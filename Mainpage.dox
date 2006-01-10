@@ -1,0 +1,4 @@
+/** @mainpage libakonadi
+
+This library contains the access methods for the KDE PIM Storage Service Akonadi.
+*/
