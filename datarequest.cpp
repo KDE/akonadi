@@ -24,25 +24,45 @@
 
 using namespace PIM;
 
+class DataRequest::DataRequestPrivate
+{
+  public:
+    DataReference::List mReferences;
+    QString mPart;
+    QStringList mAcceptableMimeTypes;
+};
+
 DataRequest::DataRequest( const DataReference::List &references, const QString &part,
                           const QStringList &acceptableMimeTypes )
+  : d( new DataRequestPrivate )
 {
+  d->mReferences = references;
+  d->mPart = part;
+  d->mAcceptableMimeTypes = acceptableMimeTypes;
 }
 
 DataRequest::~DataRequest()
 {
+  delete d;
+  d = 0;
 }
 
 int DataRequest::count() const
 {
+  // TODO: return real data
+  return 0;
 }
 
-QByteArray DataRequest::data( int index ) const
+QByteArray DataRequest::data( int ) const
 {
+  // TODO: return real data
+  return QByteArray();
 }
 
-QByteArray DataRequest::mimeType( int index ) const
+QByteArray DataRequest::mimeType( int ) const
 {
+  // TODO: return real data
+  return QByteArray();
 }
 
 void DataRequest::doStart()

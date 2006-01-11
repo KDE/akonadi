@@ -24,13 +24,22 @@
 
 using namespace PIM;
 
+class Query::QueryPrivate
+{
+  public:
+    QString mPattern;
+};
+
 
 Query::Query()
+  : d( new QueryPrivate )
 {
 }
 
 Query::~Query()
 {
+  delete d;
+  d = 0;
 }
 
 void Query::setQueryPattern( const QString &pattern )
@@ -40,15 +49,18 @@ void Query::setQueryPattern( const QString &pattern )
 
 QList<PIM::DataReference> Query::result() const
 {
+  // TODO: return real data
+  return QList<PIM::DataReference>();
 }
 
 void Query::doSetQueryPattern( const QString &pattern )
 {
+  d->mPattern = pattern;
 }
 
 void Query::doStart()
 {
-  // start communication with pim storage service here
+  // TODO: start communication with pim storage service here
 }
 
 #include "query.moc"

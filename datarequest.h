@@ -77,17 +77,22 @@ class DataRequest : public Job
     int count() const;
 
     /**
-      Returns the plain data of the data item at the given @param index.
+      Returns the plain data of the data item at the given @param index,
+      or an empty @see QByteArray if @param index is >= @see count().
      */
     QByteArray data( int index = 0 ) const;
 
     /**
-      Returns the mime type of the data item at the given @param index.
+      Returns the mime type of the data item at the given @param index,
+      or an empty @see QByteArray if @param index is >= @see count().
      */
     QByteArray mimeType( int index = 0 ) const;
 
   private:
     void doStart();
+
+    class DataRequestPrivate;
+    DataRequestPrivate *d;
 };
 
 }

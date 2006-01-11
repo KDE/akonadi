@@ -170,6 +170,14 @@ class Job : public QObject
      */
     void done( PIM::Job *job );
 
+    /**
+      Progress signal showing the overall progress of the job.
+
+      @param job The job that emitted this signal.
+      @param percent The percentage.
+     */
+    void percent( PIM::Job *job, unsigned int percent );
+
   protected:
     /**
       Subclasses have to use this method to set an error code.
