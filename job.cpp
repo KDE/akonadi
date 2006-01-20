@@ -21,6 +21,7 @@
 */
 
 #include <QEventLoop>
+#include <QHash>
 
 #include "job.h"
 
@@ -47,6 +48,21 @@ QString DataReference::persistanceID() const
 QUrl DataReference::externalUrl() const
 {
   return mExternalUrl;
+}
+
+bool DataReference::operator==( const DataReference & other ) const
+{
+  return mPersistanceID == other.mPersistanceID;
+}
+
+bool DataReference::operator<( const DataReference & other ) const
+{
+  return mPersistanceID < other.mPersistanceID;
+}
+
+uint qHash( const DataReference& ref )
+{
+  return qHash( ref.persistanceID() );
 }
 
 

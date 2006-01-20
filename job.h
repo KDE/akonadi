@@ -65,6 +65,16 @@ class DataReference
      */
     QUrl externalUrl() const;
 
+    /**
+      Returns true if two references are equal.
+    */
+    bool operator==( const DataReference &other ) const;
+
+    /**
+      Comapares to references.
+    */
+    bool operator<( const DataReference &other ) const;
+
   private:
     QString mPersistanceID;
     QString mExternalUrl;
@@ -195,5 +205,7 @@ class Job : public QObject
 };
 
 }
+
+uint qHash( const PIM::DataReference& ref );
 
 #endif
