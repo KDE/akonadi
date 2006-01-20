@@ -87,7 +87,7 @@ Job::~Job()
 bool Job::exec()
 {
   QEventLoop loop( this );
-  connect( this, SIGNAL( done() ), &loop, SLOT( quit() ) );
+  connect( this, SIGNAL( done( PIM::Job* ) ), &loop, SLOT( quit() ) );
   doStart();
   loop.exec();
 
