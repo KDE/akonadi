@@ -50,9 +50,19 @@ QUrl DataReference::externalUrl() const
   return mExternalUrl;
 }
 
+bool PIM::DataReference::isNull() const
+{
+  return mPersistanceID.isEmpty();
+}
+
 bool DataReference::operator==( const DataReference & other ) const
 {
   return mPersistanceID == other.mPersistanceID;
+}
+
+bool PIM::DataReference::operator !=( const DataReference & other ) const
+{
+  return mPersistanceID != other.mPersistanceID;
 }
 
 bool DataReference::operator<( const DataReference & other ) const

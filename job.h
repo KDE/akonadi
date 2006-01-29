@@ -66,9 +66,20 @@ class DataReference
     QUrl externalUrl() const;
 
     /**
+      Returns true if this is a empty reference, ie. one created with
+      DataReference().
+    */
+    bool isNull() const;
+
+    /**
       Returns true if two references are equal.
     */
     bool operator==( const DataReference &other ) const;
+
+    /**
+      Returns true if two references are not equal.
+    */
+    bool operator!=( const DataReference &other ) const;
 
     /**
       Comapares to references.
@@ -197,6 +208,10 @@ class Job : public QObject
   private:
     /**
       This method must be reimplemented in the concrete jobs.
+
+      Implementations must not emit the done() signal directly in this method,
+      since this will cause a deadlock in exec(). Use a singleshot timer
+      instead.
      */
     virtual void doStart() = 0;
 
