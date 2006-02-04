@@ -34,6 +34,17 @@ class Collection
 {
   public:
     /**
+      Collection types.
+    */
+    enum Type {
+      Folder, /**< 'Real' folder on eg. an IMAP server. */
+      Virtual, /**< Virtual collection (aka search folder). */
+      Resource, /**< Resource or account. */
+      Category, /**< Category. */
+      Unknown /**< Unknown collection type. */
+    };
+
+    /**
       Create a new collection.
 
       @param ref The data reference of this collection.
@@ -64,12 +75,12 @@ class Collection
       Returns the type of this collection (e.g. virtual folder, folder on an
       IMAP server, etc.).
     */
-    QString type() const;
+    Type type() const;
 
     /**
       Sets the type of this collection.
     */
-    void setType( const QString &type );
+    void setType( Type type );
 
     /**
       Returns a list of possible content mimetypes,

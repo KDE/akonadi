@@ -93,7 +93,7 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
     return col->name();
   }
   if ( role == Qt::DecorationRole ) {
-    if ( col->type() == "akonadi/resource" )
+    if ( col->type() == Collection::Resource )
       return SmallIcon( "server" );
     QStringList content = col->contentTypes();
     if ( content.size() == 1 ) {

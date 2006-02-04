@@ -30,7 +30,7 @@ class Collection::CollectionPrivate
     DataReference ref;
     DataReference parent;
     QString name;
-    QString type;
+    Type type;
     QStringList contentTypes;
     QString query;
 };
@@ -39,6 +39,7 @@ PIM::Collection::Collection( const DataReference &ref ) :
   d( new Collection::CollectionPrivate() )
 {
   d->ref = ref;
+  d->type = Unknown;
 }
 
 PIM::Collection::~ Collection( )
@@ -62,12 +63,12 @@ void PIM::Collection::setName( const QString & name )
   d->name = name;
 }
 
-QString PIM::Collection::type( ) const
+Collection::Type PIM::Collection::type() const
 {
   return d->type;
 }
 
-void PIM::Collection::setType( const QString & type )
+void PIM::Collection::setType( Type type )
 {
   d->type = type;
 }

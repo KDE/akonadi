@@ -62,11 +62,8 @@ static void createCollections( const DataReference &parent, int rec )
     }
     col->setContentTypes( content );
     global_collection_map.insert( ref, col );
-    if ( parent.persistanceID().isNull() ) {
-      col->setType( "akonadi/resource" );
-    } else {
-      col->setType( "akonadi/collection" );
-    }
+    if ( parent.isNull() )
+      col->setType( Collection::Resource );
     createCollections( ref, rec - ( rand() % 3 ) - 1 );
   }
 }
