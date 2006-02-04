@@ -268,6 +268,10 @@ QModelIndex PIM::CollectionModel::indexForReference( const DataReference & ref, 
     return QModelIndex();
 
   DataReference parentRef = d->collections.value( ref )->parent();
+  // check if parent still exist or if this is an orphan collection
+  if ( !parentRef.isNull() && !d->collections.contains( parentRef ) )
+    return QModelIndex();
+
   DataReference::List list = d->childCollections.value( parentRef );
   int row = list.indexOf( ref );
 
