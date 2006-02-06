@@ -174,7 +174,7 @@ bool PIM::CollectionModel::removeRows( int row, int count, const QModelIndex & p
   } else
     list = d->childCollections.value( DataReference() );
   if ( row < 0 || ( row + count - 1 ) >= list.size() ) {
-    kdWarning() << k_funcinfo << "Index out of bounds: " << row << "-" << row+count << " parent: " << parentRef.persistanceID() << endl;
+    kWarning() << k_funcinfo << "Index out of bounds: " << row << "-" << row+count << " parent: " << parentRef.persistanceID() << endl;
     return false;
   }
 
@@ -213,7 +213,7 @@ void PIM::CollectionModel::fetchDone( Job * job )
 {
   if ( job->error() || !d->fetchJob->collection() ) {
     // TODO: handle job errors
-    kdWarning() << k_funcinfo << "Job error or collection not available!" << endl;
+    kWarning() << k_funcinfo << "Job error or collection not available!" << endl;
   } else {
     Collection *col = d->fetchJob->collection();
     Collection *oldCol = d->collections.value( col->reference() );

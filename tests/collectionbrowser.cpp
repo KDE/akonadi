@@ -101,11 +101,11 @@ void CollectionBrowser::slotEmitChanged()
   if ( col ) {
     if ( rand() % 10 ) {
       col->setName( col->name() + " (changed)" );
-      kdDebug() << k_funcinfo << "update collection " << ref.persistanceID() << " parent: " << col->parent().persistanceID() << endl;
+      kDebug() << k_funcinfo << "update collection " << ref.persistanceID() << " parent: " << col->parent().persistanceID() << endl;
     } else {
       col->setParent( DataReference( QString::number( rand() % 1000 ), QString() ) );
       col->setName( col->name() + " (reparented)" );
-      kdDebug() << k_funcinfo << "reparenting collection " << ref.persistanceID() << " to new parent " << col->parent().persistanceID() << endl;
+      kDebug() << k_funcinfo << "reparenting collection " << ref.persistanceID() << " to new parent " << col->parent().persistanceID() << endl;
     }
     model->collectionChanged( ref );
   }
@@ -114,7 +114,7 @@ void CollectionBrowser::slotEmitChanged()
   id += 500;
   ref = DataReference( QString::number( id ), QString() );
   global_collection_map.remove( ref );
-  kdDebug() << k_funcinfo << "remove collection " << ref.persistanceID() << endl;
+  kDebug() << k_funcinfo << "remove collection " << ref.persistanceID() << endl;
   model->collectionRemoved( ref );
   // add
   id = rand() % 1000;
@@ -124,7 +124,7 @@ void CollectionBrowser::slotEmitChanged()
   col->setParent( DataReference( QString::number( rand() % 1000 ), QString() ) );
   col->setName( ref.persistanceID() + " (new)" );
   global_collection_map.insert( ref, col );
-  kdDebug() << k_funcinfo << "add collection " << ref.persistanceID() << " parent: " << col->parent().persistanceID() << endl;
+  kDebug() << k_funcinfo << "add collection " << ref.persistanceID() << " parent: " << col->parent().persistanceID() << endl;
   model->collectionChanged( ref );
 }
 
