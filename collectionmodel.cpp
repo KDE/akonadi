@@ -227,6 +227,18 @@ void PIM::CollectionModel::fetchDone( Job * job )
         emit dataChanged( index, index ); // TODO multi-column support
         delete col;
         col = 0;
+        // ### that should be the correct code, but it crashs an unpateched QTreeView
+        // (as soon as QTreeView is fixed, we can also replace Collection::copy()
+        // by a normal copy ctor.
+#if 0
+        // TODO multi-column support
+        QModelIndex oldIndex = indexForReference( oldCol->reference() );
+        d->collections.insert( col->reference(), col );
+        QModelIndex index = indexForReference( col->reference() );
+        changePersistentIndex( oldIndex, index );
+        emit dataChanged( index, index );
+        delete oldCol;
+#endif
       } else {
         // parent changed, ie. we need to remove and add
         collectionRemoved( col->reference() );
