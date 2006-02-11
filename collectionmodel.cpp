@@ -89,10 +89,10 @@ int PIM::CollectionModel::columnCount( const QModelIndex & parent ) const
 QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
 {
   Collection *col = static_cast<Collection*>( index.internalPointer() );
-  if ( role == Qt::DisplayRole ) {
+  if ( index.column() == 0 && role == Qt::DisplayRole ) {
     return col->name();
   }
-  if ( role == Qt::DecorationRole ) {
+  if ( index.column() == 0 && role == Qt::DecorationRole ) {
     if ( col->type() == Collection::Resource )
       return SmallIcon( "server" );
     QStringList content = col->contentTypes();
@@ -104,7 +104,8 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
         return SmallIcon( "kmgroupware_folder_calendar" );
       if ( content.first() == "akonadi/task" )
         return SmallIcon( "kmgroupware_folder_tasks" );
-    }
+    } else if ( content.isEmpty() )
+      return SmallIcon( "folder_grey" );
     return SmallIcon( "folder" );
   }
   return QVariant();
@@ -179,7 +180,7 @@ bool PIM::CollectionModel::removeRows( int row, int count, const QModelIndex & p
   }
 
   DataReference::List removeList = list.mid( row, count );
-  beginRemoveRows( parent, row, row + count ); // FIXME row +/- 1??, crashs sort proxy model!
+  beginRemoveRows( parent, row, row + count - 1 ); // FIXME row +/- 1??, crashs sort proxy model!
   foreach ( DataReference ref, removeList ) {
     list.removeAll( ref );
     delete d->collections.take( ref );
@@ -221,16 +222,6 @@ void PIM::CollectionModel::fetchDone( Job * job )
     // update existing collection
     if ( oldCol ) {
       if ( oldCol->parent() == col->parent() ) {
-        // parent didn't change, we can keep the old collection and just update its content
-        oldCol->copy( col );
-        QModelIndex index = indexForReference( col->reference() );
-        emit dataChanged( index, index ); // TODO multi-column support
-        delete col;
-        col = 0;
-        // ### that should be the correct code, but it crashs an unpateched QTreeView
-        // (as soon as QTreeView is fixed, we can also replace Collection::copy()
-        // by a normal copy ctor.
-#if 0
         // TODO multi-column support
         QModelIndex oldIndex = indexForReference( oldCol->reference() );
         d->collections.insert( col->reference(), col );
@@ -238,7 +229,6 @@ void PIM::CollectionModel::fetchDone( Job * job )
         changePersistentIndex( oldIndex, index );
         emit dataChanged( index, index );
         delete oldCol;
-#endif
       } else {
         // parent changed, ie. we need to remove and add
         collectionRemoved( col->reference() );

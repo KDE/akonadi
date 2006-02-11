@@ -19,6 +19,7 @@
 
 #include "collection.h"
 #include "collectionfetchjob.h"
+#include "messagecollection.h"
 
 #include <QTimer>
 
@@ -36,8 +37,11 @@ PIM::CollectionFetchJob::CollectionFetchJob( const DataReference & ref )
 {
 #ifdef DUMMY_FETCH_JOB
   if ( global_collection_map.contains( ref ) ) {
-    col = new Collection( ref );
-    col->copy( global_collection_map.value( ref ) );
+    Collection *c = global_collection_map.value( ref );
+    if ( dynamic_cast<MessageCollection*>( c ) )
+      col = new MessageCollection( *static_cast<MessageCollection*>( c ) );
+    else
+      col = new Collection( *c );
   } else
     col = 0;
 #else

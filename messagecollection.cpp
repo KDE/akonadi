@@ -17,45 +17,56 @@
     02110-1301, USA.
 */
 
-#include "collectionview.h"
-
-#include <QHeaderView>
-#include <QSortFilterProxyModel>
+#include "messagecollection.h"
 
 using namespace PIM;
 
-class CollectionView::Private
+class PIM::MessageCollection::Private
 {
   public:
-    QSortFilterProxyModel *filterModel;
+    int count;
+    int unreadCount;
 };
 
-PIM::CollectionView::CollectionView( QWidget * parent ) :
-    QTreeView( parent ),
+
+PIM::MessageCollection::MessageCollection( const DataReference & ref ) :
+    Collection( ref ),
     d( new Private() )
 {
-  d->filterModel = new QSortFilterProxyModel( this );
-
-  header()->setClickable( true );
-  header()->setSortIndicatorShown( true );
-  header()->setSortIndicator( 0, Qt::Ascending );
-  header()->setStretchLastSection( false );
-  d->filterModel->sort( 0, Qt::Ascending );
+  d->count = -1;
+  d->unreadCount = -1;
 }
 
-PIM::CollectionView::~ CollectionView( )
+PIM::MessageCollection::MessageCollection( const MessageCollection & other ) :
+    Collection( other ),
+    d( new Private() )
+{
+  d->count = other.count();
+  d->unreadCount = other.unreadCount();
+}
+
+PIM::MessageCollection::~MessageCollection()
 {
   delete d;
   d = 0;
 }
 
-void PIM::CollectionView::setModel( QAbstractItemModel * model )
+int PIM::MessageCollection::count( ) const
 {
-  // FIXME sort proxy model crashs
-//   d->filterModel->setSourceModel( model );
-//   QTreeView::setModel( d->filterModel );
-  QTreeView::setModel( model );
-  header()->setResizeMode( 0, QHeaderView::Stretch );
+  return d->count;
 }
 
-#include "collectionview.moc"
+void PIM::MessageCollection::setCount( int count )
+{
+  d->count = count;
+}
+
+int PIM::MessageCollection::unreadCount( ) const
+{
+  return d->unreadCount;
+}
+
+void PIM::MessageCollection::setUnreadCount( int count )
+{
+  d->unreadCount = count;
+}

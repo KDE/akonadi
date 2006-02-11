@@ -25,8 +25,8 @@
 namespace PIM {
 
 /**
-  This class presents a collection of PIM objects, such as a folder on a mail or
-  groupware server.
+  This class represents a collection of PIM objects, such as a folder on a mail- or
+  groupware-server.
 
   Collections are hierarchical, i.e. they may have a parent collection.
  */
@@ -50,6 +50,13 @@ class Collection
       @param ref The data reference of this collection.
     */
     Collection( const DataReference &ref );
+
+    /**
+      Copy constructor.
+
+      @param other The collection to copy.
+    */
+    Collection( const Collection &other );
 
     /**
       Destroys this collection.
@@ -115,18 +122,9 @@ class Collection
     */
     void setQuery( const QString &query );
 
-    /**
-      Copy the content of the given collection into this one.
-      Used in PIM::CollectionModel to handle updates without changing pointers.
-
-      Note: Subclasses should overwrite this method, copy their data and call
-      the implementation of the super class.
-    */
-    virtual void copy( Collection *col );
-
   private:
-    class CollectionPrivate;
-    CollectionPrivate *d;
+    class Private;
+    Private *d;
 };
 
 }

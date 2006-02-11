@@ -24,7 +24,7 @@
 
 using namespace PIM;
 
-class Collection::CollectionPrivate
+class Collection::Private
 {
   public:
     DataReference ref;
@@ -36,10 +36,21 @@ class Collection::CollectionPrivate
 };
 
 PIM::Collection::Collection( const DataReference &ref ) :
-  d( new Collection::CollectionPrivate() )
+  d( new Collection::Private() )
 {
   d->ref = ref;
   d->type = Unknown;
+}
+
+PIM::Collection::Collection( const Collection &other ) :
+    d( new Collection::Private() )
+{
+  d->name = other.name();
+  d->ref = other.reference();
+  d->parent = other.parent();
+  d->type = other.type();
+  d->contentTypes = other.contentTypes();
+  d->query = other.query();
 }
 
 PIM::Collection::~ Collection( )
@@ -101,14 +112,4 @@ QString PIM::Collection::query( ) const
 void PIM::Collection::setQuery( const QString & query )
 {
   d->query = query;
-}
-
-void PIM::Collection::copy( Collection * col )
-{
-  d->name = col->name();
-  d->ref = col->reference();
-  d->parent = col->parent();
-  d->type = col->type();
-  d->contentTypes = col->contentTypes();
-  d->query = col->query();
 }

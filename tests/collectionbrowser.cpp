@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
-#include "collection.h"
+#include "messagecollection.h"
 #include "collectionbrowser.h"
 #include "collectionlistjob.h"
 #define private public
-#include "collectionmodel.h"
+#include "messagecollectionmodel.h"
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -46,11 +46,22 @@ static void createCollections( const DataReference &parent, int rec )
   int count = rand() % 10;
   for ( int i = 0; i < count; ++i ) {
     DataReference ref( QString::number( id++ ), QString() );
-    Collection *col = new Collection( ref );
+    Collection *col;
+    int r = rand() % 6;
+    if ( r <= 3 )
+      col = new Collection( ref );
+    else {
+      MessageCollection *mcol = new MessageCollection( ref );
+      mcol->setCount( 2000 );
+      mcol->setUnreadCount( r % 2 );
+      col = mcol;
+    }
     col->setParent( parent );
     col->setName( ref.persistanceID() );
     QStringList content;
-    switch ( rand() % 6 ) {
+    switch ( r ) {
+      case 0:
+        break;
       case 1:
         content << "text/x-vcard"; break;
       case 2:
@@ -78,11 +89,14 @@ CollectionBrowser::CollectionBrowser() : CollectionView()
   // use some dummy collections for now
   createCollections( DataReference(), 8 );
   foreach ( Collection *col, global_collection_map ) {
-    Collection *colCopy = new Collection( col->reference() );
-    colCopy->copy( col );
+    Collection *colCopy;
+    if ( dynamic_cast<MessageCollection*>( col ) )
+      colCopy = new MessageCollection( *static_cast<MessageCollection*>( col ) );
+    else
+      colCopy = new Collection( *col );
     collections.insert( col->reference(), colCopy );
   }
-  model = new CollectionModel( collections, this );
+  model = new MessageCollectionModel( collections, this );
   setModel( model );
 
   // emulate the monitor job
