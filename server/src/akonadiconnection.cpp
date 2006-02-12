@@ -23,6 +23,8 @@
 #include "handler.h"
 #include "response.h"
 
+#include <assert.h>
+
 using namespace Akonadi;
 
 AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
