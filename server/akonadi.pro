@@ -5,4 +5,4 @@ CONFIG += release \
           qt \
           thread
 
-QT  += network
+QT  += network debug

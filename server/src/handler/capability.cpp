@@ -35,7 +35,6 @@ Capability::~Capability()
 
 bool Capability::handleLine( const QByteArray& )
 {
-    qDebug() << "Handle caps" << endl;
     Response response;
     response.setString( "CAPABILITY IMAP4 IMAP4rev1" );
     response.setUntagged();
