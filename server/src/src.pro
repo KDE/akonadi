@@ -30,5 +30,5 @@ CONFIG += debug \
 warn_on \
 thread \
 qt
-QT += network
+QT = core network
 TARGET = ../bin/akonadi
