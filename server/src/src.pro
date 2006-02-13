@@ -26,7 +26,7 @@ SOURCES += akonadi.cpp \
            ../test/teststoragebackend.cpp \
            collection.cpp 
 TEMPLATE = app
-CONFIG += release \
+CONFIG += debug \
 warn_on \
 thread \
 qt
