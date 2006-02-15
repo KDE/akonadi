@@ -65,9 +65,10 @@ void AkonadiConnection::run()
      * hold them in memory 'en gros'. */
 
     connect( m_tcpSocket, SIGNAL( readyRead() ),
-             this, SLOT( slotNewData() ) );
+             this, SLOT( slotNewData() ), Qt::DirectConnection );
     connect( m_tcpSocket, SIGNAL( disconnected() ),
-             this, SLOT( slotDisconnected() ) );
+             this, SLOT( slotDisconnected() ), Qt::DirectConnection );
+    qDebug() << "on: " << currentThreadId() <<  endl;
     exec();
 }
 
@@ -79,7 +80,7 @@ void AkonadiConnection::slotDisconnected()
 void AkonadiConnection::slotNewData()
 {
     QByteArray line = m_tcpSocket->readLine().trimmed();
-    qDebug() << "GOT:" << line << endl;
+    qDebug() << "GOT:" << line <<  endl;
     if ( !m_currentHandler ) {
         // this is a new command, which means the line must start with a tag
         // followed by a non-empty command. First get the tag
@@ -100,9 +101,10 @@ void AkonadiConnection::slotNewData()
         m_currentHandler->setTag( tag );
         assert( m_currentHandler );
         connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
-                 this, SLOT( slotResponseAvailable( const Response & ) ) );
+                 this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
         connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
-                 this, SLOT( slotConnectionStateChange( ConnectionState ) ) );
+                 this, SLOT( slotConnectionStateChange( ConnectionState ) ),
+                 Qt::DirectConnection );
     }
     if ( m_currentHandler->handleLine( line ) )
         m_currentHandler = 0;
