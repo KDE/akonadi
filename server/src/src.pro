@@ -13,6 +13,9 @@ HEADERS += akonadi.h \
            handler/list.h \
            handler/capability.h \
            ../test/teststoragebackend.h \
+           storage/entity.h \
+           storage/datastore.h \
+           storage/debug.h \
            global.h 
 SOURCES += akonadi.cpp \
            main.cpp \
@@ -24,11 +27,14 @@ SOURCES += akonadi.cpp \
            handler/list.cpp \
            handler/capability.cpp \
            ../test/teststoragebackend.cpp \
+           storage/entity.cpp \
+           storage/datastore.cpp \
+           storage/debug.cpp \
            collection.cpp 
 TEMPLATE = app
 CONFIG += debug \
 warn_on \
 thread \
 qt
-QT = core network
+QT = core network sql
 TARGET = ../bin/akonadi
