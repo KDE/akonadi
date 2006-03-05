@@ -26,6 +26,20 @@ using namespace Akonadi;
 /***************************************************************************
  *   CachePolicy                                                           *
  ***************************************************************************/
+void debugCachePolicy( const CachePolicy & policy )
+{
+  qDebug() << "CachePolicy => ID: " << policy.getId()
+           << " Policy: " << policy.getPolicy();
+}
+
+void debugCachePolicyList( const QList<CachePolicy> & list )
+{
+  if ( list.empty() )
+    qDebug() << "The list of CachePolicies is empty.";
+  else
+    foreach( CachePolicy policy, list )
+      debugCachePolicy( policy );
+}
 
 /***************************************************************************
  *   MimeType                                                              *
@@ -38,8 +52,11 @@ void debugMimeType( const MimeType & mimetype )
 
 void debugMimeTypeList( const QList<MimeType> & list )
 {
-  foreach( MimeType mimetype, list )
-    debugMimeType( mimetype );
+  if ( list.empty() )
+    qDebug() << "The list of MimeTypes is empty.";
+  else
+    foreach( MimeType mimetype, list )
+      debugMimeType( mimetype );
 }
 
 /***************************************************************************

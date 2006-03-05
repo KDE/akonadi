@@ -47,35 +47,73 @@ DataStore::~DataStore()
 /* --- CachePolicy --------------------------------------------------- */
 bool DataStore::appendCachePolicy( const QString & policy )
 {
-  // TODO implement
+  int foundRecs = 0;
+  QSqlQuery query;
+  if ( m_dbOpened ) {
+    query.prepare( "SELECT COUNT(*) FROM CachePolicies WHERE name = :name" );
+    query.bindValue(":name", policy);
+    if ( query.exec() ) {
+      if (query.next())
+        foundRecs = query.value(0).toInt();
+    } else
+      debugLastDbError( "Error during check before insertion of CachePolicy." );
+    if ( foundRecs == 0) {
+      query.prepare( "INSERT INTO CachePolicies (name) VALUES (:name)" );
+      query.bindValue(":name", policy);
+      if ( query.exec() )
+        return true;
+      else
+        debugLastDbError( "Error during insertion of single CachePolicy." );
+    } else
+      qDebug() << "Cannot insert policy " << policy
+               << " because it already exists.";
+  }
   return false;
 }
 
 bool DataStore::removeCachePolicy( const CachePolicy & policy )
 {
-  // TODO implement
-  return false;
+  return removeCachePolicy( policy.getId() );
 }
 
 bool DataStore::removeCachePolicy( int id )
 {
-  // TODO implement
-  return false;
+  return removeById( id, "CachePolicies" );
 }
 
 CachePolicy * DataStore::getCachePolicyById( int id )
 {
-  // TODO implement
-  CachePolicy * p = new CachePolicy();
-  p->setId( id ).setCachePolicy( "dummyPolicy" );
+  CachePolicy * p = 0;
+  if ( m_dbOpened ) {
+    QSqlQuery query;
+    query.prepare( "SELECT id, name FROM CachePolicies WHERE id = :id" );
+    query.bindValue(":id", id);
+    if ( query.exec() ) {
+      if (query.next()) {
+        int id = query.value(0).toInt();
+        QString policy = query.value(1).toString();
+        p = new CachePolicy( id, policy );
+      }
+    } else 
+      debugLastDbError( "Error during selection of single CachePolicy." );
+  }
   return p;
 }
 
 QList<CachePolicy> * DataStore::listCachePolicies()
 {
-  // TODO implement
   QList<CachePolicy> * list = new QList<CachePolicy>();
-  list->append( *(getCachePolicyById( 1 )) );
+  if ( m_dbOpened ) {
+    QSqlQuery query;
+    if ( query.exec( "SELECT id, name FROM CachePolicies" ) ) {
+      while (query.next()) {
+        int id = query.value(0).toInt();
+        QString policy = query.value(1).toString();
+        list->append( CachePolicy( id, policy ) );
+      }
+    } else 
+      debugLastDbError( "Error during selection of CachePolicies." );
+  }
   return list;
 }
 
@@ -116,7 +154,7 @@ bool DataStore::appendMimeType( const QString & mimetype )
       if (query.next())
         foundRecs = query.value(0).toInt();
     } else
-      debugLastDbError( "Error during check before insertion of MimeTypes." );
+      debugLastDbError( "Error during check before insertion of MimeType." );
     if ( foundRecs == 0) {
       query.prepare( "INSERT INTO MimeTypes (mime_type) VALUES (:type)" );
       query.bindValue(":type", mimetype);
@@ -138,16 +176,7 @@ bool DataStore::removeMimeType( const MimeType & mimetype )
 
 bool DataStore::removeMimeType( int id )
 {
-  if ( m_dbOpened ) {
-    QSqlQuery query;
-    query.prepare( "DELETE FROM MimeTypes WHERE id = :id" );
-    query.bindValue(":id", id);
-    if ( query.exec() )
-      return true;
-    else
-      debugLastDbError( "Error during deletion of single MimeType." );
-  }
-  return false;
+  return removeById( id, "MimeTypes" );
 }
 
 MimeType * DataStore::getMimeTypeById( int id )
@@ -301,7 +330,7 @@ Resource * DataStore::getResourceById( int id )
   return r;
 }
 
-QList<Resource> * DataStore::listResourced()
+QList<Resource> * DataStore::listResources()
 {
   // TODO implement
   QList<Resource> * list = new QList<Resource>();
@@ -335,6 +364,25 @@ void DataStore::debugLastDbError( const QString & actionDescription ) const
            << m_database.lastError().driverText()
            << "\nDatabase said: "
            << m_database.lastError().databaseText();
+}
+
+bool DataStore::removeById( int id, const QString & tableName )
+{
+  if ( m_dbOpened ) {
+    QSqlQuery query;
+    QString statement( "DELETE FROM ");
+    statement += tableName + " WHERE id = :id";
+    query.prepare( statement );
+    query.bindValue(":id", id);
+    if ( query.exec() )
+      return true;
+    else {
+      QString msg( "Error during deletion of a single row by ID from table " );
+      msg += tableName + ".";
+      debugLastDbError( msg );
+    }
+  }
+  return false;
 }
 
 }

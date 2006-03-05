@@ -25,12 +25,14 @@ namespace Akonadi {
  *   CachePolicy                                                           *
  ***************************************************************************/
 CachePolicy::CachePolicy()
-{
-}
+{}
+
+CachePolicy::CachePolicy( int id, const QString & policy )
+  : m_id( id ), m_policy( policy )
+{}
 
 CachePolicy::~CachePolicy()
-{
-}
+{}
 
 /***************************************************************************
  *   MimeType                                                              *
@@ -39,8 +41,7 @@ MimeType::MimeType()
 {}
 
 MimeType::MimeType( int id, const QString & mimetype )
-  : m_id( id ),
-    m_mimetype( mimetype )
+  : m_id( id ), m_mimetype( mimetype )
 {}
 
 MimeType::~MimeType()

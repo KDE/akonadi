@@ -29,6 +29,8 @@ using namespace Akonadi;
 /***************************************************************************
  *   CachePolicy                                                           *
  ***************************************************************************/
+void debugCachePolicy( const CachePolicy & policy );
+void debugCachePolicyList( const QList<CachePolicy> & list );
 
 /***************************************************************************
  *   MimeType                                                              *

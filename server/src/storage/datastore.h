@@ -96,12 +96,13 @@ public:
     bool removeResource( const Resource & resource );
     bool removeResource( int id );
     Resource * getResourceById( int id );
-    QList<Resource> * listResourced();
+    QList<Resource> * listResources();
     QList<Resource> * listResources( const CachePolicy & policy );
 
 protected:
     DataStore();
     void debugLastDbError( const QString & actionDescription ) const;
+    bool removeById( int id, const QString & tableName );
 
 private:
     static DataStore * ds_instance;
