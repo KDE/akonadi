@@ -49,5 +49,7 @@ void debugMimeTypeList( const QList<MimeType> & list );
 /***************************************************************************
  *   Resource                                                              *
  ***************************************************************************/
+void debugResource( const Resource & resource );
+void debugResourceList( const QList<Resource> & list );
 
 #endif

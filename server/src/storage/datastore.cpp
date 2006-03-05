@@ -51,7 +51,7 @@ bool DataStore::appendCachePolicy( const QString & policy )
   QSqlQuery query;
   if ( m_dbOpened ) {
     query.prepare( "SELECT COUNT(*) FROM CachePolicies WHERE name = :name" );
-    query.bindValue(":name", policy);
+    query.bindValue( ":name", policy );
     if ( query.exec() ) {
       if (query.next())
         foundRecs = query.value(0).toInt();
@@ -59,7 +59,7 @@ bool DataStore::appendCachePolicy( const QString & policy )
       debugLastDbError( "Error during check before insertion of CachePolicy." );
     if ( foundRecs == 0) {
       query.prepare( "INSERT INTO CachePolicies (name) VALUES (:name)" );
-      query.bindValue(":name", policy);
+      query.bindValue( ":name", policy );
       if ( query.exec() )
         return true;
       else
@@ -87,7 +87,7 @@ CachePolicy * DataStore::getCachePolicyById( int id )
   if ( m_dbOpened ) {
     QSqlQuery query;
     query.prepare( "SELECT id, name FROM CachePolicies WHERE id = :id" );
-    query.bindValue(":id", id);
+    query.bindValue( ":id", id );
     if ( query.exec() ) {
       if (query.next()) {
         int id = query.value(0).toInt();
@@ -149,7 +149,7 @@ bool DataStore::appendMimeType( const QString & mimetype )
   QSqlQuery query;
   if ( m_dbOpened ) {
     query.prepare( "SELECT COUNT(*) FROM MimeTypes WHERE mime_type = :type" );
-    query.bindValue(":type", mimetype);
+    query.bindValue( ":type", mimetype );
     if ( query.exec() ) {
       if (query.next())
         foundRecs = query.value(0).toInt();
@@ -157,7 +157,7 @@ bool DataStore::appendMimeType( const QString & mimetype )
       debugLastDbError( "Error during check before insertion of MimeType." );
     if ( foundRecs == 0) {
       query.prepare( "INSERT INTO MimeTypes (mime_type) VALUES (:type)" );
-      query.bindValue(":type", mimetype);
+      query.bindValue( ":type", mimetype );
       if ( query.exec() )
         return true;
       else
@@ -185,7 +185,7 @@ MimeType * DataStore::getMimeTypeById( int id )
   if ( m_dbOpened ) {
     QSqlQuery query;
     query.prepare( "SELECT id, mime_type FROM MimeTypes WHERE id = :id" );
-    query.bindValue(":id", id);
+    query.bindValue( ":id", id );
     if ( query.exec() ) {
       if (query.next()) {
         int id = query.value(0).toInt();
@@ -306,35 +306,77 @@ QList<PimItem> * DataStore::listPimItems( const MimeType & mimetype,
 bool DataStore::appendResource( const QString & resource,
                                 const CachePolicy & policy )
 {
-  // TODO implement
+  int foundRecs = 0;
+  QSqlQuery query;
+  if ( m_dbOpened ) {
+    query.prepare( "SELECT COUNT(*) FROM Resources WHERE name = :name" );
+    query.bindValue( ":name", resource );
+    if ( query.exec() ) {
+      if (query.next())
+        foundRecs = query.value(0).toInt();
+    } else
+      debugLastDbError( "Error during check before insertion of Resource." );
+    if ( foundRecs == 0) {
+      query.prepare( "INSERT INTO Resources (name, cachepolicy_id) "
+                     "VALUES (:name, :policy)" );
+      query.bindValue( ":name", resource );
+      query.bindValue( ":policy", policy.getId() );
+      if ( query.exec() )
+        return true;
+      else
+        debugLastDbError( "Error during insertion of single Resource." );
+    } else
+      qDebug() << "Cannot insert resource " << resource
+               << " because it already exists.";
+  }
   return false;
 }
 
 bool DataStore::removeResource( const Resource & resource )
 {
-  // TODO implement
-  return false;
+  return removeResource( resource.getId() );
 }
 
 bool DataStore::removeResource( int id )
 {
-  // TODO implement
-  return false;
+  return removeById( id, "Resources" );
 }
 
 Resource * DataStore::getResourceById( int id )
 {
-  // TODO implement
-  Resource * r = new Resource();
-  r->setId( id ).setResource( "dummyRecource" ).setPolicyId( 1 );
+  Resource * r =0;
+  if ( m_dbOpened ) {
+    QSqlQuery query;
+    query.prepare( "SELECT id, name, cachepolicy_id FROM Resources WHERE id = :id" );
+    query.bindValue( ":id", id );
+    if ( query.exec() ) {
+      if (query.next()) {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        int id_res = query.value(0).toInt();
+        r = new Resource( id, name, id_res );
+      }
+    } else 
+      debugLastDbError( "Error during selection of single Resource." );
+  }
   return r;
 }
 
 QList<Resource> * DataStore::listResources()
 {
-  // TODO implement
   QList<Resource> * list = new QList<Resource>();
-  list->append( *(getResourceById( 1 )) );
+  if ( m_dbOpened ) {
+    QSqlQuery query;
+    if ( query.exec( "SELECT id, name, cachepolicy_id FROM Resources" ) ) {
+      while (query.next()) {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        int id_res = query.value(0).toInt();
+        list->append( Resource( id, name, id_res ) );
+      }
+    } else 
+      debugLastDbError( "Error during selection of Resources." );
+  }
   return list;
 }
 
@@ -373,7 +415,7 @@ bool DataStore::removeById( int id, const QString & tableName )
     QString statement( "DELETE FROM ");
     statement += tableName + " WHERE id = :id";
     query.prepare( statement );
-    query.bindValue(":id", id);
+    query.bindValue( ":id", id );
     if ( query.exec() )
       return true;
     else {

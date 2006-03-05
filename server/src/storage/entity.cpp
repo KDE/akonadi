@@ -74,11 +74,17 @@ PimItem::~PimItem()
  *   Resource                                                              *
  ***************************************************************************/
 Resource::Resource()
-{
-}
+{}
+
+Resource::Resource( int id, const QString & resource, int policy_id )
+  : m_id( id ), m_policy_id( policy_id ), m_resource( resource )
+{}
+
+Resource::Resource( int id, const QString & resource, const CachePolicy & policy )
+  : m_id( id ), m_policy_id( policy.getId() ), m_resource( resource )
+{}
 
 Resource::~Resource()
-{
-}
+{}
 
 }  // namespace Akonadi

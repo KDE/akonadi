@@ -70,4 +70,18 @@ void debugMimeTypeList( const QList<MimeType> & list )
 /***************************************************************************
  *   Resource                                                              *
  ***************************************************************************/
+void debugResource( const Resource & resource )
+{
+  qDebug() << "Resource => ID: " << resource.getId()
+           << " Resource: " << resource.getResource()
+           << " Policy-ID: " << resource.getPolicyId();
+}
 
+void debugResourceList( const QList<Resource> & list )
+{
+  if ( list.empty() )
+    qDebug() << "The list of Resources is empty.";
+  else
+    foreach( Resource resource, list )
+      debugResource( resource );
+}

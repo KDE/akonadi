@@ -234,6 +234,7 @@ class Resource
 {
 public:
     Resource();
+    Resource( int id, const QString & resource, int policy_id );
     Resource( int id, const QString & resource, const CachePolicy & policy );
     ~Resource();
 
