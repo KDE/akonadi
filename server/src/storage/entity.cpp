@@ -35,6 +35,29 @@ CachePolicy::~CachePolicy()
 {}
 
 /***************************************************************************
+ *   Location                                                              *
+ ***************************************************************************/
+Location::Location()
+{
+}
+
+Location::Location( int id, const QString & location,
+                    int policy_id, int resource_id )
+  : m_id( id ), m_policy_id( policy_id ),
+    m_resource_id( resource_id ), m_location( location )
+{
+}
+
+Location::Location( int id, const QString & location,
+                    const CachePolicy & policy, const Resource & resource )
+  : m_id( id ), m_policy_id( policy.getId() ),
+    m_resource_id( resource.getId() ), m_location( location )
+{}
+
+Location::~Location()
+{}
+
+/***************************************************************************
  *   MimeType                                                              *
  ***************************************************************************/
 MimeType::MimeType()

@@ -128,19 +128,166 @@ QList<ItemMetaData> * listItemMetaData( const MetaType & metatype );
 */
 
 /* --- Location ------------------------------------------------------ */
-/*
-bool appendLocation( const QString & location, const Resource & resource );
-bool appendLocation( const QString & location,
-             const Resource & resource,
-             const CachePolicy & policy );
-bool removeLocation( const Location & location );
-bool removeLocation( int id );
-bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
-bool resetLocationPolicy( const Location & location );
-Location * getLocationById( int id );
-QList<MetaType> * listLocations();
-QList<MetaType> * listLocations( const Resource & resource );
-*/
+bool DataStore::appendLocation( const QString & location,
+                                const Resource & resource )
+{
+  int foundRecs = 0;
+  QSqlQuery query;
+  if ( m_dbOpened ) {
+    query.prepare( "SELECT COUNT(*) FROM Locations WHERE uri = :uri" );
+    query.bindValue( ":uri", location );
+    if ( query.exec() ) {
+      if (query.next())
+        foundRecs = query.value(0).toInt();
+    } else
+      debugLastDbError( "Error during check before insertion of Location." );
+    if ( foundRecs == 0) {
+      query.prepare( "INSERT INTO Locations (uri, cachepolicy_id, resource_id) "
+                     "VALUES (:uri, NULL, :resource)" );
+      query.bindValue( ":uri", location );
+      query.bindValue( ":resource", resource.getId() );
+      if ( query.exec() )
+        return true;
+      else
+        debugLastDbError( "Error during insertion of single Location." );
+    } else
+      qDebug() << "Cannot insert location " << location
+               << " because it already exists.";
+  }
+  return false;
+}
+
+bool DataStore::appendLocation( const QString & location,
+                                const Resource & resource,
+                                const CachePolicy & policy )
+{
+  int foundRecs = 0;
+  QSqlQuery query;
+  if ( m_dbOpened ) {
+    query.prepare( "SELECT COUNT(*) FROM Locations WHERE uri = :uri" );
+    query.bindValue( ":uri", location );
+    if ( query.exec() ) {
+      if (query.next())
+        foundRecs = query.value(0).toInt();
+    } else
+      debugLastDbError( "Error during check before insertion of Location." );
+    if ( foundRecs == 0) {
+      query.prepare( "INSERT INTO Locations (uri, cachepolicy_id, resource_id) "
+                     "VALUES (:uri, :policy, :resource)" );
+      query.bindValue( ":uri", location );
+      query.bindValue( ":policy", policy.getId() );
+      query.bindValue( ":resource", resource.getId() );
+      if ( query.exec() )
+        return true;
+      else
+        debugLastDbError( "Error during insertion of single Location." );
+    } else
+      qDebug() << "Cannot insert location " << location
+               << " because it already exists.";
+  }
+  return false;
+}
+
+bool DataStore::removeLocation( const Location & location )
+{
+  return removeLocation( location.getId() );
+}
+
+bool DataStore::removeLocation( int id )
+{
+  return removeById( id, "Locations" );
+}
+
+bool DataStore::changeLocationPolicy( const Location & location,
+                                      const CachePolicy & policy )
+{
+  QSqlQuery query;
+  if ( m_dbOpened ) {
+    query.prepare( "UPDATE Locations SET cachepolicy_id = :policy WHERE id = :id" );
+    query.bindValue( ":policy", policy.getId() );
+    query.bindValue( ":id", location.getId() );
+    if ( query.exec() )
+      return true;
+    else
+      debugLastDbError( "Error during setting the cache policy of a single Location." );
+  }
+  return false;
+}
+
+bool DataStore::resetLocationPolicy( const Location & location )
+{
+  QSqlQuery query;
+  if ( m_dbOpened ) {
+    query.prepare( "UPDATE Locations SET cachepolicy_id = NULL WHERE id = :id" );
+    query.bindValue( ":id", location.getId() );
+    if ( query.exec() )
+      return true;
+    else
+      debugLastDbError( "Error during reset of the cache policy of a single Location." );
+  }
+  return false;
+}
+
+Location * DataStore::getLocationById( int id )
+{
+  Location * l = 0;
+  if ( m_dbOpened ) {
+    QSqlQuery query;
+    query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE id = :id" );
+    query.bindValue( ":id", id );
+    if ( query.exec() ) {
+      if (query.next()) {
+        int id = query.value(0).toInt();
+        QString uri = query.value(1).toString();
+        int policy = query.value(2).toInt();
+        int resource = query.value(2).toInt();
+        l = new Location( id, uri, policy, resource );
+      }
+    } else 
+      debugLastDbError( "Error during selection of single Location." );
+  }
+  return l;
+}
+
+QList<Location> * DataStore::listLocations()
+{
+  QList<Location> * list = new QList<Location>();
+  if ( m_dbOpened ) {
+    QSqlQuery query;
+    if ( query.exec( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations" ) ) {
+      while (query.next()) {
+        int id = query.value(0).toInt();
+        QString uri = query.value(1).toString();
+        int policy = query.value(2).toInt();
+        int resource = query.value(2).toInt();
+        list->append( Location( id, uri, policy, resource ) );
+      }
+    } else 
+      debugLastDbError( "Error during selection of Locations." );
+  }
+  return list;
+}
+
+QList<Location> * DataStore::listLocations( const Resource & resource )
+{
+  QList<Location> * list = new QList<Location>();
+  if ( m_dbOpened ) {
+    QSqlQuery query;
+    query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = :id" );
+    query.bindValue( ":id", resource.getId() );
+    if ( query.exec() ) {
+      while (query.next()) {
+        int id = query.value(0).toInt();
+        QString uri = query.value(1).toString();
+        int policy = query.value(2).toInt();
+        int resource = query.value(2).toInt();
+        list->append( Location( id, uri, policy, resource ) );
+      }
+    } else 
+      debugLastDbError( "Error during selection of Locations from a Resource." );
+  }
+  return list;
+}
 
 /* --- MimeType ------------------------------------------------------ */
 bool DataStore::appendMimeType( const QString & mimetype )
@@ -382,11 +529,21 @@ QList<Resource> * DataStore::listResources()
 
 QList<Resource> * DataStore::listResources( const CachePolicy & policy )
 {
-  // TODO implement
   QList<Resource> * list = new QList<Resource>();
-  // let's fake it for now
-  if ( policy.getId() == 1 )
-    list->append( *(getResourceById( 1 )) );
+  if ( m_dbOpened ) {
+    QSqlQuery query;
+    query.prepare( "SELECT id, name, cachepolicy_id FROM Resources WHERE cachepolicy_id = :id" );
+    query.bindValue( ":id", policy.getId() );
+    if ( query.exec() ) {
+      while (query.next()) {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        int id_res = query.value(0).toInt();
+        list->append( Resource( id, name, id_res ) );
+      }
+    } else 
+      debugLastDbError( "Error during selection of Resources by a Policy." );
+  }
   return list;
 }
 

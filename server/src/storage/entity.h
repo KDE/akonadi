@@ -101,6 +101,8 @@ class Location
 public:
     Location();
     Location( int id, const QString & location,
+              int policy_id, int resource_id );
+    Location( int id, const QString & location,
               const CachePolicy & policy, const Resource & resource );
     ~Location();
 

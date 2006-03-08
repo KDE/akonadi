@@ -63,8 +63,8 @@ public:
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
     Location * getLocationById( int id );
-    QList<MetaType> * listLocations();
-    QList<MetaType> * listLocations( const Resource & resource );
+    QList<Location> * listLocations();
+    QList<Location> * listLocations( const Resource & resource );
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype );
