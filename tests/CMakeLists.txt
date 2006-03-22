@@ -13,7 +13,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(collectionbrowser ${collectionbrowser_SRCS})
 
-target_link_libraries(collectionbrowser  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(collectionbrowser  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
