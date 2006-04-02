@@ -240,7 +240,7 @@ void PIM::CollectionModel::fetchDone( Job * job )
     if ( !oldCol && col ) {
       d->collections.insert( col->reference(), col );
       QModelIndex parentIndex = indexForReference( col->parent() );
-      beginInsertRows( parentIndex, rowCount( parentIndex ) - 1, rowCount( parentIndex ) ); // ### row +/- 1??, crashs sort proxy model!
+      beginInsertRows( parentIndex, rowCount( parentIndex ), rowCount( parentIndex ) );
       d->childCollections[ col->parent() ].append( col->reference() );
       endInsertRows();
     }
