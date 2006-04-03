@@ -7,7 +7,8 @@ METASOURCES = AUTO
 KDE_CXXFLAGS = -UQT3_SUPPORT
 
 # test programs:
-check_PROGRAMS = collectionbrowser
+check_PROGRAMS = collectionbrowser messagebrowser
 
 collectionbrowser_SOURCES = collectionbrowser.cpp
+messagebrowser_SOURCES = messagebrowser.cpp
 
