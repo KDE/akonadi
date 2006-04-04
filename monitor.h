@@ -17,52 +17,55 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGEMONITOR_H
-#define PIM_MESSAGEMONITOR_H
+#ifndef PIM_MONITOR_H
+#define PIM_MONITOR_H
 
 #include <libakonadi/job.h>
 
 namespace PIM {
 
 /**
-  Monitors a set of messages that match a given query and emits signals if
-  these messages are changed or removed or new messages that match the query
+  Monitors a set of objects that match a given query and emits signals if some
+  of these objects are changed or removed or new messages that match the query
   are added to the storage backend.
+
+  A monitor job will run until it is killed or deleted, the done() signal will
+  only be emitted in case of a fatal error.
 */
-class MessageMonitor : public Job
+class Monitor : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a new MessageMonitor job.
+      Creates a new monitor job.
       @param query This query defines which messages are monitored.
     */
-    MessageMonitor( const QString &query );
+    Monitor( const QString &query );
 
     /**
-      Destroys this MessageMonitor job.
+      Destroys this monitor job.
     */
-    virtual ~MessageMonitor();
+    virtual ~Monitor();
 
   signals:
     /**
-      Emitted if some messages have changed.
-      @param references A list of references of changed messages.
+      Emitted if some objects have changed.
+      @param references A list of references of changed objects.
     */
-    void messagesChanged( const DataReference::List &refrences );
+    void changed( const DataReference::List &references );
 
     /**
-      Emitted if some messages that match the query have been added.
-      @param references A list of refereces of added messages.
+      Emitted if some objects that match the query have been added.
+      @param references A list of refereces of added objects.
     */
-    void messagesAdded( const DataReference::List &references );
+    void added( const DataReference::List &references );
 
     /**
-      Emitted if some messages have been removed.
-      @param references A list of references of removed messages.
+      Emitted if some objects have been removed.
+      @param references A list of references of removed objects.
     */
-    void messagesRemoved( const DataReference::List &references );
+    void removed( const DataReference::List &references );
 
   private:
     virtual void doStart();

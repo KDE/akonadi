@@ -105,16 +105,21 @@ class CollectionModel : public QAbstractItemModel
     */
     QModelIndex indexForReference( const DataReference &ref, int column = 0 );
 
+    /**
+      Removes a the given collection from the model.
+    */
+    void collectionRemoved( const DataReference &ref );
+
   private slots:
     /**
       Notify the model about collection changes.
     */
-    void collectionChanged( const DataReference &ref );
+    void collectionChanged( const DataReference::List& references );
 
     /**
       Notify the model about removed collections.
     */
-    void collectionRemoved( const DataReference &ref );
+    void collectionRemoved( const DataReference::List& references );
 
     /**
       Connected to the collection fetch job.

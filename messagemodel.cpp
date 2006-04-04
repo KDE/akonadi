@@ -19,8 +19,8 @@
 
 #include "message.h"
 #include "messagemodel.h"
-#include "messagemonitor.h"
 #include "messagequery.h"
+#include "monitor.h"
 
 #include <kmime_message.h>
 
@@ -35,7 +35,7 @@ class MessageModel::Private
     QList<Message*> messages;
     QString query;
     MessageQuery *listingJob;
-    MessageMonitor *monitorJob;
+    Monitor *monitor;
     QList<MessageQuery*> fetchJobs, updateJobs;
 };
 
@@ -44,13 +44,13 @@ PIM::MessageModel::MessageModel( QObject *parent ) :
     d( new Private() )
 {
   d->listingJob = 0;
-  d->monitorJob = 0;
+  d->monitor = 0;
 }
 
 PIM::MessageModel::~MessageModel( )
 {
   delete d->listingJob;
-  delete d->monitorJob;
+  delete d->monitor;
   qDeleteAll( d->fetchJobs );
   qDeleteAll( d->updateJobs );
   delete d;
@@ -124,8 +124,8 @@ void PIM::MessageModel::setQuery( const QString & query )
   d->messages.clear();
   reset();
   // stop all running jobs
-  delete d->monitorJob;
-  d->monitorJob = 0;
+  delete d->monitor;
+  d->monitor = 0;
   qDeleteAll( d->updateJobs );
   d->updateJobs.clear();
   qDeleteAll( d->fetchJobs );
@@ -151,12 +151,15 @@ void PIM::MessageModel::listingDone( PIM::Job * job )
   d->listingJob = 0;
 
   // start monitor job
-  d->monitorJob = new MessageMonitor( d->query );
-  connect( d->monitorJob, SIGNAL( messagesChanged( const DataReference::List& ) ),
+  // TODO error handling
+  d->monitor = new Monitor( d->query );
+  connect( d->monitor, SIGNAL( changed( const DataReference::List& ) ),
            SLOT( messagesChanged( const DataReference::List& ) ) );
-  connect( d->monitorJob, SIGNAL( messagesRemoved( const DataReference::List& ) ),
+  connect( d->monitor, SIGNAL( added( const DataReference::List& ) ),
+           SLOT( messagesAdded( const DataReference::List& ) ) );
+  connect( d->monitor, SIGNAL( removed( const DataReference::List& ) ),
            SLOT( messagesRemoved( const DataReference::List& ) ) );
-  d->monitorJob->start();
+  d->monitor->start();
 }
 
 void PIM::MessageModel::fetchingNewDone( PIM::Job * job )

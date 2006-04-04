@@ -17,50 +17,31 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTIONMONITORJOB_H
-#define PIM_COLLECTIONMONITORJOB_H
+#include "monitor.h"
 
-#include <libakonadi/job.h>
+using namespace PIM;
 
-namespace PIM {
-
-/**
-  Monitors the collection tree and signals all changes.
-
-  @todo Support partial monitoring (eg. monitor only collections containing
-  contacts.
-*/
-class CollectionMonitorJob : public Job
+class Monitor::Private
 {
-  Q_OBJECT
-
   public:
-    /**
-      Creates a new collection monitor job.
-    */
-    CollectionMonitorJob();
-
-    /**
-      Destroys this job.
-    */
-    ~CollectionMonitorJob();
-
-  signals:
-    /**
-      Emitted when a collection on the storage service has been added or changed.
-    */
-    void collectionChanged( const DataReference &ref );
-
-    /**
-      Emitted if a collection on the storage service has been deleted.
-    */
-    void collectionRemoved( const DataReference &ref );
-
-  private:
-    virtual void doStart();
-
+    QString query;
 };
 
+PIM::Monitor::Monitor( const QString & query ) :
+    Job(),
+    d( new Private() )
+{
+  d->query = query;
 }
 
-#endif
+PIM::Monitor::~Monitor( )
+{
+  delete d;
+}
+
+void PIM::Monitor::doStart( )
+{
+  // TODO
+}
+
+#include "monitor.moc"

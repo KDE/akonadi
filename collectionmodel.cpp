@@ -20,7 +20,7 @@
 #include "collection.h"
 #include "collectionfetchjob.h"
 #include "collectionmodel.h"
-#include "collectionmonitorjob.h"
+#include "monitor.h"
 
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -38,7 +38,7 @@ class CollectionModel::Private
   public:
     QHash<DataReference, Collection*> collections;
     QHash<DataReference, DataReference::List> childCollections;
-    CollectionMonitorJob *monitorJob;
+    Monitor* monitor;
     CollectionFetchJob *fetchJob;
     QQueue<DataReference> updateQueue;
 };
@@ -56,10 +56,15 @@ PIM::CollectionModel::CollectionModel( const QHash< DataReference, Collection * 
     d->childCollections[ col->parent() ].append( col->reference() );
 
   // monitor collection changes
-  d->monitorJob = new CollectionMonitorJob();
-  connect( d->monitorJob, SIGNAL( collectionChanged( const DataReference& ) ), SLOT( collectionChanged( const DataReference& ) ) );
-  connect( d->monitorJob, SIGNAL( collectionRemoved( const DataReference& ) ), SLOT( collectionRemoved( const DataReference& ) ) );
-  d->monitorJob->start();
+  // TODO: handle errors
+  d->monitor = new Monitor( "mimetype=x-akonadi/collection" );
+  connect( d->monitor, SIGNAL( changed( const DataReference::List& ) ),
+           SLOT( collectionChanged( const DataReference::List& ) ) );
+  connect( d->monitor, SIGNAL( added( const DataReference::List& ) ),
+           SLOT( collectionChanged( const DataReference::List& ) ) );
+  connect( d->monitor, SIGNAL( removed( const DataReference& ) ),
+           SLOT( collectionRemoved( const DataReference::List& ) ) );
+  d->monitor->start();
 
   // ### Hack to get the kmail resource folder icons
   KGlobal::instance()->iconLoader()->addAppDir( "kmail" );
@@ -71,8 +76,8 @@ PIM::CollectionModel::~CollectionModel()
   qDeleteAll( d->collections );
   d->collections.clear();
 
-  delete d->monitorJob;
-  d->monitorJob = 0;
+  delete d->monitor;
+  d->monitor = 0;
   delete d->fetchJob;
   d->fetchJob = 0;
 
@@ -190,10 +195,19 @@ bool PIM::CollectionModel::removeRows( int row, int count, const QModelIndex & p
   return true;
 }
 
-void PIM::CollectionModel::collectionChanged( const DataReference & ref )
+void PIM::CollectionModel::collectionChanged( const DataReference::List& references )
 {
-  d->updateQueue.enqueue( ref );
+  // TODO no need to serialize fetch jobs...
+  foreach ( DataReference ref, references )
+    d->updateQueue.enqueue( ref );
   processUpdates();
+}
+
+void PIM::CollectionModel::collectionRemoved( const DataReference::List& references )
+{
+  foreach ( DataReference ref, references ) {
+    collectionRemoved( ref );
+  }
 }
 
 void PIM::CollectionModel::collectionRemoved( const DataReference & ref )

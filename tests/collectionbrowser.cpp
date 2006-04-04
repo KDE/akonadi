@@ -121,7 +121,7 @@ void CollectionBrowser::slotEmitChanged()
       col->setName( col->name() + " (reparented)" );
       kDebug() << k_funcinfo << "reparenting collection " << ref.persistanceID() << " to new parent " << col->parent().persistanceID() << endl;
     }
-    model->collectionChanged( ref );
+    model->collectionChanged( DataReference::List() << ref );
   }
   // delete
   id = rand() % 1000;
@@ -139,7 +139,7 @@ void CollectionBrowser::slotEmitChanged()
   col->setName( ref.persistanceID() + " (new)" );
   global_collection_map.insert( ref, col );
   kDebug() << k_funcinfo << "add collection " << ref.persistanceID() << " parent: " << col->parent().persistanceID() << endl;
-  model->collectionChanged( ref );
+  model->collectionChanged( DataReference::List() << ref );
 }
 
 int main( int argc, char** argv )
