@@ -22,6 +22,10 @@
 
 #include <libakonadi/collectionmodel.h>
 
+/**
+  Extended modell for message collections.
+  Supports columns for message unread/total counts.
+*/
 namespace PIM {
 
 class MessageCollectionModel : public CollectionModel
