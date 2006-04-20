@@ -174,7 +174,7 @@ void PIM::MessageModel::fetchingNewDone( PIM::Job * job )
     d->messages += list;
     endInsertRows();
   }
-  d->fetchJobs.remove( static_cast<MessageQuery*>( job ) );
+  d->fetchJobs.removeAll( static_cast<MessageQuery*>( job ) );
   job->deleteLater();
 }
 
@@ -198,7 +198,7 @@ void PIM::MessageModel::fetchingUpdatesDone( PIM::Job * job )
       }
     }
   }
-  d->updateJobs.remove( static_cast<MessageQuery*>( job ) );
+  d->updateJobs.removeAll( static_cast<MessageQuery*>( job ) );
   job->deleteLater();
 }
 
