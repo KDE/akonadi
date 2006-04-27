@@ -41,7 +41,8 @@ PIM::CollectionFetchJob::CollectionFetchJob( const DataReference & ref )
     if ( dynamic_cast<MessageCollection*>( c ) )
       col = new MessageCollection( *static_cast<MessageCollection*>( c ) );
     else
-      col = new Collection( *c );
+      // FIXME: dereferencing 0 will always crash. what's intended ????
+      col = 0; // new Collection( *c );
   } else
     col = 0;
 #else
