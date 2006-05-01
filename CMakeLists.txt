@@ -54,7 +54,5 @@ install_files( /include/libakonadi FILES
 	monitor.h 
 )
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
