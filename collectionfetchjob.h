@@ -21,6 +21,7 @@
 #define PIM_COLLECTIONFETCHJOB_H
 
 #include <libakonadi/job.h>
+#include <kdepim_export.h>
 
 namespace PIM {
 
@@ -32,7 +33,7 @@ class Collection;
 
   @todo Derive from DataRequest instead from Job and support fetching lists?
 */
-class CollectionFetchJob : public Job
+class AKONADI_EXPORT CollectionFetchJob : public Job
 {
   Q_OBJECT
 

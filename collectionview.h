@@ -21,6 +21,7 @@
 #define PIM_COLLECTION_VIEW
 
 #include <QTreeView>
+#include <kdepim_export.h>
 
 namespace PIM {
 
@@ -28,7 +29,7 @@ namespace PIM {
   A view to show a collection tree provided by a CollectionModell.
   It uses an internal QSortFilterProxyModel to provide sorting.
 */
-class CollectionView : public QTreeView
+class AKONADI_EXPORT CollectionView : public QTreeView
 {
   Q_OBJECT
 

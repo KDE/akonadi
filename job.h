@@ -27,13 +27,15 @@
 #include <QString>
 #include <QUrl>
 
+#include <kdepim_export.h>
+
 namespace PIM {
 
 /**
   This class encapsulates a reference to a pim object in
   the pim storage service.
  */
-class DataReference
+class AKONADI_EXPORT DataReference
 {
   public:
     typedef QList<DataReference> List;
@@ -125,7 +127,7 @@ class DataReference
 
   Subclasses must reimplement @see doStart().
  */
-class Job : public QObject
+class AKONADI_EXPORT Job : public QObject
 {
   Q_OBJECT
 
@@ -221,6 +223,6 @@ class Job : public QObject
 
 }
 
-uint qHash( const PIM::DataReference& ref );
+AKONADI_EXPORT uint qHash( const PIM::DataReference& ref );
 
 #endif

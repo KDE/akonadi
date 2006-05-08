@@ -21,6 +21,7 @@
 #define PIM_COLLECTION_H
 
 #include <libakonadi/job.h>
+#include <kdepim_export.h>
 
 namespace PIM {
 
@@ -30,7 +31,7 @@ namespace PIM {
 
   Collections are hierarchical, i.e. they may have a parent collection.
  */
-class Collection
+class AKONADI_EXPORT Collection
 {
   public:
     /**

@@ -21,6 +21,7 @@
 #define PIM_MESSAGECOLLECTIONMODEL_H
 
 #include <libakonadi/collectionmodel.h>
+#include <kdepim_export.h>
 
 /**
   Extended modell for message collections.
@@ -28,7 +29,7 @@
 */
 namespace PIM {
 
-class MessageCollectionModel : public CollectionModel
+class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
 {
   Q_OBJECT
 

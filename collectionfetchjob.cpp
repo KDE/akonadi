@@ -30,7 +30,7 @@ using namespace PIM;
 #ifdef DUMMY_FETCH_JOB
 #include <QHash>
 static Collection* col = 0;
-QHash<DataReference, Collection*> global_collection_map;
+AKONADI_EXPORT QHash<DataReference, Collection*> global_collection_map;
 #endif
 
 PIM::CollectionFetchJob::CollectionFetchJob( const DataReference & ref )

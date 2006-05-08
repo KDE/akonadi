@@ -21,6 +21,7 @@
 #define PIM_COLLECTION_JOB
 
 #include <libakonadi/job.h>
+#include <kdepim_export.h>
 
 namespace PIM {
 
@@ -34,7 +35,7 @@ class Collection;
 
   @todo Add partial collection retrieval (eg. only collections containing contacts).
 */
-class CollectionListJob : public Job
+class AKONADI_EXPORT CollectionListJob : public Job
 {
   Q_OBJECT
 

@@ -21,6 +21,7 @@
 #define PIM_MESSAGEMODEL_H
 
 #include <libakonadi/job.h>
+#include <kdepim_export.h>
 
 #include <QAbstractTableModel>
 
@@ -31,7 +32,7 @@ class Job;
 /**
   A flat self-updating message model.
 */
-class MessageModel : public QAbstractTableModel
+class AKONADI_EXPORT MessageModel : public QAbstractTableModel
 {
   Q_OBJECT
 

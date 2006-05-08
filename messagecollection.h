@@ -21,13 +21,14 @@
 #define PIM_MESSAGECOLLECTION_H
 
 #include <libakonadi/collection.h>
+#include <kdepim_export.h>
 
 namespace PIM {
 
 /**
   A collection of messages, eg. emails or news articles.
 */
-class MessageCollection : public Collection
+class AKONADI_EXPORT MessageCollection : public Collection
 {
   public:
     /**

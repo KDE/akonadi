@@ -23,6 +23,7 @@
 #include <QAbstractItemModel>
 
 #include <libakonadi/job.h>
+#include <kdepim_export.h>
 
 namespace PIM {
 
@@ -36,7 +37,7 @@ class Collection;
 
   @todo Split into generic and KDE dependent parts?
 */
-class CollectionModel : public QAbstractItemModel
+class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
 {
   Q_OBJECT
 
