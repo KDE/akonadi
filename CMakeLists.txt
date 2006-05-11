@@ -6,7 +6,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/
 	${CMAKE_SOURCE_DIR}/libakonadi
 	${CMAKE_SOURCE_DIR}/libkmime
-	${KDE4_INCLUDES}
+	
 )
 
 
