@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 
-#include <qcoreapplication.h>
+#include <QCoreApplication>
 #include "akonadi.h"
 
 int main( int argc, char ** argv ) {
