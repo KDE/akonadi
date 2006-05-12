@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( tests ) 
 
@@ -54,5 +53,4 @@ install_files( /include/libakonadi FILES
 	monitor.h 
 )
 
-kde4_footer()
 
