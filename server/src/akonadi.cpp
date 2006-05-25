@@ -23,7 +23,6 @@
 
 #include "storagebackend.h"
 #include "teststoragebackend.h"
-#include "sqlitestoragebackend.h"
 
 using namespace Akonadi;
 
