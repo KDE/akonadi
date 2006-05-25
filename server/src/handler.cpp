@@ -30,6 +30,7 @@ using namespace Akonadi;
 
 Handler::Handler()
     :QObject()
+    , m_connection( 0 )
 {
 }
 
@@ -86,4 +87,16 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     if ( command == "LIST" )
         return new List();
     return 0;
+}
+
+
+void Akonadi::Handler::setConnection( const AkonadiConnection* connection )
+{
+    m_connection = connection;
+}
+
+
+const AkonadiConnection* Akonadi::Handler::connection() const
+{
+    return m_connection;
 }

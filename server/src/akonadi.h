@@ -25,8 +25,6 @@
 
 namespace Akonadi {
 
-class StorageBackend;
-
 class AkonadiServer: public QTcpServer
 {
     Q_OBJECT
@@ -37,14 +35,11 @@ public:
     AkonadiServer( QObject *parent = 0 );
     ~AkonadiServer();
 
-    StorageBackend* storageBackend();
 
 protected:
     /** reimpl */
     void incomingConnection(int socketDescriptor);
 
-private:
-    StorageBackend * m_backend;
 };
 
 }

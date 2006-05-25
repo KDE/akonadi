@@ -23,9 +23,7 @@
 
 #include "storagebackend.h"
 #include "teststoragebackend.h"
-
-#include "storage/datastore.h"
-#include "storage/debug.h"
+#include "sqlitestoragebackend.h"
 
 using namespace Akonadi;
 
@@ -33,22 +31,14 @@ static AkonadiServer *s_instance = 0;
 
 AkonadiServer::AkonadiServer( QObject* parent )
     : QTcpServer( parent )
-    , m_backend( 0 )
 {
     s_instance = this;
-    /* To see some output from the database access, you should start the server 
-       in the directory where the prepared akonadi.db file is located and
-       uncomment the following lines.
-    */
-    // debugMimeTypeList( *(DataStore::instance()->listMimeTypes()) );
-    // debugCachePolicyList( *(DataStore::instance()->listCachePolicies()) );
     listen( QHostAddress::LocalHost, 4444 );
 }
 
 
 AkonadiServer::~AkonadiServer()
 {
-    delete m_backend;
 }
 
 void AkonadiServer::incomingConnection( int socketDescriptor )
@@ -58,14 +48,6 @@ void AkonadiServer::incomingConnection( int socketDescriptor )
     thread->start();
 }
 
-
-StorageBackend * Akonadi::AkonadiServer::storageBackend( )
-{
-    if ( !m_backend ) {
-        m_backend = new TestStorageBackend();
-    }
-    return m_backend;
-}
 
 AkonadiServer * AkonadiServer::instance()
 {

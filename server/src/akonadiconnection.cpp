@@ -20,6 +20,7 @@
 #include <QEventLoop>
 
 #include "akonadiconnection.h"
+#include "storage/datastore.h"
 #include "handler.h"
 #include "response.h"
 
@@ -33,8 +34,19 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
     , m_tcpSocket( 0 )
     , m_currentHandler( 0 )
     , m_connectionState( NonAuthenticated )
+    , m_backend( 0 )
 {
 }
+
+DataStore * Akonadi::AkonadiConnection::storageBackend( ) const
+{
+    if ( !m_backend ) {
+//        m_backend = new TestStorageBackend();
+      m_backend = new DataStore();
+    }
+    return m_backend;
+}
+
 
 
 AkonadiConnection::~AkonadiConnection()
@@ -140,6 +152,7 @@ Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
     }
     // we didn't have a handler for this, let the default one do its thing
     if ( !handler ) handler = new Handler();
+    handler->setConnection( this );
     return handler;
 }
 

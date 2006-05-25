@@ -20,6 +20,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include <Qt>
+#include <QDebug>
 #include <QString>
 
 namespace Akonadi {
@@ -132,6 +134,8 @@ private:
 
     friend class DataStore;
 };
+
+QDebug & operator<< ( QDebug& d, const  Akonadi::Location& location);
 
 /***************************************************************************
  *   MimeType                                                              *
@@ -263,4 +267,6 @@ private:
 };
 
 }
+
+
 #endif

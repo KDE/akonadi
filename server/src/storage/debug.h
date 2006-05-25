@@ -24,13 +24,18 @@
 
 #include <QList>
 
-using namespace Akonadi;
+namespace Akonadi {
 
 /***************************************************************************
  *   CachePolicy                                                           *
  ***************************************************************************/
 void debugCachePolicy( const CachePolicy & policy );
 void debugCachePolicyList( const QList<CachePolicy> & list );
+
+QDebug & operator<< ( QDebug& d, const  Akonadi::CachePolicy& policy );
+
+
+
 
 /***************************************************************************
  *   MimeType                                                              *
@@ -51,5 +56,7 @@ void debugMimeTypeList( const QList<MimeType> & list );
  ***************************************************************************/
 void debugResource( const Resource & resource );
 void debugResourceList( const QList<Resource> & list );
+
+}
 
 #endif

@@ -57,6 +57,12 @@ Location::Location( int id, const QString & location,
 Location::~Location()
 {}
 
+QDebug & operator<< ( QDebug& d, const  Akonadi::Location& location)
+{
+   d << location.getLocation();
+}
+
+
 /***************************************************************************
  *   MimeType                                                              *
  ***************************************************************************/

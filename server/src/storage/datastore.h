@@ -35,7 +35,7 @@ namespace Akonadi {
 class DataStore
 {
 public:
-    static DataStore * instance();
+    DataStore();
     ~DataStore();
 
     /* --- CachePolicy --------------------------------------------------- */
@@ -43,15 +43,15 @@ public:
     bool removeCachePolicy( const CachePolicy & policy );
     bool removeCachePolicy( int id );
     CachePolicy * getCachePolicyById( int id );
-    QList<CachePolicy> * listCachePolicies();
+    QList<CachePolicy> listCachePolicies();
 
     /* --- ItemMetaData--------------------------------------------------- */
     bool appendItemMetaData( const QString & metadata, const MetaType & metatype );
     bool removeItemMetaData( const ItemMetaData & metadata );
     bool removeItemMetaData( int id );
     ItemMetaData * getItemMetaDataById( int id );
-    QList<ItemMetaData> * listItemMetaData();
-    QList<ItemMetaData> * listItemMetaData( const MetaType & metatype );
+    QList<ItemMetaData> listItemMetaData();
+    QList<ItemMetaData> listItemMetaData( const MetaType & metatype );
 
     /* --- Location ------------------------------------------------------ */
     bool appendLocation( const QString & location, const Resource & resource );
@@ -63,23 +63,23 @@ public:
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
     Location * getLocationById( int id );
-    QList<Location> * listLocations();
-    QList<Location> * listLocations( const Resource & resource );
+    QList<Location> listLocations();
+    QList<Location> listLocations( const Resource & resource );
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype );
     bool removeMimeType( const MimeType & mimetype );
     bool removeMimeType( int id );
     MimeType * getMimeTypeById( int id );
-    QList<MimeType> * listMimeTypes();
+    QList<MimeType> listMimeTypes();
 
     /* --- MetaType ------------------------------------------------------ */
     bool appendMetaType( const QString & metatype, const MimeType & mimetype );
     bool removeMetaType( const MetaType & metatype );
     bool removeMetaType( int id );
     MetaType * getMetaTypeById( int id );
-    QList<MetaType> * listMetaTypes();
-    QList<MetaType> * listMetaTypes( const MimeType & mimetype );
+    QList<MetaType> listMetaTypes();
+    QList<MetaType> listMetaTypes( const MimeType & mimetype );
 
     /* --- PimItem ------------------------------------------------------- */
     bool appendPimItem( const QByteArray & data,
@@ -88,7 +88,7 @@ public:
     bool removePimItem( const PimItem & location );
     bool removePimItem( int id );
     PimItem * getPimItemById( int id );
-    QList<PimItem> * listPimItems( const MimeType & mimetype,
+    QList<PimItem> listPimItems( const MimeType & mimetype,
                                    const Location & location );
 
     /* --- Resource ------------------------------------------------------ */
@@ -96,11 +96,10 @@ public:
     bool removeResource( const Resource & resource );
     bool removeResource( int id );
     Resource * getResourceById( int id );
-    QList<Resource> * listResources();
-    QList<Resource> * listResources( const CachePolicy & policy );
+    QList<Resource> listResources();
+    QList<Resource> listResources( const CachePolicy & policy );
 
 protected:
-    DataStore();
     void debugLastDbError( const QString & actionDescription ) const;
     bool removeById( int id, const QString & tableName );
 

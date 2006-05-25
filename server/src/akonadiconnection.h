@@ -28,6 +28,7 @@ class QTcpSocket;
 namespace Akonadi {
     class Handler;
     class Response;
+    class DataStore;
 
 /**
     An AkonadiConnection represents one connection of a client to the server.
@@ -40,6 +41,7 @@ public:
     ~AkonadiConnection();
     void run();
 
+    DataStore* storageBackend() const;
 signals:
     void error( QTcpSocket::SocketError socketError );
 
@@ -58,6 +60,7 @@ private:
     QTcpSocket * m_tcpSocket;
     Handler *m_currentHandler;
     ConnectionState m_connectionState;
+    mutable DataStore* m_backend;
 };
 
 }

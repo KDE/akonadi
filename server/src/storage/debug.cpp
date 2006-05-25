@@ -26,13 +26,13 @@ using namespace Akonadi;
 /***************************************************************************
  *   CachePolicy                                                           *
  ***************************************************************************/
-void debugCachePolicy( const CachePolicy & policy )
+void Akonadi::debugCachePolicy( const CachePolicy & policy )
 {
   qDebug() << "CachePolicy => ID: " << policy.getId()
            << " Policy: " << policy.getPolicy();
 }
 
-void debugCachePolicyList( const QList<CachePolicy> & list )
+void Akonadi::debugCachePolicyList( const QList<CachePolicy> & list )
 {
   if ( list.empty() )
     qDebug() << "The list of CachePolicies is empty.";
@@ -41,16 +41,24 @@ void debugCachePolicyList( const QList<CachePolicy> & list )
       debugCachePolicy( policy );
 }
 
+QDebug & Akonadi::operator<< ( QDebug& d, const  Akonadi::CachePolicy& policy )
+{
+   d << "CachePolicy => ID: " << policy.getId() 
+     << " Policy: " << policy.getPolicy() << endl;
+   return d;
+}
+
+
 /***************************************************************************
  *   MimeType                                                              *
  ***************************************************************************/
-void debugMimeType( const MimeType & mimetype )
+void Akonadi::debugMimeType( const MimeType & mimetype )
 {
   qDebug() << "MimeType => ID: " << mimetype.getId()
            << " MimeType: " << mimetype.getMimeType();
 }
 
-void debugMimeTypeList( const QList<MimeType> & list )
+void Akonadi::debugMimeTypeList( const QList<MimeType> & list )
 {
   if ( list.empty() )
     qDebug() << "The list of MimeTypes is empty.";
@@ -70,14 +78,14 @@ void debugMimeTypeList( const QList<MimeType> & list )
 /***************************************************************************
  *   Resource                                                              *
  ***************************************************************************/
-void debugResource( const Resource & resource )
+void Akonadi::debugResource( const Resource & resource )
 {
   qDebug() << "Resource => ID: " << resource.getId()
            << " Resource: " << resource.getResource()
            << " Policy-ID: " << resource.getPolicyId();
 }
 
-void debugResourceList( const QList<Resource> & list )
+void Akonadi::debugResourceList( const QList<Resource> & list )
 {
   if ( list.empty() )
     qDebug() << "The list of Resources is empty.";

@@ -25,6 +25,7 @@
 
 namespace Akonadi {
     class Response;
+    class AkonadiConnection;
 
 /**
 The handler interfaces describes an entity capable of handling an AkonadiIMAP command.*/
@@ -58,6 +59,9 @@ public:
     static Handler* findHandlerForCommandNonAuthenticated( const QByteArray& line );
     static Handler* findHandlerForCommandAuthenticated( const QByteArray& line );
     static Handler* findHandlerForCommandSelected( const QByteArray& line );
+
+    void setConnection( const AkonadiConnection* connection );
+    const AkonadiConnection* connection() const;
     
 signals:
     
@@ -77,6 +81,7 @@ signals:
     void connectionStateChange( ConnectionState state );
 private:
     QByteArray m_tag;
+    const AkonadiConnection* m_connection;
 };
 
 }
