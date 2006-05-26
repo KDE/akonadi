@@ -101,6 +101,14 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     Qt::ItemFlags flags( const QModelIndex &index ) const;
 
+    /**
+      Add a new collection to the model and try to save it into the backend.
+      @param parent The parent model index.
+      @param name The name of the new collection.
+      @returns flase on immediate error.
+    */
+    bool createCollection( const QModelIndex &parent, const QString &name );
+
   private:
     /**
       Process pending updates.

@@ -50,6 +50,12 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     */
     virtual void setModel ( QAbstractItemModel * model );
 
+  public slots:
+    /**
+      Add a child collection to the given model index.
+    */
+    void createCollection( const QModelIndex &index );
+
   private:
     class Private;
     Private *d;

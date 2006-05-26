@@ -18,6 +18,7 @@
 */
 
 #include "collection.h"
+#include "collectioncreatejob.h"
 #include "collectionfetchjob.h"
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
@@ -39,7 +40,7 @@ using namespace PIM;
 class CollectionModel::Private
 {
   public:
-    enum EditType { None, Rename, Add, Delete };
+    enum EditType { None, Rename, Create, Delete };
     QHash<QByteArray, Collection*> collections;
     QHash<QByteArray, QList<QByteArray> > childCollections;
     EditType currentEdit;
@@ -389,6 +390,14 @@ void PIM::CollectionModel::editDone( PIM::Job * job )
     qWarning() << "Edit failed: " << job->errorText() << " - reverting current transaction";
     // revert current transaction
     switch ( d->currentEdit ) {
+      case Private::Create:
+      {
+        QModelIndex index = indexForPath( d->editedCollection->path() );
+        QModelIndex parent = indexForPath( d->editedCollection->parent() );
+        removeRow( index.row(), parent );
+        d->editedCollection = 0;
+        break;
+      }
       case Private::Rename:
         d->editedCollection->setName( d->editOldName );
         QModelIndex index = indexForPath( d->editedCollection->path() );
@@ -400,6 +409,33 @@ void PIM::CollectionModel::editDone( PIM::Job * job )
   }
   d->currentEdit = Private::None;
   job->deleteLater();
+}
+
+bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const QString & name )
+{
+  if ( d->currentEdit != Private::None )
+    return false;
+  if ( !parent.isValid() )
+    return false; // FIXME: creation of top-level collections??
+  d->currentEdit = Private::Create;
+  Collection *parentCol = static_cast<Collection*>( parent.internalPointer() );
+  // create temporary fake collection, will be removed on error
+  d->editedCollection = new Collection( parentCol->path() + Collection::delimiter() + name.toLatin1() ); // FIXME utf-7 encoding
+  if ( d->collections.contains( d->editedCollection->path() ) ) {
+    delete d->editedCollection;
+    d->editedCollection = 0;
+    return false;
+  }
+  d->collections.insert( d->editedCollection->path(), d->editedCollection );
+  beginInsertRows( parent, rowCount( parent ), rowCount( parent ) );
+  d->childCollections[ d->editedCollection->parent() ].append( d->editedCollection->path() );
+  endInsertRows();
+
+  // start creation job
+  CollectionCreateJob *job = new CollectionCreateJob( d->editedCollection->path(), this );
+  connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
+  job->start();
+  return true;
 }
 
 #include "collectionmodel.moc"

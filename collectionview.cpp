@@ -17,9 +17,14 @@
     02110-1301, USA.
 */
 
+#include "collectionmodel.h"
 #include "collectionview.h"
 
+#include <klocale.h>
+
+#include <QDebug>
 #include <QHeaderView>
+#include <QInputDialog>
 #include <QSortFilterProxyModel>
 
 using namespace PIM;
@@ -28,6 +33,7 @@ class CollectionView::Private
 {
   public:
     QSortFilterProxyModel *filterModel;
+    CollectionModel *model;
 };
 
 PIM::CollectionView::CollectionView( QWidget * parent ) :
@@ -43,6 +49,9 @@ PIM::CollectionView::CollectionView( QWidget * parent ) :
   d->filterModel->sort( 0, Qt::Ascending );
 
   setEditTriggers( QAbstractItemView::EditKeyPressed );
+
+  // temporary for testing
+  connect( this, SIGNAL(doubleClicked(QModelIndex)), SLOT(createCollection(QModelIndex)) );
 }
 
 PIM::CollectionView::~ CollectionView( )
@@ -53,11 +62,19 @@ PIM::CollectionView::~ CollectionView( )
 
 void PIM::CollectionView::setModel( QAbstractItemModel * model )
 {
+  d->model = static_cast<CollectionModel*>( model );
   // FIXME sort proxy model crashs
 //   d->filterModel->setSourceModel( model );
 //   QTreeView::setModel( d->filterModel );
   QTreeView::setModel( model );
   header()->setResizeMode( 0, QHeaderView::Stretch );
+}
+
+void PIM::CollectionView::createCollection( const QModelIndex & parent )
+{
+  QString name = QInputDialog::getText( this, i18n("New Folder"), i18n("Name") );
+  if ( !d->model->createCollection( parent, name ) )
+    qWarning() << "Collection creation failed immediately!";
 }
 
 #include "collectionview.moc"
