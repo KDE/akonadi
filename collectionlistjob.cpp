@@ -81,11 +81,6 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
       folderName = data.mid( begin + 2, data.lastIndexOf( '"' ) - begin - 2 );
     else
       folderName = data.mid( begin + 1 ); // ### strip trailing newline?
-    // add prefix
-    if ( d->prefix.endsWith( Collection::delimiter() ) )
-      folderName.prepend( d->prefix );
-    else
-      folderName.prepend( d->prefix + Collection::delimiter() );
     // strip trailing delimiters
     if ( folderName.endsWith( delim ) )
       folderName.truncate( data.length() - 1 );
