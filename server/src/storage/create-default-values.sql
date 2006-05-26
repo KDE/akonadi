@@ -28,4 +28,8 @@ INSERT INTO Resources (id, name, cachepolicy_id) VALUES(2, 'res3', 0);
 
 INSERT INTO PersistentSearches (id, name, query) VALUES(0, 'kde-core-devel', 'MIMETYPE message/rfc822 HEADER From kde-core-devel@kde.org');
 INSERT INTO PersistentSearches (id, name, query) VALUES(1, 'all', 'MIMETYPE message/rfc822 ALL');
-INSERT INTO PersistentSearches (id, name, query) VALUES(2, 'Test Üser', 'MIMETYPE message/rfc822 BODY "Test Üser"');
+INSERT INTO PersistentSearches (id, name, query) VALUES(2, 'Test ï¿½er', 'MIMETYPE message/rfc822 BODY "Test ï¿½er"');
+
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 1);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 2);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 1, 2);

@@ -94,3 +94,9 @@ CREATE TABLE PartFlags
 	part_id		INTEGER REFERENCES Parts(id)
 );
 
+CREATE TABLE LocationMimeTypes
+(
+        location_id		INTEGER REFERENCES Locations(id),
+	mimetype_id		INTEGER REFERENCES MimeTypes(id)
+);
+

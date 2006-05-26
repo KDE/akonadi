@@ -325,6 +325,24 @@ Location DataStore::getLocationById( int id ) const
   return l;
 }
 
+QList<MimeType> DataStore::getMimeTypesForLocation( int id ) const
+{
+    QList<MimeType> list;
+    if ( m_dbOpened ) {
+        QSqlQuery query( m_database );
+        if ( query.exec( "SELECT mimetype_id FROM LocationMimeTypes WHERE location_id = \"" + QString::number(id) + "\"") ) {
+            while (query.next()) {
+                int mtid = query.value(0).toInt();
+                MimeType m = getMimeTypeById( mtid );
+                if ( m.isValid() )
+                    list.append( m );
+            }
+        } else
+            debugLastDbError( "Error during selection of Locations." );
+    }
+    return list;
+}
+
 QList<Location> DataStore::listLocations() const
 {
   QList<Location> list;
@@ -336,7 +354,9 @@ QList<Location> DataStore::listLocations() const
         QString uri = query.value(1).toString();
         int policy = query.value(2).toInt();
         int resource = query.value(2).toInt();
-        list.append( Location( id, uri, policy, resource ) );
+        Location l( id, uri, policy, resource );
+        l.setMimeTypes( getMimeTypesForLocation( id ) );
+        list.append( l );
       }
     } else
       debugLastDbError( "Error during selection of Locations." );
@@ -361,7 +381,9 @@ QList<Location> DataStore::listLocations( const Resource & resource ) const
         QString uri = query.value(1).toString();
         int policy = query.value(2).toInt();
         int resource = query.value(2).toInt();
-        list.append( Location( id, uri, policy, resource ) );
+        Location l( id, uri, policy, resource );
+        l.setMimeTypes( getMimeTypesForLocation( id ) );
+        list.append( l );
       }
     } else
       debugLastDbError( "Error during selection of Locations from a Resource." );
@@ -406,18 +428,16 @@ bool DataStore::removeMimeType( int id )
   return removeById( id, "MimeTypes" );
 }
 
-MimeType * DataStore::getMimeTypeById( int id )
+MimeType DataStore::getMimeTypeById( int id ) const
 {
-  MimeType * m = 0;
+  MimeType m;
   if ( m_dbOpened ) {
     QSqlQuery query( m_database );
-    query.prepare( "SELECT id, mime_type FROM MimeTypes WHERE id = :id" );
-    query.bindValue( ":id", id );
-    if ( query.exec() ) {
+    if ( query.exec( "SELECT id, mime_type FROM MimeTypes WHERE id = \"" + QString::number( id ) + "\"") ) {
       if (query.next()) {
         int id = query.value(0).toInt();
         QString type = query.value(1).toString();
-        m = new MimeType( id, type );
+        m = MimeType( id, type );
       }
     } else
       debugLastDbError( "Error during selection of single MimeType." );

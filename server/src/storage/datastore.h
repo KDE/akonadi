@@ -71,12 +71,13 @@ public:
     Location getLocationByName( const Resource&, const QByteArray& name ) const;
     QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource ) const;
+    QList<MimeType> getMimeTypesForLocation( int id ) const;
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype );
     bool removeMimeType( const MimeType & mimetype );
     bool removeMimeType( int id );
-    MimeType * getMimeTypeById( int id );
+    MimeType getMimeTypeById( int id ) const;
     QList<MimeType> listMimeTypes();
 
     /* --- MetaType ------------------------------------------------------ */
