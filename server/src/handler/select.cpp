@@ -46,7 +46,6 @@ bool Select::handleLine(const QByteArray& line )
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     QByteArray mailbox = stripQuotes( line.right( line.size() - startOfMailbox ) );
     mailbox.prepend( connection()->selectedCollection() );
-    qDebug() << "Select mailbox:" << mailbox << endl;
 
     // Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
     // OPTIONAL OK untagged responses: UNSEEN, PERMANENTFLAGS
@@ -55,8 +54,12 @@ bool Select::handleLine(const QByteArray& line )
     response.setString( "FLAGS (Answered)");
     emit responseAvailable( response );
 
-    Resource resource;
     DataStore *db = connection()->storageBackend();
+    int secondSlash = mailbox.indexOf( '/', 2 ) + 1;
+    qDebug() << "Select: " << mailbox.mid( secondSlash, mailbox.size() - secondSlash )
+             << " in resource: " << mailbox.mid( 1, secondSlash - 2 );
+    Resource resource = db->getResourceByName( mailbox.left( secondSlash ) );
+    Location l = db->getLocationByName( resource, mailbox.right( mailbox.size() - secondSlash ) );
 
     int exists = 5;
     response.setString( QString::number(exists) + " EXISTS" );

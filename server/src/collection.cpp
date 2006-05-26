@@ -46,3 +46,13 @@ QString Collection::identifier() const
 {
     return m_identifier;
 }
+
+void Akonadi::Collection::setNoSelect( bool v )
+{
+    m_noSelect = v;
+}
+
+void Akonadi::Collection::setNoInferiors( bool v )
+{
+    m_noInferiors = v;
+}

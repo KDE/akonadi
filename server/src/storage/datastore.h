@@ -67,7 +67,8 @@ public:
     bool removeLocation( int id );
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
-    Location * getLocationById( int id );
+    Location getLocationById( int id ) const;
+    Location getLocationByName( const Resource&, const QByteArray& name ) const;
     QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource ) const;
 

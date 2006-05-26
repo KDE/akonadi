@@ -35,8 +35,11 @@ public:
 
     ~Collection();
 
-    QString identifier() const;
+    void setNoSelect( bool );
+    void setNoInferiors( bool );
 
+
+    QString identifier() const;
     bool isNoSelect() const;
     bool isNoInferiors() const;
 

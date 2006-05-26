@@ -82,13 +82,14 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
         const QList<Resource> resources = listResources();
         foreach ( Resource r, resources )
         {
-            Collection c( "/" + r.getResource() );
+            Collection c( r.getResource() );
+            c.setNoSelect( true );
             result.append( c );
         }
 
         CollectionList persistenSearches = PersistentSearchManager::self()->collections();
         if ( !persistenSearches.isEmpty() )
-            result.append( Collection( "/Search" ) );
+            result.append( Collection( "Search" ) );
 
     }
     else if ( fullPrefix == "/Search/" )
@@ -109,7 +110,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
             const bool atFirstLevel = location.lastIndexOf('/') == fullPrefix.lastIndexOf('/');
             if ( location.startsWith( fullPrefix ) ) {
                 if ( hasStar || ( hasPercent && atFirstLevel ) ) {
-                    Collection c( location );
+                    Collection c( location.right( location.size() -1 ) );
                     result.append( c );
                 }
             }
@@ -302,9 +303,9 @@ bool DataStore::resetLocationPolicy( const Location & location )
   return false;
 }
 
-Location * DataStore::getLocationById( int id )
+Location DataStore::getLocationById( int id ) const
 {
-  Location * l = 0;
+  Location l;
   if ( m_dbOpened ) {
     QSqlQuery query( m_database );
     query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE id = :id" );
@@ -315,7 +316,7 @@ Location * DataStore::getLocationById( int id )
         QString uri = query.value(1).toString();
         int policy = query.value(2).toInt();
         int resource = query.value(2).toInt();
-        l = new Location( id, uri, policy, resource );
+        l = Location( id, uri, policy, resource );
       }
     } else
       debugLastDbError( "Error during selection of single Location." );
@@ -675,4 +676,31 @@ bool DataStore::removeById( int id, const QString & tableName )
   return false;
 }
 
+}
+
+Akonadi::Location Akonadi::DataStore::getLocationByName( const Resource &resource,
+                                                const QByteArray & name ) const
+{
+    Location l;
+    if ( !resource.isValid() ) return l;
+    if ( m_dbOpened ) {
+        QSqlQuery query( m_database );
+        const QString queryString =
+                "SELECT id, uri, cachepolicy_id, resource_id FROM Locations "
+                "WHERE resource_id = \"" + QString::number( resource.getId() ) + "\""
+                "AND uri = \"" + name + "\"";
+        if ( query.exec( queryString ) ) {
+            while (query.next()) {
+
+                int id = query.value(0).toInt();
+                QString uri = query.value(1).toString();
+                int policy = query.value(2).toInt();
+                int resource = query.value(2).toInt();
+                l = Location( id, uri, policy, resource );
+            }
+        } else
+            debugLastDbError( "Error during selection of a Location by name from a Resource." );
+    }
+
+    return l;
 }
