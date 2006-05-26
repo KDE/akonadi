@@ -97,14 +97,15 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
     }
     else
     {
-        const QByteArray resource = fullPrefix.mid( 1, fullPrefix.indexOf('/')-1 );
-        qDebug() << "Listing folders in resource: " << resource;
+        const QByteArray resource = fullPrefix.mid( 1, fullPrefix.indexOf('/', 1) - 1 );
+        //qDebug() << "Listing folders in resource: " << resource;
         Resource r = getResourceByName( resource );
         const QList<Location> locations = listLocations( r );
 
         foreach( Location l, locations )
         {
-            const QString location = l.getLocation();
+            const QString location = "/" + resource + l.getLocation();
+            qDebug() << "Location: " << location << " " << resource << " prefix: " << fullPrefix;
             const bool atFirstLevel = location.lastIndexOf('/') == fullPrefix.lastIndexOf('/');
             if ( location.startsWith( fullPrefix ) ) {
                 if ( hasStar || ( hasPercent && atFirstLevel ) ) {
@@ -344,12 +345,16 @@ QList<Location> DataStore::listLocations() const
 QList<Location> DataStore::listLocations( const Resource & resource ) const
 {
   QList<Location> list;
+  if ( !resource.isValid() ) return list;
   if ( m_dbOpened ) {
     QSqlQuery query( m_database );
-    query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = :id" );
-    query.bindValue( ":id", resource.getId() );
-    if ( query.exec() ) {
+    // query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = :id" );
+    // query.bindValue( ":id", resource.getId() );
+    const QString queryString =
+            "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = \"" + QString::number( resource.getId() ) + "\"";
+    if ( query.exec( queryString ) ) {
       while (query.next()) {
+
         int id = query.value(0).toInt();
         QString uri = query.value(1).toString();
         int policy = query.value(2).toInt();
@@ -587,9 +592,10 @@ const Resource DataStore::getResourceByName( const QByteArray& name ) const
     Resource r;
     if ( m_dbOpened ) {
         QSqlQuery query( m_database );
-        query.prepare( "SELECT id, name, cachepolicy_id FROM Resources WHERE name = :name" );
-        query.bindValue( ":id", name );
-        if ( query.exec() ) {
+       // query.prepare( "SELECT id, name, cachepolicy_id FROM Resources WHERE name = :name" );
+       // query.bindValue( ":name", name );
+        QString querystring = "SELECT id, name, cachepolicy_id FROM Resources WHERE name = \"" + name + "\"";
+        if ( query.exec( querystring) ) {
             if (query.next()) {
                 int id = query.value(0).toInt();
                 QString name = query.value(1).toString();
