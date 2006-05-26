@@ -50,6 +50,13 @@ public:
     CachePolicy * getCachePolicyById( int id );
     QList<CachePolicy> listCachePolicies();
 
+    /* --- CachePolicy --------------------------------------------------- */
+    bool appendFlag( const QString & name );
+    bool removeFlag( const Flag & flag );
+    bool removeFlag( int id );
+    Flag * getFlagById( int id );
+    QList<Flag> listFlags();
+
     /* --- ItemMetaData--------------------------------------------------- */
     bool appendItemMetaData( const QString & metadata, const MetaType & metatype );
     bool removeItemMetaData( const ItemMetaData & metadata );

@@ -48,6 +48,23 @@ QDebug & Akonadi::operator<< ( QDebug& d, const  Akonadi::CachePolicy& policy )
    return d;
 }
 
+/***************************************************************************
+ *   Flag                                                                  *
+ ***************************************************************************/
+void Akonadi::debugFlag( const Flag & flag )
+{
+  qDebug() << "Flag => ID: " << flag.getId()
+           << " Name: " << flag.getName();
+}
+
+void Akonadi::debugFlagList( const QList<Flag> & list )
+{
+  if ( list.empty() )
+    qDebug() << "The list of Flags is empty.";
+  else
+    foreach( Flag flag, list )
+      debugFlag( flag );
+}
 
 /***************************************************************************
  *   MimeType                                                              *

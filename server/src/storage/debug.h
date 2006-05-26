@@ -34,8 +34,11 @@ void debugCachePolicyList( const QList<CachePolicy> & list );
 
 QDebug & operator<< ( QDebug& d, const  Akonadi::CachePolicy& policy );
 
-
-
+/***************************************************************************
+ *   Flag                                                                  *
+ ***************************************************************************/
+void debugFlag( const Flag & flag );
+void debugFlagList( const QList<Flag> & list );
 
 /***************************************************************************
  *   MimeType                                                              *

@@ -120,6 +120,79 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
     return result;
 }
 
+/* --- Flag ---------------------------------------------------------- */
+bool DataStore::appendFlag( const QString & name )
+{
+  int foundRecs = 0;
+  QSqlQuery query( m_database );
+  if ( m_dbOpened ) {
+    query.prepare( "SELECT COUNT(*) FROM Flags WHERE name = :name" );
+    query.bindValue( ":name", name );
+    if ( query.exec() ) {
+      if (query.next())
+        foundRecs = query.value(0).toInt();
+    } else
+      debugLastDbError( "Error during check before insertion of Flag." );
+    if ( foundRecs == 0) {
+      query.prepare( "INSERT INTO Flags (name) VALUES (:name)" );
+      query.bindValue( ":name", name );
+      if ( query.exec() )
+        return true;
+      else
+        debugLastDbError( "Error during insertion of single Flag." );
+    } else
+      qDebug() << "Cannot insert flag " << name
+               << " because it already exists.";
+  }
+  return false;
+}
+
+bool DataStore::removeFlag( const Flag & flag )
+{
+  return removeCachePolicy( flag.getId() );
+}
+
+bool DataStore::removeFlag( int id )
+{
+  return removeById( id, "Flags" );
+}
+
+Flag * DataStore::getFlagById( int id )
+{
+  Flag * f = 0;
+  if ( m_dbOpened ) {
+    QSqlQuery query( m_database );
+    query.prepare( "SELECT id, name FROM Flags WHERE id = :id" );
+    query.bindValue( ":id", id );
+    if ( query.exec() ) {
+      if (query.next()) {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        f = new Flag( id, name );
+      }
+    } else
+      debugLastDbError( "Error during selection of single Flag." );
+  }
+  return f;
+}
+
+QList<Flag> DataStore::listFlags()
+{
+  QList<Flag> list;
+  if ( m_dbOpened ) {
+    QSqlQuery query( m_database );
+    if ( query.exec( "SELECT id, name FROM Flags" ) ) {
+      while (query.next()) {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        list.append( Flag( id, name ) );
+      }
+    } else
+      debugLastDbError( "Error during selection of Flags." );
+  }
+  return list;
+}
+
 /* --- CachePolicy --------------------------------------------------- */
 bool DataStore::appendCachePolicy( const QString & policy )
 {
