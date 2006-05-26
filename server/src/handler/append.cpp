@@ -24,67 +24,47 @@
 #include "storage/datastore.h"
 #include "storage/entity.h"
 
-#include "select.h"
+#include "append.h"
 #include "response.h"
 
 using namespace Akonadi;
 
-Select::Select(): Handler()
+Append::Append(): Handler()
 {
 }
 
 
-Select::~Select()
+Append::~Append()
 {
 }
 
 
-bool Select::handleLine(const QByteArray& line )
+bool Append::handleLine(const QByteArray& line )
 {
-    // parse out the reference name and mailbox name
+    // Arguments:  mailbox name
+    //        OPTIONAL flag parenthesized list
+    //        OPTIONAL date/time string
+    //        message literal
+  
     int startOfCommand = line.indexOf( ' ' ) + 1;
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     QByteArray mailbox = stripQuotes( line.right( line.size() - startOfMailbox ) );
-    mailbox.prepend( connection()->selectedCollection() );
+    QByteArray body;
 
-    // Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
-    // OPTIONAL OK untagged responses: UNSEEN, PERMANENTFLAGS
     Response response;
     response.setUntagged();
 
     DataStore *db = connection()->storageBackend();
     Location l = db->getLocationByRawMailbox( mailbox );
-
-    if ( !l.isValid() ) {
+    MimeType mimeType(0, "message/rfc820" );
+    bool ok = db->appendPimItem( body, mimeType, l );
+    if ( ok )
+        response.setSuccess();
+    else
         response.setFailure();
-        response.setString( "Cannot list this folder");
-        emit responseAvailable( response );
-        deleteLater();
-        return true;
-    }
-
-    response.setString( l.getFlags() );
-    emit responseAvailable( response );
- 
-    response.setString( QString::number(l.getExists()) + " EXISTS" );
-    emit responseAvailable( response );
-
-    response.setString( QString::number(l.getRecent()) + " RECENT" );
-    emit responseAvailable( response );
-
-    response.setString( "OK [UNSEEN " + QString::number(l.getUnseen()) + "] Message "
-            + QString::number(l.getFirstUnseen() ) + " is first unseen" );
-    emit responseAvailable( response );
-
-    response.setString( "OK [UIDVALIDITY " + QString::number( l.getUidValidity() ) + "] UIDs valid" );
-    emit responseAvailable( response );
-
-    response.setSuccess();
     response.setTag( tag() );
-    response.setString( "Completed" );
+    response.setString( "Append completed" );
     emit responseAvailable( response );
-
-    connection()->setSelectedCollection( mailbox );
     deleteLater();
     return true;
 }

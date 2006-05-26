@@ -76,6 +76,7 @@ public:
     bool resetLocationPolicy( const Location & location );
     Location getLocationById( int id ) const;
     Location getLocationByName( const Resource&, const QByteArray& name ) const;
+    Location getLocationByRawMailbox( const QByteArray& mailbox ) const;
     QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource ) const;
     QList<MimeType> getMimeTypesForLocation( int id ) const;

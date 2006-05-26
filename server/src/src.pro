@@ -14,6 +14,7 @@ HEADERS += akonadi.h \
            handler/logout.h \
            handler/noop.h \
            handler/select.h \
+           handler/append.h \
            handler/search.h \
            handler/searchpersistent.h \
            ../test/teststoragebackend.h \
@@ -37,6 +38,7 @@ SOURCES += akonadi.cpp \
            handler/login.cpp \
            handler/noop.cpp \
            handler/select.cpp \
+           handler/append.cpp \
            handler/search.cpp \
            handler/searchhelper.cpp \
            handler/searchpersistent.cpp \

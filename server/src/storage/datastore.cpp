@@ -398,6 +398,15 @@ Location DataStore::getLocationById( int id ) const
   return l;
 }
 
+Location DataStore::getLocationByRawMailbox( const QByteArray& mailbox ) const
+{
+    int secondSlash = mailbox.indexOf( '/', 2 ) + 1;
+    //qDebug() << "Select: " << mailbox.mid( secondSlash -1 , mailbox.size() - (secondSlash-1) )
+    //         << " in resource: " << mailbox.mid( 1, secondSlash - 2 );
+    Resource resource = getResourceByName( mailbox.mid( 1, secondSlash - 2 ) );
+    return getLocationByName( resource, mailbox.mid( secondSlash -1 , mailbox.size() - (secondSlash-1) ) );
+}
+
 QList<MimeType> DataStore::getMimeTypesForLocation( int id ) const
 {
     QList<MimeType> list;

@@ -29,6 +29,7 @@
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
+#include "handler/append.h"
 
 
 using namespace Akonadi;
@@ -89,6 +90,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
 {
     // allowd commands are SELECT, EXAMINE, CREATE, DELETE, RENAME,
     // SUBSCRIBE, UNSUBSCRIBE, LIST, LSUB, and APPEND.
+    if ( command == "APPEND" )
+        return new Append();
     if ( command == "LIST" )
         return new List();
     if ( command == "SELECT" )
