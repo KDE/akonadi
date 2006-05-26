@@ -82,7 +82,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
         const QList<Resource> resources = listResources();
         foreach ( Resource r, resources )
         {
-            Collection c( r.getResource() );
+            Collection c( "/" + r.getResource() );
             result.append( c );
         }
 
