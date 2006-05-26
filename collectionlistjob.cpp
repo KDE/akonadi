@@ -71,7 +71,7 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
   if ( tag == "*" && data.startsWith( "LIST" ) ) {
     int begin = data.indexOf( '(' );
     int end = data.indexOf( ')' );
-    QList<QByteArray> attributes = data.mid( begin, end - begin - 1 ).split( ' ' );
+    QList<QByteArray> attributes = data.mid( begin + 1, end - begin - 1 ).split( ' ' );
     begin = data.indexOf( '"', end );
     char delim = data[begin + 1];
     begin = data.indexOf( ' ', begin + 2 );
@@ -104,11 +104,11 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
       col->setType( Collection::Folder );
 
     QStringList contentTypes;
-    if ( !attributes.contains( "\Noinferiors" ) )
+    if ( !attributes.contains( "\\Noinferiors" ) )
       contentTypes << "akonadi/folder";
     QByteArray mimetypes;
     foreach ( QByteArray ba, attributes ) {
-      if ( ba.startsWith( "\MimeTypes" ) ) {
+      if ( ba.startsWith( "\\MimeTypes" ) ) {
         mimetypes = ba;
         break;
       }

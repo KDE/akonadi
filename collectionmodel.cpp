@@ -108,17 +108,19 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
     if ( col->type() == Collection::Virtual )
       return SmallIcon( "folder_green" );
     QStringList content = col->contentTypes();
-    if ( content.size() == 1 ) {
-      if ( content.first() == "text/x-vcard" || content.first() == "text/vcard" )
+    if ( content.size() == 1 || (content.size() == 2 && content.contains( "akonadi/folder" )) ) {
+      if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
         return SmallIcon( "kmgroupware_folder_contacts" );
       // TODO: add all other content types and/or fix their mimetypes
-      if ( content.first() == "akonadi/event" || content.first() == "text/ical" )
+      if ( content.contains( "akonadi/event" ) || content.contains( "text/ical" ) )
         return SmallIcon( "kmgroupware_folder_calendar" );
-      if ( content.first() == "akonadi/task" )
+      if ( content.contains( "akonadi/task" ) )
         return SmallIcon( "kmgroupware_folder_tasks" );
-    } else if ( content.isEmpty() )
+      return SmallIcon( "folder" );
+    } else if ( content.isEmpty() ) {
       return SmallIcon( "folder_grey" );
-    return SmallIcon( "folder" );
+    } else
+      return SmallIcon( "folder_orange" ); // mixed stuff
   }
   return QVariant();
 }
