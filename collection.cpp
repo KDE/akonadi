@@ -72,6 +72,11 @@ QString PIM::Collection::name( ) const
   return d->name;
 }
 
+void PIM::Collection::setName( const QString & name )
+{
+  d->name = name;
+}
+
 Collection::Type PIM::Collection::type() const
 {
   return d->type;

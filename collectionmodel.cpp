@@ -39,8 +39,12 @@ using namespace PIM;
 class CollectionModel::Private
 {
   public:
+    enum EditType { None, Rename, Add, Delete };
     QHash<QByteArray, Collection*> collections;
     QHash<QByteArray, QList<QByteArray> > childCollections;
+    EditType currentEdit;
+    Collection *editedCollection;
+    QString editOldName;
 //     Monitor* monitor;
 //     CollectionFetchJob *fetchJob;
 //     QQueue<DataReference> updateQueue;
@@ -50,6 +54,9 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
     QAbstractItemModel( parent ),
     d( new Private() )
 {
+  d->currentEdit = Private::None;
+  d->editedCollection = 0;
+
   // start a list job
   CollectionListJob *job = new CollectionListJob( Collection::prefix(), false, this );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
@@ -344,13 +351,23 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
 
 bool PIM::CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
+  if ( d->currentEdit != Private::None )
+    return false;
   if ( index.column() == 0 && role == Qt::EditRole ) {
-    Collection *col = static_cast<Collection*>( index.internalPointer() );
-    qDebug() << "Renaming collection to " << value.toString();
-    // FIXME: corrent name encoding, etc.
-    CollectionRenameJob *job = new CollectionRenameJob( col->path(), col->parent() + col->delimiter() + value.toString().toLatin1(), this );
+    // rename collection
+    d->editedCollection = static_cast<Collection*>( index.internalPointer() );
+    d->currentEdit = Private::Rename;
+    d->editOldName = d->editedCollection->name();
+    d->editedCollection->setName( value.toString() );
+    QByteArray newPath;
+    if ( d->editedCollection->parent() == Collection::root() )
+      newPath = d->editedCollection->name().toLatin1(); // TODO: to utf7
+    else
+      newPath = d->editedCollection->parent() + Collection::delimiter() + d->editedCollection->name().toLatin1(); // TODO: to utf7
+    CollectionRenameJob *job = new CollectionRenameJob( d->editedCollection->path(), newPath, this );
     connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
     job->start();
+    emit dataChanged( index, index );
     return true;
   }
   return QAbstractItemModel::setData( index, value, role );
@@ -360,7 +377,7 @@ Qt::ItemFlags PIM::CollectionModel::flags( const QModelIndex & index ) const
 {
   if ( index.column() == 0 ) {
     Collection *col = static_cast<Collection*>( index.internalPointer() );
-    if ( col->type() != Collection::VirtualParent )
+    if ( col->type() != Collection::VirtualParent && d->currentEdit == Private::None )
       return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
   }
   return QAbstractItemModel::flags( index );
@@ -368,13 +385,20 @@ Qt::ItemFlags PIM::CollectionModel::flags( const QModelIndex & index ) const
 
 void PIM::CollectionModel::editDone( PIM::Job * job )
 {
-  qDebug() << "Edit done";
   if ( job->error() ) {
-    qWarning() << "Edit failed: " << job->errorText();
+    qWarning() << "Edit failed: " << job->errorText() << " - reverting current transaction";
+    // revert current transaction
+    switch ( d->currentEdit ) {
+      case Private::Rename:
+        d->editedCollection->setName( d->editOldName );
+        QModelIndex index = indexForPath( d->editedCollection->path() );
+        emit dataChanged( index, index );
+    }
     // TODO: revert current change
   } else {
-    // TODO: transaction done
+    // transaction done
   }
+  d->currentEdit = Private::None;
   job->deleteLater();
 }
 

@@ -46,7 +46,6 @@ PIM::CollectionRenameJob::~ CollectionRenameJob( )
 
 void PIM::CollectionRenameJob::doStart( )
 {
-  qDebug() << "renaming!";
   d->tag = newTag();
   writeData( d->tag + " RENAME " + d->from + " " + d->to );
 }

@@ -77,6 +77,13 @@ class AKONADI_EXPORT Collection
     QString name() const;
 
     /**
+      Sets the collection name. Note that this does not change path()!
+      This is used during renaming to fake immediate changes.
+      @param name The new collection name;
+    */
+    void setName( const QString &name );
+
+    /**
       Returns the type of this collection (e.g. virtual folder, folder on an
       IMAP server, etc.).
     */
