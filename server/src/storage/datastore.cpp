@@ -21,6 +21,8 @@
 #include "persistentsearchmanager.h"
 
 #include <QSqlQuery>
+#include <QSqlField>
+#include <QSqlDriver>
 #include <QVariant>
 #include <QThread>
 #include <QUuid>
@@ -599,9 +601,12 @@ bool DataStore::appendPimItem( const QByteArray & data,
 {
   QSqlQuery query( m_database );
   if ( m_dbOpened ) {
+      QSqlField field( "data", QVariant::String );
+      field.setValue( data );
+      QString escaped = m_database.driver()->formatValue( field );
       QString queryString = QString("INSERT INTO PimItems (data, location_id, mimetype_id) "
-              "VALUES ('%1', %2, %3)")
-              .arg(data.data())
+              "VALUES (%1, %2, %3)")
+              .arg(escaped)
               .arg(location.getId())
               .arg(mimetype.getId());
     //qDebug() << "QUERY: " << queryString;
