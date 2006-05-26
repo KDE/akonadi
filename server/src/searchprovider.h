@@ -22,7 +22,7 @@
 
 #include <QList>
 
-#include "akonadiconnection.h"
+#include "storage/datastore.h"
 
 namespace Akonadi {
 
@@ -41,26 +41,15 @@ class SearchProvider
      * Starts a query for the given search criteria and
      * returns a list of matching uids.
      */
-    virtual QList<QByteArray> queryForUids( const QList<QByteArray> &searchCriteria ) const = 0;
+    virtual QList<QByteArray> queryForUids( const QList<QByteArray> &searchCriteria,
+                                            const DataStore *store ) const = 0;
 
     /**
      * Starts a query for the given search criteria and
      * returns a list of matching objects.
      */
-    virtual QList<QByteArray> queryForObjects( const QList<QByteArray> &searchCriteria ) const = 0;
-
-    /**
-     * Sets the connection which shall be used to access the database.
-     */
-    void setConnection( const AkonadiConnection *connection );
-
-    /**
-     * Returns the connection which can be used to access the database.
-     */
-    const AkonadiConnection *connection() const;
-
-  private:
-    const AkonadiConnection *mConnection;
+    virtual QList<QByteArray> queryForObjects( const QList<QByteArray> &searchCriteria,
+                                               const DataStore *store ) const = 0;
 };
 
 }

@@ -48,12 +48,17 @@ class PersistentSearch
     /**
      * Returns a list of uids which match the stored search criteria.
      */
-    QList<QByteArray> uids() const;
+    QList<QByteArray> uids( const DataStore *store ) const;
 
     /**
      * Returns a list of objects which match the stored search criteria.
      */
-    QList<QByteArray> objects() const;
+    QList<QByteArray> objects( const DataStore *store ) const;
+
+    /**
+     * Returns the search criteria.
+     */
+    QList<QByteArray> searchCriteria() const;
 
   private:
     QList<QByteArray> mQuery;

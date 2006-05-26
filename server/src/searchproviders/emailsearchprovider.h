@@ -31,8 +31,10 @@ class EmailSearchProvider : public SearchProvider
     virtual ~EmailSearchProvider();
 
     virtual QList<QByteArray> supportedMimeTypes() const;
-    virtual QList<QByteArray> queryForUids( const QList<QByteArray> &searchCriteria ) const;
-    virtual QList<QByteArray> queryForObjects( const QList<QByteArray> &searchCriteria ) const;
+    virtual QList<QByteArray> queryForUids( const QList<QByteArray> &searchCriteria,
+                                            const DataStore *store ) const;
+    virtual QList<QByteArray> queryForObjects( const QList<QByteArray> &searchCriteria,
+                                               const DataStore *store ) const;
 };
 
 }

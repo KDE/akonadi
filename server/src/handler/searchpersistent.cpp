@@ -62,7 +62,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
       } else {
         QByteArray mimeType = SearchHelper::extractMimetype( junks, 3 );
 
-        SearchProvider *provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType, connection() );
+        SearchProvider *provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType );
         PersistentSearch *persistentSearch = new PersistentSearch( junks.mid( 3 ), provider );
 
         QString identifier = QString::fromUtf8( junks[ 2 ] );

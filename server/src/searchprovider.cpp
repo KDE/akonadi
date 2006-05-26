@@ -28,13 +28,3 @@ SearchProvider::SearchProvider()
 SearchProvider::~SearchProvider()
 {
 }
-
-void SearchProvider::setConnection( const AkonadiConnection *connection )
-{
-  mConnection = connection;
-}
-
-const AkonadiConnection *SearchProvider::connection() const
-{
-  return mConnection;
-}

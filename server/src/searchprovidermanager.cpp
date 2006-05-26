@@ -41,17 +41,13 @@ SearchProviderManager* SearchProviderManager::self()
   return mSelf;
 }
 
-SearchProvider* SearchProviderManager::createSearchProviderForMimetype( const QByteArray &mimeType,
-                                                                        const AkonadiConnection *connection )
+SearchProvider* SearchProviderManager::createSearchProviderForMimetype( const QByteArray &mimeType )
 {
   SearchProvider *provider = 0;
 
   if ( mimeType == "message/rfc822" || mimeType == "message/news" ) {
     provider = new EmailSearchProvider;
   }
-
-  if ( provider )
-    provider->setConnection( connection );
 
   return provider;
 }

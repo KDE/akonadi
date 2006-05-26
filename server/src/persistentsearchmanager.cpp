@@ -17,7 +17,13 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QSqlQuery>
 #include <QStringList>
+#include <QUuid>
+#include <QVariant>
+
+#include "searchhelper.h"
+#include "searchprovidermanager.h"
 
 #include "persistentsearchmanager.h"
 
@@ -27,10 +33,39 @@ PersistentSearchManager* PersistentSearchManager::mSelf = 0;
 
 PersistentSearchManager::PersistentSearchManager()
 {
+  mDatabase = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
+  mDatabase.setDatabaseName( "akonadi.db" );
+  mDatabase.open();
+
+  if ( !mDatabase.isOpen() )
+    qDebug() << "PersistentSearchManager: Unable to open database akonadi.db.";
+
+  QSqlQuery query( mDatabase );
+  query.prepare( "SELECT name, query FROM PersistentSearches" );
+  if ( query.exec() ) {
+    qDebug( "load data" );
+    mListMutex.lock();
+    while ( query.next() ) {
+      QString identifier = query.value( 0 ).toString();
+    qDebug( "found %s", qPrintable( identifier ) );
+
+      QString queryString = query.value( 1 ).toString();
+      QList<QByteArray> junks = SearchHelper::splitLine( queryString.toUtf8() );
+      QByteArray mimeType = SearchHelper::extractMimetype( junks, 0 );
+
+      SearchProvider *provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType );
+      PersistentSearch *persistentSearch = new PersistentSearch( junks, provider );
+
+      mList.insert( identifier, persistentSearch );
+    }
+    mListMutex.unlock();
+  } else
+    qDebug() << "PersistentSearchManager: Unable to reload Persistent Searches";
 }
 
 PersistentSearchManager::~PersistentSearchManager()
 {
+  mDatabase.close();
 }
 
 PersistentSearchManager* PersistentSearchManager::self()
@@ -56,7 +91,26 @@ void PersistentSearchManager::addPersistentSearch( const QString &identifier, Pe
     return;
   }
 
+  /**
+   * Insert in local cache.
+   */
   mList.insert( identifier, search );
+
+
+  /**
+   * Insert in database.
+   */
+  QString queryString;
+  const QList<QByteArray> searchCriteria = search->searchCriteria();
+  for ( int i = 0; i < queryString.count(); ++i )
+    queryString += " " + QString::fromUtf8( searchCriteria[ i ] );
+
+  const QString statement = QString( "INSERT INTO PersistentSearches (name, query) VALUES ('%1', '%2') ")
+                                   .arg( identifier, queryString );
+
+  QSqlQuery query( mDatabase );
+  if ( !query.exec( statement ) )
+    qDebug( "PersistentSearchManager: Unable to remove identifier '%s' from database", qPrintable( identifier ) );
 
   mListMutex.unlock();
 }
@@ -70,34 +124,46 @@ void PersistentSearchManager::removePersistentSearch( const QString &identifier 
     return;
   }
 
+  /**
+   * Remove from local cache.
+   */
   delete mList.value( identifier );
   mList.remove( identifier );
+
+  /**
+   * Remove from database.
+   */
+  const QString statement = QString( "DELETE FROM PersistentSearches WHERE name = '%1' ").arg( identifier );
+
+  QSqlQuery query( mDatabase );
+  if ( !query.exec( statement ) )
+    qDebug( "PersistentSearchManager: Unable to remove identifier '%s' from database", qPrintable( identifier ) );
 
   mListMutex.unlock();
 }
 
-QList<QByteArray> PersistentSearchManager::uids( const QString &identifier ) const
+QList<QByteArray> PersistentSearchManager::uids( const QString &identifier, const DataStore *store ) const
 {
   QList<QByteArray> uids;
 
   mListMutex.lock();
   if ( mList.contains( identifier ) ) {
     PersistentSearch *search = mList.value( identifier );
-    uids = search->uids();
+    uids = search->uids( store );
   }
   mListMutex.unlock();
 
   return uids;
 }
 
-QList<QByteArray> PersistentSearchManager::objects( const QString &identifier ) const
+QList<QByteArray> PersistentSearchManager::objects( const QString &identifier, const DataStore *store ) const
 {
   QList<QByteArray> objects;
 
   mListMutex.lock();
   if ( mList.contains( identifier ) ) {
     PersistentSearch *search = mList.value( identifier );
-    objects = search->objects();
+    objects = search->objects( store );
   }
   mListMutex.unlock();
 
@@ -114,7 +180,7 @@ CollectionList PersistentSearchManager::collections() const
   mListMutex.unlock();
 
   for ( int i = 0; i < identifiers.count(); ++i )
-      collections.append( Collection( "/Search/" + identifiers[ i ] ) );
+    collections.append( Collection( "/Search/" + identifiers[ i ] ) );
 
   return collections;
 }

@@ -2,7 +2,7 @@
 # ------------------------------------------- 
 # Subdir relative project main directory: ./src
 # Target is an application:  ../bin/akonadi
-INCLUDEPATH += ../include ../test searchproviders/
+INCLUDEPATH += ../include ../test searchproviders/ handler/
 
 HEADERS += akonadi.h \
            akonadiconnection.h \

@@ -25,3 +25,7 @@ INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (4, '/foo2',
 INSERT INTO Resources (id, name, cachepolicy_id) VALUES(0, 'res1', 0);
 INSERT INTO Resources (id, name, cachepolicy_id) VALUES(1, 'res2', 0);
 INSERT INTO Resources (id, name, cachepolicy_id) VALUES(2, 'res3', 0);
+
+INSERT INTO PersistentSearches (id, name, query) VALUES(0, 'kde-core-devel', 'MIMETYPE message/rfc822 HEADER From kde-core-devel@kde.org');
+INSERT INTO PersistentSearches (id, name, query) VALUES(1, 'all', 'MIMETYPE message/rfc822 ALL');
+INSERT INTO PersistentSearches (id, name, query) VALUES(2, 'Test Üser', 'MIMETYPE message/rfc822 BODY "Test Üser"');

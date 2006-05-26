@@ -32,12 +32,17 @@ PersistentSearch::~PersistentSearch()
   mProvider = 0;
 }
 
-QList<QByteArray> PersistentSearch::uids() const
+QList<QByteArray> PersistentSearch::uids( const DataStore *store ) const
 {
-  return mProvider->queryForUids( mQuery );
+  return mProvider->queryForUids( mQuery, store );
 }
 
-QList<QByteArray> PersistentSearch::objects() const
+QList<QByteArray> PersistentSearch::objects( const DataStore *store ) const
 {
-  return mProvider->queryForObjects( mQuery );
+  return mProvider->queryForObjects( mQuery, store );
+}
+
+QList<QByteArray> PersistentSearch::searchCriteria() const
+{
+  return mQuery;
 }

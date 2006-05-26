@@ -18,11 +18,12 @@
  ***************************************************************************/
 
 #include "akonadi.h"
-
+#include "akonadiconnection.h"
 #include "response.h"
-#include "search.h"
 #include "searchhelper.h"
 #include "searchprovidermanager.h"
+
+#include "search.h"
 
 using namespace Akonadi;
 
@@ -60,13 +61,13 @@ bool Search::handleLine( const QByteArray& line )
   }
 
   SearchProvider *provider = 0;
-  provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType, connection() );
+  provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType );
 
   if ( provider ) {
     QList<QByteArray> uids;
     bool ok = true;
     try {
-      uids = provider->queryForUids( junks );
+      uids = provider->queryForUids( junks, connection()->storageBackend() );
     } catch ( ... ) {
       ok = false;
     }

@@ -22,6 +22,7 @@
 
 #include <QMap>
 #include <QMutex>
+#include <QSqlDatabase>
 
 #include "collection.h"
 #include "persistentsearch.h"
@@ -51,12 +52,12 @@ class PersistentSearchManager
     /**
      * Returns a list of uids which match the persistent search with the given identifier.
      */
-    QList<QByteArray> uids( const QString &identifier ) const;
+    QList<QByteArray> uids( const QString &identifier, const DataStore *store ) const;
 
     /**
      * Returns a list of objects which match the persistent search with the given identifier.
      */
-    QList<QByteArray> objects( const QString &identifier ) const;
+    QList<QByteArray> objects( const QString &identifier, const DataStore *store ) const;
 
     /**
      * Returns a list of collections as representation of the persistent searches.
@@ -70,6 +71,8 @@ class PersistentSearchManager
 
     QMap<QString, PersistentSearch*> mList;
     mutable QMutex mListMutex;
+
+    QSqlDatabase mDatabase;
 };
 
 }

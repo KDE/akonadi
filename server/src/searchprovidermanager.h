@@ -32,12 +32,11 @@ class SearchProviderManager
     static SearchProviderManager* self();
 
     /**
-     * Returns a new search provider for the given mimetype which
-     * uses the given connection for accessing the database.
+     * Returns a new search provider for the given mimetype.
      *
      * You have to delete the search provider yourself after use!
      */
-    SearchProvider* createSearchProviderForMimetype( const QByteArray &mimeType, const AkonadiConnection *connection );
+    SearchProvider* createSearchProviderForMimetype( const QByteArray &mimeType );
 
   private:
     SearchProviderManager();
