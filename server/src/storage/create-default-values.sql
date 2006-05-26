@@ -5,6 +5,7 @@ INSERT INTO CachePolicies (name) VALUES ('permanent');
 INSERT INTO MimeTypes (mime_type) VALUES ('message/rfc822');
 INSERT INTO MimeTypes (mime_type) VALUES ('text/ical');
 INSERT INTO MimeTypes (mime_type) VALUES ('text/vcard');
+INSERT INTO MimeTypes (mime_type) VALUES ('directory/inode');
 
 INSERT INTO MetaTypes SELECT NULL, 'from', id FROM MimeTypes WHERE mime_type = 'message/rfc822';
 INSERT INTO MetaTypes SELECT NULL, 'to', id FROM MimeTypes WHERE mime_type = 'message/rfc822';
@@ -33,3 +34,7 @@ INSERT INTO PersistentSearches (id, name, query) VALUES(2, 'Test �er', 'MIMETY
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 1);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 2);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 1, 2);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 4);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 1, 4);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 2, 4);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 3, 4);

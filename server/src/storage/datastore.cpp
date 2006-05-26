@@ -290,8 +290,11 @@ bool DataStore::appendLocation( const QString & location,
     } else
       debugLastDbError( "Error during check before insertion of Location." );
     if ( foundRecs == 0 ) {
-      QString q = "INSERT INTO Locations (uri, cachepolicy_id, resource_id) "
-                  "VALUES (\"" + location + "\", NULL, \"" + QString::number( resource.getId() ) + "\"";
+      QString q = QString( "INSERT INTO Locations (uri, cachepolicy_id, "
+                           "resource_id, exists_count, recent_count, "
+                           "unseen_count, first_unseen, uid_validity) "
+                           "VALUES (\"%1\", NULL, \"%2\", 0, 0, 0, 0, 0 )" )
+                         .arg( location ).arg( resource.getId() );
       if ( query.exec( q ) ) {
         if ( insertId ) {
           QVariant v = query.lastInsertId();
@@ -803,6 +806,8 @@ bool DataStore::removeById( int id, const QString & tableName )
 Akonadi::Location Akonadi::DataStore::getLocationByName( const Resource &resource,
                                                          const QByteArray & name ) const
 {
+    qDebug() << "getLocationByName( " << resource.getResource() << ", "
+             << name << " )";
     Location l;
     if ( !resource.isValid() ) return l;
     if ( m_dbOpened ) {
