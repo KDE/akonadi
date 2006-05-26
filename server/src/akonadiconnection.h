@@ -24,6 +24,7 @@
 #include <QtNetwork/QTcpSocket>
 class QTcpSocket;
 
+#include "storage/entity.h"
 #include "global.h"
 
 namespace Akonadi {
@@ -45,6 +46,8 @@ public:
     DataStore* storageBackend();
     const QByteArray selectedCollection() const;
     void setSelectedCollection( const QByteArray& collection );
+
+    const Location selectedLocation();
 
     void addStatusMessage( const QByteArray& msg );
     void flushStatusMessageQueue();

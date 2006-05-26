@@ -197,6 +197,19 @@ void Akonadi::AkonadiConnection::setSelectedCollection( const QByteArray& collec
     m_selectedConnection = collection;
 }
 
+const Location Akonadi::AkonadiConnection::selectedLocation()
+{
+  QByteArray collection = selectedCollection();
+
+  DataStore *db = storageBackend();
+  int secondSlash = collection.indexOf( '/', 2 ) + 1;
+
+  Resource resource = db->getResourceByName( collection.left( secondSlash ) );
+  Location l = db->getLocationByName( resource, collection.right( collection.size() - secondSlash ) );
+
+  return l;
+}
+
 void Akonadi::AkonadiConnection::addStatusMessage( const QByteArray& msg )
 {
     m_statusMessageQueue.append( msg );
