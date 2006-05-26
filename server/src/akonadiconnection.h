@@ -46,6 +46,9 @@ public:
     const QByteArray selectedCollection() const;
     void setSelectedCollection( const QByteArray& collection );
 
+    void addStatusMessage( const QByteArray& msg );
+    void flushStatusMessageQueue();
+
 signals:
     void error( QTcpSocket::SocketError socketError );
 
@@ -59,6 +62,7 @@ protected:
     void writeOut( const char* );
     Handler* findHandlerForCommand( const QByteArray& command );
 
+
 private:
     int m_socketDescriptor;
     QTcpSocket * m_tcpSocket;
@@ -66,6 +70,7 @@ private:
     ConnectionState m_connectionState;
     mutable DataStore* m_backend;
     QByteArray m_selectedConnection;
+    QList<QByteArray> m_statusMessageQueue;
 };
 
 }

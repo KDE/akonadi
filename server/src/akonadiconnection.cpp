@@ -196,3 +196,21 @@ void Akonadi::AkonadiConnection::setSelectedCollection( const QByteArray& collec
 {
     m_selectedConnection = collection;
 }
+
+void Akonadi::AkonadiConnection::addStatusMessage( const QByteArray& msg )
+{
+    m_statusMessageQueue.append( msg );
+}
+
+void Akonadi::AkonadiConnection::flushStatusMessageQueue()
+{
+    for ( int i = 0; i < m_statusMessageQueue.count(); ++i ) {
+      Response response;
+      response.setUntagged();
+      response.setString( m_statusMessageQueue[ i ] );
+
+      slotResponseAvailable( response );
+    }
+
+    m_statusMessageQueue.clear();
+}

@@ -20,10 +20,11 @@
 
 #include "handler.h"
 #include "response.h"
-#include "handler/login.h"
-#include "handler/logout.h"
 #include "handler/capability.h"
 #include "handler/list.h"
+#include "handler/login.h"
+#include "handler/logout.h"
+#include "handler/noop.h"
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
@@ -95,6 +96,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new Search();
     if ( command == "SEARCH_STORE" || command == "SEARCH_DELETE" || command == "SEARCH_DEBUG" )
         return new SearchPersistent();
+    if ( command == "NOOP" )
+        return new Noop();
 
     return 0;
 }

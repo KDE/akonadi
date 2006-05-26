@@ -8,13 +8,14 @@ HEADERS += akonadi.h \
            akonadiconnection.h \
            handler.h \
            response.h \
+           handler/capability.h \
+           handler/list.h \
            handler/login.h \
            handler/logout.h \
-           handler/list.h \
+           handler/noop.h \
            handler/select.h \
            handler/search.h \
            handler/searchpersistent.h \
-           handler/capability.h \
            ../test/teststoragebackend.h \
            persistentsearch.h \
            persistentsearchmanager.h \
@@ -30,14 +31,15 @@ SOURCES += akonadi.cpp \
            akonadiconnection.cpp \
            handler.cpp \
            response.cpp \
+           handler/capability.cpp \
+           handler/list.cpp \
            handler/logout.cpp \
            handler/login.cpp \
-           handler/list.cpp \
+           handler/noop.cpp \
            handler/select.cpp \
            handler/search.cpp \
            handler/searchhelper.cpp \
            handler/searchpersistent.cpp \
-           handler/capability.cpp \
            ../test/teststoragebackend.cpp \
            persistentsearch.cpp \
            persistentsearchmanager.cpp \
