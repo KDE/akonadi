@@ -54,7 +54,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
 {
     CollectionList result;
 
-    if ( mailboxPattern.isEmpty() || mailboxPattern == "\"\"" )
+    if ( mailboxPattern.isEmpty() )
         return result;
 
     QByteArray sanitizedPattern( mailboxPattern );
@@ -62,7 +62,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
     const bool hasPercent = mailboxPattern.contains('%');
     const bool hasStar = mailboxPattern.contains('*');
     if ( hasPercent || hasStar ) {
-        int endOfPath = mailboxPattern.lastIndexOf('/');
+        int endOfPath = mailboxPattern.lastIndexOf('/') + 1;
             
         if ( mailboxPattern[0] != '/' && fullPrefix != "/" )
             fullPrefix += "/";
@@ -98,14 +98,14 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
     else
     {
         const QByteArray resource = fullPrefix.mid( 1, fullPrefix.indexOf('/', 1) - 1 );
-        //qDebug() << "Listing folders in resource: " << resource;
+        qDebug() << "Listing folders in resource: " << resource;
         Resource r = getResourceByName( resource );
         const QList<Location> locations = listLocations( r );
 
         foreach( Location l, locations )
         {
             const QString location = "/" + resource + l.getLocation();
-            qDebug() << "Location: " << location << " " << resource << " prefix: " << fullPrefix;
+            //qDebug() << "Location: " << location << " " << resource << " prefix: " << fullPrefix;
             const bool atFirstLevel = location.lastIndexOf('/') == fullPrefix.lastIndexOf('/');
             if ( location.startsWith( fullPrefix ) ) {
                 if ( hasStar || ( hasPercent && atFirstLevel ) ) {
