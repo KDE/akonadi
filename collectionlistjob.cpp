@@ -78,14 +78,22 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
 
     QByteArray folderName;
     if ( data[begin + 1] == '"' )
-      folderName = d->prefix + data.mid( begin + 2, data.lastIndexOf( '"' ) - begin - 2 );
+      folderName = data.mid( begin + 2, data.lastIndexOf( '"' ) - begin - 2 );
     else
-      folderName = d->prefix + data.mid( begin + 1 ); // ### strip trailing newline?
+      folderName = data.mid( begin + 1 ); // ### strip trailing newline?
+    // add prefix
+    if ( d->prefix.endsWith( Collection::delimiter() ) )
+      folderName.prepend( d->prefix );
+    else
+      folderName.prepend( d->prefix + Collection::delimiter() );
     // strip trailing delimiters
     if ( folderName.endsWith( delim ) )
       folderName.truncate( data.length() - 1 );
 
     QByteArray parentName = folderName.mid( 0, folderName.lastIndexOf( delim ) + 1 );
+    // strip trailing delimiter, but not if this is root
+    if ( parentName.endsWith( Collection::delimiter() ) && parentName != Collection::root() )
+      parentName.truncate( parentName.length() - 1 );
     Collection *col = new Collection( folderName );
     col->setParent( parentName );
 

@@ -105,6 +105,8 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
       return SmallIcon( "server" );
     if ( col->type() == Collection::VirtualParent )
       return SmallIcon( "find" );
+    if ( col->type() == Collection::Virtual )
+      return SmallIcon( "folder_green" );
     QStringList content = col->contentTypes();
     if ( content.size() == 1 ) {
       if ( content.first() == "text/x-vcard" )
@@ -327,7 +329,7 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
 
     // start recursive fetch jobs for resources (which we can't list recursivly)
     foreach( const Collection *col,  collections ) {
-      if ( col->type() == Collection::Resource ) {
+      if ( col->type() == Collection::Resource || col->type() == Collection::VirtualParent ) {
         CollectionListJob *cljob = new CollectionListJob( col->path(), true, this );
         connect( cljob, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
         cljob->start();
