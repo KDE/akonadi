@@ -39,18 +39,26 @@ QList<QByteArray> EmailSearchProvider::supportedMimeTypes() const
   return mimeTypes;
 }
 
-QList<QByteArray> EmailSearchProvider::queryForUids( const QList<QByteArray> &searchCriteria )
+QList<QByteArray> EmailSearchProvider::queryForUids( const QList<QByteArray> &searchCriteria ) const
 {
   QList<QByteArray> dummy;
-  dummy.append( "12" );
-  dummy.append( "22" );
-  dummy.append( "34" );
-  dummy.append( "108" );
+
+  if ( searchCriteria.contains( "foobar" ) ) {
+    dummy.append( "12" );
+    dummy.append( "22" );
+    dummy.append( "34" );
+    dummy.append( "108" );
+  } else if ( searchCriteria.contains( "blaah" ) ) {
+    dummy.append( "132" );
+    dummy.append( "221" );
+    dummy.append( "341" );
+    dummy.append( "109" );
+  }
 
   return dummy;
 }
 
-QList<QByteArray> EmailSearchProvider::queryForObjects( const QList<QByteArray> &searchCriteria )
+QList<QByteArray> EmailSearchProvider::queryForObjects( const QList<QByteArray> &searchCriteria ) const
 {
   return QList<QByteArray>();
 }

@@ -17,52 +17,27 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef AKONADISEARCHPROVIDER_H
-#define AKONADISEARCHPROVIDER_H
+#include "persistentsearch.h"
 
-#include <QList>
+using namespace Akonadi;
 
-#include "akonadiconnection.h"
-
-namespace Akonadi {
-
-class SearchProvider
+PersistentSearch::PersistentSearch( const QList<QByteArray> &query, SearchProvider *provider )
+  : mQuery( query ), mProvider( provider )
 {
-  public:
-    SearchProvider();
-    virtual ~SearchProvider();
-
-    /**
-     * Returns a list of supported mimetypes.
-     */
-    virtual QList<QByteArray> supportedMimeTypes() const = 0;
-
-    /**
-     * Starts a query for the given search criteria and
-     * returns a list of matching uids.
-     */
-    virtual QList<QByteArray> queryForUids( const QList<QByteArray> &searchCriteria ) const = 0;
-
-    /**
-     * Starts a query for the given search criteria and
-     * returns a list of matching objects.
-     */
-    virtual QList<QByteArray> queryForObjects( const QList<QByteArray> &searchCriteria ) const = 0;
-
-    /**
-     * Sets the connection which shall be used to access the database.
-     */
-    void setConnection( const AkonadiConnection *connection );
-
-    /**
-     * Returns the connection which can be used to access the database.
-     */
-    const AkonadiConnection *connection() const;
-
-  private:
-    const AkonadiConnection *mConnection;
-};
-
 }
 
-#endif
+PersistentSearch::~PersistentSearch()
+{
+  delete mProvider;
+  mProvider = 0;
+}
+
+QList<QByteArray> PersistentSearch::uids() const
+{
+  return mProvider->queryForUids( mQuery );
+}
+
+QList<QByteArray> PersistentSearch::objects() const
+{
+  return mProvider->queryForObjects( mQuery );
+}

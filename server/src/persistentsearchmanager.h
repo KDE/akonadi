@@ -17,50 +17,59 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef AKONADISEARCHPROVIDER_H
-#define AKONADISEARCHPROVIDER_H
+#ifndef AKONADIPERSISTENTSEARCHMANAGER_H
+#define AKONADIPERSISTENTSEARCHMANAGER_H
 
-#include <QList>
+#include <QMap>
+#include <QMutex>
 
-#include "akonadiconnection.h"
+#include "collection.h"
+#include "persistentsearch.h"
 
 namespace Akonadi {
 
-class SearchProvider
+class PersistentSearchManager
 {
   public:
-    SearchProvider();
-    virtual ~SearchProvider();
+    ~PersistentSearchManager();
+
+    static PersistentSearchManager* self();
 
     /**
-     * Returns a list of supported mimetypes.
+     * Adds a new persistent search to the manager under the given name.
+     *
+     * The manager takes ownership of the persistent search.
      */
-    virtual QList<QByteArray> supportedMimeTypes() const = 0;
+    void addPersistentSearch( const QString &identifier, PersistentSearch *search );
 
     /**
-     * Starts a query for the given search criteria and
-     * returns a list of matching uids.
+     * Removes the persistent search with the associated identifier from the
+     * manager and deletes it.
      */
-    virtual QList<QByteArray> queryForUids( const QList<QByteArray> &searchCriteria ) const = 0;
+    void removePersistentSearch( const QString &identifier );
 
     /**
-     * Starts a query for the given search criteria and
-     * returns a list of matching objects.
+     * Returns a list of uids which match the persistent search with the given identifier.
      */
-    virtual QList<QByteArray> queryForObjects( const QList<QByteArray> &searchCriteria ) const = 0;
+    QList<QByteArray> uids( const QString &identifier ) const;
 
     /**
-     * Sets the connection which shall be used to access the database.
+     * Returns a list of objects which match the persistent search with the given identifier.
      */
-    void setConnection( const AkonadiConnection *connection );
+    QList<QByteArray> objects( const QString &identifier ) const;
 
     /**
-     * Returns the connection which can be used to access the database.
+     * Returns a list of collections as representation of the persistent searches.
      */
-    const AkonadiConnection *connection() const;
+    CollectionList collections() const;
 
   private:
-    const AkonadiConnection *mConnection;
+    PersistentSearchManager();
+
+    static PersistentSearchManager* mSelf;
+
+    QMap<QString, PersistentSearch*> mList;
+    mutable QMutex mListMutex;
 };
 
 }

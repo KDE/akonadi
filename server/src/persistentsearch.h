@@ -17,50 +17,47 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef AKONADISEARCHPROVIDER_H
-#define AKONADISEARCHPROVIDER_H
+#ifndef AKONADIPERSISTENTSEARCH_H
+#define AKONADIPERSISTENTSEARCH_H
 
 #include <QList>
 
-#include "akonadiconnection.h"
+#include "searchprovider.h"
 
 namespace Akonadi {
 
-class SearchProvider
+class PersistentSearch
 {
   public:
-    SearchProvider();
-    virtual ~SearchProvider();
+    /**
+     * Creates a new persistant search with the given search criteria.
+     *
+     * @param searchCriteria The search criteria.
+     * @param provider The search provider which queries the data from the
+     *                 backend.
+     *
+     * The PersistantSearch object takes ownership of the provider.
+     */
+    PersistentSearch( const QList<QByteArray> &searchCriteria, SearchProvider *provider );
 
     /**
-     * Returns a list of supported mimetypes.
+     * Destroys the persistant search.
      */
-    virtual QList<QByteArray> supportedMimeTypes() const = 0;
+    ~PersistentSearch();
 
     /**
-     * Starts a query for the given search criteria and
-     * returns a list of matching uids.
+     * Returns a list of uids which match the stored search criteria.
      */
-    virtual QList<QByteArray> queryForUids( const QList<QByteArray> &searchCriteria ) const = 0;
+    QList<QByteArray> uids() const;
 
     /**
-     * Starts a query for the given search criteria and
-     * returns a list of matching objects.
+     * Returns a list of objects which match the stored search criteria.
      */
-    virtual QList<QByteArray> queryForObjects( const QList<QByteArray> &searchCriteria ) const = 0;
-
-    /**
-     * Sets the connection which shall be used to access the database.
-     */
-    void setConnection( const AkonadiConnection *connection );
-
-    /**
-     * Returns the connection which can be used to access the database.
-     */
-    const AkonadiConnection *connection() const;
+    QList<QByteArray> objects() const;
 
   private:
-    const AkonadiConnection *mConnection;
+    QList<QByteArray> mQuery;
+    SearchProvider *mProvider;
 };
 
 }
