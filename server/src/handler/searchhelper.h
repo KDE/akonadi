@@ -16,27 +16,20 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#ifndef AKONADISEARCH_H
-#define AKONADISEARCH_H
+
+#ifndef AKONADISEARCHHELPER_H
+#define AKONADISEARCHHELPER_H
 
 #include <QByteArray>
-
-#include <handler.h>
+#include <QList>
 
 namespace Akonadi {
 
-/**
-  Handler for the search command.
- */
-class Search : public Handler
+class SearchHelper
 {
-public:
-    Search();
-
-    ~Search();
-
-    bool handleLine(const QByteArray& line);
-
+  public:
+    static QList<QByteArray> splitLine( const QByteArray &line );
+    static QByteArray extractMimetype( const QList<QByteArray> &junks, int start );
 };
 
 }

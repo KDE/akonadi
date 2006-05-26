@@ -16,29 +16,64 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#ifndef AKONADISEARCH_H
-#define AKONADISEARCH_H
 
-#include <QByteArray>
+#include "searchhelper.h"
 
-#include <handler.h>
+using namespace Akonadi;
 
-namespace Akonadi {
-
-/**
-  Handler for the search command.
- */
-class Search : public Handler
+QList<QByteArray> SearchHelper::splitLine( const QByteArray &line )
 {
-public:
-    Search();
+  QList<QByteArray> retval;
 
-    ~Search();
+  int i, start = 0;
+  bool escaped = false;
+  for ( i = 0; i < line.count(); ++i ) {
+    if ( line[ i ] == ' ' ) {
+      if ( !escaped ) {
+        retval.append( line.mid( start, i - start ) );
+        start = i + 1;
+      }
+    } else if ( line[ i ] == '"' ) {
+      if ( escaped ) {
+        escaped = false;
+      } else {
+        escaped = true;
+      }
+    }
+  }
 
-    bool handleLine(const QByteArray& line);
+  retval.append( line.mid( start, i - start ) );
 
-};
-
+  return retval;
 }
 
-#endif
+QByteArray SearchHelper::extractMimetype( const QList<QByteArray> &junks, int start )
+{
+  QByteArray mimeType;
+
+  if ( junks.count() <= start )
+    return QByteArray();
+
+  if ( junks[ start ].toUpper() == "CHARSET" ) {
+    if ( junks.count() <= ( start + 2 ) )
+      return QByteArray();
+    if ( junks[ start + 2 ].toUpper() == "MIMETYPE" ) {
+      if ( junks.count() <= ( start + 3 ) )
+        return QByteArray();
+      else
+        mimeType = junks[ start + 3 ].toLower();
+    }
+  } else {
+    if ( junks[ start ].toUpper() == "MIMETYPE" ) {
+      if ( junks.count() <= ( start + 1 ) )
+        return QByteArray();
+      else
+        mimeType = junks[ start + 1 ].toLower();
+    }
+  }
+
+  if ( mimeType.isEmpty() )
+    mimeType = "message/rfc822";
+
+  return mimeType;
+}

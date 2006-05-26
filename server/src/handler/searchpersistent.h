@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#ifndef AKONADISEARCH_H
-#define AKONADISEARCH_H
+#ifndef AKONADISEARCHPERSISTENT_H
+#define AKONADISEARCHPERSISTENT_H
 
 #include <QByteArray>
 
@@ -26,17 +26,16 @@
 namespace Akonadi {
 
 /**
-  Handler for the search command.
+  Handler for the search_store search_delete commands.
  */
-class Search : public Handler
+class SearchPersistent : public Handler
 {
-public:
-    Search();
+  public:
+    SearchPersistent();
 
-    ~Search();
+    ~SearchPersistent();
 
-    bool handleLine(const QByteArray& line);
-
+    bool handleLine( const QByteArray& line );
 };
 
 }

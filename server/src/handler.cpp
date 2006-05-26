@@ -25,6 +25,7 @@
 #include "handler/capability.h"
 #include "handler/list.h"
 #include "handler/search.h"
+#include "handler/searchpersistent.h"
 #include "handler/select.h"
 
 
@@ -92,6 +93,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new Select();
     if ( command == "SEARCH" )
         return new Search();
+    if ( command == "SEARCH_STORE" || command == "SEARCH_DELETE" || command == "SEARCH_DEBUG" )
+        return new SearchPersistent();
 
     return 0;
 }

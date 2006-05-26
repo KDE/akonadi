@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Tobias Koenig <tokoe@kde.org>                        *
+ *   Copyright (C) 2006 by Tobias Koenig <tokoe@kde.org>                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -21,44 +21,15 @@
 
 #include "response.h"
 #include "search.h"
+#include "searchhelper.h"
 #include "searchprovidermanager.h"
 
 using namespace Akonadi;
-
-/**
- * Splits a line at white spaces which are not escaped by '"'
- */
-static QList<QByteArray> splitLine( const QByteArray &line )
-{
-  QList<QByteArray> retval;
-
-  int i, start = 0;
-  bool escaped = false;
-  for ( i = 0; i < line.count(); ++i ) {
-    if ( line[ i ] == ' ' ) {
-      if ( !escaped ) {
-        retval.append( line.mid( start, i - start ) );
-        start = i + 1;
-      }
-    } else if ( line[ i ] == '"' ) {
-      if ( escaped ) {
-        escaped = false;
-      } else {
-        escaped = true;
-      }
-    }
-  }
-
-  retval.append( line.mid( start, i - start ) );
-
-  return retval;
-}
 
 Search::Search()
   : Handler()
 {
 }
-
 
 Search::~Search()
 {
@@ -66,78 +37,71 @@ Search::~Search()
 
 bool Search::handleLine( const QByteArray& line )
 {
-    Response response;
-    response.setUntagged();
+  Response response;
+  response.setUntagged();
 
-    QList<QByteArray> junks = splitLine( line );
+  QList<QByteArray> junks = SearchHelper::splitLine( line );
 
-    /**
-     * A search can have the following forms:
-     *
-     * 123 SEARCH CHARSET <charset> MIMETYPE <mimetype> ...
-     * 123 SEARCH MIMETYPE <mimetype> ...
-     * 123 SEARCH ...
-     *
-     * so we first have to find out which case matches.
-     */
-    QByteArray mimeType;
-    if ( junks[ 2 ].toUpper() == "CHARSET" ) {
-      if ( junks[ 4 ].toUpper() == "MIMETYPE" )
-        mimeType = junks[ 5 ].toLower();
-    } else {
-      if ( junks[ 2 ].toUpper() == "MIMETYPE" )
-        mimeType = junks[ 3 ].toLower();
+  if ( junks.count() < 4 ) {
+    response.setTag( tag() );
+    response.setError();
+    response.setString( "Too less arguments" );
+    emit responseAvailable( response );
+    return false;
+  }
+
+  QByteArray mimeType = SearchHelper::extractMimetype( junks, 2 );
+  if ( mimeType.isEmpty() ) {
+    response.setTag( tag() );
+    response.setError();
+    response.setString( "Too less arguments" );
+    emit responseAvailable( response );
+    return false;
+  }
+
+  SearchProvider *provider = 0;
+  provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType, connection() );
+
+  if ( provider ) {
+    QList<QByteArray> uids;
+    bool ok = true;
+    try {
+      uids = provider->queryForUids( junks );
+    } catch ( ... ) {
+      ok = false;
     }
 
-    /**
-     * If no mimetype is specified fallback to normal IMAP search.
-     */
-    if ( mimeType.isEmpty() )
-      mimeType = "message/rfc822";
+    if ( ok ) {
+      response.setSuccess();
 
-    SearchProvider *provider = 0;
-    provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType, connection() );
+      QByteArray msg = "SEARCH";
+      for ( int i = 0; i < uids.count(); ++i )
+        msg += " " + uids[ i ];
 
-    if ( provider ) {
-      QList<QByteArray> uids;
-      bool ok = true;
-      try {
-        uids = provider->queryForUids( junks );
-      } catch ( ... ) {
-        ok = false;
-      }
+      response.setString( msg );
+      emit responseAvailable( response );
 
-      if ( ok ) {
-        response.setSuccess();
+      response.setSuccess();
+      response.setTag( tag() );
+      response.setString( "SEARCH completed" );
+      emit responseAvailable( response );
 
-        QByteArray msg = "SEARCH";
-        for ( int i = 0; i < uids.count(); ++i )
-          msg += " " + uids[ i ];
-
-        response.setString( msg );
-        emit responseAvailable( response );
-
-        response.setSuccess();
-        response.setTag( tag() );
-        response.setString( "SEARCH completed" );
-        emit responseAvailable( response );
-
-      } else {
-        response.setTag( tag() );
-        response.setError();
-        response.setString( "Invalid search criteria" );
-
-        emit responseAvailable( response );
-      }
     } else {
       response.setTag( tag() );
       response.setError();
-      response.setString( QByteArray( "No handler for MIMETYPE '" + mimeType + "' found" ) );
+      response.setString( "Invalid search criteria" );
 
       emit responseAvailable( response );
     }
+  } else {
+    response.setTag( tag() );
+    response.setError();
+    response.setString( QByteArray( "No handler for MIMETYPE '" + mimeType + "' found" ) );
 
-    deleteLater();
+    emit responseAvailable( response );
+  }
 
-    return true;
+  deleteLater();
+
+  return true;
 }

@@ -118,8 +118,14 @@ void AkonadiConnection::slotNewData()
                  this, SLOT( slotConnectionStateChange( ConnectionState ) ),
                  Qt::DirectConnection );
     }
-    if ( m_currentHandler->handleLine( line ) )
-        m_currentHandler = 0;
+    try {
+      m_currentHandler->handleLine( line );
+    } catch ( ... ) {
+      qDebug( "Oops" );
+      delete m_currentHandler;
+    }
+
+    m_currentHandler = 0;
 }
 
 void AkonadiConnection::writeOut( const char* str )

@@ -19,6 +19,7 @@
 #ifndef AKONADICONNECTION_H
 #define AKONADICONNECTION_H
 
+#include <QPointer>
 #include <QThread>
 #include <QtNetwork/QTcpSocket>
 class QTcpSocket;
@@ -44,7 +45,7 @@ public:
     DataStore* storageBackend();
     const QByteArray selectedCollection() const;
     void setSelectedCollection( const QByteArray& collection );
-    
+
 signals:
     void error( QTcpSocket::SocketError socketError );
 
@@ -53,7 +54,7 @@ protected slots:
     void slotNewData();
     void slotResponseAvailable( const Response& );
     void slotConnectionStateChange( ConnectionState );
-    
+
 protected:
     void writeOut( const char* );
     Handler* findHandlerForCommand( const QByteArray& command );
@@ -61,7 +62,7 @@ protected:
 private:
     int m_socketDescriptor;
     QTcpSocket * m_tcpSocket;
-    Handler *m_currentHandler;
+    QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore* m_backend;
     QByteArray m_selectedConnection;
