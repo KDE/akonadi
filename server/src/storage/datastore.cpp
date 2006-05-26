@@ -45,11 +45,12 @@ DataStore::~DataStore()
 }
 
 /* -- High level API -- */
-const CollectionList Akonadi::DataStore::listCollections( const QByteArray& prefix ) const
+const CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
+                                                          const QByteArray & mailboxPattern ) const
 {
     CollectionList result;
 
-    if ( prefix.isEmpty() )
+    if ( prefix == "/" )
     {
         // list resources and queries
         const QList<Resource> resources = listResources();

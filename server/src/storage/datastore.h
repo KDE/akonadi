@@ -40,7 +40,8 @@ public:
     ~DataStore();
 
     /* -- higher level API -- */
-    const CollectionList listCollections( const QByteArray& prefix ) const;
+    const CollectionList listCollections( const QByteArray& prefix,
+                                          const QByteArray & mailboxPattern ) const;
 
     /* --- CachePolicy --------------------------------------------------- */
     bool appendCachePolicy( const QString & policy );

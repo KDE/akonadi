@@ -81,7 +81,6 @@ void AkonadiConnection::run()
              this, SLOT( slotNewData() ), Qt::DirectConnection );
     connect( m_tcpSocket, SIGNAL( disconnected() ),
              this, SLOT( slotDisconnected() ), Qt::DirectConnection );
-    qDebug() << "on: " << currentThreadId() <<  endl;
     exec();
 }
 
