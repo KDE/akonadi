@@ -56,10 +56,10 @@ bool Select::handleLine(const QByteArray& line )
 
     DataStore *db = connection()->storageBackend();
     int secondSlash = mailbox.indexOf( '/', 2 ) + 1;
-    qDebug() << "Select: " << mailbox.mid( secondSlash, mailbox.size() - secondSlash )
-             << " in resource: " << mailbox.mid( 1, secondSlash - 2 );
-    Resource resource = db->getResourceByName( mailbox.left( secondSlash ) );
-    Location l = db->getLocationByName( resource, mailbox.right( mailbox.size() - secondSlash ) );
+    //qDebug() << "Select: " << mailbox.mid( secondSlash, mailbox.size() - secondSlash )
+    //         << " in resource: " << mailbox.mid( 1, secondSlash - 2 );
+    Resource resource = db->getResourceByName( mailbox.mid( 1, secondSlash - 2 ) );
+    Location l = db->getLocationByName( resource, mailbox.mid( secondSlash -1 , mailbox.size() - (secondSlash-1) ) );
 
     int exists = 5;
     response.setString( QString::number(exists) + " EXISTS" );

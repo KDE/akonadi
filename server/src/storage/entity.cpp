@@ -28,7 +28,7 @@ CachePolicy::CachePolicy()
 {}
 
 CachePolicy::CachePolicy( int id, const QString & policy )
-  : m_id( id ), m_policy( policy )
+  : Entity( id ), m_policy( policy )
 {}
 
 CachePolicy::~CachePolicy()
@@ -43,14 +43,14 @@ Location::Location()
 
 Location::Location( int id, const QString & location,
                     int policy_id, int resource_id )
-  : m_id( id ), m_policy_id( policy_id ),
+  : Entity( id ), m_policy_id( policy_id ),
     m_resource_id( resource_id ), m_location( location )
 {
 }
 
 Location::Location( int id, const QString & location,
                     const CachePolicy & policy, const Resource & resource )
-  : m_id( id ), m_policy_id( policy.getId() ),
+    : Entity( id ), m_policy_id( policy.getId() ),
     m_resource_id( resource.getId() ), m_location( location )
 {}
 
@@ -70,7 +70,7 @@ MimeType::MimeType()
 {}
 
 MimeType::MimeType( int id, const QString & mimetype )
-  : m_id( id ), m_mimetype( mimetype )
+    : Entity( id ), m_mimetype( mimetype )
 {}
 
 MimeType::~MimeType()
@@ -103,16 +103,15 @@ PimItem::~PimItem()
  *   Resource                                                              *
  ***************************************************************************/
 Resource::Resource()
-    :m_id( -1 )
 {
 }
 
 Resource::Resource( int id, const QString & resource, int policy_id )
-  : m_id( id ), m_policy_id( policy_id ), m_resource( resource )
+    : Entity( id ), m_policy_id( policy_id ), m_resource( resource )
 {}
 
 Resource::Resource( int id, const QString & resource, const CachePolicy & policy )
-  : m_id( id ), m_policy_id( policy.getId() ), m_resource( resource )
+    : Entity( id ), m_policy_id( policy.getId() ), m_resource( resource )
 {}
 
 Resource::~Resource()

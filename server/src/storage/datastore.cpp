@@ -465,7 +465,8 @@ MetaType * DataStore::getMetaTypeById( int id )
 {
   // TODO implement
   MetaType * m = new MetaType();
-  m->setId( id ).setMetaType( "dummyMetaType" ).setMimeTypeId( 1 );
+  m->setId( id );
+  m->setMetaType( "dummyMetaType" ).setMimeTypeId( 1 );
   return m;
 }
 
@@ -513,7 +514,8 @@ PimItem * DataStore::getPimItemById( int id )
 {
   // TODO implement
   PimItem * p = new PimItem();
-  p->setId( id ).setData( "dummyData" );
+  p->setId( id );
+  p->setData( "dummyData" );
   p->setMimeTypeId( 1 ).setLocationId( 1 );
   return p;
 }
@@ -679,7 +681,7 @@ bool DataStore::removeById( int id, const QString & tableName )
 }
 
 Akonadi::Location Akonadi::DataStore::getLocationByName( const Resource &resource,
-                                                const QByteArray & name ) const
+                                                         const QByteArray & name ) const
 {
     Location l;
     if ( !resource.isValid() ) return l;
@@ -687,11 +689,10 @@ Akonadi::Location Akonadi::DataStore::getLocationByName( const Resource &resourc
         QSqlQuery query( m_database );
         const QString queryString =
                 "SELECT id, uri, cachepolicy_id, resource_id FROM Locations "
-                "WHERE resource_id = \"" + QString::number( resource.getId() ) + "\""
-                "AND uri = \"" + name + "\"";
+                "WHERE resource_id = " + QString::number( resource.getId() ) + 
+                " AND uri = \"" + name + "\"";
         if ( query.exec( queryString ) ) {
             while (query.next()) {
-
                 int id = query.value(0).toInt();
                 QString uri = query.value(1).toString();
                 int policy = query.value(2).toInt();
@@ -701,6 +702,7 @@ Akonadi::Location Akonadi::DataStore::getLocationByName( const Resource &resourc
         } else
             debugLastDbError( "Error during selection of a Location by name from a Resource." );
     }
+    qDebug() << "Resource: " << resource.isValid() << " location: " << l.isValid();
 
     return l;
 }
