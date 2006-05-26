@@ -44,6 +44,20 @@ DataStore::~DataStore()
   m_database.close();
 }
 
+/* -- High level API -- */
+const CollectionList Akonadi::DataStore::listCollections( ) const
+{
+    const QList<Location> locations = listLocations();
+    CollectionList result;
+    
+    foreach( Location l, locations )
+    {
+        Collection c( l.getLocation() );
+        result.append( c );
+    }
+    return result;
+}
+
 /* --- CachePolicy --------------------------------------------------- */
 bool DataStore::appendCachePolicy( const QString & policy )
 {
@@ -249,7 +263,7 @@ Location * DataStore::getLocationById( int id )
   return l;
 }
 
-QList<Location> DataStore::listLocations()
+const QList<Location> DataStore::listLocations() const
 {
   QList<Location> list;
   if ( m_dbOpened ) {

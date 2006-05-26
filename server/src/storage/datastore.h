@@ -20,12 +20,13 @@
 #ifndef DATASTORE_H
 #define DATASTORE_H
 
-#include "entity.h"
-
 #include <QList>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QtDebug>
+
+#include "entity.h"
+#include "collection.h"
 
 namespace Akonadi {
 
@@ -37,6 +38,9 @@ class DataStore
 public:
     DataStore();
     ~DataStore();
+
+    /* -- higher level API -- */
+    const CollectionList listCollections() const;
 
     /* --- CachePolicy --------------------------------------------------- */
     bool appendCachePolicy( const QString & policy );
@@ -63,7 +67,7 @@ public:
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
     Location * getLocationById( int id );
-    QList<Location> listLocations();
+    const QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource );
 
     /* --- MimeType ------------------------------------------------------ */
