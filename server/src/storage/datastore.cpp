@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "datastore.h"
+#include "persistentsearchmanager.h"
 
 #include <QSqlQuery>
 #include <QVariant>
@@ -85,11 +86,14 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
             result.append( c );
         }
 
-        // FIXME list top level search folder, if there is more than 0 searches
+        CollectionList persistenSearches = PersistentSearchManager::self()->collections();
+        if ( !persistenSearches.isEmpty() )
+          result.append( Collection( "Search" ) );
+
     }
     else if ( fullPrefix == "Search" )
     {
-        // FIXME get searches, list them
+        result += PersistentSearchManager::self()->collections();
     }
     else
     {
