@@ -17,6 +17,7 @@ HEADERS += akonadi.h \
            handler/append.h \
            handler/search.h \
            handler/searchpersistent.h \
+           handler/create.h \
            ../test/teststoragebackend.h \
            persistentsearch.h \
            persistentsearchmanager.h \
@@ -42,6 +43,7 @@ SOURCES += akonadi.cpp \
            handler/search.cpp \
            handler/searchhelper.cpp \
            handler/searchpersistent.cpp \
+           handler/create.cpp \
            ../test/teststoragebackend.cpp \
            persistentsearch.cpp \
            persistentsearchmanager.cpp \

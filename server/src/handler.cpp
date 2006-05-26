@@ -29,6 +29,7 @@
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
+#include "handler/create.h"
 #include "handler/append.h"
 
 
@@ -92,6 +93,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     // SUBSCRIBE, UNSUBSCRIBE, LIST, LSUB, and APPEND.
     if ( command == "APPEND" )
         return new Append();
+    if ( command == "CREATE" )
+        return new Create();
     if ( command == "LIST" )
         return new List();
     if ( command == "SELECT" )
