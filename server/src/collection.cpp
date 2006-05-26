@@ -56,3 +56,13 @@ void Akonadi::Collection::setNoInferiors( bool v )
 {
     m_noInferiors = v;
 }
+
+void Akonadi::Collection::setMimeTypes( const QByteArray& mimetypes )
+{
+    m_mimeTypes = mimetypes;
+}
+
+QByteArray Akonadi::Collection::getMimeTypes() const
+{
+    return m_mimeTypes;
+}

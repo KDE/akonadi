@@ -114,6 +114,8 @@ public:
     int getPolicyId() const { return m_policy_id; };
     int getResourceId() const { return m_resource_id; };
     const QString & getLocation() const { return m_location; };
+    void setMimeTypes( const QList<MimeType> & types )
+    { m_mimeTypes = types; }
 
     QString getFlags() const { return m_flags; }
     int getExists() const { return m_exists; }
@@ -121,6 +123,7 @@ public:
     int getUnseen() const { return m_unseen; }
     int getFirstUnseen() const { return m_unseen; }
     long getUidValidity() const { return m_uidValidity; }
+    QList<MimeType> getMimeTypes() const { return m_mimeTypes; }
 
 protected:
     Location & setPolicyId( int policy_id )
@@ -143,6 +146,7 @@ private:
     int m_firstUnseen;
     long m_uidValidity;
     QString m_flags;
+    QList<MimeType> m_mimeTypes;
 
     friend class DataStore;
 };
@@ -159,6 +163,7 @@ public:
     MimeType( int id, const QString & mimetype );
     ~MimeType();
     QString getMimeType() const { return m_mimetype; }
+    static QByteArray asCommaSeparatedString( QList<MimeType> );
 
 protected:
     MimeType & setMimeType( const QString & mimetype )

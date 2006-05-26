@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QStringList>
 #include "entity.h"
 
 namespace Akonadi {
@@ -127,4 +128,17 @@ Resource::Resource( int id, const QString & resource, const CachePolicy & policy
 Resource::~Resource()
 {}
 
-}  // namespace Akonadi
+}
+
+QByteArray Akonadi::MimeType::asCommaSeparatedString( QList<MimeType> types )
+{
+    QStringList list;
+    foreach ( MimeType mt, types )
+    {
+        list.append( mt.getMimeType() );
+    }
+    return list.join( "," ).toLatin1();
+}
+
+// namespace Akonadi
+

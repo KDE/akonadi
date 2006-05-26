@@ -37,16 +37,20 @@ public:
 
     void setNoSelect( bool );
     void setNoInferiors( bool );
+    void setMimeTypes( const QByteArray & );
 
 
     QString identifier() const;
     bool isNoSelect() const;
     bool isNoInferiors() const;
+    /** Returns a comman separated list of allowed mime types for this folder */
+    QByteArray getMimeTypes() const;
 
 private:
     QString m_identifier;
     bool m_noSelect;
     bool m_noInferiors;
+    QByteArray m_mimeTypes;
 };
 
 typedef QList<Collection> CollectionList;

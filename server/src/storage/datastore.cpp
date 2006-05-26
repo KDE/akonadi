@@ -111,6 +111,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
             if ( location.startsWith( fullPrefix ) ) {
                 if ( hasStar || ( hasPercent && atFirstLevel ) ) {
                     Collection c( location.right( location.size() -1 ) );
+                    c.setMimeTypes( MimeType::asCommaSeparatedString( l.getMimeTypes() ) );
                     result.append( c );
                 }
             }
