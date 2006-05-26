@@ -103,6 +103,8 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
   if ( index.column() == 0 && role == Qt::DecorationRole ) {
     if ( col->type() == Collection::Resource )
       return SmallIcon( "server" );
+    if ( col->type() == Collection::VirtualParent )
+      return SmallIcon( "find" );
     QStringList content = col->contentTypes();
     if ( content.size() == 1 ) {
       if ( content.first() == "text/x-vcard" )

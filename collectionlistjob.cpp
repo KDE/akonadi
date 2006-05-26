@@ -22,6 +22,7 @@
 
 #include <QDebug>
 #include <QHash>
+#include <QStringList>
 #include <QTimer>
 
 using namespace PIM;
@@ -74,20 +75,36 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
     begin = data.indexOf( '"', end );
     char delim = data[begin + 1];
     begin = data.indexOf( ' ', begin + 2 );
+
     QByteArray folderName;
-    if ( data[begin + 1] == '"' ) // ### are quoted results allowed?
-      folderName = d->prefix + data.mid( begin + 2, data.length() - begin - 3 );
+    if ( data[begin + 1] == '"' )
+      folderName = d->prefix + data.mid( begin + 2, data.lastIndexOf( '"' ) - begin - 2 );
     else
-      folderName = d->prefix + data.mid( begin + 1 );
-    QByteArray parentName = folderName.mid( 0, folderName.lastIndexOf( delim ) + 1 ); // ### handle trailing delimiters!
+      folderName = d->prefix + data.mid( begin + 1 ); // ### strip trailing newline?
+    // strip trailing delimiters
+    if ( folderName.endsWith( delim ) )
+      folderName.truncate( data.length() - 1 );
+
+    QByteArray parentName = folderName.mid( 0, folderName.lastIndexOf( delim ) + 1 );
     Collection *col = new Collection( folderName );
     col->setParent( parentName );
+
     // determine collection type, TODO: search folder
-    if ( parentName == Collection::root() )
-      col->setType( Collection::Resource );
+    if ( parentName == Collection::root() ) {
+      if ( folderName == Collection::searchFolder() )
+        col->setType( Collection::VirtualParent );
+      else
+        col->setType( Collection::Resource );
+    } else if ( parentName == Collection::searchFolder() )
+      col->setType( Collection::Virtual );
     else
       col->setType( Collection::Folder );
-    // TODO: add other collection parameters
+
+    QStringList contentTypes;
+    if ( !attributes.contains( "\Noinferiors" ) )
+      contentTypes << "akonadi/folder";
+    col->setContentTypes( contentTypes );
+
     d->collections.append( col );
     qDebug() << "received list response: delim: " << delim << " name: " << folderName << "attrs: " << attributes << " parent: " << parentName;
   }

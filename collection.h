@@ -41,6 +41,7 @@ class AKONADI_EXPORT Collection
       Folder, /**< 'Real' folder on eg. an IMAP server. */
       Virtual, /**< Virtual collection (aka search folder). */
       Resource, /**< Resource or account. */
+      VirtualParent, /**< The parent collection of all virtual collections. */
       Unknown /**< Unknown collection type. */
     };
 
@@ -117,6 +118,11 @@ class AKONADI_EXPORT Collection
       Returns the root path.
     */
     static QByteArray root();
+
+    /**
+      Returns the path of the top-level search folder.
+    */
+    static QByteArray searchFolder();
 
   private:
     class Private;

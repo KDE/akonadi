@@ -111,3 +111,8 @@ QByteArray PIM::Collection::root( )
 {
   return QByteArray( "/" );
 }
+
+QByteArray PIM::Collection::searchFolder( )
+{
+  return delimiter() + QByteArray( "Search" );
+}
