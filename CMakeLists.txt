@@ -23,6 +23,7 @@ set( akonadi_LIB_SRC
 	messagecollection.cpp
 	messagecollectionmodel.cpp
 	message.cpp
+	messagefetchjob.cpp
 	messagemodel.cpp
 	messagequery.cpp
 	monitor.cpp
@@ -48,6 +49,7 @@ install_files( /include/libakonadi FILES
 	messagecollection.h
 	messagecollectionmodel.h
 	message.h
+	messagefetchjob.h
 	messagemodel.h
 	messagequery.h
 	monitor.h

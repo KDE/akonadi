@@ -18,6 +18,7 @@
 */
 
 #include "message.h"
+#include "messagefetchjob.h"
 #include "messagemodel.h"
 #include "messagequery.h"
 #include "monitor.h"
@@ -33,8 +34,8 @@ class MessageModel::Private
 {
   public:
     QList<Message*> messages;
-    QString query;
-    MessageQuery *listingJob;
+    QByteArray path;
+    MessageFetchJob *listingJob;
     Monitor *monitor;
     QList<MessageQuery*> fetchJobs, updateJobs;
 };
@@ -115,11 +116,11 @@ QVariant PIM::MessageModel::headerData( int section, Qt::Orientation orientation
   return QAbstractTableModel::headerData( section, orientation, role );
 }
 
-void PIM::MessageModel::setQuery( const QString & query )
+void PIM::MessageModel::setPath( const QByteArray& path )
 {
-  if ( d->query == query )
+  if ( d->path == path )
     return;
-  d->query = query;
+  d->path = path;
   // the query changed, thus everything we have already is invalid
   d->messages.clear();
   reset();
@@ -132,7 +133,7 @@ void PIM::MessageModel::setQuery( const QString & query )
   d->updateJobs.clear();
   delete d->listingJob;
   // start listing job
-  d->listingJob = new MessageQuery( query, "ENVELOPE" );
+  d->listingJob = new MessageFetchJob( path, this );
   connect( d->listingJob, SIGNAL( done( PIM::Job* ) ), SLOT( listingDone( PIM::Job* ) ) );
   d->listingJob->start();
 }
@@ -152,7 +153,7 @@ void PIM::MessageModel::listingDone( PIM::Job * job )
 
   // start monitor job
   // TODO error handling
-  d->monitor = new Monitor( d->query );
+  d->monitor = new Monitor( "folder=" + d->path );
   connect( d->monitor, SIGNAL( changed( const DataReference::List& ) ),
            SLOT( messagesChanged( const DataReference::List& ) ) );
   connect( d->monitor, SIGNAL( added( const DataReference::List& ) ),
