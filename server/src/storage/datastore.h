@@ -50,7 +50,7 @@ public:
     CachePolicy * getCachePolicyById( int id );
     QList<CachePolicy> listCachePolicies();
 
-    /* --- CachePolicy --------------------------------------------------- */
+    /* --- Flag ---------------------------------------------------------- */
     bool appendFlag( const QString & name );
     bool removeFlag( const Flag & flag );
     bool removeFlag( int id );
