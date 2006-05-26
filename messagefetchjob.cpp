@@ -31,7 +31,7 @@ class PIM::MessageFetchJobPrivate
     QByteArray path;
     DataReference uid;
     Message::List messages;
-    QByteArray currentTag;
+    QByteArray tag;
 };
 
 PIM::MessageFetchJob::MessageFetchJob( const QByteArray & path, QObject * parent ) :
@@ -63,10 +63,16 @@ void PIM::MessageFetchJob::doStart()
 
 void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  // TODO
+  if ( tag == d->tag ) {
+    if ( !data.startsWith( "OK" ) )
+      setError( Unknown );
+    emit done( this );
+    return;
+  }
+  qDebug() << "Unhandled response in message fetch job: " << tag << data;
 }
 
-Message::List PIM::MessageFetchJob::messages( ) const
+Message::List PIM::MessageFetchJob::messages() const
 {
   return d->messages;
 }
@@ -74,7 +80,14 @@ Message::List PIM::MessageFetchJob::messages( ) const
 void PIM::MessageFetchJob::selectDone( PIM::Job * job )
 {
   job->deleteLater();
-  emit done( this );
+  // the collection is now selected, fetch the message(s)
+  d->tag = newTag();
+  QByteArray command = d->tag + " FETCH ";
+  if ( d->uid.isNull() )
+    command += "0:* ENVELOPE";
+  else
+    command += d->uid.persistanceID().toLatin1() + " (BODY[])";
+  writeData( command );
 }
 
 #include "messagefetchjob.moc"
