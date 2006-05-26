@@ -160,7 +160,7 @@ void PIM::MessageModel::listingDone( PIM::Job * job )
            SLOT( messagesAdded( const DataReference::List& ) ) );
   connect( d->monitor, SIGNAL( removed( const DataReference::List& ) ),
            SLOT( messagesRemoved( const DataReference::List& ) ) );
-  d->monitor->start();
+//   d->monitor->start();
 }
 
 void PIM::MessageModel::fetchingNewDone( PIM::Job * job )

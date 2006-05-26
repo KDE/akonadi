@@ -65,6 +65,9 @@ class AKONADI_EXPORT MessageFetchJob : public Job
     virtual void doStart();
     virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
 
+  private slots:
+    void selectDone( PIM::Job* job );
+
   private:
     MessageFetchJobPrivate *d;
 

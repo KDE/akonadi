@@ -18,7 +18,10 @@
 */
 
 #include "collection.h"
+#include "collectionselectjob.h"
 #include "messagefetchjob.h"
+
+#include <QDebug>
 
 using namespace PIM;
 
@@ -53,7 +56,9 @@ PIM::MessageFetchJob::~ MessageFetchJob( )
 
 void PIM::MessageFetchJob::doStart()
 {
-  emit done( this );
+  CollectionSelectJob *job = new CollectionSelectJob( d->uid.isNull() ? d->path : Collection::root(), this );
+  connect( job, SIGNAL(done(PIM::Job*)), SLOT(selectDone(PIM::Job*)) );
+  job->start();
 }
 
 void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteArray & data )
@@ -64,6 +69,12 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
 Message::List PIM::MessageFetchJob::messages( ) const
 {
   return d->messages;
+}
+
+void PIM::MessageFetchJob::selectDone( PIM::Job * job )
+{
+  job->deleteLater();
+  emit done( this );
 }
 
 #include "messagefetchjob.moc"
