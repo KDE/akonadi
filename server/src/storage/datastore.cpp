@@ -345,23 +345,20 @@ QList<MimeType> DataStore::getMimeTypesForLocation( int id ) const
 
 QList<Location> DataStore::listLocations() const
 {
-  QList<Location> list;
-  if ( m_dbOpened ) {
-    QSqlQuery query( m_database );
-    if ( query.exec( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations" ) ) {
-      while (query.next()) {
-        int id = query.value(0).toInt();
-        QString uri = query.value(1).toString();
-        int policy = query.value(2).toInt();
-        int resource = query.value(2).toInt();
-        Location l( id, uri, policy, resource );
-        l.setMimeTypes( getMimeTypesForLocation( id ) );
-        list.append( l );
-      }
-    } else
-      debugLastDbError( "Error during selection of Locations." );
-  }
-  return list;
+    QList<Location> list;
+    if ( m_dbOpened ) {
+        QSqlQuery query( m_database );
+        if ( query.exec( "SELECT id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity FROM Locations" ) ) {
+            while (query.next()) {
+                Location l;
+                l.fillFromQuery( query );
+                l.setMimeTypes( getMimeTypesForLocation( l.getId() ) );
+                list.append( l );
+            }
+        } else
+            debugLastDbError( "Error during selection of Locations." );
+    }
+    return list;
 }
 
 QList<Location> DataStore::listLocations( const Resource & resource ) const
@@ -369,22 +366,18 @@ QList<Location> DataStore::listLocations( const Resource & resource ) const
   QList<Location> list;
   if ( !resource.isValid() ) return list;
   if ( m_dbOpened ) {
-    QSqlQuery query( m_database );
-    // query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = :id" );
-    // query.bindValue( ":id", resource.getId() );
-    const QString queryString =
-            "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = \"" + QString::number( resource.getId() ) + "\"";
-    if ( query.exec( queryString ) ) {
-      while (query.next()) {
-
-        int id = query.value(0).toInt();
-        QString uri = query.value(1).toString();
-        int policy = query.value(2).toInt();
-        int resource = query.value(2).toInt();
-        Location l( id, uri, policy, resource );
-        l.setMimeTypes( getMimeTypesForLocation( id ) );
-        list.append( l );
-      }
+        QSqlQuery query( m_database );
+        // query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = :id" );
+        // query.bindValue( ":id", resource.getId() );
+        const QString queryString =
+                "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = \"" + QString::number( resource.getId() ) + "\"";
+        if ( query.exec( queryString ) ) {
+            while (query.next()) {
+                Location l;
+                l.fillFromQuery( query );
+                l.setMimeTypes( getMimeTypesForLocation( l.getId() ) );
+                list.append( l );
+            }
     } else
       debugLastDbError( "Error during selection of Locations from a Resource." );
   }
@@ -709,16 +702,13 @@ Akonadi::Location Akonadi::DataStore::getLocationByName( const Resource &resourc
     if ( m_dbOpened ) {
         QSqlQuery query( m_database );
         const QString queryString =
-                "SELECT id, uri, cachepolicy_id, resource_id FROM Locations "
+                "SELECT id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity FROM Locations "
                 "WHERE resource_id = " + QString::number( resource.getId() ) + 
                 " AND uri = \"" + name + "\"";
         if ( query.exec( queryString ) ) {
             while (query.next()) {
-                int id = query.value(0).toInt();
-                QString uri = query.value(1).toString();
-                int policy = query.value(2).toInt();
-                int resource = query.value(2).toInt();
-                l = Location( id, uri, policy, resource );
+                l.fillFromQuery( query );
+                l.setMimeTypes( getMimeTypesForLocation( l.getId() ) );
             }
         } else
             debugLastDbError( "Error during selection of a Location by name from a Resource." );

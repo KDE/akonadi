@@ -20,7 +20,7 @@ INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (0, '/foo', 
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (1, '/foo/bar', 0, 0);
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (2, '/foo/bar/bla', 0, 0);
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (3, '/foo/bla', 0, 0);
-INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (4, '/foo2', 0, 1);
+INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity) VALUES (4, '/foo2', 0, 1, 2, 3, 4, 5, 6);
 
 INSERT INTO Resources (id, name, cachepolicy_id) VALUES(0, 'res1', 0);
 INSERT INTO Resources (id, name, cachepolicy_id) VALUES(1, 'res2', 0);

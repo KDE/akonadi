@@ -18,6 +18,8 @@
  ***************************************************************************/
 
 #include <QStringList>
+#include <QSqlQuery>
+#include <QVariant>
 #include "entity.h"
 
 namespace Akonadi {
@@ -63,6 +65,20 @@ void Location::init()
 {
     // FIXME, obviously
     m_flags = "FLAGS (Answered)";
+}
+
+void Location::fillFromQuery( const QSqlQuery & query )
+{
+    m_id = query.value(0).toInt();
+    m_location = query.value(1).toString();
+    m_policy_id = query.value(2).toInt();
+    m_resource_id = query.value(3).toInt();
+    m_exists = query.value(4).toInt();
+    m_recent = query.value(5).toInt();
+    m_unseen = query.value(6).toInt();
+    m_firstUnseen = query.value(7).toInt();
+    m_uidValidity = query.value(8).toInt();
+    // FIXME flags
 }
 
 Location::~Location()

@@ -17,7 +17,12 @@ CREATE TABLE Locations
 	id		INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	uri		CHAR(512) NOT NULL UNIQUE,
 	cachepolicy_id	INTEGER REFERENCES CachePolicies(id),
-	resource_id	INTEGER NOT NULL REFERENCES Resources(id)
+	resource_id	INTEGER NOT NULL REFERENCES Resources(id),
+	exists_count    INTEGER,
+	recent_count    INTEGER,
+	unseen_count    INTEGER,
+	first_unseen    INTEGER,
+	uid_validity    INTEGER
 );
 
 CREATE TABLE PersistentSearches

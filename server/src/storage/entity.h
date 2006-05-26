@@ -24,6 +24,8 @@
 #include <QDebug>
 #include <QString>
 
+class QSqlQuery;
+
 namespace Akonadi {
 
 class DataStore;
@@ -39,12 +41,12 @@ class Resource;
 class Entity
 {
 public:
-    Entity() : m_id( -1 ) {}
-    Entity( int id ) : m_id( id ) {}
     int getId() const { return m_id; }
     void setId( int id ) { m_id = id; }
     bool isValid() const { return m_id != -1; }
-private:
+protected:
+    Entity() : m_id( -1 ) {}
+    Entity( int id ) : m_id( id ) {}
     int m_id;
 };
 
@@ -97,6 +99,7 @@ private:
     friend class DataStore;
 };
 
+
 /***************************************************************************
  *   Location                                                              *
  ***************************************************************************/
@@ -108,6 +111,7 @@ public:
               int policy_id, int resource_id );
     Location( int id, const QString & location,
               const CachePolicy & policy, const Resource & resource );
+    void fillFromQuery( const QSqlQuery & query );
     ~Location();
 
 
