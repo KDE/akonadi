@@ -57,6 +57,16 @@ bool Create::handleLine(const QByteArray& line )
     Response response;
     response.setTag( tag() );
 
+
+    response.setSuccess();
+    response.setString( "Completed" );
+    emit responseAvailable( response );
+
+    deleteLater();
+    return true;
+
+
+    
     if ( mailbox.isEmpty() || mailbox.contains( "//" ) ) {
         response.setError();
         response.setString( "Invalid argument" );

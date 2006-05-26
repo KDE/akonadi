@@ -91,9 +91,10 @@ void AkonadiConnection::slotDisconnected()
 
 void AkonadiConnection::slotNewData()
 {
-    QByteArray line = m_tcpSocket->readLine().trimmed();
+    QByteArray line = m_tcpSocket->readLine();
     qDebug() << "GOT:" << line <<  endl;
     if ( !m_currentHandler ) {
+        line = line.trimmed();
         // this is a new command, which means the line must start with a tag
         // followed by a non-empty command. First get the tag
         int separator = line.indexOf(' ');
@@ -119,13 +120,20 @@ void AkonadiConnection::slotNewData()
                  Qt::DirectConnection );
     }
     try {
-      m_currentHandler->handleLine( line );
+        if ( m_currentHandler->handleLine( line ) )
+            m_currentHandler = 0;
     } catch ( ... ) {
-      qDebug( "Oops" );
-      delete m_currentHandler;
+        qDebug( "Oops" );
+        delete m_currentHandler;
+        m_currentHandler = 0;
+    }
+    if ( m_tcpSocket->canReadLine() ) {
+        if ( m_currentHandler )
+            slotNewData();
+        else
+            m_tcpSocket->readLine();
     }
 
-    m_currentHandler = 0;
 }
 
 void AkonadiConnection::writeOut( const char* str )

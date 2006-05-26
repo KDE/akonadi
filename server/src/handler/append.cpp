@@ -29,7 +29,8 @@
 
 using namespace Akonadi;
 
-Append::Append(): Handler()
+Append::Append()
+    : Handler(), m_size(-1)
 {
 }
 
@@ -39,8 +40,20 @@ Append::~Append()
 }
 
 
-bool Append::handleLine(const QByteArray& line )
+bool Akonadi::Append::handleLine(const QByteArray& line )
 {
+    if ( m_size > -1 ) { // continuation
+        m_data += line;
+        bool done = false;
+        m_size -= line.size();
+        if (  m_size == 0 ) {
+            commit();
+            done = true;
+            deleteLater();
+        }
+        return done;
+    }
+    
     // Arguments:  mailbox name
     //        OPTIONAL flag parenthesized list
     //        OPTIONAL date/time string
@@ -48,24 +61,36 @@ bool Append::handleLine(const QByteArray& line )
   
     int startOfCommand = line.indexOf( ' ' ) + 1;
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QByteArray mailbox = stripQuotes( line.right( line.size() - startOfMailbox ) );
-    QByteArray body;
+    int endOfMailbox = line.indexOf( ' ', startOfMailbox ) + 1;
+    m_mailbox = stripQuotes( line.mid( startOfMailbox, endOfMailbox - startOfMailbox -1 ) );
 
+    // FIXME parse optionals
+    int startOfSize = line.indexOf('{') + 1;
+    m_size = QString( line.mid( startOfSize, line.indexOf('}') - startOfSize ) ).toInt();
+    
     Response response;
-    response.setUntagged();
+    response.setContinuation();
+    response.setString( "Ready for literal data" );
+    emit responseAvailable( response );
+    return false;
+}
+
+void Akonadi::Append::commit()
+{
+    Response response;
 
     DataStore *db = connection()->storageBackend();
-    Location l = db->getLocationByRawMailbox( mailbox );
-    MimeType mimeType(0, "message/rfc820" );
-    bool ok = db->appendPimItem( body, mimeType, l );
-    if ( ok )
-        response.setSuccess();
-    else
-        response.setFailure();
+    Location l = db->getLocationByRawMailbox( m_mailbox );
+    MimeType mimeType(0, "message/rfc822" );
+    bool ok = db->appendPimItem( m_data, mimeType, l );
     response.setTag( tag() );
-    response.setString( "Append completed" );
+    if ( ok ) {
+        response.setSuccess();
+        response.setString( "Append completed" );
+    } else {
+        response.setFailure();
+        response.setString( "Append failed" );
+    }
     emit responseAvailable( response );
-    deleteLater();
-    return true;
 }
 

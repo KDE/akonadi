@@ -24,6 +24,7 @@
 #include <QVariant>
 #include <QThread>
 #include <QUuid>
+#include <QString>
 #include <QStringList>
 
 
@@ -406,11 +407,11 @@ Location DataStore::getLocationById( int id ) const
 
 Location DataStore::getLocationByRawMailbox( const QByteArray& mailbox ) const
 {
-    int secondSlash = mailbox.indexOf( '/', 2 ) + 1;
-    //qDebug() << "Select: " << mailbox.mid( secondSlash -1 , mailbox.size() - (secondSlash-1) )
-    //         << " in resource: " << mailbox.mid( 1, secondSlash - 2 );
-    Resource resource = getResourceByName( mailbox.mid( 1, secondSlash - 2 ) );
-    return getLocationByName( resource, mailbox.mid( secondSlash -1 , mailbox.size() - (secondSlash-1) ) );
+    int secondSlash = mailbox.indexOf( '/', 2 );
+    // qDebug() << "Select: " << mailbox.mid( secondSlash, mailbox.size() - secondSlash )
+    //         << " in resource: " << mailbox.left( secondSlash );
+    Resource resource = getResourceByName( mailbox.left( secondSlash ) );
+    return getLocationByName( resource, mailbox.mid( secondSlash, mailbox.size() - secondSlash ) );
 }
 
 QList<MimeType> DataStore::getMimeTypesForLocation( int id ) const
@@ -596,15 +597,15 @@ bool DataStore::appendPimItem( const QByteArray & data,
                                const MimeType & mimetype,
                                const Location & location )
 {
-  int foundRecs = 0;
   QSqlQuery query( m_database );
   if ( m_dbOpened ) {
-    query.prepare( "INSERT INTO PimItems (data, location_id, mimetype_id) "
-                   "VALUES (:data, :location, :type)" );
-    query.bindValue( ":data", data );
-    query.bindValue( ":location", location.getId() );
-    query.bindValue( ":type", mimetype.getId() );
-    if ( query.exec() )
+      QString queryString = QString("INSERT INTO PimItems (data, location_id, mimetype_id) "
+              "VALUES ('%1', %2, %3)")
+              .arg(data.data())
+              .arg(location.getId())
+              .arg(mimetype.getId());
+    //qDebug() << "QUERY: " << queryString;
+    if ( query.exec( queryString ) )
       return true;
     else
       debugLastDbError( "Error during insertion of single PimItem." );

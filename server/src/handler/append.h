@@ -37,6 +37,14 @@ public:
 
     bool handleLine(const QByteArray& line);
 
+protected:
+    void commit(); 
+
+private:
+    int m_size;
+    QByteArray m_data;
+    QByteArray m_mailbox;
+
 };
 
 }
