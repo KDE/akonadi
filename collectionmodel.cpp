@@ -21,6 +21,7 @@
 #include "collectionfetchjob.h"
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
+#include "collectionrenamejob.h"
 #include "monitor.h"
 
 #include <kdebug.h>
@@ -97,7 +98,7 @@ int PIM::CollectionModel::columnCount( const QModelIndex & parent ) const
 QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
 {
   Collection *col = static_cast<Collection*>( index.internalPointer() );
-  if ( index.column() == 0 && role == Qt::DisplayRole ) {
+  if ( index.column() == 0 && (role == Qt::DisplayRole || role == Qt::EditRole) ) {
     return col->name();
   }
   if ( index.column() == 0 && role == Qt::DecorationRole ) {
@@ -337,6 +338,42 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
         cljob->start();
       }
     }
+  }
+  job->deleteLater();
+}
+
+bool PIM::CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
+{
+  if ( index.column() == 0 && role == Qt::EditRole ) {
+    Collection *col = static_cast<Collection*>( index.internalPointer() );
+    qDebug() << "Renaming collection to " << value.toString();
+    // FIXME: corrent name encoding, etc.
+    CollectionRenameJob *job = new CollectionRenameJob( col->path(), col->parent() + col->delimiter() + value.toString().toLatin1(), this );
+    connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
+    job->start();
+    return true;
+  }
+  return QAbstractItemModel::setData( index, value, role );
+}
+
+Qt::ItemFlags PIM::CollectionModel::flags( const QModelIndex & index ) const
+{
+  if ( index.column() == 0 ) {
+    Collection *col = static_cast<Collection*>( index.internalPointer() );
+    if ( col->type() != Collection::VirtualParent )
+      return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
+  }
+  return QAbstractItemModel::flags( index );
+}
+
+void PIM::CollectionModel::editDone( PIM::Job * job )
+{
+  qDebug() << "Edit done";
+  if ( job->error() ) {
+    qWarning() << "Edit failed: " << job->errorText();
+    // TODO: revert current change
+  } else {
+    // TODO: transaction done
   }
   job->deleteLater();
 }

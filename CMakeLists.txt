@@ -19,6 +19,7 @@ set( akonadi_LIB_SRC
 	collectionlistjob.cpp
 	collectionmodel.cpp
 	collectionfetchjob.cpp
+	collectionrenamejob.cpp
 	collectionselectjob.cpp
 	collectionview.cpp
 	messagecollection.cpp
@@ -46,6 +47,7 @@ install_files( /include/libakonadi FILES
 	collectionlistjob.h
 	collectionmodel.h
 	collectionfetchjob.h
+	collectionrenamejob.h
 	collectionselectjob.h
 	collectionview.h
 	messagecollection.h

@@ -94,7 +94,7 @@ Job::Job( QObject *parent )
 {
   d->mError = None;
   d->socket = new QTcpSocket( this );
-  connect( d->socket, SIGNAL(connected()), SLOT(slotConnected()) );
+  connect( d->socket, SIGNAL(disconnected()), SLOT(slotDisconnected()) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(slotDataReceived()) );
   connect( d->socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotSocketError()) );
   d->lastTag = 0;
@@ -157,10 +157,11 @@ void Job::setError( int error )
   d->mError = error;
 }
 
-void PIM::Job::slotConnected( )
+void PIM::Job::slotDisconnected( )
 {
-  d->loginTag = newTag();
-  writeData( d->loginTag + " LOGIN\n" );
+  setError( ConnectionFailed );
+  // FIXME: we must make sure to emit done() only once!
+//   emit done( this );
 }
 
 void PIM::Job::slotDataReceived( )
@@ -180,6 +181,10 @@ void PIM::Job::slotDataReceived( )
         setError( ConnectionFailed );
         emit done( this );
       }
+    }
+    if ( tag == "*" && data.startsWith( "OK Akonadi" ) ) {
+      d->loginTag = newTag();
+      writeData( d->loginTag + " LOGIN\n" );
     }
     // work for our subclasses
     else

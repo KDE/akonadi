@@ -41,6 +41,8 @@ PIM::CollectionView::CollectionView( QWidget * parent ) :
   header()->setSortIndicator( 0, Qt::Ascending );
   header()->setStretchLastSection( false );
   d->filterModel->sort( 0, Qt::Ascending );
+
+  setEditTriggers( QAbstractItemView::EditKeyPressed );
 }
 
 PIM::CollectionView::~ CollectionView( )

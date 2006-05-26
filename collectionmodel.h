@@ -91,6 +91,16 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     virtual bool removeRows( int row, int count, const QModelIndex & parent = QModelIndex() );
 
+    /**
+      Reimplemented.
+    */
+    bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
+
+    /**
+      Reimplemented.
+    */
+    Qt::ItemFlags flags( const QModelIndex &index ) const;
+
   private:
     /**
       Process pending updates.
@@ -127,6 +137,11 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Connected to the list jobs.
     */
     void listDone( PIM::Job *job );
+
+    /**
+      Connected to edit jobs.
+    */
+    void editDone( PIM::Job *job );
 
   private:
     class Private;

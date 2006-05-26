@@ -233,7 +233,7 @@ class AKONADI_EXPORT Job : public QObject
     virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
 
   private slots:
-    void slotConnected();
+    void slotDisconnected();
     void slotDataReceived();
     void slotSocketError();
 
