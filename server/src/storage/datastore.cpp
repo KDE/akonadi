@@ -88,7 +88,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
 
         CollectionList persistenSearches = PersistentSearchManager::self()->collections();
         if ( !persistenSearches.isEmpty() )
-          result.append( Collection( "Search" ) );
+            result.append( Collection( "/Search" ) );
 
     }
     else if ( fullPrefix == "Search" )
