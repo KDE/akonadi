@@ -77,11 +77,6 @@ class AKONADI_EXPORT Collection
     QString name() const;
 
     /**
-      Sets the name of this collection.
-     */
-    void setName( const QString &name );
-
-    /**
       Returns the type of this collection (e.g. virtual folder, folder on an
       IMAP server, etc.).
     */
@@ -117,7 +112,12 @@ class AKONADI_EXPORT Collection
     /**
       Returns the collection path delimiter.
     */
-    static char delimiter();
+    static QByteArray delimiter();
+
+    /**
+      Returns the root path.
+    */
+    static QByteArray root();
 
   private:
     class Private;

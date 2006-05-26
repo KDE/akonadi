@@ -124,7 +124,7 @@ QModelIndex PIM::CollectionModel::index( int row, int column, const QModelIndex 
 {
   QList<QByteArray> list;
   if ( !parent.isValid() )
-    list = d->childCollections.value( /*DataReference()*/ "/" ); // ### FIXME
+    list = d->childCollections.value( Collection::root() );
   else
     list = d->childCollections.value( static_cast<Collection*>( parent.internalPointer() )->path() );
 
@@ -162,7 +162,7 @@ int PIM::CollectionModel::rowCount( const QModelIndex & parent ) const
   if ( parent.isValid() )
     list = d->childCollections.value( static_cast<Collection*>( parent.internalPointer() )->path() );
   else
-    list = d->childCollections.value( /*DataReference()*/ "/" ); // ### FIXME
+    list = d->childCollections.value( Collection::root() );
 
   return list.size();
 }

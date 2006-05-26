@@ -50,13 +50,13 @@ PIM::CollectionListJob::~CollectionListJob()
 
 PIM::Collection::List PIM::CollectionListJob::collections() const
 {
-  return Collection::List();
+  return d->collections;
 }
 
 void PIM::CollectionListJob::doStart()
 {
   d->tag = newTag();
-  writeData( d->tag + " LIST \"" + d->prefix + "/\" \"" + ( d->recursive ? '*' : '%' ) + "\"" );
+  writeData( d->tag + " LIST \"" + d->prefix + "\" " + ( d->recursive ? '*' : '%' ) );
 }
 
 void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByteArray & data )
@@ -75,12 +75,16 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
     char delim = data[begin + 1];
     begin = data.indexOf( ' ', begin + 2 );
     QByteArray folderName;
-    if ( data[begin + 1] == '"' )
-      folderName = data.mid( begin + 2, data.length() - begin - 3 );
+    if ( data[begin + 1] == '"' ) // ### are quoted results allowed?
+      folderName = d->prefix + data.mid( begin + 2, data.length() - begin - 3 );
     else
-      folderName = data.mid( begin + 1 );
-    // TODO: create collections
-    qDebug() << "received list response: delim: " << delim << " name: " << folderName << "attrs: " << attributes;
+      folderName = d->prefix + data.mid( begin + 1 );
+    QByteArray parentName = folderName.mid( 0, folderName.lastIndexOf( delim ) + 1 ); // ### handle trailing delimiters!
+    Collection *col = new Collection( folderName );
+    col->setParent( parentName );
+    // TODO: add other collection parameters
+    d->collections.append( col );
+    qDebug() << "received list response: delim: " << delim << " name: " << folderName << "attrs: " << attributes << " parent: " << parentName;
   }
   qDebug() << "unhandled server response in collection list job" << tag << data;
 }

@@ -27,6 +27,7 @@
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 
+#include <QDebug>
 #include <QHash>
 #include <QSortFilterProxyModel>
 #include <QTimer>
@@ -85,6 +86,7 @@ CollectionBrowser::CollectionBrowser() : CollectionView()
   CollectionListJob *job = new CollectionListJob( QByteArray( Collection::delimiter() ), true, this );
   job->exec();
   Collection::List collections = job->collections();
+  qDebug() << "got " << collections.size() << "collections";
   delete job;
   // use some dummy collections for now
 /*  createCollections( DataReference(), 8 );

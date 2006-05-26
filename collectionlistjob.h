@@ -48,7 +48,7 @@ class AKONADI_EXPORT CollectionListJob : public Job
       @param recursive Do a recursive collection listing.
       @param parent The parent object.
     */
-    CollectionListJob( const QByteArray &prefix = QByteArray( Collection::delimiter() ), bool recursive = false, QObject *parent = 0 );
+    CollectionListJob( const QByteArray &prefix, bool recursive = false, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -57,6 +57,7 @@ class AKONADI_EXPORT CollectionListJob : public Job
 
     /**
       Returns a list of collection objects.
+      It's your job to make sure they are deleted.
     */
     Collection::List collections() const;
 

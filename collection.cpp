@@ -64,12 +64,12 @@ QByteArray PIM::Collection::path() const
 
 QString PIM::Collection::name( ) const
 {
+  if ( d->name.isEmpty() && d->path != root() ) {
+    QByteArray name = d->path.mid( d->path.lastIndexOf( delimiter() ) + 1 );
+    // TODO decode to utf-8
+    d->name = QString::fromLatin1( name );
+  }
   return d->name;
-}
-
-void PIM::Collection::setName( const QString & name )
-{
-  d->name = name;
 }
 
 Collection::Type PIM::Collection::type() const
@@ -102,7 +102,12 @@ void PIM::Collection::setParent( const QByteArray &parent )
   d->parent = parent;
 }
 
-char PIM::Collection::delimiter()
+QByteArray PIM::Collection::delimiter()
 {
-  return '/';
+  return QByteArray( "/" );
+}
+
+QByteArray PIM::Collection::root( )
+{
+  return QByteArray( "/" );
 }
