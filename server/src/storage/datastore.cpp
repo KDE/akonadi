@@ -119,7 +119,7 @@ CachePolicy * DataStore::getCachePolicyById( int id )
 {
   CachePolicy * p = 0;
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     query.prepare( "SELECT id, name FROM CachePolicies WHERE id = :id" );
     query.bindValue( ":id", id );
     if ( query.exec() ) {
@@ -128,7 +128,7 @@ CachePolicy * DataStore::getCachePolicyById( int id )
         QString policy = query.value(1).toString();
         p = new CachePolicy( id, policy );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of single CachePolicy." );
   }
   return p;
@@ -138,14 +138,14 @@ QList<CachePolicy> DataStore::listCachePolicies()
 {
   QList<CachePolicy> list;
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     if ( query.exec( "SELECT id, name FROM CachePolicies" ) ) {
       while (query.next()) {
         int id = query.value(0).toInt();
         QString policy = query.value(1).toString();
         list.append( CachePolicy( id, policy ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of CachePolicies." );
   }
   return list;
@@ -166,7 +166,7 @@ bool DataStore::appendLocation( const QString & location,
                                 const Resource & resource )
 {
   int foundRecs = 0;
-  QSqlQuery query;
+  QSqlQuery query( m_database );
   if ( m_dbOpened ) {
     query.prepare( "SELECT COUNT(*) FROM Locations WHERE uri = :uri" );
     query.bindValue( ":uri", location );
@@ -196,7 +196,7 @@ bool DataStore::appendLocation( const QString & location,
                                 const CachePolicy & policy )
 {
   int foundRecs = 0;
-  QSqlQuery query;
+  QSqlQuery query( m_database );
   if ( m_dbOpened ) {
     query.prepare( "SELECT COUNT(*) FROM Locations WHERE uri = :uri" );
     query.bindValue( ":uri", location );
@@ -235,7 +235,7 @@ bool DataStore::removeLocation( int id )
 bool DataStore::changeLocationPolicy( const Location & location,
                                       const CachePolicy & policy )
 {
-  QSqlQuery query;
+  QSqlQuery query( m_database );
   if ( m_dbOpened ) {
     query.prepare( "UPDATE Locations SET cachepolicy_id = :policy WHERE id = :id" );
     query.bindValue( ":policy", policy.getId() );
@@ -250,7 +250,7 @@ bool DataStore::changeLocationPolicy( const Location & location,
 
 bool DataStore::resetLocationPolicy( const Location & location )
 {
-  QSqlQuery query;
+  QSqlQuery query( m_database );
   if ( m_dbOpened ) {
     query.prepare( "UPDATE Locations SET cachepolicy_id = NULL WHERE id = :id" );
     query.bindValue( ":id", location.getId() );
@@ -266,7 +266,7 @@ Location * DataStore::getLocationById( int id )
 {
   Location * l = 0;
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE id = :id" );
     query.bindValue( ":id", id );
     if ( query.exec() ) {
@@ -277,7 +277,7 @@ Location * DataStore::getLocationById( int id )
         int resource = query.value(2).toInt();
         l = new Location( id, uri, policy, resource );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of single Location." );
   }
   return l;
@@ -296,7 +296,7 @@ QList<Location> DataStore::listLocations() const
         int resource = query.value(2).toInt();
         list.append( Location( id, uri, policy, resource ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of Locations." );
   }
   return list;
@@ -306,7 +306,7 @@ QList<Location> DataStore::listLocations( const Resource & resource )
 {
   QList<Location> list;
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = :id" );
     query.bindValue( ":id", resource.getId() );
     if ( query.exec() ) {
@@ -317,7 +317,7 @@ QList<Location> DataStore::listLocations( const Resource & resource )
         int resource = query.value(2).toInt();
         list.append( Location( id, uri, policy, resource ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of Locations from a Resource." );
   }
   return list;
@@ -327,7 +327,7 @@ QList<Location> DataStore::listLocations( const Resource & resource )
 bool DataStore::appendMimeType( const QString & mimetype )
 {
   int foundRecs = 0;
-  QSqlQuery query;
+  QSqlQuery query( m_database );
   if ( m_dbOpened ) {
     query.prepare( "SELECT COUNT(*) FROM MimeTypes WHERE mime_type = :type" );
     query.bindValue( ":type", mimetype );
@@ -364,7 +364,7 @@ MimeType * DataStore::getMimeTypeById( int id )
 {
   MimeType * m = 0;
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     query.prepare( "SELECT id, mime_type FROM MimeTypes WHERE id = :id" );
     query.bindValue( ":id", id );
     if ( query.exec() ) {
@@ -373,7 +373,7 @@ MimeType * DataStore::getMimeTypeById( int id )
         QString type = query.value(1).toString();
         m = new MimeType( id, type );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of single MimeType." );
   }
   return m;
@@ -383,14 +383,14 @@ QList<MimeType> DataStore::listMimeTypes()
 {
   QList<MimeType> list;
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     if ( query.exec( "SELECT id, mime_type FROM MimeTypes" ) ) {
       while (query.next()) {
         int id = query.value(0).toInt();
         QString type = query.value(1).toString();
         list.append( MimeType( id, type ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of MimeTypes." );
   }
   return list;
@@ -488,7 +488,7 @@ bool DataStore::appendResource( const QString & resource,
                                 const CachePolicy & policy )
 {
   int foundRecs = 0;
-  QSqlQuery query;
+  QSqlQuery query( m_database );
   if ( m_dbOpened ) {
     query.prepare( "SELECT COUNT(*) FROM Resources WHERE name = :name" );
     query.bindValue( ":name", resource );
@@ -527,7 +527,7 @@ Resource * DataStore::getResourceById( int id )
 {
   Resource * r =0;
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     query.prepare( "SELECT id, name, cachepolicy_id FROM Resources WHERE id = :id" );
     query.bindValue( ":id", id );
     if ( query.exec() ) {
@@ -537,7 +537,7 @@ Resource * DataStore::getResourceById( int id )
         int id_res = query.value(0).toInt();
         r = new Resource( id, name, id_res );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of single Resource." );
   }
   return r;
@@ -547,7 +547,7 @@ QList<Resource> DataStore::listResources() const
 {
   QList<Resource> list;
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     if ( query.exec( "SELECT id, name, cachepolicy_id FROM Resources" ) ) {
       while (query.next()) {
         int id = query.value(0).toInt();
@@ -555,7 +555,7 @@ QList<Resource> DataStore::listResources() const
         int id_res = query.value(0).toInt();
         list.append( Resource( id, name, id_res ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of Resources." );
   }
   return list;
@@ -565,7 +565,7 @@ QList<Resource> DataStore::listResources( const CachePolicy & policy )
 {
   QList<Resource> list;
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     query.prepare( "SELECT id, name, cachepolicy_id FROM Resources WHERE cachepolicy_id = :id" );
     query.bindValue( ":id", policy.getId() );
     if ( query.exec() ) {
@@ -575,7 +575,7 @@ QList<Resource> DataStore::listResources( const CachePolicy & policy )
         int id_res = query.value(0).toInt();
         list.append( Resource( id, name, id_res ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of Resources by a Policy." );
   }
   return list;
@@ -594,7 +594,7 @@ void DataStore::debugLastDbError( const QString & actionDescription ) const
 bool DataStore::removeById( int id, const QString & tableName )
 {
   if ( m_dbOpened ) {
-    QSqlQuery query;
+    QSqlQuery query( m_database );
     QString statement( "DELETE FROM ");
     statement += tableName + " WHERE id = :id";
     query.prepare( statement );
