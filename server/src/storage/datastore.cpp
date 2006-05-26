@@ -45,15 +45,34 @@ DataStore::~DataStore()
 }
 
 /* -- High level API -- */
-const CollectionList Akonadi::DataStore::listCollections( ) const
+const CollectionList Akonadi::DataStore::listCollections( const QByteArray& prefix ) const
 {
-    const QList<Location> locations = listLocations();
     CollectionList result;
-    
-    foreach( Location l, locations )
+
+    if ( prefix.isEmpty() )
     {
-        Collection c( l.getLocation() );
-        result.append( c );
+        // list resources and queries
+        const QList<Resource> resources = listResources();
+        foreach ( Resource r, resources )
+        {
+            Collection c( r.getResource() );
+            result.append( c );
+        }
+
+        // FIXME queries go here
+    }
+    else
+    {
+        const QList<Location> locations = listLocations();
+
+        foreach( Location l, locations )
+        {
+            const QString location = l.getLocation();
+            if ( location.startsWith( prefix ) ) {
+                Collection c( location );
+                result.append( c );
+            }
+        }
     }
     return result;
 }
@@ -263,7 +282,7 @@ Location * DataStore::getLocationById( int id )
   return l;
 }
 
-const QList<Location> DataStore::listLocations() const
+QList<Location> DataStore::listLocations() const
 {
   QList<Location> list;
   if ( m_dbOpened ) {
@@ -523,7 +542,7 @@ Resource * DataStore::getResourceById( int id )
   return r;
 }
 
-QList<Resource> DataStore::listResources()
+QList<Resource> DataStore::listResources() const
 {
   QList<Resource> list;
   if ( m_dbOpened ) {

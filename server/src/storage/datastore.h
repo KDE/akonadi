@@ -40,7 +40,7 @@ public:
     ~DataStore();
 
     /* -- higher level API -- */
-    const CollectionList listCollections() const;
+    const CollectionList listCollections( const QByteArray& prefix ) const;
 
     /* --- CachePolicy --------------------------------------------------- */
     bool appendCachePolicy( const QString & policy );
@@ -67,7 +67,7 @@ public:
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
     Location * getLocationById( int id );
-    const QList<Location> listLocations() const;
+    QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource );
 
     /* --- MimeType ------------------------------------------------------ */
@@ -100,7 +100,7 @@ public:
     bool removeResource( const Resource & resource );
     bool removeResource( int id );
     Resource * getResourceById( int id );
-    QList<Resource> listResources();
+    QList<Resource> listResources() const;
     QList<Resource> listResources( const CachePolicy & policy );
 
 protected:
