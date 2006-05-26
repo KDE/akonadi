@@ -64,8 +64,8 @@ bool Create::handleLine(const QByteArray& line )
     }
     else {
         DataStore *db = connection()->storageBackend();
-        const int startOfLocation = mailbox.indexOf( '/' ) + 1;
-        const QByteArray resourceName = mailbox.left( startOfLocation - 1 );
+        const int startOfLocation = mailbox.indexOf( '/' );
+        const QByteArray resourceName = mailbox.left( startOfLocation );
         const QByteArray locationName = mailbox.mid( startOfLocation );
         qDebug() << "Create: " << locationName
                  << " in resource: " << resourceName;
@@ -86,7 +86,7 @@ bool Create::handleLine(const QByteArray& line )
             // check whether the superior hierarchical folder exists
             qDebug() << "Does " << locationName.left( endOfSupFolder )
                      << " exist in " << resourceName << "?";
-            if ( !db->getLocationByName( resource, locationName.left( endOfSupFolder ) ).isValid() ) {
+            if ( ! db->getLocationByName( resource, locationName.left( endOfSupFolder ) ).isValid() ) {
                 // the superior folder does not exist, so it has to be created
                 qDebug() << "No, it has to be created";
                 foldersToCreate.prepend( locationName.left( endOfSupFolder ) );
