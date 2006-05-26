@@ -57,7 +57,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
       if ( junks.count() < 4 ) {
         response.setTag( tag() );
         response.setError();
-        response.setString( "Too less arguments" );
+        response.setString( "Too few arguments" );
         emit responseAvailable( response );
       } else {
         QByteArray mimeType = SearchHelper::extractMimetype( junks, 3 );
@@ -77,7 +77,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
       if ( junks.count() < 3 ) {
         response.setTag( tag() );
         response.setError();
-        response.setString( "Too less arguments" );
+        response.setString( "Too few arguments" );
         emit responseAvailable( response );
       } else {
         QString identifier = QString::fromUtf8( junks[ 2 ] );

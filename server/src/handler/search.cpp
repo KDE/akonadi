@@ -45,7 +45,7 @@ bool Search::handleLine( const QByteArray& line )
   if ( junks.count() < 4 ) {
     response.setTag( tag() );
     response.setError();
-    response.setString( "Too less arguments" );
+    response.setString( "Too few arguments" );
     emit responseAvailable( response );
     return false;
   }
@@ -54,7 +54,7 @@ bool Search::handleLine( const QByteArray& line )
   if ( mimeType.isEmpty() ) {
     response.setTag( tag() );
     response.setError();
-    response.setString( "Too less arguments" );
+    response.setString( "Too few arguments" );
     emit responseAvailable( response );
     return false;
   }
