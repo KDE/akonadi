@@ -41,7 +41,6 @@ class AKONADI_EXPORT Collection
       Folder, /**< 'Real' folder on eg. an IMAP server. */
       Virtual, /**< Virtual collection (aka search folder). */
       Resource, /**< Resource or account. */
-      Category, /**< Category. */
       Unknown /**< Unknown collection type. */
     };
 

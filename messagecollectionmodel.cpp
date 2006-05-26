@@ -27,9 +27,8 @@
 
 using namespace PIM;
 
-PIM::MessageCollectionModel::MessageCollectionModel( const Collection::List &collections,
-                                                     QObject * parent ) :
-    CollectionModel( collections, parent )
+PIM::MessageCollectionModel::MessageCollectionModel( QObject * parent ) :
+    CollectionModel( parent )
 {
 }
 

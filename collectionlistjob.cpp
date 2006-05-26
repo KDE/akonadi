@@ -82,6 +82,11 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
     QByteArray parentName = folderName.mid( 0, folderName.lastIndexOf( delim ) + 1 ); // ### handle trailing delimiters!
     Collection *col = new Collection( folderName );
     col->setParent( parentName );
+    // determine collection type, TODO: search folder
+    if ( parentName == Collection::root() )
+      col->setType( Collection::Resource );
+    else
+      col->setType( Collection::Folder );
     // TODO: add other collection parameters
     d->collections.append( col );
     qDebug() << "received list response: delim: " << delim << " name: " << folderName << "attrs: " << attributes << " parent: " << parentName;

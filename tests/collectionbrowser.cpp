@@ -83,11 +83,6 @@ static void createCollections( const DataReference &parent, int rec )
 
 CollectionBrowser::CollectionBrowser() : CollectionView()
 {
-  CollectionListJob *job = new CollectionListJob( QByteArray( Collection::delimiter() ), true, this );
-  job->exec();
-  Collection::List collections = job->collections();
-  qDebug() << "got " << collections.size() << "collections";
-  delete job;
   // use some dummy collections for now
 /*  createCollections( DataReference(), 8 );
   foreach ( Collection *col, global_collection_map ) {
@@ -98,7 +93,7 @@ CollectionBrowser::CollectionBrowser() : CollectionView()
       colCopy = new Collection( *col );
     collections.append( colCopy );
   }*/
-  model = new MessageCollectionModel( collections, this );
+  model = new MessageCollectionModel( this );
   setModel( model );
 
   // emulate the monitor job
