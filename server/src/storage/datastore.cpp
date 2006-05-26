@@ -53,6 +53,9 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
 {
     CollectionList result;
 
+    if ( mailboxPattern.isEmpty() )
+        return result;
+
     if ( prefix == "/" )
     {
         // list resources and queries
@@ -70,18 +73,28 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
         const QList<Location> locations = listLocations();
 
         QString sanitizedPattern( mailboxPattern );
+        QString fullPrefix( prefix );
         const bool hasPercent = mailboxPattern.contains('%');
         const bool hasStar = mailboxPattern.contains('*');
-        if ( hasPercent )
-            sanitizedPattern = "%";
-        if ( hasStar )
-            sanitizedPattern = "*";
+        if ( hasPercent || hasStar ) {
+            int endOfPath = mailboxPattern.lastIndexOf('/');
+            
+            if ( mailboxPattern[0] != '/' )
+                fullPrefix += "/";
+            fullPrefix += mailboxPattern.left( endOfPath );
+
+            if ( hasPercent )
+                sanitizedPattern = "%";
+            if ( hasStar )
+                sanitizedPattern = "*";
+        }
+        qDebug() << "FullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
 
         foreach( Location l, locations )
         {
             const QString location = l.getLocation();
-            const bool atFirstLevel = location.lastIndexOf('/') > prefix.size();
-            if ( location.startsWith( prefix ) ) {
+            const bool atFirstLevel = location.lastIndexOf('/') == fullPrefix.lastIndexOf('/');
+            if ( location.startsWith( fullPrefix ) ) {
                 if ( hasStar || ( hasPercent && atFirstLevel ) ) {
                     Collection c( location );
                     result.append( c );
