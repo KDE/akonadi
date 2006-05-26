@@ -25,6 +25,7 @@
 #include "handler/capability.h"
 #include "handler/list.h"
 #include "handler/search.h"
+#include "handler/select.h"
 
 
 using namespace Akonadi;
@@ -87,6 +88,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     // SUBSCRIBE, UNSUBSCRIBE, LIST, LSUB, and APPEND.
     if ( command == "LIST" )
         return new List();
+    if ( command == "SELECT" )
+        return new Select();
     if ( command == "SEARCH" )
         return new Search();
 

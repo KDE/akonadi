@@ -11,6 +11,7 @@ HEADERS += akonadi.h \
            handler/login.h \
            handler/logout.h \
            handler/list.h \
+           handler/select.h \
            handler/search.h \
            handler/capability.h \
            ../test/teststoragebackend.h \
@@ -31,6 +32,7 @@ SOURCES += akonadi.cpp \
            handler/logout.cpp \
            handler/login.cpp \
            handler/list.cpp \
+           handler/select.cpp \
            handler/search.cpp \
            handler/capability.cpp \
            ../test/teststoragebackend.cpp \
