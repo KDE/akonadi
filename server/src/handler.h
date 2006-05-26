@@ -62,6 +62,8 @@ public:
 
     void setConnection( AkonadiConnection* connection );
     AkonadiConnection* connection();
+
+    static QByteArray stripQuotes( const QByteArray & );
     
 signals:
     

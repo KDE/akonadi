@@ -46,7 +46,10 @@ public:
     void setTag( const QByteArray& tag );
     void setUntagged();
     void setContinuation();
+
+    void setString( const char* );
     void setString( const QByteArray& string );
+    void setString( const QString& string );
 
     void setSuccess();
     void setFailure();

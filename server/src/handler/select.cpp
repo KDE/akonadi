@@ -44,19 +44,45 @@ bool Select::handleLine(const QByteArray& line )
     // parse out the reference name and mailbox name
     int startOfCommand = line.indexOf( ' ' ) + 1;
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QByteArray mailbox = line.right( line.size() - startOfMailbox );
+    QByteArray mailbox = stripQuotes( line.right( line.size() - startOfMailbox ) );
+    mailbox.prepend( connection()->selectedCollection() );
     qDebug() << "Select mailbox:" << mailbox << endl;
 
+    // Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
+    // OPTIONAL OK untagged responses: UNSEEN, PERMANENTFLAGS
     Response response;
     response.setUntagged();
+    response.setString( "FLAGS (Answered)");
+    emit responseAvailable( response );
 
     Resource resource;
     DataStore *db = connection()->storageBackend();
 
+    int exists = 5;
+    response.setString( QString::number(exists) + " EXISTS" );
+    emit responseAvailable( response );
+
+    int recent = 5;
+    response.setString( QString::number(recent) + " RECENT" );
+    emit responseAvailable( response );
+
+
+    int unseen = 1;
+    int firstUnseen = 4;
+
+    response.setString( "OK [UNSEEN " + QString::number(unseen) + "] Message " + QString::number(firstUnseen) + " is first unseen" );
+    emit responseAvailable( response );
+
+    unsigned int uidValidity = 3857529045;
+    response.setString( "OK [UIDVALIDITY " + QString::number(uidValidity) + "] UIDs valid" );
+    emit responseAvailable( response );
+
     response.setSuccess();
     response.setTag( tag() );
-    response.setString( "Select completed" );
+    response.setString( "Completed" );
     emit responseAvailable( response );
+    
+    connection()->setSelectedCollection( mailbox );
     deleteLater();
     return true;
 }

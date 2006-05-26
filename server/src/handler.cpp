@@ -1,3 +1,4 @@
+
 /***************************************************************************
  *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
  *                                                                         *
@@ -112,4 +113,13 @@ void Akonadi::Handler::setConnection( AkonadiConnection* connection )
 AkonadiConnection* Akonadi::Handler::connection()
 {
     return m_connection;
+}
+
+
+
+QByteArray Akonadi::Handler::stripQuotes( const QByteArray &mailbox )
+{
+    if ( mailbox.startsWith('"') && mailbox.endsWith('"') )
+       return mailbox.mid( 1, mailbox.size() - 2);
+    return mailbox;
 }
