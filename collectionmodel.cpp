@@ -109,10 +109,10 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
       return SmallIcon( "folder_green" );
     QStringList content = col->contentTypes();
     if ( content.size() == 1 ) {
-      if ( content.first() == "text/x-vcard" )
+      if ( content.first() == "text/x-vcard" || content.first() == "text/vcard" )
         return SmallIcon( "kmgroupware_folder_contacts" );
       // TODO: add all other content types and/or fix their mimetypes
-      if ( content.first() == "akonadi/event" )
+      if ( content.first() == "akonadi/event" || content.first() == "text/ical" )
         return SmallIcon( "kmgroupware_folder_calendar" );
       if ( content.first() == "akonadi/task" )
         return SmallIcon( "kmgroupware_folder_tasks" );
