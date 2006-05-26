@@ -134,7 +134,7 @@ Resource::~Resource()
 
 }
 
-QByteArray Akonadi::MimeType::asCommaSeparatedString( QList<MimeType> types )
+QByteArray Akonadi::MimeType::asCommaSeparatedString( const QList<MimeType> &types )
 {
     QStringList list;
     foreach ( MimeType mt, types )
