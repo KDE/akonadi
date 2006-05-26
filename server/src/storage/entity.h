@@ -247,6 +247,7 @@ public:
     int getId() const { return m_id; };
     int getPolicyId() const { return m_policy_id; };
     const QString & getResource() const { return m_resource; };
+    bool isValid() { return m_id != -1; }
 
 protected:
     Resource & setId( int id )

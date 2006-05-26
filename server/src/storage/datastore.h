@@ -69,7 +69,7 @@ public:
     bool resetLocationPolicy( const Location & location );
     Location * getLocationById( int id );
     QList<Location> listLocations() const;
-    QList<Location> listLocations( const Resource & resource );
+    QList<Location> listLocations( const Resource & resource ) const;
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype );
@@ -100,7 +100,8 @@ public:
     bool appendResource( const QString & resource, const CachePolicy & policy );
     bool removeResource( const Resource & resource );
     bool removeResource( int id );
-    Resource * getResourceById( int id );
+    Resource getResourceById( int id );
+    const Resource getResourceByName( const QByteArray& name ) const;
     QList<Resource> listResources() const;
     QList<Resource> listResources( const CachePolicy & policy );
 

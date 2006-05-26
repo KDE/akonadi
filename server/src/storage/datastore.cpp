@@ -56,8 +56,8 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
     if ( mailboxPattern.isEmpty() || mailboxPattern == "\"\"" )
         return result;
 
-    QString sanitizedPattern( mailboxPattern );
-    QString fullPrefix( prefix );
+    QByteArray sanitizedPattern( mailboxPattern );
+    QByteArray fullPrefix( prefix );
     const bool hasPercent = mailboxPattern.contains('%');
     const bool hasStar = mailboxPattern.contains('*');
     if ( hasPercent || hasStar ) {
@@ -72,7 +72,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
         if ( hasStar )
             sanitizedPattern = "*";
     }
-    qDebug() << "FullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
+    //qDebug() << "FullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
 
 
     if ( fullPrefix == "/" )
@@ -85,12 +85,18 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
             result.append( c );
         }
 
-        // FIXME queries go here
+        // FIXME list top level search folder, if there is more than 0 searches
+    }
+    else if ( fullPrefix == "Search" )
+    {
+        // FIXME get searches, list them
     }
     else
     {
-        const QList<Location> locations = listLocations();
-
+        const QByteArray resource = fullPrefix.mid( 1, fullPrefix.indexOf('/')-1 );
+        qDebug() << "Listing folders in resource: " << resource;
+        Resource r = getResourceByName( resource );
+        const QList<Location> locations = listLocations( r );
 
         foreach( Location l, locations )
         {
@@ -331,7 +337,7 @@ QList<Location> DataStore::listLocations() const
   return list;
 }
 
-QList<Location> DataStore::listLocations( const Resource & resource )
+QList<Location> DataStore::listLocations( const Resource & resource ) const
 {
   QList<Location> list;
   if ( m_dbOpened ) {
@@ -552,9 +558,9 @@ bool DataStore::removeResource( int id )
   return removeById( id, "Resources" );
 }
 
-Resource * DataStore::getResourceById( int id )
+Resource DataStore::getResourceById( int id )
 {
-  Resource * r =0;
+    Resource r;
   if ( m_dbOpened ) {
     QSqlQuery query( m_database );
     query.prepare( "SELECT id, name, cachepolicy_id FROM Resources WHERE id = :id" );
@@ -564,12 +570,32 @@ Resource * DataStore::getResourceById( int id )
         int id = query.value(0).toInt();
         QString name = query.value(1).toString();
         int id_res = query.value(0).toInt();
-        r = new Resource( id, name, id_res );
+        r = Resource( id, name, id_res );
       }
     } else 
       debugLastDbError( "Error during selection of single Resource." );
   }
   return r;
+}
+
+const Resource DataStore::getResourceByName( const QByteArray& name ) const
+{
+    Resource r;
+    if ( m_dbOpened ) {
+        QSqlQuery query( m_database );
+        query.prepare( "SELECT id, name, cachepolicy_id FROM Resources WHERE name = :name" );
+        query.bindValue( ":id", name );
+        if ( query.exec() ) {
+            if (query.next()) {
+                int id = query.value(0).toInt();
+                QString name = query.value(1).toString();
+                int id_res = query.value(0).toInt();
+                r = Resource( id, name, id_res );
+            }
+        } else
+            debugLastDbError( "Error during selection of single Resource." );
+    }
+    return r;
 }
 
 QList<Resource> DataStore::listResources() const

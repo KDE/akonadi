@@ -103,7 +103,9 @@ PimItem::~PimItem()
  *   Resource                                                              *
  ***************************************************************************/
 Resource::Resource()
-{}
+    :m_id( -1 )
+{
+}
 
 Resource::Resource( int id, const QString & resource, int policy_id )
   : m_id( id ), m_policy_id( policy_id ), m_resource( resource )
