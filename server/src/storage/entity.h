@@ -123,6 +123,28 @@ private:
 
 
 /***************************************************************************
+ *   MimeType                                                              *
+ ***************************************************************************/
+class MimeType : public Entity
+{
+public:
+    MimeType();
+    MimeType( int id, const QString & mimetype );
+    ~MimeType();
+    QString getMimeType() const { return m_mimetype; }
+    static QByteArray asCommaSeparatedString( const QList<MimeType>& );
+
+protected:
+    MimeType & setMimeType( const QString & mimetype )
+        { m_mimetype = mimetype; return *this; };
+
+private:
+    QString m_mimetype;
+
+    friend class DataStore;
+};
+
+/***************************************************************************
  *   Location                                                              *
  ***************************************************************************/
 class Location : public Entity
@@ -178,28 +200,6 @@ private:
 };
 
 QDebug & operator<< ( QDebug& d, const  Akonadi::Location& location);
-
-/***************************************************************************
- *   MimeType                                                              *
- ***************************************************************************/
-class MimeType : public Entity
-{
-public:
-    MimeType();
-    MimeType( int id, const QString & mimetype );
-    ~MimeType();
-    QString getMimeType() const { return m_mimetype; }
-    static QByteArray asCommaSeparatedString( const QList<MimeType>& );
-
-protected:
-    MimeType & setMimeType( const QString & mimetype )
-        { m_mimetype = mimetype; return *this; };
-
-private:
-    QString m_mimetype;
-
-    friend class DataStore;
-};
 
 /***************************************************************************
  *   MetaType                                                              *
