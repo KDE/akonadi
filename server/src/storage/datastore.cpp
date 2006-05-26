@@ -63,7 +63,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
     const bool hasStar = mailboxPattern.contains('*');
     if ( hasPercent || hasStar ) {
         int endOfPath = mailboxPattern.lastIndexOf('/') + 1;
-            
+
         if ( mailboxPattern[0] != '/' && fullPrefix != "/" )
             fullPrefix += "/";
         fullPrefix += mailboxPattern.left( endOfPath );
@@ -91,7 +91,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
             result.append( Collection( "/Search" ) );
 
     }
-    else if ( fullPrefix == "Search" )
+    else if ( fullPrefix == "/Search/" )
     {
         result += PersistentSearchManager::self()->collections();
     }
@@ -168,7 +168,7 @@ CachePolicy * DataStore::getCachePolicyById( int id )
         QString policy = query.value(1).toString();
         p = new CachePolicy( id, policy );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of single CachePolicy." );
   }
   return p;
@@ -185,7 +185,7 @@ QList<CachePolicy> DataStore::listCachePolicies()
         QString policy = query.value(1).toString();
         list.append( CachePolicy( id, policy ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of CachePolicies." );
   }
   return list;
@@ -317,7 +317,7 @@ Location * DataStore::getLocationById( int id )
         int resource = query.value(2).toInt();
         l = new Location( id, uri, policy, resource );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of single Location." );
   }
   return l;
@@ -336,7 +336,7 @@ QList<Location> DataStore::listLocations() const
         int resource = query.value(2).toInt();
         list.append( Location( id, uri, policy, resource ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of Locations." );
   }
   return list;
@@ -361,7 +361,7 @@ QList<Location> DataStore::listLocations( const Resource & resource ) const
         int resource = query.value(2).toInt();
         list.append( Location( id, uri, policy, resource ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of Locations from a Resource." );
   }
   return list;
@@ -417,7 +417,7 @@ MimeType * DataStore::getMimeTypeById( int id )
         QString type = query.value(1).toString();
         m = new MimeType( id, type );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of single MimeType." );
   }
   return m;
@@ -434,7 +434,7 @@ QList<MimeType> DataStore::listMimeTypes()
         QString type = query.value(1).toString();
         list.append( MimeType( id, type ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of MimeTypes." );
   }
   return list;
@@ -581,7 +581,7 @@ Resource DataStore::getResourceById( int id )
         int id_res = query.value(0).toInt();
         r = Resource( id, name, id_res );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of single Resource." );
   }
   return r;
@@ -620,7 +620,7 @@ QList<Resource> DataStore::listResources() const
         int id_res = query.value(0).toInt();
         list.append( Resource( id, name, id_res ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of Resources." );
   }
   return list;
@@ -640,7 +640,7 @@ QList<Resource> DataStore::listResources( const CachePolicy & policy )
         int id_res = query.value(0).toInt();
         list.append( Resource( id, name, id_res ) );
       }
-    } else 
+    } else
       debugLastDbError( "Error during selection of Resources by a Policy." );
   }
   return list;
