@@ -110,6 +110,7 @@ public:
               const CachePolicy & policy, const Resource & resource );
     ~Location();
 
+
     int getPolicyId() const { return m_policy_id; };
     int getResourceId() const { return m_resource_id; };
     const QString & getLocation() const { return m_location; };
@@ -130,6 +131,7 @@ protected:
 
     Location & setLocation( const QString & location )
         { m_location = location; return *this; };
+    void init();
 
 private:
     int m_policy_id;

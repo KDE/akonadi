@@ -51,8 +51,6 @@ bool Select::handleLine(const QByteArray& line )
     // OPTIONAL OK untagged responses: UNSEEN, PERMANENTFLAGS
     Response response;
     response.setUntagged();
-    response.setString( "FLAGS (Answered)");
-    emit responseAvailable( response );
 
     DataStore *db = connection()->storageBackend();
     int secondSlash = mailbox.indexOf( '/', 2 ) + 1;
@@ -66,6 +64,9 @@ bool Select::handleLine(const QByteArray& line )
         emit responseAvailable( response );
     }
 
+    response.setString( l.getFlags() );
+    emit responseAvailable( response );
+ 
     response.setString( QString::number(l.getExists()) + " EXISTS" );
     emit responseAvailable( response );
 
@@ -85,7 +86,7 @@ bool Select::handleLine(const QByteArray& line )
     response.setTag( tag() );
     response.setString( "Completed" );
     emit responseAvailable( response );
-    
+
     connection()->setSelectedCollection( mailbox );
     deleteLater();
     return true;

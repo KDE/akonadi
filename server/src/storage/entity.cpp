@@ -39,6 +39,7 @@ CachePolicy::~CachePolicy()
  ***************************************************************************/
 Location::Location()
 {
+    init();
 }
 
 Location::Location( int id, const QString & location,
@@ -46,13 +47,22 @@ Location::Location( int id, const QString & location,
   : Entity( id ), m_policy_id( policy_id ),
     m_resource_id( resource_id ), m_location( location )
 {
+    init();
 }
 
 Location::Location( int id, const QString & location,
                     const CachePolicy & policy, const Resource & resource )
     : Entity( id ), m_policy_id( policy.getId() ),
     m_resource_id( resource.getId() ), m_location( location )
-{}
+{
+    init();
+}
+
+void Location::init()
+{
+    // FIXME, obviously
+    m_flags = "FLAGS (Answered)";
+}
 
 Location::~Location()
 {}
