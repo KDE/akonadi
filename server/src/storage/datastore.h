@@ -66,7 +66,8 @@ public:
     QList<ItemMetaData> listItemMetaData( const MetaType & metatype );
 
     /* --- Location ------------------------------------------------------ */
-    bool appendLocation( const QString & location, const Resource & resource );
+    bool appendLocation( const QString & location, const Resource & resource,
+                         int *insertId = 0 );
     bool appendLocation( const QString & location,
                  const Resource & resource,
                  const CachePolicy & policy );
@@ -80,7 +81,8 @@ public:
     QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource ) const;
     QList<MimeType> getMimeTypesForLocation( int id ) const;
-
+    bool appendMimeTypeForLocation( int locationId, const MimeType & mimeType );
+    
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype );
     bool removeMimeType( const MimeType & mimetype );

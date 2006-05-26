@@ -278,25 +278,28 @@ QList<ItemMetaData> * listItemMetaData( const MetaType & metatype );
 
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( const QString & location,
-                                const Resource & resource )
+                                const Resource & resource,
+                                int *insertId )
 {
   int foundRecs = 0;
   QSqlQuery query( m_database );
   if ( m_dbOpened ) {
-    query.prepare( "SELECT COUNT(*) FROM Locations WHERE uri = :uri" );
-    query.bindValue( ":uri", location );
-    if ( query.exec() ) {
-      if (query.next())
+    if ( query.exec( "SELECT COUNT(*) FROM Locations WHERE uri = \"" + location + "\"" ) ) {
+      if ( query.next() )
         foundRecs = query.value(0).toInt();
     } else
       debugLastDbError( "Error during check before insertion of Location." );
-    if ( foundRecs == 0) {
-      query.prepare( "INSERT INTO Locations (uri, cachepolicy_id, resource_id) "
-                     "VALUES (:uri, NULL, :resource)" );
-      query.bindValue( ":uri", location );
-      query.bindValue( ":resource", resource.getId() );
-      if ( query.exec() )
+    if ( foundRecs == 0 ) {
+      QString q = "INSERT INTO Locations (uri, cachepolicy_id, resource_id) "
+                  "VALUES (\"" + location + "\", NULL, \"" + QString::number( resource.getId() ) + "\"";
+      if ( query.exec( q ) ) {
+        if ( insertId ) {
+          QVariant v = query.lastInsertId();
+          if ( v.isValid() )
+            *insertId = v.toInt();
+        }
         return true;
+      }
       else
         debugLastDbError( "Error during insertion of single Location." );
     } else
