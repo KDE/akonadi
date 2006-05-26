@@ -1,11 +1,11 @@
 
-add_subdirectory( tests ) 
+add_subdirectory( tests )
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/
 	${CMAKE_SOURCE_DIR}/libakonadi
 	${CMAKE_SOURCE_DIR}/libkmime
-	
+
 )
 
 
@@ -25,12 +25,12 @@ set( akonadi_LIB_SRC
 	message.cpp
 	messagemodel.cpp
 	messagequery.cpp
-	monitor.cpp 
+	monitor.cpp
 )
 
 kde4_automoc( ${akonadi_LIB_SRC} )
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
-target_link_libraries( akonadi ${KDE4_KDECORE_LIBS} kmime )
+target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${KDE4_KDECORE_LIBS} kmime )
 set_target_properties( akonadi PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets( ${LIB_INSTALL_DIR} akonadi )
 
@@ -50,7 +50,7 @@ install_files( /include/libakonadi FILES
 	message.h
 	messagemodel.h
 	messagequery.h
-	monitor.h 
+	monitor.h
 )
 
 

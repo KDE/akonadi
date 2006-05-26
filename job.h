@@ -207,9 +207,20 @@ class AKONADI_EXPORT Job : public QObject
      */
     void setError( int );
 
-  private:
     /**
-      This method must be reimplemented in the concrete jobs.
+      Returns a new unique command tag for comunication with the backend.
+    */
+    QByteArray newTag();
+
+    /**
+      Sends raw data to the backend.
+    */
+    void writeData( const QByteArray &data );
+
+    /**
+      This method must be reimplemented in the concrete jobs. It will be called
+      after the job has been started and a connection to the Akonadi backend has
+      been established.
 
       Implementations must not emit the done() signal directly in this method,
       since this will cause a deadlock in exec(). Use a singleshot timer
@@ -217,6 +228,24 @@ class AKONADI_EXPORT Job : public QObject
      */
     virtual void doStart() = 0;
 
+    /**
+      This method should be reimplemented in the concrete jobs. It will be called
+      on received data from the backend.
+      @param tag The tag of the corresponding command, empty if this is an untagges response.
+      @param data The received data.
+    */
+    virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
+
+  private:
+    void startInternal();
+
+  private slots:
+    void slotConnected();
+    void slotDataReceived();
+    void slotSocketError();
+    void emitDone();
+
+  private:
     class JobPrivate;
     JobPrivate *d;
 };

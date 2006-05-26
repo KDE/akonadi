@@ -27,8 +27,8 @@ class Monitor::Private
     QString query;
 };
 
-PIM::Monitor::Monitor( const QString & query ) :
-    Job(),
+PIM::Monitor::Monitor( const QString & query, QObject *parent ) :
+    Job( parent ),
     d( new Private() )
 {
   d->query = query;

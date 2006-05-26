@@ -41,8 +41,9 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     /**
       Creates a new collection fetch job.
       @param ref The collection to fetch.
+      @param parent The parent object.
     */
-    CollectionFetchJob( const DataReference &ref );
+    CollectionFetchJob( const DataReference &ref, QObject *parent = 0 );
 
     /**
       Destroys this job.

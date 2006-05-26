@@ -40,8 +40,9 @@ class Monitor : public Job
     /**
       Creates a new monitor job.
       @param query This query defines which messages are monitored.
+      @param parent The parent object.
     */
-    Monitor( const QString &query );
+    Monitor( const QString &query, QObject *parent = 0 );
 
     /**
       Destroys this monitor job.

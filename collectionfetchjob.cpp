@@ -33,7 +33,8 @@ static Collection* col = 0;
 AKONADI_EXPORT QHash<DataReference, Collection*> global_collection_map;
 #endif
 
-PIM::CollectionFetchJob::CollectionFetchJob( const DataReference & ref )
+PIM::CollectionFetchJob::CollectionFetchJob( const DataReference & ref, QObject *parent ) :
+  Job( parent )
 {
 #ifdef DUMMY_FETCH_JOB
   if ( global_collection_map.contains( ref ) ) {

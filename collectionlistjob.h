@@ -42,8 +42,9 @@ class AKONADI_EXPORT CollectionListJob : public Job
   public:
     /**
       Create a new CollectionListJob.
+      @param parent The parent object.
     */
-    CollectionListJob();
+    CollectionListJob( QObject *parent = 0 );
 
     /**
       Destroys this job.

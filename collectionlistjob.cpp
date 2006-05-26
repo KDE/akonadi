@@ -25,7 +25,8 @@
 
 using namespace PIM;
 
-PIM::CollectionListJob::CollectionListJob()
+PIM::CollectionListJob::CollectionListJob( QObject *parent ) :
+    Job( parent )
 {
 }
 
