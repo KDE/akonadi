@@ -28,6 +28,7 @@ class PIM::CollectionSelectJobPrivate
   public:
     QByteArray path;
     QByteArray tag;
+    int unseen;
 };
 
 PIM::CollectionSelectJob::CollectionSelectJob( const QByteArray & path, QObject *parent ) :
@@ -35,6 +36,7 @@ PIM::CollectionSelectJob::CollectionSelectJob( const QByteArray & path, QObject 
     d( new CollectionSelectJobPrivate )
 {
   d->path = path;
+  d->unseen = -1;
 }
 
 PIM::CollectionSelectJob::~ CollectionSelectJob( )
@@ -51,12 +53,27 @@ void PIM::CollectionSelectJob::doStart( )
 void PIM::CollectionSelectJob::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == d->tag ) {
-    if ( !tag.startsWith( "OK" ) )
+    if ( !data.startsWith( "OK" ) )
       setError( Unknown );
     emit done( this );
     return;
   }
+  if ( tag == "*" ) {
+    if ( data.startsWith( "OK [UNSEEN" ) ) {
+      int begin = data.indexOf( ' ', 4 );
+      int end = data.indexOf( ']' );
+      QByteArray number = data.mid( begin + 1, end - begin - 1 );
+      d->unseen = number.toInt();
+      qDebug() << "unseen items " << d->unseen << " in folder " << d->path;
+      return;
+    }
+  }
   qDebug() << "Unhandled response in collection selection job: " << tag << data;
+}
+
+int PIM::CollectionSelectJob::unseen( ) const
+{
+  return d->unseen;
 }
 
 

@@ -45,6 +45,11 @@ class AKONADI_EXPORT CollectionSelectJob : public Job
     */
     virtual ~CollectionSelectJob();
 
+    /**
+      Returns the unseen count of the selected folder, -1 if not available.
+    */
+    int unseen() const;
+
   protected:
     void doStart();
     void handleResponse( const QByteArray &tag, const QByteArray &data );

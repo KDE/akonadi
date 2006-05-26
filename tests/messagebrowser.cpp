@@ -28,7 +28,7 @@ using namespace PIM;
 MessageBrowser::MessageBrowser() : QTreeView()
 {
   MessageModel* model = new MessageModel( this );
-  model->setPath( "/res/foo" );
+  model->setPath( "res1/foo" );
   setModel( model );
 }
 
