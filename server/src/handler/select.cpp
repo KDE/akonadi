@@ -60,24 +60,25 @@ bool Select::handleLine(const QByteArray& line )
     //         << " in resource: " << mailbox.mid( 1, secondSlash - 2 );
     Resource resource = db->getResourceByName( mailbox.mid( 1, secondSlash - 2 ) );
     Location l = db->getLocationByName( resource, mailbox.mid( secondSlash -1 , mailbox.size() - (secondSlash-1) ) );
+    if ( !l.isValid() ) {
+        response.setFailure();
+        response.setString( "Cannot list this folder");
+        emit responseAvailable( response );
+    }
 
-    int exists = 5;
-    response.setString( QString::number(exists) + " EXISTS" );
+    response.setString( QString::number(l.getExists()) + " EXISTS" );
     emit responseAvailable( response );
 
-    int recent = 5;
-    response.setString( QString::number(recent) + " RECENT" );
+    response.setString( QString::number(l.getRecent()) + " RECENT" );
     emit responseAvailable( response );
 
-
-    int unseen = 1;
     int firstUnseen = 4;
 
-    response.setString( "OK [UNSEEN " + QString::number(unseen) + "] Message " + QString::number(firstUnseen) + " is first unseen" );
+    response.setString( "OK [UNSEEN " + QString::number(l.getUnseen()) + "] Message "
+            + QString::number(l.getFirstUnseen() ) + " is first unseen" );
     emit responseAvailable( response );
 
-    unsigned int uidValidity = 3857529045;
-    response.setString( "OK [UIDVALIDITY " + QString::number(uidValidity) + "] UIDs valid" );
+    response.setString( "OK [UIDVALIDITY " + QString::number( l.getUidValidity() ) + "] UIDs valid" );
     emit responseAvailable( response );
 
     response.setSuccess();

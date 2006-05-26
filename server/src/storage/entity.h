@@ -114,6 +114,13 @@ public:
     int getResourceId() const { return m_resource_id; };
     const QString & getLocation() const { return m_location; };
 
+    QString getFlags() const { return m_flags; }
+    int getExists() const { return m_exists; }
+    int getRecent() const { return m_recent; }
+    int getUnseen() const { return m_unseen; }
+    int getFirstUnseen() const { return m_unseen; }
+    long getUidValidity() const { return m_uidValidity; }
+
 protected:
     Location & setPolicyId( int policy_id )
         { m_policy_id = policy_id; return *this; };
@@ -128,6 +135,12 @@ private:
     int m_policy_id;
     int m_resource_id;
     QString m_location;
+    int m_exists;
+    int m_recent;
+    int m_unseen;
+    int m_firstUnseen;
+    long m_uidValidity;
+    QString m_flags;
 
     friend class DataStore;
 };
