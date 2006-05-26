@@ -114,7 +114,7 @@ CollectionList PersistentSearchManager::collections() const
   mListMutex.unlock();
 
   for ( int i = 0; i < identifiers.count(); ++i )
-    collections.append( Collection( identifiers[ i ] ) );
+      collections.append( Collection( "/Search/" + identifiers[ i ] ) );
 
   return collections;
 }
