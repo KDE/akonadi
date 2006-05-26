@@ -120,6 +120,11 @@ class AKONADI_EXPORT Collection
     static QByteArray root();
 
     /**
+      Returns the Akonadi IMAP collection prefix.
+    */
+    static QByteArray prefix();
+
+    /**
       Returns the path of the top-level search folder.
     */
     static QByteArray searchFolder();

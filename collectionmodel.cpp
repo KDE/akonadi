@@ -50,7 +50,7 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
     d( new Private() )
 {
   // start a list job
-  CollectionListJob *job = new CollectionListJob( Collection::root(), false, this );
+  CollectionListJob *job = new CollectionListJob( Collection::prefix(), false, this );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
   job->start();
 
@@ -330,7 +330,7 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
     // start recursive fetch jobs for resources (which we can't list recursivly)
     foreach( const Collection *col,  collections ) {
       if ( col->type() == Collection::Resource || col->type() == Collection::VirtualParent ) {
-        CollectionListJob *cljob = new CollectionListJob( col->path(), true, this );
+        CollectionListJob *cljob = new CollectionListJob( col->prefix() + col->path(), true, this );
         connect( cljob, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
         cljob->start();
       }

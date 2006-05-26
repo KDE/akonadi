@@ -109,10 +109,15 @@ QByteArray PIM::Collection::delimiter()
 
 QByteArray PIM::Collection::root( )
 {
-  return QByteArray( "/" );
+  return QByteArray();
 }
 
 QByteArray PIM::Collection::searchFolder( )
 {
-  return delimiter() + QByteArray( "Search" );
+  return root() + QByteArray( "Search" );
+}
+
+QByteArray PIM::Collection::prefix()
+{
+  return QByteArray( "/" );
 }
