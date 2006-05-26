@@ -35,10 +35,11 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
     , m_currentHandler( 0 )
     , m_connectionState( NonAuthenticated )
     , m_backend( 0 )
+    , m_selectedConnection( "/" )
 {
 }
 
-DataStore * Akonadi::AkonadiConnection::storageBackend( ) const
+DataStore * Akonadi::AkonadiConnection::storageBackend()
 {
     if ( !m_backend ) {
 //        m_backend = new TestStorageBackend();
@@ -179,4 +180,14 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
             m_tcpSocket->disconnectFromHost();
             break;
     }
+}
+
+const QByteArray Akonadi::AkonadiConnection::selectedCollection( ) const
+{
+    return m_selectedConnection;
+}
+
+void Akonadi::AkonadiConnection::setSelectedCollection( const QByteArray& collection )
+{
+    m_selectedConnection = collection;
 }

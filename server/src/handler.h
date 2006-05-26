@@ -60,8 +60,8 @@ public:
     static Handler* findHandlerForCommandAuthenticated( const QByteArray& line );
     static Handler* findHandlerForCommandSelected( const QByteArray& line );
 
-    void setConnection( const AkonadiConnection* connection );
-    const AkonadiConnection* connection() const;
+    void setConnection( AkonadiConnection* connection );
+    AkonadiConnection* connection();
     
 signals:
     
@@ -81,7 +81,7 @@ signals:
     void connectionStateChange( ConnectionState state );
 private:
     QByteArray m_tag;
-    const AkonadiConnection* m_connection;
+    AkonadiConnection* m_connection;
 };
 
 }

@@ -90,13 +90,13 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
 }
 
 
-void Akonadi::Handler::setConnection( const AkonadiConnection* connection )
+void Akonadi::Handler::setConnection( AkonadiConnection* connection )
 {
     m_connection = connection;
 }
 
 
-const AkonadiConnection* Akonadi::Handler::connection() const
+AkonadiConnection* Akonadi::Handler::connection()
 {
     return m_connection;
 }

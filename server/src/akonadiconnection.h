@@ -41,7 +41,10 @@ public:
     ~AkonadiConnection();
     void run();
 
-    DataStore* storageBackend() const;
+    DataStore* storageBackend();
+    const QByteArray selectedCollection() const;
+    void setSelectedCollection( const QByteArray& collection );
+    
 signals:
     void error( QTcpSocket::SocketError socketError );
 
@@ -61,6 +64,7 @@ private:
     Handler *m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore* m_backend;
+    QByteArray m_selectedConnection;
 };
 
 }
