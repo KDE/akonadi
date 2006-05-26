@@ -221,11 +221,7 @@ class AKONADI_EXPORT Job : public QObject
       This method must be reimplemented in the concrete jobs. It will be called
       after the job has been started and a connection to the Akonadi backend has
       been established.
-
-      Implementations must not emit the done() signal directly in this method,
-      since this will cause a deadlock in exec(). Use a singleshot timer
-      instead.
-     */
+    */
     virtual void doStart() = 0;
 
     /**
@@ -236,14 +232,10 @@ class AKONADI_EXPORT Job : public QObject
     */
     virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
 
-  private:
-    void startInternal();
-
   private slots:
     void slotConnected();
     void slotDataReceived();
     void slotSocketError();
-    void emitDone();
 
   private:
     class JobPrivate;

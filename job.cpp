@@ -83,26 +83,21 @@ uint qHash( const DataReference& ref )
 class Job::JobPrivate
 {
   public:
-    enum State { Idle, LoggedIn, StartRequested, Started };
     int mError;
     QTcpSocket *socket;
     int lastTag;
     QByteArray loginTag;
-    State state;
 };
 
 Job::Job( QObject *parent )
   : QObject( parent ), d( new JobPrivate )
 {
-  qDebug() << "new job created";
   d->mError = None;
   d->socket = new QTcpSocket( this );
   connect( d->socket, SIGNAL(connected()), SLOT(slotConnected()) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(slotDataReceived()) );
   connect( d->socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotSocketError()) );
-  d->socket->connectToHost( QHostAddress::LocalHost, 4444 );
   d->lastTag = 0;
-  d->state = JobPrivate::Idle;
 }
 
 Job::~Job()
@@ -114,7 +109,6 @@ Job::~Job()
 
 bool Job::exec()
 {
-  qDebug() << "exec()";
   QEventLoop loop( this );
   connect( this, SIGNAL( done( PIM::Job* ) ), &loop, SLOT( quit() ) );
   start();
@@ -125,11 +119,7 @@ bool Job::exec()
 
 void Job::start()
 {
-  qDebug() << "start()";
-  if ( d->state == JobPrivate::LoggedIn )
-    startInternal();
-  else
-    d->state = JobPrivate::StartRequested;
+  d->socket->connectToHost( QHostAddress::LocalHost, 4444 );
 }
 
 void Job::kill()
@@ -184,20 +174,23 @@ void PIM::Job::slotDataReceived( )
     QByteArray data = buffer.mid( startOfData + 1 );
     // handle our stuff
     if ( tag == d->loginTag ) {
-      if ( d->state == JobPrivate::StartRequested )
-        startInternal();
-      else
-        d->state = JobPrivate::LoggedIn;
+      if ( data.startsWith( "OK" ) )
+        doStart();
+      else {
+        setError( ConnectionFailed );
+        emit done( this );
+      }
     }
     // work for our subclasses
     else
       handleResponse( tag, data );
   }
 }
-void PIM::Job::slotSocketError( )
+void PIM::Job::slotSocketError()
 {
   qWarning() << "Socket error: " << d->socket->errorString();
   setError( ConnectionFailed );
+  emit done( this );
 }
 
 QByteArray PIM::Job::newTag( )
@@ -213,24 +206,7 @@ void PIM::Job::writeData( const QByteArray & data )
 
 void PIM::Job::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  qWarning() << "Unhandled backend response: " << tag << " " << data;
-}
-
-void PIM::Job::startInternal( )
-{
-  qDebug() << "start internal";
-  d->state = JobPrivate::Started;
-  if ( error() != None ) {
-    // we weren't able to connect to the backend
-    QTimer::singleShot( 0, this, SLOT(emitDone()) );
-    return;
-  }
-  doStart();
-}
-
-void PIM::Job::emitDone( )
-{
-  emit done( this );
+  qWarning() << "Unhandled backend response: " << tag << data;
 }
 
 #include "job.moc"
