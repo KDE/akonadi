@@ -63,6 +63,10 @@ void Location::init()
 {
     // FIXME, obviously
     m_flags = "FLAGS (Answered)";
+    QList<MimeType> list;
+    list.append( MimeType(0, "text/vcard"));
+    list.append( MimeType(0, "xml/kolab-event"));
+    setMimeTypes( list );
 }
 
 Location::~Location()
