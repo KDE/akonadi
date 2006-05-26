@@ -135,6 +135,13 @@ PimItem::PimItem()
 {
 }
 
+PimItem::PimItem( int id, const QByteArray & data, int location_id,
+                  int mimetype_id )
+    : Entity( id ), m_data( data ), m_location_id( location_id ),
+      m_mimetype_id( mimetype_id )
+{}
+
+
 PimItem::~PimItem()
 {
 }

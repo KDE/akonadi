@@ -101,7 +101,7 @@ public:
                         const Location & location );
     bool removePimItem( const PimItem & pimItem );
     bool removePimItem( int id );
-    PimItem * getPimItemById( int id );
+    PimItem getPimItemById( int id );
     QList<PimItem> listPimItems( const MimeType & mimetype,
                                  const Location & location );
 

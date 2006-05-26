@@ -251,6 +251,7 @@ class PimItem : public Entity
 {
 public:
     PimItem();
+    PimItem( int id, const QByteArray & data, int location_id, int mimetype_id );
     ~PimItem();
 
     int getMimeTypeId() const { return m_mimetype_id; };

@@ -389,7 +389,7 @@ Location DataStore::getLocationById( int id ) const
         int id = query.value(0).toInt();
         QString uri = query.value(1).toString();
         int policy = query.value(2).toInt();
-        int resource = query.value(2).toInt();
+        int resource = query.value(3).toInt();
         l = Location( id, uri, policy, resource );
       }
     } else
@@ -607,13 +607,24 @@ bool DataStore::removePimItem( int id )
   return removeById( id, "PimItems" );
 }
 
-PimItem * DataStore::getPimItemById( int id )
+PimItem DataStore::getPimItemById( int id )
 {
-  // TODO implement
-  PimItem * p = new PimItem();
-  p->setId( id );
-  p->setData( "dummyData" );
-  p->setMimeTypeId( 1 ).setLocationId( 1 );
+  PimItem p;
+  if ( m_dbOpened ) {
+    QSqlQuery query( m_database );
+    query.prepare( "SELECT id, data, location_id, mimetype_id FROM PimItems WHERE id = :id" );
+    query.bindValue( ":id", id );
+    if ( query.exec() ) {
+      if (query.next()) {
+        int id = query.value(0).toInt();
+        QByteArray data = query.value(1).toByteArray();
+        int location = query.value(2).toInt();
+        int mimetype = query.value(3).toInt();
+        p = PimItem( id, data, location, mimetype );
+      }
+    } else
+      debugLastDbError( "Error during selection of single Location." );
+  }
   return p;
 }
 
@@ -622,7 +633,7 @@ QList<PimItem> DataStore::listPimItems( const MimeType & mimetype,
 {
   // TODO implement
   QList<PimItem> list;
-  list.append( *(getPimItemById( 1 )) );
+  list.append( getPimItemById( 1 ) );
   return list;
 }
 
