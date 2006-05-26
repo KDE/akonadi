@@ -20,33 +20,69 @@
 #include "collection.h"
 #include "collectionlistjob.h"
 
+#include <QDebug>
 #include <QHash>
 #include <QTimer>
 
 using namespace PIM;
 
-PIM::CollectionListJob::CollectionListJob( QObject *parent ) :
-    Job( parent )
+class PIM::CollectionListJobPrivate
 {
+  public:
+    bool recursive;
+    QByteArray prefix;
+    QByteArray tag;
+    Collection::List collections;
+};
+
+PIM::CollectionListJob::CollectionListJob( const QByteArray &prefix, bool recursive, QObject *parent ) :
+    Job( parent ),
+    d( new CollectionListJobPrivate )
+{
+  d->prefix = prefix;
+  d->recursive = recursive;
 }
 
 PIM::CollectionListJob::~CollectionListJob()
 {
+  delete d;
 }
 
-QHash<DataReference, Collection*> PIM::CollectionListJob::collections() const
+PIM::Collection::List PIM::CollectionListJob::collections() const
 {
-  return QHash<DataReference, Collection*>();
+  return Collection::List();
 }
 
 void PIM::CollectionListJob::doStart()
 {
-  QTimer::singleShot( 0, this, SLOT( emitDone() ) );
+  d->tag = newTag();
+  writeData( d->tag + " LIST \"" + d->prefix + "/\" \"" + ( d->recursive ? '*' : '%' ) + "\"" );
 }
 
-void PIM::CollectionListJob::emitDone()
+void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  emit done( this );
+  if ( tag == d->tag ) {
+    if ( !data.startsWith( "OK" ) )
+      setError( Unknown );
+    emit done( this );
+    return;
+  }
+  if ( tag == "*" && data.startsWith( "LIST" ) ) {
+    int begin = data.indexOf( '(' );
+    int end = data.indexOf( ')' );
+    QList<QByteArray> attributes = data.mid( begin, end - begin - 1 ).split( ' ' );
+    begin = data.indexOf( '"', end );
+    char delim = data[begin + 1];
+    begin = data.indexOf( ' ', begin + 2 );
+    QByteArray folderName;
+    if ( data[begin + 1] == '"' )
+      folderName = data.mid( begin + 2, data.length() - begin - 3 );
+    else
+      folderName = data.mid( begin + 1 );
+    // TODO: create collections
+    qDebug() << "received list response: delim: " << delim << " name: " << folderName << "attrs: " << attributes;
+  }
+  qDebug() << "unhandled server response in collection list job" << tag << data;
 }
 
 #include "collectionlistjob.moc"

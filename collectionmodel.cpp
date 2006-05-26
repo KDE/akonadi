@@ -36,35 +36,38 @@ using namespace PIM;
 class CollectionModel::Private
 {
   public:
-    QHash<DataReference, Collection*> collections;
-    QHash<DataReference, DataReference::List> childCollections;
+    QHash<QByteArray, Collection*> collections;
+    QHash<QByteArray, QList<QByteArray> > childCollections;
     Monitor* monitor;
     CollectionFetchJob *fetchJob;
     QQueue<DataReference> updateQueue;
 };
 
-PIM::CollectionModel::CollectionModel( const QHash< DataReference, Collection * > & collections,
+PIM::CollectionModel::CollectionModel( const Collection::List &collections,
                                        QObject * parent ) :
     QAbstractItemModel( parent ),
     d( new Private() )
 {
-  d->collections = collections;
   d->fetchJob = 0;
 
+  // build uid hash
+  foreach( Collection *col, collections )
+      d->collections.insert( col->path(), col );
   // build child collection hash
   foreach ( const Collection *col, d->collections )
-    d->childCollections[ col->parent() ].append( col->reference() );
+    d->childCollections[ col->parent() ].append( col->path() );
 
   // monitor collection changes
   // TODO: handle errors
-  d->monitor = new Monitor( "mimetype=x-akonadi/collection" );
+  // FIXME: collections don't have uids anymore!
+  /*d->monitor = new Monitor( "mimetype=x-akonadi/collection" );
   connect( d->monitor, SIGNAL( changed( const DataReference::List& ) ),
            SLOT( collectionChanged( const DataReference::List& ) ) );
   connect( d->monitor, SIGNAL( added( const DataReference::List& ) ),
            SLOT( collectionChanged( const DataReference::List& ) ) );
   connect( d->monitor, SIGNAL( removed( const DataReference& ) ),
            SLOT( collectionRemoved( const DataReference::List& ) ) );
-  d->monitor->start();
+  d->monitor->start();*/
 
   // ### Hack to get the kmail resource folder icons
   KGlobal::instance()->iconLoader()->addAppDir( "kmail" );
@@ -76,10 +79,11 @@ PIM::CollectionModel::~CollectionModel()
   qDeleteAll( d->collections );
   d->collections.clear();
 
-  delete d->monitor;
+  // FIXME
+/*  delete d->monitor;
   d->monitor = 0;
   delete d->fetchJob;
-  d->fetchJob = 0;
+  d->fetchJob = 0;*/
 
   delete d;
   d = 0;
@@ -118,11 +122,11 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
 
 QModelIndex PIM::CollectionModel::index( int row, int column, const QModelIndex & parent ) const
 {
-  DataReference::List list;
+  QList<QByteArray> list;
   if ( !parent.isValid() )
-    list = d->childCollections.value( DataReference() );
+    list = d->childCollections.value( /*DataReference()*/ "/" ); // ### FIXME
   else
-    list = d->childCollections.value( static_cast<Collection*>( parent.internalPointer() )->reference() );
+    list = d->childCollections.value( static_cast<Collection*>( parent.internalPointer() )->path() );
 
   if ( row < 0 || row >= list.size() )
     return QModelIndex();
@@ -137,15 +141,15 @@ QModelIndex PIM::CollectionModel::parent( const QModelIndex & index ) const
     return QModelIndex();
 
   Collection *col = static_cast<Collection*>( index.internalPointer() );
-  DataReference parentRef = col->parent();
-  Collection *parentCol = d->collections.value( parentRef );
+  QByteArray parentPath = col->parent();
+  Collection *parentCol = d->collections.value( parentPath );
   if ( !parentCol )
     return QModelIndex();
 
-  DataReference::List list;
+  QList<QByteArray> list;
   list = d->childCollections.value( parentCol->parent() );
 
-  int parentRow = list.indexOf( parentRef );
+  int parentRow = list.indexOf( parentPath );
   if ( parentRow < 0 )
     return QModelIndex();
 
@@ -154,11 +158,11 @@ QModelIndex PIM::CollectionModel::parent( const QModelIndex & index ) const
 
 int PIM::CollectionModel::rowCount( const QModelIndex & parent ) const
 {
-  DataReference::List list;
+  QList<QByteArray> list;
   if ( parent.isValid() )
-    list = d->childCollections.value( static_cast<Collection*>( parent.internalPointer() )->reference() );
+    list = d->childCollections.value( static_cast<Collection*>( parent.internalPointer() )->path() );
   else
-    list = d->childCollections.value( DataReference() );
+    list = d->childCollections.value( /*DataReference()*/ "/" ); // ### FIXME
 
   return list.size();
 }
@@ -172,29 +176,30 @@ QVariant PIM::CollectionModel::headerData( int section, Qt::Orientation orientat
 
 bool PIM::CollectionModel::removeRows( int row, int count, const QModelIndex & parent )
 {
-  DataReference::List list;
-  DataReference parentRef;
+  QList<QByteArray> list;
+  QByteArray parentPath;
   if ( parent.isValid() ) {
-    parentRef = static_cast<Collection*>( parent.internalPointer() )->reference();
-    list = d->childCollections.value( parentRef );
+    parentPath = static_cast<Collection*>( parent.internalPointer() )->path();
+    list = d->childCollections.value( parentPath );
   } else
-    list = d->childCollections.value( DataReference() );
+    list = d->childCollections.value( /*DataReference()*/ "/" ); // ### FIXME
   if ( row < 0 || ( row + count - 1 ) >= list.size() ) {
-    kWarning() << k_funcinfo << "Index out of bounds: " << row << "-" << row+count << " parent: " << parentRef.persistanceID() << endl;
+    kWarning() << k_funcinfo << "Index out of bounds: " << row << "-" << row+count << " parent: " << parentPath << endl;
     return false;
   }
 
-  DataReference::List removeList = list.mid( row, count );
+  QList<QByteArray> removeList = list.mid( row, count );
   beginRemoveRows( parent, row, row + count - 1 ); // FIXME row +/- 1??, crashs sort proxy model!
-  foreach ( DataReference ref, removeList ) {
-    list.removeAll( ref );
-    delete d->collections.take( ref );
+  foreach ( QByteArray path, removeList ) {
+    list.removeAll( path );
+    delete d->collections.take( path );
   }
-  d->childCollections.insert( parentRef, list );
+  d->childCollections.insert( parentPath, list );
   endRemoveRows();
   return true;
 }
 
+// FIXME
 void PIM::CollectionModel::collectionChanged( const DataReference::List& references )
 {
   // TODO no need to serialize fetch jobs...
@@ -203,6 +208,7 @@ void PIM::CollectionModel::collectionChanged( const DataReference::List& referen
   processUpdates();
 }
 
+// FIXME
 void PIM::CollectionModel::collectionRemoved( const DataReference::List& references )
 {
   foreach ( DataReference ref, references ) {
@@ -210,9 +216,10 @@ void PIM::CollectionModel::collectionRemoved( const DataReference::List& referen
   }
 }
 
+// FIXME
 void PIM::CollectionModel::collectionRemoved( const DataReference & ref )
 {
-  QModelIndex colIndex = indexForReference( ref );
+/* QModelIndex colIndex = indexForReference( ref );
   if ( colIndex.isValid() ) {
     QModelIndex parentIndex = parent( colIndex );
     // collection is still somewhere in the hierarchy
@@ -221,12 +228,13 @@ void PIM::CollectionModel::collectionRemoved( const DataReference & ref )
     if ( d->collections.contains( ref ) )
       // collection is orphan, ie. the parent has been removed already
       delete d->collections.take( ref );
-  }
+  }*/
 }
 
+// FIXME
 void PIM::CollectionModel::fetchDone( Job * job )
 {
-  if ( job->error() || !d->fetchJob->collection() ) {
+/*  if ( job->error() || !d->fetchJob->collection() ) {
     // TODO: handle job errors
     kWarning() << k_funcinfo << "Job error or collection not available!" << endl;
   } else {
@@ -263,33 +271,33 @@ void PIM::CollectionModel::fetchDone( Job * job )
 
   job->deleteLater();
   d->fetchJob = 0;
-  processUpdates();
+  processUpdates();*/
 }
 
 void PIM::CollectionModel::processUpdates()
 {
-  if ( d->fetchJob )
+/*  if ( d->fetchJob )
     return;
   if ( d->updateQueue.isEmpty() )
     return;
 
   d->fetchJob = new CollectionFetchJob( d->updateQueue.dequeue() );
   connect( d->fetchJob, SIGNAL( done( PIM::Job* ) ), SLOT( fetchDone( PIM::Job* ) ) );
-  d->fetchJob->start();
+  d->fetchJob->start();*/
 }
 
-QModelIndex PIM::CollectionModel::indexForReference( const DataReference & ref, int column )
+QModelIndex PIM::CollectionModel::indexForPath( const QByteArray &path, int column )
 {
-  if ( !d->collections.contains( ref ) )
+  if ( !d->collections.contains( path ) )
     return QModelIndex();
 
-  DataReference parentRef = d->collections.value( ref )->parent();
+  QByteArray parentPath = d->collections.value( path )->parent();
   // check if parent still exist or if this is an orphan collection
-  if ( !parentRef.isNull() && !d->collections.contains( parentRef ) )
+  if ( !parentPath.isNull() && !d->collections.contains( parentPath ) )
     return QModelIndex();
 
-  DataReference::List list = d->childCollections.value( parentRef );
-  int row = list.indexOf( ref );
+  QList<QByteArray> list = d->childCollections.value( parentPath );
+  int row = list.indexOf( path );
 
   if ( row >= 0 )
     return createIndex( row, column, d->collections.value( list[row] ) );

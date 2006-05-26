@@ -29,8 +29,8 @@ class PIM::MessageCollection::Private
 };
 
 
-PIM::MessageCollection::MessageCollection( const DataReference & ref ) :
-    Collection( ref ),
+PIM::MessageCollection::MessageCollection( const QByteArray &path ) :
+    Collection( path ),
     d( new Private() )
 {
   d->count = -1;

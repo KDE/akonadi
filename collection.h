@@ -45,12 +45,14 @@ class AKONADI_EXPORT Collection
       Unknown /**< Unknown collection type. */
     };
 
+    typedef QList<Collection*> List;
+
     /**
       Create a new collection.
 
-      @param ref The data reference of this collection.
+      @param path The unique IMAP path of this collection.
     */
-    Collection( const DataReference &ref );
+    Collection( const QByteArray &path );
 
     /**
       Copy constructor.
@@ -65,12 +67,12 @@ class AKONADI_EXPORT Collection
     virtual ~Collection();
 
     /**
-      Returns the DataReference of this object.
+      Returns the unique IMAP path of this collection.
     */
-    DataReference reference() const;
+    QByteArray path() const;
 
     /**
-      Returns the name of this collection.
+      Returns the name of this collection usable for display.
     */
     QString name() const;
 
@@ -103,25 +105,19 @@ class AKONADI_EXPORT Collection
     void setContentTypes( const QStringList &types );
 
     /**
-      Returns a reference to the parent collection, might be an empty reference if this
-      collection is a top-level collection.
+      Returns the IMAP path to the parent collection.
     */
-    DataReference parent() const;
+    QByteArray parent() const;
 
     /**
-      Sets the parent collections.
+      Sets the path of the parent collection.
     */
-    void setParent( const DataReference &parent );
+    void setParent( const QByteArray &parent );
 
     /**
-      Returns a query for the Akonadi backend to list the folder content.
+      Returns the collection path delimiter.
     */
-    QString query() const;
-
-    /**
-      Set the content query.
-    */
-    void setQuery( const QString &query );
+    static char delimiter();
 
   private:
     class Private;

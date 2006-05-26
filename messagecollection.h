@@ -34,9 +34,9 @@ class AKONADI_EXPORT MessageCollection : public Collection
     /**
       Create a new collection.
 
-      @param ref The data reference of this collection.
+      @param path The unique IMAP path of this collection.
      */
-    MessageCollection( const DataReference &ref );
+    MessageCollection( const QByteArray &path );
 
     /**
       Copy constructor.

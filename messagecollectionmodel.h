@@ -36,12 +36,12 @@ class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
   public:
     /**
       Create a new message collection model.
-      @param collections A hash containing all collections.
+      @param collections A list containing all collections.
       The CollectionModel takes the ownership of the collection objects,
       ie. it will take care of deleting them.
       @param parent The parent object.
     */
-    MessageCollectionModel( const QHash<DataReference, Collection*> &collections,
+    MessageCollectionModel( const QList<Collection*> &collections,
                               QObject *parent = 0 );
 
     /**

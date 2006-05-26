@@ -27,7 +27,7 @@
 
 using namespace PIM;
 
-PIM::MessageCollectionModel::MessageCollectionModel( const QHash< DataReference, Collection * > & collections,
+PIM::MessageCollectionModel::MessageCollectionModel( const Collection::List &collections,
                                                      QObject * parent ) :
     CollectionModel( collections, parent )
 {

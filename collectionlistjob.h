@@ -20,12 +20,14 @@
 #ifndef PIM_COLLECTION_JOB
 #define PIM_COLLECTION_JOB
 
+#include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
 namespace PIM {
 
 class Collection;
+class CollectionListJobPrivate;
 
 /**
   This class can be used to retrieve the complete or partial collection tree
@@ -42,9 +44,11 @@ class AKONADI_EXPORT CollectionListJob : public Job
   public:
     /**
       Create a new CollectionListJob.
+      @param prefix The folder that should be listed
+      @param recursive Do a recursive collection listing.
       @param parent The parent object.
     */
-    CollectionListJob( QObject *parent = 0 );
+    CollectionListJob( const QByteArray &prefix = QByteArray( Collection::delimiter() ), bool recursive = false, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -52,16 +56,17 @@ class AKONADI_EXPORT CollectionListJob : public Job
     virtual ~CollectionListJob();
 
     /**
-      Returns a QHash that maps references to PIM::Collection objects.
+      Returns a list of collection objects.
     */
-    QHash<DataReference, Collection*> collections() const;
+    Collection::List collections() const;
+
+  protected:
+    virtual void doStart();
+    virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    virtual void doStart();
+    CollectionListJobPrivate *d;
 
-  private slots:
-    // just for testing
-    void emitDone();
 };
 
 }

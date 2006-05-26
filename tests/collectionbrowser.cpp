@@ -41,7 +41,7 @@ static int id = 0;
 
 static void createCollections( const DataReference &parent, int rec )
 {
-  if ( rec <= 0 )
+/*  if ( rec <= 0 )
     return;
   int count = rand() % 10;
   for ( int i = 0; i < count; ++i ) {
@@ -76,39 +76,39 @@ static void createCollections( const DataReference &parent, int rec )
     if ( parent.isNull() )
       col->setType( Collection::Resource );
     createCollections( ref, rec - ( rand() % 3 ) - 1 );
-  }
+  }*/
 }
 
 
 CollectionBrowser::CollectionBrowser() : CollectionView()
 {
-  CollectionListJob *job = new CollectionListJob();
+  CollectionListJob *job = new CollectionListJob( QByteArray( Collection::delimiter() ), true, this );
   job->exec();
-  QHash<DataReference, Collection*> collections = job->collections();
+  Collection::List collections = job->collections();
   delete job;
   // use some dummy collections for now
-  createCollections( DataReference(), 8 );
+/*  createCollections( DataReference(), 8 );
   foreach ( Collection *col, global_collection_map ) {
     Collection *colCopy;
     if ( dynamic_cast<MessageCollection*>( col ) )
       colCopy = new MessageCollection( *static_cast<MessageCollection*>( col ) );
     else
       colCopy = new Collection( *col );
-    collections.insert( col->reference(), colCopy );
-  }
+    collections.append( colCopy );
+  }*/
   model = new MessageCollectionModel( collections, this );
   setModel( model );
 
   // emulate the monitor job
-  QTimer *t = new QTimer( this );
+  /*QTimer *t = new QTimer( this );
   connect( t, SIGNAL( timeout() ), SLOT( slotEmitChanged() ) );
-  t->start( 1000 );
+  t->start( 1000 );*/
 //   t->setSingleShot( true );
 }
 
 void CollectionBrowser::slotEmitChanged()
 {
-  // update
+/*  // update
   int id = rand() % 1000;
   DataReference ref( QString::number( id ), QString() );
   Collection *col = global_collection_map.value( ref );
@@ -139,7 +139,7 @@ void CollectionBrowser::slotEmitChanged()
   col->setName( ref.persistanceID() + " (new)" );
   global_collection_map.insert( ref, col );
   kDebug() << k_funcinfo << "add collection " << ref.persistanceID() << " parent: " << col->parent().persistanceID() << endl;
-  model->collectionChanged( DataReference::List() << ref );
+  model->collectionChanged( DataReference::List() << ref );*/
 }
 
 int main( int argc, char** argv )

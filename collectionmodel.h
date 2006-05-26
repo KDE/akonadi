@@ -44,12 +44,13 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
   public:
     /**
       Create a new collection model.
-      @param collections A hash containing all collections.
+      @param collections A list containing all collections.
       The CollectionModel takes the ownership of the collection objects,
       ie. it will take care of deleting them.
+      @todo start the list job internally.
       @param parent The parent object.
     */
-    CollectionModel( const QHash<DataReference, Collection*> &collections,
+    CollectionModel( const QList<Collection*> &collections,
                      QObject *parent = 0 );
 
     /**
@@ -104,7 +105,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Helper function to generate a model index for a given collection reference.
     */
-    QModelIndex indexForReference( const DataReference &ref, int column = 0 );
+    QModelIndex indexForPath( const QByteArray &path, int column = 0 );
 
     /**
       Removes a the given collection from the model.

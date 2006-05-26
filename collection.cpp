@@ -27,18 +27,17 @@ using namespace PIM;
 class Collection::Private
 {
   public:
-    DataReference ref;
-    DataReference parent;
+    QByteArray path;
+    QByteArray parent;
     QString name;
     Type type;
     QStringList contentTypes;
-    QString query;
 };
 
-PIM::Collection::Collection( const DataReference &ref ) :
+PIM::Collection::Collection( const QByteArray &path ) :
   d( new Collection::Private() )
 {
-  d->ref = ref;
+  d->path = path;
   d->type = Unknown;
 }
 
@@ -46,22 +45,21 @@ PIM::Collection::Collection( const Collection &other ) :
     d( new Collection::Private() )
 {
   d->name = other.name();
-  d->ref = other.reference();
+  d->path = other.path();
   d->parent = other.parent();
   d->type = other.type();
   d->contentTypes = other.contentTypes();
-  d->query = other.query();
 }
 
-PIM::Collection::~ Collection( )
+PIM::Collection::~Collection( )
 {
   delete d;
   d = 0;
 }
 
-DataReference PIM::Collection::reference( ) const
+QByteArray PIM::Collection::path() const
 {
-  return d->ref;
+  return d->path;
 }
 
 QString PIM::Collection::name( ) const
@@ -94,22 +92,17 @@ void PIM::Collection::setContentTypes( const QStringList & types )
   d->contentTypes = types;
 }
 
-DataReference PIM::Collection::parent( ) const
+QByteArray PIM::Collection::parent( ) const
 {
   return d->parent;
 }
 
-void PIM::Collection::setParent( const DataReference & parent )
+void PIM::Collection::setParent( const QByteArray &parent )
 {
   d->parent = parent;
 }
 
-QString PIM::Collection::query( ) const
+char PIM::Collection::delimiter()
 {
-  return d->query;
-}
-
-void PIM::Collection::setQuery( const QString & query )
-{
-  d->query = query;
+  return '/';
 }
