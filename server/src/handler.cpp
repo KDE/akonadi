@@ -24,6 +24,7 @@
 #include "handler/logout.h"
 #include "handler/capability.h"
 #include "handler/list.h"
+#include "handler/search.h"
 
 
 using namespace Akonadi;
@@ -86,6 +87,9 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     // SUBSCRIBE, UNSUBSCRIBE, LIST, LSUB, and APPEND.
     if ( command == "LIST" )
         return new List();
+    if ( command == "SEARCH" )
+        return new Search();
+
     return 0;
 }
 

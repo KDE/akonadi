@@ -2,7 +2,7 @@
 # ------------------------------------------- 
 # Subdir relative project main directory: ./src
 # Target is an application:  ../bin/akonadi
-INCLUDEPATH += ../include ../test
+INCLUDEPATH += ../include ../test searchproviders/
 
 HEADERS += akonadi.h \
            akonadiconnection.h \
@@ -11,8 +11,12 @@ HEADERS += akonadi.h \
            handler/login.h \
            handler/logout.h \
            handler/list.h \
+           handler/search.h \
            handler/capability.h \
            ../test/teststoragebackend.h \
+           searchprovider.h \
+           searchprovidermanager.h \
+           searchproviders/emailsearchprovider.h \
            storage/entity.h \
            storage/datastore.h \
            storage/debug.h \
@@ -25,8 +29,12 @@ SOURCES += akonadi.cpp \
            handler/logout.cpp \
            handler/login.cpp \
            handler/list.cpp \
+           handler/search.cpp \
            handler/capability.cpp \
            ../test/teststoragebackend.cpp \
+           searchprovider.cpp \
+           searchprovidermanager.cpp \
+           searchproviders/emailsearchprovider.cpp \
            storage/entity.cpp \
            storage/datastore.cpp \
            storage/debug.cpp \
