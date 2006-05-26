@@ -98,12 +98,12 @@ public:
     /* --- PimItem ------------------------------------------------------- */
     bool appendPimItem( const QByteArray & data,
                         const MimeType & mimetype,
-                        const QString & location );
-    bool removePimItem( const PimItem & location );
+                        const Location & location );
+    bool removePimItem( const PimItem & pimItem );
     bool removePimItem( int id );
     PimItem * getPimItemById( int id );
     QList<PimItem> listPimItems( const MimeType & mimetype,
-                                   const Location & location );
+                                 const Location & location );
 
     /* --- Resource ------------------------------------------------------ */
     bool appendResource( const QString & resource, const CachePolicy & policy );

@@ -579,22 +579,32 @@ QList<MetaType> DataStore::listMetaTypes( const MimeType & mimetype )
 /* --- PimItem ------------------------------------------------------- */
 bool DataStore::appendPimItem( const QByteArray & data,
                                const MimeType & mimetype,
-                               const QString & location )
+                               const Location & location )
 {
-  // TODO implement
+  int foundRecs = 0;
+  QSqlQuery query( m_database );
+  if ( m_dbOpened ) {
+    query.prepare( "INSERT INTO PimItems (data, location_id, mimetype_id) "
+                   "VALUES (:data, :location, :type)" );
+    query.bindValue( ":data", data );
+    query.bindValue( ":location", location.getId() );
+    query.bindValue( ":type", mimetype.getId() );
+    if ( query.exec() )
+      return true;
+    else
+      debugLastDbError( "Error during insertion of single PimItem." );
+  }
   return false;
 }
 
-bool DataStore::removePimItem( const PimItem & location )
+bool DataStore::removePimItem( const PimItem & pimItem )
 {
-  // TODO implement
-  return false;
+  return removePimItem( pimItem.getId() );
 }
 
 bool DataStore::removePimItem( int id )
 {
-  // TODO implement
-  return false;
+  return removeById( id, "PimItems" );
 }
 
 PimItem * DataStore::getPimItemById( int id )
