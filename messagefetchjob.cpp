@@ -79,15 +79,20 @@ Message::List PIM::MessageFetchJob::messages() const
 
 void PIM::MessageFetchJob::selectDone( PIM::Job * job )
 {
-  job->deleteLater();
-  // the collection is now selected, fetch the message(s)
-  d->tag = newTag();
-  QByteArray command = d->tag + " FETCH ";
-  if ( d->uid.isNull() )
-    command += "0:* ENVELOPE";
-  else
-    command += d->uid.persistanceID().toLatin1() + " (BODY[])";
-  writeData( command );
+  if ( job->error() ) {
+    setError( job->error() );
+    emit done( this );
+  } else {
+    job->deleteLater();
+    // the collection is now selected, fetch the message(s)
+    d->tag = newTag();
+    QByteArray command = d->tag + " FETCH ";
+    if ( d->uid.isNull() )
+      command += "0:* ENVELOPE";
+    else
+      command += d->uid.persistanceID().toLatin1() + " (BODY[])";
+    writeData( command );
+  }
 }
 
 #include "messagefetchjob.moc"

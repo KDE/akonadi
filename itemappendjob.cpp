@@ -49,7 +49,7 @@ PIM::ItemAppendJob::~ ItemAppendJob( )
 void PIM::ItemAppendJob::doStart()
 {
   d->tag = newTag();
-  writeData( d->tag + " APPEND " + d->path + " () {" + QByteArray::number( d->data.size() ) + "}" );
+  writeData( d->tag + " APPEND " + d->path + " (\\MimeType[" + d->mimetype + "]) {" + QByteArray::number( d->data.size() ) + "}" );
 }
 
 void PIM::ItemAppendJob::handleResponse( const QByteArray & tag, const QByteArray & data )
