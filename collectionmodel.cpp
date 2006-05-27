@@ -421,6 +421,7 @@ bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const Q
   Collection *parentCol = static_cast<Collection*>( parent.internalPointer() );
   // create temporary fake collection, will be removed on error
   d->editedCollection = new Collection( parentCol->path() + Collection::delimiter() + name.toLatin1() ); // FIXME utf-7 encoding
+  d->editedCollection->setParent( parentCol->path() );
   if ( d->collections.contains( d->editedCollection->path() ) ) {
     delete d->editedCollection;
     d->editedCollection = 0;

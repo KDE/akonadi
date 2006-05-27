@@ -73,6 +73,8 @@ void PIM::CollectionView::setModel( QAbstractItemModel * model )
 void PIM::CollectionView::createCollection( const QModelIndex & parent )
 {
   QString name = QInputDialog::getText( this, i18n("New Folder"), i18n("Name") );
+  if ( name.isEmpty() )
+    return;
   if ( !d->model->createCollection( parent, name ) )
     qWarning() << "Collection creation failed immediately!";
 }
