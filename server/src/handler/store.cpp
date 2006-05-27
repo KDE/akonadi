@@ -123,6 +123,8 @@ void Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
         flag = store->flagByName( flags[ i ] );
         if ( !flag.isValid() )
           return;
+        else
+          flagList.append( flag );
       }
     } else {
       flagList.append( flag );
@@ -153,6 +155,8 @@ void Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
         flag = store->flagByName( flags[ i ] );
         if ( !flag.isValid() )
           return;
+        else
+          flagList.append( flag );
       }
     } else {
       flagList.append( flag );

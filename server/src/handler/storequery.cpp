@@ -48,22 +48,16 @@ bool StoreQuery::parse( const QByteArray &query )
   const QByteArray subCommand = query.mid( start, end - start ).toUpper();
   if ( subCommand == "FLAGS" ) {
     mType = Replace;
-    qDebug( "tokoe: replace" );
   } else if ( subCommand == "FLAGS.SILENT" ) {
     mType = Replace | Silent;
-    qDebug( "tokoe: replace silent" );
   } else if ( subCommand == "+FLAGS" ) {
     mType = Add;
-    qDebug( "tokoe: add" );
   } else if ( subCommand == "+FLAGS.SILENT" ) {
     mType = Add | Silent;
-    qDebug( "tokoe: add silent" );
   } else if ( subCommand == "-FLAGS" ) {
     mType = Delete;
-    qDebug( "tokoe: delete" );
   } else if ( subCommand == "-FLAGS.SILENT" ) {
     mType = Delete | Silent;
-    qDebug( "tokoe: delete silent" );
   } else
     return false;
 
@@ -88,6 +82,8 @@ bool StoreQuery::parse( const QByteArray &query )
       mFlags.append( "\\Seen" );
     else if ( flag == "\\DRAFT" )
       mFlags.append( "\\Draft" );
+    else
+      mFlags.append( flags[ i ] );
   }
 
   return true;

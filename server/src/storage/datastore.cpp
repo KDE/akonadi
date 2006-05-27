@@ -129,15 +129,16 @@ bool DataStore::appendFlag( const QString & name )
   int foundRecs = 0;
   QSqlQuery query( m_database );
 
-  query.prepare( "SELECT COUNT(*) FROM Flags WHERE name = :name" );
-  query.bindValue( ":name", name );
-  if ( !query.exec() ) {
+  //query.prepare( "SELECT COUNT(*) FROM Flags WHERE name = :name" );
+  //query.bindValue( ":name", name );
+  QString statement = QString( "SELECT COUNT(*) FROM Flags WHERE name = '%1'" ).arg( name );
+  if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "Error during check before insertion of Flag." );
     return false;
   }
 
-  if (query.next())
-    foundRecs = query.value(0).toInt();
+  if ( query.next() )
+    foundRecs = query.value( 0 ).toInt();
 
   if ( foundRecs > 0 ) {
     qDebug() << "Cannot insert flag " << name
@@ -145,10 +146,11 @@ bool DataStore::appendFlag( const QString & name )
     return false;
   }
 
-  query.prepare( "INSERT INTO Flags (name) VALUES (:name)" );
-  query.bindValue( ":name", name );
+  //query.prepare( "INSERT INTO Flags (name) VALUES (:name)" );
+  //query.bindValue( ":name", name );
+  statement = QString( "INSERT INTO Flags (name) VALUES ('%1')" ).arg( name );
 
-  if ( !query.exec() ) {
+  if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "Error during insertion of single Flag." );
     return false;
   }
