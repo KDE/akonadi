@@ -86,14 +86,13 @@ bool Status::handleLine( const QByteArray& line )
         statusResponse += QString::number( l.recent() );
     }
     // UIDNEXT - The next unique identifier value of the mailbox
-    // TODO
-    //if ( attributeList.contains( "UIDNEXT" ) ) {
-    //    if ( !statusResponse.isEmpty() )
-    //        statusResponse += " UIDNEXT ";
-    //    else
-    //        statusResponse += "UIDNEXT ";
-    //    statusResponse += QString::number( ??? ) );
-    //}
+    if ( attributeList.contains( "UIDNEXT" ) ) {
+        if ( !statusResponse.isEmpty() )
+            statusResponse += " UIDNEXT ";
+        else
+            statusResponse += "UIDNEXT ";
+        statusResponse += QString::number( db->uidNext() );
+    }
     // UIDVALIDITY - The unique identifier validity value of the mailbox
     if ( attributeList.contains( "UIDVALIDITY" ) ) {
         if ( !statusResponse.isEmpty() )

@@ -131,6 +131,11 @@ public:
     QList<Resource> listResources() const;
     QList<Resource> listResources( const CachePolicy & policy );
 
+    /* --- Helper functions ---------------------------------------------- */
+    /** Returns the id of the next PIM item that is added to the db.
+     */
+    int uidNext() const;
+
 protected:
     void debugLastDbError( const QString & actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const QString & actionDescription ) const;

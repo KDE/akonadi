@@ -1302,3 +1302,26 @@ Location DataStore::locationByName( const Resource &resource,
 
   return location;
 }
+
+
+int DataStore::uidNext() const
+{
+    // FIXME We can't use max(id) FROM PimItems because this is wrong if the
+    //       entry with the highest id is deleted. Instead we should probably
+    //       keep record of the largest id that any PimItem ever had.
+    if ( !m_dbOpened )
+        return 0;
+
+    QSqlQuery query( m_database );
+    const QString q = QString( "SELECT max(id) FROM PimItems" );
+    if ( ! query.exec( q ) ) {
+        debugLastQueryError( q, "Error while getting maximal id from PimItems." );
+        return 0;
+    }
+
+    if ( query.next() ) {
+        return query.value(0).toInt() + 1;
+    }
+    else
+        return 0;
+}
