@@ -41,11 +41,13 @@ class ImapParser
     static QList<QByteArray> parseParentheziedList( const QByteArray &data, int start = 0 );
 
     /**
-      Returns the next quoted string.
+      Parses the next quoted string from @p data starting at @p start and puts it into
+      @p result. The number of parsed characters is returned (this is not equal to result.length()!).
       @param data Source data.
+      @param result Parsed string, quotation is removed and 'NIL' is transformed to an empty QByteArray.
       @param start start parsing at this index.
     */
-    static QByteArray parseQuotedString( const QByteArray &data, int start = 0 );
+    static int parseQuotedString( const QByteArray &data, QByteArray &result, int start = 0 );
 
 };
 

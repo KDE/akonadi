@@ -47,17 +47,15 @@ QList< QByteArray > PIM::ImapParser::parseParentheziedList( const QByteArray & d
     if ( data[i] == ' ' )
       continue;
     if ( count == 0 ) {
-      QByteArray ba = parseQuotedString( data, i );
+      QByteArray ba;
+      i = parseQuotedString( data, ba, i );
       rv.append( ba );
-      if ( data[i] == '"' )
-        i += 2;
-      i += ba.length();
     }
   }
   return rv;
 }
 
-QByteArray PIM::ImapParser::parseQuotedString( const QByteArray & data, int start )
+int PIM::ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, int start )
 {
   int begin = start;
   int end = start;
@@ -95,6 +93,9 @@ QByteArray PIM::ImapParser::parseQuotedString( const QByteArray & data, int star
     }
   }
 
-  return data.mid( begin, end - begin );
+  result = data.mid( begin, end - begin );
+  if ( result == "NIL" )
+    result.clear();
+  return end;
 }
 
