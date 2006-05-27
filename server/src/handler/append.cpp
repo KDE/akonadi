@@ -46,19 +46,19 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
         m_data += line;
         bool done = false;
         m_size -= line.size();
-        if (  m_size == 0 ) {
+        if ( m_size == 0 ) {
             commit();
             done = true;
             deleteLater();
         }
         return done;
     }
-    
+
     // Arguments:  mailbox name
     //        OPTIONAL flag parenthesized list
     //        OPTIONAL date/time string
     //        message literal
-  
+
     int startOfCommand = line.indexOf( ' ' ) + 1;
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     int endOfMailbox = line.indexOf( ' ', startOfMailbox ) + 1;
@@ -73,6 +73,7 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
         deleteLater();
         return true;
     }
+
     Response response;
     response.setContinuation();
     response.setString( "Ready for literal data" );
@@ -89,13 +90,31 @@ void Akonadi::Append::commit()
     MimeType mimeType(0, "message/rfc822" );
     bool ok = db->appendPimItem( m_data, mimeType, l );
     response.setTag( tag() );
-    if ( ok ) {
-        response.setSuccess();
-        response.setString( "Append completed" );
-    } else {
+    if ( !ok ) {
+        response.setTag( tag() );
         response.setFailure();
         response.setString( "Append failed" );
+        emit responseAvailable( response );
+        return;
     }
+
+    // TODO set \Recent flag of message
+
+    // the message was appended; now we have to update the counts
+    const int existsChange = +1;
+    const int recentChange = +1;
+    int unseenChange = +1; // TODO only if message doesn't have the \Seen flag
+    // int firstUnseen = ?; // can't be updated atomically, so we probably have to
+                            // recalculate it each time it's needed
+    ok = db->updateLocationCounts( l, existsChange, recentChange, unseenChange );
+    // TODO handle failure by removing the message again from the db
+
+    // TODO if the mailbox is currently selected, the normal new message
+    //      actions SHOULD occur.  Specifically, the server SHOULD notify the
+    //      client immediately via an untagged EXISTS response.
+
+    response.setTag( tag() );
+    response.setSuccess();
+    response.setString( "Append completed" );
     emit responseAvailable( response );
 }
-
