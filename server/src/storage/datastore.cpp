@@ -60,24 +60,25 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
     if ( mailboxPattern.isEmpty() )
         return result;
 
+    // normalize path and pattern
     QByteArray sanitizedPattern( mailboxPattern );
     QByteArray fullPrefix( prefix );
     const bool hasPercent = mailboxPattern.contains('%');
     const bool hasStar = mailboxPattern.contains('*');
-    if ( hasPercent || hasStar ) {
-        int endOfPath = mailboxPattern.lastIndexOf('/') + 1;
+    const int endOfPath = mailboxPattern.lastIndexOf('/') + 1;
 
-        if ( mailboxPattern[0] != '/' && fullPrefix != "/" )
-            fullPrefix += "/";
-        fullPrefix += mailboxPattern.left( endOfPath );
+    if ( mailboxPattern[0] != '/' && fullPrefix != "/" )
+        fullPrefix += "/";
+    fullPrefix += mailboxPattern.left( endOfPath );
 
-        if ( hasPercent )
-            sanitizedPattern = "%";
-        if ( hasStar )
-            sanitizedPattern = "*";
-    }
+    if ( hasPercent )
+        sanitizedPattern = "%";
+    else if ( hasStar )
+        sanitizedPattern = "*";
+    else
+        sanitizedPattern = mailboxPattern.mid( endOfPath );
+
     qDebug() << "FullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
-
 
     if ( fullPrefix == "/" )
     {
@@ -112,7 +113,8 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
             //qDebug() << "Location: " << location << " " << resource << " prefix: " << fullPrefix;
             const bool atFirstLevel = location.lastIndexOf('/') == fullPrefix.lastIndexOf('/');
             if ( location.startsWith( fullPrefix ) ) {
-                if ( hasStar || ( hasPercent && atFirstLevel ) ) {
+                if ( hasStar || ( hasPercent && atFirstLevel ) ||
+                     location == fullPrefix + sanitizedPattern ) {
                     Collection c( location.right( location.size() -1 ) );
                     c.setMimeTypes( MimeType::asCommaSeparatedString( l.getMimeTypes() ) );
                     result.append( c );
