@@ -74,6 +74,7 @@ public:
                  const CachePolicy & policy );
     bool removeLocation( const Location & location );
     bool removeLocation( int id );
+    bool updateLocationCounts( const Location & location, int existsChange, int recentChange, int unseenChange );
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
     Location getLocationById( int id ) const;
@@ -81,6 +82,7 @@ public:
     Location getLocationByRawMailbox( const QByteArray& mailbox ) const;
     QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource ) const;
+
     QList<MimeType> getMimeTypesForLocation( int id ) const;
     bool appendMimeTypeForLocation( int locationId, const QString & mimeType );
     bool appendMimeTypeForLocation( int locationId, int mimeTypeId );

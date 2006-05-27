@@ -76,7 +76,7 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
         if ( hasStar )
             sanitizedPattern = "*";
     }
-    //qDebug() << "FullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
+    qDebug() << "FullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
 
 
     if ( fullPrefix == "/" )
@@ -354,6 +354,39 @@ bool DataStore::removeLocation( const Location & location )
 bool DataStore::removeLocation( int id )
 {
   return removeById( id, "Locations" );
+}
+
+static QString updateExpression( int change, const QString & name )
+{
+    if ( change = 0 )
+        return QString::null;
+    else if ( change > 0 )
+        // return a = a + n
+        return name + " = " + name + " + " + QString::number( change );
+    else if ( change < 0 )
+        // return a = a - |n|
+        return name + " = " + name + " - " + QString::number( -change );
+}
+
+bool DataStore::updateLocationCounts( const Location & location, int existsChange,
+                                      int recentChange, int unseenChange )
+{
+    if ( existsChange == 0 && recentChange == 0 && unseenChange == 0 )
+        return true; // there's nothing to do
+
+    QSqlQuery query( m_database );
+    if ( m_dbOpened ) {
+        QString q = QString( "UPDATE Locations SET %1 %2 %3 WHERE id = \"%4\"" )
+                    .arg( updateExpression( existsChange, "exists_count" ) )
+                    .arg( updateExpression( recentChange, "recent_count" ) )
+                    .arg( updateExpression( unseenChange, "unseen_count" ) )
+                    .arg( location.getId() );
+        if ( query.exec( q ) )
+            return true;
+        else
+            debugLastQueryError( query, "Error while updating the counts of a single Location." );
+    }
+    return false;
 }
 
 bool DataStore::changeLocationPolicy( const Location & location,
