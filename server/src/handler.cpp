@@ -32,6 +32,7 @@
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
+#include "handler/status.h"
 #include "handler/store.h"
 #include "uid.h"
 
@@ -113,6 +114,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new Uid();
     if ( command == "STORE" )
         return new Store();
+    if ( command == "STATUS" )
+        return new Status();
 
     return 0;
 }
