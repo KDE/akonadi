@@ -356,16 +356,14 @@ bool DataStore::removeLocation( int id )
   return removeById( id, "Locations" );
 }
 
-static QString updateExpression( int change, const QString & name )
+static void addToUpdateAssignments( QStringList & l, int change, const QString & name )
 {
-    if ( change = 0 )
-        return QString::null;
-    else if ( change > 0 )
+    if ( change > 0 )
         // return a = a + n
-        return name + " = " + name + " + " + QString::number( change );
+        l.append( name + " = " + name + " + " + QString::number( change ) );
     else if ( change < 0 )
         // return a = a - |n|
-        return name + " = " + name + " - " + QString::number( -change );
+        l.append( name + " = " + name + " - " + QString::number( -change ) );
 }
 
 bool DataStore::updateLocationCounts( const Location & location, int existsChange,
@@ -376,11 +374,14 @@ bool DataStore::updateLocationCounts( const Location & location, int existsChang
 
     QSqlQuery query( m_database );
     if ( m_dbOpened ) {
-        QString q = QString( "UPDATE Locations SET %1 %2 %3 WHERE id = \"%4\"" )
-                    .arg( updateExpression( existsChange, "exists_count" ) )
-                    .arg( updateExpression( recentChange, "recent_count" ) )
-                    .arg( updateExpression( unseenChange, "unseen_count" ) )
+        QStringList assignments;
+        addToUpdateAssignments( assignments, existsChange, "exists_count" );
+        addToUpdateAssignments( assignments, recentChange, "recent_count" );
+        addToUpdateAssignments( assignments, unseenChange, "unseen_count" );
+        QString q = QString( "UPDATE Locations SET %1 WHERE id = \"%2\"" )
+                    .arg( assignments.join(",") )
                     .arg( location.getId() );
+        qDebug() << "Executing SQL query " << q;
         if ( query.exec( q ) )
             return true;
         else
