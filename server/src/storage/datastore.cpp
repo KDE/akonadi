@@ -657,7 +657,7 @@ Location DataStore::locationByRawMailbox( const QByteArray& mailbox ) const
 
   Resource resource = resourceByName( mailbox.left( secondSlash ) );
 
-  return locationByName( resource, mailbox.mid( secondSlash, mailbox.size() - secondSlash ) );
+  return locationByName( resource, mailbox.mid( secondSlash ) );
 }
 
 QList<MimeType> DataStore::mimeTypesForLocation( int id ) const
