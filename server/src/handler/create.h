@@ -19,8 +19,6 @@
 #ifndef AKONADICREATE_H
 #define AKONADICREATE_H
 
-#include <QByteArray>
-
 #include <handler.h>
 
 namespace Akonadi {

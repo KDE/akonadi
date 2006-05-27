@@ -19,8 +19,6 @@
 #ifndef AKONADISELECT_H
 #define AKONADISELECT_H
 
-#include <QByteArray>
-
 #include <handler.h>
 
 namespace Akonadi {

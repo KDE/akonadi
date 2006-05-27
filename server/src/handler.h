@@ -19,6 +19,7 @@
 #ifndef AKONADIHANDLER_H
 #define AKONADIHANDLER_H
 
+#include <QByteArray>
 #include <QObject>
 
 #include "global.h"

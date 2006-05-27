@@ -93,7 +93,12 @@ bool Fetch::handleLine( const QByteArray& line )
 
   QSqlQuery query( database );
 
-  QString statement = QString( "SELECT COUNT(*) AS count FROM PimItems WHERE location_id = %1" ).arg( locationId );
+  QString statement;
+  if ( fetchQuery.mIsUidFetch )
+    statement = QString( "SELECT MAX(id) AS max_id FROM PimItems" );
+  else
+    statement = QString( "SELECT COUNT(*) AS count FROM PimItems WHERE location_id = %1" ).arg( locationId );
+
   if ( !query.exec( statement ) ) {
     response.setTag( tag() );
     response.setError();
@@ -107,7 +112,39 @@ bool Fetch::handleLine( const QByteArray& line )
   query.next();
   const int maxNumberOfEntry = query.value( 0 ).toInt() + 1;
 
-  statement = QString( "SELECT id, data FROM PimItems WHERE location_id = %1" ).arg( locationId );
+  /**
+   * On a UID FETCH we do a SQL preselection of the pim items by uid.
+   */
+  QString statementFilter;
+  if ( fetchQuery.mIsUidFetch ) {
+    QStringList statementParts;
+    for ( int i = 0; i < fetchQuery.mSequences.count(); ++i ) {
+      if ( fetchQuery.mSequences[ i ].contains( ':' ) ) {
+        QList<QByteArray> pair = fetchQuery.mSequences[ i ].split( ':' );
+        const QString left( pair[ 0 ] );
+        const QString right( pair[ 1 ] );
+        if ( pair[ 0 ] == "*" && pair[ 1 ] == "*" ) {
+          statementParts.append( QString( "id = %1" ).arg( QString::number( maxNumberOfEntry - 1 ) ) );
+        } else if ( pair[ 0 ] == "*" ) {
+          statementParts.append( QString( "(id >=1 AND id <= %1)" ).arg( right ) );
+        } else if ( pair[ 1 ] == "*" ) {
+          statementParts.append( QString( "(id >=%1 AND id <= %2)" ).arg( left ).arg( maxNumberOfEntry - 1 ) );
+        } else {
+          statementParts.append( QString( "(id >=%1 AND id <= %2)" ).arg( left, right ) );
+        }
+      } else {
+        statementParts.append( QString( "id = %1" ).arg( QString::fromLatin1( fetchQuery.mSequences[ i ] ) ) );
+      }
+    }
+
+    statementFilter = statementParts.join( " OR " );
+  }
+
+  if ( fetchQuery.mIsUidFetch )
+    statement = QString( "SELECT id, data FROM PimItems WHERE %1" ).arg( statementFilter );
+  else
+    statement = QString( "SELECT id, data FROM PimItems WHERE location_id = %1" ).arg( locationId );
+
   if ( !query.exec( statement ) ) {
     response.setTag( tag() );
     response.setError();
@@ -119,61 +156,79 @@ bool Fetch::handleLine( const QByteArray& line )
     return true;
   }
 
-  for ( int i = 0; i < fetchQuery.mSequences.count(); ++i ) {
-    if ( fetchQuery.mSequences[ i ].contains( ':' ) ) {
-      int min = 0;
-      int max = 0;
+  if ( fetchQuery.mIsUidFetch ) {
+    int i = 0;
+    while ( query.next() ) {
+      response.setUntagged();
+      response.setString( buildResponse( query, fetchQuery, i ) );
+      emit responseAvailable( response );
 
-      QList<QByteArray> pair = fetchQuery.mSequences[ i ].split( ':' );
-      if ( pair[ 0 ] == "*" && pair[ 1 ] == "*" ) {
-        min = max = maxNumberOfEntry;
-      } else if ( pair[ 0 ] == "*" ) {
-        min = 0;
-        max = pair[ 1 ].toInt();
-      } else if ( pair[ 1 ] == "*" ) {
-        min = pair[ 0 ].toInt();
-        max = maxNumberOfEntry;
+      i++;
+    }
+  } else {
+    /**
+     * On a normal FETCH we do a post selection of the pim items by index.
+     */
+    for ( int i = 0; i < fetchQuery.mSequences.count(); ++i ) {
+      if ( fetchQuery.mSequences[ i ].contains( ':' ) ) {
+        int min = 0;
+        int max = 0;
+
+        QList<QByteArray> pair = fetchQuery.mSequences[ i ].split( ':' );
+        if ( pair[ 0 ] == "*" && pair[ 1 ] == "*" ) {
+          min = max = maxNumberOfEntry;
+        } else if ( pair[ 0 ] == "*" ) {
+          min = 0;
+          max = pair[ 1 ].toInt();
+        } else if ( pair[ 1 ] == "*" ) {
+          min = pair[ 0 ].toInt();
+          max = maxNumberOfEntry;
+        } else {
+          min = pair[ 0 ].toInt();
+          max = pair[ 1 ].toInt();
+        }
+
+        if ( max < min )
+          qSwap( max, min );
+
+        if ( min < 1 )
+          min = 1;
+
+        // transform from imap index to query index
+        min--; max--;
+
+        for ( int i = min; i < max; ++i ) {
+          response.setUntagged();
+          response.setString( buildResponse( query, fetchQuery, i ) );
+          emit responseAvailable( response );
+        }
       } else {
-        min = pair[ 0 ].toInt();
-        max = pair[ 1 ].toInt();
-      }
+        int pos;
+        if ( fetchQuery.mSequences[ i ] == "*" )
+          pos = query.size() - 1;
+        else
+          pos = fetchQuery.mSequences[ i ].toInt();
 
-      if ( max < min )
-        qSwap( max, min );
+        if ( pos < 1 )
+          pos = 1;
 
-      if ( min < 1 )
-        min = 1;
+        // transform from imap index to query index
+        pos--;
 
-      // transform from imap index to query index
-      min--; max--;
-
-      for ( int i = min; i < max; ++i ) {
         response.setUntagged();
-        response.setString( buildResponse( query, fetchQuery, i ) );
+        response.setString( buildResponse( query, fetchQuery, pos ) );
         emit responseAvailable( response );
       }
-    } else {
-      int pos;
-      if ( fetchQuery.mSequences[ i ] == "*" )
-        pos = query.size() - 1;
-      else
-        pos = fetchQuery.mSequences[ i ].toInt();
-
-      if ( pos < 1 )
-        pos = 1;
-
-      // transform from imap index to query index
-      pos--;
-
-      response.setUntagged();
-      response.setString( buildResponse( query, fetchQuery, pos ) );
-      emit responseAvailable( response );
     }
   }
 
   response.setTag( tag() );
   response.setSuccess();
-  response.setString( "FETCH completed" );
+
+  if ( fetchQuery.mIsUidFetch )
+    response.setString( "UID FETCH completed" );
+  else
+    response.setString( "FETCH completed" );
 
   emit responseAvailable( response );
 
@@ -187,7 +242,8 @@ static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery,
   /**
    * Synthesize the response.
    */
-  query.seek( pos );
+  if ( !query.seek( pos ) )
+    qDebug( "Unable to seek in SqlQuery" );
 
   QList<QByteArray> attributes;
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Envelope ) ) {
@@ -224,8 +280,8 @@ static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery,
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Body_Structure ) ) {
   }
 
-  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Uid ) ) {
-    attributes.append( "UID " + query.value( 0 ).toByteArray() );
+  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Uid ) || fetchQuery.mIsUidFetch ) {
+    attributes.append( "UID " + query.value( 0 ).toString().toLatin1() );
   }
 
   QByteArray attributesString;

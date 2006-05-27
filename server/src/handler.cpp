@@ -21,7 +21,9 @@
 
 #include "handler.h"
 #include "response.h"
+#include "handler/append.h"
 #include "handler/capability.h"
+#include "handler/create.h"
 #include "handler/fetch.h"
 #include "handler/list.h"
 #include "handler/login.h"
@@ -30,9 +32,7 @@
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
-#include "handler/create.h"
-#include "handler/append.h"
-
+#include "uid.h"
 
 using namespace Akonadi;
 
@@ -108,6 +108,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new Noop();
     if ( command == "FETCH" )
         return new Fetch();
+    if ( command == "UID" )
+        return new Uid();
 
     return 0;
 }

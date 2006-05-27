@@ -73,6 +73,7 @@ class FetchQuery
     QList<QByteArray> mSequences;
     QList<Attribute> mAttributes;
     Type mType;
+    bool mIsUidFetch;
 };
 
 }

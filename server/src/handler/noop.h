@@ -20,8 +20,6 @@
 #ifndef AKONADINOOP_H
 #define AKONADINOOP_H
 
-#include <QByteArray>
-
 #include <handler.h>
 
 namespace Akonadi {

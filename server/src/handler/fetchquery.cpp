@@ -25,7 +25,18 @@ using namespace Akonadi;
 
 bool FetchQuery::parse( const QByteArray &query )
 {
-  int start = 6;
+  int start = 0;
+
+  if ( query.toUpper().startsWith( "UID FETCH " ) ) {
+    mIsUidFetch = true;
+    start = 10;
+  } else if ( query.toUpper().startsWith( "FETCH " ) ) {
+    mIsUidFetch = false;
+    start = 6;
+  } else
+    return false;
+
+
   int end = query.indexOf( ' ', start );
 
   if ( end == -1 )

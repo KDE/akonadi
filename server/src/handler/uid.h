@@ -17,24 +17,28 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef AKONADISEARCHPERSISTENT_H
-#define AKONADISEARCHPERSISTENT_H
+#ifndef AKONADIUID_H
+#define AKONADIUID_H
+
+#include <QPointer>
 
 #include <handler.h>
 
 namespace Akonadi {
 
 /**
-  Handler for the search_store search_delete commands.
+  Proxy handler for the uid command.
  */
-class SearchPersistent : public Handler
+class Uid : public Handler
 {
   public:
-    SearchPersistent();
+    Uid();
+    ~Uid();
 
-    ~SearchPersistent();
+    bool handleLine(const QByteArray& line);
 
-    bool handleLine( const QByteArray& line );
+  private:
+    QPointer<Handler> mSubHandler;
 };
 
 }

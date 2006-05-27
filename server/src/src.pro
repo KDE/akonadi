@@ -9,18 +9,19 @@ HEADERS += akonadi.h \
            handler.h \
            handlerhelper.h \
            response.h \
+           handler/append.h \
            handler/capability.h \
+           handler/create.h \
            handler/fetch.h \
            handler/fetchquery.h \
            handler/list.h \
            handler/login.h \
            handler/logout.h \
            handler/noop.h \
-           handler/select.h \
-           handler/append.h \
            handler/search.h \
            handler/searchpersistent.h \
-           handler/create.h \
+           handler/select.h \
+           handler/uid.h \
            ../test/teststoragebackend.h \
            persistentsearch.h \
            persistentsearchmanager.h \
@@ -37,19 +38,20 @@ SOURCES += akonadi.cpp \
            handler.cpp \
            handlerhelper.cpp \
            response.cpp \
+           handler/append.cpp \
+           handler/create.cpp \
            handler/capability.cpp \
            handler/fetch.cpp \
            handler/fetchquery.cpp \
            handler/list.cpp \
-           handler/logout.cpp \
            handler/login.cpp \
+           handler/logout.cpp \
            handler/noop.cpp \
-           handler/select.cpp \
-           handler/append.cpp \
            handler/search.cpp \
            handler/searchhelper.cpp \
            handler/searchpersistent.cpp \
-           handler/create.cpp \
+           handler/select.cpp \
+           handler/uid.cpp \
            ../test/teststoragebackend.cpp \
            persistentsearch.cpp \
            persistentsearchmanager.cpp \

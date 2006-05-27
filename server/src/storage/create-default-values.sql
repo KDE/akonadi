@@ -17,9 +17,9 @@ INSERT INTO Flags (name) VALUES ('important');
 INSERT INTO Flags (name) VALUES ('has_attachment');
 INSERT INTO Flags (name) VALUES ('spam');
 
-INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (0, '/foo', 0, 0);
-INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (1, '/foo/bar', 0, 0);
-INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (2, '/foo/bar/bla', 0, 0);
+INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count) VALUES (0, '/foo', 0, 0, 3);
+INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count) VALUES (1, '/foo/bar', 0, 0, 2);
+INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count) VALUES (2, '/foo/bar/bla', 0, 0, 2);
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id) VALUES (3, '/foo/bla', 0, 0);
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity) VALUES (4, '/foo2', 0, 1, 2, 3, 4, 5, 6);
 
