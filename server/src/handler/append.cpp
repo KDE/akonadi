@@ -67,6 +67,12 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     // FIXME parse optionals
     int startOfSize = line.indexOf('{') + 1;
     m_size = QString( line.mid( startOfSize, line.indexOf('}') - startOfSize ) ).toInt();
+
+    if ( m_size == 0 ) {  // we allow 0-size puts
+        commit();
+        deleteLater();
+        return true;
+    }
     
     Response response;
     response.setContinuation();
