@@ -20,9 +20,9 @@
 #ifndef AKONADISTORE_H
 #define AKONADISTORE_H
 
-#include <QSqlDatabase>
-
 #include <handler.h>
+
+#include "storage/entity.h"
 
 namespace Akonadi {
 
@@ -38,11 +38,9 @@ class Store : public Handler
     bool handleLine(const QByteArray& line);
 
   private:
-    void replaceFlags( const QString &uid, const QList<QByteArray> &flags );
-    void addFlags( const QString &uid, const QList<QByteArray> &flags );
-    void deleteFlags( const QString &uid, const QList<QByteArray> &flags );
-
-    QSqlDatabase mDatabase;
+    void replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
+    void addFlags( const PimItem &item, const QList<QByteArray> &flags );
+    void deleteFlags( const PimItem &item, const QList<QByteArray> &flags );
 };
 
 }

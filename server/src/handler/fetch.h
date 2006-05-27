@@ -22,6 +22,9 @@
 
 #include <handler.h>
 
+#include "storage/datastore.h"
+#include "fetchquery.h"
+
 namespace Akonadi {
 
 /**
@@ -35,6 +38,10 @@ class Fetch : public Handler
     ~Fetch();
 
     bool handleLine(const QByteArray& line);
+
+  private:
+    QByteArray buildResponse( const PimItem&, const FetchQuery&, int );
+    QByteArray buildEnvelope( const PimItem&, const FetchQuery& );
 };
 
 }

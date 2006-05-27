@@ -120,7 +120,10 @@ public:
     QList<PimItem> listPimItems( const MimeType & mimetype,
                                  const Location & location );
     int highestPimItemId();
-    int highestPimItemIdByLocation( const Location &location );
+    int highestPimItemCountByLocation( const Location &location );
+
+    QList<PimItem> matchingPimItems( const QList<QByteArray> &sequences );
+    QList<PimItem> matchingPimItemsByLocation( const QList<QByteArray> &sequences, const Location &location );
 
     /* --- Resource ------------------------------------------------------ */
     bool appendResource( const QString & resource, const CachePolicy & policy );

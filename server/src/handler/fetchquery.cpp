@@ -77,56 +77,34 @@ bool FetchQuery::parse( const QByteArray &query )
   return true;
 }
 
-QList<QByteArray> FetchQuery::normalizedSequences( const QList<QByteArray> &sequences )
-{
-  int min = -1, max = -1;
-  bool hasMax = false;
-
-#define FETCH_CHECK( str ) \
-  if ( str == "*" ) { \
-    hasMax = true; \
-  } else { \
-    int num = str.toInt(); \
-    if ( min == -1 ) { \
-      min = max = num; \
-    } else { \
-      if ( num < min ) \
-        min = num; \
-      else if ( num > max ) \
-        max = num; \
-    } \
-  }
-
-
-  for ( int i = 0; i < sequences.count(); ++i ) {
-    if ( sequences[ i ].contains( ':' ) ) {
-      const QList<QByteArray> pair = sequences[ i ].split( ':' );
-
-      FETCH_CHECK( pair[ 0 ] );
-      FETCH_CHECK( pair[ 1 ] );
-    } else {
-      FETCH_CHECK( sequences[ i ] );
-    }
-  }
-
-  QList<QByteArray> retval;
-  retval.append( QByteArray::number( min ) );
-  if ( hasMax )
-    retval.append( "*" );
-  else
-    retval.append( QByteArray::number( max ) );
-
-  return retval;
-}
-
 bool FetchQuery::hasAttributeType( Attribute::Type type ) const
 {
   for ( int i = 0; i < mAttributes.count(); ++i ) {
-    if ( mAttributes[ i ].mType == type )
+    if ( mAttributes[ i ].type() == type )
       return true;
   }
 
   return false;
+}
+
+QList<QByteArray> FetchQuery::sequences() const
+{
+  return mSequences;
+}
+
+QList<FetchQuery::Attribute> FetchQuery::attributes() const
+{
+  return mAttributes;
+}
+
+FetchQuery::Type FetchQuery::type() const
+{
+  return mType;
+}
+
+bool FetchQuery::isUidFetch() const
+{
+  return mIsUidFetch;
 }
 
 void FetchQuery::dump()
@@ -185,6 +163,11 @@ bool FetchQuery::Attribute::parse( const QByteArray &attribute )
     mType = Uid;
 
   return true;
+}
+
+FetchQuery::Attribute::Type FetchQuery::Attribute::type() const
+{
+  return mType;
 }
 
 void FetchQuery::Attribute::dump()

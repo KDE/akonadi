@@ -33,20 +33,28 @@ class StoreQuery
   public:
     enum Type
     {
-      Replace,
-      Add,
-      Delete,
+      Replace = 1,
+      Add = 2,
+      Delete = 4,
       Silent = 8
     };
 
     StoreQuery();
 
     bool parse( const QByteArray &query );
+
+    int type() const;
+    QList<QByteArray> flags() const;
+    QList<QByteArray> sequences() const;
+    bool isUidStore() const;
+
     void dump();
 
+  private:
     int mType;
     QList<QByteArray> mFlags;
     QList<QByteArray> mSequences;
+    bool mIsUidStore;
 };
 
 }

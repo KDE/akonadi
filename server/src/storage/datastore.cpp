@@ -259,7 +259,7 @@ bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
   // then add the new flags
   for ( int i = 0; i < flags.count(); ++i ) {
     const QString statement = QString( "INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES ( '%1', '%2' )" )
-                                     .arg( flags[ i ].name() ).arg( item.id() );
+                                     .arg( flags[ i ].id() ).arg( item.id() );
     if ( !query.exec( statement ) ) {
       debugLastQueryError( query, "Error during adding new ItemFlags." );
       return false;
@@ -289,7 +289,7 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
 
     if ( !exists ) {
       const QString statement = QString( "INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES ( '%1', '%2' )" )
-                                       .arg( flags[ i ].id(), item.id() );
+                                       .arg( flags[ i ].id() ).arg( item.id() );
       if ( !query.exec( statement ) ) {
         debugLastQueryError( query, "Error during adding new ItemFlags." );
         return false;
@@ -1061,7 +1061,7 @@ int DataStore::highestPimItemId()
   return query.value( 0 ).toInt();
 }
 
-int DataStore::highestPimItemIdByLocation( const Location &location )
+int DataStore::highestPimItemCountByLocation( const Location &location )
 {
   if ( !m_dbOpened || !location.isValid() )
     return -1;
@@ -1070,18 +1070,168 @@ int DataStore::highestPimItemIdByLocation( const Location &location )
   const QString statement = QString( "SELECT COUNT(*) AS count FROM PimItems WHERE location_id = %1" ).arg( location.id() );
 
   if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "DataStore::highestPimItemIdByLocation" );
+    debugLastQueryError( query, "DataStore::highestPimItemCountByLocation" );
     return -1;
   }
 
   if ( !query.next() ) {
-    debugLastQueryError( query, "DataStore::highestPimItemIdByLocation" );
+    debugLastQueryError( query, "DataStore::highestPimItemCountByLocation" );
     return -1;
   }
 
-  return query.value( 0 ).toInt();
+  return query.value( 0 ).toInt() + 1;
 }
 
+QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences )
+{
+  if ( !m_dbOpened )
+    return QList<PimItem>();
+
+  int highestEntry = highestPimItemId();
+  if ( highestEntry == -1 ) {
+    qDebug( "DataStore::matchingPimItems: Invalid highest entry number '%d' ", highestEntry );
+    return QList<PimItem>();
+  }
+
+  QStringList statementParts;
+  for ( int i = 0; i < sequences.count(); ++i ) {
+    if ( sequences[ i ].contains( ':' ) ) {
+      QList<QByteArray> pair = sequences[ i ].split( ':' );
+      const QString left( pair[ 0 ] );
+      const QString right( pair[ 1 ] );
+
+      if ( left == "*" && right == "*" ) {
+        statementParts.append( QString( "id = %1" ).arg( QString::number( highestEntry ) ) );
+      } else if ( left == "*" ) {
+        statementParts.append( QString( "(id >=1 AND id <= %1)" ).arg( right ) );
+      } else if ( right == "*" ) {
+        statementParts.append( QString( "(id >=%1 AND id <= %2)" ).arg( left ).arg( highestEntry ) );
+      } else {
+        statementParts.append( QString( "(id >=%1 AND id <= %2)" ).arg( left, right ) );
+      }
+    } else {
+      statementParts.append( QString( "id = %1" ).arg( QString::fromLatin1( sequences[ i ] ) ) );
+    }
+  }
+
+  const QString statement = QString( "SELECT id FROM PimItems WHERE %1" ).arg( statementParts.join( " OR " ) );
+
+  QSqlQuery query( m_database );
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "DataStore::matchingPimItemsByLocation" );
+    return QList<PimItem>();
+  }
+
+  QList<PimItem> pimItems;
+  while ( query.next() ) {
+    PimItem item = pimItemById( query.value( 0 ).toInt() );
+    if ( !item.isValid() ) {
+      qDebug( "DataStore::matchingPimItems: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
+      return QList<PimItem>();
+    }
+
+    pimItems.append( item );
+  }
+
+  return pimItems;
+}
+
+QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &sequences, const Location &location )
+{
+  if ( !m_dbOpened || !location.isValid() )
+    return QList<PimItem>();
+
+  QSqlQuery query( m_database );
+  const QString statement = QString( "SELECT id FROM PimItems WHERE location_id = %1" ).arg( location.id() );
+
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "DataStore::matchingPimItemsByLocation" );
+    return QList<PimItem>();
+  }
+
+  int highestEntry = highestPimItemCountByLocation( location );
+  if ( highestEntry == -1 ) {
+    qDebug( "DataStore::matchingPimItemsByLocation: Invalid highest entry number '%d' ", highestEntry );
+    return QList<PimItem>();
+  }
+  
+  QList<PimItem> pimItems;
+  for ( int i = 0; i < sequences.count(); ++i ) {
+    if ( sequences[ i ].contains( ':' ) ) {
+      int min = 0;
+      int max = 0;
+
+      QList<QByteArray> pair = sequences[ i ].split( ':' );
+      if ( pair[ 0 ] == "*" && pair[ 1 ] == "*" ) {
+        min = max = highestEntry;
+      } else if ( pair[ 0 ] == "*" ) {
+        min = 0;
+        max = pair[ 1 ].toInt();
+      } else if ( pair[ 1 ] == "*" ) {
+        min = pair[ 0 ].toInt();
+        max = highestEntry;
+      } else {
+        min = pair[ 0 ].toInt();
+        max = pair[ 1 ].toInt();
+      }
+
+      if ( min < 1 )
+        min = 1;
+
+      if ( max < 1 )
+        max = 1;
+
+      if ( max < min )
+        qSwap( max, min );
+
+      // transform from imap index to query index
+      min--; max--;
+
+      for ( int i = min; i < max; ++i ) {
+        if ( !query.seek( i ) ) {
+          qDebug( "DataStore::matchingPimItemsByLocation: Unable to seek at position '%d' ", i );
+          return QList<PimItem>();
+        }
+
+        PimItem item = pimItemById( query.value( 0 ).toInt() );
+        if ( !item.isValid() ) {
+          qDebug( "DataStore::matchingPimItemsByLocation: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
+          return QList<PimItem>();
+        }
+
+        pimItems.append( item );
+      }
+    } else {
+
+      int pos = 0;
+      if ( sequences[ i ] == "*" )
+        pos = query.size() - 1;
+      else
+        pos = sequences[ i ].toInt();
+
+      if ( pos < 1 )
+        pos = 1;
+
+      // transform from imap index to query index
+      pos--;
+
+      if ( !query.seek( pos ) ) {
+        qDebug( "DataStore::matchingPimItemsByLocation: Unable to seek at position '%d' ", pos );
+        return QList<PimItem>();
+      }
+
+      PimItem item = pimItemById( query.value( 0 ).toInt() );
+      if ( !item.isValid() ) {
+        qDebug( "DataStore::matchingPimItemsByLocation: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
+        return QList<PimItem>();
+      }
+
+      pimItems.append( item );
+    }
+  }
+
+  return pimItems;
+}
 
 
 /* --- Resource ------------------------------------------------------ */

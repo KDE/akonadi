@@ -59,17 +59,26 @@ class FetchQuery
         };
 
         bool parse( const QByteArray &attribute );
+
+        Type type() const;
+
         void dump();
 
+      private:
         Type mType;
     };
 
     bool parse( const QByteArray &query );
-    QList<QByteArray> normalizedSequences( const QList<QByteArray> &sequences );
+
     bool hasAttributeType( Attribute::Type type ) const;
+    QList<QByteArray> sequences() const;
+    QList<Attribute> attributes() const;
+    Type type() const;
+    bool isUidFetch() const;
 
     void dump();
 
+  private:
     QList<QByteArray> mSequences;
     QList<Attribute> mAttributes;
     Type mType;

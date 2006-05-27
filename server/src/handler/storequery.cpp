@@ -28,9 +28,14 @@ StoreQuery::StoreQuery()
 
 bool StoreQuery::parse( const QByteArray &query )
 {
-  int start;
-  if ( query.toUpper().startsWith( "STORE " ) )
+  int start = 6;
+  if ( query.toUpper().startsWith( "STORE " ) ) {
     start = 6;
+    mIsUidStore = false;
+  } else if ( query.toUpper().startsWith( "UID STORE " ) ) {
+    start = 10;
+    mIsUidStore = true;
+  }
 
   int end = query.indexOf( ' ', start );
 
@@ -43,16 +48,22 @@ bool StoreQuery::parse( const QByteArray &query )
   const QByteArray subCommand = query.mid( start, end - start ).toUpper();
   if ( subCommand == "FLAGS" ) {
     mType = Replace;
+    qDebug( "tokoe: replace" );
   } else if ( subCommand == "FLAGS.SILENT" ) {
     mType = Replace | Silent;
+    qDebug( "tokoe: replace silent" );
   } else if ( subCommand == "+FLAGS" ) {
     mType = Add;
+    qDebug( "tokoe: add" );
   } else if ( subCommand == "+FLAGS.SILENT" ) {
     mType = Add | Silent;
+    qDebug( "tokoe: add silent" );
   } else if ( subCommand == "-FLAGS" ) {
     mType = Delete;
+    qDebug( "tokoe: delete" );
   } else if ( subCommand == "-FLAGS.SILENT" ) {
     mType = Delete | Silent;
+    qDebug( "tokoe: delete silent" );
   } else
     return false;
 
@@ -80,6 +91,26 @@ bool StoreQuery::parse( const QByteArray &query )
   }
 
   return true;
+}
+
+int StoreQuery::type() const
+{
+  return mType;
+}
+
+QList<QByteArray> StoreQuery::flags() const
+{
+  return mFlags;
+}
+
+QList<QByteArray> StoreQuery::sequences() const
+{
+  return mSequences;
+}
+
+bool StoreQuery::isUidStore() const
+{
+  return mIsUidStore;
 }
 
 void StoreQuery::dump()

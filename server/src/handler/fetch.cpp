@@ -33,9 +33,6 @@
 
 using namespace Akonadi;
 
-static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery, int pos, QSqlDatabase &database );
-static QByteArray buildEnvelope( QSqlQuery &query, const FetchQuery &fetchQuery, int pos );
-
 Fetch::Fetch()
   : Handler()
 {
@@ -64,168 +61,29 @@ bool Fetch::handleLine( const QByteArray& line )
     return true;
   }
 
+  DataStore *store = connection()->storageBackend();
+
+  QList<PimItem> pimItems;
   if ( connection()->selectedLocation().id() == -1 ) {
-    response.setTag( tag() );
-    response.setError();
-    response.setString( "Select a mailbox first" );
-
-    emit responseAvailable( response );
-    deleteLater();
-
-    return true;
-  }
-
-  QString locationId = QString::number( connection()->selectedLocation().id() );
-
-  QSqlDatabase database = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
-  database.setDatabaseName( "akonadi.db" );
-  database.open();
-  if ( !database.isOpen() ) {
-    response.setTag( tag() );
-    response.setError();
-    response.setString( "Unable to open backend storage" );
-
-    emit responseAvailable( response );
-    deleteLater();
-
-    return true;
-  }
-
-  QSqlQuery query( database );
-
-  QString statement;
-  if ( fetchQuery.mIsUidFetch )
-    statement = QString( "SELECT MAX(id) AS max_id FROM PimItems" );
-  else
-    statement = QString( "SELECT COUNT(*) AS count FROM PimItems WHERE location_id = %1" ).arg( locationId );
-
-  if ( !query.exec( statement ) ) {
-    response.setTag( tag() );
-    response.setError();
-    response.setString( "Unable to access backend storage: " + query.lastError().text().toLatin1() );
-
-    emit responseAvailable( response );
-    deleteLater();
-
-    return true;
-  }
-  query.next();
-  const int maxNumberOfEntry = query.value( 0 ).toInt() + 1;
-
-  /**
-   * On a UID FETCH we do a SQL preselection of the pim items by uid.
-   */
-  QString statementFilter;
-  if ( fetchQuery.mIsUidFetch ) {
-    QStringList statementParts;
-    for ( int i = 0; i < fetchQuery.mSequences.count(); ++i ) {
-      if ( fetchQuery.mSequences[ i ].contains( ':' ) ) {
-        QList<QByteArray> pair = fetchQuery.mSequences[ i ].split( ':' );
-        const QString left( pair[ 0 ] );
-        const QString right( pair[ 1 ] );
-        if ( pair[ 0 ] == "*" && pair[ 1 ] == "*" ) {
-          statementParts.append( QString( "id = %1" ).arg( QString::number( maxNumberOfEntry - 1 ) ) );
-        } else if ( pair[ 0 ] == "*" ) {
-          statementParts.append( QString( "(id >=1 AND id <= %1)" ).arg( right ) );
-        } else if ( pair[ 1 ] == "*" ) {
-          statementParts.append( QString( "(id >=%1 AND id <= %2)" ).arg( left ).arg( maxNumberOfEntry - 1 ) );
-        } else {
-          statementParts.append( QString( "(id >=%1 AND id <= %2)" ).arg( left, right ) );
-        }
-      } else {
-        statementParts.append( QString( "id = %1" ).arg( QString::fromLatin1( fetchQuery.mSequences[ i ] ) ) );
-      }
-    }
-
-    statementFilter = statementParts.join( " OR " );
-  }
-
-  if ( fetchQuery.mIsUidFetch )
-    statement = QString( "SELECT id, data FROM PimItems WHERE %1" ).arg( statementFilter );
-  else
-    statement = QString( "SELECT id, data FROM PimItems WHERE location_id = %1" ).arg( locationId );
-
-  if ( !query.exec( statement ) ) {
-    response.setTag( tag() );
-    response.setError();
-    response.setString( "Unable to access backend storage: " + query.lastError().text().toLatin1() );
-
-    emit responseAvailable( response );
-    deleteLater();
-
-    return true;
-  }
-
-  if ( fetchQuery.mIsUidFetch ) {
-    int i = 0;
-    while ( query.next() ) {
-      response.setUntagged();
-      response.setString( buildResponse( query, fetchQuery, i, database ) );
-      emit responseAvailable( response );
-
-      i++;
-    }
+    pimItems = store->matchingPimItems( fetchQuery.sequences() );
   } else {
-    /**
-     * On a normal FETCH we do a post selection of the pim items by index.
-     */
-    for ( int i = 0; i < fetchQuery.mSequences.count(); ++i ) {
-      if ( fetchQuery.mSequences[ i ].contains( ':' ) ) {
-        int min = 0;
-        int max = 0;
-
-        QList<QByteArray> pair = fetchQuery.mSequences[ i ].split( ':' );
-        if ( pair[ 0 ] == "*" && pair[ 1 ] == "*" ) {
-          min = max = maxNumberOfEntry;
-        } else if ( pair[ 0 ] == "*" ) {
-          min = 0;
-          max = pair[ 1 ].toInt();
-        } else if ( pair[ 1 ] == "*" ) {
-          min = pair[ 0 ].toInt();
-          max = maxNumberOfEntry;
-        } else {
-          min = pair[ 0 ].toInt();
-          max = pair[ 1 ].toInt();
-        }
-
-        if ( max < min )
-          qSwap( max, min );
-
-        if ( min < 1 )
-          min = 1;
-
-        // transform from imap index to query index
-        min--; max--;
-
-        for ( int i = min; i < max; ++i ) {
-          response.setUntagged();
-          response.setString( buildResponse( query, fetchQuery, i, database ) );
-          emit responseAvailable( response );
-        }
-      } else {
-        int pos;
-        if ( fetchQuery.mSequences[ i ] == "*" )
-          pos = query.size() - 1;
-        else
-          pos = fetchQuery.mSequences[ i ].toInt();
-
-        if ( pos < 1 )
-          pos = 1;
-
-        // transform from imap index to query index
-        pos--;
-
-        response.setUntagged();
-        response.setString( buildResponse( query, fetchQuery, pos, database ) );
-        emit responseAvailable( response );
-      }
+    if ( fetchQuery.isUidFetch() ) {
+      pimItems = store->matchingPimItems( fetchQuery.sequences() );
+    } else {
+      pimItems = store->matchingPimItemsByLocation( fetchQuery.sequences(), connection()->selectedLocation() );
     }
+  }
+
+  for ( int i = 0; i < pimItems.count(); ++i ) {
+    response.setUntagged();
+    response.setString( buildResponse( pimItems[ i ], fetchQuery, i ) );
+    emit responseAvailable( response );
   }
 
   response.setTag( tag() );
   response.setSuccess();
 
-  if ( fetchQuery.mIsUidFetch )
+  if ( fetchQuery.isUidFetch() )
     response.setString( "UID FETCH completed" );
   else
     response.setString( "FETCH completed" );
@@ -237,29 +95,19 @@ bool Fetch::handleLine( const QByteArray& line )
   return true;
 }
 
-static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery, int pos, QSqlDatabase &database  )
+QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQuery, int pos  )
 {
-  /**
-   * Synthesize the response.
-   */
-  if ( !query.seek( pos ) )
-    qDebug( "Unable to seek in SqlQuery" );
-
   QList<QByteArray> attributes;
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Envelope ) ) {
-    attributes.append( "ENVELOPE " + buildEnvelope( query, fetchQuery, pos ) );
+    attributes.append( "ENVELOPE " + buildEnvelope( item, fetchQuery ) );
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Flags ) ) {
-    QString statement = QString( "SELECT Flags.name FROM Flags, ItemFlags WHERE Flags.id = ItemFlags.flag_id AND ItemFlags.pimitem_id = %1" ).arg( query.value( 0 ).toString() );
-
-    QSqlQuery flagsQuery( database );
+    QList<Flag> flagList = connection()->storageBackend()->itemFlags( item );
 
     QStringList flags;
-    if ( flagsQuery.exec( statement ) ) {
-      while ( flagsQuery.next() )
-        flags.append( flagsQuery.value( 0 ).toString() );
-    }
+    for ( int i = 0; i < flagList.count(); ++i )
+      flags.append( flagList[ i ].name() );
 
     attributes.append( "FLAGS (" + flags.join( " " ).toLatin1() + ")" );
   }
@@ -268,17 +116,15 @@ static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery,
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RFC822 ) ) {
-    const QByteArray data = query.value( 1 ).toByteArray();
-    attributes.append( "RFC822 {" + QByteArray::number( data.length() ) +
-                       "}\r\n" + data );
+    attributes.append( "RFC822 {" + QByteArray::number( item.data().length() ) +
+                       "}\r\n" + item.data() );
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RFC822_Header ) ) {
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RFC822_Size ) ) {
-    const QByteArray data = query.value( 1 ).toByteArray();
-    attributes.append( "RFC822.SIZE " + QByteArray::number( data.length() ) );
+    attributes.append( "RFC822.SIZE " + QByteArray::number( item.data().length() ) );
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RFC822_Text ) ) {
@@ -290,8 +136,8 @@ static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery,
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Body_Structure ) ) {
   }
 
-  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Uid ) || fetchQuery.mIsUidFetch ) {
-    attributes.append( "UID " + query.value( 0 ).toString().toLatin1() );
+  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Uid ) || fetchQuery.isUidFetch() ) {
+    attributes.append( "UID " + QByteArray::number( item.id() ) );
   }
 
   QByteArray attributesString;
@@ -309,7 +155,7 @@ static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery,
 }
 
 // FIXME build from database
-static QByteArray buildEnvelope( QSqlQuery&, const FetchQuery&, int )
+QByteArray Fetch::buildEnvelope( const PimItem&, const FetchQuery& )
 {
   const QByteArray date( "\"Wed, 1 Feb 2006 13:37:19 UT\"" );
   const QByteArray subject( "\"IMPORTANT: Akonadi Test\"" );

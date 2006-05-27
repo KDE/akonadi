@@ -17,11 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QSqlQuery>
-#include <QSqlError>
 #include <QStringList>
-#include <QUuid>
-#include <QVariant> 
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
@@ -63,22 +59,40 @@ bool Store::handleLine( const QByteArray& line )
   }
 
   storeQuery.dump();
-/*
-  mDatabase = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
-  mDatabase.setDatabaseName( "akonadi.db" );
-  mDatabase.open();
-  if ( !mDatabase.isOpen() ) {
-    response.setTag( tag() );
-    response.setError();
-    response.setString( "Unable to open backend storage" );
 
-    emit responseAvailable( response );
-    deleteLater();
+  DataStore *store = connection()->storageBackend();
 
-    return true;
+  QList<PimItem> pimItems;
+  if ( connection()->selectedLocation().id() == -1 ) {
+    pimItems = store->matchingPimItems( storeQuery.sequences() );
+  } else {
+    if ( storeQuery.isUidStore() ) {
+      pimItems = store->matchingPimItems( storeQuery.sequences() );
+    } else {
+      pimItems = store->matchingPimItemsByLocation( storeQuery.sequences(), connection()->selectedLocation() );
+    }
   }
-*/
 
+  for ( int i = 0; i < pimItems.count(); ++i ) {
+    if ( storeQuery.type() & StoreQuery::Replace ) {
+      replaceFlags( pimItems[ i ], storeQuery.flags() );
+    } else if ( storeQuery.type() & StoreQuery::Add ) {
+      addFlags( pimItems[ i ], storeQuery.flags() );
+    } else if ( storeQuery.type() & StoreQuery::Delete ) {
+      deleteFlags( pimItems[ i ], storeQuery.flags() );
+    }
+
+    if ( !( storeQuery.type() & StoreQuery::Silent ) ) {
+      QList<Flag> flags = store->itemFlags( pimItems[ i ] );
+      QStringList flagList;
+      for ( int j = 0; j < flags.count(); ++j )
+        flagList.append( flags[ j ].name() );
+
+      response.setUntagged();
+      response.setString( QByteArray::number( i ) + " FETCH (FLAGS (" + flagList.join( " " ).toLatin1() + "))" );
+      emit responseAvailable( response );
+    }
+  }
 
   response.setTag( tag() );
   response.setSuccess();
@@ -91,15 +105,9 @@ bool Store::handleLine( const QByteArray& line )
 }
 
 
-void Store::replaceFlags( const QString &uid, const QList<QByteArray> &flags )
+void Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
   DataStore *store = connection()->storageBackend();
-
-  PimItem item = store->pimItemById( uid.toInt() );
-  if ( !item.isValid() ) {
-    qDebug( "Store::replaceFlags: Invalid uid '%s' passed", qPrintable( uid ) );
-    return;
-  }
 
   QList<Flag> flagList;
   for ( int i = 0; i < flags.count(); ++i ) {
@@ -127,15 +135,9 @@ void Store::replaceFlags( const QString &uid, const QList<QByteArray> &flags )
   }
 }
 
-void Store::addFlags( const QString &uid, const QList<QByteArray> &flags )
+void Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
   DataStore *store = connection()->storageBackend();
-
-  PimItem item = store->pimItemById( uid.toInt() );
-  if ( !item.isValid() ) {
-    qDebug( "Store::addFlags: Invalid uid '%s' passed", qPrintable( uid ) );
-    return;
-  }
 
   QList<Flag> flagList;
   for ( int i = 0; i < flags.count(); ++i ) {
@@ -163,15 +165,9 @@ void Store::addFlags( const QString &uid, const QList<QByteArray> &flags )
   }
 }
 
-void Store::deleteFlags( const QString &uid, const QList<QByteArray> &flags )
+void Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
   DataStore *store = connection()->storageBackend();
-
-  PimItem item = store->pimItemById( uid.toInt() );
-  if ( !item.isValid() ) {
-    qDebug( "Store::deleteFlags: Invalid uid '%s' passed", qPrintable( uid ) );
-    return;
-  }
 
   QList<Flag> flagList;
   for ( int i = 0; i < flags.count(); ++i ) {
