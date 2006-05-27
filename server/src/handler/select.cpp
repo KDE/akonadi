@@ -41,13 +41,11 @@ Select::~Select()
 
 bool Select::handleLine(const QByteArray& line )
 {
-    // parse out the reference name and mailbox name
+    connection()->setSelectedCollection("/"); // as per rfc, even if the followin select fails
+
     int startOfCommand = line.indexOf( ' ' ) + 1;
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     QByteArray mailbox = stripQuotes( line.right( line.size() - startOfMailbox ) );
-    QByteArray selected = connection()->selectedCollection();
-    if ( selected != "/" )
-        mailbox.prepend( selected.right( selected.size() -1 ) );
 
     // Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
     // OPTIONAL OK untagged responses: UNSEEN, PERMANENTFLAGS
