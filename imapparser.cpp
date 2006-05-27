@@ -128,3 +128,28 @@ int PIM::ImapParser::stripLeadingSpaces( const QByteArray & data, int start )
   return data.length();
 }
 
+int PIM::ImapParser::parenthesesBalance( const QByteArray & data, int start )
+{
+  int count = 0;
+  bool insideQuote = false;
+  for ( int i = start; i < data.length(); ++i ) {
+    if ( data[i] == '"' ) {
+      insideQuote = !insideQuote;
+      continue;
+    }
+    if ( data[i] == '\\' && insideQuote ) {
+      ++i;
+      continue;
+    }
+    if ( data[i] == '(' && !insideQuote ) {
+      ++count;
+      continue;
+    }
+    if ( data[i] == ')' && !insideQuote ) {
+      --count;
+      continue;
+    }
+  }
+  return count;
+}
+

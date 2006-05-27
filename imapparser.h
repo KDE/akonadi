@@ -65,7 +65,14 @@ class ImapParser
       @param data The source data.
       @param start start parsing from here.
     */
-    static int stripLeadingSpaces( const QByteArray &data, int start );
+    static int stripLeadingSpaces( const QByteArray &data, int start = 0 );
+
+    /**
+      Returns the parentheses balance for the given data, considering quotes.
+      @param data The source data.
+      @param start start parsing from here.
+    */
+    static int parenthesesBalance( const QByteArray &data, int start = 0 );
 };
 
 }

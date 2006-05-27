@@ -28,6 +28,7 @@
 #include <QTimer>
 
 #include "job.h"
+#include "imapparser.h"
 
 using namespace PIM;
 
@@ -180,37 +181,59 @@ void PIM::Job::slotDisconnected( )
 void PIM::Job::slotDataReceived( )
 {
   static int literalSize = 0;
-  static QByteArray literalBuffer;
+  static QByteArray dataBuffer;
+  static int parenthesesCount = 0;
 
   while ( d->socket->canReadLine() ) {
     QByteArray readBuffer = d->socket->readLine();
+    dataBuffer += readBuffer;
 
     // literal read in progress
     if ( literalSize > 0 ) {
-      literalBuffer += readBuffer;
       literalSize -= readBuffer.size();
+
       // still not everything read
       if ( literalSize > 0 )
         continue;
+
+      // check the remaining (non-literal) part for parentheses
+      if ( literalSize < 0 )
+        parenthesesCount = ImapParser::parenthesesBalance( readBuffer, readBuffer.length() + literalSize );
+
+      // literal string finished but still open parentheses
+      if ( parenthesesCount > 0 )
+        continue;
+
     } else {
+
+      // open parentheses
+      parenthesesCount += ImapParser::parenthesesBalance( readBuffer );
 
       // start new literal read
       if ( readBuffer.trimmed().endsWith( '}' ) ) {
         int begin = readBuffer.lastIndexOf( '{' );
         int end = readBuffer.lastIndexOf( '}' );
         literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
-        literalBuffer = readBuffer;
         continue;
       }
 
-      // just a normal response
-      literalBuffer = readBuffer;
+      // still open parentheses
+      if ( parenthesesCount > 0 )
+        continue;
+
+      // just a normal response, fall through
     }
 
-    qDebug() << "data received " << literalBuffer;
-    int startOfData = literalBuffer.indexOf( ' ' );
-    QByteArray tag = literalBuffer.left( startOfData );
-    QByteArray data = literalBuffer.mid( startOfData + 1 );
+    qDebug() << "data received " << dataBuffer;
+    int startOfData = dataBuffer.indexOf( ' ' );
+    QByteArray tag = dataBuffer.left( startOfData );
+    QByteArray data = dataBuffer.mid( startOfData + 1 );
+
+    // reset parser stuff
+    dataBuffer.clear();
+    literalSize = 0;
+    parenthesesCount = 0;
+
     // handle login stuff (if we are the parent job)
     if ( tag == d->loginTag && !d->parent ) {
       if ( data.startsWith( "OK" ) )
