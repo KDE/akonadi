@@ -87,10 +87,27 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
         // envelope
         if ( fetch[i] == "ENVELOPE" ) {
           QList<QByteArray> env = ImapParser::parseParentheziedList( fetch[i + 1] );
+          Q_ASSERT( env.count() >= 4 );
           // date
           mime->date()->from7BitString( env[0] );
           // subject
           mime->subject()->from7BitString( env[1] );
+          // from
+          QList<QByteArray> addrList = ImapParser::parseParentheziedList( env[2] );
+          if ( addrList.count() >= 1 ) {
+            QList<QByteArray> addr = ImapParser::parseParentheziedList( addrList[0] );
+            Q_ASSERT( addr.count() == 4 );
+            mime->from()->setName( addr[0] );
+            mime->from()->setEmail( addr[2] + "@" + addr[3] );
+          }
+          // reply-to
+          addrList = ImapParser::parseParentheziedList( env[3] );
+          if ( addrList.count() >= 1 ) {
+            QList<QByteArray> addr = ImapParser::parseParentheziedList( addrList[0] );
+            Q_ASSERT( addr.count() == 4 );
+            mime->replyTo()->setNameFrom7Bit( addr[0] );
+            mime->replyTo()->setEmail( addr[2] + "@" + addr[3] );
+          }
         }
       }
       return;
