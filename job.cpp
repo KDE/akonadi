@@ -179,13 +179,40 @@ void PIM::Job::slotDisconnected( )
 
 void PIM::Job::slotDataReceived( )
 {
+  static int literalSize = 0;
+  static QByteArray literalBuffer;
+
   while ( d->socket->canReadLine() ) {
-    // TODO: implement reading/parsing of raw data blocks ({size} suffix)
-    QByteArray buffer = d->socket->readLine();
-    qDebug() << "data received " << buffer;
-    int startOfData = buffer.indexOf( ' ' );
-    QByteArray tag = buffer.left( startOfData );
-    QByteArray data = buffer.mid( startOfData + 1 );
+    bool literalReadFinished = false;
+    QByteArray readBuffer = d->socket->readLine();
+
+    // literal read in progress
+    if ( literalSize > 0 ) {
+      literalBuffer += readBuffer;
+      literalSize -= readBuffer.size();
+      // still not everything read
+      if ( literalSize > 0 )
+        return;
+      literalReadFinished = true;
+    }
+
+    // start new literal read
+    if ( readBuffer.trimmed().endsWith( '}' ) ) {
+      int begin = readBuffer.lastIndexOf( '{' );
+      int end = readBuffer.lastIndexOf( '}' );
+      literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
+      literalBuffer = readBuffer;
+      return;
+    }
+
+    // just a normal response
+    if ( !literalReadFinished )
+      literalBuffer = readBuffer;
+
+    qDebug() << "data received " << literalBuffer;
+    int startOfData = literalBuffer.indexOf( ' ' );
+    QByteArray tag = literalBuffer.left( startOfData );
+    QByteArray data = literalBuffer.mid( startOfData + 1 );
     // handle login stuff (if we are the parent job)
     if ( tag == d->loginTag && !d->parent ) {
       if ( data.startsWith( "OK" ) )

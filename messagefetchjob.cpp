@@ -59,7 +59,12 @@ PIM::MessageFetchJob::~ MessageFetchJob( )
 
 void PIM::MessageFetchJob::doStart()
 {
-  CollectionSelectJob *job = new CollectionSelectJob( "\"" + (d->uid.isNull() ? d->path : Collection::root()) + "\"", this );
+  QByteArray selectPath;
+  if ( d->uid.isNull() ) // collection content listing
+    selectPath = d->path;
+  else                   // message fetching
+    selectPath = Collection::root();
+  CollectionSelectJob *job = new CollectionSelectJob( selectPath, this );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(selectDone(PIM::Job*)) );
   job->start();
 }
@@ -175,7 +180,7 @@ void PIM::MessageFetchJob::selectDone( PIM::Job * job )
     if ( d->uid.isNull() )
       command += " FETCH 1:* (UID ENVELOPE)";
     else
-      command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (RFC822)";
+      command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID RFC822)";
     writeData( command );
   }
 }
