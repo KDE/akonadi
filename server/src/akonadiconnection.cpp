@@ -65,8 +65,6 @@ void AkonadiConnection::run()
         return;
     }
 
-    writeOut( "* OK Akonadi Almost IMAP Server");
-
     /* Start a local event loop and start processing incoming data. Whenever
      * a full command has been read, it is delegated to the responsible
      * handler and processed by that. If that command needs to do something
@@ -81,6 +79,9 @@ void AkonadiConnection::run()
              this, SLOT( slotNewData() ), Qt::DirectConnection );
     connect( m_tcpSocket, SIGNAL( disconnected() ),
              this, SLOT( slotDisconnected() ), Qt::DirectConnection );
+
+    writeOut( "* OK Akonadi Almost IMAP Server");
+
     exec();
 }
 
@@ -152,7 +153,7 @@ Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
 {
     Handler * handler = Handler::findHandlerForCommandAlwaysAllowed( command );
     if ( handler ) return handler;
-    
+
     switch ( m_connectionState ) {
         case NonAuthenticated:
             handler =  Handler::findHandlerForCommandNonAuthenticated( command );            break;
@@ -162,7 +163,7 @@ Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
         case Selected:
             break;
         case LoggingOut:
-            break; 
+            break;
     }
     // we didn't have a handler for this, let the default one do its thing
     if ( !handler ) handler = new Handler();
