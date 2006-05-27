@@ -434,6 +434,50 @@ QList<MimeType> DataStore::getMimeTypesForLocation( int id ) const
     return list;
 }
 
+bool DataStore::appendMimeTypeForLocation( int locationId, const QString & mimeType ) {
+    //qDebug() << "DataStore::appendMimeTypeForLocation( " << locationId << ", '" << mimeType << "' )";
+    int mimeTypeId;
+    MimeType m = getMimeTypeByName( mimeType );
+    if ( !m.isValid() ) {
+        // the MIME type doesn't exist, so we have to add it to the db
+        if ( !appendMimeType( mimeType, &mimeTypeId ) )
+            return false;
+    }
+    else {
+        mimeTypeId = m.getId();
+    }
+    return appendMimeTypeForLocation( locationId, mimeTypeId );
+}
+
+bool DataStore::appendMimeTypeForLocation( int locationId, int mimeTypeId )
+{
+    //qDebug() << "DataStore::appendMimeTypeForLocation( " << locationId << ", '" << mimeTypeId << "' )";
+    int foundRecs = 0;
+    QSqlQuery query( m_database );
+    if ( m_dbOpened ) {
+        QString q = QString( "SELECT COUNT(*) FROM LocationMimeTypes WHERE location_id = \"%1\" AND mimetype_id = \"%2\"" )
+                    .arg( locationId ).arg( mimeTypeId );
+        if ( query.exec( q ) ) {
+            if ( query.next() )
+                foundRecs = query.value(0).toInt();
+        } else
+            debugLastDbError( "Error during check before insertion of LocationMimeType." );
+        if ( foundRecs == 0 ) {
+            QString insertQuery = QString( "INSERT INTO LocationMimeTypes (location_id, mimetype_id) VALUES (\"%1\", \"%2\")" )
+                    .arg( locationId ).arg( mimeTypeId );
+            if ( query.exec( insertQuery ) ) {
+                return true;
+            }
+            else
+                debugLastDbError( "Error during insertion of single LocationMimeType." );
+        } else
+            qDebug() << "Cannot insert location-mime type ( " << locationId
+                     << ", " << mimeTypeId << " ) because it already exists.";
+    }
+    return false;
+}
+
+
 QList<Location> DataStore::listLocations() const
 {
     QList<Location> list;
@@ -476,23 +520,29 @@ QList<Location> DataStore::listLocations( const Resource & resource ) const
 }
 
 /* --- MimeType ------------------------------------------------------ */
-bool DataStore::appendMimeType( const QString & mimetype )
+bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
 {
   int foundRecs = 0;
   QSqlQuery query( m_database );
   if ( m_dbOpened ) {
-    query.prepare( "SELECT COUNT(*) FROM MimeTypes WHERE mime_type = :type" );
-    query.bindValue( ":type", mimetype );
-    if ( query.exec() ) {
-      if (query.next())
+    QString q = QString( "SELECT COUNT(*) FROM MimeTypes WHERE mime_type = \"%1\"" )
+                .arg( mimetype );
+    if ( query.exec( q ) ) {
+      if ( query.next() )
         foundRecs = query.value(0).toInt();
     } else
       debugLastQueryError( query, "Error during check before insertion of MimeType." );
-    if ( foundRecs == 0) {
+    if ( foundRecs == 0 ) {
       query.prepare( "INSERT INTO MimeTypes (mime_type) VALUES (:type)" );
       query.bindValue( ":type", mimetype );
-      if ( query.exec() )
+      if ( query.exec() ) {
+        if ( insertId ) {
+          QVariant v = query.lastInsertId();
+          if ( v.isValid() )
+            *insertId = v.toInt();
+        }
         return true;
+      }
       else
         debugLastQueryError( query, "Error during insertion of single MimeType." );
     } else
@@ -525,6 +575,23 @@ MimeType DataStore::getMimeTypeById( int id ) const
       }
     } else
       debugLastQueryError( query, "Error during selection of single MimeType." );
+  }
+  return m;
+}
+
+MimeType DataStore::getMimeTypeByName( const QString & name ) const
+{
+  MimeType m;
+  if ( m_dbOpened ) {
+    QSqlQuery query( m_database );
+    if ( query.exec( "SELECT id, mime_type FROM MimeTypes WHERE mime_type = \"" + name + "\"" ) ) {
+      if ( query.next() ) {
+        int id = query.value(0).toInt();
+        QString type = query.value(1).toString();
+        m = MimeType( id, type );
+      }
+    } else
+      debugLastDbError( "Error during selection of single MimeType." );
   }
   return m;
 }

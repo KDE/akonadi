@@ -82,13 +82,15 @@ public:
     QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource ) const;
     QList<MimeType> getMimeTypesForLocation( int id ) const;
-    bool appendMimeTypeForLocation( int locationId, const MimeType & mimeType );
-    
+    bool appendMimeTypeForLocation( int locationId, const QString & mimeType );
+    bool appendMimeTypeForLocation( int locationId, int mimeTypeId );
+
     /* --- MimeType ------------------------------------------------------ */
-    bool appendMimeType( const QString & mimetype );
+    bool appendMimeType( const QString & mimetype, int *insertId = 0 );
     bool removeMimeType( const MimeType & mimetype );
     bool removeMimeType( int id );
     MimeType getMimeTypeById( int id ) const;
+    MimeType getMimeTypeByName( const QString & mimetype ) const;
     QList<MimeType> listMimeTypes();
 
     /* --- MetaType ------------------------------------------------------ */
