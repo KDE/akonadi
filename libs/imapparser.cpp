@@ -48,25 +48,44 @@ QList< QByteArray > PIM::ImapParser::parseParentheziedList( const QByteArray & d
       continue;
     if ( count == 0 ) {
       QByteArray ba;
-      i = parseQuotedString( data, ba, i );
+      i = parseString( data, ba, i ) - 1; // compensate the increment
       rv.append( ba );
     }
   }
   return rv;
 }
 
+int PIM::ImapParser::parseString( const QByteArray & data, QByteArray & result, int start )
+{
+  int begin = stripLeadingSpaces( data, start );
+
+  // literal string
+  // TODO: error handling
+  if ( data[begin] == '{' ) {
+    int end = data.indexOf( '}', begin );
+    Q_ASSERT( end > begin );
+    int size = data.mid( begin + 1, end - begin - 1 ).toInt();
+
+    // strip CRLF
+    begin = end + 1;
+    for ( ; begin < data.length(); ++begin ) {
+      if ( data[begin] != '\n' && data[begin] != '\r' )
+        break;
+    }
+
+    end = begin + size;
+    result = data.mid( begin, end - begin );
+    return end;
+  }
+
+  // quoted string
+  return parseQuotedString( data, result, begin );
+}
+
 int PIM::ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, int start )
 {
-  int begin = start;
-  int end = start;
-
-  // strip leading spaces
-  for ( int i = start; i < data.length(); ++i ) {
-    if ( data[i] == ' ' )
-        ++begin;
-    else
-      break;
-  }
+  int begin = stripLeadingSpaces( data, start );
+  int end = begin;
 
   // quoted string
   if ( data[begin] == '"' ) {
@@ -77,7 +96,7 @@ int PIM::ImapParser::parseQuotedString( const QByteArray & data, QByteArray &res
         continue;
       }
       if ( data[i] == '"' ) {
-        end = i;
+        end = i + 1; // skip the '"'
         break;
       }
     }
@@ -96,6 +115,16 @@ int PIM::ImapParser::parseQuotedString( const QByteArray & data, QByteArray &res
   result = data.mid( begin, end - begin );
   if ( result == "NIL" )
     result.clear();
+  // TODO: strip quotes!
   return end;
+}
+
+int PIM::ImapParser::stripLeadingSpaces( const QByteArray & data, int start )
+{
+  for ( int i = start; i < data.length(); ++i ) {
+    if ( data[i] != ' ' )
+      return i;
+  }
+  return data.length();
 }
 
