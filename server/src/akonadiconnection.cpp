@@ -93,9 +93,9 @@ void AkonadiConnection::slotDisconnected()
 void AkonadiConnection::slotNewData()
 {
     QByteArray line = m_tcpSocket->readLine();
-    qDebug() << "GOT:" << line <<  endl;
     if ( !m_currentHandler ) {
         line = line.trimmed();
+        qDebug() << "GOT:" << line <<  endl;
         // this is a new command, which means the line must start with a tag
         // followed by a non-empty command. First get the tag
         int separator = line.indexOf(' ');

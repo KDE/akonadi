@@ -73,7 +73,6 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
         deleteLater();
         return true;
     }
-    
     Response response;
     response.setContinuation();
     response.setString( "Ready for literal data" );
