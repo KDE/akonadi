@@ -71,68 +71,71 @@ bool Create::handleLine(const QByteArray& line )
         response.setError();
         response.setString( "Invalid argument" );
         emit responseAvailable( response );
+        deleteLater();
+        return true;
     }
-    else {
-        DataStore *db = connection()->storageBackend();
-        const int startOfLocation = mailbox.indexOf( '/' );
-        const QByteArray resourceName = mailbox.left( startOfLocation );
-        const QByteArray locationName = mailbox.mid( startOfLocation );
-        qDebug() << "Create: " << locationName
-                 << " in resource: " << resourceName;
-        Resource resource = db->getResourceByName( resourceName );
-        // first check whether location already exists
-        if ( db->getLocationByName( resource, locationName ).isValid() ) {
-            response.setFailure();
-            response.setString( "A folder with that name does already exist");
-            emit responseAvailable( response );
+
+    DataStore *db = connection()->storageBackend();
+    const int startOfLocation = mailbox.indexOf( '/' );
+    const QByteArray resourceName = mailbox.left( startOfLocation );
+    const QByteArray locationName = mailbox.mid( startOfLocation );
+    //qDebug() << "Create: " << locationName
+    //         << " in resource: " << resourceName;
+    Resource resource = db->getResourceByName( resourceName );
+
+    // first check whether location already exists
+    if ( db->getLocationByName( resource, locationName ).isValid() ) {
+        response.setFailure();
+        response.setString( "A folder with that name does already exist");
+        emit responseAvailable( response );
+        deleteLater();
+        return true;
+    }
+
+    // we have to create all superior hierarchical folders, so look for the
+    // starting point
+    QList<QByteArray> foldersToCreate;
+    foldersToCreate.append( locationName );
+    for ( int endOfSupFolder = locationName.lastIndexOf( '/', locationName.size() - 1 );
+          endOfSupFolder > 0;
+          endOfSupFolder = locationName.lastIndexOf( '/', endOfSupFolder - 2 ) ) {
+        // check whether the superior hierarchical folder exists
+        if ( ! db->getLocationByName( resource, locationName.left( endOfSupFolder ) ).isValid() ) {
+            // the superior folder does not exist, so it has to be created
+            foldersToCreate.prepend( locationName.left( endOfSupFolder ) );
         }
-        // we have to create all superior hierarchical folders, so look for the
-        // starting point
-        QList<QByteArray> foldersToCreate;
-        foldersToCreate.append( locationName );
-        for ( int endOfSupFolder = locationName.lastIndexOf( '/', locationName.size() - 1 );
-              endOfSupFolder > 0;
-              endOfSupFolder = locationName.lastIndexOf( '/', endOfSupFolder - 2 ) ) {
-            // check whether the superior hierarchical folder exists
-            qDebug() << "Does " << locationName.left( endOfSupFolder )
-                     << " exist in " << resourceName << "?";
-            if ( ! db->getLocationByName( resource, locationName.left( endOfSupFolder ) ).isValid() ) {
-                // the superior folder does not exist, so it has to be created
-                qDebug() << "No, it has to be created";
-                foldersToCreate.prepend( locationName.left( endOfSupFolder ) );
-            }
-            else {
-                // the superior folder exists, so we can stop here
-                qDebug() << "Yes, it exists";
+        else {
+            // the superior folder exists, so we can stop here
+            break;
+        }
+    }
+
+    // now we try to create all necessary folders
+    // first check whether the existing superior folder can contain subfolders
+    const int endOfSupFolder = foldersToCreate[0].lastIndexOf( '/' );
+    if ( endOfSupFolder > 0 ) {
+        bool canContainSubfolders = false;
+        const QList<MimeType> mimeTypes = db->getMimeTypesForLocation( db->getLocationByName( resource, locationName.left( endOfSupFolder ) ).getId() );
+        foreach ( MimeType m, mimeTypes ) {
+            if ( m.getMimeType().toLower() == "directory/inode" ) {
+                canContainSubfolders = true;
                 break;
             }
         }
-        // now we try to create all necessary folders
-        // first check whether the existing superior folder can contain subfolders
-        const int endOfSupFolder = foldersToCreate[0].lastIndexOf( '/' );
-        if ( endOfSupFolder > 0 ) {
-            bool canContainSubfolders = false;
-            const QList<MimeType> mimeTypes = db->getMimeTypesForLocation( db->getLocationByName( resource, locationName.left( endOfSupFolder ) ).getId() );
-            foreach ( MimeType m, mimeTypes ) {
-                if ( m.getMimeType().toLower() == "directory/inode" ) {
-                    canContainSubfolders = true;
-                    break;
-                }
-            }
-            if ( !canContainSubfolders ) {
-                response.setFailure();
-                response.setString( "Superior folder cannot contain subfolders" );
-                emit responseAvailable( response );
-                deleteLater();
-                return true;
-            }
+        if ( !canContainSubfolders ) {
+            response.setFailure();
+            response.setString( "Superior folder cannot contain subfolders" );
+            emit responseAvailable( response );
+            deleteLater();
+            return true;
         }
-        // everything looks good, now we create the folders
-        foreach ( QByteArray folderName, foldersToCreate ) {
-            int locationId = 0;
-            db->appendLocation( folderName, resource, &locationId );
-            //db->appendMimeTypeForLocation( locationId, MimeType( "directory/inode" ) );
-        }
+    }
+    // everything looks good, now we create the folders
+    foreach ( QByteArray folderName, foldersToCreate ) {
+        int locationId = 0;
+        db->appendLocation( folderName, resource, &locationId );
+        db->appendMimeTypeForLocation( locationId, "directory/inode" );
+        // FIXME add more MIME types
     }
 
     response.setSuccess();
