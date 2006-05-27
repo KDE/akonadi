@@ -33,7 +33,7 @@
 
 using namespace Akonadi;
 
-static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery, int pos );
+static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery, int pos, QSqlDatabase &database );
 static QByteArray buildEnvelope( QSqlQuery &query, const FetchQuery &fetchQuery, int pos );
 
 Fetch::Fetch()
@@ -64,7 +64,7 @@ bool Fetch::handleLine( const QByteArray& line )
     return true;
   }
 
-  if ( connection()->selectedLocation().getId() == -1 ) {
+  if ( connection()->selectedLocation().id() == -1 ) {
     response.setTag( tag() );
     response.setError();
     response.setString( "Select a mailbox first" );
@@ -75,7 +75,7 @@ bool Fetch::handleLine( const QByteArray& line )
     return true;
   }
 
-  QString locationId = QString::number( connection()->selectedLocation().getId() );
+  QString locationId = QString::number( connection()->selectedLocation().id() );
 
   QSqlDatabase database = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
   database.setDatabaseName( "akonadi.db" );
@@ -160,7 +160,7 @@ bool Fetch::handleLine( const QByteArray& line )
     int i = 0;
     while ( query.next() ) {
       response.setUntagged();
-      response.setString( buildResponse( query, fetchQuery, i ) );
+      response.setString( buildResponse( query, fetchQuery, i, database ) );
       emit responseAvailable( response );
 
       i++;
@@ -199,7 +199,7 @@ bool Fetch::handleLine( const QByteArray& line )
 
         for ( int i = min; i < max; ++i ) {
           response.setUntagged();
-          response.setString( buildResponse( query, fetchQuery, i ) );
+          response.setString( buildResponse( query, fetchQuery, i, database ) );
           emit responseAvailable( response );
         }
       } else {
@@ -216,7 +216,7 @@ bool Fetch::handleLine( const QByteArray& line )
         pos--;
 
         response.setUntagged();
-        response.setString( buildResponse( query, fetchQuery, pos ) );
+        response.setString( buildResponse( query, fetchQuery, pos, database ) );
         emit responseAvailable( response );
       }
     }
@@ -237,7 +237,7 @@ bool Fetch::handleLine( const QByteArray& line )
   return true;
 }
 
-static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery, int pos )
+static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery, int pos, QSqlDatabase &database  )
 {
   /**
    * Synthesize the response.
@@ -251,7 +251,17 @@ static QByteArray buildResponse( QSqlQuery &query, const FetchQuery &fetchQuery,
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Flags ) ) {
-    attributes.append( "FLAGS (\\Seen)" );
+    QString statement = QString( "SELECT Flags.name FROM Flags, ItemFlags WHERE Flags.id = ItemFlags.flag_id AND ItemFlags.pimitem_id = %1" ).arg( query.value( 0 ).toString() );
+
+    QSqlQuery flagsQuery( database );
+
+    QStringList flags;
+    if ( flagsQuery.exec( statement ) ) {
+      while ( flagsQuery.next() )
+        flags.append( flagsQuery.value( 0 ).toString() );
+    }
+
+    attributes.append( "FLAGS (" + flags.join( " " ).toLatin1() + ")" );
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::InternalDate ) ) {

@@ -28,8 +28,8 @@ using namespace Akonadi;
  ***************************************************************************/
 void Akonadi::debugCachePolicy( const CachePolicy & policy )
 {
-  qDebug() << "CachePolicy => ID: " << policy.getId()
-           << " Policy: " << policy.getPolicy();
+  qDebug() << "CachePolicy => ID: " << policy.id()
+           << " Policy: " << policy.policy();
 }
 
 void Akonadi::debugCachePolicyList( const QList<CachePolicy> & list )
@@ -43,8 +43,8 @@ void Akonadi::debugCachePolicyList( const QList<CachePolicy> & list )
 
 QDebug & Akonadi::operator<< ( QDebug& d, const  Akonadi::CachePolicy& policy )
 {
-   d << "CachePolicy => ID: " << policy.getId() 
-     << " Policy: " << policy.getPolicy() << endl;
+   d << "CachePolicy => ID: " << policy.id() 
+     << " Policy: " << policy.policy() << endl;
    return d;
 }
 
@@ -53,8 +53,8 @@ QDebug & Akonadi::operator<< ( QDebug& d, const  Akonadi::CachePolicy& policy )
  ***************************************************************************/
 void Akonadi::debugFlag( const Flag & flag )
 {
-  qDebug() << "Flag => ID: " << flag.getId()
-           << " Name: " << flag.getName();
+  qDebug() << "Flag => ID: " << flag.id()
+           << " Name: " << flag.name();
 }
 
 void Akonadi::debugFlagList( const QList<Flag> & list )
@@ -71,8 +71,8 @@ void Akonadi::debugFlagList( const QList<Flag> & list )
  ***************************************************************************/
 void Akonadi::debugMimeType( const MimeType & mimetype )
 {
-  qDebug() << "MimeType => ID: " << mimetype.getId()
-           << " MimeType: " << mimetype.getMimeType();
+  qDebug() << "MimeType => ID: " << mimetype.id()
+           << " MimeType: " << mimetype.mimeType();
 }
 
 void Akonadi::debugMimeTypeList( const QList<MimeType> & list )
@@ -97,9 +97,9 @@ void Akonadi::debugMimeTypeList( const QList<MimeType> & list )
  ***************************************************************************/
 void Akonadi::debugResource( const Resource & resource )
 {
-  qDebug() << "Resource => ID: " << resource.getId()
-           << " Resource: " << resource.getResource()
-           << " Policy-ID: " << resource.getPolicyId();
+  qDebug() << "Resource => ID: " << resource.id()
+           << " Resource: " << resource.resource()
+           << " Policy-ID: " << resource.policyId();
 }
 
 void Akonadi::debugResourceList( const QList<Resource> & list )

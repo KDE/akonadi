@@ -53,7 +53,7 @@ bool Select::handleLine(const QByteArray& line )
     response.setUntagged();
 
     DataStore *db = connection()->storageBackend();
-    Location l = db->getLocationByRawMailbox( mailbox );
+    Location l = db->locationByRawMailbox( mailbox );
 
     if ( !l.isValid() ) {
         response.setFailure();
@@ -63,20 +63,20 @@ bool Select::handleLine(const QByteArray& line )
         return true;
     }
 
-    response.setString( l.getFlags() );
+    response.setString( l.flags() );
     emit responseAvailable( response );
  
-    response.setString( QString::number(l.getExists()) + " EXISTS" );
+    response.setString( QString::number(l.exists()) + " EXISTS" );
     emit responseAvailable( response );
 
-    response.setString( QString::number(l.getRecent()) + " RECENT" );
+    response.setString( QString::number(l.recent()) + " RECENT" );
     emit responseAvailable( response );
 
-    response.setString( "OK [UNSEEN " + QString::number(l.getUnseen()) + "] Message "
-            + QString::number(l.getFirstUnseen() ) + " is first unseen" );
+    response.setString( "OK [UNSEEN " + QString::number(l.unseen()) + "] Message "
+            + QString::number(l.firstUnseen() ) + " is first unseen" );
     emit responseAvailable( response );
 
-    response.setString( "OK [UIDVALIDITY " + QString::number( l.getUidValidity() ) + "] UIDs valid" );
+    response.setString( "OK [UIDVALIDITY " + QString::number( l.uidValidity() ) + "] UIDs valid" );
     emit responseAvailable( response );
 
     response.setSuccess();

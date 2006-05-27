@@ -17,35 +17,34 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "akonadi.h"
-#include "akonadiconnection.h"
-#include "response.h"
+#ifndef AKONADISTORE_H
+#define AKONADISTORE_H
 
-#include "noop.h"
+#include <QSqlDatabase>
 
-using namespace Akonadi;
+#include <handler.h>
 
-Noop::Noop()
-  : Handler()
+namespace Akonadi {
+
+/**
+  Handler for the store command.
+ */
+class Store : public Handler
 {
+  public:
+    Store();
+    ~Store();
+
+    bool handleLine(const QByteArray& line);
+
+  private:
+    void replaceFlags( const QString &uid, const QList<QByteArray> &flags );
+    void addFlags( const QString &uid, const QList<QByteArray> &flags );
+    void deleteFlags( const QString &uid, const QList<QByteArray> &flags );
+
+    QSqlDatabase mDatabase;
+};
+
 }
 
-Noop::~Noop()
-{
-}
-
-bool Noop::handleLine( const QByteArray& )
-{
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( "NOOP completed" );
-
-  connection()->flushStatusMessageQueue();
-
-  emit responseAvailable( response );
-
-  deleteLater();
-
-  return true;
-}
+#endif

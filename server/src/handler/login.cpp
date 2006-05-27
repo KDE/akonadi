@@ -33,7 +33,7 @@ Login::~Login()
 }
 
 
-bool Login::handleLine(const QByteArray& line)
+bool Login::handleLine( const QByteArray& )
 {
     Response response;
     response.setTag( tag() );

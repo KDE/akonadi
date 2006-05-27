@@ -71,10 +71,10 @@ bool Create::handleLine(const QByteArray& line )
     const QByteArray locationName = mailbox.mid( startOfLocation );
     //qDebug() << "Create: " << locationName
     //         << " in resource: " << resourceName;
-    Resource resource = db->getResourceByName( resourceName );
+    Resource resource = db->resourceByName( resourceName );
 
     // first check whether location already exists
-    if ( db->getLocationByName( resource, locationName ).isValid() ) {
+    if ( db->locationByName( resource, locationName ).isValid() ) {
         response.setFailure();
         response.setString( "A folder with that name does already exist");
         emit responseAvailable( response );
@@ -90,7 +90,7 @@ bool Create::handleLine(const QByteArray& line )
           endOfSupFolder > 0;
           endOfSupFolder = locationName.lastIndexOf( '/', endOfSupFolder - 2 ) ) {
         // check whether the superior hierarchical folder exists
-        if ( ! db->getLocationByName( resource, locationName.left( endOfSupFolder ) ).isValid() ) {
+        if ( ! db->locationByName( resource, locationName.left( endOfSupFolder ) ).isValid() ) {
             // the superior folder does not exist, so it has to be created
             foldersToCreate.prepend( locationName.left( endOfSupFolder ) );
         }
@@ -105,9 +105,9 @@ bool Create::handleLine(const QByteArray& line )
     const int endOfSupFolder = foldersToCreate[0].lastIndexOf( '/' );
     if ( endOfSupFolder > 0 ) {
         bool canContainSubfolders = false;
-        const QList<MimeType> mimeTypes = db->getMimeTypesForLocation( db->getLocationByName( resource, locationName.left( endOfSupFolder ) ).getId() );
+        const QList<MimeType> mimeTypes = db->mimeTypesForLocation( db->locationByName( resource, locationName.left( endOfSupFolder ) ).id() );
         foreach ( MimeType m, mimeTypes ) {
-            if ( m.getMimeType().toLower() == "directory/inode" ) {
+            if ( m.mimeType().toLower() == "directory/inode" ) {
                 canContainSubfolders = true;
                 break;
             }

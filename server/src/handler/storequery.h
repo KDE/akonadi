@@ -17,35 +17,38 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "akonadi.h"
-#include "akonadiconnection.h"
-#include "response.h"
+#ifndef AKONADISTOREQUERY_H
+#define AKONADISTOREQUERY_H
 
-#include "noop.h"
+#include <QByteArray>
+#include <QList>
 
-using namespace Akonadi;
+namespace Akonadi {
 
-Noop::Noop()
-  : Handler()
+/**
+ * An tool class which does the parsing of a store request for us.
+ */
+class StoreQuery
 {
+  public:
+    enum Type
+    {
+      Replace,
+      Add,
+      Delete,
+      Silent = 8
+    };
+
+    StoreQuery();
+
+    bool parse( const QByteArray &query );
+    void dump();
+
+    int mType;
+    QList<QByteArray> mFlags;
+    QList<QByteArray> mSequences;
+};
+
 }
 
-Noop::~Noop()
-{
-}
-
-bool Noop::handleLine( const QByteArray& )
-{
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( "NOOP completed" );
-
-  connection()->flushStatusMessageQueue();
-
-  emit responseAvailable( response );
-
-  deleteLater();
-
-  return true;
-}
+#endif

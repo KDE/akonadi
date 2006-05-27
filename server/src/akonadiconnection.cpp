@@ -216,7 +216,7 @@ const Location Akonadi::AkonadiConnection::selectedLocation()
   qDebug( "selectedLocation: collection=%s", collection.data() );
 
   DataStore *db = storageBackend();
-  Location l = db->getLocationByRawMailbox( collection );
+  Location l = db->locationByRawMailbox( collection );
 
   return l;
 }

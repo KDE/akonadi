@@ -16,6 +16,11 @@ INSERT INTO MetaTypes SELECT NULL, 'email', id FROM MimeTypes WHERE mime_type = 
 INSERT INTO Flags (name) VALUES ('important');
 INSERT INTO Flags (name) VALUES ('has_attachment');
 INSERT INTO Flags (name) VALUES ('spam');
+INSERT INTO Flags (name) VALUES ('\Answered');
+INSERT INTO Flags (name) VALUES ('\Flagged');
+INSERT INTO Flags (name) VALUES ('\Deleted');
+INSERT INTO Flags (name) VALUES ('\Seen');
+INSERT INTO Flags (name) VALUES ('\Draft');
 
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity) VALUES (0, '/foo', 0, 0, 3, 0, 0, 0, 0);
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity) VALUES (1, '/foo/bar', 0, 0, 2, 0, 0, 0, 0);
@@ -46,3 +51,9 @@ INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (3, 'testmailbo
 INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (4, 'testmailbody4', 2, 0);
 INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (5, 'testmailbody5', 2, 0);
 INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (6, 'testmailbody6', 1, 0);
+
+INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (4, 0);
+INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (5, 0);
+INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (6, 0);
+INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (4, 1);
+INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (4, 1);

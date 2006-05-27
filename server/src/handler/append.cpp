@@ -86,7 +86,7 @@ void Akonadi::Append::commit()
     Response response;
 
     DataStore *db = connection()->storageBackend();
-    Location l = db->getLocationByRawMailbox( m_mailbox );
+    Location l = db->locationByRawMailbox( m_mailbox );
     MimeType mimeType(0, "message/rfc822" );
     bool ok = db->appendPimItem( m_data, mimeType, l );
     response.setTag( tag() );

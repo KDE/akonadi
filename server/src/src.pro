@@ -21,6 +21,7 @@ HEADERS += akonadi.h \
            handler/search.h \
            handler/searchpersistent.h \
            handler/select.h \
+           handler/store.h \
            handler/uid.h \
            ../test/teststoragebackend.h \
            persistentsearch.h \
@@ -51,6 +52,8 @@ SOURCES += akonadi.cpp \
            handler/searchhelper.cpp \
            handler/searchpersistent.cpp \
            handler/select.cpp \
+           handler/store.cpp \
+           handler/storequery.cpp \
            handler/uid.cpp \
            ../test/teststoragebackend.cpp \
            persistentsearch.cpp \

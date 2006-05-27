@@ -48,21 +48,28 @@ public:
     bool appendCachePolicy( const QString & policy );
     bool removeCachePolicy( const CachePolicy & policy );
     bool removeCachePolicy( int id );
-    CachePolicy * getCachePolicyById( int id );
+    CachePolicy cachePolicyById( int id );
     QList<CachePolicy> listCachePolicies();
 
     /* --- Flag ---------------------------------------------------------- */
     bool appendFlag( const QString & name );
     bool removeFlag( const Flag & flag );
     bool removeFlag( int id );
-    Flag * getFlagById( int id );
+    Flag flagById( int id );
+    Flag flagByName( const QString &name );
     QList<Flag> listFlags();
+
+    /* --- ItemFlags ----------------------------------------------------- */
+    bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
+    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags );
+    bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
+    QList<Flag> itemFlags( const PimItem &item );
 
     /* --- ItemMetaData--------------------------------------------------- */
     bool appendItemMetaData( const QString & metadata, const MetaType & metatype );
     bool removeItemMetaData( const ItemMetaData & metadata );
     bool removeItemMetaData( int id );
-    ItemMetaData * getItemMetaDataById( int id );
+    ItemMetaData itemMetaDataById( int id );
     QList<ItemMetaData> listItemMetaData();
     QList<ItemMetaData> listItemMetaData( const MetaType & metatype );
 
@@ -77,13 +84,13 @@ public:
     bool updateLocationCounts( const Location & location, int existsChange, int recentChange, int unseenChange );
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
-    Location getLocationById( int id ) const;
-    Location getLocationByName( const Resource&, const QByteArray& name ) const;
-    Location getLocationByRawMailbox( const QByteArray& mailbox ) const;
+    Location locationById( int id ) const;
+    Location locationByName( const Resource&, const QByteArray& name ) const;
+    Location locationByRawMailbox( const QByteArray& mailbox ) const;
     QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource ) const;
+    QList<MimeType> mimeTypesForLocation( int id ) const;
 
-    QList<MimeType> getMimeTypesForLocation( int id ) const;
     bool appendMimeTypeForLocation( int locationId, const QString & mimeType );
     bool appendMimeTypeForLocation( int locationId, int mimeTypeId );
 
@@ -91,15 +98,15 @@ public:
     bool appendMimeType( const QString & mimetype, int *insertId = 0 );
     bool removeMimeType( const MimeType & mimetype );
     bool removeMimeType( int id );
-    MimeType getMimeTypeById( int id ) const;
-    MimeType getMimeTypeByName( const QString & mimetype ) const;
+    MimeType mimeTypeById( int id ) const;
+    MimeType mimeTypeByName( const QString & mimetype ) const;
     QList<MimeType> listMimeTypes();
 
     /* --- MetaType ------------------------------------------------------ */
     bool appendMetaType( const QString & metatype, const MimeType & mimetype );
     bool removeMetaType( const MetaType & metatype );
     bool removeMetaType( int id );
-    MetaType * getMetaTypeById( int id );
+    MetaType metaTypeById( int id );
     QList<MetaType> listMetaTypes();
     QList<MetaType> listMetaTypes( const MimeType & mimetype );
 
@@ -109,7 +116,7 @@ public:
                         const Location & location );
     bool removePimItem( const PimItem & pimItem );
     bool removePimItem( int id );
-    PimItem getPimItemById( int id );
+    PimItem pimItemById( int id );
     QList<PimItem> listPimItems( const MimeType & mimetype,
                                  const Location & location );
 
@@ -117,8 +124,8 @@ public:
     bool appendResource( const QString & resource, const CachePolicy & policy );
     bool removeResource( const Resource & resource );
     bool removeResource( int id );
-    Resource getResourceById( int id );
-    const Resource getResourceByName( const QByteArray& name ) const;
+    Resource resourceById( int id );
+    const Resource resourceByName( const QByteArray& name ) const;
     QList<Resource> listResources() const;
     QList<Resource> listResources( const CachePolicy & policy );
 

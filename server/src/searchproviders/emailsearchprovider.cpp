@@ -40,7 +40,7 @@ QList<QByteArray> EmailSearchProvider::supportedMimeTypes() const
 }
 
 QList<QByteArray> EmailSearchProvider::queryForUids( const QList<QByteArray> &searchCriteria,
-                                                     const DataStore *store ) const
+                                                     const DataStore* ) const
 {
   QList<QByteArray> dummy;
 
@@ -59,8 +59,8 @@ QList<QByteArray> EmailSearchProvider::queryForUids( const QList<QByteArray> &se
   return dummy;
 }
 
-QList<QByteArray> EmailSearchProvider::queryForObjects( const QList<QByteArray> &searchCriteria,
-                                                        const DataStore *store ) const
+QList<QByteArray> EmailSearchProvider::queryForObjects( const QList<QByteArray>&,
+                                                        const DataStore* ) const
 {
   return QList<QByteArray>();
 }

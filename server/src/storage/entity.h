@@ -40,11 +40,13 @@ class Resource;
 
 class Entity
 {
-public:
-    int getId() const { return m_id; }
+  public:
+    int id() const { return m_id; }
     void setId( int id ) { m_id = id; }
+
     bool isValid() const { return m_id != -1; }
-protected:
+
+  protected:
     Entity() : m_id( -1 ) {}
     Entity( int id ) : m_id( id ) {}
     int m_id;
@@ -55,19 +57,19 @@ protected:
  ***************************************************************************/
 class CachePolicy : public Entity
 {
-public:
+  public:
     CachePolicy();
     CachePolicy( int id, const QString & policy );
     ~CachePolicy();
 
 
-    const QString & getPolicy() const { return m_policy; };
+    const QString & policy() const { return m_policy; };
 
-protected:
+  protected:
     CachePolicy & setCachePolicy( const QString & policy )
         { m_policy = policy; return *this; };
 
-private:
+  private:
     QString m_policy;
     friend class DataStore;
 };
@@ -77,19 +79,19 @@ private:
  ***************************************************************************/
 class Flag : public Entity
 {
-public:
+  public:
     Flag();
     Flag( int id, const QString & name );
     ~Flag();
 
 
-    const QString & getName() const { return m_name; };
+    const QString & name() const { return m_name; };
 
-protected:
+  protected:
     Flag & setName( const QString & name )
         { m_name = name; return *this; };
 
-private:
+  private:
     QString m_name;
     friend class DataStore;
 };
@@ -99,22 +101,22 @@ private:
  ***************************************************************************/
 class ItemMetaData : public Entity
 {
-public:
+  public:
     ItemMetaData();
     ItemMetaData( int id, const QString & metadata, const MetaType & metatype );
     ~ItemMetaData();
 
-    int getMetaTypeId() const { return m_metatype_id; };
-    const QString & getItemMetaData() const { return m_metadata; };
+    int metaTypeId() const { return m_metatype_id; };
+    const QString & itemMetaData() const { return m_metadata; };
 
-protected:
+  protected:
     ItemMetaData & setMetaTypeId( int metatype_id )
         { m_metatype_id = metatype_id; return *this; };
 
     ItemMetaData & setItemMetaData( const QString & metadata)
         { m_metadata = metadata; return *this; };
 
-private:
+  private:
     int m_metatype_id;
     QString m_metadata;
 
@@ -127,18 +129,18 @@ private:
  ***************************************************************************/
 class MimeType : public Entity
 {
-public:
+  public:
     MimeType();
     MimeType( int id, const QString & mimetype );
     ~MimeType();
-    QString getMimeType() const { return m_mimetype; }
+    QString mimeType() const { return m_mimetype; }
     static QByteArray asCommaSeparatedString( const QList<MimeType>& );
 
-protected:
+  protected:
     MimeType & setMimeType( const QString & mimetype )
         { m_mimetype = mimetype; return *this; };
 
-private:
+  private:
     QString m_mimetype;
 
     friend class DataStore;
@@ -149,7 +151,7 @@ private:
  ***************************************************************************/
 class Location : public Entity
 {
-public:
+  public:
     Location();
     Location( int id, const QString & location,
               int policy_id, int resource_id );
@@ -159,21 +161,21 @@ public:
     ~Location();
 
 
-    int getPolicyId() const { return m_policy_id; };
-    int getResourceId() const { return m_resource_id; };
-    const QString & getLocation() const { return m_location; };
+    int policyId() const { return m_policy_id; };
+    int resourceId() const { return m_resource_id; };
+    const QString & location() const { return m_location; };
     void setMimeTypes( const QList<MimeType> & types )
     { m_mimeTypes = types; }
 
-    QString getFlags() const { return m_flags; }
-    int getExists() const { return m_exists; }
-    int getRecent() const { return m_recent; }
-    int getUnseen() const { return m_unseen; }
-    int getFirstUnseen() const { return m_unseen; }
-    long getUidValidity() const { return m_uidValidity; }
-    QList<MimeType> getMimeTypes() const { return m_mimeTypes; }
+    QString flags() const { return m_flags; }
+    int exists() const { return m_exists; }
+    int recent() const { return m_recent; }
+    int unseen() const { return m_unseen; }
+    int firstUnseen() const { return m_unseen; }
+    long uidValidity() const { return m_uidValidity; }
+    QList<MimeType> mimeTypes() const { return m_mimeTypes; }
 
-protected:
+  protected:
     Location & setPolicyId( int policy_id )
         { m_policy_id = policy_id; return *this; };
 
@@ -184,7 +186,7 @@ protected:
         { m_location = location; return *this; };
     void init();
 
-private:
+  private:
     int m_policy_id;
     int m_resource_id;
     QString m_location;
@@ -206,23 +208,23 @@ QDebug & operator<< ( QDebug& d, const  Akonadi::Location& location);
  ***************************************************************************/
 class MetaType : public Entity
 {
-public:
+  public:
     MetaType();
     MetaType( int id, const QString & metatype ,
               const MimeType & mimetype );
     ~MetaType();
 
-    int getMimeTypeId() const { return m_mimetype_id; };
-    const QString & getMetaType() const { return m_metatype; };
+    int mimeTypeId() const { return m_mimetype_id; };
+    const QString & metaType() const { return m_metatype; };
 
-protected:
+  protected:
     MetaType & setMimeTypeId( int mimetype_id )
         { m_mimetype_id = mimetype_id; return *this; };
 
     MetaType & setMetaType( const QString & metatype )
         { m_metatype = metatype; return *this; };
 
-private:
+  private:
     int m_mimetype_id;
     QString m_metatype;
 
@@ -249,16 +251,16 @@ private:
  ***************************************************************************/
 class PimItem : public Entity
 {
-public:
+  public:
     PimItem();
     PimItem( int id, const QByteArray & data, int location_id, int mimetype_id );
     ~PimItem();
 
-    int getMimeTypeId() const { return m_mimetype_id; };
-    int getLocationId() const { return m_location_id; };
-    const QByteArray & getData() const { return m_data; };
+    int mimeTypeId() const { return m_mimetype_id; };
+    int locationId() const { return m_location_id; };
+    const QByteArray & data() const { return m_data; };
 
-protected:
+  protected:
     PimItem & setMimeTypeId( int mimetype_id )
         { m_mimetype_id = mimetype_id; return *this; };
 
@@ -268,10 +270,10 @@ protected:
     PimItem & setData( const QByteArray & data )
         { m_data = data; return *this; };
 
-private:
-    int m_mimetype_id;
-    int m_location_id;
+  private:
     QByteArray m_data;
+    int m_location_id;
+    int m_mimetype_id;
 
     friend class DataStore;
 };
@@ -281,24 +283,23 @@ private:
  ***************************************************************************/
 class Resource : public Entity
 {
-public:
+  public:
     Resource();
     Resource( int id, const QString & resource, int policy_id );
     Resource( int id, const QString & resource, const CachePolicy & policy );
     ~Resource();
 
-    int getPolicyId() const { return m_policy_id; };
-    const QString & getResource() const { return m_resource; };
+    int policyId() const { return m_policy_id; };
+    const QString & resource() const { return m_resource; };
 
-protected:
-
+  protected:
     Resource & setPolicyId( int policy_id )
         { m_policy_id = policy_id; return *this; };
 
     Resource & setResource( const QString & resource )
         { m_resource = resource; return *this; };
 
-private:
+  private:
     int m_policy_id;
     QString m_resource;
 

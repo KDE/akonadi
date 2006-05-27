@@ -68,8 +68,8 @@ Location::Location( int id, const QString & location,
 
 Location::Location( int id, const QString & location,
                     const CachePolicy & policy, const Resource & resource )
-    : Entity( id ), m_policy_id( policy.getId() ),
-    m_resource_id( resource.getId() ), m_location( location )
+    : Entity( id ), m_policy_id( policy.id() ),
+    m_resource_id( resource.id() ), m_location( location )
 {
     init();
 }
@@ -99,7 +99,9 @@ Location::~Location()
 
 QDebug & operator<< ( QDebug& d, const  Akonadi::Location& location)
 {
-   d << location.getLocation();
+   d << location.location();
+
+   return d;
 }
 
 
@@ -158,7 +160,7 @@ Resource::Resource( int id, const QString & resource, int policy_id )
 {}
 
 Resource::Resource( int id, const QString & resource, const CachePolicy & policy )
-    : Entity( id ), m_policy_id( policy.getId() ), m_resource( resource )
+    : Entity( id ), m_policy_id( policy.id() ), m_resource( resource )
 {}
 
 Resource::~Resource()
@@ -171,7 +173,7 @@ QByteArray Akonadi::MimeType::asCommaSeparatedString( const QList<MimeType> &typ
     QStringList list;
     foreach ( MimeType mt, types )
     {
-        list.append( mt.getMimeType() );
+        list.append( mt.mimeType() );
     }
     return list.join( "," ).toLatin1();
 }

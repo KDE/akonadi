@@ -32,6 +32,7 @@
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
+#include "handler/store.h"
 #include "uid.h"
 
 using namespace Akonadi;
@@ -110,6 +111,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new Fetch();
     if ( command == "UID" )
         return new Uid();
+    if ( command == "STORE" )
+        return new Store();
 
     return 0;
 }

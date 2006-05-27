@@ -66,3 +66,4 @@ QByteArray Akonadi::Collection::getMimeTypes() const
 {
     return m_mimeTypes;
 }
+
