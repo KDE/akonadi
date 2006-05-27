@@ -38,3 +38,11 @@ INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 4);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 1, 4);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 2, 4);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 3, 4);
+
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (0, 'testmailbody', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (1, 'testmailbody1', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (2, 'testmailbody2', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (3, 'testmailbody3', 1, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (4, 'testmailbody4', 2, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (5, 'testmailbody5', 2, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (6, 'testmailbody6', 1, 0);
