@@ -87,14 +87,22 @@ class Job::JobPrivate
     QTcpSocket *socket;
     int lastTag;
     QByteArray loginTag;
+    Job *parent;
 };
 
 Job::Job( QObject *parent )
   : QObject( parent ), d( new JobPrivate )
 {
   d->mError = None;
-  d->socket = new QTcpSocket( this );
-  connect( d->socket, SIGNAL(disconnected()), SLOT(slotDisconnected()) );
+  d->parent = dynamic_cast<Job*>( parent );
+  if ( !d->parent ) {
+    d->socket = new QTcpSocket( this );
+    connect( d->socket, SIGNAL(disconnected()), SLOT(slotDisconnected()) );
+  } else {
+    qDebug() << "Sharing socket with parent job.";
+    d->socket = d->parent->d->socket;
+    d->parent->addSubJob( this );
+  }
   connect( d->socket, SIGNAL(readyRead()), SLOT(slotDataReceived()) );
   connect( d->socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotSocketError()) );
   d->lastTag = 0;
@@ -102,7 +110,8 @@ Job::Job( QObject *parent )
 
 Job::~Job()
 {
-  d->socket->close();
+  if ( !d->parent )
+    d->socket->close();
   delete d;
   d = 0;
 }
@@ -119,7 +128,11 @@ bool Job::exec()
 
 void Job::start()
 {
-  d->socket->connectToHost( QHostAddress::LocalHost, 4444 );
+  emit aboutToStart( this );
+  if ( !d->parent )
+    d->socket->connectToHost( QHostAddress::LocalHost, 4444 );
+  else
+    doStart(); // can we get the exec() dead-lock here again?
 }
 
 void Job::kill()
@@ -173,16 +186,17 @@ void PIM::Job::slotDataReceived( )
     int startOfData = buffer.indexOf( ' ' );
     QByteArray tag = buffer.left( startOfData );
     QByteArray data = buffer.mid( startOfData + 1 );
-    // handle our stuff
-    if ( tag == d->loginTag ) {
+    // handle login stuff (if we are the parent job)
+    if ( tag == d->loginTag && !d->parent ) {
       if ( data.startsWith( "OK" ) )
         doStart();
       else {
         setError( ConnectionFailed );
         emit done( this );
       }
+      return;
     }
-    if ( tag == "*" && data.startsWith( "OK Akonadi" ) ) {
+    if ( tag == "*" && data.startsWith( "OK Akonadi" ) && !d->parent ) {
       d->loginTag = newTag();
       writeData( d->loginTag + " LOGIN\n" );
     }
@@ -200,6 +214,8 @@ void PIM::Job::slotSocketError()
 
 QByteArray PIM::Job::newTag( )
 {
+  if ( d->parent )
+    return d->parent->newTag();
   d->lastTag++;
   return QByteArray::number( d->lastTag );
 }
@@ -212,6 +228,28 @@ void PIM::Job::writeData( const QByteArray & data )
 void PIM::Job::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
   qWarning() << "Unhandled backend response: " << tag << data;
+}
+
+void PIM::Job::addSubJob( Job * job )
+{
+  connect( job, SIGNAL(aboutToStart(PIM::Job*)), SLOT(slotSubJobAboutToStart(PIM::Job*)) );
+  connect( job, SIGNAL(done(PIM::Job*)), SLOT(slotSubJobDone(PIM::Job*)) );
+}
+
+void PIM::Job::slotSubJobAboutToStart( PIM::Job * job )
+{
+  // reconnect socket signals to the subjob
+  qDebug() << "re-routing socket signals to sub-job";
+  disconnect( d->socket, SIGNAL(readyRead()), this, SLOT(slotDataReceived()) );
+  connect( d->socket, SIGNAL(readyRead()), job, SLOT(slotDataReceived()) );
+}
+
+void PIM::Job::slotSubJobDone( PIM::Job * job )
+{
+  // get our signals back from the sub-job
+  qDebug() << "re-routing socket signals back to parent job";
+  disconnect( d->socket, SIGNAL(readyRead()), job, SLOT(slotDataReceived()) );
+  connect( d->socket, SIGNAL(readyRead()), this, SLOT(slotDataReceived()) );
 }
 
 #include "job.moc"

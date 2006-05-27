@@ -133,6 +133,8 @@ class AKONADI_EXPORT Job : public QObject
 
   public:
 
+    typedef QList<Job*> List;
+
     /**
       Error codes that can be emitted by this class,
       subclasses can provide additional codes.
@@ -147,6 +149,9 @@ class AKONADI_EXPORT Job : public QObject
 
     /**
       Creates a new job.
+      If the parent object is a Job object, the new job will use the same socket to
+      communicate with the backend as the parent job.
+      @param parent The parent object or parent job.
      */
     Job( QObject *parent = 0 );
 
@@ -201,6 +206,12 @@ class AKONADI_EXPORT Job : public QObject
      */
     void percent( PIM::Job *job, unsigned int percent );
 
+    /**
+      Emitted directly before the job will be started.
+      @param job The started job.
+    */
+    void aboutToStart( PIM::Job *job );
+
   protected:
     /**
       Subclasses have to use this method to set an error code.
@@ -232,10 +243,18 @@ class AKONADI_EXPORT Job : public QObject
     */
     virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
 
+  private:
+    /**
+      Adds the given job as a sub job.
+    */
+    void addSubJob( Job* job );
+
   private slots:
     void slotDisconnected();
     void slotDataReceived();
     void slotSocketError();
+    void slotSubJobAboutToStart( PIM::Job* job );
+    void slotSubJobDone( PIM::Job* job );
 
   private:
     class JobPrivate;
