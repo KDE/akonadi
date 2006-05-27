@@ -22,6 +22,8 @@
 
 #include <QTreeView>
 
+#include <libakonadi/job.h>
+
 namespace PIM {
 
 class MessageBrowser : public QTreeView
@@ -31,6 +33,7 @@ class MessageBrowser : public QTreeView
     MessageBrowser();
   private slots:
     void messageActivated( const QModelIndex &index );
+    void slotFetchDone( PIM::Job* job );
 };
 
 }

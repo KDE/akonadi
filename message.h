@@ -31,7 +31,7 @@ namespace PIM {
 /**
   Representation of an email message or a news article.
 */
-class Message
+class AKONADI_EXPORT Message
 {
   public:
     typedef QList<Message*> List;

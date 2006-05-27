@@ -22,8 +22,13 @@
 #include "messagebrowser.h"
 #include "messagemodel.h"
 
+#include "kmime_message.h"
+
 #include <kapplication.h>
 #include <kcmdlineargs.h>
+
+#include <QDebug>
+#include <QTextEdit>
 
 using namespace PIM;
 
@@ -51,7 +56,22 @@ void PIM::MessageBrowser::messageActivated( const QModelIndex & index )
   if ( ref.isNull() )
     return;
   MessageFetchJob *job = new MessageFetchJob( ref, this );
+  connect( job, SIGNAL(done(PIM::Job*)), SLOT(slotFetchDone(PIM::Job*)) );
   job->start();
+}
+
+void PIM::MessageBrowser::slotFetchDone( PIM::Job * job )
+{
+  if ( job->error() ) {
+    qWarning() << "Message fetch failed: " << job->errorText();
+  } else {
+    Message *msg = static_cast<MessageFetchJob*>( job )->messages().first();
+    QTextEdit *te = new QTextEdit();
+    te->setReadOnly( true );
+    te->setText( msg->mime()->encodedContent() );
+    te->show();
+  }
+  job->deleteLater();
 }
 
 #include "messagebrowser.moc"

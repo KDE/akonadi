@@ -63,7 +63,7 @@ void PIM::MessageFetchJob::doStart()
   if ( d->uid.isNull() ) // collection content listing
     selectPath = d->path;
   else                   // message fetching
-    selectPath = Collection::root();
+    selectPath = /*Collection::root()*/ "res1/foo"; // ### just until the server is fixed
   CollectionSelectJob *job = new CollectionSelectJob( selectPath, this );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(selectDone(PIM::Job*)) );
   job->start();
@@ -86,7 +86,7 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
 
       // parse the main fetch response
       QList<QByteArray> fetch = ImapParser::parseParentheziedList( data, begin + 6 );
-      for ( int i = 0; i < fetch.count() - 1; ++i ) {
+      for ( int i = 0; i < fetch.count() - 1; i += 2 ) {
         // uid
         if ( fetch[i] == "UID" ) {
           msg = new Message( DataReference( fetch[i + 1], QString() ) );
@@ -153,6 +153,10 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
           // not yet supported by KMime
           // message id
           mime->messageID()->from7BitString( env[9] );
+        }
+        // rfc822 body
+        else if ( fetch[i] == "RFC822" ) {
+          mime->setContent( fetch[i + 1] );
         }
       }
       Q_ASSERT( msg );
