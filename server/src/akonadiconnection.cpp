@@ -210,11 +210,13 @@ const Location Akonadi::AkonadiConnection::selectedLocation()
 {
   QByteArray collection = selectedCollection();
 
-  DataStore *db = storageBackend();
-  int secondSlash = collection.indexOf( '/', 2 ) + 1;
+  if ( collection.startsWith( '/' ) )
+    collection = collection.mid( 1 );
 
-  Resource resource = db->getResourceByName( collection.left( secondSlash ) );
-  Location l = db->getLocationByName( resource, collection.right( collection.size() - secondSlash ) );
+  qDebug( "selectedLocation: collection=%s", collection.data() );
+
+  DataStore *db = storageBackend();
+  Location l = db->getLocationByRawMailbox( collection );
 
   return l;
 }

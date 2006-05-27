@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "akonadi.h"
+#include "handlerhelper.h"
 #include "response.h"
 #include "persistentsearch.h"
 #include "persistentsearchmanager.h"
@@ -42,7 +43,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
     Response response;
     response.setUntagged();
 
-    QList<QByteArray> junks = SearchHelper::splitLine( line );
+    QList<QByteArray> junks = HandlerHelper::splitLine( line );
 
     /**
      * A persistent search can have the following forms:

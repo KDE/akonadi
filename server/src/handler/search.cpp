@@ -19,6 +19,7 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
+#include "handlerhelper.h"
 #include "response.h"
 #include "searchhelper.h"
 #include "searchprovidermanager.h"
@@ -41,7 +42,7 @@ bool Search::handleLine( const QByteArray& line )
   Response response;
   response.setUntagged();
 
-  QList<QByteArray> junks = SearchHelper::splitLine( line );
+  QList<QByteArray> junks = HandlerHelper::splitLine( line );
 
   if ( junks.count() < 4 ) {
     response.setTag( tag() );

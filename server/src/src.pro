@@ -7,8 +7,11 @@ INCLUDEPATH += ../include ../test searchproviders/ handler/
 HEADERS += akonadi.h \
            akonadiconnection.h \
            handler.h \
+           handlerhelper.h \
            response.h \
            handler/capability.h \
+           handler/fetch.h \
+           handler/fetchquery.h \
            handler/list.h \
            handler/login.h \
            handler/logout.h \
@@ -32,8 +35,11 @@ SOURCES += akonadi.cpp \
            main.cpp \
            akonadiconnection.cpp \
            handler.cpp \
+           handlerhelper.cpp \
            response.cpp \
            handler/capability.cpp \
+           handler/fetch.cpp \
+           handler/fetchquery.cpp \
            handler/list.cpp \
            handler/logout.cpp \
            handler/login.cpp \

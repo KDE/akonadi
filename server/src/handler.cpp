@@ -22,6 +22,7 @@
 #include "handler.h"
 #include "response.h"
 #include "handler/capability.h"
+#include "handler/fetch.h"
 #include "handler/list.h"
 #include "handler/login.h"
 #include "handler/logout.h"
@@ -105,6 +106,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new SearchPersistent();
     if ( command == "NOOP" )
         return new Noop();
+    if ( command == "FETCH" )
+        return new Fetch();
 
     return 0;
 }

@@ -22,6 +22,7 @@
 #include <QUuid>
 #include <QVariant>
 
+#include "handlerhelper.h"
 #include "searchhelper.h"
 #include "searchprovidermanager.h"
 
@@ -50,7 +51,7 @@ PersistentSearchManager::PersistentSearchManager()
     qDebug( "found %s", qPrintable( identifier ) );
 
       QString queryString = query.value( 1 ).toString();
-      QList<QByteArray> junks = SearchHelper::splitLine( queryString.toUtf8() );
+      QList<QByteArray> junks = HandlerHelper::splitLine( queryString.toUtf8() );
       QByteArray mimeType = SearchHelper::extractMimetype( junks, 0 );
 
       SearchProvider *provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType );
