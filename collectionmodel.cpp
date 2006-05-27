@@ -413,12 +413,10 @@ void PIM::CollectionModel::editDone( PIM::Job * job )
 
 bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const QString & name )
 {
-  if ( d->currentEdit != Private::None )
+  if ( !canCreateCollection( parent ) )
     return false;
-  if ( !parent.isValid() )
-    return false; // FIXME: creation of top-level collections??
-  d->currentEdit = Private::Create;
   Collection *parentCol = static_cast<Collection*>( parent.internalPointer() );
+
   // create temporary fake collection, will be removed on error
   d->editedCollection = new Collection( parentCol->path() + Collection::delimiter() + name.toLatin1() ); // FIXME utf-7 encoding
   d->editedCollection->setParent( parentCol->path() );
@@ -436,6 +434,24 @@ bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const Q
   CollectionCreateJob *job = new CollectionCreateJob( d->editedCollection->path(), this );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
   job->start();
+
+  d->currentEdit = Private::Create;
+  return true;
+}
+
+bool PIM::CollectionModel::canCreateCollection( const QModelIndex & parent )
+{
+  if ( d->currentEdit != Private::None )
+    return false;
+  if ( !parent.isValid() )
+    return false; // FIXME: creation of top-level collections??
+
+  Collection *col = static_cast<Collection*>( parent.internalPointer() );
+  if ( col->type() == Collection::Virtual || col->type() == Collection::VirtualParent )
+    return false;
+  if ( !col->contentTypes().contains( "directoy/inode" ) && !col->contentTypes().contains( "akonadi/folder" ) )
+    return false;
+
   return true;
 }
 
