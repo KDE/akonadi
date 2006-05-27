@@ -119,6 +119,8 @@ public:
     PimItem pimItemById( int id );
     QList<PimItem> listPimItems( const MimeType & mimetype,
                                  const Location & location );
+    int highestPimItemId();
+    int highestPimItemIdByLocation( const Location &location );
 
     /* --- Resource ------------------------------------------------------ */
     bool appendResource( const QString & resource, const CachePolicy & policy );

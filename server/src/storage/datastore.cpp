@@ -103,14 +103,14 @@ const CollectionList Akonadi::DataStore::listCollections( const QByteArray & pre
     const QList<Location> locations = listLocations( r );
 
     foreach( Location l, locations ) {
-      const QString location = "/" + resource + l.getLocation();
+      const QString location = "/" + resource + l.location();
       //qDebug() << "Location: " << location << " " << resource << " prefix: " << fullPrefix;
       const bool atFirstLevel = location.lastIndexOf( '/' ) == fullPrefix.lastIndexOf( '/' );
       if ( location.startsWith( fullPrefix ) ) {
         if ( hasStar || ( hasPercent && atFirstLevel ) ||
              location == fullPrefix + sanitizedPattern ) {
           Collection c( location.right( location.size() -1 ) );
-          c.setMimeTypes( MimeType::asCommaSeparatedString( l.getMimeTypes() ) );
+          c.setMimeTypes( MimeType::asCommaSeparatedString( l.mimeTypes() ) );
           result.append( c );
         }
       }
@@ -577,7 +577,7 @@ bool DataStore::updateLocationCounts( const Location & location, int existsChang
         addToUpdateAssignments( assignments, unseenChange, "unseen_count" );
         QString q = QString( "UPDATE Locations SET %1 WHERE id = \"%2\"" )
                     .arg( assignments.join(",") )
-                    .arg( location.getId() );
+                    .arg( location.id() );
         qDebug() << "Executing SQL query " << q;
         if ( query.exec( q ) )
             return true;
@@ -1039,6 +1039,49 @@ QList<PimItem> DataStore::listPimItems( const MimeType & mimetype,
   list.append( pimItemById( 1 ) );
   return list;
 }
+
+int DataStore::highestPimItemId()
+{
+  if ( !m_dbOpened )
+    return -1;
+
+  QSqlQuery query( m_database );
+  const QString statement = QString( "SELECT MAX(id) FROM PimItems" );
+
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "DataStore::highestPimItemId" );
+    return -1;
+  }
+
+  if ( !query.next() ) {
+    debugLastQueryError( query, "DataStore::highestPimItemId" );
+    return -1;
+  }
+
+  return query.value( 0 ).toInt();
+}
+
+int DataStore::highestPimItemIdByLocation( const Location &location )
+{
+  if ( !m_dbOpened || !location.isValid() )
+    return -1;
+
+  QSqlQuery query( m_database );
+  const QString statement = QString( "SELECT COUNT(*) AS count FROM PimItems WHERE location_id = %1" ).arg( location.id() );
+
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "DataStore::highestPimItemIdByLocation" );
+    return -1;
+  }
+
+  if ( !query.next() ) {
+    debugLastQueryError( query, "DataStore::highestPimItemIdByLocation" );
+    return -1;
+  }
+
+  return query.value( 0 ).toInt();
+}
+
 
 
 /* --- Resource ------------------------------------------------------ */
