@@ -135,14 +135,14 @@ bool DataStore::appendFlag( const QString & name )
       if (query.next())
         foundRecs = query.value(0).toInt();
     } else
-      debugLastDbError( "Error during check before insertion of Flag." );
+      debugLastQueryError( query, "Error during check before insertion of Flag." );
     if ( foundRecs == 0) {
       query.prepare( "INSERT INTO Flags (name) VALUES (:name)" );
       query.bindValue( ":name", name );
       if ( query.exec() )
         return true;
       else
-        debugLastDbError( "Error during insertion of single Flag." );
+        debugLastQueryError( query, "Error during insertion of single Flag." );
     } else
       qDebug() << "Cannot insert flag " << name
                << " because it already exists.";
@@ -174,7 +174,7 @@ Flag * DataStore::getFlagById( int id )
         f = new Flag( id, name );
       }
     } else
-      debugLastDbError( "Error during selection of single Flag." );
+      debugLastQueryError( query, "Error during selection of single Flag." );
   }
   return f;
 }
@@ -191,7 +191,7 @@ QList<Flag> DataStore::listFlags()
         list.append( Flag( id, name ) );
       }
     } else
-      debugLastDbError( "Error during selection of Flags." );
+      debugLastQueryError( query, "Error during selection of Flags." );
   }
   return list;
 }
@@ -208,14 +208,14 @@ bool DataStore::appendCachePolicy( const QString & policy )
       if (query.next())
         foundRecs = query.value(0).toInt();
     } else
-      debugLastDbError( "Error during check before insertion of CachePolicy." );
+      debugLastQueryError( query, "Error during check before insertion of CachePolicy." );
     if ( foundRecs == 0) {
       query.prepare( "INSERT INTO CachePolicies (name) VALUES (:name)" );
       query.bindValue( ":name", policy );
       if ( query.exec() )
         return true;
       else
-        debugLastDbError( "Error during insertion of single CachePolicy." );
+        debugLastQueryError( query, "Error during insertion of single CachePolicy." );
     } else
       qDebug() << "Cannot insert policy " << policy
                << " because it already exists.";
@@ -247,7 +247,7 @@ CachePolicy * DataStore::getCachePolicyById( int id )
         p = new CachePolicy( id, policy );
       }
     } else
-      debugLastDbError( "Error during selection of single CachePolicy." );
+      debugLastQueryError( query, "Error during selection of single CachePolicy." );
   }
   return p;
 }
@@ -264,7 +264,7 @@ QList<CachePolicy> DataStore::listCachePolicies()
         list.append( CachePolicy( id, policy ) );
       }
     } else
-      debugLastDbError( "Error during selection of CachePolicies." );
+      debugLastQueryError( query, "Error during selection of CachePolicies." );
   }
   return list;
 }
@@ -291,7 +291,7 @@ bool DataStore::appendLocation( const QString & location,
       if ( query.next() )
         foundRecs = query.value(0).toInt();
     } else
-      debugLastDbError( "Error during check before insertion of Location." );
+      debugLastQueryError( query, "Error during check before insertion of Location." );
     if ( foundRecs == 0 ) {
       QString q = QString( "INSERT INTO Locations (uri, cachepolicy_id, "
                            "resource_id, exists_count, recent_count, "
@@ -307,7 +307,7 @@ bool DataStore::appendLocation( const QString & location,
         return true;
       }
       else
-        debugLastDbError( "Error during insertion of single Location." );
+        debugLastQueryError( query, "Error during insertion of single Location." );
     } else
       qDebug() << "Cannot insert location " << location
                << " because it already exists.";
@@ -328,7 +328,7 @@ bool DataStore::appendLocation( const QString & location,
       if (query.next())
         foundRecs = query.value(0).toInt();
     } else
-      debugLastDbError( "Error during check before insertion of Location." );
+      debugLastQueryError( query, "Error during check before insertion of Location." );
     if ( foundRecs == 0) {
       query.prepare( "INSERT INTO Locations (uri, cachepolicy_id, resource_id) "
                      "VALUES (:uri, :policy, :resource)" );
@@ -338,7 +338,7 @@ bool DataStore::appendLocation( const QString & location,
       if ( query.exec() )
         return true;
       else
-        debugLastDbError( "Error during insertion of single Location." );
+        debugLastQueryError( query, "Error during insertion of single Location." );
     } else
       qDebug() << "Cannot insert location " << location
                << " because it already exists.";
@@ -367,7 +367,7 @@ bool DataStore::changeLocationPolicy( const Location & location,
     if ( query.exec() )
       return true;
     else
-      debugLastDbError( "Error during setting the cache policy of a single Location." );
+      debugLastQueryError( query, "Error during setting the cache policy of a single Location." );
   }
   return false;
 }
@@ -381,7 +381,7 @@ bool DataStore::resetLocationPolicy( const Location & location )
     if ( query.exec() )
       return true;
     else
-      debugLastDbError( "Error during reset of the cache policy of a single Location." );
+      debugLastQueryError( query, "Error during reset of the cache policy of a single Location." );
   }
   return false;
 }
@@ -402,7 +402,7 @@ Location DataStore::getLocationById( int id ) const
         l = Location( id, uri, policy, resource );
       }
     } else
-      debugLastDbError( "Error during selection of single Location." );
+      debugLastQueryError( query, "Error during selection of single Location." );
   }
   return l;
 }
@@ -429,7 +429,7 @@ QList<MimeType> DataStore::getMimeTypesForLocation( int id ) const
                     list.append( m );
             }
         } else
-            debugLastDbError( "Error during selection of Locations." );
+            debugLastQueryError( query, "Error during selection of Locations." );
     }
     return list;
 }
@@ -447,7 +447,7 @@ QList<Location> DataStore::listLocations() const
                 list.append( l );
             }
         } else
-            debugLastDbError( "Error during selection of Locations." );
+            debugLastQueryError( query, "Error during selection of Locations." );
     }
     return list;
 }
@@ -470,7 +470,7 @@ QList<Location> DataStore::listLocations( const Resource & resource ) const
                 list.append( l );
             }
     } else
-      debugLastDbError( "Error during selection of Locations from a Resource." );
+      debugLastQueryError( query, "Error during selection of Locations from a Resource." );
   }
   return list;
 }
@@ -487,14 +487,14 @@ bool DataStore::appendMimeType( const QString & mimetype )
       if (query.next())
         foundRecs = query.value(0).toInt();
     } else
-      debugLastDbError( "Error during check before insertion of MimeType." );
+      debugLastQueryError( query, "Error during check before insertion of MimeType." );
     if ( foundRecs == 0) {
       query.prepare( "INSERT INTO MimeTypes (mime_type) VALUES (:type)" );
       query.bindValue( ":type", mimetype );
       if ( query.exec() )
         return true;
       else
-        debugLastDbError( "Error during insertion of single MimeType." );
+        debugLastQueryError( query, "Error during insertion of single MimeType." );
     } else
       qDebug() << "Cannot insert mimetype " << mimetype
                << " because it already exists.";
@@ -524,7 +524,7 @@ MimeType DataStore::getMimeTypeById( int id ) const
         m = MimeType( id, type );
       }
     } else
-      debugLastDbError( "Error during selection of single MimeType." );
+      debugLastQueryError( query, "Error during selection of single MimeType." );
   }
   return m;
 }
@@ -541,7 +541,7 @@ QList<MimeType> DataStore::listMimeTypes()
         list.append( MimeType( id, type ) );
       }
     } else
-      debugLastDbError( "Error during selection of MimeTypes." );
+      debugLastQueryError( query, "Error during selection of MimeTypes." );
   }
   return list;
 }
@@ -613,7 +613,7 @@ bool DataStore::appendPimItem( const QByteArray & data,
     if ( query.exec( queryString ) )
       return true;
     else
-      debugLastDbError( "Error during insertion of single PimItem." );
+      debugLastQueryError( query, "Error during insertion of single PimItem." );
   }
   return false;
 }
@@ -644,7 +644,7 @@ PimItem DataStore::getPimItemById( int id )
         p = PimItem( id, data, location, mimetype );
       }
     } else
-      debugLastDbError( "Error during selection of single Location." );
+      debugLastQueryError( query, "Error during selection of single Location." );
   }
   return p;
 }
@@ -672,7 +672,7 @@ bool DataStore::appendResource( const QString & resource,
       if (query.next())
         foundRecs = query.value(0).toInt();
     } else
-      debugLastDbError( "Error during check before insertion of Resource." );
+      debugLastQueryError( query, "Error during check before insertion of Resource." );
     if ( foundRecs == 0) {
       query.prepare( "INSERT INTO Resources (name, cachepolicy_id) "
                      "VALUES (:name, :policy)" );
@@ -681,7 +681,7 @@ bool DataStore::appendResource( const QString & resource,
       if ( query.exec() )
         return true;
       else
-        debugLastDbError( "Error during insertion of single Resource." );
+        debugLastQueryError( query, "Error during insertion of single Resource." );
     } else
       qDebug() << "Cannot insert resource " << resource
                << " because it already exists.";
@@ -714,7 +714,7 @@ Resource DataStore::getResourceById( int id )
         r = Resource( id, name, id_res );
       }
     } else
-      debugLastDbError( "Error during selection of single Resource." );
+      debugLastQueryError( query, "Error during selection of single Resource." );
   }
   return r;
 }
@@ -735,7 +735,7 @@ const Resource DataStore::getResourceByName( const QByteArray& name ) const
                 r = Resource( id, name, id_res );
             }
         } else
-            debugLastDbError( "Error during selection of single Resource." );
+            debugLastQueryError( query, "Error during selection of single Resource." );
     }
     return r;
 }
@@ -753,7 +753,7 @@ QList<Resource> DataStore::listResources() const
         list.append( Resource( id, name, id_res ) );
       }
     } else
-      debugLastDbError( "Error during selection of Resources." );
+      debugLastQueryError( query, "Error during selection of Resources." );
   }
   return list;
 }
@@ -773,7 +773,7 @@ QList<Resource> DataStore::listResources( const CachePolicy & policy )
         list.append( Resource( id, name, id_res ) );
       }
     } else
-      debugLastDbError( "Error during selection of Resources by a Policy." );
+      debugLastQueryError( query, "Error during selection of Resources by a Policy." );
   }
   return list;
 }
@@ -786,6 +786,12 @@ void DataStore::debugLastDbError( const QString & actionDescription ) const
            << m_database.lastError().driverText()
            << "\nDatabase said: "
            << m_database.lastError().databaseText();
+}
+
+void DataStore::debugLastQueryError( const QSqlQuery &query, const QString & actionDescription ) const
+{
+  qDebug() << actionDescription
+           << ": " << query.lastError().text();
 }
 
 bool DataStore::removeById( int id, const QString & tableName )
@@ -801,7 +807,7 @@ bool DataStore::removeById( int id, const QString & tableName )
     else {
       QString msg( "Error during deletion of a single row by ID from table " );
       msg += tableName + ".";
-      debugLastDbError( msg );
+      debugLastQueryError( query, msg );
     }
   }
   return false;
@@ -828,7 +834,7 @@ Akonadi::Location Akonadi::DataStore::getLocationByName( const Resource &resourc
                 l.setMimeTypes( getMimeTypesForLocation( l.getId() ) );
             }
         } else
-            debugLastDbError( "Error during selection of a Location by name from a Resource." );
+            debugLastQueryError( query, "Error during selection of a Location by name from a Resource." );
     }
     qDebug() << "Resource: " << resource.isValid() << " location: " << l.isValid();
 

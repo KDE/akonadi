@@ -23,6 +23,7 @@
 #include <QList>
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QSqlQuery>
 #include <QtDebug>
 
 #include "entity.h"
@@ -119,6 +120,7 @@ public:
 
 protected:
     void debugLastDbError( const QString & actionDescription ) const;
+    void debugLastQueryError( const QSqlQuery &query, const QString & actionDescription ) const;
     bool removeById( int id, const QString & tableName );
 
 private:
