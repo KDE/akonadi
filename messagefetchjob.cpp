@@ -19,7 +19,10 @@
 
 #include "collection.h"
 #include "collectionselectjob.h"
+#include "imapparser.h"
 #include "messagefetchjob.h"
+
+#include "kmime_message.h"
 
 #include <QDebug>
 
@@ -68,6 +71,30 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
       setError( Unknown );
     emit done( this );
     return;
+  }
+  if ( tag == "*" ) {
+    int begin = data.indexOf( "FETCH" );
+    if ( begin >= 0 ) {
+      // create a new message object
+      Message* msg = new Message(); // TODO: UID
+      KMime::Message* mime = new KMime::Message();
+      msg->setMime( mime );
+      d->messages.append( msg );
+
+      // parse the main fetch response
+      QList<QByteArray> fetch = ImapParser::parseParentheziedList( data, begin + 6 );
+      for ( int i = 0; i < fetch.count() - 1; ++i ) {
+        // envelope
+        if ( fetch[i] == "ENVELOPE" ) {
+          QList<QByteArray> env = ImapParser::parseParentheziedList( fetch[i + 1] );
+          // date
+          mime->date()->from7BitString( env[0] );
+          // subject
+          mime->subject()->from7BitString( env[1] );
+        }
+      }
+      return;
+    }
   }
   qDebug() << "Unhandled response in message fetch job: " << tag << data;
 }

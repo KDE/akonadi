@@ -80,6 +80,7 @@ QVariant PIM::MessageModel::data( const QModelIndex & index, int role ) const
       case Receiver:
         return msg->mime()->to()->asUnicodeString();
       case Date:
+        return msg->mime()->date()->asUnicodeString();
       case Size:
       // TODO
       default:
