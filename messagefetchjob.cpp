@@ -76,16 +76,20 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
     int begin = data.indexOf( "FETCH" );
     if ( begin >= 0 ) {
       // create a new message object
-      Message* msg = new Message(); // TODO: UID
+      Message* msg = 0;
       KMime::Message* mime = new KMime::Message();
-      msg->setMime( mime );
-      d->messages.append( msg );
 
       // parse the main fetch response
       QList<QByteArray> fetch = ImapParser::parseParentheziedList( data, begin + 6 );
       for ( int i = 0; i < fetch.count() - 1; ++i ) {
+        // uid
+        if ( fetch[i] == "UID" ) {
+          msg = new Message( DataReference( fetch[i + 1], QString() ) );
+          msg->setMime( mime );
+          d->messages.append( msg );
+        }
         // envelope
-        if ( fetch[i] == "ENVELOPE" ) {
+        else if ( fetch[i] == "ENVELOPE" ) {
           QList<QByteArray> env = ImapParser::parseParentheziedList( fetch[i + 1] );
           Q_ASSERT( env.count() >= 10 );
           // date
@@ -146,6 +150,7 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
           mime->messageID()->from7BitString( env[9] );
         }
       }
+      Q_ASSERT( msg );
       return;
     }
   }
@@ -168,7 +173,7 @@ void PIM::MessageFetchJob::selectDone( PIM::Job * job )
     d->tag = newTag();
     QByteArray command = d->tag + " FETCH ";
     if ( d->uid.isNull() )
-      command += "0:* ENVELOPE";
+      command += "1:* (UID ENVELOPE)";
     else
       command += d->uid.persistanceID().toLatin1() + " (BODY[])";
     writeData( command );
