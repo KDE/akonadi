@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include "message.h"
+#include "messagefetchjob.h"
 #include "messagebrowser.h"
 #include "messagemodel.h"
 
@@ -30,6 +32,8 @@ MessageBrowser::MessageBrowser() : QTreeView()
   MessageModel* model = new MessageModel( this );
   model->setPath( "res1/foo" );
   setModel( model );
+
+  connect( this, SIGNAL(doubleClicked(QModelIndex)), SLOT(messageActivated(QModelIndex)) );
 }
 
 int main( int argc, char** argv )
@@ -39,6 +43,15 @@ int main( int argc, char** argv )
   MessageBrowser w;
   w.show();
   return app.exec();
+}
+
+void PIM::MessageBrowser::messageActivated( const QModelIndex & index )
+{
+  DataReference ref = static_cast<MessageModel*>( model() )->referenceForIndex( index );
+  if ( ref.isNull() )
+    return;
+  MessageFetchJob *job = new MessageFetchJob( ref, this );
+  job->start();
 }
 
 #include "messagebrowser.moc"

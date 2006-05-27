@@ -29,6 +29,8 @@ class MessageBrowser : public QTreeView
   Q_OBJECT
   public:
     MessageBrowser();
+  private slots:
+    void messageActivated( const QModelIndex &index );
 };
 
 }

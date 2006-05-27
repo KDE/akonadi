@@ -59,7 +59,7 @@ PIM::MessageFetchJob::~ MessageFetchJob( )
 
 void PIM::MessageFetchJob::doStart()
 {
-  CollectionSelectJob *job = new CollectionSelectJob( d->uid.isNull() ? d->path : Collection::root(), this );
+  CollectionSelectJob *job = new CollectionSelectJob( "\"" + (d->uid.isNull() ? d->path : Collection::root()) + "\"", this );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(selectDone(PIM::Job*)) );
   job->start();
 }
@@ -171,11 +171,11 @@ void PIM::MessageFetchJob::selectDone( PIM::Job * job )
     job->deleteLater();
     // the collection is now selected, fetch the message(s)
     d->tag = newTag();
-    QByteArray command = d->tag + " FETCH ";
+    QByteArray command = d->tag;
     if ( d->uid.isNull() )
-      command += "1:* (UID ENVELOPE)";
+      command += " FETCH 1:* (UID ENVELOPE)";
     else
-      command += d->uid.persistanceID().toLatin1() + " (BODY[])";
+      command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (RFC822)";
     writeData( command );
   }
 }

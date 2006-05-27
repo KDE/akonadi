@@ -28,6 +28,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include <QDebug>
+
 using namespace PIM;
 
 class MessageModel::Private
@@ -243,6 +245,17 @@ void PIM::MessageModel::messagesRemoved( const DataReference::List & references 
     delete msg;
     endRemoveRows();
   }
+}
+
+DataReference PIM::MessageModel::referenceForIndex( const QModelIndex & index ) const
+{
+  if ( !index.isValid() )
+    return DataReference();
+  if ( index.row() >= d->messages.count() )
+    return DataReference();
+  Message *msg = d->messages.at( index.row() );
+  Q_ASSERT( msg );
+  return msg->reference();
 }
 
 #include "messagemodel.moc"

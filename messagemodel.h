@@ -88,6 +88,13 @@ class AKONADI_EXPORT MessageModel : public QAbstractTableModel
     */
     void setPath( const QByteArray &path );
 
+    /**
+      Returns the message reference to the given model index. If the index
+      is invalid, an empty reference is returned.
+      @param index The model index.
+    */
+    DataReference referenceForIndex( const QModelIndex &index ) const;
+
   private slots:
     /**
       Connected to the message query job which does a complete listing
