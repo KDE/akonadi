@@ -183,7 +183,6 @@ void PIM::Job::slotDataReceived( )
   static QByteArray literalBuffer;
 
   while ( d->socket->canReadLine() ) {
-    bool literalReadFinished = false;
     QByteArray readBuffer = d->socket->readLine();
 
     // literal read in progress
@@ -192,22 +191,21 @@ void PIM::Job::slotDataReceived( )
       literalSize -= readBuffer.size();
       // still not everything read
       if ( literalSize > 0 )
-        return;
-      literalReadFinished = true;
-    }
+        continue;
+    } else {
 
-    // start new literal read
-    if ( readBuffer.trimmed().endsWith( '}' ) ) {
-      int begin = readBuffer.lastIndexOf( '{' );
-      int end = readBuffer.lastIndexOf( '}' );
-      literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
-      literalBuffer = readBuffer;
-      return;
-    }
+      // start new literal read
+      if ( readBuffer.trimmed().endsWith( '}' ) ) {
+        int begin = readBuffer.lastIndexOf( '{' );
+        int end = readBuffer.lastIndexOf( '}' );
+        literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
+        literalBuffer = readBuffer;
+        continue;
+      }
 
-    // just a normal response
-    if ( !literalReadFinished )
+      // just a normal response
       literalBuffer = readBuffer;
+    }
 
     qDebug() << "data received " << literalBuffer;
     int startOfData = literalBuffer.indexOf( ' ' );
