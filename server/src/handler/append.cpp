@@ -94,19 +94,21 @@ static QDateTime parseDateTime( const QByteArray & s )
 }
 
 
+bool Akonadi::Append::handleContinuation( const QByteArray& line )
+{
+    m_data += line;
+    m_size -= line.size();
+    if ( !allDataRead() )
+        return false;
+    commit();
+    deleteLater();
+    return true;
+}
 
 bool Akonadi::Append::handleLine(const QByteArray& line )
 {
-    if ( inContinuation() ) {
-        m_data += line;
-        m_size -= line.size();
-        if ( allDataRead() ) {
-            commit();
-            deleteLater();
-            return true;
-        }
-        return false;
-    }
+    if ( inContinuation() )
+        return handleContinuation( line );
 
     // Arguments:  mailbox name
     //        OPTIONAL flag parenthesized list

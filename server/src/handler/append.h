@@ -36,6 +36,7 @@ public:
     ~Append();
 
     bool handleLine(const QByteArray& line);
+    bool handleContinuation( const QByteArray& line );
 
 protected:
     void commit();
