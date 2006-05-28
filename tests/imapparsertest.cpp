@@ -126,18 +126,21 @@ void ImapParserTest::testParseParenthesizedList( )
 {
   QByteArray input;
   QList<QByteArray> result;
+  int consumed;
 
   // empty lists
   input = "() ( )";
-  result = ImapParser::parseParentheziedList( input, 0 );
+  consumed = ImapParser::parseParentheziedList( input, result, 0 );
   QVERIFY( result.isEmpty() );
+  QCOMPARE( consumed, 2 );
 
-  result = ImapParser::parseParentheziedList( input, 2 );
+  consumed = ImapParser::parseParentheziedList( input, result, 2 );
   QVERIFY( result.isEmpty() );
+  QCOMPARE( consumed, 6 );
 
   // complex list with all kind of entries
   input = "(entry1 \"entry2()\" (sub list) \")))\" {6}\nentry3) end";
-  result = ImapParser::parseParentheziedList( input );
+  consumed = ImapParser::parseParentheziedList( input, result, 0 );
   QList<QByteArray> reference;
   reference << "entry1";
   reference << "entry2()";
@@ -145,6 +148,7 @@ void ImapParserTest::testParseParenthesizedList( )
   reference << ")))";
   reference << "entry3";
   QCOMPARE( result, reference );
+  QCOMPARE( consumed, 47 );
 }
 
 

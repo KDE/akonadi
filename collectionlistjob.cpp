@@ -19,6 +19,7 @@
 
 #include "collection.h"
 #include "collectionlistjob.h"
+#include "imapparser.h"
 
 #include <QDebug>
 #include <QHash>
@@ -69,18 +70,21 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
     return;
   }
   if ( tag == "*" && data.startsWith( "LIST" ) ) {
-    int begin = data.indexOf( '(' );
-    int end = data.indexOf( ')' );
-    QList<QByteArray> attributes = data.mid( begin + 1, end - begin - 1 ).split( ' ' );
-    begin = data.indexOf( '"', end );
-    char delim = data[begin + 1];
-    begin = data.indexOf( ' ', begin + 2 );
+    int current = 4; // 'LIST'
 
+    // attributes
+    QList<QByteArray> attributes;
+    current = ImapParser::parseParentheziedList( data, attributes, current );
+
+    // delimiter
+    QByteArray delim;
+    current = ImapParser::parseString( data, delim, current );
+    Q_ASSERT( delim.length() == 1 );
+
+    // collection name 
     QByteArray folderName;
-    if ( data[begin + 1] == '"' )
-      folderName = data.mid( begin + 2, data.lastIndexOf( '"' ) - begin - 2 );
-    else
-      folderName = data.mid( begin + 1 ); // ### strip trailing newline?
+    current = ImapParser::parseString( data, folderName, current );
+
     // strip trailing delimiters
     if ( folderName.endsWith( delim ) )
       folderName.truncate( data.length() - 1 );
@@ -124,6 +128,7 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
 
     d->collections.append( col );
     qDebug() << "received list response: delim: " << delim << " name: " << folderName << "attrs: " << attributes << " parent: " << parentName;
+    return;
   }
   qDebug() << "unhandled server response in collection list job" << tag << data;
 }

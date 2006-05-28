@@ -7,7 +7,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/libkmime
 )
 
-# convenience macro to add akonadi single-source qtestlib unit-tests
+# convenience macro to add akonadi qtestlib unit-tests
 macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
@@ -49,6 +49,7 @@ target_link_libraries(itemdumper  akonadi ${KDE4_KDECORE_LIBS} )
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
+add_akonadi_test(collectionjobtest.cpp)
 
 
 endif(KDE4_BUILD_TESTS)
