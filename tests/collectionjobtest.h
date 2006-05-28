@@ -31,6 +31,8 @@ class CollectionJobTest : public QObject
     void testNonRecursiveFolderList();
     void testEmptyFolderList();
     void testSearchFolderList();
+    void testIllegalCreateFolder();
+    void testCreateFolder();
 };
 
 

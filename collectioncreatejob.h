@@ -29,7 +29,7 @@ class CollectionCreateJobPrivate;
 /**
   Job to create collections.
 */
-class CollectionCreateJob : public Job
+class AKONADI_EXPORT CollectionCreateJob : public Job
 {
   Q_OBJECT
   public:

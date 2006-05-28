@@ -44,7 +44,7 @@ PIM::CollectionCreateJob::~ CollectionCreateJob( )
 void PIM::CollectionCreateJob::doStart( )
 {
   d->tag = newTag();
-  writeData( d->tag + " CREATE " + d->path );
+  writeData( d->tag + " CREATE \"" + d->path + "\"" );
 }
 
 void PIM::CollectionCreateJob::handleResponse( const QByteArray & tag, const QByteArray & data )

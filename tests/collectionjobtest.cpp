@@ -21,6 +21,7 @@
 #include <qtest_kde.h>
 
 #include "collection.h"
+#include "collectioncreatejob.h"
 #include "collectionlistjob.h"
 
 using namespace PIM;
@@ -132,6 +133,42 @@ void CollectionJobTest::testSearchFolderList( )
   QCOMPARE( col->type(), Collection::Virtual );
   QVERIFY( findCol( list, "Search/all" ) != 0 );
   QVERIFY( findCol( list, "Search/kde-core-devel" ) != 0 );
+}
+
+void CollectionJobTest::testIllegalCreateFolder( )
+{
+  // root
+  CollectionCreateJob *job = new CollectionCreateJob( "/", this );
+  QVERIFY( !job->exec() );
+
+  // empty
+  job = new CollectionCreateJob( "" , this );
+  QVERIFY( !job->exec() );
+
+  // search folder
+  job = new CollectionCreateJob( "/Search/New Folder", this );
+  QVERIFY( !job->exec() );
+
+  // already existing folder
+  job = new CollectionCreateJob( "res2/foo2", this );
+  QVERIFY( !job->exec() );
+
+  // Parent folder with \Noinferiors flag
+  job = new CollectionCreateJob( "res2/foo2/bar", this );
+  QVERIFY( !job->exec() );
+}
+
+void CollectionJobTest::testCreateFolder( )
+{
+  // TODO complete this
+
+  // folder that already exists within another resource
+  CollectionCreateJob *job = new CollectionCreateJob( "res3/foo", this );
+  QVERIFY( job->exec() );
+
+  // folder with missing parents
+  job = new CollectionCreateJob( "res3/sub1/sub2/sub3", this );
+  QVERIFY( job->exec() );
 }
 
 
