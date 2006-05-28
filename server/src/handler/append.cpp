@@ -212,7 +212,7 @@ bool Akonadi::Append::inContinuation( ) const
 
 bool Akonadi::Append::allDataRead( ) const
 {
-    m_size == 0;
+    return ( m_size == 0 );
 }
 
 bool Akonadi::Append::startContinuation()
