@@ -20,6 +20,8 @@
 #ifndef PIM_IMAPPARSER_H
 #define PIM_IMAPPARSER_H
 
+#include <kdepim_export.h>
+
 #include <QByteArray>
 #include <QList>
 
@@ -29,7 +31,7 @@ namespace PIM {
   Helper functions to parse IMAP responses.
   @todo Not really Akonadi specific, move somewhere else.
 */
-class ImapParser
+class AKONADI_EXPORT ImapParser
 {
   public:
     /**
