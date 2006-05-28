@@ -153,17 +153,13 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     const int startOfSize = startOfLiteral + 1;
     m_size = line.mid( startOfSize, line.indexOf('}') - startOfSize ).toInt();
 
-    if ( allDataRead() ) {  // we allow 0-size puts
-        commit();
-        deleteLater();
-        return true;
-    }
+    if ( !allDataRead() )
+        return startContinuation();
 
-    Response response;
-    response.setContinuation();
-    response.setString( "Ready for literal data" );
-    emit responseAvailable( response );
-    return false;
+    // otherwise it's a 0-size put, so we're done
+    commit();
+    deleteLater();
+    return true;
 }
 
 void Akonadi::Append::commit()
@@ -217,4 +213,13 @@ bool Akonadi::Append::inContinuation( ) const
 bool Akonadi::Append::allDataRead( ) const
 {
     m_size == 0;
+}
+
+bool Akonadi::Append::startContinuation()
+{
+    Response response;
+    response.setContinuation();
+    response.setString( "Ready for literal data" );
+    emit responseAvailable( response );
+    return false;
 }

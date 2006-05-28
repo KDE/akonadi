@@ -42,6 +42,7 @@ protected:
     void commit();
     bool inContinuation() const;
     bool allDataRead() const;
+    bool startContinuation();
 
 private:
     int m_size;
