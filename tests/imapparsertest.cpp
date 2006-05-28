@@ -27,6 +27,28 @@ using namespace PIM;
 
 QTEST_KDEMAIN( ImapParserTest, NoGUI );
 
+void ImapParserTest::testStripLeadingSpaces( )
+{
+  QByteArray input = "  a  ";
+  int result;
+
+  // simple leading spaces at the beginning
+  result = ImapParser::stripLeadingSpaces( input, 0 );
+  QCOMPARE( result, 2 );
+
+  // simple leading spaces in the middle
+  result = ImapParser::stripLeadingSpaces( input, 1 );
+  QCOMPARE( result, 2 );
+
+  // no leading spaces
+  result = ImapParser::stripLeadingSpaces( input, 2 );
+  QCOMPARE( result, 2 );
+
+  // trailing spaces
+  result = ImapParser::stripLeadingSpaces( input, 3 );
+  QCOMPARE( result, 5 );
+}
+
 void ImapParserTest::testParseQuotedString( )
 {
   QByteArray input = "\"quoted \\\"NIL\\\"   string inside\"";
@@ -71,6 +93,58 @@ void ImapParserTest::testParseQuotedString( )
   consumed = ImapParser::parseQuotedString( input, result, 9 );
   QCOMPARE( result, QByteArray( "" ) );
   QCOMPARE( consumed, 12 );
+}
+
+void ImapParserTest::testParseString( )
+{
+  QByteArray input = "\"quoted\" unquoted {7}\nliteral {0}\n empty literal";
+  QByteArray result;
+  int consumed;
+
+  // quoted strings
+  consumed = ImapParser::parseString( input, result, 0 );
+  QCOMPARE( result, QByteArray( "quoted" ) );
+  QCOMPARE( consumed, 8 );
+
+  // unquoted string
+  consumed = ImapParser::parseString( input, result, 8 );
+  QCOMPARE( result, QByteArray( "unquoted" ) );
+  QCOMPARE( consumed, 17 );
+
+  // literal string
+  consumed = ImapParser::parseString( input, result, 17 );
+  QCOMPARE( result, QByteArray( "literal" ) );
+  QCOMPARE( consumed, 29 );
+
+  // empty literal string
+  consumed = ImapParser::parseString( input, result, 29 );
+  QCOMPARE( result, QByteArray( "" ) );
+  QCOMPARE( consumed, 34 );
+}
+
+void ImapParserTest::testParseParenthesizedList( )
+{
+  QByteArray input;
+  QList<QByteArray> result;
+
+  // empty lists
+  input = "() ( )";
+  result = ImapParser::parseParentheziedList( input, 0 );
+  QVERIFY( result.isEmpty() );
+
+  result = ImapParser::parseParentheziedList( input, 2 );
+  QVERIFY( result.isEmpty() );
+
+  // complex list with all kind of entries
+  input = "(entry1 \"entry2()\" (sub list) \")))\" {6}\nentry3) end";
+  result = ImapParser::parseParentheziedList( input );
+  QList<QByteArray> reference;
+  reference << "entry1";
+  reference << "entry2()";
+  reference << "(sub list)";
+  reference << ")))";
+  reference << "entry3";
+  QCOMPARE( result, reference );
 }
 
 
