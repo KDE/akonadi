@@ -88,8 +88,9 @@ bool Store::handleLine( const QByteArray& line )
       for ( int j = 0; j < flags.count(); ++j )
         flagList.append( flags[ j ].name() );
 
+      int itemPosition = store->pimItemPosition( pimItems[ i ] );
       response.setUntagged();
-      response.setString( QByteArray::number( i ) + " FETCH (FLAGS (" + flagList.join( " " ).toLatin1() + "))" );
+      response.setString( QByteArray::number( itemPosition ) + " FETCH (FLAGS (" + flagList.join( " " ).toLatin1() + "))" );
       emit responseAvailable( response );
     }
   }

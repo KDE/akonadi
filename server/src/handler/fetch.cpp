@@ -76,7 +76,7 @@ bool Fetch::handleLine( const QByteArray& line )
 
   for ( int i = 0; i < pimItems.count(); ++i ) {
     response.setUntagged();
-    response.setString( buildResponse( pimItems[ i ], fetchQuery, i ) );
+    response.setString( buildResponse( pimItems[ i ], fetchQuery ) );
     emit responseAvailable( response );
   }
 
@@ -95,7 +95,7 @@ bool Fetch::handleLine( const QByteArray& line )
   return true;
 }
 
-QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQuery, int pos  )
+QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQuery  )
 {
   QList<QByteArray> attributes;
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Envelope ) ) {
@@ -148,10 +148,12 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
       attributesString += attributes[ i ];
   }
 
+  int itemPosition = connection()->storageBackend()->pimItemPosition( item );
+
   if ( attributes.isEmpty() )
-    return QByteArray::number( pos + 1 ) + " FETCH";
+    return QByteArray::number( itemPosition ) + " FETCH";
   else
-    return QByteArray::number( pos + 1 ) + " FETCH (" + attributesString + ")";
+    return QByteArray::number( itemPosition ) + " FETCH (" + attributesString + ")";
 }
 
 // FIXME build from database

@@ -47,13 +47,24 @@ INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 3, 4);
 INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (0, 'testmailbody', 0, 0);
 INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (1, 'testmailbody1', 0, 0);
 INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (2, 'testmailbody2', 0, 0);
-INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (3, 'testmailbody3', 1, 0);
-INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (4, 'testmailbody4', 2, 0);
-INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (5, 'testmailbody5', 2, 0);
-INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (6, 'testmailbody6', 1, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (3, 'testmailbody3', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (4, 'testmailbody4', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (5, 'testmailbody5', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (6, 'testmailbody6', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (7, 'testmailbody7', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (8, 'testmailbody8', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (9, 'testmailbody9', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (10, 'testmailbody10', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (11, 'testmailbody11', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (12, 'testmailbody12', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (13, 'testmailbody13', 0, 0);
+INSERT INTO PimItems (id, data, location_id, mimetype_id) VALUES (14, 'testmailbody14', 0, 0);
 
 INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (4, 0);
 INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (5, 0);
 INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (6, 0);
 INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (4, 1);
 INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (4, 1);
+
+INSERT INTO ItemMetaData (id, data, metatype_id, pimitem_id) VALUES (0, "testmetatata", 0, 0);
+INSERT INTO ItemMetaData (id, data, metatype_id, pimitem_id) VALUES (1, "testmetatata2", 0, 3);

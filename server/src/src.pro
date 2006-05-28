@@ -12,6 +12,7 @@ HEADERS += akonadi.h \
            handler/append.h \
            handler/capability.h \
            handler/create.h \
+           handler/expunge.h \
            handler/fetch.h \
            handler/fetchquery.h \
            handler/list.h \
@@ -43,6 +44,7 @@ SOURCES += akonadi.cpp \
            handler/append.cpp \
            handler/create.cpp \
            handler/capability.cpp \
+           handler/expunge.cpp \
            handler/fetch.cpp \
            handler/fetchquery.cpp \
            handler/list.cpp \

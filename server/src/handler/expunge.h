@@ -17,31 +17,24 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef AKONADIFETCH_H
-#define AKONADIFETCH_H
+#ifndef AKONADIEXPUNGE_H
+#define AKONADIEXPUNGE_H
 
 #include <handler.h>
-
-#include "storage/datastore.h"
-#include "fetchquery.h"
 
 namespace Akonadi {
 
 /**
-  Handler for the fetch command.
+  Handler for the expunge command.
  */
-class Fetch : public Handler
+class Expunge : public Handler
 {
   public:
-    Fetch();
+    Expunge();
 
-    ~Fetch();
+    ~Expunge();
 
     bool handleLine(const QByteArray& line);
-
-  private:
-    QByteArray buildResponse( const PimItem&, const FetchQuery& );
-    QByteArray buildEnvelope( const PimItem&, const FetchQuery& );
 };
 
 }

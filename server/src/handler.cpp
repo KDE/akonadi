@@ -24,6 +24,7 @@
 #include "handler/append.h"
 #include "handler/capability.h"
 #include "handler/create.h"
+#include "handler/expunge.h"
 #include "handler/fetch.h"
 #include "handler/list.h"
 #include "handler/login.h"
@@ -110,6 +111,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new Noop();
     if ( command == "FETCH" )
         return new Fetch();
+    if ( command == "EXPUNGE" )
+        return new Expunge();
     if ( command == "UID" )
         return new Uid();
     if ( command == "STORE" )

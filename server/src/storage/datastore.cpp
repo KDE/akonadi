@@ -1006,6 +1006,96 @@ bool DataStore::removePimItem( int id )
   return removeById( id, "PimItems" );
 }
 
+bool DataStore::cleanupPimItem( const PimItem &item )
+{
+  if ( !m_dbOpened || !item.isValid() )
+    return false;
+
+  QSqlDriver *driver = m_database.driver();
+  if ( !driver->beginTransaction() ) {
+    debugLastDbError( "DataStore::cleanupPimItem: beginTransaction" );
+    return false;
+  }
+
+  QSqlQuery query( m_database );
+
+  QString statement = QString( "DELETE FROM ItemMetaData WHERE pimitem_id = %1" ).arg( item.id() );
+  query.exec( statement );
+  statement = QString( "DELETE FROM ItemFlags WHERE pimitem_id = %1" ).arg( item.id() );
+  query.exec( statement );
+  statement = QString( "DELETE FROM Parts WHERE pimitem_id = %1" ).arg( item.id() );
+  query.exec( statement );
+  statement = QString( "DELETE FROM PimItems WHERE id = %1" ).arg( item.id() );
+  query.exec( statement );
+
+  if ( !driver->commitTransaction() ) {
+    debugLastDbError( "DataStore::cleanupPimItem: commitTransaction" );
+
+    if ( !driver->rollbackTransaction() )
+      debugLastDbError( "DataStore::cleanupPimItem: rollbackTransaction" );
+
+    return false;
+  }
+
+  return true;
+}
+
+bool DataStore::cleanupPimItems( const Location &location )
+{
+  if ( !m_dbOpened || !location.isValid() )
+    return false;
+
+  const QString statement = QString( "SELECT ItemFlags.pimitem_id FROM Flags, ItemFlags, PimItems "
+                                     "WHERE Flags.name = '\\Deleted' AND "
+                                     "ItemFlags.flag_id = Flags.id AND "
+                                     "ItemFlags.pimitem_id = PimItems.id AND "
+                                     "PimItems.location_id = %1" ).arg( location.id() );
+
+  QSqlQuery query( m_database );
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "Error during cleaning up pim items." );
+    return false;
+  }
+
+  QList<PimItem> pimItems;
+  while ( query.next() ) {
+    PimItem item;
+    item.setId( query.value( 0 ).toInt() );
+
+    pimItems.append( item );
+  }
+
+  bool ok = true;
+  for ( int i = 0; i < pimItems.count(); ++i )
+    ok = ok && cleanupPimItem( pimItems[ i ] );
+
+  return ok;
+}
+
+int DataStore::pimItemPosition( const PimItem &item )
+{
+  if ( !m_dbOpened || !item.isValid() )
+    return -1;
+
+  QSqlQuery query( m_database );
+
+  const QString statement = QString( "SELECT id FROM PimItems WHERE location_id = %1" ).arg( item.locationId() );
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "Error during selection of pim item position." );
+    return -1;
+  }
+
+  int i = 1;
+  while ( query.next() ) {
+    if ( item.id() == query.value( 0 ).toInt() )
+      return i;
+
+    ++i;
+  }
+
+  return -1;
+}
+
 PimItem DataStore::pimItemById( int id )
 {
   if ( !m_dbOpened )
@@ -1040,6 +1130,31 @@ QList<PimItem> DataStore::listPimItems( const MimeType & mimetype,
   QList<PimItem> list;
   list.append( pimItemById( 1 ) );
   return list;
+}
+
+QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &flag )
+{
+  if ( !m_dbOpened || !location.isValid() )
+    return QList<PimItem>();
+
+  QSqlQuery query( m_database );
+
+  const QString statement = QString( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id FROM PimItems, ItemFlags WHERE "
+                                     "ItemFlags.pimitem_id = PimItems.id AND ItemFlags.flag_id = %1 AND location_id = %2" )
+                                   .arg( flag.id() ).arg( location.id() );
+
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "DataStore::listPimItems" );
+    return QList<PimItem>();
+  }
+
+  QList<PimItem> pimItems;
+  while ( query.next() ) {
+    pimItems.append( PimItem( query.value( 0 ).toInt(), query.value( 1 ).toByteArray(),
+                              location.id(), query.value( 2 ).toInt() ) );
+  }
+
+  return pimItems;
 }
 
 int DataStore::highestPimItemId()
@@ -1156,7 +1271,10 @@ QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &s
     qDebug( "DataStore::matchingPimItemsByLocation: Invalid highest entry number '%d' ", highestEntry );
     return QList<PimItem>();
   }
-  
+
+  // iterate over the whole query to make seek possible.
+  while ( query.next() ) {}
+
   QList<PimItem> pimItems;
   for ( int i = 0; i < sequences.count(); ++i ) {
     if ( sequences[ i ].contains( ':' ) ) {
@@ -1165,13 +1283,13 @@ QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &s
 
       QList<QByteArray> pair = sequences[ i ].split( ':' );
       if ( pair[ 0 ] == "*" && pair[ 1 ] == "*" ) {
-        min = max = highestEntry;
+        min = max = highestEntry - 1;
       } else if ( pair[ 0 ] == "*" ) {
         min = 0;
         max = pair[ 1 ].toInt();
       } else if ( pair[ 1 ] == "*" ) {
         min = pair[ 0 ].toInt();
-        max = highestEntry;
+        max = highestEntry - 1;
       } else {
         min = pair[ 0 ].toInt();
         max = pair[ 1 ].toInt();
@@ -1189,7 +1307,7 @@ QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &s
       // transform from imap index to query index
       min--; max--;
 
-      for ( int i = min; i < max; ++i ) {
+      for ( int i = min; i <= max; ++i ) {
         if ( !query.seek( i ) ) {
           qDebug( "DataStore::matchingPimItemsByLocation: Unable to seek at position '%d' ", i );
           return QList<PimItem>();

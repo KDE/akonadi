@@ -119,6 +119,25 @@ public:
     PimItem pimItemById( int id );
     QList<PimItem> listPimItems( const MimeType & mimetype,
                                  const Location & location );
+
+    QList<PimItem> listPimItems( const Location & location, const Flag &flag );
+
+    /**
+     * Removes the pim item and all referenced data ( e.g. flags )
+     */
+    bool cleanupPimItem( const PimItem &item );
+
+    /**
+     * Cleanups all items which have the '\Deleted' flag set
+     */
+    bool cleanupPimItems( const Location &location );
+
+    /**
+     * Returns the current position ( folder index ) of this
+     * item.
+     */
+    int pimItemPosition( const PimItem &item );
+
     int highestPimItemId();
     int highestPimItemCountByLocation( const Location &location );
 
