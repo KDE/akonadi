@@ -23,9 +23,8 @@
 
 using namespace PIM;
 
-QList< QByteArray > PIM::ImapParser::parseParentheziedList( const QByteArray & data, int start )
+int PIM::ImapParser::parseParentheziedList( const QByteArray & data, QList<QByteArray> &result, int start )
 {
-  QList<QByteArray> rv;
   int begin = data.indexOf( '(', start );
   int count = 0;
   int sublistbegin = start;
@@ -38,9 +37,9 @@ QList< QByteArray > PIM::ImapParser::parseParentheziedList( const QByteArray & d
     }
     if ( data[i] == ')' ) {
       if ( count <= 0 )
-        break;
+        return i + 1;
       if ( count == 1 )
-        rv.append( data.mid( sublistbegin, i - sublistbegin + 1 ) );
+        result.append( data.mid( sublistbegin, i - sublistbegin + 1 ) );
       --count;
       continue;
     }
@@ -49,10 +48,10 @@ QList< QByteArray > PIM::ImapParser::parseParentheziedList( const QByteArray & d
     if ( count == 0 ) {
       QByteArray ba;
       i = parseString( data, ba, i ) - 1; // compensate the increment
-      rv.append( ba );
+      result.append( ba );
     }
   }
-  return rv;
+  return data.length();
 }
 
 int PIM::ImapParser::parseString( const QByteArray & data, QByteArray & result, int start )

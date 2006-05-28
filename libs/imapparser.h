@@ -35,12 +35,15 @@ class AKONADI_EXPORT ImapParser
 {
   public:
     /**
-      Returns a list of elements in the first parenthesized list found
-      in the given data. This does not recurse into sub-lists.
+      Parses the next parenthesized list in @p data starting from @p start
+      and puts the result into @p result. The number of used characters is
+      returned.
+      This does not recurse into sub-lists.
       @param data Source data.
+      @param result The parsed list.
       @param start start parsing at this index.
     */
-    static QList<QByteArray> parseParentheziedList( const QByteArray &data, int start = 0 );
+    static int parseParentheziedList( const QByteArray &data, QList<QByteArray> &result, int start = 0 );
 
     /**
       Parse the next string in @p data (quoted or literal) starting from @p start
