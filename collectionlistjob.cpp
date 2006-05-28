@@ -108,8 +108,6 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
       col->setType( Collection::Folder );
 
     QStringList contentTypes;
-    if ( !attributes.contains( "\\Noinferiors" ) )
-      contentTypes << "akonadi/folder";
     QByteArray mimetypes;
     foreach ( QByteArray ba, attributes ) {
       if ( ba.startsWith( "\\MimeTypes" ) ) {

@@ -117,7 +117,7 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
     if ( col->type() == Collection::Virtual )
       return SmallIcon( "folder_green" );
     QStringList content = col->contentTypes();
-    if ( content.size() == 1 || (content.size() == 2 && content.contains( "akonadi/folder" )) ) {
+    if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
       if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
         return SmallIcon( "kmgroupware_folder_contacts" );
       // TODO: add all other content types and/or fix their mimetypes
@@ -449,7 +449,7 @@ bool PIM::CollectionModel::canCreateCollection( const QModelIndex & parent ) con
   Collection *col = static_cast<Collection*>( parent.internalPointer() );
   if ( col->type() == Collection::Virtual || col->type() == Collection::VirtualParent )
     return false;
-  if ( !col->contentTypes().contains( "directoy/inode" ) && !col->contentTypes().contains( "akonadi/folder" ) )
+  if ( !col->contentTypes().contains( Collection::collectionMimeType() ) )
     return false;
 
   return true;

@@ -126,3 +126,8 @@ QByteArray PIM::Collection::prefix()
 {
   return QByteArray( "/" );
 }
+
+QByteArray PIM::Collection::collectionMimeType( )
+{
+  return QByteArray( "directory/inode" );
+}

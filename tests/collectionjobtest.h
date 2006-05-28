@@ -27,6 +27,7 @@ class CollectionJobTest : public QObject
   Q_OBJECT
   private slots:
     void testTopLevelList();
+    void testFolderList();
 };
 
 

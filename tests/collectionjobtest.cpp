@@ -34,11 +34,20 @@ static Collection* findCol( const Collection::List &list, const QByteArray &path
   return 0;
 }
 
+// list compare which ignores the order
+template <class T> static void compareLists( const QList<T> &l1, const QList<T> &l2 )
+{
+  QCOMPARE( l1.count(), l2.count() );
+  foreach ( const T entry, l1 ) {
+    QVERIFY( l2.contains( entry ) );
+  }
+}
+
  // ### These tests rely on an running akonadi server which uses the test database!!
 void CollectionJobTest::testTopLevelList( )
 {
   // non-recursive top-level list
-  CollectionListJob *job = new CollectionListJob( Collection::root() );
+  CollectionListJob *job = new CollectionListJob( Collection::root(), false );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
   delete job;
@@ -57,6 +66,36 @@ void CollectionJobTest::testTopLevelList( )
   col = findCol( list, "Search" );
   QVERIFY( col != 0 );
   QCOMPARE( col->type(), Collection::VirtualParent );
+}
+
+void CollectionJobTest::testFolderList( )
+{
+  // recursive list of physical folders
+  CollectionListJob *job = new CollectionListJob( "/res1", true );
+  QVERIFY( job->exec() );
+  Collection::List list = job->collections();
+  delete job;
+
+  // check if everything is there
+  QCOMPARE( list.count(), 4 );
+  Collection *col;
+  QStringList contentTypes;
+
+  col = findCol( list, "res1/foo" );
+  QVERIFY( col != 0 );
+  QCOMPARE( col->type(), Collection::Folder );
+  contentTypes << "message/rfc822" << "text/ical" << Collection::collectionMimeType();
+  compareLists( col->contentTypes(), contentTypes );
+
+  QVERIFY( findCol( list, "res1/foo/bar" ) != 0 );
+  QVERIFY( findCol( list, "res1/foo/bla" ) != 0 );
+
+  col = findCol( list, "res1/foo/bar/bla" );
+  QVERIFY( col != 0 );
+  QCOMPARE( col->type(), Collection::Folder );
+  contentTypes.clear();
+  contentTypes << Collection::collectionMimeType();
+  compareLists( col->contentTypes(), contentTypes );
 }
 
 #include "collectionjobtest.moc"

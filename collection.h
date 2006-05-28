@@ -136,6 +136,11 @@ class AKONADI_EXPORT Collection
     */
     static QByteArray searchFolder();
 
+    /**
+      Returns the mimetype used for collections.
+    */
+    static QByteArray collectionMimeType();
+
   private:
     class Private;
     Private *d;
