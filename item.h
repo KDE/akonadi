@@ -17,54 +17,40 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGE_H
-#define PIM_MESSAGE_H
+#ifndef PIM_ITEM_H
+#define PIM_ITEM_H
 
-#include <libakonadi/item.h>
 #include <libakonadi/job.h>
-
-namespace KMime {
-  class Message;
-}
 
 namespace PIM {
 
-class MessagePrivate;
+class ItemPrivate;
 
 /**
-  Representation of an email message or a news article.
+  Base class for all PIM items stored in Akonadi.
+  It contains type-neutral data and the unique reference.
 */
-class AKONADI_EXPORT Message : public Item
+class AKONADI_EXPORT Item
 {
   public:
-    typedef QList<Message*> List;
+    /**
+      Create a new PIM item.
+      @param ref The unique reference of this item.
+    */
+    Item( const DataReference &ref = DataReference() );
 
     /**
-      Creates a new Message object.
-
-      @param ref The data reference of this message.
+      Destroys this PIM item.
     */
-    Message( const DataReference &ref = DataReference() );
+    virtual ~Item();
 
     /**
-      Destroys this message.
+      Returns the DataReference of this item.
     */
-    virtual ~Message();
-
-    /**
-      Returns the actual content of this message, including message headers
-      (as far as available).
-    */
-    KMime::Message* mime() const;
-
-    /**
-      Sets the message content. The Message object takes the ownership of
-      @p mime, ie. it will take care of deleting it.
-    */
-    void setMime( KMime::Message* mime );
+    DataReference reference() const;
 
   private:
-    MessagePrivate* d;
+    ItemPrivate *d;
 };
 
 }

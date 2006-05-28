@@ -17,37 +17,29 @@
     02110-1301, USA.
 */
 
-#include "message.h"
-
-#include <kmime_message.h>
+#include "item.h"
 
 using namespace PIM;
 
-class PIM::MessagePrivate
-{
+class PIM::ItemPrivate {
   public:
-    KMime::Message *mime;
+    DataReference ref;
 };
 
-
-PIM::Message::Message( const DataReference & ref ) :
-    Item( ref ),
-    d( new MessagePrivate() )
+PIM::Item::Item( const DataReference & ref ) :
+    d( new ItemPrivate )
 {
+  d->ref = ref;
 }
 
-PIM::Message::~Message( )
+PIM::Item::~ Item( )
 {
-  delete d->mime;
   delete d;
 }
 
-KMime::Message * PIM::Message::mime( ) const
+DataReference PIM::Item::reference( ) const
 {
-  return d->mime;
+  return d->ref;
 }
 
-void PIM::Message::setMime( KMime::Message * mime )
-{
-  d->mime = mime;
-}
+

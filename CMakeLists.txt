@@ -24,6 +24,7 @@ set( akonadi_LIB_SRC
 	collectionselectjob.cpp
 	collectionview.cpp
 	imapparser.cpp
+	item.cpp
 	itemappendjob.cpp
 	messagecollection.cpp
 	messagecollectionmodel.cpp
@@ -55,6 +56,7 @@ install_files( /include/libakonadi FILES
 	collectionselectjob.h
 	collectionview.h
 	imapparser.h
+	item.h
 	itemappendjob.h
 	messagecollection.h
 	messagecollectionmodel.h

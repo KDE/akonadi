@@ -93,6 +93,11 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
           msg->setMime( mime );
           d->messages.append( msg );
         }
+        // flags
+        if ( fetch[i] == "FLAGS" ) {
+          QList<QByteArray> flags = ImapParser::parseParentheziedList( fetch[i + 1] );
+          // TODO
+        }
         // envelope
         else if ( fetch[i] == "ENVELOPE" ) {
           QList<QByteArray> env = ImapParser::parseParentheziedList( fetch[i + 1] );
@@ -182,9 +187,9 @@ void PIM::MessageFetchJob::selectDone( PIM::Job * job )
     d->tag = newTag();
     QByteArray command = d->tag;
     if ( d->uid.isNull() )
-      command += " FETCH 1:* (UID ENVELOPE)";
+      command += " FETCH 1:* (UID FLAGS ENVELOPE)";
     else
-      command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID RFC822)";
+      command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID FLAGS RFC822)";
     writeData( command );
   }
 }
