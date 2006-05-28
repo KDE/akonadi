@@ -38,7 +38,9 @@ public:
     bool handleLine(const QByteArray& line);
 
 protected:
-    void commit(); 
+    void commit();
+    bool inContinuation() const;
+    bool allDataRead() const;
 
 private:
     int m_size;

@@ -94,18 +94,18 @@ static QDateTime parseDateTime( const QByteArray & s )
 }
 
 
+
 bool Akonadi::Append::handleLine(const QByteArray& line )
 {
-    if ( m_size > -1 ) { // continuation
+    if ( inContinuation() ) {
         m_data += line;
-        bool done = false;
         m_size -= line.size();
-        if ( m_size == 0 ) {
+        if ( allDataRead() ) {
             commit();
-            done = true;
             deleteLater();
+            return true;
         }
-        return done;
+        return false;
     }
 
     // Arguments:  mailbox name
@@ -151,7 +151,7 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     const int startOfSize = startOfLiteral + 1;
     m_size = line.mid( startOfSize, line.indexOf('}') - startOfSize ).toInt();
 
-    if ( m_size == 0 ) {  // we allow 0-size puts
+    if ( allDataRead() ) {  // we allow 0-size puts
         commit();
         deleteLater();
         return true;
@@ -205,4 +205,14 @@ void Akonadi::Append::commit()
     response.setSuccess();
     response.setString( "Append completed" );
     emit responseAvailable( response );
+}
+
+bool Akonadi::Append::inContinuation( ) const
+{
+    return m_size > -1;
+}
+
+bool Akonadi::Append::allDataRead( ) const
+{
+    m_size == 0;
 }
