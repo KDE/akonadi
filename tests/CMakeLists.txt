@@ -7,6 +7,15 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/libkmime
 )
 
+# convenience macro to add akonadi single-source qtestlib unit-tests
+macro(add_akonadi_test _source)
+  set(_test ${_source})
+  get_filename_component(_name ${_source} NAME_WE)
+  kde4_automoc(${_test})
+  kde4_add_executable(${_name} RUN_UNINSTALLED ${_test})
+  target_link_libraries(${_name} akonadi ${QT_QTTEST_LIBRARY})
+  add_test( libakonadi-${_name} ${EXECUTABLE_OUTPUT_PATH}/${_name})
+endmacro(add_akonadi_test)
 
 ########### next target ###############
 
@@ -37,6 +46,9 @@ kde4_automoc(${itemdumper_SRCS})
 kde4_add_executable(itemdumper RUN_UNINSTALLED ${itemdumper_SRCS})
 
 target_link_libraries(itemdumper  akonadi ${KDE4_KDECORE_LIBS} )
+
+# qtestlib unit tests
+add_akonadi_test(imapparsertest.cpp)
 
 
 endif(KDE4_BUILD_TESTS)

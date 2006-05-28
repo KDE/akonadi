@@ -96,6 +96,7 @@ int PIM::ImapParser::parseQuotedString( const QByteArray & data, QByteArray &res
         continue;
       }
       if ( data[i] == '"' ) {
+        result = data.mid( begin, i - begin );
         end = i + 1; // skip the '"'
         break;
       }
@@ -106,16 +107,22 @@ int PIM::ImapParser::parseQuotedString( const QByteArray & data, QByteArray &res
   else {
     for ( int i = begin; i < data.length(); ++i ) {
       if ( data[i] == ' ' || data[i] == '(' || data[i] == ')' ) {
+        result = data.mid( begin, i - begin );
+
+        // transform unquoted NIL
+        if ( result == "NIL" )
+          result.clear();
+
         end = i;
         break;
       }
     }
   }
 
-  result = data.mid( begin, end - begin );
-  if ( result == "NIL" )
-    result.clear();
-  // TODO: strip quotes!
+  // strip quotes
+  while ( result.contains( "\\\"" ) )
+    result.replace( "\\\"", "\"" );
+
   return end;
 }
 
