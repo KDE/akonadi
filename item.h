@@ -22,6 +22,8 @@
 
 #include <libakonadi/job.h>
 
+#include <QSet>
+
 namespace PIM {
 
 class ItemPrivate;
@@ -33,6 +35,8 @@ class ItemPrivate;
 class AKONADI_EXPORT Item
 {
   public:
+    typedef QSet<QByteArray> Flags;
+
     /**
       Create a new PIM item.
       @param ref The unique reference of this item.
@@ -48,6 +52,29 @@ class AKONADI_EXPORT Item
       Returns the DataReference of this item.
     */
     DataReference reference() const;
+
+    /**
+      Returns the flags of this item.
+    */
+    Flags flags() const;
+
+    /**
+      Checks if the given flag is set.
+      @param name The flag name.
+    */
+    bool hasFlag( const QByteArray &name ) const;
+
+    /**
+      Sets an item flag.
+      @param name The flag name.
+    */
+    void setFlag( const QByteArray &name );
+
+    /**
+      Removes an item flag.
+      @param name The flag name.
+    */
+    void unsetFlag( const QByteArray &name );
 
   private:
     ItemPrivate *d;

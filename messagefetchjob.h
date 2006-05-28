@@ -65,6 +65,13 @@ class AKONADI_EXPORT MessageFetchJob : public Job
     virtual void doStart();
     virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
 
+    /**
+      Returns the reference from the given fetch response.
+      @param fetchResponse The IMAP fetch response, already splitted into
+      name/value pairs
+    */
+    DataReference parseUid( const QList<QByteArray> &fetchResponse );
+
   private slots:
     void selectDone( PIM::Job* job );
 

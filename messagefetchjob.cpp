@@ -80,23 +80,28 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
   if ( tag == "*" ) {
     int begin = data.indexOf( "FETCH" );
     if ( begin >= 0 ) {
-      // create a new message object
-      Message* msg = 0;
-      KMime::Message* mime = new KMime::Message();
 
-      // parse the main fetch response
+      // split fetch response into key/value pairs
       QList<QByteArray> fetch = ImapParser::parseParentheziedList( data, begin + 6 );
+
+      // create a new message object
+      DataReference ref = parseUid( fetch );
+      if ( ref.isNull() ) {
+        qWarning() << "No UID found in fetch response - skipping";
+        return;
+      }
+      Message* msg = new Message( ref );
+      KMime::Message* mime = new KMime::Message();
+      msg->setMime( mime );
+      d->messages.append( msg );
+
+      // parse fetch response fields
       for ( int i = 0; i < fetch.count() - 1; i += 2 ) {
-        // uid
-        if ( fetch[i] == "UID" ) {
-          msg = new Message( DataReference( fetch[i + 1], QString() ) );
-          msg->setMime( mime );
-          d->messages.append( msg );
-        }
         // flags
         if ( fetch[i] == "FLAGS" ) {
           QList<QByteArray> flags = ImapParser::parseParentheziedList( fetch[i + 1] );
-          // TODO
+          foreach ( const QByteArray flag, flags )
+            msg->setFlag( flag );
         }
         // envelope
         else if ( fetch[i] == "ENVELOPE" ) {
@@ -192,6 +197,20 @@ void PIM::MessageFetchJob::selectDone( PIM::Job * job )
       command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID FLAGS RFC822)";
     writeData( command );
   }
+}
+
+DataReference PIM::MessageFetchJob::parseUid( const QList< QByteArray > & fetchResponse )
+{
+  int index = fetchResponse.indexOf( "UID" );
+  if ( index < 0 ) {
+    qWarning() << "Fetch response doesn't contain a UID field!";
+    return DataReference();
+  }
+  if ( index == fetchResponse.count() - 1 ) {
+    qWarning() << "Broken fetch response: No value for UID field!";
+    return DataReference();
+  }
+  return DataReference( fetchResponse[index + 1], QString() );
 }
 
 #include "messagefetchjob.moc"

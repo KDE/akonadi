@@ -24,6 +24,7 @@ using namespace PIM;
 class PIM::ItemPrivate {
   public:
     DataReference ref;
+    Item::Flags flags;
 };
 
 PIM::Item::Item( const DataReference & ref ) :
@@ -40,6 +41,26 @@ PIM::Item::~ Item( )
 DataReference PIM::Item::reference( ) const
 {
   return d->ref;
+}
+
+Item::Flags PIM::Item::flags( ) const
+{
+  return d->flags;
+}
+
+void PIM::Item::setFlag( const QByteArray & name )
+{
+  d->flags.insert( name );
+}
+
+void PIM::Item::unsetFlag( const QByteArray & name )
+{
+  d->flags.remove( name );
+}
+
+bool PIM::Item::hasFlag( const QByteArray & name ) const
+{
+  return d->flags.contains( name );
 }
 
 
