@@ -21,6 +21,7 @@
 #include "response.h"
 
 #include "fetch.h"
+#include "store.h"
 
 #include "uid.h"
 
@@ -61,6 +62,8 @@ bool Uid::handleLine( const QByteArray& line )
     mSubHandler = 0;
     if ( subCommand == "FETCH" )
       mSubHandler = new Fetch();
+    else if ( subCommand == "STORE" )
+      mSubHandler = new Store();
 
     if ( !mSubHandler ) {
       Response response;
