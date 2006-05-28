@@ -28,6 +28,9 @@ class CollectionJobTest : public QObject
   private slots:
     void testTopLevelList();
     void testFolderList();
+    void testNonRecursiveFolderList();
+    void testEmptyFolderList();
+    void testSearchFolderList();
 };
 
 

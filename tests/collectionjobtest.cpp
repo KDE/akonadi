@@ -98,4 +98,42 @@ void CollectionJobTest::testFolderList( )
   compareLists( col->contentTypes(), contentTypes );
 }
 
+void CollectionJobTest::testNonRecursiveFolderList( )
+{
+  CollectionListJob *job = new CollectionListJob( "/res1", false );
+  QVERIFY( job->exec() );
+  Collection::List list = job->collections();
+  delete job;
+
+  QCOMPARE( list.count(), 1 );
+  QVERIFY( findCol( list, "res1/foo" ) );
+}
+
+void CollectionJobTest::testEmptyFolderList( )
+{
+  CollectionListJob *job = new CollectionListJob( "/res3", false );
+  QVERIFY( job->exec() );
+  Collection::List list = job->collections();
+  delete job;
+
+  QCOMPARE( list.count(), 0 );
+}
+
+void CollectionJobTest::testSearchFolderList( )
+{
+  CollectionListJob *job = new CollectionListJob( Collection::root() + Collection::delimiter() + Collection::searchFolder(), false );
+  QVERIFY( job->exec() );
+  Collection::List list = job->collections();
+  delete job;
+
+  QCOMPARE( list.count(), 3 );
+  Collection *col = findCol( list, "Search/Test ?er" );
+  QVERIFY( col != 0 );
+  QCOMPARE( col->type(), Collection::Virtual );
+  QVERIFY( findCol( list, "Search/all" ) != 0 );
+  QVERIFY( findCol( list, "Search/kde-core-devel" ) != 0 );
+}
+
+
+
 #include "collectionjobtest.moc"
