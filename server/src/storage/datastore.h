@@ -65,6 +65,8 @@ public:
     bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
     QList<Flag> itemFlags( const PimItem &item );
 
+    bool appendItemFlags( int pimItemId, const QList<QByteArray> &flags );
+
     /* --- ItemMetaData--------------------------------------------------- */
     bool appendItemMetaData( const QString & metadata, const MetaType & metatype );
     bool removeItemMetaData( const ItemMetaData & metadata );
@@ -113,7 +115,9 @@ public:
     /* --- PimItem ------------------------------------------------------- */
     bool appendPimItem( const QByteArray & data,
                         const MimeType & mimetype,
-                        const Location & location );
+                        const Location & location,
+                        const QDateTime & dateTime,
+                        int *insertId = 0 );
     bool removePimItem( const PimItem & pimItem );
     bool removePimItem( int id );
     PimItem pimItemById( int id );
@@ -138,7 +142,7 @@ public:
      */
     int pimItemPosition( const PimItem &item );
 
-    int highestPimItemId();
+    int highestPimItemId() const;
     int highestPimItemCountByLocation( const Location &location );
 
     QList<PimItem> matchingPimItems( const QList<QByteArray> &sequences );
@@ -155,6 +159,7 @@ public:
 
     /* --- Helper functions ---------------------------------------------- */
     /** Returns the id of the next PIM item that is added to the db.
+        @return possible id of the next PIM item that is added to the database
      */
     int uidNext() const;
 
@@ -162,6 +167,29 @@ protected:
     void debugLastDbError( const QString & actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const QString & actionDescription ) const;
     bool removeById( int id, const QString & tableName );
+
+private:
+    /** Returns the id of the most recent inserted row, or -1 if there's no such
+        id.
+        @param query the query we want to get the last insert id for
+        @return id of the most recent inserted row, or -1
+     */
+    static int lastInsertId( const QSqlQuery & query );
+
+    /** Converts the given date/time to the database format, i.e.
+        "YYYY-MM-DD HH:MM:SS".
+        @param dateTime the date/time in UTC
+        @return the date/time in database format
+        @see dateTimeToQDateTime
+     */
+    static QByteArray dateTimeFromQDateTime( const QDateTime & dateTime );
+
+    /** Converts the given date/time from database format to QDateTime.
+        @param dateTime the date/time in database format
+        @return the date/time as QDateTime
+        @see dateTimeFromQDateTime
+     */
+    static QDateTime dateTimeToQDateTime( const QByteArray & dateTime );
 
 private:
     static DataStore * ds_instance;

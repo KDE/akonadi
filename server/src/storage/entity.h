@@ -23,6 +23,7 @@
 #include <Qt>
 #include <QDebug>
 #include <QString>
+#include <QDateTime>
 
 class QSqlQuery;
 
@@ -253,12 +254,14 @@ class PimItem : public Entity
 {
   public:
     PimItem();
-    PimItem( int id, const QByteArray & data, int location_id, int mimetype_id );
+    PimItem( int id, const QByteArray & data, int location_id, int mimetype_id,
+             const QDateTime & dateTime );
     ~PimItem();
 
     int mimeTypeId() const { return m_mimetype_id; };
     int locationId() const { return m_location_id; };
     const QByteArray & data() const { return m_data; };
+    QDateTime dateTime() const { return m_datetime; };
 
   protected:
     PimItem & setMimeTypeId( int mimetype_id )
@@ -270,10 +273,14 @@ class PimItem : public Entity
     PimItem & setData( const QByteArray & data )
         { m_data = data; return *this; };
 
+    PimItem & setDateTime( const QDateTime & dateTime )
+        { m_datetime = dateTime; return *this; };
+
   private:
     QByteArray m_data;
     int m_location_id;
     int m_mimetype_id;
+    QDateTime m_datetime;
 
     friend class DataStore;
 };

@@ -21,6 +21,8 @@
 
 #include <handler.h>
 
+#include <QDateTime>
+
 namespace Akonadi {
 
 /**
@@ -42,6 +44,8 @@ private:
     int m_size;
     QByteArray m_data;
     QByteArray m_mailbox;
+    QDateTime m_dateTime;
+    QList<QByteArray> m_flags;
 
 };
 

@@ -302,6 +302,11 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
   return true;
 }
 
+bool DataStore::appendItemFlags( int pimItemId, const QList<QByteArray> &flags )
+{
+    // FIXME Implement me
+}
+
 bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 {
   if ( !m_dbOpened )
@@ -493,11 +498,8 @@ bool DataStore::appendLocation( const QString & location,
     return false;
   }
 
-  if ( insertId ) {
-    QVariant v = query.lastInsertId();
-    if ( v.isValid() )
-      *insertId = v.toInt();
-  }
+  if ( insertId )
+      *insertId = lastInsertId( query );
 
   return true;
 }
@@ -832,11 +834,8 @@ bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
     return false;
   }
 
-  if ( insertId ) {
-    QVariant v = query.lastInsertId();
-    if ( v.isValid() )
-      *insertId = v.toInt();
-  }
+  if ( insertId )
+      *insertId = lastInsertId( query );
 
   return true;
 }
@@ -972,7 +971,9 @@ QList<MetaType> DataStore::listMetaTypes( const MimeType & mimetype )
 /* --- PimItem ------------------------------------------------------- */
 bool DataStore::appendPimItem( const QByteArray & data,
                                const MimeType & mimetype,
-                               const Location & location )
+                               const Location & location,
+                               const QDateTime & dateTime,
+                               int *insertId )
 {
   if ( !m_dbOpened )
     return false;
@@ -982,16 +983,32 @@ bool DataStore::appendPimItem( const QByteArray & data,
   QSqlField field( "data", QVariant::String );
   field.setValue( data );
   QString escaped = m_database.driver()->formatValue( field );
-  QString statement = QString( "INSERT INTO PimItems (data, location_id, mimetype_id) "
-                               "VALUES (%1, %2, %3)")
-                             .arg( escaped )
-                             .arg( location.id() )
-                             .arg( mimetype.id() );
+  QString statement;
+  if ( dateTime.isValid() ) {
+      statement = QString( "INSERT INTO PimItems (data, location_id, mimetype_id, "
+                           "datetime ) "
+                           "VALUES (%1, %2, %3, %4)")
+                         .arg( escaped )
+                         .arg( location.id() )
+                         .arg( mimetype.id() )
+                         .arg( QString( dateTimeFromQDateTime( dateTime ) ) );
+  }
+  else {
+      // the database will use the current date/time for datetime
+      statement = QString( "INSERT INTO PimItems (data, location_id, mimetype_id) "
+                           "VALUES (%1, %2, %3)")
+                         .arg( escaped )
+                         .arg( location.id() )
+                         .arg( mimetype.id() );
+  }
 
   if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "Error during insertion of single PimItem." );
     return false;
   }
+
+  if ( insertId )
+      *insertId = lastInsertId( query );
 
   return true;
 }
@@ -1102,7 +1119,7 @@ PimItem DataStore::pimItemById( int id )
     return PimItem();
 
   QSqlQuery query( m_database );
-  query.prepare( "SELECT id, data, location_id, mimetype_id FROM PimItems WHERE id = :id" );
+  query.prepare( "SELECT id, data, location_id, mimetype_id, datetime FROM PimItems WHERE id = :id" );
   query.bindValue( ":id", id );
 
   if ( !query.exec() ) {
@@ -1119,8 +1136,9 @@ PimItem DataStore::pimItemById( int id )
   QByteArray data = query.value( 1 ).toByteArray();
   int location = query.value( 2 ).toInt();
   int mimetype = query.value( 3 ).toInt();
+  QDateTime dateTime = dateTimeToQDateTime( query.value( 4 ).toByteArray() );
 
-  return PimItem( pimItemId, data, location, mimetype );
+  return PimItem( pimItemId, data, location, mimetype, dateTime );
 }
 
 QList<PimItem> DataStore::listPimItems( const MimeType & mimetype,
@@ -1139,7 +1157,7 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
 
   QSqlQuery query( m_database );
 
-  const QString statement = QString( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id FROM PimItems, ItemFlags WHERE "
+  const QString statement = QString( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id, PimItems.datetime FROM PimItems, ItemFlags WHERE "
                                      "ItemFlags.pimitem_id = PimItems.id AND ItemFlags.flag_id = %1 AND location_id = %2" )
                                    .arg( flag.id() ).arg( location.id() );
 
@@ -1151,13 +1169,14 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
   QList<PimItem> pimItems;
   while ( query.next() ) {
     pimItems.append( PimItem( query.value( 0 ).toInt(), query.value( 1 ).toByteArray(),
-                              location.id(), query.value( 2 ).toInt() ) );
+                              location.id(), query.value( 2 ).toInt(),
+                              dateTimeToQDateTime( query.value( 3 ).toByteArray() ) ) );
   }
 
   return pimItems;
 }
 
-int DataStore::highestPimItemId()
+int DataStore::highestPimItemId() const
 {
   if ( !m_dbOpened )
     return -1;
@@ -1579,19 +1598,34 @@ int DataStore::uidNext() const
     // FIXME We can't use max(id) FROM PimItems because this is wrong if the
     //       entry with the highest id is deleted. Instead we should probably
     //       keep record of the largest id that any PimItem ever had.
-    if ( !m_dbOpened )
-        return 0;
+    return highestPimItemId() + 1;
+}
 
-    QSqlQuery query( m_database );
-    const QString q = QString( "SELECT max(id) FROM PimItems" );
-    if ( ! query.exec( q ) ) {
-        debugLastQueryError( q, "Error while getting maximal id from PimItems." );
-        return 0;
-    }
 
-    if ( query.next() ) {
-        return query.value(0).toInt() + 1;
-    }
-    else
-        return 0;
+//static
+int DataStore::lastInsertId( const QSqlQuery & query )
+{
+    QVariant v = query.lastInsertId();
+    if ( !v.isValid() ) return -1;
+    bool ok;
+    int insertId = v.toInt( &ok );
+    if ( !ok ) return -1;
+    return insertId;
+}
+
+
+// static
+QByteArray DataStore::dateTimeFromQDateTime( const QDateTime & dateTime )
+{
+    QDateTime utcDateTime = dateTime;
+    if ( utcDateTime.timeSpec() != Qt::UTC )
+        utcDateTime.toUTC();
+    return utcDateTime.toString( "yyyy-MM-dd hh:mm:ss" ).toLatin1();
+}
+
+
+// static
+QDateTime DataStore::dateTimeToQDateTime( const QByteArray & dateTime )
+{
+    return QDateTime::fromString( dateTime, "yyyy-MM-dd hh:mm:ss" );
 }

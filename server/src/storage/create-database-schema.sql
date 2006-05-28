@@ -52,7 +52,9 @@ CREATE TABLE PimItems
 -- "data" might be BLOB as well, or we can store the data in parts
 	data		TEXT,
 	location_id	INTEGER REFERENCES Locations(id),
-	mimetype_id	INTEGER REFERENCES MimeTypes(id)
+	mimetype_id	INTEGER REFERENCES MimeTypes(id),
+-- format of datetime is "YYYY-MM-DD HH:MM:SS"
+        datetime        CHAR(19) DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE ItemMetaData
