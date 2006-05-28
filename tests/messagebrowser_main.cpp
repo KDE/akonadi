@@ -17,25 +17,18 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGEBROWSER_H
-#define PIM_MESSAGEBROWSER_H
 
-#include <QTreeView>
 
-#include <libakonadi/job.h>
+#include <kapplication.h>
+#include <kcmdlineargs.h>
 
-namespace PIM {
+#include "messagebrowser.h"
 
-class MessageBrowser : public QTreeView
+int main( int argc, char** argv )
 {
-  Q_OBJECT
-  public:
-    MessageBrowser( const QByteArray &path );
-  private slots:
-    void messageActivated( const QModelIndex &index );
-    void slotFetchDone( PIM::Job* job );
-};
-
+  KCmdLineArgs::init( argc, argv, "test", "Test" ,"test app" ,"1.0" );
+  KApplication app;
+  PIM::MessageBrowser w( "res1/foo" );
+  w.show();
+  return app.exec();
 }
-
-#endif

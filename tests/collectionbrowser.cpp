@@ -20,7 +20,9 @@
 #include "messagecollection.h"
 #include "collectionbrowser.h"
 #include "collectionlistjob.h"
+#include "collectionmodel.h"
 #define private public
+#include "messagebrowser.h"
 #include "messagecollectionmodel.h"
 
 #include <kapplication.h>
@@ -96,6 +98,8 @@ CollectionBrowser::CollectionBrowser() : CollectionView()
   model = new MessageCollectionModel( this );
   setModel( model );
 
+  connect( this, SIGNAL(activated(QModelIndex)), SLOT(slotItemActivated(QModelIndex)) );
+
   // emulate the monitor job
   /*QTimer *t = new QTimer( this );
   connect( t, SIGNAL( timeout() ), SLOT( slotEmitChanged() ) );
@@ -137,6 +141,15 @@ void CollectionBrowser::slotEmitChanged()
   global_collection_map.insert( ref, col );
   kDebug() << k_funcinfo << "add collection " << ref.persistanceID() << " parent: " << col->parent().persistanceID() << endl;
   model->collectionChanged( DataReference::List() << ref );*/
+}
+
+void PIM::CollectionBrowser::slotItemActivated( const QModelIndex & index )
+{
+  QByteArray path = model->pathForIndex( index );
+  if ( path.isNull() )
+    return;
+  MessageBrowser *mb = new MessageBrowser( path );
+  mb->show();
 }
 
 int main( int argc, char** argv )

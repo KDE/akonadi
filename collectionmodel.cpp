@@ -439,7 +439,7 @@ bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const Q
   return true;
 }
 
-bool PIM::CollectionModel::canCreateCollection( const QModelIndex & parent )
+bool PIM::CollectionModel::canCreateCollection( const QModelIndex & parent ) const
 {
   if ( d->currentEdit != Private::None )
     return false;
@@ -453,6 +453,13 @@ bool PIM::CollectionModel::canCreateCollection( const QModelIndex & parent )
     return false;
 
   return true;
+}
+
+QByteArray PIM::CollectionModel::pathForIndex( const QModelIndex & index ) const
+{
+  if ( index.isValid() )
+    return static_cast<Collection*>( index.internalPointer() )->path();
+  return QByteArray();
 }
 
 #include "collectionmodel.moc"

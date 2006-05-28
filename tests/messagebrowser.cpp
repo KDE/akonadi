@@ -23,31 +23,18 @@
 #include "messagemodel.h"
 
 #include "kmime_message.h"
-
-#include <kapplication.h>
-#include <kcmdlineargs.h>
-
 #include <QDebug>
 #include <QTextEdit>
 
 using namespace PIM;
 
-MessageBrowser::MessageBrowser() : QTreeView()
+MessageBrowser::MessageBrowser( const QByteArray &path ) : QTreeView()
 {
   MessageModel* model = new MessageModel( this );
-  model->setPath( "res1/foo" );
+  model->setPath( path );
   setModel( model );
 
   connect( this, SIGNAL(doubleClicked(QModelIndex)), SLOT(messageActivated(QModelIndex)) );
-}
-
-int main( int argc, char** argv )
-{
-  KCmdLineArgs::init( argc, argv, "test", "Test" ,"test app" ,"1.0" );
-  KApplication app;
-  MessageBrowser w;
-  w.show();
-  return app.exec();
 }
 
 void PIM::MessageBrowser::messageActivated( const QModelIndex & index )

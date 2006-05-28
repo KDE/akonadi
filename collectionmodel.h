@@ -113,7 +113,13 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Returns true if a new sub-collection for the given parent collection can be created.
       @param parent The parent model index.
     */
-    bool canCreateCollection( const QModelIndex &parent );
+    bool canCreateCollection( const QModelIndex &parent ) const;
+
+    /**
+      Returns the collection path for the given model index.
+      @param index The model index.
+    */
+    QByteArray pathForIndex( const QModelIndex &index ) const;
 
   private:
     /**

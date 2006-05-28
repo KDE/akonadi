@@ -34,6 +34,7 @@ class CollectionBrowser : public CollectionView
     CollectionBrowser();
 
   private slots:
+    void slotItemActivated( const QModelIndex &index );
     void slotEmitChanged();
 
   private:
