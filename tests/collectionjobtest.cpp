@@ -160,15 +160,31 @@ void CollectionJobTest::testIllegalCreateFolder( )
 
 void CollectionJobTest::testCreateFolder( )
 {
-  // TODO complete this
+  // simple new folder
+  CollectionCreateJob *job = new CollectionCreateJob( "res3/new folder", this );
+  QVERIFY( job->exec() );
+
+  CollectionListJob *ljob = new CollectionListJob( "/res3", false, this );
+  QVERIFY( ljob->exec() );
+  QVERIFY( findCol( ljob->collections(), "res3/new folder" ) != 0 );
 
   // folder that already exists within another resource
-  CollectionCreateJob *job = new CollectionCreateJob( "res3/foo", this );
+  job = new CollectionCreateJob( "res3/foo", this );
   QVERIFY( job->exec() );
+
+  ljob = new CollectionListJob( "/res3", false, this );
+  QVERIFY( ljob->exec() );
+  QVERIFY( findCol( ljob->collections(), "res3/foo" ) != 0 );
 
   // folder with missing parents
   job = new CollectionCreateJob( "res3/sub1/sub2/sub3", this );
   QVERIFY( job->exec() );
+
+  ljob = new CollectionListJob( "/res3", true, this );
+  QVERIFY( ljob->exec() );
+  QVERIFY( findCol( ljob->collections(), "res3/sub1" ) != 0 );
+  QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2" ) != 0 );
+  QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2/sub3" ) != 0 );
 }
 
 
