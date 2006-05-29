@@ -50,6 +50,7 @@ target_link_libraries(itemdumper  akonadi ${KDE4_KDECORE_LIBS} )
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
 add_akonadi_test(collectionjobtest.cpp)
+add_akonadi_test(messagejobtest.cpp)
 
 
 endif(KDE4_BUILD_TESTS)
