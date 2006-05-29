@@ -22,9 +22,8 @@
 
 #include <QList>
 #include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QtDebug>
+
+class QSqlQuery;
 
 #include "entity.h"
 #include "collection.h"
@@ -38,11 +37,12 @@ class DataStore
 {
 public:
     DataStore();
-    ~DataStore();
+    void init();
+    virtual ~DataStore();
 
     /* -- higher level API -- */
-    const CollectionList listCollections( const QByteArray& prefix,
-                                          const QByteArray & mailboxPattern ) const;
+    virtual CollectionList listCollections( const QByteArray& prefix,
+                                            const QByteArray & mailboxPattern ) const;
 
     /* --- CachePolicy --------------------------------------------------- */
     bool appendCachePolicy( const QString & policy );

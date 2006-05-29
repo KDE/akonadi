@@ -19,21 +19,18 @@
 #ifndef AKONADITESTSTORAGEBACKEND_H
 #define AKONADITESTSTORAGEBACKEND_H
 
-#include "storagebackend.h"
+#include "storage/datastore.h"
+
 namespace Akonadi {
 
-/**
-    @brief The interface to the storage backend.
- */
-class TestStorageBackend : public StorageBackend {
 
-public:
-    TestStorageBackend();
-    /** reimpl */
-    virtual ~TestStorageBackend();
+class MockBackend : public DataStore
+{
+    public:
+        MockBackend() { }
 
-    /** reimpl */
-    virtual CollectionList listCollections( const QString & root );
+        CollectionList listCollections( const QByteArray& prefix,
+                                        const QByteArray & mailboxPattern ) const;
 };
 
 }

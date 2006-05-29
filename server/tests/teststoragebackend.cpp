@@ -21,20 +21,17 @@
 
 using namespace Akonadi;
 
-TestStorageBackend::TestStorageBackend()
-{
-}
-
-TestStorageBackend::~TestStorageBackend()
-{
-}
-
-CollectionList TestStorageBackend::listCollections( const QString & root )
+CollectionList MockBackend::listCollections( const QByteArray& prefix,
+                                             const QByteArray & mailboxPattern ) const
 {
     CollectionList list;
-    if ( root == "\"%\"" ) {
+ //   qDebug() << "Prefix: " << prefix << " pattern: " << mailboxPattern;
+    if ( mailboxPattern == "%" ) {
         list << Collection( "INBOX" );
-    } else if ( root.startsWith( "\"INBOX" ) ) {
+    } else if ( mailboxPattern == "*" ) {
+        list << Collection( "INBOX" );
+        list << Collection( "INBOX/foo" );
+    } else if ( mailboxPattern.startsWith( "\"INBOX" ) ) {
         list << Collection( "foo" );
         list << Collection( "bar" );
         list << Collection( "fasel" );

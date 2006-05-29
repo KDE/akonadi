@@ -42,8 +42,8 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
 DataStore * Akonadi::AkonadiConnection::storageBackend()
 {
     if ( !m_backend ) {
-//        m_backend = new TestStorageBackend();
       m_backend = new DataStore();
+      m_backend->init();
     }
     return m_backend;
 }

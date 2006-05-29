@@ -22,6 +22,8 @@
 
 #include <QSqlQuery>
 #include <QSqlField>
+#include <QSqlError>
+#include <QSqlDatabase>
 #include <QSqlDriver>
 #include <QVariant>
 #include <QThread>
@@ -36,6 +38,10 @@ using namespace Akonadi;
  *   DataStore                                                           *
  ***************************************************************************/
 DataStore::DataStore()
+{
+}
+
+void DataStore::init()
 {
   m_database = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
   m_database.setDatabaseName( "akonadi.db" );
@@ -53,8 +59,8 @@ DataStore::~DataStore()
 }
 
 /* -- High level API -- */
-const CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
-                                                          const QByteArray & mailboxPattern ) const
+CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
+                                                    const QByteArray & mailboxPattern ) const
 {
   CollectionList result;
 

@@ -40,10 +40,10 @@ class AkonadiConnection : public QThread
     Q_OBJECT
 public:
     AkonadiConnection( int socketDescriptor, QObject *parent );
-    ~AkonadiConnection();
+    virtual ~AkonadiConnection();
     void run();
 
-    DataStore* storageBackend();
+    virtual DataStore* storageBackend();
     const QByteArray selectedCollection() const;
     void setSelectedCollection( const QByteArray& collection );
 
@@ -62,6 +62,7 @@ protected slots:
     void slotConnectionStateChange( ConnectionState );
 
 protected:
+    AkonadiConnection() {} // used for testing
     void writeOut( const char* );
     Handler* findHandlerForCommand( const QByteArray& command );
 
