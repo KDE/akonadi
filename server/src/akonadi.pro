@@ -4,6 +4,14 @@
 # Target is an application:  ../bin/akonadi
 INCLUDEPATH += ../include ../test searchproviders/ handler/
 
-TEMPLATE = subdirs
-SUBDIRS += libakonadiprivate.pro  akonadi.pro
-
+SOURCES += main.cpp
+TEMPLATE = app
+CONFIG += debug \
+warn_on \
+thread \
+qt
+QT = core network sql
+TARGET = akonadi
+DESTDIR = ../bin
+DEFINES += QT_NO_CAST_TO_ASCII
+LIBS = -L../lib -lakonadiprivate
