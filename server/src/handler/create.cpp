@@ -74,13 +74,8 @@ bool Create::handleLine(const QByteArray& line )
     Resource resource = db->resourceByName( resourceName );
 
     // first check whether location already exists
-    if ( db->locationByName( resource, locationName ).isValid() ) {
-        response.setFailure();
-        response.setString( "A folder with that name does already exist");
-        emit responseAvailable( response );
-        deleteLater();
-        return true;
-    }
+    if ( db->locationByName( resource, locationName ).isValid() )
+        return failureResponse( "A folder with that name does already exist" );
 
     // we have to create all superior hierarchical folders, so look for the
     // starting point
@@ -112,13 +107,8 @@ bool Create::handleLine(const QByteArray& line )
                 break;
             }
         }
-        if ( !canContainSubfolders ) {
-            response.setFailure();
-            response.setString( "Superior folder cannot contain subfolders" );
-            emit responseAvailable( response );
-            deleteLater();
-            return true;
-        }
+        if ( !canContainSubfolders )
+            return failureResponse( "Superior folder cannot contain subfolders" );
     }
     // everything looks good, now we create the folders
     foreach ( QByteArray folderName, foldersToCreate ) {

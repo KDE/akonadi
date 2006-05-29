@@ -143,3 +143,14 @@ QByteArray Akonadi::Handler::stripQuotes( const QByteArray &mailbox )
        return mailbox.mid( 1, mailbox.size() - 2);
     return mailbox;
 }
+
+bool Akonadi::Handler::failureResponse( const QString& failureMessage )
+{
+    Response response;
+    response.setTag( tag() );
+    response.setFailure();
+    response.setString( failureMessage );
+    emit responseAvailable( response );
+    deleteLater();
+    return true;
+}

@@ -41,27 +41,23 @@ Select::~Select()
 
 bool Select::handleLine(const QByteArray& line )
 {
-    connection()->setSelectedCollection("/"); // as per rfc, even if the followin select fails
+    // as per rfc, even if the following select fails, we need to reset
+    connection()->setSelectedCollection("/");
 
     int startOfCommand = line.indexOf( ' ' ) + 1;
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     QByteArray mailbox = stripQuotes( line.right( line.size() - startOfMailbox ) );
 
+    DataStore *db = connection()->storageBackend();
+    Location l = db->locationByRawMailbox( mailbox );
+
+    if ( !l.isValid() )
+        return failureResponse( "Cannot list this folder" );
+
     // Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
     // OPTIONAL OK untagged responses: UNSEEN, PERMANENTFLAGS
     Response response;
     response.setUntagged();
-
-    DataStore *db = connection()->storageBackend();
-    Location l = db->locationByRawMailbox( mailbox );
-
-    if ( !l.isValid() ) {
-        response.setFailure();
-        response.setString( "Cannot list this folder");
-        emit responseAvailable( response );
-        deleteLater();
-        return true;
-    }
 
     response.setString( l.flags() );
     emit responseAvailable( response );

@@ -100,9 +100,7 @@ bool Akonadi::Append::handleContinuation( const QByteArray& line )
     m_size -= line.size();
     if ( !allDataRead() )
         return false;
-    commit();
-    deleteLater();
-    return true;
+    return commit();
 }
 
 bool Akonadi::Append::handleLine(const QByteArray& line )
@@ -157,12 +155,10 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
         return startContinuation();
 
     // otherwise it's a 0-size put, so we're done
-    commit();
-    deleteLater();
-    return true;
+    return commit();
 }
 
-void Akonadi::Append::commit()
+bool Akonadi::Append::commit()
 {
     Response response;
 
@@ -173,11 +169,7 @@ void Akonadi::Append::commit()
     bool ok = db->appendPimItem( m_data, mimeType, l, m_dateTime, &itemId );
     response.setTag( tag() );
     if ( !ok ) {
-        response.setTag( tag() );
-        response.setFailure();
-        response.setString( "Append failed" );
-        emit responseAvailable( response );
-        return;
+        return failureResponse( "Append failed" );
     }
 
     // set message flags
@@ -203,6 +195,8 @@ void Akonadi::Append::commit()
     response.setSuccess();
     response.setString( "Append completed" );
     emit responseAvailable( response );
+    deleteLater();
+    return true;
 }
 
 bool Akonadi::Append::inContinuation( ) const

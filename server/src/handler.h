@@ -64,6 +64,9 @@ public:
     void setConnection( AkonadiConnection* connection );
     AkonadiConnection* connection();
 
+    /** Send a failure response with the given message. */
+    bool failureResponse( const QString& failureMessage );
+
     static QByteArray stripQuotes( const QByteArray & );
     
 signals:

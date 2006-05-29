@@ -39,7 +39,7 @@ public:
     bool handleContinuation( const QByteArray& line );
 
 protected:
-    void commit();
+    bool commit();
     bool inContinuation() const;
     bool allDataRead() const;
     bool startContinuation();

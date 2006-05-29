@@ -59,13 +59,8 @@ bool Status::handleLine( const QByteArray& line )
     DataStore *db = connection()->storageBackend();
     Location l = db->locationByRawMailbox( mailbox );
 
-    if ( !l.isValid() ) {
-        response.setFailure();
-        response.setString( "No status for this folder" );
-        emit responseAvailable( response );
-        deleteLater();
-        return true;
-    }
+    if ( !l.isValid() )
+        return failureResponse( "No status for this folder" );
 
     // Responses:
     // REQUIRED untagged responses: STATUS
