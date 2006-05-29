@@ -113,13 +113,15 @@ bool Create::handleLine(const QByteArray& line )
     // everything looks good, now we create the folders
     foreach ( QByteArray folderName, foldersToCreate ) {
         int locationId = 0;
-        db->appendLocation( folderName, resource, &locationId );
+        if ( ! db->appendLocation( folderName, resource, &locationId ) )
+            return failureResponse( "Adding " + resourceName + folderName + " to the database failed" );
+        // FIXME what to do if appending the mime type fails?
         db->appendMimeTypeForLocation( locationId, "directory/inode" );
         // FIXME add more MIME types
     }
 
     response.setSuccess();
-    response.setString( "Completed" );
+    response.setString( "CREATE completed" );
     emit responseAvailable( response );
 
     deleteLater();
