@@ -23,6 +23,7 @@
 #include "messagefetchjob.h"
 
 #include "kmime_message.h"
+#include "kmime_headers.h"
 
 #include <QDebug>
 
@@ -35,6 +36,39 @@ class PIM::MessageFetchJobPrivate
     DataReference uid;
     Message::List messages;
     QByteArray tag;
+
+  public:
+    void parseAddrField( const QList<QByteArray> &addrField, KMime::Headers::AddressField *hdr )
+    {
+      if ( addrField.count() != 1 ) {
+        qWarning() << "Error parsing envelope - address field does not contains exactly one entry: " << addrField;
+        return;
+      }
+      QList<QByteArray> addr;
+      ImapParser::parseParentheziedList( addrField[0], addr );
+      if ( addr.count() != 4 ) {
+        qWarning() << "Error parsing envelope address field: " << addr;
+        return;
+      }
+      hdr->setName( addr[0] );
+      hdr->setEmail( addr[2] + "@" + addr[3] );
+    }
+
+    void parseAddrList( const QList<QByteArray> &addrList, KMime::Headers::To *hdr )
+    {
+      foreach ( const QByteArray ba, addrList ) {
+        QList<QByteArray> addr;
+        ImapParser::parseParentheziedList( ba, addr );
+        if ( addr.count() != 4 ) {
+          qWarning() << "Error parsing envelope address field: " << addr;
+          continue;
+        }
+        KMime::Headers::AddressField addrField;
+        addrField.setNameFrom7Bit( addr[0] );
+        addrField.setEmail( addr[2] + "@" + addr[3] );
+        hdr->addAddress( addrField );
+      }
+    }
 };
 
 PIM::MessageFetchJob::MessageFetchJob( const QByteArray & path, QObject * parent ) :
@@ -117,57 +151,24 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
           // from
           QList<QByteArray> addrList;
           ImapParser::parseParentheziedList( env[2], addrList );
-          if ( addrList.count() >= 1 ) {
-            QList<QByteArray> addr;
-            ImapParser::parseParentheziedList( addrList[0], addr );
-            Q_ASSERT( addr.count() == 4 );
-            mime->from()->setName( addr[0] );
-            mime->from()->setEmail( addr[2] + "@" + addr[3] );
-          }
+          d->parseAddrField( addrList, mime->from() );
           // sender
           // not supported by kmime, skipp it
           // reply-to
           ImapParser::parseParentheziedList( env[4], addrList );
-          if ( addrList.count() >= 1 ) {
-            QList<QByteArray> addr;
-            ImapParser::parseParentheziedList( addrList[0], addr );
-            Q_ASSERT( addr.count() == 4 );
-            mime->replyTo()->setNameFrom7Bit( addr[0] );
-            mime->replyTo()->setEmail( addr[2] + "@" + addr[3] );
-          }
+          d->parseAddrField( addrList, mime->replyTo() );
           // to
           ImapParser::parseParentheziedList( env[5], addrList );
-          foreach ( const QByteArray ba, addrList ) {
-            QList<QByteArray> addr;
-            ImapParser::parseParentheziedList( ba, addr );
-            Q_ASSERT( addr.count() == 4 );
-            KMime::Headers::AddressField addrField;
-            addrField.setNameFrom7Bit( addr[0] );
-            addrField.setEmail( addr[2] + "@" + addr[3] );
-            mime->to()->addAddress( addrField );
-          }
+          if ( !addrList.isEmpty() )
+            d->parseAddrList( addrList, mime->to() );
           // cc
           ImapParser::parseParentheziedList( env[6], addrList );
-          foreach ( const QByteArray ba, addrList ) {
-            QList<QByteArray> addr;
-            ImapParser::parseParentheziedList( ba, addr );
-            Q_ASSERT( addr.count() == 4 );
-            KMime::Headers::AddressField addrField;
-            addrField.setNameFrom7Bit( addr[0] );
-            addrField.setEmail( addr[2] + "@" + addr[3] );
-            mime->cc()->addAddress( addrField );
-          }
+          if ( !addrList.isEmpty() )
+            d->parseAddrList( addrList, mime->cc() );
           // bcc
           ImapParser::parseParentheziedList( env[7], addrList );
-          foreach ( const QByteArray ba, addrList ) {
-            QList<QByteArray> addr;
-            ImapParser::parseParentheziedList( ba, addr );
-            Q_ASSERT( addr.count() == 4 );
-            KMime::Headers::AddressField addrField;
-            addrField.setNameFrom7Bit( addr[0] );
-            addrField.setEmail( addr[2] + "@" + addr[3] );
-            mime->bcc()->addAddress( addrField );
-          }
+          if ( !addrList.isEmpty() )
+            d->parseAddrList( addrList, mime->bcc() );
           // in-reply-to
           // not yet supported by KMime
           // message id
