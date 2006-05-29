@@ -25,6 +25,7 @@ using namespace PIM;
 
 int PIM::ImapParser::parseParentheziedList( const QByteArray & data, QList<QByteArray> &result, int start )
 {
+  result.clear();
   int begin = data.indexOf( '(', start );
   int count = 0;
   int sublistbegin = start;
