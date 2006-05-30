@@ -82,12 +82,36 @@ private slots:
         const QByteArray expectedThirdResponse = "1 OK List completed";
         QCOMPARE(nextResponse(spy).asString(), expectedThirdResponse );
     }
+
+    void testInboxList()
+    {
+        Handler* l = getHandlerFor("LIST");
+        QVERIFY( dynamic_cast<List*>(l) != 0 );
+
+        const QByteArray line = "1 LIST \"\" \"INBOX\"";
+
+        QSignalSpy spy(l, SIGNAL( responseAvailable( const Response& )));
+        l->handleLine( line );
+        QCOMPARE(spy.count(), 3);
+
+        const QByteArray expectedFirstResponse = "* LIST () \"/\" \"foo\"";
+        QCOMPARE(nextResponse(spy).asString(), expectedFirstResponse );
+
+        const QByteArray expectedSecondResponse = "* LIST () \"/\" \"bar\"";
+        QCOMPARE(nextResponse(spy).asString(), expectedSecondResponse );
+
+        const QByteArray expectedThirdResponse = "1 OK List completed";
+        QCOMPARE(nextResponse(spy).asString(), expectedThirdResponse );
+    }
+    
 private:
     // Helper
     Response nextResponse( QSignalSpy& spy )
     {
         QList<QVariant> arguments = spy.takeFirst();
-        return qvariant_cast<Response>(arguments.at(0));
+        Response r = qvariant_cast<Response>(arguments.at(0));
+        //qDebug() << "Response: " << r.asString();
+        return r;
     }
 
     Handler* getHandlerFor(const QByteArray& command )

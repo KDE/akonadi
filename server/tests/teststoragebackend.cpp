@@ -25,16 +25,15 @@ CollectionList MockBackend::listCollections( const QByteArray& prefix,
                                              const QByteArray & mailboxPattern ) const
 {
     CollectionList list;
- //   qDebug() << "Prefix: " << prefix << " pattern: " << mailboxPattern;
+    //qDebug() << "Prefix: " << prefix << " pattern: " << mailboxPattern;
     if ( mailboxPattern == "%" ) {
         list << Collection( "INBOX" );
     } else if ( mailboxPattern == "*" ) {
         list << Collection( "INBOX" );
         list << Collection( "INBOX/foo" );
-    } else if ( mailboxPattern.startsWith( "\"INBOX" ) ) {
+    } else if ( mailboxPattern.startsWith( "INBOX" ) ) {
         list << Collection( "foo" );
         list << Collection( "bar" );
-        list << Collection( "fasel" );
     }
     return list;
 }
