@@ -72,6 +72,8 @@ bool Create::handleLine(const QByteArray& line )
     //qDebug() << "Create: " << locationName
     //         << " in resource: " << resourceName;
     Resource resource = db->resourceByName( resourceName );
+    if ( !resource.isValid() )
+        return failureResponse( "Cannot create folder " + locationName + " in  unknown resource " + resourceName );
 
     // first check whether location already exists
     if ( db->locationByName( resource, locationName ).isValid() )
