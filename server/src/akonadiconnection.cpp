@@ -142,7 +142,7 @@ void AkonadiConnection::writeOut( const char* str )
     qDebug() << "writing out: " << str << endl;
     QByteArray block;
     QTextStream out(&block, QIODevice::WriteOnly);
-    out << str << endl;
+    out << str << '\r'<<  endl;
     out.flush();
     m_tcpSocket->write(block);
     m_tcpSocket->waitForBytesWritten();
