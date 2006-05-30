@@ -55,7 +55,7 @@ private slots:
         l->handleLine( line );
         QCOMPARE(spy.count(), 2);
 
-        const QByteArray expectedFirstResponse = "* LIST () \"/\" \"INBOX\" ";
+        const QByteArray expectedFirstResponse = "* LIST () \"/\" \"INBOX\"";
         QCOMPARE(nextResponse(spy).asString(), expectedFirstResponse );
 
         const QByteArray expectedSecondResponse = "1 OK List completed";
@@ -73,10 +73,10 @@ private slots:
         l->handleLine( line );
         QCOMPARE(spy.count(), 3);
 
-        const QByteArray expectedFirstResponse = "* LIST () \"/\" \"INBOX\" ";
+        const QByteArray expectedFirstResponse = "* LIST () \"/\" \"INBOX\"";
         QCOMPARE(nextResponse(spy).asString(), expectedFirstResponse );
 
-        const QByteArray expectedSecondResponse = "* LIST () \"/\" \"INBOX/foo\" ";
+        const QByteArray expectedSecondResponse = "* LIST () \"/\" \"INBOX/foo\"";
         QCOMPARE(nextResponse(spy).asString(), expectedSecondResponse );
 
         const QByteArray expectedThirdResponse = "1 OK List completed";
