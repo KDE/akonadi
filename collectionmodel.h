@@ -123,30 +123,20 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
 
   private:
     /**
-      Process pending updates.
-     */
-    void processUpdates();
-
-    /**
       Helper function to generate a model index for a given collection reference.
     */
     QModelIndex indexForPath( const QByteArray &path, int column = 0 );
 
+  private slots:
     /**
       Removes a the given collection from the model.
     */
     void collectionRemoved( const QByteArray &path );
 
-  private slots:
     /**
       Notify the model about collection changes.
     */
-    void collectionChanged( const DataReference::List& references );
-
-    /**
-      Notify the model about removed collections.
-    */
-    void collectionRemoved( const DataReference::List& references );
+    void collectionChanged( const QByteArray &path );
 
     /**
       Connected to the collection fetch job.

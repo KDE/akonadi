@@ -21,59 +21,96 @@
 #define PIM_MONITOR_H
 
 #include <libakonadi/job.h>
+#include <QtCore/QObject>
 
 namespace PIM {
 
-/**
-  Monitors a set of objects that match a given query and emits signals if some
-  of these objects are changed or removed or new messages that match the query
-  are added to the storage backend.
+class MonitorPrivate;
 
-  A monitor job will run until it is killed or deleted, the done() signal will
-  only be emitted in case of a fatal error.
+/**
+  Monitors an Item or Collection for changes and emits signals if some
+  of these objects are changed or removed or new ones are added to the storage
+  backend.
+
+  @todo: support un-monitoring
+  @todo: distinguish between monitoring collection properties and collection content.
 */
-class Monitor : public Job
+class AKONADI_EXPORT Monitor : public QObject
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a new monitor job.
-      @param query This query defines which messages are monitored.
+      Creates a new monitor.
       @param parent The parent object.
     */
-    Monitor( const QString &query, QObject *parent = 0 );
+    Monitor( QObject *parent = 0 );
 
     /**
-      Destroys this monitor job.
+      Destroys this monitor.
     */
     virtual ~Monitor();
 
+    /**
+      Monitors the specified collection for changes.
+      @param path The collection path.
+    */
+    void monitorCollection( const QByteArray &path );
+
+    /**
+      Monitors the specified PIM Item for changes.
+      @param ref The item references.
+    */
+    void monitorItem( const DataReference &ref );
+
   signals:
     /**
-      Emitted if some objects have changed.
-      @param references A list of references of changed objects.
+      Emitted if a monitored object has changed.
+      @param ref Reference of the changed objects.
     */
-    void changed( const DataReference::List &references );
+    void itemChanged( const DataReference &ref );
 
     /**
-      Emitted if some objects that match the query have been added.
-      @param references A list of refereces of added objects.
+      Emitted if a item has been added to a monitored collection.
+      @param ref Reference of the added object.
     */
-    void added( const DataReference::List &references );
+    void itemAdded( const DataReference &ref );
 
     /**
-      Emitted if some objects have been removed.
-      @param references A list of references of removed objects.
+      Emitted if a monitored object has been removed.
+      @param ref Reference of the removed object.
     */
-    void removed( const DataReference::List &references );
+    void itemRemoved( const DataReference &ref);
+
+    /**
+      Emitted if a monitored got a new child collection.
+      @param path The path of the new collection.
+    */
+    void collectionAdded( const QByteArray &path );
+
+    /**
+      Emitted if a monitored collection changed (its properties, not its
+      content).
+      @param path The path of the modified collection.
+    */
+    void collectionChanged( const QByteArray &path );
+
+    /**
+      Emitted if a monitored collection has been removed.
+      @param path The path of the rmeoved collection.
+    */
+    void collectionRemoved( const QByteArray &path );
+
+  private slots:
+    void slotItemChanged( const QByteArray &uid, const QByteArray &collection );
+    void slotItemAdded( const QByteArray &uid, const QByteArray &collection );
+    void slotItemRemoved( const QByteArray &uid, const QByteArray &collection );
+    void slotCollectionAdded( const QByteArray &path );
+    void slotCollectionChanged( const QByteArray &path );
+    void slotCollectionRemoved( const QByteArray &path );
 
   private:
-    virtual void doStart();
-
-  private:
-    class Private;
-    Private* d;
+    MonitorPrivate* d;
 };
 
 }

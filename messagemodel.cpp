@@ -156,13 +156,13 @@ void PIM::MessageModel::listingDone( PIM::Job * job )
 
   // start monitor job
   // TODO error handling
-  d->monitor = new Monitor( "folder=" + d->path );
+  /*d->monitor = new Monitor( "folder=" + d->path );
   connect( d->monitor, SIGNAL( changed( const DataReference::List& ) ),
            SLOT( messagesChanged( const DataReference::List& ) ) );
   connect( d->monitor, SIGNAL( added( const DataReference::List& ) ),
            SLOT( messagesAdded( const DataReference::List& ) ) );
   connect( d->monitor, SIGNAL( removed( const DataReference::List& ) ),
-           SLOT( messagesRemoved( const DataReference::List& ) ) );
+           SLOT( messagesRemoved( const DataReference::List& ) ) );*/
 //   d->monitor->start();
 }
 

@@ -46,9 +46,8 @@ class CollectionModel::Private
     EditType currentEdit;
     Collection *editedCollection;
     QString editOldName;
-//     Monitor* monitor;
+    Monitor* monitor;
 //     CollectionFetchJob *fetchJob;
-//     QQueue<DataReference> updateQueue;
 };
 
 PIM::CollectionModel::CollectionModel( QObject * parent ) :
@@ -66,16 +65,11 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
 //   d->fetchJob = 0;
 
   // monitor collection changes
-  // TODO: handle errors
-  // FIXME: collections don't have uids anymore!
-  /*d->monitor = new Monitor( "mimetype=x-akonadi/collection" );
-  connect( d->monitor, SIGNAL( changed( const DataReference::List& ) ),
-           SLOT( collectionChanged( const DataReference::List& ) ) );
-  connect( d->monitor, SIGNAL( added( const DataReference::List& ) ),
-           SLOT( collectionChanged( const DataReference::List& ) ) );
-  connect( d->monitor, SIGNAL( removed( const DataReference& ) ),
-           SLOT( collectionRemoved( const DataReference::List& ) ) );
-  d->monitor->start();*/
+  d->monitor = new Monitor();
+  d->monitor->monitorCollection( "" );
+  connect( d->monitor, SIGNAL(collectionChanged(QByteArray)), SLOT(collectionChanged(QByteArray)) );
+  connect( d->monitor, SIGNAL(collectionAdded(QByteArray)), SLOT(collectionChanged(QByteArray)) );
+  connect( d->monitor, SIGNAL(collectionRemoved(QByteArray)), SLOT(collectionRemoved(QByteArray)) );
 
   // ### Hack to get the kmail resource folder icons
   KGlobal::instance()->iconLoader()->addAppDir( "kmail" );
@@ -87,10 +81,10 @@ PIM::CollectionModel::~CollectionModel()
   qDeleteAll( d->collections );
   d->collections.clear();
 
-  // FIXME
-/*  delete d->monitor;
+  delete d->monitor;
   d->monitor = 0;
-  delete d->fetchJob;
+  // FIXME
+/*  delete d->fetchJob;
   d->fetchJob = 0;*/
 
   delete d;
@@ -213,21 +207,20 @@ bool PIM::CollectionModel::removeRows( int row, int count, const QModelIndex & p
   return true;
 }
 
-// FIXME
-void PIM::CollectionModel::collectionChanged( const DataReference::List& references )
+void PIM::CollectionModel::collectionChanged( const QByteArray &path )
 {
-/*  // TODO no need to serialize fetch jobs...
-  foreach ( DataReference ref, references )
-    d->updateQueue.enqueue( ref );
-  processUpdates();*/
-}
+  // FIXME: actually, we just need to reload the collection properties...
+  int index = path.lastIndexOf( Collection::delimiter() );
+  QByteArray parent;
+  if ( index > 0 )
+    parent = path.left( index );
+  else
+    parent = Collection::prefix();
 
-// FIXME
-void PIM::CollectionModel::collectionRemoved( const DataReference::List& references )
-{
-//   foreach ( DataReference ref, references ) {
-//     collectionRemoved( ref );
-//   }
+  qDebug() << "Collection " << path << " changed - re-listing parent: " << parent;
+  CollectionListJob *job = new CollectionListJob( parent, false, this );
+  connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
+  job->start();
 }
 
 void PIM::CollectionModel::collectionRemoved( const QByteArray &path )
@@ -283,20 +276,7 @@ void PIM::CollectionModel::fetchDone( Job * job )
   }
 
   job->deleteLater();
-  d->fetchJob = 0;
-  processUpdates();*/
-}
-
-void PIM::CollectionModel::processUpdates()
-{
-/*  if ( d->fetchJob )
-    return;
-  if ( d->updateQueue.isEmpty() )
-    return;
-
-  d->fetchJob = new CollectionFetchJob( d->updateQueue.dequeue() );
-  connect( d->fetchJob, SIGNAL( done( PIM::Job* ) ), SLOT( fetchDone( PIM::Job* ) ) );
-  d->fetchJob->start();*/
+  d->fetchJob = 0;*/
 }
 
 QModelIndex PIM::CollectionModel::indexForPath( const QByteArray &path, int column )
@@ -339,6 +319,7 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
     }
 
     // start recursive fetch jobs for resources (which we can't list recursivly)
+    // FIXME: we only need this during the intial list!
     foreach( const Collection *col,  collections ) {
       if ( col->type() == Collection::Resource || col->type() == Collection::VirtualParent ) {
         CollectionListJob *cljob = new CollectionListJob( col->prefix() + col->path(), true, this );
