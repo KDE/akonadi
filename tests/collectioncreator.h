@@ -17,47 +17,25 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTIONCREATEJOB_H
-#define PIM_COLLECTIONCREATEJOB_H
+#ifndef COLLECTIONCREATOR_H
+#define COLLECTIONCREATOR_H
 
+#include <QtCore/QObject>
+#include <QtCore/QTime>
 #include <libakonadi/job.h>
+#include <libakonadi/jobqueue.h>
 
-namespace PIM {
-
-class CollectionCreateJobPrivate;
-
-/**
-  Job to create collections.
-*/
-class AKONADI_EXPORT CollectionCreateJob : public Job
+class CollectionCreator : public QObject
 {
   Q_OBJECT
   public:
-    /**
-      Create a new CollectionCreateJob job.
-      @param path The unique IMAP path of the new collection.
-      @param parent The parent object.
-    */
-    CollectionCreateJob( const QByteArray &path, QObject *parent = 0 );
-
-    /**
-      Destroys this job.
-    */
-    virtual ~CollectionCreateJob();
-
-    /**
-      Returns the path of the collection this job is supposed to create.
-    */
-    QByteArray path() const;
-
-  protected:
-    virtual void doStart();
-    virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
-
+    CollectionCreator();
+  private slots:
+    void done(PIM::Job* job);
   private:
-    CollectionCreateJobPrivate *d;
+    int jobCount;
+    QTime startTime;
+    PIM::JobQueue *queue;
 };
-
-}
 
 #endif

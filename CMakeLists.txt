@@ -13,7 +13,6 @@ include_directories(
 
 set( akonadi_LIB_SRC
 	datarequest.cpp
-	job.cpp
 	query.cpp
 	collection.cpp
 	collectioncreatejob.cpp
@@ -26,6 +25,8 @@ set( akonadi_LIB_SRC
 	imapparser.cpp
 	item.cpp
 	itemappendjob.cpp
+	job.cpp
+	jobqueue.cpp
 	messagecollection.cpp
 	messagecollectionmodel.cpp
 	message.cpp
@@ -47,7 +48,6 @@ install_targets( ${LIB_INSTALL_DIR} akonadi )
 
 install_files( /include/libakonadi FILES
 	datarequest.h
-	job.h
 	query.h
 	collection.h
 	collectioncreatejob.h
@@ -60,6 +60,8 @@ install_files( /include/libakonadi FILES
 	imapparser.h
 	item.h
 	itemappendjob.h
+	job.h
+	jobqueue.h
 	messagecollection.h
 	messagecollectionmodel.h
 	message.h

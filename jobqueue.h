@@ -17,45 +17,58 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTIONCREATEJOB_H
-#define PIM_COLLECTIONCREATEJOB_H
+#ifndef PIM_JOBQUEUE_H
+#define PIM_JOBQUEUE_H
 
 #include <libakonadi/job.h>
 
 namespace PIM {
 
-class CollectionCreateJobPrivate;
+class JobQueuePrivate;
 
 /**
-  Job to create collections.
+  A job queue. All jobs you put in here are executed sequentially. JobQueue can
+  be used as a parent for jobs to share the same connection to the Akonadi
+  backend. Do not start enqueued jobs manually!
 */
-class AKONADI_EXPORT CollectionCreateJob : public Job
+class AKONADI_EXPORT JobQueue : public Job
 {
   Q_OBJECT
   public:
     /**
-      Create a new CollectionCreateJob job.
-      @param path The unique IMAP path of the new collection.
+      Create a new job queue.
       @param parent The parent object.
     */
-    CollectionCreateJob( const QByteArray &path, QObject *parent = 0 );
+    JobQueue( QObject *parent = 0 );
 
     /**
-      Destroys this job.
+      Destroys this object.
     */
-    virtual ~CollectionCreateJob();
+    virtual ~JobQueue();
 
     /**
-      Returns the path of the collection this job is supposed to create.
+      Adds the given job to the queue. Added jobs will be started automatically.
     */
-    QByteArray path() const;
+    void addJob( PIM::Job* job );
+
+    /**
+      Returns true if there are no jobs in the queue.
+    */
+    bool isEmpty() const;
 
   protected:
     virtual void doStart();
-    virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    CollectionCreateJobPrivate *d;
+    // part of the Job API, hide it for JobQueue
+    virtual void start();
+    void startNext();
+
+  private slots:
+    void jobDone( PIM::Job* job );
+
+  private:
+    JobQueuePrivate *d;
 };
 
 }

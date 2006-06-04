@@ -17,50 +17,72 @@
     02110-1301, USA.
 */
 
-#include "collectioncreatejob.h"
+#include "jobqueue.h"
 
 #include <QDebug>
+#include <QQueue>
 
 using namespace PIM;
 
-class PIM::CollectionCreateJobPrivate {
+class PIM::JobQueuePrivate
+{
   public:
-    QByteArray path;
-    QByteArray tag;
+    QQueue<Job*> queue;
+    bool isStarted;
+    bool jobRunning;
 };
 
-PIM::CollectionCreateJob::CollectionCreateJob( const QByteArray & path, QObject * parent ) :
+PIM::JobQueue::JobQueue( QObject * parent ) :
     Job( parent ),
-    d( new CollectionCreateJobPrivate )
+    d( new JobQueuePrivate )
 {
-  d->path = path;
+  d->isStarted = false;
+  d->jobRunning = false;
+  start();
 }
 
-PIM::CollectionCreateJob::~ CollectionCreateJob( )
+PIM::JobQueue::~ JobQueue( )
 {
+  // TODO: what to do about still enqueued jobs?
   delete d;
 }
 
-void PIM::CollectionCreateJob::doStart( )
+void PIM::JobQueue::addJob( PIM::Job * job )
 {
-  d->tag = newTag();
-  writeData( d->tag + " CREATE \"" + d->path + "\"" );
+  d->queue.enqueue( job );
+  startNext();
 }
 
-void PIM::CollectionCreateJob::handleResponse( const QByteArray & tag, const QByteArray & data )
+void PIM::JobQueue::doStart( )
 {
-  if ( tag == d->tag ) {
-    if ( !data.startsWith( "OK" ) )
-      setError( Unknown );
-    emit done( this );
+  d->isStarted = true;
+  startNext();
+}
+
+void PIM::JobQueue::jobDone( PIM::Job * job )
+{
+  Q_UNUSED( job );
+  d->jobRunning = false;
+  startNext();
+}
+
+void PIM::JobQueue::startNext( )
+{
+  if ( !d->isStarted || d->jobRunning || isEmpty() )
     return;
-  }
-  qDebug() << "unhandled response in collection create job: " << tag << data;
+  Job *job = d->queue.dequeue();
+  connect( job, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+  job->start();
 }
 
-QByteArray PIM::CollectionCreateJob::path( ) const
+bool PIM::JobQueue::isEmpty( ) const
 {
-  return d->path;
+  return d->queue.isEmpty();
 }
 
-#include "collectioncreatejob.moc"
+void PIM::JobQueue::start( )
+{
+  Job::start();
+}
+
+#include "jobqueue.moc"
