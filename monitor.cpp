@@ -47,18 +47,7 @@ PIM::Monitor::Monitor( QObject *parent ) :
     QObject( parent ),
     d( new MonitorPrivate() )
 {
-  d->nm = QDBus::sessionBus().findInterface<org::kde::pim::Akonadi::NotificationManager>("org.kde.pim.Akonadi.NotificationManager", "/");
-  if ( !d->nm ) {
-    // TODO: error handling
-    qWarning() << "Unable to connect to notification manager";
-  } else {
-    connect( d->nm, SIGNAL(itemChanged(QByteArray,QByteArray)), SLOT(slotItemChanged(QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemAdded(QByteArray,QByteArray)), SLOT(slotItemAdded(QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemRemoved(QByteArray,QByteArray)), SLOT(slotItemRemoved(QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionChanged(QByteArray)), SLOT(slotCollectionChanged(QByteArray)) );
-    connect( d->nm, SIGNAL(collectionAdded(QByteArray)), SLOT(slotCollectionAdded(QByteArray)) );
-    connect( d->nm, SIGNAL(collectionRemoved(QByteArray)), SLOT(slotCollectionRemoved(QByteArray)) );
-  }
+  connectToNotificationManager();
 }
 
 PIM::Monitor::~Monitor()
@@ -70,12 +59,14 @@ PIM::Monitor::~Monitor()
 void PIM::Monitor::monitorCollection( const QByteArray & path )
 {
   d->collections.append( path );
-  d->nm->monitorCollection( path );
+  if ( connectToNotificationManager() )
+    d->nm->monitorCollection( path );
 }
 
 void PIM::Monitor::monitorItem( const DataReference & ref )
 {
-  d->nm->monitorItem( ref.persistanceID().toLatin1() );
+  if ( connectToNotificationManager() )
+    d->nm->monitorItem( ref.persistanceID().toLatin1() );
 }
 
 void PIM::Monitor::slotItemChanged( const QByteArray & uid, const QByteArray & collection )
@@ -113,6 +104,27 @@ void PIM::Monitor::slotCollectionRemoved( const QByteArray & path )
 {
   if ( d->isCollectionMonitored( path ) )
     emit collectionRemoved( path );
+}
+
+bool PIM::Monitor::connectToNotificationManager( )
+{
+  if ( !d->nm )
+    d->nm = QDBus::sessionBus().findInterface<org::kde::pim::Akonadi::NotificationManager>("org.kde.pim.Akonadi.NotificationManager", "/");
+  else
+    return true;
+
+  if ( !d->nm ) {
+    qWarning() << "Unable to connect to notification manager";
+  } else {
+    connect( d->nm, SIGNAL(itemChanged(QByteArray,QByteArray)), SLOT(slotItemChanged(QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemAdded(QByteArray,QByteArray)), SLOT(slotItemAdded(QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemRemoved(QByteArray,QByteArray)), SLOT(slotItemRemoved(QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionChanged(QByteArray)), SLOT(slotCollectionChanged(QByteArray)) );
+    connect( d->nm, SIGNAL(collectionAdded(QByteArray)), SLOT(slotCollectionAdded(QByteArray)) );
+    connect( d->nm, SIGNAL(collectionRemoved(QByteArray)), SLOT(slotCollectionRemoved(QByteArray)) );
+    return true;
+  }
+  return false;
 }
 
 #include "monitor.moc"

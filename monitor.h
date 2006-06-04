@@ -101,6 +101,9 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void collectionRemoved( const QByteArray &path );
 
+  private:
+    bool connectToNotificationManager();
+
   private slots:
     void slotItemChanged( const QByteArray &uid, const QByteArray &collection );
     void slotItemAdded( const QByteArray &uid, const QByteArray &collection );
