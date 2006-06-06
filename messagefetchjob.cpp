@@ -151,12 +151,14 @@ void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteAr
           // from
           QList<QByteArray> addrList;
           ImapParser::parseParentheziedList( env[2], addrList );
-          d->parseAddrField( addrList, mime->from() );
+          if ( !addrList.isEmpty() )
+            d->parseAddrField( addrList, mime->from() );
           // sender
           // not supported by kmime, skipp it
           // reply-to
           ImapParser::parseParentheziedList( env[4], addrList );
-          d->parseAddrField( addrList, mime->replyTo() );
+          if ( !addrList.isEmpty() )
+            d->parseAddrField( addrList, mime->replyTo() );
           // to
           ImapParser::parseParentheziedList( env[5], addrList );
           if ( !addrList.isEmpty() )
