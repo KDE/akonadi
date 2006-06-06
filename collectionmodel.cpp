@@ -19,7 +19,7 @@
 
 #include "collection.h"
 #include "collectioncreatejob.h"
-#include "collectionfetchjob.h"
+#include "collectionstatusjob.h"
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
 #include "collectionrenamejob.h"
@@ -47,7 +47,6 @@ class CollectionModel::Private
     Collection *editedCollection;
     QString editOldName;
     Monitor* monitor;
-//     CollectionFetchJob *fetchJob;
 };
 
 PIM::CollectionModel::CollectionModel( QObject * parent ) :
@@ -61,8 +60,6 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
   CollectionListJob *job = new CollectionListJob( Collection::prefix(), false, this );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
   job->start();
-
-//   d->fetchJob = 0;
 
   // monitor collection changes
   d->monitor = new Monitor();
@@ -83,9 +80,6 @@ PIM::CollectionModel::~CollectionModel()
 
   delete d->monitor;
   d->monitor = 0;
-  // FIXME
-/*  delete d->fetchJob;
-  d->fetchJob = 0;*/
 
   delete d;
   d = 0;
@@ -110,7 +104,7 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
       return SmallIcon( "find" );
     if ( col->type() == Collection::Virtual )
       return SmallIcon( "folder_green" );
-    QStringList content = col->contentTypes();
+    QList<QByteArray> content = col->contentTypes();
     if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
       if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
         return SmallIcon( "kmgroupware_folder_contacts" );
@@ -237,46 +231,28 @@ void PIM::CollectionModel::collectionRemoved( const QByteArray &path )
   }
 }
 
-// FIXME
-void PIM::CollectionModel::fetchDone( Job * job )
+void PIM::CollectionModel::updateDone( Job * job )
 {
-/*  if ( job->error() || !d->fetchJob->collection() ) {
+  if ( job->error() ) {
     // TODO: handle job errors
-    kWarning() << k_funcinfo << "Job error or collection not available!" << endl;
+    kWarning() << k_funcinfo << "Job error: " << job->errorText() << endl;
   } else {
-    Collection *col = d->fetchJob->collection();
-    Collection *oldCol = d->collections.value( col->reference() );
+    CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
+    QByteArray path = csjob->path();
+    if ( !d->collections.contains( path ) )
+      kWarning() << k_funcinfo << "Got status response for non-existing collection: " << path << endl;
+    else {
+      Collection *col = d->collections.value( path );
+      foreach ( CollectionAttribute* attr, csjob->attributes() )
+        col->addAttribute( attr );
 
-    // update existing collection
-    if ( oldCol ) {
-      if ( oldCol->parent() == col->parent() ) {
-        // TODO multi-column support
-        QModelIndex oldIndex = indexForReference( oldCol->reference() );
-        d->collections.insert( col->reference(), col );
-        QModelIndex index = indexForReference( col->reference() );
-        changePersistentIndex( oldIndex, index );
-        emit dataChanged( index, index );
-        delete oldCol;
-      } else {
-        // parent changed, ie. we need to remove and add
-        collectionRemoved( col->reference() );
-        oldCol = 0; // deleted above
-      }
+      QModelIndex startIndex = indexForPath( path );
+      QModelIndex endIndex = indexForPath( path, columnCount( parent( startIndex ) ) );
+      emit dataChanged( startIndex, endIndex );
     }
-
-    // add new collection
-    if ( !oldCol && col ) {
-      d->collections.insert( col->reference(), col );
-      QModelIndex parentIndex = indexForReference( col->parent() );
-      beginInsertRows( parentIndex, rowCount( parentIndex ), rowCount( parentIndex ) );
-      d->childCollections[ col->parent() ].append( col->reference() );
-      endInsertRows();
-    }
-
   }
 
   job->deleteLater();
-  d->fetchJob = 0;*/
 }
 
 QModelIndex PIM::CollectionModel::indexForPath( const QByteArray &path, int column )
@@ -318,7 +294,7 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
       }
     }
 
-    // start recursive fetch jobs for resources (which we can't list recursivly)
+    // start recursive list jobs for resources (which we can't list recursivly)
     // FIXME: we only need this during the intial list!
     foreach( const Collection *col,  collections ) {
       if ( col->type() == Collection::Resource || col->type() == Collection::VirtualParent ) {

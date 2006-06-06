@@ -20,6 +20,7 @@
 #ifndef PIM_COLLECTION_H
 #define PIM_COLLECTION_H
 
+#include <libakonadi/collectionattribute.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
@@ -53,13 +54,6 @@ class AKONADI_EXPORT Collection
       @param path The unique IMAP path of this collection.
     */
     Collection( const QByteArray &path );
-
-    /**
-      Copy constructor.
-
-      @param other The collection to copy.
-    */
-    Collection( const Collection &other );
 
     /**
       Destroys this collection.
@@ -99,12 +93,12 @@ class AKONADI_EXPORT Collection
       e.g. message/rfc822, x-akonadi/collection for a mail folder that
       supports sub-folders.
     */
-    QStringList contentTypes() const;
+    QList<QByteArray> contentTypes() const;
 
     /**
       Sets the list of possible content mimetypes.
     */
-    void setContentTypes( const QStringList &types );
+    void setContentTypes( const QList<QByteArray> &types );
 
     /**
       Returns the IMAP path to the parent collection.
@@ -115,6 +109,42 @@ class AKONADI_EXPORT Collection
       Sets the path of the parent collection.
     */
     void setParent( const QByteArray &parent );
+
+    /**
+      Adds a collection attribute. An already existing attribute of the same
+      type is deleted.
+      @param attr The new attribute. The collection takes the ownership of this
+      object.
+    */
+    void addAttribute( CollectionAttribute *attr );
+
+    /**
+      Returns true if the collection has the speciefied attribute.
+      @param type The attribute type.
+    */
+    bool hasAttribute( const QByteArray &type ) const;
+
+    /**
+      Returns the attribute of the given type if available, 0 otherwise.
+      @param type The attribute type.
+    */
+    CollectionAttribute* attribute( const QByteArray &type ) const;
+
+    /**
+      Returns the attribute of the requested type or 0 if not available.
+      @param create Creates the attribute if it doesn't exist.
+    */
+    template <typename T> inline T* attribute( bool create = false )
+    {
+      T dummy;
+      if ( hasAttribute( dummy.type() ) )
+        return static_cast<T*>( attribute( dummy.type() ) );
+      if ( !create )
+        return 0;
+      T* attr = new T();
+      addAttribute( attr );
+      return attr;
+    }
 
     /**
       Returns the collection path delimiter.

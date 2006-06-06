@@ -17,52 +17,54 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTIONFETCHJOB_H
-#define PIM_COLLECTIONFETCHJOB_H
+#ifndef PIM_COLLECTIONSTATUSJOB_H
+#define PIM_COLLECTIONSTATUSJOB_H
 
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
 namespace PIM {
 
-class Collection;
+class CollectionAttribute;
+class CollectionStatusJobPrivate;
 
 /**
-  Fetches a Collection object for a given DataReference from the storage
-  service.
-
-  @todo Derive from DataRequest instead from Job and support fetching lists?
+  Fetches collection attributes for the given collection path from the storage
+  backend.
 */
-class AKONADI_EXPORT CollectionFetchJob : public Job
+class AKONADI_EXPORT CollectionStatusJob : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a new collection fetch job.
-      @param ref The collection to fetch.
+      Creates a new collection status job.
+      @param path The collection path.
       @param parent The parent object.
     */
-    CollectionFetchJob( const DataReference &ref, QObject *parent = 0 );
+    CollectionStatusJob( const QByteArray &path, QObject *parent = 0 );
 
     /**
       Destroys this job.
     */
-    virtual ~CollectionFetchJob();
+    virtual ~CollectionStatusJob();
 
     /**
-      Returns the fetched collection, 0 if the collection is not (yet) available
-      or if there has been an error.
-      It is your responsibility to delete this collection object.
+      Returns the fetched collection attributes.
     */
-    Collection* collection() const;
+    QList<CollectionAttribute*> attributes() const;
 
-  private slots:
-    // ### just for testing ###
-    void emitDone();
+    /**
+      Returns the path of the corresponding collection.
+    */
+    QByteArray path() const;
+
+  protected:
+    virtual void doStart();
+    virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    void doStart();
+    CollectionStatusJobPrivate *d;
 };
 
 }

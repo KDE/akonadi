@@ -19,6 +19,7 @@
 
 #include "collection.h"
 
+#include <QHash>
 #include <QString>
 #include <QStringList>
 
@@ -31,7 +32,7 @@ class Collection::Private
     QByteArray parent;
     QString name;
     Type type;
-    QStringList contentTypes;
+    QHash<QByteArray, CollectionAttribute*> attributes;
 };
 
 PIM::Collection::Collection( const QByteArray &path ) :
@@ -41,18 +42,9 @@ PIM::Collection::Collection( const QByteArray &path ) :
   d->type = Unknown;
 }
 
-PIM::Collection::Collection( const Collection &other ) :
-    d( new Collection::Private() )
-{
-  d->name = other.name();
-  d->path = other.path();
-  d->parent = other.parent();
-  d->type = other.type();
-  d->contentTypes = other.contentTypes();
-}
-
 PIM::Collection::~Collection( )
 {
+  qDeleteAll( d->attributes );
   delete d;
   d = 0;
 }
@@ -87,14 +79,18 @@ void PIM::Collection::setType( Type type )
   d->type = type;
 }
 
-QStringList PIM::Collection::contentTypes( ) const
+QList<QByteArray> PIM::Collection::contentTypes() const
 {
-  return d->contentTypes;
+  CollectionContentTypeAttribute *attr = const_cast<Collection*>( this )->attribute<CollectionContentTypeAttribute>();
+  if ( attr )
+    return attr->contentTypes();
+  return QList<QByteArray>();
 }
 
-void PIM::Collection::setContentTypes( const QStringList & types )
+void PIM::Collection::setContentTypes( const QList<QByteArray> & types )
 {
-  d->contentTypes = types;
+  CollectionContentTypeAttribute* attr = attribute<CollectionContentTypeAttribute>( true );
+  attr->setContentTypes( types );
 }
 
 QByteArray PIM::Collection::parent( ) const
@@ -130,4 +126,23 @@ QByteArray PIM::Collection::prefix()
 QByteArray PIM::Collection::collectionMimeType( )
 {
   return QByteArray( "directory/inode" );
+}
+
+void PIM::Collection::addAttribute( CollectionAttribute * attr )
+{
+  if ( d->attributes.contains( attr->type() ) )
+    delete d->attributes.take( attr->type() );
+  d->attributes.insert( attr->type(), attr );
+}
+
+CollectionAttribute * PIM::Collection::attribute( const QByteArray & type ) const
+{
+  if ( d->attributes.contains( type ) )
+    return d->attributes.value( type );
+  return 0;
+}
+
+bool PIM::Collection::hasAttribute( const QByteArray & type ) const
+{
+  return d->attributes.contains( type );
 }

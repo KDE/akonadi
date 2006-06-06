@@ -139,9 +139,9 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     void collectionChanged( const QByteArray &path );
 
     /**
-      Connected to the collection fetch job.
+      Connected to the collection status job.
     */
-    void fetchDone( PIM::Job *job );
+    void updateDone( PIM::Job *job );
 
     /**
       Connected to the list jobs.

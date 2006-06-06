@@ -15,12 +15,13 @@ set( akonadi_LIB_SRC
 	datarequest.cpp
 	query.cpp
 	collection.cpp
+	collectionattribute.cpp
 	collectioncreatejob.cpp
 	collectionlistjob.cpp
 	collectionmodel.cpp
-	collectionfetchjob.cpp
 	collectionrenamejob.cpp
 	collectionselectjob.cpp
+	collectionstatusjob.cpp
 	collectionview.cpp
 	imapparser.cpp
 	item.cpp
@@ -50,12 +51,13 @@ install_files( /include/libakonadi FILES
 	datarequest.h
 	query.h
 	collection.h
+	collectionattribute.h
 	collectioncreatejob.h
 	collectionlistjob.h
 	collectionmodel.h
-	collectionfetchjob.h
 	collectionrenamejob.h
 	collectionselectjob.h
+	collectionstatusjob.h
 	collectionview.h
 	imapparser.h
 	item.h

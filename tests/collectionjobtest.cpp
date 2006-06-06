@@ -80,7 +80,7 @@ void CollectionJobTest::testFolderList( )
   // check if everything is there
   QCOMPARE( list.count(), 4 );
   Collection *col;
-  QStringList contentTypes;
+  QList<QByteArray> contentTypes;
 
   col = findCol( list, "res1/foo" );
   QVERIFY( col != 0 );

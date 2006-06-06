@@ -81,7 +81,7 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
     current = ImapParser::parseString( data, delim, current );
     Q_ASSERT( delim.length() == 1 );
 
-    // collection name 
+    // collection name
     QByteArray folderName;
     current = ImapParser::parseString( data, folderName, current );
 
@@ -107,7 +107,7 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
     else
       col->setType( Collection::Folder );
 
-    QStringList contentTypes;
+    QList<QByteArray> contentTypes;
     QByteArray mimetypes;
     foreach ( QByteArray ba, attributes ) {
       if ( ba.startsWith( "\\MimeTypes" ) ) {
@@ -118,9 +118,7 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
     if ( !mimetypes.isEmpty() ) {
       int begin = mimetypes.indexOf( '[' );
       int end = mimetypes.lastIndexOf( ']' );
-      QList<QByteArray> l = mimetypes.mid( begin + 1, end - begin - 1 ).split( ',' );
-      foreach ( QByteArray type, l )
-        contentTypes << QString::fromLatin1( type );
+      contentTypes = mimetypes.mid( begin + 1, end - begin - 1 ).split( ',' );
     }
     col->setContentTypes( contentTypes );
 
