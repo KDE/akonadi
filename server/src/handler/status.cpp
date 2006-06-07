@@ -105,7 +105,7 @@ bool Status::handleLine( const QByteArray& line )
     }
 
     response.setUntagged();
-    response.setString( "STATUS " + mailbox + '(' + statusResponse + ')' );
+    response.setString( "STATUS " + mailbox + " (" + statusResponse + ')' );
     emit responseAvailable( response );
 
     response.setSuccess();
