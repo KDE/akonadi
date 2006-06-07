@@ -17,11 +17,7 @@
     02110-1301, USA.
 */
 
-#include "messagecollection.h"
 #include "collectionbrowser.h"
-#include "collectionlistjob.h"
-#include "collectionmodel.h"
-#define private public
 #include "messagebrowser.h"
 #include "messagecollectionmodel.h"
 
@@ -31,116 +27,17 @@
 
 #include <QDebug>
 #include <QHash>
-#include <QSortFilterProxyModel>
-#include <QTimer>
-#include <QTreeView>
 
 #include <stdlib.h>
 
 using namespace PIM;
 
-extern QHash<DataReference, Collection*> global_collection_map;
-static int id = 0;
-
-static void createCollections( const DataReference &parent, int rec )
-{
-/*  if ( rec <= 0 )
-    return;
-  int count = rand() % 10;
-  for ( int i = 0; i < count; ++i ) {
-    DataReference ref( QString::number( id++ ), QString() );
-    Collection *col;
-    int r = rand() % 6;
-    if ( r <= 3 )
-      col = new Collection( ref );
-    else {
-      MessageCollection *mcol = new MessageCollection( ref );
-      mcol->setCount( 2000 );
-      mcol->setUnreadCount( r % 2 );
-      col = mcol;
-    }
-    col->setParent( parent );
-    col->setName( ref.persistanceID() );
-    QStringList content;
-    switch ( r ) {
-      case 0:
-        break;
-      case 1:
-        content << "text/x-vcard"; break;
-      case 2:
-        content << "akonadi/event"; break;
-      case 3:
-        content << "akonadi/task"; break;
-      default:
-        content << "message/rfc822";
-    }
-    col->setContentTypes( content );
-    global_collection_map.insert( ref, col );
-    if ( parent.isNull() )
-      col->setType( Collection::Resource );
-    createCollections( ref, rec - ( rand() % 3 ) - 1 );
-  }*/
-}
-
-
 CollectionBrowser::CollectionBrowser() : CollectionView()
 {
-  // use some dummy collections for now
-/*  createCollections( DataReference(), 8 );
-  foreach ( Collection *col, global_collection_map ) {
-    Collection *colCopy;
-    if ( dynamic_cast<MessageCollection*>( col ) )
-      colCopy = new MessageCollection( *static_cast<MessageCollection*>( col ) );
-    else
-      colCopy = new Collection( *col );
-    collections.append( colCopy );
-  }*/
   model = new MessageCollectionModel( this );
   setModel( model );
 
   connect( this, SIGNAL(activated(QModelIndex)), SLOT(slotItemActivated(QModelIndex)) );
-
-  // emulate the monitor job
-  /*QTimer *t = new QTimer( this );
-  connect( t, SIGNAL( timeout() ), SLOT( slotEmitChanged() ) );
-  t->start( 1000 );*/
-//   t->setSingleShot( true );
-}
-
-void CollectionBrowser::slotEmitChanged()
-{
-/*  // update
-  int id = rand() % 1000;
-  DataReference ref( QString::number( id ), QString() );
-  Collection *col = global_collection_map.value( ref );
-  if ( col ) {
-    if ( rand() % 10 ) {
-      col->setName( col->name() + " (changed)" );
-      kDebug() << k_funcinfo << "update collection " << ref.persistanceID() << " parent: " << col->parent().persistanceID() << endl;
-    } else {
-      col->setParent( DataReference( QString::number( rand() % 1000 ), QString() ) );
-      col->setName( col->name() + " (reparented)" );
-      kDebug() << k_funcinfo << "reparenting collection " << ref.persistanceID() << " to new parent " << col->parent().persistanceID() << endl;
-    }
-    model->collectionChanged( DataReference::List() << ref );
-  }
-  // delete
-  id = rand() % 1000;
-  id += 500;
-  ref = DataReference( QString::number( id ), QString() );
-  global_collection_map.remove( ref );
-  kDebug() << k_funcinfo << "remove collection " << ref.persistanceID() << endl;
-  model->collectionRemoved( ref );
-  // add
-  id = rand() % 1000;
-  id += 10000;
-  ref = DataReference( QString::number( id ), QString() );
-  col = new Collection( ref );
-  col->setParent( DataReference( QString::number( rand() % 1000 ), QString() ) );
-  col->setName( ref.persistanceID() + " (new)" );
-  global_collection_map.insert( ref, col );
-  kDebug() << k_funcinfo << "add collection " << ref.persistanceID() << " parent: " << col->parent().persistanceID() << endl;
-  model->collectionChanged( DataReference::List() << ref );*/
 }
 
 void PIM::CollectionBrowser::slotItemActivated( const QModelIndex & index )

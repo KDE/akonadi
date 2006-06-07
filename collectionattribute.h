@@ -32,6 +32,8 @@ namespace PIM {
 class CollectionAttribute
 {
   public:
+    typedef QList<CollectionAttribute*> List;
+
     /**
       Returns the attribute name of this collection.
     */

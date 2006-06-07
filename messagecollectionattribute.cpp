@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
-#include "messagecollection.h"
+#include "messagecollectionattribute.h"
 
 using namespace PIM;
 
-class PIM::MessageCollection::Private
+class PIM::MessageCollectionAttribute::Private
 {
   public:
     int count;
@@ -29,44 +29,41 @@ class PIM::MessageCollection::Private
 };
 
 
-PIM::MessageCollection::MessageCollection( const QByteArray &path ) :
-    Collection( path ),
+PIM::MessageCollectionAttribute::MessageCollectionAttribute() :
+    CollectionAttribute(),
     d( new Private() )
 {
   d->count = -1;
   d->unreadCount = -1;
 }
 
-PIM::MessageCollection::MessageCollection( const MessageCollection & other ) :
-    Collection( other ),
-    d( new Private() )
-{
-  d->count = other.count();
-  d->unreadCount = other.unreadCount();
-}
-
-PIM::MessageCollection::~MessageCollection()
+PIM::MessageCollectionAttribute::~MessageCollectionAttribute()
 {
   delete d;
   d = 0;
 }
 
-int PIM::MessageCollection::count( ) const
+int PIM::MessageCollectionAttribute::count( ) const
 {
   return d->count;
 }
 
-void PIM::MessageCollection::setCount( int count )
+void PIM::MessageCollectionAttribute::setCount( int count )
 {
   d->count = count;
 }
 
-int PIM::MessageCollection::unreadCount( ) const
+int PIM::MessageCollectionAttribute::unreadCount( ) const
 {
   return d->unreadCount;
 }
 
-void PIM::MessageCollection::setUnreadCount( int count )
+void PIM::MessageCollectionAttribute::setUnreadCount( int count )
 {
   d->unreadCount = count;
+}
+
+QByteArray PIM::MessageCollectionAttribute::type( ) const
+{
+  return QByteArray( "MessageCollection" );
 }

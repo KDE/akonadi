@@ -292,6 +292,10 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
         d->childCollections[ col->parent() ].append( col->path() );
         endInsertRows();
       }
+      // ### test stuff: start a status job for every collection
+      CollectionStatusJob* csjob = new CollectionStatusJob( col->path() );
+      connect( csjob, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
+      csjob->start();
     }
 
     // start recursive list jobs for resources (which we can't list recursivly)

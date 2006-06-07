@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "messagecollection.h"
+#include "messagecollectionattribute.h"
 #include "messagecollectionmodel.h"
 
 #include <kdebug.h>
@@ -40,13 +40,14 @@ int PIM::MessageCollectionModel::columnCount( const QModelIndex & parent ) const
 
 QVariant PIM::MessageCollectionModel::data( const QModelIndex & index, int role ) const
 {
-  MessageCollection *msgcol = dynamic_cast<MessageCollection*>( static_cast<Collection*>( index.internalPointer() ) );
+  Collection *col = static_cast<Collection*>( index.internalPointer() );
+  MessageCollectionAttribute *attr = col->attribute<MessageCollectionAttribute>();
 
-  if ( role == Qt::DisplayRole && msgcol && ( index.column() == 1 || index.column() == 2 ) ) {
+  if ( role == Qt::DisplayRole && attr && ( index.column() == 1 || index.column() == 2 ) ) {
     int value = -1;
     switch ( index.column() ) {
-      case 1: value = msgcol->unreadCount(); break;
-      case 2: value = msgcol->count(); break;
+      case 1: value = attr->unreadCount(); break;
+      case 2: value = attr->count(); break;
     }
     if ( value < 0 )
       return QString();
@@ -60,7 +61,7 @@ QVariant PIM::MessageCollectionModel::data( const QModelIndex & index, int role 
     return Qt::AlignRight;
 
   // ### that's wrong, we'll need a custom delegate anyway
-  if ( role == Qt::FontRole && msgcol && msgcol->unreadCount() > 0 ) {
+  if ( role == Qt::FontRole && attr && attr->unreadCount() > 0 ) {
     QFont f;
     f.setBold( true );
     return f;

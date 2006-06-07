@@ -28,7 +28,7 @@ set( akonadi_LIB_SRC
 	itemappendjob.cpp
 	job.cpp
 	jobqueue.cpp
-	messagecollection.cpp
+	messagecollectionattribute.cpp
 	messagecollectionmodel.cpp
 	message.cpp
 	messagefetchjob.cpp
@@ -64,7 +64,7 @@ install_files( /include/libakonadi FILES
 	itemappendjob.h
 	job.h
 	jobqueue.h
-	messagecollection.h
+	messagecollectionattribute.h
 	messagecollectionmodel.h
 	message.h
 	messagefetchjob.h

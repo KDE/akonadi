@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGECOLLECTION_H
-#define PIM_MESSAGECOLLECTION_H
+#ifndef PIM_MESSAGECOLLECTIONATTRIBUTE_H
+#define PIM_MESSAGECOLLECTIONATTRIBUTE_H
 
 #include <libakonadi/collection.h>
 #include <kdepim_export.h>
@@ -28,27 +28,18 @@ namespace PIM {
 /**
   A collection of messages, eg. emails or news articles.
 */
-class AKONADI_EXPORT MessageCollection : public Collection
+class AKONADI_EXPORT MessageCollectionAttribute : public CollectionAttribute
 {
   public:
     /**
-      Create a new collection.
-
-      @param path The unique IMAP path of this collection.
+      Create a new message collection attribute.
      */
-    MessageCollection( const QByteArray &path );
+    MessageCollectionAttribute();
 
     /**
-      Copy constructor.
-
-      @param other The MessageCollection to copy.
+      Destroys this collection attribute.
     */
-    MessageCollection( const MessageCollection &other );
-
-    /**
-      Destroys this collection.
-    */
-    virtual ~MessageCollection();
+    virtual ~MessageCollectionAttribute();
 
     /**
       Returns the number of objects in this collection.
@@ -71,6 +62,8 @@ class AKONADI_EXPORT MessageCollection : public Collection
       Sets the number of unread messages in this collection.
     */
     void setUnreadCount( int count );
+
+    virtual QByteArray type() const;
 
   private:
     class Private;

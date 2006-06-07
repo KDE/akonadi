@@ -19,6 +19,8 @@
 
 #include "collectionattribute.h"
 #include "collectionstatusjob.h"
+#include "messagecollectionattribute.h"
+#include "imapparser.h"
 
 #include <QDebug>
 
@@ -28,7 +30,7 @@ class PIM::CollectionStatusJobPrivate
 {
   public:
     QByteArray path;
-    QList<CollectionAttribute*> attributes;
+    CollectionAttribute::List attributes;
     QByteArray tag;
 };
 
@@ -64,7 +66,28 @@ void PIM::CollectionStatusJob::handleResponse( const QByteArray & tag, const QBy
     return;
   }
   if ( tag == "*" ) {
-
+    QByteArray token;
+    int current = ImapParser::parseString( data, token );
+    if ( token == "STATUS" ) {
+      // folder path
+      current = ImapParser::parseString( data, token, current );
+      // result list
+      QList<QByteArray> list;
+      current = ImapParser::parseParentheziedList( data, list, current );
+      MessageCollectionAttribute *attr = new MessageCollectionAttribute();
+      for ( int i = 0; i < list.count() - 1; i += 2 ) {
+        if ( list[i] == "MESSAGES" ) {
+          attr->setCount( list[i+1].toInt() );
+        }
+        else if ( list[i] == "UNSEEN" ) {
+          attr->setUnreadCount( list[i+1].toInt() );
+        } else {
+          qDebug() << "unknown STATUS response: " << list[i];
+        }
+      }
+      d->attributes.append( attr );
+      return;
+    }
   }
   qDebug() << "unhandled response in collection status job: " << tag << data;
 }
