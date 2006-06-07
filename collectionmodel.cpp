@@ -23,6 +23,7 @@
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
 #include "collectionrenamejob.h"
+#include "jobqueue.h"
 #include "monitor.h"
 
 #include <kdebug.h>
@@ -47,6 +48,8 @@ class CollectionModel::Private
     Collection *editedCollection;
     QString editOldName;
     Monitor* monitor;
+    JobQueue *queue;
+    bool initialListing;
 };
 
 PIM::CollectionModel::CollectionModel( QObject * parent ) :
@@ -55,11 +58,14 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
 {
   d->currentEdit = Private::None;
   d->editedCollection = 0;
+  d->initialListing = true;
+
+  d->queue = new JobQueue( this );
 
   // start a list job
-  CollectionListJob *job = new CollectionListJob( Collection::prefix(), false, this );
+  CollectionListJob *job = new CollectionListJob( Collection::prefix(), false, d->queue );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
-  job->start();
+  d->queue->addJob( job );
 
   // monitor collection changes
   d->monitor = new Monitor();
@@ -203,18 +209,25 @@ bool PIM::CollectionModel::removeRows( int row, int count, const QModelIndex & p
 
 void PIM::CollectionModel::collectionChanged( const QByteArray &path )
 {
-  // FIXME: actually, we just need to reload the collection properties...
-  int index = path.lastIndexOf( Collection::delimiter() );
-  QByteArray parent;
-  if ( index > 0 )
-    parent = path.left( index );
-  else
-    parent = Collection::prefix();
+  if ( d->collections.contains( path ) ) {
+    // update
+    CollectionStatusJob *job = new CollectionStatusJob( path, d->queue );
+    connect( job, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
+    d->queue->addJob( job );
+  } else {
+    // new collection
+    int index = path.lastIndexOf( Collection::delimiter() );
+    QByteArray parent;
+    if ( index > 0 )
+      parent = path.left( index );
+    else
+      parent = Collection::prefix();
 
-  qDebug() << "Collection " << path << " changed - re-listing parent: " << parent;
-  CollectionListJob *job = new CollectionListJob( parent, false, this );
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
-  job->start();
+    qDebug() << "Collection " << path << " changed - re-listing parent: " << parent;
+    CollectionListJob *job = new CollectionListJob( parent, false, d->queue );
+    connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
+    d->queue->addJob( job );
+  }
 }
 
 void PIM::CollectionModel::collectionRemoved( const QByteArray &path )
@@ -292,19 +305,25 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
         d->childCollections[ col->parent() ].append( col->path() );
         endInsertRows();
       }
-      // ### test stuff: start a status job for every collection
-      CollectionStatusJob* csjob = new CollectionStatusJob( col->path() );
-      connect( csjob, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
-      csjob->start();
+
+      // start a status job for every collection to get message counts, etc.
+      // ### do we need this for all collections?
+      if ( col->type() == Collection::Folder || col->type() == Collection::Virtual ) {
+        CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->queue );
+        connect( csjob, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
+        d->queue->addJob( csjob );
+      }
     }
 
-    // start recursive list jobs for resources (which we can't list recursivly)
-    // FIXME: we only need this during the intial list!
-    foreach( const Collection *col,  collections ) {
-      if ( col->type() == Collection::Resource || col->type() == Collection::VirtualParent ) {
-        CollectionListJob *cljob = new CollectionListJob( col->prefix() + col->path(), true, this );
-        connect( cljob, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
-        cljob->start();
+    // start recursive list jobs for resources (which we can't list recursivly) on initial listing
+    if ( d->initialListing ) {
+      d->initialListing = false;
+      foreach( const Collection *col,  collections ) {
+        if ( col->type() == Collection::Resource || col->type() == Collection::VirtualParent ) {
+          CollectionListJob *cljob = new CollectionListJob( col->prefix() + col->path(), true, d->queue );
+          connect( cljob, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
+          d->queue->addJob( cljob );
+        }
       }
     }
   }

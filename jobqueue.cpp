@@ -70,6 +70,7 @@ void PIM::JobQueue::startNext( )
 {
   if ( !d->isStarted || d->jobRunning || isEmpty() )
     return;
+  d->jobRunning = true;
   Job *job = d->queue.dequeue();
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
   job->start();

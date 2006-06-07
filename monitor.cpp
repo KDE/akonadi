@@ -89,7 +89,6 @@ void PIM::Monitor::slotItemRemoved( const QByteArray & uid, const QByteArray & c
 
 void PIM::Monitor::slotCollectionChanged( const QByteArray & path )
 {
-  qDebug() << "hi there";
   if ( d->isCollectionMonitored( path ) )
     emit collectionChanged( path );
 }
