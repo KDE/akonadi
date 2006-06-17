@@ -108,7 +108,7 @@ void PIM::Monitor::slotCollectionRemoved( const QByteArray & path )
 bool PIM::Monitor::connectToNotificationManager( )
 {
   if ( !d->nm )
-    d->nm = QDBus::sessionBus().findInterface<org::kde::Akonadi::NotificationManager>("org.kde.pim.Akonadi.NotificationManager", "/");
+    d->nm = QDBus::sessionBus().findInterface<org::kde::Akonadi::NotificationManager>("org.kde.Akonadi.NotificationManager", "/");
   else
     return true;
 
