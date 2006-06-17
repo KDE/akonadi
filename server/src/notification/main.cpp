@@ -25,7 +25,7 @@
 int main( int argc, char ** argv ) {
     QCoreApplication a( argc, argv );
     QDBusBusService *bus = QDBus::sessionBus().busService();
-    if ( bus->requestName("org.kde.pim.Akonadi.NotificationManager", QDBusBusService::AllowReplacingName ) !=
+    if ( bus->requestName("org.kde.Akonadi.NotificationManager", QDBusBusService::AllowReplacingName ) !=
         QDBusBusService::PrimaryOwnerReply)
       exit(1);
     Akonadi::NotificationManager *nm = new Akonadi::NotificationManager();

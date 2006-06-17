@@ -30,7 +30,7 @@ namespace Akonadi {
 class NotificationManager : public QObject
 {
   Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.pim.Akonadi.NotificationManager" );
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.Akonadi.NotificationManager" );
   public:
     NotificationManager();
     virtual ~NotificationManager() {}
