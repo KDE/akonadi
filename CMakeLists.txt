@@ -37,8 +37,7 @@ set( akonadi_LIB_SRC
 	monitor.cpp
 )
 
-qdbus_generate_interface(${CMAKE_SOURCE_DIR}/akonadiserver/src/notification/notificationmanager.h)
-qdbus_add_interfaces(akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/notificationmanager.xml)
+qdbus_add_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadiserver/src/notification/org.kde.Akonadi.NotificationManager.xml)
 kde4_automoc( ${akonadi_LIB_SRC} )
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QDBUS_LIBRARIES} ${KDE4_KDECORE_LIBS} kmime )

@@ -18,7 +18,7 @@
 */
 
 #include "monitor.h"
-#include "notificationmanager.h"
+#include "notificationmanagerinterface.h"
 
 #include <dbus/qdbusinterface.h>
 #include <dbus/qdbusconnection.h>
@@ -30,7 +30,7 @@ using namespace PIM;
 class PIM::MonitorPrivate
 {
   public:
-    org::kde::pim::Akonadi::NotificationManager *nm;
+    org::kde::Akonadi::NotificationManager *nm;
     QList<QByteArray> collections;
 
     bool isCollectionMonitored( const QByteArray &path )
@@ -108,7 +108,7 @@ void PIM::Monitor::slotCollectionRemoved( const QByteArray & path )
 bool PIM::Monitor::connectToNotificationManager( )
 {
   if ( !d->nm )
-    d->nm = QDBus::sessionBus().findInterface<org::kde::pim::Akonadi::NotificationManager>("org.kde.pim.Akonadi.NotificationManager", "/");
+    d->nm = QDBus::sessionBus().findInterface<org::kde::Akonadi::NotificationManager>("org.kde.pim.Akonadi.NotificationManager", "/");
   else
     return true;
 
