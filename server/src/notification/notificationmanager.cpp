@@ -22,7 +22,6 @@
 
 #include <QDebug>
 #include <QTimer>
-#include <dbus/qdbus.h>
 
 using namespace Akonadi;
 

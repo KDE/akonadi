@@ -18,15 +18,18 @@
 */
 
 #include <QCoreApplication>
-#include <dbus/qdbus.h>
+#include <QDBusInterface>
+#include <QDBusConnectionInterface>
 #include "notificationmanager.h"
 #include <stdlib.h>
 
-int main( int argc, char ** argv ) {
+int main( int argc, char ** argv )
+{
     QCoreApplication a( argc, argv );
-    QDBusBusService *bus = QDBus::sessionBus().busService();
-    if ( bus->requestName("org.kde.Akonadi.NotificationManager", QDBusBusService::AllowReplacingName ) !=
-        QDBusBusService::PrimaryOwnerReply)
+    if ( QDBus::sessionBus().interface()->registerService("org.kde.Akonadi.NotificationManager",
+           QDBusConnectionInterface::DontQueueService,
+           QDBusConnectionInterface::AllowReplacement ) !=
+           QDBusConnectionInterface::ServiceRegistered )
       exit(1);
     Akonadi::NotificationManager *nm = new Akonadi::NotificationManager();
     QDBus::sessionBus().registerObject("/", nm, QDBusConnection::ExportAdaptors );
