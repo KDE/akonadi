@@ -20,8 +20,8 @@
 #include "monitor.h"
 #include "notificationmanagerinterface.h"
 
-#include <dbus/qdbusinterface.h>
-#include <dbus/qdbusconnection.h>
+#include <QDBusInterface>
+#include <QDBusConnection>
 
 #include <QDebug>
 
@@ -52,7 +52,6 @@ PIM::Monitor::Monitor( QObject *parent ) :
 
 PIM::Monitor::~Monitor()
 {
-  delete d->nm;
   delete d;
 }
 
@@ -108,7 +107,8 @@ void PIM::Monitor::slotCollectionRemoved( const QByteArray & path )
 bool PIM::Monitor::connectToNotificationManager( )
 {
   if ( !d->nm )
-    d->nm = QDBus::sessionBus().findInterface<org::kde::Akonadi::NotificationManager>("org.kde.Akonadi.NotificationManager", "/");
+    d->nm = new org::kde::Akonadi::NotificationManager("org.kde.Akonadi.NotificationManager",
+      "/", QDBus::sessionBus(), this );
   else
     return true;
 
