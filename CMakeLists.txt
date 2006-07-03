@@ -5,7 +5,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/
 	${CMAKE_SOURCE_DIR}/libakonadi
 	${CMAKE_SOURCE_DIR}/libkmime
-	${QDBUS_INCLUDE_DIRS}
+	${QT_QTDBUS_INCLUDE_DIR}
 )
 
 
