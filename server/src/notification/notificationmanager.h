@@ -21,6 +21,7 @@
 #define AKONADI_NOTIFICATIONMANAGER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QMutex>
 
 namespace Akonadi {
 
@@ -30,16 +31,17 @@ namespace Akonadi {
 class NotificationManager : public QObject
 {
   Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.Akonadi.NotificationManager" );
-  public:
-    NotificationManager();
-    virtual ~NotificationManager() {}
 
-  public slots:
+  public:
+    static NotificationManager *self();
+
+    virtual ~NotificationManager();
+
+  public Q_SLOTS:
     void monitorCollection( const QByteArray &path );
     void monitorItem( const QByteArray &uid );
 
-  signals:
+  Q_SIGNALS:
     void itemChanged( const QByteArray &uid, const QByteArray &collection );
     void itemAdded( const QByteArray &uid, const QByteArray &collection );
     void itemRemoved( const QByteArray &uid, const QByteArray &collection );
@@ -47,9 +49,16 @@ class NotificationManager : public QObject
     void collectionChanged( const QByteArray &path );
     void collectionRemoved( const QByteArray &path );
 
-  private slots:
+  private Q_SLOTS:
     // ### just for testing
     void emitSignal();
+
+  private:
+    NotificationManager();
+
+    static NotificationManager *mSelf;
+
+    QMutex mMutex;
 };
 
 }

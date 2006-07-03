@@ -26,16 +26,30 @@
 
 using namespace Akonadi;
 
-Akonadi::NotificationManager::NotificationManager( ) : QObject( 0 )
+NotificationManager* NotificationManager::mSelf = 0;
+
+NotificationManager::NotificationManager( )
+  : QObject( 0 )
 {
   new NotificationManagerAdaptor( this );
+  new org::kde::Akonadi::NotificationManager( QString(), QString(), QDBus::sessionBus(), this );
 
   QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
-
-  new org::kde::Akonadi::NotificationManager( QString(), QString(), QDBus::sessionBus(), this );
 }
 
-void Akonadi::NotificationManager::emitSignal( )
+NotificationManager::~NotificationManager()
+{
+}
+
+NotificationManager* NotificationManager::self()
+{
+  if ( !mSelf )
+    mSelf = new NotificationManager();
+
+  return mSelf;
+}
+
+void NotificationManager::emitSignal( )
 {
   static bool flip = false;
   if ( flip )
@@ -46,14 +60,19 @@ void Akonadi::NotificationManager::emitSignal( )
   QTimer::singleShot( 10000, this, SLOT(emitSignal()) );
 }
 
-void Akonadi::NotificationManager::monitorCollection( const QByteArray & path )
+void NotificationManager::monitorCollection( const QByteArray & path )
 {
+  mMutex.lock();
   qDebug() << "Got monitor request for collection: " << path;
+
+  mMutex.unlock();
 }
 
-void Akonadi::NotificationManager::monitorItem( const QByteArray & uid )
+void NotificationManager::monitorItem( const QByteArray & uid )
 {
+  mMutex.lock();
   qDebug() << "Got monitor request for item: " << uid;
+  mMutex.unlock();
 }
 
 #include "notificationmanager.moc"

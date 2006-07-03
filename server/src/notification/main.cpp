@@ -25,14 +25,14 @@
 
 int main( int argc, char ** argv )
 {
-    QCoreApplication a( argc, argv );
+    QCoreApplication app( argc, argv );
     if ( QDBus::sessionBus().interface()->registerService("org.kde.Akonadi.NotificationManager",
            QDBusConnectionInterface::DontQueueService,
            QDBusConnectionInterface::AllowReplacement ) !=
            QDBusConnectionInterface::ServiceRegistered )
       exit(1);
 
-    Akonadi::NotificationManager *nm = new Akonadi::NotificationManager();
+    Akonadi::NotificationManager::self();
 
-    return a.exec();
+    return app.exec();
 }
