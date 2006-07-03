@@ -311,6 +311,7 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
 bool DataStore::appendItemFlags( int pimItemId, const QList<QByteArray> &flags )
 {
     // FIXME Implement me
+    return false;
 }
 
 bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
