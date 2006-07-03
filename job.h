@@ -84,7 +84,7 @@ class AKONADI_EXPORT DataReference
     bool operator!=( const DataReference &other ) const;
 
     /**
-      Comapares to references.
+      Compares two references.
     */
     bool operator<( const DataReference &other ) const;
 
