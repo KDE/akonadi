@@ -47,6 +47,7 @@ PIM::Monitor::Monitor( QObject *parent ) :
     QObject( parent ),
     d( new MonitorPrivate() )
 {
+  d->nm = 0;
   connectToNotificationManager();
 }
 
