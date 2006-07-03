@@ -54,3 +54,5 @@ AkonadiServer * AkonadiServer::instance()
         s_instance = new AkonadiServer();
     return s_instance;
 }
+
+#include "akonadi.moc"

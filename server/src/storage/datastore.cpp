@@ -1438,10 +1438,9 @@ Resource DataStore::resourceById( int id )
     return Resource();
 
   QSqlQuery query( m_database );
-  query.prepare( "SELECT id, name, cachepolicy_id FROM Resources WHERE id = :id" );
-  query.bindValue( ":id", id );
+  QString statement = QString( "SELECT id, name, cachepolicy_id FROM Resources WHERE id = %1" ).arg( id );
 
-  if ( !query.exec() ) {
+  if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "Error during selection of single Resource." );
     return Resource();
   }

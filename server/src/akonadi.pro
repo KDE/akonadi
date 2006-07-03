@@ -6,7 +6,7 @@ INCLUDEPATH += ../include ../test searchproviders/ handler/
 
 SOURCES += main.cpp
 TEMPLATE = app
-CONFIG += debug \
+CONFIG += \
 warn_on \
 thread \
 qt

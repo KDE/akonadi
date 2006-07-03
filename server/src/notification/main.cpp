@@ -31,8 +31,8 @@ int main( int argc, char ** argv )
            QDBusConnectionInterface::AllowReplacement ) !=
            QDBusConnectionInterface::ServiceRegistered )
       exit(1);
+
     Akonadi::NotificationManager *nm = new Akonadi::NotificationManager();
-    QDBus::sessionBus().registerObject("/", nm, QDBusConnection::ExportAdaptors );
+
     return a.exec();
-    delete nm;
 }

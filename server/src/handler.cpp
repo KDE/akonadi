@@ -154,3 +154,5 @@ bool Akonadi::Handler::failureResponse( const QString& failureMessage )
     deleteLater();
     return true;
 }
+
+#include "handler.moc"

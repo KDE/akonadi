@@ -19,6 +19,7 @@
 
 #include "notificationmanager.h"
 #include "notificationmanageradaptor.h"
+#include "notificationmanagerinterface.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -28,7 +29,10 @@ using namespace Akonadi;
 Akonadi::NotificationManager::NotificationManager( ) : QObject( 0 )
 {
   new NotificationManagerAdaptor( this );
-  emitSignal(); // ### testing
+
+  QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
+
+  new org::kde::Akonadi::NotificationManager( QString(), QString(), QDBus::sessionBus(), this );
 }
 
 void Akonadi::NotificationManager::emitSignal( )

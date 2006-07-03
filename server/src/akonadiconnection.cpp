@@ -238,3 +238,5 @@ void Akonadi::AkonadiConnection::flushStatusMessageQueue()
 
     m_statusMessageQueue.clear();
 }
+
+#include "akonadiconnection.moc"

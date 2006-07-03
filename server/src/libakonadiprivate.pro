@@ -69,7 +69,7 @@ SOURCES += akonadi.cpp \
            storage/debug.cpp \
            collection.cpp 
 TEMPLATE = lib
-CONFIG += debug \
+CONFIG += \
 warn_on \
 thread \
 qt
