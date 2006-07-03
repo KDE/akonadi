@@ -951,7 +951,8 @@ MetaType DataStore::metaTypeById( int id )
   // TODO implement
   MetaType m;
   m.setId( id );
-  m.setMetaType( "dummyMetaType" ).setMimeTypeId( 1 );
+  m.setMetaType( "dummyMetaType" );
+  m.setMimeTypeId( 1 );
   return m;
 }
 
