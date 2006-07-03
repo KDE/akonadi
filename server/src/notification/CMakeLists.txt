@@ -1,7 +1,7 @@
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/
-	${QDBUS_INCLUDE_DIRS}
+	${QT_QTDBUS_INCLUDE_DIR}
 )
 
 
