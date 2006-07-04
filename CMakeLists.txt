@@ -42,11 +42,11 @@ kde4_automoc( ${akonadi_LIB_SRC} )
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDECORE_LIBS} kmime )
 set_target_properties( akonadi PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets( ${LIB_INSTALL_DIR} akonadi )
+install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 
 ########### install files ###############
 
-install_files( /include/libakonadi FILES
+install( FILES
 	datarequest.h
 	query.h
 	collection.h
@@ -70,6 +70,7 @@ install_files( /include/libakonadi FILES
 	messagemodel.h
 	messagequery.h
 	monitor.h
+	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi 
 )
 
 
