@@ -6,7 +6,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/notification )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/test )
 
 add_subdirectory( src )
-add_subdirectory( src/notification )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions" )
 
@@ -47,12 +46,10 @@ set(libakonadiprivate_SRCS
   src/collection.cpp
   src/tracer.cpp
   src/filetracer.cpp
+  src/notificationmanager.cpp
 )
 
-set( nm_SRC src/notification/notificationmanager.cpp )
-
-qt4_add_dbus_adaptors( nm_SRC src/notification/org.kde.Akonadi.NotificationManager.xml )
-qt4_add_dbus_interfaces( nm_SRC src/notification/org.kde.Akonadi.NotificationManager.xml )
+qt4_add_dbus_adaptors(libakonadiprivate_SRCS src/org.kde.Akonadi.NotificationManager.xml)
 
 set(akonadiserver_bin_SRCS ${libakonadiprivate_SRCS} ${nm_SRC}
   src/main.cpp 
