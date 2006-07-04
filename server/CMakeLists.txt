@@ -44,7 +44,9 @@ set(libakonadiprivate_SRCS
   src/storage/entity.cpp
   src/storage/datastore.cpp
   src/storage/debug.cpp
-  src/collection.cpp 
+  src/collection.cpp
+  src/tracer.cpp
+  src/filetracer.cpp
 )
 
 set( nm_SRC src/notification/notificationmanager.cpp )

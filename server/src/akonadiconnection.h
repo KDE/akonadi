@@ -75,6 +75,7 @@ private:
     mutable DataStore* m_backend;
     QByteArray m_selectedConnection;
     QList<QByteArray> m_statusMessageQueue;
+    QString m_identifier;
 };
 
 }

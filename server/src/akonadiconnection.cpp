@@ -23,6 +23,7 @@
 #include "storage/datastore.h"
 #include "handler.h"
 #include "response.h"
+#include "tracer.h"
 
 #include <assert.h>
 
@@ -37,6 +38,8 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
     , m_backend( 0 )
     , m_selectedConnection( "/" )
 {
+    m_identifier.sprintf( "%p", this );
+    Tracer::self()->beginConnection( m_identifier, QString() );
 }
 
 DataStore * Akonadi::AkonadiConnection::storageBackend()
@@ -52,7 +55,8 @@ DataStore * Akonadi::AkonadiConnection::storageBackend()
 
 AkonadiConnection::~AkonadiConnection()
 {
-    qDebug() << "Connection closed";
+    Tracer::self()->endConnection( m_identifier, QString() );
+
     delete m_tcpSocket;
 }
 
@@ -95,7 +99,9 @@ void AkonadiConnection::slotNewData()
     QByteArray line = m_tcpSocket->readLine();
     if ( !m_currentHandler ) {
         line = line.trimmed();
-        qDebug() << "GOT:" << line <<  endl;
+
+        Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( line ) );
+
         // this is a new command, which means the line must start with a tag
         // followed by a non-empty command. First get the tag
         int separator = line.indexOf(' ');
@@ -124,7 +130,6 @@ void AkonadiConnection::slotNewData()
         if ( m_currentHandler->handleLine( line ) )
             m_currentHandler = 0;
     } catch ( ... ) {
-        qDebug( "Oops" );
         delete m_currentHandler;
         m_currentHandler = 0;
     }
@@ -139,13 +144,14 @@ void AkonadiConnection::slotNewData()
 
 void AkonadiConnection::writeOut( const char* str )
 {
-    qDebug() << "writing out: " << str << endl;
     QByteArray block;
     QTextStream out(&block, QIODevice::WriteOnly);
     out << str << '\r'<<  endl;
     out.flush();
     m_tcpSocket->write(block);
     m_tcpSocket->waitForBytesWritten();
+
+    Tracer::self()->connectionOutput( m_identifier, QString::fromUtf8( block ) );
 }
 
 
@@ -212,8 +218,6 @@ const Location Akonadi::AkonadiConnection::selectedLocation()
 
   if ( collection.startsWith( '/' ) )
     collection = collection.mid( 1 );
-
-  qDebug( "selectedLocation: collection=%s", collection.data() );
 
   DataStore *db = storageBackend();
   Location l = db->locationByRawMailbox( collection );
