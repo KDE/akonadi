@@ -19,7 +19,6 @@
 
 #include "notificationmanager.h"
 #include "notificationmanageradaptor.h"
-#include "notificationmanagerinterface.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -28,11 +27,10 @@ using namespace Akonadi;
 
 NotificationManager* NotificationManager::mSelf = 0;
 
-NotificationManager::NotificationManager( )
+NotificationManager::NotificationManager()
   : QObject( 0 )
 {
   new NotificationManagerAdaptor( this );
-  new org::kde::Akonadi::NotificationManager( QString(), QString(), QDBus::sessionBus(), this );
 
   QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
 }
@@ -60,19 +58,32 @@ void NotificationManager::emitSignal( )
   QTimer::singleShot( 10000, this, SLOT(emitSignal()) );
 }
 
-void NotificationManager::monitorCollection( const QByteArray & path )
+void NotificationManager::monitorCollection( const QByteArray & id )
 {
   mMutex.lock();
-  qDebug() << "Got monitor request for collection: " << path;
+
+  if ( !mIds.contains( id ) )
+    mIds.insert( id, 0 );
+  else
+    mIds[ id ]++;
 
   mMutex.unlock();
+
+  qDebug() << "Got monitor request for collection: " << id;
 }
 
-void NotificationManager::monitorItem( const QByteArray & uid )
+void NotificationManager::monitorItem( const QByteArray & id )
 {
   mMutex.lock();
-  qDebug() << "Got monitor request for item: " << uid;
+
+  if ( !mIds.contains( id ) )
+    mIds.insert( id, 0 );
+  else
+    mIds[ id ]++;
+
   mMutex.unlock();
+
+  qDebug() << "Got monitor request for item: " << id;
 }
 
 #include "notificationmanager.moc"

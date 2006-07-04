@@ -20,8 +20,9 @@
 #ifndef AKONADI_NOTIFICATIONMANAGER_H
 #define AKONADI_NOTIFICATIONMANAGER_H
 
-#include <QtCore/QObject>
+#include <QtCore/QHash>
 #include <QtCore/QMutex>
+#include <QtCore/QObject>
 
 namespace Akonadi {
 
@@ -59,6 +60,7 @@ class NotificationManager : public QObject
     static NotificationManager *mSelf;
 
     QMutex mMutex;
+    QHash<QByteArray, int> mIds;
 };
 
 }

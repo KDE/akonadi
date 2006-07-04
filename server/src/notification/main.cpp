@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 #include "notificationmanager.h"
@@ -25,12 +25,8 @@
 
 int main( int argc, char ** argv )
 {
-    QCoreApplication app( argc, argv );
-    if ( QDBus::sessionBus().interface()->registerService("org.kde.Akonadi.NotificationManager",
-           QDBusConnectionInterface::DontQueueService,
-           QDBusConnectionInterface::AllowReplacement ) !=
-           QDBusConnectionInterface::ServiceRegistered )
-      exit(1);
+    QApplication app( argc, argv );
+    QDBus::sessionBus().registerService("org.kde.Akonadi.NotificationManager");
 
     Akonadi::NotificationManager::self();
 
