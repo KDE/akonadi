@@ -55,9 +55,11 @@ set(akonadiserver_bin_SRCS ${libakonadiprivate_SRCS}
     src/main.cpp
 )
 
-qt4_add_dbus_adaptors( libakonadiprivate_SRCS
-  src/org.kde.Akonadi.NotificationManager.xml
-  src/org.kde.Akonadi.Tracer.xml
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS
+  src/org.kde.Akonadi.NotificationManager.xml notificationmanager.h NotificationManager
+)
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS
+  src/org.kde.Akonadi.Tracer.xml dbustracer.h DBusTracer
 )
 
 kde4_automoc(${libakonadiprivate_SRCS} ${akonadiserver_bin_SRCS})
