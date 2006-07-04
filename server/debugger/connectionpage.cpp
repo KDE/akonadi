@@ -17,69 +17,41 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QString>
+#include <QtGui/QTextEdit>
+#include <QtGui/QVBoxLayout>
 
-#include "tracer.h"
+#include "connectionpage.h"
 
-#include "dbustracer.h"
-#include "filetracer.h"
-#include "nulltracer.h"
+#include "tracerinterface.h"
 
-using namespace Akonadi;
-
-Tracer* Tracer::mSelf = 0;
-
-Tracer::Tracer()
+ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
+  : QWidget( parent ), mIdentifier( identifier )
 {
-  // TODO: make it configurable?
-  mTracerBackend = new DBusTracer();
+  QVBoxLayout *layout = new QVBoxLayout( this );
+
+  mDataView = new QTextEdit( this );
+  mDataView->setReadOnly( true );
+
+  layout->addWidget( mDataView );
+
+  org::kde::Akonadi::Tracer *iface = new org::kde::Akonadi::Tracer( QString(), "/tracing", QDBus::sessionBus(), this );
+
+  connect( iface, SIGNAL( connectionDataInput( const QString&, const QString& ) ),
+           this, SLOT( connectionDataInput( const QString&, const QString& ) ) );
+  connect( iface, SIGNAL( connectionDataOutput( const QString&, const QString& ) ),
+           this, SLOT( connectionDataOutput( const QString&, const QString& ) ) );
 }
 
-Tracer::~Tracer()
+void ConnectionPage::connectionDataInput( const QString &identifier, const QString &msg )
 {
-  delete mTracerBackend;
-  mTracerBackend = 0;
+  if ( identifier == mIdentifier )
+    mDataView->append( QString( "<font color=\"red\">%1</font><br>" ).arg( msg ) );
 }
 
-Tracer* Tracer::self()
+void ConnectionPage::connectionDataOutput( const QString &identifier, const QString &msg )
 {
-  if ( !mSelf )
-    mSelf = new Tracer();
-
-  return mSelf;
+  if ( identifier == mIdentifier )
+    mDataView->append( QString( "<font color=\"blue\">%1</font><br>" ).arg( msg ) );
 }
 
-void Tracer::beginConnection( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->beginConnection( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::endConnection( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->endConnection( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::connectionInput( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->connectionInput( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::connectionOutput( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->connectionOutput( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::signalEmitted( const QString &signalName, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->signalEmitted( signalName, msg );
-  mMutex.unlock();
-}
+#include "connectionpage.moc"

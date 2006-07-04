@@ -17,69 +17,33 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QString>
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#include "tracer.h"
+#include <QtCore/QHash>
+#include <QtGui/QMainWindow>
 
-#include "dbustracer.h"
-#include "filetracer.h"
-#include "nulltracer.h"
+class QTextEdit;
+class QTabWidget;
 
-using namespace Akonadi;
+class ConnectionPage;
 
-Tracer* Tracer::mSelf = 0;
-
-Tracer::Tracer()
+class MainWindow : public QMainWindow
 {
-  // TODO: make it configurable?
-  mTracerBackend = new DBusTracer();
-}
+  Q_OBJECT
 
-Tracer::~Tracer()
-{
-  delete mTracerBackend;
-  mTracerBackend = 0;
-}
+  public:
+    MainWindow();
 
-Tracer* Tracer::self()
-{
-  if ( !mSelf )
-    mSelf = new Tracer();
+  private Q_SLOTS:
+    void connectionStarted( const QString&, const QString& );
+    void connectionEnded( const QString&, const QString& );
+    void dbusSignalEmitted( const QString&, const QString& );
 
-  return mSelf;
-}
+  private:
+    QTextEdit *mSignalsView;
+    QTabWidget *mConnectionPages;
+    QHash<QString, ConnectionPage*> mPageHash;
+};
 
-void Tracer::beginConnection( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->beginConnection( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::endConnection( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->endConnection( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::connectionInput( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->connectionInput( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::connectionOutput( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->connectionOutput( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::signalEmitted( const QString &signalName, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->signalEmitted( signalName, msg );
-  mMutex.unlock();
-}
+#endif

@@ -24,6 +24,7 @@
 #include "notificationmanager.h"
 #include "storagebackend.h"
 #include "teststoragebackend.h"
+#include "tracer.h"
 
 using namespace Akonadi;
 
@@ -36,6 +37,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     listen( QHostAddress::LocalHost, 4444 );
 
     NotificationManager::self();
+    Tracer::self();
 }
 
 

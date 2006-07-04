@@ -17,69 +17,16 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QString>
+#include <QtGui/QApplication>
 
-#include "tracer.h"
+#include "mainwindow.h"
 
-#include "dbustracer.h"
-#include "filetracer.h"
-#include "nulltracer.h"
-
-using namespace Akonadi;
-
-Tracer* Tracer::mSelf = 0;
-
-Tracer::Tracer()
+int main( int argc, char **argv )
 {
-  // TODO: make it configurable?
-  mTracerBackend = new DBusTracer();
-}
+  QApplication app( argc, argv );
 
-Tracer::~Tracer()
-{
-  delete mTracerBackend;
-  mTracerBackend = 0;
-}
+  MainWindow window;
+  window.show();
 
-Tracer* Tracer::self()
-{
-  if ( !mSelf )
-    mSelf = new Tracer();
-
-  return mSelf;
-}
-
-void Tracer::beginConnection( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->beginConnection( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::endConnection( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->endConnection( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::connectionInput( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->connectionInput( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::connectionOutput( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->connectionOutput( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::signalEmitted( const QString &signalName, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->signalEmitted( signalName, msg );
-  mMutex.unlock();
+  return app.exec();
 }

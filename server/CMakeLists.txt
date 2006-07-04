@@ -2,10 +2,11 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/include )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/searchproviders )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/notification )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/test )
+include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
 add_subdirectory( src )
+add_subdirectory( debugger )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions" )
 
@@ -45,14 +46,18 @@ set(libakonadiprivate_SRCS
   src/storage/debug.cpp
   src/collection.cpp
   src/tracer.cpp
+  src/dbustracer.cpp
   src/filetracer.cpp
   src/notificationmanager.cpp
 )
 
-qt4_add_dbus_adaptors(libakonadiprivate_SRCS src/org.kde.Akonadi.NotificationManager.xml)
+set(akonadiserver_bin_SRCS ${libakonadiprivate_SRCS}
+    src/main.cpp
+)
 
-set(akonadiserver_bin_SRCS ${libakonadiprivate_SRCS} ${nm_SRC}
-  src/main.cpp 
+qt4_add_dbus_adaptors( libakonadiprivate_SRCS
+  src/org.kde.Akonadi.NotificationManager.xml
+  src/org.kde.Akonadi.Tracer.xml
 )
 
 kde4_automoc(${libakonadiprivate_SRCS} ${akonadiserver_bin_SRCS})

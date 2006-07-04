@@ -22,6 +22,7 @@
 
 #include "notificationmanager.h"
 #include "notificationmanageradaptor.h"
+#include "tracer.h"
 
 using namespace Akonadi;
 
@@ -33,6 +34,10 @@ NotificationManager::NotificationManager()
   new NotificationManagerAdaptor( this );
 
   QDBus::sessionBus().registerObject( "/notifications", this, QDBusConnection::ExportAdaptors );
+
+  QTimer *timer = new QTimer( this );
+  connect( timer, SIGNAL( timeout() ), this, SLOT( dummy() ) );
+  timer->start( 5000 );
 }
 
 NotificationManager::~NotificationManager()
@@ -73,6 +78,23 @@ void NotificationManager::monitorItem( const QByteArray & id )
   mMutex.unlock();
 
   qDebug() << "Got monitor request for item: " << id;
+}
+
+void NotificationManager::dummy()
+{
+  static int i = 0, j = 0;
+
+  if ( i ) {
+    i = 0;
+    Tracer::self()->signalEmitted( "itemChanged", QString( "%1 %2" ).arg( QString::number( j ), "foobar" ) );
+    emit itemChanged( QByteArray::number( j ), "foobar" );
+  } else {
+    i = 1;
+    Tracer::self()->signalEmitted( "collectionChanged", QString::number( j ) );
+    emit collectionChanged( QByteArray::number( j ) );
+  }
+
+  j++;
 }
 
 #include "notificationmanager.moc"

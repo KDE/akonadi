@@ -17,69 +17,40 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QString>
+#ifndef AKONADI_DBUSTRACER_H
+#define AKONADI_DBUSTRACER_H
 
-#include "tracer.h"
+#include <QtCore/QObject>
 
-#include "dbustracer.h"
-#include "filetracer.h"
-#include "nulltracer.h"
+#include "tracerinterface.h"
 
-using namespace Akonadi;
+namespace Akonadi {
 
-Tracer* Tracer::mSelf = 0;
-
-Tracer::Tracer()
+/**
+ * A tracer which forwards all tracing information as dbus signals.
+ */
+class DBusTracer : public QObject, public TracerInterface
 {
-  // TODO: make it configurable?
-  mTracerBackend = new DBusTracer();
+  Q_OBJECT
+
+  public:
+    DBusTracer();
+    virtual ~DBusTracer();
+
+    virtual void beginConnection( const QString&, const QString& );
+    virtual void endConnection( const QString&, const QString& );
+    virtual void connectionInput( const QString&, const QString& );
+    virtual void connectionOutput( const QString&, const QString& );
+    virtual void signalEmitted( const QString&, const QString& );
+
+  Q_SIGNALS:
+    void connectionStarted( const QString &identifier, const QString &msg );
+    void connectionEnded( const QString &identifier, const QString &msg );
+    void connectionDataInput( const QString &identifier, const QString &msg );
+    void connectionDataOutput( const QString &identifier, const QString &msg );
+    void dbusSignalEmitted( const QString &signalName, const QString &msg );
+};
+
 }
 
-Tracer::~Tracer()
-{
-  delete mTracerBackend;
-  mTracerBackend = 0;
-}
-
-Tracer* Tracer::self()
-{
-  if ( !mSelf )
-    mSelf = new Tracer();
-
-  return mSelf;
-}
-
-void Tracer::beginConnection( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->beginConnection( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::endConnection( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->endConnection( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::connectionInput( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->connectionInput( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::connectionOutput( const QString &identifier, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->connectionOutput( identifier, msg );
-  mMutex.unlock();
-}
-
-void Tracer::signalEmitted( const QString &signalName, const QString &msg )
-{
-  mMutex.lock();
-  mTracerBackend->signalEmitted( signalName, msg );
-  mMutex.unlock();
-}
+#endif
