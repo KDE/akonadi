@@ -21,5 +21,5 @@ set_target_properties(akonadi_debugger PROPERTIES OUTPUT_NAME akonadi_debugger)
 
 target_link_libraries(akonadi_debugger ${QT_QTGUI_LIBRARIES} ${QT_QTDBUS_LIBRARIES})
 
-install_targets(/bin akonadi_debugger)
+install(TARGETS akonadi_debugger DESTINATION ${BIN_INSTALL_DIR} )
 
