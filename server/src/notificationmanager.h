@@ -50,10 +50,6 @@ class NotificationManager : public QObject
     void collectionChanged( const QByteArray &path );
     void collectionRemoved( const QByteArray &path );
 
-  private Q_SLOTS:
-    // ### just for testing
-    void emitSignal();
-
   private:
     NotificationManager();
 

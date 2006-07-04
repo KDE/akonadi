@@ -21,6 +21,7 @@
 #include "akonadi.h"
 #include "akonadiconnection.h"
 
+#include "notificationmanager.h"
 #include "storagebackend.h"
 #include "teststoragebackend.h"
 
@@ -33,6 +34,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
 {
     s_instance = this;
     listen( QHostAddress::LocalHost, 4444 );
+
+    NotificationManager::self();
 }
 
 

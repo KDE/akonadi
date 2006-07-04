@@ -19,11 +19,18 @@
  ***************************************************************************/
 
 
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
+#include <QtDBus/QDBusConnection>
+
 #include "akonadi.h"
 
-int main( int argc, char ** argv ) {
-    QCoreApplication a( argc, argv );
+int main( int argc, char ** argv )
+{
+    QCoreApplication app( argc, argv );
+
+    QDBus::sessionBus().registerService( "org.kde.Akonadi" );
+
     Akonadi::AkonadiServer::instance(); // trigger singleton creation
-    return a.exec();
+
+    return app.exec();
 }

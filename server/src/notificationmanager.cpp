@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
+#include <QtCore/QDebug>
+#include <QtCore/QTimer>
+
 #include "notificationmanager.h"
 #include "notificationmanageradaptor.h"
-
-#include <QDebug>
-#include <QTimer>
 
 using namespace Akonadi;
 
@@ -32,7 +32,7 @@ NotificationManager::NotificationManager()
 {
   new NotificationManagerAdaptor( this );
 
-  QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
+  QDBus::sessionBus().registerObject( "/notifications", this, QDBusConnection::ExportAdaptors );
 }
 
 NotificationManager::~NotificationManager()
@@ -45,17 +45,6 @@ NotificationManager* NotificationManager::self()
     mSelf = new NotificationManager();
 
   return mSelf;
-}
-
-void NotificationManager::emitSignal( )
-{
-  static bool flip = false;
-  if ( flip )
-    emit collectionChanged( "res1" );
-  else
-    emit collectionRemoved( "res1" );
-  flip = !flip;
-  QTimer::singleShot( 10000, this, SLOT(emitSignal()) );
 }
 
 void NotificationManager::monitorCollection( const QByteArray & id )
