@@ -74,6 +74,10 @@ bool Fetch::handleLine( const QByteArray& line )
     }
   }
 
+  if ( pimItems.isEmpty() ) {
+    return failureResponse( "Result is empty" );
+  }
+
   for ( int i = 0; i < pimItems.count(); ++i ) {
     response.setUntagged();
     response.setString( buildResponse( pimItems[ i ], fetchQuery ) );
@@ -115,7 +119,9 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::InternalDate ) ) {
   }
 
-  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RFC822 ) ) {
+  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RFC822 ) ||
+       fetchQuery.hasAttributeType( FetchQuery::Attribute::RFC822_Text ) ||
+       fetchQuery.hasAttributeType( FetchQuery::Attribute::Body ) ) {
     attributes.append( "RFC822 {" + QByteArray::number( item.data().length() ) +
                        "}\r\n" + item.data() );
   }
@@ -127,11 +133,6 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
     attributes.append( "RFC822.SIZE " + QByteArray::number( item.data().length() ) );
   }
 
-  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RFC822_Text ) ) {
-  }
-
-  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Body ) ) {
-  }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Body_Structure ) ) {
   }
