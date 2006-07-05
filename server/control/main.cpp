@@ -19,6 +19,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusError>
 
 #include "processcontrol.h"
 #include "agentmanager.h"
@@ -27,7 +28,10 @@ int main( int argc, char **argv )
 {
   QCoreApplication app( argc, argv );
 
-  QDBus::sessionBus().registerService( "org.kde.Akonadi.AgentManager" );
+  if ( !QDBus::sessionBus().registerService( "org.kde.Akonadi.AgentManager" ) ) {
+    qDebug( "Unable to connect to dbus service: %s", qPrintable( QDBus::sessionBus().lastError().message() ) );
+    return 1;
+  }
 
   Akonadi::ProcessControl controller;
   controller.start( "akonadi" );

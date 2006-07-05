@@ -21,6 +21,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusError>
 
 #include "akonadi.h"
 
@@ -28,7 +29,10 @@ int main( int argc, char ** argv )
 {
     QCoreApplication app( argc, argv );
 
-    QDBus::sessionBus().registerService( "org.kde.Akonadi" );
+    if ( !QDBus::sessionBus().registerService( "org.kde.Akonadi" ) ) {
+      qDebug( "Unable to connect to dbus service: %s", qPrintable( QDBus::sessionBus().lastError().message() ) );
+      return 1;
+    }
 
     Akonadi::AkonadiServer::instance(); // trigger singleton creation
 
