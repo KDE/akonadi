@@ -995,11 +995,11 @@ bool DataStore::appendPimItem( const QByteArray & data,
   if ( dateTime.isValid() ) {
       statement = QString( "INSERT INTO PimItems (data, location_id, mimetype_id, "
                            "datetime ) "
-                           "VALUES (%1, %2, %3, %4)")
+                           "VALUES (%1, %2, %3, '%4')")
                          .arg( escaped )
                          .arg( location.id() )
                          .arg( mimetype.id() )
-                         .arg( QString( dateTimeFromQDateTime( dateTime ) ) );
+                         .arg( dateTimeFromQDateTime( dateTime ) );
   }
   else {
       // the database will use the current date/time for datetime
@@ -1622,12 +1622,12 @@ int DataStore::lastInsertId( const QSqlQuery & query )
 
 
 // static
-QByteArray DataStore::dateTimeFromQDateTime( const QDateTime & dateTime )
+QString DataStore::dateTimeFromQDateTime( const QDateTime & dateTime )
 {
     QDateTime utcDateTime = dateTime;
     if ( utcDateTime.timeSpec() != Qt::UTC )
         utcDateTime.toUTC();
-    return utcDateTime.toString( "yyyy-MM-dd hh:mm:ss" ).toLatin1();
+    return utcDateTime.toString( "yyyy-MM-dd hh:mm:ss" );
 }
 
 

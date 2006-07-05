@@ -182,7 +182,7 @@ private:
         @return the date/time in database format
         @see dateTimeToQDateTime
      */
-    static QByteArray dateTimeFromQDateTime( const QDateTime & dateTime );
+    static QString dateTimeFromQDateTime( const QDateTime & dateTime );
 
     /** Converts the given date/time from database format to QDateTime.
         @param dateTime the date/time in database format
