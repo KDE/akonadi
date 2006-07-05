@@ -164,7 +164,19 @@ bool Akonadi::Append::commit()
 
     DataStore *db = connection()->storageBackend();
     Location l = db->locationByRawMailbox( m_mailbox );
-    MimeType mimeType(0, "message/rfc822" );
+    QString mt;
+    foreach( QByteArray flag, m_flags ) {
+      if ( flag.startsWith( "\\MimeType" ) ) {
+        int pos1 = flag.indexOf( '[' );
+        int pos2 = flag.indexOf( ']', pos1 );
+        mt = flag.mid( pos1 + 1, pos2 - pos1 - 1 );
+      }
+    }
+    MimeType mimeType = db->mimeTypeByName( mt );
+    if ( !mimeType.isValid() ) {
+      return failureResponse( QString( "Unknown mime type '%1'.").arg( mt ) );
+    }
+    
     int itemId = 0;
     bool ok = db->appendPimItem( m_data, mimeType, l, m_dateTime, &itemId );
     response.setTag( tag() );
