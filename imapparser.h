@@ -43,7 +43,7 @@ class AKONADI_EXPORT ImapParser
       @param result The parsed list.
       @param start start parsing at this index.
     */
-    static int parseParentheziedList( const QByteArray &data, QList<QByteArray> &result, int start = 0 );
+    static int parseParenthesizedList( const QByteArray &data, QList<QByteArray> &result, int start = 0 );
 
     /**
       Parse the next string in @p data (quoted or literal) starting from @p start

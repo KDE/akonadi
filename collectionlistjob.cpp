@@ -74,7 +74,7 @@ void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByte
 
     // attributes
     QList<QByteArray> attributes;
-    current = ImapParser::parseParentheziedList( data, attributes, current );
+    current = ImapParser::parseParenthesizedList( data, attributes, current );
 
     // delimiter
     QByteArray delim;

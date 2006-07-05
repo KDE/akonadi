@@ -73,7 +73,7 @@ void PIM::CollectionStatusJob::handleResponse( const QByteArray & tag, const QBy
       current = ImapParser::parseString( data, token, current );
       // result list
       QList<QByteArray> list;
-      current = ImapParser::parseParentheziedList( data, list, current );
+      current = ImapParser::parseParenthesizedList( data, list, current );
       MessageCollectionAttribute *attr = new MessageCollectionAttribute();
       for ( int i = 0; i < list.count() - 1; i += 2 ) {
         if ( list[i] == "MESSAGES" ) {
