@@ -25,7 +25,7 @@
 #include "tracerinterface.h"
 
 ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
-  : QWidget( parent ), mIdentifier( identifier )
+  : QWidget( parent ), mIdentifier( identifier ), mShowAllConnections( false )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
@@ -34,7 +34,8 @@ ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
 
   layout->addWidget( mDataView );
 
-  org::kde::Akonadi::Tracer *iface = new org::kde::Akonadi::Tracer( QString(), "/tracing", QDBus::sessionBus(), this );
+  org::kde::Akonadi::Tracer *iface = new org::kde::Akonadi::Tracer( QString(),
+    "/tracing", QDBus::sessionBus(), this );
 
   connect( iface, SIGNAL( connectionDataInput( const QString&, const QString& ) ),
            this, SLOT( connectionDataInput( const QString&, const QString& ) ) );
@@ -44,14 +45,31 @@ ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
 
 void ConnectionPage::connectionDataInput( const QString &identifier, const QString &msg )
 {
-  if ( identifier == mIdentifier )
-    mDataView->append( QString( "<font color=\"red\">%1</font><br>" ).arg( msg ) );
+  QString str;
+  if ( mShowAllConnections ) {
+    str += identifier + " ";
+  }
+  if ( mShowAllConnections || identifier == mIdentifier ) {
+    str += QString( "<font color=\"red\">%1</font><br>" ).arg( msg );
+    mDataView->append( str );
+  }
 }
 
 void ConnectionPage::connectionDataOutput( const QString &identifier, const QString &msg )
 {
-  if ( identifier == mIdentifier )
-    mDataView->append( QString( "<font color=\"blue\">%1</font><br>" ).arg( msg ) );
+  QString str;
+  if ( mShowAllConnections ) {
+    str += identifier + " ";
+  }
+  if ( mShowAllConnections || identifier == mIdentifier ) {
+    str += QString( "<font color=\"blue\">%1</font><br>" ).arg( msg );
+    mDataView->append( str );
+  }
+}
+
+void ConnectionPage::showAllConnections( bool show )
+{
+  mShowAllConnections = show;
 }
 
 #include "connectionpage.moc"

@@ -31,6 +31,8 @@ class ConnectionPage : public QWidget
   public:
     ConnectionPage( const QString &identifier, QWidget *parent = 0 );
 
+    void showAllConnections( bool );
+
   private Q_SLOTS:
     void connectionDataInput( const QString&, const QString& );
     void connectionDataOutput( const QString&, const QString& );
@@ -38,6 +40,7 @@ class ConnectionPage : public QWidget
   private:
     QTextEdit *mDataView;
     QString mIdentifier;
+    bool mShowAllConnections;
 };
 
 #endif

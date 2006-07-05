@@ -37,6 +37,10 @@ MainWindow::MainWindow()
   mSignalsView = new QTextEdit( splitter );
   mSignalsView->setReadOnly( true );
 
+  ConnectionPage *page = new ConnectionPage( "All" );
+  page->showAllConnections( true );
+  mConnectionPages->addTab( page, "All" );
+
   org::kde::Akonadi::Tracer *iface = new org::kde::Akonadi::Tracer( QString(), "/tracing", QDBus::sessionBus(), this );
   connect( iface, SIGNAL( connectionStarted( const QString&, const QString& ) ),
            this, SLOT( connectionStarted( const QString&, const QString& ) ) );
@@ -48,7 +52,7 @@ MainWindow::MainWindow()
 
 void MainWindow::connectionStarted( const QString &identifier, const QString &msg )
 {
-  ConnectionPage *page = new ConnectionPage( identifier, mConnectionPages );
+  ConnectionPage *page = new ConnectionPage( identifier );
   mConnectionPages->addTab( page, msg );
 
   mPageHash.insert( identifier, page );
