@@ -48,6 +48,7 @@ CREATE TABLE MetaTypes
 CREATE TABLE PimItems
 (
 	id		INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	remote_id	CHAR(512) NOT NULL,
 -- IMAP flags can be put here
 -- "data" might be BLOB as well, or we can store the data in parts
 	data		TEXT,

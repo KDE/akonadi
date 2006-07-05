@@ -340,10 +340,12 @@ PimItem::PimItem()
 {
 }
 
-PimItem::PimItem( int id, const QByteArray & data, int location_id,
-                  int mimetype_id, const QDateTime & dateTime )
+PimItem::PimItem( int id, const QByteArray & remote_id,
+                  const QByteArray & data, int location_id, int mimetype_id,
+                  const QDateTime & dateTime )
     : Entity( id ), m_data( data ), m_location_id( location_id ),
-      m_mimetype_id( mimetype_id ), m_datetime( dateTime )
+      m_mimetype_id( mimetype_id ), m_remote_id( remote_id ),
+      m_datetime( dateTime )
 {
 }
 
@@ -359,6 +361,11 @@ int PimItem::mimeTypeId() const
 int PimItem::locationId() const
 {
   return m_location_id;
+}
+
+QByteArray PimItem::remoteId() const
+{
+  return m_remote_id;
 }
 
 const QByteArray & PimItem::data() const
@@ -384,6 +391,11 @@ void PimItem::setLocationId( int location_id )
 void PimItem::setData( const QByteArray & data )
 {
   m_data = data;
+}
+
+void PimItem::setRemoteId( const QByteArray & remote_id )
+{
+  m_remote_id = remote_id;
 }
 
 void PimItem::setDateTime( const QDateTime & dateTime )

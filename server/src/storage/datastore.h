@@ -26,10 +26,12 @@
 class QSqlQuery;
 
 #include "entity.h"
+#include "fetchquery.h"
 #include "collection.h"
 
 namespace Akonadi {
 
+    class FetchQuery;
 /***************************************************************************
  *   DataStore                                                             *
  ***************************************************************************/
@@ -117,10 +119,12 @@ public:
                         const MimeType & mimetype,
                         const Location & location,
                         const QDateTime & dateTime,
+                        const QByteArray & remote_id,
                         int *insertId = 0 );
     bool removePimItem( const PimItem & pimItem );
     bool removePimItem( int id );
     PimItem pimItemById( int id );
+    PimItem pimItemById( int id, FetchQuery::Type type );
     QList<PimItem> listPimItems( const MimeType & mimetype,
                                  const Location & location );
 
@@ -146,7 +150,15 @@ public:
     int highestPimItemCountByLocation( const Location &location );
 
     QList<PimItem> matchingPimItems( const QList<QByteArray> &sequences );
+    QList<PimItem> matchingPimItems( const QList<QByteArray> &sequences, FetchQuery::Type type );
     QList<PimItem> matchingPimItemsByLocation( const QList<QByteArray> &sequences, const Location &location );
+    QList<PimItem> matchingPimItemsByLocation( const QList<QByteArray> &sequences,
+                                               const Location &location,
+                                               FetchQuery::Type type );
+
+    QList<PimItem> fetchMatchingPimItems( const FetchQuery &query );
+    QList<PimItem> fetchMatchingPimItemsByLocation( const FetchQuery &query,
+                                                    const Location &location );
 
     /* --- Resource ------------------------------------------------------ */
     bool appendResource( const QString & resource, const CachePolicy & policy );
@@ -167,6 +179,8 @@ protected:
     void debugLastDbError( const QString & actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const QString & actionDescription ) const;
     bool removeById( int id, const QString & tableName );
+    QByteArray retrieveDataFromResource( const QByteArray& remote_id,
+                                         int locationid, FetchQuery::Type type );
 
 private:
     /** Returns the id of the most recent inserted row, or -1 if there's no such

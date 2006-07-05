@@ -59,6 +59,9 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   src/org.kde.Akonadi.Tracer.xml dbustracer.h Akonadi::DBusTracer
 )
 
+
+qt4_add_dbus_interfaces( libakonadiprivate_SRCS control/org.kde.Akonadi.AgentManager.xml )
+
 set(akonadiserver_bin_SRCS ${libakonadiprivate_SRCS}
     src/main.cpp
 )

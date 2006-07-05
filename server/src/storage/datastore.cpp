@@ -19,6 +19,7 @@
 
 #include "datastore.h"
 #include "persistentsearchmanager.h"
+#include "agentmanagerinterface.h"
 
 #include <QSqlQuery>
 #include <QSqlField>
@@ -981,6 +982,7 @@ bool DataStore::appendPimItem( const QByteArray & data,
                                const MimeType & mimetype,
                                const Location & location,
                                const QDateTime & dateTime,
+                               const QByteArray & remote_id,
                                int *insertId )
 {
   if ( !m_dbOpened )
@@ -993,9 +995,10 @@ bool DataStore::appendPimItem( const QByteArray & data,
   QString escaped = m_database.driver()->formatValue( field );
   QString statement;
   if ( dateTime.isValid() ) {
-      statement = QString( "INSERT INTO PimItems (data, location_id, mimetype_id, "
+      statement = QString( "INSERT INTO PimItems (remote_id, data, location_id, mimetype_id, "
                            "datetime ) "
-                           "VALUES (%1, %2, %3, '%4')")
+                           "VALUES ('%1', %2, %3, %4, '%5')")
+                         .arg( QString( remote_id ) )
                          .arg( escaped )
                          .arg( location.id() )
                          .arg( mimetype.id() )
@@ -1003,8 +1006,9 @@ bool DataStore::appendPimItem( const QByteArray & data,
   }
   else {
       // the database will use the current date/time for datetime
-      statement = QString( "INSERT INTO PimItems (data, location_id, mimetype_id) "
-                           "VALUES (%1, %2, %3)")
+      statement = QString( "INSERT INTO PimItems (remote_id, data, location_id, mimetype_id) "
+                           "VALUES ('%1', %2, %3, %4)")
+                         .arg( QString( remote_id ) )
                          .arg( escaped )
                          .arg( location.id() )
                          .arg( mimetype.id() );
@@ -1121,13 +1125,27 @@ int DataStore::pimItemPosition( const PimItem &item )
   return -1;
 }
 
-PimItem DataStore::pimItemById( int id )
+QString fieldNameForDataType( FetchQuery::Type type )
+{
+  return "data";
+}
+
+QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray& remote_id,
+                                                         int locationid, FetchQuery::Type type )
+{
+  org::kde::Akonadi::AgentManager agentManager( "org.kde.Akonadi.AgentManager", "/", QDBus::sessionBus() );
+  // FIXME figure out the resource, ask it for the item, by remote id
+}
+
+
+PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
 {
   if ( !m_dbOpened )
     return PimItem();
 
+  const QString field = fieldNameForDataType( type );
   QSqlQuery query( m_database );
-  query.prepare( "SELECT id, data, location_id, mimetype_id, datetime FROM PimItems WHERE id = :id" );
+  query.prepare( QString( "SELECT id, %1, location_id, mimetype_id, datetime, remote_id FROM PimItems WHERE id = :id" ).arg( field ) );
   query.bindValue( ":id", id );
 
   if ( !query.exec() ) {
@@ -1141,12 +1159,24 @@ PimItem DataStore::pimItemById( int id )
   }
 
   int pimItemId = query.value( 0 ).toInt();
-  QByteArray data = query.value( 1 ).toByteArray();
   int location = query.value( 2 ).toInt();
   int mimetype = query.value( 3 ).toInt();
+  QByteArray remote_id = query.value( 4 ).toByteArray();
   QDateTime dateTime = dateTimeToQDateTime( query.value( 4 ).toByteArray() );
+  QVariant v = query.value( 1 );
+  QByteArray data;
+  if ( v.isValid() ) {
+      data = v.toByteArray();
+  } else {
+      data = retrieveDataFromResource( remote_id, location, type );
+  }
 
-  return PimItem( pimItemId, data, location, mimetype, dateTime );
+  return PimItem( pimItemId, remote_id, data, location, mimetype, dateTime );
+}
+
+PimItem DataStore::pimItemById( int id )
+{
+  return pimItemById( id, FetchQuery::FastType );
 }
 
 QList<PimItem> DataStore::listPimItems( const MimeType & mimetype,
@@ -1165,7 +1195,7 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
 
   QSqlQuery query( m_database );
 
-  const QString statement = QString( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id, PimItems.datetime FROM PimItems, ItemFlags WHERE "
+  const QString statement = QString( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id, PimItems.datetime, PimItems.remote_id FROM PimItems, ItemFlags WHERE "
                                      "ItemFlags.pimitem_id = PimItems.id AND ItemFlags.flag_id = %1 AND location_id = %2" )
                                    .arg( flag.id() ).arg( location.id() );
 
@@ -1176,7 +1206,9 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
 
   QList<PimItem> pimItems;
   while ( query.next() ) {
-    pimItems.append( PimItem( query.value( 0 ).toInt(), query.value( 1 ).toByteArray(),
+    pimItems.append( PimItem( query.value( 0 ).toInt(),
+                              query.value( 4 ).toByteArray(),
+                              query.value( 1 ).toByteArray(),
                               location.id(), query.value( 2 ).toInt(),
                               dateTimeToQDateTime( query.value( 3 ).toByteArray() ) ) );
   }
@@ -1226,7 +1258,14 @@ int DataStore::highestPimItemCountByLocation( const Location &location )
   return query.value( 0 ).toInt() + 1;
 }
 
-QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences )
+
+QList<PimItem> Akonadi::DataStore::fetchMatchingPimItems( const FetchQuery &query )
+{
+    return matchingPimItems( query.sequences(), query.type() );
+}
+
+QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences,
+                                            FetchQuery::Type type )
 {
   if ( !m_dbOpened )
     return QList<PimItem>();
@@ -1268,7 +1307,7 @@ QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences )
 
   QList<PimItem> pimItems;
   while ( query.next() ) {
-    PimItem item = pimItemById( query.value( 0 ).toInt() );
+    PimItem item = pimItemById( query.value( 0 ).toInt(), type );
     if ( !item.isValid() ) {
       qDebug( "DataStore::matchingPimItems: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
       return QList<PimItem>();
@@ -1278,15 +1317,37 @@ QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences )
   }
 
   return pimItems;
+
 }
 
-QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &sequences, const Location &location )
+QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences )
+{
+  return matchingPimItems( sequences, FetchQuery::FastType );
+}
+
+
+QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsByLocation( const FetchQuery &query,
+                                                                    const Location &location )
+{
+  return matchingPimItemsByLocation( query.sequences(), location, FetchQuery::FastType );
+}
+
+QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &sequences,
+                                                      const Location &location )
+{
+  return matchingPimItemsByLocation( sequences, location, FetchQuery::FastType );
+}
+
+QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &sequences,
+                                                      const Location &location,
+                                                      FetchQuery::Type type )
 {
   if ( !m_dbOpened || !location.isValid() )
     return QList<PimItem>();
 
   QSqlQuery query( m_database );
-  const QString statement = QString( "SELECT id FROM PimItems WHERE location_id = %1" ).arg( location.id() );
+  const QString statement =
+      QString( "SELECT id FROM PimItems WHERE location_id = %1" ).arg( location.id() );
 
   if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "DataStore::matchingPimItemsByLocation" );
@@ -1340,7 +1401,7 @@ QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &s
           return QList<PimItem>();
         }
 
-        PimItem item = pimItemById( query.value( 0 ).toInt() );
+        PimItem item = pimItemById( query.value( 0 ).toInt(), type );
         if ( !item.isValid() ) {
           qDebug( "DataStore::matchingPimItemsByLocation: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
           return QList<PimItem>();
@@ -1367,7 +1428,7 @@ QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &s
         return QList<PimItem>();
       }
 
-      PimItem item = pimItemById( query.value( 0 ).toInt() );
+      PimItem item = pimItemById( query.value( 0 ).toInt(), type );
       if ( !item.isValid() ) {
         qDebug( "DataStore::matchingPimItemsByLocation: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
         return QList<PimItem>();

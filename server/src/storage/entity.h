@@ -239,18 +239,21 @@ class PimItem : public Entity
 {
   public:
     PimItem();
-    PimItem( int id, const QByteArray & data, int location_id, int mimetype_id,
+    PimItem( int id, const QByteArray & remote_id,
+             const QByteArray & data, int location_id, int mimetype_id,
              const QDateTime & dateTime );
     ~PimItem();
 
     int mimeTypeId() const;
     int locationId() const;
+    QByteArray remoteId() const;
     const QByteArray & data() const;
     QDateTime dateTime() const;
 
   protected:
     void setMimeTypeId( int mimetype_id );
     void setLocationId( int location_id );
+    void setRemoteId( const QByteArray & remote_id );
     void setData( const QByteArray & data );
     void setDateTime( const QDateTime & dateTime );
 
@@ -258,6 +261,7 @@ class PimItem : public Entity
     QByteArray m_data;
     int m_location_id;
     int m_mimetype_id;
+    QByteArray m_remote_id;
     QDateTime m_datetime;
 
     friend class DataStore;

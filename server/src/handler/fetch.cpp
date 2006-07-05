@@ -65,12 +65,12 @@ bool Fetch::handleLine( const QByteArray& line )
 
   QList<PimItem> pimItems;
   if ( connection()->selectedLocation().id() == -1 ) {
-    pimItems = store->matchingPimItems( fetchQuery.sequences() );
+    pimItems = store->fetchMatchingPimItems( fetchQuery );
   } else {
     if ( fetchQuery.isUidFetch() ) {
-      pimItems = store->matchingPimItems( fetchQuery.sequences() );
+      pimItems = store->fetchMatchingPimItems( fetchQuery );
     } else {
-      pimItems = store->matchingPimItemsByLocation( fetchQuery.sequences(), connection()->selectedLocation() );
+      pimItems = store->fetchMatchingPimItemsByLocation( fetchQuery, connection()->selectedLocation() );
     }
   }
 
