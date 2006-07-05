@@ -20,7 +20,6 @@ private slots:
 
     void testInit()
     { 
-        
     }
 
 
@@ -102,6 +101,14 @@ private slots:
 
         const QByteArray expectedThirdResponse = "1 OK List completed";
         QCOMPARE(nextResponse(spy).asString(), expectedThirdResponse );
+    }
+
+    
+    /// ---- Fetch ----
+
+    void testFetch()
+    {
+        
     }
     
 private:
