@@ -18,16 +18,21 @@
  ***************************************************************************/
 
 #include <QtCore/QCoreApplication>
+#include <QtDBus/QDBusConnection>
 
 #include "processcontrol.h"
+#include "agentmanager.h"
 
 int main( int argc, char **argv )
 {
   QCoreApplication app( argc, argv );
 
-  Akonadi::ProcessControl controller;
+  QDBus::sessionBus().registerService( "org.kde.Akonadi.AgentManager" );
 
+  Akonadi::ProcessControl controller;
   controller.start( "akonadi" );
+
+  AgentManager manager;
 
   return app.exec();
 }

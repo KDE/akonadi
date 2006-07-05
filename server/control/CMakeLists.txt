@@ -5,13 +5,12 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions" )
 ########### next target ###############
 
 set( control_SRCS
+  agentmanager.cpp
   main.cpp
   processcontrol.cpp
 )
 
-qt4_add_dbus_interfaces( control_SRCS
-  ../src/org.kde.Akonadi.Tracer.xml
-)
+qt4_add_dbus_adaptor( control_SRCS org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
 
 kde4_automoc( ${control_SRCS} )
 
