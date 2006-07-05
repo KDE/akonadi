@@ -27,6 +27,9 @@
 
 namespace PIM {
 
+/**
+ * Query for emails
+ */
 class EMailQuery : public Query
 {
   Q_OBJECT

@@ -27,6 +27,9 @@
 
 namespace PIM {
 
+/**
+ * Query for contacts
+ */
 class ContactQuery : public Query
 {
   Q_OBJECT
