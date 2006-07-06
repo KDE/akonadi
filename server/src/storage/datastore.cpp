@@ -126,6 +126,7 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
         }
       }
     }
+    if ( result.isEmpty() ) result.setValid( false );
   }
 
   return result;
