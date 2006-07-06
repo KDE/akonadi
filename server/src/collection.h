@@ -53,7 +53,18 @@ private:
     QByteArray m_mimeTypes;
 };
 
-typedef QList<Collection> CollectionList;
+class CollectionList : public QList<Collection>
+{
+  public:
+    CollectionList();
+  
+    void setValid( bool valid );
+    bool isValid() const;
+  
+  private:
+    bool mValid;
+};
+
 typedef QListIterator<Collection> CollectionListIterator;
 
 }

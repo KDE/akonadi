@@ -107,6 +107,10 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
     const QByteArray resource = fullPrefix.mid( 1, fullPrefix.indexOf( '/', 1 ) - 1 );
     qDebug() << "Listing folders in resource: " << resource;
     Resource r = resourceByName( resource );
+    if ( !r.isValid() ) {
+      result.setValid( false );
+      return result;
+    }
     const QList<Location> locations = listLocations( r );
 
     foreach( Location l, locations ) {

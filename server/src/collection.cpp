@@ -67,3 +67,18 @@ QByteArray Akonadi::Collection::getMimeTypes() const
     return m_mimeTypes;
 }
 
+
+CollectionList::CollectionList()
+  : mValid( true )
+{
+}
+
+void CollectionList::setValid( bool valid )
+{
+  mValid = valid;
+}
+
+bool CollectionList::isValid() const
+{
+  return mValid;
+}
