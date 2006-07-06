@@ -34,8 +34,8 @@ MainWindow::MainWindow()
 
   mConnectionPages = new QTabWidget( splitter );
 
-  mSignalsView = new QTextEdit( splitter );
-  mSignalsView->setReadOnly( true );
+  mGeneralView = new QTextEdit( splitter );
+  mGeneralView->setReadOnly( true );
 
   ConnectionPage *page = new ConnectionPage( "All" );
   page->showAllConnections( true );
@@ -46,8 +46,12 @@ MainWindow::MainWindow()
            this, SLOT( connectionStarted( const QString&, const QString& ) ) );
   connect( iface, SIGNAL( connectionEnded( const QString&, const QString& ) ),
            this, SLOT( connectionEnded( const QString&, const QString& ) ) );
-  connect( iface, SIGNAL( dbusSignalEmitted( const QString&, const QString& ) ),
-           this, SLOT( dbusSignalEmitted( const QString&, const QString& ) ) );
+  connect( iface, SIGNAL( signalEmitted( const QString&, const QString& ) ),
+           this, SLOT( signalEmitted( const QString&, const QString& ) ) );
+  connect( iface, SIGNAL( warningEmitted( const QString&, const QString& ) ),
+           this, SLOT( warningEmitted( const QString&, const QString& ) ) );
+  connect( iface, SIGNAL( errorEmitted( const QString&, const QString& ) ),
+           this, SLOT( errorEmitted( const QString&, const QString& ) ) );
 }
 
 void MainWindow::connectionStarted( const QString &identifier, const QString &msg )
@@ -71,9 +75,19 @@ void MainWindow::connectionEnded( const QString &identifier, const QString &msg 
   delete widget;
 }
 
-void MainWindow::dbusSignalEmitted( const QString &signalName, const QString &msg )
+void MainWindow::signalEmitted( const QString &signalName, const QString &msg )
 {
-  mSignalsView->append( QString( "<font color=\"green\">%1 ( %2 )</font>" ).arg( signalName, msg ) );
+  mGeneralView->append( QString( "<font color=\"green\">%1 ( %2 )</font>" ).arg( signalName, msg ) );
+}
+
+void MainWindow::warningEmitted( const QString &componentName, const QString &msg )
+{
+  mGeneralView->append( QString( "<font color=\"blue\">%1: %2</font>" ).arg( componentName, msg ) );
+}
+
+void MainWindow::errorEmitted( const QString &componentName, const QString &msg )
+{
+  mGeneralView->append( QString( "<font color=\"red\">%1: %2</font>" ).arg( componentName, msg ) );
 }
 
 #include "mainwindow.moc"

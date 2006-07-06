@@ -81,7 +81,17 @@ class TracerInterface
      * @param signalName The name of the signal being sent.
      * @param msg A message specific string.
      */
-    virtual void signalEmitted( const QString &signalName, const QString &msg ) = 0;
+    virtual void signal( const QString &signalName, const QString &msg ) = 0;
+
+    /**
+     * This method is called whenever a component wants to output a warning.
+     */
+    virtual void warning( const QString &componentName, const QString &msg ) = 0;
+
+    /**
+     * This method is called whenever a component wants to output an error.
+     */
+    virtual void error( const QString &componentName, const QString &msg ) = 0;
 };
 
 }

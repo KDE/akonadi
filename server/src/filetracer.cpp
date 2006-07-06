@@ -53,9 +53,19 @@ void FileTracer::connectionOutput( const QString &identifier, const QString &msg
   output( identifier, QString( "output: %1" ).arg( msg ) );
 }
 
-void FileTracer::signalEmitted( const QString &signalName, const QString &msg )
+void FileTracer::signal( const QString &signalName, const QString &msg )
 {
   output( QLatin1String( "signal" ), QString( "<%1> %2" ).arg( signalName, msg ) );
+}
+
+void FileTracer::warning( const QString &componentName, const QString &msg )
+{
+  output( QLatin1String( "warning" ), QString( "<%1> %2" ).arg( componentName, msg ) );
+}
+
+void FileTracer::error( const QString &componentName, const QString &msg )
+{
+  output( QLatin1String( "error" ), QString( "<%1> %2" ).arg( componentName, msg ) );
 }
 
 void FileTracer::output( const QString &id, const QString &msg )

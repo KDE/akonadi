@@ -41,14 +41,18 @@ class DBusTracer : public QObject, public TracerInterface
     virtual void endConnection( const QString&, const QString& );
     virtual void connectionInput( const QString&, const QString& );
     virtual void connectionOutput( const QString&, const QString& );
-    virtual void signalEmitted( const QString&, const QString& );
+    virtual void signal( const QString&, const QString& );
+    virtual void warning( const QString&, const QString& );
+    virtual void error( const QString&, const QString& );
 
   Q_SIGNALS:
     void connectionStarted( const QString &identifier, const QString &msg );
     void connectionEnded( const QString &identifier, const QString &msg );
     void connectionDataInput( const QString &identifier, const QString &msg );
     void connectionDataOutput( const QString &identifier, const QString &msg );
-    void dbusSignalEmitted( const QString &signalName, const QString &msg );
+    void signalEmitted( const QString &signalName, const QString &msg );
+    void warningEmitted( const QString& componentName, const QString &msg );
+    void errorEmitted( const QString& componentName, const QString &msg );
 };
 
 }

@@ -55,9 +55,19 @@ void DBusTracer::connectionOutput( const QString &identifier, const QString &msg
   emit connectionDataOutput( identifier, msg );
 }
 
-void DBusTracer::signalEmitted( const QString &signalName, const QString &msg )
+void DBusTracer::signal( const QString &signalName, const QString &msg )
 {
-  emit dbusSignalEmitted( signalName, msg );
+  emit signalEmitted( signalName, msg );
+}
+
+void DBusTracer::warning( const QString &componentName, const QString &msg )
+{
+  emit warningEmitted( componentName, msg );
+}
+
+void DBusTracer::error( const QString &componentName, const QString &msg )
+{
+  emit errorEmitted( componentName, msg );
 }
 
 #include "dbustracer.moc"

@@ -17,8 +17,16 @@
       <arg name="identifier" type="s" direction="out"/>
       <arg name="msg" type="s" direction="out"/>
     </signal>
-    <signal name="dbusSignalEmitted">
+    <signal name="signalEmitted">
       <arg name="signalName" type="s" direction="out"/>
+      <arg name="msg" type="s" direction="out"/>
+    </signal>
+    <signal name="warningEmitted">
+      <arg name="componentName" type="s" direction="out"/>
+      <arg name="msg" type="s" direction="out"/>
+    </signal>
+    <signal name="errorEmitted">
+      <arg name="componentName" type="s" direction="out"/>
       <arg name="msg" type="s" direction="out"/>
     </signal>
   </interface>

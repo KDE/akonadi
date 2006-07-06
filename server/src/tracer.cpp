@@ -77,9 +77,25 @@ void Tracer::connectionOutput( const QString &identifier, const QString &msg )
   mMutex.unlock();
 }
 
-void Tracer::signalEmitted( const QString &signalName, const QString &msg )
+void Tracer::signal( const QString &signalName, const QString &msg )
 {
   mMutex.lock();
-  mTracerBackend->signalEmitted( signalName, msg );
+  mTracerBackend->signal( signalName, msg );
   mMutex.unlock();
 }
+
+void Tracer::warning( const QString &componentName, const QString &msg )
+{
+  mMutex.lock();
+  mTracerBackend->warning( componentName, msg );
+  mMutex.unlock();
+}
+
+void Tracer::error( const QString &componentName, const QString &msg )
+{
+  mMutex.lock();
+  mTracerBackend->error( componentName, msg );
+  mMutex.unlock();
+}
+
+#include "tracer.moc"

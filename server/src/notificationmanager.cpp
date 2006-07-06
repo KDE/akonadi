@@ -86,11 +86,11 @@ void NotificationManager::dummy()
 
   if ( i ) {
     i = 0;
-    Tracer::self()->signalEmitted( "itemChanged", QString( "%1 %2" ).arg( QString::number( j ), "foobar" ) );
+    Tracer::self()->signal( "itemChanged", QString( "%1 %2" ).arg( QString::number( j ), "foobar" ) );
     emit itemChanged( QByteArray::number( j ), "foobar" );
   } else {
     i = 1;
-    Tracer::self()->signalEmitted( "collectionChanged", QString::number( j ) );
+    Tracer::self()->signal( "collectionChanged", QString::number( j ) );
     emit collectionChanged( QByteArray::number( j ) );
   }
 

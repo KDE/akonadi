@@ -20,6 +20,7 @@
 #ifndef AKONADI_TRACER_H
 #define AKONADI_TRACER_H
 
+#include <QtCore/QObject>
 #include <QtCore/QMutex>
 
 #include "tracerinterface.h"
@@ -32,8 +33,10 @@ namespace Akonadi {
  *
  * The tracer will forward these information to the configured backends.
  */
-class Tracer : public TracerInterface
+class Tracer : public QObject, public TracerInterface
 {
+  Q_OBJECT
+
   public:
     /**
      * Returns the global tracer instance.
@@ -45,6 +48,8 @@ class Tracer : public TracerInterface
      */
     virtual ~Tracer();
 
+
+  public Q_SLOTS:
     /**
      * This method is called whenever a new data (imap) connection to the akonadi server
      * is established.
@@ -90,7 +95,17 @@ class Tracer : public TracerInterface
      * @param signalName The name of the signal being sent.
      * @param msg A message specific string.
      */
-    virtual void signalEmitted( const QString &signalName, const QString &msg );
+    virtual void signal( const QString &signalName, const QString &msg );
+
+    /**
+     * This method is called whenever a component wants to output a warning.
+     */
+    virtual void warning( const QString &componentName, const QString &msg );
+
+    /**
+     * This method is called whenever a component wants to output an error.
+     */
+    virtual void error( const QString &componentName, const QString &msg );
 
   private:
     Tracer();

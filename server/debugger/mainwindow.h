@@ -38,10 +38,12 @@ class MainWindow : public QMainWindow
   private Q_SLOTS:
     void connectionStarted( const QString&, const QString& );
     void connectionEnded( const QString&, const QString& );
-    void dbusSignalEmitted( const QString&, const QString& );
+    void signalEmitted( const QString&, const QString& );
+    void warningEmitted( const QString&, const QString& );
+    void errorEmitted( const QString&, const QString& );
 
   private:
-    QTextEdit *mSignalsView;
+    QTextEdit *mGeneralView;
     QTabWidget *mConnectionPages;
     QHash<QString, ConnectionPage*> mPageHash;
 };

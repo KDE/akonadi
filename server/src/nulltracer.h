@@ -32,11 +32,13 @@ class NullTracer : public TracerInterface
   public:
     virtual ~NullTracer() {}
 
-    virtual void beginConnection( const QString&, const QString& ) {};
-    virtual void endConnection( const QString&, const QString& ) {};
-    virtual void connectionInput( const QString&, const QString& ) {};
-    virtual void connectionOutput( const QString&, const QString& ) {};
-    virtual void signalEmitted( const QString&, const QString& ) {};
+    virtual void beginConnection( const QString&, const QString& ) {}
+    virtual void endConnection( const QString&, const QString& ) {}
+    virtual void connectionInput( const QString&, const QString& ) {}
+    virtual void connectionOutput( const QString&, const QString& ) {}
+    virtual void signal( const QString&, const QString& ) {}
+    virtual void warning( const QString&, const QString& ) {}
+    virtual void error( const QString&, const QString& ) {}
 };
 
 }
