@@ -26,6 +26,7 @@
 #include <QHostAddress>
 #include <QTcpSocket>
 #include <QTimer>
+#include <QTextStream>
 
 #include "job.h"
 #include "imapparser.h"
@@ -224,7 +225,9 @@ void PIM::Job::slotDataReceived( )
       // just a normal response, fall through
     }
 
-    qDebug() << "data received " << dataBuffer;
+    QTextStream dbg( stderr );
+    dbg << "data received: " << dataBuffer;
+
     int startOfData = dataBuffer.indexOf( ' ' );
     QByteArray tag = dataBuffer.left( startOfData );
     QByteArray data = dataBuffer.mid( startOfData + 1 );
