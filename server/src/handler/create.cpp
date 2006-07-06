@@ -103,7 +103,7 @@ bool Create::handleLine(const QByteArray& line )
         bool canContainSubfolders = false;
         const QList<MimeType> mimeTypes = db->mimeTypesForLocation( db->locationByName( resource, locationName.left( endOfSupFolder ) ).id() );
         foreach ( MimeType m, mimeTypes ) {
-            if ( m.mimeType().toLower() == "directory/inode" ) {
+            if ( m.mimeType().toLower() == "inode/directory" ) {
                 canContainSubfolders = true;
                 break;
             }
@@ -117,7 +117,7 @@ bool Create::handleLine(const QByteArray& line )
         if ( ! db->appendLocation( folderName, resource, &locationId ) )
             return failureResponse( "Adding " + resourceName + folderName + " to the database failed" );
         // FIXME what to do if appending the mime type fails?
-        db->appendMimeTypeForLocation( locationId, "directory/inode" );
+        db->appendMimeTypeForLocation( locationId, "inode/directory" );
         // FIXME add more MIME types
     }
 
