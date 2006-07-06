@@ -116,12 +116,18 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
       result.setValid( false );
       return result;
     }
-    const QList<Location> locations = listLocations( r );
 
+    result.setValid( false );
+
+    const QList<Location> locations = listLocations( r );
     foreach( Location l, locations ) {
       const QString location = "/" + resource + l.location();
-      //qDebug() << "Location: " << location << " " << resource << " prefix: " << fullPrefix;
-      const bool atFirstLevel = location.lastIndexOf( '/' ) == fullPrefix.lastIndexOf( '/' );
+#if 0
+      qDebug() << "Location: " << location << " l: " << l << "r: "<< resource
+        << " prefix: " << fullPrefix;
+#endif
+      const bool atFirstLevel =
+        location.lastIndexOf( '/' ) == fullPrefix.lastIndexOf( '/' );
       if ( location.startsWith( fullPrefix ) ) {
         if ( hasStar || ( hasPercent && atFirstLevel ) ||
              location == fullPrefix + sanitizedPattern ) {
@@ -130,8 +136,10 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
           result.append( c );
         }
       }
+      // Check, if requested folder has been found to distinguish between
+      // non-existant folder and empty folder.
+      if ( location + "/" == fullPrefix ) result.setValid( true );
     }
-    if ( result.isEmpty() ) result.setValid( false );
   }
 
   return result;
