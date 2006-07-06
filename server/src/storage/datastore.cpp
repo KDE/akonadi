@@ -109,7 +109,8 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
   } else if ( fullPrefix == "/Search/" ) {
     result += PersistentSearchManager::self()->collections();
   } else {
-    const QByteArray resource = fullPrefix.mid( 1, fullPrefix.indexOf( '/', 1 ) - 1 );
+    int firstSlash = fullPrefix.indexOf( '/', 1 );
+    const QByteArray resource = fullPrefix.mid( 1, firstSlash - 1 );
     qDebug() << "Listing folders in resource: " << resource;
     Resource r = resourceByName( resource );
     if ( !r.isValid() ) {
@@ -117,7 +118,10 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
       return result;
     }
 
-    result.setValid( false );
+    QString path = fullPrefix.mid( firstSlash + 1 );
+    if ( !path.isEmpty() ) {
+      result.setValid( false );
+    }
 
     const QList<Location> locations = listLocations( r );
     foreach( Location l, locations ) {
@@ -138,7 +142,8 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
       }
       // Check, if requested folder has been found to distinguish between
       // non-existant folder and empty folder.
-      if ( location + "/" == fullPrefix ) result.setValid( true );
+      if ( location + "/" == fullPrefix )
+        result.setValid( true );
     }
   }
 
