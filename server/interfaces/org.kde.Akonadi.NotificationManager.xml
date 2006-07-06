@@ -1,0 +1,32 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.Akonadi.NotificationManager">
+    <signal name="itemChanged">
+      <arg name="uid" type="ay" direction="out"/>
+      <arg name="collection" type="ay" direction="out"/>
+    </signal>
+    <signal name="itemAdded">
+      <arg name="uid" type="ay" direction="out"/>
+      <arg name="collection" type="ay" direction="out"/>
+    </signal>
+    <signal name="itemRemoved">
+      <arg name="uid" type="ay" direction="out"/>
+      <arg name="collection" type="ay" direction="out"/>
+    </signal>
+    <signal name="collectionAdded">
+      <arg name="path" type="ay" direction="out"/>
+    </signal>
+    <signal name="collectionChanged">
+      <arg name="path" type="ay" direction="out"/>
+    </signal>
+    <signal name="collectionRemoved">
+      <arg name="path" type="ay" direction="out"/>
+    </signal>
+    <method name="monitorCollection">
+      <arg name="path" type="ay" direction="in"/>
+    </method>
+    <method name="monitorItem">
+      <arg name="uid" type="ay" direction="in"/>
+    </method>
+  </interface>
+</node>
