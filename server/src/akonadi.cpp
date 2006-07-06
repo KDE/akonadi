@@ -22,8 +22,6 @@
 #include "akonadiconnection.h"
 
 #include "notificationmanager.h"
-#include "storagebackend.h"
-#include "teststoragebackend.h"
 #include "tracer.h"
 
 using namespace Akonadi;

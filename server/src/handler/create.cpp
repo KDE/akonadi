@@ -20,7 +20,6 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include "storagebackend.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
 

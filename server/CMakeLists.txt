@@ -2,7 +2,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/include )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/searchproviders )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/test )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
 add_subdirectory( src )
@@ -36,7 +36,6 @@ set(libakonadiprivate_SRCS
   src/handler/store.cpp
   src/handler/storequery.cpp
   src/handler/uid.cpp
-  test/teststoragebackend.cpp
   src/persistentsearch.cpp
   src/persistentsearchmanager.cpp
   src/searchprovider.cpp
