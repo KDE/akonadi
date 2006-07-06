@@ -176,6 +176,8 @@ bool Akonadi::Append::commit()
         remote_id = flag.mid( pos1 + 1, pos2 - pos1 - 1 );
       }
     }
+    // standard imap does not know this attribute, so that's mail
+    if ( mt.isEmpty() ) mt = "message/rfc822"; 
     MimeType mimeType = db->mimeTypeByName( mt );
     if ( !mimeType.isValid() ) {
       return failureResponse( QString( "Unknown mime type '%1'.").arg( mt ) );
