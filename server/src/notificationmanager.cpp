@@ -22,6 +22,7 @@
 #include "notificationmanager.h"
 #include "notificationmanageradaptor.h"
 #include "tracer.h"
+#include "storage/datastore.h"
 
 using namespace Akonadi;
 
@@ -73,6 +74,24 @@ void NotificationManager::monitorItem( const QByteArray & id )
   mMutex.unlock();
 
   qDebug() << "Got monitor request for item: " << id;
+}
+
+
+void NotificationManager::connectDatastore( DataStore * store )
+{
+  connect( store, SIGNAL( itemAdded( int, const QByteArray& ) ),
+           this, SLOT( slotItemAdded( int, const QByteArray& ) ) );
+}
+
+
+void Akonadi::NotificationManager::slotItemAdded( int uid, const QByteArray& location )
+{
+  QByteArray id = QString::number( uid ).toLatin1();
+  if ( mIds.contains( id ) || mIds.contains( location ) ) {
+    emit itemAdded( id, location );
+    QString msg = QString("ID: %1, Location: %2" ).arg( uid ).arg( location.data() );
+    Tracer::self()->signal( "NotificationManager::itemAdded", msg );
+  }
 }
 
 #include "notificationmanager.moc"

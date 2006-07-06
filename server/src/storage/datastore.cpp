@@ -20,8 +20,10 @@
 #include "datastore.h"
 #include "persistentsearchmanager.h"
 #include "agentmanagerinterface.h"
+#include "notificationmanager.h"
 
 #include <QSqlQuery>
+#include <QEventLoop>
 #include <QSqlField>
 #include <QSqlError>
 #include <QSqlDatabase>
@@ -39,6 +41,7 @@ using namespace Akonadi;
  *   DataStore                                                           *
  ***************************************************************************/
 DataStore::DataStore()
+    :QObject()
 {
 }
 
@@ -52,6 +55,8 @@ void DataStore::init()
     debugLastDbError( "Cannot open database." );
   else
     qDebug() << "Database akonadi.db opened.";
+
+  NotificationManager::self()->connectDatastore( this );
 }
 
 DataStore::~DataStore()
@@ -511,8 +516,9 @@ bool DataStore::appendLocation( const QString & location,
     return false;
   }
 
+  int id = lastInsertId( query );
   if ( insertId )
-      *insertId = lastInsertId( query );
+      *insertId = id;
 
   return true;
 }
@@ -1024,8 +1030,11 @@ bool DataStore::appendPimItem( const QByteArray & data,
     return false;
   }
 
+  int id = lastInsertId( query );
   if ( insertId )
-      *insertId = lastInsertId( query );
+      *insertId = id;
+
+  emit itemAdded( id, location.location().latin1() );
 
   return true;
 }
@@ -1140,6 +1149,17 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray& remot
 {
   org::kde::Akonadi::AgentManager agentManager( "org.kde.Akonadi.AgentManager", "/", QDBus::sessionBus() );
   // FIXME figure out the resource, ask it for the item, by remote id
+  Location l = locationById( locationid );
+  Resource r = resourceById( l.resourceId() );
+  QByteArray data;
+  if ( agentManager.requestItemDelivery( r.resource(), l.location(), remote_id, type ) ) {
+    // wait for the delivery to be done...
+    //QEventLoop loop( this );
+   // connect( this, SIGNAL( done( PIM::Job* ) ), &loop, SLOT( quit( ) ) );
+   // loop.exec( );
+  }
+  
+  return data;
 }
 
 
@@ -1702,3 +1722,5 @@ QDateTime DataStore::dateTimeToQDateTime( const QByteArray & dateTime )
 {
     return QDateTime::fromString( dateTime, "yyyy-MM-dd hh:mm:ss" );
 }
+
+#include "datastore.moc"

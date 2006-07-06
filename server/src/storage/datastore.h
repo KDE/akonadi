@@ -20,6 +20,7 @@
 #ifndef DATASTORE_H
 #define DATASTORE_H
 
+#include <QObject>
 #include <QList>
 #include <QSqlDatabase>
 
@@ -35,8 +36,9 @@ namespace Akonadi {
 /***************************************************************************
  *   DataStore                                                             *
  ***************************************************************************/
-class DataStore
+class DataStore : public QObject
 {
+    Q_OBJECT
 public:
     DataStore();
     void init();
@@ -174,6 +176,11 @@ public:
         @return possible id of the next PIM item that is added to the database
      */
     int uidNext() const;
+
+Q_SIGNALS:
+    void itemAdded( int uid, const QByteArray& location );
+    void itemRemoved( int uid, const QByteArray& location );
+    void itemChanged( int uid, const QByteArray& location );
 
 protected:
     void debugLastDbError( const QString & actionDescription ) const;

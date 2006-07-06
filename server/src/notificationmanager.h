@@ -26,6 +26,7 @@
 
 namespace Akonadi {
 
+    class DataStore;
 /**
   Notification manager D-Bus interface.
 */
@@ -37,6 +38,8 @@ class NotificationManager : public QObject
     static NotificationManager *self();
 
     virtual ~NotificationManager();
+
+    void connectDatastore( DataStore* );
 
   public Q_SLOTS:
     void monitorCollection( const QByteArray &path );
@@ -50,6 +53,8 @@ class NotificationManager : public QObject
     void collectionChanged( const QByteArray &path );
     void collectionRemoved( const QByteArray &path );
 
+  private Q_SLOTS:
+    void slotItemAdded( int uid, const QByteArray& location );
   private:
     NotificationManager();
 
