@@ -73,28 +73,32 @@ void AgentManager::removeAgentInstance( const QString &identifier )
 
 QStringList AgentManager::profiles() const
 {
-  return QStringList();
+  return mProfileManager.profiles();
 }
 
 bool AgentManager::createProfile( const QString &identifier )
 {
+  return mProfileManager.createProfile( identifier );
 }
 
 void AgentManager::removeProfile( const QString &identifier )
 {
+  mProfileManager.removeProfile( identifier );
 }
 
-void AgentManager::profileAddAgent( const QString &profileIdentifier, const QString &agentIdentifier )
+bool AgentManager::profileAddAgent( const QString &profileIdentifier, const QString &agentIdentifier )
 {
+  return mProfileManager.profileAddAgent( profileIdentifier, agentIdentifier );
 }
 
-void AgentManager::profileRemoveAgent( const QString &profileIdentifier, const QString &agentIdentifier )
+bool AgentManager::profileRemoveAgent( const QString &profileIdentifier, const QString &agentIdentifier )
 {
+  return mProfileManager.profileRemoveAgent( profileIdentifier, agentIdentifier );
 }
 
 QStringList AgentManager::profileAgents( const QString &identifier ) const
 {
-  return QStringList();
+  return mProfileManager.profileAgents( identifier );
 }
 
 #include "agentmanager.moc"

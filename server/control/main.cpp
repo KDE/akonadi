@@ -22,6 +22,7 @@
 #include <QtDBus/QDBusError>
 
 #include "processcontrol.h"
+#include "profilemanager.h"
 #include "agentmanager.h"
 
 int main( int argc, char **argv )

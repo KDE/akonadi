@@ -17,99 +17,35 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef AGENTMANAGER_H
-#define AGENTMANAGER_H
+#ifndef PROFILEMANAGER_H
+#define PROFILEMANAGER_H
 
+#include <QtCore/QMap>
+#include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-#include "profilemanager.h"
-
-/**
- * Interface for handling profiles and agents in
- * the Akonadi server.
- */
-class AgentManager : public QObject
+class ProfileManager : public QObject
 {
-  Q_OBJECT
-
   public:
     /**
-     * Creates a new agent manager.
-     *
-     * @param parent The parent object.
+     * Creates a new profile manager.
      */
-    AgentManager( QObject *parent = 0 );
+    ProfileManager( QObject *parent = 0 );
 
     /**
-     * Destroys the agent manager.
+     * Destroys the profile manager.
      */
-    ~AgentManager();
-
-
-  public Q_SLOTS:
-    /**
-     * Agent types specific methods
-     */
+    ~ProfileManager();
 
     /**
-     * Returns the list of identifiers of all available
-     * agent types.
+     * Loads the profiles from the file.
      */
-    QStringList agentTypes() const;
+    void load();
 
     /**
-     * Returns the i18n'ed name of the agent type for
-     * the given @p identifier.
+     * Saves the profiles to the file.
      */
-    QString agentName( const QString &identifier ) const;
-
-    /**
-     * Returns the i18n'ed comment of the agent type for
-     * the given @p identifier.
-     */
-    QString agentComment( const QString &identifier ) const;
-
-    /**
-     * Returns the icon name of the agent type for the
-     * given @p identifier.
-     */
-    QString agentIcon( const QString &identifier ) const;
-
-    /**
-     * Returns a list of supported mimetypes of the agent type
-     * for the given @p identifier.
-     */
-    QStringList agentMimeTypes( const QString &identifier ) const;
-
-
-    /**
-     * Returns a list of supported capabilities of the agent type
-     * for the given @p identifier.
-     */
-    QStringList agentCapabilities( const QString &identifier ) const;
-
-
-    /**
-     * Agent specific methods
-     */
-
-    /**
-     * Creates a new agent of the given agent type @p identifier.
-     *
-     * @return The identifier of the new agent if created successfully,
-     *         an empty string otherwise.
-     */
-    QString createAgentInstance( const QString &identifier );
-
-    /**
-     * Removes the agent with the given @p identifier.
-     */
-    void removeAgentInstance( const QString &identifier );
-
-
-    /**
-     * Profile specific methods
-     */
+    void save();
 
     /**
      * Returns the list of identifiers of available profiles.
@@ -152,7 +88,9 @@ class AgentManager : public QObject
     QStringList profileAgents( const QString &identifier ) const;
 
   private:
-    ProfileManager mProfileManager;
+    QString profilePath() const;
+
+    QMap<QString, QStringList> mProfiles;
 };
 
 #endif
