@@ -58,6 +58,7 @@ class AKONADI_EXPORT JobQueue : public Job
 
   protected:
     virtual void doStart();
+    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
     // part of the Job API, hide it for JobQueue

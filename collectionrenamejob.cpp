@@ -28,7 +28,6 @@ class PIM::CollectionRenameJobPrivate
   public:
     QByteArray from;
     QByteArray to;
-    QByteArray tag;
 };
 
 PIM::CollectionRenameJob::CollectionRenameJob( const QByteArray & from, const QByteArray & to, QObject * parent ) :
@@ -46,18 +45,11 @@ PIM::CollectionRenameJob::~ CollectionRenameJob( )
 
 void PIM::CollectionRenameJob::doStart( )
 {
-  d->tag = newTag();
-  writeData( d->tag + " RENAME " + d->from + " " + d->to );
+  writeData( newTag() + " RENAME " + d->from + " " + d->to );
 }
 
-void PIM::CollectionRenameJob::handleResponse( const QByteArray & tag, const QByteArray & data )
+void PIM::CollectionRenameJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  if ( tag == d->tag ) {
-    if ( !data.startsWith( "OK" ) )
-      setError( Unknown );
-    emit done( this );
-    return;
-  }
   qDebug() << "Unhandled response in collection rename job: " << tag << data;
 }
 

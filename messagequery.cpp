@@ -55,6 +55,11 @@ void PIM::MessageQuery::doStart( )
   QTimer::singleShot( 0, this, SLOT( slotEmitDone() ) );
 }
 
+void PIM::MessageQuery::doHandleResponse( const QByteArray &tag,
+  const QByteArray &data )
+{
+}
+
 void PIM::MessageQuery::slotEmitDone( )
 {
   emit done( this );

@@ -35,7 +35,6 @@ class PIM::MessageFetchJobPrivate
     QByteArray path;
     DataReference uid;
     Message::List messages;
-    QByteArray tag;
 
   public:
     void parseAddrField( const QList<QByteArray> &addrField, KMime::Headers::AddressField *hdr )
@@ -103,14 +102,8 @@ void PIM::MessageFetchJob::doStart()
   job->start();
 }
 
-void PIM::MessageFetchJob::handleResponse( const QByteArray & tag, const QByteArray & data )
+void PIM::MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  if ( tag == d->tag ) {
-    if ( !data.startsWith( "OK" ) )
-      setError( Unknown );
-    emit done( this );
-    return;
-  }
   if ( tag == "*" ) {
     int begin = data.indexOf( "FETCH" );
     if ( begin >= 0 ) {
@@ -196,13 +189,12 @@ Message::List PIM::MessageFetchJob::messages() const
 void PIM::MessageFetchJob::selectDone( PIM::Job * job )
 {
   if ( job->error() ) {
-    setError( job->error() );
+    setError( job->error(), job->errorMessage() );
     emit done( this );
   } else {
     job->deleteLater();
     // the collection is now selected, fetch the message(s)
-    d->tag = newTag();
-    QByteArray command = d->tag;
+    QByteArray command = newTag();
     if ( d->uid.isNull() )
       command += " FETCH 1:* (UID FLAGS ENVELOPE)";
     else

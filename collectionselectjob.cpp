@@ -27,7 +27,6 @@ class PIM::CollectionSelectJobPrivate
 {
   public:
     QByteArray path;
-    QByteArray tag;
     int unseen;
 };
 
@@ -49,18 +48,11 @@ void PIM::CollectionSelectJob::doStart( )
   QByteArray path = d->path;
   if ( path.startsWith( "/" ) ) path.remove( 0, 1 );
 
-  d->tag = newTag();
-  writeData( d->tag + " SELECT \"" + path + "\"" );
+  writeData( newTag() + " SELECT \"" + path + "\"" );
 }
 
-void PIM::CollectionSelectJob::handleResponse( const QByteArray & tag, const QByteArray & data )
+void PIM::CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  if ( tag == d->tag ) {
-    if ( !data.startsWith( "OK" ) )
-      setError( Unknown );
-    emit done( this );
-    return;
-  }
   if ( tag == "*" ) {
     if ( data.startsWith( "OK [UNSEEN" ) ) {
       int begin = data.indexOf( ' ', 4 );

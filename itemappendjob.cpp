@@ -29,7 +29,6 @@ class PIM::ItemAppendJobPrivate
     QByteArray path;
     QByteArray data;
     QByteArray mimetype;
-    QByteArray tag;
 };
 
 PIM::ItemAppendJob::ItemAppendJob( const QByteArray &path, const QByteArray & data, const QByteArray & mimetype, QObject * parent ) :
@@ -48,18 +47,11 @@ PIM::ItemAppendJob::~ ItemAppendJob( )
 
 void PIM::ItemAppendJob::doStart()
 {
-  d->tag = newTag();
-  writeData( d->tag + " APPEND " + d->path + " (\\MimeType[" + d->mimetype + "]) {" + QByteArray::number( d->data.size() ) + "}" );
+  writeData( newTag() + " APPEND " + d->path + " (\\MimeType[" + d->mimetype + "]) {" + QByteArray::number( d->data.size() ) + "}" );
 }
 
-void PIM::ItemAppendJob::handleResponse( const QByteArray & tag, const QByteArray & data )
+void PIM::ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  if ( tag == d->tag ) {
-    if ( !data.startsWith( "OK" ) )
-      setError( Unknown );
-    emit done( this );
-    return;
-  }
   if ( tag == "+" ) { // ready for literal data
     writeData( d->data );
     return;

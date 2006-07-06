@@ -33,7 +33,6 @@ class PIM::CollectionListJobPrivate
   public:
     bool recursive;
     QByteArray prefix;
-    QByteArray tag;
     Collection::List collections;
 };
 
@@ -57,18 +56,11 @@ PIM::Collection::List PIM::CollectionListJob::collections() const
 
 void PIM::CollectionListJob::doStart()
 {
-  d->tag = newTag();
-  writeData( d->tag + " LIST \"" + d->prefix + "\" " + ( d->recursive ? '*' : '%' ) );
+  writeData( newTag() + " LIST \"" + d->prefix + "\" " + ( d->recursive ? '*' : '%' ) );
 }
 
-void PIM::CollectionListJob::handleResponse( const QByteArray & tag, const QByteArray & data )
+void PIM::CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  if ( tag == d->tag ) {
-    if ( !data.startsWith( "OK" ) )
-      setError( Unknown );
-    emit done( this );
-    return;
-  }
   if ( tag == "*" && data.startsWith( "LIST" ) ) {
     int current = 4; // 'LIST'
 

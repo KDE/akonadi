@@ -53,6 +53,7 @@ class MessageQuery : public Job
 
   private:
     virtual void doStart();
+    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private slots:
     // just for testing

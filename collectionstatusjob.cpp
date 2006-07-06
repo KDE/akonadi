@@ -31,7 +31,6 @@ class PIM::CollectionStatusJobPrivate
   public:
     QByteArray path;
     CollectionAttribute::List attributes;
-    QByteArray tag;
 };
 
 PIM::CollectionStatusJob::CollectionStatusJob( const QByteArray & path, QObject * parent ) :
@@ -53,18 +52,11 @@ QList< CollectionAttribute * > PIM::CollectionStatusJob::attributes( ) const
 
 void PIM::CollectionStatusJob::doStart( )
 {
-  d->tag = newTag();
-  writeData( d->tag + " STATUS \"" + d->path + "\" (MESSAGES UNSEEN)" );
+  writeData( newTag() + " STATUS \"" + d->path + "\" (MESSAGES UNSEEN)" );
 }
 
-void PIM::CollectionStatusJob::handleResponse( const QByteArray & tag, const QByteArray & data )
+void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  if ( tag == d->tag ) {
-    if ( !data.startsWith( "OK" ) )
-      setError( Unknown );
-    emit done( this );
-    return;
-  }
   if ( tag == "*" ) {
     QByteArray token;
     int current = ImapParser::parseString( data, token );

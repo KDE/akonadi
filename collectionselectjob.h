@@ -52,7 +52,7 @@ class AKONADI_EXPORT CollectionSelectJob : public Job
 
   protected:
     void doStart();
-    void handleResponse( const QByteArray &tag, const QByteArray &data );
+    void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
     CollectionSelectJobPrivate *d;

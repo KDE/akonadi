@@ -26,7 +26,6 @@ using namespace PIM;
 class PIM::CollectionCreateJobPrivate {
   public:
     QByteArray path;
-    QByteArray tag;
 };
 
 PIM::CollectionCreateJob::CollectionCreateJob( const QByteArray & path, QObject * parent ) :
@@ -43,18 +42,11 @@ PIM::CollectionCreateJob::~ CollectionCreateJob( )
 
 void PIM::CollectionCreateJob::doStart( )
 {
-  d->tag = newTag();
-  writeData( d->tag + " CREATE \"" + d->path + "\"" );
+  writeData( newTag() + " CREATE \"" + d->path + "\"" );
 }
 
-void PIM::CollectionCreateJob::handleResponse( const QByteArray & tag, const QByteArray & data )
+void PIM::CollectionCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  if ( tag == d->tag ) {
-    if ( !data.startsWith( "OK" ) )
-      setError( Unknown );
-    emit done( this );
-    return;
-  }
   qDebug() << "unhandled response in collection create job: " << tag << data;
 }
 

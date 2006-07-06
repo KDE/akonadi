@@ -86,10 +86,12 @@ class Job::JobPrivate
 {
   public:
     int mError;
+    QString mErrorMessage;
     QTcpSocket *socket;
     int lastTag;
     QByteArray loginTag;
     Job *parent;
+    QByteArray tag;
 };
 
 Job::Job( QObject *parent )
@@ -148,28 +150,38 @@ int Job::error() const
   return d->mError;
 }
 
+QString Job::errorMessage() const
+{
+  return d->mErrorMessage;
+}
+
 QString Job::errorText() const
 {
+  QString str;
   switch ( d->mError ) {
     case None:
-      return QString();
       break;
     case ConnectionFailed:
-      return tr( "Can't connect to pim storage service." );
+      str = tr( "Can't connect to pim storage service." );
       break;
     case UserCanceled:
-      return tr( "User canceled transmission." );
+      str = tr( "User canceled transmission." );
       break;
     case Unknown:
     default:
-      return tr( "Unknown Error." );
+      str = tr( "Unknown Error." );
       break;
   }
+  if ( !d->mErrorMessage.isEmpty() ) {
+    str += " (" + d->mErrorMessage + ")";
+  }
+  return str;
 }
 
-void Job::setError( int error )
+void Job::setError( int error, const QString &msg )
 {
   d->mError = error;
+  d->mErrorMessage = msg;
 }
 
 void PIM::Job::slotDisconnected( )
@@ -256,6 +268,7 @@ void PIM::Job::slotDataReceived( )
       handleResponse( tag, data );
   }
 }
+
 void PIM::Job::slotSocketError()
 {
   qWarning() << "Socket error: " << d->socket->errorString();
@@ -266,9 +279,17 @@ void PIM::Job::slotSocketError()
 QByteArray PIM::Job::newTag( )
 {
   if ( d->parent )
-    return d->parent->newTag();
-  d->lastTag++;
-  return QByteArray::number( d->lastTag );
+    d->tag = d->parent->newTag();
+  else {
+    d->lastTag++;
+    d->tag = QByteArray::number( d->lastTag );
+  }
+  return d->tag;
+}
+
+QByteArray PIM::Job::tag() const
+{
+  return d->tag;
 }
 
 void PIM::Job::writeData( const QByteArray & data )
@@ -278,7 +299,17 @@ void PIM::Job::writeData( const QByteArray & data )
 
 void PIM::Job::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  qWarning() << "Unhandled backend response: " << tag << data;
+  if ( tag == d->tag ) {
+    if ( !data.startsWith( "OK" ) ) {
+      QString msg = data;
+      if ( msg.startsWith( "NO " ) ) msg.remove( 0, 3 );
+      if ( msg.endsWith( "\r\n" ) ) msg.chop( 2 );
+      setError( Unknown, msg );
+    }
+    emit done( this );
+    return;
+  }
+  doHandleResponse( tag, data );
 }
 
 void PIM::Job::addSubJob( Job * job )

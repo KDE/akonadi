@@ -185,6 +185,11 @@ class AKONADI_EXPORT Job : public QObject
     int error() const;
 
     /**
+      Return error message, if there has been an error, QString() otherwise.
+    */
+    QString errorMessage() const;
+
+    /**
       Returns the error string, if there has been an error, an empty
       string otherwise.
      */
@@ -214,14 +219,20 @@ class AKONADI_EXPORT Job : public QObject
 
   protected:
     /**
-      Subclasses have to use this method to set an error code.
+      Subclasses have to use this method to set an error code. They can
+      optionally set a describing error message.
      */
-    void setError( int );
+    void setError( int code, const QString &msg = QString() );
 
     /**
       Returns a new unique command tag for comunication with the backend.
     */
     QByteArray newTag();
+
+    /**
+      Return the tag used for the request.
+    */
+    QByteArray tag() const;
 
     /**
       Sends raw data to the backend.
@@ -241,13 +252,16 @@ class AKONADI_EXPORT Job : public QObject
       @param tag The tag of the corresponding command, empty if this is an untagges response.
       @param data The received data.
     */
-    virtual void handleResponse( const QByteArray &tag, const QByteArray &data );
+    virtual void doHandleResponse( const QByteArray &tag,
+      const QByteArray &data ) = 0;
 
   private:
     /**
       Adds the given job as a sub job.
     */
     void addSubJob( Job* job );
+
+    void handleResponse( const QByteArray &tag, const QByteArray &data );
 
   private slots:
     void slotDisconnected();
