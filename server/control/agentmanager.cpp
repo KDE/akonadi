@@ -34,32 +34,32 @@ AgentManager::~AgentManager()
 
 QStringList AgentManager::agentTypes() const
 {
-  return QStringList();
+  return mPluginManager.agentTypes();
 }
 
 QString AgentManager::agentName( const QString &identifier ) const
 {
-  return QString();
+  return mPluginManager.agentName( identifier );
 }
 
 QString AgentManager::agentComment( const QString &identifier ) const
 {
-  return QString();
+  return mPluginManager.agentComment( identifier );
 }
 
 QString AgentManager::agentIcon( const QString &identifier ) const
 {
-  return QString();
+  return mPluginManager.agentIcon( identifier );
 }
 
 QStringList AgentManager::agentMimeTypes( const QString &identifier ) const
 {
-  return QStringList();
+  return mPluginManager.agentMimeTypes( identifier );
 }
 
 QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 {
-  return QStringList();
+  return mPluginManager.agentCapabilities( identifier );
 }
 
 QString AgentManager::createAgentInstance( const QString &identifier )

@@ -17,40 +17,28 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef AGENTMANAGER_H
-#define AGENTMANAGER_H
+#ifndef PLUGINMANAGER_H
+#define PLUGINMANAGER_H
 
+#include <QtCore/QMap>
 #include <QtCore/QStringList>
 
-#include "pluginmanager.h"
-#include "profilemanager.h"
-
-/**
- * Interface for handling profiles and agents in
- * the Akonadi server.
- */
-class AgentManager : public QObject
+class PluginManager : public QObject
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new agent manager.
+     * Creates a new plugin manager.
      *
      * @param parent The parent object.
      */
-    AgentManager( QObject *parent = 0 );
+    PluginManager( QObject *parent = 0 );
 
     /**
-     * Destroys the agent manager.
+     * Destroys the plugin manager.
      */
-    ~AgentManager();
-
-
-  public Q_SLOTS:
-    /**
-     * Agent types specific methods
-     */
+    ~PluginManager();
 
     /**
      * Returns the list of identifiers of all available
@@ -89,11 +77,6 @@ class AgentManager : public QObject
      */
     QStringList agentCapabilities( const QString &identifier ) const;
 
-
-    /**
-     * Agent specific methods
-     */
-
     /**
      * Creates a new agent of the given agent type @p identifier.
      *
@@ -107,54 +90,25 @@ class AgentManager : public QObject
      */
     void removeAgentInstance( const QString &identifier );
 
-
-    /**
-     * Profile specific methods
-     */
-
-    /**
-     * Returns the list of identifiers of available profiles.
-     */
-    QStringList profiles() const;
-
-    /**
-     * Creates a new profile with the given @p identifier.
-     *
-     * @return true if created successfull, false a profile with the
-     *         same @p identifier already exists.
-     */
-    bool createProfile( const QString &identifier );
-
-    /**
-     * Removes the profile with the given @p identifier.
-     */
-    void removeProfile( const QString &identifier );
-
-    /**
-     * Adds the agent with the given identifier to the profile with
-     * the given identifier.
-     *
-     * @return true on success, false otherwise.
-     */
-    bool profileAddAgent( const QString &profileIdentifier, const QString &agentIdentifier );
-
-    /**
-     * Removes the agent with the given identifier from the profile with
-     * the given identifier.
-     *
-     * @return true on success, false otherwise.
-     */
-    bool profileRemoveAgent( const QString &profileIdentifier, const QString &agentIdentifier );
-
-    /**
-     * Returns the list of identifiers of all agents in the profile
-     * with the given identifier.
-     */
-    QStringList profileAgents( const QString &identifier ) const;
+  private Q_SLOTS:
+    void updatePluginInfos();
 
   private:
-    PluginManager mPluginManager;
-    ProfileManager mProfileManager;
+    static QString pluginInfoPath();
+
+    class PluginInfo
+    {
+      public:
+        QString identifier;
+        QString name;
+        QString comment;
+        QString icon;
+        QStringList mimeTypes;
+        QStringList capabilities;
+        QString exec;
+    };
+
+    QMap<QString, PluginInfo> mPluginInfos;
 };
 
 #endif

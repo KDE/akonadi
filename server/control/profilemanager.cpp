@@ -17,8 +17,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <config-prefix.h> // for AKONADIDIR
-
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 

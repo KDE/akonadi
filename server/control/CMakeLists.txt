@@ -9,6 +9,7 @@ configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h
 set( control_SRCS
   agentmanager.cpp
   main.cpp
+  pluginmanager.cpp
   processcontrol.cpp
   profilemanager.cpp
 )
