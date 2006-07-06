@@ -28,7 +28,7 @@
 PluginManager::PluginManager( QObject *parent )
   : QObject( parent )
 {
-  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus() );
+  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus(), this );
 
   QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
   watcher->addPath( pluginInfoPath() );
