@@ -5,9 +5,10 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
-add_subdirectory( src )
 add_subdirectory( control )
 add_subdirectory( debugger )
+add_subdirectory( src )
+add_subdirectory( tests )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions" )
 
@@ -63,15 +64,17 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
 
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.AgentManager.xml )
 
-set(akonadiserver_bin_SRCS ${libakonadiprivate_SRCS}
-    src/main.cpp
-)
+kde4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
+target_link_libraries( akonadiprivate ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARIES}
+                                      ${QT_QTSQL_LIBRARIES} ${QT_QTDBUS_LIBRARIES} )
+install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
-kde4_automoc(${libakonadiprivate_SRCS} ${akonadiserver_bin_SRCS})
+set( akonadiserver_bin_SRCS src/main.cpp )
 
-kde4_add_executable(akonadiserver_bin ${akonadiserver_bin_SRCS})
-set_target_properties(akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver)
-target_link_libraries(akonadiserver_bin ${QT_QTCORE_LIBRARIES}
-  ${QT_QTNETWORK_LIBRARIES} ${QT_QTSQL_LIBRARIES} ${QT_QTDBUS_LIBRARIES})
+kde4_automoc( ${libakonadiprivate_SRCS} ${akonadiserver_bin_SRCS} )
+
+kde4_add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
+set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
+target_link_libraries( akonadiserver_bin akonadiprivate )
 
 install(TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )

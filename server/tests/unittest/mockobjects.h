@@ -14,47 +14,47 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "akonadi.h"
-#include "akonadiconnection.h"
+#ifndef MOCKOBJECTS_H
+#define MOCKOBJECTS_H
 
-#include "notificationmanager.h"
-#include "tracer.h"
+#include "akonadiconnection.h"
+#include "teststoragebackend.h"
 
 using namespace Akonadi;
 
-static AkonadiServer *s_instance = 0;
+static AkonadiConnection * s_connection = 0;
+static DataStore * s_backend = 0;
 
-AkonadiServer::AkonadiServer( QObject* parent )
-    : QTcpServer( parent )
+class MockConnection : public AkonadiConnection
 {
-    s_instance = this;
-    listen( QHostAddress::LocalHost, 4444 );
+public:
+    MockConnection()
+    {
+    }
+    DataStore* storageBackend()
+    {
+        if ( !s_backend )
+            s_backend = new MockBackend();
+        return s_backend; 
+    }
+};
 
-    NotificationManager::self();
-    Tracer::self();
-}
-
-
-AkonadiServer::~AkonadiServer()
+class MockObjects
 {
-}
+public:
+	MockObjects();
+	~MockObjects();
 
-void AkonadiServer::incomingConnection( int socketDescriptor )
-{
-    AkonadiConnection *thread = new AkonadiConnection(socketDescriptor, this);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    thread->start();
-}
+        static AkonadiConnection * mockConnection()
+        {
+           if ( !s_connection )
+               s_connection = new MockConnection();
+           return s_connection; 
+        }
+}; // End of class MockObjects
 
 
-AkonadiServer * AkonadiServer::instance()
-{
-    if ( !s_instance )
-        s_instance = new AkonadiServer();
-    return s_instance;
-}
-
-#include "akonadi.moc"
+#endif // MOCKOBJECTS_H

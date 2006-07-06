@@ -17,44 +17,24 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-#include "akonadi.h"
-#include "akonadiconnection.h"
-
-#include "notificationmanager.h"
-#include "tracer.h"
+#include "teststoragebackend.h"
 
 using namespace Akonadi;
 
-static AkonadiServer *s_instance = 0;
-
-AkonadiServer::AkonadiServer( QObject* parent )
-    : QTcpServer( parent )
+CollectionList MockBackend::listCollections( const QByteArray& prefix,
+                                             const QByteArray & mailboxPattern ) const
 {
-    s_instance = this;
-    listen( QHostAddress::LocalHost, 4444 );
-
-    NotificationManager::self();
-    Tracer::self();
+    CollectionList list;
+    //qDebug() << "Prefix: " << prefix << " pattern: " << mailboxPattern;
+    if ( mailboxPattern == "%" ) {
+        list << Collection( "INBOX" );
+    } else if ( mailboxPattern == "*" ) {
+        list << Collection( "INBOX" );
+        list << Collection( "INBOX/foo" );
+    } else if ( mailboxPattern.startsWith( "INBOX" ) ) {
+        list << Collection( "foo" );
+        list << Collection( "bar" );
+    }
+    return list;
 }
 
-
-AkonadiServer::~AkonadiServer()
-{
-}
-
-void AkonadiServer::incomingConnection( int socketDescriptor )
-{
-    AkonadiConnection *thread = new AkonadiConnection(socketDescriptor, this);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    thread->start();
-}
-
-
-AkonadiServer * AkonadiServer::instance()
-{
-    if ( !s_instance )
-        s_instance = new AkonadiServer();
-    return s_instance;
-}
-
-#include "akonadi.moc"

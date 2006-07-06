@@ -14,47 +14,26 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "akonadi.h"
-#include "akonadiconnection.h"
+#ifndef AKONADITESTSTORAGEBACKEND_H
+#define AKONADITESTSTORAGEBACKEND_H
 
-#include "notificationmanager.h"
-#include "tracer.h"
+#include "storage/datastore.h"
 
-using namespace Akonadi;
+namespace Akonadi {
 
-static AkonadiServer *s_instance = 0;
 
-AkonadiServer::AkonadiServer( QObject* parent )
-    : QTcpServer( parent )
+class MockBackend : public DataStore
 {
-    s_instance = this;
-    listen( QHostAddress::LocalHost, 4444 );
+    public:
+        MockBackend() { }
 
-    NotificationManager::self();
-    Tracer::self();
+        CollectionList listCollections( const QByteArray& prefix,
+                                        const QByteArray & mailboxPattern ) const;
+};
+
 }
 
-
-AkonadiServer::~AkonadiServer()
-{
-}
-
-void AkonadiServer::incomingConnection( int socketDescriptor )
-{
-    AkonadiConnection *thread = new AkonadiConnection(socketDescriptor, this);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    thread->start();
-}
-
-
-AkonadiServer * AkonadiServer::instance()
-{
-    if ( !s_instance )
-        s_instance = new AkonadiServer();
-    return s_instance;
-}
-
-#include "akonadi.moc"
+#endif
