@@ -46,8 +46,11 @@ PIM::CollectionSelectJob::~ CollectionSelectJob( )
 
 void PIM::CollectionSelectJob::doStart( )
 {
+  QByteArray path = d->path;
+  if ( path.startsWith( "/" ) ) path.remove( 0, 1 );
+
   d->tag = newTag();
-  writeData( d->tag + " SELECT \"" + d->path + "\"" );
+  writeData( d->tag + " SELECT \"" + path + "\"" );
 }
 
 void PIM::CollectionSelectJob::handleResponse( const QByteArray & tag, const QByteArray & data )
