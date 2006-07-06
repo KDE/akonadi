@@ -20,6 +20,7 @@
 #include <QtCore/QString>
 
 #include "tracer.h"
+#include "traceradaptor.h"
 
 #include "dbustracer.h"
 #include "filetracer.h"
@@ -33,6 +34,10 @@ Tracer::Tracer()
 {
   // TODO: make it configurable?
   mTracerBackend = new DBusTracer();
+
+  new TracerAdaptor( this );
+
+  QDBus::sessionBus().registerObject( "/tracing", this, QDBusConnection::ExportAdaptors );
 }
 
 Tracer::~Tracer()

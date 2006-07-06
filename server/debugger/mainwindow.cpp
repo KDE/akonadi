@@ -41,7 +41,9 @@ MainWindow::MainWindow()
   page->showAllConnections( true );
   mConnectionPages->addTab( page, "All" );
 
-  org::kde::Akonadi::TracerNotification *iface = new org::kde::Akonadi::TracerNotification( QString(), "/tracing", QDBus::sessionBus(), this );
+  org::kde::Akonadi::TracerNotification *iface = new org::kde::Akonadi::TracerNotification( QString(),
+      "/tracing/notifications", QDBus::sessionBus(), this );
+
   connect( iface, SIGNAL( connectionStarted( const QString&, const QString& ) ),
            this, SLOT( connectionStarted( const QString&, const QString& ) ) );
   connect( iface, SIGNAL( connectionEnded( const QString&, const QString& ) ),

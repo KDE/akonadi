@@ -27,7 +27,7 @@ DBusTracer::DBusTracer()
 {
   new TracerNotificationAdaptor( this );
 
-  QDBus::sessionBus().registerObject( "/tracing", this, QDBusConnection::ExportAdaptors );
+  QDBus::sessionBus().registerObject( "/tracing/notifications", this, QDBusConnection::ExportAdaptors );
 }
 
 DBusTracer::~DBusTracer()
