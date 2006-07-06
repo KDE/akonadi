@@ -22,7 +22,7 @@
 
 #include "connectionpage.h"
 
-#include "tracerinterface.h"
+#include "tracernotificationinterface.h"
 
 ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
   : QWidget( parent ), mIdentifier( identifier ), mShowAllConnections( false )
@@ -34,7 +34,7 @@ ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
 
   layout->addWidget( mDataView );
 
-  org::kde::Akonadi::Tracer *iface = new org::kde::Akonadi::Tracer( QString(),
+  org::kde::Akonadi::TracerNotification *iface = new org::kde::Akonadi::TracerNotification( QString(),
     "/tracing", QDBus::sessionBus(), this );
 
   connect( iface, SIGNAL( connectionDataInput( const QString&, const QString& ) ),

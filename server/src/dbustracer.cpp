@@ -18,16 +18,15 @@
  ***************************************************************************/
 
 #include "dbustracer.h"
-#include "traceradaptor.h"
+#include "tracernotificationadaptor.h"
 
 using namespace Akonadi;
 
 DBusTracer::DBusTracer()
   : QObject( 0 )
 {
-  new TracerAdaptor( this );
+  new TracerNotificationAdaptor( this );
 
-  qDebug( "create tracing iface" );
   QDBus::sessionBus().registerObject( "/tracing", this, QDBusConnection::ExportAdaptors );
 }
 

@@ -56,7 +56,7 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager
 )
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS
-  interfaces/org.kde.Akonadi.Tracer.xml dbustracer.h Akonadi::DBusTracer
+  interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer
 )
 
 

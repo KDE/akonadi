@@ -23,7 +23,7 @@
 
 #include "mainwindow.h"
 
-#include "tracerinterface.h"
+#include "tracernotificationinterface.h"
 #include "connectionpage.h"
 
 MainWindow::MainWindow()
@@ -41,7 +41,7 @@ MainWindow::MainWindow()
   page->showAllConnections( true );
   mConnectionPages->addTab( page, "All" );
 
-  org::kde::Akonadi::Tracer *iface = new org::kde::Akonadi::Tracer( QString(), "/tracing", QDBus::sessionBus(), this );
+  org::kde::Akonadi::TracerNotification *iface = new org::kde::Akonadi::TracerNotification( QString(), "/tracing", QDBus::sessionBus(), this );
   connect( iface, SIGNAL( connectionStarted( const QString&, const QString& ) ),
            this, SLOT( connectionStarted( const QString&, const QString& ) ) );
   connect( iface, SIGNAL( connectionEnded( const QString&, const QString& ) ),

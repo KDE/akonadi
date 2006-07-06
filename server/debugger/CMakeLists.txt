@@ -11,7 +11,7 @@ set( debugger_SRCS
 )
 
 qt4_add_dbus_interfaces( debugger_SRCS
-  ../interfaces/org.kde.Akonadi.Tracer.xml
+  ../interfaces/org.kde.Akonadi.TracerNotification.xml
 )
 
 kde4_automoc( ${debugger_SRCS} )
