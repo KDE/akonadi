@@ -125,7 +125,7 @@ QByteArray PIM::Collection::prefix()
 
 QByteArray PIM::Collection::collectionMimeType( )
 {
-  return QByteArray( "directory/inode" );
+  return QByteArray( "inode/directory" );
 }
 
 void PIM::Collection::addAttribute( CollectionAttribute * attr )
