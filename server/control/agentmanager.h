@@ -109,6 +109,14 @@ class AgentManager : public QObject
 
 
     /**
+     * Asks the resource agent to store the item with the given
+     * identifier to the given @p collection as full or lightwight
+     * version, depending on @p type.
+     */
+    bool requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
+                              const QString &collection, int type );
+
+    /**
      * Profile specific methods
      */
 

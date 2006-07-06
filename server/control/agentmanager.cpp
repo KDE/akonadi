@@ -71,6 +71,11 @@ void AgentManager::removeAgentInstance( const QString &identifier )
 {
 }
 
+bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
+                                        const QString &collection, int type )
+{
+}
+
 QStringList AgentManager::profiles() const
 {
   return mProfileManager.profiles();

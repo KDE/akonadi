@@ -31,6 +31,13 @@
     <method name="removeAgentInstance">
       <arg name="identifier" type="s" direction="in"/>
     </method>
+    <method name="requestItemDelivery">
+      <arg type="b" direction="out"/>
+      <arg name="agentIdentifier" type="s" direction="in"/>
+      <arg name="itemIdentifier" type="s" direction="in"/>
+      <arg name="collection" type="s" direction="in"/>
+      <arg name="type" type="i" direction="in"/>
+    </method>
     <method name="profiles">
       <arg type="as" direction="out"/>
     </method>
