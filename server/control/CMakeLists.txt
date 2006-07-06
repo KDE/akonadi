@@ -15,6 +15,7 @@ set( control_SRCS
 )
 
 qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
+qt4_add_dbus_interfaces( control_SRCS ../interfaces/org.kde.Akonadi.Tracer.xml )
 
 kde4_automoc( ${control_SRCS} )
 

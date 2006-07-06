@@ -23,6 +23,8 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 
+#include "tracerinterface.h"
+
 class PluginManager : public QObject
 {
   Q_OBJECT
@@ -109,6 +111,7 @@ class PluginManager : public QObject
     };
 
     QMap<QString, PluginInfo> mPluginInfos;
+    org::kde::Akonadi::Tracer *mTracer;
 };
 
 #endif

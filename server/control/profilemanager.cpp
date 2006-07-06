@@ -22,10 +22,11 @@
 
 #include "profilemanager.h"
 
-
 ProfileManager::ProfileManager( QObject *parent )
   : QObject( parent )
 {
+  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus() );
+
   load();
 }
 
@@ -74,8 +75,11 @@ QStringList ProfileManager::profiles() const
 
 bool ProfileManager::createProfile( const QString &identifier )
 {
-  if ( mProfiles.contains( identifier ) )
+  if ( mProfiles.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::createProfile" ),
+                     QString( "Profile with identifier '%1' already exists" ).arg( identifier ) );
     return false;
+  }
 
   mProfiles.insert( identifier, QStringList() );
 
@@ -93,11 +97,17 @@ void ProfileManager::removeProfile( const QString &identifier )
 
 bool ProfileManager::profileAddAgent( const QString &profileIdentifier, const QString &agentIdentifier )
 {
-  if ( !mProfiles.contains( profileIdentifier ) )
+  if ( !mProfiles.contains( profileIdentifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::profileAddAgent" ),
+                     QString( "Profile '%1' does not exists" ).arg( profileIdentifier ) );
     return false;
+  }
 
-  if ( mProfiles[ profileIdentifier ].contains( agentIdentifier ) )
+  if ( mProfiles[ profileIdentifier ].contains( agentIdentifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::profileAddAgent" ),
+                     QString( "Profile '%1' contains agent '%1' already" ).arg( profileIdentifier, agentIdentifier ) );
     return false;
+  }
 
   mProfiles[ profileIdentifier ].append( agentIdentifier );
 
@@ -108,11 +118,17 @@ bool ProfileManager::profileAddAgent( const QString &profileIdentifier, const QS
 
 bool ProfileManager::profileRemoveAgent( const QString &profileIdentifier, const QString &agentIdentifier )
 {
-  if ( !mProfiles.contains( profileIdentifier ) )
+  if ( !mProfiles.contains( profileIdentifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::profileRemoveAgent" ),
+                     QString( "Profile '%1' does not exists" ).arg( profileIdentifier ) );
     return false;
+  }
 
-  if ( !mProfiles[ profileIdentifier ].contains( agentIdentifier ) )
+  if ( !mProfiles[ profileIdentifier ].contains( agentIdentifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::profileRemoveAgent" ),
+                     QString( "Profile '%1' does not contain agent '%1'" ).arg( profileIdentifier, agentIdentifier ) );
     return false;
+  }
 
   mProfiles[ profileIdentifier ].removeAll( agentIdentifier );
 
@@ -123,8 +139,11 @@ bool ProfileManager::profileRemoveAgent( const QString &profileIdentifier, const
 
 QStringList ProfileManager::profileAgents( const QString &identifier ) const
 {
-  if ( !mProfiles.contains( identifier ) )
+  if ( !mProfiles.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::profileAgents" ),
+                     QString( "Profile '%1' does not exist" ).arg( identifier ) );
     return QStringList();
+  }
 
   return mProfiles[ identifier ];
 }

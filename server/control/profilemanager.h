@@ -24,6 +24,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
+#include "tracerinterface.h"
+
 class ProfileManager : public QObject
 {
   public:
@@ -91,6 +93,7 @@ class ProfileManager : public QObject
     QString profilePath() const;
 
     QMap<QString, QStringList> mProfiles;
+    org::kde::Akonadi::Tracer *mTracer;
 };
 
 #endif

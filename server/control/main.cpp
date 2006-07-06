@@ -21,9 +21,9 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
+#include "agentmanager.h"
 #include "processcontrol.h"
 #include "profilemanager.h"
-#include "agentmanager.h"
 
 int main( int argc, char **argv )
 {
@@ -35,7 +35,7 @@ int main( int argc, char **argv )
   }
 
   Akonadi::ProcessControl controller;
-  controller.start( "akonadi" );
+  controller.start( "akonadiserver" );
 
   AgentManager manager;
 

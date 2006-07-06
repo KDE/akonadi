@@ -28,6 +28,8 @@
 PluginManager::PluginManager( QObject *parent )
   : QObject( parent )
 {
+  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus() );
+
   QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
   watcher->addPath( pluginInfoPath() );
 
@@ -49,7 +51,8 @@ QStringList PluginManager::agentTypes() const
 QString PluginManager::agentName( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    qDebug( "TODO" );
+    mTracer->warning( QLatin1String( "akonadi_control::agentName" ),
+                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
 
@@ -59,7 +62,8 @@ QString PluginManager::agentName( const QString &identifier ) const
 QString PluginManager::agentComment( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    qDebug( "TODO" );
+    mTracer->warning( QLatin1String( "akonadi_control::agentComment" ),
+                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
 
@@ -69,7 +73,8 @@ QString PluginManager::agentComment( const QString &identifier ) const
 QString PluginManager::agentIcon( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    qDebug( "TODO" );
+    mTracer->warning( QLatin1String( "akonadi_control::agentIcon" ),
+                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
 
@@ -79,7 +84,8 @@ QString PluginManager::agentIcon( const QString &identifier ) const
 QStringList PluginManager::agentMimeTypes( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    qDebug( "TODO" );
+    mTracer->warning( QLatin1String( "akonadi_control::agentMimeTypes" ),
+                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QStringList();
   }
 
@@ -89,7 +95,8 @@ QStringList PluginManager::agentMimeTypes( const QString &identifier ) const
 QStringList PluginManager::agentCapabilities( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    qDebug( "TODO" );
+    mTracer->warning( QLatin1String( "akonadi_control::agentCapabilities" ),
+                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QStringList();
   }
 
@@ -131,12 +138,14 @@ void PluginManager::updatePluginInfos()
     file.endGroup();
 
     if ( identifier.isEmpty() ) {
-      qDebug( "Error: Agent desktop file '%s' contains empty identifier", qPrintable( fileName ) );
+      mTracer->error( QLatin1String( "akonadi_control::updatePluginInfos" ),
+                     QString( "Agent desktop file '%1' contains empty identifier" ).arg( fileName ) );
       continue;
     }
 
     if ( mPluginInfos.contains( identifier ) ) {
-      qDebug( "Error: Duplicated agent identifier '%s' from file '%s'", qPrintable( fileName ), qPrintable( identifier ) );
+      mTracer->error( QLatin1String( "akonadi_control::updatePluginInfos" ),
+                     QString( "Duplicated agent identifier '%1' from file '%2'" ).arg( fileName, identifier ) );
       continue;
     }
 
