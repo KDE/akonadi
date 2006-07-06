@@ -3,7 +3,7 @@ add_subdirectory( tests )
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/
-	${CMAKE_SOURCE_DIR}/libakonadi
+	${CMAKE_SOURCE_DIR}/akonadi
 	${CMAKE_SOURCE_DIR}/libkmime
 	${QT_QTDBUS_INCLUDE_DIR}
 )
