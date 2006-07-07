@@ -151,16 +151,17 @@ public:
     int highestPimItemId() const;
     int highestPimItemCountByLocation( const Location &location );
 
-    QList<PimItem> matchingPimItems( const QList<QByteArray> &sequences );
-    QList<PimItem> matchingPimItems( const QList<QByteArray> &sequences, FetchQuery::Type type );
-    QList<PimItem> matchingPimItemsByLocation( const QList<QByteArray> &sequences, const Location &location );
-    QList<PimItem> matchingPimItemsByLocation( const QList<QByteArray> &sequences,
-                                               const Location &location,
-                                               FetchQuery::Type type );
+    QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences );
+    QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences, FetchQuery::Type type );
+    QList<PimItem> matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
+                                                      const Location &location );
+    QList<PimItem> matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
+                                                      const Location &location,
+                                                      FetchQuery::Type type );
 
-    QList<PimItem> fetchMatchingPimItems( const FetchQuery &query );
-    QList<PimItem> fetchMatchingPimItemsByLocation( const FetchQuery &query,
-                                                    const Location &location );
+    QList<PimItem> fetchMatchingPimItemsByUID( const FetchQuery &query );
+    QList<PimItem> fetchMatchingPimItemsBySequenceNumbers( const FetchQuery &query,
+                                                           const Location &location );
 
     /* --- Resource ------------------------------------------------------ */
     bool appendResource( const QString & resource, const CachePolicy & policy );

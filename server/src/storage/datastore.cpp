@@ -1297,12 +1297,12 @@ int DataStore::highestPimItemCountByLocation( const Location &location )
 }
 
 
-QList<PimItem> Akonadi::DataStore::fetchMatchingPimItems( const FetchQuery &query )
+QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsByUID( const FetchQuery &query )
 {
-    return matchingPimItems( query.sequences(), query.type() );
+    return matchingPimItemsByUID( query.sequences(), query.type() );
 }
 
-QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences,
+QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequences,
                                             FetchQuery::Type type )
 {
   if ( !m_dbOpened )
@@ -1339,7 +1339,7 @@ QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences,
 
   QSqlQuery query( m_database );
   if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "DataStore::matchingPimItemsByLocation" );
+    debugLastQueryError( query, "DataStore::matchingPimItemsBySequenceNumbers" );
     return QList<PimItem>();
   }
 
@@ -1358,27 +1358,27 @@ QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences,
 
 }
 
-QList<PimItem> DataStore::matchingPimItems( const QList<QByteArray> &sequences )
+QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequences )
 {
-  return matchingPimItems( sequences, FetchQuery::FastType );
+  return matchingPimItemsByUID( sequences, FetchQuery::FastType );
 }
 
 
-QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsByLocation( const FetchQuery &query,
-                                                                    const Location &location )
+QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsBySequenceNumbers( const FetchQuery &query,
+                                                                           const Location &location )
 {
-  return matchingPimItemsByLocation( query.sequences(), location, FetchQuery::FastType );
+  return matchingPimItemsBySequenceNumbers( query.sequences(), location, FetchQuery::FastType );
 }
 
-QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &sequences,
-                                                      const Location &location )
+QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
+                                                             const Location &location )
 {
-  return matchingPimItemsByLocation( sequences, location, FetchQuery::FastType );
+  return matchingPimItemsBySequenceNumbers( sequences, location, FetchQuery::FastType );
 }
 
-QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &sequences,
-                                                      const Location &location,
-                                                      FetchQuery::Type type )
+QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
+                                                             const Location &location,
+                                                             FetchQuery::Type type )
 {
   if ( !m_dbOpened || !location.isValid() )
     return QList<PimItem>();
@@ -1388,13 +1388,13 @@ QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &s
       QString( "SELECT id FROM PimItems WHERE location_id = %1" ).arg( location.id() );
 
   if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "DataStore::matchingPimItemsByLocation" );
+    debugLastQueryError( query, "DataStore::matchingPimItemsBySequenceNumbers" );
     return QList<PimItem>();
   }
 
   int highestEntry = highestPimItemCountByLocation( location );
   if ( highestEntry == -1 ) {
-    qDebug( "DataStore::matchingPimItemsByLocation: Invalid highest entry number '%d' ", highestEntry );
+    qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Invalid highest entry number '%d' ", highestEntry );
     return QList<PimItem>();
   }
 
@@ -1435,13 +1435,13 @@ QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &s
 
       for ( int i = min; i <= max; ++i ) {
         if ( !query.seek( i ) ) {
-          qDebug( "DataStore::matchingPimItemsByLocation: Unable to seek at position '%d' ", i );
+          qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Unable to seek at position '%d' ", i );
           return QList<PimItem>();
         }
 
         PimItem item = pimItemById( query.value( 0 ).toInt(), type );
         if ( !item.isValid() ) {
-          qDebug( "DataStore::matchingPimItemsByLocation: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
+          qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
           return QList<PimItem>();
         }
 
@@ -1462,13 +1462,13 @@ QList<PimItem> DataStore::matchingPimItemsByLocation( const QList<QByteArray> &s
       pos--;
 
       if ( !query.seek( pos ) ) {
-        qDebug( "DataStore::matchingPimItemsByLocation: Unable to seek at position '%d' ", pos );
+        qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Unable to seek at position '%d' ", pos );
         return QList<PimItem>();
       }
 
       PimItem item = pimItemById( query.value( 0 ).toInt(), type );
       if ( !item.isValid() ) {
-        qDebug( "DataStore::matchingPimItemsByLocation: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
+        qDebug( "DataStore::matchingPimItemsBySequenceNumbers: Invalid uid '%d' returned by search ", query.value( 0 ).toInt() );
         return QList<PimItem>();
       }
 

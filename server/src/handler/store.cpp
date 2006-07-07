@@ -64,12 +64,12 @@ bool Store::handleLine( const QByteArray& line )
 
   QList<PimItem> pimItems;
   if ( connection()->selectedLocation().id() == -1 ) {
-    pimItems = store->matchingPimItems( storeQuery.sequences() );
+    pimItems = store->matchingPimItemsByUID( storeQuery.sequences() );
   } else {
     if ( storeQuery.isUidStore() ) {
-      pimItems = store->matchingPimItems( storeQuery.sequences() );
+      pimItems = store->matchingPimItemsByUID( storeQuery.sequences() );
     } else {
-      pimItems = store->matchingPimItemsByLocation( storeQuery.sequences(), connection()->selectedLocation() );
+      pimItems = store->matchingPimItemsBySequenceNumbers( storeQuery.sequences(), connection()->selectedLocation() );
     }
   }
 
