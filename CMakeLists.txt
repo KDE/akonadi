@@ -35,6 +35,7 @@ set( akonadi_LIB_SRC
 	messagemodel.cpp
 	messagequery.cpp
 	monitor.cpp
+        itemlistjob.cpp
 )
 
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.NotificationManager.xml)
