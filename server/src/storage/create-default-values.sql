@@ -2,10 +2,10 @@ INSERT INTO CachePolicies (name) VALUES ('none');
 INSERT INTO CachePolicies (name) VALUES ('temporary');
 INSERT INTO CachePolicies (name) VALUES ('permanent');
 
-INSERT INTO MimeTypes (mime_type) VALUES ('message/rfc822');
-INSERT INTO MimeTypes (mime_type) VALUES ('text/calendar');
-INSERT INTO MimeTypes (mime_type) VALUES ('text/vcard');
-INSERT INTO MimeTypes (mime_type) VALUES ('inode/directory');
+INSERT INTO MimeTypes (id,mime_type) VALUES (0,'message/rfc822');
+INSERT INTO MimeTypes (id,mime_type) VALUES (1,'text/calendar');
+INSERT INTO MimeTypes (id,mime_type) VALUES (2,'text/vcard');
+INSERT INTO MimeTypes (id,mime_type) VALUES (3,'inode/directory');
 
 INSERT INTO MetaTypes SELECT NULL, 'from', id FROM MimeTypes WHERE mime_type = 'message/rfc822';
 INSERT INTO MetaTypes SELECT NULL, 'to', id FROM MimeTypes WHERE mime_type = 'message/rfc822';
@@ -39,10 +39,10 @@ INSERT INTO PersistentSearches (id, name, query) VALUES(2, 'Test �er', 'MIMETY
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 1);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 2);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 1, 2);
-INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 4);
-INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 1, 4);
-INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 2, 4);
-INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 3, 4);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 0);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 1, 3);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 2, 3);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 3, 3);
 
 INSERT INTO PimItems (id, remote_id, data, location_id, mimetype_id) VALUES (0, 'A', 'testmailbody', 0, 0);
 INSERT INTO PimItems (id, remote_id, data, location_id, mimetype_id) VALUES (1, 'B', 'testmailbody1', 0, 0);

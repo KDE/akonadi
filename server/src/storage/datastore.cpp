@@ -703,6 +703,7 @@ QList<MimeType> DataStore::mimeTypesForLocation( int id ) const
 
   QSqlQuery query( m_database );
   const QString statement = QString( "SELECT mimetype_id FROM LocationMimeTypes WHERE location_id = %1" ).arg( id );
+
   if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "Error during selection of Locations." );
     return QList<MimeType>();

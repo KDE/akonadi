@@ -113,6 +113,10 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
     for ( int i = 0; i < flagList.count(); ++i )
       flags.append( flagList[ i ].name() );
 
+    DataStore *store = connection()->storageBackend();
+    MimeType mimeType = store->mimeTypeById( item.mimeTypeId() );
+    flags.append( "\\MimeTypes[" + mimeType.mimeType() + "]" );
+
     attributes.append( "FLAGS (" + flags.join( " " ).toLatin1() + ")" );
   }
 
