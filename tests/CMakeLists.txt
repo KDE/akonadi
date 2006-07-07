@@ -2,8 +2,9 @@
 if(KDE4_BUILD_TESTS)
 
 include_directories(
-	${CMAKE_SOURCE_DIR}/libakonadi
-	${CMAKE_SOURCE_DIR}/libakonadi/tests
+	${CMAKE_SOURCE_DIR}/akonadi
+	${CMAKE_CURRENT_SOURCE_DIR}/../
+	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_SOURCE_DIR}/libkmime
 )
 
