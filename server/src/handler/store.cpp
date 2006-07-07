@@ -67,7 +67,7 @@ bool Store::handleLine( const QByteArray& line )
     pimItems = store->matchingPimItemsByUID( storeQuery.sequences() );
   } else {
     if ( storeQuery.isUidStore() ) {
-      pimItems = store->matchingPimItemsByUID( storeQuery.sequences() );
+      pimItems = store->matchingPimItemsByUID( storeQuery.sequences(), connection()->selectedLocation() );
     } else {
       pimItems = store->matchingPimItemsBySequenceNumbers( storeQuery.sequences(), connection()->selectedLocation() );
     }

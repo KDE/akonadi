@@ -1298,13 +1298,14 @@ int DataStore::highestPimItemCountByLocation( const Location &location )
 }
 
 
-QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsByUID( const FetchQuery &query )
+QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsByUID( const FetchQuery &query, const Location& l )
 {
-    return matchingPimItemsByUID( query.sequences(), query.type() );
+    return matchingPimItemsByUID( query.sequences(), query.type(), l );
 }
 
 QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequences,
-                                            FetchQuery::Type type )
+                                                 FetchQuery::Type type,
+                                                 const Location& location )
 {
   if ( !m_dbOpened )
     return QList<PimItem>();
@@ -1336,7 +1337,10 @@ QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequen
     }
   }
 
-  const QString statement = QString( "SELECT id FROM PimItems WHERE %1" ).arg( statementParts.join( " OR " ) );
+  QString statement = QString( "SELECT id FROM PimItems WHERE (%1)" ).arg( statementParts.join( " OR " ) );
+  if ( location.isValid() ) {
+     statement += QString( " AND location_id = %1" ).arg( location.id() );
+  }
 
   QSqlQuery query( m_database );
   if ( !query.exec( statement ) ) {
@@ -1359,14 +1363,15 @@ QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequen
 
 }
 
-QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequences )
+QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequences,
+                                                 const Location & location )
 {
-  return matchingPimItemsByUID( sequences, FetchQuery::FastType );
+  return matchingPimItemsByUID( sequences, FetchQuery::FastType, location );
 }
 
 
-QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsBySequenceNumbers( const FetchQuery &query,
-                                                                           const Location &location )
+QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsBySequenceNumbers( const FetchQuery & query,
+                                                                           const Location & location )
 {
   return matchingPimItemsBySequenceNumbers( query.sequences(), location, FetchQuery::FastType );
 }

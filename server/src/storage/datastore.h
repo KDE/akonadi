@@ -151,15 +151,18 @@ public:
     int highestPimItemId() const;
     int highestPimItemCountByLocation( const Location &location );
 
-    QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences );
-    QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences, FetchQuery::Type type );
+    QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences,
+                                          const Location & l = Location() );
+    QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences,
+                                          FetchQuery::Type type,
+                                          const Location & l = Location() );
     QList<PimItem> matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
                                                       const Location &location );
     QList<PimItem> matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
                                                       const Location &location,
                                                       FetchQuery::Type type );
 
-    QList<PimItem> fetchMatchingPimItemsByUID( const FetchQuery &query );
+    QList<PimItem> fetchMatchingPimItemsByUID( const FetchQuery &query, const Location& l = Location() );
     QList<PimItem> fetchMatchingPimItemsBySequenceNumbers( const FetchQuery &query,
                                                            const Location &location );
 
