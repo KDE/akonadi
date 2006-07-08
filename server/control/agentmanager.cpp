@@ -80,7 +80,7 @@ QString AgentManager::createAgentInstance( const QString &type, const QString &i
 
   mInstances[identifier].type = type;
   mInstances[identifier].controller = new Akonadi::ProcessControl( this );
-  mInstances[identifier].controller->start( mPluginManager.agentExecutable( type ) );
+  mInstances[identifier].controller->start( mPluginManager.agentExecutable( type ), QStringList( identifier ) );
   mInstances[identifier].interface = 0;
 
   return identifier;
@@ -107,9 +107,8 @@ bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QS
   }
 
   if ( !mInstances.value( agentIdentifier ).interface )
-    // FIXME: use the correct service name once the resources use them
     mInstances[agentIdentifier].interface =
-        new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource" /*_" + agentIdentifier*/, "/", QDBus::sessionBus(), this );
+        new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource_" + agentIdentifier, "/", QDBus::sessionBus(), this );
 
   if ( !mInstances.value( agentIdentifier ).interface || !mInstances.value( agentIdentifier ).interface->isValid() ) {
     mTracer->error( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
