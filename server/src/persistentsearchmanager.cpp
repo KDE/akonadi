@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QDir>
 #include <QSqlQuery>
 #include <QStringList>
 #include <QUuid>
@@ -34,8 +35,14 @@ PersistentSearchManager* PersistentSearchManager::mSelf = 0;
 
 PersistentSearchManager::PersistentSearchManager()
 {
+  const QString akonadiHomeDir = QDir::homePath() + QDir::separator() + ".akonadi" + QDir::separator();
+  if ( !QDir( akonadiHomeDir ).exists() ) {
+    QDir dir;
+    dir.mkdir( akonadiHomeDir );
+  }
+
   mDatabase = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
-  mDatabase.setDatabaseName( "akonadi.db" );
+  mDatabase.setDatabaseName( akonadiHomeDir + "akonadi.db" );
   mDatabase.open();
 
   if ( !mDatabase.isOpen() )

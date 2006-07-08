@@ -22,6 +22,7 @@
 #include "agentmanagerinterface.h"
 #include "notificationmanager.h"
 
+#include <QDir>
 #include <QSqlQuery>
 #include <QEventLoop>
 #include <QSqlField>
@@ -47,8 +48,14 @@ DataStore::DataStore()
 
 void DataStore::init()
 {
+  const QString akonadiHomeDir = QDir::homePath() + QDir::separator() + ".akonadi" + QDir::separator();
+  if ( !QDir( akonadiHomeDir ).exists() ) {
+    QDir dir;
+    dir.mkdir( akonadiHomeDir );
+  }
+
   m_database = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
-  m_database.setDatabaseName( "akonadi.db" );
+  m_database.setDatabaseName( akonadiHomeDir + "akonadi.db" );
   m_dbOpened = m_database.open();
 
   if ( !m_dbOpened )
@@ -1172,7 +1179,7 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray& remot
    // connect( this, SIGNAL( done( PIM::Job* ) ), &loop, SLOT( quit( ) ) );
    // loop.exec( );
   }
-  
+
   return data;
 }
 
