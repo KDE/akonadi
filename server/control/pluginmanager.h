@@ -80,6 +80,11 @@ class PluginManager : public QObject
     QStringList agentCapabilities( const QString &identifier ) const;
 
     /**
+     * Returns the name of the agent executable.
+     */
+    QString agentExecutable( const QString &identifier ) const;
+
+    /**
      * Creates a new agent of the given agent type @p identifier.
      *
      * @return The identifier of the new agent if created successfully,

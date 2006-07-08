@@ -24,6 +24,12 @@
 
 #include "pluginmanager.h"
 #include "profilemanager.h"
+#include "resourceinterface.h"
+#include "tracerinterface.h"
+
+namespace Akonadi {
+  class ProcessControl;
+}
 
 /**
  * Interface for handling profiles and agents in
@@ -95,12 +101,13 @@ class AgentManager : public QObject
      */
 
     /**
-     * Creates a new agent of the given agent type @p identifier.
+     * Creates a new agent of the given agent type @p type and configuration
+     * identifier @p identifier.
      *
      * @return The identifier of the new agent if created successfully,
      *         an empty string otherwise.
      */
-    QString createAgentInstance( const QString &identifier );
+    QString createAgentInstance( const QString &type, const QString &identifier );
 
     /**
      * Removes the agent with the given @p identifier.
@@ -161,8 +168,17 @@ class AgentManager : public QObject
     QStringList profileAgents( const QString &identifier ) const;
 
   private:
+    class InstanceInfo {
+      public:
+        QString type;
+        Akonadi::ProcessControl *controller;
+        org::kde::Akonadi::Resource *interface;
+    };
+
     PluginManager mPluginManager;
     ProfileManager mProfileManager;
+    QMap<QString, InstanceInfo> mInstances;
+    org::kde::Akonadi::Tracer *mTracer;
 };
 
 #endif

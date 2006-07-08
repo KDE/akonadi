@@ -19,13 +19,15 @@
 
 #include "agentmanager.h"
 #include "agentmanageradaptor.h"
+#include "processcontrol.h"
 
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
 {
   new AgentManagerAdaptor( this );
-
   QDBus::sessionBus().registerObject( "/", this );
+
+  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus(), this );
 }
 
 AgentManager::~AgentManager()
@@ -62,18 +64,61 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
   return mPluginManager.agentCapabilities( identifier );
 }
 
-QString AgentManager::createAgentInstance( const QString &identifier )
+QString AgentManager::createAgentInstance( const QString &type, const QString &identifier )
 {
-  return QString();
+  if ( !mPluginManager.agentTypes().contains( type ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::createAgentInstance" ),
+                      QString( "Agent type with identifier '%1' does not exist" ).arg( type ) );
+    return QString();
+  }
+
+  if ( mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::createAgentInstance" ),
+                      QString( "Agent instance with identifier '%1' is already running" ).arg( identifier ) );
+    return QString();
+  }
+
+  mInstances[identifier].type = type;
+  mInstances[identifier].controller = new Akonadi::ProcessControl( this );
+  mInstances[identifier].controller->start( mPluginManager.agentExecutable( type ) );
+  mInstances[identifier].interface = 0;
+
+  return identifier;
 }
 
 void AgentManager::removeAgentInstance( const QString &identifier )
 {
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::removeAgentInstance" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return;
+  }
+  delete mInstances.value( identifier ).controller;
+  mInstances.remove( identifier );
 }
 
 bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
                                         const QString &collection, int type )
 {
+  if ( !mInstances.contains( agentIdentifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( agentIdentifier ) );
+    return false;
+  }
+
+  if ( !mInstances.value( agentIdentifier ).interface )
+    // FIXME: use the correct service name once the resources use them
+    mInstances[agentIdentifier].interface =
+        new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource" /*_" + agentIdentifier*/, "/", QDBus::sessionBus(), this );
+
+  if ( !mInstances.value( agentIdentifier ).interface || !mInstances.value( agentIdentifier ).interface->isValid() ) {
+    mTracer->error( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
+                    QString( "Cannot connect to agent with identifier '%1', error message: '%2'" )
+                        .arg( agentIdentifier, mInstances.value( agentIdentifier ).interface->lastError().message() ) );
+    return false;
+  }
+
+  return mInstances.value( agentIdentifier ).interface->requestItemDelivery( itemIdentifier, collection, type );
 }
 
 QStringList AgentManager::profiles() const

@@ -103,6 +103,17 @@ QStringList PluginManager::agentCapabilities( const QString &identifier ) const
   return mPluginInfos[ identifier ].capabilities;
 }
 
+QString PluginManager::agentExecutable( const QString & identifier ) const
+{
+  if ( !mPluginInfos.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::agentExecutable" ),
+                      QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
+    return QString();
+  }
+
+  return mPluginInfos[ identifier ].exec;
+}
+
 
 QString PluginManager::createAgentInstance( const QString &identifier )
 {
