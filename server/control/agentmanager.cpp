@@ -64,8 +64,9 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
   return mPluginManager.agentCapabilities( identifier );
 }
 
-QString AgentManager::createAgentInstance( const QString &type, const QString &identifier )
+QString AgentManager::createAgentInstance( const QString &identifier )
 {
+/*
   if ( !mPluginManager.agentTypes().contains( type ) ) {
     mTracer->warning( QLatin1String( "akonadi_control::AgentManager::createAgentInstance" ),
                       QString( "Agent type with identifier '%1' does not exist" ).arg( type ) );
@@ -78,28 +79,38 @@ QString AgentManager::createAgentInstance( const QString &type, const QString &i
     return QString();
   }
 
+  QStringList arguments;
+  arguments << "--identifier" << identifier;
+
   mInstances[identifier].type = type;
   mInstances[identifier].controller = new Akonadi::ProcessControl( this );
-  mInstances[identifier].controller->start( mPluginManager.agentExecutable( type ), QStringList( identifier ) );
+  mInstances[identifier].controller->start( mPluginManager.agentExecutable( type ), arguments );
   mInstances[identifier].interface = 0;
 
   return identifier;
+*/
+
+  return QString();
 }
 
 void AgentManager::removeAgentInstance( const QString &identifier )
 {
+/*
   if ( !mInstances.contains( identifier ) ) {
     mTracer->warning( QLatin1String( "akonadi_control::AgentManager::removeAgentInstance" ),
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
     return;
   }
+
   delete mInstances.value( identifier ).controller;
   mInstances.remove( identifier );
+*/
 }
 
 bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
                                         const QString &collection, int type )
 {
+/*
   if ( !mInstances.contains( agentIdentifier ) ) {
     mTracer->warning( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( agentIdentifier ) );
@@ -108,7 +119,7 @@ bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QS
 
   if ( !mInstances.value( agentIdentifier ).interface )
     mInstances[agentIdentifier].interface =
-        new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource_" + agentIdentifier, "/", QDBus::sessionBus(), this );
+        new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + agentIdentifier, "/", QDBus::sessionBus(), this );
 
   if ( !mInstances.value( agentIdentifier ).interface || !mInstances.value( agentIdentifier ).interface->isValid() ) {
     mTracer->error( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
@@ -118,6 +129,9 @@ bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QS
   }
 
   return mInstances.value( agentIdentifier ).interface->requestItemDelivery( itemIdentifier, collection, type );
+*/
+
+  return true;
 }
 
 QStringList AgentManager::profiles() const

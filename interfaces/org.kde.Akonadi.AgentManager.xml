@@ -26,7 +26,6 @@
     </method>
     <method name="createAgentInstance">
       <arg type="s" direction="out"/>
-      <arg name="type" type="s" direction="in"/>
       <arg name="identifier" type="s" direction="in"/>
     </method>
     <method name="removeAgentInstance">

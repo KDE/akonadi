@@ -65,6 +65,12 @@ class ProcessControl : public QObject
     void start( const QString &application, const QStringList &arguments = QStringList(),
                 CrashPolicy policy = RestartOnCrash );
 
+    /**
+     * Stops the currently running application.
+     */
+    void stop();
+
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the observed application

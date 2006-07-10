@@ -34,8 +34,7 @@ ProcessControl::ProcessControl( QObject *parent )
 
 ProcessControl::~ProcessControl()
 {
-  if ( mProcess.state() != QProcess::NotRunning )
-    mProcess.terminate();
+  stop();
 }
 
 void ProcessControl::start( const QString &application, const QStringList &arguments, CrashPolicy policy )
@@ -47,6 +46,12 @@ void ProcessControl::start( const QString &application, const QStringList &argum
   mPolicy = policy;
 
   start();
+}
+
+void ProcessControl::stop()
+{
+  if ( mProcess.state() != QProcess::NotRunning )
+    mProcess.terminate();
 }
 
 void ProcessControl::slotError( QProcess::ProcessError error )

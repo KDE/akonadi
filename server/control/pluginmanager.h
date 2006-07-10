@@ -101,7 +101,26 @@ class PluginManager : public QObject
     void updatePluginInfos();
 
   private:
+    /**
+     * Returns the directory path where the .desktop files
+     * for the plugins are located.
+     */
     static QString pluginInfoPath();
+
+    /**
+     * Returns the path of the config file.
+     */
+    static QString configPath();
+
+    /**
+     * Loads the internal state from config file.
+     */
+    void load();
+
+    /**
+     * Saves internal state to the config file.
+     */
+    void save();
 
     class PluginInfo
     {
@@ -115,7 +134,26 @@ class PluginManager : public QObject
         QString exec;
     };
 
+    class InstanceInfo
+    {
+      public:
+        uint instanceCounter;
+    };
+
+    /**
+     * The map which stores the .desktop file
+     * entries for every plugin type.
+     *
+     * Key is the plugin type (e.g. 'file' or 'imap').
+     */
     QMap<QString, PluginInfo> mPluginInfos;
+
+    /**
+     * The map which stores the instance specific
+     * settings for every plugin type.
+     */
+    QMap<QString, InstanceInfo> mInstanceInfos;
+
     org::kde::Akonadi::Tracer *mTracer;
 };
 

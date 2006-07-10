@@ -1,0 +1,23 @@
+Description for the classes in this directory
+
+AgentManager
+--------------
+The agent manager is accessable via DBus and provides an inteface for
+managing profiles and agents. However most of the work it delegates to
+PluginManager and ProfileManager.
+
+PluginManager
+---------------
+The plugin manager has knowledge about all available plugins (it scans
+for .desktop files in the agent directory) and the available configured
+instances.
+
+ProfileManager
+----------------
+The profile manager is responsible for managing the profiles and provides
+methods to add/remove an agent instance to/from a profile.
+
+ProcessControl
+----------------
+The process control is a helper class which starts a process via QProcess
+and restarts it when it crashed, depending on the choosen policy.

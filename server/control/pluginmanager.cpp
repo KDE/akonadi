@@ -37,6 +37,8 @@ PluginManager::PluginManager( QObject *parent )
            this, SLOT( updatePluginInfos() ) );
 
   updatePluginInfos();
+
+  load();
 }
 
 PluginManager::~PluginManager()
@@ -118,10 +120,13 @@ QString PluginManager::agentExecutable( const QString & identifier ) const
 QString PluginManager::createAgentInstance( const QString &identifier )
 {
   return QString();
+
+  save();
 }
 
 void PluginManager::removeAgentInstance( const QString &identifier )
 {
+  save();
 }
 
 void PluginManager::updatePluginInfos()
@@ -160,6 +165,13 @@ void PluginManager::updatePluginInfos()
       continue;
     }
 
+    if ( info.exec.isEmpty() ) {
+      mTracer->error( QLatin1String( "akonadi_control::updatePluginInfos" ),
+                     QString( "Agent desktop file '%1' contains empty Exec entry" ).arg( fileName ) );
+      continue;
+    }
+
+
     mPluginInfos.insert( identifier, info );
   }
 }
@@ -167,6 +179,76 @@ void PluginManager::updatePluginInfos()
 QString PluginManager::pluginInfoPath()
 {
   return QString( "%1/share/apps/akonadi/agents" ).arg( AKONADIDIR );
+}
+
+QString PluginManager::configPath()
+{
+  const QString homePath = QDir::homePath();
+  const QString akonadiHomeDir = QString( "%1/%2" ).arg( homePath, ".akonadi" );
+
+  if ( !QDir( akonadiHomeDir ).exists() ) {
+    QDir dir;
+    dir.mkdir( akonadiHomeDir );
+  }
+
+  return akonadiHomeDir + "/agentsrc";
+}
+
+void PluginManager::load()
+{
+  mInstanceInfos.clear();
+
+  QSettings file( configPath(), QSettings::IniFormat );
+  file.beginGroup( "Instances" );
+
+  const QStringList entries = file.childGroups();
+  for ( int i = 0; i < entries.count(); ++i ) {
+    file.beginGroup( entries[ i ] );
+
+    const QString agentType = entries[ i ];
+    const int instanceCounter = file.value( "InstanceCounter", QVariant( 0 ) ).toInt();
+
+    if ( mInstanceInfos.contains( agentType ) ) {
+      mTracer->warning( QLatin1String( "akonadi_control::load" ),
+                        QString( "Duplicated agent type '%1' found in agentsrc" ).arg( agentType ) );
+      continue;
+    }
+
+    if ( !mPluginInfos.contains( agentType ) ) {
+      mTracer->warning( QLatin1String( "akonadi_control::load" ),
+                        QString( "Reference to unknown agent type '%1' in agentsrc" ).arg( agentType ) );
+      continue;
+    }
+
+    InstanceInfo info;
+    info.instanceCounter = instanceCounter;
+    mInstanceInfos.insert( agentType, info );
+
+    file.endGroup();
+  }
+
+  file.endGroup();
+}
+
+void PluginManager::save()
+{
+  QSettings file( configPath(), QSettings::IniFormat );
+
+  file.clear();
+  file.beginGroup( "Instances" );
+
+  QMapIterator<QString, InstanceInfo> it( mInstanceInfos );
+  while ( it.hasNext() ) {
+    it.next();
+
+    file.beginGroup( it.key() );
+    file.setValue( "InstanceCounter", it.value().instanceCounter );
+    file.endGroup();
+  }
+
+  file.endGroup();
+
+  file.sync();
 }
 
 #include "pluginmanager.moc"

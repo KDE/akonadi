@@ -101,13 +101,16 @@ class AgentManager : public QObject
      */
 
     /**
-     * Creates a new agent of the given agent type @p type and configuration
-     * identifier @p identifier.
+     * Creates a new agent of the given agent type @p identifier.
+     * The identifier is something like 'imap' or 'file'.
      *
      * @return The identifier of the new agent if created successfully,
      *         an empty string otherwise.
+     *         The identifier consists of two parts, the type of the
+     *         resource and an unique instance number, and looks like
+     *         the following: 'file.1' or 'imap.267'.
      */
-    QString createAgentInstance( const QString &type, const QString &identifier );
+    QString createAgentInstance( const QString &identifier );
 
     /**
      * Removes the agent with the given @p identifier.
