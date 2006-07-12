@@ -19,7 +19,6 @@
 
 #include "agentmanager.h"
 #include "agentmanageradaptor.h"
-#include "processcontrol.h"
 
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
@@ -66,45 +65,17 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 
 QString AgentManager::createAgentInstance( const QString &identifier )
 {
-/*
-  if ( !mPluginManager.agentTypes().contains( type ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::createAgentInstance" ),
-                      QString( "Agent type with identifier '%1' does not exist" ).arg( type ) );
-    return QString();
-  }
-
-  if ( mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::createAgentInstance" ),
-                      QString( "Agent instance with identifier '%1' is already running" ).arg( identifier ) );
-    return QString();
-  }
-
-  QStringList arguments;
-  arguments << "--identifier" << identifier;
-
-  mInstances[identifier].type = type;
-  mInstances[identifier].controller = new Akonadi::ProcessControl( this );
-  mInstances[identifier].controller->start( mPluginManager.agentExecutable( type ), arguments );
-  mInstances[identifier].interface = 0;
-
-  return identifier;
-*/
-
-  return QString();
+  return mPluginManager.createAgentInstance( identifier );
 }
 
 void AgentManager::removeAgentInstance( const QString &identifier )
 {
-/*
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::removeAgentInstance" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
-    return;
-  }
+  mPluginManager.removeAgentInstance( identifier );
+}
 
-  delete mInstances.value( identifier ).controller;
-  mInstances.remove( identifier );
-*/
+QStringList AgentManager::agentInstances() const
+{
+  return mPluginManager.agentInstances();
 }
 
 bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,

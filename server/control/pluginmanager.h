@@ -25,6 +25,10 @@
 
 #include "tracerinterface.h"
 
+namespace Akonadi {
+  class ProcessControl;
+}
+
 class PluginManager : public QObject
 {
   Q_OBJECT
@@ -80,15 +84,13 @@ class PluginManager : public QObject
     QStringList agentCapabilities( const QString &identifier ) const;
 
     /**
-     * Returns the name of the agent executable.
-     */
-    QString agentExecutable( const QString &identifier ) const;
-
-    /**
      * Creates a new agent of the given agent type @p identifier.
      *
      * @return The identifier of the new agent if created successfully,
      *         an empty string otherwise.
+     *         The identifier consists of two parts, the type of the
+     *         agent and an unique instance number, and looks like
+     *         the following: 'file_1' or 'imap_267'.
      */
     QString createAgentInstance( const QString &identifier );
 
@@ -96,6 +98,11 @@ class PluginManager : public QObject
      * Removes the agent with the given @p identifier.
      */
     void removeAgentInstance( const QString &identifier );
+
+    /**
+     * Returns the list of identifiers of configured instances.
+     */
+    QStringList agentInstances() const;
 
   private Q_SLOTS:
     void updatePluginInfos();
@@ -140,19 +147,35 @@ class PluginManager : public QObject
         uint instanceCounter;
     };
 
+    class Instance
+    {
+      public:
+        QString agentType;
+        Akonadi::ProcessControl *controller;
+    };
+
     /**
      * The map which stores the .desktop file
-     * entries for every plugin type.
+     * entries for every agent type.
      *
-     * Key is the plugin type (e.g. 'file' or 'imap').
+     * Key is the agent type (e.g. 'file' or 'imap').
      */
     QMap<QString, PluginInfo> mPluginInfos;
 
     /**
      * The map which stores the instance specific
      * settings for every plugin type.
+     *
+     * Key is the agent type.
      */
     QMap<QString, InstanceInfo> mInstanceInfos;
+
+    /**
+     * The map which stores the active instances.
+     *
+     * Key is the instance identifier.
+     */
+    QMap<QString, Instance> mInstances;
 
     org::kde::Akonadi::Tracer *mTracer;
 };

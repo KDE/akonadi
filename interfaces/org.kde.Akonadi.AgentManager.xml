@@ -31,6 +31,9 @@
     <method name="removeAgentInstance">
       <arg name="identifier" type="s" direction="in"/>
     </method>
+    <method name="agentInstances">
+      <arg type="as" direction="out"/>
+    </method>
     <method name="requestItemDelivery">
       <arg type="b" direction="out"/>
       <arg name="agentIdentifier" type="s" direction="in"/>
