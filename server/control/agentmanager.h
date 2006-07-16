@@ -137,7 +137,7 @@ class AgentManager : public QObject
     /**
      * Creates a new profile with the given @p identifier.
      *
-     * @return true if created successfull, false a profile with the
+     * @return true if created successful, false a profile with the
      *         same @p identifier already exists.
      */
     bool createProfile( const QString &identifier );
