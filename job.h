@@ -166,7 +166,7 @@ class AKONADI_EXPORT Job : public QObject
     bool exec();
 
     /**
-      Starts the job asynchronous. When the job finished successfull,
+      Starts the job asynchronous. When the job finished successful,
       @see done() is emitted.
      */
     void start();
@@ -225,7 +225,7 @@ class AKONADI_EXPORT Job : public QObject
     void setError( int code, const QString &msg = QString() );
 
     /**
-      Returns a new unique command tag for comunication with the backend.
+      Returns a new unique command tag for communication with the backend.
     */
     QByteArray newTag();
 

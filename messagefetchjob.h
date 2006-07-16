@@ -56,8 +56,8 @@ class AKONADI_EXPORT MessageFetchJob : public Job
     virtual ~MessageFetchJob();
 
     /**
-      Returns the fetched message objects. Invalid before the done(PIM::Job*) signal
-      has been emitted or if an error occured.
+      Returns the fetched message objects. Invalid before the done(PIM::Job*)
+      signal has been emitted or if an error occurred.
     */
     Message::List messages() const;
 

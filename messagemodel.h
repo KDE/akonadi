@@ -82,7 +82,7 @@ class AKONADI_EXPORT MessageModel : public QAbstractTableModel
 
     /**
       Sets the path to the collection the model should display. If the path has
-      changed, the model is resetted and a new message listing is requested
+      changed, the model is reset and a new message listing is requested
       from the storage backend.
       @param path The full collection path.
     */

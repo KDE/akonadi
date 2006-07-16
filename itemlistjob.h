@@ -48,8 +48,8 @@ class AKONADI_EXPORT ItemListJob : public Job
     virtual ~ItemListJob();
 
     /**
-      Returns the fetched item objects. Invalid before the done(PIM::Job*) signal
-      has been emitted or if an error occured.
+      Returns the fetched item objects. Invalid before the done(PIM::Job*)
+      signal has been emitted or if an error occurred.
     */
     Item::List items() const;
 
