@@ -181,6 +181,8 @@ public:
      */
     int uidNext() const;
 
+    static QString storagePath();
+
 Q_SIGNALS:
     void itemAdded( int uid, const QByteArray& location );
     void itemRemoved( int uid, const QByteArray& location );

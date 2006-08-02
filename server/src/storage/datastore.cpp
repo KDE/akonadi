@@ -17,11 +17,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "datastore.h"
-#include "persistentsearchmanager.h"
-#include "agentmanagerinterface.h"
-#include "notificationmanager.h"
-
 #include <QDir>
 #include <QSqlQuery>
 #include <QEventLoop>
@@ -35,6 +30,13 @@
 #include <QString>
 #include <QStringList>
 
+#include "agentmanagerinterface.h"
+#include "dbinitializer.h"
+#include "notificationmanager.h"
+#include "persistentsearchmanager.h"
+#include "tracer.h"
+
+#include "datastore.h"
 
 using namespace Akonadi;
 
@@ -42,20 +44,14 @@ using namespace Akonadi;
  *   DataStore                                                           *
  ***************************************************************************/
 DataStore::DataStore()
-    :QObject()
+  : QObject()
 {
 }
 
 void DataStore::init()
 {
-  const QString akonadiHomeDir = QDir::homePath() + QDir::separator() + ".akonadi" + QDir::separator();
-  if ( !QDir( akonadiHomeDir ).exists() ) {
-    QDir dir;
-    dir.mkdir( akonadiHomeDir );
-  }
-
   m_database = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
-  m_database.setDatabaseName( akonadiHomeDir + "akonadi.db" );
+  m_database.setDatabaseName( storagePath() );
   m_dbOpened = m_database.open();
 
   if ( !m_dbOpened )
@@ -63,12 +59,39 @@ void DataStore::init()
   else
     qDebug() << "Database akonadi.db opened.";
 
+  DbInitializer initializer( m_database, ":akonadidb.xml" );
+  if ( !initializer.run() ) {
+    Tracer::self()->error( "DataStore::init()", QString( "Unable to initialize database: %1" ).arg( initializer.errorMsg() ) );
+  }
+
   NotificationManager::self()->connectDatastore( this );
 }
 
 DataStore::~DataStore()
 {
   m_database.close();
+}
+
+QString DataStore::storagePath()
+{
+  const QString akonadiHomeDir = QDir::homePath() + QDir::separator() + ".akonadi" + QDir::separator();
+  if ( !QDir( akonadiHomeDir ).exists() ) {
+    QDir dir;
+    dir.mkdir( akonadiHomeDir );
+  }
+
+  const QString akonadiPath = akonadiHomeDir + "akonadi.db";
+
+  if ( !QFile::exists( akonadiPath ) ) {
+    QFile file( akonadiPath );
+    if ( !file.open( QIODevice::WriteOnly ) ) {
+      Tracer::self()->error( "DataStore::storagePath", QString( "Unable to create file '%1'" ).arg( akonadiPath ) );
+    } else {
+      file.close();
+    }
+  }
+
+  return akonadiPath;
 }
 
 /* -- High level API -- */
@@ -1055,7 +1078,7 @@ bool DataStore::appendPimItem( const QByteArray & data,
   if ( insertId )
       *insertId = id;
 
-  emit itemAdded( id, location.location().latin1() );
+  emit itemAdded( id, location.location().toLatin1() );
 
   return true;
 }

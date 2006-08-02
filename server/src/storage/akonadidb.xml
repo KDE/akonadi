@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+
+  <table name="CachePolicies">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="name" type="CHAR(20) NOT NULL UNIQUE"/>
+    <!--<column name="foobar" type="INTEGER"/>-->
+    <column name="foobar" type="INTEGER"/>
+  </table>
+
+  <table name="Resources">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="name" type="CHAR(60) NOT NULL UNIQUE"/>
+    <column name="cachepolicy_id" type="INTEGER NOT NULL REFERENCES CachePolicies(id)"/>
+  </table>
+
+  <table name="Locations">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="uri" type="CHAR(512) NOT NULL UNIQUE"/>
+    <column name="cachepolicy_id" type="INTEGER REFERENCES CachePolicies(id)"/>
+    <column name="resource_id" type="INTEGER NOT NULL REFERENCES Resources(id)"/>
+    <column name="exists_count" type="INTEGER"/>
+    <column name="recent_count" type="INTEGER"/>
+    <column name="unseen_count" type="INTEGER"/>
+    <column name="first_unseen" type="INTEGER"/>
+    <column name="uid_validity" type="INTEGER"/>
+  </table>
+
+  <table name="PersistentSearches">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="name" type="CHAR(512) NOT NULL UNIQUE"/>
+    <column name="query" type="CHAR(512) NOT NULL"/>
+  </table>
+
+  <table name="MimeTypes">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="mime_type" type="CHAR(60) NOT NULL UNIQUE"/>
+  </table>
+
+  <table name="MetaTypes">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="name" type="CHAR(60) NOT NULL"/>
+    <column name="mimetype_id" type="INTEGER REFERENCES MimeTypes(id)"/>
+  </table>
+
+  <table name="PimItems">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="remote_id" type="CHAR(512) NOT NULL"/>
+    <column name="data" type="TEXT"/>
+    <column name="location_id" type="INTEGER REFERENCES Locations(id)"/>
+    <column name="mimetype_id" type="INTEGER REFERENCES MimeTypes(id)"/>
+    <column name="datetime" type="CHAR(19) DEFAULT CURRENT_TIMESTAMP"/>
+  </table>
+
+  <table name="ItemMetaData">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="data" type="CHAR(512) NOT NULL"/>
+    <column name="metatype_id" type="INTEGER REFERENCES MetaTypes(id)"/>
+    <column name="pimitem_id" type="INTEGER REFERENCES PimItems(id)"/>
+  </table>
+
+  <table name="Flags">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="name" type="CHAR(20) NOT NULL UNIQUE"/>
+  </table>
+
+  <table name="ItemFlags">
+    <column name="flag_id" type="INTEGER REFERENCES Flags(id)"/>
+    <column name="pimitem_id" type="INTEGER REFERENCES PimItems(id)"/>
+  </table>
+
+  <table name="Parts">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="data" type="TEXT"/>
+    <column name="datasize" type="INTEGER NOT NULL"/>
+    <column name="pimitem_id" type="INTEGER REFERENCES PimItems(id)"/>
+    <column name="mimetype_id" type="INTEGER REFERENCES MimeTypes(id)"/>
+  </table>
+
+  <table name="PartMetaData">
+    <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="data" type="CHAR(512) NOT NULL"/>
+    <column name="metatype_id" type="INTEGER REFERENCES MetaTypes(id)"/>
+    <column name="part_id" type="INTEGER REFERENCES Parts(id)"/>
+  </table>
+
+  <table name="PartFlags">
+    <column name="flag_id" type="INTEGER REFERENCES Flags(id)"/>
+    <column name="part_id" type="INTEGER REFERENCES Parts(id)"/>
+  </table>
+
+  <table name="LocationMimeTypes">
+    <column name="location_id" type="INTEGER REFERENCES Locations(id)"/>
+    <column name="mimetype_id" type="INTEGER REFERENCES MimeTypes(id)"/>
+  </table>
+
+</database>

@@ -44,6 +44,7 @@ set(libakonadiprivate_SRCS
   src/searchproviders/emailsearchprovider.cpp
   src/storage/entity.cpp
   src/storage/datastore.cpp
+  src/storage/dbinitializer.cpp
   src/storage/debug.cpp
   src/collection.cpp
   src/tracer.cpp
@@ -64,9 +65,11 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
 
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.AgentManager.xml )
 
+qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
+
 kde4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
 target_link_libraries( akonadiprivate ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARIES}
-                                      ${QT_QTSQL_LIBRARIES} ${QT_QTDBUS_LIBRARIES} )
+                                      ${QT_QTSQL_LIBRARIES} ${QT_QTDBUS_LIBRARIES} ${QT_QTXML_LIBRARIES})
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
 set( akonadiserver_bin_SRCS src/main.cpp )
