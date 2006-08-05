@@ -29,6 +29,7 @@ class PIM::ItemAppendJobPrivate
     QByteArray path;
     QByteArray data;
     QByteArray mimetype;
+    QString remoteId;
 };
 
 PIM::ItemAppendJob::ItemAppendJob( const QByteArray &path, const QByteArray & data, const QByteArray & mimetype, QObject * parent ) :
@@ -47,7 +48,10 @@ PIM::ItemAppendJob::~ ItemAppendJob( )
 
 void PIM::ItemAppendJob::doStart()
 {
-  writeData( newTag() + " APPEND " + d->path + " (\\MimeType[" + d->mimetype + "]) {" + QByteArray::number( d->data.size() ) + "}" );
+  QByteArray remoteId;
+  if ( !d->remoteId.isEmpty() )
+    remoteId = " \\RemoteId[" + d->remoteId.toUtf8() + "]";
+  writeData( newTag() + " APPEND " + d->path + " (\\MimeType[" + d->mimetype + "]" + remoteId + ") {" + QByteArray::number( d->data.size() ) + "}" );
 }
 
 void PIM::ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -59,5 +63,9 @@ void PIM::ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteAr
   qDebug() << "unhandled response in item append job: " << tag << data;
 }
 
+void PIM::ItemAppendJob::setRemoteId(const QString & remoteId)
+{
+  d->remoteId = remoteId;
+}
 
 #include "itemappendjob.moc"

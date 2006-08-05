@@ -44,6 +44,12 @@ class AKONADI_EXPORT ItemAppendJob : public Job
     ItemAppendJob( const QByteArray &path, const QByteArray &data, const QByteArray &mimetype, QObject *parent = 0 );
 
     /**
+      Sets the remote id of the new item (should only be used by resources).
+      @param The remote id.
+    */
+    void setRemoteId( const QString &remoteId );
+
+    /**
       Deletes this job.
     */
     virtual ~ItemAppendJob();

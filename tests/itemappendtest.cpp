@@ -30,7 +30,13 @@ QTEST_KDEMAIN( ItemAppendTest, NoGUI );
 
 void ItemAppendTest::testItemAppend()
 {
+  // item without remote id
   ItemAppendJob *job = new ItemAppendJob( "/res1/foo", QByteArray(), "message/rfc822", this );
+  QVERIFY( job->exec() );
+
+  // item with remote id
+  job = new ItemAppendJob( "/res1/foo", QByteArray(), "message/rfc822", this );
+  job->setRemoteId( "remote-id" );
   QVERIFY( job->exec() );
 }
 
