@@ -135,6 +135,7 @@ QString PluginManager::createAgentInstance( const QString &identifier )
   Instance instance;
   instance.agentType = identifier;
   instance.controller = new Akonadi::ProcessControl( this );
+  instance.interface = 0;
 
   mInstances.insert( agentIdentifier, instance );
 
@@ -338,6 +339,36 @@ void PluginManager::save()
   file.endGroup();
 
   file.sync();
+}
+
+bool PluginManager::requestItemDelivery( const QString & agentIdentifier, const QString & itemIdentifier, const QString & collection, int type )
+{
+  if ( !mInstances .contains( agentIdentifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::PluginManager::requestItemDelivery" ),
+    QString( "Agent instance with identifier '%1' does not exist" ).arg( agentIdentifier ) );
+    return false;
+  }
+
+  // TODO
+  if ( !mInstances.value( agentIdentifier ).controller ) {
+    mTracer->warning( "akonadi_control::PluginManager::requestItemDelivery",
+                      "starting agent instance on demand not yet implemented!" );
+    return false;
+  }
+
+  org::kde::Akonadi::Resource *iface = mInstances.value( agentIdentifier ).interface;
+  if ( !iface )
+    iface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + agentIdentifier, "/", QDBus::sessionBus(), this );
+
+  if ( !iface || !iface->isValid() ) {
+    mTracer->error( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
+                    QString( "Cannot connect to agent with identifier '%1', error message: '%2'" )
+                        .arg( agentIdentifier, iface->lastError().message() ) );
+    return false;
+  }
+
+  mInstances[agentIdentifier].interface = iface;
+  return iface->requestItemDelivery( itemIdentifier, collection, type );
 }
 
 #include "pluginmanager.moc"

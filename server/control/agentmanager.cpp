@@ -81,28 +81,7 @@ QStringList AgentManager::agentInstances() const
 bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
                                         const QString &collection, int type )
 {
-/*
-  if ( !mInstances.contains( agentIdentifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( agentIdentifier ) );
-    return false;
-  }
-
-  if ( !mInstances.value( agentIdentifier ).interface )
-    mInstances[agentIdentifier].interface =
-        new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + agentIdentifier, "/", QDBus::sessionBus(), this );
-
-  if ( !mInstances.value( agentIdentifier ).interface || !mInstances.value( agentIdentifier ).interface->isValid() ) {
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
-                    QString( "Cannot connect to agent with identifier '%1', error message: '%2'" )
-                        .arg( agentIdentifier, mInstances.value( agentIdentifier ).interface->lastError().message() ) );
-    return false;
-  }
-
-  return mInstances.value( agentIdentifier ).interface->requestItemDelivery( itemIdentifier, collection, type );
-*/
-
-  return true;
+  return mPluginManager.requestItemDelivery( agentIdentifier, itemIdentifier, collection, type );
 }
 
 QStringList AgentManager::profiles() const

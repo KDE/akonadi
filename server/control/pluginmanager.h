@@ -23,6 +23,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 
+#include "resourceinterface.h"
 #include "tracerinterface.h"
 
 namespace Akonadi {
@@ -104,6 +105,14 @@ class PluginManager : public QObject
      */
     QStringList agentInstances() const;
 
+    /**
+     * Asks the agent to store the item with the given
+     * identifier to the given @p collection as full or lightwight
+     * version, depending on @p type.
+     */
+    bool requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
+                              const QString &collection, int type );
+
   private Q_SLOTS:
     void updatePluginInfos();
 
@@ -152,6 +161,7 @@ class PluginManager : public QObject
       public:
         QString agentType;
         Akonadi::ProcessControl *controller;
+        org::kde::Akonadi::Resource *interface;
     };
 
     /**
