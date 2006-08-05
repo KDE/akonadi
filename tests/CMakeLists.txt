@@ -57,6 +57,7 @@ add_akonadi_demo(collectioncreator.cpp)
 add_akonadi_test(imapparsertest.cpp)
 add_akonadi_test(collectionjobtest.cpp)
 add_akonadi_test(messagejobtest.cpp)
+add_akonadi_test(itemappendtest.cpp)
 
 
 endif(KDE4_BUILD_TESTS)

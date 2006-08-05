@@ -85,7 +85,7 @@ void CollectionJobTest::testFolderList( )
   col = findCol( list, "res1/foo" );
   QVERIFY( col != 0 );
   QCOMPARE( col->type(), Collection::Folder );
-  contentTypes << "message/rfc822" << "text/ical" << Collection::collectionMimeType();
+  contentTypes << "message/rfc822" << "text/calendar" << "text/vcard";
   compareLists( col->contentTypes(), contentTypes );
 
   QVERIFY( findCol( list, "res1/foo/bar" ) != 0 );

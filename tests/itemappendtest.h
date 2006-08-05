@@ -17,17 +17,17 @@
     02110-1301, USA.
 */
 
-#ifndef MESSAGEJOBTEST_H
-#define MESSAGEJOBTEST_H
+#ifndef ITEMAPPENDTEST_H
+#define ITEMAPPENDTEST_H
 
 #include <QtCore/QObject>
 
-class MessageJobTest : public QObject
+class ItemAppendTest : public QObject
 {
   Q_OBJECT
   private slots:
-    void testMessageFetch();
-    void testIllegalMessageFetch();
+    void testItemAppend();
+    void testIllegalAppend();
 };
 
 
