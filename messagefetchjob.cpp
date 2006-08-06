@@ -32,8 +32,6 @@ using namespace PIM;
 class PIM::MessageFetchJobPrivate
 {
   public:
-    QByteArray path;
-    DataReference uid;
     Message::List messages;
 
   public:
@@ -71,35 +69,21 @@ class PIM::MessageFetchJobPrivate
 };
 
 PIM::MessageFetchJob::MessageFetchJob( const QByteArray & path, QObject * parent ) :
-    Job( parent ),
+    ItemFetchJob( path, parent ),
     d( new MessageFetchJobPrivate )
 {
-  d->path = path;
+  addFetchField( "ENVELOPE" );
 }
 
 PIM::MessageFetchJob::MessageFetchJob( const DataReference & ref, QObject * parent ) :
-    Job( parent ),
+    ItemFetchJob( ref, parent ),
     d( new MessageFetchJobPrivate )
 {
-  d->path = Collection::root();
-  d->uid = ref;
 }
 
-PIM::MessageFetchJob::~ MessageFetchJob( )
+PIM::MessageFetchJob::~MessageFetchJob()
 {
   delete d;
-}
-
-void PIM::MessageFetchJob::doStart()
-{
-  QByteArray selectPath;
-  if ( d->uid.isNull() ) // collection content listing
-    selectPath = d->path;
-  else                   // message fetching
-    selectPath = /*Collection::root()*/ "res1/foo"; // ### just until the server is fixed
-  CollectionSelectJob *job = new CollectionSelectJob( selectPath, this );
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(selectDone(PIM::Job*)) );
-  job->start();
 }
 
 void PIM::MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -184,37 +168,6 @@ void PIM::MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByte
 Message::List PIM::MessageFetchJob::messages() const
 {
   return d->messages;
-}
-
-void PIM::MessageFetchJob::selectDone( PIM::Job * job )
-{
-  if ( job->error() ) {
-    setError( job->error(), job->errorMessage() );
-    emit done( this );
-  } else {
-    job->deleteLater();
-    // the collection is now selected, fetch the message(s)
-    QByteArray command = newTag();
-    if ( d->uid.isNull() )
-      command += " FETCH 1:* (UID FLAGS ENVELOPE)";
-    else
-      command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID FLAGS RFC822)";
-    writeData( command );
-  }
-}
-
-DataReference PIM::MessageFetchJob::parseUid( const QList< QByteArray > & fetchResponse )
-{
-  int index = fetchResponse.indexOf( "UID" );
-  if ( index < 0 ) {
-    qWarning() << "Fetch response doesn't contain a UID field!";
-    return DataReference();
-  }
-  if ( index == fetchResponse.count() - 1 ) {
-    qWarning() << "Broken fetch response: No value for UID field!";
-    return DataReference();
-  }
-  return DataReference( fetchResponse[index + 1], QString() );
 }
 
 #include "messagefetchjob.moc"

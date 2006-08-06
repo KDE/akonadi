@@ -17,20 +17,20 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_ITEMLISTJOB_H
-#define PIM_ITEMLISTJOB_H
+#ifndef PIM_ITEMFETCHJOB_H
+#define PIM_ITEMFETCHJOB_H
 
 #include <libakonadi/job.h>
-#include <libakonadi/message.h>
+#include <libakonadi/item.h>
 
 namespace PIM {
 
-class ItemListJobPrivate;
+class ItemFetchJobPrivate;
 
 /**
   Fetches message data from the backend.
 */
-class AKONADI_EXPORT ItemListJob : public Job
+class AKONADI_EXPORT ItemFetchJob : public Job
 {
     Q_OBJECT
   public:
@@ -40,18 +40,33 @@ class AKONADI_EXPORT ItemListJob : public Job
       @param path Absolute path of the collection.
       @param parent The parent object.
     */
-    ItemListJob( const QByteArray &path, QObject *parent = 0 );
+    ItemFetchJob( const QByteArray &path, QObject *parent = 0 );
+
+    /**
+      Creates a new item fetch job to retrieve the complete item data
+      with the given uid.
+      @param ref The unique message id.
+      @param parent The parent object.
+    */
+    ItemFetchJob( const DataReference &ref, QObject *parent = 0 );
 
     /**
       Destroys this job.
     */
-    virtual ~ItemListJob();
+    virtual ~ItemFetchJob();
 
     /**
       Returns the fetched item objects. Invalid before the done(PIM::Job*)
-      signal has been emitted or if an error occurred.
+      signal has been emitted or if an error occurred. Also useless if you are
+      using a sub-class.
     */
     Item::List items() const;
+
+    /**
+      Fetch additional field.
+      @param fields Additional fields to fetch.
+    */
+    void addFetchField( const QByteArray &field );
 
   protected:
     virtual void doStart();
@@ -68,7 +83,7 @@ class AKONADI_EXPORT ItemListJob : public Job
     void selectDone( PIM::Job* job );
 
   private:
-    ItemListJobPrivate *d;
+    ItemFetchJobPrivate *d;
 };
 
 }

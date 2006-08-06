@@ -26,6 +26,7 @@ set( akonadi_LIB_SRC
 	imapparser.cpp
 	item.cpp
 	itemappendjob.cpp
+	itemfetchjob.cpp
 	job.cpp
 	jobqueue.cpp
 	messagecollectionattribute.cpp
@@ -35,7 +36,6 @@ set( akonadi_LIB_SRC
 	messagemodel.cpp
 	messagequery.cpp
 	monitor.cpp
-        itemlistjob.cpp
 )
 
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.NotificationManager.xml)
@@ -62,6 +62,7 @@ install( FILES
 	imapparser.h
 	item.h
 	itemappendjob.h
+	itemfetchjob.h
 	job.h
 	jobqueue.h
 	messagecollectionattribute.h

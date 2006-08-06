@@ -20,7 +20,7 @@
 #ifndef PIM_MESSAGEFETCHJOB_H
 #define PIM_MESSAGEFETCHJOB_H
 
-#include <libakonadi/job.h>
+#include <libakonadi/itemfetchjob.h>
 #include <libakonadi/message.h>
 
 namespace PIM {
@@ -30,7 +30,7 @@ class MessageFetchJobPrivate;
 /**
   Fetches message data from the backend.
 */
-class AKONADI_EXPORT MessageFetchJob : public Job
+class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
 {
   Q_OBJECT
   public:
@@ -62,18 +62,7 @@ class AKONADI_EXPORT MessageFetchJob : public Job
     Message::List messages() const;
 
   protected:
-    virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
-
-    /**
-      Returns the reference from the given fetch response.
-      @param fetchResponse The IMAP fetch response, already splitted into
-      name/value pairs
-    */
-    DataReference parseUid( const QList<QByteArray> &fetchResponse );
-
-  private slots:
-    void selectDone( PIM::Job* job );
 
   private:
     MessageFetchJobPrivate *d;
