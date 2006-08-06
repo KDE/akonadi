@@ -25,6 +25,7 @@ class PIM::ItemPrivate {
   public:
     DataReference ref;
     Item::Flags flags;
+    QByteArray data;
 };
 
 PIM::Item::Item( const DataReference & ref ) :
@@ -61,6 +62,16 @@ void PIM::Item::unsetFlag( const QByteArray & name )
 bool PIM::Item::hasFlag( const QByteArray & name ) const
 {
   return d->flags.contains( name );
+}
+
+QByteArray PIM::Item::data() const
+{
+  return d->data;
+}
+
+void PIM::Item::setData(const QByteArray & data)
+{
+  d->data = data;
 }
 
 

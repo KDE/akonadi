@@ -22,6 +22,7 @@
 
 #include <libakonadi/job.h>
 
+#include <QByteArray>
 #include <QSet>
 
 namespace PIM {
@@ -36,7 +37,7 @@ class AKONADI_EXPORT Item
 {
   public:
     typedef QList<Item *> List;
-  
+
     typedef QSet<QByteArray> Flags;
 
     /**
@@ -77,6 +78,16 @@ class AKONADI_EXPORT Item
       @param name The flag name.
     */
     void unsetFlag( const QByteArray &name );
+
+    /**
+      Returns the raw data of this item.
+    */
+    virtual QByteArray data() const;
+
+    /**
+      Sets the raw data of this item.
+    */
+    virtual void setData( const QByteArray& data );
 
   private:
     ItemPrivate *d;

@@ -95,6 +95,10 @@ void PIM::ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArr
           foreach ( const QByteArray flag, flags )
             item->setFlag( flag );
         }
+        else if ( fetch[i] == "RFC822" ) {
+          item->setData( fetch[i + 1] );
+        }
+
       }
 
       d->items.append( item );
