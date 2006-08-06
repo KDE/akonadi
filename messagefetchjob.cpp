@@ -110,12 +110,8 @@ void PIM::MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByte
       // parse fetch response fields
       for ( int i = 0; i < fetch.count() - 1; i += 2 ) {
         // flags
-        if ( fetch[i] == "FLAGS" ) {
-          QList<QByteArray> flags;
-          ImapParser::parseParenthesizedList( fetch[i + 1], flags );
-          foreach ( const QByteArray flag, flags )
-            msg->setFlag( flag );
-        }
+        if ( fetch[i] == "FLAGS" )
+          parseFlags( fetch[i + 1], msg );
         // envelope
         else if ( fetch[i] == "ENVELOPE" ) {
           QList<QByteArray> env;

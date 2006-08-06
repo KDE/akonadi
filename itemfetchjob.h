@@ -79,6 +79,13 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     */
     DataReference parseUid( const QList<QByteArray> &fetchResponse );
 
+    /**
+      Parses the given flag data and sets the them on the given item.
+      @param flagData The unparsed flag data of the fetch response
+      @param item The corresponding item
+    */
+    void parseFlags( const QByteArray &flagData, Item* item );
+
   private slots:
     void selectDone( PIM::Job* job );
 

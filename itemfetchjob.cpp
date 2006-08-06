@@ -89,12 +89,8 @@ void PIM::ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArr
       // parse fetch response fields
       for ( int i = 0; i < fetch.count() - 1; i += 2 ) {
         // flags
-        if ( fetch[i] == "FLAGS" ) {
-          QList<QByteArray> flags;
-          ImapParser::parseParenthesizedList( fetch[i + 1], flags );
-          foreach ( const QByteArray flag, flags )
-            item->setFlag( flag );
-        }
+        if ( fetch[i] == "FLAGS" )
+          parseFlags( fetch[i + 1], item );
         else if ( fetch[i] == "RFC822" ) {
           item->setData( fetch[i + 1] );
         }
@@ -150,6 +146,14 @@ DataReference PIM::ItemFetchJob::parseUid( const QList< QByteArray > & fetchResp
 void PIM::ItemFetchJob::addFetchField(const QByteArray & field)
 {
   d->fields.append( field );
+}
+
+void PIM::ItemFetchJob::parseFlags(const QByteArray & flagData, Item * item)
+{
+  QList<QByteArray> flags;
+  ImapParser::parseParenthesizedList( flagData, flags );
+  foreach ( const QByteArray flag, flags )
+    item->setFlag( flag );
 }
 
 #include "itemfetchjob.moc"
