@@ -17,14 +17,14 @@ INSERT INTO MetaTypes SELECT NULL, 'end_date', id FROM MimeTypes WHERE mime_type
 INSERT INTO MetaTypes SELECT NULL, 'email', id FROM MimeTypes WHERE mime_type = 'text/vcard';
 
 DELETE FROM Flags;
-INSERT INTO Flags (name) VALUES ('important');
-INSERT INTO Flags (name) VALUES ('has_attachment');
-INSERT INTO Flags (name) VALUES ('spam');
-INSERT INTO Flags (name) VALUES ('\Answered');
-INSERT INTO Flags (name) VALUES ('\Flagged');
-INSERT INTO Flags (name) VALUES ('\Deleted');
-INSERT INTO Flags (name) VALUES ('\Seen');
-INSERT INTO Flags (name) VALUES ('\Draft');
+INSERT INTO Flags (id,name) VALUES (0,'important');
+INSERT INTO Flags (id,name) VALUES (1,'has_attachment');
+INSERT INTO Flags (id,name) VALUES (2,'spam');
+INSERT INTO Flags (id,name) VALUES (3,'\Answered');
+INSERT INTO Flags (id,name) VALUES (4,'\Flagged');
+INSERT INTO Flags (id,name) VALUES (5,'\Deleted');
+INSERT INTO Flags (id,name) VALUES (6,'\Seen');
+INSERT INTO Flags (id,name) VALUES (7,'\Draft');
 
 DELETE FROM Locations;
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity) VALUES (0, '/foo', 0, 0, 3, 0, 0, 0, 0);
