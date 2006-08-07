@@ -163,6 +163,9 @@ bool Akonadi::Append::commit()
 
     DataStore *db = connection()->storageBackend();
     Location l = db->locationByRawMailbox( m_mailbox );
+    if ( !l.isValid() )
+      return failureResponse( QString("Unknown collection '%1'.").arg( m_mailbox.constData() ) );
+
     QString mt;
     QByteArray remote_id;
     foreach( QByteArray flag, m_flags ) {
