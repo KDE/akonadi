@@ -27,6 +27,7 @@ set( akonadi_LIB_SRC
 	imapparser.cpp
 	item.cpp
 	itemappendjob.cpp
+	itemdeletejob.cpp
 	itemfetchjob.cpp
 	itemstorejob.cpp
 	job.cpp
@@ -65,6 +66,7 @@ install( FILES
 	imapparser.h
 	item.h
 	itemappendjob.h
+	itemdeletejob.h
 	itemfetchjob.h
 	itemstorejob.h
 	job.h
