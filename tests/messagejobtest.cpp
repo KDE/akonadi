@@ -49,7 +49,7 @@ void MessageJobTest::testMessageFetch( )
   // check if the fetch response is parsed correctly
   Message *msg = msgs[0];
   QCOMPARE( msg->flags().count(), 3 );
-  QVERIFY( msg->hasFlag( "\\Answered" ) );
+  QVERIFY( msg->hasFlag( "\\Seen" ) );
   QVERIFY( msg->hasFlag( "\\Flagged" ) );
   QVERIFY( msg->hasFlag( "\\Deleted" ) );
 
@@ -60,7 +60,7 @@ void MessageJobTest::testMessageFetch( )
 
   msg = msgs[1];
   QCOMPARE( msg->flags().count(), 1 );
-  QVERIFY( msg->hasFlag( "\\Answered" ) );
+  QVERIFY( msg->hasFlag( "\\Flagged" ) );
 
   msg = msgs[2];
   QVERIFY( msg->flags().isEmpty() );
@@ -87,7 +87,8 @@ void MessageJobTest::testIllegalMessageFetch( )
   // fetch a non-existing message
   DataReference ref( "42", QString() );
   job = new MessageFetchJob( ref, this );
-  QVERIFY( !job->exec() );
+  QVERIFY( job->exec() );
+  QVERIFY( job->messages().isEmpty() );
 
   // fetch message with empty reference
   ref = DataReference();
@@ -97,7 +98,8 @@ void MessageJobTest::testIllegalMessageFetch( )
   // fetch message with broken reference
   ref = DataReference( "some_random_textual_uid", QString() );
   job = new MessageFetchJob( ref, this );
-  QVERIFY( !job->exec() );
+  QVERIFY( job->exec() );
+  QVERIFY( job->messages().isEmpty() );
 }
 
 
