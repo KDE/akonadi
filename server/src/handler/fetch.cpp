@@ -74,10 +74,6 @@ bool Fetch::handleLine( const QByteArray& line )
     }
   }
 
-  if ( pimItems.isEmpty() ) {
-    return failureResponse( "Result is empty" );
-  }
-
   for ( int i = 0; i < pimItems.count(); ++i ) {
     response.setUntagged();
     response.setString( buildResponse( pimItems[ i ], fetchQuery ) );
