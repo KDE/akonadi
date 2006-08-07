@@ -39,16 +39,6 @@ bool Expunge::handleLine( const QByteArray& )
 {
   Response response;
 
-  if ( !connection()->selectedLocation().isValid() ) {
-    response.setError();
-    response.setString( "Select a mailbox first" );
-
-    emit responseAvailable( response );
-    deleteLater();
-
-    return true;
-  }
-
   Location location = connection()->selectedLocation();
   DataStore *store = connection()->storageBackend();
 

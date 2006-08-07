@@ -1259,14 +1259,16 @@ QList<PimItem> DataStore::listPimItems( const MimeType & mimetype,
 
 QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &flag )
 {
-  if ( !m_dbOpened || !location.isValid() )
+  if ( !m_dbOpened )
     return QList<PimItem>();
 
   QSqlQuery query( m_database );
 
-  const QString statement = QString( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id, PimItems.datetime, PimItems.remote_id FROM PimItems, ItemFlags WHERE "
-                                     "ItemFlags.pimitem_id = PimItems.id AND ItemFlags.flag_id = %1 AND location_id = %2" )
-                                   .arg( flag.id() ).arg( location.id() );
+  QString statement = QString( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id, PimItems.datetime, PimItems.remote_id FROM PimItems, ItemFlags WHERE "
+                                     "ItemFlags.pimitem_id = PimItems.id AND ItemFlags.flag_id = %1" )
+                                   .arg( flag.id() );
+  if ( location.isValid() )
+    statement += QString( "AND location_id = %1" ).arg( location.id() );
 
   if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "DataStore::listPimItems" );
