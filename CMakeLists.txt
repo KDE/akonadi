@@ -23,6 +23,7 @@ set( akonadi_LIB_SRC
 	collectionselectjob.cpp
 	collectionstatusjob.cpp
 	collectionview.cpp
+	expungejob.cpp
 	imapparser.cpp
 	item.cpp
 	itemappendjob.cpp
@@ -60,6 +61,7 @@ install( FILES
 	collectionselectjob.h
 	collectionstatusjob.h
 	collectionview.h
+	expungejob.h
 	imapparser.h
 	item.h
 	itemappendjob.h
