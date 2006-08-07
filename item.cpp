@@ -26,6 +26,7 @@ class PIM::ItemPrivate {
     DataReference ref;
     Item::Flags flags;
     QByteArray data;
+    QByteArray mimeType;
 };
 
 PIM::Item::Item( const DataReference & ref ) :
@@ -74,4 +75,12 @@ void PIM::Item::setData(const QByteArray & data)
   d->data = data;
 }
 
+QByteArray PIM::Item::mimeType() const
+{
+  return d->mimeType;
+}
 
+void PIM::Item::setMimeType(const QByteArray & mimeType)
+{
+  d->mimeType = mimeType;
+}

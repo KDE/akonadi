@@ -152,8 +152,14 @@ void PIM::ItemFetchJob::parseFlags(const QByteArray & flagData, Item * item)
 {
   QList<QByteArray> flags;
   ImapParser::parseParenthesizedList( flagData, flags );
-  foreach ( const QByteArray flag, flags )
-    item->setFlag( flag );
+  foreach ( const QByteArray flag, flags ) {
+    if ( flag.startsWith( "\\MimeTypes" ) ) {
+      int begin = flag.indexOf( '[' ) + 1;
+      item->setMimeType( flag.mid( begin, flag.length() - begin - 1 ) );
+    } else {
+      item->setFlag( flag );
+    }
+  }
 }
 
 #include "itemfetchjob.moc"

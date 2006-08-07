@@ -89,6 +89,16 @@ class AKONADI_EXPORT Item
     */
     virtual void setData( const QByteArray& data );
 
+    /**
+      Returns the mime type of this item.
+    */
+    QByteArray mimeType() const;
+
+    /**
+      Sets the mime type of this item to @p mimeType.
+    */
+    void setMimeType( const QByteArray &mimeType );
+
   private:
     ItemPrivate *d;
 };
