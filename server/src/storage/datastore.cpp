@@ -1083,6 +1083,32 @@ bool DataStore::appendPimItem( const QByteArray & data,
   return true;
 }
 
+bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const QByteArray & data)
+{
+  if ( !m_dbOpened )
+    return false;
+
+  QSqlQuery query( m_database );
+
+  QSqlField field( "data", QVariant::String );
+  field.setValue( data );
+  QString escaped = m_database.driver()->formatValue( field );
+  QString statement;
+  statement = QString( "UPDATE PimItems SET data = %1 WHERE id = %2" )
+      .arg( escaped )
+      .arg( pimItem.id() );
+
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "Error during insertion of single PimItem." );
+    return false;
+  }
+
+  // TODO
+  //emit itemChanged( pimItem.id(), location?? );
+
+  return true;
+}
+
 bool DataStore::removePimItem( const PimItem & pimItem )
 {
   return removePimItem( pimItem.id() );

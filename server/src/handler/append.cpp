@@ -228,12 +228,3 @@ bool Akonadi::Append::allDataRead( ) const
 {
     return ( m_size == 0 );
 }
-
-bool Akonadi::Append::startContinuation()
-{
-    Response response;
-    response.setContinuation();
-    response.setString( "Ready for literal data" );
-    emit responseAvailable( response );
-    return false;
-}

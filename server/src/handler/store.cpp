@@ -22,7 +22,6 @@
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "response.h"
-#include "storequery.h"
 #include "storage/datastore.h"
 
 #include "store.h"
@@ -30,7 +29,7 @@
 using namespace Akonadi;
 
 Store::Store()
-  : Handler()
+  : Handler(), mSize( -1 )
 {
 }
 
@@ -40,14 +39,13 @@ Store::~Store()
 
 bool Store::handleLine( const QByteArray& line )
 {
-  Response response;
-  response.setUntagged();
+  if ( inContinuation() )
+    return handleContinuation( line );
 
   int start = line.indexOf( ' ' ) + 1; // skip tag
 
-  StoreQuery storeQuery;
-
-  if ( !storeQuery.parse( line.mid( start ) ) ) {
+  if ( !mStoreQuery.parse( line.mid( start ) ) ) {
+    Response response;
     response.setTag( tag() );
     response.setError();
     response.setString( "Syntax error" );
@@ -58,31 +56,50 @@ bool Store::handleLine( const QByteArray& line )
     return true;
   }
 
-  storeQuery.dump();
+  if ( mStoreQuery.continuationSize() > 0 ) {
+    mSize = mStoreQuery.continuationSize();
+    return startContinuation();
+  }
+
+  return commit();
+}
+
+bool Store::commit()
+{
+  mStoreQuery.dump();
+
+  Response response;
+  response.setUntagged();
 
   DataStore *store = connection()->storageBackend();
 
   QList<PimItem> pimItems;
   if ( connection()->selectedLocation().id() == -1 ) {
-    pimItems = store->matchingPimItemsByUID( storeQuery.sequences() );
+    pimItems = store->matchingPimItemsByUID( mStoreQuery.sequences() );
   } else {
-    if ( storeQuery.isUidStore() ) {
-      pimItems = store->matchingPimItemsByUID( storeQuery.sequences(), connection()->selectedLocation() );
+    if ( mStoreQuery.isUidStore() ) {
+      pimItems = store->matchingPimItemsByUID( mStoreQuery.sequences(), connection()->selectedLocation() );
     } else {
-      pimItems = store->matchingPimItemsBySequenceNumbers( storeQuery.sequences(), connection()->selectedLocation() );
+      pimItems = store->matchingPimItemsBySequenceNumbers( mStoreQuery.sequences(), connection()->selectedLocation() );
     }
   }
 
   for ( int i = 0; i < pimItems.count(); ++i ) {
-    if ( storeQuery.type() & StoreQuery::Replace ) {
-      replaceFlags( pimItems[ i ], storeQuery.flags() );
-    } else if ( storeQuery.type() & StoreQuery::Add ) {
-      addFlags( pimItems[ i ], storeQuery.flags() );
-    } else if ( storeQuery.type() & StoreQuery::Delete ) {
-      deleteFlags( pimItems[ i ], storeQuery.flags() );
+    if ( mStoreQuery.dataType() == StoreQuery::Flags ) {
+      if ( mStoreQuery.operation() & StoreQuery::Replace ) {
+        replaceFlags( pimItems[ i ], mStoreQuery.flags() );
+      } else if ( mStoreQuery.operation() & StoreQuery::Add ) {
+        addFlags( pimItems[ i ], mStoreQuery.flags() );
+      } else if ( mStoreQuery.operation() & StoreQuery::Delete ) {
+        deleteFlags( pimItems[ i ], mStoreQuery.flags() );
+      }
+    } else if ( mStoreQuery.dataType() == StoreQuery::Data ) {
+      qDebug() << "literal data: " << mData;
+      DataStore *store = connection()->storageBackend();
+      store->updatePimItem( pimItems[ i ], mData );
     }
 
-    if ( !( storeQuery.type() & StoreQuery::Silent ) ) {
+    if ( !( mStoreQuery.operation() & StoreQuery::Silent ) ) {
       QList<Flag> flags = store->itemFlags( pimItems[ i ] );
       QStringList flagList;
       for ( int j = 0; j < flags.count(); ++j )
@@ -187,4 +204,23 @@ void Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
     qDebug( "Store::deleteFlags: Unable to add new item flags" );
     return;
   }
+}
+
+bool Akonadi::Store::inContinuation() const
+{
+  return mSize > -1;
+}
+
+bool Akonadi::Store::handleContinuation(const QByteArray & line)
+{
+  mData += line;
+  mSize -= line.size();
+  if ( !allDataRead() )
+    return false;
+  return commit();
+}
+
+bool Akonadi::Store::allDataRead() const
+{
+  return ( mSize == 0 );
 }

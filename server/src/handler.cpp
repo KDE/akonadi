@@ -155,4 +155,13 @@ bool Akonadi::Handler::failureResponse( const QString& failureMessage )
     return true;
 }
 
+bool Akonadi::Handler::startContinuation()
+{
+  Response response;
+  response.setContinuation();
+  response.setString( "Ready for literal data" );
+  emit responseAvailable( response );
+  return false;
+}
+
 #include "handler.moc"

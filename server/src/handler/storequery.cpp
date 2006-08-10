@@ -18,11 +18,12 @@
  ***************************************************************************/
 
 #include "storequery.h"
+#include <QDebug>
 
 using namespace Akonadi;
 
 StoreQuery::StoreQuery()
-  : mType( 0 )
+  : mOperation( 0 ), mDataType( Flags ), mContinuationSize( -1 )
 {
 }
 
@@ -47,21 +48,30 @@ bool StoreQuery::parse( const QByteArray &query )
 
   const QByteArray subCommand = query.mid( start, end - start ).toUpper();
   if ( subCommand == "FLAGS" ) {
-    mType = Replace;
+    mOperation = Replace;
   } else if ( subCommand == "FLAGS.SILENT" ) {
-    mType = Replace | Silent;
+    mOperation = Replace | Silent;
   } else if ( subCommand == "+FLAGS" ) {
-    mType = Add;
+    mOperation = Add;
   } else if ( subCommand == "+FLAGS.SILENT" ) {
-    mType = Add | Silent;
+    mOperation = Add | Silent;
   } else if ( subCommand == "-FLAGS" ) {
-    mType = Delete;
+    mOperation = Delete;
   } else if ( subCommand == "-FLAGS.SILENT" ) {
-    mType = Delete | Silent;
+    mOperation = Delete | Silent;
+  } else if ( subCommand == "DATA" ) {
+    mOperation = Replace | Silent;
+    mDataType = Data;
   } else
     return false;
 
   const QByteArray leftover = query.mid( end + 1 );
+  if ( dataType() == Data ) {
+    if ( !leftover[ 0 ] == '{' )
+      return false;
+    mContinuationSize = leftover.mid( 1, leftover.indexOf( '}' ) - 1 ).toInt();
+    return true;
+  }
   if ( !leftover[ 0 ] == '(' )
     return false;
 
@@ -89,9 +99,9 @@ bool StoreQuery::parse( const QByteArray &query )
   return true;
 }
 
-int StoreQuery::type() const
+int StoreQuery::operation() const
 {
-  return mType;
+  return mOperation;
 }
 
 QList<QByteArray> StoreQuery::flags() const
@@ -112,11 +122,21 @@ bool StoreQuery::isUidStore() const
 void StoreQuery::dump()
 {
   qDebug( "STORE:" );
-  if ( mType & Replace ) qDebug( "Replace" );
-  if ( mType & Add ) qDebug( "Add" );
-  if ( mType & Delete ) qDebug( "Delete" );
-  if ( mType & Silent ) qDebug( "Silent" );
+  if ( mOperation & Replace ) qDebug( "Replace" );
+  if ( mOperation & Add ) qDebug( "Add" );
+  if ( mOperation & Delete ) qDebug( "Delete" );
+  if ( mOperation & Silent ) qDebug( "Silent" );
 
   for ( int i = 0; i < mFlags.count(); ++i )
     qDebug( "%s", mFlags[ i ].data() );
+}
+
+int Akonadi::StoreQuery::dataType() const
+{
+  return mDataType;
+}
+
+int Akonadi::StoreQuery::continuationSize() const
+{
+  return mContinuationSize;
 }

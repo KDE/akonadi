@@ -85,6 +85,13 @@ signals:
      * @param state The new state the handler suggests to enter.
      */
     void connectionStateChange( ConnectionState state );
+
+protected:
+    /**
+      Send a continuation request for literals.
+    */
+    bool startContinuation();
+
 private:
     QByteArray m_tag;
     AkonadiConnection* m_connection;

@@ -31,7 +31,7 @@ namespace Akonadi {
 class StoreQuery
 {
   public:
-    enum Type
+    enum Operation
     {
       Replace = 1,
       Add = 2,
@@ -39,22 +39,32 @@ class StoreQuery
       Silent = 8
     };
 
+    enum DataType
+    {
+      Flags,
+      Data
+    };
+
     StoreQuery();
 
     bool parse( const QByteArray &query );
 
-    int type() const;
+    int operation() const;
+    int dataType() const;
     QList<QByteArray> flags() const;
     QList<QByteArray> sequences() const;
     bool isUidStore() const;
+    int continuationSize() const;
 
     void dump();
 
   private:
-    int mType;
+    int mOperation;
+    int mDataType;
     QList<QByteArray> mFlags;
     QList<QByteArray> mSequences;
     bool mIsUidStore;
+    int mContinuationSize;
 };
 
 }

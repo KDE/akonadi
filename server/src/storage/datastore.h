@@ -123,6 +123,7 @@ public:
                         const QDateTime & dateTime,
                         const QByteArray & remote_id,
                         int *insertId = 0 );
+    bool updatePimItem( const PimItem &pimItem, const QByteArray &data );
     bool removePimItem( const PimItem & pimItem );
     bool removePimItem( int id );
     PimItem pimItemById( int id );
