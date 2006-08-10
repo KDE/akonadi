@@ -20,6 +20,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QList>
 #include <QtCore/QPair>
+#include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QtSql/QSqlField>
 #include <QtSql/QSqlRecord>
@@ -85,6 +86,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
   typedef QPair<QString, QString> ColumnEntry;
 
   QList<ColumnEntry> columnsList;
+  QStringList dataList;
 
   QDomElement columnElement = element.firstChildElement();
   while ( !columnElement.isNull() ) {
@@ -93,6 +95,12 @@ bool DbInitializer::checkTable( const QDomElement &element )
       entry.first = columnElement.attribute( "name" );
       entry.second = columnElement.attribute( "type" );
       columnsList.append( entry );
+    } else if ( columnElement.tagName() == QLatin1String( "data" ) ) {
+      QString statement = QString( "INSERT INTO %1 (%2) VALUES (%3)" )
+          .arg( tableName )
+          .arg( columnElement.attribute( "columns" ) )
+          .arg( columnElement.attribute( "values" ) );
+      dataList << statement;
     } else {
       mErrorMsg = QString( "Unknown tag, expected <column> and got <%1>." ).arg( columnElement.tagName() );
       return false;
@@ -167,6 +175,21 @@ bool DbInitializer::checkTable( const QDomElement &element )
     }
 
     // TODO: remove obsolete columns (when sqlite will support it) and adapt column type modifications
+  }
+
+  // add initial data if table is empty
+  const QString statement = QString( "SELECT * FROM %1 LIMIT 1" ).arg( tableName );
+  if ( !query.exec( statement ) ) {
+    mErrorMsg = QString( "Unable to retrieve data from table '%1'." ).arg( tableName );
+    return false;
+  }
+  if ( query.size() == 0  || !query.first() ) {
+    foreach ( QString stmt, dataList ) {
+      if ( !query.exec( stmt ) ) {
+        mErrorMsg = QString( "Unable to add inital data to table '%1'." ).arg( tableName );
+        return false;
+      }
+    }
   }
 
   return true;

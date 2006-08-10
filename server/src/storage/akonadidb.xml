@@ -6,6 +6,9 @@
     <column name="name" type="CHAR(20) NOT NULL UNIQUE"/>
     <!--<column name="foobar" type="INTEGER"/>-->
     <column name="foobar" type="INTEGER"/>
+    <data columns="name" values="'none'"/>
+    <data columns="name" values="'temporary'"/>
+    <data columns="name" values="'permanent'"/>
   </table>
 
   <table name="Resources">
@@ -35,6 +38,10 @@
   <table name="MimeTypes">
     <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="mime_type" type="CHAR(60) NOT NULL UNIQUE"/>
+    <data columns="mime_type" values="'message/rfc822'"/>
+    <data columns="mime_type" values="'text/calendar'"/>
+    <data columns="mime_type" values="'text/vcard'"/>
+    <data columns="mime_type" values="'inode/directory'"/>
   </table>
 
   <table name="MetaTypes">
@@ -62,6 +69,14 @@
   <table name="Flags">
     <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="CHAR(20) NOT NULL UNIQUE"/>
+    <data columns="name" values="'important'"/>
+    <data columns="name" values="'has_attachment'"/>
+    <data columns="name" values="'spam'"/>
+    <data columns="name" values="'\Answered'"/>
+    <data columns="name" values="'\Flagged'"/>
+    <data columns="name" values="'\Deleted'"/>
+    <data columns="name" values="'\Seen'"/>
+    <data columns="name" values="'\Draft'"/>
   </table>
 
   <table name="ItemFlags">
