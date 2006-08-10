@@ -113,6 +113,35 @@ class PluginManager : public QObject
     bool requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
                               const QString &collection, int type );
 
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever a new agent type was installed on the system.
+     *
+     * @param agentType The identifier of the new agent type.
+     */
+    void agentTypeAdded( const QString &agentType );
+
+    /**
+     * This signal is emitted whenever an agent type was removed from the system.
+     *
+     * @param agentType The identifier of the removed agent type.
+     */
+    void agentTypeRemoved( const QString &agentType );
+
+    /**
+     * This signal is emitted whenever a new agent instance was created.
+     *
+     * @param agentIdentifier The identifier of the new agent instance.
+     */
+    void agentInstanceAdded( const QString &agentIdentifier );
+
+    /**
+     * This signal is emitted whenever an agent instance was removed.
+     *
+     * @param agentIdentifier The identifier of the removed agent instance.
+     */
+    void agentInstanceRemoved( const QString &agentIdentifier );
+
   private Q_SLOTS:
     void updatePluginInfos();
 
@@ -137,6 +166,11 @@ class PluginManager : public QObject
      * Saves internal state to the config file.
      */
     void save();
+
+    /**
+     * Reads the plugin infos from directory.
+     */
+    void readPluginInfos();
 
     class PluginInfo
     {

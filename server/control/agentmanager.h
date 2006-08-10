@@ -83,7 +83,6 @@ class AgentManager : public QObject
      */
     QStringList agentMimeTypes( const QString &identifier ) const;
 
-
     /**
      * Returns a list of supported capabilities of the agent type
      * for the given @p identifier.
@@ -168,6 +167,77 @@ class AgentManager : public QObject
      * with the given identifier.
      */
     QStringList profileAgents( const QString &identifier ) const;
+
+  Q_SIGNALS:
+    /**
+     * Agent types specific signals
+     */
+
+    /**
+     * This signal is emitted whenever a new agent type was installed on the system.
+     *
+     * @param agentType The identifier of the new agent type.
+     */
+    void agentTypeAdded( const QString &agentType );
+
+    /**
+     * This signal is emitted whenever an agent type was removed from the system.
+     *
+     * @param agentType The identifier of the removed agent type.
+     */
+    void agentTypeRemoved( const QString &agentType );
+
+    /**
+     * Agent specific signals
+     */
+
+    /**
+     * This signal is emitted whenever a new agent instance was created.
+     *
+     * @param agentIdentifier The identifier of the new agent instance.
+     */
+    void agentInstanceAdded( const QString &agentIdentifier );
+
+    /**
+     * This signal is emitted whenever an agent instance was removed.
+     *
+     * @param agentIdentifier The identifier of the removed agent instance.
+     */
+    void agentInstanceRemoved( const QString &agentIdentifier );
+
+    /**
+     * Profile specific signals
+     */
+
+    /**
+     * This signal is emitted whenever a new profile was created.
+     *
+     * @param profileIdentifier The identifier of the new profile.
+     */
+    void profileAdded( const QString &profileIdentifier );
+
+    /**
+     * This signal is emitted whenever a profile was removed.
+     *
+     * @param profileIdentifier The identifier of the removed profile.
+     */
+    void profileRemoved( const QString &profileIdentifier );
+
+    /**
+     * This signal is emitted whenever an agent was added to a profile.
+     *
+     * @param profileIdentifier The identifier of the profile.
+     * @param agentIdentifier The identifier of the agent.
+     */
+    void profileAgentAdded( const QString &profileIdentifier, const QString &agentIdentifier );
+
+    /**
+     * This signal is emitted whenever an agent was removed from a profile.
+     *
+     * @param profileIdentifier The identifier of the profile.
+     * @param agentIdentifier The identifier of the agent.
+     */
+    void profileAgentRemoved( const QString &profileIdentifier, const QString &agentIdentifier );
 
   private:
     PluginManager mPluginManager;

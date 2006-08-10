@@ -1,6 +1,32 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
   <interface name="org.kde.Akonadi.AgentManager">
+    <signal name="agentTypeAdded">
+      <arg name="agentType" type="s" direction="out"/>
+    </signal>
+    <signal name="agentTypeRemoved">
+      <arg name="agentType" type="s" direction="out"/>
+    </signal>
+    <signal name="agentInstanceAdded">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+    </signal>
+    <signal name="agentInstanceRemoved">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+    </signal>
+    <signal name="profileAdded">
+      <arg name="profileIdentifier" type="s" direction="out"/>
+    </signal>
+    <signal name="profileRemoved">
+      <arg name="profileIdentifier" type="s" direction="out"/>
+    </signal>
+    <signal name="profileAgentAdded">
+      <arg name="profileIdentifier" type="s" direction="out"/>
+      <arg name="agentIdentifier" type="s" direction="out"/>
+    </signal>
+    <signal name="profileAgentRemoved">
+      <arg name="profileIdentifier" type="s" direction="out"/>
+      <arg name="agentIdentifier" type="s" direction="out"/>
+    </signal>
     <method name="agentTypes">
       <arg type="as" direction="out"/>
     </method>

@@ -31,13 +31,13 @@ PluginManager::PluginManager( QObject *parent )
 {
   mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus(), this );
 
+  readPluginInfos();
+
   QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
   watcher->addPath( pluginInfoPath() );
 
   connect( watcher, SIGNAL( directoryChanged( const QString& ) ),
            this, SLOT( updatePluginInfos() ) );
-
-  updatePluginInfos();
 
   load();
 }
@@ -147,6 +147,8 @@ QString PluginManager::createAgentInstance( const QString &identifier )
 
   save();
 
+  emit agentInstanceAdded( agentIdentifier );
+
   return agentIdentifier;
 }
 
@@ -166,6 +168,8 @@ void PluginManager::removeAgentInstance( const QString &identifier )
   mInstances.remove( identifier );
 
   save();
+
+  emit agentInstanceRemoved( identifier );
 }
 
 QStringList PluginManager::agentInstances() const
@@ -174,6 +178,29 @@ QStringList PluginManager::agentInstances() const
 }
 
 void PluginManager::updatePluginInfos()
+{
+  QMap<QString, PluginInfo> oldInfos = mPluginInfos;
+
+  readPluginInfos();
+
+  QMapIterator<QString, PluginInfo> it( oldInfos );
+  while ( it.hasNext() ) {
+    it.next();
+
+    if ( !mPluginInfos.contains( it.key() ) )
+      emit agentTypeRemoved( it.key() );
+  }
+
+  it = mPluginInfos;
+  while ( it.hasNext() ) {
+    it.next();
+
+    if ( !oldInfos.contains( it.key() ) )
+      emit agentTypeAdded( it.key() );
+  }
+}
+
+void PluginManager::readPluginInfos()
 {
   mPluginInfos.clear();
 

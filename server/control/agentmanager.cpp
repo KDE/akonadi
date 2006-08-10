@@ -27,6 +27,24 @@ AgentManager::AgentManager( QObject *parent )
   QDBus::sessionBus().registerObject( "/", this );
 
   mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus(), this );
+
+  connect( &mPluginManager, SIGNAL( agentTypeAdded( const QString& ) ),
+           this, SIGNAL( agentTypeAdded( const QString& ) ) );
+  connect( &mPluginManager, SIGNAL( agentTypeRemoved( const QString& ) ),
+           this, SIGNAL( agentTypeRemoved( const QString& ) ) );
+  connect( &mPluginManager, SIGNAL( agentInstanceAdded( const QString& ) ),
+           this, SIGNAL( agentInstanceAdded( const QString& ) ) );
+  connect( &mPluginManager, SIGNAL( agentInstanceRemoved( const QString& ) ),
+           this, SIGNAL( agentInstanceRemoved( const QString& ) ) );
+
+  connect( &mProfileManager, SIGNAL( profileAdded( const QString& ) ),
+           this, SIGNAL( profileAdded( const QString& ) ) );
+  connect( &mProfileManager, SIGNAL( profileRemoved( const QString& ) ),
+           this, SIGNAL( profileRemoved( const QString& ) ) );
+  connect( &mProfileManager, SIGNAL( profileAgentAdded( const QString&, const QString& ) ),
+           this, SIGNAL( profileAgentAdded( const QString&, const QString& ) ) );
+  connect( &mProfileManager, SIGNAL( profileAgentRemoved( const QString&, const QString& ) ),
+           this, SIGNAL( profileAgentRemoved( const QString&, const QString& ) ) );
 }
 
 AgentManager::~AgentManager()

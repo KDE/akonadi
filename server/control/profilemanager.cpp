@@ -85,6 +85,8 @@ bool ProfileManager::createProfile( const QString &identifier )
 
   save();
 
+  emit profileAdded( identifier );
+
   return true;
 }
 
@@ -93,6 +95,8 @@ void ProfileManager::removeProfile( const QString &identifier )
   mProfiles.remove( identifier );
 
   save();
+
+  emit profileRemoved( identifier );
 }
 
 bool ProfileManager::profileAddAgent( const QString &profileIdentifier, const QString &agentIdentifier )
@@ -112,6 +116,8 @@ bool ProfileManager::profileAddAgent( const QString &profileIdentifier, const QS
   mProfiles[ profileIdentifier ].append( agentIdentifier );
 
   save();
+
+  emit profileAgentAdded( profileIdentifier, agentIdentifier );
 
   return true;
 }
@@ -133,6 +139,8 @@ bool ProfileManager::profileRemoveAgent( const QString &profileIdentifier, const
   mProfiles[ profileIdentifier ].removeAll( agentIdentifier );
 
   save();
+
+  emit profileAgentRemoved( profileIdentifier, agentIdentifier );
 
   return true;
 }
@@ -160,3 +168,5 @@ QString ProfileManager::profilePath() const
 
   return akonadiHomeDir + "/profilesrc";
 }
+
+#include "profilemanager.moc"
