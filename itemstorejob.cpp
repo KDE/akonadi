@@ -18,14 +18,38 @@
 */
 
 #include "itemstorejob.h"
+#include <QDebug>
 
 using namespace PIM;
 
 class PIM::ItemStoreJobPrivate
 {
   public:
+    enum Operation {
+      Data,
+      SetFlags,
+      AddFlags,
+      RemoveFlags
+    };
+
     Item::Flags flags;
+    Item::Flags addFlags;
+    Item::Flags removeFlags;
+    QByteArray data;
     DataReference ref;
+    QSet<int> operations;
+    QByteArray tag;
+
+    QByteArray joinFlags( const Item::Flags &flags )
+    {
+      QByteArray rv;
+      if ( flags.isEmpty() )
+        return rv;
+      foreach ( QByteArray f, flags )
+        rv += f + ' ';
+      rv.resize( rv.length() - 1 );
+      return rv;
+    }
 };
 
 PIM::ItemStoreJob::ItemStoreJob(Item * item, QObject * parent) :
@@ -35,13 +59,15 @@ PIM::ItemStoreJob::ItemStoreJob(Item * item, QObject * parent) :
   Q_ASSERT( item );
   d->flags = item->flags();
   d->ref = item->reference();
+  d->data = item->data();
+  d->operations.insert( ItemStoreJobPrivate::Data );
+  d->operations.insert( ItemStoreJobPrivate::SetFlags );
 }
 
-PIM::ItemStoreJob::ItemStoreJob(const DataReference &ref, const Item::Flags & flags, QObject * parent) :
+PIM::ItemStoreJob::ItemStoreJob(const DataReference &ref, QObject * parent) :
     Job( parent ),
     d( new ItemStoreJobPrivate )
 {
-  d->flags = flags;
   d->ref = ref;
 }
 
@@ -50,22 +76,81 @@ PIM::ItemStoreJob::~ ItemStoreJob()
   delete d;
 }
 
-void PIM::ItemStoreJob::doStart()
+void PIM::ItemStoreJob::setData(const QByteArray & data)
 {
-  QByteArray command = newTag();
-  command += " UID STORE " + d->ref.persistanceID().toLatin1();
-  command += " FLAGS (";
-  foreach ( QByteArray f, d->flags )
-    command += f + ' ';
-  command += ')';
-  writeData( command );
+  d->data = data;
+  d->operations.insert( ItemStoreJobPrivate::Data );
 }
 
-void PIM::ItemStoreJob::doHandleResponse(const QByteArray & tag, const QByteArray & data)
+void PIM::ItemStoreJob::setFlags(const Item::Flags & flags)
 {
-  // we don't care for now
-  Q_UNUSED( tag );
-  Q_UNUSED( data );
+  d->flags = flags;
+  d->operations.insert( ItemStoreJobPrivate::SetFlags );
+}
+
+void PIM::ItemStoreJob::addFlag(const Item::Flag & flag)
+{
+  d->addFlags.insert( flag );
+  d->operations.insert( ItemStoreJobPrivate::AddFlags );
+}
+
+void PIM::ItemStoreJob::removeFlag(const Item::Flag & flag)
+{
+  d->removeFlags.insert( flag );
+  d->operations.insert( ItemStoreJobPrivate::RemoveFlags );
+}
+
+void PIM::ItemStoreJob::doStart()
+{
+  sendNextCommand();
+}
+
+void PIM::ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
+{
+  if ( _tag == "+" ) { // ready for literal data
+    writeData( d->data );
+    return;
+  }
+  if ( _tag == d->tag ) {
+    if ( data.startsWith( "OK" ) ) {
+      sendNextCommand();
+    } else {
+      setError( Unknown, data );
+      emit done( this );
+    }
+    return;
+  }
+  qDebug() << "unhandled response in item store job: " << _tag << data;
+}
+
+void PIM::ItemStoreJob::sendNextCommand()
+{
+  if ( d->operations.isEmpty() ) {
+    emit done( this );
+    return;
+  }
+
+  d->tag = newTag();
+  QByteArray command = d->tag;
+  command += " UID STORE " + d->ref.persistanceID().toLatin1() + " ";
+  int op = *(d->operations.begin());
+  d->operations.remove( op );
+  switch ( op ) {
+    case ItemStoreJobPrivate::Data:
+      command += "DATA {" + QByteArray::number( d->data.size() ) + "}";
+      break;
+    case ItemStoreJobPrivate::SetFlags:
+      command += "FLAGS (" + d->joinFlags( d->flags ) + ")";
+      break;
+    case ItemStoreJobPrivate::AddFlags:
+      command += "+FLAGS (" + d->joinFlags( d->addFlags ) + ")";
+      break;
+    case ItemStoreJobPrivate::RemoveFlags:
+      command += "-FLAGS (" + d->joinFlags( d->removeFlags ) + ")";
+      break;
+  }
+  writeData( command );
+  newTag(); // hack to circumvent automatic response handling
 }
 
 #include "itemstorejob.moc"

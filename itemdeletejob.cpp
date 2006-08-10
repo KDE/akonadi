@@ -43,10 +43,8 @@ PIM::ItemDeleteJob::~ ItemDeleteJob()
 
 void PIM::ItemDeleteJob::doStart()
 {
-  // ### this destroys existing item flags, not that we would care here though...
-  Item::Flags flags;
-  flags.insert( "\\Deleted" );
-  ItemStoreJob* job = new ItemStoreJob( d->ref, flags, this );
+  ItemStoreJob* job = new ItemStoreJob( d->ref, this );
+  job->addFlag( "\\Deleted" );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(storeDone(PIM::Job*)) );
   job->start();
 }

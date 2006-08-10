@@ -27,6 +27,7 @@ class ItemStoreTest : public QObject
   Q_OBJECT
   private slots:
     void testFlagChange();
+    void testDataChange();
 };
 
 #endif

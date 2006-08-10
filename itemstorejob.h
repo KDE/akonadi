@@ -28,7 +28,7 @@ namespace PIM {
 class ItemStoreJobPrivate;
 
 /**
-  Stores the item flags.
+  Modifies an existing Item.
 */
 class ItemStoreJob : public Job
 {
@@ -36,28 +36,54 @@ class ItemStoreJob : public Job
 
   public:
     /**
-      Creates a new ItemStoreJob.
-      @param item The item which flags should be stored.
+      Writes modifications of @p item back to the storage.
+      @param item The modified items. Must not be 0.
       @param parent The parent object.
     */
     ItemStoreJob( Item* item, QObject *parent = 0 );
 
     /**
-      Creates a new ItemStoreJob.
+      Modifies the item with the identifier @p ref.
       @param ref The reference of the item to change.
-      @param flags The new item flags.
       @param parent The parent object.
     */
-    ItemStoreJob( const DataReference &ref, const Item::Flags &flags, QObject *parent = 0 );
+    ItemStoreJob( const DataReference &ref, QObject *parent = 0 );
 
     /**
       Destoys this job.
-    */
+     */
     virtual ~ItemStoreJob();
+
+    /**
+      Set the item data to @p data.
+      @param data The new item data.
+    */
+    void setData( const QByteArray &data );
+
+    /**
+      Sets the item flags to @p flags.
+      @param flags the new item flags.
+    */
+    void setFlags( const Item::Flags &flags );
+
+    /**
+      Adds the given flag. Existing flags will not be changed.
+      @param flag the flag to be added
+    */
+    void addFlag( const Item::Flag &flag );
+
+    /**
+      Removes the given flag. Other already set flags will not be changed.
+      @param flag the flag to be removed
+    */
+    void removeFlag( const Item::Flag &flag );
 
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+
+  private:
+    void sendNextCommand();
 
   private:
     ItemStoreJobPrivate *d;

@@ -38,6 +38,7 @@ class AKONADI_EXPORT Item
   public:
     typedef QList<Item *> List;
 
+    typedef QByteArray Flag;
     typedef QSet<QByteArray> Flags;
 
     /**
