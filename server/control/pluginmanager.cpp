@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFileSystemWatcher>
 #include <QtCore/QSettings>
@@ -30,6 +31,9 @@ PluginManager::PluginManager( QObject *parent )
   : QObject( parent )
 {
   mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus(), this );
+
+  connect( QDBus::sessionBus().interface(), SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
+           this, SLOT( resourceRegistered( const QString&, const QString&, const QString& ) ) );
 
   readPluginInfos();
 
@@ -129,8 +133,6 @@ QString PluginManager::createAgentInstance( const QString &identifier )
   mInstanceInfos[ identifier ].instanceCounter++;
 
   const QString agentIdentifier = QString( "%1_%2" ).arg( identifier, QString::number( instanceCounter ) );
-    mTracer->warning( QLatin1String( "akonadi_control::PluginManager::createAgentInstance" ),
-                      QString( "Agent identifier = %1" ).arg( agentIdentifier ) );
 
   Instance instance;
   instance.agentType = identifier;
@@ -159,6 +161,14 @@ void PluginManager::removeAgentInstance( const QString &identifier )
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
     return;
   }
+
+  mInstances[ identifier ].interface->quit();
+
+  /**
+   * We have to call processEvents() here to let QProcess enough time
+   * to discover that the agent application has quit.
+   */
+  QCoreApplication::processEvents();
 
   if ( mInstances[ identifier ].controller ) {
     mInstances[ identifier ].controller->stop();
@@ -325,12 +335,20 @@ void PluginManager::load()
 
     Instance instance;
     instance.agentType = agentType;
-    instance.controller = 0;
+    instance.controller = new Akonadi::ProcessControl( this );
+    instance.interface = 0;
 
     mInstances.insert( instanceIdentifier, instance );
 
+    QStringList arguments;
+    arguments << "--identifier" << instanceIdentifier;
+
+    const QString executable = mPluginInfos[ agentType ].exec;
+    mInstances[ instanceIdentifier ].controller->start( executable, arguments );
+
     file.endGroup();
   }
+
   file.endGroup();
 }
 
@@ -370,32 +388,44 @@ void PluginManager::save()
 
 bool PluginManager::requestItemDelivery( const QString & agentIdentifier, const QString & itemIdentifier, const QString & collection, int type )
 {
-  if ( !mInstances .contains( agentIdentifier ) ) {
+  if ( !mInstances.contains( agentIdentifier ) ) {
     mTracer->warning( QLatin1String( "akonadi_control::PluginManager::requestItemDelivery" ),
     QString( "Agent instance with identifier '%1' does not exist" ).arg( agentIdentifier ) );
     return false;
   }
 
-  // TODO
   if ( !mInstances.value( agentIdentifier ).controller ) {
-    mTracer->warning( "akonadi_control::PluginManager::requestItemDelivery",
-                      "starting agent instance on demand not yet implemented!" );
+    mTracer->error( QLatin1String( "akonadi_control::PluginManager::requestItemDelivery" ),
+                    QString( "Agent instance '%1' not running!" ).arg( agentIdentifier ) );
     return false;
   }
 
-  org::kde::Akonadi::Resource *iface = mInstances.value( agentIdentifier ).interface;
-  if ( !iface )
-    iface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + agentIdentifier, "/", QDBus::sessionBus(), this );
+  return mInstances[ agentIdentifier ].interface->requestItemDelivery( itemIdentifier, collection, type );
+}
 
-  if ( !iface || !iface->isValid() ) {
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
-                    QString( "Cannot connect to agent with identifier '%1', error message: '%2'" )
-                        .arg( agentIdentifier, iface->lastError().message() ) );
-    return false;
+void PluginManager::resourceRegistered( const QString &name, const QString &oldOwner, const QString &newOwner )
+{
+  if ( newOwner.isEmpty() ) // interface was unregistered
+    return;
+
+  if ( !name.startsWith( "org.kde.Akonadi.Resource." ) )
+    return;
+
+  const QString identifier = name.mid( 25 );
+
+  delete mInstances[ identifier ].interface;
+  mInstances[ identifier ].interface = 0;
+
+  org::kde::Akonadi::Resource *interface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + identifier, "/", QDBus::sessionBus(), this );
+
+  if ( !interface || !interface->isValid() ) {
+    mTracer->error( QLatin1String( "akonadi_control::PluginManager::resourceRegistered" ),
+                    QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+                        .arg( identifier, interface->lastError().message() ) );
+    return;
   }
 
-  mInstances[agentIdentifier].interface = iface;
-  return iface->requestItemDelivery( itemIdentifier, collection, type );
+  mInstances[ identifier ].interface = interface;
 }
 
 #include "pluginmanager.moc"

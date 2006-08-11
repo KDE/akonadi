@@ -144,6 +144,7 @@ class PluginManager : public QObject
 
   private Q_SLOTS:
     void updatePluginInfos();
+    void resourceRegistered( const QString&, const QString&, const QString& );
 
   private:
     /**
