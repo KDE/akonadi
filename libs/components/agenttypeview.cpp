@@ -63,6 +63,8 @@ AgentTypeView::AgentTypeView( QWidget *parent )
 
   d->mModel = new AgentTypeModel( d->mView );
   d->mView->setModel( d->mModel );
+
+  d->mView->selectionModel()->select( d->mModel->index( 0, 0 ), QItemSelectionModel::Select );
 }
 
 AgentTypeView::~AgentTypeView()
@@ -72,7 +74,15 @@ AgentTypeView::~AgentTypeView()
 
 QString AgentTypeView::currentAgentType() const
 {
-  return QString();
+  QItemSelectionModel *selectionModel = d->mView->selectionModel();
+  if ( !selectionModel )
+    return QString();
+
+  QModelIndex index = selectionModel->currentIndex();
+  if ( !index.isValid() )
+    return QString();
+
+  return index.model()->data( index, Qt::UserRole ).toString();
 }
 
 /**
@@ -110,7 +120,6 @@ void AgentTypeViewDelegate::paint( QPainter *painter, const QStyleOptionViewItem
   fm = painter->fontMetrics();
   int hc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, comment ).height();
   int wc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, comment ).width();
-  int hp = pixmap.height();
   int wp = pixmap.width();
 
   QPen pen = painter->pen();

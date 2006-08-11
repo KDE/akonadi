@@ -49,7 +49,8 @@ class AgentTypeView : public QWidget
     ~AgentTypeView();
 
     /**
-     * Returns the currently selected agent type.
+     * Returns the currently selected agent type or an
+     * empty string if no agent type is selected.
      */
     QString currentAgentType() const;
 
