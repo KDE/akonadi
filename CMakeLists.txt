@@ -13,6 +13,7 @@ include_directories(
 ########### next target ###############
 
 set( akonadi_LIB_SRC
+	agentinstancemodel.cpp
 	agenttypemodel.cpp
 	datarequest.cpp
 	query.cpp
