@@ -17,5 +17,15 @@ kde4_add_executable(agenttypeviewtest RUN_UNINSTALLED ${agenttypeviewtest_SRCS})
 
 target_link_libraries(agenttypeviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
 
+########### next target ###############
+
+set(profileviewtest_SRCS profileviewtest.cpp )
+
+kde4_automoc(${profileviewtest_SRCS})
+
+kde4_add_executable(profileviewtest RUN_UNINSTALLED ${profileviewtest_SRCS})
+
+target_link_libraries(profileviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
+
 endif(KDE4_BUILD_TESTS)
 
