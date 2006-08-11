@@ -19,8 +19,48 @@
 
 #include <QtDBus/QDBusConnection>
 #include <QtGui/QApplication>
+#include <QtGui/QDialog>
+#include <QtGui/QDialogButtonBox>
+#include <QtGui/QPushButton>
+#include <QtGui/QVBoxLayout>
 
 #include "agenttypeview.h"
+
+class Dialog : public QDialog
+{
+  public:
+    Dialog( QWidget *parent = 0 )
+      : QDialog( parent )
+    {
+      QVBoxLayout *layout = new QVBoxLayout( this );
+
+      mView = new PIM::AgentTypeView( this );
+      QDialogButtonBox *box = new QDialogButtonBox( this );
+
+      layout->addWidget( mView );
+      layout->addWidget( box );
+
+      QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
+      connect( ok, SIGNAL( clicked() ), this, SLOT( accept() ) );
+
+      QPushButton *cancel = box->addButton( QDialogButtonBox::Cancel );
+      connect( cancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
+
+      resize( 450, 320 );
+    }
+
+    virtual void done( int r )
+    {
+      if ( r == Accepted ) {
+        qDebug( "'%s' selected", qPrintable( mView->currentAgentType() ) );
+      }
+
+      QDialog::done( r );
+    }
+
+  private:
+    PIM::AgentTypeView *mView;
+};
 
 int main( int argc, char **argv )
 {
@@ -31,8 +71,8 @@ int main( int argc, char **argv )
     return 1;
   }
 
-  PIM::AgentTypeView view;
-  view.show();
+  Dialog dlg;
+  dlg.exec();
 
-  return app.exec();
+  return 0;
 };

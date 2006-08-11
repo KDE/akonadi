@@ -132,6 +132,9 @@ QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
     case Qt::DecorationRole:
       return info.icon;
       break;
+    case Qt::UserRole:
+      return info.identifier;
+      break;
     case CommentRole:
       return info.comment;
       break;
