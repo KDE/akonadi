@@ -2,8 +2,6 @@ include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions" )
 
-configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h )
-
 ########### next target ###############
 
 set( control_SRCS
