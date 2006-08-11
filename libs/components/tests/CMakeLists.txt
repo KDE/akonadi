@@ -9,6 +9,16 @@ include_directories(
 
 ########### next target ###############
 
+set(agentinstanceviewtest_SRCS agentinstanceviewtest.cpp )
+
+kde4_automoc(${agentinstanceviewtest_SRCS})
+
+kde4_add_executable(agentinstanceviewtest RUN_UNINSTALLED ${agentinstanceviewtest_SRCS})
+
+target_link_libraries(agentinstanceviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
+
+########### next target ###############
+
 set(agenttypeviewtest_SRCS agenttypeviewtest.cpp )
 
 kde4_automoc(${agenttypeviewtest_SRCS})

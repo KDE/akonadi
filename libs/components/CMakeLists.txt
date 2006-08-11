@@ -11,6 +11,7 @@ include_directories(
 ########### next target ###############
 
 set( akonadi_components_LIB_SRC
+	agentinstanceview.cpp
 	agenttypeview.cpp
 	profileview.cpp
 )
