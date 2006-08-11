@@ -55,7 +55,7 @@ void PIM::MessageBrowser::slotFetchDone( PIM::Job * job )
     Message *msg = static_cast<MessageFetchJob*>( job )->messages().first();
     QTextEdit *te = new QTextEdit();
     te->setReadOnly( true );
-    te->setText( msg->mime()->encodedContent() );
+    te->setPlainText( msg->mime()->encodedContent() );
     te->show();
   }
   job->deleteLater();
