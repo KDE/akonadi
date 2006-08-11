@@ -57,6 +57,10 @@
     <method name="removeAgentInstance">
       <arg name="identifier" type="s" direction="in"/>
     </method>
+    <method name="agentInstanceType">
+      <arg type="s" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
     <method name="agentInstances">
       <arg type="as" direction="out"/>
     </method>

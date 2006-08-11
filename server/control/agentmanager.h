@@ -112,6 +112,11 @@ class AgentManager : public QObject
     void removeAgentInstance( const QString &identifier );
 
     /**
+     * Returns the type of the agent instance with the given @p identifier.
+     */
+    QString agentInstanceType( const QString &identifier );
+
+    /**
      * Returns the list of identifiers of configured instances.
      */
     QStringList agentInstances() const;

@@ -91,6 +91,11 @@ void AgentManager::removeAgentInstance( const QString &identifier )
   mPluginManager.removeAgentInstance( identifier );
 }
 
+QString AgentManager::agentInstanceType( const QString &identifier )
+{
+  return mPluginManager.agentInstanceType( identifier );
+}
+
 QStringList AgentManager::agentInstances() const
 {
   return mPluginManager.agentInstances();

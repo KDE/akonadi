@@ -182,6 +182,17 @@ void PluginManager::removeAgentInstance( const QString &identifier )
   emit agentInstanceRemoved( identifier );
 }
 
+QString PluginManager::agentInstanceType( const QString &identifier )
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::PluginManager::agentInstanceType" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return QString();
+  }
+
+  return mInstances[ identifier ].agentType;
+}
+
 QStringList PluginManager::agentInstances() const
 {
   return mInstances.keys();
