@@ -12,6 +12,7 @@ include_directories(
 
 set( akonadi_components_LIB_SRC
 	agenttypeview.cpp
+	profileview.cpp
 )
 
 kde4_automoc( ${akonadi_LIB_SRC} )
@@ -24,5 +25,6 @@ install(TARGETS akonadicomponents DESTINATION ${LIB_INSTALL_DIR})
 
 install( FILES
 	agenttypeview.h
+	profileview.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi/components
 )
