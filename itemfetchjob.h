@@ -86,6 +86,9 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     */
     void parseFlags( const QByteArray &flagData, Item* item );
 
+  private:
+    void startFetchJob();
+
   private slots:
     void selectDone( PIM::Job* job );
 

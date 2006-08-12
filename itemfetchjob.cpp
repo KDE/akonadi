@@ -57,14 +57,12 @@ PIM::ItemFetchJob::~ ItemFetchJob( )
 
 void PIM::ItemFetchJob::doStart()
 {
-  QByteArray selectPath;
-  if ( d->uid.isNull() ) // collection content listing
-    selectPath = d->path;
-  else                   // message fetching
-    selectPath = /*Collection::root()*/ "res1/foo"; // ### just until the server is fixed
-  CollectionSelectJob *job = new CollectionSelectJob( selectPath, this );
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(selectDone(PIM::Job*)) );
-  job->start();
+  if ( d->uid.isNull() ) { // collection content listing
+    CollectionSelectJob *job = new CollectionSelectJob( d->path, this );
+    connect( job, SIGNAL(done(PIM::Job*)), SLOT(selectDone(PIM::Job*)) );
+    job->start();
+  } else
+    startFetchJob();
 }
 
 void PIM::ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -117,15 +115,7 @@ void PIM::ItemFetchJob::selectDone( PIM::Job * job )
   } else {
     job->deleteLater();
     // the collection is now selected, fetch the message(s)
-    QByteArray command = newTag();
-    if ( d->uid.isNull() )
-      command += " FETCH 1:* (UID REMOTEID FLAGS";
-    else
-    command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID REMOTEID FLAGS RFC822";
-    foreach ( QByteArray f, d->fields )
-      command += " " + f;
-    command += ")";
-    writeData( command );
+    startFetchJob();
   }
 }
 
@@ -166,6 +156,19 @@ void PIM::ItemFetchJob::parseFlags(const QByteArray & flagData, Item * item)
       item->setFlag( flag );
     }
   }
+}
+
+void PIM::ItemFetchJob::startFetchJob()
+{
+  QByteArray command = newTag();
+  if ( d->uid.isNull() )
+    command += " FETCH 1:* (UID REMOTEID FLAGS";
+  else
+    command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID REMOTEID FLAGS RFC822";
+  foreach ( QByteArray f, d->fields )
+    command += " " + f;
+  command += ")";
+  writeData( command );
 }
 
 #include "itemfetchjob.moc"
