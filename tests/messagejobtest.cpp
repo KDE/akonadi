@@ -48,6 +48,8 @@ void MessageJobTest::testMessageFetch( )
 
   // check if the fetch response is parsed correctly
   Message *msg = msgs[0];
+  QCOMPARE( msg->reference().externalUrl().toString(), QString( "A" ) );
+
   QCOMPARE( msg->flags().count(), 3 );
   QVERIFY( msg->hasFlag( "\\Seen" ) );
   QVERIFY( msg->hasFlag( "\\Flagged" ) );

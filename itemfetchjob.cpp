@@ -119,9 +119,9 @@ void PIM::ItemFetchJob::selectDone( PIM::Job * job )
     // the collection is now selected, fetch the message(s)
     QByteArray command = newTag();
     if ( d->uid.isNull() )
-      command += " FETCH 1:* (UID FLAGS";
+      command += " FETCH 1:* (UID REMOTEID FLAGS";
     else
-    command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID FLAGS RFC822";
+    command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID REMOTEID FLAGS RFC822";
     foreach ( QByteArray f, d->fields )
       command += " " + f;
     command += ")";
@@ -140,7 +140,13 @@ DataReference PIM::ItemFetchJob::parseUid( const QList< QByteArray > & fetchResp
     qWarning() << "Broken fetch response: No value for UID field!";
     return DataReference();
   }
-  return DataReference( fetchResponse[index + 1], QString() );
+
+  QString remoteId;
+  int rindex = fetchResponse.indexOf( "REMOTEID" );
+  if ( rindex >= 0 && fetchResponse.count() > rindex + 1 )
+    remoteId = QString::fromLatin1( fetchResponse[ rindex + 1 ] );
+
+  return DataReference( fetchResponse[index + 1], remoteId );
 }
 
 void PIM::ItemFetchJob::addFetchField(const QByteArray & field)
