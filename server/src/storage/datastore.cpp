@@ -1256,7 +1256,7 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
   int pimItemId = query.value( 0 ).toInt();
   int location = query.value( 2 ).toInt();
   int mimetype = query.value( 3 ).toInt();
-  QByteArray remote_id = query.value( 4 ).toByteArray();
+  QByteArray remote_id = query.value( 5 ).toByteArray();
   QDateTime dateTime = dateTimeToQDateTime( query.value( 4 ).toByteArray() );
   QVariant v = query.value( 1 );
   QByteArray data;

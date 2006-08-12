@@ -55,7 +55,8 @@ class FetchQuery
           RFC822_Text,
           Body,
           Body_Structure,
-          Uid
+          Uid,
+          RemoteId
         };
 
         bool parse( const QByteArray &attribute );

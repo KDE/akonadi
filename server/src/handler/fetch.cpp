@@ -22,7 +22,7 @@
 #include <QSqlError>
 #include <QStringList>
 #include <QUuid>
-#include <QVariant> 
+#include <QVariant>
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
@@ -139,6 +139,10 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Uid ) || fetchQuery.isUidFetch() ) {
     attributes.append( "UID " + QByteArray::number( item.id() ) );
+  }
+
+  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RemoteId ) ) {
+    attributes.append( "REMOTEID " + item.remoteId() );
   }
 
   QByteArray attributesString;
