@@ -49,7 +49,6 @@ class CollectionModel::Private
     QString editOldName;
     Monitor* monitor;
     JobQueue *queue;
-    bool initialListing;
 };
 
 PIM::CollectionModel::CollectionModel( QObject * parent ) :
@@ -58,12 +57,11 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
 {
   d->currentEdit = Private::None;
   d->editedCollection = 0;
-  d->initialListing = true;
 
   d->queue = new JobQueue( this );
 
   // start a list job
-  CollectionListJob *job = new CollectionListJob( Collection::prefix(), false, d->queue );
+  CollectionListJob *job = new CollectionListJob( Collection::prefix(), true, d->queue );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
   d->queue->addJob( job );
 
@@ -304,6 +302,8 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
         beginInsertRows( parentIndex, rowCount( parentIndex ), rowCount( parentIndex ) );
         d->childCollections[ col->parent() ].append( col->path() );
         endInsertRows();
+      } else {
+        d->childCollections[ col->parent() ].append( col->path() );
       }
 
       // start a status job for every collection to get message counts, etc.
@@ -315,17 +315,6 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
       }
     }
 
-    // start recursive list jobs for resources (which we can't list recursivly) on initial listing
-    if ( d->initialListing ) {
-      d->initialListing = false;
-      foreach( const Collection *col,  collections ) {
-        if ( col->type() == Collection::Resource || col->type() == Collection::VirtualParent ) {
-          CollectionListJob *cljob = new CollectionListJob( col->prefix() + col->path(), true, d->queue );
-          connect( cljob, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
-          d->queue->addJob( cljob );
-        }
-      }
-    }
   }
   job->deleteLater();
 }
