@@ -193,6 +193,8 @@ Q_SIGNALS:
     void itemAdded( int uid, const QByteArray& location );
     void itemRemoved( int uid, const QByteArray& location );
     void itemChanged( int uid, const QByteArray& location );
+    void collectionAdded( const QByteArray &location );
+    void collectionRemoved( const QByteArray &location );
 
 protected:
     void debugLastDbError( const QString & actionDescription ) const;

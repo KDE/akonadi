@@ -547,6 +547,7 @@ bool DataStore::appendLocation( const QString & location,
   if ( insertId )
       *insertId = id;
 
+  emit collectionAdded( location.toUtf8() );
   return true;
 }
 
@@ -590,17 +591,19 @@ bool DataStore::appendLocation( const QString & location,
     return false;
   }
 
+  emit collectionAdded( location.toUtf8() );
   return true;
 }
 
 bool DataStore::removeLocation( const Location & location )
 {
-  return removeLocation( location.id() );
+  emit collectionRemoved( location.location().toUtf8() );
+  return removeById( location.id(), "Locations" );
 }
 
 bool DataStore::removeLocation( int id )
 {
-  return removeById( id, "Locations" );
+  return removeLocation( locationById( id ) );
 }
 
 bool Akonadi::DataStore::cleanupLocation(const Location & location)

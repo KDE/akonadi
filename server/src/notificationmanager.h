@@ -55,6 +55,8 @@ class NotificationManager : public QObject
 
   private Q_SLOTS:
     void slotItemAdded( int uid, const QByteArray& location );
+    void slotCollectionAdded( const QByteArray &path );
+    void slotCollectionRemoved( const QByteArray &oath );
   private:
     NotificationManager();
 

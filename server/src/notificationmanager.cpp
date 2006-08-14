@@ -81,6 +81,10 @@ void NotificationManager::connectDatastore( DataStore * store )
 {
   connect( store, SIGNAL( itemAdded( int, const QByteArray& ) ),
            this, SLOT( slotItemAdded( int, const QByteArray& ) ) );
+  connect( store, SIGNAL(collectionAdded(const QByteArray&)),
+           SLOT(slotCollectionAdded(const QByteArray&)) );
+  connect( store, SIGNAL(collectionRemoved(const QByteArray&)),
+           SLOT(slotCollectionRemoved(const QByteArray&)) );
 }
 
 
@@ -92,6 +96,16 @@ void Akonadi::NotificationManager::slotItemAdded( int uid, const QByteArray& loc
     QString msg = QString("ID: %1, Location: %2" ).arg( uid ).arg( location.data() );
     Tracer::self()->signal( "NotificationManager::itemAdded", msg );
   }
+}
+
+void Akonadi::NotificationManager::slotCollectionAdded(const QByteArray & path)
+{
+  emit collectionAdded( path );
+}
+
+void Akonadi::NotificationManager::slotCollectionRemoved(const QByteArray & path)
+{
+  emit collectionRemoved( path );
 }
 
 #include "notificationmanager.moc"
