@@ -94,8 +94,9 @@ QVariant PIM::MessageModel::data( const QModelIndex & index, int role ) const
 
 int PIM::MessageModel::rowCount( const QModelIndex & parent ) const
 {
-  Q_UNUSED( parent );
-  return d->messages.count();
+  if ( !parent.isValid() )
+    return d->messages.count();
+  return 0;
 }
 
 QVariant PIM::MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const
