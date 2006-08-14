@@ -75,8 +75,11 @@ void MessageJobTest::testIllegalMessageFetch( )
   QVERIFY( !job->exec() );
 
   // fetch listing of a \Noselect folder
+#if 0
+  // no longer valid without \NoSelect resource nodes
   job = new MessageFetchJob( "res1", this );
   QVERIFY( !job->exec() );
+#endif
 
   // fetch listing of virtual folder root
   job = new MessageFetchJob( Collection::searchFolder(), this );
