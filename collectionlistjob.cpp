@@ -40,7 +40,10 @@ PIM::CollectionListJob::CollectionListJob( const QByteArray &prefix, bool recurs
     Job( parent ),
     d( new CollectionListJobPrivate )
 {
-  d->prefix = prefix;
+  if ( prefix.startsWith( Collection::prefix() ) )
+    d->prefix = prefix;
+  else
+    d->prefix = Collection::prefix() + prefix;
   d->recursive = recursive;
 }
 
