@@ -85,8 +85,12 @@ public:
     bool appendLocation( const QString & location,
                  const Resource & resource,
                  const CachePolicy & policy );
+    /// removes the given location without removing its content
     bool removeLocation( const Location & location );
+    /// removes the location with the given @p id without removing its content
     bool removeLocation( int id );
+    /// removes the given location and all its content
+    bool cleanupLocation( const Location &location );
     bool updateLocationCounts( const Location & location, int existsChange, int recentChange, int unseenChange );
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
@@ -99,6 +103,7 @@ public:
 
     bool appendMimeTypeForLocation( int locationId, const QString & mimeType );
     bool appendMimeTypeForLocation( int locationId, int mimeTypeId );
+    bool removeMimeTypesForLocation( int locationId );
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype, int *insertId = 0 );

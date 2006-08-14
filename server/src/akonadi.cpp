@@ -21,6 +21,7 @@
 #include "akonadiconnection.h"
 
 #include "notificationmanager.h"
+#include "resourcemanager.h"
 #include "tracer.h"
 
 using namespace Akonadi;
@@ -35,6 +36,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     NotificationManager::self();
     Tracer::self();
+    ResourceManager::self();
 }
 
 

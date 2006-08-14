@@ -603,6 +603,22 @@ bool DataStore::removeLocation( int id )
   return removeById( id, "Locations" );
 }
 
+bool Akonadi::DataStore::cleanupLocation(const Location & location)
+{
+  // delete the content
+  QList<QByteArray> seq;
+  seq << "0:*";
+  QList<PimItem> items = matchingPimItemsByUID( seq, location );
+  foreach ( PimItem item, items )
+    cleanupPimItem( item );
+
+  // delete location mimetypes
+  removeMimeTypesForLocation( location.id() );
+
+  // delete the location itself
+  return removeLocation( location );
+}
+
 static void addToUpdateAssignments( QStringList & l, int change, const QString & name )
 {
     if ( change > 0 )
@@ -783,6 +799,17 @@ bool DataStore::appendMimeTypeForLocation( int locationId, int mimeTypeId )
   }
 
   return true;
+}
+
+
+bool Akonadi::DataStore::removeMimeTypesForLocation(int locationId)
+{
+  if ( !m_dbOpened )
+    return false;
+
+  QSqlQuery query( m_database );
+  QString statement = QString( "DELETE FROM LocationMimeTypes WHERE location_id = %1" ).arg( locationId );
+  return query.exec( statement );
 }
 
 

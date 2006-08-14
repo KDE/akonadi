@@ -51,6 +51,7 @@ set(libakonadiprivate_SRCS
   src/dbustracer.cpp
   src/filetracer.cpp
   src/notificationmanager.cpp
+  src/resourcemanager.cpp
 )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS
