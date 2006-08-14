@@ -66,29 +66,29 @@ bool Create::handleLine(const QByteArray& line )
 
     DataStore *db = connection()->storageBackend();
     const int startOfLocation = mailbox.indexOf( '/' );
-    const QByteArray resourceName = mailbox.left( startOfLocation );
-    const QByteArray locationName = mailbox.mid( startOfLocation );
-    //qDebug() << "Create: " << locationName
-    //         << " in resource: " << resourceName;
-    Resource resource = db->resourceByName( resourceName );
-    if ( !resource.isValid() )
-        return failureResponse( "Cannot create folder " + locationName + " in  unknown resource " + resourceName );
+    const QByteArray topLevelName = mailbox.left( startOfLocation );
+
+    Location toplevel = db->locationByName( topLevelName );
+    if ( !toplevel.isValid() )
+        return failureResponse( "Cannot create folder " + mailbox + " in  unknown toplevel folder " + topLevelName );
+
+    Resource resource = db->resourceById( toplevel.resourceId() );
 
     // first check whether location already exists
-    if ( db->locationByName( resource, locationName ).isValid() )
+    if ( db->locationByName( mailbox ).isValid() )
         return failureResponse( "A folder with that name does already exist" );
 
     // we have to create all superior hierarchical folders, so look for the
     // starting point
     QList<QByteArray> foldersToCreate;
-    foldersToCreate.append( locationName );
-    for ( int endOfSupFolder = locationName.lastIndexOf( '/', locationName.size() - 1 );
+    foldersToCreate.append( mailbox );
+    for ( int endOfSupFolder = mailbox.lastIndexOf( '/', mailbox.size() - 1 );
           endOfSupFolder > 0;
-          endOfSupFolder = locationName.lastIndexOf( '/', endOfSupFolder - 2 ) ) {
+          endOfSupFolder = mailbox.lastIndexOf( '/', endOfSupFolder - 2 ) ) {
         // check whether the superior hierarchical folder exists
-        if ( ! db->locationByName( resource, locationName.left( endOfSupFolder ) ).isValid() ) {
+        if ( ! db->locationByName( mailbox.left( endOfSupFolder ) ).isValid() ) {
             // the superior folder does not exist, so it has to be created
-            foldersToCreate.prepend( locationName.left( endOfSupFolder ) );
+            foldersToCreate.prepend( mailbox.left( endOfSupFolder ) );
         }
         else {
             // the superior folder exists, so we can stop here
@@ -101,7 +101,7 @@ bool Create::handleLine(const QByteArray& line )
     const int endOfSupFolder = foldersToCreate[0].lastIndexOf( '/' );
     if ( endOfSupFolder > 0 ) {
         bool canContainSubfolders = false;
-        const QList<MimeType> mimeTypes = db->mimeTypesForLocation( db->locationByName( resource, locationName.left( endOfSupFolder ) ).id() );
+        const QList<MimeType> mimeTypes = db->mimeTypesForLocation( db->locationByName( mailbox.left( endOfSupFolder ) ).id() );
         foreach ( MimeType m, mimeTypes ) {
             if ( m.mimeType().toLower() == "inode/directory" ) {
                 canContainSubfolders = true;
@@ -115,7 +115,7 @@ bool Create::handleLine(const QByteArray& line )
     foreach ( QByteArray folderName, foldersToCreate ) {
         int locationId = 0;
         if ( ! db->appendLocation( folderName, resource, &locationId ) )
-            return failureResponse( "Adding " + resourceName + folderName + " to the database failed" );
+            return failureResponse( "Adding " + folderName + " to the database failed" );
         // FIXME what to do if appending the mime type fails?
         db->appendMimeTypeForLocation( locationId, "inode/directory" );
         // FIXME add more MIME types

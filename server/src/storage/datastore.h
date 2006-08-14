@@ -91,7 +91,7 @@ public:
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
     Location locationById( int id ) const;
-    Location locationByName( const Resource&, const QByteArray& name ) const;
+    Location locationByName( const QByteArray& name ) const;
     Location locationByRawMailbox( const QByteArray& mailbox ) const;
     QList<Location> listLocations() const;
     QList<Location> listLocations( const Resource & resource ) const;
@@ -168,7 +168,7 @@ public:
                                                            const Location &location );
 
     /* --- Resource ------------------------------------------------------ */
-    bool appendResource( const QString & resource, const CachePolicy & policy );
+    bool appendResource( const QString & resource, const CachePolicy & policy = CachePolicy() );
     bool removeResource( const Resource & resource );
     bool removeResource( int id );
     Resource resourceById( int id );

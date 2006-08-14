@@ -123,58 +123,42 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
 
   qDebug() << "FullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
 
-  if ( fullPrefix == "/" ) {
-    // list resources and queries
-    const QList<Resource> resources = listResources();
-    foreach ( Resource r, resources ) {
-      Collection c( r.resource() );
-      c.setNoSelect( true );
-      result.append( c );
-    }
+  if ( !fullPrefix.isEmpty() ) {
+    result.setValid( false );
+  }
 
+  const QList<Location> locations = listLocations();
+  foreach( Location l, locations ) {
+    const QString location = "/" + l.location();
+#if 0
+    qDebug() << "Location: " << location << " l: " << l << " prefix: " << fullPrefix;
+#endif
+    const bool atFirstLevel =
+      location.lastIndexOf( '/' ) == fullPrefix.lastIndexOf( '/' );
+    if ( location.startsWith( fullPrefix ) ) {
+      if ( hasStar || ( hasPercent && atFirstLevel ) ||
+           location == fullPrefix + sanitizedPattern ) {
+        Collection c( location.right( location.size() -1 ) );
+        c.setMimeTypes( MimeType::asCommaSeparatedString( l.mimeTypes() ) );
+        result.append( c );
+      }
+    }
+    // Check, if requested folder has been found to distinguish between
+    // non-existant folder and empty folder.
+    if ( location + "/" == fullPrefix || fullPrefix == "/" )
+      result.setValid( true );
+  }
+
+  // list queries
+  if ( fullPrefix == "/" ) {
     CollectionList persistenSearches = PersistentSearchManager::self()->collections();
     if ( !persistenSearches.isEmpty() )
       result.append( Collection( "Search" ) );
-
-  } else if ( fullPrefix == "/Search/" ) {
+    result.setValid( true );
+  }
+  if ( fullPrefix == "/Search/"  || (fullPrefix == "/" && hasStar) ) {
     result += PersistentSearchManager::self()->collections();
-  } else {
-    int firstSlash = fullPrefix.indexOf( '/', 1 );
-    const QByteArray resource = fullPrefix.mid( 1, firstSlash - 1 );
-    qDebug() << "Listing folders in resource: " << resource;
-    Resource r = resourceByName( resource );
-    if ( !r.isValid() ) {
-      result.setValid( false );
-      return result;
-    }
-
-    QString path = fullPrefix.mid( firstSlash + 1 );
-    if ( !path.isEmpty() ) {
-      result.setValid( false );
-    }
-
-    const QList<Location> locations = listLocations( r );
-    foreach( Location l, locations ) {
-      const QString location = "/" + resource + l.location();
-#if 0
-      qDebug() << "Location: " << location << " l: " << l << "r: "<< resource
-        << " prefix: " << fullPrefix;
-#endif
-      const bool atFirstLevel =
-        location.lastIndexOf( '/' ) == fullPrefix.lastIndexOf( '/' );
-      if ( location.startsWith( fullPrefix ) ) {
-        if ( hasStar || ( hasPercent && atFirstLevel ) ||
-             location == fullPrefix + sanitizedPattern ) {
-          Collection c( location.right( location.size() -1 ) );
-          c.setMimeTypes( MimeType::asCommaSeparatedString( l.mimeTypes() ) );
-          result.append( c );
-        }
-      }
-      // Check, if requested folder has been found to distinguish between
-      // non-existant folder and empty folder.
-      if ( location + "/" == fullPrefix )
-        result.setValid( true );
-    }
+    result.setValid( true );
   }
 
   return result;
@@ -717,13 +701,7 @@ Location DataStore::locationById( int id ) const
 
 Location DataStore::locationByRawMailbox( const QByteArray& mailbox ) const
 {
-  int secondSlash = mailbox.indexOf( '/', 2 );
-  // qDebug() << "Select: " << mailbox.mid( secondSlash, mailbox.size() - secondSlash )
-  //         << " in resource: " << mailbox.left( secondSlash );
-
-  Resource resource = resourceByName( mailbox.left( secondSlash ) );
-
-  return locationByName( resource, mailbox.mid( secondSlash ) );
+  return locationByName( mailbox );
 }
 
 QList<MimeType> DataStore::mimeTypesForLocation( int id ) const
@@ -1732,22 +1710,20 @@ bool DataStore::removeById( int id, const QString & tableName )
   return true;
 }
 
-Location DataStore::locationByName( const Resource &resource,
-                                    const QByteArray & name ) const
+Location DataStore::locationByName( const QByteArray & name ) const
 {
-  qDebug() << "locationByName( " << resource.resource() << ", "
-           << name << " )";
+  qDebug() << "locationByName( " << name << " )";
 
-  if ( !m_dbOpened || !resource.isValid() )
+  if ( !m_dbOpened )
     return Location();
 
   QSqlQuery query( m_database );
   const QString statement = QString( "SELECT id, uri, cachepolicy_id, resource_id, exists_count, recent_count,"
                                      " unseen_count, first_unseen, uid_validity FROM Locations "
-                                     "WHERE resource_id = %1 AND uri = \"%2\"" ).arg( resource.id() ).arg( QString::fromLatin1( name ) );
+                                     "WHERE uri = \"%2\"" ).arg( QString::fromLatin1( name ) );
 
   if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during selection of a Location by name from a Resource." );
+    debugLastQueryError( query, "Error during selection of a Location by name." );
     return Location();
   }
 
@@ -1757,7 +1733,7 @@ Location DataStore::locationByName( const Resource &resource,
     location.setMimeTypes( mimeTypesForLocation( location.id() ) );
   }
 
-  qDebug() << "Resource: " << resource.isValid() << " location: " << location.isValid();
+  qDebug() << "location: " << location.isValid();
 
   return location;
 }
