@@ -35,6 +35,8 @@ namespace PIM {
  */
 class ProfileView : public QWidget
 {
+  Q_OBJECT
+
   public:
     /**
      * Creates a new profile view.
@@ -49,14 +51,25 @@ class ProfileView : public QWidget
     ~ProfileView();
 
     /**
-     * Returns the currently selected profile or an
+     * Returns the identifier of the current profile or an
      * empty string if no profile is selected.
      */
     QString currentProfile() const;
 
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the current profile changes.
+     *
+     * @param current The identifier of the current profile.
+     * @param previous The identifier of the previous profile.
+     */
+    void currentChanged( const QString &current, const QString &previous );
+
   private:
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void currentProfileChanged( const QModelIndex&, const QModelIndex& ) )
 };
 
 }

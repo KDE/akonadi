@@ -46,12 +46,33 @@ class AgentTypeViewDelegate : public QAbstractItemDelegate
 class AgentTypeView::Private
 {
   public:
+    Private( AgentTypeView *parent )
+      : mParent( parent )
+    {
+    }
+
+    void currentAgentTypeChanged( const QModelIndex&, const QModelIndex& );
+
+    AgentTypeView *mParent;
     QListView *mView;
     AgentTypeModel *mModel;
 };
 
+void AgentTypeView::Private::currentAgentTypeChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
+{
+  QString currentIdentifier;
+  if ( currentIndex.isValid() )
+    currentIdentifier = currentIndex.model()->data( currentIndex, Qt::UserRole ).toString();
+
+  QString previousIdentifier;
+  if ( previousIndex.isValid() )
+    previousIdentifier = previousIndex.model()->data( previousIndex, Qt::UserRole ).toString();
+
+  emit mParent->currentChanged( currentIdentifier, previousIdentifier );
+}
+
 AgentTypeView::AgentTypeView( QWidget *parent )
-  : QWidget( parent ), d( new Private )
+  : QWidget( parent ), d( new Private( this ) )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setMargin( 0 );
@@ -64,7 +85,9 @@ AgentTypeView::AgentTypeView( QWidget *parent )
   d->mModel = new AgentTypeModel( d->mView );
   d->mView->setModel( d->mModel );
 
-  d->mView->selectionModel()->select( d->mModel->index( 0, 0 ), QItemSelectionModel::Select );
+  d->mView->selectionModel()->setCurrentIndex( d->mModel->index( 0, 0 ), QItemSelectionModel::Select );
+  connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
+           this, SLOT( currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) ) );
 }
 
 AgentTypeView::~AgentTypeView()
@@ -199,3 +222,5 @@ void AgentTypeViewDelegate::drawFocus( QPainter *painter, const QStyleOptionView
     QApplication::style()->drawPrimitive(QStyle::PE_FrameFocusRect, &o, painter);
   }
 }
+
+#include "agenttypeview.moc"

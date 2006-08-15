@@ -35,6 +35,8 @@ namespace PIM {
  */
 class AgentTypeView : public QWidget
 {
+  Q_OBJECT
+
   public:
     /**
      * Creates a new agent type view.
@@ -49,14 +51,25 @@ class AgentTypeView : public QWidget
     ~AgentTypeView();
 
     /**
-     * Returns the currently selected agent type or an
+     * Returns the identifier of the current agent type or an
      * empty string if no agent type is selected.
      */
     QString currentAgentType() const;
 
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the current agent type changes.
+     *
+     * @param current The identifier of the current agent type.
+     * @param previous The identifier of the previous agent type.
+     */
+    void currentChanged( const QString &current, const QString &previous );
+
   private:
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) )
 };
 
 }
