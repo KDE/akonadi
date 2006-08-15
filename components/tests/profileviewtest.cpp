@@ -19,48 +19,48 @@
 
 #include <QtDBus/QDBusConnection>
 #include <QtGui/QApplication>
-#include <QtGui/QDialog>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
 
-#include "profileview.h"
+#include "profileviewtest.h"
 
-class Dialog : public QDialog
+Dialog::Dialog( QWidget *parent )
+  : QDialog( parent )
 {
-  public:
-    Dialog( QWidget *parent = 0 )
-      : QDialog( parent )
-    {
-      QVBoxLayout *layout = new QVBoxLayout( this );
+  QVBoxLayout *layout = new QVBoxLayout( this );
 
-      mView = new PIM::ProfileView( this );
-      QDialogButtonBox *box = new QDialogButtonBox( this );
+  mView = new PIM::ProfileView( this );
+  connect( mView, SIGNAL( currentChanged( const QString&, const QString& ) ),
+           this, SLOT( currentChanged( const QString&, const QString& ) ) );
 
-      layout->addWidget( mView );
-      layout->addWidget( box );
+  QDialogButtonBox *box = new QDialogButtonBox( this );
 
-      QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
-      connect( ok, SIGNAL( clicked() ), this, SLOT( accept() ) );
+  layout->addWidget( mView );
+  layout->addWidget( box );
 
-      QPushButton *cancel = box->addButton( QDialogButtonBox::Cancel );
-      connect( cancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
+  QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
+  connect( ok, SIGNAL( clicked() ), this, SLOT( accept() ) );
 
-      resize( 450, 320 );
-    }
+  QPushButton *cancel = box->addButton( QDialogButtonBox::Cancel );
+  connect( cancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
 
-    virtual void done( int r )
-    {
-      if ( r == Accepted ) {
-        qDebug( "'%s' selected", qPrintable( mView->currentProfile() ) );
-      }
+  resize( 450, 320 );
+}
 
-      QDialog::done( r );
-    }
+void Dialog::done( int r )
+{
+  if ( r == Accepted ) {
+    qDebug( "'%s' selected", qPrintable( mView->currentProfile() ) );
+  }
 
-  private:
-    PIM::ProfileView *mView;
-};
+  QDialog::done( r );
+}
+
+void Dialog::currentChanged( const QString &current, const QString &previous )
+{
+  qDebug( "current changed: %s -> %s", qPrintable( previous ), qPrintable( current ) );
+}
 
 int main( int argc, char **argv )
 {
@@ -76,3 +76,5 @@ int main( int argc, char **argv )
 
   return 0;
 };
+
+#include "profileviewtest.moc"

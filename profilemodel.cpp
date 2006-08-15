@@ -119,6 +119,9 @@ QVariant ProfileModel::data( const QModelIndex &index, int role ) const
     case Qt::DisplayRole:
       return info.identifier;
       break;
+    case Qt::UserRole:
+      return info.identifier;
+      break;
     default:
       return QVariant();
       break;

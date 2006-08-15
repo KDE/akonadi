@@ -30,12 +30,33 @@ using namespace PIM;
 class ProfileView::Private
 {
   public:
+    Private( ProfileView *parent )
+      : mParent( parent )
+    {
+    }
+
+    void currentProfileChanged( const QModelIndex&, const QModelIndex& );
+
+    ProfileView *mParent;
     QListView *mView;
     ProfileModel *mModel;
 };
 
+void ProfileView::Private::currentProfileChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
+{
+  QString currentIdentifier;
+  if ( currentIndex.isValid() )
+    currentIdentifier = currentIndex.model()->data( currentIndex, Qt::UserRole ).toString();
+
+  QString previousIdentifier;
+  if ( previousIndex.isValid() )
+    previousIdentifier = previousIndex.model()->data( previousIndex, Qt::UserRole ).toString();
+
+  emit mParent->currentChanged( currentIdentifier, previousIdentifier );
+}
+
 ProfileView::ProfileView( QWidget *parent )
-  : QWidget( parent ), d( new Private )
+  : QWidget( parent ), d( new Private( this ) )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
@@ -47,7 +68,9 @@ ProfileView::ProfileView( QWidget *parent )
   d->mModel = new ProfileModel( d->mView );
   d->mView->setModel( d->mModel );
 
-  d->mView->selectionModel()->select( d->mModel->index( 0, 0 ), QItemSelectionModel::Select );
+  d->mView->selectionModel()->setCurrentIndex( d->mModel->index( 0, 0 ), QItemSelectionModel::Select );
+  connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
+           this, SLOT( currentProfileChanged( const QModelIndex&, const QModelIndex& ) ) );
 }
 
 ProfileView::~ProfileView()
@@ -65,5 +88,7 @@ QString ProfileView::currentProfile() const
   if ( !index.isValid() )
     return QString();
 
-  return index.model()->data( index, Qt::DisplayRole ).toString();
+  return index.model()->data( index, Qt::UserRole ).toString();
 }
+
+#include "profileview.moc"
