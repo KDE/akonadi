@@ -162,7 +162,11 @@ void PluginManager::removeAgentInstance( const QString &identifier )
     return;
   }
 
-  mInstances[ identifier ].interface->quit();
+  if ( mInstances[ identifier ].interface )
+    mInstances[ identifier ].interface->quit();
+  else
+    mTracer->error( QLatin1String( "akonadi_control::PluginManager::removeAgentInstance" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
 
   /**
    * We have to call processEvents() here to let QProcess enough time
@@ -411,7 +415,13 @@ bool PluginManager::requestItemDelivery( const QString & agentIdentifier, const 
     return false;
   }
 
-  return mInstances[ agentIdentifier ].interface->requestItemDelivery( itemIdentifier, collection, type );
+  if ( mInstances[ agentIdentifier ].interface )
+    return mInstances[ agentIdentifier ].interface->requestItemDelivery( itemIdentifier, collection, type );
+  else {
+    mTracer->error( QLatin1String( "akonadi_control::PluginManager::requestItemDelivery" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( agentIdentifier ) );
+    return false;
+  }
 }
 
 void PluginManager::resourceRegistered( const QString &name, const QString &oldOwner, const QString &newOwner )
