@@ -131,7 +131,7 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
 
   switch ( role ) {
     case Qt::DisplayRole:
-      return QString( "%1 (%2)" ).arg( info.name, info.identifier );
+      return QString( "%1 (%2)" ).arg( info.identifier, info.name );
       break;
     case Qt::DecorationRole:
       return info.icon;
