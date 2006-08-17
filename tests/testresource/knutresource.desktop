@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Akonadi Knut Resource
+Name[x-test]=xxAkonadi Knut Resourcexx
+Comment=An agent for debugging purpose
+Type=AkonadiResource
+Exec=akonadi_knut_resource
+Icon=knut.png
+
+X-Akonadi-MimeTypes=text/calendar,text/x-vcard
+X-Akonadi-Capabilitites=text/calendar
+X-Akonadi-Identifier=akonadi_knut_resource
