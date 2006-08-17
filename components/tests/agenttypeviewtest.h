@@ -24,6 +24,8 @@
 
 #include "agenttypeview.h"
 
+class QComboBox;
+
 class Dialog : public QDialog
 {
   Q_OBJECT
@@ -35,9 +37,11 @@ class Dialog : public QDialog
 
   private Q_SLOTS:
     void currentChanged( const QString&, const QString& );
+    void filterChanged( int );
 
   private:
     PIM::AgentTypeView *mView;
+    QComboBox *mFilter;
 };
 
 #endif

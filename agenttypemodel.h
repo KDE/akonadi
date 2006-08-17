@@ -24,6 +24,9 @@
 
 namespace PIM {
 
+/**
+ * This class provides a model for available agent types.
+ */
 class AgentTypeModel : public QAbstractItemModel
 {
   Q_OBJECT
@@ -36,7 +39,14 @@ class AgentTypeModel : public QAbstractItemModel
       CapabilitiesRole
     };
 
+    /**
+     * Creates a new agent type model.
+     */
     AgentTypeModel( QObject *parent );
+
+    /**
+     * Destroys the agent type model.
+     */
     virtual ~AgentTypeModel();
 
     virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
@@ -46,6 +56,14 @@ class AgentTypeModel : public QAbstractItemModel
 
     virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
     virtual QModelIndex parent( const QModelIndex &index ) const;
+
+  public Q_SLOTS:
+    /**
+     * Sets a filter to the model, so only agent types which
+     * provides the given list of @p mimetypes will be listed
+     * by the model.
+     */
+    void setFilter( const QStringList &mimeTypes );
 
   private:
     class Private;

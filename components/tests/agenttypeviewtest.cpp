@@ -19,6 +19,7 @@
 
 #include <QtDBus/QDBusConnection>
 #include <QtGui/QApplication>
+#include <QtGui/QComboBox>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
@@ -30,12 +31,20 @@ Dialog::Dialog( QWidget *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
+  mFilter = new QComboBox( this );
+  mFilter->addItem( "None" );
+  mFilter->addItem( "text/calendar" );
+  mFilter->addItem( "text/x-vcard" );
+  connect( mFilter, SIGNAL( activated( int ) ),
+           this, SLOT( filterChanged( int ) ) );
+
   mView = new PIM::AgentTypeView( this );
   connect( mView, SIGNAL( currentChanged( const QString&, const QString& ) ),
            this, SLOT( currentChanged( const QString&, const QString& ) ) );
 
   QDialogButtonBox *box = new QDialogButtonBox( this );
 
+  layout->addWidget( mFilter );
   layout->addWidget( mView );
   layout->addWidget( box );
 
@@ -60,6 +69,14 @@ void Dialog::done( int r )
 void Dialog::currentChanged( const QString &current, const QString &previous )
 {
   qDebug( "current changed: %s -> %s", qPrintable( previous ), qPrintable( current ) );
+}
+
+void Dialog::filterChanged( int index )
+{
+  if ( index == 0 )
+    mView->setFilter( QStringList() );
+  else
+    mView->setFilter( QStringList( mFilter->itemText( index ) ) );
 }
 
 int main( int argc, char **argv )

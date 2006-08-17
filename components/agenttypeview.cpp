@@ -86,6 +86,7 @@ AgentTypeView::AgentTypeView( QWidget *parent )
   d->mView->setModel( d->mModel );
 
   d->mView->selectionModel()->setCurrentIndex( d->mModel->index( 0, 0 ), QItemSelectionModel::Select );
+  d->mView->scrollTo( d->mModel->index( 0, 0 ) );
   connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) ) );
 }
@@ -106,6 +107,11 @@ QString AgentTypeView::currentAgentType() const
     return QString();
 
   return index.model()->data( index, Qt::UserRole ).toString();
+}
+
+void AgentTypeView::setFilter( const QStringList &mimeTypes )
+{
+  d->mModel->setFilter( mimeTypes );
 }
 
 /**

@@ -45,7 +45,10 @@ class AgentTypeModel::Private
 
     AgentTypeModel *mParent;
     QList<AgentTypeInfo> mInfos;
+    QStringList mMimeTypes;
     org::kde::Akonadi::AgentManager *mManager;
+
+    void init();
 
     void agentTypeAdded( const QString &agentType );
     void agentTypeRemoved( const QString &agentType );
@@ -53,8 +56,32 @@ class AgentTypeModel::Private
     void addAgentType( const QString &agentType );
 };
 
+void AgentTypeModel::Private::init()
+{
+  mInfos.clear();
+
+  const QStringList agentTypes = mManager->agentTypes();
+  for ( int i = 0; i < agentTypes.count(); ++i )
+    addAgentType( agentTypes[ i ] );
+}
+
 void AgentTypeModel::Private::addAgentType( const QString &agentType )
 {
+  if ( !mMimeTypes.isEmpty() ) {
+    const QStringList mimeTypes = mManager->agentMimeTypes( agentType );
+
+    /**
+     * Check whether the agent type provides one of the mimetypes
+     * defined by the filter.
+     */
+    bool valid = false;
+    for ( int i = 0; i < mimeTypes.count(); ++i )
+      valid = valid || mMimeTypes.contains( mimeTypes[ i ] );
+
+    if ( !valid )
+      return;
+  }
+
   AgentTypeInfo info;
   info.identifier = agentType;
   info.name = mManager->agentName( agentType );
@@ -90,9 +117,7 @@ AgentTypeModel::AgentTypeModel( QObject *parent )
 {
   d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.AgentManager", "/", QDBus::sessionBus(), this );
 
-  const QStringList agentTypes = d->mManager->agentTypes();
-  for ( int i = 0; i < agentTypes.count(); ++i )
-    d->addAgentType( agentTypes[ i ] );
+  d->init();
 
   connect( d->mManager, SIGNAL( agentTypeAdded( const QString& ) ),
            this, SLOT( agentTypeAdded( const QString& ) ) );
@@ -103,6 +128,14 @@ AgentTypeModel::AgentTypeModel( QObject *parent )
 AgentTypeModel::~AgentTypeModel()
 {
   delete d;
+}
+
+void AgentTypeModel::setFilter( const QStringList &mimeTypes )
+{
+  d->mMimeTypes = mimeTypes;
+  d->init();
+
+  emit layoutChanged();
 }
 
 int AgentTypeModel::columnCount( const QModelIndex& ) const
