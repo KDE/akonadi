@@ -13,6 +13,11 @@
     <signal name="agentInstanceRemoved">
       <arg name="agentIdentifier" type="s" direction="out"/>
     </signal>
+    <signal name="agentInstanceStatusChanged">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+      <arg name="status" type="i" direction="out"/>
+      <arg name="message" type="s" direction="out"/>
+    </signal>
     <signal name="profileAdded">
       <arg name="profileIdentifier" type="s" direction="out"/>
     </signal>
@@ -63,6 +68,14 @@
     </method>
     <method name="agentInstances">
       <arg type="as" direction="out"/>
+    </method>
+    <method name="agentInstanceStatus">
+      <arg type="i" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="agentInstanceStatusMessage">
+      <arg type="s" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
     </method>
     <method name="requestItemDelivery">
       <arg type="b" direction="out"/>

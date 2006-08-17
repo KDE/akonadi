@@ -36,6 +36,8 @@ AgentManager::AgentManager( QObject *parent )
            this, SIGNAL( agentInstanceAdded( const QString& ) ) );
   connect( &mPluginManager, SIGNAL( agentInstanceRemoved( const QString& ) ),
            this, SIGNAL( agentInstanceRemoved( const QString& ) ) );
+  connect( &mPluginManager, SIGNAL( agentInstanceStatusChanged( const QString&, int, const QString& ) ),
+           this, SIGNAL( agentInstanceStatusChanged( const QString&, int, const QString& ) ) );
 
   connect( &mProfileManager, SIGNAL( profileAdded( const QString& ) ),
            this, SIGNAL( profileAdded( const QString& ) ) );
@@ -99,6 +101,16 @@ QString AgentManager::agentInstanceType( const QString &identifier )
 QStringList AgentManager::agentInstances() const
 {
   return mPluginManager.agentInstances();
+}
+
+int AgentManager::agentInstanceStatus( const QString &identifier ) const
+{
+  return mPluginManager.agentInstanceStatus( identifier );
+}
+
+QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) const
+{
+  return mPluginManager.agentInstanceStatusMessage( identifier );
 }
 
 bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,

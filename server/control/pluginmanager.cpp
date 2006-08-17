@@ -202,6 +202,40 @@ QStringList PluginManager::agentInstances() const
   return mInstances.keys();
 }
 
+int PluginManager::agentInstanceStatus( const QString &identifier ) const
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::PluginManager::agentInstanceStatus" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return 2;
+  }
+
+  if ( !mInstances[ identifier ].interface ) {
+    mTracer->error( QLatin1String( "akonadi_control::PluginManager::agentInstanceStatus" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    return 2;
+  }
+
+  return mInstances[ identifier ].interface->status();
+}
+
+QString PluginManager::agentInstanceStatusMessage( const QString &identifier ) const
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "akonadi_control::PluginManager::agentInstanceStatusMessage" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return QString();
+  }
+
+  if ( !mInstances[ identifier ].interface ) {
+    mTracer->error( QLatin1String( "akonadi_control::PluginManager::agentInstanceStatusMessage" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    return QString();
+  }
+
+  return mInstances[ identifier ].interface->statusMessage();
+}
+
 void PluginManager::updatePluginInfos()
 {
   QMap<QString, PluginInfo> oldInfos = mPluginInfos;
@@ -424,7 +458,7 @@ bool PluginManager::requestItemDelivery( const QString & agentIdentifier, const 
   }
 }
 
-void PluginManager::resourceRegistered( const QString &name, const QString &oldOwner, const QString &newOwner )
+void PluginManager::resourceRegistered( const QString &name, const QString&, const QString &newOwner )
 {
   if ( newOwner.isEmpty() ) // interface was unregistered
     return;
@@ -446,7 +480,31 @@ void PluginManager::resourceRegistered( const QString &name, const QString &oldO
     return;
   }
 
+  interface->setObjectName( identifier );
+
+  connect( interface, SIGNAL( statusChanged( int, const QString& ) ),
+           this, SLOT( resourceStatusChanged( int, const QString& ) ) );
+
   mInstances[ identifier ].interface = interface;
+}
+
+void PluginManager::resourceStatusChanged( int status, const QString &message )
+{
+  org::kde::Akonadi::Resource *resource = static_cast<org::kde::Akonadi::Resource*>( sender() );
+  if ( !resource ) {
+    mTracer->error( QLatin1String( "akonadi_control::PluginManager::resourceStatusChanged" ),
+                    QLatin1String( "Got signal from unknown sender" ) );
+    return;
+  }
+
+  const QString identifier = resource->objectName();
+  if ( identifier.isEmpty() ) {
+    mTracer->error( QLatin1String( "akonadi_control::PluginManager::resourceStatusChanged" ),
+                    QLatin1String( "Sender of statusChanged signal has no identifier" ) );
+    return;
+  }
+
+  emit agentInstanceStatusChanged( identifier, status, message );
 }
 
 #include "pluginmanager.moc"

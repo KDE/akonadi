@@ -111,6 +111,17 @@ class PluginManager : public QObject
     QStringList agentInstances() const;
 
     /**
+     * Returns the current status code of the agent with the given @p identifier.
+     */
+    int agentInstanceStatus( const QString &identifier ) const;
+
+    /**
+     * Returns the i18n'ed description of the current status of the agent with
+     * the given @p identifier.
+     */
+    QString agentInstanceStatusMessage( const QString &identifier ) const;
+
+    /**
      * Asks the agent to store the item with the given
      * identifier to the given @p collection as full or lightwight
      * version, depending on @p type.
@@ -147,9 +158,20 @@ class PluginManager : public QObject
      */
     void agentInstanceRemoved( const QString &agentIdentifier );
 
+    /**
+     * This signal is emitted whenever the status of an agent instance has
+     * changed.
+     *
+     * @param agentIdentifier The identifier of the agent that has changed.
+     * @param status The new status code.
+     * @param message The i18n'ed description of the new status.
+     */
+    void agentInstanceStatusChanged( const QString &agentIdentifier, int status, const QString &message );
+
   private Q_SLOTS:
     void updatePluginInfos();
     void resourceRegistered( const QString&, const QString&, const QString& );
+    void resourceStatusChanged( int status, const QString &message );
 
   private:
     /**
