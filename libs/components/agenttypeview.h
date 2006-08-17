@@ -56,6 +56,14 @@ class AgentTypeView : public QWidget
      */
     QString currentAgentType() const;
 
+  public Q_SLOTS:
+    /**
+     * Sets a filter to the view, so only agent types which
+     * provides the given list of @p mimetypes will be listed
+     * by the model.
+     */
+    void setFilter( const QStringList &mimeTypes );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the current agent type changes.

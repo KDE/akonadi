@@ -73,6 +73,7 @@ AgentInstanceView::AgentInstanceView( QWidget *parent )
   d->mView->setModel( d->mModel );
 
   d->mView->selectionModel()->setCurrentIndex( d->mModel->index( 0, 0 ), QItemSelectionModel::Select );
+  d->mView->scrollTo( d->mModel->index( 0, 0 ) );
   connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) ) );
 }
