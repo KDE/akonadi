@@ -476,7 +476,7 @@ void PluginManager::resourceRegistered( const QString &name, const QString&, con
   if ( !interface || !interface->isValid() ) {
     mTracer->error( QLatin1String( "akonadi_control::PluginManager::resourceRegistered" ),
                     QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                        .arg( identifier, interface->lastError().message() ) );
+                        .arg( identifier, interface ? interface->lastError().message() : "" ) );
     return;
   }
 
