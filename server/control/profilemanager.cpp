@@ -25,7 +25,7 @@
 ProfileManager::ProfileManager( QObject *parent )
   : QObject( parent )
 {
-  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus(), this );
+  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
 
   load();
 }

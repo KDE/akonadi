@@ -30,7 +30,7 @@ ResourceManager* ResourceManager::mSelf = 0;
 Akonadi::ResourceManager::ResourceManager(QObject * parent) :
   QObject( parent )
 {
-  mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.AgentManager", "/", QDBus::sessionBus(), this );
+  mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.AgentManager", "/", QDBusConnection::sessionBus(), this );
 
   connect( mManager, SIGNAL(agentInstanceAdded(const QString&)),
            SLOT(resourceAdded(const QString&)) );

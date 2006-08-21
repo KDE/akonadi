@@ -24,9 +24,9 @@ AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
 {
   new AgentManagerAdaptor( this );
-  QDBus::sessionBus().registerObject( "/", this );
+  QDBusConnection::sessionBus().registerObject( "/", this );
 
-  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus(), this );
+  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
 
   connect( &mPluginManager, SIGNAL( agentTypeAdded( const QString& ) ),
            this, SIGNAL( agentTypeAdded( const QString& ) ) );

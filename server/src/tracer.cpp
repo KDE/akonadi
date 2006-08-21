@@ -37,7 +37,7 @@ Tracer::Tracer()
 
   new TracerAdaptor( this );
 
-  QDBus::sessionBus().registerObject( "/tracing", this, QDBusConnection::ExportAdaptors );
+  QDBusConnection::sessionBus().registerObject( "/tracing", this, QDBusConnection::ExportAdaptors );
 }
 
 Tracer::~Tracer()

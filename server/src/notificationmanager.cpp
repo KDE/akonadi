@@ -33,7 +33,7 @@ NotificationManager::NotificationManager()
 {
   new NotificationManagerAdaptor( this );
 
-  QDBus::sessionBus().registerObject( "/notifications", this, QDBusConnection::ExportAdaptors );
+  QDBusConnection::sessionBus().registerObject( "/notifications", this, QDBusConnection::ExportAdaptors );
 }
 
 NotificationManager::~NotificationManager()

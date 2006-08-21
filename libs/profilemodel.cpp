@@ -78,7 +78,7 @@ void ProfileModel::Private::profileRemoved( const QString &profile )
 ProfileModel::ProfileModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {
-  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.AgentManager", "/", QDBus::sessionBus(), this );
+  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.AgentManager", "/", QDBusConnection::sessionBus(), this );
 
   const QStringList profiles = d->mManager->profiles();
   for ( int i = 0; i < profiles.count(); ++i )

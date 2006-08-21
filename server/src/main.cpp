@@ -29,8 +29,8 @@ int main( int argc, char ** argv )
 {
     QCoreApplication app( argc, argv );
 
-    if ( !QDBus::sessionBus().registerService( "org.kde.Akonadi" ) ) {
-      qDebug( "Unable to connect to dbus service: %s", qPrintable( QDBus::sessionBus().lastError().message() ) );
+    if ( !QDBusConnection::sessionBus().registerService( "org.kde.Akonadi" ) ) {
+      qDebug( "Unable to connect to dbus service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
       return 1;
     }
 

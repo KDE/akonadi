@@ -30,9 +30,9 @@
 PluginManager::PluginManager( QObject *parent )
   : QObject( parent )
 {
-  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBus::sessionBus(), this );
+  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
 
-  connect( QDBus::sessionBus().interface(), SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
+  connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
            this, SLOT( resourceRegistered( const QString&, const QString&, const QString& ) ) );
 
   readPluginInfos();
@@ -471,7 +471,7 @@ void PluginManager::resourceRegistered( const QString &name, const QString&, con
   delete mInstances[ identifier ].interface;
   mInstances[ identifier ].interface = 0;
 
-  org::kde::Akonadi::Resource *interface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + identifier, "/", QDBus::sessionBus(), this );
+  org::kde::Akonadi::Resource *interface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + identifier, "/", QDBusConnection::sessionBus(), this );
 
   if ( !interface || !interface->isValid() ) {
     mTracer->error( QLatin1String( "akonadi_control::PluginManager::resourceRegistered" ),

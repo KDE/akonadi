@@ -34,8 +34,7 @@ ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
 
   layout->addWidget( mDataView );
 
-  org::kde::Akonadi::TracerNotification *iface = new org::kde::Akonadi::TracerNotification( QString(),
-      "/tracing/notifications", QDBus::sessionBus(), this );
+  org::kde::Akonadi::TracerNotification *iface = new org::kde::Akonadi::TracerNotification( QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this );
 
   connect( iface, SIGNAL( connectionDataInput( const QString&, const QString& ) ),
            this, SLOT( connectionDataInput( const QString&, const QString& ) ) );
