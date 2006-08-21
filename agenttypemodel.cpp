@@ -115,7 +115,7 @@ void AgentTypeModel::Private::agentTypeRemoved( const QString &agentType )
 AgentTypeModel::AgentTypeModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {
-  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.AgentManager", "/", QDBus::sessionBus(), this );
+  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.AgentManager", "/", QDBusConnection::sessionBus(), this );
 
   d->init();
 
