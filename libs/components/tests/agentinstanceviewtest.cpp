@@ -63,7 +63,7 @@ int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
 
-  if ( !QDBus::sessionBus().registerService( "org.kde.Test.agentinstanceviewtest" ) ) {
+  if ( !QDBusConnection::sessionBus().registerService( "org.kde.Test.agentinstanceviewtest" ) ) {
     qDebug( "Unable to register service at dbus" );
     return 1;
   }
