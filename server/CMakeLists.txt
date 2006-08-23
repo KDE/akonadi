@@ -5,7 +5,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
-add_subdirectory( control )
+#add_subdirectory( control )
 add_subdirectory( debugger )
 add_subdirectory( src )
 add_subdirectory( tests )
