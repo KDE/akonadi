@@ -123,7 +123,7 @@ class AgentManager : public QObject
     /**
      * Returns the current status code of the agent with the given @p identifier.
      */
-    int agentInstanceStatus( const QString &identifier ) const;
+    Status agentInstanceStatus( const QString &identifier ) const;
 
     /**
      * Returns the i18n'ed description of the current status of the agent with
@@ -176,7 +176,7 @@ class AgentManager : public QObject
      * @param status The new status code.
      * @param message The i18n'ed description of the new status.
      */
-    void agentInstanceStatusChanged( const QString &agentIdentifier, Status status, const QString &message );
+    void agentInstanceStatusChanged( const QString &agentIdentifier, AgentManager::Status status, const QString &message );
 
   private:
     class Private;

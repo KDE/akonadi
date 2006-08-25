@@ -137,9 +137,21 @@ QStringList AgentManager::agentInstances() const
   return d->mManager->agentInstances();
 }
 
-int AgentManager::agentInstanceStatus( const QString &identifier ) const
+AgentManager::Status AgentManager::agentInstanceStatus( const QString &identifier ) const
 {
-  return d->mManager->agentInstanceStatus( identifier );
+  int status = d->mManager->agentInstanceStatus( identifier );
+  switch ( status ) {
+    case 0:
+    default:
+      return Ready;
+      break;
+    case 1:
+      return Syncing;
+      break;
+    case 2:
+      return Error;
+      break;
+  }
 }
 
 QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) const

@@ -37,6 +37,8 @@ class AgentInstanceInfo
     QIcon icon;
     QStringList mimeTypes;
     QStringList capabilities;
+    AgentManager::Status status;
+    QString statusMessage;
 };
 
 class AgentInstanceModel::Private
@@ -53,6 +55,7 @@ class AgentInstanceModel::Private
 
     void agentInstanceAdded( const QString &agentInstance );
     void agentInstanceRemoved( const QString &agentInstance );
+    void agentInstanceStatusChanged( const QString&, AgentManager::Status, const QString& );
 
     void addAgentInstance( const QString &agentInstance );
 };
@@ -67,6 +70,8 @@ void AgentInstanceModel::Private::addAgentInstance( const QString &agentInstance
   info.icon = mManager.agentIcon( info.type );
   info.mimeTypes = mManager.agentMimeTypes( info.type );
   info.capabilities = mManager.agentCapabilities( info.type );
+  info.status = mManager.agentInstanceStatus( agentInstance );
+  info.statusMessage = mManager.agentInstanceStatusMessage( agentInstance );
 
   mInfos.append( info );
 }
@@ -90,6 +95,23 @@ void AgentInstanceModel::Private::agentInstanceRemoved( const QString &agentInst
   emit mParent->layoutChanged();
 }
 
+void AgentInstanceModel::Private::agentInstanceStatusChanged( const QString &agentInstance,
+                                                              AgentManager::Status status,
+                                                              const QString &message )
+{
+  for ( int i = 0; i < mInfos.count(); ++i ) {
+    if ( mInfos[ i ].identifier == agentInstance ) {
+      mInfos[ i ].status = status;
+      mInfos[ i ].statusMessage = message;
+
+      const QModelIndex idx = mParent->index( i, 0 );
+      emit mParent->dataChanged( idx, idx );
+
+      return;
+    }
+  }
+}
+
 AgentInstanceModel::AgentInstanceModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {
@@ -101,6 +123,8 @@ AgentInstanceModel::AgentInstanceModel( QObject *parent )
            this, SLOT( agentInstanceAdded( const QString& ) ) );
   connect( &d->mManager, SIGNAL( agentInstanceRemoved( const QString& ) ),
            this, SLOT( agentInstanceRemoved( const QString& ) ) );
+  connect( &d->mManager, SIGNAL( agentInstanceStatusChanged( const QString&, AgentManager::Status, const QString& ) ),
+           this, SLOT( agentInstanceStatusChanged( const QString&, AgentManager::Status, const QString& ) ) );
 }
 
 AgentInstanceModel::~AgentInstanceModel()
@@ -130,7 +154,7 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
 
   switch ( role ) {
     case Qt::DisplayRole:
-      return QString( "%1 (%2)" ).arg( info.identifier, info.name );
+      return QString( "%1" ).arg( info.identifier );
       break;
     case Qt::DecorationRole:
       return info.icon;
@@ -140,6 +164,12 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
       break;
     case Qt::ToolTipRole:
       return QString( "<qt><h4>%1</h4>%2</qt>" ).arg( info.name, info.comment );
+      break;
+    case StatusRole:
+      return info.status;
+      break;
+    case StatusMessageRole:
+      return info.statusMessage;
       break;
     default:
       return QVariant();

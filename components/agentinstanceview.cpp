@@ -19,14 +19,26 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QTableView>
+#include <QtGui/QListView>
+#include <QtGui/QPainter>
 
 #include <libakonadi/agentinstancemodel.h>
 
 #include "agentinstanceview.h"
 
 using namespace PIM;
+
+class AgentInstanceViewDelegate : public QAbstractItemDelegate
+{
+  public:
+    AgentInstanceViewDelegate( QObject *parent = 0 );
+
+    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+    virtual QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+
+  private:
+    void drawFocus( QPainter*, const QStyleOptionViewItem&, const QRect& ) const;
+};
 
 class AgentInstanceView::Private
 {
@@ -39,7 +51,7 @@ class AgentInstanceView::Private
     void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& );
 
     AgentInstanceView *mParent;
-    QTableView *mView;
+    QListView *mView;
     AgentInstanceModel *mModel;
 };
 
@@ -63,8 +75,8 @@ AgentInstanceView::AgentInstanceView( QWidget *parent )
   layout->setMargin( 0 );
   layout->setSpacing( 0 );
 
-  d->mView = new QTableView( this );
-  d->mView->verticalHeader()->hide();
+  d->mView = new QListView( this );
+  d->mView->setItemDelegate( new AgentInstanceViewDelegate( d->mView ) );
   layout->addWidget( d->mView );
 
   d->mModel = new AgentInstanceModel( d->mView );
@@ -92,6 +104,119 @@ QString AgentInstanceView::currentAgentInstance() const
     return QString();
 
   return index.model()->data( index, Qt::UserRole ).toString();
+}
+
+AgentInstanceViewDelegate::AgentInstanceViewDelegate( QObject *parent )
+ : QAbstractItemDelegate( parent )
+{
+}
+
+void AgentInstanceViewDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+{
+  if ( !index.isValid() )
+    return;
+
+  painter->setRenderHint( QPainter::Antialiasing );
+
+  const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
+  const QString status = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
+
+  const QVariant data = index.model()->data( index, Qt::DecorationRole );
+
+  QPixmap pixmap;
+  if ( data.isValid() && data.type() == QVariant::Icon )
+    pixmap = qvariant_cast<QIcon>( data ).pixmap( 64, 64 );
+
+  const QFont oldFont = painter->font();
+  QFont boldFont( oldFont );
+  boldFont.setBold( true );
+  painter->setFont( boldFont );
+  QFontMetrics fm = painter->fontMetrics();
+  int hn = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, name ).height();
+  int wn = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, name ).width();
+  painter->setFont( oldFont );
+
+  fm = painter->fontMetrics();
+  int hc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, status ).height();
+  int wc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, status ).width();
+  int wp = pixmap.width();
+
+  QPen pen = painter->pen();
+  QPalette::ColorGroup cg = option.state & QStyle::State_Enabled
+                            ? QPalette::Normal : QPalette::Disabled;
+  if (cg == QPalette::Normal && !(option.state & QStyle::State_Active))
+    cg = QPalette::Inactive;
+  if (option.state & QStyle::State_Selected) {
+    painter->fillRect(option.rect, option.palette.brush(cg, QPalette::Highlight));
+    painter->setPen(option.palette.color(cg, QPalette::HighlightedText));
+  } else {
+    painter->setPen(option.palette.color(cg, QPalette::Text));
+  }
+
+  QFont font = painter->font();
+  painter->setFont(option.font);
+
+  painter->drawPixmap( option.rect.x() + 5, option.rect.y() + 5, pixmap );
+
+  painter->setFont(boldFont);
+  if ( !name.isEmpty() )
+    painter->drawText( option.rect.x() + 5 + wp + 5, option.rect.y() + 7, wn, hn, Qt::AlignLeft, name );
+  painter->setFont(oldFont);
+
+  if ( !status.isEmpty() )
+    painter->drawText( option.rect.x() + 5 + wp + 5, option.rect.y() + 7 + hn, wc, hc, Qt::AlignLeft, status );
+
+  painter->setPen(pen);
+
+  drawFocus( painter, option, option.rect );
+}
+
+QSize AgentInstanceViewDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
+{
+  if ( !index.isValid() )
+    return QSize( 0, 0 );
+
+  const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
+  const QString status = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
+
+  QFontMetrics fm = option.fontMetrics;
+  int hn = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, name ).height();
+  int wn = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, name ).width();
+  int hc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, status ).height();
+  int wc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, status ).width();
+
+  int width = 0;
+  int height = 0;
+
+  if ( !name.isEmpty() ) {
+    height += hn;
+    width = qMax( width, wn );
+  }
+
+  if ( !status.isEmpty() ) {
+    height += hc;
+    width = qMax( width, wc );
+  }
+
+  height = qMax( height, 64 ) + 10;
+  width += 64 + 15;
+
+  return QSize( width, height );
+}
+
+void AgentInstanceViewDelegate::drawFocus( QPainter *painter, const QStyleOptionViewItem &option, const QRect &rect ) const
+{
+  if (option.state & QStyle::State_HasFocus) {
+    QStyleOptionFocusRect o;
+    o.QStyleOption::operator=(option);
+    o.rect = rect;
+    o.state |= QStyle::State_KeyboardFocusChange;
+    QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled)
+                              ? QPalette::Normal : QPalette::Disabled;
+    o.backgroundColor = option.palette.color(cg, (option.state & QStyle::State_Selected)
+                                             ? QPalette::Highlight : QPalette::Background);
+    QApplication::style()->drawPrimitive(QStyle::PE_FrameFocusRect, &o, painter);
+  }
 }
 
 #include "agentinstanceview.moc"
