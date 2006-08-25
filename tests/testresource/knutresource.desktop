@@ -4,7 +4,7 @@ Name=Akonadi Knut Resource
 Comment=An agent for debugging purpose
 Type=AkonadiResource
 Exec=akonadi_knut_resource
-Icon=knut.png
+Icon=knut
 
 X-Akonadi-MimeTypes=text/calendar,text/x-vcard
 X-Akonadi-Capabilitites=text/calendar

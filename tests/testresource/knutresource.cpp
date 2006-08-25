@@ -29,7 +29,9 @@ KnutResource::KnutResource( const QString &id )
   QTimer *timer = new QTimer( this );
 
   connect( timer, SIGNAL( timeout() ), this, SLOT( timeout() ) );
-  timer->start( 5000 );
+
+  int number = id.mid( 22 ).toInt();
+  timer->start( 5000 + ( 100*number ) );
 }
 
 KnutResource::~KnutResource()

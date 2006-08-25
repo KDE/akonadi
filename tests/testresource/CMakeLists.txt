@@ -14,7 +14,7 @@ set( knutresource_SRCS
   main.cpp
 )
 
-install( FILES knutresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/apps/akonadi/agents" )
+install( FILES knutresource.desktop knut.svg DESTINATION "${CMAKE_INSTALL_PREFIX}/share/apps/akonadi/agents" )
 
 kde4_automoc( ${knutresource_SRCS} )
 
