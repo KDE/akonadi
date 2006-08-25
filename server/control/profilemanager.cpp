@@ -19,12 +19,18 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusError>
 
 #include "profilemanager.h"
+#include "profilemanageradaptor.h"
 
 ProfileManager::ProfileManager( QObject *parent )
   : QObject( parent )
 {
+  new ProfileManagerAdaptor( this );
+  QDBusConnection::sessionBus().registerObject( "/ProfileManager", this );
+
   mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
 
   load();

@@ -18,20 +18,6 @@
       <arg name="status" type="i" direction="out"/>
       <arg name="message" type="s" direction="out"/>
     </signal>
-    <signal name="profileAdded">
-      <arg name="profileIdentifier" type="s" direction="out"/>
-    </signal>
-    <signal name="profileRemoved">
-      <arg name="profileIdentifier" type="s" direction="out"/>
-    </signal>
-    <signal name="profileAgentAdded">
-      <arg name="profileIdentifier" type="s" direction="out"/>
-      <arg name="agentIdentifier" type="s" direction="out"/>
-    </signal>
-    <signal name="profileAgentRemoved">
-      <arg name="profileIdentifier" type="s" direction="out"/>
-      <arg name="agentIdentifier" type="s" direction="out"/>
-    </signal>
     <method name="agentTypes">
       <arg type="as" direction="out"/>
     </method>
@@ -83,30 +69,6 @@
       <arg name="itemIdentifier" type="s" direction="in"/>
       <arg name="collection" type="s" direction="in"/>
       <arg name="type" type="i" direction="in"/>
-    </method>
-    <method name="profiles">
-      <arg type="as" direction="out"/>
-    </method>
-    <method name="createProfile">
-      <arg type="b" direction="out"/>
-      <arg name="identifier" type="s" direction="in"/>
-    </method>
-    <method name="removeProfile">
-      <arg name="identifier" type="s" direction="in"/>
-    </method>
-    <method name="profileAddAgent">
-      <arg type="b" direction="out"/>
-      <arg name="profileIdentifier" type="s" direction="in"/>
-      <arg name="agentIdentifier" type="s" direction="in"/>
-    </method>
-    <method name="profileRemoveAgent">
-      <arg type="b" direction="out"/>
-      <arg name="profileIdentifier" type="s" direction="in"/>
-      <arg name="agentIdentifier" type="s" direction="in"/>
-    </method>
-    <method name="profileAgents">
-      <arg type="as" direction="out"/>
-      <arg name="identifier" type="s" direction="in"/>
     </method>
   </interface>
 </node>

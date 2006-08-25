@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef PLUGINMANAGER_H
-#define PLUGINMANAGER_H
+#ifndef AGENTMANAGER_H
+#define AGENTMANAGER_H
 
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
@@ -30,23 +30,24 @@ namespace Akonadi {
   class ProcessControl;
 }
 
-class PluginManager : public QObject
+class AgentManager : public QObject
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new plugin manager.
+     * Creates a new agent manager.
      *
      * @param parent The parent object.
      */
-    PluginManager( QObject *parent = 0 );
+    AgentManager( QObject *parent = 0 );
 
     /**
-     * Destroys the plugin manager.
+     * Destroys the agent manager.
      */
-    ~PluginManager();
+    ~AgentManager();
 
+  public Q_SLOTS:
     /**
      * Returns the list of identifiers of all available
      * agent types.

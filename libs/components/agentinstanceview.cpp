@@ -24,7 +24,7 @@
 
 #include <libakonadi/agentinstancemodel.h>
 
-#include <config-prefix.h> // for AKONADIDIR
+#include <akonadi-prefix.h> // for AKONADIDIR
 
 #include "agentinstanceview.h"
 

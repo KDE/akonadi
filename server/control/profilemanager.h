@@ -51,6 +51,7 @@ class ProfileManager : public QObject
      */
     void save();
 
+  public Q_SLOTS:
     /**
      * Returns the list of identifiers of available profiles.
      */

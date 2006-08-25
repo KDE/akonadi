@@ -29,15 +29,16 @@ int main( int argc, char **argv )
 {
   QCoreApplication app( argc, argv );
 
-  if ( !QDBusConnection::sessionBus().registerService( "org.kde.Akonadi.AgentManager" ) ) {
-    qDebug( "Unable to connect to dbus service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
+  if ( !QDBusConnection::sessionBus().registerService( "org.kde.Akonadi.Control" ) ) {
+    qDebug( "Unable to register service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
     return 1;
   }
 
   Akonadi::ProcessControl controller;
   controller.start( "akonadiserver" );
 
-  AgentManager manager;
+  AgentManager agentManager;
+  ProfileManager profileManager;
 
   return app.exec();
 }

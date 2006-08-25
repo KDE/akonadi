@@ -1225,7 +1225,7 @@ QString fieldNameForDataType( FetchQuery::Type type )
 QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray& remote_id,
                                                          int locationid, FetchQuery::Type type )
 {
-  org::kde::Akonadi::AgentManager agentManager( "org.kde.Akonadi.AgentManager", "/", QDBusConnection::sessionBus() );
+  org::kde::Akonadi::AgentManager agentManager( "org.kde.Akonadi.Control", "/AgentManager", QDBusConnection::sessionBus() );
   // FIXME figure out the resource, ask it for the item, by remote id
   Location l = locationById( locationid );
   Resource r = resourceById( l.resourceId() );
