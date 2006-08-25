@@ -92,7 +92,7 @@ void AgentInstanceModel::Private::agentInstanceRemoved( const QString &agentInst
 AgentInstanceModel::AgentInstanceModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {
-  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.AgentManager", "/", QDBusConnection::sessionBus(), this );
+  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.Control", "/AgentManager", QDBusConnection::sessionBus(), this );
 
   const QStringList agentInstances = d->mManager->agentInstances();
   for ( int i = 0; i < agentInstances.count(); ++i )

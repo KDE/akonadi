@@ -20,7 +20,7 @@
 #include <QtCore/QStringList>
 
 #include "profilemodel.h"
-#include "agentmanagerinterface.h"
+#include "profilemanagerinterface.h"
 
 using namespace PIM;
 
@@ -40,7 +40,7 @@ class ProfileModel::Private
 
     ProfileModel *mParent;
     QList<ProfileInfo> mInfos;
-    org::kde::Akonadi::AgentManager *mManager;
+    org::kde::Akonadi::ProfileManager *mManager;
 
     void profileAdded( const QString &profile );
     void profileRemoved( const QString &profile );
@@ -78,7 +78,7 @@ void ProfileModel::Private::profileRemoved( const QString &profile )
 ProfileModel::ProfileModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {
-  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.AgentManager", "/", QDBusConnection::sessionBus(), this );
+  d->mManager = new org::kde::Akonadi::ProfileManager( "org.kde.Akonadi.Control", "/ProfileManager", QDBusConnection::sessionBus(), this );
 
   const QStringList profiles = d->mManager->profiles();
   for ( int i = 0; i < profiles.count(); ++i )
