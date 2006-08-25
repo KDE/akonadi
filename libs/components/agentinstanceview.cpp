@@ -24,8 +24,6 @@
 
 #include <libakonadi/agentinstancemodel.h>
 
-#include <akonadi-prefix.h> // for AKONADIDIR
-
 #include "agentinstanceview.h"
 
 using namespace PIM;

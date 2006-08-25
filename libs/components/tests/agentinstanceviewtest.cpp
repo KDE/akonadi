@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-#include <QtDBus/QDBusConnection>
 #include <QtGui/QApplication>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
@@ -62,11 +61,6 @@ void Dialog::currentChanged( const QString &current, const QString &previous )
 int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
-
-  if ( !QDBusConnection::sessionBus().registerService( "org.kde.Test.agentinstanceviewtest" ) ) {
-    qDebug( "Unable to register service at dbus" );
-    return 1;
-  }
 
   Dialog dlg;
   dlg.exec();

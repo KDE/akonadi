@@ -24,8 +24,6 @@
 
 #include <libakonadi/agenttypemodel.h>
 
-#include <akonadi-prefix.h> // for AKONADIDIR
-
 #include "agenttypeview.h"
 
 using namespace PIM;
@@ -133,9 +131,11 @@ void AgentTypeViewDelegate::paint( QPainter *painter, const QStyleOptionViewItem
   const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
   const QString comment = index.model()->data( index, AgentTypeModel::CommentRole ).toString();
 
-  QIcon icon;
-  icon.addFile( QString( "%1/share/apps/akonadi/agents/%2" ).arg( AKONADIDIR ).arg( index.model()->data( index, Qt::DecorationRole ).toString() ) );
-  const QPixmap pixmap = icon.pixmap( 64, 64 );
+  const QVariant data = index.model()->data( index, Qt::DecorationRole );
+
+  QPixmap pixmap;
+  if ( data.isValid() && data.type() == QVariant::Icon )
+    pixmap = qvariant_cast<QIcon>( data ).pixmap( 64, 64 );
 
   const QFont oldFont = painter->font();
   QFont boldFont( oldFont );

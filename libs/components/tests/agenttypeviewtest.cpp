@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-#include <QtDBus/QDBusConnection>
 #include <QtGui/QApplication>
 #include <QtGui/QComboBox>
 #include <QtGui/QDialogButtonBox>
@@ -82,11 +81,6 @@ void Dialog::filterChanged( int index )
 int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
-
-  if ( !QDBusConnection::sessionBus().registerService( "org.kde.Test.agenttypeviewtest" ) ) {
-    qDebug( "Unable to register service at dbus" );
-    return 1;
-  }
 
   Dialog dlg;
   dlg.exec();
