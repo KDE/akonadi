@@ -18,9 +18,10 @@
 */
 
 #include <QtCore/QStringList>
+#include <QtGui/QIcon>
 
 #include "agenttypemodel.h"
-#include "agentmanagerinterface.h"
+#include "agentmanager.h"
 
 using namespace PIM;
 
@@ -30,7 +31,7 @@ class AgentTypeInfo
     QString identifier;
     QString name;
     QString comment;
-    QString icon;
+    QIcon icon;
     QStringList mimeTypes;
     QStringList capabilities;
 };
@@ -46,7 +47,7 @@ class AgentTypeModel::Private
     AgentTypeModel *mParent;
     QList<AgentTypeInfo> mInfos;
     QStringList mMimeTypes;
-    org::kde::Akonadi::AgentManager *mManager;
+    AgentManager mManager;
 
     void init();
 
@@ -60,7 +61,7 @@ void AgentTypeModel::Private::init()
 {
   mInfos.clear();
 
-  const QStringList agentTypes = mManager->agentTypes();
+  const QStringList agentTypes = mManager.agentTypes();
   for ( int i = 0; i < agentTypes.count(); ++i )
     addAgentType( agentTypes[ i ] );
 }
@@ -68,7 +69,7 @@ void AgentTypeModel::Private::init()
 void AgentTypeModel::Private::addAgentType( const QString &agentType )
 {
   if ( !mMimeTypes.isEmpty() ) {
-    const QStringList mimeTypes = mManager->agentMimeTypes( agentType );
+    const QStringList mimeTypes = mManager.agentMimeTypes( agentType );
 
     /**
      * Check whether the agent type provides one of the mimetypes
@@ -84,11 +85,11 @@ void AgentTypeModel::Private::addAgentType( const QString &agentType )
 
   AgentTypeInfo info;
   info.identifier = agentType;
-  info.name = mManager->agentName( agentType );
-  info.comment = mManager->agentComment( agentType );
-  info.icon = mManager->agentIcon( agentType );
-  info.mimeTypes = mManager->agentMimeTypes( agentType );
-  info.capabilities = mManager->agentCapabilities( agentType );
+  info.name = mManager.agentName( agentType );
+  info.comment = mManager.agentComment( agentType );
+  info.icon = mManager.agentIcon( agentType );
+  info.mimeTypes = mManager.agentMimeTypes( agentType );
+  info.capabilities = mManager.agentCapabilities( agentType );
 
   mInfos.append( info );
 }
@@ -115,13 +116,11 @@ void AgentTypeModel::Private::agentTypeRemoved( const QString &agentType )
 AgentTypeModel::AgentTypeModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {
-  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.Control", "/AgentManager", QDBusConnection::sessionBus(), this );
-
   d->init();
 
-  connect( d->mManager, SIGNAL( agentTypeAdded( const QString& ) ),
+  connect( &d->mManager, SIGNAL( agentTypeAdded( const QString& ) ),
            this, SLOT( agentTypeAdded( const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentTypeRemoved( const QString& ) ),
+  connect( &d->mManager, SIGNAL( agentTypeRemoved( const QString& ) ),
            this, SLOT( agentTypeRemoved( const QString& ) ) );
 }
 

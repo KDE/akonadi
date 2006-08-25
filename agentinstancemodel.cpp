@@ -18,11 +18,12 @@
 */
 
 #include <QtCore/QStringList>
+#include <QtGui/QIcon>
 
 #include <klocale.h>
 
 #include "agentinstancemodel.h"
-#include "agentmanagerinterface.h"
+#include "agentmanager.h"
 
 using namespace PIM;
 
@@ -33,7 +34,7 @@ class AgentInstanceInfo
     QString type;
     QString name;
     QString comment;
-    QString icon;
+    QIcon icon;
     QStringList mimeTypes;
     QStringList capabilities;
 };
@@ -48,7 +49,7 @@ class AgentInstanceModel::Private
 
     AgentInstanceModel *mParent;
     QList<AgentInstanceInfo> mInfos;
-    org::kde::Akonadi::AgentManager *mManager;
+    AgentManager mManager;
 
     void agentInstanceAdded( const QString &agentInstance );
     void agentInstanceRemoved( const QString &agentInstance );
@@ -60,12 +61,12 @@ void AgentInstanceModel::Private::addAgentInstance( const QString &agentInstance
 {
   AgentInstanceInfo info;
   info.identifier = agentInstance;
-  info.type = mManager->agentInstanceType( agentInstance );
-  info.name = mManager->agentName( info.type );
-  info.comment = mManager->agentComment( info.type );
-  info.icon = mManager->agentIcon( info.type );
-  info.mimeTypes = mManager->agentMimeTypes( info.type );
-  info.capabilities = mManager->agentCapabilities( info.type );
+  info.type = mManager.agentInstanceType( agentInstance );
+  info.name = mManager.agentName( info.type );
+  info.comment = mManager.agentComment( info.type );
+  info.icon = mManager.agentIcon( info.type );
+  info.mimeTypes = mManager.agentMimeTypes( info.type );
+  info.capabilities = mManager.agentCapabilities( info.type );
 
   mInfos.append( info );
 }
@@ -92,15 +93,13 @@ void AgentInstanceModel::Private::agentInstanceRemoved( const QString &agentInst
 AgentInstanceModel::AgentInstanceModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {
-  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.Control", "/AgentManager", QDBusConnection::sessionBus(), this );
-
-  const QStringList agentInstances = d->mManager->agentInstances();
+  const QStringList agentInstances = d->mManager.agentInstances();
   for ( int i = 0; i < agentInstances.count(); ++i )
     d->addAgentInstance( agentInstances[ i ] );
 
-  connect( d->mManager, SIGNAL( agentInstanceAdded( const QString& ) ),
+  connect( &d->mManager, SIGNAL( agentInstanceAdded( const QString& ) ),
            this, SLOT( agentInstanceAdded( const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceRemoved( const QString& ) ),
+  connect( &d->mManager, SIGNAL( agentInstanceRemoved( const QString& ) ),
            this, SLOT( agentInstanceRemoved( const QString& ) ) );
 }
 

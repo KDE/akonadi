@@ -5,6 +5,7 @@ add_subdirectory( components )
 include_directories(
 	${CMAKE_SOURCE_DIR}/
 	${CMAKE_SOURCE_DIR}/akonadi
+	${CMAKE_BINARY_DIR}/akonadi
 	${CMAKE_SOURCE_DIR}/libkmime
 	${QT_QTDBUS_INCLUDE_DIR}
 )
@@ -14,6 +15,7 @@ include_directories(
 
 set( akonadi_LIB_SRC
 	agentinstancemodel.cpp
+	agentmanager.cpp
 	agenttypemodel.cpp
 	datarequest.cpp
 	query.cpp
@@ -42,6 +44,7 @@ set( akonadi_LIB_SRC
 	messagemodel.cpp
 	messagequery.cpp
 	monitor.cpp
+	profilemanager.cpp
 	profilemodel.cpp
 )
 
@@ -58,6 +61,7 @@ install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 ########### install files ###############
 
 install( FILES
+	agentmanager.h
 	datarequest.h
 	query.h
 	collection.h
@@ -85,6 +89,7 @@ install( FILES
 	messagemodel.h
 	messagequery.h
 	monitor.h
+	profilemanager.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi 
 )
 
