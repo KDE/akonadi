@@ -50,8 +50,8 @@ void PIM::ItemAppendJob::doStart()
 {
   QByteArray remoteId;
   if ( !d->remoteId.isEmpty() )
-    remoteId = " \\RemoteId[" + d->remoteId.toUtf8() + "]";
-  writeData( newTag() + " APPEND " + d->path + " (\\MimeType[" + d->mimetype + "]" + remoteId + ") {" + QByteArray::number( d->data.size() ) + "}" );
+    remoteId = " \\RemoteId[" + d->remoteId.toUtf8() + ']';
+  writeData( newTag() + " APPEND " + d->path + " (\\MimeType[" + d->mimetype + ']' + remoteId + ") {" + QByteArray::number( d->data.size() ) + '}' );
 }
 
 void PIM::ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )

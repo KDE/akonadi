@@ -166,8 +166,8 @@ void PIM::ItemFetchJob::startFetchJob()
   else
     command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID REMOTEID FLAGS RFC822";
   foreach ( QByteArray f, d->fields )
-    command += " " + f;
-  command += ")";
+    command += ' ' + f;
+  command += ')';
   writeData( command );
 }
 

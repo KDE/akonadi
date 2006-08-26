@@ -173,7 +173,7 @@ QString Job::errorText() const
       break;
   }
   if ( !d->mErrorMessage.isEmpty() ) {
-    str += " (" + d->mErrorMessage + ")";
+    str += " (" + d->mErrorMessage + ')';
   }
   return str;
 }

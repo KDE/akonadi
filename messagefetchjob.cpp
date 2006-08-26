@@ -48,7 +48,7 @@ class PIM::MessageFetchJobPrivate
         return;
       }
       hdr->setName( addr[0] );
-      hdr->setEmail( addr[2] + "@" + addr[3] );
+      hdr->setEmail( addr[2] + '@' + addr[3] );
     }
 
     void parseAddrList( const QList<QByteArray> &addrList, KMime::Headers::To *hdr )
@@ -62,7 +62,7 @@ class PIM::MessageFetchJobPrivate
         }
         KMime::Headers::AddressField addrField;
         addrField.setNameFrom7Bit( addr[0] );
-        addrField.setEmail( addr[2] + "@" + addr[3] );
+        addrField.setEmail( addr[2] + '@' + addr[3] );
         hdr->addAddress( addrField );
       }
     }

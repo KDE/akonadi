@@ -132,21 +132,21 @@ void PIM::ItemStoreJob::sendNextCommand()
 
   d->tag = newTag();
   QByteArray command = d->tag;
-  command += " UID STORE " + d->ref.persistanceID().toLatin1() + " ";
+  command += " UID STORE " + d->ref.persistanceID().toLatin1() + ' ';
   int op = *(d->operations.begin());
   d->operations.remove( op );
   switch ( op ) {
     case ItemStoreJobPrivate::Data:
-      command += "DATA {" + QByteArray::number( d->data.size() ) + "}";
+      command += "DATA {" + QByteArray::number( d->data.size() ) + '}';
       break;
     case ItemStoreJobPrivate::SetFlags:
-      command += "FLAGS (" + d->joinFlags( d->flags ) + ")";
+      command += "FLAGS (" + d->joinFlags( d->flags ) + ')';
       break;
     case ItemStoreJobPrivate::AddFlags:
-      command += "+FLAGS (" + d->joinFlags( d->addFlags ) + ")";
+      command += "+FLAGS (" + d->joinFlags( d->addFlags ) + ')';
       break;
     case ItemStoreJobPrivate::RemoveFlags:
-      command += "-FLAGS (" + d->joinFlags( d->removeFlags ) + ")";
+      command += "-FLAGS (" + d->joinFlags( d->removeFlags ) + ')';
       break;
   }
   writeData( command );
