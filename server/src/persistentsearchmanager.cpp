@@ -111,7 +111,7 @@ void PersistentSearchManager::addPersistentSearch( const QString &identifier, Pe
   QString queryString;
   const QList<QByteArray> searchCriteria = search->searchCriteria();
   for ( int i = 0; i < queryString.count(); ++i )
-    queryString += " " + QString::fromUtf8( searchCriteria[ i ] );
+    queryString += ' ' + QString::fromUtf8( searchCriteria[ i ] );
 
   const QString statement = QString( "INSERT INTO PersistentSearches (name, query) VALUES ('%1', '%2') ")
                                    .arg( identifier, queryString );

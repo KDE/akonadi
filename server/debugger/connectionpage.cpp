@@ -46,7 +46,7 @@ void ConnectionPage::connectionDataInput( const QString &identifier, const QStri
 {
   QString str;
   if ( mShowAllConnections ) {
-    str += identifier + " ";
+    str += identifier + ' ';
   }
   if ( mShowAllConnections || identifier == mIdentifier ) {
     str += QString( "<font color=\"red\">%1</font><br>" ).arg( msg );
@@ -58,7 +58,7 @@ void ConnectionPage::connectionDataOutput( const QString &identifier, const QStr
 {
   QString str;
   if ( mShowAllConnections ) {
-    str += identifier + " ";
+    str += identifier + ' ';
   }
   if ( mShowAllConnections || identifier == mIdentifier ) {
     str += QString( "<font color=\"blue\">%1</font><br>" ).arg( msg );

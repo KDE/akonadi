@@ -112,7 +112,7 @@ void FetchQuery::dump()
   QString type, sequence;
 
   for ( int i = 0; i < mSequences.count(); ++i )
-    sequence += "|" + QString::fromLatin1( mSequences[ i ] );
+    sequence += '|' + QString::fromLatin1( mSequences[ i ] );
   sequence.append( "|" );
 
   if ( mType == AllType )

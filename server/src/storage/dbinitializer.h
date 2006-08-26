@@ -47,14 +47,16 @@ class DbInitializer
     ~DbInitializer();
 
     /**
-     * Starts the initialization process. On success true is returned, false otherwise.
+     * Starts the initialization process.
+     * On success true is returned, false otherwise.
      *
-     * If something went wrong @see errorMsg() can be used to retrieve more information.
+     * If something went wrong @see errorMsg() can be used to retrieve more
+     * information.
      */
     bool run();
 
     /**
-     * Returns the textual description of an occured error.
+     * Returns the textual description of an occurred error.
      */
     QString errorMsg() const;
 

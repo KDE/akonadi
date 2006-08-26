@@ -111,9 +111,9 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
 
     DataStore *store = connection()->storageBackend();
     MimeType mimeType = store->mimeTypeById( item.mimeTypeId() );
-    flags.append( "\\MimeTypes[" + mimeType.mimeType() + "]" );
+    flags.append( "\\MimeTypes[" + mimeType.mimeType() + ']' );
 
-    attributes.append( "FLAGS (" + flags.join( " " ).toLatin1() + ")" );
+    attributes.append( "FLAGS (" + flags.join( " " ).toLatin1() + ')' );
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::InternalDate ) ) {
@@ -148,7 +148,7 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
   QByteArray attributesString;
   for ( int i = 0; i < attributes.count(); ++i ) {
     if ( i != 0 )
-      attributesString += " " + attributes[ i ];
+      attributesString += ' ' + attributes[ i ];
     else
       attributesString += attributes[ i ];
   }
@@ -158,7 +158,7 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
   if ( attributes.isEmpty() )
     return QByteArray::number( itemPosition ) + " FETCH";
   else
-    return QByteArray::number( itemPosition ) + " FETCH (" + attributesString + ")";
+    return QByteArray::number( itemPosition ) + " FETCH (" + attributesString + ')';
 }
 
 // FIXME build from database
@@ -173,7 +173,7 @@ QByteArray Fetch::buildEnvelope( const PimItem&, const FetchQuery& )
   const QByteArray cc( "NIL" );
   const QByteArray bcc( "NIL" );
   const QByteArray inReplyTo( "NIL" );
-  const QByteArray messageId( "<" + QUuid::createUuid().toString().toLatin1() + "@server.kde.org>" );
+  const QByteArray messageId( '<' + QUuid::createUuid().toString().toLatin1() + "@server.kde.org>" );
 
-  return QByteArray( "("+date+" "+subject+" (("+from+")) (("+sender+")) "+replyTo+" (("+to+")) "+cc+" "+bcc+" "+inReplyTo+" "+messageId+")" );
+  return QByteArray( '('+date+' '+subject+" (("+from+")) (("+sender+")) "+replyTo+" (("+to+")) "+cc+' '+bcc+' '+inReplyTo+' '+messageId+')' );
 }

@@ -111,7 +111,7 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
   const int endOfPath = mailboxPattern.lastIndexOf('/') + 1;
 
   if ( mailboxPattern[0] != '/' && fullPrefix != "/" )
-    fullPrefix += "/";
+    fullPrefix += '/';
   fullPrefix += mailboxPattern.left( endOfPath );
 
   if ( hasPercent )
@@ -129,7 +129,7 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
 
   const QList<Location> locations = listLocations();
   foreach( Location l, locations ) {
-    const QString location = "/" + l.location();
+    const QString location = '/' + l.location();
 #if 0
     qDebug() << "Location: " << location << " l: " << l << " prefix: " << fullPrefix;
 #endif
@@ -145,7 +145,7 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
     }
     // Check, if requested folder has been found to distinguish between
     // non-existant folder and empty folder.
-    if ( location + "/" == fullPrefix || fullPrefix == "/" )
+    if ( location + '/' == fullPrefix || fullPrefix == "/" )
       result.setValid( true );
   }
 

@@ -78,7 +78,7 @@ bool Search::handleLine( const QByteArray& line )
 
       QByteArray msg = "SEARCH";
       for ( int i = 0; i < uids.count(); ++i )
-        msg += " " + uids[ i ];
+        msg += ' ' + uids[ i ];
 
       response.setString( msg );
       emit responseAvailable( response );

@@ -132,7 +132,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
       if ( i != 0 )
         columns.append( ", " );
 
-      columns.append( columnsList[ i ].first + " " + columnsList[ i ].second );
+      columns.append( columnsList[ i ].first + ' ' + columnsList[ i ].second );
     }
 
     const QString statement = QString( "CREATE TABLE %1 (%2);" ).arg( tableName, columns );
@@ -186,7 +186,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
   if ( query.size() == 0  || !query.first() ) {
     foreach ( QString stmt, dataList ) {
       if ( !query.exec( stmt ) ) {
-        mErrorMsg = QString( "Unable to add inital data to table '%1'." ).arg( tableName );
+        mErrorMsg = QString( "Unable to add initial data to table '%1'." ).arg( tableName );
         return false;
       }
     }
