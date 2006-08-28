@@ -18,6 +18,7 @@
 */
 
 #include <QtCore/QTimer>
+#include <QtGui/QInputDialog>
 
 #include "knutresource.h"
 
@@ -36,6 +37,25 @@ KnutResource::KnutResource( const QString &id )
 
 KnutResource::~KnutResource()
 {
+}
+
+void KnutResource::configure()
+{
+  const QString tmp = QInputDialog::getText( 0, "Configuration", "Configuration:", QLineEdit::Normal, mConfig );
+  if ( !tmp.isEmpty() )
+    mConfig = tmp;
+}
+
+bool KnutResource::setConfiguration( const QString &config )
+{
+  mConfig = config;
+
+  return true;
+}
+
+QString KnutResource::configuration() const
+{
+  return mConfig;
 }
 
 bool KnutResource::requestItemDelivery( const QString&, const QString&, int )

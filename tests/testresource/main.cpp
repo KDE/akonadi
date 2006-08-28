@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QCoreApplication>
+#include <QtGui/QApplication>
 
 #include "knutresource.h"
 
@@ -25,7 +25,7 @@ using namespace PIM;
 
 int main( int argc, char **argv )
 {
-  QCoreApplication app( argc, argv );
+  QApplication app( argc, argv );
 
   ResourceBase::init<KnutResource>( argc, argv );
 

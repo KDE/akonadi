@@ -35,8 +35,15 @@ class KnutResource : public ResourceBase
   public Q_SLOTS:
     virtual bool requestItemDelivery( const QString&, const QString&, int );
 
+    virtual void configure();
+    virtual bool setConfiguration( const QString& );
+    virtual QString configuration() const;
+
   private Q_SLOTS:
     void timeout();
+
+  private:
+    QString mConfig;
 };
 
 }
