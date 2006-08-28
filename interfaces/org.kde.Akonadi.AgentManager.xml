@@ -18,6 +18,14 @@
       <arg name="status" type="i" direction="out"/>
       <arg name="message" type="s" direction="out"/>
     </signal>
+    <signal name="agentInstanceNameChanged">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+      <arg name="name" type="s" direction="out"/>
+    </signal>
+    <signal name="agentInstanceConfigurationChanged">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+      <arg name="data" type="s" direction="out"/>
+    </signal>
     <method name="agentTypes">
       <arg type="as" direction="out"/>
     </method>
@@ -60,6 +68,26 @@
       <arg name="identifier" type="s" direction="in"/>
     </method>
     <method name="agentInstanceStatusMessage">
+      <arg type="s" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="setAgentInstanceName">
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
+    </method>
+    <method name="agentInstanceName">
+      <arg type="s" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="agentInstanceConfigure">
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="setAgentInstanceConfiguration">
+      <arg type="b" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="data" type="s" direction="in"/>
+    </method>
+    <method name="agentInstanceConfiguration">
       <arg type="s" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
     </method>

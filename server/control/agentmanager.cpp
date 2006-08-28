@@ -64,7 +64,7 @@ QStringList AgentManager::agentTypes() const
 QString AgentManager::agentName( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::agentName" ),
+    mTracer->warning( QLatin1String( "AgentManager::agentName" ),
                      QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
@@ -75,7 +75,7 @@ QString AgentManager::agentName( const QString &identifier ) const
 QString AgentManager::agentComment( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::agentComment" ),
+    mTracer->warning( QLatin1String( "AgentManager::agentComment" ),
                      QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
@@ -86,7 +86,7 @@ QString AgentManager::agentComment( const QString &identifier ) const
 QString AgentManager::agentIcon( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::agentIcon" ),
+    mTracer->warning( QLatin1String( "AgentManager::agentIcon" ),
                      QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
@@ -97,7 +97,7 @@ QString AgentManager::agentIcon( const QString &identifier ) const
 QStringList AgentManager::agentMimeTypes( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::agentMimeTypes" ),
+    mTracer->warning( QLatin1String( "AgentManager::agentMimeTypes" ),
                      QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QStringList();
   }
@@ -108,7 +108,7 @@ QStringList AgentManager::agentMimeTypes( const QString &identifier ) const
 QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::agentCapabilities" ),
+    mTracer->warning( QLatin1String( "AgentManager::agentCapabilities" ),
                      QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QStringList();
   }
@@ -119,7 +119,7 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 QString AgentManager::createAgentInstance( const QString &identifier )
 {
   if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::createAgentInstance" ),
+    mTracer->warning( QLatin1String( "AgentManager::createAgentInstance" ),
                       QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
@@ -141,6 +141,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   const QString agentIdentifier = QString( "%1_%2" ).arg( identifier, QString::number( instanceCounter ) );
 
   Instance instance;
+  instance.name = agentIdentifier;
   instance.agentType = identifier;
   instance.controller = new Akonadi::ProcessControl( this );
   instance.interface = 0;
@@ -155,15 +156,13 @@ QString AgentManager::createAgentInstance( const QString &identifier )
 
   save();
 
-  emit agentInstanceAdded( agentIdentifier );
-
   return agentIdentifier;
 }
 
 void AgentManager::removeAgentInstance( const QString &identifier )
 {
   if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::removeAgentInstance" ),
+    mTracer->warning( QLatin1String( "AgentManager::removeAgentInstance" ),
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
     return;
   }
@@ -171,7 +170,7 @@ void AgentManager::removeAgentInstance( const QString &identifier )
   if ( mInstances[ identifier ].interface )
     mInstances[ identifier ].interface->quit();
   else
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::removeAgentInstance" ),
+    mTracer->error( QLatin1String( "AgentManager::removeAgentInstance" ),
                     QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
 
   /**
@@ -195,7 +194,7 @@ void AgentManager::removeAgentInstance( const QString &identifier )
 QString AgentManager::agentInstanceType( const QString &identifier )
 {
   if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::agentInstanceType" ),
+    mTracer->warning( QLatin1String( "AgentManager::agentInstanceType" ),
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
@@ -211,13 +210,13 @@ QStringList AgentManager::agentInstances() const
 int AgentManager::agentInstanceStatus( const QString &identifier ) const
 {
   if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::agentInstanceStatus" ),
+    mTracer->warning( QLatin1String( "AgentManager::agentInstanceStatus" ),
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
     return 2;
   }
 
   if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::agentInstanceStatus" ),
+    mTracer->error( QLatin1String( "AgentManager::agentInstanceStatus" ),
                     QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
     return 2;
   }
@@ -228,18 +227,94 @@ int AgentManager::agentInstanceStatus( const QString &identifier ) const
 QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) const
 {
   if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::agentInstanceStatusMessage" ),
+    mTracer->warning( QLatin1String( "AgentManager::agentInstanceStatusMessage" ),
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
 
   if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::agentInstanceStatusMessage" ),
+    mTracer->error( QLatin1String( "AgentManager::agentInstanceStatusMessage" ),
                     QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
     return QString();
   }
 
   return mInstances[ identifier ].interface->statusMessage();
+}
+
+void AgentManager::setAgentInstanceName( const QString &identifier, const QString &name )
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager::setAgentInstanceName" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return;
+  }
+
+  mInstances[ identifier ].name = name;
+  save();
+
+  emit agentInstanceNameChanged( identifier, name );
+}
+
+QString AgentManager::agentInstanceName( const QString &identifier ) const
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager::agentInstanceName" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return QString();
+  }
+
+  return mInstances[ identifier ].name;
+}
+
+void AgentManager::agentInstanceConfigure( const QString &identifier )
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager::agentInstanceConfigure" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return;
+  }
+
+  if ( !mInstances[ identifier ].interface ) {
+    mTracer->error( QLatin1String( "AgentManager::agentInstanceConfigure" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    return;
+  }
+
+  mInstances[ identifier ].interface->configure();
+}
+
+bool AgentManager::setAgentInstanceConfiguration( const QString &identifier, const QString &data )
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager::setAgentInstanceConfiguration" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return false;
+  }
+
+  if ( !mInstances[ identifier ].interface ) {
+    mTracer->error( QLatin1String( "AgentManager::setAgentInstanceConfiguration" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    return false;
+  }
+
+  return mInstances[ identifier ].interface->setConfiguration( data );
+}
+
+QString AgentManager::agentInstanceConfiguration( const QString &identifier ) const
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager::agentInstanceConfiguration" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return QString();
+  }
+
+  if ( !mInstances[ identifier ].interface ) {
+    mTracer->error( QLatin1String( "AgentManager::agentInstanceConfiguration" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    return QString();
+  }
+
+  return mInstances[ identifier ].interface->configuration();
 }
 
 void AgentManager::updatePluginInfos()
@@ -290,19 +365,19 @@ void AgentManager::readPluginInfos()
     file.endGroup();
 
     if ( identifier.isEmpty() ) {
-      mTracer->error( QLatin1String( "akonadi_control::updatePluginInfos" ),
+      mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
                      QString( "Agent desktop file '%1' contains empty identifier" ).arg( fileName ) );
       continue;
     }
 
     if ( mPluginInfos.contains( identifier ) ) {
-      mTracer->error( QLatin1String( "akonadi_control::updatePluginInfos" ),
+      mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
                      QString( "Duplicated agent identifier '%1' from file '%2'" ).arg( fileName, identifier ) );
       continue;
     }
 
     if ( info.exec.isEmpty() ) {
-      mTracer->error( QLatin1String( "akonadi_control::updatePluginInfos" ),
+      mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
                      QString( "Agent desktop file '%1' contains empty Exec entry" ).arg( fileName ) );
       continue;
     }
@@ -342,7 +417,7 @@ void AgentManager::load()
     const QString agentType = entries[ i ];
 
     if ( mInstanceInfos.contains( agentType ) ) {
-      mTracer->warning( QLatin1String( "akonadi_control::load" ),
+      mTracer->warning( QLatin1String( "AgentManager::load" ),
                         QString( "Duplicated agent type '%1' found in agentsrc" ).arg( agentType ) );
       continue;
     }
@@ -352,7 +427,7 @@ void AgentManager::load()
     const int instanceCounter = file.value( "InstanceCounter", QVariant( 0 ) ).toInt();
 
     if ( !mPluginInfos.contains( agentType ) ) {
-      mTracer->warning( QLatin1String( "akonadi_control::load" ),
+      mTracer->warning( QLatin1String( "AgentManager::load" ),
                         QString( "Reference to unknown agent type '%1' in agentsrc" ).arg( agentType ) );
       file.endGroup();
       continue;
@@ -373,7 +448,7 @@ void AgentManager::load()
     const QString instanceIdentifier = entries[ i ];
 
     if ( mInstances.contains( instanceIdentifier ) ) {
-      mTracer->warning( QLatin1String( "akonadi_control::AgentManager::load" ),
+      mTracer->warning( QLatin1String( "AgentManager::load" ),
                         QString( "Duplicated instance identifier '%1' found in agentsrc" ).arg( instanceIdentifier ) );
       continue;
     }
@@ -382,13 +457,15 @@ void AgentManager::load()
 
     const QString agentType = file.value( "AgentType" ).toString();
     if ( !mPluginInfos.contains( agentType ) ) {
-      mTracer->warning( QLatin1String( "akonadi_control::load" ),
+      mTracer->warning( QLatin1String( "AgentManager::load" ),
                         QString( "Reference to unknown agent type '%1' in agentsrc" ).arg( agentType ) );
       file.endGroup();
       continue;
     }
+    const QString name = file.value( "Name" ).toString();
 
     Instance instance;
+    instance.name = name;
     instance.agentType = agentType;
     instance.controller = new Akonadi::ProcessControl( this );
     instance.interface = 0;
@@ -433,6 +510,7 @@ void AgentManager::save()
 
     file.beginGroup( instanceIt.key() );
     file.setValue( "AgentType", instanceIt.value().agentType );
+    file.setValue( "Name", instanceIt.value().name );
     file.endGroup();
   }
 
@@ -444,13 +522,13 @@ void AgentManager::save()
 bool AgentManager::requestItemDelivery( const QString & agentIdentifier, const QString & itemIdentifier, const QString & collection, int type )
 {
   if ( !mInstances.contains( agentIdentifier ) ) {
-    mTracer->warning( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
+    mTracer->warning( QLatin1String( "AgentManager::requestItemDelivery" ),
     QString( "Agent instance with identifier '%1' does not exist" ).arg( agentIdentifier ) );
     return false;
   }
 
   if ( !mInstances.value( agentIdentifier ).controller ) {
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
+    mTracer->error( QLatin1String( "AgentManager::requestItemDelivery" ),
                     QString( "Agent instance '%1' not running!" ).arg( agentIdentifier ) );
     return false;
   }
@@ -458,7 +536,7 @@ bool AgentManager::requestItemDelivery( const QString & agentIdentifier, const Q
   if ( mInstances[ agentIdentifier ].interface )
     return mInstances[ agentIdentifier ].interface->requestItemDelivery( itemIdentifier, collection, type );
   else {
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::requestItemDelivery" ),
+    mTracer->error( QLatin1String( "AgentManager::requestItemDelivery" ),
                     QString( "Agent instance '%1' has no interface!" ).arg( agentIdentifier ) );
     return false;
   }
@@ -480,7 +558,7 @@ void AgentManager::resourceRegistered( const QString &name, const QString&, cons
   org::kde::Akonadi::Resource *interface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + identifier, "/", QDBusConnection::sessionBus(), this );
 
   if ( !interface || !interface->isValid() ) {
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::resourceRegistered" ),
+    mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
                     QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
                         .arg( identifier, interface ? interface->lastError().message() : "" ) );
     return;
@@ -490,27 +568,50 @@ void AgentManager::resourceRegistered( const QString &name, const QString&, cons
 
   connect( interface, SIGNAL( statusChanged( int, const QString& ) ),
            this, SLOT( resourceStatusChanged( int, const QString& ) ) );
+  connect( interface, SIGNAL( configurationChanged( const QString& ) ),
+           this, SLOT( resourceConfigurationChanged( const QString& ) ) );
 
   mInstances[ identifier ].interface = interface;
+
+  emit agentInstanceAdded( identifier );
 }
 
 void AgentManager::resourceStatusChanged( int status, const QString &message )
 {
   org::kde::Akonadi::Resource *resource = static_cast<org::kde::Akonadi::Resource*>( sender() );
   if ( !resource ) {
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::resourceStatusChanged" ),
+    mTracer->error( QLatin1String( "AgentManager::resourceStatusChanged" ),
                     QLatin1String( "Got signal from unknown sender" ) );
     return;
   }
 
   const QString identifier = resource->objectName();
   if ( identifier.isEmpty() ) {
-    mTracer->error( QLatin1String( "akonadi_control::AgentManager::resourceStatusChanged" ),
+    mTracer->error( QLatin1String( "AgentManager::resourceStatusChanged" ),
                     QLatin1String( "Sender of statusChanged signal has no identifier" ) );
     return;
   }
 
   emit agentInstanceStatusChanged( identifier, status, message );
+}
+
+void AgentManager::resourceConfigurationChanged( const QString &data )
+{
+  org::kde::Akonadi::Resource *resource = static_cast<org::kde::Akonadi::Resource*>( sender() );
+  if ( !resource ) {
+    mTracer->error( QLatin1String( "AgentManager::resourceConfigurationChanged" ),
+                    QLatin1String( "Got signal from unknown sender" ) );
+    return;
+  }
+
+  const QString identifier = resource->objectName();
+  if ( identifier.isEmpty() ) {
+    mTracer->error( QLatin1String( "AgentManager::resourceConfigurationChanged" ),
+                    QLatin1String( "Sender of configurationChanged signal has no identifier" ) );
+    return;
+  }
+
+  emit agentInstanceConfigurationChanged( identifier, data );
 }
 
 #include "agentmanager.moc"
