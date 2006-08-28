@@ -132,6 +132,36 @@ class AgentManager : public QObject
     QString agentInstanceStatusMessage( const QString &identifier ) const;
 
     /**
+     * Sets the @p name of the agent instance with the given @p identifier.
+     */
+    void setAgentInstanceName( const QString &identifier, const QString &name );
+
+    /**
+     * Returns the name of the agent instance with the given @p identifier.
+     */
+    QString agentInstanceName( const QString &identifier ) const;
+
+    /**
+     * Triggers the agent instance with the given @p identifier to show
+     * its configuration dialog.
+     */
+    void agentInstanceConfigure( const QString &identifier );
+
+    /**
+     * Sets the configuration of agent instance with the given @p identifier.
+     *
+     * @param data The configuration data in xml format.
+     * @returns true if the configuration was accepted and applyed, false otherwise.
+     */
+    bool setAgentInstanceConfiguration( const QString &identifier, const QString &data );
+
+    /**
+     * Returns the current configuration data of the agent instance with the given
+     * @p identifier or an empty string if no configuration is set.
+     */
+    QString agentInstanceConfiguration( const QString &identifier ) const;
+
+    /**
      * Asks the agent to store the item with the given
      * identifier to the given @p collection as full or lightwight
      * version, depending on @p type.
@@ -177,6 +207,22 @@ class AgentManager : public QObject
      * @param message The i18n'ed description of the new status.
      */
     void agentInstanceStatusChanged( const QString &agentIdentifier, AgentManager::Status status, const QString &message );
+
+    /**
+     * This signal is emitted whenever the name of the agent instance has changed.
+     *
+     * @param agentIdentifier The identifier of the agent that has changed.
+     * @param name The new name of the agent identifier.
+     */
+    void agentInstanceNameChanged( const QString &agentIdentifier, const QString &name );
+
+    /**
+     * This signal is emitted whenever the configuration of the agent instance has changed.
+     *
+     * @param agentIdentifier The identifier of the agent that has changed.
+     * @param data The new configuration data of the agent instance.
+     */
+    void agentInstanceConfigurationChanged( const QString &agentIdentifier, const QString &data );
 
   private:
     class Private;

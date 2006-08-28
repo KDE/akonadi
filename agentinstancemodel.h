@@ -54,6 +54,7 @@ class AgentInstanceModel : public QAbstractItemModel
     Q_PRIVATE_SLOT( d, void agentInstanceAdded( const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceRemoved( const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceStatusChanged( const QString&, AgentManager::Status, const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceNameChanged( const QString&, const QString& ) )
 };
 
 }

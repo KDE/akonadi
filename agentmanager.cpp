@@ -72,6 +72,10 @@ AgentManager::AgentManager( QObject *parent )
            this, SIGNAL( agentInstanceRemoved( const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceStatusChanged( const QString&, int, const QString& ) ),
            this, SLOT( agentInstanceStatusChanged( const QString&, int, const QString& ) ) );
+  connect( d->mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
+           this, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ) );
+  connect( d->mManager, SIGNAL( agentInstanceConfigurationChanged( const QString&, const QString& ) ),
+           this, SIGNAL( agentInstanceConfigurationChanged( const QString&, const QString& ) ) );
 }
 
 AgentManager::~AgentManager()
@@ -157,6 +161,31 @@ AgentManager::Status AgentManager::agentInstanceStatus( const QString &identifie
 QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) const
 {
   return d->mManager->agentInstanceStatusMessage( identifier );
+}
+
+void AgentManager::setAgentInstanceName( const QString &identifier, const QString &name )
+{
+  d->mManager->setAgentInstanceName( identifier, name );
+}
+
+QString AgentManager::agentInstanceName( const QString &identifier ) const
+{
+  return d->mManager->agentInstanceName( identifier );
+}
+
+void AgentManager::agentInstanceConfigure( const QString &identifier )
+{
+  d->mManager->agentInstanceConfigure( identifier );
+}
+
+bool AgentManager::setAgentInstanceConfiguration( const QString &identifier, const QString &data )
+{
+  return d->mManager->setAgentInstanceConfiguration( identifier, data );
+}
+
+QString AgentManager::agentInstanceConfiguration( const QString &identifier ) const
+{
+  return d->mManager->agentInstanceConfiguration( identifier );
 }
 
 bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
