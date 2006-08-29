@@ -97,8 +97,11 @@ public:
     Location locationById( int id ) const;
     Location locationByName( const QByteArray& name ) const;
     Location locationByRawMailbox( const QByteArray& mailbox ) const;
-    QList<Location> listLocations() const;
-    QList<Location> listLocations( const Resource & resource ) const;
+    /**
+      Returns all collection associated with the given resource, all collections if the
+      resource is invalid.
+    */
+    QList<Location> listLocations( const Resource & resource = Resource() ) const;
     QList<MimeType> mimeTypesForLocation( int id ) const;
 
     bool appendMimeTypeForLocation( int locationId, const QString & mimeType );

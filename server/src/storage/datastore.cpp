@@ -110,6 +110,25 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
   const bool hasStar = mailboxPattern.contains('*');
   const int endOfPath = mailboxPattern.lastIndexOf('/') + 1;
 
+  Resource resource;
+  if ( fullPrefix.startsWith( '#' ) ) {
+    int endOfRes = fullPrefix.indexOf( '/' );
+    QByteArray resourceName;
+    if ( endOfRes < 0 ) {
+      resourceName = fullPrefix.mid( 1 );
+      fullPrefix = QByteArray();
+    } else {
+      resourceName = fullPrefix.mid( 1, endOfRes - 1 );
+      fullPrefix = fullPrefix.right( fullPrefix.length() - endOfRes );
+    }
+
+    resource = resourceByName( resourceName );
+    if ( !resource.isValid() ) {
+      result.setValid( false );
+      return result;
+    }
+  }
+
   if ( mailboxPattern[0] != '/' && fullPrefix != "/" )
     fullPrefix += '/';
   fullPrefix += mailboxPattern.left( endOfPath );
@@ -121,13 +140,13 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
   else
     sanitizedPattern = mailboxPattern.mid( endOfPath );
 
-  qDebug() << "FullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
+  qDebug() << "Resource: " << resource.resource() << " fullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
 
   if ( !fullPrefix.isEmpty() ) {
     result.setValid( false );
   }
 
-  const QList<Location> locations = listLocations();
+  const QList<Location> locations = listLocations( resource );
   foreach( Location l, locations ) {
     const QString location = '/' + l.location();
 #if 0
@@ -149,16 +168,18 @@ CollectionList Akonadi::DataStore::listCollections( const QByteArray & prefix,
       result.setValid( true );
   }
 
-  // list queries
-  if ( fullPrefix == "/" ) {
-    CollectionList persistenSearches = PersistentSearchManager::self()->collections();
-    if ( !persistenSearches.isEmpty() )
-      result.append( Collection( "Search" ) );
-    result.setValid( true );
-  }
-  if ( fullPrefix == "/Search/"  || (fullPrefix == "/" && hasStar) ) {
-    result += PersistentSearchManager::self()->collections();
-    result.setValid( true );
+  // list queries (only in global namespace)
+  if ( !resource.isValid() ) {
+    if ( fullPrefix == "/" ) {
+      CollectionList persistenSearches = PersistentSearchManager::self()->collections();
+      if ( !persistenSearches.isEmpty() )
+        result.append( Collection( "Search" ) );
+      result.setValid( true );
+    }
+    if ( fullPrefix == "/Search/"  || (fullPrefix == "/" && hasStar) ) {
+      result += PersistentSearchManager::self()->collections();
+      result.setValid( true );
+    }
   }
 
   return result;
@@ -816,42 +837,18 @@ bool Akonadi::DataStore::removeMimeTypesForLocation(int locationId)
 }
 
 
-QList<Location> DataStore::listLocations() const
+QList<Location> DataStore::listLocations( const Resource & resource ) const
 {
   if ( !m_dbOpened )
     return QList<Location>();
 
   QSqlQuery query( m_database );
-  const QString statement = QString( "SELECT id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity FROM Locations" );
-
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during selection of Locations." );
-    return QList<Location>();
-  }
-
-  QList<Location> locations;
-
-  while ( query.next() ) {
-    Location location;
-    location.fillFromQuery( query );
-    location.setMimeTypes( mimeTypesForLocation( location.id() ) );
-    locations.append( location );
-  }
-
-  return locations;
-}
-
-QList<Location> DataStore::listLocations( const Resource & resource ) const
-{
-  if ( !m_dbOpened || !resource.isValid() )
-    return QList<Location>();
-
-  QSqlQuery query( m_database );
   // query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = :id" );
   // query.bindValue( ":id", resource.id() );
+  QString statement = QString( "SELECT id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity FROM Locations" );
 
-  const QString statement = QString( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = %1" )
-                                   .arg( resource.id() );
+  if ( resource.isValid() )
+    statement += QString( " WHERE resource_id = %1" ).arg( resource.id() );
 
   if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "Error during selection of Locations from a Resource." );

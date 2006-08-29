@@ -66,12 +66,14 @@ void Akonadi::ResourceManager::resourceRemoved(const QString & name)
 
   // remove items and collections
   Resource resource = db->resourceByName( name.toUtf8() );
-  QList<Location> locations = db->listLocations( resource );
-  foreach ( Location location, locations )
-    db->cleanupLocation( location );
+  if ( resource.isValid() ) {
+    QList<Location> locations = db->listLocations( resource );
+    foreach ( Location location, locations )
+      db->cleanupLocation( location );
 
-  // remove resource
-  db->removeResource( resource );
+    // remove resource
+    db->removeResource( resource );
+  }
 
   delete db;
 }
