@@ -25,6 +25,7 @@
 
 #include "append.h"
 #include "response.h"
+#include "handlerhelper.h"
 
 using namespace Akonadi;
 
@@ -117,8 +118,7 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
 
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    const int startOfFlags = line.indexOf( ' ', startOfMailbox ) + 1;
-    m_mailbox = stripQuotes( line.mid( startOfMailbox, startOfFlags - startOfMailbox -1 ) );
+    const int startOfFlags = HandlerHelper::parseQuotedString( line, m_mailbox, startOfMailbox ) + 1;
 
     // parse optional flag parenthesized list
     // Syntax:
@@ -180,7 +180,7 @@ bool Akonadi::Append::commit()
       }
     }
     // standard imap does not know this attribute, so that's mail
-    if ( mt.isEmpty() ) mt = "message/rfc822"; 
+    if ( mt.isEmpty() ) mt = "message/rfc822";
     MimeType mimeType = db->mimeTypeByName( mt );
     if ( !mimeType.isValid() ) {
       return failureResponse( QString( "Unknown mime type '%1'.").arg( mt ) );

@@ -47,3 +47,57 @@ QList<QByteArray> HandlerHelper::splitLine( const QByteArray &line )
   return retval;
 }
 
+// ### FIXME massive code duplication with libakonadi/imapparser.cpp!
+int HandlerHelper::parseQuotedString( const QByteArray &data, QByteArray &result, int start )
+{
+  int begin = stripLeadingSpaces( data, start );
+  int end = begin;
+
+  // quoted string
+  if ( data[begin] == '"' ) {
+    ++begin;
+    for ( int i = begin; i < data.length(); ++i ) {
+      if ( data[i] == '\\' ) {
+        ++i;
+        continue;
+      }
+      if ( data[i] == '"' ) {
+        result = data.mid( begin, i - begin );
+        end = i + 1; // skip the '"'
+        break;
+      }
+    }
+  }
+
+  // unquoted string
+  else {
+    for ( int i = begin; i < data.length(); ++i ) {
+      if ( data[i] == ' ' || data[i] == '(' || data[i] == ')' ) {
+        result = data.mid( begin, i - begin );
+
+        // transform unquoted NIL
+        if ( result == "NIL" )
+          result.clear();
+
+        end = i;
+        break;
+      }
+    }
+  }
+
+  // strip quotes
+  while ( result.contains( "\\\"" ) )
+    result.replace( "\\\"", "\"" );
+
+  return end;
+}
+
+int HandlerHelper::stripLeadingSpaces( const QByteArray & data, int start )
+{
+  for ( int i = start; i < data.length(); ++i ) {
+    if ( data[i] != ' ' )
+      return i;
+  }
+  return data.length();
+}
+
