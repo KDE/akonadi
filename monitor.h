@@ -54,8 +54,9 @@ class AKONADI_EXPORT Monitor : public QObject
     /**
       Monitors the specified collection for changes.
       @param path The collection path.
+      @param recursive If true also sub-collection will be monitored.
     */
-    void monitorCollection( const QByteArray &path );
+    void monitorCollection( const QByteArray &path, bool recursive );
 
     /**
       Monitors the specified PIM Item for changes.

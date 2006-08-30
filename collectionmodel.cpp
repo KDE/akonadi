@@ -67,7 +67,7 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
 
   // monitor collection changes
   d->monitor = new Monitor();
-  d->monitor->monitorCollection( "" );
+  d->monitor->monitorCollection( Collection::root(), true );
   connect( d->monitor, SIGNAL(collectionChanged(QByteArray)), SLOT(collectionChanged(QByteArray)) );
   connect( d->monitor, SIGNAL(collectionAdded(QByteArray)), SLOT(collectionChanged(QByteArray)) );
   connect( d->monitor, SIGNAL(collectionRemoved(QByteArray)), SLOT(collectionRemoved(QByteArray)) );

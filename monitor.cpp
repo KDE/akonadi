@@ -31,13 +31,19 @@ class PIM::MonitorPrivate
 {
   public:
     org::kde::Akonadi::NotificationManager *nm;
-    QList<QByteArray> collections;
+    QHash<QByteArray,bool> collections;
 
     bool isCollectionMonitored( const QByteArray &path )
     {
-      foreach ( const QByteArray ba, collections ) {
-        if ( path.startsWith( ba ) )
-          return true;
+      for ( QHash<QByteArray,bool>::ConstIterator it = collections.constBegin();
+            it != collections.constEnd(); ++it ) {
+        if ( it.value() ) {
+          if ( path.startsWith( it.key() ) )
+            return true;
+        } else {
+          if ( path == it.key() )
+            return true;
+        }
       }
       return false;
     }
@@ -56,9 +62,9 @@ PIM::Monitor::~Monitor()
   delete d;
 }
 
-void PIM::Monitor::monitorCollection( const QByteArray & path )
+void PIM::Monitor::monitorCollection( const QByteArray & path, bool recursive )
 {
-  d->collections.append( path );
+  d->collections.insert( path, recursive );
   if ( connectToNotificationManager() )
     d->nm->monitorCollection( path );
 }
@@ -71,20 +77,26 @@ void PIM::Monitor::monitorItem( const DataReference & ref )
 
 void PIM::Monitor::slotItemChanged( const QByteArray & uid, const QByteArray & collection )
 {
-  if ( d->isCollectionMonitored( collection ) )
+  if ( d->isCollectionMonitored( collection ) ) {
     emit itemChanged( DataReference( uid, QString() ) );
+    emit collectionChanged( collection );
+  }
 }
 
 void PIM::Monitor::slotItemAdded( const QByteArray & uid, const QByteArray & collection )
 {
-  if ( d->isCollectionMonitored( collection ) )
+  if ( d->isCollectionMonitored( collection ) ) {
     emit itemAdded( DataReference( uid, QString() ) );
+    emit collectionChanged( collection );
+  }
 }
 
 void PIM::Monitor::slotItemRemoved( const QByteArray & uid, const QByteArray & collection )
 {
-  if ( d->isCollectionMonitored( collection ) )
+  if ( d->isCollectionMonitored( collection ) ) {
     emit itemRemoved( DataReference( uid, QString() ) );
+    emit collectionChanged( collection );
+  }
 }
 
 void PIM::Monitor::slotCollectionChanged( const QByteArray & path )
