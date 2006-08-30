@@ -308,7 +308,7 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
 
       // start a status job for every collection to get message counts, etc.
       // ### do we need this for all collections?
-      if ( col->type() == Collection::Folder || col->type() == Collection::Virtual ) {
+      if ( col->type() != Collection::VirtualParent ) {
         CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->queue );
         connect( csjob, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
         d->queue->addJob( csjob );
