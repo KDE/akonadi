@@ -40,7 +40,11 @@ int PIM::MessageCollectionModel::columnCount( const QModelIndex & parent ) const
 
 QVariant PIM::MessageCollectionModel::data( const QModelIndex & index, int role ) const
 {
+  if ( !index.isValid() )
+    return QVariant();
+
   Collection *col = static_cast<Collection*>( index.internalPointer() );
+  Q_ASSERT( col );
   MessageCollectionAttribute *attr = col->attribute<MessageCollectionAttribute>();
 
   if ( role == Qt::DisplayRole && attr && ( index.column() == 1 || index.column() == 2 ) ) {
