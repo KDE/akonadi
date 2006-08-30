@@ -34,16 +34,14 @@ class PIM::CollectionListJobPrivate
     bool recursive;
     QByteArray prefix;
     Collection::List collections;
+    QString resource;
 };
 
 PIM::CollectionListJob::CollectionListJob( const QByteArray &prefix, bool recursive, QObject *parent ) :
     Job( parent ),
     d( new CollectionListJobPrivate )
 {
-  if ( prefix.startsWith( Collection::prefix() ) )
-    d->prefix = prefix;
-  else
-    d->prefix = Collection::prefix() + prefix;
+  d->prefix = prefix;
   d->recursive = recursive;
 }
 
@@ -59,7 +57,15 @@ PIM::Collection::List PIM::CollectionListJob::collections() const
 
 void PIM::CollectionListJob::doStart()
 {
-  writeData( newTag() + " LIST \"" + d->prefix + "\" " + ( d->recursive ? '*' : '%' ) );
+  QByteArray command = newTag() + " LIST \"";
+  if ( !d->resource.isEmpty() )
+    command += '#' + d->resource.toUtf8();
+  command += "\" \"" + d->prefix;
+  if ( !d->prefix.endsWith( Collection::delimiter() ) && !d->prefix.isEmpty() )
+    command += Collection::delimiter();
+  command += ( d->recursive ? '*' : '%' );
+  command += '\"';
+  writeData( command );
 }
 
 void PIM::CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -122,6 +128,11 @@ void PIM::CollectionListJob::doHandleResponse( const QByteArray & tag, const QBy
     return;
   }
   qDebug() << "unhandled server response in collection list job" << tag << data;
+}
+
+void PIM::CollectionListJob::setResource(const QString & resource)
+{
+  d->resource = resource;
 }
 
 #include "collectionlistjob.moc"

@@ -135,6 +135,37 @@ void CollectionJobTest::testSearchFolderList( )
   QVERIFY( findCol( list, "Search/kde-core-devel" ) != 0 );
 }
 
+void CollectionJobTest::testResourceFolderList()
+{
+  // non-existing resource
+  CollectionListJob *job = new CollectionListJob( Collection::root() );
+  job->setResource( "i_dont_exist" );
+  QVERIFY( !job->exec() );
+
+  // recursive listing of all collections of an existing resource
+  job = new CollectionListJob( Collection::root(), true );
+  job->setResource( "akonadi_dummy_resource_1" );
+  QVERIFY( job->exec() );
+
+  Collection::List list = job->collections();
+  QCOMPARE( list.count(), 5 );
+  QVERIFY( findCol( list, "res1" ) );
+  QVERIFY( findCol( list, "res1/foo" ) );
+  QVERIFY( findCol( list, "res1/foo/bar" ) );
+  QVERIFY( findCol( list, "res1/foo/bar/bla" ) );
+
+  // limited listing of a resource
+  job = new CollectionListJob( "res1/foo", true );
+  job->setResource( "akonadi_dummy_resource_1" );
+  QVERIFY( job->exec() );
+
+  list = job->collections();
+  QCOMPARE( list.count(), 3 );
+  QVERIFY( findCol( list, "res1/foo/bar" ) );
+  QVERIFY( findCol( list, "res1/foo/bar/bla" ) );
+  QVERIFY( findCol( list, "res1/foo/bla" ) );
+}
+
 void CollectionJobTest::testIllegalCreateFolder( )
 {
   // root

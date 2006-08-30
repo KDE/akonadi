@@ -61,6 +61,12 @@ class AKONADI_EXPORT CollectionListJob : public Job
     */
     Collection::List collections() const;
 
+    /**
+      Sets a resource identifier to limit collection listing to one resource.
+      @param resource The resource identifier.
+    */
+    void setResource( const QString &resource );
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
