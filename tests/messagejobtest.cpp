@@ -53,7 +53,7 @@ void MessageJobTest::testMessageFetch( )
   QCOMPARE( msg->flags().count(), 3 );
   QVERIFY( msg->hasFlag( "\\Seen" ) );
   QVERIFY( msg->hasFlag( "\\Flagged" ) );
-  QVERIFY( msg->hasFlag( "\\Deleted" ) );
+  QVERIFY( msg->hasFlag( "\\Draft" ) );
 
   // TODO: complete checks for message parsing
   QCOMPARE( msg->mime()->subject()->asUnicodeString(), QString::fromUtf8( "IMPORTANT: Akonadi Test" ) );

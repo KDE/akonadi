@@ -19,6 +19,8 @@
 
 #include "itemappendtest.h"
 #include <libakonadi/itemappendjob.h>
+#include <libakonadi/itemfetchjob.h>
+#include <libakonadi/itemdeletejob.h>
 
 #include <QDebug>
 
@@ -38,6 +40,22 @@ void ItemAppendTest::testItemAppend()
   job = new ItemAppendJob( "res1/foo", QByteArray(), "message/rfc822", this );
   job->setRemoteId( "remote-id" );
   QVERIFY( job->exec() );
+
+  // append/fetch/delete to collection with a space in the name
+  job = new ItemAppendJob( "res2/space folder", QByteArray("some content"), "message/rfc822", this );
+  QVERIFY( job->exec() );
+
+  ItemFetchJob *fjob = new ItemFetchJob( "res2/space folder", this );
+  QVERIFY( fjob->exec() );
+  QCOMPARE( fjob->items().count(), 1 );
+  DataReference ref = fjob->items().first()->reference();
+
+  ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
+  QVERIFY( djob->exec() );
+
+  fjob = new ItemFetchJob( "res2/space folder", this );
+  QVERIFY( fjob->exec() );
+  QVERIFY( fjob->items().isEmpty() );
 }
 
 void ItemAppendTest::testIllegalAppend()
