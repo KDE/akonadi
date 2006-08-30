@@ -25,6 +25,7 @@
 
 #include "status.h"
 #include "response.h"
+#include "handlerhelper.h"
 
 using namespace Akonadi;
 
@@ -48,8 +49,8 @@ bool Status::handleLine( const QByteArray& line )
     // status-att = "MESSAGES" / "RECENT" / "UIDNEXT" / "UIDVALIDITY" / "UNSEEN"
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    const int endOfMailbox = line.indexOf( ' ', startOfMailbox );
-    const QByteArray mailbox = stripQuotes( line.mid( startOfMailbox, endOfMailbox - startOfMailbox ) );
+    QByteArray mailbox;
+    const int endOfMailbox = HandlerHelper::parseQuotedString( line, mailbox, startOfMailbox );
     const QByteArray statusAttributes = line.mid( endOfMailbox + 2, line.size() - ( endOfMailbox + 2 ) - 1 );
     const QList<QByteArray> attributeList = statusAttributes.split( ' ' );
 
