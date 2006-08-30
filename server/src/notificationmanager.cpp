@@ -52,10 +52,10 @@ void NotificationManager::monitorCollection( const QByteArray & id )
 {
   mMutex.lock();
 
-  if ( !mIds.contains( id ) )
-    mIds.insert( id, 0 );
+  if ( !mLocations.contains( id ) )
+    mLocations.insert( id, 0 );
   else
-    mIds[ id ]++;
+    mLocations[ id ]++;
 
   mMutex.unlock();
 
@@ -91,7 +91,7 @@ void NotificationManager::connectDatastore( DataStore * store )
 void Akonadi::NotificationManager::slotItemAdded( int uid, const QByteArray& location )
 {
   QByteArray id = QString::number( uid ).toLatin1();
-  if ( mIds.contains( id ) || mIds.contains( location ) ) {
+  if ( mIds.contains( id ) || isLocationMonitored( location ) ) {
     emit itemAdded( id, location );
     QString msg = QString("ID: %1, Location: %2" ).arg( uid ).arg( location.data() );
     Tracer::self()->signal( "NotificationManager::itemAdded", msg );
@@ -100,12 +100,23 @@ void Akonadi::NotificationManager::slotItemAdded( int uid, const QByteArray& loc
 
 void Akonadi::NotificationManager::slotCollectionAdded(const QByteArray & path)
 {
-  emit collectionAdded( path );
+  if ( isLocationMonitored( path ) )
+    emit collectionAdded( path );
 }
 
 void Akonadi::NotificationManager::slotCollectionRemoved(const QByteArray & path)
 {
-  emit collectionRemoved( path );
+  if ( isLocationMonitored( path ) )
+    emit collectionRemoved( path );
+}
+
+bool Akonadi::NotificationManager::isLocationMonitored(const QByteArray & location)
+{
+  foreach ( QByteArray l, mLocations.keys() ) {
+    if ( location.startsWith( l ) )
+      return true;
+  }
+  return false;
 }
 
 #include "notificationmanager.moc"

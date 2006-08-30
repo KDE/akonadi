@@ -62,8 +62,11 @@ class NotificationManager : public QObject
 
     static NotificationManager *mSelf;
 
+    bool isLocationMonitored( const QByteArray &location );
+
     QMutex mMutex;
     QHash<QByteArray, int> mIds;
+    QHash<QByteArray, int> mLocations;
 };
 
 }
