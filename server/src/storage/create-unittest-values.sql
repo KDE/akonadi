@@ -14,6 +14,7 @@ INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recen
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity) VALUES (5, 'res1', 1, 0, 0, 0, 0, 0, 0);
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity) VALUES (6, 'res2', 1, 1, 0, 0, 0, 0, 0);
 INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity) VALUES (7, 'res3', 1, 2, 0, 0, 0, 0, 0);
+INSERT INTO Locations (id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity) VALUES (8, 'res2/space folder', 1, 1, 0, 0, 0, 0, 0);
 
 DELETE FROM Resources;
 INSERT INTO Resources (id, name, cachepolicy_id) VALUES(0, 'akonadi_dummy_resource_1', 1);
@@ -54,7 +55,7 @@ INSERT INTO PimItems (id, remote_id, data, location_id, mimetype_id) VALUES (14,
 
 DELETE FROM ItemFlags;
 INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (5, 0);
-INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (6, 0);
+INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (8, 0);
 INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (7, 0);
 INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (5, 1);
 INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (5, 1);
