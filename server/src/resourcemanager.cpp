@@ -43,12 +43,16 @@ void Akonadi::ResourceManager::resourceAdded(const QString & name)
   DataStore *db = new DataStore();
   db->init();
 
+  Resource resource = db->resourceByName( name.toUtf8() );
+  if ( resource.isValid() )
+    return; // resource already exists
+
   // create the resource
   if ( !db->appendResource( name ) ) {
     Tracer::self()->error( "ResourceManager", "Could not create resource '" + name + "'." );
     return;
   }
-  Resource resource = db->resourceByName( name.toUtf8() );
+  resource = db->resourceByName( name.toUtf8() );
 
   // create the toplevel collection
   QString collectionName = mManager->agentName( mManager->agentInstanceType( name ) );
