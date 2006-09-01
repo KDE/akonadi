@@ -17,25 +17,37 @@
     02110-1301, USA.
 */
 
-#ifndef COLLECTIONFETCHTEST_H
-#define COLLECTIONFETCHTEST_H
+#include "collectiondeletejob.h"
 
-#include <QtCore/QObject>
+using namespace PIM;
 
-class CollectionJobTest : public QObject
+class PIM::CollectionDeleteJobPrivate
 {
-  Q_OBJECT
-  private slots:
-    void testTopLevelList();
-    void testFolderList();
-    void testNonRecursiveFolderList();
-    void testEmptyFolderList();
-    void testSearchFolderList();
-    void testResourceFolderList();
-    void testIllegalCreateFolder();
-    void testCreateDeleteFolder();
-    void testCreateDeleteFolderRecursive();
+  public:
+    QByteArray path;
 };
 
+PIM::CollectionDeleteJob::CollectionDeleteJob(const QByteArray & path, QObject * parent) :
+    Job( parent ), d( new CollectionDeleteJobPrivate )
+{
+  d->path = path;
+}
 
-#endif
+PIM::CollectionDeleteJob::~ CollectionDeleteJob()
+{
+  delete d;
+}
+
+void PIM::CollectionDeleteJob::doStart()
+{
+  writeData( newTag() + " DELETE \"" + d->path + "\"" );
+}
+
+void PIM::CollectionDeleteJob::doHandleResponse(const QByteArray & tag, const QByteArray & data)
+{
+  // the parent class does it all for us
+  Q_UNUSED( tag );
+  Q_UNUSED( data );
+}
+
+#include "collectiondeletejob.moc"

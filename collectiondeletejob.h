@@ -17,25 +17,45 @@
     02110-1301, USA.
 */
 
-#ifndef COLLECTIONFETCHTEST_H
-#define COLLECTIONFETCHTEST_H
+#ifndef PIM_COLLECTIONDELETEJOB_H
+#define PIM_COLLECTIONDELETEJOB_H
 
-#include <QtCore/QObject>
+#include <libakonadi/job.h>
 
-class CollectionJobTest : public QObject
+namespace PIM {
+
+class CollectionDeleteJobPrivate;
+
+/**
+  Job to delete collections.
+  Be carefull with using this: It deletes not only the specified collection
+  but also all its sub-collections as well as all associated content!
+*/
+class CollectionDeleteJob : public Job
 {
   Q_OBJECT
-  private slots:
-    void testTopLevelList();
-    void testFolderList();
-    void testNonRecursiveFolderList();
-    void testEmptyFolderList();
-    void testSearchFolderList();
-    void testResourceFolderList();
-    void testIllegalCreateFolder();
-    void testCreateDeleteFolder();
-    void testCreateDeleteFolderRecursive();
+
+  public:
+    /**
+      Creates a new CollectionDeleteJob.
+      @param path Path of a collection to delete.
+      @param parent The parent object.
+    */
+    CollectionDeleteJob( const QByteArray &path, QObject *parent = 0 );
+
+    /**
+      Destroys this job.
+    */
+    ~CollectionDeleteJob();
+
+  protected:
+    virtual void doStart();
+    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+
+  private:
+    CollectionDeleteJobPrivate* const d;
 };
 
+}
 
 #endif

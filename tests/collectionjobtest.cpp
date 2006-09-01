@@ -22,6 +22,7 @@
 
 #include "collection.h"
 #include "collectioncreatejob.h"
+#include "collectiondeletejob.h"
 #include "collectionlistjob.h"
 
 using namespace PIM;
@@ -189,7 +190,7 @@ void CollectionJobTest::testIllegalCreateFolder( )
   QVERIFY( !job->exec() );
 }
 
-void CollectionJobTest::testCreateFolder( )
+void CollectionJobTest::testCreateDeleteFolder( )
 {
   // simple new folder
   CollectionCreateJob *job = new CollectionCreateJob( "res3/new folder", this );
@@ -199,6 +200,13 @@ void CollectionJobTest::testCreateFolder( )
   QVERIFY( ljob->exec() );
   QVERIFY( findCol( ljob->collections(), "res3/new folder" ) != 0 );
 
+  CollectionDeleteJob *del = new CollectionDeleteJob( "res3/new folder", this );
+  QVERIFY( del->exec() );
+
+  ljob = new CollectionListJob( "res3", false, this );
+  QVERIFY( ljob->exec() );
+  QVERIFY( findCol( ljob->collections(), "res3/new folder" ) == 0 );
+
   // folder that already exists within another resource
   job = new CollectionCreateJob( "res3/foo", this );
   QVERIFY( job->exec() );
@@ -207,15 +215,35 @@ void CollectionJobTest::testCreateFolder( )
   QVERIFY( ljob->exec() );
   QVERIFY( findCol( ljob->collections(), "res3/foo" ) != 0 );
 
+  del = new CollectionDeleteJob( "res3/foo", this );
+  QVERIFY( del->exec() );
+
+  ljob = new CollectionListJob( "res3", false, this );
+  QVERIFY( ljob->exec() );
+  QVERIFY( findCol( ljob->collections(), "res3/foo" ) == 0 );
+
+}
+
+void CollectionJobTest::testCreateDeleteFolderRecursive()
+{
   // folder with missing parents
-  job = new CollectionCreateJob( "res3/sub1/sub2/sub3", this );
+  CollectionCreateJob *job = new CollectionCreateJob( "res3/sub1/sub2/sub3", this );
   QVERIFY( job->exec() );
 
-  ljob = new CollectionListJob( "/res3", true, this );
+  CollectionListJob *ljob = new CollectionListJob( "/res3", true, this );
   QVERIFY( ljob->exec() );
   QVERIFY( findCol( ljob->collections(), "res3/sub1" ) != 0 );
   QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2" ) != 0 );
   QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2/sub3" ) != 0 );
+
+  CollectionDeleteJob *del = new CollectionDeleteJob( "res3/sub1", this );
+  QVERIFY( del->exec() );
+
+  ljob = new CollectionListJob( "/res3", true, this );
+  QVERIFY( ljob->exec() );
+  QVERIFY( findCol( ljob->collections(), "res3/sub1" ) == 0 );
+  QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2" ) == 0 );
+  QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2/sub3" ) == 0 );
 }
 
 

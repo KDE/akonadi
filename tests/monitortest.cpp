@@ -21,6 +21,7 @@
 
 #include <libakonadi/monitor.h>
 #include <libakonadi/collectioncreatejob.h>
+#include <libakonadi/collectiondeletejob.h>
 #include <libakonadi/itemappendjob.h>
 #include <libakonadi/itemstorejob.h>
 #include <libakonadi/itemdeletejob.h>
@@ -125,7 +126,18 @@ void MonitorTest::testMonitor()
   QVERIFY( imspy.isEmpty() );
 
   // delete a collection
-  // TODO
+  CollectionDeleteJob *cdel = new CollectionDeleteJob( "res3/monitor", this );
+  QVERIFY( cdel->exec() );
+
+  QCOMPARE( crspy.count(), 1 );
+  arg = crspy.takeFirst();
+  QCOMPARE( arg.at(0).toByteArray(), QByteArray( "res3/monitor" ) );
+
+  QVERIFY( caspy.isEmpty() );
+  QVERIFY( cmspy.isEmpty() );
+  QVERIFY( iaspy.isEmpty() );
+  QVERIFY( imspy.isEmpty() );
+  QVERIFY( irspy.isEmpty() );
 }
 
 #include "monitortest.moc"

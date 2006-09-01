@@ -22,6 +22,7 @@ set( akonadi_LIB_SRC
 	collection.cpp
 	collectionattribute.cpp
 	collectioncreatejob.cpp
+	collectiondeletejob.cpp
 	collectionlistjob.cpp
 	collectionmodel.cpp
 	collectionrenamejob.cpp
@@ -90,7 +91,7 @@ install( FILES
 	messagequery.h
 	monitor.h
 	profilemanager.h
-	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi 
+	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi
 )
 
 
