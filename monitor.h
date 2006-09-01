@@ -69,19 +69,19 @@ class AKONADI_EXPORT Monitor : public QObject
       Emitted if a monitored object has changed.
       @param ref Reference of the changed objects.
     */
-    void itemChanged( const DataReference &ref );
+    void itemChanged( const PIM::DataReference &ref );
 
     /**
       Emitted if a item has been added to a monitored collection.
       @param ref Reference of the added object.
     */
-    void itemAdded( const DataReference &ref );
+    void itemAdded( const PIM::DataReference &ref );
 
     /**
       Emitted if a monitored object has been removed.
       @param ref Reference of the removed object.
     */
-    void itemRemoved( const DataReference &ref);
+    void itemRemoved( const PIM::DataReference &ref);
 
     /**
       Emitted if a monitored got a new child collection.

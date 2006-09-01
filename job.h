@@ -23,6 +23,7 @@
 #ifndef PIM_JOB_H
 #define PIM_JOB_H
 
+#include <QMetaType>
 #include <QObject>
 #include <QString>
 #include <QUrl>
@@ -278,5 +279,7 @@ class AKONADI_EXPORT Job : public QObject
 }
 
 AKONADI_EXPORT uint qHash( const PIM::DataReference& ref );
+
+Q_DECLARE_METATYPE(PIM::DataReference);
 
 #endif

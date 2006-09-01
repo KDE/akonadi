@@ -59,6 +59,7 @@ add_akonadi_test(collectionjobtest.cpp)
 add_akonadi_test(messagejobtest.cpp)
 add_akonadi_test(itemappendtest.cpp)
 add_akonadi_test(itemstoretest.cpp)
+add_akonadi_test(monitortest.cpp)
 
 
 endif(KDE4_BUILD_TESTS)
