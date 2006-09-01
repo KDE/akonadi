@@ -71,18 +71,21 @@ int HandlerHelper::parseQuotedString( const QByteArray &data, QByteArray &result
 
   // unquoted string
   else {
+    bool reachedInputEnd = true;
     for ( int i = begin; i < data.length(); ++i ) {
       if ( data[i] == ' ' || data[i] == '(' || data[i] == ')' ) {
-        result = data.mid( begin, i - begin );
-
-        // transform unquoted NIL
-        if ( result == "NIL" )
-          result.clear();
-
         end = i;
+        reachedInputEnd = false;
         break;
       }
     }
+    if ( reachedInputEnd )
+      end = data.length();
+    result = data.mid( begin, end - begin );
+
+    // transform unquoted NIL
+    if ( result == "NIL" )
+      result.clear();
   }
 
   // strip quotes
