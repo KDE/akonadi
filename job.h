@@ -280,6 +280,6 @@ class AKONADI_EXPORT Job : public QObject
 
 AKONADI_EXPORT uint qHash( const PIM::DataReference& ref );
 
-Q_DECLARE_METATYPE(PIM::DataReference);
+Q_DECLARE_METATYPE(PIM::DataReference)
 
 #endif
