@@ -93,6 +93,12 @@ void ImapParserTest::testParseQuotedString( )
   consumed = ImapParser::parseQuotedString( input, result, 9 );
   QCOMPARE( result, QByteArray( "" ) );
   QCOMPARE( consumed, 12 );
+
+  // unquoted string at input end
+  input = "some string";
+  consumed = ImapParser::parseQuotedString( input, result, 4 );
+  QCOMPARE( result, QByteArray( "string" ) );
+  QCOMPARE( consumed, 11 );
 }
 
 void ImapParserTest::testParseString( )
