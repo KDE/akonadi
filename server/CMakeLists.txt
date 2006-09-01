@@ -22,6 +22,7 @@ set(libakonadiprivate_SRCS
   src/handler/append.cpp
   src/handler/create.cpp
   src/handler/capability.cpp
+  src/handler/delete.cpp
   src/handler/expunge.cpp
   src/handler/fetch.cpp
   src/handler/fetchquery.cpp

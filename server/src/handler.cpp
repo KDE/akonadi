@@ -24,6 +24,7 @@
 #include "handler/append.h"
 #include "handler/capability.h"
 #include "handler/create.h"
+#include "handler/delete.h"
 #include "handler/expunge.h"
 #include "handler/fetch.h"
 #include "handler/list.h"
@@ -119,6 +120,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new Store();
     if ( command == "STATUS" )
         return new Status();
+    if ( command == "DELETE" )
+      return new Delete();
 
     return 0;
 }
