@@ -84,6 +84,7 @@ class ProcessControl : public QObject
     void slotError( QProcess::ProcessError );
     void slotFinished( int, QProcess::ExitStatus );
     void slotErrorMessages();
+    void slotStdoutMessages();
 
   private:
     void start();

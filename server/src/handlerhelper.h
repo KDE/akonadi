@@ -29,12 +29,6 @@ class HandlerHelper
 {
   public:
     static QList<QByteArray> splitLine( const QByteArray &line );
-    /**
-      Copied from libakonadi/imapparser.h!
-      @todo Share this stuff somehow!
-    */
-    static int parseQuotedString( const QByteArray &data, QByteArray &result, int start = 0 );
-    static int stripLeadingSpaces( const QByteArray &data, int start = 0 );
 };
 
 }

@@ -19,6 +19,8 @@
 
 #include "processcontrol.h"
 
+#include <QDebug>
+
 using namespace Akonadi;
 
 ProcessControl::ProcessControl( QObject *parent )
@@ -30,6 +32,8 @@ ProcessControl::ProcessControl( QObject *parent )
            this, SLOT( slotFinished( int, QProcess::ExitStatus ) ) );
   connect( &mProcess, SIGNAL( readyReadStandardError() ),
            this, SLOT( slotErrorMessages() ) );
+  connect( &mProcess, SIGNAL( readyReadStandardOutput() ),
+            this, SLOT( slotStdoutMessages() ) );
 }
 
 ProcessControl::~ProcessControl()
@@ -89,7 +93,9 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
 
 void ProcessControl::slotErrorMessages()
 {
-  emit processErrorMessages( QString::fromUtf8( mProcess.readAllStandardError() ) );
+  QString message = QString::fromUtf8( mProcess.readAllStandardError() );
+  emit processErrorMessages( message );
+  qDebug() << mApplication << "[err]" << message;
 }
 
 void ProcessControl::start()
@@ -100,6 +106,12 @@ void ProcessControl::start()
             qPrintable( mApplication ), qPrintable( mProcess.errorString() ) );
     return;
   }
+}
+
+void Akonadi::ProcessControl::slotStdoutMessages()
+{
+  QString message = QString::fromUtf8( mProcess.readAllStandardOutput() );
+  qDebug() << mApplication << "[out]" << message;
 }
 
 #include "processcontrol.moc"

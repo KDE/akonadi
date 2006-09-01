@@ -25,7 +25,7 @@
 
 #include "status.h"
 #include "response.h"
-#include "handlerhelper.h"
+#include "imapparser.h"
 
 using namespace Akonadi;
 
@@ -50,7 +50,7 @@ bool Status::handleLine( const QByteArray& line )
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     QByteArray mailbox;
-    const int endOfMailbox = HandlerHelper::parseQuotedString( line, mailbox, startOfMailbox );
+    const int endOfMailbox = PIM::ImapParser::parseQuotedString( line, mailbox, startOfMailbox );
     const QByteArray statusAttributes = line.mid( endOfMailbox + 2, line.size() - ( endOfMailbox + 2 ) - 1 );
     const QList<QByteArray> attributeList = statusAttributes.split( ' ' );
 

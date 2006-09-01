@@ -25,7 +25,7 @@
 
 #include "append.h"
 #include "response.h"
-#include "handlerhelper.h"
+#include "imapparser.h"
 
 using namespace Akonadi;
 
@@ -118,7 +118,7 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
 
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    const int startOfFlags = HandlerHelper::parseQuotedString( line, m_mailbox, startOfMailbox ) + 1;
+    const int startOfFlags = PIM::ImapParser::parseQuotedString( line, m_mailbox, startOfMailbox ) + 1;
 
     // parse optional flag parenthesized list
     // Syntax:

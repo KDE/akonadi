@@ -20,7 +20,7 @@
 #include "delete.h"
 
 #include <akonadiconnection.h>
-#include <handlerhelper.h>
+#include <imapparser.h>
 #include <response.h>
 #include <storage/datastore.h>
 #include <storage/entity.h>
@@ -38,7 +38,7 @@ bool Akonadi::Delete::handleLine(const QByteArray & line)
   int begin = line.indexOf( " DELETE" ) + 7;
   QByteArray collection;
   if ( line.length() > begin )
-    HandlerHelper::parseQuotedString( line, collection, begin );
+    PIM::ImapParser::parseQuotedString( line, collection, begin );
 
   // normalize collection name
   if ( collection.startsWith( '/' )  )
