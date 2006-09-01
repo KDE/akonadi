@@ -50,7 +50,9 @@ DataStore::DataStore()
 
 void DataStore::init()
 {
-  m_database = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
+  m_connectionName = QUuid::createUuid().toString() + QString::number( reinterpret_cast<qulonglong>( QThread::currentThread() ) );
+  Q_ASSERT( !QSqlDatabase::contains( m_connectionName ) );
+  m_database = QSqlDatabase::addDatabase( "QSQLITE", m_connectionName );
   m_database.setDatabaseName( storagePath() );
   m_dbOpened = m_database.open();
 
@@ -70,6 +72,8 @@ void DataStore::init()
 DataStore::~DataStore()
 {
   m_database.close();
+  m_database = QSqlDatabase();
+  QSqlDatabase::removeDatabase( m_connectionName );
 }
 
 QString DataStore::storagePath()

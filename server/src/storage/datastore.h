@@ -230,8 +230,7 @@ private:
     static QDateTime dateTimeToQDateTime( const QByteArray & dateTime );
 
 private:
-    static DataStore * ds_instance;
-
+    QString m_connectionName;
     QSqlDatabase m_database;
     bool m_dbOpened;
 };

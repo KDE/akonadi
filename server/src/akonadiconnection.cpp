@@ -52,12 +52,12 @@ DataStore * Akonadi::AkonadiConnection::storageBackend()
 }
 
 
-
 AkonadiConnection::~AkonadiConnection()
 {
     Tracer::self()->endConnection( m_identifier, QString() );
 
     delete m_tcpSocket;
+    delete m_backend;
 }
 
 void AkonadiConnection::run()
