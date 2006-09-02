@@ -46,3 +46,13 @@ QList<QByteArray> HandlerHelper::splitLine( const QByteArray &line )
 
   return retval;
 }
+
+QByteArray Akonadi::HandlerHelper::normalizeCollectionName(const QByteArray &name)
+{
+  QByteArray collection = name;
+  if ( collection.startsWith( '/' )  )
+    collection = collection.right( collection.length() - 1 );
+  if ( collection.endsWith( '/' ) )
+    collection = collection.left( collection.length() - 1 );
+  return collection;
+}

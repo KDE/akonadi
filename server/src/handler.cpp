@@ -30,6 +30,7 @@
 #include "handler/list.h"
 #include "handler/login.h"
 #include "handler/logout.h"
+#include "handler/modify.h"
 #include "handler/noop.h"
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
@@ -122,6 +123,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new Status();
     if ( command == "DELETE" )
       return new Delete();
+    if ( command == "MODIFY" )
+      return new Modify();
 
     return 0;
 }

@@ -17,55 +17,60 @@
     02110-1301, USA.
 */
 
-#include "delete.h"
+#include "modify.h"
 
 #include <akonadiconnection.h>
-#include <handlerhelper.h>
-#include <imapparser.h>
-#include <response.h>
 #include <storage/datastore.h>
 #include <storage/entity.h>
+#include <imapparser.h>
+#include <handlerhelper.h>
+#include <response.h>
 
-Akonadi::Delete::Delete() : Handler()
+using namespace Akonadi;
+
+Akonadi::Modify::Modify()
 {
 }
 
-Akonadi::Delete::~Delete()
+Akonadi::Modify::~ Modify()
 {
 }
 
-bool Akonadi::Delete::handleLine(const QByteArray & line)
+bool Akonadi::Modify::handleLine(const QByteArray & line)
 {
-  int begin = line.indexOf( " DELETE" ) + 7;
+  int pos = line.indexOf( ' ' ) + 1; // skip tag
+  pos = line.indexOf( ' ', pos ); // skip command
+  if ( pos < 0 )
+    return failureResponse( "Invalid syntax" );
+
   QByteArray collection;
-  if ( line.length() > begin )
-    PIM::ImapParser::parseQuotedString( line, collection, begin );
+  pos = PIM::ImapParser::parseQuotedString( line, collection, pos );
   collection = HandlerHelper::normalizeCollectionName( collection );
 
-  // prevent deletion of the root node
   if ( collection.isEmpty() )
-    return failureResponse( "Deleting everything is not allowed." );
+    return failureResponse( "Cannot modify root collection." );
 
-  // check if collection exists
   DataStore *db = connection()->storageBackend();
   Location location = db->locationByName( collection );
   if ( !location.isValid() )
     return failureResponse( "No such collection." );
 
-  // delete all child collections
-  QList<Location> locations = db->listLocations();
-  collection += '/';
-  foreach ( Location location, locations ) {
-    if ( location.location().startsWith( collection ) )
-      db->cleanupLocation( location );
+  while ( pos < line.length() ) {
+    QByteArray type;
+    pos = PIM::ImapParser::parseString( line, type, pos );
+    if ( type == "MIMETYPES" ) {
+      QList<QByteArray> mimeTypes;
+      pos = PIM::ImapParser::parseParenthesizedList( line, mimeTypes, pos );
+      db->removeMimeTypesForLocation( location.id() );
+      foreach ( QByteArray ba, mimeTypes )
+        db->appendMimeTypeForLocation( location.id(), QString::fromUtf8(ba) );
+    } else
+      return failureResponse( "Unknown modify type" );
   }
-
-  db->cleanupLocation( location );
 
   Response response;
   response.setTag( tag() );
-  response.setString( "DELETE completed" );
+  response.setString( "MODIFY done" );
   emit responseAvailable( response );
-  deleteLater();
   return true;
 }
