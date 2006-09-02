@@ -24,6 +24,7 @@
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectionlistjob.h"
+#include "collectionmodifyjob.h"
 #include "collectionstatusjob.h"
 #include "messagecollectionattribute.h"
 
@@ -298,6 +299,44 @@ void CollectionJobTest::testStatus()
   QVERIFY( mimeTypes.contains( "text/calendar" ) );
   QVERIFY( mimeTypes.contains( "text/vcard" ) );
   QVERIFY( mimeTypes.contains( "message/rfc822" ) );
+}
+
+void CollectionJobTest::testModify()
+{
+  QList<QByteArray> reference;
+  reference << "text/calendar" << "text/vcard" << "message/rfc822";
+
+  // test noop modify
+  CollectionModifyJob *mod = new CollectionModifyJob( "res1/foo", this );
+  QVERIFY( mod->exec() );
+  delete mod;
+
+  CollectionStatusJob *status = new CollectionStatusJob( "res1/foo", this );
+  QVERIFY( status->exec() );
+  QCOMPARE( status->mimeTypes(), reference );
+  delete status;
+
+  // test clearing content types
+  mod = new CollectionModifyJob( "res1/foo", this );
+  mod->setContentTypes( QList<QByteArray>() );
+  QVERIFY( mod->exec() );
+  delete mod;
+
+  status = new CollectionStatusJob( "res1/foo", this );
+  QVERIFY( status->exec() );
+  QVERIFY( status->mimeTypes().isEmpty() );
+  delete status;
+
+  // test setting contnet types
+  mod = new CollectionModifyJob( "res1/foo", this );
+  mod->setContentTypes( reference );
+  QVERIFY( mod->exec() );
+  delete mod;
+
+  status = new CollectionStatusJob( "res1/foo", this );
+  QVERIFY( status->exec() );
+  QCOMPARE( status->mimeTypes(), reference );
+  delete status;
 }
 
 

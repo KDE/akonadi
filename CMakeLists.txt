@@ -25,6 +25,7 @@ set( akonadi_LIB_SRC
 	collectiondeletejob.cpp
 	collectionlistjob.cpp
 	collectionmodel.cpp
+	collectionmodifyjob.cpp
 	collectionrenamejob.cpp
 	collectionselectjob.cpp
 	collectionstatusjob.cpp
@@ -68,8 +69,10 @@ install( FILES
 	collection.h
 	collectionattribute.h
 	collectioncreatejob.h
+	collectiondeletejob.h
 	collectionlistjob.h
 	collectionmodel.h
+	collectionmodifyjob.h
 	collectionrenamejob.h
 	collectionselectjob.h
 	collectionstatusjob.h
