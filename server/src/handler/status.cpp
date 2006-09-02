@@ -103,6 +103,13 @@ bool Status::handleLine( const QByteArray& line )
             statusResponse += "UNSEEN ";
         statusResponse += QString::number( l.unseen() );
     }
+    if ( attributeList.contains( "MIMETYPES" ) ) {
+      if ( !statusResponse.isEmpty() )
+        statusResponse += ' ';
+      statusResponse += "MIMETYPES (";
+      statusResponse += MimeType::asCommaSeparatedString( l.mimeTypes() );
+      statusResponse += ')';
+    }
 
     response.setUntagged();
     response.setString( "STATUS " + mailbox + " (" + statusResponse + ')' );
