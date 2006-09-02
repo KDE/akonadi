@@ -75,10 +75,7 @@ void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const Q
         else if ( list[i] == "UNSEEN" ) {
           attr->setUnreadCount( list[i+1].toInt() );
         } else if ( list[i] == "MIMETYPES" ) {
-          QByteArray data = list[i + 1];
-          data = data.mid( 1, data.size() - 2 );
-          if ( !data.isEmpty() )
-            d->mimeTypes = data.split( ',' );
+          ImapParser::parseParenthesizedList( list[i + 1], d->mimeTypes );
         } else {
           qDebug() << "unknown STATUS response: " << list[i];
         }

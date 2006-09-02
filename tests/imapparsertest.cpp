@@ -155,6 +155,12 @@ void ImapParserTest::testParseParenthesizedList( )
   reference << "entry3";
   QCOMPARE( result, reference );
   QCOMPARE( consumed, 47 );
+
+  // no list at all
+  input = "some list-less text";
+  consumed = ImapParser::parseParenthesizedList( input, result, 0 );
+  QVERIFY( result.isEmpty() );
+  QCOMPARE( consumed, 0 );
 }
 
 

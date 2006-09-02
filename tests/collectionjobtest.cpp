@@ -224,6 +224,24 @@ void CollectionJobTest::testCreateDeleteFolder( )
   QVERIFY( ljob->exec() );
   QVERIFY( findCol( ljob->collections(), "res3/foo" ) == 0 );
 
+  // folder with mime types
+  job = new CollectionCreateJob( "res3/mail folder", this );
+  QList<QByteArray> mimeTypes;
+  mimeTypes << "inode/directory" << "message/rfc822";
+  job->setContentTypes( mimeTypes );
+  QVERIFY( job->exec() );
+  delete job;
+
+  CollectionStatusJob *status = new CollectionStatusJob( "res3/mail folder", this );
+  QVERIFY( status->exec() );
+  QList<QByteArray> mimeTypes2 = status->mimeTypes();
+  delete status;
+  QCOMPARE( mimeTypes2.count(), 2 );
+  QCOMPARE( mimeTypes, mimeTypes2 );
+
+  del = new CollectionDeleteJob( "res3/mail folder", this );
+  QVERIFY( del->exec() );
+  delete del;
 }
 
 void CollectionJobTest::testCreateDeleteFolderRecursive()

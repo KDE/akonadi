@@ -18,6 +18,7 @@
 */
 
 #include "collectioncreatejob.h"
+#include "imapparser.h"
 
 #include <QDebug>
 
@@ -26,6 +27,7 @@ using namespace PIM;
 class PIM::CollectionCreateJobPrivate {
   public:
     QByteArray path;
+    QList<QByteArray> contentTypes;
 };
 
 PIM::CollectionCreateJob::CollectionCreateJob( const QByteArray & path, QObject * parent ) :
@@ -42,7 +44,10 @@ PIM::CollectionCreateJob::~ CollectionCreateJob( )
 
 void PIM::CollectionCreateJob::doStart( )
 {
-  writeData( newTag() + " CREATE \"" + d->path + "\"" );
+  QByteArray command = newTag() + " CREATE \"" + d->path + "\"";
+  if ( !d->contentTypes.isEmpty() )
+    command += '(' + ImapParser::join( d->contentTypes, QByteArray(" ") ) + ')';
+  writeData( command );
 }
 
 void PIM::CollectionCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -53,6 +58,11 @@ void PIM::CollectionCreateJob::doHandleResponse( const QByteArray & tag, const Q
 QByteArray PIM::CollectionCreateJob::path( ) const
 {
   return d->path;
+}
+
+void PIM::CollectionCreateJob::setContentTypes(const QList< QByteArray > & contentTypes)
+{
+  d->contentTypes = contentTypes;
 }
 
 #include "collectioncreatejob.moc"
