@@ -157,13 +157,13 @@ QString MimeType::mimeType() const
   return m_mimetype;
 }
 
-QByteArray Akonadi::MimeType::asCommaSeparatedString( const QList<MimeType> &types )
+QByteArray Akonadi::MimeType::asCommaSeparatedString( const QList<MimeType> &types, const QByteArray &separator )
 {
   QStringList list;
   foreach ( MimeType mt, types )
     list.append( mt.mimeType() );
 
-  return list.join( "," ).toLatin1();
+  return list.join( separator ).toLatin1();
 }
 
 void MimeType::setMimeType( const QString & mimetype )
@@ -353,7 +353,7 @@ PimItem::~PimItem()
 {
 }
 
-int PimItem::mimeTypeId() const 
+int PimItem::mimeTypeId() const
 {
   return m_mimetype_id;
 }

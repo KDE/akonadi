@@ -78,6 +78,13 @@ class AKONADI_EXPORT ImapParser
       @param start start parsing from here.
     */
     static int parenthesesBalance( const QByteArray &data, int start = 0 );
+
+    /**
+      Joins a QByteArray list with the given separator.
+      @param list The QByteArray list to join.
+      @param separator The separator
+    */
+    static QByteArray join( const QList<QByteArray> &list, const QByteArray &separator );
 };
 
 }

@@ -24,6 +24,7 @@
 #include "storage/entity.h"
 
 #include "create.h"
+#include "imapparser.h"
 #include "response.h"
 
 using namespace Akonadi;
@@ -43,7 +44,11 @@ bool Create::handleLine(const QByteArray& line )
     // parse out the reference name and mailbox name
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QByteArray mailbox = stripQuotes( line.right( line.size() - startOfMailbox ) );
+    QByteArray mailbox;
+    const int pos = PIM::ImapParser::parseQuotedString( line, mailbox, startOfMailbox );
+    QList<QByteArray> mimeTypes;
+    PIM::ImapParser::parseParenthesizedList( line, mimeTypes, pos );
+    qDebug() << "mailbox: " << mailbox << " mimeTypes: " << mimeTypes << " pos: " << pos;
 
     // strip off a trailing '/'
     if ( !mailbox.isEmpty() && mailbox[0] == '/' )
@@ -117,8 +122,8 @@ bool Create::handleLine(const QByteArray& line )
         if ( ! db->appendLocation( folderName, resource, &locationId ) )
             return failureResponse( "Adding " + folderName + " to the database failed" );
         // FIXME what to do if appending the mime type fails?
-        db->appendMimeTypeForLocation( locationId, "inode/directory" );
-        // FIXME add more MIME types
+        foreach ( QByteArray mimeType, mimeTypes )
+          db->appendMimeTypeForLocation( locationId, QString::fromUtf8(mimeType) );
     }
 
     response.setSuccess();

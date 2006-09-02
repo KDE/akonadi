@@ -129,7 +129,7 @@ class MimeType : public Entity
     ~MimeType();
 
     QString mimeType() const;
-    static QByteArray asCommaSeparatedString( const QList<MimeType>& );
+    static QByteArray asCommaSeparatedString( const QList<MimeType> &types, const QByteArray &separator = QByteArray(",") );
 
   protected:
     void setMimeType( const QString & mimetype );

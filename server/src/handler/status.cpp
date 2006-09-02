@@ -107,7 +107,7 @@ bool Status::handleLine( const QByteArray& line )
       if ( !statusResponse.isEmpty() )
         statusResponse += ' ';
       statusResponse += "MIMETYPES (";
-      statusResponse += MimeType::asCommaSeparatedString( l.mimeTypes() );
+      statusResponse += MimeType::asCommaSeparatedString( l.mimeTypes(), " " );
       statusResponse += ')';
     }
 

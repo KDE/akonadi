@@ -27,6 +27,9 @@ int PIM::ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByt
 {
   result.clear();
   int begin = data.indexOf( '(', start );
+  if ( begin < 0 )
+    return start;
+
   int count = 0;
   int sublistbegin = start;
   for ( int i = begin + 1; i < data.length(); ++i ) {
@@ -161,5 +164,19 @@ int PIM::ImapParser::parenthesesBalance( const QByteArray & data, int start )
     }
   }
   return count;
+}
+
+QByteArray PIM::ImapParser::join(const QList< QByteArray > & list, const QByteArray & separator)
+{
+  if ( list.isEmpty() )
+    return QByteArray();
+
+  QByteArray result = list.first();
+  QList<QByteArray>::ConstIterator it = list.constBegin();
+  ++it;
+  for ( ; it != list.constEnd(); ++it )
+    result += separator + (*it);
+
+  return result;
 }
 
