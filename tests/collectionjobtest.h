@@ -35,6 +35,7 @@ class CollectionJobTest : public QObject
     void testIllegalCreateFolder();
     void testCreateDeleteFolder();
     void testCreateDeleteFolderRecursive();
+    void testStatus();
 };
 
 

@@ -242,7 +242,7 @@ void PIM::CollectionModel::collectionRemoved( const QByteArray &path )
   }
 }
 
-void PIM::CollectionModel::updateDone( Job * job )
+void PIM::CollectionModel::updateDone( PIM::Job * job )
 {
   if ( job->error() ) {
     // TODO: handle job errors
@@ -254,6 +254,7 @@ void PIM::CollectionModel::updateDone( Job * job )
       kWarning() << k_funcinfo << "Got status response for non-existing collection: " << path << endl;
     else {
       Collection *col = d->collections.value( path );
+      col->setContentTypes( csjob->mimeTypes() );
       foreach ( CollectionAttribute* attr, csjob->attributes() )
         col->addAttribute( attr );
 
@@ -290,12 +291,13 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
     qWarning() << "Job error: " << job->errorText() << endl;
   } else {
     Collection::List collections = static_cast<CollectionListJob*>( job )->collections();
-    qDebug() << "got " << collections.size() << "collections";
 
     // update model
     foreach( Collection* col, collections ) {
-      if ( d->collections.contains( col->path() ) )
-        collectionRemoved( col->path() );
+      if ( d->collections.contains( col->path() ) ) {
+        // collection already known
+        continue;
+      }
       d->collections.insert( col->path(), col );
       QModelIndex parentIndex = indexForPath( col->parent() );
       if ( parentIndex.isValid() || col->parent() == Collection::root() ) {
@@ -307,7 +309,6 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
       }
 
       // start a status job for every collection to get message counts, etc.
-      // ### do we need this for all collections?
       if ( col->type() != Collection::VirtualParent ) {
         CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->queue );
         connect( csjob, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
@@ -334,9 +335,9 @@ bool PIM::CollectionModel::setData( const QModelIndex & index, const QVariant & 
       newPath = d->editedCollection->name().toLatin1(); // TODO: to utf7
     else
       newPath = d->editedCollection->parent() + Collection::delimiter() + d->editedCollection->name().toLatin1(); // TODO: to utf7
-    CollectionRenameJob *job = new CollectionRenameJob( d->editedCollection->path(), newPath, this );
+    CollectionRenameJob *job = new CollectionRenameJob( d->editedCollection->path(), newPath, d->queue );
     connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
-    job->start();
+    d->queue->addJob( job );
     emit dataChanged( index, index );
     return true;
   }
@@ -400,9 +401,9 @@ bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const Q
   endInsertRows();
 
   // start creation job
-  CollectionCreateJob *job = new CollectionCreateJob( d->editedCollection->path(), this );
+  CollectionCreateJob *job = new CollectionCreateJob( d->editedCollection->path(), d->queue );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
-  job->start();
+  d->queue->addJob( job );
 
   d->currentEdit = Private::Create;
   return true;

@@ -31,6 +31,7 @@ class PIM::CollectionStatusJobPrivate
   public:
     QByteArray path;
     CollectionAttribute::List attributes;
+    QList<QByteArray> mimeTypes;
 };
 
 PIM::CollectionStatusJob::CollectionStatusJob( const QByteArray & path, QObject * parent ) :
@@ -52,7 +53,7 @@ QList< CollectionAttribute * > PIM::CollectionStatusJob::attributes( ) const
 
 void PIM::CollectionStatusJob::doStart( )
 {
-  writeData( newTag() + " STATUS \"" + d->path + "\" (MESSAGES UNSEEN)" );
+  writeData( newTag() + " STATUS \"" + d->path + "\" (MESSAGES UNSEEN MIMETYPES)" );
 }
 
 void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -73,6 +74,11 @@ void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const Q
         }
         else if ( list[i] == "UNSEEN" ) {
           attr->setUnreadCount( list[i+1].toInt() );
+        } else if ( list[i] == "MIMETYPES" ) {
+          QByteArray data = list[i + 1];
+          data = data.mid( 1, data.size() - 2 );
+          if ( !data.isEmpty() )
+            d->mimeTypes = data.split( ',' );
         } else {
           qDebug() << "unknown STATUS response: " << list[i];
         }
@@ -87,6 +93,11 @@ void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const Q
 QByteArray PIM::CollectionStatusJob::path( ) const
 {
   return d->path;
+}
+
+QList< QByteArray > PIM::CollectionStatusJob::mimeTypes() const
+{
+  return d->mimeTypes;
 }
 
 

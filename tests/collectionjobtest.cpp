@@ -24,6 +24,8 @@
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectionlistjob.h"
+#include "collectionstatusjob.h"
+#include "messagecollectionattribute.h"
 
 using namespace PIM;
 
@@ -244,6 +246,40 @@ void CollectionJobTest::testCreateDeleteFolderRecursive()
   QVERIFY( findCol( ljob->collections(), "res3/sub1" ) == 0 );
   QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2" ) == 0 );
   QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2/sub3" ) == 0 );
+}
+
+void CollectionJobTest::testStatus()
+{
+  // empty folder
+  CollectionStatusJob *status = new CollectionStatusJob( "res1", this );
+  QVERIFY( status->exec() );
+
+  QList<CollectionAttribute*> attrs = status->attributes();
+  QCOMPARE( attrs.count(), 1 );
+  MessageCollectionAttribute *attr = dynamic_cast<MessageCollectionAttribute*>( attrs.first() );
+  QVERIFY( attr != 0 );
+  QCOMPARE( attr->count(), 0 );
+  QCOMPARE( attr->unreadCount(), 0 );
+
+  qDebug() << "mimeTypes: " << status->mimeTypes();
+  QVERIFY( status->mimeTypes().isEmpty() );
+
+  // folder with attributes and content
+  status = new CollectionStatusJob( "res1/foo", this );
+  QVERIFY( status->exec() );
+
+  attrs = status->attributes();
+  QCOMPARE( attrs.count(), 1 );
+  attr = dynamic_cast<MessageCollectionAttribute*>( attrs.first() );
+  QVERIFY( attr != 0 );
+  QCOMPARE( attr->count(), 3 );
+  QCOMPARE( attr->unreadCount(), 0 );
+
+  QList<QByteArray> mimeTypes = status->mimeTypes();
+  QCOMPARE( mimeTypes.count(), 3 );
+  QVERIFY( mimeTypes.contains( "text/calendar" ) );
+  QVERIFY( mimeTypes.contains( "text/vcard" ) );
+  QVERIFY( mimeTypes.contains( "message/rfc822" ) );
 }
 
 
