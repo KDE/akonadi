@@ -48,11 +48,10 @@ bool Create::handleLine(const QByteArray& line )
     const int pos = PIM::ImapParser::parseQuotedString( line, mailbox, startOfMailbox );
     QList<QByteArray> mimeTypes;
     PIM::ImapParser::parseParenthesizedList( line, mimeTypes, pos );
-    qDebug() << "mailbox: " << mailbox << " mimeTypes: " << mimeTypes << " pos: " << pos;
 
     // strip off a trailing '/'
     if ( !mailbox.isEmpty() && mailbox[0] == '/' )
-      mailbox = mailbox.right( mailbox.size() - 1 );
+        mailbox = mailbox.right( mailbox.size() - 1 );
 
     // Responses:
     // OK - create completed
@@ -123,7 +122,7 @@ bool Create::handleLine(const QByteArray& line )
             return failureResponse( "Adding " + folderName + " to the database failed" );
         // FIXME what to do if appending the mime type fails?
         foreach ( QByteArray mimeType, mimeTypes )
-          db->appendMimeTypeForLocation( locationId, QString::fromUtf8(mimeType) );
+            db->appendMimeTypeForLocation( locationId, QString::fromUtf8(mimeType) );
     }
 
     response.setSuccess();
