@@ -25,7 +25,7 @@
 
 using namespace PIM;
 
-QTEST_KDEMAIN( ImapParserTest, NoGUI );
+QTEST_KDEMAIN( ImapParserTest, NoGUI )
 
 void ImapParserTest::testStripLeadingSpaces( )
 {
