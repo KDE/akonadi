@@ -26,6 +26,9 @@ using namespace PIM;
 int PIM::ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByteArray> &result, int start )
 {
   result.clear();
+  if ( start >= data.length() )
+    return data.length();
+
   int begin = data.indexOf( '(', start );
   if ( begin < 0 )
     return start;
@@ -61,6 +64,9 @@ int PIM::ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByt
 int PIM::ImapParser::parseString( const QByteArray & data, QByteArray & result, int start )
 {
   int begin = stripLeadingSpaces( data, start );
+  result.clear();
+  if ( begin >= data.length() )
+    return data.length();
 
   // literal string
   // TODO: error handling
@@ -89,6 +95,9 @@ int PIM::ImapParser::parseQuotedString( const QByteArray & data, QByteArray &res
 {
   int begin = stripLeadingSpaces( data, start );
   int end = begin;
+  result.clear();
+  if ( begin >= data.length() )
+    return data.length();
 
   // quoted string
   if ( data[begin] == '"' ) {
