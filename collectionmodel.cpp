@@ -199,6 +199,7 @@ bool PIM::CollectionModel::removeRows( int row, int count, const QModelIndex & p
   foreach ( QByteArray path, removeList ) {
     list.removeAll( path );
     delete d->collections.take( path );
+    d->childCollections.remove( path );
   }
   d->childCollections.insert( parentPath, list );
   endRemoveRows();
@@ -219,10 +220,14 @@ void PIM::CollectionModel::collectionChanged( const QByteArray &path )
     if ( index > 0 )
       parent = path.left( index );
     else
-      parent = Collection::prefix();
+      parent = Collection::root();
 
-    qDebug() << "Collection " << path << " changed - re-listing parent: " << parent;
+    // re-list parent non-recursively
     CollectionListJob *job = new CollectionListJob( parent, false, d->queue );
+    connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
+    d->queue->addJob( job );
+    // list the new collection recursively
+    job = new CollectionListJob( path, true, d->queue );
     connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
     d->queue->addJob( job );
   }
@@ -236,9 +241,11 @@ void PIM::CollectionModel::collectionRemoved( const QByteArray &path )
     // collection is still somewhere in the hierarchy
     removeRow( colIndex.row(), parentIndex );
   } else {
-    if ( d->collections.contains( path ) )
+    if ( d->collections.contains( path ) ) {
       // collection is orphan, ie. the parent has been removed already
       delete d->collections.take( path );
+      d->childCollections.remove( path );
+    }
   }
 }
 
