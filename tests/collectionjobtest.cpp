@@ -30,7 +30,7 @@
 
 using namespace PIM;
 
-QTEST_KDEMAIN( CollectionJobTest, NoGUI );
+QTEST_KDEMAIN( CollectionJobTest, NoGUI )
 
 static Collection* findCol( const Collection::List &list, const QByteArray &path ) {
   foreach ( Collection* col, list )
