@@ -33,7 +33,7 @@ class KnutResource : public ResourceBase
     ~KnutResource();
 
   public Q_SLOTS:
-    virtual bool requestItemDelivery( const QString&, const QString&, int );
+    virtual bool requestItemDelivery( const QString&, const QString&, const QString&, int );
 
     virtual void configure();
     virtual bool setConfiguration( const QString& );

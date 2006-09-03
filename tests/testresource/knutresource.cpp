@@ -58,7 +58,7 @@ QString KnutResource::configuration() const
   return mConfig;
 }
 
-bool KnutResource::requestItemDelivery( const QString&, const QString&, int )
+bool KnutResource::requestItemDelivery( const QString&, const QString&, const QString&, int )
 {
   return false;
 }
