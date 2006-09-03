@@ -28,7 +28,7 @@ using namespace PIM;
 
 #include <qtest_kde.h>
 
-QTEST_KDEMAIN( ItemAppendTest, NoGUI );
+QTEST_KDEMAIN( ItemAppendTest, NoGUI )
 
 void ItemAppendTest::testItemAppend()
 {

@@ -31,7 +31,7 @@ using namespace PIM;
 
 #include <qtest_kde.h>
 
-QTEST_KDEMAIN( MessageJobTest, NoGUI );
+QTEST_KDEMAIN( MessageJobTest, NoGUI )
 
 void MessageJobTest::testMessageFetch( )
 {

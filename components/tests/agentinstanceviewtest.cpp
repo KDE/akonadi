@@ -66,6 +66,6 @@ int main( int argc, char **argv )
   dlg.exec();
 
   return 0;
-};
+}
 
 #include "agentinstanceviewtest.moc"
