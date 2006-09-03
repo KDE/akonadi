@@ -203,7 +203,7 @@ protected:
     void debugLastDbError( const QString & actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const QString & actionDescription ) const;
     bool removeById( int id, const QString & tableName );
-    QByteArray retrieveDataFromResource( const QByteArray& remote_id,
+    QByteArray retrieveDataFromResource( const QByteArray &uid, const QByteArray& remote_id,
                                          int locationid, FetchQuery::Type type );
 
 private:

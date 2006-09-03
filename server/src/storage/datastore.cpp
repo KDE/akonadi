@@ -1223,7 +1223,7 @@ QString fieldNameForDataType( FetchQuery::Type type )
   return "data";
 }
 
-QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray& remote_id,
+QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray &uid, const QByteArray& remote_id,
                                                          int locationid, FetchQuery::Type type )
 {
   org::kde::Akonadi::AgentManager agentManager( "org.kde.Akonadi.Control", "/AgentManager", QDBusConnection::sessionBus() );
@@ -1231,7 +1231,7 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray& remot
   Location l = locationById( locationid );
   Resource r = resourceById( l.resourceId() );
   QByteArray data;
-  if ( agentManager.requestItemDelivery( r.resource(), l.location(), remote_id, type ) ) {
+  if ( agentManager.requestItemDelivery( r.resource(), uid, remote_id, l.location(), type ) ) {
     // wait for the delivery to be done...
     //QEventLoop loop( this );
    // connect( this, SIGNAL( done( PIM::Job* ) ), &loop, SLOT( quit( ) ) );
@@ -1272,7 +1272,7 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
   if ( v.isValid() ) {
       data = v.toByteArray();
   } else {
-      data = retrieveDataFromResource( remote_id, location, type );
+      data = retrieveDataFromResource( QByteArray::number( id ), remote_id, location, type );
   }
 
   return PimItem( pimItemId, remote_id, data, location, mimetype, dateTime );

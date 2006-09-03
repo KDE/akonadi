@@ -519,7 +519,8 @@ void AgentManager::save()
   file.sync();
 }
 
-bool AgentManager::requestItemDelivery( const QString & agentIdentifier, const QString & itemIdentifier, const QString & collection, int type )
+bool AgentManager::requestItemDelivery( const QString & agentIdentifier, const QString & uid,
+                                        const QString &remoteId, const QString & collection, int type )
 {
   if ( !mInstances.contains( agentIdentifier ) ) {
     mTracer->warning( QLatin1String( "AgentManager::requestItemDelivery" ),
@@ -534,7 +535,7 @@ bool AgentManager::requestItemDelivery( const QString & agentIdentifier, const Q
   }
 
   if ( mInstances[ agentIdentifier ].interface )
-    return mInstances[ agentIdentifier ].interface->requestItemDelivery( itemIdentifier, collection, type );
+    return mInstances[ agentIdentifier ].interface->requestItemDelivery( uid, remoteId, collection, type );
   else {
     mTracer->error( QLatin1String( "AgentManager::requestItemDelivery" ),
                     QString( "Agent instance '%1' has no interface!" ).arg( agentIdentifier ) );
