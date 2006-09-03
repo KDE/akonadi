@@ -32,6 +32,7 @@
 #include "handler/logout.h"
 #include "handler/modify.h"
 #include "handler/noop.h"
+#include "handler/rename.h"
 #include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
@@ -125,6 +126,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new Delete();
     if ( command == "MODIFY" )
       return new Modify();
+    if ( command == "RENAME" )
+      return new Rename();
 
     return 0;
 }

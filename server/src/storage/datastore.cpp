@@ -717,6 +717,23 @@ bool DataStore::resetLocationPolicy( const Location & location )
   return true;
 }
 
+bool Akonadi::DataStore::renameLocation(const Location & location, const QString & newName)
+{
+  if ( !m_dbOpened )
+    return false;
+
+  QSqlQuery query( m_database );
+  query.prepare( "UPDATE Locations SET uri = :name WHERE id = :id" );
+  query.bindValue( ":id", location.id() );
+  query.bindValue( ":name", newName );
+  if ( !query.exec() ) {
+    debugLastQueryError( query, "Error during renaming of a single location." );
+    return false;
+  }
+
+  return true;
+}
+
 Location DataStore::locationById( int id ) const
 {
   if ( !m_dbOpened )

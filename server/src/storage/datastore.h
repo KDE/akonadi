@@ -94,6 +94,8 @@ public:
     bool updateLocationCounts( const Location & location, int existsChange, int recentChange, int unseenChange );
     bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
+    /// rename the collection @p location to @p newName.
+    bool renameLocation( const Location &location, const QString &newName );
     Location locationById( int id ) const;
     Location locationByName( const QByteArray& name ) const;
     Location locationByRawMailbox( const QByteArray& mailbox ) const;

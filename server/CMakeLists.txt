@@ -31,6 +31,7 @@ set(libakonadiprivate_SRCS
   src/handler/logout.cpp
   src/handler/modify.cpp
   src/handler/noop.cpp
+  src/handler/rename.cpp
   src/handler/search.cpp
   src/handler/searchhelper.cpp
   src/handler/searchpersistent.cpp
