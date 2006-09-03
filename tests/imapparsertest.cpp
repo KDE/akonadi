@@ -47,6 +47,10 @@ void ImapParserTest::testStripLeadingSpaces( )
   // trailing spaces
   result = ImapParser::stripLeadingSpaces( input, 3 );
   QCOMPARE( result, 5 );
+
+  // out of bounds access
+  result = ImapParser::stripLeadingSpaces( input, input.length() );
+  QCOMPARE( result, input.length() );
 }
 
 void ImapParserTest::testParseQuotedString( )
@@ -99,6 +103,11 @@ void ImapParserTest::testParseQuotedString( )
   consumed = ImapParser::parseQuotedString( input, result, 4 );
   QCOMPARE( result, QByteArray( "string" ) );
   QCOMPARE( consumed, 11 );
+
+  // out of bounds access
+  consumed = ImapParser::parseQuotedString( input, result, input.length() );
+  QVERIFY( result.isEmpty() );
+  QCOMPARE( consumed, input.length() );
 }
 
 void ImapParserTest::testParseString( )
@@ -126,6 +135,11 @@ void ImapParserTest::testParseString( )
   consumed = ImapParser::parseString( input, result, 29 );
   QCOMPARE( result, QByteArray( "" ) );
   QCOMPARE( consumed, 34 );
+
+  // out of bounds access
+  consumed = ImapParser::parseString( input, result, input.length() );
+  QCOMPARE( result, QByteArray() );
+  QCOMPARE( consumed, input.length() );
 }
 
 void ImapParserTest::testParseParenthesizedList( )
@@ -161,6 +175,11 @@ void ImapParserTest::testParseParenthesizedList( )
   consumed = ImapParser::parseParenthesizedList( input, result, 0 );
   QVERIFY( result.isEmpty() );
   QCOMPARE( consumed, 0 );
+
+  // out of bounds access
+  consumed = ImapParser::parseParenthesizedList( input, result, input.length() );
+  QVERIFY( result.isEmpty() );
+  QCOMPARE( consumed, input.length() );
 }
 
 
