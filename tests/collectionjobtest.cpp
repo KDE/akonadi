@@ -48,6 +48,16 @@ template <class T> static void compareLists( const QList<T> &l1, const QList<T> 
   }
 }
 
+template <typename T> static T* extractAttribute( QList<CollectionAttribute*> attrs )
+{
+  T dummy;
+  foreach ( CollectionAttribute* attr, attrs ) {
+    if ( attr->type() == dummy.type() )
+      return dynamic_cast<T*>( attr );
+  }
+  return 0;
+}
+
  // ### These tests rely on an running akonadi server which uses the test database!!
 void CollectionJobTest::testTopLevelList( )
 {
@@ -235,10 +245,10 @@ void CollectionJobTest::testCreateDeleteFolder( )
 
   CollectionStatusJob *status = new CollectionStatusJob( "res3/mail folder", this );
   QVERIFY( status->exec() );
-  QList<QByteArray> mimeTypes2 = status->mimeTypes();
+  CollectionContentTypeAttribute *attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
+  QVERIFY( attr != 0 );
+  compareLists( attr->contentTypes(), mimeTypes );
   delete status;
-  QCOMPARE( mimeTypes2.count(), 2 );
-  QCOMPARE( mimeTypes, mimeTypes2 );
 
   del = new CollectionDeleteJob( "res3/mail folder", this );
   QVERIFY( del->exec() );
@@ -274,27 +284,30 @@ void CollectionJobTest::testStatus()
   QVERIFY( status->exec() );
 
   QList<CollectionAttribute*> attrs = status->attributes();
-  QCOMPARE( attrs.count(), 1 );
-  MessageCollectionAttribute *attr = dynamic_cast<MessageCollectionAttribute*>( attrs.first() );
-  QVERIFY( attr != 0 );
-  QCOMPARE( attr->count(), 0 );
-  QCOMPARE( attr->unreadCount(), 0 );
+  QCOMPARE( attrs.count(), 2 );
+  MessageCollectionAttribute *mcattr = extractAttribute<MessageCollectionAttribute>( attrs );
+  QVERIFY( mcattr != 0 );
+  QCOMPARE( mcattr->count(), 0 );
+  QCOMPARE( mcattr->unreadCount(), 0 );
 
-  qDebug() << "mimeTypes: " << status->mimeTypes();
-  QVERIFY( status->mimeTypes().isEmpty() );
+  CollectionContentTypeAttribute *ctattr = extractAttribute<CollectionContentTypeAttribute>( attrs );
+  QVERIFY( ctattr != 0 );
+  QVERIFY( ctattr->contentTypes().isEmpty() );
 
   // folder with attributes and content
   status = new CollectionStatusJob( "res1/foo", this );
   QVERIFY( status->exec() );
 
   attrs = status->attributes();
-  QCOMPARE( attrs.count(), 1 );
-  attr = dynamic_cast<MessageCollectionAttribute*>( attrs.first() );
-  QVERIFY( attr != 0 );
-  QCOMPARE( attr->count(), 3 );
-  QCOMPARE( attr->unreadCount(), 0 );
+  QCOMPARE( attrs.count(), 2 );
+  mcattr = extractAttribute<MessageCollectionAttribute>( attrs );
+  QVERIFY( mcattr != 0 );
+  QCOMPARE( mcattr->count(), 3 );
+  QCOMPARE( mcattr->unreadCount(), 0 );
 
-  QList<QByteArray> mimeTypes = status->mimeTypes();
+  ctattr = extractAttribute<CollectionContentTypeAttribute>( attrs );
+  QVERIFY( ctattr != 0 );
+  QList<QByteArray> mimeTypes = ctattr->contentTypes();
   QCOMPARE( mimeTypes.count(), 3 );
   QVERIFY( mimeTypes.contains( "text/calendar" ) );
   QVERIFY( mimeTypes.contains( "text/vcard" ) );
@@ -313,7 +326,9 @@ void CollectionJobTest::testModify()
 
   CollectionStatusJob *status = new CollectionStatusJob( "res1/foo", this );
   QVERIFY( status->exec() );
-  QCOMPARE( status->mimeTypes(), reference );
+  CollectionContentTypeAttribute *attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
+  QVERIFY( attr != 0 );
+  compareLists( attr->contentTypes(), reference );
   delete status;
 
   // test clearing content types
@@ -324,7 +339,9 @@ void CollectionJobTest::testModify()
 
   status = new CollectionStatusJob( "res1/foo", this );
   QVERIFY( status->exec() );
-  QVERIFY( status->mimeTypes().isEmpty() );
+  attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
+  QVERIFY( attr != 0 );
+  QVERIFY( attr->contentTypes().isEmpty() );
   delete status;
 
   // test setting contnet types
@@ -335,7 +352,9 @@ void CollectionJobTest::testModify()
 
   status = new CollectionStatusJob( "res1/foo", this );
   QVERIFY( status->exec() );
-  QCOMPARE( status->mimeTypes(), reference );
+  attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
+  QVERIFY( attr != 0 );
+  compareLists( attr->contentTypes(), reference );
   delete status;
 }
 

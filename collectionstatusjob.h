@@ -59,11 +59,6 @@ class AKONADI_EXPORT CollectionStatusJob : public Job
     */
     QByteArray path() const;
 
-    /**
-      Returns the allowed content MIME types of the corresponding collection.
-    */
-    QList<QByteArray> mimeTypes() const;
-
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );

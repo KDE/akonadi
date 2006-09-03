@@ -254,7 +254,6 @@ void PIM::CollectionModel::updateDone( PIM::Job * job )
       kWarning() << k_funcinfo << "Got status response for non-existing collection: " << path << endl;
     else {
       Collection *col = d->collections.value( path );
-      col->setContentTypes( csjob->mimeTypes() );
       foreach ( CollectionAttribute* attr, csjob->attributes() )
         col->addAttribute( attr );
 

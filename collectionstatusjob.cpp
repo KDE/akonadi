@@ -31,7 +31,6 @@ class PIM::CollectionStatusJobPrivate
   public:
     QByteArray path;
     CollectionAttribute::List attributes;
-    QList<QByteArray> mimeTypes;
 };
 
 PIM::CollectionStatusJob::CollectionStatusJob( const QByteArray & path, QObject * parent ) :
@@ -67,20 +66,24 @@ void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const Q
       // result list
       QList<QByteArray> list;
       current = ImapParser::parseParenthesizedList( data, list, current );
-      MessageCollectionAttribute *attr = new MessageCollectionAttribute();
+      MessageCollectionAttribute *mcattr = new MessageCollectionAttribute();
+      CollectionContentTypeAttribute *ctattr = new CollectionContentTypeAttribute();
       for ( int i = 0; i < list.count() - 1; i += 2 ) {
         if ( list[i] == "MESSAGES" ) {
-          attr->setCount( list[i+1].toInt() );
+          mcattr->setCount( list[i+1].toInt() );
         }
         else if ( list[i] == "UNSEEN" ) {
-          attr->setUnreadCount( list[i+1].toInt() );
+          mcattr->setUnreadCount( list[i+1].toInt() );
         } else if ( list[i] == "MIMETYPES" ) {
-          ImapParser::parseParenthesizedList( list[i + 1], d->mimeTypes );
+          QList<QByteArray> mimeTypes;
+          ImapParser::parseParenthesizedList( list[i + 1], mimeTypes );
+          ctattr->setContentTypes( mimeTypes );
         } else {
           qDebug() << "unknown STATUS response: " << list[i];
         }
       }
-      d->attributes.append( attr );
+      d->attributes.append( mcattr );
+      d->attributes.append( ctattr );
       return;
     }
   }
@@ -91,12 +94,6 @@ QByteArray PIM::CollectionStatusJob::path( ) const
 {
   return d->path;
 }
-
-QList< QByteArray > PIM::CollectionStatusJob::mimeTypes() const
-{
-  return d->mimeTypes;
-}
-
 
 
 #include "collectionstatusjob.moc"
