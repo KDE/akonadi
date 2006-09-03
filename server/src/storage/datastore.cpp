@@ -722,6 +722,7 @@ bool Akonadi::DataStore::renameLocation(const Location & location, const QString
   if ( !m_dbOpened )
     return false;
 
+  QString oldName = location.location();
   QSqlQuery query( m_database );
   query.prepare( "UPDATE Locations SET uri = :name WHERE id = :id" );
   query.bindValue( ":id", location.id() );
@@ -731,6 +732,8 @@ bool Akonadi::DataStore::renameLocation(const Location & location, const QString
     return false;
   }
 
+  emit collectionRemoved( oldName.toUtf8() );
+  emit collectionAdded( newName.toUtf8() );
   return true;
 }
 

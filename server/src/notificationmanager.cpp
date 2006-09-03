@@ -108,8 +108,10 @@ void Akonadi::NotificationManager::slotCollectionAdded(const QByteArray & path)
 
 void Akonadi::NotificationManager::slotCollectionRemoved(const QByteArray & path)
 {
-  if ( isLocationMonitored( path ) )
+  if ( isLocationMonitored( path ) ) {
     emit collectionRemoved( path );
+    Tracer::self()->signal( "NotificationManager::collectionRemoved", "Location: " + path );
+  }
 }
 
 bool Akonadi::NotificationManager::isLocationMonitored(const QByteArray & location)
