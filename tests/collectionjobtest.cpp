@@ -25,6 +25,7 @@
 #include "collectiondeletejob.h"
 #include "collectionlistjob.h"
 #include "collectionmodifyjob.h"
+#include "collectionrenamejob.h"
 #include "collectionstatusjob.h"
 #include "messagecollectionattribute.h"
 
@@ -358,6 +359,49 @@ void CollectionJobTest::testModify()
   delete status;
 }
 
+void CollectionJobTest::testRename()
+{
+  CollectionRenameJob *rename = new CollectionRenameJob( "res1", "res1 (renamed)", this );
+  QVERIFY( rename->exec() );
+  delete rename;
 
+  CollectionListJob *ljob = new CollectionListJob( "res1 (renamed)", true );
+  QVERIFY( ljob->exec() );
+  Collection::List list = ljob->collections();
+  delete ljob;
+
+  QCOMPARE( list.count(), 4 );
+  QVERIFY( findCol( list, "res1 (renamed)/foo" ) != 0 );
+  QVERIFY( findCol( list, "res1 (renamed)/foo/bar" ) != 0 );
+  QVERIFY( findCol( list, "res1 (renamed)/foo/bla" ) != 0 );
+  QVERIFY( findCol( list, "res1 (renamed)/foo/bar/bla" ) != 0 );
+
+  // cleanup
+  rename = new CollectionRenameJob( "res1 (renamed)", "res1", this );
+  QVERIFY( rename->exec() );
+  delete rename;
+}
+
+void CollectionJobTest::testIllegalRename()
+{
+  // non-existing collection
+  CollectionRenameJob *rename = new CollectionRenameJob( "i dont exist", "i dont exist either", this );
+  QVERIFY( !rename->exec() );
+  delete rename;
+
+  // already existing target
+  rename = new CollectionRenameJob( "res1", "res2", this );
+  QVERIFY( !rename->exec() );
+  delete rename;
+
+  // root being source or target
+  rename = new CollectionRenameJob( Collection::root(), "some name", this );
+  QVERIFY( !rename->exec() );
+  delete rename;
+
+  rename = new CollectionRenameJob( "res1", Collection::root(), this );
+  QVERIFY( !rename->exec() );
+  delete rename;
+}
 
 #include "collectionjobtest.moc"
