@@ -166,7 +166,8 @@ class AgentManager : public QObject
      * identifier to the given @p collection as full or lightwight
      * version, depending on @p type.
      */
-    bool requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
+    bool requestItemDelivery( const QString &agentIdentifier, const QString &uid,
+                              const QString &remoteId,
                               const QString &collection, int type );
 
   Q_SIGNALS:

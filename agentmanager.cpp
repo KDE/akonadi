@@ -188,10 +188,11 @@ QString AgentManager::agentInstanceConfiguration( const QString &identifier ) co
   return d->mManager->agentInstanceConfiguration( identifier );
 }
 
-bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &itemIdentifier,
+bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &uid,
+                                        const QString &remoteId,
                                         const QString &collection, int type )
 {
-  return d->mManager->requestItemDelivery( agentIdentifier, itemIdentifier, collection, type );
+  return d->mManager->requestItemDelivery( agentIdentifier, uid, remoteId, collection, type );
 }
 
 #include "agentmanager.moc"
