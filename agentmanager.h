@@ -162,6 +162,12 @@ class AgentManager : public QObject
     QString agentInstanceConfiguration( const QString &identifier ) const;
 
     /**
+     * Triggers the agent instance with the given @p identifier to start
+     * synchronization.
+     */
+    void agentInstanceSynchronize( const QString &identifier );
+
+    /**
      * Asks the agent to store the item with the given
      * identifier to the given @p collection as full or lightwight
      * version, depending on @p type.

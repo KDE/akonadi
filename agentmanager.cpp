@@ -188,6 +188,11 @@ QString AgentManager::agentInstanceConfiguration( const QString &identifier ) co
   return d->mManager->agentInstanceConfiguration( identifier );
 }
 
+void AgentManager::agentInstanceSynchronize( const QString &identifier )
+{
+  d->mManager->agentInstanceSynchronize( identifier );
+}
+
 bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &uid,
                                         const QString &remoteId,
                                         const QString &collection, int type )
