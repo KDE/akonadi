@@ -17,8 +17,6 @@ set( akonadi_LIB_SRC
 	agentinstancemodel.cpp
 	agentmanager.cpp
 	agenttypemodel.cpp
-	datarequest.cpp
-	query.cpp
 	collection.cpp
 	collectionattribute.cpp
 	collectioncreatejob.cpp
@@ -64,8 +62,6 @@ install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 
 install( FILES
 	agentmanager.h
-	datarequest.h
-	query.h
 	collection.h
 	collectionattribute.h
 	collectioncreatejob.h
