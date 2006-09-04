@@ -91,6 +91,9 @@
       <arg type="s" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
     </method>
+    <method name="agentInstanceSynchronize">
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
     <method name="requestItemDelivery">
       <arg type="b" direction="out"/>
       <arg name="agentIdentifier" type="s" direction="in"/>

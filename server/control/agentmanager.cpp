@@ -317,6 +317,23 @@ QString AgentManager::agentInstanceConfiguration( const QString &identifier ) co
   return mInstances[ identifier ].interface->configuration();
 }
 
+void AgentManager::agentInstanceSynchronize( const QString &identifier )
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager::agentInstanceSynchronize" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return;
+  }
+
+  if ( !mInstances[ identifier ].interface ) {
+    mTracer->error( QLatin1String( "AgentManager::agentInstanceSynchronize" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    return;
+  }
+
+  mInstances[ identifier ].interface->synchronize();
+}
+
 void AgentManager::updatePluginInfos()
 {
   QMap<QString, PluginInfo> oldInfos = mPluginInfos;
