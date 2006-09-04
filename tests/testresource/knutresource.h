@@ -22,6 +22,8 @@
 
 #include <resourcebase.h>
 
+class QTimer;
+
 namespace PIM {
 
 class KnutResource : public ResourceBase
@@ -39,11 +41,16 @@ class KnutResource : public ResourceBase
     virtual bool setConfiguration( const QString& );
     virtual QString configuration() const;
 
+    virtual void synchronize();
+
   private Q_SLOTS:
-    void timeout();
+    void statusTimeout();
+    void syncTimeout();
 
   private:
     QString mConfig;
+    QTimer *mStatusTimer;
+    QTimer *mSyncTimer;
 };
 
 }

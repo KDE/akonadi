@@ -27,12 +27,14 @@ using namespace PIM;
 KnutResource::KnutResource( const QString &id )
   : ResourceBase( id )
 {
-  QTimer *timer = new QTimer( this );
+  mStatusTimer = new QTimer( this );
+  connect( mStatusTimer, SIGNAL( timeout() ), this, SLOT( statusTimeout() ) );
 
-  connect( timer, SIGNAL( timeout() ), this, SLOT( timeout() ) );
+  mSyncTimer = new QTimer( this );
+  connect( mSyncTimer, SIGNAL( timeout() ), this, SLOT( syncTimeout() ) );
 
   int number = id.mid( 22 ).toInt();
-  timer->start( 5000 + ( 100*number ) );
+  mStatusTimer->start( 5000 + ( 100*number ) );
 }
 
 KnutResource::~KnutResource()
@@ -58,24 +60,55 @@ QString KnutResource::configuration() const
   return mConfig;
 }
 
+void KnutResource::synchronize()
+{
+  mSyncTimer->start( 2000 );
+}
+
 bool KnutResource::requestItemDelivery( const QString&, const QString&, const QString&, int )
 {
   return false;
 }
 
-void KnutResource::timeout()
+void KnutResource::statusTimeout()
 {
   static Status status = Ready;
 
   if ( status == Ready ) {
-    statusChanged( Syncing, tr( "Syncing with Kolab Server" ) );
+    changeStatus( Syncing, tr( "Syncing with Kolab Server" ) );
     status = Syncing;
   } else if ( status == Syncing ) {
-    statusChanged( Error, tr( "Unable to connect to Kolab Server" ) );
+    changeStatus( Error, tr( "Unable to connect to Kolab Server" ) );
     status = Error;
   } else if ( status == Error ) {
-    statusChanged( Ready, tr( "Data loaded successfully from Kolab Sever" ) );
+    changeStatus( Ready, tr( "Data loaded successfully from Kolab Sever" ) );
     status = Ready;
+  }
+}
+
+void KnutResource::syncTimeout()
+{
+  mStatusTimer->stop();
+
+  static int progress = 0;
+
+  if ( progress == 0 )
+    changeStatus( Syncing, "Syncing collection 'contacts'" );
+  else if ( progress == 1 )
+    changeStatus( Syncing, "Syncing collection 'events'" );
+  else if ( progress == 2 )
+    changeStatus( Syncing, "Syncing collection 'notes'" );
+  else if ( progress == 3 )
+    changeStatus( Syncing, "Syncing collection 'tasks'" );
+  else if ( progress == 4 )
+    changeStatus( Syncing, "Syncing collection 'journals'" );
+  else if ( progress == 5 )
+    changeStatus( Syncing, "Syncing collection 'mails'" );
+  
+  if ( progress == 5 ) {
+    progress = 0;
+    mSyncTimer->stop();
+    changeStatus( Ready );
   }
 }
 
