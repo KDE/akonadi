@@ -119,7 +119,8 @@ void AgentInstanceViewDelegate::paint( QPainter *painter, const QStyleOptionView
   painter->setRenderHint( QPainter::Antialiasing );
 
   const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
-  const QString status = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
+  int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
+  const QString statusMessage = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
 
   const QVariant data = index.model()->data( index, Qt::DecorationRole );
 
@@ -137,8 +138,8 @@ void AgentInstanceViewDelegate::paint( QPainter *painter, const QStyleOptionView
   painter->setFont( oldFont );
 
   fm = painter->fontMetrics();
-  int hc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, status ).height();
-  int wc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, status ).width();
+  int hc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, statusMessage ).height();
+  int wc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, statusMessage ).width();
   int wp = pixmap.width();
 
   QPen pen = painter->pen();
@@ -163,8 +164,22 @@ void AgentInstanceViewDelegate::paint( QPainter *painter, const QStyleOptionView
     painter->drawText( option.rect.x() + 5 + wp + 5, option.rect.y() + 7, wn, hn, Qt::AlignLeft, name );
   painter->setFont(oldFont);
 
-  if ( !status.isEmpty() )
-    painter->drawText( option.rect.x() + 5 + wp + 5, option.rect.y() + 7 + hn, wc, hc, Qt::AlignLeft, status );
+  static QPixmap readyPixmap = QIcon( ":/pics/ready.svg" ).pixmap( QSize( 16, 16 ) );
+  static QPixmap syncPixmap = QIcon( ":/pics/sync.svg" ).pixmap( QSize( 16, 16 ) );
+  static QPixmap errorPixmap = QIcon( ":/pics/error.svg" ).pixmap( QSize( 16, 16 ) );
+
+  QPixmap statusPixmap;
+  if ( status == 0 )
+    statusPixmap = readyPixmap;
+  else if ( status == 1 )
+    statusPixmap = syncPixmap;
+  else
+    statusPixmap = errorPixmap;
+
+  painter->drawPixmap( option.rect.x() + 5 + wp + 2, option.rect.y() + 7 + hn, statusPixmap );
+
+  if ( !statusMessage.isEmpty() )
+    painter->drawText( option.rect.x() + 5 + wp + 7 + 16, option.rect.y() + 7 + hn, wc, hc, Qt::AlignLeft, statusMessage );
 
   painter->setPen(pen);
 
