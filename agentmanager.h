@@ -132,6 +132,18 @@ class AgentManager : public QObject
     QString agentInstanceStatusMessage( const QString &identifier ) const;
 
     /**
+     * Returns the current progress of the agent with the given @p identifier
+     * in percentage.
+     */
+    uint agentInstanceProgress( const QString &identifier ) const;
+
+    /**
+     * Returns the i18n'ed description of the current progress of the agent with
+     * the given @p identifier.
+     */
+    QString agentInstanceProgressMessage( const QString &identifier ) const;
+
+    /**
      * Sets the @p name of the agent instance with the given @p identifier.
      */
     void setAgentInstanceName( const QString &identifier, const QString &name );
@@ -214,6 +226,16 @@ class AgentManager : public QObject
      * @param message The i18n'ed description of the new status.
      */
     void agentInstanceStatusChanged( const QString &agentIdentifier, AgentManager::Status status, const QString &message );
+
+    /**
+     * This signal is emitted whenever the progress of an agent instance has
+     * changed.
+     *
+     * @param agentIdentifier The identifier of the agent that has changed.
+     * @param progress The new progress in percentage.
+     * @param message The i18n'ed description of the new progress.
+     */
+    void agentInstanceProgressChanged( const QString &agentIdentifier, uint progress, const QString &message );
 
     /**
      * This signal is emitted whenever the name of the agent instance has changed.

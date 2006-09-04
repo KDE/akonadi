@@ -72,6 +72,8 @@ AgentManager::AgentManager( QObject *parent )
            this, SIGNAL( agentInstanceRemoved( const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceStatusChanged( const QString&, int, const QString& ) ),
            this, SLOT( agentInstanceStatusChanged( const QString&, int, const QString& ) ) );
+  connect( d->mManager, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ),
+           this, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
            this, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceConfigurationChanged( const QString&, const QString& ) ),
@@ -161,6 +163,16 @@ AgentManager::Status AgentManager::agentInstanceStatus( const QString &identifie
 QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) const
 {
   return d->mManager->agentInstanceStatusMessage( identifier );
+}
+
+uint AgentManager::agentInstanceProgress( const QString &identifier ) const
+{
+  return d->mManager->agentInstanceProgress( identifier );
+}
+
+QString AgentManager::agentInstanceProgressMessage( const QString &identifier ) const
+{
+  return d->mManager->agentInstanceProgressMessage( identifier );
 }
 
 void AgentManager::setAgentInstanceName( const QString &identifier, const QString &name )
