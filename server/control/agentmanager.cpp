@@ -241,6 +241,40 @@ QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) co
   return mInstances[ identifier ].interface->statusMessage();
 }
 
+uint AgentManager::agentInstanceProgress( const QString &identifier ) const
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager::agentInstanceProgress" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return 0;
+  }
+
+  if ( !mInstances[ identifier ].interface ) {
+    mTracer->error( QLatin1String( "AgentManager::agentInstanceProgress" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    return 0;
+  }
+
+  return mInstances[ identifier ].interface->progress();
+}
+
+QString AgentManager::agentInstanceProgressMessage( const QString &identifier ) const
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager::agentInstanceProgressMessage" ),
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return QString();
+  }
+
+  if ( !mInstances[ identifier ].interface ) {
+    mTracer->error( QLatin1String( "AgentManager::agentInstanceProgressMessage" ),
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    return QString();
+  }
+
+  return mInstances[ identifier ].interface->progressMessage();
+}
+
 void AgentManager::setAgentInstanceName( const QString &identifier, const QString &name )
 {
   if ( !mInstances.contains( identifier ) ) {
@@ -586,6 +620,8 @@ void AgentManager::resourceRegistered( const QString &name, const QString&, cons
 
   connect( interface, SIGNAL( statusChanged( int, const QString& ) ),
            this, SLOT( resourceStatusChanged( int, const QString& ) ) );
+  connect( interface, SIGNAL( progressChanged( int, const QString& ) ),
+           this, SLOT( resourceProgressChanged( int, const QString& ) ) );
   connect( interface, SIGNAL( configurationChanged( const QString& ) ),
            this, SLOT( resourceConfigurationChanged( const QString& ) ) );
 
@@ -611,6 +647,25 @@ void AgentManager::resourceStatusChanged( int status, const QString &message )
   }
 
   emit agentInstanceStatusChanged( identifier, status, message );
+}
+
+void AgentManager::resourceProgressChanged( uint progress, const QString &message )
+{
+  org::kde::Akonadi::Resource *resource = static_cast<org::kde::Akonadi::Resource*>( sender() );
+  if ( !resource ) {
+    mTracer->error( QLatin1String( "AgentManager::resourceProgressChanged" ),
+                    QLatin1String( "Got signal from unknown sender" ) );
+    return;
+  }
+
+  const QString identifier = resource->objectName();
+  if ( identifier.isEmpty() ) {
+    mTracer->error( QLatin1String( "AgentManager::resourceProgressChanged" ),
+                    QLatin1String( "Sender of statusChanged signal has no identifier" ) );
+    return;
+  }
+
+  emit agentInstanceProgressChanged( identifier, progress, message );
 }
 
 void AgentManager::resourceConfigurationChanged( const QString &data )

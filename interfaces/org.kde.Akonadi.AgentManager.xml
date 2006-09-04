@@ -18,6 +18,11 @@
       <arg name="status" type="i" direction="out"/>
       <arg name="message" type="s" direction="out"/>
     </signal>
+    <signal name="agentInstanceProgressChanged">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+      <arg name="progress" type="u" direction="out"/>
+      <arg name="message" type="s" direction="out"/>
+    </signal>
     <signal name="agentInstanceNameChanged">
       <arg name="agentIdentifier" type="s" direction="out"/>
       <arg name="name" type="s" direction="out"/>
@@ -68,6 +73,14 @@
       <arg name="identifier" type="s" direction="in"/>
     </method>
     <method name="agentInstanceStatusMessage">
+      <arg type="s" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="agentInstanceProgress">
+      <arg type="u" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="agentInstanceProgressMessage">
       <arg type="s" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
     </method>
