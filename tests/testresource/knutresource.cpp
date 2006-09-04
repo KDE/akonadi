@@ -94,18 +94,20 @@ void KnutResource::syncTimeout()
 
   if ( progress == 0 )
     changeStatus( Syncing, "Syncing collection 'contacts'" );
-  else if ( progress == 1 )
+  else if ( progress == 10 )
     changeStatus( Syncing, "Syncing collection 'events'" );
-  else if ( progress == 2 )
+  else if ( progress == 20 )
     changeStatus( Syncing, "Syncing collection 'notes'" );
-  else if ( progress == 3 )
+  else if ( progress == 30 )
     changeStatus( Syncing, "Syncing collection 'tasks'" );
-  else if ( progress == 4 )
+  else if ( progress == 40 )
     changeStatus( Syncing, "Syncing collection 'journals'" );
-  else if ( progress == 5 )
+  else if ( progress == 50 )
     changeStatus( Syncing, "Syncing collection 'mails'" );
-  
-  if ( progress == 5 ) {
+
+  changeProgress( (progress % 10) * 10 );
+
+  if ( progress == 50 ) {
     progress = 0;
     mSyncTimer->stop();
     changeStatus( Ready );
