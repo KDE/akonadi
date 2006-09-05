@@ -620,8 +620,8 @@ void AgentManager::resourceRegistered( const QString &name, const QString&, cons
 
   connect( interface, SIGNAL( statusChanged( int, const QString& ) ),
            this, SLOT( resourceStatusChanged( int, const QString& ) ) );
-  connect( interface, SIGNAL( progressChanged( int, const QString& ) ),
-           this, SLOT( resourceProgressChanged( int, const QString& ) ) );
+  connect( interface, SIGNAL( progressChanged( uint, const QString& ) ),
+           this, SLOT( resourceProgressChanged( uint, const QString& ) ) );
   connect( interface, SIGNAL( configurationChanged( const QString& ) ),
            this, SLOT( resourceConfigurationChanged( const QString& ) ) );
 
