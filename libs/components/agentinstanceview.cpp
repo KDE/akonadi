@@ -17,10 +17,13 @@
     02110-1301, USA.
 */
 
+#include <QtCore/QUrl>
+#include <QtGui/QAbstractTextDocumentLayout>
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QListView>
 #include <QtGui/QPainter>
+#include <QtGui/QTextDocument>
 
 #include <libakonadi/agentinstancemodel.h>
 
@@ -38,6 +41,8 @@ class AgentInstanceViewDelegate : public QAbstractItemDelegate
 
   private:
     void drawFocus( QPainter*, const QStyleOptionViewItem&, const QRect& ) const;
+
+    QTextDocument* document( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 };
 
 class AgentInstanceView::Private
@@ -106,9 +111,73 @@ QString AgentInstanceView::currentAgentInstance() const
   return index.model()->data( index, Qt::UserRole ).toString();
 }
 
+
+
+
+
 AgentInstanceViewDelegate::AgentInstanceViewDelegate( QObject *parent )
  : QAbstractItemDelegate( parent )
 {
+}
+
+QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &option, const QModelIndex &index ) const
+{
+  if ( !index.isValid() )
+    return 0;
+
+  const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
+  int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
+  const QString statusMessage = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
+
+  QTextDocument *document = new QTextDocument( 0 );
+
+  const QVariant data = index.model()->data( index, Qt::DecorationRole );
+  if ( data.isValid() && data.type() == QVariant::Icon ) {
+    document->addResource( QTextDocument::ImageResource, QUrl( "agent_icon" ),
+                           qvariant_cast<QIcon>( data ).pixmap( QSize( 64, 64 ) ) );
+  }
+
+  static QPixmap readyPixmap = QIcon( ":/pics/ready.svg" ).pixmap( QSize( 16, 16 ) );
+  static QPixmap syncPixmap = QIcon( ":/pics/sync.svg" ).pixmap( QSize( 16, 16 ) );
+  static QPixmap errorPixmap = QIcon( ":/pics/error.svg" ).pixmap( QSize( 16, 16 ) );
+
+  if ( status == 0 )
+    document->addResource( QTextDocument::ImageResource, QUrl( "status_icon" ), readyPixmap );
+  else if ( status == 1 )
+    document->addResource( QTextDocument::ImageResource, QUrl( "status_icon" ), syncPixmap );
+  else
+    document->addResource( QTextDocument::ImageResource, QUrl( "status_icon" ), errorPixmap );
+
+
+  QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
+  if ( cg == QPalette::Normal && !(option.state & QStyle::State_Active) )
+    cg = QPalette::Inactive;
+
+  QColor textColor;
+  if ( option.state & QStyle::State_Selected ) {
+    textColor = option.palette.color( cg, QPalette::HighlightedText );
+  } else {
+    textColor = option.palette.color( cg, QPalette::Text );
+  }
+
+  const QString content = QString(
+     "<html style=\"color:%1\">"
+     "<body>"
+     "<table>"
+     "<tr>"
+     "<td rowspan=\"2\"><img src=\"agent_icon\"></td>"
+     "<td><b>%2</b></td>"
+     "</tr>"
+     "<tr>"
+     "<td><img src=\"status_icon\"/> %3 (%4)</td>"
+     "</tr>"
+     "</table>"
+     "</body>"
+     "</html>" ).arg(textColor.name().toUpper()).arg( name ).arg( statusMessage ).arg( "foo" );
+
+  document->setHtml( content );
+
+  return document;
 }
 
 void AgentInstanceViewDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
@@ -116,70 +185,30 @@ void AgentInstanceViewDelegate::paint( QPainter *painter, const QStyleOptionView
   if ( !index.isValid() )
     return;
 
+  QTextDocument *doc = document( option, index );
+  if ( !doc )
+    return;
+
   painter->setRenderHint( QPainter::Antialiasing );
 
-  const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
-  int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
-  const QString statusMessage = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
-
-  const QVariant data = index.model()->data( index, Qt::DecorationRole );
-
-  QPixmap pixmap;
-  if ( data.isValid() && data.type() == QVariant::Icon )
-    pixmap = qvariant_cast<QIcon>( data ).pixmap( 64, 64 );
-
-  const QFont oldFont = painter->font();
-  QFont boldFont( oldFont );
-  boldFont.setBold( true );
-  painter->setFont( boldFont );
-  QFontMetrics fm = painter->fontMetrics();
-  int hn = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, name ).height();
-  int wn = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, name ).width();
-  painter->setFont( oldFont );
-
-  fm = painter->fontMetrics();
-  int hc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, statusMessage ).height();
-  int wc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, statusMessage ).width();
-  int wp = pixmap.width();
-
   QPen pen = painter->pen();
-  QPalette::ColorGroup cg = option.state & QStyle::State_Enabled
-                            ? QPalette::Normal : QPalette::Disabled;
-  if (cg == QPalette::Normal && !(option.state & QStyle::State_Active))
+
+  QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
+  if ( cg == QPalette::Normal && !(option.state & QStyle::State_Active) )
     cg = QPalette::Inactive;
-  if (option.state & QStyle::State_Selected) {
-    painter->fillRect(option.rect, option.palette.brush(cg, QPalette::Highlight));
-    painter->setPen(option.palette.color(cg, QPalette::HighlightedText));
+
+  if ( option.state & QStyle::State_Selected ) {
+    painter->fillRect( option.rect, option.palette.brush( cg, QPalette::Highlight ) );
+    painter->setPen( option.palette.color( cg, QPalette::HighlightedText ) );
   } else {
-    painter->setPen(option.palette.color(cg, QPalette::Text));
+    painter->setPen(option.palette.color( cg, QPalette::Text ) );
   }
 
-  QFont font = painter->font();
-  painter->setFont(option.font);
-
-  painter->drawPixmap( option.rect.x() + 5, option.rect.y() + 5, pixmap );
-
-  painter->setFont(boldFont);
-  if ( !name.isEmpty() )
-    painter->drawText( option.rect.x() + 5 + wp + 5, option.rect.y() + 7, wn, hn, Qt::AlignLeft, name );
-  painter->setFont(oldFont);
-
-  static QPixmap readyPixmap = QIcon( ":/pics/ready.svg" ).pixmap( QSize( 16, 16 ) );
-  static QPixmap syncPixmap = QIcon( ":/pics/sync.svg" ).pixmap( QSize( 16, 16 ) );
-  static QPixmap errorPixmap = QIcon( ":/pics/error.svg" ).pixmap( QSize( 16, 16 ) );
-
-  QPixmap statusPixmap;
-  if ( status == 0 )
-    statusPixmap = readyPixmap;
-  else if ( status == 1 )
-    statusPixmap = syncPixmap;
-  else
-    statusPixmap = errorPixmap;
-
-  painter->drawPixmap( option.rect.x() + 5 + wp + 2, option.rect.y() + 7 + hn, statusPixmap );
-
-  if ( !statusMessage.isEmpty() )
-    painter->drawText( option.rect.x() + 5 + wp + 7 + 16, option.rect.y() + 7 + hn, wc, hc, Qt::AlignLeft, statusMessage );
+  painter->save();
+  painter->translate( option.rect.topLeft() );
+  doc->drawContents( painter );
+  delete doc;
+  painter->restore();
 
   painter->setPen(pen);
 
@@ -191,46 +220,27 @@ QSize AgentInstanceViewDelegate::sizeHint( const QStyleOptionViewItem &option, c
   if ( !index.isValid() )
     return QSize( 0, 0 );
 
-  const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
-  const QString status = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
+  QTextDocument *doc = document( option, index );
+  if ( !doc )
+    return QSize( 0, 0 );
 
-  QFontMetrics fm = option.fontMetrics;
-  int hn = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, name ).height();
-  int wn = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, name ).width();
-  int hc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, status ).height();
-  int wc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, status ).width();
+  const QSize size = doc->documentLayout()->documentSize().toSize();
+  delete doc;
 
-  int width = 0;
-  int height = 0;
-
-  if ( !name.isEmpty() ) {
-    height += hn;
-    width = qMax( width, wn );
-  }
-
-  if ( !status.isEmpty() ) {
-    height += hc;
-    width = qMax( width, wc );
-  }
-
-  height = qMax( height, 64 ) + 10;
-  width += 64 + 15;
-
-  return QSize( width, height );
+  return size;
 }
 
 void AgentInstanceViewDelegate::drawFocus( QPainter *painter, const QStyleOptionViewItem &option, const QRect &rect ) const
 {
-  if (option.state & QStyle::State_HasFocus) {
+  if ( option.state & QStyle::State_HasFocus ) {
     QStyleOptionFocusRect o;
-    o.QStyleOption::operator=(option);
+    o.QStyleOption::operator=( option );
     o.rect = rect;
     o.state |= QStyle::State_KeyboardFocusChange;
-    QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled)
-                              ? QPalette::Normal : QPalette::Disabled;
-    o.backgroundColor = option.palette.color(cg, (option.state & QStyle::State_Selected)
-                                             ? QPalette::Highlight : QPalette::Background);
-    QApplication::style()->drawPrimitive(QStyle::PE_FrameFocusRect, &o, painter);
+    QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled) ? QPalette::Normal : QPalette::Disabled;
+    o.backgroundColor = option.palette.color( cg, (option.state & QStyle::State_Selected)
+                                                  ? QPalette::Highlight : QPalette::Background );
+    QApplication::style()->drawPrimitive( QStyle::PE_FrameFocusRect, &o, painter );
   }
 }
 
