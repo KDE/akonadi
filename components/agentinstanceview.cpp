@@ -127,6 +127,7 @@ QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &
 
   const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
   int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
+  uint progress = index.model()->data( index, AgentInstanceModel::ProgressRole ).toUInt();
   const QString statusMessage = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
 
   QTextDocument *document = new QTextDocument( 0 );
@@ -169,11 +170,12 @@ QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &
      "<td><b>%2</b></td>"
      "</tr>"
      "<tr>"
-     "<td><img src=\"status_icon\"/> %3 (%4)</td>"
+     "<td><img src=\"status_icon\"/> %3 %4</td>"
      "</tr>"
      "</table>"
      "</body>"
-     "</html>" ).arg(textColor.name().toUpper()).arg( name ).arg( statusMessage ).arg( "foo" );
+     "</html>" ).arg(textColor.name().toUpper()).arg( name )
+                .arg( statusMessage ).arg( status == 1 ? QString( "(%1%)" ).arg( progress ) : "" );
 
   document->setHtml( content );
 

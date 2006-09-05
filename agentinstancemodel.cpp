@@ -40,6 +40,8 @@ class AgentInstanceInfo
     QString instanceName;
     AgentManager::Status status;
     QString statusMessage;
+    uint progress;
+    QString progressMessage;
 };
 
 class AgentInstanceModel::Private
@@ -57,6 +59,7 @@ class AgentInstanceModel::Private
     void agentInstanceAdded( const QString &agentInstance );
     void agentInstanceRemoved( const QString &agentInstance );
     void agentInstanceStatusChanged( const QString&, AgentManager::Status, const QString& );
+    void agentInstanceProgressChanged( const QString&, uint, const QString& );
     void agentInstanceNameChanged( const QString&, const QString& );
 
     void addAgentInstance( const QString &agentInstance );
@@ -74,6 +77,8 @@ void AgentInstanceModel::Private::addAgentInstance( const QString &agentInstance
   info.capabilities = mManager.agentCapabilities( info.type );
   info.status = mManager.agentInstanceStatus( agentInstance );
   info.statusMessage = mManager.agentInstanceStatusMessage( agentInstance );
+  info.progress = mManager.agentInstanceProgress( agentInstance );
+  info.progressMessage = mManager.agentInstanceProgressMessage( agentInstance );
   info.instanceName = mManager.agentInstanceName( agentInstance );
 
   mInfos.append( info );
@@ -115,6 +120,23 @@ void AgentInstanceModel::Private::agentInstanceStatusChanged( const QString &age
   }
 }
 
+void AgentInstanceModel::Private::agentInstanceProgressChanged( const QString &agentInstance,
+                                                                uint progress,
+                                                                const QString &message )
+{
+  for ( int i = 0; i < mInfos.count(); ++i ) {
+    if ( mInfos[ i ].identifier == agentInstance ) {
+      mInfos[ i ].progress = progress;
+      mInfos[ i ].progressMessage = message;
+
+      const QModelIndex idx = mParent->index( i, 0 );
+      emit mParent->dataChanged( idx, idx );
+
+      return;
+    }
+  }
+}
+
 void AgentInstanceModel::Private::agentInstanceNameChanged( const QString &agentInstance,
                                                               const QString &name )
 {
@@ -143,6 +165,8 @@ AgentInstanceModel::AgentInstanceModel( QObject *parent )
            this, SLOT( agentInstanceRemoved( const QString& ) ) );
   connect( &d->mManager, SIGNAL( agentInstanceStatusChanged( const QString&, AgentManager::Status, const QString& ) ),
            this, SLOT( agentInstanceStatusChanged( const QString&, AgentManager::Status, const QString& ) ) );
+  connect( &d->mManager, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ),
+           this, SLOT( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
   connect( &d->mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
            this, SLOT( agentInstanceNameChanged( const QString&, const QString& ) ) );
 }
@@ -190,6 +214,12 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
       break;
     case StatusMessageRole:
       return info.statusMessage;
+      break;
+    case ProgressRole:
+      return info.progress;
+      break;
+    case ProgressMessageRole:
+      return info.progressMessage;
       break;
     default:
       return QVariant();
