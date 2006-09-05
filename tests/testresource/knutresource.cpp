@@ -107,10 +107,13 @@ void KnutResource::syncTimeout()
 
   changeProgress( (progress % 10) * 10 );
 
+  progress++;
+
   if ( progress == 50 ) {
     progress = 0;
     mSyncTimer->stop();
     changeStatus( Ready );
+    changeProgress( 0 );
   }
 }
 
