@@ -19,7 +19,7 @@ kde4_automoc( ${debugger_SRCS} )
 kde4_add_executable(akonadi_debugger ${debugger_SRCS})
 set_target_properties(akonadi_debugger PROPERTIES OUTPUT_NAME akonadi_debugger)
 
-target_link_libraries(akonadi_debugger ${QT_QTGUI_LIBRARIES} ${QT_QTDBUS_LIBRARIES})
+target_link_libraries(akonadi_debugger ${QT_QTCORE_LIBRARIES} ${QT_QTGUI_LIBRARIES} ${QT_QTDBUS_LIBRARIES})
 
 install(TARGETS akonadi_debugger DESTINATION ${BIN_INSTALL_DIR} )
 
