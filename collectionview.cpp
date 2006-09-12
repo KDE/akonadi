@@ -41,13 +41,13 @@ PIM::CollectionView::CollectionView( QWidget * parent ) :
     d( new Private() )
 {
   d->filterModel = new QSortFilterProxyModel( this );
+  d->filterModel->setDynamicSortFilter( true );
+  d->filterModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 
   header()->setClickable( true );
-  header()->setSortIndicatorShown( true );
-  header()->setSortIndicator( 0, Qt::Ascending );
   header()->setStretchLastSection( false );
-  d->filterModel->sort( 0, Qt::Ascending );
 
+  setSortingEnabled( true );
   setEditTriggers( QAbstractItemView::EditKeyPressed );
 
   // temporary for testing
@@ -63,10 +63,8 @@ PIM::CollectionView::~ CollectionView( )
 void PIM::CollectionView::setModel( QAbstractItemModel * model )
 {
   d->model = static_cast<CollectionModel*>( model );
-  // FIXME sort proxy model crashs
-//   d->filterModel->setSourceModel( model );
-//   QTreeView::setModel( d->filterModel );
-  QTreeView::setModel( model );
+  d->filterModel->setSourceModel( model );
+  QTreeView::setModel( d->filterModel );
   header()->setResizeMode( 0, QHeaderView::Stretch );
 }
 

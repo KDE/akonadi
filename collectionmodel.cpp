@@ -180,7 +180,7 @@ QVariant PIM::CollectionModel::headerData( int section, Qt::Orientation orientat
   return QAbstractItemModel::headerData( section, orientation, role );
 }
 
-bool PIM::CollectionModel::removeRows( int row, int count, const QModelIndex & parent )
+bool PIM::CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 {
   QList<QByteArray> list;
   QByteArray parentPath;
@@ -189,20 +189,18 @@ bool PIM::CollectionModel::removeRows( int row, int count, const QModelIndex & p
     list = d->childCollections.value( parentPath );
   } else
     list = d->childCollections.value( Collection::root() );
-  if ( row < 0 || ( row + count - 1 ) >= list.size() ) {
-    kWarning() << k_funcinfo << "Index out of bounds: " << row << "-" << row+count << " parent: " << parentPath << endl;
+  if ( row < 0 || row  >= list.size() ) {
+    kWarning() << k_funcinfo << "Index out of bounds: " << row << " parent: " << parentPath << endl;
     return false;
   }
 
-  QList<QByteArray> removeList = list.mid( row, count );
-  beginRemoveRows( parent, row, row + count - 1 ); // FIXME row +/- 1??, crashs sort proxy model!
-  foreach ( QByteArray path, removeList ) {
-    list.removeAll( path );
-    delete d->collections.take( path );
-    d->childCollections.remove( path );
-  }
+  beginRemoveRows( parent, row, row );
+  QByteArray path = list.takeAt( row );
+  delete d->collections.take( path );
+  d->childCollections.remove( path );
   d->childCollections.insert( parentPath, list );
   endRemoveRows();
+
   return true;
 }
 
@@ -239,7 +237,7 @@ void PIM::CollectionModel::collectionRemoved( const QByteArray &path )
   if ( colIndex.isValid() ) {
     QModelIndex parentIndex = parent( colIndex );
     // collection is still somewhere in the hierarchy
-    removeRow( colIndex.row(), parentIndex );
+    removeRowFromModel( colIndex.row(), parentIndex );
   } else {
     if ( d->collections.contains( path ) ) {
       // collection is orphan, ie. the parent has been removed already
@@ -265,7 +263,7 @@ void PIM::CollectionModel::updateDone( PIM::Job * job )
         col->addAttribute( attr );
 
       QModelIndex startIndex = indexForPath( path );
-      QModelIndex endIndex = indexForPath( path, columnCount( parent( startIndex ) ) );
+      QModelIndex endIndex = indexForPath( path, columnCount( parent( startIndex ) ) - 1 );
       emit dataChanged( startIndex, endIndex );
     }
   }
@@ -370,7 +368,7 @@ void PIM::CollectionModel::editDone( PIM::Job * job )
       {
         QModelIndex index = indexForPath( d->editedCollection->path() );
         QModelIndex parent = indexForPath( d->editedCollection->parent() );
-        removeRow( index.row(), parent );
+        removeRowFromModel( index.row(), parent );
         d->editedCollection = 0;
         break;
       }

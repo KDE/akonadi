@@ -84,14 +84,6 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
     /**
-      Reimplemented from QAbstractItemModel.
-
-      Note: The removed collection is not deleted from the storage service,
-      but only removed from the model.
-    */
-    virtual bool removeRows( int row, int count, const QModelIndex & parent = QModelIndex() );
-
-    /**
       Reimplemented.
     */
     bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
@@ -126,6 +118,13 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Helper function to generate a model index for a given collection reference.
     */
     QModelIndex indexForPath( const QByteArray &path, int column = 0 );
+
+    /**
+      Helper method to remove a single row from the model (not from the Akonadi backend).
+      @param row The row index.
+      @param parent The parent model index.
+    */
+    bool removeRowFromModel( int row, const QModelIndex & parent = QModelIndex() );
 
   private slots:
     /**
