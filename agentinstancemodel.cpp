@@ -222,9 +222,9 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
       return info.progressMessage;
       break;
     default:
-      return QVariant();
       break;
   }
+  return QVariant();
 }
 
 QVariant AgentInstanceModel::headerData( int section, Qt::Orientation orientation, int role ) const

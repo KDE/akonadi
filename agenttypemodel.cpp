@@ -177,9 +177,9 @@ QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
       return info.capabilities;
       break;
     default:
-      return QVariant();
       break;
   }
+  return QVariant();
 }
 
 QModelIndex AgentTypeModel::index( int row, int column, const QModelIndex& ) const
