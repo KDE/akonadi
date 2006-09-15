@@ -1,3 +1,72 @@
 libakonadi is the client access library for using the Akonadi PIM data server.  All processes that access Akonadi, including those which communicate only with a remote server, are considered clients.
 
 See libakonadi.xmi for UML documentation generated with Umbrello.
+
+
+Collections
+===========
+
+Concept
+-------
+
+Collections are sets of PIM items. Every PIM item is stored in exactly one
+collection (the server calls these "Locations" internally). An item might be
+also visible in several other collections, so called virtual collections
+which are defined as the result set of a query.
+
+Collections are organized hierachical, ie. every collection can have child
+collections, thus defining a collection tree.
+
+The concept is comparable to KMail's (search-)folders or to some extent
+(sub-)resources.
+
+Akonadi Collections
+-------------------
+
+In Akonadi, collections are uniquely identified by their path (comparable with
+usual filesystem paths).
+
+Collections can contain an arbitrary set of attributes (inherited from
+the CollectionAttribute class) to represent various collection properties
+(such as statistics, ACL's, quotas, etc.).
+
+Every collection has an attribute containing the list of supported content
+types. These are the mimetypes of items the collection can contain.
+Example: A collection of a folder-less iCal file resource would only support
+"text/calendar" items, a folder on an IMAP server "message/rfc822" but also
+"inode/directory" if it can contain sub-folders.
+
+
+Akonadi Collection Tree
+-----------------------
+
+There is a single collection tree in Akonadi, consisting of several parts:
+
+- A top-level collection for every resource. Think of these as mount-points
+  for the resource. They are automatically created and removed by the storage
+  server whenever a resource is created or removed. The resources must put
+  their items and collections into their corresponding top-level collection.
+- Resource-dependent sub-collections below the resource top-level collections.
+  If the resource represents data that is organized in folders (eg. an IMAP
+  resource), it can create additional collections below its top-level
+  collection. These have to be synced with the corresponding backend by the
+  resource.
+  Resources which represent folder-less data (eg. an iCal file) don't need
+  any sub-collections and put their items directly into the top-level collection.
+- A top-level collection containing virtual collections
+- Virtual collections
+
+Example:
+
++-+ resource-folder1
+| +- sub-folder1
+| +- sub-folder2
+|  ...
++-+ resource-folder2
+| ...
+|
++-+ Searches
+  +- search-folder1
+  +- search-folder2
+  ...
+
