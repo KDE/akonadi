@@ -38,7 +38,7 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
     , m_backend( 0 )
     , m_selectedConnection( "/" )
 {
-    m_identifier.sprintf( "%p", this );
+    m_identifier.sprintf( "%p", static_cast<void*>( this ) );
     Tracer::self()->beginConnection( m_identifier, QString() );
 }
 
@@ -142,12 +142,9 @@ void AkonadiConnection::slotNewData()
 
 }
 
-void AkonadiConnection::writeOut( const char* str )
+void AkonadiConnection::writeOut( const QByteArray &data )
 {
-    QByteArray block;
-    QTextStream out(&block, QIODevice::WriteOnly);
-    out << str << '\r'<<  endl;
-    out.flush();
+    QByteArray block = data + "\r\n";
     m_tcpSocket->write(block);
     m_tcpSocket->waitForBytesWritten();
 
@@ -181,7 +178,7 @@ void AkonadiConnection::slotResponseAvailable( const Response& response )
 {
     // FIXME handle reentrancy in the presence of continuation. Something like:
     // "if continuation pending, queue responses, once continuation is done, replay them"
-    writeOut( response.asString().data() );
+    writeOut( response.asString() );
 }
 
 void AkonadiConnection::slotConnectionStateChange( ConnectionState state )

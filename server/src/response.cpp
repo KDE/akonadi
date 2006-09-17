@@ -39,12 +39,13 @@ Response::~Response()
 
 QByteArray Response::asString() const
 {
-    QByteArray b;
-    QTextStream ts( &b,QIODevice::WriteOnly );
-    ts << m_tag;
-    if ( m_tag != "*" && m_tag != "+" )
-        ts << " " << s_resultCodeStrings[m_resultCode];
-    ts << " " << m_responseString;
+    QByteArray b = m_tag;
+    if ( m_tag != "*" && m_tag != "+" ) {
+        b += " ";
+        b += s_resultCodeStrings[m_resultCode];
+    }
+    b += " ";
+    b += m_responseString;
     return b;
 }
 

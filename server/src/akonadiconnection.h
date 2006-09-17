@@ -63,7 +63,7 @@ protected slots:
 
 protected:
     AkonadiConnection() {} // used for testing
-    void writeOut( const char* );
+    void writeOut( const QByteArray &data );
     Handler* findHandlerForCommand( const QByteArray& command );
 
 

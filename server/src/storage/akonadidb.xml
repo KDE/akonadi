@@ -53,7 +53,7 @@
   <table name="PimItems">
     <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remote_id" type="CHAR(512) NOT NULL"/>
-    <column name="data" type="TEXT"/>
+    <column name="data" type="BLOB"/>
     <column name="location_id" type="INTEGER REFERENCES Locations(id)"/>
     <column name="mimetype_id" type="INTEGER REFERENCES MimeTypes(id)"/>
     <column name="datetime" type="CHAR(19) DEFAULT CURRENT_TIMESTAMP"/>
