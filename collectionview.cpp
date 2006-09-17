@@ -23,6 +23,7 @@
 #include <klocale.h>
 
 #include <QDebug>
+#include <QDragMoveEvent>
 #include <QHeaderView>
 #include <QInputDialog>
 #include <QSortFilterProxyModel>
@@ -49,6 +50,9 @@ PIM::CollectionView::CollectionView( QWidget * parent ) :
 
   setSortingEnabled( true );
   setEditTriggers( QAbstractItemView::EditKeyPressed );
+  setAcceptDrops( true );
+  setDropIndicatorShown( true );
+  setDragDropMode( DropOnly );
 
   // temporary for testing
   connect( this, SIGNAL(doubleClicked(QModelIndex)), SLOT(createCollection(QModelIndex)) );
@@ -70,13 +74,32 @@ void PIM::CollectionView::setModel( QAbstractItemModel * model )
 
 void PIM::CollectionView::createCollection( const QModelIndex & parent )
 {
-  if ( !d->model->canCreateCollection( parent ) )
+  QModelIndex index =sourceIndex( parent );
+  if ( !d->model->canCreateCollection( index ) )
     return;
   QString name = QInputDialog::getText( this, i18n("New Folder"), i18n("Name") );
   if ( name.isEmpty() )
     return;
-  if ( !d->model->createCollection( parent, name ) )
+  if ( !d->model->createCollection( index, name ) )
     qWarning() << "Collection creation failed immediately!";
+}
+
+void PIM::CollectionView::dragMoveEvent(QDragMoveEvent * event)
+{
+  QModelIndex index = sourceIndex( indexAt( event->pos() ) );
+  QStringList mimeTypes = event->mimeData()->formats();
+  if ( !d->model->supportsContentType( index, mimeTypes ) ) {
+    event->setDropAction( Qt::IgnoreAction );
+    return;
+  }
+  QTreeView::dragMoveEvent( event );
+}
+
+QModelIndex PIM::CollectionView::sourceIndex(const QModelIndex & index)
+{
+  if ( index.model() == d->filterModel )
+    return d->filterModel->mapToSource( index );
+  return index;
 }
 
 #include "collectionview.moc"

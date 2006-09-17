@@ -49,10 +49,13 @@ void PIM::MessageBrowser::messageActivated( const QModelIndex & index )
 
 void PIM::MessageBrowser::slotFetchDone( PIM::Job * job )
 {
+  MessageFetchJob *fetch = static_cast<MessageFetchJob*>( job );
   if ( job->error() ) {
     qWarning() << "Message fetch failed: " << job->errorText();
+  } else if ( fetch->messages().isEmpty() ) {
+    qWarning() << "No message found!";
   } else {
-    Message *msg = static_cast<MessageFetchJob*>( job )->messages().first();
+    Message *msg = fetch->messages().first();
     QTextEdit *te = new QTextEdit();
     te->setReadOnly( true );
     te->setPlainText( msg->mime()->encodedContent() );

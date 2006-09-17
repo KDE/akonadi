@@ -23,6 +23,7 @@
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
 #include "collectionrenamejob.h"
+#include "itemappendjob.h"
 #include "jobqueue.h"
 #include "monitor.h"
 
@@ -33,6 +34,7 @@
 
 #include <QDebug>
 #include <QHash>
+#include <QMimeData>
 #include <QPixmap>
 #include <QQueue>
 
@@ -49,6 +51,18 @@ class CollectionModel::Private
     QString editOldName;
     Monitor* monitor;
     JobQueue *queue;
+    QStringList mimeTypes;
+
+    void updateSupportedMimeTypes( Collection *col )
+    {
+      QList<QByteArray> l = col->contentTypes();
+      for ( QList<QByteArray>::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
+        if ( (*it) == Collection::collectionMimeType() )
+          continue;
+        if ( !mimeTypes.contains( QString::fromLatin1( *it ) ) )
+          mimeTypes << QString::fromLatin1( *it );
+      }
+    }
 };
 
 PIM::CollectionModel::CollectionModel( QObject * parent ) :
@@ -262,6 +276,8 @@ void PIM::CollectionModel::updateDone( PIM::Job * job )
       foreach ( CollectionAttribute* attr, csjob->attributes() )
         col->addAttribute( attr );
 
+      d->updateSupportedMimeTypes( col );
+
       QModelIndex startIndex = indexForPath( path );
       QModelIndex endIndex = indexForPath( path, columnCount( parent( startIndex ) ) - 1 );
       emit dataChanged( startIndex, endIndex );
@@ -312,6 +328,8 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
         d->childCollections[ col->parent() ].append( col->path() );
       }
 
+      d->updateSupportedMimeTypes( col );
+
       // start a status job for every collection to get message counts, etc.
       if ( col->type() != Collection::VirtualParent ) {
         CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->queue );
@@ -350,12 +368,24 @@ bool PIM::CollectionModel::setData( const QModelIndex & index, const QVariant & 
 
 Qt::ItemFlags PIM::CollectionModel::flags( const QModelIndex & index ) const
 {
-  if ( index.column() == 0 ) {
-    Collection *col = static_cast<Collection*>( index.internalPointer() );
-    if ( col->type() != Collection::VirtualParent && d->currentEdit == Private::None )
-      return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
+  Qt::ItemFlags flags = QAbstractItemModel::flags( index );
+
+  Collection *col = 0;
+  if ( index.isValid() ) {
+    col = static_cast<Collection*>( index.internalPointer() );
+    Q_ASSERT( col );
   }
-  return QAbstractItemModel::flags( index );
+
+  if ( col ) {
+    if ( col->type() != Collection::VirtualParent )  {
+      if ( d->currentEdit == Private::None && index.column() == 0 )
+        flags = flags | Qt::ItemIsEditable;
+      if ( col->type() != Collection::Virtual )
+        flags = flags | Qt::ItemIsDropEnabled;
+    }
+  }
+
+  return flags;
 }
 
 void PIM::CollectionModel::editDone( PIM::Job * job )
@@ -434,6 +464,71 @@ QByteArray PIM::CollectionModel::pathForIndex( const QModelIndex & index ) const
   if ( index.isValid() )
     return static_cast<Collection*>( index.internalPointer() )->path();
   return QByteArray();
+}
+
+Qt::DropActions PIM::CollectionModel::supportedDropActions() const
+{
+  return Qt::CopyAction; // | Qt::MoveAction;
+}
+
+QStringList PIM::CollectionModel::mimeTypes() const
+{
+  return d->mimeTypes;
+}
+
+bool PIM::CollectionModel::supportsContentType(const QModelIndex & index, const QStringList & contentTypes)
+{
+  if ( !index.isValid() )
+    return false;
+  Collection *col = static_cast<Collection*>( index.internalPointer() );
+  Q_ASSERT( col );
+  QList<QByteArray> ct = col->contentTypes();
+  foreach ( QByteArray a, ct ) {
+    if ( contentTypes.contains( QString::fromLatin1( a ) ) )
+      return true;
+  }
+  return false;
+}
+
+bool PIM::CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent)
+{
+  if ( !(action & supportedDropActions()) )
+    return false;
+
+  // handle drops onto items as well as drops between items
+  QModelIndex idx;
+  if ( row >= 0 && column >= 0 )
+    idx = index( row, column, parent );
+  else
+    idx = parent;
+
+  if ( !idx.isValid() )
+    return false;
+
+  // find a type the target collection supports
+  foreach ( QString type, data->formats() ) {
+    if ( !supportsContentType( idx, QStringList( type ) ) )
+      continue;
+    QByteArray path = pathForIndex( idx );
+    QByteArray item = data->data( type );
+    // HACK for some unknown reason the data is sometimes 0-terminated...
+    if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
+      item.resize( item.size() - 1 );
+    ItemAppendJob *job = new ItemAppendJob( path, item, type.toLatin1(), d->queue );
+    d->queue->addJob( job );
+    return true;
+  }
+
+  return false;
+}
+
+void PIM::CollectionModel::appendDone(PIM::Job * job)
+{
+  if ( job->error() ) {
+    kWarning() << "Append failed: " << job->errorText() << endl;
+    // TODO: error handling
+  }
+  job->deleteLater();
 }
 
 #include "collectionmodel.moc"

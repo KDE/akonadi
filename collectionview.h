@@ -23,6 +23,8 @@
 #include <QTreeView>
 #include <kdepim_export.h>
 
+class QDragMoveEvent;
+
 namespace PIM {
 
 /**
@@ -55,6 +57,15 @@ class AKONADI_EXPORT CollectionView : public QTreeView
       Add a child collection to the given model index.
     */
     void createCollection( const QModelIndex &index );
+
+  protected:
+    virtual void dragMoveEvent( QDragMoveEvent *event );
+
+    /**
+      Translates a QModelIndex from the sort proxy model into a QModelIndex
+      from the CollectionModel if necessary.
+    */
+    QModelIndex sourceIndex( const QModelIndex &index );
 
   private:
     class Private;

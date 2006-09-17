@@ -94,6 +94,21 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     Qt::ItemFlags flags( const QModelIndex &index ) const;
 
     /**
+      Reimplemented.
+    */
+    virtual Qt::DropActions supportedDropActions() const;
+
+    /**
+      Reimplemented.
+    */
+    virtual QStringList mimeTypes() const;
+
+    /**
+      Reimplemented.
+    */
+    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
+
+    /**
       Add a new collection to the model and try to save it into the backend.
       @param parent The parent model index.
       @param name The name of the new collection.
@@ -112,6 +127,13 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       @param index The model index.
     */
     QByteArray pathForIndex( const QModelIndex &index ) const;
+
+    /**
+      Returns wether the specified collection supports <em>any</em> of the given mime-types.
+      @param index The model index.
+      @param contentTypes The content types to check.
+    */
+    bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
 
   private:
     /**
@@ -151,6 +173,11 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Connected to edit jobs.
     */
     void editDone( PIM::Job *job );
+
+    /**
+      Connected to item append jobs used for DND.
+    */
+    void appendDone( PIM::Job *job );
 
   private:
     class Private;

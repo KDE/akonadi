@@ -42,7 +42,7 @@ CollectionBrowser::CollectionBrowser() : CollectionView()
 
 void PIM::CollectionBrowser::slotItemActivated( const QModelIndex & index )
 {
-  QByteArray path = model->pathForIndex( index );
+  QByteArray path = model->pathForIndex( sourceIndex( index ) );
   if ( path.isNull() )
     return;
   MessageBrowser *mb = new MessageBrowser( path );
