@@ -89,14 +89,18 @@ bool Store::commit()
   for ( int i = 0; i < pimItems.count(); ++i ) {
     if ( mStoreQuery.dataType() == StoreQuery::Flags ) {
       if ( mStoreQuery.operation() & StoreQuery::Replace ) {
-        replaceFlags( pimItems[ i ], mStoreQuery.flags() );
+        if ( !replaceFlags( pimItems[ i ], mStoreQuery.flags() ) )
+          return failureResponse( "Unable to replace item flags." );
       } else if ( mStoreQuery.operation() & StoreQuery::Add ) {
-        addFlags( pimItems[ i ], mStoreQuery.flags() );
+        if ( !addFlags( pimItems[ i ], mStoreQuery.flags() ) )
+          return failureResponse( "Unable to add item flags." );
       } else if ( mStoreQuery.operation() & StoreQuery::Delete ) {
-        deleteFlags( pimItems[ i ], mStoreQuery.flags() );
+        if ( !deleteFlags( pimItems[ i ], mStoreQuery.flags() ) )
+          return failureResponse( "Unable to remove item flags." );
       }
     } else if ( mStoreQuery.dataType() == StoreQuery::Data ) {
-      store->updatePimItem( pimItems[ i ], mData );
+      if ( !store->updatePimItem( pimItems[ i ], mData ) )
+        return failureResponse( "Unable to change item data." );
     }
 
     if ( !( mStoreQuery.operation() & StoreQuery::Silent ) ) {
@@ -126,7 +130,7 @@ bool Store::commit()
 }
 
 
-void Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
+bool Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
   DataStore *store = connection()->storageBackend();
 
@@ -134,16 +138,14 @@ void Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
   for ( int i = 0; i < flags.count(); ++i ) {
     Flag flag = store->flagByName( flags[ i ] );
     if ( !flag.isValid() ) {
-      /**
-       * If the flag does not exist we'll create it now.
-       */
+       // If the flag does not exist we'll create it now.
       if ( !store->appendFlag( flags[ i ] ) ) {
         qDebug( "Store::replaceFlags: Unable to add new flag '%s'", flags[ i ].data() );
-        return;
+        return false;
       } else {
         flag = store->flagByName( flags[ i ] );
         if ( !flag.isValid() )
-          return;
+          return false;
         else
           flagList.append( flag );
       }
@@ -154,11 +156,12 @@ void Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
 
   if ( !store->setItemFlags( item, flagList ) ) {
     qDebug( "Store::replaceFlags: Unable to set new item flags" );
-    return;
+    return false;
   }
+  return true;
 }
 
-void Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
+bool Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
   DataStore *store = connection()->storageBackend();
 
@@ -166,16 +169,14 @@ void Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
   for ( int i = 0; i < flags.count(); ++i ) {
     Flag flag = store->flagByName( flags[ i ] );
     if ( !flag.isValid() ) {
-      /**
-       * If the flag does not exist we'll create it now.
-       */
+       // If the flag does not exist we'll create it now.
       if ( !store->appendFlag( flags[ i ] ) ) {
         qDebug( "Store::addFlags: Unable to add new flag '%s'", flags[ i ].data() );
-        return;
+        return false;
       } else {
         flag = store->flagByName( flags[ i ] );
         if ( !flag.isValid() )
-          return;
+          return false;
         else
           flagList.append( flag );
       }
@@ -186,11 +187,12 @@ void Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
 
   if ( !store->appendItemFlags( item, flagList ) ) {
     qDebug( "Store::addFlags: Unable to add new item flags" );
-    return;
+    return false;
   }
+  return true;
 }
 
-void Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
+bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
   DataStore *store = connection()->storageBackend();
 
@@ -205,8 +207,9 @@ void Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
 
   if ( !store->removeItemFlags( item, flagList ) ) {
     qDebug( "Store::deleteFlags: Unable to add new item flags" );
-    return;
+    return false;
   }
+  return true;
 }
 
 bool Akonadi::Store::inContinuation() const

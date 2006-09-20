@@ -44,9 +44,9 @@ class Store : public Handler
     bool allDataRead() const;
     bool handleContinuation( const QByteArray& line );
 
-    void replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
-    void addFlags( const PimItem &item, const QList<QByteArray> &flags );
-    void deleteFlags( const PimItem &item, const QList<QByteArray> &flags );
+    bool replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
+    bool addFlags( const PimItem &item, const QList<QByteArray> &flags );
+    bool deleteFlags( const PimItem &item, const QList<QByteArray> &flags );
 
     StoreQuery mStoreQuery;
     int mSize;
