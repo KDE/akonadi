@@ -95,15 +95,14 @@ void MonitorTest::testMonitor()
   QVERIFY( store->exec() );
   qApp->processEvents();
 
-  // ### no yet implemented
-  /*QCOMPARE( cmspy.count(), 1 );
+  QCOMPARE( cmspy.count(), 1 );
   arg = cmspy.takeFirst();
   QCOMPARE( arg.at(0).toByteArray(), QByteArray( "res3/monitor" ) );
 
   QCOMPARE( imspy.count(), 1 );
   arg = imspy.takeFirst();
   DataReference ref2 = qvariant_cast<DataReference>( arg.at(0) );
-  QCOMPARE( ref, ref2 );*/
+  QCOMPARE( ref, ref2 );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
@@ -115,20 +114,23 @@ void MonitorTest::testMonitor()
   QVERIFY( del->exec() );
   qApp->processEvents();
 
-  // ### not yet implemented
-  /*QCOMPARE( cmspy.count(), 1 );
+  QEXPECT_FAIL( "", "deletion is splitted into two commands...", Continue );
+  QCOMPARE( cmspy.count(), 1 );
   arg = cmspy.takeFirst();
   QCOMPARE( arg.at(0).toByteArray(), QByteArray( "res3/monitor" ) );
+  cmspy.clear();
 
   QCOMPARE( irspy.count(), 1 );
-  arg = imspy.takeFirst();
-  DataReference ref2 = qvariant_cast<DataReference>( arg.at(0) );
-  QCOMPARE( ref, ref2 );*/
+  arg = irspy.takeFirst();
+  ref2 = qvariant_cast<DataReference>( arg.at(0) );
+  QCOMPARE( ref, ref2 );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
   QVERIFY( iaspy.isEmpty() );
+  QEXPECT_FAIL( "", "deletion is splitted into two commands...", Continue );
   QVERIFY( imspy.isEmpty() );
+  imspy.clear();
 
   // delete a collection
   CollectionDeleteJob *cdel = new CollectionDeleteJob( "res3/monitor", this );

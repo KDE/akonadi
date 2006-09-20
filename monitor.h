@@ -64,6 +64,18 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void monitorItem( const DataReference &ref );
 
+    /**
+      Monitors the specified resource for changes.
+      @param resource The resource identifier.
+    */
+    void monitorResource( const QByteArray &resource );
+
+    /**
+      Monitor all items matching the specified mimetype.
+      @param mimetype The mimetype.
+    */
+    void monitorMimeType( const QByteArray &mimetype );
+
   signals:
     /**
       Emitted if a monitored object has changed.
@@ -106,12 +118,15 @@ class AKONADI_EXPORT Monitor : public QObject
     bool connectToNotificationManager();
 
   private slots:
-    void slotItemChanged( const QByteArray &uid, const QByteArray &collection );
-    void slotItemAdded( const QByteArray &uid, const QByteArray &collection );
-    void slotItemRemoved( const QByteArray &uid, const QByteArray &collection );
-    void slotCollectionAdded( const QByteArray &path );
-    void slotCollectionChanged( const QByteArray &path );
-    void slotCollectionRemoved( const QByteArray &path );
+    void slotItemChanged( const QByteArray &uid, const QByteArray &collection,
+                          const QByteArray &mimetype, const QByteArray &resource );
+    void slotItemAdded( const QByteArray &uid, const QByteArray &collection,
+                        const QByteArray &mimetype, const QByteArray &resource );
+    void slotItemRemoved( const QByteArray &uid, const QByteArray &collection,
+                          const QByteArray &mimetype, const QByteArray &resource );
+    void slotCollectionAdded( const QByteArray &path, const QByteArray &resource );
+    void slotCollectionChanged( const QByteArray &path, const QByteArray &resource );
+    void slotCollectionRemoved( const QByteArray &path, const QByteArray &resource );
 
   private:
     MonitorPrivate* d;
