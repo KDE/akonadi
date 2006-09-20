@@ -22,6 +22,7 @@
 #include <akonadiconnection.h>
 #include <storage/datastore.h>
 #include <storage/entity.h>
+#include <storage/transaction.h>
 #include <imapparser.h>
 #include <handlerhelper.h>
 #include <response.h>
@@ -51,6 +52,8 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
     return failureResponse( "Cannot modify root collection." );
 
   DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
+
   Location location = db->locationByName( collection );
   if ( !location.isValid() )
     return failureResponse( "No such collection." );
@@ -61,12 +64,17 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
     if ( type == "MIMETYPES" ) {
       QList<QByteArray> mimeTypes;
       pos = PIM::ImapParser::parseParenthesizedList( line, mimeTypes, pos );
-      db->removeMimeTypesForLocation( location.id() );
+      if ( !db->removeMimeTypesForLocation( location.id() ) )
+        return failureResponse( "Unable to modify collection mimetypes." );
       foreach ( QByteArray ba, mimeTypes )
-        db->appendMimeTypeForLocation( location.id(), QString::fromUtf8(ba) );
+        if ( !db->appendMimeTypeForLocation( location.id(), QString::fromUtf8(ba) ) )
+          return failureResponse( "Unable to modify collection mimetypes." );
     } else
       return failureResponse( "Unknown modify type" );
   }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction." );
 
   Response response;
   response.setTag( tag() );

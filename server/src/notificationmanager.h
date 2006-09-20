@@ -41,32 +41,34 @@ class NotificationManager : public QObject
 
     void connectDatastore( DataStore* );
 
-  public Q_SLOTS:
-    void monitorCollection( const QByteArray &path );
-    void monitorItem( const QByteArray &uid );
-
   Q_SIGNALS:
-    void itemChanged( const QByteArray &uid, const QByteArray &collection );
-    void itemAdded( const QByteArray &uid, const QByteArray &collection );
-    void itemRemoved( const QByteArray &uid, const QByteArray &collection );
-    void collectionAdded( const QByteArray &path );
-    void collectionChanged( const QByteArray &path );
-    void collectionRemoved( const QByteArray &path );
+    void itemChanged( const QByteArray &uid, const QByteArray &collection,
+                      const QByteArray &mimetype, const QByteArray &resource );
+    void itemAdded( const QByteArray &uid, const QByteArray &collection,
+                    const QByteArray &mimetype, const QByteArray &resource );
+    void itemRemoved( const QByteArray &uid, const QByteArray &collection,
+                      const QByteArray &mimetype, const QByteArray &resource );
+    void collectionAdded( const QByteArray &path, const QByteArray &resource );
+    void collectionChanged( const QByteArray &path, const QByteArray &resource );
+    void collectionRemoved( const QByteArray &path, const QByteArray &resource );
 
   private Q_SLOTS:
-    void slotItemAdded( int uid, const QByteArray& location );
-    void slotCollectionAdded( const QByteArray &path );
-    void slotCollectionRemoved( const QByteArray &oath );
+    void slotItemAdded( int uid, const QByteArray& location,
+                        const QByteArray &mimetype, const QByteArray &resource );
+    void slotItemChanged( int uid, const QByteArray &location,
+                          const QByteArray &mimetype, const QByteArray &resource );
+    void slotItemRemoved( int uid, const QByteArray &location,
+                          const QByteArray &mimetype, const QByteArray &resource );
+    void slotCollectionAdded( const QByteArray &path, const QByteArray &resource );
+    void slotCollectionChanged( const QByteArray &path, const QByteArray &resource );
+    void slotCollectionRemoved( const QByteArray &path, const QByteArray &resource );
+
   private:
     NotificationManager();
 
     static NotificationManager *mSelf;
 
-    bool isLocationMonitored( const QByteArray &location );
-
     QMutex mMutex;
-    QHash<QByteArray, int> mIds;
-    QHash<QByteArray, int> mLocations;
 };
 
 }

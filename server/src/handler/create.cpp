@@ -22,6 +22,7 @@
 #include "akonadiconnection.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
+#include "storage/transaction.h"
 
 #include "create.h"
 #include "imapparser.h"
@@ -69,6 +70,8 @@ bool Create::handleLine(const QByteArray& line )
     }
 
     DataStore *db = connection()->storageBackend();
+    Transaction transaction( db );
+
     const int startOfLocation = mailbox.indexOf( '/' );
     const QByteArray topLevelName = mailbox.left( startOfLocation );
 
@@ -120,10 +123,14 @@ bool Create::handleLine(const QByteArray& line )
         int locationId = 0;
         if ( ! db->appendLocation( folderName, resource, &locationId ) )
             return failureResponse( "Adding " + folderName + " to the database failed" );
-        // FIXME what to do if appending the mime type fails?
-        foreach ( QByteArray mimeType, mimeTypes )
-            db->appendMimeTypeForLocation( locationId, QString::fromUtf8(mimeType) );
+        foreach ( QByteArray mimeType, mimeTypes ) {
+            if ( !db->appendMimeTypeForLocation( locationId, QString::fromUtf8(mimeType) ) )
+                return failureResponse( "Unable to append mimetype for collection." );
+        }
     }
+
+    if ( !transaction.commit() )
+      return failureResponse( "Unable to commit transaction." );
 
     response.setSuccess();
     response.setString( "CREATE completed" );

@@ -24,6 +24,7 @@
 #include <response.h>
 #include <storage/datastore.h>
 #include <storage/entity.h>
+#include <storage/transaction.h>
 
 using namespace Akonadi;
 
@@ -53,6 +54,8 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
     return failureResponse( "Collection name must not be empty" );
 
   DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
+
   Location location = db->locationByName( newName );
   if ( location.isValid() )
     return failureResponse( "Collection already exists" );
@@ -65,14 +68,17 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
   oldName += '/';
   foreach ( Location location, locations ) {
     if ( location.location().startsWith( oldName ) ) {
-      // TODO: error handling
       QString name = location.location();
       name = name.replace( 0, oldName.length(), QString::fromUtf8(newName) + '/' );
-      db->renameLocation( location, name );
+      if ( !db->renameLocation( location, name ) )
+        return failureResponse( "Failed to rename collection." );
     }
   }
-  // TODO: error handling
-  db->renameLocation( location, newName );
+  if ( !db->renameLocation( location, newName ) )
+    return failureResponse( "Failed to rename collection." );
+
+  if ( !transaction.commit() )
+    return failureResponse( "Failed to commit transaction." );
 
   Response response;
   response.setTag( tag() );

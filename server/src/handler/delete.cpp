@@ -25,6 +25,7 @@
 #include <response.h>
 #include <storage/datastore.h>
 #include <storage/entity.h>
+#include <storage/transaction.h>
 
 Akonadi::Delete::Delete() : Handler()
 {
@@ -48,6 +49,8 @@ bool Akonadi::Delete::handleLine(const QByteArray & line)
 
   // check if collection exists
   DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
+
   Location location = db->locationByName( collection );
   if ( !location.isValid() )
     return failureResponse( "No such collection." );
@@ -56,11 +59,16 @@ bool Akonadi::Delete::handleLine(const QByteArray & line)
   QList<Location> locations = db->listLocations();
   collection += '/';
   foreach ( Location location, locations ) {
-    if ( location.location().startsWith( collection ) )
-      db->cleanupLocation( location );
+    if ( location.location().startsWith( collection ) ) {
+      if ( !db->cleanupLocation( location ) )
+        return failureResponse( "Unable to delete collection." );
+    }
   }
+  if ( !db->cleanupLocation( location ) )
+    return failureResponse( "Unable to delete collection." );
 
-  db->cleanupLocation( location );
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction." );
 
   Response response;
   response.setTag( tag() );

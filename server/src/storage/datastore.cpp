@@ -43,9 +43,12 @@ using namespace Akonadi;
 /***************************************************************************
  *   DataStore                                                           *
  ***************************************************************************/
-DataStore::DataStore()
-  : QObject()
+DataStore::DataStore() :
+  QObject(),
+  m_dbOpened( false ),
+  m_inTransaction( false )
 {
+  mNotificationCollector = new NotificationCollector( this );
 }
 
 void DataStore::init()
@@ -66,11 +69,13 @@ void DataStore::init()
     Tracer::self()->error( "DataStore::init()", QString( "Unable to initialize database: %1" ).arg( initializer.errorMsg() ) );
   }
 
+  m_inTransaction = false;
   NotificationManager::self()->connectDatastore( this );
 }
 
 DataStore::~DataStore()
 {
+  Q_ASSERT( !m_inTransaction );
   m_database.close();
   m_database = QSqlDatabase();
   QSqlDatabase::removeDatabase( m_connectionName );
@@ -337,6 +342,7 @@ bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
     }
   }
 
+  mNotificationCollector->itemChanged( item.id() );
   return true;
 }
 
@@ -368,13 +374,14 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
     }
   }
 
+  mNotificationCollector->itemChanged( item.id() );
   return true;
 }
 
 bool DataStore::appendItemFlags( int pimItemId, const QList<QByteArray> &flags )
 {
     // FIXME Implement me
-    return false;
+    return true;
 }
 
 bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
@@ -393,6 +400,7 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
     }
   }
 
+  mNotificationCollector->itemChanged( item.id() );
   return true;
 }
 
@@ -572,7 +580,7 @@ bool DataStore::appendLocation( const QString & location,
   if ( insertId )
       *insertId = id;
 
-  emit collectionAdded( location.toUtf8() );
+  mNotificationCollector->collectionAdded( location.toUtf8(), resource.resource().toLatin1() );
   return true;
 }
 
@@ -616,13 +624,14 @@ bool DataStore::appendLocation( const QString & location,
     return false;
   }
 
-  emit collectionAdded( location.toUtf8() );
+  mNotificationCollector->collectionAdded( location.toUtf8(), resource.resource().toLatin1() );
   return true;
 }
 
 bool DataStore::removeLocation( const Location & location )
 {
-  emit collectionRemoved( location.location().toUtf8() );
+  Resource res = resourceById( location.resourceId() );
+  mNotificationCollector->collectionRemoved( location.location().toUtf8(), res.resource().toLatin1() );
   return removeById( location.id(), "Locations" );
 }
 
@@ -732,8 +741,9 @@ bool Akonadi::DataStore::renameLocation(const Location & location, const QString
     return false;
   }
 
-  emit collectionRemoved( oldName.toUtf8() );
-  emit collectionAdded( newName.toUtf8() );
+  Resource res = resourceById( location.resourceId() );
+  mNotificationCollector->collectionRemoved( oldName.toUtf8(), res.resource().toLatin1() );
+  mNotificationCollector->collectionAdded( newName.toUtf8() );
   return true;
 }
 
@@ -1107,7 +1117,7 @@ bool DataStore::appendPimItem( const QByteArray & data,
   if ( insertId )
       *insertId = id;
 
-  emit itemAdded( id, location.location().toLatin1() );
+  mNotificationCollector->itemAdded( id, location.location().toLatin1(), mimetype.mimeType().toLatin1() );
 
   return true;
 }
@@ -1132,26 +1142,19 @@ bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const QByteArray
     return false;
   }
 
-  // TODO
-  //emit itemChanged( pimItem.id(), location?? );
-
+  mNotificationCollector->itemChanged( pimItem.id() );
   return true;
-}
-
-bool DataStore::removePimItem( const PimItem & pimItem )
-{
-  return removePimItem( pimItem.id() );
-}
-
-bool DataStore::removePimItem( int id )
-{
-  return removeById( id, "PimItems" );
 }
 
 bool DataStore::cleanupPimItem( const PimItem &item )
 {
   if ( !m_dbOpened || !item.isValid() )
     return false;
+
+
+  // get some data before we delete
+  Location loc = locationById( item.locationId() );
+  MimeType mimetype = mimeTypeById( item.mimeTypeId() );
 
   QSqlDriver *driver = m_database.driver();
   if ( !driver->beginTransaction() ) {
@@ -1179,6 +1182,9 @@ bool DataStore::cleanupPimItem( const PimItem &item )
     return false;
   }
 
+  Resource res = resourceById( loc.resourceId() );
+  mNotificationCollector->itemRemoved( item.id(), loc.location().toLatin1(),
+                                       mimetype.mimeType().toLatin1(), res.resource().toLatin1() );
   return true;
 }
 
@@ -1319,11 +1325,12 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
 
   QSqlQuery query( m_database );
 
-  QString statement = QString( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id, PimItems.datetime, PimItems.remote_id FROM PimItems, ItemFlags WHERE "
-                                     "ItemFlags.pimitem_id = PimItems.id AND ItemFlags.flag_id = %1" )
-                                   .arg( flag.id() );
+  QString statement = QString( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id,"
+                               "PimItems.datetime, PimItems.remote_id, PimItems.location_id"
+                               " FROM PimItems, ItemFlags WHERE "
+                               "ItemFlags.pimitem_id = PimItems.id AND ItemFlags.flag_id = %1" ).arg( flag.id() );
   if ( location.isValid() )
-    statement += QString( "AND location_id = %1" ).arg( location.id() );
+    statement += QString( " AND location_id = %1" ).arg( location.id() );
 
   if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "DataStore::listPimItems" );
@@ -1335,7 +1342,7 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
     pimItems.append( PimItem( query.value( 0 ).toInt(),
                               query.value( 4 ).toByteArray(),
                               query.value( 1 ).toByteArray(),
-                              location.id(), query.value( 2 ).toInt(),
+                              query.value( 5 ).toInt(), query.value( 2 ).toInt(),
                               dateTimeToQDateTime( query.value( 3 ).toByteArray() ) ) );
   }
 
@@ -1825,6 +1832,78 @@ QString DataStore::dateTimeFromQDateTime( const QDateTime & dateTime )
 QDateTime DataStore::dateTimeToQDateTime( const QByteArray & dateTime )
 {
     return QDateTime::fromString( dateTime, "yyyy-MM-dd hh:mm:ss" );
+}
+
+bool Akonadi::DataStore::beginTransaction()
+{
+  qDebug() << "DataStore::beginTransaction()";
+  if ( !m_dbOpened )
+    return false;
+
+  if ( m_inTransaction ) {
+    qWarning() << "DataStore::beginTransaction(): Transaction already in progress!";
+    return false;
+  }
+
+  QSqlDriver *driver = m_database.driver();
+  if ( !driver->beginTransaction() ) {
+    debugLastDbError( "DataStore::beginTransaction" );
+    return false;
+  }
+
+  m_inTransaction = true;
+  return true;
+}
+
+bool Akonadi::DataStore::rollbackTransaction()
+{
+  qDebug() << "DataStore::rollbackTransaction()";
+  if ( !m_dbOpened )
+    return false;
+
+  if ( !m_inTransaction ) {
+    qWarning() << "DataStore::rollbackTransaction(): No Transaction in progress!";
+    return false;
+  }
+
+  QSqlDriver *driver = m_database.driver();
+  m_inTransaction = false;
+  emit transactionRolledBack();
+  if ( !driver->rollbackTransaction() ) {
+    debugLastDbError( "DataStore::rollbackTransaction" );
+    return false;
+  }
+
+  return true;
+}
+
+bool Akonadi::DataStore::commitTransaction()
+{
+  qDebug() << "DataStore::commitTransaction()";
+  if ( !m_dbOpened )
+    return false;
+
+  if ( !m_inTransaction ) {
+    qWarning() << "DataStore::commitTransaction(): No Transaction in progress!";
+    return false;
+  }
+
+  QSqlDriver *driver = m_database.driver();
+  if ( !driver->commitTransaction() ) {
+    debugLastDbError( "DataStore::commitTransaction" );
+    rollbackTransaction();
+    m_inTransaction = false;
+    return false;
+  }
+
+  m_inTransaction = false;
+  emit transactionCommitted();
+  return true;
+}
+
+bool Akonadi::DataStore::inTransaction() const
+{
+  return m_inTransaction;
 }
 
 #include "datastore.moc"

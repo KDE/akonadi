@@ -29,10 +29,13 @@ class QSqlQuery;
 #include "entity.h"
 #include "fetchquery.h"
 #include "collection.h"
+#include "notificationcollector.h"
 
 namespace Akonadi {
 
-    class FetchQuery;
+class FetchQuery;
+class NotificationCollector;
+
 /***************************************************************************
  *   DataStore                                                             *
  ***************************************************************************/
@@ -134,8 +137,6 @@ public:
                         const QByteArray & remote_id,
                         int *insertId = 0 );
     bool updatePimItem( const PimItem &pimItem, const QByteArray &data );
-    bool removePimItem( const PimItem & pimItem );
-    bool removePimItem( int id );
     PimItem pimItemById( int id );
     PimItem pimItemById( int id, FetchQuery::Type type );
     QList<PimItem> listPimItems( const MimeType & mimetype,
@@ -194,12 +195,45 @@ public:
 
     static QString storagePath();
 
+    /**
+      Begins a transaction. No changes will be written to the database and
+      no notification signal will be emitted unless you call commitTransaction().
+      @return true if successfull.
+    */
+    bool beginTransaction();
+
+    /**
+      Reverts all changes within the current transaction.
+    */
+    bool rollbackTransaction();
+
+    /**
+      Commits all changes within the current transaction and emits all
+      collected notfication signals. If committing fails, the transaction
+      will be rolled back.
+    */
+    bool commitTransaction();
+
+    /**
+      Returns true if there is a transaction in progress.
+    */
+    bool inTransaction() const;
+
+    /**
+      Returns the notification collector of this DataStore object.
+      Use this to listen to change notification signals.
+    */
+    NotificationCollector* notificationCollector() const { return mNotificationCollector; }
+
 Q_SIGNALS:
-    void itemAdded( int uid, const QByteArray& location );
-    void itemRemoved( int uid, const QByteArray& location );
-    void itemChanged( int uid, const QByteArray& location );
-    void collectionAdded( const QByteArray &location );
-    void collectionRemoved( const QByteArray &location );
+    /**
+      Emitted if a transaction has been successfully committed.
+    */
+    void transactionCommitted();
+    /**
+      Emitted if a transaction has been aborted.
+    */
+    void transactionRolledBack();
 
 protected:
     void debugLastDbError( const QString & actionDescription ) const;
@@ -235,6 +269,8 @@ private:
     QString m_connectionName;
     QSqlDatabase m_database;
     bool m_dbOpened;
+    bool m_inTransaction;
+    NotificationCollector* mNotificationCollector;
 };
 
 }

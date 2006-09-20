@@ -22,6 +22,7 @@
 #include "akonadiconnection.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
+#include "storage/transaction.h"
 
 #include "append.h"
 #include "response.h"
@@ -162,6 +163,8 @@ bool Akonadi::Append::commit()
     Response response;
 
     DataStore *db = connection()->storageBackend();
+    Transaction transaction( db );
+
     Location l = db->locationByRawMailbox( m_mailbox );
     if ( !l.isValid() )
       return failureResponse( QString("Unknown collection '%1'.").arg( m_mailbox.constData() ) );
@@ -193,8 +196,8 @@ bool Akonadi::Append::commit()
     }
 
     // set message flags
-    ok = db->appendItemFlags( itemId, m_flags );
-    // TODO handle failure
+    if ( !db->appendItemFlags( itemId, m_flags ) )
+      return failureResponse( "Unable to append item flags." );
 
     // the message was appended; now we have to update the counts
     const int existsChange = +1;
@@ -204,12 +207,15 @@ bool Akonadi::Append::commit()
         unseenChange = +1;
     // int firstUnseen = ?; // can't be updated atomically, so we probably have to
                             // recalculate it each time it's needed
-    ok = db->updateLocationCounts( l, existsChange, recentChange, unseenChange );
-    // TODO handle failure by removing the message again from the db
+    if ( !db->updateLocationCounts( l, existsChange, recentChange, unseenChange ) )
+      return failureResponse( "Unable to update collection counts." );
 
     // TODO if the mailbox is currently selected, the normal new message
     //      actions SHOULD occur.  Specifically, the server SHOULD notify the
     //      client immediately via an untagged EXISTS response.
+
+    if ( !transaction.commit() )
+        return failureResponse( "Unable to commit transaction." );
 
     response.setTag( tag() );
     response.setSuccess();

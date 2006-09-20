@@ -23,6 +23,7 @@
 #include "akonadiconnection.h"
 #include "response.h"
 #include "storage/datastore.h"
+#include "storage/transaction.h"
 
 #include "store.h"
 
@@ -72,6 +73,7 @@ bool Store::commit()
   response.setUntagged();
 
   DataStore *store = connection()->storageBackend();
+  Transaction transaction( store );
 
   QList<PimItem> pimItems;
   if ( connection()->selectedLocation().id() == -1 ) {
@@ -94,8 +96,6 @@ bool Store::commit()
         deleteFlags( pimItems[ i ], mStoreQuery.flags() );
       }
     } else if ( mStoreQuery.dataType() == StoreQuery::Data ) {
-      qDebug() << "literal data: " << mData;
-      DataStore *store = connection()->storageBackend();
       store->updatePimItem( pimItems[ i ], mData );
     }
 
@@ -111,6 +111,9 @@ bool Store::commit()
       emit responseAvailable( response );
     }
   }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Cannot commit transaction." );
 
   response.setTag( tag() );
   response.setSuccess();
