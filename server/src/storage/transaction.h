@@ -29,6 +29,7 @@ class DataStore;
 /**
   Helper class for DataStore transaction handling.
   Works similar to QMutexLocker.
+  Supports command-local and session-global transactions.
 */
 class Transaction
 {
@@ -36,6 +37,8 @@ class Transaction
     /**
       Starts a new transaction. The transaction will automatically rolled back
       on destruction if it hasn't been committed explicitly before.
+      If there is already a global transaction in progress, this one will be used
+      instead of creating a new one.
       @param db The corresponding DataStore. You must not delete @p db during
       the lifetime of a Transaction object.
     */
@@ -43,17 +46,22 @@ class Transaction
 
     /**
       Rolls back the transaction if it hasn't been committed explicitly.
+      This also happens if a global transaction is used.
     */
     ~Transaction();
 
     /**
       Commits the transaction. Returns true on success.
+      If a global transaction is used, nothing happens, global transactions have
+      to be committed explicitly.
     */
     bool commit();
 
   private:
     Q_DISABLE_COPY( Transaction )
     DataStore* mDb;
+    bool mGlobal;
+    bool mCommitted;
 };
 
 }

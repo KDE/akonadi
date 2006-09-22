@@ -38,6 +38,7 @@
 #include "handler/select.h"
 #include "handler/status.h"
 #include "handler/store.h"
+#include "handler/transaction.h"
 #include "uid.h"
 
 using namespace Akonadi;
@@ -128,6 +129,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new Modify();
     if ( command == "RENAME" )
       return new Rename();
+    if ( command == "BEGIN" || command == "ROLLBACK" || command == "COMMIT" )
+      return new TransactionHandler();
 
     return 0;
 }

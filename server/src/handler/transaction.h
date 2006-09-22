@@ -17,31 +17,25 @@
     02110-1301, USA.
 */
 
-#include "transaction.h"
-#include "storage/datastore.h"
+#ifndef AKONADI_TRANSACTION_HANDLER_H
+#define AKONADI_TRANSACTION_HANDLER_H
 
-Akonadi::Transaction::Transaction(DataStore * db) :
-  mDb( db ), mCommitted( false )
+#include <handler.h>
+
+namespace Akonadi {
+
+/**
+  Handler for transaction commands (BEGIN, COMMIT, ROLLBACK).
+*/
+class TransactionHandler : public Handler
 {
-  if ( mDb->inTransaction() ) {
-    mGlobal = true;
-  } else {
-    mGlobal = false;
-    mDb->beginTransaction();
-  }
+  public:
+    TransactionHandler();
+    ~TransactionHandler();
+
+    bool handleLine( const QByteArray &line );
+};
+
 }
 
-Akonadi::Transaction::~ Transaction()
-{
-  if ( mDb->inTransaction() && !mCommitted )
-    mDb->rollbackTransaction();
-}
-
-bool Akonadi::Transaction::commit()
-{
-  mCommitted = true;
-  if ( !mGlobal )
-    return mDb->commitTransaction();
-  else
-    return true;
-}
+#endif

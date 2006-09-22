@@ -39,6 +39,7 @@ set(libakonadiprivate_SRCS
   src/handler/status.cpp
   src/handler/store.cpp
   src/handler/storequery.cpp
+  src/handler/transaction.cpp
   src/handler/uid.cpp
   src/persistentsearch.cpp
   src/persistentsearchmanager.cpp
