@@ -21,6 +21,7 @@
 #include "akonadiconnection.h"
 #include "response.h"
 #include "storage/datastore.h"
+#include "storage/transaction.h"
 
 #include "expunge.h"
 
@@ -41,6 +42,7 @@ bool Expunge::handleLine( const QByteArray& )
 
   Location location = connection()->selectedLocation();
   DataStore *store = connection()->storageBackend();
+  Transaction transaction( store );
 
   Flag flag = store->flagByName( "\\Deleted" );
   if ( !flag.isValid() ) {
@@ -72,6 +74,9 @@ bool Expunge::handleLine( const QByteArray& )
       return true;
     }
   }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction." );
 
   response.setTag( tag() );
   response.setSuccess();

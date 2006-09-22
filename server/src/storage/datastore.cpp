@@ -1156,29 +1156,29 @@ bool DataStore::cleanupPimItem( const PimItem &item )
   Location loc = locationById( item.locationId() );
   MimeType mimetype = mimeTypeById( item.mimeTypeId() );
 
-  QSqlDriver *driver = m_database.driver();
-  if ( !driver->beginTransaction() ) {
-    debugLastDbError( "DataStore::cleanupPimItem: beginTransaction" );
-    return false;
-  }
-
   QSqlQuery query( m_database );
 
   QString statement = QString( "DELETE FROM ItemMetaData WHERE pimitem_id = %1" ).arg( item.id() );
-  query.exec( statement );
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "Error during deletion of item meta data." );
+    return false;
+  }
+
   statement = QString( "DELETE FROM ItemFlags WHERE pimitem_id = %1" ).arg( item.id() );
-  query.exec( statement );
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "Error during deletion of item flags." );
+    return false;
+  }
+
   statement = QString( "DELETE FROM Parts WHERE pimitem_id = %1" ).arg( item.id() );
-  query.exec( statement );
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "Error during deletion of item parts." );
+    return false;
+  }
+
   statement = QString( "DELETE FROM PimItems WHERE id = %1" ).arg( item.id() );
-  query.exec( statement );
-
-  if ( !driver->commitTransaction() ) {
-    debugLastDbError( "DataStore::cleanupPimItem: commitTransaction" );
-
-    if ( !driver->rollbackTransaction() )
-      debugLastDbError( "DataStore::cleanupPimItem: rollbackTransaction" );
-
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "Error during deletion of a single item." );
     return false;
   }
 
