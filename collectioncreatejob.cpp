@@ -50,11 +50,6 @@ void PIM::CollectionCreateJob::doStart( )
   writeData( command );
 }
 
-void PIM::CollectionCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
-{
-  qDebug() << "unhandled response in collection create job: " << tag << data;
-}
-
 QByteArray PIM::CollectionCreateJob::path( ) const
 {
   return d->path;

@@ -47,7 +47,6 @@ class AKONADI_EXPORT CollectionRenameJob : public Job
 
   protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
     CollectionRenameJobPrivate *d;

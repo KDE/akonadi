@@ -35,10 +35,4 @@ void PIM::ExpungeJob::doStart()
   writeData( newTag() + " EXPUNGE" );
 }
 
-void PIM::ExpungeJob::doHandleResponse(const QByteArray & tag, const QByteArray & data)
-{
-  Q_UNUSED( tag );
-  Q_UNUSED( data );
-}
-
 #include "expungejob.moc"

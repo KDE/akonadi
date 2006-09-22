@@ -47,7 +47,6 @@ class ExpungeJob : public Job
 
   protected:
     virtual void doStart();
-    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
     ExpungeJobPrivate *d;

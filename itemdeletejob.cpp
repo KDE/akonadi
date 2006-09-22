@@ -70,10 +70,4 @@ void PIM::ItemDeleteJob::expungeDone(PIM::Job * job)
   emit done( this );
 }
 
-void PIM::ItemDeleteJob::doHandleResponse(const QByteArray & tag, const QByteArray & data)
-{
-  Q_UNUSED( tag );
-  Q_UNUSED( data );
-}
-
 #include "itemdeletejob.moc"

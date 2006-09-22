@@ -50,13 +50,6 @@ void PIM::CollectionModifyJob::doStart()
   writeData( command );
 }
 
-void PIM::CollectionModifyJob::doHandleResponse(const QByteArray & tag, const QByteArray & data)
-{
-  // parent class does all we need
-  Q_UNUSED( tag );
-  Q_UNUSED( data );
-}
-
 void PIM::CollectionModifyJob::setContentTypes(const QList< QByteArray > & mimeTypes)
 {
   d->setMimeTypes = true;

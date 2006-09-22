@@ -248,13 +248,13 @@ class AKONADI_EXPORT Job : public QObject
     virtual void doStart() = 0;
 
     /**
-      This method should be reimplemented in the concrete jobs. It will be called
-      on received data from the backend.
+      This method should be reimplemented in the concrete jobs in case you want
+      to handle incoming data. It will be called on received data from the backend.
+      The default implementation does nothing.
       @param tag The tag of the corresponding command, empty if this is an untagges response.
       @param data The received data.
     */
-    virtual void doHandleResponse( const QByteArray &tag,
-      const QByteArray &data ) = 0;
+    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
     /**

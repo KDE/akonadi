@@ -48,9 +48,4 @@ void PIM::CollectionRenameJob::doStart( )
   writeData( newTag() + " RENAME \"" + d->from + "\" \"" + d->to + '\"' );
 }
 
-void PIM::CollectionRenameJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
-{
-  qDebug() << "Unhandled response in collection rename job: " << tag << data;
-}
-
 #include "collectionrenamejob.moc"

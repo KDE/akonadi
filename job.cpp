@@ -334,4 +334,9 @@ void PIM::Job::slotSubJobDone( PIM::Job * job )
   connect( d->socket, SIGNAL(readyRead()), this, SLOT(slotDataReceived()) );
 }
 
+void PIM::Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
+{
+  qDebug() << "Unhandled response: " << tag << data;
+}
+
 #include "job.moc"

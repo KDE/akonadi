@@ -43,11 +43,4 @@ void PIM::CollectionDeleteJob::doStart()
   writeData( newTag() + " DELETE \"" + d->path + "\"" );
 }
 
-void PIM::CollectionDeleteJob::doHandleResponse(const QByteArray & tag, const QByteArray & data)
-{
-  // the parent class does it all for us
-  Q_UNUSED( tag );
-  Q_UNUSED( data );
-}
-
 #include "collectiondeletejob.moc"

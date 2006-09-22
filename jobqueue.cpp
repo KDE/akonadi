@@ -59,12 +59,6 @@ void PIM::JobQueue::doStart( )
   startNext();
 }
 
-void PIM::JobQueue::doHandleResponse( const QByteArray & tag, const QByteArray & data )
-{
-  Q_UNUSED( tag );
-  Q_UNUSED( data );
-}
-
 void PIM::JobQueue::jobDone( PIM::Job * job )
 {
   Q_UNUSED( job );
