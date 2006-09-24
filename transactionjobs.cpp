@@ -17,47 +17,53 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_ITEMDELETEJOB_H
-#define PIM_ITEMDELETEJOB_H
+#include "transactionjobs.h"
 
-#include <libakonadi/job.h>
-
-namespace PIM {
-
-class ItemDeleteJobPrivate;
-
-/**
-  Convenience job which permanently deletes an item, ie. sets the \Deleted flag
-  and then executes the EXPUNGE command.
-*/
-class ItemDeleteJob : public Job
+PIM::TransactionBeginJob::TransactionBeginJob(Job * parent) :
+  Job( parent )
 {
-  Q_OBJECT
-
-  public:
-    /**
-      Cretes a new ItemDeleteJob.
-      @param ref The reference of the item to delete.
-      @param parent The parent object.
-    */
-    ItemDeleteJob( const DataReference &ref, QObject *parent = 0 );
-
-    /**
-      Destorys this job.
-    */
-    ~ItemDeleteJob();
-
-  protected:
-    virtual void doStart();
-
-  private slots:
-    void jobDone( PIM::Job* job );
-
-  private:
-    ItemDeleteJobPrivate *d;
-
-};
-
+  Q_ASSERT( parent );
 }
 
-#endif
+PIM::TransactionBeginJob::~ TransactionBeginJob()
+{
+}
+
+void PIM::TransactionBeginJob::doStart()
+{
+  writeData( newTag() + " BEGIN" );
+}
+
+
+
+PIM::TransactionRollbackJob::TransactionRollbackJob(Job * parent) :
+    Job( parent )
+{
+  Q_ASSERT( parent );
+}
+
+PIM::TransactionRollbackJob::~ TransactionRollbackJob()
+{
+}
+
+void PIM::TransactionRollbackJob::doStart()
+{
+  writeData( newTag() + " ROLLBACK" );
+}
+
+
+
+PIM::TransactionCommitJob::TransactionCommitJob(Job * parent) :
+    Job( parent )
+{
+  Q_ASSERT( parent );
+}
+
+PIM::TransactionCommitJob::~ TransactionCommitJob()
+{
+}
+
+void PIM::TransactionCommitJob::doStart()
+{
+  writeData( newTag() + " COMMIT" );
+}

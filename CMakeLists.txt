@@ -46,6 +46,7 @@ set( akonadi_LIB_SRC
 	monitor.cpp
 	profilemanager.cpp
 	profilemodel.cpp
+	transactionjobs.cpp
 )
 
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.NotificationManager.xml)
@@ -90,6 +91,7 @@ install( FILES
 	messagequery.h
 	monitor.h
 	profilemanager.h
+	transactionjobs.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi
 )
 

@@ -114,7 +114,6 @@ void MonitorTest::testMonitor()
   QVERIFY( del->exec() );
   qApp->processEvents();
 
-  QEXPECT_FAIL( "", "deletion is splitted into two commands...", Continue );
   QCOMPARE( cmspy.count(), 1 );
   arg = cmspy.takeFirst();
   QCOMPARE( arg.at(0).toByteArray(), QByteArray( "res3/monitor" ) );
@@ -128,7 +127,6 @@ void MonitorTest::testMonitor()
   QVERIFY( caspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
   QVERIFY( iaspy.isEmpty() );
-  QEXPECT_FAIL( "", "deletion is splitted into two commands...", Continue );
   QVERIFY( imspy.isEmpty() );
   imspy.clear();
 

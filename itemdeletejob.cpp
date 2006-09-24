@@ -20,13 +20,22 @@
 #include "itemdeletejob.h"
 #include "itemstorejob.h"
 #include "expungejob.h"
+#include "transactionjobs.h"
 
 using namespace PIM;
 
 class PIM::ItemDeleteJobPrivate
 {
   public:
+    enum State {
+      Begin,
+      Store,
+      Expunge,
+      Commit
+    };
+
     DataReference ref;
+    State state;
 };
 
 PIM::ItemDeleteJob::ItemDeleteJob(const DataReference & ref, QObject * parent) :
@@ -34,6 +43,7 @@ PIM::ItemDeleteJob::ItemDeleteJob(const DataReference & ref, QObject * parent) :
     d( new ItemDeleteJobPrivate )
 {
   d->ref = ref;
+  d->state = ItemDeleteJobPrivate::Begin;
 }
 
 PIM::ItemDeleteJob::~ ItemDeleteJob()
@@ -43,31 +53,52 @@ PIM::ItemDeleteJob::~ ItemDeleteJob()
 
 void PIM::ItemDeleteJob::doStart()
 {
-  ItemStoreJob* job = new ItemStoreJob( d->ref, this );
-  job->addFlag( "\\Deleted" );
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(storeDone(PIM::Job*)) );
-  job->start();
+  TransactionBeginJob *begin = new TransactionBeginJob( this );
+  connect( begin, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+  begin->start();
 }
 
-void PIM::ItemDeleteJob::storeDone(PIM::Job * job)
+void PIM::ItemDeleteJob::jobDone(PIM::Job * job)
 {
   if ( job->error() ) {
     setError( job->error(), job->errorMessage() );
-    emit done( this );
-  } else {
     job->deleteLater();
-    ExpungeJob *ejob = new ExpungeJob( this );
-    connect( ejob, SIGNAL(done(PIM::Job*)), SLOT(expungeDone(PIM::Job*)) );
-    ejob->start();
+    emit done( this );
+    return;
   }
-}
 
-void PIM::ItemDeleteJob::expungeDone(PIM::Job * job)
-{
-  if ( job->error() )
-    setError( job->error(), job->errorMessage() );
+  switch ( d->state ) {
+    case ItemDeleteJobPrivate::Begin:
+    {
+      ItemStoreJob* store = new ItemStoreJob( d->ref, this );
+      store->addFlag( "\\Deleted" );
+      connect( store, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+      store->start();
+      d->state = ItemDeleteJobPrivate::Store;
+      break;
+    }
+    case ItemDeleteJobPrivate::Store:
+    {
+      ExpungeJob *expunge = new ExpungeJob( this );
+      connect( expunge, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+      expunge->start();
+      d->state = ItemDeleteJobPrivate::Expunge;
+      break;
+    }
+    case ItemDeleteJobPrivate::Expunge:
+    {
+      TransactionCommitJob *commit = new TransactionCommitJob( this );
+      connect( commit, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+      commit->start();
+      d->state = ItemDeleteJobPrivate::Commit;
+      break;
+    }
+    case ItemDeleteJobPrivate::Commit:
+      emit done( this );
+      break;
+  }
+
   job->deleteLater();
-  emit done( this );
 }
 
 #include "itemdeletejob.moc"
