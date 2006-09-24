@@ -75,7 +75,9 @@ void DataStore::init()
 
 DataStore::~DataStore()
 {
-  Q_ASSERT( !m_inTransaction );
+  if ( inTransaction() )
+    rollbackTransaction();
+
   m_database.close();
   m_database = QSqlDatabase();
   QSqlDatabase::removeDatabase( m_connectionName );
