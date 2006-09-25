@@ -165,7 +165,7 @@ bool Akonadi::Append::commit()
     DataStore *db = connection()->storageBackend();
     Transaction transaction( db );
 
-    Location l = db->locationByRawMailbox( m_mailbox );
+    Location l = db->locationByName( m_mailbox );
     if ( !l.isValid() )
       return failureResponse( QString("Unknown collection '%1'.").arg( m_mailbox.constData() ) );
 

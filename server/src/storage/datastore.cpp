@@ -775,11 +775,6 @@ Location DataStore::locationById( int id ) const
   return Location( locationId, uri, policy, resource );
 }
 
-Location DataStore::locationByRawMailbox( const QByteArray& mailbox ) const
-{
-  return locationByName( mailbox );
-}
-
 QList<MimeType> DataStore::mimeTypesForLocation( int id ) const
 {
   if ( !m_dbOpened )

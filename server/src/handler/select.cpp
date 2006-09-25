@@ -48,7 +48,7 @@ bool Select::handleLine(const QByteArray& line )
     QByteArray mailbox = stripQuotes( line.right( line.size() - startOfMailbox ) );
 
     DataStore *db = connection()->storageBackend();
-    Location l = db->locationByRawMailbox( mailbox );
+    Location l = db->locationByName( mailbox );
 
     if ( !l.isValid() )
         return failureResponse( "Cannot list this folder" );
@@ -60,7 +60,7 @@ bool Select::handleLine(const QByteArray& line )
 
     response.setString( l.flags() );
     emit responseAvailable( response );
- 
+
     response.setString( QString::number(l.exists()) + " EXISTS" );
     emit responseAvailable( response );
 

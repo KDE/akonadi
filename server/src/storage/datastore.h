@@ -101,7 +101,6 @@ public:
     bool renameLocation( const Location &location, const QString &newName );
     Location locationById( int id ) const;
     Location locationByName( const QByteArray& name ) const;
-    Location locationByRawMailbox( const QByteArray& mailbox ) const;
     /**
       Returns all collection associated with the given resource, all collections if the
       resource is invalid.

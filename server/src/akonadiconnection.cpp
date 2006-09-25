@@ -217,7 +217,7 @@ const Location Akonadi::AkonadiConnection::selectedLocation()
     collection = collection.mid( 1 );
 
   DataStore *db = storageBackend();
-  Location l = db->locationByRawMailbox( collection );
+  Location l = db->locationByName( collection );
 
   return l;
 }
