@@ -101,6 +101,9 @@ bool Store::commit()
     } else if ( mStoreQuery.dataType() == StoreQuery::Data ) {
       if ( !store->updatePimItem( pimItems[ i ], mData ) )
         return failureResponse( "Unable to change item data." );
+    } else if ( mStoreQuery.dataType() == StoreQuery::Collection ) {
+      if ( !store->updatePimItem( pimItems[ i ], store->locationByName( mStoreQuery.collection() ) ) )
+        return failureResponse( "Unable to move item." );
     }
 
     if ( !( mStoreQuery.operation() & StoreQuery::Silent ) ) {

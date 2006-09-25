@@ -137,6 +137,7 @@ public:
                         const QByteArray & remote_id,
                         int *insertId = 0 );
     bool updatePimItem( const PimItem &pimItem, const QByteArray &data );
+    bool updatePimItem( const PimItem &pimItem, const Location &destination );
     PimItem pimItemById( int id );
     PimItem pimItemById( int id, FetchQuery::Type type );
     QList<PimItem> listPimItems( const MimeType & mimetype,

@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "storequery.h"
+#include "imapparser.h"
 #include <QDebug>
 
 using namespace Akonadi;
@@ -62,7 +63,10 @@ bool StoreQuery::parse( const QByteArray &query )
   } else if ( subCommand == "DATA" ) {
     mOperation = Replace | Silent;
     mDataType = Data;
-  } else
+  } else if ( subCommand == "COLLECTION" ) {
+    mOperation = Replace | Silent;
+    mDataType = Collection;
+  }else
     return false;
 
   const QByteArray leftover = query.mid( end + 1 );
@@ -70,6 +74,12 @@ bool StoreQuery::parse( const QByteArray &query )
     if ( !leftover[ 0 ] == '{' )
       return false;
     mContinuationSize = leftover.mid( 1, leftover.indexOf( '}' ) - 1 ).toInt();
+    return true;
+  }
+  if ( dataType() == Collection ) {
+    PIM::ImapParser::parseString( leftover, mCollection );
+    if ( mCollection.isEmpty() )
+      return false;
     return true;
   }
   if ( !leftover[ 0 ] == '(' )
@@ -139,4 +149,9 @@ int Akonadi::StoreQuery::dataType() const
 int Akonadi::StoreQuery::continuationSize() const
 {
   return mContinuationSize;
+}
+
+QByteArray Akonadi::StoreQuery::collection() const
+{
+  return mCollection;
 }

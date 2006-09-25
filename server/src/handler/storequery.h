@@ -42,7 +42,8 @@ class StoreQuery
     enum DataType
     {
       Flags,
-      Data
+      Data,
+      Collection
     };
 
     StoreQuery();
@@ -55,6 +56,7 @@ class StoreQuery
     QList<QByteArray> sequences() const;
     bool isUidStore() const;
     int continuationSize() const;
+    QByteArray collection() const;
 
     void dump();
 
@@ -65,6 +67,7 @@ class StoreQuery
     QList<QByteArray> mSequences;
     bool mIsUidStore;
     int mContinuationSize;
+    QByteArray mCollection;
 };
 
 }

@@ -1148,6 +1148,29 @@ bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const QByteArray
   return true;
 }
 
+bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const Location & destination)
+{
+  if ( !m_dbOpened || !pimItem.isValid() || !destination.isValid() )
+    return false;
+
+  Location source = locationById( pimItem.locationId() );
+  if ( !source.isValid() )
+    return false;
+  mNotificationCollector->collectionChanged( source.location().toUtf8() );
+
+  QSqlQuery query( m_database );
+  QString statement = QString( "UPDATE PimItems SET location_id = %1 WHERE id = %2" ).
+      arg( destination.id() ).arg( pimItem.id() );
+
+  if ( !query.exec( statement ) ) {
+    debugLastQueryError( query, "Error during moving of a single PimItem." );
+    return false;
+  }
+
+  mNotificationCollector->collectionChanged( destination.location().toUtf8() );
+  return true;
+}
+
 bool DataStore::cleanupPimItem( const PimItem &item )
 {
   if ( !m_dbOpened || !item.isValid() )
