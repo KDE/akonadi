@@ -77,7 +77,6 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
   // start a list job
   CollectionListJob *job = new CollectionListJob( Collection::prefix(), true, d->queue );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
-  d->queue->addJob( job );
 
   // monitor collection changes
   d->monitor = new Monitor();
@@ -224,7 +223,6 @@ void PIM::CollectionModel::collectionChanged( const QString &path )
     // update
     CollectionStatusJob *job = new CollectionStatusJob( path, d->queue );
     connect( job, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
-    d->queue->addJob( job );
   } else {
     // new collection
     int index = path.lastIndexOf( Collection::delimiter() );
@@ -237,11 +235,9 @@ void PIM::CollectionModel::collectionChanged( const QString &path )
     // re-list parent non-recursively
     CollectionListJob *job = new CollectionListJob( parent, false, d->queue );
     connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
-    d->queue->addJob( job );
     // list the new collection recursively
     job = new CollectionListJob( path, true, d->queue );
     connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
-    d->queue->addJob( job );
   }
 }
 
@@ -334,7 +330,6 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
       if ( col->type() != Collection::VirtualParent ) {
         CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->queue );
         connect( csjob, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
-        d->queue->addJob( csjob );
       }
     }
 
@@ -359,7 +354,6 @@ bool PIM::CollectionModel::setData( const QModelIndex & index, const QVariant & 
       newPath = d->editedCollection->parent() + Collection::delimiter() + d->editedCollection->name().toLatin1(); // TODO: to utf7
     CollectionRenameJob *job = new CollectionRenameJob( d->editedCollection->path(), newPath, d->queue );
     connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
-    d->queue->addJob( job );
     emit dataChanged( index, index );
     return true;
   }
@@ -437,7 +431,6 @@ bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const Q
   // start creation job
   CollectionCreateJob *job = new CollectionCreateJob( d->editedCollection->path(), d->queue );
   connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
-  d->queue->addJob( job );
 
   d->currentEdit = Private::Create;
   return true;
@@ -515,7 +508,6 @@ bool PIM::CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction a
     if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
       item.resize( item.size() - 1 );
     ItemAppendJob *job = new ItemAppendJob( path, item, type.toLatin1(), d->queue );
-    d->queue->addJob( job );
     return true;
   }
 

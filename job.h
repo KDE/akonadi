@@ -256,12 +256,16 @@ class AKONADI_EXPORT Job : public QObject
     */
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
-  private:
     /**
-      Adds the given job as a sub job.
+      Adds the given job as a subjob to this job. This method is automatically called
+      if you construct a job using another job as parent object.
+      The base implementation does the necessary setup to share the network connection
+      with the backend.
+      @param job The new subjob.
     */
-    void addSubJob( Job* job );
+    virtual void addSubJob( Job* job );
 
+  private:
     void handleResponse( const QByteArray &tag, const QByteArray &data );
 
   private slots:

@@ -47,25 +47,23 @@ class AKONADI_EXPORT JobQueue : public Job
     virtual ~JobQueue();
 
     /**
-      Adds the given job to the queue. Added jobs will be started automatically.
-    */
-    void addJob( PIM::Job* job );
-
-    /**
       Returns true if there are no jobs in the queue.
     */
     bool isEmpty() const;
 
   protected:
     virtual void doStart();
+    virtual void addSubJob( PIM::Job *job );
 
   private:
     // part of the Job API, hide it for JobQueue
     virtual void start();
+    // uses a singleshot timer to start the job, makes sure its fully constructed
     void startNext();
 
   private slots:
     void jobDone( PIM::Job* job );
+    void slotStartNext();
 
   private:
     JobQueuePrivate *d;

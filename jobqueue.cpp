@@ -21,6 +21,7 @@
 
 #include <QDebug>
 #include <QQueue>
+#include <QTimer>
 
 using namespace PIM;
 
@@ -47,8 +48,9 @@ PIM::JobQueue::~ JobQueue( )
   delete d;
 }
 
-void PIM::JobQueue::addJob( PIM::Job * job )
+void PIM::JobQueue::addSubJob( PIM::Job * job )
 {
+  Job::addSubJob( job );
   d->queue.enqueue( job );
   startNext();
 }
@@ -66,7 +68,12 @@ void PIM::JobQueue::jobDone( PIM::Job * job )
   startNext();
 }
 
-void PIM::JobQueue::startNext( )
+void PIM::JobQueue::startNext()
+{
+  QTimer::singleShot( 0, this, SLOT(slotStartNext()) );
+}
+
+void PIM::JobQueue::slotStartNext()
 {
   if ( !d->isStarted || d->jobRunning || isEmpty() )
     return;
