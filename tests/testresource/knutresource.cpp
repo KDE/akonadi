@@ -35,6 +35,8 @@ KnutResource::KnutResource( const QString &id )
 
   int number = id.mid( 22 ).toInt();
   mStatusTimer->start( 5000 + ( 100*number ) );
+
+  mConfig = settings()->value( "Config/MyConfig" ).toString();
 }
 
 KnutResource::~KnutResource()
@@ -44,8 +46,11 @@ KnutResource::~KnutResource()
 void KnutResource::configure()
 {
   const QString tmp = QInputDialog::getText( 0, "Configuration", "Configuration:", QLineEdit::Normal, mConfig );
-  if ( !tmp.isEmpty() )
+  if ( !tmp.isEmpty() ) {
     mConfig = tmp;
+    settings()->setValue( "Config/MyConfig", mConfig );
+    setName( mConfig );
+  }
 }
 
 bool KnutResource::setConfiguration( const QString &config )
