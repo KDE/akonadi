@@ -508,6 +508,7 @@ bool PIM::CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction a
     if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
       item.resize( item.size() - 1 );
     ItemAppendJob *job = new ItemAppendJob( path, item, type.toLatin1(), d->queue );
+    connect( job, SIGNAL(done(PIM::Job*)), SLOT(appendDone(PIM::Job*)) );
     return true;
   }
 

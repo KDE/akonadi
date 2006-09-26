@@ -29,7 +29,7 @@ class JobQueuePrivate;
 /**
   A job queue. All jobs you put in here are executed sequentially. JobQueue can
   be used as a parent for jobs to share the same connection to the Akonadi
-  backend. Do not start enqueued jobs manually!
+  backend. Do not start enqueued jobs manually with start() (exec() is fine)!
 */
 class AKONADI_EXPORT JobQueue : public Job
 {

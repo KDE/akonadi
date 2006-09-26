@@ -29,6 +29,7 @@
 #include <QTextStream>
 
 #include "job.h"
+#include "jobqueue.h"
 #include "imapparser.h"
 
 using namespace PIM;
@@ -124,7 +125,9 @@ bool Job::exec()
 {
   QEventLoop loop( this );
   connect( this, SIGNAL( done( PIM::Job* ) ), &loop, SLOT( quit() ) );
-  start();
+  // if the parent is a JobQueue we don't need to start the job
+  if ( dynamic_cast<JobQueue*>( d->parent ) == 0 )
+    start();
   loop.exec();
 
   return ( d->mError == 0 );
