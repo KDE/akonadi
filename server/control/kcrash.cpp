@@ -87,7 +87,6 @@ void KCrash::init()
 #ifdef SIGSEGV
   signal (SIGSEGV, handler);
   sigaddset(&mask, SIGSEGV);
-  qDebug( "set SIGSEV handler" );
 #endif
 #ifdef SIGFPE
   signal (SIGFPE, handler);
@@ -100,6 +99,14 @@ void KCrash::init()
 #ifdef SIGABRT
   signal (SIGABRT, handler);
   sigaddset(&mask, SIGABRT);
+#endif
+#ifdef SIGTERM
+  signal (SIGTERM, handler);
+  sigaddset(&mask, SIGTERM);
+#endif
+#ifdef SIGINT
+  signal (SIGINT, handler);
+  sigaddset(&mask, SIGINT);
 #endif
 
   sigprocmask(SIG_UNBLOCK, &mask, 0);

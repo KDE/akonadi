@@ -255,6 +255,7 @@ class AgentManager : public QObject
     void resourceRegistered( const QString&, const QString&, const QString& );
     void resourceStatusChanged( int status, const QString &message );
     void resourceProgressChanged( uint progress, const QString &message );
+    void resourceNameChanged( const QString& );
     void resourceConfigurationChanged( const QString& );
 
   private:
@@ -284,6 +285,11 @@ class AgentManager : public QObject
      */
     void readPluginInfos();
 
+    /**
+     * Internal method.
+     */
+    bool checkInterface( const QString &identifier, const QString &method ) const;
+
     class PluginInfo
     {
       public:
@@ -306,7 +312,6 @@ class AgentManager : public QObject
     {
       public:
         QString agentType;
-        QString name;
         Akonadi::ProcessControl *controller;
         org::kde::Akonadi::Resource *interface;
     };

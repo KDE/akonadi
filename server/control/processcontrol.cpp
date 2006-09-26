@@ -90,6 +90,10 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
     if ( exitCode != 0 ) {
       qDebug( "ProcessControl: Application '%s' returned with exit code %d (%s)",
               qPrintable( mApplication ), exitCode, qPrintable( mProcess.errorString() ) );
+      if ( mPolicy == RestartOnCrash ) {
+        if ( !mFailedToStart ) // don't try to start an unstartable application
+          start();
+      }
     } else {
       qDebug( "Application '%s' exited normally...", qPrintable( mApplication ) );
     }

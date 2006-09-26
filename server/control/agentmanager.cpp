@@ -66,12 +66,8 @@ void AgentManager::cleanup()
   while ( it.hasNext() ) {
     it.next();
 
-    /**
-     * Delete the controller explicitely to trigger
-     * termination of child processes.
-     */
-    it.value().controller->setCrashPolicy( Akonadi::ProcessControl::StopOnCrash );
-    delete it.value().controller;
+    if ( it.value().interface )
+      it.value().interface->quit();
   }
 
   mInstances.clear();
@@ -167,7 +163,6 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   const QString agentIdentifier = QString( "%1_%2" ).arg( identifier, QString::number( instanceCounter ) );
 
   Instance instance;
-  instance.name = agentIdentifier;
   instance.agentType = identifier;
   instance.controller = new Akonadi::ProcessControl( this );
   instance.interface = 0;
@@ -193,22 +188,14 @@ void AgentManager::removeAgentInstance( const QString &identifier )
     return;
   }
 
-  if ( mInstances[ identifier ].interface )
-    mInstances[ identifier ].interface->quit();
-  else
+  if ( mInstances[ identifier ].interface ) {
+    mInstances[ identifier ].interface->cleanup();
+  } else
     mTracer->error( QLatin1String( "AgentManager::removeAgentInstance" ),
                     QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
 
-  /**
-   * We have to call processEvents() here to let QProcess enough time
-   * to discover that the agent application has quit.
-   */
-  QCoreApplication::processEvents();
-
-  if ( mInstances[ identifier ].controller ) {
-    mInstances[ identifier ].controller->stop();
+  if ( mInstances[ identifier ].controller )
     delete mInstances.value( identifier ).controller;
-  }
 
   mInstances.remove( identifier );
 
@@ -235,161 +222,80 @@ QStringList AgentManager::agentInstances() const
 
 int AgentManager::agentInstanceStatus( const QString &identifier ) const
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentInstanceStatus" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceStatus" ) ) )
     return 2;
-  }
-
-  if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "AgentManager::agentInstanceStatus" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
-    return 2;
-  }
 
   return mInstances[ identifier ].interface->status();
 }
 
 QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) const
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentInstanceStatusMessage" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceStatusMessage" ) ) )
     return QString();
-  }
-
-  if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "AgentManager::agentInstanceStatusMessage" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
-    return QString();
-  }
 
   return mInstances[ identifier ].interface->statusMessage();
 }
 
 uint AgentManager::agentInstanceProgress( const QString &identifier ) const
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentInstanceProgress" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceProgress" ) ) )
     return 0;
-  }
-
-  if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "AgentManager::agentInstanceProgress" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
-    return 0;
-  }
 
   return mInstances[ identifier ].interface->progress();
 }
 
 QString AgentManager::agentInstanceProgressMessage( const QString &identifier ) const
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentInstanceProgressMessage" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceProgressMessage" ) ) )
     return QString();
-  }
-
-  if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "AgentManager::agentInstanceProgressMessage" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
-    return QString();
-  }
 
   return mInstances[ identifier ].interface->progressMessage();
 }
 
 void AgentManager::setAgentInstanceName( const QString &identifier, const QString &name )
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::setAgentInstanceName" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "setAgentInstanceName" ) ) )
     return;
-  }
 
-  mInstances[ identifier ].name = name;
-  save();
-
-  emit agentInstanceNameChanged( identifier, name );
+  mInstances[ identifier ].interface->setName( name );
 }
 
 QString AgentManager::agentInstanceName( const QString &identifier ) const
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentInstanceName" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceName" ) ) )
     return QString();
-  }
 
-  return mInstances[ identifier ].name;
+  return mInstances[ identifier ].interface->name();
 }
 
 void AgentManager::agentInstanceConfigure( const QString &identifier )
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentInstanceConfigure" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceConfigure" ) ) )
     return;
-  }
-
-  if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "AgentManager::agentInstanceConfigure" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
-    return;
-  }
 
   mInstances[ identifier ].interface->configure();
 }
 
 bool AgentManager::setAgentInstanceConfiguration( const QString &identifier, const QString &data )
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::setAgentInstanceConfiguration" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "setAgentInstanceConfiguration" ) ) )
     return false;
-  }
-
-  if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "AgentManager::setAgentInstanceConfiguration" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
-    return false;
-  }
 
   return mInstances[ identifier ].interface->setConfiguration( data );
 }
 
 QString AgentManager::agentInstanceConfiguration( const QString &identifier ) const
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentInstanceConfiguration" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceConfiguration" ) ) )
     return QString();
-  }
-
-  if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "AgentManager::agentInstanceConfiguration" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
-    return QString();
-  }
 
   return mInstances[ identifier ].interface->configuration();
 }
 
 void AgentManager::agentInstanceSynchronize( const QString &identifier )
 {
-  if ( !mInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentInstanceSynchronize" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
     return;
-  }
-
-  if ( !mInstances[ identifier ].interface ) {
-    mTracer->error( QLatin1String( "AgentManager::agentInstanceSynchronize" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
-    return;
-  }
 
   mInstances[ identifier ].interface->synchronize();
 }
@@ -539,10 +445,8 @@ void AgentManager::load()
       file.endGroup();
       continue;
     }
-    const QString name = file.value( "Name" ).toString();
 
     Instance instance;
-    instance.name = name;
     instance.agentType = agentType;
     instance.controller = new Akonadi::ProcessControl( this );
     instance.interface = 0;
@@ -587,7 +491,6 @@ void AgentManager::save()
 
     file.beginGroup( instanceIt.key() );
     file.setValue( "AgentType", instanceIt.value().agentType );
-    file.setValue( "Name", instanceIt.value().name );
     file.endGroup();
   }
 
@@ -650,6 +553,8 @@ void AgentManager::resourceRegistered( const QString &name, const QString&, cons
            this, SLOT( resourceStatusChanged( int, const QString& ) ) );
   connect( interface, SIGNAL( progressChanged( uint, const QString& ) ),
            this, SLOT( resourceProgressChanged( uint, const QString& ) ) );
+  connect( interface, SIGNAL( nameChanged( const QString& ) ),
+           this, SLOT( resourceNameChanged( const QString& ) ) );
   connect( interface, SIGNAL( configurationChanged( const QString& ) ),
            this, SLOT( resourceConfigurationChanged( const QString& ) ) );
 
@@ -713,6 +618,42 @@ void AgentManager::resourceConfigurationChanged( const QString &data )
   }
 
   emit agentInstanceConfigurationChanged( identifier, data );
+}
+
+void AgentManager::resourceNameChanged( const QString &data )
+{
+  org::kde::Akonadi::Resource *resource = static_cast<org::kde::Akonadi::Resource*>( sender() );
+  if ( !resource ) {
+    mTracer->error( QLatin1String( "AgentManager::resourceNameChanged" ),
+                    QLatin1String( "Got signal from unknown sender" ) );
+    return;
+  }
+
+  const QString identifier = resource->objectName();
+  if ( identifier.isEmpty() ) {
+    mTracer->error( QLatin1String( "AgentManager::resourceNameChanged" ),
+                    QLatin1String( "Sender of configurationChanged signal has no identifier" ) );
+    return;
+  }
+
+  emit agentInstanceNameChanged( identifier, data );
+}
+
+bool AgentManager::checkInterface( const QString &identifier, const QString &method ) const
+{
+  if ( !mInstances.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager::" ) + method,
+                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    return false;
+  }
+
+  if ( !mInstances[ identifier ].interface ) {
+    mTracer->error( QLatin1String( "AgentManager::" ) + method,
+                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    return false;
+  }
+
+  return true;
 }
 
 #include "agentmanager.moc"
