@@ -65,7 +65,8 @@ void KCrash::setEmergencyMethod( HandlerType method )
 
 static void defaultCrashHandler( int sig )
 {
-  fprintf( stderr, "%s", kBacktrace().toLatin1().data() );
+  if ( sig != SIGTERM && sig != SIGINT )
+    fprintf( stderr, "%s", kBacktrace().toLatin1().data() );
 
   if ( s_emergencyMethod )
     s_emergencyMethod( sig );
