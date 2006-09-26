@@ -32,12 +32,12 @@ class PIM::CollectionListJobPrivate
 {
   public:
     bool recursive;
-    QByteArray prefix;
+    QString prefix;
     Collection::List collections;
     QString resource;
 };
 
-PIM::CollectionListJob::CollectionListJob( const QByteArray &prefix, bool recursive, QObject *parent ) :
+PIM::CollectionListJob::CollectionListJob( const QString &prefix, bool recursive, QObject *parent ) :
     Job( parent ),
     d( new CollectionListJobPrivate )
 {
@@ -60,7 +60,7 @@ void PIM::CollectionListJob::doStart()
   QByteArray command = newTag() + " LIST \"";
   if ( !d->resource.isEmpty() )
     command += '#' + d->resource.toUtf8();
-  command += "\" \"" + d->prefix;
+  command += "\" \"" + d->prefix.toUtf8();
   if ( !d->prefix.endsWith( Collection::delimiter() ) && !d->prefix.isEmpty() )
     command += Collection::delimiter();
   command += ( d->recursive ? '*' : '%' );
@@ -83,14 +83,14 @@ void PIM::CollectionListJob::doHandleResponse( const QByteArray & tag, const QBy
     Q_ASSERT( delim.length() == 1 );
 
     // collection name
-    QByteArray folderName;
+    QString folderName;
     current = ImapParser::parseString( data, folderName, current );
 
     // strip trailing delimiters
     if ( folderName.endsWith( delim ) )
       folderName.truncate( data.length() - 1 );
 
-    QByteArray parentName = folderName.mid( 0, folderName.lastIndexOf( delim ) + 1 );
+    QString parentName = folderName.mid( 0, folderName.lastIndexOf( delim ) + 1 );
     // strip trailing delimiter, but not if this is root
     if ( parentName.endsWith( Collection::delimiter() ) && parentName != Collection::root() )
       parentName.truncate( parentName.length() - 1 );

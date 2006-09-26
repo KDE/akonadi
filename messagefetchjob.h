@@ -40,7 +40,7 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
       @param path Absolute path of the collection.
       @param parent The parent object.
     */
-    MessageFetchJob( const QByteArray &path, QObject *parent = 0 );
+    MessageFetchJob( const QString &path, QObject *parent = 0 );
 
     /**
       Creates a new message fetch job to retrieve the complete message

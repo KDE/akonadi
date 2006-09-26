@@ -38,7 +38,7 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
       @param path The unique IMAP path of the new collection.
       @param parent The parent object.
     */
-    CollectionCreateJob( const QByteArray &path, QObject *parent = 0 );
+    CollectionCreateJob( const QString &path, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -48,7 +48,7 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     /**
       Returns the path of the collection this job is supposed to create.
     */
-    QByteArray path() const;
+    QString path() const;
 
     /**
       Set allowed content mimetypes of the newly created collection.

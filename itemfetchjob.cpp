@@ -29,13 +29,13 @@ using namespace PIM;
 class PIM::ItemFetchJobPrivate
 {
   public:
-    QByteArray path;
+    QString path;
     DataReference uid;
     QList<QByteArray> fields;
     Item::List items;
 };
 
-PIM::ItemFetchJob::ItemFetchJob( const QByteArray & path, QObject * parent ) :
+PIM::ItemFetchJob::ItemFetchJob( const QString & path, QObject * parent ) :
     Job( parent ),
     d( new ItemFetchJobPrivate )
 {

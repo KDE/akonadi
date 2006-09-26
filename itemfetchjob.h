@@ -40,7 +40,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       @param path Absolute path of the collection.
       @param parent The parent object.
     */
-    ItemFetchJob( const QByteArray &path, QObject *parent = 0 );
+    ItemFetchJob( const QString &path, QObject *parent = 0 );
 
     /**
       Creates a new item fetch job to retrieve the complete item data

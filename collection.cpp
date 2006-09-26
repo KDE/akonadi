@@ -28,14 +28,14 @@ using namespace PIM;
 class Collection::Private
 {
   public:
-    QByteArray path;
-    QByteArray parent;
+    QString path;
+    QString parent;
     QString name;
     Type type;
     QHash<QByteArray, CollectionAttribute*> attributes;
 };
 
-PIM::Collection::Collection( const QByteArray &path ) :
+PIM::Collection::Collection( const QString &path ) :
   d( new Collection::Private() )
 {
   d->path = path;
@@ -49,7 +49,7 @@ PIM::Collection::~Collection( )
   d = 0;
 }
 
-QByteArray PIM::Collection::path() const
+QString PIM::Collection::path() const
 {
   return d->path;
 }
@@ -57,9 +57,8 @@ QByteArray PIM::Collection::path() const
 QString PIM::Collection::name( ) const
 {
   if ( d->name.isEmpty() && d->path != root() ) {
-    QByteArray name = d->path.mid( d->path.lastIndexOf( delimiter() ) + 1 );
-    // TODO decode to utf-8
-    d->name = QString::fromLatin1( name );
+    QString name = d->path.mid( d->path.lastIndexOf( delimiter() ) + 1 );
+    d->name = name;
   }
   return d->name;
 }
@@ -93,12 +92,12 @@ void PIM::Collection::setContentTypes( const QList<QByteArray> & types )
   attr->setContentTypes( types );
 }
 
-QByteArray PIM::Collection::parent( ) const
+QString PIM::Collection::parent( ) const
 {
   return d->parent;
 }
 
-void PIM::Collection::setParent( const QByteArray &parent )
+void PIM::Collection::setParent( const QString &parent )
 {
   d->parent = parent;
 }

@@ -31,19 +31,19 @@ class PIM::MonitorPrivate
 {
   public:
     org::kde::Akonadi::NotificationManager *nm;
-    QHash<QByteArray,bool> collections;
+    QHash<QString,bool> collections;
     QSet<QByteArray> resources;
     QSet<QByteArray> items;
     QSet<QByteArray> mimetypes;
 
-    bool isCollectionMonitored( const QByteArray &path, const QByteArray &resource )
+    bool isCollectionMonitored( const QString &path, const QByteArray &resource )
     {
       if ( isCollectionMonitored( path ) || resources.contains( resource ) )
         return true;
       return false;
     }
 
-    bool isItemMonitored( const QByteArray &item, const QByteArray &collection,
+    bool isItemMonitored( const QByteArray &item, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource )
     {
       if ( isCollectionMonitored( collection ) || items.contains( item ) ||
@@ -53,9 +53,9 @@ class PIM::MonitorPrivate
     }
 
   private:
-    bool isCollectionMonitored( const QByteArray &path )
+    bool isCollectionMonitored( const QString &path )
     {
-      for ( QHash<QByteArray,bool>::ConstIterator it = collections.constBegin();
+      for ( QHash<QString,bool>::ConstIterator it = collections.constBegin();
             it != collections.constEnd(); ++it ) {
         if ( it.value() ) {
           if ( path.startsWith( it.key() ) )
@@ -82,7 +82,7 @@ PIM::Monitor::~Monitor()
   delete d;
 }
 
-void PIM::Monitor::monitorCollection( const QByteArray & path, bool recursive )
+void PIM::Monitor::monitorCollection( const QString& path, bool recursive )
 {
   d->collections.insert( path, recursive );
 }
@@ -102,7 +102,7 @@ void PIM::Monitor::monitorMimeType(const QByteArray & mimetype)
   d->mimetypes.insert( mimetype );
 }
 
-void PIM::Monitor::slotItemChanged( const QByteArray & uid, const QByteArray & collection,
+void PIM::Monitor::slotItemChanged( const QByteArray & uid, const QString& collection,
                                     const QByteArray &mimetype, const QByteArray &resource )
 {
   if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
@@ -111,7 +111,7 @@ void PIM::Monitor::slotItemChanged( const QByteArray & uid, const QByteArray & c
     emit collectionChanged( collection );
 }
 
-void PIM::Monitor::slotItemAdded( const QByteArray &uid, const QByteArray &collection,
+void PIM::Monitor::slotItemAdded( const QByteArray &uid, const QString &collection,
                                   const QByteArray &mimetype, const QByteArray &resource )
 {
   if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
@@ -120,7 +120,7 @@ void PIM::Monitor::slotItemAdded( const QByteArray &uid, const QByteArray &colle
     emit collectionChanged( collection );
 }
 
-void PIM::Monitor::slotItemRemoved( const QByteArray & uid, const QByteArray & collection,
+void PIM::Monitor::slotItemRemoved( const QByteArray & uid, const QString &collection,
                                     const QByteArray &mimetype, const QByteArray &resource )
 {
   if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
@@ -129,19 +129,19 @@ void PIM::Monitor::slotItemRemoved( const QByteArray & uid, const QByteArray & c
     emit collectionChanged( collection );
 }
 
-void PIM::Monitor::slotCollectionChanged( const QByteArray & path, const QByteArray &resource )
+void PIM::Monitor::slotCollectionChanged( const QString& path, const QByteArray &resource )
 {
   if ( d->isCollectionMonitored( path, resource ) )
     emit collectionChanged( path );
 }
 
-void PIM::Monitor::slotCollectionAdded( const QByteArray & path, const QByteArray &resource )
+void PIM::Monitor::slotCollectionAdded( const QString& path, const QByteArray &resource )
 {
   if ( d->isCollectionMonitored( path, resource ) )
     emit collectionAdded( path );
 }
 
-void PIM::Monitor::slotCollectionRemoved( const QByteArray & path, const QByteArray &resource )
+void PIM::Monitor::slotCollectionRemoved( const QString& path, const QByteArray &resource )
 {
   if ( d->isCollectionMonitored( path, resource ) )
     emit collectionRemoved( path );
@@ -157,18 +157,18 @@ bool PIM::Monitor::connectToNotificationManager( )
   if ( !d->nm ) {
     qWarning() << "Unable to connect to notification manager";
   } else {
-    connect( d->nm, SIGNAL(itemChanged(QByteArray,QByteArray,QByteArray,QByteArray)),
-             SLOT(slotItemChanged(QByteArray,QByteArray,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemAdded(QByteArray,QByteArray,QByteArray,QByteArray)),
-             SLOT(slotItemAdded(QByteArray,QByteArray,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemRemoved(QByteArray,QByteArray,QByteArray,QByteArray)),
-             SLOT(slotItemRemoved(QByteArray,QByteArray,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionChanged(QByteArray,QByteArray)),
-             SLOT(slotCollectionChanged(QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionAdded(QByteArray,QByteArray)),
-             SLOT(slotCollectionAdded(QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionRemoved(QByteArray,QByteArray)),
-             SLOT(slotCollectionRemoved(QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemChanged(QByteArray,QString,QByteArray,QByteArray)),
+             SLOT(slotItemChanged(QByteArray,QString,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemAdded(QByteArray,QString,QByteArray,QByteArray)),
+             SLOT(slotItemAdded(QByteArray,QString,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemRemoved(QByteArray,QString,QByteArray,QByteArray)),
+             SLOT(slotItemRemoved(QByteArray,QString,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionChanged(QString,QByteArray)),
+             SLOT(slotCollectionChanged(QString,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionAdded(QString,QByteArray)),
+             SLOT(slotCollectionAdded(QString,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionRemoved(QString,QByteArray)),
+             SLOT(slotCollectionRemoved(QString,QByteArray)) );
     return true;
   }
   return false;

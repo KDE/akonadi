@@ -26,11 +26,11 @@ using namespace PIM;
 class PIM::CollectionRenameJobPrivate
 {
   public:
-    QByteArray from;
-    QByteArray to;
+    QString from;
+    QString to;
 };
 
-PIM::CollectionRenameJob::CollectionRenameJob( const QByteArray & from, const QByteArray & to, QObject * parent ) :
+PIM::CollectionRenameJob::CollectionRenameJob( const QString & from, const QString & to, QObject * parent ) :
     Job( parent ),
     d( new CollectionRenameJobPrivate )
 {
@@ -45,7 +45,7 @@ PIM::CollectionRenameJob::~ CollectionRenameJob( )
 
 void PIM::CollectionRenameJob::doStart( )
 {
-  writeData( newTag() + " RENAME \"" + d->from + "\" \"" + d->to + '\"' );
+  writeData( newTag() + " RENAME \"" + d->from.toUtf8() + "\" \"" + d->to.toUtf8() + '\"' );
 }
 
 #include "collectionrenamejob.moc"

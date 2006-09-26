@@ -68,7 +68,7 @@ class PIM::MessageFetchJobPrivate
     }
 };
 
-PIM::MessageFetchJob::MessageFetchJob( const QByteArray & path, QObject * parent ) :
+PIM::MessageFetchJob::MessageFetchJob( const QString & path, QObject * parent ) :
     ItemFetchJob( path, parent ),
     d( new MessageFetchJobPrivate )
 {

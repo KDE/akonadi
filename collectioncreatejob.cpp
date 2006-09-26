@@ -26,11 +26,11 @@ using namespace PIM;
 
 class PIM::CollectionCreateJobPrivate {
   public:
-    QByteArray path;
+    QString path;
     QList<QByteArray> contentTypes;
 };
 
-PIM::CollectionCreateJob::CollectionCreateJob( const QByteArray & path, QObject * parent ) :
+PIM::CollectionCreateJob::CollectionCreateJob( const QString & path, QObject * parent ) :
     Job( parent ),
     d( new CollectionCreateJobPrivate )
 {
@@ -44,13 +44,13 @@ PIM::CollectionCreateJob::~ CollectionCreateJob( )
 
 void PIM::CollectionCreateJob::doStart( )
 {
-  QByteArray command = newTag() + " CREATE \"" + d->path + "\"";
+  QByteArray command = newTag() + " CREATE \"" + d->path.toUtf8() + "\"";
   if ( !d->contentTypes.isEmpty() )
     command += '(' + ImapParser::join( d->contentTypes, QByteArray(" ") ) + ')';
   writeData( command );
 }
 
-QByteArray PIM::CollectionCreateJob::path( ) const
+QString PIM::CollectionCreateJob::path( ) const
 {
   return d->path;
 }

@@ -36,7 +36,7 @@ class MessageModel::Private
 {
   public:
     QList<Message*> messages;
-    QByteArray path;
+    QString path;
     MessageFetchJob *listingJob;
     Monitor *monitor;
     QList<MessageQuery*> fetchJobs, updateJobs;
@@ -120,7 +120,7 @@ QVariant PIM::MessageModel::headerData( int section, Qt::Orientation orientation
   return QAbstractTableModel::headerData( section, orientation, role );
 }
 
-void PIM::MessageModel::setPath( const QByteArray& path )
+void PIM::MessageModel::setPath( const QString& path )
 {
   if ( d->path == path )
     return;

@@ -42,7 +42,7 @@ class AKONADI_EXPORT CollectionStatusJob : public Job
       @param path The collection path.
       @param parent The parent object.
     */
-    CollectionStatusJob( const QByteArray &path, QObject *parent = 0 );
+    CollectionStatusJob( const QString &path, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -57,7 +57,7 @@ class AKONADI_EXPORT CollectionStatusJob : public Job
     /**
       Returns the path of the corresponding collection.
     */
-    QByteArray path() const;
+    QString path() const;
 
   protected:
     virtual void doStart();

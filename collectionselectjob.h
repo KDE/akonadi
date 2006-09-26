@@ -38,7 +38,7 @@ class AKONADI_EXPORT CollectionSelectJob : public Job
       @param path The absolute path of the collection to select.
       @param parent The parent object.
     */
-    CollectionSelectJob( const QByteArray &path, QObject *parent = 0 );
+    CollectionSelectJob( const QString &path, QObject *parent = 0 );
 
     /**
       Destroys this job.

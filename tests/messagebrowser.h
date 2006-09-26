@@ -30,7 +30,7 @@ class MessageBrowser : public QTreeView
 {
   Q_OBJECT
   public:
-    MessageBrowser( const QByteArray &path );
+    MessageBrowser( const QString &path );
   private slots:
     void messageActivated( const QModelIndex &index );
     void slotFetchDone( PIM::Job* job );

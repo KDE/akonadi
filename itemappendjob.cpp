@@ -26,13 +26,13 @@ using namespace PIM;
 class PIM::ItemAppendJobPrivate
 {
   public:
-    QByteArray path;
+    QString path;
     QByteArray data;
     QByteArray mimetype;
     QString remoteId;
 };
 
-PIM::ItemAppendJob::ItemAppendJob( const QByteArray &path, const QByteArray & data, const QByteArray & mimetype, QObject * parent ) :
+PIM::ItemAppendJob::ItemAppendJob( const QString &path, const QByteArray & data, const QByteArray & mimetype, QObject * parent ) :
     Job( parent ),
     d( new ItemAppendJobPrivate )
 {
@@ -51,7 +51,7 @@ void PIM::ItemAppendJob::doStart()
   QByteArray remoteId;
   if ( !d->remoteId.isEmpty() )
     remoteId = " \\RemoteId[" + d->remoteId.toUtf8() + ']';
-  writeData( newTag() + " APPEND \"" + d->path + "\" (\\MimeType[" + d->mimetype + ']' + remoteId + ") {" + QByteArray::number( d->data.size() ) + '}' );
+  writeData( newTag() + " APPEND \"" + d->path.toUtf8() + "\" (\\MimeType[" + d->mimetype + ']' + remoteId + ") {" + QByteArray::number( d->data.size() ) + '}' );
 }
 
 void PIM::ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )

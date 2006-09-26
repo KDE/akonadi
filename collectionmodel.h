@@ -126,7 +126,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Returns the collection path for the given model index.
       @param index The model index.
     */
-    QByteArray pathForIndex( const QModelIndex &index ) const;
+    QString pathForIndex( const QModelIndex &index ) const;
 
     /**
       Returns wether the specified collection supports <em>any</em> of the given mime-types.
@@ -139,7 +139,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Helper function to generate a model index for a given collection reference.
     */
-    QModelIndex indexForPath( const QByteArray &path, int column = 0 );
+    QModelIndex indexForPath( const QString &path, int column = 0 );
 
     /**
       Helper method to remove a single row from the model (not from the Akonadi backend).
@@ -152,12 +152,12 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Removes a the given collection from the model.
     */
-    void collectionRemoved( const QByteArray &path );
+    void collectionRemoved( const QString &path );
 
     /**
       Notify the model about collection changes.
     */
-    void collectionChanged( const QByteArray &path );
+    void collectionChanged( const QString &path );
 
     /**
       Connected to the collection status job.

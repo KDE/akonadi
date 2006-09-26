@@ -404,4 +404,42 @@ void CollectionJobTest::testIllegalRename()
   delete rename;
 }
 
+void CollectionJobTest::testUtf8CollectionName()
+{
+  QString folderName = QString::fromUtf8( "res3/ä" );
+
+  // create collection
+  CollectionCreateJob *create = new CollectionCreateJob( folderName, this );
+  QVERIFY( create->exec() );
+  delete create;
+
+  // list parent
+  CollectionListJob *list = new CollectionListJob( "res3", true, this );
+  QVERIFY( list->exec() );
+  QCOMPARE( list->collections().count(), 1 );
+  Collection *col = list->collections().first();
+  QCOMPARE( col->path(), folderName );
+  delete list;
+
+  // modify collection
+  CollectionModifyJob *modify = new CollectionModifyJob( folderName, this );
+  QList<QByteArray> contentTypes;
+  contentTypes << "message/rfc822";
+  modify->setContentTypes( contentTypes );
+  QVERIFY( modify->exec() );
+  delete modify;
+
+  // collection status
+  CollectionStatusJob *status = new CollectionStatusJob( folderName, this );
+  QVERIFY( status->exec() );
+  CollectionContentTypeAttribute *ccta = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
+  QVERIFY( ccta );
+  compareLists( ccta->contentTypes(), contentTypes );
+
+  // delete collection
+  CollectionDeleteJob *del = new CollectionDeleteJob( folderName, this );
+  QVERIFY( del->exec() );
+  delete del;
+}
+
 #include "collectionjobtest.moc"

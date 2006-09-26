@@ -41,9 +41,9 @@ void MonitorTest::testMonitor()
 
   // monitor signals
   qRegisterMetaType<PIM::DataReference>("PIM::DataReference");
-  QSignalSpy caspy( monitor, SIGNAL(collectionAdded(QByteArray)) );
-  QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(QByteArray)) );
-  QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(QByteArray)) );
+  QSignalSpy caspy( monitor, SIGNAL(collectionAdded(QString)) );
+  QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(QString)) );
+  QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(QString)) );
   QSignalSpy iaspy( monitor, SIGNAL(itemAdded(PIM::DataReference)) );
   QSignalSpy imspy( monitor, SIGNAL(itemChanged(PIM::DataReference)) );
   QSignalSpy irspy( monitor, SIGNAL(itemRemoved(PIM::DataReference)) );

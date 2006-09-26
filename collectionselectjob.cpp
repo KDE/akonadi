@@ -26,11 +26,11 @@ using namespace PIM;
 class PIM::CollectionSelectJobPrivate
 {
   public:
-    QByteArray path;
+    QString path;
     int unseen;
 };
 
-PIM::CollectionSelectJob::CollectionSelectJob( const QByteArray & path, QObject *parent ) :
+PIM::CollectionSelectJob::CollectionSelectJob( const QString& path, QObject *parent ) :
     Job( parent ),
     d( new CollectionSelectJobPrivate )
 {
@@ -45,10 +45,10 @@ PIM::CollectionSelectJob::~ CollectionSelectJob( )
 
 void PIM::CollectionSelectJob::doStart( )
 {
-  QByteArray path = d->path;
+  QString path = d->path;
   if ( path.startsWith( "/" ) ) path.remove( 0, 1 );
 
-  writeData( newTag() + " SELECT \"" + path + "\"" );
+  writeData( newTag() + " SELECT \"" + path.toUtf8() + "\"" );
 }
 
 void PIM::CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )

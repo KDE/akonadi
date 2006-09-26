@@ -44,8 +44,8 @@ class CollectionModel::Private
 {
   public:
     enum EditType { None, Rename, Create, Delete };
-    QHash<QByteArray, Collection*> collections;
-    QHash<QByteArray, QList<QByteArray> > childCollections;
+    QHash<QString, Collection*> collections;
+    QHash<QString, QList<QString> > childCollections;
     EditType currentEdit;
     Collection *editedCollection;
     QString editOldName;
@@ -82,9 +82,9 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
   // monitor collection changes
   d->monitor = new Monitor();
   d->monitor->monitorCollection( Collection::root(), true );
-  connect( d->monitor, SIGNAL(collectionChanged(QByteArray)), SLOT(collectionChanged(QByteArray)) );
-  connect( d->monitor, SIGNAL(collectionAdded(QByteArray)), SLOT(collectionChanged(QByteArray)) );
-  connect( d->monitor, SIGNAL(collectionRemoved(QByteArray)), SLOT(collectionRemoved(QByteArray)) );
+  connect( d->monitor, SIGNAL(collectionChanged(QString)), SLOT(collectionChanged(QString)) );
+  connect( d->monitor, SIGNAL(collectionAdded(QString)), SLOT(collectionChanged(QString)) );
+  connect( d->monitor, SIGNAL(collectionRemoved(QString)), SLOT(collectionRemoved(QString)) );
 
   // ### Hack to get the kmail resource folder icons
   KGlobal::instance()->iconLoader()->addAppDir( "kmail" );
@@ -142,7 +142,7 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
 
 QModelIndex PIM::CollectionModel::index( int row, int column, const QModelIndex & parent ) const
 {
-  QList<QByteArray> list;
+  QList<QString> list;
   if ( !parent.isValid() )
     list = d->childCollections.value( Collection::root() );
   else
@@ -161,12 +161,12 @@ QModelIndex PIM::CollectionModel::parent( const QModelIndex & index ) const
     return QModelIndex();
 
   Collection *col = static_cast<Collection*>( index.internalPointer() );
-  QByteArray parentPath = col->parent();
+  QString parentPath = col->parent();
   Collection *parentCol = d->collections.value( parentPath );
   if ( !parentCol )
     return QModelIndex();
 
-  QList<QByteArray> list;
+  QList<QString> list;
   list = d->childCollections.value( parentCol->parent() );
 
   int parentRow = list.indexOf( parentPath );
@@ -178,7 +178,7 @@ QModelIndex PIM::CollectionModel::parent( const QModelIndex & index ) const
 
 int PIM::CollectionModel::rowCount( const QModelIndex & parent ) const
 {
-  QList<QByteArray> list;
+  QList<QString> list;
   if ( parent.isValid() )
     list = d->childCollections.value( static_cast<Collection*>( parent.internalPointer() )->path() );
   else
@@ -196,8 +196,8 @@ QVariant PIM::CollectionModel::headerData( int section, Qt::Orientation orientat
 
 bool PIM::CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 {
-  QList<QByteArray> list;
-  QByteArray parentPath;
+  QList<QString> list;
+  QString parentPath;
   if ( parent.isValid() ) {
     parentPath = static_cast<Collection*>( parent.internalPointer() )->path();
     list = d->childCollections.value( parentPath );
@@ -209,7 +209,7 @@ bool PIM::CollectionModel::removeRowFromModel( int row, const QModelIndex & pare
   }
 
   beginRemoveRows( parent, row, row );
-  QByteArray path = list.takeAt( row );
+  QString path = list.takeAt( row );
   delete d->collections.take( path );
   d->childCollections.remove( path );
   d->childCollections.insert( parentPath, list );
@@ -218,7 +218,7 @@ bool PIM::CollectionModel::removeRowFromModel( int row, const QModelIndex & pare
   return true;
 }
 
-void PIM::CollectionModel::collectionChanged( const QByteArray &path )
+void PIM::CollectionModel::collectionChanged( const QString &path )
 {
   if ( d->collections.contains( path ) ) {
     // update
@@ -228,7 +228,7 @@ void PIM::CollectionModel::collectionChanged( const QByteArray &path )
   } else {
     // new collection
     int index = path.lastIndexOf( Collection::delimiter() );
-    QByteArray parent;
+    QString parent;
     if ( index > 0 )
       parent = path.left( index );
     else
@@ -245,7 +245,7 @@ void PIM::CollectionModel::collectionChanged( const QByteArray &path )
   }
 }
 
-void PIM::CollectionModel::collectionRemoved( const QByteArray &path )
+void PIM::CollectionModel::collectionRemoved( const QString &path )
 {
   QModelIndex colIndex = indexForPath( path );
   if ( colIndex.isValid() ) {
@@ -268,7 +268,7 @@ void PIM::CollectionModel::updateDone( PIM::Job * job )
     kWarning() << k_funcinfo << "Job error: " << job->errorText() << endl;
   } else {
     CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
-    QByteArray path = csjob->path();
+    QString path = csjob->path();
     if ( !d->collections.contains( path ) )
       kWarning() << k_funcinfo << "Got status response for non-existing collection: " << path << endl;
     else {
@@ -287,17 +287,17 @@ void PIM::CollectionModel::updateDone( PIM::Job * job )
   job->deleteLater();
 }
 
-QModelIndex PIM::CollectionModel::indexForPath( const QByteArray &path, int column )
+QModelIndex PIM::CollectionModel::indexForPath( const QString &path, int column )
 {
   if ( !d->collections.contains( path ) )
     return QModelIndex();
 
-  QByteArray parentPath = d->collections.value( path )->parent();
+  QString parentPath = d->collections.value( path )->parent();
   // check if parent still exist or if this is an orphan collection
   if ( parentPath != Collection::root() && !d->collections.contains( parentPath ) )
     return QModelIndex();
 
-  QList<QByteArray> list = d->childCollections.value( parentPath );
+  QList<QString> list = d->childCollections.value( parentPath );
   int row = list.indexOf( path );
 
   if ( row >= 0 )
@@ -352,7 +352,7 @@ bool PIM::CollectionModel::setData( const QModelIndex & index, const QVariant & 
     d->currentEdit = Private::Rename;
     d->editOldName = d->editedCollection->name();
     d->editedCollection->setName( value.toString() );
-    QByteArray newPath;
+    QString newPath;
     if ( d->editedCollection->parent() == Collection::root() )
       newPath = d->editedCollection->name().toLatin1(); // TODO: to utf7
     else
@@ -459,11 +459,11 @@ bool PIM::CollectionModel::canCreateCollection( const QModelIndex & parent ) con
   return true;
 }
 
-QByteArray PIM::CollectionModel::pathForIndex( const QModelIndex & index ) const
+QString PIM::CollectionModel::pathForIndex( const QModelIndex & index ) const
 {
   if ( index.isValid() )
     return static_cast<Collection*>( index.internalPointer() )->path();
-  return QByteArray();
+  return QString();
 }
 
 Qt::DropActions PIM::CollectionModel::supportedDropActions() const
@@ -509,7 +509,7 @@ bool PIM::CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction a
   foreach ( QString type, data->formats() ) {
     if ( !supportsContentType( idx, QStringList( type ) ) )
       continue;
-    QByteArray path = pathForIndex( idx );
+    QString path = pathForIndex( idx );
     QByteArray item = data->data( type );
     // HACK for some unknown reason the data is sometimes 0-terminated...
     if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )

@@ -25,12 +25,12 @@ using namespace PIM;
 class PIM::CollectionModifyJobPrivate
 {
   public:
-    QByteArray path;
+    QString path;
     QList<QByteArray> mimeTypes;
     bool setMimeTypes;
 };
 
-PIM::CollectionModifyJob::CollectionModifyJob(const QByteArray & path, QObject * parent) :
+PIM::CollectionModifyJob::CollectionModifyJob(const QString &path, QObject * parent) :
     Job( parent ), d( new CollectionModifyJobPrivate )
 {
   d->path = path;
@@ -44,7 +44,7 @@ PIM::CollectionModifyJob::~ CollectionModifyJob()
 
 void PIM::CollectionModifyJob::doStart()
 {
-  QByteArray command = newTag() + " MODIFY \"" + d->path + '\"';
+  QByteArray command = newTag() + " MODIFY \"" + d->path.toUtf8() + '\"';
   if ( d->setMimeTypes )
     command += " MIMETYPES (" + ImapParser::join( d->mimeTypes, " " ) + ')';
   writeData( command );

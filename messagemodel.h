@@ -86,7 +86,7 @@ class AKONADI_EXPORT MessageModel : public QAbstractTableModel
       from the storage backend.
       @param path The full collection path.
     */
-    void setPath( const QByteArray &path );
+    void setPath( const QString &path );
 
     /**
       Returns the message reference to the given model index. If the index

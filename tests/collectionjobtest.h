@@ -39,6 +39,7 @@ class CollectionJobTest : public QObject
     void testModify();
     void testRename();
     void testIllegalRename();
+    void testUtf8CollectionName();
 };
 
 

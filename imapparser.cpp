@@ -189,3 +189,11 @@ QByteArray PIM::ImapParser::join(const QList< QByteArray > & list, const QByteAr
   return result;
 }
 
+int PIM::ImapParser::parseString(const QByteArray & data, QString & result, int start)
+{
+  QByteArray tmp;
+  int end = parseString( data, tmp, start );
+  result = QString::fromUtf8( tmp );
+  return end;
+}
+

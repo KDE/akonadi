@@ -24,10 +24,10 @@ using namespace PIM;
 class PIM::CollectionDeleteJobPrivate
 {
   public:
-    QByteArray path;
+    QString path;
 };
 
-PIM::CollectionDeleteJob::CollectionDeleteJob(const QByteArray & path, QObject * parent) :
+PIM::CollectionDeleteJob::CollectionDeleteJob(const QString & path, QObject * parent) :
     Job( parent ), d( new CollectionDeleteJobPrivate )
 {
   d->path = path;
@@ -40,7 +40,7 @@ PIM::CollectionDeleteJob::~ CollectionDeleteJob()
 
 void PIM::CollectionDeleteJob::doStart()
 {
-  writeData( newTag() + " DELETE \"" + d->path + "\"" );
+  writeData( newTag() + " DELETE \"" + d->path.toUtf8() + "\"" );
 }
 
 #include "collectiondeletejob.moc"

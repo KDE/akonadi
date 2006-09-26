@@ -39,7 +39,7 @@ class CollectionModifyJob : public Job
       @param path Path of the collection to modify
       @param parent The parent object
     */
-    CollectionModifyJob( const QByteArray &path, QObject *parent = 0 );
+    CollectionModifyJob( const QString &path, QObject *parent = 0 );
 
     /**
       Destroys this job.

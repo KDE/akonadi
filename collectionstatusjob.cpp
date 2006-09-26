@@ -29,11 +29,11 @@ using namespace PIM;
 class PIM::CollectionStatusJobPrivate
 {
   public:
-    QByteArray path;
+    QString path;
     CollectionAttribute::List attributes;
 };
 
-PIM::CollectionStatusJob::CollectionStatusJob( const QByteArray & path, QObject * parent ) :
+PIM::CollectionStatusJob::CollectionStatusJob( const QString& path, QObject * parent ) :
     Job( parent ),
     d( new CollectionStatusJobPrivate )
 {
@@ -52,7 +52,7 @@ QList< CollectionAttribute * > PIM::CollectionStatusJob::attributes( ) const
 
 void PIM::CollectionStatusJob::doStart( )
 {
-  writeData( newTag() + " STATUS \"" + d->path + "\" (MESSAGES UNSEEN MIMETYPES)" );
+  writeData( newTag() + " STATUS \"" + d->path.toUtf8() + "\" (MESSAGES UNSEEN MIMETYPES)" );
 }
 
 void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -90,7 +90,7 @@ void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const Q
   qDebug() << "unhandled response in collection status job: " << tag << data;
 }
 
-QByteArray PIM::CollectionStatusJob::path( ) const
+QString PIM::CollectionStatusJob::path( ) const
 {
   return d->path;
 }

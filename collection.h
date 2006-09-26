@@ -53,7 +53,7 @@ class AKONADI_EXPORT Collection
 
       @param path The unique IMAP path of this collection.
     */
-    Collection( const QByteArray &path );
+    Collection( const QString &path );
 
     /**
       Destroys this collection.
@@ -63,7 +63,7 @@ class AKONADI_EXPORT Collection
     /**
       Returns the unique IMAP path of this collection.
     */
-    QByteArray path() const;
+    QString path() const;
 
     /**
       Returns the name of this collection usable for display.
@@ -103,12 +103,12 @@ class AKONADI_EXPORT Collection
     /**
       Returns the IMAP path to the parent collection.
     */
-    QByteArray parent() const;
+    QString parent() const;
 
     /**
       Sets the path of the parent collection.
     */
-    void setParent( const QByteArray &parent );
+    void setParent( const QString &parent );
 
     /**
       Adds a collection attribute. An already existing attribute of the same

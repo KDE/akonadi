@@ -41,7 +41,7 @@ class CollectionDeleteJob : public Job
       @param path Path of a collection to delete.
       @param parent The parent object.
     */
-    CollectionDeleteJob( const QByteArray &path, QObject *parent = 0 );
+    CollectionDeleteJob( const QString &path, QObject *parent = 0 );
 
     /**
       Destroys this job.

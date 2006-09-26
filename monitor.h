@@ -56,7 +56,7 @@ class AKONADI_EXPORT Monitor : public QObject
       @param path The collection path.
       @param recursive If true also sub-collection will be monitored.
     */
-    void monitorCollection( const QByteArray &path, bool recursive );
+    void monitorCollection( const QString &path, bool recursive );
 
     /**
       Monitors the specified PIM Item for changes.
@@ -99,34 +99,34 @@ class AKONADI_EXPORT Monitor : public QObject
       Emitted if a monitored got a new child collection.
       @param path The path of the new collection.
     */
-    void collectionAdded( const QByteArray &path );
+    void collectionAdded( const QString &path );
 
     /**
       Emitted if a monitored collection changed (its properties, not its
       content).
       @param path The path of the modified collection.
     */
-    void collectionChanged( const QByteArray &path );
+    void collectionChanged( const QString &path );
 
     /**
       Emitted if a monitored collection has been removed.
       @param path The path of the rmeoved collection.
     */
-    void collectionRemoved( const QByteArray &path );
+    void collectionRemoved( const QString &path );
 
   private:
     bool connectToNotificationManager();
 
   private slots:
-    void slotItemChanged( const QByteArray &uid, const QByteArray &collection,
+    void slotItemChanged( const QByteArray &uid, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemAdded( const QByteArray &uid, const QByteArray &collection,
+    void slotItemAdded( const QByteArray &uid, const QString &collection,
                         const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemRemoved( const QByteArray &uid, const QByteArray &collection,
+    void slotItemRemoved( const QByteArray &uid, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotCollectionAdded( const QByteArray &path, const QByteArray &resource );
-    void slotCollectionChanged( const QByteArray &path, const QByteArray &resource );
-    void slotCollectionRemoved( const QByteArray &path, const QByteArray &resource );
+    void slotCollectionAdded( const QString &path, const QByteArray &resource );
+    void slotCollectionChanged( const QString &path, const QByteArray &resource );
+    void slotCollectionRemoved( const QString &path, const QByteArray &resource );
 
   private:
     MonitorPrivate* d;
