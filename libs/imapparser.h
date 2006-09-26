@@ -85,6 +85,15 @@ class AKONADI_EXPORT ImapParser
       @param separator The separator
     */
     static QByteArray join( const QList<QByteArray> &list, const QByteArray &separator );
+
+    /**
+      Same as parseString() and additional UTF-8 decoding of the result.
+      @param data Source data.
+      @param result Parsed string, quotation, literal marker, etc. are removed,
+      'NIL' is transformed into an empty QString. UTF-8 decoding is applied..
+      @param start start parsing at this index.
+    */
+    static int parseString( const QByteArray &data, QString &result, int start = 0 );
 };
 
 }

@@ -24,7 +24,7 @@ INSERT INTO Resources (id, name, cachepolicy_id) VALUES(2, 'akonadi_dummy_resour
 DELETE FROM PersistentSearches;
 INSERT INTO PersistentSearches (id, name, query) VALUES(0, 'kde-core-devel', 'MIMETYPE message/rfc822 HEADER From kde-core-devel@kde.org');
 INSERT INTO PersistentSearches (id, name, query) VALUES(1, 'all', 'MIMETYPE message/rfc822 ALL');
-INSERT INTO PersistentSearches (id, name, query) VALUES(2, 'Test �er', 'MIMETYPE message/rfc822 BODY "Test �er"');
+INSERT INTO PersistentSearches (id, name, query) VALUES(2, 'Test ?er', 'MIMETYPE message/rfc822 BODY "Test ?er"');
 
 DELETE FROM LocationMimeTypes;
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 0, 2);

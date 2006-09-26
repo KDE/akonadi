@@ -18,6 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 #include <QDebug>
+#include <QLatin1String>
 
 #include "handler.h"
 #include "response.h"
@@ -165,6 +166,16 @@ bool Akonadi::Handler::failureResponse( const QString& failureMessage )
     emit responseAvailable( response );
     deleteLater();
     return true;
+}
+
+bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )
+{
+  return failureResponse( QString::fromLatin1( failureMessage ) );
+}
+
+bool Akonadi::Handler::failureResponse(const char * failureMessage)
+{
+  return failureResponse( QLatin1String( failureMessage ) );
 }
 
 bool Akonadi::Handler::startContinuation()

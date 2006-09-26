@@ -48,7 +48,7 @@ public:
      * The tag of the command associated with this handler.
      */
     QByteArray tag() const;
-    
+
     /**
      * Process one line of input.
      * @param line The input.
@@ -66,11 +66,21 @@ public:
 
     /** Send a failure response with the given message. */
     bool failureResponse( const QString& failureMessage );
+    /**
+      Convenience method to compile with QT_NO_CAST_FROM_ASCII without
+      typing too much ;-)
+    */
+    bool failureResponse( const QByteArray &failureMessage );
+    /**
+      Convenience method to compile with QT_NO_CAST_FROM_ASCII without
+      typing too much ;-)
+     */
+    bool failureResponse( const char *failureMessage );
 
     static QByteArray stripQuotes( const QByteArray & );
-    
+
 signals:
-    
+
     /**
      * Emitted whenever the handler has a response ready for output. There can
      * be several responses per command.

@@ -23,6 +23,9 @@
 #include <QByteArray>
 #include <QList>
 #include <QObject>
+#include <QString>
+
+#include <storage/entity.h>
 
 namespace Akonadi {
 
@@ -44,13 +47,18 @@ class NotificationItem
     /**
       Creates a notification item for PIM items.
     */
-    NotificationItem( int uid, const QByteArray &collection,
+    NotificationItem( const PimItem &item, const Location &collection,
                       const QByteArray &mimeType, const QByteArray &resource );
 
     /**
       Creates a notification item for collections.
     */
-    NotificationItem( const QByteArray &collection, const QByteArray &resource );
+    NotificationItem( const QString &collection, const QByteArray &resource );
+
+    /**
+      Creates a notification item for collections.
+    */
+    NotificationItem( const Location &collection, const QByteArray &resource );
 
     /**
       Returns the type of this item.
@@ -60,17 +68,27 @@ class NotificationItem
     /**
       Returns the uid of the changed item.
     */
-    int uid() const { return mUid; }
+    int uid() const { return mItem.id(); }
+
+    /**
+      Returns the PimItem of the changed item.
+    */
+    PimItem pimItem() const { return mItem; }
 
     /**
       Returns the changed collection.
     */
-    QByteArray collection() const { return mCollection; }
+    Location collection() const { return mCollection; }
+
+    /**
+      Returns the collection name.
+    */
+    QString collectionName() const;
 
     /**
       Sets the changed collection.
     */
-    void setCollection( const QByteArray &collection ) { mCollection = collection; }
+    void setCollection( const Location &collection ) { mCollection = collection; }
 
     /**
       Returns the mime-type of the changed item.
@@ -104,10 +122,11 @@ class NotificationItem
 
   private:
     Type mType;
-    int mUid;
-    QByteArray mCollection;
+    PimItem mItem;
+    Location mCollection;
     QByteArray mMimeType;
     QByteArray mResource;
+    QString mCollectionName;
 };
 
 
@@ -139,7 +158,7 @@ class NotificationCollector : public QObject
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemAdded( int uid, const QByteArray &collection = QByteArray(),
+    void itemAdded( const PimItem &item, const Location &collection = Location(),
                     const QByteArray &mimeType = QByteArray(),
                     const QByteArray &resource = QByteArray() );
 
@@ -148,24 +167,25 @@ class NotificationCollector : public QObject
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemChanged( int uid, const QByteArray &collection = QByteArray(),
+    void itemChanged( const PimItem &item, const Location &collection = Location(),
                       const QByteArray &mimeType = QByteArray(),
                       const QByteArray &resource = QByteArray() );
 
     /**
       Notify about a removed item.
-      In contrast to itemAdded() and itemChanged() the caller must
-      provide all required information for obvious reasons.
+      Make sure you either provide all parameters or call this function before
+      actually removing the item from database.
     */
-    void itemRemoved( int uid, const QByteArray &collection,
-                      const QByteArray &mimeType, const QByteArray &resource );
+    void itemRemoved( const PimItem &item, const Location &collection = Location(),
+                      const QByteArray &mimeType = QByteArray(),
+                      const QByteArray &resource = QByteArray() );
 
     /**
       Notify about a added collection.
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
-    */
-    void collectionAdded( const QByteArray &collection,
+     */
+    void collectionAdded( const QString &collection,
                           const QByteArray &resource = QByteArray() );
 
     /**
@@ -173,33 +193,33 @@ class NotificationCollector : public QObject
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void collectionChanged( const QByteArray &collection,
+    void collectionChanged( const Location &collection,
                             const QByteArray &resource = QByteArray() );
 
     /**
       Notify about a removed collection.
-      In contrast to collectionAdded() and collectionChanged() the caller must
-      provide all required information for obvious reasons.
-    */
-    void collectionRemoved( const QByteArray &collection,
-                            const QByteArray &resource );
+      Make sure you either provide all parameters or call this function before
+      actually removing the item from database.
+     */
+    void collectionRemoved( const Location &collection,
+                            const QByteArray &resource = QByteArray() );
 
   signals:
-    void itemAddedNotification( int uid, const QByteArray &collection,
+    void itemAddedNotification( int uid, const QString &collection,
                                 const QByteArray &mimeType,
                                 const QByteArray &resource );
-    void itemChangedNotification( int uid, const QByteArray &collection,
+    void itemChangedNotification( int uid, const QString &collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
-    void itemRemovedNotification( int uid, const QByteArray &collection,
+    void itemRemovedNotification( int uid, const QString &collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
 
-    void collectionAddedNotification( const QByteArray &collection,
+    void collectionAddedNotification( const QString &collection,
                                       const QByteArray &resource );
-    void collectionChangedNotification( const QByteArray &collection,
+    void collectionChangedNotification( const QString &collection,
                                         const QByteArray &resource );
-    void collectionRemovedNotification( const QByteArray &collection,
+    void collectionRemovedNotification( const QString &collection,
                                         const QByteArray &resource );
 
   private:

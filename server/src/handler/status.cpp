@@ -49,8 +49,8 @@ bool Status::handleLine( const QByteArray& line )
     // status-att = "MESSAGES" / "RECENT" / "UIDNEXT" / "UIDVALIDITY" / "UNSEEN"
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QByteArray mailbox;
-    const int endOfMailbox = PIM::ImapParser::parseQuotedString( line, mailbox, startOfMailbox );
+    QString mailbox;
+    const int endOfMailbox = PIM::ImapParser::parseString( line, mailbox, startOfMailbox );
     const QByteArray statusAttributes = line.mid( endOfMailbox + 2, line.size() - ( endOfMailbox + 2 ) - 1 );
     const QList<QByteArray> attributeList = statusAttributes.split( ' ' );
 
@@ -66,11 +66,11 @@ bool Status::handleLine( const QByteArray& line )
     // REQUIRED untagged responses: STATUS
 
     // build STATUS response
-    QString statusResponse;
+    QByteArray statusResponse;
     // MESSAGES - The number of messages in the mailbox
     if ( attributeList.contains( "MESSAGES" ) ) {
         statusResponse += "MESSAGES ";
-        statusResponse += QString::number( l.exists() );
+        statusResponse += QByteArray::number( l.exists() );
     }
     // RECENT - The number of messages with the \Recent flag set
     if ( attributeList.contains( "RECENT" ) ) {
@@ -78,7 +78,7 @@ bool Status::handleLine( const QByteArray& line )
             statusResponse += " RECENT ";
         else
             statusResponse += "RECENT ";
-        statusResponse += QString::number( l.recent() );
+        statusResponse += QByteArray::number( l.recent() );
     }
     // UIDNEXT - The next unique identifier value of the mailbox
     if ( attributeList.contains( "UIDNEXT" ) ) {
@@ -86,7 +86,7 @@ bool Status::handleLine( const QByteArray& line )
             statusResponse += " UIDNEXT ";
         else
             statusResponse += "UIDNEXT ";
-        statusResponse += QString::number( db->uidNext() );
+        statusResponse += QByteArray::number( db->uidNext() );
     }
     // UIDVALIDITY - The unique identifier validity value of the mailbox
     if ( attributeList.contains( "UIDVALIDITY" ) ) {
@@ -94,14 +94,14 @@ bool Status::handleLine( const QByteArray& line )
             statusResponse += " UIDVALIDITY ";
         else
             statusResponse += "UIDVALIDITY ";
-        statusResponse += QString::number( l.uidValidity() );
+        statusResponse += QByteArray::number( (qlonglong)l.uidValidity() );
     }
     if ( attributeList.contains( "UNSEEN" ) ) {
         if ( !statusResponse.isEmpty() )
             statusResponse += " UNSEEN ";
         else
             statusResponse += "UNSEEN ";
-        statusResponse += QString::number( l.unseen() );
+        statusResponse += QByteArray::number( l.unseen() );
     }
     if ( attributeList.contains( "MIMETYPES" ) ) {
       if ( !statusResponse.isEmpty() )
@@ -112,7 +112,7 @@ bool Status::handleLine( const QByteArray& line )
     }
 
     response.setUntagged();
-    response.setString( "STATUS \"" + mailbox + "\" (" + statusResponse + ')' );
+    response.setString( "STATUS \"" + mailbox.toUtf8() + "\" (" + statusResponse + ')' );
     emit responseAvailable( response );
 
     response.setSuccess();

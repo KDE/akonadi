@@ -163,7 +163,7 @@ QByteArray Akonadi::MimeType::asCommaSeparatedString( const QList<MimeType> &typ
   foreach ( MimeType mt, types )
     list.append( mt.mimeType() );
 
-  return list.join( separator ).toLatin1();
+  return list.join( QString::fromLatin1( separator ) ).toLatin1();
 }
 
 void MimeType::setMimeType( const QString & mimetype )
@@ -198,7 +198,7 @@ Location::Location( int id, const QString & location,
 void Location::init()
 {
     // FIXME, obviously
-    m_flags = "FLAGS (Answered)";
+    m_flags = QLatin1String("FLAGS (Answered)");
 }
 
 void Location::fillFromQuery( const QSqlQuery & query )

@@ -119,7 +119,7 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
 
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    const int startOfFlags = PIM::ImapParser::parseQuotedString( line, m_mailbox, startOfMailbox ) + 1;
+    const int startOfFlags = PIM::ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
 
     // parse optional flag parenthesized list
     // Syntax:
@@ -167,9 +167,9 @@ bool Akonadi::Append::commit()
 
     Location l = db->locationByName( m_mailbox );
     if ( !l.isValid() )
-      return failureResponse( QString("Unknown collection '%1'.").arg( m_mailbox.constData() ) );
+      return failureResponse( "Unknown collection." );
 
-    QString mt;
+    QByteArray mt;
     QByteArray remote_id;
     foreach( QByteArray flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
@@ -184,9 +184,9 @@ bool Akonadi::Append::commit()
     }
     // standard imap does not know this attribute, so that's mail
     if ( mt.isEmpty() ) mt = "message/rfc822";
-    MimeType mimeType = db->mimeTypeByName( mt );
+    MimeType mimeType = db->mimeTypeByName( QString::fromLatin1( mt ) );
     if ( !mimeType.isValid() ) {
-      return failureResponse( QString( "Unknown mime type '%1'.").arg( mt ) );
+      return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
     }
     int itemId = 0;
     bool ok = db->appendPimItem( m_data, mimeType, l, m_dateTime, remote_id, &itemId );

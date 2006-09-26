@@ -22,6 +22,7 @@
 
 #include <QByteArray>
 #include <QList>
+#include <QString>
 
 namespace Akonadi {
 
@@ -32,7 +33,7 @@ class HandlerHelper
     /**
       Removes leading and trailing delimiters.
     */
-    static QByteArray normalizeCollectionName( const QByteArray &name );
+    static QString normalizeCollectionName( const QString &name );
 };
 
 }

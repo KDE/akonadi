@@ -18,6 +18,7 @@
  ***************************************************************************/
 #include <QDebug>
 #include <QEventLoop>
+#include <QLatin1String>
 
 #include "akonadiconnection.h"
 #include "storage/datastore.h"
@@ -36,7 +37,7 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
     , m_currentHandler( 0 )
     , m_connectionState( NonAuthenticated )
     , m_backend( 0 )
-    , m_selectedConnection( "/" )
+    , m_selectedConnection( QLatin1String("/") )
 {
     m_identifier.sprintf( "%p", static_cast<void*>( this ) );
     Tracer::self()->beginConnection( m_identifier, QString() );
@@ -199,25 +200,20 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
     }
 }
 
-const QByteArray Akonadi::AkonadiConnection::selectedCollection( ) const
+const QString Akonadi::AkonadiConnection::selectedCollection( ) const
 {
     return m_selectedConnection;
 }
 
-void Akonadi::AkonadiConnection::setSelectedCollection( const QByteArray& collection )
+void Akonadi::AkonadiConnection::setSelectedCollection( const QString& collection )
 {
     m_selectedConnection = collection;
 }
 
 const Location Akonadi::AkonadiConnection::selectedLocation()
 {
-  QByteArray collection = selectedCollection();
-
-  if ( collection.startsWith( '/' ) )
-    collection = collection.mid( 1 );
-
   DataStore *db = storageBackend();
-  Location l = db->locationByName( collection );
+  Location l = db->locationByName( selectedCollection() );
 
   return l;
 }

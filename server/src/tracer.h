@@ -98,6 +98,11 @@ class Tracer : public QObject, public TracerInterface
     virtual void signal( const QString &signalName, const QString &msg );
 
     /**
+      Convenience method with internal latin1 cast to compile with QT_NO_CAST_FROM_ASCII.
+    */
+    void signal( const char* signalName, const QString &msg );
+
+    /**
      * This method is called whenever a component wants to output a warning.
      */
     virtual void warning( const QString &componentName, const QString &msg );
@@ -106,6 +111,11 @@ class Tracer : public QObject, public TracerInterface
      * This method is called whenever a component wants to output an error.
      */
     virtual void error( const QString &componentName, const QString &msg );
+
+    /**
+     * Convenience method for QT_NO_CAST_FROM_ASCII usage.
+     */
+    void error( const char* componentName, const QString &msg );
 
   private:
     Tracer();

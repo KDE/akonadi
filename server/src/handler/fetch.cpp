@@ -26,6 +26,7 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
+#include "imapparser.h"
 #include "fetchquery.h"
 #include "response.h"
 
@@ -105,15 +106,15 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Flags ) ) {
     QList<Flag> flagList = connection()->storageBackend()->itemFlags( item );
 
-    QStringList flags;
+    QList<QByteArray> flags;
     for ( int i = 0; i < flagList.count(); ++i )
-      flags.append( flagList[ i ].name() );
+      flags.append( flagList[ i ].name().toUtf8() );
 
     DataStore *store = connection()->storageBackend();
     MimeType mimeType = store->mimeTypeById( item.mimeTypeId() );
-    flags.append( "\\MimeTypes[" + mimeType.mimeType() + ']' );
+    flags.append( "\\MimeTypes[" + mimeType.mimeType().toUtf8() + ']' );
 
-    attributes.append( "FLAGS (" + flags.join( " " ).toLatin1() + ')' );
+    attributes.append( "FLAGS (" + PIM::ImapParser::join( flags, " " ) + ')' );
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::InternalDate ) ) {

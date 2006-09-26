@@ -114,7 +114,7 @@ bool Store::commit()
 
       int itemPosition = store->pimItemPosition( pimItems[ i ] );
       response.setUntagged();
-      response.setString( QByteArray::number( itemPosition ) + " FETCH (FLAGS (" + flagList.join( " " ).toLatin1() + "))" );
+      response.setString( QByteArray::number( itemPosition ) + " FETCH (FLAGS (" + flagList.join( QLatin1String(" ") ).toUtf8() + "))" );
       emit responseAvailable( response );
     }
   }
@@ -139,14 +139,14 @@ bool Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
 
   QList<Flag> flagList;
   for ( int i = 0; i < flags.count(); ++i ) {
-    Flag flag = store->flagByName( flags[ i ] );
+    Flag flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
     if ( !flag.isValid() ) {
        // If the flag does not exist we'll create it now.
-      if ( !store->appendFlag( flags[ i ] ) ) {
+      if ( !store->appendFlag( QString::fromUtf8( flags[ i ] ) ) ) {
         qDebug( "Store::replaceFlags: Unable to add new flag '%s'", flags[ i ].data() );
         return false;
       } else {
-        flag = store->flagByName( flags[ i ] );
+        flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
         if ( !flag.isValid() )
           return false;
         else
@@ -170,14 +170,14 @@ bool Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
 
   QList<Flag> flagList;
   for ( int i = 0; i < flags.count(); ++i ) {
-    Flag flag = store->flagByName( flags[ i ] );
+    Flag flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
     if ( !flag.isValid() ) {
        // If the flag does not exist we'll create it now.
-      if ( !store->appendFlag( flags[ i ] ) ) {
+      if ( !store->appendFlag( QString::fromUtf8( flags[ i ]  ) ) ) {
         qDebug( "Store::addFlags: Unable to add new flag '%s'", flags[ i ].data() );
         return false;
       } else {
-        flag = store->flagByName( flags[ i ] );
+        flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
         if ( !flag.isValid() )
           return false;
         else
@@ -201,7 +201,7 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
 
   QList<Flag> flagList;
   for ( int i = 0; i < flags.count(); ++i ) {
-    Flag flag = store->flagByName( flags[ i ] );
+    Flag flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
     if ( !flag.isValid() )
       continue;
 

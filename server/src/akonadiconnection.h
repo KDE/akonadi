@@ -44,8 +44,8 @@ public:
     void run();
 
     virtual DataStore* storageBackend();
-    const QByteArray selectedCollection() const;
-    void setSelectedCollection( const QByteArray& collection );
+    const QString selectedCollection() const;
+    void setSelectedCollection( const QString& collection );
 
     const Location selectedLocation();
 
@@ -73,7 +73,7 @@ private:
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore* m_backend;
-    QByteArray m_selectedConnection;
+    QString m_selectedConnection;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
 };

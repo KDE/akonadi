@@ -151,7 +151,7 @@ int Akonadi::StoreQuery::continuationSize() const
   return mContinuationSize;
 }
 
-QByteArray Akonadi::StoreQuery::collection() const
+QString Akonadi::StoreQuery::collection() const
 {
   return mCollection;
 }

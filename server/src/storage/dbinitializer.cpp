@@ -43,7 +43,7 @@ bool DbInitializer::run()
 {
   QFile file( mTemplateFile );
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    mErrorMsg = QString( "Unable to open template file '%1'." ).arg( mTemplateFile );
+    mErrorMsg = QString::fromLatin1( "Unable to open template file '%1'." ).arg( mTemplateFile );
     return false;
   }
 
@@ -52,14 +52,14 @@ bool DbInitializer::run()
   QString errorMsg;
   int line, column;
   if ( !document.setContent( &file, &errorMsg, &line, &column ) ) {
-    mErrorMsg = QString( "Unable to parse template file '%1': %2 (%3:%4)." )
+    mErrorMsg = QString::fromLatin1( "Unable to parse template file '%1': %2 (%3:%4)." )
                        .arg( mTemplateFile ).arg( errorMsg ).arg( line ).arg( column );
     return false;
   }
 
   const QDomElement documentElement = document.documentElement();
   if ( documentElement.tagName() != QLatin1String( "database" ) ) {
-    mErrorMsg = QString( "Invalid format of template file '%1'." ).arg( mTemplateFile );
+    mErrorMsg = QString::fromLatin1( "Invalid format of template file '%1'." ).arg( mTemplateFile );
     return false;
   }
 
@@ -69,7 +69,7 @@ bool DbInitializer::run()
       if ( !checkTable( tableElement ) )
         return false;
     } else {
-      mErrorMsg = QString( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );
+      mErrorMsg = QString::fromLatin1( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );
       return false;
     }
 
@@ -81,7 +81,7 @@ bool DbInitializer::run()
 
 bool DbInitializer::checkTable( const QDomElement &element )
 {
-  const QString tableName = element.attribute( "name" );
+  const QString tableName = element.attribute( QLatin1String("name") );
 
   typedef QPair<QString, QString> ColumnEntry;
 
@@ -92,17 +92,17 @@ bool DbInitializer::checkTable( const QDomElement &element )
   while ( !columnElement.isNull() ) {
     if ( columnElement.tagName() == QLatin1String( "column" ) ) {
       ColumnEntry entry;
-      entry.first = columnElement.attribute( "name" );
-      entry.second = columnElement.attribute( "type" );
+      entry.first = columnElement.attribute( QLatin1String("name") );
+      entry.second = columnElement.attribute( QLatin1String("type") );
       columnsList.append( entry );
     } else if ( columnElement.tagName() == QLatin1String( "data" ) ) {
-      QString statement = QString( "INSERT INTO %1 (%2) VALUES (%3)" )
+      QString statement = QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
           .arg( tableName )
-          .arg( columnElement.attribute( "columns" ) )
-          .arg( columnElement.attribute( "values" ) );
+          .arg( columnElement.attribute( QLatin1String("columns") ) )
+          .arg( columnElement.attribute( QLatin1String("values") ) );
       dataList << statement;
     } else {
-      mErrorMsg = QString( "Unknown tag, expected <column> and got <%1>." ).arg( columnElement.tagName() );
+      mErrorMsg = QString::fromLatin1( "Unknown tag, expected <column> and got <%1>." ).arg( columnElement.tagName() );
       return false;
     }
 
@@ -111,8 +111,8 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
   QSqlQuery query( mDatabase );
 
-  if ( !query.exec( "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;" ) ) {
-    mErrorMsg = QString( "Unable to retrieve table information from database." );
+  if ( !query.exec( QLatin1String("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;") ) ) {
+    mErrorMsg = QLatin1String( "Unable to retrieve table information from database." );
     return false;
   }
 
@@ -130,15 +130,15 @@ bool DbInitializer::checkTable( const QDomElement &element )
     QString columns;
     for ( int i = 0; i < columnsList.count(); ++i ) {
       if ( i != 0 )
-        columns.append( ", " );
+        columns.append( QLatin1String(", ") );
 
-      columns.append( columnsList[ i ].first + ' ' + columnsList[ i ].second );
+      columns.append( columnsList[ i ].first + QLatin1Char(' ') + columnsList[ i ].second );
     }
 
-    const QString statement = QString( "CREATE TABLE %1 (%2);" ).arg( tableName, columns );
+    const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2);" ).arg( tableName, columns );
 
     if ( !query.exec( statement ) ) {
-      mErrorMsg = QString( "Unable to create entire table." );
+      mErrorMsg = QLatin1String( "Unable to create entire table." );
       return false;
     }
   } else {
@@ -164,11 +164,11 @@ bool DbInitializer::checkTable( const QDomElement &element )
         /**
          * Add missing column to table.
          */
-        const QString statement = QString( "ALTER TABLE %1 ADD COLUMN %2 %3;" )
+        const QString statement = QString::fromLatin1( "ALTER TABLE %1 ADD COLUMN %2 %3;" )
                                          .arg( tableName, entry.first, entry.second );
 
         if ( !query.exec( statement ) ) {
-          mErrorMsg = QString( "Unable to add column '%1' to table '%2'." ).arg( entry.first, tableName );
+          mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'." ).arg( entry.first, tableName );
           return false;
         }
       }
@@ -178,15 +178,15 @@ bool DbInitializer::checkTable( const QDomElement &element )
   }
 
   // add initial data if table is empty
-  const QString statement = QString( "SELECT * FROM %1 LIMIT 1" ).arg( tableName );
+  const QString statement = QString::fromLatin1( "SELECT * FROM %1 LIMIT 1" ).arg( tableName );
   if ( !query.exec( statement ) ) {
-    mErrorMsg = QString( "Unable to retrieve data from table '%1'." ).arg( tableName );
+    mErrorMsg = QString::fromLatin1( "Unable to retrieve data from table '%1'." ).arg( tableName );
     return false;
   }
   if ( query.size() == 0  || !query.first() ) {
     foreach ( QString stmt, dataList ) {
       if ( !query.exec( stmt ) ) {
-        mErrorMsg = QString( "Unable to add initial data to table '%1'." ).arg( tableName );
+        mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'." ).arg( tableName );
         return false;
       }
     }

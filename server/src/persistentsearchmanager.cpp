@@ -35,21 +35,21 @@ PersistentSearchManager* PersistentSearchManager::mSelf = 0;
 
 PersistentSearchManager::PersistentSearchManager()
 {
-  const QString akonadiHomeDir = QDir::homePath() + QDir::separator() + ".akonadi" + QDir::separator();
+  const QString akonadiHomeDir = QDir::homePath() + QDir::separator() + QLatin1String(".akonadi") + QDir::separator();
   if ( !QDir( akonadiHomeDir ).exists() ) {
     QDir dir;
     dir.mkdir( akonadiHomeDir );
   }
 
-  mDatabase = QSqlDatabase::addDatabase( "QSQLITE", QUuid::createUuid().toString() );
-  mDatabase.setDatabaseName( akonadiHomeDir + "akonadi.db" );
+  mDatabase = QSqlDatabase::addDatabase( QLatin1String("QSQLITE"), QUuid::createUuid().toString() );
+  mDatabase.setDatabaseName( akonadiHomeDir + QLatin1String("akonadi.db") );
   mDatabase.open();
 
   if ( !mDatabase.isOpen() )
     qDebug() << "PersistentSearchManager: Unable to open database akonadi.db.";
 
   QSqlQuery query( mDatabase );
-  query.prepare( "SELECT name, query FROM PersistentSearches" );
+  query.prepare( QLatin1String("SELECT name, query FROM PersistentSearches") );
   if ( query.exec() ) {
     qDebug( "load data" );
     mListMutex.lock();
@@ -111,9 +111,9 @@ void PersistentSearchManager::addPersistentSearch( const QString &identifier, Pe
   QString queryString;
   const QList<QByteArray> searchCriteria = search->searchCriteria();
   for ( int i = 0; i < queryString.count(); ++i )
-    queryString += ' ' + QString::fromUtf8( searchCriteria[ i ] );
+    queryString += QLatin1Char(' ') + QString::fromUtf8( searchCriteria[ i ] );
 
-  const QString statement = QString( "INSERT INTO PersistentSearches (name, query) VALUES ('%1', '%2') ")
+  const QString statement = QString( QLatin1String("INSERT INTO PersistentSearches (name, query) VALUES ('%1', '%2') ") )
                                    .arg( identifier, queryString );
 
   QSqlQuery query( mDatabase );
@@ -141,7 +141,7 @@ void PersistentSearchManager::removePersistentSearch( const QString &identifier 
   /**
    * Remove from database.
    */
-  const QString statement = QString( "DELETE FROM PersistentSearches WHERE name = '%1' ").arg( identifier );
+  const QString statement = QString( QLatin1String("DELETE FROM PersistentSearches WHERE name = '%1' ") ).arg( identifier );
 
   QSqlQuery query( mDatabase );
   if ( !query.exec( statement ) )
@@ -188,7 +188,7 @@ CollectionList PersistentSearchManager::collections() const
   mListMutex.unlock();
 
   for ( int i = 0; i < identifiers.count(); ++i )
-      collections.append( Collection( "Search/" + identifiers[ i ] ) );
+      collections.append( Collection( QLatin1String("Search/") + identifiers[ i ] ) );
 
   return collections;
 }

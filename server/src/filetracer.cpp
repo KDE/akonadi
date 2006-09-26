@@ -35,41 +35,41 @@ FileTracer::~FileTracer()
 
 void FileTracer::beginConnection( const QString &identifier, const QString &msg )
 {
-  output( identifier, QString( "begin_connection: %1" ).arg( msg ) );
+  output( identifier, QString::fromLatin1( "begin_connection: %1" ).arg( msg ) );
 }
 
 void FileTracer::endConnection( const QString &identifier, const QString &msg )
 {
-  output( identifier, QString( "end_connection: %1" ).arg( msg ) );
+  output( identifier, QString::fromLatin1( "end_connection: %1" ).arg( msg ) );
 }
 
 void FileTracer::connectionInput( const QString &identifier, const QString &msg )
 {
-  output( identifier, QString( "input: %1" ).arg( msg ) );
+  output( identifier, QString::fromLatin1( "input: %1" ).arg( msg ) );
 }
 
 void FileTracer::connectionOutput( const QString &identifier, const QString &msg )
 {
-  output( identifier, QString( "output: %1" ).arg( msg ) );
+  output( identifier, QString::fromLatin1( "output: %1" ).arg( msg ) );
 }
 
 void FileTracer::signal( const QString &signalName, const QString &msg )
 {
-  output( QLatin1String( "signal" ), QString( "<%1> %2" ).arg( signalName, msg ) );
+  output( QLatin1String( "signal" ), QString::fromLatin1( "<%1> %2" ).arg( signalName, msg ) );
 }
 
 void FileTracer::warning( const QString &componentName, const QString &msg )
 {
-  output( QLatin1String( "warning" ), QString( "<%1> %2" ).arg( componentName, msg ) );
+  output( QLatin1String( "warning" ), QString::fromLatin1( "<%1> %2" ).arg( componentName, msg ) );
 }
 
 void FileTracer::error( const QString &componentName, const QString &msg )
 {
-  output( QLatin1String( "error" ), QString( "<%1> %2" ).arg( componentName, msg ) );
+  output( QLatin1String( "error" ), QString::fromLatin1( "<%1> %2" ).arg( componentName, msg ) );
 }
 
 void FileTracer::output( const QString &id, const QString &msg )
 {
-  QString output = QString( "%1: %2\r\n" ).arg( id, msg );
+  QString output = QString::fromLatin1( "%1: %2\r\n" ).arg( id, msg );
   m_file->write( output.toUtf8() );
 }

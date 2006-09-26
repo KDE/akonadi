@@ -38,9 +38,9 @@ Akonadi::Delete::~Delete()
 bool Akonadi::Delete::handleLine(const QByteArray & line)
 {
   int begin = line.indexOf( " DELETE" ) + 7;
-  QByteArray collection;
+  QString collection;
   if ( line.length() > begin )
-    PIM::ImapParser::parseQuotedString( line, collection, begin );
+    PIM::ImapParser::parseString( line, collection, begin );
   collection = HandlerHelper::normalizeCollectionName( collection );
 
   // prevent deletion of the root node
@@ -57,7 +57,7 @@ bool Akonadi::Delete::handleLine(const QByteArray & line)
 
   // delete all child collections
   QList<Location> locations = db->listLocations();
-  collection += '/';
+  collection += QLatin1Char('/');
   foreach ( Location location, locations ) {
     if ( location.location().startsWith( collection ) ) {
       if ( !db->cleanupLocation( location ) )

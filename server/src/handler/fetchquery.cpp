@@ -109,10 +109,10 @@ bool FetchQuery::isUidFetch() const
 
 void FetchQuery::dump()
 {
-  QString type, sequence;
+  QByteArray type, sequence;
 
   for ( int i = 0; i < mSequences.count(); ++i )
-    sequence += '|' + QString::fromLatin1( mSequences[ i ] );
+    sequence += '|' + mSequences[ i ];
   sequence.append( "|" );
 
   if ( mType == AllType )
@@ -127,8 +127,8 @@ void FetchQuery::dump()
     type = "ATTRIBUTES";
 
   qDebug( "Fetch:" );
-  qDebug( "Sequence:  %s", qPrintable( sequence ) );
-  qDebug( "Type:      %s", qPrintable( type ) );
+  qDebug( "Sequence:  %s", sequence.constData() );
+  qDebug( "Type:      %s", type.constData() );
 
   if ( mType == AttributeType )
     mAttributes.first().dump();
@@ -174,7 +174,7 @@ FetchQuery::Attribute::Type FetchQuery::Attribute::type() const
 
 void FetchQuery::Attribute::dump()
 {
-  QString type;
+  QByteArray type;
 
   if ( mType == Envelope )
     type = "ENVELOPE";
@@ -199,5 +199,5 @@ void FetchQuery::Attribute::dump()
   else if ( mType == RemoteId )
     type = "REMOTEID";
 
-  qDebug( "Attribute: %s", qPrintable( type ) );
+  qDebug( "Attribute: %s", type.constData() );
 }

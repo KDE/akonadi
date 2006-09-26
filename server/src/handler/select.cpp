@@ -22,6 +22,8 @@
 #include "akonadiconnection.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
+#include "handlerhelper.h"
+#include "imapparser.h"
 
 #include "select.h"
 #include "response.h"
@@ -41,11 +43,13 @@ Select::~Select()
 bool Select::handleLine(const QByteArray& line )
 {
     // as per rfc, even if the following select fails, we need to reset
-    connection()->setSelectedCollection("/");
+    connection()->setSelectedCollection( QLatin1String("/") );
 
     int startOfCommand = line.indexOf( ' ' ) + 1;
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QByteArray mailbox = stripQuotes( line.right( line.size() - startOfMailbox ) );
+    QString mailbox;
+    PIM::ImapParser::parseString( line, mailbox, startOfMailbox );
+    mailbox = HandlerHelper::normalizeCollectionName( mailbox );
 
     DataStore *db = connection()->storageBackend();
     Location l = db->locationByName( mailbox );
@@ -61,17 +65,17 @@ bool Select::handleLine(const QByteArray& line )
     response.setString( l.flags() );
     emit responseAvailable( response );
 
-    response.setString( QString::number(l.exists()) + " EXISTS" );
+    response.setString( QByteArray::number(l.exists()) + " EXISTS" );
     emit responseAvailable( response );
 
-    response.setString( QString::number(l.recent()) + " RECENT" );
+    response.setString( QByteArray::number(l.recent()) + " RECENT" );
     emit responseAvailable( response );
 
-    response.setString( "OK [UNSEEN " + QString::number(l.unseen()) + "] Message "
-            + QString::number(l.firstUnseen() ) + " is first unseen" );
+    response.setString( "OK [UNSEEN " + QByteArray::number(l.unseen()) + "] Message "
+            + QByteArray::number(l.firstUnseen() ) + " is first unseen" );
     emit responseAvailable( response );
 
-    response.setString( "OK [UIDVALIDITY " + QString::number( l.uidValidity() ) + "] UIDs valid" );
+    response.setString( "OK [UIDVALIDITY " + QByteArray::number( (qlonglong)l.uidValidity() ) + "] UIDs valid" );
     emit responseAvailable( response );
 
     response.setSuccess();

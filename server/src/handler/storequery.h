@@ -22,6 +22,7 @@
 
 #include <QByteArray>
 #include <QList>
+#include <QString>
 
 namespace Akonadi {
 
@@ -56,7 +57,7 @@ class StoreQuery
     QList<QByteArray> sequences() const;
     bool isUidStore() const;
     int continuationSize() const;
-    QByteArray collection() const;
+    QString collection() const;
 
     void dump();
 
@@ -67,7 +68,7 @@ class StoreQuery
     QList<QByteArray> mSequences;
     bool mIsUidStore;
     int mContinuationSize;
-    QByteArray mCollection;
+    QString mCollection;
 };
 
 }

@@ -23,28 +23,37 @@
 
 #include <QDebug>
 
-Akonadi::NotificationItem::NotificationItem(int uid, const QByteArray & collection,
+Akonadi::NotificationItem::NotificationItem(const PimItem &item,
+                                            const Location& collection,
                                             const QByteArray & mimeType,
                                             const QByteArray & resource) :
   mType( Item ),
-  mUid( uid ),
+  mItem( item ),
   mCollection( collection ),
   mMimeType( mimeType ),
   mResource( resource )
 {
 }
 
-Akonadi::NotificationItem::NotificationItem(const QByteArray & collection,
+Akonadi::NotificationItem::NotificationItem(const QString& collection,
                                             const QByteArray & resource) :
   mType( Collection ),
-  mCollection( collection ),
+  mCollectionName( collection ),
   mResource( resource )
+{
+}
+
+Akonadi::NotificationItem::NotificationItem(const Location & collection,
+                                            const QByteArray & resource) :
+    mType( Collection ),
+    mCollection( collection ),
+    mResource( resource )
 {
 }
 
 bool Akonadi::NotificationItem::isComplete() const
 {
-  if ( mCollection.isEmpty() || mResource.isEmpty() )
+  if ( !mCollection.isValid() || mResource.isEmpty() )
     return false;
 
   if ( mType == Item && mMimeType.isEmpty() )
@@ -58,10 +67,17 @@ bool Akonadi::NotificationItem::operator ==(const NotificationItem & item) const
   if ( mType != item.mType )
     return false;
   if ( mType == Item )
-    return mUid == item.mUid;
+    return mItem.id() == item.mItem.id();
   if ( mType == Collection )
-    return mCollection == item.mCollection;
+    return mCollection.id() == item.mCollection.id();
   return false;
+}
+
+QString Akonadi::NotificationItem::collectionName() const
+{
+  if ( !mCollectionName.isEmpty() )
+    return mCollectionName;
+  return mCollection.location();
 }
 
 
@@ -78,43 +94,48 @@ Akonadi::NotificationCollector::~NotificationCollector()
 {
 }
 
-void Akonadi::NotificationCollector::itemAdded( int uid, const QByteArray & collection,
+void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
+                                                const Location &collection,
                                                 const QByteArray & mimeType,
                                                 const QByteArray & resource )
 {
-  NotificationItem ni( uid, collection, mimeType, resource );
+  NotificationItem ni( item, collection, mimeType, resource );
   if ( mDb->inTransaction() )
     mAddedItems.append( ni );
   else {
     completeItem( ni );
-    emit itemAddedNotification( ni.uid(), ni.collection(), ni.mimeType(), ni.resource() );
+    emit itemAddedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
 }
 
-void Akonadi::NotificationCollector::itemChanged( int uid, const QByteArray & collection,
+void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
+                                                  const Location &collection,
                                                   const QByteArray & mimeType,
                                                   const QByteArray & resource )
 {
-  NotificationItem ni( uid, collection, mimeType, resource );
+  NotificationItem ni( item, collection, mimeType, resource );
   if ( mDb->inTransaction() )
     mChangedItems.append( ni );
   else {
     completeItem( ni );
-    emit itemChangedNotification( ni.uid(), ni.collection(), ni.mimeType(), ni.resource() );
+    emit itemChangedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
 }
 
-void Akonadi::NotificationCollector::itemRemoved( int uid, const QByteArray & collection,
+void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
+                                                  const Location &collection,
                                                   const QByteArray & mimeType,
                                                   const QByteArray & resource )
 {
+  NotificationItem ni( item, collection, mimeType, resource );
+  completeItem( ni );
   if ( mDb->inTransaction() )
-    mRemovedItems.append( NotificationItem( uid, collection, mimeType, resource ) );
+    mRemovedItems.append( ni );
   else
-    emit itemRemovedNotification( uid, collection, mimeType, resource );
+    emit itemRemovedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
 }
 
-void Akonadi::NotificationCollector::collectionAdded( const QByteArray &collection,
+void Akonadi::NotificationCollector::collectionAdded( const QString &collection,
                                                       const QByteArray &resource )
 {
   NotificationItem ni( collection, resource );
@@ -122,11 +143,11 @@ void Akonadi::NotificationCollector::collectionAdded( const QByteArray &collecti
     mAddedCollections.append( ni );
   else {
     completeItem( ni );
-    emit collectionAddedNotification( ni.collection(), ni.resource() );
+    emit collectionAddedNotification( ni.collectionName(), ni.resource() );
   }
 }
 
-void Akonadi::NotificationCollector::collectionChanged( const QByteArray &collection,
+void Akonadi::NotificationCollector::collectionChanged( const Location &collection,
                                                         const QByteArray &resource )
 {
   NotificationItem ni( collection, resource );
@@ -134,17 +155,19 @@ void Akonadi::NotificationCollector::collectionChanged( const QByteArray &collec
     mChangedCollections.append( ni );
   else {
     completeItem( ni );
-    emit collectionChangedNotification( ni.collection(), ni.resource() );
+    emit collectionChangedNotification( ni.collectionName(), ni.resource() );
   }
 }
 
-void Akonadi::NotificationCollector::collectionRemoved( const QByteArray &collection,
+void Akonadi::NotificationCollector::collectionRemoved( const Location &collection,
                                                         const QByteArray &resource )
 {
+  NotificationItem ni( collection, resource );
+  completeItem( ni );
   if ( mDb->inTransaction() )
-    mRemovedCollections.append( NotificationItem( collection, resource ) );
+    mRemovedCollections.append( ni );
   else
-    emit collectionRemovedNotification( collection, resource );
+    emit collectionRemovedNotification( ni.collectionName(), ni.resource() );
 }
 
 void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
@@ -152,20 +175,22 @@ void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
   if ( item.isComplete() )
     return;
 
+  qDebug() << "completeItem()" << item.collectionName();
   if ( item.type() == NotificationItem::Collection ) {
-    Location loc = mDb->locationByName( item.collection() );
-    Resource res = mDb->resourceById( loc.resourceId() );
+    if ( !item.collection().isValid() && !item.collectionName().isEmpty() )
+      item.setCollection( mDb->locationByName( item.collectionName() ) );
+    Resource res = mDb->resourceById( item.collection().resourceId() );
     item.setResource( res.resource().toLatin1() );
   }
 
   if ( item.type() == NotificationItem::Item ) {
-    PimItem pi = mDb->pimItemById( item.uid() );
+    PimItem pi = item.pimItem();
     if ( !pi.isValid() )
       return;
     Location loc;
-    if ( item.collection().isEmpty() ) {
+    if ( !item.collection().isValid() ) {
       loc = mDb->locationById( pi.locationId() );
-      item.setCollection( loc.location().toLatin1() );
+      item.setCollection( loc );
     }
     if ( item.mimeType().isEmpty() ) {
       MimeType mt = mDb->mimeTypeById( pi.mimeTypeId() );
@@ -186,39 +211,39 @@ void Akonadi::NotificationCollector::transactionCommitted()
 
   foreach ( NotificationItem ni, mAddedCollections ) {
     completeItem( ni );
-    emit collectionAddedNotification( ni.collection(), ni.resource() );
+    emit collectionAddedNotification( ni.collectionName(), ni.resource() );
     // no change notifications for new collections
     mChangedCollections.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mRemovedCollections ) {
-    emit collectionRemovedNotification( ni.collection(), ni.resource() );
+    emit collectionRemovedNotification( ni.collectionName(), ni.resource() );
     // no change notifications for removed collections
     mChangedCollections.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mChangedCollections ) {
     completeItem( ni );
-    emit collectionChangedNotification( ni.collection(), ni.resource() );
+    emit collectionChangedNotification( ni.collectionName(), ni.resource() );
   }
 
 
   foreach ( NotificationItem ni, mAddedItems ) {
     completeItem( ni );
-    emit itemAddedNotification( ni.uid(), ni.collection(), ni.mimeType(), ni.resource() );
+    emit itemAddedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
     // no change notifications for new items
     mChangedItems.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mRemovedItems ) {
-    emit itemRemovedNotification( ni.uid(), ni.collection(), ni.mimeType(), ni.resource() );
+    emit itemRemovedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
     // no change notifications for removed items
     mChangedItems.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mChangedItems ) {
     completeItem( ni );
-    emit itemChangedNotification( ni.uid(), ni.collection(), ni.mimeType(), ni.resource() );
+    emit itemChangedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
 }
 

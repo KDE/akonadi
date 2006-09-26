@@ -37,7 +37,7 @@ Tracer::Tracer()
 
   new TracerAdaptor( this );
 
-  QDBusConnection::sessionBus().registerObject( "/tracing", this, QDBusConnection::ExportAdaptors );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/tracing"), this, QDBusConnection::ExportAdaptors );
 }
 
 Tracer::~Tracer()
@@ -89,6 +89,11 @@ void Tracer::signal( const QString &signalName, const QString &msg )
   mMutex.unlock();
 }
 
+void Akonadi::Tracer::signal(const char * signalName, const QString & msg)
+{
+  signal( QLatin1String( signalName ), msg );
+}
+
 void Tracer::warning( const QString &componentName, const QString &msg )
 {
   mMutex.lock();
@@ -101,6 +106,11 @@ void Tracer::error( const QString &componentName, const QString &msg )
   mMutex.lock();
   mTracerBackend->error( componentName, msg );
   mMutex.unlock();
+}
+
+void Akonadi::Tracer::error(const char * componentName, const QString & msg)
+{
+  error( QLatin1String( componentName ), msg );
 }
 
 #include "tracer.moc"

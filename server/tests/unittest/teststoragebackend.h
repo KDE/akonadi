@@ -30,8 +30,8 @@ class MockBackend : public DataStore
     public:
         MockBackend() { }
 
-        CollectionList listCollections( const QByteArray& prefix,
-                                        const QByteArray & mailboxPattern ) const;
+        CollectionList listCollections( const QString& prefix,
+                                        const QString& mailboxPattern ) const;
 };
 
 }

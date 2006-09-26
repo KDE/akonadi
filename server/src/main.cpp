@@ -29,7 +29,7 @@ int main( int argc, char ** argv )
 {
     QCoreApplication app( argc, argv );
 
-    if ( !QDBusConnection::sessionBus().registerService( "org.kde.Akonadi" ) ) {
+    if ( !QDBusConnection::sessionBus().registerService( QLatin1String("org.kde.Akonadi") ) ) {
       qDebug( "Unable to connect to dbus service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
       return 1;
     }

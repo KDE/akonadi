@@ -44,8 +44,8 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
   if ( pos < 0 )
     return failureResponse( "Invalid syntax" );
 
-  QByteArray collection;
-  pos = PIM::ImapParser::parseQuotedString( line, collection, pos );
+  QString collection;
+  pos = PIM::ImapParser::parseString( line, collection, pos );
   collection = HandlerHelper::normalizeCollectionName( collection );
 
   if ( collection.isEmpty() )

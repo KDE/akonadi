@@ -44,7 +44,7 @@ bool Expunge::handleLine( const QByteArray& )
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  Flag flag = store->flagByName( "\\Deleted" );
+  Flag flag = store->flagByName( QLatin1String("\\Deleted") );
   if ( !flag.isValid() ) {
     response.setError();
     response.setString( "\\Deleted flag unknown" );

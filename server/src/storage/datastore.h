@@ -48,8 +48,8 @@ public:
     virtual ~DataStore();
 
     /* -- higher level API -- */
-    virtual CollectionList listCollections( const QByteArray& prefix,
-                                            const QByteArray & mailboxPattern ) const;
+    virtual CollectionList listCollections( const QString& prefix,
+                                            const QString& mailboxPattern ) const;
 
     /* --- CachePolicy --------------------------------------------------- */
     bool appendCachePolicy( const QString & policy );
@@ -100,7 +100,7 @@ public:
     /// rename the collection @p location to @p newName.
     bool renameLocation( const Location &location, const QString &newName );
     Location locationById( int id ) const;
-    Location locationByName( const QByteArray& name ) const;
+    Location locationByName( const QString &name ) const;
     /**
       Returns all collection associated with the given resource, all collections if the
       resource is invalid.
@@ -111,6 +111,8 @@ public:
     bool appendMimeTypeForLocation( int locationId, const QString & mimeType );
     bool appendMimeTypeForLocation( int locationId, int mimeTypeId );
     bool removeMimeTypesForLocation( int locationId );
+
+    static QString locationDelimiter() { return QLatin1String("/"); }
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype, int *insertId = 0 );
@@ -236,8 +238,8 @@ Q_SIGNALS:
     void transactionRolledBack();
 
 protected:
-    void debugLastDbError( const QString & actionDescription ) const;
-    void debugLastQueryError( const QSqlQuery &query, const QString & actionDescription ) const;
+    void debugLastDbError( const char* actionDescription ) const;
+    void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
     bool removeById( int id, const QString & tableName );
     QByteArray retrieveDataFromResource( const QByteArray &uid, const QByteArray& remote_id,
                                          int locationid, FetchQuery::Type type );

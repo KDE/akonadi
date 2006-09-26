@@ -40,8 +40,8 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
 {
   int pos = line.indexOf( ' ' ) + 1; // skip tag
   pos = line.indexOf( ' ', pos ); // skip command
-  QByteArray oldName;
-  QByteArray newName;
+  QString oldName;
+  QString newName;
   if ( pos < 0 )
     return failureResponse( "Bad syntax" );
 
@@ -65,11 +65,11 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
 
   // rename all child collections
   QList<Location> locations = db->listLocations();
-  oldName += '/';
+  oldName += QLatin1Char('/');
   foreach ( Location location, locations ) {
     if ( location.location().startsWith( oldName ) ) {
       QString name = location.location();
-      name = name.replace( 0, oldName.length(), QString::fromUtf8(newName) + '/' );
+      name = name.replace( 0, oldName.length(), newName + QLatin1Char('/') );
       if ( !db->renameLocation( location, name ) )
         return failureResponse( "Failed to rename collection." );
     }
