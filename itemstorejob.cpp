@@ -29,7 +29,8 @@ class PIM::ItemStoreJobPrivate
       Data,
       SetFlags,
       AddFlags,
-      RemoveFlags
+      RemoveFlags,
+      Move
     };
 
     Item::Flags flags;
@@ -39,6 +40,7 @@ class PIM::ItemStoreJobPrivate
     DataReference ref;
     QSet<int> operations;
     QByteArray tag;
+    QString collection;
 
     QByteArray joinFlags( const Item::Flags &flags )
     {
@@ -100,6 +102,12 @@ void PIM::ItemStoreJob::removeFlag(const Item::Flag & flag)
   d->operations.insert( ItemStoreJobPrivate::RemoveFlags );
 }
 
+void PIM::ItemStoreJob::setCollection(const QString & collection)
+{
+  d->collection = collection;
+  d->operations.insert( ItemStoreJobPrivate::Move );
+}
+
 void PIM::ItemStoreJob::doStart()
 {
   sendNextCommand();
@@ -147,6 +155,9 @@ void PIM::ItemStoreJob::sendNextCommand()
       break;
     case ItemStoreJobPrivate::RemoveFlags:
       command += "-FLAGS (" + d->joinFlags( d->removeFlags ) + ')';
+      break;
+    case ItemStoreJobPrivate::Move:
+      command += "COLLECTION \"" + d->collection.toUtf8() + '\"';
       break;
   }
   writeData( command );

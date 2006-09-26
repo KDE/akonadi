@@ -78,6 +78,12 @@ class ItemStoreJob : public Job
     */
     void removeFlag( const Item::Flag &flag );
 
+    /**
+      Moves the item to the given collection.
+      @param collection Path to the new collection this item is moved into.
+    */
+    void setCollection( const QString &collection );
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );

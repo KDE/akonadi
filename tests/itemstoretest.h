@@ -28,6 +28,8 @@ class ItemStoreTest : public QObject
   private slots:
     void testFlagChange();
     void testDataChange();
+    void testItemMove();
+    void testIllegalItemMove();
 };
 
 #endif

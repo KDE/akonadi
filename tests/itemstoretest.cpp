@@ -105,4 +105,42 @@ void ItemStoreTest::testDataChange()
   QVERIFY( item->data() == "testmailbody" );
 }
 
+void ItemStoreTest::testItemMove()
+{
+  DataReference ref( "0", QString() );
+
+  ItemStoreJob *store = new ItemStoreJob( ref, this );
+  store->setCollection( "res3" );
+  QVERIFY( store->exec() );
+  delete store;
+
+  ItemFetchJob *fetch = new ItemFetchJob( "res3", this );
+  QVERIFY( fetch->exec() );
+  QCOMPARE( fetch->items().count(), 1 );
+  delete fetch;
+
+  store = new ItemStoreJob( ref, this );
+  store->setCollection( "res1/foo" );
+  QVERIFY( store->exec() );
+  delete store;
+}
+
+void ItemStoreTest::testIllegalItemMove()
+{
+  DataReference ref( "0", QString() );
+
+  // move into invalid collection
+  ItemStoreJob *store = new ItemStoreJob( ref, this );
+  store->setCollection( "i dont/exist" );
+  QVERIFY( !store->exec() );
+
+  // move item into folder that doesn't support its mimetype
+  store = new ItemStoreJob( ref, this );
+  store->setCollection( "res2" );
+  QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
+  QVERIFY( !store->exec() );
+}
+
+
+
 #include "itemstoretest.moc"
