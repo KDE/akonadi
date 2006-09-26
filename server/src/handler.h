@@ -77,8 +77,6 @@ public:
      */
     bool failureResponse( const char *failureMessage );
 
-    static QByteArray stripQuotes( const QByteArray & );
-
 signals:
 
     /**

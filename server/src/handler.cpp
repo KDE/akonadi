@@ -150,13 +150,6 @@ AkonadiConnection* Akonadi::Handler::connection()
 
 
 
-QByteArray Akonadi::Handler::stripQuotes( const QByteArray &mailbox )
-{
-    if ( mailbox.startsWith('"') && mailbox.endsWith('"') )
-       return mailbox.mid( 1, mailbox.size() - 2);
-    return mailbox;
-}
-
 bool Akonadi::Handler::failureResponse( const QString& failureMessage )
 {
     Response response;
