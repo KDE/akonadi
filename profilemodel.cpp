@@ -28,6 +28,7 @@ class ProfileInfo
 {
   public:
     QString identifier;
+    QStringList agents;
 };
 
 class ProfileModel::Private
@@ -44,6 +45,8 @@ class ProfileModel::Private
 
     void profileAdded( const QString &profile );
     void profileRemoved( const QString &profile );
+    void profileAgentAdded( const QString &profile, const QString &agent );
+    void profileAgentRemoved( const QString &profile, const QString &agent );
 
     void addProfile( const QString &profile );
 };
@@ -52,6 +55,7 @@ void ProfileModel::Private::addProfile( const QString &profile )
 {
   ProfileInfo info;
   info.identifier = profile;
+  info.agents = mManager.profileAgents( profile );
 
   mInfos.append( info );
 }
@@ -75,6 +79,32 @@ void ProfileModel::Private::profileRemoved( const QString &profile )
   emit mParent->layoutChanged();
 }
 
+void ProfileModel::Private::profileAgentAdded( const QString &profile, const QString &agent )
+{
+  for ( int i = 0; i < mInfos.count(); ++i ) {
+    if ( mInfos[ i ].identifier == profile ) {
+      mInfos[ i ].agents.append( agent );
+
+      const QModelIndex index = mParent->index( i, 0 );
+      emit mParent->dataChanged( index, index );
+      break;
+    }
+  }
+}
+
+void ProfileModel::Private::profileAgentRemoved( const QString &profile, const QString &agent )
+{
+  for ( int i = 0; i < mInfos.count(); ++i ) {
+    if ( mInfos[ i ].identifier == profile ) {
+      mInfos[ i ].agents.removeAll( agent );
+
+      const QModelIndex index = mParent->index( i, 0 );
+      emit mParent->dataChanged( index, index );
+      break;
+    }
+  }
+}
+
 ProfileModel::ProfileModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {
@@ -86,6 +116,10 @@ ProfileModel::ProfileModel( QObject *parent )
            this, SLOT( profileAdded( const QString& ) ) );
   connect( &d->mManager, SIGNAL( profileRemoved( const QString& ) ),
            this, SLOT( profileRemoved( const QString& ) ) );
+  connect( &d->mManager, SIGNAL( profileAgentAdded( const QString&, const QString& ) ),
+           this, SLOT( profileAgentAdded( const QString&, const QString& ) ) );
+  connect( &d->mManager, SIGNAL( profileAgentRemoved( const QString&, const QString& ) ),
+           this, SLOT( profileAgentRemoved( const QString&, const QString& ) ) );
 }
 
 ProfileModel::~ProfileModel()
@@ -115,7 +149,7 @@ QVariant ProfileModel::data( const QModelIndex &index, int role ) const
 
   switch ( role ) {
     case Qt::DisplayRole:
-      return info.identifier;
+      return QString( "%1 (%2)" ).arg( info.identifier, info.agents.join( ", " ) );
       break;
     case Qt::UserRole:
       return info.identifier;

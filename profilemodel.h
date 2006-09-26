@@ -46,6 +46,8 @@ class ProfileModel : public QAbstractItemModel
 
     Q_PRIVATE_SLOT( d, void profileAdded( const QString& ) )
     Q_PRIVATE_SLOT( d, void profileRemoved( const QString& ) )
+    Q_PRIVATE_SLOT( d, void profileAgentAdded( const QString&, const QString& ) )
+    Q_PRIVATE_SLOT( d, void profileAgentRemoved( const QString&, const QString& ) )
 };
 
 }
