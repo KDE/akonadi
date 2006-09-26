@@ -35,6 +35,7 @@ INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 1, 4);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 2, 4);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 3, 4);
 INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 7, 4);
+INSERT INTO LocationMimeTypes ( location_id, mimetype_id) VALUES( 7, 1);
 
 DELETE FROM PimItems;
 INSERT INTO PimItems (id, remote_id, data, location_id, mimetype_id) VALUES (0, 'A', 'testmailbody', 0, 1);
