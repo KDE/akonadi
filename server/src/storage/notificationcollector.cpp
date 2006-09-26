@@ -175,7 +175,6 @@ void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
   if ( item.isComplete() )
     return;
 
-  qDebug() << "completeItem()" << item.collectionName();
   if ( item.type() == NotificationItem::Collection ) {
     if ( !item.collection().isValid() && !item.collectionName().isEmpty() )
       item.setCollection( mDb->locationByName( item.collectionName() ) );
@@ -245,9 +244,16 @@ void Akonadi::NotificationCollector::transactionCommitted()
     completeItem( ni );
     emit itemChangedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
+
+  clear();
 }
 
 void Akonadi::NotificationCollector::transactionRolledBack()
+{
+  clear();
+}
+
+void Akonadi::NotificationCollector::clear()
 {
   mAddedItems.clear();
   mChangedItems.clear();

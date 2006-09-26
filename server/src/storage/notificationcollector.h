@@ -224,6 +224,7 @@ class NotificationCollector : public QObject
 
   private:
     void completeItem( NotificationItem &item );
+    void clear();
 
   private slots:
     void transactionCommitted();
