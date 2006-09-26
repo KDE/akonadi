@@ -52,6 +52,11 @@ void ProcessControl::start( const QString &application, const QStringList &argum
   start();
 }
 
+void ProcessControl::setCrashPolicy( CrashPolicy policy )
+{
+  mPolicy = policy;
+}
+
 void ProcessControl::stop()
 {
   if ( mProcess.state() != QProcess::NotRunning )

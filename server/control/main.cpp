@@ -25,8 +25,24 @@
 #include "processcontrol.h"
 #include "profilemanager.h"
 
+#include "kcrash.h"
+#include <stdlib.h>
+
+static AgentManager *sAgentManager = 0;
+
+void crashHandler( int )
+{
+  if ( sAgentManager )
+    sAgentManager->cleanup();
+
+  exit( 255 );
+}
+
 int main( int argc, char **argv )
 {
+  KCrash::init();
+  KCrash::setEmergencyMethod( crashHandler );
+
   QCoreApplication app( argc, argv );
 
   if ( !QDBusConnection::sessionBus().registerService( "org.kde.Akonadi.Control" ) ) {
@@ -34,11 +50,13 @@ int main( int argc, char **argv )
     return 1;
   }
 
-  Akonadi::ProcessControl controller;
-  controller.start( "akonadiserver" );
-
-  AgentManager agentManager;
+  sAgentManager = new AgentManager;
   ProfileManager profileManager;
 
-  return app.exec();
+  int retval = app.exec();
+
+  delete sAgentManager;
+  sAgentManager = 0;
+
+  return retval;
 }

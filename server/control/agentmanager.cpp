@@ -33,6 +33,9 @@
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
 {
+  mStorageController = new Akonadi::ProcessControl;
+  mStorageController->start( "akonadiserver" );
+
   new AgentManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/AgentManager", this );
 
@@ -54,6 +57,29 @@ AgentManager::AgentManager( QObject *parent )
 
 AgentManager::~AgentManager()
 {
+  cleanup();
+}
+
+void AgentManager::cleanup()
+{
+  QMutableMapIterator<QString, Instance> it( mInstances );
+  while ( it.hasNext() ) {
+    it.next();
+
+    /**
+     * Delete the controller explicitely to trigger
+     * termination of child processes.
+     */
+    it.value().controller->setCrashPolicy( Akonadi::ProcessControl::StopOnCrash );
+    delete it.value().controller;
+  }
+
+  mInstances.clear();
+
+  mStorageController->setCrashPolicy( Akonadi::ProcessControl::StopOnCrash );
+
+  delete mStorageController;
+  mStorageController = 0;
 }
 
 QStringList AgentManager::agentTypes() const
@@ -596,13 +622,15 @@ bool AgentManager::requestItemDelivery( const QString & agentIdentifier, const Q
 
 void AgentManager::resourceRegistered( const QString &name, const QString&, const QString &newOwner )
 {
-  if ( newOwner.isEmpty() ) // interface was unregistered
-    return;
-
   if ( !name.startsWith( "org.kde.Akonadi.Resource." ) )
     return;
 
   const QString identifier = name.mid( 25 );
+
+  if ( newOwner.isEmpty() ) { // interface was unregistered
+    emit agentInstanceRemoved( identifier );
+    return;
+  }
 
   delete mInstances[ identifier ].interface;
   mInstances[ identifier ].interface = 0;

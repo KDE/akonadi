@@ -70,6 +70,11 @@ class ProcessControl : public QObject
      */
     void stop();
 
+    /**
+     * Sets the crash policy.
+     */
+    void setCrashPolicy( CrashPolicy policy );
+
 
   Q_SIGNALS:
     /**

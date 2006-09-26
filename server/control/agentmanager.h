@@ -179,6 +179,12 @@ class AgentManager : public QObject
                               const QString &remoteId,
                               const QString &collection, int type );
 
+    /**
+     * Called by the crash handler and dtor to terminate
+     * the child processes.
+     */
+    void cleanup();
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever a new agent type was installed on the system.
@@ -329,6 +335,8 @@ class AgentManager : public QObject
     QMap<QString, Instance> mInstances;
 
     org::kde::Akonadi::Tracer *mTracer;
+
+    Akonadi::ProcessControl *mStorageController;
 };
 
 #endif
