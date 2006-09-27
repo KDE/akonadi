@@ -24,9 +24,7 @@
 
 class QTimer;
 
-namespace PIM {
-
-class KnutResource : public ResourceBase
+class KnutResource : public Akonadi::ResourceBase
 {
   Q_OBJECT
 
@@ -52,7 +50,5 @@ class KnutResource : public ResourceBase
     QTimer *mStatusTimer;
     QTimer *mSyncTimer;
 };
-
-}
 
 #endif

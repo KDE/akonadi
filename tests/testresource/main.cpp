@@ -21,13 +21,11 @@
 
 #include "knutresource.h"
 
-using namespace PIM;
-
 int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
 
-  ResourceBase::init<KnutResource>( argc, argv );
+  Akonadi::ResourceBase::init<KnutResource>( argc, argv );
 
   return app.exec();
 }

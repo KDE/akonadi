@@ -22,7 +22,7 @@
 
 #include "knutresource.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 KnutResource::KnutResource( const QString &id )
   : ResourceBase( id )
