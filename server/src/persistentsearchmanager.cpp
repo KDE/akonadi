@@ -17,11 +17,11 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QDir>
-#include <QSqlQuery>
-#include <QStringList>
-#include <QUuid>
-#include <QVariant>
+#include <QtCore/QDir>
+#include <QtCore/QStringList>
+#include <QtCore/QUuid>
+#include <QtCore/QVariant>
+#include <QtSql/QSqlQuery>
 
 #include "handlerhelper.h"
 #include "searchhelper.h"

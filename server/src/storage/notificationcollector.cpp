@@ -21,7 +21,7 @@
 #include "storage/datastore.h"
 #include "storage/entity.h"
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 Akonadi::NotificationItem::NotificationItem(const PimItem &item,
                                             const Location& collection,

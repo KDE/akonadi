@@ -17,18 +17,18 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QDir>
-#include <QSqlQuery>
-#include <QEventLoop>
-#include <QSqlField>
-#include <QSqlError>
-#include <QSqlDatabase>
-#include <QSqlDriver>
-#include <QVariant>
-#include <QThread>
-#include <QUuid>
-#include <QString>
-#include <QStringList>
+#include <QtCore/QDir>
+#include <QtCore/QEventLoop>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QThread>
+#include <QtCore/QUuid>
+#include <QtCore/QVariant>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlDriver>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlField>
+#include <QtSql/QSqlQuery>
 
 #include "agentmanagerinterface.h"
 #include "dbinitializer.h"

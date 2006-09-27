@@ -20,9 +20,9 @@
 #ifndef AKONADISTOREQUERY_H
 #define AKONADISTOREQUERY_H
 
-#include <QByteArray>
-#include <QList>
-#include <QString>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
+#include <QtCore/QString>
 
 namespace Akonadi {
 

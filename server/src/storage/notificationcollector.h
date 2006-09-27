@@ -20,10 +20,10 @@
 #ifndef AKONADI_NOTIFICATIONCOLLECTOR_H
 #define AKONADI_NOTIFICATIONCOLLECTOR_H
 
-#include <QByteArray>
-#include <QList>
-#include <QObject>
-#include <QString>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
+#include <QtCore/QObject>
+#include <QtCore/QString>
 
 #include <storage/entity.h>
 
@@ -204,7 +204,7 @@ class NotificationCollector : public QObject
     void collectionRemoved( const Location &collection,
                             const QByteArray &resource = QByteArray() );
 
-  signals:
+  Q_SIGNALS:
     void itemAddedNotification( int uid, const QString &collection,
                                 const QByteArray &mimeType,
                                 const QByteArray &resource );
@@ -226,7 +226,7 @@ class NotificationCollector : public QObject
     void completeItem( NotificationItem &item );
     void clear();
 
-  private slots:
+  private Q_SLOTS:
     void transactionCommitted();
     void transactionRolledBack();
 

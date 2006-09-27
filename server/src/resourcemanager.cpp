@@ -21,7 +21,7 @@
 #include "tracer.h"
 #include "storage/datastore.h"
 
-#include <QDBusConnection>
+#include <QtDBus/QDBusConnection>
 
 using namespace Akonadi;
 

@@ -19,7 +19,7 @@
 
 #include "processcontrol.h"
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 using namespace Akonadi;
 

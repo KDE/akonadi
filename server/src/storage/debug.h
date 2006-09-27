@@ -22,7 +22,7 @@
 
 #include "entity.h"
 
-#include <QList>
+#include <QtCore/QList>
 
 namespace Akonadi {
 

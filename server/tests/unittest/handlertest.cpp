@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QVariant>
-#include <QMetaType>
+#include <QtCore/QMetaType>
+#include <QtCore/QVariant>
 
 #include "handler/list.h"
 #include "mockobjects.h"

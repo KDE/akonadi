@@ -20,7 +20,7 @@
 #ifndef AKONADI_RESOURCEMANAGER_H
 #define AKONADI_RESOURCEMANAGER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 #include "agentmanagerinterface.h"
 
@@ -40,7 +40,7 @@ class ResourceManager : public QObject
   private:
     ResourceManager( QObject *parent = 0 );
 
-  private slots:
+  private Q_SLOTS:
     void resourceAdded( const QString &name );
     void resourceRemoved( const QString &name );
 

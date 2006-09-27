@@ -20,7 +20,7 @@
 #ifndef AKONADIPERSISTENTSEARCH_H
 #define AKONADIPERSISTENTSEARCH_H
 
-#include <QList>
+#include <QtCore/QList>
 
 #include "searchprovider.h"
 

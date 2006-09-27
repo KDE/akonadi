@@ -19,8 +19,8 @@
 #ifndef AKONADICONNECTION_H
 #define AKONADICONNECTION_H
 
-#include <QPointer>
-#include <QThread>
+#include <QtCore/QPointer>
+#include <QtCore/QThread>
 #include <QtNetwork/QTcpSocket>
 class QTcpSocket;
 
@@ -52,10 +52,10 @@ public:
     void addStatusMessage( const QByteArray& msg );
     void flushStatusMessageQueue();
 
-signals:
+Q_SIGNALS:
     void error( QTcpSocket::SocketError socketError );
 
-protected slots:
+protected Q_SLOTS:
     void slotDisconnected();
     void slotNewData();
     void slotResponseAvailable( const Response& );

@@ -16,9 +16,9 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#include <QDebug>
-#include <QEventLoop>
-#include <QLatin1String>
+#include <QtCore/QDebug>
+#include <QtCore/QEventLoop>
+#include <QtCore/QLatin1String>
 
 #include "akonadiconnection.h"
 #include "storage/datastore.h"

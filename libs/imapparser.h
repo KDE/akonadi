@@ -22,8 +22,8 @@
 
 #include <kdepim_export.h>
 
-#include <QByteArray>
-#include <QList>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 
 namespace PIM {
 

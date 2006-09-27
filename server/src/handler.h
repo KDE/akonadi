@@ -19,8 +19,8 @@
 #ifndef AKONADIHANDLER_H
 #define AKONADIHANDLER_H
 
-#include <QByteArray>
-#include <QObject>
+#include <QtCore/QByteArray>
+#include <QtCore/QObject>
 
 #include "global.h"
 
@@ -77,7 +77,7 @@ public:
      */
     bool failureResponse( const char *failureMessage );
 
-signals:
+Q_SIGNALS:
 
     /**
      * Emitted whenever the handler has a response ready for output. There can

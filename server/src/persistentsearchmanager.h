@@ -20,9 +20,9 @@
 #ifndef AKONADIPERSISTENTSEARCHMANAGER_H
 #define AKONADIPERSISTENTSEARCHMANAGER_H
 
-#include <QMap>
-#include <QMutex>
-#include <QSqlDatabase>
+#include <QtCore/QMap>
+#include <QtCore/QMutex>
+#include <QtSql/QSqlDatabase>
 
 #include "collection.h"
 #include "persistentsearch.h"

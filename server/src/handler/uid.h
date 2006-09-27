@@ -20,7 +20,7 @@
 #ifndef AKONADIUID_H
 #define AKONADIUID_H
 
-#include <QPointer>
+#include <QtCore/QPointer>
 
 #include <handler.h>
 

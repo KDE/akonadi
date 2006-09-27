@@ -20,7 +20,7 @@
 #ifndef AKONADISEARCHPROVIDER_H
 #define AKONADISEARCHPROVIDER_H
 
-#include <QList>
+#include <QtCore/QList>
 
 #include "storage/datastore.h"
 

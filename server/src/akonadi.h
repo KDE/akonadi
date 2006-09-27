@@ -21,7 +21,7 @@
 #ifndef AKONADISERVER_H
 #define AKONADISERVER_H
 
-#include <QTcpServer>
+#include <QtNetwork/QTcpServer>
 
 namespace Akonadi {
 

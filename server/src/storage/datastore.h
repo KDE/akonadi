@@ -20,9 +20,9 @@
 #ifndef DATASTORE_H
 #define DATASTORE_H
 
-#include <QObject>
-#include <QList>
-#include <QSqlDatabase>
+#include <QtCore/QObject>
+#include <QtCore/QList>
+#include <QtSql/QSqlDatabase>
 
 class QSqlQuery;
 

@@ -20,8 +20,8 @@
 #ifndef AKONADIFETCHQUERY_H
 #define AKONADIFETCHQUERY_H
 
-#include <QByteArray>
-#include <QList>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 
 namespace Akonadi {
 

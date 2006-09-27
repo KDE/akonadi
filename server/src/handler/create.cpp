@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#include <QDebug>
-#include <QStringList>
+#include <QtCore/QDebug>
+#include <QtCore/QStringList>
 
 #include "akonadi.h"
 #include "akonadiconnection.h"

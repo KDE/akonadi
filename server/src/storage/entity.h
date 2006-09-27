@@ -21,9 +21,9 @@
 #define ENTITY_H
 
 #include <Qt>
-#include <QDebug>
-#include <QString>
-#include <QDateTime>
+#include <QtCore/QDateTime>
+#include <QtCore/QDebug>
+#include <QtCore/QString>
 
 class QSqlQuery;
 

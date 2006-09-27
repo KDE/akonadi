@@ -20,8 +20,8 @@
 #ifndef AKONADISEARCHHELPER_H
 #define AKONADISEARCHHELPER_H
 
-#include <QByteArray>
-#include <QList>
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 
 namespace Akonadi {
 

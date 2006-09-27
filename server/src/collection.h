@@ -19,8 +19,8 @@
 #ifndef AKONADICOLLECTION_H
 #define AKONADICOLLECTION_H
 
-#include <QList>
-#include <QString>
+#include <QtCore/QList>
+#include <QtCore/QString>
 
 #include "global.h"
 

@@ -21,7 +21,7 @@
 
 #include <handler.h>
 
-#include <QDateTime>
+#include <QtCore/QDateTime>
 
 namespace Akonadi {
 

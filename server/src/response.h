@@ -19,7 +19,7 @@
 #ifndef AKONADIRESPONSE_H
 #define AKONADIRESPONSE_H
 
-#include <QByteArray>
+#include <QtCore/QByteArray>
 
 namespace Akonadi {
 
