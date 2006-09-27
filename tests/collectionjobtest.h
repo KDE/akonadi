@@ -25,7 +25,7 @@
 class CollectionJobTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testTopLevelList();
     void testFolderList();
     void testNonRecursiveFolderList();

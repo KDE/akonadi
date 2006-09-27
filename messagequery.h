@@ -55,7 +55,7 @@ class MessageQuery : public Job
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
-  private slots:
+  private Q_SLOTS:
     // just for testing
     void slotEmitDone();
 

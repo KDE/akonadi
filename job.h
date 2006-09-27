@@ -23,10 +23,10 @@
 #ifndef PIM_JOB_H
 #define PIM_JOB_H
 
-#include <QMetaType>
-#include <QObject>
-#include <QString>
-#include <QUrl>
+#include <QtCore/QMetaType>
+#include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QUrl>
 
 #include <kdepim_export.h>
 
@@ -197,7 +197,7 @@ class AKONADI_EXPORT Job : public QObject
      */
     virtual QString errorText() const;
 
-  signals:
+  Q_SIGNALS:
     /**
       This signal is emitted when the started job finished.
 
@@ -269,7 +269,7 @@ class AKONADI_EXPORT Job : public QObject
   private:
     void handleResponse( const QByteArray &tag, const QByteArray &data );
 
-  private slots:
+  private Q_SLOTS:
     void slotDisconnected();
     void slotDataReceived();
     void slotSocketError();

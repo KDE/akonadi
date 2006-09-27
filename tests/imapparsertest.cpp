@@ -21,7 +21,7 @@
 #include "imapparsertest.h"
 #include <qtest_kde.h>
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 using namespace PIM;
 

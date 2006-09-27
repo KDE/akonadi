@@ -20,7 +20,7 @@
 #ifndef PIM_COLLECTION_VIEW
 #define PIM_COLLECTION_VIEW
 
-#include <QTreeView>
+#include <QtGui/QTreeView>
 #include <kdepim_export.h>
 
 class QDragMoveEvent;
@@ -52,7 +52,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     */
     virtual void setModel ( QAbstractItemModel * model );
 
-  public slots:
+  public Q_SLOTS:
     /**
       Add a child collection to the given model index.
     */

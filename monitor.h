@@ -76,7 +76,7 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void monitorMimeType( const QByteArray &mimetype );
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted if a monitored object has changed.
       @param ref Reference of the changed objects.
@@ -117,7 +117,7 @@ class AKONADI_EXPORT Monitor : public QObject
   private:
     bool connectToNotificationManager();
 
-  private slots:
+  private Q_SLOTS:
     void slotItemChanged( const QByteArray &uid, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource );
     void slotItemAdded( const QByteArray &uid, const QString &collection,

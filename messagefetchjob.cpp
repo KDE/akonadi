@@ -25,7 +25,7 @@
 #include "kmime_message.h"
 #include "kmime_headers.h"
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 using namespace PIM;
 

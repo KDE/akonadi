@@ -30,7 +30,7 @@ class CollectionCreator : public QObject
   Q_OBJECT
   public:
     CollectionCreator();
-  private slots:
+  private Q_SLOTS:
     void done(PIM::Job* job);
   private:
     int jobCount;

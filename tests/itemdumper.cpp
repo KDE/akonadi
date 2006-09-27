@@ -18,9 +18,10 @@
 */
 
 #include "itemdumper.h"
-#include <QApplication>
-#include <QDebug>
-#include <QFile>
+#include <QtCore/QDebug>
+#include <QtCore/QFile>
+#include <QtGui/QApplication>
+
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 

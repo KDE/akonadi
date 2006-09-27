@@ -19,9 +19,9 @@
 
 #include "collection.h"
 
-#include <QHash>
-#include <QString>
-#include <QStringList>
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 using namespace PIM;
 

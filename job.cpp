@@ -20,13 +20,13 @@
     02110-1301, USA.
 */
 
-#include <QDebug>
-#include <QEventLoop>
-#include <QHash>
-#include <QHostAddress>
-#include <QTcpSocket>
-#include <QTimer>
-#include <QTextStream>
+#include <QtCore/QDebug>
+#include <QtCore/QEventLoop>
+#include <QtCore/QHash>
+#include <QtCore/QTimer>
+#include <QtCore/QTextStream>
+#include <QtNetwork/QHostAddress>
+#include <QtNetwork/QTcpSocket>
 
 #include "job.h"
 #include "jobqueue.h"

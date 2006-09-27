@@ -22,7 +22,7 @@
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/itemdeletejob.h>
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 using namespace PIM;
 

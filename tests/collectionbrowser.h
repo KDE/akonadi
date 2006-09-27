@@ -33,7 +33,7 @@ class CollectionBrowser : public CollectionView
   public:
     CollectionBrowser();
 
-  private slots:
+  private Q_SLOTS:
     void slotItemActivated( const QModelIndex &index );
 
   private:

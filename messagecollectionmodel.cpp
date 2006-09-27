@@ -23,7 +23,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <QFont>
+#include <QtGui/QFont>
 
 using namespace PIM;
 

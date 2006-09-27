@@ -50,7 +50,7 @@ class ItemDeleteJob : public Job
   protected:
     virtual void doStart();
 
-  private slots:
+  private Q_SLOTS:
     void jobDone( PIM::Job* job );
 
   private:

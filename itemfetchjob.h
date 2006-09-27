@@ -89,7 +89,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
   private:
     void startFetchJob();
 
-  private slots:
+  private Q_SLOTS:
     void selectDone( PIM::Job* job );
 
   private:

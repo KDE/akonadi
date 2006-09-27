@@ -20,8 +20,8 @@
 #include "collectioncreator.h"
 #include "collectioncreatejob.h"
 
-#include <QApplication>
-#include <QDebug>
+#include <QtCore/QDebug>
+#include <QtGui/QApplication>
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>

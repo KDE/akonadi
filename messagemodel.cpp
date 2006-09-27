@@ -28,7 +28,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 using namespace PIM;
 

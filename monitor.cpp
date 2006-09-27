@@ -20,10 +20,10 @@
 #include "monitor.h"
 #include "notificationmanagerinterface.h"
 
-#include <QDBusInterface>
-#include <QDBusConnection>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusConnection>
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 using namespace PIM;
 

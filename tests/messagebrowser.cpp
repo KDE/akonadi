@@ -23,8 +23,8 @@
 #include "messagemodel.h"
 
 #include "kmime_message.h"
-#include <QDebug>
-#include <QTextEdit>
+#include <QtCore/QDebug>
+#include <QtGui/QTextEdit>
 
 using namespace PIM;
 

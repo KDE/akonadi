@@ -20,7 +20,7 @@
 #ifndef PIM_MESSAGEBROWSER_H
 #define PIM_MESSAGEBROWSER_H
 
-#include <QTreeView>
+#include <QtGui/QTreeView>
 
 #include <libakonadi/job.h>
 
@@ -31,7 +31,7 @@ class MessageBrowser : public QTreeView
   Q_OBJECT
   public:
     MessageBrowser( const QString &path );
-  private slots:
+  private Q_SLOTS:
     void messageActivated( const QModelIndex &index );
     void slotFetchDone( PIM::Job* job );
 };

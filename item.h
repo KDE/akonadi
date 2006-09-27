@@ -22,8 +22,8 @@
 
 #include <libakonadi/job.h>
 
-#include <QByteArray>
-#include <QSet>
+#include <QtCore/QByteArray>
+#include <QtCore/QSet>
 
 namespace PIM {
 

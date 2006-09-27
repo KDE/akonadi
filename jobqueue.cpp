@@ -19,9 +19,9 @@
 
 #include "jobqueue.h"
 
-#include <QDebug>
-#include <QQueue>
-#include <QTimer>
+#include <QtCore/QDebug>
+#include <QtCore/QQueue>
+#include <QtCore/QTimer>
 
 using namespace PIM;
 

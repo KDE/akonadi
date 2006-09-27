@@ -61,7 +61,7 @@ class AKONADI_EXPORT JobQueue : public Job
     // uses a singleshot timer to start the job, makes sure its fully constructed
     void startNext();
 
-  private slots:
+  private Q_SLOTS:
     void jobDone( PIM::Job* job );
     void slotStartNext();
 

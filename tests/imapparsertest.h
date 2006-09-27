@@ -25,7 +25,7 @@
 class ImapParserTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testStripLeadingSpaces();
     void testParseQuotedString();
     void testParseString();

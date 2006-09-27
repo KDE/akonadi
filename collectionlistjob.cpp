@@ -21,10 +21,10 @@
 #include "collectionlistjob.h"
 #include "imapparser.h"
 
-#include <QDebug>
-#include <QHash>
-#include <QStringList>
-#include <QTimer>
+#include <QtCore/QDebug>
+#include <QtCore/QHash>
+#include <QtCore/QStringList>
+#include <QtCore/QTimer>
 
 using namespace PIM;
 

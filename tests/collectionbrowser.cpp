@@ -25,8 +25,8 @@
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 
-#include <QDebug>
-#include <QHash>
+#include <QtCore/QDebug>
+#include <QtCore/QHash>
 
 #include <stdlib.h>
 

@@ -22,11 +22,11 @@
 
 #include <klocale.h>
 
-#include <QDebug>
-#include <QDragMoveEvent>
-#include <QHeaderView>
-#include <QInputDialog>
-#include <QSortFilterProxyModel>
+#include <QtCore/QDebug>
+#include <QtGui/QDragMoveEvent>
+#include <QtGui/QHeaderView>
+#include <QtGui/QInputDialog>
+#include <QtGui/QSortFilterProxyModel>
 
 using namespace PIM;
 

@@ -19,7 +19,7 @@
 
 #include "messagequery.h"
 
-#include <QTimer>
+#include <QtCore/QTimer>
 
 using namespace PIM;
 

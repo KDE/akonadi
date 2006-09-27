@@ -32,11 +32,11 @@
 #include <kinstance.h>
 #include <klocale.h>
 
-#include <QDebug>
-#include <QHash>
-#include <QMimeData>
-#include <QPixmap>
-#include <QQueue>
+#include <QtCore/QDebug>
+#include <QtCore/QHash>
+#include <QtCore/QMimeData>
+#include <QtCore/QQueue>
+#include <QtGui/QPixmap>
 
 using namespace PIM;
 

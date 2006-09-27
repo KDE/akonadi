@@ -23,7 +23,7 @@
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
-#include <QAbstractTableModel>
+#include <QtCore/QAbstractTableModel>
 
 namespace PIM {
 
@@ -95,7 +95,7 @@ class AKONADI_EXPORT MessageModel : public QAbstractTableModel
     */
     DataReference referenceForIndex( const QModelIndex &index ) const;
 
-  private slots:
+  private Q_SLOTS:
     /**
       Connected to the message query job which does a complete listing
     */

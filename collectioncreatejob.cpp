@@ -20,7 +20,7 @@
 #include "collectioncreatejob.h"
 #include "imapparser.h"
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 using namespace PIM;
 

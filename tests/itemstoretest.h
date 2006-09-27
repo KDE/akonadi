@@ -25,7 +25,7 @@
 class ItemStoreTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testFlagChange();
     void testDataChange();
     void testItemMove();

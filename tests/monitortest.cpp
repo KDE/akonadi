@@ -26,8 +26,8 @@
 #include <libakonadi/itemstorejob.h>
 #include <libakonadi/itemdeletejob.h>
 
-#include <QApplication>
-#include <QSignalSpy>
+#include <QtGui/QApplication>
+#include <QtTest/QSignalSpy>
 #include <qtest_kde.h>
 
 using namespace PIM;

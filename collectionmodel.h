@@ -20,7 +20,7 @@
 #ifndef PIM_COLLECTIONMODEL_H
 #define PIM_COLLECTIONMODEL_H
 
-#include <QAbstractItemModel>
+#include <QtCore/QAbstractItemModel>
 
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
@@ -148,7 +148,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     bool removeRowFromModel( int row, const QModelIndex & parent = QModelIndex() );
 
-  private slots:
+  private Q_SLOTS:
     /**
       Removes a the given collection from the model.
     */

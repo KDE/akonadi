@@ -28,7 +28,7 @@ class ItemDumper : public QObject
   public:
     ItemDumper( const QByteArray &path, const QByteArray &filename, const QByteArray &mimetype );
 
-  private slots:
+  private Q_SLOTS:
     void done(PIM::Job* job);
 
 };
