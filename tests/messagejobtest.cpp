@@ -90,7 +90,7 @@ void MessageJobTest::testIllegalMessageFetch( )
   QVERIFY( !job->exec() );
 
   // fetch a non-existing message
-  DataReference ref( "42", QString() );
+  DataReference ref( 42, QString() );
   job = new MessageFetchJob( ref, this );
   QVERIFY( job->exec() );
   QVERIFY( job->messages().isEmpty() );
@@ -101,7 +101,7 @@ void MessageJobTest::testIllegalMessageFetch( )
   QVERIFY( !job->exec() );
 
   // fetch message with broken reference
-  ref = DataReference( "some_random_textual_uid", QString() );
+  ref = DataReference( 999999, QString() );
   job = new MessageFetchJob( ref, this );
   QVERIFY( job->exec() );
   QVERIFY( job->messages().isEmpty() );

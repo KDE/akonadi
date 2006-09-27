@@ -33,7 +33,7 @@ class PIM::MonitorPrivate
     org::kde::Akonadi::NotificationManager *nm;
     QHash<QString,bool> collections;
     QSet<QByteArray> resources;
-    QSet<QByteArray> items;
+    QSet<int> items;
     QSet<QByteArray> mimetypes;
 
     bool isCollectionMonitored( const QString &path, const QByteArray &resource )
@@ -43,7 +43,7 @@ class PIM::MonitorPrivate
       return false;
     }
 
-    bool isItemMonitored( const QByteArray &item, const QString &collection,
+    bool isItemMonitored( uint item, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource )
     {
       if ( isCollectionMonitored( collection ) || items.contains( item ) ||
@@ -89,7 +89,7 @@ void PIM::Monitor::monitorCollection( const QString& path, bool recursive )
 
 void PIM::Monitor::monitorItem( const DataReference & ref )
 {
-  d->items.insert( ref.persistanceID().toLatin1() );
+  d->items.insert( ref.persistanceID() );
 }
 
 void PIM::Monitor::monitorResource(const QByteArray & resource)
@@ -105,8 +105,8 @@ void PIM::Monitor::monitorMimeType(const QByteArray & mimetype)
 void PIM::Monitor::slotItemChanged( const QByteArray & uid, const QString& collection,
                                     const QByteArray &mimetype, const QByteArray &resource )
 {
-  if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
-    emit itemChanged( DataReference( uid, QString() ) );
+  if ( d->isItemMonitored( uid.toUInt(), collection, mimetype, resource ) )
+    emit itemChanged( DataReference( uid.toUInt(), QString() ) );
   if ( d->isCollectionMonitored( collection, resource ) )
     emit collectionChanged( collection );
 }
@@ -114,8 +114,8 @@ void PIM::Monitor::slotItemChanged( const QByteArray & uid, const QString& colle
 void PIM::Monitor::slotItemAdded( const QByteArray &uid, const QString &collection,
                                   const QByteArray &mimetype, const QByteArray &resource )
 {
-  if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
-    emit itemAdded( DataReference( uid, QString() ) );
+  if ( d->isItemMonitored( uid.toUInt(), collection, mimetype, resource ) )
+    emit itemAdded( DataReference( uid.toUInt(), QString() ) );
   if ( d->isCollectionMonitored( collection, resource ) )
     emit collectionChanged( collection );
 }
@@ -123,8 +123,8 @@ void PIM::Monitor::slotItemAdded( const QByteArray &uid, const QString &collecti
 void PIM::Monitor::slotItemRemoved( const QByteArray & uid, const QString &collection,
                                     const QByteArray &mimetype, const QByteArray &resource )
 {
-  if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
-    emit itemRemoved( DataReference( uid, QString() ) );
+  if ( d->isItemMonitored( uid.toUInt(), collection, mimetype, resource ) )
+    emit itemRemoved( DataReference( uid.toUInt(), QString() ) );
   if ( d->isCollectionMonitored( collection, resource ) )
     emit collectionChanged( collection );
 }
@@ -150,7 +150,9 @@ void PIM::Monitor::slotCollectionRemoved( const QString& path, const QByteArray 
 bool PIM::Monitor::connectToNotificationManager( )
 {
   if ( !d->nm )
-    d->nm = new org::kde::Akonadi::NotificationManager("org.kde.Akonadi", "/notifications", QDBusConnection::sessionBus(), this );
+    d->nm = new org::kde::Akonadi::NotificationManager( QLatin1String( "org.kde.Akonadi" ),
+                                                        QLatin1String( "/notifications" ),
+                                                        QDBusConnection::sessionBus(), this );
   else
     return true;
 

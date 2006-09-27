@@ -207,7 +207,7 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
       return info.identifier;
       break;
     case Qt::ToolTipRole:
-      return QString( "<qt><h4>%1</h4>%2</qt>" ).arg( info.name, info.comment );
+      return QString::fromLatin1( "<qt><h4>%1</h4>%2</qt>" ).arg( info.name, info.comment );
       break;
     case StatusRole:
       return info.status;

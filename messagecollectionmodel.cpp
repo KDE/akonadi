@@ -56,7 +56,7 @@ QVariant PIM::MessageCollectionModel::data( const QModelIndex & index, int role 
     if ( value < 0 )
       return QString();
     else if ( value == 0 )
-      return QString( "-" );
+      return QLatin1String( "-" );
     else
       return QString::number( value );
   }

@@ -62,7 +62,7 @@ void PIM::CollectionListJob::doStart()
     command += '#' + d->resource.toUtf8();
   command += "\" \"" + d->prefix.toUtf8();
   if ( !d->prefix.endsWith( Collection::delimiter() ) && !d->prefix.isEmpty() )
-    command += Collection::delimiter();
+    command += Collection::delimiter().toUtf8();
   command += ( d->recursive ? '*' : '%' );
   command += '\"';
   writeData( command );
@@ -87,10 +87,10 @@ void PIM::CollectionListJob::doHandleResponse( const QByteArray & tag, const QBy
     current = ImapParser::parseString( data, folderName, current );
 
     // strip trailing delimiters
-    if ( folderName.endsWith( delim ) )
+    if ( folderName.endsWith( QString::fromUtf8( delim ) ) )
       folderName.truncate( data.length() - 1 );
 
-    QString parentName = folderName.mid( 0, folderName.lastIndexOf( delim ) + 1 );
+    QString parentName = folderName.mid( 0, folderName.lastIndexOf( QString::fromUtf8( delim ) ) + 1 );
     // strip trailing delimiter, but not if this is root
     if ( parentName.endsWith( Collection::delimiter() ) && parentName != Collection::root() )
       parentName.truncate( parentName.length() - 1 );

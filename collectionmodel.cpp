@@ -86,7 +86,7 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
   connect( d->monitor, SIGNAL(collectionRemoved(QString)), SLOT(collectionRemoved(QString)) );
 
   // ### Hack to get the kmail resource folder icons
-  KGlobal::instance()->iconLoader()->addAppDir( "kmail" );
+  KGlobal::instance()->iconLoader()->addAppDir( QLatin1String( "kmail" ) );
 }
 
 PIM::CollectionModel::~CollectionModel()
@@ -116,25 +116,25 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
   }
   if ( index.column() == 0 && role == Qt::DecorationRole ) {
     if ( col->type() == Collection::Resource )
-      return SmallIcon( "server" );
+      return SmallIcon( QLatin1String( "server" ) );
     if ( col->type() == Collection::VirtualParent )
-      return SmallIcon( "find" );
+      return SmallIcon( QLatin1String( "find" ) );
     if ( col->type() == Collection::Virtual )
-      return SmallIcon( "folder_green" );
+      return SmallIcon( QLatin1String( "folder_green" ) );
     QList<QByteArray> content = col->contentTypes();
     if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
       if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
-        return SmallIcon( "kmgroupware_folder_contacts" );
+        return SmallIcon( QLatin1String( "kmgroupware_folder_contacts" ) );
       // TODO: add all other content types and/or fix their mimetypes
       if ( content.contains( "akonadi/event" ) || content.contains( "text/ical" ) )
-        return SmallIcon( "kmgroupware_folder_calendar" );
+        return SmallIcon( QLatin1String( "kmgroupware_folder_calendar" ) );
       if ( content.contains( "akonadi/task" ) )
-        return SmallIcon( "kmgroupware_folder_tasks" );
-      return SmallIcon( "folder" );
+        return SmallIcon( QLatin1String( "kmgroupware_folder_tasks" ) );
+      return SmallIcon( QLatin1String( "folder" ) );
     } else if ( content.isEmpty() ) {
-      return SmallIcon( "folder_grey" );
+      return SmallIcon( QLatin1String( "folder_grey" ) );
     } else
-      return SmallIcon( "folder_orange" ); // mixed stuff
+      return SmallIcon( QLatin1String( "folder_orange" ) ); // mixed stuff
   }
   return QVariant();
 }
@@ -349,9 +349,9 @@ bool PIM::CollectionModel::setData( const QModelIndex & index, const QVariant & 
     d->editedCollection->setName( value.toString() );
     QString newPath;
     if ( d->editedCollection->parent() == Collection::root() )
-      newPath = d->editedCollection->name().toLatin1(); // TODO: to utf7
+      newPath = d->editedCollection->name();
     else
-      newPath = d->editedCollection->parent() + Collection::delimiter() + d->editedCollection->name().toLatin1(); // TODO: to utf7
+      newPath = d->editedCollection->parent() + Collection::delimiter() + d->editedCollection->name();
     CollectionRenameJob *job = new CollectionRenameJob( d->editedCollection->path(), newPath, d->queue );
     connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
     emit dataChanged( index, index );
@@ -416,7 +416,7 @@ bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const Q
   Collection *parentCol = static_cast<Collection*>( parent.internalPointer() );
 
   // create temporary fake collection, will be removed on error
-  d->editedCollection = new Collection( parentCol->path() + Collection::delimiter() + name.toLatin1() ); // FIXME utf-7 encoding
+  d->editedCollection = new Collection( parentCol->path() + Collection::delimiter() + name );
   d->editedCollection->setParent( parentCol->path() );
   if ( d->collections.contains( d->editedCollection->path() ) ) {
     delete d->editedCollection;

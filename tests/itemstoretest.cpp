@@ -28,7 +28,7 @@ QTEST_KDEMAIN( ItemStoreTest, NoGUI )
 
 void ItemStoreTest::testFlagChange()
 {
-  ItemFetchJob *fjob = new ItemFetchJob( DataReference( "0", QString() ) );
+  ItemFetchJob *fjob = new ItemFetchJob( DataReference( 0, QString() ) );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   Item *item = fjob->items()[0];
@@ -41,7 +41,7 @@ void ItemStoreTest::testFlagChange()
   sjob->addFlag( "added_test_flag_1" );
   QVERIFY( sjob->exec() );
 
-  fjob = new ItemFetchJob( DataReference( "0", QString() ) );
+  fjob = new ItemFetchJob( DataReference( 0, QString() ) );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -55,7 +55,7 @@ void ItemStoreTest::testFlagChange()
   sjob->setFlags( expectedFlags );
   QVERIFY( sjob->exec() );
 
-  fjob = new ItemFetchJob( DataReference( "0", QString() ) );
+  fjob = new ItemFetchJob( DataReference( 0, QString() ) );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -69,7 +69,7 @@ void ItemStoreTest::testFlagChange()
   sjob->removeFlag( "added_test_flag_2" );
   QVERIFY( sjob->exec() );
 
-  fjob = new ItemFetchJob( DataReference( "0", QString() ) );
+  fjob = new ItemFetchJob( DataReference( 0, QString() ) );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -80,7 +80,7 @@ void ItemStoreTest::testFlagChange()
 
 void ItemStoreTest::testDataChange()
 {
-  DataReference ref( "0", QString() );
+  DataReference ref( 0, QString() );
 
   // delete data
   ItemStoreJob *sjob = new ItemStoreJob( ref );
@@ -107,7 +107,7 @@ void ItemStoreTest::testDataChange()
 
 void ItemStoreTest::testItemMove()
 {
-  DataReference ref( "0", QString() );
+  DataReference ref( 0, QString() );
 
   ItemStoreJob *store = new ItemStoreJob( ref, this );
   store->setCollection( "res3" );
@@ -127,7 +127,7 @@ void ItemStoreTest::testItemMove()
 
 void ItemStoreTest::testIllegalItemMove()
 {
-  DataReference ref( "0", QString() );
+  DataReference ref( 0, QString() );
 
   // move into invalid collection
   ItemStoreJob *store = new ItemStoreJob( ref, this );

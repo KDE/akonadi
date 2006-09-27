@@ -60,7 +60,9 @@ class AgentManager::Private
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent ), d( new Private( this ) )
 {
-  d->mManager = new org::kde::Akonadi::AgentManager( "org.kde.Akonadi.Control", "/AgentManager", QDBusConnection::sessionBus(), this );
+  d->mManager = new org::kde::Akonadi::AgentManager( QLatin1String( "org.kde.Akonadi.Control" ),
+                                                     QLatin1String( "/AgentManager" ),
+                                                     QDBusConnection::sessionBus(), this );
 
   connect( d->mManager, SIGNAL( agentTypeAdded( const QString& ) ),
            this, SIGNAL( agentTypeAdded( const QString& ) ) );
@@ -108,7 +110,7 @@ QString AgentManager::agentIconName( const QString &identifier ) const
 QIcon AgentManager::agentIcon( const QString &identifier ) const
 {
   const QString name = agentIconName( identifier );
-  const QString path = QString( "%1/share/apps/akonadi/agents/%2" ).arg( AKONADIDIR ).arg( name );
+  const QString path = QString::fromLatin1( "%1/share/apps/akonadi/agents/%2" ).arg( QLatin1String( AKONADIDIR ) ).arg( name );
 
   return QIcon( path );
 }

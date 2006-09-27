@@ -39,7 +39,7 @@ class MessageQuery : public Job
       @param query The query pattern.
       @param part The parts of the data that should be returned
     */
-    MessageQuery( const QString &query, const QString &part = "ALL" );
+    MessageQuery( const QString &query, const QString &part = QLatin1String( "ALL" ) );
 
     /**
       Destroys the MessageQuery.

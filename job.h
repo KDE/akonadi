@@ -49,7 +49,7 @@ class AKONADI_EXPORT DataReference
     /**
       Creates a new DataReference with the given persistanceID and externalUrl.
      */
-    DataReference( const QString &persistanceID, const QString &externalUrl );
+    DataReference( uint persistanceID, const QString &externalUrl );
 
     /**
       Destroys the DataReference.
@@ -60,7 +60,7 @@ class AKONADI_EXPORT DataReference
       Returns the persistance id of the DataReference or an empty string if no
       id is set.
      */
-    QString persistanceID() const;
+    uint persistanceID() const;
 
     /**
       Returns the external url of the DataReference or an empty string if no
@@ -90,11 +90,12 @@ class AKONADI_EXPORT DataReference
     bool operator<( const DataReference &other ) const;
 
   private:
-    QString mPersistanceID;
+    uint mPersistanceID;
     QString mExternalUrl;
+    bool mIsNull;
 
     class DataReferencePrivate;
-    DataReferencePrivate *d;
+    DataReferencePrivate* d;
 };
 
 /**

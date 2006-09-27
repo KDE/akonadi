@@ -46,7 +46,7 @@ PIM::CollectionSelectJob::~ CollectionSelectJob( )
 void PIM::CollectionSelectJob::doStart( )
 {
   QString path = d->path;
-  if ( path.startsWith( "/" ) ) path.remove( 0, 1 );
+  if ( path.startsWith( QLatin1Char( '/' ) ) ) path.remove( 0, 1 );
 
   writeData( newTag() + " SELECT \"" + path.toUtf8() + "\"" );
 }

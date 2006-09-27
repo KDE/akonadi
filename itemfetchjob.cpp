@@ -136,7 +136,7 @@ DataReference PIM::ItemFetchJob::parseUid( const QList< QByteArray > & fetchResp
   if ( rindex >= 0 && fetchResponse.count() > rindex + 1 )
     remoteId = QString::fromLatin1( fetchResponse[ rindex + 1 ] );
 
-  return DataReference( fetchResponse[index + 1], remoteId );
+  return DataReference( fetchResponse[index + 1].toUInt(), remoteId );
 }
 
 void PIM::ItemFetchJob::addFetchField(const QByteArray & field)
@@ -164,7 +164,7 @@ void PIM::ItemFetchJob::startFetchJob()
   if ( d->uid.isNull() )
     command += " FETCH 1:* (UID REMOTEID FLAGS";
   else
-    command += " UID FETCH " + d->uid.persistanceID().toLatin1() + " (UID REMOTEID FLAGS RFC822";
+    command += " UID FETCH " + QByteArray::number( d->uid.persistanceID() ) + " (UID REMOTEID FLAGS RFC822";
   foreach ( QByteArray f, d->fields )
     command += ' ' + f;
   command += ')';

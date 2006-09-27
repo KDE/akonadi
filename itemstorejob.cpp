@@ -123,7 +123,7 @@ void PIM::ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArra
     if ( data.startsWith( "OK" ) ) {
       sendNextCommand();
     } else {
-      setError( Unknown, data );
+      setError( Unknown, QString::fromUtf8( data ) );
       emit done( this );
     }
     return;
@@ -140,7 +140,7 @@ void PIM::ItemStoreJob::sendNextCommand()
 
   d->tag = newTag();
   QByteArray command = d->tag;
-  command += " UID STORE " + d->ref.persistanceID().toLatin1() + ' ';
+  command += " UID STORE " + QByteArray::number( d->ref.persistanceID() ) + ' ';
   int op = *(d->operations.begin());
   d->operations.remove( op );
   switch ( op ) {

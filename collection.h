@@ -149,22 +149,22 @@ class AKONADI_EXPORT Collection
     /**
       Returns the collection path delimiter.
     */
-    static QByteArray delimiter();
+    static QString delimiter();
 
     /**
       Returns the root path.
     */
-    static QByteArray root();
+    static QString root();
 
     /**
       Returns the Akonadi IMAP collection prefix.
     */
-    static QByteArray prefix();
+    static QString prefix();
 
     /**
       Returns the path of the top-level search folder.
     */
-    static QByteArray searchFolder();
+    static QString searchFolder();
 
     /**
       Returns the mimetype used for collections.

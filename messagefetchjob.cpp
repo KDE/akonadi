@@ -47,7 +47,7 @@ class PIM::MessageFetchJobPrivate
         qWarning() << "Error parsing envelope address field: " << addr;
         return;
       }
-      hdr->setName( addr[0] );
+      hdr->setName( QString::fromUtf8( addr[0] ) ); // TODO: find the correct encoding
       hdr->setEmail( addr[2] + '@' + addr[3] );
     }
 

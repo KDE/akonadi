@@ -35,11 +35,12 @@
 using namespace PIM;
 
 DataReference::DataReference()
+  : mPersistanceID( 0 ), mIsNull( true ), d( 0 )
 {
 }
 
-DataReference::DataReference( const QString &persistanceID, const QString &externalUrl )
-  : mPersistanceID( persistanceID ), mExternalUrl( externalUrl )
+DataReference::DataReference( uint persistanceID, const QString &externalUrl )
+  : mPersistanceID( persistanceID ), mExternalUrl( externalUrl ), mIsNull( false ), d( 0 )
 {
 }
 
@@ -47,7 +48,7 @@ DataReference::~DataReference()
 {
 }
 
-QString DataReference::persistanceID() const
+uint DataReference::persistanceID() const
 {
   return mPersistanceID;
 }
@@ -59,7 +60,7 @@ QUrl DataReference::externalUrl() const
 
 bool PIM::DataReference::isNull() const
 {
-  return mPersistanceID.isEmpty();
+  return mIsNull;
 }
 
 bool DataReference::operator==( const DataReference & other ) const
@@ -176,7 +177,7 @@ QString Job::errorText() const
       break;
   }
   if ( !d->mErrorMessage.isEmpty() ) {
-    str += " (" + d->mErrorMessage + ')';
+    str += QString::fromLatin1( " (%1)" ).arg( d->mErrorMessage );
   }
   return str;
 }
@@ -304,9 +305,9 @@ void PIM::Job::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == d->tag ) {
     if ( !data.startsWith( "OK" ) ) {
-      QString msg = data;
-      if ( msg.startsWith( "NO " ) ) msg.remove( 0, 3 );
-      if ( msg.endsWith( "\r\n" ) ) msg.chop( 2 );
+      QString msg = QString::fromUtf8( data );
+      if ( msg.startsWith( QLatin1String( "NO " ) ) ) msg.remove( 0, 3 );
+      if ( msg.endsWith( QLatin1String( "\r\n" ) ) ) msg.chop( 2 );
       setError( Unknown, msg );
     }
     emit done( this );

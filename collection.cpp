@@ -102,24 +102,24 @@ void PIM::Collection::setParent( const QString &parent )
   d->parent = parent;
 }
 
-QByteArray PIM::Collection::delimiter()
+QString PIM::Collection::delimiter()
 {
-  return QByteArray( "/" );
+  return QLatin1String( "/" );
 }
 
-QByteArray PIM::Collection::root( )
+QString PIM::Collection::root( )
 {
-  return QByteArray();
+  return QString();
 }
 
-QByteArray PIM::Collection::searchFolder( )
+QString PIM::Collection::searchFolder( )
 {
-  return root() + QByteArray( "Search" );
+  return root() + QLatin1String( "Search" );
 }
 
-QByteArray PIM::Collection::prefix()
+QString PIM::Collection::prefix()
 {
-  return QByteArray( "/" );
+  return QLatin1String( "/" );
 }
 
 QByteArray PIM::Collection::collectionMimeType( )
