@@ -45,7 +45,7 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
     return failureResponse( "Invalid syntax" );
 
   QString collection;
-  pos = PIM::ImapParser::parseString( line, collection, pos );
+  pos = ImapParser::parseString( line, collection, pos );
   collection = HandlerHelper::normalizeCollectionName( collection );
 
   if ( collection.isEmpty() )
@@ -60,10 +60,10 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
 
   while ( pos < line.length() ) {
     QByteArray type;
-    pos = PIM::ImapParser::parseString( line, type, pos );
+    pos = ImapParser::parseString( line, type, pos );
     if ( type == "MIMETYPES" ) {
       QList<QByteArray> mimeTypes;
-      pos = PIM::ImapParser::parseParenthesizedList( line, mimeTypes, pos );
+      pos = ImapParser::parseParenthesizedList( line, mimeTypes, pos );
       if ( !db->removeMimeTypesForLocation( location.id() ) )
         return failureResponse( "Unable to modify collection mimetypes." );
       foreach ( QByteArray ba, mimeTypes )

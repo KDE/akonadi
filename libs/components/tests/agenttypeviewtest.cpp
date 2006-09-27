@@ -37,7 +37,7 @@ Dialog::Dialog( QWidget *parent )
   connect( mFilter, SIGNAL( activated( int ) ),
            this, SLOT( filterChanged( int ) ) );
 
-  mView = new PIM::AgentTypeView( this );
+  mView = new Akonadi::AgentTypeView( this );
   connect( mView, SIGNAL( currentChanged( const QString&, const QString& ) ),
            this, SLOT( currentChanged( const QString&, const QString& ) ) );
 

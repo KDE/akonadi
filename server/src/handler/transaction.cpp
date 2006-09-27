@@ -36,7 +36,7 @@ bool Akonadi::TransactionHandler::handleLine(const QByteArray & line)
   int pos = line.indexOf( ' ' ) + 1; // skip tag
 
   QByteArray command;
-  pos = PIM::ImapParser::parseString( line, command, pos );
+  pos = ImapParser::parseString( line, command, pos );
 
   DataStore *store = connection()->storageBackend();
 

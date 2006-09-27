@@ -40,7 +40,7 @@ bool Akonadi::Delete::handleLine(const QByteArray & line)
   int begin = line.indexOf( " DELETE" ) + 7;
   QString collection;
   if ( line.length() > begin )
-    PIM::ImapParser::parseString( line, collection, begin );
+    ImapParser::parseString( line, collection, begin );
   collection = HandlerHelper::normalizeCollectionName( collection );
 
   // prevent deletion of the root node

@@ -119,7 +119,7 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
 
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    const int startOfFlags = PIM::ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
+    const int startOfFlags = ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
 
     // parse optional flag parenthesized list
     // Syntax:

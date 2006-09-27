@@ -22,7 +22,7 @@
 
 #include <QtGui/QWidget>
 
-namespace PIM {
+namespace Akonadi {
 
 /**
  * This class provides a view of all available agent types.

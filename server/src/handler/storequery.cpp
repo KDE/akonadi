@@ -77,7 +77,7 @@ bool StoreQuery::parse( const QByteArray &query )
     return true;
   }
   if ( dataType() == Collection ) {
-    PIM::ImapParser::parseString( leftover, mCollection );
+    ImapParser::parseString( leftover, mCollection );
     if ( mCollection.isEmpty() )
       return false;
     return true;

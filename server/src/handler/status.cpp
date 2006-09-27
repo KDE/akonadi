@@ -50,7 +50,7 @@ bool Status::handleLine( const QByteArray& line )
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     QString mailbox;
-    const int endOfMailbox = PIM::ImapParser::parseString( line, mailbox, startOfMailbox );
+    const int endOfMailbox = ImapParser::parseString( line, mailbox, startOfMailbox );
     const QByteArray statusAttributes = line.mid( endOfMailbox + 2, line.size() - ( endOfMailbox + 2 ) - 1 );
     const QList<QByteArray> attributeList = statusAttributes.split( ' ' );
 

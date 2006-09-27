@@ -48,10 +48,10 @@ bool Create::handleLine(const QByteArray& line )
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     QByteArray tmp;
-    const int pos = PIM::ImapParser::parseQuotedString( line, tmp, startOfMailbox );
+    const int pos = ImapParser::parseQuotedString( line, tmp, startOfMailbox );
     QString mailbox = QString::fromUtf8( tmp );
     QList<QByteArray> mimeTypes;
-    PIM::ImapParser::parseParenthesizedList( line, mimeTypes, pos );
+    ImapParser::parseParenthesizedList( line, mimeTypes, pos );
 
     // strip off a trailing '/'
     mailbox = HandlerHelper::normalizeCollectionName( mailbox );

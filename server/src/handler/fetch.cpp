@@ -114,7 +114,7 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
     MimeType mimeType = store->mimeTypeById( item.mimeTypeId() );
     flags.append( "\\MimeTypes[" + mimeType.mimeType().toUtf8() + ']' );
 
-    attributes.append( "FLAGS (" + PIM::ImapParser::join( flags, " " ) + ')' );
+    attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::InternalDate ) ) {

@@ -48,7 +48,7 @@ bool Select::handleLine(const QByteArray& line )
     int startOfCommand = line.indexOf( ' ' ) + 1;
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     QString mailbox;
-    PIM::ImapParser::parseString( line, mailbox, startOfMailbox );
+    ImapParser::parseString( line, mailbox, startOfMailbox );
     mailbox = HandlerHelper::normalizeCollectionName( mailbox );
 
     DataStore *db = connection()->storageBackend();

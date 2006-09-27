@@ -17,12 +17,12 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_PROFILEMANAGER_H
-#define PIM_PROFILEMANAGER_H
+#ifndef AKONADI_PROFILEMANAGER_H
+#define AKONADI_PROFILEMANAGER_H
 
 #include <QtCore/QObject>
 
-namespace PIM {
+namespace Akonadi {
 
 class ProfileManager : public QObject
 {

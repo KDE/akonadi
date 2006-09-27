@@ -37,7 +37,7 @@ class Dialog : public QDialog
     void currentChanged( const QString&, const QString& );
 
   private:
-    PIM::AgentInstanceView *mView;
+    Akonadi::AgentInstanceView *mView;
 };
 
 #endif

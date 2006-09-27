@@ -1275,7 +1275,7 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray &uid, 
   if ( agentManager.requestItemDelivery( r.resource(), QString::fromLatin1(uid), QString::fromUtf8(remote_id), l.location(), type ) ) {
     // wait for the delivery to be done...
     //QEventLoop loop( this );
-   // connect( this, SIGNAL( done( PIM::Job* ) ), &loop, SLOT( quit( ) ) );
+   // connect( this, SIGNAL( done( Akonadi::Job* ) ), &loop, SLOT( quit( ) ) );
    // loop.exec( );
   }
 

@@ -40,7 +40,7 @@ class Dialog : public QDialog
     void filterChanged( int );
 
   private:
-    PIM::AgentTypeView *mView;
+    Akonadi::AgentTypeView *mView;
     QComboBox *mFilter;
 };
 

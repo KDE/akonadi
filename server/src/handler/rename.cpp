@@ -45,9 +45,9 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
   if ( pos < 0 )
     return failureResponse( "Bad syntax" );
 
-  pos = PIM::ImapParser::parseString( line, oldName, pos );
+  pos = ImapParser::parseString( line, oldName, pos );
   oldName = HandlerHelper::normalizeCollectionName( oldName );
-  PIM::ImapParser::parseString( line, newName, pos );
+  ImapParser::parseString( line, newName, pos );
   newName = HandlerHelper::normalizeCollectionName( newName );
 
   if ( oldName.isEmpty() || newName.isEmpty() )

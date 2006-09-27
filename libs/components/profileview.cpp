@@ -25,7 +25,7 @@
 
 #include "profileview.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 class ProfileView::Private
 {
