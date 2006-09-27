@@ -149,7 +149,7 @@ QVariant ProfileModel::data( const QModelIndex &index, int role ) const
 
   switch ( role ) {
     case Qt::DisplayRole:
-      return QString( "%1 (%2)" ).arg( info.identifier, info.agents.join( ", " ) );
+      return QString::fromLatin1( "%1 (%2)" ).arg( info.identifier, info.agents.join( QLatin1String( ", " ) ) );
       break;
     case Qt::UserRole:
       return info.identifier;

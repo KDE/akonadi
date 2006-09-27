@@ -31,7 +31,9 @@ class ProfileManager::Private
 ProfileManager::ProfileManager( QObject *parent )
   : QObject( parent ), d( new Private )
 {
-  d->mManager = new org::kde::Akonadi::ProfileManager( "org.kde.Akonadi.Control", "/ProfileManager", QDBusConnection::sessionBus(), this );
+  d->mManager = new org::kde::Akonadi::ProfileManager( QLatin1String( "org.kde.Akonadi.Control" ),
+                                                       QLatin1String( "/ProfileManager" ),
+                                                       QDBusConnection::sessionBus(), this );
 
   connect( d->mManager, SIGNAL( profileAdded( const QString& ) ),
            this, SIGNAL( profileAdded( const QString& ) ) );
