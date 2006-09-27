@@ -17,12 +17,12 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_ITEMDELETEJOB_H
-#define PIM_ITEMDELETEJOB_H
+#ifndef AKONADI_ITEMDELETEJOB_H
+#define AKONADI_ITEMDELETEJOB_H
 
 #include <libakonadi/job.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class ItemDeleteJobPrivate;
 
@@ -51,7 +51,7 @@ class ItemDeleteJob : public Job
     virtual void doStart();
 
   private Q_SLOTS:
-    void jobDone( PIM::Job* job );
+    void jobDone( Akonadi::Job* job );
 
   private:
     ItemDeleteJobPrivate *d;

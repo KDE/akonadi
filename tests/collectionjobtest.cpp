@@ -29,7 +29,7 @@
 #include "collectionstatusjob.h"
 #include "messagecollectionattribute.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 QTEST_KDEMAIN( CollectionJobTest, NoGUI )
 

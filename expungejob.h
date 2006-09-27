@@ -17,12 +17,12 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_EXPUNGEJOB_H
-#define PIM_EXPUNGEJOB_H
+#ifndef AKONADI_EXPUNGEJOB_H
+#define AKONADI_EXPUNGEJOB_H
 
 #include <libakonadi/job.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class ExpungeJobPrivate;
 

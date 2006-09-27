@@ -30,7 +30,7 @@
 #include <QtTest/QSignalSpy>
 #include <qtest_kde.h>
 
-using namespace PIM;
+using namespace Akonadi;
 
 QTEST_KDEMAIN( MonitorTest, NoGUI )
 
@@ -40,13 +40,13 @@ void MonitorTest::testMonitor()
   monitor->monitorCollection( "res3", true );
 
   // monitor signals
-  qRegisterMetaType<PIM::DataReference>("PIM::DataReference");
+  qRegisterMetaType<Akonadi::DataReference>("Akonadi::DataReference");
   QSignalSpy caspy( monitor, SIGNAL(collectionAdded(QString)) );
   QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(QString)) );
   QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(QString)) );
-  QSignalSpy iaspy( monitor, SIGNAL(itemAdded(PIM::DataReference)) );
-  QSignalSpy imspy( monitor, SIGNAL(itemChanged(PIM::DataReference)) );
-  QSignalSpy irspy( monitor, SIGNAL(itemRemoved(PIM::DataReference)) );
+  QSignalSpy iaspy( monitor, SIGNAL(itemAdded(Akonadi::DataReference)) );
+  QSignalSpy imspy( monitor, SIGNAL(itemChanged(Akonadi::DataReference)) );
+  QSignalSpy irspy( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)) );
 
   QVERIFY( caspy.isValid() );
   QVERIFY( cmspy.isValid() );

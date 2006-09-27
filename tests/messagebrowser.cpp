@@ -26,7 +26,7 @@
 #include <QtCore/QDebug>
 #include <QtGui/QTextEdit>
 
-using namespace PIM;
+using namespace Akonadi;
 
 MessageBrowser::MessageBrowser( const QString &path ) : QTreeView()
 {
@@ -37,17 +37,17 @@ MessageBrowser::MessageBrowser( const QString &path ) : QTreeView()
   connect( this, SIGNAL(doubleClicked(QModelIndex)), SLOT(messageActivated(QModelIndex)) );
 }
 
-void PIM::MessageBrowser::messageActivated( const QModelIndex & index )
+void MessageBrowser::messageActivated( const QModelIndex & index )
 {
   DataReference ref = static_cast<MessageModel*>( model() )->referenceForIndex( index );
   if ( ref.isNull() )
     return;
   MessageFetchJob *job = new MessageFetchJob( ref, this );
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(slotFetchDone(PIM::Job*)) );
+  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(slotFetchDone(Akonadi::Job*)) );
   job->start();
 }
 
-void PIM::MessageBrowser::slotFetchDone( PIM::Job * job )
+void MessageBrowser::slotFetchDone( Job * job )
 {
   MessageFetchJob *fetch = static_cast<MessageFetchJob*>( job );
   if ( job->error() ) {

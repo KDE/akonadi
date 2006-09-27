@@ -17,15 +17,15 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTION_VIEW
-#define PIM_COLLECTION_VIEW
+#ifndef AKONADI_COLLECTION_VIEW
+#define AKONADI_COLLECTION_VIEW
 
 #include <QtGui/QTreeView>
 #include <kdepim_export.h>
 
 class QDragMoveEvent;
 
-namespace PIM {
+namespace Akonadi {
 
 /**
   A view to show a collection tree provided by a CollectionModell.

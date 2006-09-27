@@ -27,9 +27,9 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::MessageFetchJobPrivate
+class Akonadi::MessageFetchJobPrivate
 {
   public:
     Message::List messages;
@@ -68,25 +68,25 @@ class PIM::MessageFetchJobPrivate
     }
 };
 
-PIM::MessageFetchJob::MessageFetchJob( const QString & path, QObject * parent ) :
+MessageFetchJob::MessageFetchJob( const QString & path, QObject * parent ) :
     ItemFetchJob( path, parent ),
     d( new MessageFetchJobPrivate )
 {
   addFetchField( "ENVELOPE" );
 }
 
-PIM::MessageFetchJob::MessageFetchJob( const DataReference & ref, QObject * parent ) :
+MessageFetchJob::MessageFetchJob( const DataReference & ref, QObject * parent ) :
     ItemFetchJob( ref, parent ),
     d( new MessageFetchJobPrivate )
 {
 }
 
-PIM::MessageFetchJob::~MessageFetchJob()
+MessageFetchJob::~MessageFetchJob()
 {
   delete d;
 }
 
-void PIM::MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "*" ) {
     int begin = data.indexOf( "FETCH" );
@@ -161,7 +161,7 @@ void PIM::MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByte
   qDebug() << "Unhandled response in message fetch job: " << tag << data;
 }
 
-Message::List PIM::MessageFetchJob::messages() const
+Message::List MessageFetchJob::messages() const
 {
   return d->messages;
 }

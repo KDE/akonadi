@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MONITOR_H
-#define PIM_MONITOR_H
+#ifndef AKONADI_MONITOR_H
+#define AKONADI_MONITOR_H
 
 #include <libakonadi/job.h>
 #include <QtCore/QObject>
 
-namespace PIM {
+namespace Akonadi {
 
 class MonitorPrivate;
 
@@ -81,19 +81,19 @@ class AKONADI_EXPORT Monitor : public QObject
       Emitted if a monitored object has changed.
       @param ref Reference of the changed objects.
     */
-    void itemChanged( const PIM::DataReference &ref );
+    void itemChanged( const Akonadi::DataReference &ref );
 
     /**
       Emitted if a item has been added to a monitored collection.
       @param ref Reference of the added object.
     */
-    void itemAdded( const PIM::DataReference &ref );
+    void itemAdded( const Akonadi::DataReference &ref );
 
     /**
       Emitted if a monitored object has been removed.
       @param ref Reference of the removed object.
     */
-    void itemRemoved( const PIM::DataReference &ref);
+    void itemRemoved( const Akonadi::DataReference &ref);
 
     /**
       Emitted if a monitored got a new child collection.

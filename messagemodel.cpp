@@ -30,7 +30,7 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
 class MessageModel::Private
 {
@@ -42,7 +42,7 @@ class MessageModel::Private
     QList<MessageQuery*> fetchJobs, updateJobs;
 };
 
-PIM::MessageModel::MessageModel( QObject *parent ) :
+MessageModel::MessageModel( QObject *parent ) :
     QAbstractTableModel( parent ),
     d( new Private() )
 {
@@ -50,7 +50,7 @@ PIM::MessageModel::MessageModel( QObject *parent ) :
   d->monitor = 0;
 }
 
-PIM::MessageModel::~MessageModel( )
+MessageModel::~MessageModel( )
 {
   delete d->listingJob;
   delete d->monitor;
@@ -59,13 +59,13 @@ PIM::MessageModel::~MessageModel( )
   delete d;
 }
 
-int PIM::MessageModel::columnCount( const QModelIndex & parent ) const
+int MessageModel::columnCount( const QModelIndex & parent ) const
 {
   Q_UNUSED( parent );
   return 5; // keep in sync with the column type enum
 }
 
-QVariant PIM::MessageModel::data( const QModelIndex & index, int role ) const
+QVariant MessageModel::data( const QModelIndex & index, int role ) const
 {
   if ( !index.isValid() )
     return QVariant();
@@ -92,14 +92,14 @@ QVariant PIM::MessageModel::data( const QModelIndex & index, int role ) const
   return QVariant();
 }
 
-int PIM::MessageModel::rowCount( const QModelIndex & parent ) const
+int MessageModel::rowCount( const QModelIndex & parent ) const
 {
   if ( !parent.isValid() )
     return d->messages.count();
   return 0;
 }
 
-QVariant PIM::MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
@@ -120,7 +120,7 @@ QVariant PIM::MessageModel::headerData( int section, Qt::Orientation orientation
   return QAbstractTableModel::headerData( section, orientation, role );
 }
 
-void PIM::MessageModel::setPath( const QString& path )
+void MessageModel::setPath( const QString& path )
 {
   if ( d->path == path )
     return;
@@ -138,11 +138,11 @@ void PIM::MessageModel::setPath( const QString& path )
   delete d->listingJob;
   // start listing job
   d->listingJob = new MessageFetchJob( path, this );
-  connect( d->listingJob, SIGNAL( done( PIM::Job* ) ), SLOT( listingDone( PIM::Job* ) ) );
+  connect( d->listingJob, SIGNAL( done( Akonadi::Job* ) ), SLOT( listingDone( Akonadi::Job* ) ) );
   d->listingJob->start();
 }
 
-void PIM::MessageModel::listingDone( PIM::Job * job )
+void MessageModel::listingDone( Job * job )
 {
   Q_ASSERT( job == d->listingJob );
   if ( job->error() ) {
@@ -167,7 +167,7 @@ void PIM::MessageModel::listingDone( PIM::Job * job )
 //   d->monitor->start();
 }
 
-void PIM::MessageModel::fetchingNewDone( PIM::Job * job )
+void MessageModel::fetchingNewDone( Job * job )
 {
   Q_ASSERT( d->fetchJobs.contains( static_cast<MessageQuery*>( job ) ) );
   if ( job->error() ) {
@@ -183,7 +183,7 @@ void PIM::MessageModel::fetchingNewDone( PIM::Job * job )
   job->deleteLater();
 }
 
-void PIM::MessageModel::fetchingUpdatesDone( PIM::Job * job )
+void MessageModel::fetchingUpdatesDone( Job * job )
 {
   Q_ASSERT( d->updateJobs.contains( static_cast<MessageQuery*>( job ) ) );
   if ( job->error() ) {
@@ -207,27 +207,27 @@ void PIM::MessageModel::fetchingUpdatesDone( PIM::Job * job )
   job->deleteLater();
 }
 
-void PIM::MessageModel::messagesChanged( const DataReference::List & references )
+void MessageModel::messagesChanged( const DataReference::List & references )
 {
   // TODO: build query based on the reference list
   QString query;
   MessageQuery* job = new MessageQuery( query );
-  connect( job, SIGNAL( done( PIM::Job* ) ), SLOT( fetchingUpdatesDone( PIM::Job* job ) ) );
+  connect( job, SIGNAL( done( Akonadi::Job* ) ), SLOT( fetchingUpdatesDone( Akonadi::Job* job ) ) );
   job->start();
   d->updateJobs.append( job );
 }
 
-void PIM::MessageModel::messagesAdded( const DataReference::List & references )
+void MessageModel::messagesAdded( const DataReference::List & references )
 {
   // TODO: build query based on the reference list
   QString query;
   MessageQuery* job = new MessageQuery( query );
-  connect( job, SIGNAL( done( PIM::Job* ) ), SLOT( fetchingNewDone( PIM::Job* job ) ) );
+  connect( job, SIGNAL( done( Akonadi::Job* ) ), SLOT( fetchingNewDone( Akonadi::Job* job ) ) );
   job->start();
   d->fetchJobs.append( job );
 }
 
-void PIM::MessageModel::messagesRemoved( const DataReference::List & references )
+void MessageModel::messagesRemoved( const DataReference::List & references )
 {
   foreach ( DataReference ref, references ) {
     // ### *slow*
@@ -248,7 +248,7 @@ void PIM::MessageModel::messagesRemoved( const DataReference::List & references 
   }
 }
 
-DataReference PIM::MessageModel::referenceForIndex( const QModelIndex & index ) const
+DataReference MessageModel::referenceForIndex( const QModelIndex & index ) const
 {
   if ( !index.isValid() )
     return DataReference();

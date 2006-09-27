@@ -22,9 +22,9 @@
 #include "expungejob.h"
 #include "transactionjobs.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::ItemDeleteJobPrivate
+class Akonadi::ItemDeleteJobPrivate
 {
   public:
     enum State {
@@ -38,7 +38,7 @@ class PIM::ItemDeleteJobPrivate
     State state;
 };
 
-PIM::ItemDeleteJob::ItemDeleteJob(const DataReference & ref, QObject * parent) :
+ItemDeleteJob::ItemDeleteJob(const DataReference & ref, QObject * parent) :
     Job( parent ),
     d( new ItemDeleteJobPrivate )
 {
@@ -46,19 +46,19 @@ PIM::ItemDeleteJob::ItemDeleteJob(const DataReference & ref, QObject * parent) :
   d->state = ItemDeleteJobPrivate::Begin;
 }
 
-PIM::ItemDeleteJob::~ ItemDeleteJob()
+ItemDeleteJob::~ ItemDeleteJob()
 {
   delete d;
 }
 
-void PIM::ItemDeleteJob::doStart()
+void ItemDeleteJob::doStart()
 {
   TransactionBeginJob *begin = new TransactionBeginJob( this );
-  connect( begin, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+  connect( begin, SIGNAL(done(Akonadi::Job*)), SLOT(jobDone(Akonadi::Job*)) );
   begin->start();
 }
 
-void PIM::ItemDeleteJob::jobDone(PIM::Job * job)
+void ItemDeleteJob::jobDone(Job * job)
 {
   if ( job->error() ) {
     setError( job->error(), job->errorMessage() );
@@ -72,7 +72,7 @@ void PIM::ItemDeleteJob::jobDone(PIM::Job * job)
     {
       ItemStoreJob* store = new ItemStoreJob( d->ref, this );
       store->addFlag( "\\Deleted" );
-      connect( store, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+      connect( store, SIGNAL(done(Akonadi::Job*)), SLOT(jobDone(Akonadi::Job*)) );
       store->start();
       d->state = ItemDeleteJobPrivate::Store;
       break;
@@ -80,7 +80,7 @@ void PIM::ItemDeleteJob::jobDone(PIM::Job * job)
     case ItemDeleteJobPrivate::Store:
     {
       ExpungeJob *expunge = new ExpungeJob( this );
-      connect( expunge, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+      connect( expunge, SIGNAL(done(Akonadi::Job*)), SLOT(jobDone(Akonadi::Job*)) );
       expunge->start();
       d->state = ItemDeleteJobPrivate::Expunge;
       break;
@@ -88,7 +88,7 @@ void PIM::ItemDeleteJob::jobDone(PIM::Job * job)
     case ItemDeleteJobPrivate::Expunge:
     {
       TransactionCommitJob *commit = new TransactionCommitJob( this );
-      connect( commit, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+      connect( commit, SIGNAL(done(Akonadi::Job*)), SLOT(jobDone(Akonadi::Job*)) );
       commit->start();
       d->state = ItemDeleteJobPrivate::Commit;
       break;

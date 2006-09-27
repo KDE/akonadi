@@ -17,12 +17,12 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_JOBQUEUE_H
-#define PIM_JOBQUEUE_H
+#ifndef AKONADI_JOBQUEUE_H
+#define AKONADI_JOBQUEUE_H
 
 #include <libakonadi/job.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class JobQueuePrivate;
 
@@ -53,7 +53,7 @@ class AKONADI_EXPORT JobQueue : public Job
 
   protected:
     virtual void doStart();
-    virtual void addSubJob( PIM::Job *job );
+    virtual void addSubJob( Akonadi::Job *job );
 
   private:
     // part of the Job API, hide it for JobQueue
@@ -62,7 +62,7 @@ class AKONADI_EXPORT JobQueue : public Job
     void startNext();
 
   private Q_SLOTS:
-    void jobDone( PIM::Job* job );
+    void jobDone( Akonadi::Job* job );
     void slotStartNext();
 
   private:

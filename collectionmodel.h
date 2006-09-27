@@ -17,15 +17,15 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTIONMODEL_H
-#define PIM_COLLECTIONMODEL_H
+#ifndef AKONADI_COLLECTIONMODEL_H
+#define AKONADI_COLLECTIONMODEL_H
 
 #include <QtCore/QAbstractItemModel>
 
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class Collection;
 
@@ -162,22 +162,22 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Connected to the collection status job.
     */
-    void updateDone( PIM::Job *job );
+    void updateDone( Akonadi::Job *job );
 
     /**
       Connected to the list jobs.
     */
-    void listDone( PIM::Job *job );
+    void listDone( Akonadi::Job *job );
 
     /**
       Connected to edit jobs.
     */
-    void editDone( PIM::Job *job );
+    void editDone( Akonadi::Job *job );
 
     /**
       Connected to item append jobs used for DND.
     */
-    void appendDone( PIM::Job *job );
+    void appendDone( Akonadi::Job *job );
 
   private:
     class Private;

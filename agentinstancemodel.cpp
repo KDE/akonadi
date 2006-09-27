@@ -25,7 +25,7 @@
 #include "agentinstancemodel.h"
 #include "agentmanager.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 class AgentInstanceInfo
 {

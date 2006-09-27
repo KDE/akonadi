@@ -17,14 +17,12 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGEBROWSER_H
-#define PIM_MESSAGEBROWSER_H
+#ifndef MESSAGEBROWSER_H
+#define MESSAGEBROWSER_H
 
 #include <QtGui/QTreeView>
 
 #include <libakonadi/job.h>
-
-namespace PIM {
 
 class MessageBrowser : public QTreeView
 {
@@ -33,9 +31,7 @@ class MessageBrowser : public QTreeView
     MessageBrowser( const QString &path );
   private Q_SLOTS:
     void messageActivated( const QModelIndex &index );
-    void slotFetchDone( PIM::Job* job );
+    void slotFetchDone( Akonadi::Job* job );
 };
-
-}
 
 #endif

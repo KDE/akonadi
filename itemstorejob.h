@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_ITEMSTOREJOB_H
-#define PIM_ITEMSTOREJOB_H
+#ifndef AKONADI_ITEMSTOREJOB_H
+#define AKONADI_ITEMSTOREJOB_H
 
 #include <libakonadi/item.h>
 #include <libakonadi/job.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class ItemStoreJobPrivate;
 

@@ -17,14 +17,14 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTION_H
-#define PIM_COLLECTION_H
+#ifndef AKONADI_COLLECTION_H
+#define AKONADI_COLLECTION_H
 
 #include <libakonadi/collectionattribute.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
-namespace PIM {
+namespace Akonadi {
 
 /**
   This class represents a collection of PIM objects, such as a folder on a mail- or

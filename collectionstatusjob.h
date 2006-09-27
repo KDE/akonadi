@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTIONSTATUSJOB_H
-#define PIM_COLLECTIONSTATUSJOB_H
+#ifndef AKONADI_COLLECTIONSTATUSJOB_H
+#define AKONADI_COLLECTIONSTATUSJOB_H
 
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class CollectionAttribute;
 class CollectionStatusJobPrivate;

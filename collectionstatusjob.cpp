@@ -24,38 +24,38 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::CollectionStatusJobPrivate
+class Akonadi::CollectionStatusJobPrivate
 {
   public:
     QString path;
     CollectionAttribute::List attributes;
 };
 
-PIM::CollectionStatusJob::CollectionStatusJob( const QString& path, QObject * parent ) :
+CollectionStatusJob::CollectionStatusJob( const QString& path, QObject * parent ) :
     Job( parent ),
     d( new CollectionStatusJobPrivate )
 {
   d->path = path;
 }
 
-PIM::CollectionStatusJob::~ CollectionStatusJob( )
+CollectionStatusJob::~ CollectionStatusJob( )
 {
   delete d;
 }
 
-QList< CollectionAttribute * > PIM::CollectionStatusJob::attributes( ) const
+QList< CollectionAttribute * > CollectionStatusJob::attributes( ) const
 {
   return d->attributes;
 }
 
-void PIM::CollectionStatusJob::doStart( )
+void CollectionStatusJob::doStart( )
 {
   writeData( newTag() + " STATUS \"" + d->path.toUtf8() + "\" (MESSAGES UNSEEN MIMETYPES)" );
 }
 
-void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "*" ) {
     QByteArray token;
@@ -90,7 +90,7 @@ void PIM::CollectionStatusJob::doHandleResponse( const QByteArray & tag, const Q
   qDebug() << "unhandled response in collection status job: " << tag << data;
 }
 
-QString PIM::CollectionStatusJob::path( ) const
+QString CollectionStatusJob::path( ) const
 {
   return d->path;
 }

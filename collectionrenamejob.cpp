@@ -21,16 +21,16 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::CollectionRenameJobPrivate
+class Akonadi::CollectionRenameJobPrivate
 {
   public:
     QString from;
     QString to;
 };
 
-PIM::CollectionRenameJob::CollectionRenameJob( const QString & from, const QString & to, QObject * parent ) :
+CollectionRenameJob::CollectionRenameJob( const QString & from, const QString & to, QObject * parent ) :
     Job( parent ),
     d( new CollectionRenameJobPrivate )
 {
@@ -38,12 +38,12 @@ PIM::CollectionRenameJob::CollectionRenameJob( const QString & from, const QStri
   d->to = to;
 }
 
-PIM::CollectionRenameJob::~ CollectionRenameJob( )
+CollectionRenameJob::~ CollectionRenameJob( )
 {
   delete d;
 }
 
-void PIM::CollectionRenameJob::doStart( )
+void CollectionRenameJob::doStart( )
 {
   writeData( newTag() + " RENAME \"" + d->from.toUtf8() + "\" \"" + d->to.toUtf8() + '\"' );
 }

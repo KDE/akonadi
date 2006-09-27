@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGEQUERY_H
-#define PIM_MESSAGEQUERY_H
+#ifndef AKONADI_MESSAGEQUERY_H
+#define AKONADI_MESSAGEQUERY_H
 
 #include <libakonadi/job.h>
 #include <libakonadi/message.h>
 
-namespace PIM {
+namespace Akonadi {
 
 /**
   Retrieving of (partial) messages matching a given query pattern.

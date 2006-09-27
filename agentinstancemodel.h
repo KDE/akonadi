@@ -22,7 +22,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
-namespace PIM {
+namespace Akonadi {
 
 class AgentInstanceModel : public QAbstractItemModel
 {

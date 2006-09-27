@@ -19,26 +19,26 @@
 
 #include "collectiondeletejob.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::CollectionDeleteJobPrivate
+class Akonadi::CollectionDeleteJobPrivate
 {
   public:
     QString path;
 };
 
-PIM::CollectionDeleteJob::CollectionDeleteJob(const QString & path, QObject * parent) :
+CollectionDeleteJob::CollectionDeleteJob(const QString & path, QObject * parent) :
     Job( parent ), d( new CollectionDeleteJobPrivate )
 {
   d->path = path;
 }
 
-PIM::CollectionDeleteJob::~ CollectionDeleteJob()
+CollectionDeleteJob::~ CollectionDeleteJob()
 {
   delete d;
 }
 
-void PIM::CollectionDeleteJob::doStart()
+void CollectionDeleteJob::doStart()
 {
   writeData( newTag() + " DELETE \"" + d->path.toUtf8() + "\"" );
 }

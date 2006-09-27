@@ -31,11 +31,11 @@ class CollectionCreator : public QObject
   public:
     CollectionCreator();
   private Q_SLOTS:
-    void done(PIM::Job* job);
+    void done(Akonadi::Job* job);
   private:
     int jobCount;
     QTime startTime;
-    PIM::JobQueue *queue;
+    Akonadi::JobQueue *queue;
 };
 
 #endif

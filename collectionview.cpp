@@ -28,7 +28,7 @@
 #include <QtGui/QInputDialog>
 #include <QtGui/QSortFilterProxyModel>
 
-using namespace PIM;
+using namespace Akonadi;
 
 class CollectionView::Private
 {
@@ -37,7 +37,7 @@ class CollectionView::Private
     CollectionModel *model;
 };
 
-PIM::CollectionView::CollectionView( QWidget * parent ) :
+CollectionView::CollectionView( QWidget * parent ) :
     QTreeView( parent ),
     d( new Private() )
 {
@@ -58,13 +58,13 @@ PIM::CollectionView::CollectionView( QWidget * parent ) :
   connect( this, SIGNAL(doubleClicked(QModelIndex)), SLOT(createCollection(QModelIndex)) );
 }
 
-PIM::CollectionView::~ CollectionView( )
+CollectionView::~ CollectionView( )
 {
   delete d;
   d = 0;
 }
 
-void PIM::CollectionView::setModel( QAbstractItemModel * model )
+void CollectionView::setModel( QAbstractItemModel * model )
 {
   d->model = static_cast<CollectionModel*>( model );
   d->filterModel->setSourceModel( model );
@@ -72,7 +72,7 @@ void PIM::CollectionView::setModel( QAbstractItemModel * model )
   header()->setResizeMode( 0, QHeaderView::Stretch );
 }
 
-void PIM::CollectionView::createCollection( const QModelIndex & parent )
+void CollectionView::createCollection( const QModelIndex & parent )
 {
   QModelIndex index =sourceIndex( parent );
   if ( !d->model->canCreateCollection( index ) )
@@ -84,7 +84,7 @@ void PIM::CollectionView::createCollection( const QModelIndex & parent )
     qWarning() << "Collection creation failed immediately!";
 }
 
-void PIM::CollectionView::dragMoveEvent(QDragMoveEvent * event)
+void CollectionView::dragMoveEvent(QDragMoveEvent * event)
 {
   QModelIndex index = sourceIndex( indexAt( event->pos() ) );
   QStringList mimeTypes = event->mimeData()->formats();
@@ -95,7 +95,7 @@ void PIM::CollectionView::dragMoveEvent(QDragMoveEvent * event)
   QTreeView::dragMoveEvent( event );
 }
 
-QModelIndex PIM::CollectionView::sourceIndex(const QModelIndex & index)
+QModelIndex CollectionView::sourceIndex(const QModelIndex & index)
 {
   if ( index.model() == d->filterModel )
     return d->filterModel->mapToSource( index );

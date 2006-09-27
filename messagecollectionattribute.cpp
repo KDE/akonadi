@@ -19,9 +19,9 @@
 
 #include "messagecollectionattribute.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::MessageCollectionAttribute::Private
+class MessageCollectionAttribute::Private
 {
   public:
     int count;
@@ -29,7 +29,7 @@ class PIM::MessageCollectionAttribute::Private
 };
 
 
-PIM::MessageCollectionAttribute::MessageCollectionAttribute() :
+MessageCollectionAttribute::MessageCollectionAttribute() :
     CollectionAttribute(),
     d( new Private() )
 {
@@ -37,33 +37,33 @@ PIM::MessageCollectionAttribute::MessageCollectionAttribute() :
   d->unreadCount = -1;
 }
 
-PIM::MessageCollectionAttribute::~MessageCollectionAttribute()
+MessageCollectionAttribute::~MessageCollectionAttribute()
 {
   delete d;
   d = 0;
 }
 
-int PIM::MessageCollectionAttribute::count( ) const
+int MessageCollectionAttribute::count( ) const
 {
   return d->count;
 }
 
-void PIM::MessageCollectionAttribute::setCount( int count )
+void MessageCollectionAttribute::setCount( int count )
 {
   d->count = count;
 }
 
-int PIM::MessageCollectionAttribute::unreadCount( ) const
+int MessageCollectionAttribute::unreadCount( ) const
 {
   return d->unreadCount;
 }
 
-void PIM::MessageCollectionAttribute::setUnreadCount( int count )
+void MessageCollectionAttribute::setUnreadCount( int count )
 {
   d->unreadCount = count;
 }
 
-QByteArray PIM::MessageCollectionAttribute::type( ) const
+QByteArray MessageCollectionAttribute::type( ) const
 {
   return QByteArray( "MessageCollection" );
 }

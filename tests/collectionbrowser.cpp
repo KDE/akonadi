@@ -30,17 +30,15 @@
 
 #include <stdlib.h>
 
-using namespace PIM;
-
 CollectionBrowser::CollectionBrowser() : CollectionView()
 {
-  model = new MessageCollectionModel( this );
+  model = new Akonadi::MessageCollectionModel( this );
   setModel( model );
 
   connect( this, SIGNAL(activated(QModelIndex)), SLOT(slotItemActivated(QModelIndex)) );
 }
 
-void PIM::CollectionBrowser::slotItemActivated( const QModelIndex & index )
+void CollectionBrowser::slotItemActivated( const QModelIndex & index )
 {
   QString path = model->pathForIndex( sourceIndex( index ) );
   if ( path.isNull() )

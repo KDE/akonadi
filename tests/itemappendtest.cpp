@@ -24,7 +24,7 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
 #include <qtest_kde.h>
 

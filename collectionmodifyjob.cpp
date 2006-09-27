@@ -20,9 +20,9 @@
 #include "collectionmodifyjob.h"
 #include "imapparser.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::CollectionModifyJobPrivate
+class Akonadi::CollectionModifyJobPrivate
 {
   public:
     QString path;
@@ -30,19 +30,19 @@ class PIM::CollectionModifyJobPrivate
     bool setMimeTypes;
 };
 
-PIM::CollectionModifyJob::CollectionModifyJob(const QString &path, QObject * parent) :
+CollectionModifyJob::CollectionModifyJob(const QString &path, QObject * parent) :
     Job( parent ), d( new CollectionModifyJobPrivate )
 {
   d->path = path;
   d->setMimeTypes = false;
 }
 
-PIM::CollectionModifyJob::~ CollectionModifyJob()
+CollectionModifyJob::~ CollectionModifyJob()
 {
   delete d;
 }
 
-void PIM::CollectionModifyJob::doStart()
+void CollectionModifyJob::doStart()
 {
   QByteArray command = newTag() + " MODIFY \"" + d->path.toUtf8() + '\"';
   if ( d->setMimeTypes )
@@ -50,7 +50,7 @@ void PIM::CollectionModifyJob::doStart()
   writeData( command );
 }
 
-void PIM::CollectionModifyJob::setContentTypes(const QList< QByteArray > & mimeTypes)
+void CollectionModifyJob::setContentTypes(const QList< QByteArray > & mimeTypes)
 {
   d->setMimeTypes = true;
   d->mimeTypes = mimeTypes;

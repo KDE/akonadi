@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_ITEMFETCHJOB_H
-#define PIM_ITEMFETCHJOB_H
+#ifndef AKONADI_ITEMFETCHJOB_H
+#define AKONADI_ITEMFETCHJOB_H
 
 #include <libakonadi/job.h>
 #include <libakonadi/item.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class ItemFetchJobPrivate;
 
@@ -56,7 +56,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     virtual ~ItemFetchJob();
 
     /**
-      Returns the fetched item objects. Invalid before the done(PIM::Job*)
+      Returns the fetched item objects. Invalid before the done(Akonadi::Job*)
       signal has been emitted or if an error occurred. Also useless if you are
       using a sub-class.
     */
@@ -90,7 +90,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     void startFetchJob();
 
   private Q_SLOTS:
-    void selectDone( PIM::Job* job );
+    void selectDone( Akonadi::Job* job );
 
   private:
     ItemFetchJobPrivate *d;

@@ -20,7 +20,7 @@
 #include "profilemanager.h"
 #include "profilemanagerinterface.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 class ProfileManager::Private
 {

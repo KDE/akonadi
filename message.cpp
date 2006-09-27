@@ -21,33 +21,33 @@
 
 #include <kmime_message.h>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::MessagePrivate
+class Akonadi::MessagePrivate
 {
   public:
     KMime::Message *mime;
 };
 
 
-PIM::Message::Message( const DataReference & ref ) :
+Message::Message( const DataReference & ref ) :
     Item( ref ),
     d( new MessagePrivate() )
 {
 }
 
-PIM::Message::~Message( )
+Message::~Message( )
 {
   delete d->mime;
   delete d;
 }
 
-KMime::Message * PIM::Message::mime( ) const
+KMime::Message * Message::mime( ) const
 {
   return d->mime;
 }
 
-void PIM::Message::setMime( KMime::Message * mime )
+void Message::setMime( KMime::Message * mime )
 {
   d->mime = mime;
 }

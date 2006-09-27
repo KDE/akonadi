@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGECOLLECTIONATTRIBUTE_H
-#define PIM_MESSAGECOLLECTIONATTRIBUTE_H
+#ifndef AKONADI_MESSAGECOLLECTIONATTRIBUTE_H
+#define AKONADI_MESSAGECOLLECTIONATTRIBUTE_H
 
 #include <libakonadi/collection.h>
 #include <kdepim_export.h>
 
-namespace PIM {
+namespace Akonadi {
 
 /**
   A collection of messages, eg. emails or news articles.

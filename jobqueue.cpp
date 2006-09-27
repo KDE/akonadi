@@ -23,9 +23,9 @@
 #include <QtCore/QQueue>
 #include <QtCore/QTimer>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::JobQueuePrivate
+class Akonadi::JobQueuePrivate
 {
   public:
     QQueue<Job*> queue;
@@ -33,7 +33,7 @@ class PIM::JobQueuePrivate
     bool jobRunning;
 };
 
-PIM::JobQueue::JobQueue( QObject * parent ) :
+JobQueue::JobQueue( QObject * parent ) :
     Job( parent ),
     d( new JobQueuePrivate )
 {
@@ -42,53 +42,53 @@ PIM::JobQueue::JobQueue( QObject * parent ) :
   start();
 }
 
-PIM::JobQueue::~ JobQueue( )
+JobQueue::~ JobQueue( )
 {
   // TODO: what to do about still enqueued jobs?
   delete d;
 }
 
-void PIM::JobQueue::addSubJob( PIM::Job * job )
+void JobQueue::addSubJob( Job * job )
 {
   Job::addSubJob( job );
   d->queue.enqueue( job );
   startNext();
 }
 
-void PIM::JobQueue::doStart( )
+void JobQueue::doStart( )
 {
   d->isStarted = true;
   startNext();
 }
 
-void PIM::JobQueue::jobDone( PIM::Job * job )
+void JobQueue::jobDone( Job * job )
 {
   Q_UNUSED( job );
   d->jobRunning = false;
   startNext();
 }
 
-void PIM::JobQueue::startNext()
+void JobQueue::startNext()
 {
   QTimer::singleShot( 0, this, SLOT(slotStartNext()) );
 }
 
-void PIM::JobQueue::slotStartNext()
+void JobQueue::slotStartNext()
 {
   if ( !d->isStarted || d->jobRunning || isEmpty() )
     return;
   d->jobRunning = true;
   Job *job = d->queue.dequeue();
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(jobDone(PIM::Job*)) );
+  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(jobDone(Akonadi::Job*)) );
   job->start();
 }
 
-bool PIM::JobQueue::isEmpty( ) const
+bool JobQueue::isEmpty( ) const
 {
   return d->queue.isEmpty();
 }
 
-void PIM::JobQueue::start( )
+void JobQueue::start( )
 {
   Job::start();
 }

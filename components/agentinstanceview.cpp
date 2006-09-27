@@ -29,7 +29,7 @@
 
 #include "agentinstanceview.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 class AgentInstanceViewDelegate : public QAbstractItemDelegate
 {

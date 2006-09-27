@@ -20,8 +20,8 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_JOB_H
-#define PIM_JOB_H
+#ifndef AKONADI_JOB_H
+#define AKONADI_JOB_H
 
 #include <QtCore/QMetaType>
 #include <QtCore/QObject>
@@ -30,7 +30,7 @@
 
 #include <kdepim_export.h>
 
-namespace PIM {
+namespace Akonadi {
 
 /**
   This class encapsulates a reference to a pim object in
@@ -103,9 +103,9 @@ class AKONADI_EXPORT DataReference
   the code looks like
 
   \code
-    PIM::Job *job = new PIM::SomeJob( some parameter );
-    connect( job, SIGNAL( done( PIM::Job* ) ),
-             this, SLOT( slotResult( PIM::Job* ) ) );
+    Akonadi::Job *job = new Akonadi::SomeJob( some parameter );
+    connect( job, SIGNAL( done( Akonadi::Job* ) ),
+             this, SLOT( slotResult( Akonadi::Job* ) ) );
     job->start();
   \endcode
 
@@ -119,7 +119,7 @@ class AKONADI_EXPORT DataReference
   With the synchronous interface the code looks like
 
   \code
-    PIM::SomeJob job( some parameter );
+    Akonadi::SomeJob job( some parameter );
     if ( !job.exec() ) {
       qDebug( "Error: %s", qPrintable( job.errorString() ) );
     } else {
@@ -203,7 +203,7 @@ class AKONADI_EXPORT Job : public QObject
 
       @param job A pointer to the job which emitted the signal.
      */
-    void done( PIM::Job *job );
+    void done( Akonadi::Job *job );
 
     /**
       Progress signal showing the overall progress of the job.
@@ -211,13 +211,13 @@ class AKONADI_EXPORT Job : public QObject
       @param job The job that emitted this signal.
       @param percent The percentage.
      */
-    void percent( PIM::Job *job, unsigned int percent );
+    void percent( Akonadi::Job *job, unsigned int percent );
 
     /**
       Emitted directly before the job will be started.
       @param job The started job.
     */
-    void aboutToStart( PIM::Job *job );
+    void aboutToStart( Akonadi::Job *job );
 
   protected:
     /**
@@ -273,8 +273,8 @@ class AKONADI_EXPORT Job : public QObject
     void slotDisconnected();
     void slotDataReceived();
     void slotSocketError();
-    void slotSubJobAboutToStart( PIM::Job* job );
-    void slotSubJobDone( PIM::Job* job );
+    void slotSubJobAboutToStart( Akonadi::Job* job );
+    void slotSubJobDone( Akonadi::Job* job );
 
   private:
     class JobPrivate;
@@ -283,8 +283,8 @@ class AKONADI_EXPORT Job : public QObject
 
 }
 
-AKONADI_EXPORT uint qHash( const PIM::DataReference& ref );
+AKONADI_EXPORT uint qHash( const Akonadi::DataReference& ref );
 
-Q_DECLARE_METATYPE(PIM::DataReference)
+Q_DECLARE_METATYPE(Akonadi::DataReference)
 
 #endif

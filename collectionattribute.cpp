@@ -19,28 +19,28 @@
 
 #include "collectionattribute.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
-PIM::CollectionAttribute::~ CollectionAttribute( )
+CollectionAttribute::~ CollectionAttribute( )
 {
 }
 
-PIM::CollectionContentTypeAttribute::CollectionContentTypeAttribute( const QList< QByteArray > & contentTypes )
+CollectionContentTypeAttribute::CollectionContentTypeAttribute( const QList< QByteArray > & contentTypes )
 {
   mContentTypes = contentTypes;
 }
 
-QByteArray PIM::CollectionContentTypeAttribute::type() const
+QByteArray CollectionContentTypeAttribute::type() const
 {
   return QByteArray( "ContentTypes" );
 }
 
-QList< QByteArray > PIM::CollectionContentTypeAttribute::contentTypes( ) const
+QList< QByteArray > CollectionContentTypeAttribute::contentTypes( ) const
 {
   return mContentTypes;
 }
 
-void PIM::CollectionContentTypeAttribute::setContentTypes( const QList< QByteArray > & contentTypes )
+void CollectionContentTypeAttribute::setContentTypes( const QList< QByteArray > & contentTypes )
 {
   mContentTypes = contentTypes;
 }

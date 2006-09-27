@@ -32,7 +32,7 @@
 #include "jobqueue.h"
 #include "imapparser.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 DataReference::DataReference()
   : mPersistanceID( 0 ), mIsNull( true ), d( 0 )
@@ -58,7 +58,7 @@ QUrl DataReference::externalUrl() const
   return mExternalUrl;
 }
 
-bool PIM::DataReference::isNull() const
+bool DataReference::isNull() const
 {
   return mIsNull;
 }
@@ -68,7 +68,7 @@ bool DataReference::operator==( const DataReference & other ) const
   return mPersistanceID == other.mPersistanceID;
 }
 
-bool PIM::DataReference::operator !=( const DataReference & other ) const
+bool DataReference::operator !=( const DataReference & other ) const
 {
   return mPersistanceID != other.mPersistanceID;
 }
@@ -125,7 +125,7 @@ Job::~Job()
 bool Job::exec()
 {
   QEventLoop loop( this );
-  connect( this, SIGNAL( done( PIM::Job* ) ), &loop, SLOT( quit() ) );
+  connect( this, SIGNAL( done( Akonadi::Job* ) ), &loop, SLOT( quit() ) );
   // if the parent is a JobQueue we don't need to start the job
   if ( dynamic_cast<JobQueue*>( d->parent ) == 0 )
     start();
@@ -188,14 +188,14 @@ void Job::setError( int error, const QString &msg )
   d->mErrorMessage = msg;
 }
 
-void PIM::Job::slotDisconnected( )
+void Job::slotDisconnected( )
 {
   setError( ConnectionFailed );
   // FIXME: we must make sure to emit done() only once!
 //   emit done( this );
 }
 
-void PIM::Job::slotDataReceived( )
+void Job::slotDataReceived( )
 {
   static int literalSize = 0;
   static QByteArray dataBuffer;
@@ -273,14 +273,14 @@ void PIM::Job::slotDataReceived( )
   }
 }
 
-void PIM::Job::slotSocketError()
+void Job::slotSocketError()
 {
   qWarning() << "Socket error: " << d->socket->errorString();
   setError( ConnectionFailed );
   emit done( this );
 }
 
-QByteArray PIM::Job::newTag( )
+QByteArray Job::newTag( )
 {
   if ( d->parent )
     d->tag = d->parent->newTag();
@@ -291,17 +291,17 @@ QByteArray PIM::Job::newTag( )
   return d->tag;
 }
 
-QByteArray PIM::Job::tag() const
+QByteArray Job::tag() const
 {
   return d->tag;
 }
 
-void PIM::Job::writeData( const QByteArray & data )
+void Job::writeData( const QByteArray & data )
 {
   d->socket->write( data );
 }
 
-void PIM::Job::handleResponse( const QByteArray & tag, const QByteArray & data )
+void Job::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == d->tag ) {
     if ( !data.startsWith( "OK" ) ) {
@@ -316,13 +316,13 @@ void PIM::Job::handleResponse( const QByteArray & tag, const QByteArray & data )
   doHandleResponse( tag, data );
 }
 
-void PIM::Job::addSubJob( Job * job )
+void Job::addSubJob( Job * job )
 {
-  connect( job, SIGNAL(aboutToStart(PIM::Job*)), SLOT(slotSubJobAboutToStart(PIM::Job*)) );
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(slotSubJobDone(PIM::Job*)) );
+  connect( job, SIGNAL(aboutToStart(Akonadi::Job*)), SLOT(slotSubJobAboutToStart(Akonadi::Job*)) );
+  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(slotSubJobDone(Akonadi::Job*)) );
 }
 
-void PIM::Job::slotSubJobAboutToStart( PIM::Job * job )
+void Job::slotSubJobAboutToStart( Job * job )
 {
   // reconnect socket signals to the subjob
   qDebug() << "re-routing socket signals to sub-job";
@@ -330,7 +330,7 @@ void PIM::Job::slotSubJobAboutToStart( PIM::Job * job )
   connect( d->socket, SIGNAL(readyRead()), job, SLOT(slotDataReceived()) );
 }
 
-void PIM::Job::slotSubJobDone( PIM::Job * job )
+void Job::slotSubJobDone( Job * job )
 {
   // get our signals back from the sub-job
   qDebug() << "re-routing socket signals back to parent job";
@@ -338,7 +338,7 @@ void PIM::Job::slotSubJobDone( PIM::Job * job )
   connect( d->socket, SIGNAL(readyRead()), this, SLOT(slotDataReceived()) );
 }
 
-void PIM::Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
+void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
 {
   qDebug() << "Unhandled response: " << tag << data;
 }

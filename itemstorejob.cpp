@@ -20,9 +20,9 @@
 #include "itemstorejob.h"
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::ItemStoreJobPrivate
+class Akonadi::ItemStoreJobPrivate
 {
   public:
     enum Operation {
@@ -54,7 +54,7 @@ class PIM::ItemStoreJobPrivate
     }
 };
 
-PIM::ItemStoreJob::ItemStoreJob(Item * item, QObject * parent) :
+ItemStoreJob::ItemStoreJob(Item * item, QObject * parent) :
     Job ( parent ),
     d( new ItemStoreJobPrivate )
 {
@@ -66,54 +66,54 @@ PIM::ItemStoreJob::ItemStoreJob(Item * item, QObject * parent) :
   d->operations.insert( ItemStoreJobPrivate::SetFlags );
 }
 
-PIM::ItemStoreJob::ItemStoreJob(const DataReference &ref, QObject * parent) :
+ItemStoreJob::ItemStoreJob(const DataReference &ref, QObject * parent) :
     Job( parent ),
     d( new ItemStoreJobPrivate )
 {
   d->ref = ref;
 }
 
-PIM::ItemStoreJob::~ ItemStoreJob()
+ItemStoreJob::~ ItemStoreJob()
 {
   delete d;
 }
 
-void PIM::ItemStoreJob::setData(const QByteArray & data)
+void ItemStoreJob::setData(const QByteArray & data)
 {
   d->data = data;
   d->operations.insert( ItemStoreJobPrivate::Data );
 }
 
-void PIM::ItemStoreJob::setFlags(const Item::Flags & flags)
+void ItemStoreJob::setFlags(const Item::Flags & flags)
 {
   d->flags = flags;
   d->operations.insert( ItemStoreJobPrivate::SetFlags );
 }
 
-void PIM::ItemStoreJob::addFlag(const Item::Flag & flag)
+void ItemStoreJob::addFlag(const Item::Flag & flag)
 {
   d->addFlags.insert( flag );
   d->operations.insert( ItemStoreJobPrivate::AddFlags );
 }
 
-void PIM::ItemStoreJob::removeFlag(const Item::Flag & flag)
+void ItemStoreJob::removeFlag(const Item::Flag & flag)
 {
   d->removeFlags.insert( flag );
   d->operations.insert( ItemStoreJobPrivate::RemoveFlags );
 }
 
-void PIM::ItemStoreJob::setCollection(const QString & collection)
+void ItemStoreJob::setCollection(const QString & collection)
 {
   d->collection = collection;
   d->operations.insert( ItemStoreJobPrivate::Move );
 }
 
-void PIM::ItemStoreJob::doStart()
+void ItemStoreJob::doStart()
 {
   sendNextCommand();
 }
 
-void PIM::ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
+void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
 {
   if ( _tag == "+" ) { // ready for literal data
     writeData( d->data );
@@ -131,7 +131,7 @@ void PIM::ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArra
   qDebug() << "unhandled response in item store job: " << _tag << data;
 }
 
-void PIM::ItemStoreJob::sendNextCommand()
+void ItemStoreJob::sendNextCommand()
 {
   if ( d->operations.isEmpty() ) {
     emit done( this );

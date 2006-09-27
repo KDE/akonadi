@@ -25,7 +25,7 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
-using namespace PIM;
+using namespace Akonadi;
 
 ItemDumper::ItemDumper( const QByteArray &path, const QByteArray &filename, const QByteArray &mimetype )
 {
@@ -34,11 +34,11 @@ ItemDumper::ItemDumper( const QByteArray &path, const QByteArray &filename, cons
   QByteArray data = f.readAll();
   f.close();
   ItemAppendJob *job = new ItemAppendJob( path, data, mimetype, this );
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(done(PIM::Job*)) );
+  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(done(Akonadi::Job*)) );
   job->start();
 }
 
-void ItemDumper::done( PIM::Job * job )
+void ItemDumper::done( Job * job )
 {
   if ( job->error() ) {
     qWarning() << "Error while creating item: " << job->errorText();

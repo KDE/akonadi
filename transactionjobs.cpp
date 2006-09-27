@@ -19,51 +19,53 @@
 
 #include "transactionjobs.h"
 
-PIM::TransactionBeginJob::TransactionBeginJob(Job * parent) :
+using namespace Akonadi;
+
+TransactionBeginJob::TransactionBeginJob(Job * parent) :
   Job( parent )
 {
   Q_ASSERT( parent );
 }
 
-PIM::TransactionBeginJob::~ TransactionBeginJob()
+TransactionBeginJob::~ TransactionBeginJob()
 {
 }
 
-void PIM::TransactionBeginJob::doStart()
+void TransactionBeginJob::doStart()
 {
   writeData( newTag() + " BEGIN" );
 }
 
 
 
-PIM::TransactionRollbackJob::TransactionRollbackJob(Job * parent) :
+TransactionRollbackJob::TransactionRollbackJob(Job * parent) :
     Job( parent )
 {
   Q_ASSERT( parent );
 }
 
-PIM::TransactionRollbackJob::~ TransactionRollbackJob()
+TransactionRollbackJob::~ TransactionRollbackJob()
 {
 }
 
-void PIM::TransactionRollbackJob::doStart()
+void TransactionRollbackJob::doStart()
 {
   writeData( newTag() + " ROLLBACK" );
 }
 
 
 
-PIM::TransactionCommitJob::TransactionCommitJob(Job * parent) :
+TransactionCommitJob::TransactionCommitJob(Job * parent) :
     Job( parent )
 {
   Q_ASSERT( parent );
 }
 
-PIM::TransactionCommitJob::~ TransactionCommitJob()
+TransactionCommitJob::~ TransactionCommitJob()
 {
 }
 
-void PIM::TransactionCommitJob::doStart()
+void TransactionCommitJob::doStart()
 {
   writeData( newTag() + " COMMIT" );
 }

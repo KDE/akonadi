@@ -17,15 +17,15 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGEMODEL_H
-#define PIM_MESSAGEMODEL_H
+#ifndef AKONADI_MESSAGEMODEL_H
+#define AKONADI_MESSAGEMODEL_H
 
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
 #include <QtCore/QAbstractTableModel>
 
-namespace PIM {
+namespace Akonadi {
 
 class Job;
 
@@ -99,17 +99,17 @@ class AKONADI_EXPORT MessageModel : public QAbstractTableModel
     /**
       Connected to the message query job which does a complete listing
     */
-    void listingDone( PIM::Job* job );
+    void listingDone( Akonadi::Job* job );
 
     /**
       Connected to message queries that handle newly added messages.
     */
-    void fetchingNewDone( PIM::Job* job );
+    void fetchingNewDone( Akonadi::Job* job );
 
     /**
       Connected to message queries that handle changed messages.
     */
-    void fetchingUpdatesDone( PIM::Job* job );
+    void fetchingUpdatesDone( Akonadi::Job* job );
 
     /**
       Connected to the monitor job.

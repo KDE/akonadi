@@ -29,7 +29,7 @@ class ItemDumper : public QObject
     ItemDumper( const QByteArray &path, const QByteArray &filename, const QByteArray &mimetype );
 
   private Q_SLOTS:
-    void done(PIM::Job* job);
+    void done(Akonadi::Job* job);
 
 };
 

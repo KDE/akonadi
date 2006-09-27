@@ -22,27 +22,27 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::CollectionCreateJobPrivate {
+class Akonadi::CollectionCreateJobPrivate {
   public:
     QString path;
     QList<QByteArray> contentTypes;
 };
 
-PIM::CollectionCreateJob::CollectionCreateJob( const QString & path, QObject * parent ) :
+CollectionCreateJob::CollectionCreateJob( const QString & path, QObject * parent ) :
     Job( parent ),
     d( new CollectionCreateJobPrivate )
 {
   d->path = path;
 }
 
-PIM::CollectionCreateJob::~ CollectionCreateJob( )
+CollectionCreateJob::~ CollectionCreateJob( )
 {
   delete d;
 }
 
-void PIM::CollectionCreateJob::doStart( )
+void CollectionCreateJob::doStart( )
 {
   QByteArray command = newTag() + " CREATE \"" + d->path.toUtf8() + "\"";
   if ( !d->contentTypes.isEmpty() )
@@ -50,12 +50,12 @@ void PIM::CollectionCreateJob::doStart( )
   writeData( command );
 }
 
-QString PIM::CollectionCreateJob::path( ) const
+QString CollectionCreateJob::path( ) const
 {
   return d->path;
 }
 
-void PIM::CollectionCreateJob::setContentTypes(const QList< QByteArray > & contentTypes)
+void CollectionCreateJob::setContentTypes(const QList< QByteArray > & contentTypes)
 {
   d->contentTypes = contentTypes;
 }

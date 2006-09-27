@@ -23,7 +23,7 @@
 #include "agenttypemodel.h"
 #include "agentmanager.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 class AgentTypeInfo
 {

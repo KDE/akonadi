@@ -17,15 +17,15 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_IMAPPARSER_H
-#define PIM_IMAPPARSER_H
+#ifndef AKONADI_IMAPPARSER_H
+#define AKONADI_IMAPPARSER_H
 
 #include <kdepim_export.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 
-namespace PIM {
+namespace Akonadi {
 
 /**
   Helper functions to parse IMAP responses.

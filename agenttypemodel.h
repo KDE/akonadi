@@ -22,7 +22,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
-namespace PIM {
+namespace Akonadi {
 
 /**
  * This class provides a model for available agent types.

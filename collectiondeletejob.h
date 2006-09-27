@@ -17,12 +17,12 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTIONDELETEJOB_H
-#define PIM_COLLECTIONDELETEJOB_H
+#ifndef AKONADI_COLLECTIONDELETEJOB_H
+#define AKONADI_COLLECTIONDELETEJOB_H
 
 #include <libakonadi/job.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class CollectionDeleteJobPrivate;
 

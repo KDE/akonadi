@@ -19,18 +19,18 @@
 
 #include "expungejob.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
-PIM::ExpungeJob::ExpungeJob(QObject * parent) :
+ExpungeJob::ExpungeJob(QObject * parent) :
     Job( parent )
 {
 }
 
-PIM::ExpungeJob::~ ExpungeJob()
+ExpungeJob::~ ExpungeJob()
 {
 }
 
-void PIM::ExpungeJob::doStart()
+void ExpungeJob::doStart()
 {
   writeData( newTag() + " EXPUNGE" );
 }

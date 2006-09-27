@@ -17,16 +17,16 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTIONBROWSER_H
-#define PIM_COLLECTIONBROWSER_H
+#ifndef COLLECTIONBROWSER_H
+#define COLLECTIONBROWSER_H
 
 #include "collectionview.h"
 
-namespace PIM {
-
+namespace Akonadi {
 class CollectionModel;
+}
 
-class CollectionBrowser : public CollectionView
+class CollectionBrowser : public Akonadi::CollectionView
 {
   Q_OBJECT
 
@@ -37,9 +37,7 @@ class CollectionBrowser : public CollectionView
     void slotItemActivated( const QModelIndex &index );
 
   private:
-    CollectionModel *model;
+    Akonadi::CollectionModel *model;
 };
-
-}
 
 #endif

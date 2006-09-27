@@ -24,7 +24,7 @@
 #include "agentmanager.h"
 #include "agentmanagerinterface.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 class AgentManager::Private
 {

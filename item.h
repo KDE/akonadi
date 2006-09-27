@@ -17,15 +17,15 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_ITEM_H
-#define PIM_ITEM_H
+#ifndef AKONADI_ITEM_H
+#define AKONADI_ITEM_H
 
 #include <libakonadi/job.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QSet>
 
-namespace PIM {
+namespace Akonadi {
 
 class ItemPrivate;
 

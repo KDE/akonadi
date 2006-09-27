@@ -22,7 +22,7 @@
 #include <libakonadi/itemstorejob.h>
 #include <qtest_kde.h>
 
-using namespace PIM;
+using namespace Akonadi;
 
 QTEST_KDEMAIN( ItemStoreTest, NoGUI )
 

@@ -17,14 +17,14 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTION_JOB
-#define PIM_COLLECTION_JOB
+#ifndef AKONADI_COLLECTION_JOB
+#define AKONADI_COLLECTION_JOB
 
 #include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class Collection;
 class CollectionListJobPrivate;
@@ -33,7 +33,7 @@ class CollectionListJobPrivate;
   This class can be used to retrieve the complete or partial collection tree
   of the PIM storage service.
 
-  It returns a QHash of references to PIM::Collection objects.
+  It returns a QHash of references to Akonadi::Collection objects.
 
   @todo Add partial collection retrieval (eg. only collections containing contacts).
 */

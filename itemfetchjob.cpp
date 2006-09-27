@@ -24,9 +24,9 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::ItemFetchJobPrivate
+class Akonadi::ItemFetchJobPrivate
 {
   public:
     QString path;
@@ -35,14 +35,14 @@ class PIM::ItemFetchJobPrivate
     Item::List items;
 };
 
-PIM::ItemFetchJob::ItemFetchJob( const QString & path, QObject * parent ) :
+ItemFetchJob::ItemFetchJob( const QString & path, QObject * parent ) :
     Job( parent ),
     d( new ItemFetchJobPrivate )
 {
   d->path = path;
 }
 
-PIM::ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
+ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
     Job( parent ),
     d( new ItemFetchJobPrivate )
 {
@@ -50,22 +50,22 @@ PIM::ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
   d->uid = ref;
 }
 
-PIM::ItemFetchJob::~ ItemFetchJob( )
+ItemFetchJob::~ ItemFetchJob( )
 {
   delete d;
 }
 
-void PIM::ItemFetchJob::doStart()
+void ItemFetchJob::doStart()
 {
   if ( d->uid.isNull() ) { // collection content listing
     CollectionSelectJob *job = new CollectionSelectJob( d->path, this );
-    connect( job, SIGNAL(done(PIM::Job*)), SLOT(selectDone(PIM::Job*)) );
+    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(selectDone(Akonadi::Job*)) );
     job->start();
   } else
     startFetchJob();
 }
 
-void PIM::ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "*" ) {
     int begin = data.indexOf( "FETCH" );
@@ -82,7 +82,7 @@ void PIM::ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArr
         return;
       }
 
-      PIM::Item *item = new PIM::Item( ref );
+      Item *item = new Item( ref );
 
       // parse fetch response fields
       for ( int i = 0; i < fetch.count() - 1; i += 2 ) {
@@ -102,12 +102,12 @@ void PIM::ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArr
   qDebug() << "Unhandled response in message fetch job: " << tag << data;
 }
 
-PIM::Item::List PIM::ItemFetchJob::items() const
+Item::List ItemFetchJob::items() const
 {
   return d->items;
 }
 
-void PIM::ItemFetchJob::selectDone( PIM::Job * job )
+void ItemFetchJob::selectDone( Job * job )
 {
   if ( job->error() ) {
     setError( job->error(), job->errorMessage() );
@@ -119,7 +119,7 @@ void PIM::ItemFetchJob::selectDone( PIM::Job * job )
   }
 }
 
-DataReference PIM::ItemFetchJob::parseUid( const QList< QByteArray > & fetchResponse )
+DataReference ItemFetchJob::parseUid( const QList< QByteArray > & fetchResponse )
 {
   int index = fetchResponse.indexOf( "UID" );
   if ( index < 0 ) {
@@ -139,12 +139,12 @@ DataReference PIM::ItemFetchJob::parseUid( const QList< QByteArray > & fetchResp
   return DataReference( fetchResponse[index + 1].toUInt(), remoteId );
 }
 
-void PIM::ItemFetchJob::addFetchField(const QByteArray & field)
+void ItemFetchJob::addFetchField(const QByteArray & field)
 {
   d->fields.append( field );
 }
 
-void PIM::ItemFetchJob::parseFlags(const QByteArray & flagData, Item * item)
+void ItemFetchJob::parseFlags(const QByteArray & flagData, Item * item)
 {
   QList<QByteArray> flags;
   ImapParser::parseParenthesizedList( flagData, flags );
@@ -158,7 +158,7 @@ void PIM::ItemFetchJob::parseFlags(const QByteArray & flagData, Item * item)
   }
 }
 
-void PIM::ItemFetchJob::startFetchJob()
+void ItemFetchJob::startFetchJob()
 {
   QByteArray command = newTag();
   if ( d->uid.isNull() )

@@ -21,16 +21,16 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::CollectionSelectJobPrivate
+class Akonadi::CollectionSelectJobPrivate
 {
   public:
     QString path;
     int unseen;
 };
 
-PIM::CollectionSelectJob::CollectionSelectJob( const QString& path, QObject *parent ) :
+CollectionSelectJob::CollectionSelectJob( const QString& path, QObject *parent ) :
     Job( parent ),
     d( new CollectionSelectJobPrivate )
 {
@@ -38,12 +38,12 @@ PIM::CollectionSelectJob::CollectionSelectJob( const QString& path, QObject *par
   d->unseen = -1;
 }
 
-PIM::CollectionSelectJob::~ CollectionSelectJob( )
+CollectionSelectJob::~ CollectionSelectJob( )
 {
   delete d;
 }
 
-void PIM::CollectionSelectJob::doStart( )
+void CollectionSelectJob::doStart( )
 {
   QString path = d->path;
   if ( path.startsWith( QLatin1Char( '/' ) ) ) path.remove( 0, 1 );
@@ -51,7 +51,7 @@ void PIM::CollectionSelectJob::doStart( )
   writeData( newTag() + " SELECT \"" + path.toUtf8() + "\"" );
 }
 
-void PIM::CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "*" ) {
     if ( data.startsWith( "OK [UNSEEN" ) ) {
@@ -66,7 +66,7 @@ void PIM::CollectionSelectJob::doHandleResponse( const QByteArray & tag, const Q
   qDebug() << "Unhandled response in collection selection job: " << tag << data;
 }
 
-int PIM::CollectionSelectJob::unseen( ) const
+int CollectionSelectJob::unseen( ) const
 {
   return d->unseen;
 }

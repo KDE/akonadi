@@ -21,9 +21,9 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-int PIM::ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByteArray> &result, int start )
+int ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByteArray> &result, int start )
 {
   result.clear();
   if ( start >= data.length() )
@@ -61,7 +61,7 @@ int PIM::ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByt
   return data.length();
 }
 
-int PIM::ImapParser::parseString( const QByteArray & data, QByteArray & result, int start )
+int ImapParser::parseString( const QByteArray & data, QByteArray & result, int start )
 {
   int begin = stripLeadingSpaces( data, start );
   result.clear();
@@ -91,7 +91,7 @@ int PIM::ImapParser::parseString( const QByteArray & data, QByteArray & result, 
   return parseQuotedString( data, result, begin );
 }
 
-int PIM::ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, int start )
+int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, int start )
 {
   int begin = stripLeadingSpaces( data, start );
   int end = begin;
@@ -141,7 +141,7 @@ int PIM::ImapParser::parseQuotedString( const QByteArray & data, QByteArray &res
   return end;
 }
 
-int PIM::ImapParser::stripLeadingSpaces( const QByteArray & data, int start )
+int ImapParser::stripLeadingSpaces( const QByteArray & data, int start )
 {
   for ( int i = start; i < data.length(); ++i ) {
     if ( data[i] != ' ' )
@@ -150,7 +150,7 @@ int PIM::ImapParser::stripLeadingSpaces( const QByteArray & data, int start )
   return data.length();
 }
 
-int PIM::ImapParser::parenthesesBalance( const QByteArray & data, int start )
+int ImapParser::parenthesesBalance( const QByteArray & data, int start )
 {
   int count = 0;
   bool insideQuote = false;
@@ -175,7 +175,7 @@ int PIM::ImapParser::parenthesesBalance( const QByteArray & data, int start )
   return count;
 }
 
-QByteArray PIM::ImapParser::join(const QList< QByteArray > & list, const QByteArray & separator)
+QByteArray ImapParser::join(const QList< QByteArray > & list, const QByteArray & separator)
 {
   if ( list.isEmpty() )
     return QByteArray();
@@ -189,7 +189,7 @@ QByteArray PIM::ImapParser::join(const QList< QByteArray > & list, const QByteAr
   return result;
 }
 
-int PIM::ImapParser::parseString(const QByteArray & data, QString & result, int start)
+int ImapParser::parseString(const QByteArray & data, QString & result, int start)
 {
   QByteArray tmp;
   int end = parseString( data, tmp, start );

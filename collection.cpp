@@ -23,7 +23,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-using namespace PIM;
+using namespace Akonadi;
 
 class Collection::Private
 {
@@ -35,26 +35,26 @@ class Collection::Private
     QHash<QByteArray, CollectionAttribute*> attributes;
 };
 
-PIM::Collection::Collection( const QString &path ) :
+Collection::Collection( const QString &path ) :
   d( new Collection::Private() )
 {
   d->path = path;
   d->type = Unknown;
 }
 
-PIM::Collection::~Collection( )
+Collection::~Collection( )
 {
   qDeleteAll( d->attributes );
   delete d;
   d = 0;
 }
 
-QString PIM::Collection::path() const
+QString Collection::path() const
 {
   return d->path;
 }
 
-QString PIM::Collection::name( ) const
+QString Collection::name( ) const
 {
   if ( d->name.isEmpty() && d->path != root() ) {
     QString name = d->path.mid( d->path.lastIndexOf( delimiter() ) + 1 );
@@ -63,22 +63,22 @@ QString PIM::Collection::name( ) const
   return d->name;
 }
 
-void PIM::Collection::setName( const QString & name )
+void Collection::setName( const QString & name )
 {
   d->name = name;
 }
 
-Collection::Type PIM::Collection::type() const
+Collection::Type Collection::type() const
 {
   return d->type;
 }
 
-void PIM::Collection::setType( Type type )
+void Collection::setType( Type type )
 {
   d->type = type;
 }
 
-QList<QByteArray> PIM::Collection::contentTypes() const
+QList<QByteArray> Collection::contentTypes() const
 {
   CollectionContentTypeAttribute *attr = const_cast<Collection*>( this )->attribute<CollectionContentTypeAttribute>();
   if ( attr )
@@ -86,62 +86,62 @@ QList<QByteArray> PIM::Collection::contentTypes() const
   return QList<QByteArray>();
 }
 
-void PIM::Collection::setContentTypes( const QList<QByteArray> & types )
+void Collection::setContentTypes( const QList<QByteArray> & types )
 {
   CollectionContentTypeAttribute* attr = attribute<CollectionContentTypeAttribute>( true );
   attr->setContentTypes( types );
 }
 
-QString PIM::Collection::parent( ) const
+QString Collection::parent( ) const
 {
   return d->parent;
 }
 
-void PIM::Collection::setParent( const QString &parent )
+void Collection::setParent( const QString &parent )
 {
   d->parent = parent;
 }
 
-QString PIM::Collection::delimiter()
+QString Collection::delimiter()
 {
   return QLatin1String( "/" );
 }
 
-QString PIM::Collection::root( )
+QString Collection::root( )
 {
   return QString();
 }
 
-QString PIM::Collection::searchFolder( )
+QString Collection::searchFolder( )
 {
   return root() + QLatin1String( "Search" );
 }
 
-QString PIM::Collection::prefix()
+QString Collection::prefix()
 {
   return QLatin1String( "/" );
 }
 
-QByteArray PIM::Collection::collectionMimeType( )
+QByteArray Collection::collectionMimeType( )
 {
   return QByteArray( "inode/directory" );
 }
 
-void PIM::Collection::addAttribute( CollectionAttribute * attr )
+void Collection::addAttribute( CollectionAttribute * attr )
 {
   if ( d->attributes.contains( attr->type() ) )
     delete d->attributes.take( attr->type() );
   d->attributes.insert( attr->type(), attr );
 }
 
-CollectionAttribute * PIM::Collection::attribute( const QByteArray & type ) const
+CollectionAttribute * Collection::attribute( const QByteArray & type ) const
 {
   if ( d->attributes.contains( type ) )
     return d->attributes.value( type );
   return 0;
 }
 
-bool PIM::Collection::hasAttribute( const QByteArray & type ) const
+bool Collection::hasAttribute( const QByteArray & type ) const
 {
   return d->attributes.contains( type );
 }

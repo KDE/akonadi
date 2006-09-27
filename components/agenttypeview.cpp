@@ -26,7 +26,7 @@
 
 #include "agenttypeview.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 class AgentTypeViewDelegate : public QAbstractItemDelegate
 {

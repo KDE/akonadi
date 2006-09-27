@@ -17,12 +17,12 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_TRANSACTIONJOBS_H
-#define PIM_TRANSACTIONJOBS_H
+#ifndef AKONADI_TRANSACTIONJOBS_H
+#define AKONADI_TRANSACTIONJOBS_H
 
 #include <libakonadi/job.h>
 
-namespace PIM {
+namespace Akonadi {
 
 /**
   Begins a session-global transaction.

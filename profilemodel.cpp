@@ -22,7 +22,7 @@
 #include "profilemodel.h"
 #include "profilemanager.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
 class ProfileInfo
 {

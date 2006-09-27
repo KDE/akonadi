@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGE_H
-#define PIM_MESSAGE_H
+#ifndef AKONADI_MESSAGE_H
+#define AKONADI_MESSAGE_H
 
 #include <libakonadi/item.h>
 #include <libakonadi/job.h>
@@ -27,7 +27,7 @@ namespace KMime {
   class Message;
 }
 
-namespace PIM {
+namespace Akonadi {
 
 class MessagePrivate;
 

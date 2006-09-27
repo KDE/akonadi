@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGECOLLECTIONMODEL_H
-#define PIM_MESSAGECOLLECTIONMODEL_H
+#ifndef AKONADI_MESSAGECOLLECTIONMODEL_H
+#define AKONADI_MESSAGECOLLECTIONMODEL_H
 
 #include <libakonadi/collectionmodel.h>
 #include <kdepim_export.h>
@@ -27,7 +27,7 @@
   Extended modell for message collections.
   Supports columns for message unread/total counts.
 */
-namespace PIM {
+namespace Akonadi {
 
 class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
 {

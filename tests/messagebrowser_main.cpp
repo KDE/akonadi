@@ -28,7 +28,7 @@ int main( int argc, char** argv )
 {
   KCmdLineArgs::init( argc, argv, "test", "Test" ,"test app" ,"1.0" );
   KApplication app;
-  PIM::MessageBrowser w( "res1/foo" );
+  MessageBrowser w( "res1/foo" );
   w.show();
   return app.exec();
 }

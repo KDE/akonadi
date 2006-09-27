@@ -23,7 +23,7 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
 QTEST_KDEMAIN( ImapParserTest, NoGUI )
 

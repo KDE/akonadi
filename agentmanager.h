@@ -17,14 +17,14 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_AGENTMANAGER_H
-#define PIM_AGENTMANAGER_H
+#ifndef AKONADI_AGENTMANAGER_H
+#define AKONADI_AGENTMANAGER_H
 
 #include <QtCore/QObject>
 
 class QIcon;
 
-namespace PIM {
+namespace Akonadi {
 
 class AgentManager : public QObject
 {

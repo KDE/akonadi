@@ -26,9 +26,9 @@
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::CollectionListJobPrivate
+class Akonadi::CollectionListJobPrivate
 {
   public:
     bool recursive;
@@ -37,7 +37,7 @@ class PIM::CollectionListJobPrivate
     QString resource;
 };
 
-PIM::CollectionListJob::CollectionListJob( const QString &prefix, bool recursive, QObject *parent ) :
+CollectionListJob::CollectionListJob( const QString &prefix, bool recursive, QObject *parent ) :
     Job( parent ),
     d( new CollectionListJobPrivate )
 {
@@ -45,17 +45,17 @@ PIM::CollectionListJob::CollectionListJob( const QString &prefix, bool recursive
   d->recursive = recursive;
 }
 
-PIM::CollectionListJob::~CollectionListJob()
+CollectionListJob::~CollectionListJob()
 {
   delete d;
 }
 
-PIM::Collection::List PIM::CollectionListJob::collections() const
+Collection::List CollectionListJob::collections() const
 {
   return d->collections;
 }
 
-void PIM::CollectionListJob::doStart()
+void CollectionListJob::doStart()
 {
   QByteArray command = newTag() + " LIST \"";
   if ( !d->resource.isEmpty() )
@@ -68,7 +68,7 @@ void PIM::CollectionListJob::doStart()
   writeData( command );
 }
 
-void PIM::CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "*" && data.startsWith( "LIST" ) ) {
     int current = 4; // 'LIST'
@@ -130,7 +130,7 @@ void PIM::CollectionListJob::doHandleResponse( const QByteArray & tag, const QBy
   qDebug() << "unhandled server response in collection list job" << tag << data;
 }
 
-void PIM::CollectionListJob::setResource(const QString & resource)
+void CollectionListJob::setResource(const QString & resource)
 {
   d->resource = resource;
 }

@@ -21,7 +21,7 @@
 
 #include <QtCore/QTimer>
 
-using namespace PIM;
+using namespace Akonadi;
 
 class MessageQuery::Private
 {
@@ -31,7 +31,7 @@ class MessageQuery::Private
     Message::List messages;
 };
 
-PIM::MessageQuery::MessageQuery( const QString & query, const QString & part ) :
+MessageQuery::MessageQuery( const QString & query, const QString & part ) :
     Job(),
     d ( new Private() )
 {
@@ -39,28 +39,28 @@ PIM::MessageQuery::MessageQuery( const QString & query, const QString & part ) :
   d->part = part;
 }
 
-PIM::MessageQuery::~MessageQuery( )
+MessageQuery::~MessageQuery( )
 {
   delete d;
 }
 
-Message::List PIM::MessageQuery::messages( ) const
+Message::List MessageQuery::messages( ) const
 {
   return d->messages;
 }
 
-void PIM::MessageQuery::doStart( )
+void MessageQuery::doStart( )
 {
   // TODO
   QTimer::singleShot( 0, this, SLOT( slotEmitDone() ) );
 }
 
-void PIM::MessageQuery::doHandleResponse( const QByteArray &tag,
+void MessageQuery::doHandleResponse( const QByteArray &tag,
   const QByteArray &data )
 {
 }
 
-void PIM::MessageQuery::slotEmitDone( )
+void MessageQuery::slotEmitDone( )
 {
   emit done( this );
 }

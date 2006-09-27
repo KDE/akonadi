@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_COLLECTIONATTRIBUTE_H
-#define PIM_COLLECTIONATTRIBUTE_H
+#ifndef AKONADI_COLLECTIONATTRIBUTE_H
+#define AKONADI_COLLECTIONATTRIBUTE_H
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 
-namespace PIM {
+namespace Akonadi {
 
 /**
   Stores specific collection attributes (ACLs, unread counts, quotas, etc.).

@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef PIM_MESSAGEFETCHJOB_H
-#define PIM_MESSAGEFETCHJOB_H
+#ifndef AKONADI_MESSAGEFETCHJOB_H
+#define AKONADI_MESSAGEFETCHJOB_H
 
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/message.h>
 
-namespace PIM {
+namespace Akonadi {
 
 class MessageFetchJobPrivate;
 
@@ -56,7 +56,7 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
     virtual ~MessageFetchJob();
 
     /**
-      Returns the fetched message objects. Invalid before the done(PIM::Job*)
+      Returns the fetched message objects. Invalid before the done(Akonadi::Job*)
       signal has been emitted or if an error occurred.
     */
     Message::List messages() const;

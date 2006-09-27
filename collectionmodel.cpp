@@ -38,7 +38,7 @@
 #include <QtCore/QQueue>
 #include <QtGui/QPixmap>
 
-using namespace PIM;
+using namespace Akonadi;
 
 class CollectionModel::Private
 {
@@ -65,7 +65,7 @@ class CollectionModel::Private
     }
 };
 
-PIM::CollectionModel::CollectionModel( QObject * parent ) :
+CollectionModel::CollectionModel( QObject * parent ) :
     QAbstractItemModel( parent ),
     d( new Private() )
 {
@@ -76,7 +76,7 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
 
   // start a list job
   CollectionListJob *job = new CollectionListJob( Collection::prefix(), true, d->queue );
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
+  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(listDone(Akonadi::Job*)) );
 
   // monitor collection changes
   d->monitor = new Monitor();
@@ -89,7 +89,7 @@ PIM::CollectionModel::CollectionModel( QObject * parent ) :
   KGlobal::instance()->iconLoader()->addAppDir( QLatin1String( "kmail" ) );
 }
 
-PIM::CollectionModel::~CollectionModel()
+CollectionModel::~CollectionModel()
 {
   d->childCollections.clear();
   qDeleteAll( d->collections );
@@ -102,13 +102,13 @@ PIM::CollectionModel::~CollectionModel()
   d = 0;
 }
 
-int PIM::CollectionModel::columnCount( const QModelIndex & parent ) const
+int CollectionModel::columnCount( const QModelIndex & parent ) const
 {
   Q_UNUSED( parent );
   return 1;
 }
 
-QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
+QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 {
   Collection *col = static_cast<Collection*>( index.internalPointer() );
   if ( index.column() == 0 && (role == Qt::DisplayRole || role == Qt::EditRole) ) {
@@ -139,7 +139,7 @@ QVariant PIM::CollectionModel::data( const QModelIndex & index, int role ) const
   return QVariant();
 }
 
-QModelIndex PIM::CollectionModel::index( int row, int column, const QModelIndex & parent ) const
+QModelIndex CollectionModel::index( int row, int column, const QModelIndex & parent ) const
 {
   QList<QString> list;
   if ( !parent.isValid() )
@@ -154,7 +154,7 @@ QModelIndex PIM::CollectionModel::index( int row, int column, const QModelIndex 
   return createIndex( row, column, d->collections.value( list[row] ) );
 }
 
-QModelIndex PIM::CollectionModel::parent( const QModelIndex & index ) const
+QModelIndex CollectionModel::parent( const QModelIndex & index ) const
 {
   if ( !index.isValid() )
     return QModelIndex();
@@ -175,7 +175,7 @@ QModelIndex PIM::CollectionModel::parent( const QModelIndex & index ) const
   return createIndex( parentRow, 0, parentCol );
 }
 
-int PIM::CollectionModel::rowCount( const QModelIndex & parent ) const
+int CollectionModel::rowCount( const QModelIndex & parent ) const
 {
   QList<QString> list;
   if ( parent.isValid() )
@@ -186,14 +186,14 @@ int PIM::CollectionModel::rowCount( const QModelIndex & parent ) const
   return list.size();
 }
 
-QVariant PIM::CollectionModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant CollectionModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
   if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole )
     return i18n( "Name" );
   return QAbstractItemModel::headerData( section, orientation, role );
 }
 
-bool PIM::CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
+bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 {
   QList<QString> list;
   QString parentPath;
@@ -217,12 +217,12 @@ bool PIM::CollectionModel::removeRowFromModel( int row, const QModelIndex & pare
   return true;
 }
 
-void PIM::CollectionModel::collectionChanged( const QString &path )
+void CollectionModel::collectionChanged( const QString &path )
 {
   if ( d->collections.contains( path ) ) {
     // update
     CollectionStatusJob *job = new CollectionStatusJob( path, d->queue );
-    connect( job, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
+    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(updateDone(Akonadi::Job*)) );
   } else {
     // new collection
     int index = path.lastIndexOf( Collection::delimiter() );
@@ -234,14 +234,14 @@ void PIM::CollectionModel::collectionChanged( const QString &path )
 
     // re-list parent non-recursively
     CollectionListJob *job = new CollectionListJob( parent, false, d->queue );
-    connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
+    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(listDone(Akonadi::Job*)) );
     // list the new collection recursively
     job = new CollectionListJob( path, true, d->queue );
-    connect( job, SIGNAL(done(PIM::Job*)), SLOT(listDone(PIM::Job*)) );
+    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(listDone(Akonadi::Job*)) );
   }
 }
 
-void PIM::CollectionModel::collectionRemoved( const QString &path )
+void CollectionModel::collectionRemoved( const QString &path )
 {
   QModelIndex colIndex = indexForPath( path );
   if ( colIndex.isValid() ) {
@@ -257,7 +257,7 @@ void PIM::CollectionModel::collectionRemoved( const QString &path )
   }
 }
 
-void PIM::CollectionModel::updateDone( PIM::Job * job )
+void CollectionModel::updateDone( Job * job )
 {
   if ( job->error() ) {
     // TODO: handle job errors
@@ -283,7 +283,7 @@ void PIM::CollectionModel::updateDone( PIM::Job * job )
   job->deleteLater();
 }
 
-QModelIndex PIM::CollectionModel::indexForPath( const QString &path, int column )
+QModelIndex CollectionModel::indexForPath( const QString &path, int column )
 {
   if ( !d->collections.contains( path ) )
     return QModelIndex();
@@ -301,7 +301,7 @@ QModelIndex PIM::CollectionModel::indexForPath( const QString &path, int column 
   return QModelIndex();
 }
 
-void PIM::CollectionModel::listDone( PIM::Job * job )
+void CollectionModel::listDone( Job * job )
 {
   if ( job->error() ) {
     qWarning() << "Job error: " << job->errorText() << endl;
@@ -329,7 +329,7 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
       // start a status job for every collection to get message counts, etc.
       if ( col->type() != Collection::VirtualParent ) {
         CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->queue );
-        connect( csjob, SIGNAL(done(PIM::Job*)), SLOT(updateDone(PIM::Job*)) );
+        connect( csjob, SIGNAL(done(Akonadi::Job*)), SLOT(updateDone(Akonadi::Job*)) );
       }
     }
 
@@ -337,7 +337,7 @@ void PIM::CollectionModel::listDone( PIM::Job * job )
   job->deleteLater();
 }
 
-bool PIM::CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
+bool CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
   if ( d->currentEdit != Private::None )
     return false;
@@ -353,14 +353,14 @@ bool PIM::CollectionModel::setData( const QModelIndex & index, const QVariant & 
     else
       newPath = d->editedCollection->parent() + Collection::delimiter() + d->editedCollection->name();
     CollectionRenameJob *job = new CollectionRenameJob( d->editedCollection->path(), newPath, d->queue );
-    connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
+    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(editDone(Akonadi::Job*)) );
     emit dataChanged( index, index );
     return true;
   }
   return QAbstractItemModel::setData( index, value, role );
 }
 
-Qt::ItemFlags PIM::CollectionModel::flags( const QModelIndex & index ) const
+Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 {
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
@@ -382,7 +382,7 @@ Qt::ItemFlags PIM::CollectionModel::flags( const QModelIndex & index ) const
   return flags;
 }
 
-void PIM::CollectionModel::editDone( PIM::Job * job )
+void CollectionModel::editDone( Job * job )
 {
   if ( job->error() ) {
     qWarning() << "Edit failed: " << job->errorText() << " - reverting current transaction";
@@ -409,7 +409,7 @@ void PIM::CollectionModel::editDone( PIM::Job * job )
   job->deleteLater();
 }
 
-bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const QString & name )
+bool CollectionModel::createCollection( const QModelIndex & parent, const QString & name )
 {
   if ( !canCreateCollection( parent ) )
     return false;
@@ -430,13 +430,13 @@ bool PIM::CollectionModel::createCollection( const QModelIndex & parent, const Q
 
   // start creation job
   CollectionCreateJob *job = new CollectionCreateJob( d->editedCollection->path(), d->queue );
-  connect( job, SIGNAL(done(PIM::Job*)), SLOT(editDone(PIM::Job*)) );
+  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(editDone(Akonadi::Job*)) );
 
   d->currentEdit = Private::Create;
   return true;
 }
 
-bool PIM::CollectionModel::canCreateCollection( const QModelIndex & parent ) const
+bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
 {
   if ( d->currentEdit != Private::None )
     return false;
@@ -452,24 +452,24 @@ bool PIM::CollectionModel::canCreateCollection( const QModelIndex & parent ) con
   return true;
 }
 
-QString PIM::CollectionModel::pathForIndex( const QModelIndex & index ) const
+QString CollectionModel::pathForIndex( const QModelIndex & index ) const
 {
   if ( index.isValid() )
     return static_cast<Collection*>( index.internalPointer() )->path();
   return QString();
 }
 
-Qt::DropActions PIM::CollectionModel::supportedDropActions() const
+Qt::DropActions CollectionModel::supportedDropActions() const
 {
   return Qt::CopyAction; // | Qt::MoveAction;
 }
 
-QStringList PIM::CollectionModel::mimeTypes() const
+QStringList CollectionModel::mimeTypes() const
 {
   return d->mimeTypes;
 }
 
-bool PIM::CollectionModel::supportsContentType(const QModelIndex & index, const QStringList & contentTypes)
+bool CollectionModel::supportsContentType(const QModelIndex & index, const QStringList & contentTypes)
 {
   if ( !index.isValid() )
     return false;
@@ -483,7 +483,7 @@ bool PIM::CollectionModel::supportsContentType(const QModelIndex & index, const 
   return false;
 }
 
-bool PIM::CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent)
+bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent)
 {
   if ( !(action & supportedDropActions()) )
     return false;
@@ -508,14 +508,14 @@ bool PIM::CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction a
     if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
       item.resize( item.size() - 1 );
     ItemAppendJob *job = new ItemAppendJob( path, item, type.toLatin1(), d->queue );
-    connect( job, SIGNAL(done(PIM::Job*)), SLOT(appendDone(PIM::Job*)) );
+    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(appendDone(Akonadi::Job*)) );
     return true;
   }
 
   return false;
 }
 
-void PIM::CollectionModel::appendDone(PIM::Job * job)
+void CollectionModel::appendDone(Job * job)
 {
   if ( job->error() ) {
     kWarning() << "Append failed: " << job->errorText() << endl;

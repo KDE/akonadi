@@ -25,20 +25,20 @@
 
 #include <QtGui/QFont>
 
-using namespace PIM;
+using namespace Akonadi;
 
-PIM::MessageCollectionModel::MessageCollectionModel( QObject * parent ) :
+MessageCollectionModel::MessageCollectionModel( QObject * parent ) :
     CollectionModel( parent )
 {
 }
 
-int PIM::MessageCollectionModel::columnCount( const QModelIndex & parent ) const
+int MessageCollectionModel::columnCount( const QModelIndex & parent ) const
 {
   Q_UNUSED( parent );
   return 3;
 }
 
-QVariant PIM::MessageCollectionModel::data( const QModelIndex & index, int role ) const
+QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) const
 {
   if ( !index.isValid() )
     return QVariant();
@@ -74,7 +74,7 @@ QVariant PIM::MessageCollectionModel::data( const QModelIndex & index, int role 
   return CollectionModel::data( index, role );
 }
 
-QVariant PIM::MessageCollectionModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant MessageCollectionModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole )
     switch ( section ) {

@@ -21,9 +21,9 @@
 
 #include <QtCore/QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::ItemAppendJobPrivate
+class Akonadi::ItemAppendJobPrivate
 {
   public:
     QString path;
@@ -32,7 +32,7 @@ class PIM::ItemAppendJobPrivate
     QString remoteId;
 };
 
-PIM::ItemAppendJob::ItemAppendJob( const QString &path, const QByteArray & data, const QByteArray & mimetype, QObject * parent ) :
+ItemAppendJob::ItemAppendJob( const QString &path, const QByteArray & data, const QByteArray & mimetype, QObject * parent ) :
     Job( parent ),
     d( new ItemAppendJobPrivate )
 {
@@ -41,12 +41,12 @@ PIM::ItemAppendJob::ItemAppendJob( const QString &path, const QByteArray & data,
   d->mimetype = mimetype;
 }
 
-PIM::ItemAppendJob::~ ItemAppendJob( )
+ItemAppendJob::~ ItemAppendJob( )
 {
   delete d;
 }
 
-void PIM::ItemAppendJob::doStart()
+void ItemAppendJob::doStart()
 {
   QByteArray remoteId;
   if ( !d->remoteId.isEmpty() )
@@ -54,7 +54,7 @@ void PIM::ItemAppendJob::doStart()
   writeData( newTag() + " APPEND \"" + d->path.toUtf8() + "\" (\\MimeType[" + d->mimetype + ']' + remoteId + ") {" + QByteArray::number( d->data.size() ) + '}' );
 }
 
-void PIM::ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "+" ) { // ready for literal data
     writeData( d->data );
@@ -63,7 +63,7 @@ void PIM::ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteAr
   qDebug() << "unhandled response in item append job: " << tag << data;
 }
 
-void PIM::ItemAppendJob::setRemoteId(const QString & remoteId)
+void ItemAppendJob::setRemoteId(const QString & remoteId)
 {
   d->remoteId = remoteId;
 }

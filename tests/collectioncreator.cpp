@@ -29,7 +29,7 @@
 #define COLLECTION_COUNT 100
 #undef SEQUENTIAL_EXECUTION
 
-using namespace PIM;
+using namespace Akonadi;
 
 CollectionCreator::CollectionCreator( )
 {
@@ -42,18 +42,18 @@ CollectionCreator::CollectionCreator( )
   for ( int i = 0; i < COLLECTION_COUNT; ++i ) {
 #ifdef SEQUENTIAL_EXECUTION
     CollectionCreateJob *job = new CollectionCreateJob( "res3/col" + QByteArray::number( i ), queue );
-    connect( job, SIGNAL(done(PIM::Job*)), SLOT(done(PIM::Job*)) );
+    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(done(Akonadi::Job*)) );
     queue->addJob( job );
 #else
     CollectionCreateJob *job = new CollectionCreateJob( "res3/col" + QByteArray::number( i ), this );
-    connect( job, SIGNAL(done(PIM::Job*)), SLOT(done(PIM::Job*)) );
+    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(done(Akonadi::Job*)) );
     job->start();
     ++jobCount;
 #endif
   }
 }
 
-void CollectionCreator::done( PIM::Job * job )
+void CollectionCreator::done( Akonadi::Job * job )
 {
 #ifndef SEQUENTIAL_EXECUTION
   --jobCount;

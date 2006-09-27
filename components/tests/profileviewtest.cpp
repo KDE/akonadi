@@ -29,7 +29,7 @@ Dialog::Dialog( QWidget *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  mView = new PIM::ProfileView( this );
+  mView = new Akonadi::ProfileView( this );
   connect( mView, SIGNAL( currentChanged( const QString&, const QString& ) ),
            this, SLOT( currentChanged( const QString&, const QString& ) ) );
 

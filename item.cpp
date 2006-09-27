@@ -19,9 +19,9 @@
 
 #include "item.h"
 
-using namespace PIM;
+using namespace Akonadi;
 
-class PIM::ItemPrivate {
+class Akonadi::ItemPrivate {
   public:
     DataReference ref;
     Item::Flags flags;
@@ -29,58 +29,58 @@ class PIM::ItemPrivate {
     QByteArray mimeType;
 };
 
-PIM::Item::Item( const DataReference & ref ) :
+Item::Item( const DataReference & ref ) :
     d( new ItemPrivate )
 {
   d->ref = ref;
 }
 
-PIM::Item::~ Item( )
+Item::~ Item( )
 {
   delete d;
 }
 
-DataReference PIM::Item::reference( ) const
+DataReference Item::reference( ) const
 {
   return d->ref;
 }
 
-Item::Flags PIM::Item::flags( ) const
+Item::Flags Item::flags( ) const
 {
   return d->flags;
 }
 
-void PIM::Item::setFlag( const QByteArray & name )
+void Item::setFlag( const QByteArray & name )
 {
   d->flags.insert( name );
 }
 
-void PIM::Item::unsetFlag( const QByteArray & name )
+void Item::unsetFlag( const QByteArray & name )
 {
   d->flags.remove( name );
 }
 
-bool PIM::Item::hasFlag( const QByteArray & name ) const
+bool Item::hasFlag( const QByteArray & name ) const
 {
   return d->flags.contains( name );
 }
 
-QByteArray PIM::Item::data() const
+QByteArray Item::data() const
 {
   return d->data;
 }
 
-void PIM::Item::setData(const QByteArray & data)
+void Item::setData(const QByteArray & data)
 {
   d->data = data;
 }
 
-QByteArray PIM::Item::mimeType() const
+QByteArray Item::mimeType() const
 {
   return d->mimeType;
 }
 
-void PIM::Item::setMimeType(const QByteArray & mimeType)
+void Item::setMimeType(const QByteArray & mimeType)
 {
   d->mimeType = mimeType;
 }
