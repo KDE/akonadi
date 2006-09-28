@@ -45,12 +45,15 @@ void Akonadi::ResourceManager::resourceAdded(const QString & name)
   db->init();
 
   Resource resource = db->resourceByName( name.toUtf8() );
-  if ( resource.isValid() )
+  if ( resource.isValid() ) {
+    delete db;
     return; // resource already exists
+  }
 
   // create the resource
   if ( !db->appendResource( name ) ) {
     Tracer::self()->error( "ResourceManager", QString::fromLatin1("Could not create resource '%1'.").arg(name) );
+    delete db;
     return;
   }
   resource = db->resourceByName( name.toUtf8() );
