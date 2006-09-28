@@ -10,6 +10,7 @@ add_subdirectory( src )
 add_subdirectory( tests )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
+#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAKONADI_USE_POSTGRES" )
 
 ########### next target ###############
 set(libakonadiprivate_SRCS
@@ -70,7 +71,7 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
 
-qt4_add_dbus_interfaces( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.AgentManager.xml )
+qt4_add_dbus_interfaces( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.AgentManager.xml ../resources/include/org.kde.Akonadi.Resource.xml)
 
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 

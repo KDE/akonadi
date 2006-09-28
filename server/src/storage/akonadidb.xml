@@ -56,7 +56,7 @@
     <column name="data" type="BLOB"/>
     <column name="location_id" type="INTEGER REFERENCES Locations(id)"/>
     <column name="mimetype_id" type="INTEGER REFERENCES MimeTypes(id)"/>
-    <column name="datetime" type="CHAR(19) DEFAULT CURRENT_TIMESTAMP"/>
+    <column name="datetime" type="CHAR(32) DEFAULT CURRENT_TIMESTAMP"/>
   </table>
 
   <table name="ItemMetaData">

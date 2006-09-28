@@ -45,6 +45,7 @@ class DataStore : public QObject
 public:
     DataStore();
     void init();
+    void close();
     virtual ~DataStore();
 
     /* -- higher level API -- */

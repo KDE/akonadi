@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QList>
 #include <QtCore/QPair>
@@ -94,6 +95,14 @@ bool DbInitializer::checkTable( const QDomElement &element )
       ColumnEntry entry;
       entry.first = columnElement.attribute( QLatin1String("name") );
       entry.second = columnElement.attribute( QLatin1String("type") );
+#ifdef AKONADI_USE_POSTGRES
+      if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
+        entry.second = QLatin1String("SERIAL PRIMARY KEY NOT NULL");
+      if ( entry.second.contains( QLatin1String("BLOB") ) )
+        entry.second = QLatin1String("BYTEA");
+      if ( entry.second.contains( QLatin1String("CHAR") ) )
+        entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
+#endif
       columnsList.append( entry );
     } else if ( columnElement.tagName() == QLatin1String( "data" ) ) {
       QString statement = QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
@@ -111,14 +120,18 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
   QSqlQuery query( mDatabase );
 
+#ifdef AKONADI_USE_POSTGRES
+  if ( !query.exec( QLatin1String("SELECT tablename FROM pg_tables ORDER BY tablename;" ) ) ) {
+#else
   if ( !query.exec( QLatin1String("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;") ) ) {
+#endif
     mErrorMsg = QLatin1String( "Unable to retrieve table information from database." );
     return false;
   }
 
   bool found = false;
   while ( query.next() ) {
-    if ( query.value( 0 ).toString() == tableName )
+    if ( query.value( 0 ).toString().toLower() == tableName.toLower() )
       found = true;
   }
 
@@ -136,6 +149,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
     }
 
     const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2);" ).arg( tableName, columns );
+    qDebug() << statement;
 
     if ( !query.exec( statement ) ) {
       mErrorMsg = QLatin1String( "Unable to create entire table." );
