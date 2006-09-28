@@ -28,7 +28,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#ifdef HAVE_EXECINFO_H
 #include <execinfo.h>
+#endif
 
 #include "kcrash.h"
 
@@ -36,6 +39,8 @@ QString kBacktrace()
 {
   QString s;
 
+/* FIXME: is there an equivalent for darwin, *BSD, or windows? */
+#ifdef HAVE_EXECINFO_H
   void* trace[256];
   int n = backtrace(trace, 256);
   if (!n)
@@ -53,6 +58,7 @@ QString kBacktrace()
 
   if (strings)
     free (strings);
+#endif
 
   return s;
 }
