@@ -11,7 +11,9 @@ add_subdirectory( sqlplugin )
 add_subdirectory( tests )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
+#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAKONADI_USE_SQLITE" )
 #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAKONADI_USE_POSTGRES" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAKONADI_USE_MYSQL_EMBEDDED" )
 
 ########### next target ###############
 set(libakonadiprivate_SRCS

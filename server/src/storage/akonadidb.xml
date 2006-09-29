@@ -19,7 +19,7 @@
 
   <table name="Locations">
     <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="uri" type="CHAR(512) NOT NULL UNIQUE"/>
+    <column name="uri" type="VARCHAR(255) NOT NULL UNIQUE"/>
     <column name="cachepolicy_id" type="INTEGER REFERENCES CachePolicies(id)"/>
     <column name="resource_id" type="INTEGER NOT NULL REFERENCES Resources(id)"/>
     <column name="exists_count" type="INTEGER"/>
@@ -31,8 +31,8 @@
 
   <table name="PersistentSearches">
     <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="CHAR(512) NOT NULL UNIQUE"/>
-    <column name="query" type="CHAR(512) NOT NULL"/>
+    <column name="name" type="VARCHAR(255) NOT NULL UNIQUE"/>
+    <column name="query" type="BLOB NOT NULL"/>
   </table>
 
   <table name="MimeTypes">
@@ -52,16 +52,16 @@
 
   <table name="PimItems">
     <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="remote_id" type="CHAR(512) NOT NULL"/>
+    <column name="remote_id" type="BLOB NOT NULL"/>
     <column name="data" type="BLOB"/>
     <column name="location_id" type="INTEGER REFERENCES Locations(id)"/>
     <column name="mimetype_id" type="INTEGER REFERENCES MimeTypes(id)"/>
-    <column name="datetime" type="CHAR(32) DEFAULT CURRENT_TIMESTAMP"/>
+    <column name="datetime" type="TIMESTAMP DEFAULT CURRENT_TIMESTAMP"/>
   </table>
 
   <table name="ItemMetaData">
     <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="data" type="CHAR(512) NOT NULL"/>
+    <column name="data" type="BLOB NOT NULL"/>
     <column name="metatype_id" type="INTEGER REFERENCES MetaTypes(id)"/>
     <column name="pimitem_id" type="INTEGER REFERENCES PimItems(id)"/>
   </table>
@@ -94,7 +94,7 @@
 
   <table name="PartMetaData">
     <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="data" type="CHAR(512) NOT NULL"/>
+    <column name="data" type="BLOB NOT NULL"/>
     <column name="metatype_id" type="INTEGER REFERENCES MetaTypes(id)"/>
     <column name="part_id" type="INTEGER REFERENCES Parts(id)"/>
   </table>

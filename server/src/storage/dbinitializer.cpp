@@ -42,6 +42,8 @@ DbInitializer::~DbInitializer()
 
 bool DbInitializer::run()
 {
+  qDebug() << "DbInitializer::run()";
+
   QFile file( mTemplateFile );
   if ( !file.open( QIODevice::ReadOnly ) ) {
     mErrorMsg = QString::fromLatin1( "Unable to open template file '%1'." ).arg( mTemplateFile );
@@ -77,6 +79,7 @@ bool DbInitializer::run()
     tableElement = tableElement.nextSiblingElement();
   }
 
+  qDebug() << "DbInitializer::run() done";
   return true;
 }
 
@@ -100,7 +103,13 @@ bool DbInitializer::checkTable( const QDomElement &element )
         entry.second = QLatin1String("SERIAL PRIMARY KEY NOT NULL");
       if ( entry.second.contains( QLatin1String("BLOB") ) )
         entry.second = QLatin1String("BYTEA");
-      if ( entry.second.contains( QLatin1String("CHAR") ) )
+      if ( entry.second.startsWith( QLatin1String("CHAR") ) )
+        entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
+#endif
+#ifdef AKONADI_USE_MYSQL_EMBEDDED
+      if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
+        entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("AUTO_INCREMENT"));
+      if ( entry.second.startsWith( QLatin1String("CHAR") ) )
         entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
 #endif
       columnsList.append( entry );
@@ -122,8 +131,12 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
 #ifdef AKONADI_USE_POSTGRES
   if ( !query.exec( QLatin1String("SELECT tablename FROM pg_tables ORDER BY tablename;" ) ) ) {
-#else
+#endif
+#ifdef AKONADI_USE_SQLITE
   if ( !query.exec( QLatin1String("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;") ) ) {
+#endif
+#ifdef AKONADI_USE_MYSQL_EMBEDDED
+  if ( !query.exec( QLatin1String("SHOW TABLES") ) ) {
 #endif
     mErrorMsg = QLatin1String( "Unable to retrieve table information from database." );
     return false;
