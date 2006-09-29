@@ -1,5 +1,7 @@
 find_package(MySQL REQUIRED)
 
+include_directories(${MYSQL_INCLUDE_DIR})
+
 set(mysql_embedded_plugin_PART_SRCS main.cpp qsql_mysql_embedded.cpp )
 
 kde4_automoc(${mysql_embedded_plugin_PART_SRCS})
