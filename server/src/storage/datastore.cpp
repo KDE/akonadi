@@ -65,14 +65,15 @@ void DataStore::open()
 {
   m_connectionName = QUuid::createUuid().toString() + QString::number( reinterpret_cast<qulonglong>( QThread::currentThread() ) );
   Q_ASSERT( !QSqlDatabase::contains( m_connectionName ) );
-#ifdef AKONADI_USE_POSTGRES
-  m_database = QSqlDatabase::addDatabase( QLatin1String("QPSQL"), m_connectionName );
-  m_database.setDatabaseName( QLatin1String("akonadidb") );
-  m_database.setUserName( QLatin1String("postgres" ) );
-#else
-  m_database = QSqlDatabase::addDatabase( QLatin1String("QSQLITE"), m_connectionName );
-  m_database.setDatabaseName( storagePath() );
-#endif
+  m_database = QSqlDatabase::addDatabase( QLatin1String("QMYSQL_EMBEDDED"), m_connectionName );
+  if ( !m_database.isValid() ) {
+    m_dbOpened = false;
+    return;
+  }
+
+  m_database.setDatabaseName( QLatin1String("akonadi") );
+  m_database.setConnectOptions( QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( storagePath() ) );
+
   m_dbOpened = m_database.open();
 
   if ( !m_dbOpened )
@@ -81,7 +82,7 @@ void DataStore::open()
     qDebug() << "Database akonadi.db opened.";
 
   Q_ASSERT( m_database.driver()->hasFeature( QSqlDriver::LastInsertId ) );
-  Q_ASSERT( m_database.driver()->hasFeature( QSqlDriver::Transactions ) );
+  //Q_ASSERT( m_database.driver()->hasFeature( QSqlDriver::Transactions ) );
 }
 
 void Akonadi::DataStore::close()
@@ -104,24 +105,39 @@ void Akonadi::DataStore::init()
 
 QString DataStore::storagePath()
 {
+  /**
+   * We need the following path for the database directory:
+   *   $HOME/.akonadi/db/akonadi/
+   */
   const QString akonadiHomeDir = QDir::homePath() + QDir::separator() + QLatin1String(".akonadi") + QDir::separator();
   if ( !QDir( akonadiHomeDir ).exists() ) {
     QDir dir;
-    dir.mkdir( akonadiHomeDir );
+    if ( !dir.mkdir( akonadiHomeDir ) )
+      Tracer::self()->error( "DataStore::storagePath",
+                             QString::fromLatin1( "Unable to create directory '%1'" ).arg( akonadiHomeDir ) );
   }
 
-  const QString akonadiPath = akonadiHomeDir + QLatin1String("akonadi.db");
-
-  if ( !QFile::exists( akonadiPath ) ) {
-    QFile file( akonadiPath );
-    if ( !file.open( QIODevice::WriteOnly ) ) {
-      Tracer::self()->error( "DataStore::storagePath", QString::fromLatin1( "Unable to create file '%1'" ).arg( akonadiPath ) );
-    } else {
-      file.close();
-    }
+  const QString dbDataDir = akonadiHomeDir + QLatin1String( "db" ) + QDir::separator();
+  if ( !QDir( dbDataDir ).exists() ) {
+    QDir dir;
+    if ( !dir.mkdir( dbDataDir ) )
+      Tracer::self()->error( "DataStore::storagePath",
+                             QString::fromLatin1( "Unable to create directory '%1'" ).arg( dbDataDir ) );
   }
 
-  return akonadiPath;
+  const QString dbDir = dbDataDir + QLatin1String("akonadi");
+
+  if ( !QDir( dbDir ).exists() ) {
+    QDir dir;
+    if ( !dir.mkdir( dbDir ) )
+      Tracer::self()->error( "DataStore::storagePath",
+                             QString::fromLatin1( "Unable to create directory '%1'" ).arg( dbDir ) );
+  }
+
+  /**
+   * Return the data directory and not the database directory
+   */
+  return dbDataDir;
 }
 
 /* -- High level API -- */
