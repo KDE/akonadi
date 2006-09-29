@@ -42,7 +42,6 @@ Akonadi::ResourceManager::ResourceManager(QObject * parent) :
 void Akonadi::ResourceManager::resourceAdded(const QString & name)
 {
   DataStore *db = new DataStore();
-  db->init();
 
   Resource resource = db->resourceByName( name.toUtf8() );
   if ( resource.isValid() ) {
@@ -73,7 +72,6 @@ void Akonadi::ResourceManager::resourceAdded(const QString & name)
 void Akonadi::ResourceManager::resourceRemoved(const QString & name)
 {
   DataStore *db = new DataStore();
-  db->init();
 
   // remove items and collections
   Resource resource = db->resourceByName( name.toUtf8() );

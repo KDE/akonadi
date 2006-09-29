@@ -47,12 +47,21 @@ using namespace Akonadi;
 DataStore::DataStore() :
   QObject(),
   m_dbOpened( false ),
-  m_inTransaction( false )
+  m_inTransaction( false ),
+  mNotificationCollector( new NotificationCollector( this ) )
 {
-  mNotificationCollector = new NotificationCollector( this );
+  open();
+
+  m_inTransaction = false;
+  NotificationManager::self()->connectDatastore( this );
 }
 
-void DataStore::init()
+DataStore::~DataStore()
+{
+  close();
+}
+
+void DataStore::open()
 {
   m_connectionName = QUuid::createUuid().toString() + QString::number( reinterpret_cast<qulonglong>( QThread::currentThread() ) );
   Q_ASSERT( !QSqlDatabase::contains( m_connectionName ) );
@@ -71,13 +80,6 @@ void DataStore::init()
   else
     qDebug() << "Database akonadi.db opened.";
 
-  DbInitializer initializer( m_database, QLatin1String(":akonadidb.xml") );
-  if ( !initializer.run() ) {
-    Tracer::self()->error( "DataStore::init()", QString::fromLatin1( "Unable to initialize database: %1" ).arg( initializer.errorMsg() ) );
-  }
-
-  m_inTransaction = false;
-  NotificationManager::self()->connectDatastore( this );
   Q_ASSERT( m_database.driver()->hasFeature( QSqlDriver::LastInsertId ) );
   Q_ASSERT( m_database.driver()->hasFeature( QSqlDriver::Transactions ) );
 }
@@ -92,9 +94,12 @@ void Akonadi::DataStore::close()
   QSqlDatabase::removeDatabase( m_connectionName );
 }
 
-DataStore::~DataStore()
+void Akonadi::DataStore::init()
 {
-  close();
+  DbInitializer initializer( m_database, QLatin1String(":akonadidb.xml") );
+  if ( !initializer.run() ) {
+    Tracer::self()->error( "DataStore::init()", QString::fromLatin1( "Unable to initialize database: %1" ).arg( initializer.errorMsg() ) );
+  }
 }
 
 QString DataStore::storagePath()

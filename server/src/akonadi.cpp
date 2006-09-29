@@ -20,6 +20,7 @@
 #include "akonadi.h"
 #include "akonadiconnection.h"
 
+#include "storage/datastore.h"
 #include "notificationmanager.h"
 #include "resourcemanager.h"
 #include "tracer.h"
@@ -33,6 +34,11 @@ AkonadiServer::AkonadiServer( QObject* parent )
 {
     s_instance = this;
     listen( QHostAddress::LocalHost, 4444 );
+
+    // initialize the database
+    DataStore *db = new DataStore();
+    db->init();
+    delete db;
 
     NotificationManager::self();
     Tracer::self();

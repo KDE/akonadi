@@ -36,17 +36,37 @@ namespace Akonadi {
 class FetchQuery;
 class NotificationCollector;
 
-/***************************************************************************
- *   DataStore                                                             *
- ***************************************************************************/
+/**
+  This class handles all the database access.
+*/
 class DataStore : public QObject
 {
     Q_OBJECT
 public:
+    /**
+      Creates a new DataStore object and opens it.
+    */
     DataStore();
-    void init();
-    void close();
+
+    /**
+      Closes the database connection and destroys the DataStore object.
+    */
     virtual ~DataStore();
+
+    /**
+      Opens the database connection.
+    */
+    void open();
+
+    /**
+      Closes the databse connection.
+    */
+    void close();
+
+    /**
+      Initializes the database. Should be called during startup by the main thread.
+    */
+    void init();
 
     /* -- higher level API -- */
     virtual CollectionList listCollections( const QString& prefix,
