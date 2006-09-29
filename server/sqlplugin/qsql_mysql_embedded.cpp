@@ -34,6 +34,7 @@
 #include <qsqlrecord.h>
 #include <qstringlist.h>
 #include <qtextcodec.h>
+#include <qthread.h>
 #include <qvector.h>
 
 #include <qdebug.h>
@@ -846,6 +847,11 @@ void QMYSQLEmbeddedDriver::qServerInit()
 {
 #ifndef Q_NO_MYSQL_EMBEDDED
 # if MYSQL_VERSION_ID >= 40000
+    if ( QCoreApplication::instance()->thread() != QThread::currentThread() ) {
+        mysql_thread_init();
+        return;
+    }
+
     static bool init = false;
     if (init)
         return;
@@ -905,7 +911,10 @@ QMYSQLEmbeddedDriver::~QMYSQLEmbeddedDriver()
     delete d;
 #ifndef Q_NO_MYSQL_EMBEDDED
 # if MYSQL_VERSION_ID > 40000
-    mysql_server_end();
+    if ( QCoreApplication::instance()->thread() == QThread::currentThread() )
+        mysql_server_end();
+    else
+        mysql_thread_end();
 # endif
 #endif
 }
@@ -1007,7 +1016,8 @@ bool QMYSQLEmbeddedDriver::open(const QString& db,
      */
     qServerInit();
 
-    d->mysql = mysql_init((MYSQL*) 0);
+    if ( !d->mysql )
+        d->mysql = mysql_init((MYSQL*) 0);
     if ( d->mysql ) {
         mysql_options(d->mysql, MYSQL_OPT_USE_EMBEDDED_CONNECTION, 0);
         mysql_options(d->mysql, MYSQL_READ_DEFAULT_GROUP, "libmysql_client");
@@ -1043,7 +1053,8 @@ bool QMYSQLEmbeddedDriver::open(const QString& db,
 void QMYSQLEmbeddedDriver::close()
 {
     if (isOpen()) {
-        mysql_close(d->mysql);
+        if ( QCoreApplication::instance()->thread() == QThread::currentThread() )
+            mysql_close(d->mysql);
         setOpen(false);
         setOpenError(false);
     }
