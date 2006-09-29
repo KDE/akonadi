@@ -30,15 +30,14 @@ using namespace Akonadi;
 static AkonadiServer *s_instance = 0;
 
 AkonadiServer::AkonadiServer( QObject* parent )
-    : QTcpServer( parent )
+    : QTcpServer( parent ), mDb( 0 )
 {
     s_instance = this;
     listen( QHostAddress::LocalHost, 4444 );
 
     // initialize the database
-    DataStore *db = new DataStore();
-    db->init();
-    delete db;
+    mDb = new DataStore();
+    mDb->init();
 
     NotificationManager::self();
     Tracer::self();
@@ -48,6 +47,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
 AkonadiServer::~AkonadiServer()
 {
+  delete mDb;
 }
 
 void AkonadiServer::incomingConnection( int socketDescriptor )
