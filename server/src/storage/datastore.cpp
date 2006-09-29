@@ -78,6 +78,8 @@ void DataStore::init()
 
   m_inTransaction = false;
   NotificationManager::self()->connectDatastore( this );
+  Q_ASSERT( m_database.driver()->hasFeature( QSqlDriver::LastInsertId ) );
+  Q_ASSERT( m_database.driver()->hasFeature( QSqlDriver::Transactions ) );
 }
 
 void Akonadi::DataStore::close()
@@ -370,9 +372,11 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
   QSqlQuery query( m_database );
 
   for ( int i = 0; i < flags.count(); ++i ) {
-    const QString statement = QString::fromLatin1( "SELECT COUNT(*) FROM ItemFlags WHERE flag_id = %1 AND pimitem_id = %2" )
-                                     .arg( flags[ i ].id() ).arg( item.id() );
-    if ( !query.exec( statement ) ) {
+    query.prepare( QLatin1String("SELECT COUNT(*) FROM ItemFlags WHERE flag_id = :flag_id AND pimitem_id = :pimitem_id") );
+    query.bindValue( QLatin1String(":flag_id"), flags[ i ].id() );
+    query.bindValue( QLatin1String(":pimitem_id"), item.id() );
+
+    if ( !query.exec() ) {
       debugLastQueryError( query, "Error during select on ItemFlags." );
       return false;
     }
@@ -381,9 +385,11 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
     int exists = query.value( 0 ).toInt();
 
     if ( !exists ) {
-      const QString statement = QString::fromLatin1( "INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES ( '%1', '%2' )" )
-                                       .arg( flags[ i ].id() ).arg( item.id() );
-      if ( !query.exec( statement ) ) {
+      query.prepare( QLatin1String("INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (:flag_id, :pimitem_id)") );
+      query.bindValue( QLatin1String(":flag_id"), flags[ i ].id() );
+      query.bindValue( QLatin1String(":pimitem_id"), item.id() );
+
+      if ( !query.exec() ) {
         debugLastQueryError( query, "Error during adding new ItemFlags." );
         return false;
       }
@@ -868,6 +874,7 @@ bool DataStore::appendMimeTypeForLocation( int locationId, int mimeTypeId )
 
   if ( !query.exec() ) {
     debugLastDbError( "Error during insertion of single LocationMimeType." );
+    debugLastQueryError( query, "Error during insertion of single LocationMimeType." );
     return false;
   }
 
