@@ -61,6 +61,7 @@ set(libakonadiprivate_SRCS
   src/collection.cpp
   src/tracer.cpp
   src/dbustracer.cpp
+  src/dbusthread.cpp
   src/filetracer.cpp
   src/notificationmanager.cpp
   src/resourcemanager.cpp

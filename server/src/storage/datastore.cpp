@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QEventLoop>
 #include <QtCore/QString>
@@ -33,6 +34,7 @@
 #include "agentmanagerinterface.h"
 #include "resourceinterface.h"
 #include "dbinitializer.h"
+#include "dbusthread.h"
 #include "notificationmanager.h"
 #include "persistentsearchmanager.h"
 #include "tracer.h"
@@ -1344,15 +1346,32 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray &uid, 
   Resource r = resourceById( l.resourceId() );
 
   // call the resource
-  // ### hack/unsafe/racy/fixme/ugly/temporary/just for testing/whatever
-  org::kde::Akonadi::Resource *interface = new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.resource(),
-      QLatin1String("/"), QDBusConnection::sessionBus(), this );
-  if ( !interface || !interface->isValid() ) {
-     qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                        .arg( r.resource(), interface ? interface->lastError().message() : QString() );
-    return QByteArray();
+
+  // Use the interface if we are in main thread, the DBusThread proxy otherwise
+  if ( QThread::currentThread() == QCoreApplication::instance()->thread() ) {
+      org::kde::Akonadi::Resource *interface =
+                  new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.resource(),
+                                                   QLatin1String("/"), QDBusConnection::sessionBus(), this );
+
+      if ( !interface || !interface->isValid() ) {
+         qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+                                        .arg( r.resource(), interface ? interface->lastError().message() : QString() );
+         return QByteArray();
+      }
+      bool ok = interface->requestItemDelivery( QString::fromLatin1(uid), QString::fromUtf8(remote_id), l.location(), type );
+  } else {
+    QList<QVariant> arguments;
+    arguments << QString::fromLatin1( uid ) << QString::fromUtf8( remote_id ) << l.location() << type;
+
+    DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
+
+    const QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Resource" ),
+                                                         QLatin1String( "/" ),
+                                                         QLatin1String( "org.kde.Akonadi.Resource." ) + r.resource(),
+                                                         QLatin1String( "requestItemDelivery" ), arguments );
+
+    // do something with result...
   }
-  bool ok = interface->requestItemDelivery( QString::fromLatin1(uid), QString::fromUtf8(remote_id), l.location(), type );
   qDebug() << "returned from requestItemDelivery()";
 
   // get the delivered item

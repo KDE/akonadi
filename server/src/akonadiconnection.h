@@ -26,6 +26,7 @@ class QTcpSocket;
 
 #include "storage/entity.h"
 #include "global.h"
+#include "dbusthread.h"
 
 namespace Akonadi {
     class Handler;
@@ -35,7 +36,7 @@ namespace Akonadi {
 /**
     An AkonadiConnection represents one connection of a client to the server.
 */
-class AkonadiConnection : public QThread
+class AkonadiConnection : public DBusThread
 {
     Q_OBJECT
 public:
