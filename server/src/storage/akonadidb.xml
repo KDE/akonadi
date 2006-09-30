@@ -59,6 +59,11 @@
     <column name="datetime" type="TIMESTAMP DEFAULT CURRENT_TIMESTAMP"/>
   </table>
 
+  <table name="SearchLocations">
+    <column name="pim_id" type="INTEGER REFERENCES PimItems(id)"/>
+    <column name="location_id" type="INTEGER REFERENCES PersistenSearches(id)"/>
+  </table>
+
   <table name="ItemMetaData">
     <column name="id" type="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="data" type="BLOB NOT NULL"/>
