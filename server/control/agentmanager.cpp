@@ -34,7 +34,8 @@ AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
 {
   mStorageController = new Akonadi::ProcessControl;
-  mStorageController->start( "akonadiserver" );
+  // ### change back to RestartOnCrash once we don't crash anymore...
+  mStorageController->start( "akonadiserver", QStringList(), Akonadi::ProcessControl::StopOnCrash );
 
   new AgentManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/AgentManager", this );

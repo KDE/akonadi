@@ -106,7 +106,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
       if ( entry.second.startsWith( QLatin1String("CHAR") ) )
         entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
 #endif
-#ifdef AKONADI_USE_MYSQL_EMBEDDED
+#if defined AKONADI_USE_MYSQL_EMBEDDED || defined AKONADI_USE_MYSQL
       if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
         entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("AUTO_INCREMENT"));
       if ( entry.second.startsWith( QLatin1String("CHAR") ) )
@@ -135,7 +135,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
 #ifdef AKONADI_USE_SQLITE
   if ( !query.exec( QLatin1String("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;") ) ) {
 #endif
-#ifdef AKONADI_USE_MYSQL_EMBEDDED
+#if defined AKONADI_USE_MYSQL_EMBEDDED || defined AKONADI_USE_MYSQL
   if ( !query.exec( QLatin1String("SHOW TABLES") ) ) {
 #endif
     mErrorMsg = QLatin1String( "Unable to retrieve table information from database." );

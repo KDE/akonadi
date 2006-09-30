@@ -65,15 +65,25 @@ void DataStore::open()
 {
   m_connectionName = QUuid::createUuid().toString() + QString::number( reinterpret_cast<qulonglong>( QThread::currentThread() ) );
   Q_ASSERT( !QSqlDatabase::contains( m_connectionName ) );
+#ifdef AKONADI_USE_MYSQL_EMBEDDED
   m_database = QSqlDatabase::addDatabase( QLatin1String("QMYSQL_EMBEDDED"), m_connectionName );
+  m_database.setDatabaseName( QLatin1String("akonadi") );
+  m_database.setConnectOptions( QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( storagePath() ) );
+#endif
+#ifdef AKONADI_USE_MYSQL
+  m_database = QSqlDatabase::addDatabase( QLatin1String("QMYSQL"), m_connectionName );
+  m_database.setUserName( QLatin1String("root") );
+  m_database.setDatabaseName( QLatin1String("akonadi") );
+#endif
+#ifdef AKONADI_USE_SQLITE
+  m_database = QSqlDatabase::addDatabase( QLatin1String("QSQLITE"), m_connectionName );
+  m_database.setDatabaseName( storagePath() );
+#endif
+
   if ( !m_database.isValid() ) {
     m_dbOpened = false;
     return;
   }
-
-  m_database.setDatabaseName( QLatin1String("akonadi") );
-  m_database.setConnectOptions( QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( storagePath() ) );
-
   m_dbOpened = m_database.open();
 
   if ( !m_dbOpened )
@@ -117,6 +127,18 @@ QString DataStore::storagePath()
                              QString::fromLatin1( "Unable to create directory '%1'" ).arg( akonadiHomeDir ) );
   }
 
+#ifdef AKONADI_USE_SQLITE
+  const QString akonadiPath = akonadiHomeDir + QLatin1String("akonadi.db");
+  if ( !QFile::exists( akonadiPath ) ) {
+    QFile file( akonadiPath );
+    if ( !file.open( QIODevice::WriteOnly ) ) {
+      Tracer::self()->error( "DataStore::storagePath", QString::fromLatin1( "Unable to create file '%1'" ).arg( akonadiPath ) );
+    } else {
+      file.close();
+    }
+  }
+  return akonadiPath;
+#else
   const QString dbDataDir = akonadiHomeDir + QLatin1String( "db" ) + QDir::separator();
   if ( !QDir( dbDataDir ).exists() ) {
     QDir dir;
@@ -138,6 +160,7 @@ QString DataStore::storagePath()
    * Return the data directory and not the database directory
    */
   return dbDataDir;
+#endif
 }
 
 /* -- High level API -- */
