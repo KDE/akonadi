@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 
@@ -74,9 +75,10 @@ QList<QVariant> DBusThread::callDBus( const QString &service, const QString &pat
 
   DBusThreadManager *manager = DBusThreadManager::self();
 
+  mMutex.lock();
+
   QCoreApplication::instance()->postEvent( manager, event );
 
-  mMutex.lock();
   mCondition.wait( &mMutex );
   mMutex.unlock();
 
@@ -87,7 +89,9 @@ void DBusThread::wakeup( const QList<QVariant> &result )
 {
   mData = result;
 
+  mMutex.lock();
   mCondition.wakeAll();
+  mMutex.unlock();
 }
 
 DBusThreadManager* DBusThreadManager::mSelf = 0;
@@ -134,7 +138,8 @@ void DBusThreadManager::customEvent( QEvent *_event )
 DBusThreadProxy::DBusThreadProxy( DBusThread *thread, const QDBusMessage &message )
   : mThread( thread )
 {
-  QDBusConnection::sessionBus().callWithCallback( message, this, SLOT( dbusReply( const QDBusMessage& ) ) );
+  if ( !QDBusConnection::sessionBus().callWithCallback( message, this, SLOT( dbusReply( const QDBusMessage& ) ) ) )
+    emit dbusReply( message.createError( QLatin1String("Call Error"), QLatin1String("callWithCallback() failed in DBusThreadProxy") ) );
 }
 
 void DBusThreadProxy::dbusReply( const QDBusMessage &message )
