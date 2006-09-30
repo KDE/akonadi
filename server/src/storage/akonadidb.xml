@@ -114,4 +114,9 @@
     <column name="mimetype_id" type="INTEGER REFERENCES MimeTypes(id)"/>
   </table>
 
+  <table name="SearchLocationMimeTypes">
+    <column name="searchlocation_id" type="INTEGER REFERENCES SearchLocations(id)"/>
+    <column name="mimetype_id" type="INTEGER REFERENCES MimeTypes(id)"/>
+  </table>
+
 </database>
