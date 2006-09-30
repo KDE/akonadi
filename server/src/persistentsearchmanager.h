@@ -29,6 +29,8 @@
 
 namespace Akonadi {
 
+class DataStore;
+
 class PersistentSearchManager
 {
   public:
@@ -72,7 +74,7 @@ class PersistentSearchManager
     QMap<QString, PersistentSearch*> mList;
     mutable QMutex mListMutex;
 
-    QSqlDatabase mDatabase;
+    DataStore* mDb;
 };
 
 }

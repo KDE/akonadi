@@ -68,6 +68,11 @@ public:
     */
     void init();
 
+    /**
+      Returns the database object. Can be used for executing queries.
+    */
+    QSqlDatabase database() const;
+
     /* -- higher level API -- */
     virtual CollectionList listCollections( const QString& prefix,
                                             const QString& mailboxPattern ) const;

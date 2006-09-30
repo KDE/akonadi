@@ -26,6 +26,7 @@
 #include "handlerhelper.h"
 #include "searchhelper.h"
 #include "searchprovidermanager.h"
+#include "storage/datastore.h"
 
 #include "persistentsearchmanager.h"
 
@@ -33,22 +34,9 @@ using namespace Akonadi;
 
 PersistentSearchManager* PersistentSearchManager::mSelf = 0;
 
-PersistentSearchManager::PersistentSearchManager()
+PersistentSearchManager::PersistentSearchManager() : mDb( new DataStore )
 {
-  const QString akonadiHomeDir = QDir::homePath() + QDir::separator() + QLatin1String(".akonadi") + QDir::separator();
-  if ( !QDir( akonadiHomeDir ).exists() ) {
-    QDir dir;
-    dir.mkdir( akonadiHomeDir );
-  }
-
-  mDatabase = QSqlDatabase::addDatabase( QLatin1String("QSQLITE"), QUuid::createUuid().toString() );
-  mDatabase.setDatabaseName( akonadiHomeDir + QLatin1String("akonadi.db") );
-  mDatabase.open();
-
-  if ( !mDatabase.isOpen() )
-    qDebug() << "PersistentSearchManager: Unable to open database akonadi.db.";
-
-  QSqlQuery query( mDatabase );
+  QSqlQuery query( mDb->database() );
   query.prepare( QLatin1String("SELECT name, query FROM PersistentSearches") );
   if ( query.exec() ) {
     qDebug( "load data" );
@@ -73,7 +61,7 @@ PersistentSearchManager::PersistentSearchManager()
 
 PersistentSearchManager::~PersistentSearchManager()
 {
-  mDatabase.close();
+  delete mDb;
 }
 
 PersistentSearchManager* PersistentSearchManager::self()
@@ -116,7 +104,7 @@ void PersistentSearchManager::addPersistentSearch( const QString &identifier, Pe
   const QString statement = QString( QLatin1String("INSERT INTO PersistentSearches (name, query) VALUES ('%1', '%2') ") )
                                    .arg( identifier, queryString );
 
-  QSqlQuery query( mDatabase );
+  QSqlQuery query( mDb->database() );
   if ( !query.exec( statement ) )
     qDebug( "PersistentSearchManager: Unable to remove identifier '%s' from database", qPrintable( identifier ) );
 
@@ -143,7 +131,7 @@ void PersistentSearchManager::removePersistentSearch( const QString &identifier 
    */
   const QString statement = QString( QLatin1String("DELETE FROM PersistentSearches WHERE name = '%1' ") ).arg( identifier );
 
-  QSqlQuery query( mDatabase );
+  QSqlQuery query( mDb->database() );
   if ( !query.exec( statement ) )
     qDebug( "PersistentSearchManager: Unable to remove identifier '%s' from database", qPrintable( identifier ) );
 

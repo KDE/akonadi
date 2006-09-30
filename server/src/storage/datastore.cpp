@@ -115,6 +115,11 @@ void Akonadi::DataStore::init()
   }
 }
 
+QSqlDatabase Akonadi::DataStore::database() const
+{
+  return m_database;
+}
+
 QString DataStore::storagePath()
 {
   /**
