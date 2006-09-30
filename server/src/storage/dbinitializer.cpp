@@ -117,7 +117,11 @@ bool DbInitializer::checkTable( const QDomElement &element )
       QString statement = QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
           .arg( tableName )
           .arg( columnElement.attribute( QLatin1String("columns") ) )
+#if defined AKONADI_USE_MYSQL_EMBEDDED || defined AKONADI_USE_MYSQL
+          .arg( columnElement.attribute( QLatin1String("values") ).replace( QLatin1String("\\"), QLatin1String("\\\\") ) );
+#else
           .arg( columnElement.attribute( QLatin1String("values") ) );
+#endif
       dataList << statement;
     } else {
       mErrorMsg = QString::fromLatin1( "Unknown tag, expected <column> and got <%1>." ).arg( columnElement.tagName() );

@@ -312,11 +312,10 @@ Flag DataStore::flagById( int id )
     return Flag();
 
   QSqlQuery query( m_database );
-//  query.prepare( "SELECT id, name FROM Flags WHERE id = :id" );
-//  query.bindValue( ":id", id );
-  const QString statement = QString::fromLatin1( "SELECT id, name FROM Flags WHERE id = %1" ).arg( id );
+  query.prepare( QLatin1String("SELECT id, name FROM Flags WHERE id = :id") );
+  query.bindValue( QLatin1String(":id"), id );
 
-  if ( !query.exec( statement ) ) {
+  if ( !query.exec() ) {
     debugLastQueryError( query, "Error during selection of single Flag." );
     return Flag();
   }
@@ -338,11 +337,10 @@ Flag DataStore::flagByName( const QString &name )
     return Flag();
 
   QSqlQuery query( m_database );
-//  query.prepare( "SELECT id, name FROM Flags WHERE name = :id" );
-//  query.bindValue( ":id", id );
-  const QString statement = QString::fromLatin1( "SELECT id, name FROM Flags WHERE name = \"%1\"" ).arg( name );
+  query.prepare( QLatin1String("SELECT id, name FROM Flags WHERE name = :name") );
+  query.bindValue( QLatin1String(":name"), name );
 
-  if ( !query.exec( statement ) ) {
+  if ( !query.exec() ) {
     debugLastQueryError( query, "Error during selection of single Flag." );
     return Flag();
   }
@@ -1153,31 +1151,21 @@ bool DataStore::appendPimItem( const QByteArray & data,
 
   QSqlQuery query( m_database );
 
-  QSqlField field( QLatin1String("data"), QVariant::String );
-  field.setValue( data );
-  QString escaped = m_database.driver()->formatValue( field );
-  QString statement;
   if ( dateTime.isValid() ) {
-      statement = QString::fromLatin1( "INSERT INTO PimItems (remote_id, data, location_id, mimetype_id, "
-                           "datetime ) "
-                           "VALUES ('%1', %2, %3, %4, '%5')")
-                         .arg( QString::fromUtf8( remote_id ) )
-                         .arg( escaped )
-                         .arg( location.id() )
-                         .arg( mimetype.id() )
-                         .arg( dateTimeFromQDateTime( dateTime ) );
-  }
-  else {
+      query.prepare( QLatin1String( "INSERT INTO PimItems (remote_id, data, location_id, mimetype_id, datetime ) "
+                                    "VALUES (:remote_id, :data, :location_id, :mimetype_id, :datetime)") );
+      query.bindValue( QLatin1String(":datetime"), dateTimeFromQDateTime( dateTime ) );
+  } else {
       // the database will use the current date/time for datetime
-      statement = QString::fromLatin1( "INSERT INTO PimItems (remote_id, data, location_id, mimetype_id) "
-                           "VALUES ('%1', %2, %3, %4)")
-                         .arg( QString::fromUtf8(remote_id) )
-                         .arg( escaped )
-                         .arg( location.id() )
-                         .arg( mimetype.id() );
+      query.prepare( QLatin1String( "INSERT INTO PimItems (remote_id, data, location_id, mimetype_id) "
+                                    "VALUES (:remote_id, :data, :location_i, :mimetype_id)") );
   }
+  query.bindValue( QLatin1String(":remote_id"), QString::fromUtf8(remote_id) );
+  query.bindValue( QLatin1String(":data"), data );
+  query.bindValue( QLatin1String(":location_id"), location.id() );
+  query.bindValue( QLatin1String(":mimetype_id"), mimetype.id() );
 
-  if ( !query.exec( statement ) ) {
+  if ( !query.exec() ) {
     debugLastQueryError( query, "Error during insertion of single PimItem." );
     return false;
   }
@@ -1197,16 +1185,11 @@ bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const QByteArray
     return false;
 
   QSqlQuery query( m_database );
+  query.prepare( QLatin1String("UPDATE PimItems SET data = :data WHERE id = :id") );
+  query.bindValue( QLatin1String(":data"), data );
+  query.bindValue( QLatin1String(":id"), pimItem.id() );
 
-  QSqlField field( QLatin1String("data"), QVariant::String );
-  field.setValue( data );
-  QString escaped = m_database.driver()->formatValue( field );
-  QString statement;
-  statement = QString::fromLatin1( "UPDATE PimItems SET data = %1 WHERE id = %2" )
-      .arg( escaped )
-      .arg( pimItem.id() );
-
-  if ( !query.exec( statement ) ) {
+  if ( !query.exec() ) {
     debugLastQueryError( query, "Error during insertion of single PimItem." );
     return false;
   }
@@ -1365,12 +1348,13 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray &uid, 
 
     DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
 
-    const QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Resource" ),
+    const QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Resource." ) + r.resource(),
                                                          QLatin1String( "/" ),
-                                                         QLatin1String( "org.kde.Akonadi.Resource." ) + r.resource(),
+                                                         QLatin1String( "org.kde.Akonadi.Resource" ),
                                                          QLatin1String( "requestItemDelivery" ), arguments );
 
     // do something with result...
+    qDebug() << "got dbus response: " << result;
   }
   qDebug() << "returned from requestItemDelivery()";
 
