@@ -30,9 +30,9 @@
 
 #include <QDebug>
 
-using namespace PIM;
+using namespace Akonadi;
 
-class MessageModel::Private
+class Akonadi::MessageModel::Private
 {
   public:
     QList<Message*> messages;
@@ -40,26 +40,26 @@ class MessageModel::Private
     Monitor *monitor;
 };
 
-PIM::MessageModel::MessageModel( QObject *parent ) :
+MessageModel::MessageModel( QObject *parent ) :
     ItemModel( parent ),
     d( new Private() )
 {
   d->monitor = 0;
 }
 
-PIM::MessageModel::~MessageModel( )
+MessageModel::~MessageModel( )
 {
   delete d->monitor;
   delete d;
 }
 
-int PIM::MessageModel::columnCount( const QModelIndex & parent ) const
+int MessageModel::columnCount( const QModelIndex & parent ) const
 {
   Q_UNUSED( parent );
   return 5; // keep in sync with the column type enum
 }
 
-QVariant PIM::MessageModel::data( const QModelIndex & index, int role ) const
+QVariant MessageModel::data( const QModelIndex & index, int role ) const
 {
   if ( !index.isValid() )
     return QVariant();
@@ -86,14 +86,14 @@ QVariant PIM::MessageModel::data( const QModelIndex & index, int role ) const
   return QVariant();
 }
 
-int PIM::MessageModel::rowCount( const QModelIndex & parent ) const
+int MessageModel::rowCount( const QModelIndex & parent ) const
 {
   if ( !parent.isValid() )
     return d->messages.count();
   return 0;
 }
 
-QVariant PIM::MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
@@ -114,7 +114,7 @@ QVariant PIM::MessageModel::headerData( int section, Qt::Orientation orientation
   return QAbstractTableModel::headerData( section, orientation, role );
 }
 
-PIM::ItemFetchJob* PIM::MessageModel::createFetchJob( const QString &path, QObject* parent )
+ItemFetchJob* MessageModel::createFetchJob( const QString &path, QObject* parent )
 {
   return new MessageFetchJob( path, parent );
 }

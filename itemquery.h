@@ -39,7 +39,7 @@ class ItemQuery : public Job
       @param query The query pattern.
       @param part The parts of the data that should be returned
     */
-    ItemQuery( const QString &query, const QString &part = "ALL" );
+    ItemQuery( const QString &query, const QString &part = QLatin1String( "ALL" ) );
 
     /**
       Destroys the ItemQuery.

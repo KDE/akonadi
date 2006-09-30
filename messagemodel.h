@@ -25,12 +25,12 @@
 
 #include "itemmodel.h"
 
-namespace PIM {
+namespace Akonadi {
 
 /**
   A flat self-updating message model.
 */
-class AKONADI_EXPORT MessageModel : public PIM::ItemModel
+class AKONADI_EXPORT MessageModel : public Akonadi::ItemModel
 {
   Q_OBJECT
 
@@ -81,7 +81,8 @@ class AKONADI_EXPORT MessageModel : public PIM::ItemModel
     /**
       Reimplemented from ItemModel.
     */
-    virtual PIM::ItemFetchJob* createFetchJob( const QString &path, QObject* parent = 0 );
+    virtual Akonadi::ItemFetchJob* createFetchJob( const QString &path, QObject* parent = 0 );
+
   private:
     class Private;
     Private* d;
