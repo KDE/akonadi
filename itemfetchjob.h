@@ -28,7 +28,7 @@ namespace Akonadi {
 class ItemFetchJobPrivate;
 
 /**
-  Fetches message data from the backend.
+  Fetches item data from the backend.
 */
 class AKONADI_EXPORT ItemFetchJob : public Job
 {

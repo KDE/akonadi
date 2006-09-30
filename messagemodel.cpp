@@ -28,44 +28,38 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <QtCore/QDebug>
+#include <QDebug>
 
-using namespace Akonadi;
+using namespace PIM;
 
 class MessageModel::Private
 {
   public:
     QList<Message*> messages;
     QString path;
-    MessageFetchJob *listingJob;
     Monitor *monitor;
-    QList<MessageQuery*> fetchJobs, updateJobs;
 };
 
-MessageModel::MessageModel( QObject *parent ) :
-    QAbstractTableModel( parent ),
+PIM::MessageModel::MessageModel( QObject *parent ) :
+    ItemModel( parent ),
     d( new Private() )
 {
-  d->listingJob = 0;
   d->monitor = 0;
 }
 
-MessageModel::~MessageModel( )
+PIM::MessageModel::~MessageModel( )
 {
-  delete d->listingJob;
   delete d->monitor;
-  qDeleteAll( d->fetchJobs );
-  qDeleteAll( d->updateJobs );
   delete d;
 }
 
-int MessageModel::columnCount( const QModelIndex & parent ) const
+int PIM::MessageModel::columnCount( const QModelIndex & parent ) const
 {
   Q_UNUSED( parent );
   return 5; // keep in sync with the column type enum
 }
 
-QVariant MessageModel::data( const QModelIndex & index, int role ) const
+QVariant PIM::MessageModel::data( const QModelIndex & index, int role ) const
 {
   if ( !index.isValid() )
     return QVariant();
@@ -92,14 +86,14 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
   return QVariant();
 }
 
-int MessageModel::rowCount( const QModelIndex & parent ) const
+int PIM::MessageModel::rowCount( const QModelIndex & parent ) const
 {
   if ( !parent.isValid() )
     return d->messages.count();
   return 0;
 }
 
-QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant PIM::MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
@@ -120,143 +114,9 @@ QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int
   return QAbstractTableModel::headerData( section, orientation, role );
 }
 
-void MessageModel::setPath( const QString& path )
+PIM::ItemFetchJob* PIM::MessageModel::createFetchJob( const QString &path, QObject* parent )
 {
-  if ( d->path == path )
-    return;
-  d->path = path;
-  // the query changed, thus everything we have already is invalid
-  d->messages.clear();
-  reset();
-  // stop all running jobs
-  delete d->monitor;
-  d->monitor = 0;
-  qDeleteAll( d->updateJobs );
-  d->updateJobs.clear();
-  qDeleteAll( d->fetchJobs );
-  d->updateJobs.clear();
-  delete d->listingJob;
-  // start listing job
-  d->listingJob = new MessageFetchJob( path, this );
-  connect( d->listingJob, SIGNAL( done( Akonadi::Job* ) ), SLOT( listingDone( Akonadi::Job* ) ) );
-  d->listingJob->start();
-}
-
-void MessageModel::listingDone( Job * job )
-{
-  Q_ASSERT( job == d->listingJob );
-  if ( job->error() ) {
-    // TODO
-    kWarning() << k_funcinfo << "Message query failed!" << endl;
-  } else {
-    d->messages = d->listingJob->messages();
-    reset();
-  }
-  d->listingJob->deleteLater();
-  d->listingJob = 0;
-
-  // start monitor job
-  // TODO error handling
-  /*d->monitor = new Monitor( "folder=" + d->path );
-  connect( d->monitor, SIGNAL( changed( const DataReference::List& ) ),
-           SLOT( messagesChanged( const DataReference::List& ) ) );
-  connect( d->monitor, SIGNAL( added( const DataReference::List& ) ),
-           SLOT( messagesAdded( const DataReference::List& ) ) );
-  connect( d->monitor, SIGNAL( removed( const DataReference::List& ) ),
-           SLOT( messagesRemoved( const DataReference::List& ) ) );*/
-//   d->monitor->start();
-}
-
-void MessageModel::fetchingNewDone( Job * job )
-{
-  Q_ASSERT( d->fetchJobs.contains( static_cast<MessageQuery*>( job ) ) );
-  if ( job->error() ) {
-    // TODO
-    kWarning() << k_funcinfo << "Fetching new messages failed!" << endl;
-  } else {
-    Message::List list = static_cast<MessageQuery*>( job )->messages();
-    beginInsertRows( QModelIndex(), d->messages.size(), d->messages.size() + list.size() );
-    d->messages += list;
-    endInsertRows();
-  }
-  d->fetchJobs.removeAll( static_cast<MessageQuery*>( job ) );
-  job->deleteLater();
-}
-
-void MessageModel::fetchingUpdatesDone( Job * job )
-{
-  Q_ASSERT( d->updateJobs.contains( static_cast<MessageQuery*>( job ) ) );
-  if ( job->error() ) {
-    // TODO
-    kWarning() << k_funcinfo << "Updating changed messages failed!" << endl;
-  } else {
-    Message::List list = static_cast<MessageQuery*>( job )->messages();
-    foreach ( Message* msg, list ) {
-      // ### *slow*
-      for ( int i = 0; i < d->messages.size(); ++i ) {
-        if ( d->messages.at( i )->reference() == msg->reference() ) {
-          delete d->messages.at( i );
-          d->messages.replace( i, msg );
-          emit dataChanged( index( i, 0 ), index( i, columnCount() ) );
-          break;
-        }
-      }
-    }
-  }
-  d->updateJobs.removeAll( static_cast<MessageQuery*>( job ) );
-  job->deleteLater();
-}
-
-void MessageModel::messagesChanged( const DataReference::List & references )
-{
-  // TODO: build query based on the reference list
-  QString query;
-  MessageQuery* job = new MessageQuery( query );
-  connect( job, SIGNAL( done( Akonadi::Job* ) ), SLOT( fetchingUpdatesDone( Akonadi::Job* job ) ) );
-  job->start();
-  d->updateJobs.append( job );
-}
-
-void MessageModel::messagesAdded( const DataReference::List & references )
-{
-  // TODO: build query based on the reference list
-  QString query;
-  MessageQuery* job = new MessageQuery( query );
-  connect( job, SIGNAL( done( Akonadi::Job* ) ), SLOT( fetchingNewDone( Akonadi::Job* job ) ) );
-  job->start();
-  d->fetchJobs.append( job );
-}
-
-void MessageModel::messagesRemoved( const DataReference::List & references )
-{
-  foreach ( DataReference ref, references ) {
-    // ### *slow*
-    int index = -1;
-    for ( int i = 0; i < d->messages.size(); ++i ) {
-      if ( d->messages.at( i )->reference() == ref ) {
-        index = i;
-        break;
-      }
-    }
-    if ( index < 0 )
-      continue;
-    beginRemoveRows( QModelIndex(), index, index );
-    Message* msg = d->messages.at( index );
-    d->messages.removeAt( index );
-    delete msg;
-    endRemoveRows();
-  }
-}
-
-DataReference MessageModel::referenceForIndex( const QModelIndex & index ) const
-{
-  if ( !index.isValid() )
-    return DataReference();
-  if ( index.row() >= d->messages.count() )
-    return DataReference();
-  Message *msg = d->messages.at( index.row() );
-  Q_ASSERT( msg );
-  return msg->reference();
+  return new MessageFetchJob( path, parent );
 }
 
 #include "messagemodel.moc"

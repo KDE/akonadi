@@ -23,16 +23,14 @@
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
-#include <QtCore/QAbstractTableModel>
+#include "itemmodel.h"
 
-namespace Akonadi {
-
-class Job;
+namespace PIM {
 
 /**
   A flat self-updating message model.
 */
-class AKONADI_EXPORT MessageModel : public QAbstractTableModel
+class AKONADI_EXPORT MessageModel : public PIM::ItemModel
 {
   Q_OBJECT
 
@@ -81,51 +79,9 @@ class AKONADI_EXPORT MessageModel : public QAbstractTableModel
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
     /**
-      Sets the path to the collection the model should display. If the path has
-      changed, the model is reset and a new message listing is requested
-      from the storage backend.
-      @param path The full collection path.
+      Reimplemented from ItemModel.
     */
-    void setPath( const QString &path );
-
-    /**
-      Returns the message reference to the given model index. If the index
-      is invalid, an empty reference is returned.
-      @param index The model index.
-    */
-    DataReference referenceForIndex( const QModelIndex &index ) const;
-
-  private Q_SLOTS:
-    /**
-      Connected to the message query job which does a complete listing
-    */
-    void listingDone( Akonadi::Job* job );
-
-    /**
-      Connected to message queries that handle newly added messages.
-    */
-    void fetchingNewDone( Akonadi::Job* job );
-
-    /**
-      Connected to message queries that handle changed messages.
-    */
-    void fetchingUpdatesDone( Akonadi::Job* job );
-
-    /**
-      Connected to the monitor job.
-    */
-    void messagesChanged( const DataReference::List &references );
-
-    /**
-      Connected to the monitor job.
-    */
-    void messagesAdded( const DataReference::List &references );
-
-    /**
-      Connected to the monitor job.
-    */
-    void messagesRemoved( const DataReference::List &references );
-
+    virtual PIM::ItemFetchJob* createFetchJob( const QString &path, QObject* parent = 0 );
   private:
     class Private;
     Private* d;

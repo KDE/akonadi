@@ -20,6 +20,8 @@
 #ifndef AKONADI_MESSAGEFETCHJOB_H
 #define AKONADI_MESSAGEFETCHJOB_H
 
+#include "itemfetchjob.h"
+
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/message.h>
 

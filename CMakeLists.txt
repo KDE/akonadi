@@ -36,6 +36,8 @@ set( akonadi_LIB_SRC
 	itemdeletejob.cpp
 	itemfetchjob.cpp
 	itemstorejob.cpp
+	itemquery.cpp
+	itemmodel.cpp
 	job.cpp
 	jobqueue.cpp
 	messagecollectionattribute.cpp
