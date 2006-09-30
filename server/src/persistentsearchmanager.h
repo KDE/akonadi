@@ -25,11 +25,11 @@
 #include <QtSql/QSqlDatabase>
 
 #include "collection.h"
-#include "persistentsearch.h"
 
 namespace Akonadi {
 
 class DataStore;
+class PersistentSearch;
 
 class PersistentSearchManager
 {

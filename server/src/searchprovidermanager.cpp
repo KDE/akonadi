@@ -20,6 +20,7 @@
 #include "emailsearchprovider.h"
 
 #include "searchprovidermanager.h"
+#include <QByteArray>
 
 using namespace Akonadi;
 
@@ -45,9 +46,9 @@ SearchProvider* SearchProviderManager::createSearchProviderForMimetype( const QB
 {
   SearchProvider *provider = 0;
 
-  if ( mimeType == "message/rfc822" || mimeType == "message/news" ) {
-    provider = new EmailSearchProvider;
-  }
+//   if ( mimeType == "message/rfc822" || mimeType == "message/news" ) {
+//     provider = new EmailSearchProvider;
+//   }
 
   return provider;
 }

@@ -292,6 +292,23 @@ class Resource : public Entity
     friend class DataStore;
 };
 
+/**
+  Represents a persistent search aka virtual folder.
+*/
+class PersistentSearch : public Entity
+{
+  public:
+    PersistentSearch();
+    PersistentSearch( int id, const QString &name, const QByteArray &query );
+
+    QString name() const { return m_name; }
+    QByteArray query() const { return m_query; }
+
+  private:
+    QString m_name;
+    QByteArray m_query;
+};
+
 }
 
 

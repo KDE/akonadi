@@ -447,5 +447,18 @@ void Resource::setResource( const QString & resource )
 
 }
 
+
+Akonadi::PersistentSearch::PersistentSearch() : Entity()
+{
+}
+
+Akonadi::PersistentSearch::PersistentSearch(int id, const QString &name, const QByteArray & query) :
+    Entity( id ),
+    m_name( name ),
+    m_query( query )
+{
+}
+
+
 // namespace Akonadi
 

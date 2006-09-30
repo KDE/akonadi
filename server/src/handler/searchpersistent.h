@@ -26,7 +26,13 @@ namespace Akonadi {
 
 /**
   Handler for the search_store search_delete commands.
- */
+
+  A persistent search can have the following forms:
+
+    123 SEARCH_STORE <name> "<mimetype>" "<query>"
+  or
+    123 SEARCH_DELETE <name>
+*/
 class SearchPersistent : public Handler
 {
   public:

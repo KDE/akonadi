@@ -68,11 +68,6 @@ public:
     */
     void init();
 
-    /**
-      Returns the database object. Can be used for executing queries.
-    */
-    QSqlDatabase database() const;
-
     /* -- higher level API -- */
     virtual CollectionList listCollections( const QString& prefix,
                                             const QString& mailboxPattern ) const;
@@ -214,6 +209,12 @@ public:
     const Resource resourceByName( const QByteArray& name ) const;
     QList<Resource> listResources() const;
     QList<Resource> listResources( const CachePolicy & policy );
+
+    /* --- Persistent search --------------------------------------------- */
+    bool appendPersisntentSearch( const QString &name, const QByteArray &queryString );
+    bool removePersistentSearch( const PersistentSearch &search );
+    PersistentSearch persistentSearch( const QString &name );
+    CollectionList listPersistentSearches() const;
 
     /* --- Helper functions ---------------------------------------------- */
     /** Returns the id of the next PIM item that is added to the db.

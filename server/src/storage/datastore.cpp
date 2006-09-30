@@ -36,7 +36,6 @@
 #include "dbinitializer.h"
 #include "dbusthread.h"
 #include "notificationmanager.h"
-#include "persistentsearchmanager.h"
 #include "tracer.h"
 
 #include "datastore.h"
@@ -115,10 +114,6 @@ void Akonadi::DataStore::init()
   }
 }
 
-QSqlDatabase Akonadi::DataStore::database() const
-{
-  return m_database;
-}
 
 QString DataStore::storagePath()
 {
@@ -249,13 +244,13 @@ CollectionList Akonadi::DataStore::listCollections( const QString & prefix,
   // list queries (only in global namespace)
   if ( !resource.isValid() ) {
     if ( fullPrefix == locationDelimiter() ) {
-      CollectionList persistenSearches = PersistentSearchManager::self()->collections();
+      CollectionList persistenSearches = listPersistentSearches();
       if ( !persistenSearches.isEmpty() )
         result.append( Collection( QLatin1String("Search") ) );
       result.setValid( true );
     }
     if ( fullPrefix == QLatin1String("/Search/")  || (fullPrefix == locationDelimiter() && hasStar) ) {
-      result += PersistentSearchManager::self()->collections();
+      result += listPersistentSearches();
       result.setValid( true );
     }
   }
@@ -1834,6 +1829,69 @@ QList<Resource> DataStore::listResources( const CachePolicy & policy )
 
   return resources;
 }
+
+
+
+bool Akonadi::DataStore::appendPersisntentSearch(const QString & name, const QByteArray & queryString)
+{
+  if ( !m_dbOpened ) return false;
+
+  QSqlQuery query( m_database );
+  query.prepare( QLatin1String("INSERT INTO PersistentSearches (name, query) VALUES (:name, :query)") );
+  query.bindValue( QLatin1String(":name"), name );
+  query.bindValue( QLatin1String(":query"), queryString );
+
+  if ( !query.exec() ) {
+    debugLastQueryError( query, "Unable to append persistent search" );
+    return false;
+  }
+
+  mNotificationCollector->collectionAdded( name );
+  return true;
+}
+
+bool Akonadi::DataStore::removePersistentSearch( const PersistentSearch &search )
+{
+  // TODO
+//   mNotificationCollector->collectionRemoved( search.name() );
+  return removeById( search.id(), QLatin1String("PersistentSearches") );
+}
+
+PersistentSearch Akonadi::DataStore::persistentSearch(const QString & name)
+{
+  if ( !m_dbOpened ) return PersistentSearch();
+
+  QSqlQuery query( m_database );
+  query.prepare( QLatin1String("SELECT id, name, query FROM PersistentSearches WHERE name = :name") );
+  query.bindValue( QLatin1String(":name"), name );
+
+  if ( !query.exec() || !query.next() ) {
+    debugLastQueryError( query, "Error during selection of persistent search" );
+    return PersistentSearch();
+  }
+
+  int id = query.value( 0 ).toInt();
+  QString searchName = query.value( 1 ).toString();
+  QByteArray queryString = query.value( 2 ).toByteArray();
+
+  return PersistentSearch( id, searchName, queryString );
+}
+
+CollectionList Akonadi::DataStore::listPersistentSearches() const
+{
+  QSqlQuery query( m_database );
+  query.prepare( QLatin1String("SELECT name FROM PersistentSearches") );
+  if ( query.exec() ) {
+    CollectionList list;
+    while ( query.next() ) {
+      QString name = query.value( 0 ).toString();
+      list.append( QLatin1String("Search/") + name );
+    }
+    return list;
+  }
+  return CollectionList();
+}
+
 
 
 void DataStore::debugLastDbError( const char* actionDescription ) const

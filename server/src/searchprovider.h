@@ -22,9 +22,9 @@
 
 #include <QtCore/QList>
 
-#include "storage/datastore.h"
-
 namespace Akonadi {
+
+class DataStore;
 
 class SearchProvider
 {

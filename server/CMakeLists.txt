@@ -47,11 +47,11 @@ set(libakonadiprivate_SRCS
   src/handler/storequery.cpp
   src/handler/transaction.cpp
   src/handler/uid.cpp
-  src/persistentsearch.cpp
-  src/persistentsearchmanager.cpp
-  src/searchprovider.cpp
+#  src/persistentsearch.cpp
+#  src/persistentsearchmanager.cpp
+#  src/searchprovider.cpp
   src/searchprovidermanager.cpp
-  src/searchproviders/emailsearchprovider.cpp
+#  src/searchproviders/emailsearchprovider.cpp
   src/storage/entity.cpp
   src/storage/datastore.cpp
   src/storage/dbinitializer.cpp

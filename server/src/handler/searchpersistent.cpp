@@ -18,14 +18,13 @@
  ***************************************************************************/
 
 #include "akonadi.h"
-#include "handlerhelper.h"
-#include "response.h"
-#include "persistentsearch.h"
-#include "persistentsearchmanager.h"
-#include "searchhelper.h"
-#include "searchprovidermanager.h"
-
+#include "akonadiconnection.h"
 #include "searchpersistent.h"
+#include "imapparser.h"
+#include "response.h"
+#include "storage/datastore.h"
+#include "storage/entity.h"
+#include "storage/transaction.h"
 
 using namespace Akonadi;
 
@@ -40,69 +39,62 @@ SearchPersistent::~SearchPersistent()
 
 bool SearchPersistent::handleLine( const QByteArray& line )
 {
-    Response response;
-    response.setUntagged();
+  int pos = line.indexOf( ' ' ) + 1; // skip tag
+  QByteArray command;
+  pos = ImapParser::parseString( line, command, pos );
 
-    QList<QByteArray> junks = HandlerHelper::splitLine( line );
+  QString collectionName;
+  pos = ImapParser::parseString( line, collectionName, pos );
+  if ( collectionName.isEmpty() )
+    return failureResponse( "No name specified" );
 
-    /**
-     * A persistent search can have the following forms:
-     *
-     *    123 SEARCH_STORE <name> <criterion1> <criterion2> ...
-     * or
-     *    123 SEARCH_DELETE <name>
-     *
-     * so we first have to find out which case matches.
-     */
-    if ( junks[ 1 ].toUpper() == "SEARCH_STORE" ) {
-      if ( junks.count() < 4 ) {
-        response.setTag( tag() );
-        response.setError();
-        response.setString( "Too few arguments" );
-        emit responseAvailable( response );
-      } else {
-        QByteArray mimeType = SearchHelper::extractMimetype( junks, 3 );
+  DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
 
-        SearchProvider *provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType );
-        PersistentSearch *persistentSearch = new PersistentSearch( junks.mid( 3 ), provider );
+  if ( command.toUpper() == "SEARCH_STORE" ) {
 
-        QString identifier = QString::fromUtf8( junks[ 2 ] );
-        PersistentSearchManager::self()->addPersistentSearch( identifier, persistentSearch );
+    PersistentSearch search = db->persistentSearch( collectionName );
+    if ( search.isValid() )
+      return failureResponse( "Persistent search does already exist" );
 
-        response.setTag( tag() );
-        response.setSuccess();
-        response.setString( "SEARCH_STORE completed" );
-        emit responseAvailable( response );
-      }
-    } else if ( junks[ 1 ].toUpper() == "SEARCH_DELETE" ) {
-      if ( junks.count() < 3 ) {
-        response.setTag( tag() );
-        response.setError();
-        response.setString( "Too few arguments" );
-        emit responseAvailable( response );
-      } else {
-        QString identifier = QString::fromUtf8( junks[ 2 ] );
-        PersistentSearchManager::self()->removePersistentSearch( identifier );
+    QByteArray mimeType;
+    pos = ImapParser::parseString( line, mimeType, pos );
+    if ( mimeType.isEmpty() )
+      return failureResponse( "No mimetype specified" );
 
-        response.setTag( tag() );
-        response.setSuccess();
-        response.setString( "SEARCH_DELETE completed" );
-        emit responseAvailable( response );
-      }
-    } else if ( junks[ 1 ].toUpper() == "SEARCH_DEBUG" ) {
-      CollectionList collections = PersistentSearchManager::self()->collections();
-      for ( int i = 0; i < collections.count(); ++i ) {
-        response.setString( collections[ i ].identifier().toLatin1() );
-        emit responseAvailable( response );
-      }
+    MimeType mt = db->mimeTypeByName( QString::fromUtf8(mimeType) );
+    if ( !mt.isValid() )
+      return failureResponse( "Invalid mimetype" );
 
-      response.setTag( tag() );
-      response.setSuccess();
-      response.setString( "SEARCH_DEBUG completed" );
-      emit responseAvailable( response );
-    }
+    QByteArray queryString;
+    ImapParser::parseString( line, queryString, pos );
+    if ( queryString.isEmpty() )
+      return failureResponse( "No query specified" );
 
-    deleteLater();
+    if ( !db->appendPersisntentSearch( collectionName, queryString ) )
+      return failureResponse( "Unable to create persistent search" );
 
-    return true;
+  } else if ( command.toUpper() == "SEARCH_DELETE" ) {
+
+    PersistentSearch search = db->persistentSearch( collectionName );
+    if ( !search.isValid() )
+      return failureResponse( "No such persistent search" );
+    if ( !db->removePersistentSearch( search ) )
+      return failureResponse( "Unable to remove presistent search" );
+
+  } else {
+    return failureResponse( "Unknwon command" );
+  }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction" );
+
+  Response response;
+  response.setTag( tag() );
+  response.setSuccess();
+  response.setString( command + " completed" );
+  emit responseAvailable( response );
+
+  deleteLater();
+  return true;
 }
