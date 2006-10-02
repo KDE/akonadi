@@ -20,7 +20,9 @@
 #define AKONADIHANDLER_H
 
 #include <QtCore/QByteArray>
+#include <QtCore/QHash>
 #include <QtCore/QObject>
+#include <QtCore/QStringList>
 
 #include "global.h"
 
@@ -100,9 +102,16 @@ protected:
     */
     bool startContinuation();
 
+    /**
+      Cached lookup of search providers.
+      @param mimeType The mimetype a search provider is requested for.
+    */
+    QStringList providerForMimetype( const QByteArray &mimeType );
+
 private:
     QByteArray m_tag;
     AkonadiConnection* m_connection;
+    QHash<QByteArray,QStringList> m_providerCache;
 };
 
 }

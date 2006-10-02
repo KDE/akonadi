@@ -75,6 +75,27 @@ bool Fetch::handleLine( const QByteArray& line )
     }
   }
 
+  // temporary HACK to test search providers
+  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Envelope ) ) {
+    QStringList uids;
+    foreach ( PimItem item, pimItems )
+      uids << QString::number( item.id() ); // QList<int> doesn't work with dqbus bindings yet...
+
+    QList<QVariant> arguments;
+    arguments << uids << QLatin1String("ENVELOPE");
+    DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
+
+    QString provider = providerForMimetype( "message/rfc822" ).first();
+
+    QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.SearchProvider." ) + provider,
+        QLatin1String( "/" ),
+        QLatin1String( "org.kde.Akonadi.SearchProvider" ),
+        QLatin1String( "fetchResponse" ), arguments );
+
+    // TODO error handling (eg. on failing call)
+    qDebug() << "fetchResonse: " << result;
+  }
+
   for ( int i = 0; i < pimItems.count(); ++i ) {
     response.setUntagged();
     response.setString( buildResponse( pimItems[ i ], fetchQuery ) );

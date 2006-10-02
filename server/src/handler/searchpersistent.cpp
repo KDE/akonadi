@@ -26,6 +26,8 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 
+#include <QtCore/QStringList>
+
 using namespace Akonadi;
 
 SearchPersistent::SearchPersistent()
@@ -73,6 +75,24 @@ bool SearchPersistent::handleLine( const QByteArray& line )
 
     if ( !db->appendPersisntentSearch( collectionName, queryString ) )
       return failureResponse( "Unable to create persistent search" );
+
+    // get the responsible search providers
+    QStringList providers = providerForMimetype( mimeType );
+    if ( providers.isEmpty() )
+      return failureResponse( "No search providers found for this mimetype" );
+
+    // call search providers
+    qDebug() << "found search providers for mimetype:" << mimeType << providers;
+    QList<QVariant> arguments;
+    arguments << collectionName << QString::fromUtf8( queryString );
+    DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
+    foreach ( QString provider, providers ) {
+      QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.SearchProvider." ) + provider,
+                                     QLatin1String( "/" ),
+                                     QLatin1String( "org.kde.Akonadi.SearchProvider" ),
+                                     QLatin1String( "search" ), arguments );
+      qDebug() << "returned from search provider call: " << result;
+    }
 
   } else if ( command.toUpper() == "SEARCH_DELETE" ) {
 

@@ -13,11 +13,17 @@ set( control_SRCS
   main.cpp
   processcontrol.cpp
   profilemanager.cpp
+  searchprovidermanager.cpp
 )
 
 qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
 qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.ProfileManager.xml profilemanager.h ProfileManager )
-qt4_add_dbus_interfaces( control_SRCS ../interfaces/org.kde.Akonadi.Tracer.xml ../../resources/include/org.kde.Akonadi.Resource.xml)
+qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.SearchProviderManager.xml searchprovidermanager.h Akonadi::SearchProviderManager )
+qt4_add_dbus_interfaces( control_SRCS
+  ../interfaces/org.kde.Akonadi.Tracer.xml
+  ../../resources/include/org.kde.Akonadi.Resource.xml
+  ../../searchproviders/org.kde.Akonadi.SearchProvider.xml
+)
 
 kde4_automoc( ${control_SRCS} )
 

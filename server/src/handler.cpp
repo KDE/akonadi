@@ -42,6 +42,8 @@
 #include "handler/transaction.h"
 #include "uid.h"
 
+#include "dbusthread.h"
+
 using namespace Akonadi;
 
 Handler::Handler()
@@ -178,6 +180,31 @@ bool Akonadi::Handler::startContinuation()
   response.setString( "Ready for literal data" );
   emit responseAvailable( response );
   return false;
+}
+
+QStringList Akonadi::Handler::providerForMimetype(const QByteArray & mimeType)
+{
+  if ( m_providerCache.contains( mimeType ) )
+    return m_providerCache.value( mimeType );
+
+  QList<QVariant> arguments;
+  arguments << QString::fromUtf8( mimeType );
+  DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
+
+  QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Control" ),
+      QLatin1String( "/SearchProviderManager" ),
+      QLatin1String( "org.kde.Akonadi.SearchProviderManager" ),
+      QLatin1String( "providersForMimeType" ), arguments );
+
+  // TODO error handling (eg. on failing call)
+  if ( result.isEmpty() )
+    return QStringList();
+
+  QStringList providers = result.first().toStringList();
+  if ( !providers.isEmpty() )
+    m_providerCache.insert( mimeType, providers );
+
+  return providers;
 }
 
 #include "handler.moc"
