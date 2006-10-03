@@ -92,15 +92,13 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     */
     virtual DataReference referenceForIndex( const QModelIndex &index ) const;
 
+
+  protected:
     /**
       Returns the item at given index.
     */
     Item* itemForIndex( const QModelIndex &index ) const;
 
-    /**
-      Returns the number of items in this model.
-    */
-    int itemCount() const;
   private slots:
     /**
       Connected to the message query job which does a complete listing

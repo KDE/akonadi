@@ -227,17 +227,12 @@ DataReference Akonadi::ItemModel::referenceForIndex( const QModelIndex & index )
 Akonadi::Item* Akonadi::ItemModel::itemForIndex( const QModelIndex & index ) const
 {
   if ( !index.isValid() )
-    return new Item();
+    return 0;
   if ( index.row() >= d->items.count() )
-    return new Item();
+    return 0;
   Item *itm = d->items.at( index.row() );
   Q_ASSERT( itm );
   return itm;
-}
-
-int Akonadi::ItemModel::itemCount() const
-{
-  return d->items.count();
 }
 
 #include "itemmodel.moc"

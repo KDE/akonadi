@@ -58,9 +58,9 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
 {
   if ( !index.isValid() )
     return QVariant();
-  if ( index.row() >= itemCount() )
+  if ( index.row() >= rowCount() )
     return QVariant();
-  Message* msg = dynamic_cast<Message*>( itemForIndex( index ) );
+  Message* msg = static_cast<Message*>( itemForIndex( index ) );
   Q_ASSERT( msg->mime() );
   if ( role == Qt::DisplayRole ) {
     switch ( index.column() ) {
