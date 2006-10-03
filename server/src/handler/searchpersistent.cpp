@@ -90,7 +90,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
       QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.SearchProvider." ) + provider,
                                      QLatin1String( "/" ),
                                      QLatin1String( "org.kde.Akonadi.SearchProvider" ),
-                                     QLatin1String( "search" ), arguments );
+                                     QLatin1String( "addSearch" ), arguments );
       qDebug() << "returned from search provider call: " << result;
     }
 
@@ -99,6 +99,25 @@ bool SearchPersistent::handleLine( const QByteArray& line )
     PersistentSearch search = db->persistentSearch( collectionName );
     if ( !search.isValid() )
       return failureResponse( "No such persistent search" );
+
+    // get the responsible search providers
+    // TODO: fetch mimetype from the database
+    QStringList providers = providerForMimetype( "message/rfc822" );
+    if ( providers.isEmpty() )
+      return failureResponse( "No search providers found for this mimetype" );
+
+    // unregister at search providers
+    QList<QVariant> arguments;
+    arguments << collectionName;
+    DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
+    foreach ( QString provider, providers ) {
+      QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.SearchProvider." ) + provider,
+                                     QLatin1String( "/" ),
+                                     QLatin1String( "org.kde.Akonadi.SearchProvider" ),
+                                     QLatin1String( "removeSearch" ), arguments );
+      qDebug() << "returned from search provider call: " << result;
+    }
+
     if ( !db->removePersistentSearch( search ) )
       return failureResponse( "Unable to remove presistent search" );
 
