@@ -166,4 +166,12 @@ Message::List MessageFetchJob::messages() const
   return d->messages;
 }
 
+Item::List Akonadi::MessageFetchJob::items() const
+{
+  Item::List list;
+  for ( Message::List::ConstIterator it = d->messages.constBegin(); it != d->messages.constEnd(); ++it )
+    list.append( *it );
+  return list;
+}
+
 #include "messagefetchjob.moc"

@@ -57,10 +57,9 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 
     /**
       Returns the fetched item objects. Invalid before the done(Akonadi::Job*)
-      signal has been emitted or if an error occurred. Also useless if you are
-      using a sub-class.
+      signal has been emitted or if an error occurred.
     */
-    Item::List items() const;
+    virtual Item::List items() const;
 
     /**
       Fetch additional field.

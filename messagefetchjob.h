@@ -63,6 +63,8 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
     */
     Message::List messages() const;
 
+    virtual Item::List items() const;
+
   protected:
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
