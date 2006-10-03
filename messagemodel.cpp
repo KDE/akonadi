@@ -35,21 +35,16 @@ using namespace Akonadi;
 class Akonadi::MessageModel::Private
 {
   public:
-    QList<Message*> messages;
-    QString path;
-    Monitor *monitor;
 };
 
 MessageModel::MessageModel( QObject *parent ) :
     ItemModel( parent ),
     d( new Private() )
 {
-  d->monitor = 0;
 }
 
 MessageModel::~MessageModel( )
 {
-  delete d->monitor;
   delete d;
 }
 
@@ -63,9 +58,9 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
 {
   if ( !index.isValid() )
     return QVariant();
-  if ( index.row() >= d->messages.count() )
+  if ( index.row() >= itemCount() )
     return QVariant();
-  Message* msg = d->messages.at( index.row() );
+  Message* msg = dynamic_cast<Message*>( itemForIndex( index ) );
   Q_ASSERT( msg->mime() );
   if ( role == Qt::DisplayRole ) {
     switch ( index.column() ) {
@@ -84,13 +79,6 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
     }
   }
   return QVariant();
-}
-
-int MessageModel::rowCount( const QModelIndex & parent ) const
-{
-  if ( !parent.isValid() )
-    return d->messages.count();
-  return 0;
 }
 
 QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const

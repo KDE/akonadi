@@ -30,7 +30,7 @@ using namespace Akonadi;
 
 MessageBrowser::MessageBrowser( const QString &path ) : QTreeView()
 {
-  ItemModel* model = new MessageModel( this );
+  MessageModel* model = new MessageModel( this );
   model->setPath( path );
   setModel( model );
 

@@ -71,11 +71,6 @@ class AKONADI_EXPORT MessageModel : public Akonadi::ItemModel
     /**
       Reimplemented from QAbstractItemModel.
      */
-    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
-     */
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
     /**
