@@ -45,7 +45,7 @@ class AKONADI_EXPORT ItemAppendJob : public Job
 
     /**
       Sets the remote id of the new item (should only be used by resources).
-      @param The remote id.
+      @param remoteId The remote id.
     */
     void setRemoteId( const QString &remoteId );
 

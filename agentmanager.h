@@ -26,6 +26,9 @@ class QIcon;
 
 namespace Akonadi {
 
+/**
+  This class provides an interface to manage agents.
+*/
 class AgentManager : public QObject
 {
   Q_OBJECT
@@ -162,6 +165,7 @@ class AgentManager : public QObject
     /**
      * Sets the configuration of agent instance with the given @p identifier.
      *
+     * @param identifier The identifier of the agent to configure.
      * @param data The configuration data in xml format.
      * @returns true if the configuration was accepted and applyed, false otherwise.
      */

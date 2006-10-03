@@ -27,7 +27,7 @@ namespace Akonadi {
 class ItemDeleteJobPrivate;
 
 /**
-  Convenience job which permanently deletes an item, ie. sets the \Deleted flag
+  Convenience job which permanently deletes an item, ie. sets the \\Deleted flag
   and then executes the EXPUNGE command.
 */
 class ItemDeleteJob : public Job

@@ -37,6 +37,7 @@ class AKONADI_EXPORT CollectionRenameJob : public Job
       Create a new rename job.
       @param from Collection source path.
       @param to Collection destination path.
+      @param parent The parent object.
     */
     CollectionRenameJob( const QString &from, const QString &to, QObject *parent = 0 );
 

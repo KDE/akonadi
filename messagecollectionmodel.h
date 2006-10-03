@@ -23,12 +23,12 @@
 #include <libakonadi/collectionmodel.h>
 #include <kdepim_export.h>
 
+namespace Akonadi {
+
 /**
   Extended modell for message collections.
   Supports columns for message unread/total counts.
 */
-namespace Akonadi {
-
 class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
 {
   Q_OBJECT

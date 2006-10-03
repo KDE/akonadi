@@ -63,7 +63,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 
     /**
       Fetch additional field.
-      @param fields Additional fields to fetch.
+      @param field Additional field to fetch.
     */
     void addFetchField( const QByteArray &field );
 
