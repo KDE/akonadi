@@ -155,9 +155,9 @@ QVariant ProfileModel::data( const QModelIndex &index, int role ) const
       return info.identifier;
       break;
     default:
-      return QVariant();
       break;
   }
+  return QVariant();
 }
 
 QModelIndex ProfileModel::index( int row, int column, const QModelIndex& ) const
