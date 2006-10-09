@@ -1,3 +1,5 @@
+macro_optional_find_package(OpenSSL)
+
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/include )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/searchproviders )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
@@ -7,9 +9,9 @@ include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
 add_subdirectory( control )
 add_subdirectory( src )
-if (MYSQL_EMBEDDED_FOUND)
+if (MYSQL_EMBEDDED_FOUND AND OPENSSL_FOUND)
   add_subdirectory( sqlplugin )
-endif (MYSQL_EMBEDDED_FOUND)
+endif (MYSQL_EMBEDDED_FOUND AND OPENSSL_FOUND)
 add_subdirectory( tests )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
