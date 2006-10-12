@@ -47,7 +47,7 @@ class AKONADI_EXPORT DataReference
     DataReference();
 
     /**
-      Creates a new DataReference with the given persistanceID and externalUrl.
+      Creates a new DataReference with the given @p persistanceID and @p externalUrl .
      */
     DataReference( uint persistanceID, const QString &externalUrl );
 
