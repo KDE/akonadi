@@ -37,13 +37,13 @@ class DBusTracer : public QObject, public TracerInterface
     DBusTracer();
     virtual ~DBusTracer();
 
-    virtual void beginConnection( const QString&, const QString& );
-    virtual void endConnection( const QString&, const QString& );
-    virtual void connectionInput( const QString&, const QString& );
-    virtual void connectionOutput( const QString&, const QString& );
-    virtual void signal( const QString&, const QString& );
-    virtual void warning( const QString&, const QString& );
-    virtual void error( const QString&, const QString& );
+    virtual void beginConnection( const QString &identifier, const QString &msg );
+    virtual void endConnection( const QString &identifier, const QString &msg );
+    virtual void connectionInput( const QString &identifier, const QString &msg );
+    virtual void connectionOutput( const QString &identifier, const QString &msg );
+    virtual void signal( const QString &signalName, const QString &msg );
+    virtual void warning( const QString &componentName, const QString &msg );
+    virtual void error( const QString &componentName, const QString &msg );
 
   Q_SIGNALS:
     void connectionStarted( const QString &identifier, const QString &msg );
