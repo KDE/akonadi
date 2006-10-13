@@ -32,7 +32,7 @@ endmacro(add_akonadi_test)
 
 set(collectionbrowser_SRCS collectionbrowser.cpp messagebrowser.cpp )
 
-kde4_automoc(${collectionbrowser_SRCS})
+kde4_automoc(collectionbrowser ${collectionbrowser_SRCS})
 
 kde4_add_executable(collectionbrowser RUN_UNINSTALLED ${collectionbrowser_SRCS})
 
@@ -42,7 +42,7 @@ target_link_libraries(collectionbrowser  akonadi ${KDE4_KDECORE_LIBS} )
 
 set(messagebrowser_SRCS messagebrowser.cpp  messagebrowser_main.cpp )
 
-kde4_automoc(${messagebrowser_SRCS})
+kde4_automoc(messagebrowser ${messagebrowser_SRCS})
 
 kde4_add_executable(messagebrowser RUN_UNINSTALLED ${messagebrowser_SRCS})
 
