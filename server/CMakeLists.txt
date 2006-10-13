@@ -91,7 +91,7 @@ install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
 set( akonadiserver_bin_SRCS src/main.cpp )
 
-kde4_automoc( ${libakonadiprivate_SRCS} akonadiserver_bin ${akonadiserver_bin_SRCS} )
+kde4_automoc(akonadiserver_bin  ${libakonadiprivate_SRCS} ${akonadiserver_bin_SRCS} )
 
 kde4_add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
 set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
