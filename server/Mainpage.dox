@@ -1,0 +1,227 @@
+/**
+\mainpage Akonadi storage and control server
+
+\section akonadi_server_overview Overview
+
+\li \ref akonadi_design_storage "Purpose and design of the storage server"
+\li \ref akonadi_design_control "Purpose and design of the control process"
+\li \ref akonadi_server_definitions
+\li \ref akonadi_server_database
+\li <a href="classes.html">Alphabetical Class List</a>
+\li <a href="hierarchy.html">Class Hierarchy</a>
+\li \ref akonadi_server_srclayout
+
+
+
+
+\page akonadi_server_definitions Type Definitions
+
+To let all components let play together nicely we have to use some common encoding
+definitions.
+
+\li <em>Collection names</em><br/>
+    Collection names and pathes are Unicode strings (QString) to allow custom names by the user.
+\li <em>DataReference</em><br/>
+    The persistent identifier is an unsigned interger and the external URL is
+    an Unicode string (QString).
+\li <em>Transfered data over IMAP</em><br/>
+    The data transfered over IMAP are byte arrays (QByteArray). If Unicode strings are
+    transfered over IMAP, UTF-8 encoding is applied.
+\li <em>Error/Status messages</em>
+    Error and status messages are visible to the user, so they have to be
+    Unicode strings (QString).
+
+
+
+
+\page akonadi_server_database Database Layout
+
+This is an overview over the database layout of the \ref akonadi_design_storage "storage server".
+
+\section akonadi_server_database_cachepolicies CachePolicies
+
+\li \e id <br/>
+    The unique id for cache policies
+\li \e name <br/>
+    The name of the cache policy
+
+\section akonadi_server_database_resources Resources
+
+\li \e id <br/>
+    The unique id for resources
+\li \e name <br/>
+    The name of the resource
+\li \e cachepolicy_id <br/>
+    The id of the cache policy that should be applyed for this resource, see table
+    \ref akonadi_server_database_cachepolicies.
+
+\section akonadi_server_database_locations Locations
+
+This table contains all collections known to the storage backend.
+
+\li \e id <br/>
+    The unique id for locations
+\li \e uri <br/>
+    The path of the location
+\li \e cachepolicy_id <br/>
+    The id of the cache policy that should be applyed for this location, see table
+    \ref akonadi_server_database_cachepolicies.
+\li \e resource_id <br/>
+    The id of the resource this location belongs to, see table
+    \ref akonadi_server_database_resources.
+\li \e exists_count <br/>
+    Contains the number of items in the location
+\li \e recent_count <br/>
+    Contains the number of recent items in the location (?)
+\li \e unseen_count <br/>
+    Contains the number of unseen items in the location (?)
+\li \e first_unseen <br/>
+    Contains the number of first unseen items in the location (?)
+\li \e uid_validity <br/>
+    Contains the uid validity value (IMAP specific)
+
+\section akonadi_server_database_persistentsearches PersistentSearches
+
+\li \e id <br/>
+    The unique id for persistent searches
+\li \e name <br/>
+    The name of the persistent search
+\li \e query <br/>
+    Contains query string
+
+\section akonadi_server_database_mimetypes MimeTypes
+
+This table contains all mimetypes supported by the storage server.
+
+\li \e id <br/>
+    The unique id for mime types
+\li \e mime_type <br/>
+    The IANA registered mime type
+
+\section akonadi_server_database_pimitems PimItems
+
+This table contains all PIM items (mails, events, contacts, etc.) stored in the storage server.
+
+\li \e id <br/>
+    The unique id for pim items
+\li \e remote_id <br/>
+    The unique id of the item in the external data source
+\li \e data <br/>
+    The data of the item (only if cache policy is enabled)
+\li \e location_id <br/>
+    The id of the location where the pim item is stored in, see table
+    \ref akonadi_server_database_locations.
+\li \e mimetype_id <br/>
+    The id of the mime type of the pim item, see table
+    \ref akonadi_server_database_mimetypes.
+\li \e datetime <br/>
+    The time stamp of the last modification
+
+\section akonadi_server_database_serachlocations SearchLocations
+
+\li \e pimitem_id <br/>
+    The id of the pim item
+\li \e location_id <br/>
+    The id of the location
+\li \e mimetype_id <br/>
+    The id of the mime type
+
+\section akonadi_server_database_itemmetadata ItemMetaData
+
+\li \e id <br/>
+    The unique id for item meta data
+\li \e data <br/>
+    The data of the meta data
+\li \e mematype_id <br/>
+    The id of the meta type of the meta data
+\li \e pimitem_id <br/>
+    The id of the pim item where the meta data belong to
+
+
+\section akonadi_server_database_flags Flags
+
+\li \e id <br/>
+    The unique id for flags
+\li \e name <br/>
+    The name of the flag
+
+
+\section akonadi_server_database_itemflags ItemFlags
+
+This table contains the set of flags set for a specific PIM item.
+
+\li \e flag_id <br/>
+    The id of the flag, see table \ref akonadi_server_database_flags.
+\li \e pimitem_id <br/>
+    The id of the pim item, see table \ref akonadi_server_database_pimitems.
+
+\section akonadi_server_database_parts Parts
+
+\li \e id <br/>
+    The unique id for parts
+\li \e data <br/>
+    The data of the part
+\li \e datasize <br/>
+    The size of the data of the part
+\li \e pimitem_id <br/>
+    The id of the pim item where the part belongs to
+\li \e mimetype_id <br/>
+    The id of the mime type of the part
+
+\section akonadi_server_database_partmetadata PartMetaData
+
+\li \e id <br/>
+    The unique id for part meta data
+\li \e data <br/>
+    The data of the meta data
+\li \e metatype_id <br/>
+    The id of the meta type of the meta data
+\li \e part_id <br/>
+    The id of the part where the meta data belongs to
+
+\section akonadi_server_database_partflags PartFlags
+
+\li \e flag_id <br/>
+    The id of the part flag
+\li \e part_id <br/>
+    The id of the part
+
+\section akonadi_server_database_locationmimetypes LocationMimeTypes
+
+This tables contains the set of mimetypes supported by a specific collections.
+
+\li \e location_id <br/>
+    The id of the location, see table \ref akonadi_server_database_locations.
+\li \e mimetype_id <br/>
+    The id of the mime type, see table \ref akonadi_server_database_mimetypes.
+
+\section akonadi_server_database_searchlocationmimetypes SearchLocationMimeTypes
+
+\li \e searchlocation_id <br/>
+    The id of the search location
+\li \e mimetype_id <br/>
+    The id of the mime type
+
+
+
+
+\page akonadi_server_srclayout Source Code Layout
+
+The code of the storage and control components is located in the \c server sub-directory.
+The diffrent parts are layed out as follows:
+
+\li \e control <br/>
+    Contains the source code of the \ref akonadi_design_control "Control" component.
+\li \e interfaces <br/>
+    Contains the D-Bus interface descriptions of the Akonadi components
+\li \e src <br/>
+    Contains the source code of the \ref akonadi_design_storage "Storage" component.
+\li \e src/handler <br/>
+    Contains the source code for the handlers of the single IMAP commands.
+\li \e src/storage <br/>
+    Contains the source code for accessing the storage back-end.
+
+*/
+
+// DOXYGEN_REFERENCES = akonadi
+// DOXYGEN_EXCLUDE = sqlplugin
