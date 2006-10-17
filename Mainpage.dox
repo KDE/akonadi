@@ -1,6 +1,62 @@
 /** @mainpage Akonadi client library
 
-This library contains the access methods for the KDE PIM Storage Service Akonadi.
+\section libakonadi_intro Introduction
+
+libakonadi is the client access library for using the Akonadi PIM data server.
+Every process accessing Akonadi, including those which communicate with a remote s
+erver (\ref akonadi_design_agents "agents"), are considered clients.
+
+Functionality provided by libakonadi:
+
+- \ref libakonadi_jobs
+- \ref libakonadi_monitor
+- \ref libakonadi_collections
+- \ref libakonadi_pimitems
+
+\section libakonadi_jobs Accessing the Akonadi server
+
+Accessing the Akonadi server is done using job-classes derived from Akonadi::Job.
+
+\todo Complete this section.
+
+\section libakonadi_monitor Change notifications
+
+The Akonadi::Monitor class allows you to monitor specific resources,
+\ref akonadi_concepts_collections "collections" and PIM items for changes.
+
+\section libakonadi_collections Collection retrieval and manipulation
+
+See \ref akonadi_concepts_collections "Collection Conecpt" for more information
+about the concept of collections. A collection is represented by the Akonadi::Collection class.
+
+Classes to retrieve information about collections:
+
+- Akonadi::CollectionListJob
+- Akonadi::CollectionSelectJob
+- Akonadi::CollectionStatusJob
+
+Classes to manipulate collections:
+
+- Akonadi::CollectionCreateJob
+- Akonadi::CollectionModifyJob
+- Akonadi::CollectionRenameJob
+- Akonadi::CollectionDeleteJob
+
+There is also CollectionModel, which is a self-updating model class which can
+be used in combination with CollectionView.
+
+\section libakonadi_pimitems PIM item retrieval and manipulation
+
+PIM items are represented by classes derived from Akonadi::Item.
+Items can be retrieved using job classes derived from Akonadi::ItemFetchJob.
+
+The following classes are provided to manipulate PIM items:
+
+- Akonadi::ItemAppendJob
+- Akonadi::ItemStoreJob
+- Akonadi::ItemDeleteJob
+- Akonadi::ExpungeJob
+
 */
 
-// DOXYGEN_REFERENCES = libkmime
+// DOXYGEN_REFERENCES = akonadi libkmime
