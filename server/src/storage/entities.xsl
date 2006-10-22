@@ -115,18 +115,18 @@ class <xsl:value-of select="$className"/> : public Entity
 
     // data retrieval for referenced tables
     <xsl:for-each select="column[@refTable != '']">
-    <xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="concat(translate(substring(@refTable,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring(@refTable,2))"/>();
+    <xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="concat(translate(substring(@refTable,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring(@refTable,2))"/>() const;
     </xsl:for-each>
 
     // data retrieval for inverse referenced tables
     <xsl:for-each select="reference">
-    QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="@name"/>();
+    QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="@name"/>() const;
     </xsl:for-each>
 
     // data retrieval for n:m relations
     <xsl:variable name="currentName"><xsl:value-of select="@name"/></xsl:variable>
     <xsl:for-each select="../relation[@table1 = $currentName]">
-    QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s();
+    QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const;
     </xsl:for-each>
 
   private:
@@ -248,7 +248,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
 
 // data retrieval for referenced tables
 <xsl:for-each select="column[@refTable != '']">
-<xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@refTable,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring(@refTable,2))"/>()
+<xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@refTable,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring(@refTable,2))"/>() const
 {
   return <xsl:value-of select="@refTable"/>::retrieveById( <xsl:value-of select="@name"/>() );
 
@@ -257,7 +257,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
 
 // data retrieval for inverse referenced tables
 <xsl:for-each select="reference">
-QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>()
+QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>() const
 {
   return <xsl:value-of select="@table"/>::retrieveFiltered( <xsl:value-of select="@table"/>::<xsl:value-of select="@key"/>Column(), id() );
 }
@@ -266,7 +266,7 @@ QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"/>
 // data retrieval for n:m relations
 <xsl:variable name="currentName"><xsl:value-of select="@name"/></xsl:variable>
 <xsl:for-each select="../relation[@table1 = $currentName]">
-QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s()
+QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const
 {
   QSqlDatabase db = DataStore::self()->database();
   if ( !db.isOpen() )
@@ -356,9 +356,6 @@ QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$class
     return <xsl:value-of select="$className"/>();
   }
   if ( !query.next() ) {
-    qDebug() &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
-      &lt;&lt; <xsl:value-of select="$key"/> &lt;&lt; "from table" &lt;&lt; tableName()
-      &lt;&lt; query.lastError().text();
     return <xsl:value-of select="$className"/>();
   }
 
