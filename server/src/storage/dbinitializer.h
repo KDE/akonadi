@@ -62,6 +62,10 @@ class DbInitializer
 
   private:
     bool checkTable( const QDomElement& );
+    bool checkRelation( const QDomElement &element );
+
+    QString sqlType( const QString &type );
+    bool hasTable( const QString &tableName );
 
     QSqlDatabase mDatabase;
     QString mTemplateFile;

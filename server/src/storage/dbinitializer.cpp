@@ -71,7 +71,10 @@ bool DbInitializer::run()
     if ( tableElement.tagName() == QLatin1String( "table" ) ) {
       if ( !checkTable( tableElement ) )
         return false;
-    } else {
+    } else if ( tableElement.tagName() == QLatin1String( "relation" ) ) {
+      if ( !checkRelation( tableElement ) )
+        return false;
+    }else {
       mErrorMsg = QString::fromLatin1( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );
       return false;
     }
@@ -85,7 +88,8 @@ bool DbInitializer::run()
 
 bool DbInitializer::checkTable( const QDomElement &element )
 {
-  const QString tableName = element.attribute( QLatin1String("name") );
+  const QString tableName = element.attribute( QLatin1String("name") ) /*+ QLatin1String("Table")*/;
+  qDebug() << "checking table " << tableName;
 
   typedef QPair<QString, QString> ColumnEntry;
 
@@ -97,7 +101,10 @@ bool DbInitializer::checkTable( const QDomElement &element )
     if ( columnElement.tagName() == QLatin1String( "column" ) ) {
       ColumnEntry entry;
       entry.first = columnElement.attribute( QLatin1String("name") );
-      entry.second = columnElement.attribute( QLatin1String("type") );
+      if ( columnElement.attribute( QLatin1String("sqltype") ).isEmpty() )
+        entry.second = sqlType( columnElement.attribute( QLatin1String("type") ) ) + QLatin1String( " " ) + columnElement.attribute( QLatin1String("properties") );
+      else
+        entry.second = columnElement.attribute( QLatin1String("sqltype") ) + QLatin1String( " " ) + columnElement.attribute( QLatin1String("properties") );
 #ifdef AKONADI_USE_POSTGRES
       if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
         entry.second = QLatin1String("SERIAL PRIMARY KEY NOT NULL");
@@ -123,6 +130,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
           .arg( columnElement.attribute( QLatin1String("values") ) );
 #endif
       dataList << statement;
+    } else if ( columnElement.tagName() == QLatin1String("reference") ) {
     } else {
       mErrorMsg = QString::fromLatin1( "Unknown tag, expected <column> and got <%1>." ).arg( columnElement.tagName() );
       return false;
@@ -133,26 +141,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
   QSqlQuery query( mDatabase );
 
-#ifdef AKONADI_USE_POSTGRES
-  if ( !query.exec( QLatin1String("SELECT tablename FROM pg_tables ORDER BY tablename;" ) ) ) {
-#endif
-#ifdef AKONADI_USE_SQLITE
-  if ( !query.exec( QLatin1String("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;") ) ) {
-#endif
-#if defined AKONADI_USE_MYSQL_EMBEDDED || defined AKONADI_USE_MYSQL
-  if ( !query.exec( QLatin1String("SHOW TABLES") ) ) {
-#endif
-    mErrorMsg = QLatin1String( "Unable to retrieve table information from database." );
-    return false;
-  }
-
-  bool found = false;
-  while ( query.next() ) {
-    if ( query.value( 0 ).toString().toLower() == tableName.toLower() )
-      found = true;
-  }
-
-  if ( !found ) {
+  if ( !hasTable( tableName ) ) {
     /**
      * We have to create the entire table.
      */
@@ -226,7 +215,83 @@ bool DbInitializer::checkTable( const QDomElement &element )
   return true;
 }
 
+bool DbInitializer::checkRelation(const QDomElement & element)
+{
+  QString table1 = element.attribute(QLatin1String("table1"));
+  QString table2 = element.attribute(QLatin1String("table2"));
+  QString col1 = element.attribute(QLatin1String("column1"));
+  QString col2 = element.attribute(QLatin1String("column2"));
+
+  QString tableName = table1 + table2 + QLatin1String("Relation");
+  qDebug() << "checking relation " << tableName;
+
+  if ( hasTable( tableName ) )
+    return true;
+
+  // TODO: add unique constraint
+  QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
+  statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4), " )
+      .arg( table1 )
+      .arg( col1 )
+      .arg( table1 )
+      .arg( col1 );
+  statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4))" )
+      .arg( table2 )
+      .arg( col2 )
+      .arg( table2 )
+      .arg( col2 );
+  qDebug() << statement;
+
+  QSqlQuery query( mDatabase );
+  if ( !query.exec( statement ) ) {
+    mErrorMsg = QLatin1String( "Unable to create entire table." );
+    return false;
+  }
+
+  return true;
+}
+
 QString DbInitializer::errorMsg() const
 {
   return mErrorMsg;
+}
+
+QString DbInitializer::sqlType(const QString & type)
+{
+  if ( type == QLatin1String("int") )
+    return QLatin1String("INTEGER");
+  if ( type == QLatin1String("QString") )
+    return QLatin1String("TEXT");
+  if (type == QLatin1String("QByteArray") )
+    return QLatin1String("BLOB");
+  if ( type == QLatin1String("QDateTime") )
+    return QLatin1String("TIMESTAMP");
+  Q_ASSERT( false );
+  return QString();
+}
+
+bool DbInitializer::hasTable(const QString & tableName)
+{
+  QString statement;
+#ifdef AKONADI_USE_POSTGRES
+  statement = QLatin1String("SELECT tablename FROM pg_tables ORDER BY tablename;" );
+#endif
+#ifdef AKONADI_USE_SQLITE
+  statement = QLatin1String("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");
+#endif
+#if defined AKONADI_USE_MYSQL_EMBEDDED || defined AKONADI_USE_MYSQL
+  statement = QLatin1String("SHOW TABLES");
+#endif
+
+  QSqlQuery query( mDatabase );
+  if ( !query.exec( statement ) ) {
+    mErrorMsg = QLatin1String( "Unable to retrieve table information from database." );
+    return false;
+  }
+
+  while ( query.next() ) {
+    if ( query.value( 0 ).toString().toLower() == tableName.toLower() )
+      return true;
+  }
+  return false;
 }
