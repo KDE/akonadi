@@ -41,13 +41,11 @@ Akonadi::ResourceManager::ResourceManager(QObject * parent) :
 
 void Akonadi::ResourceManager::resourceAdded(const QString & name)
 {
-  DataStore *db = new DataStore();
+  DataStore *db = DataStore::self();
 
   Resource resource = db->resourceByName( name.toUtf8() );
-  if ( resource.isValid() ) {
-    delete db;
+  if ( resource.isValid() )
     return; // resource already exists
-  }
 
   // create the resource
   if ( !db->appendResource( name ) ) {
@@ -65,13 +63,11 @@ void Akonadi::ResourceManager::resourceAdded(const QString & name)
   if ( loc.isValid() )
     collectionName = name; // name already in use...
   db->appendLocation( collectionName, resource );
-
-  delete db;
 }
 
 void Akonadi::ResourceManager::resourceRemoved(const QString & name)
 {
-  DataStore *db = new DataStore();
+  DataStore *db = DataStore::self();
 
   // remove items and collections
   Resource resource = db->resourceByName( name.toUtf8() );
@@ -83,8 +79,6 @@ void Akonadi::ResourceManager::resourceRemoved(const QString & name)
     // remove resource
     db->removeResource( resource );
   }
-
-  delete db;
 }
 
 ResourceManager * Akonadi::ResourceManager::self()

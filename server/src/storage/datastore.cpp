@@ -23,6 +23,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QThread>
+#include <QtCore/QThreadStorage>
 #include <QtCore/QUuid>
 #include <QtCore/QVariant>
 #include <QtSql/QSqlDatabase>
@@ -113,6 +114,16 @@ void Akonadi::DataStore::init()
     Tracer::self()->error( "DataStore::init()", QString::fromLatin1( "Unable to initialize database: %1" ).arg( initializer.errorMsg() ) );
   }
 }
+
+QThreadStorage<DataStore*> instances;
+
+DataStore * Akonadi::DataStore::self()
+{
+  if ( !instances.hasLocalData() )
+    instances.setLocalData( new DataStore() );
+  return instances.localData();
+}
+
 
 
 QString DataStore::storagePath()

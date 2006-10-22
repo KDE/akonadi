@@ -46,7 +46,7 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
 DataStore * Akonadi::AkonadiConnection::storageBackend()
 {
     if ( !m_backend )
-      m_backend = new DataStore();
+      m_backend = DataStore::self();
     return m_backend;
 }
 
@@ -56,7 +56,6 @@ AkonadiConnection::~AkonadiConnection()
     Tracer::self()->endConnection( m_identifier, QString() );
 
     delete m_tcpSocket;
-    delete m_backend;
 }
 
 void AkonadiConnection::run()

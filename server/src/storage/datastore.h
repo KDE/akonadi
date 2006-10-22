@@ -42,12 +42,7 @@ class NotificationCollector;
 class DataStore : public QObject
 {
     Q_OBJECT
-public:
-    /**
-      Creates a new DataStore object and opens it.
-    */
-    DataStore();
-
+  public:
     /**
       Closes the database connection and destroys the DataStore object.
     */
@@ -67,6 +62,11 @@ public:
       Initializes the database. Should be called during startup by the main thread.
     */
     void init();
+
+    /**
+      Per thread signleton.
+    */
+    static DataStore* self();
 
     /* -- higher level API -- */
     virtual CollectionList listCollections( const QString& prefix,
@@ -254,6 +254,11 @@ public:
     */
     NotificationCollector* notificationCollector() const { return mNotificationCollector; }
 
+    /**
+      Returns the QSqlDatabase object. Use this for generating queries yourself.
+    */
+    QSqlDatabase database() const { return m_database; }
+
 Q_SIGNALS:
     /**
       Emitted if a transaction has been successfully committed.
@@ -265,6 +270,11 @@ Q_SIGNALS:
     void transactionRolledBack();
 
 protected:
+    /**
+      Creates a new DataStore object and opens it.
+    */
+    DataStore();
+
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
     bool removeById( int id, const QString & tableName );
