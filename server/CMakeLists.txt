@@ -87,8 +87,8 @@ qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 kde4_automoc(${libakonadiprivate_SRCS})
 
 kde4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
-target_link_libraries( akonadiprivate ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARIES}
-                                      ${QT_QTSQL_LIBRARIES} ${QT_QTDBUS_LIBRARIES} ${QT_QTXML_LIBRARIES})
+target_link_libraries( akonadiprivate ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}
+                                      ${QT_QTSQL_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY})
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
 set( akonadiserver_bin_SRCS src/main.cpp )
