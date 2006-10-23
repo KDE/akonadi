@@ -84,6 +84,8 @@ qt4_add_dbus_interfaces( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Agent
 
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 
+kde4_automoc(${libakonadiprivate_SRCS})
+
 kde4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
 target_link_libraries( akonadiprivate ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARIES}
                                       ${QT_QTSQL_LIBRARIES} ${QT_QTDBUS_LIBRARIES} ${QT_QTXML_LIBRARIES})
@@ -91,7 +93,6 @@ install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
 set( akonadiserver_bin_SRCS src/main.cpp )
 
-kde4_automoc(akonadiserver_bin  ${libakonadiprivate_SRCS} ${akonadiserver_bin_SRCS} )
 
 kde4_add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
 set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )

@@ -7,7 +7,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 set(handlertest_SRCS handlertest.cpp teststoragebackend.cpp )
 
-kde4_automoc(handlertest ${handlertest_SRCS})
+kde4_automoc(${handlertest_SRCS})
 
 kde4_add_executable(handlertest NOGUI RUN_UNINSTALLED ${handlertest_SRCS})
 
