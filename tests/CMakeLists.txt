@@ -12,7 +12,7 @@ include_directories(
 macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_automoc(${_name} ${_test})
+  kde4_automoc(${_test})
   kde4_add_executable(${_name} RUN_UNINSTALLED ${_test})
   target_link_libraries(${_name} akonadi)
 endmacro(add_akonadi_demo)
@@ -22,7 +22,7 @@ endmacro(add_akonadi_demo)
 macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_automoc(${_name} ${_test})
+  kde4_automoc(${_test})
   kde4_add_executable(${_name} RUN_UNINSTALLED ${_test})
   target_link_libraries(${_name} akonadi ${QT_QTTEST_LIBRARY})
   add_test( libakonadi-${_name} ${EXECUTABLE_OUTPUT_PATH}/${_name})
@@ -32,7 +32,7 @@ endmacro(add_akonadi_test)
 
 set(collectionbrowser_SRCS collectionbrowser.cpp messagebrowser.cpp )
 
-kde4_automoc(collectionbrowser ${collectionbrowser_SRCS})
+kde4_automoc(${collectionbrowser_SRCS})
 
 kde4_add_executable(collectionbrowser RUN_UNINSTALLED ${collectionbrowser_SRCS})
 
@@ -42,7 +42,7 @@ target_link_libraries(collectionbrowser  akonadi ${KDE4_KDECORE_LIBS} )
 
 set(messagebrowser_SRCS messagebrowser.cpp  messagebrowser_main.cpp )
 
-kde4_automoc(messagebrowser ${messagebrowser_SRCS})
+kde4_automoc(${messagebrowser_SRCS})
 
 kde4_add_executable(messagebrowser RUN_UNINSTALLED ${messagebrowser_SRCS})
 
