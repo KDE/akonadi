@@ -43,7 +43,7 @@ void Akonadi::ResourceManager::resourceAdded(const QString & name)
 {
   DataStore *db = DataStore::self();
 
-  Resource resource = db->resourceByName( name.toUtf8() );
+  Resource resource = Resource::retrieveByName( name );
   if ( resource.isValid() )
     return; // resource already exists
 
@@ -53,13 +53,13 @@ void Akonadi::ResourceManager::resourceAdded(const QString & name)
     delete db;
     return;
   }
-  resource = db->resourceByName( name.toUtf8() );
+  resource = Resource::retrieveByName( name );
 
   // create the toplevel collection
   QString collectionName = mManager->agentName( mManager->agentInstanceType( name ) );
   if ( collectionName.isEmpty() )
     collectionName = name;
-  Location loc = db->locationByName( collectionName );
+  Location loc = Location::retrieveByName( collectionName );
   if ( loc.isValid() )
     collectionName = name; // name already in use...
   db->appendLocation( collectionName, resource );
@@ -70,9 +70,9 @@ void Akonadi::ResourceManager::resourceRemoved(const QString & name)
   DataStore *db = DataStore::self();
 
   // remove items and collections
-  Resource resource = db->resourceByName( name.toUtf8() );
+  Resource resource = Resource::retrieveByName( name );
   if ( resource.isValid() ) {
-    QList<Location> locations = db->listLocations( resource );
+    QList<Location> locations = resource.locations();
     foreach ( Location location, locations )
       db->cleanupLocation( location );
 

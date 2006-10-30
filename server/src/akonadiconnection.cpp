@@ -209,10 +209,7 @@ void Akonadi::AkonadiConnection::setSelectedCollection( const QString& collectio
 
 const Location Akonadi::AkonadiConnection::selectedLocation()
 {
-  DataStore *db = storageBackend();
-  Location l = db->locationByName( selectedCollection() );
-
-  return l;
+  return Location::retrieveByName( selectedCollection() );
 }
 
 void Akonadi::AkonadiConnection::addStatusMessage( const QByteArray& msg )

@@ -165,7 +165,7 @@ bool Akonadi::Append::commit()
     DataStore *db = connection()->storageBackend();
     Transaction transaction( db );
 
-    Location l = db->locationByName( m_mailbox );
+    Location l = Location::retrieveByName( m_mailbox );
     if ( !l.isValid() )
       return failureResponse( "Unknown collection." );
 
@@ -184,7 +184,7 @@ bool Akonadi::Append::commit()
     }
     // standard imap does not know this attribute, so that's mail
     if ( mt.isEmpty() ) mt = "message/rfc822";
-    MimeType mimeType = db->mimeTypeByName( QString::fromLatin1( mt ) );
+    MimeType mimeType = MimeType::retrieveByName( QString::fromLatin1( mt ) );
     if ( !mimeType.isValid() ) {
       return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
     }

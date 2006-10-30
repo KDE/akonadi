@@ -55,7 +55,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
 
   if ( command.toUpper() == "SEARCH_STORE" ) {
 
-    PersistentSearch search = db->persistentSearch( collectionName );
+    PersistentSearch search = PersistentSearch::retrieveByName( collectionName );
     if ( search.isValid() )
       return failureResponse( "Persistent search does already exist" );
 
@@ -64,7 +64,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
     if ( mimeType.isEmpty() )
       return failureResponse( "No mimetype specified" );
 
-    MimeType mt = db->mimeTypeByName( QString::fromUtf8(mimeType) );
+    MimeType mt = MimeType::retrieveByName( QString::fromUtf8(mimeType) );
     if ( !mt.isValid() )
       return failureResponse( "Invalid mimetype" );
 
@@ -96,7 +96,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
 
   } else if ( command.toUpper() == "SEARCH_DELETE" ) {
 
-    PersistentSearch search = db->persistentSearch( collectionName );
+    PersistentSearch search = PersistentSearch::retrieveByName( collectionName );
     if ( !search.isValid() )
       return failureResponse( "No such persistent search" );
 

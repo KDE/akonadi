@@ -5,6 +5,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/searchproviders )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
 add_subdirectory( control )
@@ -21,6 +22,22 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAKONADI_USE_SQLITE" )
 #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DAKONADI_USE_MYSQL" )
 
 ########### next target ###############
+
+add_custom_command(
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/entities.h
+         ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
+  COMMAND ${XSLTPROC_EXECUTABLE} --stringparam code header 
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities.xsl 
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml
+          > ${CMAKE_CURRENT_BINARY_DIR}/entities.h
+  COMMAND ${XSLTPROC_EXECUTABLE} --stringparam code source
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities.xsl
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml
+          > ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities.xsl
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml
+)
+
 set(libakonadiprivate_SRCS
   src/akonadi.cpp
   src/akonadiconnection.cpp
@@ -55,9 +72,9 @@ set(libakonadiprivate_SRCS
   src/searchprovidermanager.cpp
 #  src/searchproviders/emailsearchprovider.cpp
   src/storage/entity.cpp
+  entities.cpp
   src/storage/datastore.cpp
   src/storage/dbinitializer.cpp
-  src/storage/debug.cpp
   src/storage/notificationcollector.cpp
   src/storage/transaction.cpp
   src/collection.cpp

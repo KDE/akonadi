@@ -77,14 +77,14 @@ bool Create::handleLine(const QByteArray& line )
     const int startOfLocation = mailbox.indexOf( QLatin1Char('/') );
     const QString topLevelName = mailbox.left( startOfLocation );
 
-    Location toplevel = db->locationByName( topLevelName );
+    Location toplevel = Location::retrieveByName( topLevelName );
     if ( !toplevel.isValid() )
         return failureResponse( "Cannot create folder " + mailbox.toUtf8() + " in  unknown toplevel folder " + topLevelName.toUtf8() );
 
-    Resource resource = db->resourceById( toplevel.resourceId() );
+    Resource resource = Resource::retrieveById( toplevel.resourceId() );
 
     // first check whether location already exists
-    if ( db->locationByName( mailbox ).isValid() )
+    if ( Location::exists( mailbox ) )
         return failureResponse( "A folder with that name does already exist" );
 
     // we have to create all superior hierarchical folders, so look for the
@@ -95,7 +95,7 @@ bool Create::handleLine(const QByteArray& line )
           endOfSupFolder > 0;
           endOfSupFolder = mailbox.lastIndexOf( QLatin1Char('/'), endOfSupFolder - 2 ) ) {
         // check whether the superior hierarchical folder exists
-        if ( ! db->locationByName( mailbox.left( endOfSupFolder ) ).isValid() ) {
+        if ( !Location::retrieveByName( mailbox.left( endOfSupFolder ) ).isValid() ) {
             // the superior folder does not exist, so it has to be created
             foldersToCreate.prepend( mailbox.left( endOfSupFolder ) );
         }
@@ -110,9 +110,9 @@ bool Create::handleLine(const QByteArray& line )
     const int endOfSupFolder = foldersToCreate[0].lastIndexOf( QLatin1Char('/') );
     if ( endOfSupFolder > 0 ) {
         bool canContainSubfolders = false;
-        const QList<MimeType> mimeTypes = db->mimeTypesForLocation( db->locationByName( mailbox.left( endOfSupFolder ) ).id() );
+        const QList<MimeType> mimeTypes = Location::retrieveByName( mailbox.left( endOfSupFolder ) ).mimeTypes();
         foreach ( MimeType m, mimeTypes ) {
-            if ( m.mimeType().toLower() == QLatin1String("inode/directory") ) {
+            if ( m.name().toLower() == QLatin1String("inode/directory") ) {
                 canContainSubfolders = true;
                 break;
             }

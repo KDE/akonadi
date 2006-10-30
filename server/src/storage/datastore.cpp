@@ -205,7 +205,7 @@ CollectionList Akonadi::DataStore::listCollections( const QString & prefix,
     }
 
     qDebug() << "listCollections()" << resourceName;
-    resource = resourceByName( resourceName.toUtf8() );
+    resource = Resource::retrieveByName( resourceName );
     qDebug() << "resource.isValid()" << resource.isValid();
     if ( !resource.isValid() ) {
       result.setValid( false );
@@ -224,7 +224,7 @@ CollectionList Akonadi::DataStore::listCollections( const QString & prefix,
   else
     sanitizedPattern = mailboxPattern.mid( endOfPath );
 
-  qDebug() << "Resource: " << resource.resource() << " fullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
+  qDebug() << "Resource: " << resource.name() << " fullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
 
   if ( !fullPrefix.isEmpty() ) {
     result.setValid( false );
@@ -232,7 +232,7 @@ CollectionList Akonadi::DataStore::listCollections( const QString & prefix,
 
   const QList<Location> locations = listLocations( resource );
   foreach( Location l, locations ) {
-    const QString location = locationDelimiter() + l.location();
+    const QString location = locationDelimiter() + l.name();
 #if 0
     qDebug() << "Location: " << location << " l: " << l << " prefix: " << fullPrefix;
 #endif
@@ -242,7 +242,7 @@ CollectionList Akonadi::DataStore::listCollections( const QString & prefix,
       if ( hasStar || ( hasPercent && atFirstLevel ) ||
            location == fullPrefix + sanitizedPattern ) {
         Collection c( location.right( location.size() -1 ) );
-        c.setMimeTypes( MimeType::asCommaSeparatedString( l.mimeTypes() ) );
+        c.setMimeTypes( MimeType::joinByName<MimeType>( l.mimeTypes(), QLatin1String(",") ).toLatin1() );
         result.append( c );
       }
     }
@@ -272,147 +272,37 @@ CollectionList Akonadi::DataStore::listCollections( const QString & prefix,
 /* --- Flag ---------------------------------------------------------- */
 bool DataStore::appendFlag( const QString & name )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  int foundRecs = 0;
-  QSqlQuery query( m_database );
-
-  //query.prepare( "SELECT COUNT(*) FROM Flags WHERE name = :name" );
-  //query.bindValue( ":name", name );
-  QString statement = QString::fromLatin1( "SELECT COUNT(*) FROM Flags WHERE name = '%1'" ).arg( name );
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during check before insertion of Flag." );
-    return false;
-  }
-
-  if ( query.next() )
-    foundRecs = query.value( 0 ).toInt();
-
-  if ( foundRecs > 0 ) {
+  if ( Flag::exists( name ) ) {
     qDebug() << "Cannot insert flag " << name
              << " because it already exists.";
     return false;
   }
 
-  //query.prepare( "INSERT INTO Flags (name) VALUES (:name)" );
-  //query.bindValue( ":name", name );
-  statement = QString::fromLatin1( "INSERT INTO Flags (name) VALUES ('%1')" ).arg( name );
-
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during insertion of single Flag." );
-    return false;
-  }
-
-  return true;
+  return Flag::insert( Flag( -1, name ) );
 }
 
 bool DataStore::removeFlag( const Flag & flag )
 {
-  return removeCachePolicy( flag.id() );
+  return removeFlag( flag.id() );
 }
 
 bool DataStore::removeFlag( int id )
 {
-  return removeById( id, QLatin1String("Flags") );
-}
-
-Flag DataStore::flagById( int id )
-{
-  if ( !m_dbOpened )
-    return Flag();
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT id, name FROM Flags WHERE id = :id") );
-  query.bindValue( QLatin1String(":id"), id );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during selection of single Flag." );
-    return Flag();
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single Flag." );
-    return Flag();
-  }
-
-  int flagId = query.value( 0 ).toInt();
-  QString name = query.value( 1 ).toString();
-
-  return Flag( flagId, name );
-}
-
-Flag DataStore::flagByName( const QString &name )
-{
-  if ( !m_dbOpened )
-    return Flag();
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT id, name FROM Flags WHERE name = :name") );
-  query.bindValue( QLatin1String(":name"), name );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during selection of single Flag." );
-    return Flag();
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single Flag." );
-    return Flag();
-  }
-
-  int id = query.value( 0 ).toInt();
-  QString flagName = query.value( 1 ).toString();
-
-  return Flag( id, flagName );
-}
-
-QList<Flag> DataStore::listFlags()
-{
-  QList<Flag> list;
-
-  if ( !m_dbOpened )
-    return list;
-
-  QSqlQuery query( m_database );
-  if ( !query.exec( QLatin1String("SELECT id, name FROM Flags") ) ) {
-    debugLastQueryError( query, "Error during selection of Flags." );
-    return list;
-  }
-
-  while ( query.next() ) {
-    int id = query.value( 0 ).toInt();
-    QString name = query.value( 1 ).toString();
-    list.append( Flag( id, name ) );
-  }
-
-  return list;
+  return removeById( id, Flag::tableName() );
 }
 
 /* --- ItemFlags ----------------------------------------------------- */
 
 bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-
   // first delete all old flags of this pim item
-  const QString statement = QString::fromLatin1( "DELETE FROM ItemFlags WHERE pimitem_id = %1" ).arg( item.id() );
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during deletion of ItemFlags." );
+  if ( !item.clearFlags() )
     return false;
-  }
 
   // then add the new flags
   for ( int i = 0; i < flags.count(); ++i ) {
-    const QString statement = QString::fromLatin1( "INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES ( '%1', '%2' )" )
-                                     .arg( flags[ i ].id() ).arg( item.id() );
-    if ( !query.exec( statement ) ) {
-      debugLastQueryError( query, "Error during adding new ItemFlags." );
+    if ( !item.addFlag( flags[i] ) )
       return false;
-    }
   }
 
   mNotificationCollector->itemChanged( item );
@@ -421,33 +311,10 @@ bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
 
 bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-
   for ( int i = 0; i < flags.count(); ++i ) {
-    query.prepare( QLatin1String("SELECT COUNT(*) FROM ItemFlags WHERE flag_id = :flag_id AND pimitem_id = :pimitem_id") );
-    query.bindValue( QLatin1String(":flag_id"), flags[ i ].id() );
-    query.bindValue( QLatin1String(":pimitem_id"), item.id() );
-
-    if ( !query.exec() ) {
-      debugLastQueryError( query, "Error during select on ItemFlags." );
-      return false;
-    }
-
-    query.next();
-    int exists = query.value( 0 ).toInt();
-
-    if ( !exists ) {
-      query.prepare( QLatin1String("INSERT INTO ItemFlags (flag_id, pimitem_id) VALUES (:flag_id, :pimitem_id)") );
-      query.bindValue( QLatin1String(":flag_id"), flags[ i ].id() );
-      query.bindValue( QLatin1String(":pimitem_id"), item.id() );
-
-      if ( !query.exec() ) {
-        debugLastQueryError( query, "Error during adding new ItemFlags." );
+    if ( !item.relatesToFlag( flags[ i ] ) ) {
+      if ( !item.addFlag( flags[i] ) )
         return false;
-      }
     }
   }
 
@@ -463,87 +330,25 @@ bool DataStore::appendItemFlags( int pimItemId, const QList<QByteArray> &flags )
 
 bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-
   for ( int i = 0; i < flags.count(); ++i ) {
-    const QString statement = QString::fromLatin1( "DELETE FROM ItemFlags WHERE flag_id = %1 AND pimitem_id = %2" )
-                                     .arg( flags[ i ].id() ).arg( item.id() );
-    if ( !query.exec( statement ) ) {
-      debugLastQueryError( query, "Error during deletion of ItemFlags." );
+    if ( !item.removeFlag( flags[ i ] ) )
       return false;
-    }
   }
 
   mNotificationCollector->itemChanged( item );
   return true;
 }
 
-QList<Flag> DataStore::itemFlags( const PimItem &item )
-{
-  QList<Flag> flags;
-
-  if ( !m_dbOpened )
-    return flags;
-
-  QSqlQuery query( m_database );
-  const QString statement = QString::fromLatin1( "SELECT Flags.id, Flags.name FROM Flags, ItemFlags WHERE Flags.id = ItemFlags.flag_id AND ItemFlags.pimitem_id = %1" )
-                                   .arg( item.id() );
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during selection of ItemFlags." );
-    return flags;
-  }
-
-  while (query.next()) {
-    int id = query.value( 0 ).toInt();
-    QString name = query.value( 1 ).toString();
-    flags.append( Flag( id, name ) );
-  }
-
-  return flags;
-}
 
 /* --- CachePolicy --------------------------------------------------- */
 bool DataStore::appendCachePolicy( const QString & policy )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  int foundRecs = 0;
-  QSqlQuery query( m_database );
-
-  query.prepare( QLatin1String("SELECT COUNT(*) FROM CachePolicies WHERE name = :name") );
-  query.bindValue( QLatin1String(":name"), policy );
-
-  if ( !query.exec() ) {
-    return false;
-    debugLastQueryError( query, "Error during check before insertion of CachePolicy." );
-  }
-
-  if ( !query.next() ) {
-    return false;
-    debugLastQueryError( query, "Error during check before insertion of CachePolicy." );
-  }
-
-  foundRecs = query.value( 0 ).toInt();
-
-  if ( foundRecs > 0 ) {
+  if ( CachePolicy::exists( policy ) ) {
     qDebug() << "Cannot insert policy " << policy
              << " because it already exists.";
     return false;
   }
-
-  query.prepare( QLatin1String("INSERT INTO CachePolicies (name) VALUES (:name)") );
-  query.bindValue( QLatin1String(":name"), policy );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during insertion of single CachePolicy." );
-    return false;
-  }
-
-  return true;
+  return CachePolicy::insert( CachePolicy( -1, policy ) );
 }
 
 bool DataStore::removeCachePolicy( const CachePolicy & policy )
@@ -553,115 +358,26 @@ bool DataStore::removeCachePolicy( const CachePolicy & policy )
 
 bool DataStore::removeCachePolicy( int id )
 {
-  return removeById( id, QLatin1String("CachePolicies") );
+  return removeById( id, CachePolicy::tableName() );
 }
 
-CachePolicy DataStore::cachePolicyById( int id )
-{
-  if ( !m_dbOpened )
-    return CachePolicy();
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT id, name FROM CachePolicies WHERE id = :id") );
-  query.bindValue( QLatin1String(":id"), id );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during selection of single CachePolicy." );
-    return CachePolicy();
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single CachePolicy." );
-    return CachePolicy();
-  }
-
-  int policyId = query.value( 0 ).toInt();
-  QString policy = query.value( 1 ).toString();
-
-  return CachePolicy( policyId, policy );
-}
-
-QList<CachePolicy> DataStore::listCachePolicies()
-{
-  if ( !m_dbOpened )
-    return QList<CachePolicy>();
-
-  QSqlQuery query( m_database );
-  if ( !query.exec( QLatin1String("SELECT id, name FROM CachePolicies" ) ) ) {
-    debugLastQueryError( query, "Error during selection of CachePolicies." );
-    return QList<CachePolicy>();
-  }
-
-  QList<CachePolicy> list;
-  while ( query.next() ) {
-    int id = query.value( 0 ).toInt();
-    QString policy = query.value( 1 ).toString();
-
-    list.append( CachePolicy( id, policy ) );
-  }
-
-  return list;
-}
-
-/* --- ItemMetaData--------------------------------------------------- */
-/*
-bool appendItemMetaData( const QString & metadata, const MetaType & metatype );
-bool removeItemMetaData( const ItemMetaData & metadata );
-bool removeItemMetaData( int id );
-ItemMetaData * itemMetaDataById( int id );
-QList<ItemMetaData> * listItemMetaData();
-QList<ItemMetaData> * listItemMetaData( const MetaType & metatype );
-*/
 
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( const QString & location,
                                 const Resource & resource,
                                 int *insertId )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  int foundRecs = 0;
-  QSqlQuery query( m_database );
-
-  query.prepare( QLatin1String("SELECT COUNT(*) FROM Locations WHERE uri = :uri") );
-  query.bindValue( QLatin1String(":uri"), location );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during check before insertion of Location." );
-    return false;
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during check before insertion of Location." );
-    return false;
-  }
-
-  foundRecs = query.value( 0 ).toInt();
-
-  if ( foundRecs > 0 ) {
+  if ( Location::exists( location ) ) {
     qDebug() << "Cannot insert location " << location
              << " because it already exists.";
     return false;
   }
 
-  QString statement = QString::fromLatin1( "INSERT INTO Locations (uri, cachepolicy_id, "
-                               "resource_id, exists_count, recent_count, "
-                               "unseen_count, first_unseen, uid_validity) "
-                               "VALUES (:uri, NULL, :resource_id, 0, 0, 0, 0, 0 )" );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":uri"), location );
-  query.bindValue( QLatin1String(":resource_id"), resource.id() );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during insertion of single Location." );
+#warning This did insert NULL for cachePolicy before!
+  if ( !Location::insert( Location( -1, location, -1, resource.id(), 0, 0, 0, 0 ,0 ), insertId ) )
     return false;
-  }
 
-  int id = lastInsertId( query );
-  if ( insertId )
-      *insertId = id;
-
-  mNotificationCollector->collectionAdded( location, resource.resource().toLatin1() );
+  mNotificationCollector->collectionAdded( location, resource.name().toLatin1() );
   return true;
 }
 
@@ -669,55 +385,27 @@ bool DataStore::appendLocation( const QString & location,
                                 const Resource & resource,
                                 const CachePolicy & policy )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  int foundRecs = 0;
-  QSqlQuery query( m_database );
-
-  query.prepare( QLatin1String("SELECT COUNT(*) FROM Locations WHERE uri = :uri") );
-  query.bindValue( QLatin1String(":uri"), location );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during check before insertion of Location." );
-    return false;
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during check before insertion of Location." );
-    return false;
-  }
-
-  foundRecs = query.value( 0 ).toInt();
-
-  if ( foundRecs > 0 ) {
+  if ( Location::exists( location ) ) {
     qDebug() << "Cannot insert location " << location
-             << " because it already exists.";
+        << " because it already exists.";
     return false;
   }
-
-  query.prepare( QLatin1String("INSERT INTO Locations (uri, cachepolicy_id, resource_id) "
-                 "VALUES (:uri, :policy, :resource)") );
-  query.bindValue( QLatin1String(":uri"), location );
-  query.bindValue( QLatin1String(":policy"), policy.id() );
-  query.bindValue( QLatin1String(":resource"), resource.id() );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during insertion of single Location." );
+  if ( !Location::insert( Location( -1, location, policy.id(), resource.id(), 0, 0, 0, 0 ,0 ) ) )
     return false;
-  }
 
-  mNotificationCollector->collectionAdded( location, resource.resource().toLatin1() );
+  mNotificationCollector->collectionAdded( location, resource.name().toLatin1() );
   return true;
 }
 
 bool DataStore::removeLocation( const Location & location )
 {
   mNotificationCollector->collectionRemoved( location );
-  return removeById( location.id(), QLatin1String("Locations") );
+  return removeById( location.id(), Location::tableName() );
 }
 
 bool DataStore::removeLocation( int id )
 {
-  return removeLocation( locationById( id ) );
+  return removeLocation( Location::retrieveById( id ) );
 }
 
 bool Akonadi::DataStore::cleanupLocation(const Location & location)
@@ -755,11 +443,11 @@ bool DataStore::updateLocationCounts( const Location & location, int existsChang
     QSqlQuery query( m_database );
     if ( m_dbOpened ) {
         QStringList assignments;
-        addToUpdateAssignments( assignments, existsChange, QLatin1String("exists_count") );
-        addToUpdateAssignments( assignments, recentChange, QLatin1String("recent_count") );
-        addToUpdateAssignments( assignments, unseenChange, QLatin1String("unseen_count") );
-        QString q = QString::fromLatin1( "UPDATE Locations SET %1 WHERE id = :id" )
-                    .arg( assignments.join(QLatin1String(",")) );
+        addToUpdateAssignments( assignments, existsChange, Location::existCountColumn() );
+        addToUpdateAssignments( assignments, recentChange, Location::recentCountColumn() );
+        addToUpdateAssignments( assignments, unseenChange, Location::unseenCountColumn() );
+        QString q = QString::fromLatin1( "UPDATE %1 SET %2 WHERE id = :id" )
+                    .arg( Location::tableName(), assignments.join(QLatin1String(",")) );
         qDebug() << "Executing SQL query " << q;
         query.prepare( q );
         query.bindValue( QLatin1String(":id"), location.id() );
@@ -774,20 +462,7 @@ bool DataStore::updateLocationCounts( const Location & location, int existsChang
 bool DataStore::changeLocationPolicy( const Location & location,
                                       const CachePolicy & policy )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-
-  query.prepare( QLatin1String("UPDATE Locations SET cachepolicy_id = :policy WHERE id = :id") );
-  query.bindValue( QLatin1String(":policy"), policy.id() );
-  query.bindValue( QLatin1String(":id"), location.id() );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during setting the cache policy of a single Location." );
-    return false;
-  }
-
-  return true;
+  return location.updateColumn( Location::cachePolicyIdColumn(), policy.id() );
 }
 
 bool DataStore::resetLocationPolicy( const Location & location )
@@ -797,7 +472,8 @@ bool DataStore::resetLocationPolicy( const Location & location )
 
   QSqlQuery query( m_database );
 
-  query.prepare( QLatin1String("UPDATE Locations SET cachepolicy_id = NULL WHERE id = :id") );
+  query.prepare( QString::fromLatin1("UPDATE %1 SET %2 = NULL WHERE %3 = :id")
+      .arg( Location::tableName(), Location::cachePolicyIdColumn(), Location::idColumn() ) );
   query.bindValue( QLatin1String(":id"), location.id() );
   if ( !query.exec() ) {
     debugLastQueryError( query, "Error during reset of the cache policy of a single Location." );
@@ -815,7 +491,8 @@ bool Akonadi::DataStore::renameLocation(const Location & location, const QString
   mNotificationCollector->collectionRemoved( location );
 
   QSqlQuery query( m_database );
-  query.prepare( QLatin1String("UPDATE Locations SET uri = :name WHERE id = :id") );
+  query.prepare( QString::fromLatin1("UPDATE %1 SET %2 = :name WHERE %3 = :id")
+      .arg( Location::tableName(), Location::nameColumn(), Location::idColumn() ) );
   query.bindValue( QLatin1String(":id"), location.id() );
   query.bindValue( QLatin1String(":name"), newName );
   if ( !query.exec() ) {
@@ -827,62 +504,12 @@ bool Akonadi::DataStore::renameLocation(const Location & location, const QString
   return true;
 }
 
-Location DataStore::locationById( int id ) const
-{
-  if ( !m_dbOpened )
-    return Location();
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE id = :id") );
-  query.bindValue( QLatin1String(":id"), id );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during selection of single Location." );
-    return Location();
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single Location." );
-    return Location();
-  }
-
-  int locationId = query.value( 0 ).toInt();
-  QString uri = query.value( 1 ).toString();
-  int policy = query.value( 2 ).toInt();
-  int resource = query.value( 3 ).toInt();
-
-  return Location( locationId, uri, policy, resource );
-}
-
-QList<MimeType> DataStore::mimeTypesForLocation( int id ) const
-{
-  if ( !m_dbOpened )
-    return QList<MimeType>();
-
-  QSqlQuery query( m_database );
-  const QString statement = QString::fromLatin1( "SELECT mimetype_id FROM LocationMimeTypes WHERE location_id = %1" ).arg( id );
-
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during selection of Locations." );
-    return QList<MimeType>();
-  }
-
-  QList<MimeType> mimeTypes;
-  while ( query.next() ) {
-    int id = query.value( 0 ).toInt();
-    MimeType mimeType = mimeTypeById( id );
-
-    if ( mimeType.isValid() )
-      mimeTypes.append( mimeType );
-  }
-
-  return mimeTypes;
-}
 
 bool DataStore::appendMimeTypeForLocation( int locationId, const QString & mimeType )
 {
   //qDebug() << "DataStore::appendMimeTypeForLocation( " << locationId << ", '" << mimeType << "' )";
   int mimeTypeId;
-  MimeType m = mimeTypeByName( mimeType );
+  MimeType m = MimeType::retrieveByName( mimeType );
   if ( !m.isValid() ) {
     // the MIME type doesn't exist, so we have to add it to the db
     if ( !appendMimeType( mimeType, &mimeTypeId ) )
@@ -896,127 +523,39 @@ bool DataStore::appendMimeTypeForLocation( int locationId, const QString & mimeT
 
 bool DataStore::appendMimeTypeForLocation( int locationId, int mimeTypeId )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  //qDebug() << "DataStore::appendMimeTypeForLocation( " << locationId << ", '" << mimeTypeId << "' )";
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String( "SELECT COUNT(*) FROM LocationMimeTypes WHERE location_id = :locationId AND mimetype_id = :mimetypeId" ) );
-  query.bindValue( QLatin1String(":locationId"), locationId );
-  query.bindValue( QLatin1String(":mimetypeId"), mimeTypeId );
-
-  if ( !query.exec() ) {
-    debugLastDbError( "Error during check before insertion of LocationMimeType." );
-    return false;
-  }
-
-  if ( !query.next() ) {
-    debugLastDbError( "Error during check before insertion of LocationMimeType." );
-    return false;
-  }
-
-  int foundRecs = query.value( 0 ).toInt();
-
-  if ( foundRecs > 0 ) {
+  if ( Location::relatesToMimeType( locationId, mimeTypeId ) ) {
     qDebug() << "Cannot insert location-mime type ( " << locationId
              << ", " << mimeTypeId << " ) because it already exists.";
     return false;
   }
 
-  query.prepare( QLatin1String( "INSERT INTO LocationMimeTypes (location_id, mimetype_id) VALUES (:locationId, :mimeTypeId)" ) );
-  query.bindValue( QLatin1String(":locationId"), locationId );
-  query.bindValue( QLatin1String(":mimeTypeId"), mimeTypeId );
-
-  if ( !query.exec() ) {
-    debugLastDbError( "Error during insertion of single LocationMimeType." );
-    debugLastQueryError( query, "Error during insertion of single LocationMimeType." );
-    return false;
-  }
-
-  return true;
+  return Location::addMimeType( locationId, mimeTypeId );
 }
 
 
 bool Akonadi::DataStore::removeMimeTypesForLocation(int locationId)
 {
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-  QString statement = QString::fromLatin1( "DELETE FROM LocationMimeTypes WHERE location_id = %1" ).arg( locationId );
-  return query.exec( statement );
+  return Location::clearMimeTypes( locationId );
 }
 
 
 QList<Location> DataStore::listLocations( const Resource & resource ) const
 {
-  if ( !m_dbOpened )
-    return QList<Location>();
-
-  QSqlQuery query( m_database );
-  // query.prepare( "SELECT id, uri, cachepolicy_id, resource_id FROM Locations WHERE resource_id = :id" );
-  // query.bindValue( ":id", resource.id() );
-  QString statement = QString::fromLatin1( "SELECT id, uri, cachepolicy_id, resource_id, exists_count, recent_count, unseen_count, first_unseen, uid_validity FROM Locations" );
-
   if ( resource.isValid() )
-    statement += QString::fromLatin1( " WHERE resource_id = %1" ).arg( resource.id() );
-
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during selection of Locations from a Resource." );
-    return QList<Location>();
-  }
-
-  QList<Location> locations;
-  while ( query.next() ) {
-    Location location;
-    location.fillFromQuery( query );
-    location.setMimeTypes( mimeTypesForLocation( location.id() ) );
-    locations.append( location );
-  }
-
-  return locations;
+    return Location::retrieveFiltered( Location::resourceIdColumn(), resource.id() );
+  return Location::retrieveAll();
 }
 
 /* --- MimeType ------------------------------------------------------ */
 bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-
-  const QString statement = QString::fromLatin1( "SELECT COUNT(*) FROM MimeTypes WHERE mime_type = \"%1\"" )
-                                   .arg( mimetype );
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during check before insertion of MimeType." );
-    return false;
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during check before insertion of MimeType." );
-    return false;
-  }
-
-  int foundRecs = query.value( 0 ).toInt();
-
-  if ( foundRecs > 0 ) {
+  if ( MimeType::exists( mimetype ) ) {
     qDebug() << "Cannot insert mimetype " << mimetype
              << " because it already exists.";
     return false;
   }
 
-  query.prepare( QLatin1String("INSERT INTO MimeTypes (mime_type) VALUES (:type)") );
-  query.bindValue( QLatin1String(":type"), mimetype );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during insertion of single MimeType." );
-    return false;
-  }
-
-  if ( insertId )
-      *insertId = lastInsertId( query );
-
-  return true;
+  return MimeType::insert( MimeType( -1, mimetype ), insertId );
 }
 
 bool DataStore::removeMimeType( const MimeType & mimetype )
@@ -1026,127 +565,9 @@ bool DataStore::removeMimeType( const MimeType & mimetype )
 
 bool DataStore::removeMimeType( int id )
 {
-  return removeById( id, QLatin1String("MimeTypes") );
+  return removeById( id, MimeType::tableName() );
 }
 
-MimeType DataStore::mimeTypeById( int id ) const
-{
-  if ( !m_dbOpened )
-    return MimeType();
-
-  QSqlQuery query( m_database );
-  const QString statement = QString::fromLatin1( "SELECT id, mime_type FROM MimeTypes WHERE id = %1" ).arg( id );
-
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during selection of single MimeType." );
-    return MimeType();
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single MimeType." );
-    return MimeType();
-  }
-
-  int mimeTypeId = query.value( 0 ).toInt();
-  QString type = query.value( 1 ).toString();
-
-  return MimeType( mimeTypeId, type );
-}
-
-MimeType DataStore::mimeTypeByName( const QString & name ) const
-{
-  if ( !m_dbOpened )
-    return MimeType();
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String( "SELECT id, mime_type FROM MimeTypes WHERE mime_type = :name" ) );
-  query.bindValue( QLatin1String(":name"), name );
-
-  if ( !query.exec() ) {
-    debugLastDbError( "Error during selection of single MimeType." );
-    return MimeType();
-  }
-
-  if ( !query.next() ) {
-    debugLastDbError( "Error during selection of single MimeType." );
-    return MimeType();
-  }
-
-  int id = query.value( 0 ).toInt();
-  QString type = query.value( 1 ).toString();
-
-  return MimeType( id, type );
-}
-
-QList<MimeType> DataStore::listMimeTypes()
-{
-  if ( !m_dbOpened )
-    return QList<MimeType>();
-
-  QSqlQuery query( m_database );
-  if ( !query.exec( QLatin1String("SELECT id, mime_type FROM MimeTypes") ) ) {
-    debugLastQueryError( query, "Error during selection of MimeTypes." );
-    return QList<MimeType>();
-  }
-
-  QList<MimeType> mimeTypes;
-  while ( query.next() ) {
-    int id = query.value( 0 ).toInt();
-    QString type = query.value( 1 ).toString();
-
-    mimeTypes.append( MimeType( id, type ) );
-  }
-
-  return mimeTypes;
-}
-
-
-/* --- MetaType ------------------------------------------------------ */
-bool DataStore::appendMetaType( const QString & metatype, const MimeType & mimetype )
-{
-  // TODO implement
-  return false;
-}
-
-bool DataStore::removeMetaType( const MetaType & metatype )
-{
-  // TODO implement
-  return false;
-}
-
-bool DataStore::removeMetaType( int id )
-{
-  // TODO implement
-  return false;
-}
-
-MetaType DataStore::metaTypeById( int id )
-{
-  // TODO implement
-  MetaType m;
-  m.setId( id );
-  m.setMetaType( QLatin1String("dummyMetaType") );
-  m.setMimeTypeId( 1 );
-  return m;
-}
-
-QList<MetaType> DataStore::listMetaTypes()
-{
-  // TODO implement
-  QList<MetaType> list;
-  list.append( metaTypeById( 1 ) );
-  return list;
-}
-
-QList<MetaType> DataStore::listMetaTypes( const MimeType & mimetype )
-{
-  // TODO implement
-  QList<MetaType> list;
-  // let's fake it for now
-  if ( mimetype.id() == 1 )
-    list.append( this->metaTypeById( 1 ) );
-  return list;
-}
 
 
 /* --- PimItem ------------------------------------------------------- */
@@ -1160,21 +581,24 @@ bool DataStore::appendPimItem( const QByteArray & data,
   if ( !m_dbOpened )
     return false;
 
-  QSqlQuery query( m_database );
-
+  QStringList columns;
+  columns << PimItem::remoteIdColumn() << PimItem::dataColumn() << PimItem::locationIdColumn() << PimItem::mimeTypeIdColumn();
+  QString values = QLatin1String( ":remote_id, :data, :location_id, :mimetype_id");
   if ( dateTime.isValid() ) {
-      query.prepare( QLatin1String( "INSERT INTO PimItems (remote_id, data, location_id, mimetype_id, datetime ) "
-                                    "VALUES (:remote_id, :data, :location_id, :mimetype_id, :datetime)") );
-      query.bindValue( QLatin1String(":datetime"), dateTimeFromQDateTime( dateTime ) );
-  } else {
-      // the database will use the current date/time for datetime
-      query.prepare( QLatin1String( "INSERT INTO PimItems (remote_id, data, location_id, mimetype_id) "
-                                    "VALUES (:remote_id, :data, :location_i, :mimetype_id)") );
+    columns << PimItem::datetimeColumn();
+    values += QLatin1String( ", :datetime" );
   }
+  QString statement = QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
+      .arg( PimItem::tableName(), columns.join( QLatin1String(",") ), values );
+
+  QSqlQuery query( m_database );
+  query.prepare( statement );
   query.bindValue( QLatin1String(":remote_id"), QString::fromUtf8(remote_id) );
   query.bindValue( QLatin1String(":data"), data );
   query.bindValue( QLatin1String(":location_id"), location.id() );
   query.bindValue( QLatin1String(":mimetype_id"), mimetype.id() );
+  if ( dateTime.isValid() )
+    query.bindValue( QLatin1String(":datetime"), dateTimeFromQDateTime( dateTime ) );
 
   if ( !query.exec() ) {
     debugLastQueryError( query, "Error during insertion of single PimItem." );
@@ -1185,25 +609,14 @@ bool DataStore::appendPimItem( const QByteArray & data,
   if ( insertId )
       *insertId = id;
 
-  mNotificationCollector->itemAdded( pimItemById( id ), location, mimetype.mimeType().toLatin1() );
-
+  mNotificationCollector->itemAdded( pimItemById( id ), location, mimetype.name().toLatin1() );
   return true;
 }
 
 bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const QByteArray & data)
 {
-  if ( !m_dbOpened )
+  if ( !pimItem.updateColumn( PimItem::dataColumn(), data ) )
     return false;
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("UPDATE PimItems SET data = :data WHERE id = :id") );
-  query.bindValue( QLatin1String(":data"), data );
-  query.bindValue( QLatin1String(":id"), pimItem.id() );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during insertion of single PimItem." );
-    return false;
-  }
 
   mNotificationCollector->itemChanged( pimItem );
   return true;
@@ -1211,22 +624,16 @@ bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const QByteArray
 
 bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const Location & destination)
 {
-  if ( !m_dbOpened || !pimItem.isValid() || !destination.isValid() )
+  if ( !pimItem.isValid() || !destination.isValid() )
     return false;
 
-  Location source = locationById( pimItem.locationId() );
+  Location source = pimItem.location();
   if ( !source.isValid() )
     return false;
   mNotificationCollector->collectionChanged( source );
 
-  QSqlQuery query( m_database );
-  QString statement = QString::fromLatin1( "UPDATE PimItems SET location_id = %1 WHERE id = %2" ).
-      arg( destination.id() ).arg( pimItem.id() );
-
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during moving of a single PimItem." );
+  if ( !pimItem.updateColumn( PimItem::locationIdColumn(), destination.id() ) )
     return false;
-  }
 
   mNotificationCollector->collectionChanged( destination );
   return true;
@@ -1234,38 +641,20 @@ bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const Location &
 
 bool DataStore::cleanupPimItem( const PimItem &item )
 {
-  if ( !m_dbOpened || !item.isValid() )
+  if ( !item.isValid() )
     return false;
-
 
   // generate the notification before actually removing the data
   mNotificationCollector->itemRemoved( item );
 
-  QSqlQuery query( m_database );
-
-  QString statement = QString::fromLatin1( "DELETE FROM ItemMetaData WHERE pimitem_id = %1" ).arg( item.id() );
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during deletion of item meta data." );
+  if ( !ItemMetaData::remove( ItemMetaData::pimItemIdColumn(), item.id() ) )
     return false;
-  }
-
-  statement = QString::fromLatin1( "DELETE FROM ItemFlags WHERE pimitem_id = %1" ).arg( item.id() );
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during deletion of item flags." );
+  if ( !item.clearFlags() )
     return false;
-  }
-
-  statement = QString::fromLatin1( "DELETE FROM Parts WHERE pimitem_id = %1" ).arg( item.id() );
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during deletion of item parts." );
+  if ( !Part::remove( Part::pimItemIdColumn(), item.id() ) )
     return false;
-  }
-
-  statement = QString::fromLatin1( "DELETE FROM PimItems WHERE id = %1" ).arg( item.id() );
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during deletion of a single item." );
+  if ( !PimItem::remove( PimItem::idColumn(), item.id() ) )
     return false;
-  }
 
   return true;
 }
@@ -1275,14 +664,23 @@ bool DataStore::cleanupPimItems( const Location &location )
   if ( !m_dbOpened || !location.isValid() )
     return false;
 
-  const QString statement = QString::fromLatin1( "SELECT ItemFlags.pimitem_id FROM Flags, ItemFlags, PimItems "
-                                     "WHERE Flags.name = '\\Deleted' AND "
-                                     "ItemFlags.flag_id = Flags.id AND "
-                                     "ItemFlags.pimitem_id = PimItems.id AND "
-                                     "PimItems.location_id = %1" ).arg( location.id() );
+  QStringList tables;
+  tables << Flag::tableName() << PimItemFlagRelation::tableName() << PimItem::tableName();
+  QString statement = QString::fromLatin1( "SELECT %1 FROM %2 " )
+      .arg( PimItemFlagRelation::leftFullColumnName(), tables.join( QLatin1String(",") ) );
+  statement += QString::fromLatin1( "WHERE %1 = '\\Deleted' AND " )
+      .arg( Flag::nameFullColumnName() );
+  statement += QString::fromLatin1( "%1 = %2 AND " )
+      .arg( PimItemFlagRelation::rightFullColumnName(), Flag::idFullColumnName() );
+  statement += QString::fromLatin1( "%1 = %2 AND " )
+      .arg( PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
+  statement += QString::fromLatin1( "%1 = :locationId" )
+      .arg( PimItem::locationIdFullColumnName() );
 
   QSqlQuery query( m_database );
-  if ( !query.exec( statement ) ) {
+  query.prepare( statement );
+  query.bindValue( QLatin1String(":locationId"), location.id() );
+  if ( !query.exec() ) {
     debugLastQueryError( query, "Error during cleaning up pim items." );
     return false;
   }
@@ -1307,10 +705,13 @@ int DataStore::pimItemPosition( const PimItem &item )
   if ( !m_dbOpened || !item.isValid() )
     return -1;
 
-  QSqlQuery query( m_database );
+  const QString statement = QString::fromLatin1( "SELECT %1 FROM %2 WHERE %3 = :locationId" )
+      .arg( PimItem::idColumn(), PimItem::tableName(), PimItem::locationIdColumn() );
 
-  const QString statement = QString::fromLatin1( "SELECT id FROM PimItems WHERE location_id = %1" ).arg( item.locationId() );
-  if ( !query.exec( statement ) ) {
+  QSqlQuery query( m_database );
+  query.prepare( statement );
+  query.bindValue( QLatin1String(":locationId"), item.locationId() );
+  if ( !query.exec() ) {
     debugLastQueryError( query, "Error during selection of pim item position." );
     return -1;
   }
@@ -1336,30 +737,30 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray &uid, 
 {
   // TODO: error handling
   qDebug() << "retrieveDataFromResource()" << uid;
-  Location l = locationById( locationid );
-  Resource r = resourceById( l.resourceId() );
+  Location l = Location::retrieveById( locationid );
+  Resource r = l.resource();
 
   // call the resource
 
   // Use the interface if we are in main thread, the DBusThread proxy otherwise
   if ( QThread::currentThread() == QCoreApplication::instance()->thread() ) {
       org::kde::Akonadi::Resource *interface =
-                  new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.resource(),
+                  new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.name(),
                                                    QLatin1String("/"), QDBusConnection::sessionBus(), this );
 
       if ( !interface || !interface->isValid() ) {
          qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                                        .arg( r.resource(), interface ? interface->lastError().message() : QString() );
+                                        .arg( r.name(), interface ? interface->lastError().message() : QString() );
          return QByteArray();
       }
-      bool ok = interface->requestItemDelivery( QString::fromLatin1(uid), QString::fromUtf8(remote_id), l.location(), type );
+      bool ok = interface->requestItemDelivery( QString::fromLatin1(uid), QString::fromUtf8(remote_id), l.name(), type );
   } else {
     QList<QVariant> arguments;
-    arguments << QString::fromLatin1( uid ) << QString::fromUtf8( remote_id ) << l.location() << type;
+    arguments << QString::fromLatin1( uid ) << QString::fromUtf8( remote_id ) << l.name() << type;
 
     DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
 
-    const QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Resource." ) + r.resource(),
+    const QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Resource." ) + r.name(),
                                                          QLatin1String( "/" ),
                                                          QLatin1String( "org.kde.Akonadi.Resource" ),
                                                          QLatin1String( "requestItemDelivery" ), arguments );
@@ -1371,7 +772,8 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray &uid, 
 
   // get the delivered item
   QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT data FROM PimItems WHERE id = :id") );
+  query.prepare( QString::fromLatin1("SELECT data FROM %1 WHERE %2 = :id")
+      .arg( PimItem::tableName(), PimItem::idColumn() ) );
   query.bindValue( QLatin1String(":id"), uid.toInt() );
   if ( query.exec() && query.next() )
     return query.value( 0 ).toByteArray();
@@ -1386,26 +788,27 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
     return PimItem();
 
   const QString field = fieldNameForDataType( type );
+  QStringList cols;
+  cols << PimItem::idColumn() << PimItem::locationIdColumn() << PimItem::mimeTypeIdColumn()
+       << PimItem::datetimeColumn() << PimItem::remoteIdColumn();
+  QString statement = QString::fromLatin1( "SELECT %1, %2 FROM %3 WHERE %4 = :id" )
+      .arg( cols.join( QLatin1String(",") ), field, PimItem::tableName(), PimItem::idColumn() );
+
   QSqlQuery query( m_database );
-  query.prepare( QString::fromLatin1( "SELECT id, %1, location_id, mimetype_id, datetime, remote_id FROM PimItems WHERE id = :id" ).arg( field ) );
+  query.prepare( statement );
   query.bindValue( QLatin1String(":id"), id );
 
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during selection of single Location." );
-    return PimItem();
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single Location." );
+  if ( !query.exec() || !query.next() ) {
+    debugLastQueryError( query, "Error during selection of single PimItem." );
     return PimItem();
   }
 
   int pimItemId = query.value( 0 ).toInt();
-  int location = query.value( 2 ).toInt();
-  int mimetype = query.value( 3 ).toInt();
-  QByteArray remote_id = query.value( 5 ).toByteArray();
-  QDateTime dateTime = dateTimeToQDateTime( query.value( 4 ).toByteArray() );
-  QByteArray data = query.value( 1 ).toByteArray();
+  int location = query.value( 1 ).toInt();
+  int mimetype = query.value( 2 ).toInt();
+  QByteArray remote_id = query.value( 4 ).toByteArray();
+  QDateTime dateTime = dateTimeToQDateTime( query.value( 3 ).toByteArray() );
+  QByteArray data = query.value( 5 ).toByteArray();
   if ( data.isEmpty() && type == FetchQuery::AllType )
       data = retrieveDataFromResource( QByteArray::number( id ), remote_id, location, type );
 
@@ -1431,16 +834,26 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
   if ( !m_dbOpened )
     return QList<PimItem>();
 
-  QSqlQuery query( m_database );
+  QStringList cols;
+  cols << PimItem::idFullColumnName() << PimItem::dataFullColumnName()
+      << PimItem::mimeTypeIdFullColumnName() << PimItem::datetimeFullColumnName()
+      << PimItem::remoteIdFullColumnName() << PimItem::locationIdFullColumnName();
+  QString statement = QString::fromLatin1( "SELECT %1 FROM %2, %3 WHERE " )
+      .arg( cols.join( QLatin1String(",") ), PimItem::tableName(), PimItemFlagRelation::tableName() );
+  statement += QString::fromLatin1( "%1 = %2 AND %3 = :flag_id" )
+      .arg( PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName(), PimItemFlagRelation::rightFullColumnName() );
 
-  QString statement = QString::fromLatin1( "SELECT PimItems.id, PimItems.data, PimItems.mimetype_id,"
-                               "PimItems.datetime, PimItems.remote_id, PimItems.location_id"
-                               " FROM PimItems, ItemFlags WHERE "
-                               "ItemFlags.pimitem_id = PimItems.id AND ItemFlags.flag_id = %1" ).arg( flag.id() );
   if ( location.isValid() )
-    statement += QString::fromLatin1( " AND location_id = %1" ).arg( location.id() );
+    statement += QString::fromLatin1( " AND %1 = :location_id" )
+        .arg( PimItem::locationIdFullColumnName() );
 
-  if ( !query.exec( statement ) ) {
+  QSqlQuery query( m_database );
+  query.prepare( statement );
+  query.bindValue( QLatin1String(":flag_id"), flag.id() );
+  if ( location.isValid() )
+    query.bindValue( QLatin1String(":location_id"), location.id() );
+
+  if ( !query.exec() ) {
     debugLastQueryError( query, "DataStore::listPimItems" );
     return QList<PimItem>();
   }
@@ -1463,7 +876,7 @@ int DataStore::highestPimItemId() const
     return -1;
 
   QSqlQuery query( m_database );
-  const QString statement = QString::fromLatin1( "SELECT MAX(id) FROM PimItems" );
+  const QString statement = QString::fromLatin1( "SELECT MAX(%1) FROM %2" ).arg( PimItem::idColumn(), PimItem::tableName() );
 
   if ( !query.exec( statement ) ) {
     debugLastQueryError( query, "DataStore::highestPimItemId" );
@@ -1480,23 +893,14 @@ int DataStore::highestPimItemId() const
 
 int DataStore::highestPimItemCountByLocation( const Location &location )
 {
-  if ( !m_dbOpened || !location.isValid() )
+  if ( !location.isValid() )
     return -1;
 
-  QSqlQuery query( m_database );
-  const QString statement = QString::fromLatin1( "SELECT COUNT(*) AS count FROM PimItems WHERE location_id = %1" ).arg( location.id() );
-
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "DataStore::highestPimItemCountByLocation" );
+  int cnt = PimItem::count( PimItem::locationIdColumn(), location.id() );
+  if ( cnt < 0 )
     return -1;
-  }
 
-  if ( !query.next() ) {
-    debugLastQueryError( query, "DataStore::highestPimItemCountByLocation" );
-    return -1;
-  }
-
-  return query.value( 0 ).toInt() + 1;
+  return cnt + 1;
 }
 
 
@@ -1539,14 +943,17 @@ QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequen
     }
   }
 
-  QString statement = QString::fromLatin1( "SELECT id FROM PimItems WHERE (%1)" )
-      .arg( statementParts.join( QLatin1String(" OR ") ) );
-  if ( location.isValid() ) {
-     statement += QString::fromLatin1( " AND location_id = %1" ).arg( location.id() );
-  }
+  QString statement = QString::fromLatin1( "SELECT id FROM %1 WHERE (%2)" )
+      .arg( PimItem::tableName(), statementParts.join( QLatin1String(" OR ") ) );
+  if ( location.isValid() )
+     statement += QString::fromLatin1( " AND %1 = :location_id" ).arg( PimItem::locationIdColumn() );
 
   QSqlQuery query( m_database );
-  if ( !query.exec( statement ) ) {
+  query.prepare( statement );
+  if ( location.isValid() )
+    query.bindValue( QLatin1String(":location_id"), location.id() );
+
+  if ( !query.exec() ) {
     debugLastQueryError( query, "DataStore::matchingPimItemsBySequenceNumbers" );
     return QList<PimItem>();
   }
@@ -1594,9 +1001,11 @@ QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteAr
 
   QSqlQuery query( m_database );
   const QString statement =
-      QString::fromLatin1( "SELECT id FROM PimItems WHERE location_id = %1" ).arg( location.id() );
+      QString::fromLatin1( "SELECT %1 FROM %2 WHERE %3 = :id" ).arg( PimItem::idColumn(), PimItem::tableName(), PimItem::locationIdColumn() );
+  query.prepare( statement );
+  query.bindValue( QLatin1String(":id"), location.id() );
 
-  if ( !query.exec( statement ) ) {
+  if ( !query.exec() ) {
     debugLastQueryError( query, "DataStore::matchingPimItemsBySequenceNumbers" );
     return QList<PimItem>();
   }
@@ -1693,42 +1102,13 @@ QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteAr
 bool DataStore::appendResource( const QString & resource,
                                 const CachePolicy & policy )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT COUNT(*) FROM Resources WHERE name = :name") );
-  query.bindValue( QLatin1String(":name"), resource );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during check before insertion of Resource." );
-    return false;
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during check before insertion of Resource." );
-    return false;
-  }
-
-  int foundRecs = query.value( 0 ).toInt();
-
-  if ( foundRecs > 0) {
+  if ( Resource::exists( resource ) ) {
     qDebug() << "Cannot insert resource " << resource
              << " because it already exists.";
     return false;
   }
 
-  query.prepare( QLatin1String("INSERT INTO Resources (name, cachepolicy_id) "
-                 "VALUES (:name, :policy)") );
-  query.bindValue( QLatin1String(":name"), resource );
-  query.bindValue( QLatin1String(":policy"), policy.id() );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during insertion of single Resource." );
-    return false;
-  }
-
-  return true;
+  return Resource::insert( Resource( -1, resource, policy.id() ) );
 }
 
 bool DataStore::removeResource( const Resource & resource )
@@ -1738,125 +1118,29 @@ bool DataStore::removeResource( const Resource & resource )
 
 bool DataStore::removeResource( int id )
 {
-  return removeById( id, QLatin1String("Resources") );
+  return removeById( id, Resource::tableName() );
 }
 
-Resource DataStore::resourceById( int id )
-{
-  if ( !m_dbOpened )
-    return Resource();
-
-  QSqlQuery query( m_database );
-  QString statement = QString::fromLatin1( "SELECT id, name, cachepolicy_id FROM Resources WHERE id = %1" ).arg( id );
-
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "Error during selection of single Resource." );
-    return Resource();
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single Resource." );
-    return Resource();
-  }
-
-  int resourceId = query.value( 0 ).toInt();
-  QString name = query.value( 1 ).toString();
-  int id_res = query.value( 0 ).toInt();
-
-  return Resource( resourceId, name, id_res );
-}
-
-const Resource DataStore::resourceByName( const QByteArray& name ) const
-{
-  if ( !m_dbOpened )
-    return Resource();
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT id, name, cachepolicy_id FROM Resources WHERE name = :name") );
-  query.bindValue( QLatin1String(":name"), QString::fromUtf8(name) );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during selection of single Resource." );
-    return Resource();
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single Resource." );
-    return Resource();
-  }
-
-  int id = query.value( 0 ).toInt();
-  QString resourceName = query.value( 1 ).toString();
-  int id_res = query.value( 0 ).toInt();
-
-  return Resource( id, resourceName, id_res );
-}
-
-QList<Resource> DataStore::listResources() const
-{
-  if ( !m_dbOpened )
-    return QList<Resource>();
-
-  QSqlQuery query( m_database );
-  if ( !query.exec( QLatin1String("SELECT id, name, cachepolicy_id FROM Resources") ) ) {
-    debugLastQueryError( query, "Error during selection of Resources." );
-    return QList<Resource>();
-  }
-
-  QList<Resource> resources;
-  while ( query.next() ) {
-    int id = query.value( 0 ).toInt();
-    QString name = query.value( 1 ).toString();
-    int id_res = query.value( 0 ).toInt();
-
-    resources.append( Resource( id, name, id_res ) );
-  }
-
-  return resources;
-}
 
 QList<Resource> DataStore::listResources( const CachePolicy & policy )
 {
-  if ( !m_dbOpened )
-    return QList<Resource>();
+  return Resource::retrieveFiltered( Resource::cachePolicyIdColumn(), policy.id() );
+}
 
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT id, name, cachepolicy_id FROM Resources WHERE cachepolicy_id = :id") );
-  query.bindValue( QLatin1String(":id"), policy.id() );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during selection of Resources by a Policy." );
-    return QList<Resource>();
-  }
-
-  QList<Resource> resources;
-  while ( query.next() ) {
-    int id = query.value( 0 ).toInt();
-    QString name = query.value( 1 ).toString();
-    int id_res = query.value( 0 ).toInt();
-
-    resources.append( Resource( id, name, id_res ) );
-  }
-
-  return resources;
+CollectionList Akonadi::DataStore::listPersistentSearches() const
+{
+  QList<PersistentSearch> list = PersistentSearch::retrieveAll();
+  CollectionList rv;
+  foreach ( PersistentSearch search, list )
+    rv.append( QLatin1String("Search/") + search.name() );
+  return rv;
 }
 
 
 
 bool Akonadi::DataStore::appendPersisntentSearch(const QString & name, const QByteArray & queryString)
 {
-  if ( !m_dbOpened ) return false;
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("INSERT INTO PersistentSearches (name, query) VALUES (:name, :query)") );
-  query.bindValue( QLatin1String(":name"), name );
-  query.bindValue( QLatin1String(":query"), queryString );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Unable to append persistent search" );
-    return false;
-  }
-
+  PersistentSearch::insert( PersistentSearch( -1, name, queryString ) );
   mNotificationCollector->collectionAdded( name );
   return true;
 }
@@ -1865,43 +1149,9 @@ bool Akonadi::DataStore::removePersistentSearch( const PersistentSearch &search 
 {
   // TODO
 //   mNotificationCollector->collectionRemoved( search.name() );
-  return removeById( search.id(), QLatin1String("PersistentSearches") );
+  return removeById( search.id(), PersistentSearch::tableName() );
 }
 
-PersistentSearch Akonadi::DataStore::persistentSearch(const QString & name)
-{
-  if ( !m_dbOpened ) return PersistentSearch();
-
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT id, name, query FROM PersistentSearches WHERE name = :name") );
-  query.bindValue( QLatin1String(":name"), name );
-
-  if ( !query.exec() || !query.next() ) {
-    debugLastQueryError( query, "Error during selection of persistent search" );
-    return PersistentSearch();
-  }
-
-  int id = query.value( 0 ).toInt();
-  QString searchName = query.value( 1 ).toString();
-  QByteArray queryString = query.value( 2 ).toByteArray();
-
-  return PersistentSearch( id, searchName, queryString );
-}
-
-CollectionList Akonadi::DataStore::listPersistentSearches() const
-{
-  QSqlQuery query( m_database );
-  query.prepare( QLatin1String("SELECT name FROM PersistentSearches") );
-  if ( query.exec() ) {
-    CollectionList list;
-    while ( query.next() ) {
-      QString name = query.value( 0 ).toString();
-      list.append( QLatin1String("Search/") + name );
-    }
-    return list;
-  }
-  return CollectionList();
-}
 
 
 
@@ -1936,36 +1186,6 @@ bool DataStore::removeById( int id, const QString & tableName )
   }
 
   return true;
-}
-
-Location DataStore::locationByName( const QString& name ) const
-{
-  qDebug() << "locationByName( " << name << " )";
-
-  if ( !m_dbOpened )
-    return Location();
-
-  QSqlQuery query( m_database );
-  const QString statement = QString::fromLatin1( "SELECT id, uri, cachepolicy_id, resource_id, exists_count, recent_count,"
-                                     " unseen_count, first_unseen, uid_validity FROM Locations "
-                                     "WHERE uri = :uri" );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":uri"), name );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during selection of a Location by name." );
-    return Location();
-  }
-
-  Location location;
-  while ( query.next() ) {
-    location.fillFromQuery( query );
-    location.setMimeTypes( mimeTypesForLocation( location.id() ) );
-  }
-
-  qDebug() << "location: " << location.isValid();
-
-  return location;
 }
 
 

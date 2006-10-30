@@ -125,15 +125,14 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
   }
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Flags ) ) {
-    QList<Flag> flagList = connection()->storageBackend()->itemFlags( item );
+    QList<Flag> flagList = item.flags();
 
     QList<QByteArray> flags;
     for ( int i = 0; i < flagList.count(); ++i )
       flags.append( flagList[ i ].name().toUtf8() );
 
-    DataStore *store = connection()->storageBackend();
-    MimeType mimeType = store->mimeTypeById( item.mimeTypeId() );
-    flags.append( "\\MimeTypes[" + mimeType.mimeType().toUtf8() + ']' );
+    MimeType mimeType = item.mimeType();
+    flags.append( "\\MimeTypes[" + mimeType.name().toUtf8() + ']' );
 
     attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
   }

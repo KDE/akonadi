@@ -24,21 +24,18 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <QtCore/QString>
-
-class QSqlQuery;
+#include <QtCore/QStringList>
+#include <QtCore/QVariant>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 
 namespace Akonadi {
 
-class DataStore;
-
-class CachePolicy;
-class ItemMetaData;
-class Location;
-class MimeType;
-class MetaType;
-class PimItem;
-class Resource;
-
+/**
+  Base class for classes representing database records. It also contains
+  low-level data access and manipulation template methods.
+*/
 class Entity
 {
   public:
@@ -47,266 +44,229 @@ class Entity
 
     bool isValid() const;
 
+    template <typename T> static QString joinByName( const QList<T> &list, const QString &sep )
+    {
+      QStringList tmp;
+      foreach ( T t, list )
+        tmp << t.name();
+      return tmp.join( sep );
+    }
+
   protected:
     Entity();
     Entity( int id );
 
+    /**
+      Returns the number of records having @p value in @p column.
+      @param column The name of the key column.
+      @param value The value used to identify the record.
+    */
+    template <typename T> inline static int count( const QString &column, const QVariant &value )
+    {
+      QSqlDatabase db = database();
+      if ( !db.isOpen() )
+        return -1;
+
+      QString statement = QLatin1String( "SELECT count(*) FROM " );
+      statement.append( T::tableName() );
+      statement.append( QLatin1String( " WHERE :value = " ) );
+      statement.append( column );
+
+      QSqlQuery query( db );
+      query.prepare( statement );
+      query.bindValue( QLatin1String(":value"), value );
+      if ( !query.exec() || !query.next() ) {
+        qDebug() << "Error during counting records in table" << T::tableName()
+            << query.lastError().text();
+        return -1;
+      }
+
+      return query.value( 0 ).toInt();
+    }
+
+    /**
+      Updates the value of a specified column in the database to the given value.
+      Note: The object itself is not changed!
+    */
+    template <typename T> inline bool updateColumn( const QString &column, const QVariant &value ) const
+    {
+      QSqlDatabase db = database();
+      if ( !db.isOpen() )
+        return false;
+
+      QSqlQuery query( db );
+      QString statement = QLatin1String( "UPDATE " );
+      statement += T::tableName();
+      statement += QLatin1String( " SET " );
+      statement += column;
+      statement += QLatin1String( " = :column WHERE id = :id" );
+      query.prepare( statement );
+      query.bindValue( QLatin1String(":column"), value );
+      query.bindValue( QLatin1String(":id"), id() );
+      if ( !query.exec() ) {
+        qDebug() << "Error during updating record with id" << id()
+            << " in table" << T::tableName() << query.lastError().text();
+        return false;
+      }
+      return true;
+    }
+
+    /**
+      Deletes all records having @p value in @p column.
+    */
+    template <typename T> inline static bool remove( const QString &column, const QVariant &value )
+    {
+      QSqlDatabase db = database();
+      if ( !db.isOpen() )
+        return false;
+
+      QString statement = QLatin1String( "DELETE FROM " );
+      statement += T::tableName();
+      statement += QLatin1String( " WHERE :value = " );
+      statement += column;
+
+      QSqlQuery query( db );
+      query.prepare( statement );
+      query.bindValue( QLatin1String(":value"), value );
+      if ( !query.exec() ) {
+        qDebug() << "Error during deleting records from table"
+            << T::tableName() << query.lastError().text();
+        return false;
+      }
+      return true;
+    }
+
+    /**
+      Checks wether an entry in a n:m relation table exists.
+      @param leftId Identifier of the left part of the relation.
+      @param rightId Identifier of the right part of the relation.
+     */
+    template <typename T> inline static bool relatesTo( int leftId, int rightId )
+    {
+      QSqlDatabase db = database();
+      if ( !db.isOpen() )
+        return false;
+
+      QString statement = QLatin1String("SELECT count(*) FROM ");
+      statement.append( T::tableName() );
+      statement.append( QLatin1String(" WHERE ") );
+      statement.append( T::leftColumn() );
+      statement.append( QLatin1String(" = :left AND :right = ") );
+      statement.append( T::rightColumn() );
+
+      QSqlQuery query( db );
+      query.prepare( statement );
+      query.bindValue( QLatin1String(":left"), leftId );
+      query.bindValue( QLatin1String(":right"), rightId );
+
+      if ( !query.exec() || !query.next() ) {
+        qDebug() << "Error during counting records in table" << T::tableName()
+            << query.lastError().text();
+        return false;
+      }
+
+      if ( query.value( 0 ).toInt() > 0 )
+        return true;
+      return false;
+    }
+
+    /**
+      Adds an entry to a n:m relation table (specified by the template parameter).
+      @param leftId Identifier of the left part of the relation.
+      @param rightId Identifier of the right part of the relation.
+    */
+    template <typename T> inline static bool addToRelation( int leftId, int rightId )
+    {
+      QSqlDatabase db = database();
+      if ( !db.isOpen() )
+        return false;
+
+      QString statement = QLatin1String("INSERT INTO ");
+      statement.append( T::tableName() );
+      statement.append( QLatin1String(" ( ") );
+      statement.append( T::leftColumn() );
+      statement.append( QLatin1String(" , ") );
+      statement.append( T::rightColumn() );
+      statement.append( QLatin1String(" ) VALUES ( :left, :right )") );
+
+      QSqlQuery query( db );
+      query.prepare( statement );
+      query.bindValue( QLatin1String(":left"), leftId );
+      query.bindValue( QLatin1String(":right"), rightId );
+
+      if ( !query.exec() ) {
+        qDebug() << "Error during adding a record to table" << T::tableName()
+          << query.lastError().text();
+        return false;
+      }
+
+      return true;
+    }
+
+    /**
+      Removes an entry from a n:m relation table (specified by the template parameter).
+      @param leftId Identifier of the left part of the relation.
+      @param rightId Identifier of the right part of the relation.
+    */
+    template <typename T> inline static bool removeFromRelation( int leftId, int rightId )
+    {
+      QSqlDatabase db = database();
+      if ( !db.isOpen() )
+        return false;
+
+      QString statement = QLatin1String("DELETE FROM ");
+      statement.append( T::tableName() );
+      statement.append( QLatin1String(" WHERE ") );
+      statement.append( T::leftColumn() );
+      statement.append( QLatin1String(" = :left AND ") );
+      statement.append( T::rightColumn() );
+      statement.append( QLatin1String(" = :right") );
+
+      QSqlQuery query( db );
+      query.prepare( statement );
+      query.bindValue( QLatin1String(":left"), leftId );
+      query.bindValue( QLatin1String(":right"), rightId );
+
+      if ( !query.exec() ) {
+        qDebug() << "Error during removing a record from relation table" << T::tableName()
+          << query.lastError().text();
+        return false;
+      }
+
+      return true;
+    }
+
+    /**
+      Clears all entries from a n:m relation table (specified by the given template parameter).
+      @param leftId Identifier of the left relation side.
+    */
+    template <typename T> inline static bool clearRelation( int leftId )
+    {
+      QSqlDatabase db = database();
+      if ( !db.isOpen() )
+        return false;
+
+      QString statement = QLatin1String( "DELETE FROM ");
+      statement.append( T::tableName() );
+      statement.append( QLatin1String(" WHERE ") );
+      statement.append( T::leftColumn() );
+      statement.append( QLatin1String( " = :left" ) );
+
+      QSqlQuery query( db );
+      query.prepare( statement );
+      query.bindValue( QLatin1String( ":left" ), leftId );
+      if ( !query.exec() ) {
+        qDebug() << "Error during clearing relation table" << T::tableName()
+            << "for id" << leftId << query.lastError().text();
+        return false;
+      }
+
+      return true;
+    }
+
+  private:
+    static QSqlDatabase database();
     int m_id;
-};
-
-/***************************************************************************
- *   CachePolicy                                                           *
- ***************************************************************************/
-class CachePolicy : public Entity
-{
-  public:
-    CachePolicy();
-    CachePolicy( int id, const QString & policy );
-    ~CachePolicy();
-
-    const QString & policy() const;
-
-  protected:
-    void setCachePolicy( const QString & policy );
-
-  private:
-    QString m_policy;
-    friend class DataStore;
-};
-
-/***************************************************************************
- *   Flag                                                                  *
- ***************************************************************************/
-class Flag : public Entity
-{
-  public:
-    Flag();
-    Flag( int id, const QString & name );
-    ~Flag();
-
-    const QString & name() const;
-
-  protected:
-    void setName( const QString & name );
-
-  private:
-    QString m_name;
-    friend class DataStore;
-};
-
-/***************************************************************************
- *   ItemMetaData                                                          *
- ***************************************************************************/
-class ItemMetaData : public Entity
-{
-  public:
-    ItemMetaData();
-    ItemMetaData( int id, const QString & metadata, const MetaType & metatype );
-    ~ItemMetaData();
-
-    int metaTypeId() const;
-    const QString & itemMetaData() const;
-
-  protected:
-    void setMetaTypeId( int metatype_id );
-    void setItemMetaData( const QString & metadata );
-
-  private:
-    int m_metatype_id;
-    QString m_metadata;
-
-    friend class DataStore;
-};
-
-/***************************************************************************
- *   MimeType                                                              *
- ***************************************************************************/
-class MimeType : public Entity
-{
-  public:
-    MimeType();
-    MimeType( int id, const QString & mimetype );
-    ~MimeType();
-
-    QString mimeType() const;
-    static QByteArray asCommaSeparatedString( const QList<MimeType> &types, const QByteArray &separator = QByteArray(",") );
-
-  protected:
-    void setMimeType( const QString & mimetype );
-
-  private:
-    QString m_mimetype;
-
-    friend class DataStore;
-};
-
-/***************************************************************************
- *   Location                                                              *
- ***************************************************************************/
-class Location : public Entity
-{
-  public:
-    Location();
-    Location( int id, const QString & location,
-              int policy_id, int resource_id );
-    Location( int id, const QString & location,
-              const CachePolicy & policy, const Resource & resource );
-    ~Location();
-
-    void fillFromQuery( const QSqlQuery & query );
-
-    int policyId() const;
-    int resourceId() const;
-    const QString & location() const;
-    void setMimeTypes( const QList<MimeType> & types );
-
-    QString flags() const;
-    int exists() const;
-    int recent() const;
-    int unseen() const;
-    int firstUnseen() const;
-    long uidValidity() const;
-    QList<MimeType> mimeTypes() const;
-
-  protected:
-    void setPolicyId( int policy_id );
-    void setResourceId( int resource_id );
-    void setLocation( const QString & location );
-
-    void init();
-
-  private:
-    int m_policy_id;
-    int m_resource_id;
-    QString m_location;
-    int m_exists;
-    int m_recent;
-    int m_unseen;
-    int m_firstUnseen;
-    long m_uidValidity;
-    QString m_flags;
-    QList<MimeType> m_mimeTypes;
-
-    friend class DataStore;
-};
-
-QDebug & operator<< ( QDebug& d, const  Akonadi::Location& location );
-
-/***************************************************************************
- *   MetaType                                                              *
- ***************************************************************************/
-class MetaType : public Entity
-{
-  public:
-    MetaType();
-    MetaType( int id, const QString & metatype ,
-              const MimeType & mimetype );
-    ~MetaType();
-
-    int mimeTypeId() const;
-    const QString & metaType() const;
-
-  protected:
-    void setMimeTypeId( int mimetype_id );
-    void setMetaType( const QString & metatype );
-
-  private:
-    int m_mimetype_id;
-    QString m_metatype;
-
-    friend class DataStore;
-};
-
-/***************************************************************************
- *   Part                                                                  *
- ***************************************************************************/
-// TODO
-
-/***************************************************************************
- *   PartFlag                                                              *
- ***************************************************************************/
-// TODO
-
-/***************************************************************************
- *   PartMetaData                                                          *
- ***************************************************************************/
-// TODO
-
-/***************************************************************************
- *   PimItem                                                               *
- ***************************************************************************/
-class PimItem : public Entity
-{
-  public:
-    PimItem();
-    PimItem( int id, const QByteArray & remote_id,
-             const QByteArray & data, int location_id, int mimetype_id,
-             const QDateTime & dateTime );
-    ~PimItem();
-
-    int mimeTypeId() const;
-    int locationId() const;
-    QByteArray remoteId() const;
-    const QByteArray & data() const;
-    QDateTime dateTime() const;
-
-  protected:
-    void setMimeTypeId( int mimetype_id );
-    void setLocationId( int location_id );
-    void setRemoteId( const QByteArray & remote_id );
-    void setData( const QByteArray & data );
-    void setDateTime( const QDateTime & dateTime );
-
-  private:
-    QByteArray m_data;
-    int m_location_id;
-    int m_mimetype_id;
-    QByteArray m_remote_id;
-    QDateTime m_datetime;
-
-    friend class DataStore;
-};
-
-/***************************************************************************
- *   Resource                                                              *
- ***************************************************************************/
-class Resource : public Entity
-{
-  public:
-    Resource();
-    Resource( int id, const QString & resource, int policy_id );
-    Resource( int id, const QString & resource, const CachePolicy & policy );
-    ~Resource();
-
-    int policyId() const;
-    const QString & resource() const;
-
-  protected:
-    void setPolicyId( int policy_id );
-    void setResource( const QString & resource );
-
-  private:
-    int m_policy_id;
-    QString m_resource;
-
-    friend class DataStore;
-};
-
-/**
-  Represents a persistent search aka virtual folder.
-*/
-class PersistentSearch : public Entity
-{
-  public:
-    PersistentSearch();
-    PersistentSearch( int id, const QString &name, const QByteArray &query );
-
-    QString name() const { return m_name; }
-    QByteArray query() const { return m_query; }
-
-  private:
-    QString m_name;
-    QByteArray m_query;
 };
 
 }

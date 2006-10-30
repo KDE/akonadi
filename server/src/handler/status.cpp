@@ -57,7 +57,7 @@ bool Status::handleLine( const QByteArray& line )
     Response response;
 
     DataStore *db = connection()->storageBackend();
-    Location l = db->locationByName( mailbox );
+    Location l = Location::retrieveByName( mailbox );
 
     if ( !l.isValid() )
         return failureResponse( "No status for this folder" );
@@ -70,7 +70,7 @@ bool Status::handleLine( const QByteArray& line )
     // MESSAGES - The number of messages in the mailbox
     if ( attributeList.contains( "MESSAGES" ) ) {
         statusResponse += "MESSAGES ";
-        statusResponse += QByteArray::number( l.exists() );
+        statusResponse += QByteArray::number( l.existCount() );
     }
     // RECENT - The number of messages with the \Recent flag set
     if ( attributeList.contains( "RECENT" ) ) {
@@ -78,7 +78,7 @@ bool Status::handleLine( const QByteArray& line )
             statusResponse += " RECENT ";
         else
             statusResponse += "RECENT ";
-        statusResponse += QByteArray::number( l.recent() );
+        statusResponse += QByteArray::number( l.recentCount() );
     }
     // UIDNEXT - The next unique identifier value of the mailbox
     if ( attributeList.contains( "UIDNEXT" ) ) {
@@ -101,13 +101,13 @@ bool Status::handleLine( const QByteArray& line )
             statusResponse += " UNSEEN ";
         else
             statusResponse += "UNSEEN ";
-        statusResponse += QByteArray::number( l.unseen() );
+        statusResponse += QByteArray::number( l.unseenCount() );
     }
     if ( attributeList.contains( "MIMETYPES" ) ) {
       if ( !statusResponse.isEmpty() )
         statusResponse += ' ';
       statusResponse += "MIMETYPES (";
-      statusResponse += MimeType::asCommaSeparatedString( l.mimeTypes(), " " );
+      statusResponse += MimeType::joinByName<MimeType>( l.mimeTypes(), QLatin1String(" ") ).toLatin1();
       statusResponse += ')';
     }
 

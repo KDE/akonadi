@@ -88,7 +88,7 @@ bool DbInitializer::run()
 
 bool DbInitializer::checkTable( const QDomElement &element )
 {
-  const QString tableName = element.attribute( QLatin1String("name") ) /*+ QLatin1String("Table")*/;
+  const QString tableName = element.attribute( QLatin1String("name") ) + QLatin1String("Table");
   qDebug() << "checking table " << tableName;
 
   typedef QPair<QString, QString> ColumnEntry;

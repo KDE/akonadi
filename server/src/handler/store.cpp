@@ -102,12 +102,12 @@ bool Store::commit()
       if ( !store->updatePimItem( pimItems[ i ], mData ) )
         return failureResponse( "Unable to change item data." );
     } else if ( mStoreQuery.dataType() == StoreQuery::Collection ) {
-      if ( !store->updatePimItem( pimItems[ i ], store->locationByName( mStoreQuery.collection() ) ) )
+      if ( !store->updatePimItem( pimItems[ i ], Location::retrieveByName( mStoreQuery.collection() ) ) )
         return failureResponse( "Unable to move item." );
     }
 
     if ( !( mStoreQuery.operation() & StoreQuery::Silent ) ) {
-      QList<Flag> flags = store->itemFlags( pimItems[ i ] );
+      QList<Flag> flags = pimItems[ i ].flags();
       QStringList flagList;
       for ( int j = 0; j < flags.count(); ++j )
         flagList.append( flags[ j ].name() );
@@ -139,14 +139,14 @@ bool Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
 
   QList<Flag> flagList;
   for ( int i = 0; i < flags.count(); ++i ) {
-    Flag flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
+    Flag flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
     if ( !flag.isValid() ) {
        // If the flag does not exist we'll create it now.
       if ( !store->appendFlag( QString::fromUtf8( flags[ i ] ) ) ) {
         qDebug( "Store::replaceFlags: Unable to add new flag '%s'", flags[ i ].data() );
         return false;
       } else {
-        flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
+        flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
         if ( !flag.isValid() )
           return false;
         else
@@ -170,14 +170,14 @@ bool Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
 
   QList<Flag> flagList;
   for ( int i = 0; i < flags.count(); ++i ) {
-    Flag flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
+    Flag flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
     if ( !flag.isValid() ) {
        // If the flag does not exist we'll create it now.
       if ( !store->appendFlag( QString::fromUtf8( flags[ i ]  ) ) ) {
         qDebug( "Store::addFlags: Unable to add new flag '%s'", flags[ i ].data() );
         return false;
       } else {
-        flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
+        flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
         if ( !flag.isValid() )
           return false;
         else
@@ -201,7 +201,7 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
 
   QList<Flag> flagList;
   for ( int i = 0; i < flags.count(); ++i ) {
-    Flag flag = store->flagByName( QString::fromUtf8( flags[ i ] ) );
+    Flag flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
     if ( !flag.isValid() )
       continue;
 

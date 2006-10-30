@@ -77,7 +77,7 @@ QString Akonadi::NotificationItem::collectionName() const
 {
   if ( !mCollectionName.isEmpty() )
     return mCollectionName;
-  return mCollection.location();
+  return mCollection.name();
 }
 
 
@@ -177,9 +177,8 @@ void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
 
   if ( item.type() == NotificationItem::Collection ) {
     if ( !item.collection().isValid() && !item.collectionName().isEmpty() )
-      item.setCollection( mDb->locationByName( item.collectionName() ) );
-    Resource res = mDb->resourceById( item.collection().resourceId() );
-    item.setResource( res.resource().toLatin1() );
+      item.setCollection( Location::retrieveByName( item.collectionName() ) );
+    item.setResource( item.collection().resource().name().toLatin1() );
   }
 
   if ( item.type() == NotificationItem::Item ) {
@@ -188,18 +187,16 @@ void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
       return;
     Location loc;
     if ( !item.collection().isValid() ) {
-      loc = mDb->locationById( pi.locationId() );
+      loc = pi.location();
       item.setCollection( loc );
     }
     if ( item.mimeType().isEmpty() ) {
-      MimeType mt = mDb->mimeTypeById( pi.mimeTypeId() );
-      item.setMimeType( mt.mimeType().toLatin1() );
+      item.setMimeType( pi.mimeType().name().toLatin1() );
     }
     if ( item.resource().isEmpty() ) {
       if ( !loc.isValid() )
-        loc = mDb->locationById( pi.locationId() );
-      Resource res = mDb->resourceById( loc.resourceId() );
-      item.setResource( res.resource().toLatin1() );
+        loc = pi.location();
+      item.setResource( loc.resource().name().toLatin1() );
     }
   }
 }

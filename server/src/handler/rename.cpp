@@ -56,10 +56,10 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = db->locationByName( newName );
+  Location location = Location::retrieveByName( newName );
   if ( location.isValid() )
     return failureResponse( "Collection already exists" );
-  location = db->locationByName( oldName );
+  location = Location::retrieveByName( oldName );
   if ( !location.isValid() )
     return failureResponse( "No such collection" );
 
@@ -67,8 +67,8 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
   QList<Location> locations = db->listLocations();
   oldName += QLatin1Char('/');
   foreach ( Location location, locations ) {
-    if ( location.location().startsWith( oldName ) ) {
-      QString name = location.location();
+    if ( location.name().startsWith( oldName ) ) {
+      QString name = location.name();
       name = name.replace( 0, oldName.length(), newName + QLatin1Char('/') );
       if ( !db->renameLocation( location, name ) )
         return failureResponse( "Failed to rename collection." );

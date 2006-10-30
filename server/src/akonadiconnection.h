@@ -24,7 +24,7 @@
 #include <QtNetwork/QTcpSocket>
 class QTcpSocket;
 
-#include "storage/entity.h"
+#include "entities.h"
 #include "global.h"
 #include "dbusthread.h"
 

@@ -43,13 +43,22 @@
 
 namespace Akonadi {
 
-// forward declarations
+// forward declaration for table classes
 <xsl:for-each select="database/table">
 class <xsl:value-of select="@name"/>;
 </xsl:for-each>
 
+// forward declaration for relation classes
+<xsl:for-each select="database/relation">
+class <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation;
+</xsl:for-each>
+
 <xsl:for-each select="database/table">
-<xsl:call-template name="entity-header"/>
+<xsl:call-template name="table-header"/>
+</xsl:for-each>
+
+<xsl:for-each select="database/relation">
+<xsl:call-template name="relation-header"/>
 </xsl:for-each>
 
 }
@@ -59,7 +68,7 @@ class <xsl:value-of select="@name"/>;
 
 <!-- cpp generation -->
 <xsl:if test="$code='source'">
-#include &lt;storage/entities.h&gt;
+#include &lt;entities.h&gt;
 #include &lt;storage/datastore.h&gt;
 
 #include &lt;qsqldatabase.h&gt;
@@ -71,7 +80,11 @@ class <xsl:value-of select="@name"/>;
 using namespace Akonadi;
 
 <xsl:for-each select="database/table">
-<xsl:call-template name="entity-source"/>
+<xsl:call-template name="table-source"/>
+</xsl:for-each>
+
+<xsl:for-each select="database/relation">
+<xsl:call-template name="relation-source"/>
 </xsl:for-each>
 
 </xsl:if>
@@ -80,11 +93,15 @@ using namespace Akonadi;
 
 
 
-<!-- entity header template -->
-<xsl:template name="entity-header">
+<!-- table class header template -->
+<xsl:template name="table-header">
 <xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
+<xsl:variable name="entityName"><xsl:value-of select="@name"/></xsl:variable>
+
 class <xsl:value-of select="$className"/> : public Entity
 {
+  friend class DataStore;
+
   public:
     // constructor
     <xsl:value-of select="$className"/>();
@@ -98,8 +115,20 @@ class <xsl:value-of select="$className"/> : public Entity
     // SQL table information
     static QString tableName();
     <xsl:for-each select="column">
-    <xsl:text>static QString </xsl:text><xsl:value-of select="@name"/>Column();
+    static QString <xsl:value-of select="@name"/>Column();
+    static QString <xsl:value-of select="@name"/>FullColumnName();
     </xsl:for-each>
+
+    // count records
+    static int count( const QString &amp;column, const QVariant &amp;value );
+
+    // check existence
+    <xsl:if test="column[@name = 'id']">
+    static bool exists( int id );
+    </xsl:if>
+    <xsl:if test="column[@name = 'name']">
+    static bool exists( const QString &amp;name );
+    </xsl:if>
 
     // data retrieval
     <xsl:if test="column[@name = 'id']">
@@ -124,9 +153,31 @@ class <xsl:value-of select="$className"/> : public Entity
     </xsl:for-each>
 
     // data retrieval for n:m relations
-    <xsl:variable name="currentName"><xsl:value-of select="@name"/></xsl:variable>
-    <xsl:for-each select="../relation[@table1 = $currentName]">
+    <xsl:for-each select="../relation[@table1 = $entityName]">
     QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const;
+    </xsl:for-each>
+
+  protected:
+    // inserting new data
+    static bool insert( const <xsl:value-of select="$className"/>&amp; record, int* insertId = 0 );
+
+    // updating existing data
+    bool updateColumn( const QString &amp;column, const QVariant &amp;value ) const;
+
+    // delete records
+    static bool remove( const QString &amp;column, const QVariant &amp;value );
+
+    // manipulate n:m relations
+    <xsl:for-each select="../relation[@table1 = $entityName]">
+    <xsl:variable name="rightSideClass"><xsl:value-of select="@table2"/></xsl:variable>
+    bool relatesTo<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const;
+    static bool relatesTo<xsl:value-of select="@table2"/>( int leftId, int rightId );
+    bool add<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const;
+    static bool add<xsl:value-of select="@table2"/>( int leftId, int rightId );
+    bool remove<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const;
+    static bool remove<xsl:value-of select="@table2"/>( int leftId, int rightId );
+    bool clear<xsl:value-of select="@table2"/>s() const;
+    static bool clear<xsl:value-of select="@table2"/>s( int id );
     </xsl:for-each>
 
   private:
@@ -141,11 +192,29 @@ QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$class
 </xsl:template>
 
 
+<!-- relation class header template -->
+<xsl:template name="relation-header">
+<xsl:variable name="className"><xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation</xsl:variable>
 
-<!-- entity source template -->
-<xsl:template name="entity-source">
+class <xsl:value-of select="$className"/>
+{
+  public:
+    // SQL table information
+    static QString tableName();
+    static QString leftColumn();
+    static QString leftFullColumnName();
+    static QString rightColumn();
+    static QString rightFullColumnName();
+};
+</xsl:template>
+
+
+
+<!-- table class source template -->
+<xsl:template name="table-source">
 <xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
 <xsl:variable name="tableName"><xsl:value-of select="@name"/>Table</xsl:variable>
+<xsl:variable name="entityName"><xsl:value-of select="@name"/></xsl:variable>
 
 // constructor
 <xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>() : Entity() {}
@@ -187,7 +256,33 @@ QString <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>Colum
 {
   return QLatin1String( "<xsl:value-of select="@name"/>" );
 }
+
+QString <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>FullColumnName()
+{
+  return tableName() + QLatin1String( ".<xsl:value-of select="@name"/>" );
+}
 </xsl:for-each>
+
+
+// count records
+int <xsl:value-of select="$className"/>::count( const QString &amp;column, const QVariant &amp;value )
+{
+  return Entity::count&lt;<xsl:value-of select="$className"/>&gt;( column, value );
+}
+
+// check existence
+<xsl:if test="column[@name = 'id']">
+bool <xsl:value-of select="$className"/>::exists( int id )
+{
+  return count( idColumn(), id ) > 0;
+}
+</xsl:if>
+<xsl:if test="column[@name = 'name']">
+bool <xsl:value-of select="$className"/>::exists( const QString &amp;name )
+{
+  return count( nameColumn(), name ) > 0;
+}
+</xsl:if>
 
 
 // data retrieval
@@ -263,38 +358,95 @@ QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"/>
 }
 </xsl:for-each>
 
+<!-- methods for n:m relations -->
+<xsl:for-each select="../relation[@table1 = $entityName]">
+<xsl:variable name="relationName"><xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation</xsl:variable>
+<xsl:variable name="rightSideClass"><xsl:value-of select="@table2"/></xsl:variable>
+<xsl:variable name="rightSideEntity"><xsl:value-of select="@table2"/></xsl:variable>
+<xsl:variable name="rightSideTable"><xsl:value-of select="@table2"/>Table</xsl:variable>
+
 // data retrieval for n:m relations
-<xsl:variable name="currentName"><xsl:value-of select="@name"/></xsl:variable>
-<xsl:for-each select="../relation[@table1 = $currentName]">
-QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const
+QList&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const
 {
   QSqlDatabase db = DataStore::self()->database();
   if ( !db.isOpen() )
-    return QList&lt;<xsl:value-of select="@table2"/>&gt;();
+    return QList&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
 
   QSqlQuery query( db );
-  QString statement = QLatin1String( "SELECT <xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/> FROM " );
-  statement.append( QLatin1String("<xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation") );
-  statement.append( QLatin1String(" WHERE <xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/> = :key") );
+  QString statement = QLatin1String( "SELECT " );
+  <xsl:for-each select="/database/table[@name = $rightSideEntity]/column">
+    statement.append( QLatin1String("<xsl:value-of select="$rightSideTable"/>.<xsl:value-of select="@name"/>" ) );
+    <xsl:if test="position() != last()">
+    statement.append( QLatin1String(", ") );
+    </xsl:if>
+  </xsl:for-each>
+  statement.append( QLatin1String(" FROM <xsl:value-of select="$rightSideTable"/>, <xsl:value-of select="$relationName"/>") );
+  statement.append( QLatin1String(" WHERE <xsl:value-of select="$relationName"/>.<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/> = :key") );
+  statement.append( QLatin1String(" AND <xsl:value-of select="$relationName"/>.<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/> = <xsl:value-of select="$rightSideTable"/>.<xsl:value-of select="@column2"/>") );
+
   query.prepare( statement );
   query.bindValue( QLatin1String(":key"), id() );
   if ( !query.exec() ) {
     qDebug() &lt;&lt; "Error during selection of records from table <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation"
       &lt;&lt; query.lastError().text();
-    return QList&lt;<xsl:value-of select="@table2"/>&gt;();
+    return QList&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
   }
-  QList&lt;<xsl:value-of select="@table2"/>&gt; rv;
+  QList&lt;<xsl:value-of select="$rightSideClass"/>&gt; rv;
   while ( query.next() ) {
-    int id = query.value( 0 ).toInt();
-    <xsl:value-of select="@table2"/> tmp = <xsl:value-of select="@table2"/>::retrieveById( id );
-    if ( tmp.isValid() )
-      rv.append( tmp );
+    rv.append( <xsl:value-of select="$rightSideClass"/>(
+    <xsl:for-each select="/database/table[@name= $rightSideEntity]/column">
+      query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
+      <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>
+    ) );
   }
   return rv;
 }
+
+// manipulate n:m relations
+bool <xsl:value-of select="$className"/>::relatesTo<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const
+{
+  return Entity::relatesTo&lt;<xsl:value-of select="$relationName"/>&gt;( id(), value.id() );
+}
+
+bool <xsl:value-of select="$className"/>::relatesTo<xsl:value-of select="@table2"/>( int leftId, int rightId )
+{
+  return Entity::relatesTo&lt;<xsl:value-of select="$relationName"/>&gt;( leftId, rightId );
+}
+
+bool <xsl:value-of select="$className"/>::add<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const
+{
+  return Entity::addToRelation&lt;<xsl:value-of select="$relationName"/>&gt;( id(), value.id() );
+}
+
+bool <xsl:value-of select="$className"/>::add<xsl:value-of select="@table2"/>( int leftId, int rightId )
+{
+  return Entity::addToRelation&lt;<xsl:value-of select="$relationName"/>&gt;( leftId, rightId );
+}
+
+bool <xsl:value-of select="$className"/>::remove<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const
+{
+  return Entity::removeFromRelation&lt;<xsl:value-of select="$relationName"/>&gt;( id(), value.id() );
+}
+
+bool <xsl:value-of select="$className"/>::remove<xsl:value-of select="@table2"/>( int leftId, int rightId )
+{
+  return Entity::removeFromRelation&lt;<xsl:value-of select="$relationName"/>&gt;( leftId, rightId );
+}
+
+bool <xsl:value-of select="$className"/>::clear<xsl:value-of select="@table2"/>s() const
+{
+  return Entity::clearRelation&lt;<xsl:value-of select="$relationName"/>&gt;( id() );
+}
+
+bool <xsl:value-of select="$className"/>::clear<xsl:value-of select="@table2"/>s( int id )
+{
+  return Entity::clearRelation&lt;<xsl:value-of select="$relationName"/>&gt;( id );
+}
+
 </xsl:for-each>
 
-// debuig stream operator
+// debug stream operator
 QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$className"/>&amp; entity )
 {
   d &lt;&lt; "[<xsl:value-of select="$className"/>: "
@@ -306,6 +458,87 @@ QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$class
   return d;
 }
 
+// inserting new data
+bool <xsl:value-of select="$className"/>::insert( const <xsl:value-of select="$className"/>&amp; record, int* insertId )
+{
+  QSqlDatabase db = DataStore::self()->database();
+  if ( !db.isOpen() )
+    return false;
+
+  QString statement = QLatin1String("INSERT INTO <xsl:value-of select="$tableName"/> (");
+  <xsl:for-each select="column[@name != 'id']">
+    statement += record.<xsl:value-of select="@name"/>Column();
+    <xsl:if test="position() != last()">statement += QLatin1String(",");</xsl:if>
+  </xsl:for-each>
+  statement += QLatin1String(") VALUES (");
+  <xsl:for-each select="column[@name != 'id']">
+    statement += QLatin1String( ":<xsl:value-of select="@name"/>" );
+    <xsl:if test="position() != last()">statement += QLatin1String(",");</xsl:if>
+  </xsl:for-each>
+  statement += QLatin1String(")");
+
+  QSqlQuery query( db );
+  query.prepare( statement );
+  <xsl:for-each select="column[@name != 'id']">
+    query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), record.<xsl:value-of select="@name"/>() );
+  </xsl:for-each>
+
+  if ( !query.exec() ) {
+    qDebug() &lt;&lt; "Error during insertion into table" &lt;&lt; tableName()
+      &lt;&lt; query.lastError().text();
+    return false;
+  }
+
+  if ( insertId )
+    *insertId = DataStore::self()->lastInsertId( query );
+  return true;
+}
+
+// update existing data
+bool <xsl:value-of select="$className"/>::updateColumn ( const QString &amp;column, const QVariant &amp;value ) const
+{
+  return Entity::updateColumn&lt;<xsl:value-of select="$className"/>&gt;( column, value );
+}
+
+// delete records
+bool <xsl:value-of select="$className"/>::remove( const QString &amp;column, const QVariant &amp;value )
+{
+  return Entity::remove&lt;<xsl:value-of select="$className"/>&gt;( column, value );
+}
+
+</xsl:template>
+
+
+<!-- relation class source template -->
+<xsl:template name="relation-source">
+<xsl:variable name="className"><xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation</xsl:variable>
+<xsl:variable name="tableName"><xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation</xsl:variable>
+
+// SQL table information
+QString <xsl:value-of select="$className"/>::tableName()
+{
+  return QLatin1String( "<xsl:value-of select="$tableName"/>" );
+}
+
+QString <xsl:value-of select="$className"/>::leftColumn()
+{
+  return QLatin1String( "<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>" );
+}
+
+QString <xsl:value-of select="$className"/>::leftFullColumnName()
+{
+  return tableName() + QLatin1String( "." ) + leftColumn();
+}
+
+QString <xsl:value-of select="$className"/>::rightColumn()
+{
+  return QLatin1String( "<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>" );
+}
+
+QString <xsl:value-of select="$className"/>::rightFullColumnName()
+{
+  return tableName() + QLatin1String( "." ) + rightColumn();
+}
 </xsl:template>
 
 

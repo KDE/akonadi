@@ -52,79 +52,75 @@
 -->
 <database>
 
-  <table name="CachePolicies">
+  <table name="CachePolicy">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="CHAR(20)" properties="NOT NULL UNIQUE"/>
+    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <!--<column name="foobar" type="int"/>-->
     <data columns="name" values="'none'"/>
     <data columns="name" values="'temporary'"/>
     <data columns="name" values="'permanent'"/>
   </table>
 
-  <table name="Resources">
+  <table name="Resource">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="CHAR(60)" properties="NOT NULL UNIQUE"/>
-    <column name="cachepolicy_id" type="int" refTable="CachePolicies" refColumn="id" properties="NOT NULL REFERENCES CachePolicies(id)"/>
-    <reference name="locations" table="Locations" key="resourceId"/>
+    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
+    <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="NOT NULL REFERENCES CachePolicy(id)"/>
+    <reference name="locations" table="Location" key="resourceId"/>
   </table>
 
-  <table name="Locations">
+  <table name="Location">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="uri" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
-    <column name="cachepolicy_id" type="int" properties="REFERENCES CachePolicies(id)"/>
-    <column name="resource_id" type="int" refTable="Resources" refColumn="id" properties="NOT NULL REFERENCES Resources(id)"/>
-    <column name="exists_count" type="int"/>
-    <column name="recent_count" type="int"/>
-    <column name="unseen_count" type="int"/>
-    <column name="first_unseen" type="int"/>
-    <column name="uid_validity" type="int"/>
-    <reference name="items" table="PimItems" key="location_id"/>
+    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
+    <column name="cachePolicyId" type="int" properties="REFERENCES CachePolicy(id)"/>
+    <column name="resourceId" type="int" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
+    <column name="existCount" type="int"/>
+    <column name="recentCount" type="int"/>
+    <column name="unseenCount" type="int"/>
+    <column name="firstUnseen" type="int"/>
+    <column name="uidValidity" type="int"/>
+    <reference name="items" table="PimItem" key="locationId"/>
   </table>
 
-  <table name="PersistentSearches">
+  <table name="PersistentSearch">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <column name="query" type="QByteArray" properties="NOT NULL"/>
   </table>
 
-  <table name="MimeTypes">
+  <table name="MimeType">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="mime_type" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
-    <data columns="mime_type" values="'message/rfc822'"/>
-    <data columns="mime_type" values="'text/calendar'"/>
-    <data columns="mime_type" values="'text/vcard'"/>
-    <data columns="mime_type" values="'inode/directory'"/>
+    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
+    <data columns="name" values="'message/rfc822'"/>
+    <data columns="name" values="'text/calendar'"/>
+    <data columns="name" values="'text/vcard'"/>
+    <data columns="name" values="'inode/directory'"/>
   </table>
 
-  <table name="MetaTypes">
+  <table name="MetaType">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="CHAR(60)" properties="NOT NULL"/>
-    <column name="mimetype_id" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
+    <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
   </table>
 
-  <table name="PimItems">
+  <table name="PimItem">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="remote_id" type="QByteArray" properties="NOT NULL"/>
+    <column name="remoteId" type="QByteArray" properties="NOT NULL"/>
     <column name="data" type="QByteArray"/>
-    <column name="location_id" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
-    <column name="mimetype_id" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
+    <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
+    <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP"/>
   </table>
 
-  <table name="SearchLocations">
-    <column name="pim_id" type="int" properties="REFERENCES PimItems(id)"/>
-    <column name="location_id" type="int" properties="REFERENCES PersistenSearches(id)"/>
-  </table>
-  <relation table1="SearchLocations" column1="id" table2="PimItems" column2="id"/>
+  <relation table1="SearchLocation" column1="id" table2="PimItem" column2="id"/>
 
   <table name="ItemMetaData">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="data" type="QByteArray" properties="NOT NULL"/>
-    <column name="metatype_id" type="int" properties="REFERENCES MetaTypes(id)"/>
-    <column name="pimitem_id" type="int" properties="REFERENCES PimItems(id)"/>
+    <column name="metaTypeId" type="int" refTable="MetaType" refColumn="id" properties="REFERENCES MetaType(id)"/>
+    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="REFERENCES PimItem(id)"/>
   </table>
 
-  <table name="Flags">
+  <table name="Flag">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <data columns="name" values="'important'"/>
@@ -137,43 +133,27 @@
     <data columns="name" values="'\Draft'"/>
   </table>
 
-  <table name="ItemFlags">
-    <column name="flag_id" type="int" properties="REFERENCES Flags(id)"/>
-    <column name="pimitem_id" type="int" properties="REFERENCES PimItems(id)"/>
-  </table>
-  <relation table1="PimItems" column1="id" table2="Flags" column2="id"/>
+  <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
 
-  <table name="Parts">
+  <table name="Part">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="int" properties="NOT NULL"/>
-    <column name="pimitem_id" type="int" properties="REFERENCES PimItems(id)"/>
-    <column name="mimetype_id" type="int" properties="REFERENCES MimeTypes(id)"/>
+    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="REFERENCES PimItem(id)"/>
+    <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
   </table>
 
   <table name="PartMetaData">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="data" type="QByteArray" properties="NOT NULL"/>
-    <column name="metatype_id" type="int" properties="REFERENCES MetaTypes(id)"/>
-    <column name="part_id" type="int" properties="REFERENCES Parts(id)"/>
+    <column name="metaTypeId" refTable="MetaType" refColumn="id" type="int" properties="REFERENCES MetaType(id)"/>
+    <column name="partId" type="int" refTable="Part" refColumn="id" properties="REFERENCES Part(id)"/>
   </table>
 
-  <table name="PartFlags">
-    <column name="flag_id" type="int" properties="REFERENCES Flags(id)"/>
-    <column name="part_id" type="int" properties="REFERENCES Parts(id)"/>
-  </table>
-  <relation table2="Flags" column2="id" table1="Parts" column1="id"/>
+  <relation table2="Flag" column2="id" table1="Part" column1="id"/>
 
-  <table name="LocationMimeTypes">
-    <column name="location_id" type="int" properties="REFERENCES Locations(id)"/>
-    <column name="mimetype_id" type="int" properties="REFERENCES MimeType(id)"/>
-  </table>
   <relation table1="Location" column1="id" table2="MimeType" column2="id"/>
 
-  <table name="SearchLocationMimeTypes">
-    <column name="searchlocation_id" type="int" properties="REFERENCES SearchLocations(id)"/>
-    <column name="mimetype_id" type="int" properties="REFERENCES MimeType(id)"/>
-  </table>
-  <relation table1="SearchLocations" column1="id" table2="MimeType" column2="id"/>
+  <relation table1="SearchLocation" column1="id" table2="MimeType" column2="id"/>
 
 </database>

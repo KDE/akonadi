@@ -51,7 +51,7 @@ bool Akonadi::Delete::handleLine(const QByteArray & line)
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = db->locationByName( collection );
+  Location location = Location::retrieveByName( collection );
   if ( !location.isValid() )
     return failureResponse( "No such collection." );
 
@@ -59,7 +59,7 @@ bool Akonadi::Delete::handleLine(const QByteArray & line)
   QList<Location> locations = db->listLocations();
   collection += QLatin1Char('/');
   foreach ( Location location, locations ) {
-    if ( location.location().startsWith( collection ) ) {
+    if ( location.name().startsWith( collection ) ) {
       if ( !db->cleanupLocation( location ) )
         return failureResponse( "Unable to delete collection." );
     }

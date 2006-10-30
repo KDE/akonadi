@@ -25,7 +25,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include <storage/entity.h>
+#include <entities.h>
 
 namespace Akonadi {
 

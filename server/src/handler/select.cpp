@@ -51,8 +51,7 @@ bool Select::handleLine(const QByteArray& line )
     ImapParser::parseString( line, mailbox, startOfMailbox );
     mailbox = HandlerHelper::normalizeCollectionName( mailbox );
 
-    DataStore *db = connection()->storageBackend();
-    Location l = db->locationByName( mailbox );
+    Location l = Location::retrieveByName( mailbox );
 
     if ( !l.isValid() )
         return failureResponse( "Cannot list this folder" );
@@ -62,16 +61,16 @@ bool Select::handleLine(const QByteArray& line )
     Response response;
     response.setUntagged();
 
-    response.setString( l.flags() );
+    response.setString( Flag::joinByName<Flag>( Flag::retrieveAll(), QLatin1String(" ") ) );
     emit responseAvailable( response );
 
-    response.setString( QByteArray::number(l.exists()) + " EXISTS" );
+    response.setString( QByteArray::number(l.existCount()) + " EXISTS" );
     emit responseAvailable( response );
 
-    response.setString( QByteArray::number(l.recent()) + " RECENT" );
+    response.setString( QByteArray::number(l.recentCount()) + " RECENT" );
     emit responseAvailable( response );
 
-    response.setString( "OK [UNSEEN " + QByteArray::number(l.unseen()) + "] Message "
+    response.setString( "OK [UNSEEN " + QByteArray::number(l.unseenCount()) + "] Message "
             + QByteArray::number(l.firstUnseen() ) + " is first unseen" );
     emit responseAvailable( response );
 

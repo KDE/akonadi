@@ -26,7 +26,7 @@
 
 class QSqlQuery;
 
-#include "entity.h"
+#include "entities.h"
 #include "fetchquery.h"
 #include "collection.h"
 #include "notificationcollector.h"
@@ -76,32 +76,18 @@ class DataStore : public QObject
     bool appendCachePolicy( const QString & policy );
     bool removeCachePolicy( const CachePolicy & policy );
     bool removeCachePolicy( int id );
-    CachePolicy cachePolicyById( int id );
-    QList<CachePolicy> listCachePolicies();
 
     /* --- Flag ---------------------------------------------------------- */
     bool appendFlag( const QString & name );
     bool removeFlag( const Flag & flag );
     bool removeFlag( int id );
-    Flag flagById( int id );
-    Flag flagByName( const QString &name );
-    QList<Flag> listFlags();
 
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
     bool appendItemFlags( const PimItem &item, const QList<Flag> &flags );
     bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
-    QList<Flag> itemFlags( const PimItem &item );
 
     bool appendItemFlags( int pimItemId, const QList<QByteArray> &flags );
-
-    /* --- ItemMetaData--------------------------------------------------- */
-    bool appendItemMetaData( const QString & metadata, const MetaType & metatype );
-    bool removeItemMetaData( const ItemMetaData & metadata );
-    bool removeItemMetaData( int id );
-    ItemMetaData itemMetaDataById( int id );
-    QList<ItemMetaData> listItemMetaData();
-    QList<ItemMetaData> listItemMetaData( const MetaType & metatype );
 
     /* --- Location ------------------------------------------------------ */
     bool appendLocation( const QString & location, const Resource & resource,
@@ -120,14 +106,11 @@ class DataStore : public QObject
     bool resetLocationPolicy( const Location & location );
     /// rename the collection @p location to @p newName.
     bool renameLocation( const Location &location, const QString &newName );
-    Location locationById( int id ) const;
-    Location locationByName( const QString &name ) const;
     /**
       Returns all collection associated with the given resource, all collections if the
       resource is invalid.
     */
     QList<Location> listLocations( const Resource & resource = Resource() ) const;
-    QList<MimeType> mimeTypesForLocation( int id ) const;
 
     bool appendMimeTypeForLocation( int locationId, const QString & mimeType );
     bool appendMimeTypeForLocation( int locationId, int mimeTypeId );
@@ -139,17 +122,6 @@ class DataStore : public QObject
     bool appendMimeType( const QString & mimetype, int *insertId = 0 );
     bool removeMimeType( const MimeType & mimetype );
     bool removeMimeType( int id );
-    MimeType mimeTypeById( int id ) const;
-    MimeType mimeTypeByName( const QString & mimetype ) const;
-    QList<MimeType> listMimeTypes();
-
-    /* --- MetaType ------------------------------------------------------ */
-    bool appendMetaType( const QString & metatype, const MimeType & mimetype );
-    bool removeMetaType( const MetaType & metatype );
-    bool removeMetaType( int id );
-    MetaType metaTypeById( int id );
-    QList<MetaType> listMetaTypes();
-    QList<MetaType> listMetaTypes( const MimeType & mimetype );
 
     /* --- PimItem ------------------------------------------------------- */
     bool appendPimItem( const QByteArray & data,
@@ -205,15 +177,11 @@ class DataStore : public QObject
     bool appendResource( const QString & resource, const CachePolicy & policy = CachePolicy() );
     bool removeResource( const Resource & resource );
     bool removeResource( int id );
-    Resource resourceById( int id );
-    const Resource resourceByName( const QByteArray& name ) const;
-    QList<Resource> listResources() const;
     QList<Resource> listResources( const CachePolicy & policy );
 
     /* --- Persistent search --------------------------------------------- */
     bool appendPersisntentSearch( const QString &name, const QByteArray &queryString );
     bool removePersistentSearch( const PersistentSearch &search );
-    PersistentSearch persistentSearch( const QString &name );
     CollectionList listPersistentSearches() const;
 
     /* --- Helper functions ---------------------------------------------- */
@@ -281,7 +249,7 @@ protected:
     QByteArray retrieveDataFromResource( const QByteArray &uid, const QByteArray& remote_id,
                                          int locationid, FetchQuery::Type type );
 
-private:
+  public:
     /** Returns the id of the most recent inserted row, or -1 if there's no such
         id.
         @param query the query we want to get the last insert id for
@@ -289,6 +257,7 @@ private:
      */
     static int lastInsertId( const QSqlQuery & query );
 
+  private:
     /** Converts the given date/time to the database format, i.e.
         "YYYY-MM-DD HH:MM:SS".
         @param dateTime the date/time in UTC

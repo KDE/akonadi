@@ -54,7 +54,7 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = db->locationByName( collection );
+  Location location = Location::retrieveByName( collection );
   if ( !location.isValid() )
     return failureResponse( "No such collection." );
 
