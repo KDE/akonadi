@@ -23,7 +23,7 @@
 #include "messagequery.h"
 #include "monitor.h"
 
-#include <kmime_message.h>
+#include <kmime/kmime_message.h>
 
 #include <kdebug.h>
 #include <klocale.h>

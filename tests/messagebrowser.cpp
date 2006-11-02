@@ -22,7 +22,7 @@
 #include "messagebrowser.h"
 #include "messagemodel.h"
 
-#include "kmime_message.h"
+#include <kmime/kmime_message.h>
 #include <QtCore/QDebug>
 #include <QtGui/QTextEdit>
 

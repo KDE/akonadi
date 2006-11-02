@@ -22,8 +22,8 @@
 #include "imapparser.h"
 #include "messagefetchjob.h"
 
-#include "kmime_message.h"
-#include "kmime_headers.h"
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_headers.h>
 
 #include <QtCore/QDebug>
 

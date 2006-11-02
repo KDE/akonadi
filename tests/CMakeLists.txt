@@ -5,7 +5,6 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/akonadi
 	${CMAKE_CURRENT_SOURCE_DIR}/../
 	${CMAKE_CURRENT_SOURCE_DIR}
-	${CMAKE_SOURCE_DIR}/libkmime
 )
 
 # convenience macro to add akonadi demo application
