@@ -278,7 +278,7 @@ bool DataStore::appendFlag( const QString & name )
     return false;
   }
 
-  return Flag::insert( Flag( -1, name ) );
+  return Flag::insert( Flag( name ) );
 }
 
 bool DataStore::removeFlag( const Flag & flag )
@@ -348,7 +348,7 @@ bool DataStore::appendCachePolicy( const QString & policy )
              << " because it already exists.";
     return false;
   }
-  return CachePolicy::insert( CachePolicy( -1, policy ) );
+  return CachePolicy::insert( CachePolicy( policy ) );
 }
 
 bool DataStore::removeCachePolicy( const CachePolicy & policy )
@@ -373,8 +373,15 @@ bool DataStore::appendLocation( const QString & location,
     return false;
   }
 
-#warning This did insert NULL for cachePolicy before!
-  if ( !Location::insert( Location( -1, location, -1, resource.id(), 0, 0, 0, 0 ,0 ), insertId ) )
+  Location loc;
+  loc.setName( location );
+  loc.setResourceId( resource.id() );
+  loc.setExistCount( 0 );
+  loc.setRecentCount( 0 );
+  loc.setUnseenCount( 0 );
+  loc.setFirstUnseen( 0 );
+  loc.setUidValidity( 0 );
+  if ( !Location::insert( loc, insertId ) )
     return false;
 
   mNotificationCollector->collectionAdded( location, resource.name().toLatin1() );
@@ -390,7 +397,7 @@ bool DataStore::appendLocation( const QString & location,
         << " because it already exists.";
     return false;
   }
-  if ( !Location::insert( Location( -1, location, policy.id(), resource.id(), 0, 0, 0, 0 ,0 ) ) )
+  if ( !Location::insert( Location( location, policy.id(), resource.id(), 0, 0, 0, 0 ,0 ) ) )
     return false;
 
   mNotificationCollector->collectionAdded( location, resource.name().toLatin1() );
@@ -555,7 +562,7 @@ bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
     return false;
   }
 
-  return MimeType::insert( MimeType( -1, mimetype ), insertId );
+  return MimeType::insert( MimeType( mimetype ), insertId );
 }
 
 bool DataStore::removeMimeType( const MimeType & mimetype )
@@ -1108,7 +1115,7 @@ bool DataStore::appendResource( const QString & resource,
     return false;
   }
 
-  return Resource::insert( Resource( -1, resource, policy.id() ) );
+  return Resource::insert( Resource( resource, policy.id() ) );
 }
 
 bool DataStore::removeResource( const Resource & resource )
@@ -1140,7 +1147,7 @@ CollectionList Akonadi::DataStore::listPersistentSearches() const
 
 bool Akonadi::DataStore::appendPersisntentSearch(const QString & name, const QByteArray & queryString)
 {
-  PersistentSearch::insert( PersistentSearch( -1, name, queryString ) );
+  PersistentSearch::insert( PersistentSearch( name, queryString ) );
   mNotificationCollector->collectionAdded( name );
   return true;
 }

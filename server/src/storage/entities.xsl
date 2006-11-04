@@ -105,11 +105,21 @@ class <xsl:value-of select="$className"/> : public Entity
   public:
     // constructor
     <xsl:value-of select="$className"/>();
-    <xsl:value-of select="$className"/>( <xsl:call-template name="ctor-args"/> );
+    <xsl:value-of select="$className"/>(
+    <xsl:for-each select="column[@name != 'id']">
+      <xsl:call-template name="argument"/><xsl:if test="position() != last()">, </xsl:if>
+    </xsl:for-each> );
+    <xsl:if test="column[@name = 'id']">
+    <xsl:value-of select="$className"/>(
+    <xsl:for-each select="column">
+      <xsl:call-template name="argument"/><xsl:if test="position() != last()">, </xsl:if>
+    </xsl:for-each> );
+    </xsl:if>
 
     // accessor methods
     <xsl:for-each select="column[@name != 'id']">
-      <xsl:value-of select="@type"/><xsl:text> </xsl:text><xsl:value-of select="@name"/>() const;
+    <xsl:value-of select="@type"/><xsl:text> </xsl:text><xsl:value-of select="@name"/>() const;
+    void <xsl:call-template name="setter-signature"/>;
     </xsl:for-each>
 
     // SQL table information
@@ -184,6 +194,7 @@ class <xsl:value-of select="$className"/> : public Entity
     // member variables
     <xsl:for-each select="column[@name != 'id']">
     <xsl:value-of select="@type"/><xsl:text> m_</xsl:text><xsl:value-of select="@name"/>;
+    bool m_<xsl:value-of select="@name"/>_changed;
     </xsl:for-each>
 };
 
@@ -217,30 +228,53 @@ class <xsl:value-of select="$className"/>
 <xsl:variable name="entityName"><xsl:value-of select="@name"/></xsl:variable>
 
 // constructor
-<xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>() : Entity() {}
-
-<xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>( <xsl:call-template name="ctor-args"/> ) :
-<xsl:choose>
-  <xsl:when test="column[@name='id']">
-  Entity( id )
-  </xsl:when>
-  <xsl:otherwise>
-  Entity()
-  </xsl:otherwise>
-</xsl:choose>
-<xsl:for-each select="column">
-  <xsl:if test="@name != 'id'">
-    <xsl:text>, m_</xsl:text><xsl:value-of select="@name"/>( <xsl:value-of select="@name"/> )
-  </xsl:if>
+<xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>() : Entity()
+<xsl:for-each select="column[@name != 'id']">
+, m_<xsl:value-of select="@name"/>_changed( false )
 </xsl:for-each>
 {
 }
+
+<xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>(
+  <xsl:for-each select="column[@name != 'id']">
+    <xsl:call-template name="argument"/><xsl:if test="position() != last()">, </xsl:if>
+  </xsl:for-each>
+) :
+  Entity()
+<xsl:for-each select="column[@name != 'id']">
+  , m_<xsl:value-of select="@name"/>( <xsl:value-of select="@name"/> )
+  , m_<xsl:value-of select="@name"/>_changed( true )
+</xsl:for-each>
+{
+}
+
+<xsl:if test="column[@name = 'id']">
+<xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>(
+  <xsl:for-each select="column">
+    <xsl:call-template name="argument"/><xsl:if test="position() != last()">, </xsl:if>
+  </xsl:for-each>
+) :
+  Entity( id )
+<xsl:for-each select="column[@name != 'id']">
+  , m_<xsl:value-of select="@name"/>( <xsl:value-of select="@name"/> )
+  , m_<xsl:value-of select="@name"/>_changed( true )
+</xsl:for-each>
+{
+}
+</xsl:if>
+
 
 // accessor methods
 <xsl:for-each select="column[@name != 'id']">
 <xsl:value-of select="@type"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>() const
 {
   <xsl:text>return m_</xsl:text><xsl:value-of select="@name"/>;
+}
+
+void <xsl:value-of select="$className"/>::<xsl:call-template name="setter-signature"/>
+{
+  m_<xsl:value-of select="@name"/> = <xsl:value-of select="@name"/>;
+  m_<xsl:value-of select="@name"/>_changed = true;
 }
 
 </xsl:for-each>
@@ -465,22 +499,22 @@ bool <xsl:value-of select="$className"/>::insert( const <xsl:value-of select="$c
   if ( !db.isOpen() )
     return false;
 
-  QString statement = QLatin1String("INSERT INTO <xsl:value-of select="$tableName"/> (");
+  QStringList cols, vals;
   <xsl:for-each select="column[@name != 'id']">
-    statement += record.<xsl:value-of select="@name"/>Column();
-    <xsl:if test="position() != last()">statement += QLatin1String(",");</xsl:if>
+  if ( record.m_<xsl:value-of select="@name"/>_changed ) {
+    cols.append( record.<xsl:value-of select="@name"/>Column() );
+    vals.append( QLatin1String( ":<xsl:value-of select="@name"/>" ) );
+  }
   </xsl:for-each>
-  statement += QLatin1String(") VALUES (");
-  <xsl:for-each select="column[@name != 'id']">
-    statement += QLatin1String( ":<xsl:value-of select="@name"/>" );
-    <xsl:if test="position() != last()">statement += QLatin1String(",");</xsl:if>
-  </xsl:for-each>
-  statement += QLatin1String(")");
+  QString statement = QString::fromLatin1("INSERT INTO <xsl:value-of select="$tableName"/> (%1) VALUES (%2)")
+    .arg( cols.join( QLatin1String(",") ), vals.join( QLatin1String(",") ) );
 
   QSqlQuery query( db );
   query.prepare( statement );
   <xsl:for-each select="column[@name != 'id']">
+  if ( record.m_<xsl:value-of select="@name"/>_changed ) {
     query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), record.<xsl:value-of select="@name"/>() );
+  }
   </xsl:for-each>
 
   if ( !query.exec() ) {
@@ -545,19 +579,18 @@ QString <xsl:value-of select="$className"/>::rightFullColumnName()
 
 <!-- Helper templates -->
 
-<!-- constructor argument list -->
-<xsl:template name="ctor-args">
-  <xsl:for-each select="column">
-    <xsl:if test="starts-with(@type,'Q')">
-      <xsl:text>const </xsl:text>
-    </xsl:if>
-    <xsl:value-of select="@type"/><xsl:text> </xsl:text>
-    <xsl:if test="starts-with(@type,'Q')">
-      <xsl:text>&amp;</xsl:text>
-    </xsl:if>
-    <xsl:value-of select="@name"/>
-    <xsl:if test="position()!=last()">, </xsl:if>
-  </xsl:for-each>
+<!-- generates function argument code for the current column -->
+<xsl:template name="argument">
+  <xsl:if test="starts-with(@type,'Q')">const </xsl:if><xsl:value-of select="@type"/><xsl:text> </xsl:text>
+  <xsl:if test="starts-with(@type,'Q')">&amp;</xsl:if><xsl:value-of select="@name"/>
+</xsl:template>
+
+<!-- signature of setter method -->
+<xsl:template name="setter-signature">
+<xsl:variable name="methodName">
+  <xsl:value-of select="concat(translate(substring(@name,1,1),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@name,2))"/>
+</xsl:variable>
+set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
 </xsl:template>
 
 <!-- field name list -->
