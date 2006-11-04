@@ -46,7 +46,7 @@ void CollectionCreateJob::doStart( )
 {
   QByteArray command = newTag() + " CREATE \"" + d->path.toUtf8() + "\"";
   if ( !d->contentTypes.isEmpty() )
-    command += '(' + ImapParser::join( d->contentTypes, QByteArray(" ") ) + ')';
+    command += " (" + ImapParser::join( d->contentTypes, QByteArray(" ") ) + ')';
   writeData( command );
 }
 
