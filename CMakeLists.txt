@@ -58,7 +58,7 @@ qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/inter
 kde4_automoc(${akonadi_LIB_SRC})
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 
-target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDECORE_LIBS} kmime )
+target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDECORE_LIBS} ${KDE4_KMIME_LIBS} )
 set_target_properties( akonadi PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 
