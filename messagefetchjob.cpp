@@ -51,7 +51,7 @@ class Akonadi::MessageFetchJobPrivate
       hdr->setEmail( addr[2] + '@' + addr[3] );
     }
 
-    void parseAddrList( const QList<QByteArray> &addrList, KMime::Headers::To *hdr )
+    void parseAddrList( const QList<QByteArray> &addrList, KMime::Headers::Generics::AddressList *hdr )
     {
       foreach ( const QByteArray ba, addrList ) {
         QList<QByteArray> addr;
@@ -60,9 +60,9 @@ class Akonadi::MessageFetchJobPrivate
           qWarning() << "Error parsing envelope address field: " << addr;
           continue;
         }
-        KMime::Headers::AddressField addrField;
+        KMime::Types::Mailbox addrField;
         addrField.setNameFrom7Bit( addr[0] );
-        addrField.setEmail( addr[2] + '@' + addr[3] );
+        addrField.setAddress( addr[2] + '@' + addr[3] );
         hdr->addAddress( addrField );
       }
     }
