@@ -131,7 +131,7 @@ void MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray
           // reply-to
           ImapParser::parseParenthesizedList( env[4], addrList );
           if ( !addrList.isEmpty() )
-            d->parseAddrField( addrList, mime->replyTo() );
+            d->parseAddrList( addrList, mime->replyTo() );
           // to
           ImapParser::parseParenthesizedList( env[5], addrList );
           if ( !addrList.isEmpty() )
@@ -145,7 +145,7 @@ void MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray
           if ( !addrList.isEmpty() )
             d->parseAddrList( addrList, mime->bcc() );
           // in-reply-to
-          // not yet supported by KMime
+          mime->inReplyTo()->from7BitString( env[8] );
           // message id
           mime->messageID()->from7BitString( env[9] );
         }
