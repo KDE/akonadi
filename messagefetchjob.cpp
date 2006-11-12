@@ -35,23 +35,7 @@ class Akonadi::MessageFetchJobPrivate
     Message::List messages;
 
   public:
-    void parseAddrField( const QList<QByteArray> &addrField, KMime::Headers::AddressField *hdr )
-    {
-      if ( addrField.count() != 1 ) {
-        qWarning() << "Error parsing envelope - address field does not contains exactly one entry: " << addrField;
-        return;
-      }
-      QList<QByteArray> addr;
-      ImapParser::parseParenthesizedList( addrField[0], addr );
-      if ( addr.count() != 4 ) {
-        qWarning() << "Error parsing envelope address field: " << addr;
-        return;
-      }
-      hdr->setName( QString::fromUtf8( addr[0] ) ); // TODO: find the correct encoding
-      hdr->setEmail( addr[2] + '@' + addr[3] );
-    }
-
-    void parseAddrList( const QList<QByteArray> &addrList, KMime::Headers::Generics::AddressList *hdr )
+    template <typename T> void parseAddrList( const QList<QByteArray> &addrList, T *hdr )
     {
       foreach ( const QByteArray ba, addrList ) {
         QList<QByteArray> addr;
@@ -125,7 +109,7 @@ void MessageFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray
           QList<QByteArray> addrList;
           ImapParser::parseParenthesizedList( env[2], addrList );
           if ( !addrList.isEmpty() )
-            d->parseAddrField( addrList, mime->from() );
+            d->parseAddrList( addrList, mime->from() );
           // sender
           // not supported by kmime, skipp it
           // reply-to
