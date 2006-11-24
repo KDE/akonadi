@@ -37,9 +37,9 @@ class Akonadi::MessageFetchJobPrivate
   public:
     template <typename T> void parseAddrList( const QList<QByteArray> &addrList, T *hdr )
     {
-      foreach ( const QByteArray ba, addrList ) {
+      for ( QList<QByteArray>::ConstIterator it = addrList.constBegin(); it != addrList.constEnd(); ++it ) {
         QList<QByteArray> addr;
-        ImapParser::parseParenthesizedList( ba, addr );
+        ImapParser::parseParenthesizedList( *it, addr );
         if ( addr.count() != 4 ) {
           qWarning() << "Error parsing envelope address field: " << addr;
           continue;
