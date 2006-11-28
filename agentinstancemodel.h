@@ -21,10 +21,11 @@
 #define AGENTINSTANCEMODEL_H
 
 #include <QtCore/QAbstractItemModel>
+#include <kdepim_export.h>
 
 namespace Akonadi {
 
-class AgentInstanceModel : public QAbstractItemModel
+class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
 {
   Q_OBJECT
 

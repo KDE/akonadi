@@ -21,6 +21,7 @@
 #define AKONADI_ITEMDELETEJOB_H
 
 #include <libakonadi/job.h>
+#include <kdepim_export.h>
 
 namespace Akonadi {
 
@@ -30,7 +31,7 @@ class ItemDeleteJobPrivate;
   Convenience job which permanently deletes an item, ie. sets the \\Deleted flag
   and then executes the EXPUNGE command.
 */
-class ItemDeleteJob : public Job
+class AKONADI_EXPORT ItemDeleteJob : public Job
 {
   Q_OBJECT
 

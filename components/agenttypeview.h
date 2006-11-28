@@ -21,7 +21,7 @@
 #define AGENTTYPEVIEW_H
 
 #include <QtGui/QWidget>
-
+#include <kdepim_export.h>
 namespace Akonadi {
 
 /**
@@ -33,7 +33,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AgentTypeView : public QWidget
+class AKONADICOMPONENTS_EXPORT AgentTypeView : public QWidget
 {
   Q_OBJECT
 

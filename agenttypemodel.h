@@ -21,13 +21,13 @@
 #define AGENTTYPEMODEL_H
 
 #include <QtCore/QAbstractItemModel>
-
+#include <kdepim_export.h>
 namespace Akonadi {
 
 /**
  * This class provides a model for available agent types.
  */
-class AgentTypeModel : public QAbstractItemModel
+class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
 {
   Q_OBJECT
 

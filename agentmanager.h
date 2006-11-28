@@ -21,6 +21,7 @@
 #define AKONADI_AGENTMANAGER_H
 
 #include <QtCore/QObject>
+#include <kdepim_export.h>
 
 class QIcon;
 
@@ -29,7 +30,7 @@ namespace Akonadi {
 /**
   This class provides an interface to manage agents.
 */
-class AgentManager : public QObject
+class AKONADI_EXPORT AgentManager : public QObject
 {
   Q_OBJECT
 

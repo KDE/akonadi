@@ -21,7 +21,7 @@
 #define AKONADI_COLLECTIONMODIFYJOB_H
 
 #include <libakonadi/job.h>
-
+#include <kdepim_export.h>
 namespace Akonadi {
 
 class CollectionModifyJobPrivate;
@@ -29,7 +29,7 @@ class CollectionModifyJobPrivate;
 /**
   Job to modify properties of existing collections.
 */
-class CollectionModifyJob : public Job
+class AKONADI_EXPORT CollectionModifyJob : public Job
 {
   Q_OBJECT
 

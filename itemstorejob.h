@@ -22,6 +22,7 @@
 
 #include <libakonadi/item.h>
 #include <libakonadi/job.h>
+#include <kdepim_export.h>
 
 namespace Akonadi {
 
@@ -30,7 +31,7 @@ class ItemStoreJobPrivate;
 /**
   Modifies an existing Item.
 */
-class ItemStoreJob : public Job
+class AKONADI_EXPORT ItemStoreJob : public Job
 {
   Q_OBJECT
 
