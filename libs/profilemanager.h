@@ -21,10 +21,11 @@
 #define AKONADI_PROFILEMANAGER_H
 
 #include <QtCore/QObject>
+#include <kdepim_export.h>
 
 namespace Akonadi {
 
-class ProfileManager : public QObject
+class AKONADI_EXPORT ProfileManager : public QObject
 {
   Q_OBJECT
 

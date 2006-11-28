@@ -21,10 +21,11 @@
 #define PROFILEMODEL_H
 
 #include <QtCore/QAbstractItemModel>
+#include <kdepim_export.h>
 
 namespace Akonadi {
 
-class ProfileModel : public QAbstractItemModel
+class AKONADI_EXPORT ProfileModel : public QAbstractItemModel
 {
   Q_OBJECT
 
