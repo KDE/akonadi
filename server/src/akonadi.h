@@ -22,10 +22,11 @@
 #define AKONADISERVER_H
 
 #include <QtNetwork/QTcpServer>
+#include <kdepim_export.h>
 
 namespace Akonadi {
 
-class AkonadiServer: public QTcpServer
+class AKONADI_EXPORT AkonadiServer: public QTcpServer
 {
     Q_OBJECT
 
