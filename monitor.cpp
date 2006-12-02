@@ -35,10 +35,11 @@ class Akonadi::MonitorPrivate
     QSet<QByteArray> resources;
     QSet<int> items;
     QSet<QByteArray> mimetypes;
+    bool monitorAll;
 
     bool isCollectionMonitored( const QString &path, const QByteArray &resource )
     {
-      if ( isCollectionMonitored( path ) || resources.contains( resource ) )
+      if ( monitorAll || isCollectionMonitored( path ) || resources.contains( resource ) )
         return true;
       return false;
     }
@@ -46,7 +47,7 @@ class Akonadi::MonitorPrivate
     bool isItemMonitored( uint item, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource )
     {
-      if ( isCollectionMonitored( collection ) || items.contains( item ) ||
+      if ( monitorAll || isCollectionMonitored( collection ) || items.contains( item ) ||
            resource.contains( resource ) || mimetypes.contains( mimetype ) )
         return true;
       return false;
@@ -74,6 +75,7 @@ Monitor::Monitor( QObject *parent ) :
     d( new MonitorPrivate() )
 {
   d->nm = 0;
+  d->monitorAll = false;
   connectToNotificationManager();
 }
 
@@ -100,6 +102,11 @@ void Monitor::monitorResource(const QByteArray & resource)
 void Monitor::monitorMimeType(const QByteArray & mimetype)
 {
   d->mimetypes.insert( mimetype );
+}
+
+void Akonadi::Monitor::monitorAll()
+{
+  d->monitorAll = true;
 }
 
 void Monitor::slotItemChanged( const QByteArray & uid, const QString& collection,

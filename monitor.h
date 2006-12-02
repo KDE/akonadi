@@ -76,6 +76,11 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void monitorMimeType( const QByteArray &mimetype );
 
+    /**
+      Monitor all items.
+    */
+    void monitorAll();
+
   Q_SIGNALS:
     /**
       Emitted if a monitored object has changed.
