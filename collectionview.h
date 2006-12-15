@@ -60,6 +60,8 @@ class AKONADI_EXPORT CollectionView : public QTreeView
 
   protected:
     virtual void dragMoveEvent( QDragMoveEvent *event );
+    virtual void dragLeaveEvent( QDragLeaveEvent *event );
+    virtual void dropEvent( QDropEvent *event );
 
     /**
       Translates a QModelIndex from the sort proxy model into a QModelIndex
@@ -67,9 +69,12 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     */
     QModelIndex sourceIndex( const QModelIndex &index );
 
+  private slots:
+    void dragExpand();
+
   private:
     class Private;
-    Private *d;
+    Private * const d;
 };
 
 }

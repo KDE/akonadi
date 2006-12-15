@@ -20,9 +20,12 @@
 #include "collectionmodel.h"
 #include "collectionview.h"
 
+#include <kdebug.h>
 #include <klocale.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QTimer>
+#include <QtGui/QApplication>
 #include <QtGui/QDragMoveEvent>
 #include <QtGui/QHeaderView>
 #include <QtGui/QInputDialog>
@@ -35,6 +38,8 @@ class CollectionView::Private
   public:
     QSortFilterProxyModel *filterModel;
     CollectionModel *model;
+    QModelIndex dragOverIndex;
+    QTimer dragExpandTimer;
 };
 
 CollectionView::CollectionView( QWidget * parent ) :
@@ -54,6 +59,9 @@ CollectionView::CollectionView( QWidget * parent ) :
   setDropIndicatorShown( true );
   setDragDropMode( DropOnly );
 
+  d->dragExpandTimer.setSingleShot( true );
+  connect( &d->dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()) );
+
   // temporary for testing
   connect( this, SIGNAL(doubleClicked(QModelIndex)), SLOT(createCollection(QModelIndex)) );
 }
@@ -61,7 +69,6 @@ CollectionView::CollectionView( QWidget * parent ) :
 CollectionView::~ CollectionView( )
 {
   delete d;
-  d = 0;
 }
 
 void CollectionView::setModel( QAbstractItemModel * model )
@@ -86,7 +93,16 @@ void CollectionView::createCollection( const QModelIndex & parent )
 
 void CollectionView::dragMoveEvent(QDragMoveEvent * event)
 {
-  QModelIndex index = sourceIndex( indexAt( event->pos() ) );
+  QModelIndex index = indexAt( event->pos() );
+  if ( d->dragOverIndex != index ) {
+    d->dragExpandTimer.stop();
+    if ( index.isValid() && !isExpanded( index ) && itemsExpandable() ) {
+      d->dragExpandTimer.start( QApplication::startDragTime() );
+      d->dragOverIndex = index;
+    }
+  }
+
+  index = sourceIndex( indexAt( event->pos() ) );
   QStringList mimeTypes = event->mimeData()->formats();
   if ( !d->model->supportsContentType( index, mimeTypes ) ) {
     event->setDropAction( Qt::IgnoreAction );
@@ -100,6 +116,27 @@ QModelIndex CollectionView::sourceIndex(const QModelIndex & index)
   if ( index.model() == d->filterModel )
     return d->filterModel->mapToSource( index );
   return index;
+}
+
+void CollectionView::dragLeaveEvent(QDragLeaveEvent * event)
+{
+  d->dragExpandTimer.stop();
+  d->dragOverIndex = QModelIndex();
+  QTreeView::dragLeaveEvent( event );
+}
+
+void CollectionView::dropEvent(QDropEvent * event)
+{
+  d->dragExpandTimer.stop();
+  d->dragOverIndex = QModelIndex();
+  QTreeView::dropEvent( event );
+}
+
+void CollectionView::dragExpand()
+{
+  kDebug() << k_funcinfo << endl;
+  setExpanded( d->dragOverIndex, true );
+  d->dragOverIndex = QModelIndex();
 }
 
 #include "collectionview.moc"
