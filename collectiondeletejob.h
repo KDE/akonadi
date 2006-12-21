@@ -31,7 +31,7 @@ class CollectionDeleteJobPrivate;
   Be carefull with using this: It deletes not only the specified collection
   but also all its sub-collections as well as all associated content!
 */
-class CollectionDeleteJob : public Job
+class AKONADI_EXPORT CollectionDeleteJob : public Job
 {
   Q_OBJECT
 

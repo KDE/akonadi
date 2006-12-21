@@ -22,6 +22,7 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
+#include <kdepim_export.h>
 
 namespace Akonadi {
 
@@ -29,7 +30,7 @@ namespace Akonadi {
   Stores specific collection attributes (ACLs, unread counts, quotas, etc.).
   Every collection can have zero ore one attribute of every type.
 */
-class CollectionAttribute
+class AKONADI_EXPORT CollectionAttribute
 {
   public:
     typedef QList<CollectionAttribute*> List;
@@ -50,7 +51,7 @@ class CollectionAttribute
   Content mimetypes collection attribute. Contains a list of allowed content
   types of a collection.
 */
-class CollectionContentTypeAttribute : public CollectionAttribute
+class AKONADI_EXPORT CollectionContentTypeAttribute : public CollectionAttribute
 {
   public:
     /**
