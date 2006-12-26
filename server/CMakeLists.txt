@@ -116,3 +116,5 @@ set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
 target_link_libraries( akonadiserver_bin akonadiprivate )
 
 install(TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
+install(FILES interfaces/org.kde.Akonadi.AgentManager.xml interfaces/org.kde.Akonadi.NotificationManager.xml interfaces/org.kde.Akonadi.ProfileManager.xml interfaces/org.kde.Akonadi.SearchProviderManager.xml interfaces/org.kde.Akonadi.Tracer.xml interfaces/org.kde.Akonadi.TracerNotification.xml DESTINATION ${DBUS_INTERFACES_DIR} )
+
