@@ -11,7 +11,7 @@ kde4_automoc(${handlertest_SRCS})
 
 kde4_add_executable(handlertest NOGUI RUN_UNINSTALLED ${handlertest_SRCS})
 
-target_link_libraries(handlertest akonadiprivate ${QT_QTTEST_LIBRARY})
+target_link_libraries(handlertest ${CMAKE_CURRENT_BINARY_DIR}/lib/akonadiprivate ${QT_QTTEST_LIBRARY})
 
 add_test(akonadi-handlertest ${EXECUTABLE_OUTPUT_PATH}/handlertest)
 
