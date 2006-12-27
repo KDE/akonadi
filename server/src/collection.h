@@ -22,6 +22,7 @@
 #include <QtCore/QList>
 #include <QtCore/QString>
 
+#include "akonadiprivate_export.h"
 #include "global.h"
 
 namespace Akonadi {
@@ -29,7 +30,7 @@ namespace Akonadi {
 /**
   @brief A collection of objects.
  */
-class Collection {
+class AKONADIPRIVATE_EXPORT Collection {
 public:
     Collection( const QString & identifier );
 
@@ -53,7 +54,7 @@ private:
     QByteArray m_mimeTypes;
 };
 
-class CollectionList : public QList<Collection>
+class AKONADIPRIVATE_EXPORT CollectionList : public QList<Collection>
 {
   public:
     CollectionList();

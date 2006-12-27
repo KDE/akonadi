@@ -30,6 +30,7 @@ class QSqlQuery;
 #include "fetchquery.h"
 #include "collection.h"
 #include "notificationcollector.h"
+#include "akonadiprivate_export.h"
 
 namespace Akonadi {
 
@@ -39,7 +40,7 @@ class NotificationCollector;
 /**
   This class handles all the database access.
 */
-class DataStore : public QObject
+class AKONADIPRIVATE_EXPORT DataStore : public QObject
 {
     Q_OBJECT
   public:

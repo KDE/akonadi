@@ -28,6 +28,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QWaitCondition>
 #include <QtDBus/QDBusMessage>
+#include "akonadiprivate_export.h"
 
 /**
  * Threads which want to send DBus messages must inherit from
@@ -35,7 +36,7 @@
  *
  * To send a message use callDBus.
  */
-class DBusThread : public QThread
+class AKONADIPRIVATE_EXPORT DBusThread : public QThread
 {
   friend class DBusThreadProxy;
 

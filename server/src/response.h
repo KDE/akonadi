@@ -20,6 +20,7 @@
 #define AKONADIRESPONSE_H
 
 #include <QtCore/QByteArray>
+#include "akonadiprivate_export.h"
 
 namespace Akonadi {
 
@@ -28,7 +29,7 @@ namespace Akonadi {
     Encapsulates the result of a command, including what to send
     back to the client.
  */
-class Response{
+class AKONADIPRIVATE_EXPORT Response{
     enum ResultCode {
         OK = 0,
         NO = 1,
