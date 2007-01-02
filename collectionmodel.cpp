@@ -31,6 +31,7 @@
 #include <kiconloader.h>
 #include <kinstance.h>
 #include <klocale.h>
+#include <kapplication.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QHash>
@@ -86,7 +87,7 @@ CollectionModel::CollectionModel( QObject * parent ) :
   connect( d->monitor, SIGNAL(collectionRemoved(QString)), SLOT(collectionRemoved(QString)) );
 
   // ### Hack to get the kmail resource folder icons
-  KGlobal::instance()->iconLoader()->addAppDir( QLatin1String( "kmail" ) );
+  kapp->iconLoader()->addAppDir( QLatin1String( "kmail" ) );
 }
 
 CollectionModel::~CollectionModel()
