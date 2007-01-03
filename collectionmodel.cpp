@@ -27,6 +27,7 @@
 #include "jobqueue.h"
 #include "monitor.h"
 
+#include <kapplication.h>
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kinstance.h>
@@ -87,7 +88,10 @@ CollectionModel::CollectionModel( QObject * parent ) :
   connect( d->monitor, SIGNAL(collectionRemoved(QString)), SLOT(collectionRemoved(QString)) );
 
   // ### Hack to get the kmail resource folder icons
-  kapp->iconLoader()->addAppDir( QLatin1String( "kmail" ) );
+  if (kapp)
+  {
+    kapp->iconLoader()->addAppDir( QLatin1String( "kmail" ) );
+  }
 }
 
 CollectionModel::~CollectionModel()
