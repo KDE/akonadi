@@ -3,8 +3,8 @@
 \section libakonadi_intro Introduction
 
 libakonadi is the client access library for using the Akonadi PIM data server.
-Every process accessing Akonadi, including those which communicate with a remote s
-erver (\ref akonadi_design_agents "agents"), are considered clients.
+All processes accessing Akonadi, including those which communicate with a remote
+server (\ref akonadi_design_agents "agents"), are considered clients.
 
 Functionality provided by libakonadi:
 
@@ -26,7 +26,7 @@ The Akonadi::Monitor class allows you to monitor specific resources,
 
 \section libakonadi_collections Collection retrieval and manipulation
 
-See \ref akonadi_concepts_collections "Collection Conecpt" for more information
+See \ref akonadi_concepts_collections "Collection Concept" for more information
 about the concept of collections. A collection is represented by the Akonadi::Collection class.
 
 Classes to retrieve information about collections:
