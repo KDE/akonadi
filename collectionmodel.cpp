@@ -27,12 +27,10 @@
 #include "jobqueue.h"
 #include "monitor.h"
 
-#include <kapplication.h>
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kinstance.h>
 #include <klocale.h>
-#include <kapplication.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QHash>
