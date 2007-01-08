@@ -88,10 +88,7 @@ CollectionModel::CollectionModel( QObject * parent ) :
   connect( d->monitor, SIGNAL(collectionRemoved(QString)), SLOT(collectionRemoved(QString)) );
 
   // ### Hack to get the kmail resource folder icons
-  if (kapp)
-  {
-    kapp->iconLoader()->addAppDir( QLatin1String( "kmail" ) );
-  }
+  KIconLoader::global()->addAppDir( QLatin1String( "kmail" ) );
 }
 
 CollectionModel::~CollectionModel()
