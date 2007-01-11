@@ -34,3 +34,5 @@ target_link_libraries(akonadi_control ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
 
 install(TARGETS akonadi_control DESTINATION ${BIN_INSTALL_DIR})
 
+configure_file(org.kde.Akonadi.Control.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Control.service)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Control.service DESTINATION ${CMAKE_INSTALL_PREFIX}/share/dbus-1/services)
