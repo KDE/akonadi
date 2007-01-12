@@ -20,7 +20,6 @@
 #include "message.h"
 #include "messagefetchjob.h"
 #include "messagemodel.h"
-#include "messagequery.h"
 #include "monitor.h"
 
 #include <kmime/kmime_message.h>

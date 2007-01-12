@@ -36,7 +36,6 @@ set( akonadi_LIB_SRC
 	itemdeletejob.cpp
 	itemfetchjob.cpp
 	itemstorejob.cpp
-	itemquery.cpp
 	itemmodel.cpp
 	job.cpp
 	jobqueue.cpp
@@ -45,7 +44,6 @@ set( akonadi_LIB_SRC
 	message.cpp
 	messagefetchjob.cpp
 	messagemodel.cpp
-	messagequery.cpp
 	monitor.cpp
 	profilemanager.cpp
 	profilemodel.cpp
@@ -93,7 +91,6 @@ install( FILES
 	message.h
 	messagefetchjob.h
 	messagemodel.h
-	messagequery.h
 	monitor.h
 	profilemanager.h
 	transactionjobs.h

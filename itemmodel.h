@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <volker.krause@rwth-aachen.de>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -118,24 +118,19 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     void fetchingNewDone( Akonadi::Job* job );
 
     /**
-      Connected to message queries that handle changed messages.
+      Connected to the monitor job.
     */
-    void fetchingUpdatesDone( Akonadi::Job* job );
+    void itemChanged( const Akonadi::DataReference &reference );
 
     /**
       Connected to the monitor job.
     */
-    void itemsChanged( const DataReference::List &references );
+    void itemAdded( const Akonadi::DataReference &reference );
 
     /**
       Connected to the monitor job.
     */
-    void itemsAdded( const DataReference::List &references );
-
-    /**
-      Connected to the monitor job.
-    */
-    void itemsRemoved( const DataReference::List &references );
+    void itemRemoved( const Akonadi::DataReference &reference );
 
   private:
     class Private;
