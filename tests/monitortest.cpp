@@ -22,6 +22,7 @@
 #include <libakonadi/monitor.h>
 #include <libakonadi/collectioncreatejob.h>
 #include <libakonadi/collectiondeletejob.h>
+#include <libakonadi/control.h>
 #include <libakonadi/itemappendjob.h>
 #include <libakonadi/itemstorejob.h>
 #include <libakonadi/itemdeletejob.h>
@@ -33,6 +34,11 @@
 using namespace Akonadi;
 
 QTEST_KDEMAIN( MonitorTest, NoGUI )
+
+void MonitorTest::initTestCase()
+{
+  Control::start();
+}
 
 void MonitorTest::testMonitor()
 {

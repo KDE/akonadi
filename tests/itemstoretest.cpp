@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include "control.h"
 #include "itemstoretest.h"
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/itemstorejob.h>
@@ -25,6 +26,11 @@
 using namespace Akonadi;
 
 QTEST_KDEMAIN( ItemStoreTest, NoGUI )
+
+void ItemStoreTest::initTestCase()
+{
+  Control::start();
+}
 
 void ItemStoreTest::testFlagChange()
 {
@@ -140,7 +146,5 @@ void ItemStoreTest::testIllegalItemMove()
   QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
   QVERIFY( !store->exec() );
 }
-
-
 
 #include "itemstoretest.moc"

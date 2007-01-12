@@ -18,6 +18,7 @@
 */
 
 #include "collection.h"
+#include "control.h"
 #include "message.h"
 #include "messagejobtest.h"
 #include "messagefetchjob.h"
@@ -32,6 +33,11 @@ using namespace Akonadi;
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( MessageJobTest, NoGUI )
+
+void MessageJobTest::initTestCase()
+{
+  Control::start();
+}
 
 void MessageJobTest::testMessageFetch( )
 {
@@ -106,6 +112,5 @@ void MessageJobTest::testIllegalMessageFetch( )
   QVERIFY( job->exec() );
   QVERIFY( job->messages().isEmpty() );
 }
-
 
 #include "messagejobtest.moc"

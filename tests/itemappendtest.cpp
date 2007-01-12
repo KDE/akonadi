@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include "control.h"
 #include "itemappendtest.h"
 #include <libakonadi/itemappendjob.h>
 #include <libakonadi/itemfetchjob.h>
@@ -29,6 +30,11 @@ using namespace Akonadi;
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( ItemAppendTest, NoGUI )
+
+void ItemAppendTest::initTestCase()
+{
+  Control::start();
+}
 
 void ItemAppendTest::testItemAppend()
 {

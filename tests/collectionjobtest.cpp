@@ -27,11 +27,20 @@
 #include "collectionmodifyjob.h"
 #include "collectionrenamejob.h"
 #include "collectionstatusjob.h"
+#include "control.h"
 #include "messagecollectionattribute.h"
+
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 
 using namespace Akonadi;
 
 QTEST_KDEMAIN( CollectionJobTest, NoGUI )
+
+void CollectionJobTest::initTestCase()
+{
+  Control::start();
+}
 
 static Collection* findCol( const Collection::List &list, const QByteArray &path ) {
   foreach ( Collection* col, list )

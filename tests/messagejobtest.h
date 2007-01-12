@@ -26,6 +26,7 @@ class MessageJobTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
+    void initTestCase();
     void testMessageFetch();
     void testIllegalMessageFetch();
 };

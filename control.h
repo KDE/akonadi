@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,20 +17,43 @@
     02110-1301, USA.
 */
 
-#ifndef ITEMSTORETEST_H
-#define ITEMSTORETEST_H
+#ifndef AKONADI_CONTROL_H
+#define AKONADI_CONTROL_H
 
 #include <QtCore/QObject>
 
-class ItemStoreTest : public QObject
+#include <kdepim_export.h>
+
+class QEventLoop;
+
+namespace Akonadi {
+
+/**
+  This class provides methods to control the Akonadi server.
+*/
+class AKONADI_EXPORT Control : public QObject
 {
   Q_OBJECT
-  private Q_SLOTS:
-    void initTestCase();
-    void testFlagChange();
-    void testDataChange();
-    void testItemMove();
-    void testIllegalItemMove();
+  public:
+    /**
+      Starts the Akonadi server synchronously if necessary.
+    */
+    static void start();
+
+  private:
+    Control();
+    static Control* self();
+    void startInternal();
+
+  private slots:
+    void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
+
+  private:
+    static Control* mInstance;
+    QEventLoop *mEventLoop;
+
 };
+
+}
 
 #endif

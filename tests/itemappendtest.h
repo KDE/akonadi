@@ -26,6 +26,7 @@ class ItemAppendTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
+    void initTestCase();
     void testItemAppend();
     void testUtf8Data();
     void testIllegalAppend();
