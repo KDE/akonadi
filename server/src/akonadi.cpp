@@ -33,7 +33,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
     : QTcpServer( parent )
 {
     s_instance = this;
-    listen( QHostAddress::LocalHost, 4444 );
+    if ( !listen( QHostAddress::LocalHost, 4444 ) )
+      qFatal("Unable to listen on port 4444");
 
     // initialize the database
     DataStore *db = DataStore::self();

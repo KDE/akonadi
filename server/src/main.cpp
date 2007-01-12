@@ -29,12 +29,12 @@ int main( int argc, char ** argv )
 {
     QCoreApplication app( argc, argv );
 
+    Akonadi::AkonadiServer::instance(); // trigger singleton creation
+
     if ( !QDBusConnection::sessionBus().registerService( QLatin1String("org.kde.Akonadi") ) ) {
       qDebug( "Unable to connect to dbus service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
       return 1;
     }
-
-    Akonadi::AkonadiServer::instance(); // trigger singleton creation
 
     return app.exec();
 }
