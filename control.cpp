@@ -58,7 +58,11 @@ void Control::startInternal()
 {
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) || mEventLoop )
     return;
- QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
+ QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
+ if ( !reply.isValid() ) {
+   qWarning( "Unable to start Akonadi control process: %s", qPrintable( reply.error().message() ) );
+   return;
+ }
  mEventLoop = new QEventLoop( this );
  mEventLoop->exec();
 }
