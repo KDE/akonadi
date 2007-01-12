@@ -39,6 +39,14 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
   public:
     /**
+      Columns types.
+    */
+    enum Column {
+      Id = 0, /**< The unique id. */
+      MimeType /**< Item mimetype. */
+    };
+
+    /**
       Creates a new message model.
 
       @param parent The parent object.
@@ -53,7 +61,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     /**
       Reimplemented from QAbstractItemModel.
      */
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const = 0;
+    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
 
     /**
       Reimplemented from QAbstractItemModel.
@@ -83,7 +91,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       @param path The full collection path.
       @param parent The parent of the fetchjob.
     */
-    virtual ItemFetchJob* createFetchJob( const QString &path, QObject* parent = 0 ) = 0;
+    virtual ItemFetchJob* createFetchJob( const QString &path, QObject* parent = 0 );
 
     /**
       Returns the message reference to the given model index. If the index
@@ -91,7 +99,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       @param index The model index.
     */
     virtual DataReference referenceForIndex( const QModelIndex &index ) const;
-
 
   protected:
     /**

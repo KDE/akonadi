@@ -61,13 +61,24 @@ Akonadi::ItemModel::~ItemModel( )
 
 QVariant Akonadi::ItemModel::data( const QModelIndex & index, int role ) const
 {
-  Q_UNUSED( role );
   if ( !index.isValid() )
     return QVariant();
   if ( index.row() >= d->items.count() )
     return QVariant();
-  Item* itm = d->items.at( index.row() );
-  return itm->data();
+  Item* item = d->items.at( index.row() );
+  if ( !item )
+    return QVariant();
+
+  if ( role == Qt::DisplayRole ) {
+    switch ( index.column() ) {
+      case Id:
+        return QString::number( item->reference().persistanceID() );
+      case MimeType:
+        return QString::fromLatin1( item->mimeType() );
+    }
+  }
+
+  return QVariant();
 }
 
 int Akonadi::ItemModel::rowCount( const QModelIndex & parent ) const
@@ -77,8 +88,25 @@ int Akonadi::ItemModel::rowCount( const QModelIndex & parent ) const
   return 0;
 }
 
+int ItemModel::columnCount(const QModelIndex & parent) const
+{
+  if ( !parent.isValid() )
+    return 2; // keep in sync with Column enum
+  return 0;
+}
+
 QVariant Akonadi::ItemModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
+  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
+    switch ( section ) {
+      case Id:
+        return i18n( "Id" );
+      case MimeType:
+        return i18n( "MimeType" );
+      default:
+        return QString();
+    }
+  }
   return QAbstractTableModel::headerData( section, orientation, role );
 }
 
@@ -114,6 +142,7 @@ void Akonadi::ItemModel::listingDone( Akonadi::Job * job )
   } else {
     d->items = d->listingJob->items();
     reset();
+    kDebug() << k_funcinfo << "################################" << d->items.count() << endl;
   }
   d->listingJob->deleteLater();
   d->listingJob = 0;
@@ -233,6 +262,11 @@ Akonadi::Item* Akonadi::ItemModel::itemForIndex( const QModelIndex & index ) con
   Item *itm = d->items.at( index.row() );
   Q_ASSERT( itm );
   return itm;
+}
+
+ItemFetchJob* ItemModel::createFetchJob(const QString & path, QObject * parent)
+{
+  return new ItemFetchJob( path, parent );
 }
 
 #include "itemmodel.moc"

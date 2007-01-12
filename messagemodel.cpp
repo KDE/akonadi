@@ -99,7 +99,7 @@ QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int
         return QString();
     }
   }
-  return QAbstractTableModel::headerData( section, orientation, role );
+  return ItemModel::headerData( section, orientation, role );
 }
 
 ItemFetchJob* MessageModel::createFetchJob( const QString &path, QObject* parent )

@@ -52,6 +52,12 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     */
     virtual void setModel ( QAbstractItemModel * model );
 
+    /**
+      Translates a QModelIndex from the sort proxy model into a QModelIndex
+      from the CollectionModel if necessary.
+    */
+    QModelIndex sourceIndex( const QModelIndex &index );
+
   public Q_SLOTS:
     /**
       Add a child collection to the given model index.
@@ -62,12 +68,6 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     virtual void dragMoveEvent( QDragMoveEvent *event );
     virtual void dragLeaveEvent( QDragLeaveEvent *event );
     virtual void dropEvent( QDropEvent *event );
-
-    /**
-      Translates a QModelIndex from the sort proxy model into a QModelIndex
-      from the CollectionModel if necessary.
-    */
-    QModelIndex sourceIndex( const QModelIndex &index );
 
   private slots:
     void dragExpand();
