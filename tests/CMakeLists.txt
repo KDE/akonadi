@@ -27,27 +27,6 @@ macro(add_akonadi_test _source)
   add_test( libakonadi-${_name} ${EXECUTABLE_OUTPUT_PATH}/${_name})
 endmacro(add_akonadi_test)
 
-########### next target ###############
-
-set(collectionbrowser_SRCS collectionbrowser.cpp messagebrowser.cpp )
-
-kde4_automoc(${collectionbrowser_SRCS})
-
-kde4_add_executable(collectionbrowser RUN_UNINSTALLED ${collectionbrowser_SRCS})
-
-target_link_libraries(collectionbrowser  akonadi ${KDE4_KDECORE_LIBS} )
-
-########### next target ###############
-
-set(messagebrowser_SRCS messagebrowser.cpp  messagebrowser_main.cpp )
-
-kde4_automoc(${messagebrowser_SRCS})
-
-kde4_add_executable(messagebrowser RUN_UNINSTALLED ${messagebrowser_SRCS})
-
-target_link_libraries(messagebrowser  akonadi ${KDE4_KDECORE_LIBS} )
-
-
 # demo applications
 add_akonadi_demo(itemdumper.cpp)
 add_akonadi_demo(collectioncreator.cpp)
