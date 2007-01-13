@@ -207,11 +207,4 @@ void AgentManager::agentInstanceSynchronize( const QString &identifier )
   d->mManager->agentInstanceSynchronize( identifier );
 }
 
-bool AgentManager::requestItemDelivery( const QString &agentIdentifier, const QString &uid,
-                                        const QString &remoteId,
-                                        const QString &collection, int type )
-{
-  return d->mManager->requestItemDelivery( agentIdentifier, uid, remoteId, collection, type );
-}
-
 #include "agentmanager.moc"
