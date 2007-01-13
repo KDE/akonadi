@@ -70,7 +70,7 @@ void KnutResource::synchronize()
   mSyncTimer->start( 2000 );
 }
 
-bool KnutResource::requestItemDelivery( const QString&, const QString&, const QString&, int, const QDBusMessage& )
+bool KnutResource::requestItemDelivery( int, const QString&, const QString&, int, const QDBusMessage& )
 {
   return false;
 }
