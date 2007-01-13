@@ -739,7 +739,7 @@ QString fieldNameForDataType( FetchQuery::Type type )
   return QLatin1String("data");
 }
 
-QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray &uid, const QByteArray& remote_id,
+QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id,
                                                          int locationid, FetchQuery::Type type )
 {
   // TODO: error handling
@@ -760,10 +760,10 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray &uid, 
                                         .arg( r.name(), interface ? interface->lastError().message() : QString() );
          return QByteArray();
       }
-      bool ok = interface->requestItemDelivery( QString::fromLatin1(uid), QString::fromUtf8(remote_id), l.name(), type );
+      bool ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), l.name(), type );
   } else {
     QList<QVariant> arguments;
-    arguments << QString::fromLatin1( uid ) << QString::fromUtf8( remote_id ) << l.name() << type;
+    arguments << uid << QString::fromUtf8( remote_id ) << l.name() << type;
 
     DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
 
@@ -781,7 +781,7 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( const QByteArray &uid, 
   QSqlQuery query( m_database );
   query.prepare( QString::fromLatin1("SELECT data FROM %1 WHERE %2 = :id")
       .arg( PimItem::tableName(), PimItem::idColumn() ) );
-  query.bindValue( QLatin1String(":id"), uid.toInt() );
+  query.bindValue( QLatin1String(":id"), uid );
   if ( query.exec() && query.next() )
     return query.value( 0 ).toByteArray();
 
@@ -817,7 +817,7 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
   QDateTime dateTime = dateTimeToQDateTime( query.value( 3 ).toByteArray() );
   QByteArray data = query.value( 5 ).toByteArray();
   if ( data.isEmpty() && type == FetchQuery::AllType )
-      data = retrieveDataFromResource( QByteArray::number( id ), remote_id, location, type );
+      data = retrieveDataFromResource( id, remote_id, location, type );
 
   return PimItem( pimItemId, remote_id, data, location, mimetype, dateTime );
 }

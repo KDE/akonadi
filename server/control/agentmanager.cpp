@@ -500,30 +500,6 @@ void AgentManager::save()
   file.sync();
 }
 
-bool AgentManager::requestItemDelivery( const QString & agentIdentifier, const QString & uid,
-                                        const QString &remoteId, const QString & collection, int type )
-{
-  if ( !mInstances.contains( agentIdentifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::requestItemDelivery" ),
-    QString( "Agent instance with identifier '%1' does not exist" ).arg( agentIdentifier ) );
-    return false;
-  }
-
-  if ( !mInstances.value( agentIdentifier ).controller ) {
-    mTracer->error( QLatin1String( "AgentManager::requestItemDelivery" ),
-                    QString( "Agent instance '%1' not running!" ).arg( agentIdentifier ) );
-    return false;
-  }
-
-  if ( mInstances[ agentIdentifier ].interface )
-    return mInstances[ agentIdentifier ].interface->requestItemDelivery( uid, remoteId, collection, type );
-  else {
-    mTracer->error( QLatin1String( "AgentManager::requestItemDelivery" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( agentIdentifier ) );
-    return false;
-  }
-}
-
 void AgentManager::resourceRegistered( const QString &name, const QString&, const QString &newOwner )
 {
   if ( !name.startsWith( "org.kde.Akonadi.Resource." ) )

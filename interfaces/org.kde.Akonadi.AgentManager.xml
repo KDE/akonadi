@@ -107,13 +107,5 @@
     <method name="agentInstanceSynchronize">
       <arg name="identifier" type="s" direction="in"/>
     </method>
-    <method name="requestItemDelivery">
-      <arg type="b" direction="out"/>
-      <arg name="agentIdentifier" type="s" direction="in"/>
-      <arg name="itemUid" type="s" direction="in"/>
-      <arg name="itemRemoteId" type="s" direction="in"/>
-      <arg name="collection" type="s" direction="in"/>
-      <arg name="type" type="i" direction="in"/>
-    </method>
   </interface>
 </node>
