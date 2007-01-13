@@ -26,9 +26,9 @@ INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, rece
 INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (9, 'res2/space folder', 1, 2, 0, 0, 0, 0, 0);
 
 DELETE FROM PersistentSearchTable;
-INSERT INTO PersistentSearchTable (id, name, query) VALUES(0, 'kde-core-devel', 'MIMETYPE message/rfc822 HEADER From kde-core-devel@kde.org');
-INSERT INTO PersistentSearchTable (id, name, query) VALUES(1, 'all', 'MIMETYPE message/rfc822 ALL');
-INSERT INTO PersistentSearchTable (id, name, query) VALUES(2, 'Test ?er', 'MIMETYPE message/rfc822 BODY "Test ?er"');
+INSERT INTO PersistentSearchTable (id, name, query) VALUES(1, 'kde-core-devel', 'MIMETYPE message/rfc822 HEADER From kde-core-devel@kde.org');
+INSERT INTO PersistentSearchTable (id, name, query) VALUES(2, 'all', 'MIMETYPE message/rfc822 ALL');
+INSERT INTO PersistentSearchTable (id, name, query) VALUES(3, 'Test ?er', 'MIMETYPE message/rfc822 BODY "Test ?er"');
 
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 1, 2);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 1, 3);
