@@ -23,11 +23,13 @@
 
 QTEST_KDEMAIN( InterpreterTest, NoGUI )
 
+using namespace Akonadi;
+
 void InterpreterTest::testSimple()
 {
-  Parser parser;
+  SearchParser parser;
 
-  InterpreterItem *item = parser.parse( "(name = 'hello world')" );
+  SearchInterpreterItem *item = parser.parse( "(name = 'hello world')" );
 
   QVERIFY( item != 0 );
   QVERIFY( item->isLeafItem() );
@@ -40,16 +42,16 @@ void InterpreterTest::testSimple()
 
 void InterpreterTest::testNested()
 {
-  Parser parser;
+  SearchParser parser;
 
-  InterpreterItem *item = parser.parse( "(| (name = 'foo') (money != 'bar'))" );
+  SearchInterpreterItem *item = parser.parse( "(| (name = 'foo') (money != 'bar'))" );
   QVERIFY( item != 0 );
   QVERIFY( !item->isLeafItem() );
 
-  QList<InterpreterItem*> childItems = item->childItems();
+  QList<SearchInterpreterItem*> childItems = item->childItems();
   QCOMPARE( childItems.count(), 2 );
 
-  InterpreterItem *childItem = childItems[ 0 ];
+  SearchInterpreterItem *childItem = childItems[ 0 ];
   QVERIFY( childItem->isLeafItem() );
   QCOMPARE( childItem->key(), QLatin1String( "name" ) );
   QCOMPARE( childItem->comparator(), QLatin1String( "=" ) );
@@ -66,22 +68,22 @@ void InterpreterTest::testNested()
 
 void InterpreterTest::testDoubleNested()
 {
-  Parser parser;
+  SearchParser parser;
 
-  InterpreterItem *item = parser.parse( "(| (& (name = 'foo') (me != 'you') (he != 'she')) (money != 'bar'))" );
+  SearchInterpreterItem *item = parser.parse( "(| (& (name = 'foo') (me != 'you') (he != 'she')) (money != 'bar'))" );
   QVERIFY( item != 0 );
   QVERIFY( !item->isLeafItem() );
 
-  QList<InterpreterItem*> childItems = item->childItems();
+  QList<SearchInterpreterItem*> childItems = item->childItems();
   QCOMPARE( childItems.count(), 2 );
 
-  InterpreterItem *childItem = childItems[ 0 ];
+  SearchInterpreterItem *childItem = childItems[ 0 ];
   QVERIFY( !childItem->isLeafItem() );
 
-  QList<InterpreterItem*> subChildItems = childItem->childItems();
+  QList<SearchInterpreterItem*> subChildItems = childItem->childItems();
   QCOMPARE( subChildItems.count(), 3 );
 
-  InterpreterItem *subChildItem = subChildItems[ 0 ];
+  SearchInterpreterItem *subChildItem = subChildItems[ 0 ];
   QVERIFY( subChildItem->isLeafItem() );
   QCOMPARE( subChildItem->key(), QLatin1String( "name" ) );
   QCOMPARE( subChildItem->comparator(), QLatin1String( "=" ) );

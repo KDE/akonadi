@@ -17,16 +17,18 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef INTERPRETER_H
-#define INTERPRETER_H
+#ifndef AKONADI_INTERPRETER_H
+#define AKONADI_INTERPRETER_H
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
+namespace Akonadi {
+
 /**
  * This class encapsulates solving nexted boolean constructs
  */
-class InterpreterItem
+class SearchInterpreterItem
 {
   public:
     enum Relation
@@ -38,23 +40,23 @@ class InterpreterItem
     /**
      * Creates a new solver item with the given key, comparator and pattern.
      */
-    InterpreterItem( const QString &key, const QString &comparator, const QString &pattern );
+    SearchInterpreterItem( const QString &key, const QString &comparator, const QString &pattern );
 
     /**
      * Creates a new solver item which combines the given child items by a given relation.
      *
      * Ownership of the child items is transfered to the item.
      */
-    InterpreterItem( Relation relation );
+    SearchInterpreterItem( Relation relation );
 
     /**
      * Destroys the solver item and all its child items.
      */
-    virtual ~InterpreterItem();
+    virtual ~SearchInterpreterItem();
 
-    virtual void setChildItems( const QList<InterpreterItem*> items );
+    virtual void setChildItems( const QList<SearchInterpreterItem*> items );
 
-    QList<InterpreterItem*> childItems() const;
+    QList<SearchInterpreterItem*> childItems() const;
 
     bool isLeafItem() const;
     Relation relation() const;
@@ -71,21 +73,23 @@ class InterpreterItem
     QString mPattern;
 
     Relation mRelation;
-    QList<InterpreterItem*> mItems;
+    QList<SearchInterpreterItem*> mItems;
 
     bool mIsLeaf;
 };
 
-class Parser
+class SearchParser
 {
   public:
-    InterpreterItem* parse( const QString &query ) const;
+    SearchInterpreterItem* parse( const QString &query ) const;
 
   private:
     QStringList tokenize( const QString& ) const;
     QStringListIterator balanced( QStringListIterator ) const;
 
-    InterpreterItem* parseInternal( QStringListIterator &it ) const;
+    SearchInterpreterItem* parseInternal( QStringListIterator &it ) const;
 };
+
+}
 
 #endif

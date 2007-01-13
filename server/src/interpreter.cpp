@@ -19,58 +19,60 @@
 
 #include "interpreter.h"
 
-InterpreterItem::InterpreterItem( const QString &key, const QString &comparator, const QString &pattern )
+using namespace Akonadi;
+
+SearchInterpreterItem::SearchInterpreterItem( const QString &key, const QString &comparator, const QString &pattern )
   : mKey( key ), mComparator( comparator ), mPattern( pattern ), mIsLeaf( true )
 {
 }
 
-InterpreterItem::InterpreterItem( Relation relation )
+SearchInterpreterItem::SearchInterpreterItem( Relation relation )
   : mRelation( relation ), mIsLeaf( false )
 {
 }
 
-void InterpreterItem::setChildItems( const QList<InterpreterItem*> items )
+void SearchInterpreterItem::setChildItems( const QList<SearchInterpreterItem*> items )
 {
   mItems = items;
 }
 
-QList<InterpreterItem*> InterpreterItem::childItems() const
+QList<SearchInterpreterItem*> SearchInterpreterItem::childItems() const
 {
   return mItems;
 }
 
-InterpreterItem::~InterpreterItem()
+SearchInterpreterItem::~SearchInterpreterItem()
 {
   qDeleteAll( mItems );
   mItems.clear();
 }
 
-bool InterpreterItem::isLeafItem() const
+bool SearchInterpreterItem::isLeafItem() const
 {
   return mIsLeaf;
 }
 
-InterpreterItem::Relation InterpreterItem::relation() const
+SearchInterpreterItem::Relation SearchInterpreterItem::relation() const
 {
   return mRelation;
 }
 
-QString InterpreterItem::key() const
+QString SearchInterpreterItem::key() const
 {
   return mKey;
 }
 
-QString InterpreterItem::comparator() const
+QString SearchInterpreterItem::comparator() const
 {
   return mComparator;
 }
 
-QString InterpreterItem::pattern() const
+QString SearchInterpreterItem::pattern() const
 {
   return mPattern;
 }
 
-QString InterpreterItem::dump() const
+QString SearchInterpreterItem::dump() const
 {
   if ( mIsLeaf ) {
     return QString( "(%1 %2 %3)" ).arg( mKey, mComparator, mPattern );
@@ -85,7 +87,7 @@ QString InterpreterItem::dump() const
   }
 }
 
-InterpreterItem* Parser::parse( const QString &query ) const
+SearchInterpreterItem* SearchParser::parse( const QString &query ) const
 {
   QString pattern( query.trimmed() );
 
@@ -101,7 +103,7 @@ InterpreterItem* Parser::parse( const QString &query ) const
   return parseInternal( it );
 }
 
-QStringListIterator Parser::balanced( QStringListIterator _it ) const
+QStringListIterator SearchParser::balanced( QStringListIterator _it ) const
 {
   QStringListIterator it( _it );
 
@@ -122,7 +124,7 @@ QStringListIterator Parser::balanced( QStringListIterator _it ) const
   return _it;
 }
 
-QStringList Parser::tokenize( const QString &query ) const
+QStringList SearchParser::tokenize( const QString &query ) const
 {
   QString pattern( query.trimmed() );
 
@@ -206,7 +208,7 @@ QStringList Parser::tokenize( const QString &query ) const
   return tokens;
 }
 
-InterpreterItem* Parser::parseInternal( QStringListIterator &it ) const
+SearchInterpreterItem* SearchParser::parseInternal( QStringListIterator &it ) const
 {
   if ( !it.hasNext() )
     return 0;
@@ -216,7 +218,7 @@ InterpreterItem* Parser::parseInternal( QStringListIterator &it ) const
     /**
      * We have a term like: (&( ... )( ... )( ... ))
      */
-    QList<InterpreterItem*> childItems;
+    QList<SearchInterpreterItem*> childItems;
 
     const QString operatorSign = token;
 
@@ -234,7 +236,7 @@ InterpreterItem* Parser::parseInternal( QStringListIterator &it ) const
       }
       nextIt.previous();
 
-      InterpreterItem *item = parseInternal( it );
+      SearchInterpreterItem *item = parseInternal( it );
       if ( item == 0 ) {
         qDeleteAll( childItems );
         return 0;
@@ -248,12 +250,12 @@ InterpreterItem* Parser::parseInternal( QStringListIterator &it ) const
       it = nextIt;
     } while ( true );
 
-    InterpreterItem *item = 0;
+    SearchInterpreterItem *item = 0;
 
     if ( operatorSign == QLatin1String( "&" ) )
-      item = new InterpreterItem( InterpreterItem::And );
+      item = new SearchInterpreterItem( SearchInterpreterItem::And );
     else
-      item = new InterpreterItem( InterpreterItem::Or );
+      item = new SearchInterpreterItem( SearchInterpreterItem::Or );
 
     item->setChildItems( childItems );
 
@@ -279,7 +281,7 @@ InterpreterItem* Parser::parseInternal( QStringListIterator &it ) const
 
     const QString pattern = it.next();
 
-    return new InterpreterItem( key, comparator, pattern );
+    return new SearchInterpreterItem( key, comparator, pattern );
   }
 
   return 0;
