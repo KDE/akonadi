@@ -182,6 +182,39 @@ void ImapParserTest::testParseParenthesizedList( )
   QCOMPARE( consumed, input.length() );
 }
 
+void ImapParserTest::testParseNumber()
+{
+  QByteArray input = " 1a23.4";
+  int result, pos;
+  bool ok;
 
+  // empty string
+  pos = ImapParser::parseNumber( QByteArray(), result, &ok );
+  QCOMPARE( ok, false );
+  QCOMPARE( pos, 0 );
+
+  // leading spaces at the beginning
+  pos = ImapParser::parseNumber( input, result, &ok, 0 );
+  QCOMPARE( ok, true );
+  QCOMPARE( pos, 2 );
+  QCOMPARE( result, 1 );
+
+  // multiple digits
+  pos = ImapParser::parseNumber( input, result, &ok, 3 );
+  QCOMPARE( ok, true );
+  QCOMPARE( pos, 5 );
+  QCOMPARE( result, 23 );
+
+  // number at input end
+  pos = ImapParser::parseNumber( input, result, &ok, 6 );
+  QCOMPARE( ok, true );
+  QCOMPARE( pos, 7 );
+  QCOMPARE( result, 4 );
+
+  // out of bounds access
+  pos = ImapParser::parseNumber( input, result, &ok, input.length() );
+  QCOMPARE( ok, false );
+  QCOMPARE( pos, input.length() );
+}
 
 #include "imapparsertest.moc"

@@ -18,6 +18,7 @@
 */
 
 #include "itemappendjob.h"
+#include "imapparser.h"
 
 #include <QtCore/QDebug>
 
@@ -30,6 +31,7 @@ class Akonadi::ItemAppendJobPrivate
     QByteArray data;
     QByteArray mimetype;
     QString remoteId;
+    int uid;
 };
 
 ItemAppendJob::ItemAppendJob( const QString &path, const QByteArray & data, const QByteArray & mimetype, QObject * parent ) :
@@ -39,6 +41,7 @@ ItemAppendJob::ItemAppendJob( const QString &path, const QByteArray & data, cons
   d->path = path;
   d->data = data;
   d->mimetype = mimetype;
+  d->uid = 0;
 }
 
 ItemAppendJob::~ ItemAppendJob( )
@@ -60,12 +63,27 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
     writeData( d->data );
     return;
   }
+  if ( tag == this->tag() ) {
+    int pos = data.indexOf( "UIDNEXT" );
+    bool ok = false;
+    if ( pos > 0 )
+      ImapParser::parseNumber( data, d->uid, &ok, pos );
+    if ( !ok )
+      qDebug() << "invalid response to item append job: " << tag << data;
+  }
   qDebug() << "unhandled response in item append job: " << tag << data;
 }
 
 void ItemAppendJob::setRemoteId(const QString & remoteId)
 {
   d->remoteId = remoteId;
+}
+
+DataReference ItemAppendJob::reference() const
+{
+  if ( d->uid == 0 )
+    return DataReference();
+  return DataReference( d->uid, d->remoteId );
 }
 
 #include "itemappendjob.moc"

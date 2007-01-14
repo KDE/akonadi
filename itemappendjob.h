@@ -54,6 +54,12 @@ class AKONADI_EXPORT ItemAppendJob : public Job
     */
     virtual ~ItemAppendJob();
 
+    /**
+      Returns a DataReference pointing to the new item. The result is invalid
+      if the job failed.
+    */
+    DataReference reference() const;
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
