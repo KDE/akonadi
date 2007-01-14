@@ -306,15 +306,23 @@ void Job::writeData( const QByteArray & data )
 void Job::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == d->tag ) {
-    if ( !data.startsWith( "OK" ) ) {
+    if ( data.startsWith( "NO " ) || data.startsWith( "BAD " ) ) {
       QString msg = QString::fromUtf8( data );
-      if ( msg.startsWith( QLatin1String( "NO " ) ) ) msg.remove( 0, 3 );
-      if ( msg.endsWith( QLatin1String( "\r\n" ) ) ) msg.chop( 2 );
+
+      msg.remove( 0, msg.startsWith( QLatin1String( "NO " ) ) ? 3 : 4 );
+
+      if ( msg.endsWith( QLatin1String( "\r\n" ) ) )
+        msg.chop( 2 );
+
       setError( Unknown, msg );
+      emit done( this );
+      return;
+    } else if ( data.startsWith( "OK" ) ) {
+      emit done( this );
+      return;
     }
-    emit done( this );
-    return;
   }
+
   doHandleResponse( tag, data );
 }
 
