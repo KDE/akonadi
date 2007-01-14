@@ -22,6 +22,8 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
+#include <QtCore/QMutex>
+#include <QtCore/QWaitCondition>
 #include <QtSql/QSqlDatabase>
 
 class QSqlQuery;
@@ -280,6 +282,10 @@ private:
     bool m_dbOpened;
     bool m_inTransaction;
     NotificationCollector* mNotificationCollector;
+
+    static QList<int> mPendingItemDeliveries;
+    static QMutex mPendingItemDeliveriesMutex;
+    static QWaitCondition mPendingItemDeliveriesCondition;
 };
 
 }

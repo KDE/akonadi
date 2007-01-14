@@ -43,6 +43,10 @@
 
 using namespace Akonadi;
 
+QList<int> DataStore::mPendingItemDeliveries;
+QMutex DataStore::mPendingItemDeliveriesMutex;
+QWaitCondition DataStore::mPendingItemDeliveriesCondition;
+
 /***************************************************************************
  *   DataStore                                                           *
  ***************************************************************************/
@@ -747,35 +751,51 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
   Location l = Location::retrieveById( locationid );
   Resource r = l.resource();
 
-  // call the resource
-
-  // Use the interface if we are in main thread, the DBusThread proxy otherwise
-  if ( QThread::currentThread() == QCoreApplication::instance()->thread() ) {
-      org::kde::Akonadi::Resource *interface =
-                  new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.name(),
-                                                   QLatin1String("/"), QDBusConnection::sessionBus(), this );
-
-      if ( !interface || !interface->isValid() ) {
-         qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                                        .arg( r.name(), interface ? interface->lastError().message() : QString() );
-         return QByteArray();
-      }
-      bool ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), l.name(), type );
+  // check if that item is already been fetched by someone else
+  mPendingItemDeliveriesMutex.lock();
+  if ( mPendingItemDeliveries.contains( uid ) ) {
+      qDebug() << "requestItemDelivery(): item already requested by other thread - waiting";
+      mPendingItemDeliveriesCondition.wait( &mPendingItemDeliveriesMutex );
+      qDebug() << "requestItemDelivery(): continuing";
+      mPendingItemDeliveriesMutex.unlock();
   } else {
-    QList<QVariant> arguments;
-    arguments << uid << QString::fromUtf8( remote_id ) << l.name() << type;
+      mPendingItemDeliveries << uid;
+      mPendingItemDeliveriesMutex.unlock();
 
-    DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
+      // call the resource
 
-    const QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Resource." ) + r.name(),
-                                                         QLatin1String( "/" ),
-                                                         QLatin1String( "org.kde.Akonadi.Resource" ),
-                                                         QLatin1String( "requestItemDelivery" ), arguments );
+      // Use the interface if we are in main thread, the DBusThread proxy otherwise
+      if ( QThread::currentThread() == QCoreApplication::instance()->thread() ) {
+          org::kde::Akonadi::Resource *interface =
+                      new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.name(),
+                                                      QLatin1String("/"), QDBusConnection::sessionBus(), this );
 
-    // do something with result...
-    qDebug() << "got dbus response: " << result;
+          if ( !interface || !interface->isValid() ) {
+            qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+                                            .arg( r.name(), interface ? interface->lastError().message() : QString() );
+            return QByteArray();
+          }
+          bool ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), l.name(), type );
+      } else {
+        QList<QVariant> arguments;
+        arguments << uid << QString::fromUtf8( remote_id ) << l.name() << type;
+
+        DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
+
+        const QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Resource." ) + r.name(),
+                                                            QLatin1String( "/" ),
+                                                            QLatin1String( "org.kde.Akonadi.Resource" ),
+                                                            QLatin1String( "requestItemDelivery" ), arguments );
+
+        // do something with result...
+        qDebug() << "got dbus response: " << result;
+      }
+      qDebug() << "returned from requestItemDelivery()";
+
+      mPendingItemDeliveriesMutex.lock();
+      mPendingItemDeliveries.removeAll( uid );
+      mPendingItemDeliveriesMutex.unlock();
   }
-  qDebug() << "returned from requestItemDelivery()";
 
   // get the delivered item
   QSqlQuery query( m_database );
