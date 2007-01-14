@@ -43,26 +43,26 @@ class NotificationManager : public QObject
     void connectDatastore( DataStore* );
 
   Q_SIGNALS:
-    Q_SCRIPTABLE void itemChanged( const QByteArray &uid, const QString &collection,
+    Q_SCRIPTABLE void itemChanged( int sessionId, const QByteArray &uid, const QString &collection,
                       const QByteArray &mimetype, const QByteArray &resource );
-    Q_SCRIPTABLE void itemAdded( const QByteArray &uid, const QString &collection,
+    Q_SCRIPTABLE void itemAdded( int sessionId, const QByteArray &uid, const QString &collection,
                     const QByteArray &mimetype, const QByteArray &resource );
-    Q_SCRIPTABLE void itemRemoved( const QByteArray &uid, const QString &collection,
+    Q_SCRIPTABLE void itemRemoved( int sessionId, const QByteArray &uid, const QString &collection,
                       const QByteArray &mimetype, const QByteArray &resource );
-    Q_SCRIPTABLE void collectionAdded( const QString &path, const QByteArray &resource );
-    Q_SCRIPTABLE void collectionChanged( const QString &path, const QByteArray &resource );
-    Q_SCRIPTABLE void collectionRemoved( const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionAdded( int sessionId, const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionChanged( int sessionId, const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionRemoved( int sessionId, const QString &path, const QByteArray &resource );
 
   private Q_SLOTS:
-    void slotItemAdded( int uid, const QString& location,
+    void slotItemAdded( int sessionId, int uid, const QString& location,
                         const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemChanged( int uid, const QString &location,
+    void slotItemChanged( int sessionId, int uid, const QString &location,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemRemoved( int uid, const QString &location,
+    void slotItemRemoved( int sessionId, int uid, const QString &location,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotCollectionAdded( const QString &path, const QByteArray &resource );
-    void slotCollectionChanged( const QString &path, const QByteArray &resource );
-    void slotCollectionRemoved( const QString &path, const QByteArray &resource );
+    void slotCollectionAdded( int sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionChanged( int sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionRemoved( int sessionId, const QString &path, const QByteArray &resource );
 
   private:
     NotificationManager();

@@ -145,6 +145,7 @@ class NotificationCollector : public QObject
   public:
     /**
       Create a new notification collector for the given DataStore @p db.
+      @param db The datastore using this notification collector.
     */
     NotificationCollector( DataStore *db );
 
@@ -152,6 +153,11 @@ class NotificationCollector : public QObject
       Destroys this notification collector.
     */
     ~NotificationCollector();
+
+    /**
+      Sets the identifier of the session causing the changes.
+    */
+    void setSessionId( int sessionId );
 
     /**
       Notify about an added item.
@@ -205,21 +211,21 @@ class NotificationCollector : public QObject
                             const QByteArray &resource = QByteArray() );
 
   Q_SIGNALS:
-    void itemAddedNotification( int uid, const QString &collection,
+    void itemAddedNotification( int sessionId, int uid, const QString &collection,
                                 const QByteArray &mimeType,
                                 const QByteArray &resource );
-    void itemChangedNotification( int uid, const QString &collection,
+    void itemChangedNotification( int sessionId, int uid, const QString &collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
-    void itemRemovedNotification( int uid, const QString &collection,
+    void itemRemovedNotification( int sessionId, int uid, const QString &collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
 
-    void collectionAddedNotification( const QString &collection,
+    void collectionAddedNotification( int sessionId, const QString &collection,
                                       const QByteArray &resource );
-    void collectionChangedNotification( const QString &collection,
+    void collectionChangedNotification( int sessionId, const QString &collection,
                                         const QByteArray &resource );
-    void collectionRemovedNotification( const QString &collection,
+    void collectionRemovedNotification( int sessionId, const QString &collection,
                                         const QByteArray &resource );
 
   private:
@@ -232,6 +238,7 @@ class NotificationCollector : public QObject
 
   private:
     DataStore *mDb;
+    int mSessionId;
 
     NotificationItem::List mAddedItems;
     NotificationItem::List mChangedItems;

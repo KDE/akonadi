@@ -23,6 +23,8 @@
 
 #include <QtCore/QDebug>
 
+using namespace Akonadi;
+
 Akonadi::NotificationItem::NotificationItem(const PimItem &item,
                                             const Location& collection,
                                             const QByteArray & mimeType,
@@ -86,6 +88,7 @@ Akonadi::NotificationCollector::NotificationCollector(DataStore * db) :
   QObject( db ),
   mDb( db )
 {
+  mSessionId = 0;
   connect( db, SIGNAL(transactionCommitted()), SLOT(transactionCommitted()) );
   connect( db, SIGNAL(transactionRolledBack()), SLOT(transactionRolledBack()) );
 }
@@ -104,7 +107,7 @@ void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
     mAddedItems.append( ni );
   else {
     completeItem( ni );
-    emit itemAddedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemAddedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
 }
 
@@ -118,7 +121,7 @@ void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
     mChangedItems.append( ni );
   else {
     completeItem( ni );
-    emit itemChangedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemChangedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
 }
 
@@ -132,7 +135,7 @@ void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
   if ( mDb->inTransaction() )
     mRemovedItems.append( ni );
   else
-    emit itemRemovedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemRemovedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
 }
 
 void Akonadi::NotificationCollector::collectionAdded( const QString &collection,
@@ -143,7 +146,7 @@ void Akonadi::NotificationCollector::collectionAdded( const QString &collection,
     mAddedCollections.append( ni );
   else {
     completeItem( ni );
-    emit collectionAddedNotification( ni.collectionName(), ni.resource() );
+    emit collectionAddedNotification( mSessionId, ni.collectionName(), ni.resource() );
   }
 }
 
@@ -155,7 +158,7 @@ void Akonadi::NotificationCollector::collectionChanged( const Location &collecti
     mChangedCollections.append( ni );
   else {
     completeItem( ni );
-    emit collectionChangedNotification( ni.collectionName(), ni.resource() );
+    emit collectionChangedNotification( mSessionId, ni.collectionName(), ni.resource() );
   }
 }
 
@@ -167,7 +170,7 @@ void Akonadi::NotificationCollector::collectionRemoved( const Location &collecti
   if ( mDb->inTransaction() )
     mRemovedCollections.append( ni );
   else
-    emit collectionRemovedNotification( ni.collectionName(), ni.resource() );
+    emit collectionRemovedNotification( mSessionId, ni.collectionName(), ni.resource() );
 }
 
 void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
@@ -207,39 +210,39 @@ void Akonadi::NotificationCollector::transactionCommitted()
 
   foreach ( NotificationItem ni, mAddedCollections ) {
     completeItem( ni );
-    emit collectionAddedNotification( ni.collectionName(), ni.resource() );
+    emit collectionAddedNotification( mSessionId, ni.collectionName(), ni.resource() );
     // no change notifications for new collections
     mChangedCollections.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mRemovedCollections ) {
-    emit collectionRemovedNotification( ni.collectionName(), ni.resource() );
+    emit collectionRemovedNotification( mSessionId, ni.collectionName(), ni.resource() );
     // no change notifications for removed collections
     mChangedCollections.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mChangedCollections ) {
     completeItem( ni );
-    emit collectionChangedNotification( ni.collectionName(), ni.resource() );
+    emit collectionChangedNotification( mSessionId, ni.collectionName(), ni.resource() );
   }
 
 
   foreach ( NotificationItem ni, mAddedItems ) {
     completeItem( ni );
-    emit itemAddedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemAddedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
     // no change notifications for new items
     mChangedItems.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mRemovedItems ) {
-    emit itemRemovedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemRemovedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
     // no change notifications for removed items
     mChangedItems.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mChangedItems ) {
     completeItem( ni );
-    emit itemChangedNotification( ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemChangedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
 
   clear();
@@ -258,6 +261,11 @@ void Akonadi::NotificationCollector::clear()
   mAddedCollections.clear();
   mChangedCollections.clear();
   mRemovedCollections.clear();
+}
+
+void NotificationCollector::setSessionId(int sessionId)
+{
+  mSessionId = sessionId;
 }
 
 #include "notificationcollector.moc"

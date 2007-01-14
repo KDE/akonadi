@@ -47,9 +47,10 @@ bool Login::handleLine( const QByteArray &line )
   if ( tmp.isEmpty() )
     return failureResponse( "Missing session identifier." );
   bool ok = false;
-  connection()->setSessionId( tmp.toInt( &ok ) );
+  int sessionId = tmp.toInt( &ok );
   if ( !ok )
     return failureResponse( "Invalid session identifier." );
+  connection()->setSessionId( sessionId );
 
   Response response;
   response.setTag( tag() );
