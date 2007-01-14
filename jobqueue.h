@@ -51,6 +51,11 @@ class AKONADI_EXPORT JobQueue : public Job
     */
     bool isEmpty() const;
 
+    /**
+      Kills all pending jobs and deletes them.
+    */
+    virtual void kill();
+
   protected:
     virtual void doStart();
     virtual void addSubJob( Akonadi::Job *job );

@@ -93,4 +93,13 @@ void JobQueue::start( )
   Job::start();
 }
 
+void JobQueue::kill()
+{
+  // FIXME: kill currently running job
+  foreach ( Job* job, d->queue )
+    job->kill();
+  qDeleteAll( d->queue );
+  d->queue.clear();
+}
+
 #include "jobqueue.moc"

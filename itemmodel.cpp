@@ -19,6 +19,7 @@
 
 #include "itemfetchjob.h"
 #include "itemmodel.h"
+#include "jobqueue.h"
 #include "monitor.h"
 
 #include <kmime/kmime_message.h>
@@ -35,25 +36,22 @@ class ItemModel::Private
   public:
     QList<Item*> items;
     QString path;
-    ItemFetchJob *listingJob;
     Monitor *monitor;
-    QList<ItemFetchJob*> fetchJobs;
+    JobQueue *queue;
 };
 
 Akonadi::ItemModel::ItemModel( QObject *parent ) :
     QAbstractTableModel( parent ),
     d( new Private() )
 {
-  d->listingJob = 0;
   d->monitor = 0;
+  d->queue = new JobQueue( this );
 }
 
-Akonadi::ItemModel::~ItemModel( )
+Akonadi::ItemModel::~ItemModel()
 {
-  delete d->listingJob;
+  d->queue->kill();
   delete d->monitor;
-  qDeleteAll( d->items );
-  qDeleteAll( d->fetchJobs );
   delete d;
 }
 
@@ -118,32 +116,29 @@ void Akonadi::ItemModel::setPath( const QString& path )
   d->items.clear();
   reset();
   // stop all running jobs
+  d->queue->kill();
   delete d->monitor;
   d->monitor = 0;
-  qDeleteAll( d->fetchJobs );
-  d->fetchJobs.clear();
-  delete d->listingJob;
   // start listing job
-  d->listingJob = createFetchJob( path, this );
-  connect( d->listingJob, SIGNAL( done( Akonadi::Job* ) ), SLOT( listingDone( Akonadi::Job* ) ) );
-  d->listingJob->start();
+  ItemFetchJob* job = createFetchJob( path, d->queue );
+  connect( job, SIGNAL( done( Akonadi::Job* ) ), SLOT( listingDone( Akonadi::Job* ) ) );
 }
 
 void Akonadi::ItemModel::listingDone( Akonadi::Job * job )
 {
-  Q_ASSERT( job == d->listingJob );
+  ItemFetchJob *fetch = static_cast<ItemFetchJob*>( job );
   if ( job->error() ) {
     // TODO
     kWarning() << k_funcinfo << "Item query failed!" << endl;
   } else {
-    d->items = d->listingJob->items();
+    d->items = fetch->items();
     reset();
   }
-  d->listingJob->deleteLater();
-  d->listingJob = 0;
+  job->deleteLater();
 
   // start monitor
   d->monitor = new Monitor( this );
+  d->monitor->ignoreSession( d->queue );
   d->monitor->monitorCollection( d->path, false );
   connect( d->monitor, SIGNAL(itemChanged(Akonadi::DataReference)),
            SLOT(itemChanged(Akonadi::DataReference)) );
@@ -155,7 +150,6 @@ void Akonadi::ItemModel::listingDone( Akonadi::Job * job )
 
 void Akonadi::ItemModel::fetchingNewDone( Akonadi::Job * job )
 {
-  Q_ASSERT( d->fetchJobs.contains( static_cast<ItemFetchJob*>( job ) ) );
   if ( job->error() ) {
     // TODO
     kWarning() << k_funcinfo << "Fetching new items failed!" << endl;
@@ -168,7 +162,6 @@ void Akonadi::ItemModel::fetchingNewDone( Akonadi::Job * job )
     } else
       kWarning() << k_funcinfo << "Got unexpected empty fetch response!" << endl;
   }
-  d->fetchJobs.removeAll( static_cast<ItemFetchJob*>( job ) );
   job->deleteLater();
 }
 
@@ -181,10 +174,8 @@ void ItemModel::itemChanged( const DataReference &reference )
 void ItemModel::itemAdded( const DataReference &reference )
 {
   // TODO: make sure we don't fetch the complete data here!
-  ItemFetchJob *job = new ItemFetchJob( reference, this );
+  ItemFetchJob *job = new ItemFetchJob( reference, d->queue );
   connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(fetchingNewDone(Akonadi::Job*)) );
-  job->start();
-  d->fetchJobs.append( job );
 }
 
 void ItemModel::itemRemoved( const DataReference &reference )
