@@ -43,6 +43,14 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
 
   public:
     /**
+      Extended item roles for collections.
+    */
+    enum CollectionItemRole {
+      PathRole = Qt::UserRole, ///< The collection path.
+      ChildCreatableRole ///< The collection can contain sub-collections.
+    };
+
+    /**
       Create a new collection model.
       @param parent The parent object.
     */
@@ -117,23 +125,18 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     bool createCollection( const QModelIndex &parent, const QString &name );
 
     /**
-      Returns true if a new sub-collection for the given parent collection can be created.
-      @param parent The parent model index.
-    */
-    bool canCreateCollection( const QModelIndex &parent ) const;
-
-    /**
-      Returns the collection path for the given model index.
-      @param index The model index.
-    */
-    QString pathForIndex( const QModelIndex &index ) const;
-
-    /**
       Returns wether the specified collection supports <em>any</em> of the given mime-types.
       @param index The model index.
       @param contentTypes The content types to check.
     */
     bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
+
+  protected:
+    /**
+      Returns the collection path for the given model index.
+      @param index The model index.
+    */
+    QString pathForIndex( const QModelIndex &index ) const;
 
   private:
     /**
@@ -147,6 +150,12 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       @param parent The parent model index.
     */
     bool removeRowFromModel( int row, const QModelIndex & parent = QModelIndex() );
+
+    /**
+      Returns true if a new sub-collection for the given parent collection can be created.
+      @param parent The parent model index.
+    */
+    bool canCreateCollection( const QModelIndex &parent ) const;
 
   private Q_SLOTS:
     /**

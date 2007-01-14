@@ -115,27 +115,36 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
   if ( index.column() == 0 && (role == Qt::DisplayRole || role == Qt::EditRole) ) {
     return col->name();
   }
-  if ( index.column() == 0 && role == Qt::DecorationRole ) {
-    if ( col->type() == Collection::Resource )
-      return SmallIcon( QLatin1String( "server" ) );
-    if ( col->type() == Collection::VirtualParent )
-      return SmallIcon( QLatin1String( "find" ) );
-    if ( col->type() == Collection::Virtual )
-      return SmallIcon( QLatin1String( "folder_green" ) );
-    QList<QByteArray> content = col->contentTypes();
-    if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
-      if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
-        return SmallIcon( QLatin1String( "kmgroupware_folder_contacts" ) );
-      // TODO: add all other content types and/or fix their mimetypes
-      if ( content.contains( "akonadi/event" ) || content.contains( "text/ical" ) )
-        return SmallIcon( QLatin1String( "kmgroupware_folder_calendar" ) );
-      if ( content.contains( "akonadi/task" ) )
-        return SmallIcon( QLatin1String( "kmgroupware_folder_tasks" ) );
-      return SmallIcon( QLatin1String( "folder" ) );
-    } else if ( content.isEmpty() ) {
-      return SmallIcon( QLatin1String( "folder_grey" ) );
-    } else
-      return SmallIcon( QLatin1String( "folder_orange" ) ); // mixed stuff
+
+  switch ( role ) {
+    case Qt::DecorationRole:
+      if ( index.column() == 0 ) {
+        if ( col->type() == Collection::Resource )
+          return SmallIcon( QLatin1String( "server" ) );
+        if ( col->type() == Collection::VirtualParent )
+          return SmallIcon( QLatin1String( "find" ) );
+        if ( col->type() == Collection::Virtual )
+          return SmallIcon( QLatin1String( "folder_green" ) );
+        QList<QByteArray> content = col->contentTypes();
+        if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
+          if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
+            return SmallIcon( QLatin1String( "kmgroupware_folder_contacts" ) );
+          // TODO: add all other content types and/or fix their mimetypes
+          if ( content.contains( "akonadi/event" ) || content.contains( "text/ical" ) )
+            return SmallIcon( QLatin1String( "kmgroupware_folder_calendar" ) );
+          if ( content.contains( "akonadi/task" ) )
+            return SmallIcon( QLatin1String( "kmgroupware_folder_tasks" ) );
+          return SmallIcon( QLatin1String( "folder" ) );
+        } else if ( content.isEmpty() ) {
+          return SmallIcon( QLatin1String( "folder_grey" ) );
+        } else
+          return SmallIcon( QLatin1String( "folder_orange" ) ); // mixed stuff
+      }
+      break;
+    case PathRole:
+      return pathForIndex( index );
+    case ChildCreatableRole:
+      return canCreateCollection( index );
   }
   return QVariant();
 }
