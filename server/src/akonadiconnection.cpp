@@ -230,4 +230,14 @@ void Akonadi::AkonadiConnection::flushStatusMessageQueue()
     m_statusMessageQueue.clear();
 }
 
+void AkonadiConnection::setSessionId(int id)
+{
+  m_sessionId = id;
+}
+
+int AkonadiConnection::sessionId() const
+{
+  return m_sessionId;
+}
+
 #include "akonadiconnection.moc"

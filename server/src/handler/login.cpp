@@ -20,6 +20,8 @@
 
 #include "login.h"
 #include "response.h"
+#include "imapparser.h"
+#include "akonadiconnection.h"
 
 using namespace Akonadi;
 
@@ -33,16 +35,30 @@ Login::~Login()
 }
 
 
-bool Login::handleLine( const QByteArray& )
+bool Login::handleLine( const QByteArray &line )
 {
-    Response response;
-    response.setTag( tag() );
-    response.setSuccess();
-    response.setString( "User logged in" );
+  int pos = line.indexOf( ' ' ) + 1; // skip tag
+  pos = line.indexOf( ' ', pos ); // skip command
+  if ( pos < 0 )
+    return failureResponse( "Invalid syntax" );
 
-    emit responseAvailable( response );
-    emit connectionStateChange( Authenticated );
-    deleteLater();
-    return true;
+  QByteArray tmp;
+  pos = ImapParser::parseString( line, tmp, pos );
+  if ( tmp.isEmpty() )
+    return failureResponse( "Missing session identifier." );
+  bool ok = false;
+  connection()->setSessionId( tmp.toInt( &ok ) );
+  if ( !ok )
+    return failureResponse( "Invalid session identifier." );
+
+  Response response;
+  response.setTag( tag() );
+  response.setSuccess();
+  response.setString( "User logged in" );
+
+  emit responseAvailable( response );
+  emit connectionStateChange( Authenticated );
+  deleteLater();
+  return true;
 }
 

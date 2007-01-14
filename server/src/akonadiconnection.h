@@ -54,6 +54,9 @@ public:
     void addStatusMessage( const QByteArray& msg );
     void flushStatusMessageQueue();
 
+    void setSessionId( int id );
+    int sessionId() const;
+
 Q_SIGNALS:
     void error( QTcpSocket::SocketError socketError );
 
@@ -78,6 +81,7 @@ private:
     QString m_selectedConnection;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
+    int m_sessionId;
 };
 
 }
