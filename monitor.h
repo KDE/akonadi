@@ -34,6 +34,7 @@ class MonitorPrivate;
 
   @todo: support un-monitoring
   @todo: distinguish between monitoring collection properties and collection content.
+  @todo: special case for collection content counts changed
 */
 class AKONADI_EXPORT Monitor : public QObject
 {
@@ -81,6 +82,12 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void monitorAll();
 
+    /**
+      Ignore all notifications caused by the given session.
+      @param session The session you want to ignore.
+    */
+    void ignoreSession( Job *session );
+
   Q_SIGNALS:
     /**
       Emitted if a monitored object has changed.
@@ -123,15 +130,17 @@ class AKONADI_EXPORT Monitor : public QObject
     bool connectToNotificationManager();
 
   private Q_SLOTS:
-    void slotItemChanged( const QByteArray &uid, const QString &collection,
+    void slotItemChanged( int sessionId, const QByteArray &uid, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemAdded( const QByteArray &uid, const QString &collection,
+    void slotItemAdded( int sessionId, const QByteArray &uid, const QString &collection,
                         const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemRemoved( const QByteArray &uid, const QString &collection,
+    void slotItemRemoved( int sessionId, const QByteArray &uid, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotCollectionAdded( const QString &path, const QByteArray &resource );
-    void slotCollectionChanged( const QString &path, const QByteArray &resource );
-    void slotCollectionRemoved( const QString &path, const QByteArray &resource );
+    void slotCollectionAdded( int sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionChanged( int sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionRemoved( int sessionId, const QString &path, const QByteArray &resource );
+
+    void sessionDestroyed(QObject *obj);
 
   private:
     MonitorPrivate* d;

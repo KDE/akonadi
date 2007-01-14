@@ -36,8 +36,9 @@ class Akonadi::MonitorPrivate
     QSet<int> items;
     QSet<QByteArray> mimetypes;
     bool monitorAll;
+    QList<int> sessions;
 
-    bool isCollectionMonitored( const QString &path, const QByteArray &resource )
+    bool isCollectionMonitored( const QString &path, const QByteArray &resource ) const
     {
       if ( monitorAll || isCollectionMonitored( path ) || resources.contains( resource ) )
         return true;
@@ -45,7 +46,7 @@ class Akonadi::MonitorPrivate
     }
 
     bool isItemMonitored( uint item, const QString &collection,
-                          const QByteArray &mimetype, const QByteArray &resource )
+                          const QByteArray &mimetype, const QByteArray &resource ) const
     {
       if ( monitorAll || isCollectionMonitored( collection ) || items.contains( item ) ||
            resource.contains( resource ) || mimetypes.contains( mimetype ) )
@@ -53,8 +54,13 @@ class Akonadi::MonitorPrivate
       return false;
     }
 
+    bool isSessionIgnored( int sessionId ) const
+    {
+      return sessions.contains( sessionId );
+    }
+
   private:
-    bool isCollectionMonitored( const QString &path )
+    bool isCollectionMonitored( const QString &path ) const
     {
       for ( QHash<QString,bool>::ConstIterator it = collections.constBegin();
             it != collections.constEnd(); ++it ) {
@@ -109,47 +115,58 @@ void Akonadi::Monitor::monitorAll()
   d->monitorAll = true;
 }
 
-void Monitor::slotItemChanged( const QByteArray & uid, const QString& collection,
+void Monitor::ignoreSession(Job * session)
+{
+  d->sessions << session->sessionId();
+}
+
+void Monitor::slotItemChanged( int sessionId, const QByteArray & uid, const QString& collection,
                                const QByteArray &mimetype, const QByteArray &resource )
 {
+  if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isItemMonitored( uid.toUInt(), collection, mimetype, resource ) )
     emit itemChanged( DataReference( uid.toUInt(), QString() ) );
   if ( d->isCollectionMonitored( collection, resource ) )
     emit collectionChanged( collection );
 }
 
-void Monitor::slotItemAdded( const QByteArray &uid, const QString &collection,
+void Monitor::slotItemAdded( int sessionId, const QByteArray &uid, const QString &collection,
                              const QByteArray &mimetype, const QByteArray &resource )
 {
+  if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isItemMonitored( uid.toUInt(), collection, mimetype, resource ) )
     emit itemAdded( DataReference( uid.toUInt(), QString() ) );
   if ( d->isCollectionMonitored( collection, resource ) )
     emit collectionChanged( collection );
 }
 
-void Monitor::slotItemRemoved( const QByteArray & uid, const QString &collection,
+void Monitor::slotItemRemoved( int sessionId, const QByteArray & uid, const QString &collection,
                                const QByteArray &mimetype, const QByteArray &resource )
 {
+  if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isItemMonitored( uid.toUInt(), collection, mimetype, resource ) )
     emit itemRemoved( DataReference( uid.toUInt(), QString() ) );
   if ( d->isCollectionMonitored( collection, resource ) )
     emit collectionChanged( collection );
 }
 
-void Monitor::slotCollectionChanged( const QString& path, const QByteArray &resource )
+void Monitor::slotCollectionChanged( int sessionId, const QString& path, const QByteArray &resource )
 {
+  if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isCollectionMonitored( path, resource ) )
     emit collectionChanged( path );
 }
 
-void Monitor::slotCollectionAdded( const QString& path, const QByteArray &resource )
+void Monitor::slotCollectionAdded( int sessionId, const QString& path, const QByteArray &resource )
 {
+  if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isCollectionMonitored( path, resource ) )
     emit collectionAdded( path );
 }
 
-void Monitor::slotCollectionRemoved( const QString& path, const QByteArray &resource )
+void Monitor::slotCollectionRemoved( int sessionId, const QString& path, const QByteArray &resource )
 {
+  if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isCollectionMonitored( path, resource ) )
     emit collectionRemoved( path );
 }
@@ -166,21 +183,28 @@ bool Monitor::connectToNotificationManager( )
   if ( !d->nm ) {
     qWarning() << "Unable to connect to notification manager";
   } else {
-    connect( d->nm, SIGNAL(itemChanged(QByteArray,QString,QByteArray,QByteArray)),
-             SLOT(slotItemChanged(QByteArray,QString,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemAdded(QByteArray,QString,QByteArray,QByteArray)),
-             SLOT(slotItemAdded(QByteArray,QString,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemRemoved(QByteArray,QString,QByteArray,QByteArray)),
-             SLOT(slotItemRemoved(QByteArray,QString,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionChanged(QString,QByteArray)),
-             SLOT(slotCollectionChanged(QString,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionAdded(QString,QByteArray)),
-             SLOT(slotCollectionAdded(QString,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionRemoved(QString,QByteArray)),
-             SLOT(slotCollectionRemoved(QString,QByteArray)) );
+    connect( d->nm, SIGNAL(itemChanged(int,QByteArray,QString,QByteArray,QByteArray)),
+             SLOT(slotItemChanged(int,QByteArray,QString,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemAdded(int,QByteArray,QString,QByteArray,QByteArray)),
+             SLOT(slotItemAdded(int,QByteArray,QString,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemRemoved(int,QByteArray,QString,QByteArray,QByteArray)),
+             SLOT(slotItemRemoved(int,QByteArray,QString,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionChanged(int,QString,QByteArray)),
+             SLOT(slotCollectionChanged(int,QString,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionAdded(int,QString,QByteArray)),
+             SLOT(slotCollectionAdded(int,QString,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionRemoved(int,QString,QByteArray)),
+             SLOT(slotCollectionRemoved(int,QString,QByteArray)) );
     return true;
   }
   return false;
+}
+
+void Monitor::sessionDestroyed(QObject * obj)
+{
+  Job* job = dynamic_cast<Job*>( obj );
+  if ( job )
+    d->sessions.removeAll( job->sessionId() );
 }
 
 #include "monitor.moc"
