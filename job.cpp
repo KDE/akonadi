@@ -94,6 +94,7 @@ class Job::JobPrivate
     QByteArray loginTag;
     Job *parent;
     QByteArray tag;
+    int sessionId;
 };
 
 Job::Job( QObject *parent )
@@ -265,7 +266,8 @@ void Job::slotDataReceived( )
     }
     if ( tag == "*" && data.startsWith( "OK Akonadi" ) && !d->parent ) {
       d->loginTag = newTag();
-      writeData( d->loginTag + " LOGIN\n" );
+      d->sessionId = qrand();
+      writeData( d->loginTag + " LOGIN " + QByteArray::number( d->sessionId ) + "\n" );
     }
     // work for our subclasses
     else
@@ -341,6 +343,13 @@ void Job::slotSubJobDone( Job * job )
 void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
 {
   qDebug() << "Unhandled response: " << tag << data;
+}
+
+int Job::sessionId() const
+{
+  if ( d->parent )
+    return d->parent->sessionId();
+  return d->sessionId;
 }
 
 #include "job.moc"

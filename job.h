@@ -197,6 +197,11 @@ class AKONADI_EXPORT Job : public QObject
      */
     virtual QString errorText() const;
 
+    /**
+      Returns the identifier of the session that executes this job.
+    */
+    int sessionId() const;
+
   Q_SIGNALS:
     /**
       This signal is emitted when the started job finished.
