@@ -197,3 +197,20 @@ int ImapParser::parseString(const QByteArray & data, QString & result, int start
   return end;
 }
 
+int ImapParser::parseNumber(const QByteArray & data, int & result, bool * ok, int start)
+{
+  if ( ok )
+    *ok = false;
+  int pos = stripLeadingSpaces( data, start );
+  if ( pos >= data.length() )
+    return data.length();
+  QByteArray tmp;
+  for (; pos < data.length(); ++pos ) {
+    if ( !QChar( QLatin1Char( data.at( pos ) ) ).isDigit() )
+      break;
+    tmp += data.at( pos );
+  }
+  result = tmp.toInt( ok );
+  return pos;
+}
+

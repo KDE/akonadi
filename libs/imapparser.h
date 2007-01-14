@@ -94,6 +94,16 @@ class AKONADI_EXPORT ImapParser
       @param start start parsing at this index.
     */
     static int parseString( const QByteArray &data, QString &result, int start = 0 );
+
+    /**
+      Parses the next integer number from @p data starting at start and puts it into
+      @p result. The number of characters parsed is returned (this is not the parsed result!).
+      @param data Source data.
+      @param result Parsed integer number, invalid of ok is false.
+      @param ok Set to false if the parsing failed.
+      @param start start parsing at this index.
+    */
+    static int parseNumber( const QByteArray &data, int &result, bool *ok = 0, int start = 0 );
 };
 
 }

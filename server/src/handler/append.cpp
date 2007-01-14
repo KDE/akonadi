@@ -218,6 +218,10 @@ bool Akonadi::Append::commit()
         return failureResponse( "Unable to commit transaction." );
 
     response.setTag( tag() );
+    response.setUserDefined();
+    response.setString( "[UIDNEXT " + QByteArray::number( itemId ) + "]" );
+    emit responseAvailable( response );
+
     response.setSuccess();
     response.setString( "Append completed" );
     emit responseAvailable( response );

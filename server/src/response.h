@@ -34,13 +34,14 @@ class AKONADIPRIVATE_EXPORT Response{
         OK = 0,
         NO = 1,
         BAD = 2,
-        BYE = 3 // not strictly a result code, but easier to handle this way
+        BYE = 3, // not strictly a result code, but easier to handle this way
+        USER = 4
     };
 public:
     Response();
 
     ~Response();
-    
+
     /** The response string to be sent to the client. */
     QByteArray asString() const;
 
@@ -56,6 +57,7 @@ public:
     void setFailure();
     void setError();
     void setBye();
+    void setUserDefined();
 private:
     QByteArray m_responseString;
     ResultCode m_resultCode;

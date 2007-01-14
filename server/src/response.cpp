@@ -23,7 +23,7 @@
 using namespace Akonadi;
 
 static const char* s_resultCodeStrings[] = {
-    "OK", "NO", "BAD", "BYE"
+    "OK", "NO", "BAD", "BYE", ""
 };
 
 Response::Response()
@@ -40,7 +40,7 @@ Response::~Response()
 QByteArray Response::asString() const
 {
     QByteArray b = m_tag;
-    if ( m_tag != "*" && m_tag != "+" ) {
+    if ( m_tag != "*" && m_tag != "+" && m_resultCode != USER ) {
         b += " ";
         b += s_resultCodeStrings[m_resultCode];
     }
@@ -100,4 +100,7 @@ void Response::setBye( )
     m_resultCode = Response::BYE;
 }
 
-
+void Response::setUserDefined()
+{
+  m_resultCode = Response::USER;
+}
