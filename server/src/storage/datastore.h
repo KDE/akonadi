@@ -72,8 +72,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     static DataStore* self();
 
     /* -- higher level API -- */
-    virtual CollectionList listCollections( const QString& prefix,
-                                            const QString& mailboxPattern ) const;
 
     /* --- CachePolicy --------------------------------------------------- */
     bool appendCachePolicy( const QString & policy );
