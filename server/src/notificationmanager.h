@@ -33,6 +33,7 @@ namespace Akonadi {
 class NotificationManager : public QObject
 {
   Q_OBJECT
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.Akonadi.NotificationManager" )
 
   public:
     static NotificationManager *self();
@@ -42,15 +43,15 @@ class NotificationManager : public QObject
     void connectDatastore( DataStore* );
 
   Q_SIGNALS:
-    void itemChanged( const QByteArray &uid, const QString &collection,
+    Q_SCRIPTABLE void itemChanged( const QByteArray &uid, const QString &collection,
                       const QByteArray &mimetype, const QByteArray &resource );
-    void itemAdded( const QByteArray &uid, const QString &collection,
+    Q_SCRIPTABLE void itemAdded( const QByteArray &uid, const QString &collection,
                     const QByteArray &mimetype, const QByteArray &resource );
-    void itemRemoved( const QByteArray &uid, const QString &collection,
+    Q_SCRIPTABLE void itemRemoved( const QByteArray &uid, const QString &collection,
                       const QByteArray &mimetype, const QByteArray &resource );
-    void collectionAdded( const QString &path, const QByteArray &resource );
-    void collectionChanged( const QString &path, const QByteArray &resource );
-    void collectionRemoved( const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionAdded( const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionChanged( const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionRemoved( const QString &path, const QByteArray &resource );
 
   private Q_SLOTS:
     void slotItemAdded( int uid, const QString& location,

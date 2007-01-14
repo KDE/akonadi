@@ -27,8 +27,8 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -DQT_NO_CAST_FROM_ASCII -D
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/entities.h
          ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
-  COMMAND ${XSLTPROC_EXECUTABLE} --stringparam code header 
-          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities.xsl 
+  COMMAND ${XSLTPROC_EXECUTABLE} --stringparam code header
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities.xsl
           ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml
           > ${CMAKE_CURRENT_BINARY_DIR}/entities.h
   COMMAND ${XSLTPROC_EXECUTABLE} --stringparam code source
@@ -88,9 +88,12 @@ set(libakonadiprivate_SRCS
   src/imapparser.cpp
 )
 
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS
-  interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager
-)
+qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
+# ugly hack to force generation of the xml interface description, which doesn't
+# happen always, just installing the file doesn't seem to provide enough dependencies
+macro_add_file_dependencies( src/notificationmanager.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml)
+
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer
 )
@@ -107,7 +110,7 @@ kde4_automoc(${libakonadiprivate_SRCS})
 kde4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
 target_link_libraries( akonadiprivate ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}
                                       ${QT_QTSQL_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY})
-set_target_properties(akonadiprivate PROPERTIES VERSION 1.0.0 SOVERSION 1 )			      
+set_target_properties(akonadiprivate PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
 set( akonadiserver_bin_SRCS src/main.cpp )
@@ -118,5 +121,11 @@ set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
 target_link_libraries( akonadiserver_bin akonadiprivate )
 
 install(TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
-install(FILES interfaces/org.kde.Akonadi.AgentManager.xml interfaces/org.kde.Akonadi.NotificationManager.xml interfaces/org.kde.Akonadi.ProfileManager.xml interfaces/org.kde.Akonadi.SearchProviderManager.xml interfaces/org.kde.Akonadi.Tracer.xml interfaces/org.kde.Akonadi.TracerNotification.xml DESTINATION ${DBUS_INTERFACES_DIR} )
-
+install(FILES
+  interfaces/org.kde.Akonadi.AgentManager.xml
+  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml
+  interfaces/org.kde.Akonadi.ProfileManager.xml
+  interfaces/org.kde.Akonadi.SearchProviderManager.xml
+  interfaces/org.kde.Akonadi.Tracer.xml
+  interfaces/org.kde.Akonadi.TracerNotification.xml
+DESTINATION ${DBUS_INTERFACES_DIR})

@@ -18,9 +18,9 @@
 */
 
 #include <QtCore/QDebug>
+#include <QDBusConnection>
 
 #include "notificationmanager.h"
-#include "notificationmanageradaptor.h"
 #include "tracer.h"
 #include "storage/datastore.h"
 
@@ -31,9 +31,8 @@ NotificationManager* NotificationManager::mSelf = 0;
 NotificationManager::NotificationManager()
   : QObject( 0 )
 {
-  new NotificationManagerAdaptor( this );
-
-  QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications"), this, QDBusConnection::ExportAdaptors );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications"),
+    this, QDBusConnection::ExportScriptableSignals );
 }
 
 NotificationManager::~NotificationManager()
