@@ -81,6 +81,7 @@ CollectionModel::CollectionModel( QObject * parent ) :
   // monitor collection changes
   d->monitor = new Monitor();
   d->monitor->monitorCollection( Collection::root(), true );
+  d->monitor->ignoreSession( d->queue );
   connect( d->monitor, SIGNAL(collectionChanged(QString)), SLOT(collectionChanged(QString)) );
   connect( d->monitor, SIGNAL(collectionAdded(QString)), SLOT(collectionChanged(QString)) );
   connect( d->monitor, SIGNAL(collectionRemoved(QString)), SLOT(collectionRemoved(QString)) );
