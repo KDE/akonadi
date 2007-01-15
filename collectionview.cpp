@@ -81,12 +81,12 @@ void CollectionView::setModel( QAbstractItemModel * model )
 
 void CollectionView::createCollection( const QModelIndex & parent )
 {
-  QModelIndex index = sourceIndex( parent );
-  if ( !model()->data( index, CollectionModel::ChildCreatableRole ).toBool() )
+  if ( !model()->data( parent, CollectionModel::ChildCreatableRole ).toBool() )
     return;
   QString name = QInputDialog::getText( this, i18n("New Folder"), i18n("Name") );
   if ( name.isEmpty() )
     return;
+  QModelIndex index = sourceIndex( parent );
   if ( !d->model->createCollection( index, name ) )
     qWarning() << "Collection creation failed immediately!";
 }
