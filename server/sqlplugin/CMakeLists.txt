@@ -10,4 +10,4 @@ set_target_properties(qsql_mysql_embedded PROPERTIES OUTPUT_NAME libqsqlmysqlemb
 target_link_libraries(qsql_mysql_embedded ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY}
                                           ${MYSQL_EMBEDDED_LIBRARIES} ${OPENSSL_LIBRARIES} crypto crypt nsl z)
 
-install(TARGETS qsql_mysql_embedded DESTINATION ${QT_INCLUDE_DIR}/../plugins/sqldrivers)
+install(TARGETS qsql_mysql_embedded DESTINATION ${QT_PLUGINS_DIR}/sqldrivers)
