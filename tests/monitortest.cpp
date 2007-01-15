@@ -31,6 +31,8 @@
 #include <QtTest/QSignalSpy>
 #include <qtest_kde.h>
 
+#include <unistd.h>
+
 using namespace Akonadi;
 
 QTEST_KDEMAIN( MonitorTest, NoGUI )
@@ -64,7 +66,7 @@ void MonitorTest::testMonitor()
   // create a collection
   CollectionCreateJob *create = new CollectionCreateJob( "res3/monitor", this );
   QVERIFY( create->exec() );
-  qApp->processEvents(); // make sure the DBus signal has been processed
+  sleep(1); qApp->processEvents(); // make sure the DBus signal has been processed
 
   QCOMPARE( caspy.count(), 1 );
   QList<QVariant> arg = caspy.takeFirst();
@@ -79,7 +81,7 @@ void MonitorTest::testMonitor()
   // add an item
   ItemAppendJob *append = new ItemAppendJob( "res3/monitor", QByteArray(), "message/rfc822", this );
   QVERIFY( append->exec() );
-  qApp->processEvents();
+  sleep(1); qApp->processEvents();
 
   QCOMPARE( cmspy.count(), 1 );
   arg = cmspy.takeFirst();
@@ -99,7 +101,7 @@ void MonitorTest::testMonitor()
   ItemStoreJob *store = new ItemStoreJob( ref, this );
   store->setData( QByteArray( "some new content" ) );
   QVERIFY( store->exec() );
-  qApp->processEvents();
+  sleep(1); qApp->processEvents();
 
   QCOMPARE( cmspy.count(), 1 );
   arg = cmspy.takeFirst();
@@ -118,7 +120,7 @@ void MonitorTest::testMonitor()
   // delete an item
   ItemDeleteJob *del = new ItemDeleteJob( ref, this );
   QVERIFY( del->exec() );
-  qApp->processEvents();
+  sleep(1); qApp->processEvents();
 
   QCOMPARE( cmspy.count(), 1 );
   arg = cmspy.takeFirst();
@@ -139,7 +141,7 @@ void MonitorTest::testMonitor()
   // delete a collection
   CollectionDeleteJob *cdel = new CollectionDeleteJob( "res3/monitor", this );
   QVERIFY( cdel->exec() );
-  qApp->processEvents();
+  sleep(1); qApp->processEvents();
 
   QCOMPARE( crspy.count(), 1 );
   arg = crspy.takeFirst();
