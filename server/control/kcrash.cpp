@@ -21,14 +21,13 @@
 
 #include <QtCore/QString>
 
-#include "config.h"
-
 #include <string.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "config-akonadi.h"
 #ifdef HAVE_EXECINFO_H
 #include <execinfo.h>
 #endif
