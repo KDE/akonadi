@@ -29,7 +29,7 @@
 
 #include <kdebug.h>
 #include <kiconloader.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <klocale.h>
 
 #include <QtCore/QDebug>
