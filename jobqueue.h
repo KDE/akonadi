@@ -71,7 +71,7 @@ class AKONADI_EXPORT JobQueue : public Job
     void slotStartNext();
 
   private:
-    JobQueuePrivate *d;
+    JobQueuePrivate* const d;
 };
 
 }

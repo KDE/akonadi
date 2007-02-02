@@ -50,7 +50,7 @@ class AKONADI_EXPORT CollectionRenameJob : public Job
     virtual void doStart();
 
   private:
-    CollectionRenameJobPrivate *d;
+    CollectionRenameJobPrivate* const d;
 };
 
 }

@@ -93,7 +93,7 @@ class AKONADI_EXPORT ItemStoreJob : public Job
     void sendNextCommand();
 
   private:
-    ItemStoreJobPrivate *d;
+    ItemStoreJobPrivate* const d;
 
 };
 

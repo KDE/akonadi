@@ -40,7 +40,6 @@ MessageCollectionAttribute::MessageCollectionAttribute() :
 MessageCollectionAttribute::~MessageCollectionAttribute()
 {
   delete d;
-  d = 0;
 }
 
 int MessageCollectionAttribute::count( ) const

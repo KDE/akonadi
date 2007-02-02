@@ -69,7 +69,7 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    MessageFetchJobPrivate *d;
+    MessageFetchJobPrivate* const d;
 
 };
 

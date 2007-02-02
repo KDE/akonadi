@@ -60,7 +60,7 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     virtual void doStart();
 
   private:
-    CollectionCreateJobPrivate *d;
+    CollectionCreateJobPrivate* const d;
 };
 
 }

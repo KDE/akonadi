@@ -46,7 +46,6 @@ Collection::~Collection( )
 {
   qDeleteAll( d->attributes );
   delete d;
-  d = 0;
 }
 
 QString Collection::path() const

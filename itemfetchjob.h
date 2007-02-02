@@ -92,7 +92,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     void selectDone( Akonadi::Job* job );
 
   private:
-    ItemFetchJobPrivate *d;
+    ItemFetchJobPrivate* const d;
 };
 
 }

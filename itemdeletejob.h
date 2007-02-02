@@ -55,7 +55,7 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
     void jobDone( Akonadi::Job* job );
 
   private:
-    ItemDeleteJobPrivate *d;
+    ItemDeleteJobPrivate* const d;
 
 };
 

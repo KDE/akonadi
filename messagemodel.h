@@ -80,7 +80,7 @@ class AKONADI_EXPORT MessageModel : public Akonadi::ItemModel
 
   private:
     class Private;
-    Private* d;
+    Private* const d;
 };
 
 }

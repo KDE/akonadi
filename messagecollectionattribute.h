@@ -67,7 +67,7 @@ class AKONADI_EXPORT MessageCollectionAttribute : public CollectionAttribute
 
   private:
     class Private;
-    Private *d;
+    Private* const d;
 
 };
 

@@ -55,10 +55,6 @@ class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
     */
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
-  private:
-    class Private;
-    Private *d;
-
 };
 
 }

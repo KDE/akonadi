@@ -100,7 +100,6 @@ CollectionModel::~CollectionModel()
   d->monitor = 0;
 
   delete d;
-  d = 0;
 }
 
 int CollectionModel::columnCount( const QModelIndex & parent ) const

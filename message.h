@@ -64,7 +64,7 @@ class AKONADI_EXPORT Message : public Item
     void setMime( KMime::Message* mime );
 
   private:
-    MessagePrivate* d;
+    MessagePrivate* const d;
 };
 
 }

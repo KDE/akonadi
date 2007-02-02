@@ -190,7 +190,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
 
   private:
     class Private;
-    Private *d;
+    Private* const d;
 };
 
 }

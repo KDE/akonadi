@@ -143,7 +143,7 @@ class AKONADI_EXPORT Monitor : public QObject
     void sessionDestroyed(QObject *obj);
 
   private:
-    MonitorPrivate* d;
+    MonitorPrivate* const d;
 };
 
 }

@@ -283,7 +283,7 @@ class AKONADI_EXPORT Job : public QObject
 
   private:
     class JobPrivate;
-    JobPrivate *d;
+    JobPrivate* const d;
 };
 
 }

@@ -101,7 +101,7 @@ class AKONADI_EXPORT Item
     void setMimeType( const QByteArray &mimeType );
 
   private:
-    ItemPrivate *d;
+    ItemPrivate* const d;
 };
 
 }

@@ -173,7 +173,7 @@ class AKONADI_EXPORT Collection
 
   private:
     class Private;
-    Private *d;
+    Private* const d;
 };
 
 }

@@ -120,7 +120,6 @@ Job::~Job()
   if ( !d->parent )
     d->socket->close();
   delete d;
-  d = 0;
 }
 
 bool Job::exec()

@@ -134,7 +134,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
   private:
     class Private;
-    Private* d;
+    Private* const d;
 };
 
 }

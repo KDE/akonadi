@@ -65,7 +65,7 @@ class AKONADI_EXPORT ItemAppendJob : public Job
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    ItemAppendJobPrivate *d;
+    ItemAppendJobPrivate* const d;
 };
 
 }
