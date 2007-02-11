@@ -230,13 +230,13 @@ void Akonadi::AkonadiConnection::flushStatusMessageQueue()
     m_statusMessageQueue.clear();
 }
 
-void AkonadiConnection::setSessionId(int id)
+void AkonadiConnection::setSessionId(const QByteArray &id)
 {
   m_sessionId = id;
   storageBackend()->notificationCollector()->setSessionId( id );
 }
 
-int AkonadiConnection::sessionId() const
+QByteArray AkonadiConnection::sessionId() const
 {
   return m_sessionId;
 }

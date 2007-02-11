@@ -75,16 +75,19 @@ bool Store::commit()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
+  // ### Akonadi vs. IMAP conflict
   QList<PimItem> pimItems;
-  if ( connection()->selectedLocation().id() == -1 ) {
+  if ( connection()->selectedLocation().id() == -1 || mStoreQuery.isUidStore() ) {
     pimItems = store->matchingPimItemsByUID( mStoreQuery.sequences() );
   } else {
-    if ( mStoreQuery.isUidStore() ) {
-      pimItems = store->matchingPimItemsByUID( mStoreQuery.sequences(), connection()->selectedLocation() );
-    } else {
+//     if ( mStoreQuery.isUidStore() ) {
+//       pimItems = store->matchingPimItemsByUID( mStoreQuery.sequences(), connection()->selectedLocation() );
+//     } else {
       pimItems = store->matchingPimItemsBySequenceNumbers( mStoreQuery.sequences(), connection()->selectedLocation() );
-    }
+//     }
   }
+
+  qDebug() << "Store::commit()" << pimItems.count() << "items selected.";
 
   for ( int i = 0; i < pimItems.count(); ++i ) {
     if ( mStoreQuery.dataType() == StoreQuery::Flags ) {

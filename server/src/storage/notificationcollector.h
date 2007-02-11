@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <volker.krause@rwth-aachen.de>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -157,7 +157,7 @@ class NotificationCollector : public QObject
     /**
       Sets the identifier of the session causing the changes.
     */
-    void setSessionId( int sessionId );
+    void setSessionId( const QByteArray &sessionId );
 
     /**
       Notify about an added item.
@@ -211,21 +211,21 @@ class NotificationCollector : public QObject
                             const QByteArray &resource = QByteArray() );
 
   Q_SIGNALS:
-    void itemAddedNotification( int sessionId, int uid, const QString &collection,
+    void itemAddedNotification( const QByteArray &sessionId, int uid, const QString &collection,
                                 const QByteArray &mimeType,
                                 const QByteArray &resource );
-    void itemChangedNotification( int sessionId, int uid, const QString &collection,
+    void itemChangedNotification( const QByteArray &sessionId, int uid, const QString &collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
-    void itemRemovedNotification( int sessionId, int uid, const QString &collection,
+    void itemRemovedNotification( const QByteArray &sessionId, int uid, const QString &collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
 
-    void collectionAddedNotification( int sessionId, const QString &collection,
+    void collectionAddedNotification( const QByteArray &sessionId, const QString &collection,
                                       const QByteArray &resource );
-    void collectionChangedNotification( int sessionId, const QString &collection,
+    void collectionChangedNotification( const QByteArray &sessionId, const QString &collection,
                                         const QByteArray &resource );
-    void collectionRemovedNotification( int sessionId, const QString &collection,
+    void collectionRemovedNotification( const QByteArray &sessionId, const QString &collection,
                                         const QByteArray &resource );
 
   private:
@@ -238,7 +238,7 @@ class NotificationCollector : public QObject
 
   private:
     DataStore *mDb;
-    int mSessionId;
+    QByteArray mSessionId;
 
     NotificationItem::List mAddedItems;
     NotificationItem::List mChangedItems;

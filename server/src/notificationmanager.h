@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <volker.krause@rwth-aachen.de>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -43,26 +43,26 @@ class NotificationManager : public QObject
     void connectDatastore( DataStore* );
 
   Q_SIGNALS:
-    Q_SCRIPTABLE void itemChanged( int sessionId, const QByteArray &uid, const QString &collection,
+    Q_SCRIPTABLE void itemChanged( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
                       const QByteArray &mimetype, const QByteArray &resource );
-    Q_SCRIPTABLE void itemAdded( int sessionId, const QByteArray &uid, const QString &collection,
+    Q_SCRIPTABLE void itemAdded( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
                     const QByteArray &mimetype, const QByteArray &resource );
-    Q_SCRIPTABLE void itemRemoved( int sessionId, const QByteArray &uid, const QString &collection,
+    Q_SCRIPTABLE void itemRemoved( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
                       const QByteArray &mimetype, const QByteArray &resource );
-    Q_SCRIPTABLE void collectionAdded( int sessionId, const QString &path, const QByteArray &resource );
-    Q_SCRIPTABLE void collectionChanged( int sessionId, const QString &path, const QByteArray &resource );
-    Q_SCRIPTABLE void collectionRemoved( int sessionId, const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionAdded( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionChanged( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionRemoved( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
 
   private Q_SLOTS:
-    void slotItemAdded( int sessionId, int uid, const QString& location,
+    void slotItemAdded( const QByteArray &sessionId, int uid, const QString& location,
                         const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemChanged( int sessionId, int uid, const QString &location,
+    void slotItemChanged( const QByteArray &sessionId, int uid, const QString &location,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemRemoved( int sessionId, int uid, const QString &location,
+    void slotItemRemoved( const QByteArray &sessionId, int uid, const QString &location,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotCollectionAdded( int sessionId, const QString &path, const QByteArray &resource );
-    void slotCollectionChanged( int sessionId, const QString &path, const QByteArray &resource );
-    void slotCollectionRemoved( int sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionAdded( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionChanged( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionRemoved( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
 
   private:
     NotificationManager();

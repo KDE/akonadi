@@ -42,14 +42,10 @@ bool Login::handleLine( const QByteArray &line )
   if ( pos < 0 )
     return failureResponse( "Invalid syntax" );
 
-  QByteArray tmp;
-  pos = ImapParser::parseString( line, tmp, pos );
-  if ( tmp.isEmpty() )
+  QByteArray sessionId;
+  pos = ImapParser::parseString( line, sessionId, pos );
+  if ( sessionId.isEmpty() )
     return failureResponse( "Missing session identifier." );
-  bool ok = false;
-  int sessionId = tmp.toInt( &ok );
-  if ( !ok )
-    return failureResponse( "Invalid session identifier." );
   connection()->setSessionId( sessionId );
 
   Response response;

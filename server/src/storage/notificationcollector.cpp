@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <volker.krause@rwth-aachen.de>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -88,7 +88,6 @@ Akonadi::NotificationCollector::NotificationCollector(DataStore * db) :
   QObject( db ),
   mDb( db )
 {
-  mSessionId = 0;
   connect( db, SIGNAL(transactionCommitted()), SLOT(transactionCommitted()) );
   connect( db, SIGNAL(transactionRolledBack()), SLOT(transactionRolledBack()) );
 }
@@ -263,7 +262,7 @@ void Akonadi::NotificationCollector::clear()
   mRemovedCollections.clear();
 }
 
-void NotificationCollector::setSessionId(int sessionId)
+void NotificationCollector::setSessionId(const QByteArray &sessionId)
 {
   mSessionId = sessionId;
 }
