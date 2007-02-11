@@ -130,7 +130,7 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
   d->clearParserState();
 
   d->socket = new QTcpSocket( this );
-  connect( d->socket, SIGNAL(disconnected()), SLOT(disconnected()) );
+  connect( d->socket, SIGNAL(disconnected()), SLOT(socketError()) );
   connect( d->socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
   reconnect();
@@ -165,14 +165,10 @@ void Session::reconnect()
     d->socket->connectToHost( QHostAddress::LocalHost, 4444 );
 }
 
-void Session::disconnected()
-{
-  d->connected = false;
-  QTimer::singleShot( 1000, this, SLOT(reconnect()) );
-}
-
 void Session::socketError()
 {
+  if ( d->currentJob )
+    d->currentJob->lostConnection();
   d->connected = false;
   QTimer::singleShot( 1000, this, SLOT(reconnect()) );
 }
@@ -227,10 +223,11 @@ void Session::doStartNext()
 
 void Session::jobDone(KJob * job)
 {
-  Q_ASSERT( job == d->currentJob );
-  d->jobRunning = false;
-  d->currentJob = 0;
-  startNext();
+  if( job == d->currentJob ) {
+    d->jobRunning = false;
+    d->currentJob = 0;
+    startNext();
+  }
 }
 
 QThreadStorage<Session*> instances;

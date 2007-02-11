@@ -125,8 +125,7 @@ void Job::start()
 
 bool Job::doKill()
 {
-  // TODO
-  return false;
+  return true;
 }
 
 QString Job::errorString() const
@@ -249,6 +248,17 @@ void Job::startNext()
     Job *job = dynamic_cast<Akonadi::Job*>( subjobs().first() );
     Q_ASSERT( job );
     job->startQueued();
+  }
+}
+
+void Job::lostConnection()
+{
+  if ( d->currentSubJob ) {
+    d->currentSubJob->lostConnection();
+  } else {
+    kill( KJob::Quietly );
+    setError( ConnectionFailed );
+    emitResult();
   }
 }
 

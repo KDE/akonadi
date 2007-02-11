@@ -243,6 +243,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
   private:
     void handleResponse( const QByteArray &tag, const QByteArray &data );
     void startQueued();
+    void lostConnection();
 
   private Q_SLOTS:
     void slotSubJobAboutToStart( Akonadi::Job* job );

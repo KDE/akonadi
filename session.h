@@ -95,7 +95,6 @@ class AKONADI_EXPORT Session : public QObject
 
   private slots:
     void reconnect();
-    void disconnected();
     void socketError();
     void dataReceived();
     void doStartNext();
