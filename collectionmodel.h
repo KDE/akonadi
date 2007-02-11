@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -171,22 +171,22 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Connected to the collection status job.
     */
-    void updateDone( Akonadi::Job *job );
+    void updateDone( KJob *job );
 
     /**
       Connected to the list jobs.
     */
-    void listDone( Akonadi::Job *job );
+    void listDone( KJob *job );
 
     /**
       Connected to edit jobs.
     */
-    void editDone( Akonadi::Job *job );
+    void editDone( KJob *job );
 
     /**
       Connected to item append jobs used for DND.
     */
-    void appendDone( Akonadi::Job *job );
+    void appendDone( KJob *job );
 
   private:
     class Private;

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -24,8 +24,8 @@
 #include "collectionmodel.h"
 #include "collectionrenamejob.h"
 #include "itemappendjob.h"
-#include "jobqueue.h"
 #include "monitor.h"
+#include "session.h"
 
 #include <kdebug.h>
 #include <kiconloader.h>
@@ -50,7 +50,7 @@ class CollectionModel::Private
     Collection *editedCollection;
     QString editOldName;
     Monitor* monitor;
-    JobQueue *queue;
+    Session *session;
     QStringList mimeTypes;
 
     void updateSupportedMimeTypes( Collection *col )
@@ -72,16 +72,16 @@ CollectionModel::CollectionModel( QObject * parent ) :
   d->currentEdit = Private::None;
   d->editedCollection = 0;
 
-  d->queue = new JobQueue( this );
+  d->session = new Session( QByteArray("CollectionModel-") + QByteArray::number( qrand() ), this );
 
   // start a list job
-  CollectionListJob *job = new CollectionListJob( Collection::prefix(), true, d->queue );
-  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(listDone(Akonadi::Job*)) );
+  CollectionListJob *job = new CollectionListJob( Collection::prefix(), true, d->session );
+  connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
 
   // monitor collection changes
   d->monitor = new Monitor();
   d->monitor->monitorCollection( Collection::root(), true );
-  d->monitor->ignoreSession( d->queue );
+  d->monitor->ignoreSession( d->session );
   connect( d->monitor, SIGNAL(collectionChanged(QString)), SLOT(collectionChanged(QString)) );
   connect( d->monitor, SIGNAL(collectionAdded(QString)), SLOT(collectionChanged(QString)) );
   connect( d->monitor, SIGNAL(collectionRemoved(QString)), SLOT(collectionRemoved(QString)) );
@@ -230,8 +230,8 @@ void CollectionModel::collectionChanged( const QString &path )
 {
   if ( d->collections.contains( path ) ) {
     // update
-    CollectionStatusJob *job = new CollectionStatusJob( path, d->queue );
-    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(updateDone(Akonadi::Job*)) );
+    CollectionStatusJob *job = new CollectionStatusJob( path, d->session );
+    connect( job, SIGNAL(result(KJob*)), SLOT(updateDone(KJob*)) );
   } else {
     // new collection
     int index = path.lastIndexOf( Collection::delimiter() );
@@ -242,11 +242,11 @@ void CollectionModel::collectionChanged( const QString &path )
       parent = Collection::root();
 
     // re-list parent non-recursively
-    CollectionListJob *job = new CollectionListJob( parent, false, d->queue );
-    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(listDone(Akonadi::Job*)) );
+    CollectionListJob *job = new CollectionListJob( parent, false, d->session );
+    connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
     // list the new collection recursively
-    job = new CollectionListJob( path, true, d->queue );
-    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(listDone(Akonadi::Job*)) );
+    job = new CollectionListJob( path, true, d->session );
+    connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
   }
 }
 
@@ -266,11 +266,11 @@ void CollectionModel::collectionRemoved( const QString &path )
   }
 }
 
-void CollectionModel::updateDone( Job * job )
+void CollectionModel::updateDone( KJob * job )
 {
   if ( job->error() ) {
     // TODO: handle job errors
-    kWarning() << k_funcinfo << "Job error: " << job->errorText() << endl;
+    kWarning() << k_funcinfo << "Job error: " << job->errorString() << endl;
   } else {
     CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
     QString path = csjob->path();
@@ -288,8 +288,6 @@ void CollectionModel::updateDone( Job * job )
       emit dataChanged( startIndex, endIndex );
     }
   }
-
-  job->deleteLater();
 }
 
 QModelIndex CollectionModel::indexForPath( const QString &path, int column )
@@ -310,10 +308,10 @@ QModelIndex CollectionModel::indexForPath( const QString &path, int column )
   return QModelIndex();
 }
 
-void CollectionModel::listDone( Job * job )
+void CollectionModel::listDone( KJob * job )
 {
   if ( job->error() ) {
-    qWarning() << "Job error: " << job->errorText() << endl;
+    qWarning() << "Job error: " << job->errorString() << endl;
   } else {
     Collection::List collections = static_cast<CollectionListJob*>( job )->collections();
 
@@ -337,13 +335,12 @@ void CollectionModel::listDone( Job * job )
 
       // start a status job for every collection to get message counts, etc.
       if ( col->type() != Collection::VirtualParent ) {
-        CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->queue );
-        connect( csjob, SIGNAL(done(Akonadi::Job*)), SLOT(updateDone(Akonadi::Job*)) );
+        CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->session );
+        connect( csjob, SIGNAL(result(KJob*)), SLOT(updateDone(KJob*)) );
       }
     }
 
   }
-  job->deleteLater();
 }
 
 bool CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
@@ -361,8 +358,8 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
       newPath = d->editedCollection->name();
     else
       newPath = d->editedCollection->parent() + Collection::delimiter() + d->editedCollection->name();
-    CollectionRenameJob *job = new CollectionRenameJob( d->editedCollection->path(), newPath, d->queue );
-    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(editDone(Akonadi::Job*)) );
+    CollectionRenameJob *job = new CollectionRenameJob( d->editedCollection->path(), newPath, d->session );
+    connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
     emit dataChanged( index, index );
     return true;
   }
@@ -391,10 +388,10 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
   return flags;
 }
 
-void CollectionModel::editDone( Job * job )
+void CollectionModel::editDone( KJob * job )
 {
   if ( job->error() ) {
-    qWarning() << "Edit failed: " << job->errorText() << " - reverting current transaction";
+    qWarning() << "Edit failed: " << job->errorString() << " - reverting current transaction";
     // revert current transaction
     switch ( d->currentEdit ) {
       case Private::Create:
@@ -415,7 +412,6 @@ void CollectionModel::editDone( Job * job )
     // transaction done
   }
   d->currentEdit = Private::None;
-  job->deleteLater();
 }
 
 bool CollectionModel::createCollection( const QModelIndex & parent, const QString & name )
@@ -438,8 +434,8 @@ bool CollectionModel::createCollection( const QModelIndex & parent, const QStrin
   endInsertRows();
 
   // start creation job
-  CollectionCreateJob *job = new CollectionCreateJob( d->editedCollection->path(), d->queue );
-  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(editDone(Akonadi::Job*)) );
+  CollectionCreateJob *job = new CollectionCreateJob( d->editedCollection->path(), d->session );
+  connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
 
   d->currentEdit = Private::Create;
   return true;
@@ -516,21 +512,20 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     // HACK for some unknown reason the data is sometimes 0-terminated...
     if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
       item.resize( item.size() - 1 );
-    ItemAppendJob *job = new ItemAppendJob( path, item, type.toLatin1(), d->queue );
-    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(appendDone(Akonadi::Job*)) );
+    ItemAppendJob *job = new ItemAppendJob( path, item, type.toLatin1(), d->session );
+    connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
     return true;
   }
 
   return false;
 }
 
-void CollectionModel::appendDone(Job * job)
+void CollectionModel::appendDone(KJob * job)
 {
   if ( job->error() ) {
-    kWarning() << "Append failed: " << job->errorText() << endl;
+    kWarning() << "Append failed: " << job->errorString() << endl;
     // TODO: error handling
   }
-  job->deleteLater();
 }
 
 #include "collectionmodel.moc"

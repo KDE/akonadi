@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -123,8 +123,9 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
     if ( data.startsWith( "OK" ) ) {
       sendNextCommand();
     } else {
-      setError( Unknown, QString::fromUtf8( data ) );
-      emit done( this );
+      setError( Unknown );
+      setErrorText( QString::fromUtf8( data ) );
+      emitResult();
     }
     return;
   }
@@ -134,7 +135,7 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
 void ItemStoreJob::sendNextCommand()
 {
   if ( d->operations.isEmpty() ) {
-    emit done( this );
+    emitResult();
     return;
   }
 

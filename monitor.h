@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -26,6 +26,7 @@
 namespace Akonadi {
 
 class MonitorPrivate;
+class Session;
 
 /**
   Monitors an Item or Collection for changes and emits signals if some
@@ -86,7 +87,7 @@ class AKONADI_EXPORT Monitor : public QObject
       Ignore all notifications caused by the given session.
       @param session The session you want to ignore.
     */
-    void ignoreSession( Job *session );
+    void ignoreSession( Session *session );
 
   Q_SIGNALS:
     /**
@@ -130,15 +131,15 @@ class AKONADI_EXPORT Monitor : public QObject
     bool connectToNotificationManager();
 
   private Q_SLOTS:
-    void slotItemChanged( int sessionId, const QByteArray &uid, const QString &collection,
+    void slotItemChanged( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemAdded( int sessionId, const QByteArray &uid, const QString &collection,
+    void slotItemAdded( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
                         const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemRemoved( int sessionId, const QByteArray &uid, const QString &collection,
+    void slotItemRemoved( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotCollectionAdded( int sessionId, const QString &path, const QByteArray &resource );
-    void slotCollectionChanged( int sessionId, const QString &path, const QByteArray &resource );
-    void slotCollectionRemoved( int sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionAdded( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionChanged( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionRemoved( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
 
     void sessionDestroyed(QObject *obj);
 

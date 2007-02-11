@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -56,7 +56,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     virtual ~ItemFetchJob();
 
     /**
-      Returns the fetched item objects. Invalid before the done(Akonadi::Job*)
+      Returns the fetched item objects. Invalid before the result(KJob*)
       signal has been emitted or if an error occurred.
     */
     virtual Item::List items() const;
@@ -89,7 +89,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     void startFetchJob();
 
   private Q_SLOTS:
-    void selectDone( Akonadi::Job* job );
+    void selectDone( KJob* job );
 
   private:
     ItemFetchJobPrivate* const d;

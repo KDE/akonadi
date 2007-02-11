@@ -38,7 +38,6 @@ set( akonadi_LIB_SRC
 	itemstorejob.cpp
 	itemmodel.cpp
 	job.cpp
-	jobqueue.cpp
 	messagecollectionattribute.cpp
 	messagecollectionmodel.cpp
 	message.cpp
@@ -47,6 +46,7 @@ set( akonadi_LIB_SRC
 	monitor.cpp
 	profilemanager.cpp
 	profilemodel.cpp
+	session.cpp
 	transactionjobs.cpp
 )
 
@@ -86,7 +86,6 @@ install( FILES
 	itemfetchjob.h
 	itemstorejob.h
 	job.h
-	jobqueue.h
 	messagecollectionattribute.h
 	messagecollectionmodel.h
 	message.h
@@ -94,6 +93,7 @@ install( FILES
 	messagemodel.h
 	monitor.h
 	profilemanager.h
+	session.h
 	transactionjobs.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi
 )

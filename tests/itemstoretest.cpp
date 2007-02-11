@@ -1,5 +1,5 @@
   /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -118,17 +118,14 @@ void ItemStoreTest::testItemMove()
   ItemStoreJob *store = new ItemStoreJob( ref, this );
   store->setCollection( "res3" );
   QVERIFY( store->exec() );
-  delete store;
 
   ItemFetchJob *fetch = new ItemFetchJob( "res3", this );
   QVERIFY( fetch->exec() );
   QCOMPARE( fetch->items().count(), 1 );
-  delete fetch;
 
   store = new ItemStoreJob( ref, this );
   store->setCollection( "res1/foo" );
   QVERIFY( store->exec() );
-  delete store;
 }
 
 void ItemStoreTest::testIllegalItemMove()

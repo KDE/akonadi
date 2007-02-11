@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -59,8 +59,8 @@ void ItemFetchJob::doStart()
 {
   if ( d->uid.isNull() ) { // collection content listing
     CollectionSelectJob *job = new CollectionSelectJob( d->path, this );
-    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(selectDone(Akonadi::Job*)) );
-    job->start();
+    connect( job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)) );
+    addSubjob( job );
   } else
     startFetchJob();
 }
@@ -107,16 +107,11 @@ Item::List ItemFetchJob::items() const
   return d->items;
 }
 
-void ItemFetchJob::selectDone( Job * job )
+void ItemFetchJob::selectDone( KJob * job )
 {
-  if ( job->error() ) {
-    setError( job->error(), job->errorMessage() );
-    emit done( this );
-  } else {
-    job->deleteLater();
+  if ( !job->error() )
     // the collection is now selected, fetch the message(s)
     startFetchJob();
-  }
 }
 
 DataReference ItemFetchJob::parseUid( const QList< QByteArray > & fetchResponse )

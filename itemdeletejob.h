@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -52,7 +52,7 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
     virtual void doStart();
 
   private Q_SLOTS:
-    void jobDone( Akonadi::Job* job );
+    void jobDone( KJob* job );
 
   private:
     ItemDeleteJobPrivate* const d;

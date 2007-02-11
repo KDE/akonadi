@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -54,51 +54,24 @@ ItemDeleteJob::~ ItemDeleteJob()
 void ItemDeleteJob::doStart()
 {
   TransactionBeginJob *begin = new TransactionBeginJob( this );
-  connect( begin, SIGNAL(done(Akonadi::Job*)), SLOT(jobDone(Akonadi::Job*)) );
-  begin->start();
+  addSubjob( begin );
+
+  ItemStoreJob* store = new ItemStoreJob( d->ref, this );
+  store->addFlag( "\\Deleted" );
+  addSubjob( store );
+
+  ExpungeJob *expunge = new ExpungeJob( this );
+  addSubjob( expunge );
+
+  TransactionCommitJob *commit = new TransactionCommitJob( this );
+  connect( commit, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
+  addSubjob( commit );
 }
 
-void ItemDeleteJob::jobDone(Job * job)
+void ItemDeleteJob::jobDone(KJob * job)
 {
-  if ( job->error() ) {
-    setError( job->error(), job->errorMessage() );
-    job->deleteLater();
-    emit done( this );
-    return;
-  }
-
-  switch ( d->state ) {
-    case ItemDeleteJobPrivate::Begin:
-    {
-      ItemStoreJob* store = new ItemStoreJob( d->ref, this );
-      store->addFlag( "\\Deleted" );
-      connect( store, SIGNAL(done(Akonadi::Job*)), SLOT(jobDone(Akonadi::Job*)) );
-      store->start();
-      d->state = ItemDeleteJobPrivate::Store;
-      break;
-    }
-    case ItemDeleteJobPrivate::Store:
-    {
-      ExpungeJob *expunge = new ExpungeJob( this );
-      connect( expunge, SIGNAL(done(Akonadi::Job*)), SLOT(jobDone(Akonadi::Job*)) );
-      expunge->start();
-      d->state = ItemDeleteJobPrivate::Expunge;
-      break;
-    }
-    case ItemDeleteJobPrivate::Expunge:
-    {
-      TransactionCommitJob *commit = new TransactionCommitJob( this );
-      connect( commit, SIGNAL(done(Akonadi::Job*)), SLOT(jobDone(Akonadi::Job*)) );
-      commit->start();
-      d->state = ItemDeleteJobPrivate::Commit;
-      break;
-    }
-    case ItemDeleteJobPrivate::Commit:
-      emit done( this );
-      break;
-  }
-
-  job->deleteLater();
+  if ( !job->error() ) // error is already handled by KCompositeJob
+    emitResult();
 }
 
 #include "itemdeletejob.moc"

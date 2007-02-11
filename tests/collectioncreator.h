@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -23,7 +23,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QTime>
 #include <libakonadi/job.h>
-#include <libakonadi/jobqueue.h>
+#include <libakonadi/session.h>
 
 class CollectionCreator : public QObject
 {
@@ -31,11 +31,11 @@ class CollectionCreator : public QObject
   public:
     CollectionCreator();
   private Q_SLOTS:
-    void done(Akonadi::Job* job);
+    void done(KJob *job);
   private:
     int jobCount;
     QTime startTime;
-    Akonadi::JobQueue *queue;
+    Akonadi::Session *queue;
 };
 
 #endif

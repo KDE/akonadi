@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -41,18 +41,15 @@ void ItemAppendTest::testItemAppend()
   // item without remote id
   ItemAppendJob *job = new ItemAppendJob( "res1/foo", QByteArray(), "message/rfc822", this );
   QVERIFY( job->exec() );
-  delete job;
 
   // item with remote id
   job = new ItemAppendJob( "res1/foo", QByteArray(), "message/rfc822", this );
   job->setRemoteId( "remote-id" );
   QVERIFY( job->exec() );
-  delete job;
 
   // item with data containing linebreaks
   job = new ItemAppendJob( "res1/foo", QByteArray("\nsome\n\nbreaked\ncontent\n\n"), "message/rfc822", this );
   QVERIFY( job->exec() );
-  delete job;
 
   // append/fetch/delete to collection with a space in the name
   job = new ItemAppendJob( "res2/space folder", QByteArray("some content"), "message/rfc822", this );
@@ -62,16 +59,13 @@ void ItemAppendTest::testItemAppend()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   DataReference ref = fjob->items().first()->reference();
-  delete fjob;
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );
-  delete djob;
 
   fjob = new ItemFetchJob( "res2/space folder", this );
   QVERIFY( fjob->exec() );
   QVERIFY( fjob->items().isEmpty() );
-  delete fjob;
 }
 
 void ItemAppendTest::testUtf8Data()
@@ -79,7 +73,6 @@ void ItemAppendTest::testUtf8Data()
   QString utf8string = QString::fromUtf8("äöüß@€µøđ¢©®");
   ItemAppendJob* job = new ItemAppendJob( "res2/space folder", utf8string.toUtf8(), "message/rfc822", this );
   QVERIFY( job->exec() );
-  delete job;
 
   ItemFetchJob *fjob = new ItemFetchJob( "res2/space folder", this );
   fjob->addFetchField( "RFC822" );
@@ -88,11 +81,9 @@ void ItemAppendTest::testUtf8Data()
   QCOMPARE( utf8string.toUtf8(), fjob->items().first()->data() );
 
   DataReference ref = fjob->items().first()->reference();
-  delete fjob;
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );
-  delete djob;
 }
 
 void ItemAppendTest::testIllegalAppend()

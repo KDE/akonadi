@@ -3,6 +3,7 @@
 
     Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
                   2006 Marc Mutz <mutz@kde.org>
+                  2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -27,6 +28,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
+
+#include <kcompositejob.h>
 
 #include <kdepim_export.h>
 
@@ -104,8 +107,8 @@ class AKONADI_EXPORT DataReference
 
   \code
     Akonadi::Job *job = new Akonadi::SomeJob( some parameter );
-    connect( job, SIGNAL( done( Akonadi::Job* ) ),
-             this, SLOT( slotResult( Akonadi::Job* ) ) );
+    connect( job, SIGNAL( result( KJob* ) ),
+             this, SLOT( slotResult( KJob* ) ) );
     job->start();
   \endcode
 
@@ -128,10 +131,15 @@ class AKONADI_EXPORT DataReference
   \endcode
 
   Subclasses must reimplement @see doStart().
+
+  Note that KJob-derived objects delete itself, it is thus not possible
+  to create job objects on the stack!
  */
-class AKONADI_EXPORT Job : public QObject
+class AKONADI_EXPORT Job : public KCompositeJob
 {
   Q_OBJECT
+
+  friend class Session;
 
   public:
 
@@ -143,17 +151,17 @@ class AKONADI_EXPORT Job : public QObject
      */
     enum Error
     {
-      None,
-      ConnectionFailed,
+      ConnectionFailed = UserDefinedError,
       UserCanceled,
       Unknown
     };
 
     /**
       Creates a new job.
-      If the parent object is a Job object, the new job will use the same socket to
-      communicate with the backend as the parent job.
-      @param parent The parent object or parent job.
+      If the parent object is a Job object, the new job will be a subjob of @p parent.
+      If the parent object is a Session object, it will be used for server communication
+      instead of the default session.
+      @param parent The parent object, job or session.
      */
     Job( QObject *parent = 0 );
 
@@ -163,61 +171,23 @@ class AKONADI_EXPORT Job : public QObject
     virtual ~Job();
 
     /**
-      Executes the job synchronous.
-     */
-    bool exec();
-
-    /**
       Starts the job asynchronous. When the job finished successful,
       @see done() is emitted.
      */
     void start();
 
     /**
-      Abort this job.
-
-      The @see done() signal is emitted nonetheless, but @see error()
-      returns a special error code.
-     */
-    virtual void kill();
-
-    /**
-      Returns the error code, if there has been an error, 0 otherwise.
-     */
-    int error() const;
-
-    /**
-      Return error message, if there has been an error, QString() otherwise.
-    */
-    QString errorMessage() const;
-
-    /**
       Returns the error string, if there has been an error, an empty
       string otherwise.
      */
-    virtual QString errorText() const;
+    virtual QString errorString() const;
 
     /**
       Returns the identifier of the session that executes this job.
     */
-    int sessionId() const;
+    QByteArray sessionId() const;
 
   Q_SIGNALS:
-    /**
-      This signal is emitted when the started job finished.
-
-      @param job A pointer to the job which emitted the signal.
-     */
-    void done( Akonadi::Job *job );
-
-    /**
-      Progress signal showing the overall progress of the job.
-
-      @param job The job that emitted this signal.
-      @param percent The percentage.
-     */
-    void percent( Akonadi::Job *job, unsigned int percent );
-
     /**
       Emitted directly before the job will be started.
       @param job The started job.
@@ -225,12 +195,6 @@ class AKONADI_EXPORT Job : public QObject
     void aboutToStart( Akonadi::Job *job );
 
   protected:
-    /**
-      Subclasses have to use this method to set an error code. They can
-      optionally set a describing error message.
-     */
-    void setError( int code, const QString &msg = QString() );
-
     /**
       Returns a new unique command tag for communication with the backend.
     */
@@ -269,17 +233,20 @@ class AKONADI_EXPORT Job : public QObject
       with the backend.
       @param job The new subjob.
     */
-    virtual void addSubJob( Job* job );
+    virtual bool addSubjob( KJob* job );
+
+    virtual bool doKill();
+
+  protected Q_SLOTS:
+    virtual void slotResult( KJob* job );
 
   private:
     void handleResponse( const QByteArray &tag, const QByteArray &data );
+    void startQueued();
 
   private Q_SLOTS:
-    void slotDisconnected();
-    void slotDataReceived();
-    void slotSocketError();
     void slotSubJobAboutToStart( Akonadi::Job* job );
-    void slotSubJobDone( Akonadi::Job* job );
+    void startNext();
 
   private:
     class JobPrivate;

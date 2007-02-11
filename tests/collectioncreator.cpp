@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -34,7 +34,7 @@ using namespace Akonadi;
 CollectionCreator::CollectionCreator( )
 {
 #ifdef SEQUENTIAL_EXECUTION
-  queue = new JobQueue( this );
+  queue = new Session( this );
 #else
   jobCount = 0;
 #endif
@@ -42,26 +42,25 @@ CollectionCreator::CollectionCreator( )
   for ( int i = 0; i < COLLECTION_COUNT; ++i ) {
 #ifdef SEQUENTIAL_EXECUTION
     CollectionCreateJob *job = new CollectionCreateJob( "res3/col" + QByteArray::number( i ), queue );
-    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(done(Akonadi::Job*)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(result(KJob*)) );
     queue->addJob( job );
 #else
     CollectionCreateJob *job = new CollectionCreateJob( "res3/col" + QByteArray::number( i ), this );
-    connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(done(Akonadi::Job*)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(result(KJob*)) );
     job->start();
     ++jobCount;
 #endif
   }
 }
 
-void CollectionCreator::done( Akonadi::Job * job )
+void CollectionCreator::done( KJob * job )
 {
 #ifndef SEQUENTIAL_EXECUTION
   --jobCount;
 #endif
   if ( job->error() ) {
-    qWarning() << "Creation failed: " << job->errorText();
+    qWarning() << "Creation failed: " << job->errorString();
   }
-  job->deleteLater();
 #ifdef SEQUENTIAL_EXECUTION
   if ( queue->isEmpty() ) {
 #else

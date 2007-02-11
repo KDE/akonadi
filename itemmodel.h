@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -110,12 +110,12 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     /**
       Connected to the message query job which does a complete listing
     */
-    void listingDone( Akonadi::Job* job );
+    void listingDone( KJob* job );
 
     /**
       Connected to message queries that handle newly added messages.
     */
-    void fetchingNewDone( Akonadi::Job* job );
+    void fetchingNewDone( KJob* job );
 
     /**
       Connected to the monitor job.

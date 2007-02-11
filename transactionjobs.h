@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -26,14 +26,14 @@ namespace Akonadi {
 
 /**
   Begins a session-global transaction.
-  Note: this will only have an effect when used as a subjob or with a JobQueue.
+  Note: this will only have an effect when used as a subjob or with a Session.
 */
 class TransactionBeginJob : public Job
 {
   public:
     /**
       Creates a new TransactionBeginJob.
-      @param parent The parent job or JobQueue, must not be 0.
+      @param parent The parent job or Session, must not be 0.
     */
     TransactionBeginJob( Job *parent );
 
@@ -49,14 +49,14 @@ class TransactionBeginJob : public Job
 
 /**
   Aborts a session-global transaction.
-  Note: this will only have an effect when used as a subjob or with a JobQueue.
+  Note: this will only have an effect when used as a subjob or with a Session.
 */
 class TransactionRollbackJob : public Job
 {
   public:
     /**
       Creates a new TransactionRollbackJob.
-      @param parent The parent job or JobQueue, must not be 0.
+      @param parent The parent job or Session, must not be 0.
     */
     TransactionRollbackJob( Job *parent );
 
@@ -78,7 +78,7 @@ class TransactionCommitJob : public Job
   public:
     /**
       Creates a new TransactionCommitJob.
-      @param parent The parent job or JobQueue, must not be 0.
+      @param parent The parent job or Session, must not be 0.
      */
     TransactionCommitJob( Job *parent );
 

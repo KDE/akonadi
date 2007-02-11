@@ -3,6 +3,7 @@
 
     Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
                   2006 Marc Mutz <mutz@kde.org>
+                  2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -29,8 +30,8 @@
 #include <QtNetwork/QTcpSocket>
 
 #include "job.h"
-#include "jobqueue.h"
 #include "imapparser.h"
+#include "session.h"
 
 using namespace Akonadi;
 
@@ -87,83 +88,52 @@ uint qHash( const DataReference& ref )
 class Job::JobPrivate
 {
   public:
-    int mError;
-    QString mErrorMessage;
-    QTcpSocket *socket;
-    int lastTag;
-    QByteArray loginTag;
     Job *parent;
+    Job *currentSubJob;
     QByteArray tag;
-    int sessionId;
+    Session* session;
 };
 
 Job::Job( QObject *parent )
-  : QObject( parent ), d( new JobPrivate )
+  : KCompositeJob( parent ), d( new JobPrivate )
 {
-  d->mError = None;
   d->parent = dynamic_cast<Job*>( parent );
-  if ( !d->parent ) {
-    d->socket = new QTcpSocket( this );
-    connect( d->socket, SIGNAL(disconnected()), SLOT(slotDisconnected()) );
-  } else {
-    qDebug() << "Sharing socket with parent job.";
-    d->socket = d->parent->d->socket;
-    d->parent->addSubJob( this );
+  d->currentSubJob = 0;
+  d->session = dynamic_cast<Session*>( parent );
+
+  if ( !d->session ) {
+    if ( !d->parent )
+      d->session = Session::defaultSession();
+    else
+      d->session = d->parent->d->session;
   }
-  connect( d->socket, SIGNAL(readyRead()), SLOT(slotDataReceived()) );
-  connect( d->socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(slotSocketError()) );
-  d->lastTag = 0;
+
+  if ( !d->parent )
+    d->session->addJob( this );
+  else
+    d->parent->addSubjob( this );
 }
 
 Job::~Job()
 {
-  if ( !d->parent )
-    d->socket->close();
   delete d;
-}
-
-bool Job::exec()
-{
-  QEventLoop loop( this );
-  connect( this, SIGNAL( done( Akonadi::Job* ) ), &loop, SLOT( quit() ) );
-  // if the parent is a JobQueue we don't need to start the job
-  if ( dynamic_cast<JobQueue*>( d->parent ) == 0 )
-    start();
-  loop.exec();
-
-  return ( d->mError == 0 );
 }
 
 void Job::start()
 {
-  emit aboutToStart( this );
-  if ( !d->parent )
-    d->socket->connectToHost( QHostAddress::LocalHost, 4444 );
-  else
-    doStart(); // can we get the exec() dead-lock here again?
 }
 
-void Job::kill()
+bool Job::doKill()
 {
-  d->mError = UserCanceled;
-  emit done( this );
+  // TODO
+  return false;
 }
 
-int Job::error() const
-{
-  return d->mError;
-}
-
-QString Job::errorMessage() const
-{
-  return d->mErrorMessage;
-}
-
-QString Job::errorText() const
+QString Job::errorString() const
 {
   QString str;
-  switch ( d->mError ) {
-    case None:
+  switch ( error() ) {
+    case NoError:
       break;
     case ConnectionFailed:
       str = tr( "Can't connect to pim storage service." );
@@ -176,119 +146,18 @@ QString Job::errorText() const
       str = tr( "Unknown Error." );
       break;
   }
-  if ( !d->mErrorMessage.isEmpty() ) {
-    str += QString::fromLatin1( " (%1)" ).arg( d->mErrorMessage );
+  if ( !errorText().isEmpty() ) {
+    str += QString::fromLatin1( " (%1)" ).arg( errorText() );
   }
   return str;
-}
-
-void Job::setError( int error, const QString &msg )
-{
-  d->mError = error;
-  d->mErrorMessage = msg;
-}
-
-void Job::slotDisconnected( )
-{
-  setError( ConnectionFailed );
-  // FIXME: we must make sure to emit done() only once!
-//   emit done( this );
-}
-
-void Job::slotDataReceived( )
-{
-  static int literalSize = 0;
-  static QByteArray dataBuffer;
-  static int parenthesesCount = 0;
-
-  while ( d->socket->canReadLine() ) {
-    QByteArray readBuffer = d->socket->readLine();
-    dataBuffer += readBuffer;
-
-    // literal read in progress
-    if ( literalSize > 0 ) {
-      literalSize -= readBuffer.size();
-
-      // still not everything read
-      if ( literalSize > 0 )
-        continue;
-
-      // check the remaining (non-literal) part for parentheses
-      if ( literalSize < 0 )
-        parenthesesCount = ImapParser::parenthesesBalance( readBuffer, readBuffer.length() + literalSize );
-
-      // literal string finished but still open parentheses
-      if ( parenthesesCount > 0 )
-        continue;
-
-    } else {
-
-      // open parentheses
-      parenthesesCount += ImapParser::parenthesesBalance( readBuffer );
-
-      // start new literal read
-      if ( readBuffer.trimmed().endsWith( '}' ) ) {
-        int begin = readBuffer.lastIndexOf( '{' );
-        int end = readBuffer.lastIndexOf( '}' );
-        literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
-        continue;
-      }
-
-      // still open parentheses
-      if ( parenthesesCount > 0 )
-        continue;
-
-      // just a normal response, fall through
-    }
-
-    QTextStream dbg( stderr );
-    dbg << "data received: " << dataBuffer;
-
-    int startOfData = dataBuffer.indexOf( ' ' );
-    QByteArray tag = dataBuffer.left( startOfData );
-    QByteArray data = dataBuffer.mid( startOfData + 1 );
-
-    // reset parser stuff
-    dataBuffer.clear();
-    literalSize = 0;
-    parenthesesCount = 0;
-
-    // handle login stuff (if we are the parent job)
-    if ( tag == d->loginTag && !d->parent ) {
-      if ( data.startsWith( "OK" ) )
-        doStart();
-      else {
-        setError( ConnectionFailed );
-        emit done( this );
-      }
-      return;
-    }
-    if ( tag == "*" && data.startsWith( "OK Akonadi" ) && !d->parent ) {
-      d->loginTag = newTag();
-      d->sessionId = qrand();
-      writeData( d->loginTag + " LOGIN " + QByteArray::number( d->sessionId ) + "\n" );
-    }
-    // work for our subclasses
-    else
-      handleResponse( tag, data );
-  }
-}
-
-void Job::slotSocketError()
-{
-  qWarning() << "Socket error: " << d->socket->errorString();
-  setError( ConnectionFailed );
-  emit done( this );
 }
 
 QByteArray Job::newTag( )
 {
   if ( d->parent )
     d->tag = d->parent->newTag();
-  else {
-    d->lastTag++;
-    d->tag = QByteArray::number( d->lastTag );
-  }
+  else
+    d->tag = QByteArray::number( d->session->nextTag() );
   return d->tag;
 }
 
@@ -299,11 +168,16 @@ QByteArray Job::tag() const
 
 void Job::writeData( const QByteArray & data )
 {
-  d->socket->write( data );
+  d->session->writeData( data );
 }
 
 void Job::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
+  if ( d->currentSubJob ) {
+    d->currentSubJob->handleResponse( tag, data );
+    return;
+  }
+
   if ( tag == d->tag ) {
     if ( data.startsWith( "NO " ) || data.startsWith( "BAD " ) ) {
       QString msg = QString::fromUtf8( data );
@@ -313,11 +187,12 @@ void Job::handleResponse( const QByteArray & tag, const QByteArray & data )
       if ( msg.endsWith( QLatin1String( "\r\n" ) ) )
         msg.chop( 2 );
 
-      setError( Unknown, msg );
-      emit done( this );
+      setError( Unknown );
+      setErrorText( msg );
+      emitResult();
       return;
     } else if ( data.startsWith( "OK" ) ) {
-      emit done( this );
+      emitResult();
       return;
     }
   }
@@ -325,26 +200,20 @@ void Job::handleResponse( const QByteArray & tag, const QByteArray & data )
   doHandleResponse( tag, data );
 }
 
-void Job::addSubJob( Job * job )
+bool Job::addSubjob( KJob * job )
 {
-  connect( job, SIGNAL(aboutToStart(Akonadi::Job*)), SLOT(slotSubJobAboutToStart(Akonadi::Job*)) );
-  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(slotSubJobDone(Akonadi::Job*)) );
+  bool rv = KCompositeJob::addSubjob( job );
+  if ( rv ) {
+    connect( job, SIGNAL(aboutToStart(Akonadi::Job*)), SLOT(slotSubJobAboutToStart(Akonadi::Job*)) );
+    QTimer::singleShot( 0, this, SLOT(startNext()) );
+  }
+  return rv;
 }
 
 void Job::slotSubJobAboutToStart( Job * job )
 {
-  // reconnect socket signals to the subjob
-  qDebug() << "re-routing socket signals to sub-job";
-  disconnect( d->socket, SIGNAL(readyRead()), this, SLOT(slotDataReceived()) );
-  connect( d->socket, SIGNAL(readyRead()), job, SLOT(slotDataReceived()) );
-}
-
-void Job::slotSubJobDone( Job * job )
-{
-  // get our signals back from the sub-job
-  qDebug() << "re-routing socket signals back to parent job";
-  disconnect( d->socket, SIGNAL(readyRead()), job, SLOT(slotDataReceived()) );
-  connect( d->socket, SIGNAL(readyRead()), this, SLOT(slotDataReceived()) );
+  Q_ASSERT( d->currentSubJob == 0 );
+  d->currentSubJob = job;
 }
 
 void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
@@ -352,11 +221,35 @@ void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
   qDebug() << "Unhandled response: " << tag << data;
 }
 
-int Job::sessionId() const
+QByteArray Job::sessionId() const
 {
   if ( d->parent )
     return d->parent->sessionId();
-  return d->sessionId;
+  return d->session->sessionId();
+}
+
+void Job::startQueued()
+{
+  emit aboutToStart( this );
+  doStart();
+}
+
+void Job::slotResult(KJob * job)
+{
+  Q_ASSERT( job == d->currentSubJob );
+  KCompositeJob::slotResult( job );
+  d->currentSubJob = 0;
+  if ( !job->error() )
+    QTimer::singleShot( 0, this, SLOT(startNext()) );
+}
+
+void Job::startNext()
+{
+  if ( !d->currentSubJob && hasSubjobs() ) {
+    Job *job = dynamic_cast<Akonadi::Job*>( subjobs().first() );
+    Q_ASSERT( job );
+    job->startQueued();
+  }
 }
 
 #include "job.moc"

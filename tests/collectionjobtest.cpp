@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -75,7 +75,6 @@ void CollectionJobTest::testTopLevelList( )
   CollectionListJob *job = new CollectionListJob( Collection::root(), false );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
-  delete job;
 
   // check if everything is there and has the correct types and attributes
   QCOMPARE( list.count(), 4 );
@@ -99,7 +98,6 @@ void CollectionJobTest::testFolderList( )
   CollectionListJob *job = new CollectionListJob( "/res1", true );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
-  delete job;
 
   // check if everything is there
   QCOMPARE( list.count(), 4 );
@@ -128,7 +126,6 @@ void CollectionJobTest::testNonRecursiveFolderList( )
   CollectionListJob *job = new CollectionListJob( "/res1", false );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
-  delete job;
 
   QCOMPARE( list.count(), 1 );
   QVERIFY( findCol( list, "res1/foo" ) );
@@ -139,7 +136,6 @@ void CollectionJobTest::testEmptyFolderList( )
   CollectionListJob *job = new CollectionListJob( "/res3", false );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
-  delete job;
 
   QCOMPARE( list.count(), 0 );
 }
@@ -149,7 +145,6 @@ void CollectionJobTest::testSearchFolderList( )
   CollectionListJob *job = new CollectionListJob( Collection::root() + Collection::delimiter() + Collection::searchFolder(), false );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
-  delete job;
 
   QCOMPARE( list.count(), 3 );
   Collection *col = findCol( list, "Search/Test ?er" );
@@ -251,18 +246,15 @@ void CollectionJobTest::testCreateDeleteFolder( )
   mimeTypes << "inode/directory" << "message/rfc822";
   job->setContentTypes( mimeTypes );
   QVERIFY( job->exec() );
-  delete job;
 
   CollectionStatusJob *status = new CollectionStatusJob( "res3/mail folder", this );
   QVERIFY( status->exec() );
   CollectionContentTypeAttribute *attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
   QVERIFY( attr != 0 );
   compareLists( attr->contentTypes(), mimeTypes );
-  delete status;
 
   del = new CollectionDeleteJob( "res3/mail folder", this );
   QVERIFY( del->exec() );
-  delete del;
 }
 
 void CollectionJobTest::testCreateDeleteFolderRecursive()
@@ -332,52 +324,44 @@ void CollectionJobTest::testModify()
   // test noop modify
   CollectionModifyJob *mod = new CollectionModifyJob( "res1/foo", this );
   QVERIFY( mod->exec() );
-  delete mod;
 
   CollectionStatusJob *status = new CollectionStatusJob( "res1/foo", this );
   QVERIFY( status->exec() );
   CollectionContentTypeAttribute *attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
   QVERIFY( attr != 0 );
   compareLists( attr->contentTypes(), reference );
-  delete status;
 
   // test clearing content types
   mod = new CollectionModifyJob( "res1/foo", this );
   mod->setContentTypes( QList<QByteArray>() );
   QVERIFY( mod->exec() );
-  delete mod;
 
   status = new CollectionStatusJob( "res1/foo", this );
   QVERIFY( status->exec() );
   attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
   QVERIFY( attr != 0 );
   QVERIFY( attr->contentTypes().isEmpty() );
-  delete status;
 
   // test setting contnet types
   mod = new CollectionModifyJob( "res1/foo", this );
   mod->setContentTypes( reference );
   QVERIFY( mod->exec() );
-  delete mod;
 
   status = new CollectionStatusJob( "res1/foo", this );
   QVERIFY( status->exec() );
   attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
   QVERIFY( attr != 0 );
   compareLists( attr->contentTypes(), reference );
-  delete status;
 }
 
 void CollectionJobTest::testRename()
 {
   CollectionRenameJob *rename = new CollectionRenameJob( "res1", "res1 (renamed)", this );
   QVERIFY( rename->exec() );
-  delete rename;
 
   CollectionListJob *ljob = new CollectionListJob( "res1 (renamed)", true );
   QVERIFY( ljob->exec() );
   Collection::List list = ljob->collections();
-  delete ljob;
 
   QCOMPARE( list.count(), 4 );
   QVERIFY( findCol( list, "res1 (renamed)/foo" ) != 0 );
@@ -388,7 +372,6 @@ void CollectionJobTest::testRename()
   // cleanup
   rename = new CollectionRenameJob( "res1 (renamed)", "res1", this );
   QVERIFY( rename->exec() );
-  delete rename;
 }
 
 void CollectionJobTest::testIllegalRename()
@@ -396,21 +379,17 @@ void CollectionJobTest::testIllegalRename()
   // non-existing collection
   CollectionRenameJob *rename = new CollectionRenameJob( "i dont exist", "i dont exist either", this );
   QVERIFY( !rename->exec() );
-  delete rename;
 
   // already existing target
   rename = new CollectionRenameJob( "res1", "res2", this );
   QVERIFY( !rename->exec() );
-  delete rename;
 
   // root being source or target
   rename = new CollectionRenameJob( Collection::root(), "some name", this );
   QVERIFY( !rename->exec() );
-  delete rename;
 
   rename = new CollectionRenameJob( "res1", Collection::root(), this );
   QVERIFY( !rename->exec() );
-  delete rename;
 }
 
 void CollectionJobTest::testUtf8CollectionName()
@@ -420,7 +399,6 @@ void CollectionJobTest::testUtf8CollectionName()
   // create collection
   CollectionCreateJob *create = new CollectionCreateJob( folderName, this );
   QVERIFY( create->exec() );
-  delete create;
 
   // list parent
   CollectionListJob *list = new CollectionListJob( "res3", true, this );
@@ -428,7 +406,6 @@ void CollectionJobTest::testUtf8CollectionName()
   QCOMPARE( list->collections().count(), 1 );
   Collection *col = list->collections().first();
   QCOMPARE( col->path(), folderName );
-  delete list;
 
   // modify collection
   CollectionModifyJob *modify = new CollectionModifyJob( folderName, this );
@@ -436,7 +413,6 @@ void CollectionJobTest::testUtf8CollectionName()
   contentTypes << "message/rfc822";
   modify->setContentTypes( contentTypes );
   QVERIFY( modify->exec() );
-  delete modify;
 
   // collection status
   CollectionStatusJob *status = new CollectionStatusJob( folderName, this );
@@ -448,7 +424,6 @@ void CollectionJobTest::testUtf8CollectionName()
   // delete collection
   CollectionDeleteJob *del = new CollectionDeleteJob( folderName, this );
   QVERIFY( del->exec() );
-  delete del;
 }
 
 #include "collectionjobtest.moc"

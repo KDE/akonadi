@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -34,18 +34,17 @@ ItemDumper::ItemDumper( const QByteArray &path, const QByteArray &filename, cons
   QByteArray data = f.readAll();
   f.close();
   ItemAppendJob *job = new ItemAppendJob( path, data, mimetype, this );
-  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(done(Akonadi::Job*)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(result(KJob*)) );
   job->start();
 }
 
-void ItemDumper::done( Job * job )
+void ItemDumper::done( KJob * job )
 {
   if ( job->error() ) {
-    qWarning() << "Error while creating item: " << job->errorText();
+    qWarning() << "Error while creating item: " << job->errorString();
   } else {
     qDebug() << "Done!";
   }
-  job->deleteLater();
   qApp->quit();
 }
 

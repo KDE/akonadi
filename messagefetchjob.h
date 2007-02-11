@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -58,7 +58,7 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
     virtual ~MessageFetchJob();
 
     /**
-      Returns the fetched message objects. Invalid before the done(Akonadi::Job*)
+      Returns the fetched message objects. Invalid before the result(KJob*)
       signal has been emitted or if an error occurred.
     */
     Message::List messages() const;

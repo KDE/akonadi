@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,8 +19,8 @@
 
 #include "itemfetchjob.h"
 #include "itemmodel.h"
-#include "jobqueue.h"
 #include "monitor.h"
+#include "session.h"
 
 #include <kmime/kmime_message.h>
 
@@ -37,7 +37,7 @@ class ItemModel::Private
     QList<Item*> items;
     QString path;
     Monitor *monitor;
-    JobQueue *queue;
+    Session *session;
 };
 
 Akonadi::ItemModel::ItemModel( QObject *parent ) :
@@ -45,12 +45,11 @@ Akonadi::ItemModel::ItemModel( QObject *parent ) :
     d( new Private() )
 {
   d->monitor = 0;
-  d->queue = new JobQueue( this );
+  d->session = new Session( QByteArray("ItemModel-") + QByteArray::number( qrand() ), this );
 }
 
 Akonadi::ItemModel::~ItemModel()
 {
-  d->queue->kill();
   delete d->monitor;
   delete d;
 }
@@ -116,15 +115,15 @@ void Akonadi::ItemModel::setPath( const QString& path )
   d->items.clear();
   reset();
   // stop all running jobs
-  d->queue->kill();
+  d->session->clear();
   delete d->monitor;
   d->monitor = 0;
   // start listing job
-  ItemFetchJob* job = createFetchJob( path, d->queue );
-  connect( job, SIGNAL( done( Akonadi::Job* ) ), SLOT( listingDone( Akonadi::Job* ) ) );
+  ItemFetchJob* job = createFetchJob( path, d->session );
+  connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 }
 
-void Akonadi::ItemModel::listingDone( Akonadi::Job * job )
+void Akonadi::ItemModel::listingDone( KJob * job )
 {
   ItemFetchJob *fetch = static_cast<ItemFetchJob*>( job );
   if ( job->error() ) {
@@ -134,11 +133,10 @@ void Akonadi::ItemModel::listingDone( Akonadi::Job * job )
     d->items = fetch->items();
     reset();
   }
-  job->deleteLater();
 
   // start monitor
   d->monitor = new Monitor( this );
-  d->monitor->ignoreSession( d->queue );
+  d->monitor->ignoreSession( d->session );
   d->monitor->monitorCollection( d->path, false );
   connect( d->monitor, SIGNAL(itemChanged(Akonadi::DataReference)),
            SLOT(itemChanged(Akonadi::DataReference)) );
@@ -148,7 +146,7 @@ void Akonadi::ItemModel::listingDone( Akonadi::Job * job )
            SLOT(itemRemoved(Akonadi::DataReference)) );
 }
 
-void Akonadi::ItemModel::fetchingNewDone( Akonadi::Job * job )
+void Akonadi::ItemModel::fetchingNewDone( KJob * job )
 {
   if ( job->error() ) {
     // TODO
@@ -162,7 +160,6 @@ void Akonadi::ItemModel::fetchingNewDone( Akonadi::Job * job )
     } else
       kWarning() << k_funcinfo << "Got unexpected empty fetch response!" << endl;
   }
-  job->deleteLater();
 }
 
 void ItemModel::itemChanged( const DataReference &reference )
@@ -174,8 +171,8 @@ void ItemModel::itemChanged( const DataReference &reference )
 void ItemModel::itemAdded( const DataReference &reference )
 {
   // TODO: make sure we don't fetch the complete data here!
-  ItemFetchJob *job = new ItemFetchJob( reference, d->queue );
-  connect( job, SIGNAL(done(Akonadi::Job*)), SLOT(fetchingNewDone(Akonadi::Job*)) );
+  ItemFetchJob *job = new ItemFetchJob( reference, d->session );
+  connect( job, SIGNAL(result(KJob*)), SLOT(fetchingNewDone(KJob*)) );
 }
 
 void ItemModel::itemRemoved( const DataReference &reference )
