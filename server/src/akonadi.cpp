@@ -20,6 +20,7 @@
 #include "akonadi.h"
 #include "akonadiconnection.h"
 
+#include "cachecleaner.h"
 #include "cachepolicymanager.h"
 #include "storage/datastore.h"
 #include "notificationmanager.h"
@@ -45,11 +46,14 @@ AkonadiServer::AkonadiServer( QObject* parent )
     Tracer::self();
     ResourceManager::self();
     new CachePolicyManager( this );
+    mCacheCleaner = new CacheCleaner( this );
+    mCacheCleaner->start();
 }
 
 
 AkonadiServer::~AkonadiServer()
 {
+    mCacheCleaner->quit();
 }
 
 void AkonadiServer::incomingConnection( int socketDescriptor )

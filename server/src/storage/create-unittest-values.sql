@@ -15,7 +15,7 @@ INSERT INTO ResourceTable (id, name, cachePolicyId) VALUES(1, 'akonadi_dummy_res
 INSERT INTO ResourceTable (id, name, cachePolicyId) VALUES(2, 'akonadi_dummy_resource_2', 1);
 INSERT INTO ResourceTable (id, name, cachePolicyId) VALUES(3, 'akonadi_dummy_resource_3', 1);
 
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (1, 'res1/foo', 1, 1, 3, 0, 0, 0, 0);
+INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (1, 'res1/foo', 3, 1, 3, 0, 0, 0, 0);
 INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (2, 'res1/foo/bar', 1, 1, 2, 0, 0, 0, 0);
 INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (3, 'res1/foo/bar/bla', 1, 1, 2, 0, 0, 0, 0);
 INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (4, 'res1/foo/bla', 1, 1, 0, 0, 0, 0, 0);

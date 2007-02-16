@@ -87,6 +87,7 @@ set(libakonadiprivate_SRCS
   src/resourcemanager.cpp
   src/imapparser.cpp
   src/cachepolicymanager.cpp
+  src/cachecleaner.cpp
 )
 
 qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)

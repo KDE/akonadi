@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -125,12 +125,26 @@ class <xsl:value-of select="$className"/> : public Entity
     void <xsl:call-template name="setter-signature"/>;
     </xsl:for-each>
 
-    // SQL table information
+    /** Returns the name of the SQL table. */
     static QString tableName();
+
+    /**
+      Returns a list of all SQL column names. The names are in the correct
+      order for usage with extractResult().
+    */
+    static QStringList columnNames();
+
     <xsl:for-each select="column">
     static QString <xsl:value-of select="@name"/>Column();
     static QString <xsl:value-of select="@name"/>FullColumnName();
     </xsl:for-each>
+
+    /**
+      Extracts the query result.
+      @param query A executed query containing a list of <xsl:value-of select="$entityName"/> records.
+      Note that the fields need to be in the correct order (same as in the constructor)!
+    */
+    static QList&lt; <xsl:value-of select="$className"/> &gt; extractResult( QSqlQuery&amp; query );
 
     /** Count records with value @p value in column @p column. */
     static int count( const QString &amp;column, const QVariant &amp;value );
@@ -184,10 +198,15 @@ class <xsl:value-of select="$className"/> : public Entity
     static bool remove( int id );
     </xsl:if>
 
-  protected:
-    // updating existing data
+    /**
+      Updates column @p column of this record to value @p value.
+      @param column The name of the column to update.
+      @param value The new value, QVariant() is treated as @c NULL.
+      @returns true on success, false otherwise.
+    */
     bool updateColumn( const QString &amp;column, const QVariant &amp;value ) const;
 
+  protected:
     // delete records
     static bool remove( const QString &amp;column, const QVariant &amp;value );
 
@@ -299,6 +318,15 @@ void <xsl:value-of select="$className"/>::<xsl:call-template name="setter-signat
   return QLatin1String( "<xsl:value-of select="$tableName"/>" );
 }
 
+QStringList <xsl:value-of select="$className"/>::columnNames()
+{
+  QStringList rv;
+  <xsl:for-each select="column">
+  rv.append( QLatin1String( "<xsl:value-of select="@name"/>" ) );
+  </xsl:for-each>
+  return rv;
+}
+
 <xsl:for-each select="column">
 QString <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>Column()
 {
@@ -333,6 +361,21 @@ bool <xsl:value-of select="$className"/>::exists( const QString &amp;name )
 </xsl:if>
 
 
+// result extraction
+QList&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::extractResult( QSqlQuery &amp; query )
+{
+  QList&lt;<xsl:value-of select="$className"/>&gt; rv;
+  while ( query.next() ) {
+    rv.append( <xsl:value-of select="$className"/>(
+      <xsl:for-each select="column">
+        query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:for-each>
+    ) );
+  }
+  return rv;
+}
+
 // data retrieval
 <xsl:if test="column[@name='id']">
 <xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveById( int id )
@@ -363,7 +406,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
       &lt;&lt; query.lastError().text();
     return QList&lt;<xsl:value-of select="$className"/>&gt;();
   }
-  <xsl:call-template name="extract-result-list"/>
+  return extractResult( query );
 }
 
 QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveFiltered( const QString &amp;key, const QVariant &amp;value )
@@ -386,7 +429,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
       &lt;&lt; query.lastError().text();
     return QList&lt;<xsl:value-of select="$className"/>&gt;();
   }
-  <xsl:call-template name="extract-result-list"/>
+  return extractResult( query );
 }
 
 // data retrieval for referenced tables
@@ -439,16 +482,8 @@ QList&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$cla
       &lt;&lt; query.lastError().text();
     return QList&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
   }
-  QList&lt;<xsl:value-of select="$rightSideClass"/>&gt; rv;
-  while ( query.next() ) {
-    rv.append( <xsl:value-of select="$rightSideClass"/>(
-    <xsl:for-each select="/database/table[@name= $rightSideEntity]/column">
-      query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
-      <xsl:if test="position() != last()">,</xsl:if>
-    </xsl:for-each>
-    ) );
-  }
-  return rv;
+
+  return <xsl:value-of select="$rightSideClass"/>::extractResult( query );
 }
 
 // manipulate n:m relations
@@ -657,22 +692,6 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
     <xsl:if test="position() != last()">,</xsl:if>
   </xsl:for-each>
   );
-</xsl:template>
-
-<!-- result list extraction from a query-->
-<xsl:template name="extract-result-list">
-<xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
-
-  QList&lt;<xsl:value-of select="$className"/>&gt; rv;
-  while ( query.next() ) {
-    rv.append( <xsl:value-of select="$className"/>(
-      <xsl:for-each select="column">
-        query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
-        <xsl:if test="position() != last()">,</xsl:if>
-      </xsl:for-each>
-    ) );
-  }
-  return rv;
 </xsl:template>
 
 </xsl:stylesheet>

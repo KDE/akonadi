@@ -77,7 +77,7 @@
   <table name="Location">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
-    <column name="cachePolicyId" type="int" properties="REFERENCES CachePolicy(id)"/>
+    <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="REFERENCES CachePolicy(id)"/>
     <column name="resourceId" type="int" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
     <column name="existCount" type="int"/>
     <column name="recentCount" type="int"/>
@@ -115,6 +115,7 @@
     <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP"/>
+    <column name="atime" type="QDateTime"/>
   </table>
 
   <relation table1="SearchLocation" column1="id" table2="PimItem" column2="id"/>

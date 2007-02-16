@@ -26,6 +26,8 @@
 
 namespace Akonadi {
 
+class CacheCleaner;
+
 class AKONADIPRIVATE_EXPORT AkonadiServer: public QTcpServer
 {
     Q_OBJECT
@@ -40,6 +42,9 @@ public:
 protected:
     /** reimpl */
     void incomingConnection(int socketDescriptor);
+
+  private:
+    CacheCleaner *mCacheCleaner;
 };
 
 }

@@ -113,6 +113,11 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
 
     static QString locationDelimiter() { return QLatin1String("/"); }
 
+    /**
+      Returns the active CachePolicy for this Location.
+    */
+    CachePolicy activeCachePolicy( const Location &loc );
+
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype, int *insertId = 0 );
     bool removeMimeType( const MimeType & mimetype );

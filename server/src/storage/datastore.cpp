@@ -446,6 +446,20 @@ QList<Location> DataStore::listLocations( const Resource & resource ) const
   return Location::retrieveAll();
 }
 
+CachePolicy DataStore::activeCachePolicy(const Location & loc)
+{
+  CachePolicy policy;
+  policy = loc.cachePolicy();
+  if ( policy.isValid() )
+    return policy;
+
+  // TODO: check parent locations
+
+  // fall back to resource cache policy
+  Resource res = loc.resource();
+  return res.cachePolicy();
+}
+
 /* --- MimeType ------------------------------------------------------ */
 bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
 {
@@ -707,7 +721,7 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
   const QString field = fieldNameForDataType( type );
   QStringList cols;
   cols << PimItem::idColumn() << PimItem::locationIdColumn() << PimItem::mimeTypeIdColumn()
-       << PimItem::datetimeColumn() << PimItem::remoteIdColumn();
+       << PimItem::datetimeColumn() << PimItem::remoteIdColumn() << PimItem::atimeColumn();
   QString statement = QString::fromLatin1( "SELECT %1, %2 FROM %3 WHERE %4 = :id" )
       .arg( cols.join( QLatin1String(",") ), field, PimItem::tableName(), PimItem::idColumn() );
 
@@ -725,11 +739,12 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
   int mimetype = query.value( 2 ).toInt();
   QByteArray remote_id = query.value( 4 ).toByteArray();
   QDateTime dateTime = dateTimeToQDateTime( query.value( 3 ).toByteArray() );
-  QByteArray data = query.value( 5 ).toByteArray();
+  QDateTime atime = dateTimeToQDateTime( query.value( 5 ).toByteArray() );
+  QByteArray data = query.value( 6 ).toByteArray();
   if ( data.isEmpty() && type == FetchQuery::AllType )
       data = retrieveDataFromResource( id, remote_id, location, type );
 
-  return PimItem( pimItemId, remote_id, data, location, mimetype, dateTime );
+  return PimItem( pimItemId, remote_id, data, location, mimetype, dateTime, atime );
 }
 
 PimItem DataStore::pimItemById( int id )
@@ -754,7 +769,8 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
   QStringList cols;
   cols << PimItem::idFullColumnName() << PimItem::dataFullColumnName()
       << PimItem::mimeTypeIdFullColumnName() << PimItem::datetimeFullColumnName()
-      << PimItem::remoteIdFullColumnName() << PimItem::locationIdFullColumnName();
+      << PimItem::remoteIdFullColumnName() << PimItem::locationIdFullColumnName()
+      << PimItem::atimeFullColumnName();
   QString statement = QString::fromLatin1( "SELECT %1 FROM %2, %3 WHERE " )
       .arg( cols.join( QLatin1String(",") ), PimItem::tableName(), PimItemFlagRelation::tableName() );
   statement += QString::fromLatin1( "%1 = %2 AND %3 = :flag_id" )
@@ -781,7 +797,8 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
                               query.value( 4 ).toByteArray(),
                               query.value( 1 ).toByteArray(),
                               query.value( 5 ).toInt(), query.value( 2 ).toInt(),
-                              dateTimeToQDateTime( query.value( 3 ).toByteArray() ) ) );
+                              dateTimeToQDateTime( query.value( 3 ).toByteArray() ),
+                              dateTimeToQDateTime( query.value( 6 ).toByteArray() ) ) );
   }
 
   return pimItems;
