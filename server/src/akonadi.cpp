@@ -20,6 +20,7 @@
 #include "akonadi.h"
 #include "akonadiconnection.h"
 
+#include "cachepolicymanager.h"
 #include "storage/datastore.h"
 #include "notificationmanager.h"
 #include "resourcemanager.h"
@@ -43,6 +44,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     NotificationManager::self();
     Tracer::self();
     ResourceManager::self();
+    new CachePolicyManager( this );
 }
 
 

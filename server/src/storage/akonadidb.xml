@@ -29,7 +29,7 @@
 
   Database element (root node, can contain table and relation elements)
 
-  Table attributes (can contain column and reference elements)
+  Table attributes (can contain column, reference and data elements)
   - name: The entity class name, the table will be named FooTable.
 
   Column attributes:
@@ -45,20 +45,26 @@
   - table: name of the table a n:1 relation exist
   - key: column name of the referenced table containing the foreign key
 
+  Initial data:
+  - columns: A comma separated list of column names
+  - values: A comma separated and SQL-quoted list of values
+
   Relation elements define a n:m relation between two tables.
   Attributes:
   - table[12]: Table names
   - column[12]: Column names
+
 -->
 <database>
 
   <table name="CachePolicy">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
-    <!--<column name="foobar" type="int"/>-->
-    <data columns="name" values="'none'"/>
-    <data columns="name" values="'temporary'"/>
-    <data columns="name" values="'permanent'"/>
+    <column name="expireTime" type="int" default="0" properties="NOT NULL"/>
+    <column name="offlineParts" type="QString"/>
+    <data columns="name,expireTime,offlineParts" values="'None',0,''"/>
+    <data columns="name,expireTime,offlineParts" values="'Temporary',60,'HEAD'"/>
+    <data columns="name,expireTime,offlineParts" values="'Permanent',-1,'ALL'"/>
   </table>
 
   <table name="Resource">

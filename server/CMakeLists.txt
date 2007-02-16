@@ -86,13 +86,17 @@ set(libakonadiprivate_SRCS
   src/notificationmanager.cpp
   src/resourcemanager.cpp
   src/imapparser.cpp
+  src/cachepolicymanager.cpp
 )
 
 qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
+qt4_generate_dbus_interface(../server/src/cachepolicymanager.h org.kde.Akonadi.CachePolicyManager.xml)
 # ugly hack to force generation of the xml interface description, which doesn't
 # happen always, just installing the file doesn't seem to provide enough dependencies
 macro_add_file_dependencies( src/notificationmanager.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml)
+macro_add_file_dependencies( src/cachepolicymanager.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.CachePolicyManager.xml)
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer
@@ -124,6 +128,7 @@ install(TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
 install(FILES
   interfaces/org.kde.Akonadi.AgentManager.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml
+  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.CachePolicyManager.xml
   interfaces/org.kde.Akonadi.ProfileManager.xml
   interfaces/org.kde.Akonadi.SearchProviderManager.xml
   interfaces/org.kde.Akonadi.Tracer.xml

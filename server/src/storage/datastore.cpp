@@ -191,7 +191,8 @@ bool DataStore::appendFlag( const QString & name )
     return false;
   }
 
-  return Flag::insert( Flag( name ) );
+  Flag flag( name );
+  return flag.insert();
 }
 
 bool DataStore::removeFlag( const Flag & flag )
@@ -253,28 +254,6 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 }
 
 
-/* --- CachePolicy --------------------------------------------------- */
-bool DataStore::appendCachePolicy( const QString & policy )
-{
-  if ( CachePolicy::exists( policy ) ) {
-    qDebug() << "Cannot insert policy " << policy
-             << " because it already exists.";
-    return false;
-  }
-  return CachePolicy::insert( CachePolicy( policy ) );
-}
-
-bool DataStore::removeCachePolicy( const CachePolicy & policy )
-{
-  return removeCachePolicy( policy.id() );
-}
-
-bool DataStore::removeCachePolicy( int id )
-{
-  return removeById( id, CachePolicy::tableName() );
-}
-
-
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( const QString & location,
                                 const Resource & resource,
@@ -294,7 +273,7 @@ bool DataStore::appendLocation( const QString & location,
   loc.setUnseenCount( 0 );
   loc.setFirstUnseen( 0 );
   loc.setUidValidity( 0 );
-  if ( !Location::insert( loc, insertId ) )
+  if ( !loc.insert( insertId ) )
     return false;
 
   mNotificationCollector->collectionAdded( location, resource.name().toLatin1() );
@@ -310,7 +289,8 @@ bool DataStore::appendLocation( const QString & location,
         << " because it already exists.";
     return false;
   }
-  if ( !Location::insert( Location( location, policy.id(), resource.id(), 0, 0, 0, 0 ,0 ) ) )
+  Location loc( location, policy.id(), resource.id(), 0, 0, 0, 0 ,0 );
+  if ( !loc.insert() )
     return false;
 
   mNotificationCollector->collectionAdded( location, resource.name().toLatin1() );
@@ -475,7 +455,8 @@ bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
     return false;
   }
 
-  return MimeType::insert( MimeType( mimetype ), insertId );
+  MimeType mt( mimetype );
+  return mt.insert( insertId );
 }
 
 bool DataStore::removeMimeType( const MimeType & mimetype )
@@ -1044,7 +1025,8 @@ bool DataStore::appendResource( const QString & resource,
     return false;
   }
 
-  return Resource::insert( Resource( resource, policy.id() ) );
+  Resource res( resource, policy.id() );
+  return res.insert();
 }
 
 bool DataStore::removeResource( const Resource & resource )
@@ -1076,7 +1058,9 @@ CollectionList Akonadi::DataStore::listPersistentSearches() const
 
 bool Akonadi::DataStore::appendPersisntentSearch(const QString & name, const QByteArray & queryString)
 {
-  PersistentSearch::insert( PersistentSearch( name, queryString ) );
+  PersistentSearch ps( name, queryString );
+  if ( !ps.insert() )
+    return false;
   mNotificationCollector->collectionAdded( name );
   return true;
 }

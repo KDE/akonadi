@@ -98,6 +98,9 @@ using namespace Akonadi;
 <xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
 <xsl:variable name="entityName"><xsl:value-of select="@name"/></xsl:variable>
 
+/**
+  Representation of a record in the <xsl:value-of select="$entityName"/> table.
+*/
 class <xsl:value-of select="$className"/> : public Entity
 {
   friend class DataStore;
@@ -129,7 +132,7 @@ class <xsl:value-of select="$className"/> : public Entity
     static QString <xsl:value-of select="@name"/>FullColumnName();
     </xsl:for-each>
 
-    // count records
+    /** Count records with value @p value in column @p column. */
     static int count( const QString &amp;column, const QVariant &amp;value );
 
     // check existence
@@ -167,10 +170,21 @@ class <xsl:value-of select="$className"/> : public Entity
     QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const;
     </xsl:for-each>
 
-  protected:
-    // inserting new data
-    static bool insert( const <xsl:value-of select="$className"/>&amp; record, int* insertId = 0 );
+    /**
+      Inserts this record into the DataStore.
+      @param insertId pointer to an int, filled with the identifier of this record on success.
+    */
+    bool insert( int* insertId = 0 );
 
+    /** Deletes this record. */
+    bool remove();
+
+    <xsl:if test="column[@name = 'id']">
+    /** Deletes the record with the given id. */
+    static bool remove( int id );
+    </xsl:if>
+
+  protected:
     // updating existing data
     bool updateColumn( const QString &amp;column, const QVariant &amp;value ) const;
 
@@ -493,7 +507,7 @@ QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$class
 }
 
 // inserting new data
-bool <xsl:value-of select="$className"/>::insert( const <xsl:value-of select="$className"/>&amp; record, int* insertId )
+bool <xsl:value-of select="$className"/>::insert( int* insertId )
 {
   QSqlDatabase db = DataStore::self()->database();
   if ( !db.isOpen() )
@@ -501,8 +515,8 @@ bool <xsl:value-of select="$className"/>::insert( const <xsl:value-of select="$c
 
   QStringList cols, vals;
   <xsl:for-each select="column[@name != 'id']">
-  if ( record.m_<xsl:value-of select="@name"/>_changed ) {
-    cols.append( record.<xsl:value-of select="@name"/>Column() );
+  if ( m_<xsl:value-of select="@name"/>_changed ) {
+    cols.append( <xsl:value-of select="@name"/>Column() );
     vals.append( QLatin1String( ":<xsl:value-of select="@name"/>" ) );
   }
   </xsl:for-each>
@@ -512,8 +526,8 @@ bool <xsl:value-of select="$className"/>::insert( const <xsl:value-of select="$c
   QSqlQuery query( db );
   query.prepare( statement );
   <xsl:for-each select="column[@name != 'id']">
-  if ( record.m_<xsl:value-of select="@name"/>_changed ) {
-    query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), record.<xsl:value-of select="@name"/>() );
+  if ( m_<xsl:value-of select="@name"/>_changed ) {
+    query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), this-&gt;<xsl:value-of select="@name"/>() );
   }
   </xsl:for-each>
 
@@ -539,6 +553,18 @@ bool <xsl:value-of select="$className"/>::remove( const QString &amp;column, con
 {
   return Entity::remove&lt;<xsl:value-of select="$className"/>&gt;( column, value );
 }
+
+bool <xsl:value-of select="$className"/>::remove()
+{
+  return remove( id() );
+}
+
+<xsl:if test="column[@name = 'id']">
+bool <xsl:value-of select="$className"/>::remove( int id )
+{
+  return remove( idColumn(), id );
+}
+</xsl:if>
 
 </xsl:template>
 

@@ -73,11 +73,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
 
     /* -- higher level API -- */
 
-    /* --- CachePolicy --------------------------------------------------- */
-    bool appendCachePolicy( const QString & policy );
-    bool removeCachePolicy( const CachePolicy & policy );
-    bool removeCachePolicy( int id );
-
     /* --- Flag ---------------------------------------------------------- */
     bool appendFlag( const QString & name );
     bool removeFlag( const Flag & flag );
@@ -85,8 +80,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
 
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
-    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags );
-    bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
+    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags );    bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
 
     bool appendItemFlags( int pimItemId, const QList<QByteArray> &flags );
 
