@@ -29,6 +29,7 @@ namespace Akonadi {
 
 class Job;
 class ItemFetchJob;
+class Session;
 
 /**
   A flat self-updating message model.
@@ -43,6 +44,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     */
     enum Column {
       Id = 0, /**< The unique id. */
+      RemoteId, /**< The remote identifier. */
       MimeType /**< Item mimetype. */
     };
 
@@ -87,13 +89,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     void setPath( const QString &path );
 
     /**
-      Creates a fetchjob which will fetch the items from the backend.
-      @param path The full collection path.
-      @param parent The parent of the fetchjob.
-    */
-    virtual ItemFetchJob* createFetchJob( const QString &path, QObject* parent = 0 );
-
-    /**
       Returns the message reference to the given model index. If the index
       is invalid, an empty reference is returned.
       @param index The model index.
@@ -102,9 +97,22 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
   protected:
     /**
+      Creates a fetchjob which will fetch the items from the backend.
+      Sub-classes should re-implement this method and return an appropriate
+      ItemFetchJob sub-class for their corresponding types.
+      Note: use session() as parent for jobs created here!
+    */
+    virtual ItemFetchJob* createFetchJob();
+
+    /**
       Returns the item at given index.
     */
     Item* itemForIndex( const QModelIndex &index ) const;
+
+    /**
+      Returns the Session object used for all operations by this model.
+    */
+    Session* session() const;
 
   private slots:
     /**

@@ -50,7 +50,7 @@ class Akonadi::MonitorPrivate
                           const QByteArray &mimetype, const QByteArray &resource ) const
     {
       if ( monitorAll || isCollectionMonitored( collection ) || items.contains( item ) ||
-           resource.contains( resource ) || mimetypes.contains( mimetype ) )
+           resources.contains( resource ) || mimetypes.contains( mimetype ) )
         return true;
       return false;
     }

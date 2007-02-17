@@ -35,6 +35,12 @@ class Akonadi::ItemFetchJobPrivate
     Item::List items;
 };
 
+ItemFetchJob::ItemFetchJob(QObject * parent) :
+    Job( parent ),
+    d( new ItemFetchJobPrivate )
+{
+}
+
 ItemFetchJob::ItemFetchJob( const QString & path, QObject * parent ) :
     Job( parent ),
     d( new ItemFetchJobPrivate )
@@ -164,6 +170,18 @@ void ItemFetchJob::startFetchJob()
     command += ' ' + f;
   command += ')';
   writeData( command );
+}
+
+void ItemFetchJob::setPath(const QString & path)
+{
+  d->path = path;
+  d->uid = DataReference();
+}
+
+void Akonadi::ItemFetchJob::setUid(const DataReference & ref)
+{
+  d->path = Collection::root();
+  d->uid = ref;
 }
 
 #include "itemfetchjob.moc"

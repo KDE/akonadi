@@ -68,6 +68,8 @@ QVariant Akonadi::ItemModel::data( const QModelIndex & index, int role ) const
     switch ( index.column() ) {
       case Id:
         return QString::number( item->reference().persistanceID() );
+      case RemoteId:
+        return item->reference().externalUrl().toString();
       case MimeType:
         return QString::fromLatin1( item->mimeType() );
     }
@@ -86,7 +88,7 @@ int Akonadi::ItemModel::rowCount( const QModelIndex & parent ) const
 int ItemModel::columnCount(const QModelIndex & parent) const
 {
   if ( !parent.isValid() )
-    return 2; // keep in sync with Column enum
+    return 3; // keep in sync with Column enum
   return 0;
 }
 
@@ -96,6 +98,8 @@ QVariant Akonadi::ItemModel::headerData( int section, Qt::Orientation orientatio
     switch ( section ) {
       case Id:
         return i18n( "Id" );
+      case RemoteId:
+        return i18n( "Remote Id" );
       case MimeType:
         return i18n( "MimeType" );
       default:
@@ -119,7 +123,8 @@ void Akonadi::ItemModel::setPath( const QString& path )
   delete d->monitor;
   d->monitor = 0;
   // start listing job
-  ItemFetchJob* job = createFetchJob( path, d->session );
+  ItemFetchJob* job = createFetchJob();
+  job->setPath( path );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 }
 
@@ -170,8 +175,10 @@ void ItemModel::itemChanged( const DataReference &reference )
 
 void ItemModel::itemAdded( const DataReference &reference )
 {
+  qDebug() << "itemAdded()" << reference.persistanceID();
   // TODO: make sure we don't fetch the complete data here!
-  ItemFetchJob *job = new ItemFetchJob( reference, d->session );
+  ItemFetchJob *job = createFetchJob();
+  job->setUid( reference );
   connect( job, SIGNAL(result(KJob*)), SLOT(fetchingNewDone(KJob*)) );
 }
 
@@ -216,9 +223,14 @@ Akonadi::Item* Akonadi::ItemModel::itemForIndex( const QModelIndex & index ) con
   return itm;
 }
 
-ItemFetchJob* ItemModel::createFetchJob(const QString & path, QObject * parent)
+ItemFetchJob* ItemModel::createFetchJob()
 {
-  return new ItemFetchJob( path, parent );
+  return new ItemFetchJob( session() );
+}
+
+Session * ItemModel::session() const
+{
+  return d->session;
 }
 
 #include "itemmodel.moc"

@@ -21,6 +21,7 @@
 #include "messagefetchjob.h"
 #include "messagemodel.h"
 #include "monitor.h"
+#include "session.h"
 
 #include <kmime/kmime_message.h>
 
@@ -101,9 +102,9 @@ QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int
   return ItemModel::headerData( section, orientation, role );
 }
 
-ItemFetchJob* MessageModel::createFetchJob( const QString &path, QObject* parent )
+ItemFetchJob* MessageModel::createFetchJob()
 {
-  return new MessageFetchJob( path, parent );
+  return new MessageFetchJob( session() );
 }
 
 #include "messagemodel.moc"

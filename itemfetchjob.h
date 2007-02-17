@@ -35,6 +35,12 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     Q_OBJECT
   public:
     /**
+      Creates a new item fetch job.
+      @param parent The parent object.
+    */
+    ItemFetchJob( QObject *parent = 0 );
+
+    /**
       Create a new item list job to retrieve handles to all
       items in the given collection.
       @param path Absolute path of the collection.
@@ -60,6 +66,18 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       signal has been emitted or if an error occurred.
     */
     virtual Item::List items() const;
+
+    /**
+      Sets the path to the collection that should be listed.
+      @param path Absolute path of the collection.
+    */
+    void setPath( const QString &path );
+
+    /**
+      Sets the unique identifier of the item that should be fetched.
+      @param ref The unique message id.
+    */
+    void setUid( const DataReference &ref );
 
     /**
       Fetch additional field.

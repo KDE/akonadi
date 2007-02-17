@@ -37,6 +37,12 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
   Q_OBJECT
   public:
     /**
+      Create a new message fetch job.
+      @param parent The parent object.
+    */
+    MessageFetchJob( QObject *parent = 0 );
+
+    /**
       Create a new message fetch job to retrieve envelopes of all
       messages in the given collection.
       @param path Absolute path of the collection.
