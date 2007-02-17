@@ -21,20 +21,25 @@
 
 using namespace Akonadi;
 
-CollectionList MockBackend::listCollections( const QString& prefix,
-                                             const QString& mailboxPattern ) const
+bool MockBackend::listCollections( const QString& prefix,
+                                   const QString& mailboxPattern,
+                                   QList<Location> &result ) const
 {
-    CollectionList list;
+    result.clear();
     //qDebug() << "Prefix: " << prefix << " pattern: " << mailboxPattern;
     if ( mailboxPattern == QLatin1String("%") ) {
-        list << Collection( QLatin1String("INBOX") );
+        Location l;
+        l.setName( QLatin1String("INBOX") );
+        result << l;
     } else if ( mailboxPattern == QLatin1String("*") ) {
-        list << Collection( QLatin1String("INBOX") );
-        list << Collection( QLatin1String("INBOX/foo") );
+        Location l1; l1.setName( QLatin1String("INBOX") );
+        Location l2; l2.setName( QLatin1String("INBOX/foo") );
+        result << l1 << l2;
     } else if ( mailboxPattern.startsWith( QLatin1String("INBOX") ) ) {
-        list << Collection( QLatin1String("foo") );
-        list << Collection( QLatin1String("bar") );
+        Location l1; l1.setName( QLatin1String("foo") );
+        Location l2; l2.setName( QLatin1String("bar") );
+        result << l1 << l2;
     }
-    return list;
+    return true;
 }
 

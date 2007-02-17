@@ -30,8 +30,9 @@ class MockBackend : public DataStore
     public:
         MockBackend() { }
 
-        CollectionList listCollections( const QString& prefix,
-                                        const QString& mailboxPattern ) const;
+        bool listCollections( const QString& prefix,
+                              const QString& mailboxPattern,
+                              QList<Location> &result ) const;
 };
 
 }

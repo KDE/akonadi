@@ -78,7 +78,6 @@ set(libakonadiprivate_SRCS
   src/storage/dbinitializer.cpp
   src/storage/notificationcollector.cpp
   src/storage/transaction.cpp
-  src/collection.cpp
   src/tracer.cpp
   src/dbustracer.cpp
   src/dbusthread.cpp

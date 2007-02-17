@@ -30,7 +30,6 @@ class QSqlQuery;
 
 #include "entities.h"
 #include "fetchquery.h"
-#include "collection.h"
 #include "notificationcollector.h"
 #include "akonadiprivate_export.h"
 
@@ -70,8 +69,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
       Per thread signleton.
     */
     static DataStore* self();
-
-    /* -- higher level API -- */
 
     /* --- Flag ---------------------------------------------------------- */
     bool appendFlag( const QString & name );
@@ -182,7 +179,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /* --- Persistent search --------------------------------------------- */
     bool appendPersisntentSearch( const QString &name, const QByteArray &queryString );
     bool removePersistentSearch( const PersistentSearch &search );
-    CollectionList listPersistentSearches() const;
+    QList<Location> listPersistentSearches() const;
 
     /* --- Helper functions ---------------------------------------------- */
     /** Returns the id of the next PIM item that is added to the db.

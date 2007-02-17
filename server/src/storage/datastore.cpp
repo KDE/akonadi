@@ -1055,12 +1055,15 @@ QList<Resource> DataStore::listResources( const CachePolicy & policy )
   return Resource::retrieveFiltered( Resource::cachePolicyIdColumn(), policy.id() );
 }
 
-CollectionList Akonadi::DataStore::listPersistentSearches() const
+QList<Location> Akonadi::DataStore::listPersistentSearches() const
 {
   QList<PersistentSearch> list = PersistentSearch::retrieveAll();
-  CollectionList rv;
-  foreach ( PersistentSearch search, list )
-    rv.append( QLatin1String("Search/") + search.name() );
+  QList<Location> rv;
+  foreach ( PersistentSearch search, list ) {
+    Location l;
+    l.setName( QLatin1String("Search/") + search.name() );
+    rv.append( l );
+  }
   return rv;
 }
 

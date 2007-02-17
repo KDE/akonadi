@@ -36,6 +36,7 @@
 #ifndef AKONADI_ENTITIES_H
 #define AKONADI_ENTITIES_H
 #include &lt;storage/entity.h&gt;
+#include "akonadiprivate_export.h"
 
 #include &lt;qdebug.h&gt;
 #include &lt;qstring.h&gt;
@@ -101,7 +102,7 @@ using namespace Akonadi;
 /**
   Representation of a record in the <xsl:value-of select="$entityName"/> table.
 */
-class <xsl:value-of select="$className"/> : public Entity
+class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
 {
   friend class DataStore;
 
