@@ -359,10 +359,12 @@ bool DataStore::updateLocationCounts( const Location & location, int existsChang
     return false;
 }
 
-bool DataStore::changeLocationPolicy( const Location & location,
+bool DataStore::changeLocationPolicy( Location & location,
                                       const CachePolicy & policy )
 {
-  return location.updateColumn( Location::cachePolicyIdColumn(), policy.id() );
+  // TODO: change notification
+  location.setCachePolicyId( policy.id() );
+  return location.update();
 }
 
 bool DataStore::resetLocationPolicy( const Location & location )
@@ -528,16 +530,17 @@ bool DataStore::appendPimItem( const QByteArray & data,
   return true;
 }
 
-bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const QByteArray & data)
+bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const QByteArray & data)
 {
-  if ( !pimItem.updateColumn( PimItem::dataColumn(), data ) )
+  pimItem.setData( data );
+  if ( !pimItem.update() )
     return false;
 
   mNotificationCollector->itemChanged( pimItem );
   return true;
 }
 
-bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const Location & destination)
+bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const Location & destination)
 {
   if ( !pimItem.isValid() || !destination.isValid() )
     return false;
@@ -547,7 +550,8 @@ bool Akonadi::DataStore::updatePimItem(const PimItem & pimItem, const Location &
     return false;
   mNotificationCollector->collectionChanged( source );
 
-  if ( !pimItem.updateColumn( PimItem::locationIdColumn(), destination.id() ) )
+  pimItem.setLocationId( destination.id() );
+  if ( !pimItem.update() )
     return false;
 
   mNotificationCollector->collectionChanged( destination );

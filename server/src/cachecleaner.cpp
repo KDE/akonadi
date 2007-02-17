@@ -70,7 +70,9 @@ void CacheCleaner::cleanCache()
 
     // clear data field
     foreach ( PimItem pimItem, pimItems ) {
-      pimItem.updateColumn( PimItem::dataColumn(), QVariant() );
+      pimItem.setData( QByteArray() );
+      if ( !pimItem.update() )
+        qDebug() << "failed to update item" << pimItem.id();
     }
   }
 

@@ -85,33 +85,6 @@ class Entity
     }
 
     /**
-      Updates the value of a specified column in the database to the given value.
-      Note: The object itself is not changed!
-    */
-    template <typename T> inline bool updateColumn( const QString &column, const QVariant &value ) const
-    {
-      QSqlDatabase db = database();
-      if ( !db.isOpen() )
-        return false;
-
-      QSqlQuery query( db );
-      QString statement = QLatin1String( "UPDATE " );
-      statement += T::tableName();
-      statement += QLatin1String( " SET " );
-      statement += column;
-      statement += QLatin1String( " = :column WHERE id = :id" );
-      query.prepare( statement );
-      query.bindValue( QLatin1String(":column"), value );
-      query.bindValue( QLatin1String(":id"), id() );
-      if ( !query.exec() ) {
-        qDebug() << "Error during updating record with id" << id()
-            << " in table" << T::tableName() << query.lastError().text();
-        return false;
-      }
-      return true;
-    }
-
-    /**
       Deletes all records having @p value in @p column.
     */
     template <typename T> inline static bool remove( const QString &column, const QVariant &value )

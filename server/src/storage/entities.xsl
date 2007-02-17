@@ -190,6 +190,12 @@ class <xsl:value-of select="$className"/> : public Entity
     */
     bool insert( int* insertId = 0 );
 
+    /**
+      Stores all changes made to this record into the database.
+      @returns true on success, false otherwise.
+    */
+    bool update();
+
     /** Deletes this record. */
     bool remove();
 
@@ -197,14 +203,6 @@ class <xsl:value-of select="$className"/> : public Entity
     /** Deletes the record with the given id. */
     static bool remove( int id );
     </xsl:if>
-
-    /**
-      Updates column @p column of this record to value @p value.
-      @param column The name of the column to update.
-      @param value The new value, QVariant() is treated as @c NULL.
-      @returns true on success, false otherwise.
-    */
-    bool updateColumn( const QString &amp;column, const QVariant &amp;value ) const;
 
   protected:
     // delete records
@@ -578,9 +576,39 @@ bool <xsl:value-of select="$className"/>::insert( int* insertId )
 }
 
 // update existing data
-bool <xsl:value-of select="$className"/>::updateColumn ( const QString &amp;column, const QVariant &amp;value ) const
+bool <xsl:value-of select="$className"/>::update()
 {
-  return Entity::updateColumn&lt;<xsl:value-of select="$className"/>&gt;( column, value );
+  QSqlDatabase db = DataStore::self()->database();
+  if ( !db.isOpen() )
+    return false;
+
+  QString statement = QLatin1String( "UPDATE " );
+  statement += tableName();
+  statement += QLatin1String( " SET " );
+
+  QStringList cols;
+  <xsl:for-each select="column[@name != 'id']">
+  if ( m_<xsl:value-of select="@name"/>_changed )
+    cols.append( <xsl:value-of select="@name"/>Column() + QLatin1String( " = :<xsl:value-of select="@name"/>" ) );;
+  </xsl:for-each>
+  statement += cols.join( QLatin1String( ", " ) );
+  statement += QLatin1String( " WHERE id = :id" );
+
+  QSqlQuery query( db );
+  query.prepare( statement );
+  <xsl:for-each select="column[@name != 'id']">
+  if ( m_<xsl:value-of select="@name"/>_changed ) {
+    query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), this-&gt;<xsl:value-of select="@name"/>() );
+  }
+  </xsl:for-each>
+
+  query.bindValue( QLatin1String(":id"), id() );
+  if ( !query.exec() ) {
+    qDebug() &lt;&lt; "Error during updating record with id" &lt;&lt; id()
+             &lt;&lt; " in table" &lt;&lt; tableName() &lt;&lt; query.lastError().text();
+    return false;
+  }
+  return true;
 }
 
 // delete records

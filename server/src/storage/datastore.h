@@ -97,7 +97,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /// removes the given location and all its content
     bool cleanupLocation( const Location &location );
     bool updateLocationCounts( const Location & location, int existsChange, int recentChange, int unseenChange );
-    bool changeLocationPolicy( const Location & location, const CachePolicy & policy );
+    bool changeLocationPolicy( Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
     /// rename the collection @p location to @p newName.
     bool renameLocation( const Location &location, const QString &newName );
@@ -130,8 +130,8 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
                         const QDateTime & dateTime,
                         const QByteArray & remote_id,
                         int *insertId = 0 );
-    bool updatePimItem( const PimItem &pimItem, const QByteArray &data );
-    bool updatePimItem( const PimItem &pimItem, const Location &destination );
+    bool updatePimItem( PimItem &pimItem, const QByteArray &data );
+    bool updatePimItem( PimItem &pimItem, const Location &destination );
     PimItem pimItemById( int id );
     PimItem pimItemById( int id, FetchQuery::Type type );
     QList<PimItem> listPimItems( const MimeType & mimetype,

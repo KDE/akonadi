@@ -47,7 +47,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     ResourceManager::self();
     new CachePolicyManager( this );
     mCacheCleaner = new CacheCleaner( this );
-    mCacheCleaner->start();
+    mCacheCleaner->start( QThread::IdlePriority );
 }
 
 
