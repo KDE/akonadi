@@ -69,8 +69,19 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
       foreach ( QByteArray ba, mimeTypes )
         if ( !db->appendMimeTypeForLocation( location.id(), QString::fromUtf8(ba) ) )
           return failureResponse( "Unable to modify collection mimetypes." );
+    } else if ( type == "CACHEPOLICY" ) {
+      int policyId;
+      bool ok = false;
+      pos = ImapParser::parseNumber( line, policyId, &ok, pos );
+      if ( !ok )
+        return failureResponse( "Invalid cache policy identifier" );
+      CachePolicy policy = CachePolicy::retrieveById( policyId );
+      if ( !policy.isValid() )
+        return failureResponse( "Cache policy does not exist" );
+      if ( !db->changeLocationPolicy( location, policy ) )
+        return failureResponse( "Unable to modify collection cache policy" );
     } else
-      return failureResponse( "Unknown modify type" );
+      return failureResponse( "Unknown modify type: " + type );
   }
 
   if ( !transaction.commit() )

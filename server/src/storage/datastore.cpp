@@ -362,8 +362,8 @@ bool DataStore::updateLocationCounts( const Location & location, int existsChang
 bool DataStore::changeLocationPolicy( Location & location,
                                       const CachePolicy & policy )
 {
-  // TODO: change notification
   location.setCachePolicyId( policy.id() );
+  mNotificationCollector->collectionChanged( location );
   return location.update();
 }
 
