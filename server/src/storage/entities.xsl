@@ -570,8 +570,9 @@ bool <xsl:value-of select="$className"/>::insert( int* insertId )
     return false;
   }
 
+  setId( DataStore::self()->lastInsertId( query ) );
   if ( insertId )
-    *insertId = DataStore::self()->lastInsertId( query );
+    *insertId = id();
   return true;
 }
 

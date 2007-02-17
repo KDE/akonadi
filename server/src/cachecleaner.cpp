@@ -54,11 +54,12 @@ void CacheCleaner::cleanCache()
     // check if there is something to expire at all
     if ( policy.offlineParts() == QLatin1String( "ALL" ) || policy.expireTime() < 0 )
       continue;
+    int expireTime = qMax( 5, policy.expireTime() );
 
     // find all expired items
     QueryBuilder<PimItem> qb;
     qb.addCondition( PimItem::locationIdColumn(), "=", location.id() );
-    qb.addCondition( PimItem::atimeColumn(), "<", QDateTime::currentDateTime().addSecs( 60 * policy.expireTime() ) );
+    qb.addCondition( PimItem::atimeColumn(), "<", QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
     qb.addCondition( PimItem::dataColumn(), "IS NOT", QVariant() );
     if ( !qb.exec() )
       continue;

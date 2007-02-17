@@ -495,44 +495,26 @@ bool DataStore::appendPimItem( const QByteArray & data,
                                const QByteArray & remote_id,
                                int *insertId )
 {
-  if ( !m_dbOpened )
-    return false;
-
-  QStringList columns;
-  columns << PimItem::remoteIdColumn() << PimItem::dataColumn() << PimItem::locationIdColumn() << PimItem::mimeTypeIdColumn();
-  QString values = QLatin1String( ":remote_id, :data, :location_id, :mimetype_id");
-  if ( dateTime.isValid() ) {
-    columns << PimItem::datetimeColumn();
-    values += QLatin1String( ", :datetime" );
-  }
-  QString statement = QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
-      .arg( PimItem::tableName(), columns.join( QLatin1String(",") ), values );
-
-  QSqlQuery query( m_database );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":remote_id"), QString::fromUtf8(remote_id) );
-  query.bindValue( QLatin1String(":data"), data );
-  query.bindValue( QLatin1String(":location_id"), location.id() );
-  query.bindValue( QLatin1String(":mimetype_id"), mimetype.id() );
+  PimItem pimItem;
+  pimItem.setData( data );
+  pimItem.setMimeTypeId( mimetype.id() );
+  pimItem.setLocationId( location.id() );
   if ( dateTime.isValid() )
-    query.bindValue( QLatin1String(":datetime"), dateTimeFromQDateTime( dateTime ) );
+    pimItem.setDatetime( dateTime );
+  pimItem.setRemoteId( remote_id );
+  pimItem.setAtime( QDateTime::currentDateTime() );
 
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during insertion of single PimItem." );
+  if ( !pimItem.insert( insertId ) )
     return false;
-  }
 
-  int id = lastInsertId( query );
-  if ( insertId )
-      *insertId = id;
-
-  mNotificationCollector->itemAdded( pimItemById( id ), location, mimetype.name().toLatin1() );
+  mNotificationCollector->itemAdded( pimItem, location, mimetype.name().toLatin1() );
   return true;
 }
 
 bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const QByteArray & data)
 {
   pimItem.setData( data );
+  pimItem.setAtime( QDateTime::currentDateTime() );
   if ( !pimItem.update() )
     return false;
 
@@ -551,6 +533,7 @@ bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const Location & desti
   mNotificationCollector->collectionChanged( source );
 
   pimItem.setLocationId( destination.id() );
+  pimItem.setAtime( QDateTime::currentDateTime() );
   if ( !pimItem.update() )
     return false;
 
@@ -748,7 +731,13 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
   if ( data.isEmpty() && type == FetchQuery::AllType )
       data = retrieveDataFromResource( id, remote_id, location, type );
 
-  return PimItem( pimItemId, remote_id, data, location, mimetype, dateTime, atime );
+  // update access time
+  PimItem item = PimItem( pimItemId, remote_id, data, location, mimetype, dateTime, atime );
+  item.setAtime( QDateTime::currentDateTime() );
+  if ( !item.update() )
+    qDebug() << "Failed to update access time for item" << item.id();
+
+  return item;
 }
 
 PimItem DataStore::pimItemById( int id )
