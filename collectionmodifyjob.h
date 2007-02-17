@@ -52,6 +52,12 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
     */
     void setContentTypes( const QList<QByteArray> &mimeTypes );
 
+    /**
+      Sets the cache policy of the collection.
+      @param policyId The identifier of the cache policy.
+    */
+    void setCachePolicy( int policyId );
+
   protected:
     virtual void doStart();
 

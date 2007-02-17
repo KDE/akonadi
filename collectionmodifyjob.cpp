@@ -27,7 +27,9 @@ class Akonadi::CollectionModifyJobPrivate
   public:
     QString path;
     QList<QByteArray> mimeTypes;
+    int policyId;
     bool setMimeTypes;
+    bool setPolicy;
 };
 
 CollectionModifyJob::CollectionModifyJob(const QString &path, QObject * parent) :
@@ -35,6 +37,7 @@ CollectionModifyJob::CollectionModifyJob(const QString &path, QObject * parent) 
 {
   d->path = path;
   d->setMimeTypes = false;
+  d->setPolicy = false;
 }
 
 CollectionModifyJob::~ CollectionModifyJob()
@@ -47,6 +50,8 @@ void CollectionModifyJob::doStart()
   QByteArray command = newTag() + " MODIFY \"" + d->path.toUtf8() + '\"';
   if ( d->setMimeTypes )
     command += " MIMETYPES (" + ImapParser::join( d->mimeTypes, " " ) + ')';
+  if ( d->setPolicy )
+    command += " CACHEPOLICY " + QByteArray::number( d->policyId );
   writeData( command );
 }
 
@@ -54,6 +59,12 @@ void CollectionModifyJob::setContentTypes(const QList< QByteArray > & mimeTypes)
 {
   d->setMimeTypes = true;
   d->mimeTypes = mimeTypes;
+}
+
+void CollectionModifyJob::setCachePolicy(int policyId)
+{
+  d->policyId = policyId;
+  d->setPolicy = true;
 }
 
 #include "collectionmodifyjob.moc"
