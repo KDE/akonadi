@@ -151,20 +151,6 @@ class AgentManager : public QObject
     void agentInstanceConfigure( const QString &identifier );
 
     /**
-     * Sets the configuration of agent instance with the given @p identifier.
-     *
-     * @param data The configuration data in xml format.
-     * @returns true if the configuration was accepted and applyed, false otherwise.
-     */
-    bool setAgentInstanceConfiguration( const QString &identifier, const QString &data );
-
-    /**
-     * Returns the current configuration data of the agent instance with the given
-     * @p identifier or an empty string if no configuration is set.
-     */
-    QString agentInstanceConfiguration( const QString &identifier ) const;
-
-    /**
      * Triggers the agent instance with the given @p identifier to start
      * synchronization.
      */
@@ -233,21 +219,12 @@ class AgentManager : public QObject
      */
     void agentInstanceNameChanged( const QString &agentIdentifier, const QString &name );
 
-    /**
-     * This signal is emitted whenever the configuration of the agent instance has changed.
-     *
-     * @param agentIdentifier The identifier of the agent that has changed.
-     * @param data The new configuration data of the agent instance.
-     */
-    void agentInstanceConfigurationChanged( const QString &agentIdentifier, const QString &data );
-
   private Q_SLOTS:
     void updatePluginInfos();
     void resourceRegistered( const QString&, const QString&, const QString& );
     void resourceStatusChanged( int status, const QString &message );
     void resourceProgressChanged( uint progress, const QString &message );
     void resourceNameChanged( const QString& );
-    void resourceConfigurationChanged( const QString& );
 
   private:
     /**

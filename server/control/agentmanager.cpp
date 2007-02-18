@@ -277,22 +277,6 @@ void AgentManager::agentInstanceConfigure( const QString &identifier )
   mInstances[ identifier ].interface->configure();
 }
 
-bool AgentManager::setAgentInstanceConfiguration( const QString &identifier, const QString &data )
-{
-  if ( !checkInterface( identifier, QLatin1String( "setAgentInstanceConfiguration" ) ) )
-    return false;
-
-  return mInstances[ identifier ].interface->setConfiguration( data );
-}
-
-QString AgentManager::agentInstanceConfiguration( const QString &identifier ) const
-{
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceConfiguration" ) ) )
-    return QString();
-
-  return mInstances[ identifier ].interface->configuration();
-}
-
 void AgentManager::agentInstanceSynchronize( const QString &identifier )
 {
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
@@ -532,8 +516,6 @@ void AgentManager::resourceRegistered( const QString &name, const QString&, cons
            this, SLOT( resourceProgressChanged( uint, const QString& ) ) );
   connect( interface, SIGNAL( nameChanged( const QString& ) ),
            this, SLOT( resourceNameChanged( const QString& ) ) );
-  connect( interface, SIGNAL( configurationChanged( const QString& ) ),
-           this, SLOT( resourceConfigurationChanged( const QString& ) ) );
 
   mInstances[ identifier ].interface = interface;
 
@@ -576,25 +558,6 @@ void AgentManager::resourceProgressChanged( uint progress, const QString &messag
   }
 
   emit agentInstanceProgressChanged( identifier, progress, message );
-}
-
-void AgentManager::resourceConfigurationChanged( const QString &data )
-{
-  org::kde::Akonadi::Resource *resource = static_cast<org::kde::Akonadi::Resource*>( sender() );
-  if ( !resource ) {
-    mTracer->error( QLatin1String( "AgentManager::resourceConfigurationChanged" ),
-                    QLatin1String( "Got signal from unknown sender" ) );
-    return;
-  }
-
-  const QString identifier = resource->objectName();
-  if ( identifier.isEmpty() ) {
-    mTracer->error( QLatin1String( "AgentManager::resourceConfigurationChanged" ),
-                    QLatin1String( "Sender of configurationChanged signal has no identifier" ) );
-    return;
-  }
-
-  emit agentInstanceConfigurationChanged( identifier, data );
 }
 
 void AgentManager::resourceNameChanged( const QString &data )

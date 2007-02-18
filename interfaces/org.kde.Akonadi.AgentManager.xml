@@ -95,15 +95,6 @@
     <method name="agentInstanceConfigure">
       <arg name="identifier" type="s" direction="in"/>
     </method>
-    <method name="setAgentInstanceConfiguration">
-      <arg type="b" direction="out"/>
-      <arg name="identifier" type="s" direction="in"/>
-      <arg name="data" type="s" direction="in"/>
-    </method>
-    <method name="agentInstanceConfiguration">
-      <arg type="s" direction="out"/>
-      <arg name="identifier" type="s" direction="in"/>
-    </method>
     <method name="agentInstanceSynchronize">
       <arg name="identifier" type="s" direction="in"/>
     </method>
