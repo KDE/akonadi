@@ -175,7 +175,6 @@ void ItemModel::itemChanged( const DataReference &reference )
 
 void ItemModel::itemAdded( const DataReference &reference )
 {
-  qDebug() << "itemAdded()" << reference.persistanceID();
   // TODO: make sure we don't fetch the complete data here!
   ItemFetchJob *job = createFetchJob();
   job->setUid( reference );

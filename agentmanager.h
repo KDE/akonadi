@@ -164,21 +164,6 @@ class AKONADI_EXPORT AgentManager : public QObject
     void agentInstanceConfigure( const QString &identifier );
 
     /**
-     * Sets the configuration of agent instance with the given @p identifier.
-     *
-     * @param identifier The identifier of the agent to configure.
-     * @param data The configuration data in xml format.
-     * @returns true if the configuration was accepted and applyed, false otherwise.
-     */
-    bool setAgentInstanceConfiguration( const QString &identifier, const QString &data );
-
-    /**
-     * Returns the current configuration data of the agent instance with the given
-     * @p identifier or an empty string if no configuration is set.
-     */
-    QString agentInstanceConfiguration( const QString &identifier ) const;
-
-    /**
      * Triggers the agent instance with the given @p identifier to start
      * synchronization.
      */
@@ -240,14 +225,6 @@ class AKONADI_EXPORT AgentManager : public QObject
      * @param name The new name of the agent identifier.
      */
     void agentInstanceNameChanged( const QString &agentIdentifier, const QString &name );
-
-    /**
-     * This signal is emitted whenever the configuration of the agent instance has changed.
-     *
-     * @param agentIdentifier The identifier of the agent that has changed.
-     * @param data The new configuration data of the agent instance.
-     */
-    void agentInstanceConfigurationChanged( const QString &agentIdentifier, const QString &data );
 
   private:
     class Private;

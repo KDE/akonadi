@@ -78,8 +78,6 @@ AgentManager::AgentManager( QObject *parent )
            this, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
            this, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceConfigurationChanged( const QString&, const QString& ) ),
-           this, SIGNAL( agentInstanceConfigurationChanged( const QString&, const QString& ) ) );
 }
 
 AgentManager::~AgentManager()
@@ -190,16 +188,6 @@ QString AgentManager::agentInstanceName( const QString &identifier ) const
 void AgentManager::agentInstanceConfigure( const QString &identifier )
 {
   d->mManager->agentInstanceConfigure( identifier );
-}
-
-bool AgentManager::setAgentInstanceConfiguration( const QString &identifier, const QString &data )
-{
-  return d->mManager->setAgentInstanceConfiguration( identifier, data );
-}
-
-QString AgentManager::agentInstanceConfiguration( const QString &identifier ) const
-{
-  return d->mManager->agentInstanceConfiguration( identifier );
 }
 
 void AgentManager::agentInstanceSynchronize( const QString &identifier )
