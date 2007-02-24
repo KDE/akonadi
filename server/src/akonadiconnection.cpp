@@ -233,6 +233,7 @@ void Akonadi::AkonadiConnection::flushStatusMessageQueue()
 void AkonadiConnection::setSessionId(const QByteArray &id)
 {
   m_sessionId = id;
+  storageBackend()->setSessionId( id );
   storageBackend()->notificationCollector()->setSessionId( id );
 }
 

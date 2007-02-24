@@ -135,6 +135,12 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
     */
     static QStringList columnNames();
 
+    /**
+      Returns a list of all SQL column names prefixed with their tables names.
+      The names are in the correct order for usage with extractResult().
+    */
+    static QStringList fullColumnNames();
+
     <xsl:for-each select="column">
     static QString <xsl:value-of select="@name"/>Column();
     static QString <xsl:value-of select="@name"/>FullColumnName();
@@ -322,6 +328,15 @@ QStringList <xsl:value-of select="$className"/>::columnNames()
   QStringList rv;
   <xsl:for-each select="column">
   rv.append( QLatin1String( "<xsl:value-of select="@name"/>" ) );
+  </xsl:for-each>
+  return rv;
+}
+
+QStringList <xsl:value-of select="$className"/>::fullColumnNames()
+{
+  QStringList rv;
+  <xsl:for-each select="column">
+  rv.append( QLatin1String( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@name"/>" ) );
   </xsl:for-each>
   return rv;
 }

@@ -9,6 +9,6 @@ set_target_properties(qsql_mysql_embedded PROPERTIES OUTPUT_NAME libqsqlmysqlemb
 
 # MYSQL_LIBRARIES is necessary since it defines yaSSL_CTX_free while MYSQL_EMBEDDED_LIBRARIES doesn't (on kubuntu edgy at least)
 target_link_libraries(qsql_mysql_embedded ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY}
-                                          ${MYSQL_LIBRARIES} ${MYSQL_EMBEDDED_LIBRARIES} ${OPENSSL_LIBRARIES} crypto crypt nsl z)
+                                          ${MYSQL_EMBEDDED_LIBRARIES} ${OPENSSL_LIBRARIES} crypto crypt nsl z)
 
 install(TARGETS qsql_mysql_embedded DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/sqldrivers)

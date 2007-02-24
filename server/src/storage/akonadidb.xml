@@ -116,6 +116,7 @@
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP"/>
     <column name="atime" type="QDateTime"/>
+    <column name="dirty" type="bool"/>
   </table>
 
   <relation table1="SearchLocation" column1="id" table2="PimItem" column2="id"/>

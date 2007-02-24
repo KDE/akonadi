@@ -266,6 +266,8 @@ QString DbInitializer::sqlType(const QString & type)
     return QLatin1String("BLOB");
   if ( type == QLatin1String("QDateTime") )
     return QLatin1String("TIMESTAMP");
+  if ( type == QLatin1String( "bool" ) )
+    return QLatin1String("BOOL");
   Q_ASSERT( false );
   return QString();
 }

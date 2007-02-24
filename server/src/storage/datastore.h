@@ -224,6 +224,11 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     */
     QSqlDatabase database() const { return m_database; }
 
+    /**
+      Sets the current session id.
+    */
+    void setSessionId( const QByteArray &sessionId ) { mSessionId = sessionId; }
+
 Q_SIGNALS:
     /**
       Emitted if a transaction has been successfully committed.
@@ -275,6 +280,7 @@ private:
     QSqlDatabase m_database;
     bool m_dbOpened;
     bool m_inTransaction;
+    QByteArray mSessionId;
     NotificationCollector* mNotificationCollector;
 
     static QList<int> mPendingItemDeliveries;

@@ -66,7 +66,10 @@ bool StoreQuery::parse( const QByteArray &query )
   } else if ( subCommand == "COLLECTION" ) {
     mOperation = Replace | Silent;
     mDataType = Collection;
-  }else
+  } else if ( subCommand == "DIRTY" ) {
+    mOperation = Replace | Silent;
+    mDataType = Dirty;
+  } else
     return false;
 
   const QByteArray leftover = query.mid( end + 1 );

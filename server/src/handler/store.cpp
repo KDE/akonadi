@@ -107,6 +107,11 @@ bool Store::commit()
     } else if ( mStoreQuery.dataType() == StoreQuery::Collection ) {
       if ( !store->updatePimItem( pimItems[ i ], Location::retrieveByName( mStoreQuery.collection() ) ) )
         return failureResponse( "Unable to move item." );
+    } else if ( mStoreQuery.dataType() == StoreQuery::Dirty ) {
+      PimItem item = pimItems.at( i );
+      item.setDirty( false );
+      if ( !item.update() )
+        return failureResponse( "Unable to update item" );
     }
 
     if ( !( mStoreQuery.operation() & StoreQuery::Silent ) ) {

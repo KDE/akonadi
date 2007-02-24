@@ -44,7 +44,8 @@ class StoreQuery
     {
       Flags,
       Data,
-      Collection
+      Collection,
+      Dirty
     };
 
     StoreQuery();

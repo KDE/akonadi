@@ -33,20 +33,52 @@ template <typename T> class QueryBuilder
     /**
       Creates a new query builder.
     */
-    inline QueryBuilder() : mQuery( DataStore::self()->database() ) {}
+    inline QueryBuilder() : mQuery( DataStore::self()->database() )
+    {
+      mTables << T::tableName();
+    }
 
     /**
-      Add a WHERE condition.
+      Add a table to the FROM part of the query.
+      @param table The table name.
+    */
+    inline void addTable( const QString &table )
+    {
+      mTables << table;
+    }
+
+    /**
+      Add a WHERE condition which compares a column with a given value.
       @param column The column that should be compared.
       @param op The operator used for comparison
       @param value The value @p column is compared to.
     */
-    inline void addCondition( const QString &column, const char* op, const QVariant &value )
+    inline void addValueCondition( const QString &column, const char* op, const QVariant &value )
     {
+      Q_ASSERT( !column.isEmpty() );
+
       Condition c;
       c.column = column;
       c.op = QString::fromLatin1( op );
       c.value = value;
+      mConditions << c;
+    }
+
+    /**
+      Add a WHERE condition which compares a column with another column.
+      @param column The column that should be compared.
+      @param op The operator used for comparison.
+      @param column2 The column @p column is compared to.
+    */
+    inline void addColumnCondition( const QString &column, const char* op, const QString column2 )
+    {
+      Q_ASSERT( !column.isEmpty() );
+      Q_ASSERT( !column2.isEmpty() );
+
+      Condition c;
+      c.column = column;
+      c.column2 = column2;
+      c.op = QString::fromLatin1( op );
       mConditions << c;
     }
 
@@ -56,9 +88,9 @@ template <typename T> class QueryBuilder
     inline bool exec()
     {
       QString statement = QLatin1String( "SELECT " );
-      statement += T::columnNames().join( QLatin1String( ", " ) );
+      statement += T::fullColumnNames().join( QLatin1String( ", " ) );
       statement += QLatin1String(" FROM ");
-      statement += T::tableName();
+      statement += mTables.join( QLatin1String( ", " ) );
       if ( !mConditions.isEmpty() ) {
         statement += QLatin1String(" WHERE ");
         int i = 0;
@@ -68,10 +100,14 @@ template <typename T> class QueryBuilder
           cstmt += QLatin1Char( ' ' );
           cstmt += c.op;
           cstmt += QLatin1Char( ' ' );
-          if ( c.value.isValid() )
-            cstmt += QString::fromLatin1( ":%1" ).arg( i++ );
-          else
-            cstmt += QLatin1String( "NULL" );
+          if ( c.column2.isEmpty() ) {
+            if ( c.value.isValid() )
+              cstmt += QString::fromLatin1( ":%1" ).arg( i++ );
+            else
+              cstmt += QLatin1String( "NULL" );
+          } else {
+            cstmt += c.column2;
+          }
           conds << cstmt;
         }
         statement += conds.join( QLatin1String( " AND " ) );
@@ -79,7 +115,7 @@ template <typename T> class QueryBuilder
       mQuery.prepare( statement );
       int i = 0;
       foreach ( const Condition c, mConditions )
-        if ( c.value.isValid() )
+        if ( c.column2.isEmpty() && c.value.isValid() )
           mQuery.bindValue( QString::fromLatin1( ":%1" ).arg( i++ ), c.value );
       if ( !mQuery.exec() ) {
         qDebug() << "Error during selecting records from table"
@@ -102,11 +138,12 @@ template <typename T> class QueryBuilder
     class Condition
     {
       public:
-        QString column;
+        QString column, column2;
         QString op;
         QVariant value;
     };
     QList<Condition> mConditions;
+    QStringList mTables;
     QSqlQuery mQuery;
 };
 

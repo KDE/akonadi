@@ -58,9 +58,10 @@ void CacheCleaner::cleanCache()
 
     // find all expired items
     QueryBuilder<PimItem> qb;
-    qb.addCondition( PimItem::locationIdColumn(), "=", location.id() );
-    qb.addCondition( PimItem::atimeColumn(), "<", QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
-    qb.addCondition( PimItem::dataColumn(), "IS NOT", QVariant() );
+    qb.addValueCondition( PimItem::locationIdColumn(), "=", location.id() );
+    qb.addValueCondition( PimItem::atimeColumn(), "<", QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
+    qb.addValueCondition( PimItem::dataColumn(), "IS NOT", QVariant() );
+    qb.addValueCondition( PimItem::dirtyColumn(), "=", false );
     if ( !qb.exec() )
       continue;
     QList<PimItem> pimItems = qb.result();
