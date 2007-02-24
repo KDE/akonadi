@@ -30,7 +30,8 @@ class Akonadi::ItemStoreJobPrivate
       SetFlags,
       AddFlags,
       RemoveFlags,
-      Move
+      Move,
+      Dirty
     };
 
     Item::Flags flags;
@@ -108,6 +109,11 @@ void ItemStoreJob::setCollection(const QString & collection)
   d->operations.insert( ItemStoreJobPrivate::Move );
 }
 
+void ItemStoreJob::setClean()
+{
+  d->operations.insert( ItemStoreJobPrivate::Dirty );
+}
+
 void ItemStoreJob::doStart()
 {
   sendNextCommand();
@@ -159,6 +165,9 @@ void ItemStoreJob::sendNextCommand()
       break;
     case ItemStoreJobPrivate::Move:
       command += "COLLECTION \"" + d->collection.toUtf8() + '\"';
+      break;
+    case ItemStoreJobPrivate::Dirty:
+      command += "DIRTY";
       break;
   }
   writeData( command );

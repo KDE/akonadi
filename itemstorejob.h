@@ -85,6 +85,12 @@ class AKONADI_EXPORT ItemStoreJob : public Job
     */
     void setCollection( const QString &collection );
 
+    /**
+      Resets the item dirty flag. Should only be used by resources after
+      writing changes back to the corresponding server.
+    */
+    void setClean();
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
