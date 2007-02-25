@@ -75,6 +75,7 @@ bool Fetch::handleLine( const QByteArray& line )
     }
   }
 
+#if 0
   // temporary HACK to test search providers
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Envelope ) ) {
     QStringList uids;
@@ -95,6 +96,7 @@ bool Fetch::handleLine( const QByteArray& line )
     // TODO error handling (eg. on failing call)
     qDebug() << "fetchResonse: " << result;
   }
+#endif
 
   for ( int i = 0; i < pimItems.count(); ++i ) {
     response.setUntagged();

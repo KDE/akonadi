@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -106,7 +106,7 @@ void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
     mAddedItems.append( ni );
   else {
     completeItem( ni );
-    emit itemAddedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
 }
 
@@ -120,7 +120,7 @@ void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
     mChangedItems.append( ni );
   else {
     completeItem( ni );
-    emit itemChangedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
 }
 
@@ -134,7 +134,7 @@ void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
   if ( mDb->inTransaction() )
     mRemovedItems.append( ni );
   else
-    emit itemRemovedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
 }
 
 void Akonadi::NotificationCollector::collectionAdded( const QString &collection,
@@ -228,20 +228,20 @@ void Akonadi::NotificationCollector::transactionCommitted()
 
   foreach ( NotificationItem ni, mAddedItems ) {
     completeItem( ni );
-    emit itemAddedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
     // no change notifications for new items
     mChangedItems.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mRemovedItems ) {
-    emit itemRemovedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
     // no change notifications for removed items
     mChangedItems.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mChangedItems ) {
     completeItem( ni );
-    emit itemChangedNotification( mSessionId, ni.uid(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
   }
 
   clear();

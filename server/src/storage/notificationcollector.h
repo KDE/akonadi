@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -71,6 +71,11 @@ class NotificationItem
     int uid() const { return mItem.id(); }
 
     /**
+      Returns the remote id of the changed item.
+    */
+    QString remoteId() const { return QString::fromLatin1( mItem.remoteId() ); }
+
+    /**
       Returns the PimItem of the changed item.
     */
     PimItem pimItem() const { return mItem; }
@@ -134,9 +139,6 @@ class NotificationItem
   Part of the DataStore, collects change notifications and emits
   them after the current transaction has been successfully committed.
   Where possible, notifications are compressed.
-
-  @todo The itemRemoved() (and maybe other) signals also needs the remoteid,
-        maybe we should use DataReference everywhere?
 */
 class NotificationCollector : public QObject
 {
@@ -211,13 +213,19 @@ class NotificationCollector : public QObject
                             const QByteArray &resource = QByteArray() );
 
   Q_SIGNALS:
-    void itemAddedNotification( const QByteArray &sessionId, int uid, const QString &collection,
+    void itemAddedNotification( const QByteArray &sessionId, int uid,
+                                const QString &remotedId,
+                                const QString &collection,
                                 const QByteArray &mimeType,
                                 const QByteArray &resource );
-    void itemChangedNotification( const QByteArray &sessionId, int uid, const QString &collection,
+    void itemChangedNotification( const QByteArray &sessionId, int uid,
+                                  const QString &remotedId,
+                                  const QString &collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
-    void itemRemovedNotification( const QByteArray &sessionId, int uid, const QString &collection,
+    void itemRemovedNotification( const QByteArray &sessionId, int uid,
+                                  const QString &remotedId,
+                                  const QString &collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
 
