@@ -121,32 +121,32 @@ void Monitor::ignoreSession(Session * session)
   d->sessions << session->sessionId();
 }
 
-void Monitor::slotItemChanged( const QByteArray &sessionId, const QByteArray & uid, const QString& collection,
+void Monitor::slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, const QString& collection,
                                const QByteArray &mimetype, const QByteArray &resource )
 {
   if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isItemMonitored( uid.toUInt(), collection, mimetype, resource ) )
-    emit itemChanged( DataReference( uid.toUInt(), QString() ) );
+  if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
+    emit itemChanged( DataReference( uid, remoteId ) );
   if ( d->isCollectionMonitored( collection, resource ) )
     emit collectionChanged( collection );
 }
 
-void Monitor::slotItemAdded( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
+void Monitor::slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
                              const QByteArray &mimetype, const QByteArray &resource )
 {
   if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isItemMonitored( uid.toUInt(), collection, mimetype, resource ) )
-    emit itemAdded( DataReference( uid.toUInt(), QString() ) );
+  if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
+    emit itemAdded( DataReference( uid, remoteId ) );
   if ( d->isCollectionMonitored( collection, resource ) )
     emit collectionChanged( collection );
 }
 
-void Monitor::slotItemRemoved( const QByteArray &sessionId, const QByteArray & uid, const QString &collection,
+void Monitor::slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
                                const QByteArray &mimetype, const QByteArray &resource )
 {
   if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isItemMonitored( uid.toUInt(), collection, mimetype, resource ) )
-    emit itemRemoved( DataReference( uid.toUInt(), QString() ) );
+  if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
+    emit itemRemoved( DataReference( uid, remoteId ) );
   if ( d->isCollectionMonitored( collection, resource ) )
     emit collectionChanged( collection );
 }
@@ -184,12 +184,12 @@ bool Monitor::connectToNotificationManager( )
   if ( !d->nm ) {
     qWarning() << "Unable to connect to notification manager";
   } else {
-    connect( d->nm, SIGNAL(itemChanged(QByteArray,QByteArray,QString,QByteArray,QByteArray)),
-             SLOT(slotItemChanged(QByteArray,QByteArray,QString,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemAdded(QByteArray,QByteArray,QString,QByteArray,QByteArray)),
-             SLOT(slotItemAdded(QByteArray,QByteArray,QString,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemRemoved(QByteArray,QByteArray,QString,QByteArray,QByteArray)),
-             SLOT(slotItemRemoved(QByteArray,QByteArray,QString,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemChanged(QByteArray,int,QString,QString,QByteArray,QByteArray)),
+             SLOT(slotItemChanged(QByteArray,int,QString,QString,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemAdded(QByteArray,int,QString,QString,QByteArray,QByteArray)),
+             SLOT(slotItemAdded(QByteArray,int,QString,QString,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemRemoved(QByteArray,int,QString,QString,QByteArray,QByteArray)),
+             SLOT(slotItemRemoved(QByteArray,int,QString,QString,QByteArray,QByteArray)) );
     connect( d->nm, SIGNAL(collectionChanged(QByteArray,QString,QByteArray)),
              SLOT(slotCollectionChanged(QByteArray,QString,QByteArray)) );
     connect( d->nm, SIGNAL(collectionAdded(QByteArray,QString,QByteArray)),

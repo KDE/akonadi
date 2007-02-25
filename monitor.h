@@ -131,11 +131,11 @@ class AKONADI_EXPORT Monitor : public QObject
     bool connectToNotificationManager();
 
   private Q_SLOTS:
-    void slotItemChanged( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
+    void slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemAdded( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
+    void slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
                         const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemRemoved( const QByteArray &sessionId, const QByteArray &uid, const QString &collection,
+    void slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
                           const QByteArray &mimetype, const QByteArray &resource );
     void slotCollectionAdded( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
     void slotCollectionChanged( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
