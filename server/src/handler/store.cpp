@@ -90,28 +90,37 @@ bool Store::commit()
   qDebug() << "Store::commit()" << pimItems.count() << "items selected.";
 
   for ( int i = 0; i < pimItems.count(); ++i ) {
-    if ( mStoreQuery.dataType() == StoreQuery::Flags ) {
-      if ( mStoreQuery.operation() & StoreQuery::Replace ) {
-        if ( !replaceFlags( pimItems[ i ], mStoreQuery.flags() ) )
-          return failureResponse( "Unable to replace item flags." );
-      } else if ( mStoreQuery.operation() & StoreQuery::Add ) {
-        if ( !addFlags( pimItems[ i ], mStoreQuery.flags() ) )
-          return failureResponse( "Unable to add item flags." );
-      } else if ( mStoreQuery.operation() & StoreQuery::Delete ) {
-        if ( !deleteFlags( pimItems[ i ], mStoreQuery.flags() ) )
-          return failureResponse( "Unable to remove item flags." );
-      }
-    } else if ( mStoreQuery.dataType() == StoreQuery::Data ) {
-      if ( !store->updatePimItem( pimItems[ i ], mData ) )
-        return failureResponse( "Unable to change item data." );
-    } else if ( mStoreQuery.dataType() == StoreQuery::Collection ) {
-      if ( !store->updatePimItem( pimItems[ i ], Location::retrieveByName( mStoreQuery.collection() ) ) )
-        return failureResponse( "Unable to move item." );
-    } else if ( mStoreQuery.dataType() == StoreQuery::Dirty ) {
-      PimItem item = pimItems.at( i );
-      item.setDirty( false );
-      if ( !item.update() )
-        return failureResponse( "Unable to update item" );
+    switch ( mStoreQuery.dataType() ) {
+      case StoreQuery::Flags:
+        if ( mStoreQuery.operation() & StoreQuery::Replace ) {
+          if ( !replaceFlags( pimItems[ i ], mStoreQuery.flags() ) )
+            return failureResponse( "Unable to replace item flags." );
+        } else if ( mStoreQuery.operation() & StoreQuery::Add ) {
+          if ( !addFlags( pimItems[ i ], mStoreQuery.flags() ) )
+            return failureResponse( "Unable to add item flags." );
+        } else if ( mStoreQuery.operation() & StoreQuery::Delete ) {
+          if ( !deleteFlags( pimItems[ i ], mStoreQuery.flags() ) )
+            return failureResponse( "Unable to remove item flags." );
+        }
+        break;
+      case StoreQuery::Data:
+        if ( !store->updatePimItem( pimItems[ i ], mData ) )
+          return failureResponse( "Unable to change item data." );
+        break;
+      case StoreQuery::Collection:
+        if ( !store->updatePimItem( pimItems[ i ], Location::retrieveByName( mStoreQuery.collection() ) ) )
+          return failureResponse( "Unable to move item." );
+        break;
+      case StoreQuery::RemoteId:
+        if ( !store->updatePimItem( pimItems[i], mStoreQuery.remoteId() ) )
+          return failureResponse( "Unable to change remote id for item." );
+        break;
+      case StoreQuery::Dirty:
+        PimItem item = pimItems.at( i );
+        item.setDirty( false );
+        if ( !item.update() )
+          return failureResponse( "Unable to update item" );
+        break;
     }
 
     if ( !( mStoreQuery.operation() & StoreQuery::Silent ) ) {

@@ -45,6 +45,7 @@ class StoreQuery
       Flags,
       Data,
       Collection,
+      RemoteId,
       Dirty
     };
 
@@ -59,6 +60,7 @@ class StoreQuery
     bool isUidStore() const;
     int continuationSize() const;
     QString collection() const;
+    QString remoteId() const { return mCollection; }
 
     void dump();
 

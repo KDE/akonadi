@@ -553,6 +553,21 @@ bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const Location & desti
   return true;
 }
 
+bool DataStore::updatePimItem(PimItem & pimItem, const QString & remoteId)
+{
+  if ( !pimItem.isValid() )
+    return false;
+
+  pimItem.setRemoteId( remoteId.toLatin1() );
+  pimItem.setAtime( QDateTime::currentDateTime() );
+  if ( !pimItem.update() )
+    return false;
+  mNotificationCollector->itemChanged( pimItem );
+  return true;
+}
+
+
+
 bool DataStore::cleanupPimItem( const PimItem &item )
 {
   if ( !item.isValid() )

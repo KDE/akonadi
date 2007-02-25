@@ -66,6 +66,9 @@ bool StoreQuery::parse( const QByteArray &query )
   } else if ( subCommand == "COLLECTION" ) {
     mOperation = Replace | Silent;
     mDataType = Collection;
+  } else if ( subCommand == "REMOTEID" ) {
+    mOperation = Replace | Silent;
+    mDataType = RemoteId;
   } else if ( subCommand == "DIRTY" ) {
     mOperation = Replace | Silent;
     mDataType = Dirty;
@@ -79,7 +82,7 @@ bool StoreQuery::parse( const QByteArray &query )
     mContinuationSize = leftover.mid( 1, leftover.indexOf( '}' ) - 1 ).toInt();
     return true;
   }
-  if ( dataType() == Collection ) {
+  if ( dataType() == Collection || dataType() == RemoteId ) {
     ImapParser::parseString( leftover, mCollection );
     if ( mCollection.isEmpty() )
       return false;
