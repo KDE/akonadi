@@ -31,6 +31,7 @@ class Akonadi::ItemStoreJobPrivate
       AddFlags,
       RemoveFlags,
       Move,
+      RemoteId,
       Dirty
     };
 
@@ -109,6 +110,11 @@ void ItemStoreJob::setCollection(const QString & collection)
   d->operations.insert( ItemStoreJobPrivate::Move );
 }
 
+void ItemStoreJob::setRemoteId()
+{
+  d->operations.insert( ItemStoreJobPrivate::RemoteId );
+}
+
 void ItemStoreJob::setClean()
 {
   d->operations.insert( ItemStoreJobPrivate::Dirty );
@@ -165,6 +171,9 @@ void ItemStoreJob::sendNextCommand()
       break;
     case ItemStoreJobPrivate::Move:
       command += "COLLECTION \"" + d->collection.toUtf8() + '\"';
+      break;
+    case ItemStoreJobPrivate::RemoteId:
+      command += "REMOTEID \"" + d->ref.externalUrl().toString().toLatin1() + '\"';
       break;
     case ItemStoreJobPrivate::Dirty:
       command += "DIRTY";
