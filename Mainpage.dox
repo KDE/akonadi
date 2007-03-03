@@ -59,4 +59,4 @@ The following classes are provided to manipulate PIM items:
 
 */
 
-// DOXYGEN_REFERENCES = akonadi libkmime
+// DOXYGEN_REFERENCES = kdecore akonadi libkmime

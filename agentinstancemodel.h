@@ -35,7 +35,8 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
       StatusRole = Qt::UserRole + 1,
       StatusMessageRole,
       ProgressRole,
-      ProgressMessageRole
+      ProgressMessageRole,
+      OnlineRole
     };
 
     AgentInstanceModel( QObject *parent );
@@ -49,6 +50,9 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
 
     virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
     virtual QModelIndex parent( const QModelIndex &index ) const;
+
+    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+    virtual bool setData( const QModelIndex &index, const QVariant &value, int role );
 
   private:
     class Private;

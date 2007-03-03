@@ -42,6 +42,7 @@ class AgentInstanceInfo
     QString statusMessage;
     uint progress;
     QString progressMessage;
+    bool online;
 };
 
 class AgentInstanceModel::Private
@@ -80,6 +81,7 @@ void AgentInstanceModel::Private::addAgentInstance( const QString &agentInstance
   info.progress = mManager.agentInstanceProgress( agentInstance );
   info.progressMessage = mManager.agentInstanceProgressMessage( agentInstance );
   info.instanceName = mManager.agentInstanceName( agentInstance );
+  info.online = mManager.agentInstanceOnline( agentInstance );
 
   mInfos.append( info );
 }
@@ -221,6 +223,9 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
     case ProgressMessageRole:
       return info.progressMessage;
       break;
+    case OnlineRole:
+      return info.online;
+      break;
     default:
       break;
   }
@@ -259,6 +264,37 @@ QModelIndex AgentInstanceModel::index( int row, int column, const QModelIndex& )
 QModelIndex AgentInstanceModel::parent( const QModelIndex& ) const
 {
   return QModelIndex();
+}
+
+Qt::ItemFlags AgentInstanceModel::flags(const QModelIndex & index) const
+{
+  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mInfos.count() )
+    return QAbstractItemModel::flags( index );
+
+  return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
+}
+
+bool AgentInstanceModel::setData(const QModelIndex & index, const QVariant & value, int role)
+{
+  if ( !index.isValid() )
+    return false;
+
+  if ( index.row() < 0 || index.row() >= d->mInfos.count() )
+    return false;
+
+  AgentInstanceInfo info = d->mInfos[ index.row() ];
+
+  switch ( role ) {
+    case OnlineRole:
+      d->mManager.setAgentInstanceOnline( info.identifier, value.toBool() );
+      info.online = d->mManager.agentInstanceOnline( info.identifier );
+      emit dataChanged( index, index );
+      return true;
+    default:
+      return false;
+  }
+
+  return false;
 }
 
 #include "agentinstancemodel.moc"

@@ -195,4 +195,14 @@ void AgentManager::agentInstanceSynchronize( const QString &identifier )
   d->mManager->agentInstanceSynchronize( identifier );
 }
 
+bool AgentManager::agentInstanceOnline(const QString & identifier)
+{
+  return d->mManager->agentInstanceOnline( identifier );
+}
+
+void AgentManager::setAgentInstanceOnline(const QString & identifier, bool state)
+{
+  d->mManager->setAgentInstanceOnline( identifier, state );
+}
+
 #include "agentmanager.moc"

@@ -169,6 +169,16 @@ class AKONADI_EXPORT AgentManager : public QObject
      */
     void agentInstanceSynchronize( const QString &identifier );
 
+    /**
+      Returns if the agent instance @p identifier is in online mode.
+    */
+    bool agentInstanceOnline( const QString &identifier );
+
+    /**
+      Sets agent instance @p identifier to online or offline mode.
+    */
+    void setAgentInstanceOnline( const QString &identifier, bool state );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever a new agent type was installed on the system.
