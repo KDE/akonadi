@@ -33,7 +33,7 @@ class KnutResource : public Akonadi::ResourceBase
     ~KnutResource();
 
   public Q_SLOTS:
-    virtual bool requestItemDelivery( int, const QString&, const QString&, int, const QDBusMessage& );
+    virtual bool requestItemDelivery( int, const QString&, int, const QDBusMessage& );
 
     virtual void configure();
     virtual bool setConfiguration( const QString& );
