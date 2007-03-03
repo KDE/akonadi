@@ -70,8 +70,11 @@ void KnutResource::synchronize()
   mSyncTimer->start( 2000 );
 }
 
-bool KnutResource::requestItemDelivery( int, const QString&, int, const QDBusMessage& )
+bool KnutResource::requestItemDelivery( const DataReference &ref, int type, const QDBusMessage &msg )
 {
+  Q_UNUSED( ref );
+  Q_UNUSED( type );
+  Q_UNUSED( msg );
   return false;
 }
 
