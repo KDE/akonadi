@@ -693,10 +693,10 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
                                             .arg( r.name(), interface ? interface->lastError().message() : QString() );
             return QByteArray();
           }
-          bool ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), l.name(), type );
+          bool ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), type );
       } else {
         QList<QVariant> arguments;
-        arguments << uid << QString::fromUtf8( remote_id ) << l.name() << type;
+        arguments << uid << QString::fromUtf8( remote_id ) << type;
 
         DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
 
