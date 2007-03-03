@@ -285,6 +285,22 @@ void AgentManager::agentInstanceSynchronize( const QString &identifier )
   mInstances[ identifier ].interface->synchronize();
 }
 
+bool AgentManager::agentInstanceOnline(const QString & identifier)
+{
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
+    return false;
+
+  return mInstances[ identifier ].interface->isOnline();
+}
+
+void AgentManager::setAgentInstanceOnline(const QString & identifier, bool state )
+{
+  if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
+    return;
+
+  mInstances[ identifier ].interface->setOnline( state );
+}
+
 void AgentManager::updatePluginInfos()
 {
   QMap<QString, PluginInfo> oldInfos = mPluginInfos;

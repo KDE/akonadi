@@ -27,10 +27,6 @@
       <arg name="agentIdentifier" type="s" direction="out"/>
       <arg name="name" type="s" direction="out"/>
     </signal>
-    <signal name="agentInstanceConfigurationChanged">
-      <arg name="agentIdentifier" type="s" direction="out"/>
-      <arg name="data" type="s" direction="out"/>
-    </signal>
     <method name="agentTypes">
       <arg type="as" direction="out"/>
     </method>
@@ -97,6 +93,14 @@
     </method>
     <method name="agentInstanceSynchronize">
       <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="agentInstanceOnline">
+      <arg type="b" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
+    <method name="setAgentInstanceOnline">
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="state" type="b" direction="in"/>
     </method>
   </interface>
 </node>

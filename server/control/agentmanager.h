@@ -33,6 +33,7 @@ namespace Akonadi {
 class AgentManager : public QObject
 {
   Q_OBJECT
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.Akonadi.AgentManager" )
 
   public:
     /**
@@ -46,6 +47,12 @@ class AgentManager : public QObject
      * Destroys the agent manager.
      */
     ~AgentManager();
+
+    /**
+     * Called by the crash handler and dtor to terminate
+     * the child processes.
+     */
+    void cleanup();
 
   public Q_SLOTS:
     /**
@@ -157,10 +164,14 @@ class AgentManager : public QObject
     void agentInstanceSynchronize( const QString &identifier );
 
     /**
-     * Called by the crash handler and dtor to terminate
-     * the child processes.
-     */
-    void cleanup();
+      Returns if the agent instance @p identifier is in online mode.
+    */
+    bool agentInstanceOnline( const QString &identifier );
+
+    /**
+      Sets agent instance @p identifier to online or offline mode.
+    */
+    void setAgentInstanceOnline( const QString &identifier, bool state );
 
   Q_SIGNALS:
     /**
