@@ -104,7 +104,7 @@ void ProcessControl::slotErrorMessages()
 {
   QString message = QString::fromUtf8( mProcess.readAllStandardError() );
   emit processErrorMessages( message );
-  qDebug() << mApplication << "[err]" << message;
+  qDebug( "[%s] %s", qPrintable( mApplication ), qPrintable( message.trimmed() ) );
 }
 
 void ProcessControl::start()
