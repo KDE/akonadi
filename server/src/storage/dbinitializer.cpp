@@ -105,30 +105,28 @@ bool DbInitializer::checkTable( const QDomElement &element )
         entry.second = sqlType( columnElement.attribute( QLatin1String("type") ) ) + QLatin1String( " " ) + columnElement.attribute( QLatin1String("properties") );
       else
         entry.second = columnElement.attribute( QLatin1String("sqltype") ) + QLatin1String( " " ) + columnElement.attribute( QLatin1String("properties") );
-#ifdef AKONADI_USE_POSTGRES
-      if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
-        entry.second = QLatin1String("SERIAL PRIMARY KEY NOT NULL");
-      if ( entry.second.contains( QLatin1String("BLOB") ) )
-        entry.second = QLatin1String("BYTEA");
-      if ( entry.second.startsWith( QLatin1String("CHAR") ) )
-        entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
-#endif
-#if defined AKONADI_USE_MYSQL_EMBEDDED || defined AKONADI_USE_MYSQL
-      if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
-        entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("AUTO_INCREMENT"));
-      if ( entry.second.startsWith( QLatin1String("CHAR") ) )
-        entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
-#endif
+      if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) ) {
+        if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
+          entry.second = QLatin1String("SERIAL PRIMARY KEY NOT NULL");
+        if ( entry.second.contains( QLatin1String("BLOB") ) )
+          entry.second = QLatin1String("BYTEA");
+        if ( entry.second.startsWith( QLatin1String("CHAR") ) )
+          entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
+      } else if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
+        if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
+          entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("AUTO_INCREMENT"));
+        if ( entry.second.startsWith( QLatin1String("CHAR") ) )
+          entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
+      }
       columnsList.append( entry );
     } else if ( columnElement.tagName() == QLatin1String( "data" ) ) {
+      QString values = columnElement.attribute( QLatin1String("values") );
+      if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) )
+        values.replace( QLatin1String("\\"), QLatin1String("\\\\") );
       QString statement = QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
           .arg( tableName )
           .arg( columnElement.attribute( QLatin1String("columns") ) )
-#if defined AKONADI_USE_MYSQL_EMBEDDED || defined AKONADI_USE_MYSQL
-          .arg( columnElement.attribute( QLatin1String("values") ).replace( QLatin1String("\\"), QLatin1String("\\\\") ) );
-#else
-          .arg( columnElement.attribute( QLatin1String("values") ) );
-#endif
+          .arg( values );
       dataList << statement;
     } else if ( columnElement.tagName() == QLatin1String("reference") ) {
     } else {
@@ -275,15 +273,14 @@ QString DbInitializer::sqlType(const QString & type)
 bool DbInitializer::hasTable(const QString & tableName)
 {
   QString statement;
-#ifdef AKONADI_USE_POSTGRES
-  statement = QLatin1String("SELECT tablename FROM pg_tables ORDER BY tablename;" );
-#endif
-#ifdef AKONADI_USE_SQLITE
-  statement = QLatin1String("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");
-#endif
-#if defined AKONADI_USE_MYSQL_EMBEDDED || defined AKONADI_USE_MYSQL
-  statement = QLatin1String("SHOW TABLES");
-#endif
+  if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) )
+    statement = QLatin1String("SELECT tablename FROM pg_tables ORDER BY tablename;" );
+  else if ( mDatabase.driverName() == QLatin1String( "QSQLITE" ) )
+    statement = QLatin1String("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");
+  else if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) )
+    statement = QLatin1String("SHOW TABLES");
+  else
+    Q_ASSERT( false ); // unknown driver
 
   QSqlQuery query( mDatabase );
   if ( !query.exec( statement ) ) {

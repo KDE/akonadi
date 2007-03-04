@@ -40,6 +40,49 @@ class NotificationCollector;
 
 /**
   This class handles all the database access.
+
+  <h4>Database configuration</h4>
+
+  You can select between various database backends during runtime using the
+  @c $HOME/.akonadi/akonadiserverrc configuration file.
+
+  Example:
+@verbatim
+[%General]
+Driver=QMYSQL
+
+[QMYSQL_EMBEDDED]
+Name=akonadi
+Options=SERVER_DATADIR=/home/foo/.akonadi/db
+
+[QMYSQL]
+Name=akonadi
+Host=localhost
+User=foo
+Password=*****
+#Options=UNIX_SOCKET=/home/foo/.akonadi/mysql.socket
+
+[QSQLITE]
+Name=/home/foo/.akonadi/akonadi.db
+@endverbatim
+
+  Use @c General/Driver to select the QSql driver to use for databse
+  access. The following drivers are currently supported, other might work
+  but are untested:
+
+  - QMYSQL
+  - QMYSQL_EMBEDDED
+  - QSQLITE
+
+  The options for each driver are read from the corresponding group.
+  The following options are supported, dependend on the driver not all of them
+  might have an effect:
+
+  - Name: Database name, for sqlite that's the file name of the database.
+  - Host: Hostname of the database server
+  - User: Username for the database server
+  - Password: Password for the database server
+  - Options: Additional options, format is driver-dependent
 */
 class AKONADIPRIVATE_EXPORT DataStore : public QObject
 {
@@ -230,6 +273,11 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     */
     void setSessionId( const QByteArray &sessionId ) { mSessionId = sessionId; }
 
+    /**
+      Returns the name of the used database driver.
+    */
+    static QString driverName() { return mDbDriverName; }
+
 Q_SIGNALS:
     /**
       Emitted if a transaction has been successfully committed.
@@ -287,6 +335,14 @@ private:
     static QList<int> mPendingItemDeliveries;
     static QMutex mPendingItemDeliveriesMutex;
     static QWaitCondition mPendingItemDeliveriesCondition;
+
+    // database configuration
+    static QString mDbDriverName;
+    static QString mDbName;
+    static QString mDbHostName;
+    static QString mDbUserName;
+    static QString mDbPassword;
+    static QString mDbConnectionOptions;
 };
 
 }

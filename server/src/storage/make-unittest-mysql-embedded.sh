@@ -8,12 +8,22 @@ fi
 pushd `dirname $abs_path` > /dev/null
 
 akonadidb=akonadi
+socketfile=$HOME/.akonadi/mysql.socket
+if ! [ -S $socketfile ]; then
+	startserver=true
+else
+	unset startserver
+fi
 
-/usr/sbin/mysqld --datadir=$HOME/.akonadi/db/ --socket=$HOME/.akonadi/mysql.socket --skip-grant-tables --skip-networking &
-sleep 2;
+if ! [ -z "$startserver" ]; then
+	/usr/sbin/mysqld --datadir=$HOME/.akonadi/db/ --socket=$socketfile --skip-grant-tables --skip-networking &
+	sleep 2;
+fi
 
-cat create-unittest-values.sql | mysql --socket=$HOME/.akonadi/mysql.socket -D $akonadidb
+cat create-unittest-values.sql | mysql --socket=$socketfile -D $akonadidb
 
-killall mysqld
+if ! [ -z "$startserver" ]; then
+	killall mysqld
+fi
 
 popd > /dev/null
