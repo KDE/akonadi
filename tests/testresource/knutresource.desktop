@@ -1,7 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Akonadi Knut Resource
+Name[x-test]=xxAkonadi Knut Resourcexx
 Comment=An agent for debugging purpose
+Comment[x-test]=xxAn agent for debugging purposexx
 Type=AkonadiResource
 Exec=akonadi_knut_resource
 Icon=knut
