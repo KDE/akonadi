@@ -121,7 +121,7 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
         if ( col->type() == Collection::Resource )
           return SmallIcon( QLatin1String( "server" ) );
         if ( col->type() == Collection::VirtualParent )
-          return SmallIcon( QLatin1String( "find" ) );
+          return SmallIcon( QLatin1String( "edit-find" ) );
         if ( col->type() == Collection::Virtual )
           return SmallIcon( QLatin1String( "folder_green" ) );
         QList<QByteArray> content = col->contentTypes();
