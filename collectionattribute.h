@@ -44,6 +44,11 @@ class AKONADI_EXPORT CollectionAttribute
       Destroys this attribute.
     */
     virtual ~CollectionAttribute();
+
+    /**
+      Creates a copy of this object.
+    */
+    virtual CollectionAttribute* clone() const = 0;
 };
 
 
@@ -60,7 +65,8 @@ class AKONADI_EXPORT CollectionContentTypeAttribute : public CollectionAttribute
     */
     CollectionContentTypeAttribute( const QList<QByteArray> &contentTypes = QList<QByteArray>() );
 
-    virtual  QByteArray type() const;
+    virtual QByteArray type() const;
+    virtual CollectionContentTypeAttribute* clone() const;
 
     /**
       Returns the allowed content mimetypes.

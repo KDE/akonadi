@@ -44,3 +44,8 @@ void CollectionContentTypeAttribute::setContentTypes( const QList< QByteArray > 
 {
   mContentTypes = contentTypes;
 }
+
+CollectionContentTypeAttribute * CollectionContentTypeAttribute::clone() const
+{
+  return new CollectionContentTypeAttribute( mContentTypes );
+}

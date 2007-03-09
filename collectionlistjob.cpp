@@ -94,7 +94,8 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
     // strip trailing delimiter, but not if this is root
     if ( parentName.endsWith( Collection::delimiter() ) && parentName != Collection::root() )
       parentName.truncate( parentName.length() - 1 );
-    Collection *col = new Collection( folderName );
+    Collection *col = new Collection( -1 );
+    col->setPath( folderName );
     col->setParent( parentName );
 
     // determine collection type, TODO: search folder

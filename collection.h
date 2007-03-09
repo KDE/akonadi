@@ -24,6 +24,8 @@
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
+#include <QtCore/QSharedDataPointer>
+
 namespace Akonadi {
 
 /**
@@ -31,6 +33,8 @@ namespace Akonadi {
   groupware-server.
 
   Collections are hierarchical, i.e. they may have a parent collection.
+
+  This class is implicitly shared.
  */
 class AKONADI_EXPORT Collection
 {
@@ -51,9 +55,9 @@ class AKONADI_EXPORT Collection
     /**
       Create a new collection.
 
-      @param path The unique IMAP path of this collection.
+      @param id The unique identifier of this collection.
     */
-    Collection( const QString &path );
+    Collection( int id );
 
     /**
       Destroys this collection.
@@ -61,9 +65,15 @@ class AKONADI_EXPORT Collection
     virtual ~Collection();
 
     /**
+      Returns the unique identifier of this collection.
+    */
+    int id() const;
+
+    /**
       Returns the unique IMAP path of this collection.
     */
-    QString path() const;
+    KDE_DEPRECATED QString path() const;
+    KDE_DEPRECATED void setPath( const QString &path );
 
     /**
       Returns the name of this collection usable for display.
@@ -159,7 +169,7 @@ class AKONADI_EXPORT Collection
     /**
       Returns the Akonadi IMAP collection prefix.
     */
-    static QString prefix();
+    KDE_DEPRECATED static QString prefix();
 
     /**
       Returns the path of the top-level search folder.
@@ -173,7 +183,7 @@ class AKONADI_EXPORT Collection
 
   private:
     class Private;
-    Private* const d;
+    QSharedDataPointer<Private> d;
 };
 
 }

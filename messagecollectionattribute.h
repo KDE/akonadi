@@ -64,6 +64,7 @@ class AKONADI_EXPORT MessageCollectionAttribute : public CollectionAttribute
     void setUnreadCount( int count );
 
     virtual QByteArray type() const;
+    virtual MessageCollectionAttribute* clone() const;
 
   private:
     class Private;

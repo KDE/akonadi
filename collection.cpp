@@ -25,27 +25,53 @@
 
 using namespace Akonadi;
 
-class Collection::Private
+class Collection::Private : public QSharedData
 {
   public:
+    Private() :
+      QSharedData(),
+      id( -1 ),
+      type( Unknown )
+    {}
+
+    Private( const Private &other ) :
+      QSharedData( other )
+    {
+      id = other.id;
+      path = other.path;
+      parent = other.parent;
+      name = other.name;
+      type = other.type;
+      foreach ( CollectionAttribute* attr, other.attributes )
+        attributes.insert( attr->type(), attr->clone() );
+    }
+
+    ~Private()
+    {
+      qDeleteAll( attributes );
+    }
+
+    int id;
     QString path;
     QString parent;
-    QString name;
+    mutable QString name; // ### remove mutable
     Type type;
     QHash<QByteArray, CollectionAttribute*> attributes;
 };
 
-Collection::Collection( const QString &path ) :
-  d( new Collection::Private() )
+Collection::Collection( int id ) :
+    d( new Private )
 {
-  d->path = path;
-  d->type = Unknown;
+  d->id = id;
 }
 
-Collection::~Collection( )
+Collection::~Collection()
 {
-  qDeleteAll( d->attributes );
-  delete d;
+}
+
+int Akonadi::Collection::id() const
+{
+  return d->id;
 }
 
 QString Collection::path() const
@@ -53,9 +79,14 @@ QString Collection::path() const
   return d->path;
 }
 
+void Collection::setPath( const QString &path )
+{
+  d->path = path;
+}
+
 QString Collection::name( ) const
 {
-  if ( d->name.isEmpty() && d->path != root() ) {
+ if ( d->name.isEmpty() && d->path != root() ) {
     QString name = d->path.mid( d->path.lastIndexOf( delimiter() ) + 1 );
     d->name = name;
   }

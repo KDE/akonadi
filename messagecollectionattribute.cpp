@@ -66,3 +66,11 @@ QByteArray MessageCollectionAttribute::type( ) const
 {
   return QByteArray( "MessageCollection" );
 }
+
+MessageCollectionAttribute * MessageCollectionAttribute::clone() const
+{
+  MessageCollectionAttribute* attr =  new MessageCollectionAttribute();
+  attr->setCount( count() );
+  attr->setUnreadCount( unreadCount() );
+  return attr;
+}

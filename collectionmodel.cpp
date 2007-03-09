@@ -421,7 +421,9 @@ bool CollectionModel::createCollection( const QModelIndex & parent, const QStrin
   Collection *parentCol = static_cast<Collection*>( parent.internalPointer() );
 
   // create temporary fake collection, will be removed on error
-  d->editedCollection = new Collection( parentCol->path() + Collection::delimiter() + name );
+  Collection *c = new Collection( -1 );
+  c->setPath( parentCol->path() + Collection::delimiter() + name );
+  d->editedCollection = c;
   d->editedCollection->setParent( parentCol->path() );
   if ( d->collections.contains( d->editedCollection->path() ) ) {
     delete d->editedCollection;
