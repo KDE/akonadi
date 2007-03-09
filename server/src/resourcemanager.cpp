@@ -62,7 +62,7 @@ void Akonadi::ResourceManager::resourceAdded(const QString & name)
   Location loc = Location::retrieveByName( collectionName );
   if ( loc.isValid() )
     collectionName = name; // name already in use...
-  db->appendLocation( collectionName, resource );
+  db->appendLocation( 0, collectionName, resource );
 }
 
 void Akonadi::ResourceManager::resourceRemoved(const QString & name)

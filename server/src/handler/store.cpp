@@ -24,6 +24,7 @@
 #include "response.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
+#include "handlerhelper.h"
 
 #include "store.h"
 
@@ -108,7 +109,7 @@ bool Store::commit()
           return failureResponse( "Unable to change item data." );
         break;
       case StoreQuery::Collection:
-        if ( !store->updatePimItem( pimItems[ i ], Location::retrieveByName( mStoreQuery.collection() ) ) )
+        if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( mStoreQuery.collection() ) ) )
           return failureResponse( "Unable to move item." );
         break;
       case StoreQuery::RemoteId:

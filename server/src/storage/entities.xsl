@@ -107,6 +107,9 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
   friend class DataStore;
 
   public:
+    /// List of <xsl:value-of select="$entityName"/> records.
+    typedef QList&lt;<xsl:value-of select="$className"/>&gt; List;
+
     // constructor
     <xsl:value-of select="$className"/>();
     <xsl:value-of select="$className"/>(
@@ -173,16 +176,24 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByName( const QString &amp;name );
     </xsl:if>
 
-    static QList&lt;<xsl:value-of select="$className"/>&gt; retrieveAll();
-    static QList&lt;<xsl:value-of select="$className"/>&gt; retrieveFiltered( const QString &amp;key, const QVariant &amp;value );
+    static <xsl:value-of select="$className"/>::List retrieveAll();
+    static <xsl:value-of select="$className"/>::List retrieveFiltered( const QString &amp;key, const QVariant &amp;value );
 
-    // data retrieval for referenced tables
+    <!-- data retrieval for referenced tables (n:1) -->
     <xsl:for-each select="column[@refTable != '']">
-    <xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="concat(translate(substring(@refTable,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring(@refTable,2))"/>() const;
+    /**
+      Retrieve the <xsl:value-of select="@refTable"/> record referred to by the
+      <xsl:value-of select="@name"/> column of this record.
+    */
+    <xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:call-template name="method-name-n1"/>() const;
     </xsl:for-each>
 
-    // data retrieval for inverse referenced tables
+    <!-- data retrieval for inverse referenced tables (1:n) -->
     <xsl:for-each select="reference">
+    /**
+      Retrieve a list of all <xsl:value-of select="@table"/> records referring to this record
+      in their column <xsl:value-of select="@key"/>.
+    */
     QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="@name"/>() const;
     </xsl:for-each>
 
@@ -448,7 +459,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
 
 // data retrieval for referenced tables
 <xsl:for-each select="column[@refTable != '']">
-<xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@refTable,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring(@refTable,2))"/>() const
+<xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:call-template name="method-name-n1"/>() const
 {
   return <xsl:value-of select="@refTable"/>::retrieveById( <xsl:value-of select="@name"/>() );
 
@@ -737,6 +748,18 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
     <xsl:if test="position() != last()">,</xsl:if>
   </xsl:for-each>
   );
+</xsl:template>
+
+<!-- method name for n:1 referred records -->
+<xsl:template name="method-name-n1">
+<xsl:choose>
+<xsl:when test="@methodName != ''">
+  <xsl:value-of select="@methodName"/>
+</xsl:when>
+<xsl:otherwise>
+  <xsl:value-of select="concat(translate(substring(@refTable,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring(@refTable,2))"/>
+</xsl:otherwise>
+</xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>

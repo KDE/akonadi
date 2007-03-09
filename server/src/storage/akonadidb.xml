@@ -38,6 +38,7 @@
   - sqltype: The SQL type (optional), overwrites types derived from the C++ type.
   - default: Default value for entity class constructor.
   - refTable, refColumn: foreign key, also used to generate accessor methods for 1:n relations
+  - methodName: method name to access referred records, the table name is used if not given
   - properties: SQL properties such as constraints
 
   Reference attributes (indication n:1 relations)
@@ -76,7 +77,10 @@
 
   <table name="Location">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
+    <column name="remoteId" type="QString"/>
+    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
+    <column name="parentId" type="int" refTable="Location" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Location(id)"/>
+    <reference name="children" table="Location" key="parentId"/>
     <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="REFERENCES CachePolicy(id)"/>
     <column name="resourceId" type="int" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
     <column name="existCount" type="int"/>

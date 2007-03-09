@@ -24,6 +24,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for the select command.
  */
 class Select : public Handler

@@ -27,21 +27,22 @@
 #include <storage/entity.h>
 #include <storage/transaction.h>
 
-Akonadi::Delete::Delete() : Handler()
+using namespace Akonadi;
+
+Delete::Delete() : Handler()
 {
 }
 
-Akonadi::Delete::~Delete()
+Delete::~Delete()
 {
 }
 
-bool Akonadi::Delete::handleLine(const QByteArray & line)
+bool Delete::handleLine(const QByteArray & line)
 {
   int begin = line.indexOf( " DELETE" ) + 7;
-  QString collection;
+  QByteArray collection;
   if ( line.length() > begin )
     ImapParser::parseString( line, collection, begin );
-  collection = HandlerHelper::normalizeCollectionName( collection );
 
   // prevent deletion of the root node
   if ( collection.isEmpty() )
@@ -51,21 +52,12 @@ bool Akonadi::Delete::handleLine(const QByteArray & line)
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = Location::retrieveByName( collection );
+  Location location = HandlerHelper::collectionFromIdOrName( collection );
   if ( !location.isValid() )
     return failureResponse( "No such collection." );
 
-  // delete all child collections
-  QList<Location> locations = db->listLocations();
-  collection += QLatin1Char('/');
-  foreach ( Location location, locations ) {
-    if ( location.name().startsWith( collection ) ) {
-      if ( !db->cleanupLocation( location ) )
-        return failureResponse( "Unable to delete collection." );
-    }
-  }
-  if ( !db->cleanupLocation( location ) )
-    return failureResponse( "Unable to delete collection." );
+  if ( !deleteRecursive( location ) )
+    return failureResponse( "Unable to delete collection" );
 
   if ( !transaction.commit() )
     return failureResponse( "Unable to commit transaction." );
@@ -76,4 +68,15 @@ bool Akonadi::Delete::handleLine(const QByteArray & line)
   emit responseAvailable( response );
   deleteLater();
   return true;
+}
+
+bool Delete::deleteRecursive(const Location & loc)
+{
+  Location::List children = loc.children();
+  foreach ( const Location child, children ) {
+    if ( !deleteRecursive( child ) )
+      return false;
+  }
+  DataStore *db = connection()->storageBackend();
+  return db->cleanupLocation( loc );
 }

@@ -28,6 +28,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for the store command.
  */
 class Store : public Handler

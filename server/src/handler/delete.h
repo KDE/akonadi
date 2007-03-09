@@ -21,10 +21,13 @@
 #define AKONADI_DELETE_H
 
 #include <handler.h>
+#include <entities.h>
 
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for collection deletion commands.
 */
 class Delete : public Handler
@@ -33,6 +36,9 @@ class Delete : public Handler
     Delete();
     ~Delete();
     virtual bool handleLine( const QByteArray &line );
+
+  private:
+    bool deleteRecursive( const Location &loc );
 
 };
 

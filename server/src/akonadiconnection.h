@@ -46,8 +46,8 @@ public:
     void run();
 
     virtual DataStore* storageBackend();
-    const QString selectedCollection() const;
-    void setSelectedCollection( const QString& collection );
+    int selectedCollection() const;
+    void setSelectedCollection( int collection );
 
     const Location selectedLocation();
 
@@ -78,7 +78,7 @@ private:
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore* m_backend;
-    QString m_selectedConnection;
+    int m_selectedConnection;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;

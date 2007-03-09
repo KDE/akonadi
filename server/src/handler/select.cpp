@@ -43,15 +43,14 @@ Select::~Select()
 bool Select::handleLine(const QByteArray& line )
 {
     // as per rfc, even if the following select fails, we need to reset
-    connection()->setSelectedCollection( QLatin1String("/") );
+    connection()->setSelectedCollection( 0 );
 
     int startOfCommand = line.indexOf( ' ' ) + 1;
     int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QString mailbox;
+    QByteArray mailbox;
     ImapParser::parseString( line, mailbox, startOfMailbox );
-    mailbox = HandlerHelper::normalizeCollectionName( mailbox );
 
-    Location l = Location::retrieveByName( mailbox );
+    Location l = HandlerHelper::collectionFromIdOrName( mailbox );
 
     if ( !l.isValid() )
         return failureResponse( "Cannot list this folder" );
@@ -82,7 +81,7 @@ bool Select::handleLine(const QByteArray& line )
     response.setString( "Completed" );
     emit responseAvailable( response );
 
-    connection()->setSelectedCollection( mailbox );
+    connection()->setSelectedCollection( l.id() );
     deleteLater();
     return true;
 }

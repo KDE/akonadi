@@ -28,6 +28,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for the fetch command.
  */
 class Fetch : public Handler

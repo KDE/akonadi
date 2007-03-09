@@ -27,6 +27,7 @@
 #include "append.h"
 #include "response.h"
 #include "imapparser.h"
+#include "handlerhelper.h"
 
 using namespace Akonadi;
 
@@ -165,7 +166,7 @@ bool Akonadi::Append::commit()
     DataStore *db = connection()->storageBackend();
     Transaction transaction( db );
 
-    Location l = Location::retrieveByName( m_mailbox );
+    Location l = HandlerHelper::collectionFromIdOrName( m_mailbox );
     if ( !l.isValid() )
       return failureResponse( "Unknown collection." );
 

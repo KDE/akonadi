@@ -24,6 +24,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for the capability command.
  */
 class Capability : public Handler

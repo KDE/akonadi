@@ -20,6 +20,7 @@
 #include "notificationcollector.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
+#include "handlerhelper.h"
 
 #include <QtCore/QDebug>
 
@@ -79,7 +80,7 @@ QString Akonadi::NotificationItem::collectionName() const
 {
   if ( !mCollectionName.isEmpty() )
     return mCollectionName;
-  return mCollection.name();
+  return HandlerHelper::pathForCollection( mCollection );
 }
 
 
@@ -137,7 +138,7 @@ void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
     emit itemRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
 }
 
-void Akonadi::NotificationCollector::collectionAdded( const QString &collection,
+void Akonadi::NotificationCollector::collectionAdded( const Location &collection,
                                                       const QByteArray &resource )
 {
   NotificationItem ni( collection, resource );

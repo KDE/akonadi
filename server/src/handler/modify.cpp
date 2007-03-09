@@ -44,9 +44,8 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
   if ( pos < 0 )
     return failureResponse( "Invalid syntax" );
 
-  QString collection;
+  QByteArray collection;
   pos = ImapParser::parseString( line, collection, pos );
-  collection = HandlerHelper::normalizeCollectionName( collection );
 
   if ( collection.isEmpty() )
     return failureResponse( "Cannot modify root collection." );
@@ -54,7 +53,7 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = Location::retrieveByName( collection );
+  Location location = HandlerHelper::collectionFromIdOrName( collection );
   if ( !location.isValid() )
     return failureResponse( "No such collection." );
 

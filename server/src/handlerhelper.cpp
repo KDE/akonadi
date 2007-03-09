@@ -18,6 +18,8 @@
  ***************************************************************************/
 
 #include "handlerhelper.h"
+#include "storage/datastore.h"
+#include "storage/querybuilder.h"
 
 using namespace Akonadi;
 
@@ -55,4 +57,46 @@ QString Akonadi::HandlerHelper::normalizeCollectionName(const QString &name)
   if ( collection.endsWith( QLatin1Char('/') ) )
     collection = collection.left( collection.length() - 1 );
   return collection;
+}
+
+Location HandlerHelper::collectionFromIdOrName(const QByteArray & id)
+{
+  // id is a number
+  bool ok = false;
+  int collectionId = id.toInt( &ok );
+  if ( ok )
+    return Location::retrieveById( collectionId );
+
+  // id is a path
+  QString path = QString::fromUtf8( id ); // ### should be UTF-7 for real IMAP compatibility
+  path = normalizeCollectionName( path );
+
+  const QStringList pathParts = path.split( QLatin1Char('/') );
+  Location loc;
+  foreach ( const QString part, pathParts ) {
+    QueryBuilder<Location> qb;
+    qb.addValueCondition( Location::nameColumn(), "=", part );
+    if ( loc.isValid() )
+      qb.addValueCondition( Location::parentIdColumn(), "=", loc.id() );
+    else
+      qb.addValueCondition( Location::parentIdColumn(), "=", 0 );
+    if ( !qb.exec() )
+      return Location();
+    Location::List list = qb.result();
+    if ( list.count() != 1 )
+      return Location();
+    loc = list.first();
+  }
+  return loc;
+}
+
+QString HandlerHelper::pathForCollection(const Location & loc)
+{
+  QStringList parts;
+  Location current = loc;
+  while ( current.isValid() ) {
+    parts.prepend( current.name() );
+    current = current.parent();
+  }
+  return parts.join( QLatin1String("/") );
 }

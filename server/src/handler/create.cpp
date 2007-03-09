@@ -95,7 +95,7 @@ bool Create::handleLine(const QByteArray& line )
           endOfSupFolder > 0;
           endOfSupFolder = mailbox.lastIndexOf( QLatin1Char('/'), endOfSupFolder - 2 ) ) {
         // check whether the superior hierarchical folder exists
-        if ( !Location::retrieveByName( mailbox.left( endOfSupFolder ) ).isValid() ) {
+        if ( !HandlerHelper::collectionFromIdOrName( mailbox.left( endOfSupFolder ).toUtf8() ).isValid() ) {
             // the superior folder does not exist, so it has to be created
             foldersToCreate.prepend( mailbox.left( endOfSupFolder ) );
         }
@@ -108,9 +108,12 @@ bool Create::handleLine(const QByteArray& line )
     // now we try to create all necessary folders
     // first check whether the existing superior folder can contain subfolders
     const int endOfSupFolder = foldersToCreate[0].lastIndexOf( QLatin1Char('/') );
+    int parentId = 0;
     if ( endOfSupFolder > 0 ) {
         bool canContainSubfolders = false;
-        const QList<MimeType> mimeTypes = Location::retrieveByName( mailbox.left( endOfSupFolder ) ).mimeTypes();
+        Location parent = HandlerHelper::collectionFromIdOrName( mailbox.left( endOfSupFolder ).toUtf8() );
+        parentId = parent.id();
+        const QList<MimeType> mimeTypes = parent.mimeTypes();
         foreach ( MimeType m, mimeTypes ) {
             if ( m.name().toLower() == QLatin1String("inode/directory") ) {
                 canContainSubfolders = true;
@@ -123,8 +126,13 @@ bool Create::handleLine(const QByteArray& line )
     // everything looks good, now we create the folders
     foreach ( QString folderName, foldersToCreate ) {
         int locationId = 0;
-        if ( ! db->appendLocation( folderName, resource, &locationId ) )
+        int index = folderName.lastIndexOf( QLatin1Char('/') );
+        QString name = folderName;
+        if ( index > 0 )
+          name = folderName.mid( index + 1 );
+        if ( ! db->appendLocation( parentId, name, resource, &locationId ) )
             return failureResponse( "Adding " + folderName.toUtf8() + " to the database failed" );
+        parentId = locationId;
         foreach ( QByteArray mimeType, mimeTypes ) {
             if ( !db->appendMimeTypeForLocation( locationId, QString::fromUtf8(mimeType) ) )
                 return failureResponse( "Unable to append mimetype for collection." );

@@ -59,7 +59,7 @@ class StoreQuery
     QList<QByteArray> sequences() const;
     bool isUidStore() const;
     int continuationSize() const;
-    QString collection() const;
+    QByteArray collection() const;
     QString remoteId() const { return mCollection; }
 
     void dump();

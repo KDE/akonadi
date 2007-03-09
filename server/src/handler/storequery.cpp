@@ -157,7 +157,7 @@ int Akonadi::StoreQuery::continuationSize() const
   return mContinuationSize;
 }
 
-QString Akonadi::StoreQuery::collection() const
+QByteArray Akonadi::StoreQuery::collection() const
 {
-  return mCollection;
+  return mCollection.toUtf8();
 }

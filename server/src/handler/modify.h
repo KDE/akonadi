@@ -25,6 +25,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for the MODIFY command (not in RFC 3501).
 */
 class Modify : public Handler

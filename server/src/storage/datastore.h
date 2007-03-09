@@ -125,11 +125,8 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool appendItemFlags( int pimItemId, const QList<QByteArray> &flags );
 
     /* --- Location ------------------------------------------------------ */
-    bool appendLocation( const QString & location, const Resource & resource,
+    bool appendLocation( int parent, const QString &name, const Resource & resource,
                          int *insertId = 0 );
-    bool appendLocation( const QString & location,
-                 const Resource & resource,
-                 const CachePolicy & policy );
     /// removes the given location without removing its content
     bool removeLocation( const Location & location );
     /// removes the location with the given @p id without removing its content
@@ -140,7 +137,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool changeLocationPolicy( Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
     /// rename the collection @p location to @p newName.
-    bool renameLocation( const Location &location, const QString &newName );
+    bool renameLocation( const Location &location, int newParent, const QString &newName );
     /**
       Returns all collection associated with the given resource, all collections if the
       resource is invalid.

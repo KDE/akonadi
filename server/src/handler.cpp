@@ -22,6 +22,7 @@
 
 #include "handler.h"
 #include "response.h"
+#include "handler/aklist.h"
 #include "handler/append.h"
 #include "handler/capability.h"
 #include "handler/create.h"
@@ -134,6 +135,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new Rename();
     if ( command == "BEGIN" || command == "ROLLBACK" || command == "COMMIT" )
       return new TransactionHandler();
+    if ( command == "X-AKLIST" )
+      return new AkList();
 
     return 0;
 }

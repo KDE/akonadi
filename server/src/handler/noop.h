@@ -25,6 +25,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for the noop command.
  */
 class Noop : public Handler

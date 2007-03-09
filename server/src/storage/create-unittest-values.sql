@@ -15,15 +15,15 @@ INSERT INTO ResourceTable (id, name, cachePolicyId) VALUES(1, 'akonadi_dummy_res
 INSERT INTO ResourceTable (id, name, cachePolicyId) VALUES(2, 'akonadi_dummy_resource_2', 1);
 INSERT INTO ResourceTable (id, name, cachePolicyId) VALUES(3, 'akonadi_dummy_resource_3', 1);
 
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (1, 'res1/foo', 3, 1, 3, 0, 0, 0, 0);
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (2, 'res1/foo/bar', 1, 1, 2, 0, 0, 0, 0);
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (3, 'res1/foo/bar/bla', 1, 1, 2, 0, 0, 0, 0);
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (4, 'res1/foo/bla', 1, 1, 0, 0, 0, 0, 0);
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (5, 'res2/foo2', 1, 2, 2, 3, 4, 5, 6);
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (6, 'res1', 1, 1, 0, 0, 0, 0, 0);
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (7, 'res2', 1, 2, 0, 0, 0, 0, 0);
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (8, 'res3', 1, 3, 0, 0, 0, 0, 0);
-INSERT INTO LocationTable (id, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (9, 'res2/space folder', 1, 2, 0, 0, 0, 0, 0);
+INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (1, 6, 'foo', 3, 1, 3, 0, 0, 0, 0);
+INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (2, 1, 'bar', 1, 1, 2, 0, 0, 0, 0);
+INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (3, 2, 'bla', 1, 1, 2, 0, 0, 0, 0);
+INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (4, 1, 'bla', 1, 1, 0, 0, 0, 0, 0);
+INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (5, 7, 'foo2', 1, 2, 2, 3, 4, 5, 6);
+INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (6, 0, 'res1', 1, 1, 0, 0, 0, 0, 0);
+INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (7, 0, 'res2', 1, 2, 0, 0, 0, 0, 0);
+INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (8, 0, 'res3', 1, 3, 0, 0, 0, 0, 0);
+INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (9, 7, 'space folder', 1, 2, 0, 0, 0, 0, 0);
 
 DELETE FROM PersistentSearchTable;
 INSERT INTO PersistentSearchTable (id, name, query) VALUES(1, 'kde-core-devel', 'MIMETYPE message/rfc822 HEADER From kde-core-devel@kde.org');

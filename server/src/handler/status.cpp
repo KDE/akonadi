@@ -26,6 +26,7 @@
 #include "status.h"
 #include "response.h"
 #include "imapparser.h"
+#include "handlerhelper.h"
 
 using namespace Akonadi;
 
@@ -49,7 +50,7 @@ bool Status::handleLine( const QByteArray& line )
     // status-att = "MESSAGES" / "RECENT" / "UIDNEXT" / "UIDVALIDITY" / "UNSEEN"
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QString mailbox;
+    QByteArray mailbox;
     const int endOfMailbox = ImapParser::parseString( line, mailbox, startOfMailbox );
     const QByteArray statusAttributes = line.mid( endOfMailbox + 2, line.size() - ( endOfMailbox + 2 ) - 1 );
     const QList<QByteArray> attributeList = statusAttributes.split( ' ' );
@@ -57,7 +58,7 @@ bool Status::handleLine( const QByteArray& line )
     Response response;
 
     DataStore *db = connection()->storageBackend();
-    Location l = Location::retrieveByName( mailbox );
+    Location l = HandlerHelper::collectionFromIdOrName( mailbox );
 
     if ( !l.isValid() )
         return failureResponse( "No status for this folder" );
@@ -112,7 +113,7 @@ bool Status::handleLine( const QByteArray& line )
     }
 
     response.setUntagged();
-    response.setString( "STATUS \"" + mailbox.toUtf8() + "\" (" + statusResponse + ')' );
+    response.setString( "STATUS \"" + HandlerHelper::pathForCollection( l ).toUtf8() + "\" (" + statusResponse + ')' );
     emit responseAvailable( response );
 
     response.setSuccess();

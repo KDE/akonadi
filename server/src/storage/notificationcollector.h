@@ -193,7 +193,7 @@ class NotificationCollector : public QObject
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
      */
-    void collectionAdded( const QString &collection,
+    void collectionAdded( const Location &collection,
                           const QByteArray &resource = QByteArray() );
 
     /**

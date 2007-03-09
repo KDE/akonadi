@@ -25,6 +25,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for the expunge command.
  */
 class Expunge : public Handler

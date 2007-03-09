@@ -24,8 +24,13 @@
 #include <QtCore/QList>
 #include <QtCore/QString>
 
+#include <entities.h>
+
 namespace Akonadi {
 
+/**
+  Helper functions for command handlers.
+*/
 class HandlerHelper
 {
   public:
@@ -34,6 +39,16 @@ class HandlerHelper
       Removes leading and trailing delimiters.
     */
     static QString normalizeCollectionName( const QString &name );
+
+    /**
+      Returns the collection identified by the given id or path.
+    */
+    static Location collectionFromIdOrName( const QByteArray &id );
+
+    /**
+      Returns the full path for the given collection.
+    */
+    static QString pathForCollection( const Location &loc );
 };
 
 }

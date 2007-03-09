@@ -40,15 +40,13 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
 {
   int pos = line.indexOf( ' ' ) + 1; // skip tag
   pos = line.indexOf( ' ', pos ); // skip command
-  QString oldName;
+  QByteArray oldName;
   QString newName;
   if ( pos < 0 )
     return failureResponse( "Bad syntax" );
 
   pos = ImapParser::parseString( line, oldName, pos );
-  oldName = HandlerHelper::normalizeCollectionName( oldName );
   ImapParser::parseString( line, newName, pos );
-  newName = HandlerHelper::normalizeCollectionName( newName );
 
   if ( oldName.isEmpty() || newName.isEmpty() )
     return failureResponse( "Collection name must not be empty" );
@@ -56,25 +54,24 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = Location::retrieveByName( newName );
+  Location location = HandlerHelper::collectionFromIdOrName( newName.toUtf8() );
   if ( location.isValid() )
     return failureResponse( "Collection already exists" );
-  location = Location::retrieveByName( oldName );
+  location = HandlerHelper::collectionFromIdOrName( oldName );
   if ( !location.isValid() )
     return failureResponse( "No such collection" );
 
-  // rename all child collections
-  QList<Location> locations = db->listLocations();
-  oldName += QLatin1Char('/');
-  foreach ( Location location, locations ) {
-    if ( location.name().startsWith( oldName ) ) {
-      QString name = location.name();
-      name = name.replace( 0, oldName.length(), newName + QLatin1Char('/') );
-      if ( !db->renameLocation( location, name ) )
-        return failureResponse( "Failed to rename collection." );
-    }
-  }
-  if ( !db->renameLocation( location, newName ) )
+  QString parentPath;
+  int index = newName.lastIndexOf( QLatin1Char('/') );
+  if ( index > 0 )
+    parentPath = newName.mid( index + 1 );
+  Location parent = HandlerHelper::collectionFromIdOrName( parentPath.toUtf8() );
+  newName = newName.left( index );
+  int parentId = 0;
+  if ( parent.isValid() )
+    parentId = parent.id();
+
+  if ( !db->renameLocation( location, parentId, newName ) )
     return failureResponse( "Failed to rename collection." );
 
   if ( !transaction.commit() )

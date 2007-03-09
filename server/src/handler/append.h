@@ -26,6 +26,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for the Append command.
  */
 class Append : public Handler
@@ -46,7 +48,7 @@ protected:
 private:
     int m_size;
     QByteArray m_data;
-    QString m_mailbox;
+    QByteArray m_mailbox;
     QDateTime m_dateTime;
     QList<QByteArray> m_flags;
 

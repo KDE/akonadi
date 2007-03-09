@@ -37,7 +37,7 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
     , m_currentHandler( 0 )
     , m_connectionState( NonAuthenticated )
     , m_backend( 0 )
-    , m_selectedConnection( QLatin1String("/") )
+    , m_selectedConnection( 0 )
 {
     m_identifier.sprintf( "%p", static_cast<void*>( this ) );
     Tracer::self()->beginConnection( m_identifier, QString() );
@@ -197,19 +197,19 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
     }
 }
 
-const QString Akonadi::AkonadiConnection::selectedCollection( ) const
+int Akonadi::AkonadiConnection::selectedCollection( ) const
 {
     return m_selectedConnection;
 }
 
-void Akonadi::AkonadiConnection::setSelectedCollection( const QString& collection )
+void Akonadi::AkonadiConnection::setSelectedCollection( int collection )
 {
     m_selectedConnection = collection;
 }
 
 const Location Akonadi::AkonadiConnection::selectedLocation()
 {
-  return Location::retrieveByName( selectedCollection() );
+  return Location::retrieveById( selectedCollection() );
 }
 
 void Akonadi::AkonadiConnection::addStatusMessage( const QByteArray& msg )

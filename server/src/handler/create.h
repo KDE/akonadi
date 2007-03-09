@@ -24,6 +24,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akoandi_server_handler
+
   Handler for the CREATE command.
  */
 class Create : public Handler

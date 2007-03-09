@@ -45,6 +45,7 @@ set(libakonadiprivate_SRCS
   src/handler.cpp
   src/handlerhelper.cpp
   src/response.cpp
+  src/handler/aklist.cpp
   src/handler/append.cpp
   src/handler/create.cpp
   src/handler/capability.cpp
@@ -71,7 +72,6 @@ set(libakonadiprivate_SRCS
 #  src/persistentsearchmanager.cpp
 #  src/searchprovider.cpp
   src/searchprovidermanager.cpp
-#  src/searchproviders/emailsearchprovider.cpp
   src/storage/entity.cpp
   entities.cpp
   src/storage/datastore.cpp

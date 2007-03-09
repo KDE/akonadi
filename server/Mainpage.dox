@@ -218,6 +218,7 @@ The diffrent parts are layed out as follows:
     Contains the source code of the \ref akonadi_design_storage "Storage" component.
 \li \e src/handler <br/>
     Contains the source code for the handlers of the single IMAP commands.
+    See <a href="group__akoandi__server__handler.html">command handers module</a>
 \li \e src/storage <br/>
     Contains the source code for accessing the storage back-end.
 

@@ -32,6 +32,12 @@ namespace Akonadi {
     class AkonadiConnection;
 
 /**
+  \defgroup akoandi_server_handler Command handlers
+
+  All commands supported by the Akonadi server are implemented as sub-classes of Akonadi::Handler.
+*/
+
+/**
 The handler interfaces describes an entity capable of handling an AkonadiIMAP command.*/
 class AKONADIPRIVATE_EXPORT Handler : public QObject {
     Q_OBJECT

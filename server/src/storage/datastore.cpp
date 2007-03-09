@@ -40,6 +40,7 @@
 #include "notificationmanager.h"
 #include "tracer.h"
 #include "querybuilder.h"
+#include "handlerhelper.h"
 
 #include "datastore.h"
 
@@ -298,18 +299,26 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 
 
 /* --- Location ------------------------------------------------------ */
-bool DataStore::appendLocation( const QString & location,
+bool DataStore::appendLocation( int parent, const QString &name,
                                 const Resource & resource,
                                 int *insertId )
 {
-  if ( Location::exists( location ) ) {
-    qDebug() << "Cannot insert location " << location
+  QueryBuilder<Location> qb;
+  qb.addValueCondition( Location::parentIdColumn(), "=", parent );
+  qb.addValueCondition( Location::nameColumn(), "=", name );
+  if ( !qb.exec() ) {
+    qDebug() << "Unable to check location existence";
+    return false;
+  }
+  if ( !qb.result().isEmpty() ) {
+    qDebug() << "Cannot insert location " << name
              << " because it already exists.";
     return false;
   }
 
   Location loc;
-  loc.setName( location );
+  loc.setName( name );
+  loc.setParentId( parent );
   loc.setResourceId( resource.id() );
   loc.setExistCount( 0 );
   loc.setRecentCount( 0 );
@@ -319,24 +328,7 @@ bool DataStore::appendLocation( const QString & location,
   if ( !loc.insert( insertId ) )
     return false;
 
-  mNotificationCollector->collectionAdded( location, resource.name().toLatin1() );
-  return true;
-}
-
-bool DataStore::appendLocation( const QString & location,
-                                const Resource & resource,
-                                const CachePolicy & policy )
-{
-  if ( Location::exists( location ) ) {
-    qDebug() << "Cannot insert location " << location
-        << " because it already exists.";
-    return false;
-  }
-  Location loc( location, policy.id(), resource.id(), 0, 0, 0, 0 ,0 );
-  if ( !loc.insert() )
-    return false;
-
-  mNotificationCollector->collectionAdded( location, resource.name().toLatin1() );
+  mNotificationCollector->collectionAdded( loc, resource.name().toLatin1() );
   return true;
 }
 
@@ -428,24 +420,21 @@ bool DataStore::resetLocationPolicy( const Location & location )
   return true;
 }
 
-bool Akonadi::DataStore::renameLocation(const Location & location, const QString & newName)
+bool Akonadi::DataStore::renameLocation(const Location & location, int newParent, const QString & newName)
 {
   if ( !m_dbOpened )
     return false;
 
+  Location renamedLoc = location;
   mNotificationCollector->collectionRemoved( location );
 
-  QSqlQuery query( m_database );
-  query.prepare( QString::fromLatin1("UPDATE %1 SET %2 = :name WHERE %3 = :id")
-      .arg( Location::tableName(), Location::nameColumn(), Location::idColumn() ) );
-  query.bindValue( QLatin1String(":id"), location.id() );
-  query.bindValue( QLatin1String(":name"), newName );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during renaming of a single location." );
-    return false;
-  }
+  renamedLoc.setName( newName );
+  renamedLoc.setParentId( newParent );
 
-  mNotificationCollector->collectionAdded( newName );
+  if ( !renamedLoc.update() )
+    return false;
+
+  mNotificationCollector->collectionAdded( renamedLoc );
   return true;
 }
 
@@ -1120,7 +1109,8 @@ bool Akonadi::DataStore::appendPersisntentSearch(const QString & name, const QBy
   PersistentSearch ps( name, queryString );
   if ( !ps.insert() )
     return false;
-  mNotificationCollector->collectionAdded( name );
+// FIXME
+//   mNotificationCollector->collectionAdded( name );
   return true;
 }
 

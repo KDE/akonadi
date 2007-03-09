@@ -24,7 +24,10 @@
 namespace Akonadi {
 
 /**
-Handler for the login command.*/
+  @ingroup akoandi_server_handler
+
+  Handler for the login command.
+*/
 class Login : public Handler
 {
 public:
