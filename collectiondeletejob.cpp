@@ -24,13 +24,13 @@ using namespace Akonadi;
 class Akonadi::CollectionDeleteJobPrivate
 {
   public:
-    QString path;
+    Collection collection;
 };
 
-CollectionDeleteJob::CollectionDeleteJob(const QString & path, QObject * parent) :
+CollectionDeleteJob::CollectionDeleteJob(const Collection &collection, QObject * parent) :
     Job( parent ), d( new CollectionDeleteJobPrivate )
 {
-  d->path = path;
+  d->collection = collection;
 }
 
 CollectionDeleteJob::~ CollectionDeleteJob()
@@ -40,7 +40,7 @@ CollectionDeleteJob::~ CollectionDeleteJob()
 
 void CollectionDeleteJob::doStart()
 {
-  writeData( newTag() + " DELETE \"" + d->path.toUtf8() + "\"" );
+  writeData( newTag() + " DELETE " + QByteArray::number( d->collection.id() ) );
 }
 
 #include "collectiondeletejob.moc"

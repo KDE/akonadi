@@ -75,6 +75,7 @@ void MonitorTest::testMonitor()
   // create a collection
   CollectionCreateJob *create = new CollectionCreateJob( res3, "monitor", this );
   QVERIFY( create->exec() );
+  Collection monitorCol = create->collection();
   QTest::qWait(1000); // make sure the DBus signal has been processed
 
   QCOMPARE( caspy.count(), 1 );
@@ -148,7 +149,7 @@ void MonitorTest::testMonitor()
   imspy.clear();
 
   // delete a collection
-  CollectionDeleteJob *cdel = new CollectionDeleteJob( "res3/monitor", this );
+  CollectionDeleteJob *cdel = new CollectionDeleteJob( monitorCol, this );
   QVERIFY( cdel->exec() );
   QTest::qWait(1000);
 

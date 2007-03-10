@@ -234,7 +234,7 @@ void CollectionJobTest::testCreateDeleteFolder( )
   QVERIFY( ljob->exec() );
   QCOMPARE( findCol( ljob->collections(), "new folder" ), newCol );
 
-  CollectionDeleteJob *del = new CollectionDeleteJob( "res3/new folder", this );
+  CollectionDeleteJob *del = new CollectionDeleteJob( newCol, this );
   QVERIFY( del->exec() );
 
   ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
@@ -251,7 +251,7 @@ void CollectionJobTest::testCreateDeleteFolder( )
   QVERIFY( ljob->exec() );
   QCOMPARE( findCol( ljob->collections(), "foo" ), newCol );
 
-  del = new CollectionDeleteJob( "res3/foo", this );
+  del = new CollectionDeleteJob( newCol, this );
   QVERIFY( del->exec() );
 
   ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
@@ -273,7 +273,7 @@ void CollectionJobTest::testCreateDeleteFolder( )
   QVERIFY( attr != 0 );
   compareLists( attr->contentTypes(), mimeTypes );
 
-  del = new CollectionDeleteJob( "res3/mail folder", this );
+  del = new CollectionDeleteJob( newCol, this );
   QVERIFY( del->exec() );
 }
 
@@ -445,7 +445,7 @@ void CollectionJobTest::testUtf8CollectionName()
   compareLists( ccta->contentTypes(), contentTypes );
 
   // delete collection
-  CollectionDeleteJob *del = new CollectionDeleteJob( "res3/" + folderName, this );
+  CollectionDeleteJob *del = new CollectionDeleteJob( col, this );
   QVERIFY( del->exec() );
 }
 

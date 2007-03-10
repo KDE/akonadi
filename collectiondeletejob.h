@@ -20,6 +20,7 @@
 #ifndef AKONADI_COLLECTIONDELETEJOB_H
 #define AKONADI_COLLECTIONDELETEJOB_H
 
+#include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 
 namespace Akonadi {
@@ -38,10 +39,10 @@ class AKONADI_EXPORT CollectionDeleteJob : public Job
   public:
     /**
       Creates a new CollectionDeleteJob.
-      @param path Path of a collection to delete.
+      @param collection The collection to delete.
       @param parent The parent object.
     */
-    CollectionDeleteJob( const QString &path, QObject *parent = 0 );
+    CollectionDeleteJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.
