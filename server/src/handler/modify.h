@@ -28,6 +28,18 @@ namespace Akonadi {
   @ingroup akoandi_server_handler
 
   Handler for the MODIFY command (not in RFC 3501).
+
+  This command is used to modify collections. Its syntax is similar to the STORE
+  command.
+
+  <h4>Syntax</h4>
+
+  Request:
+  @verbatim
+  request = tag " MODIFY " collection-id " " attribute-list
+  attribute-list = *(attribute-name " " attribute-value)
+  attribute-name = "NAME" | "MIMETYPE" | "REMOTEID" | "CACHEPOLICY" | "PARENT"
+  @endverbatim
 */
 class Modify : public Handler
 {

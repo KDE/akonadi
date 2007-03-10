@@ -46,21 +46,19 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
 
   QByteArray collection;
   pos = ImapParser::parseString( line, collection, pos );
-
-  if ( collection.isEmpty() )
-    return failureResponse( "Cannot modify root collection." );
+  Location location = HandlerHelper::collectionFromIdOrName( collection );
+  if ( !location.isValid() )
+    return failureResponse( "No such collection" );
+  if ( location.id() == 0 )
+    return failureResponse( "Cannot modify root collection" );
 
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = HandlerHelper::collectionFromIdOrName( collection );
-  if ( !location.isValid() )
-    return failureResponse( "No such collection." );
-
   while ( pos < line.length() ) {
     QByteArray type;
     pos = ImapParser::parseString( line, type, pos );
-    if ( type == "MIMETYPES" ) {
+    if ( type == "MIMETYPE" ) {
       QList<QByteArray> mimeTypes;
       pos = ImapParser::parseParenthesizedList( line, mimeTypes, pos );
       if ( !db->removeMimeTypesForLocation( location.id() ) )
@@ -79,6 +77,19 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
         return failureResponse( "Cache policy does not exist" );
       if ( !db->changeLocationPolicy( location, policy ) )
         return failureResponse( "Unable to modify collection cache policy" );
+    } else if ( type == "NAME" ) {
+      QString newName;
+      pos = ImapParser::parseString( line, newName, pos );
+      if ( !db->renameLocation( location, location.parentId(), newName ) )
+        return failureResponse( "Unable to rename collection" );
+    } else if ( type == "PARENT" ) {
+      QByteArray newParent;
+      pos = ImapParser::parseString( line, newParent, pos );
+      Location parent = HandlerHelper::collectionFromIdOrName( newParent );
+      if ( !parent.isValid() )
+        return failureResponse( "Unknown parent collection" );
+      if ( !db->renameLocation( location, parent.id(), location.name() ) )
+        return failureResponse( "Unable to reparent colleciton" );
     } else
       return failureResponse( "Unknown modify type: " + type );
   }
