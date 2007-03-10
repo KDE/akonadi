@@ -46,7 +46,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Extended item roles for collections.
     */
     enum CollectionItemRole {
-      PathRole = Qt::UserRole, ///< The collection path.
+      CollectionIdRole = Qt::UserRole, ///< The collection path.
       ChildCreatableRole ///< The collection can contain sub-collections.
     };
 
@@ -136,13 +136,13 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Returns the collection path for the given model index.
       @param index The model index.
     */
-    QString pathForIndex( const QModelIndex &index ) const;
+//     QString pathForIndex( const QModelIndex &index ) const;
 
   private:
     /**
       Helper function to generate a model index for a given collection reference.
     */
-    QModelIndex indexForPath( const QString &path, int column = 0 );
+    QModelIndex indexForId( int id, int column = 0 );
 
     /**
       Helper method to remove a single row from the model (not from the Akonadi backend).

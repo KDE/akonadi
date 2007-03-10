@@ -92,7 +92,7 @@ void MessageJobTest::testIllegalMessageFetch( )
   QVERIFY( !job->exec() );
 
   // listing of root
-  job = new MessageFetchJob( Collection::root(), this );
+  job = new MessageFetchJob( Collection::root().path(), this );
   QVERIFY( !job->exec() );
 
   // fetch a non-existing message

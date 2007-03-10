@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -31,6 +31,7 @@ class Collection::Private : public QSharedData
     Private() :
       QSharedData(),
       id( -1 ),
+      parentId( -1 ),
       type( Unknown )
     {}
 
@@ -38,9 +39,10 @@ class Collection::Private : public QSharedData
       QSharedData( other )
     {
       id = other.id;
+      parentId = other.parentId;
       path = other.path;
-      parent = other.parent;
       name = other.name;
+      remoteId = other.remoteId;
       type = other.type;
       foreach ( CollectionAttribute* attr, other.attributes )
         attributes.insert( attr->type(), attr->clone() );
@@ -52,17 +54,28 @@ class Collection::Private : public QSharedData
     }
 
     int id;
+    int parentId;
     QString path;
-    QString parent;
-    mutable QString name; // ### remove mutable
+    QString name;
+    QString remoteId;
     Type type;
     QHash<QByteArray, CollectionAttribute*> attributes;
 };
+
+Collection::Collection() :
+    d ( new Private )
+{
+}
 
 Collection::Collection( int id ) :
     d( new Private )
 {
   d->id = id;
+}
+
+Collection::Collection(const Collection & other) :
+    d ( other.d )
+{
 }
 
 Collection::~Collection()
@@ -86,10 +99,6 @@ void Collection::setPath( const QString &path )
 
 QString Collection::name( ) const
 {
- if ( d->name.isEmpty() && d->path != root() ) {
-    QString name = d->path.mid( d->path.lastIndexOf( delimiter() ) + 1 );
-    d->name = name;
-  }
   return d->name;
 }
 
@@ -122,14 +131,14 @@ void Collection::setContentTypes( const QList<QByteArray> & types )
   attr->setContentTypes( types );
 }
 
-QString Collection::parent( ) const
+int Collection::parent() const
 {
-  return d->parent;
+  return d->parentId;
 }
 
-void Collection::setParent( const QString &parent )
+void Collection::setParent( int parent )
 {
-  d->parent = parent;
+  d->parentId = parent;
 }
 
 QString Collection::delimiter()
@@ -137,14 +146,18 @@ QString Collection::delimiter()
   return QLatin1String( "/" );
 }
 
-QString Collection::root( )
+Collection Collection::root( )
 {
-  return QString();
+  Collection root( 0 );
+  QList<QByteArray> types;
+  types << collectionMimeType();
+  root.setContentTypes( types );
+  return root;
 }
 
 QString Collection::searchFolder( )
 {
-  return root() + QLatin1String( "Search" );
+  return root().name() + QLatin1String( "Search" );
 }
 
 QString Collection::prefix()
@@ -174,4 +187,35 @@ CollectionAttribute * Collection::attribute( const QByteArray & type ) const
 bool Collection::hasAttribute( const QByteArray & type ) const
 {
   return d->attributes.contains( type );
+}
+
+bool Collection::isValid() const
+{
+  return id() >= 0;
+}
+
+bool Collection::operator ==(const Collection & other) const
+{
+  return d->id == other.id();
+}
+
+bool Collection::operator !=(const Collection & other) const
+{
+  return d->id != other.id();
+}
+
+QString Collection::remoteId() const
+{
+  return d->remoteId;
+}
+
+void Collection::setRemoteId(const QString & remoteId)
+{
+  d->remoteId = remoteId;
+}
+
+Collection& Collection::operator =(const Collection & other)
+{
+  d = other.d;
+  return *this;
 }

@@ -31,11 +31,7 @@ class CollectionListJobPrivate;
 
 /**
   This class can be used to retrieve the complete or partial collection tree
-  of the PIM storage service.
-
-  It returns a QHash of references to Akonadi::Collection objects.
-
-  @todo Add partial collection retrieval (eg. only collections containing contacts).
+  from the PIM storage service.
 */
 class AKONADI_EXPORT CollectionListJob : public Job
 {
@@ -43,12 +39,22 @@ class AKONADI_EXPORT CollectionListJob : public Job
 
   public:
     /**
+      List type.
+    */
+    enum ListType
+    {
+      Local, ///< Only fetch the base collection.
+      Flat, ///< Only list direct sub-collections of the base collection.
+      Recursive ///< List all sub-collections.
+    };
+
+    /**
       Create a new CollectionListJob.
-      @param prefix The folder that should be listed
+      @param collection The base collection for the listing.
       @param recursive Do a recursive collection listing.
       @param parent The parent object.
     */
-    CollectionListJob( const QString &prefix, bool recursive = false, QObject *parent = 0 );
+    CollectionListJob( const Collection &collection, ListType type = Flat, QObject *parent = 0 );
 
     /**
       Destroys this job.

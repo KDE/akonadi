@@ -52,8 +52,7 @@ ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
     Job( parent ),
     d( new ItemFetchJobPrivate )
 {
-  d->path = Collection::root();
-  d->uid = ref;
+  setUid( ref );
 }
 
 ItemFetchJob::~ ItemFetchJob( )
@@ -180,7 +179,7 @@ void ItemFetchJob::setPath(const QString & path)
 
 void Akonadi::ItemFetchJob::setUid(const DataReference & ref)
 {
-  d->path = Collection::root();
+  d->path = Collection::root().path();
   d->uid = ref;
 }
 

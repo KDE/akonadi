@@ -31,18 +31,19 @@ using namespace Akonadi;
 class Akonadi::CollectionListJobPrivate
 {
   public:
-    bool recursive;
-    QString prefix;
+    CollectionListJob::ListType type;
+    Collection base;
     Collection::List collections;
     QString resource;
 };
 
-CollectionListJob::CollectionListJob( const QString &prefix, bool recursive, QObject *parent ) :
+CollectionListJob::CollectionListJob( const Collection &collection, ListType type, QObject *parent ) :
     Job( parent ),
     d( new CollectionListJobPrivate )
 {
-  d->prefix = prefix;
-  d->recursive = recursive;
+  Q_ASSERT( collection.isValid() );
+  d->base = collection;
+  d->type = type;
 }
 
 CollectionListJob::~CollectionListJob()
@@ -57,75 +58,93 @@ Collection::List CollectionListJob::collections() const
 
 void CollectionListJob::doStart()
 {
-  QByteArray command = newTag() + " LIST \"";
-  if ( !d->resource.isEmpty() )
-    command += '#' + d->resource.toUtf8();
-  command += "\" \"" + d->prefix.toUtf8();
-  if ( !d->prefix.endsWith( Collection::delimiter() ) && !d->prefix.isEmpty() )
-    command += Collection::delimiter().toUtf8();
-  command += ( d->recursive ? '*' : '%' );
-  command += '\"';
+  QByteArray command = newTag() + " X-AKLIST ";
+  command += QByteArray::number( d->base.id() );
+  command += ' ';
+  switch ( d->type ) {
+    case Local:
+      command += "0 (";
+      break;
+    case Flat:
+      command += "1 (";
+      break;
+    case Recursive:
+      command += "INF (";
+      break;
+    default:
+      Q_ASSERT( false );
+  }
+
+  if ( !d->resource.isEmpty() ) {
+    command += "RESOURCE \"";
+    command += d->resource.toUtf8();
+    command += '"';
+  }
+
+  command += ')';
   writeData( command );
 }
 
 void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  if ( tag == "*" && data.startsWith( "LIST" ) ) {
-    int current = 4; // 'LIST'
+  if ( tag == "*" ) {
+    int pos = 0;
+
+    // collection and parent id
+    int colId = -1;
+    bool ok = false;
+    pos = ImapParser::parseNumber( data, colId, &ok, pos );
+    if ( !ok || colId <= 0 ) {
+      qDebug() << "could not parse response:" << data;
+      return;
+    }
+
+    int parentId = -1;
+    pos = ImapParser::parseNumber( data, parentId, &ok, pos );
+    if ( !ok || parentId < 0 ) {
+      qDebug() << "could not parse response:" << data;
+      return;
+    }
+
+    Collection collection( colId );
+    collection.setParent( parentId );
 
     // attributes
     QList<QByteArray> attributes;
-    current = ImapParser::parseParenthesizedList( data, attributes, current );
+    pos = ImapParser::parseParenthesizedList( data, attributes, pos );
 
-    // delimiter
-    QByteArray delim;
-    current = ImapParser::parseString( data, delim, current );
-    Q_ASSERT( delim.length() == 1 );
+    for ( int i = 0; i < attributes.count() - 1; i += 2 ) {
+      const QByteArray key = attributes.at( i );
+      const QByteArray value = attributes.at( i + 1 );
 
-    // collection name
-    QString folderName;
-    current = ImapParser::parseString( data, folderName, current );
-
-    // strip trailing delimiters
-    if ( folderName.endsWith( QString::fromUtf8( delim ) ) )
-      folderName.truncate( data.length() - 1 );
-
-    QString parentName = folderName.mid( 0, folderName.lastIndexOf( QString::fromUtf8( delim ) ) + 1 );
-    // strip trailing delimiter, but not if this is root
-    if ( parentName.endsWith( Collection::delimiter() ) && parentName != Collection::root() )
-      parentName.truncate( parentName.length() - 1 );
-    Collection *col = new Collection( -1 );
-    col->setPath( folderName );
-    col->setParent( parentName );
-
-    // determine collection type, TODO: search folder
-    if ( parentName == Collection::root() ) {
-      if ( folderName == Collection::searchFolder() )
-        col->setType( Collection::VirtualParent );
-      else
-        col->setType( Collection::Resource );
-    } else if ( parentName == Collection::searchFolder() )
-      col->setType( Collection::Virtual );
-    else
-      col->setType( Collection::Folder );
-
-    QList<QByteArray> contentTypes;
-    QByteArray mimetypes;
-    foreach ( QByteArray ba, attributes ) {
-      if ( ba.startsWith( "\\MimeTypes" ) ) {
-        mimetypes = ba;
-        break;
+      if ( key == "NAME" ) {
+        collection.setName( QString::fromUtf8( value ) );
+      } else if ( key == "REMOTEID" ) {
+        collection.setRemoteId( QString::fromUtf8( value ) );
+      } else if ( key == "MIMETYPE" ) {
+        QList<QByteArray> list;
+        ImapParser::parseParenthesizedList( value, list );
+        collection.setContentTypes( list );
+      } else {
+        qDebug() << "Unknown collection attribute:" << key;
       }
     }
-    if ( !mimetypes.isEmpty() ) {
-      int begin = mimetypes.indexOf( '[' );
-      int end = mimetypes.lastIndexOf( ']' );
-      contentTypes = mimetypes.mid( begin + 1, end - begin - 1 ).split( ',' );
-    }
-    col->setContentTypes( contentTypes );
 
-    d->collections.append( col );
-    qDebug() << "received list response: delim: " << delim << " name: " << folderName << "attrs: " << attributes << " parent: " << parentName;
+    // determine collection type
+    if ( collection.parent() == Collection::root().id() ) {
+      if ( collection.name() == Collection::searchFolder() )
+        collection.setType( Collection::VirtualParent );
+      else
+        collection.setType( Collection::Resource );
+    }
+#warning Port me!
+//    else if ( parentName == Collection::searchFolder() )
+//       col->setType( Collection::Virtual );
+    else {
+      collection.setType( Collection::Folder );
+    }
+
+    d->collections.append( collection );
     return;
   }
   qDebug() << "unhandled server response in collection list job" << tag << data;

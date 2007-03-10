@@ -42,11 +42,11 @@ void CollectionJobTest::initTestCase()
   Control::start();
 }
 
-static Collection* findCol( const Collection::List &list, const QByteArray &path ) {
-  foreach ( Collection* col, list )
-    if ( col->path() == path )
+static Collection findCol( const Collection::List &list, const QString &name ) {
+  foreach ( const Collection col, list )
+    if ( col.name() == name )
       return col;
-  return 0;
+  return Collection();
 }
 
 // list compare which ignores the order
@@ -68,121 +68,130 @@ template <typename T> static T* extractAttribute( QList<CollectionAttribute*> at
   return 0;
 }
 
- // ### These tests rely on an running akonadi server which uses the test database!!
+static int res1ColId = -1;
+static int res3ColId = -1;
+static int searchColId = -1;
+
 void CollectionJobTest::testTopLevelList( )
 {
   // non-recursive top-level list
-  CollectionListJob *job = new CollectionListJob( Collection::root(), false );
+  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Flat );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
   // check if everything is there and has the correct types and attributes
+  QEXPECT_FAIL( "", "Search folder not yet ported", Continue );
   QCOMPARE( list.count(), 4 );
-  Collection *col;
+  Collection col;
 
   col = findCol( list, "res1" );
-  QVERIFY( col != 0 );
-  QCOMPARE( col->type(), Collection::Resource );
+  QVERIFY( col.isValid() );
+  res1ColId = col.id(); // for the next test
+  QVERIFY( res1ColId > 0 );
+  QCOMPARE( col.type(), Collection::Resource );
+  QCOMPARE( col.parent(), Collection::root().id() );
 
-  QVERIFY( findCol( list, "res2" ) != 0 );
-  QVERIFY( findCol( list, "res3" ) != 0 );
+  QVERIFY( findCol( list, "res2" ).isValid() );
+  QVERIFY( findCol( list, "res3" ).isValid() );
+  res3ColId = findCol( list, "res3" ).id();
+  QVERIFY( res3ColId > 0 );
 
+#if 0
   col = findCol( list, "Search" );
-  QVERIFY( col != 0 );
-  QCOMPARE( col->type(), Collection::VirtualParent );
+  searchColId = col.id();
+  QVERIFY( col.isValid() );
+  QCOMPARE( col.type(), Collection::VirtualParent );
+#endif
 }
 
 void CollectionJobTest::testFolderList( )
 {
   // recursive list of physical folders
-  CollectionListJob *job = new CollectionListJob( "/res1", true );
+  CollectionListJob *job = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Recursive );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
   // check if everything is there
   QCOMPARE( list.count(), 4 );
-  Collection *col;
+  Collection col;
   QList<QByteArray> contentTypes;
 
-  col = findCol( list, "res1/foo" );
-  QVERIFY( col != 0 );
-  QCOMPARE( col->type(), Collection::Folder );
+  col = findCol( list, "foo" );
+  QVERIFY( col.isValid() );
+  QCOMPARE( col.parent(), res1ColId );
+  QCOMPARE( col.type(), Collection::Folder );
   contentTypes << "message/rfc822" << "text/calendar" << "text/vcard";
-  compareLists( col->contentTypes(), contentTypes );
+  compareLists( col.contentTypes(), contentTypes );
 
-  QVERIFY( findCol( list, "res1/foo/bar" ) != 0 );
-  QVERIFY( findCol( list, "res1/foo/bla" ) != 0 );
-
-  col = findCol( list, "res1/foo/bar/bla" );
-  QVERIFY( col != 0 );
-  QCOMPARE( col->type(), Collection::Folder );
-  contentTypes.clear();
-  contentTypes << Collection::collectionMimeType();
-  compareLists( col->contentTypes(), contentTypes );
+  QVERIFY( findCol( list, "bar" ).isValid() );
+  QCOMPARE( findCol( list, "bar" ).parent(), col.id() );
+  QVERIFY( findCol( list, "bla" ).isValid() );
 }
 
 void CollectionJobTest::testNonRecursiveFolderList( )
 {
-  CollectionListJob *job = new CollectionListJob( "/res1", false );
+  CollectionListJob *job = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Local );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
   QCOMPARE( list.count(), 1 );
-  QVERIFY( findCol( list, "res1/foo" ) );
+  QVERIFY( findCol( list, "res1" ).isValid() );
 }
 
 void CollectionJobTest::testEmptyFolderList( )
 {
-  CollectionListJob *job = new CollectionListJob( "/res3", false );
+  CollectionListJob *job = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
   QCOMPARE( list.count(), 0 );
 }
 
+#if 0
 void CollectionJobTest::testSearchFolderList( )
 {
-  CollectionListJob *job = new CollectionListJob( Collection::root() + Collection::delimiter() + Collection::searchFolder(), false );
+  CollectionListJob *job = new CollectionListJob( Collection( searchColId ), CollectionListJob::Flat );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
   QCOMPARE( list.count(), 3 );
-  Collection *col = findCol( list, "Search/Test ?er" );
-  QVERIFY( col != 0 );
-  QCOMPARE( col->type(), Collection::Virtual );
-  QVERIFY( findCol( list, "Search/all" ) != 0 );
-  QVERIFY( findCol( list, "Search/kde-core-devel" ) != 0 );
+  Collection col = findCol( list, "Search/Test ?er" );
+  QVERIFY( col.isValid() );
+  QCOMPARE( col.type(), Collection::Virtual );
+  QVERIFY( findCol( list, "all" ).isValid() );
+  QVERIFY( findCol( list, "kde-core-devel" ).isValid() );
 }
+#endif
 
 void CollectionJobTest::testResourceFolderList()
 {
   // non-existing resource
-  CollectionListJob *job = new CollectionListJob( Collection::root() );
+  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Flat );
   job->setResource( "i_dont_exist" );
   QVERIFY( !job->exec() );
 
   // recursive listing of all collections of an existing resource
-  job = new CollectionListJob( Collection::root(), true );
+  job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
   job->setResource( "akonadi_dummy_resource_1" );
   QVERIFY( job->exec() );
 
   Collection::List list = job->collections();
   QCOMPARE( list.count(), 5 );
-  QVERIFY( findCol( list, "res1" ) );
-  QVERIFY( findCol( list, "res1/foo" ) );
-  QVERIFY( findCol( list, "res1/foo/bar" ) );
-  QVERIFY( findCol( list, "res1/foo/bar/bla" ) );
+  QVERIFY( findCol( list, "res1" ).isValid() );
+  QVERIFY( findCol( list, "foo" ).isValid() );
+  QVERIFY( findCol( list, "bar" ).isValid() );
+  QVERIFY( findCol( list, "bla" ).isValid() );
+  int fooId = findCol( list, "foo" ).id();
 
   // limited listing of a resource
-  job = new CollectionListJob( "res1/foo", true );
+  job = new CollectionListJob( Collection( fooId ), CollectionListJob::Recursive );
   job->setResource( "akonadi_dummy_resource_1" );
   QVERIFY( job->exec() );
 
   list = job->collections();
   QCOMPARE( list.count(), 3 );
-  QVERIFY( findCol( list, "res1/foo/bar" ) );
-  QVERIFY( findCol( list, "res1/foo/bar/bla" ) );
-  QVERIFY( findCol( list, "res1/foo/bla" ) );
+  QVERIFY( findCol( list, "bar" ).isValid() );
+  QVERIFY( findCol( list, "bla" ).isValid() );
 }
 
 void CollectionJobTest::testIllegalCreateFolder( )
@@ -214,31 +223,31 @@ void CollectionJobTest::testCreateDeleteFolder( )
   CollectionCreateJob *job = new CollectionCreateJob( "res3/new folder", this );
   QVERIFY( job->exec() );
 
-  CollectionListJob *ljob = new CollectionListJob( "/res3", false, this );
+  CollectionListJob *ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
   QVERIFY( ljob->exec() );
-  QVERIFY( findCol( ljob->collections(), "res3/new folder" ) != 0 );
+  QVERIFY( findCol( ljob->collections(), "new folder" ).isValid() );
 
   CollectionDeleteJob *del = new CollectionDeleteJob( "res3/new folder", this );
   QVERIFY( del->exec() );
 
-  ljob = new CollectionListJob( "res3", false, this );
+  ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
   QVERIFY( ljob->exec() );
-  QVERIFY( findCol( ljob->collections(), "res3/new folder" ) == 0 );
+  QVERIFY( !findCol( ljob->collections(), "new folder" ).isValid() );
 
   // folder that already exists within another resource
   job = new CollectionCreateJob( "res3/foo", this );
   QVERIFY( job->exec() );
 
-  ljob = new CollectionListJob( "/res3", false, this );
+  ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
   QVERIFY( ljob->exec() );
-  QVERIFY( findCol( ljob->collections(), "res3/foo" ) != 0 );
+  QVERIFY( findCol( ljob->collections(), "foo" ).isValid() );
 
   del = new CollectionDeleteJob( "res3/foo", this );
   QVERIFY( del->exec() );
 
-  ljob = new CollectionListJob( "res3", false, this );
+  ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
   QVERIFY( ljob->exec() );
-  QVERIFY( findCol( ljob->collections(), "res3/foo" ) == 0 );
+  QVERIFY( !findCol( ljob->collections(), "res3/foo" ).isValid() );
 
   // folder with mime types
   job = new CollectionCreateJob( "res3/mail folder", this );
@@ -263,20 +272,23 @@ void CollectionJobTest::testCreateDeleteFolderRecursive()
   CollectionCreateJob *job = new CollectionCreateJob( "res3/sub1/sub2/sub3", this );
   QVERIFY( job->exec() );
 
-  CollectionListJob *ljob = new CollectionListJob( "/res3", true, this );
+  CollectionListJob *ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Recursive, this );
   QVERIFY( ljob->exec() );
-  QVERIFY( findCol( ljob->collections(), "res3/sub1" ) != 0 );
-  QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2" ) != 0 );
-  QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2/sub3" ) != 0 );
+  QVERIFY( findCol( ljob->collections(), "sub1" ).isValid() );
+  QCOMPARE( findCol( ljob->collections(), "sub1" ).parent(), res3ColId );
+  QVERIFY( findCol( ljob->collections(), "sub2" ).isValid() );
+  QCOMPARE( findCol( ljob->collections(), "sub1" ).id(), findCol( ljob->collections(), "sub2" ).parent() );
+  QVERIFY( findCol( ljob->collections(), "sub3" ).isValid() );
+  QCOMPARE( findCol( ljob->collections(), "sub2" ).id(), findCol( ljob->collections(), "sub3" ).parent() );
 
   CollectionDeleteJob *del = new CollectionDeleteJob( "res3/sub1", this );
   QVERIFY( del->exec() );
 
-  ljob = new CollectionListJob( "/res3", true, this );
+  ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Recursive, this );
   QVERIFY( ljob->exec() );
-  QVERIFY( findCol( ljob->collections(), "res3/sub1" ) == 0 );
-  QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2" ) == 0 );
-  QVERIFY( findCol( ljob->collections(), "res3/sub1/sub2/sub3" ) == 0 );
+  QVERIFY( !findCol( ljob->collections(), "sub1" ).isValid() );
+  QVERIFY( !findCol( ljob->collections(), "sub2" ).isValid() );
+  QVERIFY( !findCol( ljob->collections(), "sub3" ).isValid() );
 }
 
 void CollectionJobTest::testStatus()
@@ -359,15 +371,23 @@ void CollectionJobTest::testRename()
   CollectionRenameJob *rename = new CollectionRenameJob( "res1", "res1 (renamed)", this );
   QVERIFY( rename->exec() );
 
-  CollectionListJob *ljob = new CollectionListJob( "res1 (renamed)", true );
+  CollectionListJob *ljob = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Recursive );
   QVERIFY( ljob->exec() );
   Collection::List list = ljob->collections();
 
   QCOMPARE( list.count(), 4 );
-  QVERIFY( findCol( list, "res1 (renamed)/foo" ) != 0 );
-  QVERIFY( findCol( list, "res1 (renamed)/foo/bar" ) != 0 );
-  QVERIFY( findCol( list, "res1 (renamed)/foo/bla" ) != 0 );
-  QVERIFY( findCol( list, "res1 (renamed)/foo/bar/bla" ) != 0 );
+  QVERIFY( findCol( list, "foo" ).isValid() );
+  QVERIFY( findCol( list, "bar" ).isValid() );
+  QVERIFY( findCol( list, "bla" ).isValid() );
+
+  ljob = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Local );
+  QVERIFY( ljob->exec() );
+  list = ljob->collections();
+
+  QCOMPARE( list.count(), 1 );
+  Collection col = list.first();
+  QCOMPARE( col.name(), QLatin1String("res1 (renamed)") );
+  QCOMPARE( col.parent(), Collection::root().id() );
 
   // cleanup
   rename = new CollectionRenameJob( "res1 (renamed)", "res1", this );
@@ -385,10 +405,10 @@ void CollectionJobTest::testIllegalRename()
   QVERIFY( !rename->exec() );
 
   // root being source or target
-  rename = new CollectionRenameJob( Collection::root(), "some name", this );
+  rename = new CollectionRenameJob( Collection::root().path(), "some name", this );
   QVERIFY( !rename->exec() );
 
-  rename = new CollectionRenameJob( "res1", Collection::root(), this );
+  rename = new CollectionRenameJob( "res1", Collection::root().path(), this );
   QVERIFY( !rename->exec() );
 }
 
@@ -401,11 +421,11 @@ void CollectionJobTest::testUtf8CollectionName()
   QVERIFY( create->exec() );
 
   // list parent
-  CollectionListJob *list = new CollectionListJob( "res3", true, this );
+  CollectionListJob *list = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Recursive, this );
   QVERIFY( list->exec() );
   QCOMPARE( list->collections().count(), 1 );
-  Collection *col = list->collections().first();
-  QCOMPARE( col->path(), folderName );
+  Collection col = list->collections().first();
+  QCOMPARE( col.name(), QString::fromUtf8( "ä" ) );
 
   // modify collection
   CollectionModifyJob *modify = new CollectionModifyJob( folderName, this );

@@ -43,19 +43,15 @@ using namespace Akonadi;
 class CollectionModel::Private
 {
   public:
-    enum EditType { None, Rename, Create, Delete };
-    QHash<QString, Collection*> collections;
-    QHash<QString, QList<QString> > childCollections;
-    EditType currentEdit;
-    Collection *editedCollection;
-    QString editOldName;
+    QHash<int, Collection> collections;
+    QHash<int, QList<int> > childCollections;
     Monitor* monitor;
     Session *session;
     QStringList mimeTypes;
 
-    void updateSupportedMimeTypes( Collection *col )
+    void updateSupportedMimeTypes( Collection col )
     {
-      QList<QByteArray> l = col->contentTypes();
+      QList<QByteArray> l = col.contentTypes();
       for ( QList<QByteArray>::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
         if ( (*it) == Collection::collectionMimeType() )
           continue;
@@ -69,18 +65,15 @@ CollectionModel::CollectionModel( QObject * parent ) :
     QAbstractItemModel( parent ),
     d( new Private() )
 {
-  d->currentEdit = Private::None;
-  d->editedCollection = 0;
-
   d->session = new Session( QByteArray("CollectionModel-") + QByteArray::number( qrand() ), this );
 
   // start a list job
-  CollectionListJob *job = new CollectionListJob( Collection::prefix(), true, d->session );
+  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, d->session );
   connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
 
   // monitor collection changes
   d->monitor = new Monitor();
-  d->monitor->monitorCollection( Collection::root(), true );
+  d->monitor->monitorCollection( Collection::root().path(), true );
   d->monitor->ignoreSession( d->session );
   connect( d->monitor, SIGNAL(collectionChanged(QString)), SLOT(collectionChanged(QString)) );
   connect( d->monitor, SIGNAL(collectionAdded(QString)), SLOT(collectionChanged(QString)) );
@@ -93,7 +86,6 @@ CollectionModel::CollectionModel( QObject * parent ) :
 CollectionModel::~CollectionModel()
 {
   d->childCollections.clear();
-  qDeleteAll( d->collections );
   d->collections.clear();
 
   delete d->monitor;
@@ -110,21 +102,27 @@ int CollectionModel::columnCount( const QModelIndex & parent ) const
 
 QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 {
-  Collection *col = static_cast<Collection*>( index.internalPointer() );
+  if ( !index.isValid() )
+    return QVariant();
+
+  Collection col = d->collections.value( index.internalId() );
+  if ( !col.isValid() )
+    return QVariant();
+
   if ( index.column() == 0 && (role == Qt::DisplayRole || role == Qt::EditRole) ) {
-    return col->name();
+    return col.name();
   }
 
   switch ( role ) {
     case Qt::DecorationRole:
       if ( index.column() == 0 ) {
-        if ( col->type() == Collection::Resource )
+        if ( col.type() == Collection::Resource )
           return SmallIcon( QLatin1String( "server" ) );
-        if ( col->type() == Collection::VirtualParent )
+        if ( col.type() == Collection::VirtualParent )
           return SmallIcon( QLatin1String( "edit-find" ) );
-        if ( col->type() == Collection::Virtual )
+        if ( col.type() == Collection::Virtual )
           return SmallIcon( QLatin1String( "folder_green" ) );
-        QList<QByteArray> content = col->contentTypes();
+        QList<QByteArray> content = col.contentTypes();
         if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
           if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
             return SmallIcon( QLatin1String( "kmgroupware_folder_contacts" ) );
@@ -140,8 +138,8 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
           return SmallIcon( QLatin1String( "folder_orange" ) ); // mixed stuff
       }
       break;
-    case PathRole:
-      return pathForIndex( index );
+    case CollectionIdRole:
+      return col.id();
     case ChildCreatableRole:
       return canCreateCollection( index );
   }
@@ -150,17 +148,17 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 
 QModelIndex CollectionModel::index( int row, int column, const QModelIndex & parent ) const
 {
-  QList<QString> list;
+  QList<int> list;
   if ( !parent.isValid() )
-    list = d->childCollections.value( Collection::root() );
+    list = d->childCollections.value( Collection::root().id() );
   else
-    list = d->childCollections.value( static_cast<Collection*>( parent.internalPointer() )->path() );
+    list = d->childCollections.value( parent.internalId() );
 
   if ( row < 0 || row >= list.size() )
     return QModelIndex();
-  if ( !d->collections.contains( list[row] ) )
+  if ( !d->collections.contains( list.at(row) ) )
     return QModelIndex();
-  return createIndex( row, column, d->collections.value( list[row] ) );
+  return createIndex( row, column, d->collections.value( list.at(row) ).id() );
 }
 
 QModelIndex CollectionModel::parent( const QModelIndex & index ) const
@@ -168,29 +166,31 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
   if ( !index.isValid() )
     return QModelIndex();
 
-  Collection *col = static_cast<Collection*>( index.internalPointer() );
-  QString parentPath = col->parent();
-  Collection *parentCol = d->collections.value( parentPath );
-  if ( !parentCol )
+  Collection col = d->collections.value( index.internalId() );
+  if ( !col.isValid() )
     return QModelIndex();
 
-  QList<QString> list;
-  list = d->childCollections.value( parentCol->parent() );
+  Collection parentCol = d->collections.value( col.parent() );
+  if ( !parentCol.isValid() )
+    return QModelIndex();
 
-  int parentRow = list.indexOf( parentPath );
+  QList<int> list;
+  list = d->childCollections.value( parentCol.parent() );
+
+  int parentRow = list.indexOf( parentCol.id() );
   if ( parentRow < 0 )
     return QModelIndex();
 
-  return createIndex( parentRow, 0, parentCol );
+  return createIndex( parentRow, 0, parentCol.id() );
 }
 
 int CollectionModel::rowCount( const QModelIndex & parent ) const
 {
-  QList<QString> list;
+  QList<int> list;
   if ( parent.isValid() )
-    list = d->childCollections.value( static_cast<Collection*>( parent.internalPointer() )->path() );
+    list = d->childCollections.value( parent.internalId() );
   else
-    list = d->childCollections.value( Collection::root() );
+    list = d->childCollections.value( Collection::root().id() );
 
   return list.size();
 }
@@ -204,23 +204,22 @@ QVariant CollectionModel::headerData( int section, Qt::Orientation orientation, 
 
 bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 {
-  QList<QString> list;
-  QString parentPath;
+  QList<int> list;
+  Collection parentCol;
   if ( parent.isValid() ) {
-    parentPath = static_cast<Collection*>( parent.internalPointer() )->path();
-    list = d->childCollections.value( parentPath );
+    parentCol = d->collections.value( parent.internalId() );
+    list = d->childCollections.value( parentCol.id() );
   } else
-    list = d->childCollections.value( Collection::root() );
+    list = d->childCollections.value( Collection::root().id() );
   if ( row < 0 || row  >= list.size() ) {
-    kWarning() << k_funcinfo << "Index out of bounds: " << row << " parent: " << parentPath << endl;
+    kWarning() << k_funcinfo << "Index out of bounds: " << row << " parent: " << parentCol.id() << endl;
     return false;
   }
 
   beginRemoveRows( parent, row, row );
-  QString path = list.takeAt( row );
-  delete d->collections.take( path );
-  d->childCollections.remove( path );
-  d->childCollections.insert( parentPath, list );
+  int delColId = list.takeAt( row );
+  d->childCollections.remove( delColId ); // remove children of deleted collection
+  d->childCollections.insert( parentCol.id(), list ); // update children of parent
   endRemoveRows();
 
   return true;
@@ -228,6 +227,8 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 
 void CollectionModel::collectionChanged( const QString &path )
 {
+#warning Port me!
+#if 0
   if ( d->collections.contains( path ) ) {
     // update
     CollectionStatusJob *job = new CollectionStatusJob( path, d->session );
@@ -239,7 +240,7 @@ void CollectionModel::collectionChanged( const QString &path )
     if ( index > 0 )
       parent = path.left( index );
     else
-      parent = Collection::root();
+      parent = Collection::root().path();
 
     // re-list parent non-recursively
     CollectionListJob *job = new CollectionListJob( parent, false, d->session );
@@ -248,10 +249,13 @@ void CollectionModel::collectionChanged( const QString &path )
     job = new CollectionListJob( path, true, d->session );
     connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
   }
+#endif
 }
 
 void CollectionModel::collectionRemoved( const QString &path )
 {
+#warning Port me!
+#if 0
   QModelIndex colIndex = indexForPath( path );
   if ( colIndex.isValid() ) {
     QModelIndex parentIndex = parent( colIndex );
@@ -264,10 +268,13 @@ void CollectionModel::collectionRemoved( const QString &path )
       d->childCollections.remove( path );
     }
   }
+#endif
 }
 
 void CollectionModel::updateDone( KJob * job )
 {
+#warning Port me!
+#if 0
   if ( job->error() ) {
     // TODO: handle job errors
     kWarning() << k_funcinfo << "Job error: " << job->errorString() << endl;
@@ -288,23 +295,24 @@ void CollectionModel::updateDone( KJob * job )
       emit dataChanged( startIndex, endIndex );
     }
   }
+#endif
 }
 
-QModelIndex CollectionModel::indexForPath( const QString &path, int column )
+QModelIndex CollectionModel::indexForId( int id, int column )
 {
-  if ( !d->collections.contains( path ) )
+  if ( !d->collections.contains( id ) )
     return QModelIndex();
 
-  QString parentPath = d->collections.value( path )->parent();
+  int parentId = d->collections.value( id ).parent();
   // check if parent still exist or if this is an orphan collection
-  if ( parentPath != Collection::root() && !d->collections.contains( parentPath ) )
+  if ( parentId != Collection::root().id() && !d->collections.contains( parentId ) )
     return QModelIndex();
 
-  QList<QString> list = d->childCollections.value( parentPath );
-  int row = list.indexOf( path );
+  QList<int> list = d->childCollections.value( parentId );
+  int row = list.indexOf( id );
 
   if ( row >= 0 )
-    return createIndex( row, column, d->collections.value( list[row] ) );
+    return createIndex( row, column, d->collections.value( list.at(row) ).id() );
   return QModelIndex();
 }
 
@@ -316,28 +324,34 @@ void CollectionModel::listDone( KJob * job )
     Collection::List collections = static_cast<CollectionListJob*>( job )->collections();
 
     // update model
-    foreach( Collection* col, collections ) {
-      if ( d->collections.contains( col->path() ) ) {
+    foreach( const Collection col, collections ) {
+      if ( d->collections.contains( col.id() ) ) {
         // collection already known
+        d->collections[ col.id() ] = col;
+        QModelIndex startIndex = indexForId( col.id() );
+        QModelIndex endIndex = indexForId( col.id(), columnCount( parent( startIndex ) ) - 1 );
+        emit dataChanged( startIndex, endIndex );
         continue;
       }
-      d->collections.insert( col->path(), col );
-      QModelIndex parentIndex = indexForPath( col->parent() );
-      if ( parentIndex.isValid() || col->parent() == Collection::root() ) {
+      d->collections.insert( col.id(), col );
+      QModelIndex parentIndex = indexForId( col.parent() );
+      if ( parentIndex.isValid() || col.parent() == Collection::root().id() ) {
         beginInsertRows( parentIndex, rowCount( parentIndex ), rowCount( parentIndex ) );
-        d->childCollections[ col->parent() ].append( col->path() );
+        d->childCollections[ col.parent() ].append( col.id() );
         endInsertRows();
       } else {
-        d->childCollections[ col->parent() ].append( col->path() );
+        d->childCollections[ col.parent() ].append( col.id() );
       }
 
       d->updateSupportedMimeTypes( col );
 
+#if 0
       // start a status job for every collection to get message counts, etc.
-      if ( col->type() != Collection::VirtualParent ) {
+      if ( col.type() != Collection::VirtualParent ) {
         CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->session );
         connect( csjob, SIGNAL(result(KJob*)), SLOT(updateDone(KJob*)) );
       }
+#endif
     }
 
   }
@@ -345,6 +359,7 @@ void CollectionModel::listDone( KJob * job )
 
 bool CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
+#if 0
   if ( d->currentEdit != Private::None )
     return false;
   if ( index.column() == 0 && role == Qt::EditRole ) {
@@ -354,7 +369,7 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
     d->editOldName = d->editedCollection->name();
     d->editedCollection->setName( value.toString() );
     QString newPath;
-    if ( d->editedCollection->parent() == Collection::root() )
+    if ( d->editedCollection->parent() == Collection::root().path() )
       newPath = d->editedCollection->name();
     else
       newPath = d->editedCollection->parent() + Collection::delimiter() + d->editedCollection->name();
@@ -363,6 +378,7 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
     emit dataChanged( index, index );
     return true;
   }
+#endif
   return QAbstractItemModel::setData( index, value, role );
 }
 
@@ -370,17 +386,17 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 {
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
-  Collection *col = 0;
+  Collection col;
   if ( index.isValid() ) {
-    col = static_cast<Collection*>( index.internalPointer() );
-    Q_ASSERT( col );
+    col = d->collections.value( index.internalId() );
+    Q_ASSERT( col.isValid() );
   }
 
-  if ( col ) {
-    if ( col->type() != Collection::VirtualParent )  {
-      if ( d->currentEdit == Private::None && index.column() == 0 )
+  if ( col.isValid() ) {
+    if ( col.type() != Collection::VirtualParent )  {
+      if ( index.column() == 0 )
         flags = flags | Qt::ItemIsEditable;
-      if ( col->type() != Collection::Virtual )
+      if ( col.type() != Collection::Virtual )
         flags = flags | Qt::ItemIsDropEnabled;
     }
   }
@@ -390,6 +406,7 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 
 void CollectionModel::editDone( KJob * job )
 {
+#if 0
   if ( job->error() ) {
     qWarning() << "Edit failed: " << job->errorString() << " - reverting current transaction";
     // revert current transaction
@@ -412,10 +429,12 @@ void CollectionModel::editDone( KJob * job )
     // transaction done
   }
   d->currentEdit = Private::None;
+#endif
 }
 
 bool CollectionModel::createCollection( const QModelIndex & parent, const QString & name )
 {
+#if 0
   if ( !canCreateCollection( parent ) )
     return false;
   Collection *parentCol = static_cast<Collection*>( parent.internalPointer() );
@@ -441,10 +460,12 @@ bool CollectionModel::createCollection( const QModelIndex & parent, const QStrin
 
   d->currentEdit = Private::Create;
   return true;
+#endif
 }
 
 bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
 {
+#if 0
   if ( d->currentEdit != Private::None )
     return false;
   if ( !parent.isValid() )
@@ -456,15 +477,18 @@ bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
   if ( !col->contentTypes().contains( Collection::collectionMimeType() ) )
     return false;
 
+#endif
   return true;
 }
 
+#if 0
 QString CollectionModel::pathForIndex( const QModelIndex & index ) const
 {
   if ( index.isValid() )
     return static_cast<Collection*>( index.internalPointer() )->path();
   return QString();
 }
+#endif
 
 Qt::DropActions CollectionModel::supportedDropActions() const
 {
@@ -480,9 +504,9 @@ bool CollectionModel::supportsContentType(const QModelIndex & index, const QStri
 {
   if ( !index.isValid() )
     return false;
-  Collection *col = static_cast<Collection*>( index.internalPointer() );
-  Q_ASSERT( col );
-  QList<QByteArray> ct = col->contentTypes();
+  Collection col = d->collections.value( index.internalId() );
+  Q_ASSERT( col.isValid() );
+  QList<QByteArray> ct = col.contentTypes();
   foreach ( QByteArray a, ct ) {
     if ( contentTypes.contains( QString::fromLatin1( a ) ) )
       return true;
@@ -509,6 +533,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
   foreach ( QString type, data->formats() ) {
     if ( !supportsContentType( idx, QStringList( type ) ) )
       continue;
+#if 0
     QString path = pathForIndex( idx );
     QByteArray item = data->data( type );
     // HACK for some unknown reason the data is sometimes 0-terminated...
@@ -517,6 +542,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     ItemAppendJob *job = new ItemAppendJob( path, item, type.toLatin1(), d->session );
     connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
     return true;
+#endif
   }
 
   return false;

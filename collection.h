@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -50,19 +50,30 @@ class AKONADI_EXPORT Collection
       Unknown /**< Unknown collection type. */
     };
 
-    typedef QList<Collection*> List;
+    /// A list of collections.
+    typedef QList<Collection> List;
+
+    /**
+      Creates an invalid collection.
+    */
+    Collection();
 
     /**
       Create a new collection.
 
       @param id The unique identifier of this collection.
     */
-    Collection( int id );
+    explicit Collection( int id );
+
+    /**
+      Copy constructor.
+    */
+    Collection( const Collection &other );
 
     /**
       Destroys this collection.
     */
-    virtual ~Collection();
+    ~Collection();
 
     /**
       Returns the unique identifier of this collection.
@@ -111,14 +122,14 @@ class AKONADI_EXPORT Collection
     void setContentTypes( const QList<QByteArray> &types );
 
     /**
-      Returns the IMAP path to the parent collection.
+      Returns the identifier of the parent collection.
     */
-    QString parent() const;
+    int parent() const;
 
     /**
-      Sets the path of the parent collection.
+      Sets the identifier of the parent collection.
     */
-    void setParent( const QString &parent );
+    void setParent( int parent );
 
     /**
       Adds a collection attribute. An already existing attribute of the same
@@ -162,9 +173,9 @@ class AKONADI_EXPORT Collection
     static QString delimiter();
 
     /**
-      Returns the root path.
+      Returns the root collection.
     */
-    static QString root();
+    static Collection root();
 
     /**
       Returns the Akonadi IMAP collection prefix.
@@ -180,6 +191,36 @@ class AKONADI_EXPORT Collection
       Returns the mimetype used for collections.
     */
     static QByteArray collectionMimeType();
+
+    /**
+      Returns true if this is a valid collection.
+    */
+    bool isValid() const;
+
+    /**
+      Comapares two collections.
+    */
+    bool operator==( const Collection &other ) const;
+
+    /**
+      Comapares two collections.
+    */
+    bool operator!=( const Collection &other ) const;
+
+    /**
+      Returns the remote identifier of this collection.
+    */
+    QString remoteId() const;
+
+    /**
+      Sets the remote identifier of this collection.
+    */
+    void setRemoteId( const QString &remoteId );
+
+    /**
+      Assignment operator.
+    */
+    Collection& operator=( const Collection &other );
 
   private:
     class Private;
