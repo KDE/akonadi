@@ -273,29 +273,23 @@ void CollectionModel::collectionRemoved( const QString &path )
 
 void CollectionModel::updateDone( KJob * job )
 {
-#warning Port me!
-#if 0
   if ( job->error() ) {
     // TODO: handle job errors
     kWarning() << k_funcinfo << "Job error: " << job->errorString() << endl;
   } else {
     CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
-    QString path = csjob->path();
-    if ( !d->collections.contains( path ) )
-      kWarning() << k_funcinfo << "Got status response for non-existing collection: " << path << endl;
+    Collection col = csjob->collection();
+    if ( !d->collections.contains( col.id() ) )
+      kWarning() << k_funcinfo << "Got status response for non-existing collection: " << col.id() << endl;
     else {
-      Collection *col = d->collections.value( path );
-      foreach ( CollectionAttribute* attr, csjob->attributes() )
-        col->addAttribute( attr );
-
+      d->collections[ col.id() ] = col;
       d->updateSupportedMimeTypes( col );
 
-      QModelIndex startIndex = indexForPath( path );
-      QModelIndex endIndex = indexForPath( path, columnCount( parent( startIndex ) ) - 1 );
+      QModelIndex startIndex = indexForId( col.id() );
+      QModelIndex endIndex = indexForId( col.id(), columnCount( parent( startIndex ) ) - 1 );
       emit dataChanged( startIndex, endIndex );
     }
   }
-#endif
 }
 
 QModelIndex CollectionModel::indexForId( int id, int column )
@@ -345,13 +339,11 @@ void CollectionModel::listDone( KJob * job )
 
       d->updateSupportedMimeTypes( col );
 
-#if 0
       // start a status job for every collection to get message counts, etc.
       if ( col.type() != Collection::VirtualParent ) {
-        CollectionStatusJob* csjob = new CollectionStatusJob( col->path(), d->session );
+        CollectionStatusJob* csjob = new CollectionStatusJob( col, d->session );
         connect( csjob, SIGNAL(result(KJob*)), SLOT(updateDone(KJob*)) );
       }
-#endif
     }
 
   }
@@ -514,6 +506,11 @@ void CollectionModel::appendDone(KJob * job)
     kWarning() << "Append failed: " << job->errorString() << endl;
     // TODO: error handling
   }
+}
+
+Collection CollectionModel::collectionForId(int id) const
+{
+  return d->collections.value( id );
 }
 
 #include "collectionmodel.moc"

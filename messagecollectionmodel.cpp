@@ -43,9 +43,10 @@ QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) con
   if ( !index.isValid() )
     return QVariant();
 
-  Collection *col = static_cast<Collection*>( index.internalPointer() );
-  Q_ASSERT( col );
-  MessageCollectionAttribute *attr = col->attribute<MessageCollectionAttribute>();
+  Collection col = collectionForId( CollectionModel::data( index, CollectionIdRole ).toInt() );
+  if ( !col.isValid() )
+    return QVariant();
+  MessageCollectionAttribute *attr = col.attribute<MessageCollectionAttribute>();
 
   if ( role == Qt::DisplayRole && attr && ( index.column() == 1 || index.column() == 2 ) ) {
     int value = -1;

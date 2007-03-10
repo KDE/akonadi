@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,6 +20,7 @@
 #ifndef AKONADI_COLLECTIONSTATUSJOB_H
 #define AKONADI_COLLECTIONSTATUSJOB_H
 
+#include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
@@ -39,10 +40,10 @@ class AKONADI_EXPORT CollectionStatusJob : public Job
   public:
     /**
       Creates a new collection status job.
-      @param path The collection path.
+      @param collection The collection.
       @param parent The parent object.
     */
-    CollectionStatusJob( const QString &path, QObject *parent = 0 );
+    CollectionStatusJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -55,9 +56,10 @@ class AKONADI_EXPORT CollectionStatusJob : public Job
     QList<CollectionAttribute*> attributes() const;
 
     /**
-      Returns the path of the corresponding collection.
+      Returns the corresponding collection, if the job was executed succesfully,
+      the collection is already updated.
     */
-    QString path() const;
+    Collection collection() const;
 
   protected:
     virtual void doStart();

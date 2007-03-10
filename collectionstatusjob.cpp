@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -29,15 +29,15 @@ using namespace Akonadi;
 class Akonadi::CollectionStatusJobPrivate
 {
   public:
-    QString path;
+    Collection collection;
     CollectionAttribute::List attributes;
 };
 
-CollectionStatusJob::CollectionStatusJob( const QString& path, QObject * parent ) :
+CollectionStatusJob::CollectionStatusJob( const Collection &collection, QObject * parent ) :
     Job( parent ),
     d( new CollectionStatusJobPrivate )
 {
-  d->path = path;
+  d->collection = collection;
 }
 
 CollectionStatusJob::~ CollectionStatusJob( )
@@ -52,7 +52,7 @@ QList< CollectionAttribute * > CollectionStatusJob::attributes( ) const
 
 void CollectionStatusJob::doStart( )
 {
-  writeData( newTag() + " STATUS \"" + d->path.toUtf8() + "\" (MESSAGES UNSEEN MIMETYPES)" );
+  writeData( newTag() + " STATUS " + QByteArray::number( d->collection.id() ) + " (MESSAGES UNSEEN MIMETYPES)" );
 }
 
 void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -84,15 +84,17 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
       }
       d->attributes.append( mcattr );
       d->attributes.append( ctattr );
+      foreach ( CollectionAttribute* attr, d->attributes )
+        d->collection.addAttribute( attr );
       return;
     }
   }
   qDebug() << "unhandled response in collection status job: " << tag << data;
 }
 
-QString CollectionStatusJob::path( ) const
+Collection CollectionStatusJob::collection() const
 {
-  return d->path;
+  return d->collection;
 }
 
 
