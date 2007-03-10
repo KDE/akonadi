@@ -420,8 +420,8 @@ bool CollectionModel::createCollection( const QModelIndex & parent, const QStrin
   connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
 
   d->currentEdit = Private::Create;
-  return true;
 #endif
+  return true;
 }
 
 bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
