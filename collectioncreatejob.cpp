@@ -26,15 +26,18 @@ using namespace Akonadi;
 
 class Akonadi::CollectionCreateJobPrivate {
   public:
-    QString path;
+    Collection parent;
+    QString name;
     QList<QByteArray> contentTypes;
+    Collection collection;
 };
 
-CollectionCreateJob::CollectionCreateJob( const QString & path, QObject * parent ) :
+CollectionCreateJob::CollectionCreateJob( const Collection &parentCollection, const QString &name, QObject * parent ) :
     Job( parent ),
     d( new CollectionCreateJobPrivate )
 {
-  d->path = path;
+  d->parent = parentCollection;
+  d->name = name;
 }
 
 CollectionCreateJob::~ CollectionCreateJob( )
@@ -44,20 +47,53 @@ CollectionCreateJob::~ CollectionCreateJob( )
 
 void CollectionCreateJob::doStart( )
 {
-  QByteArray command = newTag() + " CREATE \"" + d->path.toUtf8() + "\"";
+  QByteArray command = newTag() + " CREATE \"" + d->name.toUtf8() + "\" ";
+  command += QByteArray::number( d->parent.id() );
+  command += " (";
   if ( !d->contentTypes.isEmpty() )
-    command += " (" + ImapParser::join( d->contentTypes, QByteArray(" ") ) + ')';
+    command += "MIMETYPE (" + ImapParser::join( d->contentTypes, QByteArray(" ") ) + ')';
+  command += ')';
   writeData( command );
-}
-
-QString CollectionCreateJob::path( ) const
-{
-  return d->path;
 }
 
 void CollectionCreateJob::setContentTypes(const QList< QByteArray > & contentTypes)
 {
   d->contentTypes = contentTypes;
+}
+
+Collection CollectionCreateJob::collection() const
+{
+  return d->collection;
+}
+
+void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteArray & data)
+{
+  if ( tag == "*" ) {
+    // TODO: share the parsing code with CollectionListJob
+    int pos = 0;
+
+    // collection and parent id
+    int colId = -1;
+    bool ok = false;
+    pos = ImapParser::parseNumber( data, colId, &ok, pos );
+    if ( !ok || colId <= 0 ) {
+      qDebug() << "could not parse response:" << data;
+      return;
+    }
+
+    int parentId = -1;
+    pos = ImapParser::parseNumber( data, parentId, &ok, pos );
+    if ( !ok || parentId < 0 ) {
+      qDebug() << "could not parse response:" << data;
+      return;
+    }
+
+    d->collection = Collection( colId );
+    d->collection.setParent( parentId );
+    d->collection.setName( d->name );
+
+  } else
+    Job::doHandleResponse( tag, data );
 }
 
 #include "collectioncreatejob.moc"

@@ -20,6 +20,7 @@
 #ifndef AKONADI_COLLECTIONCREATEJOB_H
 #define AKONADI_COLLECTIONCREATEJOB_H
 
+#include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 
 namespace Akonadi {
@@ -28,6 +29,8 @@ class CollectionCreateJobPrivate;
 
 /**
   Job to create collections.
+
+  @todo Support setting the remote id.
 */
 class AKONADI_EXPORT CollectionCreateJob : public Job
 {
@@ -35,10 +38,11 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
   public:
     /**
       Create a new CollectionCreateJob job.
-      @param path The unique IMAP path of the new collection.
+      @param parentCollection The parent collection.
+      @param name The collection name
       @param parent The parent object.
     */
-    CollectionCreateJob( const QString &path, QObject *parent = 0 );
+    CollectionCreateJob( const Collection &parentCollection, const QString &name, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -46,18 +50,19 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     virtual ~CollectionCreateJob();
 
     /**
-      Returns the path of the collection this job is supposed to create.
-    */
-    QString path() const;
-
-    /**
       Set allowed content mimetypes of the newly created collection.
       @param contentTypes The allowed content types of the new collection.
     */
     void setContentTypes( const QList<QByteArray> &contentTypes );
 
+    /**
+      Returns the created collection if the job was executed succesfull.
+    */
+    Collection collection() const;
+
   protected:
     virtual void doStart();
+    virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
     CollectionCreateJobPrivate* const d;

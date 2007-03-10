@@ -22,6 +22,7 @@
 #include <libakonadi/monitor.h>
 #include <libakonadi/collectioncreatejob.h>
 #include <libakonadi/collectiondeletejob.h>
+#include <libakonadi/collectionlistjob.h>
 #include <libakonadi/control.h>
 #include <libakonadi/itemappendjob.h>
 #include <libakonadi/itemstorejob.h>
@@ -35,9 +36,19 @@ using namespace Akonadi;
 
 QTEST_KDEMAIN( MonitorTest, NoGUI )
 
+static Collection res3;
+
 void MonitorTest::initTestCase()
 {
   Control::start();
+
+  // get the collections we run the tests on
+  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
+  QVERIFY( job->exec() );
+  Collection::List list = job->collections();
+  foreach ( const Collection col, list )
+    if ( col.name() == "res3" )
+      res3 = col;
 }
 
 void MonitorTest::testMonitor()
@@ -62,7 +73,7 @@ void MonitorTest::testMonitor()
   QVERIFY( irspy.isValid() );
 
   // create a collection
-  CollectionCreateJob *create = new CollectionCreateJob( "res3/monitor", this );
+  CollectionCreateJob *create = new CollectionCreateJob( res3, "monitor", this );
   QVERIFY( create->exec() );
   QTest::qWait(1000); // make sure the DBus signal has been processed
 

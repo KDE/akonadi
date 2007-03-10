@@ -45,7 +45,7 @@ CollectionCreator::CollectionCreator( )
     connect( job, SIGNAL(result(KJob*)), SLOT(result(KJob*)) );
     queue->addJob( job );
 #else
-    CollectionCreateJob *job = new CollectionCreateJob( "res3/col" + QByteArray::number( i ), this );
+    CollectionCreateJob *job = new CollectionCreateJob( Collection::root(), QLatin1String("col") + QString::number( i ), this );
     connect( job, SIGNAL(result(KJob*)), SLOT(result(KJob*)) );
     job->start();
     ++jobCount;
