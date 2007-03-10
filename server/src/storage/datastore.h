@@ -125,8 +125,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool appendItemFlags( int pimItemId, const QList<QByteArray> &flags );
 
     /* --- Location ------------------------------------------------------ */
-    bool appendLocation( int parent, const QString &name, const Resource & resource,
-                         int *insertId = 0 );
+    bool appendLocation( Location &location );
     /// removes the given location without removing its content
     bool removeLocation( const Location & location );
     /// removes the location with the given @p id without removing its content

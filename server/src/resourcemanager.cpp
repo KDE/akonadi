@@ -59,10 +59,14 @@ void Akonadi::ResourceManager::resourceAdded(const QString & name)
   QString collectionName = mManager->agentName( mManager->agentInstanceType( name ) );
   if ( collectionName.isEmpty() )
     collectionName = name;
-  Location loc = Location::retrieveByName( collectionName );
-  if ( loc.isValid() )
-    collectionName = name; // name already in use...
-  db->appendLocation( 0, collectionName, resource );
+  Location loc;
+  loc.setName( collectionName );
+  loc.setParentId( 0 ); // root
+  loc.setResourceId( resource.id() );
+  if ( !db->appendLocation( loc ) ) {
+    loc.setName( name ); // name already in use, try again
+    db->appendLocation( loc );
+  }
 }
 
 void Akonadi::ResourceManager::resourceRemoved(const QString & name)

@@ -299,36 +299,30 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 
 
 /* --- Location ------------------------------------------------------ */
-bool DataStore::appendLocation( int parent, const QString &name,
-                                const Resource & resource,
-                                int *insertId )
+bool DataStore::appendLocation( Location &location )
 {
   QueryBuilder<Location> qb;
-  qb.addValueCondition( Location::parentIdColumn(), "=", parent );
-  qb.addValueCondition( Location::nameColumn(), "=", name );
+  qb.addValueCondition( Location::parentIdColumn(), "=", location.parentId() );
+  qb.addValueCondition( Location::nameColumn(), "=", location.name() );
   if ( !qb.exec() ) {
     qDebug() << "Unable to check location existence";
     return false;
   }
   if ( !qb.result().isEmpty() ) {
-    qDebug() << "Cannot insert location " << name
+    qDebug() << "Cannot insert location " << location.name()
              << " because it already exists.";
     return false;
   }
 
-  Location loc;
-  loc.setName( name );
-  loc.setParentId( parent );
-  loc.setResourceId( resource.id() );
-  loc.setExistCount( 0 );
-  loc.setRecentCount( 0 );
-  loc.setUnseenCount( 0 );
-  loc.setFirstUnseen( 0 );
-  loc.setUidValidity( 0 );
-  if ( !loc.insert( insertId ) )
+  location.setExistCount( 0 );
+  location.setRecentCount( 0 );
+  location.setUnseenCount( 0 );
+  location.setFirstUnseen( 0 );
+  location.setUidValidity( 0 );
+  if ( !location.insert() )
     return false;
 
-  mNotificationCollector->collectionAdded( loc, resource.name().toLatin1() );
+  mNotificationCollector->collectionAdded( location );
   return true;
 }
 

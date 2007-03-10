@@ -44,109 +44,103 @@ Create::~Create()
 
 bool Create::handleLine(const QByteArray& line )
 {
-    // parse out the reference name and mailbox name
-    const int startOfCommand = line.indexOf( ' ' ) + 1;
-    const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QByteArray tmp;
-    const int pos = ImapParser::parseQuotedString( line, tmp, startOfMailbox );
-    QString mailbox = QString::fromUtf8( tmp );
-    QList<QByteArray> mimeTypes;
-    ImapParser::parseParenthesizedList( line, mimeTypes, pos );
+  int pos = line.indexOf( ' ' ); // skip tag
+  pos = line.indexOf( ' ', pos + 1 ); // skip command
 
-    // strip off a trailing '/'
-    mailbox = HandlerHelper::normalizeCollectionName( mailbox );
+  QString name;
+  pos = ImapParser::parseString( line, name, pos );
 
-    // Responses:
-    // OK - create completed
-    // NO - create failure: can't create mailbox with that name
-    // BAD - command unknown or arguments invalid
-    Response response;
-    response.setTag( tag() );
+  bool ok = false;
+  int parentId = -1;
+  Location parent;
+  pos = ImapParser::parseNumber( line, parentId, &ok, pos );
+  if ( !ok ) { // RFC 3501 comapt
+    QString parentPath;
+    int index = name.lastIndexOf( QLatin1Char('/') );
+    if ( index > 0 ) {
+      parentPath = name.left( index );
+      name = name.mid( index + 1 );
+      parent = HandlerHelper::collectionFromIdOrName( parentPath.toUtf8() );
+    } else
+      parentId = 0;
+  } else {
+    if ( parentId > 0 )
+      parent = Location::retrieveById( parentId );
+  }
 
-    if ( mailbox.isEmpty() || mailbox.contains( QLatin1String("//") ) ) {
-        response.setError();
-        response.setString( "Invalid argument" );
-        emit responseAvailable( response );
-        deleteLater();
-        return true;
+  if ( parentId != 0 && !parent.isValid() )
+    return failureResponse( "Parent collection not found" );
+
+  if ( name.isEmpty() )
+    return failureResponse( "Invalid collection name" );
+
+  int resourceId = 0;
+  if ( parent.isValid() ) {
+    // check if parent can contain a sub-folder
+    MimeType::List list = parent.mimeTypes();
+    bool found = false;
+    foreach ( const MimeType mt, list ) {
+      if ( mt.name() == QLatin1String( "inode/directory" ) ) {
+        found = true;
+        break;
+      }
     }
+    if ( !found )
+      return failureResponse( "Parent collection can not contain sub-collections" );
 
-    DataStore *db = connection()->storageBackend();
-    Transaction transaction( db );
+    // inherit resource
+    resourceId = parent.resourceId();
+  }
 
-    const int startOfLocation = mailbox.indexOf( QLatin1Char('/') );
-    const QString topLevelName = mailbox.left( startOfLocation );
+  Location location;
+  location.setParentId( parentId );
+  location.setName( name );
+  location.setResourceId( resourceId );
 
-    Location toplevel = Location::retrieveByName( topLevelName );
-    if ( !toplevel.isValid() )
-        return failureResponse( "Cannot create folder " + mailbox.toUtf8() + " in  unknown toplevel folder " + topLevelName.toUtf8() );
+  // attributes
+  QList<QByteArray> attributes;
+  QList<QByteArray> mimeTypes;
+  pos = ImapParser::parseParenthesizedList( line, attributes, pos );
+  for ( int i = 0; i < attributes.count() - 1; i += 2 ) {
+    const QByteArray key = attributes.at( i );
+    const QByteArray value = attributes.at( i + 1 );
+    if ( key == "REMOTEID" ) {
+      location.setRemoteId( QString::fromUtf8( value ) );
+    } else if ( key == "MIMETYPE" ) {
+      ImapParser::parseParenthesizedList( value, mimeTypes );
+    } else
+      qDebug() << "Unknown attribute" << key;
+  }
 
-    Resource resource = Resource::retrieveById( toplevel.resourceId() );
+  DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
 
-    // first check whether location already exists
-    if ( Location::exists( mailbox ) )
-        return failureResponse( "A folder with that name does already exist" );
+  if ( !db->appendLocation( location ) )
+    return failureResponse( "Could not create collection" );
 
-    // we have to create all superior hierarchical folders, so look for the
-    // starting point
-    QStringList foldersToCreate;
-    foldersToCreate.append( mailbox );
-    for ( int endOfSupFolder = mailbox.lastIndexOf( QLatin1Char('/'), mailbox.size() - 1 );
-          endOfSupFolder > 0;
-          endOfSupFolder = mailbox.lastIndexOf( QLatin1Char('/'), endOfSupFolder - 2 ) ) {
-        // check whether the superior hierarchical folder exists
-        if ( !HandlerHelper::collectionFromIdOrName( mailbox.left( endOfSupFolder ).toUtf8() ).isValid() ) {
-            // the superior folder does not exist, so it has to be created
-            foldersToCreate.prepend( mailbox.left( endOfSupFolder ) );
-        }
-        else {
-            // the superior folder exists, so we can stop here
-            break;
-        }
-    }
+  foreach ( const QByteArray mimeType, mimeTypes ) {
+    if ( !db->appendMimeTypeForLocation( location.id(), QString::fromUtf8(mimeType) ) )
+      return failureResponse( "Unable to append mimetype for collection." );
+  }
 
-    // now we try to create all necessary folders
-    // first check whether the existing superior folder can contain subfolders
-    const int endOfSupFolder = foldersToCreate[0].lastIndexOf( QLatin1Char('/') );
-    int parentId = 0;
-    if ( endOfSupFolder > 0 ) {
-        bool canContainSubfolders = false;
-        Location parent = HandlerHelper::collectionFromIdOrName( mailbox.left( endOfSupFolder ).toUtf8() );
-        parentId = parent.id();
-        const QList<MimeType> mimeTypes = parent.mimeTypes();
-        foreach ( MimeType m, mimeTypes ) {
-            if ( m.name().toLower() == QLatin1String("inode/directory") ) {
-                canContainSubfolders = true;
-                break;
-            }
-        }
-        if ( !canContainSubfolders )
-            return failureResponse( "Superior folder cannot contain subfolders" );
-    }
-    // everything looks good, now we create the folders
-    foreach ( QString folderName, foldersToCreate ) {
-        int locationId = 0;
-        int index = folderName.lastIndexOf( QLatin1Char('/') );
-        QString name = folderName;
-        if ( index > 0 )
-          name = folderName.mid( index + 1 );
-        if ( ! db->appendLocation( parentId, name, resource, &locationId ) )
-            return failureResponse( "Adding " + folderName.toUtf8() + " to the database failed" );
-        parentId = locationId;
-        foreach ( QByteArray mimeType, mimeTypes ) {
-            if ( !db->appendMimeTypeForLocation( locationId, QString::fromUtf8(mimeType) ) )
-                return failureResponse( "Unable to append mimetype for collection." );
-        }
-    }
+  Response response;
+  response.setUntagged();
 
-    if ( !transaction.commit() )
-      return failureResponse( "Unable to commit transaction." );
+   // write out collection details
+  QByteArray b = QByteArray::number( location.id() ) + ' '
+               + QByteArray::number( location.parentId() ) + " ()"; // TODO: add attributes
+  response.setString( b );
+  emit responseAvailable( response );
 
-    response.setSuccess();
-    response.setString( "CREATE completed" );
-    emit responseAvailable( response );
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction." );
 
-    deleteLater();
-    return true;
+  response.setSuccess();
+  response.setString( "CREATE completed" );
+  response.setTag( tag() );
+  emit responseAvailable( response );
+
+  deleteLater();
+  return true;
 }
 

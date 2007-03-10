@@ -26,7 +26,20 @@ namespace Akonadi {
 /**
   @ingroup akoandi_server_handler
 
-  Handler for the CREATE command.
+  Handler for the CREATE command. CREATE is backward-compatible with RFC 3051,
+  except recursive collection creation.
+
+  <h4>Syntax</h4>
+
+  Request:
+  @verbatim
+  tag " CREATE " collection-name " " parent-collection " (" attribute-list ")"
+  @endverbatim
+
+  @c attribute-list is the same as defined in AkList.
+
+  Response:
+  A untagged response identical to AkList is sent for every created collection.
  */
 class Create : public Handler
 {
