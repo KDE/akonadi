@@ -42,7 +42,7 @@ class Akonadi::ItemStoreJobPrivate
     DataReference ref;
     QSet<int> operations;
     QByteArray tag;
-    QString collection;
+    Collection collection;
 
     QByteArray joinFlags( const Item::Flags &flags )
     {
@@ -104,7 +104,7 @@ void ItemStoreJob::removeFlag(const Item::Flag & flag)
   d->operations.insert( ItemStoreJobPrivate::RemoveFlags );
 }
 
-void ItemStoreJob::setCollection(const QString & collection)
+void ItemStoreJob::setCollection(const Collection &collection)
 {
   d->collection = collection;
   d->operations.insert( ItemStoreJobPrivate::Move );
@@ -170,7 +170,7 @@ void ItemStoreJob::sendNextCommand()
       command += "-FLAGS (" + d->joinFlags( d->removeFlags ) + ')';
       break;
     case ItemStoreJobPrivate::Move:
-      command += "COLLECTION \"" + d->collection.toUtf8() + '\"';
+      command += "COLLECTION " + QByteArray::number( d->collection.id() );
       break;
     case ItemStoreJobPrivate::RemoteId:
       command += "REMOTEID \"" + d->ref.externalUrl().toString().toLatin1() + '\"';

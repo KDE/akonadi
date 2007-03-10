@@ -27,13 +27,14 @@
 
 using namespace Akonadi;
 
-ItemDumper::ItemDumper( const QByteArray &path, const QByteArray &filename, const QByteArray &mimetype )
+ItemDumper::ItemDumper( const Collection &collection, const QByteArray &filename, const QByteArray &mimetype )
 {
   QFile f( filename );
   Q_ASSERT( f.open(QIODevice::ReadOnly) );
   QByteArray data = f.readAll();
   f.close();
-  ItemAppendJob *job = new ItemAppendJob( path, data, mimetype, this );
+  ItemAppendJob *job = new ItemAppendJob( collection, mimetype, this );
+  job->setData( data );
   connect( job, SIGNAL(result(KJob*)), SLOT(result(KJob*)) );
   job->start();
 }
@@ -65,7 +66,10 @@ int main( int argc, char** argv )
   QByteArray path = args->getOption( "path" );
   QByteArray mimetype = args->getOption( "mimetype" );
   QByteArray file = args->getOption( "file" );
+#warning Port me!
+#if 0
   ItemDumper d( path, file, mimetype );
+#endif
   return app.exec();
 }
 

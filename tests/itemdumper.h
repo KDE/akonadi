@@ -20,13 +20,14 @@
 #ifndef ITEMDUMPER_H
 #define ITEMDUMPER_H
 
+#include <libakonadi/collection.h>
 #include <libakonadi/itemappendjob.h>
 
 class ItemDumper : public QObject
 {
   Q_OBJECT
   public:
-    ItemDumper( const QByteArray &path, const QByteArray &filename, const QByteArray &mimetype );
+    ItemDumper( const Akonadi::Collection &collection, const QByteArray &filename, const QByteArray &mimetype );
 
   private Q_SLOTS:
     void done(KJob* job);

@@ -20,6 +20,7 @@
 #ifndef AKONADI_ITEMSTOREJOB_H
 #define AKONADI_ITEMSTOREJOB_H
 
+#include <libakonadi/collection.h>
 #include <libakonadi/item.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
@@ -83,7 +84,7 @@ class AKONADI_EXPORT ItemStoreJob : public Job
       Moves the item to the given collection.
       @param collection Path to the new collection this item is moved into.
     */
-    void setCollection( const QString &collection );
+    void setCollection( const Collection &collection );
 
     /**
       Sets the remote id based on the DataReference object given in the

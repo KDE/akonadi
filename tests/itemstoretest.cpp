@@ -19,6 +19,7 @@
 
 #include "control.h"
 #include "itemstoretest.h"
+#include <libakonadi/collectionlistjob.h>
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/itemstorejob.h>
 #include <qtest_kde.h>
@@ -27,9 +28,31 @@ using namespace Akonadi;
 
 QTEST_KDEMAIN( ItemStoreTest, NoGUI )
 
+static Collection res1_foo;
+static Collection res2;
+static Collection res3;
+
 void ItemStoreTest::initTestCase()
 {
   Control::start();
+
+  // get the collections we run the tests on
+  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
+  QVERIFY( job->exec() );
+  Collection::List list = job->collections();
+  Collection res1;
+  foreach ( const Collection col, list ) {
+    if ( col.name() == "res1" )
+      res1 = col;
+    if ( col.name() == "res2" )
+      res2 = col;
+    if ( col.name() == "res3" )
+      res3 = col;
+  }
+  foreach ( const Collection col, list ) {
+    if ( col.name() == "foo" && col.parent() == res1.id() )
+      res1_foo = col;
+  }
 }
 
 void ItemStoreTest::testFlagChange()
@@ -113,22 +136,19 @@ void ItemStoreTest::testDataChange()
 
 void ItemStoreTest::testItemMove()
 {
-#warning Port me!
-#if 0
   DataReference ref( 1, QString() );
 
   ItemStoreJob *store = new ItemStoreJob( ref, this );
-  store->setCollection( "res3" );
+  store->setCollection( res3 );
   QVERIFY( store->exec() );
 
-  ItemFetchJob *fetch = new ItemFetchJob( "res3", this );
+  ItemFetchJob *fetch = new ItemFetchJob( res3, this );
   QVERIFY( fetch->exec() );
   QCOMPARE( fetch->items().count(), 1 );
 
   store = new ItemStoreJob( ref, this );
-  store->setCollection( "res1/foo" );
+  store->setCollection( res1_foo );
   QVERIFY( store->exec() );
-#endif
 }
 
 void ItemStoreTest::testIllegalItemMove()
@@ -137,12 +157,12 @@ void ItemStoreTest::testIllegalItemMove()
 
   // move into invalid collection
   ItemStoreJob *store = new ItemStoreJob( ref, this );
-  store->setCollection( "i dont/exist" );
+  store->setCollection( Collection( INT_MAX ) );
   QVERIFY( !store->exec() );
 
   // move item into folder that doesn't support its mimetype
   store = new ItemStoreJob( ref, this );
-  store->setCollection( "res2" );
+  store->setCollection( res2 );
   QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
   QVERIFY( !store->exec() );
 }

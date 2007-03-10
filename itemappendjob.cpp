@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -27,19 +27,18 @@ using namespace Akonadi;
 class Akonadi::ItemAppendJobPrivate
 {
   public:
-    QString path;
+    Collection collection;
     QByteArray data;
     QByteArray mimetype;
     QString remoteId;
     int uid;
 };
 
-ItemAppendJob::ItemAppendJob( const QString &path, const QByteArray & data, const QByteArray & mimetype, QObject * parent ) :
+ItemAppendJob::ItemAppendJob( const Collection &collection, const QByteArray & mimetype, QObject * parent ) :
     Job( parent ),
     d( new ItemAppendJobPrivate )
 {
-  d->path = path;
-  d->data = data;
+  d->collection = collection;
   d->mimetype = mimetype;
   d->uid = 0;
 }
@@ -54,7 +53,9 @@ void ItemAppendJob::doStart()
   QByteArray remoteId;
   if ( !d->remoteId.isEmpty() )
     remoteId = " \\RemoteId[" + d->remoteId.toUtf8() + ']';
-  writeData( newTag() + " APPEND \"" + d->path.toUtf8() + "\" (\\MimeType[" + d->mimetype + ']' + remoteId + ") {" + QByteArray::number( d->data.size() ) + '}' );
+  writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
+      + " (\\MimeType[" + d->mimetype + ']' + remoteId + ") {"
+      + QByteArray::number( d->data.size() ) + '}' );
 }
 
 void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -67,11 +68,16 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
     int pos = data.indexOf( "UIDNEXT" );
     bool ok = false;
     if ( pos > 0 )
-      ImapParser::parseNumber( data, d->uid, &ok, pos );
+      ImapParser::parseNumber( data, d->uid, &ok, pos + 7 );
     if ( !ok )
       qDebug() << "invalid response to item append job: " << tag << data;
   }
   qDebug() << "unhandled response in item append job: " << tag << data;
+}
+
+void ItemAppendJob::setData(const QByteArray & data)
+{
+  d->data = data;
 }
 
 void ItemAppendJob::setRemoteId(const QString & remoteId)

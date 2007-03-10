@@ -89,7 +89,7 @@ void MonitorTest::testMonitor()
   QVERIFY( irspy.isEmpty() );
 
   // add an item
-  ItemAppendJob *append = new ItemAppendJob( "res3/monitor", QByteArray(), "message/rfc822", this );
+  ItemAppendJob *append = new ItemAppendJob( monitorCol, "message/rfc822", this );
   QVERIFY( append->exec() );
   QTest::qWait(1000);
 

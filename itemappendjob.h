@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,7 +20,8 @@
 #ifndef AKONADI_ITEMAPPENDJOB_H
 #define AKONADI_ITEMAPPENDJOB_H
 
-#include "job.h"
+#include <libakonadi/collection.h>
+#include <libakonadi/job.h>
 
 namespace Akonadi {
 
@@ -36,12 +37,17 @@ class AKONADI_EXPORT ItemAppendJob : public Job
   public:
     /**
       Create a new item append job.
-      @param path Destination path.
-      @param data The raw data of the PIM item. Must be using CRLF!
+      @param collection Parent collection.
       @param mimetype The mimetype of the PIM item.
       @param parent The parent object.
     */
-    ItemAppendJob( const QString &path, const QByteArray &data, const QByteArray &mimetype, QObject *parent = 0 );
+    ItemAppendJob( const Collection &collection, const QByteArray &mimetype, QObject *parent = 0 );
+
+    /**
+      Sets the data of hte new item.
+      @param data The raw data of the PIM item.
+    */
+    void setData( const QByteArray &data );
 
     /**
       Sets the remote id of the new item (should only be used by resources).

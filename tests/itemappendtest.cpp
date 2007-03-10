@@ -53,30 +53,36 @@ void ItemAppendTest::initTestCase()
 
 void ItemAppendTest::testItemAppend()
 {
+  DataReference::List refs; // for cleanup
+
   // item without remote id
-  ItemAppendJob *job = new ItemAppendJob( "res1/foo", QByteArray(), "message/rfc822", this );
+  ItemAppendJob *job = new ItemAppendJob( Collection( testFolder1 ), "message/rfc822", this );
   QVERIFY( job->exec() );
+  refs << job->reference();
 
   // item with remote id
-  job = new ItemAppendJob( "res1/foo", QByteArray(), "message/rfc822", this );
+  job = new ItemAppendJob( Collection( testFolder1 ), "message/rfc822", this );
   job->setRemoteId( "remote-id" );
   QVERIFY( job->exec() );
+  refs << job->reference();
 
   // item with data containing linebreaks
-  job = new ItemAppendJob( "res1/foo", QByteArray("\nsome\n\nbreaked\ncontent\n\n"), "message/rfc822", this );
+  job = new ItemAppendJob( Collection( testFolder1 ), "message/rfc822", this );
+  job->setData(  QByteArray("\nsome\n\nbreaked\ncontent\n\n") );
   QVERIFY( job->exec() );
-
-  // append/fetch/delete to collection with a space in the name
-  job = new ItemAppendJob( "res2/space folder", QByteArray("some content"), "message/rfc822", this );
-  QVERIFY( job->exec() );
+  refs << job->reference();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
   QVERIFY( fjob->exec() );
-  QCOMPARE( fjob->items().count(), 1 );
-  DataReference ref = fjob->items().first()->reference();
+  QCOMPARE( fjob->items().count(), 3 );
+  foreach ( Item *item, fjob->items() ) {
+    QVERIFY( refs.indexOf( item->reference() ) >= 0 );
+  }
 
-  ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-  QVERIFY( djob->exec() );
+  foreach ( DataReference ref, refs ) {
+    ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
+    QVERIFY( djob->exec() );
+  }
 
   fjob = new ItemFetchJob( testFolder1, this );
   QVERIFY( fjob->exec() );
@@ -86,16 +92,16 @@ void ItemAppendTest::testItemAppend()
 void ItemAppendTest::testUtf8Data()
 {
   QString utf8string = QString::fromUtf8("äöüß@€µøđ¢©®");
-  ItemAppendJob* job = new ItemAppendJob( "res2/space folder", utf8string.toUtf8(), "message/rfc822", this );
+  ItemAppendJob* job = new ItemAppendJob( Collection( testFolder1 ), "message/rfc822", this );
+  job->setData( utf8string.toUtf8() );
   QVERIFY( job->exec() );
+  DataReference ref = job->reference();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
   fjob->addFetchField( "RFC822" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   QCOMPARE( utf8string.toUtf8(), fjob->items().first()->data() );
-
-  DataReference ref = fjob->items().first()->reference();
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );
@@ -104,17 +110,20 @@ void ItemAppendTest::testUtf8Data()
 void ItemAppendTest::testIllegalAppend()
 {
   // adding item to non-existing collection
-  ItemAppendJob *job = new ItemAppendJob( "I/dont/exist", QByteArray(), "message/rfc822", this );
+  ItemAppendJob *job = new ItemAppendJob( Collection( INT_MAX ), "message/rfc822", this );
   QVERIFY( !job->exec() );
 
   // adding item with non-existing mimetype
-  job = new ItemAppendJob( "res1/foo", QByteArray(), "wrong/type", this );
+  job = new ItemAppendJob( Collection( testFolder1 ), "wrong/type", this );
   QVERIFY( !job->exec() );
 
+#warning Port me!
+#if 0
   // adding item into a collection which can't handle items of this type
-  job = new ItemAppendJob( "res1/foo/bla", QByteArray(), "message/rfc822", this );
+  job = new ItemAppendJob( "res1/foo/bla", "message/rfc822", this );
   QEXPECT_FAIL( "", "Test not yet implemented in the server.", Continue );
   QVERIFY( !job->exec() );
+#endif
 }
 
 #include "itemappendtest.moc"
