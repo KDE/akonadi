@@ -333,8 +333,14 @@ void CollectionJobTest::testModify()
   QList<QByteArray> reference;
   reference << "text/calendar" << "text/vcard" << "message/rfc822";
 
+  Collection col;
+  CollectionListJob *ljob = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Flat );
+  QVERIFY( ljob->exec() );
+  col = findCol( ljob->collections(), "foo" );
+  QVERIFY( col.isValid() );
+
   // test noop modify
-  CollectionModifyJob *mod = new CollectionModifyJob( "res1/foo", this );
+  CollectionModifyJob *mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
   CollectionStatusJob *status = new CollectionStatusJob( "res1/foo", this );
@@ -344,7 +350,7 @@ void CollectionJobTest::testModify()
   compareLists( attr->contentTypes(), reference );
 
   // test clearing content types
-  mod = new CollectionModifyJob( "res1/foo", this );
+  mod = new CollectionModifyJob( col, this );
   mod->setContentTypes( QList<QByteArray>() );
   QVERIFY( mod->exec() );
 
@@ -355,7 +361,7 @@ void CollectionJobTest::testModify()
   QVERIFY( attr->contentTypes().isEmpty() );
 
   // test setting contnet types
-  mod = new CollectionModifyJob( "res1/foo", this );
+  mod = new CollectionModifyJob( col, this );
   mod->setContentTypes( reference );
   QVERIFY( mod->exec() );
 
@@ -428,7 +434,7 @@ void CollectionJobTest::testUtf8CollectionName()
   QCOMPARE( col.name(), QString::fromUtf8( "ä" ) );
 
   // modify collection
-  CollectionModifyJob *modify = new CollectionModifyJob( folderName, this );
+  CollectionModifyJob *modify = new CollectionModifyJob( col, this );
   QList<QByteArray> contentTypes;
   contentTypes << "message/rfc822";
   modify->setContentTypes( contentTypes );

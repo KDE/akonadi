@@ -20,8 +20,10 @@
 #ifndef AKONADI_COLLECTIONMODIFYJOB_H
 #define AKONADI_COLLECTIONMODIFYJOB_H
 
+#include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
+
 namespace Akonadi {
 
 class CollectionModifyJobPrivate;
@@ -36,10 +38,10 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
   public:
     /**
       Create a new modify job for the given collection.
-      @param path Path of the collection to modify
+      @param collection The Collection to modify
       @param parent The parent object
     */
-    CollectionModifyJob( const QString &path, QObject *parent = 0 );
+    CollectionModifyJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -57,6 +59,18 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
       @param policyId The identifier of the cache policy.
     */
     void setCachePolicy( int policyId );
+
+    /**
+      Changes name of this collection.
+      @param name The new name.
+    */
+    void setName( const QString &name );
+
+    /**
+      Changes the parent of this collection.
+      @param parent The new parent collection.
+    */
+    void setParent( const Collection &parent );
 
   protected:
     virtual void doStart();

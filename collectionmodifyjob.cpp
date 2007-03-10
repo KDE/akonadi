@@ -25,17 +25,20 @@ using namespace Akonadi;
 class Akonadi::CollectionModifyJobPrivate
 {
   public:
-    QString path;
+    Collection collection;
     QList<QByteArray> mimeTypes;
     int policyId;
     bool setMimeTypes;
     bool setPolicy;
+    QString name;
+    Collection parent;
 };
 
-CollectionModifyJob::CollectionModifyJob(const QString &path, QObject * parent) :
+CollectionModifyJob::CollectionModifyJob(const Collection &collection, QObject * parent) :
     Job( parent ), d( new CollectionModifyJobPrivate )
 {
-  d->path = path;
+  Q_ASSERT( collection.isValid() );
+  d->collection = collection;
   d->setMimeTypes = false;
   d->setPolicy = false;
 }
@@ -47,11 +50,15 @@ CollectionModifyJob::~ CollectionModifyJob()
 
 void CollectionModifyJob::doStart()
 {
-  QByteArray command = newTag() + " MODIFY \"" + d->path.toUtf8() + '\"';
+  QByteArray command = newTag() + " MODIFY " + QByteArray::number( d->collection.id() ) + ' ';
   if ( d->setMimeTypes )
-    command += " MIMETYPES (" + ImapParser::join( d->mimeTypes, " " ) + ')';
+    command += " MIMETYPE (" + ImapParser::join( d->mimeTypes, " " ) + ')';
   if ( d->setPolicy )
     command += " CACHEPOLICY " + QByteArray::number( d->policyId );
+  if ( d->parent.isValid() )
+    command += " PARENT " + QByteArray::number( d->parent.id() );
+  if ( !d->name.isEmpty() )
+    command += " NAME \"" + d->name.toUtf8() + '"';
   writeData( command );
 }
 
@@ -65,6 +72,16 @@ void CollectionModifyJob::setCachePolicy(int policyId)
 {
   d->policyId = policyId;
   d->setPolicy = true;
+}
+
+void CollectionModifyJob::setName(const QString & name)
+{
+  d->name = name;
+}
+
+void CollectionModifyJob::setParent(const Collection & parent)
+{
+  d->parent = parent;
 }
 
 #include "collectionmodifyjob.moc"

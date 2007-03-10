@@ -22,7 +22,7 @@
 #include "collectionstatusjob.h"
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
-#include "collectionrenamejob.h"
+#include "collectionmodifyjob.h"
 #include "itemappendjob.h"
 #include "monitor.h"
 #include "session.h"
@@ -359,26 +359,16 @@ void CollectionModel::listDone( KJob * job )
 
 bool CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
-#if 0
-  if ( d->currentEdit != Private::None )
-    return false;
   if ( index.column() == 0 && role == Qt::EditRole ) {
     // rename collection
-    d->editedCollection = static_cast<Collection*>( index.internalPointer() );
-    d->currentEdit = Private::Rename;
-    d->editOldName = d->editedCollection->name();
-    d->editedCollection->setName( value.toString() );
-    QString newPath;
-    if ( d->editedCollection->parent() == Collection::root().path() )
-      newPath = d->editedCollection->name();
-    else
-      newPath = d->editedCollection->parent() + Collection::delimiter() + d->editedCollection->name();
-    CollectionRenameJob *job = new CollectionRenameJob( d->editedCollection->path(), newPath, d->session );
+    Collection col = d->collections.value( index.internalId() );
+    if ( !col.isValid() || value.toString().isEmpty() )
+      return false;
+    CollectionModifyJob *job = new CollectionModifyJob( col, d->session );
+    job->setName( value.toString() );
     connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
-    emit dataChanged( index, index );
     return true;
   }
-#endif
   return QAbstractItemModel::setData( index, value, role );
 }
 
@@ -406,30 +396,9 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 
 void CollectionModel::editDone( KJob * job )
 {
-#if 0
   if ( job->error() ) {
-    qWarning() << "Edit failed: " << job->errorString() << " - reverting current transaction";
-    // revert current transaction
-    switch ( d->currentEdit ) {
-      case Private::Create:
-      {
-        QModelIndex index = indexForPath( d->editedCollection->path() );
-        QModelIndex parent = indexForPath( d->editedCollection->parent() );
-        removeRowFromModel( index.row(), parent );
-        d->editedCollection = 0;
-        break;
-      }
-      case Private::Rename:
-        d->editedCollection->setName( d->editOldName );
-        QModelIndex index = indexForPath( d->editedCollection->path() );
-        emit dataChanged( index, index );
-    }
-    // TODO: revert current change
-  } else {
-    // transaction done
+    qWarning() << "Edit failed: " << job->errorString();
   }
-  d->currentEdit = Private::None;
-#endif
 }
 
 bool CollectionModel::createCollection( const QModelIndex & parent, const QString & name )
@@ -480,15 +449,6 @@ bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
 #endif
   return true;
 }
-
-#if 0
-QString CollectionModel::pathForIndex( const QModelIndex & index ) const
-{
-  if ( index.isValid() )
-    return static_cast<Collection*>( index.internalPointer() )->path();
-  return QString();
-}
-#endif
 
 Qt::DropActions CollectionModel::supportedDropActions() const
 {

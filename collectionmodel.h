@@ -131,13 +131,6 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
 
-  protected:
-    /**
-      Returns the collection path for the given model index.
-      @param index The model index.
-    */
-//     QString pathForIndex( const QModelIndex &index ) const;
-
   private:
     /**
       Helper function to generate a model index for a given collection reference.
