@@ -81,12 +81,12 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
     /**
-      Sets the path to the collection the model should display. If the path has
+      Sets the collection the model should display. If the collection has
       changed, the model is reset and a new message listing is requested
       from the storage backend.
-      @param path The full collection path.
+      @param collection The collection.
     */
-    void setPath( const QString &path );
+    void setCollection( const Collection &collection );
 
     /**
       Returns the message reference to the given model index. If the index

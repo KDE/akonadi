@@ -29,7 +29,7 @@ using namespace Akonadi;
 class Akonadi::ItemFetchJobPrivate
 {
   public:
-    QString path;
+    Collection collection;
     DataReference uid;
     QList<QByteArray> fields;
     Item::List items;
@@ -41,11 +41,11 @@ ItemFetchJob::ItemFetchJob(QObject * parent) :
 {
 }
 
-ItemFetchJob::ItemFetchJob( const QString & path, QObject * parent ) :
+ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
     Job( parent ),
     d( new ItemFetchJobPrivate )
 {
-  d->path = path;
+  d->collection = collection;
 }
 
 ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
@@ -63,7 +63,7 @@ ItemFetchJob::~ ItemFetchJob( )
 void ItemFetchJob::doStart()
 {
   if ( d->uid.isNull() ) { // collection content listing
-    CollectionSelectJob *job = new CollectionSelectJob( d->path, this );
+    CollectionSelectJob *job = new CollectionSelectJob( d->collection, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)) );
     addSubjob( job );
   } else
@@ -171,15 +171,15 @@ void ItemFetchJob::startFetchJob()
   writeData( command );
 }
 
-void ItemFetchJob::setPath(const QString & path)
+void ItemFetchJob::setCollection(const Collection &collection)
 {
-  d->path = path;
+  d->collection = collection;
   d->uid = DataReference();
 }
 
 void Akonadi::ItemFetchJob::setUid(const DataReference & ref)
 {
-  d->path = Collection::root().path();
+  d->collection = Collection::root();
   d->uid = ref;
 }
 

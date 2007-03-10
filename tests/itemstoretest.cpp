@@ -113,6 +113,8 @@ void ItemStoreTest::testDataChange()
 
 void ItemStoreTest::testItemMove()
 {
+#warning Port me!
+#if 0
   DataReference ref( 1, QString() );
 
   ItemStoreJob *store = new ItemStoreJob( ref, this );
@@ -126,6 +128,7 @@ void ItemStoreTest::testItemMove()
   store = new ItemStoreJob( ref, this );
   store->setCollection( "res1/foo" );
   QVERIFY( store->exec() );
+#endif
 }
 
 void ItemStoreTest::testIllegalItemMove()

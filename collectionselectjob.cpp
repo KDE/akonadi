@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -26,15 +26,15 @@ using namespace Akonadi;
 class Akonadi::CollectionSelectJobPrivate
 {
   public:
-    QString path;
+    Collection collection;
     int unseen;
 };
 
-CollectionSelectJob::CollectionSelectJob( const QString& path, QObject *parent ) :
+CollectionSelectJob::CollectionSelectJob( const Collection &collection, QObject *parent ) :
     Job( parent ),
     d( new CollectionSelectJobPrivate )
 {
-  d->path = path;
+  d->collection = collection;
   d->unseen = -1;
 }
 
@@ -45,10 +45,7 @@ CollectionSelectJob::~ CollectionSelectJob( )
 
 void CollectionSelectJob::doStart( )
 {
-  QString path = d->path;
-  if ( path.startsWith( QLatin1Char( '/' ) ) ) path.remove( 0, 1 );
-
-  writeData( newTag() + " SELECT \"" + path.toUtf8() + "\"" );
+  writeData( newTag() + " SELECT " + QByteArray::number( d->collection.id() ) );
 }
 
 void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -59,7 +56,7 @@ void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteA
       int end = data.indexOf( ']' );
       QByteArray number = data.mid( begin + 1, end - begin - 1 );
       d->unseen = number.toInt();
-      qDebug() << "unseen items " << d->unseen << " in folder " << d->path;
+      qDebug() << "unseen items " << d->unseen << " in folder " << d->collection.id();
       return;
     }
   }

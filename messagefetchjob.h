@@ -45,10 +45,10 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
     /**
       Create a new message fetch job to retrieve envelopes of all
       messages in the given collection.
-      @param path Absolute path of the collection.
+      @param collection The collection.
       @param parent The parent object.
     */
-    MessageFetchJob( const QString &path, QObject *parent = 0 );
+    MessageFetchJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Creates a new message fetch job to retrieve the complete message

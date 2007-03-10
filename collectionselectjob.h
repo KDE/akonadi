@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,6 +20,7 @@
 #ifndef AKONADI_COLLECTIONSELECTJOB_H
 #define AKONADI_COLLECTIONSELECTJOB_H
 
+#include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 
 namespace Akonadi {
@@ -35,10 +36,10 @@ class AKONADI_EXPORT CollectionSelectJob : public Job
   public:
     /**
       Creates a new collection select job.
-      @param path The absolute path of the collection to select.
+      @param collection The collection to select.
       @param parent The parent object.
     */
-    CollectionSelectJob( const QString &path, QObject *parent = 0 );
+    CollectionSelectJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.

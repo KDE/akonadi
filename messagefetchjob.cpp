@@ -58,8 +58,8 @@ MessageFetchJob::MessageFetchJob(QObject * parent) :
 {
 }
 
-MessageFetchJob::MessageFetchJob( const QString & path, QObject * parent ) :
-    ItemFetchJob( path, parent ),
+MessageFetchJob::MessageFetchJob( const Collection &collection, QObject * parent ) :
+    ItemFetchJob( collection, parent ),
     d( new MessageFetchJobPrivate )
 {
   addFetchField( "ENVELOPE" );

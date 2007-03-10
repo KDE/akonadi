@@ -19,6 +19,7 @@
 
 #include "control.h"
 #include "itemappendtest.h"
+#include <libakonadi/collectionlistjob.h>
 #include <libakonadi/itemappendjob.h>
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/itemdeletejob.h>
@@ -31,9 +32,23 @@ using namespace Akonadi;
 
 QTEST_KDEMAIN( ItemAppendTest, NoGUI )
 
+static Collection testFolder1;
+
 void ItemAppendTest::initTestCase()
 {
   Control::start();
+
+  // get the collections we run the tests on
+  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
+  QVERIFY( job->exec() );
+  Collection::List list = job->collections();
+  Collection res2;
+  foreach ( const Collection col, list )
+    if ( col.name() == "res2" )
+      res2 = col;
+  foreach ( const Collection col, list )
+    if ( col.name() == "space folder" && col.parent() == res2.id() )
+      testFolder1 = col;
 }
 
 void ItemAppendTest::testItemAppend()
@@ -55,7 +70,7 @@ void ItemAppendTest::testItemAppend()
   job = new ItemAppendJob( "res2/space folder", QByteArray("some content"), "message/rfc822", this );
   QVERIFY( job->exec() );
 
-  ItemFetchJob *fjob = new ItemFetchJob( "res2/space folder", this );
+  ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   DataReference ref = fjob->items().first()->reference();
@@ -63,7 +78,7 @@ void ItemAppendTest::testItemAppend()
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );
 
-  fjob = new ItemFetchJob( "res2/space folder", this );
+  fjob = new ItemFetchJob( testFolder1, this );
   QVERIFY( fjob->exec() );
   QVERIFY( fjob->items().isEmpty() );
 }
@@ -74,7 +89,7 @@ void ItemAppendTest::testUtf8Data()
   ItemAppendJob* job = new ItemAppendJob( "res2/space folder", utf8string.toUtf8(), "message/rfc822", this );
   QVERIFY( job->exec() );
 
-  ItemFetchJob *fjob = new ItemFetchJob( "res2/space folder", this );
+  ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
   fjob->addFetchField( "RFC822" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );

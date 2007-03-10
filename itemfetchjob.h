@@ -20,6 +20,7 @@
 #ifndef AKONADI_ITEMFETCHJOB_H
 #define AKONADI_ITEMFETCHJOB_H
 
+#include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 #include <libakonadi/item.h>
 
@@ -43,10 +44,10 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     /**
       Create a new item list job to retrieve handles to all
       items in the given collection.
-      @param path Absolute path of the collection.
+      @param collection The collection to list.
       @param parent The parent object.
     */
-    ItemFetchJob( const QString &path, QObject *parent = 0 );
+    ItemFetchJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Creates a new item fetch job to retrieve the complete item data
@@ -68,10 +69,10 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     virtual Item::List items() const;
 
     /**
-      Sets the path to the collection that should be listed.
-      @param path Absolute path of the collection.
+      Sets the collection that should be listed.
+      @param collection The collection that should be listed.
     */
-    void setPath( const QString &path );
+    void setCollection( const Collection &collection );
 
     /**
       Sets the unique identifier of the item that should be fetched.

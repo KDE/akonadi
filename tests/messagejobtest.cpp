@@ -22,6 +22,7 @@
 #include "message.h"
 #include "messagejobtest.h"
 #include "messagefetchjob.h"
+#include "collectionlistjob.h"
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_headers.h>
@@ -34,20 +35,34 @@ using namespace Akonadi;
 
 QTEST_KDEMAIN( MessageJobTest, NoGUI )
 
+static Collection testFolder1;
+static Collection testFolder2;
+
 void MessageJobTest::initTestCase()
 {
   Control::start();
+
+  // get the collections we run the tests on
+  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
+  QVERIFY( job->exec() );
+  Collection::List list = job->collections();
+  foreach ( const Collection col, list )
+    if ( col.name() == "res1" )
+      testFolder1 = col;
+  foreach ( const Collection col, list )
+    if ( col.name() == "foo" && col.parent() == testFolder1.id() )
+      testFolder2 = col;
 }
 
 void MessageJobTest::testMessageFetch( )
 {
   // listing of an empty folder
-  MessageFetchJob *job = new MessageFetchJob( "res2/foo2", this );
+  MessageFetchJob *job = new MessageFetchJob( testFolder1, this );
   QVERIFY( job->exec() );
   QVERIFY( job->messages().isEmpty() );
 
   // listing of a non-empty folder
-  job = new MessageFetchJob( "res1/foo", this );
+  job = new MessageFetchJob( testFolder2, this );
   QVERIFY( job->exec() );
   Message::List msgs = job->messages();
   QCOMPARE( msgs.count(), 15 );
@@ -77,22 +92,18 @@ void MessageJobTest::testMessageFetch( )
 void MessageJobTest::testIllegalMessageFetch( )
 {
   // fetch non-existing folder
-  MessageFetchJob *job = new MessageFetchJob( "try/to/find/me", this );
+  MessageFetchJob *job = new MessageFetchJob( Collection( INT_MAX ), this );
   QVERIFY( !job->exec() );
 
-  // fetch listing of a \Noselect folder
+#warning Port me!
 #if 0
-  // no longer valid without \NoSelect resource nodes
-  job = new MessageFetchJob( "res1", this );
-  QVERIFY( !job->exec() );
-#endif
-
   // fetch listing of virtual folder root
   job = new MessageFetchJob( Collection::searchFolder(), this );
   QVERIFY( !job->exec() );
+#endif
 
   // listing of root
-  job = new MessageFetchJob( Collection::root().path(), this );
+  job = new MessageFetchJob( Collection::root(), this );
   QVERIFY( !job->exec() );
 
   // fetch a non-existing message

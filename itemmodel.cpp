@@ -35,7 +35,7 @@ class ItemModel::Private
 {
   public:
     QList<Item*> items;
-    QString path;
+    Collection collection;
     Monitor *monitor;
     Session *session;
 };
@@ -109,12 +109,12 @@ QVariant Akonadi::ItemModel::headerData( int section, Qt::Orientation orientatio
   return QAbstractTableModel::headerData( section, orientation, role );
 }
 
-void Akonadi::ItemModel::setPath( const QString& path )
+void Akonadi::ItemModel::setCollection( const Collection &collection )
 {
   qWarning() << "ItemModel::setPath()";
-  if ( d->path == path )
+  if ( d->collection == collection )
     return;
-  d->path = path;
+  d->collection = collection;
   // the query changed, thus everything we have already is invalid
   d->items.clear();
   reset();
@@ -124,7 +124,7 @@ void Akonadi::ItemModel::setPath( const QString& path )
   d->monitor = 0;
   // start listing job
   ItemFetchJob* job = createFetchJob();
-  job->setPath( path );
+  job->setCollection( collection );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 }
 
@@ -142,7 +142,7 @@ void Akonadi::ItemModel::listingDone( KJob * job )
   // start monitor
   d->monitor = new Monitor( this );
   d->monitor->ignoreSession( d->session );
-  d->monitor->monitorCollection( d->path, false );
+  d->monitor->monitorCollection( d->collection.path(), false );
   connect( d->monitor, SIGNAL(itemChanged(Akonadi::DataReference)),
            SLOT(itemChanged(Akonadi::DataReference)) );
   connect( d->monitor, SIGNAL(itemAdded(Akonadi::DataReference)),
