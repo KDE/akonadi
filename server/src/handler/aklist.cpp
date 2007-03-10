@@ -71,7 +71,12 @@ bool AkList::handleLine(const QByteArray& line )
     Location loc = Location::retrieveById( baseCollection );
     if ( !loc.isValid() )
       return failureResponse( "Collection " + QByteArray::number( baseCollection ) + " does not exist" );
-    locations << loc;
+    if ( depth == 0 )
+      locations << loc;
+    else {
+      locations << loc.children();
+      --depth;
+    }
   } else {
     if ( depth != 0 ) {
       Location::List list = Location::retrieveFiltered( Location::parentIdColumn(), 0 );
