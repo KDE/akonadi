@@ -38,14 +38,6 @@ Akonadi::NotificationItem::NotificationItem(const PimItem &item,
 {
 }
 
-Akonadi::NotificationItem::NotificationItem(const QString& collection,
-                                            const QByteArray & resource) :
-  mType( Collection ),
-  mCollectionName( collection ),
-  mResource( resource )
-{
-}
-
 Akonadi::NotificationItem::NotificationItem(const Location & collection,
                                             const QByteArray & resource) :
     mType( Collection ),
@@ -76,14 +68,6 @@ bool Akonadi::NotificationItem::operator ==(const NotificationItem & item) const
   return false;
 }
 
-QString Akonadi::NotificationItem::collectionName() const
-{
-  if ( !mCollectionName.isEmpty() )
-    return mCollectionName;
-  return HandlerHelper::pathForCollection( mCollection );
-}
-
-
 
 Akonadi::NotificationCollector::NotificationCollector(DataStore * db) :
   QObject( db ),
@@ -107,7 +91,7 @@ void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
     mAddedItems.append( ni );
   else {
     completeItem( ni );
-    emit itemAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
   }
 }
 
@@ -121,7 +105,7 @@ void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
     mChangedItems.append( ni );
   else {
     completeItem( ni );
-    emit itemChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
   }
 }
 
@@ -135,7 +119,7 @@ void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
   if ( mDb->inTransaction() )
     mRemovedItems.append( ni );
   else
-    emit itemRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
 }
 
 void Akonadi::NotificationCollector::collectionAdded( const Location &collection,
@@ -146,7 +130,7 @@ void Akonadi::NotificationCollector::collectionAdded( const Location &collection
     mAddedCollections.append( ni );
   else {
     completeItem( ni );
-    emit collectionAddedNotification( mSessionId, ni.collectionName(), ni.resource() );
+    emit collectionAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
   }
 }
 
@@ -158,7 +142,7 @@ void Akonadi::NotificationCollector::collectionChanged( const Location &collecti
     mChangedCollections.append( ni );
   else {
     completeItem( ni );
-    emit collectionChangedNotification( mSessionId, ni.collectionName(), ni.resource() );
+    emit collectionChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
   }
 }
 
@@ -170,7 +154,7 @@ void Akonadi::NotificationCollector::collectionRemoved( const Location &collecti
   if ( mDb->inTransaction() )
     mRemovedCollections.append( ni );
   else
-    emit collectionRemovedNotification( mSessionId, ni.collectionName(), ni.resource() );
+    emit collectionRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
 }
 
 void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
@@ -179,9 +163,8 @@ void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
     return;
 
   if ( item.type() == NotificationItem::Collection ) {
-    if ( !item.collection().isValid() && !item.collectionName().isEmpty() )
-      item.setCollection( Location::retrieveByName( item.collectionName() ) );
-    item.setResource( item.collection().resource().name().toLatin1() );
+    if ( item.resource().isEmpty() )
+      item.setResource( item.collection().resource().name().toLatin1() );
   }
 
   if ( item.type() == NotificationItem::Item ) {
@@ -210,39 +193,39 @@ void Akonadi::NotificationCollector::transactionCommitted()
 
   foreach ( NotificationItem ni, mAddedCollections ) {
     completeItem( ni );
-    emit collectionAddedNotification( mSessionId, ni.collectionName(), ni.resource() );
+    emit collectionAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
     // no change notifications for new collections
     mChangedCollections.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mRemovedCollections ) {
-    emit collectionRemovedNotification( mSessionId, ni.collectionName(), ni.resource() );
+    emit collectionRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
     // no change notifications for removed collections
     mChangedCollections.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mChangedCollections ) {
     completeItem( ni );
-    emit collectionChangedNotification( mSessionId, ni.collectionName(), ni.resource() );
+    emit collectionChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
   }
 
 
   foreach ( NotificationItem ni, mAddedItems ) {
     completeItem( ni );
-    emit itemAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
     // no change notifications for new items
     mChangedItems.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mRemovedItems ) {
-    emit itemRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
     // no change notifications for removed items
     mChangedItems.removeAll( ni );
   }
 
   foreach ( NotificationItem ni, mChangedItems ) {
     completeItem( ni );
-    emit itemChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collectionName(), ni.mimeType(), ni.resource() );
+    emit itemChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
   }
 
   clear();

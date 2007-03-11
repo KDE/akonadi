@@ -49,70 +49,70 @@ NotificationManager* NotificationManager::self()
 
 void NotificationManager::connectDatastore( DataStore * store )
 {
-  connect( store->notificationCollector(), SIGNAL(itemAddedNotification(QByteArray,int,QString,QString,QByteArray,QByteArray)),
-           SLOT(slotItemAdded(QByteArray,int,QString,QString,QByteArray,QByteArray)) );
-  connect( store->notificationCollector(), SIGNAL(itemChangedNotification(QByteArray,int,QString,QString,QByteArray,QByteArray)),
-           SLOT(slotItemChanged(QByteArray,int,QString,QString,QByteArray,QByteArray)) );
-  connect( store->notificationCollector(), SIGNAL(itemRemovedNotification(QByteArray,int,QString,QString,QByteArray,QByteArray)),
-           SLOT(slotItemRemoved(QByteArray,int,QString,QString,QByteArray,QByteArray)) );
-  connect( store->notificationCollector(), SIGNAL(collectionAddedNotification(QByteArray,QString,QByteArray)),
-           SLOT(slotCollectionAdded(QByteArray,QString,QByteArray)) );
-  connect( store->notificationCollector(), SIGNAL(collectionChangedNotification(QByteArray,QString,QByteArray)),
-           SLOT(slotCollectionChanged(QByteArray,QString,QByteArray)) );
-  connect( store->notificationCollector(), SIGNAL(collectionRemovedNotification(QByteArray,QString,QByteArray)),
-           SLOT(slotCollectionRemoved(QByteArray,QString,QByteArray)) );
+  connect( store->notificationCollector(), SIGNAL(itemAddedNotification(QByteArray,int,QString,int,QByteArray,QByteArray)),
+           SLOT(slotItemAdded(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+  connect( store->notificationCollector(), SIGNAL(itemChangedNotification(QByteArray,int,QString,int,QByteArray,QByteArray)),
+           SLOT(slotItemChanged(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+  connect( store->notificationCollector(), SIGNAL(itemRemovedNotification(QByteArray,int,QString,int,QByteArray,QByteArray)),
+           SLOT(slotItemRemoved(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+  connect( store->notificationCollector(), SIGNAL(collectionAddedNotification(QByteArray,int,QString,QByteArray)),
+           SLOT(slotCollectionAdded(QByteArray,int,QString,QByteArray)) );
+  connect( store->notificationCollector(), SIGNAL(collectionChangedNotification(QByteArray,int,QString,QByteArray)),
+           SLOT(slotCollectionChanged(QByteArray,int,QString,QByteArray)) );
+  connect( store->notificationCollector(), SIGNAL(collectionRemovedNotification(QByteArray,int,QString,QByteArray)),
+           SLOT(slotCollectionRemoved(QByteArray,int,QString,QByteArray)) );
 }
 
 
 void Akonadi::NotificationManager::slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId,
-                                                  const QString &location, const QByteArray &mimeType,
+                                                  int collection, const QByteArray &mimeType,
                                                   const QByteArray &resource )
 {
   QString msg = QString::fromLatin1("ID: %1, Location: %2, Mimetype: %3, Resource: %4, Session: %5" )
-      .arg( uid ).arg( location ).arg( QString::fromLatin1(mimeType) ).arg( QString::fromLatin1(resource) ).arg( QString::fromLatin1(sessionId) );
+      .arg( uid ).arg( collection ).arg( QString::fromLatin1(mimeType) ).arg( QString::fromLatin1(resource) ).arg( QString::fromLatin1(sessionId) );
   Tracer::self()->signal( "NotificationManager::itemAdded", msg );
-  emit itemAdded( sessionId, uid, remoteId, location, mimeType, resource );
+  emit itemAdded( sessionId, uid, remoteId, collection, mimeType, resource );
 }
 
 void Akonadi::NotificationManager::slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId,
-                                                    const QString &location, const QByteArray &mimetype,
+                                                    int collection, const QByteArray &mimetype,
                                                     const QByteArray &resource )
 {
   QString msg = QString::fromLatin1("ID: %1, Location: %2, Mimetype: %3, Resource: %4, Session: %5" )
-      .arg( uid ).arg( location ).arg( QString::fromLatin1(mimetype) ).arg( QString::fromLatin1(resource) ).arg( QString::fromLatin1(sessionId) );
+      .arg( uid ).arg( collection ).arg( QString::fromLatin1(mimetype) ).arg( QString::fromLatin1(resource) ).arg( QString::fromLatin1(sessionId) );
   Tracer::self()->signal( "NotificationManager::itemChanged", msg );
-  emit itemChanged( sessionId, uid, remoteId, location, mimetype, resource );
+  emit itemChanged( sessionId, uid, remoteId, collection, mimetype, resource );
 }
 
 void Akonadi::NotificationManager::slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId,
-                                                    const QString &location, const QByteArray &mimetype,
+                                                    int collection, const QByteArray &mimetype,
                                                     const QByteArray &resource )
 {
   QString msg = QString::fromLatin1("ID: %1, Location: %2, Mimetype: %3, Resource: %4, Session: %5" )
-      .arg( uid ).arg( location ).arg( QString::fromLatin1(mimetype) ).arg( QString::fromLatin1(resource) ).arg( QString::fromLatin1(sessionId) );
+      .arg( uid ).arg( collection ).arg( QString::fromLatin1(mimetype) ).arg( QString::fromLatin1(resource) ).arg( QString::fromLatin1(sessionId) );
   Tracer::self()->signal( "NotificationManager::itemRemoved", msg );
-  emit itemRemoved( sessionId, uid, remoteId, location, mimetype, resource );
+  emit itemRemoved( sessionId, uid, remoteId, collection, mimetype, resource );
 }
 
-void Akonadi::NotificationManager::slotCollectionAdded(const QByteArray &sessionId, const QString &path, const QByteArray &resource)
+void Akonadi::NotificationManager::slotCollectionAdded(const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource)
 {
   Tracer::self()->signal( "NotificationManager::collectionAdded", QLatin1String("Location: ")
-      + path + QLatin1String(" Resource: " + resource) );
-  emit collectionAdded( sessionId, path, resource );
+      + QString::number( collection ) + QLatin1String(" Resource: " + resource) );
+  emit collectionAdded( sessionId, collection, remoteId, resource );
 }
 
-void Akonadi::NotificationManager::slotCollectionChanged(const QByteArray &sessionId, const QString &path, const QByteArray & resource)
+void Akonadi::NotificationManager::slotCollectionChanged(const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray & resource)
 {
   Tracer::self()->signal( "NotificationManager::collectionChanged", QLatin1String("Location: ")
-      + path + QLatin1String(" Resource: " + resource) );
-  emit collectionChanged( sessionId, path, resource );
+      + QString::number( collection ) + QLatin1String(" Resource: " + resource) );
+  emit collectionChanged( sessionId, collection, remoteId, resource );
 }
 
-void Akonadi::NotificationManager::slotCollectionRemoved(const QByteArray &sessionId, const QString &path, const QByteArray &resource)
+void Akonadi::NotificationManager::slotCollectionRemoved(const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource)
 {
   Tracer::self()->signal( "NotificationManager::collectionRemoved", QLatin1String("Location: ")
-      + path + QLatin1String(" Resource: " + resource) );
-  emit collectionRemoved( sessionId, path, resource );
+      + QString::number( collection ) + QLatin1String(" Resource: " + resource) );
+  emit collectionRemoved( sessionId, collection, remoteId, resource );
 }
 
 #include "notificationmanager.moc"

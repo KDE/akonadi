@@ -43,26 +43,26 @@ class NotificationManager : public QObject
     void connectDatastore( DataStore* );
 
   Q_SIGNALS:
-    Q_SCRIPTABLE void itemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
+    Q_SCRIPTABLE void itemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                       const QByteArray &mimetype, const QByteArray &resource );
-    Q_SCRIPTABLE void itemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
+    Q_SCRIPTABLE void itemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                     const QByteArray &mimetype, const QByteArray &resource );
-    Q_SCRIPTABLE void itemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
+    Q_SCRIPTABLE void itemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                       const QByteArray &mimetype, const QByteArray &resource );
-    Q_SCRIPTABLE void collectionAdded( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
-    Q_SCRIPTABLE void collectionChanged( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
-    Q_SCRIPTABLE void collectionRemoved( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionAdded( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionChanged( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
+    Q_SCRIPTABLE void collectionRemoved( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
 
   private Q_SLOTS:
-    void slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, const QString& location,
+    void slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                         const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &location,
+    void slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &location,
+    void slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotCollectionAdded( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
-    void slotCollectionChanged( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
-    void slotCollectionRemoved( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionAdded( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
+    void slotCollectionChanged( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
+    void slotCollectionRemoved( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
 
   private:
     NotificationManager();

@@ -53,11 +53,6 @@ class NotificationItem
     /**
       Creates a notification item for collections.
     */
-    NotificationItem( const QString &collection, const QByteArray &resource );
-
-    /**
-      Creates a notification item for collections.
-    */
     NotificationItem( const Location &collection, const QByteArray &resource );
 
     /**
@@ -68,12 +63,12 @@ class NotificationItem
     /**
       Returns the uid of the changed item.
     */
-    int uid() const { return mItem.id(); }
+    int uid() const { return mType == Item ? mItem.id() : mCollection.id(); }
 
     /**
       Returns the remote id of the changed item.
     */
-    QString remoteId() const { return QString::fromLatin1( mItem.remoteId() ); }
+    QString remoteId() const { return mType == Item ? QString::fromLatin1( mItem.remoteId() ) : mCollection.remoteId(); }
 
     /**
       Returns the PimItem of the changed item.
@@ -84,11 +79,6 @@ class NotificationItem
       Returns the changed collection.
     */
     Location collection() const { return mCollection; }
-
-    /**
-      Returns the collection name.
-    */
-    QString collectionName() const;
 
     /**
       Sets the changed collection.
@@ -215,26 +205,26 @@ class NotificationCollector : public QObject
   Q_SIGNALS:
     void itemAddedNotification( const QByteArray &sessionId, int uid,
                                 const QString &remotedId,
-                                const QString &collection,
+                                int collection,
                                 const QByteArray &mimeType,
                                 const QByteArray &resource );
     void itemChangedNotification( const QByteArray &sessionId, int uid,
                                   const QString &remotedId,
-                                  const QString &collection,
+                                  int collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
     void itemRemovedNotification( const QByteArray &sessionId, int uid,
                                   const QString &remotedId,
-                                  const QString &collection,
+                                  int collection,
                                   const QByteArray &mimeType,
                                   const QByteArray &resource );
 
-    void collectionAddedNotification( const QByteArray &sessionId, const QString &collection,
-                                      const QByteArray &resource );
-    void collectionChangedNotification( const QByteArray &sessionId, const QString &collection,
-                                        const QByteArray &resource );
-    void collectionRemovedNotification( const QByteArray &sessionId, const QString &collection,
-                                        const QByteArray &resource );
+    void collectionAddedNotification( const QByteArray &sessionId, int collection,
+                                      const QString &remoteId, const QByteArray &resource );
+    void collectionChangedNotification( const QByteArray &sessionId, int collection,
+                                        const QString &remoteId, const QByteArray &resource );
+    void collectionRemovedNotification( const QByteArray &sessionId, int collection,
+                                        const QString &remoteId, const QByteArray &resource );
 
   private:
     void completeItem( NotificationItem &item );
