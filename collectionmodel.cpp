@@ -18,7 +18,6 @@
 */
 
 #include "collection.h"
-#include "collectioncreatejob.h"
 #include "collectionstatusjob.h"
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
@@ -121,7 +120,7 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
         if ( col.type() == Collection::VirtualParent )
           return SmallIcon( QLatin1String( "edit-find" ) );
         if ( col.type() == Collection::Virtual )
-          return SmallIcon( QLatin1String( "folder_green" ) );
+          return SmallIcon( QLatin1String( "folder-green" ) );
         QList<QByteArray> content = col.contentTypes();
         if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
           if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
@@ -133,9 +132,9 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
             return SmallIcon( QLatin1String( "kmgroupware_folder_tasks" ) );
           return SmallIcon( QLatin1String( "folder" ) );
         } else if ( content.isEmpty() ) {
-          return SmallIcon( QLatin1String( "folder_grey" ) );
+          return SmallIcon( QLatin1String( "folder-grey" ) );
         } else
-          return SmallIcon( QLatin1String( "folder_orange" ) ); // mixed stuff
+          return SmallIcon( QLatin1String( "folder-orange" ) ); // mixed stuff
       }
       break;
     case CollectionIdRole:
@@ -393,52 +392,17 @@ void CollectionModel::editDone( KJob * job )
   }
 }
 
-bool CollectionModel::createCollection( const QModelIndex & parent, const QString & name )
-{
-#if 0
-  if ( !canCreateCollection( parent ) )
-    return false;
-  Collection *parentCol = static_cast<Collection*>( parent.internalPointer() );
-
-  // create temporary fake collection, will be removed on error
-  Collection *c = new Collection( -1 );
-  c->setPath( parentCol->path() + Collection::delimiter() + name );
-  d->editedCollection = c;
-  d->editedCollection->setParent( parentCol->path() );
-  if ( d->collections.contains( d->editedCollection->path() ) ) {
-    delete d->editedCollection;
-    d->editedCollection = 0;
-    return false;
-  }
-  d->collections.insert( d->editedCollection->path(), d->editedCollection );
-  beginInsertRows( parent, rowCount( parent ), rowCount( parent ) );
-  d->childCollections[ d->editedCollection->parent() ].append( d->editedCollection->path() );
-  endInsertRows();
-
-  // start creation job
-  CollectionCreateJob *job = new CollectionCreateJob( d->editedCollection->path(), d->session );
-  connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
-
-  d->currentEdit = Private::Create;
-#endif
-  return true;
-}
-
 bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
 {
-#if 0
-  if ( d->currentEdit != Private::None )
-    return false;
   if ( !parent.isValid() )
     return false; // FIXME: creation of top-level collections??
 
-  Collection *col = static_cast<Collection*>( parent.internalPointer() );
-  if ( col->type() == Collection::Virtual || col->type() == Collection::VirtualParent )
+  Collection col = d->collections.value( parent.internalId() );
+  if ( col.type() == Collection::Virtual || col.type() == Collection::VirtualParent )
     return false;
-  if ( !col->contentTypes().contains( Collection::collectionMimeType() ) )
+  if ( !col.contentTypes().contains( Collection::collectionMimeType() ) )
     return false;
 
-#endif
   return true;
 }
 

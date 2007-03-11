@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,9 +19,13 @@
 
 #include "collectionmodel.h"
 #include "collectionview.h"
+#include "collectioncreatejob.h"
+#include "collectiondeletejob.h"
 
+#include <kaction.h>
 #include <kdebug.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
@@ -29,6 +33,7 @@
 #include <QtGui/QDragMoveEvent>
 #include <QtGui/QHeaderView>
 #include <QtGui/QInputDialog>
+#include <QtGui/QMenu>
 #include <QtGui/QSortFilterProxyModel>
 
 using namespace Akonadi;
@@ -40,6 +45,9 @@ class CollectionView::Private
     CollectionModel *model;
     QModelIndex dragOverIndex;
     QTimer dragExpandTimer;
+
+    KAction *newCollectionAction;
+    KAction *deleteCollectionAction;
 };
 
 CollectionView::CollectionView( QWidget * parent ) :
@@ -64,6 +72,11 @@ CollectionView::CollectionView( QWidget * parent ) :
 
   // temporary for testing
   connect( this, SIGNAL(doubleClicked(QModelIndex)), SLOT(createCollection(QModelIndex)) );
+
+  d->newCollectionAction = new KAction( KIcon(QLatin1String("folder-new")), i18n("New Folder..."), this );
+  connect( d->newCollectionAction, SIGNAL(triggered()), SLOT(createCollection()) );
+  d->deleteCollectionAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n("Delete Folder"), this );
+  connect( d->deleteCollectionAction, SIGNAL(triggered()), SLOT(deleteCollection()) );
 }
 
 CollectionView::~ CollectionView( )
@@ -77,18 +90,6 @@ void CollectionView::setModel( QAbstractItemModel * model )
   d->filterModel->setSourceModel( model );
   QTreeView::setModel( d->filterModel );
   header()->setResizeMode( 0, QHeaderView::Stretch );
-}
-
-void CollectionView::createCollection( const QModelIndex & parent )
-{
-  if ( !model()->data( parent, CollectionModel::ChildCreatableRole ).toBool() )
-    return;
-  QString name = QInputDialog::getText( this, i18n("New Folder"), i18n("Name") );
-  if ( name.isEmpty() )
-    return;
-  QModelIndex index = sourceIndex( parent );
-  if ( !d->model->createCollection( index, name ) )
-    qWarning() << "Collection creation failed immediately!";
 }
 
 void CollectionView::dragMoveEvent(QDragMoveEvent * event)
@@ -137,6 +138,54 @@ void CollectionView::dragExpand()
   kDebug() << k_funcinfo << endl;
   setExpanded( d->dragOverIndex, true );
   d->dragOverIndex = QModelIndex();
+}
+
+void CollectionView::contextMenuEvent(QContextMenuEvent * event)
+{
+  QList<QAction*> actions;
+  actions << d->newCollectionAction << d->deleteCollectionAction;
+  QMenu::exec( actions, event->globalPos() );
+}
+
+void Akonadi::CollectionView::createCollection()
+{
+  QModelIndex index = currentIndex();
+  if ( !index.data( CollectionModel::ChildCreatableRole ).toBool() )
+    return;
+  QString name = QInputDialog::getText( this, i18n("New Folder"), i18n("Name") );
+  if ( name.isEmpty() )
+    return;
+  int parentId = index.data( CollectionModel::CollectionIdRole ).toInt();
+  if ( parentId <= 0 )
+    return;
+
+  CollectionCreateJob *job = new CollectionCreateJob( Collection( parentId ), name );
+  connect( job, SIGNAL(result(KJob*)), SLOT(createResult(KJob*)) );
+}
+
+void CollectionView::createResult(KJob * job)
+{
+  if ( job->error() )
+    KMessageBox::error( this, i18n("Could not create folder: %1", job->errorString()), i18n("Folder creation failed") );
+}
+
+void CollectionView::deleteCollection()
+{
+  QModelIndex index = currentIndex();
+  if ( !index.isValid() )
+    return;
+  int colId = index.data( CollectionModel::CollectionIdRole ).toInt();
+  if ( colId <= 0 )
+    return;
+
+  CollectionDeleteJob *job = new CollectionDeleteJob( Collection( colId ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(deleteResult(KJob*)) );
+}
+
+void CollectionView::deleteResult(KJob * job)
+{
+  if ( job->error() )
+    KMessageBox::error( this, i18n("Could not delete folder: %1", job->errorString()), i18n("Folder deletion failed") );
 }
 
 #include "collectionview.moc"

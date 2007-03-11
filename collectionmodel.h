@@ -117,14 +117,6 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
     /**
-      Add a new collection to the model and try to save it into the backend.
-      @param parent The parent model index.
-      @param name The name of the new collection.
-      @returns false on immediate error.
-    */
-    bool createCollection( const QModelIndex &parent, const QString &name );
-
-    /**
       Returns wether the specified collection supports <em>any</em> of the given mime-types.
       @param index The model index.
       @param contentTypes The content types to check.

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -58,19 +58,18 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     */
     QModelIndex sourceIndex( const QModelIndex &index );
 
-  public Q_SLOTS:
-    /**
-      Add a child collection to the given model index.
-    */
-    void createCollection( const QModelIndex &index );
-
   protected:
     virtual void dragMoveEvent( QDragMoveEvent *event );
     virtual void dragLeaveEvent( QDragLeaveEvent *event );
     virtual void dropEvent( QDropEvent *event );
+    virtual void contextMenuEvent( QContextMenuEvent *event );
 
   private slots:
     void dragExpand();
+    void createCollection();
+    void createResult( KJob* job );
+    void deleteCollection();
+    void deleteResult( KJob* job );
 
   private:
     class Private;
