@@ -32,21 +32,21 @@ class Akonadi::MonitorPrivate
 {
   public:
     org::kde::Akonadi::NotificationManager *nm;
-    QHash<QString,bool> collections;
+    Collection::List collections;
     QSet<QByteArray> resources;
     QSet<int> items;
     QSet<QByteArray> mimetypes;
     bool monitorAll;
     QList<QByteArray> sessions;
 
-    bool isCollectionMonitored( const QString &path, const QByteArray &resource ) const
+    bool isCollectionMonitored( int collection, const QByteArray &resource ) const
     {
-      if ( monitorAll || isCollectionMonitored( path ) || resources.contains( resource ) )
+      if ( monitorAll || isCollectionMonitored( collection ) || resources.contains( resource ) )
         return true;
       return false;
     }
 
-    bool isItemMonitored( uint item, const QString &collection,
+    bool isItemMonitored( uint item, int collection,
                           const QByteArray &mimetype, const QByteArray &resource ) const
     {
       if ( monitorAll || isCollectionMonitored( collection ) || items.contains( item ) ||
@@ -61,18 +61,12 @@ class Akonadi::MonitorPrivate
     }
 
   private:
-    bool isCollectionMonitored( const QString &path ) const
+    bool isCollectionMonitored( int collection ) const
     {
-      for ( QHash<QString,bool>::ConstIterator it = collections.constBegin();
-            it != collections.constEnd(); ++it ) {
-        if ( it.value() ) {
-          if ( path.startsWith( it.key() ) )
-            return true;
-        } else {
-          if ( path == it.key() )
-            return true;
-        }
-      }
+      if ( collections.contains( Collection( collection ) ) )
+        return true;
+      if ( collections.contains( Collection::root() ) )
+        return true;
       return false;
     }
 };
@@ -91,9 +85,9 @@ Monitor::~Monitor()
   delete d;
 }
 
-void Monitor::monitorCollection( const QString& path, bool recursive )
+void Monitor::monitorCollection( const Collection &collection )
 {
-  d->collections.insert( path, recursive );
+  d->collections << collection;
 }
 
 void Monitor::monitorItem( const DataReference & ref )
@@ -121,55 +115,58 @@ void Monitor::ignoreSession(Session * session)
   d->sessions << session->sessionId();
 }
 
-void Monitor::slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, const QString& collection,
+void Monitor::slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                                const QByteArray &mimetype, const QByteArray &resource )
 {
   if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
     emit itemChanged( DataReference( uid, remoteId ) );
-  if ( d->isCollectionMonitored( collection, resource ) )
-    emit collectionChanged( collection );
+  // FIXME: only collection status has changed here
+//   if ( d->isCollectionMonitored( collection, resource ) )
+//     emit collectionChanged( collection );
 }
 
-void Monitor::slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
+void Monitor::slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                              const QByteArray &mimetype, const QByteArray &resource )
 {
   if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
     emit itemAdded( DataReference( uid, remoteId ) );
-  if ( d->isCollectionMonitored( collection, resource ) )
-    emit collectionChanged( collection );
+  // FIXME: only collection status has changed here
+//   if ( d->isCollectionMonitored( collection, resource ) )
+//     emit collectionChanged( collection );
 }
 
-void Monitor::slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
+void Monitor::slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                                const QByteArray &mimetype, const QByteArray &resource )
 {
   if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
     emit itemRemoved( DataReference( uid, remoteId ) );
+  // FIXME: only collection status has changed here
+//   if ( d->isCollectionMonitored( collection, resource ) )
+//     emit collectionChanged( collection );
+}
+
+void Monitor::slotCollectionChanged( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource )
+{
+  if ( d->isSessionIgnored( sessionId ) ) return;
   if ( d->isCollectionMonitored( collection, resource ) )
-    emit collectionChanged( collection );
+    emit collectionChanged( collection, remoteId );
 }
 
-void Monitor::slotCollectionChanged( const QByteArray &sessionId, const QString& path, const QByteArray &resource )
+void Monitor::slotCollectionAdded( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource )
 {
   if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isCollectionMonitored( path, resource ) )
-    emit collectionChanged( path );
+  if ( d->isCollectionMonitored( collection, resource ) )
+    emit collectionAdded( collection, remoteId );
 }
 
-void Monitor::slotCollectionAdded( const QByteArray &sessionId, const QString& path, const QByteArray &resource )
+void Monitor::slotCollectionRemoved( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource )
 {
   if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isCollectionMonitored( path, resource ) )
-    emit collectionAdded( path );
-}
-
-void Monitor::slotCollectionRemoved( const QByteArray &sessionId, const QString& path, const QByteArray &resource )
-{
-  if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isCollectionMonitored( path, resource ) )
-    emit collectionRemoved( path );
+  if ( d->isCollectionMonitored( collection, resource ) )
+    emit collectionRemoved( collection, remoteId );
 }
 
 bool Monitor::connectToNotificationManager( )
@@ -184,18 +181,18 @@ bool Monitor::connectToNotificationManager( )
   if ( !d->nm ) {
     qWarning() << "Unable to connect to notification manager";
   } else {
-    connect( d->nm, SIGNAL(itemChanged(QByteArray,int,QString,QString,QByteArray,QByteArray)),
-             SLOT(slotItemChanged(QByteArray,int,QString,QString,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemAdded(QByteArray,int,QString,QString,QByteArray,QByteArray)),
-             SLOT(slotItemAdded(QByteArray,int,QString,QString,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemRemoved(QByteArray,int,QString,QString,QByteArray,QByteArray)),
-             SLOT(slotItemRemoved(QByteArray,int,QString,QString,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionChanged(QByteArray,QString,QByteArray)),
-             SLOT(slotCollectionChanged(QByteArray,QString,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionAdded(QByteArray,QString,QByteArray)),
-             SLOT(slotCollectionAdded(QByteArray,QString,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionRemoved(QByteArray,QString,QByteArray)),
-             SLOT(slotCollectionRemoved(QByteArray,QString,QByteArray)) );
+    connect( d->nm, SIGNAL(itemChanged(QByteArray,int,QString,int,QByteArray,QByteArray)),
+             SLOT(slotItemChanged(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemAdded(QByteArray,int,QString,int,QByteArray,QByteArray)),
+             SLOT(slotItemAdded(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(itemRemoved(QByteArray,int,QString,int,QByteArray,QByteArray)),
+             SLOT(slotItemRemoved(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionChanged(QByteArray,int,QString,QByteArray)),
+             SLOT(slotCollectionChanged(QByteArray,int,QString,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionAdded(QByteArray,int,QString,QByteArray)),
+             SLOT(slotCollectionAdded(QByteArray,int,QString,QByteArray)) );
+    connect( d->nm, SIGNAL(collectionRemoved(QByteArray,int,QString,QByteArray)),
+             SLOT(slotCollectionRemoved(QByteArray,int,QString,QByteArray)) );
     return true;
   }
   return false;

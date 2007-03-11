@@ -70,9 +70,6 @@ CollectionView::CollectionView( QWidget * parent ) :
   d->dragExpandTimer.setSingleShot( true );
   connect( &d->dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()) );
 
-  // temporary for testing
-  connect( this, SIGNAL(doubleClicked(QModelIndex)), SLOT(createCollection(QModelIndex)) );
-
   d->newCollectionAction = new KAction( KIcon(QLatin1String("folder-new")), i18n("New Folder..."), this );
   connect( d->newCollectionAction, SIGNAL(triggered()), SLOT(createCollection()) );
   d->deleteCollectionAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n("Delete Folder"), this );

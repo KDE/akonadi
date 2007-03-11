@@ -153,12 +153,12 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Removes a the given collection from the model.
     */
-    void collectionRemoved( const QString &path );
+    void collectionRemoved( int collection );
 
     /**
       Notify the model about collection changes.
     */
-    void collectionChanged( const QString &path );
+    void collectionChanged( int collection );
 
     /**
       Connected to the collection status job.

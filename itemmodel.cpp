@@ -142,7 +142,7 @@ void Akonadi::ItemModel::listingDone( KJob * job )
   // start monitor
   d->monitor = new Monitor( this );
   d->monitor->ignoreSession( d->session );
-  d->monitor->monitorCollection( d->collection.path(), false );
+  d->monitor->monitorCollection( d->collection );
   connect( d->monitor, SIGNAL(itemChanged(Akonadi::DataReference)),
            SLOT(itemChanged(Akonadi::DataReference)) );
   connect( d->monitor, SIGNAL(itemAdded(Akonadi::DataReference)),

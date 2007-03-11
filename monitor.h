@@ -20,6 +20,7 @@
 #ifndef AKONADI_MONITOR_H
 #define AKONADI_MONITOR_H
 
+#include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 #include <QtCore/QObject>
 
@@ -55,10 +56,10 @@ class AKONADI_EXPORT Monitor : public QObject
 
     /**
       Monitors the specified collection for changes.
-      @param path The collection path.
-      @param recursive If true also sub-collection will be monitored.
+      Monitoring Collection::root() monitors all collections.
+      @param collection The collection to monitor.
     */
-    void monitorCollection( const QString &path, bool recursive );
+    void monitorCollection( const Collection &collection );
 
     /**
       Monitors the specified PIM Item for changes.
@@ -110,36 +111,39 @@ class AKONADI_EXPORT Monitor : public QObject
 
     /**
       Emitted if a monitored got a new child collection.
-      @param path The path of the new collection.
+      @param collection The identifier of the removed collection.
+      @param remoteId The remote identifier of the removed collection.
     */
-    void collectionAdded( const QString &path );
+    void collectionAdded( int collection, const QString &remoteId );
 
     /**
       Emitted if a monitored collection changed (its properties, not its
       content).
-      @param path The path of the modified collection.
+      @param collection The identifier of the removed collection.
+      @param remoteId The remote identifier of the removed collection.
     */
-    void collectionChanged( const QString &path );
+    void collectionChanged( int collection, const QString &remoteId );
 
     /**
       Emitted if a monitored collection has been removed.
-      @param path The path of the rmeoved collection.
+      @param collection The identifier of the removed collection.
+      @param remoteId The remote identifier of the removed collection.
     */
-    void collectionRemoved( const QString &path );
+    void collectionRemoved( int collection, const QString &remoteId );
 
   private:
     bool connectToNotificationManager();
 
   private Q_SLOTS:
-    void slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
+    void slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
+    void slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                         const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, const QString &collection,
+    void slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
                           const QByteArray &mimetype, const QByteArray &resource );
-    void slotCollectionAdded( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
-    void slotCollectionChanged( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
-    void slotCollectionRemoved( const QByteArray &sessionId, const QString &path, const QByteArray &resource );
+    void slotCollectionAdded( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
+    void slotCollectionChanged( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
+    void slotCollectionRemoved( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
 
     void sessionDestroyed(QObject *obj);
 

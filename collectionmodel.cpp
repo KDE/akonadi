@@ -72,11 +72,11 @@ CollectionModel::CollectionModel( QObject * parent ) :
 
   // monitor collection changes
   d->monitor = new Monitor();
-  d->monitor->monitorCollection( Collection::root().path(), true );
+  d->monitor->monitorCollection( Collection::root() );
   d->monitor->ignoreSession( d->session );
-  connect( d->monitor, SIGNAL(collectionChanged(QString)), SLOT(collectionChanged(QString)) );
-  connect( d->monitor, SIGNAL(collectionAdded(QString)), SLOT(collectionChanged(QString)) );
-  connect( d->monitor, SIGNAL(collectionRemoved(QString)), SLOT(collectionRemoved(QString)) );
+  connect( d->monitor, SIGNAL(collectionChanged(int,QString)), SLOT(collectionChanged(int)) );
+  connect( d->monitor, SIGNAL(collectionAdded(int,QString)), SLOT(collectionChanged(int)) );
+  connect( d->monitor, SIGNAL(collectionRemoved(int,QString)), SLOT(collectionRemoved(int)) );
 
   // ### Hack to get the kmail resource folder icons
   KIconLoader::global()->addAppDir( QLatin1String( "kmail" ) );
@@ -224,50 +224,32 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
   return true;
 }
 
-void CollectionModel::collectionChanged( const QString &path )
+void CollectionModel::collectionChanged( int collection )
 {
-#warning Port me!
-#if 0
-  if ( d->collections.contains( path ) ) {
+  if ( d->collections.contains( collection ) ) {
     // update
-    CollectionStatusJob *job = new CollectionStatusJob( path, d->session );
+    CollectionStatusJob *job = new CollectionStatusJob( d->collections.value( collection ), d->session );
     connect( job, SIGNAL(result(KJob*)), SLOT(updateDone(KJob*)) );
   } else {
-    // new collection
-    int index = path.lastIndexOf( Collection::delimiter() );
-    QString parent;
-    if ( index > 0 )
-      parent = path.left( index );
-    else
-      parent = Collection::root().path();
-
-    // re-list parent non-recursively
-    CollectionListJob *job = new CollectionListJob( parent, false, d->session );
-    connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
-    // list the new collection recursively
-    job = new CollectionListJob( path, true, d->session );
+    CollectionListJob *job = new CollectionListJob( Collection( collection ), CollectionListJob::Local, d->session );
     connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
   }
-#endif
 }
 
-void CollectionModel::collectionRemoved( const QString &path )
+void CollectionModel::collectionRemoved( int collection )
 {
-#warning Port me!
-#if 0
-  QModelIndex colIndex = indexForPath( path );
+  QModelIndex colIndex = indexForId( collection );
   if ( colIndex.isValid() ) {
     QModelIndex parentIndex = parent( colIndex );
     // collection is still somewhere in the hierarchy
     removeRowFromModel( colIndex.row(), parentIndex );
   } else {
-    if ( d->collections.contains( path ) ) {
+    if ( d->collections.contains( collection ) ) {
       // collection is orphan, ie. the parent has been removed already
-      delete d->collections.take( path );
-      d->childCollections.remove( path );
+      d->collections.remove( collection );
+      d->childCollections.remove( collection );
     }
   }
-#endif
 }
 
 void CollectionModel::updateDone( KJob * job )
