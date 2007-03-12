@@ -419,8 +419,11 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
   if ( !m_dbOpened )
     return false;
 
+  const bool move = location.parentId() != newParent;
+
   Location renamedLoc = location;
-  mNotificationCollector->collectionRemoved( location );
+  if ( move )
+    mNotificationCollector->collectionRemoved( location );
 
   renamedLoc.setName( newName );
   renamedLoc.setParentId( newParent );
@@ -428,7 +431,10 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
   if ( !renamedLoc.update() )
     return false;
 
-  mNotificationCollector->collectionAdded( renamedLoc );
+  if ( move )
+    mNotificationCollector->collectionAdded( renamedLoc );
+  else
+    mNotificationCollector->collectionChanged( renamedLoc );
   return true;
 }
 

@@ -75,11 +75,12 @@ bool Create::handleLine(const QByteArray& line )
     return failureResponse( "Invalid collection name" );
 
   int resourceId = 0;
+  MimeType::List parentContentTypes;
   if ( parent.isValid() ) {
     // check if parent can contain a sub-folder
-    MimeType::List list = parent.mimeTypes();
+    parentContentTypes = parent.mimeTypes();
     bool found = false;
-    foreach ( const MimeType mt, list ) {
+    foreach ( const MimeType mt, parentContentTypes ) {
       if ( mt.name() == QLatin1String( "inode/directory" ) ) {
         found = true;
         break;
@@ -100,6 +101,7 @@ bool Create::handleLine(const QByteArray& line )
   // attributes
   QList<QByteArray> attributes;
   QList<QByteArray> mimeTypes;
+  bool mimeTypesSet = false;
   pos = ImapParser::parseParenthesizedList( line, attributes, pos );
   for ( int i = 0; i < attributes.count() - 1; i += 2 ) {
     const QByteArray key = attributes.at( i );
@@ -108,6 +110,7 @@ bool Create::handleLine(const QByteArray& line )
       location.setRemoteId( QString::fromUtf8( value ) );
     } else if ( key == "MIMETYPE" ) {
       ImapParser::parseParenthesizedList( value, mimeTypes );
+      mimeTypesSet = true;
     } else
       qDebug() << "Unknown attribute" << key;
   }
@@ -118,8 +121,16 @@ bool Create::handleLine(const QByteArray& line )
   if ( !db->appendLocation( location ) )
     return failureResponse( "Could not create collection" );
 
-  foreach ( const QByteArray mimeType, mimeTypes ) {
-    if ( !db->appendMimeTypeForLocation( location.id(), QString::fromUtf8(mimeType) ) )
+  QStringList effectiveMimeTypes;
+  if ( mimeTypesSet ) {
+    foreach ( const QByteArray b, mimeTypes )
+      effectiveMimeTypes << QString::fromUtf8( b );
+  } else {
+    foreach ( const MimeType mt, parentContentTypes )
+      effectiveMimeTypes << mt.name();
+  }
+  foreach ( const QString mimeType, effectiveMimeTypes ) {
+    if ( !db->appendMimeTypeForLocation( location.id(), mimeType ) )
       return failureResponse( "Unable to append mimetype for collection." );
   }
 
