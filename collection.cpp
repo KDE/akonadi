@@ -170,6 +170,11 @@ QByteArray Collection::collectionMimeType( )
   return QByteArray( "inode/directory" );
 }
 
+QList<CollectionAttribute*> Collection::attributes() const
+{
+  return d->attributes.values();
+}
+
 void Collection::addAttribute( CollectionAttribute * attr )
 {
   if ( d->attributes.contains( attr->type() ) )

@@ -70,6 +70,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     void createResult( KJob* job );
     void deleteCollection();
     void deleteResult( KJob* job );
+    void updateActions( const QModelIndex &current );
 
   private:
     class Private;

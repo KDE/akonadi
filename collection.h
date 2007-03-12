@@ -146,6 +146,11 @@ class AKONADI_EXPORT Collection
     bool hasAttribute( const QByteArray &type ) const;
 
     /**
+      Returns all attributes.
+    */
+    QList<CollectionAttribute*> attributes() const;
+
+    /**
       Returns the attribute of the given type if available, 0 otherwise.
       @param type The attribute type.
     */

@@ -87,6 +87,8 @@ void CollectionView::setModel( QAbstractItemModel * model )
   d->filterModel->setSourceModel( model );
   QTreeView::setModel( d->filterModel );
   header()->setResizeMode( 0, QHeaderView::Stretch );
+
+  connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(updateActions(QModelIndex)) );
 }
 
 void CollectionView::dragMoveEvent(QDragMoveEvent * event)
@@ -139,9 +141,11 @@ void CollectionView::dragExpand()
 
 void CollectionView::contextMenuEvent(QContextMenuEvent * event)
 {
+  updateActions( indexAt( event->pos() ) );
   QList<QAction*> actions;
   actions << d->newCollectionAction << d->deleteCollectionAction;
   QMenu::exec( actions, event->globalPos() );
+  updateActions( currentIndex() );
 }
 
 void Akonadi::CollectionView::createCollection()
@@ -183,6 +187,22 @@ void CollectionView::deleteResult(KJob * job)
 {
   if ( job->error() )
     KMessageBox::error( this, i18n("Could not delete folder: %1", job->errorString()), i18n("Folder deletion failed") );
+}
+
+void CollectionView::updateActions( const QModelIndex &current )
+{
+  if ( !current.isValid() ) {
+    d->newCollectionAction->setEnabled( false );
+    d->deleteCollectionAction->setEnabled( false );
+    return;
+  }
+
+  d->newCollectionAction->setEnabled( current.data( CollectionModel::ChildCreatableRole ).toBool() );
+
+  if ( current.parent().isValid() )
+    d->deleteCollectionAction->setEnabled( true );
+  else
+    d->newCollectionAction->setEnabled( false );
 }
 
 #include "collectionview.moc"

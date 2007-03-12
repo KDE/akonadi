@@ -73,7 +73,6 @@ CollectionModel::CollectionModel( QObject * parent ) :
   // monitor collection changes
   d->monitor = new Monitor();
   d->monitor->monitorCollection( Collection::root() );
-  d->monitor->ignoreSession( d->session );
   connect( d->monitor, SIGNAL(collectionChanged(int,QString)), SLOT(collectionChanged(int)) );
   connect( d->monitor, SIGNAL(collectionAdded(int,QString)), SLOT(collectionChanged(int)) );
   connect( d->monitor, SIGNAL(collectionRemoved(int,QString)), SLOT(collectionRemoved(int)) );
@@ -226,13 +225,11 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 
 void CollectionModel::collectionChanged( int collection )
 {
+  CollectionListJob *job = new CollectionListJob( Collection( collection ), CollectionListJob::Local, d->session );
+  connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
   if ( d->collections.contains( collection ) ) {
-    // update
     CollectionStatusJob *job = new CollectionStatusJob( d->collections.value( collection ), d->session );
     connect( job, SIGNAL(result(KJob*)), SLOT(updateDone(KJob*)) );
-  } else {
-    CollectionListJob *job = new CollectionListJob( Collection( collection ), CollectionListJob::Local, d->session );
-    connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
   }
 }
 
@@ -259,10 +256,13 @@ void CollectionModel::updateDone( KJob * job )
     kWarning() << k_funcinfo << "Job error: " << job->errorString() << endl;
   } else {
     CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
-    Collection col = csjob->collection();
-    if ( !d->collections.contains( col.id() ) )
-      kWarning() << k_funcinfo << "Got status response for non-existing collection: " << col.id() << endl;
+    Collection result = csjob->collection();
+    if ( !d->collections.contains( result.id() ) )
+      kWarning() << k_funcinfo << "Got status response for non-existing collection: " << result.id() << endl;
     else {
+      Collection col = d->collections.value( result.id() );
+      foreach ( CollectionAttribute* attr, result.attributes() )
+        col.addAttribute( attr->clone() );
       d->collections[ col.id() ] = col;
       d->updateSupportedMimeTypes( col );
 
