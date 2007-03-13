@@ -25,17 +25,23 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
+#include <libakonadi/collectionpathresolver.h>
+
 using namespace Akonadi;
 
-ItemDumper::ItemDumper( const Collection &collection, const QByteArray &filename, const QByteArray &mimetype )
+ItemDumper::ItemDumper( const QString &path, const QByteArray &filename, const QByteArray &mimetype )
 {
+  CollectionPathResolver* resolver = new CollectionPathResolver( path, this );
+  Q_ASSERT( resolver->exec() );
+  const Collection collection = Collection( resolver->collection() );
+
   QFile f( filename );
   Q_ASSERT( f.open(QIODevice::ReadOnly) );
   QByteArray data = f.readAll();
   f.close();
   ItemAppendJob *job = new ItemAppendJob( collection, mimetype, this );
   job->setData( data );
-  connect( job, SIGNAL(result(KJob*)), SLOT(result(KJob*)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
   job->start();
 }
 
@@ -66,10 +72,7 @@ int main( int argc, char** argv )
   QByteArray path = args->getOption( "path" );
   QByteArray mimetype = args->getOption( "mimetype" );
   QByteArray file = args->getOption( "file" );
-#warning Port me!
-#if 0
-  ItemDumper d( path, file, mimetype );
-#endif
+  ItemDumper d( QString::fromUtf8( path ), file, mimetype );
   return app.exec();
 }
 

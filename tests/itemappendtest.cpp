@@ -20,6 +20,7 @@
 #include "control.h"
 #include "itemappendtest.h"
 #include <libakonadi/collectionlistjob.h>
+#include <libakonadi/collectionpathresolver.h>
 #include <libakonadi/itemappendjob.h>
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/itemdeletejob.h>
@@ -117,13 +118,13 @@ void ItemAppendTest::testIllegalAppend()
   job = new ItemAppendJob( Collection( testFolder1 ), "wrong/type", this );
   QVERIFY( !job->exec() );
 
-#warning Port me!
-#if 0
   // adding item into a collection which can't handle items of this type
-  job = new ItemAppendJob( "res1/foo/bla", "message/rfc822", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo/bla", this );
+  QVERIFY( resolver->exec() );
+  const Collection col = Collection( resolver->collection() );
+  job = new ItemAppendJob( col, "message/rfc822", this );
   QEXPECT_FAIL( "", "Test not yet implemented in the server.", Continue );
   QVERIFY( !job->exec() );
-#endif
 }
 
 #include "itemappendtest.moc"

@@ -27,6 +27,7 @@
 #include "collectionmodifyjob.h"
 #include "collectionrenamejob.h"
 #include "collectionstatusjob.h"
+#include "collectionpathresolver.h"
 #include "control.h"
 #include "messagecollectionattribute.h"
 
@@ -71,7 +72,6 @@ template <typename T> static T* extractAttribute( QList<CollectionAttribute*> at
 static int res1ColId = -1;
 static int res2ColId = -1;
 static int res3ColId = -1;
-static int searchColId = -1;
 
 void CollectionJobTest::testTopLevelList( )
 {
@@ -213,11 +213,11 @@ void CollectionJobTest::testIllegalCreateFolder( )
   job = new CollectionCreateJob( Collection( res2ColId ), "foo2", this );
   QVERIFY( !job->exec() );
 
-#if 0
   // Parent folder with \Noinferiors flag
-  job = new CollectionCreateJob( "res2/foo2/bar", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( "res2/foo", this );
+  QVERIFY( resolver->exec() );
+  job = new CollectionCreateJob( Collection( resolver->collection() ), "new folder", this );
   QVERIFY( !job->exec() );
-#endif
 }
 
 void CollectionJobTest::testCreateDeleteFolder( )
@@ -301,9 +301,10 @@ void CollectionJobTest::testStatus()
   QVERIFY( ctattr != 0 );
   QVERIFY( ctattr->contentTypes().isEmpty() );
 
-#if 0
   // folder with attributes and content
-  status = new CollectionStatusJob( "res1/foo", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );;
+  QVERIFY( resolver->exec() );
+  status = new CollectionStatusJob( Collection( resolver->collection() ), this );
   QVERIFY( status->exec() );
 
   attrs = status->attributes();
@@ -320,7 +321,6 @@ void CollectionJobTest::testStatus()
   QVERIFY( mimeTypes.contains( "text/calendar" ) );
   QVERIFY( mimeTypes.contains( "text/vcard" ) );
   QVERIFY( mimeTypes.contains( "message/rfc822" ) );
-#endif
 }
 
 void CollectionJobTest::testModify()
