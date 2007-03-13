@@ -24,6 +24,7 @@ set( akonadi_LIB_SRC
 	collectionlistjob.cpp
 	collectionmodel.cpp
 	collectionmodifyjob.cpp
+	collectionpathresolver.cpp
 	collectionrenamejob.cpp
 	collectionselectjob.cpp
 	collectionstatusjob.cpp
