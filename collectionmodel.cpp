@@ -431,16 +431,17 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
   foreach ( QString type, data->formats() ) {
     if ( !supportsContentType( idx, QStringList( type ) ) )
       continue;
-#if 0
-    QString path = pathForIndex( idx );
+    const Collection col = d->collections.value( idx.internalId() );
+    if ( !col.isValid() )
+      return false;
     QByteArray item = data->data( type );
     // HACK for some unknown reason the data is sometimes 0-terminated...
     if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
       item.resize( item.size() - 1 );
-    ItemAppendJob *job = new ItemAppendJob( path, item, type.toLatin1(), d->session );
+    ItemAppendJob *job = new ItemAppendJob( col, type.toLatin1(), d->session );
+    job->setData( item );
     connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
     return true;
-#endif
   }
 
   return false;
