@@ -83,12 +83,12 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
       if ( !db->renameLocation( location, location.parentId(), newName ) )
         return failureResponse( "Unable to rename collection" );
     } else if ( type == "PARENT" ) {
-      QByteArray newParent;
-      pos = ImapParser::parseString( line, newParent, pos );
-      Location parent = HandlerHelper::collectionFromIdOrName( newParent );
-      if ( !parent.isValid() )
-        return failureResponse( "Unknown parent collection" );
-      if ( !db->renameLocation( location, parent.id(), location.name() ) )
+      int newParent;
+      bool ok = false;
+      pos = ImapParser::parseNumber( line, newParent, &ok, pos );
+      if ( !ok )
+        return failureResponse( "Invalid syntax" );
+      if ( !db->renameLocation( location, newParent, location.name() ) )
         return failureResponse( "Unable to reparent colleciton" );
     } else
       return failureResponse( "Unknown modify type: " + type );

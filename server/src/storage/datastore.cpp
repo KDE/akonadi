@@ -416,10 +416,25 @@ bool DataStore::resetLocationPolicy( const Location & location )
 
 bool Akonadi::DataStore::renameLocation(const Location & location, int newParent, const QString & newName)
 {
+  if ( location.name() == newName && location.parentId() == newParent )
+    return true;
+
   if ( !m_dbOpened )
     return false;
 
+  if ( newParent > 0 ) {
+    Location parent = Location::retrieveById( newParent );
+    if ( !parent.isValid() )
+      return false;
+  }
+
   const bool move = location.parentId() != newParent;
+
+  QueryBuilder<Location> qb;
+  qb.addValueCondition( Location::parentIdColumn(), "=", newParent );
+  qb.addValueCondition( Location::nameColumn(), "=", newName );
+  if ( !qb.exec() || qb.result().count() > 0 )
+    return false;
 
   Location renamedLoc = location;
   if ( move )
