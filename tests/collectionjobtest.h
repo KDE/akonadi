@@ -38,8 +38,8 @@ class CollectionJobTest : public QObject
     void testCreateDeleteFolderRecursive();
     void testStatus();
     void testModify();
-    void testRename();
-    void testIllegalRename();
+    void testMove();
+    void testIllegalModify();
     void testUtf8CollectionName();
 };
 

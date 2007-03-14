@@ -81,12 +81,6 @@ class AKONADI_EXPORT Collection
     int id() const;
 
     /**
-      Returns the unique IMAP path of this collection.
-    */
-    KDE_DEPRECATED QString path() const;
-    KDE_DEPRECATED void setPath( const QString &path );
-
-    /**
       Returns the name of this collection usable for display.
     */
     QString name() const;
@@ -181,11 +175,6 @@ class AKONADI_EXPORT Collection
       Returns the root collection.
     */
     static Collection root();
-
-    /**
-      Returns the Akonadi IMAP collection prefix.
-    */
-    KDE_DEPRECATED static QString prefix();
 
     /**
       Returns the path of the top-level search folder.

@@ -25,7 +25,6 @@ set( akonadi_LIB_SRC
 	collectionmodel.cpp
 	collectionmodifyjob.cpp
 	collectionpathresolver.cpp
-	collectionrenamejob.cpp
 	collectionselectjob.cpp
 	collectionstatusjob.cpp
 	collectionview.cpp
@@ -74,7 +73,7 @@ install( FILES
 	collectionlistjob.h
 	collectionmodel.h
 	collectionmodifyjob.h
-	collectionrenamejob.h
+	collectionpathresolver.h
 	collectionselectjob.h
 	collectionstatusjob.h
 	collectionview.h

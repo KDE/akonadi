@@ -40,7 +40,6 @@ class Collection::Private : public QSharedData
     {
       id = other.id;
       parentId = other.parentId;
-      path = other.path;
       name = other.name;
       remoteId = other.remoteId;
       type = other.type;
@@ -55,7 +54,6 @@ class Collection::Private : public QSharedData
 
     int id;
     int parentId;
-    QString path;
     QString name;
     QString remoteId;
     Type type;
@@ -85,16 +83,6 @@ Collection::~Collection()
 int Akonadi::Collection::id() const
 {
   return d->id;
-}
-
-QString Collection::path() const
-{
-  return d->path;
-}
-
-void Collection::setPath( const QString &path )
-{
-  d->path = path;
 }
 
 QString Collection::name( ) const
@@ -158,11 +146,6 @@ Collection Collection::root( )
 QString Collection::searchFolder( )
 {
   return root().name() + QLatin1String( "Search" );
-}
-
-QString Collection::prefix()
-{
-  return QLatin1String( "/" );
 }
 
 QByteArray Collection::collectionMimeType( )

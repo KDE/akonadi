@@ -39,7 +39,6 @@ Classes to manipulate collections:
 
 - Akonadi::CollectionCreateJob
 - Akonadi::CollectionModifyJob
-- Akonadi::CollectionRenameJob
 - Akonadi::CollectionDeleteJob
 
 There is also CollectionModel, which is a self-updating model class which can

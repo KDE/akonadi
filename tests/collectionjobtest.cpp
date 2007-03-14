@@ -25,7 +25,6 @@
 #include "collectiondeletejob.h"
 #include "collectionlistjob.h"
 #include "collectionmodifyjob.h"
-#include "collectionrenamejob.h"
 #include "collectionstatusjob.h"
 #include "collectionpathresolver.h"
 #include "control.h"
@@ -214,7 +213,7 @@ void CollectionJobTest::testIllegalCreateFolder( )
   QVERIFY( !job->exec() );
 
   // Parent folder with \Noinferiors flag
-  CollectionPathResolver *resolver = new CollectionPathResolver( "res2/foo", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( "res2/foo2", this );
   QVERIFY( resolver->exec() );
   job = new CollectionCreateJob( Collection( resolver->collection() ), "new folder", this );
   QVERIFY( !job->exec() );
@@ -367,16 +366,18 @@ void CollectionJobTest::testModify()
   compareLists( attr->contentTypes(), reference );
 }
 
-void CollectionJobTest::testRename()
+void CollectionJobTest::testMove()
 {
-  CollectionRenameJob *rename = new CollectionRenameJob( "res1", "res1 (renamed)", this );
-  QVERIFY( rename->exec() );
+  CollectionModifyJob *mod = new CollectionModifyJob( Collection( res1ColId ), this );
+  mod->setParent( Collection( res2ColId ) );
+  QVERIFY( mod->exec() );
 
-  CollectionListJob *ljob = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Recursive );
+  CollectionListJob *ljob = new CollectionListJob( Collection( res2ColId ), CollectionListJob::Recursive );
   QVERIFY( ljob->exec() );
   Collection::List list = ljob->collections();
 
-  QCOMPARE( list.count(), 4 );
+  QCOMPARE( list.count(), 7 );
+  QVERIFY( findCol( list, "res1" ).isValid() );
   QVERIFY( findCol( list, "foo" ).isValid() );
   QVERIFY( findCol( list, "bar" ).isValid() );
   QVERIFY( findCol( list, "bla" ).isValid() );
@@ -387,30 +388,36 @@ void CollectionJobTest::testRename()
 
   QCOMPARE( list.count(), 1 );
   Collection col = list.first();
-  QCOMPARE( col.name(), QLatin1String("res1 (renamed)") );
-  QCOMPARE( col.parent(), Collection::root().id() );
+  QCOMPARE( col.name(), QLatin1String("res1") );
+  QCOMPARE( col.parent(), res2ColId );
 
   // cleanup
-  rename = new CollectionRenameJob( "res1 (renamed)", "res1", this );
-  QVERIFY( rename->exec() );
+  mod = new CollectionModifyJob( Collection( res1ColId ), this );
+  mod->setParent( Collection::root() );
+  QVERIFY( mod->exec() );
 }
 
-void CollectionJobTest::testIllegalRename()
+void CollectionJobTest::testIllegalModify()
 {
   // non-existing collection
-  CollectionRenameJob *rename = new CollectionRenameJob( "i dont exist", "i dont exist either", this );
-  QVERIFY( !rename->exec() );
+  CollectionModifyJob *mod = new CollectionModifyJob( Collection( INT_MAX ), this );
+  mod->setParent( Collection( res1ColId ) );
+  QVERIFY( !mod->exec() );
 
-  // already existing target
-  rename = new CollectionRenameJob( "res1", "res2", this );
-  QVERIFY( !rename->exec() );
+  // rename to already existing name
+  mod = new CollectionModifyJob( Collection( res1ColId ), this );
+  mod->setName( "res2" );
+  QVERIFY( !mod->exec() );
 
-  // root being source or target
-  rename = new CollectionRenameJob( Collection::root().path(), "some name", this );
-  QVERIFY( !rename->exec() );
+  // move to non-existing target
+  mod = new CollectionModifyJob( Collection( res1ColId ), this );
+  mod->setParent( Collection( INT_MAX ) );
+  QVERIFY( !mod->exec() );
 
-  rename = new CollectionRenameJob( "res1", Collection::root().path(), this );
-  QVERIFY( !rename->exec() );
+  // moving root
+  mod = new CollectionModifyJob( Collection::root(), this );
+  mod->setParent( Collection( INT_MAX ) );
+  QVERIFY( !mod->exec() );
 }
 
 void CollectionJobTest::testUtf8CollectionName()
