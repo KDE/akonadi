@@ -95,13 +95,6 @@ void MessageJobTest::testIllegalMessageFetch( )
   MessageFetchJob *job = new MessageFetchJob( Collection( INT_MAX ), this );
   QVERIFY( !job->exec() );
 
-#warning Port me!
-#if 0
-  // fetch listing of virtual folder root
-  job = new MessageFetchJob( Collection::searchFolder(), this );
-  QVERIFY( !job->exec() );
-#endif
-
   // listing of root
   job = new MessageFetchJob( Collection::root(), this );
   QVERIFY( !job->exec() );

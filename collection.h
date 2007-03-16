@@ -177,11 +177,6 @@ class AKONADI_EXPORT Collection
     static Collection root();
 
     /**
-      Returns the path of the top-level search folder.
-    */
-    static QString searchFolder();
-
-    /**
       Returns the mimetype used for collections.
     */
     static QByteArray collectionMimeType();
@@ -215,6 +210,17 @@ class AKONADI_EXPORT Collection
       Assignment operator.
     */
     Collection& operator=( const Collection &other );
+
+    /**
+      Returns the identifier of the resource owning this collection.
+    */
+    QString resource() const;
+
+    /**
+      Sets the identifier of the resource owning this collection.
+      @param res The resource identifier.
+    */
+    void setResource( const QString &resource );
 
   private:
     class Private;

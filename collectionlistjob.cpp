@@ -125,6 +125,8 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
         QList<QByteArray> list;
         ImapParser::parseParenthesizedList( value, list );
         collection.setContentTypes( list );
+      } else if ( key == "RESOURCE" ) {
+        collection.setResource( QString::fromUtf8( value ) );
       } else {
         qDebug() << "Unknown collection attribute:" << key;
       }
@@ -132,14 +134,13 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
 
     // determine collection type
     if ( collection.parent() == Collection::root().id() ) {
-      if ( collection.name() == Collection::searchFolder() )
+      if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) )
         collection.setType( Collection::VirtualParent );
       else
         collection.setType( Collection::Resource );
     }
-#warning Port me!
-//    else if ( parentName == Collection::searchFolder() )
-//       col->setType( Collection::Virtual );
+   else if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) )
+      collection.setType( Collection::Virtual );
     else {
       collection.setType( Collection::Folder );
     }

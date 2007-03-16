@@ -71,6 +71,7 @@ template <typename T> static T* extractAttribute( QList<CollectionAttribute*> at
 static int res1ColId = -1;
 static int res2ColId = -1;
 static int res3ColId = -1;
+static int searchColId = -1;
 
 void CollectionJobTest::testTopLevelList( )
 {
@@ -80,7 +81,6 @@ void CollectionJobTest::testTopLevelList( )
   Collection::List list = job->collections();
 
   // check if everything is there and has the correct types and attributes
-  QEXPECT_FAIL( "", "Search folder not yet ported", Continue );
   QCOMPARE( list.count(), 4 );
   Collection col;
 
@@ -90,6 +90,7 @@ void CollectionJobTest::testTopLevelList( )
   QVERIFY( res1ColId > 0 );
   QCOMPARE( col.type(), Collection::Resource );
   QCOMPARE( col.parent(), Collection::root().id() );
+  QCOMPARE( col.resource(), QLatin1String("akonadi_dummy_resource_1") );
 
   QVERIFY( findCol( list, "res2" ).isValid() );
   res2ColId = findCol( list, "res2" ).id();
@@ -98,12 +99,11 @@ void CollectionJobTest::testTopLevelList( )
   res3ColId = findCol( list, "res3" ).id();
   QVERIFY( res3ColId > 0 );
 
-#if 0
   col = findCol( list, "Search" );
   searchColId = col.id();
   QVERIFY( col.isValid() );
   QCOMPARE( col.type(), Collection::VirtualParent );
-#endif
+  QCOMPARE( col.resource(), QLatin1String("akonadi_search_resource") );
 }
 
 void CollectionJobTest::testFolderList( )
@@ -149,7 +149,6 @@ void CollectionJobTest::testEmptyFolderList( )
   QCOMPARE( list.count(), 0 );
 }
 
-#if 0
 void CollectionJobTest::testSearchFolderList( )
 {
   CollectionListJob *job = new CollectionListJob( Collection( searchColId ), CollectionListJob::Flat );
@@ -157,13 +156,13 @@ void CollectionJobTest::testSearchFolderList( )
   Collection::List list = job->collections();
 
   QCOMPARE( list.count(), 3 );
-  Collection col = findCol( list, "Search/Test ?er" );
+  Collection col = findCol( list, "Test ?er" );
   QVERIFY( col.isValid() );
   QCOMPARE( col.type(), Collection::Virtual );
+  QCOMPARE( col.resource(), QLatin1String("akonadi_search_resource" ) );
   QVERIFY( findCol( list, "all" ).isValid() );
   QVERIFY( findCol( list, "kde-core-devel" ).isValid() );
 }
-#endif
 
 void CollectionJobTest::testResourceFolderList()
 {
@@ -202,11 +201,9 @@ void CollectionJobTest::testIllegalCreateFolder( )
   CollectionCreateJob *job = new CollectionCreateJob( Collection::root(), QString(), this );
   QVERIFY( !job->exec() );
 
-#if 0
   // search folder
-  job = new CollectionCreateJob( "/Search/New Folder", this );
+  job = new CollectionCreateJob( Collection( searchColId ), "New Folder", this );
   QVERIFY( !job->exec() );
-#endif
 
   // already existing folder
   job = new CollectionCreateJob( Collection( res2ColId ), "foo2", this );

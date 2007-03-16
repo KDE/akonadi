@@ -45,6 +45,7 @@ class Collection::Private : public QSharedData
       type = other.type;
       foreach ( CollectionAttribute* attr, other.attributes )
         attributes.insert( attr->type(), attr->clone() );
+      resource = other.resource;
     }
 
     ~Private()
@@ -58,6 +59,7 @@ class Collection::Private : public QSharedData
     QString remoteId;
     Type type;
     QHash<QByteArray, CollectionAttribute*> attributes;
+    QString resource;
 };
 
 Collection::Collection() :
@@ -143,11 +145,6 @@ Collection Collection::root( )
   return root;
 }
 
-QString Collection::searchFolder( )
-{
-  return root().name() + QLatin1String( "Search" );
-}
-
 QByteArray Collection::collectionMimeType( )
 {
   return QByteArray( "inode/directory" );
@@ -206,4 +203,14 @@ Collection& Collection::operator =(const Collection & other)
 {
   d = other.d;
   return *this;
+}
+
+QString Collection::resource() const
+{
+  return d->resource;
+}
+
+void Collection::setResource(const QString & resource)
+{
+  d->resource = resource;
 }

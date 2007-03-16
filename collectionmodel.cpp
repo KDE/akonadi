@@ -115,11 +115,11 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
     case Qt::DecorationRole:
       if ( index.column() == 0 ) {
         if ( col.type() == Collection::Resource )
-          return SmallIcon( QLatin1String( "server" ) );
+          return SmallIcon( QLatin1String( "network-wired" ) );
         if ( col.type() == Collection::VirtualParent )
           return SmallIcon( QLatin1String( "edit-find" ) );
         if ( col.type() == Collection::Virtual )
-          return SmallIcon( QLatin1String( "folder-green" ) );
+          return SmallIcon( QLatin1String( "folder-violet" ) );
         QList<QByteArray> content = col.contentTypes();
         if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
           if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
