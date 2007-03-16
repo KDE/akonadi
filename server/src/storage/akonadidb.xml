@@ -73,6 +73,7 @@
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="NOT NULL REFERENCES CachePolicy(id)"/>
     <reference name="locations" table="Location" key="resourceId"/>
+    <data columns="name,cachePolicyId" values="'akonadi_search_resource',1"/>
   </table>
 
   <table name="Location">
@@ -89,12 +90,7 @@
     <column name="firstUnseen" type="int"/>
     <column name="uidValidity" type="int"/>
     <reference name="items" table="PimItem" key="locationId"/>
-  </table>
-
-  <table name="PersistentSearch">
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
-    <column name="query" type="QByteArray" properties="NOT NULL"/>
+    <data columns="parentId,name,resourceId" values="0,'Search',1"/>
   </table>
 
   <table name="MimeType">
@@ -122,8 +118,6 @@
     <column name="atime" type="QDateTime"/>
     <column name="dirty" type="bool"/>
   </table>
-
-  <relation table1="SearchLocation" column1="id" table2="PimItem" column2="id"/>
 
   <table name="ItemMetaData">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
@@ -165,7 +159,4 @@
   <relation table2="Flag" column2="id" table1="Part" column1="id"/>
 
   <relation table1="Location" column1="id" table2="MimeType" column2="id"/>
-
-  <relation table1="SearchLocation" column1="id" table2="MimeType" column2="id"/>
-
 </database>

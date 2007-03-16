@@ -125,7 +125,8 @@ bool AkList::listCollection(const Location & root, int depth )
   // FIXME: escape " and "\"
   b += "NAME \"" + root.name().toUtf8() + "\" ";
   b += "MIMETYPE (" + MimeType::joinByName( root.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
-  b += "REMOTEID \"" + root.remoteId().toLatin1() + "\")";
+  b += "REMOTEID \"" + root.remoteId().toUtf8() + "\" ";
+  b += "RESOURCE \"" + root.resource().name().toUtf8() + "\")";
   response.setString( b );
   emit responseAvailable( response );
 

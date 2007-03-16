@@ -106,7 +106,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /**
       Initializes the database. Should be called during startup by the main thread.
     */
-    void init();
+    bool init();
 
     /**
       Per thread signleton.
@@ -218,8 +218,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
 
     /* --- Persistent search --------------------------------------------- */
     bool appendPersisntentSearch( const QString &name, const QByteArray &queryString );
-    bool removePersistentSearch( const PersistentSearch &search );
-    QList<Location> listPersistentSearches() const;
 
     /* --- Helper functions ---------------------------------------------- */
     /** Returns the id of the next PIM item that is added to the db.

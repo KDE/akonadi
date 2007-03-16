@@ -25,6 +25,7 @@
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
+#include "handlerhelper.h"
 
 #include <QtCore/QStringList>
 
@@ -45,7 +46,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
   QByteArray command;
   pos = ImapParser::parseString( line, command, pos );
 
-  QString collectionName;
+  QByteArray collectionName;
   pos = ImapParser::parseString( line, collectionName, pos );
   if ( collectionName.isEmpty() )
     return failureResponse( "No name specified" );
@@ -54,10 +55,6 @@ bool SearchPersistent::handleLine( const QByteArray& line )
   Transaction transaction( db );
 
   if ( command.toUpper() == "SEARCH_STORE" ) {
-
-    PersistentSearch search = PersistentSearch::retrieveByName( collectionName );
-    if ( search.isValid() )
-      return failureResponse( "Persistent search does already exist" );
 
     QByteArray mimeType;
     pos = ImapParser::parseString( line, mimeType, pos );
@@ -73,7 +70,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
     if ( queryString.isEmpty() )
       return failureResponse( "No query specified" );
 
-    if ( !db->appendPersisntentSearch( collectionName, queryString ) )
+    if ( !db->appendPersisntentSearch( QString::fromUtf8(collectionName), queryString ) )
       return failureResponse( "Unable to create persistent search" );
 
     // get the responsible search providers
@@ -96,7 +93,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
 
   } else if ( command.toUpper() == "SEARCH_DELETE" ) {
 
-    PersistentSearch search = PersistentSearch::retrieveByName( collectionName );
+    Location search = HandlerHelper::collectionFromIdOrName( collectionName );
     if ( !search.isValid() )
       return failureResponse( "No such persistent search" );
 
@@ -118,7 +115,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
       qDebug() << "returned from search provider call: " << result;
     }
 
-    if ( !db->removePersistentSearch( search ) )
+    if ( !db->cleanupLocation( search ) )
       return failureResponse( "Unable to remove presistent search" );
 
   } else {

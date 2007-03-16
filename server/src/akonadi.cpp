@@ -42,7 +42,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
     DataStore *db = DataStore::self();
     if ( !db->database().isOpen() )
       qFatal("Unable to open database.");
-    db->init();
+    if ( !db->init() )
+      qFatal("Unable to initalize database.");
 
     NotificationManager::self();
     Tracer::self();

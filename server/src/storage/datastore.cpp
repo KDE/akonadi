@@ -157,12 +157,10 @@ void Akonadi::DataStore::close()
   QSqlDatabase::removeDatabase( m_connectionName );
 }
 
-void Akonadi::DataStore::init()
+bool Akonadi::DataStore::init()
 {
   DbInitializer initializer( m_database, QLatin1String(":akonadidb.xml") );
-  if ( !initializer.run() ) {
-    Tracer::self()->error( "DataStore::init()", QString::fromLatin1( "Unable to initialize database: %1" ).arg( initializer.errorMsg() ) );
-  }
+  return initializer.run();
 }
 
 QThreadStorage<DataStore*> instances;
@@ -1105,38 +1103,15 @@ QList<Resource> DataStore::listResources( const CachePolicy & policy )
   return Resource::retrieveFiltered( Resource::cachePolicyIdColumn(), policy.id() );
 }
 
-QList<Location> Akonadi::DataStore::listPersistentSearches() const
-{
-  QList<PersistentSearch> list = PersistentSearch::retrieveAll();
-  QList<Location> rv;
-  foreach ( PersistentSearch search, list ) {
-    Location l;
-    l.setName( QLatin1String("Search/") + search.name() );
-    rv.append( l );
-  }
-  return rv;
-}
-
-
 
 bool Akonadi::DataStore::appendPersisntentSearch(const QString & name, const QByteArray & queryString)
 {
-  PersistentSearch ps( name, queryString );
-  if ( !ps.insert() )
-    return false;
-// FIXME
-//   mNotificationCollector->collectionAdded( name );
-  return true;
+  Location l;
+  l.setRemoteId( QString::fromUtf8( queryString ) );
+  l.setParentId( 1 ); // search root
+  l.setName( name );
+  return appendLocation( l );
 }
-
-bool Akonadi::DataStore::removePersistentSearch( const PersistentSearch &search )
-{
-  // TODO
-//   mNotificationCollector->collectionRemoved( search.name() );
-  return removeById( search.id(), PersistentSearch::tableName() );
-}
-
-
 
 
 void DataStore::debugLastDbError( const char* actionDescription ) const
