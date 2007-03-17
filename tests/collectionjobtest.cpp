@@ -214,6 +214,10 @@ void CollectionJobTest::testIllegalCreateFolder( )
   QVERIFY( resolver->exec() );
   job = new CollectionCreateJob( Collection( resolver->collection() ), "new folder", this );
   QVERIFY( !job->exec() );
+
+  // folder with missing parents
+  job = new CollectionCreateJob( Collection( INT_MAX ), "sub1", this );
+  QVERIFY( !job->exec() );
 }
 
 void CollectionJobTest::testCreateDeleteFolder( )
@@ -254,30 +258,38 @@ void CollectionJobTest::testCreateDeleteFolder( )
   QVERIFY( ljob->exec() );
   QVERIFY( !findCol( ljob->collections(), "res3/foo" ).isValid() );
 
-  // folder with mime types
+  // folder with attributes
   job = new CollectionCreateJob( Collection( res3ColId ), "mail folder", this );
   QList<QByteArray> mimeTypes;
   mimeTypes << "inode/directory" << "message/rfc822";
   job->setContentTypes( mimeTypes );
+  job->setRemoteId( "remote id" );
   QVERIFY( job->exec() );
   newCol = job->collection();
   QVERIFY( newCol.isValid() );
 
-  CollectionStatusJob *status = new CollectionStatusJob( newCol, this );
-  QVERIFY( status->exec() );
-  CollectionContentTypeAttribute *attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
-  QVERIFY( attr != 0 );
-  compareLists( attr->contentTypes(), mimeTypes );
+  CollectionListJob *list = new CollectionListJob( newCol, CollectionListJob::Local, this );
+  QVERIFY( list->exec() );
+  QCOMPARE( list->collections().count(), 1 );
+  Collection col = list->collections().first();
+  compareLists( col.contentTypes(), mimeTypes );
+  QCOMPARE( col.remoteId(), QString("remote id") );
+  QCOMPARE( col.resource(), QString("akonadi_dummy_resource_3") );
 
+  // cleanup
   del = new CollectionDeleteJob( newCol, this );
   QVERIFY( del->exec() );
 }
 
-void CollectionJobTest::testCreateDeleteFolderRecursive()
+void CollectionJobTest::testIllegalDeleteFolder()
 {
-  // folder with missing parents
-  CollectionCreateJob *job = new CollectionCreateJob( Collection( INT_MAX ), "sub1", this );
-  QVERIFY( !job->exec() );
+  // non-existing folder
+  CollectionDeleteJob *del = new CollectionDeleteJob( Collection( INT_MAX ), this );
+  QVERIFY( !del->exec() );
+
+  // root
+  del = new CollectionDeleteJob( Collection::root(), this );
+  QVERIFY( !del->exec() );
 }
 
 void CollectionJobTest::testStatus()

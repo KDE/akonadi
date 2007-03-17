@@ -30,6 +30,7 @@ class Akonadi::CollectionCreateJobPrivate {
     QString name;
     QList<QByteArray> contentTypes;
     Collection collection;
+    QString remoteId;
 };
 
 CollectionCreateJob::CollectionCreateJob( const Collection &parentCollection, const QString &name, QObject * parent ) :
@@ -52,6 +53,7 @@ void CollectionCreateJob::doStart( )
   command += " (";
   if ( !d->contentTypes.isEmpty() )
     command += "MIMETYPE (" + ImapParser::join( d->contentTypes, QByteArray(" ") ) + ')';
+  command += " REMOTEID \"" + d->remoteId.toUtf8() + '"';
   command += ')';
   writeData( command );
 }
@@ -94,6 +96,11 @@ void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteAr
 
   } else
     Job::doHandleResponse( tag, data );
+}
+
+void CollectionCreateJob::setRemoteId(const QString & remoteId)
+{
+  d->remoteId = remoteId;
 }
 
 #include "collectioncreatejob.moc"

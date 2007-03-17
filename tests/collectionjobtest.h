@@ -35,7 +35,7 @@ class CollectionJobTest : public QObject
     void testResourceFolderList();
     void testIllegalCreateFolder();
     void testCreateDeleteFolder();
-    void testCreateDeleteFolderRecursive();
+    void testIllegalDeleteFolder();
     void testStatus();
     void testModify();
     void testMove();

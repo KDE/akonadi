@@ -56,6 +56,12 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     void setContentTypes( const QList<QByteArray> &contentTypes );
 
     /**
+      Sets the remote id of the collection.
+      @param remoteId The remote identifier of the collection
+    */
+    void setRemoteId( const QString &remoteId );
+
+    /**
       Returns the created collection if the job was executed succesfull.
     */
     Collection collection() const;
