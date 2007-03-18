@@ -93,6 +93,7 @@ void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteAr
     d->collection = Collection( colId );
     d->collection.setParent( parentId );
     d->collection.setName( d->name );
+    d->collection.setRemoteId( d->remoteId );
 
   } else
     Job::doHandleResponse( tag, data );

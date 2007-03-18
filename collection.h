@@ -126,6 +126,23 @@ class AKONADI_EXPORT Collection
     void setParent( int parent );
 
     /**
+      Sets the parent collection.
+    */
+    void setParent( const Collection &collection );
+
+    /**
+      Returns the parent remote identifier.
+      Note: This returns usually nothing for collections retrieved from the backend.
+    */
+    QString parentRemoteId() const;
+
+    /**
+      Sets the parent remote identifier.
+      @param remoteParent The remote identifier of the parent.
+    */
+    void setParentRemoteId( const QString &remoteParent );
+
+    /**
       Adds a collection attribute. An already existing attribute of the same
       type is deleted.
       @param attr The new attribute. The collection takes the ownership of this
@@ -228,5 +245,7 @@ class AKONADI_EXPORT Collection
 };
 
 }
+
+AKONADI_EXPORT uint qHash( const Akonadi::Collection &collection );
 
 #endif

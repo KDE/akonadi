@@ -42,6 +42,7 @@ class Collection::Private : public QSharedData
       parentId = other.parentId;
       name = other.name;
       remoteId = other.remoteId;
+      parentRemoteId = other.parentRemoteId;
       type = other.type;
       foreach ( CollectionAttribute* attr, other.attributes )
         attributes.insert( attr->type(), attr->clone() );
@@ -57,6 +58,7 @@ class Collection::Private : public QSharedData
     int parentId;
     QString name;
     QString remoteId;
+    QString parentRemoteId;
     Type type;
     QHash<QByteArray, CollectionAttribute*> attributes;
     QString resource;
@@ -65,6 +67,8 @@ class Collection::Private : public QSharedData
 Collection::Collection() :
     d ( new Private )
 {
+  static int lastId = -1;
+  d->id = lastId--;
 }
 
 Collection::Collection( int id ) :
@@ -129,6 +133,22 @@ int Collection::parent() const
 void Collection::setParent( int parent )
 {
   d->parentId = parent;
+}
+
+void Collection::setParent(const Collection & collection)
+{
+  d->parentId = collection.parent();
+  d->parentRemoteId = collection.parentRemoteId();
+}
+
+QString Collection::parentRemoteId() const
+{
+  return d->parentRemoteId;
+}
+
+void Collection::setParentRemoteId(const QString & remoteParent)
+{
+  d->parentRemoteId = remoteParent;
 }
 
 QString Collection::delimiter()
@@ -213,4 +233,9 @@ QString Collection::resource() const
 void Collection::setResource(const QString & resource)
 {
   d->resource = resource;
+}
+
+uint qHash( const Akonadi::Collection &collection )
+{
+  return qHash( collection.id() );
 }
