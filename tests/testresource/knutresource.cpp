@@ -65,11 +65,6 @@ QString KnutResource::configuration() const
   return mConfig;
 }
 
-void KnutResource::synchronize()
-{
-  mSyncTimer->start( 2000 );
-}
-
 bool KnutResource::requestItemDelivery( const DataReference &ref, int type, const QDBusMessage &msg )
 {
   Q_UNUSED( ref );
@@ -123,6 +118,23 @@ void KnutResource::syncTimeout()
     changeStatus( Ready );
     changeProgress( 0 );
   }
+}
+
+void KnutResource::retrieveCollections()
+{
+  Collection c;
+  c.setParent( Collection::root() );
+  c.setRemoteId( "foo" );
+  c.setName( name() );
+  Collection::List list;
+  list << c;
+  collectionsRetrieved( list );
+}
+
+void KnutResource::synchronizeCollection(const Akonadi::Collection & collection)
+{
+  Q_UNUSED( collection );
+  mSyncTimer->start( 2000 );
 }
 
 #include "knutresource.moc"

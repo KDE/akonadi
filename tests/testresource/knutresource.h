@@ -39,7 +39,9 @@ class KnutResource : public Akonadi::ResourceBase
     virtual bool setConfiguration( const QString& );
     virtual QString configuration() const;
 
-    virtual void synchronize();
+  protected:
+    void retrieveCollections();
+    void synchronizeCollection( const Akonadi::Collection &collection );
 
   private Q_SLOTS:
     void statusTimeout();
