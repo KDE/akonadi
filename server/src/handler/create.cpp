@@ -54,7 +54,7 @@ bool Create::handleLine(const QByteArray& line )
   int parentId = -1;
   Location parent;
   pos = ImapParser::parseNumber( line, parentId, &ok, pos );
-  if ( !ok ) { // RFC 3501 comapt
+  if ( !ok ) { // RFC 3501 compat
     QString parentPath;
     int index = name.lastIndexOf( QLatin1Char('/') );
     if ( index > 0 ) {
@@ -91,6 +91,13 @@ bool Create::handleLine(const QByteArray& line )
 
     // inherit resource
     resourceId = parent.resourceId();
+  } else {
+    // deduce owning resource from current session id
+    QString sessionId = QString::fromUtf8( connection()->sessionId() );
+    Resource res = Resource::retrieveByName( sessionId );
+    if ( !res.isValid() )
+      return failureResponse( "Cannot create top-level collection" );
+    resourceId = res.id();
   }
 
   Location location;
