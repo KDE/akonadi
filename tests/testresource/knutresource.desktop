@@ -10,6 +10,6 @@ Type=AkonadiResource
 Exec=akonadi_knut_resource
 Icon=knut
 
-X-Akonadi-MimeTypes=text/calendar,text/x-vcard
+X-Akonadi-MimeTypes=text/calendar,text/directory
 X-Akonadi-Capabilitites=text/calendar
 X-Akonadi-Identifier=akonadi_knut_resource
