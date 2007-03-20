@@ -122,7 +122,7 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
           return SmallIcon( QLatin1String( "folder-violet" ) );
         QList<QByteArray> content = col.contentTypes();
         if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
-          if ( content.contains( "text/x-vcard" ) || content.contains( "text/vcard" ) )
+          if ( content.contains( "text/x-vcard" ) || content.contains( "text/directory" ) || content.contains( "text/vcard" ) )
             return SmallIcon( QLatin1String( "kmgroupware_folder_contacts" ) );
           // TODO: add all other content types and/or fix their mimetypes
           if ( content.contains( "akonadi/event" ) || content.contains( "text/ical" ) )
