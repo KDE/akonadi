@@ -33,7 +33,7 @@ Dialog::Dialog( QWidget *parent )
   mFilter = new QComboBox( this );
   mFilter->addItem( "None" );
   mFilter->addItem( "text/calendar" );
-  mFilter->addItem( "text/x-vcard" );
+  mFilter->addItem( "text/directory" );
   connect( mFilter, SIGNAL( activated( int ) ),
            this, SLOT( filterChanged( int ) ) );
 
