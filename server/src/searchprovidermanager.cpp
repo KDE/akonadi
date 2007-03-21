@@ -42,7 +42,7 @@ SearchProviderManager* SearchProviderManager::self()
   return mSelf;
 }
 
-SearchProvider* SearchProviderManager::createSearchProviderForMimetype( const QByteArray &mimeType )
+SearchProvider* SearchProviderManager::createSearchProviderForMimetype( const QByteArray& )
 {
   SearchProvider *provider = 0;
 
