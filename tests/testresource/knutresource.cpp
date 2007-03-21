@@ -133,7 +133,7 @@ void KnutResource::retrieveCollections()
 
 void KnutResource::synchronizeCollection(const Akonadi::Collection & collection)
 {
-  Q_UNUSED( collection );
+  changeStatus( Syncing, "Syncing collection " + collection.name() );
   mSyncTimer->start( 2000 );
 }
 
