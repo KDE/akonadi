@@ -206,9 +206,12 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
   Collection parentCol;
   if ( parent.isValid() ) {
     parentCol = d->collections.value( parent.internalId() );
+    Q_ASSERT( parentCol.id() == parent.internalId() );
     list = d->childCollections.value( parentCol.id() );
-  } else
+  } else {
+    parentCol = Collection::root();
     list = d->childCollections.value( Collection::root().id() );
+  }
   if ( row < 0 || row  >= list.size() ) {
     kWarning() << k_funcinfo << "Index out of bounds: " << row << " parent: " << parentCol.id() << endl;
     return false;
