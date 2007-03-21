@@ -17,35 +17,61 @@
     02110-1301, USA.
 */
 
+#include <QtCore/QSharedData>
+
 #include "item.h"
 
 using namespace Akonadi;
 
-class Akonadi::ItemPrivate {
+class Item::Private : public QSharedData
+{
   public:
-    DataReference ref;
+    Private()
+      : QSharedData()
+    {
+    }
+
+    Private( const Private &other )
+      : QSharedData( other )
+    {
+      reference = other.reference;
+      flags = other.flags;
+      data = other.data;
+      mimeType = other.mimeType;
+    }
+
+    DataReference reference;
     Item::Flags flags;
     QByteArray data;
     QByteArray mimeType;
 };
 
-Item::Item( const DataReference & ref ) :
-    d( new ItemPrivate )
+Item::Item( const DataReference & reference )
+  : d( new Private )
 {
-  d->ref = ref;
+  d->reference = reference;
 }
 
-Item::~ Item( )
+Item::Item( const Item &other )
+  : d( other.d )
 {
-  delete d;
 }
 
-DataReference Item::reference( ) const
+Item::~Item( )
 {
-  return d->ref;
 }
 
-Item::Flags Item::flags( ) const
+bool Item::isValid() const
+{
+  return !d->reference.isNull();
+}
+
+DataReference Item::reference() const
+{
+  return d->reference;
+}
+
+Item::Flags Item::flags() const
 {
   return d->flags;
 }
@@ -70,7 +96,7 @@ QByteArray Item::data() const
   return d->data;
 }
 
-void Item::setData(const QByteArray & data)
+void Item::setData( const QByteArray & data )
 {
   d->data = data;
 }
@@ -80,7 +106,15 @@ QByteArray Item::mimeType() const
   return d->mimeType;
 }
 
-void Item::setMimeType(const QByteArray & mimeType)
+void Item::setMimeType( const QByteArray & mimeType )
 {
   d->mimeType = mimeType;
+}
+
+Item& Item::operator=( const Item & other )
+{
+  if ( this != &other )
+    d = other.d;
+
+  return *this;
 }

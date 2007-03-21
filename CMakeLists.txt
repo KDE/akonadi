@@ -40,9 +40,9 @@ set( akonadi_LIB_SRC
 	job.cpp
 	messagecollectionattribute.cpp
 	messagecollectionmodel.cpp
-	message.cpp
-	messagefetchjob.cpp
-	messagemodel.cpp
+  #	message.cpp
+  #	messagefetchjob.cpp
+  #	messagemodel.cpp
 	monitor.cpp
 	profilemanager.cpp
 	profilemodel.cpp

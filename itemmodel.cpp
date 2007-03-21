@@ -34,7 +34,7 @@ using namespace Akonadi;
 class ItemModel::Private
 {
   public:
-    QList<Item*> items;
+    Item::List items;
     Collection collection;
     Monitor *monitor;
     Session *session;
@@ -60,18 +60,18 @@ QVariant Akonadi::ItemModel::data( const QModelIndex & index, int role ) const
     return QVariant();
   if ( index.row() >= d->items.count() )
     return QVariant();
-  Item* item = d->items.at( index.row() );
-  if ( !item )
+  const Item item = d->items.at( index.row() );
+  if ( !item.isValid() )
     return QVariant();
 
   if ( role == Qt::DisplayRole ) {
     switch ( index.column() ) {
       case Id:
-        return QString::number( item->reference().persistanceID() );
+        return QString::number( item.reference().persistanceID() );
       case RemoteId:
-        return item->reference().externalUrl().toString();
+        return item.reference().externalUrl().toString();
       case MimeType:
-        return QString::fromLatin1( item->mimeType() );
+        return QString::fromLatin1( item.mimeType() );
     }
   }
 
@@ -186,7 +186,7 @@ void ItemModel::itemRemoved( const DataReference &reference )
   // ### *slow*
   int index = -1;
   for ( int i = 0; i < d->items.size(); ++i ) {
-    if ( d->items.at( i )->reference() == reference ) {
+    if ( d->items.at( i ).reference() == reference ) {
       index = i;
       break;
     }
@@ -194,9 +194,9 @@ void ItemModel::itemRemoved( const DataReference &reference )
   if ( index < 0 )
     return;
   beginRemoveRows( QModelIndex(), index, index );
-  Item* itm = d->items.at( index );
+  const Item item = d->items.at( index );
+  Q_ASSERT( item.isValid() );
   d->items.removeAt( index );
-  delete itm;
   endRemoveRows();
 }
 
@@ -206,20 +206,24 @@ DataReference Akonadi::ItemModel::referenceForIndex( const QModelIndex & index )
     return DataReference();
   if ( index.row() >= d->items.count() )
     return DataReference();
-  Item *itm = d->items.at( index.row() );
-  Q_ASSERT( itm );
-  return itm->reference();
+
+  const Item item = d->items.at( index.row() );
+  Q_ASSERT( item.isValid() );
+  return item.reference();
 }
 
-Akonadi::Item* Akonadi::ItemModel::itemForIndex( const QModelIndex & index ) const
+Akonadi::Item Akonadi::ItemModel::itemForIndex( const QModelIndex & index ) const
 {
   if ( !index.isValid() )
-    return 0;
+    return Akonadi::Item();
+
   if ( index.row() >= d->items.count() )
-    return 0;
-  Item *itm = d->items.at( index.row() );
-  Q_ASSERT( itm );
-  return itm;
+    return Akonadi::Item();
+
+  Item item = d->items.at( index.row() );
+  Q_ASSERT( item.isValid() );
+
+  return item;
 }
 
 ItemFetchJob* ItemModel::createFetchJob()

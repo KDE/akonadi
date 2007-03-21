@@ -87,7 +87,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
         return;
       }
 
-      Item *item = new Item( ref );
+      Item item( ref );
 
       // parse fetch response fields
       for ( int i = 0; i < fetch.count() - 1; i += 2 ) {
@@ -95,7 +95,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
         if ( fetch[i] == "FLAGS" )
           parseFlags( fetch[i + 1], item );
         else if ( fetch[i] == "RFC822" ) {
-          item->setData( fetch[i + 1] );
+          item.setData( fetch[i + 1] );
         }
 
       }
@@ -144,16 +144,16 @@ void ItemFetchJob::addFetchField(const QByteArray & field)
   d->fields.append( field );
 }
 
-void ItemFetchJob::parseFlags(const QByteArray & flagData, Item * item)
+void ItemFetchJob::parseFlags(const QByteArray & flagData, Item &item)
 {
   QList<QByteArray> flags;
   ImapParser::parseParenthesizedList( flagData, flags );
   foreach ( const QByteArray flag, flags ) {
     if ( flag.startsWith( "\\MimeTypes" ) ) {
       int begin = flag.indexOf( '[' ) + 1;
-      item->setMimeType( flag.mid( begin, flag.length() - begin - 1 ) );
+      item.setMimeType( flag.mid( begin, flag.length() - begin - 1 ) );
     } else {
-      item->setFlag( flag );
+      item.setFlag( flag );
     }
   }
 }

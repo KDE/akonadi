@@ -107,7 +107,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     /**
       Returns the item at given index.
     */
-    Item* itemForIndex( const QModelIndex &index ) const;
+    Item itemForIndex( const QModelIndex &index ) const;
 
     /**
       Returns the Session object used for all operations by this model.

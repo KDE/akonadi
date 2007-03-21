@@ -221,7 +221,9 @@ void Collection::setRemoteId(const QString & remoteId)
 
 Collection& Collection::operator =(const Collection & other)
 {
-  d = other.d;
+  if ( this != &other )
+    d = other.d;
+
   return *this;
 }
 

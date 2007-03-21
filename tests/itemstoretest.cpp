@@ -60,13 +60,13 @@ void ItemStoreTest::testFlagChange()
   ItemFetchJob *fjob = new ItemFetchJob( DataReference( 1, QString() ) );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
-  Item *item = fjob->items()[0];
+  Item item = fjob->items()[0];
 
   // add a flag
-  Item::Flags origFlags = item->flags();
+  Item::Flags origFlags = item.flags();
   Item::Flags expectedFlags = origFlags;
   expectedFlags.insert( "added_test_flag_1" );
-  ItemStoreJob *sjob = new ItemStoreJob( item->reference() );
+  ItemStoreJob *sjob = new ItemStoreJob( item.reference() );
   sjob->addFlag( "added_test_flag_1" );
   QVERIFY( sjob->exec() );
 
@@ -74,13 +74,13 @@ void ItemStoreTest::testFlagChange()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
-  QCOMPARE( item->flags().count(), expectedFlags.count() );
-  Item::Flags diff = expectedFlags - item->flags();
+  QCOMPARE( item.flags().count(), expectedFlags.count() );
+  Item::Flags diff = expectedFlags - item.flags();
   QVERIFY( diff.isEmpty() );
 
   // set flags
   expectedFlags.insert( "added_test_flag_2" );
-  sjob = new ItemStoreJob( item->reference() );
+  sjob = new ItemStoreJob( item.reference() );
   sjob->setFlags( expectedFlags );
   QVERIFY( sjob->exec() );
 
@@ -88,12 +88,12 @@ void ItemStoreTest::testFlagChange()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
-  QCOMPARE( item->flags().count(), expectedFlags.count() );
-  diff = expectedFlags - item->flags();
+  QCOMPARE( item.flags().count(), expectedFlags.count() );
+  diff = expectedFlags - item.flags();
   QVERIFY( diff.isEmpty() );
 
   // remove a flag
-  sjob = new ItemStoreJob( item->reference() );
+  sjob = new ItemStoreJob( item.reference() );
   sjob->removeFlag( "added_test_flag_1" );
   sjob->removeFlag( "added_test_flag_2" );
   QVERIFY( sjob->exec() );
@@ -102,8 +102,8 @@ void ItemStoreTest::testFlagChange()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
-  QCOMPARE( item->flags().count(), origFlags.count() );
-  diff = origFlags - item->flags();
+  QCOMPARE( item.flags().count(), origFlags.count() );
+  diff = origFlags - item.flags();
   QVERIFY( diff.isEmpty() );
 }
 
@@ -119,8 +119,8 @@ void ItemStoreTest::testDataChange()
   ItemFetchJob *fjob = new ItemFetchJob( ref );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
-  Item *item = fjob->items()[0];
-  QVERIFY( item->data().isEmpty() );
+  Item item = fjob->items()[0];
+  QVERIFY( item.data().isEmpty() );
 
   // add data
   sjob = new ItemStoreJob( ref );
@@ -131,7 +131,7 @@ void ItemStoreTest::testDataChange()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
-  QVERIFY( item->data() == "testmailbody" );
+  QVERIFY( item.data() == "testmailbody" );
 }
 
 void ItemStoreTest::testItemMove()

@@ -76,8 +76,8 @@ void ItemAppendTest::testItemAppend()
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 3 );
-  foreach ( Item *item, fjob->items() ) {
-    QVERIFY( refs.indexOf( item->reference() ) >= 0 );
+  foreach ( Item item, fjob->items() ) {
+    QVERIFY( refs.indexOf( item.reference() ) >= 0 );
   }
 
   foreach ( DataReference ref, refs ) {
@@ -102,7 +102,7 @@ void ItemAppendTest::testUtf8Data()
   fjob->addFetchField( "RFC822" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
-  QCOMPARE( utf8string.toUtf8(), fjob->items().first()->data() );
+  QCOMPARE( utf8string.toUtf8(), fjob->items().first().data() );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );

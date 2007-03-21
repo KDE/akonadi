@@ -24,10 +24,9 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QSet>
+#include <QtCore/QSharedDataPointer>
 
 namespace Akonadi {
-
-class ItemPrivate;
 
 /**
   Base class for all PIM items stored in Akonadi.
@@ -36,7 +35,7 @@ class ItemPrivate;
 class AKONADI_EXPORT Item
 {
   public:
-    typedef QList<Item *> List;
+    typedef QList<Item> List;
 
     typedef QByteArray Flag;
     typedef QSet<QByteArray> Flags;
@@ -48,9 +47,19 @@ class AKONADI_EXPORT Item
     Item( const DataReference &ref = DataReference() );
 
     /**
+     * Copy constructor.
+     */
+    Item( const Item &other );
+
+    /**
       Destroys this PIM item.
     */
     virtual ~Item();
+
+    /**
+     * Returns whether the item is a valid PIM item.
+     */
+    bool isValid() const;
 
     /**
       Returns the DataReference of this item.
@@ -100,8 +109,11 @@ class AKONADI_EXPORT Item
     */
     void setMimeType( const QByteArray &mimeType );
 
+    Item& operator=( const Item &other );
+
   private:
-    ItemPrivate* const d;
+    class Private;
+    QSharedDataPointer<Private> d;
 };
 
 }

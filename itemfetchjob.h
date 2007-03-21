@@ -102,7 +102,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       @param flagData The unparsed flag data of the fetch response
       @param item The corresponding item
     */
-    void parseFlags( const QByteArray &flagData, Item* item );
+    void parseFlags( const QByteArray &flagData, Item &item );
 
   private:
     void startFetchJob();
