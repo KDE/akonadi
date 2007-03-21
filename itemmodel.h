@@ -121,19 +121,14 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     void listingDone( KJob* job );
 
     /**
-      Connected to message queries that handle newly added messages.
+      Connected to the monitor job.
     */
-    void fetchingNewDone( KJob* job );
+    void itemChanged( const Item &item );
 
     /**
       Connected to the monitor job.
     */
-    void itemChanged( const Akonadi::DataReference &reference );
-
-    /**
-      Connected to the monitor job.
-    */
-    void itemAdded( const Akonadi::DataReference &reference );
+    void itemAdded( const Item &item );
 
     /**
       Connected to the monitor job.

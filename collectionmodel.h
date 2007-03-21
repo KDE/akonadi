@@ -158,7 +158,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Notify the model about collection changes.
     */
-    void collectionChanged( int collection );
+    void collectionChanged( const Collection &collection );
 
     /**
       Connected to the collection status job.

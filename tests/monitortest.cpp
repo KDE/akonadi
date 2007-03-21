@@ -58,11 +58,11 @@ void MonitorTest::testMonitor()
 
   // monitor signals
   qRegisterMetaType<Akonadi::DataReference>("Akonadi::DataReference");
-  QSignalSpy caspy( monitor, SIGNAL(collectionAdded(int,QString)) );
-  QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(int,QString)) );
+  QSignalSpy caspy( monitor, SIGNAL(collectionAdded(const Item&)) );
+  QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(const Item&)) );
   QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(int,QString)) );
-  QSignalSpy iaspy( monitor, SIGNAL(itemAdded(Akonadi::DataReference)) );
-  QSignalSpy imspy( monitor, SIGNAL(itemChanged(Akonadi::DataReference)) );
+  QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Item&)) );
+  QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Item&)) );
   QSignalSpy irspy( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)) );
 
   QVERIFY( caspy.isValid() );

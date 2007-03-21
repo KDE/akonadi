@@ -143,42 +143,25 @@ void Akonadi::ItemModel::listingDone( KJob * job )
   d->monitor = new Monitor( this );
   d->monitor->ignoreSession( d->session );
   d->monitor->monitorCollection( d->collection );
-  connect( d->monitor, SIGNAL(itemChanged(Akonadi::DataReference)),
-           SLOT(itemChanged(Akonadi::DataReference)) );
-  connect( d->monitor, SIGNAL(itemAdded(Akonadi::DataReference)),
-           SLOT(itemAdded(Akonadi::DataReference)) );
+  connect( d->monitor, SIGNAL(itemChanged( const Item& )),
+           SLOT(itemChanged( const Item& )) );
+  connect( d->monitor, SIGNAL(itemAdded( const Item& )),
+           SLOT(itemAdded( const Item& )) );
   connect( d->monitor, SIGNAL(itemRemoved(Akonadi::DataReference)),
            SLOT(itemRemoved(Akonadi::DataReference)) );
 }
 
-void Akonadi::ItemModel::fetchingNewDone( KJob * job )
+void ItemModel::itemChanged( const Item &item )
 {
-  if ( job->error() ) {
-    // TODO
-    kWarning() << k_funcinfo << "Fetching new items failed!" << endl;
-  } else {
-    Item::List list = static_cast<ItemFetchJob*>( job )->items();
-    if ( !list.isEmpty() ) {
-      beginInsertRows( QModelIndex(), d->items.size(), d->items.size() + list.size() );
-      d->items += list;
-      endInsertRows();
-    } else
-      kWarning() << k_funcinfo << "Got unexpected empty fetch response!" << endl;
-  }
+  itemRemoved( item.reference() );
+  itemAdded( item.reference() );
 }
 
-void ItemModel::itemChanged( const DataReference &reference )
+void ItemModel::itemAdded( const Item &item )
 {
-  itemRemoved( reference );
-  itemAdded( reference );
-}
-
-void ItemModel::itemAdded( const DataReference &reference )
-{
-  // TODO: make sure we don't fetch the complete data here!
-  ItemFetchJob *job = createFetchJob();
-  job->setUid( reference );
-  connect( job, SIGNAL(result(KJob*)), SLOT(fetchingNewDone(KJob*)) );
+  beginInsertRows( QModelIndex(), d->items.size(), d->items.size() + 1 );
+  d->items.append( item );
+  endInsertRows();
 }
 
 void ItemModel::itemRemoved( const DataReference &reference )

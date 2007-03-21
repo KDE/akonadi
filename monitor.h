@@ -21,12 +21,12 @@
 #define AKONADI_MONITOR_H
 
 #include <libakonadi/collection.h>
+#include <libakonadi/item.h>
 #include <libakonadi/job.h>
 #include <QtCore/QObject>
 
 namespace Akonadi {
 
-class MonitorPrivate;
 class Session;
 
 /**
@@ -93,15 +93,15 @@ class AKONADI_EXPORT Monitor : public QObject
   Q_SIGNALS:
     /**
       Emitted if a monitored object has changed.
-      @param ref Reference of the changed objects.
+      @param item The changed item.
     */
-    void itemChanged( const Akonadi::DataReference &ref );
+    void itemChanged( const Item &item );
 
     /**
       Emitted if a item has been added to a monitored collection.
-      @param ref Reference of the added object.
+      @param item The new item.
     */
-    void itemAdded( const Akonadi::DataReference &ref );
+    void itemAdded( const Item &item );
 
     /**
       Emitted if a monitored object has been removed.
@@ -111,18 +111,16 @@ class AKONADI_EXPORT Monitor : public QObject
 
     /**
       Emitted if a monitored got a new child collection.
-      @param collection The identifier of the removed collection.
-      @param remoteId The remote identifier of the removed collection.
+      @param collection The new collection.
     */
-    void collectionAdded( int collection, const QString &remoteId );
+    void collectionAdded( const Collection &collection );
 
     /**
       Emitted if a monitored collection changed (its properties, not its
       content).
-      @param collection The identifier of the removed collection.
-      @param remoteId The remote identifier of the removed collection.
-    */
-    void collectionChanged( int collection, const QString &remoteId );
+      @param collection The changed collection.
+     */
+    void collectionChanged( const Collection &collection );
 
     /**
       Emitted if a monitored collection has been removed.
@@ -132,23 +130,23 @@ class AKONADI_EXPORT Monitor : public QObject
     void collectionRemoved( int collection, const QString &remoteId );
 
   private:
-    bool connectToNotificationManager();
+    class Private;
+    Private* const d;
 
-  private Q_SLOTS:
-    void slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                          const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                        const QByteArray &mimetype, const QByteArray &resource );
-    void slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                          const QByteArray &mimetype, const QByteArray &resource );
-    void slotCollectionAdded( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
-    void slotCollectionChanged( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
-    void slotCollectionRemoved( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
-
-    void sessionDestroyed(QObject *obj);
-
-  private:
-    MonitorPrivate* const d;
+    Q_PRIVATE_SLOT( d, void slotItemChanged( const QByteArray&, int, const QString&, int,
+                                             const QByteArray&, const QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void slotItemAdded( const QByteArray&, int, const QString&, int,
+                                           const QByteArray&, const QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void slotItemRemoved( const QByteArray&, int, const QString&, int,
+                                             const QByteArray&, const QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void slotCollectionAdded( const QByteArray&, int, const QString&, const QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void slotCollectionChanged( const QByteArray&, int, const QString&, const QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void slotCollectionRemoved( const QByteArray&, int, const QString&, const QByteArray& ) )
+    Q_PRIVATE_SLOT( d, void sessionDestroyed( QObject* ) )
+    Q_PRIVATE_SLOT( d, void slotFetchItemAddedFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotFetchItemChangedFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotFetchCollectionAddedFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotFetchCollectionChangedFinished( KJob* ) )
 };
 
 }

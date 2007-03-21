@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include "collectionlistjob.h"
+#include "itemfetchjob.h"
 #include "monitor.h"
 #include "notificationmanagerinterface.h"
 #include "session.h"
@@ -28,9 +30,15 @@
 
 using namespace Akonadi;
 
-class Akonadi::MonitorPrivate
+class Monitor::Private
 {
   public:
+    Private( Monitor *parent )
+      : mParent( parent )
+    {
+    }
+
+    Monitor *mParent;
     org::kde::Akonadi::NotificationManager *nm;
     Collection::List collections;
     QSet<QByteArray> resources;
@@ -60,6 +68,21 @@ class Akonadi::MonitorPrivate
       return sessions.contains( sessionId );
     }
 
+    bool connectToNotificationManager();
+
+    // private slots
+    void slotItemChanged( const QByteArray&, int, const QString&, int, const QByteArray&, const QByteArray& );
+    void slotItemAdded( const QByteArray&, int, const QString&, int, const QByteArray&, const QByteArray& );
+    void slotItemRemoved( const QByteArray&, int, const QString&, int, const QByteArray&, const QByteArray& );
+    void slotCollectionAdded( const QByteArray&, int, const QString&, const QByteArray& );
+    void slotCollectionChanged( const QByteArray&, int, const QString&, const QByteArray& );
+    void slotCollectionRemoved( const QByteArray&, int, const QString&, const QByteArray& );
+    void sessionDestroyed( QObject* );
+    void slotFetchItemAddedFinished( KJob* );
+    void slotFetchItemChangedFinished( KJob* );
+    void slotFetchCollectionAddedFinished( KJob* );
+    void slotFetchCollectionChangedFinished( KJob* );
+
   private:
     bool isCollectionMonitored( int collection ) const
     {
@@ -71,13 +94,184 @@ class Akonadi::MonitorPrivate
     }
 };
 
+bool Monitor::Private::connectToNotificationManager()
+{
+  if ( !nm )
+    nm = new org::kde::Akonadi::NotificationManager( QLatin1String( "org.kde.Akonadi" ),
+                                                     QLatin1String( "/notifications" ),
+                                                     QDBusConnection::sessionBus(), mParent );
+  else
+    return true;
+
+  if ( !nm ) {
+    qWarning() << "Unable to connect to notification manager";
+  } else {
+    connect( nm, SIGNAL(itemChanged(QByteArray,int,QString,int,QByteArray,QByteArray)),
+             mParent, SLOT(slotItemChanged(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+    connect( nm, SIGNAL(itemAdded(QByteArray,int,QString,int,QByteArray,QByteArray)),
+             mParent, SLOT(slotItemAdded(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+    connect( nm, SIGNAL(itemRemoved(QByteArray,int,QString,int,QByteArray,QByteArray)),
+             mParent, SLOT(slotItemRemoved(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+    connect( nm, SIGNAL(collectionChanged(QByteArray,int,QString,QByteArray)),
+             mParent, SLOT(slotCollectionChanged(QByteArray,int,QString,QByteArray)) );
+    connect( nm, SIGNAL(collectionAdded(QByteArray,int,QString,QByteArray)),
+             mParent, SLOT(slotCollectionAdded(QByteArray,int,QString,QByteArray)) );
+    connect( nm, SIGNAL(collectionRemoved(QByteArray,int,QString,QByteArray)),
+             mParent, SLOT(slotCollectionRemoved(QByteArray,int,QString,QByteArray)) );
+    return true;
+  }
+  return false;
+}
+
+void Monitor::Private::slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
+                                        const QByteArray &mimetype, const QByteArray &resource )
+{
+  if ( isSessionIgnored( sessionId ) )
+    return;
+
+  if ( isItemMonitored( uid, collection, mimetype, resource ) ) {
+    ItemFetchJob *job = new ItemFetchJob( DataReference( uid, remoteId ), mParent );
+    connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotFetchItemChangedFinished( KJob* ) ) );
+    job->start();
+  }
+  // FIXME: only collection status has changed here
+//   if ( isCollectionMonitored( collection, resource ) )
+//     emit mParent->collectionChanged( collection );
+}
+
+void Monitor::Private::slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
+                                      const QByteArray &mimetype, const QByteArray &resource )
+{
+  if ( isSessionIgnored( sessionId ) )
+    return;
+
+  if ( isItemMonitored( uid, collection, mimetype, resource ) ) {
+    ItemFetchJob *job = new ItemFetchJob( DataReference( uid, remoteId ), mParent );
+    connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotFetchItemAddedFinished( KJob* ) ) );
+    job->start();
+  }
+
+  // FIXME: only collection status has changed here
+//   if ( isCollectionMonitored( collection, resource ) )
+//     emit mParent->collectionChanged( collection );
+}
+
+void Monitor::Private::slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
+                                        const QByteArray &mimetype, const QByteArray &resource )
+{
+  if ( isSessionIgnored( sessionId ) )
+    return;
+
+  if ( isItemMonitored( uid, collection, mimetype, resource ) )
+    emit mParent->itemRemoved( DataReference( uid, remoteId ) );
+  // FIXME: only collection status has changed here
+//   if ( isCollectionMonitored( collection, resource ) )
+//     emit mParent->collectionChanged( collection );
+}
+
+void Monitor::Private::slotCollectionChanged( const QByteArray &sessionId, int collection, const QString&,
+                                              const QByteArray &resource )
+{
+  if ( isSessionIgnored( sessionId ) )
+    return;
+
+  if ( isCollectionMonitored( collection, resource ) ) {
+    CollectionListJob *job = new CollectionListJob( Collection( collection ), CollectionListJob::Local, mParent );
+    connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotFetchCollectionChangedFinished( KJob* ) ) );
+    job->start();
+  }
+}
+
+void Monitor::Private::slotCollectionAdded( const QByteArray &sessionId, int collection, const QString&,
+                                            const QByteArray &resource )
+{
+  if ( isSessionIgnored( sessionId ) )
+    return;
+
+  if ( isCollectionMonitored( collection, resource ) ) {
+    CollectionListJob *job = new CollectionListJob( Collection( collection ), CollectionListJob::Local, mParent );
+    connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotFetchCollectionAddedFinished( KJob* ) ) );
+    job->start();
+  }
+}
+
+void Monitor::Private::slotCollectionRemoved( const QByteArray &sessionId, int collection,
+                                              const QString &remoteId, const QByteArray &resource )
+{
+  if ( isSessionIgnored( sessionId ) )
+    return;
+
+  if ( isCollectionMonitored( collection, resource ) )
+    emit mParent->collectionRemoved( collection, remoteId );
+}
+
+void Monitor::Private::sessionDestroyed( QObject * object )
+{
+  Session* session = qobject_cast<Session*>( object );
+  if ( session )
+    sessions.removeAll( session->sessionId() );
+}
+
+void Monitor::Private::slotFetchItemAddedFinished( KJob *job )
+{
+  if ( job->error() ) {
+    qWarning() << "Error on fetching item: " << job->errorText();
+  } else {
+    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+
+    const Item item = fetchJob->items().first();
+    if ( item.isValid() )
+      emit mParent->itemAdded( item );
+  }
+}
+
+void Monitor::Private::slotFetchItemChangedFinished( KJob *job )
+{
+  if ( job->error() ) {
+    qWarning() << "Error on fetching item: " << job->errorText();
+  } else {
+    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+
+    const Item item = fetchJob->items().first();
+    if ( item.isValid() )
+      emit mParent->itemChanged( item );
+  }
+}
+
+void Monitor::Private::slotFetchCollectionAddedFinished( KJob *job )
+{
+  if ( job->error() ) {
+    qWarning() << "Error on fetching collection: " << job->errorText();
+  } else {
+    CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
+
+    const Collection collection = listJob->collections().first();
+    if ( collection.isValid() )
+      emit mParent->collectionAdded( collection );
+  }
+}
+
+void Monitor::Private::slotFetchCollectionChangedFinished( KJob *job )
+{
+  if ( job->error() ) {
+    qWarning() << "Error on fetching collection: " << job->errorText();
+  } else {
+    CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
+
+    const Collection collection = listJob->collections().first();
+    if ( collection.isValid() )
+      emit mParent->collectionChanged( collection );
+  }
+}
+
+
 Monitor::Monitor( QObject *parent ) :
     QObject( parent ),
-    d( new MonitorPrivate() )
+    d( new Private( this ) )
 {
   d->nm = 0;
   d->monitorAll = false;
-  connectToNotificationManager();
+  d->connectToNotificationManager();
 }
 
 Monitor::~Monitor()
@@ -113,96 +307,6 @@ void Akonadi::Monitor::monitorAll()
 void Monitor::ignoreSession(Session * session)
 {
   d->sessions << session->sessionId();
-}
-
-void Monitor::slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                               const QByteArray &mimetype, const QByteArray &resource )
-{
-  if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
-    emit itemChanged( DataReference( uid, remoteId ) );
-  // FIXME: only collection status has changed here
-//   if ( d->isCollectionMonitored( collection, resource ) )
-//     emit collectionChanged( collection );
-}
-
-void Monitor::slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                             const QByteArray &mimetype, const QByteArray &resource )
-{
-  if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
-    emit itemAdded( DataReference( uid, remoteId ) );
-  // FIXME: only collection status has changed here
-//   if ( d->isCollectionMonitored( collection, resource ) )
-//     emit collectionChanged( collection );
-}
-
-void Monitor::slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                               const QByteArray &mimetype, const QByteArray &resource )
-{
-  if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isItemMonitored( uid, collection, mimetype, resource ) )
-    emit itemRemoved( DataReference( uid, remoteId ) );
-  // FIXME: only collection status has changed here
-//   if ( d->isCollectionMonitored( collection, resource ) )
-//     emit collectionChanged( collection );
-}
-
-void Monitor::slotCollectionChanged( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource )
-{
-  if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isCollectionMonitored( collection, resource ) )
-    emit collectionChanged( collection, remoteId );
-}
-
-void Monitor::slotCollectionAdded( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource )
-{
-  if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isCollectionMonitored( collection, resource ) )
-    emit collectionAdded( collection, remoteId );
-}
-
-void Monitor::slotCollectionRemoved( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource )
-{
-  if ( d->isSessionIgnored( sessionId ) ) return;
-  if ( d->isCollectionMonitored( collection, resource ) )
-    emit collectionRemoved( collection, remoteId );
-}
-
-bool Monitor::connectToNotificationManager( )
-{
-  if ( !d->nm )
-    d->nm = new org::kde::Akonadi::NotificationManager( QLatin1String( "org.kde.Akonadi" ),
-                                                        QLatin1String( "/notifications" ),
-                                                        QDBusConnection::sessionBus(), this );
-  else
-    return true;
-
-  if ( !d->nm ) {
-    qWarning() << "Unable to connect to notification manager";
-  } else {
-    connect( d->nm, SIGNAL(itemChanged(QByteArray,int,QString,int,QByteArray,QByteArray)),
-             SLOT(slotItemChanged(QByteArray,int,QString,int,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemAdded(QByteArray,int,QString,int,QByteArray,QByteArray)),
-             SLOT(slotItemAdded(QByteArray,int,QString,int,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(itemRemoved(QByteArray,int,QString,int,QByteArray,QByteArray)),
-             SLOT(slotItemRemoved(QByteArray,int,QString,int,QByteArray,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionChanged(QByteArray,int,QString,QByteArray)),
-             SLOT(slotCollectionChanged(QByteArray,int,QString,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionAdded(QByteArray,int,QString,QByteArray)),
-             SLOT(slotCollectionAdded(QByteArray,int,QString,QByteArray)) );
-    connect( d->nm, SIGNAL(collectionRemoved(QByteArray,int,QString,QByteArray)),
-             SLOT(slotCollectionRemoved(QByteArray,int,QString,QByteArray)) );
-    return true;
-  }
-  return false;
-}
-
-void Monitor::sessionDestroyed(QObject * obj)
-{
-  Session* session = dynamic_cast<Session*>( obj );
-  if ( session )
-    d->sessions.removeAll( session->sessionId() );
 }
 
 #include "monitor.moc"
