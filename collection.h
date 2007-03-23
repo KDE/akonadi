@@ -248,4 +248,6 @@ class AKONADI_EXPORT Collection
 
 AKONADI_EXPORT uint qHash( const Akonadi::Collection &collection );
 
+Q_DECLARE_METATYPE(Akonadi::Collection)
+
 #endif

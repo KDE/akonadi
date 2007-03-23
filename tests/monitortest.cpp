@@ -28,6 +28,7 @@
 #include <libakonadi/itemstorejob.h>
 #include <libakonadi/itemdeletejob.h>
 
+#include <QtCore/QVariant>
 #include <QtGui/QApplication>
 #include <QtTest/QSignalSpy>
 #include <qtest_kde.h>
@@ -57,12 +58,14 @@ void MonitorTest::testMonitor()
   monitor->monitorCollection( Collection::root() );
 
   // monitor signals
-  qRegisterMetaType<Akonadi::DataReference>("Akonadi::DataReference");
-  QSignalSpy caspy( monitor, SIGNAL(collectionAdded(const Item&)) );
-  QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(const Item&)) );
+  qRegisterMetaType<Akonadi::DataReference>();
+  qRegisterMetaType<Akonadi::Collection>();
+  qRegisterMetaType<Akonadi::Item>();
+  QSignalSpy caspy( monitor, SIGNAL(collectionAdded(const Akonadi::Collection&)) );
+  QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
   QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(int,QString)) );
-  QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Item&)) );
-  QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Item&)) );
+  QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&)) );
+  QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&)) );
   QSignalSpy irspy( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)) );
 
   QVERIFY( caspy.isValid() );
@@ -76,11 +79,14 @@ void MonitorTest::testMonitor()
   CollectionCreateJob *create = new CollectionCreateJob( res3, "monitor", this );
   QVERIFY( create->exec() );
   Collection monitorCol = create->collection();
+  QVERIFY( monitorCol.isValid() );
   QTest::qWait(1000); // make sure the DBus signal has been processed
 
   QCOMPARE( caspy.count(), 1 );
   QList<QVariant> arg = caspy.takeFirst();
-  QCOMPARE( arg.at(0).toInt(), monitorCol.id() );
+  Collection col = arg.at(0).value<Collection>();
+  QCOMPARE( col, monitorCol );
+  QCOMPARE( col.name(), QString("monitor") );
 
   QVERIFY( cmspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
@@ -91,6 +97,8 @@ void MonitorTest::testMonitor()
   // add an item
   ItemAppendJob *append = new ItemAppendJob( monitorCol, "message/rfc822", this );
   QVERIFY( append->exec() );
+  DataReference monitorRef = append->reference();
+  QVERIFY( !monitorRef.isNull() );
   QTest::qWait(1000);
 
   // ### statistic changes currently don't generate signals
@@ -102,8 +110,9 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( iaspy.count(), 1 );
   arg = iaspy.takeFirst();
-  DataReference ref = qvariant_cast<DataReference>( arg.at(0) );
-  QVERIFY( !ref.isNull() );
+  Item item = arg.at( 0 ).value<Item>();
+  QCOMPARE( item.reference(), monitorRef );
+  QCOMPARE( item.mimeType(), QByteArray( "message/rfc822" ) );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
@@ -111,7 +120,7 @@ void MonitorTest::testMonitor()
   QVERIFY( irspy.isEmpty() );
 
   // modify an item
-  ItemStoreJob *store = new ItemStoreJob( ref, this );
+  ItemStoreJob *store = new ItemStoreJob( monitorRef, this );
   store->setData( QByteArray( "some new content" ) );
   QVERIFY( store->exec() );
   QTest::qWait(1000);
@@ -124,8 +133,9 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( imspy.count(), 1 );
   arg = imspy.takeFirst();
-  DataReference ref2 = qvariant_cast<DataReference>( arg.at(0) );
-  QCOMPARE( ref, ref2 );
+  item = arg.at( 0 ).value<Item>();
+  QCOMPARE( monitorRef, item.reference() );
+  QCOMPARE( item.data(), QByteArray( "some new content" ) );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
@@ -133,7 +143,7 @@ void MonitorTest::testMonitor()
   QVERIFY( irspy.isEmpty() );
 
   // delete an item
-  ItemDeleteJob *del = new ItemDeleteJob( ref, this );
+  ItemDeleteJob *del = new ItemDeleteJob( monitorRef, this );
   QVERIFY( del->exec() );
   QTest::qWait(1000);
 
@@ -146,8 +156,8 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( irspy.count(), 1 );
   arg = irspy.takeFirst();
-  ref2 = qvariant_cast<DataReference>( arg.at(0) );
-  QCOMPARE( ref, ref2 );
+  DataReference ref = qvariant_cast<DataReference>( arg.at(0) );
+  QCOMPARE( monitorRef, ref );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );

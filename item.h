@@ -118,4 +118,6 @@ class AKONADI_EXPORT Item
 
 }
 
+Q_DECLARE_METATYPE(Akonadi::Item)
+
 #endif

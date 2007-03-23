@@ -95,13 +95,13 @@ class AKONADI_EXPORT Monitor : public QObject
       Emitted if a monitored object has changed.
       @param item The changed item.
     */
-    void itemChanged( const Item &item );
+    void itemChanged( const Akonadi::Item &item );
 
     /**
       Emitted if a item has been added to a monitored collection.
       @param item The new item.
     */
-    void itemAdded( const Item &item );
+    void itemAdded( const Akonadi::Item &item );
 
     /**
       Emitted if a monitored object has been removed.
@@ -113,14 +113,14 @@ class AKONADI_EXPORT Monitor : public QObject
       Emitted if a monitored got a new child collection.
       @param collection The new collection.
     */
-    void collectionAdded( const Collection &collection );
+    void collectionAdded( const Akonadi::Collection &collection );
 
     /**
       Emitted if a monitored collection changed (its properties, not its
       content).
       @param collection The changed collection.
      */
-    void collectionChanged( const Collection &collection );
+    void collectionChanged( const Akonadi::Collection &collection );
 
     /**
       Emitted if a monitored collection has been removed.
