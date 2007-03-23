@@ -123,12 +123,12 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     /**
       Connected to the monitor job.
     */
-    void itemChanged( const Item &item );
+    void itemChanged( const Akonadi::Item &item );
 
     /**
       Connected to the monitor job.
     */
-    void itemAdded( const Item &item );
+    void itemAdded( const Akonadi::Item &item );
 
     /**
       Connected to the monitor job.

@@ -73,8 +73,8 @@ CollectionModel::CollectionModel( QObject * parent ) :
   // monitor collection changes
   d->monitor = new Monitor();
   d->monitor->monitorCollection( Collection::root() );
-  connect( d->monitor, SIGNAL(collectionChanged(const Collection&)), SLOT(collectionChanged(const Collection&)) );
-  connect( d->monitor, SIGNAL(collectionAdded(const Collection&)), SLOT(collectionChanged(const Collection&)) );
+  connect( d->monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)), SLOT(collectionChanged(const Akonadi::Collection&)) );
+  connect( d->monitor, SIGNAL(collectionAdded(const Akonadi::Collection&)), SLOT(collectionChanged(const Akonadi::Collection&)) );
   connect( d->monitor, SIGNAL(collectionRemoved(int,QString)), SLOT(collectionRemoved(int)) );
 
   // ### Hack to get the kmail resource folder icons
@@ -226,7 +226,7 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
   return true;
 }
 
-void CollectionModel::collectionChanged( const Collection &collection )
+void CollectionModel::collectionChanged( const Akonadi::Collection &collection )
 {
   CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, d->session );
   connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );

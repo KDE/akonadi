@@ -143,21 +143,21 @@ void Akonadi::ItemModel::listingDone( KJob * job )
   d->monitor = new Monitor( this );
   d->monitor->ignoreSession( d->session );
   d->monitor->monitorCollection( d->collection );
-  connect( d->monitor, SIGNAL(itemChanged( const Item& )),
-           SLOT(itemChanged( const Item& )) );
-  connect( d->monitor, SIGNAL(itemAdded( const Item& )),
-           SLOT(itemAdded( const Item& )) );
+  connect( d->monitor, SIGNAL(itemChanged( const Akonadi::Item& )),
+           SLOT(itemChanged( const Akonadi::Item& )) );
+  connect( d->monitor, SIGNAL(itemAdded( const Akonadi::Item& )),
+           SLOT(itemAdded( const Akonadi::Item& )) );
   connect( d->monitor, SIGNAL(itemRemoved(Akonadi::DataReference)),
            SLOT(itemRemoved(Akonadi::DataReference)) );
 }
 
-void ItemModel::itemChanged( const Item &item )
+void ItemModel::itemChanged( const Akonadi::Item &item )
 {
   itemRemoved( item.reference() );
   itemAdded( item.reference() );
 }
 
-void ItemModel::itemAdded( const Item &item )
+void ItemModel::itemAdded( const Akonadi::Item &item )
 {
   beginInsertRows( QModelIndex(), d->items.size(), d->items.size() + 1 );
   d->items.append( item );
