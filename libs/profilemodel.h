@@ -30,7 +30,7 @@ class AKONADI_EXPORT ProfileModel : public QAbstractItemModel
   Q_OBJECT
 
   public:
-    ProfileModel( QObject *parent );
+    explicit ProfileModel( QObject *parent );
     virtual ~ProfileModel();
 
     virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;

@@ -33,7 +33,7 @@ class AKONADI_EXPORT ProfileManager : public QObject
     /**
      * Creates a new profile manager.
      */
-    ProfileManager( QObject *parent = 0 );
+    explicit ProfileManager( QObject *parent = 0 );
 
     /**
      * Destroys the profile manager.
