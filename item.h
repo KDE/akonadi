@@ -44,7 +44,7 @@ class AKONADI_EXPORT Item
       Create a new PIM item.
       @param ref The unique reference of this item.
     */
-    explicit Item( const DataReference &ref = DataReference() );
+    Item( const DataReference &ref = DataReference() );
 
     /**
      * Copy constructor.
