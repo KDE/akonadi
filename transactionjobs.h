@@ -35,7 +35,7 @@ class TransactionBeginJob : public Job
       Creates a new TransactionBeginJob.
       @param parent The parent job or Session, must not be 0.
     */
-    TransactionBeginJob( Job *parent );
+    explicit TransactionBeginJob( Job *parent );
 
     /**
       Destroys this job.
@@ -58,7 +58,7 @@ class TransactionRollbackJob : public Job
       Creates a new TransactionRollbackJob.
       @param parent The parent job or Session, must not be 0.
     */
-    TransactionRollbackJob( Job *parent );
+    explicit TransactionRollbackJob( Job *parent );
 
     /**
       Destroys this TransactionRollbackJob.
@@ -80,7 +80,7 @@ class TransactionCommitJob : public Job
       Creates a new TransactionCommitJob.
       @param parent The parent job or Session, must not be 0.
      */
-    TransactionCommitJob( Job *parent );
+    explicit TransactionCommitJob( Job *parent );
 
     /**
       Destroys this TransactionCommitJob.

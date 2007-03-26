@@ -63,7 +63,7 @@ class AKONADI_EXPORT CollectionContentTypeAttribute : public CollectionAttribute
       Creates a new content mimetype attribute.
       @param contentTypes Allowed content types.
     */
-    CollectionContentTypeAttribute( const QList<QByteArray> &contentTypes = QList<QByteArray>() );
+  explicit CollectionContentTypeAttribute( const QList<QByteArray> &contentTypes = QList<QByteArray>() );
 
     virtual QByteArray type() const;
     virtual CollectionContentTypeAttribute* clone() const;

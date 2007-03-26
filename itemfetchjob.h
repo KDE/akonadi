@@ -39,7 +39,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       Creates a new item fetch job.
       @param parent The parent object.
     */
-    ItemFetchJob( QObject *parent = 0 );
+    explicit ItemFetchJob( QObject *parent = 0 );
 
     /**
       Create a new item list job to retrieve handles to all

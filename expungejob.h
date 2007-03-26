@@ -38,7 +38,7 @@ class ExpungeJob : public Job
       Creates a new ExpungeJob.
       @param parent The parent object.
     */
-    ExpungeJob( QObject *parent = 0 );
+    explicit ExpungeJob( QObject *parent = 0 );
 
     /**
       Destroys this job.

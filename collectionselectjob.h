@@ -39,7 +39,7 @@ class AKONADI_EXPORT CollectionSelectJob : public Job
       @param collection The collection to select.
       @param parent The parent object.
     */
-    CollectionSelectJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionSelectJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.

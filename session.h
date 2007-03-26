@@ -52,7 +52,7 @@ class AKONADI_EXPORT Session : public QObject
 
       @see defaultSession()
     */
-    Session( const QByteArray &sessionId = QByteArray(), QObject *parent = 0 );
+    explicit Session( const QByteArray &sessionId = QByteArray(), QObject *parent = 0 );
 
     /**
       Closes this session.

@@ -41,7 +41,7 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
       @param collection The Collection to modify
       @param parent The parent object
     */
-    CollectionModifyJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionModifyJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.

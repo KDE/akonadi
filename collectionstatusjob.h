@@ -43,7 +43,7 @@ class AKONADI_EXPORT CollectionStatusJob : public Job
       @param collection The collection.
       @param parent The parent object.
     */
-    CollectionStatusJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionStatusJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.

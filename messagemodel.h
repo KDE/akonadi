@@ -51,7 +51,7 @@ class AKONADI_EXPORT MessageModel : public Akonadi::ItemModel
 
       @param parent The parent object.
     */
-    MessageModel( QObject* parent = 0 );
+    explicit MessageModel( QObject* parent = 0 );
 
     /**
       Deletes the message model.

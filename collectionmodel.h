@@ -54,7 +54,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Create a new collection model.
       @param parent The parent object.
     */
-    CollectionModel( QObject *parent = 0 );
+    explicit CollectionModel( QObject *parent = 0 );
 
     /**
       Destroys this model.

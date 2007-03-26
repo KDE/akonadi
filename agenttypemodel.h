@@ -42,7 +42,7 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
     /**
      * Creates a new agent type model.
      */
-    AgentTypeModel( QObject *parent );
+    explicit AgentTypeModel( QObject *parent );
 
     /**
      * Destroys the agent type model.

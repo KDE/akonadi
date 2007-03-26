@@ -42,14 +42,14 @@ class AKONADI_EXPORT ItemStoreJob : public Job
       @param item The modified items. Must not be 0.
       @param parent The parent object.
     */
-    ItemStoreJob( Item* item, QObject *parent = 0 );
+    explicit ItemStoreJob( Item* item, QObject *parent = 0 );
 
     /**
       Modifies the item with the identifier @p ref.
       @param ref The reference of the item to change.
       @param parent The parent object.
     */
-    ItemStoreJob( const DataReference &ref, QObject *parent = 0 );
+    explicit ItemStoreJob( const DataReference &ref, QObject *parent = 0 );
 
     /**
       Destoys this job.

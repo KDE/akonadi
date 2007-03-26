@@ -40,7 +40,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
       Create a new collection view.
       @param parent the parent widget.
     */
-    CollectionView( QWidget *parent = 0 );
+    explicit CollectionView( QWidget *parent = 0 );
 
     /**
       Destroys this collection view.

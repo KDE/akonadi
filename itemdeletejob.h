@@ -41,7 +41,7 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
       @param ref The reference of the item to delete.
       @param parent The parent object.
     */
-    ItemDeleteJob( const DataReference &ref, QObject *parent = 0 );
+    explicit ItemDeleteJob( const DataReference &ref, QObject *parent = 0 );
 
     /**
       Destorys this job.

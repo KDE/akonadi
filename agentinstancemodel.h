@@ -39,7 +39,7 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
       OnlineRole
     };
 
-    AgentInstanceModel( QObject *parent );
+    explicit AgentInstanceModel( QObject *parent );
     virtual ~AgentInstanceModel();
 
     virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;

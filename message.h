@@ -44,7 +44,7 @@ class AKONADI_EXPORT Message : public Item
 
       @param ref The data reference of this message.
     */
-    Message( const DataReference &ref = DataReference() );
+    explicit Message( const DataReference &ref = DataReference() );
 
     /**
       Destroys this message.

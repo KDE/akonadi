@@ -49,7 +49,7 @@ class AKONADI_EXPORT AgentManager : public QObject
     /**
      * Creates a new agent manager.
      */
-    AgentManager( QObject *parent = 0 );
+    explicit AgentManager( QObject *parent = 0 );
 
     /**
      * Destroys the agent manager.

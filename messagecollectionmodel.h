@@ -38,7 +38,7 @@ class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
       Create a new message collection model.
       @param parent The parent object.
     */
-    MessageCollectionModel( QObject *parent = 0 );
+    explicit MessageCollectionModel( QObject *parent = 0 );
 
     /**
       Reimplemented from CollectionModel.

@@ -43,7 +43,7 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
       @param path The collection path.
       @param parent The parent object.
     */
-    CollectionPathResolver( const QString &path, QObject *parent = 0 );
+    explicit CollectionPathResolver( const QString &path, QObject *parent = 0 );
 
     /**
       Creates a new CollectionPathResolver to determine the path of
@@ -51,7 +51,7 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
       @param collection The collection
       @param parent The parent object.
     */
-    CollectionPathResolver( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionPathResolver( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this object.

@@ -47,7 +47,7 @@ class AKONADI_EXPORT Monitor : public QObject
       Creates a new monitor.
       @param parent The parent object.
     */
-    Monitor( QObject *parent = 0 );
+    explicit Monitor( QObject *parent = 0 );
 
     /**
       Destroys this monitor.

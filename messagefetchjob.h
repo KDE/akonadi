@@ -40,7 +40,7 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
       Create a new message fetch job.
       @param parent The parent object.
     */
-    MessageFetchJob( QObject *parent = 0 );
+    explicit MessageFetchJob( QObject *parent = 0 );
 
     /**
       Create a new message fetch job to retrieve envelopes of all
@@ -48,7 +48,7 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
       @param collection The collection.
       @param parent The parent object.
     */
-    MessageFetchJob( const Collection &collection, QObject *parent = 0 );
+    explicit MessageFetchJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Creates a new message fetch job to retrieve the complete message
@@ -56,7 +56,7 @@ class AKONADI_EXPORT MessageFetchJob : public ItemFetchJob
       @param ref The unique message id.
       @param parent The parent object.
     */
-    MessageFetchJob( const DataReference &ref, QObject *parent = 0 );
+    explicit MessageFetchJob( const DataReference &ref, QObject *parent = 0 );
 
     /**
       Destroys this job.

@@ -53,7 +53,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
       @param parent The parent object.
     */
-    ItemModel( QObject* parent = 0 );
+    explicit ItemModel( QObject* parent = 0 );
 
     /**
       Deletes the message model.
