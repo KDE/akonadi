@@ -31,6 +31,7 @@ class Akonadi::CollectionCreateJobPrivate {
     QList<QByteArray> contentTypes;
     Collection collection;
     QString remoteId;
+    QList<QPair<QByteArray, QByteArray> > attributes;
 };
 
 CollectionCreateJob::CollectionCreateJob( const Collection &parentCollection, const QString &name, QObject * parent ) :
@@ -54,6 +55,9 @@ void CollectionCreateJob::doStart( )
   if ( !d->contentTypes.isEmpty() )
     command += "MIMETYPE (" + ImapParser::join( d->contentTypes, QByteArray(" ") ) + ')';
   command += " REMOTEID \"" + d->remoteId.toUtf8() + '"';
+  typedef QPair<QByteArray,QByteArray> QByteArrayPair;
+  foreach ( const QByteArrayPair bp, d->attributes )
+    command += ' ' + bp.first + ' ' + bp.second;
   command += ')';
   writeData( command );
 }
@@ -102,6 +106,16 @@ void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteAr
 void CollectionCreateJob::setRemoteId(const QString & remoteId)
 {
   d->remoteId = remoteId;
+}
+
+void CollectionCreateJob::setAttribute(CollectionAttribute * attr)
+{
+  Q_ASSERT( !attr->type().isEmpty() );
+
+  QByteArray value = attr->toByteArray();
+  if ( value.isEmpty() )
+    value = "";
+  d->attributes.append( qMakePair( attr->type(), value ) );
 }
 
 #include "collectioncreatejob.moc"

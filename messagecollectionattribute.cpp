@@ -74,3 +74,14 @@ MessageCollectionAttribute * MessageCollectionAttribute::clone() const
   attr->setUnreadCount( unreadCount() );
   return attr;
 }
+
+QByteArray MessageCollectionAttribute::toByteArray() const
+{
+  // TODO
+  return QByteArray();
+}
+
+void MessageCollectionAttribute::setData(const QByteArray & data)
+{
+  // TODO
+}

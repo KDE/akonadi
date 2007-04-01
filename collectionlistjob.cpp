@@ -121,14 +121,10 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
         collection.setName( QString::fromUtf8( value ) );
       } else if ( key == "REMOTEID" ) {
         collection.setRemoteId( QString::fromUtf8( value ) );
-      } else if ( key == "MIMETYPE" ) {
-        QList<QByteArray> list;
-        ImapParser::parseParenthesizedList( value, list );
-        collection.setContentTypes( list );
       } else if ( key == "RESOURCE" ) {
         collection.setResource( QString::fromUtf8( value ) );
       } else {
-        qDebug() << "Unknown collection attribute:" << key;
+        collection.addRawAttribute( key, value );
       }
     }
 

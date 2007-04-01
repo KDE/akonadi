@@ -239,6 +239,14 @@ class AKONADI_EXPORT Collection
     */
     void setResource( const QString &resource );
 
+    /**
+      Adds raw attribute data. If an attribute with the same name already exists
+      it is overwritten.
+      @param type Attribute type.
+      @param value Attribute value.
+    */
+    void addRawAttribute( const QByteArray &type, const QByteArray &value );
+
   private:
     class Private;
     QSharedDataPointer<Private> d;

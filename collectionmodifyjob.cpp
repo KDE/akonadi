@@ -32,6 +32,7 @@ class Akonadi::CollectionModifyJobPrivate
     bool setPolicy;
     QString name;
     Collection parent;
+    QList<QPair<QByteArray,QByteArray> > attributes;
 };
 
 CollectionModifyJob::CollectionModifyJob(const Collection &collection, QObject * parent) :
@@ -59,6 +60,9 @@ void CollectionModifyJob::doStart()
     command += " PARENT " + QByteArray::number( d->parent.id() );
   if ( !d->name.isEmpty() )
     command += " NAME \"" + d->name.toUtf8() + '"';
+  typedef QPair<QByteArray,QByteArray> QByteArrayPair;
+  foreach ( const QByteArrayPair bp, d->attributes )
+    command += ' ' + bp.first + ' ' + bp.second;
   writeData( command );
 }
 
@@ -82,6 +86,16 @@ void CollectionModifyJob::setName(const QString & name)
 void CollectionModifyJob::setParent(const Collection & parent)
 {
   d->parent = parent;
+}
+
+void CollectionModifyJob::setAttribute(CollectionAttribute * attr)
+{
+  Q_ASSERT( !attr->type().isEmpty() );
+
+  QByteArray value = attr->toByteArray();
+  if ( value.isEmpty() )
+    value = "";
+  d->attributes.append( qMakePair( attr->type(), value ) );
 }
 
 #include "collectionmodifyjob.moc"

@@ -19,6 +19,7 @@ set( akonadi_LIB_SRC
 	agenttypemodel.cpp
 	collection.cpp
 	collectionattribute.cpp
+	collectionattributefactory.cpp
 	collectioncreatejob.cpp
 	collectiondeletejob.cpp
 	collectionlistjob.cpp
@@ -68,6 +69,7 @@ install( FILES
 	agentmanager.h
 	collection.h
 	collectionattribute.h
+	collectionattributefactory.h
 	collectioncreatejob.h
 	collectiondeletejob.h
 	collectionlistjob.h

@@ -49,6 +49,19 @@ class AKONADI_EXPORT CollectionAttribute
       Creates a copy of this object.
     */
     virtual CollectionAttribute* clone() const = 0;
+
+    /**
+      Returns a QByteArray representation of the attribute which will be
+      used for communication and storage.
+    */
+    virtual QByteArray toByteArray() const = 0;
+
+    /**
+      Sets the data of this attribute, using the same encoding
+      as returned by toByteArray().
+      @param data The encoded attribute data.
+    */
+    virtual void setData( const QByteArray &data ) = 0;
 };
 
 
@@ -67,6 +80,8 @@ class AKONADI_EXPORT CollectionContentTypeAttribute : public CollectionAttribute
 
     virtual QByteArray type() const;
     virtual CollectionContentTypeAttribute* clone() const;
+    virtual QByteArray toByteArray() const;
+    virtual void setData( const QByteArray &data );
 
     /**
       Returns the allowed content mimetypes.

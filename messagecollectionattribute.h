@@ -65,6 +65,8 @@ class AKONADI_EXPORT MessageCollectionAttribute : public CollectionAttribute
 
     virtual QByteArray type() const;
     virtual MessageCollectionAttribute* clone() const;
+    virtual QByteArray toByteArray() const;
+    virtual void setData( const QByteArray &data );
 
   private:
     class Private;

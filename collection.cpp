@@ -18,7 +18,9 @@
 */
 
 #include "collection.h"
+#include "collectionattributefactory.h"
 
+#include <QtCore/QDebug>
 #include <QtCore/QHash>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -46,6 +48,7 @@ class Collection::Private : public QSharedData
       type = other.type;
       foreach ( CollectionAttribute* attr, other.attributes )
         attributes.insert( attr->type(), attr->clone() );
+      rawAttributes = other.rawAttributes;
       resource = other.resource;
     }
 
@@ -61,6 +64,7 @@ class Collection::Private : public QSharedData
     QString parentRemoteId;
     Type type;
     QHash<QByteArray, CollectionAttribute*> attributes;
+    QHash<QByteArray, QByteArray> rawAttributes;
     QString resource;
 };
 
@@ -240,4 +244,16 @@ void Collection::setResource(const QString & resource)
 uint qHash( const Akonadi::Collection &collection )
 {
   return qHash( collection.id() );
+}
+
+void Collection::addRawAttribute(const QByteArray & type, const QByteArray & value)
+{
+  CollectionAttribute* attr = CollectionAttributeFactory::createAttribute( type );
+  if ( attr ) {
+    attr->setData( value );
+    addAttribute( attr );
+  } else {
+    qDebug() << "unknown collection attribute type:" << type;
+    d->rawAttributes.insert( type, value );
+  }
 }

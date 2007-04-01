@@ -18,6 +18,7 @@
 */
 
 #include "collectionattribute.h"
+#include "imapparser.h"
 
 using namespace Akonadi;
 
@@ -32,7 +33,7 @@ CollectionContentTypeAttribute::CollectionContentTypeAttribute( const QList< QBy
 
 QByteArray CollectionContentTypeAttribute::type() const
 {
-  return QByteArray( "ContentTypes" );
+  return QByteArray( "MIMETYPE" );
 }
 
 QList< QByteArray > CollectionContentTypeAttribute::contentTypes( ) const
@@ -48,4 +49,16 @@ void CollectionContentTypeAttribute::setContentTypes( const QList< QByteArray > 
 CollectionContentTypeAttribute * CollectionContentTypeAttribute::clone() const
 {
   return new CollectionContentTypeAttribute( mContentTypes );
+}
+
+QByteArray CollectionContentTypeAttribute::toByteArray() const
+{
+  return '(' + ImapParser::join( contentTypes(), " " ) + ')';
+}
+
+void CollectionContentTypeAttribute::setData(const QByteArray & data)
+{
+  QList<QByteArray> list;
+  ImapParser::parseParenthesizedList( data, list );
+  setContentTypes( list );
 }

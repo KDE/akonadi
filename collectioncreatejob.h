@@ -66,6 +66,12 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     */
     Collection collection() const;
 
+    /**
+      Sets the given collection attribute.
+      @param attr A collection attribute, ownership stays with the caller.
+    */
+    void setAttribute( CollectionAttribute* attr );
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
