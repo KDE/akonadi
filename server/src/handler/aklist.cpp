@@ -126,7 +126,12 @@ bool AkList::listCollection(const Location & root, int depth )
   b += "NAME \"" + root.name().toUtf8() + "\" ";
   b += "MIMETYPE (" + MimeType::joinByName( root.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
   b += "REMOTEID \"" + root.remoteId().toUtf8() + "\" ";
-  b += "RESOURCE \"" + root.resource().name().toUtf8() + "\")";
+  b += "RESOURCE \"" + root.resource().name().toUtf8() + "\" ";
+
+  LocationAttribute::List attrs = root.attributes();
+  foreach ( const LocationAttribute attr, attrs )
+    b += attr.type() + " \"" + attr.value() + '"';
+  b+= ')';
   response.setString( b );
   emit responseAvailable( response );
 

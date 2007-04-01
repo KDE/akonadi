@@ -108,6 +108,7 @@ bool Create::handleLine(const QByteArray& line )
   // attributes
   QList<QByteArray> attributes;
   QList<QByteArray> mimeTypes;
+  QList< QPair<QByteArray, QByteArray> > userDefAttrs;
   bool mimeTypesSet = false;
   pos = ImapParser::parseParenthesizedList( line, attributes, pos );
   for ( int i = 0; i < attributes.count() - 1; i += 2 ) {
@@ -118,8 +119,9 @@ bool Create::handleLine(const QByteArray& line )
     } else if ( key == "MIMETYPE" ) {
       ImapParser::parseParenthesizedList( value, mimeTypes );
       mimeTypesSet = true;
-    } else
-      qDebug() << "Unknown attribute" << key;
+    } else {
+      userDefAttrs << qMakePair( key, value );
+    }
   }
 
   DataStore *db = connection()->storageBackend();
@@ -139,6 +141,13 @@ bool Create::handleLine(const QByteArray& line )
   foreach ( const QString mimeType, effectiveMimeTypes ) {
     if ( !db->appendMimeTypeForLocation( location.id(), mimeType ) )
       return failureResponse( "Unable to append mimetype for collection." );
+  }
+
+  // store user defined attributes
+  typedef QPair<QByteArray,QByteArray> QByteArrayPair;
+  foreach ( const QByteArrayPair attr, userDefAttrs ) {
+    if ( !db->addCollectionAttribute( location, attr.first, attr.second ) )
+      return failureResponse( "Unable to add collection attribute." );
   }
 
   Response response;

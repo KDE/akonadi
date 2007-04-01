@@ -90,6 +90,7 @@
     <column name="firstUnseen" type="int"/>
     <column name="uidValidity" type="int"/>
     <reference name="items" table="PimItem" key="locationId"/>
+    <reference name="attributes" table="LocationAttribute" key="locationId"/>
     <data columns="parentId,name,resourceId" values="0,'Search',1"/>
   </table>
 
@@ -159,4 +160,11 @@
   <relation table2="Flag" column2="id" table1="Part" column1="id"/>
 
   <relation table1="Location" column1="id" table2="MimeType" column2="id"/>
+
+  <table name="LocationAttribute">
+    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
+    <column name="type" type="QByteArray" properties="NOT NULL"/>
+    <column name="value" type="QByteArray"/>
+  </table>
 </database>

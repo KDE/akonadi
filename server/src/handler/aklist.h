@@ -53,7 +53,7 @@ namespace Akonadi {
   @verbatim
   response = "*" collection-id " " parent-id " ("attribute-list")"
   attribute-list = *(attribute-identifier " " attribute-value)
-  attribute-identifier = "NAME" | "MIMETYPE" | "REMOTEID" | "RESOURCE"
+  attribute-identifier = "NAME" | "MIMETYPE" | "REMOTEID" | "RESOURCE" | custom-attr-identifier
   @endverbatim
 
   The name is encoded as an quoted UTF-8 string. There is no order defined for the

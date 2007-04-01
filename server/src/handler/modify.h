@@ -38,7 +38,7 @@ namespace Akonadi {
   @verbatim
   request = tag " MODIFY " collection-id " " attribute-list
   attribute-list = *(attribute-name " " attribute-value)
-  attribute-name = "NAME" | "MIMETYPE" | "REMOTEID" | "CACHEPOLICY" | "PARENT"
+  attribute-name = "NAME" | "MIMETYPE" | "REMOTEID" | "CACHEPOLICY" | "PARENT" | [-]custom-attr-name
   @endverbatim
 */
 class Modify : public Handler

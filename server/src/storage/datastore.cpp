@@ -347,6 +347,11 @@ bool Akonadi::DataStore::cleanupLocation(const Location & location)
   // delete location mimetypes
   removeMimeTypesForLocation( location.id() );
 
+  // delete attributes
+  foreach ( LocationAttribute attr, location.attributes() )
+    if ( !attr.remove() )
+      return false;
+
   // delete the location itself
   return removeLocation( location );
 }
@@ -1111,6 +1116,49 @@ bool Akonadi::DataStore::appendPersisntentSearch(const QString & name, const QBy
   l.setParentId( 1 ); // search root
   l.setName( name );
   return appendLocation( l );
+}
+
+
+bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & key, const QByteArray & value)
+{
+  QueryBuilder<LocationAttribute> qb;
+  qb.addValueCondition( LocationAttribute::locationIdColumn(), "=", loc.id() );
+  qb.addValueCondition( LocationAttribute::typeColumn(), "=", key );
+  if ( !qb.exec() )
+    return false;
+
+  if ( qb.result().count() > 0 ) {
+    qDebug() << "Attribute" << key << "already exists for location" << loc.id();
+    return false;
+  }
+
+  LocationAttribute attr;
+  attr.setLocationId( loc.id() );
+  attr.setType( key );
+  attr.setValue( value );
+
+  if ( !attr.insert() )
+    return false;
+
+  mNotificationCollector->collectionChanged( loc );
+  return true;
+}
+
+bool Akonadi::DataStore::removeCollectionAttribute(const Location & loc, const QByteArray & key)
+{
+  QueryBuilder<LocationAttribute> qb;
+  qb.addValueCondition( LocationAttribute::locationIdColumn(), "=", loc.id() );
+  qb.addValueCondition( LocationAttribute::typeColumn(), "=", key );
+  if ( !qb.exec() )
+    return false;
+
+  foreach ( LocationAttribute attr, qb.result() ) {
+    if ( !attr.remove() )
+      return false;
+  }
+
+  mNotificationCollector->collectionChanged( loc );
+  return true;
 }
 
 

@@ -219,6 +219,10 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /* --- Persistent search --------------------------------------------- */
     bool appendPersisntentSearch( const QString &name, const QByteArray &queryString );
 
+    /* --- Collection attribues ------------------------------------------ */
+    bool addCollectionAttribute( const Location &loc, const QByteArray &key, const QByteArray &value );
+    bool removeCollectionAttribute( const Location &loc, const QByteArray &key );
+
     /* --- Helper functions ---------------------------------------------- */
     /** Returns the id of the next PIM item that is added to the db.
         @return possible id of the next PIM item that is added to the database

@@ -90,8 +90,16 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
         return failureResponse( "Invalid syntax" );
       if ( !db->renameLocation( location, newParent, location.name() ) )
         return failureResponse( "Unable to reparent colleciton" );
-    } else
-      return failureResponse( "Unknown modify type: " + type );
+    } else {
+      // custom attribute
+      // TODO: implement attribute deletion
+      if ( !db->removeCollectionAttribute( location, type ) )
+        return failureResponse( "Unable to remove custom collection attribute" );
+      QByteArray value;
+      pos = ImapParser::parseString( line, value, pos );
+      if ( !db->addCollectionAttribute( location, type, value ) )
+        return failureResponse( "Unable to add custom collection attribute" );
+    }
   }
 
   if ( !transaction.commit() )
