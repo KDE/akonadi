@@ -64,7 +64,7 @@ void MessageCollectionAttribute::setUnreadCount( int count )
 
 QByteArray MessageCollectionAttribute::type( ) const
 {
-  return QByteArray( "MessageCollection" );
+  return "MessageCollection";
 }
 
 MessageCollectionAttribute * MessageCollectionAttribute::clone() const

@@ -102,12 +102,12 @@ class AKONADI_EXPORT Item
     /**
       Returns the mime type of this item.
     */
-    QByteArray mimeType() const;
+    QString mimeType() const;
 
     /**
       Sets the mime type of this item to @p mimeType.
     */
-    void setMimeType( const QByteArray &mimeType );
+    void setMimeType( const QString &mimeType );
 
     Item& operator=( const Item &other );
 

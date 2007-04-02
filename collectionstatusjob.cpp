@@ -77,7 +77,9 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
         } else if ( list[i] == "MIMETYPES" ) {
           QList<QByteArray> mimeTypes;
           ImapParser::parseParenthesizedList( list[i + 1], mimeTypes );
-          ctattr->setContentTypes( mimeTypes );
+          QStringList sMimeTypes;
+          foreach( QByteArray it, mimeTypes ) sMimeTypes << QLatin1String( it );
+          ctattr->setContentTypes( sMimeTypes );
         } else {
           qDebug() << "unknown STATUS response: " << list[i];
         }

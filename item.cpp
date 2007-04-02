@@ -43,7 +43,7 @@ class Item::Private : public QSharedData
     DataReference reference;
     Item::Flags flags;
     QByteArray data;
-    QByteArray mimeType;
+    QString mimeType;
 };
 
 Item::Item( const DataReference & reference )
@@ -101,12 +101,12 @@ void Item::setData( const QByteArray & data )
   d->data = data;
 }
 
-QByteArray Item::mimeType() const
+QString Item::mimeType() const
 {
   return d->mimeType;
 }
 
-void Item::setMimeType( const QByteArray & mimeType )
+void Item::setMimeType( const QString & mimeType )
 {
   d->mimeType = mimeType;
 }

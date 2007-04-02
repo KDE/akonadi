@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include <sys/types.h>
+
 #include "collectionjobtest.h"
 #include <qtest_kde.h>
 
@@ -32,6 +34,8 @@
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+
+
 
 using namespace Akonadi;
 
@@ -116,7 +120,7 @@ void CollectionJobTest::testFolderList( )
   // check if everything is there
   QCOMPARE( list.count(), 4 );
   Collection col;
-  QList<QByteArray> contentTypes;
+  QStringList contentTypes;
 
   col = findCol( list, "foo" );
   QVERIFY( col.isValid() );
@@ -260,7 +264,7 @@ void CollectionJobTest::testCreateDeleteFolder( )
 
   // folder with attributes
   job = new CollectionCreateJob( Collection( res3ColId ), "mail folder", this );
-  QList<QByteArray> mimeTypes;
+  QStringList mimeTypes;
   mimeTypes << "inode/directory" << "message/rfc822";
   job->setContentTypes( mimeTypes );
   job->setRemoteId( "remote id" );
@@ -324,7 +328,7 @@ void CollectionJobTest::testStatus()
 
   ctattr = extractAttribute<CollectionContentTypeAttribute>( attrs );
   QVERIFY( ctattr != 0 );
-  QList<QByteArray> mimeTypes = ctattr->contentTypes();
+  QStringList mimeTypes = ctattr->contentTypes();
   QCOMPARE( mimeTypes.count(), 3 );
   QVERIFY( mimeTypes.contains( "text/calendar" ) );
   QVERIFY( mimeTypes.contains( "text/vcard" ) );
@@ -333,7 +337,7 @@ void CollectionJobTest::testStatus()
 
 void CollectionJobTest::testModify()
 {
-  QList<QByteArray> reference;
+  QStringList reference;
   reference << "text/calendar" << "text/vcard" << "message/rfc822";
 
   Collection col;
@@ -354,7 +358,7 @@ void CollectionJobTest::testModify()
 
   // test clearing content types
   mod = new CollectionModifyJob( col, this );
-  mod->setContentTypes( QList<QByteArray>() );
+  mod->setContentTypes( QStringList() );
   QVERIFY( mod->exec() );
 
   status = new CollectionStatusJob( col, this );
@@ -448,7 +452,7 @@ void CollectionJobTest::testUtf8CollectionName()
 
   // modify collection
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
-  QList<QByteArray> contentTypes;
+  QStringList contentTypes;
   contentTypes << "message/rfc822";
   modify->setContentTypes( contentTypes );
   QVERIFY( modify->exec() );

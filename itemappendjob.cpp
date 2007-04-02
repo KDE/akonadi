@@ -29,12 +29,12 @@ class Akonadi::ItemAppendJobPrivate
   public:
     Collection collection;
     QByteArray data;
-    QByteArray mimetype;
+    QString mimetype;
     QString remoteId;
     int uid;
 };
 
-ItemAppendJob::ItemAppendJob( const Collection &collection, const QByteArray & mimetype, QObject * parent ) :
+ItemAppendJob::ItemAppendJob( const Collection &collection, const QString & mimetype, QObject * parent ) :
     Job( parent ),
     d( new ItemAppendJobPrivate )
 {
@@ -54,7 +54,7 @@ void ItemAppendJob::doStart()
   if ( !d->remoteId.isEmpty() )
     remoteId = " \\RemoteId[" + d->remoteId.toUtf8() + ']';
   writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
-      + " (\\MimeType[" + d->mimetype + ']' + remoteId + ") {"
+      + " (\\MimeType[" + d->mimetype.toLatin1() + ']' + remoteId + ") {"
       + QByteArray::number( d->data.size() ) + '}' );
 }
 

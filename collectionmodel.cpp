@@ -50,12 +50,12 @@ class CollectionModel::Private
 
     void updateSupportedMimeTypes( Collection col )
     {
-      QList<QByteArray> l = col.contentTypes();
-      for ( QList<QByteArray>::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
+      QStringList l = col.contentTypes();
+      for ( QStringList::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
         if ( (*it) == Collection::collectionMimeType() )
           continue;
-        if ( !mimeTypes.contains( QString::fromLatin1( *it ) ) )
-          mimeTypes << QString::fromLatin1( *it );
+        if ( !mimeTypes.contains( *it  ) )
+          mimeTypes << *it;
       }
     }
 };
@@ -120,14 +120,14 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
           return SmallIcon( QLatin1String( "edit-find" ) );
         if ( col.type() == Collection::Virtual )
           return SmallIcon( QLatin1String( "folder-violet" ) );
-        QList<QByteArray> content = col.contentTypes();
+        QStringList content = col.contentTypes();
         if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
-          if ( content.contains( "text/x-vcard" ) || content.contains( "text/directory" ) || content.contains( "text/vcard" ) )
+          if ( content.contains( QLatin1String( "text/x-vcard" ) ) || content.contains( QLatin1String( "text/directory" ) ) || content.contains( QLatin1String( "text/vcard" ) ) )
             return SmallIcon( QLatin1String( "kmgroupware_folder_contacts" ) );
           // TODO: add all other content types and/or fix their mimetypes
-          if ( content.contains( "akonadi/event" ) || content.contains( "text/ical" ) )
+          if ( content.contains( QLatin1String( "akonadi/event" ) ) || content.contains( QLatin1String( "text/ical" ) ) )
             return SmallIcon( QLatin1String( "kmgroupware_folder_calendar" ) );
-          if ( content.contains( "akonadi/task" ) )
+          if ( content.contains( QLatin1String( "akonadi/task" ) ) )
             return SmallIcon( QLatin1String( "kmgroupware_folder_tasks" ) );
           return SmallIcon( QLatin1String( "folder" ) );
         } else if ( content.isEmpty() ) {
@@ -407,9 +407,9 @@ bool CollectionModel::supportsContentType(const QModelIndex & index, const QStri
     return false;
   Collection col = d->collections.value( index.internalId() );
   Q_ASSERT( col.isValid() );
-  QList<QByteArray> ct = col.contentTypes();
-  foreach ( QByteArray a, ct ) {
-    if ( contentTypes.contains( QString::fromLatin1( a ) ) )
+  QStringList ct = col.contentTypes();
+  foreach ( QString a, ct ) {
+    if ( contentTypes.contains( a ) )
       return true;
   }
   return false;
@@ -441,7 +441,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     // HACK for some unknown reason the data is sometimes 0-terminated...
     if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
       item.resize( item.size() - 1 );
-    ItemAppendJob *job = new ItemAppendJob( col, type.toLatin1(), d->session );
+    ItemAppendJob *job = new ItemAppendJob( col, type, d->session );
     job->setData( item );
     connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
     return true;

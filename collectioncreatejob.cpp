@@ -28,7 +28,7 @@ class Akonadi::CollectionCreateJobPrivate {
   public:
     Collection parent;
     QString name;
-    QList<QByteArray> contentTypes;
+    QStringList contentTypes;
     Collection collection;
     QString remoteId;
     QList<QPair<QByteArray, QByteArray> > attributes;
@@ -53,7 +53,11 @@ void CollectionCreateJob::doStart( )
   command += QByteArray::number( d->parent.id() );
   command += " (";
   if ( !d->contentTypes.isEmpty() )
-    command += "MIMETYPE (" + ImapParser::join( d->contentTypes, QByteArray(" ") ) + ')';
+  {
+    QList<QByteArray> cList;
+    foreach( QString s, d->contentTypes ) cList << s.toLatin1();
+    command += "MIMETYPE (" + ImapParser::join( cList, QByteArray(" ") ) + ')';
+  }
   command += " REMOTEID \"" + d->remoteId.toUtf8() + '"';
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   foreach ( const QByteArrayPair bp, d->attributes )
@@ -62,7 +66,7 @@ void CollectionCreateJob::doStart( )
   writeData( command );
 }
 
-void CollectionCreateJob::setContentTypes(const QList< QByteArray > & contentTypes)
+void CollectionCreateJob::setContentTypes(const QStringList & contentTypes)
 {
   d->contentTypes = contentTypes;
 }

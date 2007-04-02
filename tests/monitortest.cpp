@@ -112,7 +112,7 @@ void MonitorTest::testMonitor()
   arg = iaspy.takeFirst();
   Item item = arg.at( 0 ).value<Item>();
   QCOMPARE( item.reference(), monitorRef );
-  QCOMPARE( item.mimeType(), QByteArray( "message/rfc822" ) );
+  QCOMPARE( item.mimeType(), QString::fromLatin1(  "message/rfc822" ) );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );

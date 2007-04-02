@@ -41,7 +41,7 @@ class AKONADI_EXPORT ItemAppendJob : public Job
       @param mimetype The mimetype of the PIM item.
       @param parent The parent object.
     */
-    ItemAppendJob( const Collection &collection, const QByteArray &mimetype, QObject *parent = 0 );
+    ItemAppendJob( const Collection &collection, const QString &mimetype, QObject *parent = 0 );
 
     /**
       Sets the data of hte new item.

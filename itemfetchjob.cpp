@@ -151,7 +151,7 @@ void ItemFetchJob::parseFlags(const QByteArray & flagData, Item &item)
   foreach ( const QByteArray flag, flags ) {
     if ( flag.startsWith( "\\MimeTypes" ) ) {
       int begin = flag.indexOf( '[' ) + 1;
-      item.setMimeType( flag.mid( begin, flag.length() - begin - 1 ) );
+      item.setMimeType( QString::fromLatin1( flag.mid( begin, flag.length() - begin - 1 ) ) );
     } else {
       item.setFlag( flag );
     }

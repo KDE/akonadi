@@ -53,7 +53,7 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
       Set allowed content mimetypes of the newly created collection.
       @param contentTypes The allowed content types of the new collection.
     */
-    void setContentTypes( const QList<QByteArray> &contentTypes );
+    void setContentTypes( const QStringList &contentTypes );
 
     /**
       Sets the remote id of the collection.

@@ -26,7 +26,7 @@ CollectionAttribute::~ CollectionAttribute( )
 {
 }
 
-CollectionContentTypeAttribute::CollectionContentTypeAttribute( const QList< QByteArray > & contentTypes )
+CollectionContentTypeAttribute::CollectionContentTypeAttribute( const QStringList & contentTypes )
 {
   mContentTypes = contentTypes;
 }
@@ -36,12 +36,12 @@ QByteArray CollectionContentTypeAttribute::type() const
   return QByteArray( "MIMETYPE" );
 }
 
-QList< QByteArray > CollectionContentTypeAttribute::contentTypes( ) const
+QStringList CollectionContentTypeAttribute::contentTypes( ) const
 {
   return mContentTypes;
 }
 
-void CollectionContentTypeAttribute::setContentTypes( const QList< QByteArray > & contentTypes )
+void CollectionContentTypeAttribute::setContentTypes( const QStringList & contentTypes )
 {
   mContentTypes = contentTypes;
 }
@@ -53,12 +53,18 @@ CollectionContentTypeAttribute * CollectionContentTypeAttribute::clone() const
 
 QByteArray CollectionContentTypeAttribute::toByteArray() const
 {
-  return '(' + ImapParser::join( contentTypes(), " " ) + ')';
+  QList<QByteArray> bList;
+  QStringList cList = contentTypes();
+  foreach(QString s, cList) bList << s.toLatin1();
+  return '(' + ImapParser::join(bList , " " ) + ')';
 }
 
 void CollectionContentTypeAttribute::setData(const QByteArray & data)
 {
   QList<QByteArray> list;
   ImapParser::parseParenthesizedList( data, list );
-  setContentTypes( list );
+  
+  QStringList sList;
+  foreach(QByteArray b, list) sList << QString::fromLatin1( b );
+  setContentTypes( sList );
 }

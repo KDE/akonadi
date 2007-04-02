@@ -71,7 +71,7 @@ QVariant Akonadi::ItemModel::data( const QModelIndex & index, int role ) const
       case RemoteId:
         return item.reference().externalUrl().toString();
       case MimeType:
-        return QString::fromLatin1( item.mimeType() );
+        return item.mimeType();
     }
   }
 

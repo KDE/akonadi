@@ -115,15 +115,15 @@ void Collection::setType( Type type )
   d->type = type;
 }
 
-QList<QByteArray> Collection::contentTypes() const
+QStringList Collection::contentTypes() const
 {
   CollectionContentTypeAttribute *attr = const_cast<Collection*>( this )->attribute<CollectionContentTypeAttribute>();
   if ( attr )
     return attr->contentTypes();
-  return QList<QByteArray>();
+  return QStringList();
 }
 
-void Collection::setContentTypes( const QList<QByteArray> & types )
+void Collection::setContentTypes( const QStringList & types )
 {
   CollectionContentTypeAttribute* attr = attribute<CollectionContentTypeAttribute>( true );
   attr->setContentTypes( types );
@@ -163,15 +163,15 @@ QString Collection::delimiter()
 Collection Collection::root( )
 {
   Collection root( 0 );
-  QList<QByteArray> types;
+  QStringList types;
   types << collectionMimeType();
   root.setContentTypes( types );
   return root;
 }
 
-QByteArray Collection::collectionMimeType( )
+QString Collection::collectionMimeType( )
 {
-  return QByteArray( "inode/directory" );
+  return QString::fromLatin1("inode/directory");
 }
 
 QList<CollectionAttribute*> Collection::attributes() const

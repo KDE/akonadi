@@ -77,7 +77,7 @@ class AKONADI_EXPORT Monitor : public QObject
       Monitor all items matching the specified mimetype.
       @param mimetype The mimetype.
     */
-    void monitorMimeType( const QByteArray &mimetype );
+    void monitorMimeType( const QString &mimetype );
 
     /**
       Monitor all items.
@@ -134,11 +134,11 @@ class AKONADI_EXPORT Monitor : public QObject
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void slotItemChanged( const QByteArray&, int, const QString&, int,
-                                             const QByteArray&, const QByteArray& ) )
+                                             const QString&, const QByteArray& ) )
     Q_PRIVATE_SLOT( d, void slotItemAdded( const QByteArray&, int, const QString&, int,
-                                           const QByteArray&, const QByteArray& ) )
+                                           const QString&, const QByteArray& ) )
     Q_PRIVATE_SLOT( d, void slotItemRemoved( const QByteArray&, int, const QString&, int,
-                                             const QByteArray&, const QByteArray& ) )
+                                             const QString&, const QByteArray& ) )
     Q_PRIVATE_SLOT( d, void slotCollectionAdded( const QByteArray&, int, const QString&, const QByteArray& ) )
     Q_PRIVATE_SLOT( d, void slotCollectionChanged( const QByteArray&, int, const QString&, const QByteArray& ) )
     Q_PRIVATE_SLOT( d, void slotCollectionRemoved( const QByteArray&, int, const QString&, const QByteArray& ) )

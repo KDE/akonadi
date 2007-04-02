@@ -108,12 +108,12 @@ class AKONADI_EXPORT Collection
       e.g. message/rfc822, x-akonadi/collection for a mail folder that
       supports sub-folders.
     */
-    QList<QByteArray> contentTypes() const;
+    QStringList contentTypes() const;
 
     /**
       Sets the list of possible content mimetypes.
     */
-    void setContentTypes( const QList<QByteArray> &types );
+    void setContentTypes( const QStringList &types );
 
     /**
       Returns the identifier of the parent collection.
@@ -196,7 +196,7 @@ class AKONADI_EXPORT Collection
     /**
       Returns the mimetype used for collections.
     */
-    static QByteArray collectionMimeType();
+    static QString collectionMimeType();
 
     /**
       Returns true if this is a valid collection.

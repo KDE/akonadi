@@ -26,7 +26,7 @@ class Akonadi::CollectionModifyJobPrivate
 {
   public:
     Collection collection;
-    QList<QByteArray> mimeTypes;
+    QStringList mimeTypes;
     int policyId;
     bool setMimeTypes;
     bool setPolicy;
@@ -53,7 +53,11 @@ void CollectionModifyJob::doStart()
 {
   QByteArray command = newTag() + " MODIFY " + QByteArray::number( d->collection.id() ) + ' ';
   if ( d->setMimeTypes )
-    command += " MIMETYPE (" + ImapParser::join( d->mimeTypes, " " ) + ')';
+  {
+    QList<QByteArray> bList;
+    foreach( QString s, d->mimeTypes ) bList << s.toLatin1();
+    command += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
+  }
   if ( d->setPolicy )
     command += " CACHEPOLICY " + QByteArray::number( d->policyId );
   if ( d->parent.isValid() )
@@ -66,7 +70,7 @@ void CollectionModifyJob::doStart()
   writeData( command );
 }
 
-void CollectionModifyJob::setContentTypes(const QList< QByteArray > & mimeTypes)
+void CollectionModifyJob::setContentTypes(const QStringList & mimeTypes)
 {
   d->setMimeTypes = true;
   d->mimeTypes = mimeTypes;

@@ -43,7 +43,7 @@ class Monitor::Private
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<int> items;
-    QSet<QByteArray> mimetypes;
+    QSet<QString> mimetypes;
     bool monitorAll;
     QList<QByteArray> sessions;
 
@@ -55,7 +55,7 @@ class Monitor::Private
     }
 
     bool isItemMonitored( uint item, int collection,
-                          const QByteArray &mimetype, const QByteArray &resource ) const
+                          const QString &mimetype, const QByteArray &resource ) const
     {
       if ( monitorAll || isCollectionMonitored( collection ) || items.contains( item ) ||
            resources.contains( resource ) || mimetypes.contains( mimetype ) )
@@ -71,9 +71,9 @@ class Monitor::Private
     bool connectToNotificationManager();
 
     // private slots
-    void slotItemChanged( const QByteArray&, int, const QString&, int, const QByteArray&, const QByteArray& );
-    void slotItemAdded( const QByteArray&, int, const QString&, int, const QByteArray&, const QByteArray& );
-    void slotItemRemoved( const QByteArray&, int, const QString&, int, const QByteArray&, const QByteArray& );
+    void slotItemChanged( const QByteArray&, int, const QString&, int, const QString&, const QByteArray& );
+    void slotItemAdded( const QByteArray&, int, const QString&, int, const QString&, const QByteArray& );
+    void slotItemRemoved( const QByteArray&, int, const QString&, int, const QString&, const QByteArray& );
     void slotCollectionAdded( const QByteArray&, int, const QString&, const QByteArray& );
     void slotCollectionChanged( const QByteArray&, int, const QString&, const QByteArray& );
     void slotCollectionRemoved( const QByteArray&, int, const QString&, const QByteArray& );
@@ -106,12 +106,12 @@ bool Monitor::Private::connectToNotificationManager()
   if ( !nm ) {
     qWarning() << "Unable to connect to notification manager";
   } else {
-    connect( nm, SIGNAL(itemChanged(QByteArray,int,QString,int,QByteArray,QByteArray)),
-             mParent, SLOT(slotItemChanged(QByteArray,int,QString,int,QByteArray,QByteArray)) );
-    connect( nm, SIGNAL(itemAdded(QByteArray,int,QString,int,QByteArray,QByteArray)),
-             mParent, SLOT(slotItemAdded(QByteArray,int,QString,int,QByteArray,QByteArray)) );
-    connect( nm, SIGNAL(itemRemoved(QByteArray,int,QString,int,QByteArray,QByteArray)),
-             mParent, SLOT(slotItemRemoved(QByteArray,int,QString,int,QByteArray,QByteArray)) );
+    connect( nm, SIGNAL(itemChanged(QByteArray,int,QString,int,QString,QByteArray)),
+             mParent, SLOT(slotItemChanged(QByteArray,int,QString,int,QString,QByteArray)) );
+    connect( nm, SIGNAL(itemAdded(QByteArray,int,QString,int,QString,QByteArray)),
+             mParent, SLOT(slotItemAdded(QByteArray,int,QString,int,QString,QByteArray)) );
+    connect( nm, SIGNAL(itemRemoved(QByteArray,int,QString,int,QString,QByteArray)),
+             mParent, SLOT(slotItemRemoved(QByteArray,int,QString,int,QString,QByteArray)) );
     connect( nm, SIGNAL(collectionChanged(QByteArray,int,QString,QByteArray)),
              mParent, SLOT(slotCollectionChanged(QByteArray,int,QString,QByteArray)) );
     connect( nm, SIGNAL(collectionAdded(QByteArray,int,QString,QByteArray)),
@@ -124,7 +124,7 @@ bool Monitor::Private::connectToNotificationManager()
 }
 
 void Monitor::Private::slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                                        const QByteArray &mimetype, const QByteArray &resource )
+                                        const QString &mimetype, const QByteArray &resource )
 {
   if ( isSessionIgnored( sessionId ) )
     return;
@@ -140,7 +140,7 @@ void Monitor::Private::slotItemChanged( const QByteArray &sessionId, int uid, co
 }
 
 void Monitor::Private::slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                                      const QByteArray &mimetype, const QByteArray &resource )
+                                      const QString &mimetype, const QByteArray &resource )
 {
   if ( isSessionIgnored( sessionId ) )
     return;
@@ -157,7 +157,7 @@ void Monitor::Private::slotItemAdded( const QByteArray &sessionId, int uid, cons
 }
 
 void Monitor::Private::slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                                        const QByteArray &mimetype, const QByteArray &resource )
+                                        const QString &mimetype, const QByteArray &resource )
 {
   if ( isSessionIgnored( sessionId ) )
     return;
@@ -294,7 +294,7 @@ void Monitor::monitorResource(const QByteArray & resource)
   d->resources.insert( resource );
 }
 
-void Monitor::monitorMimeType(const QByteArray & mimetype)
+void Monitor::monitorMimeType(const QString & mimetype)
 {
   d->mimetypes.insert( mimetype );
 }

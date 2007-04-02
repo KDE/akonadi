@@ -20,9 +20,11 @@
 #ifndef AKONADI_COLLECTIONATTRIBUTE_H
 #define AKONADI_COLLECTIONATTRIBUTE_H
 
-#include <QtCore/QByteArray>
 #include <QtCore/QList>
+#include <QtCore/QStringList>
 #include <kdepim_export.h>
+
+class QString;
 
 namespace Akonadi {
 
@@ -76,7 +78,7 @@ class AKONADI_EXPORT CollectionContentTypeAttribute : public CollectionAttribute
       Creates a new content mimetype attribute.
       @param contentTypes Allowed content types.
     */
-  explicit CollectionContentTypeAttribute( const QList<QByteArray> &contentTypes = QList<QByteArray>() );
+  explicit CollectionContentTypeAttribute( const QStringList &contentTypes = QStringList() );
 
     virtual QByteArray type() const;
     virtual CollectionContentTypeAttribute* clone() const;
@@ -86,16 +88,16 @@ class AKONADI_EXPORT CollectionContentTypeAttribute : public CollectionAttribute
     /**
       Returns the allowed content mimetypes.
     */
-    QList<QByteArray> contentTypes() const;
+    QStringList contentTypes() const;
 
     /**
       Sets the allowed content mimetypes.
       @param contentTypes Allowed content types.
     */
-    void setContentTypes( const QList<QByteArray> &contentTypes );
+    void setContentTypes( const QStringList &contentTypes );
 
   private:
-    QList<QByteArray> mContentTypes;
+    QStringList mContentTypes;
 };
 
 }

@@ -52,7 +52,7 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
       Sets the supported content mimetypes of the collection to the given value.
       @param mimeTypes The new supported content mimetypes.
     */
-    void setContentTypes( const QList<QByteArray> &mimeTypes );
+    void setContentTypes( const QStringList &mimeTypes );
 
     /**
       Sets the cache policy of the collection.
