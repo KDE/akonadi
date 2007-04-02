@@ -34,7 +34,6 @@ namespace Akonadi {
 class HandlerHelper
 {
   public:
-    static QList<QByteArray> splitLine( const QByteArray &line );
     /**
       Removes leading and trailing delimiters.
     */

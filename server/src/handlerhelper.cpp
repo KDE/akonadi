@@ -23,32 +23,6 @@
 
 using namespace Akonadi;
 
-QList<QByteArray> HandlerHelper::splitLine( const QByteArray &line )
-{
-  QList<QByteArray> retval;
-
-  int i, start = 0;
-  bool escaped = false;
-  for ( i = 0; i < line.count(); ++i ) {
-    if ( line[ i ] == ' ' ) {
-      if ( !escaped ) {
-        retval.append( line.mid( start, i - start ) );
-        start = i + 1;
-      }
-    } else if ( line[ i ] == '"' ) {
-      if ( escaped ) {
-        escaped = false;
-      } else {
-        escaped = true;
-      }
-    }
-  }
-
-  retval.append( line.mid( start, i - start ) );
-
-  return retval;
-}
-
 QString Akonadi::HandlerHelper::normalizeCollectionName(const QString &name)
 {
   QString collection = name;
