@@ -64,7 +64,7 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
       if ( !db->removeMimeTypesForLocation( location.id() ) )
         return failureResponse( "Unable to modify collection mimetypes." );
       foreach ( QByteArray ba, mimeTypes )
-        if ( !db->appendMimeTypeForLocation( location.id(), QString::fromUtf8(ba) ) )
+        if ( !db->appendMimeTypeForLocation( location.id(), QString::fromLatin1(ba) ) )
           return failureResponse( "Unable to modify collection mimetypes." );
     } else if ( type == "CACHEPOLICY" ) {
       int policyId;

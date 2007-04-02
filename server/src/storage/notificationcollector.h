@@ -48,7 +48,7 @@ class NotificationItem
       Creates a notification item for PIM items.
     */
     NotificationItem( const PimItem &item, const Location &collection,
-                      const QByteArray &mimeType, const QByteArray &resource );
+                      const QString &mimeType, const QByteArray &resource );
 
     /**
       Creates a notification item for collections.
@@ -88,12 +88,12 @@ class NotificationItem
     /**
       Returns the mime-type of the changed item.
     */
-    QByteArray mimeType() const { return mMimeType; }
+    QString mimeType() const { return mMimeType; }
 
     /**
       Sets the mimetype of the changed item.
     */
-    void setMimeType( const QByteArray &mimeType ) { mMimeType = mimeType; }
+    void setMimeType( const QString &mimeType ) { mMimeType = mimeType; }
 
     /**
       Returns the resource of the changed collection/item.
@@ -119,7 +119,7 @@ class NotificationItem
     Type mType;
     PimItem mItem;
     Location mCollection;
-    QByteArray mMimeType;
+    QString mMimeType;
     QByteArray mResource;
     QString mCollectionName;
 };
@@ -157,7 +157,7 @@ class NotificationCollector : public QObject
       that is missing will be looked up in the database later.
     */
     void itemAdded( const PimItem &item, const Location &collection = Location(),
-                    const QByteArray &mimeType = QByteArray(),
+                    const QString &mimeType = QString(),
                     const QByteArray &resource = QByteArray() );
 
     /**
@@ -166,7 +166,7 @@ class NotificationCollector : public QObject
       that is missing will be looked up in the database later.
     */
     void itemChanged( const PimItem &item, const Location &collection = Location(),
-                      const QByteArray &mimeType = QByteArray(),
+                      const QString &mimeType = QString(),
                       const QByteArray &resource = QByteArray() );
 
     /**
@@ -175,7 +175,7 @@ class NotificationCollector : public QObject
       actually removing the item from database.
     */
     void itemRemoved( const PimItem &item, const Location &collection = Location(),
-                      const QByteArray &mimeType = QByteArray(),
+                      const QString &mimeType = QString(),
                       const QByteArray &resource = QByteArray() );
 
     /**
@@ -206,17 +206,17 @@ class NotificationCollector : public QObject
     void itemAddedNotification( const QByteArray &sessionId, int uid,
                                 const QString &remotedId,
                                 int collection,
-                                const QByteArray &mimeType,
+                                const QString &mimeType,
                                 const QByteArray &resource );
     void itemChangedNotification( const QByteArray &sessionId, int uid,
                                   const QString &remotedId,
                                   int collection,
-                                  const QByteArray &mimeType,
+                                  const QString &mimeType,
                                   const QByteArray &resource );
     void itemRemovedNotification( const QByteArray &sessionId, int uid,
                                   const QString &remotedId,
                                   int collection,
-                                  const QByteArray &mimeType,
+                                  const QString &mimeType,
                                   const QByteArray &resource );
 
     void collectionAddedNotification( const QByteArray &sessionId, int collection,

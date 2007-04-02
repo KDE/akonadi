@@ -564,7 +564,7 @@ bool DataStore::appendPimItem( const QByteArray & data,
   if ( !pimItem.insert( insertId ) )
     return false;
 
-  mNotificationCollector->itemAdded( pimItem, location, mimetype.name().toLatin1() );
+  mNotificationCollector->itemAdded( pimItem, location, mimetype.name() );
   return true;
 }
 

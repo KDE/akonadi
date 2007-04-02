@@ -56,12 +56,12 @@ bool SearchPersistent::handleLine( const QByteArray& line )
 
   if ( command.toUpper() == "SEARCH_STORE" ) {
 
-    QByteArray mimeType;
+    QString mimeType;
     pos = ImapParser::parseString( line, mimeType, pos );
     if ( mimeType.isEmpty() )
       return failureResponse( "No mimetype specified" );
 
-    MimeType mt = MimeType::retrieveByName( QString::fromUtf8(mimeType) );
+    MimeType mt = MimeType::retrieveByName( mimeType );
     if ( !mt.isValid() )
       return failureResponse( "Invalid mimetype" );
 
@@ -99,7 +99,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
 
     // get the responsible search providers
     // TODO: fetch mimetype from the database
-    QStringList providers = providerForMimetype( "message/rfc822" );
+    QStringList providers = providerForMimetype( QString::fromLatin1( "message/rfc822" ) );
     if ( providers.isEmpty() )
       return failureResponse( "No search providers found for this mimetype" );
 

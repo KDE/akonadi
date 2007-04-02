@@ -28,7 +28,7 @@ using namespace Akonadi;
 
 Akonadi::NotificationItem::NotificationItem(const PimItem &item,
                                             const Location& collection,
-                                            const QByteArray & mimeType,
+                                            const QString & mimeType,
                                             const QByteArray & resource) :
   mType( Item ),
   mItem( item ),
@@ -83,7 +83,7 @@ Akonadi::NotificationCollector::~NotificationCollector()
 
 void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
                                                 const Location &collection,
-                                                const QByteArray & mimeType,
+                                                const QString & mimeType,
                                                 const QByteArray & resource )
 {
   NotificationItem ni( item, collection, mimeType, resource );
@@ -97,7 +97,7 @@ void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
 
 void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
                                                   const Location &collection,
-                                                  const QByteArray & mimeType,
+                                                  const QString & mimeType,
                                                   const QByteArray & resource )
 {
   NotificationItem ni( item, collection, mimeType, resource );
@@ -111,7 +111,7 @@ void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
 
 void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
                                                   const Location &collection,
-                                                  const QByteArray & mimeType,
+                                                  const QString & mimeType,
                                                   const QByteArray & resource )
 {
   NotificationItem ni( item, collection, mimeType, resource );
@@ -177,7 +177,7 @@ void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
       item.setCollection( loc );
     }
     if ( item.mimeType().isEmpty() ) {
-      item.setMimeType( pi.mimeType().name().toLatin1() );
+      item.setMimeType( pi.mimeType().name() );
     }
     if ( item.resource().isEmpty() ) {
       if ( !loc.isValid() )

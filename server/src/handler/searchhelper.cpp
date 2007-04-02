@@ -47,33 +47,33 @@ QList<QByteArray> SearchHelper::splitLine( const QByteArray &line )
   return retval;
 }
 
-QByteArray SearchHelper::extractMimetype( const QList<QByteArray> &junks, int start )
+QString SearchHelper::extractMimetype( const QList<QByteArray> &junks, int start )
 {
-  QByteArray mimeType;
+  QString mimeType;
 
   if ( junks.count() <= start )
-    return QByteArray();
+    return QString();
 
   if ( junks[ start ].toUpper() == "CHARSET" ) {
     if ( junks.count() <= ( start + 2 ) )
-      return QByteArray();
+      return QString();
     if ( junks[ start + 2 ].toUpper() == "MIMETYPE" ) {
       if ( junks.count() <= ( start + 3 ) )
-        return QByteArray();
+        return QString();
       else
-        mimeType = junks[ start + 3 ].toLower();
+        mimeType = QString::fromLatin1(junks[ start + 3 ].toLower());
     }
   } else {
     if ( junks[ start ].toUpper() == "MIMETYPE" ) {
       if ( junks.count() <= ( start + 1 ) )
-        return QByteArray();
+        return QString();
       else
-        mimeType = junks[ start + 1 ].toLower();
+        mimeType = QString::fromLatin1(junks[ start + 1 ].toLower());
     }
   }
 
   if ( mimeType.isEmpty() )
-    mimeType = "message/rfc822";
+    mimeType = QString::fromLatin1( "message/rfc822" );
 
   return mimeType;
 }

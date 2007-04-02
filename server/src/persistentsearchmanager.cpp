@@ -46,8 +46,9 @@ PersistentSearchManager::PersistentSearchManager() : mDb( new DataStore )
     qDebug( "found %s", qPrintable( identifier ) );
 
       QString queryString = query.value( 1 ).toString();
+
       QList<QByteArray> junks = SearchHelper::splitLine( queryString.toUtf8() );
-      QByteArray mimeType = SearchHelper::extractMimetype( junks, 0 );
+      QString mimeType = SearchHelper::extractMimetype( junks, 0 );
 
       SearchProvider *provider = SearchProviderManager::self()->createSearchProviderForMimetype( mimeType );
       PersistentSearch *persistentSearch = new PersistentSearch( junks, provider );

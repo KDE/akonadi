@@ -182,13 +182,13 @@ bool Akonadi::Handler::startContinuation()
   return false;
 }
 
-QStringList Akonadi::Handler::providerForMimetype(const QByteArray & mimeType)
+QStringList Akonadi::Handler::providerForMimetype(const QString & mimeType)
 {
   if ( m_providerCache.contains( mimeType ) )
     return m_providerCache.value( mimeType );
 
   QList<QVariant> arguments;
-  arguments << QString::fromUtf8( mimeType );
+  arguments <<  mimeType;
   DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
 
   QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Control" ),

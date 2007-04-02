@@ -44,22 +44,22 @@ class NotificationManager : public QObject
 
   Q_SIGNALS:
     Q_SCRIPTABLE void itemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                      const QByteArray &mimetype, const QByteArray &resource );
+                      const QString &mimetype, const QByteArray &resource );
     Q_SCRIPTABLE void itemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                    const QByteArray &mimetype, const QByteArray &resource );
+                    const QString &mimetype, const QByteArray &resource );
     Q_SCRIPTABLE void itemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                      const QByteArray &mimetype, const QByteArray &resource );
+                      const QString &mimetype, const QByteArray &resource );
     Q_SCRIPTABLE void collectionAdded( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
     Q_SCRIPTABLE void collectionChanged( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
     Q_SCRIPTABLE void collectionRemoved( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
 
   private Q_SLOTS:
     void slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                        const QByteArray &mimetype, const QByteArray &resource );
+                        const QString &mimetype, const QByteArray &resource );
     void slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                          const QByteArray &mimetype, const QByteArray &resource );
+                          const QString &mimetype, const QByteArray &resource );
     void slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
-                          const QByteArray &mimetype, const QByteArray &resource );
+                          const QString &mimetype, const QByteArray &resource );
     void slotCollectionAdded( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
     void slotCollectionChanged( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );
     void slotCollectionRemoved( const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource );

@@ -22,6 +22,7 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
+#include <QtCore/QString>
 
 namespace Akonadi {
 
@@ -29,7 +30,7 @@ class SearchHelper
 {
   public:
     static QList<QByteArray> splitLine( const QByteArray &line );
-    static QByteArray extractMimetype( const QList<QByteArray> &junks, int start );
+    static QString extractMimetype( const QList<QByteArray> &junks, int start );
 };
 
 }
