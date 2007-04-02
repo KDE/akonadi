@@ -67,6 +67,7 @@ class DBusThreadProxy : public QObject
 
   private Q_SLOTS:
     void dbusReply( const QDBusMessage& );
+    void dbusError( const QDBusError &err, const QDBusMessage &msg );
 
   private:
     QPointer<DBusThread> mThread;

@@ -138,7 +138,7 @@ void DBusThreadManager::customEvent( QEvent *_event )
 DBusThreadProxy::DBusThreadProxy( DBusThread *thread, const QDBusMessage &message )
   : mThread( thread )
 {
-  if ( !QDBusConnection::sessionBus().callWithCallback( message, this, SLOT( dbusReply( const QDBusMessage& ) ) ) )
+  if ( !QDBusConnection::sessionBus().callWithCallback( message, this, SLOT(dbusReply(QDBusMessage)), SLOT(dbusError(QDBusError,QDBusMessage)) ) )
     emit dbusReply( message.createError( QLatin1String("Call Error"), QLatin1String("callWithCallback() failed in DBusThreadProxy") ) );
 }
 
@@ -146,6 +146,17 @@ void DBusThreadProxy::dbusReply( const QDBusMessage &message )
 {
   if ( mThread )
     mThread->wakeup( message.arguments() );
+  else
+    qDebug( "DBusThreadProxy: thread was deleted during dbus call!" );
+
+  deleteLater();
+}
+
+void DBusThreadProxy::dbusError(const QDBusError & err, const QDBusMessage & msg)
+{
+  qDebug( "DBusThreadProxy: call failed: %s", qPrintable( err.message() ) );
+  if ( mThread )
+    mThread->wakeup( msg.arguments() );
   else
     qDebug( "DBusThreadProxy: thread was deleted during dbus call!" );
 
