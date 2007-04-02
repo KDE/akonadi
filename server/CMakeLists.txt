@@ -59,7 +59,6 @@ set(libakonadiprivate_SRCS
   src/handler/modify.cpp
   src/handler/noop.cpp
   src/handler/rename.cpp
-  src/handler/search.cpp
   src/handler/searchhelper.cpp
   src/handler/searchpersistent.cpp
   src/handler/select.cpp
@@ -68,10 +67,6 @@ set(libakonadiprivate_SRCS
   src/handler/storequery.cpp
   src/handler/transaction.cpp
   src/handler/uid.cpp
-#  src/persistentsearch.cpp
-#  src/persistentsearchmanager.cpp
-#  src/searchprovider.cpp
-  src/searchprovidermanager.cpp
   src/storage/entity.cpp
   entities.cpp
   src/storage/datastore.cpp

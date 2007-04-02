@@ -35,7 +35,6 @@
 #include "handler/modify.h"
 #include "handler/noop.h"
 #include "handler/rename.h"
-#include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
 #include "handler/status.h"
@@ -111,8 +110,6 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new List();
     if ( command == "SELECT" )
         return new Select();
-    if ( command == "SEARCH" )
-        return new Search();
     if ( command == "SEARCH_STORE" || command == "SEARCH_DELETE" || command == "SEARCH_DEBUG" )
         return new SearchPersistent();
     if ( command == "NOOP" )
