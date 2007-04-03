@@ -21,7 +21,7 @@
 
 #include <qtest_kde.h>
 
-QTEST_KDEMAIN( InterpreterTest, NoGUI )
+QTEST_KDEMAIN_CORE( InterpreterTest )
 
 using namespace Akonadi;
 
