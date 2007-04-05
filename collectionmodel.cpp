@@ -94,7 +94,8 @@ CollectionModel::~CollectionModel()
 
 int CollectionModel::columnCount( const QModelIndex & parent ) const
 {
-  Q_UNUSED( parent );
+  if (parent.isValid() && parent.column() != 0)
+    return 0;
   return 1;
 }
 
@@ -146,11 +147,17 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 
 QModelIndex CollectionModel::index( int row, int column, const QModelIndex & parent ) const
 {
+  if (column >= columnCount() || column < 0) return QModelIndex();
+  
   QList<int> list;
   if ( !parent.isValid() )
     list = d->childCollections.value( Collection::root().id() );
   else
+  {
+    if (parent.column() > 0)
+       return QModelIndex();
     list = d->childCollections.value( parent.internalId() );
+  }
 
   if ( row < 0 || row >= list.size() )
     return QModelIndex();

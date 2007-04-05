@@ -34,7 +34,8 @@ MessageCollectionModel::MessageCollectionModel( QObject * parent ) :
 
 int MessageCollectionModel::columnCount( const QModelIndex & parent ) const
 {
-  Q_UNUSED( parent );
+  if (parent.isValid() && parent.column() != 0)
+    return 0;
   return 3;
 }
 
