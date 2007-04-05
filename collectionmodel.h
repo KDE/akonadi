@@ -47,7 +47,8 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     enum CollectionItemRole {
       CollectionIdRole = Qt::UserRole, ///< The collection path.
-      ChildCreatableRole ///< The collection can contain sub-collections.
+      ChildCreatableRole, ///< The collection can contain sub-collections.
+      CollectionContentTypesRole ///< Returns the mimetypes supported by the collection
     };
 
     /**

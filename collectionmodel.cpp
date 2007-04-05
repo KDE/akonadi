@@ -139,6 +139,8 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
       break;
     case CollectionIdRole:
       return col.id();
+    case CollectionContentTypesRole:
+      return QVariant(col.contentTypes());
     case ChildCreatableRole:
       return canCreateCollection( index );
   }

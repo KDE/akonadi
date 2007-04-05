@@ -24,6 +24,7 @@ set( akonadi_LIB_SRC
 	collectiondeletejob.cpp
 	collectionlistjob.cpp
 	collectionmodel.cpp
+	collectionfilterproxymodel.cpp
 	collectionmodifyjob.cpp
 	collectionpathresolver.cpp
 	collectionselectjob.cpp
@@ -74,6 +75,7 @@ install( FILES
 	collectiondeletejob.h
 	collectionlistjob.h
 	collectionmodel.h
+	collectionfilterproxymodel.h
 	collectionmodifyjob.h
 	collectionpathresolver.h
 	collectionselectjob.h
