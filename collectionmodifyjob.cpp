@@ -33,6 +33,7 @@ class Akonadi::CollectionModifyJobPrivate
     QString name;
     Collection parent;
     QList<QPair<QByteArray,QByteArray> > attributes;
+    QList<QByteArray> removeAttributes;
 };
 
 CollectionModifyJob::CollectionModifyJob(const Collection &collection, QObject * parent) :
@@ -67,6 +68,8 @@ void CollectionModifyJob::doStart()
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   foreach ( const QByteArrayPair bp, d->attributes )
     command += ' ' + bp.first + ' ' + bp.second;
+  foreach ( const QByteArray b, d->removeAttributes )
+    command += " -" + b;
   writeData( command );
 }
 
@@ -100,6 +103,11 @@ void CollectionModifyJob::setAttribute(CollectionAttribute * attr)
   if ( value.isEmpty() )
     value = "";
   d->attributes.append( qMakePair( attr->type(), value ) );
+}
+
+void CollectionModifyJob::removeAttribute(const QByteArray & attrName)
+{
+  d->removeAttributes << attrName;
 }
 
 #include "collectionmodifyjob.moc"

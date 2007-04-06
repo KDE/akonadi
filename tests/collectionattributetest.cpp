@@ -107,7 +107,9 @@ void CollectionAttributeTest::testAttributes()
 
 
   // delete a custom attribute
-  // TODO
+  modify = new CollectionModifyJob( col, this );
+  modify->removeAttribute( attr->type() );
+  QVERIFY( modify->exec() );
 
   list = new CollectionListJob( col, CollectionListJob::Local, this );
   QVERIFY( list->exec() );
@@ -116,7 +118,6 @@ void CollectionAttributeTest::testAttributes()
 
   QVERIFY( col.isValid() );
   attr = col.attribute<TestAttribute>();
-  QEXPECT_FAIL( "", "Not yet implemented", Continue );
   QVERIFY( attr == 0 );
 
 
