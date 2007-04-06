@@ -37,9 +37,11 @@ namespace Akonadi {
   Request:
   @verbatim
   request = tag " MODIFY " collection-id " " attribute-list
-  attribute-list = *(attribute-name " " attribute-value)
+  attribute-list = *([-]attribute-name [" " attribute-value])
   attribute-name = "NAME" | "MIMETYPE" | "REMOTEID" | "CACHEPOLICY" | "PARENT" | [-]custom-attr-name
   @endverbatim
+
+  Attributes marked with a leading '-' will be deleted, they don't have any attribute value.
 */
 class Modify : public Handler
 {

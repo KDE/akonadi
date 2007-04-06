@@ -92,13 +92,19 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
         return failureResponse( "Unable to reparent colleciton" );
     } else {
       // custom attribute
-      // TODO: implement attribute deletion
+      bool removeOnly = false;
+      if ( type.startsWith( '-' ) ) {
+        type = type.mid( 1 );
+        removeOnly = true;
+      }
       if ( !db->removeCollectionAttribute( location, type ) )
         return failureResponse( "Unable to remove custom collection attribute" );
-      QByteArray value;
-      pos = ImapParser::parseString( line, value, pos );
-      if ( !db->addCollectionAttribute( location, type, value ) )
-        return failureResponse( "Unable to add custom collection attribute" );
+      if ( ! removeOnly ) {
+        QByteArray value;
+        pos = ImapParser::parseString( line, value, pos );
+        if ( !db->addCollectionAttribute( location, type, value ) )
+          return failureResponse( "Unable to add custom collection attribute" );
+      }
     }
   }
 
