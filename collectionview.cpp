@@ -42,7 +42,6 @@ class CollectionView::Private
 {
   public:
     QSortFilterProxyModel *filterModel;
-    CollectionModel *model;
     QModelIndex dragOverIndex;
     QTimer dragExpandTimer;
 
@@ -83,7 +82,6 @@ CollectionView::~ CollectionView( )
 
 void CollectionView::setModel( QAbstractItemModel * model )
 {
-  d->model = static_cast<CollectionModel*>( model );
   d->filterModel->setSourceModel( model );
   QTreeView::setModel( d->filterModel );
   header()->setResizeMode( 0, QHeaderView::Stretch );
@@ -102,20 +100,18 @@ void CollectionView::dragMoveEvent(QDragMoveEvent * event)
     }
   }
 
-  index = sourceIndex( indexAt( event->pos() ) );
-  QStringList mimeTypes = event->mimeData()->formats();
-  if ( !d->model->supportsContentType( index, mimeTypes ) ) {
-    event->setDropAction( Qt::IgnoreAction );
-    return;
-  }
-  QTreeView::dragMoveEvent( event );
-}
 
-QModelIndex CollectionView::sourceIndex(const QModelIndex & index)
-{
-  if ( index.model() == d->filterModel )
-    return d->filterModel->mapToSource( index );
-  return index;
+  QStringList supportedContentTypes = model()->data( index, CollectionModel::CollectionContentTypesRole ).toStringList();
+  QStringList mimeTypes = event->mimeData()->formats();
+  foreach ( const QString type, mimeTypes ) {
+    if ( supportedContentTypes.contains( type ) ) {
+      QTreeView::dragMoveEvent( event );
+      return;
+    }
+  }
+
+  event->setDropAction( Qt::IgnoreAction );
+  return;
 }
 
 void CollectionView::dragLeaveEvent(QDragLeaveEvent * event)
