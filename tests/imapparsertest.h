@@ -31,6 +31,8 @@ class ImapParserTest : public QObject
     void testParseString();
     void testParseParenthesizedList();
     void testParseNumber();
+    void testQuote_data();
+    void testQuote();
 };
 
 

@@ -253,7 +253,6 @@ void Collection::addRawAttribute(const QByteArray & type, const QByteArray & val
     attr->setData( value );
     addAttribute( attr );
   } else {
-    qDebug() << "unknown collection attribute type:" << type;
     d->rawAttributes.insert( type, value );
   }
 }

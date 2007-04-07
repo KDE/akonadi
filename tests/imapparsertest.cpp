@@ -108,6 +108,12 @@ void ImapParserTest::testParseQuotedString( )
   consumed = ImapParser::parseQuotedString( input, result, input.length() );
   QVERIFY( result.isEmpty() );
   QCOMPARE( consumed, input.length() );
+
+  // de-quoting
+  input = "\"\\\"some \\\\ quoted stuff\\\"\"";
+  consumed = ImapParser::parseQuotedString( input, result, 0 );
+  QCOMPARE( result, QByteArray( "\"some \\ quoted stuff\"" ) );
+  QCOMPARE( consumed, input.length() );
 }
 
 void ImapParserTest::testParseString( )
@@ -215,6 +221,30 @@ void ImapParserTest::testParseNumber()
   pos = ImapParser::parseNumber( input, result, &ok, input.length() );
   QCOMPARE( ok, false );
   QCOMPARE( pos, input.length() );
+}
+
+void ImapParserTest::testQuote_data()
+{
+  QTest::addColumn<QByteArray>( "unquoted" );
+  QTest::addColumn<QByteArray>( "quoted" );
+
+  QTest::newRow( "empty" ) << QByteArray("") << QByteArray("\"\"");
+  QTest::newRow( "simple" ) << QByteArray("bla") << QByteArray("\"bla\"");
+  QTest::newRow( "double-quotes" ) << QByteArray("\"test\"test\"") << QByteArray("\"\\\"test\\\"test\\\"\"");
+  QTest::newRow( "backslash" ) << QByteArray("\\") << QByteArray("\"\\\\\"");
+  QByteArray binaryNonEncoded;
+  binaryNonEncoded += '\000';
+  QByteArray binaryEncoded("\"" );
+  binaryEncoded += '\000';
+  binaryEncoded += '"';
+  QTest::newRow( "binary" ) << binaryNonEncoded << binaryEncoded;
+}
+
+void ImapParserTest::testQuote()
+{
+  QFETCH( QByteArray, unquoted );
+  QFETCH( QByteArray, quoted );
+  QCOMPARE( ImapParser::quote( unquoted ), quoted );
 }
 
 #include "imapparsertest.moc"

@@ -135,8 +135,11 @@ int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, 
   }
 
   // strip quotes
+  // FIXME: this can be done more efficient
   while ( result.contains( "\\\"" ) )
     result.replace( "\\\"", "\"" );
+  while ( result.contains( "\\\\" ) )
+    result.replace( "\\\\", "\\" );
 
   return end;
 }
@@ -214,3 +217,15 @@ int ImapParser::parseNumber(const QByteArray & data, int & result, bool * ok, in
   return pos;
 }
 
+QByteArray ImapParser::quote(const QByteArray & data)
+{
+  QByteArray result( "\"" );
+  result.reserve( data.length() + 2 );
+  for ( int i = 0; i < data.length(); ++i ) {
+    if ( data.at( i ) == '"' || data.at( i ) == '\\' )
+      result += '\\';
+    result += data.at( i );
+  }
+  result += '"';
+  return result;
+}

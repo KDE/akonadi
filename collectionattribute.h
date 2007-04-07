@@ -54,7 +54,7 @@ class AKONADI_EXPORT CollectionAttribute
 
     /**
       Returns a QByteArray representation of the attribute which will be
-      used for communication and storage.
+      storaged. This can be raw binary data, no encoding needs to be applied.
     */
     virtual QByteArray toByteArray() const = 0;
 

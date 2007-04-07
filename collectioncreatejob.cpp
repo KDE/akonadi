@@ -116,9 +116,7 @@ void CollectionCreateJob::setAttribute(CollectionAttribute * attr)
 {
   Q_ASSERT( !attr->type().isEmpty() );
 
-  QByteArray value = attr->toByteArray();
-  if ( value.isEmpty() )
-    value = "";
+  QByteArray value = ImapParser::quote( attr->toByteArray() );
   d->attributes.append( qMakePair( attr->type(), value ) );
 }
 

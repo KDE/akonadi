@@ -47,23 +47,42 @@ class TestAttribute : public CollectionAttribute
     QByteArray mData;
 };
 
+static int parentColId = -1;
+
 void CollectionAttributeTest::initTestCase()
 {
   Control::start();
   CollectionAttributeFactory::registerAttribute<TestAttribute>();
+
+  CollectionPathResolver *resolver = new CollectionPathResolver( "res3", this );
+  QVERIFY( resolver->exec() );
+  parentColId = resolver->collection();
+  QVERIFY( parentColId > 0 );
+}
+
+void CollectionAttributeTest::testAttributes_data()
+{
+  QTest::addColumn<QByteArray>("attr1");
+  QTest::addColumn<QByteArray>("attr2");
+
+  QTest::newRow("basic") << QByteArray("foo") << QByteArray("bar");
+  QTest::newRow("emtpy1") << QByteArray("") << QByteArray("non-empty");
+  QTest::newRow("empty2") << QByteArray("non-empty") << QByteArray("");
+  QTest::newRow("space") << QByteArray("foo bar") << QByteArray("bar foo");
+  QTest::newRow("quotes") << QByteArray("\"quoted \\ test\"") << QByteArray("single \" quote \\");
+  QTest::newRow("parenthesis") << QByteArray(")") << QByteArray("(");
+  QTest::newRow("binary") << QByteArray("\000") << QByteArray("\001");
 }
 
 void CollectionAttributeTest::testAttributes()
 {
-  CollectionPathResolver *resolver = new CollectionPathResolver( "res3", this );
-  QVERIFY( resolver->exec() );
-  int parentId = resolver->collection();
-  QVERIFY( parentId > 0 );
+  QFETCH( QByteArray, attr1 );
+  QFETCH( QByteArray, attr2 );
 
   // add a custom attribute
   TestAttribute *attr = new TestAttribute();
-  attr->setData( "foo" );
-  CollectionCreateJob *create = new CollectionCreateJob( Collection( parentId ), "attribute test", this );
+  attr->setData( attr1 );
+  CollectionCreateJob *create = new CollectionCreateJob( Collection( parentColId ), "attribute test", this );
   create->setAttribute( attr );
   delete attr;
   QVERIFY( create->exec() );
@@ -73,7 +92,7 @@ void CollectionAttributeTest::testAttributes()
   attr = col.attribute<TestAttribute>();
 #if 0
   QVERIFY( attr != 0 );
-  QCOMPARE( attr->toByteArray(), QByteArray( "foo" ) );
+  QCOMPARE( attr->toByteArray(), QByteArray( attr1 ) );
 #endif
 
   CollectionListJob *list = new CollectionListJob( col, CollectionListJob::Local, this );
@@ -84,12 +103,12 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( col.isValid() );
   attr = col.attribute<TestAttribute>();
   QVERIFY( attr != 0 );
-  QCOMPARE( attr->toByteArray(), QByteArray( "foo" ) );
+  QCOMPARE( attr->toByteArray(), QByteArray( attr1 ) );
 
 
   // modify a custom attribute
   attr = new TestAttribute();
-  attr->setData( "bar" );
+  attr->setData( attr2 );
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
   modify->setAttribute( attr );
   delete attr;
@@ -103,7 +122,7 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( col.isValid() );
   attr = col.attribute<TestAttribute>();
   QVERIFY( attr != 0 );
-  QCOMPARE( attr->toByteArray(), QByteArray( "bar" ) );
+  QCOMPARE( attr->toByteArray(), QByteArray( attr2 ) );
 
 
   // delete a custom attribute
