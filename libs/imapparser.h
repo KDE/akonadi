@@ -104,6 +104,12 @@ class AKONADI_EXPORT ImapParser
       @param start start parsing at this index.
     */
     static int parseNumber( const QByteArray &data, int &result, bool *ok = 0, int start = 0 );
+
+    /**
+      Quotes the given byte array.
+      @param data Source data.
+    */
+    static QByteArray quote( const QByteArray &data );
 };
 
 }

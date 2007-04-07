@@ -130,7 +130,7 @@ bool AkList::listCollection(const Location & root, int depth )
 
   LocationAttribute::List attrs = root.attributes();
   foreach ( const LocationAttribute attr, attrs )
-    b += attr.type() + " \"" + attr.value() + '"';
+    b += attr.type() + ' ' + ImapParser::quote( attr.value() );
   b+= ')';
   response.setString( b );
   emit responseAvailable( response );
