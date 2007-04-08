@@ -184,6 +184,17 @@ class AKONADI_EXPORT Collection
     }
 
     /**
+      Returns the attribute of the requested type or 0 if not available.
+    */
+    template <typename T> inline T* attribute() const
+    {
+      T dummy;
+      if ( hasAttribute( dummy.type() ) )
+        return static_cast<T*>( attribute( dummy.type() ) );
+      return 0;
+    }
+
+    /**
       Returns the collection path delimiter.
     */
     static QString delimiter();
