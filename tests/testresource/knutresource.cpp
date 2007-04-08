@@ -135,6 +135,7 @@ void KnutResource::synchronizeCollection(const Akonadi::Collection & collection)
 {
   changeStatus( Syncing, "Syncing collection " + collection.name() );
   mSyncTimer->start( 2000 );
+  collectionSynchronized();
 }
 
 #include "knutresource.moc"
