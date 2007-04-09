@@ -805,7 +805,7 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
   QDateTime atime = dateTimeToQDateTime( query.value( 5 ).toByteArray() );
   bool dirty = query.value( 6 ).toBool();
   QByteArray data = query.value( 7 ).toByteArray();
-  if ( data.isEmpty() && type == FetchQuery::AllType )
+  if ( data.isEmpty() && type != FetchQuery::FastType )
       data = retrieveDataFromResource( id, remote_id, location, type );
 
   // update access time
@@ -820,15 +820,6 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
 PimItem DataStore::pimItemById( int id )
 {
   return pimItemById( id, FetchQuery::FastType );
-}
-
-QList<PimItem> DataStore::listPimItems( const MimeType & mimetype,
-                                        const Location & location )
-{
-  // TODO implement
-  QList<PimItem> list;
-  list.append( pimItemById( 1 ) );
-  return list;
 }
 
 QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &flag )
@@ -886,7 +877,7 @@ int DataStore::highestPimItemCountByLocation( const Location &location )
 
 QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsByUID( const FetchQuery &query, const Location& l )
 {
-    return matchingPimItemsByUID( query.sequences(), /*query.type() HACK*/ FetchQuery::AllType, l );
+    return matchingPimItemsByUID( query.sequences(), query.type(), l );
 }
 
 QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequences,
@@ -1235,7 +1226,6 @@ QDateTime DataStore::dateTimeToQDateTime( const QByteArray & dateTime )
 
 bool Akonadi::DataStore::beginTransaction()
 {
-  qDebug() << "DataStore::beginTransaction()";
   if ( !m_dbOpened )
     return false;
 
@@ -1256,7 +1246,6 @@ bool Akonadi::DataStore::beginTransaction()
 
 bool Akonadi::DataStore::rollbackTransaction()
 {
-  qDebug() << "DataStore::rollbackTransaction()";
   if ( !m_dbOpened )
     return false;
 
@@ -1278,7 +1267,6 @@ bool Akonadi::DataStore::rollbackTransaction()
 
 bool Akonadi::DataStore::commitTransaction()
 {
-  qDebug() << "DataStore::commitTransaction()";
   if ( !m_dbOpened )
     return false;
 

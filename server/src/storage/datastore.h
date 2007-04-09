@@ -171,8 +171,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool updatePimItem( PimItem &pimItem, const QString &remoteId );
     PimItem pimItemById( int id );
     PimItem pimItemById( int id, FetchQuery::Type type );
-    QList<PimItem> listPimItems( const MimeType & mimetype,
-                                 const Location & location );
 
     QList<PimItem> listPimItems( const Location & location, const Flag &flag );
 
