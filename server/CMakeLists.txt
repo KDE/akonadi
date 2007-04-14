@@ -75,7 +75,6 @@ set(libakonadiprivate_SRCS
   src/storage/transaction.cpp
   src/tracer.cpp
   src/dbustracer.cpp
-  src/dbusthread.cpp
   src/filetracer.cpp
   src/notificationmanager.cpp
   src/resourcemanager.cpp
@@ -100,7 +99,12 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
 
-qt4_add_dbus_interfaces( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.AgentManager.xml ../resources/include/org.kde.Akonadi.Resource.xml)
+qt4_add_dbus_interfaces( libakonadiprivate_SRCS
+  interfaces/org.kde.Akonadi.AgentManager.xml
+  interfaces/org.kde.Akonadi.SearchProviderManager.xml
+  ../resources/include/org.kde.Akonadi.Resource.xml
+  ../searchproviders/org.kde.Akonadi.SearchProvider.xml
+)
 
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 

@@ -36,7 +36,6 @@
 #include "agentmanagerinterface.h"
 #include "resourceinterface.h"
 #include "dbinitializer.h"
-#include "dbusthread.h"
 #include "notificationmanager.h"
 #include "tracer.h"
 #include "querybuilder.h"
@@ -730,34 +729,16 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
       mPendingItemDeliveriesMutex.unlock();
 
       // call the resource
+      org::kde::Akonadi::Resource *interface =
+            new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.name(),
+                                             QLatin1String("/"), QDBusConnection::sessionBus(), this );
 
-      // Use the interface if we are in main thread, the DBusThread proxy otherwise
-      if ( QThread::currentThread() == QCoreApplication::instance()->thread() ) {
-          org::kde::Akonadi::Resource *interface =
-                      new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.name(),
-                                                      QLatin1String("/"), QDBusConnection::sessionBus(), this );
-
-          if ( !interface || !interface->isValid() ) {
-            qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                                            .arg( r.name(), interface ? interface->lastError().message() : QString() );
-            return QByteArray();
-          }
-          bool ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), type );
-      } else {
-        QList<QVariant> arguments;
-        arguments << uid << QString::fromUtf8( remote_id ) << type;
-
-        DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
-
-        const QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Resource." ) + r.name(),
-                                                            QLatin1String( "/" ),
-                                                            QLatin1String( "org.kde.Akonadi.Resource" ),
-                                                            QLatin1String( "requestItemDelivery" ), arguments );
-
-        // do something with result...
-        qDebug() << "got dbus response: " << result;
+      if ( !interface || !interface->isValid() ) {
+        qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+                                        .arg( r.name(), interface ? interface->lastError().message() : QString() );
+        return QByteArray();
       }
-      qDebug() << "returned from requestItemDelivery()";
+      bool ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), type );
 
       mPendingItemDeliveriesMutex.lock();
       mPendingItemDeliveries.removeAll( uid );

@@ -26,6 +26,7 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 #include "handlerhelper.h"
+#include "searchproviderinterface.h"
 
 #include <QtCore/QStringList>
 
@@ -79,17 +80,20 @@ bool SearchPersistent::handleLine( const QByteArray& line )
       return failureResponse( "No search providers found for this mimetype" );
 
     // call search providers
-    qDebug() << "found search providers for mimetype:" << mimeType << providers;
-    QList<QVariant> arguments;
-    arguments << collectionName << QString::fromUtf8( queryString );
-    DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
-    foreach ( QString provider, providers ) {
-      QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.SearchProvider." ) + provider,
-                                     QLatin1String( "/" ),
-                                     QLatin1String( "org.kde.Akonadi.SearchProvider" ),
-                                     QLatin1String( "addSearch" ), arguments );
-      qDebug() << "returned from search provider call: " << result;
+// FIXME: actually provide that interface...
+#if 0
+    org::kde::Akonadi::SearchProvider *interface =
+        new org::kde::Akonadi::SearchProvider(
+          QLatin1String("org.kde.Akonadi.SearchProvider.") + provider,
+          QLatin1String("/"), QDBusConnection::sessionBus(), this );
+
+    if ( !interface || !interface->isValid() ) {
+      qDebug() << "Cannot connect to search provider" << provider
+          << (interface ? interface->lastError().message() : QString() );
+    } else {
+      interface->addSearch( collectionName, queryString );
     }
+#endif
 
   } else if ( command.toUpper() == "SEARCH_DELETE" ) {
 
@@ -104,16 +108,20 @@ bool SearchPersistent::handleLine( const QByteArray& line )
       return failureResponse( "No search providers found for this mimetype" );
 
     // unregister at search providers
-    QList<QVariant> arguments;
-    arguments << collectionName;
-    DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
-    foreach ( QString provider, providers ) {
-      QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.SearchProvider." ) + provider,
-                                     QLatin1String( "/" ),
-                                     QLatin1String( "org.kde.Akonadi.SearchProvider" ),
-                                     QLatin1String( "removeSearch" ), arguments );
-      qDebug() << "returned from search provider call: " << result;
+// FIXME: actually provide that interface...
+#if 0
+    org::kde::Akonadi::SearchProvider *interface =
+        new org::kde::Akonadi::SearchProvider(
+          QLatin1String("org.kde.Akonadi.SearchProvider.") + provider,
+          QLatin1String("/"), QDBusConnection::sessionBus(), this );
+
+    if ( !interface || !interface->isValid() ) {
+      qDebug() << "Cannot connect to search provider" << provider
+          << (interface ? interface->lastError().message() : QString() );
+    } else {
+      interface->removeSearch( collectionName );
     }
+#endif
 
     if ( !db->cleanupLocation( search ) )
       return failureResponse( "Unable to remove presistent search" );

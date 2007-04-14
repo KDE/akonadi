@@ -42,7 +42,7 @@
 #include "handler/transaction.h"
 #include "uid.h"
 
-#include "dbusthread.h"
+#include "searchprovidermanagerinterface.h"
 
 using namespace Akonadi;
 
@@ -187,20 +187,15 @@ QStringList Akonadi::Handler::providerForMimetype(const QString & mimeType)
   if ( m_providerCache.contains( mimeType ) )
     return m_providerCache.value( mimeType );
 
-  QList<QVariant> arguments;
-  arguments <<  mimeType;
-  DBusThread *dbusThread = static_cast<DBusThread*>( QThread::currentThread() );
+  org::kde::Akonadi::SearchProviderManager *interface =
+    new org::kde::Akonadi::SearchProviderManager( QLatin1String("org.kde.Akonadi.SearchProviderManager"),
+                                                  QLatin1String("/"), QDBusConnection::sessionBus(), this );
 
-  QList<QVariant> result = dbusThread->callDBus( QLatin1String( "org.kde.Akonadi.Control" ),
-      QLatin1String( "/SearchProviderManager" ),
-      QLatin1String( "org.kde.Akonadi.SearchProviderManager" ),
-      QLatin1String( "providersForMimeType" ), arguments );
-
-  // TODO error handling (eg. on failing call)
-  if ( result.isEmpty() )
+  if ( !interface || !interface->isValid() ) {
+    qDebug() << "Cannot connect to search provider manager" << (interface ? interface->lastError().message() : QString() );
     return QStringList();
-
-  QStringList providers = result.first().toStringList();
+  }
+  QStringList providers = interface->providersForMimeType( mimeType );
   if ( !providers.isEmpty() )
     m_providerCache.insert( mimeType, providers );
 

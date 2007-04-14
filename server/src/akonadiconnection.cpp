@@ -31,7 +31,7 @@
 using namespace Akonadi;
 
 AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
-    : DBusThread(parent)
+    : QThread(parent)
     , m_socketDescriptor(socketDescriptor)
     , m_tcpSocket( 0 )
     , m_currentHandler( 0 )
