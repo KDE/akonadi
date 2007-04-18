@@ -99,10 +99,11 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
 
+qt4_generate_dbus_interface( ../resources/include/resource.h org.kde.Akonadi.Resource.xml )
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.AgentManager.xml
   interfaces/org.kde.Akonadi.SearchProviderManager.xml
-  ../resources/include/org.kde.Akonadi.Resource.xml
+  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml
   ../searchproviders/org.kde.Akonadi.SearchProvider.xml
 )
 
