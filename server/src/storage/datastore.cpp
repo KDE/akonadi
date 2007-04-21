@@ -38,7 +38,7 @@
 #include "dbinitializer.h"
 #include "notificationmanager.h"
 #include "tracer.h"
-#include "querybuilder.h"
+#include "selectquerybuilder.h"
 #include "handlerhelper.h"
 
 #include "datastore.h"
@@ -298,7 +298,7 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( Location &location )
 {
-  QueryBuilder<Location> qb;
+  SelectQueryBuilder<Location> qb;
   qb.addValueCondition( Location::parentIdColumn(), "=", location.parentId() );
   qb.addValueCondition( Location::nameColumn(), "=", location.name() );
   if ( !qb.exec() ) {
@@ -432,7 +432,7 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
 
   const bool move = location.parentId() != newParent;
 
-  QueryBuilder<Location> qb;
+  SelectQueryBuilder<Location> qb;
   qb.addValueCondition( Location::parentIdColumn(), "=", newParent );
   qb.addValueCondition( Location::nameColumn(), "=", newName );
   if ( !qb.exec() || qb.result().count() > 0 )
@@ -504,7 +504,13 @@ CachePolicy DataStore::activeCachePolicy(const Location & loc)
   if ( policy.isValid() )
     return policy;
 
-  // TODO: check parent locations
+  Location parent = loc.parent();
+  while ( parent.isValid() ) {
+    policy = parent.cachePolicy();
+    if ( policy.isValid() )
+      return policy;
+    parent = parent.parent();
+  }
 
   // fall back to resource cache policy
   Resource res = loc.resource();
@@ -808,7 +814,7 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
   if ( !m_dbOpened )
     return QList<PimItem>();
 
-  QueryBuilder<PimItem> qb;
+  SelectQueryBuilder<PimItem> qb;
   qb.addTable( PimItemFlagRelation::tableName() );
   qb.addColumnCondition( PimItem::idFullColumnName(), "=", PimItemFlagRelation::leftFullColumnName() );
   qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), "=", flag.id() );
@@ -1093,7 +1099,7 @@ bool Akonadi::DataStore::appendPersisntentSearch(const QString & name, const QBy
 
 bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & key, const QByteArray & value)
 {
-  QueryBuilder<LocationAttribute> qb;
+  SelectQueryBuilder<LocationAttribute> qb;
   qb.addValueCondition( LocationAttribute::locationIdColumn(), "=", loc.id() );
   qb.addValueCondition( LocationAttribute::typeColumn(), "=", key );
   if ( !qb.exec() )
@@ -1118,7 +1124,7 @@ bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & 
 
 bool Akonadi::DataStore::removeCollectionAttribute(const Location & loc, const QByteArray & key)
 {
-  QueryBuilder<LocationAttribute> qb;
+  SelectQueryBuilder<LocationAttribute> qb;
   qb.addValueCondition( LocationAttribute::locationIdColumn(), "=", loc.id() );
   qb.addValueCondition( LocationAttribute::typeColumn(), "=", key );
   if ( !qb.exec() )

@@ -24,6 +24,7 @@
 #include "imapparser.h"
 
 #include "aklist.h"
+#include "akonadiconnection.h"
 #include "response.h"
 
 using namespace Akonadi;
@@ -127,6 +128,11 @@ bool AkList::listCollection(const Location & root, int depth )
   b += "MIMETYPE (" + MimeType::joinByName( root.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
   b += "REMOTEID \"" + root.remoteId().toUtf8() + "\" ";
   b += "RESOURCE \"" + root.resource().name().toUtf8() + "\" ";
+
+  DataStore *db = connection()->storageBackend();
+  CachePolicy policy = db->activeCachePolicy( root );
+  if ( policy.isValid() )
+    b += "CACHEPOLICY " + QByteArray::number( policy.id() ) + ' ';
 
   LocationAttribute::List attrs = root.attributes();
   foreach ( const LocationAttribute attr, attrs )

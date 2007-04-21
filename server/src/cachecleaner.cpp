@@ -19,7 +19,7 @@
 
 #include "cachecleaner.h"
 #include "storage/datastore.h"
-#include "storage/querybuilder.h"
+#include "storage/selectquerybuilder.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -57,7 +57,7 @@ void CacheCleaner::cleanCache()
     int expireTime = qMax( 5, policy.expireTime() );
 
     // find all expired items
-    QueryBuilder<PimItem> qb;
+    SelectQueryBuilder<PimItem> qb;
     qb.addValueCondition( PimItem::locationIdColumn(), "=", location.id() );
     qb.addValueCondition( PimItem::atimeColumn(), "<", QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
     qb.addValueCondition( PimItem::dataColumn(), "IS NOT", QVariant() );

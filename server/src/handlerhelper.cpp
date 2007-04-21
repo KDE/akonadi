@@ -19,7 +19,7 @@
 
 #include "handlerhelper.h"
 #include "storage/datastore.h"
-#include "storage/querybuilder.h"
+#include "storage/selectquerybuilder.h"
 
 using namespace Akonadi;
 
@@ -48,7 +48,7 @@ Location HandlerHelper::collectionFromIdOrName(const QByteArray & id)
   const QStringList pathParts = path.split( QLatin1Char('/') );
   Location loc;
   foreach ( const QString part, pathParts ) {
-    QueryBuilder<Location> qb;
+    SelectQueryBuilder<Location> qb;
     qb.addValueCondition( Location::nameColumn(), "=", part );
     if ( loc.isValid() )
       qb.addValueCondition( Location::parentIdColumn(), "=", loc.id() );

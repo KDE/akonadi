@@ -119,6 +119,13 @@ bool Create::handleLine(const QByteArray& line )
     } else if ( key == "MIMETYPE" ) {
       ImapParser::parseParenthesizedList( value, mimeTypes );
       mimeTypesSet = true;
+    } else if ( key == "CACHEPOLICY" ) {
+      int cachePolicyId = -1;
+      bool ok = false;
+      ImapParser::parseNumber( value, cachePolicyId, &ok );
+      if ( !ok || cachePolicyId <= 0 )
+        return failureResponse( "Invalid cache policy" );
+      location.setCachePolicyId( cachePolicyId );
     } else {
       userDefAttrs << qMakePair( key, value );
     }

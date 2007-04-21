@@ -52,8 +52,8 @@ bool Status::handleLine( const QByteArray& line )
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
     QByteArray mailbox;
     const int endOfMailbox = ImapParser::parseString( line, mailbox, startOfMailbox );
-    const QByteArray statusAttributes = line.mid( endOfMailbox + 2, line.size() - ( endOfMailbox + 2 ) - 1 );
-    const QList<QByteArray> attributeList = statusAttributes.split( ' ' );
+    QList<QByteArray> attributeList;
+    ImapParser::parseParenthesizedList( line, attributeList, endOfMailbox );
 
     Response response;
 
@@ -103,13 +103,6 @@ bool Status::handleLine( const QByteArray& line )
         else
             statusResponse += "UNSEEN ";
         statusResponse += QByteArray::number( l.unseenCount() );
-    }
-    if ( attributeList.contains( "MIMETYPES" ) ) {
-      if ( !statusResponse.isEmpty() )
-        statusResponse += ' ';
-      statusResponse += "MIMETYPES (";
-      statusResponse += MimeType::joinByName<MimeType>( l.mimeTypes(), QLatin1String(" ") ).toLatin1();
-      statusResponse += ')';
     }
 
     response.setUntagged();
