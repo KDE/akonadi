@@ -8,7 +8,7 @@ fi
 pushd `dirname $abs_path` > /dev/null
 
 akonadidb=akonadi
-socketfile=$HOME/.akonadi/mysql.socket
+socketfile=$HOME/.akonadi/db_misc/mysql.socket
 if ! [ -S $socketfile ]; then
 	startserver=true
 else
@@ -16,7 +16,7 @@ else
 fi
 
 if ! [ -z "$startserver" ]; then
-	/usr/sbin/mysqld --datadir=$HOME/.akonadi/db/ --socket=$socketfile --skip-grant-tables --skip-networking &
+	/usr/sbin/mysqld --datadir=$HOME/.akonadi/db_data/ --socket=$socketfile --skip-grant-tables --skip-networking &
 	sleep 2;
 fi
 
