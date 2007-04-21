@@ -94,7 +94,7 @@ bool KnutResource::requestItemDelivery( const DataReference &ref, int type, cons
 {
   Q_UNUSED( type );
 
-  const QString remoteId = ref.externalUrl().toString();
+  const QString remoteId = ref.remoteId();
 
   QMutableMapIterator<QString, CollectionEntry> it( mCollections );
   while ( it.hasNext() ) {
@@ -133,7 +133,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
     if ( !addressee.isEmpty() ) {
       entry.addressees.insert( addressee.uid(), addressee );
 
-      DataReference r( item.reference().persistanceID(), addressee.uid() );
+      DataReference r( item.reference().id(), addressee.uid() );
       changesCommitted( r );
     }
   } else if ( item.mimeType() == QLatin1String( "text/calendar" ) ) {
@@ -141,7 +141,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
     if ( incidence ) {
       entry.incidences.insert( incidence->uid(), incidence );
 
-      DataReference r( item.reference().persistanceID(), incidence->uid() );
+      DataReference r( item.reference().id(), incidence->uid() );
       changesCommitted( r );
     }
   }
@@ -155,23 +155,23 @@ void KnutResource::itemChanged( const Akonadi::Item &item )
 
     CollectionEntry &entry = it.value();
 
-    if ( entry.addressees.contains( item.reference().externalUrl().toString() ) ) {
+    if ( entry.addressees.contains( item.reference().remoteId() ) ) {
       const KABC::Addressee addressee = mVCardConverter.parseVCard( item.data() );
       if ( !addressee.isEmpty() ) {
         entry.addressees.insert( addressee.uid(), addressee );
 
-        DataReference r( item.reference().persistanceID(), addressee.uid() );
+        DataReference r( item.reference().id(), addressee.uid() );
         changesCommitted( r );
       }
 
       return;
-    } if ( entry.incidences.contains( item.reference().externalUrl().toString() ) ) {
+    } if ( entry.incidences.contains( item.reference().remoteId() ) ) {
       KCal::Incidence *incidence = mICalConverter.fromString( QString::fromUtf8( item.data() ) );
       if ( incidence ) {
-        delete entry.incidences.take( item.reference().externalUrl().toString() );
+        delete entry.incidences.take( item.reference().remoteId() );
         entry.incidences.insert( incidence->uid(), incidence );
 
-        DataReference r( item.reference().persistanceID(), incidence->uid() );
+        DataReference r( item.reference().id(), incidence->uid() );
         changesCommitted( r );
       }
 
@@ -188,11 +188,11 @@ void KnutResource::itemRemoved( const Akonadi::DataReference &reference )
 
     CollectionEntry &entry = it.value();
 
-    if ( entry.addressees.contains( reference.externalUrl().toString() ) ) {
-      entry.addressees.remove( reference.externalUrl().toString() );
+    if ( entry.addressees.contains( reference.remoteId() ) ) {
+      entry.addressees.remove( reference.remoteId() );
       return;
-    } if ( entry.incidences.contains( reference.externalUrl().toString() ) ) {
-      delete entry.incidences.take( reference.externalUrl().toString() );
+    } if ( entry.incidences.contains( reference.remoteId() ) ) {
+      delete entry.incidences.take( reference.remoteId() );
       return;
     }
   }
@@ -245,7 +245,7 @@ void KnutResource::synchronizeCollection( const Akonadi::Collection &collection 
 
     bool found = false;
     foreach ( Item item, items ) {
-      if ( item.reference().externalUrl().toString() == uid ) {
+      if ( item.reference().remoteId() == uid ) {
         found = true;
         break;
       }
@@ -272,7 +272,7 @@ void KnutResource::synchronizeCollection( const Akonadi::Collection &collection 
 
     bool found = false;
     foreach ( Item item, items ) {
-      if ( item.reference().externalUrl().toString() == uid ) {
+      if ( item.reference().remoteId() == uid ) {
         found = true;
         break;
       }
