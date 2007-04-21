@@ -155,7 +155,7 @@ void Akonadi::ItemModel::listingDone( KJob * job )
 void ItemModel::itemChanged( const Akonadi::Item &item )
 {
   itemRemoved( item.reference() );
-  itemAdded( item.reference() );
+  itemAdded( item );
 }
 
 void ItemModel::itemAdded( const Akonadi::Item &item )
