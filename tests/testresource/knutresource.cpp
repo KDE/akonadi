@@ -17,8 +17,18 @@
     02110-1301, USA.
 */
 
-#include <QtCore/QTimer>
-#include <QtGui/QInputDialog>
+#include <QtCore/QFile>
+#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
+
+#include <libakonadi/collectionlistjob.h>
+#include <libakonadi/collectionmodifyjob.h>
+#include <libakonadi/itemappendjob.h>
+#include <libakonadi/itemfetchjob.h>
+#include <libakonadi/itemstorejob.h>
+#include <libakonadi/session.h>
+
+#include <klocale.h>
 
 #include "knutresource.h"
 
@@ -27,16 +37,7 @@ using namespace Akonadi;
 KnutResource::KnutResource( const QString &id )
   : ResourceBase( id )
 {
-  mStatusTimer = new QTimer( this );
-  connect( mStatusTimer, SIGNAL( timeout() ), this, SLOT( statusTimeout() ) );
-
-  mSyncTimer = new QTimer( this );
-  connect( mSyncTimer, SIGNAL( timeout() ), this, SLOT( syncTimeout() ) );
-
-  int number = id.mid( 22 ).toInt();
-  mStatusTimer->start( 5000 + ( 100*number ) );
-
-  mConfig = settings()->value( "Config/MyConfig" ).toString();
+  mDataFile = settings()->value( "General/DataFile" ).toString();
 }
 
 KnutResource::~KnutResource()
@@ -45,97 +46,240 @@ KnutResource::~KnutResource()
 
 void KnutResource::configure()
 {
-  const QString tmp = QInputDialog::getText( 0, "Configuration", "Configuration:", QLineEdit::Normal, mConfig );
-  if ( !tmp.isEmpty() ) {
-    mConfig = tmp;
-    settings()->setValue( "Config/MyConfig", mConfig );
-    setName( mConfig );
-  }
+}
+
+void KnutResource::aboutToQuit()
+{
 }
 
 bool KnutResource::setConfiguration( const QString &config )
 {
-  mConfig = config;
+  mDataFile = config;
+  settings()->setValue( "General/DataFile", mDataFile );
 
   return true;
 }
 
 QString KnutResource::configuration() const
 {
-  return mConfig;
+  return mDataFile;
 }
 
 bool KnutResource::requestItemDelivery( const DataReference &ref, int type, const QDBusMessage &msg )
 {
-  Q_UNUSED( ref );
   Q_UNUSED( type );
-  Q_UNUSED( msg );
+
+  const QString remoteId = ref.externalUrl().toString();
+
+  QMutableMapIterator<QString, CollectionEntry> it( mCollections );
+  while ( it.hasNext() ) {
+    const CollectionEntry &entry = it.value();
+
+    QByteArray data;
+
+    if ( entry.addressees.contains( remoteId ) )
+      data = mVCardConverter.createVCard( entry.addressees.value( remoteId ) );
+
+    if ( entry.incidences.contains( remoteId ) )
+      data = mICalConverter.toString( entry.incidences.value( remoteId ) ).toUtf8();
+
+    if ( !data.isEmpty() ) {
+      ItemStoreJob *job = new ItemStoreJob( ref, session() );
+      job->setData( data );
+
+      return deliverItem( job, msg );
+    }
+  }
+
   return false;
 }
 
-void KnutResource::statusTimeout()
+void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  static Status status = Ready;
+  if ( !mCollections.contains( collection.remoteId() ) )
+    return;
 
-  if ( status == Ready ) {
-    changeStatus( Syncing, tr( "Syncing with Kolab Server" ) );
-    status = Syncing;
-  } else if ( status == Syncing ) {
-    changeStatus( Error, tr( "Unable to connect to Kolab Server" ) );
-    status = Error;
-  } else if ( status == Error ) {
-    changeStatus( Ready, tr( "Data loaded successfully from Kolab Sever" ) );
-    status = Ready;
+  CollectionEntry &entry = mCollections[ collection.remoteId() ];
+
+  if ( item.mimeType() == QLatin1String( "text/vcard" ) ) {
+    const KABC::Addressee addressee = mVCardConverter.parseVCard( item.data() );
+    if ( !addressee.isEmpty() )
+      entry.addressees.insert( addressee.uid(), addressee );
+  } else if ( item.mimeType() == QLatin1String( "text/calendar" ) ) {
+    KCal::Incidence *incidence = mICalConverter.fromString( QString::fromUtf8( item.data() ) );
+    if ( incidence ) {
+      entry.incidences.insert( incidence->uid(), incidence );
+    }
   }
 }
 
-void KnutResource::syncTimeout()
+void KnutResource::itemChanged( const Akonadi::Item &item )
 {
-  mStatusTimer->stop();
+  Q_UNUSED( item );
+}
 
-  static int progress = 0;
-
-  if ( progress == 0 )
-    changeStatus( Syncing, "Syncing collection 'contacts'" );
-  else if ( progress == 10 )
-    changeStatus( Syncing, "Syncing collection 'events'" );
-  else if ( progress == 20 )
-    changeStatus( Syncing, "Syncing collection 'notes'" );
-  else if ( progress == 30 )
-    changeStatus( Syncing, "Syncing collection 'tasks'" );
-  else if ( progress == 40 )
-    changeStatus( Syncing, "Syncing collection 'journals'" );
-  else if ( progress == 50 )
-    changeStatus( Syncing, "Syncing collection 'mails'" );
-
-  changeProgress( (progress % 10) * 10 );
-
-  progress++;
-
-  if ( progress == 50 ) {
-    progress = 0;
-    mSyncTimer->stop();
-    changeStatus( Ready );
-    changeProgress( 0 );
-  }
+void KnutResource::itemRemoved( const Akonadi::DataReference &ref )
+{
+  Q_UNUSED( ref );
 }
 
 void KnutResource::retrieveCollections()
 {
-  Collection c;
-  c.setParent( Collection::root() );
-  c.setRemoteId( "foo" );
-  c.setName( name() );
-  Collection::List list;
-  list << c;
-  collectionsRetrieved( list );
+  Akonadi::Collection::List collections;
+  QMapIterator<QString, CollectionEntry> it( mCollections );
+  while ( it.hasNext() ) {
+    it.next();
+    collections.append( it.value().collection );
+  }
+
+  collectionsRetrieved( collections );
 }
 
-void KnutResource::synchronizeCollection(const Akonadi::Collection & collection)
+void KnutResource::synchronizeCollection( const Akonadi::Collection &collection )
 {
-  changeStatus( Syncing, "Syncing collection " + collection.name() );
-  mSyncTimer->start( 2000 );
+  ItemFetchJob *fetch = new ItemFetchJob( collection, session() );
+  if ( !fetch->exec() ) {
+    changeStatus( Error, i18n( "Unable to fetch listing of collection '%1': %2", collection.name(), fetch->errorString() ) );
+    return;
+  }
+
+  changeProgress( 0 );
+
+  Item::List items = fetch->items();
+
+  KABC::Addressee::List addressees;
+  QMapIterator<QString, CollectionEntry> it( mCollections );
+  while ( it.hasNext() ) {
+    if ( it.value().collection.id() == collection.id() ) {
+      addressees = it.value().addressees.values();
+      break;
+    }
+  }
+
+  int counter = 0;
+  foreach ( KABC::Addressee addressee, addressees ) {
+    QString uid = addressee.uid();
+
+    bool found = false;
+    foreach ( Item item, items ) {
+      if ( item.reference().externalUrl().toString() == uid ) {
+        found = true;
+        break;
+      }
+    }
+
+    if ( found )
+      continue;
+
+    ItemAppendJob *append = new ItemAppendJob( collection, "text/vcard", session() );
+    append->setRemoteId( uid );
+    if ( !append->exec() ) {
+      changeProgress( 0 );
+      changeStatus( Error, i18n( "Appending new contact failed: %1", append->errorString() ) );
+      return;
+    }
+
+    counter++;
+    int percentage = (counter * 100) / addressees.count();
+    changeProgress( percentage );
+  }
+
   collectionSynchronized();
+}
+
+bool KnutResource::loadData()
+{
+  mCollections.clear();
+
+  QFile file( mDataFile );
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    changeStatus( Error, "Unable to open data file" );
+    return false;
+  }
+
+  QDomDocument document;
+  if ( !document.setContent( &file, true ) ) {
+    changeStatus( Error, "Unable to parse data file" );
+    return false;
+  }
+
+  QDomElement element = document.documentElement();
+  if ( element.tagName() != QLatin1String( "knut" ) ) {
+    changeStatus( Error, "Data file has invalid format" );
+    return false;
+  }
+
+  Collection parentCollection;
+  parentCollection.setParent( Collection::root() );
+  parentCollection.setRemoteId( mDataFile );
+  parentCollection.setName( name() );
+
+  CollectionEntry entry;
+  entry.collection = parentCollection;
+
+  element = element.firstChildElement();
+  while ( !element.isNull() ) {
+    if ( element.tagName() == QLatin1String( "collection" ) ) {
+      addCollection( element, parentCollection );
+    } else if ( element.tagName() == QLatin1String( "item" ) ) {
+      if ( element.attribute( "mimetype" ) == QLatin1String( "text/vcard" ) )
+        addAddressee( element, entry );
+      else if ( element.attribute( "mimetype" ) == QLatin1String( "text/calendar" ) )
+        addIncidence( element, entry );
+    }
+
+    element = element.nextSiblingElement();
+  }
+
+  mCollections.insert( entry.collection.remoteId(), entry );
+
+  return true;
+}
+
+void KnutResource::addCollection( const QDomElement &element, const Akonadi::Collection &parentCollection )
+{
+  Collection collection;
+  collection.setParent( parentCollection );
+  collection.setName( element.attribute( "name" ) );
+  collection.setRemoteId( mDataFile + "#" + element.attribute( "name" ) );
+  collection.setContentTypes( element.attribute( "mimetypes" ).split( ";", QString::SkipEmptyParts ) );
+
+  CollectionEntry entry;
+  entry.collection = collection;
+
+  QDomElement childElement = element.firstChildElement();
+  while ( !childElement.isNull() ) {
+    if ( childElement.tagName() == QLatin1String( "collection" ) ) {
+      addCollection( childElement, collection );
+    } else if ( childElement.tagName() == QLatin1String( "item" ) ) {
+      if ( childElement.attribute( "mimetype" ) == QLatin1String( "text/x-vcard" ) )
+        addAddressee( childElement, entry );
+      else if ( childElement.attribute( "mimetype" ) == QLatin1String( "text/x-calendar" ) )
+        addIncidence( childElement, entry );
+    }
+
+    childElement = childElement.nextSiblingElement();
+  }
+
+  mCollections.insert( entry.collection.remoteId(), entry );
+}
+
+void KnutResource::addAddressee( const QDomElement &element, CollectionEntry &entry )
+{
+  const QString data = element.text();
+
+  KABC::Addressee addressee = mVCardConverter.parseVCard( data.toUtf8() );
+  if ( !addressee.isEmpty() )
+    entry.addressees.insert( addressee.uid(), addressee );
+}
+
+void KnutResource::addIncidence( const QDomElement &element, CollectionEntry &entry )
+{
+  const QString data = element.text();
+
+  KCal::Incidence *incidence = mICalConverter.fromString( data );
+  if ( incidence )
+    entry.incidences.insert( incidence->uid(), incidence );
 }
 
 #include "knutresource.moc"

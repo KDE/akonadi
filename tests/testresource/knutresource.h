@@ -20,8 +20,12 @@
 #ifndef KNUTRESOURCE_H
 #define KNUTRESOURCE_H
 
+#include <kabc/vcardconverter.h>
+#include <kcal/incidence.h>
+#include <kcal/icalformat.h>
 #include <resourcebase.h>
 
+class QDomElement;
 class QTimer;
 
 class KnutResource : public Akonadi::ResourceBase
@@ -34,23 +38,39 @@ class KnutResource : public Akonadi::ResourceBase
 
   public Q_SLOTS:
     virtual bool requestItemDelivery( const Akonadi::DataReference &ref, int type, const QDBusMessage &msg );
-
     virtual void configure();
+
     virtual bool setConfiguration( const QString& );
     virtual QString configuration() const;
 
   protected:
+    virtual void aboutToQuit();
+
+    virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    virtual void itemChanged( const Akonadi::Item &item );
+    virtual void itemRemoved( const Akonadi::DataReference &ref );
+
     void retrieveCollections();
     void synchronizeCollection( const Akonadi::Collection &collection );
 
-  private Q_SLOTS:
-    void statusTimeout();
-    void syncTimeout();
-
   private:
-    QString mConfig;
-    QTimer *mStatusTimer;
-    QTimer *mSyncTimer;
+    class CollectionEntry
+    {
+      public:
+        Akonadi::Collection collection;
+        QMap<QString, KABC::Addressee> addressees;
+        QMap<QString, KCal::Incidence*> incidences;
+    };
+
+    bool loadData();
+    void addCollection( const QDomElement &element, const Akonadi::Collection &parentCollection );
+    void addAddressee( const QDomElement &element, CollectionEntry &entry );
+    void addIncidence( const QDomElement &element, CollectionEntry &entry );
+
+    QString mDataFile;
+    KABC::VCardConverter mVCardConverter;
+    KCal::ICalFormat mICalConverter;
+    QMap<QString, CollectionEntry> mCollections;
 };
 
 #endif
