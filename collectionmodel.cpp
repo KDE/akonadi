@@ -132,9 +132,10 @@ void CollectionModel::Private::listDone( KJob *job )
     Collection::List _collections = static_cast<CollectionListJob*>( job )->collections();
 
     // update model
-    foreach( const Collection col, _collections ) {
+    foreach( Collection col, _collections ) {
       if ( collections.contains( col.id() ) ) {
         // collection already known
+        col.setStatus( collections.value( col.id() ).status() );
         collections[ col.id() ] = col;
         QModelIndex startIndex = mParent->indexForId( col.id() );
         QModelIndex endIndex = mParent->indexForId( col.id(), mParent->columnCount( mParent->parent( startIndex ) ) - 1 );
