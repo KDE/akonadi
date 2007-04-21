@@ -34,53 +34,10 @@ template <typename T> class SelectQueryBuilder : public QueryBuilder
     /**
       Creates a new query builder.
     */
-    inline SelectQueryBuilder() : QueryBuilder()
+    inline SelectQueryBuilder() : QueryBuilder( Select )
     {
+      addColumns( T::fullColumnNames() );
       addTable( T::tableName() );
-    }
-
-    /**
-      Executes the query, returns true on success.
-    */
-    inline bool exec()
-    {
-      QString statement = QLatin1String( "SELECT " );
-      statement += T::fullColumnNames().join( QLatin1String( ", " ) );
-      statement += QLatin1String(" FROM ");
-      statement += mTables.join( QLatin1String( ", " ) );
-      if ( !mConditions.isEmpty() ) {
-        statement += QLatin1String(" WHERE ");
-        int i = 0;
-        QStringList conds;
-        foreach ( const Condition c, mConditions ) {
-          QString cstmt = c.column;
-          cstmt += QLatin1Char( ' ' );
-          cstmt += c.op;
-          cstmt += QLatin1Char( ' ' );
-          if ( c.column2.isEmpty() ) {
-            if ( c.value.isValid() )
-              cstmt += QString::fromLatin1( ":%1" ).arg( i++ );
-            else
-              cstmt += QLatin1String( "NULL" );
-          } else {
-            cstmt += c.column2;
-          }
-          conds << cstmt;
-        }
-        statement += conds.join( QLatin1String( " AND " ) );
-      }
-      mQuery.prepare( statement );
-      int i = 0;
-      foreach ( const Condition c, mConditions )
-        if ( c.column2.isEmpty() && c.value.isValid() )
-          mQuery.bindValue( QString::fromLatin1( ":%1" ).arg( i++ ), c.value );
-      if ( !mQuery.exec() ) {
-        qDebug() << "Error during selecting records from table"
-            << T::tableName() << mQuery.lastError().text();
-        qDebug() << "Query was:" << statement;
-        return false;
-      }
-      return true;
     }
 
     /**
@@ -88,7 +45,7 @@ template <typename T> class SelectQueryBuilder : public QueryBuilder
     */
     QList<T> result()
     {
-      return T::extractResult( mQuery );
+      return T::extractResult( query() );
     }
 };
 

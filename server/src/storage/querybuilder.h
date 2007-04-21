@@ -30,16 +30,26 @@ namespace Akonadi {
 class QueryBuilder
 {
   public:
+    enum QueryType {
+      Select
+    };
+
     /**
       Creates a new query builder.
     */
-    QueryBuilder();
+    QueryBuilder( QueryType type );
 
     /**
       Add a table to the FROM part of the query.
       @param table The table name.
     */
     void addTable( const QString &table );
+
+    /**
+      Adds the given columns to a select query.
+      @param cols The columns you want to select.
+    */
+    void addColumns( const QStringList &cols );
 
     /**
       Add a WHERE condition which compares a column with a given value.
@@ -57,7 +67,17 @@ class QueryBuilder
     */
     void addColumnCondition( const QString &column, const char* op, const QString column2 );
 
-  protected:
+    /**
+      Returns the query, only valid after exec().
+    */
+    QSqlQuery& query();
+
+    /**
+      Executes the query, returns true on success.
+    */
+    bool exec();
+
+  private:
     class Condition
     {
       public:
@@ -68,6 +88,8 @@ class QueryBuilder
     QList<Condition> mConditions;
     QStringList mTables;
     QSqlQuery mQuery;
+    QueryType mType;
+    QStringList mColumns;
 };
 
 }
