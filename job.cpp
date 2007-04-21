@@ -96,7 +96,7 @@ QString DataReference::remoteId() const
 
 bool DataReference::isNull() const
 {
-  return d->mId >= 0;
+  return d->mId < 0;
 }
 
 bool DataReference::operator==( const DataReference & other ) const
