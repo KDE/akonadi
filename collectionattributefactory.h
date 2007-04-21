@@ -51,7 +51,6 @@ class AKONADI_EXPORT CollectionAttributeFactory
     void registerAttribute( CollectionAttribute *attr );
 
   private:
-    static CollectionAttributeFactory* mInstance;
     class Private;
     Private* const d;
 };

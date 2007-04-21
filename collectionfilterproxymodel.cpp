@@ -29,15 +29,46 @@ using namespace Akonadi;
 class CollectionFilterProxyModel::Private
 {
   public:
+    Private( CollectionFilterProxyModel *parent )
+      : mParent( parent ), sourceModel( 0 )
+    {
+    }
+
+    bool collectionAccepted( const QModelIndex &index );
+
+    CollectionFilterProxyModel *mParent;
     QStringList mimeTypes;
     CollectionModel *sourceModel;
 };
 
-CollectionFilterProxyModel::CollectionFilterProxyModel(QObject *parent) :
-  QSortFilterProxyModel(parent),
-  d( new Private() )
+bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex &index )
 {
-  d->sourceModel = 0L;
+  // Retrieve supported mimetypes
+  QStringList collectionMimeTypes = mParent->sourceModel()->data( index, CollectionModel::CollectionContentTypesRole ).toStringList();
+
+  // If this collection directly contains one valid mimetype, it is accepted
+  foreach ( QString type, mimeTypes ) {
+    if ( collectionMimeTypes.contains( type ) )
+      return true;
+  }
+  // If this collection has a child which contains valid mimetypes, it is accepted
+  QModelIndex childIndex = index.child( 0, 0 );
+  while ( childIndex.isValid() ) {
+    if ( collectionAccepted( childIndex ) )
+      return true;
+
+    childIndex = childIndex.sibling( childIndex.row() + 1, 0 );
+  }
+
+  // Or else, no reason to keep this collection.
+  return false;
+}
+
+
+CollectionFilterProxyModel::CollectionFilterProxyModel( QObject *parent )
+  : QSortFilterProxyModel( parent ),
+    d( new Private( this ) )
+{
 }
 
 CollectionFilterProxyModel::~CollectionFilterProxyModel()
@@ -57,34 +88,12 @@ void CollectionFilterProxyModel::addMimeType(const QString &type)
 
 bool CollectionFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
 {
-  return collectionAccepted( sourceModel()->index(sourceRow, 0, sourceParent));
+  return d->collectionAccepted( sourceModel()->index( sourceRow, 0, sourceParent ) );
 }
 
 QStringList CollectionFilterProxyModel::mimeTypes() const
 {
   return d->mimeTypes;
 }
-
-bool CollectionFilterProxyModel::collectionAccepted(const QModelIndex &index) const
-{
-  // Retrieve supported mimetypes
-  QStringList collectionMimeTypes = sourceModel()->data( index, CollectionModel::CollectionContentTypesRole).toStringList();
-
-  // If this collection directly contains one valid mimetype, it is accepted
-  foreach(QString type, d->mimeTypes) {
-    if (collectionMimeTypes.contains(type))
-      return true;
-  }
-  // If this collection has a child which contains valid mimetypes, it is accepted
-  QModelIndex childIndex = index.child(0, 0);
-  while(childIndex.isValid()) {
-    if (collectionAccepted(childIndex)) return true;
-    childIndex = childIndex.sibling(childIndex.row() + 1, 0);
-  }
-
-  // Or else, no reason to keep this collection.
-  return false;
-}
-
 
 #include "collectionfilterproxymodel.moc"

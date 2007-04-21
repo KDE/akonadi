@@ -27,16 +27,17 @@ class CollectionAttributeFactory::Private
 {
   public:
     QHash<QByteArray, CollectionAttribute*> attributes;
+    static CollectionAttributeFactory* mInstance;
 };
 
-CollectionAttributeFactory* CollectionAttributeFactory::mInstance = 0;
+CollectionAttributeFactory* CollectionAttributeFactory::Private::mInstance = 0;
 
 CollectionAttributeFactory* CollectionAttributeFactory::self()
 {
-  if ( !mInstance )
-    mInstance = new CollectionAttributeFactory();
+  if ( !Private::mInstance )
+    Private::mInstance = new CollectionAttributeFactory();
 
-  return mInstance;
+  return Private::mInstance;
 }
 
 CollectionAttributeFactory::CollectionAttributeFactory()

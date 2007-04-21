@@ -49,44 +49,41 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
   Q_OBJECT
 
   public:
-	/**
-	 * Create a new CollectionProxyFilterModel
-	 * @param parent The parent object
-	 */
-	CollectionFilterProxyModel(QObject *parent = 0);
-	
-	/**
-	 * Destroy the model
-	 **/
-	virtual ~CollectionFilterProxyModel();
+    /**
+     * Create a new CollectionProxyFilterModel
+     * @param parent The parent object
+     */
+    CollectionFilterProxyModel( QObject *parent = 0 );
 
-	/**
-	 * Add types to be shown by the filter
-	 * @param typeList A list of mimetypes to be shown
-	 */
-	void addMimeTypes(const QStringList &typeList);
-	/**
-	 * Convenience method for the previous one
-	 * @param type A type to show
-	 */
-	void addMimeType(const QString &type);
+    /**
+     * Destroy the model
+     **/
+    virtual ~CollectionFilterProxyModel();
+
+    /**
+     * Add types to be shown by the filter
+     * @param typeList A list of mimetypes to be shown
+     */
+    void addMimeTypes( const QStringList &typeList );
+
+    /**
+     * Convenience method for the previous one
+     * @param type A type to show
+     */
+    void addMimeType( const QString &type );
+
     /**
      * @return The list of supported mimetypes
      */
     QStringList mimeTypes() const;
-    
-   protected:
+
+  protected:
     /**
      * Reimplemented to only accept rows (collections) which are able to contain the filter mimetypes.
      */
-	virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const; 
-	
-  private:
-    /**
-     * Used by filterAcceptsRow (recursive)
-     */
-    bool collectionAccepted(const QModelIndex &index) const;
+    virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const; 
 
+  private:
     class Private;
     Private* const d;
 };
