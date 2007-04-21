@@ -18,6 +18,7 @@
 */
 
 #include <QtCore/QFile>
+#include <QtCore/QDir>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
 
@@ -28,6 +29,7 @@
 #include <libakonadi/itemstorejob.h>
 #include <libakonadi/session.h>
 
+#include <kfiledialog.h>
 #include <klocale.h>
 
 #include "knutresource.h"
@@ -46,6 +48,26 @@ KnutResource::~KnutResource()
 
 void KnutResource::configure()
 {
+  QString oldFile = settings()->value( "General/DataFile" ).toString();
+  KUrl url;
+  if ( !oldFile.isEmpty() )
+    url = KUrl::fromPath( oldFile );
+  else
+    url = KUrl::fromPath( QDir::homePath() );
+
+  QString newFile = KFileDialog::getOpenFileName( url, "*.xml |Data File", 0, i18n( "Select Data File" ) );
+
+  if ( newFile.isEmpty() )
+    return;
+
+  if ( oldFile == newFile )
+    return;
+
+  mDataFile = newFile;
+  settings()->setValue( "General/DataFile", newFile );
+
+  loadData();
+  synchronize();
 }
 
 void KnutResource::aboutToQuit()
@@ -56,6 +78,9 @@ bool KnutResource::setConfiguration( const QString &config )
 {
   mDataFile = config;
   settings()->setValue( "General/DataFile", mDataFile );
+
+  loadData();
+  synchronize();
 
   return true;
 }
@@ -73,6 +98,8 @@ bool KnutResource::requestItemDelivery( const DataReference &ref, int type, cons
 
   QMutableMapIterator<QString, CollectionEntry> it( mCollections );
   while ( it.hasNext() ) {
+    it.next();
+
     const CollectionEntry &entry = it.value();
 
     QByteArray data;
@@ -103,24 +130,72 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
 
   if ( item.mimeType() == QLatin1String( "text/vcard" ) ) {
     const KABC::Addressee addressee = mVCardConverter.parseVCard( item.data() );
-    if ( !addressee.isEmpty() )
+    if ( !addressee.isEmpty() ) {
       entry.addressees.insert( addressee.uid(), addressee );
+
+      DataReference r( item.reference().persistanceID(), addressee.uid() );
+      changesCommitted( r );
+    }
   } else if ( item.mimeType() == QLatin1String( "text/calendar" ) ) {
     KCal::Incidence *incidence = mICalConverter.fromString( QString::fromUtf8( item.data() ) );
     if ( incidence ) {
       entry.incidences.insert( incidence->uid(), incidence );
+
+      DataReference r( item.reference().persistanceID(), incidence->uid() );
+      changesCommitted( r );
     }
   }
 }
 
 void KnutResource::itemChanged( const Akonadi::Item &item )
 {
-  Q_UNUSED( item );
+  QMutableMapIterator<QString, CollectionEntry> it( mCollections );
+  while ( it.hasNext() ) {
+    it.next();
+
+    CollectionEntry &entry = it.value();
+
+    if ( entry.addressees.contains( item.reference().externalUrl().toString() ) ) {
+      const KABC::Addressee addressee = mVCardConverter.parseVCard( item.data() );
+      if ( !addressee.isEmpty() ) {
+        entry.addressees.insert( addressee.uid(), addressee );
+
+        DataReference r( item.reference().persistanceID(), addressee.uid() );
+        changesCommitted( r );
+      }
+
+      return;
+    } if ( entry.incidences.contains( item.reference().externalUrl().toString() ) ) {
+      KCal::Incidence *incidence = mICalConverter.fromString( QString::fromUtf8( item.data() ) );
+      if ( incidence ) {
+        delete entry.incidences.take( item.reference().externalUrl().toString() );
+        entry.incidences.insert( incidence->uid(), incidence );
+
+        DataReference r( item.reference().persistanceID(), incidence->uid() );
+        changesCommitted( r );
+      }
+
+      return;
+    }
+  }
 }
 
-void KnutResource::itemRemoved( const Akonadi::DataReference &ref )
+void KnutResource::itemRemoved( const Akonadi::DataReference &reference )
 {
-  Q_UNUSED( ref );
+  QMutableMapIterator<QString, CollectionEntry> it( mCollections );
+  while ( it.hasNext() ) {
+    it.next();
+
+    CollectionEntry &entry = it.value();
+
+    if ( entry.addressees.contains( reference.externalUrl().toString() ) ) {
+      entry.addressees.remove( reference.externalUrl().toString() );
+      return;
+    } if ( entry.incidences.contains( reference.externalUrl().toString() ) ) {
+      delete entry.incidences.take( reference.externalUrl().toString() );
+      return;
+    }
+  }
 }
 
 void KnutResource::retrieveCollections()
@@ -148,17 +223,25 @@ void KnutResource::synchronizeCollection( const Akonadi::Collection &collection 
   Item::List items = fetch->items();
 
   KABC::Addressee::List addressees;
+  KCal::Incidence::List incidences;
   QMapIterator<QString, CollectionEntry> it( mCollections );
   while ( it.hasNext() ) {
     if ( it.value().collection.id() == collection.id() ) {
       addressees = it.value().addressees.values();
+
+      const QList<KCal::Incidence*> list = it.value().incidences.values();
+      for ( int i = 0; i < list.count(); ++i )
+        incidences.append( list[ i ] );
       break;
     }
   }
 
   int counter = 0;
+  int fullcount = addressees.count() + incidences.count();
+
+  // synchronize contacts
   foreach ( KABC::Addressee addressee, addressees ) {
-    QString uid = addressee.uid();
+    const QString uid = addressee.uid();
 
     bool found = false;
     foreach ( Item item, items ) {
@@ -180,8 +263,34 @@ void KnutResource::synchronizeCollection( const Akonadi::Collection &collection 
     }
 
     counter++;
-    int percentage = (counter * 100) / addressees.count();
-    changeProgress( percentage );
+    changeProgress( (counter * 100) / fullcount );
+  }
+
+  // synchronize events
+  foreach ( KCal::Incidence *incidence, incidences ) {
+    const QString uid = incidence->uid();
+
+    bool found = false;
+    foreach ( Item item, items ) {
+      if ( item.reference().externalUrl().toString() == uid ) {
+        found = true;
+        break;
+      }
+    }
+
+    if ( found )
+      continue;
+
+    ItemAppendJob *append = new ItemAppendJob( collection, "text/calendar", session() );
+    append->setRemoteId( uid );
+    if ( !append->exec() ) {
+      changeProgress( 0 );
+      changeStatus( Error, i18n( "Appending new calendar failed: %1", append->errorString() ) );
+      return;
+    }
+
+    counter++;
+    changeProgress( (counter * 100) / fullcount );
   }
 
   collectionSynchronized();
