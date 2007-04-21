@@ -165,7 +165,7 @@ void ItemFetchJob::startFetchJob()
   if ( d->uid.isNull() )
     command += " FETCH 1:*";
   else
-    command += " UID FETCH " + QByteArray::number( d->uid.persistanceID() );
+    command += " UID FETCH " + QByteArray::number( d->uid.id() );
 
   command += " (UID REMOTEID FLAGS";
   if ( d->fetchData )

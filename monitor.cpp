@@ -353,7 +353,7 @@ void Monitor::monitorCollection( const Collection &collection )
 
 void Monitor::monitorItem( const DataReference & ref )
 {
-  d->items.insert( ref.persistanceID() );
+  d->items.insert( ref.id() );
 }
 
 void Monitor::monitorResource(const QByteArray & resource)

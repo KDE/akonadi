@@ -153,7 +153,7 @@ void ItemStoreJob::sendNextCommand()
 
   d->tag = newTag();
   QByteArray command = d->tag;
-  command += " UID STORE " + QByteArray::number( d->ref.persistanceID() ) + ' ';
+  command += " UID STORE " + QByteArray::number( d->ref.id() ) + ' ';
   int op = *(d->operations.begin());
   d->operations.remove( op );
   switch ( op ) {
@@ -173,7 +173,7 @@ void ItemStoreJob::sendNextCommand()
       command += "COLLECTION " + QByteArray::number( d->collection.id() );
       break;
     case ItemStoreJobPrivate::RemoteId:
-      command += "REMOTEID \"" + d->ref.externalUrl().toString().toLatin1() + '\"';
+      command += "REMOTEID \"" + d->ref.remoteId().toLatin1() + '\"';
       break;
     case ItemStoreJobPrivate::Dirty:
       command += "DIRTY";

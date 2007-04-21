@@ -67,9 +67,9 @@ QVariant Akonadi::ItemModel::data( const QModelIndex & index, int role ) const
   if ( role == Qt::DisplayRole ) {
     switch ( index.column() ) {
       case Id:
-        return QString::number( item.reference().persistanceID() );
+        return QString::number( item.reference().id() );
       case RemoteId:
-        return item.reference().externalUrl().toString();
+        return item.reference().remoteId();
       case MimeType:
         return item.mimeType();
     }

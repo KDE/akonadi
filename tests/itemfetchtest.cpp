@@ -52,7 +52,7 @@ void ItemFetchTest::testFetch()
 
   // check if the fetch response is parsed correctly
   Item item = items[0];
-  QCOMPARE( item.reference().externalUrl().toString(), QString( "A" ) );
+  QCOMPARE( item.reference().remoteId(), QString( "A" ) );
 
   QCOMPARE( item.flags().count(), 3 );
   QVERIFY( item.hasFlag( "\\Seen" ) );

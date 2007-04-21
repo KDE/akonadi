@@ -27,6 +27,7 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QSharedDataPointer>
 #include <QtCore/QUrl>
 
 #include <kcompositejob.h>
@@ -50,55 +51,58 @@ class AKONADI_EXPORT DataReference
     DataReference();
 
     /**
-      Creates a new DataReference with the given @p persistanceID and @p externalUrl .
+      Creates a new DataReference with the given local @p id and @p remoteId.
      */
-    DataReference( uint persistanceID, const QString &externalUrl );
+    DataReference( int id, const QString &remoteId );
+
+    /**
+      Copy constructor.
+     */
+    DataReference( const DataReference &other );
 
     /**
       Destroys the DataReference.
      */
     ~DataReference();
 
-    /**
-      Returns the persistance id of the DataReference or an empty string if no
-      id is set.
-     */
-    uint persistanceID() const;
+    DataReference& operator=( const DataReference &other );
 
     /**
-      Returns the external url of the DataReference or an empty string if no
-      url is set.
+      Returns the local id of the DataReference or an invalid string if no
+      id is set.
      */
-    QUrl externalUrl() const;
+    int id() const;
+
+    /**
+      Returns the remote of the DataReference or an empty string if no
+      remote id is set.
+     */
+    QString remoteId() const;
 
     /**
       Returns true if this is a empty reference, ie. one created with
       DataReference().
-    */
+     */
     bool isNull() const;
 
     /**
       Returns true if two references are equal.
-    */
+     */
     bool operator==( const DataReference &other ) const;
 
     /**
       Returns true if two references are not equal.
-    */
+     */
     bool operator!=( const DataReference &other ) const;
 
     /**
       Compares two references.
-    */
+     */
     bool operator<( const DataReference &other ) const;
 
   private:
-    uint mPersistanceID;
-    QString mExternalUrl;
-    bool mIsNull;
-
-    class DataReferencePrivate;
-    DataReferencePrivate* d;
+    class Private;
+    QSharedDataPointer<Private> d;
 };
 
 /**
