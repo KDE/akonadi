@@ -86,6 +86,13 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     */
     void addFetchField( const QByteArray &field );
 
+    /**
+      Choose whether the item data should be fetched.
+      @param fetch @c true to fetch the item data, fetch only
+      meta-data otherwise.
+    */
+    void fetchData( bool fetch );
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );

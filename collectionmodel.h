@@ -22,6 +22,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
+#include <libakonadi/collectionstatus.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
@@ -131,6 +132,12 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     Collection collectionForId( int id ) const;
 
+    /**
+      Enable fetching of collection status information.
+      @see CollectionStatus.
+    */
+    void fetchCollectionStatus( bool enable );
+
   private:
     /**
       Helper function to generate a model index for a given collection reference.
@@ -165,6 +172,11 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Connected to the collection status job.
     */
     void updateDone( KJob *job );
+
+    /**
+      Notify the model about collection status changes.
+    */
+    void collectionStatusChanged( int collection, const Akonadi::CollectionStatus &status );
 
     /**
       Connected to the list jobs.

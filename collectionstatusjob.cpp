@@ -17,9 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionattribute.h"
 #include "collectionstatusjob.h"
-#include "messagecollectionattribute.h"
 #include "imapparser.h"
 
 #include <QtCore/QDebug>
@@ -30,7 +28,7 @@ class Akonadi::CollectionStatusJobPrivate
 {
   public:
     Collection collection;
-    CollectionAttribute::List attributes;
+    CollectionStatus status;
 };
 
 CollectionStatusJob::CollectionStatusJob( const Collection &collection, QObject * parent ) :
@@ -45,14 +43,9 @@ CollectionStatusJob::~ CollectionStatusJob( )
   delete d;
 }
 
-QList< CollectionAttribute * > CollectionStatusJob::attributes( ) const
-{
-  return d->attributes;
-}
-
 void CollectionStatusJob::doStart( )
 {
-  writeData( newTag() + " STATUS " + QByteArray::number( d->collection.id() ) + " (MESSAGES UNSEEN MIMETYPES)" );
+  writeData( newTag() + " STATUS " + QByteArray::number( d->collection.id() ) + " (MESSAGES UNSEEN)" );
 }
 
 void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -66,28 +59,17 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
       // result list
       QList<QByteArray> list;
       current = ImapParser::parseParenthesizedList( data, list, current );
-      MessageCollectionAttribute *mcattr = new MessageCollectionAttribute();
-//      CollectionContentTypeAttribute *ctattr = new CollectionContentTypeAttribute();
       for ( int i = 0; i < list.count() - 1; i += 2 ) {
         if ( list[i] == "MESSAGES" ) {
-          mcattr->setCount( list[i+1].toInt() );
-        }
-        else if ( list[i] == "UNSEEN" ) {
-          mcattr->setUnreadCount( list[i+1].toInt() );
-        } else if ( list[i] == "MIMETYPES" ) {
-          QList<QByteArray> mimeTypes;
-          ImapParser::parseParenthesizedList( list[i + 1], mimeTypes );
-          QStringList sMimeTypes;
-          foreach( QByteArray it, mimeTypes ) sMimeTypes << QLatin1String( it );
-          //ctattr->setContentTypes( sMimeTypes );
+          d->status.setCount( list[i+1].toInt() );
+        } else if ( list[i] == "UNSEEN" ) {
+          d->status.setUnreadCount( list[i+1].toInt() );
         } else {
           qDebug() << "unknown STATUS response: " << list[i];
         }
       }
-      d->attributes.append( mcattr );
-//      d->attributes.append( ctattr );
-      foreach ( CollectionAttribute* attr, d->attributes )
-        d->collection.addAttribute( attr );
+
+      d->collection.setStatus( d->status );
       return;
     }
   }
@@ -97,6 +79,11 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
 Collection CollectionStatusJob::collection() const
 {
   return d->collection;
+}
+
+CollectionStatus Akonadi::CollectionStatusJob::status() const
+{
+  return d->status;
 }
 
 

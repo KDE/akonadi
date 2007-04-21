@@ -42,11 +42,15 @@ using namespace Akonadi;
 class CollectionModel::Private
 {
   public:
+    Private() :
+      fetchStatus( false )
+    {}
     QHash<int, Collection> collections;
     QHash<int, QList<int> > childCollections;
     Monitor* monitor;
     Session *session;
     QStringList mimeTypes;
+    bool fetchStatus;
 
     void updateSupportedMimeTypes( Collection col )
     {
@@ -73,9 +77,12 @@ CollectionModel::CollectionModel( QObject * parent ) :
   // monitor collection changes
   d->monitor = new Monitor();
   d->monitor->monitorCollection( Collection::root() );
+  d->monitor->fetchCollection( true );
   connect( d->monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)), SLOT(collectionChanged(const Akonadi::Collection&)) );
   connect( d->monitor, SIGNAL(collectionAdded(const Akonadi::Collection&)), SLOT(collectionChanged(const Akonadi::Collection&)) );
   connect( d->monitor, SIGNAL(collectionRemoved(int,QString)), SLOT(collectionRemoved(int)) );
+  connect( d->monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)),
+           SLOT(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
 
   // ### Hack to get the kmail resource folder icons
   KIconLoader::global()->addAppDir( QLatin1String( "kmail" ) );
@@ -150,7 +157,7 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 QModelIndex CollectionModel::index( int row, int column, const QModelIndex & parent ) const
 {
   if (column >= columnCount() || column < 0) return QModelIndex();
-  
+
   QList<int> list;
   if ( !parent.isValid() )
     list = d->childCollections.value( Collection::root().id() );
@@ -239,10 +246,6 @@ void CollectionModel::collectionChanged( const Akonadi::Collection &collection )
 {
   CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, d->session );
   connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
-  if ( d->collections.contains( collection.id() ) ) {
-    CollectionStatusJob *job = new CollectionStatusJob( d->collections.value( collection.id() ), d->session );
-    connect( job, SIGNAL(result(KJob*)), SLOT(updateDone(KJob*)) );
-  }
 }
 
 void CollectionModel::collectionRemoved( int collection )
@@ -269,19 +272,7 @@ void CollectionModel::updateDone( KJob * job )
   } else {
     CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
     Collection result = csjob->collection();
-    if ( !d->collections.contains( result.id() ) )
-      kWarning() << k_funcinfo << "Got status response for non-existing collection: " << result.id() << endl;
-    else {
-      Collection col = d->collections.value( result.id() );
-      foreach ( CollectionAttribute* attr, result.attributes() )
-        col.addAttribute( attr->clone() );
-      d->collections[ col.id() ] = col;
-      d->updateSupportedMimeTypes( col );
-
-      QModelIndex startIndex = indexForId( col.id() );
-      QModelIndex endIndex = indexForId( col.id(), columnCount( parent( startIndex ) ) - 1 );
-      emit dataChanged( startIndex, endIndex );
-    }
+    collectionStatusChanged( result.id(), csjob->status() );
   }
 }
 
@@ -333,7 +324,7 @@ void CollectionModel::listDone( KJob * job )
       d->updateSupportedMimeTypes( col );
 
       // start a status job for every collection to get message counts, etc.
-      if ( col.type() != Collection::VirtualParent ) {
+      if ( d->fetchStatus && col.type() != Collection::VirtualParent ) {
         CollectionStatusJob* csjob = new CollectionStatusJob( col, d->session );
         connect( csjob, SIGNAL(result(KJob*)), SLOT(updateDone(KJob*)) );
       }
@@ -470,6 +461,26 @@ void CollectionModel::appendDone(KJob * job)
 Collection CollectionModel::collectionForId(int id) const
 {
   return d->collections.value( id );
+}
+
+void CollectionModel::fetchCollectionStatus(bool enable)
+{
+  d->fetchStatus = enable;
+  d->monitor->fetchCollectionStatus( enable );
+}
+
+void CollectionModel::collectionStatusChanged(int collection, const Akonadi::CollectionStatus & status)
+{
+  if ( !d->collections.contains( collection ) )
+    kWarning() << k_funcinfo << "Got status response for non-existing collection: " << collection << endl;
+  else {
+    d->collections[ collection ].setStatus( status );
+
+    Collection col = d->collections.value( collection );
+    QModelIndex startIndex = indexForId( col.id() );
+    QModelIndex endIndex = indexForId( col.id(), columnCount( parent( startIndex ) ) - 1 );
+    emit dataChanged( startIndex, endIndex );
+  }
 }
 
 #include "collectionmodel.moc"

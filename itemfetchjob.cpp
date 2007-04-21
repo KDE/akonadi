@@ -33,12 +33,14 @@ class Akonadi::ItemFetchJobPrivate
     DataReference uid;
     QList<QByteArray> fields;
     Item::List items;
+    bool fetchData;
 };
 
 ItemFetchJob::ItemFetchJob(QObject * parent) :
     Job( parent ),
     d( new ItemFetchJobPrivate )
 {
+  d->fetchData = false;
 }
 
 ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
@@ -46,6 +48,7 @@ ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
     d( new ItemFetchJobPrivate )
 {
   d->collection = collection;
+  d->fetchData = false;
 }
 
 ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
@@ -53,6 +56,7 @@ ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
     d( new ItemFetchJobPrivate )
 {
   setUid( ref );
+  d->fetchData = true;
 }
 
 ItemFetchJob::~ ItemFetchJob( )
@@ -162,9 +166,14 @@ void ItemFetchJob::startFetchJob()
 {
   QByteArray command = newTag();
   if ( d->uid.isNull() )
-    command += " FETCH 1:* (UID REMOTEID FLAGS";
+    command += " FETCH 1:*";
   else
-    command += " UID FETCH " + QByteArray::number( d->uid.persistanceID() ) + " (UID REMOTEID FLAGS RFC822";
+    command += " UID FETCH " + QByteArray::number( d->uid.persistanceID() );
+
+  command += " (UID REMOTEID FLAGS";
+  if ( d->fetchData )
+    command += " RFC822";
+
   foreach ( QByteArray f, d->fields )
     command += ' ' + f;
   command += ')';
@@ -181,6 +190,11 @@ void Akonadi::ItemFetchJob::setUid(const DataReference & ref)
 {
   d->collection = Collection::root();
   d->uid = ref;
+}
+
+void ItemFetchJob::fetchData(bool fetch)
+{
+  d->fetchData = fetch;
 }
 
 #include "itemfetchjob.moc"

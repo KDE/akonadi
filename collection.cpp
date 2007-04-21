@@ -34,7 +34,8 @@ class Collection::Private : public QSharedData
       QSharedData(),
       id( -1 ),
       parentId( -1 ),
-      type( Unknown )
+      type( Unknown ),
+      cachePolicyId( -1 )
     {}
 
     Private( const Private &other ) :
@@ -50,6 +51,8 @@ class Collection::Private : public QSharedData
         attributes.insert( attr->type(), attr->clone() );
       rawAttributes = other.rawAttributes;
       resource = other.resource;
+      cachePolicyId = other.cachePolicyId;
+      status = other.status;
       contentTypes = other.contentTypes;
     }
 
@@ -67,6 +70,8 @@ class Collection::Private : public QSharedData
     QHash<QByteArray, CollectionAttribute*> attributes;
     QHash<QByteArray, QByteArray> rawAttributes;
     QString resource;
+    int cachePolicyId;
+    CollectionStatus status;
     QStringList contentTypes;
 };
 
@@ -253,4 +258,24 @@ void Collection::addRawAttribute(const QByteArray & type, const QByteArray & val
   } else {
     d->rawAttributes.insert( type, value );
   }
+}
+
+int Collection::cachePolicyId() const
+{
+  return d->cachePolicyId;
+}
+
+void Collection::setCachePolicyId(int cachePolicyId)
+{
+  d->cachePolicyId = cachePolicyId;
+}
+
+CollectionStatus Collection::status() const
+{
+  return d->status;
+}
+
+void Collection::setStatus(const CollectionStatus & status)
+{
+  d->status = status;
 }

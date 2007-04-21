@@ -17,71 +17,69 @@
     02110-1301, USA.
 */
 
-#include "messagecollectionattribute.h"
+#include "collectionstatus.h"
+
+#include <QSharedData>
 
 using namespace Akonadi;
 
-class MessageCollectionAttribute::Private
+class CollectionStatus::Private : public QSharedData
 {
   public:
+    Private() :
+      QSharedData(),
+      count( -1 ),
+      unreadCount( -1 )
+    {}
+
+    Private( const Private &other ) :
+      QSharedData( other )
+    {
+      count = other.count;
+      unreadCount = other.count;
+    }
+
     int count;
     int unreadCount;
 };
 
 
-MessageCollectionAttribute::MessageCollectionAttribute() :
-    CollectionAttribute(),
-    d( new Private() )
+CollectionStatus::CollectionStatus() :
+    d( new Private )
 {
-  d->count = -1;
-  d->unreadCount = -1;
 }
 
-MessageCollectionAttribute::~MessageCollectionAttribute()
+CollectionStatus::CollectionStatus(const CollectionStatus &other) :
+    d( other.d )
 {
-  delete d;
 }
 
-int MessageCollectionAttribute::count( ) const
+CollectionStatus::~CollectionStatus()
+{
+}
+
+int CollectionStatus::count( ) const
 {
   return d->count;
 }
 
-void MessageCollectionAttribute::setCount( int count )
+void CollectionStatus::setCount( int count )
 {
   d->count = count;
 }
 
-int MessageCollectionAttribute::unreadCount( ) const
+int CollectionStatus::unreadCount( ) const
 {
   return d->unreadCount;
 }
 
-void MessageCollectionAttribute::setUnreadCount( int count )
+void CollectionStatus::setUnreadCount( int count )
 {
   d->unreadCount = count;
 }
 
-QByteArray MessageCollectionAttribute::type( ) const
+CollectionStatus& CollectionStatus::operator =(const CollectionStatus & other)
 {
-  return "MessageCollection";
-}
-
-MessageCollectionAttribute * MessageCollectionAttribute::clone() const
-{
-  MessageCollectionAttribute* attr =  new MessageCollectionAttribute();
-  attr->setCount( count() );
-  attr->setUnreadCount( unreadCount() );
-  return attr;
-}
-
-QByteArray MessageCollectionAttribute::toByteArray() const
-{
-  // TODO
-  return QByteArray();
-}
-
-void MessageCollectionAttribute::setData(const QByteArray & data)
-{
-  // TODO
+  d = other.d;
+  return *this;
 }

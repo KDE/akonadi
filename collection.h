@@ -21,6 +21,7 @@
 #define AKONADI_COLLECTION_H
 
 #include <libakonadi/collectionattribute.h>
+#include <libakonadi/collectionstatus.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
@@ -257,6 +258,28 @@ class AKONADI_EXPORT Collection
       @param value Attribute value.
     */
     void addRawAttribute( const QByteArray &type, const QByteArray &value );
+
+    /**
+      Returns the cache policy identifer of the effective cache policy
+      of this collection.
+    */
+    int cachePolicyId() const;
+
+    /**
+      Sets the cache policy of this collection.
+      @param cachePolicyId The cache policy identifier.
+    */
+    void setCachePolicyId( int cachePolicyId );
+
+    /**
+      Returns the CollectionStatus object.
+    */
+    CollectionStatus status() const;
+
+    /**
+      Sets the CollectionStatus object for this collection.
+    */
+    void setStatus( const CollectionStatus &status );
 
   private:
     class Private;

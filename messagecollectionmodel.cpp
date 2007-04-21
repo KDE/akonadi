@@ -17,8 +17,9 @@
     02110-1301, USA.
 */
 
-#include "messagecollectionattribute.h"
 #include "messagecollectionmodel.h"
+
+#include "collection.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -30,6 +31,7 @@ using namespace Akonadi;
 MessageCollectionModel::MessageCollectionModel( QObject * parent ) :
     CollectionModel( parent )
 {
+  fetchCollectionStatus( true );
 }
 
 int MessageCollectionModel::columnCount( const QModelIndex & parent ) const
@@ -47,13 +49,13 @@ QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) con
   Collection col = collectionForId( CollectionModel::data( index, CollectionIdRole ).toInt() );
   if ( !col.isValid() )
     return QVariant();
-  MessageCollectionAttribute *attr = col.attribute<MessageCollectionAttribute>();
+  CollectionStatus status = col.status();
 
-  if ( role == Qt::DisplayRole && attr && ( index.column() == 1 || index.column() == 2 ) ) {
+  if ( role == Qt::DisplayRole && ( index.column() == 1 || index.column() == 2 ) ) {
     int value = -1;
     switch ( index.column() ) {
-      case 1: value = attr->unreadCount(); break;
-      case 2: value = attr->count(); break;
+      case 1: value = status.unreadCount(); break;
+      case 2: value = status.count(); break;
     }
     if ( value < 0 )
       return QString();
@@ -67,7 +69,7 @@ QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) con
     return Qt::AlignRight;
 
   // ### that's wrong, we'll need a custom delegate anyway
-  if ( role == Qt::FontRole && attr && attr->unreadCount() > 0 ) {
+  if ( role == Qt::FontRole && status.unreadCount() > 0 ) {
     QFont f;
     f.setBold( true );
     return f;

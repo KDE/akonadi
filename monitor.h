@@ -21,6 +21,7 @@
 #define AKONADI_MONITOR_H
 
 #include <libakonadi/collection.h>
+#include <libakonadi/collectionstatus.h>
 #include <libakonadi/item.h>
 #include <libakonadi/job.h>
 #include <QtCore/QObject>
@@ -33,6 +34,9 @@ class Session;
   Monitors an Item or Collection for changes and emits signals if some
   of these objects are changed or removed or new ones are added to the storage
   backend.
+
+  Optionally, the changed objects can be fetched automatically from the server.
+  To enable this, see fetchCollection(), fetchItemMetaData(), fetchItemData().
 
   @todo: support un-monitoring
   @todo: distinguish between monitoring collection properties and collection content.
@@ -90,6 +94,30 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void ignoreSession( Session *session );
 
+    /**
+      Enable automatic fetching of changed collections from the server.
+      @param enable @c true enables auto-fetching, @c false disables auto-fetching.
+    */
+    void fetchCollection( bool enable );
+
+    /**
+      Enables automatic fetching of changed item meta-data from the server.
+      @param enable @c true to enable.
+    */
+    void fetchItemMetaData( bool enable );
+
+    /**
+      Enable automatic fetching of changed item data from the server.
+      @param enable @c true to enable.
+    */
+    void fetchItemData( bool enable );
+
+    /**
+      Enable automatic fetching of changed collection status information.
+      @param enable @c true to enable.
+    */
+    void fetchCollectionStatus( bool enable );
+
   Q_SIGNALS:
     /**
       Emitted if a monitored object has changed.
@@ -130,6 +158,15 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void collectionRemoved( int collection, const QString &remoteId );
 
+    /**
+      Emitted if the status information of a monitored collection
+      has changed.
+      @param collection The collection identifier of the changed collection.
+      @param status The updated collection status, invalid of automatic
+      fetching of status changes is disabled.
+    */
+    void collectionStatusChanged( int collection, const Akonadi::CollectionStatus &status );
+
   private:
     class Private;
     Private* const d;
@@ -148,6 +185,7 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_PRIVATE_SLOT( d, void slotFetchItemChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotFetchCollectionAddedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotFetchCollectionChangedFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotStatusChangedFinished( KJob* ) )
 };
 
 }

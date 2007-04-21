@@ -72,6 +72,13 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     */
     void setAttribute( CollectionAttribute* attr );
 
+    /**
+      Sets the cache policy identifier.
+      @param cachePolicyId The cache policy identifier, -1 is the default
+      (inheriting cache policy from the parent).
+    */
+    void setCachePolicyId( int cachePolicyId );
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );

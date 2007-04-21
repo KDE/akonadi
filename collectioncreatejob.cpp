@@ -26,12 +26,17 @@ using namespace Akonadi;
 
 class Akonadi::CollectionCreateJobPrivate {
   public:
+    CollectionCreateJobPrivate() :
+      cachePolicyId( -1 )
+    {}
+
     Collection parent;
     QString name;
     QStringList contentTypes;
     Collection collection;
     QString remoteId;
     QList<QPair<QByteArray, QByteArray> > attributes;
+    int cachePolicyId;
 };
 
 CollectionCreateJob::CollectionCreateJob( const Collection &parentCollection, const QString &name, QObject * parent ) :
@@ -62,6 +67,8 @@ void CollectionCreateJob::doStart( )
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   foreach ( const QByteArrayPair bp, d->attributes )
     command += ' ' + bp.first + ' ' + bp.second;
+  if ( d->cachePolicyId > 0 )
+    command += " CACHEPOLICY " + QByteArray::number( d->cachePolicyId );
   command += ')';
   writeData( command );
 }
@@ -118,6 +125,11 @@ void CollectionCreateJob::setAttribute(CollectionAttribute * attr)
 
   QByteArray value = ImapParser::quote( attr->toByteArray() );
   d->attributes.append( qMakePair( attr->type(), value ) );
+}
+
+void CollectionCreateJob::setCachePolicyId(int cachePolicyId)
+{
+  d->cachePolicyId = cachePolicyId;
 }
 
 #include "collectioncreatejob.moc"

@@ -21,6 +21,7 @@
 #define AKONADI_COLLECTIONSTATUSJOB_H
 
 #include <libakonadi/collection.h>
+#include <libakonadi/collectionstatus.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
@@ -30,8 +31,7 @@ class CollectionAttribute;
 class CollectionStatusJobPrivate;
 
 /**
-  Fetches collection attributes for the given collection path from the storage
-  backend.
+  Fetches the CollectionStatus object for a given collection.
 */
 class AKONADI_EXPORT CollectionStatusJob : public Job
 {
@@ -51,9 +51,9 @@ class AKONADI_EXPORT CollectionStatusJob : public Job
     virtual ~CollectionStatusJob();
 
     /**
-      Returns the fetched collection attributes.
+      Returns the fetched collection status.
     */
-    QList<CollectionAttribute*> attributes() const;
+    CollectionStatus status() const;
 
     /**
       Returns the corresponding collection, if the job was executed succesfully,

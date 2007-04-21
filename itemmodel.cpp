@@ -141,11 +141,12 @@ void Akonadi::ItemModel::listingDone( KJob * job )
 
   // start monitor
   d->monitor = new Monitor( this );
+  d->monitor->fetchItemMetaData( true );
   d->monitor->ignoreSession( d->session );
   d->monitor->monitorCollection( d->collection );
   connect( d->monitor, SIGNAL(itemChanged( const Akonadi::Item& )),
            SLOT(itemChanged( const Akonadi::Item& )) );
-  connect( d->monitor, SIGNAL(itemAdded( const Akonadi::Item& )),
+  connect( d->monitor, SIGNAL(itemAdded( const Akonadi::Item&, const Akonadi::Collection& )),
            SLOT(itemAdded( const Akonadi::Item& )) );
   connect( d->monitor, SIGNAL(itemRemoved(Akonadi::DataReference)),
            SLOT(itemRemoved(Akonadi::DataReference)) );

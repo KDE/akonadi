@@ -17,29 +17,42 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_MESSAGECOLLECTIONATTRIBUTE_H
-#define AKONADI_MESSAGECOLLECTIONATTRIBUTE_H
+#ifndef AKONADI_COLLECTIONSTATUS_H
+#define AKONADI_COLLECTIONSTATUS_H
 
-#include <libakonadi/collection.h>
 #include <kdepim_export.h>
+#include <QtCore/QMetaType>
+#include <QtCore/QSharedDataPointer>
 
 namespace Akonadi {
 
 /**
-  A collection of messages, eg. emails or news articles.
+  Contains status information of a collection, such as
+  total number of items, number of new/unread items, etc..
+
+  These information might be expensive to obtain and are thus
+  not included when fetching collection with a CollectionListJob.
+  They can be retrieved spearately using CollectionStatusJob.
+
+  This class is implicitely shared.
 */
-class AKONADI_EXPORT MessageCollectionAttribute : public CollectionAttribute
+class AKONADI_EXPORT CollectionStatus
 {
   public:
     /**
-      Create a new message collection attribute.
+      Creates a new CollectionStatus object.
      */
-    MessageCollectionAttribute();
+    CollectionStatus();
 
     /**
-      Destroys this collection attribute.
+      Copy constructor.
     */
-    virtual ~MessageCollectionAttribute();
+    CollectionStatus( const CollectionStatus &other );
+
+    /**
+      Destructor.
+    */
+    ~CollectionStatus();
 
     /**
       Returns the number of objects in this collection.
@@ -63,17 +76,19 @@ class AKONADI_EXPORT MessageCollectionAttribute : public CollectionAttribute
     */
     void setUnreadCount( int count );
 
-    virtual QByteArray type() const;
-    virtual MessageCollectionAttribute* clone() const;
-    virtual QByteArray toByteArray() const;
-    virtual void setData( const QByteArray &data );
+    /**
+      Assignment operator.
+    */
+    CollectionStatus& operator=( const CollectionStatus &other );
 
   private:
     class Private;
-    Private* const d;
+    QSharedDataPointer<Private> d;
 
 };
 
 }
+
+Q_DECLARE_METATYPE(Akonadi::CollectionStatus)
 
 #endif

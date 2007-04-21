@@ -123,6 +123,15 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
         collection.setRemoteId( QString::fromUtf8( value ) );
       } else if ( key == "RESOURCE" ) {
         collection.setResource( QString::fromUtf8( value ) );
+      } else if ( key == "MIMETYPE" ) {
+        QList<QByteArray> ct;
+        ImapParser::parseParenthesizedList( value, ct );
+        QStringList ct2;
+        foreach ( const QByteArray b, ct )
+          ct2 << QString::fromLatin1( b );
+        collection.setContentTypes( ct2 );
+      } else if ( key == "CACHEPOLICY" ) {
+        collection.setCachePolicyId( value.toInt() );
       } else {
         collection.addRawAttribute( key, value );
       }

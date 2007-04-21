@@ -27,10 +27,10 @@
 #include "collectiondeletejob.h"
 #include "collectionlistjob.h"
 #include "collectionmodifyjob.h"
+#include "collectionstatus.h"
 #include "collectionstatusjob.h"
 #include "collectionpathresolver.h"
 #include "control.h"
-#include "messagecollectionattribute.h"
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -268,6 +268,7 @@ void CollectionJobTest::testCreateDeleteFolder( )
   mimeTypes << "inode/directory" << "message/rfc822";
   job->setContentTypes( mimeTypes );
   job->setRemoteId( "remote id" );
+  job->setCachePolicyId( 1 );
   QVERIFY( job->exec() );
   newCol = job->collection();
   QVERIFY( newCol.isValid() );
@@ -279,6 +280,7 @@ void CollectionJobTest::testCreateDeleteFolder( )
   compareLists( col.contentTypes(), mimeTypes );
   QCOMPARE( col.remoteId(), QString("remote id") );
   QCOMPARE( col.resource(), QString("akonadi_dummy_resource_3") );
+  QCOMPARE( col.cachePolicyId(), 1 );
 
   // cleanup
   del = new CollectionDeleteJob( newCol, this );
@@ -302,12 +304,9 @@ void CollectionJobTest::testStatus()
   CollectionStatusJob *status = new CollectionStatusJob( Collection( res1ColId ), this );
   QVERIFY( status->exec() );
 
-  QList<CollectionAttribute*> attrs = status->attributes();
-  QCOMPARE( attrs.count(), 2 );
-  MessageCollectionAttribute *mcattr = extractAttribute<MessageCollectionAttribute>( attrs );
-  QVERIFY( mcattr != 0 );
-  QCOMPARE( mcattr->count(), 0 );
-  QCOMPARE( mcattr->unreadCount(), 0 );
+  CollectionStatus s = status->status();
+  QCOMPARE( s.count(), 0 );
+  QCOMPARE( s.unreadCount(), 0 );
 
   // folder with attributes and content
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );;
@@ -315,12 +314,9 @@ void CollectionJobTest::testStatus()
   status = new CollectionStatusJob( Collection( resolver->collection() ), this );
   QVERIFY( status->exec() );
 
-  attrs = status->attributes();
-  QCOMPARE( attrs.count(), 2 );
-  mcattr = extractAttribute<MessageCollectionAttribute>( attrs );
-  QVERIFY( mcattr != 0 );
-  QCOMPARE( mcattr->count(), 3 );
-  QCOMPARE( mcattr->unreadCount(), 0 );
+  s = status->status();
+  QCOMPARE( s.count(), 3 );
+  QCOMPARE( s.unreadCount(), 0 );
 }
 
 void CollectionJobTest::testModify()
@@ -338,15 +334,33 @@ void CollectionJobTest::testModify()
   CollectionModifyJob *mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
+  ljob = new CollectionListJob( col, CollectionListJob::Local, this );
+  QVERIFY( ljob->exec() );
+  QCOMPARE( ljob->collections().count(), 1 );
+  col = ljob->collections().first();
+  compareLists( col.contentTypes(), reference );
+
   // test clearing content types
   mod = new CollectionModifyJob( col, this );
   mod->setContentTypes( QStringList() );
   QVERIFY( mod->exec() );
 
+  ljob = new CollectionListJob( col, CollectionListJob::Local, this );
+  QVERIFY( ljob->exec() );
+  QCOMPARE( ljob->collections().count(), 1 );
+  col = ljob->collections().first();
+  QVERIFY( col.contentTypes().isEmpty() );
+
   // test setting contnet types
   mod = new CollectionModifyJob( col, this );
   mod->setContentTypes( reference );
   QVERIFY( mod->exec() );
+
+  ljob = new CollectionListJob( col, CollectionListJob::Local, this );
+  QVERIFY( ljob->exec() );
+  QCOMPARE( ljob->collections().count(), 1 );
+  col = ljob->collections().first();
+  compareLists( col.contentTypes(), reference );
 }
 
 void CollectionJobTest::testMove()
@@ -426,6 +440,13 @@ void CollectionJobTest::testUtf8CollectionName()
   contentTypes << "message/rfc822";
   modify->setContentTypes( contentTypes );
   QVERIFY( modify->exec() );
+
+  // collection status
+  CollectionStatusJob *status = new CollectionStatusJob( col, this );
+  QVERIFY( status->exec() );
+  CollectionStatus s = status->status();
+  QCOMPARE( s.count(), 0 );
+  QCOMPARE( s.unreadCount(), 0 );
 
   // delete collection
   CollectionDeleteJob *del = new CollectionDeleteJob( col, this );

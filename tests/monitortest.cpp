@@ -56,14 +56,18 @@ void MonitorTest::testMonitor()
 {
   Monitor *monitor = new Monitor( this );
   monitor->monitorCollection( Collection::root() );
+  monitor->fetchCollection( true );
+  monitor->fetchItemData( true );
 
   // monitor signals
   qRegisterMetaType<Akonadi::DataReference>();
   qRegisterMetaType<Akonadi::Collection>();
   qRegisterMetaType<Akonadi::Item>();
+  qRegisterMetaType<Akonadi::CollectionStatus>();
   QSignalSpy caspy( monitor, SIGNAL(collectionAdded(const Akonadi::Collection&)) );
   QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
   QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(int,QString)) );
+  QSignalSpy csspy( monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
   QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
   QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&)) );
   QSignalSpy irspy( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)) );
@@ -71,6 +75,7 @@ void MonitorTest::testMonitor()
   QVERIFY( caspy.isValid() );
   QVERIFY( cmspy.isValid() );
   QVERIFY( crspy.isValid() );
+  QVERIFY( csspy.isValid() );
   QVERIFY( iaspy.isValid() );
   QVERIFY( imspy.isValid() );
   QVERIFY( irspy.isValid() );
@@ -90,6 +95,7 @@ void MonitorTest::testMonitor()
 
   QVERIFY( cmspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
+  QVERIFY( csspy.isEmpty() );
   QVERIFY( iaspy.isEmpty() );
   QVERIFY( imspy.isEmpty() );
   QVERIFY( irspy.isEmpty() );
@@ -101,12 +107,9 @@ void MonitorTest::testMonitor()
   QVERIFY( !monitorRef.isNull() );
   QTest::qWait(1000);
 
-  // ### statistic changes currently don't generate signals
-#if 0
-  QCOMPARE( cmspy.count(), 1 );
-  arg = cmspy.takeFirst();
+  QCOMPARE( csspy.count(), 1 );
+  arg = csspy.takeFirst();
   QCOMPARE( arg.at(0).toInt(), monitorCol.id() );
-#endif
 
   QCOMPARE( iaspy.count(), 1 );
   arg = iaspy.takeFirst();
@@ -118,6 +121,7 @@ void MonitorTest::testMonitor()
   QCOMPARE( collection.remoteId(), monitorCol.remoteId() );
 
   QVERIFY( caspy.isEmpty() );
+  QVERIFY( cmspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
   QVERIFY( imspy.isEmpty() );
   QVERIFY( irspy.isEmpty() );
@@ -128,11 +132,9 @@ void MonitorTest::testMonitor()
   QVERIFY( store->exec() );
   QTest::qWait(1000);
 
-#if 0
-  QCOMPARE( cmspy.count(), 1 );
-  arg = cmspy.takeFirst();
+  QCOMPARE( csspy.count(), 1 );
+  arg = csspy.takeFirst();
   QCOMPARE( arg.at(0).toInt(), monitorCol.id() );
-#endif
 
   QCOMPARE( imspy.count(), 1 );
   arg = imspy.takeFirst();
@@ -141,6 +143,7 @@ void MonitorTest::testMonitor()
   QCOMPARE( item.data(), QByteArray( "some new content" ) );
 
   QVERIFY( caspy.isEmpty() );
+  QVERIFY( cmspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
   QVERIFY( iaspy.isEmpty() );
   QVERIFY( irspy.isEmpty() );
@@ -150,12 +153,10 @@ void MonitorTest::testMonitor()
   QVERIFY( del->exec() );
   QTest::qWait(1000);
 
-#if 0
-  QCOMPARE( cmspy.count(), 1 );
-  arg = cmspy.takeFirst();
+  QCOMPARE( csspy.count(), 1 );
+  arg = csspy.takeFirst();
   QCOMPARE( arg.at(0).toInt(), monitorCol.id() );
   cmspy.clear();
-#endif
 
   QCOMPARE( irspy.count(), 1 );
   arg = irspy.takeFirst();
@@ -163,6 +164,7 @@ void MonitorTest::testMonitor()
   QCOMPARE( monitorRef, ref );
 
   QVERIFY( caspy.isEmpty() );
+  QVERIFY( cmspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
   QVERIFY( iaspy.isEmpty() );
   QVERIFY( imspy.isEmpty() );
@@ -179,6 +181,7 @@ void MonitorTest::testMonitor()
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( cmspy.isEmpty() );
+  QVERIFY( csspy.isEmpty() );
   QVERIFY( iaspy.isEmpty() );
   QVERIFY( imspy.isEmpty() );
   QVERIFY( irspy.isEmpty() );

@@ -28,6 +28,7 @@ set( akonadi_LIB_SRC
 	collectionmodifyjob.cpp
 	collectionpathresolver.cpp
 	collectionselectjob.cpp
+	collectionstatus.cpp
 	collectionstatusjob.cpp
 	collectionview.cpp
 	control.cpp
@@ -40,7 +41,6 @@ set( akonadi_LIB_SRC
 	itemstorejob.cpp
 	itemmodel.cpp
 	job.cpp
-	messagecollectionattribute.cpp
 	messagecollectionmodel.cpp
   #	message.cpp
   #	messagefetchjob.cpp
@@ -80,6 +80,7 @@ install( FILES
 	collectionmodifyjob.h
 	collectionpathresolver.h
 	collectionselectjob.h
+	collectionstatus.h
 	collectionstatusjob.h
 	collectionview.h
 	control.h
@@ -91,7 +92,6 @@ install( FILES
 	itemfetchjob.h
 	itemstorejob.h
 	job.h
-	messagecollectionattribute.h
 	messagecollectionmodel.h
 	message.h
 	messagefetchjob.h
