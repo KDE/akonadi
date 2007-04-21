@@ -22,6 +22,7 @@
 #include "akonadiconnection.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
+#include "storage/countquerybuilder.h"
 
 #include "status.h"
 #include "response.h"
@@ -71,7 +72,12 @@ bool Status::handleLine( const QByteArray& line )
     // MESSAGES - The number of messages in the mailbox
     if ( attributeList.contains( "MESSAGES" ) ) {
         statusResponse += "MESSAGES ";
-        statusResponse += QByteArray::number( l.existCount() );
+        CountQueryBuilder qb;
+        qb.addTable( PimItem::tableName() );
+        qb.addValueCondition( PimItem::locationIdColumn(), "=", l.id() );
+        if ( !qb.exec() )
+          return failureResponse( "Could not determine message count." );
+        statusResponse += QByteArray::number( qb.result() );
     }
     // RECENT - The number of messages with the \Recent flag set
     if ( attributeList.contains( "RECENT" ) ) {
@@ -102,7 +108,26 @@ bool Status::handleLine( const QByteArray& line )
             statusResponse += " UNSEEN ";
         else
             statusResponse += "UNSEEN ";
-        statusResponse += QByteArray::number( l.unseenCount() );
+
+        // FIXME optimize me: use only one query
+        CountQueryBuilder qb;
+        qb.addTable( PimItem::tableName() );
+        qb.addTable( Flag::tableName() );
+        qb.addTable( PimItemFlagRelation::tableName() );
+        qb.addValueCondition( PimItem::locationIdFullColumnName(), "=", l.id() );
+        qb.addColumnCondition( PimItem::idFullColumnName(), "=", PimItemFlagRelation::leftFullColumnName() );
+        qb.addColumnCondition( Flag::idFullColumnName(), "=", PimItemFlagRelation::rightFullColumnName() );
+        qb.addValueCondition( Flag::nameFullColumnName(), "=", QString::fromLatin1("\\Seen") );
+        if ( !qb.exec() )
+          return failureResponse( "Unable to retrieve unread count" );
+
+        CountQueryBuilder qb2;
+        qb2.addTable( PimItem::tableName() );
+        qb2.addValueCondition( PimItem::locationIdColumn(), "=", l.id() );
+        if ( !qb2.exec() )
+          return failureResponse( "Unable to retrieve item count" );
+
+        statusResponse += QByteArray::number( qb2.result() - qb.result() );
     }
 
     response.setUntagged();

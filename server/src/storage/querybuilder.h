@@ -20,7 +20,10 @@
 #ifndef AKONADI_QUERYBUILDER_H
 #define AKONADI_QUERYBUILDER_H
 
-#include "storage/datastore.h"
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QVariant>
+#include <QtSql/QSqlQuery>
 
 namespace Akonadi {
 
@@ -50,6 +53,12 @@ class QueryBuilder
       @param cols The columns you want to select.
     */
     void addColumns( const QStringList &cols );
+
+    /**
+      Adds the given column to a select query.
+      @param col The column to add.
+    */
+    void addColumn( const QString &col );
 
     /**
       Add a WHERE condition which compares a column with a given value.

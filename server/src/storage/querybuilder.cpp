@@ -18,6 +18,7 @@
 */
 
 #include "querybuilder.h"
+#include "storage/datastore.h"
 
 using namespace Akonadi;
 
@@ -96,15 +97,14 @@ bool QueryBuilder::exec()
     }
     statement += conds.join( QLatin1String( " AND " ) );
   }
+
   mQuery.prepare( statement );
   int i = 0;
   foreach ( const Condition c, mConditions )
     if ( c.column2.isEmpty() && c.value.isValid() )
       mQuery.bindValue( QString::fromLatin1( ":%1" ).arg( i++ ), c.value );
   if ( !mQuery.exec() ) {
-    qDebug() << "Error during selecting records from table"
-        /*<< T::tableName()*/ << mQuery.lastError().text();
-    qDebug() << "Query was:" << statement;
+    qDebug() << "Error during executing query" << statement << ": " << mQuery.lastError().text();
     return false;
   }
   return true;
@@ -112,5 +112,10 @@ bool QueryBuilder::exec()
 
 void QueryBuilder::addColumns(const QStringList & cols)
 {
-  mColumns = cols;
+  mColumns << cols;
+}
+
+void QueryBuilder::addColumn(const QString & col)
+{
+  mColumns << col;
 }

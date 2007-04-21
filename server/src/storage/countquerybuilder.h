@@ -17,34 +17,36 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SELECTQUERYBUILDER_H
-#define AKONADI_SELECTQUERYBUILDER_H
+#ifndef AKONADI_COUNTQUERYBUILDER_H
+#define AKONADI_COUNTQUERYBUILDER_H
 
 #include "storage/querybuilder.h"
 
 namespace Akonadi {
 
 /**
-  Helper class for creating and executing database SELECT queries.
+  Helper class for creating queries to count elements in a database.
 */
-template <typename T> class SelectQueryBuilder : public QueryBuilder
+class CountQueryBuilder : public QueryBuilder
 {
   public:
     /**
       Creates a new query builder.
     */
-    inline SelectQueryBuilder() : QueryBuilder( Select )
+    inline CountQueryBuilder() : QueryBuilder( Select )
     {
-      addColumns( T::fullColumnNames() );
-      addTable( T::tableName() );
+      addColumn( QLatin1String( "count(*)" ) );
     }
 
     /**
-      Returns the result of this SELECT query.
+      Returns the result of this query.
+      @returns -1 on error.
     */
-    QList<T> result()
+    inline int result()
     {
-      return T::extractResult( query() );
+      if ( !query().next() )
+        return -1;
+      return query().value( 0 ).toInt();
     }
 };
 
