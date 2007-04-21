@@ -111,7 +111,7 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
       flags.append( flagList[ i ].name().toUtf8() );
 
     MimeType mimeType = item.mimeType();
-    flags.append( "\\MimeTypes[" + mimeType.name().toUtf8() + ']' );
+    attributes.append( "MIMETYPE \"" + mimeType.name().toUtf8() + "\"" );
 
     attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
   }
