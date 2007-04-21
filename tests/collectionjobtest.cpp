@@ -315,8 +315,8 @@ void CollectionJobTest::testStatus()
   QVERIFY( status->exec() );
 
   s = status->status();
-  QCOMPARE( s.count(), 3 );
-  QCOMPARE( s.unreadCount(), 0 );
+  QCOMPARE( s.count(), 14 );
+  QCOMPARE( s.unreadCount(), 14 );
 }
 
 void CollectionJobTest::testModify()

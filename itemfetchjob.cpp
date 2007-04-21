@@ -100,6 +100,8 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
           parseFlags( fetch[i + 1], item );
         else if ( fetch[i] == "RFC822" ) {
           item.setData( fetch[i + 1] );
+        } else if ( fetch[i] == "MIMETYPE" ) {
+          item.setMimeType( QString::fromUtf8( fetch[i + 1] ) );
         }
 
       }
@@ -153,12 +155,7 @@ void ItemFetchJob::parseFlags(const QByteArray & flagData, Item &item)
   QList<QByteArray> flags;
   ImapParser::parseParenthesizedList( flagData, flags );
   foreach ( const QByteArray flag, flags ) {
-    if ( flag.startsWith( "\\MimeTypes" ) ) {
-      int begin = flag.indexOf( '[' ) + 1;
-      item.setMimeType( QString::fromLatin1( flag.mid( begin, flag.length() - begin - 1 ) ) );
-    } else {
-      item.setFlag( flag );
-    }
+    item.setFlag( flag );
   }
 }
 
