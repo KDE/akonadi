@@ -28,6 +28,7 @@
 
 #include "kcrash.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 static AgentManager *sAgentManager = 0;
 

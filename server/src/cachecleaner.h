@@ -38,6 +38,8 @@ class CacheCleaner : public QThread
     */
     CacheCleaner( QObject* parent = 0 );
 
+    ~CacheCleaner();
+
   protected:
     virtual void run();
 

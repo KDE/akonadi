@@ -31,6 +31,7 @@ class KCrash
 
     static void init();
     static void setEmergencyMethod( HandlerType method );
+    static void setShutdownMethod( HandlerType method );
 };
 
 #endif

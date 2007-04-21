@@ -1,6 +1,7 @@
 macro_optional_find_package(OpenSSL)
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/include )
+include_directories( ${CMAKE_BINARY_DIR}/akonadi )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/searchproviders )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
@@ -100,6 +101,10 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
 
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS
+  interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer
+)
+
 qt4_generate_dbus_interface( ../resources/include/resource.h org.kde.Akonadi.Resource.xml )
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.AgentManager.xml
@@ -118,7 +123,7 @@ target_link_libraries( akonadiprivate ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRAR
 set_target_properties(akonadiprivate PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
-set( akonadiserver_bin_SRCS src/main.cpp )
+set( akonadiserver_bin_SRCS src/main.cpp control/kcrash.cpp )
 
 
 kde4_add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )

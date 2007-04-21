@@ -21,30 +21,48 @@
 #ifndef AKONADISERVER_H
 #define AKONADISERVER_H
 
+#include <QtCore/QPointer>
 #include <QtNetwork/QTcpServer>
+
 #include "akonadiprivate_export.h"
+
+class QProcess;
 
 namespace Akonadi {
 
+class AkonadiConnection;
 class CacheCleaner;
 
 class AKONADIPRIVATE_EXPORT AkonadiServer: public QTcpServer
 {
     Q_OBJECT
 
-public:
+  public:
     static AkonadiServer* instance();
 
     AkonadiServer( QObject *parent = 0 );
     ~AkonadiServer();
 
+  public Q_SLOTS:
+    /**
+     * Triggers a clean server shutdown.
+     */ 
+    void quit();
 
-protected:
+  private Q_SLOTS:
+    void doQuit();
+
+  protected:
     /** reimpl */
     void incomingConnection(int socketDescriptor);
 
   private:
+    void startDatabaseProcess();
+    void stopDatabaseProcess();
+
     CacheCleaner *mCacheCleaner;
+    QProcess *mDatabaseProcess;
+    QList< QPointer<AkonadiConnection> > mConnections;
 };
 
 }

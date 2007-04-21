@@ -31,6 +31,11 @@ CacheCleaner::CacheCleaner(QObject * parent) :
 {
 }
 
+CacheCleaner::~CacheCleaner()
+{
+  DataStore::self()->close();
+}
+
 void CacheCleaner::run()
 {
   QTimer::singleShot( /*60, just for testing --> */ 5 * 1000, this, SLOT(cleanCache()) );

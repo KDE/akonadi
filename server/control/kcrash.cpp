@@ -62,19 +62,29 @@ QString kBacktrace()
   return s;
 }
 static KCrash::HandlerType s_emergencyMethod = 0;
+static KCrash::HandlerType s_shutdownMethod = 0;
 
 void KCrash::setEmergencyMethod( HandlerType method )
 {
   s_emergencyMethod = method;
 }
 
+void KCrash::setShutdownMethod( HandlerType method )
+{
+  s_shutdownMethod = method;
+}
+
 static void defaultCrashHandler( int sig )
 {
-  if ( sig != SIGTERM && sig != SIGINT )
+  if ( sig != SIGTERM && sig != SIGINT ) {
     fprintf( stderr, "%s", kBacktrace().toLatin1().data() );
 
-  if ( s_emergencyMethod )
-    s_emergencyMethod( sig );
+    if ( s_emergencyMethod )
+      s_emergencyMethod( sig );
+  } else {
+    if ( s_shutdownMethod )
+      s_shutdownMethod( sig );
+  }
 
   _exit(255);
 }

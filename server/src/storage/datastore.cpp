@@ -67,15 +67,10 @@ DataStore::DataStore() :
 {
   // load database settings if needed
   if ( mDbDriverName.isEmpty() ) {
-    QSettings *settings = new QSettings( QDir::homePath()
-        + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
-#ifdef AKONADI_USE_MYSQL_EMBEDDED
-    QString defaultDriver = QLatin1String("QMYSQL_EMBEDDED");
-#else
-    QString defaultDriver = QLatin1String("QSQLITE");
-#endif
-    mDbDriverName = settings->value( QLatin1String("General/Driver"),
-                                     defaultDriver ).toString();
+    QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
+    QString defaultDriver = QLatin1String("QMYSQL");
+
+    mDbDriverName = settings.value( QLatin1String("General/Driver"), defaultDriver ).toString();
 
     // ensure we have a database driver
     if ( mDbDriverName.isEmpty() )
@@ -89,19 +84,30 @@ DataStore::DataStore() :
       defaultOptions = QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( storagePath() );
     } else if ( mDbDriverName == QLatin1String( "QMYSQL" ) ) {
       defaultDbName = QLatin1String( "akonadi" );
+      defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/db_misc/mysql.socket" )
+                                     .arg( QDir::homePath() + QLatin1String( "/.akonadi/"  ) );
     } else if ( mDbDriverName == QLatin1String( "QSQLITE" ) ) {
       defaultDbName = storagePath();
     }
 
     // read settings for current driver
-    settings->beginGroup( mDbDriverName );
-    mDbName = settings->value( QLatin1String("Name"), defaultDbName ).toString();
-    mDbHostName = settings->value( QLatin1String("Host") ).toString();
-    mDbUserName = settings->value( QLatin1String("User") ).toString();
-    mDbPassword = settings->value( QLatin1String("Password") ).toString();
-    mDbConnectionOptions = settings->value( QLatin1String("Options"), defaultOptions ).toString();
-    settings->endGroup();
-    delete settings;
+    settings.beginGroup( mDbDriverName );
+    mDbName = settings.value( QLatin1String( "Name" ), defaultDbName ).toString();
+    mDbHostName = settings.value( QLatin1String( "Host" ) ).toString();
+    mDbUserName = settings.value( QLatin1String( "User" ) ).toString();
+    mDbPassword = settings.value( QLatin1String( "Password" ) ).toString();
+    mDbConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
+    settings.endGroup();
+
+    // store back the default values
+    settings.setValue( QLatin1String( "General/Driver" ), mDbDriverName );
+    settings.beginGroup( mDbDriverName );
+    settings.setValue( QLatin1String( "Name" ), mDbName );
+    settings.setValue( QLatin1String( "User" ), mDbUserName );
+    settings.setValue( QLatin1String( "Password" ), mDbPassword );
+    settings.setValue( QLatin1String( "Options" ), mDbConnectionOptions );
+    settings.endGroup();
+    settings.sync();
   }
 
   open();

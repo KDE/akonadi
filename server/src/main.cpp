@@ -24,9 +24,24 @@
 #include <QtDBus/QDBusError>
 
 #include "akonadi.h"
+#include <cstdlib>
+
+#include "../control/kcrash.h"
+
+void shutdownHandler( int )
+{
+  qDebug( "Shutting down AkonadiServer..." );
+
+  Akonadi::AkonadiServer::instance()->quit();
+
+  exit( 255 );
+}
 
 int main( int argc, char ** argv )
 {
+    KCrash::init();
+    KCrash::setShutdownMethod( shutdownHandler );
+
     QCoreApplication app( argc, argv );
 
     Akonadi::AkonadiServer::instance(); // trigger singleton creation
@@ -36,5 +51,9 @@ int main( int argc, char ** argv )
       return 1;
     }
 
-    return app.exec();
+    app.exec();
+
+    Akonadi::AkonadiServer::instance()->quit();
+
+    return 0;
 }

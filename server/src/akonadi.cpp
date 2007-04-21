@@ -17,8 +17,17 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
+#include <QtCore/QProcess>
+#include <QtCore/QSettings>
+#include <QtCore/QTimer>
+
+#include <unistd.h>
+
 #include "akonadi.h"
 #include "akonadiconnection.h"
+#include "serveradaptor.h"
 
 #include "cachecleaner.h"
 #include "cachepolicymanager.h"
@@ -32,8 +41,17 @@ using namespace Akonadi;
 static AkonadiServer *s_instance = 0;
 
 AkonadiServer::AkonadiServer( QObject* parent )
-    : QTcpServer( parent )
+    : QTcpServer( parent ), mDatabaseProcess( 0 )
 {
+    // create the akonadi directory
+    QDir homeDir = QDir::home();
+    if ( !homeDir.exists( QLatin1String( ".akonadi/" ) ) )
+      homeDir.mkdir( QLatin1String( ".akonadi/" ) );
+
+    QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
+    if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL" ) )
+      startDatabaseProcess();
+
     s_instance = this;
     if ( !listen( QHostAddress::LocalHost, 4444 ) )
       qFatal("Unable to listen on port 4444");
@@ -51,18 +69,45 @@ AkonadiServer::AkonadiServer( QObject* parent )
     new CachePolicyManager( this );
     mCacheCleaner = new CacheCleaner( this );
     mCacheCleaner->start( QThread::IdlePriority );
+
+    new ServerAdaptor( this );
+    QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );
 }
 
 
 AkonadiServer::~AkonadiServer()
 {
+}
+
+void AkonadiServer::quit()
+{
     mCacheCleaner->quit();
+    mCacheCleaner->wait();
+    delete mCacheCleaner;
+
+    for ( int i = 0; i < mConnections.count(); ++i ) {
+      if ( mConnections[ i ] ) {
+        mConnections[ i ]->wait();
+      }
+    }
+
+    QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
+    if ( settings.value( QLatin1String("General/Driver") ).toString() == QLatin1String( "QMYSQL" ) )
+      stopDatabaseProcess();
+
+    QTimer::singleShot( 0, this, SLOT( doQuit() ) );
+}
+
+void AkonadiServer::doQuit()
+{
+    QCoreApplication::exit();
 }
 
 void AkonadiServer::incomingConnection( int socketDescriptor )
 {
-    AkonadiConnection *thread = new AkonadiConnection(socketDescriptor, this);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    QPointer<AkonadiConnection> thread = new AkonadiConnection( socketDescriptor, this );
+    connect( thread, SIGNAL( finished() ), thread, SLOT( deleteLater() ) );
+    mConnections.append( thread );
     thread->start();
 }
 
@@ -72,6 +117,61 @@ AkonadiServer * AkonadiServer::instance()
     if ( !s_instance )
         s_instance = new AkonadiServer();
     return s_instance;
+}
+
+void AkonadiServer::startDatabaseProcess()
+{
+  // create the database directories if they don't exists
+  QDir akonadiDirectory( QDir::home().path() + QLatin1String( "/.akonadi/" ) );
+
+  if ( !akonadiDirectory.exists( QLatin1String( "db_data/" ) ) )
+    akonadiDirectory.mkdir( QLatin1String( "db_data/" ) );
+
+  if ( !akonadiDirectory.exists( QLatin1String( "db_log/" ) ) )
+    akonadiDirectory.mkdir( QLatin1String( "db_log/" ) );
+
+  if ( !akonadiDirectory.exists( QLatin1String( "db_misc/" ) ) )
+    akonadiDirectory.mkdir( QLatin1String( "db_misc/" ) );
+
+  // synthesize the mysqld command
+  QStringList arguments;
+  arguments << QString::fromLatin1( "--datadir=%1/db_data/" ).arg( akonadiDirectory.path() );
+  arguments << QString::fromLatin1( "--log-bin=%1/db_log/" ).arg( akonadiDirectory.path() );
+  arguments << QString::fromLatin1( "--log-bin-index=%1/db_log/" ).arg( akonadiDirectory.path() );
+  arguments << QString::fromLatin1( "--socket=%1/db_misc/mysql.socket" ).arg( akonadiDirectory.path() );
+  arguments << QString::fromLatin1( "--pid-file=%1/db_misc/mysql.pid" ).arg( akonadiDirectory.path() );
+  arguments << QString::fromLatin1( "--skip-grant-table" );
+  arguments << QString::fromLatin1( "--skip-networking" );
+
+  mDatabaseProcess = new QProcess( this );
+  mDatabaseProcess->start( QLatin1String( "/usr/sbin/mysqld" ), arguments );
+  mDatabaseProcess->waitForStarted();
+
+  QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
+  db.setConnectOptions( QString::fromLatin1( "UNIX_SOCKET=%1/db_misc/mysql.socket" ).arg( akonadiDirectory.path() ) );
+
+  bool opened = false;
+  for ( int i = 0; i < 10; ++i ) {
+    opened = db.open();
+    if ( opened )
+      break;
+
+    sleep( 1 );
+  }
+
+  if ( opened ) {
+    QSqlQuery query( db );
+    if ( !query.exec( QLatin1String( "USE DATABASE akonadi" ) ) )
+      query.exec( QLatin1String( "CREATE DATABASE akonadi" ) );
+  }
+
+  QSqlDatabase::removeDatabase( QLatin1String( "initConnection" ) );
+}
+
+void AkonadiServer::stopDatabaseProcess()
+{
+  mDatabaseProcess->terminate();
+  mDatabaseProcess->waitForFinished();
 }
 
 #include "akonadi.moc"
