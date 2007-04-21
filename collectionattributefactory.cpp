@@ -33,12 +33,9 @@ CollectionAttributeFactory* CollectionAttributeFactory::mInstance = 0;
 
 CollectionAttributeFactory* CollectionAttributeFactory::self()
 {
-  if ( !mInstance ) {
+  if ( !mInstance )
     mInstance = new CollectionAttributeFactory();
 
-    // register built-in attributes
-    registerAttribute<CollectionContentTypeAttribute>();
-  }
   return mInstance;
 }
 

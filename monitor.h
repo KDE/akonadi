@@ -100,8 +100,9 @@ class AKONADI_EXPORT Monitor : public QObject
     /**
       Emitted if a item has been added to a monitored collection.
       @param item The new item.
+      @param collection The collection the item is added to.
     */
-    void itemAdded( const Akonadi::Item &item );
+    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
     /**
       Emitted if a monitored object has been removed.

@@ -64,7 +64,7 @@ void MonitorTest::testMonitor()
   QSignalSpy caspy( monitor, SIGNAL(collectionAdded(const Akonadi::Collection&)) );
   QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
   QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(int,QString)) );
-  QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&)) );
+  QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
   QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&)) );
   QSignalSpy irspy( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)) );
 
@@ -113,6 +113,9 @@ void MonitorTest::testMonitor()
   Item item = arg.at( 0 ).value<Item>();
   QCOMPARE( item.reference(), monitorRef );
   QCOMPARE( item.mimeType(), QString::fromLatin1(  "message/rfc822" ) );
+  Collection collection = arg.at( 1 ).value<Collection>();
+  QCOMPARE( collection.id(), monitorCol.id() );
+  QCOMPARE( collection.remoteId(), monitorCol.remoteId() );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );

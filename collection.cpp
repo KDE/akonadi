@@ -50,6 +50,7 @@ class Collection::Private : public QSharedData
         attributes.insert( attr->type(), attr->clone() );
       rawAttributes = other.rawAttributes;
       resource = other.resource;
+      contentTypes = other.contentTypes;
     }
 
     ~Private()
@@ -66,6 +67,7 @@ class Collection::Private : public QSharedData
     QHash<QByteArray, CollectionAttribute*> attributes;
     QHash<QByteArray, QByteArray> rawAttributes;
     QString resource;
+    QStringList contentTypes;
 };
 
 Collection::Collection() :
@@ -117,16 +119,12 @@ void Collection::setType( Type type )
 
 QStringList Collection::contentTypes() const
 {
-  CollectionContentTypeAttribute *attr = const_cast<Collection*>( this )->attribute<CollectionContentTypeAttribute>();
-  if ( attr )
-    return attr->contentTypes();
-  return QStringList();
+  return d->contentTypes;
 }
 
 void Collection::setContentTypes( const QStringList & types )
 {
-  CollectionContentTypeAttribute* attr = attribute<CollectionContentTypeAttribute>( true );
-  attr->setContentTypes( types );
+  d->contentTypes = types;
 }
 
 int Collection::parent() const

@@ -66,40 +66,6 @@ class AKONADI_EXPORT CollectionAttribute
     virtual void setData( const QByteArray &data ) = 0;
 };
 
-
-/**
-  Content mimetypes collection attribute. Contains a list of allowed content
-  types of a collection.
-*/
-class AKONADI_EXPORT CollectionContentTypeAttribute : public CollectionAttribute
-{
-  public:
-    /**
-      Creates a new content mimetype attribute.
-      @param contentTypes Allowed content types.
-    */
-  explicit CollectionContentTypeAttribute( const QStringList &contentTypes = QStringList() );
-
-    virtual QByteArray type() const;
-    virtual CollectionContentTypeAttribute* clone() const;
-    virtual QByteArray toByteArray() const;
-    virtual void setData( const QByteArray &data );
-
-    /**
-      Returns the allowed content mimetypes.
-    */
-    QStringList contentTypes() const;
-
-    /**
-      Sets the allowed content mimetypes.
-      @param contentTypes Allowed content types.
-    */
-    void setContentTypes( const QStringList &contentTypes );
-
-  private:
-    QStringList mContentTypes;
-};
-
 }
 
 #endif

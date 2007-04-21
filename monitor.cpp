@@ -20,6 +20,7 @@
 #include "collectionlistjob.h"
 #include "itemfetchjob.h"
 #include "monitor.h"
+#include "monitor_p.h"
 #include "notificationmanagerinterface.h"
 #include "session.h"
 
@@ -146,8 +147,9 @@ void Monitor::Private::slotItemAdded( const QByteArray &sessionId, int uid, cons
     return;
 
   if ( isItemMonitored( uid, collection, mimetype, resource ) ) {
-    ItemFetchJob *job = new ItemFetchJob( DataReference( uid, remoteId ), mParent );
+    ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( uid, remoteId ), collection, mParent );
     connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotFetchItemAddedFinished( KJob* ) ) );
+
     job->start();
   }
 
@@ -217,11 +219,12 @@ void Monitor::Private::slotFetchItemAddedFinished( KJob *job )
   if ( job->error() ) {
     qWarning() << "Error on fetching item: " << job->errorText();
   } else {
-    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+    ItemCollectionFetchJob *fetchJob = qobject_cast<ItemCollectionFetchJob*>( job );
 
-    const Item item = fetchJob->items().first();
+    const Item item = fetchJob->item();
+    const Collection collection = fetchJob->collection();
     if ( item.isValid() )
-      emit mParent->itemAdded( item );
+      emit mParent->itemAdded( item, collection );
   }
 }
 

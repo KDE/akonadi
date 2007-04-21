@@ -46,6 +46,7 @@ set( akonadi_LIB_SRC
   #	messagefetchjob.cpp
   #	messagemodel.cpp
 	monitor.cpp
+	monitor_p.cpp
 	profilemanager.cpp
 	profilemodel.cpp
 	session.cpp

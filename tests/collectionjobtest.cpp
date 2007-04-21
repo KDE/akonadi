@@ -309,10 +309,6 @@ void CollectionJobTest::testStatus()
   QCOMPARE( mcattr->count(), 0 );
   QCOMPARE( mcattr->unreadCount(), 0 );
 
-  CollectionContentTypeAttribute *ctattr = extractAttribute<CollectionContentTypeAttribute>( attrs );
-  QVERIFY( ctattr != 0 );
-  QVERIFY( ctattr->contentTypes().isEmpty() );
-
   // folder with attributes and content
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );;
   QVERIFY( resolver->exec() );
@@ -325,14 +321,6 @@ void CollectionJobTest::testStatus()
   QVERIFY( mcattr != 0 );
   QCOMPARE( mcattr->count(), 3 );
   QCOMPARE( mcattr->unreadCount(), 0 );
-
-  ctattr = extractAttribute<CollectionContentTypeAttribute>( attrs );
-  QVERIFY( ctattr != 0 );
-  QStringList mimeTypes = ctattr->contentTypes();
-  QCOMPARE( mimeTypes.count(), 3 );
-  QVERIFY( mimeTypes.contains( "text/calendar" ) );
-  QVERIFY( mimeTypes.contains( "text/vcard" ) );
-  QVERIFY( mimeTypes.contains( "message/rfc822" ) );
 }
 
 void CollectionJobTest::testModify()
@@ -350,33 +338,15 @@ void CollectionJobTest::testModify()
   CollectionModifyJob *mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
-  CollectionStatusJob *status = new CollectionStatusJob( col, this );
-  QVERIFY( status->exec() );
-  CollectionContentTypeAttribute *attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
-  QVERIFY( attr != 0 );
-  compareLists( attr->contentTypes(), reference );
-
   // test clearing content types
   mod = new CollectionModifyJob( col, this );
   mod->setContentTypes( QStringList() );
   QVERIFY( mod->exec() );
 
-  status = new CollectionStatusJob( col, this );
-  QVERIFY( status->exec() );
-  attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
-  QVERIFY( attr != 0 );
-  QVERIFY( attr->contentTypes().isEmpty() );
-
   // test setting contnet types
   mod = new CollectionModifyJob( col, this );
   mod->setContentTypes( reference );
   QVERIFY( mod->exec() );
-
-  status = new CollectionStatusJob( col, this );
-  QVERIFY( status->exec() );
-  attr = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
-  QVERIFY( attr != 0 );
-  compareLists( attr->contentTypes(), reference );
 }
 
 void CollectionJobTest::testMove()
@@ -456,13 +426,6 @@ void CollectionJobTest::testUtf8CollectionName()
   contentTypes << "message/rfc822";
   modify->setContentTypes( contentTypes );
   QVERIFY( modify->exec() );
-
-  // collection status
-  CollectionStatusJob *status = new CollectionStatusJob( col, this );
-  QVERIFY( status->exec() );
-  CollectionContentTypeAttribute *ccta = extractAttribute<CollectionContentTypeAttribute>( status->attributes() );
-  QVERIFY( ccta );
-  compareLists( ccta->contentTypes(), contentTypes );
 
   // delete collection
   CollectionDeleteJob *del = new CollectionDeleteJob( col, this );

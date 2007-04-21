@@ -67,7 +67,7 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
       QList<QByteArray> list;
       current = ImapParser::parseParenthesizedList( data, list, current );
       MessageCollectionAttribute *mcattr = new MessageCollectionAttribute();
-      CollectionContentTypeAttribute *ctattr = new CollectionContentTypeAttribute();
+//      CollectionContentTypeAttribute *ctattr = new CollectionContentTypeAttribute();
       for ( int i = 0; i < list.count() - 1; i += 2 ) {
         if ( list[i] == "MESSAGES" ) {
           mcattr->setCount( list[i+1].toInt() );
@@ -79,13 +79,13 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
           ImapParser::parseParenthesizedList( list[i + 1], mimeTypes );
           QStringList sMimeTypes;
           foreach( QByteArray it, mimeTypes ) sMimeTypes << QLatin1String( it );
-          ctattr->setContentTypes( sMimeTypes );
+          //ctattr->setContentTypes( sMimeTypes );
         } else {
           qDebug() << "unknown STATUS response: " << list[i];
         }
       }
       d->attributes.append( mcattr );
-      d->attributes.append( ctattr );
+//      d->attributes.append( ctattr );
       foreach ( CollectionAttribute* attr, d->attributes )
         d->collection.addAttribute( attr );
       return;
