@@ -22,7 +22,7 @@
 
 using namespace Akonadi;
 
-class Akonadi::ItemStoreJobPrivate
+class ItemStoreJob::Private
 {
   public:
     enum Operation {
@@ -35,6 +35,12 @@ class Akonadi::ItemStoreJobPrivate
       Dirty
     };
 
+    Private( ItemStoreJob *parent )
+      : mParent( parent )
+    {
+    }
+
+    ItemStoreJob *mParent;
     Item::Flags flags;
     Item::Flags addFlags;
     Item::Flags removeFlags;
@@ -43,6 +49,8 @@ class Akonadi::ItemStoreJobPrivate
     QSet<int> operations;
     QByteArray tag;
     Collection collection;
+
+    void sendNextCommand();
 
     QByteArray joinFlags( const Item::Flags &flags )
     {
@@ -56,21 +64,62 @@ class Akonadi::ItemStoreJobPrivate
     }
 };
 
+void ItemStoreJob::Private::sendNextCommand()
+{
+  if ( operations.isEmpty() ) {
+    mParent->emitResult();
+    return;
+  }
+
+  tag = mParent->newTag();
+  QByteArray command = tag;
+  command += " UID STORE " + QByteArray::number( ref.id() ) + ' ';
+  int op = *(operations.begin());
+  operations.remove( op );
+  switch ( op ) {
+    case Data:
+      command += "DATA {" + QByteArray::number( data.size() ) + '}';
+      break;
+    case SetFlags:
+      command += "FLAGS (" + joinFlags( flags ) + ')';
+      break;
+    case AddFlags:
+      command += "+FLAGS (" + joinFlags( addFlags ) + ')';
+      break;
+    case RemoveFlags:
+      command += "-FLAGS (" + joinFlags( removeFlags ) + ')';
+      break;
+    case Move:
+      command += "COLLECTION " + QByteArray::number( collection.id() );
+      break;
+    case RemoteId:
+      command += "REMOTEID \"" + ref.remoteId().toLatin1() + '\"';
+      break;
+    case Dirty:
+      command += "DIRTY";
+      break;
+  }
+  mParent->writeData( command );
+  mParent->newTag(); // hack to circumvent automatic response handling
+}
+
+
+
 ItemStoreJob::ItemStoreJob(Item * item, QObject * parent) :
     Job ( parent ),
-    d( new ItemStoreJobPrivate )
+    d( new Private( this ) )
 {
   Q_ASSERT( item );
   d->flags = item->flags();
   d->ref = item->reference();
   d->data = item->data();
-  d->operations.insert( ItemStoreJobPrivate::Data );
-  d->operations.insert( ItemStoreJobPrivate::SetFlags );
+  d->operations.insert( Private::Data );
+  d->operations.insert( Private::SetFlags );
 }
 
 ItemStoreJob::ItemStoreJob(const DataReference &ref, QObject * parent) :
     Job( parent ),
-    d( new ItemStoreJobPrivate )
+    d( new Private( this ) )
 {
   d->ref = ref;
 }
@@ -83,46 +132,46 @@ ItemStoreJob::~ ItemStoreJob()
 void ItemStoreJob::setData(const QByteArray & data)
 {
   d->data = data;
-  d->operations.insert( ItemStoreJobPrivate::Data );
+  d->operations.insert( Private::Data );
 }
 
 void ItemStoreJob::setFlags(const Item::Flags & flags)
 {
   d->flags = flags;
-  d->operations.insert( ItemStoreJobPrivate::SetFlags );
+  d->operations.insert( Private::SetFlags );
 }
 
 void ItemStoreJob::addFlag(const Item::Flag & flag)
 {
   d->addFlags.insert( flag );
-  d->operations.insert( ItemStoreJobPrivate::AddFlags );
+  d->operations.insert( Private::AddFlags );
 }
 
 void ItemStoreJob::removeFlag(const Item::Flag & flag)
 {
   d->removeFlags.insert( flag );
-  d->operations.insert( ItemStoreJobPrivate::RemoveFlags );
+  d->operations.insert( Private::RemoveFlags );
 }
 
 void ItemStoreJob::setCollection(const Collection &collection)
 {
   d->collection = collection;
-  d->operations.insert( ItemStoreJobPrivate::Move );
+  d->operations.insert( Private::Move );
 }
 
 void ItemStoreJob::setRemoteId()
 {
-  d->operations.insert( ItemStoreJobPrivate::RemoteId );
+  d->operations.insert( Private::RemoteId );
 }
 
 void ItemStoreJob::setClean()
 {
-  d->operations.insert( ItemStoreJobPrivate::Dirty );
+  d->operations.insert( Private::Dirty );
 }
 
 void ItemStoreJob::doStart()
 {
-  sendNextCommand();
+  d->sendNextCommand();
 }
 
 void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
@@ -133,7 +182,7 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
   }
   if ( _tag == d->tag ) {
     if ( data.startsWith( "OK" ) ) {
-      sendNextCommand();
+      d->sendNextCommand();
     } else {
       setError( Unknown );
       setErrorText( QString::fromUtf8( data ) );
@@ -142,45 +191,6 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
     return;
   }
   qDebug() << "unhandled response in item store job: " << _tag << data;
-}
-
-void ItemStoreJob::sendNextCommand()
-{
-  if ( d->operations.isEmpty() ) {
-    emitResult();
-    return;
-  }
-
-  d->tag = newTag();
-  QByteArray command = d->tag;
-  command += " UID STORE " + QByteArray::number( d->ref.id() ) + ' ';
-  int op = *(d->operations.begin());
-  d->operations.remove( op );
-  switch ( op ) {
-    case ItemStoreJobPrivate::Data:
-      command += "DATA {" + QByteArray::number( d->data.size() ) + '}';
-      break;
-    case ItemStoreJobPrivate::SetFlags:
-      command += "FLAGS (" + d->joinFlags( d->flags ) + ')';
-      break;
-    case ItemStoreJobPrivate::AddFlags:
-      command += "+FLAGS (" + d->joinFlags( d->addFlags ) + ')';
-      break;
-    case ItemStoreJobPrivate::RemoveFlags:
-      command += "-FLAGS (" + d->joinFlags( d->removeFlags ) + ')';
-      break;
-    case ItemStoreJobPrivate::Move:
-      command += "COLLECTION " + QByteArray::number( d->collection.id() );
-      break;
-    case ItemStoreJobPrivate::RemoteId:
-      command += "REMOTEID \"" + d->ref.remoteId().toLatin1() + '\"';
-      break;
-    case ItemStoreJobPrivate::Dirty:
-      command += "DIRTY";
-      break;
-  }
-  writeData( command );
-  newTag(); // hack to circumvent automatic response handling
 }
 
 #include "itemstorejob.moc"

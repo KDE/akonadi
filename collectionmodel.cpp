@@ -42,15 +42,26 @@ using namespace Akonadi;
 class CollectionModel::Private
 {
   public:
-    Private() :
-      fetchStatus( false )
-    {}
+    Private( CollectionModel *parent )
+      : mParent( parent ), fetchStatus( false )
+    {
+    }
+
+    CollectionModel *mParent;
     QHash<int, Collection> collections;
     QHash<int, QList<int> > childCollections;
-    Monitor* monitor;
+    Monitor *monitor;
     Session *session;
     QStringList mimeTypes;
     bool fetchStatus;
+
+    void collectionRemoved( int );
+    void collectionChanged( const Akonadi::Collection& );
+    void updateDone( KJob* );
+    void collectionStatusChanged( int, const Akonadi::CollectionStatus& );
+    void listDone( KJob* );
+    void editDone( KJob* );
+    void appendDone( KJob* );
 
     void updateSupportedMimeTypes( Collection col )
     {
@@ -64,9 +75,113 @@ class CollectionModel::Private
     }
 };
 
+void CollectionModel::Private::collectionRemoved( int collection )
+{
+  QModelIndex colIndex = mParent->indexForId( collection );
+  if ( colIndex.isValid() ) {
+    QModelIndex parentIndex = mParent->parent( colIndex );
+    // collection is still somewhere in the hierarchy
+    mParent->removeRowFromModel( colIndex.row(), parentIndex );
+  } else {
+    if ( collections.contains( collection ) ) {
+      // collection is orphan, ie. the parent has been removed already
+      collections.remove( collection );
+      childCollections.remove( collection );
+    }
+  }
+}
+
+void CollectionModel::Private::collectionChanged( const Akonadi::Collection &collection )
+{
+  CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, session );
+  mParent->connect( job, SIGNAL( result( KJob* ) ),
+                    mParent, SLOT( listDone( KJob* ) ) );
+}
+
+void CollectionModel::Private::updateDone( KJob *job )
+{
+  if ( job->error() ) {
+    // TODO: handle job errors
+    kWarning() << k_funcinfo << "Job error: " << job->errorString() << endl;
+  } else {
+    CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
+    Collection result = csjob->collection();
+    collectionStatusChanged( result.id(), csjob->status() );
+  }
+}
+
+void CollectionModel::Private::collectionStatusChanged( int collection, const Akonadi::CollectionStatus & status )
+{
+  if ( !collections.contains( collection ) )
+    kWarning() << k_funcinfo << "Got status response for non-existing collection: " << collection << endl;
+  else {
+    collections[ collection ].setStatus( status );
+
+    Collection col = collections.value( collection );
+    QModelIndex startIndex = mParent->indexForId( col.id() );
+    QModelIndex endIndex = mParent->indexForId( col.id(), mParent->columnCount( mParent->parent( startIndex ) ) - 1 );
+    emit mParent->dataChanged( startIndex, endIndex );
+  }
+}
+
+void CollectionModel::Private::listDone( KJob *job )
+{
+  if ( job->error() ) {
+    qWarning() << "Job error: " << job->errorString() << endl;
+  } else {
+    Collection::List _collections = static_cast<CollectionListJob*>( job )->collections();
+
+    // update model
+    foreach( const Collection col, _collections ) {
+      if ( collections.contains( col.id() ) ) {
+        // collection already known
+        collections[ col.id() ] = col;
+        QModelIndex startIndex = mParent->indexForId( col.id() );
+        QModelIndex endIndex = mParent->indexForId( col.id(), mParent->columnCount( mParent->parent( startIndex ) ) - 1 );
+        emit mParent->dataChanged( startIndex, endIndex );
+        continue;
+      }
+      collections.insert( col.id(), col );
+      QModelIndex parentIndex = mParent->indexForId( col.parent() );
+      if ( parentIndex.isValid() || col.parent() == Collection::root().id() ) {
+        mParent->beginInsertRows( parentIndex, mParent->rowCount( parentIndex ), mParent->rowCount( parentIndex ) );
+        childCollections[ col.parent() ].append( col.id() );
+        mParent->endInsertRows();
+      } else {
+        childCollections[ col.parent() ].append( col.id() );
+      }
+
+      updateSupportedMimeTypes( col );
+
+      // start a status job for every collection to get message counts, etc.
+      if ( fetchStatus && col.type() != Collection::VirtualParent ) {
+        CollectionStatusJob* csjob = new CollectionStatusJob( col, session );
+        mParent->connect( csjob, SIGNAL(result(KJob*)), mParent, SLOT(updateDone(KJob*)) );
+      }
+    }
+  }
+}
+
+void CollectionModel::Private::editDone( KJob * job )
+{
+  if ( job->error() ) {
+    qWarning() << "Edit failed: " << job->errorString();
+  }
+}
+
+void CollectionModel::Private::appendDone(KJob * job)
+{
+  if ( job->error() ) {
+    kWarning() << "Append failed: " << job->errorString() << endl;
+    // TODO: error handling
+  }
+}
+
+
+
 CollectionModel::CollectionModel( QObject * parent ) :
     QAbstractItemModel( parent ),
-    d( new Private() )
+    d( new Private( this ) )
 {
   d->session = new Session( QByteArray("CollectionModel-") + QByteArray::number( qrand() ), this );
 
@@ -242,40 +357,6 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
   return true;
 }
 
-void CollectionModel::collectionChanged( const Akonadi::Collection &collection )
-{
-  CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, d->session );
-  connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
-}
-
-void CollectionModel::collectionRemoved( int collection )
-{
-  QModelIndex colIndex = indexForId( collection );
-  if ( colIndex.isValid() ) {
-    QModelIndex parentIndex = parent( colIndex );
-    // collection is still somewhere in the hierarchy
-    removeRowFromModel( colIndex.row(), parentIndex );
-  } else {
-    if ( d->collections.contains( collection ) ) {
-      // collection is orphan, ie. the parent has been removed already
-      d->collections.remove( collection );
-      d->childCollections.remove( collection );
-    }
-  }
-}
-
-void CollectionModel::updateDone( KJob * job )
-{
-  if ( job->error() ) {
-    // TODO: handle job errors
-    kWarning() << k_funcinfo << "Job error: " << job->errorString() << endl;
-  } else {
-    CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
-    Collection result = csjob->collection();
-    collectionStatusChanged( result.id(), csjob->status() );
-  }
-}
-
 QModelIndex CollectionModel::indexForId( int id, int column )
 {
   if ( !d->collections.contains( id ) )
@@ -292,45 +373,6 @@ QModelIndex CollectionModel::indexForId( int id, int column )
   if ( row >= 0 )
     return createIndex( row, column, d->collections.value( list.at(row) ).id() );
   return QModelIndex();
-}
-
-void CollectionModel::listDone( KJob * job )
-{
-  if ( job->error() ) {
-    qWarning() << "Job error: " << job->errorString() << endl;
-  } else {
-    Collection::List collections = static_cast<CollectionListJob*>( job )->collections();
-
-    // update model
-    foreach( const Collection col, collections ) {
-      if ( d->collections.contains( col.id() ) ) {
-        // collection already known
-        d->collections[ col.id() ] = col;
-        QModelIndex startIndex = indexForId( col.id() );
-        QModelIndex endIndex = indexForId( col.id(), columnCount( parent( startIndex ) ) - 1 );
-        emit dataChanged( startIndex, endIndex );
-        continue;
-      }
-      d->collections.insert( col.id(), col );
-      QModelIndex parentIndex = indexForId( col.parent() );
-      if ( parentIndex.isValid() || col.parent() == Collection::root().id() ) {
-        beginInsertRows( parentIndex, rowCount( parentIndex ), rowCount( parentIndex ) );
-        d->childCollections[ col.parent() ].append( col.id() );
-        endInsertRows();
-      } else {
-        d->childCollections[ col.parent() ].append( col.id() );
-      }
-
-      d->updateSupportedMimeTypes( col );
-
-      // start a status job for every collection to get message counts, etc.
-      if ( d->fetchStatus && col.type() != Collection::VirtualParent ) {
-        CollectionStatusJob* csjob = new CollectionStatusJob( col, d->session );
-        connect( csjob, SIGNAL(result(KJob*)), SLOT(updateDone(KJob*)) );
-      }
-    }
-
-  }
 }
 
 bool CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
@@ -368,13 +410,6 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
   }
 
   return flags;
-}
-
-void CollectionModel::editDone( KJob * job )
-{
-  if ( job->error() ) {
-    qWarning() << "Edit failed: " << job->errorString();
-  }
 }
 
 bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
@@ -450,14 +485,6 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
   return false;
 }
 
-void CollectionModel::appendDone(KJob * job)
-{
-  if ( job->error() ) {
-    kWarning() << "Append failed: " << job->errorString() << endl;
-    // TODO: error handling
-  }
-}
-
 Collection CollectionModel::collectionForId(int id) const
 {
   return d->collections.value( id );
@@ -467,20 +494,6 @@ void CollectionModel::fetchCollectionStatus(bool enable)
 {
   d->fetchStatus = enable;
   d->monitor->fetchCollectionStatus( enable );
-}
-
-void CollectionModel::collectionStatusChanged(int collection, const Akonadi::CollectionStatus & status)
-{
-  if ( !d->collections.contains( collection ) )
-    kWarning() << k_funcinfo << "Got status response for non-existing collection: " << collection << endl;
-  else {
-    d->collections[ collection ].setStatus( status );
-
-    Collection col = d->collections.value( collection );
-    QModelIndex startIndex = indexForId( col.id() );
-    QModelIndex endIndex = indexForId( col.id(), columnCount( parent( startIndex ) ) - 1 );
-    emit dataChanged( startIndex, endIndex );
-  }
 }
 
 #include "collectionmodel.moc"

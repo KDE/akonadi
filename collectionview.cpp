@@ -41,6 +41,19 @@ using namespace Akonadi;
 class CollectionView::Private
 {
   public:
+    Private( CollectionView *parent )
+      : mParent( parent )
+    {
+    }
+
+    void dragExpand();
+    void createCollection();
+    void createResult( KJob* );
+    void deleteCollection();
+    void deleteResult( KJob* );
+    void updateActions( const QModelIndex& );
+
+    CollectionView *mParent;
     QSortFilterProxyModel *filterModel;
     QModelIndex dragOverIndex;
     QTimer dragExpandTimer;
@@ -49,9 +62,75 @@ class CollectionView::Private
     KAction *deleteCollectionAction;
 };
 
+void CollectionView::Private::dragExpand()
+{
+  kDebug() << k_funcinfo << endl;
+  mParent->setExpanded( dragOverIndex, true );
+  dragOverIndex = QModelIndex();
+}
+
+void CollectionView::Private::createCollection()
+{
+  QModelIndex index = mParent->currentIndex();
+  if ( !index.data( CollectionModel::ChildCreatableRole ).toBool() )
+    return;
+  QString name = QInputDialog::getText( mParent, i18n("New Folder"), i18n("Name") );
+  if ( name.isEmpty() )
+    return;
+  int parentId = index.data( CollectionModel::CollectionIdRole ).toInt();
+  if ( parentId <= 0 )
+    return;
+
+  CollectionCreateJob *job = new CollectionCreateJob( Collection( parentId ), name );
+  mParent->connect( job, SIGNAL(result(KJob*)), mParent, SLOT(createResult(KJob*)) );
+}
+
+void CollectionView::Private::createResult(KJob * job)
+{
+  if ( job->error() )
+    KMessageBox::error( mParent, i18n("Could not create folder: %1", job->errorString()), i18n("Folder creation failed") );
+}
+
+void CollectionView::Private::deleteCollection()
+{
+  QModelIndex index = mParent->currentIndex();
+  if ( !index.isValid() )
+    return;
+  int colId = index.data( CollectionModel::CollectionIdRole ).toInt();
+  if ( colId <= 0 )
+    return;
+
+  CollectionDeleteJob *job = new CollectionDeleteJob( Collection( colId ) );
+  mParent->connect( job, SIGNAL(result(KJob*)), mParent, SLOT(deleteResult(KJob*)) );
+}
+
+void CollectionView::Private::deleteResult(KJob * job)
+{
+  if ( job->error() )
+    KMessageBox::error( mParent, i18n("Could not delete folder: %1", job->errorString()), i18n("Folder deletion failed") );
+}
+
+void CollectionView::Private::updateActions( const QModelIndex &current )
+{
+  if ( !current.isValid() ) {
+    newCollectionAction->setEnabled( false );
+    deleteCollectionAction->setEnabled( false );
+    return;
+  }
+
+  newCollectionAction->setEnabled( current.data( CollectionModel::ChildCreatableRole ).toBool() );
+
+  if ( current.parent().isValid() )
+    deleteCollectionAction->setEnabled( true );
+  else
+    newCollectionAction->setEnabled( false );
+}
+
+
+
 CollectionView::CollectionView( QWidget * parent ) :
     QTreeView( parent ),
-    d( new Private() )
+    d( new Private( this ) )
 {
   d->filterModel = new QSortFilterProxyModel( this );
   d->filterModel->setDynamicSortFilter( true );
@@ -75,7 +154,7 @@ CollectionView::CollectionView( QWidget * parent ) :
   connect( d->deleteCollectionAction, SIGNAL(triggered()), SLOT(deleteCollection()) );
 }
 
-CollectionView::~ CollectionView( )
+CollectionView::~CollectionView()
 {
   delete d;
 }
@@ -128,77 +207,13 @@ void CollectionView::dropEvent(QDropEvent * event)
   QTreeView::dropEvent( event );
 }
 
-void CollectionView::dragExpand()
-{
-  kDebug() << k_funcinfo << endl;
-  setExpanded( d->dragOverIndex, true );
-  d->dragOverIndex = QModelIndex();
-}
-
 void CollectionView::contextMenuEvent(QContextMenuEvent * event)
 {
-  updateActions( indexAt( event->pos() ) );
+  d->updateActions( indexAt( event->pos() ) );
   QList<QAction*> actions;
   actions << d->newCollectionAction << d->deleteCollectionAction;
   QMenu::exec( actions, event->globalPos() );
-  updateActions( currentIndex() );
-}
-
-void Akonadi::CollectionView::createCollection()
-{
-  QModelIndex index = currentIndex();
-  if ( !index.data( CollectionModel::ChildCreatableRole ).toBool() )
-    return;
-  QString name = QInputDialog::getText( this, i18n("New Folder"), i18n("Name") );
-  if ( name.isEmpty() )
-    return;
-  int parentId = index.data( CollectionModel::CollectionIdRole ).toInt();
-  if ( parentId <= 0 )
-    return;
-
-  CollectionCreateJob *job = new CollectionCreateJob( Collection( parentId ), name );
-  connect( job, SIGNAL(result(KJob*)), SLOT(createResult(KJob*)) );
-}
-
-void CollectionView::createResult(KJob * job)
-{
-  if ( job->error() )
-    KMessageBox::error( this, i18n("Could not create folder: %1", job->errorString()), i18n("Folder creation failed") );
-}
-
-void CollectionView::deleteCollection()
-{
-  QModelIndex index = currentIndex();
-  if ( !index.isValid() )
-    return;
-  int colId = index.data( CollectionModel::CollectionIdRole ).toInt();
-  if ( colId <= 0 )
-    return;
-
-  CollectionDeleteJob *job = new CollectionDeleteJob( Collection( colId ) );
-  connect( job, SIGNAL(result(KJob*)), SLOT(deleteResult(KJob*)) );
-}
-
-void CollectionView::deleteResult(KJob * job)
-{
-  if ( job->error() )
-    KMessageBox::error( this, i18n("Could not delete folder: %1", job->errorString()), i18n("Folder deletion failed") );
-}
-
-void CollectionView::updateActions( const QModelIndex &current )
-{
-  if ( !current.isValid() ) {
-    d->newCollectionAction->setEnabled( false );
-    d->deleteCollectionAction->setEnabled( false );
-    return;
-  }
-
-  d->newCollectionAction->setEnabled( current.data( CollectionModel::ChildCreatableRole ).toBool() );
-
-  if ( current.parent().isValid() )
-    d->deleteCollectionAction->setEnabled( true );
-  else
-    d->newCollectionAction->setEnabled( false );
+  d->updateActions( currentIndex() );
 }
 
 #include "collectionview.moc"

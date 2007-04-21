@@ -27,8 +27,6 @@
 
 namespace Akonadi {
 
-class ItemStoreJobPrivate;
-
 /**
   Modifies an existing Item.
 */
@@ -104,10 +102,8 @@ class AKONADI_EXPORT ItemStoreJob : public Job
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    void sendNextCommand();
-
-  private:
-    ItemStoreJobPrivate* const d;
+    class Private;
+    Private* const d;
 
 };
 

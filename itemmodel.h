@@ -114,30 +114,14 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     */
     Session* session() const;
 
-  private slots:
-    /**
-      Connected to the message query job which does a complete listing
-    */
-    void listingDone( KJob* job );
-
-    /**
-      Connected to the monitor job.
-    */
-    void itemChanged( const Akonadi::Item &item );
-
-    /**
-      Connected to the monitor job.
-    */
-    void itemAdded( const Akonadi::Item &item );
-
-    /**
-      Connected to the monitor job.
-    */
-    void itemRemoved( const Akonadi::DataReference &reference );
-
   private:
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void listingDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item& ) )
+    Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item& ) )
+    Q_PRIVATE_SLOT( d, void itemRemoved( const Akonadi::DataReference& ) )
 };
 
 }

@@ -1,5 +1,7 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    This file is part of libakonadi.
+
+    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,42 +19,32 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_CONTROL_H
-#define AKONADI_CONTROL_H
+#ifndef AKONADI_JOB_P_H
+#define AKONADI_JOB_P_H
 
-#include <QtCore/QObject>
-
-#include <kdepim_export.h>
-
-class QEventLoop;
+#include "session.h"
 
 namespace Akonadi {
 
-/**
-  This class provides methods to control the Akonadi server.
-*/
-class AKONADI_EXPORT Control : public QObject
+class Job::Private
 {
-  Q_OBJECT
-
   public:
-    /**
-      Destructor
-     */
-    ~Control();
+    Private( Job *_parent )
+      : mParent( _parent )
+    {
+    }
 
-    /**
-      Starts the Akonadi server synchronously if necessary.
-     */
-    static void start();
+    void handleResponse( const QByteArray &tag, const QByteArray &data );
+    void startQueued();
+    void lostConnection();
+    void slotSubJobAboutToStart( Akonadi::Job* );
+    void startNext();
 
-  private:
-    Control();
-
-    class Private;
-    Private* const d;
-
-    Q_PRIVATE_SLOT( d, void serviceOwnerChanged( const QString&, const QString&, const QString& ) )
+    Job *mParent;
+    Job *parent;
+    Job *currentSubJob;
+    QByteArray tag;
+    Session* session;
 };
 
 }

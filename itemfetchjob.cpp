@@ -26,9 +26,18 @@
 
 using namespace Akonadi;
 
-class Akonadi::ItemFetchJobPrivate
+class ItemFetchJob::Private
 {
   public:
+    Private( ItemFetchJob *parent )
+      : mParent( parent )
+    {
+    }
+
+    void startFetchJob();
+    void selectDone( KJob * job );
+
+    ItemFetchJob *mParent;
     Collection collection;
     DataReference uid;
     QList<QByteArray> fields;
@@ -36,16 +45,41 @@ class Akonadi::ItemFetchJobPrivate
     bool fetchData;
 };
 
+void ItemFetchJob::Private::startFetchJob()
+{
+  QByteArray command = mParent->newTag();
+  if ( uid.isNull() )
+    command += " FETCH 1:*";
+  else
+    command += " UID FETCH " + QByteArray::number( uid.id() );
+
+  command += " (UID REMOTEID FLAGS";
+  if ( fetchData )
+    command += " RFC822";
+
+  foreach ( QByteArray f, fields )
+    command += ' ' + f;
+  command += ')';
+  mParent->writeData( command );
+}
+
+void ItemFetchJob::Private::selectDone( KJob * job )
+{
+  if ( !job->error() )
+    // the collection is now selected, fetch the message(s)
+    startFetchJob();
+}
+
 ItemFetchJob::ItemFetchJob(QObject * parent) :
     Job( parent ),
-    d( new ItemFetchJobPrivate )
+    d( new Private( this ) )
 {
   d->fetchData = false;
 }
 
 ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
     Job( parent ),
-    d( new ItemFetchJobPrivate )
+    d( new Private( this ) )
 {
   d->collection = collection;
   d->fetchData = false;
@@ -53,7 +87,7 @@ ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
 
 ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
     Job( parent ),
-    d( new ItemFetchJobPrivate )
+    d( new Private( this ) )
 {
   setUid( ref );
   d->fetchData = true;
@@ -71,7 +105,7 @@ void ItemFetchJob::doStart()
     connect( job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)) );
     addSubjob( job );
   } else
-    startFetchJob();
+    d->startFetchJob();
 }
 
 void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -118,13 +152,6 @@ Item::List ItemFetchJob::items() const
   return d->items;
 }
 
-void ItemFetchJob::selectDone( KJob * job )
-{
-  if ( !job->error() )
-    // the collection is now selected, fetch the message(s)
-    startFetchJob();
-}
-
 DataReference ItemFetchJob::parseUid( const QList< QByteArray > & fetchResponse )
 {
   int index = fetchResponse.indexOf( "UID" );
@@ -157,24 +184,6 @@ void ItemFetchJob::parseFlags(const QByteArray & flagData, Item &item)
   foreach ( const QByteArray flag, flags ) {
     item.setFlag( flag );
   }
-}
-
-void ItemFetchJob::startFetchJob()
-{
-  QByteArray command = newTag();
-  if ( d->uid.isNull() )
-    command += " FETCH 1:*";
-  else
-    command += " UID FETCH " + QByteArray::number( d->uid.id() );
-
-  command += " (UID REMOTEID FLAGS";
-  if ( d->fetchData )
-    command += " RFC822";
-
-  foreach ( QByteArray f, d->fields )
-    command += ' ' + f;
-  command += ')';
-  writeData( command );
 }
 
 void ItemFetchJob::setCollection(const Collection &collection)

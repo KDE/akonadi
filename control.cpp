@@ -31,43 +31,52 @@
 
 using namespace Akonadi;
 
-Control* Control::mInstance = 0;
 static KStaticDeleter<Control> sControlDeleter;
 
-void Control::start()
+class Control::Private
 {
-  self()->startInternal();
-}
+  public:
+    Private( Control *parent )
+      : mParent( parent ), mEventLoop( 0 )
+    {
+    }
 
-Control* Control::self()
+    void startInternal();
+    void serviceOwnerChanged( const QString&, const QString&, const QString& );
+    static Control* self();
+
+    Control *mParent;
+    QEventLoop *mEventLoop;
+
+    static Control* mInstance;
+};
+
+Control* Control::Private::mInstance = 0;
+
+Control* Control::Private::self()
 {
   if ( !mInstance )
     sControlDeleter.setObject( mInstance, new Control() );
+
   return mInstance;
 }
 
-Control::Control() :
-    QObject()
-{
-  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           SLOT(serviceOwnerChanged(QString,QString,QString)) );
-  mEventLoop = 0;
-}
-
-void Control::startInternal()
+void Control::Private::startInternal()
 {
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) || mEventLoop )
     return;
- QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
- if ( !reply.isValid() ) {
-   qWarning( "Unable to start Akonadi control process: %s", qPrintable( reply.error().message() ) );
-   return;
- }
- mEventLoop = new QEventLoop( this );
- mEventLoop->exec();
+
+  QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
+  if ( !reply.isValid() ) {
+    qWarning( "Unable to start Akonadi control process: %s", qPrintable( reply.error().message() ) );
+    return;
+  }
+
+  mEventLoop = new QEventLoop( mParent );
+  mEventLoop->exec();
 }
 
-void Control::serviceOwnerChanged(const QString & name, const QString & oldOwner, const QString & newOwner)
+void Control::Private::serviceOwnerChanged( const QString & name, const QString & oldOwner, const QString & newOwner )
 {
   Q_UNUSED( oldOwner );
   if ( name == AKONADI_SERVER_SERVICE && !newOwner.isEmpty() && mEventLoop ) {
@@ -75,6 +84,24 @@ void Control::serviceOwnerChanged(const QString & name, const QString & oldOwner
     delete mEventLoop;
     mEventLoop = 0;
   }
+}
+
+
+Control::Control()
+  : d( new Private( this ) )
+{
+  connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
+           SLOT( serviceOwnerChanged( QString, QString, QString ) ) );
+}
+
+Control::~Control()
+{
+  delete d;
+}
+
+void Control::start()
+{
+  Private::self()->d->startInternal();
 }
 
 #include "control.moc"

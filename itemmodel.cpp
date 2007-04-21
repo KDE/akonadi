@@ -34,27 +34,98 @@ using namespace Akonadi;
 class ItemModel::Private
 {
   public:
+    Private( ItemModel *parent )
+      : mParent( parent ), monitor( 0 )
+    {
+      session = new Session( QByteArray("ItemModel-") + QByteArray::number( qrand() ), mParent );
+    }
+
+    ~Private()
+    {
+      delete monitor;
+    }
+
+    void listingDone( KJob* );
+    void itemChanged( const Akonadi::Item& );
+    void itemAdded( const Akonadi::Item& );
+    void itemRemoved( const Akonadi::DataReference& );
+
+    ItemModel *mParent;
     Item::List items;
     Collection collection;
     Monitor *monitor;
     Session *session;
 };
 
-Akonadi::ItemModel::ItemModel( QObject *parent ) :
-    QAbstractTableModel( parent ),
-    d( new Private() )
+void ItemModel::Private::listingDone( KJob * job )
 {
-  d->monitor = 0;
-  d->session = new Session( QByteArray("ItemModel-") + QByteArray::number( qrand() ), this );
+  ItemFetchJob *fetch = static_cast<ItemFetchJob*>( job );
+  if ( job->error() ) {
+    // TODO
+    kWarning() << k_funcinfo << "Item query failed!" << endl;
+  } else {
+    items = fetch->items();
+    mParent->reset();
+  }
+
+  // start monitor
+  monitor = new Monitor( mParent );
+  monitor->fetchItemMetaData( true );
+  monitor->ignoreSession( session );
+  monitor->monitorCollection( collection );
+  mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item& )),
+                    mParent, SLOT(itemChanged( const Akonadi::Item& )) );
+  mParent->connect( monitor, SIGNAL(itemAdded( const Akonadi::Item&, const Akonadi::Collection& )),
+                    mParent, SLOT(itemAdded( const Akonadi::Item& )) );
+  mParent->connect( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)),
+                    mParent, SLOT(itemRemoved(Akonadi::DataReference)) );
 }
 
-Akonadi::ItemModel::~ItemModel()
+void ItemModel::Private::itemChanged( const Akonadi::Item &item )
 {
-  delete d->monitor;
+  itemRemoved( item.reference() );
+  itemAdded( item );
+}
+
+void ItemModel::Private::itemAdded( const Akonadi::Item &item )
+{
+  mParent->beginInsertRows( QModelIndex(), items.size(), items.size() + 1 );
+  items.append( item );
+  mParent->endInsertRows();
+}
+
+void ItemModel::Private::itemRemoved( const DataReference &reference )
+{
+  // ### *slow*
+  int index = -1;
+  for ( int i = 0; i < items.size(); ++i ) {
+    if ( items.at( i ).reference() == reference ) {
+      index = i;
+      break;
+    }
+  }
+  if ( index < 0 )
+    return;
+
+  mParent->beginRemoveRows( QModelIndex(), index, index );
+  const Item item = items.at( index );
+  Q_ASSERT( item.isValid() );
+  items.removeAt( index );
+  mParent->endRemoveRows();
+}
+
+ItemModel::ItemModel( QObject *parent ) :
+    QAbstractTableModel( parent ),
+    d( new Private( this ) )
+{
+}
+
+ItemModel::~ItemModel()
+{
   delete d;
 }
 
-QVariant Akonadi::ItemModel::data( const QModelIndex & index, int role ) const
+QVariant ItemModel::data( const QModelIndex & index, int role ) const
 {
   if ( !index.isValid() )
     return QVariant();
@@ -78,7 +149,7 @@ QVariant Akonadi::ItemModel::data( const QModelIndex & index, int role ) const
   return QVariant();
 }
 
-int Akonadi::ItemModel::rowCount( const QModelIndex & parent ) const
+int ItemModel::rowCount( const QModelIndex & parent ) const
 {
   if ( !parent.isValid() )
     return d->items.count();
@@ -92,7 +163,7 @@ int ItemModel::columnCount(const QModelIndex & parent) const
   return 0;
 }
 
-QVariant Akonadi::ItemModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant ItemModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
@@ -109,7 +180,7 @@ QVariant Akonadi::ItemModel::headerData( int section, Qt::Orientation orientatio
   return QAbstractTableModel::headerData( section, orientation, role );
 }
 
-void Akonadi::ItemModel::setCollection( const Collection &collection )
+void ItemModel::setCollection( const Collection &collection )
 {
   qWarning() << "ItemModel::setPath()";
   if ( d->collection == collection )
@@ -128,63 +199,7 @@ void Akonadi::ItemModel::setCollection( const Collection &collection )
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 }
 
-void Akonadi::ItemModel::listingDone( KJob * job )
-{
-  ItemFetchJob *fetch = static_cast<ItemFetchJob*>( job );
-  if ( job->error() ) {
-    // TODO
-    kWarning() << k_funcinfo << "Item query failed!" << endl;
-  } else {
-    d->items = fetch->items();
-    reset();
-  }
-
-  // start monitor
-  d->monitor = new Monitor( this );
-  d->monitor->fetchItemMetaData( true );
-  d->monitor->ignoreSession( d->session );
-  d->monitor->monitorCollection( d->collection );
-  connect( d->monitor, SIGNAL(itemChanged( const Akonadi::Item& )),
-           SLOT(itemChanged( const Akonadi::Item& )) );
-  connect( d->monitor, SIGNAL(itemAdded( const Akonadi::Item&, const Akonadi::Collection& )),
-           SLOT(itemAdded( const Akonadi::Item& )) );
-  connect( d->monitor, SIGNAL(itemRemoved(Akonadi::DataReference)),
-           SLOT(itemRemoved(Akonadi::DataReference)) );
-}
-
-void ItemModel::itemChanged( const Akonadi::Item &item )
-{
-  itemRemoved( item.reference() );
-  itemAdded( item );
-}
-
-void ItemModel::itemAdded( const Akonadi::Item &item )
-{
-  beginInsertRows( QModelIndex(), d->items.size(), d->items.size() + 1 );
-  d->items.append( item );
-  endInsertRows();
-}
-
-void ItemModel::itemRemoved( const DataReference &reference )
-{
-  // ### *slow*
-  int index = -1;
-  for ( int i = 0; i < d->items.size(); ++i ) {
-    if ( d->items.at( i ).reference() == reference ) {
-      index = i;
-      break;
-    }
-  }
-  if ( index < 0 )
-    return;
-  beginRemoveRows( QModelIndex(), index, index );
-  const Item item = d->items.at( index );
-  Q_ASSERT( item.isValid() );
-  d->items.removeAt( index );
-  endRemoveRows();
-}
-
-DataReference Akonadi::ItemModel::referenceForIndex( const QModelIndex & index ) const
+DataReference ItemModel::referenceForIndex( const QModelIndex & index ) const
 {
   if ( !index.isValid() )
     return DataReference();
@@ -196,7 +211,7 @@ DataReference Akonadi::ItemModel::referenceForIndex( const QModelIndex & index )
   return item.reference();
 }
 
-Akonadi::Item Akonadi::ItemModel::itemForIndex( const QModelIndex & index ) const
+Item ItemModel::itemForIndex( const QModelIndex & index ) const
 {
   if ( !index.isValid() )
     return Akonadi::Item();

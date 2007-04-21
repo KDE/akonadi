@@ -25,8 +25,6 @@
 
 namespace Akonadi {
 
-class ItemDeleteJobPrivate;
-
 /**
   Convenience job which permanently deletes an item, ie. sets the \\Deleted flag
   and then executes the EXPUNGE command.
@@ -51,12 +49,11 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
   protected:
     virtual void doStart();
 
-  private Q_SLOTS:
-    void jobDone( KJob* job );
-
   private:
-    ItemDeleteJobPrivate* const d;
+    class Private;
+    Private* const d;
 
+    Q_PRIVATE_SLOT( d, void jobDone( KJob* ) )
 };
 
 }

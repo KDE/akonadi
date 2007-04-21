@@ -21,6 +21,7 @@
 
 #include "imapparser.h"
 #include "job.h"
+#include "job_p.h"
 
 #include <kdebug.h>
 
@@ -32,9 +33,22 @@
 
 using namespace Akonadi;
 
-class Akonadi::Session::Private
+class Session::Private
 {
   public:
+    Private( Session *parent )
+      : mParent( parent )
+    {
+    }
+
+    void startNext();
+    void reconnect();
+    void socketError();
+    void dataReceived();
+    void doStartNext();
+    void jobDone( KJob* job );
+
+    Session *mParent;
     QByteArray sessionId;
     QTcpSocket* socket;
     bool connected;
@@ -114,9 +128,82 @@ class Akonadi::Session::Private
     }
 };
 
+void Session::Private::startNext()
+{
+  QTimer::singleShot( 0, mParent, SLOT(doStartNext()) );
+}
+
+void Session::Private::reconnect()
+{
+  if ( socket->state() != QAbstractSocket::ConnectedState &&
+       socket->state() != QAbstractSocket::ConnectingState )
+    socket->connectToHost( QHostAddress::LocalHost, 4444 );
+}
+
+void Session::Private::socketError()
+{
+  if ( currentJob )
+    currentJob->d->lostConnection();
+  connected = false;
+  QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
+}
+
+void Session::Private::dataReceived()
+{
+  while ( socket->canReadLine() ) {
+    if ( !parseNextLine() )
+      continue; // response not yet completed
+
+    // handle login response
+    if ( tagBuffer == QByteArray("0") ) {
+      if ( dataBuffer.startsWith( "OK" ) ) {
+        connected = true;
+        startNext();
+      } else {
+        kWarning() << k_funcinfo << "Unable to login to Akonadi server: " << dataBuffer << endl;
+        socket->close();
+        QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
+      }
+    }
+
+    // send login command
+    if ( tagBuffer == "*" && dataBuffer.startsWith( "OK Akonadi" ) ) {
+      mParent->writeData( "0 LOGIN " + sessionId + "\n" );
+
+    // work for the current job
+    } else {
+      if ( currentJob )
+        currentJob->d->handleResponse( tagBuffer, dataBuffer );
+    }
+
+    // reset parser stuff
+    clearParserState();
+  }
+}
+
+void Session::Private::doStartNext()
+{
+  if ( !connected || jobRunning || queue.isEmpty() )
+    return;
+  jobRunning = true;
+  currentJob = queue.dequeue();
+  mParent->connect( currentJob, SIGNAL(result(KJob*)), mParent, SLOT(jobDone(KJob*)) );
+  currentJob->d->startQueued();
+}
+
+void Session::Private::jobDone(KJob * job)
+{
+  if( job == currentJob ) {
+    jobRunning = false;
+    currentJob = 0;
+    startNext();
+  }
+}
+
+
 Session::Session(const QByteArray & sessionId, QObject * parent) :
     QObject( parent ),
-    d( new Private )
+    d( new Private( this ) )
 {
   if ( !sessionId.isEmpty() )
     d->sessionId = sessionId;
@@ -133,7 +220,7 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
   connect( d->socket, SIGNAL(disconnected()), SLOT(socketError()) );
   connect( d->socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
-  reconnect();
+  d->reconnect();
 }
 
 Session::~Session()
@@ -150,84 +237,12 @@ QByteArray Session::sessionId() const
 void Session::addJob(Job * job)
 {
   d->queue.append( job );
-  startNext();
+  d->startNext();
 }
 
 void Session::writeData(const QByteArray & data)
 {
   d->socket->write( data );
-}
-
-void Session::reconnect()
-{
-  if ( d->socket->state() != QAbstractSocket::ConnectedState &&
-       d->socket->state() != QAbstractSocket::ConnectingState )
-    d->socket->connectToHost( QHostAddress::LocalHost, 4444 );
-}
-
-void Session::socketError()
-{
-  if ( d->currentJob )
-    d->currentJob->lostConnection();
-  d->connected = false;
-  QTimer::singleShot( 1000, this, SLOT(reconnect()) );
-}
-
-void Session::dataReceived()
-{
-  while ( d->socket->canReadLine() ) {
-    if ( !d->parseNextLine() )
-      continue; // response not yet completed
-
-    // handle login response
-    if ( d->tagBuffer == QByteArray("0") ) {
-      if ( d->dataBuffer.startsWith( "OK" ) ) {
-        d->connected = true;
-        startNext();
-      } else {
-        kWarning() << k_funcinfo << "Unable to login to Akonadi server: " << d->dataBuffer << endl;
-        d->socket->close();
-        QTimer::singleShot( 1000, this, SLOT(reconnect()) );
-      }
-    }
-
-    // send login command
-    if ( d->tagBuffer == "*" && d->dataBuffer.startsWith( "OK Akonadi" ) ) {
-      writeData( "0 LOGIN " + d->sessionId + "\n" );
-
-    // work for the current job
-    } else {
-      if ( d->currentJob )
-        d->currentJob->handleResponse( d->tagBuffer, d->dataBuffer );
-    }
-
-    // reset parser stuff
-    d->clearParserState();
-  }
-}
-
-void Session::startNext()
-{
-  QTimer::singleShot( 0, this, SLOT(doStartNext()) );
-}
-
-void Session::doStartNext()
-{
-  if ( !d->connected || d->jobRunning || d->queue.isEmpty() )
-    return;
-  d->jobRunning = true;
-  d->currentJob = d->queue.dequeue();
-  connect( d->currentJob, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
-  d->currentJob->startQueued();
-}
-
-void Session::jobDone(KJob * job)
-{
-  if( job == d->currentJob ) {
-    d->jobRunning = false;
-    d->currentJob = 0;
-    startNext();
-  }
 }
 
 QThreadStorage<Session*> instances;

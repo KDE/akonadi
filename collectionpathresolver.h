@@ -71,12 +71,12 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
   protected:
     void doStart();
 
-  private slots:
-    void jobResult( KJob* job );
-
   private:
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void jobResult( KJob* ) )
+
 };
 
 }

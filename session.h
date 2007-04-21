@@ -91,18 +91,14 @@ class AKONADI_EXPORT Session : public QObject
     int nextTag();
 
   private:
-    void startNext();
-
-  private slots:
-    void reconnect();
-    void socketError();
-    void dataReceived();
-    void doStartNext();
-    void jobDone( KJob* job );
-
-  private:
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void reconnect() )
+    Q_PRIVATE_SLOT( d, void socketError() )
+    Q_PRIVATE_SLOT( d, void dataReceived() )
+    Q_PRIVATE_SLOT( d, void doStartNext() )
+    Q_PRIVATE_SLOT( d, void jobDone( KJob* ) )
 };
 
 }

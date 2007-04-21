@@ -245,17 +245,11 @@ class AKONADI_EXPORT Job : public KCompositeJob
     virtual void slotResult( KJob* job );
 
   private:
-    void handleResponse( const QByteArray &tag, const QByteArray &data );
-    void startQueued();
-    void lostConnection();
+    class Private;
+    Private* const d;
 
-  private Q_SLOTS:
-    void slotSubJobAboutToStart( Akonadi::Job* job );
-    void startNext();
-
-  private:
-    class JobPrivate;
-    JobPrivate* const d;
+    Q_PRIVATE_SLOT( d, void slotSubJobAboutToStart( Akonadi::Job* ) )
+    Q_PRIVATE_SLOT( d, void startNext() )
 };
 
 }

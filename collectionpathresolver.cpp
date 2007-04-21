@@ -29,6 +29,14 @@ using namespace Akonadi;
 class CollectionPathResolver::Private
 {
   public:
+    Private( CollectionPathResolver *parent )
+      : mParent( parent )
+    {
+    }
+
+    void jobResult( KJob* );
+
+    CollectionPathResolver *mParent;
     int colId;
     QString path;
     bool pathToId;
@@ -36,9 +44,59 @@ class CollectionPathResolver::Private
     Collection currentNode;
 };
 
+void CollectionPathResolver::Private::jobResult(KJob *job )
+{
+  if ( job->error() )
+    return;
+
+  CollectionListJob *list = static_cast<CollectionListJob*>( job );
+  CollectionListJob *nextJob = 0;
+  const Collection::List cols = list->collections();
+  if ( cols.isEmpty() ) {
+      mParent->setError( Unknown );
+      mParent->setErrorText( i18n( "No such collection.") );
+      mParent->emitResult();
+      return;
+  }
+
+  if ( pathToId ) {
+    const QString currentPart = pathParts.takeFirst();
+    bool found = false;
+    foreach ( const Collection c, cols ) {
+      if ( c.name() == currentPart ) {
+        currentNode = c;
+        found = true;
+        break;
+      }
+    }
+    if ( !found ) {
+      mParent->setError( Unknown );
+      mParent->setErrorText( i18n( "No such collection.") );
+      mParent->emitResult();
+      return;
+    }
+    if ( pathParts.isEmpty() ) {
+      colId = currentNode.id();
+      mParent->emitResult();
+      return;
+    }
+    nextJob = new CollectionListJob( currentNode, CollectionListJob::Flat, mParent );
+  } else {
+    Collection col = list->collections().first();
+    currentNode = Collection( col.parent() );
+    pathParts.prepend( col.name() );
+    if ( currentNode == Collection::root() ) {
+      mParent->emitResult();
+      return;
+    }
+    nextJob = new CollectionListJob( currentNode, CollectionListJob::Local, mParent );
+  }
+  mParent->connect( nextJob, SIGNAL(result(KJob*)), mParent, SLOT(jobResult(KJob*)) );
+}
+
 CollectionPathResolver::CollectionPathResolver(const QString & path, QObject * parent)
   : Job( parent ),
-    d( new Private )
+    d( new Private( this ) )
 {
   d->pathToId = true;
   d->path = path;
@@ -53,7 +111,7 @@ CollectionPathResolver::CollectionPathResolver(const QString & path, QObject * p
 
 CollectionPathResolver::CollectionPathResolver(const Collection & collection, QObject * parent)
   : Job( parent ),
-    d( new Private )
+    d( new Private( this ) )
 {
   d->pathToId = false;
   d->colId = collection.id();
@@ -96,56 +154,6 @@ void CollectionPathResolver::doStart()
     job = new CollectionListJob( d->currentNode, CollectionListJob::Local, this );
   }
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
-}
-
-void CollectionPathResolver::jobResult(KJob *job )
-{
-  if ( job->error() )
-    return;
-
-  CollectionListJob *list = static_cast<CollectionListJob*>( job );
-  CollectionListJob *nextJob = 0;
-  const Collection::List cols = list->collections();
-  if ( cols.isEmpty() ) {
-      setError( Unknown );
-      setErrorText( i18n( "No such collection.") );
-      emitResult();
-      return;
-  }
-
-  if ( d->pathToId ) {
-    const QString currentPart = d->pathParts.takeFirst();
-    bool found = false;
-    foreach ( const Collection c, cols ) {
-      if ( c.name() == currentPart ) {
-        d->currentNode = c;
-        found = true;
-        break;
-      }
-    }
-    if ( !found ) {
-      setError( Unknown );
-      setErrorText( i18n( "No such collection.") );
-      emitResult();
-      return;
-    }
-    if ( d->pathParts.isEmpty() ) {
-      d->colId = d->currentNode.id();
-      emitResult();
-      return;
-    }
-    nextJob = new CollectionListJob( d->currentNode, CollectionListJob::Flat, this );
-  } else {
-    Collection col = list->collections().first();
-    d->currentNode = Collection( col.parent() );
-    d->pathParts.prepend( col.name() );
-    if ( d->currentNode == Collection::root() ) {
-      emitResult();
-      return;
-    }
-    nextJob = new CollectionListJob( d->currentNode, CollectionListJob::Local, this );
-  }
-  connect( nextJob, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
 }
 
 #include "collectionpathresolver.moc"

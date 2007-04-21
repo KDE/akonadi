@@ -58,17 +58,16 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     virtual void dropEvent( QDropEvent *event );
     virtual void contextMenuEvent( QContextMenuEvent *event );
 
-  private slots:
-    void dragExpand();
-    void createCollection();
-    void createResult( KJob* job );
-    void deleteCollection();
-    void deleteResult( KJob* job );
-    void updateActions( const QModelIndex &current );
-
   private:
     class Private;
     Private * const d;
+
+    Q_PRIVATE_SLOT( d, void dragExpand() )
+    Q_PRIVATE_SLOT( d, void createCollection() )
+    Q_PRIVATE_SLOT( d, void createResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void deleteCollection() )
+    Q_PRIVATE_SLOT( d, void deleteResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void updateActions( const QModelIndex& ) )
 };
 
 }

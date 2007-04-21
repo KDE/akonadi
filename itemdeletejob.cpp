@@ -24,7 +24,7 @@
 
 using namespace Akonadi;
 
-class Akonadi::ItemDeleteJobPrivate
+class ItemDeleteJob::Private
 {
   public:
     enum State {
@@ -34,16 +34,30 @@ class Akonadi::ItemDeleteJobPrivate
       Commit
     };
 
+    Private( ItemDeleteJob *parent )
+      : mParent( parent )
+    {
+    }
+
+    void jobDone( KJob* );
+
+    ItemDeleteJob *mParent;
     DataReference ref;
     State state;
 };
 
-ItemDeleteJob::ItemDeleteJob(const DataReference & ref, QObject * parent) :
-    Job( parent ),
-    d( new ItemDeleteJobPrivate )
+void ItemDeleteJob::Private::jobDone( KJob * job )
+{
+  if ( !job->error() ) // error is already handled by KCompositeJob
+    mParent->emitResult();
+}
+
+ItemDeleteJob::ItemDeleteJob( const DataReference & ref, QObject * parent )
+  : Job( parent ),
+    d( new Private( this ) )
 {
   d->ref = ref;
-  d->state = ItemDeleteJobPrivate::Begin;
+  d->state = Private::Begin;
 }
 
 ItemDeleteJob::~ ItemDeleteJob()
@@ -66,12 +80,6 @@ void ItemDeleteJob::doStart()
   TransactionCommitJob *commit = new TransactionCommitJob( this );
   connect( commit, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
   addSubjob( commit );
-}
-
-void ItemDeleteJob::jobDone(KJob * job)
-{
-  if ( !job->error() ) // error is already handled by KCompositeJob
-    emitResult();
 }
 
 #include "itemdeletejob.moc"

@@ -31,6 +31,7 @@
 #include <QtNetwork/QTcpSocket>
 
 #include "job.h"
+#include "job_p.h"
 #include "imapparser.h"
 #include "session.h"
 
@@ -120,17 +121,70 @@ uint qHash( const DataReference& reference )
 }
 
 
-class Job::JobPrivate
+void Job::Private::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  public:
-    Job *parent;
-    Job *currentSubJob;
-    QByteArray tag;
-    Session* session;
-};
+  if ( currentSubJob ) {
+    currentSubJob->d->handleResponse( tag, data );
+    return;
+  }
+
+  if ( tag == tag ) {
+    if ( data.startsWith( "NO " ) || data.startsWith( "BAD " ) ) {
+      QString msg = QString::fromUtf8( data );
+
+      msg.remove( 0, msg.startsWith( QLatin1String( "NO " ) ) ? 3 : 4 );
+
+      if ( msg.endsWith( QLatin1String( "\r\n" ) ) )
+        msg.chop( 2 );
+
+      mParent->setError( Unknown );
+      mParent->setErrorText( msg );
+      mParent->emitResult();
+      return;
+    } else if ( data.startsWith( "OK" ) ) {
+      mParent->emitResult();
+      return;
+    }
+  }
+
+  mParent->doHandleResponse( tag, data );
+}
+
+void Job::Private::startQueued()
+{
+  emit mParent->aboutToStart( mParent );
+  mParent->doStart();
+}
+
+void Job::Private::lostConnection()
+{
+  if ( currentSubJob ) {
+    currentSubJob->d->lostConnection();
+  } else {
+    mParent->kill( KJob::Quietly );
+    mParent->setError( ConnectionFailed );
+    mParent->emitResult();
+  }
+}
+
+void Job::Private::slotSubJobAboutToStart( Job * job )
+{
+  Q_ASSERT( currentSubJob == 0 );
+  currentSubJob = job;
+}
+
+void Job::Private::startNext()
+{
+  if ( !currentSubJob && mParent->hasSubjobs() ) {
+    Job *job = dynamic_cast<Akonadi::Job*>( mParent->subjobs().first() );
+    Q_ASSERT( job );
+    job->d->startQueued();
+  }
+}
+
 
 Job::Job( QObject *parent )
-  : KCompositeJob( parent ), d( new JobPrivate )
+  : KCompositeJob( parent ), d( new Private( this ) )
 {
   d->parent = dynamic_cast<Job*>( parent );
   d->currentSubJob = 0;
@@ -205,35 +259,6 @@ void Job::writeData( const QByteArray & data )
   d->session->writeData( data );
 }
 
-void Job::handleResponse( const QByteArray & tag, const QByteArray & data )
-{
-  if ( d->currentSubJob ) {
-    d->currentSubJob->handleResponse( tag, data );
-    return;
-  }
-
-  if ( tag == d->tag ) {
-    if ( data.startsWith( "NO " ) || data.startsWith( "BAD " ) ) {
-      QString msg = QString::fromUtf8( data );
-
-      msg.remove( 0, msg.startsWith( QLatin1String( "NO " ) ) ? 3 : 4 );
-
-      if ( msg.endsWith( QLatin1String( "\r\n" ) ) )
-        msg.chop( 2 );
-
-      setError( Unknown );
-      setErrorText( msg );
-      emitResult();
-      return;
-    } else if ( data.startsWith( "OK" ) ) {
-      emitResult();
-      return;
-    }
-  }
-
-  doHandleResponse( tag, data );
-}
-
 bool Job::addSubjob( KJob * job )
 {
   bool rv = KCompositeJob::addSubjob( job );
@@ -242,12 +267,6 @@ bool Job::addSubjob( KJob * job )
     QTimer::singleShot( 0, this, SLOT(startNext()) );
   }
   return rv;
-}
-
-void Job::slotSubJobAboutToStart( Job * job )
-{
-  Q_ASSERT( d->currentSubJob == 0 );
-  d->currentSubJob = job;
 }
 
 void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
@@ -262,12 +281,6 @@ QByteArray Job::sessionId() const
   return d->session->sessionId();
 }
 
-void Job::startQueued()
-{
-  emit aboutToStart( this );
-  doStart();
-}
-
 void Job::slotResult(KJob * job)
 {
   Q_ASSERT( job == d->currentSubJob );
@@ -275,26 +288,6 @@ void Job::slotResult(KJob * job)
   d->currentSubJob = 0;
   if ( !job->error() )
     QTimer::singleShot( 0, this, SLOT(startNext()) );
-}
-
-void Job::startNext()
-{
-  if ( !d->currentSubJob && hasSubjobs() ) {
-    Job *job = dynamic_cast<Akonadi::Job*>( subjobs().first() );
-    Q_ASSERT( job );
-    job->startQueued();
-  }
-}
-
-void Job::lostConnection()
-{
-  if ( d->currentSubJob ) {
-    d->currentSubJob->lostConnection();
-  } else {
-    kill( KJob::Quietly );
-    setError( ConnectionFailed );
-    emitResult();
-  }
 }
 
 #include "job.moc"

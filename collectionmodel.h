@@ -157,45 +157,17 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     bool canCreateCollection( const QModelIndex &parent ) const;
 
-  private Q_SLOTS:
-    /**
-      Removes a the given collection from the model.
-    */
-    void collectionRemoved( int collection );
-
-    /**
-      Notify the model about collection changes.
-    */
-    void collectionChanged( const Akonadi::Collection &collection );
-
-    /**
-      Connected to the collection status job.
-    */
-    void updateDone( KJob *job );
-
-    /**
-      Notify the model about collection status changes.
-    */
-    void collectionStatusChanged( int collection, const Akonadi::CollectionStatus &status );
-
-    /**
-      Connected to the list jobs.
-    */
-    void listDone( KJob *job );
-
-    /**
-      Connected to edit jobs.
-    */
-    void editDone( KJob *job );
-
-    /**
-      Connected to item append jobs used for DND.
-    */
-    void appendDone( KJob *job );
-
   private:
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void collectionRemoved( int ) )
+    Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d, void updateDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void collectionStatusChanged( int, const Akonadi::CollectionStatus& ) )
+    Q_PRIVATE_SLOT( d, void listDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void editDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void appendDone( KJob* ) )
 };
 
 }
