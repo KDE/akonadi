@@ -32,6 +32,7 @@ set( akonadi_LIB_SRC
 	collectionstatusjob.cpp
 	collectionview.cpp
 	control.cpp
+	datareference.cpp
 	expungejob.cpp
 	imapparser.cpp
 	item.cpp
@@ -84,6 +85,7 @@ install( FILES
 	collectionstatusjob.h
 	collectionview.h
 	control.h
+	datareference.h
 	expungejob.h
 	imapparser.h
 	item.h

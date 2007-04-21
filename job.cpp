@@ -23,8 +23,6 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QEventLoop>
-#include <QtCore/QHash>
-#include <QtCore/QSharedData>
 #include <QtCore/QTimer>
 #include <QtCore/QTextStream>
 #include <QtNetwork/QHostAddress>
@@ -36,90 +34,6 @@
 #include "session.h"
 
 using namespace Akonadi;
-
-class DataReference::Private : public QSharedData
-{
-  public:
-    Private()
-      : mId( -1 )
-    {
-    }
-
-    Private( const Private &other )
-      : QSharedData( other )
-    {
-      mId = other.mId;
-      mRemoteId = other.mRemoteId;
-    }
-
-    int mId;
-    QString mRemoteId;
-};
-
-DataReference::DataReference()
-  : d( new Private )
-{
-}
-
-DataReference::DataReference( int id, const QString &remoteId )
-  : d( new Private )
-{
-  d->mId = id;
-  d->mRemoteId = remoteId;
-}
-
-DataReference::DataReference( const DataReference &other )
-  : d( other.d )
-{
-}
-
-DataReference::~DataReference()
-{
-}
-
-DataReference& DataReference::operator=( const DataReference &other )
-{
-  if ( this != &other )
-    d = other.d;
-
-  return *this;
-}
-
-int DataReference::id() const
-{
-  return d->mId;
-}
-
-QString DataReference::remoteId() const
-{
-  return d->mRemoteId;
-}
-
-bool DataReference::isNull() const
-{
-  return d->mId < 0;
-}
-
-bool DataReference::operator==( const DataReference & other ) const
-{
-  return d->mId == other.d->mId;
-}
-
-bool DataReference::operator !=( const DataReference & other ) const
-{
-  return !(*this == other);
-}
-
-bool DataReference::operator<( const DataReference & other ) const
-{
-  return d->mId < other.d->mId;
-}
-
-uint qHash( const DataReference& reference )
-{
-  return qHash( reference.id() );
-}
-
 
 void Job::Private::handleResponse( const QByteArray & tag, const QByteArray & data )
 {

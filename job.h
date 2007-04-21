@@ -24,86 +24,15 @@
 #ifndef AKONADI_JOB_H
 #define AKONADI_JOB_H
 
-#include <QtCore/QMetaType>
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QSharedDataPointer>
-#include <QtCore/QUrl>
 
 #include <kcompositejob.h>
+#include <libakonadi/datareference.h>
 
 #include <kdepim_export.h>
 
 namespace Akonadi {
-
-/**
-  This class encapsulates a reference to a pim object in
-  the pim storage service.
- */
-class AKONADI_EXPORT DataReference
-{
-  public:
-    typedef QList<DataReference> List;
-
-    /**
-      Creates an empty DataReference.
-     */
-    DataReference();
-
-    /**
-      Creates a new DataReference with the given local @p id and @p remoteId.
-     */
-    DataReference( int id, const QString &remoteId );
-
-    /**
-      Copy constructor.
-     */
-    DataReference( const DataReference &other );
-
-    /**
-      Destroys the DataReference.
-     */
-    ~DataReference();
-
-    DataReference& operator=( const DataReference &other );
-
-    /**
-      Returns the local id of the DataReference or an invalid string if no
-      id is set.
-     */
-    int id() const;
-
-    /**
-      Returns the remote of the DataReference or an empty string if no
-      remote id is set.
-     */
-    QString remoteId() const;
-
-    /**
-      Returns true if this is a empty reference, ie. one created with
-      DataReference().
-     */
-    bool isNull() const;
-
-    /**
-      Returns true if two references are equal.
-     */
-    bool operator==( const DataReference &other ) const;
-
-    /**
-      Returns true if two references are not equal.
-     */
-    bool operator!=( const DataReference &other ) const;
-
-    /**
-      Compares two references.
-     */
-    bool operator<( const DataReference &other ) const;
-
-  private:
-    class Private;
-    QSharedDataPointer<Private> d;
-};
 
 /**
   This class encapsulates a request to the pim storage service,
@@ -253,9 +182,5 @@ class AKONADI_EXPORT Job : public KCompositeJob
 };
 
 }
-
-AKONADI_EXPORT uint qHash( const Akonadi::DataReference& ref );
-
-Q_DECLARE_METATYPE(Akonadi::DataReference)
 
 #endif
