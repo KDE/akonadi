@@ -37,12 +37,12 @@ using namespace Akonadi;
 
 void Job::Private::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  if ( currentSubJob ) {
-    currentSubJob->d->handleResponse( tag, data );
+  if ( mCurrentSubJob ) {
+    mCurrentSubJob->d->handleResponse( tag, data );
     return;
   }
 
-  if ( tag == tag ) {
+  if ( tag == mTag ) {
     if ( data.startsWith( "NO " ) || data.startsWith( "BAD " ) ) {
       QString msg = QString::fromUtf8( data );
 
@@ -72,8 +72,8 @@ void Job::Private::startQueued()
 
 void Job::Private::lostConnection()
 {
-  if ( currentSubJob ) {
-    currentSubJob->d->lostConnection();
+  if ( mCurrentSubJob ) {
+    mCurrentSubJob->d->lostConnection();
   } else {
     mParent->kill( KJob::Quietly );
     mParent->setError( ConnectionFailed );
@@ -83,13 +83,13 @@ void Job::Private::lostConnection()
 
 void Job::Private::slotSubJobAboutToStart( Job * job )
 {
-  Q_ASSERT( currentSubJob == 0 );
-  currentSubJob = job;
+  Q_ASSERT( mCurrentSubJob == 0 );
+  mCurrentSubJob = job;
 }
 
 void Job::Private::startNext()
 {
-  if ( !currentSubJob && mParent->hasSubjobs() ) {
+  if ( !mCurrentSubJob && mParent->hasSubjobs() ) {
     Job *job = dynamic_cast<Akonadi::Job*>( mParent->subjobs().first() );
     Q_ASSERT( job );
     job->d->startQueued();
@@ -100,21 +100,21 @@ void Job::Private::startNext()
 Job::Job( QObject *parent )
   : KCompositeJob( parent ), d( new Private( this ) )
 {
-  d->parent = dynamic_cast<Job*>( parent );
-  d->currentSubJob = 0;
-  d->session = dynamic_cast<Session*>( parent );
+  d->mParentJob = dynamic_cast<Job*>( parent );
+  d->mCurrentSubJob = 0;
+  d->mSession = dynamic_cast<Session*>( parent );
 
-  if ( !d->session ) {
-    if ( !d->parent )
-      d->session = Session::defaultSession();
+  if ( !d->mSession ) {
+    if ( !d->mParentJob )
+      d->mSession = Session::defaultSession();
     else
-      d->session = d->parent->d->session;
+      d->mSession = d->mParentJob->d->mSession;
   }
 
-  if ( !d->parent )
-    d->session->addJob( this );
+  if ( !d->mParentJob )
+    d->mSession->addJob( this );
   else
-    d->parent->addSubjob( this );
+    d->mParentJob->addSubjob( this );
 }
 
 Job::~Job()
@@ -156,21 +156,21 @@ QString Job::errorString() const
 
 QByteArray Job::newTag( )
 {
-  if ( d->parent )
-    d->tag = d->parent->newTag();
+  if ( d->mParentJob )
+    d->mTag = d->mParentJob->newTag();
   else
-    d->tag = QByteArray::number( d->session->nextTag() );
-  return d->tag;
+    d->mTag = QByteArray::number( d->mSession->nextTag() );
+  return d->mTag;
 }
 
 QByteArray Job::tag() const
 {
-  return d->tag;
+  return d->mTag;
 }
 
 void Job::writeData( const QByteArray & data )
 {
-  d->session->writeData( data );
+  d->mSession->writeData( data );
 }
 
 bool Job::addSubjob( KJob * job )
@@ -190,16 +190,16 @@ void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
 
 QByteArray Job::sessionId() const
 {
-  if ( d->parent )
-    return d->parent->sessionId();
-  return d->session->sessionId();
+  if ( d->mParentJob )
+    return d->mParentJob->sessionId();
+  return d->mSession->sessionId();
 }
 
 void Job::slotResult(KJob * job)
 {
-  Q_ASSERT( job == d->currentSubJob );
+  Q_ASSERT( job == d->mCurrentSubJob );
   KCompositeJob::slotResult( job );
-  d->currentSubJob = 0;
+  d->mCurrentSubJob = 0;
   if ( !job->error() )
     QTimer::singleShot( 0, this, SLOT(startNext()) );
 }

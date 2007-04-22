@@ -29,8 +29,8 @@ namespace Akonadi {
 class Job::Private
 {
   public:
-    Private( Job *_parent )
-      : mParent( _parent )
+    Private( Job *parent )
+      : mParent( parent )
     {
     }
 
@@ -41,10 +41,10 @@ class Job::Private
     void startNext();
 
     Job *mParent;
-    Job *parent;
-    Job *currentSubJob;
-    QByteArray tag;
-    Session* session;
+    Job *mParentJob;
+    Job *mCurrentSubJob;
+    QByteArray mTag;
+    Session* mSession;
 };
 
 }

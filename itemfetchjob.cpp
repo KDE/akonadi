@@ -169,7 +169,7 @@ DataReference ItemFetchJob::parseUid( const QList< QByteArray > & fetchResponse 
   if ( rindex >= 0 && fetchResponse.count() > rindex + 1 )
     remoteId = QString::fromLatin1( fetchResponse[ rindex + 1 ] );
 
-  return DataReference( fetchResponse[index + 1].toUInt(), remoteId );
+  return DataReference( fetchResponse[index + 1].toInt(), remoteId );
 }
 
 void ItemFetchJob::addFetchField(const QByteArray & field)
