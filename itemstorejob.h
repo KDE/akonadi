@@ -36,13 +36,6 @@ class AKONADI_EXPORT ItemStoreJob : public Job
 
   public:
     /**
-      Writes modifications of @p item back to the storage.
-      @param item The modified items. Must not be 0.
-      @param parent The parent object.
-    */
-    explicit ItemStoreJob( Item* item, QObject *parent = 0 );
-
-    /**
       Modifies the item with the identifier @p ref.
       @param ref The reference of the item to change.
       @param parent The parent object.

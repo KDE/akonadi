@@ -104,19 +104,6 @@ void ItemStoreJob::Private::sendNextCommand()
 }
 
 
-
-ItemStoreJob::ItemStoreJob(Item * item, QObject * parent) :
-    Job ( parent ),
-    d( new Private( this ) )
-{
-  Q_ASSERT( item );
-  d->flags = item->flags();
-  d->ref = item->reference();
-  d->data = item->data();
-  d->operations.insert( Private::Data );
-  d->operations.insert( Private::SetFlags );
-}
-
 ItemStoreJob::ItemStoreJob(const DataReference &ref, QObject * parent) :
     Job( parent ),
     d( new Private( this ) )
