@@ -103,6 +103,12 @@ void ItemHydra::testItemCopy()
 
 }
 
+void ItemHydra::testEmptyPayload()
+{
+    Item i1;
+    Item i2;
+    i1 = i2; // should not crash
+}
 
 
 #include "itemhydratest.moc"

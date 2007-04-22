@@ -55,7 +55,10 @@ Item::Item( const DataReference & reference )
 Item::Item( const Item &other )
   : d( other.d ), m_payload( 0 )
 {
+  if ( other.m_payload )
     m_payload = other.m_payload->clone();
+  else
+    m_payload = 0;
 }
 
 Item::~Item( )
@@ -117,7 +120,10 @@ Item& Item::operator=( const Item & other )
 {
   if ( this != &other ) {
     d = other.d;
-    m_payload = other.m_payload->clone();
+    if ( other.m_payload )
+      m_payload = other.m_payload->clone();
+    else
+      m_payload = 0;
   }
 
   return *this;

@@ -33,6 +33,7 @@ class ItemHydra: public QObject
     void testItemValuePayload();
     void testItemPointerPayload();
     void testItemCopy();
+    void testEmptyPayload();
 };
 
 #endif
