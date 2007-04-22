@@ -128,3 +128,8 @@ Item& Item::operator=( const Item & other )
 
   return *this;
 }
+
+bool Item::hasPayload() const
+{
+  return m_payload != 0;
+}

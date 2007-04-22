@@ -40,11 +40,11 @@ struct Payload : public PayloadBase
     Payload( T p ) { payload = p; }
     Payload( const Payload& other )
     {
-       payload = other.payload; 
+       payload = other.payload;
     }
     Payload & operator=( const Payload & other )
     {
-       payload = other.payload; 
+       payload = other.payload;
     }
 
     PayloadBase * clone() const
@@ -145,14 +145,23 @@ class AKONADI_EXPORT Item
     */
     void setMimeType( const QString &mimeType );
 
+    /**
+      Assignment operator.
+    */
     Item& operator=( const Item &other );
 
+    /**
+      Sets the payload object of this PIM item.
+    */
     template <typename T>
     void setPayload( T p )
     {
             m_payload = new Payload<T>( p );
     }
 
+    /**
+      Returns the payload object of this PIM item.
+    */
     template <typename T>
     T payload()
     {
@@ -162,11 +171,19 @@ class AKONADI_EXPORT Item
         return p->payload;
     }
 
+    /**
+      Returns the payload object of this PIM item.
+    */
     template <typename T>
     const T payload() const
     {
         return const_cast<Item*>( this )->payload<T>();
     }
+
+    /**
+      Returns true if this item has a payload object.
+    */
+    bool hasPayload() const;
 
   private:
     class Private;

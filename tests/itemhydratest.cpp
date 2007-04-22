@@ -62,10 +62,12 @@ void ItemHydra::testItemValuePayload()
     Item f;
     Rudi rudi;
     f.setPayload( rudi );
+    QVERIFY( f.hasPayload() );
 
     Item b;
     Gerd gerd;
     b.setPayload( gerd );
+    QVERIFY( b.hasPayload() );
 
     QCOMPARE( f.payload<Rudi>(), rudi );
     QVERIFY( !(f.payload<Rudi>() == gerd ) );
@@ -82,6 +84,7 @@ void ItemHydra::testItemPointerPayload()
     //f.setPayload( rudi );
 
     f.setPayload( std::auto_ptr<Rudi>( rudi ) );
+    QVERIFY( f.hasPayload() );
     QCOMPARE( f.payload< std::auto_ptr<Rudi> >()->who, rudi->who );
 
     // below doesn't compile, hopefully
@@ -99,6 +102,7 @@ void ItemHydra::testItemCopy()
 
     Item s;
     s = f;
+    QVERIFY( s.hasPayload() );
     QCOMPARE( s.payload<Rudi>(), rudi );
 
 }
@@ -108,6 +112,9 @@ void ItemHydra::testEmptyPayload()
     Item i1;
     Item i2;
     i1 = i2; // should not crash
+
+    QVERIFY( !i1.hasPayload() );
+    QVERIFY( !i2.hasPayload() );
 }
 
 
