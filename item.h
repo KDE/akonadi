@@ -23,9 +23,12 @@
 #include <libakonadi/job.h>
 
 #include <QtCore/QByteArray>
+#include <QtCore/QDebug>
 #include <QtCore/QSet>
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QStringList>
+
+#include <typeinfo>
 
 namespace Akonadi {
 
@@ -33,6 +36,7 @@ struct PayloadBase
 {
     virtual ~PayloadBase() { };
     virtual PayloadBase * clone() const = 0;
+    virtual const char* typeName() const = 0;
 };
 
 template <typename T>
@@ -52,6 +56,12 @@ struct Payload : public PayloadBase
     {
         return new Payload<T>( const_cast<Payload<T>* >(this)->payload);
     }
+
+    const char* typeName() const
+    {
+      return typeid(this).name();
+    }
+
     T payload;
 };
 
@@ -185,6 +195,10 @@ class AKONADI_EXPORT Item
     {
         if ( !m_payload ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "No valid payload set.");
         Payload<T> *p = dynamic_cast<Payload<T>*>(m_payload);
+        // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
+        if ( !p && strcmp( m_payload->typeName(), typeid(p).name() ) == 0 ) {
+          p = reinterpret_cast<Payload<T>*>( m_payload );
+        }
         if ( !p) Q_ASSERT_X(false, "Akonadi::Item::payload()", "Wrong payload type.");
         return p->payload;
     }
