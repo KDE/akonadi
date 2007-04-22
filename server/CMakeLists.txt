@@ -105,7 +105,7 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer
 )
 
-qt4_generate_dbus_interface( ../resources/include/resource.h org.kde.Akonadi.Resource.xml )
+qt4_generate_dbus_interface( ../libakonadi/resource.h org.kde.Akonadi.Resource.xml )
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.AgentManager.xml
   interfaces/org.kde.Akonadi.SearchProviderManager.xml

@@ -16,7 +16,7 @@ set( control_SRCS
   searchprovidermanager.cpp
 )
 
-qt4_generate_dbus_interface( ../../resources/include/resource.h org.kde.Akonadi.Resource.xml )
+qt4_generate_dbus_interface( ../../libakonadi/resource.h org.kde.Akonadi.Resource.xml )
 qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
 qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.ProfileManager.xml profilemanager.h ProfileManager )
 qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.SearchProviderManager.xml searchprovidermanager.h Akonadi::SearchProviderManager )
