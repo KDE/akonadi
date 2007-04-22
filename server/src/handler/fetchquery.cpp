@@ -159,10 +159,6 @@ bool FetchQuery::Attribute::parse( const QByteArray &attribute )
     mType = Body_Structure;
   else if ( attribute.toUpper().startsWith( "BODY" ) )
     mType = Body;
-  else if ( attribute.toUpper().startsWith( "UID" ) )
-    mType = Uid;
-  else if ( attribute.toUpper().startsWith( "REMOTEID" ) )
-    mType = RemoteId;
 
   return true;
 }
@@ -194,10 +190,6 @@ void FetchQuery::Attribute::dump()
     type = "BODY.STRUCTURE";
   else if ( mType == Body )
     type = "BODY";
-  else if ( mType == Uid )
-    type = "UID";
-  else if ( mType == RemoteId )
-    type = "REMOTEID";
 
   qDebug( "Attribute: %s", type.constData() );
 }

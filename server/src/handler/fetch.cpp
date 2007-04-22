@@ -99,6 +99,11 @@ bool Fetch::handleLine( const QByteArray& line )
 QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQuery  )
 {
   QList<QByteArray> attributes;
+  attributes.append( "UID " + QByteArray::number( item.id() ) );
+  attributes.append( "REMOTEID \"" + item.remoteId() + '"' );
+  MimeType mimeType = item.mimeType();
+  attributes.append( "MIMETYPE \"" + mimeType.name().toUtf8() + "\"" );
+
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Envelope ) ) {
     attributes.append( "ENVELOPE " + buildEnvelope( item, fetchQuery ) );
   }
@@ -110,8 +115,6 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
     for ( int i = 0; i < flagList.count(); ++i )
       flags.append( flagList[ i ].name().toUtf8() );
 
-    MimeType mimeType = item.mimeType();
-    attributes.append( "MIMETYPE \"" + mimeType.name().toUtf8() + "\"" );
 
     attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
   }
@@ -135,14 +138,6 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
 
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Body_Structure ) ) {
-  }
-
-  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Uid ) || fetchQuery.isUidFetch() ) {
-    attributes.append( "UID " + QByteArray::number( item.id() ) );
-  }
-
-  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RemoteId ) ) {
-    attributes.append( "REMOTEID " + item.remoteId() );
   }
 
   QByteArray attributesString;
