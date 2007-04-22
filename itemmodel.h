@@ -97,14 +97,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
   protected:
     /**
-      Creates a fetchjob which will fetch the items from the backend.
-      Sub-classes should re-implement this method and return an appropriate
-      ItemFetchJob sub-class for their corresponding types.
-      Note: use session() as parent for jobs created here!
-    */
-    virtual ItemFetchJob* createFetchJob();
-
-    /**
       Returns the item at given index.
     */
     Item itemForIndex( const QModelIndex &index ) const;
@@ -119,7 +111,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void listingDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item& ) )
+    Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QStringList& ) )
     Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item& ) )
     Q_PRIVATE_SLOT( d, void itemRemoved( const Akonadi::DataReference& ) )
 };

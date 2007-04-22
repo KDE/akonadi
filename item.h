@@ -25,6 +25,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QSet>
 #include <QtCore/QSharedDataPointer>
+#include <QtCore/QStringList>
 
 namespace Akonadi {
 
@@ -124,6 +125,23 @@ class AKONADI_EXPORT Item
       @param name The flag name.
     */
     void unsetFlag( const QByteArray &name );
+
+    /**
+      Adds a new part with the given @p identifier and @p data.
+      If a part with the identifier already exists, it is overwritten.
+     */
+    void addPart( const QString &identifier, const QByteArray &data );
+
+    /**
+      Returns the data of the part with the given @p identifier or any
+      empty byte array if a part with the identifier doesn't exists.
+     */
+    QByteArray part( const QString &identifier ) const;
+
+    /**
+      Returns the list of part identifiers of this item.
+     */
+    QStringList availableParts() const;
 
     /**
       Returns the raw data of this item.

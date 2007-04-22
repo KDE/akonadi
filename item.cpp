@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include <QtCore/QMap>
 #include <QtCore/QSharedData>
 
 #include "item.h"
@@ -38,16 +39,18 @@ class Item::Private : public QSharedData
       flags = other.flags;
       data = other.data;
       mimeType = other.mimeType;
+      mParts = other.mParts;
     }
 
     DataReference reference;
     Item::Flags flags;
     QByteArray data;
     QString mimeType;
+    QMap<QString, QByteArray> mParts;
 };
 
 Item::Item( const DataReference & reference )
-  : d( new Private ), m_payload(0)
+  : d( new Private ), m_payload( 0 )
 {
   d->reference = reference;
 }
@@ -94,6 +97,21 @@ void Item::unsetFlag( const QByteArray & name )
 bool Item::hasFlag( const QByteArray & name ) const
 {
   return d->flags.contains( name );
+}
+
+void Item::addPart( const QString &identifier, const QByteArray &data )
+{
+  d->mParts.insert( identifier, data );
+}
+
+QByteArray Item::part( const QString &identifier ) const
+{
+  return d->mParts.value( identifier );
+}
+
+QStringList Item::availableParts() const
+{
+  return d->mParts.keys();
 }
 
 QByteArray Item::data() const

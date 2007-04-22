@@ -46,7 +46,7 @@ class ItemModel::Private
     }
 
     void listingDone( KJob* );
-    void itemChanged( const Akonadi::Item& );
+    void itemChanged( const Akonadi::Item&, const QStringList& );
     void itemAdded( const Akonadi::Item& );
     void itemRemoved( const Akonadi::DataReference& );
 
@@ -70,18 +70,18 @@ void ItemModel::Private::listingDone( KJob * job )
 
   // start monitor
   monitor = new Monitor( mParent );
-  monitor->fetchItemMetaData( true );
+  monitor->addFetchPart( ItemFetchJob::PartAll );
   monitor->ignoreSession( session );
   monitor->monitorCollection( collection );
-  mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item& )),
-                    mParent, SLOT(itemChanged( const Akonadi::Item& )) );
+  mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item&, const QStringList& )),
+                    mParent, SLOT(itemChanged( const Akonadi::Item&, const QStringList& )) );
   mParent->connect( monitor, SIGNAL(itemAdded( const Akonadi::Item&, const Akonadi::Collection& )),
                     mParent, SLOT(itemAdded( const Akonadi::Item& )) );
   mParent->connect( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)),
                     mParent, SLOT(itemRemoved(Akonadi::DataReference)) );
 }
 
-void ItemModel::Private::itemChanged( const Akonadi::Item &item )
+void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QStringList& )
 {
   itemRemoved( item.reference() );
   itemAdded( item );
@@ -194,8 +194,7 @@ void ItemModel::setCollection( const Collection &collection )
   delete d->monitor;
   d->monitor = 0;
   // start listing job
-  ItemFetchJob* job = createFetchJob();
-  job->setCollection( collection );
+  ItemFetchJob* job = new ItemFetchJob( collection, session() );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 }
 
@@ -223,11 +222,6 @@ Item ItemModel::itemForIndex( const QModelIndex & index ) const
   Q_ASSERT( item.isValid() );
 
   return item;
-}
-
-ItemFetchJob* ItemModel::createFetchJob()
-{
-  return new ItemFetchJob( session() );
 }
 
 Session * ItemModel::session() const

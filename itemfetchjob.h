@@ -34,13 +34,17 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     Q_OBJECT
   public:
     /**
-      Creates a new item fetch job.
-      @param parent The parent object.
-    */
-    explicit ItemFetchJob( QObject *parent = 0 );
+      The part identifier for all parts.
+     */
+    static const QLatin1String PartAll;
 
     /**
-      Create a new item list job to retrieve handles to all
+      The part identifier for envelope parts.
+     */
+    static const QLatin1String PartEnvelope;
+
+    /**
+      Create a new item list job to retrieve envelope parts of all
       items in the given collection.
       @param collection The collection to list.
       @param parent The parent object.
@@ -48,8 +52,8 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     ItemFetchJob( const Collection &collection, QObject *parent = 0 );
 
     /**
-      Creates a new item fetch job to retrieve the complete item data
-      with the given uid.
+      Creates a new item fetch job to retrieve all parts of the item
+      with the given id.
       @param ref The unique message id.
       @param parent The parent object.
     */
@@ -79,17 +83,9 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     void setUid( const DataReference &ref );
 
     /**
-      Fetch additional field.
-      @param field Additional field to fetch.
+      Choose which part(s) of the item shall be fetched.
     */
-    void addFetchField( const QByteArray &field );
-
-    /**
-      Choose whether the item data should be fetched.
-      @param fetch @c true to fetch the item data, fetch only
-      meta-data otherwise.
-    */
-    void fetchData( bool fetch );
+    void addFetchPart( const QString &identifier );
 
   protected:
     virtual void doStart();

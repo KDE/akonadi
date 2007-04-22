@@ -73,9 +73,6 @@ class AKONADI_EXPORT MessageModel : public Akonadi::ItemModel
      */
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
-  protected:
-    virtual Akonadi::ItemFetchJob* createFetchJob();
-
   private:
     class Private;
     Private* const d;

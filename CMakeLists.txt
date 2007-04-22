@@ -30,6 +30,7 @@ set( akonadi_LIB_SRC
 	collectionselectjob.cpp
 	collectionstatus.cpp
 	collectionstatusjob.cpp
+	collectionsync.cpp
 	collectionview.cpp
 	control.cpp
 	datareference.cpp
@@ -43,6 +44,7 @@ set( akonadi_LIB_SRC
 	itemstorejob.cpp
 	itemmodel.cpp
 	job.cpp
+	kcrash.cpp
 	messagecollectionmodel.cpp
   #	message.cpp
   #	messagefetchjob.cpp
@@ -51,14 +53,18 @@ set( akonadi_LIB_SRC
 	monitor_p.cpp
 	profilemanager.cpp
 	profilemodel.cpp
+	resourcebase.cpp
 	session.cpp
 	transactionjobs.cpp
 )
 
 qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
+qt4_generate_dbus_interface(resource.h org.kde.Akonadi.Resource.xml)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.AgentManager.xml)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.ProfileManager.xml)
+qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.Tracer.xml)
+qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
 
 kde4_automoc(${akonadi_LIB_SRC})
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
@@ -102,9 +108,9 @@ install( FILES
 	messagemodel.h
 	monitor.h
 	profilemanager.h
+  resource.h
+  resourcebase.h
 	session.h
 	transactionjobs.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi
 )
-
-

@@ -37,8 +37,6 @@ class Monitor::Private
   public:
     Private( Monitor *parent )
       : mParent( parent ),
-        fetchItemData( false ),
-        fetchItemMetaData( false ),
         fetchCollection( false ),
         fetchCollectionStatus( false )
     {
@@ -52,6 +50,7 @@ class Monitor::Private
     QSet<QString> mimetypes;
     bool monitorAll;
     QList<QByteArray> sessions;
+    QStringList mFetchParts;
 
     bool isCollectionMonitored( int collection, const QByteArray &resource ) const
     {
@@ -90,8 +89,6 @@ class Monitor::Private
     void slotFetchCollectionChangedFinished( KJob* );
     void slotStatusChangedFinished( KJob* );
 
-    bool fetchItemData;
-    bool fetchItemMetaData;
     bool fetchCollection;
     bool fetchCollectionStatus;
 
@@ -148,14 +145,15 @@ void Monitor::Private::slotItemChanged( const QByteArray &sessionId, int uid, co
     return;
 
   if ( isItemMonitored( uid, collection, mimetype, resource ) ) {
-    if ( fetchItemData || fetchItemMetaData ) {
-      ItemFetchJob *job = new ItemFetchJob( DataReference( uid, remoteId ), mParent );
-      job->fetchData( fetchItemData );
-      connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotFetchItemChangedFinished( KJob* ) ) );
-    } else {
+    if ( mFetchParts.isEmpty() ) {
       Item item( DataReference( uid, remoteId ) );
       item.setMimeType( mimetype );
-      emit mParent->itemChanged( item );
+      emit mParent->itemChanged( item, QStringList() );
+    } else {
+      ItemFetchJob *job = new ItemFetchJob( DataReference( uid, remoteId ), mParent );
+      foreach( QString part, mFetchParts )
+        job->addFetchPart( part );
+      connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotFetchItemChangedFinished( KJob* ) ) );
     }
   }
 
@@ -175,16 +173,17 @@ void Monitor::Private::slotItemAdded( const QByteArray &sessionId, int uid, cons
     return;
 
   if ( isItemMonitored( uid, collection, mimetype, resource ) ) {
-    if ( fetchItemData || fetchItemMetaData ) {
-      ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( uid, remoteId ), collection, mParent );
-      job->fetchData( fetchItemData );
-      connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotFetchItemAddedFinished( KJob* ) ) );
-    } else {
+    if ( mFetchParts.isEmpty() ) {
       Item item( DataReference( uid, remoteId ) );
       item.setMimeType( mimetype );
       Collection col( collection );
       col.setResource( QString::fromUtf8( resource ) );
       emit mParent->itemAdded( item, col );
+    } else {
+      ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( uid, remoteId ), collection, mParent );
+      foreach( QString part, mFetchParts )
+        job->addFetchPart( part );
+      connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotFetchItemAddedFinished( KJob* ) ) );
     }
   }
 
@@ -291,7 +290,8 @@ void Monitor::Private::slotFetchItemChangedFinished( KJob *job )
 
     const Item item = fetchJob->items().first();
     if ( item.isValid() )
-      emit mParent->itemChanged( item );
+      // TODO: pass the parts from the item fetch job here
+      emit mParent->itemChanged( item, QStringList( ItemFetchJob::PartAll ) );
   }
 }
 
@@ -381,14 +381,10 @@ void Monitor::fetchCollection(bool enable)
   d->fetchCollection = enable;
 }
 
-void Monitor::fetchItemMetaData(bool enable)
+void Monitor::addFetchPart( const QString &identifier )
 {
-  d->fetchItemMetaData = enable;
-}
-
-void Monitor::fetchItemData(bool enable)
-{
-  d->fetchItemData = enable;
+  if ( !d->mFetchParts.contains( identifier ) )
+    d->mFetchParts.append( identifier );
 }
 
 void Monitor::fetchCollectionStatus(bool enable)

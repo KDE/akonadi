@@ -101,29 +101,24 @@ class AKONADI_EXPORT Monitor : public QObject
     void fetchCollection( bool enable );
 
     /**
-      Enables automatic fetching of changed item meta-data from the server.
-      @param enable @c true to enable.
-    */
-    void fetchItemMetaData( bool enable );
-
-    /**
-      Enable automatic fetching of changed item data from the server.
-      @param enable @c true to enable.
-    */
-    void fetchItemData( bool enable );
-
-    /**
       Enable automatic fetching of changed collection status information.
       @param enable @c true to enable.
     */
     void fetchCollectionStatus( bool enable );
 
+    /**
+      Sets the part identifier of the parts that shall be fetched for
+      items. As default no parts are fetched.
+    */
+    void addFetchPart( const QString &identifier );
+
   Q_SIGNALS:
     /**
       Emitted if a monitored object has changed.
       @param item The changed item.
+      @param partIdentifiers The identifiers of the item parts that has been changed.
     */
-    void itemChanged( const Akonadi::Item &item );
+    void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
 
     /**
       Emitted if a item has been added to a monitored collection.

@@ -25,8 +25,9 @@
 #include <libakonadi/collectionlistjob.h>
 #include <libakonadi/control.h>
 #include <libakonadi/itemappendjob.h>
-#include <libakonadi/itemstorejob.h>
 #include <libakonadi/itemdeletejob.h>
+#include <libakonadi/itemfetchjob.h>
+#include <libakonadi/itemstorejob.h>
 
 #include <QtCore/QVariant>
 #include <QtGui/QApplication>
@@ -57,7 +58,7 @@ void MonitorTest::testMonitor()
   Monitor *monitor = new Monitor( this );
   monitor->monitorCollection( Collection::root() );
   monitor->fetchCollection( true );
-  monitor->fetchItemData( true );
+  monitor->addFetchPart( ItemFetchJob::PartAll );
 
   // monitor signals
   qRegisterMetaType<Akonadi::DataReference>();
@@ -69,7 +70,7 @@ void MonitorTest::testMonitor()
   QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(int,QString)) );
   QSignalSpy csspy( monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
   QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
-  QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&)) );
+  QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QStringList&)) );
   QSignalSpy irspy( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)) );
 
   QVERIFY( caspy.isValid() );

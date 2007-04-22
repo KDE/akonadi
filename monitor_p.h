@@ -40,7 +40,7 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
     Item item() const;
     Collection collection() const;
 
-    void fetchData( bool fetch );
+    void addFetchPart( const QString &identifier );
 
   protected:
     virtual void doStart();
@@ -55,7 +55,7 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
 
     Item mItem;
     Collection mCollection;
-    bool mFetchData;
+    QStringList mFetchParts;
 };
 
 }

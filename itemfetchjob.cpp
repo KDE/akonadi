@@ -41,10 +41,12 @@ class ItemFetchJob::Private
     ItemFetchJob *mParent;
     Collection collection;
     DataReference uid;
-    QList<QByteArray> fields;
     Item::List items;
-    bool fetchData;
+    QStringList mFetchParts;
 };
+
+const QLatin1String ItemFetchJob::PartAll = QLatin1String( "AkonadiItemPartAll" );
+const QLatin1String ItemFetchJob::PartEnvelope = QLatin1String( "AkonadiItemPartEnvelope" );
 
 void ItemFetchJob::Private::startFetchJob()
 {
@@ -55,11 +57,14 @@ void ItemFetchJob::Private::startFetchJob()
     command += " UID FETCH " + QByteArray::number( uid.id() );
 
   command += " (UID REMOTEID FLAGS";
-  if ( fetchData )
+  if ( mFetchParts.contains( PartAll ) )
     command += " RFC822";
 
-  foreach ( QByteArray f, fields )
-    command += ' ' + f;
+  foreach ( QString part, mFetchParts ) {
+    if ( part != PartAll && part != PartEnvelope )
+      command += ' ' + part.toUtf8();
+  }
+
   command += ')';
   mParent->writeData( command );
 }
@@ -71,19 +76,12 @@ void ItemFetchJob::Private::selectDone( KJob * job )
     startFetchJob();
 }
 
-ItemFetchJob::ItemFetchJob(QObject * parent) :
-    Job( parent ),
-    d( new Private( this ) )
-{
-  d->fetchData = false;
-}
-
 ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
     Job( parent ),
     d( new Private( this ) )
 {
   d->collection = collection;
-  d->fetchData = false;
+  d->mFetchParts.append( PartEnvelope );
 }
 
 ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
@@ -91,7 +89,7 @@ ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
     d( new Private( this ) )
 {
   setUid( ref );
-  d->fetchData = true;
+  d->mFetchParts.append( PartAll );
 }
 
 ItemFetchJob::~ ItemFetchJob( )
@@ -178,11 +176,6 @@ DataReference ItemFetchJob::parseUid( const QList< QByteArray > & fetchResponse 
   return DataReference( fetchResponse[index + 1].toInt(), remoteId );
 }
 
-void ItemFetchJob::addFetchField(const QByteArray & field)
-{
-  d->fields.append( field );
-}
-
 void ItemFetchJob::parseFlags(const QByteArray & flagData, Item &item)
 {
   QList<QByteArray> flags;
@@ -204,9 +197,10 @@ void Akonadi::ItemFetchJob::setUid(const DataReference & ref)
   d->uid = ref;
 }
 
-void ItemFetchJob::fetchData(bool fetch)
+void ItemFetchJob::addFetchPart( const QString &identifier )
 {
-  d->fetchData = fetch;
+  if ( !d->mFetchParts.contains( identifier ) )
+    d->mFetchParts.append( identifier );
 }
 
 #include "itemfetchjob.moc"

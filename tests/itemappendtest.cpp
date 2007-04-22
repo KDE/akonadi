@@ -99,7 +99,7 @@ void ItemAppendTest::testUtf8Data()
   DataReference ref = job->reference();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
-  fjob->addFetchField( "RFC822" );
+  fjob->addFetchPart( "RFC822" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   QCOMPARE( utf8string.toUtf8(), fjob->items().first().data() );

@@ -102,9 +102,4 @@ QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int
   return ItemModel::headerData( section, orientation, role );
 }
 
-ItemFetchJob* MessageModel::createFetchJob()
-{
-  return new MessageFetchJob( session() );
-}
-
 #include "messagemodel.moc"
