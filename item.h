@@ -159,7 +159,9 @@ class AKONADI_EXPORT Item
         if ( !p && strcmp( m_payload->typeName(), typeid(p).name() ) == 0 ) {
           p = reinterpret_cast<Payload<T>*>( m_payload );
         }
-        if ( !p ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "Wrong payload type.");
+        if ( !p )
+          qFatal( "Akonadi::Item::payload(): Wrong payload type (is '%s', requested '%s')",
+                  m_payload->typeName(), typeid(p).name() );
         return p->payload;
     }
 
