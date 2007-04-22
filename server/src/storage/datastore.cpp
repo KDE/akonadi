@@ -732,11 +732,20 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
   // check if that item is already been fetched by someone else
   mPendingItemDeliveriesMutex.lock();
   if ( mPendingItemDeliveries.contains( uid ) ) {
-      qDebug() << "requestItemDelivery(): item already requested by other thread - waiting";
+      qDebug() << "requestItemDelivery(): item already requested by other thread - waiting" << uid;
       mPendingItemDeliveriesCondition.wait( &mPendingItemDeliveriesMutex );
       qDebug() << "requestItemDelivery(): continuing";
-      mPendingItemDeliveriesMutex.unlock();
+      forever {
+        mPendingItemDeliveriesMutex.lock();
+        if ( !mPendingItemDeliveries.contains( uid ) ) {
+          mPendingItemDeliveriesMutex.unlock();
+          break;
+        }
+        qDebug() << "requestItemDelivery(): item still requested by other thread - waiting again" << uid;
+        mPendingItemDeliveriesCondition.wait( &mPendingItemDeliveriesMutex );
+      }
   } else {
+      qDebug() << "requestItemDelivery(): blocking uid" << uid;
       mPendingItemDeliveries << uid;
       mPendingItemDeliveriesMutex.unlock();
 
@@ -745,15 +754,18 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
             new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.name(),
                                              QLatin1String("/"), QDBusConnection::sessionBus(), this );
 
+      bool ok = false;
       if ( !interface || !interface->isValid() ) {
         qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
                                         .arg( r.name(), interface ? interface->lastError().message() : QString() );
-        return QByteArray();
+      } else {
+        ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), type );
       }
-      bool ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), type );
 
       mPendingItemDeliveriesMutex.lock();
+      qDebug() << "requestItemDelivery(): freeing uid" << uid;
       mPendingItemDeliveries.removeAll( uid );
+      mPendingItemDeliveriesCondition.wakeAll();
       mPendingItemDeliveriesMutex.unlock();
   }
 
