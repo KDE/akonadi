@@ -27,12 +27,22 @@ class QIODevice;
 
 namespace Akonadi {
 
-    class Item;
-    class ItemSerializerPlugin;
+class Item;
 
-    class AKONADI_EXPORT ItemSerializerException
-    {
-    };
+class ItemSerializerPlugin 
+{
+public:
+    virtual ~ItemSerializerPlugin() { };
+    virtual void deserialize( Item& item, const QString& label, const QByteArray& data ) const = 0;
+    virtual void deserialize( Item& item, const QString& label, const QIODevice& data ) const = 0;
+    virtual void serialize( const Item& item, const QString& label, QByteArray& data ) const = 0;
+    virtual void serialize( const Item& item, const QString& label, QIODevice& data ) const = 0;
+};
+
+
+class AKONADI_EXPORT ItemSerializerException
+{
+};
 
 /**
 */

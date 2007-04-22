@@ -19,25 +19,24 @@
 
 #include "itemserializer.h"
 #include "item.h"
+
+// Qt
 #include <QByteArray>
 #include <QIODevice>
 #include <QDebug>
+#include <QMap>
+#include <QString>
+
+// libkdepim
+#include <libkdepim/pluginloader.h>
+
+
 
 namespace Akonadi {
 
 class DefaultItemSerializerPlugin;
 
 static DefaultItemSerializerPlugin * s_p = 0;
-
-class ItemSerializerPlugin 
-{
-public:
-    virtual ~ItemSerializerPlugin() { };
-    virtual void deserialize( Item& item, const QString& label, const QByteArray& data ) const = 0;
-    virtual void deserialize( Item& item, const QString& label, const QIODevice& data ) const = 0;
-    virtual void serialize( const Item& item, const QString& label, QByteArray& data ) const = 0;
-    virtual void serialize( const Item& item, const QString& label, QIODevice& data ) const = 0;
-};
 
 class DefaultItemSerializerPlugin : public ItemSerializerPlugin
 {
@@ -74,43 +73,90 @@ public:
 
 };
 
+
+namespace {
+
+  KPIM_DEFINE_PLUGIN_LOADER( ItemSerializerPluginLoader,
+			     Akonadi::ItemSerializerPlugin,
+			     "create_item_serializer_plugin",
+			     "akonadi/plugins/serializer/*.desktop" )
+
+}
+
+
 }
 
 using namespace Akonadi;
 
+static QMap<QString, const ItemSerializerPlugin*> * all = 0;
+
+static void loadPlugins() {
+  const ItemSerializerPluginLoader* pl = ItemSerializerPluginLoader::instance();
+  if ( !pl ) {
+    qWarning() << "ItemSerializerPluginLoader: cannot instantiate plugin loader!" << endl;
+    return;
+  }
+  const QStringList types = pl->types();
+  qDebug() << "ItemSerializerPluginLoader: found " << types.size() << " plugins." << endl;
+  for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
+    const ItemSerializerPlugin * plugin = pl->createForName( *it );
+    if ( !plugin ) {
+      qWarning() << "ItemSerializerPlugin: plugin \"" << *it << "\" is not valid!" << endl;
+      continue;
+    }
+    qDebug() << "ItemSerializerPluginLoader: inserting plugin for type: " << *it;
+    all->insert( *it, plugin );
+  }
+}
+
+static void setup()
+{
+    if (!all) {
+        all = new QMap<QString, const ItemSerializerPlugin*>();
+        loadPlugins();
+    }
+}
+
 /*static*/ 
 void ItemSerializer::deserialize( Item& item, const QString& label, const QByteArray& data )
 {
+    setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
 }
 
 /*static*/ 
 void ItemSerializer::deserialize( Item& item, const QString& label, const QIODevice& data )
 {
+    setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
 }
 
 /*static*/ 
 void ItemSerializer::serialize( const Item& item, const QString& label, QByteArray& data )
 {
+    setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, data );
 }
 
 /*static*/ 
 void ItemSerializer::serialize( const Item& item, const QString& label, QIODevice& data )
 {
+    setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, data );
 }
 
 /*static*/ 
 const ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetype )
 {
-    ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
-    
+    const ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
+
     // Go finding the right plugin for the mimetype
-    //
-
-
+    qDebug() << "ItemSerializer: looking for plugin for mimetype " << mimetype;
+   
+    if ( all->contains( mimetype ) ) {
+        qDebug() << "ItemSerializer: found plugin!";
+        return *(all->value(mimetype));
+    }
 
     Q_ASSERT(plugin);
     return *plugin;
