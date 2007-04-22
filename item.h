@@ -32,48 +32,7 @@
 
 namespace Akonadi {
 
-struct PayloadBase
-{
-    virtual ~PayloadBase() { };
-    virtual PayloadBase * clone() const = 0;
-    virtual const char* typeName() const = 0;
-};
-
-template <typename T>
-struct Payload : public PayloadBase
-{
-    Payload( T p ) { payload = p; }
-    Payload( const Payload& other )
-    {
-       payload = other.payload;
-    }
-    Payload & operator=( const Payload & other )
-    {
-       payload = other.payload;
-    }
-
-    PayloadBase * clone() const
-    {
-        return new Payload<T>( const_cast<Payload<T>* >(this)->payload);
-    }
-
-    const char* typeName() const
-    {
-      return typeid(this).name();
-    }
-
-    T payload;
-};
-
-template <typename T>
-struct Payload<T*> : public PayloadBase
-{
-    Payload( T* )
-    {
-        Q_ASSERT_X( false, "Akonadi::Payload", "The Item class is not intended to be used with raw pointer types. Please use a smart pointer instead." );
-    }
-};
-
+#include "itempayloadinternals_p.h"
 
 /**
   Base class for all PIM items stored in Akonadi.
@@ -194,12 +153,13 @@ class AKONADI_EXPORT Item
     T payload()
     {
         if ( !m_payload ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "No valid payload set.");
+
         Payload<T> *p = dynamic_cast<Payload<T>*>(m_payload);
         // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
         if ( !p && strcmp( m_payload->typeName(), typeid(p).name() ) == 0 ) {
           p = reinterpret_cast<Payload<T>*>( m_payload );
         }
-        if ( !p) Q_ASSERT_X(false, "Akonadi::Item::payload()", "Wrong payload type.");
+        if ( !p ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "Wrong payload type.");
         return p->payload;
     }
 
