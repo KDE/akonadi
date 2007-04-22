@@ -47,18 +47,20 @@ class Item::Private : public QSharedData
 };
 
 Item::Item( const DataReference & reference )
-  : d( new Private )
+  : d( new Private ), m_payload(0)
 {
   d->reference = reference;
 }
 
 Item::Item( const Item &other )
-  : d( other.d )
+  : d( other.d ), m_payload( 0 )
 {
+    m_payload = other.m_payload->clone();
 }
 
 Item::~Item( )
 {
+    delete m_payload;
 }
 
 bool Item::isValid() const
@@ -113,8 +115,10 @@ void Item::setMimeType( const QString & mimeType )
 
 Item& Item::operator=( const Item & other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+    m_payload = other.m_payload->clone();
+  }
 
   return *this;
 }

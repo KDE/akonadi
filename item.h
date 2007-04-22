@@ -28,6 +28,42 @@
 
 namespace Akonadi {
 
+struct PayloadBase
+{
+    virtual ~PayloadBase() { };
+    virtual PayloadBase * clone() const = 0;
+};
+
+template <typename T>
+struct Payload : public PayloadBase
+{
+    Payload( T p ) { payload = p; }
+    Payload( const Payload& other )
+    {
+       payload = other.payload; 
+    }
+    Payload & operator=( const Payload & other )
+    {
+       payload = other.payload; 
+    }
+
+    PayloadBase * clone() const
+    {
+        return new Payload<T>( const_cast<Payload<T>* >(this)->payload);
+    }
+    T payload;
+};
+
+template <typename T>
+struct Payload<T*> : public PayloadBase
+{
+    Payload( T* )
+    {
+        Q_ASSERT_X( false, "Akonadi::Payload", "The Item class is not intended to be used with raw pointer types. Please use a smart pointer instead." );
+    }
+};
+
+
 /**
   Base class for all PIM items stored in Akonadi.
   It contains type-neutral data and the unique reference.
@@ -111,9 +147,31 @@ class AKONADI_EXPORT Item
 
     Item& operator=( const Item &other );
 
+    template <typename T>
+    void setPayload( T p )
+    {
+            m_payload = new Payload<T>( p );
+    }
+
+    template <typename T>
+    T payload()
+    {
+        if ( !m_payload ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "No valid payload set.");
+        Payload<T> *p = dynamic_cast<Payload<T>*>(m_payload);
+        if ( !p) Q_ASSERT_X(false, "Akonadi::Item::payload()", "Wrong payload type.");
+        return p->payload;
+    }
+
+    template <typename T>
+    const T payload() const
+    {
+        return const_cast<Item*>( this )->payload<T>();
+    }
+
   private:
     class Private;
     QSharedDataPointer<Private> d;
+    PayloadBase * m_payload;
 };
 
 }
