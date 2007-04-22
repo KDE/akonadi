@@ -21,6 +21,7 @@
 #include "collectionselectjob.h"
 #include "imapparser.h"
 #include "itemfetchjob.h"
+#include "itemserializer.h"
 
 #include <QtCore/QDebug>
 
@@ -133,7 +134,12 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
         if ( fetch[i] == "FLAGS" )
           parseFlags( fetch[i + 1], item );
         else if ( fetch[i] == "RFC822" ) {
-          item.setData( fetch[i + 1] );
+            try {
+                ItemSerializer::deserialize( item, QString::fromLatin1(fetch[i]), fetch[i+1]);
+            } catch ( ItemSerializerException &e ) {
+                // FIXME how do we react to this? Should we still append?
+                qWarning() << "Failed to construct the payload of type: " << item.mimeType();
+            }
         } else if ( fetch[i] == "MIMETYPE" ) {
           item.setMimeType( QString::fromUtf8( fetch[i + 1] ) );
         }
