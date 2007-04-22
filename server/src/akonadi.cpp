@@ -50,7 +50,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL" )
-         && !settings.value( QLatin1String( "MYSQL/StartServer" ), true ).toBool() )
+         && settings.value( QLatin1String( "MYSQL/StartServer" ), true ).toBool() )
       startDatabaseProcess();
 
     s_instance = this;
@@ -94,7 +94,7 @@ void AkonadiServer::quit()
 
     QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver") ).toString() == QLatin1String( "QMYSQL" )
-         && !settings.value( QLatin1String( "MYSQL/StartServer" ), true ).toBool() )
+         && settings.value( QLatin1String( "MYSQL/StartServer" ), true ).toBool() )
       stopDatabaseProcess();
 
     QTimer::singleShot( 0, this, SLOT( doQuit() ) );

@@ -21,7 +21,7 @@ else (MYSQL_EMBEDDED_FOUND AND OPENSSL_FOUND)
 endif (MYSQL_EMBEDDED_FOUND AND OPENSSL_FOUND)
 add_subdirectory( tests )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fexceptions -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
 
 ########### next target ###############
 
