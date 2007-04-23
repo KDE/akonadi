@@ -18,6 +18,7 @@
 */
 
 #include "session.h"
+#include "session_p.h"
 
 #include "imapparser.h"
 #include "job.h"
@@ -33,100 +34,7 @@
 
 using namespace Akonadi;
 
-class Session::Private
-{
-  public:
-    Private( Session *parent )
-      : mParent( parent )
-    {
-    }
 
-    void startNext();
-    void reconnect();
-    void socketError();
-    void dataReceived();
-    void doStartNext();
-    void jobDone( KJob* job );
-
-    Session *mParent;
-    QByteArray sessionId;
-    QTcpSocket* socket;
-    bool connected;
-    int nextTag;
-
-    // job management
-    QQueue<Job*> queue;
-    Job* currentJob;
-    bool jobRunning;
-
-    // parser stuff
-    QByteArray dataBuffer;
-    QByteArray tagBuffer;
-    int parenthesesCount;
-    int literalSize;
-
-    void clearParserState()
-    {
-      dataBuffer.clear();
-      tagBuffer.clear();
-      parenthesesCount = 0;
-      literalSize = 0;
-    }
-
-    // Returns true iff response is complete, false otherwise.
-    bool parseNextLine()
-    {
-      QByteArray readBuffer = socket->readLine();
-
-      // first line, get the tag
-      if ( dataBuffer.isEmpty() ) {
-        int startOfData = readBuffer.indexOf( ' ' );
-        tagBuffer = readBuffer.left( startOfData );
-        dataBuffer = readBuffer.mid( startOfData + 1 );
-      } else {
-        dataBuffer += readBuffer;
-      }
-
-      // literal read in progress
-      if ( literalSize > 0 ) {
-        literalSize -= readBuffer.size();
-
-        // still not everything read
-        if ( literalSize > 0 )
-          return false;
-
-        // check the remaining (non-literal) part for parentheses
-        if ( literalSize < 0 )
-          // the following looks strange but works since literalSize can be negative here
-          parenthesesCount = ImapParser::parenthesesBalance( readBuffer, readBuffer.length() + literalSize );
-
-        // literal string finished but still open parentheses
-        if ( parenthesesCount > 0 )
-            return false;
-
-      } else {
-
-        // open parentheses
-        parenthesesCount += ImapParser::parenthesesBalance( readBuffer );
-
-        // start new literal read
-        if ( readBuffer.trimmed().endsWith( '}' ) ) {
-          int begin = readBuffer.lastIndexOf( '{' );
-          int end = readBuffer.lastIndexOf( '}' );
-          literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
-          return false;
-        }
-
-        // still open parentheses
-        if ( parenthesesCount > 0 )
-          return false;
-
-        // just a normal response, fall through
-      }
-
-      return true;
-    }
-};
 
 void Session::Private::startNext()
 {
