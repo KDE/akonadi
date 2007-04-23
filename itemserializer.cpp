@@ -21,11 +21,11 @@
 #include "item.h"
 
 // Qt
-#include <QByteArray>
-#include <QIODevice>
-#include <QDebug>
-#include <QMap>
-#include <QString>
+#include <QtCore/QByteArray>
+#include <QtCore/QDebug>
+#include <QtCore/QIODevice>
+#include <QtCore/QMap>
+#include <QtCore/QString>
 
 // libkdepim
 #include <libkdepim/pluginloader.h>

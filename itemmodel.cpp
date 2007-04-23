@@ -27,7 +27,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 using namespace Akonadi;
 
@@ -195,6 +195,7 @@ void ItemModel::setCollection( const Collection &collection )
   d->monitor = 0;
   // start listing job
   ItemFetchJob* job = new ItemFetchJob( collection, session() );
+  job->addFetchPart( ItemFetchJob::PartAll );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 }
 

@@ -26,7 +26,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
 #include <QtCore/QString>
-#include <QDBusContext>
+#include <QtDBus/QDBusContext>
 
 #include <kdepim_export.h>
 
@@ -372,29 +372,25 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
   private:
     static QString parseArguments( int, char** );
 
-  private Q_SLOTS:
-    void slotDeliveryDone( KJob* job );
-
-    void slotItemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
-    void slotItemChanged( const Akonadi::Item &item, const QStringList& );
-    void slotItemRemoved( const Akonadi::DataReference &reference );
-    void slotCollectionAdded( const Akonadi::Collection &collection );
-    void slotCollectionChanged( const Akonadi::Collection &collection );
-    void slotCollectionRemoved( int id, const QString &remoteId );
-
-    void slotReplayNextItem();
-    void slotReplayItemAdded( KJob *job );
-    void slotReplayItemChanged( KJob *job );
-    void slotReplayCollectionAdded( KJob *job );
-    void slotReplayCollectionChanged( KJob *job );
-
-    void slotCollectionSyncDone( KJob *job );
-    void slotLocalListDone( KJob *job );
-    void slotSyncNextCollection();
-
   private:
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void slotDeliveryDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d, void slotItemChanged( const Akonadi::Item&, const QStringList& ) )
+    Q_PRIVATE_SLOT( d, void slotItemRemoved( const Akonadi::DataReference& ) )
+    Q_PRIVATE_SLOT( d, void slotCollectionAdded( const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d, void slotCollectionChanged( const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d, void slotCollectionRemoved( int, const QString& ) )
+    Q_PRIVATE_SLOT( d, void slotReplayNextItem() )
+    Q_PRIVATE_SLOT( d, void slotReplayItemAdded( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotReplayItemChanged( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotReplayCollectionAdded( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotReplayCollectionChanged( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotCollectionSyncDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotSyncNextCollection() )
 };
 
 }

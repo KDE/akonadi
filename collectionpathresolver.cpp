@@ -22,7 +22,7 @@
 
 #include <klocale.h>
 
-#include <QStringList>
+#include <QtCore/QStringList>
 
 using namespace Akonadi;
 

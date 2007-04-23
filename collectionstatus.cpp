@@ -19,7 +19,7 @@
 
 #include "collectionstatus.h"
 
-#include <QSharedData>
+#include <QtCore/QSharedData>
 
 using namespace Akonadi;
 

@@ -22,9 +22,9 @@
 #include <kdebug.h>
 #include <kstaticdeleter.h>
 
-#include <QDBusConnection>
-#include <QDBusConnectionInterface>
-#include <QEventLoop>
+#include <QtCore/QEventLoop>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
 
 #define AKONADI_CONTROL_SERVICE QLatin1String("org.kde.Akonadi.Control")
 #define AKONADI_SERVER_SERVICE QLatin1String("org.kde.Akonadi")

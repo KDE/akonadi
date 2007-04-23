@@ -21,8 +21,8 @@
 
 #include "collectionmodel.h"
 
-#include <QString>
-#include <QStringList>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 using namespace Akonadi;
 

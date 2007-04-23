@@ -24,7 +24,7 @@
 #include <libakonadi/collectionlistjob.h>
 #include <libakonadi/collectionmodifyjob.h>
 
-#include <QHash>
+#include <QtCore/QHash>
 
 #include <kdebug.h>
 

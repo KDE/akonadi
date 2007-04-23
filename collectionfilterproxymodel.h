@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTIONPROXYFILTERMODEL_H
 #define AKONADI_COLLECTIONPROXYFILTERMODEL_H
 
-#include <QSortFilterProxyModel>
+#include <QtGui/QSortFilterProxyModel>
 
 #include <kdepim_export.h>
 

@@ -19,7 +19,7 @@
 
 #include "collectionattributefactory.h"
 
-#include <QHash>
+#include <QtCore/QHash>
 
 using namespace Akonadi;
 

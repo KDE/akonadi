@@ -26,11 +26,11 @@
 
 #include <kdebug.h>
 
-#include <QHostAddress>
-#include <QQueue>
-#include <QTcpSocket>
-#include <QThreadStorage>
-#include <QTimer>
+#include <QtCore/QQueue>
+#include <QtCore/QThreadStorage>
+#include <QtCore/QTimer>
+#include <QtNetwork/QHostAddress>
+#include <QtNetwork/QTcpSocket>
 
 using namespace Akonadi;
 

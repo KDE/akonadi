@@ -23,12 +23,13 @@
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
-#include <QAbstractTableModel>
+#include <QtCore/QAbstractTableModel>
 
 namespace Akonadi {
 
-class Job;
+class Collection;
 class ItemFetchJob;
+class Job;
 class Session;
 
 /**
