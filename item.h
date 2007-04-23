@@ -113,16 +113,6 @@ class AKONADI_EXPORT Item
     QStringList availableParts() const;
 
     /**
-      Returns the raw data of this item.
-    */
-    virtual QByteArray data() const;
-
-    /**
-      Sets the raw data of this item.
-    */
-    virtual void setData( const QByteArray& data );
-
-    /**
       Returns the mime type of this item.
     */
     QString mimeType() const;

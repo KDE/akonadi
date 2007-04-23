@@ -120,7 +120,7 @@ void ItemStoreTest::testDataChange()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   Item item = fjob->items()[0];
-  QVERIFY( item.data().isEmpty() );
+  QVERIFY( item.payload<QByteArray>().isEmpty() );
 
   // add data
   sjob = new ItemStoreJob( ref );
@@ -131,7 +131,7 @@ void ItemStoreTest::testDataChange()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
-  QVERIFY( item.data() == "testmailbody" );
+  QVERIFY( item.payload<QByteArray>() == "testmailbody" );
 }
 
 void ItemStoreTest::testItemMove()

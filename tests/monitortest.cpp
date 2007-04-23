@@ -141,7 +141,7 @@ void MonitorTest::testMonitor()
   arg = imspy.takeFirst();
   item = arg.at( 0 ).value<Item>();
   QCOMPARE( monitorRef, item.reference() );
-  QCOMPARE( item.data(), QByteArray( "some new content" ) );
+  QCOMPARE( item.payload<QByteArray>(), QByteArray( "some new content" ) );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( cmspy.isEmpty() );

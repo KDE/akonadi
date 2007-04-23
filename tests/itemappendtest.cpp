@@ -102,7 +102,8 @@ void ItemAppendTest::testUtf8Data()
   fjob->addFetchPart( "RFC822" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
-  QCOMPARE( utf8string.toUtf8(), fjob->items().first().data() );
+  Item item = fjob->items().first();
+  QCOMPARE( utf8string.toUtf8(), item.payload<QByteArray>() );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );

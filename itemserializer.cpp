@@ -53,7 +53,7 @@ public:
 
     void deserialize( Item& item, const QString& label, const QByteArray& data ) const
     {
-        item.setData( data );
+        item.setPayload( data );
     }
 
     void deserialize( Item& item, const QString& label, const QIODevice& data ) const
@@ -63,7 +63,7 @@ public:
 
     void serialize( const Item& item, const QString& label, QByteArray& data ) const
     {
-        throw ItemSerializerException();
+        data = item.payload<QByteArray>();
     }
 
     void serialize( const Item& item, const QString& label, QIODevice& data ) const
@@ -117,42 +117,42 @@ static void setup()
     }
 }
 
-/*static*/ 
+/*static*/
 void ItemSerializer::deserialize( Item& item, const QString& label, const QByteArray& data )
 {
     setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
 }
 
-/*static*/ 
+/*static*/
 void ItemSerializer::deserialize( Item& item, const QString& label, const QIODevice& data )
 {
     setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
 }
 
-/*static*/ 
+/*static*/
 void ItemSerializer::serialize( const Item& item, const QString& label, QByteArray& data )
 {
     setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, data );
 }
 
-/*static*/ 
+/*static*/
 void ItemSerializer::serialize( const Item& item, const QString& label, QIODevice& data )
 {
     setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, data );
 }
 
-/*static*/ 
+/*static*/
 const ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetype )
 {
     const ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
 
     // Go finding the right plugin for the mimetype
     qDebug() << "ItemSerializer: looking for plugin for mimetype " << mimetype;
-   
+
     if ( all->contains( mimetype ) ) {
         qDebug() << "ItemSerializer: found plugin!";
         return *(all->value(mimetype));

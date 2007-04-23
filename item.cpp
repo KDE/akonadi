@@ -37,14 +37,12 @@ class Item::Private : public QSharedData
     {
       reference = other.reference;
       flags = other.flags;
-      data = other.data;
       mimeType = other.mimeType;
       mParts = other.mParts;
     }
 
     DataReference reference;
     Item::Flags flags;
-    QByteArray data;
     QString mimeType;
     QMap<QString, QByteArray> mParts;
 };
@@ -112,16 +110,6 @@ QByteArray Item::part( const QString &identifier ) const
 QStringList Item::availableParts() const
 {
   return d->mParts.keys();
-}
-
-QByteArray Item::data() const
-{
-  return d->data;
-}
-
-void Item::setData( const QByteArray & data )
-{
-  d->data = data;
 }
 
 QString Item::mimeType() const
