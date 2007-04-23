@@ -129,7 +129,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
   CollectionEntry &entry = mCollections[ collection.remoteId() ];
 
   if ( item.mimeType() == QLatin1String( "text/vcard" ) ) {
-    const KABC::Addressee addressee = mVCardConverter.parseVCard( item.data() );
+    const KABC::Addressee addressee = item.payload<KABC::Addressee>();
     if ( !addressee.isEmpty() ) {
       entry.addressees.insert( addressee.uid(), addressee );
 
@@ -137,7 +137,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
       changesCommitted( r );
     }
   } else if ( item.mimeType() == QLatin1String( "text/calendar" ) ) {
-    KCal::Incidence *incidence = mICalConverter.fromString( QString::fromUtf8( item.data() ) );
+    KCal::Incidence *incidence = mICalConverter.fromString( QString::fromUtf8( item.payload<QByteArray>() ) );
     if ( incidence ) {
       entry.incidences.insert( incidence->uid(), incidence );
 
@@ -156,7 +156,7 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QStringList& )
     CollectionEntry &entry = it.value();
 
     if ( entry.addressees.contains( item.reference().remoteId() ) ) {
-      const KABC::Addressee addressee = mVCardConverter.parseVCard( item.data() );
+      const KABC::Addressee addressee = item.payload<KABC::Addressee>();
       if ( !addressee.isEmpty() ) {
         entry.addressees.insert( addressee.uid(), addressee );
 
@@ -166,7 +166,7 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QStringList& )
 
       return;
     } if ( entry.incidences.contains( item.reference().remoteId() ) ) {
-      KCal::Incidence *incidence = mICalConverter.fromString( QString::fromUtf8( item.data() ) );
+      KCal::Incidence *incidence = mICalConverter.fromString( item.payload<QByteArray>() );
       if ( incidence ) {
         delete entry.incidences.take( item.reference().remoteId() );
         entry.incidences.insert( incidence->uid(), incidence );
