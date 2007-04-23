@@ -22,6 +22,7 @@
 
 #include <kdepim_export.h>
 
+class QString;
 class QByteArray;
 class QIODevice;
 
