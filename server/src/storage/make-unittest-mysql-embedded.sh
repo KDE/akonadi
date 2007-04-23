@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 if [ -L $0 ]; then
 	abs_path=`readlink $0`
 else
