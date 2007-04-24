@@ -30,12 +30,25 @@ namespace Akonadi {
 
 class Item;
 
-class ItemSerializerPlugin 
+/**
+  Base class for PIM item type serializer plugins.
+*/
+class ItemSerializerPlugin
 {
 public:
     virtual ~ItemSerializerPlugin() { };
+    /**
+      De-serialize item part @p label from @p data.
+      If the given item part is not supported, call Item::addPart().
+    */
     virtual void deserialize( Item& item, const QString& label, const QByteArray& data ) const = 0;
     virtual void deserialize( Item& item, const QString& label, const QIODevice& data ) const = 0;
+
+    /**
+      Serialize item part @p label into @p data.
+      If the given part is not supported, do what???
+      @todo what happens with unsupported parts.
+    */
     virtual void serialize( const Item& item, const QString& label, QByteArray& data ) const = 0;
     virtual void serialize( const Item& item, const QString& label, QIODevice& data ) const = 0;
 };
@@ -59,6 +72,7 @@ class AKONADI_EXPORT ItemSerializer
       /** throws ItemSerializerException on failure */
       static void serialize( const Item& item, const QString& label, QIODevice& data );
 
+  private:
       static const ItemSerializerPlugin& pluginForMimeType( const QString& mimetype );
 };
 

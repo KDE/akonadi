@@ -53,21 +53,31 @@ public:
 
     void deserialize( Item& item, const QString& label, const QByteArray& data ) const
     {
-        item.setPayload( data );
+        if ( label == QLatin1String("RFC822") )
+          item.setPayload( data );
+        else
+          item.addPart( label, data );
     }
 
     void deserialize( Item& item, const QString& label, const QIODevice& data ) const
     {
+        Q_UNUSED( item );
+        Q_UNUSED( label );
+        Q_UNUSED( data );
         throw ItemSerializerException();
     }
 
     void serialize( const Item& item, const QString& label, QByteArray& data ) const
     {
-        data = item.payload<QByteArray>();
+        if ( label == QLatin1String("RFC822") )
+            data = item.payload<QByteArray>();
     }
 
     void serialize( const Item& item, const QString& label, QIODevice& data ) const
     {
+        Q_UNUSED( item );
+        Q_UNUSED( label );
+        Q_UNUSED( data );
         throw ItemSerializerException();
     }
 

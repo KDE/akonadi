@@ -103,13 +103,11 @@ install( FILES
 	itemstorejob.h
 	job.h
 	messagecollectionmodel.h
-	message.h
-	messagefetchjob.h
 	messagemodel.h
 	monitor.h
 	profilemanager.h
-  resource.h
-  resourcebase.h
+	resource.h
+	resourcebase.h
 	session.h
 	transactionjobs.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi

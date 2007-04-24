@@ -60,7 +60,7 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
     return QVariant();
   if ( index.row() >= rowCount() )
     return QVariant();
-  Message* msg = static_cast<Message*>( itemForIndex( index ) );
+  Item item = itemForIndex( index );
   Q_ASSERT( msg->mime() );
   if ( role == Qt::DisplayRole ) {
     switch ( index.column() ) {

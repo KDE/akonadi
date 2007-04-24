@@ -117,29 +117,27 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       QList<QByteArray> fetch;
       ImapParser::parseParenthesizedList( data, fetch, begin + 6 );
 
-      // create a new message object
-      DataReference ref = parseUid( fetch );
-      if ( ref.isNull() ) {
-        qWarning() << "No UID found in fetch response - skipping";
+      // create a new item object
+      Item item = createItem( fetch );
+      if ( !item.isValid() )
         return;
-      }
-
-      Item item( ref );
 
       // parse fetch response fields
       for ( int i = 0; i < fetch.count() - 1; i += 2 ) {
+        const QByteArray key = fetch.value( i );
+        // skip stuff we dealt with already
+        if ( key == "UID" || key == "REMOTEID" || key == "MIMETYPE" )
+          continue;
         // flags
-        if ( fetch[i] == "FLAGS" )
+        if ( key == "FLAGS" )
           parseFlags( fetch[i + 1], item );
-        else if ( fetch[i] == "RFC822" ) {
-            try {
-                ItemSerializer::deserialize( item, QString::fromLatin1(fetch[i]), fetch[i+1]);
-            } catch ( ItemSerializerException &e ) {
-                // FIXME how do we react to this? Should we still append?
-                qWarning() << "Failed to construct the payload of type: " << item.mimeType();
-            }
-        } else if ( fetch[i] == "MIMETYPE" ) {
-          item.setMimeType( QString::fromUtf8( fetch[i + 1] ) );
+        else {
+          try {
+            ItemSerializer::deserialize( item, QString::fromLatin1(key), fetch[i+1]);
+          } catch ( ItemSerializerException &e ) {
+            // FIXME how do we react to this? Should we still append?
+            qWarning() << "Failed to construct the payload of type: " << item.mimeType();
+          }
         }
 
       }
@@ -156,24 +154,32 @@ Item::List ItemFetchJob::items() const
   return d->items;
 }
 
-DataReference ItemFetchJob::parseUid( const QList< QByteArray > & fetchResponse )
+Item ItemFetchJob::createItem(const QList< QByteArray > & fetchResponse)
 {
-  int index = fetchResponse.indexOf( "UID" );
-  if ( index < 0 ) {
-    qWarning() << "Fetch response doesn't contain a UID field!";
-    return DataReference();
-  }
-  if ( index == fetchResponse.count() - 1 ) {
-    qWarning() << "Broken fetch response: No value for UID field!";
-    return DataReference();
+  int uid;
+  QString rid;
+  QString mimeType;
+
+  for ( int i = 0; i < fetchResponse.count() - 1; i += 2 ) {
+    const QByteArray key = fetchResponse.value( i );
+    const QByteArray value = fetchResponse.value( i + 1 );
+
+    if ( key == "UID" )
+      uid = value.toInt();
+    else if ( key == "REMOTEID" )
+      rid = QString::fromUtf8( value );
+    else if ( key == "MIMETYPE" )
+      mimeType = QString::fromLatin1( value );
   }
 
-  QString remoteId;
-  int rindex = fetchResponse.indexOf( "REMOTEID" );
-  if ( rindex >= 0 && fetchResponse.count() > rindex + 1 )
-    remoteId = QString::fromLatin1( fetchResponse[ rindex + 1 ] );
+  if ( uid < 0 || mimeType.isEmpty() ) {
+    qWarning() << "Broken fetch response: UID, RID or MIMETYPE missing!";
+    return Item();
+  }
 
-  return DataReference( fetchResponse[index + 1].toInt(), remoteId );
+  Item item( DataReference( uid, rid ) );
+  item.setMimeType( mimeType );
+  return item;
 }
 
 void ItemFetchJob::parseFlags(const QByteArray & flagData, Item &item)
