@@ -18,13 +18,13 @@
 */
 
 #include "collectionsync.h"
+#include "collection.h"
 
 #include <libakonadi/collectioncreatejob.h>
 #include <libakonadi/collectiondeletejob.h>
 #include <libakonadi/collectionlistjob.h>
 #include <libakonadi/collectionmodifyjob.h>
 
-#include <QtCore/QHash>
 
 #include <kdebug.h>
 

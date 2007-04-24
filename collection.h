@@ -22,7 +22,6 @@
 
 #include <libakonadi/collectionattribute.h>
 #include <libakonadi/collectionstatus.h>
-#include <libakonadi/job.h>
 #include <kdepim_export.h>
 
 #include <QtCore/QSharedDataPointer>
