@@ -20,7 +20,7 @@ kde4_automoc(${knutresource_SRCS})
 
 kde4_add_executable(akonadi_knut_resource RUN_UNINSTALLED ${knutresource_SRCS})
 
-target_link_libraries(akonadi_knut_resource akonadi ${QT_QTCORE_LIBRARIES} ${QT_QTDBUS_LIBRARIES} kabc kcal)
+target_link_libraries(akonadi_knut_resource akonadi ${QT_QTCORE_LIBRARIES} ${QT_QTDBUS_LIBRARIES} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS})
 
 install(TARGETS akonadi_knut_resource DESTINATION ${BIN_INSTALL_DIR})
 
