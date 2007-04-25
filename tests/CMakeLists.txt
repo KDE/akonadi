@@ -1,7 +1,7 @@
 
 if(KDE4_BUILD_TESTS)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 find_package( Boost REQUIRED )
 
