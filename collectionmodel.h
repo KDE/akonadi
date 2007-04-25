@@ -115,6 +115,11 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
 
     /**
       Reimplemented.
+     */
+    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
+
+    /**
+      Reimplemented.
     */
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 

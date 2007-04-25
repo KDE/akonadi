@@ -22,6 +22,7 @@
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
 #include "collectionmodifyjob.h"
+#include "itemstorejob.h"
 #include "itemappendjob.h"
 #include "monitor.h"
 #include "session.h"
@@ -395,6 +396,8 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 {
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
+   flags = flags | Qt::ItemIsDragEnabled;
+
   Collection col;
   if ( index.isValid() ) {
     col = d->collections.value( index.internalId() );
@@ -429,12 +432,12 @@ bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
 
 Qt::DropActions CollectionModel::supportedDropActions() const
 {
-  return Qt::CopyAction; // | Qt::MoveAction;
+  return Qt::CopyAction | Qt::MoveAction;
 }
 
 QStringList CollectionModel::mimeTypes() const
 {
-  return d->mimeTypes;
+  return QStringList() << QLatin1String( "text/uri-list" );
 }
 
 bool CollectionModel::supportsContentType(const QModelIndex & index, const QStringList & contentTypes)
@@ -449,6 +452,22 @@ bool CollectionModel::supportsContentType(const QModelIndex & index, const QStri
       return true;
   }
   return false;
+}
+
+QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
+{
+    // TODO Change uri format to "the official akonadi uri format" when it exists
+    KUrl::List urls;
+    foreach ( QModelIndex index, indexes ) {
+        KUrl url;
+        url.setProtocol( QString::fromLatin1("akonadicollection") );
+        url.setPath( QString::number( index.internalId() ) );
+        urls << url;
+    }
+    QMimeData *data = new QMimeData();
+    urls.populateMimeData( data );
+
+    return data;
 }
 
 bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent)
@@ -466,21 +485,78 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
   if ( !idx.isValid() )
     return false;
 
-  // find a type the target collection supports
-  foreach ( QString type, data->formats() ) {
-    if ( !supportsContentType( idx, QStringList( type ) ) )
-      continue;
-    const Collection col = d->collections.value( idx.internalId() );
-    if ( !col.isValid() )
-      return false;
-    QByteArray item = data->data( type );
-    // HACK for some unknown reason the data is sometimes 0-terminated...
-    if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
-      item.resize( item.size() - 1 );
-    ItemAppendJob *job = new ItemAppendJob( col, type, d->session );
-    job->setData( item );
-    connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-    return true;
+  const Collection parentCol = d->collections.value( idx.internalId() );
+  if (!parentCol.isValid())
+    return false;
+
+  if ( KUrl::List::canDecode( data ) ) 
+  { // data is a url list
+    KUrl::List urls = KUrl::List::fromMimeData( data );
+    foreach( KUrl url, urls ) {
+      // retrieve the associated collection item
+      QString protocol = url.protocol();
+      QString path = url.path();
+      int id = path.toInt();
+
+      if ( protocol == QString::fromLatin1("akonadicollection") )
+      {
+        if ( id == parent.internalId() ) /* Can't drop on yourself */
+          return false;
+
+        if (action == Qt::MoveAction) {
+            Collection collectionToMove = d->collections.value( id );
+            CollectionModifyJob *job = new CollectionModifyJob( collectionToMove, d->session );
+            job->setParent( parentCol );
+            connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
+            return true;
+        }
+        else { // TODO A Copy Collection Job
+          return false;
+        }
+      }
+      else if ( protocol == QString::fromLatin1("akonadiitem") )
+      {
+        if (action == Qt::MoveAction) {
+            DataReference ref( id, QString() ); // TODO Get the remotedId ??
+            ItemStoreJob *job = new ItemStoreJob( ref, d->session );
+            job->setCollection( parentCol );
+            connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
+            return true;
+        }
+        else if ( action == Qt::CopyAction ) {
+          // TODO Wait for a job allowing to copy on server side.
+        }
+        else {
+          return false;
+        }
+      }
+    }
+  }
+  else
+  { // we try to drop an external data not coming with the akonadi:// url
+    if ( action == Qt::CopyAction )
+    {
+      // find a type the target collection supports
+      foreach ( QString type, data->formats() ) {
+        if ( !supportsContentType( idx, QStringList( type ) ) )
+          continue;
+
+        QByteArray item = data->data( type );
+        // HACK for some unknown reason the data is sometimes 0-terminated...
+        if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
+          item.resize( item.size() - 1 );
+
+        ItemAppendJob *job = new ItemAppendJob( parentCol, type, d->session );
+        job->setData( item );
+        connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
+
+        return true;
+      }
+    }
+    else
+    {
+      // TODO Support moving this kind of data ? 
+    }
   }
 
   return false;

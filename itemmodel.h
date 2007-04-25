@@ -82,6 +82,21 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
     /**
+      Reimplemented from QAbstractItemModel
+     */
+    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+
+    /**
+      Reimplemented from QAbstractItemModel
+     */
+    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
+
+    /**
+      Reimplemented from QAbstractItemModel
+    */
+    virtual QStringList mimeTypes() const;
+
+    /**
       Sets the collection the model should display. If the collection has
       changed, the model is reset and a new message listing is requested
       from the storage backend.

@@ -28,6 +28,7 @@
 #include <klocale.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QMimeData>
 
 using namespace Akonadi;
 
@@ -118,6 +119,7 @@ ItemModel::ItemModel( QObject *parent ) :
     QAbstractTableModel( parent ),
     d( new Private( this ) )
 {
+  setSupportedDragActions( Qt::MoveAction | Qt::CopyAction );
 }
 
 ItemModel::~ItemModel()
@@ -225,9 +227,40 @@ Item ItemModel::itemForIndex( const QModelIndex & index ) const
   return item;
 }
 
+Qt::ItemFlags ItemModel::flags( const QModelIndex &index ) const
+{
+  Qt::ItemFlags defaultFlags = QAbstractTableModel::flags(index);
+
+  if (index.isValid())
+    return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
+  else
+    return Qt::ItemIsDropEnabled | defaultFlags;
+}
+
+QStringList ItemModel::mimeTypes() const
+{
+  return QStringList();
+}
+
 Session * ItemModel::session() const
 {
   return d->session;
+}
+
+QMimeData *ItemModel::mimeData( const QModelIndexList &indexes ) const
+{
+  // TODO Change uri format to "the official akonadi uri format" when it exists
+  KUrl::List urls;
+  foreach ( QModelIndex index, indexes ) {
+    KUrl url;
+    url.setProtocol( QString::fromLatin1("akonadiitem") );
+    url.setPath( QString::number( data(index, Id).toInt() ));
+    urls << url;
+  }
+  QMimeData *data = new QMimeData();
+  urls.populateMimeData( data );
+
+  return data;
 }
 
 #include "itemmodel.moc"

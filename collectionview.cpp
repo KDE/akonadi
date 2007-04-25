@@ -143,7 +143,7 @@ CollectionView::CollectionView( QWidget * parent ) :
   setEditTriggers( QAbstractItemView::EditKeyPressed );
   setAcceptDrops( true );
   setDropIndicatorShown( true );
-  setDragDropMode( DropOnly );
+  setDragDropMode( DragDrop );
 
   d->dragExpandTimer.setSingleShot( true );
   connect( &d->dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()) );
@@ -179,18 +179,18 @@ void CollectionView::dragMoveEvent(QDragMoveEvent * event)
     }
   }
 
-
-  QStringList supportedContentTypes = model()->data( index, CollectionModel::CollectionContentTypesRole ).toStringList();
-  QStringList mimeTypes = event->mimeData()->formats();
-  foreach ( const QString type, mimeTypes ) {
-    if ( supportedContentTypes.contains( type ) ) {
-      QTreeView::dragMoveEvent( event );
-      return;
-    }
-  }
-
-  event->setDropAction( Qt::IgnoreAction );
+  // TODO : get this from the QMimeData: the current problem is that url do not contain any mimetype information
+//   QStringList supportedContentTypes = model()->data( index, CollectionModel::CollectionContentTypesRole ).toStringList();
+//   QStringList mimeTypes = event->mimeData()->formats();
+//   foreach ( const QString type, mimeTypes ) {
+//     if ( supportedContentTypes.contains( type ) ) {
+  QTreeView::dragMoveEvent( event );
   return;
+//     }
+//   }
+// 
+//   event->setDropAction( Qt::IgnoreAction );
+//   return;
 }
 
 void CollectionView::dragLeaveEvent(QDragLeaveEvent * event)
@@ -200,10 +200,29 @@ void CollectionView::dragLeaveEvent(QDragLeaveEvent * event)
   QTreeView::dragLeaveEvent( event );
 }
 
+
 void CollectionView::dropEvent(QDropEvent * event)
 {
   d->dragExpandTimer.stop();
   d->dragOverIndex = QModelIndex();
+
+  // open a context menu offering different drop actions (move, copy and cancel)
+  // TODO If possible, hide non available actions ...
+  QMenu popup( this );
+  QAction* moveDropAction = popup.addAction( KIcon( QString::fromLatin1("goto-page") ), i18n("&Move here") );
+  QAction* copyDropAction = popup.addAction( KIcon( QString::fromLatin1("edit-copy") ), i18n("&Copy here") );
+  popup.addSeparator();
+  popup.addAction( KIcon( QString::fromLatin1("process-stop") ), i18n("Cancel"));
+
+  QAction *activatedAction = popup.exec( QCursor::pos() );
+  if (activatedAction == moveDropAction) {
+    event->setDropAction( Qt::MoveAction );
+  }
+  else if (activatedAction == copyDropAction) {
+    event->setDropAction( Qt::CopyAction );
+  }
+  else return;
+
   QTreeView::dropEvent( event );
 }
 
