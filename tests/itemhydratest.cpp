@@ -23,8 +23,11 @@
 #include <libakonadi/item.h>
 #include <qtest_kde.h>
 #include <QDebug>
+#include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 
 using namespace Akonadi;
+using boost::shared_ptr;
 
 struct Volker
 {
@@ -32,13 +35,18 @@ struct Volker
     {
         return f.who == who;
     }
+    virtual ~Volker() { }
     QString who;
 };
+typedef shared_ptr<Volker> VolkerPtr;
 
 struct Rudi: public Volker
 {
     Rudi() { who = "Rudi"; }
+    virtual ~Rudi() { }
 };
+
+typedef shared_ptr<Rudi> RudiPtr;
 
 struct Gerd: public Volker
 {
@@ -117,5 +125,47 @@ void ItemHydra::testEmptyPayload()
     QVERIFY( !i2.hasPayload() );
 }
 
+void ItemHydra::testPointerPayload()
+{
+    Rudi* r = new Rudi;
+    RudiPtr p( r );
+    boost::weak_ptr<Rudi> w( p );
+    QCOMPARE( p.use_count(), (long)1 );
+
+    {
+      Item i1;
+      i1.setPayload(p);
+      QVERIFY( i1.hasPayload() );
+      QCOMPARE( p.use_count(), (long)2 );
+      {
+        RudiPtr p2 = i1.payload< RudiPtr >();
+        QCOMPARE( p.use_count(), (long)3 );
+      }
+      QCOMPARE( p.use_count(), (long)2 );
+    }
+    QCOMPARE( p.use_count(), (long)1 );
+    QCOMPARE( w.use_count(), (long)1 );
+    p.reset();
+    QCOMPARE( w.use_count(), (long)0 );
+}
+
+
+void ItemHydra::testPolymorphicPayload()
+{
+  VolkerPtr p( new Rudi );
+ 
+  {
+      Item i1;
+      i1.setPayload(p);
+      QVERIFY( i1.hasPayload() );
+      QCOMPARE( p.use_count(), (long)2 );
+      {
+        RudiPtr p2 = boost::dynamic_pointer_cast<Rudi, Volker>( i1.payload< VolkerPtr >() );
+        QCOMPARE( p.use_count(), (long)3 );
+        QCOMPARE( p2->who, QString("Rudi") );
+      }
+      QCOMPARE( p.use_count(), (long)2 );
+  }
+}
 
 #include "itemhydratest.moc"

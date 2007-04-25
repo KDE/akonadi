@@ -34,6 +34,8 @@ class ItemHydra: public QObject
     void testItemPointerPayload();
     void testItemCopy();
     void testEmptyPayload();
+    void testPointerPayload();
+    void testPolymorphicPayload();
 };
 
 #endif
