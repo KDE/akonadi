@@ -249,15 +249,22 @@ Session * ItemModel::session() const
 
 QMimeData *ItemModel::mimeData( const QModelIndexList &indexes ) const
 {
-  // TODO Change uri format to "the official akonadi uri format" when it exists
+  QMimeData *data = new QMimeData();
+  // Add item uri to the mimedata for dropping in external applications
   KUrl::List urls;
   foreach ( QModelIndex index, indexes ) {
+    if ( index.column() != 0 )
+      continue;
+
     KUrl url;
-    url.setProtocol( QString::fromLatin1("akonadiitem") );
-    url.setPath( QString::number( data(index, Id).toInt() ));
+    url.setProtocol( QString::fromLatin1("akonadi") );
+    url.setEncodedPathAndQuery( QString::fromLatin1("?item=") 
+                                + ItemModel::data( index, Id ).toString()
+                                + QString::fromLatin1( "&type=" )
+                                + itemForIndex( index ).mimeType()
+                              );
     urls << url;
   }
-  QMimeData *data = new QMimeData();
   urls.populateMimeData( data );
 
   return data;

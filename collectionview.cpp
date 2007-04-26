@@ -179,18 +179,25 @@ void CollectionView::dragMoveEvent(QDragMoveEvent * event)
     }
   }
 
-  // TODO : get this from the QMimeData: the current problem is that url do not contain any mimetype information
-//   QStringList supportedContentTypes = model()->data( index, CollectionModel::CollectionContentTypesRole ).toStringList();
-//   QStringList mimeTypes = event->mimeData()->formats();
-//   foreach ( const QString type, mimeTypes ) {
-//     if ( supportedContentTypes.contains( type ) ) {
-  QTreeView::dragMoveEvent( event );
-  return;
-//     }
-//   }
-// 
-//   event->setDropAction( Qt::IgnoreAction );
-//   return;
+  // Check if the collection under the cursor accepts this data type
+  QStringList supportedContentTypes = model()->data( index, CollectionModel::CollectionContentTypesRole ).toStringList();
+  const QMimeData *data = event->mimeData();
+  KUrl::List urls = KUrl::List::fromMimeData( data );
+  foreach( KUrl url, urls ) {
+    QString protocol = url.protocol();
+    if ( protocol != QString::fromLatin1("akonadi") )
+      break;
+    QMap<QString, QString> query = url.queryItems();
+    QString type = query[ QString::fromLatin1("type") ];
+    if ( ( query.contains( QString::fromLatin1("collection") ) && supportedContentTypes.contains( QString::fromLatin1("inode/directory") ) ) 
+          || supportedContentTypes.contains( type ) ) {
+      QTreeView::dragMoveEvent( event );
+      return;
+    }
+  }
+
+   event->setDropAction( Qt::IgnoreAction );
+   return;
 }
 
 void CollectionView::dragLeaveEvent(QDragLeaveEvent * event)

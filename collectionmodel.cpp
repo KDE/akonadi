@@ -397,13 +397,15 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 {
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
-   flags = flags | Qt::ItemIsDragEnabled;
+  flags = flags | Qt::ItemIsDragEnabled;
 
   Collection col;
   if ( index.isValid() ) {
     col = d->collections.value( index.internalId() );
     Q_ASSERT( col.isValid() );
   }
+  else 
+    return flags | Qt::ItemIsDropEnabled; // HACK Workaround for a probable bug in Qt
 
   if ( col.isValid() ) {
     if ( col.type() != Collection::VirtualParent )  {
@@ -457,15 +459,18 @@ bool CollectionModel::supportsContentType(const QModelIndex & index, const QStri
 
 QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
 {
-    // TODO Change uri format to "the official akonadi uri format" when it exists
+    QMimeData *data = new QMimeData();
     KUrl::List urls;
     foreach ( QModelIndex index, indexes ) {
+        if ( index.column() != 0 )
+          continue;
+
         KUrl url;
-        url.setProtocol( QString::fromLatin1("akonadicollection") );
-        url.setPath( QString::number( index.internalId() ) );
+        url.setProtocol( QString::fromLatin1("akonadi") );
+        url.setEncodedPathAndQuery( QString::fromLatin1("?collection=") 
+                                  + QString::number( index.internalId() ) );
         urls << url;
     }
-    QMimeData *data = new QMimeData();
     urls.populateMimeData( data );
 
     return data;
@@ -490,75 +495,74 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
   if (!parentCol.isValid())
     return false;
 
-  if ( KUrl::List::canDecode( data ) )
-  { // data is a url list
-    KUrl::List urls = KUrl::List::fromMimeData( data );
-    foreach( KUrl url, urls ) {
-      // retrieve the associated collection item
-      QString protocol = url.protocol();
-      QString path = url.path();
-      int id = path.toInt();
+  // we try to drop data not coming with the akonadi:// url
+  // find a type the target collection supports
+  foreach ( QString type, data->formats() ) {
+    if ( !supportsContentType( idx, QStringList( type ) ) )
+      continue;
 
-      if ( protocol == QString::fromLatin1("akonadicollection") )
-      {
-        if ( id == parent.internalId() ) /* Can't drop on yourself */
-          return false;
+    QByteArray item = data->data( type );
+    // HACK for some unknown reason the data is sometimes 0-terminated...
+    if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
+      item.resize( item.size() - 1 );
 
-        if (action == Qt::MoveAction) {
-            Collection collectionToMove = d->collections.value( id );
-            CollectionModifyJob *job = new CollectionModifyJob( collectionToMove, d->session );
-            job->setParent( parentCol );
-            connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-            return true;
-        }
-        else { // TODO A Copy Collection Job
-          return false;
-        }
-      }
-      else if ( protocol == QString::fromLatin1("akonadiitem") )
-      {
-        if (action == Qt::MoveAction) {
-            DataReference ref( id, QString() ); // TODO Get the remotedId ??
-            ItemStoreJob *job = new ItemStoreJob( ref, d->session );
-            job->setCollection( parentCol );
-            connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-            return true;
-        }
-        else if ( action == Qt::CopyAction ) {
-          // TODO Wait for a job allowing to copy on server side.
-        }
-        else {
-          return false;
-        }
-      }
-    }
+    Item it;
+    it.setMimeType( type );
+    ItemSerializer::deserialize( it, QLatin1String("RFC822"), item );
+
+    ItemAppendJob *job = new ItemAppendJob( it, parentCol, d->session );
+    connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
+    return true; 
+    // TODO return true is not good with the asynchronous job call : If job fails, will the data be 
+    // deleted on the application which started the drag and drop ? CHECK how it's done for moving files to
+    // a remote server.
   }
-  else
-  { // we try to drop an external data not coming with the akonadi:// url
-    if ( action == Qt::CopyAction )
+
+  if ( !KUrl::List::canDecode( data ) )
+    return false;
+
+  // data contains an url list
+  KUrl::List urls = KUrl::List::fromMimeData( data );
+  foreach( KUrl url, urls ) {
+    QString protocol = url.protocol();
+    if ( protocol != QString::fromLatin1("akonadi") )
+      return false;
+    QMap<QString, QString> query = url.queryItems();
+
+    if ( query.contains( QString::fromLatin1("collection") ) )
     {
-      // find a type the target collection supports
-      foreach ( QString type, data->formats() ) {
-        if ( !supportsContentType( idx, QStringList( type ) ) )
-          continue;
+      int id = query[QString::fromLatin1("collection")].toInt();
+      if ( id == parent.internalId() ) /* Can't drop on yourself */
+        return false;
+      // TODO Can't drop on one of your child
 
-        QByteArray item = data->data( type );
-        // HACK for some unknown reason the data is sometimes 0-terminated...
-        if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
-          item.resize( item.size() - 1 );
-
-        Item it;
-        it.setMimeType( type );
-        ItemSerializer::deserialize( it, QLatin1String("RFC822"), item );
-        ItemAppendJob *job = new ItemAppendJob( it, parentCol, d->session );
+      if (action == Qt::MoveAction) {
+        Collection collectionToMove = d->collections.value( id );
+        CollectionModifyJob *job = new CollectionModifyJob( collectionToMove, d->session );
+        job->setParent( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-
         return true;
       }
+      else { // TODO A Copy Collection Job
+        return false;
+      }
     }
-    else
+    else if ( query.contains( QString::fromLatin1("item") ) )
     {
-      // TODO Support moving this kind of data ?
+      int id = query[QString::fromLatin1("item")].toInt();
+      if (action == Qt::MoveAction) {
+        DataReference ref( id, QString() ); // TODO Get the remotedId ??
+        ItemStoreJob *job = new ItemStoreJob( ref, d->session );
+        job->setCollection( parentCol );
+        connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
+        return true; // TODO same here, see above (MoveAction, asynchronous problem)
+      }
+      else if ( action == Qt::CopyAction ) {
+      // TODO Wait for a job allowing to copy on server side.
+      }
+      else {
+        return false;
+      }
     }
   }
 
