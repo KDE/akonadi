@@ -22,6 +22,7 @@
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
 #include "collectionmodifyjob.h"
+#include "itemserializer.h"
 #include "itemstorejob.h"
 #include "itemappendjob.h"
 #include "monitor.h"
@@ -489,7 +490,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
   if (!parentCol.isValid())
     return false;
 
-  if ( KUrl::List::canDecode( data ) ) 
+  if ( KUrl::List::canDecode( data ) )
   { // data is a url list
     KUrl::List urls = KUrl::List::fromMimeData( data );
     foreach( KUrl url, urls ) {
@@ -546,8 +547,10 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
           item.resize( item.size() - 1 );
 
-        ItemAppendJob *job = new ItemAppendJob( parentCol, type, d->session );
-        job->setData( item );
+        Item it;
+        it.setMimeType( type );
+        ItemSerializer::deserialize( it, QLatin1String("RFC822"), item );
+        ItemAppendJob *job = new ItemAppendJob( it, parentCol, d->session );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
 
         return true;
@@ -555,7 +558,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     }
     else
     {
-      // TODO Support moving this kind of data ? 
+      // TODO Support moving this kind of data ?
     }
   }
 

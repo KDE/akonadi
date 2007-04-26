@@ -69,7 +69,7 @@ public:
 
     void serialize( const Item& item, const QString& label, QByteArray& data ) const
     {
-        if ( label == QLatin1String("RFC822") )
+        if ( label == QLatin1String("RFC822") && item.hasPayload() )
             data = item.payload<QByteArray>();
     }
 

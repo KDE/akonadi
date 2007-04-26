@@ -39,8 +39,10 @@ ItemDumper::ItemDumper( const QString &path, const QByteArray &filename, const Q
   Q_ASSERT( f.open(QIODevice::ReadOnly) );
   QByteArray data = f.readAll();
   f.close();
-  ItemAppendJob *job = new ItemAppendJob( collection, mimetype, this );
-  job->setData( data );
+  Item item;
+  item.setMimeType( mimetype );
+  item.setPayload( data );
+  ItemAppendJob *job = new ItemAppendJob( item, collection, this );
   connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
   job->start();
 }

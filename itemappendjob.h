@@ -21,6 +21,7 @@
 #define AKONADI_ITEMAPPENDJOB_H
 
 #include <libakonadi/collection.h>
+#include <libakonadi/item.h>
 #include <libakonadi/job.h>
 
 namespace Akonadi {
@@ -29,7 +30,6 @@ class ItemAppendJobPrivate;
 
 /**
   Creates a new PIM item on the backend.
-  Can be used as base class for type specific append jobs.
 */
 class AKONADI_EXPORT ItemAppendJob : public Job
 {
@@ -37,28 +37,16 @@ class AKONADI_EXPORT ItemAppendJob : public Job
   public:
     /**
       Create a new item append job.
+      @param item The item to append. It must have a mimetype set.
       @param collection Parent collection.
-      @param mimetype The mimetype of the PIM item.
       @param parent The parent object.
     */
-    ItemAppendJob( const Collection &collection, const QString &mimetype, QObject *parent = 0 );
-
-    /**
-      Sets the data of hte new item.
-      @param data The raw data of the PIM item.
-    */
-    void setData( const QByteArray &data );
-
-    /**
-      Sets the remote id of the new item (should only be used by resources).
-      @param remoteId The remote id.
-    */
-    void setRemoteId( const QString &remoteId );
+    ItemAppendJob( const Item &item, const Collection &collection, QObject *parent = 0 );
 
     /**
       Deletes this job.
     */
-    virtual ~ItemAppendJob();
+    ~ItemAppendJob();
 
     /**
       Returns a DataReference pointing to the new item. The result is invalid

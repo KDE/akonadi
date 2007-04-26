@@ -18,6 +18,7 @@
 */
 
 #include "itemappendjob.h"
+#include "itemserializer.h"
 #include "imapparser.h"
 
 #include <QtCore/QDebug>
@@ -27,20 +28,19 @@ using namespace Akonadi;
 class Akonadi::ItemAppendJobPrivate
 {
   public:
+    Item item;
     Collection collection;
     QByteArray data;
-    QString mimetype;
-    QString remoteId;
     int uid;
 };
 
-ItemAppendJob::ItemAppendJob( const Collection &collection, const QString & mimetype, QObject * parent ) :
+ItemAppendJob::ItemAppendJob( const Item &item, const Collection &collection, QObject * parent ) :
     Job( parent ),
     d( new ItemAppendJobPrivate )
 {
+  Q_ASSERT( !item.mimeType().isEmpty() );
+  d->item = item;
   d->collection = collection;
-  d->mimetype = mimetype;
-  d->uid = 0;
 }
 
 ItemAppendJob::~ ItemAppendJob( )
@@ -51,10 +51,11 @@ ItemAppendJob::~ ItemAppendJob( )
 void ItemAppendJob::doStart()
 {
   QByteArray remoteId;
-  if ( !d->remoteId.isEmpty() )
-    remoteId = " \\RemoteId[" + d->remoteId.toUtf8() + ']';
+  if ( !d->item.reference().remoteId().isEmpty() )
+    remoteId = " \\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']';
+  ItemSerializer::serialize( d->item, QLatin1String("RFC822"), d->data );
   writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
-      + " (\\MimeType[" + d->mimetype.toLatin1() + ']' + remoteId + ") {"
+      + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
       + QByteArray::number( d->data.size() ) + '}' );
 }
 
@@ -75,21 +76,11 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
   qDebug() << "unhandled response in item append job: " << tag << data;
 }
 
-void ItemAppendJob::setData(const QByteArray & data)
-{
-  d->data = data;
-}
-
-void ItemAppendJob::setRemoteId(const QString & remoteId)
-{
-  d->remoteId = remoteId;
-}
-
 DataReference ItemAppendJob::reference() const
 {
   if ( d->uid == 0 )
     return DataReference();
-  return DataReference( d->uid, d->remoteId );
+  return DataReference( d->uid, d->item.reference().remoteId() );
 }
 
 #include "itemappendjob.moc"

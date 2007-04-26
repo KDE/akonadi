@@ -102,7 +102,9 @@ void MonitorTest::testMonitor()
   QVERIFY( irspy.isEmpty() );
 
   // add an item
-  ItemAppendJob *append = new ItemAppendJob( monitorCol, "message/rfc822", this );
+  Item newItem;
+  newItem.setMimeType( "message/rfc822" );
+  ItemAppendJob *append = new ItemAppendJob( newItem, monitorCol, this );
   QVERIFY( append->exec() );
   DataReference monitorRef = append->reference();
   QVERIFY( !monitorRef.isNull() );
