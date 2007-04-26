@@ -254,8 +254,9 @@ void KnutResource::synchronizeCollection( const Akonadi::Collection &collection 
     if ( found )
       continue;
 
-    ItemAppendJob *append = new ItemAppendJob( collection, "text/vcard", session() );
-    append->setRemoteId( uid );
+    Item item( DataReference( -1, uid ) );
+    item.setMimeType( "text/vcard" );
+    ItemAppendJob *append = new ItemAppendJob( item, collection, session() );
     if ( !append->exec() ) {
       changeProgress( 0 );
       changeStatus( Error, i18n( "Appending new contact failed: %1", append->errorString() ) );
@@ -281,8 +282,9 @@ void KnutResource::synchronizeCollection( const Akonadi::Collection &collection 
     if ( found )
       continue;
 
-    ItemAppendJob *append = new ItemAppendJob( collection, "text/calendar", session() );
-    append->setRemoteId( uid );
+    Item item( DataReference( -1, uid ) );
+    item.setMimeType( "text/calendar" );
+    ItemAppendJob *append = new ItemAppendJob( item, collection, session() );
     if ( !append->exec() ) {
       changeProgress( 0 );
       changeStatus( Error, i18n( "Appending new calendar failed: %1", append->errorString() ) );
