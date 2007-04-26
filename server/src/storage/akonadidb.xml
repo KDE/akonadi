@@ -101,6 +101,7 @@
     <data columns="name" values="'text/calendar'"/>
     <data columns="name" values="'text/vcard'"/>
     <data columns="name" values="'inode/directory'"/>
+    <data columns="name" values="'application/octet-stream'"/>
   </table>
 
   <table name="MetaType">
