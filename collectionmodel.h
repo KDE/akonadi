@@ -130,6 +130,14 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
 
+    /**
+      Returns whether the specified collection has @p childIndex in its children (recursively).
+      @param index The model index.
+      @param childIndex Child to search for.
+      @return true if found, false otherwise. Also return true if index == childIndex
+     */
+     bool hasChild( const QModelIndex &index, const QModelIndex &childIndex );
+
   protected:
     /**
       Returns the collection for a given collection id.
