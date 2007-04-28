@@ -153,7 +153,7 @@ void ItemHydra::testPointerPayload()
 void ItemHydra::testPolymorphicPayload()
 {
   VolkerPtr p( new Rudi );
- 
+
   {
       Item i1;
       i1.setPayload(p);
@@ -166,6 +166,18 @@ void ItemHydra::testPolymorphicPayload()
       }
       QCOMPARE( p.use_count(), (long)2 );
   }
+}
+
+void ItemHydra::testHasPayload()
+{
+  Item i1;
+  QVERIFY( !i1.hasPayload<Rudi>() );
+  QVERIFY( !i1.hasPayload<Gerd>() );
+
+  Rudi r;
+  i1.setPayload( r );
+  QVERIFY( i1.hasPayload<Rudi>() );
+  QVERIFY( !i1.hasPayload<Gerd>() );
 }
 
 #include "itemhydratest.moc"

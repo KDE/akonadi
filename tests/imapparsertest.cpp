@@ -186,6 +186,18 @@ void ImapParserTest::testParseParenthesizedList( )
   consumed = ImapParser::parseParenthesizedList( input, result, input.length() );
   QVERIFY( result.isEmpty() );
   QCOMPARE( consumed, input.length() );
+
+  // newline literal (based on itemappendtest bug)
+  input = "(foo {6}\n\n\nbar\n bla)";
+  consumed = ImapParser::parseParenthesizedList( input, result );
+  reference.clear();
+  reference << "foo";
+  reference << "\n\nbar\n";
+  reference << "bla";
+  qDebug() << result;
+  qDebug() << reference;
+  QCOMPARE( result, reference );
+  QCOMPARE( consumed, input.length() );
 }
 
 void ImapParserTest::testParseNumber()

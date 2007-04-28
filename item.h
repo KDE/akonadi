@@ -169,6 +169,22 @@ class AKONADI_EXPORT Item
     */
     bool hasPayload() const;
 
+    /**
+      Returns true if this item has a payload of type @c T.
+    */
+    template <typename T>
+    bool hasPayload() const
+    {
+        if ( !hasPayload() )
+          return false;
+        Payload<T> *p = dynamic_cast<Payload<T>*>(m_payload);
+        // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
+        if ( !p && strcmp( m_payload->typeName(), typeid(p).name() ) == 0 ) {
+          p = reinterpret_cast<Payload<T>*>( m_payload );
+        }
+        return p;
+    }
+
   private:
     class Private;
     QSharedDataPointer<Private> d;

@@ -77,10 +77,10 @@ int ImapParser::parseString( const QByteArray & data, QByteArray & result, int s
 
     // strip CRLF
     begin = end + 1;
-    for ( ; begin < data.length(); ++begin ) {
-      if ( data[begin] != '\n' && data[begin] != '\r' )
-        break;
-    }
+    if ( begin < data.length() && data[begin] == '\r' )
+      ++begin;
+    if ( begin < data.length() && data[begin] == '\n' )
+      ++begin;
 
     end = begin + size;
     result = data.mid( begin, end - begin );

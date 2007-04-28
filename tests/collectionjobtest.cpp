@@ -126,7 +126,7 @@ void CollectionJobTest::testFolderList( )
   QVERIFY( col.isValid() );
   QCOMPARE( col.parent(), res1ColId );
   QCOMPARE( col.type(), Collection::Folder );
-  contentTypes << "message/rfc822" << "text/calendar" << "text/vcard";
+  contentTypes << "message/rfc822" << "text/calendar" << "text/vcard" << "application/octet-stream";
   compareLists( col.contentTypes(), contentTypes );
 
   QVERIFY( findCol( list, "bar" ).isValid() );
@@ -322,7 +322,7 @@ void CollectionJobTest::testStatus()
 void CollectionJobTest::testModify()
 {
   QStringList reference;
-  reference << "text/calendar" << "text/vcard" << "message/rfc822";
+  reference << "text/calendar" << "text/vcard" << "message/rfc822" << "application/octet-stream";
 
   Collection col;
   CollectionListJob *ljob = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Flat );

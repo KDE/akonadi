@@ -114,7 +114,6 @@ void ItemAppendTest::testContent()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();
-  QEXPECT_FAIL( "newlines", "no idea", Continue );
   QCOMPARE( data, item2.payload<QByteArray>() );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );

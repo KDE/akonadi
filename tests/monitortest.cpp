@@ -103,7 +103,7 @@ void MonitorTest::testMonitor()
 
   // add an item
   Item newItem;
-  newItem.setMimeType( "message/rfc822" );
+  newItem.setMimeType( "application/octet-stream" );
   ItemAppendJob *append = new ItemAppendJob( newItem, monitorCol, this );
   QVERIFY( append->exec() );
   DataReference monitorRef = append->reference();
@@ -118,7 +118,7 @@ void MonitorTest::testMonitor()
   arg = iaspy.takeFirst();
   Item item = arg.at( 0 ).value<Item>();
   QCOMPARE( item.reference(), monitorRef );
-  QCOMPARE( item.mimeType(), QString::fromLatin1(  "message/rfc822" ) );
+  QCOMPARE( item.mimeType(), QString::fromLatin1(  "application/octet-stream" ) );
   Collection collection = arg.at( 1 ).value<Collection>();
   QCOMPARE( collection.id(), monitorCol.id() );
   QCOMPARE( collection.remoteId(), monitorCol.remoteId() );
