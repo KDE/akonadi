@@ -97,7 +97,7 @@
   <table name="MimeType">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
-    <data columns="name" values="application/octet-stream"/>
+    <data columns="name" values="'application/octet-stream'"/>
     <data columns="name" values="'message/rfc822'"/>
     <data columns="name" values="'text/calendar'"/>
     <data columns="name" values="'text/vcard'"/>
