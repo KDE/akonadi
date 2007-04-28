@@ -165,7 +165,11 @@ void Akonadi::DataStore::close()
 bool Akonadi::DataStore::init()
 {
   DbInitializer initializer( m_database, QLatin1String(":akonadidb.xml") );
-  return initializer.run();
+  if (! initializer.run() ) {
+    qWarning() << initializer.errorMsg();
+    return false;
+  }
+  return true;
 }
 
 QThreadStorage<DataStore*> instances;

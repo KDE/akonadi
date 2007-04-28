@@ -29,14 +29,15 @@ INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'kde-
 INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'all', 'MIMETYPE message/rfc822 ALL', 1);
 INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'Test ?er', 'MIMETYPE message/rfc822 BODY "Test ?er"', 1);
 
-INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 2);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 3);
-INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 2, 4);
+INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 4);
+INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 2);
+INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 2, 5);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 1);
-INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 2, 4);
-INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 3, 4);
-INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 4, 4);
-INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 8, 4);
+INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 2, 5);
+INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 3, 5);
+INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 4, 5);
+INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 8, 5);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 8, 1);
 
 INSERT INTO PimItemTable (id, remoteId, data, locationId, mimeTypeId) VALUES (1, 'A', 'testmailbody', 10, 1);
