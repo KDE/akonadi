@@ -46,8 +46,6 @@ set( akonadi_LIB_SRC
 	job.cpp
 	kcrash.cpp
 	messagecollectionmodel.cpp
-  #	message.cpp
-  #	messagefetchjob.cpp
   #	messagemodel.cpp
 	monitor.cpp
 	monitor_p.cpp
