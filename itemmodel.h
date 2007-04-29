@@ -20,6 +20,7 @@
 #ifndef AKONADI_ITEMMODEL_H
 #define AKONADI_ITEMMODEL_H
 
+#include <libakonadi/item.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 

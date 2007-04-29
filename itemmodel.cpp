@@ -71,7 +71,7 @@ void ItemModel::Private::listingDone( KJob * job )
 
   // start monitor
   monitor = new Monitor( mParent );
-  monitor->addFetchPart( ItemFetchJob::PartAll );
+  monitor->addFetchPart( ItemFetchJob::PartEnvelope );
   monitor->ignoreSession( session );
   monitor->monitorCollection( collection );
   mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item&, const QStringList& )),
@@ -197,7 +197,7 @@ void ItemModel::setCollection( const Collection &collection )
   d->monitor = 0;
   // start listing job
   ItemFetchJob* job = new ItemFetchJob( collection, session() );
-  job->addFetchPart( ItemFetchJob::PartAll );
+  job->addFetchPart( ItemFetchJob::PartEnvelope );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 }
 
@@ -258,7 +258,7 @@ QMimeData *ItemModel::mimeData( const QModelIndexList &indexes ) const
 
     KUrl url;
     url.setProtocol( QString::fromLatin1("akonadi") );
-    url.setEncodedPathAndQuery( QString::fromLatin1("?item=") 
+    url.setEncodedPathAndQuery( QString::fromLatin1("?item=")
                                 + ItemModel::data( index, Id ).toString()
                                 + QString::fromLatin1( "&type=" )
                                 + itemForIndex( index ).mimeType()

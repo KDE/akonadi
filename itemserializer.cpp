@@ -114,8 +114,11 @@ static void loadPlugins() {
       qWarning() << "ItemSerializerPlugin: plugin \"" << *it << "\" is not valid!" << endl;
       continue;
     }
-    qDebug() << "ItemSerializerPluginLoader: inserting plugin for type: " << *it;
-    all->insert( *it, plugin );
+    QStringList supportedTypes = (*it).split( QLatin1Char(',') );
+    foreach ( const QString t, supportedTypes ) {
+      qDebug() << "ItemSerializerPluginLoader: inserting plugin for type: " << t;
+      all->insert( t, plugin );
+    }
   }
 }
 

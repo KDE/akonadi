@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#include "message.h"
-#include "messagefetchjob.h"
 #include "messagemodel.h"
 #include "monitor.h"
 #include "session.h"
 
 #include <kmime/kmime_message.h>
+#include <boost/shared_ptr.hpp>
+typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -61,17 +61,19 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
   if ( index.row() >= rowCount() )
     return QVariant();
   Item item = itemForIndex( index );
-  Q_ASSERT( msg->mime() );
+  if ( !item.hasPayload<MessagePtr>() )
+    return QVariant();
+  MessagePtr msg = item.payload<MessagePtr>();
   if ( role == Qt::DisplayRole ) {
     switch ( index.column() ) {
       case Subject:
-        return msg->mime()->subject()->asUnicodeString();
+        return msg->subject()->asUnicodeString();
       case Sender:
-        return msg->mime()->from()->asUnicodeString();
+        return msg->from()->asUnicodeString();
       case Receiver:
-        return msg->mime()->to()->asUnicodeString();
+        return msg->to()->asUnicodeString();
       case Date:
-        return msg->mime()->date()->asUnicodeString();
+        return msg->date()->asUnicodeString();
       case Size:
       // TODO
       default:

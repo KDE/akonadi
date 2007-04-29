@@ -46,7 +46,7 @@ class ItemFetchJob::Private
 };
 
 const QLatin1String ItemFetchJob::PartAll = QLatin1String( "AkonadiItemPartAll" );
-const QLatin1String ItemFetchJob::PartEnvelope = QLatin1String( "AkonadiItemPartEnvelope" );
+const QLatin1String ItemFetchJob::PartEnvelope = QLatin1String( "ENVELOPE" );
 
 void ItemFetchJob::Private::startFetchJob()
 {
@@ -61,8 +61,7 @@ void ItemFetchJob::Private::startFetchJob()
     command += " RFC822";
 
   foreach ( QString part, mFetchParts ) {
-    if ( part != PartAll && part != PartEnvelope )
-      command += ' ' + part.toUtf8();
+    command += ' ' + part.toUtf8();
   }
 
   command += ')';
