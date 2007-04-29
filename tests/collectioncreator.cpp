@@ -42,11 +42,11 @@ CollectionCreator::CollectionCreator( )
   for ( int i = 0; i < COLLECTION_COUNT; ++i ) {
 #ifdef SEQUENTIAL_EXECUTION
     CollectionCreateJob *job = new CollectionCreateJob( "res3/col" + QByteArray::number( i ), queue );
-    connect( job, SIGNAL(result(KJob*)), SLOT(result(KJob*)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
     queue->addJob( job );
 #else
     CollectionCreateJob *job = new CollectionCreateJob( Collection::root(), QLatin1String("col") + QString::number( i ), this );
-    connect( job, SIGNAL(result(KJob*)), SLOT(result(KJob*)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
     job->start();
     ++jobCount;
 #endif
