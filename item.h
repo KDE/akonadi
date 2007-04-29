@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+                  2007 Till Adam <adam@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
