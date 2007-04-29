@@ -110,21 +110,24 @@ void ItemStoreTest::testFlagChange()
 void ItemStoreTest::testDataChange()
 {
   DataReference ref( 1, QString() );
+  Item item( ref );
+  item.setMimeType( "application/octet-stream" );
 
   // delete data
-  ItemStoreJob *sjob = new ItemStoreJob( ref );
-  sjob->setData( QByteArray() );
+  ItemStoreJob *sjob = new ItemStoreJob( item );
+  sjob->storePayload();
   QVERIFY( sjob->exec() );
 
   ItemFetchJob *fjob = new ItemFetchJob( ref );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
-  Item item = fjob->items()[0];
+  item = fjob->items()[0];
   QVERIFY( item.payload<QByteArray>().isEmpty() );
 
   // add data
-  sjob = new ItemStoreJob( ref );
-  sjob->setData( "testmailbody" );
+  item.setPayload( QByteArray( "testmailbody" ) );
+  sjob = new ItemStoreJob( item );
+  sjob->storePayload();
   QVERIFY( sjob->exec() );
 
   fjob = new ItemFetchJob( ref );

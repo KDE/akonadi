@@ -54,6 +54,12 @@ class AKONADI_EXPORT Item
     explicit Item( const DataReference &ref = DataReference() );
 
     /**
+      Create a new PIM item with the given mimetype.
+      @param mimeType The mimetype of this item.
+    */
+    explicit Item( const QString &mimeType );
+
+    /**
      * Copy constructor.
      */
     Item( const Item &other );
@@ -72,6 +78,12 @@ class AKONADI_EXPORT Item
       Returns the DataReference of this item.
     */
     DataReference reference() const;
+
+    /**
+      Sets the DataReference for this item.
+      @param ref The DataReference object identifying this item.
+    */
+    void setReference( const DataReference &ref );
 
     /**
       Returns the flags of this item.

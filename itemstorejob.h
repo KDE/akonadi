@@ -43,9 +43,23 @@ class AKONADI_EXPORT ItemStoreJob : public Job
     explicit ItemStoreJob( const DataReference &ref, QObject *parent = 0 );
 
     /**
+      Stores the given item.
+      By default only the meta data is stored, you need to explicitly enable storing
+      of the payload data.
+      @param item The Item object to store.
+      @param parent The parent object.
+    */
+    explicit ItemStoreJob( const Item &item, QObject *parent = 0 );
+
+    /**
       Destoys this job.
      */
     virtual ~ItemStoreJob();
+
+    /**
+      Store the payload data.
+    */
+    void storePayload();
 
     /**
       Set the item data to @p data.

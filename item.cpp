@@ -53,6 +53,12 @@ Item::Item( const DataReference & reference )
   d->reference = reference;
 }
 
+Item::Item(const QString & mimeType) :
+    d ( new Private ), m_payload( 0 )
+{
+  d->mimeType = mimeType;
+}
+
 Item::Item( const Item &other )
   : d( other.d ), m_payload( 0 )
 {
@@ -75,6 +81,11 @@ bool Item::isValid() const
 DataReference Item::reference() const
 {
   return d->reference;
+}
+
+void Item::setReference(const DataReference & ref)
+{
+  d->reference = ref;
 }
 
 Item::Flags Item::flags() const

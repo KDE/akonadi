@@ -18,6 +18,7 @@
 */
 
 #include "itemstorejob.h"
+#include "itemserializer.h"
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
@@ -49,6 +50,7 @@ class ItemStoreJob::Private
     QSet<int> operations;
     QByteArray tag;
     Collection collection;
+    Item item;
 
     void sendNextCommand();
 
@@ -93,6 +95,10 @@ void ItemStoreJob::Private::sendNextCommand()
       command += "COLLECTION " + QByteArray::number( collection.id() );
       break;
     case RemoteId:
+      if ( ref.remoteId().isEmpty() ) {
+        sendNextCommand();
+        return;
+      }
       command += "REMOTEID \"" + ref.remoteId().toLatin1() + '\"';
       break;
     case Dirty:
@@ -109,6 +115,15 @@ ItemStoreJob::ItemStoreJob(const DataReference &ref, QObject * parent) :
     d( new Private( this ) )
 {
   d->ref = ref;
+}
+
+ItemStoreJob::ItemStoreJob(const Item & item, QObject * parent) :
+    Job( parent ),
+    d( new Private( this ) )
+{
+  d->item = item;
+  d->ref = item.reference();
+  d->operations.insert( Private::RemoteId );
 }
 
 ItemStoreJob::~ ItemStoreJob()
@@ -178,6 +193,13 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
     return;
   }
   qDebug() << "unhandled response in item store job: " << _tag << data;
+}
+
+void ItemStoreJob::storePayload()
+{
+  // TODO: multipart support
+  ItemSerializer::serialize( d->item, QLatin1String("RFC822"), d->data );
+  d->operations.insert( Private::Data );
 }
 
 #include "itemstorejob.moc"
