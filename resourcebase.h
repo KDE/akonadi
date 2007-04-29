@@ -44,7 +44,7 @@ class Job;
 class Session;
 
 /**
- * This class should be used as subclass by all resource agents
+ * This class should be used as base class by all resource agents
  * since it encapsulates large parts of the protocol between
  * resource agent, agent manager and storage.
  *
