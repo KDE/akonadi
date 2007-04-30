@@ -88,7 +88,7 @@ class AKONADI_EXPORT Collection
     /**
       Sets the collection name. Note that this does not change path()!
       This is used during renaming to fake immediate changes.
-      @param name The new collection name;
+      @param name The new collection name
     */
     void setName( const QString &name );
 
@@ -151,7 +151,7 @@ class AKONADI_EXPORT Collection
     void addAttribute( CollectionAttribute *attr );
 
     /**
-      Returns true if the collection has the speciefied attribute.
+      Returns true if the collection has the specified attribute.
       @param type The attribute type.
     */
     bool hasAttribute( const QByteArray &type ) const;

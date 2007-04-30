@@ -26,7 +26,7 @@
 namespace Akonadi {
 
 /**
-  Extended modell for message collections.
+  Extended model for message collections.
   Supports columns for message unread/total counts.
 */
 class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
