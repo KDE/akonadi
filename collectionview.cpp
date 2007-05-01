@@ -52,6 +52,7 @@ class CollectionView::Private
     void deleteCollection();
     void deleteResult( KJob* );
     void updateActions( const QModelIndex& );
+    bool hasParent( const QModelIndex& idx, int parentId );
 
     CollectionView *mParent;
     QSortFilterProxyModel *filterModel;
@@ -61,6 +62,18 @@ class CollectionView::Private
     KAction *newCollectionAction;
     KAction *deleteCollectionAction;
 };
+
+bool CollectionView::Private::hasParent( const QModelIndex& idx, int parentId )
+{
+  QModelIndex idx2 = idx;
+  while( idx2.isValid() ) {
+    if ( mParent->model()->data( idx2, CollectionModel::CollectionIdRole).toInt() == parentId )
+      return true;
+
+    idx2 = idx2.parent();
+  }
+  return false;
+}
 
 void CollectionView::Private::dragExpand()
 {
@@ -188,16 +201,29 @@ void CollectionView::dragMoveEvent(QDragMoveEvent * event)
     if ( protocol != QString::fromLatin1("akonadi") )
       break;
     QMap<QString, QString> query = url.queryItems();
-    QString type = query[ QString::fromLatin1("type") ];
-    if ( ( query.contains( QString::fromLatin1("collection") ) && supportedContentTypes.contains( QString::fromLatin1("inode/directory") ) ) 
-          || supportedContentTypes.contains( type ) ) {
-      QTreeView::dragMoveEvent( event );
-      return;
+
+    if ( ( query.contains( QString::fromLatin1("collection") ) ) )
+    {
+      if ( !supportedContentTypes.contains( QString::fromLatin1( "inode/directory" ) ) )
+        break;
+
+      // Check if we don't try to drop on one of the children
+      if ( d->hasParent( index, query[QString::fromLatin1( "collection" )].toInt() ) )
+        break;
     }
+    else
+    {
+      QString type = query[ QString::fromLatin1("type") ];
+      if ( !supportedContentTypes.contains( type ) )
+        break;
+    }
+
+    QTreeView::dragMoveEvent( event );
+    return;
   }
 
-   event->setDropAction( Qt::IgnoreAction );
-   return;
+  event->setDropAction( Qt::IgnoreAction );
+  return;
 }
 
 void CollectionView::dragLeaveEvent(QDragLeaveEvent * event)

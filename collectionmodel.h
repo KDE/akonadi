@@ -123,21 +123,6 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
-    /**
-      Returns wether the specified collection supports <em>any</em> of the given mime-types.
-      @param index The model index.
-      @param contentTypes The content types to check.
-    */
-    bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
-
-    /**
-      Returns whether the specified collection has @p childIndex in its children (recursively).
-      @param index The model index.
-      @param childIndex Child to search for.
-      @return true if found, false otherwise. Also return true if index == childIndex
-     */
-     bool hasChild( const QModelIndex &index, const QModelIndex &childIndex );
-
   protected:
     /**
       Returns the collection for a given collection id.
@@ -169,6 +154,13 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       @param parent The parent model index.
     */
     bool canCreateCollection( const QModelIndex &parent ) const;
+
+    /**
+      Returns wether the specified collection supports <em>any</em> of the given mime-types.
+      @param index The model index.
+      @param contentTypes The content types to check.
+    */
+    bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
 
   private:
     class Private;

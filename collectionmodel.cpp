@@ -532,8 +532,6 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     if ( query.contains( QString::fromLatin1("collection") ) )
     {
       int id = query[QString::fromLatin1("collection")].toInt();
-      if ( hasChild( indexForId(id), parent ) ) /* Can't drop on yourself or on your children */
-        return false;
 
       if (action == Qt::MoveAction) {
         Collection collectionToMove = d->collections.value( id );
@@ -579,22 +577,6 @@ void CollectionModel::fetchCollectionStatus(bool enable)
   d->monitor->fetchCollectionStatus( enable );
 }
 
-bool CollectionModel::hasChild( const QModelIndex &index, const QModelIndex &childIndex )
-{
-  if (index == childIndex)
-    return true;
 
-  int row = 0;
-  QModelIndex idx = CollectionModel::index(row, 0, index);
-  while( idx.isValid() ) {
-
-    if (hasChild( idx, childIndex ))
-      return true;
-
-    row++;
-    idx = CollectionModel::index(row, 0, index);
-  }
-  return false;
-}
 
 #include "collectionmodel.moc"
