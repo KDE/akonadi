@@ -95,9 +95,21 @@ void CollectionModel::Private::collectionRemoved( int collection )
 
 void CollectionModel::Private::collectionChanged( const Akonadi::Collection &collection )
 {
-  CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, session );
-  mParent->connect( job, SIGNAL( result( KJob* ) ),
+  // What kind of change is it ?
+  int oldParentId = collections[ collection.id() ].parent();
+  int newParentId = collection.parent();
+  if ( newParentId !=  oldParentId ) { // It's a move
+    mParent->removeRowFromModel( mParent->indexForId( collections[ collection.id() ].id() ).row(), mParent->indexForId( oldParentId ) );
+    CollectionListJob *job = new CollectionListJob( collections[ newParentId ], CollectionListJob::Recursive, session );
+    mParent->connect( job, SIGNAL( result( KJob* ) ),
                     mParent, SLOT( listDone( KJob* ) ) );
+  }
+  else { // It's a simple change
+    CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, session );
+    mParent->connect( job, SIGNAL( result( KJob* ) ),
+                    mParent, SLOT( listDone( KJob* ) ) );
+  }
+
 }
 
 void CollectionModel::Private::updateDone( KJob *job )
@@ -353,6 +365,9 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 
   beginRemoveRows( parent, row, row );
   int delColId = list.takeAt( row );
+  foreach( int childColId, d->childCollections[ delColId ] )
+    d->collections.remove( childColId );
+  d->collections.remove( delColId );
   d->childCollections.remove( delColId ); // remove children of deleted collection
   d->childCollections.insert( parentCol.id(), list ); // update children of parent
   endRemoveRows();
