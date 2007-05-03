@@ -98,7 +98,7 @@ class Tracer : public QObject, public TracerInterface
     virtual void signal( const QString &signalName, const QString &msg );
 
     /**
-      Convenience method with internal latin1 cast to compile with QT_NO_CAST_FROM_ASCII.
+      Convenience method with internal toLatin1 cast to compile with QT_NO_CAST_FROM_ASCII.
     */
     void signal( const char* signalName, const QString &msg );
 
