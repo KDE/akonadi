@@ -122,7 +122,6 @@ void CollectionModel::Private::updateDone( KJob *job )
     CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
     Collection result = csjob->collection();
     collectionStatusChanged( result.id(), csjob->status() );
-    emit mParent->leaveModality();
   }
 }
 
@@ -183,8 +182,6 @@ void CollectionModel::Private::editDone( KJob * job )
 {
   if ( job->error() ) {
     qWarning() << "Edit failed: " << job->errorString();
-  } else {
-    emit mParent->leaveModality();
   }
 }
 
@@ -193,8 +190,6 @@ void CollectionModel::Private::appendDone(KJob * job)
   if ( job->error() ) {
     kWarning() << "Append failed: " << job->errorString() << endl;
     // TODO: error handling
-  } else {
-    emit mParent->leaveModality();
   }
 }
 
