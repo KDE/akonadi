@@ -532,9 +532,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 
     ItemAppendJob *job = new ItemAppendJob( it, parentCol, d->session );
     connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-    if (job->exec())
-      return true;
-    return false;
+    return job->exec();
   }
 
   if ( !KUrl::List::canDecode( data ) )
@@ -557,9 +555,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         CollectionModifyJob *job = new CollectionModifyJob( collectionToMove, d->session );
         job->setParent( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-        if (job->exec())
-          return true;
-        return false;
+        return job->exec();
       }
       else { // TODO A Copy Collection Job
         return false;
@@ -573,9 +569,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         ItemStoreJob *job = new ItemStoreJob( ref, d->session );
         job->setCollection( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-        if (job->exec())
-          return true;
-        return false;
+        return job->exec();
       }
       else if ( action == Qt::CopyAction ) {
       // TODO Wait for a job allowing to copy on server side.
