@@ -174,8 +174,6 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     Q_PRIVATE_SLOT( d, void editDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void appendDone( KJob* ) )
 
-  signals:
-    void leaveModality();
 };
 
 }

@@ -76,16 +76,6 @@ class CollectionModel::Private
           mimeTypes << *it;
       }
     }
-
-    // Manage asynchronous jobs
-    void enter_loop()
-    {
-      QEventLoop eventLoop;
-      connect( mParent, SIGNAL( leaveModality() ),
-            &eventLoop, SLOT( quit() ) );
-      eventLoop.exec( QEventLoop::ExcludeUserInputEvents );
-    }
-
 };
 
 void CollectionModel::Private::collectionRemoved( int collection )
@@ -418,7 +408,6 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
     CollectionModifyJob *job = new CollectionModifyJob( col, d->session );
     job->setName( value.toString() );
     connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
-    d->enter_loop();
     return true;
   }
   return QAbstractItemModel::setData( index, value, role );
@@ -543,10 +532,9 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 
     ItemAppendJob *job = new ItemAppendJob( it, parentCol, d->session );
     connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-    return true; 
-    // TODO return true is not good with the asynchronous job call : If job fails, will the data be 
-    // deleted on the application which started the drag and drop ? CHECK how it's done for moving files to
-    // a remote server.
+    if (job->exec())
+      return true;
+    return false;
   }
 
   if ( !KUrl::List::canDecode( data ) )
@@ -569,8 +557,9 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         CollectionModifyJob *job = new CollectionModifyJob( collectionToMove, d->session );
         job->setParent( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-        d->enter_loop();
-        return true;
+        if (job->exec())
+          return true;
+        return false;
       }
       else { // TODO A Copy Collection Job
         return false;
@@ -584,8 +573,9 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         ItemStoreJob *job = new ItemStoreJob( ref, d->session );
         job->setCollection( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-        d->enter_loop();
-        return true; // TODO esame here, see above (MoveAction, asynchronous problem)
+        if (job->exec())
+          return true;
+        return false;
       }
       else if ( action == Qt::CopyAction ) {
       // TODO Wait for a job allowing to copy on server side.
