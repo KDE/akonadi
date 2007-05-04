@@ -37,6 +37,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QMimeData>
 #include <QtCore/QQueue>
+#include <QtCore/QEventLoop>
 #include <QtGui/QPixmap>
 
 using namespace Akonadi;
@@ -75,6 +76,16 @@ class CollectionModel::Private
           mimeTypes << *it;
       }
     }
+
+    // Manage asynchronous jobs
+    void enter_loop()
+    {
+      QEventLoop eventLoop;
+      connect( mParent, SIGNAL( leaveModality() ),
+            &eventLoop, SLOT( quit() ) );
+      eventLoop.exec( QEventLoop::ExcludeUserInputEvents );
+    }
+
 };
 
 void CollectionModel::Private::collectionRemoved( int collection )
@@ -121,6 +132,7 @@ void CollectionModel::Private::updateDone( KJob *job )
     CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
     Collection result = csjob->collection();
     collectionStatusChanged( result.id(), csjob->status() );
+    emit mParent->leaveModality();
   }
 }
 
@@ -181,6 +193,8 @@ void CollectionModel::Private::editDone( KJob * job )
 {
   if ( job->error() ) {
     qWarning() << "Edit failed: " << job->errorString();
+  } else {
+    emit mParent->leaveModality();
   }
 }
 
@@ -189,9 +203,10 @@ void CollectionModel::Private::appendDone(KJob * job)
   if ( job->error() ) {
     kWarning() << "Append failed: " << job->errorString() << endl;
     // TODO: error handling
+  } else {
+    emit mParent->leaveModality();
   }
 }
-
 
 
 CollectionModel::CollectionModel( QObject * parent ) :
@@ -403,6 +418,7 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
     CollectionModifyJob *job = new CollectionModifyJob( col, d->session );
     job->setName( value.toString() );
     connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
+    d->enter_loop();
     return true;
   }
   return QAbstractItemModel::setData( index, value, role );
@@ -553,6 +569,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         CollectionModifyJob *job = new CollectionModifyJob( collectionToMove, d->session );
         job->setParent( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
+        d->enter_loop();
         return true;
       }
       else { // TODO A Copy Collection Job
@@ -567,7 +584,8 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         ItemStoreJob *job = new ItemStoreJob( ref, d->session );
         job->setCollection( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-        return true; // TODO same here, see above (MoveAction, asynchronous problem)
+        d->enter_loop();
+        return true; // TODO esame here, see above (MoveAction, asynchronous problem)
       }
       else if ( action == Qt::CopyAction ) {
       // TODO Wait for a job allowing to copy on server side.
