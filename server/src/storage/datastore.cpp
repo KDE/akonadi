@@ -449,8 +449,6 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
     return false;
 
   Location renamedLoc = location;
-  if ( move )
-    mNotificationCollector->collectionRemoved( location );
 
   renamedLoc.setName( newName );
   renamedLoc.setParentId( newParent );
@@ -458,10 +456,7 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
   if ( !renamedLoc.update() )
     return false;
 
-  if ( move )
-    mNotificationCollector->collectionAdded( renamedLoc );
-  else
-    mNotificationCollector->collectionChanged( renamedLoc );
+  mNotificationCollector->collectionChanged( renamedLoc );
   return true;
 }
 
