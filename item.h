@@ -31,6 +31,8 @@
 
 #include <typeinfo>
 
+class KUrl;
+
 namespace Akonadi {
 
 #include "itempayloadinternals_p.h"
@@ -68,6 +70,11 @@ class AKONADI_EXPORT Item
       Destroys this PIM item.
     */
     virtual ~Item();
+
+    /**
+      Creates an item from the url
+    */
+    static DataReference fromUrl( const KUrl &url );
 
     /**
      * Returns whether the item is a valid PIM item.
@@ -197,6 +204,16 @@ class AKONADI_EXPORT Item
         }
         return p;
     }
+
+  /**
+    Returns the url for the item
+  */
+  KUrl url() const;
+
+  /**
+    Returns true if the url is valid for an item
+  */
+  static bool urlIsValid( const KUrl &url );
 
   private:
     class Private;

@@ -21,6 +21,7 @@
 #include <QtCore/QSharedData>
 
 #include "item.h"
+#include "kurl.h"
 
 using namespace Akonadi;
 
@@ -149,4 +150,25 @@ Item& Item::operator=( const Item & other )
 bool Item::hasPayload() const
 {
   return m_payload != 0;
+}
+
+KUrl Item::url() const
+{
+  KUrl url;
+  url.setProtocol( QString::fromLatin1("akonadi") );
+  url.setEncodedPathAndQuery( QString::fromLatin1("?item=")
+                                + reference().id()
+                                + QString::fromLatin1( "&type=" )
+                                + mimeType() );
+  return url;
+}
+
+DataReference Item::fromUrl( const KUrl &url )
+{
+  return DataReference( url.queryItems()[ QString::fromLatin1("item") ].toInt(), QString() );
+}
+
+bool Item::urlIsValid( const KUrl &url )
+{
+  return url.protocol() == QString::fromLatin1("akonadi") && url.queryItems().contains( QString::fromLatin1("item") );
 }

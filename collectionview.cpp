@@ -157,6 +157,7 @@ CollectionView::CollectionView( QWidget * parent ) :
   setAcceptDrops( true );
   setDropIndicatorShown( true );
   setDragDropMode( DragDrop );
+  setDragEnabled( true );
 
   d->dragExpandTimer.setSingleShot( true );
   connect( &d->dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()) );

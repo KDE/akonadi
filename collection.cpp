@@ -25,6 +25,8 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
+#include "kurl.h"
+
 using namespace Akonadi;
 
 class Collection::Private : public QSharedData
@@ -158,6 +160,19 @@ void Collection::setParentRemoteId(const QString & remoteParent)
   d->parentRemoteId = remoteParent;
 }
 
+KUrl Collection::url() const
+{
+  KUrl url;
+  url.setProtocol( QString::fromLatin1("akonadi") );
+  url.setEncodedPathAndQuery( QString::fromLatin1("?collection=") + QString::number( id() ) );
+  return url;
+}
+
+Collection Collection::fromUrl( const KUrl &url )
+{
+  return Collection( url.queryItems()[ QString::fromLatin1("collection") ].toInt() );
+}
+
 QString Collection::delimiter()
 {
   return QLatin1String( "/" );
@@ -278,4 +293,9 @@ CollectionStatus Collection::status() const
 void Collection::setStatus(const CollectionStatus & status)
 {
   d->status = status;
+}
+
+bool Collection::urlIsValid( const KUrl &url )
+{
+  return url.protocol() == QString::fromLatin1("akonadi") && url.queryItems().contains( QString::fromLatin1("collection") );
 }

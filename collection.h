@@ -26,6 +26,8 @@
 
 #include <QtCore/QSharedDataPointer>
 
+class KUrl;
+
 namespace Akonadi {
 
 /**
@@ -74,6 +76,11 @@ class AKONADI_EXPORT Collection
       Destroys this collection.
     */
     ~Collection();
+
+    /**
+      Creates a collection from the url
+    */
+    static Collection fromUrl( const KUrl &url );
 
     /**
       Returns the unique identifier of this collection.
@@ -279,6 +286,16 @@ class AKONADI_EXPORT Collection
       Sets the CollectionStatus object for this collection.
     */
     void setStatus( const CollectionStatus &status );
+
+    /**
+      Returns the collection url
+    */
+    KUrl url() const;
+
+    /**
+      Returns true if the url is valid for an item
+    */
+    static bool urlIsValid( const KUrl &url );
 
   private:
     class Private;
