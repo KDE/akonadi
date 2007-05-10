@@ -30,7 +30,7 @@ class CollectionFilterProxyModel::Private
 {
   public:
     Private( CollectionFilterProxyModel *parent )
-      : mParent( parent ), sourceModel( 0 )
+      : mParent( parent )
     {
     }
 
@@ -38,7 +38,6 @@ class CollectionFilterProxyModel::Private
 
     CollectionFilterProxyModel *mParent;
     QStringList mimeTypes;
-    CollectionModel *sourceModel;
 };
 
 bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex &index )
