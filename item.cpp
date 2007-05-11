@@ -21,7 +21,8 @@
 #include <QtCore/QSharedData>
 
 #include "item.h"
-#include "kurl.h"
+
+#include <kurl.h>
 
 using namespace Akonadi;
 

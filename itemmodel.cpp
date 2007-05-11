@@ -256,14 +256,7 @@ QMimeData *ItemModel::mimeData( const QModelIndexList &indexes ) const
     if ( index.column() != 0 )
       continue;
 
-    KUrl url;
-    url.setProtocol( QString::fromLatin1("akonadi") );
-    url.setEncodedPathAndQuery( QString::fromLatin1("?item=")
-                                + ItemModel::data( index, Id ).toString()
-                                + QString::fromLatin1( "&type=" )
-                                + itemForIndex( index ).mimeType()
-                              );
-    urls << url;
+    urls << itemForIndex( index ).url();
   }
   urls.populateMimeData( data );
 

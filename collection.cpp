@@ -25,7 +25,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include "kurl.h"
+#include <kurl.h>
 
 using namespace Akonadi;
 

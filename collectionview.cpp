@@ -198,23 +198,20 @@ void CollectionView::dragMoveEvent(QDragMoveEvent * event)
   const QMimeData *data = event->mimeData();
   KUrl::List urls = KUrl::List::fromMimeData( data );
   foreach( KUrl url, urls ) {
-    QString protocol = url.protocol();
-    if ( protocol != QString::fromLatin1("akonadi") )
-      break;
-    QMap<QString, QString> query = url.queryItems();
 
-    if ( ( query.contains( QString::fromLatin1("collection") ) ) )
+    if ( Collection::urlIsValid( url ) )
     {
       if ( !supportedContentTypes.contains( QString::fromLatin1( "inode/directory" ) ) )
         break;
 
       // Check if we don't try to drop on one of the children
-      if ( d->hasParent( index, query[QString::fromLatin1( "collection" )].toInt() ) )
+      Collection col = Collection::fromUrl( url );
+      if ( d->hasParent( index, col.id() ) )
         break;
     }
     else
     {
-      QString type = query[ QString::fromLatin1("type") ];
+      QString type = url.queryItems()[ QString::fromLatin1("type") ];
       if ( !supportedContentTypes.contains( type ) )
         break;
     }

@@ -480,11 +480,7 @@ QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
         if ( index.column() != 0 )
           continue;
 
-        KUrl url;
-        url.setProtocol( QString::fromLatin1("akonadi") );
-        url.setEncodedPathAndQuery( QString::fromLatin1("?collection=") 
-                                  + QString::number( index.internalId() ) );
-        urls << url;
+        urls << Collection( index.internalId() ).url();
     }
     urls.populateMimeData( data );
 
@@ -536,18 +532,11 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
   // data contains an url list
   KUrl::List urls = KUrl::List::fromMimeData( data );
   foreach( KUrl url, urls ) {
-    QString protocol = url.protocol();
-    if ( protocol != QString::fromLatin1("akonadi") )
-      return false;
-    QMap<QString, QString> query = url.queryItems();
-
-    if ( query.contains( QString::fromLatin1("collection") ) )
+    if ( Collection::urlIsValid( url ) )
     {
-      int id = query[QString::fromLatin1("collection")].toInt();
-
+      Collection col = Collection::fromUrl( url );
       if (action == Qt::MoveAction) {
-        Collection collectionToMove = d->collections.value( id );
-        CollectionModifyJob *job = new CollectionModifyJob( collectionToMove, d->session );
+        CollectionModifyJob *job = new CollectionModifyJob( col, d->session );
         job->setParent( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
         return job->exec();
@@ -556,11 +545,10 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         return false;
       }
     }
-    else if ( query.contains( QString::fromLatin1("item") ) )
+    else if ( Item::urlIsValid( url ) )
     {
-      int id = query[QString::fromLatin1("item")].toInt();
+      DataReference ref = Item::fromUrl( url );
       if (action == Qt::MoveAction) {
-        DataReference ref( id, QString() ); // TODO Get the remotedId ??
         ItemStoreJob *job = new ItemStoreJob( ref, d->session );
         job->setCollection( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
