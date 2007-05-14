@@ -38,12 +38,14 @@ set( akonadi_LIB_SRC
 	expungejob.cpp
 	imapparser.cpp
 	item.cpp
-	itemserializer.cpp
 	itemappendjob.cpp
+	itembrowser.cpp
 	itemdeletejob.cpp
 	itemfetchjob.cpp
-	itemstorejob.cpp
 	itemmodel.cpp
+	itemserializer.cpp
+	itemstorejob.cpp
+	itemview.cpp
 	job.cpp
 	kcrash.cpp
 	messagecollectionmodel.cpp
@@ -95,11 +97,13 @@ install( FILES
 	expungejob.h
 	imapparser.h
 	item.h
-	itemserializer.h
 	itemappendjob.h
+	itembrowser.h
 	itemdeletejob.h
 	itemfetchjob.h
+	itemserializer.h
 	itemstorejob.h
+	itemview.h
 	job.h
 	messagecollectionmodel.h
 	messagemodel.h

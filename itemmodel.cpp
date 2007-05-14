@@ -56,6 +56,7 @@ class ItemModel::Private
     Collection collection;
     Monitor *monitor;
     Session *session;
+    QStringList mFetchParts;
 };
 
 void ItemModel::Private::listingDone( KJob * job )
@@ -72,6 +73,9 @@ void ItemModel::Private::listingDone( KJob * job )
   // start monitor
   monitor = new Monitor( mParent );
   monitor->addFetchPart( ItemFetchJob::PartEnvelope );
+  foreach( QString part, mFetchParts )
+    monitor->addFetchPart( part );
+
   monitor->ignoreSession( session );
   monitor->monitorCollection( collection );
   mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item&, const QStringList& )),
@@ -191,14 +195,30 @@ void ItemModel::setCollection( const Collection &collection )
   // the query changed, thus everything we have already is invalid
   d->items.clear();
   reset();
+
   // stop all running jobs
   d->session->clear();
   delete d->monitor;
   d->monitor = 0;
+
   // start listing job
   ItemFetchJob* job = new ItemFetchJob( collection, session() );
   job->addFetchPart( ItemFetchJob::PartEnvelope );
+  foreach( QString part, d->mFetchParts )
+    job->addFetchPart( part );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
+}
+
+void ItemModel::addFetchPart( const QString &identifier )
+{
+  if ( !d->mFetchParts.contains( identifier ) )
+    d->mFetchParts.append( identifier );
+
+  // update the monitor
+  if ( d->monitor ) {
+    foreach( QString part, d->mFetchParts )
+      d->monitor->addFetchPart( part );
+  }
 }
 
 DataReference ItemModel::referenceForIndex( const QModelIndex & index ) const

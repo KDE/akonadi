@@ -112,6 +112,12 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     */
     virtual DataReference referenceForIndex( const QModelIndex &index ) const;
 
+    /**
+      Sets the part identifier of the parts that shall be fetched for
+      items. As default no parts are fetched.
+    */
+    void addFetchPart( const QString &identifier );
+
   protected:
     /**
       Returns the item at given index.
