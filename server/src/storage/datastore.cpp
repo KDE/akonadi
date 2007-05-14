@@ -1159,17 +1159,21 @@ bool Akonadi::DataStore::removeCollectionAttribute(const Location & loc, const Q
 
 void DataStore::debugLastDbError( const char* actionDescription ) const
 {
-  qDebug() << actionDescription
-           << "\nDriver said: "
-           << m_database.lastError().driverText()
-           << "\nDatabase said: "
-           << m_database.lastError().databaseText();
+  Tracer::self()->error( "DataStore (Database Error)",
+                         QString::fromLatin1( "%1\nDriver said: %2\nDatabase said:%3" )
+                            .arg( QString::fromLatin1( actionDescription ) )
+                            .arg( m_database.lastError().driverText() )
+                            .arg( m_database.lastError().databaseText() )
+                       );
 }
 
 void DataStore::debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const
 {
-  qDebug() << actionDescription
-           << ": " << query.lastError().text();
+  Tracer::self()->error( "DataStore (Database Query Error)",
+                         QString::fromLatin1( "%1: %2" )
+                            .arg( QString::fromLatin1( actionDescription ) )
+                            .arg( query.lastError().text() )
+                       );
 }
 
 bool DataStore::removeById( int id, const QString & tableName )

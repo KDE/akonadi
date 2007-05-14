@@ -101,9 +101,10 @@ void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
                                                   const QByteArray & resource )
 {
   NotificationItem ni( item, collection, mimeType, resource );
-  if ( mDb->inTransaction() )
-    mChangedItems.append( ni );
-  else {
+  if ( mDb->inTransaction() ) {
+    if ( !mChangedItems.contains( ni ) )
+      mChangedItems.append( ni );
+  } else {
     completeItem( ni );
     emit itemChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
   }
