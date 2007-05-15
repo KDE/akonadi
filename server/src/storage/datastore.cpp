@@ -595,6 +595,8 @@ bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const Location & desti
 {
   if ( !pimItem.isValid() || !destination.isValid() )
     return false;
+  if ( pimItem.locationId() == destination.id() )
+    return true;
 
   Location source = pimItem.location();
   if ( !source.isValid() )
@@ -616,6 +618,8 @@ bool DataStore::updatePimItem(PimItem & pimItem, const QString & remoteId)
 {
   if ( !pimItem.isValid() )
     return false;
+  if ( pimItem.remoteId() == remoteId.toLatin1() )
+    return true;
 
   pimItem.setRemoteId( remoteId.toLatin1() );
   pimItem.setAtime( QDateTime::currentDateTime() );
