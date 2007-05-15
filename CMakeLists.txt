@@ -49,7 +49,6 @@ set( akonadi_LIB_SRC
 	job.cpp
 	kcrash.cpp
 	messagecollectionmodel.cpp
-	messagemodel.cpp
 	monitor.cpp
 	monitor_p.cpp
 	profilemanager.cpp
@@ -70,7 +69,7 @@ qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonad
 kde4_automoc(${akonadi_LIB_SRC})
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 
-target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDEUI_LIBS} ${KDE4_KMIME_LIBS} kdepim)
+target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDEUI_LIBS} kdepim)
 set_target_properties( akonadi PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 
@@ -106,7 +105,6 @@ install( FILES
 	itemview.h
 	job.h
 	messagecollectionmodel.h
-	messagemodel.h
 	monitor.h
 	profilemanager.h
 	resource.h

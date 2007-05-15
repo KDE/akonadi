@@ -12,6 +12,8 @@ Functionality provided by libakonadi:
 - \ref libakonadi_monitor
 - \ref libakonadi_collections
 - \ref libakonadi_pimitems
+- \ref libakonadi_serializer
+- \ref libakonadi_resource
 
 \section libakonadi_jobs Accessing the Akonadi server
 
@@ -41,8 +43,10 @@ Classes to manipulate collections:
 - Akonadi::CollectionModifyJob
 - Akonadi::CollectionDeleteJob
 
-There is also CollectionModel, which is a self-updating model class which can
-be used in combination with CollectionView.
+There is also Akonadi::CollectionModel, which is a self-updating model class which can
+be used in combination with Akonadi::CollectionView. Akonadi::CollectionFilterProxyModel
+can be used to limit a displayed collection tree to collections supporting a certain
+type of PIM items.
 
 \section libakonadi_pimitems PIM item retrieval and manipulation
 
@@ -56,6 +60,24 @@ The following classes are provided to manipulate PIM items:
 - Akonadi::ItemDeleteJob
 - Akonadi::ExpungeJob
 
+Akonadi::ItemModel provides a self-updating model class which can be used to display the content
+of a collection.
+
+\section libakonadi_serializer PIM Item Serializer
+
+The class Akonadi::ItemSerializer is responsible to convert between the stored (binary) representation
+of a PIM item and the objects used to handle these items provided by the corresponding libraries (kabc, kcal, etc.).
+
+Serializer plugins allow you to add support for new kinds of PIM items to Akonadi.
+Akonadi::ItemSerializerPlugin can be used as a base class for such a plugin.
+
+\section libakonadi_resource Resources
+
+The class Akonadi::ResourceBase is the common base class for all resources. It provides the
+necessary interfaces to the server as well as many convenience functions to make implementing
+a new resource as easy as possible.
+
+
 */
 
-// DOXYGEN_REFERENCES = kdecore akonadi libkmime
+// DOXYGEN_REFERENCES = kdecore kdeui akonadi

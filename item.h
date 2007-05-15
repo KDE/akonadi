@@ -38,8 +38,17 @@ namespace Akonadi {
 #include "itempayloadinternals_p.h"
 
 /**
-  Base class for all PIM items stored in Akonadi.
-  It contains type-neutral data and the unique reference.
+  This class represents a PIM item stored in Akonadi.
+
+  A PIM item consists one or more parts (not fully implemented yet),
+  allowing a fine-grained access on its content were needed (eg. mail envelope,
+  mail body and attachments).
+
+  This class contains beside some type-agnostic information (unique identifiers, flags)
+  a single payload object representing its actual data. Which objects these actually
+  are depends on the mimetype of the item and the corresponding serializer plugin.
+
+  This calss is implicitly shared.
 */
 class AKONADI_EXPORT Item
 {
@@ -149,6 +158,8 @@ class AKONADI_EXPORT Item
 
     /**
       Sets the payload object of this PIM item.
+      The payload MUST NOT be a pointer, use a boost::shared_ptr instead.
+      The payload should be an implicitly shared class.
     */
     template <typename T>
     void setPayload( T p )
@@ -158,6 +169,7 @@ class AKONADI_EXPORT Item
 
     /**
       Returns the payload object of this PIM item.
+      This method will abort if you try to retrieve the wrong payload type.
     */
     template <typename T>
     T payload()
@@ -177,6 +189,7 @@ class AKONADI_EXPORT Item
 
     /**
       Returns the payload object of this PIM item.
+      This method will abort if you try to retrieve the wrong payload type.
     */
     template <typename T>
     const T payload() const

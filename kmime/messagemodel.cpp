@@ -18,8 +18,9 @@
 */
 
 #include "messagemodel.h"
-#include "monitor.h"
-#include "session.h"
+
+#include <libakonadi/monitor.h>
+#include <libakonadi/session.h>
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>

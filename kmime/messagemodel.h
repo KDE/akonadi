@@ -20,10 +20,10 @@
 #ifndef AKONADI_MESSAGEMODEL_H
 #define AKONADI_MESSAGEMODEL_H
 
+#include <libakonadi/itemmodel.h>
 #include <libakonadi/job.h>
 #include <kdepim_export.h>
 
-#include "itemmodel.h"
 
 namespace Akonadi {
 

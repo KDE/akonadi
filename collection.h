@@ -37,6 +37,8 @@ namespace Akonadi {
   Collections are hierarchical, i.e. they may have a parent collection.
 
   This class is implicitly shared.
+
+  @see \ref akonadi_concepts_collections "Akonadi Collection Concept"
  */
 class AKONADI_EXPORT Collection
 {
