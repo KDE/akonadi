@@ -161,16 +161,13 @@ void ItemSerializer::serialize( const Item& item, const QString& label, QIODevic
 /*static*/
 const ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetype )
 {
-    const ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
-
-    // Go finding the right plugin for the mimetype
-    qDebug() << "ItemSerializer: looking for plugin for mimetype " << mimetype;
-
-    if ( all->contains( mimetype ) ) {
-        qDebug() << "ItemSerializer: found plugin!";
+    if ( all->contains( mimetype ) )
         return *(all->value(mimetype));
-    }
 
+    qDebug() << "ItemSerializer: No plugin for mimetype " << mimetype << " found!";
+    qDebug() << "available plugins are: " << all->keys();
+
+    const ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
     Q_ASSERT(plugin);
     return *plugin;
 }

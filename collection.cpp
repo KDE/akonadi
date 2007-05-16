@@ -164,13 +164,20 @@ KUrl Collection::url() const
 {
   KUrl url;
   url.setProtocol( QString::fromLatin1("akonadi") );
-  url.setEncodedPathAndQuery( QString::fromLatin1("?collection=") + QString::number( id() ) );
+  url.addQueryItem( QLatin1String("collection"), QString::number( id() ) );
   return url;
 }
 
 Collection Collection::fromUrl( const KUrl &url )
 {
-  return Collection( url.queryItems()[ QString::fromLatin1("collection") ].toInt() );
+  QString colStr = url.queryItem( QLatin1String( "collection" ) );
+  bool ok = false;
+  int colId = colStr.toInt( &ok );
+  if ( !ok )
+    return Collection();
+  if ( colId == 0 )
+    return Collection::root();
+  return Collection( colId );
 }
 
 QString Collection::delimiter()
