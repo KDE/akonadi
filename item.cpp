@@ -157,10 +157,8 @@ KUrl Item::url() const
 {
   KUrl url;
   url.setProtocol( QString::fromLatin1("akonadi") );
-  url.setEncodedPathAndQuery( QString::fromLatin1("?item=")
-                                + reference().id()
-                                + QString::fromLatin1( "&type=" )
-                                + mimeType() );
+  url.addQueryItem( QLatin1String( "item" ), QString::number( reference().id() ) );
+  url.addQueryItem( QLatin1String( "type" ), mimeType() );
   return url;
 }
 
