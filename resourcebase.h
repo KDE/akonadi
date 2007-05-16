@@ -51,21 +51,83 @@ class Session;
  * It provides many convenience methods to make implementing a
  * new akonadi resource agent as simple as possible.
  *
- * <h4>Synchronizing Scheme</h4>
+ * <h4>How to write a resource</h4>
  *
- * The following process is started by calling synchronize().
+ * The following provides an overview of what you need to do to implement
+ * your own Akonadi resource. In the following, the term 'backend' refers
+ * to the entity the resource connects with Akonadi, be it a single file
+ * or a remote server.
  *
- * 1) Synchronize collection tree:
- *   - retrieveCollections() is called, retrieve collection tree from
- *     backend if necessary.
- *   - convert collection tree from backend specific format into
- *     Collection objects. Make sure to add a remote id to identify
- *     collection on the backend as well as the remote identifier of
- *     the parent collection.
- *   - call collectionsRetrieved() and provide the list of collections
+ * @todo Complete this (requestItemDelivery, online/offline state management)
  *
- * 2) Synchronize a single collection
- *   - TODO
+ * <h5>Basic %Resource Framework</h5>
+ *
+ * The following is needed to create a new resource:
+ * - A new class deriving from Akonadi::ResourceBase, implementing at least all
+ *   pure-virtual methods, see below for further details.
+ * - call init() in your main() function.
+ * - a .desktop file similar to the following example
+ *   \code
+ * [Desktop Entry]
+ * Encoding=UTF-8
+ * Name=My Akonadi Resource
+ * Type=AkonadiResource
+ * Exec=akonadi_my_resource
+ * Icon=my-icon
+ *
+ * X-Akonadi-MimeTypes=&lt;supported-mimetypes&gt;
+ * X-Akonadi-Capabilitites&lt;supported-mimetype&gt;
+ * X-Akonadi-Identifier=akonadi_my_resource
+ *   \endcode
+ * @todo what is capabilities used for?
+ *
+ * <h5>Handling PIM Items</h5>
+ *
+ * To follow item changes in the backend, the following steps are necessary:
+ * - Implement synchronizeCollection() to synchronize all items in the given
+ *   collection. You have to do item synchronization manually here, there are
+ *   no convenience methods provided as for collections (yet).
+ * - Call collectionSynchronized() when done.
+ * @todo Convenience methods for item synchronization
+ *
+ * To write local changes back to the backend, you need to re-implement
+ * the following three methods:
+ * - itemAdded()
+ * - itemChanged()
+ * - itemRemoved()
+ * These methods are called whenever a local item related to this resource is
+ * added, modified or deleted. They are only called if the resource is online, otherwise
+ * all changes are recorded and replayed as soon the resource is online again.
+ *
+ * <h5>Handling Collections</h5>
+ *
+ * To follow collection changes in the backend, the following steps are necessary:
+ * - Implement retrieveCollections() to retrieve collections from the backend.
+ *   If the backend supports incremental collections updates, implmenting
+ *   support for that is recommended to improve performance.
+ * - Convert the collections of the backend to Akonadi collections.
+ *   This typically happens either in retrieveCollections() if you retrieved
+ *   the collection synchronously (not recommended for network backends) or
+ *   in the a result slot of the asynchronous retrieval job.
+ *   Converting means to create Akonadi::Collection objects for every retrieved
+ *   collection. It's very important that every object has its remote identifier
+ *   and its parent remote identifier set.
+ * - Call collectionsRetrieved() or collectionsRetrievedIncremental() respectively
+ *   with the collection objects created above. The Akonadi storage will then be
+ *   updated automatically. Note that it is usually not necessary to manipulate
+ *   any collection in the Akonadi storage manually.
+ *
+ *
+ * To write local collection changes back to the backend, you need to re-implement
+ * the following three methods:
+ * - collectionAdded()
+ * - collectionChanged()
+ * - collectionRemoved()
+ * These methods are called whenever a local collection related to this resource is
+ * added, modified or deleted. They are only called if the resource is online, otherwise
+ * all changes are recorded and replayed as soon the resource is online again.
+ *
+ * @todo Convenience base class for collection-less resources
  */
 class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
 {
