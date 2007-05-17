@@ -104,12 +104,6 @@
     <data columns="name" values="'inode/directory'"/>
   </table>
 
-  <table name="MetaType">
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="CHAR(60)" properties="NOT NULL"/>
-    <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
-  </table>
-
   <table name="PimItem">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remoteId" type="QByteArray"/>
@@ -119,13 +113,6 @@
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP"/>
     <column name="atime" type="QDateTime"/>
     <column name="dirty" type="bool"/>
-  </table>
-
-  <table name="ItemMetaData">
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="data" type="QByteArray" properties="NOT NULL"/>
-    <column name="metaTypeId" type="int" refTable="MetaType" refColumn="id" properties="REFERENCES MetaType(id)"/>
-    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="REFERENCES PimItem(id)"/>
   </table>
 
   <table name="Flag">
@@ -149,13 +136,6 @@
     <column name="datasize" type="int" properties="NOT NULL"/>
     <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="REFERENCES PimItem(id)"/>
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
-  </table>
-
-  <table name="PartMetaData">
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="data" type="QByteArray" properties="NOT NULL"/>
-    <column name="metaTypeId" refTable="MetaType" refColumn="id" type="int" properties="REFERENCES MetaType(id)"/>
-    <column name="partId" type="int" refTable="Part" refColumn="id" properties="REFERENCES Part(id)"/>
   </table>
 
   <relation table2="Flag" column2="id" table1="Part" column1="id"/>

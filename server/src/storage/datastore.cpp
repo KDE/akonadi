@@ -639,8 +639,6 @@ bool DataStore::cleanupPimItem( const PimItem &item )
   // generate the notification before actually removing the data
   mNotificationCollector->itemRemoved( item );
 
-  if ( !ItemMetaData::remove( ItemMetaData::pimItemIdColumn(), item.id() ) )
-    return false;
   if ( !item.clearFlags() )
     return false;
   if ( !Part::remove( Part::pimItemIdColumn(), item.id() ) )
