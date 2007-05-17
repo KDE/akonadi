@@ -59,7 +59,7 @@ void CollectionPathResolverTest::testRoot()
 
 void CollectionPathResolverTest::testFailure()
 {
-  CollectionPathResolver *resolver = new CollectionPathResolver( "/I/dont/exist", this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( "/I/do not/exist", this );
   QVERIFY( !resolver->exec() );
 
   resolver = new CollectionPathResolver( Collection( INT_MAX ), this );

@@ -231,7 +231,7 @@ class AKONADI_EXPORT Item
   private:
     class Private;
     QSharedDataPointer<Private> d;
-    PayloadBase*  m_payload;
+    PayloadBase*  m_payload; // krazy:exclude=dpointer
 };
 
 }

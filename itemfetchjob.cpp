@@ -17,10 +17,11 @@
     02110-1301, USA.
 */
 
+#include "itemfetchjob.h"
+
 #include "collection.h"
 #include "collectionselectjob.h"
 #include "imapparser.h"
-#include "itemfetchjob.h"
 #include "itemserializer.h"
 
 #include <QtCore/QDebug>

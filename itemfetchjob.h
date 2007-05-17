@@ -49,7 +49,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       @param collection The collection to list.
       @param parent The parent object.
     */
-    ItemFetchJob( const Collection &collection, QObject *parent = 0 );
+    explicit ItemFetchJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Creates a new item fetch job to retrieve all parts of the item
@@ -57,7 +57,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       @param ref The unique message id.
       @param parent The parent object.
     */
-    ItemFetchJob( const DataReference &ref, QObject *parent = 0 );
+    explicit ItemFetchJob( const DataReference &ref, QObject *parent = 0 );
 
     /**
       Destroys this job.

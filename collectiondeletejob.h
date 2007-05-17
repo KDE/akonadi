@@ -42,7 +42,7 @@ class AKONADI_EXPORT CollectionDeleteJob : public Job
       @param collection The collection to delete.
       @param parent The parent object.
     */
-    CollectionDeleteJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionDeleteJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.

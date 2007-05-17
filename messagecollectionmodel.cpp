@@ -29,7 +29,8 @@
 using namespace Akonadi;
 
 MessageCollectionModel::MessageCollectionModel( QObject * parent ) :
-    CollectionModel( parent )
+    CollectionModel( parent ),
+    d( 0 )
 {
   fetchCollectionStatus( true );
 }

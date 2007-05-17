@@ -56,7 +56,7 @@ class AKONADI_EXPORT CollectionStatusJob : public Job
     CollectionStatus status() const;
 
     /**
-      Returns the corresponding collection, if the job was executed succesfully,
+      Returns the corresponding collection, if the job was executed successfully,
       the collection is already updated.
     */
     Collection collection() const;
