@@ -17,14 +17,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QProcess>
-#include <QtCore/QSettings>
-#include <QtCore/QTimer>
-
-#include <unistd.h>
-
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "serveradaptor.h"
@@ -35,6 +27,14 @@
 #include "notificationmanager.h"
 #include "resourcemanager.h"
 #include "tracer.h"
+
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
+#include <QtCore/QProcess>
+#include <QtCore/QSettings>
+#include <QtCore/QTimer>
+
+#include <unistd.h>
 
 using namespace Akonadi;
 
@@ -62,7 +62,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     if ( !db->database().isOpen() )
       qFatal("Unable to open database.");
     if ( !db->init() )
-      qFatal("Unable to initalize database.");
+      qFatal("Unable to initialize database.");
 
     NotificationManager::self();
     Tracer::self();

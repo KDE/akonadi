@@ -44,7 +44,7 @@ void QueryBuilder::addValueCondition(const QString & column, const char * op, co
   mConditions << c;
 }
 
-void QueryBuilder::addColumnCondition(const QString & column, const char * op, const QString column2)
+void QueryBuilder::addColumnCondition(const QString & column, const char * op, const QString &column2)
 {
   Q_ASSERT( !column.isEmpty() );
   Q_ASSERT( !column2.isEmpty() );

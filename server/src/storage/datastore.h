@@ -75,7 +75,7 @@ Name=/home/foo/.akonadi/akonadi.db
   - QSQLITE
 
   The options for each driver are read from the corresponding group.
-  The following options are supported, dependend on the driver not all of them
+  The following options are supported, dependent on the driver not all of them
   might have an effect:
 
   - Name: Database name, for sqlite that's the file name of the database.
@@ -232,7 +232,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /**
       Begins a transaction. No changes will be written to the database and
       no notification signal will be emitted unless you call commitTransaction().
-      @return true if successfull.
+      @return @c true if successful.
     */
     bool beginTransaction();
 

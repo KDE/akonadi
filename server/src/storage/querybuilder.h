@@ -74,7 +74,7 @@ class QueryBuilder
       @param op The operator used for comparison.
       @param column2 The column @p column is compared to.
     */
-    void addColumnCondition( const QString &column, const char* op, const QString column2 );
+    void addColumnCondition( const QString &column, const char* op, const QString &column2 );
 
     /**
       Returns the query, only valid after exec().
