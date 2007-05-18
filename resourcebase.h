@@ -75,8 +75,8 @@ class Session;
  * Exec=akonadi_my_resource
  * Icon=my-icon
  *
- * X-Akonadi-MimeTypes=&lt;supported-mimetypes&gt;
- * X-Akonadi-Capabilitites&lt;supported-mimetype&gt;
+ * X-Akonadi-MimeTypes=<supported-mimetypes>
+ * X-Akonadi-Capabilitites<supported-mimetype>
  * X-Akonadi-Identifier=akonadi_my_resource
  *   \endcode
  * @todo what is capabilities used for?
