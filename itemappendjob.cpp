@@ -53,7 +53,9 @@ void ItemAppendJob::doStart()
   QByteArray remoteId;
   if ( !d->item.reference().remoteId().isEmpty() )
     remoteId = " \\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']';
-  ItemSerializer::serialize( d->item, QLatin1String("RFC822"), d->data );
+  // FIXME: iterate over all parts
+  if ( d->item.hasPayload() )
+    ItemSerializer::serialize( d->item, QLatin1String("RFC822"), d->data );
   writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
       + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
       + QByteArray::number( d->data.size() ) + '}' );
