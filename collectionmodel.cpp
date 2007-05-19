@@ -97,9 +97,9 @@ void CollectionModel::Private::collectionRemoved( int collection )
 void CollectionModel::Private::collectionChanged( const Akonadi::Collection &collection )
 {
   // What kind of change is it ?
-  int oldParentId = collections[ collection.id() ].parent();
+  int oldParentId = collections.value( collection.id() ).parent();
   int newParentId = collection.parent();
-  if ( newParentId !=  oldParentId ) { // It's a move
+  if ( newParentId !=  oldParentId && oldParentId > 0 ) { // It's a move
     mParent->removeRowFromModel( mParent->indexForId( collections[ collection.id() ].id() ).row(), mParent->indexForId( oldParentId ) );
     CollectionListJob *job = new CollectionListJob( collections[ newParentId ], CollectionListJob::Recursive, session );
     mParent->connect( job, SIGNAL( result( KJob* ) ),
@@ -419,7 +419,7 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
     col = d->collections.value( index.internalId() );
     Q_ASSERT( col.isValid() );
   }
-  else 
+  else
     return flags | Qt::ItemIsDropEnabled; // HACK Workaround for a probable bug in Qt
 
   if ( col.isValid() ) {
