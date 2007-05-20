@@ -48,7 +48,7 @@ namespace Akonadi {
   a single payload object representing its actual data. Which objects these actually
   are depends on the mimetype of the item and the corresponding serializer plugin.
 
-  This calss is implicitly shared.
+  This class is implicitly shared.
 */
 class AKONADI_EXPORT Item
 {

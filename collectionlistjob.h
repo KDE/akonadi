@@ -51,7 +51,7 @@ class AKONADI_EXPORT CollectionListJob : public Job
     /**
       Create a new CollectionListJob.
       @param collection The base collection for the listing.
-      @param recursive Do a recursive collection listing.
+      @param type the type of listing to perform
       @param parent The parent object.
     */
     explicit CollectionListJob( const Collection &collection, ListType type = Flat, QObject *parent = 0 );

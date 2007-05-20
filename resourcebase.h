@@ -342,7 +342,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
      * storage is received. Must be reimplemented in any resource.
      *
      * @param ref The DataReference of this item.
-     * @param remoteId The remote identifier of the item that is requested.
      * @param type The type of the data that shall be put, either a full object or
      *             just a lightweight version.
      * @param msg QDBusMessage to pass along for delayed reply.
