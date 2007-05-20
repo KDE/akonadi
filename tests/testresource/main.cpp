@@ -17,15 +17,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtGui/QApplication>
-
 #include "knutresource.h"
 
 int main( int argc, char **argv )
 {
-  QApplication app( argc, argv );
-
-  Akonadi::ResourceBase::init<KnutResource>( argc, argv );
-
-  return app.exec();
+  return Akonadi::ResourceBase::init<KnutResource>( argc, argv );
 }
