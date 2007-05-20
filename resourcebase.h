@@ -23,17 +23,19 @@
 #ifndef AKONADI_RESOURCEBASE_H
 #define AKONADI_RESOURCEBASE_H
 
+#include "resource.h"
+
+#include <libakonadi/collection.h>
+#include <libakonadi/job.h>
+
+#include <kapplication.h>
+
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtDBus/QDBusContext>
 
 #include <kdepim_export.h>
-
-#include <libakonadi/collection.h>
-#include <libakonadi/job.h>
-
-#include "resource.h"
 
 class KJob;
 
@@ -148,6 +150,8 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     /**
      * Use this method in the main function of your resource
      * application to initialize your resource subclass.
+     * This method also takes care of creating a KApplication
+     * object and parsing command line arguments.
      *
      * \code
      *
@@ -158,20 +162,18 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
      *
      *   int main( int argc, char **argv )
      *   {
-     *     QCoreApplication app;
-     *
-     *     ResourceBase::init<MyResource>( argc, argv );
-     *
-     *     return app.exec();
+     *     return ResourceBase::init<MyResource>( argc, argv );
      *   }
      *
      * \endcode
      */
     template <typename T>
-    static void init( int argc = 0, char **argv = 0 )
+    static int init( int argc, char **argv )
     {
       QString id = parseArguments( argc, argv );
-      new T( id );
+      KApplication app;
+      T* r = new T( id );
+      return init( r );
     }
 
     /**
@@ -432,6 +434,7 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
 
   private:
     static QString parseArguments( int, char** );
+    static int init( ResourceBase *r );
 
   private:
     class Private;

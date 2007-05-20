@@ -20,6 +20,22 @@
     02110-1301, USA.
 */
 
+#include "resourcebase.h"
+
+#include "kcrash.h"
+#include "resourceadaptor.h"
+#include "collectionsync.h"
+#include "monitor_p.h"
+#include "tracerinterface.h"
+
+#include <libakonadi/collectionlistjob.h>
+#include <libakonadi/itemfetchjob.h>
+#include <libakonadi/itemstorejob.h>
+#include <libakonadi/job.h>
+#include <libakonadi/session.h>
+#include <libakonadi/monitor.h>
+
+#include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
@@ -32,21 +48,6 @@
 
 #include <signal.h>
 #include <stdlib.h>
-
-#include "kcrash.h"
-#include "resourcebase.h"
-#include "resourceadaptor.h"
-#include "collectionsync.h"
-#include "monitor_p.h"
-
-#include "tracerinterface.h"
-
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/itemfetchjob.h>
-#include <libakonadi/itemstorejob.h>
-#include <libakonadi/job.h>
-#include <libakonadi/session.h>
-#include <libakonadi/monitor.h>
 
 using namespace Akonadi;
 
@@ -402,23 +403,25 @@ QString ResourceBase::name() const
     return d->mName;
 }
 
+static KCmdLineOptions options[] =
+{
+  { "identifier <argument>", "Resource identifier", 0 },
+  KCmdLineLastOption
+};
+
+static char* sAppName = 0;
+
 QString ResourceBase::parseArguments( int argc, char **argv )
 {
   QString identifier;
-  if ( argc && argv ) {
-    if ( argc < 3 ) {
-      qDebug( "ResourceBase::parseArguments: Not enough arguments passed..." );
-      exit( 1 );
-    }
+  if ( argc < 3 ) {
+    qDebug( "ResourceBase::parseArguments: Not enough arguments passed..." );
+    exit( 1 );
+  }
 
-    for ( int i = 1; i < argc - 1; ++i ) {
-      if ( QLatin1String( argv[ i ] ) == QLatin1String( "--identifier" ) )
-        identifier = QLatin1String( argv[ i + 1 ] );
-    }
-  } else {
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if ( args && args->isSet( "identifier" ) )
-      identifier = QString::fromLatin1( args->getOption( "identifier" ) );
+  for ( int i = 1; i < argc - 1; ++i ) {
+    if ( QLatin1String( argv[ i ] ) == QLatin1String( "--identifier" ) )
+      identifier = QLatin1String( argv[ i + 1 ] );
   }
 
   if ( identifier.isEmpty() ) {
@@ -426,9 +429,21 @@ QString ResourceBase::parseArguments( int argc, char **argv )
     exit( 1 );
   }
 
-  QApplication::setQuitOnLastWindowClosed( false );
+  sAppName = qstrdup( identifier.toLatin1().constData() );
+  KCmdLineArgs::init( argc, argv, sAppName, I18N_NOOP("Akonadi Resource"),
+                      I18N_NOOP("Akonadi Resource") ,"0.1" );
+  KCmdLineArgs::addCmdLineOptions( options );
 
   return identifier;
+}
+
+int ResourceBase::init( ResourceBase *r )
+{
+  QApplication::setQuitOnLastWindowClosed( false );
+  int rv = kapp->exec();
+  delete r;
+  delete[] sAppName;
+  return rv;
 }
 
 void ResourceBase::quit()
