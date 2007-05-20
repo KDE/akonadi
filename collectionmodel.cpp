@@ -101,7 +101,12 @@ void CollectionModel::Private::collectionChanged( const Akonadi::Collection &col
   int newParentId = collection.parent();
   if ( newParentId !=  oldParentId && oldParentId >= 0 ) { // It's a move
     mParent->removeRowFromModel( mParent->indexForId( collections[ collection.id() ].id() ).row(), mParent->indexForId( oldParentId ) );
-    CollectionListJob *job = new CollectionListJob( collections[ newParentId ], CollectionListJob::Recursive, session );
+    Collection newParent;
+    if ( newParentId == Collection::root().id() )
+      newParent = Collection::root();
+    else
+      newParent = collections.value( newParentId );
+    CollectionListJob *job = new CollectionListJob( newParent, CollectionListJob::Recursive, session );
     mParent->connect( job, SIGNAL( result( KJob* ) ),
                     mParent, SLOT( listDone( KJob* ) ) );
   }
