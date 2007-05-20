@@ -146,8 +146,8 @@ void Collection::setParent( int parent )
 
 void Collection::setParent(const Collection & collection)
 {
-  d->parentId = collection.parent();
-  d->parentRemoteId = collection.parentRemoteId();
+  d->parentId = collection.id();
+  d->parentRemoteId = collection.remoteId();
 }
 
 QString Collection::parentRemoteId() const
