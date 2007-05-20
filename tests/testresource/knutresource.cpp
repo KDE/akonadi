@@ -226,6 +226,7 @@ void KnutResource::synchronizeCollection( const Akonadi::Collection &collection 
   KCal::Incidence::List incidences;
   QMapIterator<QString, CollectionEntry> it( mCollections );
   while ( it.hasNext() ) {
+    it.next();
     if ( it.value().collection.id() == collection.id() ) {
       addressees = it.value().addressees.values();
 
@@ -324,6 +325,9 @@ bool KnutResource::loadData()
   parentCollection.setParent( Collection::root() );
   parentCollection.setRemoteId( mDataFile );
   parentCollection.setName( name() );
+  QStringList contentTypes;
+  contentTypes << Collection::collectionMimeType();
+  parentCollection.setContentTypes( contentTypes );
 
   CollectionEntry entry;
   entry.collection = parentCollection;
