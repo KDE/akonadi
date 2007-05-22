@@ -2,11 +2,13 @@
 Encoding=UTF-8
 Name=Akonadi Knut Resource
 Name[es]=Recurso Knut Akonadi
+Name[ja]=Akonadi Knut リソース
 Name[sv]=Akonadi Knut-resurs
 Name[x-test]=xxAkonadi Knut Resourcexx
 Name[zh_TW]=Akonadi Knut 資源
 Comment=An agent for debugging purpose
 Comment[es]=Un agente para depurar
+Comment[ja]=デバッグのためのエージェント
 Comment[sv]=En modul för felsökningssyften
 Comment[x-test]=xxAn agent for debugging purposexx
 Comment[zh_TW]=除錯用的代理程式
