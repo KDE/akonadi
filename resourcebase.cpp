@@ -26,6 +26,7 @@
 #include "resourceadaptor.h"
 #include "collectionsync.h"
 #include "monitor_p.h"
+#include "resourcescheduler.h"
 #include "tracerinterface.h"
 
 #include <libakonadi/collectionlistjob.h>
@@ -71,7 +72,7 @@ class ResourceBase::Private
         mSettings( 0 ),
         online( true ),
         changeRecording( false ),
-        syncState( Idle )
+        scheduler( new ResourceScheduler( parent ) )
     {
       mStatusMessage = defaultReadyMessage();
     }
@@ -93,7 +94,8 @@ class ResourceBase::Private
 
     void slotCollectionSyncDone( KJob *job );
     void slotLocalListDone( KJob *job );
-    void slotSyncNextCollection();
+    void slotSynchronizeCollection( const Collection &col );
+    void slotCollectionListDone( KJob *job );
 
     QString defaultReadyMessage() const;
     QString defaultSyncingMessage() const;
@@ -199,17 +201,9 @@ class ResourceBase::Private
     }
 
     // synchronize states
-    enum SyncState {
-      Idle,
-      RetrievingRemoteCollections,
-      SyncingCollections,
-      RetrievingLocalCollections,
-      SyncingSingleCollection
-    };
-    SyncState syncState;
-
-    Collection::List localCollections;
     Collection currentCollection;
+
+    ResourceScheduler *scheduler;
 };
 
 QString ResourceBase::Private::defaultReadyMessage() const
@@ -277,6 +271,13 @@ ResourceBase::ResourceBase( const QString & id )
 
   d->monitor->ignoreSession( session() );
   d->monitor->monitorResource( d->mId.toLatin1() );
+
+  connect( d->scheduler, SIGNAL(executeFullSync()),
+           SLOT(retrieveCollections()) );
+  connect( d->scheduler, SIGNAL(executeCollectionSync(Collection)),
+           SLOT(slotSynchronizeCollection(Collection)) );
+  connect( d->scheduler, SIGNAL(executeItemFetch(DataReference,QStringList,QDBusMessage)),
+           SLOT(requestItemDelivery(DataReference,QStringList,QDBusMessage)) );
 
   d->loadChanges();
 
@@ -370,11 +371,7 @@ void ResourceBase::configure()
 
 void ResourceBase::synchronize()
 {
-  if ( d->syncState != Private::Idle )
-    return;
-
-  d->syncState = Private::RetrievingRemoteCollections;
-  retrieveCollections();
+  d->scheduler->scheduleFullSync();
 }
 
 void ResourceBase::setName( const QString &name )
@@ -521,6 +518,7 @@ void ResourceBase::Private::slotDeliveryDone(KJob * job)
     reply << true;
   }
   QDBusConnection::sessionBus().send( reply );
+  scheduler->taskDone();
 }
 
 void ResourceBase::enableChangeRecording(bool enable)
@@ -728,13 +726,14 @@ void ResourceBase::changesCommitted(const DataReference & ref)
   job->setClean();
 }
 
-bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, int type )
+bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, const QStringList &parts )
 {
   if ( !isOnline() ) {
     error( i18n( "Cannot fetch item in offline mode." ) );
     return false;
   }
-  return requestItemDelivery( DataReference( uid, remoteId ), type, message() );
+  d->scheduler->scheduleItemFetch( DataReference( uid, remoteId ), parts, message() );
+  return true;
 }
 
 bool ResourceBase::isOnline() const
@@ -755,7 +754,6 @@ void ResourceBase::collectionsRetrieved(const Collection::List & collections)
 {
   CollectionSync *syncer = new CollectionSync( d->mId, session() );
   syncer->setRemoteCollections( collections );
-  d->syncState = Private::SyncingCollections;
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)) );
 }
 
@@ -763,7 +761,6 @@ void ResourceBase::collectionsRetrievedIncremental(const Collection::List & chan
 {
   CollectionSync *syncer = new CollectionSync( d->mId, session() );
   syncer->setRemoteCollections( changedCollections, removedCollections );
-  d->syncState = Private::SyncingCollections;
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)) );
 }
 
@@ -771,59 +768,75 @@ void ResourceBase::Private::slotCollectionSyncDone(KJob * job)
 {
   if ( job->error() ) {
     mParent->error( job->errorString() );
-    syncState = Private::Idle;
-    return;
+  } else {
+    if ( scheduler->currentTask().type == ResourceScheduler::SyncAll ) {
+      CollectionListJob *list = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, mParent->session() );
+      list->setResource( mId );
+      mParent->connect( list, SIGNAL(result(KJob*)), mParent, SLOT(slotLocalListDone(KJob*)) );
+      return;
+    }
   }
-
-  syncState = Private::RetrievingLocalCollections;
-  CollectionListJob *list = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, mParent->session() );
-  list->setResource( mId );
-  mParent->connect( list, SIGNAL(result(KJob*)), mParent, SLOT(slotLocalListDone(KJob*)) );
+  mParent->changeStatus( Ready );
+  scheduler->taskDone();
 }
 
 void ResourceBase::Private::slotLocalListDone(KJob * job)
 {
   if ( job->error() ) {
     mParent->error( job->errorString() );
-    syncState = Private::Idle;
-    return;
-  }
-
-  localCollections = static_cast<CollectionListJob*>( job )->collections();
-
-  // make sure all signals are emitted before we enter syncCollection()
-  // which might use exec() and block signals to Session which causes a deadlock
-  QTimer::singleShot( 0, mParent, SLOT(slotSyncNextCollection()) );
-  syncState = Private::SyncingSingleCollection;
-}
-
-void ResourceBase::Private::slotSyncNextCollection()
-{
-  while ( !localCollections.isEmpty() ) {
-    currentCollection = localCollections.takeFirst();
-    // check if this collection actually can contain anything
-    QStringList contentTypes = currentCollection.contentTypes();
-    contentTypes.removeAll( Collection::collectionMimeType() );
-    if ( !contentTypes.isEmpty() ) {
-      mParent->changeStatus( Syncing, i18n( "Syncing collection '%1'", currentCollection.name() ) );
-      mParent->synchronizeCollection( currentCollection );
-      return;
+  } else {
+    Collection::List cols = static_cast<CollectionListJob*>( job )->collections();
+    foreach ( const Collection &col, cols ) {
+      scheduler->scheduleSync( col );
     }
   }
+  scheduler->taskDone();
+}
 
-  syncState = Private::Idle;
-  mParent->changeStatus( Ready );
+void ResourceBase::Private::slotSynchronizeCollection( const Collection &col )
+{
+  currentCollection = col;
+  // check if this collection actually can contain anything
+  QStringList contentTypes = currentCollection.contentTypes();
+  contentTypes.removeAll( Collection::collectionMimeType() );
+  if ( !contentTypes.isEmpty() ) {
+    mParent->changeStatus( Syncing, i18n( "Syncing collection '%1'", currentCollection.name() ) );
+    mParent->synchronizeCollection( currentCollection );
+    return;
+  }
+  scheduler->taskDone();
 }
 
 void ResourceBase::collectionSynchronized()
 {
-  QTimer::singleShot( 0, this, SLOT(slotSyncNextCollection()) );
+  changeStatus( Ready );
+  d->scheduler->taskDone();
 }
 
 Collection ResourceBase::currentCollection() const
 {
   return d->currentCollection;
 }
+
+void ResourceBase::synchronizeCollection(int collectionId)
+{
+  CollectionListJob* job = new CollectionListJob( Collection(collectionId), CollectionListJob::Local, session() );
+  job->setResource( identifier() );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionListDone(KJob*)) );
+}
+
+void ResourceBase::Private::slotCollectionListDone( KJob *job )
+{
+  if ( !job->error() ) {
+    Collection::List list = static_cast<CollectionListJob*>( job )->collections();
+    if ( !list.isEmpty() ) {
+      Collection col = list.first();
+      scheduler->scheduleSync( col );
+    }
+  }
+  // TODO: error handling
+}
+
 
 #include "resource.moc"
 #include "resourcebase.moc"

@@ -92,10 +92,9 @@ class AKONADI_EXPORT Resource : public QObject
      *
      * @param uid The Akonadi uid of the item that is requested.
      * @param remoteId The remote identifier of the item that is requested.
-     * @param type The type of the data that shall be put, either a full object or
-     *             just a lightweight version.
+     * @param parts The item pasrts that should be fetched.
      */
-    virtual bool requestItemDelivery( int uid, const QString &remoteId, int type ) = 0;
+    virtual bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts ) = 0;
 
     /**
      * This method is called whenever the resource shall show its configuration dialog
@@ -107,6 +106,12 @@ class AKONADI_EXPORT Resource : public QObject
      * This method is called whenever the resource should start synchronization.
      */
     virtual Q_NOREPLY void synchronize() = 0;
+
+    /**
+     * Synchronize the given collection.
+     * @param collectionId The identifier of the collection to synchronize.
+     */
+    virtual Q_NOREPLY void synchronizeCollection( int collectionId ) = 0;
 
     /**
      * This method is used to set the name of the resource.

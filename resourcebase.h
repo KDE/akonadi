@@ -38,6 +38,7 @@
 #include <kdepim_export.h>
 
 class KJob;
+class ResourceAdaptor;
 
 namespace Akonadi {
 
@@ -60,7 +61,7 @@ class Session;
  * to the entity the resource connects with Akonadi, be it a single file
  * or a remote server.
  *
- * @todo Complete this (requestItemDelivery, online/offline state management)
+ * @todo Complete this (online/offline state management)
  *
  * <h5>Basic %Resource Framework</h5>
  *
@@ -91,6 +92,10 @@ class Session;
  *   no convenience methods provided as for collections (yet).
  * - Call collectionSynchronized() when done.
  * @todo Convenience methods for item synchronization
+ *
+ * To fetch item data on demand, the method requestItemDelivery() needs to be
+ * reimplemented. Fetch the requested data there, create a ItemStoreJob to store
+ * the data and call deliverItem().
  *
  * To write local changes back to the backend, you need to re-implement
  * the following three methods:
@@ -241,7 +246,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
      */
     void crashHandler( int signal );
 
-    virtual bool requestItemDelivery( int uid, const QString &remoteId, int type );
     virtual bool isOnline() const;
     virtual void setOnline( bool state );
 
@@ -262,7 +266,7 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     */
     void enableChangeRecording( bool enable );
 
-  protected:
+  protected Q_SLOTS:
     /**
       Retrieve the collection tree from the remote server and supply it via
       collectionsRetrieved().
@@ -277,6 +281,17 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     */
     virtual void synchronizeCollection( const Collection &collection ) = 0;
 
+    /**
+     * This method is called whenever an external query for putting data in the
+     * storage is received. Must be reimplemented in any resource.
+     *
+     * @param ref The DataReference of this item.
+     * @param parts The item parts that should be fetched.
+     * @param msg QDBusMessage to pass along for delayed reply.
+     */
+    virtual bool requestItemDelivery( const DataReference &ref, const QStringList &parts, const QDBusMessage &msg ) = 0;
+
+  protected:
     /**
      * Creates a base resource.
      *
@@ -338,17 +353,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
      * be used for all jobs.
      */
     Session* session();
-
-    /**
-     * This method is called whenever an external query for putting data in the
-     * storage is received. Must be reimplemented in any resource.
-     *
-     * @param ref The DataReference of this item.
-     * @param type The type of the data that shall be put, either a full object or
-     *             just a lightweight version.
-     * @param msg QDBusMessage to pass along for delayed reply.
-     */
-    virtual bool requestItemDelivery( const DataReference &ref, int type, const QDBusMessage &msg ) = 0;
 
     /**
       Call this method from in requestItemDelivery(). It will generate an appropriate
@@ -436,6 +440,11 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     static QString parseArguments( int, char** );
     static int init( ResourceBase *r );
 
+    // dbus resource interface
+    friend class ::ResourceAdaptor;
+    void synchronizeCollection( int collectionId );
+    bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts );
+
   private:
     class Private;
     Private* const d;
@@ -454,7 +463,8 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     Q_PRIVATE_SLOT( d, void slotReplayCollectionChanged( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotCollectionSyncDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotSyncNextCollection() )
+    Q_PRIVATE_SLOT( d, void slotSynchronizeCollection(const Collection &col) )
+    Q_PRIVATE_SLOT( d, void slotCollectionListDone( KJob* ) )
 };
 
 }

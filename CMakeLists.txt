@@ -54,6 +54,7 @@ set( akonadi_LIB_SRC
 	profilemanager.cpp
 	profilemodel.cpp
 	resourcebase.cpp
+	resourcescheduler.cpp
 	session.cpp
 	transactionjobs.cpp
 )
