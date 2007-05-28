@@ -129,6 +129,11 @@ bool DbInitializer::checkTable( const QDomElement &element )
           .arg( values );
       dataList << statement;
     } else if ( columnElement.tagName() == QLatin1String("reference") ) {
+      /* this is the n-side of a n:1 relationship. 
+       * it is used for code generation but not relevant for schema generation.
+       */
+    } else if ( columnElement.tagName() == QLatin1String("comment") ) {
+      // we use comments for doxygen but not for schema generation
     } else {
       mErrorMsg = QString::fromLatin1( "Unknown tag, expected <column> and got <%1>." ).arg( columnElement.tagName() );
       return false;

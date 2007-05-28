@@ -100,6 +100,10 @@ using namespace Akonadi;
 
 /**
   Representation of a record in the <xsl:value-of select="$entityName"/> table.
+  <xsl:if test="comment != ''">
+  &lt;br&gt;
+  <xsl:value-of select="comment"/>
+  </xsl:if>
 */
 class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
 {
@@ -124,6 +128,11 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
 
     // accessor methods
     <xsl:for-each select="column[@name != 'id']">
+    <xsl:if test="comment != ''">
+    /** 
+      <xsl:value-of select="comment"/>
+    */
+    </xsl:if>
     <xsl:value-of select="@type"/><xsl:text> </xsl:text><xsl:value-of select="@name"/>() const;
     void <xsl:call-template name="setter-signature"/>;
     </xsl:for-each>
@@ -255,6 +264,11 @@ QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$class
 <xsl:template name="relation-header">
 <xsl:variable name="className"><xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation</xsl:variable>
 
+<xsl:if test="comment != ''">
+/**
+  <xsl:value-of select="comment"/>
+*/
+</xsl:if>
 class <xsl:value-of select="$className"/>
 {
   public:

@@ -62,7 +62,9 @@
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <column name="expireTime" type="int" default="0" properties="NOT NULL"/>
-    <column name="offlineParts" type="QString"/>
+    <column name="offlineParts" type="QString">
+      <comment>???</comment>
+    </column>
     <data columns="name,expireTime,offlineParts" values="'None',0,''"/>
     <data columns="name,expireTime,offlineParts" values="'Temporary',60,'HEAD'"/>
     <data columns="name,expireTime,offlineParts" values="'Permanent',-1,'ALL'"/>
@@ -71,7 +73,9 @@
   <table name="Resource">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
-    <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="NOT NULL REFERENCES CachePolicy(id)"/>
+    <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="NOT NULL REFERENCES CachePolicy(id)">
+      <comment>Default for all locations with undefined cachePolicy.</comment>
+    </column>
     <reference name="locations" table="Location" key="resourceId"/>
     <data columns="name,cachePolicyId" values="'akonadi_search_resource',1"/>
   </table>
@@ -88,13 +92,16 @@
     <column name="recentCount" type="int"/>
     <column name="unseenCount" type="int"/>
     <column name="firstUnseen" type="int"/>
-    <column name="uidValidity" type="int"/>
+    <column name="uidValidity" type="int">
+      <comment>???</comment>
+    </column>
     <reference name="items" table="PimItem" key="locationId"/>
     <reference name="attributes" table="LocationAttribute" key="locationId"/>
     <data columns="parentId,name,resourceId" values="0,'Search',1"/>
   </table>
 
   <table name="MimeType">
+    <comment>This meta data is stored inside akonadi to provide fast access.</comment>
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <data columns="name" values="'application/octet-stream'"/>
@@ -110,12 +117,17 @@
     <column name="data" type="QByteArray"/>
     <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
-    <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP"/>
-    <column name="atime" type="QDateTime"/>
+    <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP">
+      <comment>create/modified time</comment>
+    </column>
+    <column name="atime" type="QDateTime">
+      <comment>read access time</comment>
+    </column>
     <column name="dirty" type="bool"/>
   </table>
 
   <table name="Flag">
+    <comment>This meta data is stored inside akonadi to provide fast access.</comment>
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <data columns="name" values="'important'"/>
@@ -140,7 +152,9 @@
 
   <relation table2="Flag" column2="id" table1="Part" column1="id"/>
 
-  <relation table1="Location" column1="id" table2="MimeType" column2="id"/>
+  <relation table1="Location" column1="id" table2="MimeType" column2="id">
+    <comment>Specifies allowed MimeType for a Location</comment>
+  </relation>
 
   <table name="LocationAttribute">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
