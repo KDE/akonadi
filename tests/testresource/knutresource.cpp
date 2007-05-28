@@ -90,9 +90,9 @@ QString KnutResource::configuration() const
   return mDataFile;
 }
 
-bool KnutResource::requestItemDelivery( const DataReference &ref, int type, const QDBusMessage &msg )
+bool KnutResource::requestItemDelivery( const DataReference &ref, const QStringList &parts, const QDBusMessage &msg )
 {
-  Q_UNUSED( type );
+  Q_UNUSED( parts );
 
   const QString remoteId = ref.remoteId();
 
