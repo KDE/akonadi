@@ -61,9 +61,11 @@
   <table name="CachePolicy">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
-    <column name="expireTime" type="int" default="0" properties="NOT NULL"/>
+    <column name="expireTime" type="int" default="0" properties="NOT NULL">
+      <comment>The time in minutes the cached parts should be kept.</comment>
+    </column>
     <column name="offlineParts" type="QString">
-      <comment>???</comment>
+      <comment>A list of item parts that should be kept for offline usage.</comment>
     </column>
     <data columns="name,expireTime,offlineParts" values="'None',0,''"/>
     <data columns="name,expireTime,offlineParts" values="'Temporary',60,'HEAD'"/>
@@ -86,14 +88,17 @@
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="parentId" type="int" refTable="Location" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Location(id)"/>
     <reference name="children" table="Location" key="parentId"/>
-    <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="REFERENCES CachePolicy(id)"/>
+    <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="REFERENCES CachePolicy(id)">
+      <comment>Identifier of the cache policy that should be used for this
+        collection. If NULL, the default should be used.</comment>
+    </column>
     <column name="resourceId" type="int" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
     <column name="existCount" type="int"/>
     <column name="recentCount" type="int"/>
     <column name="unseenCount" type="int"/>
     <column name="firstUnseen" type="int"/>
     <column name="uidValidity" type="int">
-      <comment>???</comment>
+      <comment>Needed for IMAP compatibility??</comment>
     </column>
     <reference name="items" table="PimItem" key="locationId"/>
     <reference name="attributes" table="LocationAttribute" key="locationId"/>
@@ -123,7 +128,9 @@
     <column name="atime" type="QDateTime">
       <comment>read access time</comment>
     </column>
-    <column name="dirty" type="bool"/>
+    <column name="dirty" type="bool">
+      <comment>Indicates that this item has unsaved changes.</comment>
+    </column>
   </table>
 
   <table name="Flag">

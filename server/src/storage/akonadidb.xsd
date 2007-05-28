@@ -39,16 +39,17 @@
       <xsd:element name="reference"  type="referenceType" minOccurs="0" maxOccurs="100"/>
       <xsd:element name="data"       type="dataType"      minOccurs="0" maxOccurs="100"/>
     </xsd:sequence>
+    <xsd:attribute name="name"       type="xsd:string"   use="required"/>
   </xsd:complexType>
 
   <xsd:complexType name="relationType">
     <xsd:sequence>
       <xsd:element name="comment"    type="xsd:string"  minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="table1"     type="xsd:string"  minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="column1"    type="xsd:string"  minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="table2"     type="xsd:string"  minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="column2"    type="xsd:string"  minOccurs="1" maxOccurs="1"/>
     </xsd:sequence>
+    <xsd:attribute name="table1"     type="xsd:string"   use="required"/>
+    <xsd:attribute name="column1"    type="xsd:string"   use="required"/>
+    <xsd:attribute name="table2"     type="xsd:string"   use="required"/>
+    <xsd:attribute name="column2"    type="xsd:string"   use="required"/>
   </xsd:complexType>
 
   <xsd:complexType name="columnType">
@@ -60,6 +61,7 @@
     <xsd:attribute name="sqltype"     type="xsd:string"/>
     <xsd:attribute name="default"     type="xsd:string"/>
     <xsd:attribute name="refTable"    type="xsd:string"/>
+    <xsd:attribute name="refColumn"   type="xsd:string"/>
     <xsd:attribute name="methodName"  type="xsd:string"/>
     <xsd:attribute name="properties"  type="xsd:string"/>
   </xsd:complexType>
