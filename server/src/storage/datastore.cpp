@@ -760,7 +760,8 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
         qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
                                         .arg( r.name(), interface ? interface->lastError().message() : QString() );
       } else {
-        ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), type );
+        // FIXME: add correct item part list
+        ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), QStringList() );
       }
 
       mPendingItemDeliveriesMutex.lock();
