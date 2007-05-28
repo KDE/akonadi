@@ -29,6 +29,7 @@
 #include <QtDBus/QDBusConnection>
 
 #include <QtCore/QDebug>
+#include <QtCore/QTimer>
 
 using namespace Akonadi;
 
@@ -88,11 +89,15 @@ class Monitor::Private
     void slotFetchCollectionAddedFinished( KJob* );
     void slotFetchCollectionChangedFinished( KJob* );
     void slotStatusChangedFinished( KJob* );
+    void slotFlushRecentlyChangedCollections();
 
     bool fetchCollection;
     bool fetchCollectionStatus;
 
   private:
+    // collections that need a status update
+    QSet<int> recentlyChangedCollections;
+
     bool isCollectionMonitored( int collection ) const
     {
       if ( collections.contains( Collection( collection ) ) )
@@ -106,6 +111,15 @@ class Monitor::Private
     {
       CollectionStatusJob *job = new CollectionStatusJob( Collection( colId ), mParent );
       connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotStatusChangedFinished(KJob*)) );
+    }
+
+    void notifyCollectionStatusWatchers( int collection, const QByteArray &resource )
+    {
+      if ( isCollectionMonitored( collection, resource ) ) {
+        if (recentlyChangedCollections.empty() )
+          QTimer::singleShot( 500, mParent, SLOT(slotFlushRecentlyChangedCollections()) );
+        recentlyChangedCollections.insert( collection );
+      }
     }
 };
 
@@ -157,13 +171,7 @@ void Monitor::Private::slotItemChanged( const QByteArray &sessionId, int uid, co
     }
   }
 
-  // collection status has changed
-  if ( isCollectionMonitored( collection, resource ) ) {
-    if ( fetchCollectionStatus )
-      fetchStatus( collection );
-    else
-      emit mParent->collectionStatusChanged( collection, CollectionStatus() );
-  }
+  notifyCollectionStatusWatchers( collection, resource );
 }
 
 void Monitor::Private::slotItemAdded( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
@@ -187,13 +195,7 @@ void Monitor::Private::slotItemAdded( const QByteArray &sessionId, int uid, cons
     }
   }
 
-  // collection status has changed
-  if ( isCollectionMonitored( collection, resource ) ) {
-    if ( fetchCollectionStatus )
-      fetchStatus( collection );
-    else
-      emit mParent->collectionStatusChanged( collection, CollectionStatus() );
-  }
+  notifyCollectionStatusWatchers( collection, resource );
 }
 
 void Monitor::Private::slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId, int collection,
@@ -205,13 +207,7 @@ void Monitor::Private::slotItemRemoved( const QByteArray &sessionId, int uid, co
   if ( isItemMonitored( uid, collection, mimetype, resource ) )
     emit mParent->itemRemoved( DataReference( uid, remoteId ) );
 
-  // collection status has changed
-  if ( isCollectionMonitored( collection, resource ) ) {
-    if ( fetchCollectionStatus )
-      fetchStatus( collection );
-    else
-      emit mParent->collectionStatusChanged( collection, CollectionStatus() );
-  }
+  notifyCollectionStatusWatchers( collection, resource );
 }
 
 void Monitor::Private::slotCollectionChanged( const QByteArray &sessionId, int collection, const QString&,
@@ -258,6 +254,9 @@ void Monitor::Private::slotCollectionRemoved( const QByteArray &sessionId, int c
 
   if ( isCollectionMonitored( collection, resource ) )
     emit mParent->collectionRemoved( collection, remoteId );
+
+  // no need for status updates anymore
+  recentlyChangedCollections.remove( collection );
 }
 
 void Monitor::Private::sessionDestroyed( QObject * object )
@@ -329,6 +328,17 @@ void Monitor::Private::slotStatusChangedFinished( KJob* job )
     CollectionStatusJob *statusJob = static_cast<CollectionStatusJob*>( job );
     emit mParent->collectionStatusChanged( statusJob->collection().id(), statusJob->status() );
   }
+}
+
+void Monitor::Private::slotFlushRecentlyChangedCollections()
+{
+  foreach( int collection, recentlyChangedCollections ) {
+    if ( fetchCollectionStatus )
+      fetchStatus( collection );
+    else
+      emit mParent->collectionStatusChanged( collection, CollectionStatus() );
+  }
+  recentlyChangedCollections.clear();
 }
 
 

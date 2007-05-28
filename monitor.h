@@ -181,6 +181,7 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_PRIVATE_SLOT( d, void slotFetchCollectionAddedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotFetchCollectionChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotStatusChangedFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotFlushRecentlyChangedCollections() )
 };
 
 }
