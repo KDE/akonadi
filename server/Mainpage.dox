@@ -16,18 +16,18 @@
 
 \page akonadi_server_definitions Type Definitions
 
-To let all components play together nicely we have to use some common encoding
+To let all components play together nicely, we have to use some common encoding
 definitions.
 
 \li <em>Collection names</em><br/>
     Collection names and paths are Unicode strings (QString) to allow custom names by the user.
 \li <em>DataReference</em><br/>
-    The persistent identifier is an unsigned interger and the external URL is
+    The persistent identifier is an unsigned integer and the external URL is
     a Unicode string (QString).
 \li <em>Transfered data over IMAP</em><br/>
     The data transferred over IMAP are byte arrays (QByteArray). If Unicode strings are
     transferred over IMAP, UTF-8 encoding is applied.
-\li <em>Error/Status messages</em>
+\li <em>Error/Status messages</em><br/>
     Error and status messages are visible to the user, so they have to be
     Unicode strings (QString).
 
