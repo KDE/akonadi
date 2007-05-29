@@ -47,12 +47,12 @@ class Job;
 class Session;
 
 /**
- * This class should be used as base class by all resource agents
+ * This class should be used as a base class by all resource agents,
  * since it encapsulates large parts of the protocol between
  * resource agent, agent manager and storage.
  *
  * It provides many convenience methods to make implementing a
- * new akonadi resource agent as simple as possible.
+ * new Akonadi resource agent as simple as possible.
  *
  * <h4>How to write a resource</h4>
  *
@@ -110,12 +110,12 @@ class Session;
  *
  * To follow collection changes in the backend, the following steps are necessary:
  * - Implement retrieveCollections() to retrieve collections from the backend.
- *   If the backend supports incremental collections updates, implmenting
+ *   If the backend supports incremental collections updates, implementing
  *   support for that is recommended to improve performance.
  * - Convert the collections of the backend to Akonadi collections.
  *   This typically happens either in retrieveCollections() if you retrieved
  *   the collection synchronously (not recommended for network backends) or
- *   in the a result slot of the asynchronous retrieval job.
+ *   in the result slot of the asynchronous retrieval job.
  *   Converting means to create Akonadi::Collection objects for every retrieved
  *   collection. It's very important that every object has its remote identifier
  *   and its parent remote identifier set.
@@ -262,7 +262,7 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     /**
       Enables change recording. When change recording is enabled all changes are
       stored internally and replayed as soon as change recording is disabled.
-      @param enable True to enable change recoding, false to disable change recording.
+      @param enable True to enable change recording, false to disable change recording.
     */
     void enableChangeRecording( bool enable );
 
