@@ -63,6 +63,15 @@ class Collection::Private : public QSharedData
       qDeleteAll( attributes );
     }
 
+    static Collection newRoot()
+    {
+      Collection root( 0 );
+      QStringList types;
+      types << collectionMimeType();
+      root.setContentTypes( types );
+      return root;
+    }
+
     int id;
     int parentId;
     QString name;
@@ -75,7 +84,10 @@ class Collection::Private : public QSharedData
     int cachePolicyId;
     CollectionStatus status;
     QStringList contentTypes;
+    static const Collection root;
 };
+
+const Collection Collection::Private::root = Collection::Private::newRoot();
 
 Collection::Collection() :
     d ( new Private )
@@ -185,13 +197,9 @@ QString Collection::delimiter()
   return QLatin1String( "/" );
 }
 
-Collection Collection::root( )
+Collection Collection::root()
 {
-  Collection root( 0 );
-  QStringList types;
-  types << collectionMimeType();
-  root.setContentTypes( types );
-  return root;
+  return Private::root;
 }
 
 QString Collection::collectionMimeType( )
