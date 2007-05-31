@@ -333,10 +333,12 @@ void Monitor::Private::slotStatusChangedFinished( KJob* job )
 void Monitor::Private::slotFlushRecentlyChangedCollections()
 {
   foreach( int collection, recentlyChangedCollections ) {
-    if ( fetchCollectionStatus )
+    if ( fetchCollectionStatus ) {
       fetchStatus( collection );
-    else
-      emit mParent->collectionStatusChanged( collection, CollectionStatus() );
+    } else {
+      static const CollectionStatus dummyStatus;
+      emit mParent->collectionStatusChanged( collection, dummyStatus );
+    }
   }
   recentlyChangedCollections.clear();
 }
