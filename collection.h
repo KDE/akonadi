@@ -141,7 +141,7 @@ class AKONADI_EXPORT Collection
 
     /**
       Returns the parent remote identifier.
-      Note: This returns usually nothing for collections retrieved from the backend.
+      Note: This usually returns nothing for collections retrieved from the backend.
     */
     QString parentRemoteId() const;
 
@@ -224,12 +224,12 @@ class AKONADI_EXPORT Collection
     bool isValid() const;
 
     /**
-      Comapares two collections.
+      Compares two collections.
     */
     bool operator==( const Collection &other ) const;
 
     /**
-      Comapares two collections.
+      Compares two collections.
     */
     bool operator!=( const Collection &other ) const;
 
