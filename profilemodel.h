@@ -20,8 +20,8 @@
 #ifndef PROFILEMODEL_H
 #define PROFILEMODEL_H
 
+#include "libakonadi_export.h"
 #include <QtCore/QAbstractItemModel>
-#include <kdepim_export.h>
 
 namespace Akonadi {
 

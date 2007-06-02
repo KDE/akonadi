@@ -23,6 +23,7 @@
 #ifndef AKONADI_RESOURCEBASE_H
 #define AKONADI_RESOURCEBASE_H
 
+#include "libakonadi_export.h"
 #include "resource.h"
 
 #include <libakonadi/collection.h>
@@ -34,8 +35,6 @@
 #include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtDBus/QDBusContext>
-
-#include <kdepim_export.h>
 
 class KJob;
 class ResourceAdaptor;

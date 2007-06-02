@@ -24,6 +24,7 @@
 #ifndef AKONADI_JOB_H
 #define AKONADI_JOB_H
 
+#include "libakonadi_export.h"
 #include "session_p.h"
 
 #include <QtCore/QObject>
@@ -32,7 +33,6 @@
 #include <kcompositejob.h>
 #include <libakonadi/datareference.h>
 
-#include <kdepim_export.h>
 
 namespace Akonadi {
 

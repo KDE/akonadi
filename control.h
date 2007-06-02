@@ -20,9 +20,8 @@
 #ifndef AKONADI_CONTROL_H
 #define AKONADI_CONTROL_H
 
+#include "libakonadi_export.h"
 #include <QtCore/QObject>
-
-#include <kdepim_export.h>
 
 class QEventLoop;
 

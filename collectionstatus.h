@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTIONSTATUS_H
 #define AKONADI_COLLECTIONSTATUS_H
 
-#include <kdepim_export.h>
+#include "libakonadi_export.h"
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 

@@ -20,8 +20,8 @@
 #ifndef AKONADI_COLLECTION_VIEW
 #define AKONADI_COLLECTION_VIEW
 
+#include "libakonadi_export.h"
 #include <QtGui/QTreeView>
-#include <kdepim_export.h>
 
 class QDragMoveEvent;
 

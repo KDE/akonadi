@@ -20,9 +20,9 @@
 #ifndef AKONADI_COLLECTIONATTRIBUTE_H
 #define AKONADI_COLLECTIONATTRIBUTE_H
 
+#include "libakonadi_export.h"
 #include <QtCore/QList>
 #include <QtCore/QStringList>
-#include <kdepim_export.h>
 
 class QString;
 

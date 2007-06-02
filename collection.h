@@ -20,9 +20,9 @@
 #ifndef AKONADI_COLLECTION_H
 #define AKONADI_COLLECTION_H
 
+#include "libakonadi_export.h"
 #include <libakonadi/collectionattribute.h>
 #include <libakonadi/collectionstatus.h>
-#include <kdepim_export.h>
 
 #include <QtCore/QSharedDataPointer>
 

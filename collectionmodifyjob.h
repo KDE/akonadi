@@ -20,9 +20,9 @@
 #ifndef AKONADI_COLLECTIONMODIFYJOB_H
 #define AKONADI_COLLECTIONMODIFYJOB_H
 
+#include "libakonadi_export.h"
 #include <libakonadi/collection.h>
 #include <libakonadi/job.h>
-#include <kdepim_export.h>
 
 namespace Akonadi {
 

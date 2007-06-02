@@ -20,8 +20,8 @@
 #ifndef AGENTINSTANCEMODEL_H
 #define AGENTINSTANCEMODEL_H
 
+#include "libakonadi_export.h"
 #include <QtCore/QAbstractItemModel>
-#include <kdepim_export.h>
 
 namespace Akonadi {
 

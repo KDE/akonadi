@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEMVIEW_H
 #define AKONADI_ITEMVIEW_H
 
-#include <kdepim_export.h>
+#include "libakonadi_export.h"
 
 class QStringList;
 

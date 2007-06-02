@@ -20,10 +20,10 @@
 #ifndef AKONADI_COLLECTIONSTATUSJOB_H
 #define AKONADI_COLLECTIONSTATUSJOB_H
 
+#include "libakonadi_export.h"
 #include <libakonadi/collection.h>
 #include <libakonadi/collectionstatus.h>
 #include <libakonadi/job.h>
-#include <kdepim_export.h>
 
 namespace Akonadi {
 

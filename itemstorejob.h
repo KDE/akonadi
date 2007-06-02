@@ -20,10 +20,10 @@
 #ifndef AKONADI_ITEMSTOREJOB_H
 #define AKONADI_ITEMSTOREJOB_H
 
+#include "libakonadi_export.h"
 #include <libakonadi/collection.h>
 #include <libakonadi/item.h>
 #include <libakonadi/job.h>
-#include <kdepim_export.h>
 
 namespace Akonadi {
 

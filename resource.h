@@ -22,9 +22,8 @@
 #ifndef AKONADI_RESOURCE_H
 #define AKONADI_RESOURCE_H
 
+#include "libakonadi_export.h"
 #include <QtCore/QObject>
-
-#include <kdepim_export.h>
 
 #ifndef Q_NOREPLY
 #define Q_NOREPLY

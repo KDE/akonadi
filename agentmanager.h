@@ -20,8 +20,8 @@
 #ifndef AKONADI_AGENTMANAGER_H
 #define AKONADI_AGENTMANAGER_H
 
+#include "libakonadi_export.h"
 #include <QtCore/QObject>
-#include <kdepim_export.h>
 
 class QIcon;
 

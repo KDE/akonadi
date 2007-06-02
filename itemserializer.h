@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEM_SERIALIZER_H
 #define AKONADI_ITEM_SERIALIZER_H
 
-#include <kdepim_export.h>
+#include "libakonadi_export.h"
 
 class QString;
 class QByteArray;

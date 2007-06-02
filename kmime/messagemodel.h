@@ -20,17 +20,16 @@
 #ifndef AKONADI_MESSAGEMODEL_H
 #define AKONADI_MESSAGEMODEL_H
 
+#include "akonadi_export.h"
 #include <libakonadi/itemmodel.h>
 #include <libakonadi/job.h>
-#include <kdepim_export.h>
-
 
 namespace Akonadi {
 
 /**
   A flat self-updating message model.
 */
-class AKONADI_EXPORT MessageModel : public Akonadi::ItemModel
+class AKONADI_KMIME_EXPORT MessageModel : public Akonadi::ItemModel
 {
   Q_OBJECT
 
