@@ -71,7 +71,7 @@ kde4_automoc(${akonadi_LIB_SRC})
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 
 target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDEUI_LIBS} kdepim)
-set_target_properties( akonadi PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties( akonadi PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 
 ########### install files ###############

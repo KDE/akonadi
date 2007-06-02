@@ -17,7 +17,7 @@ kde4_automoc(${kmimeakonadi_LIB_SRC})
 kde4_add_library( kmimeakonadi SHARED ${kmimeakonadi_LIB_SRC} )
 
 target_link_libraries( kmimeakonadi akonadi ${KDE4_KMIME_LIBS} )
-set_target_properties( kmimeakonadi PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties( kmimeakonadi PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kmimeakonadi DESTINATION ${LIB_INSTALL_DIR})
 
 ########### install files ###############
