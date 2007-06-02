@@ -50,6 +50,7 @@ class ItemModel::Private
     void itemChanged( const Akonadi::Item&, const QStringList& );
     void itemAdded( const Akonadi::Item& );
     void itemRemoved( const Akonadi::DataReference& );
+    int rowForItem( const Akonadi::DataReference& );
 
     ItemModel *mParent;
     Item::List items;
@@ -86,10 +87,27 @@ void ItemModel::Private::listingDone( KJob * job )
                     mParent, SLOT(itemRemoved(Akonadi::DataReference)) );
 }
 
+int ItemModel::Private::rowForItem( const Akonadi::DataReference& ref )
+{
+  // ### *slow*
+  int row = -1;
+  for ( int i = 0; i < items.size(); ++i ) {
+    if ( items.at( i ).reference() == ref ) {
+      row = i;
+      break;
+    }
+  }
+  return row;
+}
+
 void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QStringList& )
 {
-  itemRemoved( item.reference() );
-  itemAdded( item );
+  int row = rowForItem( item.reference() );
+  if ( row < 0 )
+    return;
+  QModelIndex index = mParent->index( row, 0, QModelIndex() );
+
+  mParent->dataChanged( index, index );
 }
 
 void ItemModel::Private::itemAdded( const Akonadi::Item &item )
@@ -101,14 +119,7 @@ void ItemModel::Private::itemAdded( const Akonadi::Item &item )
 
 void ItemModel::Private::itemRemoved( const DataReference &reference )
 {
-  // ### *slow*
-  int index = -1;
-  for ( int i = 0; i < items.size(); ++i ) {
-    if ( items.at( i ).reference() == reference ) {
-      index = i;
-      break;
-    }
-  }
+  int index = rowForItem( reference );
   if ( index < 0 )
     return;
 
