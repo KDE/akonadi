@@ -121,7 +121,7 @@ kde4_automoc(${libakonadiprivate_SRCS})
 kde4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
 target_link_libraries( akonadiprivate ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}
                                       ${QT_QTSQL_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY})
-set_target_properties(akonadiprivate PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(akonadiprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
 set( akonadiserver_bin_SRCS src/main.cpp control/kcrash.cpp )
