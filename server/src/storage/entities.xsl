@@ -35,7 +35,7 @@
 #ifndef AKONADI_ENTITIES_H
 #define AKONADI_ENTITIES_H
 #include &lt;storage/entity.h&gt;
-#include "akonadiprivate_export.h"
+#include "akonadi_export.h"
 
 #include &lt;qdebug.h&gt;
 #include &lt;qstring.h&gt;
@@ -105,7 +105,7 @@ using namespace Akonadi;
   <xsl:value-of select="comment"/>
   </xsl:if>
 */
-class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
+class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
 {
   friend class DataStore;
 

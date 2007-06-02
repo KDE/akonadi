@@ -20,8 +20,8 @@
 #ifndef PROFILEVIEW_H
 #define PROFILEVIEW_H
 
+#include "libakonadi_export.h"
 #include <QtGui/QWidget>
-#include <kdepim_export.h>
 
 namespace Akonadi {
 
@@ -34,7 +34,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADICOMPONENTS_EXPORT ProfileView : public QWidget
+class AKONADI_COMPONENTS_EXPORT ProfileView : public QWidget
 {
   Q_OBJECT
 

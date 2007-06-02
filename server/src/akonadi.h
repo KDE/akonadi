@@ -24,7 +24,7 @@
 #include <QtCore/QPointer>
 #include <QtNetwork/QTcpServer>
 
-#include "akonadiprivate_export.h"
+#include "akonadi_export.h"
 
 class QProcess;
 
@@ -33,7 +33,7 @@ namespace Akonadi {
 class AkonadiConnection;
 class CacheCleaner;
 
-class AKONADIPRIVATE_EXPORT AkonadiServer: public QTcpServer
+class AKONADI_SERVER_EXPORT AkonadiServer: public QTcpServer
 {
     Q_OBJECT
 

@@ -22,7 +22,7 @@
 
 #include <entities.h>
 #include <handler.h>
-#include "akonadiprivate_export.h"
+#include "akonadi_export.h"
 
 namespace Akonadi {
 
@@ -59,7 +59,7 @@ namespace Akonadi {
   The name is encoded as an quoted UTF-8 string. There is no order defined for the
   single responses.
  */
-class AKONADIPRIVATE_EXPORT AkList : public Handler
+class AKONADI_SERVER_EXPORT AkList : public Handler
 {
   public:
     AkList();

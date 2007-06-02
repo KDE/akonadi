@@ -20,7 +20,7 @@
 #ifndef AKONADI_IMAPPARSER_H
 #define AKONADI_IMAPPARSER_H
 
-#include <kdepim_export.h>
+#include "libakonadi_export.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>

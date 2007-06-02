@@ -1,8 +1,9 @@
 macro_optional_find_package(OpenSSL)
 
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/include )
 include_directories( ${CMAKE_BINARY_DIR}/akonadi )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/searchproviders )
+include_directories( ${CMAKE_SOURCE_DIR}/akonadi )
+#TODO: remove the next line when the src/imapparser symlinks are removed
+include_directories( ${CMAKE_SOURCE_DIR}/akonadi/libakonadi )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )

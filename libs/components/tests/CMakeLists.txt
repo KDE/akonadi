@@ -2,7 +2,7 @@
 if(KDE4_BUILD_TESTS)
 
 include_directories(
-	${CMAKE_SOURCE_DIR}/akonadi
+	${CMAKE_SOURCE_DIR}/akonadi/libakonadi
 	${CMAKE_CURRENT_SOURCE_DIR}/../
 	${CMAKE_CURRENT_SOURCE_DIR}
 )

@@ -22,10 +22,9 @@
 #ifndef AKONADI_DATAREFERENCE_H
 #define AKONADI_DATAREFERENCE_H
 
+#include "libakonadi_export.h"
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
-
-#include <kdepim_export.h>
 
 namespace Akonadi {
 
