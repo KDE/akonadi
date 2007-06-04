@@ -29,7 +29,6 @@
 #define Q_NOREPLY
 #endif
 
-class QDBusMessage;
 
 namespace Akonadi {
 

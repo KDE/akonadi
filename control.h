@@ -23,7 +23,6 @@
 #include "libakonadi_export.h"
 #include <QtCore/QObject>
 
-class QEventLoop;
 
 namespace Akonadi {
 

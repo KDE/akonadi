@@ -26,8 +26,6 @@
 #include <QTcpSocket>
 #include <QThreadStorage>
 
-class QHostAddress;
-class QTimer;
 
 namespace Akonadi {
 

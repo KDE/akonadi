@@ -29,7 +29,6 @@
 namespace Akonadi {
 
 class Collection;
-class ItemFetchJob;
 class Job;
 class Session;
 
