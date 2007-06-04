@@ -26,7 +26,6 @@
 #include <resourcebase.h>
 
 class QDomElement;
-class QTimer;
 
 class KnutResource : public Akonadi::ResourceBase
 {
