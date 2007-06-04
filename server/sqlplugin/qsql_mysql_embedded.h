@@ -44,7 +44,6 @@ QT_BEGIN_HEADER
 class QMYSQLEmbeddedDriverPrivate;
 class QMYSQLEmbeddedResultPrivate;
 class QMYSQLEmbeddedDriver;
-class QSqlRecordInfo;
 
 class QMYSQLEmbeddedResult : public QSqlResult
 {

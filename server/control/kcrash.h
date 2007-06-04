@@ -22,7 +22,6 @@
 #ifndef KCRASH_H
 #define KCRASH_H
 
-class QString;
 
 class KCrash
 {
