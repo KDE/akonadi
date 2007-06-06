@@ -105,6 +105,7 @@ install( FILES
 	itemstorejob.h
 	itemview.h
 	job.h
+	libakonadi_export.h
 	messagecollectionmodel.h
 	monitor.h
 	profilemanager.h
