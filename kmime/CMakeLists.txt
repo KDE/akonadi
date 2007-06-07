@@ -5,7 +5,10 @@ include_directories(
         ${Boost_INCLUDE_DIR}
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}" )
+if(NOT MSVC)
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall" )
+endif(NOT MSVC)
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}" )
 
 ########### next target ###############
 
