@@ -732,7 +732,10 @@ bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, const 
     error( i18n( "Cannot fetch item in offline mode." ) );
     return false;
   }
+
+  setDelayedReply( true );
   d->scheduler->scheduleItemFetch( DataReference( uid, remoteId ), parts, message() );
+
   return true;
 }
 
