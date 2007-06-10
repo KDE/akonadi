@@ -34,7 +34,7 @@
 #endif
 
 #ifndef AKONADI_COMPONENTS_EXPORT
-# if defined(MAKE_AKONADI_COMPONENTS_LIB)
+# if defined(MAKE_AKONADICOMPONENTS_LIB)
    /* We are building this library */
 #  define AKONADI_COMPONENTS_EXPORT KDE_EXPORT
 # else
