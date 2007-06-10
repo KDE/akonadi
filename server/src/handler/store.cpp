@@ -240,8 +240,11 @@ bool Akonadi::Store::inContinuation() const
 
 bool Akonadi::Store::handleContinuation(const QByteArray & line)
 {
-  mData += line;
-  mSize -= line.size();
+  if ( line.size() > mSize )
+    mData += line.left( mSize );
+  else
+    mData += line;
+  mSize = qMax( mSize - line.size(), 0 );
   if ( !allDataRead() )
     return false;
   return commit();
