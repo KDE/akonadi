@@ -121,6 +121,7 @@ ItemStoreJob::ItemStoreJob(const Item & item, QObject * parent) :
     Job( parent ),
     d( new Private( this ) )
 {
+  Q_ASSERT( !item.mimeType().isEmpty() );
   d->item = item;
   d->ref = item.reference();
   d->operations.insert( Private::RemoteId );
@@ -180,6 +181,9 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
 {
   if ( _tag == "+" ) { // ready for literal data
     writeData( d->data );
+    // ### readLine() would deadlock in the server otherwise, should probably be fixed there
+    if ( !d->data.endsWith( '\n' ) )
+      writeData( "\n" );
     return;
   }
   if ( _tag == d->tag ) {

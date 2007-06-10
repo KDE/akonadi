@@ -28,6 +28,7 @@ class ItemStoreTest : public QObject
   private Q_SLOTS:
     void initTestCase();
     void testFlagChange();
+    void testDataChange_data();
     void testDataChange();
     void testItemMove();
     void testIllegalItemMove();
