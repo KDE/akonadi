@@ -26,6 +26,10 @@
 
 #include "tracerinterface.h"
 
+/**
+ * The profile manager is responsible for managing the profiles and provides
+ * methods to add/remove an agent instance to/from a profile.
+ */
 class ProfileManager : public QObject
 {
   Q_OBJECT

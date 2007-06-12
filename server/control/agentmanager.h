@@ -30,6 +30,11 @@ namespace Akonadi {
   class ProcessControl;
 }
 
+/**
+ * The agent manager has knowledge about all available agents (it scans
+ * for .desktop files in the agent directory) and the available configured
+ * instances.
+ */ 
 class AgentManager : public QObject
 {
   Q_OBJECT
