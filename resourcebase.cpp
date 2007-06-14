@@ -507,6 +507,18 @@ bool ResourceBase::deliverItem(Akonadi::Job * job, const QDBusMessage & msg)
   return false;
 }
 
+void ResourceBase::itemAdded( const Item &item, const Collection &collection )
+{
+  Q_UNUSED( item );
+  Q_UNUSED( collection );
+}
+
+void ResourceBase::itemChanged( const Item &item, const QStringList &partIdentifiers )
+{
+  Q_UNUSED( item );
+  Q_UNUSED( partIdentifiers );
+}
+
 void ResourceBase::Private::slotDeliveryDone(KJob * job)
 {
   Q_ASSERT( pendingReplys.contains( static_cast<Akonadi::Job*>( job ) ) );

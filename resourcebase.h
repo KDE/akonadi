@@ -365,14 +365,14 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
       Reimplement to handle adding of new items.
       @param item The newly added item.
     */
-    virtual void itemAdded( const Item &, const Collection & ) { }
+    virtual void itemAdded( const Item &item, const Collection &collection );
 
     /**
       Reimplement to handle changes to existing items.
       @param item The changed item.
       @param partIdentifiers The identifiers of the item parts that has been changed.
     */
-    virtual void itemChanged( const Item &, const QStringList & ) { }
+    virtual void itemChanged( const Item &item, const QStringList &partIdentifiers  );
 
     /**
       Reimplement to handle deletion of items.
