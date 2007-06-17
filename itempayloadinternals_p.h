@@ -17,6 +17,11 @@
     02110-1301, USA.
 */
 
+#ifndef ITEMPAYLOADINTERNALS_P_H
+#define ITEMPAYLOADINTERNALS_P_H
+
+#include <typeinfo>
+
 /* WARNING
  * The below is an implementation detail of the Item class. It is not to be
  * considered public API, and subject to change without notice
@@ -64,4 +69,5 @@ struct Payload<T*> : public PayloadBase
     }
 };
 
+#endif
 
