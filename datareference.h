@@ -70,6 +70,11 @@ class AKONADI_EXPORT DataReference
       remote id is set.
      */
     QString remoteId() const;
+    
+    /**
+      Sets the remote id of the DataReference, overriding the previous one.
+     */
+    void setRemoteId( const QString &id );
 
     /**
       Returns true if this is a empty reference, ie. one created with
