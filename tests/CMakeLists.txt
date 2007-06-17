@@ -1,6 +1,4 @@
 
-if(KDE4_BUILD_TESTS)
-
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 include_directories(
@@ -15,7 +13,7 @@ macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_automoc(${_test})
-  kde4_add_executable(${_name} RUN_UNINSTALLED ${_test})
+  kde4_add_test_executable(${_name} ${_test})
   target_link_libraries(${_name} akonadi)
 endmacro(add_akonadi_demo)
 
@@ -25,9 +23,8 @@ macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_automoc(${_test})
-  kde4_add_executable(${_name} RUN_UNINSTALLED ${_test})
+  kde4_add_unit_test(${_name} TESTNAME libakonati-${_name} ${_test})
   target_link_libraries(${_name} akonadi ${QT_QTTEST_LIBRARY})
-  add_test( libakonadi-${_name} ${EXECUTABLE_OUTPUT_PATH}/${_name})
 endmacro(add_akonadi_test)
 
 # demo applications
@@ -45,7 +42,4 @@ add_akonadi_test(itemhydratest.cpp)
 add_akonadi_test(itemappendtest.cpp)
 add_akonadi_test(itemstoretest.cpp)
 add_akonadi_test(monitortest.cpp)
-
-
-endif(KDE4_BUILD_TESTS)
 
