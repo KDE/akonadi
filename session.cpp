@@ -36,19 +36,19 @@ using namespace Akonadi;
 
 
 
-void Session::Private::startNext()
+void SessionPrivate::startNext()
 {
   QTimer::singleShot( 0, mParent, SLOT(doStartNext()) );
 }
 
-void Session::Private::reconnect()
+void SessionPrivate::reconnect()
 {
   if ( socket->state() != QAbstractSocket::ConnectedState &&
        socket->state() != QAbstractSocket::ConnectingState )
     socket->connectToHost( QHostAddress::LocalHost, 4444 );
 }
 
-void Session::Private::socketError()
+void SessionPrivate::socketError()
 {
   if ( currentJob )
     currentJob->d->lostConnection();
@@ -56,7 +56,7 @@ void Session::Private::socketError()
   QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
 }
 
-void Session::Private::dataReceived()
+void SessionPrivate::dataReceived()
 {
   while ( socket->canReadLine() ) {
     if ( !parseNextLine() )
@@ -89,7 +89,7 @@ void Session::Private::dataReceived()
   }
 }
 
-void Session::Private::doStartNext()
+void SessionPrivate::doStartNext()
 {
   if ( !connected || jobRunning || queue.isEmpty() )
     return;
@@ -99,7 +99,7 @@ void Session::Private::doStartNext()
   currentJob->d->startQueued();
 }
 
-void Session::Private::jobDone(KJob * job)
+void SessionPrivate::jobDone(KJob * job)
 {
   if( job == currentJob ) {
     jobRunning = false;
@@ -111,7 +111,7 @@ void Session::Private::jobDone(KJob * job)
 
 Session::Session(const QByteArray & sessionId, QObject * parent) :
     QObject( parent ),
-    d( new Private( this ) )
+    d( new SessionPrivate( this ) )
 {
   if ( !sessionId.isEmpty() )
     d->sessionId = sessionId;

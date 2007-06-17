@@ -28,6 +28,7 @@ class KJob;
 namespace Akonadi {
 
 class Job;
+class SessionPrivate;
 
 /**
   A communication session with the Akonadi storage. Every Job object has to
@@ -41,6 +42,7 @@ class AKONADI_EXPORT Session : public QObject
   Q_OBJECT
 
   friend class Job;
+  friend class SessionPrivate;
 
   public:
     /**
@@ -90,8 +92,7 @@ class AKONADI_EXPORT Session : public QObject
     int nextTag();
 
   private:
-    class Private;
-    Private* const d;
+    SessionPrivate* const d;
 
     Q_PRIVATE_SLOT( d, void reconnect() )
     Q_PRIVATE_SLOT( d, void socketError() )

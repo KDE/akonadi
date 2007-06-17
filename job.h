@@ -25,7 +25,6 @@
 #define AKONADI_JOB_H
 
 #include "libakonadi_export.h"
-#include "session_p.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -35,6 +34,9 @@
 
 
 namespace Akonadi {
+
+class Session;
+class SessionPrivate;
 
 /**
   This class encapsulates a request to the pim storage service,
@@ -75,7 +77,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
   Q_OBJECT
 
   friend class Session;
-  friend class Session::Private;
+  friend class SessionPrivate;
 
   public:
 

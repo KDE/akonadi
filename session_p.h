@@ -29,10 +29,10 @@
 
 namespace Akonadi {
 
-class Session::Private
+class SessionPrivate
 {
   public:
-    Private( Session *parent )
+    SessionPrivate( Session *parent )
       : mParent( parent )
     {
     }
