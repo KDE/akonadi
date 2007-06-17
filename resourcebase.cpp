@@ -734,7 +734,6 @@ void ResourceBase::Private::slotCollectionRemoved( int id, const QString &remote
 void ResourceBase::changesCommitted(const DataReference & ref)
 {
   ItemStoreJob *job = new ItemStoreJob( ref, session() );
-  job->setRemoteId();
   job->setClean();
 }
 

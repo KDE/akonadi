@@ -95,7 +95,7 @@ void ItemStoreJob::Private::sendNextCommand()
       command += "COLLECTION " + QByteArray::number( collection.id() );
       break;
     case RemoteId:
-      if ( ref.remoteId().isEmpty() ) {
+      if ( ref.remoteId().isNull() ) {
         sendNextCommand();
         return;
       }
@@ -115,6 +115,7 @@ ItemStoreJob::ItemStoreJob(const DataReference &ref, QObject * parent) :
     d( new Private( this ) )
 {
   d->ref = ref;
+  d->operations.insert( Private::RemoteId );
 }
 
 ItemStoreJob::ItemStoreJob(const Item & item, QObject * parent) :
@@ -160,11 +161,6 @@ void ItemStoreJob::setCollection(const Collection &collection)
 {
   d->collection = collection;
   d->operations.insert( Private::Move );
-}
-
-void ItemStoreJob::setRemoteId()
-{
-  d->operations.insert( Private::RemoteId );
 }
 
 void ItemStoreJob::setClean()

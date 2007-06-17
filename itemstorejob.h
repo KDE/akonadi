@@ -92,13 +92,6 @@ class AKONADI_EXPORT ItemStoreJob : public Job
     void setCollection( const Collection &collection );
 
     /**
-      Sets the remote id based on the DataReference object given in the
-      constructor.
-      Use for resources to update the remote id after adding an item to the server.
-    */
-    void setRemoteId();
-
-    /**
       Resets the item dirty flag. Should only be used by resources after
       writing changes back to the corresponding server.
     */

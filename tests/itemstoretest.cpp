@@ -175,4 +175,31 @@ void ItemStoreTest::testIllegalItemMove()
   QVERIFY( !store->exec() );
 }
 
+void ItemStoreTest::testRemoteId_data()
+{
+  QTest::addColumn<QString>( "rid" );
+  QTest::addColumn<QString>( "exprid" );
+
+  QTest::newRow( "set" ) << QString( "A" ) << QString( "A" );
+  QTest::newRow( "no-change" ) << QString() << QString( "A" );
+  QTest::newRow( "clear" ) << QString( "" ) << QString( "" );
+  QTest::newRow( "reset" ) << QString( "A" ) << QString( "A" );
+}
+
+void ItemStoreTest::testRemoteId()
+{
+  QFETCH( QString, rid );
+  QFETCH( QString, exprid );
+
+  DataReference ref( 1, rid );
+  ItemStoreJob *store = new ItemStoreJob( ref, this );
+  QVERIFY( store->exec() );
+
+  ItemFetchJob *fetch = new ItemFetchJob( ref, this );
+  QVERIFY( fetch->exec() );
+  QCOMPARE( fetch->items().count(), 1 );
+  Item item = fetch->items().at( 0 );
+  QCOMPARE( item.reference().remoteId(), exprid );
+}
+
 #include "itemstoretest.moc"

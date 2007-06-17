@@ -130,8 +130,9 @@ void MonitorTest::testMonitor()
   QVERIFY( irspy.isEmpty() );
 
   // modify an item
-  ItemStoreJob *store = new ItemStoreJob( monitorRef, this );
-  store->setData( QByteArray( "some new content" ) );
+  item.setPayload<QByteArray>( "some new content" );
+  ItemStoreJob *store = new ItemStoreJob( item, this );
+  store->storePayload();
   QVERIFY( store->exec() );
   QTest::qWait(1000);
 
