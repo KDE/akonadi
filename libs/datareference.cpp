@@ -54,7 +54,7 @@ DataReference::DataReference( int id, const QString &remoteId )
   : d( new Private )
 {
   d->mId = id;
-  d->mRemoteId = remoteId;
+  setRemoteId ( remoteId );
 }
 
 DataReference::DataReference( const DataReference &other )
@@ -82,6 +82,11 @@ int DataReference::id() const
 QString DataReference::remoteId() const
 {
   return d->mRemoteId;
+}
+
+void DataReference::setRemoteId( const QString &id )
+{
+  d->mRemoteId=id;
 }
 
 bool DataReference::isNull() const
