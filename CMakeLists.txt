@@ -101,6 +101,7 @@ install( FILES
 	itembrowser.h
 	itemdeletejob.h
 	itemfetchjob.h
+	itempayloadinternals_p.h
 	itemserializer.h
 	itemstorejob.h
 	itemview.h
