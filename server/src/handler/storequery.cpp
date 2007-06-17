@@ -84,7 +84,7 @@ bool StoreQuery::parse( const QByteArray &query )
   }
   if ( dataType() == Collection || dataType() == RemoteId ) {
     ImapParser::parseString( leftover, mCollection );
-    if ( mCollection.isEmpty() )
+    if ( dataType() == Collection && mCollection.isEmpty() )
       return false;
     return true;
   }
