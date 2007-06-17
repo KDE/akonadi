@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include "knutresource.h"
+
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
@@ -32,9 +34,11 @@
 #include <kfiledialog.h>
 #include <klocale.h>
 
-#include "knutresource.h"
+#include <boost/shared_ptr.hpp>
 
 using namespace Akonadi;
+
+typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 
 KnutResource::KnutResource( const QString &id )
   : ResourceBase( id )
@@ -101,18 +105,21 @@ bool KnutResource::requestItemDelivery( const DataReference &ref, const QStringL
     it.next();
 
     const CollectionEntry &entry = it.value();
+    Item item( ref );
 
-    QByteArray data;
+    if ( entry.addressees.contains( remoteId ) ) {
+      item.setMimeType( "text/vcard" );
+      item.setPayload<KABC::Addressee>( entry.addressees.value( remoteId ) );
+    }
 
-    if ( entry.addressees.contains( remoteId ) )
-      data = mVCardConverter.createVCard( entry.addressees.value( remoteId ) );
+    if ( entry.incidences.contains( remoteId ) ) {
+      item.setMimeType( "text/calendar" );
+      item.setPayload<IncidencePtr>( IncidencePtr( entry.incidences.value( remoteId ) ) );
+    }
 
-    if ( entry.incidences.contains( remoteId ) )
-      data = mICalConverter.toString( entry.incidences.value( remoteId ) ).toUtf8();
-
-    if ( !data.isEmpty() ) {
-      ItemStoreJob *job = new ItemStoreJob( ref, session() );
-      job->setData( data );
+    if ( item.hasPayload() ) {
+      ItemStoreJob *job = new ItemStoreJob( item, session() );
+      job->storePayload();
 
       return deliverItem( job, msg );
     }
