@@ -73,7 +73,7 @@ set(libakonadiprivate_SRCS
   src/handler/transaction.cpp
   src/handler/uid.cpp
   src/storage/entity.cpp
-  entities.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   src/storage/datastore.cpp
   src/storage/dbinitializer.cpp
   src/storage/notificationcollector.cpp
