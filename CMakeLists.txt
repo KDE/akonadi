@@ -77,6 +77,7 @@ install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 ########### install files ###############
 
 install( FILES
+	akonadi_export.h
 	agentmanager.h
 	collection.h
 	collectionattribute.h

@@ -20,7 +20,7 @@
 #ifndef AKONADI_MESSAGEMODEL_H
 #define AKONADI_MESSAGEMODEL_H
 
-#include "akonadi_export.h"
+#include <libakonadi/akonadi_export.h>
 #include <libakonadi/itemmodel.h>
 #include <libakonadi/job.h>
 
