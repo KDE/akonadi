@@ -105,6 +105,7 @@ install( FILES
 	itemserializer.h
 	itemstorejob.h
 	itemview.h
+	itemmodel.h
 	job.h
 	libakonadi_export.h
 	messagecollectionmodel.h
