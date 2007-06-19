@@ -35,6 +35,9 @@
 						write file
 
 	*/
+// FIXME: implement pseudocode above
+exit();
+
 // The output file and its header
 $output = fopen("enron_contacts.txt", "w");
 fwrite($output, "Name;Company;Email");
