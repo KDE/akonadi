@@ -62,12 +62,6 @@ class AKONADI_EXPORT ItemStoreJob : public Job
     void storePayload();
 
     /**
-      Set the item data to @p data.
-      @param data The new item data.
-    */
-    void setData( const QByteArray &data );
-
-    /**
       Sets the item flags to @p flags.
       @param flags the new item flags.
     */

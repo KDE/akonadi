@@ -133,12 +133,6 @@ ItemStoreJob::~ ItemStoreJob()
   delete d;
 }
 
-void ItemStoreJob::setData(const QByteArray & data)
-{
-  d->data = data;
-  d->operations.insert( Private::Data );
-}
-
 void ItemStoreJob::setFlags(const Item::Flags & flags)
 {
   d->flags = flags;
