@@ -19,36 +19,18 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-	/*
-		CLI arguments:
-		- chance of an attachment
-		- minimum/maximum size of attachment
-
-		open maildir
-			scan all users
-				scan all subdirs
-					if(rand(0,100) < chance)
-						open file
-						add attachment
-							add mime-stuff (content-type: multipart/mixed, part separators)
-	  					generate random data (size: rand(minimumsize,maximumsize) and base64_encode it
-						write file
-
-	*/
-// FIXME: implement pseudocode above
-exit();
-
-// The output file and its header
-$output = fopen("enron_contacts.txt", "w");
-fwrite($output, "Name;Company;Email");
-
-// The mail headers to look for
-$search_elements = array("X-To:", "To:", "X-From:", "From:"); //, "Cc:", "Bcc:");
+// Process commandline arguments
+$args = process_arguments($argv);
+$attachment_chance = $args["chance"];
+$attachment_minsize = $args["minsize"];
+$attachment_maxsize = $args["maxsize"];
 
 // Location of maildirs
 $maildirname = "maildir";
 
-$maildir = opendir($maildirname);
+if(($maildir = opendir($maildirname)) === FALSE)
+  die("Error opening " . $maildirname . "\n");
+
 $c = 0;
 
 // Process all mail accounts
@@ -62,74 +44,89 @@ while($account = readdir($maildir))
   $alldocsname = $maildirname . "/" . $account . "/" . "all_documents";
   if($alldocs = @opendir($alldocsname))
   {
-    echo "Analyzing account '" . $account . "'...";
+    echo "Processing account '" . $account . "'...";
 
-    $contacts = array();
+    // Generate random attachment data
+    $attachment_data = substr(base64_encode(random_string($attachment_maxsize)), 0, $attachment_maxsize);
 
     // Read next mail file
     while($mailfile = readdir($alldocs))
     {
       $c++;
+      // DEBUG: if($c == 4) exit();
 
-      // Open mail file
-      $fd = fopen($alldocsname . "/" . $mailfile, "r");
-      if($fd)
+      // Skip current and parent directory
+      if($mailfile == "." || $mailfile == "..")
+        continue;
+
+      // Add attachment with a certain chance
+      if(rand(0, 100) < $attachment_chance)
       {
-        $values = array();
-
-        // Read file line by line
-        while($line = fgets($fd))
+        // Read mail file into array
+        if(($mail = file($alldocsname . "/" . $mailfile)) !== FALSE)
         {
-          // Stop after headers
-          if($line == "\n")
-            break;
+          // Open output file
+          $fd = fopen($alldocsname . "/" . $mailfile, "w");
+          // DEBUG: $fd = fopen("php://stdout", "w");
 
-          // Remove trailing newline
-          $line = substr($line, 0, strlen($line) - 1);
-
-          // Search for certain headers
-          foreach($search_elements as $search_element)
+          if($fd)
           {
-            $length = strlen($search_element);
+            // Generate MIME content boundary
+            $boundary = random_text(50);
 
-            // Skip headers without contents
-            if(strlen($line) > ($length + 3))
+            // Process original mail file, line by line
+            $indata = false;
+            foreach($mail as $line)
             {
-              // Check if header matches one of the searched headers
-              if(substr_compare($line, $search_element, 0, $length) == 0)
+              $done = false;
+
+              // Find contenttype header
+              if(strpos($line, "Content-Type:") === 0)
               {
-                $values[$search_element] = explode_nicely(",;", substr($line, $length + 1));
+                // Save original contenttype header
+                $original_contenttype = $line;
+
+                // Replace by new one
+                fwrite($fd, "Content-Type: multipart/mixed; boundary=\"" . $boundary . "\"\n");
+                $done = true;
               }
+
+              // At start of data, insert boundary and original contenttype header
+              if(!$indata && ($line == "\n" || $line == "\r\n" || $line == ""))
+              {
+                fwrite($fd, "\nThis is a multi-part message in MIME format.\n\n" .
+                            "--" . $boundary . "\n" .
+                            $original_contenttype . "\n");
+                $indata = true;
+              }
+
+              // If this line isn't processed yet, just write it back to the file
+              if(!$done || $indata)
+                fwrite($fd, $line);
             }
+
+            // Add boundary, new content headers and random attachment data
+            $attachment_filename = random_text(10) . ".bin";
+            fwrite($fd, "\n--" . $boundary . "\n" .
+                        "Content-Type: application/octet-stream;\n\tname=\"" . $attachment_filename . "\"\n" .
+                        "Content-Transfer-Encoding: base64\n" .
+                        "Content-Description: " . $attachment_filename . "\n" .
+                        "Content-Disposition: attachment;\n\tfilename=\"" . $attachment_filename . "\"\n\n");
+
+            // Add random attachment data
+            for($i = rand($attachment_minsize, $attachment_maxsize); $i > 0;)
+            {
+              fwrite($fd, substr($attachment_data, $attachment_maxsize-$i, 76) . "\n");
+              $i -= 77;
+            }
+
+            fwrite($fd, "\n--" . $boundary . "--\n");
+
+            fclose($fd);
           }
         }
-        // Interpret headers
-        for($i = 0; $i < count($values["X-From:"]); $i++)
-        {
-          $contact = interprete_values($values["X-From:"][$i], $values["From:"][$i]);
-          $contacts[$contact[2]] = $contact;
-
-        }
-        for($i = 0; $i < count($values["X-To:"]); $i++)
-        {
-          $contact = interprete_values($values["X-To:"][$i], $values["To:"][$i]);
-          $contacts[$contact[2]] = $contact;
-        }
       }
     }
-
-    // Write headers to output file
-    foreach($contacts as $contact)
-    {
-      $line = implode(";", $contact) . "\n";
-      if($line != "\n")
-      {
-        fwrite($output, $line);
-//        echo($line);
-      }
-    }
-
-    echo " " . count($contacts) . " contacts found.\n";
   }
 }
 
@@ -143,6 +140,52 @@ function random_string($length)
   while($length-- > 0)
     $out .= chr(rand(0,255));
   return $out;
+}
+
+function random_text($length)
+{
+  $out = "";
+  while($length-- > 0)
+  {
+    $n = rand(0, 61);
+    if($n < 10)
+      $c = chr($n+48);
+    else if($n < 36)
+      $c = chr($n-10+65);
+    else
+      $c = chr($n-36+97);
+
+    $out .= $c;
+  }
+  return $out;
+}
+
+function process_arguments($argv)
+{
+  $_ARG = array();
+  if(is_array($argv))
+  {
+    foreach ($argv as $arg)
+    {
+      if (ereg('--[a-zA-Z0-9]*=.*',$arg))
+      {
+        $str = split("=",$arg); $arg = '';
+        $key = ereg_replace("--",'',$str[0]);
+        for ( $i = 1; $i < count($str); $i++ )
+        {
+          $arg .= $str[$i];
+        }
+        $_ARG[$key] = $arg;
+      }
+      elseif(ereg('-[a-zA-Z0-9]',$arg))
+      {
+        $arg = ereg_replace("-",'',$arg);
+        $_ARG[$arg] = true;
+      }
+    }
+  }
+
+  return $_ARG;
 }
 
 ?>
