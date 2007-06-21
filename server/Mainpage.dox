@@ -3,8 +3,7 @@
 
 \section akonadi_server_overview Overview
 
-\li \ref akonadi_design_storage "Purpose and design of the storage server"
-\li \ref akonadi_design_control "Purpose and design of the control process"
+\li An introduction to server components can be found in \ref akonadi_design
 \li \ref akonadi_server_definitions
 \li \ref akonadi_server_database
 \li <a href="classes.html">Alphabetical Class List</a>
