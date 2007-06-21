@@ -20,7 +20,7 @@
 #ifndef PROFILEVIEW_H
 #define PROFILEVIEW_H
 
-#include "libakonadi_export.h"
+#include <libakonadi/libakonadi_export.h>
 #include <QtGui/QWidget>
 
 namespace Akonadi {
