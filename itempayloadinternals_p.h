@@ -27,6 +27,7 @@
  * considered public API, and subject to change without notice
  */
 
+//@cond PRIVATE
 struct PayloadBase
 {
     virtual ~PayloadBase() { };
@@ -68,6 +69,7 @@ struct Payload<T*> : public PayloadBase
         Q_ASSERT_X( false, "Akonadi::Payload", "The Item class is not intended to be used with raw pointer types. Please use a smart pointer instead." );
     }
 };
+//@endcond
 
 #endif
 
