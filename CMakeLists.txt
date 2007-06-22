@@ -16,6 +16,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO
 
 set( akonadi_LIB_SRC
 	agentinstancemodel.cpp
+	agentbase.cpp	
 	agentmanager.cpp
 	agenttypemodel.cpp
 	collection.cpp
@@ -61,11 +62,13 @@ set( akonadi_LIB_SRC
 
 qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
 qt4_generate_dbus_interface(resource.h org.kde.Akonadi.Resource.xml)
+qt4_generate_dbus_interface(agent.h org.kde.Akonadi.Agent.xml)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.AgentManager.xml)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.ProfileManager.xml)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.Tracer.xml)
 qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
+qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml agent.h Akonadi::Agent )
 
 kde4_automoc(${akonadi_LIB_SRC})
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
