@@ -59,33 +59,33 @@ void SessionPrivate::socketError()
 void SessionPrivate::dataReceived()
 {
   while ( socket->canReadLine() ) {
-    if ( !parseNextLine() )
+    if ( !parser->parseNextLine( socket->readLine() ) )
       continue; // response not yet completed
 
     // handle login response
-    if ( tagBuffer == QByteArray("0") ) {
-      if ( dataBuffer.startsWith( "OK" ) ) {
+    if ( parser->tag() == QByteArray("0") ) {
+      if ( parser->data().startsWith( "OK" ) ) {
         connected = true;
         startNext();
       } else {
-        kWarning() << k_funcinfo << "Unable to login to Akonadi server: " << dataBuffer << endl;
+        kWarning() << k_funcinfo << "Unable to login to Akonadi server: " << parser->data() << endl;
         socket->close();
         QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
       }
     }
 
     // send login command
-    if ( tagBuffer == "*" && dataBuffer.startsWith( "OK Akonadi" ) ) {
+    if ( parser->tag() == "*" && parser->data().startsWith( "OK Akonadi" ) ) {
       mParent->writeData( "0 LOGIN " + sessionId + "\n" );
 
     // work for the current job
     } else {
       if ( currentJob )
-        currentJob->d->handleResponse( tagBuffer, dataBuffer );
+        currentJob->d->handleResponse( parser->tag(), parser->data() );
     }
 
     // reset parser stuff
-    clearParserState();
+    parser->reset();
   }
 }
 
@@ -122,7 +122,6 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
   d->nextTag = 1;
   d->currentJob = 0;
   d->jobRunning = false;
-  d->clearParserState();
 
   d->socket = new QTcpSocket( this );
   connect( d->socket, SIGNAL(disconnected()), SLOT(socketError()) );

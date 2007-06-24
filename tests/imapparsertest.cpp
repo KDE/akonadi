@@ -22,6 +22,9 @@
 #include <qtest_kde.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QVariant>
+
+Q_DECLARE_METATYPE( QList<QByteArray> )
 
 using namespace Akonadi;
 
@@ -257,6 +260,96 @@ void ImapParserTest::testQuote()
   QFETCH( QByteArray, unquoted );
   QFETCH( QByteArray, quoted );
   QCOMPARE( ImapParser::quote( unquoted ), quoted );
+}
+
+void ImapParserTest::testMessageParser_data()
+{
+  QTest::addColumn<QList<QByteArray> >( "input" );
+  QTest::addColumn<QByteArray>( "tag" );
+  QTest::addColumn<QByteArray>( "data" );
+  QTest::addColumn<bool>( "complete" );
+
+  QList<QByteArray> input;
+  QTest::newRow( "empty" ) << input << QByteArray() << QByteArray() << false;
+
+  input << "*";
+  QTest::newRow( "tag-only" ) << input << QByteArray("*") << QByteArray() << true;
+
+  input.clear();
+  input << "20 UID FETCH (foo)";
+  QTest::newRow( "simple" ) << input << QByteArray("20") << QByteArray( "UID FETCH (foo)" ) << true;
+
+  input.clear();
+  input << "1 (bla (" << ") blub)";
+  QTest::newRow( "parenthesis" ) << input << QByteArray("1")
+      << QByteArray( "(bla () blub)" ) << true;
+
+  input.clear();
+  input << "1 {3}" << "bla";
+  QTest::newRow( "literal" ) << input << QByteArray("1") << QByteArray("{3}bla") << true;
+
+  input.clear();
+  input << "1 FETCH (UID 5 DATA {3}"
+        << "bla"
+        << " RID 5)";
+  QTest::newRow( "parenthesisEnclosedLiteral" ) << input << QByteArray("1")
+      << QByteArray( "FETCH (UID 5 DATA {3}bla RID 5)" ) << true;
+
+  input.clear();
+  input << "1 {3}" << "bla {4}" << "blub";
+  QTest::newRow( "2literal" ) << input << QByteArray("1")
+      << QByteArray("{3}bla {4}blub") << true;
+
+  input.clear();
+  input << "1 {4}" << "A{9}";
+  QTest::newRow( "literal in literal" ) << input << QByteArray("1")
+      << QByteArray("{4}A{9}") << true;
+
+  input.clear();
+  input << "* FETCH (UID 1 DATA {3}" << "bla" << " ENVELOPE {4}" << "blub" << " RID 5)";
+  QTest::newRow( "enclosed2literal" ) << input << QByteArray("*")
+      << QByteArray( "FETCH (UID 1 DATA {3}bla ENVELOPE {4}blub RID 5)" ) << true;
+}
+
+void ImapParserTest::testMessageParser()
+{
+  QFETCH( QList<QByteArray>, input );
+  QFETCH( QByteArray, tag );
+  QFETCH( QByteArray, data );
+  QFETCH( bool, complete );
+
+  ImapParser *parser = new ImapParser();
+  QVERIFY( parser->tag().isEmpty() );
+  QVERIFY( parser->data().isEmpty() );
+
+  for ( int i = 0; i < input.count(); ++i ) {
+    bool res = parser->parseNextLine( input.at( i ) );
+    if ( i != input.count() - 1 )
+      QVERIFY( !res );
+    else
+      QCOMPARE( res, complete );
+  }
+
+  QCOMPARE( parser->tag(), tag );
+  QCOMPARE( parser->data(), data );
+
+  // try again, this time with a not fresh parser
+  parser->reset();
+  QVERIFY( parser->tag().isEmpty() );
+  QVERIFY( parser->data().isEmpty() );
+
+  for ( int i = 0; i < input.count(); ++i ) {
+    bool res = parser->parseNextLine( input.at( i ) );
+    if ( i != input.count() - 1 )
+      QVERIFY( !res );
+    else
+      QCOMPARE( res, complete );
+  }
+
+  QCOMPARE( parser->tag(), tag );
+  QCOMPARE( parser->data(), data );
+
+  delete parser;
 }
 
 #include "imapparsertest.moc"
