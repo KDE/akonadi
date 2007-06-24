@@ -29,6 +29,7 @@ class ImapParser::Private {
     QByteArray dataBuffer;
     int parenthesesCount;
     int literalSize;
+    bool continuation;
 
     // returns true if readBuffer contains a literal start and sets
     // parser state accrodingly
@@ -44,6 +45,7 @@ class ImapParser::Private {
 
         // TODO error handling
         literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
+        continuation = true;
         return true;
       }
       return false;
@@ -270,6 +272,8 @@ ImapParser::~ ImapParser()
 
 bool ImapParser::parseNextLine(const QByteArray &readBuffer)
 {
+  d->continuation = false;
+
   // first line, get the tag
   if ( d->tagBuffer.isEmpty() ) {
     const int startOfData = ImapParser::parseString( readBuffer, d->tagBuffer );
@@ -337,4 +341,10 @@ void ImapParser::reset()
   d->tagBuffer.clear();
   d->parenthesesCount = 0;
   d->literalSize = 0;
+  d->continuation = false;
+}
+
+bool ImapParser::continuationStarted() const
+{
+  return d->continuation;
 }
