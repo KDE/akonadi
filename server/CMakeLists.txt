@@ -2,7 +2,7 @@ macro_optional_find_package(OpenSSL)
 
 include_directories( ${CMAKE_BINARY_DIR}/akonadi )
 include_directories( ${CMAKE_SOURCE_DIR}/akonadi )
-#TODO: remove the next line when the src/imapparser symlinks are removed
+# needed for akonadi_export.h
 include_directories( ${CMAKE_SOURCE_DIR}/akonadi/libakonadi )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
@@ -84,7 +84,7 @@ set(libakonadiprivate_SRCS
   src/filetracer.cpp
   src/notificationmanager.cpp
   src/resourcemanager.cpp
-  src/imapparser.cpp
+  ../libakonadi/imapparser.cpp
   src/cachepolicymanager.cpp
   src/cachecleaner.cpp
 )
