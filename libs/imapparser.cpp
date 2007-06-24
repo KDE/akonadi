@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -22,6 +22,33 @@
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
+
+class ImapParser::Private {
+  public:
+    QByteArray tagBuffer;
+    QByteArray dataBuffer;
+    int parenthesesCount;
+    int literalSize;
+
+    // returns true if readBuffer contains a literal start and sets
+    // parser state accrodingly
+    bool checkLiteralStart( const QByteArray &readBuffer, int pos = 0 )
+    {
+      if ( readBuffer.trimmed().endsWith( '}' ) ) {
+        const int begin = readBuffer.lastIndexOf( '{' );
+        const int end = readBuffer.lastIndexOf( '}' );
+
+        // new literal in previous literal data block
+        if ( begin < pos )
+          return false;
+
+        // TODO error handling
+        literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
+        return true;
+      }
+      return false;
+    }
+};
 
 int ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByteArray> &result, int start )
 {
@@ -228,4 +255,86 @@ QByteArray ImapParser::quote(const QByteArray & data)
   }
   result += '"';
   return result;
+}
+
+ImapParser::ImapParser() :
+    d ( new Private )
+{
+  reset();
+}
+
+ImapParser::~ ImapParser()
+{
+  delete d;
+}
+
+bool ImapParser::parseNextLine(const QByteArray &readBuffer)
+{
+  // first line, get the tag
+  if ( d->tagBuffer.isEmpty() ) {
+    const int startOfData = ImapParser::parseString( readBuffer, d->tagBuffer );
+    if ( startOfData < readBuffer.length() && startOfData >= 0 )
+      d->dataBuffer = readBuffer.mid( startOfData + 1 );
+
+  } else {
+    d->dataBuffer += readBuffer;
+  }
+
+  // literal read in progress
+  if ( d->literalSize > 0 ) {
+    d->literalSize -= readBuffer.size();
+
+    // still not everything read
+    if ( d->literalSize > 0 )
+      return false;
+
+    // check the remaining (non-literal) part for parentheses
+    if ( d->literalSize < 0 ) {
+      // the following looks strange but works since literalSize can be negative here
+      d->parenthesesCount = ImapParser::parenthesesBalance( readBuffer, readBuffer.length() + d->literalSize );
+
+      // check if another literal read was started
+      if ( d->checkLiteralStart( readBuffer, readBuffer.length() + d->literalSize ) )
+        return false;
+    }
+
+    // literal string finished but still open parentheses
+    if ( d->parenthesesCount > 0 )
+        return false;
+
+  } else {
+
+    // open parentheses
+    d->parenthesesCount += ImapParser::parenthesesBalance( readBuffer );
+
+    // start new literal read
+    if ( d->checkLiteralStart( readBuffer ) )
+      return false;
+
+    // still open parentheses
+    if ( d->parenthesesCount > 0 )
+      return false;
+
+    // just a normal response, fall through
+  }
+
+  return true;
+}
+
+QByteArray ImapParser::tag() const
+{
+  return d->tagBuffer;
+}
+
+QByteArray ImapParser::data() const
+{
+  return d->dataBuffer;
+}
+
+void ImapParser::reset()
+{
+  d->dataBuffer.clear();
+  d->tagBuffer.clear();
+  d->parenthesesCount = 0;
+  d->literalSize = 0;
 }

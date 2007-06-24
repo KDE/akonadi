@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -28,8 +28,7 @@
 namespace Akonadi {
 
 /**
-  Helper functions to parse IMAP responses.
-  @todo Not really Akonadi specific, move somewhere else.
+  Parser for IMAP messages.
 */
 class AKONADI_EXPORT ImapParser
 {
@@ -110,6 +109,46 @@ class AKONADI_EXPORT ImapParser
       @param data Source data.
     */
     static QByteArray quote( const QByteArray &data );
+
+
+    /**
+      Constructs a new IMAP parser.
+    */
+    ImapParser();
+
+    /**
+      Destroys an IMAP parser.
+    */
+    ~ImapParser();
+
+    /**
+      Parses the given line.
+      @returns True if an IMAP message was parsed completely, false if more data is needed.
+      @todo read from a QIODevice directly to avoid an extra line buffer
+    */
+    bool parseNextLine( const QByteArray &readBuffer );
+
+    /**
+      Returns the tag of the parsed message.
+      Only valid if parseNextLine() returned true.
+    */
+    QByteArray tag() const;
+
+    /**
+      Return the raw data of the parsed IMAP message.
+      Only valid if parseNextLine() returned true.
+    */
+    QByteArray data() const;
+
+    /**
+      Resets the internal state of the parser. Call before parsing
+      a new IMAP message.
+    */
+    void reset();
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 }
