@@ -69,7 +69,7 @@ bool Fetch::handleLine( const QByteArray& line )
     pimItems = store->fetchMatchingPimItemsByUID( fetchQuery );
   } else {
     if ( fetchQuery.isUidFetch() ) {
-      pimItems = store->fetchMatchingPimItemsByUID( fetchQuery, connection()->selectedLocation() ) ;
+      pimItems = store->fetchMatchingPimItemsByUID( fetchQuery /*, connection()->selectedLocation()*/ ) ;
     } else {
       pimItems = store->fetchMatchingPimItemsBySequenceNumbers( fetchQuery, connection()->selectedLocation() );
     }
