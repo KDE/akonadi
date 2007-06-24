@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Till Adam <adam@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -32,25 +33,63 @@ class Item;
 
 /**
   Base class for PIM item type serializer plugins.
+  Serializer plugins convert between the payload of Akonadi::Item objects and
+  a textual or binary representation of the actual content data.
+  This allows to easily add support for new types to Akonadi.
+
+  <h4>How to write an Akonadi serializer plugin</h4>
+
+  The following describes the basic steps needed to write an Akonadi
+  serializer plugin.
+
+  <h5>(de-)Serialization Code</h5>
+
+  Create a class that inherits Akonadi::ItemSerializerPlugin and
+  implement its two pure virtual methods, serialize() and deserialize().
+
+  <h5>Plugin Framework</h5>
+
+  @todo Factory macro
+
+   @todo Desktop file example
 */
-class ItemSerializerPlugin
+class AKONADI_EXPORT ItemSerializerPlugin
 {
 public:
-    virtual ~ItemSerializerPlugin() { };
     /**
-      De-serialize item part @p label from @p data.
-      If the given item part is not supported, call Item::addPart().
+      Destructor
     */
-    virtual void deserialize( Item& item, const QString& label, const QByteArray& data ) const = 0;
-    virtual void deserialize( Item& item, const QString& label, const QIODevice& data ) const = 0;
+    virtual ~ItemSerializerPlugin();
 
     /**
-      Serialize item part @p label into @p data.
-      If the given part is not supported, do what???
-      @todo what happens with unsupported parts.
+      Convert serialized item data provided in @p data into payload for @p item.
+      @param item The item to which the payload should be added.
+      It is guaranteed to have a mimetype matching one of the supported mimetypes of this
+      plugin. However it might contain a unsuited payload added manually by the application
+      developer. Verifying the payload type in case a payload is already available is recommended
+      therefore.
+      @param label The part identifier of the part to deserialize.
+      If this part is unknown and therefore cannot be deserialized, [continue me, what shoud happen?]
+      For now: call Item::addPart() for unknown parts
+      @param data An QIODevice providing access to the serialized data. The QIODevice is opened in
+      read-only mode and positioned at the beginning. The QIODevice is guaranteed to be valid.
     */
-    virtual void serialize( const Item& item, const QString& label, QByteArray& data ) const = 0;
-    virtual void serialize( const Item& item, const QString& label, QIODevice& data ) const = 0;
+    virtual void deserialize( Item& item, const QString& label, QIODevice& data ) = 0;
+
+    /**
+      Convert the payload object provided in @p item into its serialzed form into @p data.
+      @param item The item which contains the payload.
+      It is guaranteed to have a mimetype matching one of the supported mimetypes of this
+      plugin as well as the existence of a payload object. However it might contain an unsupported
+      payload added manually by the application developer. Verifying the payload type is recommended
+      therefore.
+      @param label The part identifier of the part to serialize.
+      If this part is unknown and therefore cannot be deserialized, [continue me, what shoud happen?]
+      @param data The QIODevice where the serialized data should be writtne to.
+      The QIODevice is opened in write-only mode and positioned at the beginning.
+      The QIODevice is guaranteed to be valid.
+    */
+    virtual void serialize( const Item& item, const QString& label, QIODevice& data ) = 0;
 };
 
 
@@ -66,14 +105,14 @@ class AKONADI_EXPORT ItemSerializer
       /** throws ItemSerializerException on failure */
       static void deserialize( Item& item, const QString& label, const QByteArray& data );
       /** throws ItemSerializerException on failure */
-      static void deserialize( Item& item, const QString& label, const QIODevice& data );
+      static void deserialize( Item& item, const QString& label, QIODevice& data );
       /** throws ItemSerializerException on failure */
       static void serialize( const Item& item, const QString& label, QByteArray& data );
       /** throws ItemSerializerException on failure */
       static void serialize( const Item& item, const QString& label, QIODevice& data );
 
   private:
-      static const ItemSerializerPlugin& pluginForMimeType( const QString& mimetype );
+      static ItemSerializerPlugin& pluginForMimeType( const QString& mimetype );
 };
 
 }

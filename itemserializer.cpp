@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Till Adam <adam@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -21,6 +22,7 @@
 #include "item.h"
 
 // Qt
+#include <QtCore/QBuffer>
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
 #include <QtCore/QIODevice>
@@ -51,34 +53,18 @@ public:
         return s_p;
     }
 
-    void deserialize( Item& item, const QString& label, const QByteArray& data ) const
+    void deserialize( Item& item, const QString& label, QIODevice& data )
     {
         if ( label == QLatin1String("RFC822") )
-          item.setPayload( data );
+          item.setPayload( data.readAll() );
         else
-          item.addPart( label, data );
+          item.addPart( label, data.readAll() );
     }
 
-    void deserialize( Item& item, const QString& label, const QIODevice& data ) const
+    void serialize( const Item& item, const QString& label, QIODevice& data )
     {
-        Q_UNUSED( item );
-        Q_UNUSED( label );
-        Q_UNUSED( data );
-        throw ItemSerializerException();
-    }
-
-    void serialize( const Item& item, const QString& label, QByteArray& data ) const
-    {
-        if ( label == QLatin1String("RFC822") && item.hasPayload() )
-            data = item.payload<QByteArray>();
-    }
-
-    void serialize( const Item& item, const QString& label, QIODevice& data ) const
-    {
-        Q_UNUSED( item );
-        Q_UNUSED( label );
-        Q_UNUSED( data );
-        throw ItemSerializerException();
+        if ( label == QLatin1String("RFC822") && item.hasPayload<QByteArray>() )
+            data.write( item.payload<QByteArray>() );
     }
 
 };
@@ -98,7 +84,7 @@ namespace {
 
 using namespace Akonadi;
 
-static QMap<QString, const ItemSerializerPlugin*> * all = 0;
+static QMap<QString, ItemSerializerPlugin*> * all = 0;
 
 static void loadPlugins() {
   const ItemSerializerPluginLoader* pl = ItemSerializerPluginLoader::instance();
@@ -109,7 +95,7 @@ static void loadPlugins() {
   const QStringList types = pl->types();
   qDebug() << "ItemSerializerPluginLoader: found " << types.size() << " plugins." << endl;
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
-    const ItemSerializerPlugin * plugin = pl->createForName( *it );
+    ItemSerializerPlugin * plugin = pl->createForName( *it );
     if ( !plugin ) {
       qWarning() << "ItemSerializerPlugin: plugin \"" << *it << "\" is not valid!" << endl;
       continue;
@@ -125,7 +111,7 @@ static void loadPlugins() {
 static void setup()
 {
     if (!all) {
-        all = new QMap<QString, const ItemSerializerPlugin*>();
+        all = new QMap<QString, ItemSerializerPlugin*>();
         loadPlugins();
     }
 }
@@ -134,11 +120,16 @@ static void setup()
 void ItemSerializer::deserialize( Item& item, const QString& label, const QByteArray& data )
 {
     setup();
-    ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
+    QBuffer buffer;
+    buffer.setData( data );
+    buffer.open( QIODevice::ReadOnly );
+    buffer.seek( 0 );
+    ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, buffer );
+    buffer.close();
 }
 
 /*static*/
-void ItemSerializer::deserialize( Item& item, const QString& label, const QIODevice& data )
+void ItemSerializer::deserialize( Item& item, const QString& label, QIODevice& data )
 {
     setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
@@ -147,19 +138,28 @@ void ItemSerializer::deserialize( Item& item, const QString& label, const QIODev
 /*static*/
 void ItemSerializer::serialize( const Item& item, const QString& label, QByteArray& data )
 {
+    if ( !item.hasPayload() )
+      return;
     setup();
-    ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, data );
+    QBuffer buffer;
+    buffer.setBuffer( &data );
+    buffer.open( QIODevice::WriteOnly );
+    buffer.seek( 0 );
+    ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, buffer );
+    buffer.close();
 }
 
 /*static*/
 void ItemSerializer::serialize( const Item& item, const QString& label, QIODevice& data )
 {
+    if ( item.hasPayload() )
+      return;
     setup();
     ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, data );
 }
 
 /*static*/
-const ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetype )
+ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetype )
 {
     if ( all->contains( mimetype ) )
         return *(all->value(mimetype));
@@ -167,9 +167,11 @@ const ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & m
     qDebug() << "ItemSerializer: No plugin for mimetype " << mimetype << " found!";
     qDebug() << "available plugins are: " << all->keys();
 
-    const ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
+    ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
     Q_ASSERT(plugin);
     return *plugin;
 }
 
-
+ItemSerializerPlugin::~ItemSerializerPlugin()
+{
+}
