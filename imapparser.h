@@ -146,6 +146,12 @@ class AKONADI_EXPORT ImapParser
     */
     void reset();
 
+    /**
+      Returns true if the last parsed line contained a literal continuation,
+      ie. readiness for receiving literal data needs to be indicated.
+    */
+    bool continuationStarted() const;
+
   private:
     class Private;
     Private *const d;

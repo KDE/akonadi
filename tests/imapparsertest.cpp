@@ -25,6 +25,7 @@
 #include <QtCore/QVariant>
 
 Q_DECLARE_METATYPE( QList<QByteArray> )
+Q_DECLARE_METATYPE( QList<int> )
 
 using namespace Akonadi;
 
@@ -268,47 +269,59 @@ void ImapParserTest::testMessageParser_data()
   QTest::addColumn<QByteArray>( "tag" );
   QTest::addColumn<QByteArray>( "data" );
   QTest::addColumn<bool>( "complete" );
+  QTest::addColumn<QList<int> >( "continuations" );
 
   QList<QByteArray> input;
-  QTest::newRow( "empty" ) << input << QByteArray() << QByteArray() << false;
+  QList<int> continuations;
+  QTest::newRow( "empty" ) << input << QByteArray() << QByteArray() << false << continuations;
 
   input << "*";
-  QTest::newRow( "tag-only" ) << input << QByteArray("*") << QByteArray() << true;
+  QTest::newRow( "tag-only" ) << input << QByteArray("*") << QByteArray() << true << continuations;
 
   input.clear();
   input << "20 UID FETCH (foo)";
-  QTest::newRow( "simple" ) << input << QByteArray("20") << QByteArray( "UID FETCH (foo)" ) << true;
+  QTest::newRow( "simple" ) << input << QByteArray("20")
+      << QByteArray( "UID FETCH (foo)" ) << true << continuations;
 
   input.clear();
   input << "1 (bla (" << ") blub)";
   QTest::newRow( "parenthesis" ) << input << QByteArray("1")
-      << QByteArray( "(bla () blub)" ) << true;
+      << QByteArray( "(bla () blub)" ) << true << continuations;
 
   input.clear();
   input << "1 {3}" << "bla";
-  QTest::newRow( "literal" ) << input << QByteArray("1") << QByteArray("{3}bla") << true;
+  continuations << 0;
+  QTest::newRow( "literal" ) << input << QByteArray("1") << QByteArray("{3}bla")
+      << true << continuations;
 
   input.clear();
   input << "1 FETCH (UID 5 DATA {3}"
         << "bla"
         << " RID 5)";
   QTest::newRow( "parenthesisEnclosedLiteral" ) << input << QByteArray("1")
-      << QByteArray( "FETCH (UID 5 DATA {3}bla RID 5)" ) << true;
+      << QByteArray( "FETCH (UID 5 DATA {3}bla RID 5)" ) << true << continuations;
 
   input.clear();
   input << "1 {3}" << "bla {4}" << "blub";
+  continuations.clear();
+  continuations << 0 << 1;
   QTest::newRow( "2literal" ) << input << QByteArray("1")
-      << QByteArray("{3}bla {4}blub") << true;
+      << QByteArray("{3}bla {4}blub") << true << continuations;
 
   input.clear();
   input << "1 {4}" << "A{9}";
+  continuations.clear();
+  continuations << 0;
   QTest::newRow( "literal in literal" ) << input << QByteArray("1")
-      << QByteArray("{4}A{9}") << true;
+      << QByteArray("{4}A{9}") << true << continuations;
 
   input.clear();
   input << "* FETCH (UID 1 DATA {3}" << "bla" << " ENVELOPE {4}" << "blub" << " RID 5)";
+  continuations.clear();
+  continuations << 0 << 2;
   QTest::newRow( "enclosed2literal" ) << input << QByteArray("*")
-      << QByteArray( "FETCH (UID 1 DATA {3}bla ENVELOPE {4}blub RID 5)" ) << true;
+      << QByteArray( "FETCH (UID 1 DATA {3}bla ENVELOPE {4}blub RID 5)" )
+      << true << continuations;
 }
 
 void ImapParserTest::testMessageParser()
@@ -317,6 +330,8 @@ void ImapParserTest::testMessageParser()
   QFETCH( QByteArray, tag );
   QFETCH( QByteArray, data );
   QFETCH( bool, complete );
+  QFETCH( QList<int>, continuations );
+  QList<int> cont = continuations;
 
   ImapParser *parser = new ImapParser();
   QVERIFY( parser->tag().isEmpty() );
@@ -328,15 +343,21 @@ void ImapParserTest::testMessageParser()
       QVERIFY( !res );
     else
       QCOMPARE( res, complete );
+    if ( parser->continuationStarted() ) {
+      QVERIFY( cont.contains( i ) );
+      cont.removeAll( i );
+    }
   }
 
   QCOMPARE( parser->tag(), tag );
   QCOMPARE( parser->data(), data );
+  QVERIFY( cont.isEmpty() );
 
   // try again, this time with a not fresh parser
   parser->reset();
   QVERIFY( parser->tag().isEmpty() );
   QVERIFY( parser->data().isEmpty() );
+  cont = continuations;
 
   for ( int i = 0; i < input.count(); ++i ) {
     bool res = parser->parseNextLine( input.at( i ) );
@@ -344,10 +365,15 @@ void ImapParserTest::testMessageParser()
       QVERIFY( !res );
     else
       QCOMPARE( res, complete );
+    if ( parser->continuationStarted() ) {
+      QVERIFY( cont.contains( i ) );
+      cont.removeAll( i );
+    }
   }
 
   QCOMPARE( parser->tag(), tag );
   QCOMPARE( parser->data(), data );
+  QVERIFY( cont.isEmpty() );
 
   delete parser;
 }
