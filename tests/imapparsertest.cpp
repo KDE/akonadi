@@ -328,6 +328,12 @@ void ImapParserTest::testMessageParser_data()
   QTest::newRow( "enclosed2literal" ) << input << QByteArray("*")
       << QByteArray( "FETCH (UID 1 DATA {3}bla ENVELOPE {4}blub RID 5)" )
       << true << continuations;
+
+  input.clear();
+  input << "1 DATA {0}";
+  continuations.clear();
+  QTest::newRow( "empty literal" ) << input << QByteArray( "1" )
+      << QByteArray( "DATA {0}" ) << true << continuations;
 }
 
 void ImapParserTest::testMessageParser()
