@@ -1,6 +1,8 @@
 /*
     This file is part of libakonadi.
 
+    Copyright (c) 2006 Till Adam <adam@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2007 Bruno Virlet <bruno.virlet@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
@@ -171,6 +173,8 @@ AgentBase::AgentBase( const QString & id )
            this, SLOT( slotCollectionRemoved( int, const QString& ) ) );
 
   d->monitor->ignoreSession( session() );
+  // TODO An agent should not monitor *all* by default
+  d->monitor->monitorAll(); 
 
   // initial configuration
   bool initialized = settings()->value( QLatin1String( "Agent/Initialized" ), false ).toBool();
