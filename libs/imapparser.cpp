@@ -45,6 +45,11 @@ class ImapParser::Private {
 
         // TODO error handling
         literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
+
+        // emtpy literal
+        if ( literalSize == 0 )
+          return false;
+
         continuation = true;
         return true;
       }
