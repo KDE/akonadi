@@ -49,7 +49,7 @@ class AKONADI_EXPORT Resource : public QObject
     /**
      * Destroys the resource.
      */
-    virtual ~Resource() { };
+    virtual ~Resource() { }
 
   public Q_SLOTS:
 

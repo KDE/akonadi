@@ -30,7 +30,7 @@
 //@cond PRIVATE
 struct PayloadBase
 {
-    virtual ~PayloadBase() { };
+    virtual ~PayloadBase() { }
     virtual PayloadBase * clone() const = 0;
     virtual const char* typeName() const = 0;
 };

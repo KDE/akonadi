@@ -45,7 +45,7 @@ class AKONADI_EXPORT Agent : public QObject
     /**
      * Destroys the agent.
      */
-    virtual ~Agent() { };
+    virtual ~Agent() { }
 
   public Q_SLOTS:
 
