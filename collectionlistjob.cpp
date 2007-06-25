@@ -81,7 +81,7 @@ void CollectionListJob::doStart()
     command += '"';
   }
 
-  command += ')';
+  command += ")\n";
   writeData( command );
 }
 

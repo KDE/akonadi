@@ -58,13 +58,15 @@ void ItemAppendJob::doStart()
     ItemSerializer::serialize( d->item, QLatin1String("RFC822"), d->data );
   writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
       + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
-      + QByteArray::number( d->data.size() ) + '}' );
+      + QByteArray::number( d->data.size() ) + "}\n" );
 }
 
 void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "+" ) { // ready for literal data
     writeData( d->data );
+    if ( !d->data.endsWith( '\n' ) )
+      writeData( "\n" );
     return;
   }
   if ( tag == this->tag() ) {

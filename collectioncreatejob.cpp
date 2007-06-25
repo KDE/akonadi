@@ -69,7 +69,7 @@ void CollectionCreateJob::doStart( )
     command += ' ' + bp.first + ' ' + bp.second;
   if ( d->cachePolicyId > 0 )
     command += " CACHEPOLICY " + QByteArray::number( d->cachePolicyId );
-  command += ')';
+  command += ")\n";
   writeData( command );
 }
 

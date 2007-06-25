@@ -32,7 +32,7 @@ ExpungeJob::~ ExpungeJob()
 
 void ExpungeJob::doStart()
 {
-  writeData( newTag() + " EXPUNGE" );
+  writeData( newTag() + " EXPUNGE\n" );
 }
 
 #include "expungejob.moc"

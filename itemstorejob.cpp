@@ -105,6 +105,7 @@ void ItemStoreJob::Private::sendNextCommand()
       command += "DIRTY";
       break;
   }
+  command += "\n";
   mParent->writeData( command );
   mParent->newTag(); // hack to circumvent automatic response handling
 }

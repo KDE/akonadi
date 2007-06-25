@@ -33,7 +33,7 @@ TransactionBeginJob::~ TransactionBeginJob()
 
 void TransactionBeginJob::doStart()
 {
-  writeData( newTag() + " BEGIN" );
+  writeData( newTag() + " BEGIN\n" );
 }
 
 
@@ -50,7 +50,7 @@ TransactionRollbackJob::~ TransactionRollbackJob()
 
 void TransactionRollbackJob::doStart()
 {
-  writeData( newTag() + " ROLLBACK" );
+  writeData( newTag() + " ROLLBACK\n" );
 }
 
 
@@ -67,5 +67,5 @@ TransactionCommitJob::~ TransactionCommitJob()
 
 void TransactionCommitJob::doStart()
 {
-  writeData( newTag() + " COMMIT" );
+  writeData( newTag() + " COMMIT\n" );
 }

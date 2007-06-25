@@ -65,7 +65,7 @@ void ItemFetchJob::Private::startFetchJob()
     command += ' ' + part.toUtf8();
   }
 
-  command += ')';
+  command += ")\n";
   mParent->writeData( command );
 }
 

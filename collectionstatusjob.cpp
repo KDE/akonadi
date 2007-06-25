@@ -45,7 +45,7 @@ CollectionStatusJob::~ CollectionStatusJob( )
 
 void CollectionStatusJob::doStart( )
 {
-  writeData( newTag() + " STATUS " + QByteArray::number( d->collection.id() ) + " (MESSAGES UNSEEN)" );
+  writeData( newTag() + " STATUS " + QByteArray::number( d->collection.id() ) + " (MESSAGES UNSEEN)\n" );
 }
 
 void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )

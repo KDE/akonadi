@@ -52,24 +52,30 @@ CollectionModifyJob::~ CollectionModifyJob()
 
 void CollectionModifyJob::doStart()
 {
-  QByteArray command = newTag() + " MODIFY " + QByteArray::number( d->collection.id() ) + ' ';
+  QByteArray command = newTag() + " MODIFY " + QByteArray::number( d->collection.id() );
+  QByteArray changes;
   if ( d->setMimeTypes )
   {
     QList<QByteArray> bList;
     foreach( QString s, d->mimeTypes ) bList << s.toLatin1();
-    command += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
+    changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
   }
   if ( d->setPolicy )
-    command += " CACHEPOLICY " + QByteArray::number( d->policyId );
+    changes += " CACHEPOLICY " + QByteArray::number( d->policyId );
   if ( d->parent.isValid() )
-    command += " PARENT " + QByteArray::number( d->parent.id() );
+    changes += " PARENT " + QByteArray::number( d->parent.id() );
   if ( !d->name.isEmpty() )
-    command += " NAME \"" + d->name.toUtf8() + '"';
+    changes += " NAME \"" + d->name.toUtf8() + '"';
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   foreach ( const QByteArrayPair bp, d->attributes )
-    command += ' ' + bp.first + ' ' + bp.second;
+    changes += ' ' + bp.first + ' ' + bp.second;
   foreach ( const QByteArray b, d->removeAttributes )
-    command += " -" + b;
+    changes += " -" + b;
+  if ( changes.isEmpty() ) {
+    emitResult();
+    return;
+  }
+  command += changes + "\n";
   writeData( command );
 }
 
