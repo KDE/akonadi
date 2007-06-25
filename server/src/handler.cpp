@@ -173,15 +173,6 @@ bool Akonadi::Handler::failureResponse(const char * failureMessage)
   return failureResponse( QLatin1String( failureMessage ) );
 }
 
-bool Akonadi::Handler::startContinuation()
-{
-  Response response;
-  response.setContinuation();
-  response.setString( "Ready for literal data" );
-  emit responseAvailable( response );
-  return false;
-}
-
 QStringList Akonadi::Handler::providerForMimetype(const QString & mimeType)
 {
   if ( m_providerCache.contains( mimeType ) )

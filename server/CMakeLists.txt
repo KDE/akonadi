@@ -69,7 +69,6 @@ set(libakonadiprivate_SRCS
   src/handler/select.cpp
   src/handler/status.cpp
   src/handler/store.cpp
-  src/handler/storequery.cpp
   src/handler/transaction.cpp
   src/handler/uid.cpp
   src/storage/entity.cpp

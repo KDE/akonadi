@@ -38,15 +38,11 @@ public:
     ~Append();
 
     bool handleLine(const QByteArray& line);
-    bool handleContinuation( const QByteArray& line );
 
 protected:
     bool commit();
-    bool inContinuation() const;
-    bool allDataRead() const;
 
 private:
-    int m_size;
     QByteArray m_data;
     QByteArray m_mailbox;
     QDateTime m_dateTime;

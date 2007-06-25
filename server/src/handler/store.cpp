@@ -25,13 +25,14 @@
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "handlerhelper.h"
+#include "imapparser.h"
 
 #include "store.h"
 
 using namespace Akonadi;
 
 Store::Store()
-  : Handler(), mSize( -1 )
+  : Handler()
 {
 }
 
@@ -41,90 +42,95 @@ Store::~Store()
 
 bool Store::handleLine( const QByteArray& line )
 {
-  if ( inContinuation() )
-    return handleContinuation( line );
-
-  int start = line.indexOf( ' ' ) + 1; // skip tag
-
-  if ( !mStoreQuery.parse( line.mid( start ) ) ) {
-    Response response;
-    response.setTag( tag() );
-    response.setError();
-    response.setString( "Syntax error" );
-
-    emit responseAvailable( response );
-    deleteLater();
-
-    return true;
+  int pos = line.indexOf( ' ' ) + 1; // skip tag
+  QByteArray buffer;
+  pos = ImapParser::parseString( line, buffer, pos );
+  bool uidStore = false;
+  if ( buffer == "UID" ) {
+    uidStore = true;
+    pos = ImapParser::parseString( line, buffer, pos ); // skip 'STORE'
   }
-
-  if ( mStoreQuery.continuationSize() > 0 ) {
-    mSize = mStoreQuery.continuationSize();
-    return startContinuation();
-  }
-
-  return commit();
-}
-
-bool Store::commit()
-{
-  mStoreQuery.dump();
 
   Response response;
   response.setUntagged();
+
+  QList<QByteArray> sequences;
+  pos = ImapParser::parseString( line, buffer, pos );
+  sequences = buffer.split( ',' );
+  if ( sequences.isEmpty() )
+    return failureResponse( "No item specified" );
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
   // ### Akonadi vs. IMAP conflict
   QList<PimItem> pimItems;
-  if ( connection()->selectedLocation().id() == -1 || mStoreQuery.isUidStore() ) {
-    pimItems = store->matchingPimItemsByUID( mStoreQuery.sequences() );
+  if ( connection()->selectedLocation().id() == -1 || uidStore ) {
+    pimItems = store->matchingPimItemsByUID( sequences );
   } else {
 //     if ( mStoreQuery.isUidStore() ) {
 //       pimItems = store->matchingPimItemsByUID( mStoreQuery.sequences(), connection()->selectedLocation() );
 //     } else {
-      pimItems = store->matchingPimItemsBySequenceNumbers( mStoreQuery.sequences(), connection()->selectedLocation() );
+      pimItems = store->matchingPimItemsBySequenceNumbers( sequences, connection()->selectedLocation() );
 //     }
   }
 
   qDebug() << "Store::commit()" << pimItems.count() << "items selected.";
 
+  // parse command
+  QByteArray command;
+  pos = ImapParser::parseString( line, command, pos );
+  Operation op = Replace;
+  bool silent = false;
+
+  if ( command.startsWith( '+' ) ) {
+    op = Add;
+    command = command.mid( 1 );
+  } else if ( command.startsWith( '-' ) ) {
+    op = Delete;
+    command = command.mid( 1 );
+  }
+  if ( command.endsWith( ".SILENT" ) ) {
+    silent = true;
+    command.chop( 7 );
+  }
+
   for ( int i = 0; i < pimItems.count(); ++i ) {
-    switch ( mStoreQuery.dataType() ) {
-      case StoreQuery::Flags:
-        if ( mStoreQuery.operation() & StoreQuery::Replace ) {
-          if ( !replaceFlags( pimItems[ i ], mStoreQuery.flags() ) )
-            return failureResponse( "Unable to replace item flags." );
-        } else if ( mStoreQuery.operation() & StoreQuery::Add ) {
-          if ( !addFlags( pimItems[ i ], mStoreQuery.flags() ) )
-            return failureResponse( "Unable to add item flags." );
-        } else if ( mStoreQuery.operation() & StoreQuery::Delete ) {
-          if ( !deleteFlags( pimItems[ i ], mStoreQuery.flags() ) )
-            return failureResponse( "Unable to remove item flags." );
-        }
-        break;
-      case StoreQuery::Data:
-        if ( !store->updatePimItem( pimItems[ i ], mData ) )
-          return failureResponse( "Unable to change item data." );
-        break;
-      case StoreQuery::Collection:
-        if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( mStoreQuery.collection() ) ) )
-          return failureResponse( "Unable to move item." );
-        break;
-      case StoreQuery::RemoteId:
-        if ( !store->updatePimItem( pimItems[i], mStoreQuery.remoteId() ) )
-          return failureResponse( "Unable to change remote id for item." );
-        break;
-      case StoreQuery::Dirty:
+    if ( command == "FLAGS" ) {
+      QList<QByteArray> flags;
+      pos = ImapParser::parseParenthesizedList( line, flags, pos );
+      if ( op == Replace ) {
+        if ( !replaceFlags( pimItems[ i ], flags ) )
+          return failureResponse( "Unable to replace item flags." );
+      } else if ( op == Add ) {
+        if ( !addFlags( pimItems[ i ], flags ) )
+          return failureResponse( "Unable to add item flags." );
+      } else if ( op == Delete ) {
+        if ( !deleteFlags( pimItems[ i ], flags ) )
+          return failureResponse( "Unable to remove item flags." );
+      }
+    } else if ( command == "DATA" ) {
+      pos = ImapParser::parseString( line, buffer, pos );
+      if ( !store->updatePimItem( pimItems[ i ], buffer ) )
+        return failureResponse( "Unable to change item data." );
+    } else if ( command == "COLLECTION" ) {
+      pos = ImapParser::parseString( line, buffer, pos );
+      if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( buffer ) ) )
+        return failureResponse( "Unable to move item." );
+    } else if ( command == "REMOTEID" ) {
+      pos = ImapParser::parseString( line, buffer, pos );
+      if ( !store->updatePimItem( pimItems[i], QString::fromUtf8( buffer ) ) )
+        return failureResponse( "Unable to change remote id for item." );
+    } else if ( command == "DIRTY" ) {
         PimItem item = pimItems.at( i );
         item.setDirty( false );
         if ( !item.update() )
           return failureResponse( "Unable to update item" );
-        break;
+    } else {
+      return failureResponse( "Unknown command" );
     }
 
-    if ( !( mStoreQuery.operation() & StoreQuery::Silent ) ) {
+    if ( !silent ) {
       QList<Flag> flags = pimItems[ i ].flags();
       QStringList flagList;
       for ( int j = 0; j < flags.count(); ++j )
@@ -231,26 +237,4 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
     return false;
   }
   return true;
-}
-
-bool Akonadi::Store::inContinuation() const
-{
-  return mSize > -1;
-}
-
-bool Akonadi::Store::handleContinuation(const QByteArray & line)
-{
-  if ( line.size() > mSize )
-    mData += line.left( mSize );
-  else
-    mData += line;
-  mSize = qMax( mSize - line.size(), 0 );
-  if ( !allDataRead() )
-    return false;
-  return commit();
-}
-
-bool Akonadi::Store::allDataRead() const
-{
-  return ( mSize == 0 );
 }

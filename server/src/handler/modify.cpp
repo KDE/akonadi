@@ -90,6 +90,8 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
         return failureResponse( "Invalid syntax" );
       if ( !db->renameLocation( location, newParent, location.name() ) )
         return failureResponse( "Unable to reparent colleciton" );
+    } else if ( type.isEmpty() ) {
+      break; // input end
     } else {
       // custom attribute
       bool removeOnly = false;

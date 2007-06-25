@@ -105,11 +105,6 @@ Q_SIGNALS:
 
 protected:
     /**
-      Send a continuation request for literals.
-    */
-    bool startContinuation();
-
-    /**
       Cached lookup of search providers.
       @param mimeType The mimetype a search provider is requested for.
     */

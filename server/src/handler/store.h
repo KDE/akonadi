@@ -23,7 +23,6 @@
 #include <handler.h>
 
 #include "storage/entity.h"
-#include "storequery.h"
 
 namespace Akonadi {
 
@@ -40,19 +39,18 @@ class Store : public Handler
 
     bool handleLine(const QByteArray& line);
 
-  private:
-    bool commit();
-    bool inContinuation() const;
-    bool allDataRead() const;
-    bool handleContinuation( const QByteArray& line );
+    enum Operation
+    {
+      Replace,
+      Add,
+      Delete
+    };
 
+
+  private:
     bool replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool addFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool deleteFlags( const PimItem &item, const QList<QByteArray> &flags );
-
-    StoreQuery mStoreQuery;
-    int mSize;
-    QByteArray mData;
 };
 
 }

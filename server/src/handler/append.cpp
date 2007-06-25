@@ -32,7 +32,7 @@
 using namespace Akonadi;
 
 Append::Append()
-    : Handler(), m_size(-1)
+    : Handler()
 {
 }
 
@@ -96,20 +96,8 @@ static QDateTime parseDateTime( const QByteArray & s )
 }
 
 
-bool Akonadi::Append::handleContinuation( const QByteArray& line )
-{
-    m_data += line;
-    m_size -= line.size();
-    if ( !allDataRead() )
-        return false;
-    return commit();
-}
-
 bool Akonadi::Append::handleLine(const QByteArray& line )
 {
-    if ( inContinuation() )
-        return handleContinuation( line );
-
     // Arguments:  mailbox name
     //        OPTIONAL flag parenthesized list
     //        OPTIONAL date/time string
@@ -148,14 +136,7 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     // if date/time is not given then it will be set to the current date/time
     // by the database
 
-    // finally parse the message literal
-    const int startOfSize = startOfLiteral + 1;
-    m_size = line.mid( startOfSize, line.indexOf('}') - startOfSize ).toInt();
-
-    if ( !allDataRead() )
-        return startContinuation();
-
-    // otherwise it's a 0-size put, so we're done
+    ImapParser::parseString( line, m_data, startOfLiteral );
     return commit();
 }
 
@@ -228,14 +209,4 @@ bool Akonadi::Append::commit()
     emit responseAvailable( response );
     deleteLater();
     return true;
-}
-
-bool Akonadi::Append::inContinuation( ) const
-{
-    return m_size > -1;
-}
-
-bool Akonadi::Append::allDataRead( ) const
-{
-    return ( m_size == 0 );
 }

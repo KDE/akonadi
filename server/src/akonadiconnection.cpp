@@ -25,6 +25,7 @@
 #include "handler.h"
 #include "response.h"
 #include "tracer.h"
+#include "imapparser.h"
 
 #include <assert.h>
 
@@ -41,6 +42,7 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
 {
     m_identifier.sprintf( "%p", static_cast<void*>( this ) );
     Tracer::self()->beginConnection( m_identifier, QString() );
+    m_parser = new ImapParser;
 }
 
 DataStore * Akonadi::AkonadiConnection::storageBackend()
@@ -56,6 +58,7 @@ AkonadiConnection::~AkonadiConnection()
     Tracer::self()->endConnection( m_identifier, QString() );
 
     delete m_tcpSocket;
+    delete m_parser;
 }
 
 void AkonadiConnection::run()
@@ -94,50 +97,41 @@ void AkonadiConnection::slotDisconnected()
 
 void AkonadiConnection::slotNewData()
 {
+  while ( m_tcpSocket->canReadLine() ) {
     QByteArray line = m_tcpSocket->readLine();
-    if ( !m_currentHandler ) {
-        line = line.trimmed();
+    Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( line ) );
 
-        Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( line ) );
+    if ( m_parser->parseNextLine( line ) ) {
+      // parse the command
+      QByteArray command;
+      ImapParser::parseString( m_parser->data(), command );
 
-        // this is a new command, which means the line must start with a tag
-        // followed by a non-empty command. First get the tag
-        int separator = line.indexOf(' ');
-        if ( separator == -1 || separator == line.size() ) {
-            writeOut( "* BAD Untagged client command cannot be processed" );
-            return;
-        }
-        // parse our the tag
-        const QByteArray tag = line.left( separator );
-        // and the command
-        int commandStart = line.indexOf( ' ', 0 ) + 1;
-        int commandEnd = line.indexOf( ' ', commandStart );
-        if ( commandEnd == -1 ) commandEnd = line.size();
-        const QByteArray command = line.mid( commandStart, commandEnd - commandStart ).toUpper();
-
-        m_currentHandler = findHandlerForCommand( command );
-        m_currentHandler->setTag( tag );
-        assert( m_currentHandler );
-        connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
-                 this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
-        connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
-                 this, SLOT( slotConnectionStateChange( ConnectionState ) ),
-                 Qt::DirectConnection );
+      m_currentHandler = findHandlerForCommand( command );
+      m_currentHandler->setTag( m_parser->tag() );
+      assert( m_currentHandler );
+      connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
+               this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
+      connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
+               this, SLOT( slotConnectionStateChange( ConnectionState ) ),
+               Qt::DirectConnection );
+      try {
+          // FIXME: remove the tag, it's only there for backward compatibility with the handlers!
+          if ( m_currentHandler->handleLine( m_parser->tag() + " " + m_parser->data() ) )
+              m_currentHandler = 0;
+      } catch ( ... ) {
+          delete m_currentHandler;
+          m_currentHandler = 0;
+      }
+      m_parser->reset();
+    } else {
+      if ( m_parser->continuationStarted() ) {
+        Response response;
+        response.setContinuation();
+        response.setString( "Ready for literal data" );
+        slotResponseAvailable( response );
+      }
     }
-    try {
-        if ( m_currentHandler->handleLine( line ) )
-            m_currentHandler = 0;
-    } catch ( ... ) {
-        delete m_currentHandler;
-        m_currentHandler = 0;
-    }
-    if ( m_tcpSocket->canReadLine() ) {
-        if ( m_currentHandler )
-            slotNewData();
-        else
-            m_tcpSocket->readLine();
-    }
-
+  }
 }
 
 void AkonadiConnection::writeOut( const QByteArray &data )

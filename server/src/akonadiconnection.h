@@ -32,6 +32,7 @@ namespace Akonadi {
     class Handler;
     class Response;
     class DataStore;
+    class ImapParser;
 
 /**
     An AkonadiConnection represents one connection of a client to the server.
@@ -81,6 +82,7 @@ private:
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;
+    ImapParser *m_parser;
 };
 
 }
