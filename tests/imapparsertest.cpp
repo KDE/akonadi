@@ -118,6 +118,12 @@ void ImapParserTest::testParseQuotedString( )
   consumed = ImapParser::parseQuotedString( input, result, 0 );
   QCOMPARE( result, QByteArray( "\"some \\ quoted stuff\"" ) );
   QCOMPARE( consumed, input.length() );
+
+  // linebreak as separator
+  input = "LOGOUT\nFOO";
+  consumed = ImapParser::parseQuotedString( input, result, 0 );
+  QCOMPARE( result, QByteArray("LOGOUT") );
+  QCOMPARE( consumed, 6 );
 }
 
 void ImapParserTest::testParseString( )

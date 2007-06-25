@@ -148,7 +148,7 @@ int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, 
   else {
     bool reachedInputEnd = true;
     for ( int i = begin; i < data.length(); ++i ) {
-      if ( data[i] == ' ' || data[i] == '(' || data[i] == ')' ) {
+      if ( data[i] == ' ' || data[i] == '(' || data[i] == ')' || data[i] == '\n' || data[i] == '\r' ) {
         end = i;
         reachedInputEnd = false;
         break;
