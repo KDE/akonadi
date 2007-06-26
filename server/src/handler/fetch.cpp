@@ -71,7 +71,11 @@ bool Fetch::handleLine( const QByteArray& line )
     if ( fetchQuery.isUidFetch() ) {
       pimItems = store->fetchMatchingPimItemsByUID( fetchQuery /*, connection()->selectedLocation()*/ ) ;
     } else {
-      pimItems = store->fetchMatchingPimItemsBySequenceNumbers( fetchQuery, connection()->selectedLocation() );
+      // HACK to make fetching content of the comple collection work
+      if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::RFC822 ) )
+        pimItems = store->matchingPimItemsBySequenceNumbers( fetchQuery.sequences(), connection()->selectedLocation(), fetchQuery.type() );
+      else
+        pimItems = store->fetchMatchingPimItemsBySequenceNumbers( fetchQuery, connection()->selectedLocation() );
     }
   }
 
