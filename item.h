@@ -78,7 +78,7 @@ class AKONADI_EXPORT Item
     /**
       Destroys this PIM item.
     */
-    virtual ~Item();
+    ~Item();
 
     /**
       Creates an item from the url
