@@ -110,7 +110,7 @@ void ItemAppendTest::testContent()
   DataReference ref = job->reference();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
-  fjob->addFetchPart( "RFC822" );
+  fjob->addFetchPart( Item::PartBody );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();

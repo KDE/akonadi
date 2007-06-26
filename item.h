@@ -59,6 +59,23 @@ class AKONADI_EXPORT Item
     typedef QSet<QByteArray> Flags;
 
     /**
+      The part identifier for all parts.
+     */
+    static const QLatin1String PartAll;
+
+    /**
+      The part identifier for envelope parts.
+     */
+    static const QLatin1String PartEnvelope;
+
+    /**
+      The part identifier for the main body part.
+     */
+    static const QLatin1String PartBody;
+
+
+
+    /**
       Create a new PIM item.
       @param ref The unique reference of this item.
     */

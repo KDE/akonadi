@@ -55,7 +55,7 @@ public:
 
     void deserialize( Item& item, const QString& label, QIODevice& data )
     {
-        if ( label == QLatin1String("RFC822") )
+        if ( label == Item::PartBody )
           item.setPayload( data.readAll() );
         else
           item.addPart( label, data.readAll() );
@@ -63,7 +63,7 @@ public:
 
     void serialize( const Item& item, const QString& label, QIODevice& data )
     {
-        if ( label == QLatin1String("RFC822") && item.hasPayload<QByteArray>() )
+        if ( label == Item::PartBody && item.hasPayload<QByteArray>() )
             data.write( item.payload<QByteArray>() );
     }
 

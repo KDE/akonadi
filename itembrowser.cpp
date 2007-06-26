@@ -50,5 +50,5 @@ void ItemBrowser::itemRemoved()
 
 QString ItemBrowser::itemToRichText( const Item &item )
 {
-  return QString::fromUtf8( item.part( QLatin1String( "RFC822" ) ) );
+  return QString::fromUtf8( item.part( Item::PartBody ) );
 }

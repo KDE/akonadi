@@ -49,6 +49,11 @@ class Item::Private : public QSharedData
     QMap<QString, QByteArray> mParts;
 };
 
+const QLatin1String Item::PartAll = QLatin1String( "AkonadiItemPartAll" );
+const QLatin1String Item::PartBody = QLatin1String( "RFC822" );
+const QLatin1String Item::PartEnvelope = QLatin1String( "ENVELOPE" );
+
+
 Item::Item( const DataReference & reference )
   : d( new Private ), m_payload( 0 )
 {

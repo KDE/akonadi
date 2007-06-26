@@ -290,7 +290,7 @@ void Monitor::Private::slotFetchItemChangedFinished( KJob *job )
     const Item item = fetchJob->items().first();
     if ( item.isValid() )
       // TODO: pass the parts from the item fetch job here
-      emit mParent->itemChanged( item, QStringList( ItemFetchJob::PartAll ) );
+      emit mParent->itemChanged( item, QStringList( Item::PartAll ) );
   }
 }
 

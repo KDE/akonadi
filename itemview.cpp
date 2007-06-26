@@ -85,7 +85,7 @@ void ItemView::itemRemoved()
 
 QStringList ItemView::fetchPartIdentifiers() const
 {
-  return QStringList( ItemFetchJob::PartAll );
+  return QStringList( Item::PartAll );
 }
 
 #include "itemview_p.moc"

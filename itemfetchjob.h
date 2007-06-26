@@ -34,16 +34,6 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     Q_OBJECT
   public:
     /**
-      The part identifier for all parts.
-     */
-    static const QLatin1String PartAll;
-
-    /**
-      The part identifier for envelope parts.
-     */
-    static const QLatin1String PartEnvelope;
-
-    /**
       Create a new item list job to retrieve envelope parts of all
       items in the given collection.
       @param collection The collection to list.

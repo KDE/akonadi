@@ -193,7 +193,7 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
 void ItemStoreJob::storePayload()
 {
   // TODO: multipart support
-  ItemSerializer::serialize( d->item, QLatin1String("RFC822"), d->data );
+  ItemSerializer::serialize( d->item, Item::PartBody, d->data );
   d->operations.insert( Private::Data );
 }
 

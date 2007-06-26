@@ -73,7 +73,7 @@ void ItemModel::Private::listingDone( KJob * job )
 
   // start monitor
   monitor = new Monitor( mParent );
-  monitor->addFetchPart( ItemFetchJob::PartEnvelope );
+  monitor->addFetchPart( Item::PartEnvelope );
   foreach( QString part, mFetchParts )
     monitor->addFetchPart( part );
 
@@ -214,7 +214,7 @@ void ItemModel::setCollection( const Collection &collection )
 
   // start listing job
   ItemFetchJob* job = new ItemFetchJob( collection, session() );
-  job->addFetchPart( ItemFetchJob::PartEnvelope );
+  job->addFetchPart( Item::PartEnvelope );
   foreach( QString part, d->mFetchParts )
     job->addFetchPart( part );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );

@@ -46,9 +46,6 @@ class ItemFetchJob::Private
     QStringList mFetchParts;
 };
 
-const QLatin1String ItemFetchJob::PartAll = QLatin1String( "AkonadiItemPartAll" );
-const QLatin1String ItemFetchJob::PartEnvelope = QLatin1String( "ENVELOPE" );
-
 void ItemFetchJob::Private::startFetchJob()
 {
   QByteArray command = mParent->newTag();
@@ -58,7 +55,7 @@ void ItemFetchJob::Private::startFetchJob()
     command += " UID FETCH " + QByteArray::number( uid.id() );
 
   command += " (UID REMOTEID FLAGS";
-  if ( mFetchParts.contains( PartAll ) )
+  if ( mFetchParts.contains( Item::PartAll ) )
     command += " RFC822";
 
   foreach ( QString part, mFetchParts ) {
@@ -81,7 +78,7 @@ ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
     d( new Private( this ) )
 {
   d->collection = collection;
-  d->mFetchParts.append( PartEnvelope );
+  d->mFetchParts.append( Item::PartEnvelope );
 }
 
 ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
@@ -89,7 +86,7 @@ ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
     d( new Private( this ) )
 {
   setUid( ref );
-  d->mFetchParts.append( PartAll );
+  d->mFetchParts.append( Item::PartAll );
 }
 
 ItemFetchJob::~ ItemFetchJob( )
