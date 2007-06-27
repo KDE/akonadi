@@ -737,7 +737,6 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
       mPendingItemDeliveriesCondition.wait( &mPendingItemDeliveriesMutex );
       qDebug() << "requestItemDelivery(): continuing";
       forever {
-        mPendingItemDeliveriesMutex.lock();
         if ( !mPendingItemDeliveries.contains( uid ) ) {
           mPendingItemDeliveriesMutex.unlock();
           break;
