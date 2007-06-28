@@ -16,7 +16,7 @@ Comment[x-test]=xxAn agent for debugging purposexx
 Comment[zh_TW]=除錯用的代理程式
 Type=AkonadiResource
 Exec=akonadi_knut_resource
-Icon=knut
+Icon=tool
 
 X-Akonadi-MimeTypes=text/calendar,text/directory
 X-Akonadi-Capabilitites=text/calendar
