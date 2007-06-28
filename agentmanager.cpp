@@ -17,12 +17,15 @@
     02110-1301, USA.
 */
 
-#include <QtGui/QIcon>
+#include "agentmanager.h"
 
 #include "akonadi-prefix.h" // for AKONADIDIR
-
-#include "agentmanager.h"
 #include "agentmanagerinterface.h"
+
+#include <kiconloader.h>
+
+#include <QtGui/QIcon>
+
 
 using namespace Akonadi;
 
@@ -108,9 +111,7 @@ QString AgentManager::agentIconName( const QString &identifier ) const
 QIcon AgentManager::agentIcon( const QString &identifier ) const
 {
   const QString name = agentIconName( identifier );
-  const QString path = QString::fromLatin1( "%1/share/apps/akonadi/agents/%2" ).arg( QLatin1String( AKONADIDIR ) ).arg( name );
-
-  return QIcon( path );
+  return KIconLoader::global()->loadIconSet( name, K3Icon::Desktop );
 }
 
 QStringList AgentManager::agentMimeTypes( const QString &identifier ) const
