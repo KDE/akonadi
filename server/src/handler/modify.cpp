@@ -90,6 +90,15 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
         return failureResponse( "Invalid syntax" );
       if ( !db->renameLocation( location, newParent, location.name() ) )
         return failureResponse( "Unable to reparent colleciton" );
+    } else if ( type == "REMOTEID" ) {
+      // FIXME: missing change notification
+      QString rid;
+      pos = ImapParser::parseString( line, rid, pos );
+      if ( rid == location.remoteId() )
+        continue;
+      location.setRemoteId( rid );
+      if ( !location.update() )
+        return failureResponse( "Unable to change remote identifier" );
     } else if ( type.isEmpty() ) {
       break; // input end
     } else {
