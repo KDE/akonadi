@@ -66,6 +66,8 @@ void CollectionModifyJob::doStart()
     changes += " PARENT " + QByteArray::number( d->parent.id() );
   if ( !d->name.isEmpty() )
     changes += " NAME \"" + d->name.toUtf8() + '"';
+  if ( !d->collection.remoteId().isNull() )
+    changes += " REMOTEID \"" + d->collection.remoteId().toUtf8() + '"';
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   foreach ( const QByteArrayPair bp, d->attributes )
     changes += ' ' + bp.first + ' ' + bp.second;

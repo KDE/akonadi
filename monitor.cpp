@@ -228,7 +228,7 @@ void Monitor::Private::slotCollectionChanged( const QByteArray &sessionId, int c
   }
 }
 
-void Monitor::Private::slotCollectionAdded( const QByteArray &sessionId, int collection, const QString&,
+void Monitor::Private::slotCollectionAdded( const QByteArray &sessionId, int collection, const QString &remoteId,
                                             const QByteArray &resource )
 {
   if ( isSessionIgnored( sessionId ) )
@@ -241,6 +241,7 @@ void Monitor::Private::slotCollectionAdded( const QByteArray &sessionId, int col
     } else {
       Collection col( collection );
       col.setResource( QString::fromUtf8( resource ) );
+      col.setRemoteId( remoteId );
       emit mParent->collectionAdded( col );
     }
   }

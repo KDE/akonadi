@@ -136,7 +136,7 @@ void CollectionView::Private::updateActions( const QModelIndex &current )
   if ( current.parent().isValid() )
     deleteCollectionAction->setEnabled( true );
   else
-    newCollectionAction->setEnabled( false );
+    deleteCollectionAction->setEnabled( false );
 }
 
 
