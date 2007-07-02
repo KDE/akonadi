@@ -30,7 +30,7 @@
 
 using namespace Akonadi;
 
-ItemDumper::ItemDumper( const QString &path, const QByteArray &filename, const QByteArray &mimetype )
+ItemDumper::ItemDumper( const QString &path, const QString &filename, const QString &mimetype )
 {
   CollectionPathResolver* resolver = new CollectionPathResolver( path, this );
   Q_ASSERT( resolver->exec() );
@@ -58,24 +58,21 @@ void ItemDumper::done( KJob * job )
   qApp->quit();
 }
 
-static KCmdLineOptions options[] =
-{
-  { "path <argument>", "IMAP destination path", 0 },
-  { "mimetype <argument>", "Source mimetype", 0 },
-  { "file <argument>", "Source file", 0 },
-  KCmdLineLastOption
-};
-
 int main( int argc, char** argv )
 {
-  KCmdLineArgs::init( argc, argv, "test", "Test" ,"test app" ,"1.0" );
+  KCmdLineArgs::init( argc, argv, "test", 0, ki18n("Test") ,"1.0" ,ki18n("test app") );
+
+  KCmdLineOptions options;
+  options.add("path <argument>", ki18n("IMAP destination path"));
+  options.add("mimetype <argument>", ki18n("Source mimetype"));
+  options.add("file <argument>", ki18n("Source file"));
   KCmdLineArgs::addCmdLineOptions( options );
   KApplication app;
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  QByteArray path = args->getOption( "path" );
-  QByteArray mimetype = args->getOption( "mimetype" );
-  QByteArray file = args->getOption( "file" );
-  ItemDumper d( QString::fromUtf8( path ), file, mimetype );
+  QString path = args->getOption( "path" );
+  QString mimetype = args->getOption( "mimetype" );
+  QString file = args->getOption( "file" );
+  ItemDumper d( path, file, mimetype );
   return app.exec();
 }
 

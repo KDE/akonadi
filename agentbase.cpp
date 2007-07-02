@@ -190,12 +190,6 @@ AgentBase::~AgentBase()
   delete d;
 }
 
-static KCmdLineOptions options[] =
-{
-  { "identifier <argument>", "Agent identifier", 0 },
-  KCmdLineLastOption
-};
-
 static char* sAppName = 0;
 
 QString AgentBase::parseArguments( int argc, char **argv )
@@ -217,8 +211,11 @@ QString AgentBase::parseArguments( int argc, char **argv )
   }
 
   sAppName = qstrdup( identifier.toLatin1().constData() );
-  KCmdLineArgs::init( argc, argv, sAppName, I18N_NOOP("Akonadi Agent"),
-                      I18N_NOOP("Akonadi Agent") ,"0.1" );
+  KCmdLineArgs::init( argc, argv, sAppName, 0, ki18n("Akonadi Agent"),"0.1" ,
+                      ki18n("Akonadi Agent") );
+
+  KCmdLineOptions options;
+  options.add("identifier <argument>", ki18n("Agent identifier"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   return identifier;

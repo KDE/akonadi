@@ -400,12 +400,6 @@ QString ResourceBase::name() const
     return d->mName;
 }
 
-static KCmdLineOptions options[] =
-{
-  { "identifier <argument>", "Resource identifier", 0 },
-  KCmdLineLastOption
-};
-
 static char* sAppName = 0;
 
 QString ResourceBase::parseArguments( int argc, char **argv )
@@ -427,8 +421,11 @@ QString ResourceBase::parseArguments( int argc, char **argv )
   }
 
   sAppName = qstrdup( identifier.toLatin1().constData() );
-  KCmdLineArgs::init( argc, argv, sAppName, I18N_NOOP("Akonadi Resource"),
-                      I18N_NOOP("Akonadi Resource") ,"0.1" );
+  KCmdLineArgs::init( argc, argv, sAppName, 0, ki18n("Akonadi Resource"),"0.1" ,
+                      ki18n("Akonadi Resource") );
+
+  KCmdLineOptions options;
+  options.add("identifier <argument>", ki18n("Resource identifier"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   return identifier;

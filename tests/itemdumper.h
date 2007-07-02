@@ -27,7 +27,7 @@ class ItemDumper : public QObject
 {
   Q_OBJECT
   public:
-    ItemDumper( const QString &path, const QByteArray &filename, const QByteArray &mimetype );
+    ItemDumper( const QString &path, const QString &filename, const QString &mimetype );
 
   private Q_SLOTS:
     void done(KJob* job);
