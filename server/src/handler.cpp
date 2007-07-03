@@ -173,24 +173,4 @@ bool Akonadi::Handler::failureResponse(const char * failureMessage)
   return failureResponse( QLatin1String( failureMessage ) );
 }
 
-QStringList Akonadi::Handler::providerForMimetype(const QString & mimeType)
-{
-  if ( m_providerCache.contains( mimeType ) )
-    return m_providerCache.value( mimeType );
-
-  org::kde::Akonadi::SearchProviderManager *interface =
-    new org::kde::Akonadi::SearchProviderManager( QLatin1String("org.kde.Akonadi.SearchProviderManager"),
-                                                  QLatin1String("/"), QDBusConnection::sessionBus(), this );
-
-  if ( !interface || !interface->isValid() ) {
-    qDebug() << "Cannot connect to search provider manager" << (interface ? interface->lastError().message() : QString() );
-    return QStringList();
-  }
-  QStringList providers = interface->providersForMimeType( mimeType );
-  if ( !providers.isEmpty() )
-    m_providerCache.insert( mimeType, providers );
-
-  return providers;
-}
-
 #include "handler.moc"

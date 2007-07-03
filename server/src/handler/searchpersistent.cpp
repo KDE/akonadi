@@ -74,54 +74,11 @@ bool SearchPersistent::handleLine( const QByteArray& line )
     if ( !db->appendPersisntentSearch( QString::fromUtf8(collectionName), queryString ) )
       return failureResponse( "Unable to create persistent search" );
 
-    // get the responsible search providers
-    QStringList providers = providerForMimetype( mimeType );
-    if ( providers.isEmpty() )
-      return failureResponse( "No search providers found for this mimetype" );
-
-    // call search providers
-// FIXME: actually provide that interface...
-#if 0
-    org::kde::Akonadi::SearchProvider *interface =
-        new org::kde::Akonadi::SearchProvider(
-          QLatin1String("org.kde.Akonadi.SearchProvider.") + provider,
-          QLatin1String("/"), QDBusConnection::sessionBus(), this );
-
-    if ( !interface || !interface->isValid() ) {
-      qDebug() << "Cannot connect to search provider" << provider
-          << (interface ? interface->lastError().message() : QString() );
-    } else {
-      interface->addSearch( collectionName, queryString );
-    }
-#endif
-
   } else if ( command.toUpper() == "SEARCH_DELETE" ) {
 
     Location search = HandlerHelper::collectionFromIdOrName( collectionName );
     if ( !search.isValid() )
       return failureResponse( "No such persistent search" );
-
-    // get the responsible search providers
-    // TODO: fetch mimetype from the database
-    QStringList providers = providerForMimetype( QString::fromLatin1( "message/rfc822" ) );
-    if ( providers.isEmpty() )
-      return failureResponse( "No search providers found for this mimetype" );
-
-    // unregister at search providers
-// FIXME: actually provide that interface...
-#if 0
-    org::kde::Akonadi::SearchProvider *interface =
-        new org::kde::Akonadi::SearchProvider(
-          QLatin1String("org.kde.Akonadi.SearchProvider.") + provider,
-          QLatin1String("/"), QDBusConnection::sessionBus(), this );
-
-    if ( !interface || !interface->isValid() ) {
-      qDebug() << "Cannot connect to search provider" << provider
-          << (interface ? interface->lastError().message() : QString() );
-    } else {
-      interface->removeSearch( collectionName );
-    }
-#endif
 
     if ( !db->cleanupLocation( search ) )
       return failureResponse( "Unable to remove presistent search" );

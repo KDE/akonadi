@@ -103,17 +103,9 @@ Q_SIGNALS:
      */
     void connectionStateChange( ConnectionState state );
 
-protected:
-    /**
-      Cached lookup of search providers.
-      @param mimeType The mimetype a search provider is requested for.
-    */
-    QStringList providerForMimetype( const QString &mimeType );
-
 private:
     QByteArray m_tag;
     AkonadiConnection* m_connection;
-    QHash<QString,QStringList> m_providerCache;
 };
 
 }
