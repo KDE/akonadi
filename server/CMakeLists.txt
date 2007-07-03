@@ -86,6 +86,7 @@ set(libakonadiprivate_SRCS
   ../libakonadi/imapparser.cpp
   src/cachepolicymanager.cpp
   src/cachecleaner.cpp
+  src/xesammanager.cpp
 )
 
 qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
@@ -108,12 +109,37 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer
 )
 
+# taken from FindQt4.cmake to add additional includes, should probably be merged back
+MACRO(QT4_ADD_DBUS_INTERFACE2 _sources _interface _basename _include)
+  GET_FILENAME_COMPONENT(_infile ${_interface} ABSOLUTE)
+  SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+  SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
+  SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
+  SET(_params -m -i ${_include} -p)
+
+  ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
+      COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} ${_params} ${_basename} ${_infile}
+      DEPENDS ${_infile})
+
+  SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
+
+  QT4_GENERATE_MOC(${_header} ${_moc})
+
+  SET(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
+  MACRO_ADD_FILE_DEPENDENCIES(${_impl} ${_moc})
+ENDMACRO(QT4_ADD_DBUS_INTERFACE2)
+
+
 qt4_generate_dbus_interface( ../libakonadi/resource.h org.kde.Akonadi.Resource.xml )
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.AgentManager.xml
   interfaces/org.kde.Akonadi.SearchProviderManager.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml
   ../searchproviders/org.kde.Akonadi.SearchProvider.xml
+)
+qt4_add_dbus_interface2(libakonadiprivate_SRCS
+  interfaces/org.freedesktop.xesam.Search.xml
+  xesaminterface xesamtypes.h
 )
 
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )

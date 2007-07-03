@@ -32,6 +32,7 @@ namespace Akonadi {
 
 class AkonadiConnection;
 class CacheCleaner;
+class XesamManager;
 
 class AKONADI_SERVER_EXPORT AkonadiServer: public QTcpServer
 {
@@ -46,7 +47,7 @@ class AKONADI_SERVER_EXPORT AkonadiServer: public QTcpServer
   public Q_SLOTS:
     /**
      * Triggers a clean server shutdown.
-     */ 
+     */
     void quit();
 
   private Q_SLOTS:
@@ -63,6 +64,7 @@ class AKONADI_SERVER_EXPORT AkonadiServer: public QTcpServer
     CacheCleaner *mCacheCleaner;
     QProcess *mDatabaseProcess;
     QList< QPointer<AkonadiConnection> > mConnections;
+    XesamManager *mXesamManager;
 };
 
 }

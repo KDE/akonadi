@@ -27,6 +27,7 @@
 #include "notificationmanager.h"
 #include "resourcemanager.h"
 #include "tracer.h"
+#include "xesammanager.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -71,6 +72,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
     mCacheCleaner = new CacheCleaner( this );
     mCacheCleaner->start( QThread::IdlePriority );
 
+    mXesamManager = new XesamManager( this );
+
     new ServerAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );
 }
@@ -85,6 +88,8 @@ void AkonadiServer::quit()
     mCacheCleaner->quit();
     mCacheCleaner->wait();
     delete mCacheCleaner;
+    delete mXesamManager;
+    mXesamManager = 0;
 
     for ( int i = 0; i < mConnections.count(); ++i ) {
       if ( mConnections[ i ] ) {
