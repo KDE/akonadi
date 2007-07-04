@@ -17,6 +17,17 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "datastore.h"
+
+#include "agentmanagerinterface.h"
+#include "resourceinterface.h"
+#include "dbinitializer.h"
+#include "notificationmanager.h"
+#include "tracer.h"
+#include "selectquerybuilder.h"
+#include "handlerhelper.h"
+#include "countquerybuilder.h"
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QEventLoop>
@@ -32,16 +43,6 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlField>
 #include <QtSql/QSqlQuery>
-
-#include "agentmanagerinterface.h"
-#include "resourceinterface.h"
-#include "dbinitializer.h"
-#include "notificationmanager.h"
-#include "tracer.h"
-#include "selectquerybuilder.h"
-#include "handlerhelper.h"
-
-#include "datastore.h"
 
 using namespace Akonadi;
 
@@ -355,6 +356,7 @@ bool Akonadi::DataStore::cleanupLocation(const Location & location)
 
   // delete location mimetypes
   removeMimeTypesForLocation( location.id() );
+  Location::clearPimItems( location.id() );
 
   // delete attributes
   foreach ( LocationAttribute attr, location.attributes() )
@@ -873,11 +875,20 @@ int DataStore::highestPimItemCountByLocation( const Location &location )
   if ( !location.isValid() )
     return -1;
 
-  int cnt = PimItem::count( PimItem::locationIdColumn(), location.id() );
-  if ( cnt < 0 )
-    return -1;
+  if ( location.resource().name() == QLatin1String("akonadi_search_resource") ) {
+    CountQueryBuilder builder;
+    builder.addTable( LocationPimItemRelation::tableName() );
+    builder.addValueCondition( LocationPimItemRelation::leftColumn(), "=", location.id() );
+    if ( !builder.exec() )
+      return -1;
+    return builder.result();
+  } else {
+    int cnt = PimItem::count( PimItem::locationIdColumn(), location.id() );
+    if ( cnt < 0 )
+      return -1;
 
-  return cnt + 1;
+    return cnt + 1;
+  }
 }
 
 
@@ -976,16 +987,19 @@ QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteAr
   if ( !m_dbOpened || !location.isValid() )
     return QList<PimItem>();
 
-  QSqlQuery query( m_database );
-  const QString statement =
-      QString::fromLatin1( "SELECT %1 FROM %2 WHERE %3 = :id" ).arg( PimItem::idColumn(), PimItem::tableName(), PimItem::locationIdColumn() );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":id"), location.id() );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "DataStore::matchingPimItemsBySequenceNumbers" );
-    return QList<PimItem>();
+  QueryBuilder builder( QueryBuilder::Select );
+  if ( location.resource().name() != QLatin1String( "akonadi_search_resource" ) ) {
+    builder.addTable( PimItem::tableName() );
+    builder.addValueCondition( PimItem::locationIdColumn(), "=", location.id() );
+    builder.addColumn( PimItem::idColumn() );
+  } else {
+    builder.addTable( LocationPimItemRelation::tableName() );
+    builder.addValueCondition( LocationPimItemRelation::leftColumn(), "=", location.id() );
+    builder.addColumn( LocationPimItemRelation::rightColumn() );
   }
+
+  if ( !builder.exec() )
+    return PimItem::List();
 
   int highestEntry = highestPimItemCountByLocation( location );
   if ( highestEntry == -1 ) {
@@ -994,6 +1008,7 @@ QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteAr
   }
 
   // iterate over the whole query to make seek possible.
+  QSqlQuery query = builder.query();
   while ( query.next() ) {}
 
   QList<PimItem> pimItems;

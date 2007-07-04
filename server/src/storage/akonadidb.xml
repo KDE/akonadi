@@ -169,4 +169,8 @@
     <column name="type" type="QByteArray" properties="NOT NULL"/>
     <column name="value" type="QByteArray"/>
   </table>
+
+  <relation table1="Location" column1="id" table2="PimItem" column2="id">
+    <comment>Used to associacte items with search folders.</comment>
+  </relation>
 </database>
