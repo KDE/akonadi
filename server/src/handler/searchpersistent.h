@@ -30,8 +30,6 @@ namespace Akonadi {
   A persistent search can have the following forms:
 
     123 SEARCH_STORE <name> <query>
-  or
-    123 SEARCH_DELETE <collection-id>
 */
 class SearchPersistent : public Handler
 {

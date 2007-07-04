@@ -26,6 +26,7 @@
 #include <storage/datastore.h>
 #include <storage/entity.h>
 #include <storage/transaction.h>
+#include "xesammanager.h"
 
 using namespace Akonadi;
 
@@ -56,9 +57,14 @@ bool Delete::handleLine(const QByteArray & line)
   if ( !location.isValid() )
     return failureResponse( "No such collection." );
 
-  // don't delete virtual root
-  if ( location.parentId() == 0 && location.resource().name() == QLatin1String("akonadi_search_resource") )
-    return failureResponse( "Cannot delete virtual root collection" );
+  // handle virtual folders
+  if ( location.resource().name() == QLatin1String("akonadi_search_resource") ) {
+    // don't delete virtual root
+    if ( location.parentId() == 0 )
+      return failureResponse( "Cannot delete virtual root collection" );
+    if ( !XesamManager::instance()->removeSearch( location.id() ) )
+      return failureResponse( "Failed to remove XESAM search" );
+  }
 
   if ( !deleteRecursive( location ) )
     return failureResponse( "Unable to delete collection" );

@@ -20,6 +20,7 @@
 #ifndef AKONADI_XESAMMANAGER_H
 #define AKONADI_XESAMMANAGER_H
 
+#include <QMutex>
 #include <QObject>
 
 #include "entities.h"
@@ -35,9 +36,12 @@ class XesamManager : public QObject
     XesamManager( QObject* parent = 0 );
     ~XesamManager();
 
+    static XesamManager* instance() { return mInstance; }
+    bool addSearch( const Location &loc );
+    bool removeSearch( int loc );
+
   private:
     void reloadSearches();
-    void addSearch( const Location &loc );
 
   private slots:
     void slotHitsAdded( const QString &search, int count );
@@ -48,6 +52,9 @@ class XesamManager : public QObject
     OrgFreedesktopXesamSearchInterface *mInterface;
     QString mSession;
     QHash<QString,int> mSearchMap;
+    QHash<int,QString> mInvSearchMap;
+    static XesamManager* mInstance;
+    QMutex mMutex;
 };
 
 }

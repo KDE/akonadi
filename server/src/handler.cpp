@@ -110,7 +110,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
         return new List();
     if ( command == "SELECT" )
         return new Select();
-    if ( command == "SEARCH_STORE" || command == "SEARCH_DELETE" || command == "SEARCH_DEBUG" )
+    if ( command == "SEARCH_STORE" )
         return new SearchPersistent();
     if ( command == "NOOP" )
         return new Noop();

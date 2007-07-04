@@ -26,7 +26,7 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 #include "handlerhelper.h"
-#include "searchproviderinterface.h"
+#include "xesammanager.h"
 
 #include <QtCore/QStringList>
 
@@ -44,8 +44,7 @@ SearchPersistent::~SearchPersistent()
 bool SearchPersistent::handleLine( const QByteArray& line )
 {
   int pos = line.indexOf( ' ' ) + 1; // skip tag
-  QByteArray command;
-  pos = ImapParser::parseString( line, command, pos );
+  pos = line.indexOf( ' ', pos ) + 1; // skip command
 
   QByteArray collectionName;
   pos = ImapParser::parseString( line, collectionName, pos );
@@ -55,33 +54,21 @@ bool SearchPersistent::handleLine( const QByteArray& line )
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  if ( command.toUpper() == "SEARCH_STORE" ) {
+  QByteArray queryString;
+  ImapParser::parseString( line, queryString, pos );
+  if ( queryString.isEmpty() )
+    return failureResponse( "No query specified" );
 
-    QByteArray queryString;
-    ImapParser::parseString( line, queryString, pos );
-    if ( queryString.isEmpty() )
-      return failureResponse( "No query specified" );
+  Location l;
+  l.setRemoteId( QString::fromUtf8( queryString ) );
+  l.setParentId( 1 ); // search root
+  l.setResourceId( 1 ); // search resource
+  l.setName( QString::fromUtf8( collectionName ) );
+  if ( !db->appendLocation( l ) )
+    return failureResponse( "Unable to create persistent search" );
 
-    Location l;
-    l.setRemoteId( QString::fromUtf8( queryString ) );
-    l.setParentId( 1 ); // search root
-    l.setResourceId( 1 ); // search resource
-    l.setName( QString::fromUtf8( collectionName ) );
-    if ( !db->appendLocation( l ) )
-      return failureResponse( "Unable to create persistent search" );
-
-  } else if ( command.toUpper() == "SEARCH_DELETE" ) {
-
-    Location search = HandlerHelper::collectionFromIdOrName( collectionName );
-    if ( !search.isValid() )
-      return failureResponse( "No such persistent search" );
-
-    if ( !db->cleanupLocation( search ) )
-      return failureResponse( "Unable to remove presistent search" );
-
-  } else {
-    return failureResponse( "Unknwon command" );
-  }
+  if ( !XesamManager::instance()->addSearch( l ) )
+    return failureResponse( "Unable to start XESAM search" );
 
   if ( !transaction.commit() )
     return failureResponse( "Unable to commit transaction" );
@@ -89,7 +76,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
   Response response;
   response.setTag( tag() );
   response.setSuccess();
-  response.setString( command + " completed" );
+  response.setString( "SEARCH_STORE completed" );
   emit responseAvailable( response );
 
   deleteLater();

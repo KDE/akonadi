@@ -27,9 +27,14 @@
 
 using namespace Akonadi;
 
+XesamManager* XesamManager::mInstance = 0;
+
 XesamManager::XesamManager(QObject * parent) :
     QObject( parent )
 {
+  Q_ASSERT( mInstance == 0 );
+  mInstance = this;
+
   mInterface = new OrgFreedesktopXesamSearchInterface(
       QLatin1String("org.freedesktop.xesam.searcher"),
       QLatin1String("/org/freedesktop/xesam/searcher/main"),
@@ -57,6 +62,7 @@ XesamManager::~XesamManager()
 {
   if ( !mSession.isEmpty() )
     mInterface->CloseSession( mSession );
+  mInstance = 0;
 }
 
 void XesamManager::slotHitsAdded(const QString & search, int count)
@@ -87,14 +93,28 @@ void XesamManager::reloadSearches()
   }
 }
 
-void XesamManager::addSearch(const Location & loc)
+bool XesamManager::addSearch(const Location & loc)
 {
+  QMutexLocker lock( &mMutex );
   if ( loc.remoteId().isEmpty() )
-    return;
+    return false;
   QString searchId = mInterface->NewSearch( mSession, loc.remoteId() );
   qDebug() << "XesamManager::addSeach" << loc << searchId;
   mSearchMap[ searchId ] = loc.id();
+  mInvSearchMap[ loc.id() ] = searchId;
   mInterface->StartSearch( searchId );
+  return true;
+}
+
+bool XesamManager::removeSearch(int loc)
+{
+  QMutexLocker lock( &mMutex );
+  if ( !mInvSearchMap.contains( loc ) )
+    return false;
+  QString searchId = mInvSearchMap.value( loc );
+  mInvSearchMap.remove( loc );
+  mSearchMap.remove( searchId );
+  return true;
 }
 
 #include "xesammanager.moc"
