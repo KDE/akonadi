@@ -648,6 +648,9 @@ bool DataStore::cleanupPimItem( const PimItem &item )
   if ( !PimItem::remove( PimItem::idColumn(), item.id() ) )
     return false;
 
+  if ( !Entity::clearRelation<LocationPimItemRelation>( item.id(), Entity::Right ) )
+    return false;
+
   return true;
 }
 

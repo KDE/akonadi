@@ -209,11 +209,16 @@ class Entity
       return true;
     }
 
+    enum RelationSide {
+      Left,
+      Right
+    };
+
     /**
       Clears all entries from a n:m relation table (specified by the given template parameter).
       @param leftId Identifier of the left relation side.
     */
-    template <typename T> inline static bool clearRelation( int leftId )
+    template <typename T> inline static bool clearRelation( int id, RelationSide side = Left )
     {
       QSqlDatabase db = database();
       if ( !db.isOpen() )
@@ -222,15 +227,21 @@ class Entity
       QString statement = QLatin1String( "DELETE FROM ");
       statement.append( T::tableName() );
       statement.append( QLatin1String(" WHERE ") );
-      statement.append( T::leftColumn() );
-      statement.append( QLatin1String( " = :left" ) );
-
+      switch ( side ) {
+        case Left:
+          statement.append( T::leftColumn() ); break;
+        case Right:
+          statement.append( T::rightColumn() ); break;
+        default:
+          qFatal("Invalid enum value");
+      }
+      statement.append( QLatin1String( " = :id" ) );
       QSqlQuery query( db );
       query.prepare( statement );
-      query.bindValue( QLatin1String( ":left" ), leftId );
+      query.bindValue( QLatin1String( ":id" ), id );
       if ( !query.exec() ) {
         qDebug() << "Error during clearing relation table" << T::tableName()
-            << "for id" << leftId << query.lastError().text();
+            << "for id" << id << query.lastError().text();
         return false;
       }
 
