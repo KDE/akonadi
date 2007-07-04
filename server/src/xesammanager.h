@@ -22,6 +22,8 @@
 
 #include <QObject>
 
+#include "entities.h"
+
 class OrgFreedesktopXesamSearchInterface;
 
 namespace Akonadi {
@@ -33,6 +35,10 @@ class XesamManager : public QObject
     XesamManager( QObject* parent = 0 );
     ~XesamManager();
 
+  private:
+    void reloadSearches();
+    void addSearch( const Location &loc );
+
   private slots:
     void slotHitsAdded( const QString &search, int count );
     void slotHitsRemoved( const QString &search, const QList<int> &hits );
@@ -41,9 +47,7 @@ class XesamManager : public QObject
   private:
     OrgFreedesktopXesamSearchInterface *mInterface;
     QString mSession;
-
-    // testing
-    QString mSearch;
+    QHash<QString,int> mSearchMap;
 };
 
 }

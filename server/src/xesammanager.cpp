@@ -19,6 +19,7 @@
 
 #include "xesammanager.h"
 
+#include "storage/datastore.h"
 #include "xesaminterface.h"
 #include "xesamtypes.h"
 
@@ -46,9 +47,7 @@ XesamManager::XesamManager(QObject * parent) :
     connect( mInterface, SIGNAL(HitsRemoved(QString,QList<int>)), SLOT(slotHitsRemoved(QString,QList<int>)) );
     connect( mInterface, SIGNAL(HitsModified(QString,QList<int>)), SLOT(slotHitsModified(QString,QList<int>)) );
 
-    // testing
-    mSearch = mInterface->NewSearch( mSession, QLatin1String("search-query") );
-    mInterface->StartSearch( mSearch );
+    reloadSearches();
   } else {
     qWarning() << "XESAM interface not found!";
   }
@@ -73,6 +72,29 @@ void XesamManager::slotHitsRemoved(const QString & search, const QList<int> & hi
 void XesamManager::slotHitsModified(const QString & search, const QList< int > & hits)
 {
   qDebug() << "hits modified: " << search << hits;
+}
+
+void XesamManager::reloadSearches()
+{
+  Resource res = Resource::retrieveByName( QLatin1String("akonadi_search_resource") );
+  if ( !res.isValid() ) {
+    qWarning() << "No valid search resource found!";
+    return;
+  }
+  Location::List locs = res.locations();
+  foreach ( const Location l, locs ) {
+    addSearch( l );
+  }
+}
+
+void XesamManager::addSearch(const Location & loc)
+{
+  if ( loc.remoteId().isEmpty() )
+    return;
+  QString searchId = mInterface->NewSearch( mSession, loc.remoteId() );
+  qDebug() << "XesamManager::addSeach" << loc << searchId;
+  mSearchMap[ searchId ] = loc.id();
+  mInterface->StartSearch( searchId );
 }
 
 #include "xesammanager.moc"
