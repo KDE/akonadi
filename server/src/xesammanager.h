@@ -42,6 +42,7 @@ class XesamManager : public QObject
 
   private:
     void reloadSearches();
+    void stopSearches();
 
   private slots:
     void slotHitsAdded( const QString &search, int count );

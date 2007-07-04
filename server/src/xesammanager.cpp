@@ -60,6 +60,7 @@ XesamManager::XesamManager(QObject * parent) :
 
 XesamManager::~XesamManager()
 {
+  stopSearches();
   if ( !mSession.isEmpty() )
     mInterface->CloseSession( mSession );
   mInstance = 0;
@@ -115,6 +116,19 @@ bool XesamManager::removeSearch(int loc)
   mInvSearchMap.remove( loc );
   mSearchMap.remove( searchId );
   return true;
+}
+
+void XesamManager::stopSearches()
+{
+  Resource res = Resource::retrieveByName( QLatin1String("akonadi_search_resource") );
+  if ( !res.isValid() ) {
+    qWarning() << "No valid search resource found!";
+    return;
+  }
+  Location::List locs = res.locations();
+  foreach ( const Location l, locs ) {
+    removeSearch( l.id() );
+  }
 }
 
 #include "xesammanager.moc"
