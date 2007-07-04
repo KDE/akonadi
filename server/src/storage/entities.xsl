@@ -62,6 +62,10 @@ class <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation;
 </xsl:for-each>
 
 }
+
+<xsl:for-each select="database/table">
+<xsl:call-template name="table-debug-header"/>
+</xsl:for-each>
 #endif
 
 </xsl:if>
@@ -129,7 +133,7 @@ class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
     // accessor methods
     <xsl:for-each select="column[@name != 'id']">
     <xsl:if test="comment != ''">
-    /** 
+    /**
       <xsl:value-of select="comment"/>
     */
     </xsl:if>
@@ -254,9 +258,14 @@ class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
     bool m_<xsl:value-of select="@name"/>_changed;
     </xsl:for-each>
 };
+</xsl:template>
+
+<!-- debug stream operators -->
+<xsl:template name="table-debug-header">
+<xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
 
 // debug stream operator
-QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$className"/>&amp; entity );
+AKONADI_SERVER_EXPORT QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const Akonadi::<xsl:value-of select="$className"/>&amp; entity );
 </xsl:template>
 
 
