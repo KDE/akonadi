@@ -57,21 +57,17 @@ bool SearchPersistent::handleLine( const QByteArray& line )
 
   if ( command.toUpper() == "SEARCH_STORE" ) {
 
-    QString mimeType;
-    pos = ImapParser::parseString( line, mimeType, pos );
-    if ( mimeType.isEmpty() )
-      return failureResponse( "No mimetype specified" );
-
-    MimeType mt = MimeType::retrieveByName( mimeType );
-    if ( !mt.isValid() )
-      return failureResponse( "Invalid mimetype" );
-
     QByteArray queryString;
     ImapParser::parseString( line, queryString, pos );
     if ( queryString.isEmpty() )
       return failureResponse( "No query specified" );
 
-    if ( !db->appendPersisntentSearch( QString::fromUtf8(collectionName), queryString ) )
+    Location l;
+    l.setRemoteId( QString::fromUtf8( queryString ) );
+    l.setParentId( 1 ); // search root
+    l.setResourceId( 1 ); // search resource
+    l.setName( QString::fromUtf8( collectionName ) );
+    if ( !db->appendLocation( l ) )
       return failureResponse( "Unable to create persistent search" );
 
   } else if ( command.toUpper() == "SEARCH_DELETE" ) {

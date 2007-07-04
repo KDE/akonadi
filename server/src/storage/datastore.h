@@ -214,9 +214,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool removeResource( int id );
     QList<Resource> listResources( const CachePolicy & policy );
 
-    /* --- Persistent search --------------------------------------------- */
-    bool appendPersisntentSearch( const QString &name, const QByteArray &queryString );
-
     /* --- Collection attribues ------------------------------------------ */
     bool addCollectionAttribute( const Location &loc, const QByteArray &key, const QByteArray &value );
     bool removeCollectionAttribute( const Location &loc, const QByteArray &key );

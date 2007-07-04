@@ -1106,16 +1106,6 @@ QList<Resource> DataStore::listResources( const CachePolicy & policy )
 }
 
 
-bool Akonadi::DataStore::appendPersisntentSearch(const QString & name, const QByteArray & queryString)
-{
-  Location l;
-  l.setRemoteId( QString::fromUtf8( queryString ) );
-  l.setParentId( 1 ); // search root
-  l.setName( name );
-  return appendLocation( l );
-}
-
-
 bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & key, const QByteArray & value)
 {
   SelectQueryBuilder<LocationAttribute> qb;
