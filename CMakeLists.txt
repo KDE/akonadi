@@ -16,7 +16,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO
 
 set( akonadi_LIB_SRC
 	agentinstancemodel.cpp
-	agentbase.cpp	
+	agentbase.cpp
 	agentmanager.cpp
 	agenttypemodel.cpp
 	collection.cpp
@@ -56,6 +56,7 @@ set( akonadi_LIB_SRC
 	profilemodel.cpp
 	resourcebase.cpp
 	resourcescheduler.cpp
+	searchcreatejob.cpp
 	session.cpp
 	transactionjobs.cpp
 )
