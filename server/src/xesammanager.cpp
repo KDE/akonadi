@@ -69,11 +69,37 @@ XesamManager::~XesamManager()
 void XesamManager::slotHitsAdded(const QString & search, int count)
 {
   qDebug() << "hits added: " << search << count;
+  mMutex.lock();
+  int colId = mSearchMap.value( search );
+  mMutex.unlock();
+  if ( colId <= 0 )
+    return;
+  QList<QList<QVariant> > results = mInterface->GetHits( search, count );
+  typedef QList<QVariant> VariantList;
+  foreach ( const VariantList list, results ) {
+    if ( list.isEmpty() )
+      continue;
+    int itemId = uriToItemId( list.first().toString() );
+    Entity::addToRelation<LocationPimItemRelation>( colId, itemId );
+  }
 }
 
 void XesamManager::slotHitsRemoved(const QString & search, const QList<int> & hits)
 {
   qDebug() << "hits removed: " << search << hits;
+  mMutex.lock();
+  int colId = mSearchMap.value( search );
+  mMutex.unlock();
+  if ( colId <= 0 )
+    return;
+  QList<QList<QVariant> > results = mInterface->GetHitData( search, hits, QStringList( QLatin1String("uri") ) );
+  typedef QList<QVariant> VariantList;
+  foreach ( const VariantList list, results ) {
+    if ( list.isEmpty() )
+      continue;
+    int itemId = uriToItemId( list.first().toString() );
+    Entity::removeFromRelation<LocationPimItemRelation>( colId, itemId );
+  }
 }
 
 void XesamManager::slotHitsModified(const QString & search, const QList< int > & hits)
@@ -131,6 +157,12 @@ void XesamManager::stopSearches()
   foreach ( const Location l, locs ) {
     removeSearch( l.id() );
   }
+}
+
+int XesamManager::uriToItemId(const QString & uri)
+{
+  // TODO implement me!
+  return uri.toInt();
 }
 
 #include "xesammanager.moc"

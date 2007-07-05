@@ -54,10 +54,6 @@ class Entity
       return tmp.join( sep );
     }
 
-  protected:
-    Entity();
-    Entity( int id );
-
     /**
       Returns the number of records having @p value in @p column.
       @param column The name of the key column.
@@ -223,6 +219,11 @@ class Entity
 
       return true;
     }
+
+  protected:
+    Entity();
+    Entity( int id );
+
 
   private:
     static QSqlDatabase database();
