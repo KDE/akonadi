@@ -69,7 +69,7 @@ public:
       developer. Verifying the payload type in case a payload is already available is recommended
       therefore.
       @param label The part identifier of the part to deserialize.
-      If this part is unknown and therefore cannot be deserialized, [continue me, what shoud happen?]
+      If this part is unknown and therefore cannot be deserialized, [continue me, what should happen?]
       For now: call Item::addPart() for unknown parts
       @param data An QIODevice providing access to the serialized data. The QIODevice is opened in
       read-only mode and positioned at the beginning. The QIODevice is guaranteed to be valid.
@@ -84,7 +84,7 @@ public:
       payload added manually by the application developer. Verifying the payload type is recommended
       therefore.
       @param label The part identifier of the part to serialize.
-      If this part is unknown and therefore cannot be deserialized, [continue me, what shoud happen?]
+      If this part is unknown and therefore cannot be deserialized, [continue me, what should happen?]
       @param data The QIODevice where the serialized data should be writtne to.
       The QIODevice is opened in write-only mode and positioned at the beginning.
       The QIODevice is guaranteed to be valid.
