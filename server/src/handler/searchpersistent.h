@@ -28,8 +28,9 @@ namespace Akonadi {
   Handler for the search_store search_delete commands.
 
   A persistent search can have the following forms:
-
-    123 SEARCH_STORE <name> <query>
+  @verbatim
+  123 SEARCH_STORE <name> <query>
+  @endverbatim
 */
 class SearchPersistent : public Handler
 {

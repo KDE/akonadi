@@ -34,7 +34,8 @@ class QueryBuilder
 {
   public:
     enum QueryType {
-      Select
+      Select,
+      Delete
     };
 
     /**

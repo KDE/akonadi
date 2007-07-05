@@ -68,12 +68,19 @@ bool QueryBuilder::exec()
   switch ( mType ) {
     case Select:
       statement += QLatin1String( "SELECT " );
+      Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
       statement += mColumns.join( QLatin1String( ", " ) );
       statement += QLatin1String(" FROM ");
+      Q_ASSERT_X( mTables.count() > 0, "QueryBuilder::exec()", "No tables specified" );
       statement += mTables.join( QLatin1String( ", " ) );
      break;
+    case Delete:
+      statement += QLatin1String( "DELETE FROM " );
+      Q_ASSERT_X( mTables.count() == 1, "QueryBuilder::exec()", "Exactly one table needed" );
+      statement += mTables.first();
+      break;
     default:
-      Q_ASSERT( false );
+      Q_ASSERT_X( false, "QueryBuilder::exec()", "Unknown enum value" );
   }
 
   if ( !mConditions.isEmpty() ) {

@@ -96,6 +96,8 @@ void XesamManager::reloadSearches()
 
 bool XesamManager::addSearch(const Location & loc)
 {
+  if ( !mInterface->isValid() )
+    return false;
   QMutexLocker lock( &mMutex );
   if ( loc.remoteId().isEmpty() )
     return false;

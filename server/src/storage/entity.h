@@ -20,6 +20,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include "countquerybuilder.h"
+
 #include <Qt>
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
@@ -67,21 +69,17 @@ class Entity
       if ( !db.isOpen() )
         return -1;
 
-      QString statement = QLatin1String( "SELECT count(*) FROM " );
-      statement.append( T::tableName() );
-      statement.append( QLatin1String( " WHERE :value = " ) );
-      statement.append( column );
+      CountQueryBuilder builder;
+      builder.addTable( T::tableName() );
+      builder.addValueCondition( column, "=", value );
 
-      QSqlQuery query( db );
-      query.prepare( statement );
-      query.bindValue( QLatin1String(":value"), value );
-      if ( !query.exec() || !query.next() ) {
+      if ( !builder.exec() ) {
         qDebug() << "Error during counting records in table" << T::tableName()
-            << query.lastError().text();
+            << builder.query().lastError().text();
         return -1;
       }
 
-      return query.value( 0 ).toInt();
+      return builder.result();
     }
 
     /**
@@ -93,17 +91,13 @@ class Entity
       if ( !db.isOpen() )
         return false;
 
-      QString statement = QLatin1String( "DELETE FROM " );
-      statement += T::tableName();
-      statement += QLatin1String( " WHERE :value = " );
-      statement += column;
+      QueryBuilder builder( QueryBuilder::Delete );
+      builder.addTable( T::tableName() );
+      builder.addValueCondition( column, "=", value );
 
-      QSqlQuery query( db );
-      query.prepare( statement );
-      query.bindValue( QLatin1String(":value"), value );
-      if ( !query.exec() ) {
+      if ( !builder.exec() ) {
         qDebug() << "Error during deleting records from table"
-            << T::tableName() << query.lastError().text();
+            << T::tableName() << builder.query().lastError().text();
         return false;
       }
       return true;
@@ -120,25 +114,18 @@ class Entity
       if ( !db.isOpen() )
         return false;
 
-      QString statement = QLatin1String("SELECT count(*) FROM ");
-      statement.append( T::tableName() );
-      statement.append( QLatin1String(" WHERE ") );
-      statement.append( T::leftColumn() );
-      statement.append( QLatin1String(" = :left AND :right = ") );
-      statement.append( T::rightColumn() );
+      CountQueryBuilder builder;
+      builder.addTable( T::tableName() );
+      builder.addValueCondition( T::leftColumn(), "=", leftId );
+      builder.addValueCondition( T::rightColumn(), "=", rightId );
 
-      QSqlQuery query( db );
-      query.prepare( statement );
-      query.bindValue( QLatin1String(":left"), leftId );
-      query.bindValue( QLatin1String(":right"), rightId );
-
-      if ( !query.exec() || !query.next() ) {
+      if ( !builder.exec() ) {
         qDebug() << "Error during counting records in table" << T::tableName()
-            << query.lastError().text();
+            << builder.query().lastError().text();
         return false;
       }
 
-      if ( query.value( 0 ).toInt() > 0 )
+      if ( builder.result() > 0 )
         return true;
       return false;
     }
@@ -187,22 +174,14 @@ class Entity
       if ( !db.isOpen() )
         return false;
 
-      QString statement = QLatin1String("DELETE FROM ");
-      statement.append( T::tableName() );
-      statement.append( QLatin1String(" WHERE ") );
-      statement.append( T::leftColumn() );
-      statement.append( QLatin1String(" = :left AND ") );
-      statement.append( T::rightColumn() );
-      statement.append( QLatin1String(" = :right") );
+      QueryBuilder builder( QueryBuilder::Delete );
+      builder.addTable( T::tableName() );
+      builder.addValueCondition( T::leftColumn(), "=", leftId );
+      builder.addValueCondition( T::rightColumn(), "=", rightId );
 
-      QSqlQuery query( db );
-      query.prepare( statement );
-      query.bindValue( QLatin1String(":left"), leftId );
-      query.bindValue( QLatin1String(":right"), rightId );
-
-      if ( !query.exec() ) {
+      if ( !builder.exec() ) {
         qDebug() << "Error during removing a record from relation table" << T::tableName()
-          << query.lastError().text();
+          << builder.query().lastError().text();
         return false;
       }
 
@@ -224,24 +203,21 @@ class Entity
       if ( !db.isOpen() )
         return false;
 
-      QString statement = QLatin1String( "DELETE FROM ");
-      statement.append( T::tableName() );
-      statement.append( QLatin1String(" WHERE ") );
+      QueryBuilder builder( QueryBuilder::Delete );
+      builder.addTable( T::tableName() );
       switch ( side ) {
         case Left:
-          statement.append( T::leftColumn() ); break;
+          builder.addValueCondition( T::leftColumn(), "=", id );
+          break;
         case Right:
-          statement.append( T::rightColumn() ); break;
+          builder.addValueCondition( T::rightColumn(), "=", id );
+          break;
         default:
           qFatal("Invalid enum value");
       }
-      statement.append( QLatin1String( " = :id" ) );
-      QSqlQuery query( db );
-      query.prepare( statement );
-      query.bindValue( QLatin1String( ":id" ), id );
-      if ( !query.exec() ) {
+      if ( !builder.exec() ) {
         qDebug() << "Error during clearing relation table" << T::tableName()
-            << "for id" << id << query.lastError().text();
+            << "for id" << id << builder.query().lastError().text();
         return false;
       }
 

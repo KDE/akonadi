@@ -22,6 +22,9 @@
 
 #include "storage/querybuilder.h"
 
+#include <QDebug>
+#include <QSqlError>
+
 namespace Akonadi {
 
 /**
@@ -44,8 +47,10 @@ class CountQueryBuilder : public QueryBuilder
     */
     inline int result()
     {
-      if ( !query().next() )
+      if ( !query().next() ) {
+        qDebug() << "Error during retrieving result of query:" << query().lastError().text();
         return -1;
+      }
       return query().value( 0 ).toInt();
     }
 };
