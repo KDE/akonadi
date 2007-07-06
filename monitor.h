@@ -166,22 +166,12 @@ class AKONADI_EXPORT Monitor : public QObject
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void slotItemChanged( const QByteArray&, int, const QString&, int,
-                                             const QString&, const QByteArray& ) )
-    Q_PRIVATE_SLOT( d, void slotItemAdded( const QByteArray&, int, const QString&, int,
-                                           const QString&, const QByteArray& ) )
-    Q_PRIVATE_SLOT( d, void slotItemRemoved( const QByteArray&, int, const QString&, int,
-                                             const QString&, const QByteArray& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionAdded( const QByteArray&, int, const QString&, const QByteArray& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionChanged( const QByteArray&, int, const QString&, const QByteArray& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionRemoved( const QByteArray&, int, const QString&, const QByteArray& ) )
-    Q_PRIVATE_SLOT( d, void sessionDestroyed( QObject* ) )
-    Q_PRIVATE_SLOT( d, void slotFetchItemAddedFinished( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotFetchItemChangedFinished( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotFetchCollectionAddedFinished( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotFetchCollectionChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotStatusChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotFlushRecentlyChangedCollections() )
+
+    Q_PRIVATE_SLOT( d, void slotNotify( const Akonadi::NotificationMessage &msg ) )
+    Q_PRIVATE_SLOT( d, void slotItemJobFinished( KJob *job ) )
+    Q_PRIVATE_SLOT( d, void slotCollectionJobFinished( KJob *job ) )
 };
 
 }

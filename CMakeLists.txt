@@ -52,6 +52,7 @@ set( akonadi_LIB_SRC
 	messagecollectionmodel.cpp
 	monitor.cpp
 	monitor_p.cpp
+	notificationmessage.cpp
 	profilemanager.cpp
 	profilemodel.cpp
 	resourcebase.cpp
@@ -61,10 +62,10 @@ set( akonadi_LIB_SRC
 	transactionjobs.cpp
 )
 
-qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
+#qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
 qt4_generate_dbus_interface(resource.h org.kde.Akonadi.Resource.xml)
 qt4_generate_dbus_interface(agent.h org.kde.Akonadi.Agent.xml)
-qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml)
+qt4_add_dbus_interface2(akonadi_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../server/interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanagerinterface notificationmessage.h)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.AgentManager.xml)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.ProfileManager.xml)
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/interfaces/org.kde.Akonadi.Tracer.xml)
