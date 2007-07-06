@@ -84,17 +84,18 @@ set(libakonadiprivate_SRCS
   src/notificationmanager.cpp
   src/resourcemanager.cpp
   ../libakonadi/imapparser.cpp
+  ../libakonadi/notificationmessage.cpp
   src/cachepolicymanager.cpp
   src/cachecleaner.cpp
   src/xesammanager.cpp
 )
 
-qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
+# qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
 qt4_generate_dbus_interface(../server/src/cachepolicymanager.h org.kde.Akonadi.CachePolicyManager.xml)
 # ugly hack to force generation of the xml interface description, which doesn't
 # happen always, just installing the file doesn't seem to provide enough dependencies
-macro_add_file_dependencies( src/notificationmanager.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml)
+# macro_add_file_dependencies( src/notificationmanager.cpp
+#   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml)
 macro_add_file_dependencies( src/cachepolicymanager.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.CachePolicyManager.xml)
 
@@ -104,31 +105,12 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS
+  interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer
 )
-
-# taken from FindQt4.cmake to add additional includes, should probably be merged back
-MACRO(QT4_ADD_DBUS_INTERFACE2 _sources _interface _basename _include)
-  GET_FILENAME_COMPONENT(_infile ${_interface} ABSOLUTE)
-  SET(_header ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
-  SET(_impl   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
-  SET(_moc    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.moc)
-  SET(_params -m -i ${_include} -p)
-
-  ADD_CUSTOM_COMMAND(OUTPUT ${_impl} ${_header}
-      COMMAND ${QT_DBUSXML2CPP_EXECUTABLE} ${_params} ${_basename} ${_infile}
-      DEPENDS ${_infile})
-
-  SET_SOURCE_FILES_PROPERTIES(${_impl} PROPERTIES SKIP_AUTOMOC TRUE)
-
-  QT4_GENERATE_MOC(${_header} ${_moc})
-
-  SET(${_sources} ${${_sources}} ${_impl} ${_header} ${_moc})
-  MACRO_ADD_FILE_DEPENDENCIES(${_impl} ${_moc})
-ENDMACRO(QT4_ADD_DBUS_INTERFACE2)
-
 
 qt4_generate_dbus_interface( ../libakonadi/resource.h org.kde.Akonadi.Resource.xml )
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS

@@ -21,6 +21,7 @@
 #include <QDBusConnection>
 
 #include "notificationmanager.h"
+#include "notificationmanageradaptor.h"
 #include "tracer.h"
 #include "storage/datastore.h"
 
@@ -31,8 +32,11 @@ NotificationManager* NotificationManager::mSelf = 0;
 NotificationManager::NotificationManager()
   : QObject( 0 )
 {
+  NotificationMessage::registerDBusTypes();
+
+  new NotificationManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications"),
-    this, QDBusConnection::ExportScriptableSignals );
+    this, QDBusConnection::ExportAdaptors );
 }
 
 NotificationManager::~NotificationManager()
@@ -68,51 +72,96 @@ void Akonadi::NotificationManager::slotItemAdded( const QByteArray &sessionId, i
                                                   int collection, const QString &mimeType,
                                                   const QByteArray &resource )
 {
-  QString msg = QString::fromLatin1("ID: %1, Location: %2, Mimetype: %3, Resource: %4, Session: %5" )
-      .arg( uid ).arg( collection ).arg( mimeType ).arg( QString::fromLatin1(resource) ).arg( QString::fromLatin1(sessionId) );
-  Tracer::self()->signal( "NotificationManager::itemAdded", msg );
-  emit itemAdded( sessionId, uid, remoteId, collection, mimeType, resource );
+  NotificationMessage m;
+  m.setType( NotificationMessage::Item );
+  m.setOperation( NotificationMessage::Add );
+  m.setSessionId( sessionId );
+  m.setUid( uid );
+  m.setRemoteId( remoteId );
+  m.setMimeType( mimeType );
+  m.setResource( resource );
+  m.setParentCollection( collection );
+
+  Tracer::self()->signal( "NotificationManager::notify", m.toString() );
+  emit notify( m );
 }
 
 void Akonadi::NotificationManager::slotItemChanged( const QByteArray &sessionId, int uid, const QString &remoteId,
                                                     int collection, const QString &mimetype,
                                                     const QByteArray &resource )
 {
-  QString msg = QString::fromLatin1("ID: %1, Location: %2, Mimetype: %3, Resource: %4, Session: %5" )
-      .arg( uid ).arg( collection ).arg( mimetype ).arg( QString::fromLatin1(resource) ).arg( QString::fromLatin1(sessionId) );
-  Tracer::self()->signal( "NotificationManager::itemChanged", msg );
-  emit itemChanged( sessionId, uid, remoteId, collection, mimetype, resource );
+  NotificationMessage m;
+  m.setType( NotificationMessage::Item );
+  m.setOperation( NotificationMessage::Modify );
+  m.setSessionId( sessionId );
+  m.setUid( uid );
+  m.setRemoteId( remoteId );
+  m.setMimeType( mimetype );
+  m.setResource( resource );
+  m.setParentCollection( collection );
+
+  Tracer::self()->signal( "NotificationManager::notify", m.toString() );
+  emit notify( m );
 }
 
 void Akonadi::NotificationManager::slotItemRemoved( const QByteArray &sessionId, int uid, const QString &remoteId,
                                                     int collection, const QString &mimetype,
                                                     const QByteArray &resource )
 {
-  QString msg = QString::fromLatin1("ID: %1, Location: %2, Mimetype: %3, Resource: %4, Session: %5" )
-      .arg( uid ).arg( collection ).arg( mimetype ).arg( QString::fromLatin1(resource) ).arg( QString::fromLatin1(sessionId) );
-  Tracer::self()->signal( "NotificationManager::itemRemoved", msg );
-  emit itemRemoved( sessionId, uid, remoteId, collection, mimetype, resource );
+  NotificationMessage m;
+  m.setType( NotificationMessage::Item );
+  m.setOperation( NotificationMessage::Remove );
+  m.setSessionId( sessionId );
+  m.setUid( uid );
+  m.setRemoteId( remoteId );
+  m.setMimeType( mimetype );
+  m.setResource( resource );
+  m.setParentCollection( collection );
+
+  Tracer::self()->signal( "NotificationManager::notify", m.toString() );
+  emit notify( m );
 }
 
 void Akonadi::NotificationManager::slotCollectionAdded(const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource)
 {
-  Tracer::self()->signal( "NotificationManager::collectionAdded", QLatin1String("Location: ")
-      + QString::number( collection ) + QLatin1String(" Resource: " + resource) );
-  emit collectionAdded( sessionId, collection, remoteId, resource );
+  NotificationMessage m;
+  m.setType( NotificationMessage::Collection );
+  m.setOperation( NotificationMessage::Add );
+  m.setSessionId( sessionId );
+  m.setUid( collection );
+  m.setRemoteId( remoteId );
+  m.setResource( resource );
+
+  Tracer::self()->signal( "NotificationManager::notify", m.toString() );
+  emit notify( m );
 }
 
 void Akonadi::NotificationManager::slotCollectionChanged(const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray & resource)
 {
-  Tracer::self()->signal( "NotificationManager::collectionChanged", QLatin1String("Location: ")
-      + QString::number( collection ) + QLatin1String(" Resource: " + resource) );
-  emit collectionChanged( sessionId, collection, remoteId, resource );
+  NotificationMessage m;
+  m.setType( NotificationMessage::Collection );
+  m.setOperation( NotificationMessage::Modify );
+  m.setSessionId( sessionId );
+  m.setUid( collection );
+  m.setRemoteId( remoteId );
+  m.setResource( resource );
+
+  Tracer::self()->signal( "NotificationManager::notify", m.toString() );
+  emit notify( m );
 }
 
 void Akonadi::NotificationManager::slotCollectionRemoved(const QByteArray &sessionId, int collection, const QString &remoteId, const QByteArray &resource)
 {
-  Tracer::self()->signal( "NotificationManager::collectionRemoved", QLatin1String("Location: ")
-      + QString::number( collection ) + QLatin1String(" Resource: " + resource) );
-  emit collectionRemoved( sessionId, collection, remoteId, resource );
+  NotificationMessage m;
+  m.setType( NotificationMessage::Collection );
+  m.setOperation( NotificationMessage::Remove );
+  m.setSessionId( sessionId );
+  m.setUid( collection );
+  m.setRemoteId( remoteId );
+  m.setResource( resource );
+
+  Tracer::self()->signal( "NotificationManager::notify", m.toString() );
+  emit notify( m );
 }
 
 #include "notificationmanager.moc"
