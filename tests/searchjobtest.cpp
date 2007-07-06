@@ -33,7 +33,7 @@ using namespace Akonadi;
 
 void SearchJobTest::testCreateDeleteSearch()
 {
-  SearchCreateJob *create = new SearchCreateJob( "search123456", "query", this );
+  SearchCreateJob *create = new SearchCreateJob( "search123456", "<request><userQuery>Akonadi</userQuery></request>", this );
   QVERIFY( create->exec() );
 
   CollectionListJob *list = new CollectionListJob( Collection( 1 ), CollectionListJob::Recursive, this );
