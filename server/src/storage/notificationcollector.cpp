@@ -22,52 +22,11 @@
 #include "storage/entity.h"
 #include "handlerhelper.h"
 
+#include <libakonadi/notificationmessage.h>
+
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
-
-Akonadi::NotificationItem::NotificationItem(const PimItem &item,
-                                            const Location& collection,
-                                            const QString & mimeType,
-                                            const QByteArray & resource) :
-  mType( Item ),
-  mItem( item ),
-  mCollection( collection ),
-  mMimeType( mimeType ),
-  mResource( resource )
-{
-}
-
-Akonadi::NotificationItem::NotificationItem(const Location & collection,
-                                            const QByteArray & resource) :
-    mType( Collection ),
-    mCollection( collection ),
-    mResource( resource )
-{
-}
-
-bool Akonadi::NotificationItem::isComplete() const
-{
-  if ( !mCollection.isValid() || mResource.isEmpty() )
-    return false;
-
-  if ( mType == Item && mMimeType.isEmpty() )
-    return false;
-
-  return true;
-}
-
-bool Akonadi::NotificationItem::operator ==(const NotificationItem & item) const
-{
-  if ( mType != item.mType )
-    return false;
-  if ( mType == Item )
-    return mItem.id() == item.mItem.id();
-  if ( mType == Collection )
-    return mCollection.id() == item.mCollection.id();
-  return false;
-}
-
 
 Akonadi::NotificationCollector::NotificationCollector(DataStore * db) :
   QObject( db ),
@@ -86,13 +45,7 @@ void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
                                                 const QString & mimeType,
                                                 const QByteArray & resource )
 {
-  NotificationItem ni( item, collection, mimeType, resource );
-  if ( mDb->inTransaction() )
-    mAddedItems.append( ni );
-  else {
-    completeItem( ni );
-    emit itemAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
-  }
+  itemNotification( NotificationMessage::Add, item, collection, mimeType, resource );
 }
 
 void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
@@ -100,14 +53,7 @@ void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
                                                   const QString & mimeType,
                                                   const QByteArray & resource )
 {
-  NotificationItem ni( item, collection, mimeType, resource );
-  if ( mDb->inTransaction() ) {
-    if ( !mChangedItems.contains( ni ) )
-      mChangedItems.append( ni );
-  } else {
-    completeItem( ni );
-    emit itemChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
-  }
+  itemNotification( NotificationMessage::Modify, item, collection, mimeType, resource );
 }
 
 void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
@@ -115,119 +61,31 @@ void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
                                                   const QString & mimeType,
                                                   const QByteArray & resource )
 {
-  NotificationItem ni( item, collection, mimeType, resource );
-  completeItem( ni );
-  if ( mDb->inTransaction() )
-    mRemovedItems.append( ni );
-  else
-    emit itemRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
+  itemNotification( NotificationMessage::Remove, item, collection, mimeType, resource );
 }
 
 void Akonadi::NotificationCollector::collectionAdded( const Location &collection,
                                                       const QByteArray &resource )
 {
-  NotificationItem ni( collection, resource );
-  if ( mDb->inTransaction() )
-    mAddedCollections.append( ni );
-  else {
-    completeItem( ni );
-    emit collectionAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
-  }
+  collectionNotification( NotificationMessage::Add, collection, resource );
 }
 
 void Akonadi::NotificationCollector::collectionChanged( const Location &collection,
                                                         const QByteArray &resource )
 {
-  NotificationItem ni( collection, resource );
-  if ( mDb->inTransaction() )
-    mChangedCollections.append( ni );
-  else {
-    completeItem( ni );
-    emit collectionChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
-  }
+  collectionNotification( NotificationMessage::Modify, collection, resource );
 }
 
 void Akonadi::NotificationCollector::collectionRemoved( const Location &collection,
                                                         const QByteArray &resource )
 {
-  NotificationItem ni( collection, resource );
-  completeItem( ni );
-  if ( mDb->inTransaction() )
-    mRemovedCollections.append( ni );
-  else
-    emit collectionRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
-}
-
-void Akonadi::NotificationCollector::completeItem(NotificationItem & item)
-{
-  if ( item.isComplete() )
-    return;
-
-  if ( item.type() == NotificationItem::Collection ) {
-    if ( item.resource().isEmpty() )
-      item.setResource( item.collection().resource().name().toLatin1() );
-  }
-
-  if ( item.type() == NotificationItem::Item ) {
-    PimItem pi = item.pimItem();
-    if ( !pi.isValid() )
-      return;
-    Location loc;
-    if ( !item.collection().isValid() ) {
-      loc = pi.location();
-      item.setCollection( loc );
-    }
-    if ( item.mimeType().isEmpty() ) {
-      item.setMimeType( pi.mimeType().name() );
-    }
-    if ( item.resource().isEmpty() ) {
-      if ( !loc.isValid() )
-        loc = pi.location();
-      item.setResource( loc.resource().name().toLatin1() );
-    }
-  }
+  collectionNotification( NotificationMessage::Remove, collection, resource );
 }
 
 void Akonadi::NotificationCollector::transactionCommitted()
 {
-  // TODO: remove duplicates from the lists
-
-  foreach ( NotificationItem ni, mAddedCollections ) {
-    completeItem( ni );
-    emit collectionAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
-    // no change notifications for new collections
-    mChangedCollections.removeAll( ni );
-  }
-
-  foreach ( NotificationItem ni, mRemovedCollections ) {
-    emit collectionRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
-    // no change notifications for removed collections
-    mChangedCollections.removeAll( ni );
-  }
-
-  foreach ( NotificationItem ni, mChangedCollections ) {
-    completeItem( ni );
-    emit collectionChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.resource() );
-  }
-
-
-  foreach ( NotificationItem ni, mAddedItems ) {
-    completeItem( ni );
-    emit itemAddedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
-    // no change notifications for new items
-    mChangedItems.removeAll( ni );
-  }
-
-  foreach ( NotificationItem ni, mRemovedItems ) {
-    emit itemRemovedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
-    // no change notifications for removed items
-    mChangedItems.removeAll( ni );
-  }
-
-  foreach ( NotificationItem ni, mChangedItems ) {
-    completeItem( ni );
-    emit itemChangedNotification( mSessionId, ni.uid(), ni.remoteId(), ni.collection().id(), ni.mimeType(), ni.resource() );
-  }
+  foreach ( const NotificationMessage msg, mNotifications )
+    emit notify( msg );
 
   clear();
 }
@@ -239,17 +97,67 @@ void Akonadi::NotificationCollector::transactionRolledBack()
 
 void Akonadi::NotificationCollector::clear()
 {
-  mAddedItems.clear();
-  mChangedItems.clear();
-  mRemovedItems.clear();
-  mAddedCollections.clear();
-  mChangedCollections.clear();
-  mRemovedCollections.clear();
+  mNotifications.clear();
 }
 
 void NotificationCollector::setSessionId(const QByteArray &sessionId)
 {
   mSessionId = sessionId;
+}
+
+void NotificationCollector::itemNotification( NotificationMessage::Operation op,
+                                              const PimItem & item,
+                                              const Location & collection,
+                                              const QString & mimeType,
+                                              const QByteArray & resource)
+{
+  NotificationMessage msg;
+  msg.setSessionId( mSessionId );
+  msg.setType( NotificationMessage::Item );
+  msg.setOperation( op );
+  msg.setUid( item.id() );
+  msg.setRemoteId( QString::fromUtf8( item.remoteId() ) );
+
+  Location loc = collection;
+  if ( !loc.isValid() )
+    loc = item.location();
+  msg.setParentCollection( loc.id() );
+  QString mt = mimeType;
+  if ( mt.isEmpty() )
+    mt = item.mimeType().name();
+  msg.setMimeType( mt );
+  QByteArray res = resource;
+  if ( res.isEmpty() )
+    res = loc.resource().name().toLatin1();
+  msg.setResource( res );
+  dispatchNotification( msg );
+}
+
+void NotificationCollector::collectionNotification( NotificationMessage::Operation op,
+                                                    const Location & collection,
+                                                    const QByteArray & resource)
+{
+  NotificationMessage msg;
+  msg.setType( NotificationMessage::Collection );
+  msg.setOperation( op );
+  msg.setSessionId( mSessionId );
+  msg.setUid( collection.id() );
+  msg.setRemoteId( collection.remoteId() );
+
+  QByteArray res = resource;
+  if ( res.isEmpty() )
+    res = collection.resource().name().toLatin1();
+  msg.setResource( res );
+  dispatchNotification( msg );
+}
+
+void NotificationCollector::dispatchNotification(const NotificationMessage & msg)
+{
+  if ( mDb->inTransaction() ) {
+    NotificationMessage::appendAndCompress( mNotifications, msg );
+  } else {
+    emit notify( msg );
+  }
 }
 
 #include "notificationcollector.moc"

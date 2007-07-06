@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,47 +17,18 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_NOTIFICATIONMANAGER_H
-#define AKONADI_NOTIFICATIONMANAGER_H
+#ifndef AKONADI_NOTIFICATIONMESSAGETEST_H
+#define AKONADI_NOTIFICATIONMESSAGETEST_H
 
-#include <libakonadi/notificationmessage.h>
-
-#include <QtCore/QHash>
-#include <QtCore/QMutex>
 #include <QtCore/QObject>
 
-namespace Akonadi {
-
-    class DataStore;
-/**
-  Notification manager D-Bus interface.
-*/
-class NotificationManager : public QObject
+class NotificationMessageTest : public QObject
 {
   Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.Akonadi.NotificationManager" )
-
-  public:
-    static NotificationManager *self();
-
-    virtual ~NotificationManager();
-
-    void connectDatastore( DataStore* );
-
-  Q_SIGNALS:
-    Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage &msg );
-
-  private Q_SLOTS:
-    void slotNotify( const Akonadi::NotificationMessage &msg );
-
-  private:
-    NotificationManager();
-
-    static NotificationManager *mSelf;
-
-    QMutex mMutex;
+  private slots:
+    void testCompress();
+    void testCompress2();
 };
 
-}
 
 #endif
