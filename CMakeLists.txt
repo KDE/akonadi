@@ -12,7 +12,21 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}" )
 
-########### next target ###############
+# libakonadiprotocol
+set( akonadiproto_srcs
+  imapparser.cpp
+  notificationmessage.cpp
+)
+
+kde4_automoc(${akonadiproto_srcs})
+kde4_add_library( akonadiprotocol SHARED ${akonadiproto_srcs} )
+
+target_link_libraries( akonadiprotocol ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
+set_target_properties( akonadiprotocol PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS akonadiprotocol  DESTINATION ${LIB_INSTALL_DIR})
+
+
+# libakonadi
 
 set( akonadi_LIB_SRC
 	agentinstancemodel.cpp
@@ -37,7 +51,6 @@ set( akonadi_LIB_SRC
 	control.cpp
 	datareference.cpp
 	expungejob.cpp
-	imapparser.cpp
 	item.cpp
 	itemappendjob.cpp
 	itembrowser.cpp
@@ -52,7 +65,6 @@ set( akonadi_LIB_SRC
 	messagecollectionmodel.cpp
 	monitor.cpp
 	monitor_p.cpp
-	notificationmessage.cpp
 	profilemanager.cpp
 	profilemodel.cpp
 	resourcebase.cpp
@@ -74,7 +86,7 @@ qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonad
 kde4_automoc(${akonadi_LIB_SRC})
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 
-target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDEUI_LIBS} kdepim)
+target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDEUI_LIBS} kdepim akonadiprotocol)
 set_target_properties( akonadi PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 
@@ -100,7 +112,6 @@ install( FILES
 	control.h
 	datareference.h
 	expungejob.h
-	imapparser.h
 	item.h
 	itemappendjob.h
 	itembrowser.h
