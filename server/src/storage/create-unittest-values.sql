@@ -25,9 +25,9 @@ INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existC
 INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (8, 0, 'res3', 1, 4, 0, 0, 0, 0, 0);
 INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId, existCount, recentCount, unseenCount, firstUnseen, uidValidity) VALUES (9, 7, 'space folder', 1, 3, 0, 0, 0, 0, 0);
 
-INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'kde-core-devel', 'MIMETYPE message/rfc822 HEADER From kde-core-devel@kde.org', 1);
-INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'all', 'MIMETYPE message/rfc822 ALL', 1);
-INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'Test ?er', 'MIMETYPE message/rfc822 BODY "Test ?er"', 1);
+INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'kde-core-devel', '<request><userQuery>kde-core-devel@kde.org</userQuery></request>', 1);
+INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'all', '<request><userQuery>MIMETYPE message/rfc822</userQuery></request>', 1);
+INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'Test ?er', '<request><userQuery>"Test ?er"</userQuery></request>', 1);
 
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 3);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 4);
