@@ -48,7 +48,8 @@ void Akonadi::ResourceManager::resourceAdded(const QString & name)
     return; // resource already exists
 
   // create the resource
-  if ( !db->appendResource( name ) ) {
+  resource.setName( name );
+  if ( !resource.insert() ) {
     Tracer::self()->error( "ResourceManager", QString::fromLatin1("Could not create resource '%1'.").arg(name) );
     delete db;
     return;
@@ -68,7 +69,7 @@ void Akonadi::ResourceManager::resourceRemoved(const QString & name)
       db->cleanupLocation( location );
 
     // remove resource
-    db->removeResource( resource );
+    resource.remove();
   }
 }
 

@@ -39,7 +39,7 @@ class Delete : public Handler
     virtual bool handleLine( const QByteArray &line );
 
   private:
-    bool deleteRecursive( const Location &loc );
+    bool deleteRecursive( Location &loc );
 
 };
 

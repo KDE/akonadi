@@ -80,10 +80,10 @@ bool Delete::handleLine(const QByteArray & line)
   return true;
 }
 
-bool Delete::deleteRecursive(const Location & loc)
+bool Delete::deleteRecursive(Location & loc)
 {
   Location::List children = loc.children();
-  foreach ( const Location child, children ) {
+  foreach ( Location child, children ) {
     if ( !deleteRecursive( child ) )
       return false;
   }

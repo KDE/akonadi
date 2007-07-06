@@ -247,16 +247,6 @@ bool DataStore::appendFlag( const QString & name )
   return flag.insert();
 }
 
-bool DataStore::removeFlag( const Flag & flag )
-{
-  return removeFlag( flag.id() );
-}
-
-bool DataStore::removeFlag( int id )
-{
-  return removeById( id, Flag::tableName() );
-}
-
 /* --- ItemFlags ----------------------------------------------------- */
 
 bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
@@ -334,18 +324,13 @@ bool DataStore::appendLocation( Location &location )
   return true;
 }
 
-bool DataStore::removeLocation( const Location & location )
+bool DataStore::removeLocation( Location & location )
 {
   mNotificationCollector->collectionRemoved( location );
-  return removeById( location.id(), Location::tableName() );
+  return location.remove();
 }
 
-bool DataStore::removeLocation( int id )
-{
-  return removeLocation( Location::retrieveById( id ) );
-}
-
-bool Akonadi::DataStore::cleanupLocation(const Location & location)
+bool Akonadi::DataStore::cleanupLocation(Location & location)
 {
   // delete the content
   QList<QByteArray> seq;
@@ -535,16 +520,6 @@ bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
 
   MimeType mt( mimetype );
   return mt.insert( insertId );
-}
-
-bool DataStore::removeMimeType( const MimeType & mimetype )
-{
-  return removeMimeType( mimetype.id() );
-}
-
-bool DataStore::removeMimeType( int id )
-{
-  return removeById( id, MimeType::tableName() );
 }
 
 
@@ -1093,37 +1068,6 @@ QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteAr
 }
 
 
-/* --- Resource ------------------------------------------------------ */
-bool DataStore::appendResource( const QString & resource,
-                                const CachePolicy & policy )
-{
-  if ( Resource::exists( resource ) ) {
-    qDebug() << "Cannot insert resource " << resource
-             << " because it already exists.";
-    return false;
-  }
-
-  Resource res( resource, policy.id() );
-  return res.insert();
-}
-
-bool DataStore::removeResource( const Resource & resource )
-{
-  return removeResource( resource.id() );
-}
-
-bool DataStore::removeResource( int id )
-{
-  return removeById( id, Resource::tableName() );
-}
-
-
-QList<Resource> DataStore::listResources( const CachePolicy & policy )
-{
-  return Resource::retrieveFiltered( Resource::cachePolicyIdColumn(), policy.id() );
-}
-
-
 bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & key, const QByteArray & value)
 {
   SelectQueryBuilder<LocationAttribute> qb;
@@ -1185,25 +1129,6 @@ void DataStore::debugLastQueryError( const QSqlQuery &query, const char* actionD
                             .arg( query.lastError().text() )
                        );
 }
-
-bool DataStore::removeById( int id, const QString & tableName )
-{
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-  const QString statement = QString::fromLatin1( "DELETE FROM %1 WHERE id = :id" ).arg( tableName );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":id"), id );
-
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during deletion of a single row by ID from table %1: " + tableName.toLatin1() );
-    return false;
-  }
-
-  return true;
-}
-
 
 int DataStore::uidNext() const
 {

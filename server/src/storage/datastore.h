@@ -115,8 +115,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
 
     /* --- Flag ---------------------------------------------------------- */
     bool appendFlag( const QString & name );
-    bool removeFlag( const Flag & flag );
-    bool removeFlag( int id );
 
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
@@ -127,11 +125,9 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     /* --- Location ------------------------------------------------------ */
     bool appendLocation( Location &location );
     /// removes the given location without removing its content
-    bool removeLocation( const Location & location );
-    /// removes the location with the given @p id without removing its content
-    bool removeLocation( int id );
+    bool removeLocation( Location & location );
     /// removes the given location and all its content
-    bool cleanupLocation( const Location &location );
+    bool cleanupLocation( Location &location );
     bool updateLocationCounts( const Location & location, int existsChange, int recentChange, int unseenChange );
     bool changeLocationPolicy( Location & location, const CachePolicy & policy );
     bool resetLocationPolicy( const Location & location );
@@ -156,8 +152,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype, int *insertId = 0 );
-    bool removeMimeType( const MimeType & mimetype );
-    bool removeMimeType( int id );
 
     /* --- PimItem ------------------------------------------------------- */
     bool appendPimItem( const QByteArray & data,
@@ -207,12 +201,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     QList<PimItem> fetchMatchingPimItemsByUID( const FetchQuery &query, const Location& l = Location() );
     QList<PimItem> fetchMatchingPimItemsBySequenceNumbers( const FetchQuery &query,
                                                            const Location &location );
-
-    /* --- Resource ------------------------------------------------------ */
-    bool appendResource( const QString & resource, const CachePolicy & policy = CachePolicy() );
-    bool removeResource( const Resource & resource );
-    bool removeResource( int id );
-    QList<Resource> listResources( const CachePolicy & policy );
 
     /* --- Collection attribues ------------------------------------------ */
     bool addCollectionAttribute( const Location &loc, const QByteArray &key, const QByteArray &value );
@@ -289,7 +277,6 @@ protected:
 
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
-    bool removeById( int id, const QString & tableName );
     QByteArray retrieveDataFromResource( int uid, const QByteArray& remote_id,
                                          int locationid, FetchQuery::Type type );
 
