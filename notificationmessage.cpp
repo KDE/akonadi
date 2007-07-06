@@ -20,6 +20,7 @@
 #include "notificationmessage.h"
 
 #include <QDBusMetaType>
+#include <QDebug>
 #include <QHash>
 
 using namespace Akonadi;
@@ -28,8 +29,8 @@ class NotificationMessage::Private : public QSharedData
 {
   public:
     Private() : QSharedData(),
-      type( -1 ),
-      operation( -1 ),
+      type( NotificationMessage::InvalidType ),
+      operation( NotificationMessage::InvalidOp ),
       uid( -1 ),
       parentCollection( -1 )
     {}
@@ -47,11 +48,10 @@ class NotificationMessage::Private : public QSharedData
       parts = other.parts;
     }
 
-    bool operator==(const Private &other ) const
+    bool compareWithoutOp( const Private &other ) const
     {
       return sessionId == other.sessionId
           && type == other.type
-          && operation == other.operation
           && uid == other.uid
           && remoteId == other.remoteId
           && resource == other.resource
@@ -60,9 +60,14 @@ class NotificationMessage::Private : public QSharedData
           && parts == other.parts;
     }
 
+    bool operator==(const Private &other ) const
+    {
+      return operation == other.operation && compareWithoutOp( other );
+    }
+
     QByteArray sessionId;
-    int type;
-    int operation;
+    NotificationMessage::Type type;
+    NotificationMessage::Operation operation;
     int uid;
     QString remoteId;
     QByteArray resource;
@@ -113,22 +118,22 @@ void NotificationMessage::setSessionId( const QByteArray &sessionId )
   d->sessionId = sessionId;
 }
 
-int NotificationMessage::type() const
+NotificationMessage::Type NotificationMessage::type() const
 {
   return d->type;
 }
 
-void NotificationMessage::setType(int type)
+void NotificationMessage::setType(Type type)
 {
   d->type = type;
 }
 
-int NotificationMessage::operation() const
+NotificationMessage::Operation NotificationMessage::operation() const
 {
   return d->operation;
 }
 
-void NotificationMessage::setOperation(int op)
+void NotificationMessage::setOperation(Operation op)
 {
   d->operation = op;
 }
@@ -221,6 +226,22 @@ QString NotificationMessage::toString() const
   return rv;
 }
 
+void NotificationMessage::appendAndCompress(NotificationMessage::List & list, const NotificationMessage & msg)
+{
+  for ( NotificationMessage::List::Iterator it = list.begin(); it != list.end(); ) {
+    if ( msg.d->compareWithoutOp( *((*it).d) ) ) {
+      if ( msg.operation() == (*it).operation() || msg.operation() == Modify ) {
+        return;
+      }
+      if ( msg.operation() == Remove && (*it).operation() == Modify ) {
+        it = list.erase( it );
+      } else
+        ++it;
+    } else
+      ++it;
+  }
+  list << msg;
+}
 
 QDBusArgument & operator <<(QDBusArgument & arg, const NotificationMessage & msg)
 {
@@ -246,9 +267,9 @@ const QDBusArgument & operator >>(const QDBusArgument & arg, NotificationMessage
   msg.setSessionId( b );
   int i;
   arg >> i;
-  msg.setType( i );
+  msg.setType( static_cast<NotificationMessage::Type>( i ) );
   arg >> i;
-  msg.setOperation( i );
+  msg.setOperation( static_cast<NotificationMessage::Operation>( i ) );
   arg >> i;
   msg.setUid( i );
   QString s;

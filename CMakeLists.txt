@@ -62,7 +62,6 @@ set( akonadi_LIB_SRC
 	transactionjobs.cpp
 )
 
-#qt4_generate_dbus_interface(../server/src/notificationmanager.h org.kde.Akonadi.NotificationManager.xml)
 qt4_generate_dbus_interface(resource.h org.kde.Akonadi.Resource.xml)
 qt4_generate_dbus_interface(agent.h org.kde.Akonadi.Agent.xml)
 qt4_add_dbus_interface2(akonadi_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../server/interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanagerinterface notificationmessage.h)

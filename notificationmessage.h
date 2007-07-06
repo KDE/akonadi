@@ -20,6 +20,8 @@
 #ifndef AKONADI_NOTIFICATIONMESSAGE_H
 #define AKONADI_NOTIFICATIONMESSAGE_H
 
+#include <libakonadi/libakonadi_export.h>
+
 #include <QtCore/QList>
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
@@ -32,17 +34,19 @@ namespace Akonadi {
   Used for sending notification signals over DBus.
   DBus type: (ayiiisayisas)
 */
-class NotificationMessage
+class AKONADI_EXPORT NotificationMessage
 {
   public:
     typedef QList<NotificationMessage> List;
 
     enum Type {
+      InvalidType,
       Collection,
       Item
     };
 
     enum Operation {
+      InvalidOp,
       Add,
       Modify,
       Remove
@@ -60,11 +64,11 @@ class NotificationMessage
     QByteArray sessionId() const;
     void setSessionId( const QByteArray &sessionId );
 
-    int type() const;
-    void setType( int type );
+    Type type() const;
+    void setType( Type type );
 
-    int operation() const;
-    void setOperation( int op );
+    Operation operation() const;
+    void setOperation( Operation op );
 
     int uid() const;
     void setUid( int uid );
@@ -85,6 +89,12 @@ class NotificationMessage
     void setItemParts( const QStringList &parts );
 
     QString toString() const;
+
+    /**
+      Adds a new notification message to the given list and comporesses notifications
+      where possible.
+    */
+    static void appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg );
 
   private:
     class Private;

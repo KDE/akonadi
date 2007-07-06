@@ -43,4 +43,5 @@ add_akonadi_test(itemappendtest.cpp)
 add_akonadi_test(itemstoretest.cpp)
 add_akonadi_test(monitortest.cpp)
 add_akonadi_test(searchjobtest.cpp)
+add_akonadi_test(notificationmessagetest.cpp)
 

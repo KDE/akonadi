@@ -278,12 +278,12 @@ void Monitor::Private::slotItemJobFinished( KJob* job )
   }
   NotificationMessage msg = pendingJobs.take( job );
   if ( job->error() ) {
-    kWarning() << k_funcinfo << "Error on fetching item: " << job->errorText();
+    kWarning() << k_funcinfo << "Error on fetching item: " << job->errorText() << endl;
   } else {
     Item item;
     Collection col;
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-    if ( fetchJob )
+    if ( fetchJob && fetchJob->items().count() > 0 )
       item = fetchJob->items().first();
     ItemCollectionFetchJob *cfjob = qobject_cast<ItemCollectionFetchJob*>( job );
     if ( cfjob ) {
@@ -302,11 +302,11 @@ void Monitor::Private::slotCollectionJobFinished( KJob* job )
   }
   NotificationMessage msg = pendingJobs.take( job );
   if ( job->error() ) {
-    kWarning() << k_funcinfo << "Error on fetching collection: " << job->errorText();
+    kWarning() << k_funcinfo << "Error on fetching collection: " << job->errorText() << endl;
   } else {
     Collection col;
     CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
-    if ( listJob )
+    if ( listJob && listJob->collections().count() > 0 )
       col = listJob->collections().first();
     emitCollectionNotification( msg, col );
   }
