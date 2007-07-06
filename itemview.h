@@ -36,7 +36,7 @@ class Item;
  * in the Akonadi storage. The presentation of the information
  * is up to the user of this class.
  *
- * @see ItemViewBrowser
+ * @see ItemBrowser
  */
 class AKONADI_EXPORT ItemView
 {
