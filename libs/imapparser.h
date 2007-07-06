@@ -20,7 +20,7 @@
 #ifndef AKONADI_IMAPPARSER_H
 #define AKONADI_IMAPPARSER_H
 
-#include "libakonadi_export.h"
+#include "akonadiprotocol_export.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -30,7 +30,7 @@ namespace Akonadi {
 /**
   Parser for IMAP messages.
 */
-class AKONADI_EXPORT ImapParser
+class AKONADIPROTOCOL_EXPORT ImapParser
 {
   public:
     /**

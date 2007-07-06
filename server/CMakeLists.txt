@@ -83,8 +83,6 @@ set(libakonadiprivate_SRCS
   src/filetracer.cpp
   src/notificationmanager.cpp
   src/resourcemanager.cpp
-  ../libakonadi/imapparser.cpp
-  ../libakonadi/notificationmessage.cpp
   src/cachepolicymanager.cpp
   src/cachecleaner.cpp
   src/xesammanager.cpp
@@ -126,8 +124,15 @@ qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 kde4_automoc(${libakonadiprivate_SRCS})
 
 kde4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
-target_link_libraries( akonadiprivate ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}
-                                      ${QT_QTSQL_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN32_LIBRARY})
+target_link_libraries( akonadiprivate
+  ${QT_QTCORE_LIBRARY}
+  ${QT_QTNETWORK_LIBRARY}
+  ${QT_QTSQL_LIBRARY}
+  ${QT_QTDBUS_LIBRARY}
+  ${QT_QTXML_LIBRARY}
+  ${KDEWIN32_LIBRARY}
+  akonadiprotocol
+)
 set_target_properties(akonadiprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
