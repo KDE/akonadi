@@ -144,7 +144,7 @@ target_link_libraries( akonadiserver_bin akonadiprivate )
 install(TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
 install(FILES
   interfaces/org.kde.Akonadi.AgentManager.xml
-  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.NotificationManager.xml
+  interfaces/org.kde.Akonadi.NotificationManager.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.CachePolicyManager.xml
   interfaces/org.kde.Akonadi.ProfileManager.xml
   interfaces/org.kde.Akonadi.SearchProviderManager.xml
