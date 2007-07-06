@@ -82,7 +82,7 @@ class ResourceBase::Private
     void slotItemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     void slotItemChanged( const Akonadi::Item &item, const QStringList& );
     void slotItemRemoved( const Akonadi::DataReference &reference );
-    void slotCollectionAdded( const Akonadi::Collection &collection );
+    void slotCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
     void slotCollectionChanged( const Akonadi::Collection &collection );
     void slotCollectionRemoved( int id, const QString &remoteId );
 
@@ -131,6 +131,7 @@ class ResourceBase::Private
       int collectionId;
       QString collectionRemoteId;
       QStringList partIdentifiers;
+      int parentId;
     };
     bool changeRecording;
     QList<ChangeItem> changes;
@@ -174,6 +175,7 @@ class ResourceBase::Private
         c.collectionId = mSettings->value( QLatin1String( "collectionId" ) ).toInt();
         c.collectionRemoteId = mSettings->value( QLatin1String( "collectionRemoteId" ) ).toString();
         c.partIdentifiers = mSettings->value( QLatin1String( "partIdentifiers" ) ).toStringList();
+        c.parentId = mSettings->value( QLatin1String("parentId") ).toInt();
         changes << c;
       }
       mSettings->endArray();
@@ -194,6 +196,7 @@ class ResourceBase::Private
         mSettings->setValue( QLatin1String( "collectionId" ), c.collectionId );
         mSettings->setValue( QLatin1String( "collectionRemoteId" ), c.collectionRemoteId );
         mSettings->setValue( QLatin1String( "partIdentifiers" ), c.partIdentifiers );
+        mSettings->setValue( QLatin1String( "parentId" ), c.parentId );
       }
       mSettings->endArray();
       mSettings->endGroup();
@@ -262,8 +265,8 @@ ResourceBase::ResourceBase( const QString & id )
            this, SLOT( slotItemChanged( const Akonadi::Item&, const QStringList& ) ) );
   connect( d->monitor, SIGNAL( itemRemoved( const Akonadi::DataReference& ) ),
            this, SLOT( slotItemRemoved( const Akonadi::DataReference& ) ) );
-  connect( d->monitor, SIGNAL( collectionAdded( const Akonadi::Collection& ) ),
-           this, SLOT( slotCollectionAdded( const Akonadi::Collection& ) ) );
+  connect( d->monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
+           this, SLOT(slotCollectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   connect( d->monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
            this, SLOT( slotCollectionChanged( const Akonadi::Collection& ) ) );
   connect( d->monitor, SIGNAL( collectionRemoved( int, const QString& ) ),
@@ -567,14 +570,17 @@ void ResourceBase::Private::slotReplayNextItem()
         break;
       case Private::CollectionAdded:
         {
-          CollectionListJob *job = new CollectionListJob( Collection( c.collectionId), CollectionListJob::Flat, mParent );
+          Collection::List list;
+          list << Collection( c.collectionId );
+          list << Collection( c.parentId );
+          CollectionListJob *job = new CollectionListJob( list, mParent );
           mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotReplayCollectionAdded( KJob* ) ) );
           job->start();
         }
         break;
       case Private::CollectionChanged:
         {
-          CollectionListJob *job = new CollectionListJob( Collection( c.collectionId), CollectionListJob::Flat, mParent );
+          CollectionListJob *job = new CollectionListJob( Collection( c.collectionId), CollectionListJob::Local, mParent );
           mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotReplayCollectionChanged( KJob* ) ) );
           job->start();
         }
@@ -629,7 +635,7 @@ void ResourceBase::Private::slotReplayCollectionAdded( KJob *job )
     if ( listJob->collections().count() == 0 )
       mParent->error( i18n( "Unable to fetch collection in replay mode." ) );
     else
-      mParent->collectionAdded( listJob->collections().first() );
+      mParent->collectionAdded( listJob->collections().first(), listJob->collections().at( 1 ) );
   }
 
   QTimer::singleShot( 0, mParent, SLOT( slotReplayNextItem() ) );
@@ -642,10 +648,11 @@ void ResourceBase::Private::slotReplayCollectionChanged( KJob *job )
   } else {
     CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
 
-    if ( listJob->collections().count() == 0 )
+    if ( listJob->collections().count() <= 1 )
       mParent->error( i18n( "Unable to fetch collection in replay mode." ) );
-    else
+    else {
       mParent->collectionChanged( listJob->collections().first() );
+    }
   }
 
   QTimer::singleShot( 0, mParent, SLOT( slotReplayNextItem() ) );
@@ -691,15 +698,16 @@ void ResourceBase::Private::slotItemRemoved(const Akonadi::DataReference & ref)
   }
 }
 
-void ResourceBase::Private::slotCollectionAdded( const Akonadi::Collection &collection )
+void ResourceBase::Private::slotCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
   if ( changeRecording ) {
     Private::ChangeItem c;
     c.type = Private::CollectionAdded;
     c.collectionId = collection.id();
+    c.parentId = parent.id();
     addChange( c );
   } else {
-    mParent->collectionAdded( collection );
+    mParent->collectionAdded( collection, parent );
   }
 }
 

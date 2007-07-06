@@ -91,7 +91,8 @@ class Monitor::Private
 
     void emitItemNotification( const NotificationMessage &msg, const Item &item = Item(),
                                const Collection &collection = Collection() );
-    void emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection() );
+    void emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
+                                     const Collection &par = Collection() );
 
     bool fetchCollection;
     bool fetchCollectionStatus;
@@ -205,7 +206,11 @@ void Monitor::Private::slotNotify( const NotificationMessage &msg )
     emitItemNotification( msg );
   } else if ( msg.type() == NotificationMessage::Collection ) {
     if ( msg.operation() != NotificationMessage::Remove && fetchCollection ) {
-      CollectionListJob *job = new CollectionListJob( Collection( msg.uid() ), CollectionListJob::Local, mParent );
+      Collection::List list;
+      list << Collection( msg.uid() );
+      if ( msg.operation() == NotificationMessage::Add )
+        list << Collection( msg.parentCollection() );
+      CollectionListJob *job = new CollectionListJob( list, mParent );
       pendingJobs.insert( job, msg );
       connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionJobFinished(KJob*)) );
       return;
@@ -247,7 +252,8 @@ void Monitor::Private::emitItemNotification( const NotificationMessage &msg, con
   }
 }
 
-void Monitor::Private::emitCollectionNotification( const NotificationMessage &msg, const Collection &col )
+void Monitor::Private::emitCollectionNotification( const NotificationMessage &msg, const Collection &col,
+                                                   const Collection &par )
 {
   Q_ASSERT( msg.type() == NotificationMessage::Collection );
   Collection collection = col;
@@ -257,9 +263,12 @@ void Monitor::Private::emitCollectionNotification( const NotificationMessage &ms
     collection.setResource( QString::fromUtf8( msg.resource() ) );
     collection.setRemoteId( msg.remoteId() );
   }
+  Collection parent = par;
+  if ( !parent.isValid() )
+    parent = Collection( msg.parentCollection() );
   switch ( msg.operation() ) {
     case NotificationMessage::Add:
-      emit mParent->collectionAdded( collection );
+      emit mParent->collectionAdded( collection, parent );
       break;
     case NotificationMessage::Modify:
       emit mParent->collectionChanged( collection );
@@ -304,11 +313,16 @@ void Monitor::Private::slotCollectionJobFinished( KJob* job )
   if ( job->error() ) {
     kWarning() << k_funcinfo << "Error on fetching collection: " << job->errorText() << endl;
   } else {
-    Collection col;
+    Collection col, parent;
     CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
     if ( listJob && listJob->collections().count() > 0 )
       col = listJob->collections().first();
-    emitCollectionNotification( msg, col );
+    if ( listJob && listJob->collections().count() > 1 && msg.operation() == NotificationMessage::Add ) {
+      parent = listJob->collections().at( 1 );
+      if ( col.id() != msg.uid() )
+        qSwap( col, parent );
+    }
+    emitCollectionNotification( msg, col, parent );
   }
 }
 

@@ -50,11 +50,18 @@ class AKONADI_EXPORT CollectionListJob : public Job
 
     /**
       Create a new CollectionListJob.
-      @param collection The base collection for the listing.
+      @param collection The base collection for the listing. Must be valid.
       @param type the type of listing to perform
       @param parent The parent object.
     */
     explicit CollectionListJob( const Collection &collection, ListType type = Flat, QObject *parent = 0 );
+
+    /**
+      Create a new CollectionListJob to retrieve a list of collections.
+      @param cols A list of collections to fetch. Must not be empty, content must be valid.
+      @param parent The parent object.
+    */
+    explicit CollectionListJob( const Collection::List &cols, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -76,6 +83,9 @@ class AKONADI_EXPORT CollectionListJob : public Job
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
+
+  protected Q_SLOTS:
+    void slotResult( KJob* job );
 
   private:
     CollectionListJobPrivate* const d;

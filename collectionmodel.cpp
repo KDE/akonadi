@@ -214,7 +214,7 @@ CollectionModel::CollectionModel( QObject * parent ) :
   d->monitor->monitorCollection( Collection::root() );
   d->monitor->fetchCollection( true );
   connect( d->monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)), SLOT(collectionChanged(const Akonadi::Collection&)) );
-  connect( d->monitor, SIGNAL(collectionAdded(const Akonadi::Collection&)), SLOT(collectionChanged(const Akonadi::Collection&)) );
+  connect( d->monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), SLOT(collectionChanged(Akonadi::Collection)) );
   connect( d->monitor, SIGNAL(collectionRemoved(int,QString)), SLOT(collectionRemoved(int)) );
   connect( d->monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)),
            SLOT(collectionStatusChanged(int,Akonadi::CollectionStatus)) );

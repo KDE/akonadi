@@ -165,7 +165,7 @@ AgentBase::AgentBase( const QString & id )
            this, SLOT( slotItemChanged( const Akonadi::Item&, const QStringList& ) ) );
   connect( d->monitor, SIGNAL( itemRemoved( const Akonadi::DataReference& ) ),
            this, SLOT( slotItemRemoved( const Akonadi::DataReference& ) ) );
-  connect( d->monitor, SIGNAL( collectionAdded( const Akonadi::Collection& ) ),
+  connect( d->monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
            this, SLOT( slotCollectionAdded( const Akonadi::Collection& ) ) );
   connect( d->monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
            this, SLOT( slotCollectionChanged( const Akonadi::Collection& ) ) );
@@ -174,7 +174,7 @@ AgentBase::AgentBase( const QString & id )
 
   d->monitor->ignoreSession( session() );
   // TODO An agent should not monitor *all* by default
-  d->monitor->monitorAll(); 
+  d->monitor->monitorAll();
 
   // initial configuration
   bool initialized = settings()->value( QLatin1String( "Agent/Initialized" ), false ).toBool();

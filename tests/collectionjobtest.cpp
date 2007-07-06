@@ -453,4 +453,16 @@ void CollectionJobTest::testUtf8CollectionName()
   QVERIFY( del->exec() );
 }
 
+void CollectionJobTest::testMultiList()
+{
+  Collection::List req;
+  req << Collection( res1ColId ) << Collection( res2ColId );
+  CollectionListJob* job = new CollectionListJob( req, this );
+  QVERIFY( job->exec() );
+
+  Collection::List res;
+  res = job->collections();
+  compareLists( res, req );
+}
+
 #include "collectionjobtest.moc"

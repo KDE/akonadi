@@ -136,8 +136,9 @@ class AKONADI_EXPORT Monitor : public QObject
     /**
       Emitted if a monitored got a new child collection.
       @param collection The new collection.
+      @param parent The parent collection.
     */
-    void collectionAdded( const Akonadi::Collection &collection );
+    void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
 
     /**
       Emitted if a monitored collection changed (its properties, not its

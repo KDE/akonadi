@@ -41,6 +41,7 @@ class CollectionJobTest : public QObject
     void testMove();
     void testIllegalModify();
     void testUtf8CollectionName();
+    void testMultiList();
 };
 
 

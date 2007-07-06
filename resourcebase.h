@@ -383,8 +383,9 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     /**
       Reimplement to handle adding of new collections.
       @param collection The newly added collection.
+      @param parent The parent collection.
     */
-    virtual void collectionAdded( const Collection &collection ) { Q_UNUSED( collection ); }
+    virtual void collectionAdded( const Collection &collection, const Collection &parent ) { Q_UNUSED( collection ); Q_UNUSED( parent ); }
 
     /**
       Reimplement to handle changes to existing collections.
@@ -452,7 +453,7 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     Q_PRIVATE_SLOT( d, void slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d, void slotItemChanged( const Akonadi::Item&, const QStringList& ) )
     Q_PRIVATE_SLOT( d, void slotItemRemoved( const Akonadi::DataReference& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionAdded( const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d, void slotCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d, void slotCollectionChanged( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d, void slotCollectionRemoved( int, const QString& ) )
     Q_PRIVATE_SLOT( d, void slotReplayNextItem() )

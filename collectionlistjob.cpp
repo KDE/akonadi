@@ -33,6 +33,7 @@ class Akonadi::CollectionListJobPrivate
   public:
     CollectionListJob::ListType type;
     Collection base;
+    Collection::List baseList;
     Collection::List collections;
     QString resource;
 };
@@ -44,6 +45,14 @@ CollectionListJob::CollectionListJob( const Collection &collection, ListType typ
   Q_ASSERT( collection.isValid() );
   d->base = collection;
   d->type = type;
+}
+
+CollectionListJob::CollectionListJob(const Collection::List & cols, QObject * parent) :
+    Job( parent ),
+    d( new CollectionListJobPrivate )
+{
+  Q_ASSERT( !cols.isEmpty() );
+  d->baseList = cols;
 }
 
 CollectionListJob::~CollectionListJob()
@@ -58,6 +67,13 @@ Collection::List CollectionListJob::collections() const
 
 void CollectionListJob::doStart()
 {
+  if ( !d->baseList.isEmpty() ) {
+    foreach ( const Collection col, d->baseList ) {
+      new CollectionListJob( col, CollectionListJob::Local, this );
+    }
+    return;
+  }
+
   QByteArray command = newTag() + " X-AKLIST ";
   command += QByteArray::number( d->base.id() );
   command += ' ';
@@ -159,6 +175,16 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
 void CollectionListJob::setResource(const QString & resource)
 {
   d->resource = resource;
+}
+
+void CollectionListJob::slotResult(KJob * job)
+{
+  CollectionListJob *list = dynamic_cast<CollectionListJob*>( job );
+  Q_ASSERT( job );
+  d->collections += list->collections();
+  Job::slotResult( job );
+  if ( !job->error() && !hasSubjobs() )
+    emitResult();
 }
 
 #include "collectionlistjob.moc"
