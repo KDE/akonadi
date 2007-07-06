@@ -143,6 +143,7 @@ void NotificationCollector::collectionNotification( NotificationMessage::Operati
   msg.setSessionId( mSessionId );
   msg.setUid( collection.id() );
   msg.setRemoteId( collection.remoteId() );
+  msg.setParentCollection( collection.parentId() );
 
   QByteArray res = resource;
   if ( res.isEmpty() )
