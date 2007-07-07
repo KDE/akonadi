@@ -24,6 +24,7 @@
 #include "libakonadi_export.h"
 
 class QString;
+class QStringList;
 class QByteArray;
 class QIODevice;
 
@@ -68,9 +69,8 @@ public:
       plugin. However it might contain a unsuited payload added manually by the application
       developer. Verifying the payload type in case a payload is already available is recommended
       therefore.
-      @param label The part identifier of the part to deserialize.
-      If this part is unknown and therefore cannot be deserialized, [continue me, what should happen?]
-      For now: call Item::addPart() for unknown parts
+      @param label The part identifier of the part to deserialize. @p label will
+      be one of the item parts returned by parts().
       @param data An QIODevice providing access to the serialized data. The QIODevice is opened in
       read-only mode and positioned at the beginning. The QIODevice is guaranteed to be valid.
     */
@@ -83,13 +83,20 @@ public:
       plugin as well as the existence of a payload object. However it might contain an unsupported
       payload added manually by the application developer. Verifying the payload type is recommended
       therefore.
-      @param label The part identifier of the part to serialize.
-      If this part is unknown and therefore cannot be deserialized, [continue me, what should happen?]
+      @param label The part identifier of the part to serialize. @p label will
+      be one of the item parts returned by parts().
       @param data The QIODevice where the serialized data should be writtne to.
       The QIODevice is opened in write-only mode and positioned at the beginning.
       The QIODevice is guaranteed to be valid.
     */
     virtual void serialize( const Item& item, const QString& label, QIODevice& data ) = 0;
+
+    /**
+      Returns a list of available parts for the given item payload.
+      The default implementation returns Item::PartBody.
+      @param item The item.
+    */
+    virtual QStringList parts( const Item &item ) const;
 };
 
 

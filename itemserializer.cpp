@@ -28,6 +28,7 @@
 #include <QtCore/QIODevice>
 #include <QtCore/QMap>
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 
 // libkdepim
 #include <libkdepim/pluginloader.h>
@@ -55,15 +56,14 @@ public:
 
     void deserialize( Item& item, const QString& label, QIODevice& data )
     {
-        if ( label == Item::PartBody )
-          item.setPayload( data.readAll() );
-        else
-          item.addPart( label, data.readAll() );
+        Q_ASSERT( label == Item::PartBody );
+        item.setPayload( data.readAll() );
     }
 
     void serialize( const Item& item, const QString& label, QIODevice& data )
     {
-        if ( label == Item::PartBody && item.hasPayload<QByteArray>() )
+        Q_ASSERT( label == Item::PartBody );
+        if ( item.hasPayload<QByteArray>() )
             data.write( item.payload<QByteArray>() );
     }
 
@@ -106,6 +106,9 @@ static void loadPlugins() {
       all->insert( t, plugin );
     }
   }
+
+  if ( !all->contains( QLatin1String("application/octed-stream") ) )
+    all->insert( QLatin1String("application/octet-stream"), DefaultItemSerializerPlugin::instance() );
 }
 
 static void setup()
@@ -119,12 +122,11 @@ static void setup()
 /*static*/
 void ItemSerializer::deserialize( Item& item, const QString& label, const QByteArray& data )
 {
-    setup();
     QBuffer buffer;
     buffer.setData( data );
     buffer.open( QIODevice::ReadOnly );
     buffer.seek( 0 );
-    ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, buffer );
+    deserialize( item, label, buffer );
     buffer.close();
 }
 
@@ -132,29 +134,35 @@ void ItemSerializer::deserialize( Item& item, const QString& label, const QByteA
 void ItemSerializer::deserialize( Item& item, const QString& label, QIODevice& data )
 {
     setup();
-    ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
+    QStringList supportedParts = pluginForMimeType( item.mimeType() ).parts( item );
+    if ( supportedParts.contains( label ) )
+      ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
+    else
+      item.addPart( label, data.readAll() );
 }
 
 /*static*/
 void ItemSerializer::serialize( const Item& item, const QString& label, QByteArray& data )
 {
-    if ( !item.hasPayload() )
-      return;
-    setup();
     QBuffer buffer;
     buffer.setBuffer( &data );
     buffer.open( QIODevice::WriteOnly );
     buffer.seek( 0 );
-    ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, buffer );
+    serialize( item, label, buffer );
     buffer.close();
 }
 
 /*static*/
 void ItemSerializer::serialize( const Item& item, const QString& label, QIODevice& data )
 {
-    if ( item.hasPayload() )
-      return;
     setup();
+    QStringList supportedParts = pluginForMimeType( item.mimeType() ).parts( item );
+    if ( !supportedParts.contains( label ) ) {
+      data.write( item.part( label ) );
+      return;
+    }
+    if ( !item.hasPayload() )
+      return;
     ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, data );
 }
 
@@ -174,4 +182,12 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
 
 ItemSerializerPlugin::~ItemSerializerPlugin()
 {
+}
+
+QStringList ItemSerializerPlugin::parts(const Item & item) const
+{
+  Q_UNUSED( item );
+  QStringList list;
+  list << Item::PartBody;
+  return list;
 }
