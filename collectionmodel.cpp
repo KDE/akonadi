@@ -22,7 +22,6 @@
 #include "collectionlistjob.h"
 #include "collectionmodel.h"
 #include "collectionmodifyjob.h"
-#include "itemserializer.h"
 #include "itemstorejob.h"
 #include "itemappendjob.h"
 #include "monitor.h"
@@ -524,7 +523,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 
     Item it;
     it.setMimeType( type );
-    ItemSerializer::deserialize( it, Item::PartBody, item );
+    it.addPart( Item::PartBody, item );
 
     ItemAppendJob *job = new ItemAppendJob( it, parentCol, d->session );
     connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );

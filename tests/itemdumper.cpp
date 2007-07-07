@@ -26,7 +26,6 @@
 #include <kcmdlineargs.h>
 
 #include <libakonadi/collectionpathresolver.h>
-#include <libakonadi/itemserializer.h>
 
 using namespace Akonadi;
 
@@ -42,7 +41,7 @@ ItemDumper::ItemDumper( const QString &path, const QString &filename, const QStr
   f.close();
   Item item;
   item.setMimeType( mimetype );
-  ItemSerializer::deserialize( item, Item::PartBody, data );
+  item.addPart( Item::PartBody, data );
   ItemAppendJob *job = new ItemAppendJob( item, collection, this );
   connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
   job->start();

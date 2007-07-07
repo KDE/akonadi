@@ -119,7 +119,6 @@ install( FILES
 	itemdeletejob.h
 	itemfetchjob.h
 	itempayloadinternals_p.h
-	itemserializer.h
 	itemserializerplugin.h
 	itemstorejob.h
 	itemview.h

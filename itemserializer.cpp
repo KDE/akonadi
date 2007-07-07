@@ -139,7 +139,7 @@ void ItemSerializer::deserialize( Item& item, const QString& label, QIODevice& d
     if ( supportedParts.contains( label ) )
       ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
     else
-      item.addPart( label, data.readAll() );
+      item.addRawPart( label, data.readAll() );
 }
 
 /*static*/
@@ -159,12 +159,18 @@ void ItemSerializer::serialize( const Item& item, const QString& label, QIODevic
     setup();
     QStringList supportedParts = pluginForMimeType( item.mimeType() ).parts( item );
     if ( !supportedParts.contains( label ) ) {
-      data.write( item.part( label ) );
+      data.write( item.rawPart( label ) );
       return;
     }
     if ( !item.hasPayload() )
       return;
     ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, data );
+}
+
+QStringList ItemSerializer::parts(const Item & item)
+{
+  setup();
+  return pluginForMimeType( item.mimeType() ).parts( item );
 }
 
 /*static*/

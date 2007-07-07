@@ -249,6 +249,8 @@ void Monitor::Private::emitItemNotification( const NotificationMessage &msg, con
     case NotificationMessage::Remove:
       emit mParent->itemRemoved( it.reference() );
       break;
+    default:
+      Q_ASSERT_X( false, "Monitor::Private::emitItemNotification()", "Invalid enum value" );
   }
 }
 
@@ -276,6 +278,8 @@ void Monitor::Private::emitCollectionNotification( const NotificationMessage &ms
     case NotificationMessage::Remove:
       emit mParent->collectionRemoved( collection.id(), collection.remoteId() );
       break;
+    default:
+      Q_ASSERT_X( false, "Monitor::Private::emitCollectionNotification", "Invalid enum value" );
   }
 }
 

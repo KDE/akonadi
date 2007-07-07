@@ -34,6 +34,7 @@ class Item;
 class ItemSerializerPlugin;
 
 /**
+  @internal
   Serialization/Deserialization of item parts, serializer plugin management.
 */
 class AKONADI_EXPORT ItemSerializer
@@ -47,6 +48,9 @@ class AKONADI_EXPORT ItemSerializer
       static void serialize( const Item& item, const QString& label, QByteArray& data );
       /** throws ItemSerializerException on failure */
       static void serialize( const Item& item, const QString& label, QIODevice& data );
+
+      /** Returns a list of parts available in the item payload. */
+      static QStringList parts( const Item &item );
 
   private:
       static ItemSerializerPlugin& pluginForMimeType( const QString& mimetype );

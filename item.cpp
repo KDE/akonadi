@@ -17,12 +17,13 @@
     02110-1301, USA.
 */
 
-#include <QtCore/QMap>
-#include <QtCore/QSharedData>
-
 #include "item.h"
+#include "itemserializer.h"
 
 #include <kurl.h>
+
+#include <QtCore/QMap>
+#include <QtCore/QSharedData>
 
 using namespace Akonadi;
 
@@ -117,17 +118,20 @@ bool Item::hasFlag( const QByteArray & name ) const
 
 void Item::addPart( const QString &identifier, const QByteArray &data )
 {
-  d->mParts.insert( identifier, data );
+  ItemSerializer::deserialize( *this, identifier, data );
 }
 
 QByteArray Item::part( const QString &identifier ) const
 {
-  return d->mParts.value( identifier );
+  QByteArray data;
+  ItemSerializer::serialize( *this, identifier, data );
+  return data;
 }
 
 QStringList Item::availableParts() const
 {
-  return d->mParts.keys();
+  QStringList payloadParts = ItemSerializer::parts( *this );
+  return payloadParts + d->mParts.keys();
 }
 
 QString Item::mimeType() const
@@ -175,4 +179,14 @@ DataReference Item::fromUrl( const KUrl &url )
 bool Item::urlIsValid( const KUrl &url )
 {
   return url.protocol() == QString::fromLatin1("akonadi") && url.queryItems().contains( QString::fromLatin1("item") );
+}
+
+void Item::addRawPart(const QString & label, const QByteArray & data)
+{
+  d->mParts.insert( label, data );
+}
+
+QByteArray Item::rawPart(const QString & label) const
+{
+  return d->mParts.value( label );
 }

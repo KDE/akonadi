@@ -18,7 +18,6 @@
 */
 
 #include "itemstorejob.h"
-#include "itemserializer.h"
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
@@ -193,7 +192,7 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
 void ItemStoreJob::storePayload()
 {
   // TODO: multipart support
-  ItemSerializer::serialize( d->item, Item::PartBody, d->data );
+  d->data = d->item.part( Item::PartBody );
   d->operations.insert( Private::Data );
 }
 

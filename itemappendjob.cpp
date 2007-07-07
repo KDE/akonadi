@@ -18,7 +18,6 @@
 */
 
 #include "itemappendjob.h"
-#include "itemserializer.h"
 #include "imapparser.h"
 
 #include <QtCore/QDebug>
@@ -55,7 +54,7 @@ void ItemAppendJob::doStart()
     remoteId = " \\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']';
   // FIXME: iterate over all parts
   if ( d->item.hasPayload() )
-    ItemSerializer::serialize( d->item, Item::PartBody, d->data );
+    d->data = d->item.part( Item::PartBody );
   writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
       + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
       + QByteArray::number( d->data.size() ) + "}\n" );

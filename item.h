@@ -246,6 +246,11 @@ class AKONADI_EXPORT Item
   static bool urlIsValid( const KUrl &url );
 
   private:
+    friend class ItemSerializer;
+    void addRawPart( const QString &label, const QByteArray &data );
+    QByteArray rawPart( const QString &label ) const;
+
+  private:
     class Private;
     QSharedDataPointer<Private> d;
     PayloadBase*  m_payload; // krazy:exclude=dpointer
