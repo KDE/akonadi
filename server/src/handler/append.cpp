@@ -16,7 +16,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#include <QtCore/QDebug>
+
+#include "append.h"
+#include "response.h"
+#include "imapparser.h"
+#include "handlerhelper.h"
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
@@ -24,10 +28,7 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 
-#include "append.h"
-#include "response.h"
-#include "imapparser.h"
-#include "handlerhelper.h"
+#include <QtCore/QDebug>
 
 using namespace Akonadi;
 
@@ -153,6 +154,7 @@ bool Akonadi::Append::commit()
 
     QByteArray mt;
     QByteArray remote_id;
+    QList<QByteArray> flags;
     foreach( QByteArray flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
         int pos1 = flag.indexOf( '[' );
@@ -162,7 +164,8 @@ bool Akonadi::Append::commit()
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.indexOf( ']', pos1 );
         remote_id = flag.mid( pos1 + 1, pos2 - pos1 - 1 );
-      }
+      } else
+        flags << flag;
     }
     // standard imap does not know this attribute, so that's mail
     if ( mt.isEmpty() ) mt = "message/rfc822";
@@ -170,22 +173,22 @@ bool Akonadi::Append::commit()
     if ( !mimeType.isValid() ) {
       return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
     }
-    int itemId = 0;
-    bool ok = db->appendPimItem( m_data, mimeType, l, m_dateTime, remote_id, &itemId );
+    PimItem item;
+    bool ok = db->appendPimItem( m_data, mimeType, l, m_dateTime, remote_id, item );
     response.setTag( tag() );
     if ( !ok ) {
         return failureResponse( "Append failed" );
     }
 
     // set message flags
-    if ( !db->appendItemFlags( itemId, m_flags ) )
+    if ( !db->appendItemFlags( item, flags ) )
       return failureResponse( "Unable to append item flags." );
 
     // the message was appended; now we have to update the counts
     const int existsChange = +1;
     const int recentChange = +1;
     int unseenChange = 0;
-    if ( !m_flags.contains( "\\Seen" ) )
+    if ( !flags.contains( "\\Seen" ) )
         unseenChange = +1;
     // int firstUnseen = ?; // can't be updated atomically, so we probably have to
                             // recalculate it each time it's needed
@@ -201,7 +204,7 @@ bool Akonadi::Append::commit()
 
     response.setTag( tag() );
     response.setUserDefined();
-    response.setString( "[UIDNEXT " + QByteArray::number( itemId ) + "]" );
+    response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + "]" );
     emit responseAvailable( response );
 
     response.setSuccess();

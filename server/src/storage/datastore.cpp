@@ -267,6 +267,10 @@ bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
 
 bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
 {
+  if ( !item.isValid() )
+    return false;
+  if ( flags.isEmpty() )
+    return true;
   for ( int i = 0; i < flags.count(); ++i ) {
     if ( !item.relatesToFlag( flags[ i ] ) ) {
       if ( !item.addFlag( flags[i] ) )
@@ -278,10 +282,19 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
   return true;
 }
 
-bool DataStore::appendItemFlags( int pimItemId, const QList<QByteArray> &flags )
+bool DataStore::appendItemFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
-    // FIXME Implement me
-    return true;
+  Flag::List list;
+  foreach ( const QByteArray f, flags ) {
+    Flag flag = Flag::retrieveByName( QString::fromUtf8( f ) );
+    if ( !flag.isValid() ) {
+      flag = Flag( QString::fromUtf8( f ) );
+      if ( !flag.insert() )
+        return false;
+    }
+    list << flag;
+  }
+  return appendItemFlags( item, list );
 }
 
 bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
@@ -324,18 +337,10 @@ bool DataStore::appendLocation( Location &location )
   return true;
 }
 
-bool DataStore::removeLocation( Location & location )
-{
-  mNotificationCollector->collectionRemoved( location );
-  return location.remove();
-}
-
 bool Akonadi::DataStore::cleanupLocation(Location & location)
 {
   // delete the content
-  QList<QByteArray> seq;
-  seq << "0:*";
-  QList<PimItem> items = matchingPimItemsByUID( seq, location );
+  PimItem::List items = location.items();
   foreach ( PimItem item, items )
     cleanupPimItem( item );
 
@@ -349,7 +354,8 @@ bool Akonadi::DataStore::cleanupLocation(Location & location)
       return false;
 
   // delete the location itself
-  return removeLocation( location );
+  mNotificationCollector->collectionRemoved( location );
+  return location.remove();
 }
 
 static void addToUpdateAssignments( QStringList & l, int change, const QString & name )
@@ -482,13 +488,6 @@ bool Akonadi::DataStore::removeMimeTypesForLocation(int locationId)
 }
 
 
-QList<Location> DataStore::listLocations( const Resource & resource ) const
-{
-  if ( resource.isValid() )
-    return Location::retrieveFiltered( Location::resourceIdColumn(), resource.id() );
-  return Location::retrieveAll();
-}
-
 CachePolicy DataStore::activeCachePolicy(const Location & loc)
 {
   CachePolicy policy;
@@ -530,9 +529,8 @@ bool DataStore::appendPimItem( const QByteArray & data,
                                const Location & location,
                                const QDateTime & dateTime,
                                const QByteArray & remote_id,
-                               int *insertId )
+                               PimItem &pimItem )
 {
-  PimItem pimItem;
   pimItem.setData( data );
   pimItem.setMimeTypeId( mimetype.id() );
   pimItem.setLocationId( location.id() );
@@ -548,7 +546,7 @@ bool DataStore::appendPimItem( const QByteArray & data,
   }
   pimItem.setAtime( QDateTime::currentDateTime() );
 
-  if ( !pimItem.insert( insertId ) )
+  if ( !pimItem.insert() )
     return false;
 
   mNotificationCollector->itemAdded( pimItem, location, mimetype.name() );
@@ -634,31 +632,22 @@ bool DataStore::cleanupPimItems( const Location &location )
   if ( !m_dbOpened || !location.isValid() )
     return false;
 
-  QStringList tables;
-  tables << Flag::tableName() << PimItemFlagRelation::tableName() << PimItem::tableName();
-  QString statement = QString::fromLatin1( "SELECT %1 FROM %2 " )
-      .arg( PimItemFlagRelation::leftFullColumnName(), tables.join( QLatin1String(",") ) );
-  statement += QString::fromLatin1( "WHERE %1 = '\\Deleted' AND " )
-      .arg( Flag::nameFullColumnName() );
-  statement += QString::fromLatin1( "%1 = %2 AND " )
-      .arg( PimItemFlagRelation::rightFullColumnName(), Flag::idFullColumnName() );
-  statement += QString::fromLatin1( "%1 = %2 AND " )
-      .arg( PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
-  statement += QString::fromLatin1( "%1 = :locationId" )
-      .arg( PimItem::locationIdFullColumnName() );
+  QueryBuilder qb( QueryBuilder::Select );
+  qb.addTable( Flag::tableName() );
+  qb.addTable( PimItemFlagRelation::tableName() );
+  qb.addTable( PimItem::tableName() );
+  qb.addColumn( PimItemFlagRelation::leftFullColumnName() );
+  qb.addValueCondition( Flag::nameFullColumnName(), "=", QLatin1String("\\Deleted") );
+  qb.addValueCondition( PimItem::locationIdFullColumnName(), "=", location.id() );
+  qb.addColumnCondition( PimItemFlagRelation::rightFullColumnName(), "=", Flag::idFullColumnName() );
 
-  QSqlQuery query( m_database );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":locationId"), location.id() );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during cleaning up pim items." );
+  if ( !qb.exec() )
     return false;
-  }
 
   QList<PimItem> pimItems;
-  while ( query.next() ) {
+  while ( qb.query().next() ) {
     PimItem item;
-    item.setId( query.value( 0 ).toInt() );
+    item.setId( qb.query().value( 0 ).toInt() );
 
     pimItems.append( item );
   }
@@ -803,11 +792,6 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
   return item;
 }
 
-PimItem DataStore::pimItemById( int id )
-{
-  return pimItemById( id, FetchQuery::FastType );
-}
-
 QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &flag )
 {
   if ( !m_dbOpened )
@@ -872,12 +856,12 @@ int DataStore::highestPimItemCountByLocation( const Location &location )
 
 QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsByUID( const FetchQuery &query, const Location& l )
 {
-    return matchingPimItemsByUID( query.sequences(), query.type(), l );
+    return matchingPimItemsByUID( query.sequences(), l, query.type() );
 }
 
 QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequences,
-                                                 FetchQuery::Type type,
-                                                 const Location& location )
+                                                 const Location& location,
+                                                 FetchQuery::Type type )
 {
   if ( !m_dbOpened )
     return QList<PimItem>();
@@ -939,23 +923,10 @@ QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequen
 
 }
 
-QList<PimItem> DataStore::matchingPimItemsByUID( const QList<QByteArray> &sequences,
-                                                 const Location & location )
-{
-  return matchingPimItemsByUID( sequences, FetchQuery::FastType, location );
-}
-
-
 QList<PimItem> Akonadi::DataStore::fetchMatchingPimItemsBySequenceNumbers( const FetchQuery & query,
                                                                            const Location & location )
 {
   return matchingPimItemsBySequenceNumbers( query.sequences(), location, FetchQuery::FastType );
-}
-
-QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
-                                                             const Location &location )
-{
-  return matchingPimItemsBySequenceNumbers( sequences, location, FetchQuery::FastType );
 }
 
 QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,

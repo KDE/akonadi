@@ -118,14 +118,12 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
 
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
-    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags );    bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
-
-    bool appendItemFlags( int pimItemId, const QList<QByteArray> &flags );
+    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags );
+    bool appendItemFlags( const PimItem &item, const QList<QByteArray> &flags );
+    bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
 
     /* --- Location ------------------------------------------------------ */
     bool appendLocation( Location &location );
-    /// removes the given location without removing its content
-    bool removeLocation( Location & location );
     /// removes the given location and all its content
     bool cleanupLocation( Location &location );
     bool updateLocationCounts( const Location & location, int existsChange, int recentChange, int unseenChange );
@@ -133,11 +131,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool resetLocationPolicy( const Location & location );
     /// rename the collection @p location to @p newName.
     bool renameLocation( const Location &location, int newParent, const QString &newName );
-    /**
-      Returns all collection associated with the given resource, all collections if the
-      resource is invalid.
-    */
-    QList<Location> listLocations( const Resource & resource = Resource() ) const;
 
     bool appendMimeTypeForLocation( int locationId, const QString & mimeType );
     bool appendMimeTypeForLocation( int locationId, int mimeTypeId );
@@ -159,12 +152,11 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
                         const Location & location,
                         const QDateTime & dateTime,
                         const QByteArray & remote_id,
-                        int *insertId = 0 );
+                        PimItem &pimItem );
     bool updatePimItem( PimItem &pimItem, const QByteArray &data );
     bool updatePimItem( PimItem &pimItem, const Location &destination );
     bool updatePimItem( PimItem &pimItem, const QString &remoteId );
-    PimItem pimItemById( int id );
-    PimItem pimItemById( int id, FetchQuery::Type type );
+    PimItem pimItemById( int id, FetchQuery::Type type = FetchQuery::FastType );
 
     QList<PimItem> listPimItems( const Location & location, const Flag &flag );
 
@@ -188,15 +180,11 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     int highestPimItemCountByLocation( const Location &location );
 
     QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences,
-                                          const Location & l = Location() );
-    QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences,
-                                          FetchQuery::Type type,
-                                          const Location & l = Location() );
-    QList<PimItem> matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
-                                                      const Location &location );
+                                          const Location & l = Location(),
+                                          FetchQuery::Type type = FetchQuery::FastType );
     QList<PimItem> matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
                                                       const Location &location,
-                                                      FetchQuery::Type type );
+                                                      FetchQuery::Type type = FetchQuery::FastType );
 
     QList<PimItem> fetchMatchingPimItemsByUID( const FetchQuery &query, const Location& l = Location() );
     QList<PimItem> fetchMatchingPimItemsBySequenceNumbers( const FetchQuery &query,
