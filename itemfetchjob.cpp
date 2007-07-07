@@ -23,6 +23,7 @@
 #include "collectionselectjob.h"
 #include "imapparser.h"
 #include "itemserializer.h"
+#include "itemserializerplugin.h"
 
 #include <QtCore/QDebug>
 

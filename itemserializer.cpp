@@ -20,6 +20,7 @@
 
 #include "itemserializer.h"
 #include "item.h"
+#include "itemserializerplugin.h"
 
 // Qt
 #include <QtCore/QBuffer>
@@ -178,16 +179,4 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
     ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
     Q_ASSERT(plugin);
     return *plugin;
-}
-
-ItemSerializerPlugin::~ItemSerializerPlugin()
-{
-}
-
-QStringList ItemSerializerPlugin::parts(const Item & item) const
-{
-  Q_UNUSED( item );
-  QStringList list;
-  list << Item::PartBody;
-  return list;
 }

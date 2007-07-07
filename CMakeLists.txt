@@ -58,6 +58,7 @@ set( akonadi_LIB_SRC
 	itemfetchjob.cpp
 	itemmodel.cpp
 	itemserializer.cpp
+	itemserializerplugin.cpp
 	itemstorejob.cpp
 	itemview.cpp
 	job.cpp
@@ -119,6 +120,7 @@ install( FILES
 	itemfetchjob.h
 	itempayloadinternals_p.h
 	itemserializer.h
+	itemserializerplugin.h
 	itemstorejob.h
 	itemview.h
 	itemmodel.h
