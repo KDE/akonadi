@@ -54,17 +54,20 @@ class FetchQuery
           RFC822_Size,
           RFC822_Text,
           Body,
-          Body_Structure
+          Body_Structure,
+          Custom
         };
 
         bool parse( const QByteArray &attribute );
 
         Type type() const;
+        QString name() const { return mName; }
 
-        void dump();
+        void dump() const;
 
       private:
         Type mType;
+        QString mName;
     };
 
     bool parse( const QByteArray &query );
@@ -75,7 +78,7 @@ class FetchQuery
     Type type() const;
     bool isUidFetch() const;
 
-    void dump();
+    void dump() const;
 
   private:
     QList<QByteArray> mSequences;

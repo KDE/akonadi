@@ -26,6 +26,7 @@
 #include "storage/transaction.h"
 #include "handlerhelper.h"
 #include "imapparser.h"
+#include "storage/selectquerybuilder.h"
 
 #include "store.h"
 
@@ -109,7 +110,7 @@ bool Store::handleLine( const QByteArray& line )
         if ( !deleteFlags( pimItems[ i ], flags ) )
           return failureResponse( "Unable to remove item flags." );
       }
-    } else if ( command == "DATA" ) {
+    } else if ( command == "RFC822" ) {
       pos = ImapParser::parseString( line, buffer, pos );
       if ( !store->updatePimItem( pimItems[ i ], buffer ) )
         return failureResponse( "Unable to change item data." );
@@ -127,7 +128,28 @@ bool Store::handleLine( const QByteArray& line )
         if ( !item.update() )
           return failureResponse( "Unable to update item" );
     } else {
-      return failureResponse( "Unknown command" );
+      pos = ImapParser::parseString( line, buffer, pos );
+      qDebug() << "Multipart store: IMPLEMENT ME!" << command << buffer;
+      Part part;
+      SelectQueryBuilder<Part> qb;
+      qb.addValueCondition( Part::pimItemIdColumn(), "=", pimItems[ i ].id() );
+      qb.addValueCondition( Part::nameColumn(), "=", QString::fromUtf8( command ) );
+      if ( !qb.exec() )
+        return failureResponse( "Unable to check item part existence" );
+      Part::List result = qb.result();
+      if ( !result.isEmpty() )
+        part = result.first();
+
+      part.setData( buffer );
+      part.setName( QString::fromUtf8( command ) );
+      part.setPimItemId( pimItems[ i ].id() );
+      if ( part.isValid() ) {
+        if ( !part.update() )
+          return failureResponse( "Unable to update item part" );
+      } else {
+        if ( !part.insert() )
+          return failureResponse( "Unable to add item part" );
+      }
     }
 
     if ( !silent ) {

@@ -55,7 +55,9 @@ bool FetchQuery::parse( const QByteArray &query )
   else if ( leftover.startsWith( '(' ) ) {
     mType = AttributeListType;
 
-    const QByteArray attributeString = leftover.mid( 1, leftover.length() - 2 );
+    QByteArray attributeString = leftover.mid( 1, leftover.length() - 2 );
+    if ( attributeString.endsWith( ')' ) )
+      attributeString.chop( 1 );
     QList<QByteArray> attributes = attributeString.split( ' ' );
     for ( int i = 0; i < attributes.count(); ++i ) {
       Attribute attribute;
@@ -107,7 +109,7 @@ bool FetchQuery::isUidFetch() const
   return mIsUidFetch;
 }
 
-void FetchQuery::dump()
+void FetchQuery::dump() const
 {
   QByteArray type, sequence;
 
@@ -159,6 +161,12 @@ bool FetchQuery::Attribute::parse( const QByteArray &attribute )
     mType = Body_Structure;
   else if ( attribute.toUpper().startsWith( "BODY" ) )
     mType = Body;
+  else if ( attribute == "UID" || attribute == "REMOTEID" ) {
+    // ignore
+  } else {
+    mType = Custom;
+    mName = QString::fromUtf8( attribute );
+  }
 
   return true;
 }
@@ -168,7 +176,7 @@ FetchQuery::Attribute::Type FetchQuery::Attribute::type() const
   return mType;
 }
 
-void FetchQuery::Attribute::dump()
+void FetchQuery::Attribute::dump() const
 {
   QByteArray type;
 
@@ -190,6 +198,8 @@ void FetchQuery::Attribute::dump()
     type = "BODY.STRUCTURE";
   else if ( mType == Body )
     type = "BODY";
+  else if ( mType == Custom )
+    type = mName.toUtf8();
 
   qDebug( "Attribute: %s", type.constData() );
 }

@@ -151,6 +151,7 @@
 
   <table name="Part">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="int" properties="NOT NULL"/>
     <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="REFERENCES PimItem(id)"/>

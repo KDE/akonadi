@@ -17,20 +17,21 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QStringList>
-#include <QtCore/QUuid>
-#include <QtCore/QVariant>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
+#include "fetch.h"
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "imapparser.h"
 #include "fetchquery.h"
 #include "response.h"
+#include "storage/selectquerybuilder.h"
 
-#include "fetch.h"
+#include <QtCore/QStringList>
+#include <QtCore/QUuid>
+#include <QtCore/QVariant>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
 using namespace Akonadi;
 
@@ -142,6 +143,27 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
 
 
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Body_Structure ) ) {
+  }
+
+  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Custom ) ) {
+    foreach ( const FetchQuery::Attribute attr, fetchQuery.attributes() ) {
+      if ( attr.type() != FetchQuery::Attribute::Custom )
+        continue;
+      SelectQueryBuilder<Part> qb;
+      qb.addValueCondition( Part::pimItemIdColumn(), "=", item.id() );
+      qb.addValueCondition( Part::nameColumn(), "=",attr.name() );
+      if ( !qb.exec() ) {
+        failureResponse( "Error retrieving item part" );
+        // ### Fix error handling
+        return QByteArray();
+      }
+      Part::List list  = qb.result();
+      if ( list.isEmpty() )
+        attributes.append( attr.name().toUtf8() + " NIL" );
+      else
+        attributes.append( attr.name().toUtf8() + " {" + QByteArray::number( list.first().data().size() ) + "}\n"
+            + list.first().data() );
+    }
   }
 
   QByteArray attributesString;
