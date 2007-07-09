@@ -34,6 +34,7 @@ class ItemStoreTest : public QObject
     void testIllegalItemMove();
     void testRemoteId_data();
     void testRemoteId();
+    void testMultiPart();
 };
 
 #endif

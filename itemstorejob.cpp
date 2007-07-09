@@ -26,7 +26,6 @@ class ItemStoreJob::Private
 {
   public:
     enum Operation {
-      Data,
       SetFlags,
       AddFlags,
       RemoveFlags,
@@ -44,12 +43,13 @@ class ItemStoreJob::Private
     Item::Flags flags;
     Item::Flags addFlags;
     Item::Flags removeFlags;
-    QByteArray data;
     DataReference ref;
     QSet<int> operations;
     QByteArray tag;
     Collection collection;
     Item item;
+    QStringList parts;
+    QByteArray pendingData;
 
     void sendNextCommand();
 
@@ -67,42 +67,46 @@ class ItemStoreJob::Private
 
 void ItemStoreJob::Private::sendNextCommand()
 {
-  if ( operations.isEmpty() ) {
-    mParent->emitResult();
-    return;
+  if ( operations.isEmpty() && parts.isEmpty() ) {
+      mParent->emitResult();
+      return;
   }
 
   tag = mParent->newTag();
   QByteArray command = tag;
   command += " UID STORE " + QByteArray::number( ref.id() ) + ' ';
-  int op = *(operations.begin());
-  operations.remove( op );
-  switch ( op ) {
-    case Data:
-      command += "DATA {" + QByteArray::number( data.size() ) + '}';
-      break;
-    case SetFlags:
-      command += "FLAGS (" + joinFlags( flags ) + ')';
-      break;
-    case AddFlags:
-      command += "+FLAGS (" + joinFlags( addFlags ) + ')';
-      break;
-    case RemoveFlags:
-      command += "-FLAGS (" + joinFlags( removeFlags ) + ')';
-      break;
-    case Move:
-      command += "COLLECTION " + QByteArray::number( collection.id() );
-      break;
-    case RemoteId:
-      if ( ref.remoteId().isNull() ) {
-        sendNextCommand();
-        return;
-      }
-      command += "REMOTEID \"" + ref.remoteId().toLatin1() + '\"';
-      break;
-    case Dirty:
-      command += "DIRTY";
-      break;
+  if ( !operations.isEmpty() ) {
+    int op = *(operations.begin());
+    operations.remove( op );
+    switch ( op ) {
+      case SetFlags:
+        command += "FLAGS (" + joinFlags( flags ) + ')';
+        break;
+      case AddFlags:
+        command += "+FLAGS (" + joinFlags( addFlags ) + ')';
+        break;
+      case RemoveFlags:
+        command += "-FLAGS (" + joinFlags( removeFlags ) + ')';
+        break;
+      case Move:
+        command += "COLLECTION " + QByteArray::number( collection.id() );
+        break;
+      case RemoteId:
+        if ( ref.remoteId().isNull() ) {
+          sendNextCommand();
+          return;
+        }
+        command += "REMOTEID \"" + ref.remoteId().toLatin1() + '\"';
+        break;
+      case Dirty:
+        command += "DIRTY";
+        break;
+    }
+  } else {
+    QString label = parts.takeFirst();
+    pendingData = item.part( label );
+    command += label.toUtf8();
+    command += " {" + QByteArray::number( pendingData.size() ) + '}';
   }
   command += "\n";
   mParent->writeData( command );
@@ -170,9 +174,9 @@ void ItemStoreJob::doStart()
 void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
 {
   if ( _tag == "+" ) { // ready for literal data
-    writeData( d->data );
+    writeData( d->pendingData );
     // ### readLine() would deadlock in the server otherwise, should probably be fixed there
-    if ( !d->data.endsWith( '\n' ) )
+    if ( !d->pendingData.endsWith( '\n' ) )
       writeData( "\n" );
     return;
   }
@@ -191,9 +195,7 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
 
 void ItemStoreJob::storePayload()
 {
-  // TODO: multipart support
-  d->data = d->item.part( Item::PartBody );
-  d->operations.insert( Private::Data );
+  d->parts = d->item.availableParts();
 }
 
 #include "itemstorejob.moc"

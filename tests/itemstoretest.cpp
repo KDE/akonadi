@@ -202,4 +202,27 @@ void ItemStoreTest::testRemoteId()
   QCOMPARE( item.reference().remoteId(), exprid );
 }
 
+void ItemStoreTest::testMultiPart()
+{
+  DataReference ref( 1, QString() );
+  Item item( ref );
+  item.setMimeType( "application/octet-stream" );
+  item.addPart( Item::PartBody, "body" );
+  item.addPart( "EXTRA", "extra" );
+
+  // delete data
+  ItemStoreJob *sjob = new ItemStoreJob( item );
+  sjob->storePayload();
+  QVERIFY( sjob->exec() );
+
+  ItemFetchJob *fjob = new ItemFetchJob( ref );
+  fjob->addFetchPart( "EXTRA" );
+  fjob->addFetchPart( Item::PartBody );
+  QVERIFY( fjob->exec() );
+  QCOMPARE( fjob->items().count(), 1 );
+  item = fjob->items()[0];
+  QCOMPARE( item.part( Item::PartBody ), QByteArray("body") );
+  QCOMPARE( item.part( "EXTRA" ), QByteArray("extra") );
+}
+
 #include "itemstoretest.moc"
