@@ -15,7 +15,6 @@ mark_as_advanced(NSL_LIBRARY CRYPT_LIBRARY)
 
 set(mysql_embedded_plugin_PART_SRCS main.cpp qsql_mysql_embedded.cpp )
 
-kde4_automoc(${mysql_embedded_plugin_PART_SRCS})
 
 kde4_add_plugin(qsql_mysql_embedded ${mysql_embedded_plugin_PART_SRCS})
 set_target_properties(qsql_mysql_embedded PROPERTIES OUTPUT_NAME libqsqlmysqlembedded)

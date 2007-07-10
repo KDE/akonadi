@@ -118,7 +118,6 @@ qt4_add_dbus_interface2(libakonadiprivate_SRCS
 
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 
-kde4_automoc(${libakonadiprivate_SRCS})
 
 kde4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
 target_link_libraries( akonadiprivate

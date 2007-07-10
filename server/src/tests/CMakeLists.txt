@@ -2,7 +2,6 @@
 
 set(interpretertest_SRCS interpretertest.cpp ../interpreter.cpp )
 
-kde4_automoc(${interpretertest_SRCS})
 
 kde4_add_unit_test(interpretertest TESTNAME akonadi-interpretertest ${interpretertest_SRCS})
 
