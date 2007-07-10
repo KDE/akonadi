@@ -13,7 +13,6 @@ set( kmimeakonadi_LIB_SRC
   messagemodel.cpp
 )
 
-kde4_automoc(${kmimeakonadi_LIB_SRC})
 kde4_add_library( kmimeakonadi SHARED ${kmimeakonadi_LIB_SRC} )
 
 target_link_libraries( kmimeakonadi akonadi ${KDE4_KMIME_LIBS} )

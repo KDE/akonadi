@@ -18,7 +18,6 @@ set( akonadiproto_srcs
   notificationmessage.cpp
 )
 
-kde4_automoc(${akonadiproto_srcs})
 kde4_add_library( akonadiprotocol SHARED ${akonadiproto_srcs} )
 
 target_link_libraries( akonadiprotocol ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
@@ -84,7 +83,6 @@ qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_SOURCE_DIR}/akonadi/server/inter
 qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
 qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml agent.h Akonadi::Agent )
 
-kde4_automoc(${akonadi_LIB_SRC})
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 
 target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDEUI_LIBS} kdepim akonadiprotocol)
