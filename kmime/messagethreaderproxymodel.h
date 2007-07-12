@@ -20,7 +20,7 @@
 #ifndef AKONADI_MESSAGETHREADERPROXYMODEL_H
 #define AKONADI_MESSAGETHREADERPROXYMODEL_H
 
-#include "libakonadi/libakonadi_export.h"
+#include <libakonadi/akonadi_export.h>
 #include <QtGui/QAbstractProxyModel>
 
 class QString;
@@ -34,7 +34,7 @@ class CollectionModel;
 /**
  * Proxy to thread message using the Mailthreader agent
 */
-class AKONADI_EXPORT MessageThreaderProxyModel : public QAbstractProxyModel
+class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QAbstractProxyModel
 {
   Q_OBJECT
 
