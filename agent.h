@@ -78,7 +78,7 @@ class AKONADI_EXPORT Agent : public QObject
 
   Q_SIGNALS:
     /**
-     * This signal is emitted whenever the name of the resource has changed.
+     * This signal is emitted whenever the name of the agent has changed.
      *
      * @param name The new name of the resource.
      */
