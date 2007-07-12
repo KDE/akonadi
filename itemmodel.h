@@ -117,6 +117,12 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     */
     void addFetchPart( const QString &identifier );
 
+  signals:
+    /**
+      SetCollection emits this signal when the collection has changed.
+     */
+     void collectionChanged( const Collection &collection );
+
   protected:
     /**
       Returns the item at given index.

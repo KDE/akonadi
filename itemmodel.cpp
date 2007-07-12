@@ -218,6 +218,7 @@ void ItemModel::setCollection( const Collection &collection )
   foreach( QString part, d->mFetchParts )
     job->addFetchPart( part );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
+  emit collectionChanged( collection );
 }
 
 void ItemModel::addFetchPart( const QString &identifier )
