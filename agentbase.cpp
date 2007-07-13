@@ -317,6 +317,27 @@ void AgentBase::itemChanged( const Item &item, const QStringList &partIdentifier
   Q_UNUSED( partIdentifiers );
 }
 
+void AgentBase::itemRemoved( const DataReference &ref )
+{
+  Q_UNUSED( ref );
+}
+
+void AgentBase::collectionAdded( const Collection &collection )
+{
+  Q_UNUSED( collection );
+}
+
+void AgentBase::collectionChanged( const Collection &collection )
+{
+  Q_UNUSED( collection );
+}
+
+void AgentBase::collectionRemoved( int id, const QString &remoteId )
+{
+  Q_UNUSED( id );
+  Q_UNUSED( remoteId );
+}
+
 QSettings* AgentBase::settings()
 {
   return d->mSettings;

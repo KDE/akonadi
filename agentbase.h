@@ -174,32 +174,32 @@ class AKONADI_EXPORT AgentBase : public Agent, protected QDBusContext
       @param item The changed item.
       @param partIdentifiers The identifiers of the item parts that has been changed.
     */
-    virtual void itemChanged( const Item &item, const QStringList &partIdentifiers  );
+    virtual void itemChanged( const Item &item, const QStringList &partIdentifiers );
 
     /**
       Reimplement to handle deletion of items.
       @param ref DataReference to the deleted item.
     */
-    virtual void itemRemoved( const DataReference &ref ) { Q_UNUSED( ref ); }
+    virtual void itemRemoved( const DataReference &ref );
 
     /**
       Reimplement to handle adding of new collections.
       @param collection The newly added collection.
     */
-    virtual void collectionAdded( const Collection &collection ) { Q_UNUSED( collection ); }
+    virtual void collectionAdded( const Collection &collection );
 
     /**
       Reimplement to handle changes to existing collections.
       @param collection The changed collection.
     */
-    virtual void collectionChanged( const Collection &collection ) { Q_UNUSED( collection ); }
+    virtual void collectionChanged( const Collection &collection );
 
     /**
       Reimplement to handle deletion of collections.
       @param id The id of the deleted collection.
       @param remoteId The remote id of the deleted collection.
     */
-    virtual void collectionRemoved( int id, const QString &remoteId ) { Q_UNUSED( id ); Q_UNUSED( remoteId ); }
+    virtual void collectionRemoved( int id, const QString &remoteId );
 
   private:
     static QString parseArguments( int, char** );
