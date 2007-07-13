@@ -24,7 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef AKONADIPROTOCOL_EXPORT
-# if defined(MAKE_LIBAKONADIPROTOCOL_LIB)
+# if defined(MAKE_AKONADIPROTOCOL_LIB)
    /* We are building this library */ 
 #  define AKONADIPROTOCOL_EXPORT KDE_EXPORT
 # else
