@@ -70,7 +70,7 @@ void ItemDeleteJob::doStart()
   TransactionBeginJob *begin = new TransactionBeginJob( this );
   addSubjob( begin );
 
-  ItemStoreJob* store = new ItemStoreJob( d->ref, this );
+  ItemStoreJob* store = new ItemStoreJob( Item( d->ref ), this );
   store->addFlag( "\\Deleted" );
   addSubjob( store );
 

@@ -553,7 +553,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     {
       DataReference ref = Item::fromUrl( url );
       if (action == Qt::MoveAction) {
-        ItemStoreJob *job = new ItemStoreJob( ref, d->session );
+        ItemStoreJob *job = new ItemStoreJob( Item( ref ), d->session );
         job->setCollection( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
         return job->exec();

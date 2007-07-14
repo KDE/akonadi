@@ -36,13 +36,6 @@ class AKONADI_EXPORT ItemStoreJob : public Job
 
   public:
     /**
-      Modifies the item with the identifier @p ref.
-      @param ref The reference of the item to change.
-      @param parent The parent object.
-    */
-    explicit ItemStoreJob( const DataReference &ref, QObject *parent = 0 );
-
-    /**
       Stores the given item.
       By default only the meta data is stored, you need to explicitly enable storing
       of the payload data.

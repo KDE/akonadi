@@ -43,7 +43,6 @@ class ItemStoreJob::Private
     Item::Flags flags;
     Item::Flags addFlags;
     Item::Flags removeFlags;
-    DataReference ref;
     QSet<int> operations;
     QByteArray tag;
     Collection collection;
@@ -74,7 +73,7 @@ void ItemStoreJob::Private::sendNextCommand()
 
   tag = mParent->newTag();
   QByteArray command = tag;
-  command += " UID STORE " + QByteArray::number( ref.id() ) + ' ';
+  command += " UID STORE " + QByteArray::number( item.reference().id() ) + ' ';
   if ( !operations.isEmpty() ) {
     int op = *(operations.begin());
     operations.remove( op );
@@ -92,11 +91,11 @@ void ItemStoreJob::Private::sendNextCommand()
         command += "COLLECTION " + QByteArray::number( collection.id() );
         break;
       case RemoteId:
-        if ( ref.remoteId().isNull() ) {
+        if ( item.reference().remoteId().isNull() ) {
           sendNextCommand();
           return;
         }
-        command += "REMOTEID \"" + ref.remoteId().toLatin1() + '\"';
+        command += "REMOTEID \"" + item.reference().remoteId().toLatin1() + '\"';
         break;
       case Dirty:
         command += "DIRTY";
@@ -114,21 +113,11 @@ void ItemStoreJob::Private::sendNextCommand()
 }
 
 
-ItemStoreJob::ItemStoreJob(const DataReference &ref, QObject * parent) :
-    Job( parent ),
-    d( new Private( this ) )
-{
-  d->ref = ref;
-  d->operations.insert( Private::RemoteId );
-}
-
 ItemStoreJob::ItemStoreJob(const Item & item, QObject * parent) :
     Job( parent ),
     d( new Private( this ) )
 {
-  Q_ASSERT( !item.mimeType().isEmpty() );
   d->item = item;
-  d->ref = item.reference();
   d->operations.insert( Private::RemoteId );
 }
 
@@ -195,6 +184,7 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
 
 void ItemStoreJob::storePayload()
 {
+  Q_ASSERT( !d->item.mimeType().isEmpty() );
   d->parts = d->item.availableParts();
 }
 

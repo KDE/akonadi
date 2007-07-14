@@ -66,7 +66,7 @@ void ItemStoreTest::testFlagChange()
   Item::Flags origFlags = item.flags();
   Item::Flags expectedFlags = origFlags;
   expectedFlags.insert( "added_test_flag_1" );
-  ItemStoreJob *sjob = new ItemStoreJob( item.reference() );
+  ItemStoreJob *sjob = new ItemStoreJob( item, this );
   sjob->addFlag( "added_test_flag_1" );
   QVERIFY( sjob->exec() );
 
@@ -80,7 +80,7 @@ void ItemStoreTest::testFlagChange()
 
   // set flags
   expectedFlags.insert( "added_test_flag_2" );
-  sjob = new ItemStoreJob( item.reference() );
+  sjob = new ItemStoreJob( item, this );
   sjob->setFlags( expectedFlags );
   QVERIFY( sjob->exec() );
 
@@ -93,7 +93,7 @@ void ItemStoreTest::testFlagChange()
   QVERIFY( diff.isEmpty() );
 
   // remove a flag
-  sjob = new ItemStoreJob( item.reference() );
+  sjob = new ItemStoreJob( item, this );
   sjob->removeFlag( "added_test_flag_1" );
   sjob->removeFlag( "added_test_flag_2" );
   QVERIFY( sjob->exec() );
@@ -146,7 +146,7 @@ void ItemStoreTest::testItemMove()
 {
   DataReference ref( 1, QString() );
 
-  ItemStoreJob *store = new ItemStoreJob( ref, this );
+  ItemStoreJob *store = new ItemStoreJob( Item( ref ), this );
   store->setCollection( res3 );
   QVERIFY( store->exec() );
 
@@ -154,7 +154,7 @@ void ItemStoreTest::testItemMove()
   QVERIFY( fetch->exec() );
   QCOMPARE( fetch->items().count(), 1 );
 
-  store = new ItemStoreJob( ref, this );
+  store = new ItemStoreJob( Item( ref ), this );
   store->setCollection( res1_foo );
   QVERIFY( store->exec() );
 }
@@ -164,12 +164,12 @@ void ItemStoreTest::testIllegalItemMove()
   DataReference ref( 1, QString() );
 
   // move into invalid collection
-  ItemStoreJob *store = new ItemStoreJob( ref, this );
+  ItemStoreJob *store = new ItemStoreJob( Item( ref ), this );
   store->setCollection( Collection( INT_MAX ) );
   QVERIFY( !store->exec() );
 
   // move item into folder that doesn't support its mimetype
-  store = new ItemStoreJob( ref, this );
+  store = new ItemStoreJob( Item( ref ), this );
   store->setCollection( res2 );
   QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
   QVERIFY( !store->exec() );
@@ -192,7 +192,7 @@ void ItemStoreTest::testRemoteId()
   QFETCH( QString, exprid );
 
   DataReference ref( 1, rid );
-  ItemStoreJob *store = new ItemStoreJob( ref, this );
+  ItemStoreJob *store = new ItemStoreJob( Item( ref ), this );
   QVERIFY( store->exec() );
 
   ItemFetchJob *fetch = new ItemFetchJob( ref, this );
