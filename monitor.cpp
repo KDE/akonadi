@@ -85,7 +85,7 @@ class Monitor::Private
     void slotStatusChangedFinished( KJob* );
     void slotFlushRecentlyChangedCollections();
 
-    void slotNotify( const NotificationMessage &msg );
+    void slotNotify( const NotificationMessage::List &msgs );
     void slotItemJobFinished( KJob* job );
     void slotCollectionJobFinished( KJob *job );
 
@@ -140,8 +140,8 @@ bool Monitor::Private::connectToNotificationManager()
   if ( !nm ) {
     qWarning() << "Unable to connect to notification manager";
   } else {
-    connect( nm, SIGNAL(notify(Akonadi::NotificationMessage)),
-             mParent, SLOT(slotNotify(Akonadi::NotificationMessage)) );
+    connect( nm, SIGNAL(notify(Akonadi::NotificationMessage::List)),
+             mParent, SLOT(slotNotify(Akonadi::NotificationMessage::List)) );
     return true;
   }
   return false;
@@ -177,51 +177,53 @@ void Monitor::Private::slotFlushRecentlyChangedCollections()
   recentlyChangedCollections.clear();
 }
 
-void Monitor::Private::slotNotify( const NotificationMessage &msg )
+void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
 {
-  if ( isSessionIgnored( msg.sessionId() ) )
-    return;
+  foreach ( const NotificationMessage msg, msgs ) {
+    if ( isSessionIgnored( msg.sessionId() ) )
+      return;
 
-  if ( msg.type() == NotificationMessage::Item ) {
-    notifyCollectionStatusWatchers( msg.parentCollection(), msg.resource() );
-    if ( !isItemMonitored( msg.uid(), msg.parentCollection(), msg.mimeType(), msg.resource() ) )
-      return;
-    if ( !mFetchParts.isEmpty() && msg.operation() == NotificationMessage::Add ) {
-      ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( msg.uid(), msg.remoteId() ),
-                                                                msg.parentCollection(), mParent );
-      foreach( QString part, mFetchParts )
-        job->addFetchPart( part );
-      pendingJobs.insert( job, msg );
-      connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotItemJobFinished(KJob*)) );
-      return;
+    if ( msg.type() == NotificationMessage::Item ) {
+      notifyCollectionStatusWatchers( msg.parentCollection(), msg.resource() );
+      if ( !isItemMonitored( msg.uid(), msg.parentCollection(), msg.mimeType(), msg.resource() ) )
+        return;
+      if ( !mFetchParts.isEmpty() && msg.operation() == NotificationMessage::Add ) {
+        ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( msg.uid(), msg.remoteId() ),
+                                                                  msg.parentCollection(), mParent );
+        foreach( QString part, mFetchParts )
+          job->addFetchPart( part );
+        pendingJobs.insert( job, msg );
+        connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotItemJobFinished(KJob*)) );
+        return;
+      }
+      if ( !mFetchParts.isEmpty() && msg.operation() == NotificationMessage::Modify ) {
+        ItemFetchJob *job = new ItemFetchJob( DataReference( msg.uid(), msg.remoteId() ), mParent );
+        foreach( QString part, mFetchParts )
+          job->addFetchPart( part );
+        pendingJobs.insert( job, msg );
+        connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotItemJobFinished(KJob*)) );
+        return;
+      }
+      emitItemNotification( msg );
+    } else if ( msg.type() == NotificationMessage::Collection ) {
+      if ( msg.operation() != NotificationMessage::Remove && fetchCollection ) {
+        Collection::List list;
+        list << Collection( msg.uid() );
+        if ( msg.operation() == NotificationMessage::Add )
+          list << Collection( msg.parentCollection() );
+        CollectionListJob *job = new CollectionListJob( list, mParent );
+        pendingJobs.insert( job, msg );
+        connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionJobFinished(KJob*)) );
+        return;
+      }
+      if ( msg.operation() == NotificationMessage::Remove ) {
+        // no need for status updates anymore
+        recentlyChangedCollections.remove( msg.uid() );
+      }
+      emitCollectionNotification( msg );
+    } else {
+      qWarning() << "Received unknown change notification!";
     }
-    if ( !mFetchParts.isEmpty() && msg.operation() == NotificationMessage::Modify ) {
-      ItemFetchJob *job = new ItemFetchJob( DataReference( msg.uid(), msg.remoteId() ), mParent );
-      foreach( QString part, mFetchParts )
-        job->addFetchPart( part );
-      pendingJobs.insert( job, msg );
-      connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotItemJobFinished(KJob*)) );
-      return;
-    }
-    emitItemNotification( msg );
-  } else if ( msg.type() == NotificationMessage::Collection ) {
-    if ( msg.operation() != NotificationMessage::Remove && fetchCollection ) {
-      Collection::List list;
-      list << Collection( msg.uid() );
-      if ( msg.operation() == NotificationMessage::Add )
-        list << Collection( msg.parentCollection() );
-      CollectionListJob *job = new CollectionListJob( list, mParent );
-      pendingJobs.insert( job, msg );
-      connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionJobFinished(KJob*)) );
-      return;
-    }
-    if ( msg.operation() == NotificationMessage::Remove ) {
-      // no need for status updates anymore
-      recentlyChangedCollections.remove( msg.uid() );
-    }
-    emitCollectionNotification( msg );
-  } else {
-    qWarning() << "Received unknown change notification!";
   }
 }
 

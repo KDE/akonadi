@@ -170,7 +170,7 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_PRIVATE_SLOT( d, void slotStatusChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotFlushRecentlyChangedCollections() )
 
-    Q_PRIVATE_SLOT( d, void slotNotify( const Akonadi::NotificationMessage &msg ) )
+    Q_PRIVATE_SLOT( d, void slotNotify( const Akonadi::NotificationMessage::List &msgs ) )
     Q_PRIVATE_SLOT( d, void slotItemJobFinished( KJob *job ) )
     Q_PRIVATE_SLOT( d, void slotCollectionJobFinished( KJob *job ) )
 };
