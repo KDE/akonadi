@@ -111,7 +111,7 @@ class NotificationCollector : public QObject
                             const QByteArray &resource = QByteArray() );
 
   Q_SIGNALS:
-    void notify( const Akonadi::NotificationMessage &msg );
+    void notify( const Akonadi::NotificationMessage::List &msgs );
 
   private:
     void itemNotification( NotificationMessage::Operation op, const PimItem &item,

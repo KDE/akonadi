@@ -63,3 +63,32 @@ void NotificationMessageTest::testCompress2()
   QCOMPARE( list.count(), 1 );
   QCOMPARE( list.first().operation(), NotificationMessage::Remove );
 }
+
+void NotificationMessageTest::testCompress3()
+{
+  NotificationMessage::List list;
+  NotificationMessage msg;
+  msg.setType( NotificationMessage::Item );
+  msg.setOperation( NotificationMessage::Modify );
+
+  NotificationMessage::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 1 );
+
+  NotificationMessage::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 1 );
+}
+
+void NotificationMessageTest::testNoCompress()
+{
+  NotificationMessage::List list;
+  NotificationMessage msg;
+  msg.setType( NotificationMessage::Item );
+  msg.setOperation( NotificationMessage::Modify );
+
+  NotificationMessage::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 1 );
+
+  msg.setType( NotificationMessage::Collection );
+  NotificationMessage::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 2 );
+}

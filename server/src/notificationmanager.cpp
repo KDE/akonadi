@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#include <QtCore/QDebug>
-#include <QDBusConnection>
-
 #include "notificationmanager.h"
 #include "notificationmanageradaptor.h"
 #include "tracer.h"
 #include "storage/datastore.h"
+
+#include <QtCore/QDebug>
+#include <QDBusConnection>
 
 using namespace Akonadi;
 
@@ -37,6 +37,9 @@ NotificationManager::NotificationManager()
   new NotificationManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications"),
     this, QDBusConnection::ExportAdaptors );
+  mTimer.setInterval( 50 );
+  mTimer.setSingleShot( true );
+  connect( &mTimer, SIGNAL(timeout()), SLOT(slotEmitNotification()) );
 }
 
 NotificationManager::~NotificationManager()
@@ -53,14 +56,25 @@ NotificationManager* NotificationManager::self()
 
 void NotificationManager::connectDatastore( DataStore * store )
 {
-  connect( store->notificationCollector(), SIGNAL(notify(Akonadi::NotificationMessage)),
-           SLOT(slotNotify(Akonadi::NotificationMessage)) );
+  connect( store->notificationCollector(), SIGNAL(notify(Akonadi::NotificationMessage::List)),
+           SLOT(slotNotify(Akonadi::NotificationMessage::List)) );
 }
 
-void NotificationManager::slotNotify(const Akonadi::NotificationMessage & msg)
+void NotificationManager::slotNotify(const Akonadi::NotificationMessage::List &msgs)
 {
-  Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
-  emit notify( msg );
+  foreach ( const NotificationMessage msg, msgs )
+    NotificationMessage::appendAndCompress( mNotifications, msg );
+  if ( !mTimer.isActive() )
+    mTimer.start();
+}
+
+void NotificationManager::slotEmitNotification()
+{
+  foreach ( const NotificationMessage msg, mNotifications ) {
+    Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
+  }
+  emit notify( mNotifications );
+  mNotifications.clear();
 }
 
 #include "notificationmanager.moc"

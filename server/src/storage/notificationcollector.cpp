@@ -84,9 +84,7 @@ void Akonadi::NotificationCollector::collectionRemoved( const Location &collecti
 
 void Akonadi::NotificationCollector::transactionCommitted()
 {
-  foreach ( const NotificationMessage msg, mNotifications )
-    emit notify( msg );
-
+  emit notify( mNotifications );
   clear();
 }
 
@@ -157,7 +155,9 @@ void NotificationCollector::dispatchNotification(const NotificationMessage & msg
   if ( mDb->inTransaction() ) {
     NotificationMessage::appendAndCompress( mNotifications, msg );
   } else {
-    emit notify( msg );
+    NotificationMessage::List l;
+    l << msg;
+    emit notify( l );
   }
 }
 

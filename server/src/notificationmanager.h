@@ -23,8 +23,8 @@
 #include <libakonadi/notificationmessage.h>
 
 #include <QtCore/QHash>
-#include <QtCore/QMutex>
 #include <QtCore/QObject>
+#include <QtCore/QTimer>
 
 namespace Akonadi {
 
@@ -45,17 +45,19 @@ class NotificationManager : public QObject
     void connectDatastore( DataStore* );
 
   Q_SIGNALS:
-    Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage &msg );
+    Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
 
   private Q_SLOTS:
-    void slotNotify( const Akonadi::NotificationMessage &msg );
+    void slotNotify( const Akonadi::NotificationMessage::List &msgs );
+    void slotEmitNotification();
 
   private:
     NotificationManager();
 
+  private:
     static NotificationManager *mSelf;
-
-    QMutex mMutex;
+    NotificationMessage::List mNotifications;
+    QTimer mTimer;
 };
 
 }
