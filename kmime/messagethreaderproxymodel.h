@@ -21,7 +21,7 @@
 #define AKONADI_MESSAGETHREADERPROXYMODEL_H
 
 #include <libakonadi/akonadi_export.h>
-#include <QtGui/QAbstractProxyModel>
+#include <QtGui/QSortFilterProxyModel>
 
 class QString;
 class QModelIndex;
@@ -29,12 +29,12 @@ class QModelIndex;
 namespace Akonadi {
 
 class Collection;
-class CollectionModel;
+class MessageModel;
 
 /**
  * Proxy to thread message using the Mailthreader agent
 */
-class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QAbstractProxyModel
+class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
@@ -50,6 +50,12 @@ class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QAbstractProxyMode
      **/
     virtual ~MessageThreaderProxyModel();
 
+    /**
+     * Reimplemented to actually do the threading.
+     */
+    QModelIndex parent ( const QModelIndex & index ) const;
+
+     void setSourceModel( QAbstractItemModel *model );
   protected:
 
   private:

@@ -18,8 +18,9 @@
 */
 
 #include "messagethreaderproxymodel.h"
-
-#include "messagemodel.h"
+#include <libakonadi/itemfetchjob.h>
+#include <agents/mailthreader/mailthreaderagent.h>
+#include <messagemodel.h>
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -42,16 +43,19 @@ class MessageThreaderProxyModel::Private
     // and how to detect that ?
   }
 
+  MessageModel* sourceMessageModel()
+  {
+    return dynamic_cast<MessageModel*>( mParent->sourceModel() );
+  }
+
   MessageThreaderProxyModel *mParent;
 };
 
 MessageThreaderProxyModel::MessageThreaderProxyModel( QObject *parent )
-  : QAbstractProxyModel( parent ),
+  : QSortFilterProxyModel( parent ),
     d( new Private( this ) )
 {
-  connect( parent, SIGNAL( collectionChanged(Collection &collection) ), this, SLOT( setCollection(Collection &collection) ) );
 
-  // start a mailthreader agent
 }
 
 MessageThreaderProxyModel::~MessageThreaderProxyModel()
@@ -59,4 +63,39 @@ MessageThreaderProxyModel::~MessageThreaderProxyModel()
   delete d;
 }
 
+// ### Awful ! Already in mailthreaderagent.cpp ; just for testing purposes, though
+const QLatin1String MailThreaderAgent::PartParent = QLatin1String( "AkonadiMailThreaderAgentParent" );
+const QLatin1String MailThreaderAgent::PartSort = QLatin1String( "AkonadiMailThreaderAgentSort");
+
+QModelIndex MessageThreaderProxyModel::parent ( const QModelIndex & index ) const
+{
+  Item item = d->sourceMessageModel()->itemForIndex( mapToSource( index ) );
+  bool ok;
+  int parentId = item.part( MailThreaderAgent::PartParent ).toInt( &ok );
+  if (!ok)
+  {
+    return QModelIndex();
+  }
+  else
+    qDebug() << "threader proxy model : fount parent id" << parentId << " for "<< item.reference().id();
+  // ### *slow*
+  for ( int i = 0; i < rowCount(); ++i ) {
+    qDebug() << parentId << d->sourceMessageModel()->data( d->sourceMessageModel()->index( i, 0 ) );
+    if ( d->sourceMessageModel()->data( d->sourceMessageModel()->index( i, 0 ), ItemModel::Id ) == parentId )
+    {
+
+      return mapFromSource( d->sourceMessageModel()->index( i, 0 ) );
+    }
+  }
+
+  return QModelIndex();
+}
+
+void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
+{
+  // TODO Assert model is a MessageModel
+  QSortFilterProxyModel::setSourceModel( model );
+
+  d->sourceMessageModel()->addFetchPart( MailThreaderAgent::PartParent );
+}
 #include "messagethreaderproxymodel.moc"
