@@ -117,6 +117,11 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     */
     void addFetchPart( const QString &identifier );
 
+    /**
+      Returns the item at given index.
+    */
+    Item itemForIndex( const QModelIndex &index ) const;
+
   Q_SIGNALS:
     /**
       SetCollection emits this signal when the collection has changed.
@@ -124,10 +129,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
      void collectionChanged( const Collection &collection );
 
   protected:
-    /**
-      Returns the item at given index.
-    */
-    Item itemForIndex( const QModelIndex &index ) const;
 
     /**
       Returns the Session object used for all operations by this model.
