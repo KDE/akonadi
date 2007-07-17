@@ -1,10 +1,3 @@
-DELETE FROM MetaTypeTable;
--- INSERT INTO MetaTypeTable SELECT NULL, 'from', id FROM MimeTypes WHERE mime_type = 'message/rfc822';
--- INSERT INTO MetaTypeTable SELECT NULL, 'to', id FROM MimeTypes WHERE mime_type = 'message/rfc822';
--- INSERT INTO MetaTypeTable SELECT NULL, 'start_date', id FROM MimeTypes WHERE mime_type = 'text/calendar';
--- INSERT INTO MetaTypeTable SELECT NULL, 'end_date', id FROM MimeTypes WHERE mime_type = 'text/calendar';
--- INSERT INTO MetaTypeTable SELECT NULL, 'email', id FROM MimeTypes WHERE mime_type = 'text/vcard';
-
 DELETE FROM PimItemFlagRelation;
 DELETE FROM PimItemTable;
 DELETE FROM LocationMimeTypeRelation;
@@ -61,7 +54,3 @@ INSERT INTO PimItemFlagRelation (Flag_id, PimItem_id) VALUES (8, 1);
 INSERT INTO PimItemFlagRelation (Flag_id, PimItem_id) VALUES (7, 1);
 INSERT INTO PimItemFlagRelation (Flag_id, PimItem_id) VALUES (5, 2);
 INSERT INTO PimItemFlagRelation (Flag_id, PimItem_id) VALUES (5, 2);
-
-DELETE FROM ItemMetaDataTable;
--- INSERT INTO ItemMetaData (id, data, metatype_id, PimItem_id) VALUES (0, 'testmetatata', 0, 0);
--- INSERT INTO ItemMetaData (id, data, metatype_id, PimItem_id) VALUES (1, 'testmetatata2', 0, 3);
