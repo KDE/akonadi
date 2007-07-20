@@ -25,7 +25,6 @@
 
 class QString;
 class QStringList;
-class QByteArray;
 class QIODevice;
 
 namespace Akonadi {

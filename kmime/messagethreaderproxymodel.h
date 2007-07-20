@@ -23,13 +23,11 @@
 #include <libakonadi/akonadi_export.h>
 #include <QtGui/QSortFilterProxyModel>
 
-class QString;
 class QModelIndex;
 
 namespace Akonadi {
 
 class Collection;
-class MessageModel;
 
 /**
  * Proxy to thread message using the Mailthreader agent
