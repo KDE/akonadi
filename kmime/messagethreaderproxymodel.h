@@ -21,7 +21,8 @@
 #define AKONADI_MESSAGETHREADERPROXYMODEL_H
 
 #include <libakonadi/akonadi_export.h>
-#include <QtGui/QSortFilterProxyModel>
+#include <QtGui/QAbstractProxyModel>
+#include <QModelIndex>
 
 class QModelIndex;
 
@@ -32,7 +33,7 @@ class Collection;
 /**
  * Proxy to thread message using the Mailthreader agent
 */
-class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QSortFilterProxyModel
+class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QAbstractProxyModel
 {
   Q_OBJECT
 
@@ -52,15 +53,66 @@ class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QSortFilterProxyMo
      * Reimplemented to actually do the threading.
      */
     QModelIndex parent ( const QModelIndex & index ) const;
+    
+    /**
+     * Reimplemented
+     */
+    int rowCount( const QModelIndex & index ) const;
 
-     void setSourceModel( QAbstractItemModel *model );
-  protected:
+    /**
+     * Reimplemented
+     */
+    QModelIndex index( int row, int column, const QModelIndex& parent ) const;
 
+    /**
+     * Reimplemented
+     */
+    bool hasChildren( const QModelIndex& index ) const;
+
+    /**
+     * Reimplemented
+     */
+    QModelIndex createIndex( int row, int column, quint32 internalId ) const;
+
+    /**
+     * Reimplemented
+     */
+    int columnCount( const QModelIndex& index ) const;
+
+    /**
+     * Reimplemented
+     */
+    QStringList mimeTypes() const;
+
+    /**
+     * Reimplemented
+     */
+    QMimeData *mimeData(const QModelIndexList &indexes) const;
+
+    /**
+     * Reimplemented
+     */
+    QModelIndex mapFromSource( const QModelIndex& index ) const;
+
+    /**
+     * Reimplemented
+     */
+    QModelIndex mapToSource(const QModelIndex& index ) const;
+
+    /**
+     * Set the source model. 
+     * @params sourceMessageModel the source model. 
+     * Be careful, sourceMessageModel <b>has to be</b> a MessageModel.
+     */
+    void setSourceModel( QAbstractItemModel *sourceMessageModel );
+    
   private:
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void setCollection( Collection &col ) )
+    Q_PRIVATE_SLOT( d, void slotInsertRows( const QModelIndex&, int, int) );
+    Q_PRIVATE_SLOT( d, void slotRemoveRows( const QModelIndex&, int, int) );
+    Q_PRIVATE_SLOT( d, void slotCollectionChanged() );
 };
 
 }
