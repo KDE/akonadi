@@ -69,6 +69,10 @@ void ItemModel::Private::listingDone( KJob * job )
   } else {
     items = fetch->items();
     mParent->reset();
+    if ( items.count() ) {
+      mParent->beginInsertRows( QModelIndex(), 0, items.count() - 1 );
+      mParent->endInsertRows();
+    }
   }
 
   // start monitor
@@ -293,6 +297,11 @@ QMimeData *ItemModel::mimeData( const QModelIndexList &indexes ) const
   urls.populateMimeData( data );
 
   return data;
+}
+
+QModelIndex ItemModel::indexForItem( const Akonadi::DataReference& ref, const int column ) const
+{
+  return index( d->rowForItem( ref ), column );
 }
 
 #include "itemmodel.moc"

@@ -81,7 +81,8 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
         return QVariant();
     }
   }
-  return QVariant();
+
+  return ItemModel::data( index, role );
 }
 
 QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const
