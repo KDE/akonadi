@@ -148,4 +148,4 @@ install(FILES
   interfaces/org.kde.Akonadi.SearchProviderManager.xml
   interfaces/org.kde.Akonadi.Tracer.xml
   interfaces/org.kde.Akonadi.TracerNotification.xml
-DESTINATION ${DBUS_INTERFACES_DIR})
+DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
