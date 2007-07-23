@@ -110,9 +110,9 @@ class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QAbstractProxyMode
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void slotInsertRows( const QModelIndex&, int, int) );
-    Q_PRIVATE_SLOT( d, void slotRemoveRows( const QModelIndex&, int, int) );
-    Q_PRIVATE_SLOT( d, void slotCollectionChanged() );
+    Q_PRIVATE_SLOT( d, void slotInsertRows( const QModelIndex&, int, int) )
+    Q_PRIVATE_SLOT( d, void slotRemoveRows( const QModelIndex&, int, int) )
+    Q_PRIVATE_SLOT( d, void slotCollectionChanged() )
 };
 
 }
