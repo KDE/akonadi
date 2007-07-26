@@ -114,41 +114,50 @@ class AKONADI_EXPORT Monitor : public QObject
 
   Q_SIGNALS:
     /**
-      Emitted if a monitored object has changed.
+      Emitted if a monitored item has changed: item parts have been modified.
       @param item The changed item.
       @param partIdentifiers The identifiers of the item parts that has been changed.
     */
     void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
 
     /**
-      Emitted if a item has been added to a monitored collection.
+      Emitted if a monitored item has been moved between two collections
+      @param item The moved item
+      @param collectionSource The collection the item has been moved from
+      @param collectionDest The collection the item has been moved to
+    */
+    void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination);
+
+    /**
+      Emitted if a item has been added to the storage, in a monitored collection.
       @param item The new item.
       @param collection The collection the item is added to.
     */
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
     /**
-      Emitted if a monitored object has been removed.
+      Emitted if a monitored object has been removed from the storage and from a monitored collection.
       @param ref Reference of the removed object.
     */
     void itemRemoved( const Akonadi::DataReference &ref);
 
     /**
-      Emitted if a monitored got a new child collection.
+      Emitted if a new collection was added in the storage and if 
+      a monitored collection got this new collection as a child.
       @param collection The new collection.
       @param parent The parent collection.
     */
     void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
 
     /**
-      Emitted if a monitored collection changed (its properties, not its
-      content).
+      Emitted if a monitored collection changed (properties and 
+      content). Also emitted if the collection was reparented.
       @param collection The changed collection.
      */
     void collectionChanged( const Akonadi::Collection &collection );
 
     /**
-      Emitted if a monitored collection has been removed.
+      Emitted if a monitored collection has been removed from the storage.
       @param collection The identifier of the removed collection.
       @param remoteId The remote identifier of the removed collection.
     */

@@ -49,6 +49,7 @@ class ItemModel::Private
     void listingDone( KJob* );
     void itemChanged( const Akonadi::Item&, const QStringList& );
     void itemAdded( const Akonadi::Item& );
+    void itemMoved( const Akonadi::Item&, const Akonadi::Collection& src, const Akonadi::Collection& dst );
     void itemRemoved( const Akonadi::DataReference& );
     int rowForItem( const Akonadi::DataReference& );
 
@@ -85,6 +86,8 @@ void ItemModel::Private::listingDone( KJob * job )
   monitor->monitorCollection( collection );
   mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item&, const QStringList& )),
                     mParent, SLOT(itemChanged( const Akonadi::Item&, const QStringList& )) );
+  mParent->connect( monitor, SIGNAL(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& )),
+                    mParent, SLOT(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   mParent->connect( monitor, SIGNAL(itemAdded( const Akonadi::Item&, const Akonadi::Collection& )),
                     mParent, SLOT(itemAdded( const Akonadi::Item& )) );
   mParent->connect( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)),
@@ -114,9 +117,29 @@ void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QStringLi
   mParent->dataChanged( index, index );
 }
 
+void ItemModel::Private::itemMoved( const Akonadi::Item &item, const Akonadi::Collection& colSrc, const Akonadi::Collection& colDst )
+{
+  qDebug() << colSrc.id();
+  qDebug() << colDst.id();
+
+  if ( colSrc == collection && colDst != collection ) // item leaving this model
+  {
+    itemRemoved( item.reference() );
+    return;
+  }
+
+
+  if ( colDst == collection && colSrc != collection )
+  {
+    itemAdded( item );
+    return;
+  }
+}
+
 void ItemModel::Private::itemAdded( const Akonadi::Item &item )
 {
-  mParent->beginInsertRows( QModelIndex(), items.size(), items.size() + 1 );
+  qDebug() << "added !!!!!";
+  mParent->beginInsertRows( QModelIndex(), items.size(), items.size());
   items.append( item );
   mParent->endInsertRows();
 }
@@ -222,7 +245,8 @@ void ItemModel::setCollection( const Collection &collection )
   foreach( QString part, d->mFetchParts )
     job->addFetchPart( part );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
-  emit collectionChanged( collection );
+
+  emit collectionSet( collection );
 }
 
 void ItemModel::addFetchPart( const QString &identifier )

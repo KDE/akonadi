@@ -49,6 +49,7 @@ class AKONADIPROTOCOL_EXPORT NotificationMessage
       InvalidOp,
       Add,
       Modify,
+      Move,
       Remove
     };
 
@@ -82,6 +83,9 @@ class AKONADIPROTOCOL_EXPORT NotificationMessage
     int parentCollection() const;
     void setParentCollection( int parent );
 
+    int parentDestCollection() const;
+    void setParentDestCollection( int parent );
+
     QString mimeType() const;
     void setMimeType( const QString &mimeType );
 
@@ -91,7 +95,7 @@ class AKONADIPROTOCOL_EXPORT NotificationMessage
     QString toString() const;
 
     /**
-      Adds a new notification message to the given list and comporesses notifications
+      Adds a new notification message to the given list and compresses notifications
       where possible.
     */
     static void appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg );

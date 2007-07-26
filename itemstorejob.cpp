@@ -71,6 +71,7 @@ void ItemStoreJob::Private::sendNextCommand()
       return;
   }
 
+
   tag = mParent->newTag();
   QByteArray command = tag;
   command += " UID STORE " + QByteArray::number( item.reference().id() ) + ' ';

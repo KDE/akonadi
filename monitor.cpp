@@ -64,10 +64,11 @@ class Monitor::Private
       return false;
     }
 
-    bool isItemMonitored( uint item, int collection,
+    bool isItemMonitored( uint item, int collection, int collectionDest,
                           const QString &mimetype, const QByteArray &resource ) const
     {
-      if ( monitorAll || isCollectionMonitored( collection ) || items.contains( item ) ||
+      if ( monitorAll || isCollectionMonitored( collection ) ||
+           isCollectionMonitored( collectionDest ) ||items.contains( item ) ||
            resources.contains( resource ) || mimetypes.contains( mimetype ) )
         return true;
       return false;
@@ -90,7 +91,7 @@ class Monitor::Private
     void slotCollectionJobFinished( KJob *job );
 
     void emitItemNotification( const NotificationMessage &msg, const Item &item = Item(),
-                               const Collection &collection = Collection() );
+                               const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
     void emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
                                      const Collection &par = Collection() );
 
@@ -185,7 +186,7 @@ void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
 
     if ( msg.type() == NotificationMessage::Item ) {
       notifyCollectionStatusWatchers( msg.parentCollection(), msg.resource() );
-      if ( !isItemMonitored( msg.uid(), msg.parentCollection(), msg.mimeType(), msg.resource() ) )
+      if ( !isItemMonitored( msg.uid(), msg.parentCollection(), msg.parentDestCollection(), msg.mimeType(), msg.resource() ) )
         return;
       if ( !mFetchParts.isEmpty() && msg.operation() == NotificationMessage::Add ) {
         ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( msg.uid(), msg.remoteId() ),
@@ -228,13 +229,18 @@ void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
 }
 
 void Monitor::Private::emitItemNotification( const NotificationMessage &msg, const Item &item,
-                                             const Collection &collection )
+                                             const Collection &collection, const Collection &collectionDest  )
 {
   Q_ASSERT( msg.type() == NotificationMessage::Item );
   Collection col = collection;
+  Collection colDest = collectionDest;
   if ( !col.isValid() ) {
     col = Collection( msg.parentCollection() );
     col.setResource( QString::fromUtf8( msg.resource() ) );
+  }
+  if ( !colDest.isValid() ) {
+    colDest = Collection( msg.parentDestCollection() );
+    // FIXME setResource here required ?
   }
   Item it = item;
   if ( !it.isValid() ) {
@@ -247,6 +253,9 @@ void Monitor::Private::emitItemNotification( const NotificationMessage &msg, con
       break;
     case NotificationMessage::Modify:
       emit mParent->itemChanged( it, msg.itemParts() );
+      break;
+    case NotificationMessage::Move:
+      emit mParent->itemMoved( it, col, colDest );
       break;
     case NotificationMessage::Remove:
       emit mParent->itemRemoved( it.reference() );

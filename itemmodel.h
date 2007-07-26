@@ -133,7 +133,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     /**
       SetCollection emits this signal when the collection has changed.
      */
-     void collectionChanged( const Collection &collection );
+     void collectionSet( const Collection &collection );
 
   protected:
 
@@ -148,6 +148,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
     Q_PRIVATE_SLOT( d, void listingDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QStringList& ) )
+    Q_PRIVATE_SLOT( d, void itemMoved( const Akonadi::Item&, const Akonadi::Collection& colSrc, const Akonadi::Collection& colDst ) )
     Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item& ) )
     Q_PRIVATE_SLOT( d, void itemRemoved( const Akonadi::DataReference& ) )
 };
