@@ -586,6 +586,7 @@ bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const Location & desti
     return false;
 
   mNotificationCollector->collectionChanged( destination );
+  mNotificationCollector->itemMoved( pimItem, source, destination );
   return true;
 }
 

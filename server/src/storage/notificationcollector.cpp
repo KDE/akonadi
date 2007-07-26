@@ -45,7 +45,7 @@ void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
                                                 const QString & mimeType,
                                                 const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Add, item, collection, mimeType, resource );
+  itemNotification( NotificationMessage::Add, item, collection, Location(), mimeType, resource );
 }
 
 void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
@@ -53,15 +53,25 @@ void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
                                                   const QString & mimeType,
                                                   const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Modify, item, collection, mimeType, resource );
+  itemNotification( NotificationMessage::Modify, item, collection, Location(), mimeType, resource );
 }
+
+void Akonadi::NotificationCollector::itemMoved( const PimItem &item,
+                                                const Location &collectionSrc,
+                                                const Location &collectionDest,
+                                                const QString &mimeType,
+                                                const QByteArray &resource )
+{
+  itemNotification( NotificationMessage::Move, item, collectionSrc, collectionDest, mimeType, resource );
+}
+
 
 void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
                                                   const Location &collection,
                                                   const QString & mimeType,
                                                   const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Remove, item, collection, mimeType, resource );
+  itemNotification( NotificationMessage::Remove, item, collection, Location(), mimeType, resource );
 }
 
 void Akonadi::NotificationCollector::collectionAdded( const Location &collection,
@@ -106,6 +116,7 @@ void NotificationCollector::setSessionId(const QByteArray &sessionId)
 void NotificationCollector::itemNotification( NotificationMessage::Operation op,
                                               const PimItem & item,
                                               const Location & collection,
+                                              const Location & collectionDest,
                                               const QString & mimeType,
                                               const QByteArray & resource)
 {
@@ -120,6 +131,8 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
   if ( !loc.isValid() )
     loc = item.location();
   msg.setParentCollection( loc.id() );
+  // will be valid if it is a move message
+  msg.setParentDestCollection( collectionDest.id() );
   QString mt = mimeType;
   if ( mt.isEmpty() )
     mt = item.mimeType().name();

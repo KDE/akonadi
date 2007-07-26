@@ -78,6 +78,16 @@ class NotificationCollector : public QObject
                       const QByteArray &resource = QByteArray() );
 
     /**
+      Notify about a moved item
+      Provide as many parameters as you have at hand currently, everything
+      that is missing will be looked up in the database later.
+    */
+    void itemMoved( const PimItem &item, const Location &collectionSrc = Location(),
+                    const Location &collectionDest = Location(),
+                    const QString &mimeType = QString(),
+                    const QByteArray &resource = QByteArray() );
+
+    /**
       Notify about a removed item.
       Make sure you either provide all parameters or call this function before
       actually removing the item from database.
@@ -116,6 +126,7 @@ class NotificationCollector : public QObject
   private:
     void itemNotification( NotificationMessage::Operation op, const PimItem &item,
                            const Location &collection,
+                           const Location &collectionDest,
                            const QString &mimeType,
                            const QByteArray &resource );
     void collectionNotification( NotificationMessage::Operation op,

@@ -32,7 +32,8 @@ class NotificationMessage::Private : public QSharedData
       type( NotificationMessage::InvalidType ),
       operation( NotificationMessage::InvalidOp ),
       uid( -1 ),
-      parentCollection( -1 )
+      parentCollection( -1 ),
+      parentDestCollection( -1 )
     {}
 
     Private( const Private &other ) : QSharedData( other )
@@ -44,6 +45,7 @@ class NotificationMessage::Private : public QSharedData
       remoteId = other.remoteId;
       resource = other.resource;
       parentCollection = other.parentCollection;
+      parentDestCollection = other.parentDestCollection;
       mimeType = other.mimeType;
       parts = other.parts;
     }
@@ -56,6 +58,7 @@ class NotificationMessage::Private : public QSharedData
           && remoteId == other.remoteId
           && resource == other.resource
           && parentCollection == other.parentCollection
+          && parentDestCollection == other.parentDestCollection
           && mimeType == other.mimeType
           && parts == other.parts;
     }
@@ -72,6 +75,7 @@ class NotificationMessage::Private : public QSharedData
     QString remoteId;
     QByteArray resource;
     int parentCollection;
+    int parentDestCollection;
     QString mimeType;
     QStringList parts;
 };
@@ -173,9 +177,19 @@ int NotificationMessage::parentCollection() const
   return d->parentCollection;
 }
 
+int NotificationMessage::parentDestCollection() const
+{
+  return d->parentDestCollection;
+}
+
 void NotificationMessage::setParentCollection(int parent)
 {
   d->parentCollection = parent;
+}
+
+void NotificationMessage::setParentDestCollection( int parent )
+{
+  d->parentDestCollection = parent;
 }
 
 QString NotificationMessage::mimeType() const
@@ -210,8 +224,12 @@ QString NotificationMessage::toString() const
       break;
   }
   rv += QString::fromLatin1( "(%1, %2) " ).arg( uid() ).arg( remoteId() );
+  if ( parentDestCollection() >= 0 )
+    rv += QString::fromLatin1( "from " );
+  else
+    rv += QString::fromLatin1( "in " );
   if ( parentCollection() >= 0 )
-    rv += QString::fromLatin1( "in collection %1 " ).arg( parentCollection() );
+    rv += QString::fromLatin1( "collection %1 " ).arg( parentCollection() );
   switch ( operation() ) {
     case Add:
       rv += QLatin1String( "added" );
@@ -219,10 +237,15 @@ QString NotificationMessage::toString() const
     case Modify:
       rv += QLatin1String( "modified" );
       break;
+    case Move:
+      rv += QLatin1String( "moved" );
+      break;
     case Remove:
       rv += QLatin1String( "removed" );
       break;
   }
+  if ( parentDestCollection() >= 0 )
+    rv += QString::fromLatin1( "to collection %1" ).arg( parentDestCollection() );
   return rv;
 }
 
@@ -253,6 +276,7 @@ QDBusArgument & operator <<(QDBusArgument & arg, const NotificationMessage & msg
   arg << msg.remoteId();
   arg << msg.resource();
   arg << msg.parentCollection();
+  arg << msg.parentDestCollection();
   arg << msg.mimeType();
   arg << msg.itemParts();
   arg.endStructure();
@@ -279,6 +303,8 @@ const QDBusArgument & operator >>(const QDBusArgument & arg, NotificationMessage
   msg.setResource( b );
   arg >> i;
   msg.setParentCollection( i );
+  arg >> i;
+  msg.setParentDestCollection( i );
   arg >> s;
   msg.setMimeType( s );
   QStringList l;
