@@ -150,6 +150,7 @@ QModelIndex MessageThreaderProxyModel::index( int row, int column, const QModelI
     return QModelIndex();
 
   int id = d->childrenMap[ parentId ].at( row );
+  qDebug() << "messagethreaderproxymodel, id = " << id << " and parent = " << parentId;
   return createIndex( row, column, id );
 }
 
@@ -198,7 +199,7 @@ void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
 
   connect( sourceModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( slotInsertRows( QModelIndex, int, int ) ) );
   connect( sourceModel(), SIGNAL( rowsAboutToBeRemoved( QModelIndex, int, int ) ), SLOT( slotRemoveRows( QModelIndex, int, int ) ) );
-  connect( d->sourceMessageModel(), SIGNAL( collectionChanged( Collection ) ), SLOT( slotCollectionChanged() ) );
+  connect( d->sourceMessageModel(), SIGNAL( collectionSet( Collection ) ), SLOT( slotCollectionChanged() ) );
 }
 
 
