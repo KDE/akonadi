@@ -47,7 +47,6 @@ class MessageThreaderProxyModel::Private
 
   void slotCollectionChanged()
   {
-    qDebug() << "collection changed";
     childrenMap.clear();
     indexMap.clear();
     parentMap.clear();
@@ -66,13 +65,8 @@ class MessageThreaderProxyModel::Private
       // Retrieve the item from the source model
       Item item = sourceMessageModel()->itemForIndex( sourceMessageModel()->index( i, 0 ) );
       int id = item.reference().id();
-
       // Get his parent using the PartParent
-      bool ok = false;
-      int parentId = item.part( MailThreaderAgent::PartParent ).toInt( &ok );
-      if( !ok )
-        parentId = -1;
-
+      int parentId = parentForItem( item );
       // Fill in the tree
 
       // Check that the parent is in the collection
@@ -82,7 +76,7 @@ class MessageThreaderProxyModel::Private
 
       childrenMap[ parentId ] << item.reference().id();
       parentMap[ id ] = parentId;
-
+      mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, id );
       // ### This is not correct, indexMap[ parentId ] does not exist
       // ### Handle insertion of parents who arrive after the children (does it work ?)
       mParent->beginInsertRows( indexMap[ parentId ], childrenMap[ parentId ].count() - 1, childrenMap[ parentId ].count() - 1 );
@@ -95,28 +89,39 @@ class MessageThreaderProxyModel::Private
   }
 
 
-  // ### Untested
+
   void slotRemoveRows( const QModelIndex& sourceIndex, int begin, int end )
   {
-    // Who is the parent ?
-    QModelIndex parentIndex = mParent->mapFromSource( sourceIndex );
-    int parentId = parentIndex.internalId();
-
-    for ( int i=begin; i <= end; i++ )
+    for ( int i = begin; i <= end; i++ )
     {
       Item item = sourceMessageModel()->itemForIndex( sourceMessageModel()->index( i, 0 ) );
       int id = item.reference().id();
-
       int row = indexMap[ id ].row();
+      int parentId = parentMap[ id ];
+
       childrenMap[ parentId ].removeAt( row ); // Remove this id from the children of parentId
       parentMap.remove( id );
       indexMap.remove( id );
-      mParent->beginRemoveRows( parentIndex, row, row );
+      mParent->beginRemoveRows( indexMap[ parentId ], row, row );
       mParent->endRemoveRows();
-      mParent->beginInsertColumns( parentIndex, 0, sourceMessageModel()->columnCount() - 1 );
-      mParent->endInsertColumns();
-
+//      mParent->beginRemoveColumns( indexMap[ parentId ], 0, sourceMessageModel()->columnCount() - 1 );
+//      mParent->endRemoveColumns();
     }
+  }
+
+  int parentForItem( const Item& item )
+  {
+    bool ok = false;
+    int parentId = item.part( MailThreaderAgent::PartParent ).toInt( &ok );
+    if( !ok )
+      parentId = -1;
+
+    return parentId;
+  }
+
+  int idForIndex( const QModelIndex& index )
+  {
+    return index.isValid() ? index.internalId() : -1;
   }
 
   MessageThreaderProxyModel *mParent;
@@ -144,7 +149,7 @@ const QLatin1String MailThreaderAgent::PartSort = QLatin1String( "AkonadiMailThr
 
 QModelIndex MessageThreaderProxyModel::index( int row, int column, const QModelIndex& parent ) const
 {
-  int parentId = parent.isValid() ? parent.internalId() : -1;
+  int parentId = d->idForIndex( parent );
 
   if ( row >= d->childrenMap[ parentId ].count() )
     return QModelIndex();
@@ -170,7 +175,6 @@ QModelIndex MessageThreaderProxyModel::parent ( const QModelIndex & index ) cons
 
 QModelIndex MessageThreaderProxyModel::mapToSource( const QModelIndex& index ) const
 {
-//  qDebug() << "call here";
   return d->sourceMessageModel()->indexForItem( DataReference( index.internalId(), QString() ), index.column() );
 }
 
@@ -216,14 +220,7 @@ int MessageThreaderProxyModel::columnCount( const QModelIndex& index ) const
 
 int MessageThreaderProxyModel::rowCount( const QModelIndex& index ) const
 {
-  int count;
-
-  if ( !index.isValid() ) // Root child count
-    count = d->childrenMap[ -1 ].count();
-  else // Normal item child count
-    count = d->childrenMap[ d->sourceMessageModel()->itemForIndex( mapToSource( index ) ).reference().id() ].count();
-
-  return count;
+  return d->childrenMap[ d->idForIndex( index ) ].count();
 }
 
 QStringList MessageThreaderProxyModel::mimeTypes() const
