@@ -99,7 +99,7 @@ class MessageThreaderProxyModel::Private
         }
       }
 
-e      // ### This is not correct, indexMap[ parentId ] does not exist
+      // ### This is not correct, indexMap[ parentId ] does not exist
       // ### Handle insertion of parents who arrive after the children (does it work ?)
       mParent->beginInsertRows( indexMap[ parentId ], childrenMap[ parentId ].count() - 1, childrenMap[ parentId ].count() - 1 );
       mParent->endInsertRows();
