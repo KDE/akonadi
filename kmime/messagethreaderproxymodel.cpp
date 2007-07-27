@@ -134,7 +134,7 @@ MessageThreaderProxyModel::MessageThreaderProxyModel( QObject *parent )
   : QAbstractProxyModel( parent ),
     d( new Private( this ) )
 {
-
+  setSupportedDragActions( Qt::MoveAction | Qt::CopyAction );
 }
 
 MessageThreaderProxyModel::~MessageThreaderProxyModel()

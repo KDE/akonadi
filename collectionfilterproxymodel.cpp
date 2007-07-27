@@ -69,6 +69,7 @@ CollectionFilterProxyModel::CollectionFilterProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
     d( new Private( this ) )
 {
+  setSupportedDragActions( Qt::CopyAction | Qt::MoveAction );
 }
 
 CollectionFilterProxyModel::~CollectionFilterProxyModel()
