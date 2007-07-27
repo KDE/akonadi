@@ -32,6 +32,7 @@ class CollectionFilterProxyModel::Private
     Private( CollectionFilterProxyModel *parent )
       : mParent( parent )
     {
+      mimeTypes << QLatin1String( "text/uri-list" );
     }
 
     bool collectionAccepted( const QModelIndex &index );

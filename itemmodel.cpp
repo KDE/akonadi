@@ -119,9 +119,6 @@ void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QStringLi
 
 void ItemModel::Private::itemMoved( const Akonadi::Item &item, const Akonadi::Collection& colSrc, const Akonadi::Collection& colDst )
 {
-  qDebug() << colSrc.id();
-  qDebug() << colDst.id();
-
   if ( colSrc == collection && colDst != collection ) // item leaving this model
   {
     itemRemoved( item.reference() );

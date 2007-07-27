@@ -551,6 +551,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     }
     else if ( Item::urlIsValid( url ) )
     {
+      // TODO Extract mimetype from url and check if collection accepts it
       DataReference ref = Item::fromUrl( url );
       if (action == Qt::MoveAction) {
         ItemStoreJob *job = new ItemStoreJob( Item( ref ), d->session );
