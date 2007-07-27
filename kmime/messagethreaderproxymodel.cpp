@@ -50,6 +50,7 @@ class MessageThreaderProxyModel::Private
     childrenMap.clear();
     indexMap.clear();
     parentMap.clear();
+    realParentMap.clear();
 
     mParent->reset();
   }
@@ -67,6 +68,8 @@ class MessageThreaderProxyModel::Private
       int id = item.reference().id();
       // Get his parent using the PartParent
       int parentId = parentForItem( item );
+      realParentMap[ id ] = parentId;
+
       // Fill in the tree
 
       // Check that the parent is in the collection
@@ -77,7 +80,26 @@ class MessageThreaderProxyModel::Private
       childrenMap[ parentId ] << item.reference().id();
       parentMap[ id ] = parentId;
       mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, id );
-      // ### This is not correct, indexMap[ parentId ] does not exist
+
+      // Look for potential children into realParentMap
+      for ( QMap<int, int>::const_iterator it = realParentMap.constBegin();
+            it != realParentMap.constEnd(); it++ ) {
+        int  potentialChildId = it.key();
+        int potentialChildParentId = it.value();
+        qDebug() << potentialChildId << " -> " << potentialChildParentId;
+        if ( potentialChildParentId == id && parentMap[ potentialChildId ] != id )
+        {
+          int childRow = childrenMap[ parentMap[ potentialChildId ] ].indexOf( potentialChildId );
+
+          parentMap[ potentialChildId ] = id;
+          childrenMap[ id ] << potentialChildId;
+          mParent->createIndex( childrenMap[ id ].count() - 1, 0, potentialChildId ); // Recreate index because row changed
+//          mParent->beginRemoveRows( QModelIndex(), childRow, childRow );
+//          mParent->endRemoveRows();
+        }
+      }
+
+e      // ### This is not correct, indexMap[ parentId ] does not exist
       // ### Handle insertion of parents who arrive after the children (does it work ?)
       mParent->beginInsertRows( indexMap[ parentId ], childrenMap[ parentId ].count() - 1, childrenMap[ parentId ].count() - 1 );
       mParent->endInsertRows();
@@ -98,6 +120,17 @@ class MessageThreaderProxyModel::Private
       int id = item.reference().id();
       int row = indexMap[ id ].row();
       int parentId = parentMap[ id ];
+
+      // Reparent the children to the closest parent
+      foreach( int childId, childrenMap[ id ] ) {
+        childrenMap[ parentMap[ childId ] ].removeAt( indexMap[ childId ].row() );
+        parentMap[ childId ] = parentId;
+        childrenMap[ parentId ] << childId;
+        mParent->beginInsertRows( indexMap[ parentId ], childrenMap[ parentId ].count() - 1, childrenMap[ parentId ].count() - 1 );
+        mParent->endInsertRows();
+
+        mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, childId ); // Recreate the index because row has changed
+      }
 
       childrenMap[ parentId ].removeAt( row ); // Remove this id from the children of parentId
       parentMap.remove( id );
@@ -128,6 +161,8 @@ class MessageThreaderProxyModel::Private
   QMap<int, QList<int> > childrenMap;
   QMap<int, int> parentMap;
   QMap<int, QModelIndex> indexMap;
+
+  QMap<int, int> realParentMap; // This map isn't meant to change
 };
 
 MessageThreaderProxyModel::MessageThreaderProxyModel( QObject *parent )
