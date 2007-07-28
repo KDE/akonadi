@@ -182,12 +182,12 @@ void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
 {
   foreach ( const NotificationMessage msg, msgs ) {
     if ( isSessionIgnored( msg.sessionId() ) )
-      return;
+      continue;
 
     if ( msg.type() == NotificationMessage::Item ) {
       notifyCollectionStatusWatchers( msg.parentCollection(), msg.resource() );
       if ( !isItemMonitored( msg.uid(), msg.parentCollection(), msg.parentDestCollection(), msg.mimeType(), msg.resource() ) )
-        return;
+        continue;
       if ( !mFetchParts.isEmpty() &&
            ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move )) {
         ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( msg.uid(), msg.remoteId() ),
@@ -196,7 +196,7 @@ void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
           job->addFetchPart( part );
         pendingJobs.insert( job, msg );
         connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotItemJobFinished(KJob*)) );
-        return;
+        continue;
       }
       if ( !mFetchParts.isEmpty() && msg.operation() == NotificationMessage::Modify ) {
         ItemFetchJob *job = new ItemFetchJob( DataReference( msg.uid(), msg.remoteId() ), mParent );
@@ -204,7 +204,7 @@ void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
           job->addFetchPart( part );
         pendingJobs.insert( job, msg );
         connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotItemJobFinished(KJob*)) );
-        return;
+        continue;
       }
       emitItemNotification( msg );
     } else if ( msg.type() == NotificationMessage::Collection ) {
@@ -216,7 +216,7 @@ void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
         CollectionListJob *job = new CollectionListJob( list, mParent );
         pendingJobs.insert( job, msg );
         connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionJobFinished(KJob*)) );
-        return;
+        continue;
       }
       if ( msg.operation() == NotificationMessage::Remove ) {
         // no need for status updates anymore
