@@ -70,6 +70,8 @@ void NotificationManager::slotNotify(const Akonadi::NotificationMessage::List &m
 
 void NotificationManager::slotEmitNotification()
 {
+  if ( mNotifications.isEmpty() )
+    return;
   foreach ( const NotificationMessage msg, mNotifications ) {
     Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
   }
