@@ -143,9 +143,7 @@ void FetchQuery::dump() const
 
 bool FetchQuery::Attribute::parse( const QByteArray &attribute )
 {
-  if ( attribute.toUpper().startsWith( "ENVELOPE" ) )
-    mType = Envelope;
-  else if ( attribute.toUpper().startsWith( "FLAGS" ) )
+  if ( attribute.toUpper().startsWith( "FLAGS" ) )
     mType = Flags;
   else if ( attribute.toUpper().startsWith( "INTERNALDATE" ) )
     mType = InternalDate;
@@ -180,9 +178,7 @@ void FetchQuery::Attribute::dump() const
 {
   QByteArray type;
 
-  if ( mType == Envelope )
-    type = "ENVELOPE";
-  else if ( mType == Flags )
+  if ( mType == Flags )
     type = "FLAGS";
   else if ( mType == InternalDate )
     type = "INTERNALDATE";

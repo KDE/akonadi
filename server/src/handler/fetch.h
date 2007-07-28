@@ -43,7 +43,6 @@ class Fetch : public Handler
 
   private:
     QByteArray buildResponse( const PimItem&, const FetchQuery& );
-    QByteArray buildEnvelope( const PimItem&, const FetchQuery& );
 };
 
 }

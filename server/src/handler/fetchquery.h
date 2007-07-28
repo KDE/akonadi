@@ -46,7 +46,6 @@ class FetchQuery
       public:
         enum Type
         {
-          Envelope,
           Flags,
           InternalDate,
           RFC822,

@@ -109,10 +109,6 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
   MimeType mimeType = item.mimeType();
   attributes.append( "MIMETYPE \"" + mimeType.name().toUtf8() + "\"" );
 
-  if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Envelope ) ) {
-    attributes.append( "ENVELOPE " + buildEnvelope( item, fetchQuery ) );
-  }
-
   if ( fetchQuery.hasAttributeType( FetchQuery::Attribute::Flags ) ) {
     QList<Flag> flagList = item.flags();
 
@@ -180,21 +176,4 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
     return QByteArray::number( itemPosition ) + " FETCH";
   else
     return QByteArray::number( itemPosition ) + " FETCH (" + attributesString + ')';
-}
-
-// FIXME build from database
-QByteArray Fetch::buildEnvelope( const PimItem&, const FetchQuery& )
-{
-  const QByteArray date( "\"Wed, 1 Feb 2006 13:37:19 UT\"" );
-  const QByteArray subject( "\"IMPORTANT: Akonadi Test\"" );
-  const QByteArray from( "\"Tobias Koenig\" NIL \"tokoe\" \"kde.org\"" );
-  const QByteArray sender = from;
-  const QByteArray replyTo( "NIL" );
-  const QByteArray to( "\"Ingo Kloecker\" NIL \"kloecker\" \"kde.org\"" );
-  const QByteArray cc( "NIL" );
-  const QByteArray bcc( "NIL" );
-  const QByteArray inReplyTo( "NIL" );
-  const QByteArray messageId( '<' + QUuid::createUuid().toString().toLatin1() + "@server.kde.org>" );
-
-  return QByteArray( '('+date+' '+subject+" (("+from+")) (("+sender+")) "+replyTo+" (("+to+")) "+cc+' '+bcc+' '+inReplyTo+' '+messageId+')' );
 }
