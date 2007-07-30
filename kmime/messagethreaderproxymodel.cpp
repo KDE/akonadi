@@ -45,16 +45,29 @@ class MessageThreaderProxyModel::Private
     return dynamic_cast<MessageModel*>( mParent->sourceModel() );
   }
 
+  /*
+   * Reset everything
+   */
   void slotCollectionChanged()
   {
     childrenMap.clear();
     indexMap.clear();
     parentMap.clear();
-    realParentMap.clear();
+    realPerfectParentsMap.clear();
+    realUnperfectParentsMap.clear();
+    realSubjectParentsMap.clear();
+
+    realPerfectChildrenMap.clear();
+    realUnperfectChildrenMap.clear();
+    realSubjectChildrenMap.clear();
 
     mParent->reset();
   }
 
+  /*
+   * Function called when the signal rowsInserted was triggered in the
+   * source model.
+   */
   void slotInsertRows( const QModelIndex& sourceIndex, int begin, int end )
   {
     Q_UNUSED( sourceIndex ); // parent source index is always invalid (flat source model)
@@ -66,41 +79,63 @@ class MessageThreaderProxyModel::Private
       // Retrieve the item from the source model
       Item item = sourceMessageModel()->itemForIndex( sourceMessageModel()->index( i, 0 ) );
       int id = item.reference().id();
-      // Get his parent using the PartParent
-      int parentId = parentForItem( item );
-      realParentMap[ id ] = parentId;
+      // Get his best potential parent using the mail threader parts
+      readParentsFromParts( item );
+      int parentId = parentForItem( item.reference().id() );
 
-      // Fill in the tree
-
-      // Check that the parent is in the collection
-      // This is time consuming but ... required.
-      if ( !sourceMessageModel()->indexForItem( DataReference( parentId, QString() ), 0 ).isValid() )
-        parentId = -1;
-
+      /*
+       * Fill in the tree maps
+       */
       childrenMap[ parentId ] << item.reference().id();
       parentMap[ id ] = parentId;
       mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, id );
 
-      // Look for potential children into realParentMap
-      for ( QMap<int, int>::const_iterator it = realParentMap.constBegin();
-            it != realParentMap.constEnd(); it++ ) {
-        int  potentialChildId = it.key();
-        int potentialChildParentId = it.value();
-        qDebug() << potentialChildId << " -> " << potentialChildParentId;
-        if ( potentialChildParentId == id && parentMap[ potentialChildId ] != id )
-        {
-          int childRow = childrenMap[ parentMap[ potentialChildId ] ].indexOf( potentialChildId );
 
-          parentMap[ potentialChildId ] = id;
-          childrenMap[ id ] << potentialChildId;
-          mParent->createIndex( childrenMap[ id ].count() - 1, 0, potentialChildId ); // Recreate index because row changed
-//          mParent->beginRemoveRows( QModelIndex(), childRow, childRow );
-//          mParent->endRemoveRows();
-        }
+      /*
+       * Look for potential children into real children map
+       */
+      QList<int> potentialChildren = realPerfectChildrenMap[ id ]
+                                     << realUnperfectChildrenMap[ id ]
+                                     << realSubjectChildrenMap[ id ];
+      foreach( int potentialChildId, potentialChildren ) {
+          // This item can be a child of our item if:
+          // - it's not the item itself (could we do that check when building the 'real' maps ?)
+          // - his parent is set
+          // -   and this parent is not already our item
+          if ( potentialChildId != id &&
+               parentMap.constFind( potentialChildId ) != parentMap.constEnd() &&
+               parentMap[ potentialChildId ] != id &&
+               parentMap[ potentialChildId ]
+            )
+
+          {
+            qDebug() << "Reparenting operation";
+            // Check that the current parent of this item is not better than ours
+            QList<int> realParentsList = realPerfectParentsMap[ potentialChildId ]
+                                         << realUnperfectParentsMap[ potentialChildId ]
+                                         << realSubjectParentsMap[ potentialChildId ];
+            int currentParentPos = realParentsList.indexOf( parentMap[ potentialChildId ] );
+            // currentParentPos = 0 is probably the more common case so we may avoid an indexOf.
+            if ( currentParentPos == 0 || realParentsList.indexOf( id ) > currentParentPos )
+              continue;
+            qDebug() << "currentParentPos" << currentParentPos;
+            qDebug() << "and the other : " << realParentsList.indexOf( id );
+
+            // Remove the children from the old location
+            int childRow = childrenMap[ parentMap[ potentialChildId ] ].indexOf( potentialChildId );
+            mParent->beginRemoveRows( indexMap[ parentMap[ potentialChildId ] ], childRow, childRow );
+            mParent->endRemoveRows();
+            childrenMap[ parentMap[ potentialChildId ] ].removeAt( childRow );
+
+            // Change the tree info
+            parentMap[ potentialChildId ] = id;
+            childrenMap[ id ] << potentialChildId;
+
+            qDebug() << "Reparenting " << potentialChildId << " as child of " << id;
+            mParent->createIndex( childrenMap[ id ].count() - 1, 0, potentialChildId ); // Recreate index because row change
+          }
       }
 
-      // ### This is not correct, indexMap[ parentId ] does not exist
-      // ### Handle insertion of parents who arrive after the children (does it work ?)
       mParent->beginInsertRows( indexMap[ parentId ], childrenMap[ parentId ].count() - 1, childrenMap[ parentId ].count() - 1 );
       mParent->endInsertRows();
       mParent->beginInsertColumns( indexMap[ parentId ], 0, sourceMessageModel()->columnCount() - 1 );
@@ -110,29 +145,32 @@ class MessageThreaderProxyModel::Private
     qDebug() << time.elapsed() / 1000 << " seconds for " << end - begin + 1 << " items";
   }
 
-
-
+  /*
+   * Function called when the signal rowsAboutToBeRemoved is sent by the source model
+   * (source model indexes are *still* valid)
+   */
   void slotRemoveRows( const QModelIndex& sourceIndex, int begin, int end )
   {
+    Q_UNUSED( sourceIndex );
     for ( int i = begin; i <= end; i++ )
     {
       Item item = sourceMessageModel()->itemForIndex( sourceMessageModel()->index( i, 0 ) );
       int id = item.reference().id();
-      int row = indexMap[ id ].row();
       int parentId = parentMap[ id ];
+      int row = childrenMap[ parentId ].lastIndexOf( id );
 
       // Reparent the children to the closest parent
       foreach( int childId, childrenMap[ id ] ) {
-        childrenMap[ parentMap[ childId ] ].removeAt( indexMap[ childId ].row() );
+        childrenMap[ id ].removeAll( childId ); // There is only one ...
         parentMap[ childId ] = parentId;
         childrenMap[ parentId ] << childId;
         mParent->beginInsertRows( indexMap[ parentId ], childrenMap[ parentId ].count() - 1, childrenMap[ parentId ].count() - 1 );
         mParent->endInsertRows();
 
-        mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, childId ); // Recreate the index because row has changed
+        mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, childId ); // Is it necessary to recreate the index ?
       }
 
-      childrenMap[ parentId ].removeAt( row ); // Remove this id from the children of parentId
+      childrenMap[ parentId ].removeAll( id ); // Remove this id from the children of parentId
       parentMap.remove( id );
       indexMap.remove( id );
       mParent->beginRemoveRows( indexMap[ parentId ], row, row );
@@ -142,27 +180,105 @@ class MessageThreaderProxyModel::Private
     }
   }
 
-  int parentForItem( const Item& item )
+  /*
+   * This item has his parents stored in his threading parts.
+   * Read them and store them in the 'real' maps.
+   *
+   * We store both relationships :
+   * - child -> parents ( real*ParentsMap )
+   * - parent -> children ( real*ChildrenMap )
+   */
+  void readParentsFromParts( const Item& item )
   {
-    bool ok = false;
-    int parentId = item.part( MailThreaderAgent::PartParent ).toInt( &ok );
-    if( !ok )
-      parentId = -1;
+    QList<int> realPerfectParentsList = readParentsFromPart( item, MailThreaderAgent::PartPerfectParents );
+    QList<int> realUnperfectParentsList = readParentsFromPart( item, MailThreaderAgent::PartUnperfectParents );
+    QList<int> realSubjectParentsList = readParentsFromPart( item, MailThreaderAgent::PartSubjectParents );
 
-    return parentId;
+    realPerfectParentsMap[ item.reference().id() ] = realPerfectParentsList;
+    realUnperfectParentsMap[ item.reference().id() ] = realUnperfectParentsList;
+    realSubjectParentsMap[ item.reference().id() ] = realSubjectParentsList;
+
+    // Fill in the children maps
+    foreach( int parentId, realPerfectParentsList )
+      realPerfectChildrenMap[ parentId ] << item.reference().id();
+    foreach( int parentId, realUnperfectParentsList )
+      realUnperfectChildrenMap[ parentId ] << item.reference().id();
+    foreach( int parentId, realSubjectParentsList )
+      realSubjectChildrenMap[ parentId ] << item.reference().id();
   }
 
+  // Helper function for the precedent one
+  QList<int> readParentsFromPart( const Item& item, const QLatin1String& part  )
+  {
+    bool ok = false;
+    QList<QByteArray> parentsIds = item.part( part ).split( ',' );
+    QList<int> result;
+    int parentId;
+    foreach( QByteArray s, parentsIds ) {
+      parentId = s.toInt( &ok );
+      if( !ok )
+        continue;
+      result << parentId;
+    }
+
+    return result;
+  }
+
+  /*
+   * Find the first parent in the parents maps which is actually in the current collection
+   * @param id the item id
+   * @returns the parent id
+   */
+  int parentForItem( int id )
+  {
+
+    QList<int> parentsIds;
+    parentsIds << realPerfectParentsMap[ id ] << realUnperfectParentsMap[ id ] << realSubjectParentsMap[ id ];
+    if ( id == 72 )
+      qDebug() << parentsIds;
+    foreach( int parentId, parentsIds )
+    {
+    // Check that the parent is in the collection
+    // This is time consuming but ... required.
+      qDebug() << "considering : " << parentId;
+    if ( sourceMessageModel()->indexForItem( DataReference( parentId, QString() ), 0 ).isValid() )
+      return parentId;
+
+    }
+
+    // TODO Check somewhere for 'parent loops' : in the parts, an item child of his child ...
+    return -1;
+  }
+
+  // -1 is an invalid id which means 'root'
   int idForIndex( const QModelIndex& index )
   {
     return index.isValid() ? index.internalId() : -1;
   }
 
   MessageThreaderProxyModel *mParent;
+
+  /*
+   * These maps store the current tree structure, as presented in the view.
+   * It tries to be as close as possible from the real structure, given that not every parents
+   * are present in the collection
+   */
   QMap<int, QList<int> > childrenMap;
   QMap<int, int> parentMap;
   QMap<int, QModelIndex> indexMap;
 
-  QMap<int, int> realParentMap; // This map isn't meant to change
+  /*
+   * These maps store the real parents, as read from the item parts
+   * In the best case, the list should contain only one element ( = unique parent )
+   * If there isn't only one, the algorithm will pick up the first one in the current collection
+   */
+  QMap<int, QList<int> > realPerfectParentsMap;
+  QMap<int, QList<int> > realUnperfectParentsMap;
+  QMap<int, QList<int> > realSubjectParentsMap;
+
+  QMap<int, QList<int> > realPerfectChildrenMap;
+  QMap<int, QList<int> > realUnperfectChildrenMap;
+  QMap<int, QList<int> > realSubjectChildrenMap;
 };
 
 MessageThreaderProxyModel::MessageThreaderProxyModel( QObject *parent )
@@ -179,8 +295,9 @@ MessageThreaderProxyModel::~MessageThreaderProxyModel()
 
 
 // ### Awful ! Already in mailthreaderagent.cpp ; just for testing purposes, though
-const QLatin1String MailThreaderAgent::PartParent = QLatin1String( "AkonadiMailThreaderAgentParent" );
-const QLatin1String MailThreaderAgent::PartSort = QLatin1String( "AkonadiMailThreaderAgentSort");
+const QLatin1String MailThreaderAgent::PartPerfectParents = QLatin1String( "AkonadiMailThreaderAgentPerfectParents" );
+const QLatin1String MailThreaderAgent::PartUnperfectParents = QLatin1String( "AkonadiMailThreaderAgentUnperfectParents");
+const QLatin1String MailThreaderAgent::PartSubjectParents = QLatin1String( "AkonadiMailThreaderAgentSubjectParents" );
 
 QModelIndex MessageThreaderProxyModel::index( int row, int column, const QModelIndex& parent ) const
 {
@@ -190,7 +307,10 @@ QModelIndex MessageThreaderProxyModel::index( int row, int column, const QModelI
     return QModelIndex();
 
   int id = d->childrenMap[ parentId ].at( row );
-  qDebug() << "messagethreaderproxymodel, id = " << id << " and parent = " << parentId;
+  qDebug() << "messagethreaderproxymodel:index" << id << " is child of " << parentId;
+  qDebug() << "perfect parents :" << d->realPerfectParentsMap[ id ];
+  qDebug() << "unperfect parents :" << d->realUnperfectParentsMap[ id ];
+  qDebug() << "subject parents :" << d->realSubjectParentsMap[ id ];
   return createIndex( row, column, id );
 }
 
@@ -210,6 +330,7 @@ QModelIndex MessageThreaderProxyModel::parent ( const QModelIndex & index ) cons
 
 QModelIndex MessageThreaderProxyModel::mapToSource( const QModelIndex& index ) const
 {
+  // This function is slow because it relies on rowForItem in the ItemModel (linear time)
   return d->sourceMessageModel()->indexForItem( DataReference( index.internalId(), QString() ), index.column() );
 }
 
@@ -217,13 +338,13 @@ QModelIndex MessageThreaderProxyModel::mapFromSource( const QModelIndex& index )
 {
   Item item = d->sourceMessageModel()->itemForIndex( index );
   int id = item.reference().id();
-  return d->indexMap[ id  ]; // take column in account like mapToSource
+  return d->indexMap[ id  ]; // FIXME take column in account like mapToSource
 }
 
 QModelIndex MessageThreaderProxyModel::createIndex( int row, int column, quint32 internalId ) const
 {
   QModelIndex index = QAbstractProxyModel::createIndex( row, column, internalId );
-  d->indexMap[ internalId ] = index;
+  d->indexMap[ internalId ] = index; // Store the newly created index in the index map
   return index;
 }
 
@@ -232,10 +353,11 @@ void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
   // TODO Assert model is a MessageModel
   QAbstractProxyModel::setSourceModel( model );
 
-  d->sourceMessageModel()->addFetchPart( MailThreaderAgent::PartParent );
+  d->sourceMessageModel()->addFetchPart( MailThreaderAgent::PartPerfectParents );
+  d->sourceMessageModel()->addFetchPart( MailThreaderAgent::PartUnperfectParents );
+  d->sourceMessageModel()->addFetchPart( MailThreaderAgent::PartSubjectParents );
 
   // TODO disconnect old model
-
   connect( sourceModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( slotInsertRows( QModelIndex, int, int ) ) );
   connect( sourceModel(), SIGNAL( rowsAboutToBeRemoved( QModelIndex, int, int ) ), SLOT( slotRemoveRows( QModelIndex, int, int ) ) );
   connect( d->sourceMessageModel(), SIGNAL( collectionSet( Collection ) ), SLOT( slotCollectionChanged() ) );
