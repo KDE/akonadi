@@ -51,8 +51,10 @@ MessageModel::~MessageModel( )
 
 int MessageModel::columnCount( const QModelIndex & parent ) const
 {
-  Q_UNUSED( parent );
-  return 5; // keep in sync with the column type enum
+  if ( !parent.isValid() )
+    return 5; // keep in sync with the column type enum
+
+  return 0;
 }
 
 QVariant MessageModel::data( const QModelIndex & index, int role ) const
@@ -76,7 +78,8 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
       case Date:
         return msg->date()->asUnicodeString();
       case Size:
-      // TODO
+        // TODO
+        return 0; // pass modeltest
       default:
         return QVariant();
     }

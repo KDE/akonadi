@@ -68,10 +68,11 @@ void ItemModel::Private::listingDone( KJob * job )
     // TODO
     kWarning() << k_funcinfo << "Item query failed!" << endl;
   } else {
-    items = fetch->items();
     mParent->reset();
-    if ( items.count() ) {
-      mParent->beginInsertRows( QModelIndex(), 0, items.count() - 1 );
+    if ( fetch->items().count() )
+    {
+      mParent->beginInsertRows( QModelIndex(), 0, fetch->items().count() - 1 );
+      items = fetch->items();
       mParent->endInsertRows();
     }
   }
@@ -135,7 +136,6 @@ void ItemModel::Private::itemMoved( const Akonadi::Item &item, const Akonadi::Co
 
 void ItemModel::Private::itemAdded( const Akonadi::Item &item )
 {
-  qDebug() << "added !!!!!";
   mParent->beginInsertRows( QModelIndex(), items.size(), items.size());
   items.append( item );
   mParent->endInsertRows();

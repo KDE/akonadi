@@ -86,9 +86,12 @@ class MessageThreaderProxyModel::Private
       /*
        * Fill in the tree maps
        */
+      int row = childrenMap[ parentId ].count();
+      mParent->beginInsertRows( indexMap[ parentId ], row, row );
       childrenMap[ parentId ] << item.reference().id();
       parentMap[ id ] = parentId;
-      mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, id );
+      QModelIndex index = mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, id );
+      mParent->endInsertRows();
 
 
       /*
@@ -109,17 +112,15 @@ class MessageThreaderProxyModel::Private
             )
 
           {
-            qDebug() << "Reparenting operation";
             // Check that the current parent of this item is not better than ours
             QList<int> realParentsList = realPerfectParentsMap[ potentialChildId ]
                                          << realUnperfectParentsMap[ potentialChildId ]
                                          << realSubjectParentsMap[ potentialChildId ];
             int currentParentPos = realParentsList.indexOf( parentMap[ potentialChildId ] );
             // currentParentPos = 0 is probably the more common case so we may avoid an indexOf.
-            if ( currentParentPos == 0 || realParentsList.indexOf( id ) > currentParentPos )
+            if ( currentParentPos == 0 || ( currentParentPos != -1 && realParentsList.indexOf( id ) > currentParentPos ) )
+              // (currentParentPos can be -1 if parent is root)
               continue;
-            qDebug() << "currentParentPos" << currentParentPos;
-            qDebug() << "and the other : " << realParentsList.indexOf( id );
 
             // Remove the children from the old location
             int childRow = childrenMap[ parentMap[ potentialChildId ] ].indexOf( potentialChildId );
@@ -128,18 +129,15 @@ class MessageThreaderProxyModel::Private
             childrenMap[ parentMap[ potentialChildId ] ].removeAt( childRow );
 
             // Change the tree info
+            mParent->beginInsertRows( index, childrenMap[ id ].count(), childrenMap[ id ].count() );
             parentMap[ potentialChildId ] = id;
             childrenMap[ id ] << potentialChildId;
 
-            qDebug() << "Reparenting " << potentialChildId << " as child of " << id;
-            mParent->createIndex( childrenMap[ id ].count() - 1, 0, potentialChildId ); // Recreate index because row change
+            // Recreate index because row change
+            mParent->createIndex( childrenMap[ id ].count() - 1, 0, potentialChildId );
+            mParent->endInsertRows();
           }
       }
-
-      mParent->beginInsertRows( indexMap[ parentId ], childrenMap[ parentId ].count() - 1, childrenMap[ parentId ].count() - 1 );
-      mParent->endInsertRows();
-      mParent->beginInsertColumns( indexMap[ parentId ], 0, sourceMessageModel()->columnCount() - 1 );
-      mParent->endInsertColumns();
     }
 
     qDebug() << time.elapsed() / 1000 << " seconds for " << end - begin + 1 << " items";
@@ -157,23 +155,28 @@ class MessageThreaderProxyModel::Private
       Item item = sourceMessageModel()->itemForIndex( sourceMessageModel()->index( i, 0 ) );
       int id = item.reference().id();
       int parentId = parentMap[ id ];
-      int row = childrenMap[ parentId ].lastIndexOf( id );
+      int row = childrenMap[ parentId ].indexOf( id );
 
       // Reparent the children to the closest parent
       foreach( int childId, childrenMap[ id ] ) {
+        int childRow = childrenMap[ id ].indexOf( childId );
+        mParent->beginRemoveRows( indexMap[ id ], childRow, childRow );
         childrenMap[ id ].removeAll( childId ); // There is only one ...
+        mParent->endRemoveRows();
+
+        mParent->beginInsertRows( indexMap[ parentId ], childrenMap[ parentId ].count(),
+                                  childrenMap[ parentId ].count() );
         parentMap[ childId ] = parentId;
         childrenMap[ parentId ] << childId;
-        mParent->beginInsertRows( indexMap[ parentId ], childrenMap[ parentId ].count() - 1, childrenMap[ parentId ].count() - 1 );
         mParent->endInsertRows();
 
         mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, childId ); // Is it necessary to recreate the index ?
       }
 
+      mParent->beginRemoveRows( indexMap[ parentId ], row, row );
       childrenMap[ parentId ].removeAll( id ); // Remove this id from the children of parentId
       parentMap.remove( id );
       indexMap.remove( id );
-      mParent->beginRemoveRows( indexMap[ parentId ], row, row );
       mParent->endRemoveRows();
 //      mParent->beginRemoveColumns( indexMap[ parentId ], 0, sourceMessageModel()->columnCount() - 1 );
 //      mParent->endRemoveColumns();
@@ -234,13 +237,11 @@ class MessageThreaderProxyModel::Private
 
     QList<int> parentsIds;
     parentsIds << realPerfectParentsMap[ id ] << realUnperfectParentsMap[ id ] << realSubjectParentsMap[ id ];
-    if ( id == 72 )
-      qDebug() << parentsIds;
+
     foreach( int parentId, parentsIds )
     {
     // Check that the parent is in the collection
     // This is time consuming but ... required.
-      qDebug() << "considering : " << parentId;
     if ( sourceMessageModel()->indexForItem( DataReference( parentId, QString() ), 0 ).isValid() )
       return parentId;
 
@@ -303,29 +304,32 @@ QModelIndex MessageThreaderProxyModel::index( int row, int column, const QModelI
 {
   int parentId = d->idForIndex( parent );
 
-  if ( row >= d->childrenMap[ parentId ].count() )
+  if ( row < 0
+       || column < 0
+       || row >= d->childrenMap[ parentId ].count()
+       || column >= columnCount( parent )
+       )
     return QModelIndex();
 
   int id = d->childrenMap[ parentId ].at( row );
-  qDebug() << "messagethreaderproxymodel:index" << id << " is child of " << parentId;
-  qDebug() << "perfect parents :" << d->realPerfectParentsMap[ id ];
-  qDebug() << "unperfect parents :" << d->realUnperfectParentsMap[ id ];
-  qDebug() << "subject parents :" << d->realSubjectParentsMap[ id ];
+
   return createIndex( row, column, id );
 }
 
-QModelIndex MessageThreaderProxyModel::parent ( const QModelIndex & index ) const
+QModelIndex MessageThreaderProxyModel::parent( const QModelIndex & index ) const
 {
   if ( !index.isValid() )
     return QModelIndex();
 
   int parentId = d->parentMap[ index.internalId() ];
+
   if ( parentId == -1 )
     return QModelIndex();
 
-  int parentParentId = d->parentMap[ parentId ];
-  int row = d->childrenMap[ parentParentId ].indexOf( parentId );
-  return createIndex( row, 0, parentId );
+//  int parentParentId = d->parentMap[ parentId ];
+  //int row = d->childrenMap[ parentParentId ].indexOf( parentId );
+  return d->indexMap[ d->parentMap[ index.internalId() ] ];
+    //return createIndex( row, 0, parentId );
 }
 
 QModelIndex MessageThreaderProxyModel::mapToSource( const QModelIndex& index ) const
@@ -338,13 +342,15 @@ QModelIndex MessageThreaderProxyModel::mapFromSource( const QModelIndex& index )
 {
   Item item = d->sourceMessageModel()->itemForIndex( index );
   int id = item.reference().id();
-  return d->indexMap[ id  ]; // FIXME take column in account like mapToSource
+  //return d->indexMap[ id  ]; // FIXME take column in account like mapToSource
+  return MessageThreaderProxyModel::index( d->indexMap[ id ].row(), index.column(), d->indexMap[ id ].parent() );
 }
 
 QModelIndex MessageThreaderProxyModel::createIndex( int row, int column, quint32 internalId ) const
 {
   QModelIndex index = QAbstractProxyModel::createIndex( row, column, internalId );
-  d->indexMap[ internalId ] = index; // Store the newly created index in the index map
+  if ( column == 0 )
+    d->indexMap[ internalId ] = index; // Store the newly created index in the index map
   return index;
 }
 
@@ -366,18 +372,25 @@ void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
 
 bool MessageThreaderProxyModel::hasChildren( const QModelIndex& index ) const
 {
-  bool hasChildren = rowCount( index ) > 0;
-  return hasChildren;
+  return rowCount( index ) > 0;
 }
 
 int MessageThreaderProxyModel::columnCount( const QModelIndex& index ) const
 {
-  return sourceModel()->columnCount( mapToSource( index ) );
+  // We assume that the source model has the same number of columns for each rows
+  return sourceModel()->columnCount( QModelIndex() );
 }
 
 int MessageThreaderProxyModel::rowCount( const QModelIndex& index ) const
 {
-  return d->childrenMap[ d->idForIndex( index ) ].count();
+  int id = d->idForIndex( index );
+  if ( id == -1 )
+    return d->childrenMap[ -1 ].count();
+
+  if ( index.column() == 0 ) // QModelIndex() has children
+    return d->childrenMap[ id ].count();
+
+  return 0;
 }
 
 QStringList MessageThreaderProxyModel::mimeTypes() const
