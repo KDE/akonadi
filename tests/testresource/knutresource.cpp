@@ -59,7 +59,7 @@ void KnutResource::configure()
   else
     url = KUrl::fromPath( QDir::homePath() );
 
-  QString newFile = KFileDialog::getOpenFileName( url, "*.xml |Data File", 0, i18n( "Select Data File" ) );
+  QString newFile = KFileDialog::getOpenFileName( url, "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ), 0, i18n( "Select Data File" ) );
 
   if ( newFile.isEmpty() )
     return;
