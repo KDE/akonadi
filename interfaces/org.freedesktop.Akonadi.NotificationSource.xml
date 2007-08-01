@@ -2,7 +2,9 @@
 <node>
   <interface name="org.kde.Akonadi.NotificationManager">
     <signal name="notify">
-      <arg name="message" type="a(ayiiisayisas)" directtion="out"/>
+      <arg name="message" type="a(ayiiisayisas)" direction="out"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="const Akonadi::NotificationMessage::List &amp;"/>
+      <!-- In0 annotation for compatability with qdbusxml2cpp from Qt4.3.0 -->
       <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="const Akonadi::NotificationMessage::List &amp;"/>
     </signal>
   </interface>
