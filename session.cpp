@@ -26,11 +26,17 @@
 
 #include <kdebug.h>
 
+#include <QtCore/QDir>
 #include <QtCore/QQueue>
 #include <QtCore/QThreadStorage>
 #include <QtCore/QTimer>
+
+#ifdef Q_OS_WIN
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QTcpSocket>
+#else
+#include <klocalsocket.h>
+#endif
 
 using namespace Akonadi;
 
@@ -43,9 +49,17 @@ void SessionPrivate::startNext()
 
 void SessionPrivate::reconnect()
 {
+#ifdef Q_OS_WIN
   if ( socket->state() != QAbstractSocket::ConnectedState &&
        socket->state() != QAbstractSocket::ConnectingState )
     socket->connectToHost( QHostAddress::LocalHost, 4444 );
+#else
+  if ( socket->state() != QAbstractSocket::ConnectedState &&
+       socket->state() != QAbstractSocket::ConnectingState ) {
+    QString path = QDir::homePath() + QLatin1String("/.akonadi/akonadiserver.socket");
+    socket->connectToPath( path );
+  }
+#endif
 }
 
 void SessionPrivate::socketError()
@@ -123,7 +137,11 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
   d->currentJob = 0;
   d->jobRunning = false;
 
+#ifdef Q_OS_WIN
   d->socket = new QTcpSocket( this );
+#else
+  d->socket = new KLocalSocket( this );
+#endif
   connect( d->socket, SIGNAL(disconnected()), SLOT(socketError()) );
   connect( d->socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
