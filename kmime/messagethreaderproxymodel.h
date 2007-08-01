@@ -22,7 +22,7 @@
 
 #include <libakonadi/akonadi_export.h>
 #include <QtGui/QAbstractProxyModel>
-#include <QModelIndex>
+#include <QtCore/QModelIndex>
 
 class QModelIndex;
 
