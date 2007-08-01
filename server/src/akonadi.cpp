@@ -42,7 +42,12 @@ using namespace Akonadi;
 static AkonadiServer *s_instance = 0;
 
 AkonadiServer::AkonadiServer( QObject* parent )
-    : QTcpServer( parent ), mDatabaseProcess( 0 )
+#ifdef Q_OS_WIN
+    : QTcpServer( parent )
+#else
+    : KLocalSocketServer( parent )
+#endif
+    , mDatabaseProcess( 0 )
 {
     // create the akonadi directory
     QDir homeDir = QDir::home();
@@ -55,8 +60,14 @@ AkonadiServer::AkonadiServer( QObject* parent )
       startDatabaseProcess();
 
     s_instance = this;
+
+#ifdef Q_OS_WIN
     if ( !listen( QHostAddress::LocalHost, 4444 ) )
       qFatal("Unable to listen on port 4444");
+#else
+    if ( !listen( QDir::homePath() + QLatin1String("/.akonadi/akonadiserver.socket") ) )
+      qFatal("Unable to listen on Unix socket");
+#endif
 
     // initialize the database
     DataStore *db = DataStore::self();
@@ -101,6 +112,11 @@ void AkonadiServer::quit()
     if ( settings.value( QLatin1String("General/Driver") ).toString() == QLatin1String( "QMYSQL" )
          && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
       stopDatabaseProcess();
+
+#ifndef Q_OS_WIN
+    if ( !QDir::home().remove( QLatin1String(".akonadi/akonadiserver.socket") ) )
+        qWarning("Failed to remove Unix socket");
+#endif
 
     QTimer::singleShot( 0, this, SLOT( doQuit() ) );
 }

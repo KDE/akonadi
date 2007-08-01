@@ -126,6 +126,7 @@ target_link_libraries( akonadiprivate
   ${QT_QTSQL_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${QT_QTXML_LIBRARY}
+  ${KDE4_KDECORE_LIBRARY}
   ${KDEWIN32_LIBRARY}
   akonadiprotocol
 )
