@@ -298,12 +298,12 @@ void Monitor::Private::emitCollectionNotification( const NotificationMessage &ms
 void Monitor::Private::slotItemJobFinished( KJob* job )
 {
   if ( !pendingJobs.contains( job ) ) {
-    kWarning() << k_funcinfo << "unknown job - wtf is going on here?" << endl;
+    kWarning() << k_funcinfo <<"unknown job - wtf is going on here?";
     return;
   }
   NotificationMessage msg = pendingJobs.take( job );
   if ( job->error() ) {
-    kWarning() << k_funcinfo << "Error on fetching item: " << job->errorText() << endl;
+    kWarning() << k_funcinfo <<"Error on fetching item:" << job->errorText();
   } else {
     Item item;
     Collection col;
@@ -322,12 +322,12 @@ void Monitor::Private::slotItemJobFinished( KJob* job )
 void Monitor::Private::slotCollectionJobFinished( KJob* job )
 {
   if ( !pendingJobs.contains( job ) ) {
-    kWarning() << k_funcinfo << "unknown job - wtf is going on here?" << endl;
+    kWarning() << k_funcinfo <<"unknown job - wtf is going on here?";
     return;
   }
   NotificationMessage msg = pendingJobs.take( job );
   if ( job->error() ) {
-    kWarning() << k_funcinfo << "Error on fetching collection: " << job->errorText() << endl;
+    kWarning() << k_funcinfo <<"Error on fetching collection:" << job->errorText();
   } else {
     Collection col, parent;
     CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );

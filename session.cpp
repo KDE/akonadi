@@ -82,7 +82,7 @@ void SessionPrivate::dataReceived()
         connected = true;
         startNext();
       } else {
-        kWarning() << k_funcinfo << "Unable to login to Akonadi server: " << parser->data() << endl;
+        kWarning() << k_funcinfo <<"Unable to login to Akonadi server:" << parser->data();
         socket->close();
         QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
       }
