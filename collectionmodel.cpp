@@ -534,6 +534,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     return false;
 
   // data contains an url list
+  bool success = false;
   KUrl::List urls = KUrl::List::fromMimeData( data );
   foreach( KUrl url, urls ) {
     if ( Collection::urlIsValid( url ) )
@@ -543,7 +544,13 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         CollectionModifyJob *job = new CollectionModifyJob( col, d->session );
         job->setParent( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-        return job->exec();
+        job->exec();
+        if ( !job->exec() ) {
+          success = false;
+          break;
+        } else {
+          success = true; // continue, there might be other urls
+        }
       }
       else { // TODO A Copy Collection Job
         return false;
@@ -557,7 +564,12 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
         ItemStoreJob *job = new ItemStoreJob( Item( ref ), d->session );
         job->setCollection( parentCol );
         connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-        return job->exec();
+        if ( !job->exec() ) {
+          success = false;
+          break;
+        } else {
+          success = true; // continue, there might be other urls
+        }
       }
       else if ( action == Qt::CopyAction ) {
       // TODO Wait for a job allowing to copy on server side.
@@ -568,7 +580,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     }
   }
 
-  return false;
+  return success;
 }
 
 Collection CollectionModel::collectionForId(int id) const
