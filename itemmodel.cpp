@@ -32,6 +32,23 @@
 
 using namespace Akonadi;
 
+/*
+ * This struct is used for optimization reasons.
+ * because it embeds the row.
+ *
+ * Semantically, we could have used an item instead.
+ */
+struct ItemContainer
+{
+  ItemContainer( const Item& i, int r )
+  {
+    item = i;
+    row = r;
+  }
+  Item item;
+  int row;
+};
+
 class ItemModel::Private
 {
   public:
@@ -54,7 +71,10 @@ class ItemModel::Private
     int rowForItem( const Akonadi::DataReference& );
 
     ItemModel *mParent;
-    Item::List items;
+
+    QList<ItemContainer*> items;
+    QHash<DataReference, ItemContainer*> itemHash;
+
     Collection collection;
     Monitor *monitor;
     Session *session;
@@ -72,7 +92,11 @@ void ItemModel::Private::listingDone( KJob * job )
     if ( fetch->items().count() )
     {
       mParent->beginInsertRows( QModelIndex(), 0, fetch->items().count() - 1 );
-      items = fetch->items();
+      foreach( Item item, fetch->items() ) {
+        ItemContainer *c = new ItemContainer( item, items.count() );
+        items.append( c );
+        itemHash[ item.reference() ] = c;
+      }
       mParent->endInsertRows();
     }
   }
@@ -97,15 +121,28 @@ void ItemModel::Private::listingDone( KJob * job )
 
 int ItemModel::Private::rowForItem( const Akonadi::DataReference& ref )
 {
-  // ### *slow*
-  int row = -1;
-  for ( int i = 0; i < items.size(); ++i ) {
-    if ( items.at( i ).reference() == ref ) {
-      row = i;
-      break;
+  ItemContainer *container = itemHash.value( ref );
+  if ( !container )
+    return -1;
+
+  /* Try to find the item directly;
+
+     If items have been removed, this first try won't succeed because
+     the ItemContainer rows have not been updated (costs too much).
+  */
+  if ( items.at( container->row ) == container )
+    return container->row;
+  else { // Slow solution if the fist one has not succeeded
+    int row = -1;
+    for ( int i = 0; i < items.size(); ++i ) {
+      if ( items.at( i )->item.reference() == ref ) {
+        row = i;
+        break;
+      }
     }
+    return row;
   }
-  return row;
+
 }
 
 void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QStringList& )
@@ -137,20 +174,23 @@ void ItemModel::Private::itemMoved( const Akonadi::Item &item, const Akonadi::Co
 void ItemModel::Private::itemAdded( const Akonadi::Item &item )
 {
   mParent->beginInsertRows( QModelIndex(), items.size(), items.size());
-  items.append( item );
+  ItemContainer *c = new ItemContainer( item, items.size() );
+  items.append( c );
+  itemHash[ item.reference() ] = c;
   mParent->endInsertRows();
 }
 
 void ItemModel::Private::itemRemoved( const DataReference &reference )
 {
-  int index = rowForItem( reference );
-  if ( index < 0 )
+  int row = rowForItem( reference );
+  if ( row < 0 )
     return;
 
-  mParent->beginRemoveRows( QModelIndex(), index, index );
-  const Item item = items.at( index );
+  mParent->beginRemoveRows( QModelIndex(), row, row );
+  const Item item = items.at( row )->item;
   Q_ASSERT( item.isValid() );
-  items.removeAt( index );
+  itemHash.remove( item.reference() );
+  delete items.takeAt( row );
   mParent->endRemoveRows();
 }
 
@@ -172,7 +212,7 @@ QVariant ItemModel::data( const QModelIndex & index, int role ) const
     return QVariant();
   if ( index.row() >= d->items.count() )
     return QVariant();
-  const Item item = d->items.at( index.row() );
+  const Item item = d->items.at( index.row() )->item;
   if ( !item.isValid() )
     return QVariant();
 
@@ -228,6 +268,8 @@ void ItemModel::setCollection( const Collection &collection )
     return;
   d->collection = collection;
   // the query changed, thus everything we have already is invalid
+  foreach( ItemContainer *c, d->items )
+    delete c;
   d->items.clear();
   reset();
 
@@ -265,7 +307,7 @@ DataReference ItemModel::referenceForIndex( const QModelIndex & index ) const
   if ( index.row() >= d->items.count() )
     return DataReference();
 
-  const Item item = d->items.at( index.row() );
+  const Item item = d->items.at( index.row() )->item;
   Q_ASSERT( item.isValid() );
   return item.reference();
 }
@@ -278,7 +320,7 @@ Item ItemModel::itemForIndex( const QModelIndex & index ) const
   if ( index.row() >= d->items.count() )
     return Akonadi::Item();
 
-  Item item = d->items.at( index.row() );
+  Item item = d->items.at( index.row() )->item;
   Q_ASSERT( item.isValid() );
 
   return item;
