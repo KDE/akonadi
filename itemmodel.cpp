@@ -130,7 +130,8 @@ int ItemModel::Private::rowForItem( const Akonadi::DataReference& ref )
      If items have been removed, this first try won't succeed because
      the ItemContainer rows have not been updated (costs too much).
   */
-  if ( items.at( container->row ) == container )
+  if ( container->row < items.count()
+       && items.at( container->row ) == container )
     return container->row;
   else { // Slow solution if the fist one has not succeeded
     int row = -1;
