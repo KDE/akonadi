@@ -17,6 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QtCore/QDir>
+#include <QtCore/QSettings>
 #include <QtCore/QMetaType>
 #include <QtCore/QVariant>
 
@@ -29,11 +31,17 @@ using namespace Akonadi;
 
 void HandlerTest::initTestCase()
 {
+    // According to Volker (see log of Revision 623747), the handler test
+    // does not work with MYSQL/Embedded
+    QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
+    if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL_EMBEDDED" ) )
+        QSKIP( "HandlerTest does not work with MYSQL/Embedded", SkipAll );
+
     qRegisterMetaType<Response>("Response");
 }
 
 void HandlerTest::testInit()
-{ 
+{
 }
 
 /// ---- List ----
