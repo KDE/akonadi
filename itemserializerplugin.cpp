@@ -32,8 +32,8 @@ ItemSerializerPlugin::~ItemSerializerPlugin()
 
 QStringList ItemSerializerPlugin::parts(const Item & item) const
 {
-  Q_UNUSED( item );
   QStringList list;
-  list << Item::PartBody;
+  if ( item.hasPayload() )
+    list << Item::PartBody;
   return list;
 }

@@ -144,4 +144,31 @@ void ItemAppendTest::testIllegalAppend()
   QVERIFY( !job->exec() );
 }
 
+void ItemAppendTest::testMultipartAppend()
+{
+  DataReference::List refs; // for cleanup
+
+  Item item;
+  item.setMimeType( "application/octet-stream" );
+  item.addPart( Item::PartBody, "body data" );
+  item.addPart( "EXTRA", "extra data" );
+  ItemAppendJob *job = new ItemAppendJob( item, Collection( testFolder1 ), this );
+  QVERIFY( job->exec() );
+  refs << job->reference();
+
+  ItemFetchJob *fjob = new ItemFetchJob( refs.first(), this );
+  fjob->addFetchPart( "EXTRA" );
+  QVERIFY( fjob->exec() );
+  QCOMPARE( fjob->items().count(), 1 );
+  item = fjob->items().first();
+  QCOMPARE( item.part( Item::PartBody ), QByteArray( "body data" ) );
+  QCOMPARE( item.part( "EXTRA" ), QByteArray( "extra data" ) );
+
+  // cleanup
+  foreach ( DataReference ref, refs ) {
+    ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
+    QVERIFY( djob->exec() );
+  }
+}
+
 #include "itemappendtest.moc"

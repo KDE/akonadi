@@ -55,10 +55,12 @@ public:
         return s_p;
     }
 
-    void deserialize( Item& item, const QString& label, QIODevice& data )
+    bool deserialize( Item& item, const QString& label, QIODevice& data )
     {
-        Q_ASSERT( label == Item::PartBody );
+        if ( label != Item::PartBody )
+          return false;
         item.setPayload( data.readAll() );
+        return true;
     }
 
     void serialize( const Item& item, const QString& label, QIODevice& data )
@@ -135,11 +137,10 @@ void ItemSerializer::deserialize( Item& item, const QString& label, const QByteA
 void ItemSerializer::deserialize( Item& item, const QString& label, QIODevice& data )
 {
     setup();
-    QStringList supportedParts = pluginForMimeType( item.mimeType() ).parts( item );
-    if ( supportedParts.contains( label ) )
-      ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data );
-    else
+    if ( !ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data ) ) {
+      data.seek( 0 );
       item.addRawPart( label, data.readAll() );
+    }
 }
 
 /*static*/
@@ -169,6 +170,8 @@ void ItemSerializer::serialize( const Item& item, const QString& label, QIODevic
 
 QStringList ItemSerializer::parts(const Item & item)
 {
+  if ( !item.hasPayload() )
+    return QStringList();
   setup();
   return pluginForMimeType( item.mimeType() ).parts( item );
 }

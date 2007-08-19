@@ -34,11 +34,11 @@ void ItemTest::testMultipart()
   item.setMimeType( "application/octet-stream" );
 
   QStringList parts;
-  parts << Item::PartBody;
   QCOMPARE( item.availableParts(), parts );
 
   QByteArray bodyData = "bodydata";
   item.addPart( Item::PartBody, bodyData );
+  parts << Item::PartBody;
   QCOMPARE( item.availableParts(), parts );
   QCOMPARE( item.part( Item::PartBody ), bodyData );
 

@@ -53,6 +53,7 @@ class Item::Private : public QSharedData
 const QLatin1String Item::PartAll = QLatin1String( "AkonadiItemPartAll" );
 const QLatin1String Item::PartBody = QLatin1String( "RFC822" );
 const QLatin1String Item::PartEnvelope = QLatin1String( "ENVELOPE" );
+const QLatin1String Item::PartHeader = QLatin1String( "HEAD" );
 
 
 Item::Item( const DataReference & reference )

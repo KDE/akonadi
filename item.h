@@ -73,6 +73,11 @@ class AKONADI_EXPORT Item
      */
     static const QLatin1String PartBody;
 
+    /**
+      The part identifier for the header part.
+    */
+    static const QLatin1String PartHeader;
+
 
 
     /**

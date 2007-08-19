@@ -19,6 +19,7 @@
 
 #include "itemappendjob.h"
 #include "imapparser.h"
+#include "itemstorejob.h"
 
 #include <QtCore/QDebug>
 
@@ -31,6 +32,7 @@ class Akonadi::ItemAppendJobPrivate
     Collection collection;
     QByteArray data;
     int uid;
+    QByteArray tag;
 };
 
 ItemAppendJob::ItemAppendJob( const Item &item, const Collection &collection, QObject * parent ) :
@@ -49,13 +51,15 @@ ItemAppendJob::~ ItemAppendJob( )
 
 void ItemAppendJob::doStart()
 {
+  d->tag = newTag();
+  newTag(); // prevent automatic response handling
   QByteArray remoteId;
   if ( !d->item.reference().remoteId().isEmpty() )
     remoteId = " \\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']';
-  // FIXME: iterate over all parts
-  if ( d->item.hasPayload() )
+  // HACK we let ItemStoreJob take care of the other parts, it already can handle multi-part items.
+  if ( d->item.availableParts().count() == 1 && d->item.availableParts().first() == Item::PartBody )
     d->data = d->item.part( Item::PartBody );
-  writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
+  writeData( d->tag + " APPEND " + QByteArray::number( d->collection.id() )
       + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
       + QByteArray::number( d->data.size() ) + "}\n" );
 }
@@ -68,7 +72,19 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
       writeData( "\n" );
     return;
   }
-  if ( tag == this->tag() ) {
+  if ( tag == d->tag ) {
+    if ( data.startsWith( "NO" ) || data.startsWith( "BAD" ) ) {
+      setError( Unknown );
+      setErrorText( QString::fromUtf8( data ) );
+      emitResult();
+      return;
+    }
+    if ( data.startsWith( "OK" ) ) {
+      d->item.setReference( reference() );
+      ItemStoreJob *store = new ItemStoreJob( d->item, this );
+      store->storePayload();
+      connect( store, SIGNAL(result(KJob*)), SLOT(storeResult(KJob*)) );
+    }
     int pos = data.indexOf( "UIDNEXT" );
     bool ok = false;
     if ( pos > 0 )
@@ -76,7 +92,6 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
     if ( !ok )
       qDebug() << "invalid response to item append job: " << tag << data;
   }
-  qDebug() << "unhandled response in item append job: " << tag << data;
 }
 
 DataReference ItemAppendJob::reference() const
@@ -84,6 +99,12 @@ DataReference ItemAppendJob::reference() const
   if ( d->uid == 0 )
     return DataReference();
   return DataReference( d->uid, d->item.reference().remoteId() );
+}
+
+void ItemAppendJob::storeResult(KJob * job)
+{
+  if ( !job->error() )
+    emitResult();
 }
 
 #include "itemappendjob.moc"
