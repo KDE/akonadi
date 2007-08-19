@@ -23,6 +23,7 @@
 #include "session.h"
 #include "imapparser.h"
 #include <QQueue>
+#include <QtCore/QSettings>
 #include <QThreadStorage>
 
 #ifdef Q_OS_WIN
@@ -37,7 +38,7 @@ class SessionPrivate
 {
   public:
     SessionPrivate( Session *parent )
-      : mParent( parent )
+      : mParent( parent ), mConnectionSettings( 0 )
     {
       parser = new ImapParser();
     }
@@ -45,6 +46,7 @@ class SessionPrivate
     ~SessionPrivate()
     {
       delete parser;
+      delete mConnectionSettings;
     }
 
     void startNext();
@@ -56,6 +58,7 @@ class SessionPrivate
 
     Session *mParent;
     QByteArray sessionId;
+    QSettings *mConnectionSettings;
 #ifdef Q_OS_WIN
     QTcpSocket* socket;
 #else

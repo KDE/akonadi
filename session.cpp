@@ -49,14 +49,18 @@ void SessionPrivate::startNext()
 
 void SessionPrivate::reconnect()
 {
+  // should be checking connection method and value validity
 #ifdef Q_OS_WIN
   if ( socket->state() != QAbstractSocket::ConnectedState &&
-       socket->state() != QAbstractSocket::ConnectingState )
-    socket->connectToHost( QHostAddress::LocalHost, 4444 );
+       socket->state() != QAbstractSocket::ConnectingState ) {
+    QString address = mConnectionSettings->value( QLatin1String( "Data/Address" ), QHostAddress(QHostAddress::LocalHost).toString() ).toString();
+    int port = mConnectionSettings->value( QLatin1String( "Data/Port" ), 4444 ).toInt();
+    socket->connectToHost( QHostAddress(address), port );
+  }
 #else
   if ( socket->state() != QAbstractSocket::ConnectedState &&
        socket->state() != QAbstractSocket::ConnectingState ) {
-    QString path = QDir::homePath() + QLatin1String("/.akonadi/akonadiserver.socket");
+    QString path = mConnectionSettings->value( QLatin1String( "Data/UnixPath" ), QDir::homePath() + QLatin1String( "/.akonadi/akonadiserver.socket" ) ).toString();
     socket->connectToPath( path );
   }
 #endif
@@ -137,6 +141,9 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
   d->currentJob = 0;
   d->jobRunning = false;
 
+  d->mConnectionSettings = new QSettings( QDir::homePath() + QLatin1String("/.akonadi/akonadiconnectionrc"), QSettings::IniFormat );
+
+  // should check connection method
 #ifdef Q_OS_WIN
   d->socket = new QTcpSocket( this );
 #else
