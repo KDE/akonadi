@@ -57,6 +57,7 @@ class XesamManager : public QObject
     QHash<int,QString> mInvSearchMap;
     static XesamManager* mInstance;
     QMutex mMutex;
+    bool mValid;
 };
 
 }

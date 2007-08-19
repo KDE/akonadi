@@ -39,7 +39,7 @@ class HandlerTest: public QObject
     void testRootStarList();
     void testInboxList();
     void testFetch();
-    
+
   private:
     // Helper
     Response nextResponse( QSignalSpy& spy );

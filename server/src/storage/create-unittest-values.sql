@@ -1,5 +1,6 @@
 DELETE FROM PimItemFlagRelation;
 DELETE FROM PimItemTable;
+DELETE FROM PartTable;
 DELETE FROM LocationMimeTypeRelation;
 DELETE FROM LocationTable WHERE name != "Search" or parentId != 0;
 DELETE FROM ResourceTable WHERE name != "akonadi_search_resource";

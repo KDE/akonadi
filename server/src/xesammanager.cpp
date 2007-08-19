@@ -30,7 +30,8 @@ using namespace Akonadi;
 XesamManager* XesamManager::mInstance = 0;
 
 XesamManager::XesamManager(QObject * parent) :
-    QObject( parent )
+    QObject( parent ),
+    mValid( true )
 {
   Q_ASSERT( mInstance == 0 );
   mInstance = this;
@@ -43,9 +44,9 @@ XesamManager::XesamManager(QObject * parent) :
   if ( mInterface->isValid() ) {
     mSession = mInterface->NewSession();
     QDBusVariant result = mInterface->SetProperty( mSession, QLatin1String("search.live"), QDBusVariant(true) );
-    Q_ASSERT( result.variant().toBool() );
+    mValid = mValid && result.variant().toBool();
     result = mInterface->SetProperty( mSession, QLatin1String("search.blocking"), QDBusVariant(false) );
-    Q_ASSERT( !result.variant().toBool() );
+    mValid = mValid && !result.variant().toBool();
     qDebug() << "XESAM session:" << mSession;
 
     connect( mInterface, SIGNAL(HitsAdded(QString,int)), SLOT(slotHitsAdded(QString,int)) );
@@ -55,7 +56,11 @@ XesamManager::XesamManager(QObject * parent) :
     reloadSearches();
   } else {
     qWarning() << "XESAM interface not found!";
+    mValid = false;
   }
+
+  if ( !mValid )
+    qWarning() << "No valid XESAM interface found!";
 }
 
 XesamManager::~XesamManager()
@@ -122,7 +127,7 @@ void XesamManager::reloadSearches()
 
 bool XesamManager::addSearch(const Location & loc)
 {
-  if ( !mInterface->isValid() )
+  if ( !mInterface->isValid() || !mValid )
     return false;
   QMutexLocker lock( &mMutex );
   if ( loc.remoteId().isEmpty() )

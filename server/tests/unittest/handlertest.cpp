@@ -31,12 +31,6 @@ using namespace Akonadi;
 
 void HandlerTest::initTestCase()
 {
-    // According to Volker (see log of Revision 623747), the handler test
-    // does not work with MYSQL/Embedded
-    QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
-    if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL_EMBEDDED" ) )
-        QSKIP( "HandlerTest does not work with MYSQL/Embedded", SkipAll );
-
     qRegisterMetaType<Response>("Response");
 }
 
@@ -65,6 +59,7 @@ void HandlerTest::testSeparatorList()
 
 void HandlerTest::testRootPercentList()
 {
+    QSKIP( "Does not work without MockBackend", SkipAll );
     Handler* l = getHandlerFor("LIST");
     QVERIFY( dynamic_cast<List*>(l) != 0 );
 
@@ -83,6 +78,7 @@ void HandlerTest::testRootPercentList()
 
 void HandlerTest::testRootStarList()
 {
+    QSKIP( "Does not work without MockBackend", SkipAll );
     Handler* l = getHandlerFor("LIST");
     QVERIFY( dynamic_cast<List*>(l) != 0 );
 
@@ -104,6 +100,7 @@ void HandlerTest::testRootStarList()
 
 void HandlerTest::testInboxList()
 {
+    QSKIP( "Does not work without MockBackend", SkipAll );
     Handler* l = getHandlerFor("LIST");
     QVERIFY( dynamic_cast<List*>(l) != 0 );
 
