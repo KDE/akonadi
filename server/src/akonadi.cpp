@@ -36,6 +36,7 @@
 #include <QtCore/QTimer>
 
 #include <unistd.h>
+#include <stdlib.h>
 
 using namespace Akonadi;
 
@@ -61,12 +62,30 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     s_instance = this;
 
+    QSettings connectionSettings( QDir::homePath() + QLatin1String("/.akonadi/akonadiconnectionrc"), QSettings::IniFormat );
+
 #ifdef Q_OS_WIN
-    if ( !listen( QHostAddress::LocalHost, 4444 ) )
-      qFatal("Unable to listen on port 4444");
+    int port = settings.value( QLatin1String( "Connection/Port" ), 4444 ).toInt();
+    if ( !listen( QHostAddress::LocalHost, port ) )
+      qFatal("Unable to listen on port %d", port);
+
+    connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "TCP" ) );
+    connectionSettings.setValue( QLatin1String( "Data/Address" ), serverAddress().toString() );
+    connectionSettings.setValue( QLatin1String( "Data/Port" ), serverPort() );
 #else
-    if ( !listen( QDir::homePath() + QLatin1String("/.akonadi/akonadiserver.socket") ) )
-      qFatal("Unable to listen on Unix socket");
+    QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), QLatin1String( ".akonadi" ) ).toString();
+    if ( socketDir[0] != QLatin1Char( '/' ) )
+    {
+      homeDir.mkdir( socketDir );
+      socketDir = QDir::homePath() + QLatin1Char( '/' ) + socketDir;
+    }
+
+    QString socketFile = socketDir + QLatin1String( "/akonadiserver.socket" );
+    if ( !listen( socketFile ) )
+      qFatal("Unable to listen on Unix socket '%s'", socketFile.toLocal8Bit().data() );
+
+    connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "UnixPath" ) );
+    connectionSettings.setValue( QLatin1String( "Data/UnixPath" ), socketFile );
 #endif
 
     // initialize the database
@@ -87,6 +106,12 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     new ServerAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );
+
+    char* dbusAddress = getenv( "DBUS_SESSION_BUS_ADDRESS" );
+    if (dbusAddress != 0)
+    {
+      connectionSettings.setValue( QLatin1String( "DBUS/Address" ), QLatin1String( dbusAddress ) );
+    }
 }
 
 
@@ -114,9 +139,11 @@ void AkonadiServer::quit()
       stopDatabaseProcess();
 
 #ifndef Q_OS_WIN
-    if ( !QDir::home().remove( QLatin1String(".akonadi/akonadiserver.socket") ) )
+    if ( !QDir::home().remove( QLatin1String( ".akonadi/akonadiserver.socket" ) ) )
         qWarning("Failed to remove Unix socket");
 #endif
+    if ( !QDir::home().remove( QLatin1String( ".akonadi/akonadiconnectionrc" ) ) )
+        qWarning("Failed to remove runtime connection config file");
 
     QTimer::singleShot( 0, this, SLOT( doQuit() ) );
 }
