@@ -58,7 +58,7 @@ class AKONADI_EXPORT ItemAppendJob : public Job
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
-  private slots:
+  private Q_SLOTS:
     void storeResult( KJob *job );
 
   private:
