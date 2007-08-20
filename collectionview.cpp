@@ -77,7 +77,7 @@ bool CollectionView::Private::hasParent( const QModelIndex& idx, int parentId )
 
 void CollectionView::Private::dragExpand()
 {
-  kDebug() << k_funcinfo;
+  kDebug() ;
   mParent->setExpanded( dragOverIndex, true );
   dragOverIndex = QModelIndex();
 }
