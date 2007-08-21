@@ -23,6 +23,7 @@
 #include "imapparser.h"
 #include "job.h"
 #include "job_p.h"
+#include "xdgbasedirs.h"
 
 #include <kdebug.h>
 
@@ -60,7 +61,9 @@ void SessionPrivate::reconnect()
 #else
   if ( socket->state() != QAbstractSocket::ConnectedState &&
        socket->state() != QAbstractSocket::ConnectingState ) {
-    QString path = mConnectionSettings->value( QLatin1String( "Data/UnixPath" ), QDir::homePath() + QLatin1String( "/.akonadi/akonadiserver.socket" ) ).toString();
+    XdgBaseDirs baseDirs;
+    QString defaultSocketDir = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) );
+    QString path = mConnectionSettings->value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
     socket->connectToPath( path );
   }
 #endif
@@ -141,7 +144,19 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
   d->currentJob = 0;
   d->jobRunning = false;
 
-  d->mConnectionSettings = new QSettings( QDir::homePath() + QLatin1String("/.akonadi/akonadiconnectionrc"), QSettings::IniFormat );
+  XdgBaseDirs baseDirs;
+
+  QString connectionConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiconnectionrc" ) );
+  if ( connectionConfigFile.isEmpty() ) {
+    qWarning() << "Akonadi Client Session: connection config file '"
+               << "akonadi/akonadiconnectionrc can not be found in '"
+               << baseDirs.homePath( "config" ) << "' nor in any of "
+               << baseDirs.systemPathList( "config" );
+
+    connectionConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiconnectionrc" );
+  }
+
+  d->mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );
 
   // should check connection method
 #ifdef Q_OS_WIN

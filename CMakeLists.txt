@@ -72,6 +72,7 @@ set( akonadi_LIB_SRC
 	searchcreatejob.cpp
 	session.cpp
 	transactionjobs.cpp
+	xdgbasedirs.cpp
 )
 
 qt4_generate_dbus_interface(resource.h org.kde.Akonadi.Resource.xml)

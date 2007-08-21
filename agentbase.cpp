@@ -27,6 +27,7 @@
 #include "agentadaptor.h"
 #include "monitor_p.h"
 #include "tracerinterface.h"
+#include "xdgbasedirs.h"
 
 #include <libakonadi/session.h>
 #include <libakonadi/monitor.h>
@@ -148,7 +149,9 @@ AgentBase::AgentBase( const QString & id )
 
   d->mId = id;
 
-  d->mSettings = new QSettings( QString::fromLatin1( "%1/.akonadi/agent_config_%2" ).arg( QDir::homePath(), id ), QSettings::IniFormat );
+  XdgBaseDirs baseDirs;
+
+  d->mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( baseDirs.saveDir( "config", QLatin1String( "akonadi" ) ), id ), QSettings::IniFormat );
 
   const QString name = d->mSettings->value( QLatin1String( "Agent/Name" ) ).toString();
   if ( !name.isEmpty() )
