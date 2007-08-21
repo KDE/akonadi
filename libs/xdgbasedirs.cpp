@@ -19,6 +19,8 @@
 
 #include "xdgbasedirs.h"
 
+#include "akonadi-prefix.h" // for AKONADIDIR
+
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -81,6 +83,11 @@ QStringList XdgBaseDirs::systemPathList( const char *resource ) const
   if ( qstrncmp( "data", resource, 4 ) == 0 ) {
     if ( d->mDataDirs.isEmpty() ) {
       d->mDataDirs = d->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
+
+      QString prefixDataDir = QLatin1String( AKONADIDIR "/share/apps" );
+      if ( !d->mDataDirs.contains( prefixDataDir ) ) {
+        d->mDataDirs << prefixDataDir;
+      }
     }
     return d->mDataDirs;
   } else if ( qstrncmp( "config", resource, 6 ) == 0) {
@@ -137,6 +144,31 @@ QString XdgBaseDirs::findResourceDir( const char *resource, const QString &relPa
   }
 
   return QString();
+}
+
+QStringList XdgBaseDirs::findAllResourceDirs( const char *resource, const QString &relPath ) const
+{
+  QStringList resultList;
+
+  QString fullPath = homePath( resource ) + QLatin1Char('/' ) + relPath;
+
+  QFileInfo fileInfo( fullPath );
+  if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
+    resultList << fileInfo.absoluteFilePath();
+  }
+
+  QStringList pathList = systemPathList( resource );
+
+  QStringList::const_iterator it    = pathList.begin();
+  QStringList::const_iterator endIt = pathList.end();
+  for ( ; it != endIt; ++it ) {
+    fileInfo = QFileInfo( *it + QLatin1Char('/' ) + relPath );
+    if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
+      resultList << fileInfo.absoluteFilePath();
+    }
+  }
+
+  return resultList;
 }
 
 QString XdgBaseDirs::saveDir( const char *resource, const QString &relPath ) const

@@ -151,6 +151,9 @@ class AKONADI_SERVER_EXPORT XdgBaseDirs
      Will check the user local directory first and then process the system
      wide path list according to the inherent priority.
 
+     Use findAllResourceDirs() if looking for all directories with the given
+     subdirectory.
+
      @param resource a named resource type, e.g. "config"
      @param relPath relative path of a subdirectory to look for,
             e.g."akonadi/agents"
@@ -163,6 +166,32 @@ class AKONADI_SERVER_EXPORT XdgBaseDirs
      @see saveDir()
      */
     QString findResourceDir( const char *resource, const QString &relPath ) const;
+
+    /**
+     @brief Searches the resource specific directories for a given subdirectory
+
+     Convenience method for getting a list of directoreis with a given relative
+     subdirectory in any of the configured base directories for a given
+     resource type.
+
+     Will check the user local directory first and then process the system
+     wide path list according to the inherent priority.
+
+     Similar to findResourceDir() but does not just find the first best match
+     but all matching resource directories. The resuling list will be sorted
+     according to the same proprity criteria.
+
+     @param resource a named resource type, e.g. "config"
+     @param relPath relative path of a subdirectory to look for,
+            e.g."akonadi/agents"
+
+     @returns a list of directory paths, or @c QString() if no such
+              relative path exists in any of the base directories or if
+              non of the matches is a directory
+
+     @see findResourceDir()
+     */
+    QStringList findAllResourceDirs( const char *resource, const QString &relPath ) const;
 
     /**
      @brief Finds or creates the "save to" directory for a given resource
