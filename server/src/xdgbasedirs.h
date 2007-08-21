@@ -121,28 +121,6 @@ class AKONADI_SERVER_EXPORT XdgBaseDirs
     QStringList systemPathList( const char *resource ) const;
 
     /**
-     @brief Searches the resource specific directories for a given subdirectory
-
-     Convenience method for finding a given relative subdirectory in any of
-     the configured base directories for a given resource type.
-
-     Will check the user local directory first and then process the system
-     wide path list according to the inherent priority.
-
-     @param resource a named resource type, e.g. "config"
-     @param relPath relative path of a subdirectory to look for,
-            e.g."akonadi/agents"
-
-     @returns the directory path of the first match, or @c QString() if no such
-              relative path exists in any of the base directories or if
-              a match is not a directory
-
-     @see findResourceFile()
-     @see saveDir()
-     */
-    QString findResourceFile( const char *resource, const QString &relPath ) const;
-
-    /**
      @brief Searches the resource specific directories for a given file
 
      Convenience method for finding a given file (with optional relative path)
@@ -160,6 +138,28 @@ class AKONADI_SERVER_EXPORT XdgBaseDirs
               a match is not a file
 
      @see findResourceDir()
+     @see saveDir()
+     */
+    QString findResourceFile( const char *resource, const QString &relPath ) const;
+
+    /**
+     @brief Searches the resource specific directories for a given subdirectory
+
+     Convenience method for finding a given relative subdirectory in any of
+     the configured base directories for a given resource type.
+
+     Will check the user local directory first and then process the system
+     wide path list according to the inherent priority.
+
+     @param resource a named resource type, e.g. "config"
+     @param relPath relative path of a subdirectory to look for,
+            e.g."akonadi/agents"
+
+     @returns the directory path of the first match, or @c QString() if no such
+              relative path exists in any of the base directories or if
+              a match is not a directory
+
+     @see findResourceFile()
      @see saveDir()
      */
     QString findResourceDir( const char *resource, const QString &relPath ) const;
