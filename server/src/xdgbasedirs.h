@@ -220,6 +220,6 @@ class AKONADI_SERVER_EXPORT XdgBaseDirs
     XdgBaseDirs &operator=( const XdgBaseDirs &);
 };
 
-};
+}
 
 #endif
