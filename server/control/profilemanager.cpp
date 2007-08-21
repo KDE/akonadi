@@ -24,6 +24,7 @@
 
 #include "profilemanager.h"
 #include "profilemanageradaptor.h"
+#include "xdgbasedirs.h"
 
 ProfileManager::ProfileManager( QObject *parent )
   : QObject( parent )
@@ -43,7 +44,7 @@ ProfileManager::~ProfileManager()
 
 void ProfileManager::load()
 {
-  QSettings settings( profilePath(), QSettings::IniFormat );
+  QSettings settings( profilePath( false ), QSettings::IniFormat );
 
   const QStringList profiles = settings.childGroups();
   for ( int i = 0; i < profiles.count(); ++i ) {
@@ -58,7 +59,7 @@ void ProfileManager::load()
 
 void ProfileManager::save()
 {
-  QSettings settings( profilePath(), QSettings::IniFormat );
+  QSettings settings( profilePath( true ), QSettings::IniFormat );
   settings.clear();
 
   QMapIterator<QString, QStringList> it( mProfiles );
@@ -162,17 +163,19 @@ QStringList ProfileManager::profileAgents( const QString &identifier ) const
   return mProfiles[ identifier ];
 }
 
-QString ProfileManager::profilePath() const
+QString ProfileManager::profilePath( bool writeable ) const
 {
-  const QString homePath = QDir::homePath();
-  const QString akonadiHomeDir = QString( "%1/%2" ).arg( homePath, ".akonadi" );
+  Akonadi::XdgBaseDirs baseDirs;
 
-  if ( !QDir( akonadiHomeDir ).exists() ) {
-    QDir dir;
-    dir.mkdir( akonadiHomeDir );
-  }
+  const QString configFile =
+    baseDirs.findResourceFile( "config", QLatin1String( "akonadi/profilesrc" ) );
 
-  return akonadiHomeDir + "/profilesrc";
+  if ( !writeable && !configFile.isEmpty() )
+    return configFile;
+
+  const QString configDir = baseDirs.saveDir( "config", "akonadi" );
+
+  return configDir + QLatin1String( "/profilesrc" );
 }
 
 #include "profilemanager.moc"

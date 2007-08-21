@@ -27,6 +27,7 @@
 #include "selectquerybuilder.h"
 #include "handlerhelper.h"
 #include "countquerybuilder.h"
+#include "xdgbasedirs.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -68,7 +69,14 @@ DataStore::DataStore() :
 {
   // load database settings if needed
   if ( mDbDriverName.isEmpty() ) {
-    QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
+    XdgBaseDirs baseDirs;
+
+    QString serverConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiserverrc" ) );
+    if ( serverConfigFile.isEmpty() ) {
+      serverConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiserverrc" );
+    }
+
+    QSettings settings( serverConfigFile, QSettings::IniFormat );
     QString defaultDriver = QLatin1String("QMYSQL");
 
     mDbDriverName = settings.value( QLatin1String("General/Driver"), defaultDriver ).toString();
@@ -85,8 +93,8 @@ DataStore::DataStore() :
       defaultOptions = QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( storagePath() );
     } else if ( mDbDriverName == QLatin1String( "QMYSQL" ) ) {
       defaultDbName = QLatin1String( "akonadi" );
-      defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/db_misc/mysql.socket" )
-                                     .arg( QDir::homePath() + QLatin1String( "/.akonadi/"  ) );
+      QString miscDir = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+      defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir );
     } else if ( mDbDriverName == QLatin1String( "QSQLITE" ) ) {
       defaultDbName = storagePath();
     }
@@ -188,15 +196,17 @@ QString DataStore::storagePath()
 {
   /**
    * We need the following path for the database directory:
-   *   $HOME/.akonadi/db/akonadi/
+   *   $XDG_DATA_HOME/akonadi/db/akonadi/
    */
-  const QString akonadiHomeDir = QDir::homePath() + QDir::separator() + QLatin1String(".akonadi") + QDir::separator();
-  if ( !QDir( akonadiHomeDir ).exists() ) {
-    QDir dir;
-    if ( !dir.mkdir( akonadiHomeDir ) )
-      Tracer::self()->error( "DataStore::storagePath",
-                             QString::fromLatin1( "Unable to create directory '%1'" ).arg( akonadiHomeDir ) );
+  XdgBaseDirs baseDirs;
+
+  QString akonadiHomeDir = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) );
+  if ( akonadiHomeDir.isEmpty() ) {
+    Tracer::self()->error( "DataStore::storagePath",
+                           QString::fromLatin1( "Unable to create directory '%1/akonadi'" ).arg( baseDirs.homePath( "data" ) ) );
   }
+
+  akonadiHomeDir += QLatin1Char( '/' );
 
   if ( driverName() == QLatin1String( "QSQLITE" ) ) {
     const QString akonadiPath = akonadiHomeDir + QLatin1String("akonadi.db");

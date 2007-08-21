@@ -128,7 +128,7 @@ class ProfileManager : public QObject
     void profileAgentRemoved( const QString &profileIdentifier, const QString &agentIdentifier );
 
   private:
-    QString profilePath() const;
+    QString profilePath( bool writeable ) const;
 
     QMap<QString, QStringList> mProfiles;
     org::kde::Akonadi::Tracer *mTracer;

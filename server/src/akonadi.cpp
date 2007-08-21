@@ -27,6 +27,7 @@
 #include "notificationmanager.h"
 #include "resourcemanager.h"
 #include "tracer.h"
+#include "xdgbasedirs.h"
 #include "xesammanager.h"
 
 #include <QtCore/QCoreApplication>
@@ -50,19 +51,23 @@ AkonadiServer::AkonadiServer( QObject* parent )
 #endif
     , mDatabaseProcess( 0 )
 {
-    // create the akonadi directory
-    QDir homeDir = QDir::home();
-    if ( !homeDir.exists( QLatin1String( ".akonadi/" ) ) )
-      homeDir.mkdir( QLatin1String( ".akonadi/" ) );
+    XdgBaseDirs baseDirs;
 
-    QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
+    QString serverConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiserverrc" ) );
+    if ( serverConfigFile.isEmpty() ) {
+      serverConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiserverrc" );
+    }
+
+    QSettings settings( serverConfigFile, QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL" )
          && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
       startDatabaseProcess();
 
     s_instance = this;
 
-    QSettings connectionSettings( QDir::homePath() + QLatin1String("/.akonadi/akonadiconnectionrc"), QSettings::IniFormat );
+    QString connectionSettingsFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" ) ) + QLatin1String( "/akonadiconnectionrc" );
+
+    QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
 
 #ifdef Q_OS_WIN
     int port = settings.value( QLatin1String( "Connection/Port" ), 4444 ).toInt();
@@ -73,10 +78,11 @@ AkonadiServer::AkonadiServer( QObject* parent )
     connectionSettings.setValue( QLatin1String( "Data/Address" ), serverAddress().toString() );
     connectionSettings.setValue( QLatin1String( "Data/Port" ), serverPort() );
 #else
-    QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), QLatin1String( ".akonadi" ) ).toString();
+    QString defaultSocketDir = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) );
+    QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
     if ( socketDir[0] != QLatin1Char( '/' ) )
     {
-      homeDir.mkdir( socketDir );
+      QDir::home().mkdir( socketDir );
       socketDir = QDir::homePath() + QLatin1Char( '/' ) + socketDir;
     }
 
@@ -133,16 +139,29 @@ void AkonadiServer::quit()
       }
     }
 
-    QSettings settings( QDir::homePath() + QLatin1String("/.akonadi/akonadiserverrc"), QSettings::IniFormat );
+    XdgBaseDirs baseDirs;
+
+    QString serverConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiserverrc" ) );
+    if ( serverConfigFile.isEmpty() ) {
+      serverConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiserverrc" );
+    }
+
+    QSettings settings( serverConfigFile, QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver") ).toString() == QLatin1String( "QMYSQL" )
          && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
       stopDatabaseProcess();
 
+    QString connectionSettingsFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" ) ) + QLatin1String( "/akonadiconnectionrc" );
+
 #ifndef Q_OS_WIN
-    if ( !QDir::home().remove( QLatin1String( ".akonadi/akonadiserver.socket" ) ) )
+    QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
+    QString defaultSocketDir = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) );
+    QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
+
+    if ( !QDir::home().remove( socketDir + QLatin1String( "/akonadiserver.socket" ) ) )
         qWarning("Failed to remove Unix socket");
 #endif
-    if ( !QDir::home().remove( QLatin1String( ".akonadi/akonadiconnectionrc" ) ) )
+    if ( !QDir::home().remove( connectionSettingsFile ) )
         qWarning("Failed to remove runtime connection config file");
 
     QTimer::singleShot( 0, this, SLOT( doQuit() ) );
@@ -172,24 +191,28 @@ AkonadiServer * AkonadiServer::instance()
 void AkonadiServer::startDatabaseProcess()
 {
   // create the database directories if they don't exists
-  QDir akonadiDirectory( QDir::home().path() + QLatin1String( "/.akonadi/" ) );
+  XdgBaseDirs baseDirs;
 
-  if ( !akonadiDirectory.exists( QLatin1String( "db_data/" ) ) )
-    akonadiDirectory.mkdir( QLatin1String( "db_data/" ) );
+  QString dataDir = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_data" ) );
+  QString logDir  = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_log" ) );
+  QString miscDir = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
 
-  if ( !akonadiDirectory.exists( QLatin1String( "db_log/" ) ) )
-    akonadiDirectory.mkdir( QLatin1String( "db_log/" ) );
+  if ( dataDir.isEmpty() )
+    qFatal("Akonadi server was not able not create database data directory");
 
-  if ( !akonadiDirectory.exists( QLatin1String( "db_misc/" ) ) )
-    akonadiDirectory.mkdir( QLatin1String( "db_misc/" ) );
+  if ( logDir.isEmpty() )
+    qFatal("Akonadi server was not able not create database log directory");
+
+  if ( miscDir.isEmpty() )
+    qFatal("Akonadi server was not able not create database misc directory");
 
   // synthesize the mysqld command
   QStringList arguments;
-  arguments << QString::fromLatin1( "--datadir=%1/db_data/" ).arg( akonadiDirectory.path() );
-  arguments << QString::fromLatin1( "--log-bin=%1/db_log/" ).arg( akonadiDirectory.path() );
-  arguments << QString::fromLatin1( "--log-bin-index=%1/db_log/" ).arg( akonadiDirectory.path() );
-  arguments << QString::fromLatin1( "--socket=%1/db_misc/mysql.socket" ).arg( akonadiDirectory.path() );
-  arguments << QString::fromLatin1( "--pid-file=%1/db_misc/mysql.pid" ).arg( akonadiDirectory.path() );
+  arguments << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
+  arguments << QString::fromLatin1( "--log-bin=%1/" ).arg( logDir );
+  arguments << QString::fromLatin1( "--log-bin-index=%1/" ).arg( logDir );
+  arguments << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+  arguments << QString::fromLatin1( "--pid-file=%1/mysql.pid" ).arg( miscDir );
   arguments << QString::fromLatin1( "--skip-grant-table" );
   arguments << QString::fromLatin1( "--skip-networking" );
 
@@ -198,7 +221,7 @@ void AkonadiServer::startDatabaseProcess()
   mDatabaseProcess->waitForStarted();
 
   QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
-  db.setConnectOptions( QString::fromLatin1( "UNIX_SOCKET=%1/db_misc/mysql.socket" ).arg( akonadiDirectory.path() ) );
+  db.setConnectOptions( QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir ) );
 
   bool opened = false;
   for ( int i = 0; i < 10; ++i ) {

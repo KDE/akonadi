@@ -83,6 +83,7 @@ set(libakonadiprivate_SRCS
   src/cachepolicymanager.cpp
   src/cachecleaner.cpp
   src/xesammanager.cpp
+  src/xdgbasedirs.cpp
 )
 
 qt4_generate_dbus_interface(../server/src/cachepolicymanager.h org.kde.Akonadi.CachePolicyManager.xml)

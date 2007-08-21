@@ -29,6 +29,7 @@
 #include "agentmanager.h"
 #include "agentmanageradaptor.h"
 #include "processcontrol.h"
+#include "xdgbasedirs.h"
 
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
@@ -376,24 +377,26 @@ QString AgentManager::pluginInfoPath()
   return QString( "%1/share/apps/akonadi/agents" ).arg( AKONADIDIR );
 }
 
-QString AgentManager::configPath()
+QString AgentManager::configPath( bool writeable )
 {
-  const QString homePath = QDir::homePath();
-  const QString akonadiHomeDir = QString( "%1/%2" ).arg( homePath, ".akonadi" );
+  Akonadi::XdgBaseDirs baseDirs;
 
-  if ( !QDir( akonadiHomeDir ).exists() ) {
-    QDir dir;
-    dir.mkdir( akonadiHomeDir );
-  }
+  const QString configFile =
+    baseDirs.findResourceFile( "config", QLatin1String( "akonadi/agentsrc" ) );
 
-  return akonadiHomeDir + "/agentsrc";
+  if ( !writeable && !configFile.isEmpty() )
+    return configFile;
+
+  const QString configDir = baseDirs.saveDir( "config", "akonadi" );
+
+  return configDir + QLatin1String( "/agentsrc" );
 }
 
 void AgentManager::load()
 {
   mInstanceInfos.clear();
 
-  QSettings file( configPath(), QSettings::IniFormat );
+  QSettings file( configPath( false ), QSettings::IniFormat );
   file.beginGroup( "InstanceCounters" );
 
   QStringList entries = file.childGroups();
@@ -468,7 +471,7 @@ void AgentManager::load()
 
 void AgentManager::save()
 {
-  QSettings file( configPath(), QSettings::IniFormat );
+  QSettings file( configPath( true ), QSettings::IniFormat );
 
   file.clear();
   file.beginGroup( "InstanceCounters" );
