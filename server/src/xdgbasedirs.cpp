@@ -48,7 +48,7 @@ class XdgBaseDirsPrivate
     QStringList mDataDirs;
 };
 
-};
+}
 
 using namespace Akonadi;
 
