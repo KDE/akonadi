@@ -28,6 +28,8 @@
 #include <QObject>
 #include <QStringList>
 
+class QDir;
+
 namespace Akonadi {
 
 class ProcessControl;
@@ -56,14 +58,21 @@ class SearchProviderManager : public QObject
 
   private:
     /**
-      Returns the path where the .desktop files for searchproviders are located.
+      Returns the path list where the .desktop files for searchproviders are located.
     */
-    static QString providerInfoPath();
+    static QStringList providerInfoPathList();
 
     /**
       Reads information about available search providers.
     */
     void readProviderInfos();
+
+    /**
+      Reads information about available search providers from a given directory.
+
+      @param directory the directory to get provider information from
+    */
+    void readProviderInfos( const QDir &directory );
 
     /**
       Start search provider processes.

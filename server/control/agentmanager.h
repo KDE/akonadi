@@ -26,6 +26,8 @@
 #include "resourceinterface.h"
 #include "tracerinterface.h"
 
+class QDir;
+
 namespace Akonadi {
   class ProcessControl;
 }
@@ -244,10 +246,10 @@ class AgentManager : public QObject
 
   private:
     /**
-     * Returns the directory path where the .desktop files
+     * Returns the list of directory paths where the .desktop files
      * for the plugins are located.
      */
-    static QString pluginInfoPath();
+    static QStringList pluginInfoPathList();
 
     /**
      * Returns the path of the config file.
@@ -268,6 +270,13 @@ class AgentManager : public QObject
      * Reads the plugin infos from directory.
      */
     void readPluginInfos();
+
+    /**
+     * Reads the plugin infos from directory.
+     *
+     * @param directory the directory to get plugin information from
+     */
+    void readPluginInfos( const QDir &directory );
 
     /**
      * Internal method.

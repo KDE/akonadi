@@ -24,8 +24,6 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
-#include <akonadi-prefix.h> // for AKONADIDIR
-
 #include "agentmanager.h"
 #include "agentmanageradaptor.h"
 #include "processcontrol.h"
@@ -48,11 +46,15 @@ AgentManager::AgentManager( QObject *parent )
 
   readPluginInfos();
 
-  QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
-  watcher->addPath( pluginInfoPath() );
+  QStringList pathList = pluginInfoPathList();
 
-  connect( watcher, SIGNAL( directoryChanged( const QString& ) ),
-           this, SLOT( updatePluginInfos() ) );
+  foreach ( QString path, pathList ) {
+    QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
+    watcher->addPath( path );
+
+    connect( watcher, SIGNAL( directoryChanged( const QString& ) ),
+             this, SLOT( updatePluginInfos() ) );
+  }
 
   load();
 }
@@ -329,8 +331,16 @@ void AgentManager::readPluginInfos()
 {
   mPluginInfos.clear();
 
-  QDir directory( pluginInfoPath(), "*.desktop" );
+  QStringList pathList = pluginInfoPathList();
 
+  foreach ( QString path, pathList ) {
+      QDir directory( path, "*.desktop" );
+      readPluginInfos( directory );
+  }
+}
+
+void AgentManager::readPluginInfos( const QDir& directory )
+{
   QStringList files = directory.entryList();
   for ( int i = 0; i < files.count(); ++i ) {
     const QString fileName = directory.absoluteFilePath( files[ i ] );
@@ -372,9 +382,10 @@ void AgentManager::readPluginInfos()
   }
 }
 
-QString AgentManager::pluginInfoPath()
+QStringList AgentManager::pluginInfoPathList()
 {
-  return QString( "%1/share/apps/akonadi/agents" ).arg( AKONADIDIR );
+  Akonadi::XdgBaseDirs baseDirs;
+  return baseDirs.findAllResourceDirs( "data", QLatin1String( "akonadi/agents" ) );
 }
 
 QString AgentManager::configPath( bool writeable )

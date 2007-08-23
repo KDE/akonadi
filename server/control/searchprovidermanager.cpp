@@ -19,8 +19,8 @@
 
 #include "processcontrol.h"
 #include "searchprovidermanager.h"
-#include "akonadi-prefix.h"
 #include "searchprovidermanageradaptor.h"
+#include "xdgbasedirs.h"
 
 #include <QDebug>
 #include <QDir>
@@ -60,17 +60,26 @@ QStringList Akonadi::SearchProviderManager::providersForMimeType(const QString &
   return result;
 }
 
-QString Akonadi::SearchProviderManager::providerInfoPath()
+QStringList Akonadi::SearchProviderManager::providerInfoPathList()
 {
-  return QString( "%1/share/apps/akonadi/searchproviders" ).arg( AKONADIDIR );
+  XdgBaseDirs baseDirs;
+  return baseDirs.findAllResourceDirs( "data", QLatin1String( "akonadi/searchproviders" ) );
 }
 
 void Akonadi::SearchProviderManager::readProviderInfos()
 {
   mProviderInfos.clear();
 
-  QDir directory( providerInfoPath(), "*.desktop" );
+  QStringList pathList = providerInfoPathList();
 
+  foreach ( QString path, pathList ) {
+      QDir directory( path, "*.desktop" );
+      readProviderInfos( directory );
+  }
+}
+
+void Akonadi::SearchProviderManager::readProviderInfos( const QDir& directory )
+{
   QStringList files = directory.entryList();
   for ( int i = 0; i < files.count(); ++i ) {
     const QString fileName = directory.absoluteFilePath( files[ i ] );
