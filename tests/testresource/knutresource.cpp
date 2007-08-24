@@ -363,7 +363,7 @@ void KnutResource::addCollection( const QDomElement &element, const Akonadi::Col
   Collection collection;
   collection.setParent( parentCollection );
   collection.setName( element.attribute( "name" ) );
-  collection.setRemoteId( mDataFile + "#" + element.attribute( "name" ) );
+  collection.setRemoteId( mDataFile + QLatin1Char( '#' ) + element.attribute( "name" ) );
   collection.setContentTypes( element.attribute( "mimetypes" ).split( ";", QString::SkipEmptyParts ) );
 
   CollectionEntry entry;
