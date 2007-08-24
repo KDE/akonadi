@@ -346,7 +346,7 @@ int CollectionModel::rowCount( const QModelIndex & parent ) const
 QVariant CollectionModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
   if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole )
-    return i18n( "Name" );
+    return i18nc( "@title:column", "Name" );
   return QAbstractItemModel::headerData( section, orientation, role );
 }
 

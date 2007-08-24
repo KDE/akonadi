@@ -213,18 +213,18 @@ class ResourceBase::Private
 QString ResourceBase::Private::defaultReadyMessage() const
 {
   if ( online )
-    return i18n( "Ready" );
-  return i18n( "Offline" );
+    return i18nc( "@info:status", "Ready" );
+  return i18nc( "@info:status", "Offline" );
 }
 
 QString ResourceBase::Private::defaultSyncingMessage() const
 {
-  return tr( "Syncing..." );
+  return i18nc( "@info:status", "Syncing..." );
 }
 
 QString ResourceBase::Private::defaultErrorMessage() const
 {
-  return tr( "Error!" );
+  return i18nc( "@info:status", "Error!" );
 }
 
 ResourceBase::ResourceBase( const QString & id )

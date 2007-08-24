@@ -83,8 +83,8 @@ QVariant MessageCollectionModel::headerData( int section, Qt::Orientation orient
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole )
     switch ( section ) {
-      case 1: return i18n( "Unread" );
-      case 2: return i18n( "Total" );
+      case 1: return i18nc( "@title:column", "Unread" );
+      case 2: return i18nc( "@title:column", "Total" );
     }
 
   return CollectionModel::headerData( section, orientation, role );

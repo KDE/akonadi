@@ -87,7 +87,7 @@ void CollectionView::Private::createCollection()
   QModelIndex index = mParent->currentIndex();
   if ( !index.data( CollectionModel::ChildCreatableRole ).toBool() )
     return;
-  QString name = QInputDialog::getText( mParent, i18n("New Folder"), i18n("Name") );
+  QString name = QInputDialog::getText( mParent, i18nc( "@title:window", "New Folder"), i18nc( "@label:textbox", "Name") );
   if ( name.isEmpty() )
     return;
   int parentId = index.data( CollectionModel::CollectionIdRole ).toInt();
