@@ -17,17 +17,18 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "agentmanager.h"
+
+#include "agentmanageradaptor.h"
+#include "processcontrol.h"
+#include "xdgbasedirs.h"
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFileSystemWatcher>
 #include <QtCore/QSettings>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
-
-#include "agentmanager.h"
-#include "agentmanageradaptor.h"
-#include "processcontrol.h"
-#include "xdgbasedirs.h"
 
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )

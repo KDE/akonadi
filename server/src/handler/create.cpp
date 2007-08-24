@@ -16,6 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+#include "create.h"
+
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
 
@@ -26,7 +28,6 @@
 #include "storage/transaction.h"
 #include "handlerhelper.h"
 
-#include "create.h"
 #include "imapparser.h"
 #include "response.h"
 

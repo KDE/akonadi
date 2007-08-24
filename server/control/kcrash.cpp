@@ -19,6 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "kcrash.h"
+
 #include <QtCore/QString>
 
 #include <string.h>
@@ -27,12 +29,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "config-akonadi.h"
+#include <config-akonadi.h>
 #ifdef HAVE_EXECINFO_H
 #include <execinfo.h>
 #endif
-
-#include "kcrash.h"
 
 QString kBacktrace()
 {

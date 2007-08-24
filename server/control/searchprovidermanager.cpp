@@ -17,8 +17,9 @@
     02110-1301, USA.
 */
 
-#include "processcontrol.h"
 #include "searchprovidermanager.h"
+
+#include "processcontrol.h"
 #include "searchprovidermanageradaptor.h"
 #include "xdgbasedirs.h"
 

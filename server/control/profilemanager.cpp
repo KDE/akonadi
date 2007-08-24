@@ -17,14 +17,15 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "profilemanager.h"
+
+#include "profilemanageradaptor.h"
+#include "xdgbasedirs.h"
+
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
-
-#include "profilemanager.h"
-#include "profilemanageradaptor.h"
-#include "xdgbasedirs.h"
 
 ProfileManager::ProfileManager( QObject *parent )
   : QObject( parent )

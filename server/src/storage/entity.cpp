@@ -17,12 +17,12 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "entity.h"
+#include "datastore.h"
+
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QtSql/QSqlQuery>
-
-#include "entity.h"
-#include "datastore.h"
 
 namespace Akonadi {
 

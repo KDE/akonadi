@@ -16,6 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
+#include "select.h"
+
 #include <QtCore/QDebug>
 
 #include "akonadi.h"
@@ -25,7 +27,6 @@
 #include "handlerhelper.h"
 #include "imapparser.h"
 
-#include "select.h"
 #include "response.h"
 
 using namespace Akonadi;

@@ -17,9 +17,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "searchpersistent.h"
+
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include "searchpersistent.h"
 #include "imapparser.h"
 #include "response.h"
 #include "storage/datastore.h"

@@ -16,6 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+#include "status.h"
+
 #include <QtCore/QDebug>
 
 #include "akonadi.h"
@@ -24,7 +26,6 @@
 #include "storage/entity.h"
 #include "storage/countquerybuilder.h"
 
-#include "status.h"
 #include "response.h"
 #include "imapparser.h"
 #include "handlerhelper.h"

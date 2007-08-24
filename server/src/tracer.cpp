@@ -16,10 +16,10 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+#include "tracer.h"
 
 #include <QtCore/QString>
 
-#include "tracer.h"
 #include "traceradaptor.h"
 
 #include "dbustracer.h"

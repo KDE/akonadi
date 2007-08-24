@@ -22,6 +22,7 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
+#include <QtCore/QString>
 
 namespace Akonadi {
 

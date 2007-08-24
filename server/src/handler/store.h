@@ -26,6 +26,8 @@
 
 namespace Akonadi {
 
+class PimItem;
+
 /**
   @ingroup akoandi_server_handler
 

@@ -17,13 +17,13 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "uid.h"
+
 #include "akonadi.h"
 #include "response.h"
 
 #include "fetch.h"
 #include "store.h"
-
-#include "uid.h"
 
 using namespace Akonadi;
 

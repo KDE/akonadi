@@ -17,13 +17,14 @@
     02110-1301, USA.
 */
 
+#include "aklist.h"
+
 #include <QtCore/QDebug>
 
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "imapparser.h"
 
-#include "aklist.h"
 #include "akonadiconnection.h"
 #include "response.h"
 

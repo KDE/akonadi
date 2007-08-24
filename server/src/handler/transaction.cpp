@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "handler/transaction.h"
+#include "transaction.h"
 #include "storage/datastore.h"
 #include "akonadiconnection.h"
 #include "imapparser.h"

@@ -17,13 +17,13 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "expunge.h"
+
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "response.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
-
-#include "expunge.h"
 
 using namespace Akonadi;
 

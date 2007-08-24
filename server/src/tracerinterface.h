@@ -20,6 +20,8 @@
 #ifndef AKONADI_TRACERINTERFACE_H
 #define AKONADI_TRACERINTERFACE_H
 
+class QString;
+
 namespace Akonadi {
 
 /**

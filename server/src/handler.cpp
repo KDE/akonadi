@@ -17,10 +17,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
+#include "handler.h"
+
 #include <QtCore/QDebug>
 #include <QtCore/QLatin1String>
 
-#include "handler.h"
 #include "response.h"
 #include "handler/aklist.h"
 #include "handler/append.h"

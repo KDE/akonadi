@@ -17,11 +17,11 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "noop.h"
+
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "response.h"
-
-#include "noop.h"
 
 using namespace Akonadi;
 

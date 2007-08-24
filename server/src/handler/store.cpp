@@ -17,6 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "store.h"
+
 #include <QtCore/QStringList>
 
 #include "akonadi.h"
@@ -27,8 +29,6 @@
 #include "handlerhelper.h"
 #include "imapparser.h"
 #include "storage/selectquerybuilder.h"
-
-#include "store.h"
 
 using namespace Akonadi;
 

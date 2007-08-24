@@ -17,6 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "dbinitializer.h"
+
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QList>
@@ -28,8 +30,6 @@
 #include <QtSql/QSqlQuery>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
-
-#include "dbinitializer.h"
 
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
   : mDatabase( database ), mTemplateFile( templateFile )
@@ -129,7 +129,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
           .arg( values );
       dataList << statement;
     } else if ( columnElement.tagName() == QLatin1String("reference") ) {
-      /* this is the n-side of a n:1 relationship. 
+      /* this is the n-side of a n:1 relationship.
        * it is used for code generation but not relevant for schema generation.
        */
     } else if ( columnElement.tagName() == QLatin1String("comment") ) {
