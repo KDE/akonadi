@@ -116,7 +116,7 @@ void AkonadiConnection::slotNewData()
                Qt::DirectConnection );
       try {
           // FIXME: remove the tag, it's only there for backward compatibility with the handlers!
-          if ( m_currentHandler->handleLine( m_parser->tag() + " " + m_parser->data() ) )
+          if ( m_currentHandler->handleLine( m_parser->tag() + ' ' + m_parser->data() ) )
               m_currentHandler = 0;
       } catch ( ... ) {
           delete m_currentHandler;

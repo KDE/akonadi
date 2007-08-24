@@ -41,10 +41,10 @@ QByteArray Response::asString() const
 {
     QByteArray b = m_tag;
     if ( m_tag != "*" && m_tag != "+" && m_resultCode != USER ) {
-        b += " ";
+        b += ' ';
         b += s_resultCodeStrings[m_resultCode];
     }
-    b += " ";
+    b += ' ';
     b += m_responseString;
     return b;
 }

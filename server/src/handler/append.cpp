@@ -204,7 +204,7 @@ bool Akonadi::Append::commit()
 
     response.setTag( tag() );
     response.setUserDefined();
-    response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + "]" );
+    response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + ']' );
     emit responseAvailable( response );
 
     response.setSuccess();

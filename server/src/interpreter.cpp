@@ -81,7 +81,7 @@ QString SearchInterpreterItem::dump() const
     text += ( mRelation == And ? "&" : "|" );
     for ( int i = 0; i < mItems.count(); ++i )
       text += mItems[ i ]->dump();
-    text += ")";
+    text += QLatin1Char( ')' );
 
     return text;
   }
