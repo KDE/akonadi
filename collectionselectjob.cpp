@@ -45,7 +45,7 @@ CollectionSelectJob::~ CollectionSelectJob( )
 
 void CollectionSelectJob::doStart( )
 {
-  writeData( newTag() + " SELECT " + QByteArray::number( d->collection.id() ) + "\n" );
+  writeData( newTag() + " SELECT " + QByteArray::number( d->collection.id() ) + '\n' );
 }
 
 void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )

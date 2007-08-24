@@ -108,7 +108,7 @@ void ItemStoreJob::Private::sendNextCommand()
     command += label.toUtf8();
     command += " {" + QByteArray::number( pendingData.size() ) + '}';
   }
-  command += "\n";
+  command += '\n';
   mParent->writeData( command );
   mParent->newTag(); // hack to circumvent automatic response handling
 }

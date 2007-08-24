@@ -77,7 +77,7 @@ void CollectionModifyJob::doStart()
     emitResult();
     return;
   }
-  command += changes + "\n";
+  command += changes + '\n';
   writeData( command );
 }
 

@@ -97,7 +97,7 @@ void SessionPrivate::dataReceived()
 
     // send login command
     if ( parser->tag() == "*" && parser->data().startsWith( "OK Akonadi" ) ) {
-      mParent->writeData( "0 LOGIN " + sessionId + "\n" );
+      mParent->writeData( "0 LOGIN " + sessionId + '\n' );
 
     // work for the current job
     } else {
