@@ -14,7 +14,7 @@ set( control_SRCS
   processcontrol.cpp
   profilemanager.cpp
   searchprovidermanager.cpp
-  ../src/xdgbasedirs.cpp
+  ../../libakonadi/xdgbasedirs.cpp
 )
 
 qt4_generate_dbus_interface( ../../libakonadi/resource.h org.kde.Akonadi.Resource.xml )
