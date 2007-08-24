@@ -15,7 +15,7 @@ set( knutresource_SRCS
   main.cpp
 )
 
-install( FILES knutresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/apps/akonadi/agents" )
+install( FILES knutresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents" )
 
 
 kde4_add_executable(akonadi_knut_resource RUN_UNINSTALLED ${knutresource_SRCS})
