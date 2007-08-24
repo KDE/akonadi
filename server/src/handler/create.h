@@ -24,7 +24,7 @@
 namespace Akonadi {
 
 /**
-  @ingroup akoandi_server_handler
+  @ingroup akonadi_server_handler
 
   Handler for the CREATE command. CREATE is backward-compatible with RFC 3051,
   except recursive collection creation.

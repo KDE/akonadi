@@ -25,7 +25,7 @@
 namespace Akonadi {
 
 /**
-  @ingroup akoandi_server_handler
+  @ingroup akonadi_server_handler
 
   Handler for transaction commands (BEGIN, COMMIT, ROLLBACK).
 */

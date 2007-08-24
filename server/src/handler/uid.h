@@ -27,7 +27,7 @@
 namespace Akonadi {
 
 /**
-  @ingroup akoandi_server_handler
+  @ingroup akonadi_server_handler
 
   Proxy handler for the uid command.
  */

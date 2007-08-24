@@ -26,7 +26,7 @@
 namespace Akonadi {
 
 /**
-  @ingroup akoandi_server_handler
+  @ingroup akonadi_server_handler
 
   Handler for collection deletion commands. It's basically RFC 3051 compatible,
   but also works with still existing sub-collections and content.

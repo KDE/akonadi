@@ -29,7 +29,7 @@ namespace Akonadi {
 class PimItem;
 
 /**
-  @ingroup akoandi_server_handler
+  @ingroup akonadi_server_handler
 
   Handler for the store command.
  */

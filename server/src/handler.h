@@ -32,7 +32,7 @@ namespace Akonadi {
     class AkonadiConnection;
 
 /**
-  \defgroup akoandi_server_handler Command handlers
+  \defgroup akonadi_server_handler Command handlers
 
   All commands supported by the Akonadi server are implemented as sub-classes of Akonadi::Handler.
 */

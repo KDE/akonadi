@@ -25,6 +25,8 @@
 namespace Akonadi {
 
 /**
+  @ingroup akonadi_server_handler
+
   Handler for the search_store search_delete commands.
 
   A persistent search can have the following forms:
