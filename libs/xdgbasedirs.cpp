@@ -84,7 +84,7 @@ QStringList XdgBaseDirs::systemPathList( const char *resource ) const
     if ( d->mDataDirs.isEmpty() ) {
       d->mDataDirs = d->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
 
-      QString prefixDataDir = QLatin1String( AKONADIDIR "/share/apps" );
+      QString prefixDataDir = QLatin1String( AKONADIDIR "/share" );
       if ( !d->mDataDirs.contains( prefixDataDir ) ) {
         d->mDataDirs << prefixDataDir;
       }
