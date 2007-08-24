@@ -621,7 +621,7 @@ QSqlRecord QMYSQLEmbeddedResult::record() const
 
 #if MYSQL_VERSION_ID >= 40108
 
-static MYSQL_TIME *toMySqlDate(QDate date, QTime time, QVariant::Type type)
+static MYSQL_TIME *toMySqlDate(const QDate& date, const QTime& time, QVariant::Type type)
 {
     Q_ASSERT(type == QVariant::Time || type == QVariant::Date
              || type == QVariant::DateTime);
