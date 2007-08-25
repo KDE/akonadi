@@ -178,7 +178,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
       for ( int j = 0; j < table.count(); ++j ) {
         const QSqlField column = table.field( j );
 
-        if ( columnsList[ i ].first == column.name() ) {
+        if ( columnsList[ i ].first.toLower() == column.name().toLower() ) {
           found = true;
         }
       }
