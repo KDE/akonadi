@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
-#include <QtCore/QStringList>
-
 #include "profilemodel.h"
 #include "profilemanager.h"
+
+#include <QtCore/QStringList>
 
 using namespace Akonadi;
 

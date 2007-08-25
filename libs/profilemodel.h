@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef PROFILEMODEL_H
-#define PROFILEMODEL_H
+#ifndef AKONADI_PROFILEMODEL_H
+#define AKONADI_PROFILEMODEL_H
 
 #include "libakonadi_export.h"
 #include <QtCore/QAbstractItemModel>

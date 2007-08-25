@@ -16,10 +16,10 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
-#include <QtCore/QDebug>
-
 #include "capability.h"
 #include "response.h"
+
+#include <QtCore/QDebug>
 
 using namespace Akonadi;
 

@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
+#include "profileview.h"
+
 #include <QtGui/QApplication>
 #include <QtGui/QListView>
 #include <QtGui/QVBoxLayout>
 
 #include <libakonadi/profilemodel.h>
-
-#include "profileview.h"
 
 using namespace Akonadi;
 
