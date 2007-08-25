@@ -28,7 +28,6 @@ INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 4);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 2);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 2, 5);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 1);
-INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 2, 5);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 3, 5);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 4, 5);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 8, 5);
@@ -53,5 +52,4 @@ INSERT INTO PimItemTable (id, remoteId, data, locationId, mimeTypeId) VALUES (15
 INSERT INTO PimItemFlagRelation (Flag_id, PimItem_id) VALUES (5, 1);
 INSERT INTO PimItemFlagRelation (Flag_id, PimItem_id) VALUES (8, 1);
 INSERT INTO PimItemFlagRelation (Flag_id, PimItem_id) VALUES (7, 1);
-INSERT INTO PimItemFlagRelation (Flag_id, PimItem_id) VALUES (5, 2);
 INSERT INTO PimItemFlagRelation (Flag_id, PimItem_id) VALUES (5, 2);

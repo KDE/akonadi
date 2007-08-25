@@ -87,6 +87,7 @@
     <column name="remoteId" type="QString"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="parentId" type="int" refTable="Location" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Location(id)"/>
+    <index name="parentIndex" columns="parentId" unique="false"/>
     <reference name="children" table="Location" key="parentId"/>
     <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="REFERENCES CachePolicy(id)">
       <comment>Identifier of the cache policy that should be used for this
@@ -121,6 +122,7 @@
     <column name="remoteId" type="QByteArray"/>
     <column name="data" type="QByteArray"/>
     <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
+    <index name="locationIndex" columns="locationId" unique="false"/>
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP">
       <comment>create/modified time</comment>
