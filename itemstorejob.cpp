@@ -80,33 +80,33 @@ void ItemStoreJob::Private::sendNextCommand()
     operations.remove( op );
     switch ( op ) {
       case SetFlags:
-        command += "FLAGS (" + joinFlags( flags ) + ')';
+        command += "FLAGS.SILENT (" + joinFlags( flags ) + ')';
         break;
       case AddFlags:
-        command += "+FLAGS (" + joinFlags( addFlags ) + ')';
+        command += "+FLAGS.SILENT (" + joinFlags( addFlags ) + ')';
         break;
       case RemoveFlags:
-        command += "-FLAGS (" + joinFlags( removeFlags ) + ')';
+        command += "-FLAGS.SILENT (" + joinFlags( removeFlags ) + ')';
         break;
       case Move:
-        command += "COLLECTION " + QByteArray::number( collection.id() );
+        command += "COLLECTION.SILENT " + QByteArray::number( collection.id() );
         break;
       case RemoteId:
         if ( item.reference().remoteId().isNull() ) {
           sendNextCommand();
           return;
         }
-        command += "REMOTEID \"" + item.reference().remoteId().toLatin1() + '\"';
+        command += "REMOTEID.SILENT \"" + item.reference().remoteId().toLatin1() + '\"';
         break;
       case Dirty:
-        command += "DIRTY";
+        command += "DIRTY.SILENT";
         break;
     }
   } else {
     QString label = parts.takeFirst();
     pendingData = item.part( label );
     command += label.toUtf8();
-    command += " {" + QByteArray::number( pendingData.size() ) + '}';
+    command += ".SILENT {" + QByteArray::number( pendingData.size() ) + '}';
   }
   command += '\n';
   mParent->writeData( command );
