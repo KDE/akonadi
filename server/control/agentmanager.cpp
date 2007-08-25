@@ -29,6 +29,10 @@
 #include <QtCore/QSettings>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
+#include <QtCore/QDebug>
+
+#include <kstandarddirs.h>
+
 
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
@@ -177,7 +181,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   QStringList arguments;
   arguments << "--identifier" << agentIdentifier;
 
-  const QString executable = mPluginInfos[ identifier ].exec;
+  const QString executable = KStandardDirs::findExe( mPluginInfos[ identifier ].exec );
   mInstances[ agentIdentifier ].controller->start( executable, arguments );
 
   save();
@@ -343,6 +347,8 @@ void AgentManager::readPluginInfos()
 void AgentManager::readPluginInfos( const QDir& directory )
 {
   QStringList files = directory.entryList();
+  qDebug() << "PLUGINS: " << directory;
+  qDebug() << "PLUGINS: " << files;
   for ( int i = 0; i < files.count(); ++i ) {
     const QString fileName = directory.absoluteFilePath( files[ i ] );
 
@@ -378,7 +384,7 @@ void AgentManager::readPluginInfos( const QDir& directory )
       continue;
     }
 
-
+  qDebug() << "PLUGINS inserting: " << identifier;
     mPluginInfos.insert( identifier, info );
   }
 }
@@ -472,7 +478,7 @@ void AgentManager::load()
     QStringList arguments;
     arguments << "--identifier" << instanceIdentifier;
 
-    const QString executable = mPluginInfos[ agentType ].exec;
+    const QString executable = KStandardDirs::findExe( mPluginInfos[ agentType ].exec );
     mInstances[ instanceIdentifier ].controller->start( executable, arguments );
 
     file.endGroup();
