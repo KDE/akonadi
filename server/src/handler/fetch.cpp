@@ -170,10 +170,9 @@ QByteArray Fetch::buildResponse( const PimItem &item, const FetchQuery &fetchQue
       attributesString += attributes[ i ];
   }
 
-  int itemPosition = connection()->storageBackend()->pimItemPosition( item );
-
+  // IMAP protocol violation: should actually be the sequence number
   if ( attributes.isEmpty() )
-    return QByteArray::number( itemPosition ) + " FETCH";
+    return QByteArray::number( item.id() ) + " FETCH";
   else
-    return QByteArray::number( itemPosition ) + " FETCH (" + attributesString + ')';
+    return QByteArray::number( item.id() ) + " FETCH (" + attributesString + ')';
 }

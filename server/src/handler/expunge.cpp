@@ -57,11 +57,10 @@ bool Expunge::handleLine( const QByteArray& )
 
   QList<PimItem> items = store->listPimItems( location, flag );
   for ( int i = 0; i < items.count(); ++i ) {
-    const int position = store->pimItemPosition( items[ i ] );
-
     if ( store->cleanupPimItem( items[ i ] ) ) {
       response.setUntagged();
-      response.setString( QByteArray::number( position ) + " EXPUNGE" );
+      // IMAP protocol violation: should actually be the sequence number
+      response.setString( QByteArray::number( items[i].id() ) + " EXPUNGE" );
 
       emit responseAvailable( response );
     } else {

@@ -158,9 +158,9 @@ bool Store::handleLine( const QByteArray& line )
       for ( int j = 0; j < flags.count(); ++j )
         flagList.append( flags[ j ].name() );
 
-      int itemPosition = store->pimItemPosition( pimItems[ i ] );
       response.setUntagged();
-      response.setString( QByteArray::number( itemPosition ) + " FETCH (FLAGS (" + flagList.join( QLatin1String(" ") ).toUtf8() + "))" );
+      // IMAP protocol violation: should actually be the sequence number
+      response.setString( QByteArray::number( pimItems[i].id() ) + " FETCH (FLAGS (" + flagList.join( QLatin1String(" ") ).toUtf8() + "))" );
       emit responseAvailable( response );
     }
   }

@@ -667,33 +667,6 @@ bool DataStore::cleanupPimItems( const Location &location )
   return ok;
 }
 
-int DataStore::pimItemPosition( const PimItem &item )
-{
-  if ( !m_dbOpened || !item.isValid() )
-    return -1;
-
-  const QString statement = QString::fromLatin1( "SELECT %1 FROM %2 WHERE %3 = :locationId" )
-      .arg( PimItem::idColumn(), PimItem::tableName(), PimItem::locationIdColumn() );
-
-  QSqlQuery query( m_database );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":locationId"), item.locationId() );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during selection of pim item position." );
-    return -1;
-  }
-
-  int i = 1;
-  while ( query.next() ) {
-    if ( item.id() == query.value( 0 ).toInt() )
-      return i;
-
-    ++i;
-  }
-
-  return -1;
-}
-
 QString fieldNameForDataType( FetchQuery::Type type )
 {
   return QLatin1String("data");

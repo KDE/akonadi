@@ -172,12 +172,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
      */
     bool cleanupPimItems( const Location &location );
 
-    /**
-     * Returns the current position ( folder index ) of this
-     * item.
-     */
-    int pimItemPosition( const PimItem &item );
-
     int highestPimItemId() const;
     int highestPimItemCountByLocation( const Location &location );
 
