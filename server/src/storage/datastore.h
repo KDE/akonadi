@@ -33,6 +33,8 @@ class QSqlQuery;
 #include "fetchquery.h"
 #include "notificationcollector.h"
 
+class OrgKdeAkonadiResourceInterface;
+
 namespace Akonadi {
 
 class FetchQuery;
@@ -292,6 +294,11 @@ protected:
      */
     static QDateTime dateTimeToQDateTime( const QByteArray & dateTime );
 
+    /**
+      Returns the D-Bus interface of the given resource.
+    */
+    OrgKdeAkonadiResourceInterface* resourceInterface( const Resource &res );
+
 private:
     QString m_connectionName;
     QSqlDatabase m_database;
@@ -311,6 +318,9 @@ private:
     static QString mDbUserName;
     static QString mDbPassword;
     static QString mDbConnectionOptions;
+
+    // resource dbus interface cache
+    QHash<int, OrgKdeAkonadiResourceInterface*> mResourceInterfaceCache;
 };
 
 }

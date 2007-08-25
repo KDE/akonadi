@@ -730,17 +730,10 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
       mPendingItemDeliveriesMutex.unlock();
 
       // call the resource
-      org::kde::Akonadi::Resource *interface =
-            new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + r.name(),
-                                             QLatin1String("/"), QDBusConnection::sessionBus(), this );
-
-      bool ok = false;
-      if ( !interface || !interface->isValid() ) {
-        qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                                        .arg( r.name(), interface ? interface->lastError().message() : QString() );
-      } else {
+      org::kde::Akonadi::Resource *interface = resourceInterface( r );
+      if ( interface ) {
         // FIXME: add correct item part list
-        ok = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), QStringList() );
+        interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), QStringList() );
       }
 
       mPendingItemDeliveriesMutex.lock();
@@ -1216,6 +1209,27 @@ bool Akonadi::DataStore::commitTransaction()
 bool Akonadi::DataStore::inTransaction() const
 {
   return m_inTransaction;
+}
+
+org::kde::Akonadi::Resource * Akonadi::DataStore::resourceInterface( const Resource &res )
+{
+  org::kde::Akonadi::Resource* iface = 0;
+  if ( mResourceInterfaceCache.contains( res.id() ) )
+    iface = mResourceInterfaceCache.value( res.id() );
+  if ( iface && iface->isValid() )
+    return iface;
+
+  delete iface;
+  iface = new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + res.name(),
+                                           QLatin1String("/"), QDBusConnection::sessionBus(), this );
+  if ( !iface || !iface->isValid() ) {
+    qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+                                    .arg( res.name(), iface ? iface->lastError().message() : QString() );
+    delete iface;
+    return 0;
+  }
+  mResourceInterfaceCache.insert( res.id(), iface );
+  return iface;
 }
 
 #include "datastore.moc"
