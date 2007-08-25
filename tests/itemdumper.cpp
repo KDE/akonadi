@@ -39,6 +39,7 @@ ItemDumper::ItemDumper( const QString &path, const QString &filename, const QStr
   Q_ASSERT( f.open(QIODevice::ReadOnly) );
   QByteArray data = f.readAll();
   f.close();
+  mTime.start();
   Item item;
   item.setMimeType( mimetype );
   item.addPart( Item::PartBody, data );
@@ -54,6 +55,7 @@ void ItemDumper::done( KJob * job )
   } else {
     qDebug() << "Done!";
   }
+  qDebug() << "Time:" << mTime.elapsed();
   qApp->quit();
 }
 

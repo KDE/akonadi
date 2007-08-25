@@ -23,6 +23,8 @@
 #include <libakonadi/collection.h>
 #include <libakonadi/itemappendjob.h>
 
+#include <QTime>
+
 class ItemDumper : public QObject
 {
   Q_OBJECT
@@ -31,6 +33,9 @@ class ItemDumper : public QObject
 
   private Q_SLOTS:
     void done(KJob* job);
+
+  private:
+    QTime mTime;
 
 };
 
