@@ -59,9 +59,9 @@ class SessionPrivate;
   With the synchronous interface the code looks like
 
   \code
-    Akonadi::SomeJob job( some parameter );
-    if ( !job.exec() ) {
-      qDebug( "Error: %s", qPrintable( job.errorString() ) );
+    Akonadi::SomeJob *job = new Akonadi::SomeJob( some parameter );
+    if ( !job->exec() ) {
+      qDebug( "Error: %s", qPrintable( job->errorString() ) );
     } else {
       // do something
     }
