@@ -146,14 +146,14 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
 
   XdgBaseDirs baseDirs;
 
-  QString connectionConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiconnectionrc" ) );
-  if ( connectionConfigFile.isEmpty() ) {
+  QString connectionConfigFile = baseDirs.akonadiConnectionConfigFile();
+
+  QFileInfo fileInfo( connectionConfigFile );
+  if ( !fileInfo.exists() ) {
     qWarning() << "Akonadi Client Session: connection config file '"
                << "akonadi/akonadiconnectionrc can not be found in '"
                << baseDirs.homePath( "config" ) << "' nor in any of "
                << baseDirs.systemPathList( "config" );
-
-    connectionConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiconnectionrc" );
   }
 
   d->mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );

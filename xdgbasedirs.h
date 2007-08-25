@@ -22,6 +22,9 @@
 
 #include "libakonadi_export.h"
 
+// Qt includes
+#include <QtCore/QFlags>
+
 // forward declarations
 class QString;
 class QStringList;
@@ -212,8 +215,50 @@ class AKONADI_EXPORT XdgBaseDirs
      */
     QString saveDir( const char *resource, const QString &relPath ) const;
 
+    /**
+    * @brief Open mode flags for resource files
+    *
+    * FileAccessMode is a typedef for QFlags<FileAccessFlag>. It stores
+    * a OR combination of FileAccessFlag values
+    */
+    enum FileAccessFlag
+    {
+        ReadOnly  = 0x1,
+        WriteOnly = 0x2,
+        ReadWrite = ReadOnly | WriteOnly
+    };
+
+    typedef QFlags<FileAccessFlag> FileAccessMode;
+
+    /**
+    * @brief Returns the path of the Akonadi server config file
+    *
+    * Convenience method for getting the server config file "akonadiserverrc"
+    * since this is an often needed procedure in several parts of the code.
+    *
+    * @param openMode how the application wants to use the config file
+    *
+    * @return the path of the server config file, suitable for \p openMode
+    */
+    QString akonadiServerConfigFile( FileAccessMode openMode = ReadOnly ) const;
+
+    /**
+    * @brief Returns the path of the Akonadi data connection config file
+    *
+    * Convenience method for getting the server config file "akonadiconnectionrc"
+    * since this is an often needed procedure in several parts of the code.
+    *
+    * @param openMode how the application wants to use the config file
+    *
+    * @return the path of the data connection config file, suitable for \p openMode
+    */
+    QString akonadiConnectionConfigFile( FileAccessMode openMode = ReadOnly ) const;
+
   private:
     XdgBaseDirsPrivate* const d;
+
+  private:
+    QString akonadiConfigFile( const QString &file, FileAccessMode openMode ) const;
 
   private:
     XdgBaseDirs( const XdgBaseDirs &);
