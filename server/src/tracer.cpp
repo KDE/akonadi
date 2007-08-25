@@ -18,6 +18,7 @@
  ***************************************************************************/
 #include "tracer.h"
 
+#include <QtCore/QSettings>
 #include <QtCore/QString>
 
 #include "traceradaptor.h"
@@ -25,15 +26,32 @@
 #include "dbustracer.h"
 #include "filetracer.h"
 #include "nulltracer.h"
+#include "xdgbasedirs.h"
 
 using namespace Akonadi;
 
 Tracer* Tracer::mSelf = 0;
 
-Tracer::Tracer()
+Tracer::Tracer() : mTracerBackend( 0 )
 {
-  // TODO: make it configurable?
-  mTracerBackend = new DBusTracer();
+  // TODO de-duplicate the following lines
+  XdgBaseDirs baseDirs;
+  QString serverConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiserverrc" ) );
+  if ( serverConfigFile.isEmpty() ) {
+    serverConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiserverrc" );
+  }
+  QSettings settings( serverConfigFile, QSettings::IniFormat );
+
+  const QString type = settings.value( QLatin1String( "Debug/Tracer" ), QLatin1String( "dbus" ) ).toString();
+  if ( type == QLatin1String("file") ) {
+    qFatal( "Implement me!" );
+//     mTracerBackend = new FileTracer();
+  } else if ( type == QLatin1String("null") ) {
+    mTracerBackend = new NullTracer();
+  } else {
+    mTracerBackend = new DBusTracer();
+  }
+  Q_ASSERT( mTracerBackend );
 
   new TracerAdaptor( this );
 
