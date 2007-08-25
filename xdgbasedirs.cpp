@@ -19,7 +19,7 @@
 
 #include "xdgbasedirs.h"
 
-#include "akonadi-prefix.h" // for AKONADIDIR
+#include "akonadi-prefix.h" // for prefix defines
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
@@ -84,7 +84,7 @@ QStringList XdgBaseDirs::systemPathList( const char *resource ) const
     if ( d->mDataDirs.isEmpty() ) {
       d->mDataDirs = d->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
 
-      QString prefixDataDir = QLatin1String( AKONADIDIR "/share" );
+      QString prefixDataDir = QLatin1String( AKONADIDATA );
       if ( !d->mDataDirs.contains( prefixDataDir ) ) {
         d->mDataDirs << prefixDataDir;
       }
@@ -93,6 +93,11 @@ QStringList XdgBaseDirs::systemPathList( const char *resource ) const
   } else if ( qstrncmp( "config", resource, 6 ) == 0) {
     if ( d->mConfigDirs.isEmpty() ) {
       d->mConfigDirs = d->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
+
+      QString prefixConfigDir = QLatin1String( AKONADICONFIG );
+      if ( !d->mConfigDirs.contains( prefixConfigDir ) ) {
+        d->mConfigDirs << prefixConfigDir;
+      }
     }
     return d->mConfigDirs;
   }
