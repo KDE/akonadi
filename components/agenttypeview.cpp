@@ -17,14 +17,14 @@
     02110-1301, USA.
 */
 
+#include "agenttypeview.h"
+
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QListView>
 #include <QtGui/QPainter>
 
 #include <libakonadi/agenttypemodel.h>
-
-#include "agenttypeview.h"
 
 using namespace Akonadi;
 

@@ -21,17 +21,17 @@
     02110-1301, USA.
 */
 
+#include "job.h"
+#include "job_p.h"
+#include "imapparser.h"
+#include "session.h"
+
 #include <QtCore/QDebug>
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
 #include <QtCore/QTextStream>
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QTcpSocket>
-
-#include "job.h"
-#include "job_p.h"
-#include "imapparser.h"
-#include "session.h"
 
 using namespace Akonadi;
 

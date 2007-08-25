@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include "agentinstanceview.h"
+
 #include <QtCore/QUrl>
 #include <QtGui/QAbstractTextDocumentLayout>
 #include <QtGui/QApplication>
@@ -26,8 +28,6 @@
 #include <QtGui/QTextDocument>
 
 #include <libakonadi/agentinstancemodel.h>
-
-#include "agentinstanceview.h"
 
 using namespace Akonadi;
 

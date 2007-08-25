@@ -20,7 +20,7 @@
 #ifndef ITEMPAYLOADINTERNALS_P_H
 #define ITEMPAYLOADINTERNALS_P_H
 
-#include <QtCore/qglobal.h>
+#include <QtCore/QtGlobal>
 
 #include <typeinfo>
 

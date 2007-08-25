@@ -17,8 +17,9 @@
     02110-1301, USA.
 */
 
-#include "collectionlistjob.h"
 #include "collectionpathresolver.h"
+
+#include "collectionlistjob.h"
 
 #include <klocale.h>
 

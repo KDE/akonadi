@@ -17,8 +17,9 @@
     02110-1301, USA.
 */
 
-#include "collection.h"
 #include "collectionlistjob.h"
+
+#include "collection.h"
 #include "imapparser.h"
 
 #include <QtCore/QDebug>

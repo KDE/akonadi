@@ -17,8 +17,9 @@
     02110-1301, USA.
 */
 
-#include "collectionmodel.h"
 #include "collectionview.h"
+
+#include "collectionmodel.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 

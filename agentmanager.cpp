@@ -19,7 +19,6 @@
 
 #include "agentmanager.h"
 
-#include "akonadi-prefix.h" // for AKONADIDIR
 #include "agentmanagerinterface.h"
 
 #include <kiconloader.h>

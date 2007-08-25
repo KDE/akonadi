@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AGENTINSTANCEMODEL_H
-#define AGENTINSTANCEMODEL_H
+#ifndef AKONADI_AGENTINSTANCEMODEL_H
+#define AKONADI_AGENTINSTANCEMODEL_H
 
 #include "libakonadi_export.h"
 #include <QtCore/QAbstractItemModel>

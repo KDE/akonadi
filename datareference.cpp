@@ -19,10 +19,10 @@
     02110-1301, USA.
 */
 
+#include "datareference.h"
+
 #include <QtCore/QHash>
 #include <QtCore/QSharedData>
-
-#include "datareference.h"
 
 using namespace Akonadi;
 

@@ -17,8 +17,9 @@
     02110-1301, USA.
 */
 
-#include "itemfetchjob.h"
 #include "itemmodel.h"
+
+#include "itemfetchjob.h"
 #include "monitor.h"
 #include "session.h"
 

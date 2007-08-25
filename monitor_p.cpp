@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
+#include "monitor_p.h"
+
 #include "collectionlistjob.h"
 #include "itemfetchjob.h"
-
-#include "monitor_p.h"
 
 using namespace Akonadi;
 

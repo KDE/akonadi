@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONPROXYFILTERMODEL_H
-#define AKONADI_COLLECTIONPROXYFILTERMODEL_H
+#ifndef AKONADI_COLLECTIONFILTERPROXYMODEL_H
+#define AKONADI_COLLECTIONFILTERPROXYMODEL_H
 
 #include "libakonadi_export.h"
 #include <QtGui/QSortFilterProxyModel>
@@ -80,7 +80,7 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
     /**
      * Reimplemented to only accept rows (collections) which are able to contain the filter mimetypes.
      */
-    virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const; 
+    virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const;
 
   private:
     class Private;

@@ -17,10 +17,11 @@
     02110-1301, USA.
 */
 
+#include "collectionmodel.h"
+
 #include "collection.h"
 #include "collectionstatusjob.h"
 #include "collectionlistjob.h"
-#include "collectionmodel.h"
 #include "collectionmodifyjob.h"
 #include "itemstorejob.h"
 #include "itemappendjob.h"

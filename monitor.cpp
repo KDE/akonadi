@@ -17,11 +17,12 @@
     02110-1301, USA.
 */
 
+#include "monitor.h"
+#include "monitor_p.h"
+
 #include "collectionlistjob.h"
 #include "collectionstatusjob.h"
 #include "itemfetchjob.h"
-#include "monitor.h"
-#include "monitor_p.h"
 #include "notificationmanagerinterface.h"
 #include "notificationmessage.h"
 #include "session.h"

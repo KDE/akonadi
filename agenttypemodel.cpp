@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
-#include <QtCore/QStringList>
-#include <QtGui/QIcon>
-
 #include "agenttypemodel.h"
 #include "agentmanager.h"
+
+#include <QtCore/QStringList>
+#include <QtGui/QIcon>
 
 using namespace Akonadi;
 
