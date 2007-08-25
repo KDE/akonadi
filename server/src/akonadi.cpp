@@ -199,7 +199,7 @@ void AkonadiServer::startDatabaseProcess()
   QString miscDir = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
 
   // generate config file
-  const QString globalConfig = baseDirs.findResourceFile( "data", QLatin1String( "akonadi/mysql-global.conf" ) ); // ### needs to be config I guess?
+  const QString globalConfig = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
   const QString localConfig = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
   const QString actualConfig = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
   if ( globalConfig.isEmpty() )
