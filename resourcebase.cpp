@@ -213,7 +213,7 @@ class ResourceBase::Private
 QString ResourceBase::Private::defaultReadyMessage() const
 {
   if ( online )
-    return i18nc( "@info:status", "Ready" );
+    return i18nc( "@info:status, application ready for work", "Ready" );
   return i18nc( "@info:status", "Offline" );
 }
 
@@ -427,11 +427,13 @@ QString ResourceBase::parseArguments( int argc, char **argv )
   }
 
   sAppName = qstrdup( identifier.toLatin1().constData() );
-  KCmdLineArgs::init( argc, argv, sAppName, 0, ki18n("Akonadi Resource"),"0.1" ,
-                      ki18n("Akonadi Resource") );
+  KCmdLineArgs::init( argc, argv, sAppName, 0,
+                      ki18nc("@title, application name", "Akonadi Resource"), "0.1",
+                      ki18nc("@info, purpose of application", "Akonadi Resource") );
 
   KCmdLineOptions options;
-  options.add("identifier <argument>", ki18n("Resource identifier"));
+  options.add("identifier <argument>",
+              ki18nc("@label, commandline option", "Resource identifier"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   return identifier;
@@ -598,7 +600,7 @@ void ResourceBase::Private::slotReplayNextItem()
 void ResourceBase::Private::slotReplayItemAdded( KJob *job )
 {
   if ( job->error() ) {
-    mParent->error( i18n( "Unable to fetch item in replay mode." ) );
+    mParent->error( i18nc( "@info", "Unable to fetch item in replay mode." ) );
   } else {
     ItemCollectionFetchJob *fetchJob = qobject_cast<ItemCollectionFetchJob*>( job );
 
@@ -614,7 +616,7 @@ void ResourceBase::Private::slotReplayItemAdded( KJob *job )
 void ResourceBase::Private::slotReplayItemChanged( KJob *job )
 {
   if ( job->error() ) {
-    mParent->error( i18n( "Unable to fetch item in replay mode." ) );
+    mParent->error( i18nc( "@info", "Unable to fetch item in replay mode." ) );
   } else {
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
 
@@ -631,12 +633,12 @@ void ResourceBase::Private::slotReplayItemChanged( KJob *job )
 void ResourceBase::Private::slotReplayCollectionAdded( KJob *job )
 {
   if ( job->error() ) {
-    mParent->error( i18n( "Unable to fetch collection in replay mode." ) );
+    mParent->error( i18nc( "@info", "Unable to fetch collection in replay mode." ) );
   } else {
     CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
 
     if ( listJob->collections().count() == 0 )
-      mParent->error( i18n( "Unable to fetch collection in replay mode." ) );
+      mParent->error( i18nc( "@info", "Unable to fetch collection in replay mode." ) );
     else
       mParent->collectionAdded( listJob->collections().first(), listJob->collections().at( 1 ) );
   }
@@ -647,12 +649,12 @@ void ResourceBase::Private::slotReplayCollectionAdded( KJob *job )
 void ResourceBase::Private::slotReplayCollectionChanged( KJob *job )
 {
   if ( job->error() ) {
-    mParent->error( i18n( "Unable to fetch collection in replay mode." ) );
+    mParent->error( i18nc( "@info", "Unable to fetch collection in replay mode." ) );
   } else {
     CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
 
     if ( listJob->collections().count() <= 1 )
-      mParent->error( i18n( "Unable to fetch collection in replay mode." ) );
+      mParent->error( i18nc( "@info", "Unable to fetch collection in replay mode." ) );
     else {
       mParent->collectionChanged( listJob->collections().first() );
     }
@@ -748,7 +750,7 @@ void ResourceBase::changesCommitted(const DataReference & ref)
 bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, const QStringList &parts )
 {
   if ( !isOnline() ) {
-    error( i18n( "Cannot fetch item in offline mode." ) );
+    error( i18nc( "@info", "Cannot fetch item in offline mode." ) );
     return false;
   }
 
@@ -822,7 +824,7 @@ void ResourceBase::Private::slotSynchronizeCollection( const Collection &col )
   QStringList contentTypes = currentCollection.contentTypes();
   contentTypes.removeAll( Collection::collectionMimeType() );
   if ( !contentTypes.isEmpty() ) {
-    mParent->changeStatus( Syncing, i18n( "Syncing collection '%1'", currentCollection.name() ) );
+    mParent->changeStatus( Syncing, i18nc( "@info:status", "Syncing collection '%1'", currentCollection.name() ) );
     mParent->synchronizeCollection( currentCollection );
     return;
   }

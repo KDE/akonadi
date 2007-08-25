@@ -93,15 +93,15 @@ QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
       case Subject:
-        return i18nc( "@title:column", "Subject" );
+        return i18nc( "@title:column, message (e.g. email) subject", "Subject" );
       case Sender:
-        return i18nc( "@title:column", "Sender" );
+        return i18nc( "@title:column, sender of message (e.g. email)", "Sender" );
       case Receiver:
-        return i18nc( "@title:column", "Receiver" );
+        return i18nc( "@title:column, receiver of message (e.g. email)", "Receiver" );
       case Date:
-        return i18nc( "@title:column", "Date" );
+        return i18nc( "@title:column, message (e.g. email) timestamp", "Date" );
       case Size:
-        return i18nc( "@title:column", "Size" );
+        return i18nc( "@title:column, message (e.g. email) size", "Size" );
       default:
         return QString();
     }
