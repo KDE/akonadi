@@ -128,15 +128,6 @@ bool DbInitializer::checkTable( const QDomElement &element )
           .arg( columnElement.attribute( QLatin1String("columns") ) )
           .arg( values );
       dataList << statement;
-    } else if ( columnElement.tagName() == QLatin1String("reference") ) {
-      /* this is the n-side of a n:1 relationship.
-       * it is used for code generation but not relevant for schema generation.
-       */
-    } else if ( columnElement.tagName() == QLatin1String("comment") ) {
-      // we use comments for doxygen but not for schema generation
-    } else {
-      mErrorMsg = QString::fromLatin1( "Unknown tag, expected <column> and got <%1>." ).arg( columnElement.tagName() );
-      return false;
     }
 
     columnElement = columnElement.nextSiblingElement();
@@ -199,6 +190,34 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
     // TODO: remove obsolete columns (when sqlite will support it) and adapt column type modifications
   }
+
+  // add indices
+  columnElement = element.firstChildElement();
+  while ( !columnElement.isNull() ) {
+    if ( columnElement.tagName() == QLatin1String( "index" ) ) {
+      if ( !hasIndex( tableName, columnElement.attribute( QLatin1String("name") ) ) ) {
+        QString statement = QLatin1String( "ALTER TABLE " );
+        statement += tableName;
+        statement += QLatin1String( " ADD " );
+        if ( columnElement.attribute( QLatin1String("unique") ) == QLatin1String( "true" ) )
+          statement += QLatin1String( "UNIQUE " );
+        else
+          statement += QLatin1String( "INDEX  " );
+        statement += columnElement.attribute( QLatin1String("name") );
+        statement += QLatin1String( " (" );
+        statement += columnElement.attribute( QLatin1String("columns") );
+        statement += QLatin1Char(')');
+        QSqlQuery query( mDatabase );
+        qDebug() << "adding index" << statement;
+        if ( !query.exec( statement ) ) {
+          mErrorMsg = QLatin1String( "Unable to create index." );
+          return false;
+        }
+      }
+    }
+    columnElement = columnElement.nextSiblingElement();
+  }
+
 
   // add initial data if table is empty
   const QString statement = QString::fromLatin1( "SELECT * FROM %1 LIMIT 1" ).arg( tableName );
@@ -297,6 +316,27 @@ bool DbInitializer::hasTable(const QString & tableName)
   while ( query.next() ) {
     if ( query.value( 0 ).toString().toLower() == tableName.toLower() )
       return true;
+  }
+  return false;
+}
+
+bool DbInitializer::hasIndex(const QString & tableName, const QString & indexName)
+{
+  if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
+    QString statement = QString::fromLatin1("SHOW INDEXES FROM %1").arg( tableName );
+    QSqlQuery query( mDatabase );
+    if ( !query.exec( statement ) ) {
+      mErrorMsg = QLatin1String( "Unable to list index information." );
+      return false;
+    }
+    while ( query.next() ) {
+      // FIXME: use column name (key_name) instead of column index!!
+      if ( query.value(2) == indexName )
+        return true;
+    }
+    return false;
+  } else {
+    qFatal("Implement index support for your database!");
   }
   return false;
 }

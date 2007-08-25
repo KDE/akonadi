@@ -66,6 +66,7 @@ class DbInitializer
 
     QString sqlType( const QString &type );
     bool hasTable( const QString &tableName );
+    bool hasIndex( const QString &tableName, const QString &indexName );
 
     QSqlDatabase mDatabase;
     QString mTemplateFile;

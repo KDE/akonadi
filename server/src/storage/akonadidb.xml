@@ -169,6 +169,7 @@
     <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
     <column name="type" type="QByteArray" properties="NOT NULL"/>
     <column name="value" type="QByteArray"/>
+    <index name="locationIndex" columns="locationId" unique="false"/>
   </table>
 
   <relation table1="Location" column1="id" table2="PimItem" column2="id">
