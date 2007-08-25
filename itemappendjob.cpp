@@ -86,11 +86,12 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
       connect( store, SIGNAL(result(KJob*)), SLOT(storeResult(KJob*)) );
     }
     int pos = data.indexOf( "UIDNEXT" );
-    bool ok = false;
-    if ( pos > 0 )
+    if ( pos > 0 ) {
+      bool ok = false;
       ImapParser::parseNumber( data, d->uid, &ok, pos + 7 );
-    if ( !ok )
-      qDebug() << "invalid response to item append job: " << tag << data;
+      if ( !ok )
+        qDebug() << "invalid UIDNEXT response to APPEND command: " << tag << data;
+    }
   }
 }
 
