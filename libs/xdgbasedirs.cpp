@@ -200,6 +200,41 @@ QString XdgBaseDirs::saveDir( const char *resource, const QString &relPath ) con
   return QString();
 }
 
+QString XdgBaseDirs::akonadiServerConfigFile( FileAccessMode openMode ) const
+{
+    return akonadiConfigFile( QLatin1String( "akonadiserverrc" ), openMode );
+}
+
+QString XdgBaseDirs::akonadiConnectionConfigFile( FileAccessMode openMode ) const
+{
+    return akonadiConfigFile( QLatin1String( "akonadiconnectionrc" ), openMode );
+}
+
+QString XdgBaseDirs::akonadiConfigFile( const QString &file, FileAccessMode openMode ) const
+{
+    const QString akonadiDir = QLatin1String( "akonadi" );
+
+    QString savePath = saveDir( "config", akonadiDir ) + QLatin1Char( '/' ) + file;
+
+    if ( openMode == WriteOnly ) return savePath;
+
+    QString path = findResourceFile( "config", akonadiDir + QLatin1Char( '/' ) + file );
+
+    if ( path.isEmpty() ) {
+        return savePath;
+    } else if ( openMode == ReadOnly || path == savePath ) {
+        return path;
+    }
+
+    // file found in system paths and mode is ReadWrite, thus
+    // we copy to the home path location and return this path
+    QFile systemFile(path);
+
+    systemFile.copy(savePath);
+
+    return savePath;
+}
+
 QString XdgBaseDirsPrivate::homePath( const char *variable, const char *defaultSubDir )
 {
   char *env = std::getenv( variable );
@@ -229,4 +264,3 @@ QStringList XdgBaseDirsPrivate::systemPathList( const char *variable, const char
 
   return xdgDirList.split( QLatin1Char( ':' ) );
 }
-

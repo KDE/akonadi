@@ -34,13 +34,9 @@ Tracer* Tracer::mSelf = 0;
 
 Tracer::Tracer() : mTracerBackend( 0 )
 {
-  // TODO de-duplicate the following lines
   XdgBaseDirs baseDirs;
-  QString serverConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiserverrc" ) );
-  if ( serverConfigFile.isEmpty() ) {
-    serverConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiserverrc" );
-  }
-  QSettings settings( serverConfigFile, QSettings::IniFormat );
+
+  QSettings settings( baseDirs.akonadiServerConfigFile(), QSettings::IniFormat );
 
   const QString type = settings.value( QLatin1String( "Debug/Tracer" ), QLatin1String( "dbus" ) ).toString();
   if ( type == QLatin1String("file") ) {

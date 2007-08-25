@@ -53,19 +53,15 @@ AkonadiServer::AkonadiServer( QObject* parent )
 {
     XdgBaseDirs baseDirs;
 
-    QString serverConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiserverrc" ) );
-    if ( serverConfigFile.isEmpty() ) {
-      serverConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiserverrc" );
-    }
-
-    QSettings settings( serverConfigFile, QSettings::IniFormat );
+    QSettings settings( baseDirs.akonadiServerConfigFile(), QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL" )
          && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
       startDatabaseProcess();
 
     s_instance = this;
 
-    QString connectionSettingsFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" ) ) + QLatin1String( "/akonadiconnectionrc" );
+    QString connectionSettingsFile = baseDirs.akonadiConnectionConfigFile(
+    XdgBaseDirs::WriteOnly );
 
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
 
@@ -142,17 +138,12 @@ void AkonadiServer::quit()
 
     XdgBaseDirs baseDirs;
 
-    QString serverConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiserverrc" ) );
-    if ( serverConfigFile.isEmpty() ) {
-      serverConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiserverrc" );
-    }
-
-    QSettings settings( serverConfigFile, QSettings::IniFormat );
+    QSettings settings( baseDirs.akonadiServerConfigFile(), QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver") ).toString() == QLatin1String( "QMYSQL" )
          && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
       stopDatabaseProcess();
 
-    QString connectionSettingsFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" ) ) + QLatin1String( "/akonadiconnectionrc" );
+    QString connectionSettingsFile = baseDirs.akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
 
 #ifndef Q_OS_WIN
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );

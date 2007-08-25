@@ -71,10 +71,7 @@ DataStore::DataStore() :
   if ( mDbDriverName.isEmpty() ) {
     XdgBaseDirs baseDirs;
 
-    QString serverConfigFile = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/akonadiserverrc" ) );
-    if ( serverConfigFile.isEmpty() ) {
-      serverConfigFile = baseDirs.saveDir( "config", QLatin1String( "akonadi" )) + QLatin1String( "/akonadiserverrc" );
-    }
+    QString serverConfigFile = baseDirs.akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
 
     QSettings settings( serverConfigFile, QSettings::IniFormat );
     QString defaultDriver = QLatin1String("QMYSQL");
