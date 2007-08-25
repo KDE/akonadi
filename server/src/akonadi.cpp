@@ -87,6 +87,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     }
 
     QString socketFile = socketDir + QLatin1String( "/akonadiserver.socket" );
+    unlink( socketFile.toUtf8().constData() );
     if ( !listen( socketFile ) )
       qFatal("Unable to listen on Unix socket '%s'", socketFile.toLocal8Bit().data() );
 

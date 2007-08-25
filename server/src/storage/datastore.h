@@ -44,7 +44,7 @@ class NotificationCollector;
   <h4>Database configuration</h4>
 
   You can select between various database backends during runtime using the
-  @c $HOME/.akonadi/akonadiserverrc configuration file.
+  @c $HOME/.config/akonadi/akonadiserverrc configuration file.
 
   Example:
 @verbatim
@@ -53,17 +53,17 @@ Driver=QMYSQL
 
 [QMYSQL_EMBEDDED]
 Name=akonadi
-Options=SERVER_DATADIR=/home/foo/.akonadi/db
+Options=SERVER_DATADIR=/home/foo/.local/share/akonadi/db_data
 
 [QMYSQL]
 Name=akonadi
 Host=localhost
 User=foo
 Password=*****
-#Options=UNIX_SOCKET=/home/foo/.akonadi/mysql.socket
+#Options=UNIX_SOCKET=/home/foo/.local/share/akonadi/db_misc/mysql.socket
 
 [QSQLITE]
-Name=/home/foo/.akonadi/akonadi.db
+Name=/home/foo/.local/share/akonadi/akonadi.db
 @endverbatim
 
   Use @c General/Driver to select the QSql driver to use for databse
