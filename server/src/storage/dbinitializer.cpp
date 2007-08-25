@@ -248,27 +248,41 @@ bool DbInitializer::checkRelation(const QDomElement & element)
   QString tableName = table1 + table2 + QLatin1String("Relation");
   qDebug() << "checking relation " << tableName;
 
-  if ( hasTable( tableName ) )
-    return true;
+  if ( !hasTable( tableName ) ) {
+    QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
+    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4), " )
+        .arg( table1 )
+        .arg( col1 )
+        .arg( table1 )
+        .arg( col1 );
+    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4))" )
+        .arg( table2 )
+        .arg( col2 )
+        .arg( table2 )
+        .arg( col2 );
+    qDebug() << statement;
 
-  // TODO: add unique constraint
-  QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
-  statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4), " )
-      .arg( table1 )
-      .arg( col1 )
-      .arg( table1 )
-      .arg( col1 );
-  statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4))" )
-      .arg( table2 )
-      .arg( col2 )
-      .arg( table2 )
-      .arg( col2 );
-  qDebug() << statement;
+    QSqlQuery query( mDatabase );
+    if ( !query.exec( statement ) ) {
+      mErrorMsg = QLatin1String( "Unable to create entire table." );
+      return false;
+    }
+  }
 
-  QSqlQuery query( mDatabase );
-  if ( !query.exec( statement ) ) {
-    mErrorMsg = QLatin1String( "Unable to create entire table." );
-    return false;
+  if ( !hasIndex( tableName, QLatin1String("PRIMARY") ) ) {
+    QString statement = QLatin1String( "ALTER TABLE " );
+    statement += tableName;
+    statement += QLatin1String( " ADD PRIMARY KEY (" );
+    statement += QString::fromLatin1( "%1_%2" ).arg( table1 ).arg( col1 );
+    statement += QLatin1String( ", " );
+    statement += QString::fromLatin1( "%1_%2" ).arg( table2 ).arg( col2 );
+    statement += QLatin1Char(')');
+    QSqlQuery query( mDatabase );
+    qDebug() << "adding index" << statement;
+    if ( !query.exec( statement ) ) {
+      mErrorMsg = QLatin1String( "Unable to create index." );
+      return false;
+    }
   }
 
   return true;

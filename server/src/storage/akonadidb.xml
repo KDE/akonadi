@@ -156,6 +156,7 @@
     <column name="datasize" type="int" properties="NOT NULL"/>
     <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="REFERENCES PimItem(id)"/>
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
+    <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 
   <relation table2="Flag" column2="id" table1="Part" column1="id"/>
