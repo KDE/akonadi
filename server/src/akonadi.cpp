@@ -195,13 +195,36 @@ void AkonadiServer::startDatabaseProcess()
   XdgBaseDirs baseDirs;
 
   QString dataDir = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_data" ) );
-  QString logDir  = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_log" ) );
+  QString akDir  = baseDirs.saveDir( "data", QLatin1String( "akonadi/" ) );
   QString miscDir = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+
+  // generate config file
+  const QString globalConfig = baseDirs.findResourceFile( "data", QLatin1String( "akonadi/mysql-global.conf" ) ); // ### needs to be config I guess?
+  const QString localConfig = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
+  const QString actualConfig = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
+  if ( globalConfig.isEmpty() )
+    qFatal("Where is my MySQL config file??");
+  QFile globalFile( globalConfig );
+  QFile actualFile( actualConfig );
+  if ( globalFile.open( QFile::ReadOnly ) && actualFile.open( QFile::WriteOnly ) ) {
+    actualFile.write( globalFile.readAll() );
+    if ( !localConfig.isEmpty() ) {
+      QFile localFile( localConfig );
+      if ( localFile.open( QFile::ReadOnly ) ) {
+        actualFile.write( localFile.readAll() );
+        localFile.close();
+      }
+    }
+    actualFile.close();
+    globalFile.close();
+  } else {
+    qFatal("What did you do to my MySQL config file??");
+  }
 
   if ( dataDir.isEmpty() )
     qFatal("Akonadi server was not able not create database data directory");
 
-  if ( logDir.isEmpty() )
+  if ( akDir.isEmpty() )
     qFatal("Akonadi server was not able not create database log directory");
 
   if ( miscDir.isEmpty() )
@@ -209,13 +232,9 @@ void AkonadiServer::startDatabaseProcess()
 
   // synthesize the mysqld command
   QStringList arguments;
+  arguments << QString::fromLatin1( "--defaults-file=%1/mysql.conf" ).arg( akDir );
   arguments << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
-  arguments << QString::fromLatin1( "--log-bin=%1/" ).arg( logDir );
-  arguments << QString::fromLatin1( "--log-bin-index=%1/" ).arg( logDir );
   arguments << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
-  arguments << QString::fromLatin1( "--pid-file=%1/mysql.pid" ).arg( miscDir );
-  arguments << QString::fromLatin1( "--skip-grant-table" );
-  arguments << QString::fromLatin1( "--skip-networking" );
 
   mDatabaseProcess = new QProcess( this );
   mDatabaseProcess->start( QLatin1String( "/usr/sbin/mysqld" ), arguments );

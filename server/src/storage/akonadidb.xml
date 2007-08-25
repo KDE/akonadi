@@ -75,7 +75,7 @@
   <table name="Resource">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
-    <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="NOT NULL REFERENCES CachePolicy(id)">
+    <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="NOT NULL REFERENCES CachePolicy(id) DEFAULT 0">
       <comment>Default for all locations with undefined cachePolicy.</comment>
     </column>
     <reference name="locations" table="Location" key="resourceId"/>
