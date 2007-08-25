@@ -59,7 +59,7 @@ void CacheCleaner::cleanCache()
     // check if there is something to expire at all
     if ( policy.offlineParts() == QLatin1String( "ALL" ) || policy.expireTime() < 0 )
       continue;
-    int expireTime = qMax( 5, policy.expireTime() );
+    const int expireTime = qMax( 5, policy.expireTime() );
 
     // find all expired items
     SelectQueryBuilder<PimItem> qb;
