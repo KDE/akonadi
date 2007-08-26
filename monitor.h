@@ -124,7 +124,7 @@ class AKONADI_EXPORT Monitor : public QObject
       Emitted if a monitored item has been moved between two collections
       @param item The moved item
       @param collectionSource The collection the item has been moved from
-      @param collectionDest The collection the item has been moved to
+      @param collectionDestination The collection the item has been moved to
     */
     void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination);
 
@@ -142,7 +142,7 @@ class AKONADI_EXPORT Monitor : public QObject
     void itemRemoved( const Akonadi::DataReference &ref);
 
     /**
-      Emitted if a new collection was added in the storage and if 
+      Emitted if a new collection was added in the storage and if
       a monitored collection got this new collection as a child.
       @param collection The new collection.
       @param parent The parent collection.
@@ -150,7 +150,7 @@ class AKONADI_EXPORT Monitor : public QObject
     void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
 
     /**
-      Emitted if a monitored collection changed (properties and 
+      Emitted if a monitored collection changed (properties and
       content). Also emitted if the collection was reparented.
       @param collection The changed collection.
      */

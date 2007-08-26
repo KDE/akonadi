@@ -53,7 +53,7 @@ class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QAbstractProxyMode
      * Reimplemented to actually do the threading.
      */
     QModelIndex parent ( const QModelIndex & index ) const;
-    
+
     /**
      * Reimplemented
      */
@@ -100,12 +100,12 @@ class AKONADI_KMIME_EXPORT MessageThreaderProxyModel : public QAbstractProxyMode
     QModelIndex mapToSource(const QModelIndex& index ) const;
 
     /**
-     * Set the source model. 
-     * @params sourceMessageModel the source model. 
+     * Set the source model.
+     * @param sourceMessageModel the source model.
      * Be careful, sourceMessageModel <b>has to be</b> a MessageModel.
      */
     void setSourceModel( QAbstractItemModel *sourceMessageModel );
-    
+
   private:
     class Private;
     Private* const d;

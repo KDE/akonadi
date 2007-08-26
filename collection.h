@@ -255,7 +255,7 @@ class AKONADI_EXPORT Collection
 
     /**
       Sets the identifier of the resource owning this collection.
-      @param res The resource identifier.
+      @param resource The resource identifier.
     */
     void setResource( const QString &resource );
 

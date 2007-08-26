@@ -73,7 +73,8 @@ class ResourceScheduler : public QObject
 
     /**
       Schedules fetching of a single PIM item.
-      @param itemRef DataReference to the item to fetch.
+      @param ref DataReference to the item to fetch.
+      @param parts List of item parts
       @param msg The associated DBus message.
     */
     void scheduleItemFetch( const DataReference &ref, const QStringList &parts, const QDBusMessage &msg );
