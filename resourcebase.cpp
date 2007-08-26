@@ -429,7 +429,7 @@ QString ResourceBase::parseArguments( int argc, char **argv )
   sAppName = qstrdup( identifier.toLatin1().constData() );
   KCmdLineArgs::init( argc, argv, sAppName, 0,
                       ki18nc("@title, application name", "Akonadi Resource"), "0.1",
-                      ki18nc("@info, purpose of application", "Akonadi Resource") );
+                      ki18nc("@title, application description", "Akonadi Resource") );
 
   KCmdLineOptions options;
   options.add("identifier <argument>",
