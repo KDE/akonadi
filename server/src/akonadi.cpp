@@ -51,16 +51,16 @@ AkonadiServer::AkonadiServer( QObject* parent )
 #endif
     , mDatabaseProcess( 0 )
 {
-    XdgBaseDirs baseDirs;
+    mBaseDirs = new XdgBaseDirs();
 
-    QSettings settings( baseDirs.akonadiServerConfigFile(), QSettings::IniFormat );
+    QSettings settings( mBaseDirs->akonadiServerConfigFile(), QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL" )
          && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
       startDatabaseProcess();
 
     s_instance = this;
 
-    QString connectionSettingsFile = baseDirs.akonadiConnectionConfigFile(
+    const QString connectionSettingsFile = mBaseDirs->akonadiConnectionConfigFile(
     XdgBaseDirs::WriteOnly );
 
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
@@ -74,7 +74,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     connectionSettings.setValue( QLatin1String( "Data/Address" ), serverAddress().toString() );
     connectionSettings.setValue( QLatin1String( "Data/Port" ), serverPort() );
 #else
-    QString defaultSocketDir = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) );
+    const QString defaultSocketDir = mBaseDirs->saveDir( "data", QLatin1String( "akonadi" ) );
     QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
     if ( socketDir[0] != QLatin1Char( '/' ) )
     {
@@ -82,7 +82,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
       socketDir = QDir::homePath() + QLatin1Char( '/' ) + socketDir;
     }
 
-    QString socketFile = socketDir + QLatin1String( "/akonadiserver.socket" );
+    const QString socketFile = socketDir + QLatin1String( "/akonadiserver.socket" );
     unlink( socketFile.toUtf8().constData() );
     if ( !listen( socketFile ) )
       qFatal("Unable to listen on Unix socket '%s'", socketFile.toLocal8Bit().data() );
@@ -136,19 +136,17 @@ void AkonadiServer::quit()
       }
     }
 
-    XdgBaseDirs baseDirs;
-
-    QSettings settings( baseDirs.akonadiServerConfigFile(), QSettings::IniFormat );
+    QSettings settings( mBaseDirs->akonadiServerConfigFile(), QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver") ).toString() == QLatin1String( "QMYSQL" )
          && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
       stopDatabaseProcess();
 
-    QString connectionSettingsFile = baseDirs.akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
+    const QString connectionSettingsFile = mBaseDirs->akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
 
 #ifndef Q_OS_WIN
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
-    QString defaultSocketDir = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) );
-    QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
+    const QString defaultSocketDir = mBaseDirs->saveDir( "data", QLatin1String( "akonadi" ) );
+    const QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
 
     if ( !QDir::home().remove( socketDir + QLatin1String( "/akonadiserver.socket" ) ) )
         qWarning("Failed to remove Unix socket");
@@ -183,16 +181,14 @@ AkonadiServer * AkonadiServer::instance()
 void AkonadiServer::startDatabaseProcess()
 {
   // create the database directories if they don't exists
-  XdgBaseDirs baseDirs;
-
-  QString dataDir = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_data" ) );
-  QString akDir  = baseDirs.saveDir( "data", QLatin1String( "akonadi/" ) );
-  QString miscDir = baseDirs.saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+  const QString dataDir = mBaseDirs->saveDir( "data", QLatin1String( "akonadi/db_data" ) );
+  const QString akDir   = mBaseDirs->saveDir( "data", QLatin1String( "akonadi/" ) );
+  const QString miscDir = mBaseDirs->saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
 
   // generate config file
-  const QString globalConfig = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
-  const QString localConfig = baseDirs.findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
-  const QString actualConfig = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
+  const QString globalConfig = mBaseDirs->findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
+  const QString localConfig = mBaseDirs->findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
+  const QString actualConfig = mBaseDirs->saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
   if ( globalConfig.isEmpty() )
     qFatal("Where is my MySQL config file??");
   QFile globalFile( globalConfig );

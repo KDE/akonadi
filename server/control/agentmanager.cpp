@@ -32,7 +32,8 @@
 #include <QtCore/QDebug>
 
 AgentManager::AgentManager( QObject *parent )
-  : QObject( parent )
+  : QObject( parent ),
+    mBaseDirs( new Akonadi::XdgBaseDirs() )
 {
   mStorageController = new Akonadi::ProcessControl;
   // ### change back to RestartOnCrash once we don't crash anymore...
@@ -82,6 +83,9 @@ void AgentManager::cleanup()
 
   delete mStorageController;
   mStorageController = 0;
+
+  delete mBaseDirs;
+  mBaseDirs = 0;
 }
 
 QStringList AgentManager::agentTypes() const
@@ -178,8 +182,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   QStringList arguments;
   arguments << "--identifier" << agentIdentifier;
 
-  Akonadi::XdgBaseDirs baseDirs;
-  const QString executable = baseDirs.findExecutableFile( mPluginInfos[ identifier ].exec );
+  const QString executable = mBaseDirs->findExecutableFile( mPluginInfos[ identifier ].exec );
   mInstances[ agentIdentifier ].controller->start( executable, arguments );
 
   save();
@@ -387,23 +390,20 @@ void AgentManager::readPluginInfos( const QDir& directory )
   }
 }
 
-QStringList AgentManager::pluginInfoPathList()
+QStringList AgentManager::pluginInfoPathList() const
 {
-  Akonadi::XdgBaseDirs baseDirs;
-  return baseDirs.findAllResourceDirs( "data", QLatin1String( "akonadi/agents" ) );
+  return mBaseDirs->findAllResourceDirs( "data", QLatin1String( "akonadi/agents" ) );
 }
 
-QString AgentManager::configPath( bool writeable )
+QString AgentManager::configPath( bool writeable ) const
 {
-  Akonadi::XdgBaseDirs baseDirs;
-
   const QString configFile =
-    baseDirs.findResourceFile( "config", QLatin1String( "akonadi/agentsrc" ) );
+    mBaseDirs->findResourceFile( "config", QLatin1String( "akonadi/agentsrc" ) );
 
   if ( !writeable && !configFile.isEmpty() )
     return configFile;
 
-  const QString configDir = baseDirs.saveDir( "config", "akonadi" );
+  const QString configDir = mBaseDirs->saveDir( "config", "akonadi" );
 
   return configDir + QLatin1String( "/agentsrc" );
 }
@@ -476,8 +476,7 @@ void AgentManager::load()
     QStringList arguments;
     arguments << "--identifier" << instanceIdentifier;
 
-    Akonadi::XdgBaseDirs baseDirs;
-    const QString executable = baseDirs.findExecutableFile( mPluginInfos[ agentType ].exec );
+    const QString executable = mBaseDirs->findExecutableFile( mPluginInfos[ agentType ].exec );
     mInstances[ instanceIdentifier ].controller->start( executable, arguments );
 
     file.endGroup();

@@ -39,6 +39,7 @@ namespace Akonadi {
 
 class FetchQuery;
 class NotificationCollector;
+class XdgBaseDirs;
 
 /**
   This class handles all the database access.
@@ -196,7 +197,7 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
      */
     int uidNext() const;
 
-    static QString storagePath();
+    QString storagePath() const;
 
     /**
       Begins a transaction. No changes will be written to the database and
@@ -300,6 +301,7 @@ private:
     bool m_inTransaction;
     QByteArray mSessionId;
     NotificationCollector* mNotificationCollector;
+    XdgBaseDirs* mBaseDirs;
 
     static QList<int> mPendingItemDeliveries;
     static QMutex mPendingItemDeliveriesMutex;
