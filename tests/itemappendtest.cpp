@@ -157,6 +157,7 @@ void ItemAppendTest::testMultipartAppend()
   refs << job->reference();
 
   ItemFetchJob *fjob = new ItemFetchJob( refs.first(), this );
+  fjob->addFetchPart( Item::PartBody );
   fjob->addFetchPart( "EXTRA" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );

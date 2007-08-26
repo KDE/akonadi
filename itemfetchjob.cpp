@@ -55,9 +55,6 @@ void ItemFetchJob::Private::startFetchJob()
     command += " UID FETCH " + QByteArray::number( uid.id() );
 
   command += " (UID REMOTEID FLAGS";
-  if ( mFetchParts.contains( Item::PartAll ) )
-    command += " RFC822";
-
   foreach ( QString part, mFetchParts ) {
     command += ' ' + part.toUtf8();
   }
@@ -78,7 +75,6 @@ ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
     d( new Private( this ) )
 {
   d->collection = collection;
-  d->mFetchParts.append( Item::PartEnvelope );
 }
 
 ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
@@ -86,7 +82,6 @@ ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
     d( new Private( this ) )
 {
   setUid( ref );
-  d->mFetchParts.append( Item::PartAll );
 }
 
 ItemFetchJob::~ ItemFetchJob( )

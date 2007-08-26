@@ -135,6 +135,7 @@ void ItemStoreTest::testDataChange()
   QVERIFY( sjob->exec() );
 
   ItemFetchJob *fjob = new ItemFetchJob( ref );
+  fjob->addFetchPart( Item::PartBody );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];

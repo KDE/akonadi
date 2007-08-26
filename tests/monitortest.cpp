@@ -58,7 +58,7 @@ void MonitorTest::testMonitor()
   Monitor *monitor = new Monitor( this );
   monitor->monitorCollection( Collection::root() );
   monitor->fetchCollection( true );
-  monitor->addFetchPart( Item::PartAll );
+  monitor->addFetchPart( Item::PartBody );
 
   // monitor signals
   qRegisterMetaType<Akonadi::DataReference>();

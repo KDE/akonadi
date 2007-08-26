@@ -282,7 +282,6 @@ void ItemModel::setCollection( const Collection &collection )
 
   // start listing job
   ItemFetchJob* job = new ItemFetchJob( collection, session() );
-  job->addFetchPart( Item::PartEnvelope );
   foreach( QString part, d->mFetchParts )
     job->addFetchPart( part );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
