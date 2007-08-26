@@ -191,7 +191,8 @@ class Entity
 
     /**
       Clears all entries from a n:m relation table (specified by the given template parameter).
-      @param leftId Identifier of the left relation side.
+      @param id Identifier on the relation side.
+      @param side The side of the relation.
     */
     template <typename T> inline static bool clearRelation( int id, RelationSide side = Left )
     {
