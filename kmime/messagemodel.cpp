@@ -42,6 +42,7 @@ MessageModel::MessageModel( QObject *parent ) :
     ItemModel( parent ),
     d( new Private() )
 {
+  addFetchPart( Item::PartEnvelope );
 }
 
 MessageModel::~MessageModel( )
