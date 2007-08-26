@@ -31,9 +31,6 @@
 #include <QtDBus/QDBusError>
 #include <QtCore/QDebug>
 
-#include <kstandarddirs.h>
-
-
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
 {
@@ -181,7 +178,8 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   QStringList arguments;
   arguments << "--identifier" << agentIdentifier;
 
-  const QString executable = KStandardDirs::findExe( mPluginInfos[ identifier ].exec );
+  Akonadi::XdgBaseDirs baseDirs;
+  const QString executable = baseDirs.findExecutableFile( mPluginInfos[ identifier ].exec );
   mInstances[ agentIdentifier ].controller->start( executable, arguments );
 
   save();
@@ -478,7 +476,8 @@ void AgentManager::load()
     QStringList arguments;
     arguments << "--identifier" << instanceIdentifier;
 
-    const QString executable = KStandardDirs::findExe( mPluginInfos[ agentType ].exec );
+    Akonadi::XdgBaseDirs baseDirs;
+    const QString executable = baseDirs.findExecutableFile( mPluginInfos[ agentType ].exec );
     mInstances[ instanceIdentifier ].controller->start( executable, arguments );
 
     file.endGroup();
