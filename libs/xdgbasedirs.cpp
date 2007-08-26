@@ -27,6 +27,21 @@
 
 #include <cstdlib>
 
+static QStringList alternateExecPaths( const QString& path )
+{
+  QStringList pathList;
+
+  pathList << path;
+
+#if defined(Q_OS_WIN)
+  pathList << path + QLatin1String( ".exe" );
+#elif defined(Q_OS_MAC)
+  pathList << path + QLatin1String( ".app/Contents/MacOS/" ) + path.section( QLatin1Char( '/' ), -1 );
+#endif
+
+  return pathList;
+}
+
 namespace Akonadi {
 
 class XdgBaseDirsPrivate
@@ -46,6 +61,7 @@ class XdgBaseDirsPrivate
 
     QStringList mConfigDirs;
     QStringList mDataDirs;
+    QStringList mExecutableDirs;
 };
 
 }
@@ -68,7 +84,7 @@ QString XdgBaseDirs::homePath( const char *resource ) const
       d->mDataHome = d->homePath( "XDG_DATA_HOME", ".local/share" );
     }
     return d->mDataHome;
-  } else if ( qstrncmp( "config", resource, 6 ) == 0) {
+  } else if ( qstrncmp( "config", resource, 6 ) == 0 ) {
     if ( d->mConfigHome.isEmpty() ) {
       d->mConfigHome = d->homePath( "XDG_CONFIG_HOME", ".config" );
     }
@@ -90,7 +106,7 @@ QStringList XdgBaseDirs::systemPathList( const char *resource ) const
       }
     }
     return d->mDataDirs;
-  } else if ( qstrncmp( "config", resource, 6 ) == 0) {
+  } else if ( qstrncmp( "config", resource, 6 ) == 0 ) {
     if ( d->mConfigDirs.isEmpty() ) {
       d->mConfigDirs = d->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
 
@@ -128,9 +144,39 @@ QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relP
   return QString();
 }
 
+QString XdgBaseDirs::findExecutableFile( const QString &relPath ) const
+{
+  if ( d->mExecutableDirs.isEmpty() ) {
+    d->mExecutableDirs = d->systemPathList( "PATH", "/usr/local/bin:/usr/bin" );
+
+    QString prefixExecutableDir = QLatin1String( AKONADIPREFIX "/bin" );
+    if ( !d->mExecutableDirs.contains( prefixExecutableDir ) ) {
+      d->mExecutableDirs << prefixExecutableDir;
+    }
+  }
+
+  QStringList::const_iterator pathIt    = d->mExecutableDirs.begin();
+  QStringList::const_iterator pathEndIt = d->mExecutableDirs.end();
+  for ( ; pathIt != pathEndIt; ++pathIt ) {
+    QStringList fullPathList = alternateExecPaths(*pathIt + QLatin1Char( '/' ) + relPath );
+
+    QStringList::const_iterator it    = fullPathList.begin();
+    QStringList::const_iterator endIt = fullPathList.end();
+    for ( ; it != endIt; ++it ) {
+      QFileInfo fileInfo(*it);
+
+      if ( fileInfo.exists() && fileInfo.isFile() && fileInfo.isExecutable() ) {
+        return *it;
+      }
+    }
+  }
+
+  return QString();
+}
+
 QString XdgBaseDirs::findResourceDir( const char *resource, const QString &relPath ) const
 {
-  QString fullPath = homePath( resource ) + QLatin1Char('/' ) + relPath;
+  QString fullPath = homePath( resource ) + QLatin1Char( '/' ) + relPath;
 
   QFileInfo fileInfo( fullPath );
   if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
@@ -202,37 +248,37 @@ QString XdgBaseDirs::saveDir( const char *resource, const QString &relPath ) con
 
 QString XdgBaseDirs::akonadiServerConfigFile( FileAccessMode openMode ) const
 {
-    return akonadiConfigFile( QLatin1String( "akonadiserverrc" ), openMode );
+  return akonadiConfigFile( QLatin1String( "akonadiserverrc" ), openMode );
 }
 
 QString XdgBaseDirs::akonadiConnectionConfigFile( FileAccessMode openMode ) const
 {
-    return akonadiConfigFile( QLatin1String( "akonadiconnectionrc" ), openMode );
+  return akonadiConfigFile( QLatin1String( "akonadiconnectionrc" ), openMode );
 }
 
 QString XdgBaseDirs::akonadiConfigFile( const QString &file, FileAccessMode openMode ) const
 {
-    const QString akonadiDir = QLatin1String( "akonadi" );
+  const QString akonadiDir = QLatin1String( "akonadi" );
 
-    QString savePath = saveDir( "config", akonadiDir ) + QLatin1Char( '/' ) + file;
+  QString savePath = saveDir( "config", akonadiDir ) + QLatin1Char( '/' ) + file;
 
-    if ( openMode == WriteOnly ) return savePath;
+  if ( openMode == WriteOnly ) return savePath;
 
-    QString path = findResourceFile( "config", akonadiDir + QLatin1Char( '/' ) + file );
+  QString path = findResourceFile( "config", akonadiDir + QLatin1Char( '/' ) + file );
 
-    if ( path.isEmpty() ) {
-        return savePath;
-    } else if ( openMode == ReadOnly || path == savePath ) {
-        return path;
-    }
-
-    // file found in system paths and mode is ReadWrite, thus
-    // we copy to the home path location and return this path
-    QFile systemFile(path);
-
-    systemFile.copy(savePath);
-
+  if ( path.isEmpty() ) {
     return savePath;
+  } else if ( openMode == ReadOnly || path == savePath ) {
+    return path;
+  }
+
+  // file found in system paths and mode is ReadWrite, thus
+  // we copy to the home path location and return this path
+  QFile systemFile( path );
+
+  systemFile.copy( savePath );
+
+  return savePath;
 }
 
 QString XdgBaseDirsPrivate::homePath( const char *variable, const char *defaultSubDir )
