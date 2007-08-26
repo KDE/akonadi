@@ -146,6 +146,25 @@ class AKONADI_EXPORT XdgBaseDirs
     QString findResourceFile( const char *resource, const QString &relPath ) const;
 
     /**
+     @brief Searches the executable specific directories for a given file
+
+     Convenience method for finding a given executable (with optional relative path)
+     in any of the configured directories for a this special type.
+
+     @note This is not based on the XDG base dir spec, since it does not cover
+           executable
+
+     @param relPath relative path of a file to look for,
+            e.g."akonadiserver"
+
+     @returns the file path of the first match, or @c QString() if no such
+              relative path exists in any of the base directories
+
+     @see findResourceFile()
+     */
+    QString findExecutableFile( const QString &relPath ) const;
+
+    /**
      @brief Searches the resource specific directories for a given subdirectory
 
      Convenience method for finding a given relative subdirectory in any of
