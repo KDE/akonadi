@@ -98,22 +98,26 @@ QStringList XdgBaseDirs::systemPathList( const char *resource ) const
 {
   if ( qstrncmp( "data", resource, 4 ) == 0 ) {
     if ( d->mDataDirs.isEmpty() ) {
-      d->mDataDirs = d->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
+      QStringList dataDirs = d->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
 
-      QString prefixDataDir = QLatin1String( AKONADIDATA );
-      if ( !d->mDataDirs.contains( prefixDataDir ) ) {
-        d->mDataDirs << prefixDataDir;
+      const QString prefixDataDir = QLatin1String( AKONADIDATA );
+      if ( !dataDirs.contains( prefixDataDir ) ) {
+        dataDirs << prefixDataDir;
       }
+
+      d->mDataDirs = dataDirs;
     }
     return d->mDataDirs;
   } else if ( qstrncmp( "config", resource, 6 ) == 0 ) {
     if ( d->mConfigDirs.isEmpty() ) {
-      d->mConfigDirs = d->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
+      QStringList configDirs = d->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
 
-      QString prefixConfigDir = QLatin1String( AKONADICONFIG );
-      if ( !d->mConfigDirs.contains( prefixConfigDir ) ) {
-        d->mConfigDirs << prefixConfigDir;
+      const QString prefixConfigDir = QLatin1String( AKONADICONFIG );
+      if ( !configDirs.contains( prefixConfigDir ) ) {
+        configDirs << prefixConfigDir;
       }
+
+      d->mConfigDirs = configDirs;
     }
     return d->mConfigDirs;
   }
@@ -147,12 +151,14 @@ QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relP
 QString XdgBaseDirs::findExecutableFile( const QString &relPath ) const
 {
   if ( d->mExecutableDirs.isEmpty() ) {
-    d->mExecutableDirs = d->systemPathList( "PATH", "/usr/local/bin:/usr/bin" );
+    QStringList executableDirs = d->systemPathList( "PATH", "/usr/local/bin:/usr/bin" );
 
-    QString prefixExecutableDir = QLatin1String( AKONADIPREFIX "/bin" );
-    if ( !d->mExecutableDirs.contains( prefixExecutableDir ) ) {
-      d->mExecutableDirs << prefixExecutableDir;
+    const QString prefixExecutableDir = QLatin1String( AKONADIPREFIX "/bin" );
+    if ( !executableDirs.contains( prefixExecutableDir ) ) {
+      executableDirs << prefixExecutableDir;
     }
+
+    d->mExecutableDirs = executableDirs;
   }
 
   QStringList::const_iterator pathIt    = d->mExecutableDirs.begin();
