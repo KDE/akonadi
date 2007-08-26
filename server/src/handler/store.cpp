@@ -129,7 +129,7 @@ bool Store::handleLine( const QByteArray& line )
           return failureResponse( "Unable to update item" );
     } else {
       pos = ImapParser::parseString( line, buffer, pos );
-      qDebug() << "Multipart store: IMPLEMENT ME!" << command << buffer;
+      qDebug() << "Multipart store: IMPLEMENT ME!" << command;
       Part part;
       SelectQueryBuilder<Part> qb;
       qb.addValueCondition( Part::pimItemIdColumn(), "=", pimItems[ i ].id() );
