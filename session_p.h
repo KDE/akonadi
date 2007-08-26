@@ -22,6 +22,8 @@
 
 #include "session.h"
 #include "imapparser.h"
+#include "xdgbasedirs.h"
+
 #include <QQueue>
 #include <QtCore/QSettings>
 #include <QThreadStorage>
@@ -74,6 +76,8 @@ class SessionPrivate
 
     // parser stuff
     ImapParser *parser;
+
+    XdgBaseDirs mBaseDirs;
 };
 
 }

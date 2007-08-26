@@ -23,7 +23,6 @@
 #include "imapparser.h"
 #include "job.h"
 #include "job_p.h"
-#include "xdgbasedirs.h"
 
 #include <kdebug.h>
 
@@ -54,16 +53,15 @@ void SessionPrivate::reconnect()
 #ifdef Q_OS_WIN
   if ( socket->state() != QAbstractSocket::ConnectedState &&
        socket->state() != QAbstractSocket::ConnectingState ) {
-    QString address = mConnectionSettings->value( QLatin1String( "Data/Address" ), QHostAddress(QHostAddress::LocalHost).toString() ).toString();
-    int port = mConnectionSettings->value( QLatin1String( "Data/Port" ), 4444 ).toInt();
+    const QString address = mConnectionSettings->value( QLatin1String( "Data/Address" ), QHostAddress(QHostAddress::LocalHost).toString() ).toString();
+    const int port = mConnectionSettings->value( QLatin1String( "Data/Port" ), 4444 ).toInt();
     socket->connectToHost( QHostAddress(address), port );
   }
 #else
   if ( socket->state() != QAbstractSocket::ConnectedState &&
        socket->state() != QAbstractSocket::ConnectingState ) {
-    XdgBaseDirs baseDirs;
-    QString defaultSocketDir = baseDirs.saveDir( "data", QLatin1String( "akonadi" ) );
-    QString path = mConnectionSettings->value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
+    const QString defaultSocketDir = mBaseDirs.saveDir( "data", QLatin1String( "akonadi" ) );
+    const QString path = mConnectionSettings->value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
     socket->connectToPath( path );
   }
 #endif
@@ -144,16 +142,14 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
   d->currentJob = 0;
   d->jobRunning = false;
 
-  XdgBaseDirs baseDirs;
-
-  QString connectionConfigFile = baseDirs.akonadiConnectionConfigFile();
+  const QString connectionConfigFile = d->mBaseDirs.akonadiConnectionConfigFile();
 
   QFileInfo fileInfo( connectionConfigFile );
   if ( !fileInfo.exists() ) {
     qWarning() << "Akonadi Client Session: connection config file '"
                << "akonadi/akonadiconnectionrc can not be found in '"
-               << baseDirs.homePath( "config" ) << "' nor in any of "
-               << baseDirs.systemPathList( "config" );
+               << d->mBaseDirs.homePath( "config" ) << "' nor in any of "
+               << d->mBaseDirs.systemPathList( "config" );
   }
 
   d->mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );
