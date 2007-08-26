@@ -378,27 +378,27 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
       Reimplement to handle deletion of items.
       @param ref DataReference to the deleted item.
     */
-    virtual void itemRemoved( const DataReference &ref ) { Q_UNUSED( ref ); }
+    virtual void itemRemoved( const DataReference &ref );
 
     /**
       Reimplement to handle adding of new collections.
       @param collection The newly added collection.
       @param parent The parent collection.
     */
-    virtual void collectionAdded( const Collection &collection, const Collection &parent ) { Q_UNUSED( collection ); Q_UNUSED( parent ); }
+    virtual void collectionAdded( const Collection &collection, const Collection &parent );
 
     /**
       Reimplement to handle changes to existing collections.
       @param collection The changed collection.
     */
-    virtual void collectionChanged( const Collection &collection ) { Q_UNUSED( collection ); }
+    virtual void collectionChanged( const Collection &collection );
 
     /**
       Reimplement to handle deletion of collections.
       @param id The id of the deleted collection.
       @param remoteId The remote id of the deleted collection.
     */
-    virtual void collectionRemoved( int id, const QString &remoteId ) { Q_UNUSED( id ); Q_UNUSED( remoteId ); }
+    virtual void collectionRemoved( int id, const QString &remoteId );
 
     /**
       Resets the dirty flag of the given item and updates the remote id.

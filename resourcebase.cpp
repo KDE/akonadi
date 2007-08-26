@@ -524,6 +524,28 @@ void ResourceBase::itemChanged( const Item &item, const QStringList &partIdentif
   Q_UNUSED( partIdentifiers );
 }
 
+void ResourceBase::itemRemoved( const DataReference &ref )
+{
+  Q_UNUSED( ref );
+}
+
+void ResourceBase::collectionAdded( const Collection &collection, const Collection &parent )
+{
+  Q_UNUSED( collection );
+  Q_UNUSED( parent );
+}
+
+void ResourceBase::collectionChanged( const Collection &collection )
+{
+  Q_UNUSED( collection );
+}
+
+void ResourceBase::collectionRemoved( int id, const QString &remoteId )
+{
+  Q_UNUSED( id );
+  Q_UNUSED( remoteId );
+}
+
 void ResourceBase::Private::slotDeliveryDone(KJob * job)
 {
   Q_ASSERT( pendingReplys.contains( static_cast<Akonadi::Job*>( job ) ) );
