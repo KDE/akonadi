@@ -246,9 +246,7 @@ ResourceBase::ResourceBase( const QString & id )
 
   d->mId = id;
 
-  XdgBaseDirs baseDirs;
-
-  d->mSettings = new QSettings( QString::fromLatin1( "%1/resource_config_%2" ).arg( baseDirs.saveDir( "config", QLatin1String( "akonadi" ) ), id ), QSettings::IniFormat );
+  d->mSettings = new QSettings( QString::fromLatin1( "%1/resource_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), id ), QSettings::IniFormat );
 
   const QString name = d->mSettings->value( QLatin1String( "Resource/Name" ) ).toString();
   if ( !name.isEmpty() )
