@@ -20,7 +20,7 @@
 #include "control.h"
 
 #include <kdebug.h>
-#include <kstaticdeleter.h>
+#include <k3staticdeleter.h>
 
 #include <QtCore/QEventLoop>
 #include <QtDBus/QDBusConnection>
@@ -31,7 +31,7 @@
 
 using namespace Akonadi;
 
-static KStaticDeleter<Control> sControlDeleter;
+static K3StaticDeleter<Control> sControlDeleter;
 
 class Control::Private
 {
