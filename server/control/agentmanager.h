@@ -30,7 +30,6 @@ class QDir;
 
 namespace Akonadi {
   class ProcessControl;
-  class XdgBaseDirs;
 }
 
 /**
@@ -250,12 +249,12 @@ class AgentManager : public QObject
      * Returns the list of directory paths where the .desktop files
      * for the plugins are located.
      */
-    QStringList pluginInfoPathList() const;
+    static QStringList pluginInfoPathList();
 
     /**
      * Returns the path of the config file.
      */
-    QString configPath( bool writeable ) const;
+    static QString configPath( bool writeable );
 
     /**
      * Loads the internal state from config file.
@@ -336,8 +335,6 @@ class AgentManager : public QObject
     org::kde::Akonadi::Tracer *mTracer;
 
     Akonadi::ProcessControl *mStorageController;
-
-    Akonadi::XdgBaseDirs *mBaseDirs;
 };
 
 #endif

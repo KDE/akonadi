@@ -65,12 +65,11 @@ DataStore::DataStore() :
   QObject(),
   m_dbOpened( false ),
   m_inTransaction( false ),
-  mNotificationCollector( new NotificationCollector( this ) ),
-  mBaseDirs( new XdgBaseDirs() )
+  mNotificationCollector( new NotificationCollector( this ) )
 {
   // load database settings if needed
   if ( mDbDriverName.isEmpty() ) {
-    const QString serverConfigFile = mBaseDirs->akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+    const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
 
     QSettings settings( serverConfigFile, QSettings::IniFormat );
     QString defaultDriver = QLatin1String("QMYSQL");
@@ -89,7 +88,7 @@ DataStore::DataStore() :
       defaultOptions = QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( storagePath() );
     } else if ( mDbDriverName == QLatin1String( "QMYSQL" ) ) {
       defaultDbName = QLatin1String( "akonadi" );
-      const QString miscDir = mBaseDirs->saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+      const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
       defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir );
     } else if ( mDbDriverName == QLatin1String( "QSQLITE" ) ) {
       defaultDbName = storagePath();
@@ -194,10 +193,10 @@ QString DataStore::storagePath() const
    * We need the following path for the database directory:
    *   $XDG_DATA_HOME/akonadi/db/akonadi/
    */
-  QString akonadiHomeDir = mBaseDirs->saveDir( "data", QLatin1String( "akonadi" ) );
+  QString akonadiHomeDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
   if ( akonadiHomeDir.isEmpty() ) {
     Tracer::self()->error( "DataStore::storagePath",
-                           QString::fromLatin1( "Unable to create directory '%1/akonadi'" ).arg( mBaseDirs->homePath( "data" ) ) );
+                           QString::fromLatin1( "Unable to create directory '%1/akonadi'" ).arg( XdgBaseDirs::homePath( "data" ) ) );
   }
 
   akonadiHomeDir += QLatin1Char( '/' );

@@ -39,7 +39,6 @@ namespace Akonadi {
 
 class FetchQuery;
 class NotificationCollector;
-class XdgBaseDirs;
 
 /**
   This class handles all the database access.
@@ -301,7 +300,6 @@ private:
     bool m_inTransaction;
     QByteArray mSessionId;
     NotificationCollector* mNotificationCollector;
-    XdgBaseDirs* mBaseDirs;
 
     static QList<int> mPendingItemDeliveries;
     static QMutex mPendingItemDeliveriesMutex;

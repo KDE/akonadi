@@ -34,9 +34,7 @@ Tracer* Tracer::mSelf = 0;
 
 Tracer::Tracer() : mTracerBackend( 0 )
 {
-  XdgBaseDirs baseDirs;
-
-  QSettings settings( baseDirs.akonadiServerConfigFile(), QSettings::IniFormat );
+  QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
 
   const QString type = settings.value( QLatin1String( "Debug/Tracer" ), QLatin1String( "dbus" ) ).toString();
   if ( type == QLatin1String("file") ) {

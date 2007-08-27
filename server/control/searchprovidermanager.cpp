@@ -63,8 +63,7 @@ QStringList Akonadi::SearchProviderManager::providersForMimeType(const QString &
 
 QStringList Akonadi::SearchProviderManager::providerInfoPathList()
 {
-  XdgBaseDirs baseDirs;
-  return baseDirs.findAllResourceDirs( "data", QLatin1String( "akonadi/searchproviders" ) );
+  return XdgBaseDirs::findAllResourceDirs( "data", QLatin1String( "akonadi/searchproviders" ) );
 }
 
 void Akonadi::SearchProviderManager::readProviderInfos()

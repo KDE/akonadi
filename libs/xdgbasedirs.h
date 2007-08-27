@@ -49,18 +49,16 @@ class XdgBaseDirsPrivate;
  Example: getting the Akonadi server config file "akonadiserverrc", assuming
  that Akonadi stores its config in an additional subdirectoy called "akonadi"
  @code
- XdgBaseDirs baseDirs;
-
  QString relativeFileName = QLatin1String( "akonadi/akonadiserverrc" );
 
  // look for the file "akonadiserverrc" with additional subdirectory "akonadi"
  // in any directory associated with resource type "config"
- QString configFile = baseDirs.findResourceFile( "config", relativeFileName );
+ QString configFile = XdgBaseDirs::findResourceFile( "config", relativeFileName );
 
  if ( configFile.isEmpty() ) {
   // No config file yet, get the suitable user specific directory for storing
   // a new one
-  configFile  = baseDirs.saveDir( "config", QLatin1String( "akonadi" ) );
+  configFile  = XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) );
   configFile += QLatin1String( "akonadiserverrc" );
  }
 
@@ -99,7 +97,7 @@ class AKONADI_EXPORT XdgBaseDirs
      @see systemPathList()
      @see saveDir()
      */
-    QString homePath( const char *resource ) const;
+    static QString homePath( const char *resource );
 
     /**
      @brief Returns the list of system wide directories for a given resource type
@@ -121,7 +119,7 @@ class AKONADI_EXPORT XdgBaseDirs
 
      @see homePath()
      */
-    QStringList systemPathList( const char *resource ) const;
+    static QStringList systemPathList( const char *resource );
 
     /**
      @brief Searches the resource specific directories for a given file
@@ -143,7 +141,7 @@ class AKONADI_EXPORT XdgBaseDirs
      @see findResourceDir()
      @see saveDir
      */
-    QString findResourceFile( const char *resource, const QString &relPath ) const;
+    static QString findResourceFile( const char *resource, const QString &relPath );
 
     /**
      @brief Searches the executable specific directories for a given file
@@ -162,7 +160,7 @@ class AKONADI_EXPORT XdgBaseDirs
 
      @see findResourceFile()
      */
-    QString findExecutableFile( const QString &relPath ) const;
+    static QString findExecutableFile( const QString &relPath );
 
     /**
      @brief Searches the resource specific directories for a given subdirectory
@@ -187,7 +185,7 @@ class AKONADI_EXPORT XdgBaseDirs
      @see findResourceFile()
      @see saveDir()
      */
-    QString findResourceDir( const char *resource, const QString &relPath ) const;
+    static QString findResourceDir( const char *resource, const QString &relPath );
 
     /**
      @brief Searches the resource specific directories for a given subdirectory
@@ -213,7 +211,7 @@ class AKONADI_EXPORT XdgBaseDirs
 
      @see findResourceDir()
      */
-    QStringList findAllResourceDirs( const char *resource, const QString &relPath ) const;
+    static QStringList findAllResourceDirs( const char *resource, const QString &relPath );
 
     /**
      @brief Finds or creates the "save to" directory for a given resource
@@ -232,7 +230,7 @@ class AKONADI_EXPORT XdgBaseDirs
 
      @see findResourceDir()
      */
-    QString saveDir( const char *resource, const QString &relPath ) const;
+    static QString saveDir( const char *resource, const QString &relPath );
 
     /**
     * @brief Open mode flags for resource files
@@ -259,7 +257,7 @@ class AKONADI_EXPORT XdgBaseDirs
     *
     * @return the path of the server config file, suitable for \p openMode
     */
-    QString akonadiServerConfigFile( FileAccessMode openMode = ReadOnly ) const;
+    static QString akonadiServerConfigFile( FileAccessMode openMode = ReadOnly );
 
     /**
     * @brief Returns the path of the Akonadi data connection config file
@@ -271,13 +269,13 @@ class AKONADI_EXPORT XdgBaseDirs
     *
     * @return the path of the data connection config file, suitable for \p openMode
     */
-    QString akonadiConnectionConfigFile( FileAccessMode openMode = ReadOnly ) const;
+    static QString akonadiConnectionConfigFile( FileAccessMode openMode = ReadOnly );
 
   private:
     XdgBaseDirsPrivate* const d;
 
   private:
-    QString akonadiConfigFile( const QString &file, FileAccessMode openMode ) const;
+    static QString akonadiConfigFile( const QString &file, FileAccessMode openMode );
 
   private:
     XdgBaseDirs( const XdgBaseDirs &);

@@ -37,7 +37,6 @@ namespace Akonadi {
 
 class AkonadiConnection;
 class CacheCleaner;
-class XdgBaseDirs;
 class XesamManager;
 
 #ifdef Q_OS_WIN
@@ -75,7 +74,6 @@ class AKONADI_SERVER_EXPORT AkonadiServer: public KLocalSocketServer
     QProcess *mDatabaseProcess;
     QList< QPointer<AkonadiConnection> > mConnections;
     XesamManager *mXesamManager;
-    XdgBaseDirs *mBaseDirs;
 };
 
 }

@@ -166,15 +166,13 @@ QStringList ProfileManager::profileAgents( const QString &identifier ) const
 
 QString ProfileManager::profilePath( bool writeable ) const
 {
-  Akonadi::XdgBaseDirs baseDirs;
-
   const QString configFile =
-    baseDirs.findResourceFile( "config", QLatin1String( "akonadi/profilesrc" ) );
+    Akonadi::XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/profilesrc" ) );
 
   if ( !writeable && !configFile.isEmpty() )
     return configFile;
 
-  const QString configDir = baseDirs.saveDir( "config", "akonadi" );
+  const QString configDir = Akonadi::XdgBaseDirs::saveDir( "config", "akonadi" );
 
   return configDir + QLatin1String( "/profilesrc" );
 }

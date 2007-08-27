@@ -50,7 +50,11 @@ class XdgBaseDirsPrivate
     XdgBaseDirsPrivate() {}
 
     ~XdgBaseDirsPrivate() {}
+};
 
+class XdgBaseDirsSingleton
+{
+public:
     QString homePath( const char *variable, const char *defaultSubDir );
 
     QStringList systemPathList( const char *variable, const char *defaultDirList );
@@ -63,6 +67,8 @@ class XdgBaseDirsPrivate
     QStringList mDataDirs;
     QStringList mExecutableDirs;
 };
+
+Q_GLOBAL_STATIC(XdgBaseDirsSingleton, instance);
 
 }
 
@@ -77,55 +83,55 @@ XdgBaseDirs::~XdgBaseDirs()
   delete d;
 }
 
-QString XdgBaseDirs::homePath( const char *resource ) const
+QString XdgBaseDirs::homePath( const char *resource )
 {
   if ( qstrncmp( "data", resource, 4 ) == 0 ) {
-    if ( d->mDataHome.isEmpty() ) {
-      d->mDataHome = d->homePath( "XDG_DATA_HOME", ".local/share" );
+    if ( instance()->mDataHome.isEmpty() ) {
+      instance()->mDataHome = instance()->homePath( "XDG_DATA_HOME", ".local/share" );
     }
-    return d->mDataHome;
+    return instance()->mDataHome;
   } else if ( qstrncmp( "config", resource, 6 ) == 0 ) {
-    if ( d->mConfigHome.isEmpty() ) {
-      d->mConfigHome = d->homePath( "XDG_CONFIG_HOME", ".config" );
+    if ( instance()->mConfigHome.isEmpty() ) {
+      instance()->mConfigHome = instance()->homePath( "XDG_CONFIG_HOME", ".config" );
     }
-    return d->mConfigHome;
+    return instance()->mConfigHome;
   }
 
   return QString();
 }
 
-QStringList XdgBaseDirs::systemPathList( const char *resource ) const
+QStringList XdgBaseDirs::systemPathList( const char *resource )
 {
   if ( qstrncmp( "data", resource, 4 ) == 0 ) {
-    if ( d->mDataDirs.isEmpty() ) {
-      QStringList dataDirs = d->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
+    if ( instance()->mDataDirs.isEmpty() ) {
+      QStringList dataDirs = instance()->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
 
       const QString prefixDataDir = QLatin1String( AKONADIDATA );
       if ( !dataDirs.contains( prefixDataDir ) ) {
         dataDirs << prefixDataDir;
       }
 
-      d->mDataDirs = dataDirs;
+      instance()->mDataDirs = dataDirs;
     }
-    return d->mDataDirs;
+    return instance()->mDataDirs;
   } else if ( qstrncmp( "config", resource, 6 ) == 0 ) {
-    if ( d->mConfigDirs.isEmpty() ) {
-      QStringList configDirs = d->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
+    if ( instance()->mConfigDirs.isEmpty() ) {
+      QStringList configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
 
       const QString prefixConfigDir = QLatin1String( AKONADICONFIG );
       if ( !configDirs.contains( prefixConfigDir ) ) {
         configDirs << prefixConfigDir;
       }
 
-      d->mConfigDirs = configDirs;
+      instance()->mConfigDirs = configDirs;
     }
-    return d->mConfigDirs;
+    return instance()->mConfigDirs;
   }
 
   return QStringList();
 }
 
-QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relPath ) const
+QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relPath )
 {
   QString fullPath = homePath( resource ) + QLatin1Char('/' ) + relPath;
 
@@ -148,21 +154,21 @@ QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relP
   return QString();
 }
 
-QString XdgBaseDirs::findExecutableFile( const QString &relPath ) const
+QString XdgBaseDirs::findExecutableFile( const QString &relPath )
 {
-  if ( d->mExecutableDirs.isEmpty() ) {
-    QStringList executableDirs = d->systemPathList( "PATH", "/usr/local/bin:/usr/bin" );
+  if ( instance()->mExecutableDirs.isEmpty() ) {
+    QStringList executableDirs = instance()->systemPathList( "PATH", "/usr/local/bin:/usr/bin" );
 
     const QString prefixExecutableDir = QLatin1String( AKONADIPREFIX "/bin" );
     if ( !executableDirs.contains( prefixExecutableDir ) ) {
       executableDirs << prefixExecutableDir;
     }
 
-    d->mExecutableDirs = executableDirs;
+    instance()->mExecutableDirs = executableDirs;
   }
 
-  QStringList::const_iterator pathIt    = d->mExecutableDirs.begin();
-  QStringList::const_iterator pathEndIt = d->mExecutableDirs.end();
+  QStringList::const_iterator pathIt    = instance()->mExecutableDirs.begin();
+  QStringList::const_iterator pathEndIt = instance()->mExecutableDirs.end();
   for ( ; pathIt != pathEndIt; ++pathIt ) {
     QStringList fullPathList = alternateExecPaths(*pathIt + QLatin1Char( '/' ) + relPath );
 
@@ -180,7 +186,7 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath ) const
   return QString();
 }
 
-QString XdgBaseDirs::findResourceDir( const char *resource, const QString &relPath ) const
+QString XdgBaseDirs::findResourceDir( const char *resource, const QString &relPath )
 {
   QString fullPath = homePath( resource ) + QLatin1Char( '/' ) + relPath;
 
@@ -203,7 +209,7 @@ QString XdgBaseDirs::findResourceDir( const char *resource, const QString &relPa
   return QString();
 }
 
-QStringList XdgBaseDirs::findAllResourceDirs( const char *resource, const QString &relPath ) const
+QStringList XdgBaseDirs::findAllResourceDirs( const char *resource, const QString &relPath )
 {
   QStringList resultList;
 
@@ -228,7 +234,7 @@ QStringList XdgBaseDirs::findAllResourceDirs( const char *resource, const QStrin
   return resultList;
 }
 
-QString XdgBaseDirs::saveDir( const char *resource, const QString &relPath ) const
+QString XdgBaseDirs::saveDir( const char *resource, const QString &relPath )
 {
   QString fullPath = homePath( resource ) + QLatin1Char('/' ) + relPath;
 
@@ -252,17 +258,17 @@ QString XdgBaseDirs::saveDir( const char *resource, const QString &relPath ) con
   return QString();
 }
 
-QString XdgBaseDirs::akonadiServerConfigFile( FileAccessMode openMode ) const
+QString XdgBaseDirs::akonadiServerConfigFile( FileAccessMode openMode )
 {
   return akonadiConfigFile( QLatin1String( "akonadiserverrc" ), openMode );
 }
 
-QString XdgBaseDirs::akonadiConnectionConfigFile( FileAccessMode openMode ) const
+QString XdgBaseDirs::akonadiConnectionConfigFile( FileAccessMode openMode )
 {
   return akonadiConfigFile( QLatin1String( "akonadiconnectionrc" ), openMode );
 }
 
-QString XdgBaseDirs::akonadiConfigFile( const QString &file, FileAccessMode openMode ) const
+QString XdgBaseDirs::akonadiConfigFile( const QString &file, FileAccessMode openMode )
 {
   const QString akonadiDir = QLatin1String( "akonadi" );
 
@@ -287,7 +293,7 @@ QString XdgBaseDirs::akonadiConfigFile( const QString &file, FileAccessMode open
   return savePath;
 }
 
-QString XdgBaseDirsPrivate::homePath( const char *variable, const char *defaultSubDir )
+QString XdgBaseDirsSingleton::homePath( const char *variable, const char *defaultSubDir )
 {
   char *env = std::getenv( variable );
 
@@ -303,7 +309,7 @@ QString XdgBaseDirsPrivate::homePath( const char *variable, const char *defaultS
   return xdgPath;
 }
 
-QStringList XdgBaseDirsPrivate::systemPathList( const char *variable, const char *defaultDirList )
+QStringList XdgBaseDirsSingleton::systemPathList( const char *variable, const char *defaultDirList )
 {
   char *env = std::getenv( variable );
 
