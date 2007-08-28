@@ -68,7 +68,7 @@ public:
     QStringList mExecutableDirs;
 };
 
-Q_GLOBAL_STATIC(XdgBaseDirsSingleton, instance);
+Q_GLOBAL_STATIC(XdgBaseDirsSingleton, instance)
 
 }
 
