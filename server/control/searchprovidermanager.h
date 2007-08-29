@@ -52,7 +52,7 @@ class SearchProviderManager : public QObject
   public Q_SLOTS:
     /**
       Returns a list of search providers suitable for the given mimetype.
-      @param mimetype The mimetype.
+      @param mimeType The mimetype.
     */
     QStringList providersForMimeType( const QString &mimeType ) const;
 
