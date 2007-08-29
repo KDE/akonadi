@@ -166,6 +166,7 @@ class AKONADI_EXPORT AgentBase : public Agent, protected QDBusContext
     /**
       Reimplement to handle adding of new items.
       @param item The newly added item.
+      @param collection The collection @p item got added to.
     */
     virtual void itemAdded( const Item &item, const Collection &collection );
 

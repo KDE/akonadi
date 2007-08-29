@@ -28,7 +28,7 @@ namespace Akonadi {
 
 /**
   Contains status information of a collection, such as
-  total number of items, number of new/unread items, etc..
+  total number of items, number of new/unread items, etc.
 
   These information might be expensive to obtain and are thus
   not included when fetching collection with a CollectionListJob.
@@ -56,28 +56,37 @@ class AKONADI_EXPORT CollectionStatus
 
     /**
       Returns the number of objects in this collection.
-      @returns -1 if this information is not available.
+      @return @c -1 if this information is not available.
+      @see setCount()
+      @see unreadCount()
      */
     int count() const;
 
     /**
       Sets the number of objects in this collection.
+      @param count The number of objects
+      @see count()
     */
     void setCount( int count );
 
     /**
       Returns the number of unread messages in this collection.
-      @returns -1 if this information is not available.
+      @return @c -1 if this information is not available.
+      @see setUnreadCount()
+      @see count()
      */
     int unreadCount() const;
 
     /**
       Sets the number of unread messages in this collection.
+      @param count The number of unread messages
+      @see unreadCount()
     */
     void setUnreadCount( int count );
 
     /**
       Assignment operator.
+      @param other The status object to assign to @c this
     */
     CollectionStatus& operator=( const CollectionStatus &other );
 
