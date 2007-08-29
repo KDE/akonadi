@@ -20,8 +20,6 @@
 #ifndef XDGBASEDIRS_H
 #define XDGBASEDIRS_H
 
-#include "libakonadi_export.h"
-
 // Qt includes
 #include <QtCore/QFlags>
 
@@ -69,7 +67,7 @@ class XdgBaseDirsPrivate;
 
  @see http://www.freedesktop.org/wiki/Specifications/basedir-spec
  */
-class AKONADI_EXPORT XdgBaseDirs
+class XdgBaseDirs
 {
   public:
     /**
