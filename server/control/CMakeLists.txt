@@ -14,6 +14,7 @@ set( control_SRCS
   processcontrol.cpp
   profilemanager.cpp
   searchprovidermanager.cpp
+  ../../libakonadi/xdgbasedirs.cpp
 )
 
 qt4_generate_dbus_interface( ../../libakonadi/resource.h org.kde.Akonadi.Resource.xml )
@@ -30,7 +31,7 @@ qt4_add_dbus_interfaces( control_SRCS
 kde4_add_executable(akonadi_control NOGUI ${control_SRCS})
 set_target_properties(akonadi_control PROPERTIES OUTPUT_NAME akonadi_control)
 
-target_link_libraries(akonadi_control akonadi ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
+target_link_libraries(akonadi_control ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
 
 install(TARGETS akonadi_control DESTINATION ${BIN_INSTALL_DIR})
 
