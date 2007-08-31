@@ -10,6 +10,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
+add_subdirectory( akonadictl )
 add_subdirectory( control )
 add_subdirectory( src )
 if (MYSQL_EMBEDDED_FOUND AND OPENSSL_FOUND)
