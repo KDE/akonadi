@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Tobias Koenig <tokoe@kde.org>                   *
+ *   Copyright (C) 2007 by Tobias Koenig <tokoe@kde.org>                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -17,53 +17,35 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QCoreApplication>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
+#ifndef CONTROLMANAGER_H
+#define CONTROLMANAGER_H
 
-#include "agentmanager.h"
-#include "controlmanager.h"
-#include "processcontrol.h"
-#include "profilemanager.h"
-#include "searchprovidermanager.h"
+#include <QtCore/QObject>
 
-#include "kcrash.h"
-#include <stdlib.h>
-#include <unistd.h>
-
-static AgentManager *sAgentManager = 0;
-
-void crashHandler( int )
+/**
+ * The control manager provides a dbus method to shutdown
+ * the Akonadi Control process cleanly.
+ */
+class ControlManager : public QObject
 {
-  if ( sAgentManager )
-    sAgentManager->cleanup();
+  Q_OBJECT
 
-  exit( 255 );
-}
+  public:
+    /**
+     * Creates a new control manager.
+     */
+    ControlManager( QObject *parent = 0 );
 
-int main( int argc, char **argv )
-{
-  KCrash::init();
-  KCrash::setEmergencyMethod( crashHandler );
+    /**
+     * Destroys the control manager.
+     */
+    ~ControlManager();
 
-  QCoreApplication app( argc, argv );
+  public Q_SLOTS:
+    /**
+     * Shutdown the Akonadi Control process cleanly.
+     */
+    void shutdown();
+};
 
-  if ( !QDBusConnection::sessionBus().registerService( "org.kde.Akonadi.Control" ) ) {
-    qDebug( "Unable to register service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
-    return 1;
-  }
-
-  new ControlManager;
-
-  sAgentManager = new AgentManager;
-  ProfileManager profileManager;
-  Akonadi::SearchProviderManager* spm = new Akonadi::SearchProviderManager;
-
-  int retval = app.exec();
-
-  delete spm;
-  delete sAgentManager;
-  sAgentManager = 0;
-
-  return retval;
-}
+#endif

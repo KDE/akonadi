@@ -21,6 +21,7 @@
 
 #include "agentmanageradaptor.h"
 #include "processcontrol.h"
+#include "serverinterface.h"
 #include "xdgbasedirs.h"
 
 #include <QtCore/QCoreApplication>
@@ -78,7 +79,9 @@ void AgentManager::cleanup()
 
   mInstances.clear();
 
-  mStorageController->setCrashPolicy( Akonadi::ProcessControl::StopOnCrash );
+  org::kde::Akonadi::Server *serverIface = new org::kde::Akonadi::Server( "org.kde.Akonadi", "/Server",
+                                                                          QDBusConnection::sessionBus(), this );
+  serverIface->quit();
 
   delete mStorageController;
   mStorageController = 0;

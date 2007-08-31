@@ -130,6 +130,7 @@ void AkonadiServer::quit()
 
     for ( int i = 0; i < mConnections.count(); ++i ) {
       if ( mConnections[ i ] ) {
+        mConnections[ i ]->quit();
         mConnections[ i ]->wait();
       }
     }

@@ -59,8 +59,10 @@ void ProcessControl::setCrashPolicy( CrashPolicy policy )
 
 void ProcessControl::stop()
 {
-  if ( mProcess.state() != QProcess::NotRunning )
+  if ( mProcess.state() != QProcess::NotRunning ) {
+    mProcess.waitForFinished( 10000 );
     mProcess.terminate();
+  }
 }
 
 void ProcessControl::slotError( QProcess::ProcessError error )

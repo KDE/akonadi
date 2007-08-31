@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Tobias Koenig <tokoe@kde.org>                   *
+ *   Copyright (C) 2007 by Tobias Koenig <tokoe@kde.org>                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -18,52 +18,26 @@
  ***************************************************************************/
 
 #include <QtCore/QCoreApplication>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
+#include <QtCore/QTimer>
 
-#include "agentmanager.h"
+#include "controlmanageradaptor.h"
+
 #include "controlmanager.h"
-#include "processcontrol.h"
-#include "profilemanager.h"
-#include "searchprovidermanager.h"
 
-#include "kcrash.h"
-#include <stdlib.h>
-#include <unistd.h>
-
-static AgentManager *sAgentManager = 0;
-
-void crashHandler( int )
+ControlManager::ControlManager( QObject *parent )
+  : QObject( parent )
 {
-  if ( sAgentManager )
-    sAgentManager->cleanup();
-
-  exit( 255 );
+  new ControlManagerAdaptor( this );
+  QDBusConnection::sessionBus().registerObject( "/ControlManager", this );
 }
 
-int main( int argc, char **argv )
+ControlManager::~ControlManager()
 {
-  KCrash::init();
-  KCrash::setEmergencyMethod( crashHandler );
-
-  QCoreApplication app( argc, argv );
-
-  if ( !QDBusConnection::sessionBus().registerService( "org.kde.Akonadi.Control" ) ) {
-    qDebug( "Unable to register service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
-    return 1;
-  }
-
-  new ControlManager;
-
-  sAgentManager = new AgentManager;
-  ProfileManager profileManager;
-  Akonadi::SearchProviderManager* spm = new Akonadi::SearchProviderManager;
-
-  int retval = app.exec();
-
-  delete spm;
-  delete sAgentManager;
-  sAgentManager = 0;
-
-  return retval;
 }
+
+void ControlManager::shutdown()
+{
+  QTimer::singleShot( 0, QCoreApplication::instance(), SLOT( quit() ) );
+}
+
+#include "controlmanager.moc"
