@@ -25,7 +25,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QTime>
 #include <QtCore/QModelIndex>
 
@@ -140,7 +140,7 @@ class MessageThreaderProxyModel::Private
       }
     }
 
-    qDebug() << time.elapsed() / 1000 << " seconds for " << end - begin + 1 << " items";
+    qDebug() << time.elapsed() << "ms for" << end - begin + 1 << "items";
   }
 
   /*
@@ -264,22 +264,22 @@ class MessageThreaderProxyModel::Private
    * It tries to be as close as possible from the real structure, given that not every parents
    * are present in the collection
    */
-  QMap<int, QList<int> > childrenMap;
-  QMap<int, int> parentMap;
-  QMap<int, QModelIndex> indexMap;
+  QHash<int, QList<int> > childrenMap;
+  QHash<int, int> parentMap;
+  QHash<int, QModelIndex> indexMap;
 
   /*
    * These maps store the real parents, as read from the item parts
    * In the best case, the list should contain only one element ( = unique parent )
    * If there isn't only one, the algorithm will pick up the first one in the current collection
    */
-  QMap<int, QList<int> > realPerfectParentsMap;
-  QMap<int, QList<int> > realUnperfectParentsMap;
-  QMap<int, QList<int> > realSubjectParentsMap;
+  QHash<int, QList<int> > realPerfectParentsMap;
+  QHash<int, QList<int> > realUnperfectParentsMap;
+  QHash<int, QList<int> > realSubjectParentsMap;
 
-  QMap<int, QList<int> > realPerfectChildrenMap;
-  QMap<int, QList<int> > realUnperfectChildrenMap;
-  QMap<int, QList<int> > realSubjectChildrenMap;
+  QHash<int, QList<int> > realPerfectChildrenMap;
+  QHash<int, QList<int> > realUnperfectChildrenMap;
+  QHash<int, QList<int> > realSubjectChildrenMap;
 };
 
 MessageThreaderProxyModel::MessageThreaderProxyModel( QObject *parent )
