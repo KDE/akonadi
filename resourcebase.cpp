@@ -453,7 +453,7 @@ void ResourceBase::quit()
 
   d->mSettings->sync();
 
-  QCoreApplication::exit( 0 );
+  QTimer::singleShot( 0, QCoreApplication::instance(), SLOT( quit() ) );
 }
 
 void ResourceBase::aboutToQuit()
