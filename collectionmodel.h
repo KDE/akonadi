@@ -65,12 +65,6 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     virtual ~CollectionModel();
 
     /**
-      Filters out all collections which don't contains items
-      of the passed mime-types.
-     */
-    void filterByMimeTypes( const QStringList &mimeTypes );
-
-    /**
       Reimplemented from QAbstractItemModel.
     */
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
