@@ -45,11 +45,11 @@ void ItemView::Private::itemActivated( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  const int currentItem = index.model()->data( index, ItemModel::IdRole ).toInt();
+  const int currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toInt();
   if ( currentItem <= 0 )
     return;
 
-  const QString remoteId = index.model()->data( index, ItemModel::IdRole ).toString();
+  const QString remoteId = index.sibling(index.row(),ItemModel::RemoteId).data(ItemModel::IdRole).toString();
 
   emit mParent->activated( DataReference( currentItem, remoteId ) );
 }
@@ -59,11 +59,11 @@ void ItemView::Private::itemCurrentChanged( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  const int currentItem = index.model()->data( index, ItemModel::IdRole ).toInt();
+  const int currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toInt();
   if ( currentItem <= 0 )
     return;
 
-  const QString remoteId = index.model()->data( index, ItemModel::IdRole ).toString();
+  const QString remoteId = index.sibling(index.row(),ItemModel::RemoteId).data(ItemModel::IdRole).toString();
 
   emit mParent->currentChanged( DataReference( currentItem, remoteId ) );
 }
