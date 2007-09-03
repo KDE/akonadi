@@ -56,6 +56,7 @@ class CollectionModel::Private
     Monitor *monitor;
     Session *session;
     QStringList mimeTypes;
+    QStringList filterMimeTypes;
     bool fetchStatus;
 
     void collectionRemoved( int );
@@ -153,6 +154,17 @@ void CollectionModel::Private::listDone( KJob *job )
 
     // update model
     foreach( Collection col, _collections ) {
+      bool containsFilterMimeType = false;
+      foreach ( QString mimeType, col.contentTypes() ) {
+        if ( filterMimeTypes.contains( mimeType ) ) {
+          containsFilterMimeType = true;
+          break;
+        }
+      }
+
+      if ( !containsFilterMimeType )
+        continue;
+
       if ( collections.contains( col.id() ) ) {
         // collection already known
         col.setStatus( collections.value( col.id() ).status() );
@@ -232,6 +244,36 @@ CollectionModel::~CollectionModel()
   d->monitor = 0;
 
   delete d;
+}
+
+void CollectionModel::filterByMimeTypes( const QStringList &mimeTypes )
+{
+  d->filterMimeTypes = mimeTypes;
+
+  /**
+   * Since we changed the filter, we have to reload everything.
+   */
+  d->childCollections.clear();
+  d->collections.clear();
+
+  reset();
+
+  delete d->monitor;
+  d->monitor = 0;
+
+  // start a list job
+  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, d->session );
+  connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
+
+  // monitor collection changes
+  d->monitor = new Monitor();
+  d->monitor->monitorCollection( Collection::root() );
+  d->monitor->fetchCollection( true );
+  connect( d->monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)), SLOT(collectionChanged(const Akonadi::Collection&)) );
+  connect( d->monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), SLOT(collectionChanged(Akonadi::Collection)) );
+  connect( d->monitor, SIGNAL(collectionRemoved(int,QString)), SLOT(collectionRemoved(int)) );
+  connect( d->monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)),
+           SLOT(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
 }
 
 int CollectionModel::columnCount( const QModelIndex & parent ) const

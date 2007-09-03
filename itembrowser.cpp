@@ -33,6 +33,11 @@ ItemBrowser::~ItemBrowser()
   // delete d;
 }
 
+void ItemBrowser::setUid( const Akonadi::DataReference &uid )
+{
+  ItemDetailsView::setUid( uid );
+}
+
 void ItemBrowser::itemAdded( const Item &item )
 {
   setHtml( itemToRichText( item ) );
@@ -52,3 +57,5 @@ QString ItemBrowser::itemToRichText( const Item &item )
 {
   return QString::fromUtf8( item.part( Item::PartBody ) );
 }
+
+#include "itembrowser.moc"

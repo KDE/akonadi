@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMVIEW_P_H
-#define AKONADI_ITEMVIEW_P_H
+#ifndef AKONADI_ITEMDETAILSVIEW_P_H
+#define AKONADI_ITEMDETAILSVIEW_P_H
 
 #include <QtCore/QObject>
 
@@ -28,12 +28,12 @@
 
 namespace Akonadi {
 
-class ItemView::Private : public QObject
+class ItemDetailsView::Private : public QObject
 {
   Q_OBJECT
 
   public:
-    Private( ItemView *parent )
+    Private( ItemDetailsView *parent )
       : QObject( 0 ),
         mParent( parent ), mMonitor( 0 )
     {
@@ -44,7 +44,7 @@ class ItemView::Private : public QObject
       delete mMonitor;
     }
 
-    ItemView *mParent;
+    ItemDetailsView *mParent;
     DataReference mUid;
     Monitor *mMonitor;
 

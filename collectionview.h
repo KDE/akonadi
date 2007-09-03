@@ -27,6 +27,8 @@ class QDragMoveEvent;
 
 namespace Akonadi {
 
+class Collection;
+
 /**
   A view to show a collection tree provided by a CollectionModell.
   It uses an internal QSortFilterProxyModel to provide sorting.
@@ -52,6 +54,20 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     */
     virtual void setModel ( QAbstractItemModel * model );
 
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the user has activated
+     * a collection in the view.
+     */
+    void activated( const Akonadi::Collection &collection );
+
+    /**
+     * This signal is emitted whenever the current collection
+     * in the view has changed.
+     */
+    void currentChanged( const Akonadi::Collection &collection );
+
   protected:
     virtual void dragMoveEvent( QDragMoveEvent *event );
     virtual void dragLeaveEvent( QDragLeaveEvent *event );
@@ -68,6 +84,8 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     Q_PRIVATE_SLOT( d, void deleteCollection() )
     Q_PRIVATE_SLOT( d, void deleteResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void updateActions( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void itemActivated( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
 };
 
 }

@@ -228,6 +228,17 @@ QVariant ItemModel::data( const QModelIndex & index, int role ) const
         return item.mimeType();
     }
   }
+  
+  if ( role == IdRole ) {
+    switch ( index.column() ) {
+      case Id:
+        return QString::number( item.reference().id() );
+      case RemoteId:
+        return item.reference().remoteId();
+      case MimeType:
+        return item.mimeType();
+    }
+  }
 
   return QVariant();
 }

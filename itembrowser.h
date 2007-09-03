@@ -21,7 +21,7 @@
 #define AKONADI_ITEMBROWSER_H
 
 #include "libakonadi_export.h"
-#include <libakonadi/itemview.h>
+#include <libakonadi/itemdetailsview.h>
 #include <ktextbrowser.h>
 
 namespace Akonadi {
@@ -37,8 +37,10 @@ class Item;
  * @see KABCItemBrowser
  * @see KCalItemBrowser
  */
-class AKONADI_EXPORT ItemBrowser : public KTextBrowser, public ItemView
+class AKONADI_EXPORT ItemBrowser : public KTextBrowser, public ItemDetailsView
 {
+  Q_OBJECT
+
   public:
     /**
      * Creates a new item browser.
@@ -49,6 +51,9 @@ class AKONADI_EXPORT ItemBrowser : public KTextBrowser, public ItemView
      * Destroys the item browser.
      */
     virtual ~ItemBrowser();
+
+  public Q_SLOTS:
+    void setUid( const Akonadi::DataReference &uid );
 
   protected:
     /**

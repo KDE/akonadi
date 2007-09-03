@@ -17,22 +17,22 @@
     02110-1301, USA.
 */
 
-#include "itemview.h"
-#include "itemview_p.h"
+#include "itemdetailsview.h"
+#include "itemdetailsview_p.h"
 
 using namespace Akonadi;
 
-ItemView::ItemView()
+ItemDetailsView::ItemDetailsView()
   : d( new Private( this ) )
 {
 }
 
-ItemView::~ItemView()
+ItemDetailsView::~ItemDetailsView()
 {
   delete d;
 }
 
-void ItemView::setUid( const DataReference &id )
+void ItemDetailsView::setUid( const DataReference &id )
 {
   if ( id == d->mUid )
     return;
@@ -66,26 +66,26 @@ void ItemView::setUid( const DataReference &id )
   d->connect( job, SIGNAL( result( KJob* ) ), d, SLOT( initialFetchDone( KJob* ) ) );
 }
 
-DataReference ItemView::uid() const
+DataReference ItemDetailsView::uid() const
 {
   return d->mUid;
 }
 
-void ItemView::itemAdded( const Item& )
+void ItemDetailsView::itemAdded( const Item& )
 {
 }
 
-void ItemView::itemChanged( const Item& )
+void ItemDetailsView::itemChanged( const Item& )
 {
 }
 
-void ItemView::itemRemoved()
+void ItemDetailsView::itemRemoved()
 {
 }
 
-QStringList ItemView::fetchPartIdentifiers() const
+QStringList ItemDetailsView::fetchPartIdentifiers() const
 {
   return QStringList( Item::PartBody );
 }
 
-#include "itemview_p.moc"
+#include "itemdetailsview_p.moc"

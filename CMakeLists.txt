@@ -54,12 +54,13 @@ set( akonadi_LIB_SRC
 	itemappendjob.cpp
 	itembrowser.cpp
 	itemdeletejob.cpp
+	itemdetailsview.cpp
 	itemfetchjob.cpp
 	itemmodel.cpp
 	itemserializer.cpp
 	itemserializerplugin.cpp
 	itemstorejob.cpp
-	itemview.cpp
+  itemview.cpp
 	job.cpp
 	kcrash.cpp
 	messagecollectionmodel.cpp
@@ -116,12 +117,13 @@ install( FILES
 	itemappendjob.h
 	itembrowser.h
 	itemdeletejob.h
+	itemdetailsview.h
 	itemfetchjob.h
 	itempayloadinternals_p.h
 	itemserializerplugin.h
 	itemstorejob.h
-	itemview.h
 	itemmodel.h
+	itemview.h
 	job.h
 	libakonadi_export.h
 	messagecollectionmodel.h

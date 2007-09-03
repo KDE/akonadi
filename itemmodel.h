@@ -49,6 +49,10 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       MimeType /**< Item mimetype. */
     };
 
+    enum Roles {
+      IdRole = Qt::UserRole + 1
+    };
+
     /**
       Creates a new message model.
 
@@ -97,14 +101,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     virtual QStringList mimeTypes() const;
 
     /**
-      Sets the collection the model should display. If the collection has
-      changed, the model is reset and a new message listing is requested
-      from the storage backend.
-      @param collection The collection.
-    */
-    void setCollection( const Collection &collection );
-
-    /**
       Returns the message reference to the given model index. If the index
       is invalid, an empty reference is returned.
       @param index The model index.
@@ -128,6 +124,15 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       @param column The column for the returned index
     */ 
     QModelIndex indexForItem( const Akonadi::DataReference& ref, const int column ) const;
+
+  public Q_SLOTS:
+    /**
+      Sets the collection the model should display. If the collection has
+      changed, the model is reset and a new message listing is requested
+      from the storage backend.
+      @param collection The collection.
+    */
+    void setCollection( const Akonadi::Collection &collection );
 
   Q_SIGNALS:
     /**

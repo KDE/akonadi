@@ -53,6 +53,8 @@ class CollectionView::Private
     void deleteCollection();
     void deleteResult( KJob* );
     void updateActions( const QModelIndex& );
+    void itemActivated( const QModelIndex& );
+    void itemCurrentChanged( const QModelIndex& );
     bool hasParent( const QModelIndex& idx, int parentId );
 
     CollectionView *mParent;
@@ -140,7 +142,29 @@ void CollectionView::Private::updateActions( const QModelIndex &current )
     deleteCollectionAction->setEnabled( false );
 }
 
+void CollectionView::Private::itemActivated( const QModelIndex &index )
+{
+  if ( !index.isValid() )
+    return;
 
+  int currentCollection = index.model()->data( index, CollectionModel::CollectionIdRole ).toInt();
+  if ( currentCollection <= 0 )
+    return;
+
+  emit mParent->activated( Collection( currentCollection ) );
+}
+
+void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
+{
+  if ( !index.isValid() )
+    return;
+
+  int currentCollection = index.model()->data( index, CollectionModel::CollectionIdRole ).toInt();
+  if ( currentCollection <= 0 )
+    return;
+
+  emit mParent->currentChanged( Collection( currentCollection ) );
+}
 
 CollectionView::CollectionView( QWidget * parent ) :
     QTreeView( parent ),
@@ -167,6 +191,9 @@ CollectionView::CollectionView( QWidget * parent ) :
   connect( d->newCollectionAction, SIGNAL(triggered()), SLOT(createCollection()) );
   d->deleteCollectionAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n("Delete Folder"), this );
   connect( d->deleteCollectionAction, SIGNAL(triggered()), SLOT(deleteCollection()) );
+
+  connect( this, SIGNAL( activated( const QModelIndex& ) ),
+           this, SLOT( itemActivated( const QModelIndex& ) ) );
 }
 
 CollectionView::~CollectionView()
@@ -180,7 +207,10 @@ void CollectionView::setModel( QAbstractItemModel * model )
   QTreeView::setModel( d->filterModel );
   header()->setResizeMode( 0, QHeaderView::Stretch );
 
-  connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(updateActions(QModelIndex)) );
+  connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
+           this, SLOT( updateActions( const QModelIndex& ) ) );
+  connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
+           this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
 }
 
 void CollectionView::dragMoveEvent(QDragMoveEvent * event)

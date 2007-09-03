@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMVIEW_H
-#define AKONADI_ITEMVIEW_H
+#ifndef AKONADI_ITEMDETAILSVIEW_H
+#define AKONADI_ITEMDETAILSVIEW_H
 
 #include "libakonadi_export.h"
 
@@ -38,18 +38,18 @@ class Item;
  *
  * @see ItemBrowser
  */
-class AKONADI_EXPORT ItemView
+class AKONADI_EXPORT ItemDetailsView
 {
   public:
     /**
-     * Creates a new item view.
+     * Creates a new item details view.
      */
-    ItemView();
+    ItemDetailsView();
 
     /**
-     * Destroys the item view.
+     * Destroys the item details view.
      */
-    virtual ~ItemView();
+    virtual ~ItemDetailsView();
 
     /**
      * Sets the id of the item that shall be watched.
@@ -91,7 +91,7 @@ class AKONADI_EXPORT ItemView
     class Private;
     Private* const d;
 
-    Q_DISABLE_COPY( ItemView )
+    Q_DISABLE_COPY( ItemDetailsView )
 };
 
 }
