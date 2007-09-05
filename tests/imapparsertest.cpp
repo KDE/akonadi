@@ -204,8 +204,6 @@ void ImapParserTest::testParseParenthesizedList( )
   reference << "foo";
   reference << "\n\nbar\n";
   reference << "bla";
-  qDebug() << result;
-  qDebug() << reference;
   QCOMPARE( result, reference );
   QCOMPARE( consumed, input.length() );
 }
@@ -388,6 +386,50 @@ void ImapParserTest::testMessageParser()
   QVERIFY( cont.isEmpty() );
 
   delete parser;
+}
+
+void ImapParserTest::testParseSequenceSet_data()
+{
+  QTest::addColumn<QByteArray>( "data" );
+  QTest::addColumn<int>( "begin" );
+  QTest::addColumn<ImapInterval::List>( "result" );
+  QTest::addColumn<int>( "end" );
+
+  QByteArray data( " 1 0:* 3:4,8:* *:5,1" );
+
+  QTest::newRow( "empty" ) << QByteArray() << 0 << ImapInterval::List() << 0;
+  QTest::newRow( "input end" ) << data << 20 << ImapInterval::List() << 20;
+
+  ImapInterval::List result;
+  result << ImapInterval( 1, 1 );
+  QTest::newRow( "single value 1" ) << data << 0 << result << 2;
+  QTest::newRow( "single value 2" ) << data << 1 << result << 2;
+  QTest::newRow( "single value 3" ) << data << 19 << result << 20;
+
+  result.clear();
+  result << ImapInterval();
+  QTest::newRow( "full interval" ) << data << 2 << result << 6;
+
+  result.clear();
+  result << ImapInterval( 3, 4 ) << ImapInterval( 8 );
+  QTest::newRow( "complex 1" ) << data << 7 << result << 14;
+
+  result.clear();
+  result << ImapInterval( 0, 5 ) << ImapInterval( 1, 1 );
+  QTest::newRow( "complex 2" ) << data << 14 << result << 20;
+}
+
+void ImapParserTest::testParseSequenceSet()
+{
+  QFETCH( QByteArray, data );
+  QFETCH( int, begin );
+  QFETCH( ImapInterval::List, result );
+  QFETCH( int, end );
+
+  ImapSet res;
+  int pos = ImapParser::parseSequenceSet( data, res, begin );
+  QCOMPARE( res.intervals(), result );
+  QCOMPARE( pos, end );
 }
 
 #include "imapparsertest.moc"

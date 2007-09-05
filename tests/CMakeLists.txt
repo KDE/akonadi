@@ -31,6 +31,7 @@ add_akonadi_demo(collectioncreator.cpp)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
+add_akonadi_test(imapsettest.cpp)
 add_akonadi_test(datareferencetest.cpp)
 add_akonadi_test(collectionjobtest.cpp)
 add_akonadi_test(collectionpathresolvertest.cpp)

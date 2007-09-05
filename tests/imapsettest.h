@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,26 +17,17 @@
     02110-1301, USA.
 */
 
-#ifndef IMAPPARSER_TEST_H
-#define IMAPPARSER_TEST_H
+#ifndef AKONADI_IMAPSETTEST_H
+#define AKONADI_IMAPSETTEST_H
 
 #include <QtCore/QObject>
 
-class ImapParserTest : public QObject
+class ImapSetTest : public QObject
 {
   Q_OBJECT
-  private Q_SLOTS:
-    void testStripLeadingSpaces();
-    void testParseQuotedString();
-    void testParseString();
-    void testParseParenthesizedList();
-    void testParseNumber();
-    void testQuote_data();
-    void testQuote();
-    void testMessageParser_data();
-    void testMessageParser();
-    void testParseSequenceSet_data();
-    void testParseSequenceSet();
+  private slots:
+    void testAddList_data();
+    void testAddList();
 };
 
 
