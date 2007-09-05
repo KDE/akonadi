@@ -67,7 +67,7 @@ class Entity
 
       CountQueryBuilder builder;
       builder.addTable( T::tableName() );
-      builder.addValueCondition( column, "=", value );
+      builder.addValueCondition( column, Query::Equals, value );
 
       if ( !builder.exec() ) {
         qDebug() << "Error during counting records in table" << T::tableName()
@@ -89,7 +89,7 @@ class Entity
 
       QueryBuilder builder( QueryBuilder::Delete );
       builder.addTable( T::tableName() );
-      builder.addValueCondition( column, "=", value );
+      builder.addValueCondition( column, Query::Equals, value );
 
       if ( !builder.exec() ) {
         qDebug() << "Error during deleting records from table"
@@ -112,8 +112,8 @@ class Entity
 
       CountQueryBuilder builder;
       builder.addTable( T::tableName() );
-      builder.addValueCondition( T::leftColumn(), "=", leftId );
-      builder.addValueCondition( T::rightColumn(), "=", rightId );
+      builder.addValueCondition( T::leftColumn(), Query::Equals, leftId );
+      builder.addValueCondition( T::rightColumn(), Query::Equals, rightId );
 
       if ( !builder.exec() ) {
         qDebug() << "Error during counting records in table" << T::tableName()
@@ -172,8 +172,8 @@ class Entity
 
       QueryBuilder builder( QueryBuilder::Delete );
       builder.addTable( T::tableName() );
-      builder.addValueCondition( T::leftColumn(), "=", leftId );
-      builder.addValueCondition( T::rightColumn(), "=", rightId );
+      builder.addValueCondition( T::leftColumn(), Query::Equals, leftId );
+      builder.addValueCondition( T::rightColumn(), Query::Equals, rightId );
 
       if ( !builder.exec() ) {
         qDebug() << "Error during removing a record from relation table" << T::tableName()
@@ -204,10 +204,10 @@ class Entity
       builder.addTable( T::tableName() );
       switch ( side ) {
         case Left:
-          builder.addValueCondition( T::leftColumn(), "=", id );
+          builder.addValueCondition( T::leftColumn(), Query::Equals, id );
           break;
         case Right:
-          builder.addValueCondition( T::rightColumn(), "=", id );
+          builder.addValueCondition( T::rightColumn(), Query::Equals, id );
           break;
         default:
           qFatal("Invalid enum value");

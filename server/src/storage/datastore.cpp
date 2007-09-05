@@ -316,8 +316,8 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 bool DataStore::appendLocation( Location &location )
 {
   SelectQueryBuilder<Location> qb;
-  qb.addValueCondition( Location::parentIdColumn(), "=", location.parentId() );
-  qb.addValueCondition( Location::nameColumn(), "=", location.name() );
+  qb.addValueCondition( Location::parentIdColumn(), Query::Equals, location.parentId() );
+  qb.addValueCondition( Location::nameColumn(), Query::Equals, location.name() );
   if ( !qb.exec() ) {
     qDebug() << "Unable to check location existence";
     return false;
@@ -439,8 +439,8 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
   const bool move = location.parentId() != newParent;
 
   SelectQueryBuilder<Location> qb;
-  qb.addValueCondition( Location::parentIdColumn(), "=", newParent );
-  qb.addValueCondition( Location::nameColumn(), "=", newName );
+  qb.addValueCondition( Location::parentIdColumn(), Query::Equals, newParent );
+  qb.addValueCondition( Location::nameColumn(), Query::Equals, newName );
   if ( !qb.exec() || qb.result().count() > 0 )
     return false;
 
@@ -641,9 +641,9 @@ bool DataStore::cleanupPimItems( const Location &location )
   qb.addTable( PimItemFlagRelation::tableName() );
   qb.addTable( PimItem::tableName() );
   qb.addColumn( PimItemFlagRelation::leftFullColumnName() );
-  qb.addValueCondition( Flag::nameFullColumnName(), "=", QLatin1String("\\Deleted") );
-  qb.addValueCondition( PimItem::locationIdFullColumnName(), "=", location.id() );
-  qb.addColumnCondition( PimItemFlagRelation::rightFullColumnName(), "=", Flag::idFullColumnName() );
+  qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, QLatin1String("\\Deleted") );
+  qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, location.id() );
+  qb.addColumnCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, Flag::idFullColumnName() );
 
   if ( !qb.exec() )
     return false;
@@ -668,8 +668,7 @@ QString fieldNameForDataType( FetchQuery::Type type )
   return QLatin1String("data");
 }
 
-QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id,
-                                                         int locationid, FetchQuery::Type type )
+QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id, int locationid )
 {
   // TODO: error handling
   qDebug() << "retrieveDataFromResource()" << uid;
@@ -751,7 +750,7 @@ PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
   bool dirty = query.value( 6 ).toBool();
   QByteArray data = query.value( 7 ).toByteArray();
   if ( data.isEmpty() && type != FetchQuery::FastType )
-      data = retrieveDataFromResource( id, remote_id, location, type );
+      data = retrieveDataFromResource( id, remote_id, location );
 
   // update access time
   PimItem item = PimItem( pimItemId, remote_id, data, location, mimetype, dateTime, atime, dirty );
@@ -769,11 +768,11 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
 
   SelectQueryBuilder<PimItem> qb;
   qb.addTable( PimItemFlagRelation::tableName() );
-  qb.addColumnCondition( PimItem::idFullColumnName(), "=", PimItemFlagRelation::leftFullColumnName() );
-  qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), "=", flag.id() );
+  qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
+  qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id() );
 
   if ( location.isValid() )
-    qb.addValueCondition( PimItem::locationIdFullColumnName(), "=", location.id() );
+    qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, location.id() );
 
    if ( !qb.exec() )
     return QList<PimItem>();
@@ -810,7 +809,7 @@ int DataStore::highestPimItemCountByLocation( const Location &location )
   if ( location.resource().name() == QLatin1String("akonadi_search_resource") ) {
     CountQueryBuilder builder;
     builder.addTable( LocationPimItemRelation::tableName() );
-    builder.addValueCondition( LocationPimItemRelation::leftColumn(), "=", location.id() );
+    builder.addValueCondition( LocationPimItemRelation::leftColumn(), Query::Equals, location.id() );
     if ( !builder.exec() )
       return -1;
     return builder.result();
@@ -909,11 +908,11 @@ QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteAr
   QueryBuilder builder( QueryBuilder::Select );
   if ( location.resource().name() != QLatin1String( "akonadi_search_resource" ) ) {
     builder.addTable( PimItem::tableName() );
-    builder.addValueCondition( PimItem::locationIdColumn(), "=", location.id() );
+    builder.addValueCondition( PimItem::locationIdColumn(), Query::Equals, location.id() );
     builder.addColumn( PimItem::idColumn() );
   } else {
     builder.addTable( LocationPimItemRelation::tableName() );
-    builder.addValueCondition( LocationPimItemRelation::leftColumn(), "=", location.id() );
+    builder.addValueCondition( LocationPimItemRelation::leftColumn(), Query::Equals, location.id() );
     builder.addColumn( LocationPimItemRelation::rightColumn() );
   }
 
@@ -1012,8 +1011,8 @@ QList<PimItem> DataStore::matchingPimItemsBySequenceNumbers( const QList<QByteAr
 bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & key, const QByteArray & value)
 {
   SelectQueryBuilder<LocationAttribute> qb;
-  qb.addValueCondition( LocationAttribute::locationIdColumn(), "=", loc.id() );
-  qb.addValueCondition( LocationAttribute::typeColumn(), "=", key );
+  qb.addValueCondition( LocationAttribute::locationIdColumn(), Query::Equals, loc.id() );
+  qb.addValueCondition( LocationAttribute::typeColumn(), Query::Equals, key );
   if ( !qb.exec() )
     return false;
 
@@ -1037,8 +1036,8 @@ bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & 
 bool Akonadi::DataStore::removeCollectionAttribute(const Location & loc, const QByteArray & key)
 {
   SelectQueryBuilder<LocationAttribute> qb;
-  qb.addValueCondition( LocationAttribute::locationIdColumn(), "=", loc.id() );
-  qb.addValueCondition( LocationAttribute::typeColumn(), "=", key );
+  qb.addValueCondition( LocationAttribute::locationIdColumn(), Query::Equals, loc.id() );
+  qb.addValueCondition( LocationAttribute::typeColumn(), Query::Equals, key );
   if ( !qb.exec() )
     return false;
 

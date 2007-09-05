@@ -27,6 +27,9 @@
 
 namespace Akonadi {
 
+class ImapSet;
+class QueryBuilder;
+
 /**
   @ingroup akonadi_server_handler
 
@@ -42,7 +45,9 @@ class Fetch : public Handler
     bool handleLine(const QByteArray& line);
 
   private:
-    QByteArray buildResponse( const PimItem&, const FetchQuery& );
+    void imapSetToQuery( const ImapSet &set, QueryBuilder &qb );
+    void updateItemAccessTime( const ImapSet &set, bool isUidFetch );
+
 };
 
 }

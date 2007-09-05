@@ -75,7 +75,7 @@ bool Status::handleLine( const QByteArray& line )
         statusResponse += "MESSAGES ";
         CountQueryBuilder qb;
         qb.addTable( PimItem::tableName() );
-        qb.addValueCondition( PimItem::locationIdColumn(), "=", l.id() );
+        qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, l.id() );
         if ( !qb.exec() )
           return failureResponse( "Could not determine message count." );
         statusResponse += QByteArray::number( qb.result() );
@@ -115,16 +115,16 @@ bool Status::handleLine( const QByteArray& line )
         qb.addTable( PimItem::tableName() );
         qb.addTable( Flag::tableName() );
         qb.addTable( PimItemFlagRelation::tableName() );
-        qb.addValueCondition( PimItem::locationIdFullColumnName(), "=", l.id() );
-        qb.addColumnCondition( PimItem::idFullColumnName(), "=", PimItemFlagRelation::leftFullColumnName() );
-        qb.addColumnCondition( Flag::idFullColumnName(), "=", PimItemFlagRelation::rightFullColumnName() );
-        qb.addValueCondition( Flag::nameFullColumnName(), "=", QString::fromLatin1("\\Seen") );
+        qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, l.id() );
+        qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
+        qb.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
+        qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, QString::fromLatin1("\\Seen") );
         if ( !qb.exec() )
           return failureResponse( "Unable to retrieve unread count" );
 
         CountQueryBuilder qb2;
         qb2.addTable( PimItem::tableName() );
-        qb2.addValueCondition( PimItem::locationIdColumn(), "=", l.id() );
+        qb2.addValueCondition( PimItem::locationIdColumn(), Query::Equals, l.id() );
         if ( !qb2.exec() )
           return failureResponse( "Unable to retrieve item count" );
 

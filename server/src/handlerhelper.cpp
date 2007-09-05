@@ -49,11 +49,11 @@ Location HandlerHelper::collectionFromIdOrName(const QByteArray & id)
   Location loc;
   foreach ( const QString part, pathParts ) {
     SelectQueryBuilder<Location> qb;
-    qb.addValueCondition( Location::nameColumn(), "=", part );
+    qb.addValueCondition( Location::nameColumn(), Query::Equals, part );
     if ( loc.isValid() )
-      qb.addValueCondition( Location::parentIdColumn(), "=", loc.id() );
+      qb.addValueCondition( Location::parentIdColumn(), Query::Equals, loc.id() );
     else
-      qb.addValueCondition( Location::parentIdColumn(), "=", 0 );
+      qb.addValueCondition( Location::parentIdColumn(), Query::Equals, 0 );
     if ( !qb.exec() )
       return Location();
     Location::List list = qb.result();

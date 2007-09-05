@@ -132,8 +132,8 @@ bool Store::handleLine( const QByteArray& line )
       qDebug() << "Multipart store: IMPLEMENT ME!" << command;
       Part part;
       SelectQueryBuilder<Part> qb;
-      qb.addValueCondition( Part::pimItemIdColumn(), "=", pimItems[ i ].id() );
-      qb.addValueCondition( Part::nameColumn(), "=", QString::fromUtf8( command ) );
+      qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, pimItems[ i ].id() );
+      qb.addValueCondition( Part::nameColumn(), Query::Equals, QString::fromUtf8( command ) );
       if ( !qb.exec() )
         return failureResponse( "Unable to check item part existence" );
       Part::List result = qb.result();

@@ -20,6 +20,7 @@
 #include "imapparser.h"
 
 #include <QtCore/QDebug>
+#include <ctype.h>
 
 using namespace Akonadi;
 
@@ -243,7 +244,7 @@ int ImapParser::parseNumber(const QByteArray & data, int & result, bool * ok, in
     return data.length();
   QByteArray tmp;
   for (; pos < data.length(); ++pos ) {
-    if ( !QChar( QLatin1Char( data.at( pos ) ) ).isDigit() )
+    if ( !isdigit( data.at( pos ) ) )
       break;
     tmp += data.at( pos );
   }
@@ -262,6 +263,41 @@ QByteArray ImapParser::quote(const QByteArray & data)
   }
   result += '"';
   return result;
+}
+
+int ImapParser::parseSequenceSet(const QByteArray & data, ImapSet & result, int start)
+{
+  int begin = stripLeadingSpaces( data, start );
+  int value = -1, lower = -1, upper = -1;
+  for ( int i = begin; i < data.length(); ++i ) {
+    if ( data[i] == '*' ) {
+      value = 0;
+    } else if ( data[i] == ':' ) {
+      lower = value;
+    } else if ( isdigit( data[i] ) ) {
+      bool ok = false;
+      i = parseNumber( data, value, &ok, i );
+      Q_ASSERT( ok ); // TODO handle error
+      --i;
+    } else {
+      upper = value;
+      if ( lower < 0 )
+        lower = value;
+      result.add( ImapInterval( lower, upper ) );
+      lower = -1;
+      upper = -1;
+      value = -1;
+      if ( data[i] != ',' )
+        return i;
+    }
+  }
+  // take care of left-overs at input end
+  upper = value;
+  if ( lower < 0 )
+    lower = value;
+  if ( lower >= 0 && upper >= 0 )
+    result.add( ImapInterval( lower, upper ) );
+  return data.length();
 }
 
 ImapParser::ImapParser() :

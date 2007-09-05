@@ -261,10 +261,9 @@ protected:
 
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
-    QByteArray retrieveDataFromResource( int uid, const QByteArray& remote_id,
-                                         int locationid, FetchQuery::Type type );
-
   public:
+    QByteArray retrieveDataFromResource( int uid, const QByteArray& remote_id, int locationid );
+
     /** Returns the id of the most recent inserted row, or -1 if there's no such
         id.
         @param query the query we want to get the last insert id for
