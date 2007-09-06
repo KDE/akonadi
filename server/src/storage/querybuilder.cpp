@@ -18,7 +18,10 @@
 */
 
 #include "querybuilder.h"
+
+#ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
+#endif
 
 using namespace Akonadi;
 
