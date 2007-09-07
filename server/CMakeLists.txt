@@ -50,7 +50,6 @@ set(libakonadiprivate_SRCS
   src/handler/delete.cpp
   src/handler/expunge.cpp
   src/handler/fetch.cpp
-  src/handler/fetchquery.cpp
   src/handler/list.cpp
   src/handler/login.cpp
   src/handler/logout.cpp
@@ -105,9 +104,7 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS
 qt4_generate_dbus_interface( ../libakonadi/resource.h org.kde.Akonadi.Resource.xml )
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.AgentManager.xml
-  interfaces/org.kde.Akonadi.SearchProviderManager.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml
-  ../searchproviders/org.kde.Akonadi.SearchProvider.xml
 )
 qt4_add_dbus_interface2(libakonadiprivate_SRCS
   interfaces/org.freedesktop.xesam.Search.xml
@@ -144,7 +141,6 @@ install(FILES
   interfaces/org.kde.Akonadi.NotificationManager.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.CachePolicyManager.xml
   interfaces/org.kde.Akonadi.ProfileManager.xml
-  interfaces/org.kde.Akonadi.SearchProviderManager.xml
   interfaces/org.kde.Akonadi.Tracer.xml
   interfaces/org.kde.Akonadi.TracerNotification.xml
 DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})

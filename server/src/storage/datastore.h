@@ -30,7 +30,6 @@ class QSqlQuery;
 
 #include "akonadi_export.h"
 #include "entities.h"
-#include "fetchquery.h"
 #include "notificationcollector.h"
 
 class OrgKdeAkonadiResourceInterface;
@@ -158,7 +157,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool updatePimItem( PimItem &pimItem, const QByteArray &data );
     bool updatePimItem( PimItem &pimItem, const Location &destination );
     bool updatePimItem( PimItem &pimItem, const QString &remoteId );
-    PimItem pimItemById( int id, FetchQuery::Type type = FetchQuery::FastType );
 
     QList<PimItem> listPimItems( const Location & location, const Flag &flag );
 

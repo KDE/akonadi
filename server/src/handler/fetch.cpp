@@ -22,7 +22,6 @@
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "imapparser.h"
-#include "fetchquery.h"
 #include "response.h"
 #include "storage/selectquerybuilder.h"
 

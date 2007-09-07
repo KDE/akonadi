@@ -23,7 +23,6 @@
 #include <handler.h>
 
 #include "storage/datastore.h"
-#include "fetchquery.h"
 
 namespace Akonadi {
 

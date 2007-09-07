@@ -663,11 +663,6 @@ bool DataStore::cleanupPimItems( const Location &location )
   return ok;
 }
 
-QString fieldNameForDataType( FetchQuery::Type type )
-{
-  return QLatin1String("data");
-}
-
 QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id, int locationid )
 {
   // TODO: error handling
@@ -719,47 +714,6 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
   return QByteArray();
 }
 
-
-PimItem Akonadi::DataStore::pimItemById( int id, FetchQuery::Type type )
-{
-  if ( !m_dbOpened )
-    return PimItem();
-
-  const QString field = fieldNameForDataType( type );
-  QStringList cols;
-  cols << PimItem::idColumn() << PimItem::locationIdColumn() << PimItem::mimeTypeIdColumn()
-       << PimItem::datetimeColumn() << PimItem::remoteIdColumn() << PimItem::atimeColumn() << PimItem::dirtyColumn();
-  QString statement = QString::fromLatin1( "SELECT %1, %2 FROM %3 WHERE %4 = :id" )
-      .arg( cols.join( QLatin1String(",") ), field, PimItem::tableName(), PimItem::idColumn() );
-
-  QSqlQuery query( m_database );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":id"), id );
-
-  if ( !query.exec() || !query.next() ) {
-    debugLastQueryError( query, "Error during selection of single PimItem." );
-    return PimItem();
-  }
-
-  int pimItemId = query.value( 0 ).toInt();
-  int location = query.value( 1 ).toInt();
-  int mimetype = query.value( 2 ).toInt();
-  QByteArray remote_id = query.value( 4 ).toByteArray();
-  QDateTime dateTime = dateTimeToQDateTime( query.value( 3 ).toByteArray() );
-  QDateTime atime = dateTimeToQDateTime( query.value( 5 ).toByteArray() );
-  bool dirty = query.value( 6 ).toBool();
-  QByteArray data = query.value( 7 ).toByteArray();
-  if ( data.isEmpty() && type != FetchQuery::FastType )
-      data = retrieveDataFromResource( id, remote_id, location );
-
-  // update access time
-  PimItem item = PimItem( pimItemId, remote_id, data, location, mimetype, dateTime, atime, dirty );
-  item.setAtime( QDateTime::currentDateTime() );
-  if ( !item.update() )
-    qDebug() << "Failed to update access time for item" << item.id();
-
-  return item;
-}
 
 QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &flag )
 {
