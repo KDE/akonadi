@@ -55,28 +55,22 @@ bool Store::handleLine( const QByteArray& line )
   Response response;
   response.setUntagged();
 
-  QList<QByteArray> sequences;
-  pos = ImapParser::parseString( line, buffer, pos );
-  sequences = buffer.split( ',' );
-  if ( sequences.isEmpty() )
+  ImapSet set;
+  pos = ImapParser::parseSequenceSet( line, set, pos );
+  if ( set.isEmpty() )
     return failureResponse( "No item specified" );
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  // ### Akonadi vs. IMAP conflict
-  QList<PimItem> pimItems;
-  if ( connection()->selectedLocation().id() == -1 || uidStore ) {
-    pimItems = store->matchingPimItemsByUID( sequences );
-  } else {
-//     if ( mStoreQuery.isUidStore() ) {
-//       pimItems = store->matchingPimItemsByUID( mStoreQuery.sequences(), connection()->selectedLocation() );
-//     } else {
-      pimItems = store->matchingPimItemsBySequenceNumbers( sequences, connection()->selectedLocation() );
-//     }
+  SelectQueryBuilder<PimItem> qb;
+  if ( !uidStore && connection()->selectedLocation().isValid() ) {
+    qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, connection()->selectedLocation().id() );
   }
-
-  qDebug() << "Store::commit()" << pimItems.count() << "items selected.";
+  imapSetToQuery( set, qb );
+  if ( !qb.exec() )
+    return failureResponse( "Unable to retrieve items" );
+  QList<PimItem> pimItems = qb.result();
 
   // parse command
   QByteArray command;

@@ -28,8 +28,11 @@
 #include "global.h"
 
 namespace Akonadi {
-    class Response;
-    class AkonadiConnection;
+
+class Response;
+class AkonadiConnection;
+class QueryBuilder;
+class ImapSet;
 
 /**
   \defgroup akonadi_server_handler Command handlers
@@ -102,6 +105,13 @@ Q_SIGNALS:
      * @param state The new state the handler suggests to enter.
      */
     void connectionStateChange( ConnectionState state );
+
+  protected:
+    /**
+      Adds WHERE conditions to the given query builder which represent
+      the given IMAP sequence set.
+    */
+    void imapSetToQuery( const ImapSet &set, QueryBuilder &qb );
 
 private:
     QByteArray m_tag;

@@ -252,29 +252,6 @@ bool Fetch::handleLine( const QByteArray& line )
   return true;
 }
 
-void Fetch::imapSetToQuery(const ImapSet & set, QueryBuilder & qb)
-{
-  Query::Condition cond( Query::Or );
-  foreach ( const ImapInterval i, set.intervals() ) {
-    if ( i.hasDefinedBegin() && i.hasDefinedEnd() ) {
-      if ( i.size() == 1 ) {
-        cond.addValueCondition( PimItem::idFullColumnName(), Query::Equals, i.begin() );
-      } else {
-        Query::Condition subCond( Query::And );
-        subCond.addValueCondition( PimItem::idFullColumnName(), Query::GreaterOrEqual, i.begin() );
-        subCond.addValueCondition( PimItem::idFullColumnName(), Query::LessOrEqual, i.end() );
-        cond.addCondition( subCond );
-      }
-    } else if ( i.hasDefinedBegin() ) {
-      cond.addValueCondition( PimItem::idFullColumnName(), Query::GreaterOrEqual, i.begin() );
-    } else if ( i.hasDefinedEnd() ) {
-      cond.addValueCondition( PimItem::idFullColumnName(), Query::LessOrEqual, i.end() );
-    }
-  }
-  if ( !cond.isEmpty() )
-    qb.addCondition( cond );
-}
-
 void Fetch::updateItemAccessTime(const ImapSet & set, bool isUidFetch)
 {
   QueryBuilder qb( QueryBuilder::Update );

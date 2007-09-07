@@ -173,18 +173,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool cleanupPimItems( const Location &location );
 
     int highestPimItemId() const;
-    int highestPimItemCountByLocation( const Location &location );
-
-    QList<PimItem> matchingPimItemsByUID( const QList<QByteArray> &sequences,
-                                          const Location & l = Location(),
-                                          FetchQuery::Type type = FetchQuery::FastType );
-    QList<PimItem> matchingPimItemsBySequenceNumbers( const QList<QByteArray> &sequences,
-                                                      const Location &location,
-                                                      FetchQuery::Type type = FetchQuery::FastType );
-
-    QList<PimItem> fetchMatchingPimItemsByUID( const FetchQuery &query, const Location& l = Location() );
-    QList<PimItem> fetchMatchingPimItemsBySequenceNumbers( const FetchQuery &query,
-                                                           const Location &location );
 
     /* --- Collection attribues ------------------------------------------ */
     bool addCollectionAttribute( const Location &loc, const QByteArray &key, const QByteArray &value );

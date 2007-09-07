@@ -43,7 +43,8 @@
 #include "handler/transaction.h"
 #include "uid.h"
 
-#include "searchprovidermanagerinterface.h"
+#include "storage/querybuilder.h"
+#include "imapset.h"
 
 using namespace Akonadi;
 
@@ -172,6 +173,29 @@ bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )
 bool Akonadi::Handler::failureResponse(const char * failureMessage)
 {
   return failureResponse( QLatin1String( failureMessage ) );
+}
+
+void Handler::imapSetToQuery(const ImapSet & set, QueryBuilder & qb)
+{
+  Query::Condition cond( Query::Or );
+  foreach ( const ImapInterval i, set.intervals() ) {
+    if ( i.hasDefinedBegin() && i.hasDefinedEnd() ) {
+      if ( i.size() == 1 ) {
+        cond.addValueCondition( PimItem::idFullColumnName(), Query::Equals, i.begin() );
+      } else {
+        Query::Condition subCond( Query::And );
+        subCond.addValueCondition( PimItem::idFullColumnName(), Query::GreaterOrEqual, i.begin() );
+        subCond.addValueCondition( PimItem::idFullColumnName(), Query::LessOrEqual, i.end() );
+        cond.addCondition( subCond );
+      }
+    } else if ( i.hasDefinedBegin() ) {
+      cond.addValueCondition( PimItem::idFullColumnName(), Query::GreaterOrEqual, i.begin() );
+    } else if ( i.hasDefinedEnd() ) {
+      cond.addValueCondition( PimItem::idFullColumnName(), Query::LessOrEqual, i.end() );
+    }
+  }
+  if ( !cond.isEmpty() )
+    qb.addCondition( cond );
 }
 
 #include "handler.moc"

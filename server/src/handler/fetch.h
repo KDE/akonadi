@@ -45,7 +45,6 @@ class Fetch : public Handler
     bool handleLine(const QByteArray& line);
 
   private:
-    void imapSetToQuery( const ImapSet &set, QueryBuilder &qb );
     void updateItemAccessTime( const ImapSet &set, bool isUidFetch );
 
 };
