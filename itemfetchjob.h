@@ -77,6 +77,11 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     */
     void addFetchPart( const QString &identifier );
 
+    /**
+      Fetch all item parts.
+    */
+    void fetchAllParts();
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );

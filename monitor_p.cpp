@@ -26,7 +26,7 @@ using namespace Akonadi;
 
 ItemCollectionFetchJob::ItemCollectionFetchJob( const DataReference &reference, int collectionId, QObject *parent )
   : Job( parent ),
-    mReference( reference ), mCollectionId( collectionId )
+    mReference( reference ), mCollectionId( collectionId ), mFetchAllParts( false )
 {
 }
 
@@ -53,6 +53,8 @@ void ItemCollectionFetchJob::doStart()
   ItemFetchJob *fetchJob = new ItemFetchJob( mReference, this );
   foreach( QString part, mFetchParts )
     fetchJob->addFetchPart( part );
+  if ( mFetchAllParts )
+    fetchJob->fetchAllParts();
   connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( itemJobDone( KJob* ) ) );
   addSubjob( fetchJob );
 }
@@ -87,6 +89,11 @@ void ItemCollectionFetchJob::addFetchPart( const QString &identifier )
 {
   if ( !mFetchParts.contains( identifier ) )
     mFetchParts.append( identifier );
+}
+
+void ItemCollectionFetchJob::fetchAllParts()
+{
+  mFetchAllParts = true;
 }
 
 #include "monitor_p.moc"

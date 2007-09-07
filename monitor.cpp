@@ -43,7 +43,8 @@ class Monitor::Private
     Private( Monitor *parent )
       : mParent( parent ),
         fetchCollection( false ),
-        fetchCollectionStatus( false )
+        fetchCollectionStatus( false ),
+        fetchAllParts( false )
     {
     }
 
@@ -98,6 +99,7 @@ class Monitor::Private
 
     bool fetchCollection;
     bool fetchCollectionStatus;
+    bool fetchAllParts;
 
   private:
     // collections that need a status update
@@ -195,6 +197,8 @@ void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
                                                                   msg.parentCollection(), mParent );
         foreach( QString part, mFetchParts )
           job->addFetchPart( part );
+        if ( fetchAllParts )
+          job->fetchAllParts();
         pendingJobs.insert( job, msg );
         connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotItemJobFinished(KJob*)) );
         continue;
@@ -203,6 +207,8 @@ void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
         ItemFetchJob *job = new ItemFetchJob( DataReference( msg.uid(), msg.remoteId() ), mParent );
         foreach( QString part, mFetchParts )
           job->addFetchPart( part );
+        if ( fetchAllParts )
+          job->fetchAllParts();
         pendingJobs.insert( job, msg );
         connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotItemJobFinished(KJob*)) );
         continue;
@@ -402,6 +408,11 @@ void Monitor::addFetchPart( const QString &identifier )
 void Monitor::fetchCollectionStatus(bool enable)
 {
   d->fetchCollectionStatus = enable;
+}
+
+void Monitor::fetchAllParts()
+{
+  d->fetchAllParts = true;
 }
 
 #include "monitor.moc"

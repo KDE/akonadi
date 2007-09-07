@@ -32,7 +32,8 @@ class ItemFetchJob::Private
 {
   public:
     Private( ItemFetchJob *parent )
-      : mParent( parent )
+      : mParent( parent ),
+        fetchAllParts( false )
     {
     }
 
@@ -44,6 +45,7 @@ class ItemFetchJob::Private
     DataReference uid;
     Item::List items;
     QStringList mFetchParts;
+    bool fetchAllParts;
 };
 
 void ItemFetchJob::Private::startFetchJob()
@@ -54,12 +56,15 @@ void ItemFetchJob::Private::startFetchJob()
   else
     command += " UID FETCH " + QByteArray::number( uid.id() );
 
-  command += " (UID REMOTEID FLAGS";
-  foreach ( QString part, mFetchParts ) {
-    command += ' ' + part.toUtf8();
+  if ( !fetchAllParts ) {
+    command += " (UID REMOTEID FLAGS";
+    foreach ( QString part, mFetchParts ) {
+      command += ' ' + part.toUtf8();
+    }
+    command += ")\n";
+  } else {
+    command += "AKALL\n";
   }
-
-  command += ")\n";
   mParent->writeData( command );
 }
 
@@ -199,6 +204,11 @@ void ItemFetchJob::addFetchPart( const QString &identifier )
 {
   if ( !d->mFetchParts.contains( identifier ) )
     d->mFetchParts.append( identifier );
+}
+
+void ItemFetchJob::fetchAllParts()
+{
+  d->fetchAllParts = true;
 }
 
 #include "itemfetchjob.moc"

@@ -59,11 +59,6 @@ class AKONADI_EXPORT Item
     typedef QSet<QByteArray> Flags;
 
     /**
-      The part identifier for all parts.
-     */
-    static const QLatin1String PartAll;
-
-    /**
       The part identifier for envelope parts.
      */
     static const QLatin1String PartEnvelope;

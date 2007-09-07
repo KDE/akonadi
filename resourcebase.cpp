@@ -258,7 +258,7 @@ ResourceBase::ResourceBase( const QString & id )
   d->monitor = new Monitor( this );
   d->monitor->fetchCollection( d->online );
   if ( d->online )
-    d->monitor->addFetchPart( Item::PartAll );
+    d->monitor->fetchAllParts();
 
   connect( d->monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            this, SLOT( slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );

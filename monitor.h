@@ -112,6 +112,11 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void addFetchPart( const QString &identifier );
 
+    /**
+      Fetch all item parts.
+    */
+    void fetchAllParts();
+
   Q_SIGNALS:
     /**
       Emitted if a monitored item has changed: item parts have been modified.

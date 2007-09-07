@@ -21,6 +21,8 @@
 #include "itemfetchtest.moc"
 
 #include <libakonadi/collectionpathresolver.h>
+#include <libakonadi/itemappendjob.h>
+#include <libakonadi/itemdeletejob.h>
 #include <libakonadi/itemfetchjob.h>
 
 using namespace Akonadi;
@@ -87,4 +89,58 @@ void ItemFetchTest::testIlleagalFetch()
   ref = DataReference();
   job = new ItemFetchJob( ref, this );
   QVERIFY( !job->exec() );
+}
+
+void ItemFetchTest::testMultipartFetch()
+{
+  DataReference::List refs; // for cleanup
+  CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );
+  QVERIFY( resolver->exec() );
+  int colId = resolver->collection();
+
+  Item item;
+  item.setMimeType( "application/octet-stream" );
+  item.addPart( Item::PartBody, "body data" );
+  item.addPart( "EXTRA", "extra data" );
+  ItemAppendJob *job = new ItemAppendJob( item, Collection( colId ), this );
+  QVERIFY( job->exec() );
+  refs << job->reference();
+
+  // fetch all parts manually
+  ItemFetchJob *fjob = new ItemFetchJob( refs.first(), this );
+  fjob->addFetchPart( Item::PartBody );
+  fjob->addFetchPart( "EXTRA" );
+  QVERIFY( fjob->exec() );
+  QCOMPARE( fjob->items().count(), 1 );
+  item = fjob->items().first();
+  QCOMPARE( item.availableParts().count(), 2 );
+  QCOMPARE( item.part( Item::PartBody ), QByteArray( "body data" ) );
+  QCOMPARE( item.part( "EXTRA" ), QByteArray( "extra data" ) );
+
+  // fetch single part
+  fjob = new ItemFetchJob( refs.first(), this );
+  fjob->addFetchPart( Item::PartBody );
+  QVERIFY( fjob->exec() );
+  QCOMPARE( fjob->items().count(), 1 );
+  item = fjob->items().first();
+  QCOMPARE( item.availableParts().count(), 1 );
+  QCOMPARE( item.part( Item::PartBody ), QByteArray( "body data" ) );
+  QCOMPARE( item.part( "EXTRA" ), QByteArray() );
+
+  // fetch all parts automatically
+  fjob = new ItemFetchJob( refs.first(), this );
+  fjob->fetchAllParts();
+  QVERIFY( fjob->exec() );
+  QCOMPARE( fjob->items().count(), 1 );
+  item = fjob->items().first();
+  QCOMPARE( item.availableParts().count(), 2 );
+  QCOMPARE( item.part( Item::PartBody ), QByteArray( "body data" ) );
+  QCOMPARE( item.part( "EXTRA" ), QByteArray( "extra data" ) );
+
+  // cleanup
+  foreach ( DataReference ref, refs ) {
+    ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
+    QVERIFY( djob->exec() );
+  }
+
 }

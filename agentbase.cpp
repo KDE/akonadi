@@ -158,7 +158,7 @@ AgentBase::AgentBase( const QString & id )
   d->session = new Session( d->mId.toLatin1(), this );
   d->monitor = new Monitor( this );
   d->monitor->fetchCollection( true );
-  d->monitor->addFetchPart( Item::PartAll );
+  d->monitor->fetchAllParts();
 
   connect( d->monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            this, SLOT( slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
