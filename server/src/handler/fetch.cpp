@@ -76,12 +76,16 @@ bool Fetch::handleLine( const QByteArray& line )
     pos = ImapParser::parseString( line, buffer, pos );
     if ( buffer == "AKALL" ) {
       allParts = true;
+    } else if ( buffer == "ALL" ) {
+      attrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE";
+    } else if ( buffer == "FULL" ) {
+      attrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE";
+    } else if ( buffer == "FAST" ) {
+      attrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE" << "BODY";
     } else {
-      // TODO add ALL, FULL, FAST for imap compat
       return failureResponse( "Unsupported macro" );
     }
   }
-
 
   // build item query
   QueryBuilder itemQuery;

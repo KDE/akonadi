@@ -32,7 +32,7 @@ namespace Akonadi {
   Handler for the X-AKLIST command.
 
   This command is used to get a (limited) listing of the available collections.
-  It is diffrent from the LIST command and is more similar to FETCH.
+  It is different from the LIST command and is more similar to FETCH.
 
   <h4>Syntax</h4>
 
