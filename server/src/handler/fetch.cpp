@@ -187,7 +187,7 @@ bool Fetch::handleLine( const QByteArray& line )
     }
 
     // ### deprecated, move to part table
-    if ( attrList.contains( "RFC822" ) ) {
+    if ( attrList.contains( "RFC822" ) || allParts ) {
       DataStore *store = connection()->storageBackend();
       QByteArray part = "RFC822 ";
       QByteArray data = itemQuery.query().value( itemQueryDataColumn ).toByteArray();
