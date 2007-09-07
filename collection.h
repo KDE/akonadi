@@ -34,7 +34,7 @@ namespace Akonadi {
   This class represents a collection of PIM objects, such as a folder on a mail- or
   groupware-server.
 
-  Collections are hierarchical, i.e. they may have a parent collection.
+  Collections are hierarchical, i.e., they may have a parent collection.
 
   This class is implicitly shared.
 
@@ -47,7 +47,7 @@ class AKONADI_EXPORT Collection
       Collection types.
     */
     enum Type {
-      Folder, /**< 'Real' folder on eg. an IMAP server. */
+      Folder, /**< 'Real' folder on an IMAP server for example. */
       Virtual, /**< Virtual collection (aka search folder). */
       Resource, /**< Resource or account. */
       VirtualParent, /**< The parent collection of all virtual collections. */

@@ -45,7 +45,7 @@ class AKONADI_EXPORT ItemStoreJob : public Job
     explicit ItemStoreJob( const Item &item, QObject *parent = 0 );
 
     /**
-      Destoys this job.
+      Destroys this job.
      */
     virtual ~ItemStoreJob();
 
@@ -56,19 +56,19 @@ class AKONADI_EXPORT ItemStoreJob : public Job
 
     /**
       Sets the item flags to @p flags.
-      @param flags the new item flags.
+      @param flags The new item flags.
     */
     void setFlags( const Item::Flags &flags );
 
     /**
       Adds the given flag. Existing flags will not be changed.
-      @param flag the flag to be added
+      @param flag The flag to be added.
     */
     void addFlag( const Item::Flag &flag );
 
     /**
       Removes the given flag. Other already set flags will not be changed.
-      @param flag the flag to be removed
+      @param flag The flag to be removed.
     */
     void removeFlag( const Item::Flag &flag );
 

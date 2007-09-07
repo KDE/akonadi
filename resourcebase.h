@@ -78,7 +78,7 @@ class Session;
  * Icon=my-icon
  *
  * X-Akonadi-MimeTypes=<supported-mimetypes>
- * X-Akonadi-Capabilitites<supported-mimetype>
+ * X-Akonadi-Capabilities=<supported-mimetype>
  * X-Akonadi-Identifier=akonadi_my_resource
  *   \endcode
  * @todo what is capabilities used for?
@@ -93,7 +93,7 @@ class Session;
  * @todo Convenience methods for item synchronization
  *
  * To fetch item data on demand, the method requestItemDelivery() needs to be
- * reimplemented. Fetch the requested data there, create a ItemStoreJob to store
+ * reimplemented. Fetch the requested data there, create an ItemStoreJob to store
  * the data and call deliverItem().
  *
  * To write local changes back to the backend, you need to re-implement
