@@ -31,6 +31,7 @@
 
   Table attributes (can contain column, reference and data elements)
   - name: The entity class name, the table will be named FooTable.
+  - properties: additional SQL properties such as foreign keys
 
   Column attributes:
   - name: The column name, will be also used as accessor name in the entity class.
@@ -150,12 +151,12 @@
 
   <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
 
-  <table name="Part">
+  <table name="Part" properties="FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="int" properties="NOT NULL"/>
-    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="NOT NULL REFERENCES PimItem(id)"/>
+    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="NOT NULL REFERENCES PimItemTable(id)"/>
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 

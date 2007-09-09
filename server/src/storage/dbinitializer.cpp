@@ -89,6 +89,7 @@ bool DbInitializer::run()
 bool DbInitializer::checkTable( const QDomElement &element )
 {
   const QString tableName = element.attribute( QLatin1String("name") ) + QLatin1String("Table");
+
   qDebug() << "checking table " << tableName;
 
   typedef QPair<QString, QString> ColumnEntry;
@@ -147,6 +148,12 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
       columns.append( columnsList[ i ].first + QLatin1Char(' ') + columnsList[ i ].second );
     }
+
+    /**
+     * Add optional extra table properties (such as foreign keys and cascaded updates/deletes)
+     */
+    if( element.hasAttribute( QLatin1String("properties") ) )
+      columns.append( QLatin1String(", ") + element.attribute( QLatin1String("properties") ) );
 
     const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2);" ).arg( tableName, columns );
     qDebug() << statement;
