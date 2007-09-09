@@ -95,8 +95,6 @@ bool Fetch::handleLine( const QByteArray& line )
   itemQuery.addColumn( PimItem::idFullColumnName() );
   itemQuery.addColumn( PimItem::remoteIdFullColumnName() );
   itemQuery.addColumn( MimeType::nameFullColumnName() );
-  // FIXME: needs to be moved to Part table
-  itemQuery.addColumn( PimItem::dataFullColumnName() );
   itemQuery.addColumn( Resource::nameFullColumnName() );
   itemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
   itemQuery.addColumnCondition( PimItem::locationIdFullColumnName(), Query::Equals, Location::idFullColumnName() );
@@ -106,8 +104,7 @@ bool Fetch::handleLine( const QByteArray& line )
   const int itemQueryIdColumn = 0;
   const int itemQueryRidColumn = 1;
   const int itemQueryMimeTypeColumn = 2;
-  const int itemQueryDataColumn = 3; // FIXME deprecated
-  const int itemQueryResouceColumn = 4;
+  const int itemQueryResouceColumn = 3;
 
   if ( !itemQuery.exec() )
     return failureResponse( "Unable to list items" );
@@ -168,8 +165,6 @@ bool Fetch::handleLine( const QByteArray& line )
     while ( itemQuery.query().isValid() ) {
       const int pimItemId = itemQuery.query().value( itemQueryIdColumn ).toInt();
       QStringList missingParts = partList;
-      // ### deprecated, remove after multipart port
-//       missingParts.removeAll( QLatin1String( "RFC822" ) );
       while ( partQuery.query().isValid() ) {
         const int id = partQuery.query().value( partQueryIdColumn ).toInt();
         if ( id < pimItemId ) {
@@ -226,29 +221,6 @@ bool Fetch::handleLine( const QByteArray& line )
       }
       attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
     }
-
-    // ### deprecated, move to part table
-#if 0
-    if ( attrList.contains( "RFC822" ) || allParts ) {
-      QByteArray part = "RFC822 ";
-      QByteArray data = itemQuery.query().value( itemQueryDataColumn ).toByteArray();
-      if ( data.isNull() ) {
-        data = store->retrieveDataFromResource( pimItemId, itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
-                                                itemQuery.query().value( itemQueryResouceColumn ).toString(),
-                                                QStringList( QLatin1String( "RFC822" ) ) );
-      }
-      if ( data.isNull() ) {
-        part += " NIL";
-      } else if ( data.isEmpty() ) {
-        part += " \"\"";
-      } else {
-        part += " {" + QByteArray::number( data.length() ) + "}\n";
-        part += data;
-      }
-      attributes << part;
-    }
-    // ### deprecated end
-#endif
 
     while ( partQuery.query().isValid() ) {
       const int id = partQuery.query().value( partQueryIdColumn ).toInt();
