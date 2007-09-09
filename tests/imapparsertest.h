@@ -37,6 +37,8 @@ class ImapParserTest : public QObject
     void testMessageParser();
     void testParseSequenceSet_data();
     void testParseSequenceSet();
+    void testParseDateTime_data();
+    void testParseDateTime();
 };
 
 

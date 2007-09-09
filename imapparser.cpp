@@ -19,6 +19,7 @@
 
 #include "imapparser.h"
 
+#include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <ctype.h>
 
@@ -298,6 +299,83 @@ int ImapParser::parseSequenceSet(const QByteArray & data, ImapSet & result, int 
   if ( lower >= 0 && upper >= 0 )
     result.add( ImapInterval( lower, upper ) );
   return data.length();
+}
+
+int ImapParser::parseDateTime(const QByteArray & data, QDateTime & dateTime, int start)
+{
+  // Syntax:
+  // date-time      = DQUOTE date-day-fixed "-" date-month "-" date-year
+  //                  SP time SP zone DQUOTE
+  // date-day-fixed = (SP DIGIT) / 2DIGIT
+  //                    ; Fixed-format version of date-day
+  // date-month     = "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" /
+  //                  "Jul" / "Aug" / "Sep" / "Oct" / "Nov" / "Dec"
+  // date-year      = 4DIGIT
+  // time           = 2DIGIT ":" 2DIGIT ":" 2DIGIT
+  //                    ; Hours minutes seconds
+  // zone           = ("+" / "-") 4DIGIT
+  //                    ; Signed four-digit value of hhmm representing
+  //                    ; hours and minutes east of Greenwich (that is,
+  //                    ; the amount that the given time differs from
+  //                    ; Universal Time).  Subtracting the timezone
+  //                    ; from the given time will give the UT form.
+  //                    ; The Universal Time zone is "+0000".
+  // Example : "28-May-2006 01:03:35 +0200"
+  // Position: 0123456789012345678901234567
+  //                     1         2
+
+  int pos = stripLeadingSpaces( data, start );
+  if ( data.length() <= pos )
+    return pos;
+  bool quoted = false;
+  if ( data[pos] == '"' ) {
+    quoted = true;
+    ++pos;
+  }
+  if ( data.length() <= pos + 26 )
+    return start;
+
+  bool ok = true;
+  const int day = ( data[pos] == ' ' ? data[pos + 1] - '0' // single digit day
+                                     : data.mid( pos, 2 ).toInt( &ok ) );
+  if ( !ok ) return start;
+  pos += 3;
+  const QByteArray shortMonthNames( "janfebmaraprmayjunjulaugsepoctnovdec" );
+  int month = shortMonthNames.indexOf( data.mid( pos, 3 ).toLower() );
+  if ( month == -1 ) return start;
+  month = month / 3 + 1;
+  pos += 4;
+  const int year = data.mid( pos, 4 ).toInt( &ok );
+  if ( !ok ) return start;
+  pos += 5;
+  const int hours = data.mid( pos, 2 ).toInt( &ok );
+  if ( !ok ) return start;
+  pos += 3;
+  const int minutes = data.mid( pos, 2 ).toInt( &ok );
+  if ( !ok ) return start;
+  pos += 3;
+  const int seconds = data.mid( pos, 2 ).toInt( &ok );
+  if ( !ok ) return start;
+  pos += 4;
+  const int tzhh = data.mid( pos, 2 ).toInt( &ok );
+  if ( !ok ) return start;
+  pos += 2;
+  const int tzmm = data.mid( pos, 2 ).toInt( &ok );
+  if ( !ok ) return start;
+  int tzsecs = tzhh*60*60 + tzmm*60;
+  if ( data[pos - 3] == '-' ) tzsecs = -tzsecs;
+  const QDate date( year, month, day );
+  const QTime time( hours, minutes, seconds );
+  dateTime = QDateTime( date, time, Qt::UTC );
+  if ( !dateTime.isValid() ) return start;
+  dateTime = dateTime.addSecs( -tzsecs );
+
+  pos += 2;
+  if ( data.length() <= pos || !quoted )
+    return pos;
+  if ( data[pos] == '"' )
+    ++pos;
+  return pos;
 }
 
 ImapParser::ImapParser() :
