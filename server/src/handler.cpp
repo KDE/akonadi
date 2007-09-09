@@ -22,6 +22,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QLatin1String>
 
+#include "akonadiconnection.h"
 #include "response.h"
 #include "handler/aklist.h"
 #include "handler/append.h"
@@ -175,7 +176,7 @@ bool Akonadi::Handler::failureResponse(const char * failureMessage)
   return failureResponse( QLatin1String( failureMessage ) );
 }
 
-void Handler::imapSetToQuery(const ImapSet & set, QueryBuilder & qb)
+void Handler::imapSetToQuery(const ImapSet & set, bool isUid, QueryBuilder & qb)
 {
   Query::Condition cond( Query::Or );
   foreach ( const ImapInterval i, set.intervals() ) {
@@ -196,6 +197,9 @@ void Handler::imapSetToQuery(const ImapSet & set, QueryBuilder & qb)
   }
   if ( !cond.isEmpty() )
     qb.addCondition( cond );
+
+  if ( !isUid && connection()->selectedLocation().isValid() )
+    qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, connection()->selectedLocation().id() );
 }
 
 #include "handler.moc"

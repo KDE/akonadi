@@ -97,10 +97,7 @@ bool Fetch::handleLine( const QByteArray& line )
   itemQuery.addColumn( PimItem::dataFullColumnName() );
   itemQuery.addColumn( PimItem::locationIdFullColumnName() );
   itemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
-  if ( !isUidFetch && connection()->selectedLocation().isValid()) {
-    itemQuery.addValueCondition( PimItem::locationIdColumn(), Query::Equals, connection()->selectedLocation().id() );
-  }
-  imapSetToQuery( set, itemQuery );
+  imapSetToQuery( set, isUidFetch, itemQuery );
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   const int itemQueryIdColumn = 0;
   const int itemQueryRidColumn = 1;
@@ -121,6 +118,7 @@ bool Fetch::handleLine( const QByteArray& line )
     flagQuery.addColumn( Flag::nameFullColumnName() );
     flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
     flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
+    imapSetToQuery( set, isUidFetch, flagQuery );
     flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     if ( !flagQuery.exec() )
@@ -147,6 +145,7 @@ bool Fetch::handleLine( const QByteArray& line )
     partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
     if ( !allParts )
       partQuery.addValueCondition( Part::nameFullColumnName(), Query::In, partList );
+    imapSetToQuery( set, isUidFetch, partQuery );
     partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     if ( !partQuery.exec() )
@@ -256,10 +255,7 @@ void Fetch::updateItemAccessTime(const ImapSet & set, bool isUidFetch)
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.updateColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
-  imapSetToQuery( set, qb );
-  if ( !isUidFetch && connection()->selectedLocation().isValid()) {
-    qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, connection()->selectedLocation().id() );
-  }
+  imapSetToQuery( set, isUidFetch, qb );
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
 }

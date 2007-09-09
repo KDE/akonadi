@@ -64,10 +64,7 @@ bool Store::handleLine( const QByteArray& line )
   Transaction transaction( store );
 
   SelectQueryBuilder<PimItem> qb;
-  if ( !uidStore && connection()->selectedLocation().isValid() ) {
-    qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, connection()->selectedLocation().id() );
-  }
-  imapSetToQuery( set, qb );
+  imapSetToQuery( set, uidStore, qb );
   if ( !qb.exec() )
     return failureResponse( "Unable to retrieve items" );
   QList<PimItem> pimItems = qb.result();
