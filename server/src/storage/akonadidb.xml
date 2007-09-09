@@ -120,7 +120,6 @@
   <table name="PimItem">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remoteId" type="QByteArray"/>
-    <column name="data" type="QByteArray"/>
     <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
     <index name="locationIndex" columns="locationId" unique="false"/>
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
@@ -157,7 +156,6 @@
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="int" properties="NOT NULL"/>
     <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="REFERENCES PimItem(id)"/>
-    <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 

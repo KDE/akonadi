@@ -670,8 +670,8 @@ bool DataStore::cleanupPimItems( const Location &location )
   return ok;
 }
 
-QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id,
-                                                         const QString &resource, const QStringList &parts )
+void Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id,
+                                                   const QString &resource, const QStringList &parts )
 {
   // TODO: error handling
   qDebug() << "retrieveDataFromResource()" << uid;
@@ -706,17 +706,6 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
       mPendingItemDeliveriesCondition.wakeAll();
       mPendingItemDeliveriesMutex.unlock();
   }
-
-  // get the delivered item
-  // ### deprecated, remove after multipart port
-  QSqlQuery query( m_database );
-  query.prepare( QString::fromLatin1("SELECT data FROM %1 WHERE %2 = :id")
-      .arg( PimItem::tableName(), PimItem::idColumn() ) );
-  query.bindValue( QLatin1String(":id"), uid );
-  if ( query.exec() && query.next() )
-    return query.value( 0 ).toByteArray();
-
-  return QByteArray();
 }
 
 

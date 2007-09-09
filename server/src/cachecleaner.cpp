@@ -52,7 +52,7 @@ void CacheCleaner::cleanCache()
     // determine active cache policy
     CachePolicy policy = DataStore::self()->activeCachePolicy( location );
     if ( !policy.isValid() ) {
-      qDebug() << "No valid cache policy found for localtion" << location.name();
+      qDebug() << "No valid cache policy found for location" << location.name();
       continue;
     }
 
@@ -61,25 +61,29 @@ void CacheCleaner::cleanCache()
       continue;
     const int expireTime = qMax( 5, policy.expireTime() );
 
-    // find all expired items
-    SelectQueryBuilder<PimItem> qb;
-    qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, location.id() );
-    qb.addValueCondition( PimItem::atimeColumn(), Query::Less, QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
-    qb.addValueCondition( PimItem::dataColumn(), Query::IsNot, QVariant() );
-    qb.addValueCondition( PimItem::dirtyColumn(), Query::Equals, false );
+    // find all expired item parts
+    SelectQueryBuilder<Part> qb;
+    qb.addTable( PimItem::tableName() );
+    qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
+    qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, location.id() );
+    qb.addValueCondition( PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
+    qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
+    qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
+    if ( !policy.offlineParts().isEmpty() )
+      qb.addValueCondition( Part::nameFullColumnName(), Query::In, policy.offlineParts().split( QLatin1String(",") ) );
     if ( !qb.exec() )
       continue;
-    QList<PimItem> pimItems = qb.result();
+    QList<Part> parts = qb.result();
 
-    if ( pimItems.isEmpty() )
+    if ( parts.isEmpty() )
       continue;
-    qDebug() << "found" << pimItems.count() << "items to expire in collection" << location.name();
+    qDebug() << "found" << parts.count() << "item parts to expire in collection" << location.name();
 
     // clear data field
-    foreach ( PimItem pimItem, pimItems ) {
-      pimItem.setData( QByteArray() );
-      if ( !pimItem.update() )
-        qDebug() << "failed to update item" << pimItem.id();
+    foreach ( Part part, parts ) {
+      part.setData( QByteArray() );
+      if ( !part.update() )
+        qDebug() << "failed to update item part" << part.id();
     }
   }
 
