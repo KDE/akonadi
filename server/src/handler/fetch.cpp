@@ -90,23 +90,28 @@ bool Fetch::handleLine( const QByteArray& line )
   QueryBuilder itemQuery;
   itemQuery.addTable( PimItem::tableName() );
   itemQuery.addTable( MimeType::tableName() );
+  itemQuery.addTable( Location::tableName() );
+  itemQuery.addTable( Resource::tableName() );
   itemQuery.addColumn( PimItem::idFullColumnName() );
   itemQuery.addColumn( PimItem::remoteIdFullColumnName() );
   itemQuery.addColumn( MimeType::nameFullColumnName() );
   // FIXME: needs to be moved to Part table
   itemQuery.addColumn( PimItem::dataFullColumnName() );
-  itemQuery.addColumn( PimItem::locationIdFullColumnName() );
+  itemQuery.addColumn( Resource::nameFullColumnName() );
   itemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
+  itemQuery.addColumnCondition( PimItem::locationIdFullColumnName(), Query::Equals, Location::idFullColumnName() );
+  itemQuery.addColumnCondition( Location::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
   imapSetToQuery( set, isUidFetch, itemQuery );
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   const int itemQueryIdColumn = 0;
   const int itemQueryRidColumn = 1;
   const int itemQueryMimeTypeColumn = 2;
   const int itemQueryDataColumn = 3; // FIXME deprecated
-  const int itemQueryLocationColumn = 4;
+  const int itemQueryResouceColumn = 4;
 
   if ( !itemQuery.exec() )
     return failureResponse( "Unable to list items" );
+  itemQuery.query().next();
 
   // build flag query if needed
   QueryBuilder flagQuery;
@@ -156,13 +161,50 @@ bool Fetch::handleLine( const QByteArray& line )
   const int partQueryNameColumn = 1;
   const int partQueryDataColumn = 2;
 
-  // TODO fetch not yet cached item parts
+  // fetch not yet cached item parts
+  // TODO: I'm sure this can be done with a single query instead of manually
+  DataStore *store = connection()->storageBackend();
+  if ( !partList.isEmpty() || allParts ) {
+    while ( itemQuery.query().isValid() ) {
+      const int pimItemId = itemQuery.query().value( itemQueryIdColumn ).toInt();
+      QStringList missingParts = partList;
+      // ### deprecated, remove after multipart port
+      missingParts.removeAll( QLatin1String( "RFC822" ) );
+      while ( partQuery.query().isValid() ) {
+        const int id = partQuery.query().value( partQueryIdColumn ).toInt();
+        if ( id < pimItemId ) {
+          partQuery.query().next();
+          continue;
+        } else if ( id > pimItemId ) {
+          break;
+        }
+        const QString partName = partQuery.query().value( partQueryNameColumn ).toString();
+        if ( partQuery.query().value( partQueryDataColumn ).toByteArray().isNull() ) {
+          if ( allParts )
+            missingParts << partName;
+        } else {
+          missingParts.removeAll( partName );
+        }
+        partQuery.query().next();
+      }
+      if ( !missingParts.isEmpty() ) {
+        store->retrieveDataFromResource( pimItemId, itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
+                                         itemQuery.query().value( itemQueryResouceColumn ).toString(), missingParts );
+      }
+      itemQuery.query().next();
+    }
 
+    // re-exec part query, rewind item query
+    itemQuery.query().first();
+    if ( !partQuery.query().exec() )
+      return failureResponse( "Unable to retrieve item parts" );
+    partQuery.query().next();
+  }
 
   // build responses
   Response response;
   response.setUntagged();
-  while ( itemQuery.query().next() ) {
+  while ( itemQuery.query().isValid() ) {
     const int pimItemId = itemQuery.query().value( itemQueryIdColumn ).toInt();
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
@@ -187,12 +229,12 @@ bool Fetch::handleLine( const QByteArray& line )
 
     // ### deprecated, move to part table
     if ( attrList.contains( "RFC822" ) || allParts ) {
-      DataStore *store = connection()->storageBackend();
       QByteArray part = "RFC822 ";
       QByteArray data = itemQuery.query().value( itemQueryDataColumn ).toByteArray();
       if ( data.isNull() ) {
         data = store->retrieveDataFromResource( pimItemId, itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
-                                                itemQuery.query().value( itemQueryLocationColumn ).toInt() );
+                                                itemQuery.query().value( itemQueryResouceColumn ).toString(),
+                                                QStringList( QLatin1String( "RFC822" ) ) );
       }
       if ( data.isNull() ) {
         part += " NIL";
@@ -234,6 +276,8 @@ bool Fetch::handleLine( const QByteArray& line )
     response.setUntagged();
     response.setString( attr );
     emit responseAvailable( response );
+
+    itemQuery.query().next();
   }
 
   // update atime

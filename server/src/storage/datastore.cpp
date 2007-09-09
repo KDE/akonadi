@@ -663,12 +663,11 @@ bool DataStore::cleanupPimItems( const Location &location )
   return ok;
 }
 
-QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id, int locationid )
+QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id,
+                                                         const QString &resource, const QStringList &parts )
 {
   // TODO: error handling
   qDebug() << "retrieveDataFromResource()" << uid;
-  Location l = Location::retrieveById( locationid );
-  Resource r = l.resource();
 
   // check if that item is already been fetched by someone else
   mPendingItemDeliveriesMutex.lock();
@@ -690,11 +689,9 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
       mPendingItemDeliveriesMutex.unlock();
 
       // call the resource
-      org::kde::Akonadi::Resource *interface = resourceInterface( r );
-      if ( interface ) {
-        // FIXME: add correct item part list
-        interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), QStringList() );
-      }
+      org::kde::Akonadi::Resource *interface = resourceInterface( resource );
+      if ( interface )
+        interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), parts );
 
       mPendingItemDeliveriesMutex.lock();
       qDebug() << "requestItemDelivery(): freeing uid" << uid;
@@ -704,6 +701,7 @@ QByteArray Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArr
   }
 
   // get the delivered item
+  // ### deprecated, remove after multipart port
   QSqlQuery query( m_database );
   query.prepare( QString::fromLatin1("SELECT data FROM %1 WHERE %2 = :id")
       .arg( PimItem::tableName(), PimItem::idColumn() ) );
@@ -924,24 +922,24 @@ bool Akonadi::DataStore::inTransaction() const
   return m_inTransaction;
 }
 
-org::kde::Akonadi::Resource * Akonadi::DataStore::resourceInterface( const Resource &res )
+org::kde::Akonadi::Resource * Akonadi::DataStore::resourceInterface( const QString &res )
 {
   org::kde::Akonadi::Resource* iface = 0;
-  if ( mResourceInterfaceCache.contains( res.id() ) )
-    iface = mResourceInterfaceCache.value( res.id() );
+  if ( mResourceInterfaceCache.contains( res ) )
+    iface = mResourceInterfaceCache.value( res );
   if ( iface && iface->isValid() )
     return iface;
 
   delete iface;
-  iface = new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + res.name(),
+  iface = new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + res,
                                            QLatin1String("/"), QDBusConnection::sessionBus(), this );
   if ( !iface || !iface->isValid() ) {
     qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                                    .arg( res.name(), iface ? iface->lastError().message() : QString() );
+                                    .arg( res, iface ? iface->lastError().message() : QString() );
     delete iface;
     return 0;
   }
-  mResourceInterfaceCache.insert( res.id(), iface );
+  mResourceInterfaceCache.insert( res, iface );
   return iface;
 }
 

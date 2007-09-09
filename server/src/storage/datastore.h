@@ -248,7 +248,8 @@ protected:
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
   public:
-    QByteArray retrieveDataFromResource( int uid, const QByteArray& remote_id, int locationid );
+    QByteArray retrieveDataFromResource( int uid, const QByteArray& remote_id,
+                                         const QString &resource, const QStringList &parts );
 
     /** Returns the id of the most recent inserted row, or -1 if there's no such
         id.
@@ -276,7 +277,7 @@ protected:
     /**
       Returns the D-Bus interface of the given resource.
     */
-    OrgKdeAkonadiResourceInterface* resourceInterface( const Resource &res );
+    OrgKdeAkonadiResourceInterface* resourceInterface( const QString &res );
 
 private:
     QString m_connectionName;
@@ -299,7 +300,7 @@ private:
     static QString mDbConnectionOptions;
 
     // resource dbus interface cache
-    QHash<int, OrgKdeAkonadiResourceInterface*> mResourceInterfaceCache;
+    QHash<QString, OrgKdeAkonadiResourceInterface*> mResourceInterfaceCache;
 };
 
 }
