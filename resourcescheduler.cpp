@@ -52,6 +52,7 @@ void ResourceScheduler::scheduleItemFetch(const DataReference & ref, const QStri
   Task t;
   t.type = FetchItem;
   t.itemRef = ref;
+  t.itemParts = parts;
   t.dbusMsg = msg;
   mTaskList << t;
   scheduleNext();

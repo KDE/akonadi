@@ -90,7 +90,7 @@ class AKONADI_EXPORT Resource : public QObject
      *
      * @param uid The Akonadi uid of the item that is requested.
      * @param remoteId The remote identifier of the item that is requested.
-     * @param parts The item pasrts that should be fetched.
+     * @param parts The item parts that should be fetched.
      */
     virtual bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts ) = 0;
 
