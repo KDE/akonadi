@@ -49,6 +49,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
 #else
     : KLocalSocketServer( parent )
 #endif
+    , mCacheCleaner( 0 )
     , mDatabaseProcess( 0 )
 {
     QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
@@ -100,8 +101,10 @@ AkonadiServer::AkonadiServer( QObject* parent )
     Tracer::self();
     ResourceManager::self();
     new CachePolicyManager( this );
-    mCacheCleaner = new CacheCleaner( this );
-    mCacheCleaner->start( QThread::IdlePriority );
+    if ( settings.value( QLatin1String( "Cache/EnableCleaner" ), true ).toBool() ) {
+      mCacheCleaner = new CacheCleaner( this );
+      mCacheCleaner->start( QThread::IdlePriority );
+    }
 
     mXesamManager = new XesamManager( this );
 
@@ -122,9 +125,11 @@ AkonadiServer::~AkonadiServer()
 
 void AkonadiServer::quit()
 {
-    mCacheCleaner->quit();
-    mCacheCleaner->wait();
-    delete mCacheCleaner;
+    if ( mCacheCleaner ) {
+        mCacheCleaner->quit();
+        mCacheCleaner->wait();
+        delete mCacheCleaner;
+    }
     delete mXesamManager;
     mXesamManager = 0;
 
