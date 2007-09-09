@@ -169,7 +169,7 @@ bool Fetch::handleLine( const QByteArray& line )
       const int pimItemId = itemQuery.query().value( itemQueryIdColumn ).toInt();
       QStringList missingParts = partList;
       // ### deprecated, remove after multipart port
-      missingParts.removeAll( QLatin1String( "RFC822" ) );
+//       missingParts.removeAll( QLatin1String( "RFC822" ) );
       while ( partQuery.query().isValid() ) {
         const int id = partQuery.query().value( partQueryIdColumn ).toInt();
         if ( id < pimItemId ) {
@@ -228,6 +228,7 @@ bool Fetch::handleLine( const QByteArray& line )
     }
 
     // ### deprecated, move to part table
+#if 0
     if ( attrList.contains( "RFC822" ) || allParts ) {
       QByteArray part = "RFC822 ";
       QByteArray data = itemQuery.query().value( itemQueryDataColumn ).toByteArray();
@@ -247,6 +248,7 @@ bool Fetch::handleLine( const QByteArray& line )
       attributes << part;
     }
     // ### deprecated end
+#endif
 
     while ( partQuery.query().isValid() ) {
       const int id = partQuery.query().value( partQueryIdColumn ).toInt();

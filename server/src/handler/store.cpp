@@ -101,10 +101,6 @@ bool Store::handleLine( const QByteArray& line )
         if ( !deleteFlags( pimItems[ i ], flags ) )
           return failureResponse( "Unable to remove item flags." );
       }
-    } else if ( command == "RFC822" ) {
-      pos = ImapParser::parseString( line, buffer, pos );
-      if ( !store->updatePimItem( pimItems[ i ], buffer ) )
-        return failureResponse( "Unable to change item data." );
     } else if ( command == "COLLECTION" ) {
       pos = ImapParser::parseString( line, buffer, pos );
       if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( buffer ) ) )
@@ -120,7 +116,6 @@ bool Store::handleLine( const QByteArray& line )
           return failureResponse( "Unable to update item" );
     } else {
       pos = ImapParser::parseString( line, buffer, pos );
-      qDebug() << "Multipart store: IMPLEMENT ME!" << command;
       Part part;
       SelectQueryBuilder<Part> qb;
       qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, pimItems[ i ].id() );
@@ -141,6 +136,7 @@ bool Store::handleLine( const QByteArray& line )
         if ( !part.insert() )
           return failureResponse( "Unable to add item part" );
       }
+      store->updatePimItem( pimItems[ i ] );
     }
 
     if ( !silent ) {

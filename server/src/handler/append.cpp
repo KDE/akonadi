@@ -174,7 +174,15 @@ bool Akonadi::Append::commit()
       return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
     }
     PimItem item;
-    bool ok = db->appendPimItem( m_data, mimeType, l, m_dateTime, remote_id, item );
+
+    // wrap data into a part
+    Part part;
+    part.setName( QLatin1String("RFC822") );
+    part.setData( m_data );
+    QList<Part> parts;
+    parts.append( part );
+
+    bool ok = db->appendPimItem( parts, mimeType, l, m_dateTime, remote_id, item );
     response.setTag( tag() );
     if ( !ok ) {
         return failureResponse( "Append failed" );

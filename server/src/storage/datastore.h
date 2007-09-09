@@ -110,7 +110,7 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool init();
 
     /**
-      Per thread signleton.
+      Per thread singleton.
     */
     static DataStore* self();
 
@@ -148,13 +148,13 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool appendMimeType( const QString & mimetype, int *insertId = 0 );
 
     /* --- PimItem ------------------------------------------------------- */
-    bool appendPimItem( const QByteArray & data,
+    bool appendPimItem( const QList<Part> & parts,
                         const MimeType & mimetype,
                         const Location & location,
                         const QDateTime & dateTime,
                         const QByteArray & remote_id,
                         PimItem &pimItem );
-    bool updatePimItem( PimItem &pimItem, const QByteArray &data );
+    bool updatePimItem( PimItem &pimItem );
     bool updatePimItem( PimItem &pimItem, const Location &destination );
     bool updatePimItem( PimItem &pimItem, const QString &remoteId );
 
@@ -172,7 +172,7 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
 
     int highestPimItemId() const;
 
-    /* --- Collection attribues ------------------------------------------ */
+    /* --- Collection attributes ------------------------------------------ */
     bool addCollectionAttribute( const Location &loc, const QByteArray &key, const QByteArray &value );
     bool removeCollectionAttribute( const Location &loc, const QByteArray &key );
 

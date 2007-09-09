@@ -527,14 +527,13 @@ bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
 
 
 /* --- PimItem ------------------------------------------------------- */
-bool DataStore::appendPimItem( const QByteArray & data,
+bool DataStore::appendPimItem( const QList<Part> & parts,
                                const MimeType & mimetype,
                                const Location & location,
                                const QDateTime & dateTime,
                                const QByteArray & remote_id,
                                PimItem &pimItem )
 {
-  pimItem.setData( data );
   pimItem.setMimeTypeId( mimetype.id() );
   pimItem.setLocationId( location.id() );
   if ( dateTime.isValid() )
@@ -552,13 +551,21 @@ bool DataStore::appendPimItem( const QByteArray & data,
   if ( !pimItem.insert() )
     return false;
 
+  // insert every part
+  foreach( Part part, parts ) {
+    part.setPimItemId( pimItem.id() );
+    part.setDatasize( part.data().size() );
+
+    if( !part.insert() )
+      return false;
+  }
+
   mNotificationCollector->itemAdded( pimItem, location, mimetype.name() );
   return true;
 }
 
-bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const QByteArray & data)
+bool Akonadi::DataStore::updatePimItem(PimItem & pimItem)
 {
-  pimItem.setData( data );
   pimItem.setAtime( QDateTime::currentDateTime() );
   if ( mSessionId != pimItem.location().resource().name().toLatin1() )
     pimItem.setDirty( true );

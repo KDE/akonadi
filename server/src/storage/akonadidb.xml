@@ -176,6 +176,6 @@
   </table>
 
   <relation table1="Location" column1="id" table2="PimItem" column2="id">
-    <comment>Used to associacte items with search folders.</comment>
+    <comment>Used to associate items with search folders.</comment>
   </relation>
 </database>
