@@ -121,6 +121,15 @@ class AKONADIPROTOCOL_EXPORT ImapParser
     */
     static int parseSequenceSet( const QByteArray &data, ImapSet &result, int start = 0 );
 
+    /**
+      Parse an IMAP date/time value.
+      @param data source data.
+      @param dateTime The result date/time.
+      @param start Start parsing at this index.
+      @return end position of parsing.
+    */
+    static int parseDateTime( const QByteArray &data, QDateTime &dateTime, int start = 0 );
+
 
     /**
       Constructs a new IMAP parser.

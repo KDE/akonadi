@@ -43,60 +43,6 @@ Append::~Append()
 }
 
 
-static QDateTime parseDateTime( const QByteArray & s )
-{
-    // Syntax:
-    // date-time      = DQUOTE date-day-fixed "-" date-month "-" date-year
-    //                  SP time SP zone DQUOTE
-    // date-day-fixed = (SP DIGIT) / 2DIGIT
-    //                    ; Fixed-format version of date-day
-    // date-month     = "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" /
-    //                  "Jul" / "Aug" / "Sep" / "Oct" / "Nov" / "Dec"
-    // date-year      = 4DIGIT
-    // time           = 2DIGIT ":" 2DIGIT ":" 2DIGIT
-    //                    ; Hours minutes seconds
-    // zone           = ("+" / "-") 4DIGIT
-    //                    ; Signed four-digit value of hhmm representing
-    //                    ; hours and minutes east of Greenwich (that is,
-    //                    ; the amount that the given time differs from
-    //                    ; Universal Time).  Subtracting the timezone
-    //                    ; from the given time will give the UT form.
-    //                    ; The Universal Time zone is "+0000".
-    // Example : "28-May-2006 01:03:35 +0200"
-    // Position: 0123456789012345678901234567
-    //                     1         2
-    QDateTime dateTime;
-    bool ok = true;
-    const int day = ( s[1] == ' ' ? s[2] - '0' // single digit day
-                                  : s.mid( 1, 2 ).toInt( &ok ) );
-    if ( !ok ) return dateTime;
-    const QByteArray shortMonthNames( "janfebmaraprmayjunjulaugsepoctnovdec" );
-    int month = shortMonthNames.indexOf( s.mid( 4, 3 ).toLower() );
-    if ( month == -1 ) return dateTime;
-    month = month / 3 + 1;
-    const int year = s.mid( 8, 4 ).toInt( &ok );
-    if ( !ok ) return dateTime;
-    const int hours = s.mid( 13, 2 ).toInt( &ok );
-    if ( !ok ) return dateTime;
-    const int minutes = s.mid( 16, 2 ).toInt( &ok );
-    if ( !ok ) return dateTime;
-    const int seconds = s.mid( 19, 2 ).toInt( &ok );
-    if ( !ok ) return dateTime;
-    const int tzhh = s.mid( 23, 2 ).toInt( &ok );
-    if ( !ok ) return dateTime;
-    const int tzmm = s.mid( 25, 2 ).toInt( &ok );
-    if ( !ok ) return dateTime;
-    int tzsecs = tzhh*60*60 + tzmm*60;
-    if ( s[22] == '-' ) tzsecs = -tzsecs;
-    const QDate date( year, month, day );
-    const QTime time( hours, minutes, seconds );
-    dateTime = QDateTime( date, time, Qt::UTC );
-    if ( !dateTime.isValid() ) return dateTime;
-    dateTime.addSecs( -tzsecs );
-    return dateTime;
-}
-
-
 bool Akonadi::Append::handleLine(const QByteArray& line )
 {
     // Arguments:  mailbox name
@@ -130,8 +76,7 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     // parse optional date/time string
     int startOfLiteral = startOfDateTime;
     if ( line[startOfDateTime] == '"' ) {
-        startOfLiteral = line.indexOf( '{', startOfDateTime + 1 );
-        m_dateTime = parseDateTime( line.mid( startOfDateTime, startOfLiteral - startOfDateTime - 1 ) );
+        startOfLiteral = ImapParser::parseDateTime( line, m_dateTime, startOfDateTime );
         // FIXME Should we return an error if m_dateTime is invalid?
     }
     // if date/time is not given then it will be set to the current date/time
