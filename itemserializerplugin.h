@@ -68,9 +68,9 @@ public:
       plugin. However it might contain a unsuited payload added manually by the application
       developer. Verifying the payload type in case a payload is already available is recommended
       therefore.
-      @param label The part identifier of the part to deserialize. @p label might be a unsupported
+      @param label The part identifier of the part to deserialize. @p label might be an unsupported
       item part, return false if this is the case.
-      @param data An QIODevice providing access to the serialized data. The QIODevice is opened in
+      @param data A QIODevice providing access to the serialized data. The QIODevice is opened in
       read-only mode and positioned at the beginning. The QIODevice is guaranteed to be valid.
       @return false if the specified part is not supported by this plugin, true if the part
       could be de-serialized successfully.

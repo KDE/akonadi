@@ -18,6 +18,7 @@
 */
 
 #include "itemstorejob.h"
+#include "imapparser.h"
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
@@ -51,17 +52,6 @@ class ItemStoreJob::Private
     QByteArray pendingData;
 
     void sendNextCommand();
-
-    QByteArray joinFlags( const Item::Flags &flags )
-    {
-      QByteArray rv;
-      if ( flags.isEmpty() )
-        return rv;
-      foreach ( QByteArray f, flags )
-        rv += f + ' ';
-      rv.resize( rv.length() - 1 );
-      return rv;
-    }
 };
 
 void ItemStoreJob::Private::sendNextCommand()
@@ -80,13 +70,13 @@ void ItemStoreJob::Private::sendNextCommand()
     operations.remove( op );
     switch ( op ) {
       case SetFlags:
-        command += "FLAGS.SILENT (" + joinFlags( flags ) + ')';
+        command += "FLAGS.SILENT (" + ImapParser::join( flags, " " ) + ')';
         break;
       case AddFlags:
-        command += "+FLAGS.SILENT (" + joinFlags( addFlags ) + ')';
+        command += "+FLAGS.SILENT (" + ImapParser::join( addFlags, " " ) + ')';
         break;
       case RemoveFlags:
-        command += "-FLAGS.SILENT (" + joinFlags( removeFlags ) + ')';
+        command += "-FLAGS.SILENT (" + ImapParser::join( removeFlags, " " ) + ')';
         break;
       case Move:
         command += "COLLECTION.SILENT " + QByteArray::number( collection.id() );

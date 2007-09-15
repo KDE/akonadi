@@ -100,17 +100,18 @@ static void loadPlugins() {
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
     ItemSerializerPlugin * plugin = pl->createForName( *it );
     if ( !plugin ) {
-      qWarning() << "ItemSerializerPlugin: plugin \"" << *it << "\" is not valid!" << endl;
+      qWarning() << "ItemSerializerPlugin: plugin " << *it << " is not valid!" << endl;
       continue;
     }
+
     QStringList supportedTypes = (*it).split( QLatin1Char(',') );
     foreach ( const QString t, supportedTypes ) {
-      qDebug() << "ItemSerializerPluginLoader: inserting plugin for type: " << t;
+      qDebug() << "ItemSerializerPluginLoader: inserting plugin for type:" << t;
       all->insert( t, plugin );
     }
   }
 
-  if ( !all->contains( QLatin1String("application/octed-stream") ) )
+  if ( !all->contains( QLatin1String("application/octet-stream") ) )
     all->insert( QLatin1String("application/octet-stream"), DefaultItemSerializerPlugin::instance() );
 }
 

@@ -26,8 +26,6 @@
 
 namespace Akonadi {
 
-class ItemAppendJobPrivate;
-
 /**
   Creates a new PIM item on the backend.
 */
@@ -58,11 +56,9 @@ class AKONADI_EXPORT ItemAppendJob : public Job
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
-  private Q_SLOTS:
-    void storeResult( KJob *job );
-
   private:
-    ItemAppendJobPrivate* const d;
+    class Private;
+    Private* const d;
 };
 
 }

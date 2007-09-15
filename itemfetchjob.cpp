@@ -153,7 +153,7 @@ Item::List ItemFetchJob::items() const
 
 Item ItemFetchJob::createItem(const QList< QByteArray > & fetchResponse)
 {
-  int uid;
+  int uid = -1;
   QString rid;
   QString mimeType;
 

@@ -34,7 +34,7 @@ class ImapParser::Private {
     bool continuation;
 
     // returns true if readBuffer contains a literal start and sets
-    // parser state accrodingly
+    // parser state accordingly
     bool checkLiteralStart( const QByteArray &readBuffer, int pos = 0 )
     {
       if ( readBuffer.trimmed().endsWith( '}' ) ) {
@@ -48,7 +48,7 @@ class ImapParser::Private {
         // TODO error handling
         literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
 
-        // emtpy literal
+        // empty literal
         if ( literalSize == 0 )
           return false;
 
@@ -171,7 +171,7 @@ int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, 
   }
 
   // strip quotes
-  // FIXME: this can be done more efficient
+  // FIXME: this can be done more efficiently
   while ( result.contains( "\\\"" ) )
     result.replace( "\\\"", "\"" );
   while ( result.contains( "\\\\" ) )
@@ -226,6 +226,13 @@ QByteArray ImapParser::join(const QList< QByteArray > & list, const QByteArray &
     result += separator + (*it);
 
   return result;
+}
+
+QByteArray ImapParser::join(const QSet< QByteArray > & set, const QByteArray & separator)
+{
+  QList< QByteArray > list = QList< QByteArray >::fromSet( set );
+
+  return ImapParser::join( list, separator );
 }
 
 int ImapParser::parseString(const QByteArray & data, QString & result, int start)
@@ -378,6 +385,7 @@ int ImapParser::parseDateTime(const QByteArray & data, QDateTime & dateTime, int
   return pos;
 }
 
+
 ImapParser::ImapParser() :
     d ( new Private )
 {
@@ -466,4 +474,9 @@ void ImapParser::reset()
 bool ImapParser::continuationStarted() const
 {
   return d->continuation;
+}
+
+int ImapParser::continuationSize() const
+{
+  return d->literalSize;
 }

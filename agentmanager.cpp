@@ -21,6 +21,7 @@
 
 #include "agentmanagerinterface.h"
 
+#include <kicon.h>
 #include <kiconloader.h>
 
 #include <QtGui/QIcon>
@@ -109,8 +110,7 @@ QString AgentManager::agentIconName( const QString &identifier ) const
 
 QIcon AgentManager::agentIcon( const QString &identifier ) const
 {
-  const QString name = agentIconName( identifier );
-  return KIconLoader::global()->loadIconSet( name, K3Icon::Desktop );
+  return KIcon( agentIconName( identifier ), KIconLoader::global() );
 }
 
 QStringList AgentManager::agentMimeTypes( const QString &identifier ) const

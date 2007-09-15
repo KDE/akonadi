@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007        Robert Zwerus <arzie@dds.nl>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,28 +20,34 @@
 
 #include "itemappendjob.h"
 #include "imapparser.h"
-#include "itemstorejob.h"
 
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
 
-class Akonadi::ItemAppendJobPrivate
+class Akonadi::ItemAppendJob::Private
 {
   public:
-    Item item;
-    Collection collection;
-    QByteArray data;
-    int uid;
+    Private( ItemAppendJob *parent )
+      : mParent( parent )
+    {
+    }
+
+    ItemAppendJob *mParent;
     QByteArray tag;
+    Collection collection;
+    Item item;
+    QStringList parts;
+    int uid;
 };
 
 ItemAppendJob::ItemAppendJob( const Item &item, const Collection &collection, QObject * parent ) :
     Job( parent ),
-    d( new ItemAppendJobPrivate )
+    d( new Private( this ) )
 {
   Q_ASSERT( !item.mimeType().isEmpty() );
   d->item = item;
+  d->parts = d->item.availableParts();
   d->collection = collection;
 }
 
@@ -52,24 +59,49 @@ ItemAppendJob::~ ItemAppendJob( )
 void ItemAppendJob::doStart()
 {
   d->tag = newTag();
-  newTag(); // prevent automatic response handling
   QByteArray remoteId;
+
   if ( !d->item.reference().remoteId().isEmpty() )
     remoteId = " \\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']';
-  // HACK we let ItemStoreJob take care of the other parts, it already can handle multi-part items.
-  if ( d->item.availableParts().count() == 1 && d->item.availableParts().first() == Item::PartBody )
-    d->data = d->item.part( Item::PartBody );
-  writeData( d->tag + " APPEND " + QByteArray::number( d->collection.id() )
-      + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
-      + QByteArray::number( d->data.size() ) + "}\n" );
+  // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
+  if ( d->parts.size() <= 1  && (d->parts.isEmpty() || d->parts.first() == Item::PartBody) ) {
+    int dataSize = 0;
+    if ( d->item.hasPayload() )
+      dataSize = d->item.part( Item::PartBody ).size();
+
+    writeData( d->tag + " APPEND " + QByteArray::number( d->collection.id() )
+        + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
+        + QByteArray::number( dataSize ) + "}\n" );
+  }
+  else { // do a multipart X-AKAPPEND
+    QByteArray command = d->tag + " X-AKAPPEND " + QByteArray::number( d->collection.id() )
+        + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") ";
+
+    QString partName;
+    QList<QByteArray> partSpecs;
+    int totalSize = 0;
+    foreach( partName, d->parts ) {
+      totalSize += d->item.part( partName ).size();
+      partSpecs.append( ImapParser::quote( partName.toLatin1() ) + ":" +
+        QByteArray::number( d->item.part( partName ).size() ));
+    }
+    command += "(" + ImapParser::join( partSpecs, "," ) + ") " +
+      "{" + QByteArray::number( totalSize ) + "}\n";
+
+    writeData( command );
+  }
 }
 
 void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "+" ) { // ready for literal data
-    writeData( d->data );
-    if ( !d->data.endsWith( '\n' ) )
+    QString partName;
+    foreach( partName, d->parts ) {
+      writeData( d->item.part( partName ) );
+    }
+    if ( !d->item.part( partName ).endsWith( '\n' ) )
       writeData( "\n" );
+
     return;
   }
   if ( tag == d->tag ) {
@@ -80,13 +112,9 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
       return;
     }
     if ( data.startsWith( "OK" ) ) {
-      d->item.setReference( reference() );
-      ItemStoreJob *store = new ItemStoreJob( d->item, this );
-      store->storePayload();
-      connect( store, SIGNAL(result(KJob*)), SLOT(storeResult(KJob*)) );
+      return;
     }
-    int pos = data.indexOf( "UIDNEXT" );
-    if ( pos > 0 ) {
+    if ( int pos = data.indexOf( "UIDNEXT" ) ) {
       bool ok = false;
       ImapParser::parseNumber( data, d->uid, &ok, pos + 7 );
       if ( !ok )
@@ -100,12 +128,6 @@ DataReference ItemAppendJob::reference() const
   if ( d->uid == 0 )
     return DataReference();
   return DataReference( d->uid, d->item.reference().remoteId() );
-}
-
-void ItemAppendJob::storeResult(KJob * job)
-{
-  if ( !job->error() )
-    emitResult();
 }
 
 #include "itemappendjob.moc"

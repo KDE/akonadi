@@ -42,7 +42,7 @@ class AKONADIPROTOCOL_EXPORT ImapParser
       This does not recurse into sub-lists.
       @param data Source data.
       @param result The parsed list.
-      @param start start parsing at this index.
+      @param start Start parsing at this index.
     */
     static int parseParenthesizedList( const QByteArray &data, QList<QByteArray> &result, int start = 0 );
 
@@ -62,37 +62,44 @@ class AKONADIPROTOCOL_EXPORT ImapParser
       @p result. The number of parsed characters is returned (this is not equal to result.length()!).
       @param data Source data.
       @param result Parsed string, quotation is removed and 'NIL' is transformed to an empty QByteArray.
-      @param start start parsing at this index.
+      @param start Start parsing at this index.
     */
     static int parseQuotedString( const QByteArray &data, QByteArray &result, int start = 0 );
 
     /**
       Returns the number of leading espaces in @p data starting from @p start.
       @param data The source data.
-      @param start start parsing from here.
+      @param start Start parsing at this index.
     */
     static int stripLeadingSpaces( const QByteArray &data, int start = 0 );
 
     /**
       Returns the parentheses balance for the given data, considering quotes.
       @param data The source data.
-      @param start start parsing from here.
+      @param start Start parsing at this index.
     */
     static int parenthesesBalance( const QByteArray &data, int start = 0 );
 
     /**
       Joins a QByteArray list with the given separator.
       @param list The QByteArray list to join.
-      @param separator The separator
+      @param separator The separator.
     */
     static QByteArray join( const QList<QByteArray> &list, const QByteArray &separator );
 
     /**
-      Same as parseString() and additional UTF-8 decoding of the result.
+    Joins a QByteArray set with the given separator.
+    @param set The QByteArray set to join.
+    @param separator The separator.
+     */
+    static QByteArray join( const QSet<QByteArray> &set, const QByteArray &separator );
+
+    /**
+      Same as parseString(), but with additional UTF-8 decoding of the result.
       @param data Source data.
       @param result Parsed string, quotation, literal marker, etc. are removed,
       'NIL' is transformed into an empty QString. UTF-8 decoding is applied..
-      @param start start parsing at this index.
+      @param start Start parsing at this index.
     */
     static int parseString( const QByteArray &data, QString &result, int start = 0 );
 
@@ -100,14 +107,14 @@ class AKONADIPROTOCOL_EXPORT ImapParser
       Parses the next integer number from @p data starting at start and puts it into
       @p result. The number of characters parsed is returned (this is not the parsed result!).
       @param data Source data.
-      @param result Parsed integer number, invalid of ok is false.
+      @param result Parsed integer number, invalid if ok is false.
       @param ok Set to false if the parsing failed.
-      @param start start parsing at this index.
+      @param start Start parsing at this index.
     */
     static int parseNumber( const QByteArray &data, int &result, bool *ok = 0, int start = 0 );
 
     /**
-      Quotes the given byte array.
+      Quotes the given QByteArray.
       @param data Source data.
     */
     static QByteArray quote( const QByteArray &data );
@@ -171,6 +178,11 @@ class AKONADIPROTOCOL_EXPORT ImapParser
       ie. readiness for receiving literal data needs to be indicated.
     */
     bool continuationStarted() const;
+
+    /**
+      Returns the expected size of liteal data.
+    */
+    int continuationSize() const;
 
   private:
     class Private;
