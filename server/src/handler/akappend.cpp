@@ -1,5 +1,4 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
  *   Copyright (C) 2007 by Robert Zwerus <arzie@dds.nl>                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,6 +18,7 @@
  ***************************************************************************/
 
 #include "append.h"
+#include "akappend.h"
 #include "response.h"
 #include "imapparser.h"
 #include "handlerhelper.h"
@@ -34,25 +34,24 @@
 
 using namespace Akonadi;
 
-Append::Append()
+AkAppend::AkAppend()
     : Handler()
 {
 }
 
-
-Append::~Append()
+AkAppend::~AkAppend()
 {
 }
 
-bool Akonadi::Append::handleLine(const QByteArray& line )
+bool Akonadi::AkAppend::handleLine(const QByteArray& line )
 {
     // Arguments:  mailbox name
     //        OPTIONAL flag parenthesized list
     //        OPTIONAL date/time string
-    //        message literal
+    //        (partname literal)+
     //
     // Syntax:
-    // append = "APPEND" SP mailbox [SP flag-list] [SP date-time] SP literal
+    // x-akappend = "X-AKAPPEND" SP mailbox [SP flag-list] [SP date-time] SP (partname SP literal)+
 
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
@@ -75,19 +74,55 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     m_flags.append( "\\Recent" ); // the Recent flag always has to be set
 
     // parse optional date/time string
-    int startOfLiteral = startOfDateTime;
+    int startOfPartSpec = startOfDateTime;
     if ( line[startOfDateTime] == '"' ) {
-        startOfLiteral = ImapParser::parseDateTime( line, m_dateTime, startOfDateTime );
-        // FIXME Should we return an error if m_dateTime is invalid?
+      startOfPartSpec = line.indexOf( '"', startOfDateTime + 1 );
+      ImapParser::parseDateTime( line,  m_dateTime, startOfDateTime );
+      // FIXME Should we return an error if m_dateTime is invalid?
     }
     // if date/time is not given then it will be set to the current date/time
     // by the database
 
-    ImapParser::parseString( line, m_data, startOfLiteral );
+    // parse part specification
+    QList<QPair<QByteArray, int> > partSpecs;
+    QByteArray partName;
+    int partSize;
+    bool ok;
+
+    int pos = startOfPartSpec + 1; // skip opening '('
+    int endOfPartSpec = line.indexOf( ')', startOfPartSpec );
+    while( pos < endOfPartSpec ) {
+      if( line[pos] == ',' )
+        pos++; // skip ','
+
+      pos = ImapParser::parseQuotedString( line, partName, pos );
+      pos++; // skip ':'
+      pos = ImapParser::parseNumber( line, partSize, &ok, pos );
+      if( !ok )
+        partSize = 0;
+
+      partSpecs.append( qMakePair( partName, partSize ) );
+    }
+
+    QByteArray allParts;
+    ImapParser::parseString( line, allParts, endOfPartSpec + 1 );
+
+    // chop up literal data in parts
+    pos = 0; // traverse through part data now
+    QPair<QByteArray, int> partSpec;
+    foreach( partSpec, partSpecs ) {
+      // wrap data into a part
+      Part part;
+      part.setName( QLatin1String( partSpec.first ) );
+      part.setData( allParts.mid( pos, partSpec.second ) );
+      m_parts.append( part );
+      pos += partSpec.second;
+    }
+
     return commit();
 }
 
-bool Akonadi::Append::commit()
+bool Akonadi::AkAppend::commit()
 {
     Response response;
 
@@ -119,17 +154,11 @@ bool Akonadi::Append::commit()
     if ( !mimeType.isValid() ) {
       return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
     }
+
     PimItem item;
 
-    // wrap data into a part
-    Part part;
-    part.setName( Item::PartBody );
-    part.setData( m_data );
-    part.setPimItemId( item.id() );
-    QList<Part> parts;
-    parts.append( part );
+    bool ok = db->appendPimItem( m_parts, mimeType, l, m_dateTime, remote_id, item );
 
-    bool ok = db->appendPimItem( parts, mimeType, l, m_dateTime, remote_id, item );
     response.setTag( tag() );
     if ( !ok ) {
         return failureResponse( "Append failed" );
@@ -159,13 +188,12 @@ bool Akonadi::Append::commit()
 
     response.setTag( tag() );
     response.setUserDefined();
-    response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + ']' );
+    response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + "]" );
     emit responseAvailable( response );
 
     response.setSuccess();
     response.setString( "Append completed" );
     emit responseAvailable( response );
     deleteLater();
-
     return true;
 }

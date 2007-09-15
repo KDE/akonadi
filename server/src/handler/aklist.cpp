@@ -63,7 +63,7 @@ bool AkList::handleLine(const QByteArray& line )
     if ( filter.at( i ) == "RESOURCE" ) {
       mResource = Resource::retrieveByName( QString::fromLatin1( filter.at(i + 1) ) );
       if ( !mResource.isValid() )
-        return failureResponse( "Unknwon resource" );
+        return failureResponse( "Unknown resource" );
     } else
       return failureResponse( "Invalid filter parameter" );
   }

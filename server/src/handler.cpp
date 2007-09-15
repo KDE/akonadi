@@ -24,6 +24,7 @@
 
 #include "akonadiconnection.h"
 #include "response.h"
+#include "handler/akappend.h"
 #include "handler/aklist.h"
 #include "handler/append.h"
 #include "handler/capability.h"
@@ -103,8 +104,7 @@ QByteArray Handler::tag( ) const
 
 Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & command )
 {
-    // allowd commands are SELECT, EXAMINE, CREATE, DELETE, RENAME,
-    // SUBSCRIBE, UNSUBSCRIBE, LIST, LSUB, and APPEND.
+    // allowed commands are listed below ;-).
     if ( command == "APPEND" )
         return new Append();
     if ( command == "CREATE" )
@@ -135,6 +135,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new Rename();
     if ( command == "BEGIN" || command == "ROLLBACK" || command == "COMMIT" )
       return new TransactionHandler();
+    if ( command == "X-AKAPPEND" )
+      return new AkAppend();
     if ( command == "X-AKLIST" )
       return new AkList();
 

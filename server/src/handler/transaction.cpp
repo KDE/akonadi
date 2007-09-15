@@ -56,7 +56,7 @@ bool Akonadi::TransactionHandler::handleLine(const QByteArray & line)
 
   if ( command == "COMMIT" ) {
     if ( !store->inTransaction() )
-      return failureResponse( "There is not transaction in progress." );
+      return failureResponse( "There is no transaction in progress." );
     if ( !store->commitTransaction() )
       return failureResponse( "Unable to commit transaction." );
   }

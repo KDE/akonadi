@@ -128,7 +128,8 @@ void AkonadiConnection::slotNewData()
       if ( m_parser->continuationStarted() ) {
         Response response;
         response.setContinuation();
-        response.setString( "Ready for literal data" );
+        response.setString( "Ready for literal data (expecting " +
+            QByteArray::number( m_parser->continuationSize() ) + " bytes)" );
         slotResponseAvailable( response );
       }
     }

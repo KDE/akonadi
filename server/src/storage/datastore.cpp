@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Andreas Gungl <a.gungl@gmx.de>                  *
+ *   Copyright (C) 2007 by Robert Zwerus <arzie@dds.nl>                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -552,12 +553,14 @@ bool DataStore::appendPimItem( const QList<Part> & parts,
     return false;
 
   // insert every part
-  foreach( Part part, parts ) {
-    part.setPimItemId( pimItem.id() );
-    part.setDatasize( part.data().size() );
+  if ( !parts.isEmpty() ) {
+    foreach( Part part, parts ) {
+      part.setPimItemId( pimItem.id() );
+      part.setDatasize( part.data().size() );
 
-    if( !part.insert() )
-      return false;
+      if( !part.insert() )
+        return false;
+    }
   }
 
   mNotificationCollector->itemAdded( pimItem, location, mimetype.name() );
