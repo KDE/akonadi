@@ -34,7 +34,6 @@ class Akonadi::ItemAppendJob::Private
     }
 
     ItemAppendJob *mParent;
-    QByteArray tag;
     Collection collection;
     Item item;
     QStringList parts;
@@ -58,7 +57,6 @@ ItemAppendJob::~ ItemAppendJob( )
 
 void ItemAppendJob::doStart()
 {
-  d->tag = newTag();
   QByteArray remoteId;
 
   if ( !d->item.reference().remoteId().isEmpty() )
@@ -69,12 +67,12 @@ void ItemAppendJob::doStart()
     if ( d->item.hasPayload() )
       dataSize = d->item.part( Item::PartBody ).size();
 
-    writeData( d->tag + " APPEND " + QByteArray::number( d->collection.id() )
+    writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
         + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
         + QByteArray::number( dataSize ) + "}\n" );
   }
   else { // do a multipart X-AKAPPEND
-    QByteArray command = d->tag + " X-AKAPPEND " + QByteArray::number( d->collection.id() )
+    QByteArray command = newTag() + " X-AKAPPEND " + QByteArray::number( d->collection.id() )
         + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") ";
 
     QString partName;
@@ -104,16 +102,7 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
 
     return;
   }
-  if ( tag == d->tag ) {
-    if ( data.startsWith( "NO" ) || data.startsWith( "BAD" ) ) {
-      setError( Unknown );
-      setErrorText( QString::fromUtf8( data ) );
-      emitResult();
-      return;
-    }
-    if ( data.startsWith( "OK" ) ) {
-      return;
-    }
+  if ( tag == this->tag() ) {
     if ( int pos = data.indexOf( "UIDNEXT" ) ) {
       bool ok = false;
       ImapParser::parseNumber( data, d->uid, &ok, pos + 7 );
