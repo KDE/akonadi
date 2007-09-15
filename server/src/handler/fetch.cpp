@@ -134,11 +134,15 @@ bool Fetch::handleLine( const QByteArray& line )
   QueryBuilder partQuery;
   QStringList partList;
   foreach( const QByteArray b, attrList ) {
+    // filter out non-part attributes
     if ( b == "FLAGS" || b == "UID" || b == "REMOTEID" )
       continue;
-    partList << QString::fromLatin1( b );
+    if ( b == "RFC822.SIZE" )
+      partList << QString::fromLatin1( "RFC822" );
+    else
+      partList << QString::fromLatin1( b );
   }
-  if ( !partList.isEmpty() || allParts ) {
+  if ( !partList.isEmpty() || allParts || attrList.contains( "RFC822.SIZE" ) ) {
     partQuery.addTable( PimItem::tableName() );
     partQuery.addTable( Part::tableName() );
     partQuery.addColumn( PimItem::idFullColumnName() );
@@ -230,6 +234,7 @@ bool Fetch::handleLine( const QByteArray& line )
       } else if ( id > pimItemId ) {
         break;
       }
+      QByteArray partName = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
       QByteArray part = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
       QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
       if ( data.isNull() ) {
@@ -240,7 +245,13 @@ bool Fetch::handleLine( const QByteArray& line )
         part += " {" + QByteArray::number( data.length() ) + "}\n";
         part += data;
       }
-      attributes << part;
+      // return only requested parts (when RFC822.SIZE is requested, RFC822 is retrieved, but should not be returned)
+      if ( attrList.contains( partName ) || allParts )
+        attributes << part;
+
+      if ( partName == "RFC822" && attrList.contains( "RFC822.SIZE" ) )
+        attributes.append( "RFC822.SIZE " + QByteArray::number( data.length() ) );
+
       partQuery.query().next();
     }
 

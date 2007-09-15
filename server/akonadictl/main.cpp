@@ -48,7 +48,7 @@ static bool startServer()
 
   const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.Akonadi.Control" );
   if ( !registered ) {
-    qDebug( "Error: akonadi_control was started but didn't registered at DBus session bus." );
+    qDebug( "Error: akonadi_control was started but didn't register at DBus session bus." );
     qDebug( "Make sure your DBus system is setup correctly!" );
     return false;
   }

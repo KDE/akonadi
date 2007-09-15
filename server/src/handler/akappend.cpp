@@ -75,8 +75,7 @@ bool Akonadi::AkAppend::handleLine(const QByteArray& line )
     // parse optional date/time string
     int startOfPartSpec = startOfDateTime;
     if ( line[startOfDateTime] == '"' ) {
-      startOfPartSpec = line.indexOf( '"', startOfDateTime + 1 );
-      ImapParser::parseDateTime( line,  m_dateTime, startOfDateTime );
+      startOfPartSpec = ImapParser::parseDateTime( line, m_dateTime, startOfDateTime );
       // FIXME Should we return an error if m_dateTime is invalid?
     }
     // if date/time is not given then it will be set to the current date/time
