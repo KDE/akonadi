@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Akonadi Knut Resource
+Name[de]=Akonadi-Ressource für Knut
 Name[el]=Πόρος Knut του Akonadi
 Name[es]=Recurso Knut Akonadi
+Name[it]=Risorsa Knut per Akonadi
 Name[ja]=Akonadi Knut リソース
 Name[ne]=एकोनाडी केनट संसाधान
 Name[nl]=Akonadi Knut-hulpbron
@@ -12,8 +14,10 @@ Name[sv]=Akonadi Knut-resurs
 Name[x-test]=xxAkonadi Knut Resourcexx
 Name[zh_TW]=Akonadi Knut 資源
 Comment=An agent for debugging purpose
+Comment[de]=Agent zum Zweck der Fehlersuche
 Comment[el]=Ένας πελάτης με σκοπό την αποσφαλμάτωση
 Comment[es]=Un agente para depurar
+Comment[it]=Un agente per scopi di debug
 Comment[ja]=デバッグのためのエージェント
 Comment[ne]=त्रुटिमोचन उद्देश्यका लागि एउटा अभिकर्ता
 Comment[pt]=Um agente para fins de depuração
