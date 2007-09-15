@@ -63,7 +63,7 @@ void ItemFetchJob::Private::startFetchJob()
     }
     command += ")\n";
   } else {
-    command += "AKALL\n";
+    command += " AKALL\n";
   }
   mParent->writeData( command );
 }
