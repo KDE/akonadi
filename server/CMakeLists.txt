@@ -125,7 +125,6 @@ target_link_libraries( akonadiprivate
   ${KDE4_KDECORE_LIBRARY}
   ${KDEWIN32_LIBRARY}
   akonadiprotocol
-  akonadi
 )
 set_target_properties(akonadiprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )

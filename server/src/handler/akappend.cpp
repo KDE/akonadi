@@ -25,7 +25,6 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include "item.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
