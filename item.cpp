@@ -19,6 +19,7 @@
 
 #include "item.h"
 #include "itemserializer.h"
+#include "protocol.h"
 
 #include <kurl.h>
 
@@ -50,7 +51,7 @@ class Item::Private : public QSharedData
     QMap<QString, QByteArray> mParts;
 };
 
-const QLatin1String Item::PartBody = QLatin1String( "RFC822" );
+const QLatin1String Item::PartBody = QLatin1String( AKONADI_PART_BODY );
 const QLatin1String Item::PartEnvelope = QLatin1String( "ENVELOPE" );
 const QLatin1String Item::PartHeader = QLatin1String( "HEAD" );
 
