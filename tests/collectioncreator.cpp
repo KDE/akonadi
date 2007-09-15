@@ -19,6 +19,7 @@
 
 #include "collectioncreator.h"
 #include "collectioncreatejob.h"
+#include "collectionpathresolver.h"
 
 #include <QtCore/QDebug>
 #include <QtGui/QApplication>
@@ -26,47 +27,33 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
-#define COLLECTION_COUNT 100
-#undef SEQUENTIAL_EXECUTION
+#define COLLECTION_COUNT 1000
 
 using namespace Akonadi;
 
 CollectionCreator::CollectionCreator( )
 {
-#ifdef SEQUENTIAL_EXECUTION
-  queue = new Session( this );
-#else
   jobCount = 0;
-#endif
-  startTime = QTime::currentTime();
+  CollectionPathResolver *resolver = new CollectionPathResolver( "res3", this );
+  if ( !resolver->exec() )
+    qFatal( "Cannot resolve path." );
+  int root = resolver->collection();
+  startTime.start();
   for ( int i = 0; i < COLLECTION_COUNT; ++i ) {
-#ifdef SEQUENTIAL_EXECUTION
-    CollectionCreateJob *job = new CollectionCreateJob( "res3/col" + QByteArray::number( i ), queue );
+    CollectionCreateJob *job = new CollectionCreateJob( Collection( root ),
+        QLatin1String("col") + QString::number( i ), this );
     connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
-    queue->addJob( job );
-#else
-    CollectionCreateJob *job = new CollectionCreateJob( Collection::root(), QLatin1String("col") + QString::number( i ), this );
-    connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
-    job->start();
     ++jobCount;
-#endif
   }
 }
 
 void CollectionCreator::done( KJob * job )
 {
-#ifndef SEQUENTIAL_EXECUTION
+  if ( job->error() )
+    qWarning() << "collection creation failed: " << job->errorString();
   --jobCount;
-#endif
-  if ( job->error() ) {
-    qWarning() << "Creation failed: " << job->errorString();
-  }
-#ifdef SEQUENTIAL_EXECUTION
-  if ( queue->isEmpty() ) {
-#else
   if ( jobCount <= 0 ) {
-#endif
-    qDebug() << "creation took: " << startTime.secsTo( QTime::currentTime() ) << " seconds.";
+    qDebug() << "creation took: " << startTime.elapsed() << "ms.";
     qApp->quit();
   }
 }

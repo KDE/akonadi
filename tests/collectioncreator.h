@@ -23,7 +23,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QTime>
 #include <libakonadi/job.h>
-#include <libakonadi/session.h>
 
 class CollectionCreator : public QObject
 {
@@ -35,7 +34,6 @@ class CollectionCreator : public QObject
   private:
     int jobCount;
     QTime startTime;
-    Akonadi::Session *queue;
 };
 
 #endif
