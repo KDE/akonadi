@@ -316,19 +316,8 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( Location &location )
 {
-  SelectQueryBuilder<Location> qb;
-  qb.addValueCondition( Location::parentIdColumn(), Query::Equals, location.parentId() );
-  qb.addValueCondition( Location::nameColumn(), Query::Equals, location.name() );
-  if ( !qb.exec() ) {
-    qDebug() << "Unable to check location existence";
-    return false;
-  }
-  if ( !qb.result().isEmpty() ) {
-    qDebug() << "Cannot insert location " << location.name()
-             << " because it already exists.";
-    return false;
-  }
-
+  // no need to check for already exising collection with the same name,
+  // a unique index on parent + name prevents that in the database
   location.setExistCount( 0 );
   location.setRecentCount( 0 );
   location.setUnseenCount( 0 );
