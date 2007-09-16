@@ -471,20 +471,9 @@ bool DataStore::appendMimeTypeForLocation( int locationId, const QString & mimeT
     mimeTypeId = m.id();
   }
 
-  return appendMimeTypeForLocation( locationId, mimeTypeId );
-}
-
-bool DataStore::appendMimeTypeForLocation( int locationId, int mimeTypeId )
-{
-  if ( Location::relatesToMimeType( locationId, mimeTypeId ) ) {
-    qDebug() << "Cannot insert location-mime type ( " << locationId
-             << ", " << mimeTypeId << " ) because it already exists.";
-    return false;
-  }
-
+  // unique index on n:m relation prevents duplicates, ie. this will fail if this mimetype is already set
   return Location::addMimeType( locationId, mimeTypeId );
 }
-
 
 bool Akonadi::DataStore::removeMimeTypesForLocation(int locationId)
 {

@@ -134,7 +134,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool renameLocation( const Location &location, int newParent, const QString &newName );
 
     bool appendMimeTypeForLocation( int locationId, const QString & mimeType );
-    bool appendMimeTypeForLocation( int locationId, int mimeTypeId );
     bool removeMimeTypesForLocation( int locationId );
 
     static QString locationDelimiter() { return QLatin1String("/"); }
