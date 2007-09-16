@@ -170,6 +170,7 @@ QByteArray Job::tag() const
 
 void Job::writeData( const QByteArray & data )
 {
+  Q_ASSERT_X( !d->writeFinished, "Job::writeData()", "Calling writeData() after emitting writeFinished()" );
   d->mSession->writeData( data );
 }
 
@@ -202,6 +203,12 @@ void Job::slotResult(KJob * job)
   d->mCurrentSubJob = 0;
   if ( !job->error() )
     QTimer::singleShot( 0, this, SLOT(startNext()) );
+}
+
+void Job::emitWriteFinished()
+{
+  d->writeFinished = true;
+  emit writeFinished( this );
 }
 
 #include "job.moc"

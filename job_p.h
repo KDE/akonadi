@@ -30,7 +30,8 @@ class Job::Private
 {
   public:
     Private( Job *parent )
-      : mParent( parent )
+      : mParent( parent ),
+        writeFinished( false )
     {
     }
 
@@ -45,6 +46,7 @@ class Job::Private
     Job *mCurrentSubJob;
     QByteArray mTag;
     Session* mSession;
+    bool writeFinished;
 };
 
 }

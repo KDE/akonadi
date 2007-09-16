@@ -56,6 +56,9 @@ class SessionPrivate
     void dataReceived();
     void doStartNext();
     void jobDone( KJob* job );
+    void jobWriteFinished( Akonadi::Job* job );
+
+    bool canPipelineNext();
 
     Session *mParent;
     QByteArray sessionId;
@@ -70,6 +73,7 @@ class SessionPrivate
 
     // job management
     QQueue<Job*> queue;
+    QQueue<Job*> pipeline;
     Job* currentJob;
     bool jobRunning;
 

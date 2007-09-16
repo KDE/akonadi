@@ -99,6 +99,7 @@ class AKONADI_EXPORT Session : public QObject
     Q_PRIVATE_SLOT( d, void dataReceived() )
     Q_PRIVATE_SLOT( d, void doStartNext() )
     Q_PRIVATE_SLOT( d, void jobDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void jobWriteFinished( Akonadi::Job* ) )
 };
 
 }

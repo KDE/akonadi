@@ -39,6 +39,8 @@
 #include <klocalsocket.h>
 #endif
 
+#define PIPELINE_LENGTH 2
+
 using namespace Akonadi;
 
 
@@ -109,23 +111,58 @@ void SessionPrivate::dataReceived()
   }
 }
 
+bool SessionPrivate::canPipelineNext()
+{
+  if ( queue.isEmpty() || pipeline.count() >= PIPELINE_LENGTH )
+    return false;
+  if ( pipeline.isEmpty() && currentJob )
+    return currentJob->d->writeFinished;
+  if ( !pipeline.isEmpty() )
+    return pipeline.last()->d->writeFinished;
+  return false;
+}
+
 void SessionPrivate::doStartNext()
 {
-  if ( !connected || jobRunning || queue.isEmpty() )
+  if ( !connected || (queue.isEmpty() && pipeline.isEmpty()) )
+    return;
+  if ( canPipelineNext() ) {
+    Akonadi::Job *nextJob = queue.dequeue();
+    pipeline.enqueue( nextJob );
+    nextJob->d->startQueued();
+  }
+  if ( jobRunning )
     return;
   jobRunning = true;
-  currentJob = queue.dequeue();
-  mParent->connect( currentJob, SIGNAL(result(KJob*)), mParent, SLOT(jobDone(KJob*)) );
-  currentJob->d->startQueued();
+  if ( !pipeline.isEmpty() ) {
+    currentJob = pipeline.dequeue();
+  } else {
+    currentJob = queue.dequeue();
+    currentJob->d->startQueued();
+  }
 }
 
 void SessionPrivate::jobDone(KJob * job)
 {
   if( job == currentJob ) {
-    jobRunning = false;
-    currentJob = 0;
+    if ( pipeline.isEmpty() ) {
+      jobRunning = false;
+      currentJob = 0;
+    } else {
+      currentJob = pipeline.dequeue();
+    }
     startNext();
   }
+  // ### better handle the other cases too, user might have canceled jobs
+  else {
+    kDebug() << job << "Non-current job finished.";
+  }
+}
+
+void SessionPrivate::jobWriteFinished( Akonadi::Job* job )
+{
+  Q_ASSERT( (job == currentJob && pipeline.isEmpty()) || (job = pipeline.last()) );
+  startNext();
 }
 
 
@@ -181,6 +218,8 @@ QByteArray Session::sessionId() const
 void Session::addJob(Job * job)
 {
   d->queue.append( job );
+  connect( job, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
+  connect( job, SIGNAL(writeFinished(Akonadi::Job*)), SLOT(jobWriteFinished(Akonadi::Job*)) );
   d->startNext();
 }
 

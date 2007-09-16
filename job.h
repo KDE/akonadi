@@ -132,6 +132,15 @@ class AKONADI_EXPORT Job : public KCompositeJob
     */
     void aboutToStart( Akonadi::Job *job );
 
+    /**
+      Emitted if the job has finished all write operations, ie.
+      if this signal is emitted, the job guarantees to not call writeData() again.
+      Do not emit this signal directly, call emitWriteFinished() instead.
+      @param job This job.
+      @see emitWriteFinished()
+    */
+    void writeFinished( Akonadi::Job *job );
+
   protected:
     /**
       Returns a new unique command tag for communication with the backend.
@@ -174,6 +183,12 @@ class AKONADI_EXPORT Job : public KCompositeJob
     virtual bool addSubjob( KJob* job );
 
     virtual bool doKill();
+
+    /**
+      Call this method to indicate that this job will not call writeData() again.
+      @see writeFinished()
+    */
+    void emitWriteFinished();
 
   protected Q_SLOTS:
     virtual void slotResult( KJob* job );

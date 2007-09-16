@@ -71,6 +71,7 @@ void CollectionCreateJob::doStart( )
     command += " CACHEPOLICY " + QByteArray::number( d->cachePolicyId );
   command += ")\n";
   writeData( command );
+  emitWriteFinished();
 }
 
 void CollectionCreateJob::setContentTypes(const QStringList & contentTypes)
