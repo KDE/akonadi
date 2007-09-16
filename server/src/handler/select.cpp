@@ -74,7 +74,7 @@ bool Select::handleLine(const QByteArray& line )
             + QByteArray::number(l.firstUnseen() ) + " is first unseen" );
     emit responseAvailable( response );
 
-    response.setString( "OK [UIDVALIDITY " + QByteArray::number( (qlonglong)l.uidValidity() ) + "] UIDs valid" );
+    response.setString( "OK [UIDVALIDITY 1] UIDs valid" );
     emit responseAvailable( response );
 
     response.setSuccess();

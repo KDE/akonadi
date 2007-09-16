@@ -99,10 +99,9 @@ bool Status::handleLine( const QByteArray& line )
     // UIDVALIDITY - The unique identifier validity value of the mailbox
     if ( attributeList.contains( "UIDVALIDITY" ) ) {
         if ( !statusResponse.isEmpty() )
-            statusResponse += " UIDVALIDITY ";
+            statusResponse += " UIDVALIDITY 1";
         else
-            statusResponse += "UIDVALIDITY ";
-        statusResponse += QByteArray::number( (qlonglong)l.uidValidity() );
+            statusResponse += "UIDVALIDITY 1";
     }
     if ( attributeList.contains( "UNSEEN" ) ) {
         if ( !statusResponse.isEmpty() )

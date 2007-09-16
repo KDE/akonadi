@@ -322,7 +322,6 @@ bool DataStore::appendLocation( Location &location )
   location.setRecentCount( 0 );
   location.setUnseenCount( 0 );
   location.setFirstUnseen( 0 );
-  location.setUidValidity( 0 );
   if ( !location.insert() )
     return false;
 
