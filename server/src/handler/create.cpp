@@ -146,10 +146,8 @@ bool Create::handleLine(const QByteArray& line )
     foreach ( const MimeType mt, parentContentTypes )
       effectiveMimeTypes << mt.name();
   }
-  foreach ( const QString mimeType, effectiveMimeTypes ) {
-    if ( !db->appendMimeTypeForLocation( location.id(), mimeType ) )
-      return failureResponse( "Unable to append mimetype for collection." );
-  }
+  if ( !db->appendMimeTypeForLocation( location.id(), effectiveMimeTypes ) )
+    return failureResponse( "Unable to append mimetype for collection." );
 
   // store user defined attributes
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;

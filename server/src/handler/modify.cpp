@@ -63,9 +63,11 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
       pos = ImapParser::parseParenthesizedList( line, mimeTypes, pos );
       if ( !db->removeMimeTypesForLocation( location.id() ) )
         return failureResponse( "Unable to modify collection mimetypes." );
+      QStringList mts;
       foreach ( QByteArray ba, mimeTypes )
-        if ( !db->appendMimeTypeForLocation( location.id(), QString::fromLatin1(ba) ) )
-          return failureResponse( "Unable to modify collection mimetypes." );
+        mts << QString::fromLatin1(ba);
+      if ( !db->appendMimeTypeForLocation( location.id(), mts ) )
+        return failureResponse( "Unable to modify collection mimetypes." );
     } else if ( type == "CACHEPOLICY" ) {
       int policyId;
       bool ok = false;

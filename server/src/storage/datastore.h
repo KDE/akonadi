@@ -133,7 +133,7 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     /// rename the collection @p location to @p newName.
     bool renameLocation( const Location &location, int newParent, const QString &newName );
 
-    bool appendMimeTypeForLocation( int locationId, const QString & mimeType );
+    bool appendMimeTypeForLocation( int locationId, const QStringList & mimeTypes );
     bool removeMimeTypesForLocation( int locationId );
 
     static QString locationDelimiter() { return QLatin1String("/"); }

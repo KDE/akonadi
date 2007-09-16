@@ -447,21 +447,32 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
 }
 
 
-bool DataStore::appendMimeTypeForLocation( int locationId, const QString & mimeType )
+bool DataStore::appendMimeTypeForLocation( int locationId, const QStringList & mimeTypes )
 {
-  //qDebug() << "DataStore::appendMimeTypeForLocation( " << locationId << ", '" << mimeType << "' )";
-  int mimeTypeId;
-  MimeType m = MimeType::retrieveByName( mimeType );
-  if ( !m.isValid() ) {
-    // the MIME type doesn't exist, so we have to add it to the db
-    if ( !appendMimeType( mimeType, &mimeTypeId ) )
+  SelectQueryBuilder<MimeType> qb;
+  qb.addValueCondition( MimeType::nameColumn(), Query::In, mimeTypes );
+  if ( !qb.exec() )
+    return false;
+  QStringList missingMimeTypes = mimeTypes;
+
+  foreach ( const MimeType mt, qb.result() ) {
+    // unique index on n:m relation prevents duplicates, ie. this will fail
+    // if this mimetype is already set
+    if ( !Location::addMimeType( locationId, mt.id() ) )
       return false;
-  } else {
-    mimeTypeId = m.id();
+    missingMimeTypes.removeAll( mt.name() );
   }
 
-  // unique index on n:m relation prevents duplicates, ie. this will fail if this mimetype is already set
-  return Location::addMimeType( locationId, mimeTypeId );
+  // the MIME type doesn't exist, so we have to add it to the db
+  foreach ( const QString mtName, missingMimeTypes ) {
+    int mimeTypeId;
+    if ( !appendMimeType( mtName, &mimeTypeId ) )
+      return false;
+    if ( !Location::addMimeType( locationId, mimeTypeId ) )
+      return false;
+  }
+
+  return true;
 }
 
 bool Akonadi::DataStore::removeMimeTypesForLocation(int locationId)
