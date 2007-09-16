@@ -449,6 +449,8 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
 
 bool DataStore::appendMimeTypeForLocation( int locationId, const QStringList & mimeTypes )
 {
+  if ( mimeTypes.isEmpty() )
+    return true;
   SelectQueryBuilder<MimeType> qb;
   qb.addValueCondition( MimeType::nameColumn(), Query::In, mimeTypes );
   if ( !qb.exec() )
