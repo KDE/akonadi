@@ -42,6 +42,11 @@
   - methodName: method name to access referred records, the table name is used if not given
   - properties: SQL properties such as constraints
 
+  Indices:
+  - name: The name of the index
+  - columns: The columns covered by this index
+  - unique: bool, indicates if this index must contain unique data
+
   Reference attributes (indication n:1 relations)
   - name: Used for naming the method during code generation
   - table: name of the table a n:1 relation exist
@@ -88,8 +93,6 @@
     <column name="remoteId" type="QString"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="parentId" type="int" refTable="Location" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Location(id)"/>
-    <index name="parentIndex" columns="parentId" unique="false"/>
-    <reference name="children" table="Location" key="parentId"/>
     <column name="cachePolicyId" type="int" refTable="CachePolicy" refColumn="id" properties="REFERENCES CachePolicy(id)">
       <comment>Identifier of the cache policy that should be used for this
         collection. If NULL, the default should be used.</comment>
@@ -102,6 +105,8 @@
     <column name="uidValidity" type="int">
       <comment>Needed for IMAP compatibility??</comment>
     </column>
+    <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
+    <reference name="children" table="Location" key="parentId"/>
     <reference name="items" table="PimItem" key="locationId"/>
     <reference name="attributes" table="LocationAttribute" key="locationId"/>
     <data columns="parentId,name,resourceId" values="0,'Search',1"/>
@@ -122,7 +127,6 @@
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remoteId" type="QByteArray"/>
     <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
-    <index name="locationIndex" columns="locationId" unique="false"/>
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP">
       <comment>create/modified time</comment>
@@ -133,6 +137,7 @@
     <column name="dirty" type="bool">
       <comment>Indicates that this item has unsaved changes.</comment>
     </column>
+    <index name="locationIndex" columns="locationId" unique="false"/>
   </table>
 
   <table name="Flag">
@@ -149,8 +154,6 @@
     <data columns="name" values="'\Draft'"/>
   </table>
 
-  <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
-
   <table name="Part" properties="FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
@@ -160,12 +163,6 @@
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 
-  <relation table2="Flag" column2="id" table1="Part" column1="id"/>
-
-  <relation table1="Location" column1="id" table2="MimeType" column2="id">
-    <comment>Specifies allowed MimeType for a Location</comment>
-  </relation>
-
   <table name="LocationAttribute">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
@@ -173,6 +170,14 @@
     <column name="value" type="QByteArray"/>
     <index name="locationIndex" columns="locationId" unique="false"/>
   </table>
+
+  <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
+
+  <relation table2="Flag" column2="id" table1="Part" column1="id"/>
+
+  <relation table1="Location" column1="id" table2="MimeType" column2="id">
+    <comment>Specifies allowed MimeType for a Location</comment>
+  </relation>
 
   <relation table1="Location" column1="id" table2="PimItem" column2="id">
     <comment>Used to associate items with search folders.</comment>
