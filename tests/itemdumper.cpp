@@ -29,7 +29,8 @@
 
 using namespace Akonadi;
 
-ItemDumper::ItemDumper( const QString &path, const QString &filename, const QString &mimetype )
+ItemDumper::ItemDumper( const QString &path, const QString &filename, const QString &mimetype, int count ) :
+    mJobCount( 0 )
 {
   CollectionPathResolver* resolver = new CollectionPathResolver( path, this );
   Q_ASSERT( resolver->exec() );
@@ -39,24 +40,27 @@ ItemDumper::ItemDumper( const QString &path, const QString &filename, const QStr
   Q_ASSERT( f.open(QIODevice::ReadOnly) );
   QByteArray data = f.readAll();
   f.close();
-  mTime.start();
   Item item;
   item.setMimeType( mimetype );
   item.addPart( Item::PartBody, data );
-  ItemAppendJob *job = new ItemAppendJob( item, collection, this );
-  connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
-  job->start();
+  mTime.start();
+  for ( int i = 0; i < count; ++i ) {
+    ++mJobCount;
+    ItemAppendJob *job = new ItemAppendJob( item, collection, this );
+    connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
+  }
 }
 
 void ItemDumper::done( KJob * job )
 {
+  --mJobCount;
   if ( job->error() ) {
     qWarning() << "Error while creating item: " << job->errorString();
-  } else {
-    qDebug() << "Done!";
   }
-  qDebug() << "Time:" << mTime.elapsed();
-  qApp->quit();
+  if ( mJobCount <= 0 ) {
+    qDebug() << "Time:" << mTime.elapsed() << "ms";
+    qApp->quit();
+  }
 }
 
 int main( int argc, char** argv )
@@ -65,15 +69,17 @@ int main( int argc, char** argv )
 
   KCmdLineOptions options;
   options.add("path <argument>", ki18n("IMAP destination path"));
-  options.add("mimetype <argument>", ki18n("Source mimetype"));
+  options.add("mimetype <argument>", ki18n("Source mimetype"), "application/octet-stream");
   options.add("file <argument>", ki18n("Source file"));
+  options.add("count <argument>", ki18n("Number of times this file is added"), "1");
   KCmdLineArgs::addCmdLineOptions( options );
   KApplication app;
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   QString path = args->getOption( "path" );
   QString mimetype = args->getOption( "mimetype" );
   QString file = args->getOption( "file" );
-  ItemDumper d( path, file, mimetype );
+  int count = qMax( 1, args->getOption( "count").toInt() );
+  ItemDumper d( path, file, mimetype, count );
   return app.exec();
 }
 
