@@ -34,6 +34,8 @@ add_custom_command(
           ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml
           > ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities.xsl
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities-header.xsl
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities-source.xsl
           ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml
 )
 
