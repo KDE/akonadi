@@ -44,7 +44,44 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     <xsl:value-of select="@type"/><xsl:text> </xsl:text><xsl:value-of select="@name"/>;
     bool <xsl:value-of select="@name"/>_changed;
     </xsl:for-each>
+
+    static void addToCache( const <xsl:value-of select="$className"/> &amp; entry );
+
+    // cache
+    static bool cacheEnabled;
+    static QMutex cacheMutex;
+    <xsl:if test="column[@name = 'id']">
+    static QHash&lt;int, <xsl:value-of select="$className"/> &gt; idCache;
+    </xsl:if>
+    <xsl:if test="column[@name = 'name']">
+    static QHash&lt;QString, <xsl:value-of select="$className"/> &gt; nameCache;
+    </xsl:if>
 };
+
+
+// static members
+bool <xsl:value-of select="$className"/>::Private::cacheEnabled = false;
+QMutex <xsl:value-of select="$className"/>::Private::cacheMutex;
+<xsl:if test="column[@name = 'id']">
+QHash&lt;int, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::idCache;
+</xsl:if>
+<xsl:if test="column[@name = 'name']">
+QHash&lt;QString, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::nameCache;
+</xsl:if>
+
+
+void <xsl:value-of select="$className"/>::Private::addToCache( const <xsl:value-of select="$className"/> &amp; entry )
+{
+  Q_ASSERT( cacheEnabled );
+  cacheMutex.lock();
+  <xsl:if test="column[@name = 'id']">
+  idCache.insert( entry.id(), entry );
+  </xsl:if>
+  <xsl:if test="column[@name = 'name']">
+  nameCache.insert( entry.name(), entry );
+  </xsl:if>
+  cacheMutex.unlock();
+}
 
 
 // constructor
@@ -166,12 +203,28 @@ int <xsl:value-of select="$className"/>::count( const QString &amp;column, const
 <xsl:if test="column[@name = 'id']">
 bool <xsl:value-of select="$className"/>::exists( int id )
 {
+  if ( Private::cacheEnabled ) {
+    Private::cacheMutex.lock();
+    if ( Private::idCache.contains( id ) ) {
+      Private::cacheMutex.unlock();
+      return true;
+    }
+    Private::cacheMutex.unlock();
+  }
   return count( idColumn(), id ) > 0;
 }
 </xsl:if>
 <xsl:if test="column[@name = 'name']">
 bool <xsl:value-of select="$className"/>::exists( const QString &amp;name )
 {
+  if ( Private::cacheEnabled ) {
+    Private::cacheMutex.lock();
+    if ( Private::nameCache.contains( name ) ) {
+      Private::cacheMutex.unlock();
+      return true;
+    }
+    Private::cacheMutex.unlock();
+  }
   return count( nameColumn(), name ) > 0;
 }
 </xsl:if>
@@ -196,14 +249,20 @@ QList&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$classN
 <xsl:if test="column[@name='id']">
 <xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveById( int id )
 {
-  <xsl:call-template name="data-retrieval"><xsl:with-param name="key">id</xsl:with-param></xsl:call-template>
+  <xsl:call-template name="data-retrieval">
+  <xsl:with-param name="key">id</xsl:with-param>
+  <xsl:with-param name="cache">idCache</xsl:with-param>
+  </xsl:call-template>
 }
 
 </xsl:if>
 <xsl:if test="column[@name = 'name']">
 <xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveByName( const QString &amp;name )
 {
-  <xsl:call-template name="data-retrieval"><xsl:with-param name="key">name</xsl:with-param></xsl:call-template>
+  <xsl:call-template name="data-retrieval">
+  <xsl:with-param name="key">name</xsl:with-param>
+  <xsl:with-param name="cache">nameCache</xsl:with-param>
+  </xsl:call-template>
 }
 </xsl:if>
 
@@ -397,6 +456,7 @@ bool <xsl:value-of select="$className"/>::insert( int* insertId )
 // update existing data
 bool <xsl:value-of select="$className"/>::update()
 {
+  invalidateCache();
   QSqlDatabase db = DataStore::self()->database();
   if ( !db.isOpen() )
     return false;
@@ -433,12 +493,14 @@ bool <xsl:value-of select="$className"/>::update()
 // delete records
 bool <xsl:value-of select="$className"/>::remove( const QString &amp;column, const QVariant &amp;value )
 {
+  invalidateCompleteCache();
   return Entity::remove&lt;<xsl:value-of select="$className"/>&gt;( column, value );
 }
 
 bool <xsl:value-of select="$className"/>::remove()
 {
-  return remove( id() );
+  invalidateCache();
+  return Entity::remove&lt;<xsl:value-of select="$className"/>&gt;( idColumn(), id() );
 }
 
 <xsl:if test="column[@name = 'id']">
@@ -447,6 +509,40 @@ bool <xsl:value-of select="$className"/>::remove( int id )
   return remove( idColumn(), id );
 }
 </xsl:if>
+
+// cache stuff
+void <xsl:value-of select="$className"/>::invalidateCache() const
+{
+  if ( Private::cacheEnabled ) {
+    Private::cacheMutex.lock();
+    <xsl:if test="column[@name = 'id']">
+    Private::idCache.remove( id() );
+    </xsl:if>
+    <xsl:if test="column[@name = 'name']">
+    Private::nameCache.remove( name() );
+    </xsl:if>
+    Private::cacheMutex.unlock();
+  }
+}
+
+void <xsl:value-of select="$className"/>::invalidateCompleteCache()
+{
+  if ( Private::cacheEnabled ) {
+    Private::cacheMutex.lock();
+    <xsl:if test="column[@name = 'id']">
+    Private::idCache.clear();
+    </xsl:if>
+    <xsl:if test="column[@name = 'name']">
+    Private::nameCache.clear();
+    </xsl:if>
+    Private::cacheMutex.unlock();
+  }
+}
+
+void <xsl:value-of select="$className"/>::enableCache( bool enable )
+{
+  Private::cacheEnabled = enable;
+}
 
 </xsl:template>
 

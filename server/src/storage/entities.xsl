@@ -40,10 +40,10 @@
 #include &lt;storage/entity.h&gt;
 #include "akonadi_export.h"
 
-#include &lt;qdebug.h&gt;
-#include &lt;qstring.h&gt;
-#include &lt;qvariant.h&gt;
+#include &lt;QtCore/QDebug&gt;
 #include &lt;QtCore/QSharedDataPointer&gt;
+#include &lt;QtCore/QString&gt;
+#include &lt;QtCore/QVariant&gt;
 
 namespace Akonadi {
 
@@ -84,6 +84,8 @@ class <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation;
 #include &lt;qsqlquery.h&gt;
 #include &lt;qsqlerror.h&gt;
 #include &lt;qvariant.h&gt;
+#include &lt;QtCore/QHash&gt;
+#include &lt;QtCore/QMutex&gt;
 
 using namespace Akonadi;
 
@@ -127,7 +129,18 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
 <!-- data retrieval for a given key field -->
 <xsl:template name="data-retrieval">
 <xsl:param name="key"/>
+<xsl:param name="cache"/>
 <xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
+  <xsl:if test="$cache != ''">
+  if ( Private::cacheEnabled ) {
+    Private::cacheMutex.lock();
+    if ( Private::<xsl:value-of select="$cache"/>.contains( <xsl:value-of select="$key"/> ) ) {
+      Private::cacheMutex.unlock();
+      return Private::<xsl:value-of select="$cache"/>.value( <xsl:value-of select="$key"/> );
+    }
+    Private::cacheMutex.unlock();
+  }
+  </xsl:if>
   QSqlDatabase db = DataStore::self()->database();
   if ( !db.isOpen() )
     return <xsl:value-of select="$className"/>();
@@ -148,12 +161,16 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
     return <xsl:value-of select="$className"/>();
   }
 
-  return <xsl:value-of select="$className"/>(
+  <xsl:value-of select="$className"/> rv(
   <xsl:for-each select="column">
     query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
     <xsl:if test="position() != last()">,</xsl:if>
   </xsl:for-each>
   );
+  if ( Private::cacheEnabled ) {
+    Private::addToCache( rv );
+  }
+  return rv;
 </xsl:template>
 
 <!-- method name for n:1 referred records -->

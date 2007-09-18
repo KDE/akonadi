@@ -174,6 +174,13 @@ bool Akonadi::DataStore::init()
     qWarning() << initializer.errorMsg();
     return false;
   }
+
+  // enable caching for some tables
+  MimeType::enableCache( true );
+  Flag::enableCache( true );
+  Resource::enableCache( true );
+  CachePolicy::enableCache( true );
+
   return true;
 }
 
@@ -374,7 +381,7 @@ bool DataStore::updateLocationCounts( const Location & location, int existsChang
         addToUpdateAssignments( assignments, unseenChange, Location::unseenCountColumn() );
         QString q = QString::fromLatin1( "UPDATE %1 SET %2 WHERE id = :id" )
                     .arg( Location::tableName(), assignments.join(QLatin1String(",")) );
-        qDebug() << "Executing SQL query " << q;
+//         qDebug() << "Executing SQL query " << q;
         query.prepare( q );
         query.bindValue( QLatin1String(":id"), location.id() );
         if ( query.exec() )

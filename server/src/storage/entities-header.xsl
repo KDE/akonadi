@@ -107,9 +107,11 @@ class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
 
     // check existence
     <xsl:if test="column[@name = 'id']">
+    /** Checks if a record with id @p id exists. */
     static bool exists( int id );
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
+    /** Checks if a record with name @name exists. */
     static bool exists( const QString &amp;name );
     </xsl:if>
 
@@ -122,7 +124,9 @@ class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByName( const QString &amp;name );
     </xsl:if>
 
+    /** Retrieve all records from this table. */
     static <xsl:value-of select="$className"/>::List retrieveAll();
+    /** Retrieve all records with value @p value in column @p key. */
     static <xsl:value-of select="$className"/>::List retrieveFiltered( const QString &amp;key, const QVariant &amp;value );
 
     <!-- data retrieval for referenced tables (n:1) -->
@@ -167,6 +171,24 @@ class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
     /** Deletes the record with the given id. */
     static bool remove( int id );
     </xsl:if>
+
+    /**
+      Invalidates the cache entry for this record.
+      This method has no effect if caching is not enabled for this table.
+    */
+    void invalidateCache() const;
+
+    /**
+      Invalidates all cache entries for this table.
+      This method has no effect if caching is not enabled for this table.
+    */
+    static void invalidateCompleteCache();
+
+    /**
+      Enable/disable caching for this table.
+      This method is not thread-safe, call before activating multi-threading.
+    */
+    static void enableCache( bool enable );
 
   protected:
     // delete records
