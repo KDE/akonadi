@@ -192,7 +192,7 @@ void Monitor::Private::slotNotify( const NotificationMessage::List &msgs )
       if ( !isItemMonitored( msg.uid(), msg.parentCollection(), msg.parentDestCollection(), msg.mimeType(), msg.resource() ) )
         continue;
       if ( !mFetchParts.isEmpty() &&
-           ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move )) {
+           ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move ) || fetchAllParts ) {
         ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( msg.uid(), msg.remoteId() ),
                                                                   msg.parentCollection(), mParent );
         foreach( QString part, mFetchParts )
