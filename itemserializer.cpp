@@ -96,11 +96,11 @@ static void loadPlugins() {
     return;
   }
   const QStringList types = pl->types();
-  qDebug() << "ItemSerializerPluginLoader: found " << types.size() << " plugins." << endl;
+  qDebug() << "ItemSerializerPluginLoader: found" << types.size() << "plugins." << endl;
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
     ItemSerializerPlugin * plugin = pl->createForName( *it );
     if ( !plugin ) {
-      qWarning() << "ItemSerializerPlugin: plugin " << *it << " is not valid!" << endl;
+      qWarning() << "ItemSerializerPlugin: plugin" << *it << "is not valid!" << endl;
       continue;
     }
 
