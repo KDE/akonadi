@@ -1,3 +1,4 @@
+set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
@@ -12,7 +13,7 @@ include_directories(
 macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_test_executable(${_name} ${_test})
+  kde4_add_executable(${_name} TEST ${_test})
   target_link_libraries(${_name} akonadi)
 endmacro(add_akonadi_demo)
 
