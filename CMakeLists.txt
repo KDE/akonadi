@@ -61,6 +61,7 @@ set( akonadi_LIB_SRC
 	itemserializer.cpp
 	itemserializerplugin.cpp
 	itemstorejob.cpp
+  itemsync.cpp
   itemview.cpp
 	job.cpp
 	kcrash.cpp
@@ -124,6 +125,7 @@ install( FILES
 	itemserializerplugin.h
 	itemstorejob.h
 	itemmodel.h
+  itemsync.h
 	itemview.h
 	job.h
 	libakonadi_export.h

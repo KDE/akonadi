@@ -191,3 +191,14 @@ QByteArray Item::rawPart(const QString & label) const
 {
   return d->mParts.value( label );
 }
+
+bool Item::operator==( const Item &other ) const
+{
+  return d->reference.id() == other.d->reference.id();
+}
+
+uint qHash( const Akonadi::Item &item )
+{
+  return qHash( item.reference().id() );
+}
+
