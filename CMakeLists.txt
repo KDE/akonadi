@@ -43,6 +43,7 @@ set( akonadi_LIB_SRC
 	collectionfilterproxymodel.cpp
 	collectionmodifyjob.cpp
 	collectionpathresolver.cpp
+	collectionrightsattribute.cpp
 	collectionselectjob.cpp
 	collectionstatus.cpp
 	collectionstatusjob.cpp

@@ -19,6 +19,7 @@
 
 #include "collection.h"
 #include "collectionattributefactory.h"
+#include "collectionrightsattribute.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QHash>
@@ -134,6 +135,21 @@ Collection::Type Collection::type() const
 void Collection::setType( Type type )
 {
   d->type = type;
+}
+
+Collection::Rights Collection::rights() const
+{
+  CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>();
+  if ( attr )
+    return attr->rights();
+  else
+    return AllRights;
+}
+
+void Collection::setRights( Rights rights )
+{
+  CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>( true );
+  attr->setRights( rights );
 }
 
 QStringList Collection::contentTypes() const

@@ -19,6 +19,8 @@
 
 #include "collectionattributefactory.h"
 
+#include "collectionrightsattribute.h"
+
 #include <QtCore/QHash>
 
 using namespace Akonadi;
@@ -34,8 +36,12 @@ CollectionAttributeFactory* CollectionAttributeFactory::Private::mInstance = 0;
 
 CollectionAttributeFactory* CollectionAttributeFactory::self()
 {
-  if ( !Private::mInstance )
+  if ( !Private::mInstance ) {
     Private::mInstance = new CollectionAttributeFactory();
+
+    // Register built-in attributes
+    CollectionAttributeFactory::registerAttribute<CollectionRightsAttribute>();
+  }
 
   return Private::mInstance;
 }

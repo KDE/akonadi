@@ -58,6 +58,22 @@ class AKONADI_EXPORT Collection
     typedef QList<Collection> List;
 
     /**
+     Collection rights.
+    */
+    enum Right {
+      NoRights = 0x0,                   ///< Has no rights on this collection
+      CanChangeItem = 0x1,              ///< Can change items in this collection
+      CanCreateItem = 0x2,              ///< Can create new items in this collection
+      CanDeleteItem = 0x4,              ///< Can delete items in this collection
+      CanChangeCollection = 0x8,        ///< Can change subcollections in this collection
+      CanCreateCollection = 0x16,       ///< Can create new subcollections in this collection
+      CanDeleteCollection = 0x32,       ///< Can delete subcollections in this collection
+      AllRights = (CanChangeItem | CanCreateItem | CanDeleteItem |
+                   CanChangeCollection | CanCreateCollection | CanDeleteCollection) ///< Has all rights on this collection
+    };
+    Q_DECLARE_FLAGS(Rights, Right)
+
+    /**
       Creates an invalid collection.
     */
     Collection();
@@ -111,6 +127,16 @@ class AKONADI_EXPORT Collection
       Sets the type of this collection.
     */
     void setType( Type type );
+
+    /**
+      Returns the rights the user has on this collection.
+     */
+    Rights rights() const;
+
+    /**
+      Sets the @p rights the user has on this collection.
+     */
+    void setRights( Rights rights );
 
     /**
       Returns a list of possible content mimetypes,
