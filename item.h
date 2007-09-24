@@ -21,10 +21,19 @@
 #ifndef AKONADI_ITEM_H
 #define AKONADI_ITEM_H
 
+#include "libakonadi_export.h"
+
 #include <libakonadi/job.h>
+
+namespace Akonadi {
+class Item;
+}
+
+AKONADI_EXPORT uint qHash( const Akonadi::Item& );
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
+#include <QtCore/QHash>
 #include <QtCore/QSet>
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QStringList>
@@ -171,6 +180,11 @@ class AKONADI_EXPORT Item
       Assignment operator.
     */
     Item& operator=( const Item &other );
+
+    /**
+      Compares the id of two items.
+    */
+    bool operator==( const Item &item ) const;
 
     /**
       Sets the payload object of this PIM item.
