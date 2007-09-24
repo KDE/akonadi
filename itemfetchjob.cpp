@@ -25,6 +25,7 @@
 #include "itemserializerplugin.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QTimer>
 
 using namespace Akonadi;
 
@@ -33,8 +34,22 @@ class ItemFetchJob::Private
   public:
     Private( ItemFetchJob *parent )
       : mParent( parent ),
-        fetchAllParts( false )
+        fetchAllParts( false ),
+        emitTimer( new QTimer( parent ) )
     {
+      emitTimer->setSingleShot( true );
+      emitTimer->setInterval( 100 );
+      QObject::connect( emitTimer, SIGNAL(timeout()), parent, SLOT(timeout()) );
+      QObject::connect( parent, SIGNAL(result(KJob*)), parent, SLOT(timeout()) );
+    }
+
+    void timeout()
+    {
+      emitTimer->stop(); // in case we are called by result()
+      if ( !pendingItems.isEmpty() ) {
+        emit mParent->itemsReceived( pendingItems );
+        pendingItems.clear();
+      }
     }
 
     void startFetchJob();
@@ -46,6 +61,8 @@ class ItemFetchJob::Private
     Item::List items;
     QStringList mFetchParts;
     bool fetchAllParts;
+    Item::List pendingItems; // items pending for emitting itemsReceived()
+    QTimer* emitTimer;
 };
 
 void ItemFetchJob::Private::startFetchJob()
@@ -140,6 +157,9 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       }
 
       d->items.append( item );
+      d->pendingItems.append( item );
+      if ( !d->emitTimer->isActive() )
+        d->emitTimer->start();
       return;
     }
   }

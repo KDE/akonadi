@@ -43,6 +43,7 @@ QTEST_KDEMAIN( CollectionJobTest, NoGUI )
 
 void CollectionJobTest::initTestCase()
 {
+  qRegisterMetaType<Akonadi::Collection::List>();
   Control::start();
 }
 
@@ -114,8 +115,21 @@ void CollectionJobTest::testFolderList( )
 {
   // recursive list of physical folders
   CollectionListJob *job = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Recursive );
+  QSignalSpy spy( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)) );
+  QVERIFY( spy.isValid() );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
+
+  int count = 0;
+  for ( int i = 0; i < spy.count(); ++i ) {
+    Collection::List l = spy[i][0].value<Akonadi::Collection::List>();
+    for ( int j = 0; j < l.count(); ++j ) {
+      QVERIFY( list.count() > count + j );
+      QCOMPARE( list[count + j].id(), l[j].id() );
+    }
+    count += l.count();
+  }
+  QCOMPARE( count, list.count() );
 
   // check if everything is there
   QCOMPARE( list.count(), 4 );

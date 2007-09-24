@@ -31,6 +31,11 @@ using namespace Akonadi;
 
 QTEST_KDEMAIN( ItemFetchTest, NoGUI )
 
+void ItemFetchTest::initTestCase()
+{
+  qRegisterMetaType<Akonadi::Item::List>();
+}
+
 void ItemFetchTest::testFetch()
 {
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1", this );
@@ -48,9 +53,22 @@ void ItemFetchTest::testFetch()
 
   // listing of a non-empty folder
   job = new ItemFetchJob( Collection( colId2 ), this );
+  QSignalSpy spy( job, SIGNAL(itemsReceived(Akonadi::Item::List)) );
+  QVERIFY( spy.isValid() );
   QVERIFY( job->exec() );
   Item::List items = job->items();
   QCOMPARE( items.count(), 15 );
+
+  int count = 0;
+  for ( int i = 0; i < spy.count(); ++i ) {
+    Item::List l = spy[i][0].value<Akonadi::Item::List>();
+    for ( int j = 0; j < l.count(); ++j ) {
+      QVERIFY( items.count() > count + j );
+      QCOMPARE( items[count + j].reference(), l[j].reference() );
+    }
+    count += l.count();
+  }
+  QCOMPARE( count, items.count() );
 
   // check if the fetch response is parsed correctly
   Item item = items[0];

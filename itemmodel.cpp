@@ -66,7 +66,8 @@ class ItemModel::Private
 
     void listingDone( KJob* );
     void itemChanged( const Akonadi::Item&, const QStringList& );
-    void itemAdded( const Akonadi::Item& );
+    void itemsAdded( const Akonadi::Item::List &list );
+    void itemAdded( const Akonadi::Item &item );
     void itemMoved( const Akonadi::Item&, const Akonadi::Collection& src, const Akonadi::Collection& dst );
     void itemRemoved( const Akonadi::DataReference& );
     int rowForItem( const Akonadi::DataReference& );
@@ -87,19 +88,7 @@ void ItemModel::Private::listingDone( KJob * job )
   ItemFetchJob *fetch = static_cast<ItemFetchJob*>( job );
   if ( job->error() ) {
     // TODO
-    kWarning() <<"Item query failed!";
-  } else {
-    mParent->reset();
-    if ( fetch->items().count() )
-    {
-      mParent->beginInsertRows( QModelIndex(), 0, fetch->items().count() - 1 );
-      foreach( Item item, fetch->items() ) {
-        ItemContainer *c = new ItemContainer( item, items.count() );
-        items.append( c );
-        itemHash[ item.reference() ] = c;
-      }
-      mParent->endInsertRows();
-    }
+    kWarning() <<"Item query failed:" << job->errorString();
   }
 
   // start monitor
@@ -173,13 +162,24 @@ void ItemModel::Private::itemMoved( const Akonadi::Item &item, const Akonadi::Co
   }
 }
 
+void ItemModel::Private::itemsAdded( const Akonadi::Item::List &list )
+{
+  if ( list.isEmpty() )
+    return;
+  mParent->beginInsertRows( QModelIndex(), items.count(), items.count() + list.count() - 1 );
+  foreach( Item item, list ) {
+    ItemContainer *c = new ItemContainer( item, items.count() );
+    items.append( c );
+    itemHash[ item.reference() ] = c;
+  }
+  mParent->endInsertRows();
+}
+
 void ItemModel::Private::itemAdded( const Akonadi::Item &item )
 {
-  mParent->beginInsertRows( QModelIndex(), items.size(), items.size());
-  ItemContainer *c = new ItemContainer( item, items.size() );
-  items.append( c );
-  itemHash[ item.reference() ] = c;
-  mParent->endInsertRows();
+  Item::List l;
+  l << item;
+  itemsAdded( l );
 }
 
 void ItemModel::Private::itemRemoved( const DataReference &reference )
@@ -228,7 +228,7 @@ QVariant ItemModel::data( const QModelIndex & index, int role ) const
         return item.mimeType();
     }
   }
-  
+
   if ( role == IdRole ) {
     switch ( index.column() ) {
       case Id:
@@ -295,6 +295,7 @@ void ItemModel::setCollection( const Collection &collection )
   ItemFetchJob* job = new ItemFetchJob( collection, session() );
   foreach( QString part, d->mFetchParts )
     job->addFetchPart( part );
+  connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsAdded(Akonadi::Item::List)) );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 
   emit collectionSet( collection );

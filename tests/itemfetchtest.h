@@ -26,6 +26,7 @@ class ItemFetchTest : public QObject
 {
   Q_OBJECT
   private slots:
+    void initTestCase();
     void testFetch();
     void testIlleagalFetch();
     void testMultipartFetch();

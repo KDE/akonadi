@@ -174,6 +174,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     Q_PRIVATE_SLOT( d, void listDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void editDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void appendDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void collectionsChanged( const Akonadi::Collection::List& ) )
 
 };
 

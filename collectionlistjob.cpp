@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,7 +19,6 @@
 
 #include "collectionlistjob.h"
 
-#include "collection.h"
 #include "imapparser.h"
 
 #include <QtCore/QDebug>
@@ -32,16 +31,38 @@ using namespace Akonadi;
 class Akonadi::CollectionListJobPrivate
 {
   public:
+    CollectionListJobPrivate( CollectionListJob *parent ) :
+      q( parent ),
+      emitTimer( new QTimer( parent ) )
+    {
+      emitTimer->setSingleShot( true );
+      emitTimer->setInterval( 100 );
+      QObject::connect( emitTimer, SIGNAL(timeout()), parent, SLOT(timeout()) );
+      QObject::connect( parent, SIGNAL(result(KJob*)), parent, SLOT(timeout()) );
+    }
+
+    CollectionListJob *q;
     CollectionListJob::ListType type;
     Collection base;
     Collection::List baseList;
     Collection::List collections;
     QString resource;
+    Collection::List pendingCollections;
+    QTimer *emitTimer;
+
+    void timeout()
+    {
+      emitTimer->stop(); // in case we are called by result()
+      if ( !pendingCollections.isEmpty() ) {
+        emit q->collectionsReceived( pendingCollections );
+        pendingCollections.clear();
+      }
+    }
 };
 
 CollectionListJob::CollectionListJob( const Collection &collection, ListType type, QObject *parent ) :
     Job( parent ),
-    d( new CollectionListJobPrivate )
+    d( new CollectionListJobPrivate( this ) )
 {
   Q_ASSERT( collection.isValid() );
   d->base = collection;
@@ -50,7 +71,7 @@ CollectionListJob::CollectionListJob( const Collection &collection, ListType typ
 
 CollectionListJob::CollectionListJob(const Collection::List & cols, QObject * parent) :
     Job( parent ),
-    d( new CollectionListJobPrivate )
+    d( new CollectionListJobPrivate( this ) )
 {
   Q_ASSERT( !cols.isEmpty() );
   d->baseList = cols;
@@ -168,6 +189,9 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
     }
 
     d->collections.append( collection );
+    d->pendingCollections.append( collection );
+    if ( !d->emitTimer->isActive() )
+      d->emitTimer->start();
     return;
   }
   qDebug() << "unhandled server response in collection list job" << tag << data;

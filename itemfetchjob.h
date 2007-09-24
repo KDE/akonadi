@@ -58,7 +58,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       Returns the fetched item objects. Invalid before the result(KJob*)
       signal has been emitted or if an error occurred.
     */
-    virtual Item::List items() const;
+    Item::List items() const;
 
     /**
       Sets the collection that should be listed.
@@ -81,6 +81,12 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       Fetch all item parts.
     */
     void fetchAllParts();
+
+  Q_SIGNALS:
+    /**
+     Emitted when items are received.
+    */
+    void itemsReceived( const Akonadi::Item::List &items );
 
   protected:
     virtual void doStart();
@@ -106,6 +112,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void selectDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void timeout() )
 };
 
 }

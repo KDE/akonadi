@@ -117,12 +117,12 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       Returns the item at given index.
     */
     Item itemForIndex( const QModelIndex &index ) const;
-    
+
     /*
       Returns the model index for the given reference, with the given column
       @param ref The reference to find
       @param column The column for the returned index
-    */ 
+    */
     QModelIndex indexForItem( const Akonadi::DataReference& ref, const int column ) const;
 
   public Q_SLOTS:
@@ -155,6 +155,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QStringList& ) )
     Q_PRIVATE_SLOT( d, void itemMoved( const Akonadi::Item&, const Akonadi::Collection& colSrc, const Akonadi::Collection& colDst ) )
     Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item& ) )
+    Q_PRIVATE_SLOT( d, void itemsAdded( const Akonadi::Item::List & ) )
     Q_PRIVATE_SLOT( d, void itemRemoved( const Akonadi::DataReference& ) )
 };
 

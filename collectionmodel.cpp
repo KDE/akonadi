@@ -65,6 +65,7 @@ class CollectionModel::Private
     void listDone( KJob* );
     void editDone( KJob* );
     void appendDone( KJob* );
+    void collectionsChanged( const Akonadi::Collection::List &cols );
 
     void updateSupportedMimeTypes( Collection col )
     {
@@ -107,11 +108,16 @@ void CollectionModel::Private::collectionChanged( const Akonadi::Collection &col
     else
       newParent = collections.value( newParentId );
     CollectionListJob *job = new CollectionListJob( newParent, CollectionListJob::Recursive, session );
+    mParent->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+                      mParent, SLOT(collectionsChanged(Akonadi::Collection::List)) );
     mParent->connect( job, SIGNAL( result( KJob* ) ),
                     mParent, SLOT( listDone( KJob* ) ) );
+
   }
   else { // It's a simple change
     CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, session );
+    mParent->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+                      mParent, SLOT(collectionsChanged(Akonadi::Collection::List)) );
     mParent->connect( job, SIGNAL( result( KJob* ) ),
                     mParent, SLOT( listDone( KJob* ) ) );
   }
@@ -148,38 +154,6 @@ void CollectionModel::Private::listDone( KJob *job )
 {
   if ( job->error() ) {
     qWarning() << "Job error: " << job->errorString() << endl;
-  } else {
-    Collection::List _collections = static_cast<CollectionListJob*>( job )->collections();
-
-    // update model
-    foreach( Collection col, _collections ) {
-      if ( collections.contains( col.id() ) ) {
-        // collection already known
-        col.setStatus( collections.value( col.id() ).status() );
-        collections[ col.id() ] = col;
-        QModelIndex startIndex = mParent->indexForId( col.id() );
-        QModelIndex endIndex = mParent->indexForId( col.id(), mParent->columnCount( mParent->parent( startIndex ) ) - 1 );
-        emit mParent->dataChanged( startIndex, endIndex );
-        continue;
-      }
-      collections.insert( col.id(), col );
-      QModelIndex parentIndex = mParent->indexForId( col.parent() );
-      if ( parentIndex.isValid() || col.parent() == Collection::root().id() ) {
-        mParent->beginInsertRows( parentIndex, mParent->rowCount( parentIndex ), mParent->rowCount( parentIndex ) );
-        childCollections[ col.parent() ].append( col.id() );
-        mParent->endInsertRows();
-      } else {
-        childCollections[ col.parent() ].append( col.id() );
-      }
-
-      updateSupportedMimeTypes( col );
-
-      // start a status job for every collection to get message counts, etc.
-      if ( fetchStatus && col.type() != Collection::VirtualParent ) {
-        CollectionStatusJob* csjob = new CollectionStatusJob( col, session );
-        mParent->connect( csjob, SIGNAL(result(KJob*)), mParent, SLOT(updateDone(KJob*)) );
-      }
-    }
   }
 }
 
@@ -198,6 +172,38 @@ void CollectionModel::Private::appendDone(KJob * job)
   }
 }
 
+void CollectionModel::Private::collectionsChanged( const Collection::List &cols )
+{
+  foreach( Collection col, cols ) {
+    if ( collections.contains( col.id() ) ) {
+      // collection already known
+      col.setStatus( collections.value( col.id() ).status() );
+      collections[ col.id() ] = col;
+      QModelIndex startIndex = mParent->indexForId( col.id() );
+      QModelIndex endIndex = mParent->indexForId( col.id(), mParent->columnCount( mParent->parent( startIndex ) ) - 1 );
+      emit mParent->dataChanged( startIndex, endIndex );
+      continue;
+    }
+    collections.insert( col.id(), col );
+    QModelIndex parentIndex = mParent->indexForId( col.parent() );
+    if ( parentIndex.isValid() || col.parent() == Collection::root().id() ) {
+      mParent->beginInsertRows( parentIndex, mParent->rowCount( parentIndex ), mParent->rowCount( parentIndex ) );
+      childCollections[ col.parent() ].append( col.id() );
+      mParent->endInsertRows();
+    } else {
+      childCollections[ col.parent() ].append( col.id() );
+    }
+
+    updateSupportedMimeTypes( col );
+
+    // start a status job for every collection to get message counts, etc.
+    if ( fetchStatus && col.type() != Collection::VirtualParent ) {
+      CollectionStatusJob* csjob = new CollectionStatusJob( col, session );
+      mParent->connect( csjob, SIGNAL(result(KJob*)), mParent, SLOT(updateDone(KJob*)) );
+    }
+  }
+}
+
 
 CollectionModel::CollectionModel( QObject * parent ) :
     QAbstractItemModel( parent ),
@@ -207,6 +213,7 @@ CollectionModel::CollectionModel( QObject * parent ) :
 
   // start a list job
   CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, d->session );
+  connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(collectionsChanged(Akonadi::Collection::List)) );
   connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
 
   // monitor collection changes

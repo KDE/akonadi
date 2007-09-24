@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -26,7 +26,6 @@
 
 namespace Akonadi {
 
-class Collection;
 class CollectionListJobPrivate;
 
 /**
@@ -80,6 +79,12 @@ class AKONADI_EXPORT CollectionListJob : public Job
     */
     void setResource( const QString &resource );
 
+  Q_SIGNALS:
+    /**
+      Emitted when collections are received.
+    */
+    void collectionsReceived( const Akonadi::Collection::List &collections );
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
@@ -88,7 +93,9 @@ class AKONADI_EXPORT CollectionListJob : public Job
     void slotResult( KJob* job );
 
   private:
+    friend class CollectionListJobPrivate;
     CollectionListJobPrivate* const d;
+    Q_PRIVATE_SLOT( d, void timeout() )
 
 };
 
