@@ -1,3 +1,4 @@
+set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/akonadi
@@ -11,7 +12,7 @@ include_directories(
 set(agentinstanceviewtest_SRCS agentinstanceviewtest.cpp )
 
 
-kde4_add_test_executable(agentinstanceviewtest  ${agentinstanceviewtest_SRCS})
+kde4_add_executable(agentinstanceviewtest TEST  ${agentinstanceviewtest_SRCS})
 
 target_link_libraries(agentinstanceviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
 
@@ -20,7 +21,7 @@ target_link_libraries(agentinstanceviewtest akonadicomponents ${KDE4_KDECORE_LIB
 set(agenttypeviewtest_SRCS agenttypeviewtest.cpp )
 
 
-kde4_add_test_executable(agenttypeviewtest  ${agenttypeviewtest_SRCS})
+kde4_add_executable(agenttypeviewtest TEST  ${agenttypeviewtest_SRCS})
 
 target_link_libraries(agenttypeviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
 
@@ -29,7 +30,7 @@ target_link_libraries(agenttypeviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
 set(profileviewtest_SRCS profileviewtest.cpp )
 
 
-kde4_add_test_executable(profileviewtest  ${profileviewtest_SRCS})
+kde4_add_executable(profileviewtest TEST  ${profileviewtest_SRCS})
 
 target_link_libraries(profileviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
 
