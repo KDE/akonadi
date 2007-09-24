@@ -12,6 +12,7 @@ include_directories(
 set( akonadi_components_LIB_SRC
 	agentinstanceview.cpp
 	agenttypeview.cpp
+  collectioncombobox.cpp
 	profileview.cpp
 )
 
@@ -26,6 +27,7 @@ install(TARGETS akonadicomponents DESTINATION ${LIB_INSTALL_DIR})
 
 install( FILES
 	agenttypeview.h
+  collectioncombobox.h
 	profileview.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi/components
 )
