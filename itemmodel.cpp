@@ -93,7 +93,6 @@ void ItemModel::Private::listingDone( KJob * job )
 
   // start monitor
   monitor = new Monitor( mParent );
-  monitor->addFetchPart( Item::PartEnvelope );
   foreach( QString part, mFetchParts )
     monitor->addFetchPart( part );
 
