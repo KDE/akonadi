@@ -25,6 +25,7 @@
 #include "kcrash.h"
 #include "resourceadaptor.h"
 #include "collectionsync.h"
+#include "itemsync.h"
 #include "monitor_p.h"
 #include "resourcescheduler.h"
 #include "tracerinterface.h"
@@ -97,6 +98,10 @@ class ResourceBase::Private
     void slotLocalListDone( KJob *job );
     void slotSynchronizeCollection( const Collection &col );
     void slotCollectionListDone( KJob *job );
+
+    void slotItemSyncDone( KJob *job );
+
+    void slotPercent( KJob* job, unsigned long percent );
 
     QString defaultReadyMessage() const;
     QString defaultSyncingMessage() const;
@@ -881,6 +886,36 @@ void ResourceBase::Private::slotCollectionListDone( KJob *job )
   // TODO: error handling
 }
 
+void ResourceBase::itemsRetrieved(const Item::List & items)
+{
+  ItemSync *syncer = new ItemSync( currentCollection(), session() );
+  connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
+  connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
+  syncer->setRemoteItems( items );
+}
+
+void ResourceBase::itemsRetrievedIncremental(const Item::List & changedItems, const Item::List & removedItems)
+{
+  ItemSync *syncer = new ItemSync( currentCollection(), session() );
+  connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
+  connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
+  syncer->setRemoteItems( changedItems, removedItems );
+}
+
+void ResourceBase::Private::slotItemSyncDone( KJob *job )
+{
+  if ( job->error() ) {
+    mParent->error( job->errorString() );
+  }
+  mParent->changeStatus( Ready );
+  scheduler->taskDone();
+}
+
+void ResourceBase::Private::slotPercent( KJob *job, unsigned long percent )
+{
+  Q_UNUSED( job );
+  mParent->changeProgress( percent );
+}
 
 #include "resource.moc"
 #include "resourcebase.moc"

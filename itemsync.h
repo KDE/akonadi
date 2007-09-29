@@ -74,7 +74,6 @@ class ItemSync : public Job
 
   private Q_SLOTS:
     void slotLocalListDone( KJob *job );
-    void slotLocalCreateDone( KJob *job );
     void slotLocalChangeDone( KJob *job );
 
   private:

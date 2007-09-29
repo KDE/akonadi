@@ -27,6 +27,7 @@
 #include "resource.h"
 
 #include <libakonadi/collection.h>
+#include <libakonadi/item.h>
 #include <libakonadi/job.h>
 
 #include <kapplication.h>
@@ -87,10 +88,18 @@ class Session;
  *
  * To follow item changes in the backend, the following steps are necessary:
  * - Implement synchronizeCollection() to synchronize all items in the given
- *   collection. You have to do item synchronization manually here, there are
- *   no convenience methods provided as for collections (yet).
- * - Call collectionSynchronized() when done.
- * @todo Convenience methods for item synchronization
+ *   collection. If the backend supports incremental collections updates,
+ *   implementing support for that is recommended to improve performance.
+ * - Convert the items provided by the backend to Akonadi items.
+ *   This typically happens either in synchronizeItems() if you retrieved
+ *   the collection synchronously (not recommended for network backends) or
+ *   in the result slot of the asynchronous retrieval job.
+ *   Converting means to create Akonadi::Items objects for every retrieved
+ *   items. It's very important that every object has its remote identifier set.
+ * - Call itemsRetrieved() or itemsRetrievedIncremental() respectively
+ *   with the item objects created above. The Akonadi storage will then be
+ *   updated automatically. Note that it is usually not necessary to manipulate
+ *   any item in the Akonadi storage manually.
  *
  * To fetch item data on demand, the method requestItemDelivery() needs to be
  * reimplemented. Fetch the requested data there, create an ItemStoreJob to store
@@ -426,8 +435,27 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
                                           const Collection::List &removedCollections );
 
     /**
+      Call this methods tp supply the full collection listing from the remote
+      server. If the the remote server supports incremental listing, it's strongly
+      recommended to use itemsRetrievedIncremental() instead.
+      @param items A list of items.
+      @see itemsRetrievedIncremental().
+    */
+    void itemsRetrieved( const Item::List &items );
+
+    /**
+      Call this method to supply incrementally retrieved items from the remote
+      server.
+      @param changedItems Items changed in the backend
+      @param removedItems Items removed from the backend
+    */
+    void itemsRetrievedIncremental( const Item::List &changedItems,
+                                    const Item::List &removedItems );
+
+    /**
       Call this method to indicate you finished synchronizing the current
-      collection.
+      collection. This is not needed if you use the built in syncing
+      and call itemsRetrieved() or itemsRetrievedIncremental() instead.
       @see synchronizeCollection()
     */
     void collectionSynchronized();
@@ -466,6 +494,8 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollection(const Collection &col) )
     Q_PRIVATE_SLOT( d, void slotCollectionListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotItemSyncDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotPercent( KJob*, unsigned long ) )
 };
 
 }

@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -34,6 +35,7 @@ class ItemSync::Private
   public:
     Private() :
       pendingJobs( 0 ),
+      progress( 0 ),
       incremental( false )
     {
     }
@@ -44,14 +46,15 @@ class ItemSync::Private
     QHash<QString, Akonadi::Item> localItems;
     QSet<Akonadi::Item> unprocessedLocalItems;
 
-    // remote: mapped id -> collection
-    QHash<int, Akonadi::Item> remoteItems;
+    // remote items
+    Akonadi::Item::List remoteItems;
 
     // removed remote items
     Item::List removedRemoteItems;
 
     // create counter
     int pendingJobs;
+    int progress;
 
     bool incremental;
 };
@@ -70,26 +73,24 @@ ItemSync::~ItemSync()
 
 void ItemSync::setRemoteItems( const Item::List & remoteItems )
 {
-  foreach ( const Item item, remoteItems ) {
-    d->remoteItems.insert( item.reference().id(), item );
-  }
+  d->remoteItems = remoteItems;
+  setTotalAmount( KJob::Bytes, d->remoteItems.count() );
 }
 
 void ItemSync::setRemoteItems( const Item::List & changedItems, const Item::List & removedItems )
 {
   d->incremental = true;
-  foreach ( const Item item, changedItems ) {
-    d->remoteItems.insert( item.reference().id(), item );
-  }
-
+  d->remoteItems = changedItems;
   d->removedRemoteItems = removedItems;
+  setTotalAmount( KJob::Bytes, d->remoteItems.count() + d->removedRemoteItems.count() );
 }
 
 void ItemSync::doStart()
 {
   ItemFetchJob* job = new ItemFetchJob( d->syncCollection, this );
-  if ( !d->incremental )
-    job->fetchAllParts();
+  // FIXME this will deadlock, we only can fetch parts already in the cache
+//   if ( !d->incremental )
+//     job->fetchAllParts();
 
   connect( job, SIGNAL( result( KJob* ) ), SLOT( slotLocalListDone( KJob* ) ) );
 }
@@ -109,6 +110,7 @@ void ItemSync::slotLocalListDone( KJob * job )
   foreach ( const Item remoteItem, d->remoteItems ) {
     if ( remoteItem.reference().remoteId().isEmpty() ) {
       kWarning() << k_funcinfo << "Item " << remoteItem.reference().id() << " does not have a remote identifier - skipping";
+      d->progress++;
       continue;
     }
 
@@ -130,20 +132,18 @@ void ItemSync::slotLocalListDone( KJob * job )
        */
       needsUpdate = true;
     } else {
-      if ( localItem.flags() != remoteItem.flags() ) // Check whether the flags differ
+      if ( localItem.flags() != remoteItem.flags() ) { // Check whether the flags differ
+        kDebug() << localItem.flags() << remoteItem.flags();
         needsUpdate = true;
-      else if ( localItem.mimeType() != remoteItem.mimeType() ) // Check whether the mime-type differs
-        needsUpdate = true;
-      else {
-        /**
-         * Check whether the available part identifiers differ.
+      } else {
+        /*
+         * Check whether the new item contains unknown parts
          */
-        QStringList localParts = localItem.availableParts();
-        localParts.sort();
-
-        QStringList remoteParts = remoteItem.availableParts();
-        remoteParts.sort();
-        if ( localParts != remoteParts )
+        const QStringList localParts = localItem.availableParts();
+        QStringList missingParts = localParts;
+        foreach( const QString remotePart, remoteItem.availableParts() )
+          missingParts.removeAll( remotePart );
+        if ( !missingParts.isEmpty() )
           needsUpdate = true;
         else {
           /**
@@ -167,6 +167,8 @@ void ItemSync::slotLocalListDone( KJob * job )
       mod->storePayload();
       mod->setCollection( d->syncCollection );
       connect( mod, SIGNAL( result( KJob* ) ), SLOT( slotLocalChangeDone( KJob* ) ) );
+    } else {
+      d->progress++;
     }
   }
 
@@ -184,28 +186,18 @@ void ItemSync::slotLocalListDone( KJob * job )
   checkDone();
 }
 
-void ItemSync::slotLocalCreateDone( KJob * job )
-{
-  d->pendingJobs--;
-  if ( job->error() )
-    return;
-
-  checkDone();
-}
-
 void ItemSync::createLocalItem( const Item & item )
 {
   d->pendingJobs++;
   ItemAppendJob *create = new ItemAppendJob( item, d->syncCollection, this );
-  connect( create, SIGNAL( result( KJob* ) ), SLOT( slotLocalCreateDone( KJob* ) ) );
+  connect( create, SIGNAL( result( KJob* ) ), SLOT( slotLocalChangeDone( KJob* ) ) );
 }
 
 void ItemSync::checkDone()
 {
-  // still running jobs
+  setProcessedAmount( KJob::Bytes, d->progress );
   if ( d->pendingJobs > 0 )
     return;
-
   emitResult();
 }
 
@@ -215,6 +207,7 @@ void ItemSync::slotLocalChangeDone( KJob * job )
     return;
 
   d->pendingJobs--;
+  d->progress++;
   checkDone();
 }
 
