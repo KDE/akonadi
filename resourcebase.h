@@ -435,8 +435,8 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
                                           const Collection::List &removedCollections );
 
     /**
-      Call this methods tp supply the full collection listing from the remote
-      server. If the the remote server supports incremental listing, it's strongly
+      Call this methods to supply the full collection listing from the remote
+      server. If the remote server supports incremental listing, it's strongly
       recommended to use itemsRetrievedIncremental() instead.
       @param items A list of items.
       @see itemsRetrievedIncremental().
