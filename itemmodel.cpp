@@ -27,6 +27,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kurl.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QMimeData>
