@@ -119,6 +119,7 @@ bool KnutResource::requestItemDelivery( const DataReference &ref, const QStringL
 
     if ( item.hasPayload() ) {
       ItemStoreJob *job = new ItemStoreJob( item, session() );
+      job->noRevCheck();
       job->storePayload();
 
       return deliverItem( job, msg );
