@@ -63,9 +63,9 @@ The following classes are provided to manipulate PIM items:
 Akonadi::ItemModel provides a self-updating model class which can be used to display the content
 of a collection.
 
-\section libakonadi_serializer PIM Item Serializer
+\section libakonadi_serializer PIM item serializer
 
-The class Akonadi::ItemSerializer is responsible to convert between the stored (binary) representation
+The class Akonadi::ItemSerializer is responsible for converting between the stored (binary) representation
 of a PIM item and the objects used to handle these items provided by the corresponding libraries (kabc, kcal, etc.).
 
 Serializer plugins allow you to add support for new kinds of PIM items to Akonadi.

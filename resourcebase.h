@@ -94,8 +94,8 @@ class Session;
  *   This typically happens either in synchronizeItems() if you retrieved
  *   the collection synchronously (not recommended for network backends) or
  *   in the result slot of the asynchronous retrieval job.
- *   Converting means to create Akonadi::Items objects for every retrieved
- *   items. It's very important that every object has its remote identifier set.
+ *   Converting means to create Akonadi::Item objects for every retrieved
+ *   item. It's very important that every object has its remote identifier set.
  * - Call itemsRetrieved() or itemsRetrievedIncremental() respectively
  *   with the item objects created above. The Akonadi storage will then be
  *   updated automatically. Note that it is usually not necessary to manipulate

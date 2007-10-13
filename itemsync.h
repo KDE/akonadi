@@ -38,7 +38,7 @@ class ItemSync : public Job
 
   public:
     /**
-      Creates a new item synchronzier.
+      Creates a new item synchronizer.
 
       @param collection The collection we are syncing.
       @param parent The parent object.
