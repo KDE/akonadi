@@ -156,6 +156,11 @@ class AKONADI_EXPORT Item
     void addPart( const QString &identifier, const QByteArray &data );
 
     /**
+      Removes the part with the given @p identifier.
+     */
+    void removePart( const QString &identifier );
+
+    /**
       Returns the data of the part with the given @p identifier or any
       empty byte array if a part with the identifier doesn't exists.
      */
@@ -165,6 +170,21 @@ class AKONADI_EXPORT Item
       Returns the list of part identifiers of this item.
      */
     QStringList availableParts() const;
+
+    /**
+      Returns the revision number of this item.
+    */
+    int rev() const;
+
+    /**
+      Sets the revision number of this item to @p rev.
+    */
+    void setRev( const int rev );
+
+    /**
+      Increases the revision number of this item.
+    */
+    void incRev();
 
     /**
       Returns the mime type of this item.
@@ -261,6 +281,7 @@ class AKONADI_EXPORT Item
   private:
     friend class ItemSerializer;
     void addRawPart( const QString &label, const QByteArray &data );
+    void removeRawPart( const QString &label );
     QByteArray rawPart( const QString &label ) const;
 
   private:

@@ -87,7 +87,7 @@ void ItemFetchTest::testFetch()
   QVERIFY( item.flags().isEmpty() );
 }
 
-void ItemFetchTest::testIlleagalFetch()
+void ItemFetchTest::testIllegalFetch()
 {
   // fetch non-existing folder
   ItemFetchJob *job = new ItemFetchJob( Collection( INT_MAX ), this );

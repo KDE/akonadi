@@ -30,13 +30,19 @@ class ItemStoreJob::Private
       SetFlags,
       AddFlags,
       RemoveFlags,
+      RemoveParts,
       Move,
       RemoteId,
       Dirty
     };
 
-    Private( ItemStoreJob *parent )
-      : mParent( parent )
+    Private( ItemStoreJob *parent, Item & it )
+    : mParent( parent ), item( it ), itemRef( it ), revCheck( true )
+    {
+    }
+
+    Private( ItemStoreJob *parent, const Item &it )
+    : mParent( parent ), item( it ), itemRef( item ), revCheck( true )
     {
     }
 
@@ -44,10 +50,13 @@ class ItemStoreJob::Private
     Item::Flags flags;
     Item::Flags addFlags;
     Item::Flags removeFlags;
+    QList<QByteArray> removeParts;
     QSet<int> operations;
     QByteArray tag;
     Collection collection;
     Item item;
+    Item & itemRef; // used for increasing revision number of given item
+    bool revCheck;
     QStringList parts;
     QByteArray pendingData;
 
@@ -56,15 +65,20 @@ class ItemStoreJob::Private
 
 void ItemStoreJob::Private::sendNextCommand()
 {
+  // no further commands to send
   if ( operations.isEmpty() && parts.isEmpty() ) {
-      mParent->emitResult();
-      return;
+    mParent->emitResult();
+    return;
   }
-
 
   tag = mParent->newTag();
   QByteArray command = tag;
   command += " UID STORE " + QByteArray::number( item.reference().id() ) + ' ';
+  if ( !revCheck || addFlags.contains( "\\Deleted" ) ) {
+    command += "NOREV ";
+  } else {
+    command += "REV " + QByteArray::number( item.rev() ) + ' ';
+  }
   if ( !operations.isEmpty() ) {
     int op = *(operations.begin());
     operations.remove( op );
@@ -77,6 +91,9 @@ void ItemStoreJob::Private::sendNextCommand()
         break;
       case RemoveFlags:
         command += "-FLAGS.SILENT (" + ImapParser::join( removeFlags, " " ) + ')';
+        break;
+      case RemoveParts:
+        command += "-PARTS.SILENT (" + ImapParser::join( removeParts, " " ) + ')';
         break;
       case Move:
         command += "COLLECTION.SILENT " + QByteArray::number( collection.id() );
@@ -104,11 +121,17 @@ void ItemStoreJob::Private::sendNextCommand()
 }
 
 
-ItemStoreJob::ItemStoreJob(const Item & item, QObject * parent) :
+ItemStoreJob::ItemStoreJob(Item & item, QObject * parent) :
     Job( parent ),
-    d( new Private( this ) )
+    d( new Private( this, item ) )
 {
-  d->item = item;
+  d->operations.insert( Private::RemoteId );
+}
+
+ItemStoreJob::ItemStoreJob(const Item &item, QObject * parent) :
+    Job( parent ),
+    d( new Private( this, item ) )
+{
   d->operations.insert( Private::RemoteId );
 }
 
@@ -133,6 +156,12 @@ void ItemStoreJob::removeFlag(const Item::Flag & flag)
 {
   d->removeFlags.insert( flag );
   d->operations.insert( Private::RemoveFlags );
+}
+
+void ItemStoreJob::removePart(const QByteArray & part)
+{
+  d->removeParts.append( part );
+  d->operations.insert( Private::RemoveParts );
 }
 
 void ItemStoreJob::setCollection(const Collection &collection)
@@ -162,6 +191,13 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
   }
   if ( _tag == d->tag ) {
     if ( data.startsWith( "OK" ) ) {
+      // increase item revision of item, given by calling function
+      if( d->revCheck )
+        d->itemRef.incRev();
+
+      // increase item revision of own copy of item
+      d->item.incRev();
+
       d->sendNextCommand();
     } else {
       setError( Unknown );
@@ -177,6 +213,11 @@ void ItemStoreJob::storePayload()
 {
   Q_ASSERT( !d->item.mimeType().isEmpty() );
   d->parts = d->item.availableParts();
+}
+
+void ItemStoreJob::noRevCheck()
+{
+  d->revCheck = false;
 }
 
 #include "itemstorejob.moc"

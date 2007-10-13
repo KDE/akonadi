@@ -140,7 +140,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       for ( int i = 0; i < fetch.count() - 1; i += 2 ) {
         const QByteArray key = fetch.value( i );
         // skip stuff we dealt with already
-        if ( key == "UID" || key == "REMOTEID" || key == "MIMETYPE" )
+        if ( key == "UID" || key == "REV" || key == "REMOTEID" || key == "MIMETYPE" )
           continue;
         // flags
         if ( key == "FLAGS" )
@@ -174,6 +174,7 @@ Item::List ItemFetchJob::items() const
 Item ItemFetchJob::createItem(const QList< QByteArray > & fetchResponse)
 {
   int uid = -1;
+  int rev = -1;
   QString rid;
   QString mimeType;
 
@@ -183,18 +184,21 @@ Item ItemFetchJob::createItem(const QList< QByteArray > & fetchResponse)
 
     if ( key == "UID" )
       uid = value.toInt();
+    else if ( key == "REV" )
+      rev = value.toInt();
     else if ( key == "REMOTEID" )
       rid = QString::fromUtf8( value );
     else if ( key == "MIMETYPE" )
       mimeType = QString::fromLatin1( value );
   }
 
-  if ( uid < 0 || mimeType.isEmpty() ) {
-    qWarning() << "Broken fetch response: UID, RID or MIMETYPE missing!";
+  if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
+    qWarning() << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
     return Item();
   }
 
   Item item( DataReference( uid, rid ) );
+  item.setRev( rev );
   item.setMimeType( mimeType );
   return item;
 }

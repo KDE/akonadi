@@ -91,7 +91,7 @@ void ItemAppendTest::testContent_data()
 {
   QTest::addColumn<QByteArray>( "data" );
 
-  QTest::newRow( "emtpy" ) << QByteArray();
+  QTest::newRow( "empty" ) << QByteArray();
   QString utf8string = QString::fromUtf8("äöüß@€µøđ¢©®");
   QTest::newRow( "utf8" ) << utf8string.toUtf8();
   QTest::newRow( "newlines" ) << QByteArray("\nsome\n\nbreaked\ncontent\n\n");

@@ -62,7 +62,7 @@ void ItemAppendJob::doStart()
   if ( !d->item.reference().remoteId().isEmpty() )
     remoteId = " \\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']';
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
-  if ( d->parts.size() <= 1  && (d->parts.isEmpty() || d->parts.first() == Item::PartBody) ) {
+  if ( d->parts.isEmpty() || (d->parts.size() == 1 && d->parts.first() == Item::PartBody) ) {
     int dataSize = 0;
     if ( d->item.hasPayload() )
       dataSize = d->item.part( Item::PartBody ).size();

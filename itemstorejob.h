@@ -39,6 +39,15 @@ class AKONADI_EXPORT ItemStoreJob : public Job
       Stores the given item.
       By default only the meta data is stored, you need to explicitly enable storing
       of the payload data.
+      @param item A reference to the Item object to store.
+      @param parent The parent object.
+    */
+    explicit ItemStoreJob( Item &item, QObject *parent = 0 );
+
+    /**
+      Stores data at the item.
+      By default only the meta data is stored, you need to explicitly enable storing
+      of the payload data.
       @param item The Item object to store.
       @param parent The parent object.
     */
@@ -53,6 +62,11 @@ class AKONADI_EXPORT ItemStoreJob : public Job
       Store the payload data.
     */
     void storePayload();
+
+    /**
+      Disable revision checking.
+    */
+    void noRevCheck();
 
     /**
       Sets the item flags to @p flags.
@@ -71,6 +85,12 @@ class AKONADI_EXPORT ItemStoreJob : public Job
       @param flag The flag to be removed.
     */
     void removeFlag( const Item::Flag &flag );
+
+    /**
+      Removes the given part. Other existing parts will not be changed.
+      @param part The part to be removed.
+    */
+    void removePart( const QByteArray &part );
 
     /**
       Moves the item to the given collection.

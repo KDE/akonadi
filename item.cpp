@@ -41,12 +41,14 @@ class Item::Private : public QSharedData
     {
       reference = other.reference;
       flags = other.flags;
+      rev = other.rev;
       mimeType = other.mimeType;
       mParts = other.mParts;
     }
 
     DataReference reference;
     Item::Flags flags;
+    int rev;
     QString mimeType;
     QMap<QString, QByteArray> mParts;
 };
@@ -122,6 +124,11 @@ void Item::addPart( const QString &identifier, const QByteArray &data )
   ItemSerializer::deserialize( *this, identifier, data );
 }
 
+void Item::removePart( const QString &identifier )
+{
+  removeRawPart( identifier );
+}
+
 QByteArray Item::part( const QString &identifier ) const
 {
   QByteArray data;
@@ -133,6 +140,21 @@ QStringList Item::availableParts() const
 {
   QStringList payloadParts = ItemSerializer::parts( *this );
   return payloadParts + d->mParts.keys();
+}
+
+int Item::rev() const
+{
+  return d->rev;
+}
+
+void Item::setRev( const int rev )
+{
+  d->rev = rev;
+}
+
+void Item::incRev()
+{
+  d->rev = d->rev + 1;
 }
 
 QString Item::mimeType() const
@@ -185,6 +207,11 @@ bool Item::urlIsValid( const KUrl &url )
 void Item::addRawPart(const QString & label, const QByteArray & data)
 {
   d->mParts.insert( label, data );
+}
+
+void Item::removeRawPart(const QString & label)
+{
+  d->mParts.remove( label );
 }
 
 QByteArray Item::rawPart(const QString & label) const

@@ -1,5 +1,6 @@
   /*
     Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 Robert Zwerus <arzie@dds.nl>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -125,7 +126,10 @@ void ItemStoreTest::testDataChange()
   QFETCH( QByteArray, data );
 
   DataReference ref( 1, QString() );
-  Item item( ref );
+  Item item;
+  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  prefetchjob->exec();
+  item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
   item.setPayload( data );
 
@@ -146,8 +150,11 @@ void ItemStoreTest::testDataChange()
 void ItemStoreTest::testItemMove()
 {
   DataReference ref( 1, QString() );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  prefetchjob->exec();
+  Item item = prefetchjob->items()[0];
 
-  ItemStoreJob *store = new ItemStoreJob( Item( ref ), this );
+  ItemStoreJob *store = new ItemStoreJob( item, this );
   store->setCollection( res3 );
   QVERIFY( store->exec() );
 
@@ -155,7 +162,7 @@ void ItemStoreTest::testItemMove()
   QVERIFY( fetch->exec() );
   QCOMPARE( fetch->items().count(), 1 );
 
-  store = new ItemStoreJob( Item( ref ), this );
+  store = new ItemStoreJob( item, this );
   store->setCollection( res1_foo );
   QVERIFY( store->exec() );
 }
@@ -163,14 +170,17 @@ void ItemStoreTest::testItemMove()
 void ItemStoreTest::testIllegalItemMove()
 {
   DataReference ref( 1, QString() );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  prefetchjob->exec();
+  Item item = prefetchjob->items()[0];
 
   // move into invalid collection
-  ItemStoreJob *store = new ItemStoreJob( Item( ref ), this );
+  ItemStoreJob *store = new ItemStoreJob( item, this );
   store->setCollection( Collection( INT_MAX ) );
   QVERIFY( !store->exec() );
 
   // move item into folder that doesn't support its mimetype
-  store = new ItemStoreJob( Item( ref ), this );
+  store = new ItemStoreJob( item, this );
   store->setCollection( res2 );
   QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
   QVERIFY( !store->exec() );
@@ -193,25 +203,33 @@ void ItemStoreTest::testRemoteId()
   QFETCH( QString, exprid );
 
   DataReference ref( 1, rid );
-  ItemStoreJob *store = new ItemStoreJob( Item( ref ), this );
+
+  ItemFetchJob *prefetchjob = new ItemFetchJob( DataReference( 1, QString() ) );
+  prefetchjob->exec();
+  Item item = prefetchjob->items()[0];
+
+  item.setReference( ref );
+  ItemStoreJob *store = new ItemStoreJob( item, this );
   QVERIFY( store->exec() );
 
   ItemFetchJob *fetch = new ItemFetchJob( ref, this );
   QVERIFY( fetch->exec() );
   QCOMPARE( fetch->items().count(), 1 );
-  Item item = fetch->items().at( 0 );
+  item = fetch->items().at( 0 );
   QCOMPARE( item.reference().remoteId(), exprid );
 }
 
 void ItemStoreTest::testMultiPart()
 {
   DataReference ref( 1, QString() );
-  Item item( ref );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  prefetchjob->exec();
+  Item item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
-  item.addPart( Item::PartBody, "body" );
+  item.addPart( Item::PartBody, "testmailbody" );
   item.addPart( "EXTRA", "extra" );
 
-  // delete data
+  // store item
   ItemStoreJob *sjob = new ItemStoreJob( item );
   sjob->storePayload();
   QVERIFY( sjob->exec() );
@@ -222,8 +240,71 @@ void ItemStoreTest::testMultiPart()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
-  QCOMPARE( item.part( Item::PartBody ), QByteArray("body") );
+  QCOMPARE( item.part( Item::PartBody ), QByteArray("testmailbody") );
   QCOMPARE( item.part( "EXTRA" ), QByteArray("extra") );
+
+  // clean up
+  sjob = new ItemStoreJob( item );
+  sjob->removePart( "EXTRA" );
+  QVERIFY( sjob->exec() );
+}
+
+void ItemStoreTest::testPartRemove()
+{
+  DataReference ref( 2, QString() );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  prefetchjob->exec();
+  Item item = prefetchjob->items()[0];
+  item.setMimeType( "application/octet-stream" );
+  item.addPart( "EXTRA", "extra" );
+
+  // store item
+  ItemStoreJob *sjob = new ItemStoreJob( item );
+  sjob->storePayload();
+  QVERIFY( sjob->exec() );
+
+  // fetch item and its parts (should be RFC822, HEAD and EXTRA)
+  ItemFetchJob *fjob = new ItemFetchJob( ref );
+  fjob->fetchAllParts();
+  QVERIFY( fjob->exec() );
+  QCOMPARE( fjob->items().count(), 1 );
+  item = fjob->items()[0];
+  QCOMPARE( item.availableParts().count(), 3 );
+  QVERIFY( item.availableParts().contains( QLatin1String( "EXTRA" ) ) );
+
+  // remove a part
+  sjob = new ItemStoreJob( item );
+  sjob->removePart( "EXTRA" );
+  QVERIFY( sjob->exec() );
+
+  // fetch item again (should only have RFC822 and HEAD left)
+  ItemFetchJob *fjob2 = new ItemFetchJob( ref );
+  fjob2->fetchAllParts();
+  QVERIFY( fjob2->exec() );
+  QCOMPARE( fjob2->items().count(), 1 );
+  item = fjob2->items()[0];
+  QCOMPARE( item.availableParts().count(), 2 );
+  QVERIFY( !item.availableParts().contains( QLatin1String( "EXTRA" ) ) );
+}
+
+void ItemStoreTest::testRevisionCheck()
+{
+  // fetch same item twice
+  DataReference ref( 2, QString() );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  prefetchjob->exec();
+  Item item1 = prefetchjob->items()[0];
+  Item item2 = prefetchjob->items()[0];
+
+  // store first item unmodified
+  ItemStoreJob *sjob = new ItemStoreJob( item1 );
+  QVERIFY( sjob->exec() );
+
+  // try to store second item
+  ItemStoreJob *sjob2 = new ItemStoreJob( item2 );
+  item2.addPart( "EXTRA", "extra" );
+  sjob2->storePayload();
+  QVERIFY( !sjob2->exec() );
 }
 
 #include "itemstoretest.moc"
