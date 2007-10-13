@@ -135,6 +135,7 @@
       <comment>Indicates that this item has unsaved changes.</comment>
     </column>
     <index name="locationIndex" columns="locationId" unique="false"/>
+    <reference name="parts" table="Part" key="pimItemId"/>
   </table>
 
   <table name="Flag">
@@ -153,10 +154,10 @@
 
   <table name="Part" properties="FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="NOT NULL REFERENCES PimItemTable(id)"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="int" properties="NOT NULL"/>
-    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="NOT NULL REFERENCES PimItemTable(id)"/>
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 
@@ -169,8 +170,6 @@
   </table>
 
   <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
-
-  <relation table2="Flag" column2="id" table1="Part" column1="id"/>
 
   <relation table1="Location" column1="id" table2="MimeType" column2="id">
     <comment>Specifies allowed MimeType for a Location</comment>

@@ -19,70 +19,95 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-$input = fopen("enron_contacts.txt", "r");
-$output = fopen("enron_contacts.vcf", "w");
-$c = 0;
+define("DEBUG", false);
 
-if($input && $output)
+// Location of input files
+$vcarddir = "vcards";
+
+// Process all accounts
+$inputfiles = scandir($vcarddir);
+foreach($inputfiles as $inputfile)
 {
-	// First line consists of headers
-	fgets($input);
+  // Skip current and parent directory
+  if($inputfile == "." || $inputfile == "..")
+    continue;
 
-	while($line = fgets($input))
-	{
-		$c++;
+  $account = substr($inputfile, 0, strlen($inputfile) - 4);
+  $input = fopen($vcarddir . "/" . $inputfile, "r");
+  if(!DEBUG)
+    $output = fopen($vcarddir . "/" . $account . ".vcf", "w");
 
-		$contact = explode(";", $line);
+  echo "Processing account " . $account . "...\n";
+  $c = 0;
 
-		$vcard = "BEGIN:VCARD\n";
+  if($input && $output)
+  {
+    // First line consists of headers, we don't need it
+    fgets($input);
 
-		// ADR, N, URL
+    // Process all contacts
+    while($line = fgets($input))
+    {
+      $c++;
 
-    // 25% chance of a random birthday
-		if(rand(0,3) < 1)
-			$vcard .= "BDAY:" . rand(date("Y")-60,date("Y")-20) . "-" . rand(1,12) . "-" . rand(1,28) . "T00:00:00Z". "\n";
+      $contact = explode(";", $line);
 
-		$vcard .= "COMPANY:" . $contact[1] . "\n";
-		$vcard .= "EMAIL:" . $contact[2] . "";
-		$vcard .= "FN:" . $contact[0] . "\n";
+      // Create a vCard from the account information, add fake extra information
+      $vcard = "BEGIN:VCARD\n";
 
-    // 2% chance of a fake photograph
-		if(rand(0,50) < 1)
-			$vcard .= "PHOTO;ENCODING=b;TYPE=application/octet-stream:" . base64_encode(random_string(10000,20000)) . "\n";
+      // ADR, N, URL
 
-    // 75% chance of a random telephone number
-		if(rand(0,3) < 3)
-			$vcard .= "TEL;TYPE=" . (rand(0,1) == 0 ? "HOME" : "CELL") . ":0" . random_number(2) . (rand(0,1)==1 ? "-" : "") . random_number(7) . "\n";
+      // 25% chance of a random birthday
+      if(rand(0,3) < 1)
+        $vcard .= "BDAY:" . rand(date("Y")-60,date("Y")-20) . "-" . rand(1,12) . "-" . rand(1,28) . "T00:00:00Z". "\n";
 
-		$vcard .= "UID:" . random_uid() . "\n";
+      $vcard .= "COMPANY:" . $contact[1] . "\n";
+      $vcard .= "EMAIL:" . $contact[2] . "";
+      $vcard .= "FN:" . $contact[0] . "\n";
 
-    // 25% chance of a URL based on the contact's email address
-    if(rand(0,3) < 1)
-      $vcard .= "URL:" . random_url($contact[2]) . "\n";
+      // 2% chance of a fake photograph
+      if(rand(0,50) < 1)
+        $vcard .= "PHOTO;ENCODING=b;TYPE=application/octet-stream:" . base64_encode(random_string(10000,20000)) . "\n";
 
-		$vcard .=
-			"VERSION:3.0\n".
-			"END:VCARD\n\n";
+      // 75% chance of a random telephone number
+      if(rand(0,3) < 3)
+        $vcard .= "TEL;TYPE=" . (rand(0,1) == 0 ? "HOME" : "CELL") . ":0" . random_number(2) . (rand(0,1)==1 ? "-" : "") . random_number(7) . "\n";
 
-		fputs($output, $vcard);
-		//echo($vcard);
-		/*
-		BEGIN:VCARD
-		ADR;TYPE=home:;;Straat 1;Plaats;Provincie;Postcode;Netherlands
-		BDAY:0000-00-00T00:00:00Z
-		EMAIL:address
-		FN:Full Name
-		N:Last;First;tussenvoegsels;;
-		TEL;TYPE=HOME:0123456789
-		UID:random geneuzel
-		URL:http://www.blabla.bl
-		VERSION:3.0
-		END:VCARD
-		*/
-	}
+      $vcard .= "UID:" . random_uid() . "\n";
+
+      // 25% chance of a URL based on the contact's email address
+      if(rand(0,3) < 1)
+        $vcard .= "URL:" . remove_quotes(random_url($contact[2])) . "\n";
+
+      $vcard .=
+        "VERSION:3.0\n".
+        "END:VCARD\n\n";
+
+      if(DEBUG)
+        echo($output);
+      else
+        fputs($output, $vcard);
+
+      /* Sample vCard, for reference:
+      BEGIN:VCARD
+      ADR;TYPE=home:;;Straat 1;Plaats;Provincie;Postcode;Netherlands
+      BDAY:0000-00-00T00:00:00Z
+      EMAIL:address
+      FN:Full Name
+      N:Last;First;tussenvoegsels;;
+      TEL;TYPE=HOME:0123456789
+      UID:random geneuzel
+      URL:http://www.blabla.bl
+      VERSION:3.0
+      END:VCARD
+      */
+    }
+  }
+
+  echo "  Number of vcards created: " . $c . "\n";
+  unlink($vcarddir . "/" . $inputfile);
 }
 
-echo "Number of vcards created: " . $c . "\n";
 exit();
 
 function random_number($length)

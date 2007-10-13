@@ -32,6 +32,7 @@ if(($maildir = opendir($maildirname)) === FALSE)
   die("Error opening " . $maildirname . "\n");
 
 $c = 0;
+$a = 0;
 
 // Process all mail accounts
 while($account = readdir($maildir))
@@ -40,89 +41,101 @@ while($account = readdir($maildir))
   if($account == "." || $account == "..")
     continue;
 
-  // Open directory with all documents
-  $alldocsname = $maildirname . "/" . $account . "/" . "all_documents";
-  if($alldocs = @opendir($alldocsname))
+  echo "Processing account '" . $account . "'...\n";
+
+  // Process all subdirectories
+  $subdirs = scandir($maildirname . "/" . $account);
+  foreach($subdirs as $subdir)
   {
-    echo "Processing account '" . $account . "'...";
+    // Skip current and parent directory
+    if($subdir == "." || $subdir == ".." || $subdir == "cur" || $subdir == "new" || $subdir == "tmp")
+      continue;
+
+    echo " Processing directory '" . $subdir . "'...\n";
 
     // Generate random attachment data
     $attachment_data = substr(base64_encode(random_string($attachment_maxsize)), 0, $attachment_maxsize);
 
-    // Read next mail file
-    while($mailfile = readdir($alldocs))
+    $maillocation = $maildirname . "/" . $account . "/" . $subdir . "/cur";
+    if($dirhandle = @opendir($maillocation))
     {
-      $c++;
-      // DEBUG: if($c == 4) exit();
-
-      // Skip current and parent directory
-      if($mailfile == "." || $mailfile == "..")
-        continue;
-
-      // Add attachment with a certain chance
-      if(rand(0, 100) < $attachment_chance)
+      // Read next mail file
+      while($mailfile = readdir($dirhandle))
       {
-        // Read mail file into array
-        if(($mail = file($alldocsname . "/" . $mailfile)) !== FALSE)
+        $c++;
+        // DEBUG: if($c == 4) exit();
+
+        // Skip current and parent directory
+        if($mailfile == "." || $mailfile == "..")
+          continue;
+
+        // Add attachment with a certain chance
+        if(rand(0, 100) < $attachment_chance)
         {
-          // Open output file
-          $fd = fopen($alldocsname . "/" . $mailfile, "w");
-          // DEBUG: $fd = fopen("php://stdout", "w");
+          $a++;
 
-          if($fd)
+          // Read mail file into array
+          if(($mail = file($maillocation . "/" . $mailfile)) !== FALSE)
           {
-            // Generate MIME content boundary
-            $boundary = random_text(50);
+            // Open output file
+            $fd = fopen($maillocation . "/" . $mailfile, "w");
+            // DEBUG: $fd = fopen("php://stdout", "w");
 
-            // Process original mail file, line by line
-            $indata = false;
-            foreach($mail as $line)
+            if($fd)
             {
-              $done = false;
+              // Generate MIME content boundary
+              $boundary = random_text(50);
 
-              // Find contenttype header
-              if(strpos($line, "Content-Type:") === 0)
+              // Process original mail file, line by line
+              $indata = false;
+              foreach($mail as $line)
               {
-                // Save original contenttype header
-                $original_contenttype = $line;
+                $done = false;
 
-                // Replace by new one
-                fwrite($fd, "Content-Type: multipart/mixed; boundary=\"" . $boundary . "\"\n");
-                $done = true;
+                // Find contenttype header
+                if(strpos($line, "Content-Type:") === 0)
+                {
+                  // Save original contenttype header
+                  $original_contenttype = $line;
+
+                  // Replace by new one
+                  fwrite($fd, "Content-Type: multipart/mixed; boundary=\"" . $boundary . "\"\n");
+                  $done = true;
+                }
+
+                // At start of data, insert boundary and original contenttype header
+                if(!$indata && ($line == "\n" || $line == "\r\n" || $line == ""))
+                {
+                  fwrite($fd, "\nThis is a multi-part message in MIME format.\n\n" .
+                              "--" . $boundary . "\n" .
+                              $original_contenttype . "\n");
+                  $indata = true;
+                }
+
+                // If this line isn't processed yet, just write it back to the file
+                if(!$done || $indata)
+                  fwrite($fd, $line);
               }
 
-              // At start of data, insert boundary and original contenttype header
-              if(!$indata && ($line == "\n" || $line == "\r\n" || $line == ""))
+              // Add boundary, new content headers and random attachment data
+              $attachment_filename = random_text(10) . ".bin";
+              fwrite($fd, "\n--" . $boundary . "\n" .
+                          "Content-Type: application/octet-stream;\n\tname=\"" . $attachment_filename . "\"\n" .
+                          "Content-Transfer-Encoding: base64\n" .
+                          "Content-Description: " . $attachment_filename . "\n" .
+                          "Content-Disposition: attachment;\n\tfilename=\"" . $attachment_filename . "\"\n\n");
+
+              // Add random attachment data
+              for($i = rand($attachment_minsize, $attachment_maxsize); $i > 0;)
               {
-                fwrite($fd, "\nThis is a multi-part message in MIME format.\n\n" .
-                            "--" . $boundary . "\n" .
-                            $original_contenttype . "\n");
-                $indata = true;
+                fwrite($fd, substr($attachment_data, $attachment_maxsize-$i, 76) . "\n");
+                $i -= 77;
               }
 
-              // If this line isn't processed yet, just write it back to the file
-              if(!$done || $indata)
-                fwrite($fd, $line);
+              fwrite($fd, "\n--" . $boundary . "--\n");
+
+              fclose($fd);
             }
-
-            // Add boundary, new content headers and random attachment data
-            $attachment_filename = random_text(10) . ".bin";
-            fwrite($fd, "\n--" . $boundary . "\n" .
-                        "Content-Type: application/octet-stream;\n\tname=\"" . $attachment_filename . "\"\n" .
-                        "Content-Transfer-Encoding: base64\n" .
-                        "Content-Description: " . $attachment_filename . "\n" .
-                        "Content-Disposition: attachment;\n\tfilename=\"" . $attachment_filename . "\"\n\n");
-
-            // Add random attachment data
-            for($i = rand($attachment_minsize, $attachment_maxsize); $i > 0;)
-            {
-              fwrite($fd, substr($attachment_data, $attachment_maxsize-$i, 76) . "\n");
-              $i -= 77;
-            }
-
-            fwrite($fd, "\n--" . $boundary . "--\n");
-
-            fclose($fd);
           }
         }
       }
@@ -130,7 +143,8 @@ while($account = readdir($maildir))
   }
 }
 
-echo "Number of attachments added: " . $c . "\n";
+echo "Number of emails processed: " . $c . "\n";
+echo "Number of attachments added: " . $a . "\n";
 closedir($maildir);
 exit();
 

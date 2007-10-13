@@ -59,7 +59,7 @@ digraph "Akonadi Database Layout" {
 Code to access the database is generated from @c akonadidb.xml using an XSL stylesheet, @c entities.xsl.
 The generated code encapsulates basic database operations, such as retrieving, inserting, updating and
 removing records, as well as methods to retrieve related records. They also contain methods to retrieve
-table and column names for creating SQL quries in a typo-safe way.
+table and column names for creating SQL queries in a typo-safe way.
 
 The following classes are generated:
 <xsl:for-each select="database/table">
