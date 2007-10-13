@@ -282,6 +282,7 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags )
     return false;
   if ( flags.isEmpty() )
     return true;
+
   for ( int i = 0; i < flags.count(); ++i ) {
     if ( !item.relatesToFlag( flags[ i ] ) ) {
       if ( !item.addFlag( flags[i] ) )
@@ -319,6 +320,18 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
   return true;
 }
 
+/* --- ItemParts ----------------------------------------------------- */
+
+bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &parts )
+{
+  Part::List existingParts = item.parts();
+  foreach ( Part part, existingParts )
+    if( parts.contains( part.name().toLatin1() ) )
+      part.remove();
+
+  mNotificationCollector->itemChanged( item );
+  return true;
+}
 
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( Location &location )
@@ -875,7 +888,7 @@ bool Akonadi::DataStore::rollbackTransaction()
     return false;
 
   if ( !m_inTransaction ) {
-    qWarning() << "DataStore::rollbackTransaction(): No Transaction in progress!";
+    qWarning() << "DataStore::rollbackTransaction(): No transaction in progress!";
     return false;
   }
 
@@ -896,7 +909,7 @@ bool Akonadi::DataStore::commitTransaction()
     return false;
 
   if ( !m_inTransaction ) {
-    qWarning() << "DataStore::commitTransaction(): No Transaction in progress!";
+    qWarning() << "DataStore::commitTransaction(): No transaction in progress!";
     return false;
   }
 

@@ -120,6 +120,7 @@ bool Akonadi::Append::commit()
       return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
     }
     PimItem item;
+    item.setRev( 0 );
 
     // wrap data into a part
     Part part;

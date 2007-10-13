@@ -154,6 +154,7 @@ bool Akonadi::AkAppend::commit()
     }
 
     PimItem item;
+    item.setRev( 0 );
 
     bool ok = db->appendPimItem( m_parts, mimeType, l, m_dateTime, remote_id, item );
 

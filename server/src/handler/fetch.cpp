@@ -93,6 +93,7 @@ bool Fetch::handleLine( const QByteArray& line )
   itemQuery.addTable( Location::tableName() );
   itemQuery.addTable( Resource::tableName() );
   itemQuery.addColumn( PimItem::idFullColumnName() );
+  itemQuery.addColumn( PimItem::revFullColumnName() );
   itemQuery.addColumn( PimItem::remoteIdFullColumnName() );
   itemQuery.addColumn( MimeType::nameFullColumnName() );
   itemQuery.addColumn( Resource::nameFullColumnName() );
@@ -102,9 +103,10 @@ bool Fetch::handleLine( const QByteArray& line )
   imapSetToQuery( set, isUidFetch, itemQuery );
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   const int itemQueryIdColumn = 0;
-  const int itemQueryRidColumn = 1;
-  const int itemQueryMimeTypeColumn = 2;
-  const int itemQueryResouceColumn = 3;
+  const int itemQueryRevColumn = 1;
+  const int itemQueryRidColumn = 2;
+  const int itemQueryMimeTypeColumn = 3;
+  const int itemQueryResouceColumn = 4;
 
   if ( !itemQuery.exec() )
     return failureResponse( "Unable to list items" );
@@ -135,7 +137,7 @@ bool Fetch::handleLine( const QByteArray& line )
   QStringList partList;
   foreach( const QByteArray b, attrList ) {
     // filter out non-part attributes
-    if ( b == "FLAGS" || b == "UID" || b == "REMOTEID" )
+    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
       continue;
     if ( b == "RFC822.SIZE" )
       partList << QString::fromLatin1( "RFC822" );
@@ -205,8 +207,10 @@ bool Fetch::handleLine( const QByteArray& line )
   response.setUntagged();
   while ( itemQuery.query().isValid() ) {
     const int pimItemId = itemQuery.query().value( itemQueryIdColumn ).toInt();
+    const int pimItemRev = itemQuery.query().value( itemQueryRevColumn ).toInt();
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
+    attributes.append( "REV " + QByteArray::number( pimItemRev ) );
     attributes.append( "REMOTEID " + ImapParser::quote( itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8() ) );
     attributes.append( "MIMETYPE " + ImapParser::quote( itemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8() ) );
 

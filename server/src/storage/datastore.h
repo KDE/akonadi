@@ -123,6 +123,9 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool appendItemFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
 
+    /* --- ItemParts ----------------------------------------------------- */
+    bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
+
     /* --- Location ------------------------------------------------------ */
     bool appendLocation( Location &location );
     /// removes the given location and all its content

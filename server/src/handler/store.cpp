@@ -69,6 +69,20 @@ bool Store::handleLine( const QByteArray& line )
     return failureResponse( "Unable to retrieve items" );
   QList<PimItem> pimItems = qb.result();
 
+  // parse revision
+  int rev;
+  bool revCheck = true;
+  bool ok;
+  pos = ImapParser::parseString( line, buffer, pos ); // skip 'REV'
+  if ( buffer == "REV" ) {
+    pos = ImapParser::parseNumber( line, rev, &ok, pos );
+    if ( !ok ) {
+      return failureResponse( "Unable to parse item revision number." );
+    }
+  }
+  else if ( buffer == "NOREV" )
+    revCheck = false;
+
   // parse command
   QByteArray command;
   pos = ImapParser::parseString( line, command, pos );
@@ -88,6 +102,20 @@ bool Store::handleLine( const QByteArray& line )
   }
 
   for ( int i = 0; i < pimItems.count(); ++i ) {
+    if ( revCheck ) {
+      // check if revision number of given items and their database equivalents match
+      if ( pimItems.at( i ).rev() != rev ) {
+        return failureResponse( "Item was modified elsewhere, aborting STORE." );
+      }
+    }
+
+    // update item revision
+    pimItems[ i ].setRev( pimItems[ i ].rev() + 1 );
+    if ( !pimItems[ i ].update() ) {
+      return failureResponse( "Unable to update item revision" );
+    }
+
+    // handle command
     if ( command == "FLAGS" ) {
       QList<QByteArray> flags;
       pos = ImapParser::parseParenthesizedList( line, flags, pos );
@@ -101,6 +129,13 @@ bool Store::handleLine( const QByteArray& line )
         if ( !deleteFlags( pimItems[ i ], flags ) )
           return failureResponse( "Unable to remove item flags." );
       }
+    } else if ( command == "PARTS" ) {
+      QList<QByteArray> parts;
+      pos = ImapParser::parseParenthesizedList( line, parts, pos );
+      if ( op == Delete ) {
+        if ( !deleteParts( pimItems[ i ], parts ) )
+        return failureResponse( "Unable to remove item parts." );
+      }
     } else if ( command == "COLLECTION" ) {
       pos = ImapParser::parseString( line, buffer, pos );
       if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( buffer ) ) )
@@ -113,7 +148,7 @@ bool Store::handleLine( const QByteArray& line )
         PimItem item = pimItems.at( i );
         item.setDirty( false );
         if ( !item.update() )
-          return failureResponse( "Unable to update item" );
+          return failureResponse( "Unable to update item dirtyness" );
     } else {
       pos = ImapParser::parseString( line, buffer, pos );
       Part part;
@@ -127,6 +162,7 @@ bool Store::handleLine( const QByteArray& line )
         part = result.first();
 
       part.setData( buffer );
+      part.setDatasize( buffer.size() );
       part.setName( QString::fromUtf8( command ) );
       part.setPimItemId( pimItems[ i ].id() );
       if ( part.isValid() ) {
@@ -242,8 +278,29 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
   }
 
   if ( !store->removeItemFlags( item, flagList ) ) {
-    qDebug( "Store::deleteFlags: Unable to add new item flags" );
+    qDebug( "Store::deleteFlags: Unable to remove item flags" );
     return false;
   }
   return true;
 }
+
+bool Store::deleteParts( const PimItem &item, const QList<QByteArray> &parts )
+{
+  DataStore *store = connection()->storageBackend();
+
+  QList<QByteArray> partList;
+  for ( int i = 0; i < parts.count(); ++i ) {
+    Part part = Part::retrieveByName( QString::fromUtf8( parts[ i ] ) );
+    if ( !part.isValid() )
+      continue;
+
+    partList.append( part.name().toLatin1() );
+  }
+
+  if ( !store->removeItemParts( item, partList ) ) {
+    qDebug( "Store::deleteParts: Unable to remove item parts" );
+    return false;
+  }
+  return true;
+}
+

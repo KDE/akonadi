@@ -122,6 +122,7 @@
 
   <table name="PimItem">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="rev" type="int" properties="NOT NULL DEFAULT 0"/>
     <column name="remoteId" type="QByteArray"/>
     <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
     <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
