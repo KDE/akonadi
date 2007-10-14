@@ -59,15 +59,32 @@ bool MonitorPrivate::connectToNotificationManager()
   return false;
 }
 
-bool MonitorPrivate::processNotification(const NotificationMessage & msg)
+bool MonitorPrivate::acceptNotification(const NotificationMessage & msg)
 {
   if ( isSessionIgnored( msg.sessionId() ) )
+    return false;
+  switch ( msg.type() ) {
+    case NotificationMessage::InvalidType:
+      kWarning() << "Received invalid change notification!";
+      return false;
+    case NotificationMessage::Item:
+      return isItemMonitored( msg.uid(), msg.parentCollection(), msg.parentDestCollection(), msg.mimeType(), msg.resource() )
+          || isCollectionMonitored( msg.parentCollection(), msg.resource() )
+          || isCollectionMonitored( msg.parentDestCollection(), msg.resource() );
+    case NotificationMessage::Collection:
+      return isCollectionMonitored( msg.uid(), msg.resource() );
+  }
+  Q_ASSERT( false );
+  return false;
+}
+
+bool MonitorPrivate::processNotification(const NotificationMessage & msg)
+{
+  if ( !acceptNotification( msg ) )
     return false;
 
   if ( msg.type() == NotificationMessage::Item ) {
     notifyCollectionStatusWatchers( msg.parentCollection(), msg.resource() );
-    if ( !isItemMonitored( msg.uid(), msg.parentCollection(), msg.parentDestCollection(), msg.mimeType(), msg.resource() ) )
-      return false;
     if ( (!mFetchParts.isEmpty() || fetchAllParts) &&
           ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move ) ) {
       ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( msg.uid(), msg.remoteId() ),
@@ -94,8 +111,6 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
     return true;
 
   } else if ( msg.type() == NotificationMessage::Collection ) {
-    if ( !isCollectionMonitored( msg.uid(), msg.resource() ) )
-      return false;
     if ( msg.operation() != NotificationMessage::Remove && fetchCollection ) {
       Collection::List list;
       list << Collection( msg.uid() );

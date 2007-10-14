@@ -62,6 +62,8 @@ void ResourceScheduler::scheduleChangeReplay()
 {
   Task t;
   t.type = ChangeReplay;
+  if ( mTaskList.contains( t ) )
+    return;
   mTaskList << t;
   scheduleNext();
 }

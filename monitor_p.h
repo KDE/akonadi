@@ -75,6 +75,7 @@ class MonitorPrivate
     }
 
     bool connectToNotificationManager();
+    bool acceptNotification( const NotificationMessage &msg );
     bool processNotification( const NotificationMessage &msg );
 
     // private slots

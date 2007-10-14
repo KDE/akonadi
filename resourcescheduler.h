@@ -57,6 +57,14 @@ class ResourceScheduler : public QObject
         DataReference itemRef;
         QStringList itemParts;
         QDBusMessage dbusMsg;
+
+        bool operator==( const Task &other ) const
+        {
+          return type == other.type
+              && collection == other.collection
+              && itemRef == other.itemRef
+              && itemParts == other.itemParts;
+        }
     };
 
     ResourceScheduler( QObject *parent = 0 );

@@ -33,7 +33,6 @@ class ChangeRecorderPrivate;
   Records and replays change notification.
 
   @todo Export only for unit tests!
-  @todo Filter before writing, session id eg. might change
 */
 class AKONADI_EXPORT ChangeRecorder : public Monitor
 {
