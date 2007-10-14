@@ -26,7 +26,6 @@
 #include "resourceadaptor.h"
 #include "collectionsync.h"
 #include "itemsync.h"
-#include "monitor_p.h"
 #include "resourcescheduler.h"
 #include "tracerinterface.h"
 #include "xdgbasedirs.h"
@@ -34,12 +33,12 @@
 #include <libakonadi/collectionlistjob.h>
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/itemstorejob.h>
-#include <libakonadi/job.h>
 #include <libakonadi/session.h>
-#include <libakonadi/monitor.h>
+#include <libakonadi/changerecorder.h>
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kdebug.h>
 #include <klocale.h>
 
 #include <QtCore/QDebug>
@@ -73,26 +72,12 @@ class ResourceBase::Private
         mProgress( 0 ),
         mSettings( 0 ),
         online( true ),
-        changeRecording( false ),
         scheduler( new ResourceScheduler( parent ) )
     {
       mStatusMessage = defaultReadyMessage();
     }
 
     void slotDeliveryDone( KJob* job );
-
-    void slotItemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
-    void slotItemChanged( const Akonadi::Item &item, const QStringList& );
-    void slotItemRemoved( const Akonadi::DataReference &reference );
-    void slotCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
-    void slotCollectionChanged( const Akonadi::Collection &collection );
-    void slotCollectionRemoved( int id, const QString &remoteId );
-
-    void slotReplayNextItem();
-    void slotReplayItemAdded( KJob *job );
-    void slotReplayItemChanged( KJob *job );
-    void slotReplayCollectionAdded( KJob *job );
-    void slotReplayCollectionChanged( KJob *job );
 
     void slotCollectionSyncDone( KJob *job );
     void slotLocalListDone( KJob *job );
@@ -122,92 +107,10 @@ class ResourceBase::Private
     QSettings *mSettings;
 
     Session *session;
-    Monitor *monitor;
+    ChangeRecorder *monitor;
     QHash<Akonadi::Job*, QDBusMessage> pendingReplies;
 
     bool online;
-
-    // change recording
-    enum ChangeType {
-      ItemAdded, ItemChanged, ItemRemoved, CollectionAdded, CollectionChanged, CollectionRemoved
-    };
-    struct ChangeItem {
-      ChangeType type;
-      DataReference item;
-      int collectionId;
-      QString collectionRemoteId;
-      QStringList partIdentifiers;
-      int parentId;
-    };
-    bool changeRecording;
-    QList<ChangeItem> changes;
-
-    void addChange( ChangeItem &c )
-    {
-      bool skipCurrent = false;
-      // compress changes
-      for ( QList<ChangeItem>::Iterator it = changes.begin(); it != changes.end(); ) {
-        if ( !(*it).item.isNull() && (*it).item == c.item ) {
-          if ( (*it).type == ItemAdded && c.type == ItemRemoved )
-            skipCurrent = true; // add + remove -> noop
-          else if ( (*it).type == ItemAdded && c.type == ItemChanged )
-            c.type = ItemAdded; // add + change -> add
-          it = changes.erase( it );
-        } else if ( (*it).collectionId >= 0 && (*it).collectionId == c.collectionId ) {
-          if ( (*it).type == CollectionAdded && c.type == CollectionRemoved )
-            skipCurrent = true; // add + remove -> noop
-          else if ( (*it).type == CollectionAdded && c.type == CollectionChanged )
-            c.type = ItemAdded; // add + change -> add
-          it = changes.erase( it );
-        } else
-          ++it;
-      }
-
-      if ( !skipCurrent )
-        changes << c;
-    }
-
-    void loadChanges()
-    {
-      changes.clear();
-      mSettings->beginGroup( QLatin1String( "Changes" ) );
-      int size = mSettings->beginReadArray( QLatin1String( "change" ) );
-      for ( int i = 0; i < size; ++i ) {
-        mSettings->setArrayIndex( i );
-        ChangeItem c;
-        c.type = (ChangeType)mSettings->value( QLatin1String( "type" ) ).toInt();
-        c.item = DataReference( mSettings->value( QLatin1String( "item_uid" ) ).toInt(),
-                                mSettings->value( QLatin1String( "item_rid" ) ).toString() );
-        c.collectionId = mSettings->value( QLatin1String( "collectionId" ) ).toInt();
-        c.collectionRemoteId = mSettings->value( QLatin1String( "collectionRemoteId" ) ).toString();
-        c.partIdentifiers = mSettings->value( QLatin1String( "partIdentifiers" ) ).toStringList();
-        c.parentId = mSettings->value( QLatin1String("parentId") ).toInt();
-        changes << c;
-      }
-      mSettings->endArray();
-      mSettings->endGroup();
-      changeRecording = mSettings->value( QLatin1String( "Resource/ChangeRecording" ), false ).toBool();
-    }
-
-    void saveChanges()
-    {
-      mSettings->beginGroup( QLatin1String( "Changes" ) );
-      mSettings->beginWriteArray( QLatin1String( "change" ), changes.count() );
-      for ( int i = 0; i < changes.count(); ++i ) {
-        mSettings->setArrayIndex( i );
-        ChangeItem c = changes.at( i );
-        mSettings->setValue( QLatin1String( "type" ), c.type );
-        mSettings->setValue( QLatin1String( "item_uid" ), c.item.id() );
-        mSettings->setValue( QLatin1String( "item_rid" ), c.item.remoteId() );
-        mSettings->setValue( QLatin1String( "collectionId" ), c.collectionId );
-        mSettings->setValue( QLatin1String( "collectionRemoteId" ), c.collectionRemoteId );
-        mSettings->setValue( QLatin1String( "partIdentifiers" ), c.partIdentifiers );
-        mSettings->setValue( QLatin1String( "parentId" ), c.parentId );
-      }
-      mSettings->endArray();
-      mSettings->endGroup();
-      mSettings->setValue( QLatin1String( "Resource/ChangeRecording" ), changeRecording );
-    }
 
     // synchronize states
     Collection currentCollection;
@@ -260,26 +163,29 @@ ResourceBase::ResourceBase( const QString & id )
   d->online = settings()->value( QLatin1String( "Resource/Online" ), true ).toBool();
 
   d->session = new Session( d->mId.toLatin1(), this );
-  d->monitor = new Monitor( this );
+  d->monitor = new ChangeRecorder( this );
   d->monitor->fetchCollection( d->online );
   if ( d->online )
     d->monitor->fetchAllParts();
 
   connect( d->monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-           this, SLOT( slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+           SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   connect( d->monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
-           this, SLOT( slotItemChanged( const Akonadi::Item&, const QStringList& ) ) );
+           SLOT( itemChanged( const Akonadi::Item&, const QStringList& ) ) );
   connect( d->monitor, SIGNAL( itemRemoved( const Akonadi::DataReference& ) ),
-           this, SLOT( slotItemRemoved( const Akonadi::DataReference& ) ) );
+           SLOT( itemRemoved( const Akonadi::DataReference& ) ) );
   connect( d->monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-           this, SLOT(slotCollectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+           SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   connect( d->monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
-           this, SLOT( slotCollectionChanged( const Akonadi::Collection& ) ) );
+           SLOT( collectionChanged( const Akonadi::Collection& ) ) );
   connect( d->monitor, SIGNAL( collectionRemoved( int, const QString& ) ),
-           this, SLOT( slotCollectionRemoved( int, const QString& ) ) );
+           SLOT( collectionRemoved( int, const QString& ) ) );
+  connect( d->monitor, SIGNAL(changesAdded()),
+           d->scheduler, SLOT(scheduleChangeReplay()) );
 
   d->monitor->ignoreSession( session() );
   d->monitor->monitorResource( d->mId.toLatin1() );
+  d->monitor->setConfig( settings() );
 
   connect( d->scheduler, SIGNAL(executeFullSync()),
            SLOT(retrieveCollections()) );
@@ -287,8 +193,8 @@ ResourceBase::ResourceBase( const QString & id )
            SLOT(slotSynchronizeCollection(Collection)) );
   connect( d->scheduler, SIGNAL(executeItemFetch(DataReference,QStringList,QDBusMessage)),
            SLOT(requestItemDelivery(DataReference,QStringList,QDBusMessage)) );
-
-  d->loadChanges();
+  connect( d->scheduler, SIGNAL(executeChangeReplay()),
+           d->monitor, SLOT(replayNext()) );
 
   // initial configuration
   bool initialized = settings()->value( QLatin1String( "Resource/Initialized" ), false ).toBool();
@@ -453,7 +359,6 @@ int ResourceBase::init( ResourceBase *r )
 
 void ResourceBase::quit()
 {
-  d->saveChanges();
   aboutToQuit();
 
   d->mSettings->sync();
@@ -563,213 +468,14 @@ void ResourceBase::Private::slotDeliveryDone(KJob * job)
   scheduler->taskDone();
 }
 
-void ResourceBase::enableChangeRecording(bool enable)
-{
-  if ( d->changeRecording == enable )
-    return;
-  d->changeRecording = enable;
-  if ( !d->changeRecording ) {
-    d->slotReplayNextItem();
-  }
-}
-
-void ResourceBase::Private::slotReplayNextItem()
-{
-  if ( changes.count() > 0 ) {
-    const Private::ChangeItem c = changes.takeFirst();
-    switch ( c.type ) {
-      case Private::ItemAdded:
-        {
-          ItemCollectionFetchJob *job = new ItemCollectionFetchJob( c.item, c.collectionId, mParent );
-          mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotReplayItemAdded( KJob* ) ) );
-          job->start();
-        }
-        break;
-      case Private::ItemChanged:
-        {
-          ItemFetchJob *job = new ItemFetchJob( c.item, mParent );
-          foreach( QString part, c.partIdentifiers )
-            job->addFetchPart( part );
-          job->setProperty( "parts", QVariant( c.partIdentifiers ) );
-          mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotReplayItemChanged( KJob* ) ) );
-          job->start();
-        }
-        break;
-      case Private::ItemRemoved:
-        mParent->itemRemoved( c.item );
-        break;
-      case Private::CollectionAdded:
-        {
-          Collection::List list;
-          list << Collection( c.collectionId );
-          list << Collection( c.parentId );
-          CollectionListJob *job = new CollectionListJob( list, mParent );
-          mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotReplayCollectionAdded( KJob* ) ) );
-          job->start();
-        }
-        break;
-      case Private::CollectionChanged:
-        {
-          CollectionListJob *job = new CollectionListJob( Collection( c.collectionId), CollectionListJob::Local, mParent );
-          mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotReplayCollectionChanged( KJob* ) ) );
-          job->start();
-        }
-        break;
-      case Private::CollectionRemoved:
-        mParent->collectionRemoved( c.collectionId, c.collectionRemoteId );
-        break;
-    }
-  }
-}
-
-void ResourceBase::Private::slotReplayItemAdded( KJob *job )
-{
-  if ( job->error() ) {
-    mParent->error( i18nc( "@info", "Unable to fetch item in replay mode." ) );
-  } else {
-    ItemCollectionFetchJob *fetchJob = qobject_cast<ItemCollectionFetchJob*>( job );
-
-    const Item item = fetchJob->item();
-    const Collection collection = fetchJob->collection();
-    if ( item.isValid() )
-      mParent->itemAdded( item, collection );
-  }
-
-  QTimer::singleShot( 0, mParent, SLOT( slotReplayNextItem() ) );
-}
-
-void ResourceBase::Private::slotReplayItemChanged( KJob *job )
-{
-  if ( job->error() ) {
-    mParent->error( i18nc( "@info", "Unable to fetch item in replay mode." ) );
-  } else {
-    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-
-    const Item item = fetchJob->items().first();
-    if ( item.isValid() ) {
-      const QStringList parts = job->property( "parts" ).toStringList();
-      mParent->itemChanged( item, parts );
-    }
-  }
-
-  QTimer::singleShot( 0, mParent, SLOT( slotReplayNextItem() ) );
-}
-
-void ResourceBase::Private::slotReplayCollectionAdded( KJob *job )
-{
-  if ( job->error() ) {
-    mParent->error( i18nc( "@info", "Unable to fetch collection in replay mode." ) );
-  } else {
-    CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
-
-    if ( listJob->collections().count() == 0 )
-      mParent->error( i18nc( "@info", "Unable to fetch collection in replay mode." ) );
-    else
-      mParent->collectionAdded( listJob->collections().first(), listJob->collections().at( 1 ) );
-  }
-
-  QTimer::singleShot( 0, mParent, SLOT( slotReplayNextItem() ) );
-}
-
-void ResourceBase::Private::slotReplayCollectionChanged( KJob *job )
-{
-  if ( job->error() ) {
-    mParent->error( i18nc( "@info", "Unable to fetch collection in replay mode." ) );
-  } else {
-    CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
-
-    if ( listJob->collections().count() <= 1 )
-      mParent->error( i18nc( "@info", "Unable to fetch collection in replay mode." ) );
-    else {
-      mParent->collectionChanged( listJob->collections().first() );
-    }
-  }
-
-  QTimer::singleShot( 0, mParent, SLOT( slotReplayNextItem() ) );
-}
-
-void ResourceBase::Private::slotItemAdded( const Akonadi::Item &item, const Collection &collection )
-{
-  if ( changeRecording ) {
-    Private::ChangeItem c;
-    c.type = Private::ItemAdded;
-    c.item = item.reference();
-    c.collectionId = collection.id();
-    addChange( c );
-  } else {
-    mParent->itemAdded( item, collection );
-  }
-}
-
-void ResourceBase::Private::slotItemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers )
-{
-  if ( changeRecording ) {
-    Private::ChangeItem c;
-    c.type = Private::ItemChanged;
-    c.item = item.reference();
-    c.collectionId = -1;
-    c.partIdentifiers = partIdentifiers;
-    addChange( c );
-  } else {
-    mParent->itemChanged( item, partIdentifiers );
-  }
-}
-
-void ResourceBase::Private::slotItemRemoved(const Akonadi::DataReference & ref)
-{
-  if ( changeRecording ) {
-    Private::ChangeItem c;
-    c.type = Private::ItemRemoved;
-    c.item = ref;
-    c.collectionId = -1;
-    addChange( c );
-  } else {
-    mParent->itemRemoved( ref );
-  }
-}
-
-void ResourceBase::Private::slotCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
-{
-  if ( changeRecording ) {
-    Private::ChangeItem c;
-    c.type = Private::CollectionAdded;
-    c.collectionId = collection.id();
-    c.parentId = parent.id();
-    addChange( c );
-  } else {
-    mParent->collectionAdded( collection, parent );
-  }
-}
-
-void ResourceBase::Private::slotCollectionChanged( const Akonadi::Collection &collection )
-{
-  if ( changeRecording ) {
-    Private::ChangeItem c;
-    c.type = Private::CollectionChanged;
-    c.collectionId = collection.id();
-    addChange( c );
-  } else {
-    mParent->collectionChanged( collection );
-  }
-}
-
-void ResourceBase::Private::slotCollectionRemoved( int id, const QString &remoteId )
-{
-  if ( changeRecording ) {
-    Private::ChangeItem c;
-    c.type = Private::CollectionRemoved;
-    c.collectionId = id;
-    c.collectionRemoteId = remoteId;
-    addChange( c );
-  } else {
-    mParent->collectionRemoved( id, remoteId );
-  }
-}
-
 void ResourceBase::changesCommitted(const DataReference & ref)
 {
   ItemStoreJob *job = new ItemStoreJob( Item( ref ), session() );
   job->setClean();
+  d->monitor->changeProcessed();
+  if ( !d->monitor->isEmpty() )
+    d->scheduler->scheduleChangeReplay();
+  d->scheduler->taskDone();
 }
 
 bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, const QStringList &parts )
@@ -794,7 +500,6 @@ void ResourceBase::setOnline(bool state)
 {
   d->online = state;
   settings()->setValue( QLatin1String( "Resource/Online" ), state );
-  enableChangeRecording( !state );
   d->monitor->fetchCollection( state );
   // TODO: d->monitor->fetchItemData( state );
 }

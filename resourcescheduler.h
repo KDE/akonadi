@@ -45,7 +45,8 @@ class ResourceScheduler : public QObject
       SyncAll,
       SyncCollectionTree,
       SyncCollection,
-      FetchItem
+      FetchItem,
+      ChangeReplay
     };
 
     class Task {
@@ -89,10 +90,17 @@ class ResourceScheduler : public QObject
     */
     Task currentTask() const;
 
+  public Q_SLOTS:
+    /**
+      Schedules replaying changes.
+    */
+    void scheduleChangeReplay();
+
   Q_SIGNALS:
     void executeFullSync();
     void executeCollectionSync( const Collection &col );
     void executeItemFetch( const DataReference &ref, const QStringList &parts, const QDBusMessage &msg );
+    void executeChangeReplay();
 
   private slots:
     void scheduleNext();

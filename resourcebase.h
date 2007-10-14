@@ -267,13 +267,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
      */
     void quit();
 
-    /**
-      Enables change recording. When change recording is enabled all changes are
-      stored internally and replayed as soon as change recording is disabled.
-      @param enable True to enable change recording, false to disable change recording.
-    */
-    void enableChangeRecording( bool enable );
-
   protected Q_SLOTS:
     /**
       Retrieve the collection tree from the remote server and supply it via
@@ -370,38 +363,39 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     */
     bool deliverItem( Akonadi::Job* job, const QDBusMessage &msg );
 
+  protected Q_SLOTS:
     /**
       Reimplement to handle adding of new items.
       @param item The newly added item.
       @param collection The collection @p item got added to.
     */
-    virtual void itemAdded( const Item &item, const Collection &collection );
+    virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
     /**
       Reimplement to handle changes to existing items.
       @param item The changed item.
       @param partIdentifiers The identifiers of the item parts that has been changed.
     */
-    virtual void itemChanged( const Item &item, const QStringList &partIdentifiers  );
+    virtual void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers  );
 
     /**
       Reimplement to handle deletion of items.
       @param ref DataReference to the deleted item.
     */
-    virtual void itemRemoved( const DataReference &ref );
+    virtual void itemRemoved( const Akonadi::DataReference &ref );
 
     /**
       Reimplement to handle adding of new collections.
       @param collection The newly added collection.
       @param parent The parent collection.
     */
-    virtual void collectionAdded( const Collection &collection, const Collection &parent );
+    virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
 
     /**
       Reimplement to handle changes to existing collections.
       @param collection The changed collection.
     */
-    virtual void collectionChanged( const Collection &collection );
+    virtual void collectionChanged( const Akonadi::Collection &collection );
 
     /**
       Reimplement to handle deletion of collections.
@@ -410,6 +404,7 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     */
     virtual void collectionRemoved( int id, const QString &remoteId );
 
+  protected:
     /**
       Resets the dirty flag of the given item and updates the remote id.
       Call whenever you have successfully written changes back to the server.
@@ -479,17 +474,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void slotDeliveryDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void slotItemChanged( const Akonadi::Item&, const QStringList& ) )
-    Q_PRIVATE_SLOT( d, void slotItemRemoved( const Akonadi::DataReference& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionChanged( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionRemoved( int, const QString& ) )
-    Q_PRIVATE_SLOT( d, void slotReplayNextItem() )
-    Q_PRIVATE_SLOT( d, void slotReplayItemAdded( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotReplayItemChanged( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotReplayCollectionAdded( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotReplayCollectionChanged( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotCollectionSyncDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollection(const Collection &col) )

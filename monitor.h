@@ -28,6 +28,7 @@
 
 namespace Akonadi {
 
+class MonitorPrivate;
 class Session;
 
 /**
@@ -177,16 +178,21 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void collectionStatusChanged( int collection, const Akonadi::CollectionStatus &status );
 
+  protected:
+    //@cond PRIVATE
+    MonitorPrivate *d_ptr;
+    explicit Monitor( MonitorPrivate *d, QObject *parent = 0 );
+    //@endcond
+
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( Monitor )
 
-    Q_PRIVATE_SLOT( d, void slotStatusChangedFinished( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotFlushRecentlyChangedCollections() )
+    Q_PRIVATE_SLOT( d_ptr, void slotStatusChangedFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
 
-    Q_PRIVATE_SLOT( d, void slotNotify( const Akonadi::NotificationMessage::List &msgs ) )
-    Q_PRIVATE_SLOT( d, void slotItemJobFinished( KJob *job ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionJobFinished( KJob *job ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessage::List &msgs ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotItemJobFinished( KJob *job ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotCollectionJobFinished( KJob *job ) )
 };
 
 }

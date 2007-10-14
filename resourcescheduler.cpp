@@ -58,6 +58,14 @@ void ResourceScheduler::scheduleItemFetch(const DataReference & ref, const QStri
   scheduleNext();
 }
 
+void ResourceScheduler::scheduleChangeReplay()
+{
+  Task t;
+  t.type = ChangeReplay;
+  mTaskList << t;
+  scheduleNext();
+}
+
 void ResourceScheduler::taskDone()
 {
   mCurrentTask = Task();
@@ -83,6 +91,9 @@ void ResourceScheduler::executeNext()
       break;
     case FetchItem:
       emit executeItemFetch( mCurrentTask.itemRef, mCurrentTask.itemParts, mCurrentTask.dbusMsg );
+      break;
+    case ChangeReplay:
+      emit executeChangeReplay();
       break;
     default:
       Q_ASSERT( false );
