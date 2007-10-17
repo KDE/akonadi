@@ -98,6 +98,11 @@ class ResourceScheduler : public QObject
     */
     Task currentTask() const;
 
+    /**
+      Sets the online state.
+    */
+    void setOnline( bool state );
+
   public Q_SLOTS:
     /**
       Schedules replaying changes.
@@ -117,6 +122,7 @@ class ResourceScheduler : public QObject
   private:
     QList<Task> mTaskList;
     Task mCurrentTask;
+    bool mOnline;
 };
 
 }

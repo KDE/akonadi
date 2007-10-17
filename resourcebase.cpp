@@ -196,6 +196,10 @@ ResourceBase::ResourceBase( const QString & id )
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
            d->monitor, SLOT(replayNext()) );
 
+  d->scheduler->setOnline( d->online );
+  if ( !d->monitor->isEmpty() )
+    d->scheduler->scheduleChangeReplay();
+
   // initial configuration
   bool initialized = settings()->value( QLatin1String( "Resource/Initialized" ), false ).toBool();
   if ( !initialized ) {
@@ -502,6 +506,7 @@ void ResourceBase::setOnline(bool state)
   settings()->setValue( QLatin1String( "Resource/Online" ), state );
   d->monitor->fetchCollection( state );
   // TODO: d->monitor->fetchItemData( state );
+  d->scheduler->setOnline( state );
 }
 
 void ResourceBase::collectionsRetrieved(const Collection::List & collections)

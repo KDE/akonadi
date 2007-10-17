@@ -26,7 +26,8 @@
 using namespace Akonadi;
 
 ResourceScheduler::ResourceScheduler( QObject *parent ) :
-    QObject( parent )
+    QObject( parent ),
+    mOnline( false )
 {
 }
 
@@ -76,7 +77,7 @@ void ResourceScheduler::taskDone()
 
 void ResourceScheduler::scheduleNext()
 {
-  if ( mCurrentTask.type != Invalid || mTaskList.isEmpty() )
+  if ( mCurrentTask.type != Invalid || mTaskList.isEmpty() || !mOnline )
     return;
   QTimer::singleShot( 0, this, SLOT(executeNext()) );
 }
@@ -105,6 +106,20 @@ void ResourceScheduler::executeNext()
 ResourceScheduler::Task ResourceScheduler::currentTask() const
 {
   return mCurrentTask;
+}
+
+void ResourceScheduler::setOnline(bool state)
+{
+  if ( mOnline == state )
+    return;
+  mOnline = state;
+  if ( mOnline ) {
+    scheduleNext();
+  } else if ( mCurrentTask.type != Invalid ) {
+    // abort running task
+    mTaskList.prepend( mCurrentTask );
+    mCurrentTask = Task();
+  }
 }
 
 #include "resourcescheduler.moc"
