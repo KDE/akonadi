@@ -210,6 +210,7 @@ ResourceBase::ResourceBase( const QString & id )
 
 ResourceBase::~ResourceBase()
 {
+  d->monitor->setConfig( 0 );
   delete d->mSettings;
   delete d;
 }
@@ -365,7 +366,10 @@ void ResourceBase::quit()
 {
   aboutToQuit();
 
-  d->mSettings->sync();
+  if ( d->mSettings ) {
+    d->monitor->setConfig( 0 );
+    d->mSettings->sync();
+  }
 
   QTimer::singleShot( 0, QCoreApplication::instance(), SLOT( quit() ) );
 }
@@ -386,6 +390,7 @@ void ResourceBase::cleanup() const
   /**
    * First destroy the settings object...
    */
+  d->monitor->setConfig( 0 );
   delete d->mSettings;
   d->mSettings = 0;
 

@@ -78,6 +78,8 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
 
     void saveNotifications()
     {
+      if ( !settings )
+        return;
       settings->beginGroup( QLatin1String( "ChangeRecorder" ) );
       settings->beginWriteArray( QLatin1String( "change" ), pendingNotifications.count() );
       for ( int i = 0; i < pendingNotifications.count(); ++i ) {
@@ -116,9 +118,14 @@ ChangeRecorder::~ ChangeRecorder()
 void ChangeRecorder::setConfig(QSettings * settings)
 {
   Q_D( ChangeRecorder );
-  d->settings = settings;
-  Q_ASSERT( d->pendingNotifications.isEmpty() );
-  d->loadNotifications();
+  if ( settings ) {
+    d->settings = settings;
+    Q_ASSERT( d->pendingNotifications.isEmpty() );
+    d->loadNotifications();
+  } else if ( d->settings ) {
+    d->saveNotifications();
+    d->settings = settings;
+  }
 }
 
 void ChangeRecorder::replayNext()
