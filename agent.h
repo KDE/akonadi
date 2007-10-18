@@ -61,28 +61,10 @@ class AKONADI_EXPORT Agent : public QObject
     virtual Q_NOREPLY void configure() = 0;
 
     /**
-     * This method is used to set the name of the agent.
-     */
-    virtual void setName( const QString &name ) = 0;
-
-    /**
-     * Returns the name of the agent.
-     */
-    virtual QString name() const = 0;
-
-    /**
      * This method is called when the agent is removed from
      * the system, so it can do some cleanup stuff.
      */
-    virtual void cleanup() const = 0;
-
-  Q_SIGNALS:
-    /**
-     * This signal is emitted whenever the name of the agent has changed.
-     *
-     * @param name The new name of the resource.
-     */
-    void nameChanged( const QString &name );
+    virtual void cleanup() = 0;
 };
 
 }

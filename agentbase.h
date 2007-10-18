@@ -41,8 +41,10 @@ namespace Akonadi {
 class Session;
 class Item;
 class DataReference;
+class ChangeRecorder;
+class AgentBasePrivate;
 
-class AKONADI_EXPORT AgentBase : public Agent, protected QDBusContext
+class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 {
   Q_OBJECT
 
@@ -84,16 +86,6 @@ class AKONADI_EXPORT AgentBase : public Agent, protected QDBusContext
     virtual void configure();
 
     /**
-     * This method is used to set the name of the agent.
-     */
-    virtual void setName( const QString &name );
-
-    /**
-     * Returns the name of the agent.
-     */
-    virtual QString name() const;
-
-    /**
      * Returns the instance identifier of this agent.
      */
     QString identifier() const;
@@ -102,7 +94,7 @@ class AKONADI_EXPORT AgentBase : public Agent, protected QDBusContext
      * This method is called when the agent is removed from
      * the system, so it can do some cleanup stuff.
      */
-    virtual void cleanup() const;
+    virtual void cleanup();
 
     /**
      * This method is called from the crash handler, don't call
@@ -168,32 +160,32 @@ class AKONADI_EXPORT AgentBase : public Agent, protected QDBusContext
       @param item The newly added item.
       @param collection The collection @p item got added to.
     */
-    virtual void itemAdded( const Item &item, const Collection &collection );
+    virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
     /**
       Reimplement to handle changes to existing items.
       @param item The changed item.
       @param partIdentifiers The identifiers of the item parts that has been changed.
     */
-    virtual void itemChanged( const Item &item, const QStringList &partIdentifiers );
+    virtual void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
 
     /**
       Reimplement to handle deletion of items.
       @param ref DataReference to the deleted item.
     */
-    virtual void itemRemoved( const DataReference &ref );
+    virtual void itemRemoved( const Akonadi::DataReference &ref );
 
     /**
       Reimplement to handle adding of new collections.
       @param collection The newly added collection.
     */
-    virtual void collectionAdded( const Collection &collection );
+    virtual void collectionAdded( const Akonadi::Collection &collection );
 
     /**
       Reimplement to handle changes to existing collections.
       @param collection The changed collection.
     */
-    virtual void collectionChanged( const Collection &collection );
+    virtual void collectionChanged( const Akonadi::Collection &collection );
 
     /**
       Reimplement to handle deletion of collections.
@@ -202,6 +194,18 @@ class AKONADI_EXPORT AgentBase : public Agent, protected QDBusContext
     */
     virtual void collectionRemoved( int id, const QString &remoteId );
 
+    /**
+      Returns the Akonadi::ChangeRecorder object used for monitoring.
+      Use this to configure which parts you want to monitor.
+    */
+    ChangeRecorder* monitor() const;
+
+  protected:
+    //@cond PRIVATE
+    AgentBasePrivate *d_ptr;
+    explicit AgentBase( AgentBasePrivate* d, const QString &id );
+    //@endcond
+
   private:
     static QString parseArguments( int, char** );
     static int init( AgentBase *r );
@@ -209,17 +213,7 @@ class AKONADI_EXPORT AgentBase : public Agent, protected QDBusContext
     // dbus resource interface
     friend class ::AgentAdaptor;
 
-  private:
-    class Private;
-    Private* const d;
-
-    Q_PRIVATE_SLOT( d, void slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void slotItemChanged( const Akonadi::Item&, const QStringList& ) )
-    Q_PRIVATE_SLOT( d, void slotItemRemoved( const Akonadi::DataReference& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionAdded( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionChanged( const Akonadi::Collection& ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionRemoved( int, const QString& ) )
-
+    Q_DECLARE_PRIVATE( AgentBase )
 };
 
 }

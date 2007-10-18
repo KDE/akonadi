@@ -29,10 +29,7 @@ namespace Akonadi {
 class ChangeRecorderPrivate;
 
 /**
-  @internal
   Records and replays change notification.
-
-  @todo Export only for unit tests!
 */
 class AKONADI_EXPORT ChangeRecorder : public Monitor
 {
@@ -63,6 +60,13 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
       Remove the previously emitted change from the records.
     */
     void changeProcessed();
+
+    /**
+      Enable change recording. If change recording is disabled, this class
+      behaves exactly like Akonadi::Monitor.
+      Change recording is enabled by default.
+    */
+    void setChangeRecordingEnabled( bool enable );
 
   public Q_SLOTS:
     /**

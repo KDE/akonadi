@@ -22,15 +22,15 @@
 */
 
 #include "agentbase.h"
+#include "agentbase_p.h"
 
 #include "kcrash.h"
 #include "agentadaptor.h"
 #include "monitor_p.h"
-#include "tracerinterface.h"
 #include "xdgbasedirs.h"
 
 #include <libakonadi/session.h>
-#include <libakonadi/monitor.h>
+#include <libakonadi/changerecorder.h>
 #include <libakonadi/itemfetchjob.h>
 
 #include <kaboutdata.h>
@@ -59,136 +59,83 @@ void crashHandler( int signal )
   exit( 255 );
 }*/
 
-class AgentBase::Private
+AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
+  : q_ptr( parent ),
+    mSettings( 0 )
 {
-  public:
-    Private( AgentBase *parent )
-      : mParent( parent ),
-        mSettings( 0 )
-    {
-    }
-
-    void slotItemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
-    void slotItemChanged( const Akonadi::Item &item, const QStringList& );
-    void slotItemRemoved( const Akonadi::DataReference &reference );
-    void slotCollectionAdded( const Akonadi::Collection &collection );
-    void slotCollectionChanged( const Akonadi::Collection &collection );
-    void slotCollectionRemoved( int id, const QString &remoteId );
-
-    QString defaultErrorMessage() const;
-
-    AgentBase *mParent;
-
-    QString mId;
-    QString mName;
-
-    QSettings *mSettings;
-
-    Session *session;
-    Monitor *monitor;
-
-    org::kde::Akonadi::Tracer *mTracer;
-};
-
-QString AgentBase::Private::defaultErrorMessage() const
-{
-  return tr( "Error!" );
 }
 
-void AgentBase::Private::slotItemAdded( const Akonadi::Item &item, const Collection &collection )
+AgentBasePrivate::~AgentBasePrivate()
 {
-  mParent->itemAdded( item, collection );
+  monitor->setConfig( 0 );
+  delete mSettings;
 }
 
-void AgentBase::Private::slotItemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers )
+void AgentBasePrivate::init()
 {
-  mParent->itemChanged( item, partIdentifiers );
+  Q_Q( AgentBase );
+  mTracer = new org::kde::Akonadi::Tracer( QLatin1String( "org.kde.Akonadi" ), QLatin1String( "/tracing" ),
+                                           QDBusConnection::sessionBus(), q );
+
+  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Agent." ) + mId ) )
+    q->error( QString::fromLatin1( "Unable to register service at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
+
+  new AgentAdaptor( q );
+  if ( !QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
+    q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
+
+  mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
+
+  session = new Session( mId.toLatin1(), q );
+  monitor = new ChangeRecorder( q );
+  monitor->ignoreSession( session );
+  monitor->setConfig( mSettings );
+
+  q->connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+              q, SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
+              q, SLOT( itemChanged( const Akonadi::Item&, const QStringList& ) ) );
+  q->connect( monitor, SIGNAL( itemRemoved( const Akonadi::DataReference& ) ),
+           q, SLOT( itemRemoved( const Akonadi::DataReference& ) ) );
+  q->connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
+              q, SLOT( collectionAdded( const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
+              q, SLOT( collectionChanged( const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( collectionRemoved( int, const QString& ) ),
+              q, SLOT( collectionRemoved( int, const QString& ) ) );
+
+  // initial configuration
+  bool initialized = mSettings->value( QLatin1String( "Agent/Initialized" ), false ).toBool();
+  if ( !initialized ) {
+    QTimer::singleShot( 0, q, SLOT(configure()) ); // finish construction first
+    mSettings->setValue( QLatin1String( "Agent/Initialized" ), true );
+  }
 }
-
-void AgentBase::Private::slotItemRemoved(const Akonadi::DataReference & ref)
-{
-  mParent->itemRemoved( ref );
-}
-
-void AgentBase::Private::slotCollectionAdded( const Akonadi::Collection &collection )
-{
-  mParent->collectionAdded( collection );
-}
-
-void AgentBase::Private::slotCollectionChanged( const Akonadi::Collection &collection )
-{
-  mParent->collectionChanged( collection );
-}
-
-void AgentBase::Private::slotCollectionRemoved( int id, const QString &remoteId )
-{
-  mParent->collectionRemoved( id, remoteId );
-}
-
-
-
-
 
 
 AgentBase::AgentBase( const QString & id )
-  : d( new Private( this ) )
+  : d_ptr( new AgentBasePrivate( this ) )
 {
   KCrash::init();
   // FIXME See above KCrash::setEmergencyMethod( ::crashHandler );
   sAgentBase = this;
+  d_ptr->mId = id;
+  d_ptr->init();
+}
 
-  d->mTracer = new org::kde::Akonadi::Tracer( QLatin1String( "org.kde.Akonadi" ), QLatin1String( "/tracing" ),
-                                              QDBusConnection::sessionBus(), this );
-
-  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Agent." ) + id ) )
-    error( QString::fromLatin1( "Unable to register service at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
-
-  new AgentAdaptor( this );
-  if ( !QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportAdaptors ) )
-    error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
-
-  d->mId = id;
-
-  d->mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), id ), QSettings::IniFormat );
-
-  const QString name = d->mSettings->value( QLatin1String( "Agent/Name" ) ).toString();
-  if ( !name.isEmpty() )
-    d->mName = name;
-
-  d->session = new Session( d->mId.toLatin1(), this );
-  d->monitor = new Monitor( this );
-  d->monitor->fetchCollection( true );
-  d->monitor->fetchAllParts();
-
-  connect( d->monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-           this, SLOT( slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( d->monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
-           this, SLOT( slotItemChanged( const Akonadi::Item&, const QStringList& ) ) );
-  connect( d->monitor, SIGNAL( itemRemoved( const Akonadi::DataReference& ) ),
-           this, SLOT( slotItemRemoved( const Akonadi::DataReference& ) ) );
-  connect( d->monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-           this, SLOT( slotCollectionAdded( const Akonadi::Collection& ) ) );
-  connect( d->monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
-           this, SLOT( slotCollectionChanged( const Akonadi::Collection& ) ) );
-  connect( d->monitor, SIGNAL( collectionRemoved( int, const QString& ) ),
-           this, SLOT( slotCollectionRemoved( int, const QString& ) ) );
-
-  d->monitor->ignoreSession( session() );
-  // TODO An agent should not monitor *all* by default
-  d->monitor->monitorAll();
-
-  // initial configuration
-  bool initialized = settings()->value( QLatin1String( "Agent/Initialized" ), false ).toBool();
-  if ( !initialized ) {
-    QTimer::singleShot( 0, this, SLOT(configure()) ); // finish construction first
-    settings()->setValue( QLatin1String( "Agent/Initialized" ), true );
-  }
+AgentBase::AgentBase( AgentBasePrivate* d, const QString &id ) :
+    d_ptr( d )
+{
+  KCrash::init();
+  // FIXME See above KCrash::setEmergencyMethod( ::crashHandler );
+  sAgentBase = this;
+  d_ptr->mId = id;
+  d_ptr->init();
 }
 
 AgentBase::~AgentBase()
 {
-  delete d->mSettings;
-  delete d;
+  delete d_ptr;
 }
 
 static char* sAppName = 0;
@@ -237,9 +184,13 @@ void AgentBase::configure()
 
 void AgentBase::quit()
 {
+  Q_D( AgentBase );
   aboutToQuit();
 
-  d->mSettings->sync();
+  if ( d->mSettings ) {
+    d->monitor->setConfig( 0 );
+    d->mSettings->sync();
+  }
 
   QCoreApplication::exit( 0 );
 }
@@ -248,13 +199,15 @@ void AgentBase::aboutToQuit()
 {
 }
 
-void AgentBase::cleanup() const
+void AgentBase::cleanup()
 {
+  Q_D( AgentBase );
   const QString fileName = d->mSettings->fileName();
 
   /**
    * First destroy the settings object...
    */
+  d->monitor->setConfig( 0 );
   delete d->mSettings;
   d->mSettings = 0;
 
@@ -277,33 +230,7 @@ void AgentBase::crashHandler( int signal )
 
 QString AgentBase::identifier() const
 {
-  return d->mId;
-}
-
-void AgentBase::setName( const QString &name )
-{
-  if ( name == d->mName )
-    return;
-
-  // TODO: rename collection
-  d->mName = name;
-
-  if ( d->mName.isEmpty() || d->mName == d->mId )
-    d->mSettings->remove( QLatin1String( "Agent/Name" ) );
-  else
-    d->mSettings->setValue( QLatin1String( "Agent/Name" ), d->mName );
-
-  d->mSettings->sync();
-
-  emit nameChanged( d->mName );
-}
-
-QString AgentBase::name() const
-{
-  if ( d->mName.isEmpty() )
-    return d->mId;
-  else
-    return d->mName;
+  return d_ptr->mId;
 }
 
 void AgentBase::itemAdded( const Item &item, const Collection &collection )
@@ -341,24 +268,30 @@ void AgentBase::collectionRemoved( int id, const QString &remoteId )
 
 QSettings* AgentBase::settings()
 {
-  return d->mSettings;
+  return d_ptr->mSettings;
 }
 
 Session* AgentBase::session()
 {
-  return d->session;
+  return d_ptr->session;
 }
 
 void AgentBase::warning( const QString& message )
 {
+  Q_D( AgentBase );
   d->mTracer->warning( QString::fromLatin1( "ResourceBase(%1)" ).arg( d->mId ), message );
 }
 
 void AgentBase::error( const QString& message )
 {
+  Q_D( AgentBase );
   d->mTracer->error( QString::fromLatin1( "ResourceBase(%1)" ).arg( d->mId ), message );
 }
 
+ChangeRecorder * AgentBase::monitor() const
+{
+  return d_ptr->monitor;
+}
 
 #include "agent.moc"
 #include "agentbase.moc"

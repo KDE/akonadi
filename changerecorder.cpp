@@ -30,16 +30,24 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
   public:
     ChangeRecorderPrivate( ChangeRecorder* parent ) :
       MonitorPrivate( parent ),
-      settings( 0 )
+      settings( 0 ),
+      enableChangeRecording( true )
     {
     }
 
     Q_DECLARE_PUBLIC( ChangeRecorder )
     NotificationMessage::List pendingNotifications;
     QSettings *settings;
+    bool enableChangeRecording;
 
     virtual void slotNotify( const NotificationMessage::List &msgs )
     {
+      if ( !enableChangeRecording ) {
+        foreach( const NotificationMessage msg, msgs )
+          processNotification( msg );
+        return;
+      }
+
       Q_Q( ChangeRecorder );
       int oldChanges = pendingNotifications.count();
       foreach ( const NotificationMessage msg, msgs ) {
@@ -152,6 +160,13 @@ void ChangeRecorder::changeProcessed()
   if ( !d->pendingNotifications.isEmpty() )
     d->pendingNotifications.removeFirst();
   d->saveNotifications();
+}
+
+void ChangeRecorder::setChangeRecordingEnabled( bool enable )
+{
+  Q_D( ChangeRecorder );
+  d->enableChangeRecording = enable;
+  Q_ASSERT( enable || d->pendingNotifications.isEmpty() );
 }
 
 #include "changerecorder.moc"
