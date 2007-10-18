@@ -526,7 +526,8 @@ void AgentManager::resourceRegistered( const QString &name, const QString&, cons
   const QString identifier = name.mid( 25 );
 
   if ( newOwner.isEmpty() ) { // interface was unregistered
-    emit agentInstanceRemoved( identifier );
+    if ( mInstances.contains( identifier ) )
+      emit agentInstanceRemoved( identifier );
     return;
   }
 
