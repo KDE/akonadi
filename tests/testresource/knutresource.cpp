@@ -52,6 +52,9 @@ KnutResource::~KnutResource()
 
 void KnutResource::configure()
 {
+  if ( identifier().contains( "unittest" ) )
+    return; // headless mode, no config dialog
+
   QString oldFile = settings()->value( "General/DataFile" ).toString();
   KUrl url;
   if ( !oldFile.isEmpty() )
