@@ -34,5 +34,5 @@ Exec=akonadi_knut_resource
 Icon=tool
 
 X-Akonadi-MimeTypes=text/calendar,text/directory
-X-Akonadi-Capabilities=text/calendar
+X-Akonadi-Capabilities=Resource
 X-Akonadi-Identifier=akonadi_knut_resource
