@@ -41,19 +41,40 @@ class ResourceTest : public QObject
       QVERIFY( instance.isEmpty() );
 
       QVERIFY( manager->agentTypes().contains( "akonadi_knut_resource_unittest" ) );
+      QCOMPARE( manager->agentCapabilities( "akonadi_knut_resource_unittest" ), QStringList( "Resource" ) );
       instance = manager->createAgentInstance( "akonadi_knut_resource_unittest" );
       QVERIFY( !instance.isEmpty() );
 
       QTest::qWait( 2000 );
       QCOMPARE( spyAddInstance.count(), 1 );
+      QCOMPARE( spyAddInstance.first().at( 0 ).toString(), instance );
       QVERIFY( manager->agentInstances().contains( instance ) );
 
-      manager->removeAgentInstance( instance );
+      QString instance2 = manager->createAgentInstance( "akonadi_knut_resource_unittest" );
+      QVERIFY( instance != instance2 );
       QTest::qWait( 2000 );
-      QCOMPARE( spyRemoveInstance.count(), 1 );
+      QCOMPARE( spyAddInstance.count(), 2 );
+
+      manager->removeAgentInstance( instance );
+      manager->removeAgentInstance( instance2 );
+      QTest::qWait( 2000 );
+      QCOMPARE( spyRemoveInstance.count(), 2 );
       QVERIFY( !manager->agentInstances().contains( instance ) );
+      QVERIFY( !manager->agentInstances().contains( instance2 ) );
 
       delete manager;
+    }
+
+    void testIlleagalResourceManagerment()
+    {
+      AgentManager *manager = new AgentManager( this );
+      QString instance = manager->createAgentInstance( "non_existing_resource" );
+      QVERIFY( instance.isEmpty() );
+
+      // unique agent
+      QVERIFY( manager->agentTypes().contains( "akonadi_mailthreader_agent" ) );
+      instance = manager->createAgentInstance( "akonadi_mailthreader_agent" );
+      QVERIFY( instance.isEmpty() );
     }
 };
 

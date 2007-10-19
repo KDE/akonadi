@@ -75,10 +75,9 @@ class ResourceBasePrivate;
  * Icon=my-icon
  *
  * X-Akonadi-MimeTypes=<supported-mimetypes>
- * X-Akonadi-Capabilities=<supported-mimetype>
+ * X-Akonadi-Capabilities=Resource
  * X-Akonadi-Identifier=akonadi_my_resource
  *   \endcode
- * @todo what is capabilities used for?
  *
  * <h5>Handling PIM Items</h5>
  *
