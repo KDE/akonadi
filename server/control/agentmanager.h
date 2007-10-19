@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Tobias Koenig <tokoe@kde.org>                   *
+ *   Copyright (c) 2007 Volker Krause <vkrause@kde.org>                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -20,11 +21,11 @@
 #ifndef AGENTMANAGER_H
 #define AGENTMANAGER_H
 
+#include <QtCore/QHash>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 
-#include "agentinterface.h"
-#include "resourceinterface.h"
+#include "agentinfo.h"
 #include "tracerinterface.h"
 
 class QDir;
@@ -61,6 +62,13 @@ class AgentManager : public QObject
      * the child processes.
      */
     void cleanup();
+
+     /**
+     * Returns the path of the config file.
+     */
+    static QString configPath( bool writeable );
+
+    org::kde::Akonadi::Tracer* tracer() const { return mTracer; }
 
   public Q_SLOTS:
     /**
@@ -240,7 +248,7 @@ class AgentManager : public QObject
 
   private Q_SLOTS:
     void updatePluginInfos();
-    void resourceRegistered( const QString&, const QString&, const QString& );
+    void agentRegistered( const QString&, const QString&, const QString& );
     void resourceStatusChanged( int status, const QString &message );
     void resourceProgressChanged( uint progress, const QString &message );
     void resourceNameChanged( const QString& );
@@ -251,11 +259,6 @@ class AgentManager : public QObject
      * for the plugins are located.
      */
     static QStringList pluginInfoPathList();
-
-    /**
-     * Returns the path of the config file.
-     */
-    static QString configPath( bool writeable );
 
     /**
      * Loads the internal state from config file.
@@ -279,60 +282,26 @@ class AgentManager : public QObject
      */
     void readPluginInfos( const QDir &directory );
 
-    /**
-     * Internal method.
-     */
-    bool checkInterface( const QString &identifier, const QString &method ) const;
+    bool checkAgentInterface( const QString &identifier ) const;
+    bool checkResourceInterface( const QString &identifier, const QString &method ) const;
+    bool checkAgentExists( const QString &identifier ) const;
+    void ensureAutoStart( const AgentInfo &info );
 
-    class PluginInfo
-    {
-      public:
-        QString identifier;
-        QString name;
-        QString comment;
-        QString icon;
-        QStringList mimeTypes;
-        QStringList capabilities;
-        QString exec;
-    };
-
-    class InstanceInfo
-    {
-      public:
-        uint instanceCounter;
-    };
-
-    class Instance
-    {
-      public:
-        QString agentType;
-        Akonadi::ProcessControl *controller;
-        org::kde::Akonadi::Agent *agentInterface;
-        org::kde::Akonadi::Resource *resourceInterface;
-    };
-
+  private:
     /**
      * The map which stores the .desktop file
      * entries for every agent type.
      *
      * Key is the agent type (e.g. 'file' or 'imap').
      */
-    QMap<QString, PluginInfo> mPluginInfos;
-
-    /**
-     * The map which stores the instance specific
-     * settings for every plugin type.
-     *
-     * Key is the agent type.
-     */
-    QMap<QString, InstanceInfo> mInstanceInfos;
+    QHash<QString, AgentInfo> mAgents;
 
     /**
      * The map which stores the active instances.
      *
      * Key is the instance identifier.
      */
-    QMap<QString, Instance> mInstances;
+    QHash<QString, AgentInstanceInfo> mAgentInstances;
 
     org::kde::Akonadi::Tracer *mTracer;
 

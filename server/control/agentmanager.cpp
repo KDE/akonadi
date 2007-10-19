@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Tobias Koenig <tokoe@kde.org>                   *
+ *   Copyright (c) 2007 Volker Krause <vkrause@kde.org>                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -45,7 +46,7 @@ AgentManager::AgentManager( QObject *parent )
   mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
 
   connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
-           this, SLOT( resourceRegistered( const QString&, const QString&, const QString& ) ) );
+           this, SLOT( agentRegistered( const QString&, const QString&, const QString& ) ) );
 
   readPluginInfos();
 
@@ -60,6 +61,8 @@ AgentManager::AgentManager( QObject *parent )
   }
 
   load();
+  foreach ( const AgentInfo info, mAgents )
+    ensureAutoStart( info );
 }
 
 AgentManager::~AgentManager()
@@ -69,15 +72,12 @@ AgentManager::~AgentManager()
 
 void AgentManager::cleanup()
 {
-  QMutableMapIterator<QString, Instance> it( mInstances );
-  while ( it.hasNext() ) {
-    it.next();
-
-    if ( it.value().agentInterface )
-      it.value().agentInterface->quit();
+  foreach ( const AgentInstanceInfo info, mAgentInstances ) {
+    if ( info.agentInterface && info.agentInterface->isValid() )
+      info.agentInterface->quit();
   }
 
-  mInstances.clear();
+  mAgentInstances.clear();
 
   org::kde::Akonadi::Server *serverIface = new org::kde::Akonadi::Server( "org.kde.Akonadi", "/Server",
                                                                           QDBusConnection::sessionBus(), this );
@@ -89,125 +89,93 @@ void AgentManager::cleanup()
 
 QStringList AgentManager::agentTypes() const
 {
-  return mPluginInfos.keys();
+  return mAgents.keys();
 }
 
 QString AgentManager::agentName( const QString &identifier ) const
 {
-  if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentName" ),
-                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkAgentExists( identifier ) )
     return QString();
-  }
-
-  return mPluginInfos[ identifier ].name;
+  return mAgents.value( identifier ).name;
 }
 
 QString AgentManager::agentComment( const QString &identifier ) const
 {
-  if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentComment" ),
-                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkAgentExists( identifier ) )
     return QString();
-  }
-
-  return mPluginInfos[ identifier ].comment;
+  return mAgents.value( identifier ).comment;
 }
 
 QString AgentManager::agentIcon( const QString &identifier ) const
 {
-  if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentIcon" ),
-                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkAgentExists( identifier ) )
     return QString();
-  }
-
-  return mPluginInfos[ identifier ].icon;
+  return mAgents.value( identifier ).icon;
 }
 
 QStringList AgentManager::agentMimeTypes( const QString &identifier ) const
 {
-  if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentMimeTypes" ),
-                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkAgentExists( identifier ) )
     return QStringList();
-  }
-
-  return mPluginInfos[ identifier ].mimeTypes;
+  return mAgents.value( identifier ).mimeTypes;
 }
 
 QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 {
-  if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentCapabilities" ),
-                     QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkAgentExists( identifier ) )
     return QStringList();
-  }
-
-  return mPluginInfos[ identifier ].capabilities;
+  return mAgents.value( identifier ).capabilities;
 }
 
 QString AgentManager::createAgentInstance( const QString &identifier )
 {
-  if ( !mPluginInfos.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::createAgentInstance" ),
-                      QString( "Agent type with identifier '%1' does not exist" ).arg( identifier ) );
+  if ( !checkAgentExists( identifier ) )
+    return QString();
+  AgentInfo agentInfo = mAgents.value( identifier );
+  mAgents[ identifier ].instanceCounter++;
+
+
+  AgentInstanceInfo instance;
+  if ( agentInfo.capabilities.contains( AgentInfo::CapabilityUnique ) )
+    instance.identifier = identifier;
+  else
+    instance.identifier = QString::fromLatin1( "%1_%2" ).arg( identifier, QString::number( agentInfo.instanceCounter ) );
+  instance.agentType = identifier;
+
+  if ( mAgentInstances.contains( instance.identifier ) ) {
+    mTracer->warning( QLatin1String("AgentManager::createAgentInstance"),
+                      QString::fromLatin1( "Cannot create another instance of agent '%1'." ).arg( identifier ) );
     return QString();
   }
 
-  /**
-   * If this is the first instance of this agent type, we
-   * set the instance counter to 0
-   */
-  if ( !mInstanceInfos.contains( identifier ) ) {
-    InstanceInfo info;
-    info.instanceCounter = 0;
-
-    mInstanceInfos.insert( identifier, info );
-  }
-
-  const uint instanceCounter = mInstanceInfos[ identifier ].instanceCounter;
-  mInstanceInfos[ identifier ].instanceCounter++;
-
-  const QString agentIdentifier = QString( "%1_%2" ).arg( identifier, QString::number( instanceCounter ) );
-
-  Instance instance;
-  instance.agentType = identifier;
-  instance.controller = new Akonadi::ProcessControl( this );
-  instance.agentInterface = 0;
-  instance.resourceInterface = 0;
-
-  mInstances.insert( agentIdentifier, instance );
-
-  QStringList arguments;
-  arguments << "--identifier" << agentIdentifier;
-
-  const QString executable = Akonadi::XdgBaseDirs::findExecutableFile( mPluginInfos[ identifier ].exec );
-  mInstances[ agentIdentifier ].controller->start( executable, arguments );
+  if ( !instance.start( agentInfo, this ) )
+    return QString();
+  mAgentInstances.insert( instance.identifier, instance );
 
   save();
-
-  return agentIdentifier;
+  return instance.identifier;
 }
 
 void AgentManager::removeAgentInstance( const QString &identifier )
 {
-  if ( !mInstances.contains( identifier ) ) {
+  if ( !mAgentInstances.contains( identifier ) ) {
     mTracer->warning( QLatin1String( "AgentManager::removeAgentInstance" ),
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
     return;
   }
 
-  if ( mInstances[ identifier ].agentInterface ) {
-    mInstances[ identifier ].agentInterface->cleanup();
-  } else
+  AgentInstanceInfo instance = mAgentInstances.value( identifier );
+  if ( instance.agentInterface ) {
+    instance.agentInterface->cleanup();
+  } else {
     mTracer->error( QLatin1String( "AgentManager::removeAgentInstance" ),
                     QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+  }
 
-  if ( mInstances[ identifier ].controller )
-    delete mInstances.value( identifier ).controller;
+  if ( instance.controller )
+    delete instance.controller;
 
-  mInstances.remove( identifier );
+  mAgentInstances.remove( identifier );
 
   save();
 
@@ -216,126 +184,111 @@ void AgentManager::removeAgentInstance( const QString &identifier )
 
 QString AgentManager::agentInstanceType( const QString &identifier )
 {
-  if ( !mInstances.contains( identifier ) ) {
+  if ( !mAgentInstances.contains( identifier ) ) {
     mTracer->warning( QLatin1String( "AgentManager::agentInstanceType" ),
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
     return QString();
   }
 
-  return mInstances[ identifier ].agentType;
+  return mAgentInstances.value( identifier ).agentType;
 }
 
 QStringList AgentManager::agentInstances() const
 {
-  return mInstances.keys();
+  return mAgentInstances.keys();
 }
 
 int AgentManager::agentInstanceStatus( const QString &identifier ) const
 {
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceStatus" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceStatus" ) ) )
     return 2;
-
-  return mInstances[ identifier ].resourceInterface->status();
+  return mAgentInstances.value( identifier ).resourceInterface->status();
 }
 
 QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) const
 {
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceStatusMessage" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceStatusMessage" ) ) )
     return QString();
-
-  return mInstances[ identifier ].resourceInterface->statusMessage();
+  return mAgentInstances.value( identifier ).resourceInterface->statusMessage();
 }
 
 uint AgentManager::agentInstanceProgress( const QString &identifier ) const
 {
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceProgress" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceProgress" ) ) )
     return 0;
-
-  return mInstances[ identifier ].resourceInterface->progress();
+  return mAgentInstances.value( identifier ).resourceInterface->progress();
 }
 
 QString AgentManager::agentInstanceProgressMessage( const QString &identifier ) const
 {
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceProgressMessage" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceProgressMessage" ) ) )
     return QString();
-
-  return mInstances[ identifier ].resourceInterface->progressMessage();
+  return mAgentInstances.value( identifier ).resourceInterface->progressMessage();
 }
 
 void AgentManager::setAgentInstanceName( const QString &identifier, const QString &name )
 {
-  if ( !checkInterface( identifier, QLatin1String( "setAgentInstanceName" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "setAgentInstanceName" ) ) )
     return;
-
-  mInstances[ identifier ].resourceInterface->setName( name );
+  mAgentInstances.value( identifier ).resourceInterface->setName( name );
 }
 
 QString AgentManager::agentInstanceName( const QString &identifier ) const
 {
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceName" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceName" ) ) )
     return QString();
-
-  return mInstances[ identifier ].resourceInterface->name();
+  return mAgentInstances.value( identifier ).resourceInterface->name();
 }
 
 void AgentManager::agentInstanceConfigure( const QString &identifier )
 {
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceConfigure" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceConfigure" ) ) )
     return;
-
-  mInstances[ identifier ].resourceInterface->configure();
+  mAgentInstances.value( identifier ).resourceInterface->configure();
 }
 
 void AgentManager::agentInstanceSynchronize( const QString &identifier )
 {
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
     return;
-
-  mInstances[ identifier ].resourceInterface->synchronize();
+  mAgentInstances.value( identifier ).resourceInterface->synchronize();
 }
 
 bool AgentManager::agentInstanceOnline(const QString & identifier)
 {
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
     return false;
-
-  return mInstances[ identifier ].resourceInterface->isOnline();
+  return mAgentInstances.value( identifier ).resourceInterface->isOnline();
 }
 
 void AgentManager::setAgentInstanceOnline(const QString & identifier, bool state )
 {
-  if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
     return;
-
-  mInstances[ identifier ].resourceInterface->setOnline( state );
+  mAgentInstances.value( identifier ).resourceInterface->setOnline( state );
 }
 
 void AgentManager::updatePluginInfos()
 {
-  QMap<QString, PluginInfo> oldInfos = mPluginInfos;
-
+  QHash<QString, AgentInfo> oldInfos = mAgents;
   readPluginInfos();
 
-  QMapIterator<QString, PluginInfo> it( oldInfos );
-  while ( it.hasNext() ) {
-    it.next();
-
-    if ( !mPluginInfos.contains( it.key() ) )
-      emit agentTypeRemoved( it.key() );
+  foreach ( const AgentInfo oldInfo, oldInfos ) {
+    if ( !mAgents.contains( oldInfo.identifier ) )
+      emit agentTypeRemoved( oldInfo.identifier );
   }
 
-  it = mPluginInfos;
-  while ( it.hasNext() ) {
-    it.next();
-
-    if ( !oldInfos.contains( it.key() ) )
-      emit agentTypeAdded( it.key() );
+  foreach ( const AgentInfo newInfo, mAgents ) {
+    if ( !oldInfos.contains( newInfo.identifier ) ) {
+      emit agentTypeAdded( newInfo.identifier );
+      ensureAutoStart( newInfo );
+    }
   }
 }
 
 void AgentManager::readPluginInfos()
 {
-  mPluginInfos.clear();
+  mAgents.clear();
 
   QStringList pathList = pluginInfoPathList();
 
@@ -353,40 +306,17 @@ void AgentManager::readPluginInfos( const QDir& directory )
   for ( int i = 0; i < files.count(); ++i ) {
     const QString fileName = directory.absoluteFilePath( files[ i ] );
 
-    QSettings file( fileName, QSettings::IniFormat );
-    file.beginGroup( "Desktop Entry" );
-
-    PluginInfo info;
-    info.name = file.value( "Name" ).toString();
-    info.comment = file.value( "Comment" ).toString();
-    info.icon = file.value( "Icon" ).toString();
-    info.mimeTypes = file.value( "X-Akonadi-MimeTypes" ).toStringList();
-    info.capabilities = file.value( "X-Akonadi-Capabilities" ).toStringList();
-    info.exec = file.value( "Exec" ).toString();
-    const QString identifier = file.value( "X-Akonadi-Identifier" ).toString();
-
-    file.endGroup();
-
-    if ( identifier.isEmpty() ) {
-      mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
-                     QString( "Agent desktop file '%1' contains empty identifier" ).arg( fileName ) );
-      continue;
+    AgentInfo agentInfo;
+    if ( agentInfo.load( fileName, this ) ) {
+      if ( mAgents.contains( agentInfo.identifier ) ) {
+        mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
+                        QString( "Duplicated agent identifier '%1' from file '%2'" )
+                            .arg( fileName, agentInfo.identifier ) );
+        continue;
+      }
+      qDebug() << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
+      mAgents.insert( agentInfo.identifier, agentInfo );
     }
-
-    if ( mPluginInfos.contains( identifier ) ) {
-      mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
-                     QString( "Duplicated agent identifier '%1' from file '%2'" ).arg( fileName, identifier ) );
-      continue;
-    }
-
-    if ( info.exec.isEmpty() ) {
-      mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
-                     QString( "Agent desktop file '%1' contains empty Exec entry" ).arg( fileName ) );
-      continue;
-    }
-
-  qDebug() << "PLUGINS inserting: " << identifier;
-    mPluginInfos.insert( identifier, info );
   }
 }
 
@@ -410,47 +340,13 @@ QString AgentManager::configPath( bool writeable )
 
 void AgentManager::load()
 {
-  mInstanceInfos.clear();
-
   QSettings file( configPath( false ), QSettings::IniFormat );
-  file.beginGroup( "InstanceCounters" );
-
-  QStringList entries = file.childGroups();
-  for ( int i = 0; i < entries.count(); ++i ) {
-    const QString agentType = entries[ i ];
-
-    if ( mInstanceInfos.contains( agentType ) ) {
-      mTracer->warning( QLatin1String( "AgentManager::load" ),
-                        QString( "Duplicated agent type '%1' found in agentsrc" ).arg( agentType ) );
-      continue;
-    }
-
-    file.beginGroup( entries[ i ] );
-
-    const int instanceCounter = file.value( "InstanceCounter", QVariant( 0 ) ).toInt();
-
-    if ( !mPluginInfos.contains( agentType ) ) {
-      mTracer->warning( QLatin1String( "AgentManager::load" ),
-                        QString( "Reference to unknown agent type '%1' in agentsrc" ).arg( agentType ) );
-      file.endGroup();
-      continue;
-    }
-
-    InstanceInfo info;
-    info.instanceCounter = instanceCounter;
-    mInstanceInfos.insert( agentType, info );
-
-    file.endGroup();
-  }
-
-  file.endGroup();
-
   file.beginGroup( "Instances" );
-  entries = file.childGroups();
+  QStringList entries = file.childGroups();
   for ( int i = 0; i < entries.count(); ++i ) {
     const QString instanceIdentifier = entries[ i ];
 
-    if ( mInstances.contains( instanceIdentifier ) ) {
+    if ( mAgentInstances.contains( instanceIdentifier ) ) {
       mTracer->warning( QLatin1String( "AgentManager::load" ),
                         QString( "Duplicated instance identifier '%1' found in agentsrc" ).arg( instanceIdentifier ) );
       continue;
@@ -459,27 +355,18 @@ void AgentManager::load()
     file.beginGroup( entries[ i ] );
 
     const QString agentType = file.value( "AgentType" ).toString();
-    if ( !mPluginInfos.contains( agentType ) ) {
+    if ( !mAgents.contains( agentType ) ) {
       mTracer->warning( QLatin1String( "AgentManager::load" ),
                         QString( "Reference to unknown agent type '%1' in agentsrc" ).arg( agentType ) );
       file.endGroup();
       continue;
     }
 
-    Instance instance;
+    AgentInstanceInfo instance;
+    instance.identifier = instanceIdentifier;
     instance.agentType = agentType;
-    instance.controller = new Akonadi::ProcessControl( this );
-    instance.agentInterface = 0;
-    instance.resourceInterface = 0;
-
-    mInstances.insert( instanceIdentifier, instance );
-
-    QStringList arguments;
-    arguments << "--identifier" << instanceIdentifier;
-
-    const QString executable = Akonadi::XdgBaseDirs::findExecutableFile( mPluginInfos[ agentType ].exec );
-    mInstances[ instanceIdentifier ].controller->start( executable, arguments );
-
+    if ( instance.start( mAgents.value( agentType ), this ) )
+      mAgentInstances.insert( instanceIdentifier, instance );
     file.endGroup();
   }
 
@@ -491,27 +378,14 @@ void AgentManager::save()
   QSettings file( configPath( true ), QSettings::IniFormat );
 
   file.clear();
-  file.beginGroup( "InstanceCounters" );
-
-  QMapIterator<QString, InstanceInfo> it( mInstanceInfos );
-  while ( it.hasNext() ) {
-    it.next();
-
-    file.beginGroup( it.key() );
-    file.setValue( "InstanceCounter", it.value().instanceCounter );
-    file.endGroup();
-  }
-
-  file.endGroup();
+  foreach ( const AgentInfo info, mAgents )
+    info.save( &file );
 
   file.beginGroup( "Instances" );
 
-  QMapIterator<QString, Instance> instanceIt( mInstances );
-  while ( instanceIt.hasNext() ) {
-    instanceIt.next();
-
-    file.beginGroup( instanceIt.key() );
-    file.setValue( "AgentType", instanceIt.value().agentType );
+  foreach ( const AgentInstanceInfo info, mAgentInstances ) {
+    file.beginGroup( info.identifier );
+    file.setValue( "AgentType", info.agentType );
     file.endGroup();
   }
 
@@ -520,55 +394,65 @@ void AgentManager::save()
   file.sync();
 }
 
-void AgentManager::resourceRegistered( const QString &name, const QString&, const QString &newOwner )
+void AgentManager::agentRegistered( const QString &name, const QString&, const QString &newOwner )
 {
-  if ( !name.startsWith( "org.kde.Akonadi.Resource." ) )
-    return;
+  if ( name.startsWith( "org.kde.Akonadi.Agent." ) ) {
+    const QString identifier = name.mid( 22 );
+    if ( !mAgentInstances.contains( identifier ) )
+      return;
 
-  const QString identifier = name.mid( 25 );
+    if ( newOwner.isEmpty() ) { // interface was unregistered
+      if ( mAgentInstances.contains( identifier ) )
+        emit agentInstanceRemoved( identifier );
+      return;
+    }
 
-  if ( newOwner.isEmpty() ) { // interface was unregistered
-    if ( mInstances.contains( identifier ) )
-      emit agentInstanceRemoved( identifier );
-    return;
+    delete mAgentInstances[ identifier ].agentInterface;
+    mAgentInstances[ identifier ].agentInterface = 0;
+
+    org::kde::Akonadi::Agent *agentIface = new org::kde::Akonadi::Agent( "org.kde.Akonadi.Agent." + identifier,
+        "/", QDBusConnection::sessionBus(), this );
+    if ( !agentIface || !agentIface->isValid() ) {
+      mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
+                      QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+                          .arg( identifier, agentIface ? agentIface->lastError().message() : "" ) );
+      return;
+    }
+
+    agentIface->setObjectName( identifier );
+    mAgentInstances[ identifier ].agentInterface = agentIface;
+    emit agentInstanceAdded( identifier );
   }
 
-  delete mInstances[ identifier ].agentInterface;
-  mInstances[ identifier ].agentInterface = 0;
-  delete mInstances[ identifier ].resourceInterface;
-  mInstances[ identifier ].resourceInterface = 0;
+  else if ( name.startsWith( "org.kde.Akonadi.Resource." ) ) {
+    if ( newOwner.isEmpty() )
+      return;
 
-  org::kde::Akonadi::Agent *agentIface = new org::kde::Akonadi::Agent( "org.kde.Akonadi.Agent." + identifier,
-      "/", QDBusConnection::sessionBus(), this );
-  if ( !agentIface || !agentIface->isValid() ) {
-    mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
-                    QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                        .arg( identifier, agentIface ? agentIface->lastError().message() : "" ) );
-    return;
+    const QString identifier = name.mid( 25 );
+    if ( !mAgentInstances.contains( identifier ) )
+      return;
+
+    delete mAgentInstances[ identifier ].resourceInterface;
+    mAgentInstances[ identifier ].resourceInterface = 0;
+
+    org::kde::Akonadi::Resource *resInterface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + identifier, "/", QDBusConnection::sessionBus(), this );
+
+    if ( !resInterface || !resInterface->isValid() ) {
+      mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
+                      QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+                          .arg( identifier, resInterface ? resInterface->lastError().message() : "" ) );
+      return;
+    }
+
+    resInterface->setObjectName( identifier );
+    connect( resInterface, SIGNAL( statusChanged( int, const QString& ) ),
+            this, SLOT( resourceStatusChanged( int, const QString& ) ) );
+    connect( resInterface, SIGNAL( progressChanged( uint, const QString& ) ),
+            this, SLOT( resourceProgressChanged( uint, const QString& ) ) );
+    connect( resInterface, SIGNAL( nameChanged( const QString& ) ),
+            this, SLOT( resourceNameChanged( const QString& ) ) );
+    mAgentInstances[ identifier ].resourceInterface = resInterface;
   }
-
-  org::kde::Akonadi::Resource *resInterface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + identifier, "/", QDBusConnection::sessionBus(), this );
-
-  if ( !resInterface || !resInterface->isValid() ) {
-    mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
-                    QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                        .arg( identifier, resInterface ? resInterface->lastError().message() : "" ) );
-    return;
-  }
-
-  resInterface->setObjectName( identifier );
-
-  connect( resInterface, SIGNAL( statusChanged( int, const QString& ) ),
-           this, SLOT( resourceStatusChanged( int, const QString& ) ) );
-  connect( resInterface, SIGNAL( progressChanged( uint, const QString& ) ),
-           this, SLOT( resourceProgressChanged( uint, const QString& ) ) );
-  connect( resInterface, SIGNAL( nameChanged( const QString& ) ),
-           this, SLOT( resourceNameChanged( const QString& ) ) );
-
-  mInstances[ identifier ].agentInterface = agentIface;
-  mInstances[ identifier ].resourceInterface = resInterface;
-
-  emit agentInstanceAdded( identifier );
 }
 
 void AgentManager::resourceStatusChanged( int status, const QString &message )
@@ -628,21 +512,56 @@ void AgentManager::resourceNameChanged( const QString &data )
   emit agentInstanceNameChanged( identifier, data );
 }
 
-bool AgentManager::checkInterface( const QString &identifier, const QString &method ) const
+bool AgentManager::checkResourceInterface( const QString &identifier, const QString &method ) const
 {
-  if ( !mInstances.contains( identifier ) ) {
+  if ( !mAgentInstances.contains( identifier ) ) {
     mTracer->warning( QLatin1String( "AgentManager::" ) + method,
                       QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
     return false;
   }
 
-  if ( !mInstances[ identifier ].resourceInterface ) {
+  if ( !mAgentInstances[ identifier ].resourceInterface ) {
     mTracer->error( QLatin1String( "AgentManager::" ) + method,
                     QString( "Agent instance '%1' has no resource interface!" ).arg( identifier ) );
     return false;
   }
 
   return true;
+}
+
+bool AgentManager::checkAgentExists(const QString & identifier) const
+{
+  if ( !mAgents.contains( identifier ) ) {
+    mTracer->warning( QLatin1String( "AgentManager" ),
+                      QString::fromLatin1( "Agent type '%1' does not exist." ) .arg( identifier ) );
+    return false;
+  }
+  return true;
+}
+
+bool AgentManager::checkAgentInterface(const QString & identifier) const
+{
+  if ( !mAgentInstances.contains( identifier ) || !mAgentInstances.value( identifier ).agentInterface ) {
+    mTracer->warning( QLatin1String( "AgentManager" ),
+                      QString::fromLatin1( "Agent instance '%1' does not exist or has no interface." ).arg( identifier ) );
+    return false;
+  }
+  return true;
+}
+
+void AgentManager::ensureAutoStart(const AgentInfo & info)
+{
+  if ( !info.capabilities.contains( AgentInfo::CapabilityAutostart ) )
+    return; // no an autostart agent
+  if ( mAgentInstances.contains( info.identifier ) )
+    return; // already running
+  AgentInstanceInfo instance;
+  instance.identifier = info.identifier;
+  instance.agentType = info.identifier;
+  if ( instance.start( info, this ) ) {
+    mAgentInstances.insert( instance.identifier, instance );
+    save();
+  }
 }
 
 #include "agentmanager.moc"
