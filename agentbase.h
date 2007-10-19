@@ -24,7 +24,6 @@
 #define AKONADI_AGENTBASE_H
 
 #include "libakonadi_export.h"
-#include "agent.h"
 #include <libakonadi/collection.h>
 
 #include <kapplication.h>

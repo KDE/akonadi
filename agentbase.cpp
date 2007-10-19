@@ -24,6 +24,7 @@
 #include "agentbase.h"
 #include "agentbase_p.h"
 
+#include "agent.h"
 #include "kcrash.h"
 #include "agentadaptor.h"
 #include "monitor_p.h"

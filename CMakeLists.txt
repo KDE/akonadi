@@ -99,6 +99,7 @@ install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 
 install( FILES
 	akonadi_export.h
+	agentbase.h
 	agentmanager.h
 	collection.h
 	collectionattribute.h
