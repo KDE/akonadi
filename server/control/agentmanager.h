@@ -23,6 +23,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 
+#include "agentinterface.h"
 #include "resourceinterface.h"
 #include "tracerinterface.h"
 
@@ -306,7 +307,8 @@ class AgentManager : public QObject
       public:
         QString agentType;
         Akonadi::ProcessControl *controller;
-        org::kde::Akonadi::Resource *interface;
+        org::kde::Akonadi::Agent *agentInterface;
+        org::kde::Akonadi::Resource *resourceInterface;
     };
 
     /**

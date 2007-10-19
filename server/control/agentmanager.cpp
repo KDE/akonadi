@@ -73,8 +73,8 @@ void AgentManager::cleanup()
   while ( it.hasNext() ) {
     it.next();
 
-    if ( it.value().interface )
-      it.value().interface->quit();
+    if ( it.value().agentInterface )
+      it.value().agentInterface->quit();
   }
 
   mInstances.clear();
@@ -174,7 +174,8 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   Instance instance;
   instance.agentType = identifier;
   instance.controller = new Akonadi::ProcessControl( this );
-  instance.interface = 0;
+  instance.agentInterface = 0;
+  instance.resourceInterface = 0;
 
   mInstances.insert( agentIdentifier, instance );
 
@@ -197,8 +198,8 @@ void AgentManager::removeAgentInstance( const QString &identifier )
     return;
   }
 
-  if ( mInstances[ identifier ].interface ) {
-    mInstances[ identifier ].interface->cleanup();
+  if ( mInstances[ identifier ].agentInterface ) {
+    mInstances[ identifier ].agentInterface->cleanup();
   } else
     mTracer->error( QLatin1String( "AgentManager::removeAgentInstance" ),
                     QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
@@ -234,7 +235,7 @@ int AgentManager::agentInstanceStatus( const QString &identifier ) const
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceStatus" ) ) )
     return 2;
 
-  return mInstances[ identifier ].interface->status();
+  return mInstances[ identifier ].resourceInterface->status();
 }
 
 QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) const
@@ -242,7 +243,7 @@ QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) co
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceStatusMessage" ) ) )
     return QString();
 
-  return mInstances[ identifier ].interface->statusMessage();
+  return mInstances[ identifier ].resourceInterface->statusMessage();
 }
 
 uint AgentManager::agentInstanceProgress( const QString &identifier ) const
@@ -250,7 +251,7 @@ uint AgentManager::agentInstanceProgress( const QString &identifier ) const
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceProgress" ) ) )
     return 0;
 
-  return mInstances[ identifier ].interface->progress();
+  return mInstances[ identifier ].resourceInterface->progress();
 }
 
 QString AgentManager::agentInstanceProgressMessage( const QString &identifier ) const
@@ -258,7 +259,7 @@ QString AgentManager::agentInstanceProgressMessage( const QString &identifier ) 
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceProgressMessage" ) ) )
     return QString();
 
-  return mInstances[ identifier ].interface->progressMessage();
+  return mInstances[ identifier ].resourceInterface->progressMessage();
 }
 
 void AgentManager::setAgentInstanceName( const QString &identifier, const QString &name )
@@ -266,7 +267,7 @@ void AgentManager::setAgentInstanceName( const QString &identifier, const QStrin
   if ( !checkInterface( identifier, QLatin1String( "setAgentInstanceName" ) ) )
     return;
 
-  mInstances[ identifier ].interface->setName( name );
+  mInstances[ identifier ].resourceInterface->setName( name );
 }
 
 QString AgentManager::agentInstanceName( const QString &identifier ) const
@@ -274,7 +275,7 @@ QString AgentManager::agentInstanceName( const QString &identifier ) const
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceName" ) ) )
     return QString();
 
-  return mInstances[ identifier ].interface->name();
+  return mInstances[ identifier ].resourceInterface->name();
 }
 
 void AgentManager::agentInstanceConfigure( const QString &identifier )
@@ -282,7 +283,7 @@ void AgentManager::agentInstanceConfigure( const QString &identifier )
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceConfigure" ) ) )
     return;
 
-  mInstances[ identifier ].interface->configure();
+  mInstances[ identifier ].resourceInterface->configure();
 }
 
 void AgentManager::agentInstanceSynchronize( const QString &identifier )
@@ -290,7 +291,7 @@ void AgentManager::agentInstanceSynchronize( const QString &identifier )
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
     return;
 
-  mInstances[ identifier ].interface->synchronize();
+  mInstances[ identifier ].resourceInterface->synchronize();
 }
 
 bool AgentManager::agentInstanceOnline(const QString & identifier)
@@ -298,7 +299,7 @@ bool AgentManager::agentInstanceOnline(const QString & identifier)
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
     return false;
 
-  return mInstances[ identifier ].interface->isOnline();
+  return mInstances[ identifier ].resourceInterface->isOnline();
 }
 
 void AgentManager::setAgentInstanceOnline(const QString & identifier, bool state )
@@ -306,7 +307,7 @@ void AgentManager::setAgentInstanceOnline(const QString & identifier, bool state
   if ( !checkInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )
     return;
 
-  mInstances[ identifier ].interface->setOnline( state );
+  mInstances[ identifier ].resourceInterface->setOnline( state );
 }
 
 void AgentManager::updatePluginInfos()
@@ -468,7 +469,8 @@ void AgentManager::load()
     Instance instance;
     instance.agentType = agentType;
     instance.controller = new Akonadi::ProcessControl( this );
-    instance.interface = 0;
+    instance.agentInterface = 0;
+    instance.resourceInterface = 0;
 
     mInstances.insert( instanceIdentifier, instance );
 
@@ -531,28 +533,40 @@ void AgentManager::resourceRegistered( const QString &name, const QString&, cons
     return;
   }
 
-  delete mInstances[ identifier ].interface;
-  mInstances[ identifier ].interface = 0;
+  delete mInstances[ identifier ].agentInterface;
+  mInstances[ identifier ].agentInterface = 0;
+  delete mInstances[ identifier ].resourceInterface;
+  mInstances[ identifier ].resourceInterface = 0;
 
-  org::kde::Akonadi::Resource *interface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + identifier, "/", QDBusConnection::sessionBus(), this );
-
-  if ( !interface || !interface->isValid() ) {
+  org::kde::Akonadi::Agent *agentIface = new org::kde::Akonadi::Agent( "org.kde.Akonadi.Agent." + identifier,
+      "/", QDBusConnection::sessionBus(), this );
+  if ( !agentIface || !agentIface->isValid() ) {
     mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
                     QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                        .arg( identifier, interface ? interface->lastError().message() : "" ) );
+                        .arg( identifier, agentIface ? agentIface->lastError().message() : "" ) );
     return;
   }
 
-  interface->setObjectName( identifier );
+  org::kde::Akonadi::Resource *resInterface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + identifier, "/", QDBusConnection::sessionBus(), this );
 
-  connect( interface, SIGNAL( statusChanged( int, const QString& ) ),
+  if ( !resInterface || !resInterface->isValid() ) {
+    mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
+                    QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+                        .arg( identifier, resInterface ? resInterface->lastError().message() : "" ) );
+    return;
+  }
+
+  resInterface->setObjectName( identifier );
+
+  connect( resInterface, SIGNAL( statusChanged( int, const QString& ) ),
            this, SLOT( resourceStatusChanged( int, const QString& ) ) );
-  connect( interface, SIGNAL( progressChanged( uint, const QString& ) ),
+  connect( resInterface, SIGNAL( progressChanged( uint, const QString& ) ),
            this, SLOT( resourceProgressChanged( uint, const QString& ) ) );
-  connect( interface, SIGNAL( nameChanged( const QString& ) ),
+  connect( resInterface, SIGNAL( nameChanged( const QString& ) ),
            this, SLOT( resourceNameChanged( const QString& ) ) );
 
-  mInstances[ identifier ].interface = interface;
+  mInstances[ identifier ].agentInterface = agentIface;
+  mInstances[ identifier ].resourceInterface = resInterface;
 
   emit agentInstanceAdded( identifier );
 }
@@ -622,9 +636,9 @@ bool AgentManager::checkInterface( const QString &identifier, const QString &met
     return false;
   }
 
-  if ( !mInstances[ identifier ].interface ) {
+  if ( !mInstances[ identifier ].resourceInterface ) {
     mTracer->error( QLatin1String( "AgentManager::" ) + method,
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+                    QString( "Agent instance '%1' has no resource interface!" ).arg( identifier ) );
     return false;
   }
 
