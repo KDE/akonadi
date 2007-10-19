@@ -133,11 +133,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * This method shall be used to report errors.
      */
     void error( const QString& message );
+
     /**
      * This method is called whenever the application is about to
      * quit.
      *
-     * Reimplement this method to do session cleanup.
+     * Reimplement this method to do session cleanup (e.g. disconnecting
+     * from groupware server).
      */
     virtual void aboutToQuit();
 
@@ -155,6 +157,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     Session* session();
 
+    /**
+      Returns the Akonadi::ChangeRecorder object used for monitoring.
+      Use this to configure which parts you want to monitor.
+    */
+    ChangeRecorder* monitor() const;
+
+  protected Q_SLOTS:
     /**
       Reimplement to handle adding of new items.
       @param item The newly added item.
@@ -178,8 +187,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     /**
       Reimplement to handle adding of new collections.
       @param collection The newly added collection.
+      @param parent The parent collection.
     */
-    virtual void collectionAdded( const Akonadi::Collection &collection );
+    virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
 
     /**
       Reimplement to handle changes to existing collections.
@@ -193,12 +203,6 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
       @param remoteId The remote id of the deleted collection.
     */
     virtual void collectionRemoved( int id, const QString &remoteId );
-
-    /**
-      Returns the Akonadi::ChangeRecorder object used for monitoring.
-      Use this to configure which parts you want to monitor.
-    */
-    ChangeRecorder* monitor() const;
 
   protected:
     //@cond PRIVATE

@@ -55,12 +55,6 @@ class AKONADI_EXPORT Agent : public QObject
     virtual void quit() = 0;
 
     /**
-     * This method is called whenever the agent shall show its configuration dialog
-     * to the user.
-     */
-    virtual Q_NOREPLY void configure() = 0;
-
-    /**
      * This method is called when the agent is removed from
      * the system, so it can do some cleanup stuff.
      */

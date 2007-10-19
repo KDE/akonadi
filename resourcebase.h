@@ -24,18 +24,13 @@
 #define AKONADI_RESOURCEBASE_H
 
 #include "libakonadi_export.h"
-#include "resource.h"
+#include <libakonadi/agentbase.h>
 
 #include <libakonadi/collection.h>
 #include <libakonadi/item.h>
 #include <libakonadi/job.h>
 
 #include <kapplication.h>
-
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include <QtCore/QString>
-#include <QtDBus/QDBusContext>
 
 class KJob;
 class ResourceAdaptor;
@@ -45,6 +40,7 @@ namespace Akonadi {
 class Item;
 class Job;
 class Session;
+class ResourceBasePrivate;
 
 /**
  * This class should be used as a base class by all resource agents,
@@ -144,7 +140,7 @@ class Session;
  *
  * @todo Convenience base class for collection-less resources
  */
-class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
+class AKONADI_EXPORT ResourceBase : public AgentBase
 {
   Q_OBJECT
 
@@ -216,13 +212,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     virtual QString progressMessage() const;
 
     /**
-     * This method is called whenever the resource shall show its configuration dialog
-     * to the user. It will be automatically called when the resource is started for
-     * the first time.
-     */
-    virtual void configure();
-
-    /**
      * This method is called whenever the resource should start synchronization.
      */
     virtual void synchronize();
@@ -238,17 +227,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     virtual QString name() const;
 
     /**
-     * Returns the instance identifier of this resource.
-     */
-    QString identifier() const;
-
-    /**
-     * This method is called when the resource is removed from
-     * the system, so it can do some cleanup stuff.
-     */
-    virtual void cleanup() const;
-
-    /**
      * This method is called from the crash handler, don't call
      * it manually.
      */
@@ -259,13 +237,36 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
 
   public Q_SLOTS:
     /**
-     * This method is called to quit the resource.
-     *
-     * Before the application is terminated @see aboutToQuit() is called,
-     * which can be reimplemented to do some session cleanup (e.g. disconnecting
-     * from groupware server).
+     * This method is called whenever the resource shall show its configuration dialog
+     * to the user. It will be automatically called when the resource is started for
+     * the first time.
      */
-    void quit();
+    virtual void configure();
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the status of the resource has changed.
+     *
+     * @param status The status id of the resource (@see Status).
+     * @param message An i18n'ed message which describes the status in detail.
+     */
+    void statusChanged( int status, const QString &message );
+
+    /**
+     * This signal is emitted whenever the progress information of the resource
+     * has changed.
+     *
+     * @param progress The progress in percent (0 - 100).
+     * @param message An i18n'ed message which describes the progress in detail.
+     */
+    void progressChanged( uint progress, const QString &message );
+
+    /**
+     * This signal is emitted whenever the name of the resource has changed.
+     *
+     * @param name The new name of the resource.
+     */
+    void nameChanged( const QString &name );
 
   protected Q_SLOTS:
     /**
@@ -306,16 +307,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     ~ResourceBase();
 
     /**
-     * This method shall be used to report warnings.
-     */
-    void warning( const QString& message );
-
-    /**
-     * This method shall be used to report errors.
-     */
-    void error( const QString& message );
-
-    /**
      * This method shall be used to signal a state change.
      *
      * @param status The new status of the resource.
@@ -333,29 +324,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     void changeProgress( uint progress, const QString &message = QString() );
 
     /**
-     * This method is called whenever the application is about to
-     * quit.
-     *
-     * Reimplement this method to do session cleanup (e.g. disconnecting
-     * from groupware server).
-     */
-    virtual void aboutToQuit();
-
-    /**
-     * This method returns the settings object which has to be used by the
-     * resource to store its configuration data.
-     *
-     * Don't delete this object!
-     */
-    QSettings* settings();
-
-    /**
-     * Returns a session for communicating with the storage backend. It should
-     * be used for all jobs.
-     */
-    Session* session();
-
-    /**
       Call this method from in requestItemDelivery(). It will generate an appropriate
       D-Bus reply as soon as the given job has finished.
       @param job The job which actually delivers the item.
@@ -363,48 +331,6 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     */
     bool deliverItem( Akonadi::Job* job, const QDBusMessage &msg );
 
-  protected Q_SLOTS:
-    /**
-      Reimplement to handle adding of new items.
-      @param item The newly added item.
-      @param collection The collection @p item got added to.
-    */
-    virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
-
-    /**
-      Reimplement to handle changes to existing items.
-      @param item The changed item.
-      @param partIdentifiers The identifiers of the item parts that has been changed.
-    */
-    virtual void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers  );
-
-    /**
-      Reimplement to handle deletion of items.
-      @param ref DataReference to the deleted item.
-    */
-    virtual void itemRemoved( const Akonadi::DataReference &ref );
-
-    /**
-      Reimplement to handle adding of new collections.
-      @param collection The newly added collection.
-      @param parent The parent collection.
-    */
-    virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
-
-    /**
-      Reimplement to handle changes to existing collections.
-      @param collection The changed collection.
-    */
-    virtual void collectionChanged( const Akonadi::Collection &collection );
-
-    /**
-      Reimplement to handle deletion of collections.
-      @param id The id of the deleted collection.
-      @param remoteId The remote id of the deleted collection.
-    */
-    virtual void collectionRemoved( int id, const QString &remoteId );
-
-  protected:
     /**
       Resets the dirty flag of the given item and updates the remote id.
       Call whenever you have successfully written changes back to the server.
@@ -470,16 +396,15 @@ class AKONADI_EXPORT ResourceBase : public Resource, protected QDBusContext
     bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts );
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( ResourceBase )
 
-    Q_PRIVATE_SLOT( d, void slotDeliveryDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionSyncDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotSynchronizeCollection(const Collection &col) )
-    Q_PRIVATE_SLOT( d, void slotCollectionListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotItemSyncDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void slotPercent( KJob*, unsigned long ) )
+    Q_PRIVATE_SLOT( d_func(), void slotDeliveryDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotCollectionSyncDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotLocalListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection(const Collection &col) )
+    Q_PRIVATE_SLOT( d_func(), void slotCollectionListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotItemSyncDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotPercent( KJob*, unsigned long ) )
 };
 
 }

@@ -98,7 +98,7 @@ void AgentBasePrivate::init()
   q->connect( monitor, SIGNAL( itemRemoved( const Akonadi::DataReference& ) ),
            q, SLOT( itemRemoved( const Akonadi::DataReference& ) ) );
   q->connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-              q, SLOT( collectionAdded( const Akonadi::Collection& ) ) );
+              q, SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
               q, SLOT( collectionChanged( const Akonadi::Collection& ) ) );
   q->connect( monitor, SIGNAL( collectionRemoved( int, const QString& ) ),
@@ -250,7 +250,7 @@ void AgentBase::itemRemoved( const DataReference &ref )
   Q_UNUSED( ref );
 }
 
-void AgentBase::collectionAdded( const Collection &collection )
+void AgentBase::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
   Q_UNUSED( collection );
 }
@@ -279,13 +279,13 @@ Session* AgentBase::session()
 void AgentBase::warning( const QString& message )
 {
   Q_D( AgentBase );
-  d->mTracer->warning( QString::fromLatin1( "ResourceBase(%1)" ).arg( d->mId ), message );
+  d->mTracer->warning( QString::fromLatin1( "AgentBase(%1)" ).arg( d->mId ), message );
 }
 
 void AgentBase::error( const QString& message )
 {
   Q_D( AgentBase );
-  d->mTracer->error( QString::fromLatin1( "ResourceBase(%1)" ).arg( d->mId ), message );
+  d->mTracer->error( QString::fromLatin1( "AgentBase(%1)" ).arg( d->mId ), message );
 }
 
 ChangeRecorder * AgentBase::monitor() const

@@ -54,11 +54,6 @@ class AKONADI_EXPORT Resource : public QObject
   public Q_SLOTS:
 
     /**
-     * This method is called to quit the resource.
-     */
-    virtual void quit() = 0;
-
-    /**
      * This method returns the current status code of the resource.
      *
      * The following return values are possible:
@@ -120,12 +115,6 @@ class AKONADI_EXPORT Resource : public QObject
      * Returns the name of the resource.
      */
     virtual QString name() const = 0;
-
-    /**
-     * This method is called when the resource is removed from
-     * the system, so it can do some cleanup stuff.
-     */
-    virtual void cleanup() const = 0;
 
     /**
      * Returns true if the resource is in online mode.
