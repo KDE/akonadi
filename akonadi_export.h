@@ -53,15 +53,4 @@
 # endif
 #endif
 
-//TODO: remove with searchprovider stuff that is going away soon
-#ifndef AKONADISEARCHPROVIDER_EXPORT
-# if defined(MAKE_AKONADISEARCHPROVIDER_LIB)
-   /* We are building this library */
-#  define AKONADISEARCHPROVIDER_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define AKONADISEARCHPROVIDER_EXPORT KDE_IMPORT
-# endif
-#endif
-
 #endif
