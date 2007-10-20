@@ -17,13 +17,16 @@
     02110-1301, USA.
 */
 
+#include "agenttypeviewtest.h"
+#include <libakonadi/agentfilterproxymodel.h>
+
+#include <kcomponentdata.h>
+
 #include <QtGui/QApplication>
 #include <QtGui/QComboBox>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
-
-#include "agenttypeviewtest.h"
 
 Dialog::Dialog( QWidget *parent )
   : QDialog( parent )
@@ -34,6 +37,7 @@ Dialog::Dialog( QWidget *parent )
   mFilter->addItem( "None" );
   mFilter->addItem( "text/calendar" );
   mFilter->addItem( "text/directory" );
+  mFilter->addItem( "message/rfc822" );
   connect( mFilter, SIGNAL( activated( int ) ),
            this, SLOT( filterChanged( int ) ) );
 
@@ -72,15 +76,15 @@ void Dialog::currentChanged( const QString &current, const QString &previous )
 
 void Dialog::filterChanged( int index )
 {
-  if ( index == 0 )
-    mView->setFilter( QStringList() );
-  else
-    mView->setFilter( QStringList( mFilter->itemText( index ) ) );
+  mView->agentFilterProxyModel()->clearFilter();
+  if ( index > 0 )
+    mView->agentFilterProxyModel()->addMimeType( mFilter->itemText( index ) );
 }
 
 int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
+  KComponentData kcd( "agenttypeviewtest" );
 
   Dialog dlg;
   dlg.exec();

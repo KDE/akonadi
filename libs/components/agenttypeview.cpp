@@ -25,6 +25,7 @@
 #include <QtGui/QPainter>
 
 #include <libakonadi/agenttypemodel.h>
+#include <libakonadi/agentfilterproxymodel.h>
 
 using namespace Akonadi;
 
@@ -54,17 +55,18 @@ class AgentTypeView::Private
     AgentTypeView *mParent;
     QListView *mView;
     AgentTypeModel *mModel;
+    AgentFilterProxyModel *proxyModel;
 };
 
 void AgentTypeView::Private::currentAgentTypeChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
 {
   QString currentIdentifier;
   if ( currentIndex.isValid() )
-    currentIdentifier = currentIndex.model()->data( currentIndex, Qt::UserRole ).toString();
+    currentIdentifier = currentIndex.model()->data( currentIndex, AgentTypeModel::TypeIdentifierRole ).toString();
 
   QString previousIdentifier;
   if ( previousIndex.isValid() )
-    previousIdentifier = previousIndex.model()->data( previousIndex, Qt::UserRole ).toString();
+    previousIdentifier = previousIndex.model()->data( previousIndex, AgentTypeModel::TypeIdentifierRole ).toString();
 
   emit mParent->currentChanged( currentIdentifier, previousIdentifier );
 }
@@ -81,10 +83,12 @@ AgentTypeView::AgentTypeView( QWidget *parent )
   layout->addWidget( d->mView );
 
   d->mModel = new AgentTypeModel( d->mView );
-  d->mView->setModel( d->mModel );
+  d->proxyModel = new AgentFilterProxyModel( this );
+  d->proxyModel->setSourceModel( d->mModel );
+  d->mView->setModel( d->proxyModel );
 
-  d->mView->selectionModel()->setCurrentIndex( d->mModel->index( 0, 0 ), QItemSelectionModel::Select );
-  d->mView->scrollTo( d->mModel->index( 0, 0 ) );
+  d->mView->selectionModel()->setCurrentIndex( d->mView->model()->index( 0, 0 ), QItemSelectionModel::Select );
+  d->mView->scrollTo( d->mView->model()->index( 0, 0 ) );
   connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) ) );
 }
@@ -104,12 +108,12 @@ QString AgentTypeView::currentAgentType() const
   if ( !index.isValid() )
     return QString();
 
-  return index.model()->data( index, Qt::UserRole ).toString();
+  return index.model()->data( index, AgentTypeModel::TypeIdentifierRole ).toString();
 }
 
-void AgentTypeView::setFilter( const QStringList &mimeTypes )
+AgentFilterProxyModel* AgentTypeView::agentFilterProxyModel() const
 {
-  d->mModel->setFilter( mimeTypes );
+  return d->proxyModel;
 }
 
 /**
