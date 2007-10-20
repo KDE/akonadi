@@ -25,6 +25,8 @@
 
 namespace Akonadi {
 
+class AgentFilterProxyModel;
+
 /**
  * This class provides a view of all available agent instances.
  *
@@ -56,6 +58,12 @@ class AKONADI_COMPONENTS_EXPORT AgentInstanceView : public QWidget
      * an empty string if no agent instance is selected.
      */
     QString currentAgentInstance() const;
+
+    /**
+      Returns the agent filter proxy model, use this to filter by
+      agent mimetype or capabilities.
+    */
+    AgentFilterProxyModel* agentFilterProxyModel() const;
 
   Q_SIGNALS:
     /**

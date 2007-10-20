@@ -30,14 +30,19 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
   Q_OBJECT
 
   public:
+    // keep in sync with the agenttypemodel.h
     enum Role
     {
-      StatusRole = Qt::UserRole + 1,
+      TypeIdentifierRole  = Qt::UserRole + 1,
+      CommentRole,
+      MimeTypesRole,
+      CapabilitiesRole,
+      InstanceIdentifierRole,
+      StatusRole,
       StatusMessageRole,
       ProgressRole,
       ProgressMessageRole,
-      OnlineRole,
-      CapabilityRole
+      OnlineRole
     };
 
     explicit AgentInstanceModel( QObject *parent );

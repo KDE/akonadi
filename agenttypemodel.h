@@ -35,7 +35,8 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
   public:
     enum Role
     {
-      CommentRole = Qt::UserRole + 1,
+      TypeIdentifierRole = Qt::UserRole + 1,
+      CommentRole,
       MimeTypesRole,
       CapabilitiesRole
     };
@@ -57,14 +58,6 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
 
     virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
     virtual QModelIndex parent( const QModelIndex &index ) const;
-
-  public Q_SLOTS:
-    /**
-     * Sets a filter to the model, so only agent types which
-     * provides the given list of @p mimetypes will be listed
-     * by the model.
-     */
-    void setFilter( const QStringList &mimeTypes );
 
   private:
     class Private;

@@ -28,6 +28,7 @@
 #include <QtGui/QTextDocument>
 
 #include <libakonadi/agentinstancemodel.h>
+#include <libakonadi/agentfilterproxymodel.h>
 
 using namespace Akonadi;
 
@@ -58,17 +59,18 @@ class AgentInstanceView::Private
     AgentInstanceView *mParent;
     QListView *mView;
     AgentInstanceModel *mModel;
+    AgentFilterProxyModel *proxy;
 };
 
 void AgentInstanceView::Private::currentAgentInstanceChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
 {
   QString currentIdentifier;
   if ( currentIndex.isValid() )
-    currentIdentifier = currentIndex.model()->data( currentIndex, Qt::UserRole ).toString();
+    currentIdentifier = currentIndex.model()->data( currentIndex, AgentInstanceModel::InstanceIdentifierRole ).toString();
 
   QString previousIdentifier;
   if ( previousIndex.isValid() )
-    previousIdentifier = previousIndex.model()->data( previousIndex, Qt::UserRole ).toString();
+    previousIdentifier = previousIndex.model()->data( previousIndex, AgentInstanceModel::InstanceIdentifierRole ).toString();
 
   emit mParent->currentChanged( currentIdentifier, previousIdentifier );
 }
@@ -84,11 +86,14 @@ AgentInstanceView::AgentInstanceView( QWidget *parent )
   d->mView->setItemDelegate( new AgentInstanceViewDelegate( d->mView ) );
   layout->addWidget( d->mView );
 
-  d->mModel = new AgentInstanceModel( d->mView );
-  d->mView->setModel( d->mModel );
+  d->mModel = new AgentInstanceModel( this );
 
-  d->mView->selectionModel()->setCurrentIndex( d->mModel->index( 0, 0 ), QItemSelectionModel::Select );
-  d->mView->scrollTo( d->mModel->index( 0, 0 ) );
+  d->proxy = new AgentFilterProxyModel( this );
+  d->proxy->setSourceModel( d->mModel );
+  d->mView->setModel( d->proxy );
+
+  d->mView->selectionModel()->setCurrentIndex( d->mView->model()->index( 0, 0 ), QItemSelectionModel::Select );
+  d->mView->scrollTo( d->mView->model()->index( 0, 0 ) );
   connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) ) );
 }
@@ -108,7 +113,12 @@ QString AgentInstanceView::currentAgentInstance() const
   if ( !index.isValid() )
     return QString();
 
-  return index.model()->data( index, Qt::UserRole ).toString();
+  return index.model()->data( index, AgentInstanceModel::InstanceIdentifierRole ).toString();
+}
+
+AgentFilterProxyModel* AgentInstanceView::agentFilterProxyModel() const
+{
+  return d->proxy;
 }
 
 
@@ -129,7 +139,7 @@ QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &
   int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
   uint progress = index.model()->data( index, AgentInstanceModel::ProgressRole ).toUInt();
   const QString statusMessage = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
-  const QStringList capabilities = index.model()->data( index, AgentInstanceModel::CapabilityRole ).toStringList();
+  const QStringList capabilities = index.model()->data( index, AgentInstanceModel::CapabilitiesRole ).toStringList();
 
   QTextDocument *document = new QTextDocument( 0 );
 

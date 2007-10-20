@@ -33,6 +33,7 @@ set( akonadi_LIB_SRC
 	agentbase.cpp
 	agentmanager.cpp
 	agenttypemodel.cpp
+	agentfilterproxymodel.cpp
 	changerecorder.cpp
 	collection.cpp
 	collectionattribute.cpp

@@ -17,12 +17,14 @@
     02110-1301, USA.
 */
 
+#include "agentinstanceviewtest.h"
+
+#include <kcomponentdata.h>
+
 #include <QtGui/QApplication>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
-
-#include "agentinstanceviewtest.h"
 
 Dialog::Dialog( QWidget *parent )
   : QDialog( parent )
@@ -61,6 +63,7 @@ void Dialog::currentChanged( const QString &current, const QString &previous )
 int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
+  KComponentData kcd( "agentinstanceviewtest" );
 
   Dialog dlg;
   dlg.exec();

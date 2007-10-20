@@ -23,6 +23,7 @@
 #include <QtCore/QStringList>
 #include <QtGui/QIcon>
 
+#include <kdebug.h>
 #include <klocale.h>
 
 using namespace Akonadi;
@@ -203,7 +204,7 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
       return info.instanceName;
     case Qt::DecorationRole:
       return info.icon;
-    case Qt::UserRole:
+    case InstanceIdentifierRole:
       return info.identifier;
     case Qt::ToolTipRole:
       return QString::fromLatin1( "<qt><h4>%1</h4>%2</qt>" ).arg( info.name, info.comment );
@@ -217,8 +218,12 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
       return info.progressMessage;
     case OnlineRole:
       return info.online;
-    case CapabilityRole:
+    case CapabilitiesRole:
       return info.capabilities;
+    case TypeIdentifierRole:
+      return info.type;
+    case MimeTypesRole:
+      return info.mimeTypes;
   }
   return QVariant();
 }

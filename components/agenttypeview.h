@@ -25,6 +25,8 @@
 
 namespace Akonadi {
 
+class AgentFilterProxyModel;
+
 /**
  * This class provides a view of all available agent types.
  *
@@ -57,13 +59,11 @@ class AKONADI_COMPONENTS_EXPORT AgentTypeView : public QWidget
      */
     QString currentAgentType() const;
 
-  public Q_SLOTS:
     /**
-     * Sets a filter to the view, so only agent types which
-     * provides the given list of @p mimetypes will be listed
-     * by the model.
-     */
-    void setFilter( const QStringList &mimeTypes );
+      Returns the agent filter proxy model, use this to filter by
+      agent mimetype or capabilities.
+    */
+    AgentFilterProxyModel* agentFilterProxyModel() const;
 
   Q_SIGNALS:
     /**

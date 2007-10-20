@@ -46,7 +46,6 @@ class AgentTypeModel::Private
 
     AgentTypeModel *mParent;
     QList<AgentTypeInfo> mInfos;
-    QStringList mMimeTypes;
     AgentManager mManager;
 
     void init();
@@ -68,21 +67,6 @@ void AgentTypeModel::Private::init()
 
 void AgentTypeModel::Private::addAgentType( const QString &agentType )
 {
-  if ( !mMimeTypes.isEmpty() ) {
-    const QStringList mimeTypes = mManager.agentMimeTypes( agentType );
-
-    /**
-     * Check whether the agent type provides one of the mimetypes
-     * defined by the filter.
-     */
-    bool valid = false;
-    for ( int i = 0; i < mimeTypes.count(); ++i )
-      valid = valid || mMimeTypes.contains( mimeTypes[ i ] );
-
-    if ( !valid )
-      return;
-  }
-
   AgentTypeInfo info;
   info.identifier = agentType;
   info.name = mManager.agentName( agentType );
@@ -129,14 +113,6 @@ AgentTypeModel::~AgentTypeModel()
   delete d;
 }
 
-void AgentTypeModel::setFilter( const QStringList &mimeTypes )
-{
-  d->mMimeTypes = mimeTypes;
-  d->init();
-
-  emit layoutChanged();
-}
-
 int AgentTypeModel::columnCount( const QModelIndex& ) const
 {
   return 1;
@@ -164,7 +140,7 @@ QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
     case Qt::DecorationRole:
       return info.icon;
       break;
-    case Qt::UserRole:
+    case TypeIdentifierRole:
       return info.identifier;
       break;
     case CommentRole:
