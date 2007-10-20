@@ -283,6 +283,7 @@ class AgentManager : public QObject
     void readPluginInfos( const QDir &directory );
 
     bool checkAgentInterface( const QString &identifier ) const;
+    bool checkInstance( const QString &identifier ) const;
     bool checkResourceInterface( const QString &identifier, const QString &method ) const;
     bool checkAgentExists( const QString &identifier ) const;
     void ensureAutoStart( const AgentInfo &info );

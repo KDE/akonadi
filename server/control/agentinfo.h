@@ -60,6 +60,7 @@ class AgentInstanceInfo
   public:
     AgentInstanceInfo();
     bool start( const AgentInfo &agentInfo, AgentManager* manager );
+    bool isResource() const { return resourceInterface; }
 
     QString identifier;
     QString agentType;
