@@ -25,7 +25,6 @@
 #include "controlmanager.h"
 #include "processcontrol.h"
 #include "profilemanager.h"
-#include "searchprovidermanager.h"
 
 #include "kcrash.h"
 #include <stdlib.h>
@@ -57,11 +56,9 @@ int main( int argc, char **argv )
 
   sAgentManager = new AgentManager;
   ProfileManager profileManager;
-  Akonadi::SearchProviderManager* spm = new Akonadi::SearchProviderManager;
 
   int retval = app.exec();
 
-  delete spm;
   delete sAgentManager;
   sAgentManager = 0;
 
