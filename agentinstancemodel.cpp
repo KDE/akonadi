@@ -201,33 +201,24 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
   switch ( role ) {
     case Qt::DisplayRole:
       return info.instanceName;
-      break;
     case Qt::DecorationRole:
       return info.icon;
-      break;
     case Qt::UserRole:
       return info.identifier;
-      break;
     case Qt::ToolTipRole:
       return QString::fromLatin1( "<qt><h4>%1</h4>%2</qt>" ).arg( info.name, info.comment );
-      break;
     case StatusRole:
       return info.status;
-      break;
     case StatusMessageRole:
       return info.statusMessage;
-      break;
     case ProgressRole:
       return info.progress;
-      break;
     case ProgressMessageRole:
       return info.progressMessage;
-      break;
     case OnlineRole:
       return info.online;
-      break;
-    default:
-      break;
+    case CapabilityRole:
+      return info.capabilities;
   }
   return QVariant();
 }

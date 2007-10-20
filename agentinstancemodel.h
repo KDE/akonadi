@@ -36,7 +36,8 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
       StatusMessageRole,
       ProgressRole,
       ProgressMessageRole,
-      OnlineRole
+      OnlineRole,
+      CapabilityRole
     };
 
     explicit AgentInstanceModel( QObject *parent );

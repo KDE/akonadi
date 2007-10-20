@@ -129,6 +129,7 @@ QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &
   int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
   uint progress = index.model()->data( index, AgentInstanceModel::ProgressRole ).toUInt();
   const QString statusMessage = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
+  const QStringList capabilities = index.model()->data( index, AgentInstanceModel::CapabilityRole ).toStringList();
 
   QTextDocument *document = new QTextDocument( 0 );
 
@@ -161,21 +162,21 @@ QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &
     textColor = option.palette.color( cg, QPalette::Text );
   }
 
-  const QString content = QString(
+  QString content = QString::fromLatin1(
      "<html style=\"color:%1\">"
      "<body>"
      "<table>"
      "<tr>"
      "<td rowspan=\"2\"><img src=\"agent_icon\"></td>"
      "<td><b>%2</b></td>"
-     "</tr>"
+     "</tr>" ).arg(textColor.name().toUpper()).arg( name );
+  if ( capabilities.contains( "Resource" ) ) {
+     content += QString::fromLatin1(
      "<tr>"
-     "<td><img src=\"status_icon\"/> %3 %4</td>"
-     "</tr>"
-     "</table>"
-     "</body>"
-     "</html>" ).arg(textColor.name().toUpper()).arg( name )
-                .arg( statusMessage ).arg( status == 1 ? QString( "(%1%)" ).arg( progress ) : "" );
+     "<td><img src=\"status_icon\"/> %1 %2</td>"
+     "</tr>" ).arg( statusMessage ).arg( status == 1 ? QString( "(%1%)" ).arg( progress ) : "" );
+  }
+  content += QLatin1String( "</table></body></html>" );
 
   document->setHtml( content );
 
