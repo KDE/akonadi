@@ -21,7 +21,7 @@
 #define AKONADI_RESOURCESCHEDULER_H
 
 #include <libakonadi/collection.h>
-#include <libakonadi/datareference.h>
+#include <libakonadi/item.h>
 
 #include <QtCore/QObject>
 #include <QDBusMessage>
@@ -54,7 +54,7 @@ class ResourceScheduler : public QObject
         Task() : type( Invalid ) {}
         TaskType type;
         Collection collection;
-        DataReference itemRef;
+        Item item;
         QStringList itemParts;
         QDBusMessage dbusMsg;
 
@@ -62,7 +62,7 @@ class ResourceScheduler : public QObject
         {
           return type == other.type
               && collection == other.collection
-              && itemRef == other.itemRef
+              && item.reference() == other.item.reference()
               && itemParts == other.itemParts;
         }
     };
@@ -78,15 +78,15 @@ class ResourceScheduler : public QObject
       Schedules the synchronization of a single collection.
       @param col The collection to synchronize.
     */
-    void scheduleSync( const Collection &col );
+    void scheduleSync( const Collection &col, const QStringList &parts );
 
     /**
       Schedules fetching of a single PIM item.
-      @param ref DataReference to the item to fetch.
+      @param item the item to fetch.
       @param parts List of names of the parts of the item to fetch.
-      @param msg The associated DBus message.
+      @param msg The associated D-Bus message.
     */
-    void scheduleItemFetch( const DataReference &ref, const QStringList &parts, const QDBusMessage &msg );
+    void scheduleItemFetch( const Item &item, const QStringList &parts, const QDBusMessage &msg );
 
     /**
       The current task has been finished
@@ -111,8 +111,8 @@ class ResourceScheduler : public QObject
 
   Q_SIGNALS:
     void executeFullSync();
-    void executeCollectionSync( const Collection &col );
-    void executeItemFetch( const DataReference &ref, const QStringList &parts, const QDBusMessage &msg );
+    void executeCollectionSync( const Akonadi::Collection &col, const QStringList &parts );
+    void executeItemFetch( const Akonadi::Item &item, const QStringList &parts );
     void executeChangeReplay();
 
   private slots:

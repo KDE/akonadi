@@ -82,11 +82,11 @@ class ResourceBasePrivate;
  * <h5>Handling PIM Items</h5>
  *
  * To follow item changes in the backend, the following steps are necessary:
- * - Implement synchronizeCollection() to synchronize all items in the given
- *   collection. If the backend supports incremental collections updates,
+ * - Implement retrieveItems() to synchronize all items in the given
+ *   collection. If the backend supports incremental retrieval,
  *   implementing support for that is recommended to improve performance.
  * - Convert the items provided by the backend to Akonadi items.
- *   This typically happens either in synchronizeItems() if you retrieved
+ *   This typically happens either in retrieveItems() if you retrieved
  *   the collection synchronously (not recommended for network backends) or
  *   in the result slot of the asynchronous retrieval job.
  *   Converting means to create Akonadi::Item objects for every retrieved
@@ -96,9 +96,9 @@ class ResourceBasePrivate;
  *   updated automatically. Note that it is usually not necessary to manipulate
  *   any item in the Akonadi storage manually.
  *
- * To fetch item data on demand, the method requestItemDelivery() needs to be
- * reimplemented. Fetch the requested data there, create an ItemStoreJob to store
- * the data and call deliverItem().
+ * To fetch item data on demand, the method retrieveItem() needs to be
+ * reimplemented. Fetch the requested data there and call itemRetrieved()
+ * with the result item.
  *
  * To write local changes back to the backend, you need to re-implement
  * the following three methods:
@@ -270,27 +270,37 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
   protected Q_SLOTS:
     /**
       Retrieve the collection tree from the remote server and supply it via
-      collectionsRetrieved().
+      collectionsRetrieved() or collectionsRetrievedIncremental().
+      @see collectionsRetrieved(), collectionsRetrievedIncremental()
     */
     virtual void retrieveCollections() = 0;
 
     /**
-      Synchronize the given collection with the backend.
-      Call collectionSynchronized() once you are finished.
+      Retrieve all (new/changed) items in collection @p collection.
+      It is recommended to use incremental retrieval if the backend supports that
+      and provide the result by calling itemsRetrievedIncremental().
+      If incremental retrieval is not possible, provide the full listing by calling
+      itemsRetrieved( const Item::List& ).
+      In any case, ensure that all items have a correctly set remote identifier
+      to allow synchronizing with already locally existing items.
+      In case you don't want to use the built-in item syncing code, store the retrived
+      items manually and call itemsRetrieved() once you are done.
       @param collection The collection to sync.
-      @see collectionSynchronized(), currentCollection()
+      @param parts The items parts that should be retrieved.
+      @see itemsRetrieved( const Item::List &), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
     */
-    virtual void synchronizeCollection( const Collection &collection ) = 0;
+    virtual void retrieveItems( const Akonadi::Collection &collection, const QStringList &parts ) = 0;
 
     /**
-     * This method is called whenever an external query for putting data in the
-     * storage is received. Must be reimplemented in any resource.
-     *
-     * @param ref The DataReference of this item.
-     * @param parts The item parts that should be fetched.
-     * @param msg QDBusMessage to pass along for delayed reply.
-     */
-    virtual bool requestItemDelivery( const DataReference &ref, const QStringList &parts, const QDBusMessage &msg ) = 0;
+      Retrieve a single item from the backend. The item to retrieve is provided as @p item.
+      Add the requested payload parts and call itemRetrieved() when done.
+      @param item The empty item which payload should be retrieved. Use this object when delivering
+      the result instead of creating a new item to ensure conflict detection to work.
+      @param parts The item parts that should be retrieved.
+      @return false if there is an immediate error when retrieving the item.
+      @see itemRetrieved()
+    */
+    virtual bool retrieveItem( const Akonadi::Item &item, const QStringList &parts ) = 0;
 
   protected:
     /**
@@ -323,12 +333,11 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void changeProgress( uint progress, const QString &message = QString() );
 
     /**
-      Call this method from in requestItemDelivery(). It will generate an appropriate
-      D-Bus reply as soon as the given job has finished.
+      Call this method from retrieveItem() once the result is available.
       @param job The job which actually delivers the item.
       @param msg The D-Bus message requesting the delivery.
     */
-    bool deliverItem( Akonadi::Job* job, const QDBusMessage &msg );
+    void itemRetrieved( const Item &item );
 
     /**
       Resets the dirty flag of the given item and updates the remote id.
@@ -376,14 +385,19 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       Call this method to indicate you finished synchronizing the current
       collection. This is not needed if you use the built in syncing
       and call itemsRetrieved() or itemsRetrievedIncremental() instead.
-      @see synchronizeCollection()
+      @see retrieveItems()
     */
-    void collectionSynchronized();
+    void itemsRetrieved();
 
     /**
       Returns the collection that is currently synchronized.
     */
     Collection currentCollection() const;
+
+    /**
+      Returns the item that is currently retrieved.
+    */
+    Item currentItem() const;
 
   private:
     static QString parseArguments( int, char** );
@@ -400,7 +414,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     Q_PRIVATE_SLOT( d_func(), void slotDeliveryDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionSyncDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotLocalListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection(const Collection &col) )
+    Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection(const Akonadi::Collection &col, const QStringList &parts) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionListDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotItemSyncDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotPercent( KJob*, unsigned long ) )

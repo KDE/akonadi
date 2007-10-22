@@ -39,20 +39,21 @@ void ResourceScheduler::scheduleFullSync()
   scheduleNext();
 }
 
-void ResourceScheduler::scheduleSync(const Collection & col)
+void ResourceScheduler::scheduleSync(const Collection & col, const QStringList &parts)
 {
   Task t;
   t.type = SyncCollection;
   t.collection = col;
+  t.itemParts = parts;
   mTaskList << t;
   scheduleNext();
 }
 
-void ResourceScheduler::scheduleItemFetch(const DataReference & ref, const QStringList &parts, const QDBusMessage & msg)
+void ResourceScheduler::scheduleItemFetch(const Item & item, const QStringList &parts, const QDBusMessage & msg)
 {
   Task t;
   t.type = FetchItem;
-  t.itemRef = ref;
+  t.item = item;
   t.itemParts = parts;
   t.dbusMsg = msg;
   mTaskList << t;
@@ -90,10 +91,10 @@ void ResourceScheduler::executeNext()
       emit executeFullSync();
       break;
     case SyncCollection:
-      emit executeCollectionSync( mCurrentTask.collection );
+      emit executeCollectionSync( mCurrentTask.collection, mCurrentTask.itemParts );
       break;
     case FetchItem:
-      emit executeItemFetch( mCurrentTask.itemRef, mCurrentTask.itemParts, mCurrentTask.dbusMsg );
+      emit executeItemFetch( mCurrentTask.item, mCurrentTask.itemParts );
       break;
     case ChangeReplay:
       emit executeChangeReplay();

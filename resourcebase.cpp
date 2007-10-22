@@ -83,7 +83,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void slotCollectionSyncDone( KJob *job );
     void slotLocalListDone( KJob *job );
-    void slotSynchronizeCollection( const Collection &col );
+    void slotSynchronizeCollection( const Collection &col, const QStringList &parts );
     void slotCollectionListDone( KJob *job );
 
     void slotItemSyncDone( KJob *job );
@@ -100,8 +100,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     uint mProgress;
     QString mProgressMessage;
-
-    QHash<Akonadi::Job*, QDBusMessage> pendingReplies;
 
     bool online;
 
@@ -156,10 +154,10 @@ ResourceBase::ResourceBase( const QString & id )
 
   connect( d->scheduler, SIGNAL(executeFullSync()),
            SLOT(retrieveCollections()) );
-  connect( d->scheduler, SIGNAL(executeCollectionSync(Collection)),
-           SLOT(slotSynchronizeCollection(Collection)) );
-  connect( d->scheduler, SIGNAL(executeItemFetch(DataReference,QStringList,QDBusMessage)),
-           SLOT(requestItemDelivery(DataReference,QStringList,QDBusMessage)) );
+  connect( d->scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection,QStringList)),
+           SLOT(slotSynchronizeCollection(Akonadi::Collection,QStringList)) );
+  connect( d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QStringList)),
+           SLOT(retrieveItem(Akonadi::Item,QStringList)) );
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
            d->monitor, SLOT(replayNext()) );
 
@@ -329,20 +327,29 @@ void ResourceBase::crashHandler( int signal )
     quit();
 }
 
-bool ResourceBase::deliverItem(Akonadi::Job * job, const QDBusMessage & msg)
+void ResourceBase::itemRetrieved( const Item &item )
 {
   Q_D( ResourceBase );
-  msg.setDelayedReply( true );
-  d->pendingReplies.insert( job, msg.createReply() );
+  Q_ASSERT( d->scheduler->currentTask().type == ResourceScheduler::FetchItem );
+  if ( !item.isValid() ) {
+    QDBusMessage reply( d->scheduler->currentTask().dbusMsg );
+    reply << false;
+    QDBusConnection::sessionBus().send( reply );
+    d->scheduler->taskDone();
+    return;
+  }
+  ItemStoreJob *job = new ItemStoreJob( item, session() );
+  job->storePayload();
+  // FIXME: remove once the item with which we call retrieveItem() has a revision number
+  job->noRevCheck();
   connect( job, SIGNAL(result(KJob*)), SLOT(slotDeliveryDone(KJob*)) );
-  return false;
 }
 
 void ResourceBasePrivate::slotDeliveryDone(KJob * job)
 {
   Q_Q( ResourceBase );
-  Q_ASSERT( pendingReplies.contains( static_cast<Akonadi::Job*>( job ) ) );
-  QDBusMessage reply = pendingReplies.take( static_cast<Akonadi::Job*>( job ) );
+  Q_ASSERT( scheduler->currentTask().type == ResourceScheduler::FetchItem );
+  QDBusMessage reply( scheduler->currentTask().dbusMsg );
   if ( job->error() ) {
     q->error( QLatin1String( "Error while creating item: " ) + job->errorString() );
     reply << false;
@@ -373,7 +380,8 @@ bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, const 
   }
 
   setDelayedReply( true );
-  d->scheduler->scheduleItemFetch( DataReference( uid, remoteId ), parts, message() );
+  // FIXME: we need at least the revision number too
+  d->scheduler->scheduleItemFetch( Item( DataReference( uid, remoteId ) ), parts, message().createReply() );
 
   return true;
 }
@@ -434,13 +442,14 @@ void ResourceBasePrivate::slotLocalListDone(KJob * job)
   } else {
     Collection::List cols = static_cast<CollectionListJob*>( job )->collections();
     foreach ( const Collection &col, cols ) {
-      scheduler->scheduleSync( col );
+      // FIXME: add item parts to the dbus interface
+      scheduler->scheduleSync( col, QStringList() );
     }
   }
   scheduler->taskDone();
 }
 
-void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
+void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col, const QStringList &parts )
 {
   Q_Q( ResourceBase );
   currentCollection = col;
@@ -449,13 +458,13 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
   contentTypes.removeAll( Collection::collectionMimeType() );
   if ( !contentTypes.isEmpty() ) {
     q->changeStatus( ResourceBase::Syncing, i18nc( "@info:status", "Syncing collection '%1'", currentCollection.name() ) );
-    q->synchronizeCollection( currentCollection );
+    q->retrieveItems( currentCollection, parts );
     return;
   }
   scheduler->taskDone();
 }
 
-void ResourceBase::collectionSynchronized()
+void ResourceBase::itemsRetrieved()
 {
   Q_D( ResourceBase );
   changeStatus( Ready );
@@ -464,7 +473,20 @@ void ResourceBase::collectionSynchronized()
 
 Collection ResourceBase::currentCollection() const
 {
-  return d_func()->currentCollection;
+  const Q_D( ResourceBase );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection ,
+              "ResourceBase::currentCollection()",
+              "Trying to access current collection although no item retrieval is in progress" );
+  return d->currentCollection;
+}
+
+Item ResourceBase::currentItem() const
+{
+  const Q_D( ResourceBase );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::FetchItem ,
+              "ResourceBase::currentItem()",
+              "Trying to access current item although no item retrieval is in progress" );
+  return d->scheduler->currentTask().item;
 }
 
 void ResourceBase::synchronizeCollection(int collectionId)
@@ -480,7 +502,8 @@ void ResourceBasePrivate::slotCollectionListDone( KJob *job )
     Collection::List list = static_cast<CollectionListJob*>( job )->collections();
     if ( !list.isEmpty() ) {
       Collection col = list.first();
-      scheduler->scheduleSync( col );
+      // FIXME: get the needed item parts from somewhere
+      scheduler->scheduleSync( col, QStringList() );
     }
   }
   // TODO: error handling
