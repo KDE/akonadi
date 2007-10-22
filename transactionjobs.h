@@ -20,6 +20,7 @@
 #ifndef AKONADI_TRANSACTIONJOBS_H
 #define AKONADI_TRANSACTIONJOBS_H
 
+#include "libakonadi_export.h"
 #include <libakonadi/job.h>
 
 namespace Akonadi {
@@ -28,14 +29,14 @@ namespace Akonadi {
   Begins a session-global transaction.
   Note: this will only have an effect when used as a subjob or with a Session.
 */
-class TransactionBeginJob : public Job
+class AKONADI_EXPORT TransactionBeginJob : public Job
 {
   public:
     /**
       Creates a new TransactionBeginJob.
       @param parent The parent job or Session, must not be 0.
     */
-    explicit TransactionBeginJob( Job *parent );
+    explicit TransactionBeginJob( QObject *parent );
 
     /**
       Destroys this job.
@@ -51,14 +52,14 @@ class TransactionBeginJob : public Job
   Aborts a session-global transaction.
   Note: this will only have an effect when used as a subjob or with a Session.
 */
-class TransactionRollbackJob : public Job
+class AKONADI_EXPORT TransactionRollbackJob : public Job
 {
   public:
     /**
       Creates a new TransactionRollbackJob.
       @param parent The parent job or Session, must not be 0.
     */
-    explicit TransactionRollbackJob( Job *parent );
+    explicit TransactionRollbackJob( QObject *parent );
 
     /**
       Destroys this TransactionRollbackJob.
@@ -73,14 +74,14 @@ class TransactionRollbackJob : public Job
 /**
   Commits a session-global transaction.
 */
-class TransactionCommitJob : public Job
+class AKONADI_EXPORT TransactionCommitJob : public Job
 {
   public:
     /**
       Creates a new TransactionCommitJob.
       @param parent The parent job or Session, must not be 0.
      */
-    explicit TransactionCommitJob( Job *parent );
+    explicit TransactionCommitJob( QObject *parent );
 
     /**
       Destroys this TransactionCommitJob.

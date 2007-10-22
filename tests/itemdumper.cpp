@@ -26,6 +26,9 @@
 #include <kcmdlineargs.h>
 
 #include <libakonadi/collectionpathresolver.h>
+#include <libakonadi/transactionjobs.h>
+
+#define GLOBAL_TRANSACTION 1
 
 using namespace Akonadi;
 
@@ -44,11 +47,21 @@ ItemDumper::ItemDumper( const QString &path, const QString &filename, const QStr
   item.setMimeType( mimetype );
   item.addPart( Item::PartBody, data );
   mTime.start();
+#ifdef GLOBAL_TRANSACTION
+  TransactionBeginJob *begin = new TransactionBeginJob( this );
+  connect( begin, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
+  ++mJobCount;
+#endif
   for ( int i = 0; i < count; ++i ) {
     ++mJobCount;
     ItemAppendJob *job = new ItemAppendJob( item, collection, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
   }
+#ifdef GLOBAL_TRANSACTION
+  TransactionCommitJob *commit = new TransactionCommitJob( this );
+  connect( commit, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
+  ++mJobCount;
+#endif
 }
 
 void ItemDumper::done( KJob * job )

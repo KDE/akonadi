@@ -21,7 +21,7 @@
 
 using namespace Akonadi;
 
-TransactionBeginJob::TransactionBeginJob(Job * parent) :
+TransactionBeginJob::TransactionBeginJob(QObject * parent) :
   Job( parent )
 {
   Q_ASSERT( parent );
@@ -38,7 +38,7 @@ void TransactionBeginJob::doStart()
 
 
 
-TransactionRollbackJob::TransactionRollbackJob(Job * parent) :
+TransactionRollbackJob::TransactionRollbackJob(QObject * parent) :
     Job( parent )
 {
   Q_ASSERT( parent );
@@ -55,7 +55,7 @@ void TransactionRollbackJob::doStart()
 
 
 
-TransactionCommitJob::TransactionCommitJob(Job * parent) :
+TransactionCommitJob::TransactionCommitJob(QObject * parent) :
     Job( parent )
 {
   Q_ASSERT( parent );
