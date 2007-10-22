@@ -97,35 +97,32 @@ QString KnutResource::configuration() const
   return mDataFile;
 }
 
-bool KnutResource::requestItemDelivery( const DataReference &ref, const QStringList &parts, const QDBusMessage &msg )
+bool KnutResource::retrieveItem( const Item &item, const QStringList &parts )
 {
   Q_UNUSED( parts );
 
-  const QString remoteId = ref.remoteId();
+  const QString remoteId = item.reference().remoteId();
 
   QMutableMapIterator<QString, CollectionEntry> it( mCollections );
   while ( it.hasNext() ) {
     it.next();
 
     const CollectionEntry &entry = it.value();
-    Item item( ref );
+    Item i( item );
 
     if ( entry.addressees.contains( remoteId ) ) {
-      item.setMimeType( "text/vcard" );
-      item.setPayload<KABC::Addressee>( entry.addressees.value( remoteId ) );
+      i.setMimeType( "text/vcard" );
+      i.setPayload<KABC::Addressee>( entry.addressees.value( remoteId ) );
     }
 
     if ( entry.incidences.contains( remoteId ) ) {
-      item.setMimeType( "text/calendar" );
-      item.setPayload<IncidencePtr>( IncidencePtr( entry.incidences.value( remoteId ) ) );
+      i.setMimeType( "text/calendar" );
+      i.setPayload<IncidencePtr>( IncidencePtr( entry.incidences.value( remoteId ) ) );
     }
 
-    if ( item.hasPayload() ) {
-      ItemStoreJob *job = new ItemStoreJob( item, session() );
-      job->noRevCheck();
-      job->storePayload();
-
-      return deliverItem( job, msg );
+    if ( i.hasPayload() ) {
+      itemRetrieved( i );
+      return true;
     }
   }
 
@@ -221,7 +218,7 @@ void KnutResource::retrieveCollections()
   collectionsRetrieved( collections );
 }
 
-void KnutResource::synchronizeCollection( const Akonadi::Collection &collection )
+void KnutResource::retrieveItems( const Akonadi::Collection &collection, const QStringList &parts )
 {
   ItemFetchJob *fetch = new ItemFetchJob( collection, session() );
   if ( !fetch->exec() ) {
@@ -307,7 +304,7 @@ void KnutResource::synchronizeCollection( const Akonadi::Collection &collection 
     changeProgress( (counter * 100) / fullcount );
   }
 
-  collectionSynchronized();
+  itemsRetrieved();
 }
 
 bool KnutResource::loadData()

@@ -36,7 +36,7 @@ class KnutResource : public Akonadi::ResourceBase
     ~KnutResource();
 
   public Q_SLOTS:
-    virtual bool requestItemDelivery( const Akonadi::DataReference &ref, const QStringList &parts, const QDBusMessage &msg );
+    virtual bool retrieveItem( const Akonadi::Item &item, const QStringList &parts );
     virtual void configure();
 
     virtual bool setConfiguration( const QString& );
@@ -50,7 +50,7 @@ class KnutResource : public Akonadi::ResourceBase
     virtual void itemRemoved( const Akonadi::DataReference &ref );
 
     void retrieveCollections();
-    void synchronizeCollection( const Akonadi::Collection &collection );
+    void retrieveItems( const Akonadi::Collection &collection, const QStringList &parts );
 
   private:
     class CollectionEntry
