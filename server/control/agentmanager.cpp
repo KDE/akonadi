@@ -36,17 +36,28 @@
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
 {
-  mStorageController = new Akonadi::ProcessControl;
-  // ### change back to RestartOnCrash once we don't crash anymore...
-  mStorageController->start( "akonadiserver", QStringList(), Akonadi::ProcessControl::StopOnCrash );
-
   new AgentManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/AgentManager", this );
 
   mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
 
   connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
-           this, SLOT( agentRegistered( const QString&, const QString&, const QString& ) ) );
+           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
+
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.Akonadi" ) )
+    qFatal( "akonadiserver already running!" );
+
+  mStorageController = new Akonadi::ProcessControl;
+  mStorageController->start( "akonadiserver", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
+}
+
+void AgentManager::continueStartup()
+{
+  // prevent multiple calls in case the server has to be restarted
+  static bool first = true;
+  if ( !first )
+    return;
+  first = false;
 
   readPluginInfos();
 
@@ -402,8 +413,13 @@ void AgentManager::save()
   file.sync();
 }
 
-void AgentManager::agentRegistered( const QString &name, const QString&, const QString &newOwner )
+void AgentManager::serviceOwnerChanged( const QString &name, const QString&, const QString &newOwner )
 {
+  if ( name == "org.kde.Akonadi" && !newOwner.isEmpty() ) {
+    // server is operational, start agents
+    continueStartup();
+  }
+
   if ( name.startsWith( "org.kde.Akonadi.Agent." ) ) {
     const QString identifier = name.mid( 22 );
     if ( !mAgentInstances.contains( identifier ) )
