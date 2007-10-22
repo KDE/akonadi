@@ -137,7 +137,7 @@ bool Akonadi::Append::commit()
     }
 
     // set message flags
-    if ( !db->appendItemFlags( item, flags ) )
+    if ( !db->appendItemFlags( item, flags, false, l ) )
       return failureResponse( "Unable to append item flags." );
 
     // the message was appended; now we have to update the counts

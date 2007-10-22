@@ -200,8 +200,8 @@ void Handler::imapSetToQuery(const ImapSet & set, bool isUid, QueryBuilder & qb)
   if ( !cond.isEmpty() )
     qb.addCondition( cond );
 
-  if ( !isUid && connection()->selectedLocation().isValid() )
-    qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, connection()->selectedLocation().id() );
+  if ( !isUid && connection()->selectedCollection() >= 0 )
+    qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, connection()->selectedCollection() );
 }
 
 #include "handler.moc"
