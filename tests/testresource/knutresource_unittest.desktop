@@ -1,12 +1,14 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Akonadi Knut Resource (Headless)
+Name[el]=Πόρος Knut του Akonadi (χωρίς κεφαλή)
 Name[pt]=Recurso Knut do Akonadi (Indirecto)
 Name[pt_BR]=Recurso Knut do Akonadi (Indirecto)
 Name[sv]=Akonadi Knut-resurs (utan huvud)
 Name[x-test]=xxAkonadi Knut Resource (Headless)xx
 Name[zh_TW]=Akonadi Knut 資源（Headless）
 Comment=An agent for unittest purpose
+Comment[el]=Ένας πελάτης με σκοπό τον έλεγχο μονάδας
 Comment[pt]=Um agente para fins de testes unitários
 Comment[pt_BR]=Um agente para fins de testes unitários
 Comment[sv]=En modul för felsökningssyften
