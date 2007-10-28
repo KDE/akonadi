@@ -23,6 +23,7 @@
 #include <entities.h>
 
 #include <libakonadi/notificationmessage.h>
+#include "location.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
