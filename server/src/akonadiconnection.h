@@ -33,6 +33,7 @@ namespace Akonadi {
     class Response;
     class DataStore;
     class ImapParser;
+    class Location;
 
 /**
     An AkonadiConnection represents one connection of a client to the server.
