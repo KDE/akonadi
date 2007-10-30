@@ -30,6 +30,7 @@
 #include "collectionstatus.h"
 #include "collectionstatusjob.h"
 #include "collectionpathresolver.h"
+#include "collectionselectjob.h"
 #include "control.h"
 
 #include <QDBusConnection>
@@ -477,6 +478,22 @@ void CollectionJobTest::testMultiList()
   Collection::List res;
   res = job->collections();
   compareLists( res, req );
+}
+
+void CollectionJobTest::testSelect()
+{
+  CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );;
+  QVERIFY( resolver->exec() );
+  Collection col( resolver->collection() );
+
+  CollectionSelectJob *job = new CollectionSelectJob( col, this );
+  QVERIFY( job->exec() );
+  QCOMPARE( job->unseen(), -1 );
+
+  job = new CollectionSelectJob( col, this );
+  job->setRetrieveStatus( true );
+  QVERIFY( job->exec() );
+  QVERIFY( job->unseen() > -1 );
 }
 
 #include "collectionjobtest.moc"

@@ -26,8 +26,15 @@ using namespace Akonadi;
 class Akonadi::CollectionSelectJobPrivate
 {
   public:
+    CollectionSelectJobPrivate() :
+      unseen( -1 ),
+      silent( true )
+    {
+    }
+
     Collection collection;
     int unseen;
+    bool silent;
 };
 
 CollectionSelectJob::CollectionSelectJob( const Collection &collection, QObject *parent ) :
@@ -35,7 +42,6 @@ CollectionSelectJob::CollectionSelectJob( const Collection &collection, QObject 
     d( new CollectionSelectJobPrivate )
 {
   d->collection = collection;
-  d->unseen = -1;
 }
 
 CollectionSelectJob::~ CollectionSelectJob( )
@@ -45,7 +51,10 @@ CollectionSelectJob::~ CollectionSelectJob( )
 
 void CollectionSelectJob::doStart( )
 {
-  writeData( newTag() + " SELECT " + QByteArray::number( d->collection.id() ) + '\n' );
+  QByteArray command( newTag() + " SELECT " );
+  if ( d->silent )
+    command += "SILENT ";
+  writeData( command + QByteArray::number( d->collection.id() ) + '\n' );
 }
 
 void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -56,16 +65,19 @@ void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteA
       int end = data.indexOf( ']' );
       QByteArray number = data.mid( begin + 1, end - begin - 1 );
       d->unseen = number.toInt();
-      qDebug() << "unseen items " << d->unseen << " in folder " << d->collection.id();
       return;
     }
   }
-  qDebug() << "Unhandled response in collection selection job: " << tag << data;
 }
 
 int CollectionSelectJob::unseen( ) const
 {
   return d->unseen;
+}
+
+void CollectionSelectJob::setRetrieveStatus(bool status)
+{
+  d->silent = !status;
 }
 
 

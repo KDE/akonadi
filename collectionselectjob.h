@@ -47,6 +47,11 @@ class AKONADI_EXPORT CollectionSelectJob : public Job
     virtual ~CollectionSelectJob();
 
     /**
+      Enable fetching of collection status details.
+    */
+    void setRetrieveStatus( bool status );
+
+    /**
       Returns the unseen count of the selected folder, -1 if not available.
     */
     int unseen() const;
