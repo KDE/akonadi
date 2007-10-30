@@ -46,36 +46,53 @@ bool Select::handleLine(const QByteArray& line )
     // as per rfc, even if the following select fails, we need to reset
     connection()->setSelectedCollection( 0 );
 
-    int startOfCommand = line.indexOf( ' ' ) + 1;
-    int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QByteArray mailbox;
-    ImapParser::parseString( line, mailbox, startOfMailbox );
+    int pos = line.indexOf( ' ' ) + 1; // skip tag
+    QByteArray buffer;
 
-    Location l = HandlerHelper::collectionFromIdOrName( mailbox );
+    // command
+    pos = ImapParser::parseString( line, buffer, pos );
+    pos = ImapParser::parseString( line, buffer, pos );
+    bool silent = false;
+    if ( buffer == "SILENT" ) {
+      silent = true;
+      pos = ImapParser::parseString( line, buffer, pos );
+    }
 
+    // collection
+    Location l = HandlerHelper::collectionFromIdOrName( buffer );
     if ( !l.isValid() )
-        return failureResponse( "Cannot list this folder" );
+        return failureResponse( "Cannot select this collection" );
 
     // Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
     // OPTIONAL OK untagged responses: UNSEEN, PERMANENTFLAGS
     Response response;
-    response.setUntagged();
+    if ( !silent ) {
+      response.setUntagged();
+      response.setString( Flag::joinByName<Flag>( Flag::retrieveAll(), QLatin1String(" ") ) );
+      emit responseAvailable( response );
 
-    response.setString( Flag::joinByName<Flag>( Flag::retrieveAll(), QLatin1String(" ") ) );
-    emit responseAvailable( response );
+      int count = HandlerHelper::itemCount( l );
+      if ( count < 0 )
+        return failureResponse( "Unable to determine item count" );
+      response.setString( QByteArray::number( count ) + " EXISTS" );
+      emit responseAvailable( response );
 
-    response.setString( QByteArray::number(l.existCount()) + " EXISTS" );
-    emit responseAvailable( response );
+      count = HandlerHelper::itemWithFlagCount( l, QLatin1String( "\\Recent" ) );
+      if ( count < 0 )
+        return failureResponse( "Unable to determine recent count" );
+      response.setString( QByteArray::number( count ) + " RECENT" );
+      emit responseAvailable( response );
 
-    response.setString( QByteArray::number(l.recentCount()) + " RECENT" );
-    emit responseAvailable( response );
+      count = HandlerHelper::itemWithoutFlagCount( l, QLatin1String( "\\Seen" ) );
+      if ( count < 0 )
+        return failureResponse( "Unable to retrieve unseen count" );
+      response.setString( "OK [UNSEEN " + QByteArray::number( count ) + "] Message "
+              + QByteArray::number(l.firstUnseen() ) + " is first unseen" );
+      emit responseAvailable( response );
 
-    response.setString( "OK [UNSEEN " + QByteArray::number(l.unseenCount()) + "] Message "
-            + QByteArray::number(l.firstUnseen() ) + " is first unseen" );
-    emit responseAvailable( response );
-
-    response.setString( "OK [UIDVALIDITY 1] UIDs valid" );
-    emit responseAvailable( response );
+      response.setString( "OK [UIDVALIDITY 1] UIDs valid" );
+      emit responseAvailable( response );
+    }
 
     response.setSuccess();
     response.setTag( tag() );

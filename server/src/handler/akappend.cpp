@@ -167,17 +167,6 @@ bool Akonadi::AkAppend::commit()
     if ( !db->appendItemFlags( item, flags, false, l ) )
       return failureResponse( "Unable to append item flags." );
 
-    // the message was appended; now we have to update the counts
-    const int existsChange = +1;
-    const int recentChange = +1;
-    int unseenChange = 0;
-    if ( !flags.contains( "\\Seen" ) )
-        unseenChange = +1;
-    // int firstUnseen = ?; // can't be updated atomically, so we probably have to
-                            // recalculate it each time it's needed
-    if ( !db->updateLocationCounts( l, existsChange, recentChange, unseenChange ) )
-      return failureResponse( "Unable to update collection counts." );
-
     // TODO if the mailbox is currently selected, the normal new message
     //      actions SHOULD occur.  Specifically, the server SHOULD notify the
     //      client immediately via an untagged EXISTS response.

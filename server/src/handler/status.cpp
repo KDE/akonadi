@@ -73,12 +73,10 @@ bool Status::handleLine( const QByteArray& line )
     // MESSAGES - The number of messages in the mailbox
     if ( attributeList.contains( "MESSAGES" ) ) {
         statusResponse += "MESSAGES ";
-        CountQueryBuilder qb;
-        qb.addTable( PimItem::tableName() );
-        qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, l.id() );
-        if ( !qb.exec() )
+        const int count = HandlerHelper::itemCount( l );
+        if ( count < 0 )
           return failureResponse( "Could not determine message count." );
-        statusResponse += QByteArray::number( qb.result() );
+        statusResponse += QByteArray::number( count );
     }
     // RECENT - The number of messages with the \Recent flag set
     if ( attributeList.contains( "RECENT" ) ) {
@@ -86,7 +84,10 @@ bool Status::handleLine( const QByteArray& line )
             statusResponse += " RECENT ";
         else
             statusResponse += "RECENT ";
-        statusResponse += QByteArray::number( l.recentCount() );
+        const int count = HandlerHelper::itemWithFlagCount( l, QLatin1String( "\\Recent" ) );
+        if ( count < 0 )
+          return failureResponse( "Could not determine recent item count" );
+        statusResponse += QByteArray::number( count );
     }
     // UIDNEXT - The next unique identifier value of the mailbox
     if ( attributeList.contains( "UIDNEXT" ) ) {
@@ -109,25 +110,10 @@ bool Status::handleLine( const QByteArray& line )
         else
             statusResponse += "UNSEEN ";
 
-        // FIXME optimize me: use only one query
-        CountQueryBuilder qb;
-        qb.addTable( PimItem::tableName() );
-        qb.addTable( Flag::tableName() );
-        qb.addTable( PimItemFlagRelation::tableName() );
-        qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, l.id() );
-        qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
-        qb.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
-        qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, QString::fromLatin1("\\Seen") );
-        if ( !qb.exec() )
+        const int count = HandlerHelper::itemWithoutFlagCount( l, QLatin1String( "\\Seen" ) );
+        if ( count < 0 )
           return failureResponse( "Unable to retrieve unread count" );
-
-        CountQueryBuilder qb2;
-        qb2.addTable( PimItem::tableName() );
-        qb2.addValueCondition( PimItem::locationIdColumn(), Query::Equals, l.id() );
-        if ( !qb2.exec() )
-          return failureResponse( "Unable to retrieve item count" );
-
-        statusResponse += QByteArray::number( qb2.result() - qb.result() );
+        statusResponse += QByteArray::number( count );
     }
 
     response.setUntagged();

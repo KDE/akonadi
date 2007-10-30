@@ -48,6 +48,26 @@ class HandlerHelper
       Returns the full path for the given collection.
     */
     static QString pathForCollection( const Location &loc );
+
+    /**
+      Returns the amount of existing items in the given collection.
+      @return -1 on error
+    */
+    static int itemCount( const Location &loc );
+
+    /**
+      Returns the amount of existing items in the given collection
+      which have a given flag set.
+      @return -1 on error.
+    */
+    static int itemWithFlagCount( const Location &loc, const QString &flag );
+
+    /**
+      Returns the amount of existing items in the given collection
+      which have a given not flag set.
+      @return -1 on error
+    */
+    static int itemWithoutFlagCount( const Location &loc, const QString &flag );
 };
 
 }

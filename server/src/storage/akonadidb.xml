@@ -98,9 +98,6 @@
         collection. If NULL, the default should be used.</comment>
     </column>
     <column name="resourceId" type="int" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
-    <column name="existCount" type="int"/>
-    <column name="recentCount" type="int"/>
-    <column name="unseenCount" type="int"/>
     <column name="firstUnseen" type="int"/>
     <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
     <reference name="children" table="Location" key="parentId"/>

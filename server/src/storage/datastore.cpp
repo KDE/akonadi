@@ -340,9 +340,6 @@ bool DataStore::appendLocation( Location &location )
 {
   // no need to check for already exising collection with the same name,
   // a unique index on parent + name prevents that in the database
-  location.setExistCount( 0 );
-  location.setRecentCount( 0 );
-  location.setUnseenCount( 0 );
   location.setFirstUnseen( 0 );
   if ( !location.insert() )
     return false;
@@ -370,41 +367,6 @@ bool Akonadi::DataStore::cleanupLocation(Location & location)
   // delete the location itself
   mNotificationCollector->collectionRemoved( location );
   return location.remove();
-}
-
-static void addToUpdateAssignments( QStringList & l, int change, const QString & name )
-{
-    if ( change > 0 )
-        // return a = a + n
-        l.append( name + QLatin1String(" = ") + name + QLatin1String(" + ") + QString::number( change ) );
-    else if ( change < 0 )
-        // return a = a - |n|
-        l.append( name + QLatin1String(" = ") + name + QLatin1String(" - ") + QString::number( -change ) );
-}
-
-bool DataStore::updateLocationCounts( const Location & location, int existsChange,
-                                      int recentChange, int unseenChange )
-{
-    if ( existsChange == 0 && recentChange == 0 && unseenChange == 0 )
-        return true; // there's nothing to do
-
-    QSqlQuery query( m_database );
-    if ( m_dbOpened ) {
-        QStringList assignments;
-        addToUpdateAssignments( assignments, existsChange, Location::existCountColumn() );
-        addToUpdateAssignments( assignments, recentChange, Location::recentCountColumn() );
-        addToUpdateAssignments( assignments, unseenChange, Location::unseenCountColumn() );
-        QString q = QString::fromLatin1( "UPDATE %1 SET %2 WHERE id = :id" )
-                    .arg( Location::tableName(), assignments.join(QLatin1String(",")) );
-//         qDebug() << "Executing SQL query " << q;
-        query.prepare( q );
-        query.bindValue( QLatin1String(":id"), location.id() );
-        if ( query.exec() )
-            return true;
-        else
-            debugLastQueryError( query, "Error while updating the counts of a single Location." );
-    }
-    return false;
 }
 
 bool DataStore::changeLocationPolicy( Location & location,

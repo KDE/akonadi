@@ -74,3 +74,38 @@ QString HandlerHelper::pathForCollection(const Location & loc)
   }
   return parts.join( QLatin1String("/") );
 }
+
+int HandlerHelper::itemCount(const Location & loc)
+{
+  CountQueryBuilder qb;
+  qb.addTable( PimItem::tableName() );
+  qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, loc.id() );
+  if ( !qb.exec() )
+    return -1;
+  return qb.result();
+}
+
+int HandlerHelper::itemWithFlagCount(const Location & loc, const QString & flag)
+{
+  CountQueryBuilder qb;
+  qb.addTable( PimItem::tableName() );
+  qb.addTable( Flag::tableName() );
+  qb.addTable( PimItemFlagRelation::tableName() );
+  qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, loc.id() );
+  qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
+  qb.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
+  qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, flag );
+  if ( !qb.exec() )
+    return -1;
+  return qb.result();
+}
+
+int HandlerHelper::itemWithoutFlagCount(const Location & loc, const QString & flag)
+{
+  // FIXME optimize me: use only one query or reuse previously done count
+  const int flagCount = itemWithFlagCount( loc, flag );
+  const int totalCount = itemCount( loc );
+  if ( totalCount < 0 || flagCount < 0 )
+    return -1;
+  return totalCount - flagCount;
+}
