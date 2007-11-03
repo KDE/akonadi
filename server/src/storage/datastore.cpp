@@ -340,7 +340,6 @@ bool DataStore::appendLocation( Location &location )
 {
   // no need to check for already existing collection with the same name,
   // a unique index on parent + name prevents that in the database
-  location.setFirstUnseen( 0 );
   if ( !location.insert() )
     return false;
 

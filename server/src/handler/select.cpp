@@ -86,8 +86,7 @@ bool Select::handleLine(const QByteArray& line )
       count = HandlerHelper::itemWithoutFlagCount( l, QLatin1String( "\\Seen" ) );
       if ( count < 0 )
         return failureResponse( "Unable to retrieve unseen count" );
-      response.setString( "OK [UNSEEN " + QByteArray::number( count ) + "] Message "
-              + QByteArray::number(l.firstUnseen() ) + " is first unseen" );
+      response.setString( "OK [UNSEEN " + QByteArray::number( count ) + "] Message 0 is first unseen" );
       emit responseAvailable( response );
 
       response.setString( "OK [UIDVALIDITY 1] UIDs valid" );
