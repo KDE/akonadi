@@ -158,21 +158,26 @@ bool Store::handleLine( const QByteArray& line )
       if ( !qb.exec() )
         return failureResponse( "Unable to check item part existence" );
       Part::List result = qb.result();
-      if ( !result.isEmpty() )
+      if ( !result.isEmpty() ) {
         part = result.first();
-
-      part.setData( buffer );
-      part.setDatasize( buffer.size() );
-      part.setName( QString::fromUtf8( command ) );
-      part.setPimItemId( pimItems[ i ].id() );
-      if ( part.isValid() ) {
-        if ( !part.update() )
-          return failureResponse( "Unable to update item part" );
-      } else {
-        if ( !part.insert() )
-          return failureResponse( "Unable to add item part" );
       }
-      store->updatePimItem( pimItems[ i ] );
+
+      // only update if part contents are not yet in the storage
+      if ( part.data() != buffer )
+      {
+        part.setData( buffer );
+        part.setDatasize( buffer.size() );
+        part.setName( QString::fromUtf8( command ) );
+        part.setPimItemId( pimItems[ i ].id() );
+        if ( part.isValid() ) {
+          if ( !part.update() )
+            return failureResponse( "Unable to update item part" );
+        } else {
+          if ( !part.insert() )
+            return failureResponse( "Unable to add item part" );
+        }
+        store->updatePimItem( pimItems[ i ] );
+      }
     }
 
     if ( !silent ) {

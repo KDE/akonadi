@@ -64,7 +64,7 @@ class HandlerHelper
 
     /**
       Returns the amount of existing items in the given collection
-      which have a given not flag set.
+      which have a given flag not set.
       @return -1 on error
     */
     static int itemWithoutFlagCount( const Location &loc, const QString &flag );

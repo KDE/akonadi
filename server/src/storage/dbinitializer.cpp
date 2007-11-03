@@ -307,7 +307,7 @@ QString DbInitializer::sqlType(const QString & type)
   if ( type == QLatin1String("QString") )
     return QLatin1String("TEXT");
   if (type == QLatin1String("QByteArray") )
-    return QLatin1String("BLOB");
+    return QLatin1String("LONGBLOB");
   if ( type == QLatin1String("QDateTime") )
     return QLatin1String("TIMESTAMP");
   if ( type == QLatin1String( "bool" ) )

@@ -338,7 +338,7 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
 /* --- Location ------------------------------------------------------ */
 bool DataStore::appendLocation( Location &location )
 {
-  // no need to check for already exising collection with the same name,
+  // no need to check for already existing collection with the same name,
   // a unique index on parent + name prevents that in the database
   location.setFirstUnseen( 0 );
   if ( !location.insert() )
@@ -653,7 +653,7 @@ void Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& re
   // TODO: error handling
   qDebug() << "retrieveDataFromResource()" << uid;
 
-  // check if that item is already been fetched by someone else
+  // check if that item is already being fetched by someone else
   mPendingItemDeliveriesMutex.lock();
   if ( mPendingItemDeliveries.contains( uid ) ) {
       qDebug() << "requestItemDelivery(): item already requested by other thread - waiting" << uid;
@@ -671,6 +671,8 @@ void Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& re
       qDebug() << "requestItemDelivery(): blocking uid" << uid;
       mPendingItemDeliveries << uid;
       mPendingItemDeliveriesMutex.unlock();
+
+      qDebug() << "requestItemDelivery(): requested parts:" << parts;
 
       // call the resource
       org::kde::Akonadi::Resource *interface = resourceInterface( resource );
