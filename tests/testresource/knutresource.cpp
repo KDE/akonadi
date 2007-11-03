@@ -52,29 +52,30 @@ KnutResource::~KnutResource()
 
 void KnutResource::configure()
 {
-  if ( identifier().contains( "unittest" ) )
-    return; // headless mode, no config dialog
+  QString newFile;
 
-  QString oldFile = settings()->value( "General/DataFile" ).toString();
-  KUrl url;
-  if ( !oldFile.isEmpty() )
-    url = KUrl::fromPath( oldFile );
+  if ( identifier().contains( "unittest" ) ) {
+    newFile = "";
+  }
   else
-    url = KUrl::fromPath( QDir::homePath() );
+  {
+    QString oldFile = settings()->value( "General/DataFile" ).toString();
+    KUrl url;
+    if ( !oldFile.isEmpty() )
+      url = KUrl::fromPath( oldFile );
+    else
+      url = KUrl::fromPath( QDir::homePath() );
 
-  QString newFile = KFileDialog::getOpenFileName( url, "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ), 0, i18n( "Select Data File" ) );
+    newFile = KFileDialog::getOpenFileName( url, "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ), 0, i18n( "Select Data File" ) );
 
-  if ( newFile.isEmpty() )
-    return;
+    if ( newFile.isEmpty() )
+      return;
 
-  if ( oldFile == newFile )
-    return;
+    if ( oldFile == newFile )
+      return;
+  }
 
-  mDataFile = newFile;
-  settings()->setValue( "General/DataFile", newFile );
-
-  loadData();
-  synchronize();
+  setConfiguration( newFile );
 }
 
 void KnutResource::aboutToQuit()
