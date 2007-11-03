@@ -133,7 +133,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     /// removes the given location and all its content
     bool cleanupLocation( Location &location );
     bool changeLocationPolicy( Location & location, const CachePolicy & policy );
-    bool resetLocationPolicy( const Location & location );
     /// rename the collection @p location to @p newName.
     bool renameLocation( const Location &location, int newParent, const QString &newName );
 

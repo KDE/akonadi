@@ -376,24 +376,6 @@ bool DataStore::changeLocationPolicy( Location & location,
   return location.update();
 }
 
-bool DataStore::resetLocationPolicy( const Location & location )
-{
-  if ( !m_dbOpened )
-    return false;
-
-  QSqlQuery query( m_database );
-
-  query.prepare( QString::fromLatin1("UPDATE %1 SET %2 = NULL WHERE %3 = :id")
-      .arg( Location::tableName(), Location::cachePolicyIdColumn(), Location::idColumn() ) );
-  query.bindValue( QLatin1String(":id"), location.id() );
-  if ( !query.exec() ) {
-    debugLastQueryError( query, "Error during reset of the cache policy of a single Location." );
-    return false;
-  }
-
-  return true;
-}
-
 bool Akonadi::DataStore::renameLocation(const Location & location, int newParent, const QString & newName)
 {
   if ( location.name() == newName && location.parentId() == newParent )
