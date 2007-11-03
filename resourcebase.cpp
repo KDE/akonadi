@@ -338,7 +338,17 @@ void ResourceBase::itemRetrieved( const Item &item )
     d->scheduler->taskDone();
     return;
   }
-  ItemStoreJob *job = new ItemStoreJob( item, session() );
+
+  Item i( item );
+  QStringList requestedParts = d->scheduler->currentTask().itemParts;
+  foreach ( QString part, requestedParts ) {
+    if ( !item.availableParts().contains( part ) ) {
+      warning( QString::fromLatin1( "Item does not provide part '%1'!" ).arg( part ) );
+      i.addPart( part, QByteArray() );
+    }
+  }
+
+  ItemStoreJob *job = new ItemStoreJob( i, session() );
   job->storePayload();
   // FIXME: remove once the item with which we call retrieveItem() has a revision number
   job->noRevCheck();
