@@ -65,7 +65,7 @@ class ResourceTest : public QObject
       delete manager;
     }
 
-    void testIlleagalResourceManagerment()
+    void testIllegalResourceManagement()
     {
       AgentManager *manager = new AgentManager( this );
       QString instance = manager->createAgentInstance( "non_existing_resource" );
