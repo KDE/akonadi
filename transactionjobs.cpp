@@ -158,9 +158,15 @@ void TransactionSequence::commit()
     return;
 
   if ( subjobs().isEmpty() ) {
-    d->state = Private::Committing;
-    TransactionCommitJob *job = new TransactionCommitJob( this );
-    connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
+    if ( !error() ) {
+      d->state = Private::Committing;
+      TransactionCommitJob *job = new TransactionCommitJob( this );
+      connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
+    } else {
+      d->state = Private::RollingBack;
+      TransactionRollbackJob *job = new TransactionRollbackJob( this );
+      connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
+    }
   }
 }
 

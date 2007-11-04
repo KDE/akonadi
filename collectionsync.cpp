@@ -61,7 +61,7 @@ class CollectionSync::Private
 };
 
 CollectionSync::CollectionSync( const QString &resourceId, QObject *parent ) :
-    Job( parent ),
+    TransactionSequence( parent ),
     d( new Private )
 {
   d->resourceId = resourceId;
@@ -206,7 +206,7 @@ void CollectionSync::checkDone()
     setErrorText( QLatin1String( "Found unresolved orphan collections" ) );
   }
 
-  emitResult();
+  commit();
 }
 
 void CollectionSync::slotLocalChangeDone(KJob * job)

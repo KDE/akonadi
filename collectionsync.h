@@ -21,7 +21,7 @@
 #define AKONADI_COLLECTIONSYNC_H
 
 #include <libakonadi/collection.h>
-#include <libakonadi/job.h>
+#include <libakonadi/transactionjobs.h>
 
 namespace Akonadi {
 
@@ -30,7 +30,7 @@ namespace Akonadi {
 
   Syncs remote and local collections.
 */
-class CollectionSync : public Job
+class CollectionSync : public TransactionSequence
 {
   Q_OBJECT
 
