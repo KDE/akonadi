@@ -60,7 +60,7 @@ class ItemSync::Private
 };
 
 ItemSync::ItemSync( const Collection &collection, QObject *parent ) :
-    Job( parent ),
+    TransactionSequence( parent ),
     d( new Private )
 {
   d->syncCollection = collection;
@@ -163,7 +163,10 @@ void ItemSync::slotLocalListDone( KJob * job )
     if ( needsUpdate ) {
       d->pendingJobs++;
 
-      ItemStoreJob *mod = new ItemStoreJob( remoteItem, this );
+      Item i( remoteItem );
+      i.setReference( DataReference( localItem.reference().id(), remoteItem.reference().remoteId() ) );
+      i.setRev( localItem.rev() );
+      ItemStoreJob *mod = new ItemStoreJob( (const Item)i, this );
       mod->storePayload();
       mod->setCollection( d->syncCollection );
       connect( mod, SIGNAL( result( KJob* ) ), SLOT( slotLocalChangeDone( KJob* ) ) );
@@ -198,7 +201,7 @@ void ItemSync::checkDone()
   setProcessedAmount( KJob::Bytes, d->progress );
   if ( d->pendingJobs > 0 )
     return;
-  emitResult();
+  commit();
 }
 
 void ItemSync::slotLocalChangeDone( KJob * job )

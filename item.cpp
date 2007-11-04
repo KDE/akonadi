@@ -32,7 +32,8 @@ class Item::Private : public QSharedData
 {
   public:
     Private()
-      : QSharedData()
+      : QSharedData(),
+      rev( -1 )
     {
     }
 

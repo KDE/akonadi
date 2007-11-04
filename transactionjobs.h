@@ -92,6 +92,47 @@ class AKONADI_EXPORT TransactionCommitJob : public Job
     virtual void doStart();
 };
 
+
+/**
+  Base class for jobs that need to run a sequence of sub-jobs in a transaction.
+  As soon as the first subjob is added, the transaction is started.
+  As soon as the last subjob has successfully finished, the transaction is committed.
+  If any subjob fails, the transaction is rolled back.
+*/
+class AKONADI_EXPORT TransactionSequence : public Job
+{
+  Q_OBJECT
+  public:
+    /**
+      Creates a new transaction job sequence.
+      @param parent The parent object.
+    */
+    explicit TransactionSequence( QObject *parent = 0 );
+
+    /**
+      Destroys this job.
+    */
+    ~TransactionSequence();
+
+  protected:
+    /**
+      Commit the transaction as soon as all pending sub-jobs finished successfully.
+    */
+    void commit();
+
+    bool addSubjob( KJob* job );
+
+  protected Q_SLOTS:
+    void slotResult( KJob *job );
+
+  private:
+    class Private;
+    Private* const d;
+
+    Q_PRIVATE_SLOT( d, void commitResult(KJob*) )
+    Q_PRIVATE_SLOT( d, void rollbackResult(KJob*) )
+};
+
 }
 
 #endif

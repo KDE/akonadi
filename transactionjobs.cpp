@@ -69,3 +69,99 @@ void TransactionCommitJob::doStart()
 {
   writeData( newTag() + " COMMIT\n" );
 }
+
+
+
+class TransactionSequence::Private
+{
+  public:
+    Private( TransactionSequence *parent ) :
+      q( parent ),
+      state( Idle )
+    {
+    }
+
+    enum TransactionState
+    {
+      Idle,
+      Running,
+      WaitingForSubjobs,
+      RollingBack,
+      Committing
+    };
+
+    TransactionSequence *q;
+    TransactionState state;
+
+    void commitResult( KJob *job )
+    {
+      if ( job->error() ) {
+        q->setError( job->error() );
+        q->setErrorText( job->errorText() );
+      }
+      q->emitResult();
+    }
+
+    void rollbackResult( KJob *job )
+    {
+      Q_UNUSED( job );
+      q->emitResult();
+    }
+};
+
+TransactionSequence::TransactionSequence( QObject * parent ) :
+    Job( parent ),
+    d( new Private( this ) )
+{
+}
+
+TransactionSequence::~ TransactionSequence()
+{
+  delete d;
+}
+
+bool TransactionSequence::addSubjob(KJob * job)
+{
+  if ( d->state == Private::Idle ) {
+    d->state = Private::Running;
+    new TransactionBeginJob( this );
+  }
+  return Job::addSubjob( job );
+}
+
+void TransactionSequence::slotResult(KJob * job)
+{
+  if ( !job->error() ) {
+    Job::slotResult( job );
+    if ( subjobs().isEmpty() && d->state == Private::WaitingForSubjobs ) {
+      d->state = Private::Committing;
+      TransactionCommitJob *job = new TransactionCommitJob( this );
+      connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
+    }
+  } else {
+    setError( job->error() );
+    setErrorText( job->errorText() );
+    clearSubjobs();
+    if ( d->state == Private::Running ) {
+      d->state = Private::RollingBack;
+      TransactionRollbackJob *job = new TransactionRollbackJob( this );
+      connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
+    }
+  }
+}
+
+void TransactionSequence::commit()
+{
+  if ( d->state < Private::WaitingForSubjobs )
+    d->state = Private::WaitingForSubjobs;
+  else
+    return;
+
+  if ( subjobs().isEmpty() ) {
+    d->state = Private::Committing;
+    TransactionCommitJob *job = new TransactionCommitJob( this );
+    connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
+  }
+}
+
+#include "transactionjobs.moc"

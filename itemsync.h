@@ -21,7 +21,7 @@
 #define AKONADI_ITEMSYNC_H
 
 #include <libakonadi/item.h>
-#include <libakonadi/job.h>
+#include <libakonadi/transactionjobs.h>
 
 namespace Akonadi {
 
@@ -32,7 +32,7 @@ class Collection;
 
   Syncs remote and local items.
 */
-class ItemSync : public Job
+class ItemSync : public TransactionSequence
 {
   Q_OBJECT
 

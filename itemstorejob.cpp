@@ -194,9 +194,9 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
       // increase item revision of item, given by calling function
       if( d->revCheck )
         d->itemRef.incRev();
-
-      // increase item revision of own copy of item
-      d->item.incRev();
+      else
+        // increase item revision of own copy of item
+        d->item.incRev();
 
       d->sendNextCommand();
     } else {
