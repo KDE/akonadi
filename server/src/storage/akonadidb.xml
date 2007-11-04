@@ -64,6 +64,12 @@
 -->
 <database>
 
+  <table name="SchemaVersion">
+    <comment>Contains the schema version of the database.</comment>
+    <column name="version" type="int" default="0" properties="NOT NULL"/>
+    <data columns="version" values="1"/>
+  </table>
+
   <table name="CachePolicy">
     <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>

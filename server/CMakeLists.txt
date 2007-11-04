@@ -70,6 +70,7 @@ set(libakonadiprivate_SRCS
   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   src/storage/datastore.cpp
   src/storage/dbinitializer.cpp
+  src/storage/dbupdater.cpp
   src/storage/notificationcollector.cpp
   src/storage/query.cpp
   src/storage/querybuilder.cpp

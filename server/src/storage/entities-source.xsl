@@ -471,7 +471,9 @@ bool <xsl:value-of select="$className"/>::update()
     cols.append( <xsl:value-of select="@name"/>Column() + QLatin1String( " = :<xsl:value-of select="@name"/>" ) );;
   </xsl:for-each>
   statement += cols.join( QLatin1String( ", " ) );
+  <xsl:if test="column[@name = 'id']">
   statement += QLatin1String( " WHERE id = :id" );
+  </xsl:if>
 
   QSqlQuery query( db );
   query.prepare( statement );
@@ -481,7 +483,9 @@ bool <xsl:value-of select="$className"/>::update()
   }
   </xsl:for-each>
 
+  <xsl:if test="column[@name = 'id']">
   query.bindValue( QLatin1String(":id"), id() );
+  </xsl:if>
   if ( !query.exec() ) {
     qDebug() &lt;&lt; "Error during updating record with id" &lt;&lt; id()
              &lt;&lt; " in table" &lt;&lt; tableName() &lt;&lt; query.lastError().text();
@@ -497,13 +501,13 @@ bool <xsl:value-of select="$className"/>::remove( const QString &amp;column, con
   return Entity::remove&lt;<xsl:value-of select="$className"/>&gt;( column, value );
 }
 
+<xsl:if test="column[@name = 'id']">
 bool <xsl:value-of select="$className"/>::remove()
 {
   invalidateCache();
   return Entity::remove&lt;<xsl:value-of select="$className"/>&gt;( idColumn(), id() );
 }
 
-<xsl:if test="column[@name = 'id']">
 bool <xsl:value-of select="$className"/>::remove( int id )
 {
   return remove( idColumn(), id );

@@ -77,9 +77,11 @@ void XesamManager::slotHitsAdded(const QString & search, int count)
   mMutex.lock();
   int colId = mSearchMap.value( search );
   mMutex.unlock();
-  if ( colId <= 0 )
+  if ( colId <= 0 || count <= 0 )
     return;
+  qDebug() << "calling GetHits";
   QList<QList<QVariant> > results = mInterface->GetHits( search, count );
+  qDebug() << "GetHits returned:" << results.count();
   typedef QList<QVariant> VariantList;
   foreach ( const VariantList list, results ) {
     if ( list.isEmpty() )
@@ -137,6 +139,14 @@ bool XesamManager::addSearch(const Location & loc)
   mSearchMap[ searchId ] = loc.id();
   mInvSearchMap[ loc.id() ] = searchId;
   mInterface->StartSearch( searchId );
+
+#if 0
+  // ### workaround until HitAdded is emitted by strigi
+  lock.unlock();
+  int count = mInterface->CountHits( searchId );
+  slotHitsAdded( searchId, count );
+#endif
+
   return true;
 }
 

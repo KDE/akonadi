@@ -23,6 +23,7 @@
 #include "agentmanagerinterface.h"
 #include "resourceinterface.h"
 #include "dbinitializer.h"
+#include "dbupdater.h"
 #include "notificationmanager.h"
 #include "tracer.h"
 #include "selectquerybuilder.h"
@@ -175,11 +176,16 @@ bool Akonadi::DataStore::init()
     return false;
   }
 
+  DbUpdater updater( m_database, QLatin1String( ":dbupdate.xml" ) );
+  if ( !updater.run() )
+    return false;
+
   // enable caching for some tables
   MimeType::enableCache( true );
   Flag::enableCache( true );
   Resource::enableCache( true );
   CachePolicy::enableCache( true );
+  Location::enableCache( true );
 
   return true;
 }

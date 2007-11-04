@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
  <file>akonadidb.xml</file>
+ <file>dbupdate.xml</file>
 </qresource>
 </RCC>

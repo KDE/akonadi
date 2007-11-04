@@ -117,10 +117,12 @@ class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
 
     // data retrieval
     <xsl:if test="column[@name = 'id']">
+    /** Returns the record with id @p id. */
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveById( int id );
     </xsl:if>
 
     <xsl:if test="column[@name = 'name']">
+    /** Returns the record with name @p name. */
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByName( const QString &amp;name );
     </xsl:if>
 
@@ -160,14 +162,17 @@ class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
 
     /**
       Stores all changes made to this record into the database.
+      Note that this method assumes the existence of an 'id' column to identify
+      the record to update. If that column does not exist, all records will be
+      changed.
       @returns true on success, false otherwise.
     */
     bool update();
 
+    <xsl:if test="column[@name = 'id']">
     /** Deletes this record. */
     bool remove();
 
-    <xsl:if test="column[@name = 'id']">
     /** Deletes the record with the given id. */
     static bool remove( int id );
     </xsl:if>
