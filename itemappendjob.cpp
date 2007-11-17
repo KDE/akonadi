@@ -38,6 +38,7 @@ class Akonadi::ItemAppendJob::Private
     Item item;
     QStringList parts;
     int uid;
+    QByteArray data;
 };
 
 ItemAppendJob::ItemAppendJob( const Item &item, const Collection &collection, QObject * parent ) :
@@ -63,9 +64,9 @@ void ItemAppendJob::doStart()
     remoteId = " \\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']';
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
   if ( d->parts.isEmpty() || (d->parts.size() == 1 && d->parts.first() == Item::PartBody) ) {
-    int dataSize = 0;
     if ( d->item.hasPayload() )
-      dataSize = d->item.part( Item::PartBody ).size();
+      d->data = d->item.part( Item::PartBody );
+    int dataSize = d->data.size();
 
     writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
         + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
@@ -75,13 +76,14 @@ void ItemAppendJob::doStart()
     QByteArray command = newTag() + " X-AKAPPEND " + QByteArray::number( d->collection.id() )
         + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") ";
 
-    QString partName;
     QList<QByteArray> partSpecs;
     int totalSize = 0;
-    foreach( partName, d->parts ) {
-      totalSize += d->item.part( partName ).size();
+    foreach( const QString partName, d->parts ) {
+      QByteArray partData = d->item.part( partName );
+      totalSize += partData.size();
       partSpecs.append( ImapParser::quote( partName.toLatin1() ) + ":" +
-        QByteArray::number( d->item.part( partName ).size() ));
+        QByteArray::number( partData.size() ) );
+      d->data += partData;
     }
     command += "(" + ImapParser::join( partSpecs, "," ) + ") " +
       "{" + QByteArray::number( totalSize ) + "}\n";
@@ -93,13 +95,9 @@ void ItemAppendJob::doStart()
 void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "+" ) { // ready for literal data
-    QString partName;
-    foreach( partName, d->parts ) {
-      writeData( d->item.part( partName ) );
-    }
-    if ( !d->item.part( partName ).endsWith( '\n' ) )
+    writeData( d->data );
+    if ( !d->data.endsWith( '\n' ) )
       writeData( "\n" );
-
     return;
   }
   if ( tag == this->tag() ) {

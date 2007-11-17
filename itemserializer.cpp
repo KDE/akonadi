@@ -27,7 +27,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
 #include <QtCore/QIODevice>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -87,7 +87,7 @@ namespace {
 
 using namespace Akonadi;
 
-static QMap<QString, ItemSerializerPlugin*> * all = 0;
+static QHash<QString, ItemSerializerPlugin*> * all = 0;
 
 static void loadPlugins() {
   const ItemSerializerPluginLoader* pl = ItemSerializerPluginLoader::instance();
@@ -118,7 +118,7 @@ static void loadPlugins() {
 static void setup()
 {
     if (!all) {
-        all = new QMap<QString, ItemSerializerPlugin*>();
+        all = new QHash<QString, ItemSerializerPlugin*>();
         loadPlugins();
     }
 }
@@ -159,14 +159,15 @@ void ItemSerializer::serialize( const Item& item, const QString& label, QByteArr
 void ItemSerializer::serialize( const Item& item, const QString& label, QIODevice& data )
 {
     setup();
-    QStringList supportedParts = pluginForMimeType( item.mimeType() ).parts( item );
+    ItemSerializerPlugin& plugin = pluginForMimeType( item.mimeType() );
+    QStringList supportedParts = plugin.parts( item );
     if ( !supportedParts.contains( label ) ) {
       data.write( item.rawPart( label ) );
       return;
     }
     if ( !item.hasPayload() )
       return;
-    ItemSerializer::pluginForMimeType( item.mimeType() ).serialize( item, label, data );
+    plugin.serialize( item, label, data );
 }
 
 QStringList ItemSerializer::parts(const Item & item)

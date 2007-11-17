@@ -77,7 +77,7 @@ void ItemStoreJob::Private::sendNextCommand()
   if ( !revCheck || addFlags.contains( "\\Deleted" ) ) {
     command += "NOREV ";
   } else {
-    command += "REV " + QByteArray::number( item.rev() ) + ' ';
+    command += "REV " + QByteArray::number( itemRef.rev() ) + ' ';
   }
   if ( !operations.isEmpty() ) {
     int op = *(operations.begin());
