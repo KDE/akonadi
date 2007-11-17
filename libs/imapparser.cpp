@@ -250,12 +250,12 @@ int ImapParser::parseNumber(const QByteArray & data, int & result, bool * ok, in
   int pos = stripLeadingSpaces( data, start );
   if ( pos >= data.length() )
     return data.length();
-  QByteArray tmp;
+  int begin = pos;
   for (; pos < data.length(); ++pos ) {
     if ( !isdigit( data.at( pos ) ) )
       break;
-    tmp += data.at( pos );
   }
+  QByteArray tmp = data.mid( begin, pos - begin );
   result = tmp.toInt( ok );
   return pos;
 }
