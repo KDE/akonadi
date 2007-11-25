@@ -320,7 +320,7 @@ void AgentManager::readPluginInfos()
 void AgentManager::readPluginInfos( const QDir& directory )
 {
   QStringList files = directory.entryList();
-  qDebug() << "PLUGINS: " << directory;
+  qDebug() << "PLUGINS: " << directory.canonicalPath();
   qDebug() << "PLUGINS: " << files;
   for ( int i = 0; i < files.count(); ++i ) {
     const QString fileName = directory.absoluteFilePath( files[ i ] );
