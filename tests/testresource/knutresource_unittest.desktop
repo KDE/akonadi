@@ -20,6 +20,7 @@ Name[zh_CN]=Akonadi Knut 资源(无标头)
 Name[zh_TW]=Akonadi Knut 資源（Headless）
 Comment=An agent for unittest purpose
 Comment[ca]=Un agent amb la finalitat de proves unitàries
+Comment[de]=Agent für den Test "unittest"
 Comment[el]=Ένας πελάτης με σκοπό τον έλεγχο μονάδας
 Comment[es]=Un agente para pruebas unitarias
 Comment[et]=Agent unittestide jaoks
