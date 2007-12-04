@@ -64,8 +64,8 @@ set( akonadi_LIB_SRC
 	itemserializer.cpp
 	itemserializerplugin.cpp
 	itemstorejob.cpp
-  itemsync.cpp
-  itemview.cpp
+	itemsync.cpp
+	itemview.cpp
 	job.cpp
 	kcrash.cpp
 	messagecollectionmodel.cpp
@@ -102,6 +102,9 @@ install( FILES
 	akonadi_export.h
 	agentbase.h
 	agentmanager.h
+	agentfilterproxymodel.h
+	agentinstancemodel.h
+	agenttypemodel.h
 	collection.h
 	collectionattribute.h
 	collectionattributefactory.h
@@ -129,13 +132,13 @@ install( FILES
 	itemserializerplugin.h
 	itemstorejob.h
 	itemmodel.h
-  itemsync.h
 	itemview.h
 	job.h
 	libakonadi_export.h
 	messagecollectionmodel.h
 	monitor.h
 	profilemanager.h
+	profilemodel.h
 	resource.h
 	resourcebase.h
 	session.h
