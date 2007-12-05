@@ -23,9 +23,9 @@
 #include "session.h"
 #include "imapparser.h"
 
-#include <QQueue>
+#include <QtCore/QQueue>
 #include <QtCore/QSettings>
-#include <QThreadStorage>
+#include <QtCore/QThreadStorage>
 
 #ifdef Q_OS_WIN
 class QTcpSocket;
