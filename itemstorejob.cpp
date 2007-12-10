@@ -19,7 +19,8 @@
 
 #include "itemstorejob.h"
 #include "imapparser.h"
-#include <QtCore/QDebug>
+
+#include <kdebug.h>
 
 using namespace Akonadi;
 
@@ -206,7 +207,7 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
     }
     return;
   }
-  qDebug() << "unhandled response in item store job: " << _tag << data;
+  kDebug( 5250 ) << "Unhandled response: " << _tag << data;
 }
 
 void ItemStoreJob::storePayload()

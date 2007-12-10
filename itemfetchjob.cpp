@@ -24,7 +24,8 @@
 #include "imapparser.h"
 #include "itemserializerplugin.h"
 
-#include <QtCore/QDebug>
+#include <kdebug.h>
+
 #include <QtCore/QTimer>
 
 using namespace Akonadi;
@@ -163,7 +164,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       return;
     }
   }
-  qDebug() << "Unhandled response in message fetch job: " << tag << data;
+  kDebug( 5250 ) << "Unhandled response: " << tag << data;
 }
 
 Item::List ItemFetchJob::items() const

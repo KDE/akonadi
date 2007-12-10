@@ -65,7 +65,7 @@ bool MonitorPrivate::acceptNotification(const NotificationMessage & msg)
     return false;
   switch ( msg.type() ) {
     case NotificationMessage::InvalidType:
-      kWarning() << "Received invalid change notification!";
+      kWarning( 5250 ) << "Received invalid change notification!";
       return false;
     case NotificationMessage::Item:
       return isItemMonitored( msg.uid(), msg.parentCollection(), msg.parentDestCollection(), msg.mimeType(), msg.resource() )
@@ -239,12 +239,12 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
 void MonitorPrivate::slotItemJobFinished( KJob* job )
 {
   if ( !pendingJobs.contains( job ) ) {
-    kWarning() <<"unknown job - wtf is going on here?";
+    kWarning( 5250 ) << "Unknown job - wtf is going on here?";
     return;
   }
   NotificationMessage msg = pendingJobs.take( job );
   if ( job->error() ) {
-    kWarning() <<"Error on fetching item:" << job->errorText();
+    kWarning( 5250 ) << "Error on fetching item:" << job->errorText();
   } else {
     Item item;
     Collection col;
@@ -263,12 +263,12 @@ void MonitorPrivate::slotItemJobFinished( KJob* job )
 void MonitorPrivate::slotCollectionJobFinished( KJob* job )
 {
   if ( !pendingJobs.contains( job ) ) {
-    kWarning() <<"unknown job - wtf is going on here?";
+    kWarning( 5250 ) << "Unknown job - wtf is going on here?";
     return;
   }
   NotificationMessage msg = pendingJobs.take( job );
   if ( job->error() ) {
-    kWarning() <<"Error on fetching collection:" << job->errorText();
+    kWarning( 5250 ) << "Error on fetching collection:" << job->errorText();
   } else {
     Collection col, parent;
     CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );

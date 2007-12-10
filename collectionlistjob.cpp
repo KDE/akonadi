@@ -21,7 +21,8 @@
 
 #include "imapparser.h"
 
-#include <QtCore/QDebug>
+#include <kdebug.h>
+
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>
@@ -133,14 +134,14 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
     bool ok = false;
     pos = ImapParser::parseNumber( data, colId, &ok, pos );
     if ( !ok || colId <= 0 ) {
-      qDebug() << "could not parse response:" << data;
+      kDebug( 5250 ) << "Could not parse collection id from response:" << data;
       return;
     }
 
     int parentId = -1;
     pos = ImapParser::parseNumber( data, parentId, &ok, pos );
     if ( !ok || parentId < 0 ) {
-      qDebug() << "could not parse response:" << data;
+      kDebug( 5250 ) << "Could not parse parent id from response:" << data;
       return;
     }
 
@@ -194,7 +195,7 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
       d->emitTimer->start();
     return;
   }
-  qDebug() << "unhandled server response in collection list job" << tag << data;
+  kDebug( 5250 ) << "Unhandled server response" << tag << data;
 }
 
 void CollectionListJob::setResource(const QString & resource)

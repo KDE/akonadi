@@ -90,7 +90,7 @@ void SessionPrivate::dataReceived()
         connected = true;
         startNext();
       } else {
-        kWarning() <<"Unable to login to Akonadi server:" << parser->data();
+        kWarning( 5250 ) << "Unable to login to Akonadi server:" << parser->data();
         socket->close();
         QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
       }
@@ -155,7 +155,7 @@ void SessionPrivate::jobDone(KJob * job)
   }
   // ### better handle the other cases too, user might have canceled jobs
   else {
-    kDebug() << job << "Non-current job finished.";
+    kDebug( 5250 ) << job << "Non-current job finished.";
   }
 }
 

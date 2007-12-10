@@ -21,7 +21,7 @@
 #include "itemappendjob.h"
 #include "imapparser.h"
 
-#include <QtCore/QDebug>
+#include <kdebug.h>
 
 using namespace Akonadi;
 
@@ -104,8 +104,10 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
     if ( int pos = data.indexOf( "UIDNEXT" ) ) {
       bool ok = false;
       ImapParser::parseNumber( data, d->uid, &ok, pos + 7 );
-      if ( !ok )
-        qDebug() << "invalid UIDNEXT response to APPEND command: " << tag << data;
+      if ( !ok ) {
+        kDebug( 5250 ) << "Invalid UIDNEXT response to APPEND command: "
+                       << tag << data;
+      }
     }
   }
 }

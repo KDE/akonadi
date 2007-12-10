@@ -22,10 +22,12 @@
 #include "item.h"
 #include "itemserializerplugin.h"
 
+// KDE core
+#include <kdebug.h>
+
 // Qt
 #include <QtCore/QBuffer>
 #include <QtCore/QByteArray>
-#include <QtCore/QDebug>
 #include <QtCore/QIODevice>
 #include <QtCore/QHash>
 #include <QtCore/QString>
@@ -92,21 +94,24 @@ static QHash<QString, ItemSerializerPlugin*> * all = 0;
 static void loadPlugins() {
   const ItemSerializerPluginLoader* pl = ItemSerializerPluginLoader::instance();
   if ( !pl ) {
-    qWarning() << "ItemSerializerPluginLoader: cannot instantiate plugin loader!" << endl;
+    kWarning( 5250 ) << "Cannot instantiate plugin loader!" << endl;
     return;
   }
   const QStringList types = pl->types();
-  qDebug() << "ItemSerializerPluginLoader: found" << types.size() << "plugins." << endl;
+  kDebug( 5250 ) << "ItemSerializerPluginLoader: "
+                 << "found" << types.size() << "plugins." << endl;
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
     ItemSerializerPlugin * plugin = pl->createForName( *it );
     if ( !plugin ) {
-      qWarning() << "ItemSerializerPlugin: plugin" << *it << "is not valid!" << endl;
+      kWarning( 5250 ) << "ItemSerializerPluginLoader: "
+                       << "plugin" << *it << "is not valid!" << endl;
       continue;
     }
 
     QStringList supportedTypes = (*it).split( QLatin1Char(',') );
     foreach ( const QString t, supportedTypes ) {
-      qDebug() << "ItemSerializerPluginLoader: inserting plugin for type:" << t;
+      kDebug( 5250 ) << "ItemSerializerPluginLoader: "
+                     << "inserting plugin for type:" << t;
       all->insert( t, plugin );
     }
   }
@@ -184,8 +189,8 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
     if ( all->contains( mimetype ) )
         return *(all->value(mimetype));
 
-    qDebug() << "ItemSerializer: No plugin for mimetype " << mimetype << " found!";
-    qDebug() << "available plugins are: " << all->keys();
+    kDebug( 5250 ) << "No plugin for mimetype " << mimetype << " found!";
+    kDebug( 5250 ) << "Available plugins are: " << all->keys();
 
     ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
     Q_ASSERT(plugin);

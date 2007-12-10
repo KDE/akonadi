@@ -20,7 +20,7 @@
 #include "collectionstatusjob.h"
 #include "imapparser.h"
 
-#include <QtCore/QDebug>
+#include <kdebug.h>
 
 using namespace Akonadi;
 
@@ -65,7 +65,7 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
         } else if ( list[i] == "UNSEEN" ) {
           d->status.setUnreadCount( list[i+1].toInt() );
         } else {
-          qDebug() << "unknown STATUS response: " << list[i];
+          kDebug( 5250 ) << "Unknown STATUS response: " << list[i];
         }
       }
 
@@ -73,7 +73,7 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
       return;
     }
   }
-  qDebug() << "unhandled response in collection status job: " << tag << data;
+  kDebug( 5250 ) << "Unhandled response: " << tag << data;
 }
 
 Collection CollectionStatusJob::collection() const

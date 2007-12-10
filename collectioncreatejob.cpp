@@ -20,7 +20,7 @@
 #include "collectioncreatejob.h"
 #include "imapparser.h"
 
-#include <QtCore/QDebug>
+#include <kdebug.h>
 
 using namespace Akonadi;
 
@@ -95,14 +95,14 @@ void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteAr
     bool ok = false;
     pos = ImapParser::parseNumber( data, colId, &ok, pos );
     if ( !ok || colId <= 0 ) {
-      qDebug() << "could not parse response:" << data;
+      kDebug( 5250 ) << "Could not parse collection id from response:" << data;
       return;
     }
 
     int parentId = -1;
     pos = ImapParser::parseNumber( data, parentId, &ok, pos );
     if ( !ok || parentId < 0 ) {
-      qDebug() << "could not parse response:" << data;
+      kDebug( 5250 ) << "Could not parse parent id from response:" << data;
       return;
     }
 

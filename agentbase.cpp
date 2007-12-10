@@ -36,9 +36,9 @@
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kdebug.h>
 #include <klocale.h>
 
-#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
@@ -145,7 +145,7 @@ QString AgentBase::parseArguments( int argc, char **argv )
 {
   QString identifier;
   if ( argc < 3 ) {
-    qDebug( "AgentBase::parseArguments: Not enough arguments passed..." );
+    kDebug( 5250 ) << "Not enough arguments passed...";
     exit( 1 );
   }
 
@@ -155,7 +155,7 @@ QString AgentBase::parseArguments( int argc, char **argv )
   }
 
   if ( identifier.isEmpty() ) {
-    qDebug( "AgentBase::parseArguments: Identifier argument missing" );
+    kDebug( 5250 ) << "Identifier argument missing";
     exit( 1 );
   }
 

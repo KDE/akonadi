@@ -26,7 +26,8 @@
 #include "imapparser.h"
 #include "session.h"
 
-#include <QtCore/QDebug>
+#include <kdebug.h>
+
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
 #include <QtCore/QTextStream>
@@ -186,7 +187,7 @@ bool Job::addSubjob( KJob * job )
 
 void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
 {
-  qDebug() << "Unhandled response: " << tag << data;
+  kDebug( 5250 ) << "Unhandled response: " << tag << data;
 }
 
 QByteArray Job::sessionId() const

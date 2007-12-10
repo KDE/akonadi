@@ -129,7 +129,7 @@ void CollectionModel::Private::updateDone( KJob *job )
 {
   if ( job->error() ) {
     // TODO: handle job errors
-    kWarning() <<"Job error:" << job->errorString();
+    kWarning( 5250 ) << "Job error:" << job->errorString();
   } else {
     CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
     Collection result = csjob->collection();
@@ -140,7 +140,7 @@ void CollectionModel::Private::updateDone( KJob *job )
 void CollectionModel::Private::collectionStatusChanged( int collection, const Akonadi::CollectionStatus & status )
 {
   if ( !collections.contains( collection ) )
-    kWarning() <<"Got status response for non-existing collection:" << collection;
+    kWarning( 5250 ) << "Got status response for non-existing collection:" << collection;
   else {
     collections[ collection ].setStatus( status );
 
@@ -168,7 +168,7 @@ void CollectionModel::Private::editDone( KJob * job )
 void CollectionModel::Private::appendDone(KJob * job)
 {
   if ( job->error() ) {
-    kWarning() <<"Append failed:" << job->errorString();
+    kWarning( 5250 ) << "Append failed:" << job->errorString();
     // TODO: error handling
   }
 }
@@ -372,7 +372,7 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
     list = d->childCollections.value( Collection::root().id() );
   }
   if ( row < 0 || row  >= list.size() ) {
-    kWarning() <<"Index out of bounds:" << row <<" parent:" << parentCol.id();
+    kWarning( 5250 ) << "Index out of bounds:" << row <<" parent:" << parentCol.id();
     return false;
   }
 

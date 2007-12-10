@@ -109,7 +109,7 @@ void ItemSync::slotLocalListDone( KJob * job )
   // added / updated
   foreach ( const Item remoteItem, d->remoteItems ) {
     if ( remoteItem.reference().remoteId().isEmpty() ) {
-      kWarning() << k_funcinfo << "Item " << remoteItem.reference().id() << " does not have a remote identifier - skipping";
+      kWarning( 5250 ) << "Item " << remoteItem.reference().id() << " does not have a remote identifier - skipping";
       d->progress++;
       continue;
     }
@@ -133,7 +133,8 @@ void ItemSync::slotLocalListDone( KJob * job )
       needsUpdate = true;
     } else {
       if ( localItem.flags() != remoteItem.flags() ) { // Check whether the flags differ
-        kDebug() << localItem.flags() << remoteItem.flags();
+        kDebug( 5250 ) << "Local flags "  << localItem.flags()
+                       << "remote flags " << remoteItem.flags();
         needsUpdate = true;
       } else {
         /*
