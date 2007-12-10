@@ -343,7 +343,7 @@ void ResourceBase::itemRetrieved( const Item &item )
   QStringList requestedParts = d->scheduler->currentTask().itemParts;
   foreach ( QString part, requestedParts ) {
     if ( !item.availableParts().contains( part ) ) {
-      warning( QString::fromLatin1( "Item does not provide part '%1'!" ).arg( part ) );
+      kWarning() << "Item does not provide part" << part;
       i.addPart( part, QByteArray() );
     }
   }
