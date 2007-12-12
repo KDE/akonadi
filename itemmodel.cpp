@@ -276,7 +276,7 @@ QVariant ItemModel::headerData( int section, Qt::Orientation orientation, int ro
 
 void ItemModel::setCollection( const Collection &collection )
 {
-  qWarning() << "ItemModel::setPath()";
+  kWarning( 5250 ) << "ItemModel::setPath()";
   if ( d->collection == collection )
     return;
   d->collection = collection;

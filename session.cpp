@@ -184,10 +184,10 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
 
   QFileInfo fileInfo( connectionConfigFile );
   if ( !fileInfo.exists() ) {
-    qWarning() << "Akonadi Client Session: connection config file '"
-               << "akonadi/akonadiconnectionrc can not be found in '"
-               << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
-               << XdgBaseDirs::systemPathList( "config" );
+    kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
+                     << "akonadi/akonadiconnectionrc can not be found in '"
+                     << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
+                     << XdgBaseDirs::systemPathList( "config" );
   }
 
   d->mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );

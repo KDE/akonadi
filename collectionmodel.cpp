@@ -154,14 +154,14 @@ void CollectionModel::Private::collectionStatusChanged( int collection, const Ak
 void CollectionModel::Private::listDone( KJob *job )
 {
   if ( job->error() ) {
-    qWarning() << "Job error: " << job->errorString() << endl;
+    kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
   }
 }
 
 void CollectionModel::Private::editDone( KJob * job )
 {
   if ( job->error() ) {
-    qWarning() << "Edit failed: " << job->errorString();
+    kWarning( 5250 ) << "Edit failed: " << job->errorString();
   }
 }
 

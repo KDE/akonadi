@@ -68,7 +68,8 @@ void Control::Private::startInternal()
 
   QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
   if ( !reply.isValid() ) {
-    qWarning( "Unable to start Akonadi control process: %s", qPrintable( reply.error().message() ) );
+    kWarning( 5250 ) << "Unable to start Akonadi control process: "
+                     << reply.error().message();
     return;
   }
 

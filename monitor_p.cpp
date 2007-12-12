@@ -50,7 +50,7 @@ bool MonitorPrivate::connectToNotificationManager()
     return true;
 
   if ( !nm ) {
-    qWarning() << "Unable to connect to notification manager";
+    kWarning( 5250 ) << "Unable to connect to notification manager";
   } else {
     QObject::connect( nm, SIGNAL(notify(Akonadi::NotificationMessage::List)),
              q_ptr, SLOT(slotNotify(Akonadi::NotificationMessage::List)) );
@@ -129,7 +129,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
     return true;
 
   } else {
-    qWarning() << "Received unknown change notification!";
+    kWarning( 5250 ) << "Received unknown change notification!";
   }
   return false;
 }
@@ -144,7 +144,7 @@ void MonitorPrivate::sessionDestroyed( QObject * object )
 void MonitorPrivate::slotStatusChangedFinished( KJob* job )
 {
   if ( job->error() ) {
-    qWarning() << "Error on fetching collection status: " << job->errorText();
+    kWarning( 5250 ) << "Error on fetching collection status: " << job->errorText();
   } else {
     CollectionStatusJob *statusJob = static_cast<CollectionStatusJob*>( job );
     emit q_ptr->collectionStatusChanged( statusJob->collection().id(), statusJob->status() );
