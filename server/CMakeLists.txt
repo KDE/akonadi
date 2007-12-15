@@ -1,4 +1,8 @@
+macro_optional_find_package(MySQL)
+macro_log_feature(MYSQL_EMBEDDED_FOUND "mysql-embedded" "MySQL/Embedded Library" "http://www.mysql.org" FALSE "" "Needed for the MySQL/Embedded Akonadi backend. Sqlite will be used instead.")
+
 macro_optional_find_package(OpenSSL)
+macro_log_feature(OPENSSL_FOUND "OpenSSL" "A toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols" "http://openssl.org" FALSE "" "Required for building the Akonadi SQL plugin with MySQL embedded.")
 
 include_directories( ${CMAKE_BINARY_DIR}/akonadi )
 include_directories( ${CMAKE_SOURCE_DIR}/akonadi )
