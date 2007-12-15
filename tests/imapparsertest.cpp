@@ -462,4 +462,61 @@ void ImapParserTest::testParseDateTime()
   QCOMPARE( actualEnd, end );
 }
 
+void ImapParserTest::testBulkParser_data()
+{
+  QTest::addColumn<QByteArray>( "input" );
+  QTest::addColumn<QByteArray>( "data" );
+
+  QTest::newRow( "empty" ) << QByteArray( "* PRE {0} POST\n" ) << QByteArray("PRE {0} POST\n");
+  QTest::newRow( "small block" ) << QByteArray( "* PRE {2}\nXX POST\n" )
+      << QByteArray( "PRE {2}\nXX POST\n" );
+  QTest::newRow( "small block 2" ) << QByteArray( "* (PRE {2}\nXX\n POST)\n" )
+      << QByteArray( "(PRE {2}\nXX\n POST)\n" );
+  QTest::newRow( "large block" ) << QByteArray( "* PRE {10}\n0123456789\n" )
+      << QByteArray( "PRE {10}\n0123456789\n" );
+}
+
+void ImapParserTest::testBulkParser()
+{
+  QFETCH( QByteArray, input );
+  QFETCH( QByteArray, data );
+
+  ImapParser *parser = new ImapParser();
+  QBuffer buffer;
+  buffer.setData( input );
+  QVERIFY( buffer.open( QBuffer::ReadOnly ) );
+
+  // reading continuation as a single block
+  forever {
+    if ( buffer.atEnd() )
+      break;
+    if ( parser->continuationSize() > 0 ) {
+      parser->parseBlock( buffer.read( parser->continuationSize() ) );
+    } else if ( buffer.canReadLine() ) {
+      const QByteArray line = buffer.readLine();
+      bool res = parser->parseNextLine( line );
+      QCOMPARE( res, buffer.atEnd() );
+    }
+  }
+  QCOMPARE( parser->data(), data );
+
+  // reading continuations as smaller blocks
+  buffer.reset();
+  parser->reset();
+  forever {
+    if ( buffer.atEnd() )
+      break;
+    if ( parser->continuationSize() > 4 ) {
+      parser->parseBlock( buffer.read( 4 ) );
+    } else if ( parser->continuationSize() > 0 ) {
+      parser->parseBlock( buffer.read( parser->continuationSize() ) );
+    } else if ( buffer.canReadLine() ) {
+      bool res = parser->parseNextLine( buffer.readLine() );
+      QCOMPARE( res, buffer.atEnd() );
+    }
+  }
+
+  delete parser;
+}
+
 #include "imapparsertest.moc"
