@@ -98,40 +98,48 @@ void AkonadiConnection::slotDisconnected()
 
 void AkonadiConnection::slotNewData()
 {
-  while ( m_tcpSocket->canReadLine() ) {
-    QByteArray line = m_tcpSocket->readLine();
-    Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( line ) );
+  while ( m_tcpSocket->bytesAvailable() > 0 ) {
+    if ( m_parser->continuationSize() > 1 ) {
+      const QByteArray data = m_tcpSocket->read( qMin( m_tcpSocket->bytesAvailable(), m_parser->continuationSize() - 1 ) );
+      Tracer::self()->connectionInput( m_identifier, QLatin1String("[binary data]") );
+      m_parser->parseBlock( data );
+    } else if ( m_tcpSocket->canReadLine() ) {
+      const QByteArray line = m_tcpSocket->readLine();
+      Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( line ) );
 
-    if ( m_parser->parseNextLine( line ) ) {
-      // parse the command
-      QByteArray command;
-      ImapParser::parseString( m_parser->data(), command );
+      if ( m_parser->parseNextLine( line ) ) {
+        // parse the command
+        QByteArray command;
+        ImapParser::parseString( m_parser->data(), command );
 
-      m_currentHandler = findHandlerForCommand( command );
-      m_currentHandler->setTag( m_parser->tag() );
-      assert( m_currentHandler );
-      connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
-               this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
-      connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
-               this, SLOT( slotConnectionStateChange( ConnectionState ) ),
-               Qt::DirectConnection );
-      try {
-          // FIXME: remove the tag, it's only there for backward compatibility with the handlers!
-          if ( m_currentHandler->handleLine( m_parser->tag() + ' ' + m_parser->data() ) )
-              m_currentHandler = 0;
-      } catch ( ... ) {
-          delete m_currentHandler;
-          m_currentHandler = 0;
+        m_currentHandler = findHandlerForCommand( command );
+        m_currentHandler->setTag( m_parser->tag() );
+        assert( m_currentHandler );
+        connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
+                this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
+        connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
+                this, SLOT( slotConnectionStateChange( ConnectionState ) ),
+                Qt::DirectConnection );
+        try {
+            // FIXME: remove the tag, it's only there for backward compatibility with the handlers!
+            if ( m_currentHandler->handleLine( m_parser->tag() + ' ' + m_parser->data() ) )
+                m_currentHandler = 0;
+        } catch ( ... ) {
+            delete m_currentHandler;
+            m_currentHandler = 0;
+        }
+        m_parser->reset();
+      } else {
+        if ( m_parser->continuationStarted() ) {
+          Response response;
+          response.setContinuation();
+          response.setString( "Ready for literal data (expecting " +
+              QByteArray::number( m_parser->continuationSize() ) + " bytes)" );
+          slotResponseAvailable( response );
+        }
       }
-      m_parser->reset();
     } else {
-      if ( m_parser->continuationStarted() ) {
-        Response response;
-        response.setContinuation();
-        response.setString( "Ready for literal data (expecting " +
-            QByteArray::number( m_parser->continuationSize() ) + " bytes)" );
-        slotResponseAvailable( response );
-      }
+      break; // nothing we can do for now with the available data
     }
   }
 }

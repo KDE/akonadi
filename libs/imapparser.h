@@ -156,6 +156,13 @@ class AKONADIPROTOCOL_EXPORT ImapParser
     bool parseNextLine( const QByteArray &readBuffer );
 
     /**
+      Parses the given block of data.
+      Note: This currently only handles continuation blocks.
+      @param data The data to parse.
+    */
+    void parseBlock( const QByteArray &data );
+
+    /**
       Returns the tag of the parsed message.
       Only valid if parseNextLine() returned true.
     */
@@ -182,7 +189,7 @@ class AKONADIPROTOCOL_EXPORT ImapParser
     /**
       Returns the expected size of liteal data.
     */
-    int continuationSize() const;
+    qint64 continuationSize() const;
 
   private:
     class Private;
