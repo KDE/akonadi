@@ -115,6 +115,11 @@ ItemFetchJob::~ ItemFetchJob( )
 void ItemFetchJob::doStart()
 {
   if ( d->uid.isNull() ) { // collection content listing
+    if ( d->collection == Collection::root() ) {
+      setErrorText( QLatin1String("Cannot list root collection.") );
+      setError( Unknown );
+      emitResult();
+    }
     CollectionSelectJob *job = new CollectionSelectJob( d->collection, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)) );
     addSubjob( job );

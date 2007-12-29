@@ -66,7 +66,7 @@ class ChangeRecorderTest : public QObject
 
       triggerChange( 1 );
       triggerChange( 1 );
-      triggerChange( 2 );
+      triggerChange( 3 );
       QTest::qWait( 1000 ); // enter event loop and wait for change notifications from the server
 
       QCOMPARE( spy.count(), 0 );

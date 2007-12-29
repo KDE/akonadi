@@ -494,6 +494,12 @@ void CollectionJobTest::testSelect()
   job->setRetrieveStatus( true );
   QVERIFY( job->exec() );
   QVERIFY( job->unseen() > -1 );
+
+  job = new CollectionSelectJob( Collection::root(), this );
+  QVERIFY( job->exec() );
+
+  job = new CollectionSelectJob( Collection( INT_MAX ), this );
+  QVERIFY( !job->exec() );
 }
 
 #include "collectionjobtest.moc"
