@@ -21,6 +21,8 @@
 #include "control.h"
 #include "itemstoretest.h"
 #include <libakonadi/collectionlistjob.h>
+#include <libakonadi/collectionselectjob.h>
+#include <libakonadi/itemdeletejob.h>
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/itemstorejob.h>
 #include <qtest_kde.h>
@@ -289,6 +291,12 @@ void ItemStoreTest::testPartRemove()
 
 void ItemStoreTest::testRevisionCheck()
 {
+  // make sure we don't have any other collection selected
+  // otherwise EXPUNGE doesn't work and will be triggered by
+  // the following tests and mess up the monitor testing
+  CollectionSelectJob *sel = new CollectionSelectJob( Collection::root(), this );
+  QVERIFY( sel->exec() );
+
   // fetch same item twice
   DataReference ref( 2, QString() );
   ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
@@ -305,6 +313,19 @@ void ItemStoreTest::testRevisionCheck()
   item2.addPart( "EXTRA", "extra" );
   sjob2->storePayload();
   QVERIFY( !sjob2->exec() );
+
+  // fetch same again
+  prefetchjob = new ItemFetchJob( ref );
+  prefetchjob->exec();
+  item1 = prefetchjob->items()[0];
+
+  // delete item
+  ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
+  djob->exec();
+
+  // try to store it
+  sjob = new ItemStoreJob( item1 );
+  QVERIFY( !sjob->exec() );
 }
 
 #include "itemstoretest.moc"
