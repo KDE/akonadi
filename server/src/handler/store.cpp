@@ -68,6 +68,8 @@ bool Store::handleLine( const QByteArray& line )
   if ( !qb.exec() )
     return failureResponse( "Unable to retrieve items" );
   QList<PimItem> pimItems = qb.result();
+  if ( pimItems.isEmpty() )
+    return failureResponse( "No items found" );
 
   // parse revision
   int rev;

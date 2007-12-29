@@ -60,8 +60,13 @@ bool Select::handleLine(const QByteArray& line )
 
     // collection
     Location l = HandlerHelper::collectionFromIdOrName( buffer );
-    if ( !l.isValid() )
+    if ( !l.isValid() ) {
+      bool ok = false;
+      if ( buffer.toInt( &ok ) == 0 && ok )
+        silent = true;
+      else
         return failureResponse( "Cannot select this collection" );
+    }
 
     // Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
     // OPTIONAL OK untagged responses: UNSEEN, PERMANENTFLAGS
