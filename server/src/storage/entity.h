@@ -22,7 +22,7 @@
 
 #include "countquerybuilder.h"
 
-#include <Qt>
+#include <QtCore/Qt>
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <QtCore/QString>
