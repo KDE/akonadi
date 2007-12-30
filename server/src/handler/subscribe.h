@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-
+/*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -17,29 +15,35 @@
     along with this library; see the file COPYING.LIB.  If not, write to the
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
+*/
 
--->
+#ifndef AKONADI_SUBSCRIBE_H
+#define AKONADI_SUBSCRIBE_H
 
+#include <handler.h>
 
-<!--
-  Akonadi Database Schema Update Description
+namespace Akonadi {
 
-  update element:
-    text: SQL statement to execute for update
-    version attribute: the new schmema version
-    abortOnFailure attribute: if true, the update must succeed, otherwise failures are ignored
--->
-<updates>
+/**
+  @ingroup akonadi_server_handler
 
-  <update version="2" abortOnFailure="false">
-    ALTER TABLE LocationTable DROP COLUMN existCount;
-    ALTER TABLE LocationTable DROP COLUMN recentCount;
-    ALTER TABLE LocationTable DROP COLUMN unseenCount;
-    ALTER TABLE LocationTable DROP COLUMN firstUnseen;
-  </update>
+  Handler for the subscribe/unsubscribe commands.
+  Compatible with RFC 3501 section 6.3.7 and 6.3.8.
 
-  <update version="3" abortOnFailure="false">
-    UPDATE LocationTable SET subscribed = true;
-  </update>
+  Locally subscribe/unsubscribe a set of collections.
 
-</updates>
+  <h4>Syntax</h4>
+  @verbatim
+  tag "SUBSCRIBE " collection *( " " collection )
+  tag "UNSUBSCRIBE " collection *( " " collection )
+  @endverbatim
+ */
+class Subscribe : public Handler
+{
+  public:
+    bool handleLine( const QByteArray &line );
+};
+
+}
+
+#endif

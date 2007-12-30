@@ -66,6 +66,7 @@ set(libakonadiprivate_SRCS
   src/handler/searchhelper.cpp
   src/handler/searchpersistent.cpp
   src/handler/select.cpp
+  src/handler/subscribe.cpp
   src/handler/status.cpp
   src/handler/store.cpp
   src/handler/transaction.cpp

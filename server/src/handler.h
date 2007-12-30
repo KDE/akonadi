@@ -89,6 +89,9 @@ public:
      */
     bool failureResponse( const char *failureMessage );
 
+    /** Send a success response with the given message. */
+    bool successResponse( const char *successMessage );
+
 Q_SIGNALS:
 
     /**

@@ -67,7 +67,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="1"/>
+    <data columns="version" values="3"/>
   </table>
 
   <table name="CachePolicy">
@@ -104,6 +104,7 @@
         collection. If NULL, the default should be used.</comment>
     </column>
     <column name="resourceId" type="int" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
+    <column name="subscribed" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
     <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
     <reference name="children" table="Location" key="parentId"/>
     <reference name="items" table="PimItem" key="locationId"/>
