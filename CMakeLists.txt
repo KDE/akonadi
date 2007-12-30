@@ -77,6 +77,7 @@ set( akonadi_LIB_SRC
 	resourcescheduler.cpp
 	searchcreatejob.cpp
 	session.cpp
+	subscriptionjob.cpp
 	transactionjobs.cpp
 	xdgbasedirs.cpp
 )
