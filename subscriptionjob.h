@@ -57,6 +57,7 @@ class AKONADI_EXPORT SubscriptionJob : public Job
 
   protected:
     void doStart();
+    void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
     class Private;

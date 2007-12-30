@@ -59,8 +59,10 @@ class SubscriptionTest : public QObject
     void testInvalidSubscribe()
     {
       Collection::List l;
-      l << Collection( INT_MAX );
+      l << Collection( 1 );
       SubscriptionJob *sjob = new SubscriptionJob( this );
+      sjob->subscribe( l );
+      l << Collection( INT_MAX );
       sjob->unsubscribe( l );
       QVERIFY( !sjob->exec() );
     }

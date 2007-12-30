@@ -28,12 +28,13 @@ class SubscriptionJob::Private
 
     void sendCommand( const QByteArray &cmd, const Collection::List &list )
     {
-      QByteArray line = q->newTag() + " " + cmd;
+      tag = q->newTag();
+      QByteArray line = tag + " " + cmd;
       foreach ( const Collection col, list )
         line += " " + QByteArray::number( col.id() );
       line += '\n';
       q->writeData( line );
-//       q->newTag(); // prevent automatic response handlingd
+      q->newTag(); // prevent automatic response handling
     }
 
     void sendNextCommand()
@@ -51,6 +52,7 @@ class SubscriptionJob::Private
     }
 
     SubscriptionJob* q;
+    QByteArray tag;
     Collection::List sub, unsub;
 };
 
@@ -78,4 +80,18 @@ void SubscriptionJob::unsubscribe(const Collection::List & list)
 void SubscriptionJob::doStart()
 {
   d->sendNextCommand();
+}
+
+void SubscriptionJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
+{
+  if ( _tag == d->tag ) {
+    if ( data.startsWith( "OK" ) ) {
+      d->sendNextCommand();
+    } else {
+      setError( Unknown );
+      setErrorText( QString::fromUtf8( data ) );
+      emitResult();
+    }
+    return;
+  }
 }
