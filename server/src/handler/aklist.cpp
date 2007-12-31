@@ -30,7 +30,10 @@
 
 using namespace Akonadi;
 
-AkList::AkList(): Handler() {}
+AkList::AkList():
+    Handler(),
+    mOnlySubscribed( false )
+{}
 
 AkList::~AkList() {}
 
@@ -38,7 +41,12 @@ bool AkList::handleLine(const QByteArray& line )
 {
   // parse out the reference name and mailbox name
   int pos = line.indexOf( ' ' ) + 1; // skip tag
-  pos = line.indexOf( ' ', pos ) + 1; // skip command
+  QByteArray tmp;
+
+  // command
+  pos = ImapParser::parseString( line, tmp, pos );
+  if ( tmp == "X-AKLSUB" )
+    mOnlySubscribed = true;
 
   int baseCollection;
   bool ok = false;
@@ -47,7 +55,6 @@ bool AkList::handleLine(const QByteArray& line )
     return failureResponse( "Invalid base collection" );
 
   int depth;
-  QByteArray tmp;
   pos = ImapParser::parseString( line, tmp, pos );
   if ( tmp.isEmpty() )
     return failureResponse( "Specify listing depth" );
@@ -114,6 +121,8 @@ bool AkList::listCollection(const Location & root, int depth )
   // filter if this node isn't needed by it's children
   if ( !childrenFound ) {
     if ( mResource.isValid() && root.resourceId() != mResource.id() )
+      return false;
+    if ( mOnlySubscribed && !root.subscribed() )
       return false;
   }
 

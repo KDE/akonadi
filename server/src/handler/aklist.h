@@ -38,11 +38,15 @@ namespace Akonadi {
 
   Request:
   @verbatim
-  request = tag " X-AKLIST " collection-id " " depth " (" filter-list ")"
+  request = tag " " command " " collection-id " " depth " (" filter-list ")"
+  command = "X-AKLIST" | "X-AKLSUB"
   depth = number | "INF"
   filter-list = *(filter-key " " filter-value)
   filter-key = "RESOURCE"
   @endverbatim
+
+  @c X-AKLIST will include all known collections, @c X-AKLSUB only those that are
+  subscribed or contains subscribed collections (cf. RFC 3591, LIST vs. LSUB).
 
   @c depths chooses between recursive (@c INF), flat (1) and local (0, ie. just the
   base collection) listing, 0 indicates the root collection.
@@ -72,6 +76,7 @@ class AKONADI_SERVER_EXPORT AkList : public Handler
 
   private:
     Resource mResource;
+    bool mOnlySubscribed;
 
 };
 

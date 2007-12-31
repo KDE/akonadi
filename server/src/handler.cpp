@@ -138,7 +138,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new TransactionHandler();
     if ( command == "X-AKAPPEND" )
       return new AkAppend();
-    if ( command == "X-AKLIST" )
+    if ( command == "X-AKLIST" || command == "X-AKLSUB" )
       return new AkList();
     if ( command == "SUBSCRIBE" || command == "UNSUBSCRIBE" )
       return new Subscribe();
