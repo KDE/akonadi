@@ -19,6 +19,7 @@
 
 #include <libakonadi/control.h>
 #include <libakonadi/collection.h>
+#include <libakonadi/collectionlistjob.h>
 #include <libakonadi/subscriptionjob.h>
 
 #include <QtCore/QObject>
@@ -39,14 +40,27 @@ class SubscriptionTest : public QObject
     void testSubscribe()
     {
       Collection::List l;
-      l << Collection( 1 );
+      l << Collection( 5 );
       SubscriptionJob *sjob = new SubscriptionJob( this );
       sjob->unsubscribe( l );
       QVERIFY( sjob->exec() );
 
+      CollectionListJob *ljob = new CollectionListJob( Collection( 7 ), CollectionListJob::Flat, this );
+      QVERIFY( ljob->exec() );
+      QCOMPARE( ljob->collections().count(), 1 );
+
+      ljob = new CollectionListJob( Collection( 7 ), CollectionListJob::Flat, this );
+      ljob->includeUnsubscribed();
+      QVERIFY( ljob->exec() );
+      QCOMPARE( ljob->collections().count(), 2 );
+
       sjob = new SubscriptionJob( this );
       sjob->subscribe( l );
       QVERIFY( sjob->exec() );
+
+      ljob = new CollectionListJob( Collection( 7 ), CollectionListJob::Flat, this );
+      QVERIFY( ljob->exec() );
+      QCOMPARE( ljob->collections().count(), 2 );
     }
 
     void testEmptySubscribe()

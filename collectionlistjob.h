@@ -79,6 +79,11 @@ class AKONADI_EXPORT CollectionListJob : public Job
     */
     void setResource( const QString &resource );
 
+    /**
+      Include also unsubscribed collections.
+    */
+    void includeUnsubscribed( bool include = true );
+
   Q_SIGNALS:
     /**
       Emitted when collections are received.

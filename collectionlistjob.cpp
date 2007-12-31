@@ -50,6 +50,7 @@ class Akonadi::CollectionListJobPrivate
     QString resource;
     Collection::List pendingCollections;
     QTimer *emitTimer;
+    bool unsubscribed;
 
     void timeout()
     {
@@ -97,7 +98,11 @@ void CollectionListJob::doStart()
     return;
   }
 
-  QByteArray command = newTag() + " X-AKLIST ";
+  QByteArray command = newTag();
+  if ( d->unsubscribed )
+    command += " X-AKLIST ";
+  else
+    command += " X-AKLSUB ";
   command += QByteArray::number( d->base.id() );
   command += ' ';
   switch ( d->type ) {
@@ -211,6 +216,11 @@ void CollectionListJob::slotResult(KJob * job)
   Job::slotResult( job );
   if ( !job->error() && !hasSubjobs() )
     emitResult();
+}
+
+void CollectionListJob::includeUnsubscribed(bool include)
+{
+  d->unsubscribed = include;
 }
 
 #include "collectionlistjob.moc"
