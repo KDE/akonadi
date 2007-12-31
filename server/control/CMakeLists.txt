@@ -20,9 +20,9 @@ set( control_SRCS
 
 qt4_generate_dbus_interface( ../../libakonadi/agent.h org.kde.Akonadi.Agent.xml )
 qt4_generate_dbus_interface( ../../libakonadi/resource.h org.kde.Akonadi.Resource.xml )
-qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
-qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.ControlManager.xml controlmanager.h ControlManager )
-qt4_add_dbus_adaptor( control_SRCS ../interfaces/org.kde.Akonadi.ProfileManager.xml profilemanager.h ProfileManager )
+qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
+qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.ControlManager.xml controlmanager.h ControlManager )
+qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.ProfileManager.xml profilemanager.h ProfileManager )
 qt4_add_dbus_interfaces( control_SRCS
   ../interfaces/org.kde.Akonadi.Tracer.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml
