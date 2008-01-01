@@ -51,7 +51,8 @@ class SubscriptionModel::Private
       }
       Collection::List cols = static_cast<CollectionListJob*>( job )->collections();
       foreach( const Collection col, cols )
-        subscriptions[ col.id() ] = true;
+        if ( col.type() != Collection::Structural )
+          subscriptions[ col.id() ] = true;
       q->reset();
       emit q->loaded();
     }
@@ -59,7 +60,7 @@ class SubscriptionModel::Private
     bool isSubscribable( int id )
     {
       Collection col = q->collectionForId( id );
-      if ( col.type() == Collection::VirtualParent )
+      if ( col.type() == Collection::VirtualParent || col.type() == Collection::Structural )
         return false;
       if ( col.contentTypes().isEmpty() )
         return false;

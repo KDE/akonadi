@@ -284,6 +284,8 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
           return SmallIcon( QLatin1String( "edit-find" ) );
         if ( col.type() == Collection::Virtual )
           return SmallIcon( QLatin1String( "folder-violet" ) );
+        if ( col.type() == Collection::Structural )
+          return SmallIcon( QLatin1String( "folder-grey" ) );
         QStringList content = col.contentTypes();
         if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
           if ( content.contains( QLatin1String( "text/x-vcard" ) ) || content.contains( QLatin1String( "text/directory" ) ) || content.contains( QLatin1String( "text/vcard" ) ) )

@@ -188,10 +188,11 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
         collection.setType( Collection::VirtualParent );
       else
         collection.setType( Collection::Resource );
-    }
-   else if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) )
+    } else if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) ) {
       collection.setType( Collection::Virtual );
-    else {
+    } else if ( collection.contentTypes().isEmpty() ) {
+      collection.setType( Collection::Structural );
+    } else {
       collection.setType( Collection::Folder );
     }
 

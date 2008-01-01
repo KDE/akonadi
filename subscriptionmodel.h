@@ -29,7 +29,6 @@ namespace Akonadi {
   An extended collection model used for the subscription dialog.
 
   @internal
-  @todo Filter out \Nocontent collections
 */
 class SubscriptionModel : public CollectionModel
 {

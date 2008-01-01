@@ -49,6 +49,7 @@ class AKONADI_EXPORT Collection
     enum Type {
       Folder, /**< 'Real' folder on an IMAP server for example. */
       Virtual, /**< Virtual collection (aka search folder). */
+      Structural, /**< Structural node to keep the collection tree consistent but cannot contain any content. */
       Resource, /**< Resource or account. */
       VirtualParent, /**< The parent collection of all virtual collections. */
       Unknown /**< Unknown collection type. */
