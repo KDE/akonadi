@@ -34,7 +34,8 @@ class Akonadi::CollectionListJobPrivate
   public:
     CollectionListJobPrivate( CollectionListJob *parent ) :
       q( parent ),
-      emitTimer( new QTimer( parent ) )
+      emitTimer( new QTimer( parent ) ),
+      unsubscribed( false )
     {
       emitTimer->setSingleShot( true );
       emitTimer->setInterval( 100 );
