@@ -29,6 +29,7 @@ endmacro(add_akonadi_test)
 # demo applications
 add_akonadi_demo(itemdumper.cpp)
 add_akonadi_demo(collectioncreator.cpp)
+add_akonadi_demo(subscriber.cpp)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)

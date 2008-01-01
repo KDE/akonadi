@@ -39,6 +39,7 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QQueue>
 #include <QtCore/QEventLoop>
+#include <QtCore/QTimer>
 #include <QtGui/QPixmap>
 
 using namespace Akonadi;
@@ -47,7 +48,7 @@ class CollectionModel::Private
 {
   public:
     Private( CollectionModel *parent )
-      : mParent( parent ), fetchStatus( false )
+      : mParent( parent ), fetchStatus( false ), unsubscribed( false )
     {
     }
 
@@ -58,7 +59,9 @@ class CollectionModel::Private
     Session *session;
     QStringList mimeTypes;
     bool fetchStatus;
+    bool unsubscribed;
 
+    void init();
     void collectionRemoved( int );
     void collectionChanged( const Akonadi::Collection& );
     void updateDone( KJob* );
@@ -109,6 +112,7 @@ void CollectionModel::Private::collectionChanged( const Akonadi::Collection &col
     else
       newParent = collections.value( newParentId );
     CollectionListJob *job = new CollectionListJob( newParent, CollectionListJob::Recursive, session );
+    job->includeUnsubscribed( unsubscribed );
     mParent->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                       mParent, SLOT(collectionsChanged(Akonadi::Collection::List)) );
     mParent->connect( job, SIGNAL( result( KJob* ) ),
@@ -117,6 +121,7 @@ void CollectionModel::Private::collectionChanged( const Akonadi::Collection &col
   }
   else { // It's a simple change
     CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, session );
+    job->includeUnsubscribed( unsubscribed );
     mParent->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                       mParent, SLOT(collectionsChanged(Akonadi::Collection::List)) );
     mParent->connect( job, SIGNAL( result( KJob* ) ),
@@ -205,27 +210,35 @@ void CollectionModel::Private::collectionsChanged( const Collection::List &cols 
   }
 }
 
+void CollectionModel::Private::init()
+{
+  // start a list job
+  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, session );
+  job->includeUnsubscribed( unsubscribed );
+  connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+           mParent, SLOT(collectionsChanged(Akonadi::Collection::List)) );
+  connect( job, SIGNAL(result(KJob*)), mParent, SLOT(listDone(KJob*)) );
+
+  // monitor collection changes
+  monitor = new Monitor();
+  monitor->monitorCollection( Collection::root() );
+  monitor->fetchCollection( true );
+  connect( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)),
+           mParent, SLOT(collectionChanged(const Akonadi::Collection&)) );
+  connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
+           mParent, SLOT(collectionChanged(Akonadi::Collection)) );
+  connect( monitor, SIGNAL(collectionRemoved(int,QString)),
+           mParent, SLOT(collectionRemoved(int)) );
+  connect( monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)),
+           mParent, SLOT(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
+}
 
 CollectionModel::CollectionModel( QObject * parent ) :
     QAbstractItemModel( parent ),
     d( new Private( this ) )
 {
   d->session = new Session( QByteArray("CollectionModel-") + QByteArray::number( qrand() ), this );
-
-  // start a list job
-  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, d->session );
-  connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(collectionsChanged(Akonadi::Collection::List)) );
-  connect( job, SIGNAL(result(KJob*)), SLOT(listDone(KJob*)) );
-
-  // monitor collection changes
-  d->monitor = new Monitor();
-  d->monitor->monitorCollection( Collection::root() );
-  d->monitor->fetchCollection( true );
-  connect( d->monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)), SLOT(collectionChanged(const Akonadi::Collection&)) );
-  connect( d->monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), SLOT(collectionChanged(Akonadi::Collection)) );
-  connect( d->monitor, SIGNAL(collectionRemoved(int,QString)), SLOT(collectionRemoved(int)) );
-  connect( d->monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)),
-           SLOT(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
+  QTimer::singleShot( 0, this, SLOT(init()) );
 
   // ### Hack to get the kmail resource folder icons
   KIconLoader::global()->addAppDir( QLatin1String( "kmail" ) );
@@ -601,6 +614,11 @@ void CollectionModel::fetchCollectionStatus(bool enable)
 {
   d->fetchStatus = enable;
   d->monitor->fetchCollectionStatus( enable );
+}
+
+void CollectionModel::includeUnsubscribed(bool include)
+{
+  d->unsubscribed = include;
 }
 
 

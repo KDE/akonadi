@@ -50,7 +50,8 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     enum CollectionItemRole {
       CollectionIdRole = Qt::UserRole, ///< The collection path.
       ChildCreatableRole, ///< The collection can contain sub-collections.
-      CollectionContentTypesRole ///< Returns the mimetypes supported by the collection
+      CollectionContentTypesRole, ///< Returns the mimetypes supported by the collection
+      CollectionViewUserRole = Qt::UserRole + 32 ///< Role for user extensions
     };
 
     /**
@@ -137,6 +138,11 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     void fetchCollectionStatus( bool enable );
 
+    /**
+      Also include unsubscribed collections.
+    */
+    void includeUnsubscribed( bool include = true );
+
   private:
     /**
       Helper function to generate a model index for a given collection reference.
@@ -167,6 +173,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     class Private;
     Private* const d;
 
+    Q_PRIVATE_SLOT( d, void init() )
     Q_PRIVATE_SLOT( d, void collectionRemoved( int ) )
     Q_PRIVATE_SLOT( d, void collectionChanged( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d, void updateDone( KJob* ) )

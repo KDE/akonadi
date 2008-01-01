@@ -54,6 +54,7 @@ set( akonadi_LIB_SRC
 	control.cpp
 	datareference.cpp
 	expungejob.cpp
+	flatcollectionproxymodel.cpp
 	item.cpp
 	itemappendjob.cpp
 	itembrowser.cpp
@@ -78,6 +79,9 @@ set( akonadi_LIB_SRC
 	searchcreatejob.cpp
 	session.cpp
 	subscriptionjob.cpp
+	subscriptionmodel.cpp
+	subscriptiondialog.cpp
+	subscriptionchangeproxymodel.cpp
 	transactionjobs.cpp
 	xdgbasedirs.cpp
 )
@@ -91,6 +95,7 @@ qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../server/in
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../server/interfaces/org.kde.Akonadi.Tracer.xml)
 qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
 qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml agentbase.h Akonadi::AgentBase )
+kde4_add_ui_files( akonadi_LIB_SRC  subscriptiondialog.ui )
 
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 
