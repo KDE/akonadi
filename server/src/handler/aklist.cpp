@@ -119,12 +119,9 @@ bool AkList::listCollection(const Location & root, int depth )
   }
 
   // filter if this node isn't needed by it's children
-  if ( !childrenFound ) {
-    if ( mResource.isValid() && root.resourceId() != mResource.id() )
-      return false;
-    if ( mOnlySubscribed && !root.subscribed() )
-      return false;
-  }
+  bool hidden = (mResource.isValid() && root.resourceId() != mResource.id()) || (mOnlySubscribed && !root.subscribed());
+  if ( !childrenFound && hidden )
+    return false;
 
   Response response;
   response.setUntagged();
@@ -135,7 +132,10 @@ bool AkList::listCollection(const Location & root, int depth )
 
   // FIXME: escape " and "\"
   b += "NAME \"" + root.name().toUtf8() + "\" ";
-  b += "MIMETYPE (" + MimeType::joinByName( root.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
+  if ( hidden )
+    b+= "MIMETYPE () ";
+  else
+    b += "MIMETYPE (" + MimeType::joinByName( root.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
   b += "REMOTEID \"" + root.remoteId().toUtf8() + "\" ";
   b += "RESOURCE \"" + root.resource().name().toUtf8() + "\" ";
 
