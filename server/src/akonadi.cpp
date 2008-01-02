@@ -139,12 +139,14 @@ void AkonadiServer::quit()
         mConnections[ i ]->wait();
       }
     }
+    // execute the deleteLater() calls for the threads so they free their db connections
+    // and the following db termination will work
+    QCoreApplication::instance()->processEvents();
 
-    QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
-    if ( settings.value( QLatin1String("General/Driver") ).toString() == QLatin1String( "QMYSQL" )
-         && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
+    if ( mDatabaseProcess )
       stopDatabaseProcess();
 
+    QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
     const QString connectionSettingsFile = XdgBaseDirs::akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
 
 #ifndef Q_OS_WIN

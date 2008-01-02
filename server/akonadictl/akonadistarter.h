@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,23 +17,23 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_PROTOCOL_H
-#define AKONADI_PROTOCOL_H
+#ifndef AKONADISTARTER_H
+#define AKONADISTARTER_H
 
-/**
-  @file protocol.h Shared constants used in the communication protocol between
-  the Akonadi server and its clients.
+#include <QtCore/QObject>
 
-  @todo Fill this file with command names, item/collection property names
-  item part names, etc. and replace the usages accordingly.
-*/
+class AkonadiStarter : public QObject
+{
+  Q_OBJECT
+  public:
+    explicit AkonadiStarter( QObject *parent = 0 );
+    bool start();
 
-// D-Bus service names
-#define AKONADI_DBUS_SERVER_SERVICE "org.kde.Akonadi"
-#define AKONADI_DBUS_CONTROL_SERVICE "org.kde.Akonadi.Control"
+  private slots:
+    void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
 
-// item part names
-#define AKONADI_PART_BODY "RFC822"
-
+  private:
+    bool mRegistered;
+};
 
 #endif

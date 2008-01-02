@@ -58,7 +58,6 @@ AkonadiConnection::~AkonadiConnection()
 {
     Tracer::self()->endConnection( m_identifier, QString() );
 
-    delete m_tcpSocket;
     delete m_parser;
 }
 
@@ -89,6 +88,8 @@ void AkonadiConnection::run()
     writeOut( "* OK Akonadi Almost IMAP Server");
 
     exec();
+    delete m_tcpSocket;
+    m_tcpSocket = 0;
 }
 
 void AkonadiConnection::slotDisconnected()

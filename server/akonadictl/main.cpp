@@ -19,13 +19,15 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
-#include <QtCore/QProcess>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 
+#include <libakonadi/protocol.h>
+
 #include "controlmanagerinterface.h"
+#include "akonadistarter.h"
 
 static void printHelp( const QString &app )
 {
@@ -39,27 +41,18 @@ static void printHelp( const QString &app )
 
 static bool startServer()
 {
-  qDebug( "Starting Akonadi Server..." );
-  const bool ok = QProcess::startDetached( "akonadi_control" );
-  if ( !ok ) {
-    qDebug( "Error: unable to execute binary akonadi_control" );
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE )
+       || QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_SERVER_SERVICE ) ) {
+    qDebug() << "Akonadi is already running.";
     return false;
   }
-
-  const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.Akonadi.Control" );
-  if ( !registered ) {
-    qDebug( "Error: akonadi_control was started but didn't register at DBus session bus." );
-    qDebug( "Make sure your DBus system is setup correctly!" );
-    return false;
-  }
-
-  qDebug( "   done." );
-  return true;
+  AkonadiStarter starter;
+  return starter.start();
 }
 
 static bool stopServer()
 {
-  org::kde::Akonadi::ControlManager iface( "org.kde.Akonadi.Control", "/ControlManager", QDBusConnection::sessionBus(), 0 );
+  org::kde::Akonadi::ControlManager iface( AKONADI_DBUS_CONTROL_SERVICE, "/ControlManager", QDBusConnection::sessionBus(), 0 );
   iface.shutdown();
 
   return true;
@@ -67,10 +60,10 @@ static bool stopServer()
 
 static bool statusServer()
 {
-  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.Akonadi.Control" );
+  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE );
   qDebug( "Akonadi Control: %s", registered ? "running" : "stopped" );
 
-  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.Akonadi" );
+  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_SERVER_SERVICE );
   qDebug( "Akonadi Server: %s", registered ? "running" : "stopped" );
 
   return true;

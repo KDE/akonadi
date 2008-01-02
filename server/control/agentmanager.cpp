@@ -33,6 +33,8 @@
 #include <QtDBus/QDBusError>
 #include <QtCore/QDebug>
 
+using Akonadi::ProcessControl;
+
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
 {
@@ -84,12 +86,14 @@ AgentManager::~AgentManager()
 void AgentManager::cleanup()
 {
   foreach ( const AgentInstanceInfo info, mAgentInstances ) {
+    info.controller->setCrashPolicy( ProcessControl::StopOnCrash );
     if ( info.agentInterface && info.agentInterface->isValid() )
       info.agentInterface->quit();
   }
 
   mAgentInstances.clear();
 
+  mStorageController->setCrashPolicy( ProcessControl::StopOnCrash );
   org::kde::Akonadi::Server *serverIface = new org::kde::Akonadi::Server( "org.kde.Akonadi", "/Server",
                                                                           QDBusConnection::sessionBus(), this );
   serverIface->quit();
