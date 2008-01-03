@@ -1,8 +1,13 @@
-macro_optional_find_package(MySQL)
-macro_log_feature(MYSQL_EMBEDDED_FOUND "mysql-embedded" "MySQL/Embedded Library" "http://www.mysql.org" FALSE "" "Needed for the MySQL/Embedded Akonadi backend. Sqlite will be used instead.")
+# disable MySQL/Embedded plugin for now since it is unused and causes linker problems on Debian based 64bit systems
+# macro_optional_find_package(MySQL)
+# macro_log_feature(MYSQL_EMBEDDED_FOUND "mysql-embedded" "MySQL/Embedded Library" "http://www.mysql.org" FALSE "" "Needed for the MySQL/Embedded Akonadi backend. Sqlite will be used instead.")
+#
+# macro_optional_find_package(OpenSSL)
+# macro_log_feature(OPENSSL_FOUND "OpenSSL" "A toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols" "http://openssl.org" FALSE "" "Required for building the Akonadi SQL plugin with MySQL embedded.")
 
-macro_optional_find_package(OpenSSL)
-macro_log_feature(OPENSSL_FOUND "OpenSSL" "A toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols" "http://openssl.org" FALSE "" "Required for building the Akonadi SQL plugin with MySQL embedded.")
+find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin )
+macro_log_feature( MYSQLD_EXECUTABLE "MySQL Server" "Database server" "http://www.mysql.com" FALSE ""
+                   "Akonadi server requires the mysqld binary" )
 
 include_directories( ${CMAKE_BINARY_DIR}/akonadi )
 include_directories( ${CMAKE_SOURCE_DIR}/akonadi )
@@ -17,12 +22,15 @@ include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 add_subdirectory( akonadictl )
 add_subdirectory( control )
 add_subdirectory( src )
-if (MYSQL_EMBEDDED_FOUND AND OPENSSL_FOUND)
-  add_subdirectory( sqlplugin )
-endif (MYSQL_EMBEDDED_FOUND AND OPENSSL_FOUND)
+# if (MYSQL_EMBEDDED_FOUND AND OPENSSL_FOUND)
+#   add_subdirectory( sqlplugin )
+# endif (MYSQL_EMBEDDED_FOUND AND OPENSSL_FOUND)
 add_subdirectory( tests )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
+if ( MYSQLD_EXECUTABLE )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMYSQLD_EXECUTABLE=\"\\\"${MYSQLD_EXECUTABLE}\\\"\"" )
+endif ( MYSQLD_EXECUTABLE )
 
 ########### next target ###############
 
