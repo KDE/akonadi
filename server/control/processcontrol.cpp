@@ -20,11 +20,12 @@
 #include "processcontrol.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QTimer>
 
 using namespace Akonadi;
 
 ProcessControl::ProcessControl( QObject *parent )
-  : QObject( parent ), mFailedToStart( false )
+  : QObject( parent ), mFailedToStart( false ), mCrashCount( 0 )
 {
   connect( &mProcess, SIGNAL( error( QProcess::ProcessError ) ),
            this, SLOT( slotError( QProcess::ProcessError ) ) );
@@ -93,6 +94,13 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
       qDebug( "ProcessControl: Application '%s' returned with exit code %d (%s)",
               qPrintable( mApplication ), exitCode, qPrintable( mProcess.errorString() ) );
       if ( mPolicy == RestartOnCrash ) {
+        if ( mCrashCount > 3 ) {
+          qWarning() << mApplication << "crashed too often and will not be restarted!";
+          mPolicy = StopOnCrash;
+          return;
+        }
+        ++mCrashCount;
+        QTimer::singleShot( 5000, this, SLOT(resetCrashCount()) );
         if ( !mFailedToStart ) // don't try to start an unstartable application
           start();
       }
@@ -123,6 +131,11 @@ void Akonadi::ProcessControl::slotStdoutMessages()
 {
   QString message = QString::fromUtf8( mProcess.readAllStandardOutput() );
   qDebug() << mApplication << "[out]" << message;
+}
+
+void ProcessControl::resetCrashCount()
+{
+  mCrashCount = 0;
 }
 
 #include "processcontrol.moc"

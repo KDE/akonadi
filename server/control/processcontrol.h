@@ -90,6 +90,7 @@ class ProcessControl : public QObject
     void slotFinished( int, QProcess::ExitStatus );
     void slotErrorMessages();
     void slotStdoutMessages();
+    void resetCrashCount();
 
   private:
     void start();
@@ -99,6 +100,7 @@ class ProcessControl : public QObject
     QStringList mArguments;
     CrashPolicy mPolicy;
     bool mFailedToStart;
+    int mCrashCount;
 };
 
 }
