@@ -189,6 +189,7 @@ void AkonadiServer::startDatabaseProcess()
 #ifdef MYSQLD_EXECUTABLE
   const QString mysqldPath = QLatin1String( MYSQLD_EXECUTABLE );
 #else
+  const QString mysqldPath;
   Q_ASSERT_X( false, "AkonadiServer::startDatabaseProcess()",
               "mysqld was not found during compile time, you need to start a MySQL server yourself first and configure Akonadi accordingly" );
 #endif
