@@ -27,6 +27,7 @@ class MonitorTest : public QObject
   Q_OBJECT
   private Q_SLOTS:
     void initTestCase();
+    void testMonitor_data();
     void testMonitor();
 };
 

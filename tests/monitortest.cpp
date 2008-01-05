@@ -23,6 +23,7 @@
 #include <libakonadi/collectioncreatejob.h>
 #include <libakonadi/collectiondeletejob.h>
 #include <libakonadi/collectionlistjob.h>
+#include <libakonadi/collectionmodifyjob.h>
 #include <libakonadi/control.h>
 #include <libakonadi/itemappendjob.h>
 #include <libakonadi/itemdeletejob.h>
@@ -53,11 +54,20 @@ void MonitorTest::initTestCase()
       res3 = col;
 }
 
+void MonitorTest::testMonitor_data()
+{
+  QTest::addColumn<bool>( "fetchCol" );
+  QTest::newRow( "with collection fetching" ) << true;
+  QTest::newRow( "without collection fetching" ) << false;
+}
+
 void MonitorTest::testMonitor()
 {
+  QFETCH( bool, fetchCol );
+
   Monitor *monitor = new Monitor( this );
   monitor->monitorCollection( Collection::root() );
-  monitor->fetchCollection( true );
+  monitor->fetchCollection( fetchCol );
   monitor->addFetchPart( Item::PartBody );
 
   // monitor signals
@@ -92,7 +102,8 @@ void MonitorTest::testMonitor()
   QList<QVariant> arg = caspy.takeFirst();
   Collection col = arg.at(0).value<Collection>();
   QCOMPARE( col, monitorCol );
-  QCOMPARE( col.name(), QString("monitor") );
+  if ( fetchCol )
+    QCOMPARE( col.name(), QString("monitor") );
   Collection parent = arg.at(1).value<Collection>();
   QCOMPARE( parent, res3 );
 
@@ -175,6 +186,26 @@ void MonitorTest::testMonitor()
   QVERIFY( iaspy.isEmpty() );
   QVERIFY( imspy.isEmpty() );
   imspy.clear();
+
+  // modify a collection
+  CollectionModifyJob *mod = new CollectionModifyJob( monitorCol, this );
+  mod->setName( "changed name" );
+  QVERIFY( mod->exec() );
+  QTest::qWait(1000);
+
+  QCOMPARE( cmspy.count(), 1 );
+  arg = cmspy.takeFirst();
+  col = arg.at(0).value<Collection>();
+  QCOMPARE( col, monitorCol );
+  if ( fetchCol )
+    QCOMPARE( col.name(), QString("changed name") );
+
+  QVERIFY( caspy.isEmpty() );
+  QVERIFY( crspy.isEmpty() );
+  QVERIFY( csspy.isEmpty() );
+  QVERIFY( iaspy.isEmpty() );
+  QVERIFY( imspy.isEmpty() );
+  QVERIFY( irspy.isEmpty() );
 
   // delete a collection
   CollectionDeleteJob *cdel = new CollectionDeleteJob( monitorCol, this );
