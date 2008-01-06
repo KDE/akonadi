@@ -145,3 +145,13 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( del->exec() );
 
 }
+
+void CollectionAttributeTest::testDefaultAttributes()
+{
+  Collection col;
+  QCOMPARE( col.attributes().count(), 0 );
+  col.addRawAttribute( "TYPE", "VALUE" );
+  QCOMPARE( col.attributes().count(), 1 );
+  QVERIFY( col.hasAttribute( "TYPE" ) );
+  QCOMPARE( col.attribute( "TYPE" )->toByteArray(), QByteArray("VALUE") );
+}

@@ -45,6 +45,9 @@ set( akonadi_LIB_SRC
 	collectionfilterproxymodel.cpp
 	collectionmodifyjob.cpp
 	collectionpathresolver.cpp
+	collectionpropertiesdialog.cpp
+	collectionpropertiespage.cpp
+	collectiongeneralpropertiespage.cpp
 	collectionrightsattribute.cpp
 	collectionselectjob.cpp
 	collectionstatus.cpp
@@ -95,7 +98,10 @@ qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../server/in
 qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../server/interfaces/org.kde.Akonadi.Tracer.xml)
 qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
 qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml agentbase.h Akonadi::AgentBase )
-kde4_add_ui_files( akonadi_LIB_SRC  subscriptiondialog.ui )
+kde4_add_ui_files( akonadi_LIB_SRC
+  collectiongeneralpropertiespage.ui
+  subscriptiondialog.ui
+)
 
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 
@@ -122,6 +128,8 @@ install( FILES
 	collectionfilterproxymodel.h
 	collectionmodifyjob.h
 	collectionpathresolver.h
+	collectionpropertiesdialog.h
+	collectionpropertiespage.h
 	collectionselectjob.h
 	collectionstatus.h
 	collectionstatusjob.h

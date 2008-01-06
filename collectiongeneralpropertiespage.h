@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,19 +17,31 @@
     02110-1301, USA.
 */
 
-#include <libakonadi/subscriptiondialog.h>
+#ifndef AKOANDI_COLLECTIONPROPERTYGENERALPAGE_H
+#define AKOANDI_COLLECTIONPROPERTYGENERALPAGE_H
 
-#include <kcomponentdata.h>
-#include <QApplication>
-#include <QObject>
+#include "collectionpropertiespage.h"
+#include "ui_collectiongeneralpropertiespage.h"
 
-int main( int argc, char** argv )
+namespace Akonadi {
+
+/**
+  General page of the collection property dialog.
+  @internal
+*/
+class CollectionGeneralPropertiesPage : public CollectionPropertiesPage
 {
-  QApplication app( argc, argv );
-  app.setQuitOnLastWindowClosed( false );
-  KComponentData kcd( "akonadi" );
-  Akonadi::SubscriptionDialog* dlg = new Akonadi::SubscriptionDialog();
-  QObject::connect( dlg, SIGNAL(destroyed(QObject*)), &app, SLOT(quit()) );
-  dlg->show();
-  app.exec();
+  Q_OBJECT
+  public:
+    explicit CollectionGeneralPropertiesPage( QWidget *parent = 0 );
+
+    void load( const Collection &collection );
+    void save( Collection &collection );
+
+  private:
+    Ui::CollectionGeneralPropertiesPage ui;
+};
+
 }
+
+#endif

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -49,6 +49,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     enum CollectionItemRole {
       CollectionIdRole = Qt::UserRole, ///< The collection path.
+      CollectionRole, ///< The actual collection object.
       ChildCreatableRole, ///< The collection can contain sub-collections.
       CollectionContentTypesRole, ///< Returns the mimetypes supported by the collection
       CollectionViewUserRole = Qt::UserRole + 32 ///< Role for user extensions

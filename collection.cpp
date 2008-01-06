@@ -52,7 +52,6 @@ class Collection::Private : public QSharedData
       type = other.type;
       foreach ( CollectionAttribute* attr, other.attributes )
         attributes.insert( attr->type(), attr->clone() );
-      rawAttributes = other.rawAttributes;
       resource = other.resource;
       cachePolicyId = other.cachePolicyId;
       status = other.status;
@@ -80,7 +79,6 @@ class Collection::Private : public QSharedData
     QString parentRemoteId;
     Type type;
     QHash<QByteArray, CollectionAttribute*> attributes;
-    QHash<QByteArray, QByteArray> rawAttributes;
     QString resource;
     int cachePolicyId;
     CollectionStatus status;
@@ -298,12 +296,9 @@ uint qHash( const Akonadi::Collection &collection )
 void Collection::addRawAttribute(const QByteArray & type, const QByteArray & value)
 {
   CollectionAttribute* attr = CollectionAttributeFactory::createAttribute( type );
-  if ( attr ) {
-    attr->setData( value );
-    addAttribute( attr );
-  } else {
-    d->rawAttributes.insert( type, value );
-  }
+  Q_ASSERT( attr );
+  attr->setData( value );
+  addAttribute( attr );
 }
 
 int Collection::cachePolicyId() const

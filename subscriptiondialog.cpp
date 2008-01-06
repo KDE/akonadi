@@ -110,6 +110,7 @@ SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
   connect( d->ui.subscribeButton, SIGNAL(clicked()), SLOT(subscribeClicked()) );
   connect( d->ui.unsubscribeButton, SIGNAL(clicked()), SLOT(unsubscribeClicked()) );
   connect( this, SIGNAL(okClicked()), SLOT(done()) );
+  connect( this, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
 }
 
 SubscriptionDialog::~ SubscriptionDialog()

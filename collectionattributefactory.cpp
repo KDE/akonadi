@@ -25,6 +25,27 @@
 
 using namespace Akonadi;
 
+class DefaultCollectionAttribute : public CollectionAttribute
+{
+  public:
+    explicit DefaultCollectionAttribute( const QByteArray &type, const QByteArray &value = QByteArray() ) :
+      mType( type ),
+      mValue( value )
+    {}
+
+    QByteArray type() const { return mType; }
+    CollectionAttribute* clone() const
+    {
+      return new DefaultCollectionAttribute( mType, mValue );
+    }
+
+    QByteArray toByteArray() const { return mValue; }
+    void setData( const QByteArray &data ) { mValue = data; }
+
+  private:
+    QByteArray mType, mValue;
+};
+
 class CollectionAttributeFactory::Private
 {
   public:
@@ -68,5 +89,5 @@ CollectionAttribute* CollectionAttributeFactory::createAttribute(const QByteArra
   CollectionAttribute* attr = self()->d->attributes.value( type );
   if ( attr )
     return attr->clone();
-  return 0;
+  return new DefaultCollectionAttribute( type );
 }

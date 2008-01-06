@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,19 +17,44 @@
     02110-1301, USA.
 */
 
-#include <libakonadi/subscriptiondialog.h>
+#include "collectionpropertiespage.h"
 
-#include <kcomponentdata.h>
-#include <QApplication>
-#include <QObject>
+using namespace Akonadi;
 
-int main( int argc, char** argv )
+class CollectionPropertiesPage::Private
 {
-  QApplication app( argc, argv );
-  app.setQuitOnLastWindowClosed( false );
-  KComponentData kcd( "akonadi" );
-  Akonadi::SubscriptionDialog* dlg = new Akonadi::SubscriptionDialog();
-  QObject::connect( dlg, SIGNAL(destroyed(QObject*)), &app, SLOT(quit()) );
-  dlg->show();
-  app.exec();
+  public:
+    QString title;
+};
+
+CollectionPropertiesPage::CollectionPropertiesPage( QWidget *parent ) :
+    QWidget( parent ),
+    d( new Private )
+{
 }
+
+CollectionPropertiesPage::~CollectionPropertiesPage()
+{
+  delete d;
+}
+
+bool CollectionPropertiesPage::canHandle(const Collection & collection) const
+{
+  return true;
+}
+
+QString Akonadi::CollectionPropertiesPage::pageTitle() const
+{
+  return d->title;
+}
+
+void CollectionPropertiesPage::setPageTitle(const QString & title)
+{
+  d->title = title;
+}
+
+AbstractCollectionPropertiesPageFactory::~AbstractCollectionPropertiesPageFactory()
+{
+}
+
+#include "collectionpropertiespage.moc"

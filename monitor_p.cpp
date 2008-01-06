@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+// @cond PRIVATE
+
 #include "monitor_p.h"
 
 #include "collectionlistjob.h"
@@ -355,5 +357,7 @@ void ItemCollectionFetchJob::fetchAllParts()
 {
   mFetchAllParts = true;
 }
+
+// @endcond
 
 #include "monitor_p.moc"

@@ -83,6 +83,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     Q_PRIVATE_SLOT( d, void createResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void deleteCollection() )
     Q_PRIVATE_SLOT( d, void deleteResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void collectionProperties() )
     Q_PRIVATE_SLOT( d, void updateActions( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void itemActivated( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )

@@ -20,6 +20,8 @@
 #ifndef AKONADI_MONITOR_P_H
 #define AKONADI_MONITOR_P_H
 
+// @cond PRIVATE
+
 #include "monitor.h"
 #include "collection.h"
 #include "collectionstatusjob.h"
@@ -161,5 +163,7 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
 };
 
 }
+
+// @endcond
 
 #endif

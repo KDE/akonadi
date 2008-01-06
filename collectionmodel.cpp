@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -220,9 +220,6 @@ void CollectionModel::Private::init()
   connect( job, SIGNAL(result(KJob*)), mParent, SLOT(listDone(KJob*)) );
 
   // monitor collection changes
-  monitor = new Monitor();
-  monitor->monitorCollection( Collection::root() );
-  monitor->fetchCollection( true );
   connect( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)),
            mParent, SLOT(collectionChanged(const Akonadi::Collection&)) );
   connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
@@ -239,6 +236,11 @@ CollectionModel::CollectionModel( QObject * parent ) :
 {
   d->session = new Session( QByteArray("CollectionModel-") + QByteArray::number( qrand() ), this );
   QTimer::singleShot( 0, this, SLOT(init()) );
+
+  // monitor collection changes
+  d->monitor = new Monitor();
+  d->monitor->monitorCollection( Collection::root() );
+  d->monitor->fetchCollection( true );
 
   // ### Hack to get the kmail resource folder icons
   KIconLoader::global()->addAppDir( QLatin1String( "kmail" ) );
@@ -304,6 +306,8 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
       break;
     case CollectionIdRole:
       return col.id();
+    case CollectionRole:
+      return QVariant::fromValue( col );
     case CollectionContentTypesRole:
       return QVariant(col.contentTypes());
     case ChildCreatableRole:

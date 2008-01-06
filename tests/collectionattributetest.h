@@ -29,6 +29,7 @@ class CollectionAttributeTest : public QObject
     void initTestCase();
     void testAttributes_data();
     void testAttributes();
+    void testDefaultAttributes();
 };
 
 
