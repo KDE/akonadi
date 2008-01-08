@@ -30,6 +30,7 @@ FileTracer::FileTracer( const QString &fileName )
 
 FileTracer::~FileTracer()
 {
+  delete m_file;
 }
 
 void FileTracer::beginConnection( const QString &identifier, const QString &msg )
