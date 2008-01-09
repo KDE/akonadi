@@ -204,6 +204,8 @@ void CollectionSync::checkDone()
   if ( !d->orphanRemoteCollections.isEmpty() ) {
     setError( Unknown );
     setErrorText( QLatin1String( "Found unresolved orphan collections" ) );
+    foreach ( const Collection col, d->orphanRemoteCollections )
+      kDebug() << "found orphan collection:" << col.remoteId() << "parent:" << col.parentRemoteId();
   }
 
   commit();

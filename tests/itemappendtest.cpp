@@ -52,35 +52,35 @@ void ItemAppendTest::initTestCase()
       testFolder1 = col;
 }
 
+void ItemAppendTest::testItemAppend_data()
+{
+  QTest::addColumn<QString>( "remoteId" );
+
+  QTest::newRow( "empty" ) << QString();
+  QTest::newRow( "non empty" ) << QString( "remote-id" );
+  QTest::newRow( "whitespace" ) << QString( "remote id" );
+  QTest::newRow( "quotes" ) << QString ( "\"remote\" id" );
+}
+
 void ItemAppendTest::testItemAppend()
 {
-  DataReference::List refs; // for cleanup
+  QFETCH( QString, remoteId );
+  DataReference ref; // for cleanup
 
-  // item without remote id
-  Item item;
+  Item item( DataReference( -1, remoteId ) );
   item.setMimeType( "application/octet-stream" );
   ItemAppendJob *job = new ItemAppendJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
-  refs << job->reference();
-
-  // item with remote id
-  Item item2( DataReference( -1, "remote-id" ) );
-  item2.setMimeType( "application/octet-stream" );
-  job = new ItemAppendJob( item2, Collection( testFolder1 ), this );
-  QVERIFY( job->exec() );
-  refs << job->reference();
+  ref = job->reference();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
   QVERIFY( fjob->exec() );
-  QCOMPARE( fjob->items().count(), 2 );
-  foreach ( Item item, fjob->items() ) {
-    QVERIFY( refs.indexOf( item.reference() ) >= 0 );
-  }
+  QCOMPARE( fjob->items().count(), 1 );
+  QCOMPARE( fjob->items()[0].reference(), ref );
+  QCOMPARE( fjob->items()[0].reference().remoteId(), remoteId );
 
-  foreach ( DataReference ref, refs ) {
-    ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-    QVERIFY( djob->exec() );
-  }
+  ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
+  QVERIFY( djob->exec() );
 
   fjob = new ItemFetchJob( testFolder1, this );
   QVERIFY( fjob->exec() );

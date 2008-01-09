@@ -61,7 +61,7 @@ void ItemAppendJob::doStart()
   QByteArray remoteId;
 
   if ( !d->item.reference().remoteId().isEmpty() )
-    remoteId = " \\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']';
+    remoteId = " " + ImapParser::quote( "\\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']' );
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
   if ( d->parts.isEmpty() || (d->parts.size() == 1 && d->parts.first() == Item::PartBody) ) {
     if ( d->item.hasPayload() )

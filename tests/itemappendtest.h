@@ -27,6 +27,7 @@ class ItemAppendTest : public QObject
   Q_OBJECT
   private Q_SLOTS:
     void initTestCase();
+    void testItemAppend_data();
     void testItemAppend();
     void testContent_data();
     void testContent();
