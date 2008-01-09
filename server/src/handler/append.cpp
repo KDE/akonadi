@@ -68,9 +68,7 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     // flag-keyword   = atom
     int startOfDateTime = startOfFlags;
     if ( line[startOfFlags] == '(' ) {
-        startOfDateTime = line.indexOf( ')', startOfFlags + 1 ) + 2;
-        m_flags = line.mid( startOfFlags + 1,
-                            startOfDateTime - ( startOfFlags + 1 ) - 2 ).split(' ');
+        startOfDateTime = ImapParser::parseParenthesizedList( line, m_flags, startOfFlags ) + 1;
     }
     m_flags.append( "\\Recent" ); // the Recent flag always has to be set
 
