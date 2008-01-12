@@ -55,6 +55,7 @@ class CollectionPropertiesDialog::Private
       CollectionModifyJob *job = new CollectionModifyJob( collection, q );
       connect( job, SIGNAL(result(KJob*)), q, SLOT(saveResult(KJob*)) );
       job->setName( collection.name() );
+      job->setContentTypes( collection.contentTypes() );
       job->setCachePolicy( collection.cachePolicyId() );
       foreach ( CollectionAttribute *attr, collection.attributes() )
         job->setAttribute( attr );

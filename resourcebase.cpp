@@ -521,6 +521,10 @@ void ResourceBasePrivate::slotCollectionListDone( KJob *job )
 
 void ResourceBase::itemsRetrieved(const Item::List & items)
 {
+  Q_D( ResourceBase );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
+              "ResourceBase::itemsRetrieved()",
+              "Calling itemsRetrieved() although no item retrieval is in progress" );
   ItemSync *syncer = new ItemSync( currentCollection(), session() );
   connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
@@ -529,6 +533,10 @@ void ResourceBase::itemsRetrieved(const Item::List & items)
 
 void ResourceBase::itemsRetrievedIncremental(const Item::List & changedItems, const Item::List & removedItems)
 {
+  Q_D( ResourceBase );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
+              "ResourceBase::itemsRetrievedIncremental()",
+              "Calling itemsRetrievedIncremental() although no item retrieval is in progress" );
   ItemSync *syncer = new ItemSync( currentCollection(), session() );
   connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
