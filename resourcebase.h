@@ -105,6 +105,7 @@ class ResourceBasePrivate;
  * - itemAdded()
  * - itemChanged()
  * - itemRemoved()
+ * Once you have handled changes in these methods call changesCommitted().
  * These methods are called whenever a local item related to this resource is
  * added, modified or deleted. They are only called if the resource is online, otherwise
  * all changes are recorded and replayed as soon the resource is online again.
@@ -133,6 +134,7 @@ class ResourceBasePrivate;
  * - collectionAdded()
  * - collectionChanged()
  * - collectionRemoved()
+ * Once you have handled changes in these methods call changesCommitted().
  * These methods are called whenever a local collection related to this resource is
  * added, modified or deleted. They are only called if the resource is online, otherwise
  * all changes are recorded and replayed as soon the resource is online again.
@@ -211,7 +213,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     virtual QString progressMessage() const;
 
     /**
-     * This method is called whenever the resource should start synchronization.
+     * This method is called whenever the resource should start synchronize all data.
      */
     virtual void synchronize();
 
@@ -302,6 +304,14 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     */
     virtual bool retrieveItem( const Akonadi::Item &item, const QStringList &parts ) = 0;
 
+    // reimplemnted from AgentBase
+    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
+    void itemRemoved( const Akonadi::DataReference &ref );
+    void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
+    void collectionChanged( const Akonadi::Collection &collection );
+    void collectionRemoved( int id, const QString &remoteId );
+
   protected:
     /**
      * Creates a base resource.
@@ -345,6 +355,14 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       @param ref DataReference of the item.
     */
     void changesCommitted( const DataReference &ref );
+
+    /**
+      Call whenever you have successfully handled or ignored a collection
+      change notification. This will update the remote identifier of
+      @p collection if necessary, as well as any other collection attributes.
+      @param collection The collection which changes have been handled.
+    */
+    void changesCommitted( const Collection &collection );
 
     /**
       Call this to supply the full folder tree retrieved from the remote server.
@@ -405,7 +423,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     // dbus resource interface
     friend class ::ResourceAdaptor;
-    void synchronizeCollection( int collectionId );
+    void synchronizeCollectionTree();
+    void synchronizeCollection( int collectionId, const QStringList &parts );
     bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts );
 
   private:

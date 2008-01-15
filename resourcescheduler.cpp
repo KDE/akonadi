@@ -39,6 +39,14 @@ void ResourceScheduler::scheduleFullSync()
   scheduleNext();
 }
 
+void ResourceScheduler::scheduleCollectionTreeSync()
+{
+  Task t;
+  t.type = SyncCollectionTree;
+  mTaskList << t;
+  scheduleNext();
+}
+
 void ResourceScheduler::scheduleSync(const Collection & col, const QStringList &parts)
 {
   Task t;
@@ -89,6 +97,9 @@ void ResourceScheduler::executeNext()
   switch ( mCurrentTask.type ) {
     case SyncAll:
       emit executeFullSync();
+      break;
+    case SyncCollectionTree:
+      emit executeCollectionTreeSync();
       break;
     case SyncCollection:
       emit executeCollectionSync( mCurrentTask.collection, mCurrentTask.itemParts );

@@ -96,15 +96,21 @@ class AKONADI_EXPORT Resource : public QObject
     virtual Q_NOREPLY void configure() = 0;
 
     /**
-     * This method is called whenever the resource should start synchronization.
+     * This method is called whenever the resource should start synchronize all data.
      */
     virtual Q_NOREPLY void synchronize() = 0;
 
     /**
+     * Synchronize the collection tree.
+     */
+    virtual Q_NOREPLY void synchronizeCollectionTree() = 0;
+
+    /**
      * Synchronize the given collection.
      * @param collectionId The identifier of the collection to synchronize.
+     * @param parts The items parts that should be synchronized.
      */
-    virtual Q_NOREPLY void synchronizeCollection( int collectionId ) = 0;
+    virtual Q_NOREPLY void synchronizeCollection( int collectionId, const QStringList &parts ) = 0;
 
     /**
      * This method is used to set the name of the resource.

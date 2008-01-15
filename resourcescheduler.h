@@ -75,6 +75,11 @@ class ResourceScheduler : public QObject
     void scheduleFullSync();
 
     /**
+      Schedules a collection tree sync.
+    */
+    void scheduleCollectionTreeSync();
+
+    /**
       Schedules the synchronization of a single collection.
       @param col The collection to synchronize.
     */
@@ -112,6 +117,7 @@ class ResourceScheduler : public QObject
   Q_SIGNALS:
     void executeFullSync();
     void executeCollectionSync( const Akonadi::Collection &col, const QStringList &parts );
+    void executeCollectionTreeSync();
     void executeItemFetch( const Akonadi::Item &item, const QStringList &parts );
     void executeChangeReplay();
 

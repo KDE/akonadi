@@ -32,6 +32,7 @@
 #include "xdgbasedirs.h"
 
 #include <libakonadi/collectionlistjob.h>
+#include <libakonadi/collectionmodifyjob.h>
 #include <libakonadi/itemfetchjob.h>
 #include <libakonadi/itemstorejob.h>
 #include <libakonadi/session.h>
@@ -93,6 +94,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     QString defaultReadyMessage() const;
     QString defaultSyncingMessage() const;
 
+    void changeProcessed();
+
     QString mName;
 
     int mStatusCode;
@@ -119,6 +122,14 @@ QString ResourceBasePrivate::defaultReadyMessage() const
 QString ResourceBasePrivate::defaultSyncingMessage() const
 {
   return i18nc( "@info:status", "Syncing..." );
+}
+
+void ResourceBasePrivate::changeProcessed()
+{
+  monitor->changeProcessed();
+  if ( !monitor->isEmpty() )
+    scheduler->scheduleChangeReplay();
+  scheduler->taskDone();
 }
 
 ResourceBase::ResourceBase( const QString & id )
@@ -153,6 +164,8 @@ ResourceBase::ResourceBase( const QString & id )
   d->monitor->monitorResource( d->mId.toLatin1() );
 
   connect( d->scheduler, SIGNAL(executeFullSync()),
+           SLOT(retrieveCollections()) );
+  connect( d->scheduler, SIGNAL(executeCollectionTreeSync()),
            SLOT(retrieveCollections()) );
   connect( d->scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection,QStringList)),
            SLOT(slotSynchronizeCollection(Akonadi::Collection,QStringList)) );
@@ -375,10 +388,15 @@ void ResourceBase::changesCommitted(const DataReference & ref)
   Q_D( ResourceBase );
   ItemStoreJob *job = new ItemStoreJob( Item( ref ), session() );
   job->setClean();
-  d->monitor->changeProcessed();
-  if ( !d->monitor->isEmpty() )
-    d->scheduler->scheduleChangeReplay();
-  d->scheduler->taskDone();
+  job->noRevCheck();
+  d->changeProcessed();
+}
+
+void ResourceBase::changesCommitted( const Collection &collection )
+{
+  Q_D( ResourceBase );
+  CollectionModifyJob *job = new CollectionModifyJob( collection, session() );
+  d->changeProcessed();
 }
 
 bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, const QStringList &parts )
@@ -452,8 +470,7 @@ void ResourceBasePrivate::slotLocalListDone(KJob * job)
   } else {
     Collection::List cols = static_cast<CollectionListJob*>( job )->collections();
     foreach ( const Collection &col, cols ) {
-      // FIXME: add item parts to the dbus interface
-      scheduler->scheduleSync( col, QStringList() );
+      scheduler->scheduleSync( col, scheduler->currentTask().itemParts );
     }
   }
   scheduler->taskDone();
@@ -499,10 +516,16 @@ Item ResourceBase::currentItem() const
   return d->scheduler->currentTask().item;
 }
 
-void ResourceBase::synchronizeCollection(int collectionId)
+void ResourceBase::synchronizeCollectionTree()
+{
+  d_func()->scheduler->scheduleCollectionTreeSync();
+}
+
+void ResourceBase::synchronizeCollection(int collectionId, const QStringList &parts)
 {
   CollectionListJob* job = new CollectionListJob( Collection(collectionId), CollectionListJob::Local, session() );
   job->setResource( identifier() );
+  job->setProperty( "akonadi-parts", parts );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionListDone(KJob*)) );
 }
 
@@ -512,8 +535,7 @@ void ResourceBasePrivate::slotCollectionListDone( KJob *job )
     Collection::List list = static_cast<CollectionListJob*>( job )->collections();
     if ( !list.isEmpty() ) {
       Collection col = list.first();
-      // FIXME: get the needed item parts from somewhere
-      scheduler->scheduleSync( col, QStringList() );
+      scheduler->scheduleSync( col, job->property( "akonadi-parts" ).toStringList() );
     }
   }
   // TODO: error handling
@@ -558,6 +580,46 @@ void ResourceBasePrivate::slotPercent( KJob *job, unsigned long percent )
   Q_Q( ResourceBase );
   Q_UNUSED( job );
   q->changeProgress( percent );
+}
+
+void ResourceBase::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
+{
+  Q_UNUSED( item );
+  Q_UNUSED( collection );
+  d_func()->changeProcessed();
+}
+
+void ResourceBase::itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers )
+{
+  Q_UNUSED( item );
+  Q_UNUSED( partIdentifiers );
+  d_func()->changeProcessed();
+}
+
+void ResourceBase::itemRemoved( const Akonadi::DataReference &ref )
+{
+  Q_UNUSED( ref );
+  d_func()->changeProcessed();
+}
+
+void ResourceBase::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
+{
+  Q_UNUSED( collection );
+  Q_UNUSED( parent );
+  d_func()->changeProcessed();
+}
+
+void ResourceBase::collectionChanged( const Akonadi::Collection &collection )
+{
+  Q_UNUSED( collection );
+  d_func()->changeProcessed();
+}
+
+void ResourceBase::collectionRemoved( int id, const QString &remoteId )
+{
+  Q_UNUSED( id );
+  Q_UNUSED( remoteId );
+  d_func()->changeProcessed();
 }
 
 #include "resource.moc"
