@@ -5,7 +5,7 @@
 # macro_optional_find_package(OpenSSL)
 # macro_log_feature(OPENSSL_FOUND "OpenSSL" "A toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols" "http://openssl.org" FALSE "" "Required for building the Akonadi SQL plugin with MySQL embedded.")
 
-find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin )
+find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec )
 macro_log_feature( MYSQLD_EXECUTABLE "MySQL Server" "Database server" "http://www.mysql.com" FALSE ""
                    "Akonadi server requires the mysqld binary" )
 
