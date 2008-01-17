@@ -53,13 +53,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
     /**
       Register additional pages for the collection properties dialog.
     */
-    template <typename T> static void registerPage()
-    {
-      registerPage( new CollectionPropertiesPageFactory<T> );
-    }
-
-  private:
-    static void registerPage( AbstractCollectionPropertiesPageFactory *factory );
+    static void registerPage( CollectionPropertiesPageFactory *factory );
 
   private:
     class Private;

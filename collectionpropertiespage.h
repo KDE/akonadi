@@ -84,12 +84,12 @@ class AKONADI_EXPORT CollectionPropertiesPage : public QWidget
 /**
   Factory class for collection property dialog pages.
   You probably want to use Akonadi::CollectionPropertiesPageFactory instead.
-  @see Akonadi::CollectionPropertiesPageFactory
+  @see AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY
 */
-class AKONADI_EXPORT AbstractCollectionPropertiesPageFactory
+class AKONADI_EXPORT CollectionPropertiesPageFactory
 {
   public:
-    virtual ~AbstractCollectionPropertiesPageFactory();
+    virtual ~CollectionPropertiesPageFactory();
 
     /**
       Returns the actual page widget.
@@ -98,23 +98,18 @@ class AKONADI_EXPORT AbstractCollectionPropertiesPageFactory
     virtual CollectionPropertiesPage* createWidget( QWidget *parent = 0 ) const = 0;
 };
 
-
 /**
-  Factory class for collection property dialog pages.
-  @see Akonadi::CollectionPropertiesDialog, Akonadi::CollectionPropertiesPage
-*/
-template <typename T> class AKONADI_EXPORT CollectionPropertiesPageFactory
-  : public AbstractCollectionPropertiesPageFactory
-{
-  public:
-    /**
-      Returns the actual page widget.
-      @param parent The parent widget.
-    */
-    inline CollectionPropertiesPage* createWidget( QWidget *parent = 0 ) const
-    {
-      return new T( parent );
-    }
+  \relates CollectionPropertiesPageFactory
+  This macro exports the factory named @param factoryName for @param className class.
+*/ 
+#define AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(factoryName, className) \
+class factoryName: public CollectionPropertiesPageFactory \
+{ \
+  public: \
+    inline CollectionPropertiesPage* createWidget( QWidget *parent = 0 ) const \
+    { \
+      return new className( parent ); \
+    } \
 };
 
 }

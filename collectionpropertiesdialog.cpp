@@ -29,6 +29,8 @@
 
 using namespace Akonadi;
 
+AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPropertiesPageFactory, CollectionGeneralPropertiesPage)
+
 // FIXME: we leak d->pages!
 
 class CollectionPropertiesDialog::Private
@@ -42,7 +44,7 @@ class CollectionPropertiesDialog::Private
 
     static void registerBuiltinPages()
     {
-      pages.append( new CollectionPropertiesPageFactory<CollectionGeneralPropertiesPage>() );
+      pages.append( new CollectionGeneralPropertiesPageFactory() );
     }
 
     void save()
@@ -72,12 +74,12 @@ class CollectionPropertiesDialog::Private
     }
 
     Collection collection;
-    static QList<AbstractCollectionPropertiesPageFactory*> pages;
+    static QList<CollectionPropertiesPageFactory*> pages;
     QTabWidget* tabWidget;
     CollectionPropertiesDialog *q;
 };
 
-QList<AbstractCollectionPropertiesPageFactory*> CollectionPropertiesDialog::Private::pages;
+QList<CollectionPropertiesPageFactory*> CollectionPropertiesDialog::Private::pages;
 
 CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection & collection, QWidget * parent) :
     KDialog( parent ),
@@ -90,7 +92,7 @@ CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection & collec
   d->tabWidget = new QTabWidget( mainWidget() );
   layout->addWidget( d->tabWidget );
 
-  foreach ( AbstractCollectionPropertiesPageFactory *factory, d->pages ) {
+  foreach ( CollectionPropertiesPageFactory *factory, d->pages ) {
     CollectionPropertiesPage *page = factory->createWidget( d->tabWidget );
     if ( page->canHandle( d->collection ) ) {
       d->tabWidget->addTab( page, page->pageTitle() );
@@ -109,7 +111,7 @@ CollectionPropertiesDialog::~CollectionPropertiesDialog()
   delete d;
 }
 
-void CollectionPropertiesDialog::registerPage(AbstractCollectionPropertiesPageFactory * factory)
+void CollectionPropertiesDialog::registerPage(CollectionPropertiesPageFactory * factory)
 {
   if ( Private::pages.isEmpty() )
     Private::registerBuiltinPages();

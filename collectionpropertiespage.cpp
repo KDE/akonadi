@@ -53,7 +53,7 @@ void CollectionPropertiesPage::setPageTitle(const QString & title)
   d->title = title;
 }
 
-AbstractCollectionPropertiesPageFactory::~AbstractCollectionPropertiesPageFactory()
+CollectionPropertiesPageFactory::~CollectionPropertiesPageFactory()
 {
 }
 
