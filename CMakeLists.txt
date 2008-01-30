@@ -105,7 +105,7 @@ kde4_add_ui_files( akonadi_LIB_SRC
 
 kde4_add_library( akonadi SHARED ${akonadi_LIB_SRC} )
 
-target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARIES} ${KDE4_KDEUI_LIBS} kdepim akonadiprotocol)
+target_link_libraries( akonadi ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim akonadiprotocol)
 set_target_properties( akonadi PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS akonadi  DESTINATION ${LIB_INSTALL_DIR})
 
