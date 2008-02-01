@@ -66,7 +66,7 @@ QString DataStore::mDbConnectionOptions;
 DataStore::DataStore() :
   QObject(),
   m_dbOpened( false ),
-  m_inTransaction( false ),
+  m_transactionLevel( 0 ),
   mNotificationCollector( new NotificationCollector( this ) )
 {
   // load database settings if needed
@@ -118,7 +118,7 @@ DataStore::DataStore() :
 
   open();
 
-  m_inTransaction = false;
+  m_transactionLevel = 0;
   NotificationManager::self()->connectDatastore( this );
 }
 
@@ -160,8 +160,12 @@ void DataStore::open()
 
 void Akonadi::DataStore::close()
 {
-  if ( inTransaction() )
+  if ( inTransaction() ) {
+    // By setting m_transactionLevel to '1' here, we skip all nested transactions
+    // and rollback the outermost transaction.
+    m_transactionLevel = 1;
     rollbackTransaction();
+  }
 
   m_database.close();
   m_database = QSqlDatabase();
@@ -820,18 +824,16 @@ bool Akonadi::DataStore::beginTransaction()
   if ( !m_dbOpened )
     return false;
 
-  if ( m_inTransaction ) {
-    qWarning() << "DataStore::beginTransaction(): Transaction already in progress!";
-    return false;
+  if ( m_transactionLevel == 0 ) {
+    QSqlDriver *driver = m_database.driver();
+    if ( !driver->beginTransaction() ) {
+      debugLastDbError( "DataStore::beginTransaction" );
+      return false;
+    }
   }
 
-  QSqlDriver *driver = m_database.driver();
-  if ( !driver->beginTransaction() ) {
-    debugLastDbError( "DataStore::beginTransaction" );
-    return false;
-  }
+  m_transactionLevel++;
 
-  m_inTransaction = true;
   return true;
 }
 
@@ -840,17 +842,20 @@ bool Akonadi::DataStore::rollbackTransaction()
   if ( !m_dbOpened )
     return false;
 
-  if ( !m_inTransaction ) {
+  if ( m_transactionLevel == 0 ) {
     qWarning() << "DataStore::rollbackTransaction(): No transaction in progress!";
     return false;
   }
 
-  QSqlDriver *driver = m_database.driver();
-  m_inTransaction = false;
-  emit transactionRolledBack();
-  if ( !driver->rollbackTransaction() ) {
-    debugLastDbError( "DataStore::rollbackTransaction" );
-    return false;
+  m_transactionLevel--;
+
+  if ( m_transactionLevel == 0 ) {
+    QSqlDriver *driver = m_database.driver();
+    emit transactionRolledBack();
+    if ( !driver->rollbackTransaction() ) {
+      debugLastDbError( "DataStore::rollbackTransaction" );
+      return false;
+    }
   }
 
   return true;
@@ -861,27 +866,28 @@ bool Akonadi::DataStore::commitTransaction()
   if ( !m_dbOpened )
     return false;
 
-  if ( !m_inTransaction ) {
+  if ( m_transactionLevel == 0 ) {
     qWarning() << "DataStore::commitTransaction(): No transaction in progress!";
     return false;
   }
 
-  QSqlDriver *driver = m_database.driver();
-  if ( !driver->commitTransaction() ) {
-    debugLastDbError( "DataStore::commitTransaction" );
-    rollbackTransaction();
-    m_inTransaction = false;
-    return false;
+  if ( m_transactionLevel == 1 ) {
+    QSqlDriver *driver = m_database.driver();
+    if ( !driver->commitTransaction() ) {
+      debugLastDbError( "DataStore::commitTransaction" );
+      rollbackTransaction();
+      return false;
+    }
   }
 
-  m_inTransaction = false;
+  m_transactionLevel--;
   emit transactionCommitted();
   return true;
 }
 
 bool Akonadi::DataStore::inTransaction() const
 {
-  return m_inTransaction;
+  return m_transactionLevel > 0;
 }
 
 org::kde::Akonadi::Resource * Akonadi::DataStore::resourceInterface( const QString &res )

@@ -41,8 +41,6 @@ bool Akonadi::TransactionHandler::handleLine(const QByteArray & line)
   DataStore *store = connection()->storageBackend();
 
   if ( command == "BEGIN" ) {
-    if ( store->inTransaction() )
-      return failureResponse( "There is already a transaction in progress." );
     if ( !store->beginTransaction() )
       return failureResponse( "Unable to begin transaction." );
   }

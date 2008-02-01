@@ -23,25 +23,17 @@
 Akonadi::Transaction::Transaction(DataStore * db) :
   mDb( db ), mCommitted( false )
 {
-  if ( mDb->inTransaction() ) {
-    mGlobal = true;
-  } else {
-    mGlobal = false;
-    mDb->beginTransaction();
-  }
+  mDb->beginTransaction();
 }
 
-Akonadi::Transaction::~ Transaction()
+Akonadi::Transaction::~Transaction()
 {
-  if ( mDb->inTransaction() && !mCommitted )
+  if ( !mCommitted )
     mDb->rollbackTransaction();
 }
 
 bool Akonadi::Transaction::commit()
 {
   mCommitted = true;
-  if ( !mGlobal )
-    return mDb->commitTransaction();
-  else
-    return true;
+  return mDb->commitTransaction();
 }

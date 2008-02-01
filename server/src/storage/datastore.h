@@ -285,7 +285,7 @@ private:
     QString m_connectionName;
     QSqlDatabase m_database;
     bool m_dbOpened;
-    bool m_inTransaction;
+    uint m_transactionLevel;
     QByteArray mSessionId;
     NotificationCollector* mNotificationCollector;
 
