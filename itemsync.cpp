@@ -60,7 +60,7 @@ class ItemSync::Private
 };
 
 ItemSync::ItemSync( const Collection &collection, QObject *parent ) :
-    /*TransactionSequence*/ Job( parent ),
+    TransactionSequence( parent ),
     d( new Private )
 {
   d->syncCollection = collection;
@@ -202,7 +202,7 @@ void ItemSync::checkDone()
   setProcessedAmount( KJob::Bytes, d->progress );
   if ( d->pendingJobs > 0 )
     return;
-//   commit();
+  commit();
   emitResult();
 }
 

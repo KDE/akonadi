@@ -33,9 +33,7 @@ class Collection;
   Syncs remote and local items.
   @todo Put this into a big transaction again (improves performance considerable)
 */
-// FIXME: this currently can't be a TransactionSequence since it uses ItemDeleteJobs
-// which internally use transactions as well and we don't support cascaded transactions (yet)
-class ItemSync : public Job /*TransactionSequence*/
+class ItemSync : public TransactionSequence
 {
   Q_OBJECT
 
