@@ -9,6 +9,7 @@ pushd `dirname $abs_path` > /dev/null
 
 akonadidb=akonadi
 socketfile=$HOME/.local/share/akonadi/db_misc/mysql.socket
+logfile=$HOME/.local/share/akonadi/db_data/mysql-bin.index
 if ! [ -S $socketfile ]; then
 	startserver=true
 else
@@ -16,7 +17,20 @@ else
 fi
 
 if ! [ -z "$startserver" ]; then
-	/usr/sbin/mysqld --datadir=$HOME/.local/share/akonadi/db_data/ --socket=$socketfile --skip-grant-tables --skip-networking &
+  akonadihome=$HOME/.local/share/akonadi
+  globalconfig=$KDEDIR/share/akonadi/mysql-global.conf
+  localconfig=$HOME/.config/akonadi/mysql-local.conf
+  if [ -f $globalconfig ]; then
+	  cat $globalconfig $localconfig > $akonadihome/mysql.conf
+  fi
+
+  /usr/sbin/mysqld \
+	  --defaults-file=$akonadihome/mysql.conf \
+  	--datadir=$akonadihome/db_data/ \
+	  --socket=$akonadihome/db_misc/mysql.socket \
+    --skip-grant-tables \
+    --skip-networking &
+
 	sleep 2;
 fi
 
