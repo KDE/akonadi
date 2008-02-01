@@ -202,8 +202,8 @@ void ItemSync::checkDone()
   setProcessedAmount( KJob::Bytes, d->progress );
   if ( d->pendingJobs > 0 )
     return;
+
   commit();
-  emitResult();
 }
 
 void ItemSync::slotLocalChangeDone( KJob * job )
