@@ -149,7 +149,6 @@ install(TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
 install(FILES
   interfaces/org.kde.Akonadi.AgentManager.xml
   interfaces/org.kde.Akonadi.NotificationManager.xml
-  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.CachePolicyManager.xml
   interfaces/org.kde.Akonadi.ProfileManager.xml
   interfaces/org.kde.Akonadi.Tracer.xml
   interfaces/org.kde.Akonadi.TracerNotification.xml
