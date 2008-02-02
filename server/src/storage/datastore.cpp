@@ -455,7 +455,7 @@ void DataStore::activeCachePolicy(Location & loc)
 
   Location parent = loc.parent();
   while ( parent.isValid() ) {
-    if ( parent.cachePolicyInherit() ) {
+    if ( !parent.cachePolicyInherit() ) {
       loc.setCachePolicyCheckInterval( parent.cachePolicyCheckInterval() );
       loc.setCachePolicyCacheTimeout( parent.cachePolicyCacheTimeout() );
       loc.setCachePolicySyncOnDemand( parent.cachePolicySyncOnDemand() );

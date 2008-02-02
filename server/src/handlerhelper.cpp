@@ -143,15 +143,11 @@ int HandlerHelper::parseCachePolicy(const QByteArray & data, Location & loc, int
 QByteArray HandlerHelper::cachePolicyToByteArray(const Location & loc)
 {
   QByteArray rv = "CACHEPOLICY (";
-  if ( loc.cachePolicyInherit() ) {
-    rv += "INHERIT true";
-  } else {
-    rv += "INHERIT false";
-    rv += " INTERVAL " + QByteArray::number( loc.cachePolicyCheckInterval() );
-    rv += " CACHETIMEOUT " + QByteArray::number( loc.cachePolicyCacheTimeout() );
-    rv += " SYNCONDEMAND " + ( loc.cachePolicySyncOnDemand() ? QByteArray("true") : QByteArray("false") );
-    rv += " LOCALPARTS (" + loc.cachePolicyLocalParts().toLatin1() + ")";
-  }
+  rv += "INHERIT " + ( loc.cachePolicyInherit() ? QByteArray("true") : QByteArray("false") );
+  rv += " INTERVAL " + QByteArray::number( loc.cachePolicyCheckInterval() );
+  rv += " CACHETIMEOUT " + QByteArray::number( loc.cachePolicyCacheTimeout() );
+  rv += " SYNCONDEMAND " + ( loc.cachePolicySyncOnDemand() ? QByteArray("true") : QByteArray("false") );
+  rv += " LOCALPARTS (" + loc.cachePolicyLocalParts().toLatin1() + ")";
   rv += ")";
   return rv;
 }
