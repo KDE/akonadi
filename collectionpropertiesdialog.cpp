@@ -21,6 +21,7 @@
 
 #include "collectiongeneralpropertiespage.h"
 #include "collectionmodifyjob.h"
+#include "cachepolicypage.h"
 
 #include <kdebug.h>
 
@@ -45,6 +46,7 @@ class CollectionPropertiesDialog::Private
     static void registerBuiltinPages()
     {
       pages.append( new CollectionGeneralPropertiesPageFactory() );
+      pages.append( new CachePolicyPageFactory() );
     }
 
     void save()
@@ -58,7 +60,7 @@ class CollectionPropertiesDialog::Private
       connect( job, SIGNAL(result(KJob*)), q, SLOT(saveResult(KJob*)) );
       job->setName( collection.name() );
       job->setContentTypes( collection.contentTypes() );
-      job->setCachePolicy( collection.cachePolicyId() );
+      job->setCachePolicy( collection.cachePolicy() );
       foreach ( CollectionAttribute *attr, collection.attributes() )
         job->setAttribute( attr );
       // TODO complete me

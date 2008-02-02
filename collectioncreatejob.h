@@ -20,6 +20,7 @@
 #ifndef AKONADI_COLLECTIONCREATEJOB_H
 #define AKONADI_COLLECTIONCREATEJOB_H
 
+#include <libakonadi/cachepolicy.h>
 #include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 
@@ -73,11 +74,10 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     void setAttribute( CollectionAttribute* attr );
 
     /**
-      Sets the cache policy identifier.
-      @param cachePolicyId The cache policy identifier, -1 is the default
-      (inheriting cache policy from the parent).
+      Sets the cache policy.
+      @param policy The cache policy. Inherting from parent is default.
     */
-    void setCachePolicyId( int cachePolicyId );
+    void setCachePolicy( const CachePolicy &policy );
 
   protected:
     virtual void doStart();

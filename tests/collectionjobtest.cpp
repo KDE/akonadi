@@ -32,6 +32,7 @@
 #include "collectionpathresolver.h"
 #include "collectionselectjob.h"
 #include "control.h"
+#include "item.h"
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -283,7 +284,13 @@ void CollectionJobTest::testCreateDeleteFolder( )
   mimeTypes << "inode/directory" << "message/rfc822";
   job->setContentTypes( mimeTypes );
   job->setRemoteId( "remote id" );
-  job->setCachePolicyId( 1 );
+  CachePolicy policy;
+  policy.setInheritFromParent( false );
+  policy.setIntervalCheckTime( 60 );
+  policy.setLocalParts( QStringList( Item::PartEnvelope ) );
+  policy.enableSyncOnDemand( true );
+  policy.setCacheTimeout( 120 );
+  job->setCachePolicy( policy );
   QVERIFY( job->exec() );
   newCol = job->collection();
   QVERIFY( newCol.isValid() );
@@ -295,7 +302,11 @@ void CollectionJobTest::testCreateDeleteFolder( )
   compareLists( col.contentTypes(), mimeTypes );
   QCOMPARE( col.remoteId(), QString("remote id") );
   QCOMPARE( col.resource(), QString("akonadi_dummy_resource_3") );
-  QCOMPARE( col.cachePolicyId(), 1 );
+  QCOMPARE( col.cachePolicy().inheritFromParent(), false );
+  QCOMPARE( col.cachePolicy().intervalCheckTime(), 60 );
+  QCOMPARE( col.cachePolicy().localParts(), QStringList( Item::PartEnvelope ) );
+  QCOMPARE( col.cachePolicy().cacheTimeout(), 120 );
+  QCOMPARE( col.cachePolicy().syncOnDemand(), true );
 
   // cleanup
   del = new CollectionDeleteJob( newCol, this );

@@ -37,8 +37,7 @@ class Collection::Private : public QSharedData
       QSharedData(),
       id( -1 ),
       parentId( -1 ),
-      type( Unknown ),
-      cachePolicyId( -1 )
+      type( Unknown )
     {}
 
     Private( const Private &other ) :
@@ -53,9 +52,9 @@ class Collection::Private : public QSharedData
       foreach ( CollectionAttribute* attr, other.attributes )
         attributes.insert( attr->type(), attr->clone() );
       resource = other.resource;
-      cachePolicyId = other.cachePolicyId;
       status = other.status;
       contentTypes = other.contentTypes;
+      cachePolicy = other.cachePolicy;
     }
 
     ~Private()
@@ -80,10 +79,10 @@ class Collection::Private : public QSharedData
     Type type;
     QHash<QByteArray, CollectionAttribute*> attributes;
     QString resource;
-    int cachePolicyId;
     CollectionStatus status;
     QStringList contentTypes;
     static const Collection root;
+    CachePolicy cachePolicy;
 };
 
 const Collection Collection::Private::root = Collection::Private::newRoot();
@@ -301,16 +300,6 @@ void Collection::addRawAttribute(const QByteArray & type, const QByteArray & val
   addAttribute( attr );
 }
 
-int Collection::cachePolicyId() const
-{
-  return d->cachePolicyId;
-}
-
-void Collection::setCachePolicyId(int cachePolicyId)
-{
-  d->cachePolicyId = cachePolicyId;
-}
-
 CollectionStatus Collection::status() const
 {
   return d->status;
@@ -324,4 +313,14 @@ void Collection::setStatus(const CollectionStatus & status)
 bool Collection::urlIsValid( const KUrl &url )
 {
   return url.protocol() == QString::fromLatin1("akonadi") && url.queryItems().contains( QString::fromLatin1("collection") );
+}
+
+CachePolicy Collection::cachePolicy() const
+{
+  return d->cachePolicy;
+}
+
+void Collection::setCachePolicy(const CachePolicy & cachePolicy)
+{
+  d->cachePolicy = cachePolicy;
 }

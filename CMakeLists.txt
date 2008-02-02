@@ -34,6 +34,8 @@ set( akonadi_LIB_SRC
 	agentmanager.cpp
 	agenttypemodel.cpp
 	agentfilterproxymodel.cpp
+	cachepolicy.cpp
+	cachepolicypage.cpp
 	changerecorder.cpp
 	collection.cpp
 	collectionattribute.cpp
@@ -77,6 +79,7 @@ set( akonadi_LIB_SRC
 	monitor_p.cpp
 	profilemanager.cpp
 	profilemodel.cpp
+	protocolhelper.cpp
 	resourcebase.cpp
 	resourcescheduler.cpp
 	searchcreatejob.cpp
@@ -99,6 +102,7 @@ qt4_add_dbus_interfaces(akonadi_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../server/in
 qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
 qt4_add_dbus_adaptor( akonadi_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml agentbase.h Akonadi::AgentBase )
 kde4_add_ui_files( akonadi_LIB_SRC
+  cachepolicypage.ui
   collectiongeneralpropertiespage.ui
   subscriptiondialog.ui
 )

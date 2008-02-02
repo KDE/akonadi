@@ -1,0 +1,159 @@
+<ui version="4.0" >
+ <class>CachePolicyPage</class>
+ <widget class="QWidget" name="CachePolicyPage" >
+  <property name="enabled" >
+   <bool>true</bool>
+  </property>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>602</width>
+    <height>461</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <item>
+    <widget class="QCheckBox" name="inherit" >
+     <property name="text" >
+      <string>Inherit cache policy from parent</string>
+     </property>
+     <property name="checked" >
+      <bool>true</bool>
+     </property>
+     <property name="tristate" >
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="title" >
+      <string>Cache Policy</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string>Interval check time:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="KIntNumInput" name="checkInterval" >
+        <property name="value" >
+         <number>-1</number>
+        </property>
+        <property name="minimum" >
+         <number>-1</number>
+        </property>
+        <property name="suffix" >
+         <string>minutes</string>
+        </property>
+        <property name="specialValueText" >
+         <string>Never</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string>Local cache timerout:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="KIntNumInput" name="localCacheTimeout" >
+        <property name="value" >
+         <number>-1</number>
+        </property>
+        <property name="minimum" >
+         <number>-1</number>
+        </property>
+        <property name="suffix" >
+         <string>minutes</string>
+        </property>
+        <property name="specialValueText" >
+         <string>Never</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2" >
+       <widget class="QCheckBox" name="syncOnDemand" >
+        <property name="text" >
+         <string>Synchronize on demand</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="KEditListBox" name="localParts" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="title" >
+      <string>Locally Cached Parts</string>
+     </property>
+     <property name="buttons" >
+      <set>KEditListBox::Add|KEditListBox::Remove</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KEditListBox</class>
+   <extends>QGroupBox</extends>
+   <header>keditlistbox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KIntNumInput</class>
+   <extends>QWidget</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>inherit</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>groupBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>65</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>71</x>
+     <y>39</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>inherit</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>localParts</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>199</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>321</x>
+     <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

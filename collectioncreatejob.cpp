@@ -19,6 +19,7 @@
 
 #include "collectioncreatejob.h"
 #include "imapparser.h"
+#include "protocolhelper.h"
 
 #include <kdebug.h>
 
@@ -26,8 +27,7 @@ using namespace Akonadi;
 
 class Akonadi::CollectionCreateJobPrivate {
   public:
-    CollectionCreateJobPrivate() :
-      cachePolicyId( -1 )
+    CollectionCreateJobPrivate()
     {}
 
     Collection parent;
@@ -36,7 +36,7 @@ class Akonadi::CollectionCreateJobPrivate {
     Collection collection;
     QString remoteId;
     QList<QPair<QByteArray, QByteArray> > attributes;
-    int cachePolicyId;
+    CachePolicy cachePolicy;
 };
 
 CollectionCreateJob::CollectionCreateJob( const Collection &parentCollection, const QString &name, QObject * parent ) :
@@ -67,8 +67,7 @@ void CollectionCreateJob::doStart( )
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   foreach ( const QByteArrayPair bp, d->attributes )
     command += ' ' + bp.first + ' ' + bp.second;
-  if ( d->cachePolicyId > 0 )
-    command += " CACHEPOLICY " + QByteArray::number( d->cachePolicyId );
+  command += " " + ProtocolHelper::cachePolicyToByteArray( d->cachePolicy );
   command += ")\n";
   writeData( command );
   emitWriteFinished();
@@ -128,9 +127,9 @@ void CollectionCreateJob::setAttribute(CollectionAttribute * attr)
   d->attributes.append( qMakePair( attr->type(), value ) );
 }
 
-void CollectionCreateJob::setCachePolicyId(int cachePolicyId)
+void CollectionCreateJob::setCachePolicy( const CachePolicy &policy )
 {
-  d->cachePolicyId = cachePolicyId;
+  d->cachePolicy = policy;
 }
 
 #include "collectioncreatejob.moc"

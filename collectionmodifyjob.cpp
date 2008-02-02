@@ -19,6 +19,7 @@
 
 #include "collectionmodifyjob.h"
 #include "imapparser.h"
+#include "protocolhelper.h"
 
 using namespace Akonadi;
 
@@ -27,7 +28,7 @@ class Akonadi::CollectionModifyJobPrivate
   public:
     Collection collection;
     QStringList mimeTypes;
-    int policyId;
+    CachePolicy policy;
     bool setMimeTypes;
     bool setPolicy;
     QString name;
@@ -60,14 +61,14 @@ void CollectionModifyJob::doStart()
     foreach( QString s, d->mimeTypes ) bList << s.toLatin1();
     changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
   }
-  if ( d->setPolicy )
-    changes += " CACHEPOLICY " + QByteArray::number( d->policyId );
   if ( d->parent.isValid() )
     changes += " PARENT " + QByteArray::number( d->parent.id() );
   if ( !d->name.isEmpty() )
     changes += " NAME \"" + d->name.toUtf8() + '"';
   if ( !d->collection.remoteId().isNull() )
     changes += " REMOTEID \"" + d->collection.remoteId().toUtf8() + '"';
+  if ( d->setPolicy )
+    changes += " " + ProtocolHelper::cachePolicyToByteArray( d->policy );
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   foreach ( const QByteArrayPair bp, d->attributes )
     changes += ' ' + bp.first + ' ' + bp.second;
@@ -87,9 +88,9 @@ void CollectionModifyJob::setContentTypes(const QStringList & mimeTypes)
   d->mimeTypes = mimeTypes;
 }
 
-void CollectionModifyJob::setCachePolicy(int policyId)
+void CollectionModifyJob::setCachePolicy( const CachePolicy &policy )
 {
-  d->policyId = policyId;
+  d->policy = policy;
   d->setPolicy = true;
 }
 

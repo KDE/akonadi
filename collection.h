@@ -23,6 +23,7 @@
 #include "libakonadi_export.h"
 #include <libakonadi/collectionattribute.h>
 #include <libakonadi/collectionstatus.h>
+#include <libakonadi/cachepolicy.h>
 
 #include <QtCore/QSharedDataPointer>
 
@@ -295,16 +296,15 @@ class AKONADI_EXPORT Collection
     void addRawAttribute( const QByteArray &type, const QByteArray &value );
 
     /**
-      Returns the cache policy identifer of the effective cache policy
-      of this collection.
+      Returns the cache policy of this collection.
     */
-    int cachePolicyId() const;
+    CachePolicy cachePolicy() const;
 
     /**
       Sets the cache policy of this collection.
-      @param cachePolicyId The cache policy identifier.
+      @param cachePolicy The new cache policy.
     */
-    void setCachePolicyId( int cachePolicyId );
+    void setCachePolicy( const CachePolicy &cachePolicy );
 
     /**
       Returns the CollectionStatus object.

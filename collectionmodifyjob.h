@@ -21,6 +21,7 @@
 #define AKONADI_COLLECTIONMODIFYJOB_H
 
 #include "libakonadi_export.h"
+#include <libakonadi/cachepolicy.h>
 #include <libakonadi/collection.h>
 #include <libakonadi/job.h>
 
@@ -56,9 +57,9 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
 
     /**
       Sets the cache policy of the collection.
-      @param policyId The identifier of the cache policy.
+      @param policy The cache policy.
     */
-    void setCachePolicy( int policyId );
+    void setCachePolicy( const CachePolicy &policy );
 
     /**
       Changes name of this collection.

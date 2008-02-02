@@ -20,6 +20,7 @@
 #include "collectionlistjob.h"
 
 #include "imapparser.h"
+#include "protocolhelper.h"
 
 #include <kdebug.h>
 
@@ -176,7 +177,9 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
           ct2 << QString::fromLatin1( b );
         collection.setContentTypes( ct2 );
       } else if ( key == "CACHEPOLICY" ) {
-        collection.setCachePolicyId( value.toInt() );
+        CachePolicy policy;
+        ProtocolHelper::parseCachePolicy( value, policy );
+        collection.setCachePolicy( policy );
       } else {
         collection.addRawAttribute( key, value );
       }
