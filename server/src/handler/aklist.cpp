@@ -27,6 +27,7 @@
 
 #include "akonadiconnection.h"
 #include "response.h"
+#include "handlerhelper.h"
 
 using namespace Akonadi;
 
@@ -140,9 +141,9 @@ bool AkList::listCollection(const Location & root, int depth )
   b += "RESOURCE \"" + root.resource().name().toUtf8() + "\" ";
 
   DataStore *db = connection()->storageBackend();
-  CachePolicy policy = db->activeCachePolicy( root );
-  if ( policy.isValid() )
-    b += "CACHEPOLICY " + QByteArray::number( policy.id() ) + ' ';
+  Location dummy = root;
+  db->activeCachePolicy( dummy );
+  b += HandlerHelper::cachePolicyToByteArray( dummy ) + ' ';
 
   LocationAttribute::List attrs = root.attributes();
   foreach ( const LocationAttribute attr, attrs )

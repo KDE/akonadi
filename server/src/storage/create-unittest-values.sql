@@ -5,19 +5,19 @@ DELETE FROM LocationMimeTypeRelation;
 DELETE FROM LocationTable WHERE name != "Search" or parentId != 0;
 DELETE FROM ResourceTable WHERE name != "akonadi_search_resource";
 
-INSERT INTO ResourceTable (id, name, cachePolicyId) VALUES(2, 'akonadi_dummy_resource_1', 1);
-INSERT INTO ResourceTable (id, name, cachePolicyId) VALUES(3, 'akonadi_dummy_resource_2', 1);
-INSERT INTO ResourceTable (id, name, cachePolicyId) VALUES(4, 'akonadi_dummy_resource_3', 1);
+INSERT INTO ResourceTable (id, name) VALUES(2, 'akonadi_dummy_resource_1');
+INSERT INTO ResourceTable (id, name) VALUES(3, 'akonadi_dummy_resource_2');
+INSERT INTO ResourceTable (id, name) VALUES(4, 'akonadi_dummy_resource_3');
 
-INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId) VALUES (10, 6, 'foo', 3, 2);
-INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId) VALUES (2, 10, 'bar', 1, 2);
-INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId) VALUES (3, 2, 'bla', 1, 2);
-INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId) VALUES (4, 10, 'bla', 1, 2);
-INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId) VALUES (5, 7, 'foo2', 1, 3);
-INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId) VALUES (6, 0, 'res1', 1, 2);
-INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId) VALUES (7, 0, 'res2', 1, 3);
-INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId) VALUES (8, 0, 'res3', 1, 4);
-INSERT INTO LocationTable (id, parentId, name, cachePolicyId, resourceId) VALUES (9, 7, 'space folder', 1, 3);
+INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (10, 6, 'foo', 2);
+INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (2, 10, 'bar', 2);
+INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (3, 2, 'bla', 2);
+INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (4, 10, 'bla', 2);
+INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (5, 7, 'foo2', 3);
+INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (6, 0, 'res1', 2);
+INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (7, 0, 'res2', 3);
+INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (8, 0, 'res3', 4);
+INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (9, 7, 'space folder', 3);
 
 INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'kde-core-devel', '<request><userQuery>kde-core-devel@kde.org</userQuery></request>', 1);
 INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'all', '<request><userQuery>MIMETYPE message/rfc822</userQuery></request>', 1);

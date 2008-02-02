@@ -68,6 +68,18 @@ class HandlerHelper
       @return -1 on error
     */
     static int itemWithoutFlagCount( const Location &loc, const QString &flag );
+
+    /**
+      Parse cache policy and update the given Location object accoordingly.
+      @todo Error handling.
+    */
+    static int parseCachePolicy( const QByteArray &data, Location &loc, int start = 0 );
+
+    /**
+      Returns the protocol representation of the cache policy if the given
+      Location object.
+    */
+    static QByteArray cachePolicyToByteArray( const Location &loc );
 };
 
 }

@@ -132,7 +132,6 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     bool appendLocation( Location &location );
     /// removes the given location and all its content
     bool cleanupLocation( Location &location );
-    bool changeLocationPolicy( Location & location, const CachePolicy & policy );
     /// rename the collection @p location to @p newName.
     bool renameLocation( const Location &location, int newParent, const QString &newName );
 
@@ -142,9 +141,10 @@ class AKONADI_SERVER_EXPORT DataStore : public QObject
     static QString locationDelimiter() { return QLatin1String("/"); }
 
     /**
-      Returns the active CachePolicy for this Location.
+      Determines the active cache policy for this Location.
+      The active cache policy is set in the corresponding Location fields.
     */
-    CachePolicy activeCachePolicy( const Location &loc );
+    void activeCachePolicy( Location &loc );
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype, int *insertId = 0 );

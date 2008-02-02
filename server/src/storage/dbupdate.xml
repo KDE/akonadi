@@ -42,4 +42,10 @@
     UPDATE LocationTable SET subscribed = true;
   </update>
 
+  <update version="4" abortOnFailure="false">
+    ALTER TABLE LocationTable DROP COLUMN cachePolicyId;
+    ALTER TABLE ResourceTable DROP COLUMN cachePolicyId;
+    DROP TABLE CachePolicyTable;
+  </update>
+
 </updates>

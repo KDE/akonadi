@@ -48,18 +48,14 @@ void CacheCleaner::cleanCache()
 
   // cycle over all locations
   QList<Location> locations = Location::retrieveAll();
-  foreach ( const Location location, locations ) {
+  foreach ( Location location, locations ) {
     // determine active cache policy
-    CachePolicy policy = DataStore::self()->activeCachePolicy( location );
-    if ( !policy.isValid() ) {
-      qDebug() << "No valid cache policy found for location" << location.name();
-      continue;
-    }
+    DataStore::self()->activeCachePolicy( location );
 
     // check if there is something to expire at all
-    if ( policy.offlineParts() == QLatin1String( "ALL" ) || policy.expireTime() < 0 )
+    if ( location.cachePolicyLocalParts() == QLatin1String( "ALL" ) || location.cachePolicyCacheTimeout() < 0 )
       continue;
-    const int expireTime = qMax( 5, policy.expireTime() );
+    const int expireTime = qMax( 5, location.cachePolicyCacheTimeout() );
 
     // find all expired item parts
     SelectQueryBuilder<Part> qb;
@@ -69,8 +65,9 @@ void CacheCleaner::cleanCache()
     qb.addValueCondition( PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
     qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
     qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
-    if ( !policy.offlineParts().isEmpty() )
-      qb.addValueCondition( Part::nameFullColumnName(), Query::In, policy.offlineParts().split( QLatin1String(",") ) );
+    // ### aren't we actually deleting the parts we should keep offline here!?!?
+    if ( !location.cachePolicyLocalParts().isEmpty() )
+      qb.addValueCondition( Part::nameFullColumnName(), Query::In, location.cachePolicyLocalParts().split( QLatin1String(" ") ) );
     if ( !qb.exec() )
       continue;
     QList<Part> parts = qb.result();

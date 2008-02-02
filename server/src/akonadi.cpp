@@ -22,7 +22,6 @@
 #include "serveradaptor.h"
 
 #include "cachecleaner.h"
-#include "cachepolicymanager.h"
 #include "storage/datastore.h"
 #include "notificationmanager.h"
 #include "resourcemanager.h"
@@ -100,7 +99,6 @@ AkonadiServer::AkonadiServer( QObject* parent )
     NotificationManager::self();
     Tracer::self();
     ResourceManager::self();
-    new CachePolicyManager( this );
     if ( settings.value( QLatin1String( "Cache/EnableCleaner" ), true ).toBool() ) {
       mCacheCleaner = new CacheCleaner( this );
       mCacheCleaner->start( QThread::IdlePriority );

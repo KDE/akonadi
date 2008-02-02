@@ -93,17 +93,10 @@ set(libakonadiprivate_SRCS
   src/filetracer.cpp
   src/notificationmanager.cpp
   src/resourcemanager.cpp
-  src/cachepolicymanager.cpp
   src/cachecleaner.cpp
   src/xesammanager.cpp
   ../libakonadi/xdgbasedirs.cpp
 )
-
-qt4_generate_dbus_interface(../server/src/cachepolicymanager.h org.kde.Akonadi.CachePolicyManager.xml)
-# ugly hack to force generation of the xml interface description, which doesn't
-# happen always, just installing the file doesn't seem to provide enough dependencies
-macro_add_file_dependencies( src/cachepolicymanager.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.CachePolicyManager.xml)
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS
   interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer

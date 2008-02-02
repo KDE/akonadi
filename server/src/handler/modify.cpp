@@ -69,16 +69,10 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
       if ( !db->appendMimeTypeForLocation( location.id(), mts ) )
         return failureResponse( "Unable to modify collection mimetypes." );
     } else if ( type == "CACHEPOLICY" ) {
-      int policyId;
-      bool ok = false;
-      pos = ImapParser::parseNumber( line, policyId, &ok, pos );
-      if ( !ok )
-        return failureResponse( "Invalid cache policy identifier" );
-      CachePolicy policy = CachePolicy::retrieveById( policyId );
-      if ( !policy.isValid() )
-        return failureResponse( "Cache policy does not exist" );
-      if ( !db->changeLocationPolicy( location, policy ) )
-        return failureResponse( "Unable to modify collection cache policy" );
+      pos = HandlerHelper::parseCachePolicy( line, location, pos );
+      db->notificationCollector()->collectionChanged( location );
+      if ( !location.update() )
+        return failureResponse( "Unable to change cache policy" );
     } else if ( type == "NAME" ) {
       QString newName;
       pos = ImapParser::parseString( line, newName, pos );

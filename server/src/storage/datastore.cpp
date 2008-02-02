@@ -188,7 +188,6 @@ bool Akonadi::DataStore::init()
   MimeType::enableCache( true );
   Flag::enableCache( true );
   Resource::enableCache( true );
-  CachePolicy::enableCache( true );
   Location::enableCache( true );
 
   return true;
@@ -378,14 +377,6 @@ bool Akonadi::DataStore::cleanupLocation(Location & location)
   return location.remove();
 }
 
-bool DataStore::changeLocationPolicy( Location & location,
-                                      const CachePolicy & policy )
-{
-  location.setCachePolicyId( policy.id() );
-  mNotificationCollector->collectionChanged( location );
-  return location.update();
-}
-
 bool Akonadi::DataStore::renameLocation(const Location & location, int newParent, const QString & newName)
 {
   if ( location.name() == newName && location.parentId() == newParent )
@@ -457,24 +448,28 @@ bool Akonadi::DataStore::removeMimeTypesForLocation(int locationId)
 }
 
 
-CachePolicy DataStore::activeCachePolicy(const Location & loc)
+void DataStore::activeCachePolicy(Location & loc)
 {
-  CachePolicy policy;
-  policy = loc.cachePolicy();
-  if ( policy.isValid() )
-    return policy;
+  if ( !loc.cachePolicyInherit() )
+    return;
 
   Location parent = loc.parent();
   while ( parent.isValid() ) {
-    policy = parent.cachePolicy();
-    if ( policy.isValid() )
-      return policy;
+    if ( parent.cachePolicyInherit() ) {
+      loc.setCachePolicyCheckInterval( parent.cachePolicyCheckInterval() );
+      loc.setCachePolicyCacheTimeout( parent.cachePolicyCacheTimeout() );
+      loc.setCachePolicySyncOnDemand( parent.cachePolicySyncOnDemand() );
+      loc.setCachePolicyLocalParts( parent.cachePolicyLocalParts() );
+      return;
+    }
     parent = parent.parent();
   }
 
-  // fall back to resource cache policy
-  Resource res = loc.resource();
-  return res.cachePolicy();
+  // ### system default
+  loc.setCachePolicyCheckInterval( -1 );
+  loc.setCachePolicyCacheTimeout( -1 );
+  loc.setCachePolicySyncOnDemand( false );
+  loc.setCachePolicyLocalParts( QLatin1String("ALL") );
 }
 
 /* --- MimeType ------------------------------------------------------ */

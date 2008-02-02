@@ -21,6 +21,8 @@
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 
+#include <libakonadi/imapparser.h>
+
 using namespace Akonadi;
 
 QString Akonadi::HandlerHelper::normalizeCollectionName(const QString &name)
@@ -108,4 +110,48 @@ int HandlerHelper::itemWithoutFlagCount(const Location & loc, const QString & fl
   if ( totalCount < 0 || flagCount < 0 )
     return -1;
   return totalCount - flagCount;
+}
+
+int HandlerHelper::parseCachePolicy(const QByteArray & data, Location & loc, int start)
+{
+  QList<QByteArray> params;
+  int end = Akonadi::ImapParser::parseParenthesizedList( data, params, start );
+  for ( int i = 0; i < params.count() - 1; i += 2 ) {
+    const QByteArray key = params[i];
+    const QByteArray value = params[i + 1];
+
+    if ( key == "INHERIT" )
+      loc.setCachePolicyInherit( value == "true" );
+    else if ( key == "INTERVAL" )
+      loc.setCachePolicyCheckInterval( value.toInt() );
+    else if ( key == "CACHETIMEOUT" )
+      loc.setCachePolicyCacheTimeout( value.toInt() );
+    else if ( key == "SYNCONDEMAND" )
+      loc.setCachePolicySyncOnDemand( value == "true" );
+    else if ( key == "LOCALPARTS" ) {
+      QList<QByteArray> tmp;
+      QStringList parts;
+      Akonadi::ImapParser::parseParenthesizedList( value, tmp );
+      foreach ( const QByteArray ba, tmp )
+        parts << QString::fromLatin1( ba );
+      loc.setCachePolicyLocalParts( parts.join( QLatin1String(" ") ) );
+    }
+  }
+  return end;
+}
+
+QByteArray HandlerHelper::cachePolicyToByteArray(const Location & loc)
+{
+  QByteArray rv = "CACHEPOLICY (";
+  if ( loc.cachePolicyInherit() ) {
+    rv += "INHERIT true";
+  } else {
+    rv += "INHERIT false";
+    rv += " INTERVAL " + QByteArray::number( loc.cachePolicyCheckInterval() );
+    rv += " CACHETIMEOUT " + QByteArray::number( loc.cachePolicyCacheTimeout() );
+    rv += " SYNCONDEMAND " + ( loc.cachePolicySyncOnDemand() ? QByteArray("true") : QByteArray("false") );
+    rv += " LOCALPARTS (" + loc.cachePolicyLocalParts().toLatin1() + ")";
+  }
+  rv += ")";
+  return rv;
 }
