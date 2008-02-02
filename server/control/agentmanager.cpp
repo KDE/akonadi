@@ -277,6 +277,20 @@ void AgentManager::agentInstanceSynchronize( const QString &identifier )
   mAgentInstances.value( identifier ).resourceInterface->synchronize();
 }
 
+void AgentManager::agentInstanceSynchronizeCollectionTree(const QString & identifier)
+{
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceSynchronizeCollectionTree" ) ) )
+    return;
+  mAgentInstances.value( identifier ).resourceInterface->synchronizeCollectionTree();
+}
+
+void AgentManager::agentInstanceSynchronizeCollection(const QString & identifier, int collection)
+{
+  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceSynchronizeCollection" ) ) )
+    return;
+  mAgentInstances.value( identifier ).resourceInterface->synchronizeCollection( collection );
+}
+
 bool AgentManager::agentInstanceOnline(const QString & identifier)
 {
   if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceSynchronize" ) ) )

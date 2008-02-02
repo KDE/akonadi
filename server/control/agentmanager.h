@@ -180,6 +180,18 @@ class AgentManager : public QObject
     void agentInstanceSynchronize( const QString &identifier );
 
     /**
+      Trigger a synchronization of the collection tree by the given resource agent.
+      @param identifier The resource agent identifier.
+    */
+    void agentInstanceSynchronizeCollectionTree( const QString &identifier );
+
+    /**
+      Trigger a synchronization of the given collection by its owning resource agent.
+    */
+    void agentInstanceSynchronizeCollection( const QString &identifier, int collection );
+
+
+    /**
       Returns if the agent instance @p identifier is in online mode.
     */
     bool agentInstanceOnline( const QString &identifier );
