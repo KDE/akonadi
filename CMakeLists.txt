@@ -122,6 +122,7 @@ install( FILES
 	agentfilterproxymodel.h
 	agentinstancemodel.h
 	agenttypemodel.h
+	cachepolicy.h
 	collection.h
 	collectionattribute.h
 	collectionattributefactory.h
