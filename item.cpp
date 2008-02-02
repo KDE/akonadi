@@ -186,12 +186,15 @@ bool Item::hasPayload() const
   return m_payload != 0;
 }
 
-KUrl Item::url() const
+KUrl Item::url( UrlType type ) const
 {
   KUrl url;
   url.setProtocol( QString::fromLatin1("akonadi") );
   url.addQueryItem( QLatin1String( "item" ), QString::number( reference().id() ) );
-  url.addQueryItem( QLatin1String( "type" ), mimeType() );
+
+  if ( type == UrlWithMimeType )
+    url.addQueryItem( QLatin1String( "type" ), mimeType() );
+
   return url;
 }
 

@@ -368,7 +368,7 @@ QMimeData *ItemModel::mimeData( const QModelIndexList &indexes ) const
     if ( index.column() != 0 )
       continue;
 
-    urls << itemForIndex( index ).url();
+    urls << itemForIndex( index ).url( Item::UrlWithMimeType );
   }
   urls.populateMimeData( data );
 

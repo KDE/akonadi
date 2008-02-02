@@ -270,15 +270,24 @@ class AKONADI_EXPORT Item
         return p;
     }
 
-  /**
-    Returns the url for the item
-  */
-  KUrl url() const;
+    /**
+     * Describes the type of url which is returned in url().
+     */
+    enum UrlType
+    {
+      UrlShort = 0,         ///< A short url which contains the identifier only (default)
+      UrlWithMimeType = 1   ///< A url with identifier and mimetype
+    };
 
-  /**
-    Returns true if the url is valid for an item
-  */
-  static bool urlIsValid( const KUrl &url );
+    /**
+      Returns the url for the item
+     */
+    KUrl url( UrlType type = UrlShort ) const;
+
+    /**
+      Returns true if the url is valid for an item
+     */
+    static bool urlIsValid( const KUrl &url );
 
   private:
     friend class ItemSerializer;
