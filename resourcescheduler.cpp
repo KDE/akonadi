@@ -47,12 +47,11 @@ void ResourceScheduler::scheduleCollectionTreeSync()
   scheduleNext();
 }
 
-void ResourceScheduler::scheduleSync(const Collection & col, const QStringList &parts)
+void ResourceScheduler::scheduleSync(const Collection & col)
 {
   Task t;
   t.type = SyncCollection;
   t.collection = col;
-  t.itemParts = parts;
   mTaskList << t;
   scheduleNext();
 }

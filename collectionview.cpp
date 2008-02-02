@@ -19,6 +19,7 @@
 
 #include "collectionview.h"
 
+#include "agentmanager.h"
 #include "collectionmodel.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
@@ -47,6 +48,7 @@ class CollectionView::Private
     Private( CollectionView *parent )
       : mParent( parent )
     {
+      agentManager = new AgentManager( parent );
     }
 
     void dragExpand();
@@ -55,6 +57,7 @@ class CollectionView::Private
     void deleteCollection();
     void deleteResult( KJob* );
     void collectionProperties();
+    void synchronizeCollection();
     void updateActions( const QModelIndex& );
     void itemClicked( const QModelIndex& );
     void itemCurrentChanged( const QModelIndex& );
@@ -68,6 +71,9 @@ class CollectionView::Private
     KAction *newCollectionAction;
     KAction *deleteCollectionAction;
     KAction *collectionPropertyAction;
+    KAction *synchronizeCollectionAction;
+
+    AgentManager *agentManager;
 };
 
 bool CollectionView::Private::hasParent( const QModelIndex& idx, int parentId )
@@ -139,12 +145,22 @@ void CollectionView::Private::collectionProperties()
   dlg->show();
 }
 
+void CollectionView::Private::synchronizeCollection()
+{
+  QModelIndex index = mParent->currentIndex();
+  if ( !index.isValid() )
+    return;
+  const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
+  agentManager->agentInstanceSynchronizeCollection( col );
+}
+
 void CollectionView::Private::updateActions( const QModelIndex &current )
 {
   if ( !current.isValid() ) {
     newCollectionAction->setEnabled( false );
     deleteCollectionAction->setEnabled( false );
     collectionPropertyAction->setEnabled( false );
+    synchronizeCollectionAction->setEnabled( false );
     return;
   }
 
@@ -156,6 +172,7 @@ void CollectionView::Private::updateActions( const QModelIndex &current )
     deleteCollectionAction->setEnabled( false );
 
   collectionPropertyAction->setEnabled( true );
+  synchronizeCollectionAction->setEnabled( true );
 }
 
 void CollectionView::Private::itemClicked( const QModelIndex &index )
@@ -205,6 +222,8 @@ CollectionView::CollectionView( QWidget * parent ) :
 
   d->newCollectionAction = new KAction( KIcon(QLatin1String("folder-new")), i18n("New Folder..."), this );
   connect( d->newCollectionAction, SIGNAL(triggered()), SLOT(createCollection()) );
+  d->synchronizeCollectionAction = new KAction( KIcon(QLatin1String("view-refresh") ), i18n("Synchronize Folder"), this );
+  connect( d->synchronizeCollectionAction, SIGNAL(triggered()), SLOT(synchronizeCollection()) );
   d->deleteCollectionAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n("Delete Folder"), this );
   connect( d->deleteCollectionAction, SIGNAL(triggered()), SLOT(deleteCollection()) );
   d->collectionPropertyAction = new KAction( KIcon(QLatin1String("configure")), i18n("Folder Properties..."), this );
@@ -310,7 +329,8 @@ void CollectionView::contextMenuEvent(QContextMenuEvent * event)
 {
   d->updateActions( indexAt( event->pos() ) );
   QList<QAction*> actions;
-  actions << d->newCollectionAction << d->deleteCollectionAction
+  actions << d->newCollectionAction << d->synchronizeCollectionAction
+          << d->deleteCollectionAction
           << d->collectionPropertyAction;
   QMenu::exec( actions, event->globalPos() );
   d->updateActions( currentIndex() );

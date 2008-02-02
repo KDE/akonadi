@@ -470,7 +470,7 @@ void ResourceBasePrivate::slotLocalListDone(KJob * job)
   } else {
     Collection::List cols = static_cast<CollectionListJob*>( job )->collections();
     foreach ( const Collection &col, cols ) {
-      scheduler->scheduleSync( col, scheduler->currentTask().itemParts );
+      scheduler->scheduleSync( col );
     }
   }
   scheduler->taskDone();
@@ -521,11 +521,10 @@ void ResourceBase::synchronizeCollectionTree()
   d_func()->scheduler->scheduleCollectionTreeSync();
 }
 
-void ResourceBase::synchronizeCollection(int collectionId, const QStringList &parts)
+void ResourceBase::synchronizeCollection(int collectionId )
 {
   CollectionListJob* job = new CollectionListJob( Collection(collectionId), CollectionListJob::Local, session() );
   job->setResource( identifier() );
-  job->setProperty( "akonadi-parts", parts );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionListDone(KJob*)) );
 }
 
@@ -535,7 +534,7 @@ void ResourceBasePrivate::slotCollectionListDone( KJob *job )
     Collection::List list = static_cast<CollectionListJob*>( job )->collections();
     if ( !list.isEmpty() ) {
       Collection col = list.first();
-      scheduler->scheduleSync( col, job->property( "akonadi-parts" ).toStringList() );
+      scheduler->scheduleSync( col );
     }
   }
   // TODO: error handling

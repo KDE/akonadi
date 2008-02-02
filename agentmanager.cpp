@@ -205,4 +205,16 @@ void AgentManager::setAgentInstanceOnline(const QString & identifier, bool state
   d->mManager->setAgentInstanceOnline( identifier, state );
 }
 
+void AgentManager::agentInstanceSynchronizeCollectionTree(const QString & identifier)
+{
+  d->mManager->agentInstanceSynchronizeCollectionTree( identifier );
+}
+
+void AgentManager::agentInstanceSynchronizeCollection(const Collection & collection)
+{
+  const QString resId = collection.resource();
+  Q_ASSERT( !resId.isEmpty() );
+  d->mManager->agentInstanceSynchronizeCollection( resId, collection.id() );
+}
+
 #include "agentmanager.moc"

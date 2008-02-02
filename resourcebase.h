@@ -424,7 +424,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     // dbus resource interface
     friend class ::ResourceAdaptor;
     void synchronizeCollectionTree();
-    void synchronizeCollection( int collectionId, const QStringList &parts );
+    void synchronizeCollection( int collectionId );
     bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts );
 
   private:

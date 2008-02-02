@@ -83,7 +83,7 @@ class ResourceScheduler : public QObject
       Schedules the synchronization of a single collection.
       @param col The collection to synchronize.
     */
-    void scheduleSync( const Collection &col, const QStringList &parts );
+    void scheduleSync( const Collection &col );
 
     /**
       Schedules fetching of a single PIM item.

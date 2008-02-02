@@ -21,6 +21,8 @@
 #define AKONADI_AGENTMANAGER_H
 
 #include "libakonadi_export.h"
+#include <libakonadi/collection.h>
+
 #include <QtCore/QObject>
 
 class QIcon;
@@ -168,6 +170,18 @@ class AKONADI_EXPORT AgentManager : public QObject
      * synchronization.
      */
     void agentInstanceSynchronize( const QString &identifier );
+
+    /**
+      Trigger a synchronization of the collection tree by the given resource agent.
+      @param identifier The resource agent identifier.
+    */
+    void agentInstanceSynchronizeCollectionTree( const QString &identifier );
+
+    /**
+      Trigger a synchronization of the given collection by its owning resource agent.
+      @param collection The collection to synchronize.
+    */
+    void agentInstanceSynchronizeCollection( const Collection &collection );
 
     /**
       Returns if the agent instance @p identifier is in online mode.
