@@ -45,6 +45,7 @@ class Fetch : public Handler
 
   private:
     void updateItemAccessTime( const ImapSet &set, bool isUidFetch );
+    void triggerOnDemandFetch( bool isUidFetch );
 
 };
 

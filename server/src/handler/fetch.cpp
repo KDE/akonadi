@@ -24,6 +24,7 @@
 #include "imapparser.h"
 #include "response.h"
 #include "storage/selectquerybuilder.h"
+#include "resourceinterface.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QUuid>
@@ -85,6 +86,8 @@ bool Fetch::handleLine( const QByteArray& line )
       return failureResponse( "Unsupported macro" );
     }
   }
+
+  triggerOnDemandFetch( isUidFetch );
 
   // build item query
   QueryBuilder itemQuery;
@@ -291,4 +294,18 @@ void Fetch::updateItemAccessTime(const ImapSet & set, bool isUidFetch)
   imapSetToQuery( set, isUidFetch, qb );
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
+}
+
+void Fetch::triggerOnDemandFetch(bool isUidFetch)
+{
+  if ( isUidFetch || connection()->selectedCollection() <= 0 )
+    return;
+  Location loc = connection()->selectedLocation();
+  DataStore *store = connection()->storageBackend();
+  store->activeCachePolicy( loc );
+  if ( !loc.cachePolicySyncOnDemand() )
+    return;
+  org::kde::Akonadi::Resource *interface = store->resourceInterface( loc.resource().name() );
+  if ( interface )
+    interface->synchronizeCollection( loc.id() );
 }

@@ -260,6 +260,11 @@ protected:
      */
     static int lastInsertId( const QSqlQuery & query );
 
+    /**
+      Returns the D-Bus interface of the given resource.
+    */
+    OrgKdeAkonadiResourceInterface* resourceInterface( const QString &res );
+
   private:
     /** Converts the given date/time to the database format, i.e.
         "YYYY-MM-DD HH:MM:SS".
@@ -275,11 +280,6 @@ protected:
         @see dateTimeFromQDateTime
      */
     static QDateTime dateTimeToQDateTime( const QByteArray & dateTime );
-
-    /**
-      Returns the D-Bus interface of the given resource.
-    */
-    OrgKdeAkonadiResourceInterface* resourceInterface( const QString &res );
 
 private:
     QString m_connectionName;
