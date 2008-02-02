@@ -56,7 +56,7 @@ class CollectionView::Private
     void deleteResult( KJob* );
     void collectionProperties();
     void updateActions( const QModelIndex& );
-    void itemActivated( const QModelIndex& );
+    void itemClicked( const QModelIndex& );
     void itemCurrentChanged( const QModelIndex& );
     bool hasParent( const QModelIndex& idx, int parentId );
 
@@ -158,7 +158,7 @@ void CollectionView::Private::updateActions( const QModelIndex &current )
   collectionPropertyAction->setEnabled( true );
 }
 
-void CollectionView::Private::itemActivated( const QModelIndex &index )
+void CollectionView::Private::itemClicked( const QModelIndex &index )
 {
   if ( !index.isValid() )
     return;
@@ -167,7 +167,7 @@ void CollectionView::Private::itemActivated( const QModelIndex &index )
   if ( currentCollection <= 0 )
     return;
 
-  emit mParent->activated( Collection( currentCollection ) );
+  emit mParent->clicked( Collection( currentCollection ) );
 }
 
 void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
@@ -210,8 +210,8 @@ CollectionView::CollectionView( QWidget * parent ) :
   d->collectionPropertyAction = new KAction( KIcon(QLatin1String("configure")), i18n("Folder Properties..."), this );
   connect( d->collectionPropertyAction, SIGNAL(triggered()), SLOT(collectionProperties()) );
 
-  connect( this, SIGNAL( activated( const QModelIndex& ) ),
-           this, SLOT( itemActivated( const QModelIndex& ) ) );
+  connect( this, SIGNAL( clicked( const QModelIndex& ) ),
+           this, SLOT( itemClicked( const QModelIndex& ) ) );
 }
 
 CollectionView::~CollectionView()

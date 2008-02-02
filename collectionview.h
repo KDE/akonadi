@@ -57,10 +57,10 @@ class AKONADI_EXPORT CollectionView : public QTreeView
 
   Q_SIGNALS:
     /**
-     * This signal is emitted whenever the user has activated
+     * This signal is emitted whenever the user has clicked 
      * a collection in the view.
      */
-    void activated( const Akonadi::Collection &collection );
+    void clicked( const Akonadi::Collection &collection );
 
     /**
      * This signal is emitted whenever the current collection
@@ -85,7 +85,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     Q_PRIVATE_SLOT( d, void deleteResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void collectionProperties() )
     Q_PRIVATE_SLOT( d, void updateActions( const QModelIndex& ) )
-    Q_PRIVATE_SLOT( d, void itemActivated( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
 };
 
