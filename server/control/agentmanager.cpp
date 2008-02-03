@@ -439,15 +439,12 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
   }
 
   if ( name.startsWith( "org.kde.Akonadi.Agent." ) ) {
+    if ( newOwner.isEmpty() )
+      return;
+
     const QString identifier = name.mid( 22 );
     if ( !mAgentInstances.contains( identifier ) )
       return;
-
-    if ( newOwner.isEmpty() ) { // interface was unregistered
-      if ( mAgentInstances.contains( identifier ) )
-        emit agentInstanceRemoved( identifier );
-      return;
-    }
 
     delete mAgentInstances[ identifier ].agentInterface;
     mAgentInstances[ identifier ].agentInterface = 0;
