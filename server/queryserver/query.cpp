@@ -17,6 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QtCore/QDateTime>
 #include <QtCore/QSet>
 
 #include <Soprano/Node>
@@ -30,10 +31,9 @@ class Query::Private
 {
   public:
     Private( Query *parent, const QString &queryString, Soprano::Model *model, const QString &id )
-      : mId( id ), mIteratorIdCounter( 0 ), mQueryString( queryString ), mModel( model )
+      : mParent( parent ), mId( id ), mIteratorIdCounter( 0 ),
+        mQueryString( queryString ), mModel( model ), mRunning( false )
     {
-      connect( model, SIGNAL( statementsAdded() ), parent, SLOT( statementsAdded() ) );
-      connect( model, SIGNAL( statementsRemoved() ), parent, SLOT( statementsRemoved() ) );
     }
 
     QString createUniqueIteratorId()
@@ -44,21 +44,72 @@ class Query::Private
     void _k_statementsAdded();
     void _k_statementsRemoved();
 
+    Query *mParent;
     QString mId;
     unsigned int mIteratorIdCounter;
     QString mQueryString;
+    QDateTime mQueryTime;
     Soprano::Model *mModel;
     QSet<QueryIterator*> mIterators;
+    QSet<QString> mAllUris;
+    bool mRunning;
 };
 
 void Query::Private::_k_statementsAdded()
 {
+  QMap<QString, double> uris;
+  Soprano::QueryResultIterator it = mModel->executeQuery( mQueryString, Soprano::Query::QueryLanguageSparql );
 
+  /**
+   * Check for uris which exist in the model but not
+   * in our cache -> they are new
+   */
+  while ( it.next() ) {
+    const QString uri = it.binding( "result" ).uri().toString();
+
+    if ( !mAllUris.contains( uri ) ) {
+      mAllUris.insert( uri );
+      uris.insert( uri, 0 );
+    }
+  }
+
+  mQueryTime = QDateTime::currentDateTime();
+
+  emit mParent->hitsChanged( uris );
 }
 
 void Query::Private::_k_statementsRemoved()
 {
+  QSet<QString> availableUris;
 
+  Soprano::QueryResultIterator it = mModel->executeQuery( mQueryString, Soprano::Query::QueryLanguageSparql );
+  while ( it.next() ) {
+    const QString uri = it.binding( "result" ).uri().toString();
+    availableUris.insert( uri );
+  }
+
+  /**
+   * Check for uris which exist in our cache but not in
+   * in the model -> they were deleted.
+   */
+  QSet<QString> tmp = mAllUris;
+  tmp.subtract( availableUris );  // tmp contains all deleted uris
+
+  /**
+   * Remove all deleted uris from our cache.
+   */
+  mAllUris.subtract( tmp );
+
+  /**
+   * Create result map.
+   */
+  QMap<QString, double> uris;
+  Q_FOREACH( const QString uri, tmp )
+    uris.insert( uri, 0 );
+
+  mQueryTime = QDateTime::currentDateTime();
+
+  emit mParent->hitsRemoved( uris );
 }
 
 Query::Query( const QString &queryString, Soprano::Model *model, const QString &id, QObject *parent )
@@ -76,10 +127,35 @@ Query::~Query()
 
 void Query::start()
 {
+  if ( d->mRunning )
+    return;
+
+  d->mRunning = true;
+
+  /**
+   * Stores all available items, so we can find out which uris have been added/deleted.
+   *
+   * TODO: change it when Nepomuk will support search by creation time.
+   */
+  Soprano::QueryResultIterator it = d->mModel->executeQuery( d->mQueryString, Soprano::Query::QueryLanguageSparql );
+  while ( it.next() )
+    d->mAllUris.insert( it.binding( "result" ).uri().toString() );
+
+  it.close();
+
+  connect( d->mModel, SIGNAL( statementsAdded() ), this, SLOT( _k_statementsAdded() ) );
+  connect( d->mModel, SIGNAL( statementsRemoved() ), this, SLOT( _k_statementsRemoved() ) );
 }
 
 void Query::stop()
 {
+  if ( !d->mRunning )
+    return;
+
+  d->mRunning = false;
+
+  disconnect( d->mModel, SIGNAL( statementsAdded() ), this, SLOT( _k_statementsAdded() ) );
+  disconnect( d->mModel, SIGNAL( statementsRemoved() ), this, SLOT( _k_statementsRemoved() ) );
 }
 
 void Query::close()
