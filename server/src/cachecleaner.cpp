@@ -54,7 +54,8 @@ void CacheCleaner::cleanCache()
     DataStore::self()->activeCachePolicy( location );
 
     // check if there is something to expire at all
-    if ( location.cachePolicyLocalParts() == QLatin1String( "ALL" ) || location.cachePolicyCacheTimeout() < 0 )
+    if ( location.cachePolicyLocalParts() == QLatin1String( "ALL" ) || location.cachePolicyCacheTimeout() < 0
+       || !location.subscribed() )
       continue;
     const int expireTime = qMax( 5, location.cachePolicyCacheTimeout() );
 
