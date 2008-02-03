@@ -32,13 +32,14 @@ IntervalCheck::IntervalCheck(QObject * parent) :
 
 IntervalCheck::~ IntervalCheck()
 {
-  DataStore::self()->close();
 }
 
 void IntervalCheck::run()
 {
+  DataStore::self();
   QTimer::singleShot( 60 * 1000, this, SLOT(doIntervalCheck()) );
   exec();
+  DataStore::self()->close();
 }
 
 void IntervalCheck::doIntervalCheck()

@@ -128,16 +128,17 @@ AkonadiServer::~AkonadiServer()
 
 void AkonadiServer::quit()
 {
-    if ( mCacheCleaner ) {
-        mCacheCleaner->quit();
-        mCacheCleaner->wait();
-        delete mCacheCleaner;
-    }
-    if ( mIntervalChecker ) {
-      mIntervalChecker->quit();
+    if ( mCacheCleaner )
+      QMetaObject::invokeMethod( mCacheCleaner, "quit", Qt::QueuedConnection );
+    if ( mIntervalChecker )
+      QMetaObject::invokeMethod( mIntervalChecker, "quit", Qt::QueuedConnection );
+    QCoreApplication::instance()->processEvents();
+
+    if ( mCacheCleaner )
+      mCacheCleaner->wait();
+    if ( mIntervalChecker )
       mIntervalChecker->wait();
-      delete mIntervalChecker;
-    }
+
     delete mXesamManager;
     mXesamManager = 0;
 
@@ -147,6 +148,9 @@ void AkonadiServer::quit()
         mConnections[ i ]->wait();
       }
     }
+
+    DataStore::self()->close();
+
     // execute the deleteLater() calls for the threads so they free their db connections
     // and the following db termination will work
     QCoreApplication::instance()->processEvents();

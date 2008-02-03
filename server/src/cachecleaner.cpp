@@ -33,13 +33,14 @@ CacheCleaner::CacheCleaner(QObject * parent) :
 
 CacheCleaner::~CacheCleaner()
 {
-  DataStore::self()->close();
 }
 
 void CacheCleaner::run()
 {
+  DataStore::self();
   QTimer::singleShot( 60 * 1000, this, SLOT(cleanCache()) );
   exec();
+  DataStore::self()->close();
 }
 
 void CacheCleaner::cleanCache()
