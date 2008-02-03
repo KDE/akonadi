@@ -23,6 +23,8 @@
 #include <k3staticdeleter.h>
 
 #include <QtCore/QEventLoop>
+#include <QtCore/QProcess>
+#include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 
@@ -37,16 +39,17 @@ class Control::Private
 {
   public:
     Private( Control *parent )
-      : mParent( parent ), mEventLoop( 0 )
+      : mParent( parent ), mEventLoop( 0 ), mSuccess( false )
     {
     }
 
-    void startInternal();
+    bool startInternal();
     void serviceOwnerChanged( const QString&, const QString&, const QString& );
     static Control* self();
 
     Control *mParent;
     QEventLoop *mEventLoop;
+    bool mSuccess;
 
     static Control* mInstance;
 };
@@ -61,20 +64,36 @@ Control* Control::Private::self()
   return mInstance;
 }
 
-void Control::Private::startInternal()
+bool Control::Private::startInternal()
 {
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) || mEventLoop )
-    return;
+    return true;
 
   QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
   if ( !reply.isValid() ) {
     kWarning( 5250 ) << "Unable to start Akonadi control process: "
                      << reply.error().message();
-    return;
+
+    // start via D-Bus .service file didn't work, let's try starting the process manually
+    if ( reply.error().type() == QDBusError::ServiceUnknown ) {
+      const bool ok = QProcess::startDetached( QLatin1String("akonadi_control") );
+      if ( !ok ) {
+        kWarning( 5250 ) << "Error: unable to execute binary akonadi_control";
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   mEventLoop = new QEventLoop( mParent );
+  // safety timeout
+  QTimer::singleShot( 10000, mEventLoop, SLOT(quit()) );
   mEventLoop->exec();
+
+  if ( !mSuccess )
+    kWarning( 5250 ) << "Could not start Akonadi!";
+  return mSuccess;
 }
 
 void Control::Private::serviceOwnerChanged( const QString & name, const QString & oldOwner, const QString & newOwner )
@@ -84,6 +103,7 @@ void Control::Private::serviceOwnerChanged( const QString & name, const QString 
     mEventLoop->quit();
     delete mEventLoop;
     mEventLoop = 0;
+    mSuccess = true;
   }
 }
 
@@ -100,9 +120,9 @@ Control::~Control()
   delete d;
 }
 
-void Control::start()
+bool Control::start()
 {
-  Private::self()->d->startInternal();
+  return Private::self()->d->startInternal();
 }
 
 #include "control.moc"

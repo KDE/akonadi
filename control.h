@@ -42,7 +42,7 @@ class AKONADI_EXPORT Control : public QObject
     /**
       Starts the Akonadi server synchronously if necessary.
      */
-    static void start();
+    static bool start();
 
   private:
     Control();
