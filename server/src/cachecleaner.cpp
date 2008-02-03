@@ -65,9 +65,8 @@ void CacheCleaner::cleanCache()
     qb.addValueCondition( PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
     qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
     qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
-    // ### aren't we actually deleting the parts we should keep offline here!?!?
     if ( !location.cachePolicyLocalParts().isEmpty() )
-      qb.addValueCondition( Part::nameFullColumnName(), Query::In, location.cachePolicyLocalParts().split( QLatin1String(" ") ) );
+      qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, location.cachePolicyLocalParts().split( QLatin1String(" ") ) );
     if ( !qb.exec() )
       continue;
     QList<Part> parts = qb.result();

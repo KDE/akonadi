@@ -45,7 +45,8 @@ enum CompareOperator {
   LessOrEqual,
   Greater,
   GreaterOrEqual,
-  In
+  In,
+  NotIn
 };
 
 /**
