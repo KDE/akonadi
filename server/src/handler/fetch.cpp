@@ -301,6 +301,9 @@ void Fetch::triggerOnDemandFetch(bool isUidFetch)
   if ( isUidFetch || connection()->selectedCollection() <= 0 )
     return;
   Location loc = connection()->selectedLocation();
+  // HACK: don't trigger on-demand syncing if the resource is the one triggering it
+  if ( connection()->sessionId() == loc.resource().name().toLatin1() )
+    return;
   DataStore *store = connection()->storageBackend();
   store->activeCachePolicy( loc );
   if ( !loc.cachePolicySyncOnDemand() )
