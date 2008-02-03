@@ -22,6 +22,7 @@
 #include "serveradaptor.h"
 
 #include "cachecleaner.h"
+#include "intervalcheck.h"
 #include "storage/datastore.h"
 #include "notificationmanager.h"
 #include "resourcemanager.h"
@@ -49,6 +50,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     : KLocalSocketServer( parent )
 #endif
     , mCacheCleaner( 0 )
+    , mIntervalChecker( 0 )
     , mDatabaseProcess( 0 )
 {
     QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
@@ -104,6 +106,9 @@ AkonadiServer::AkonadiServer( QObject* parent )
       mCacheCleaner->start( QThread::IdlePriority );
     }
 
+    mIntervalChecker = new IntervalCheck( this );
+    mIntervalChecker->start( QThread::IdlePriority );
+
     mXesamManager = new XesamManager( this );
 
     new ServerAdaptor( this );
@@ -127,6 +132,11 @@ void AkonadiServer::quit()
         mCacheCleaner->quit();
         mCacheCleaner->wait();
         delete mCacheCleaner;
+    }
+    if ( mIntervalChecker ) {
+      mIntervalChecker->quit();
+      mIntervalChecker->wait();
+      delete mIntervalChecker;
     }
     delete mXesamManager;
     mXesamManager = 0;

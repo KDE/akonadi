@@ -38,7 +38,7 @@ CacheCleaner::~CacheCleaner()
 
 void CacheCleaner::run()
 {
-  QTimer::singleShot( /*60, just for testing --> */ 5 * 1000, this, SLOT(cleanCache()) );
+  QTimer::singleShot( 60 * 1000, this, SLOT(cleanCache()) );
   exec();
 }
 

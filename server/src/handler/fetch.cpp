@@ -305,7 +305,5 @@ void Fetch::triggerOnDemandFetch(bool isUidFetch)
   store->activeCachePolicy( loc );
   if ( !loc.cachePolicySyncOnDemand() )
     return;
-  org::kde::Akonadi::Resource *interface = store->resourceInterface( loc.resource().name() );
-  if ( interface )
-    interface->synchronizeCollection( loc.id() );
+  store->triggerCollectionSync( loc );
 }

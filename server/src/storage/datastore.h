@@ -252,6 +252,7 @@ protected:
   public:
     void retrieveDataFromResource( int uid, const QByteArray& remote_id,
                                          const QString &resource, const QStringList &parts );
+    void triggerCollectionSync( const Location &location );
 
     /** Returns the id of the most recent inserted row, or -1 if there's no such
         id.
@@ -259,11 +260,6 @@ protected:
         @return id of the most recent inserted row, or -1
      */
     static int lastInsertId( const QSqlQuery & query );
-
-    /**
-      Returns the D-Bus interface of the given resource.
-    */
-    OrgKdeAkonadiResourceInterface* resourceInterface( const QString &res );
 
   private:
     /** Converts the given date/time to the database format, i.e.
@@ -280,6 +276,11 @@ protected:
         @see dateTimeFromQDateTime
      */
     static QDateTime dateTimeToQDateTime( const QByteArray & dateTime );
+
+    /**
+      Returns the D-Bus interface of the given resource.
+    */
+    OrgKdeAkonadiResourceInterface* resourceInterface( const QString &res );
 
 private:
     QString m_connectionName;

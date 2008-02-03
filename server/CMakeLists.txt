@@ -56,6 +56,7 @@ set(libakonadiprivate_SRCS
   src/akonadiconnection.cpp
   src/handler.cpp
   src/handlerhelper.cpp
+  src/intervalcheck.cpp
   src/response.cpp
   src/handler/aklist.cpp
   src/handler/akappend.cpp

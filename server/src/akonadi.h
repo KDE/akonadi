@@ -32,6 +32,7 @@
 #include "akonadi_export.h"
 
 class QProcess;
+class IntervalCheck;
 
 namespace Akonadi {
 
@@ -71,6 +72,7 @@ class AKONADI_SERVER_EXPORT AkonadiServer: public KLocalSocketServer
     void stopDatabaseProcess();
 
     CacheCleaner *mCacheCleaner;
+    IntervalCheck *mIntervalChecker;
     QProcess *mDatabaseProcess;
     QList< QPointer<AkonadiConnection> > mConnections;
     XesamManager *mXesamManager;

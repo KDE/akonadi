@@ -673,6 +673,12 @@ void Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& re
   }
 }
 
+void DataStore::triggerCollectionSync( const Location &location )
+{
+  org::kde::Akonadi::Resource *interface = resourceInterface( location.resource().name() );
+  if ( interface )
+    interface->synchronizeCollection( location.id() );
+}
 
 QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &flag )
 {
