@@ -1,0 +1,14 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.Akonadi.Search.QueryIterator">
+    <method name="next">
+      <arg name="reply" type="b" direction="out" />
+    </method>
+    <method name="current">
+      <arg name="node" type="(sd)" direction="out" />
+      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QPair&lt;QString, double&gt;" />
+    </method>
+    <method name="close" />
+  </interface>
+</node>
