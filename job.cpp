@@ -76,9 +76,8 @@ void Job::Private::lostConnection()
   if ( mCurrentSubJob ) {
     mCurrentSubJob->d->lostConnection();
   } else {
-    mParent->kill( KJob::Quietly );
     mParent->setError( ConnectionFailed );
-    mParent->emitResult();
+    mParent->kill( KJob::EmitResult );
   }
 }
 
