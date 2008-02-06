@@ -53,4 +53,14 @@
 # endif
 #endif
 
+#ifndef AKONADI_KCAL_EXPORT
+# if defined(MAKE_KCALAKONADI_LIB)
+   /* We are building this library */
+#  define AKONADI_KCAL_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define AKONADI_KCAL_EXPORT KDE_IMPORT
+# endif
+#endif
+
 #endif
