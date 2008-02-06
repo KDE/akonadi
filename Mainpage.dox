@@ -17,7 +17,8 @@ Functionality provided by libakonadi:
 
 \section libakonadi_jobs Accessing the Akonadi server
 
-Accessing the Akonadi server is done using job-classes derived from Akonadi::Job.
+Accessing the Akonadi server is done using job-classes derived from Akonadi::Job. The
+communication channel with the server is provided by Akonadi::Session.
 
 \todo Complete this section.
 
@@ -71,12 +72,14 @@ of a PIM item and the objects used to handle these items provided by the corresp
 Serializer plugins allow you to add support for new kinds of PIM items to Akonadi.
 Akonadi::ItemSerializerPlugin can be used as a base class for such a plugin.
 
-\section libakonadi_resource Resources
+\section libakonadi_resource Agents and Resources
 
-The class Akonadi::ResourceBase is the common base class for all resources. It provides the
+The class Akonadi::AgentBase is the commen base class for all agents. It provides commonly needed
+functionality such as change monitoring and recording.
+
+Resources are special type of agents, Akonadi::ResourceBase is the base class them. It provides the
 necessary interfaces to the server as well as many convenience functions to make implementing
 a new resource as easy as possible.
-
 
 */
 

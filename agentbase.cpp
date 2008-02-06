@@ -60,6 +60,8 @@ void crashHandler( int signal )
   exit( 255 );
 }*/
 
+//@cond PRIVATE
+
 AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
   : q_ptr( parent ),
     mSettings( 0 )
@@ -123,6 +125,7 @@ AgentBase::AgentBase( const QString & id )
   d_ptr->mId = id;
   d_ptr->init();
 }
+// @endcond
 
 AgentBase::AgentBase( AgentBasePrivate* d, const QString &id ) :
     d_ptr( d )

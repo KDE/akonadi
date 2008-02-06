@@ -54,6 +54,7 @@ class AKONADIPROTOCOL_EXPORT ImapInterval
 
     /**
       Create a new interval.
+      @param begin The begin of the interval.
       @param end Keep default (0) to just set the interval begin
     */
     explicit ImapInterval( int begin, int end = 0 );
@@ -122,7 +123,7 @@ class AKONADIPROTOCOL_EXPORT ImapInterval
 };
 
 /**
-  Represents a set of natural numbers (1->\infty) in a as compact as possible form.
+  Represents a set of natural numbers (1->\f$\infty\f$) in a as compact as possible form.
   Used to address Akonadi items via the IMAP protocol or in the database.
   This class is implicitly shared.
 */

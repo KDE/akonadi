@@ -344,8 +344,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     /**
       Call this method from retrieveItem() once the result is available.
-      @param job The job which actually delivers the item.
-      @param msg The D-Bus message requesting the delivery.
+      @param item The retrieved item.
     */
     void itemRetrieved( const Item &item );
 

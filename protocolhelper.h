@@ -36,6 +36,8 @@ class ProtocolHelper
   public:
     /**
       Parse a cache policy definition.
+      @param data The input data.
+      @param policy The parsed cache policy.
       @param start Start of the data, ie. postion after the label
     */
     static int parseCachePolicy( const QByteArray &data, CachePolicy &policy, int start = 0 );

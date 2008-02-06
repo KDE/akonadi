@@ -30,6 +30,22 @@ namespace Akonadi {
 /**
   Represents the caching policy for a collection.
 
+  There is one cache policy per collection, it can either define to
+  inherit all properties of the policy of the parent collection (the default)
+  or specify the following values:
+
+- The item parts that should be permanently kept locally and are downloaded
+  during a collection sync (eg. full mail vs. just the headers).
+- A time up to which non-permantly cached item parts have to be kept at
+  least (0 - infinity).
+- Wether or not a collection sync is triggered on demand, ie. as soon
+  as it is accessed by a client.
+- An optional time interval for regular collection sync (aka interval
+  mail check).
+
+  This class is implicitly shared.
+
+  @todo Do we also need a size limit for the cache as well?
   @todo on a POP3 account, is should not be possible to change locally cached parts, find a solution for that
 */
 class AKONADI_EXPORT CachePolicy

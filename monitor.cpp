@@ -44,11 +44,13 @@ Monitor::Monitor( QObject *parent ) :
   d_ptr->connectToNotificationManager();
 }
 
+//@cond PRIVATE
 Monitor::Monitor(MonitorPrivate * d, QObject *parent) :
     QObject( parent ),
     d_ptr( d )
 {
 }
+//@endcond
 
 Monitor::~Monitor()
 {

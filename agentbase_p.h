@@ -25,6 +25,7 @@
 
 #include <klocale.h>
 
+//@cond PRIVATE
 namespace Akonadi {
 
 class AgentBasePrivate
@@ -53,5 +54,6 @@ class AgentBasePrivate
 };
 
 }
+//@endcond
 
 #endif

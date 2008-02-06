@@ -36,6 +36,7 @@
 
 using namespace Akonadi;
 
+//@cond PRIVATE
 void Job::Private::handleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( mCurrentSubJob ) {
@@ -95,6 +96,7 @@ void Job::Private::startNext()
     job->d->startQueued();
   }
 }
+//@endcond
 
 
 Job::Job( QObject *parent )

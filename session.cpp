@@ -44,6 +44,7 @@
 using namespace Akonadi;
 
 
+//@cond PRIVATE
 
 void SessionPrivate::startNext()
 {
@@ -171,6 +172,8 @@ void SessionPrivate::jobWriteFinished( Akonadi::Job* job )
   Q_ASSERT( (job == currentJob && pipeline.isEmpty()) || (job = pipeline.last()) );
   startNext();
 }
+
+//@endcond
 
 
 Session::Session(const QByteArray & sessionId, QObject * parent) :

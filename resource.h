@@ -108,7 +108,6 @@ class AKONADI_EXPORT Resource : public QObject
     /**
      * Synchronize the given collection.
      * @param collectionId The identifier of the collection to synchronize.
-     * @param parts The items parts that should be synchronized.
      */
     virtual Q_NOREPLY void synchronizeCollection( int collectionId ) = 0;
 

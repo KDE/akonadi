@@ -20,6 +20,8 @@
 #ifndef ITEMPAYLOADINTERNALS_P_H
 #define ITEMPAYLOADINTERNALS_P_H
 
+//@cond PRIVATE
+
 #include <QtCore/QtGlobal>
 
 #include <typeinfo>
@@ -29,7 +31,6 @@
  * considered public API, and subject to change without notice
  */
 
-//@cond PRIVATE
 struct PayloadBase
 {
     virtual ~PayloadBase() { }
