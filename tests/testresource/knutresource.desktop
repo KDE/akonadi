@@ -49,7 +49,7 @@ Comment[zh_CN]=用于调试的代理器
 Comment[zh_TW]=除錯用的代理程式
 Type=AkonadiResource
 Exec=akonadi_knut_resource
-Icon=tool
+Icon=tools-report-bug
 
 X-Akonadi-MimeTypes=text/calendar,text/directory
 X-Akonadi-Capabilities=Resource

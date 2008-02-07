@@ -37,7 +37,7 @@ class KnutResource : public Akonadi::ResourceBase
 
   public Q_SLOTS:
     virtual bool retrieveItem( const Akonadi::Item &item, const QStringList &parts );
-    virtual void configure();
+    virtual void configure( WId windowId );
 
     virtual bool setConfiguration( const QString& );
     virtual QString configuration() const;
