@@ -46,8 +46,10 @@ class SessionPrivate;
     Akonadi::Job *job = new Akonadi::SomeJob( some parameter );
     connect( job, SIGNAL( result( KJob* ) ),
              this, SLOT( slotResult( KJob* ) ) );
-    job->start();
   \endcode
+
+  The job is queued for execution as soon as the event loop is entered
+  again.
 
   And the slotResult is usually at least:
 
@@ -109,8 +111,8 @@ class AKONADI_EXPORT Job : public KCompositeJob
     virtual ~Job();
 
     /**
-      Starts the job asynchronous. When the job finished successful,
-      @see done() is emitted.
+      Jobs are started automatically once entering the event loop again, no need
+      to explicitly call this.
      */
     void start();
 
