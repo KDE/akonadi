@@ -31,8 +31,7 @@
 namespace Akonadi {
 
 /**
- * Abstract interface for all agent classes
- * TODO make Resource inherit from this
+ * Abstract D-Bus interface for all Akonadi agents.
  */
 class AKONADI_EXPORT Agent : public QObject
 {
@@ -59,6 +58,12 @@ class AKONADI_EXPORT Agent : public QObject
      * the system, so it can do some cleanup stuff.
      */
     virtual void cleanup() = 0;
+
+    /**
+      Show the configuration dialog of this agent.
+      @param windowId The parent window Id.
+    */
+    virtual Q_NOREPLY void configure( qlonglong windowId ) = 0;
 };
 
 }

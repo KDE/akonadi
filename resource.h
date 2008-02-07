@@ -90,12 +90,6 @@ class AKONADI_EXPORT Resource : public QObject
     virtual bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts ) = 0;
 
     /**
-     * This method is called whenever the resource shall show its configuration dialog
-     * to the user.
-     */
-    virtual Q_NOREPLY void configure() = 0;
-
-    /**
      * This method is called whenever the resource should start synchronize all data.
      */
     virtual Q_NOREPLY void synchronize() = 0;

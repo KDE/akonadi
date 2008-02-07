@@ -81,8 +81,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * This method is called whenever the resource shall show its configuration dialog
      * to the user. It will be automatically called when the resource is started for
      * the first time.
+     * @param windowId The parent window id.
      */
-    virtual void configure();
+    virtual void configure( WId windowId );
 
     /**
      * Returns the instance identifier of this agent.

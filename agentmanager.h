@@ -24,6 +24,7 @@
 #include <libakonadi/collection.h>
 
 #include <QtCore/QObject>
+#include <qwindowdefs.h>
 
 class QIcon;
 
@@ -162,8 +163,9 @@ class AKONADI_EXPORT AgentManager : public QObject
     /**
      * Triggers the agent instance with the given @p identifier to show
      * its configuration dialog.
+     * @param windowId Parent window id for the configuration dialog.
      */
-    void agentInstanceConfigure( const QString &identifier );
+    void agentInstanceConfigure( const QString &identifier, WId windowId );
 
     /**
      * Triggers the agent instance with the given @p identifier to start

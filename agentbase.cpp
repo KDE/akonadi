@@ -106,13 +106,6 @@ void AgentBasePrivate::init()
               q, SLOT( collectionChanged( const Akonadi::Collection& ) ) );
   q->connect( monitor, SIGNAL( collectionRemoved( int, const QString& ) ),
               q, SLOT( collectionRemoved( int, const QString& ) ) );
-
-  // initial configuration
-  bool initialized = mSettings->value( QLatin1String( "Agent/Initialized" ), false ).toBool();
-  if ( !initialized ) {
-    QTimer::singleShot( 0, q, SLOT(configure()) ); // finish construction first
-    mSettings->setValue( QLatin1String( "Agent/Initialized" ), true );
-  }
 }
 
 
@@ -182,8 +175,9 @@ int AgentBase::init( AgentBase *r )
   return rv;
 }
 
-void AgentBase::configure()
+void AgentBase::configure( WId windowId )
 {
+  Q_UNUSED( windowId );
 }
 
 void AgentBase::quit()
@@ -261,6 +255,7 @@ void AgentBase::itemRemoved( const DataReference &ref )
 void AgentBase::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
   Q_UNUSED( collection );
+  Q_UNUSED( parent );
 }
 
 void AgentBase::collectionChanged( const Collection &collection )

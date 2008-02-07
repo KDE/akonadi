@@ -141,11 +141,12 @@ ResourceBase::ResourceBase( const QString & id )
   sResourceBase = this;
 
   if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Resource." ) + id ) )
-    error( QString::fromLatin1( "Unable to register service at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
+    kFatal() << "Unable to register service at D-Bus: " << QDBusConnection::sessionBus().lastError().message();
 
   new ResourceAdaptor( this );
+  QDBusConnection::sessionBus().unregisterObject( QLatin1String( "/" ) );
   if ( !QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportAdaptors ) )
-    error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
+    kError() << "Unable to register object at D-Bus!";
 
   const QString name = d->mSettings->value( QLatin1String( "Resource/Name" ) ).toString();
   if ( !name.isEmpty() )
@@ -177,13 +178,6 @@ ResourceBase::ResourceBase( const QString & id )
   d->scheduler->setOnline( d->online );
   if ( !d->monitor->isEmpty() )
     d->scheduler->scheduleChangeReplay();
-
-  // initial configuration
-  bool initialized = settings()->value( QLatin1String( "Resource/Initialized" ), false ).toBool();
-  if ( !initialized ) {
-    QTimer::singleShot( 0, this, SLOT(configure()) ); // finish construction first
-    settings()->setValue( QLatin1String( "Resource/Initialized" ), true );
-  }
 }
 
 ResourceBase::~ResourceBase()
@@ -250,10 +244,6 @@ void ResourceBase::changeProgress( uint progress, const QString &message )
   d->mProgressMessage = message;
 
   emit progressChanged( d->mProgress, d->mProgressMessage );
-}
-
-void ResourceBase::configure()
-{
 }
 
 void ResourceBase::synchronize()

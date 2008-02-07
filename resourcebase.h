@@ -236,14 +236,6 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     virtual bool isOnline() const;
     virtual void setOnline( bool state );
 
-  public Q_SLOTS:
-    /**
-     * This method is called whenever the resource shall show its configuration dialog
-     * to the user. It will be automatically called when the resource is started for
-     * the first time.
-     */
-    virtual void configure();
-
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the status of the resource has changed.

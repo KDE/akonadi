@@ -69,6 +69,7 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
     Q_PRIVATE_SLOT( d, void agentInstanceStatusChanged( const QString&, AgentManager::Status, const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceProgressChanged( const QString&, uint, const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceNameChanged( const QString&, const QString& ) )
+    Q_PRIVATE_SLOT( d, void addAgentInstance( const QString &agentInstance ) )
 };
 
 }
