@@ -170,8 +170,9 @@ class AgentManager : public QObject
     /**
      * Triggers the agent instance with the given @p identifier to show
      * its configuration dialog.
+     * @param windowId Parent window id for the configuration dialog.
      */
-    void agentInstanceConfigure( const QString &identifier );
+    void agentInstanceConfigure( const QString &identifier, qlonglong windowId );
 
     /**
      * Triggers the agent instance with the given @p identifier to start

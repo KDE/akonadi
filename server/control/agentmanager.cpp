@@ -263,11 +263,11 @@ QString AgentManager::agentInstanceName( const QString &identifier ) const
   return mAgents.value( inst.agentType ).name;
 }
 
-void AgentManager::agentInstanceConfigure( const QString &identifier )
+void AgentManager::agentInstanceConfigure( const QString &identifier, qlonglong windowId )
 {
-  if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceConfigure" ) ) )
+  if ( !checkAgentInterface( identifier ) )
     return;
-  mAgentInstances.value( identifier ).resourceInterface->configure();
+  mAgentInstances.value( identifier ).agentInterface->configure( windowId );
 }
 
 void AgentManager::agentInstanceSynchronize( const QString &identifier )
@@ -554,8 +554,7 @@ void AgentManager::resourceNameChanged( const QString &data )
 bool AgentManager::checkInstance(const QString & identifier) const
 {
   if ( !mAgentInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    qWarning() << "Agent instance with identifier " << identifier << " does not exist";
     return false;
   }
   return true;
@@ -566,8 +565,8 @@ bool AgentManager::checkResourceInterface( const QString &identifier, const QStr
   if ( !checkInstance( identifier ) )
     return false;
   if ( !mAgentInstances[ identifier ].resourceInterface ) {
-    mTracer->error( QLatin1String( "AgentManager::" ) + method,
-                    QString( "Agent instance '%1' has no resource interface!" ).arg( identifier ) );
+    qWarning() << QLatin1String( "AgentManager::" ) + method << " Agent instance "
+        << identifier << " has no resource interface!";
     return false;
   }
 
@@ -577,8 +576,7 @@ bool AgentManager::checkResourceInterface( const QString &identifier, const QStr
 bool AgentManager::checkAgentExists(const QString & identifier) const
 {
   if ( !mAgents.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager" ),
-                      QString::fromLatin1( "Agent type '%1' does not exist." ) .arg( identifier ) );
+    qWarning() << "Agent instance " << identifier << " does not exist.";
     return false;
   }
   return true;
@@ -589,8 +587,7 @@ bool AgentManager::checkAgentInterface(const QString & identifier) const
   if ( !checkInstance( identifier ) )
     return false;
   if ( !mAgentInstances.value( identifier ).agentInterface ) {
-    mTracer->warning( QLatin1String( "AgentManager" ),
-                      QString::fromLatin1( "Agent instance '%1' as no interface." ).arg( identifier ) );
+    qWarning() << "Agent instance " << identifier << " as no agent interface.";
     return false;
   }
   return true;
