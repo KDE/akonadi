@@ -20,6 +20,8 @@
 #ifndef AKONADI_ITEMSYNC_H
 #define AKONADI_ITEMSYNC_H
 
+#include "libakonadi_export.h"
+
 #include <libakonadi/item.h>
 #include <libakonadi/transactionjobs.h>
 
@@ -28,12 +30,9 @@ namespace Akonadi {
 class Collection;
 
 /**
-  @internal
-
   Syncs remote and local items.
-  @todo Put this into a big transaction again (improves performance considerable)
 */
-class ItemSync : public TransactionSequence
+class AKONADI_EXPORT ItemSync : public TransactionSequence
 {
   Q_OBJECT
 

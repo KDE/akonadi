@@ -42,8 +42,8 @@ class ItemSync::Private
 
     Collection syncCollection;
 
-    // local: mapped remote id -> item, id -> item
-    QHash<QString, Akonadi::Item> localItems;
+    // local: mapped id -> item
+    QHash<int, Akonadi::Item> localItems;
     QSet<Akonadi::Item> unprocessedLocalItems;
 
     // remote items
@@ -102,19 +102,19 @@ void ItemSync::slotLocalListDone( KJob * job )
 
   const Item::List list = static_cast<ItemFetchJob*>( job )->items();
   foreach ( const Item item, list ) {
-    d->localItems.insert( item.reference().remoteId(), item );
+    d->localItems.insert( item.reference().id(), item );
     d->unprocessedLocalItems.insert( item );
   }
 
   // added / updated
   foreach ( const Item remoteItem, d->remoteItems ) {
+#ifndef NDEBUG
     if ( remoteItem.reference().remoteId().isEmpty() ) {
-      kWarning( 5250 ) << "Item " << remoteItem.reference().id() << " does not have a remote identifier - skipping";
-      d->progress++;
-      continue;
+      kWarning( 5250 ) << "Item " << remoteItem.reference().id() << " does not have a remote identifier";
     }
+#endif
 
-    const Item localItem = d->localItems.value( remoteItem.reference().remoteId() );
+    const Item localItem = d->localItems.value( remoteItem.reference().id() );
     d->unprocessedLocalItems.remove( localItem );
     // missing locally
     if ( !localItem.isValid() ) {

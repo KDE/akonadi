@@ -153,6 +153,7 @@ install( FILES
 	itempayloadinternals_p.h
 	itemserializerplugin.h
 	itemstorejob.h
+        itemsync.h
 	itemmodel.h
 	itemview.h
 	job.h
