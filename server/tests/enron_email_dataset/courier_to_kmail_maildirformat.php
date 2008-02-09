@@ -35,61 +35,65 @@ while($account = readdir($dirhandle)) {
 
   echo "\nProcessing account '" . $account . "'...\n";
   chdir($maildir . '/' . $account);
-  process_subdir(".");
+  process_account(".");
   chdir("../..");
 }
 
 exit();
 
 // Makes the given subdirectory and all its subdirectories maildir-compatible
-function process_subdir($dir)
+function process_account($dir)
 {
-  // Create dirs 'new'/'cur'/'tmp' with same mode as given directory
-  $stat = stat($dir);
-  $mode = $stat["mode"] & 0777;
-
-  if(DEBUG)
-    echo "\tCreating " . $dir . "/{new/cur/tmp}.\n";
-  else {
-    mkdir($dir . "/new", $mode);
-    mkdir($dir . "/cur", $mode);
-    mkdir($dir . "/tmp", $mode);
-  }
-
   // Process files and directories below given directory
   $entries = scandir($dir);
   while(count($entries) > 0) {
     $entry = array_shift($entries);
 
-     // Skip current and parent directory
+    // Skip current and parent directory
     if($entry == "." || $entry == ".." || $entry == "cur" || $entry == "new" || $entry == "tmp")
       continue;
 
-    if($dir == ".")
-      $fullname = $entry;
-    else
-      $fullname = $dir . '/' . $entry;
-
-    if(is_dir($fullname)) {
-      // Process subdirectories recursively
-      process_subdir($fullname);
-
-      // Rename subdir to maildir-compatible name
-      $newname = "." . str_replace('/', '.', $fullname);
-
-      if(DEBUG)
-        echo "\tRenaming dir ". $fullname . " to " . $newname . ".\n";
+		if(is_subdir($entry))	{
+			// .inbox.blaat.henk > .inbox.directory/.blaat.directory/henk
+		  $newname = kmail_subdirname($entry);
+	 	  if(DEBUG) {
+        echo "\tCreating dir '" . $newname . "' and renaming '" . $entry . "' to it.\n";
+			} else {
+				$stat = stat($entry);
+				$mode = $stat["mode"] & 0777;
+				mkdir($newname, $mode, true);
+				rename($entry, $newname);
+			}
+		}
+		else {
+			// .inbox > inbox
+			$newname = substr($entry, 1);
+		  if(DEBUG)
+        echo "\tRenaming dir '". $entry . "' to '" . $newname . "'.\n";
       else
-        rename($fullname, $newname);
-    }
-    else if(is_file($fullname)) {
-      // Move file to 'cur' subdirectory
-      if(DEBUG)
-        echo "\tRenaming file " .  $fullname ." to " . $dir . '/cur/' . $entry . ".\n";
-      else
-        rename($fullname, $dir . '/cur/' . $entry);
-    }
-  }
+				rename($entry, $newname);
+		}
+	}
+}
+
+// Give the kmail-subdirname for a given courier-subdirname
+function kmail_subdirname($dir)
+{
+	// .inbox.blaat.henk > henk
+	$lastpart = substr($dir, strrpos($dir, ".") + 1);
+
+	// .inbox.blaat.henk > inbox.blaat
+	$firstpart = substr($dir, 1, strrpos($dir, ".") - 1);
+
+	// .inbox.directory/.blaat.directory/henk
+	$newname = "." . str_replace(".", ".directory/.", $firstpart) . ".directory/" . $lastpart;
+	
+	return $newname;
+}
+
+function is_subdir($dir)
+{
+	return substr_count($dir, '.') > 1;
 }
 
 ?>

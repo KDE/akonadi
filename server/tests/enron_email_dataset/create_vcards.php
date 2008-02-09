@@ -37,7 +37,7 @@ foreach($inputfiles as $inputfile)
   if(!DEBUG)
     $output = fopen($vcarddir . "/" . $account . ".vcf", "w");
 
-  echo "Processing account " . $account . "...\n";
+  echo "\tProcessing account " . $account . "...\n";
   $c = 0;
 
   if($input && $output)
@@ -84,7 +84,7 @@ foreach($inputfiles as $inputfile)
         "END:VCARD\n\n";
 
       if(DEBUG)
-        echo($output);
+        echo("\t\t" . $output);
       else
         fputs($output, $vcard);
 
@@ -104,7 +104,7 @@ foreach($inputfiles as $inputfile)
     }
   }
 
-  echo "  Number of vcards created: " . $c . "\n";
+  echo "\tNumber of vcards created: " . $c . "\n";
   unlink($vcarddir . "/" . $inputfile);
 }
 
@@ -112,29 +112,29 @@ exit();
 
 function random_number($length)
 {
-	$out = "";
-	while($length-- > 0)
-		$out .= rand(0,9);
-	return $out;
+  $out = "";
+  while($length-- > 0)
+    $out .= rand(0,9);
+  return $out;
 }
 
 function random_uid()
 {
-	$out = "";
-	$length = 10;
-	while($length-- > 0)
-	{
-		$n = rand(0, 61);
-		if($n < 10)
-			$c = chr($n+48);
-		else if($n < 36)
-			$c = chr($n-10+65);
-		else
-			$c = chr($n-36+97);
+  $out = "";
+  $length = 10;
+  while($length-- > 0)
+  {
+    $n = rand(0, 61);
+    if($n < 10)
+      $c = chr($n+48);
+    else if($n < 36)
+      $c = chr($n-10+65);
+    else
+      $c = chr($n-36+97);
 
-		$out .= $c;
-	}
-	return $out;
+    $out .= $c;
+  }
+  return $out;
 }
 
 function random_url($email)
@@ -155,8 +155,8 @@ function random_string($length)
 
 function remove_quotes($str)
 {
-	$chars = "\"' \t\n\r\0";
-	return ltrim(rtrim($str, $chars.">"), $chars."<");
+  $chars = "\"' \t\n\r\0";
+  return ltrim(rtrim($str, $chars.">"), $chars."<");
 }
 
 ?>

@@ -21,7 +21,7 @@
 
 // Process commandline arguments
 $args = process_arguments($argv);
-$attachment_chance = $args["chance"];
+$attachment_every = $args["every"];
 $attachment_minsize = $args["minsize"];
 $attachment_maxsize = $args["maxsize"];
 
@@ -43,6 +43,9 @@ while($account = readdir($maildir))
 
   echo "Processing account '" . $account . "'...\n";
 
+  // Generate random attachment data
+  $attachment_data = substr(base64_encode(random_string($attachment_maxsize)), 0, $attachment_maxsize);
+
   // Process all subdirectories
   $subdirs = scandir($maildirname . "/" . $account);
   foreach($subdirs as $subdir)
@@ -51,10 +54,7 @@ while($account = readdir($maildir))
     if($subdir == "." || $subdir == ".." || $subdir == "cur" || $subdir == "new" || $subdir == "tmp")
       continue;
 
-    echo " Processing directory '" . $subdir . "'...\n";
-
-    // Generate random attachment data
-    $attachment_data = substr(base64_encode(random_string($attachment_maxsize)), 0, $attachment_maxsize);
+    echo "\tProcessing directory '" . $subdir . "'...\n";
 
     $maillocation = $maildirname . "/" . $account . "/" . $subdir . "/cur";
     if($dirhandle = @opendir($maillocation))
@@ -70,7 +70,7 @@ while($account = readdir($maildir))
           continue;
 
         // Add attachment with a certain chance
-        if(rand(0, 100) < $attachment_chance)
+        if($c % $attachment_every == 0)
         {
           $a++;
 
@@ -126,7 +126,9 @@ while($account = readdir($maildir))
                           "Content-Disposition: attachment;\n\tfilename=\"" . $attachment_filename . "\"\n\n");
 
               // Add random attachment data
-              for($i = rand($attachment_minsize, $attachment_maxsize); $i > 0;)
+              //round($attachment_minsize + (1/$c * ($attachment_maxsize - $attachment_minsize)));
+              $i = rand($attachment_minsize, $attachment_maxsize);
+              while($i > 0)
               {
                 fwrite($fd, substr($attachment_data, $attachment_maxsize-$i, 76) . "\n");
                 $i -= 77;

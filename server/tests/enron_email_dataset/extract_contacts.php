@@ -31,7 +31,7 @@ $search_elements = array("X-To:", "To:", "X-From:", "From:"); //, "Cc:", "Bcc:")
 $maildirname = "maildir";
 
 if(($maildir = opendir($maildirname)) === FALSE)
-die("Error opening " . $maildirname . "\n");
+  die("Error opening " . $maildirname . "\n");
 
 $c = 0;
 
@@ -42,7 +42,7 @@ while($account = readdir($maildir))
   if($account == "." || $account == "..")
     continue;
 
-  echo "Analyzing account '" . $account . "'...\n";
+  echo "\tAnalysing account '" . $account . "'...\n";
 
   $contacts = array();
 
@@ -54,7 +54,7 @@ while($account = readdir($maildir))
     if($subdir == ".." || $subdir == "cur" || $subdir == "new" || $subdir == "tmp")
       continue;
 
-    echo " Processing directory '" . $subdir . "'...\n";
+    echo "\t\tProcessing directory '" . $subdir . "'...\n";
 
     $maillocation = $maildirname . "/" . $account . "/" . $subdir . "/cur";
     if($dirhandle = @opendir($maillocation))
@@ -132,10 +132,10 @@ while($account = readdir($maildir))
     }
   }
 
-  echo " " . count($contacts) . " contacts found.\n";
+  echo "\t" . count($contacts) . " contacts found.\n";
 }
 
-echo "Number of messages analyzed: " . $c . "\n";
+echo "\tNumber of messages analyzed: " . $c . "\n";
 closedir($maildir);
 exit();
 
