@@ -24,7 +24,9 @@
 #include <QDir>
 #include <QTimer>
 #include <QTest>
+#include <QDBusInterface>
 
+#include <libakonadi/agentinstancecreatejob.h>
 #include <libakonadi/collectionpathresolver.h>
 #include <libakonadi/collectiondeletejob.h>
 #include <libakonadi/collectionlistjob.h>
@@ -67,9 +69,11 @@ void BenchMarker::stop()
 
 QString BenchMarker::createAgent( const QString &name )
 {
-  QString instance = manager->createAgentInstance( name );
+  AgentInstanceCreateJob *job = new AgentInstanceCreateJob( name );
+  job->exec();
+  const QString instance = job->instanceIdentifier();
 
-  if( instance.isEmpty() ) {
+  if( job->error() || instance.isEmpty() ) {
     qDebug() << "  Unable to create resource" << name;
     exit( -1 );
   }
@@ -95,9 +99,6 @@ void BenchMarker::agentInstanceStatusChanged( const QString &agentIdentifier, Ag
 {
   //qDebug() << "agent status changed:" << agentIdentifier << status << message ;
   if ( agentIdentifier == currentInstance ) {
-    if ( status == AgentManager::Configured ) {
-      done = true;
-    }
     if ( status == AgentManager::Syncing ) {
       qDebug() << "    " << message;
     }
@@ -128,17 +129,19 @@ void BenchMarker::output( const QString &message )
 
 void BenchMarker::testMaildir( QString dir )
 {
-  done = false;
-  QString instance = createAgent( "akonadi_maildir_resource_unittest" );
+  QString instance = createAgent( "akonadi_maildir_resource" );
   currentInstance = instance;
-  while(!done)
-    QTest::qWait( WAIT_TIME );
+  QTest::qWait( 1000 ); // HACK until resource startup races are fixed
 
   done = false;
   qDebug() << "  Configuring resource to use " << dir << "as source.";
-  manager->agentInstanceSetConfiguration( instance, dir );
-  while(!done)
-    QTest::qWait( WAIT_TIME );
+  QDBusInterface *configIface = new QDBusInterface( "org.kde.Akonadi.Resource." + instance,
+      "/Settings", "org.kde.Akonadi.Maildir.Settings", QDBusConnection::sessionBus(), this );
+  if ( configIface && configIface->isValid() ) {
+    configIface->call( "setPath", dir );
+  } else {
+    qFatal( "Could not configure instance %s.", qPrintable( instance ) );
+  }
 
   // import the complete email set
   done = false;
