@@ -83,6 +83,11 @@ void ResourceScheduler::taskDone()
   scheduleNext();
 }
 
+bool ResourceScheduler::isEmpty()
+{
+  return mTaskList.isEmpty();
+}
+
 void ResourceScheduler::scheduleNext()
 {
   if ( mCurrentTask.type != Invalid || mTaskList.isEmpty() || !mOnline )

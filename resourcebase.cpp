@@ -448,7 +448,8 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob * job)
       return;
     }
   }
-  q->changeStatus( ResourceBase::Ready );
+  if ( scheduler->isEmpty() )
+    q->changeStatus( ResourceBase::Ready );
   scheduler->taskDone();
 }
 
@@ -484,7 +485,8 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col, cons
 void ResourceBase::itemsRetrieved()
 {
   Q_D( ResourceBase );
-  changeStatus( Ready );
+  if ( d->scheduler->isEmpty() )
+    changeStatus( Ready );
   d->scheduler->taskDone();
 }
 
@@ -560,7 +562,8 @@ void ResourceBasePrivate::slotItemSyncDone( KJob *job )
   if ( job->error() ) {
     q->error( job->errorString() );
   }
-  q->changeStatus( ResourceBase::Ready );
+  if ( scheduler->isEmpty() )
+    q->changeStatus( ResourceBase::Ready );
   scheduler->taskDone();
 }
 

@@ -99,6 +99,11 @@ class ResourceScheduler : public QObject
     void taskDone();
 
     /**
+      Returns true if no tasks are running or in the queue.
+    */
+    bool isEmpty();
+
+    /**
       Returns the current task.
     */
     Task currentTask() const;
