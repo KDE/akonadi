@@ -446,6 +446,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
     if ( !mAgentInstances.contains( identifier ) )
       return;
 
+    const bool restarting = mAgentInstances[ identifier ].agentInterface != 0;
     delete mAgentInstances[ identifier ].agentInterface;
     mAgentInstances[ identifier ].agentInterface = 0;
 
@@ -460,7 +461,8 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
 
     agentIface->setObjectName( identifier );
     mAgentInstances[ identifier ].agentInterface = agentIface;
-    emit agentInstanceAdded( identifier );
+    if ( !restarting )
+      emit agentInstanceAdded( identifier );
   }
 
   else if ( name.startsWith( "org.kde.Akonadi.Resource." ) ) {
