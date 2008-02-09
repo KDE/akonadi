@@ -42,8 +42,8 @@ class ItemSync::Private
 
     Collection syncCollection;
 
-    // local: mapped id -> item
-    QHash<int, Akonadi::Item> localItems;
+    QHash<int, Akonadi::Item> localItemsById;
+    QHash<QString, Akonadi::Item> localItemsByRemoteId;
     QSet<Akonadi::Item> unprocessedLocalItems;
 
     // remote items
@@ -102,7 +102,8 @@ void ItemSync::slotLocalListDone( KJob * job )
 
   const Item::List list = static_cast<ItemFetchJob*>( job )->items();
   foreach ( const Item item, list ) {
-    d->localItems.insert( item.reference().id(), item );
+    d->localItemsById.insert( item.reference().id(), item );
+    d->localItemsByRemoteId.insert( item.reference().remoteId(), item );
     d->unprocessedLocalItems.insert( item );
   }
 
@@ -114,7 +115,9 @@ void ItemSync::slotLocalListDone( KJob * job )
     }
 #endif
 
-    const Item localItem = d->localItems.value( remoteItem.reference().id() );
+    Item localItem = d->localItemsById.value( remoteItem.reference().id() );
+    if ( !localItem.isValid() )
+      localItem = d->localItemsByRemoteId.value( remoteItem.reference().remoteId() );
     d->unprocessedLocalItems.remove( localItem );
     // missing locally
     if ( !localItem.isValid() ) {
@@ -185,7 +188,8 @@ void ItemSync::slotLocalListDone( KJob * job )
     ItemDeleteJob *job = new ItemDeleteJob( item.reference(), this );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( slotLocalChangeDone( KJob* ) ) );
   }
-  d->localItems.clear();
+  d->localItemsById.clear();
+  d->localItemsByRemoteId.clear();
 
   checkDone();
 }
