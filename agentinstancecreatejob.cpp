@@ -106,6 +106,11 @@ void AgentInstanceCreateJob::configure( WId windowId )
   d->doConfig = true;
 }
 
+QString AgentInstanceCreateJob::instanceIdentifier() const
+{
+  return d->instanceId;
+}
+
 void AgentInstanceCreateJob::start()
 {
   d->instanceId = d->manager->createAgentInstance( d->typeIdentifier );

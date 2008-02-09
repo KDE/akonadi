@@ -40,7 +40,7 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
       @param typeIdentifier The type of the agent to create.
       @param parent The parent object.
     */
-    AgentInstanceCreateJob( const QString &typeIdentifier, QObject *parent = 0 );
+    explicit AgentInstanceCreateJob( const QString &typeIdentifier, QObject *parent = 0 );
 
     /**
       Destructor.
@@ -52,6 +52,11 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
       @param windowId The parent window id for the configuration dialog.
     */
     void configure( WId windowId = 0 );
+
+    /**
+      Returns the instance identifier of the newly created agent instance.
+    */
+    QString instanceIdentifier() const;
 
     void start();
 

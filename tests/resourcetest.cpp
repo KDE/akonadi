@@ -22,6 +22,7 @@
 #include <qtest_kde.h>
 
 #include <libakonadi/agentmanager.h>
+#include <libakonadi/agentinstancecreatejob.h>
 
 using namespace Akonadi;
 
@@ -40,9 +41,11 @@ class ResourceTest : public QObject
       QString instance = manager->createAgentInstance( "non_existing_resource" );
       QVERIFY( instance.isEmpty() );
 
-      QVERIFY( manager->agentTypes().contains( "akonadi_knut_resource_unittest" ) );
-      QCOMPARE( manager->agentCapabilities( "akonadi_knut_resource_unittest" ), QStringList( "Resource" ) );
-      instance = manager->createAgentInstance( "akonadi_knut_resource_unittest" );
+      QVERIFY( manager->agentTypes().contains( "akonadi_knut_resource" ) );
+      QCOMPARE( manager->agentCapabilities( "akonadi_knut_resource" ), QStringList( "Resource" ) );
+      AgentInstanceCreateJob *job = new AgentInstanceCreateJob( "akonadi_knut_resource" );
+      QVERIFY( job->exec() );
+      instance = job->instanceIdentifier();
       QVERIFY( !instance.isEmpty() );
 
       QTest::qWait( 2000 );
@@ -50,7 +53,9 @@ class ResourceTest : public QObject
       QCOMPARE( spyAddInstance.first().at( 0 ).toString(), instance );
       QVERIFY( manager->agentInstances().contains( instance ) );
 
-      QString instance2 = manager->createAgentInstance( "akonadi_knut_resource_unittest" );
+      job = new AgentInstanceCreateJob( "akonadi_knut_resource" );
+      QVERIFY( job->exec() );
+      QString instance2 = job->instanceIdentifier();
       QVERIFY( instance != instance2 );
       QTest::qWait( 2000 );
       QCOMPARE( spyAddInstance.count(), 2 );
