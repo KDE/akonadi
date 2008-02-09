@@ -54,26 +54,17 @@ void KnutResource::configure( WId windowId )
 {
   QString newFile;
 
-  if ( identifier().contains( "unittest" ) ) {
-    newFile = "";
-  }
+  QString oldFile = settings()->value( "General/DataFile" ).toString();
+  KUrl url;
+  if ( !oldFile.isEmpty() )
+    url = KUrl::fromPath( oldFile );
   else
-  {
-    QString oldFile = settings()->value( "General/DataFile" ).toString();
-    KUrl url;
-    if ( !oldFile.isEmpty() )
-      url = KUrl::fromPath( oldFile );
-    else
-      url = KUrl::fromPath( QDir::homePath() );
+    url = KUrl::fromPath( QDir::homePath() );
 
-    newFile = KFileDialog::getOpenFileNameWId( url, "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ), windowId, i18n( "Select Data File" ) );
+  newFile = KFileDialog::getOpenFileNameWId( url, "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ), windowId, i18n( "Select Data File" ) );
 
-    if ( newFile.isEmpty() )
-      return;
-
-    if ( oldFile == newFile )
-      return;
-  }
+  if ( newFile.isEmpty() || oldFile == newFile )
+    return;
 
   setConfiguration( newFile );
 }
