@@ -17,10 +17,6 @@
     02110-1301, USA.
 -->
 
-<!-- TODO
- - complete type mapping
- - support type annotations
--->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
                 xmlns:kcfg="http://www.kde.org/standards/kcfg/1.0"
                 xmlns="http://www.kde.org/standards/kcfg/1.0">
@@ -32,6 +28,7 @@
 <interface>
   <xsl:attribute name="name"><xsl:value-of select="$interfaceName"/></xsl:attribute>
   <xsl:for-each select="kcfg:kcfg/kcfg:group/kcfg:entry">
+    <xsl:variable name="annotation"><xsl:call-template name="typeAnnotation"/></xsl:variable>
     <method>
       <xsl:attribute name="name">
         <xsl:value-of select="concat(translate(substring(@name,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), substring(@name,2))"/>
@@ -39,6 +36,11 @@
       <arg direction="out">
       <xsl:attribute name="type"><xsl:call-template name="convertType"/></xsl:attribute>
       </arg>
+      <xsl:if test="$annotation != ''">
+        <annotation name="com.trolltech.QtDBus.QtTypeName.Out0">
+        <xsl:attribute name="value"><xsl:value-of select="$annotation"/></xsl:attribute>
+        </annotation>
+      </xsl:if>
     </method>
     <method>
       <xsl:attribute name="name">
@@ -47,6 +49,11 @@
       <arg direction="in" identifier="value">
       <xsl:attribute name="type"><xsl:call-template name="convertType"/></xsl:attribute>
       </arg>
+      <xsl:if test="$annotation != ''">
+        <annotation name="com.trolltech.QtDBus.QtTypeName.In0">
+        <xsl:attribute name="value"><xsl:value-of select="$annotation"/></xsl:attribute>
+        </annotation>
+      </xsl:if>
     </method>
   </xsl:for-each>
 </interface>
@@ -58,15 +65,15 @@
   <xsl:when test="@type = 'String'">s</xsl:when>
   <xsl:when test="@type = 'StringList'">as</xsl:when>
   <xsl:when test="@type = 'Font'">?</xsl:when>
-  <xsl:when test="@type = 'Rect'">?</xsl:when>
-  <xsl:when test="@type = 'Size'">?</xsl:when>
+  <xsl:when test="@type = 'Rect'">(iiii)</xsl:when>
+  <xsl:when test="@type = 'Size'">(ii)</xsl:when>
   <xsl:when test="@type = 'Color'">?</xsl:when>
-  <xsl:when test="@type = 'Point'">?</xsl:when>
+  <xsl:when test="@type = 'Point'">(ii)</xsl:when>
   <xsl:when test="@type = 'Int'">i</xsl:when>
   <xsl:when test="@type = 'UInt'">u</xsl:when>
   <xsl:when test="@type = 'Bool'">b</xsl:when>
   <xsl:when test="@type = 'Double'">d</xsl:when>
-  <xsl:when test="@type = 'DateTime'">?</xsl:when>
+  <xsl:when test="@type = 'DateTime'">((iii)(iiii)i)</xsl:when>
   <xsl:when test="@type = 'LongLong'">x</xsl:when>
   <xsl:when test="@type = 'ULongLong'">t</xsl:when>
   <xsl:when test="@type = 'IntList'">ai</xsl:when>
@@ -77,6 +84,16 @@
   <xsl:when test="@type = 'Url'">s</xsl:when>
   <xsl:when test="@type = 'UrlList'">as</xsl:when>
   <xsl:otherwise>v</xsl:otherwise>
+</xsl:choose>
+</xsl:template>
+
+<xsl:template name="typeAnnotation">
+<xsl:choose>
+  <xsl:when test="@type = 'Rect'">QRect</xsl:when>
+  <xsl:when test="@type = 'Size'">QSize</xsl:when>
+  <xsl:when test="@type = 'Point'">QPoint</xsl:when>
+  <xsl:when test="@type = 'DateTime'">QDateTime</xsl:when>
+  <xsl:otherwise></xsl:otherwise>
 </xsl:choose>
 </xsl:template>
 
