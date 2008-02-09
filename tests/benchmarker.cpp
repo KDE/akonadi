@@ -45,12 +45,9 @@ using namespace Akonadi;
 BenchMarker::BenchMarker( const QString &maildir )
 {
   manager = new AgentManager( this );
-  connect( manager, SIGNAL( agentInstanceAdded( const QString & ) ), SLOT( agentInstanceAdded( const QString & ) ) );
   connect( manager, SIGNAL( agentInstanceRemoved( const QString & ) ), SLOT( agentInstanceRemoved( const QString & ) ) );
   connect( manager, SIGNAL( agentInstanceStatusChanged( const QString &, AgentManager::Status, const QString & ) ),
            SLOT( agentInstanceStatusChanged( const QString &, AgentManager::Status, const QString & ) ) );
-  connect( manager, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ),
-           SLOT( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
 
   output( "# Description\t\tAccount name\t\tTime\n" );
 
@@ -83,14 +80,9 @@ QString BenchMarker::createAgent( const QString &name )
   return instance;
 }
 
-void BenchMarker::agentInstanceAdded( const QString &instance )
-{
-  done = true;
-  // qDebug() << "agent added:" << instance;
-}
-
 void BenchMarker::agentInstanceRemoved( const QString &instance )
 {
+  Q_UNUSED( instance );
   done = true;
   // qDebug() << "agent removed:" << instance;
 }
@@ -100,19 +92,11 @@ void BenchMarker::agentInstanceStatusChanged( const QString &agentIdentifier, Ag
   //qDebug() << "agent status changed:" << agentIdentifier << status << message ;
   if ( agentIdentifier == currentInstance ) {
     if ( status == AgentManager::Syncing ) {
-      qDebug() << "    " << message;
+      //qDebug() << "    " << message;
     }
     if ( status == AgentManager::Ready ) {
       done = true;
     }
-  }
-}
-
-void BenchMarker::agentInstanceProgressChanged( const QString &agentIdentifier, uint progress, const QString &message )
-{
-  if ( agentIdentifier == currentInstance && progress == 100 ) {
-    // done = true;
-    // qDebug() <<  "agent progress changed:" << agentIdentifier << QByteArray::number( progress ) << message;
   }
 }
 

@@ -35,9 +35,7 @@ class BenchMarker : public QObject
 
   private Q_SLOTS:
     QString createAgent( const QString &name );
-    void agentInstanceAdded( const QString &instance );
     void agentInstanceRemoved( const QString &instance );
-    void agentInstanceProgressChanged( const QString &agentIdentifier, uint progress, const QString &message );
     void agentInstanceStatusChanged( const QString &instance, AgentManager::Status status, const QString &message );
     void outputStats( const QString &description );
     void output( const QString &message );
