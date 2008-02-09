@@ -590,7 +590,7 @@ bool AgentManager::checkAgentInterface(const QString & identifier) const
   if ( !checkInstance( identifier ) )
     return false;
   if ( !mAgentInstances.value( identifier ).agentInterface ) {
-    qWarning() << "Agent instance " << identifier << " as no agent interface.";
+    qWarning() << "Agent instance " << identifier << " has no agent interface.";
     return false;
   }
   return true;
