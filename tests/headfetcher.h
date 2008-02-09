@@ -1,5 +1,4 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
     Copyright (c) 2007 Robert Zwerus <arzie@dds.nl>
 
     This library is free software; you can redistribute it and/or modify it
@@ -18,30 +17,24 @@
     02110-1301, USA.
 */
 
-#ifndef ITEMDUMPER_H
-#define ITEMDUMPER_H
+#ifndef HEADFETCHER_H
+#define HEADFETCHER_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/itemappendjob.h>
+#include <QtCore/QTime>
+#include <libakonadi/collectionlistjob.h>
+#include <libakonadi/itemfetchjob.h>
 
-#include <QTime>
+using namespace Akonadi;
 
-class ItemDumper : public QObject
+class HeadFetcher : public QObject
 {
   Q_OBJECT
   public:
-    ItemDumper( const QString &path, const QString &filename, const QString &mimetype, int count );
-
+    HeadFetcher( bool multipart );
   private Q_SLOTS:
-    void done(KJob* job);
-
+    void stop();
   private:
-    QTime mTime;
-    int mJobCount;
-
+    QTime timer;
 };
-
-
-
 
 #endif

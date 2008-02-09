@@ -30,6 +30,9 @@ endmacro(add_akonadi_test)
 add_akonadi_demo(itemdumper.cpp)
 add_akonadi_demo(collectioncreator.cpp)
 add_akonadi_demo(subscriber.cpp)
+#add_akonadi_demo(benchmarker.cpp)
+#target_link_libraries(benchmarker akonadi ${QT_QTTEST_LIBRARY})
+add_akonadi_demo(headfetcher.cpp)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)

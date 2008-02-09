@@ -178,8 +178,8 @@ class AKONADI_EXPORT Item
 
     /**
       Sets the revision number of this item to @p rev.
-			Do not modify this value from within an application,
-			it is updated automatically by the revision checking functions.
+      Do not modify this value from within an application,
+      it is updated automatically by the revision checking functions.
     */
     void setRev( const int rev );
 

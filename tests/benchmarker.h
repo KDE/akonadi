@@ -1,5 +1,4 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
     Copyright (c) 2007 Robert Zwerus <arzie@dds.nl>
 
     This library is free software; you can redistribute it and/or modify it
@@ -18,30 +17,40 @@
     02110-1301, USA.
 */
 
-#ifndef ITEMDUMPER_H
-#define ITEMDUMPER_H
+#ifndef BENCHMARKER_H
+#define BENCHMARKER_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/itemappendjob.h>
+#include <QtCore/QTime>
 
-#include <QTime>
+#include <libakonadi/agentmanager.h>
+#include <libakonadi/job.h>
 
-class ItemDumper : public QObject
+using namespace Akonadi;
+
+class BenchMarker : public QObject
 {
   Q_OBJECT
   public:
-    ItemDumper( const QString &path, const QString &filename, const QString &mimetype, int count );
+    BenchMarker( const QString &maildir );
 
   private Q_SLOTS:
-    void done(KJob* job);
+    QString createAgent( const QString &name );
+    void agentInstanceAdded( const QString &instance );
+    void agentInstanceRemoved( const QString &instance );
+    void agentInstanceProgressChanged( const QString &agentIdentifier, uint progress, const QString &message );
+    void agentInstanceStatusChanged( const QString &instance, AgentManager::Status status, const QString &message );
+    void outputStats( const QString &description );
+    void output( const QString &message );
+    void stop();
 
   private:
-    QTime mTime;
-    int mJobCount;
+    void testMaildir( QString dir );
 
+    QString currentInstance;
+    QString currentAccount;
+    QTime timer;
+    bool done;
+    AgentManager *manager;
 };
-
-
-
 
 #endif

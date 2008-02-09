@@ -159,7 +159,6 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
             kWarning( 5250 ) << "Failed to construct the payload of type: " << item.mimeType();
           }
         }
-
       }
 
       d->items.append( item );

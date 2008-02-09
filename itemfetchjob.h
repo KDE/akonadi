@@ -101,7 +101,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     Item createItem( const QList<QByteArray> &fetchResponse );
 
     /**
-      Parses the given flag data and sets the them on the given item.
+      Parses the given flag data and sets them on the given item.
       @param flagData The unparsed flag data of the fetch response
       @param item The corresponding item
     */
