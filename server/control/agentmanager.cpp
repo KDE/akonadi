@@ -190,8 +190,9 @@ void AgentManager::removeAgentInstance( const QString &identifier )
                     QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
   }
 
-  if ( instance.controller )
-    delete instance.controller;
+  delete instance.resourceInterface;
+  delete instance.agentInterface;
+  delete instance.controller;
 
   mAgentInstances.remove( identifier );
 
