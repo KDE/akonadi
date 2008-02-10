@@ -296,14 +296,6 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     */
     virtual bool retrieveItem( const Akonadi::Item &item, const QStringList &parts ) = 0;
 
-    // reimplemnted from AgentBase
-    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
-    void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
-    void itemRemoved( const Akonadi::DataReference &ref );
-    void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
-    void collectionChanged( const Akonadi::Collection &collection );
-    void collectionRemoved( int id, const QString &remoteId );
-
   protected:
     /**
      * Creates a base resource.
@@ -343,14 +335,16 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
       Resets the dirty flag of the given item and updates the remote id.
       Call whenever you have successfully written changes back to the server.
-      @param ref DataReference of the item.
+      This implicitly calls changeProcessed().
+      @param item The changed item.
     */
-    void changesCommitted( const DataReference &ref );
+    void changesCommitted( const Item &item );
 
     /**
       Call whenever you have successfully handled or ignored a collection
       change notification. This will update the remote identifier of
       @p collection if necessary, as well as any other collection attributes.
+      This implicitly calls changeProcessed().
       @param collection The collection which changes have been handled.
     */
     void changesCommitted( const Collection &collection );
@@ -407,6 +401,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       Returns the item that is currently retrieved.
     */
     Item currentItem() const;
+
+    void changeProcessed();
 
   private:
     static QString parseArguments( int, char** );

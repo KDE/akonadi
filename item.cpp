@@ -100,6 +100,11 @@ void Item::setReference(const DataReference & ref)
   d->reference = ref;
 }
 
+void Item::setRemoteId( const QString &remoteId )
+{
+  d->reference.setRemoteId( remoteId );
+}
+
 Item::Flags Item::flags() const
 {
   return d->flags;
@@ -232,4 +237,3 @@ uint qHash( const Akonadi::Item &item )
 {
   return qHash( item.reference().id() );
 }
-

@@ -235,34 +235,40 @@ void AgentBase::itemAdded( const Item &item, const Collection &collection )
 {
   Q_UNUSED( item );
   Q_UNUSED( collection );
+  changeProcessed();
 }
 
 void AgentBase::itemChanged( const Item &item, const QStringList &partIdentifiers )
 {
   Q_UNUSED( item );
   Q_UNUSED( partIdentifiers );
+  changeProcessed();
 }
 
 void AgentBase::itemRemoved( const DataReference &ref )
 {
   Q_UNUSED( ref );
+  changeProcessed();
 }
 
 void AgentBase::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
   Q_UNUSED( collection );
   Q_UNUSED( parent );
+  changeProcessed();
 }
 
 void AgentBase::collectionChanged( const Collection &collection )
 {
   Q_UNUSED( collection );
+  changeProcessed();
 }
 
 void AgentBase::collectionRemoved( int id, const QString &remoteId )
 {
   Q_UNUSED( id );
   Q_UNUSED( remoteId );
+  changeProcessed();
 }
 
 QSettings* AgentBase::settings()
@@ -290,6 +296,12 @@ void AgentBase::error( const QString& message )
 ChangeRecorder * AgentBase::monitor() const
 {
   return d_ptr->monitor;
+}
+
+void AgentBase::changeProcessed()
+{
+  d_ptr->monitor->changeProcessed();
+  QTimer::singleShot( 0, d_ptr->monitor, SLOT(replayNext()) );
 }
 
 #include "agent.moc"

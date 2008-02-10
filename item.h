@@ -127,6 +127,12 @@ class AKONADI_EXPORT Item
     void setReference( const DataReference &ref );
 
     /**
+      Sets the remote identifier of this item.
+      @param remoteId The new remote id.
+     */
+    void setRemoteId( const QString &remoteId );
+
+    /**
       Returns the flags of this item.
     */
     Flags flags() const;

@@ -43,6 +43,15 @@ class DataReference;
 class ChangeRecorder;
 class AgentBasePrivate;
 
+/**
+  This calls is a base class for all Akonadi agents.
+
+  It provides:
+  - lifetime management
+  - change monitoring and recording
+  - configuration interface
+  - problem reporting
+*/
 class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 {
   Q_OBJECT
@@ -149,7 +158,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *
      * Don't delete this object!
      */
-    QSettings* settings();
+    QSettings* settings() KDE_DEPRECATED;
 
     /**
      * Returns a session for communicating with the storage backend. It should
@@ -162,6 +171,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
       Use this to configure which parts you want to monitor.
     */
     ChangeRecorder* monitor() const;
+
+    /**
+      Marks the current change as processes and replays the next change if change
+      recording is enabled (noop otherwise). This method is called
+      from the default implementation of the change notification slots. While not
+      required when not using change recording, it is nevertheless recommended to
+      to call this method when done with processing a change notification.
+    */
+    virtual void changeProcessed();
 
   protected Q_SLOTS:
     /**

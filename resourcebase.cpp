@@ -94,8 +94,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     QString defaultReadyMessage() const;
     QString defaultSyncingMessage() const;
 
-    void changeProcessed();
-
     QString mName;
 
     int mStatusCode;
@@ -124,14 +122,6 @@ QString ResourceBasePrivate::defaultSyncingMessage() const
   return i18nc( "@info:status", "Syncing..." );
 }
 
-void ResourceBasePrivate::changeProcessed()
-{
-  monitor->changeProcessed();
-  if ( !monitor->isEmpty() )
-    scheduler->scheduleChangeReplay();
-  scheduler->taskDone();
-}
-
 ResourceBase::ResourceBase( const QString & id )
   : AgentBase( new ResourceBasePrivate( this ), id )
 {
@@ -154,7 +144,7 @@ ResourceBase::ResourceBase( const QString & id )
 
   d->scheduler = new ResourceScheduler( this );
 
-  d->online = settings()->value( QLatin1String( "Resource/Online" ), true ).toBool();
+  d->online = d->mSettings->value( QLatin1String( "Resource/Online" ), true ).toBool();
   if ( d->online )
     d->monitor->fetchAllParts();
 
@@ -373,20 +363,18 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
   scheduler->taskDone();
 }
 
-void ResourceBase::changesCommitted(const DataReference & ref)
+void ResourceBase::changesCommitted(const Item& item)
 {
-  Q_D( ResourceBase );
-  ItemStoreJob *job = new ItemStoreJob( Item( ref ), session() );
+  ItemStoreJob *job = new ItemStoreJob( item, session() );
   job->setClean();
-  job->noRevCheck();
-  d->changeProcessed();
+  job->noRevCheck(); // TODO: remove, but where/how do we handle the error?
+  changeProcessed();
 }
 
 void ResourceBase::changesCommitted( const Collection &collection )
 {
-  Q_D( ResourceBase );
   CollectionModifyJob *job = new CollectionModifyJob( collection, session() );
-  d->changeProcessed();
+  changeProcessed();
 }
 
 bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, const QStringList &parts )
@@ -413,7 +401,7 @@ void ResourceBase::setOnline(bool state)
 {
   Q_D( ResourceBase );
   d->online = state;
-  settings()->setValue( QLatin1String( "Resource/Online" ), state );
+  d->mSettings->setValue( QLatin1String( "Resource/Online" ), state );
   d->monitor->fetchCollection( state );
   // TODO: d->monitor->fetchItemData( state );
   d->scheduler->setOnline( state );
@@ -574,44 +562,13 @@ void ResourceBasePrivate::slotPercent( KJob *job, unsigned long percent )
   q->changeProgress( percent );
 }
 
-void ResourceBase::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
+void ResourceBase::changeProcessed()
 {
-  Q_UNUSED( item );
-  Q_UNUSED( collection );
-  d_func()->changeProcessed();
-}
-
-void ResourceBase::itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers )
-{
-  Q_UNUSED( item );
-  Q_UNUSED( partIdentifiers );
-  d_func()->changeProcessed();
-}
-
-void ResourceBase::itemRemoved( const Akonadi::DataReference &ref )
-{
-  Q_UNUSED( ref );
-  d_func()->changeProcessed();
-}
-
-void ResourceBase::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
-{
-  Q_UNUSED( collection );
-  Q_UNUSED( parent );
-  d_func()->changeProcessed();
-}
-
-void ResourceBase::collectionChanged( const Akonadi::Collection &collection )
-{
-  Q_UNUSED( collection );
-  d_func()->changeProcessed();
-}
-
-void ResourceBase::collectionRemoved( int id, const QString &remoteId )
-{
-  Q_UNUSED( id );
-  Q_UNUSED( remoteId );
-  d_func()->changeProcessed();
+  Q_D( ResourceBase );
+  d->monitor->changeProcessed();
+  if ( !d->monitor->isEmpty() )
+    d->scheduler->scheduleChangeReplay();
+  d->scheduler->taskDone();
 }
 
 #include "resource.moc"
