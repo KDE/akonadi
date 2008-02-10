@@ -214,11 +214,7 @@ void AgentBase::cleanup()
    */
   QFile::remove( fileName );
 
-  // ### HACK FIXME
-  // Using QCoreApplication::quit() breaks change notifications
-  // for some clients/agents, no idea why
-//   QCoreApplication::quit();
-  exit( 0 );
+  QCoreApplication::quit();
 }
 
 void AgentBase::crashHandler( int signal )
