@@ -123,8 +123,10 @@ bool KnutResource::retrieveItem( const Item &item, const QStringList &parts )
 
 void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  if ( !mCollections.contains( collection.remoteId() ) )
+  if ( !mCollections.contains( collection.remoteId() ) ) {
+    changeProcessed();
     return;
+  }
 
   CollectionEntry &entry = mCollections[ collection.remoteId() ];
 
@@ -133,18 +135,23 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
     if ( !addressee.isEmpty() ) {
       entry.addressees.insert( addressee.uid(), addressee );
 
-      DataReference r( item.reference().id(), addressee.uid() );
-      changesCommitted( r );
+      Item i( item );
+      i.setRemoteId( addressee.uid() );
+      changesCommitted( i );
+      return;
     }
   } else if ( item.mimeType() == QLatin1String( "text/calendar" ) ) {
     KCal::Incidence *incidence = mICalConverter.fromString( QString::fromUtf8( item.payload<QByteArray>() ) );
     if ( incidence ) {
       entry.incidences.insert( incidence->uid(), incidence );
 
-      DataReference r( item.reference().id(), incidence->uid() );
-      changesCommitted( r );
+      Item i( item );
+      i.setRemoteId( incidence->uid() );
+      changesCommitted( i );
+      return;
     }
   }
+  changeProcessed();
 }
 
 void KnutResource::itemChanged( const Akonadi::Item &item, const QStringList& )
@@ -160,24 +167,25 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QStringList& )
       if ( !addressee.isEmpty() ) {
         entry.addressees.insert( addressee.uid(), addressee );
 
-        DataReference r( item.reference().id(), addressee.uid() );
-        changesCommitted( r );
+        Item i( item );
+        i.setRemoteId( addressee.uid() );
+        changesCommitted( i );
+        return;
       }
-
-      return;
-    } if ( entry.incidences.contains( item.reference().remoteId() ) ) {
+    } else if ( entry.incidences.contains( item.reference().remoteId() ) ) {
       KCal::Incidence *incidence = mICalConverter.fromString( item.payload<QByteArray>() );
       if ( incidence ) {
         delete entry.incidences.take( item.reference().remoteId() );
         entry.incidences.insert( incidence->uid(), incidence );
 
-        DataReference r( item.reference().id(), incidence->uid() );
-        changesCommitted( r );
+        Item i( item );
+        i.setRemoteId( incidence->uid() );
+        changesCommitted( i );
+        return;
       }
-
-      return;
     }
   }
+  changeProcessed();
 }
 
 void KnutResource::itemRemoved( const Akonadi::DataReference &reference )
@@ -190,12 +198,11 @@ void KnutResource::itemRemoved( const Akonadi::DataReference &reference )
 
     if ( entry.addressees.contains( reference.remoteId() ) ) {
       entry.addressees.remove( reference.remoteId() );
-      return;
-    } if ( entry.incidences.contains( reference.remoteId() ) ) {
+    } else if ( entry.incidences.contains( reference.remoteId() ) ) {
       delete entry.incidences.take( reference.remoteId() );
-      return;
     }
   }
+  changeProcessed();
 }
 
 void KnutResource::retrieveCollections()
