@@ -123,6 +123,7 @@ void BenchMarker::testMaildir( QString dir )
       "/Settings", "org.kde.Akonadi.Maildir.Settings", QDBusConnection::sessionBus(), this );
   if ( configIface && configIface->isValid() ) {
     configIface->call( "setPath", dir );
+    configIface->call( "setReadOnly", true );
   } else {
     qFatal( "Could not configure instance %s.", qPrintable( instance ) );
   }
