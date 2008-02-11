@@ -187,7 +187,7 @@ QString AgentManager::agentInstanceName( const QString &identifier ) const
 
 void AgentManager::agentInstanceConfigure( const QString &identifier, WId windowId )
 {
-  d->mManager->agentInstanceConfigure( identifier, windowId );
+  d->mManager->agentInstanceConfigure( identifier, (qlonglong)windowId );
 }
 
 void AgentManager::agentInstanceSynchronize( const QString &identifier )

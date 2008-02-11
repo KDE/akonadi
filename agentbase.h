@@ -26,11 +26,9 @@
 #include "libakonadi_export.h"
 #include <libakonadi/collection.h>
 
-#include <kapplication.h>
+#include <KApplication>
 
-#include <QtCore/QObject>
 #include <QtCore/QSettings>
-#include <QtCore/QString>
 #include <QtDBus/QDBusContext>
 
 class AgentAdaptor;
@@ -93,6 +91,14 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * @param windowId The parent window id.
      */
     virtual void configure( WId windowId );
+
+#ifdef Q_OS_WIN
+    /**
+     * Overload of @ref configure needed because WId cannot be automatically casted 
+     * to qlonglong on Windows.
+     */
+    void configure( qlonglong windowId ) { configure( (WId)windowId ); }
+#endif
 
     /**
      * Returns the instance identifier of this agent.
@@ -158,7 +164,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *
      * Don't delete this object!
      */
-    QSettings* settings() KDE_DEPRECATED;
+    KDE_DEPRECATED QSettings* settings();
 
     /**
      * Returns a session for communicating with the storage backend. It should
