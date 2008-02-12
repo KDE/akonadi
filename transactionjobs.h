@@ -31,6 +31,8 @@ namespace Akonadi {
 */
 class AKONADI_EXPORT TransactionBeginJob : public Job
 {
+  Q_OBJECT
+
   public:
     /**
       Creates a new TransactionBeginJob.
@@ -54,6 +56,8 @@ class AKONADI_EXPORT TransactionBeginJob : public Job
 */
 class AKONADI_EXPORT TransactionRollbackJob : public Job
 {
+  Q_OBJECT
+
   public:
     /**
       Creates a new TransactionRollbackJob.
@@ -76,6 +80,8 @@ class AKONADI_EXPORT TransactionRollbackJob : public Job
 */
 class AKONADI_EXPORT TransactionCommitJob : public Job
 {
+  Q_OBJECT
+
   public:
     /**
       Creates a new TransactionCommitJob.

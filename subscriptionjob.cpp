@@ -95,3 +95,5 @@ void SubscriptionJob::doHandleResponse(const QByteArray &_tag, const QByteArray 
     return;
   }
 }
+
+#include "subscriptionjob.moc"
