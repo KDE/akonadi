@@ -4,6 +4,7 @@ DELETE FROM PartTable;
 DELETE FROM LocationMimeTypeRelation;
 DELETE FROM LocationTable WHERE name != "Search" or parentId != 0;
 DELETE FROM ResourceTable WHERE name != "akonadi_search_resource";
+DELETE FROM LocationPimItemRelation;
 
 INSERT INTO ResourceTable (id, name) VALUES(2, 'akonadi_dummy_resource_1');
 INSERT INTO ResourceTable (id, name) VALUES(3, 'akonadi_dummy_resource_2');
@@ -19,9 +20,9 @@ INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (7, 0, 'res2',
 INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (8, 0, 'res3', 4);
 INSERT INTO LocationTable (id, parentId, name, resourceId) VALUES (9, 7, 'space folder', 3);
 
-INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'kde-core-devel', '<request><userQuery>kde-core-devel@kde.org</userQuery></request>', 1);
-INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'all', '<request><userQuery>MIMETYPE message/rfc822</userQuery></request>', 1);
-INSERT INTO LocationTable (parentId, name, remoteId, resourceId) VALUES(1, 'Test ?er', '<request><userQuery>"Test ?er"</userQuery></request>', 1);
+INSERT INTO LocationTable (id, parentId, name, remoteId, resourceId) VALUES(11, 1, 'kde-core-devel', '<request><userQuery>kde-core-devel@kde.org</userQuery></request>', 1);
+INSERT INTO LocationTable (id, parentId, name, remoteId, resourceId) VALUES(12, 1, 'all', '<request><userQuery>MIMETYPE message/rfc822</userQuery></request>', 1);
+INSERT INTO LocationTable (id, parentId, name, remoteId, resourceId) VALUES(13, 1, 'Test ?er', '<request><userQuery>"Test ?er"</userQuery></request>', 1);
 
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 3);
 INSERT INTO LocationMimeTypeRelation ( Location_id, MimeType_id) VALUES( 10, 4);
@@ -84,3 +85,7 @@ INSERT INTO PartTable (id, name, data, datasize, pimItemId) VALUES (27, 'RFC822'
 INSERT INTO PartTable (id, name, data, datasize, pimItemId) VALUES (28, 'HEAD', 'From: <test13@user.tst>', 23, 14);
 INSERT INTO PartTable (id, name, data, datasize, pimItemId) VALUES (29, 'RFC822', 'testmailbody14', 14, 15);
 INSERT INTO PartTable (id, name, data, datasize, pimItemId) VALUES (30, 'HEAD', 'From: <test14@user.tst>', 23, 15);
+
+INSERT INTO LocationPimItemRelation (Location_id, PimItem_id) VALUES (11, 1);
+INSERT INTO LocationPimItemRelation (Location_id, PimItem_id) VALUES (11, 3);
+INSERT INTO LocationPimItemRelation (Location_id, PimItem_id) VALUES (11, 5);

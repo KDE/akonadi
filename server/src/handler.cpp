@@ -214,8 +214,17 @@ void Handler::imapSetToQuery(const ImapSet & set, bool isUid, QueryBuilder & qb)
   if ( !cond.isEmpty() )
     qb.addCondition( cond );
 
-  if ( !isUid && connection()->selectedCollection() >= 0 )
-    qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, connection()->selectedCollection() );
+  if ( !isUid && connection()->selectedCollection() >= 0 ) {
+    const Location loc = connection()->selectedLocation();
+    if ( loc.resource().name() == QLatin1String("akonadi_search_resource") ) {
+      qb.addTable( LocationPimItemRelation::tableName() );
+      qb.addValueCondition( LocationPimItemRelation::leftFullColumnName(), Query::Equals, loc.id() );
+      qb.addColumnCondition( LocationPimItemRelation::rightFullColumnName(), Query::Equals,
+                             PimItem::idFullColumnName() );
+    } else {
+      qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, loc.id() );
+    }
+  }
 }
 
 #include "handler.moc"

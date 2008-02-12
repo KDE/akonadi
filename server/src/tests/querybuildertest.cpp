@@ -89,6 +89,16 @@ void QueryBuilderTest::testQueryBuilder_data()
   bindVals.clear();
   bindVals << QString( "bla" );
   QTest::newRow( "update" ) << qb << QString( "UPDATE table SET col1 = :0" ) << bindVals;
+
+  qb = QueryBuilder( QueryBuilder::Update );
+  qb.addTable( "table" );
+  qb.addTable( "table2" );
+  qb.updateColumnValue( "col1", QString( "bla" ) );
+  qb.addColumnCondition( "table1.id", Query::Equals, "table2.id" );
+  bindVals.clear();
+  bindVals << QString( "bla" );
+  QTest::newRow( "update" ) << qb << QString( "UPDATE table, table2 SET col1 = :0 WHERE ( table1.id = table2.id )" )
+      << bindVals;
 }
 
 void QueryBuilderTest::testQueryBuilder()

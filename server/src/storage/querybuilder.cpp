@@ -121,8 +121,8 @@ bool QueryBuilder::exec()
     case Update:
     {
       statement += QLatin1String( "UPDATE " );
-      Q_ASSERT_X( mTables.count() == 1, "QueryBuilder::exec()", "Exactly one table needed" );
-      statement += mTables.first();
+      Q_ASSERT_X( mTables.count() > 0, "QueryBuilder::exec()", "No tables specified" );
+      statement += mTables.join( QLatin1String( ", " ) );
       statement += QLatin1String( " SET " );
       Q_ASSERT_X( mUpdateColumns.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed" );
       typedef QPair<QString,QVariant> StringVariantPair;
