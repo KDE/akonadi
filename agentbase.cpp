@@ -80,9 +80,6 @@ void AgentBasePrivate::init()
   mTracer = new org::kde::Akonadi::Tracer( QLatin1String( "org.kde.Akonadi" ), QLatin1String( "/tracing" ),
                                            QDBusConnection::sessionBus(), q );
 
-  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Agent." ) + mId ) )
-    q->error( QString::fromLatin1( "Unable to register service at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
-
   new AgentAdaptor( q );
   if ( !QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
     q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
@@ -106,6 +103,14 @@ void AgentBasePrivate::init()
               q, SLOT( collectionChanged( const Akonadi::Collection& ) ) );
   q->connect( monitor, SIGNAL( collectionRemoved( int, const QString& ) ),
               q, SLOT( collectionRemoved( int, const QString& ) ) );
+
+  QTimer::singleShot( 0, q, SLOT(delayedInit()) );
+}
+
+void AgentBasePrivate::delayedInit()
+{
+  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Agent." ) + mId ) )
+    kFatal() << "Unable to register service at dbus:" << QDBusConnection::sessionBus().lastError().message();
 }
 
 

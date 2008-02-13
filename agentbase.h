@@ -94,7 +94,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
 #ifdef Q_OS_WIN
     /**
-     * Overload of @ref configure needed because WId cannot be automatically casted 
+     * Overload of @ref configure needed because WId cannot be automatically casted
      * to qlonglong on Windows.
      */
     void configure( qlonglong windowId ) { configure( (WId)windowId ); }
@@ -242,6 +242,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     friend class ::AgentAdaptor;
 
     Q_DECLARE_PRIVATE( AgentBase )
+    Q_PRIVATE_SLOT( d_func(), void delayedInit() )
 };
 
 }

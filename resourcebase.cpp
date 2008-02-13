@@ -80,6 +80,13 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     Q_DECLARE_PUBLIC( ResourceBase )
 
+    void delayedInit()
+    {
+      if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Resource." ) + mId ) )
+        kFatal() << "Unable to register service at D-Bus: " << QDBusConnection::sessionBus().lastError().message();
+      AgentBasePrivate::delayedInit();
+    }
+
     void slotDeliveryDone( KJob* job );
 
     void slotCollectionSyncDone( KJob *job );
@@ -129,9 +136,6 @@ ResourceBase::ResourceBase( const QString & id )
   KCrash::init();
   KCrash::setEmergencyMethod( ::crashHandler );
   sResourceBase = this;
-
-  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Resource." ) + id ) )
-    kFatal() << "Unable to register service at D-Bus: " << QDBusConnection::sessionBus().lastError().message();
 
   new ResourceAdaptor( this );
   QDBusConnection::sessionBus().unregisterObject( QLatin1String( "/" ) );

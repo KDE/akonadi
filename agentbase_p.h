@@ -32,8 +32,9 @@ class AgentBasePrivate
 {
   public:
     AgentBasePrivate( AgentBase *parent );
-    ~AgentBasePrivate();
+    virtual ~AgentBasePrivate();
     void init();
+    virtual void delayedInit();
 
     QString defaultErrorMessage() const
     {
