@@ -567,6 +567,8 @@ bool AgentManager::checkResourceInterface( const QString &identifier, const QStr
 {
   if ( !checkInstance( identifier ) )
     return false;
+  if ( !mAgents[ mAgentInstances[ identifier ].agentType ].capabilities.contains( "Resource" ) )
+    return false;
   if ( !mAgentInstances[ identifier ].resourceInterface ) {
     qWarning() << QLatin1String( "AgentManager::" ) + method << " Agent instance "
         << identifier << " has no resource interface!";
