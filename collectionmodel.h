@@ -34,9 +34,6 @@ class Collection;
 /**
   Model to handle a collection tree.
 
-  @todo Add support for collection filtering, eg. deal only with collections
-  containing contacts.
-
   @todo Split into generic and KDE dependent parts?
 */
 class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
