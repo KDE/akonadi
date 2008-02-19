@@ -22,12 +22,7 @@
 #define AKONADISERVER_H
 
 #include <QtCore/QPointer>
-
-#ifdef Q_OS_WIN
-#include <QtNetwork/QTcpServer>
-#else
-#include <klocalsocket.h>
-#endif
+#include <QtNetwork/QLocalServer>
 
 #include "akonadi_export.h"
 
@@ -40,11 +35,7 @@ class AkonadiConnection;
 class CacheCleaner;
 class XesamManager;
 
-#ifdef Q_OS_WIN
-class AKONADI_SERVER_EXPORT AkonadiServer: public QTcpServer
-#else
-class AKONADI_SERVER_EXPORT AkonadiServer: public KLocalSocketServer
-#endif
+class AKONADI_SERVER_EXPORT AkonadiServer: public QLocalServer
 {
     Q_OBJECT
 
@@ -65,7 +56,7 @@ class AKONADI_SERVER_EXPORT AkonadiServer: public KLocalSocketServer
 
   protected:
     /** reimpl */
-    void incomingConnection(int socketDescriptor);
+    void incomingConnection( quintptr socketDescriptor );
 
   private:
     void startDatabaseProcess();
