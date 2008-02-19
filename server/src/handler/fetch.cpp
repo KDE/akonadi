@@ -140,7 +140,7 @@ bool Fetch::handleLine( const QByteArray& line )
   QStringList partList;
   foreach( const QByteArray b, attrList ) {
     // filter out non-part attributes
-    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
+    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" || b.startsWith( "akonadi-" ) )
       continue;
     if ( b == "RFC822.SIZE" )
       partList << QString::fromLatin1( "RFC822" );
