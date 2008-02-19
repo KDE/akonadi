@@ -172,6 +172,7 @@ void ItemSync::slotLocalListDone( KJob * job )
       i.setRev( localItem.rev() );
       ItemStoreJob *mod = new ItemStoreJob( (const Item)i, this );
       mod->storePayload();
+      mod->setFlags( i.flags() );
       mod->setCollection( d->syncCollection );
       connect( mod, SIGNAL( result( KJob* ) ), SLOT( slotLocalChangeDone( KJob* ) ) );
     } else {
