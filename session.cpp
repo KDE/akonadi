@@ -32,12 +32,7 @@
 #include <QtCore/QThreadStorage>
 #include <QtCore/QTimer>
 
-#ifdef Q_OS_WIN
-#include <QtNetwork/QHostAddress>
-#include <QtNetwork/QTcpSocket>
-#else
-#include <klocalsocket.h>
-#endif
+#include <QtNetwork/QLocalSocket>
 
 #define PIPELINE_LENGTH 2
 
@@ -54,21 +49,12 @@ void SessionPrivate::startNext()
 void SessionPrivate::reconnect()
 {
   // should be checking connection method and value validity
-#ifdef Q_OS_WIN
-  if ( socket->state() != QAbstractSocket::ConnectedState &&
-       socket->state() != QAbstractSocket::ConnectingState ) {
-    const QString address = mConnectionSettings->value( QLatin1String( "Data/Address" ), QHostAddress(QHostAddress::LocalHost).toString() ).toString();
-    const int port = mConnectionSettings->value( QLatin1String( "Data/Port" ), 4444 ).toInt();
-    socket->connectToHost( QHostAddress(address), port );
-  }
-#else
-  if ( socket->state() != QAbstractSocket::ConnectedState &&
-       socket->state() != QAbstractSocket::ConnectingState ) {
+  if ( socket->state() != QLocalSocket::ConnectedState &&
+       socket->state() != QLocalSocket::ConnectingState ) {
     const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
     const QString path = mConnectionSettings->value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
-    socket->connectToPath( path );
+    socket->connectToServer( path );
   }
-#endif
 }
 
 void SessionPrivate::socketError()
@@ -203,13 +189,9 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
   d->mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );
 
   // should check connection method
-#ifdef Q_OS_WIN
-  d->socket = new QTcpSocket( this );
-#else
-  d->socket = new KLocalSocket( this );
-#endif
+  d->socket = new QLocalSocket( this );
   connect( d->socket, SIGNAL(disconnected()), SLOT(socketError()) );
-  connect( d->socket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError()) );
+  connect( d->socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError()) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
   d->reconnect();
 }
