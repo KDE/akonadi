@@ -50,7 +50,13 @@ namespace Akonadi {
   This class represents a PIM item stored in Akonadi.
 
   A PIM item consists of one or more parts, allowing a fine-grained access on its
-  content where needed (eg. mail envelope, mail body and attachments).
+  content where needed (eg. mail envelope, mail body and attachments). 
+  
+  There ise also a namespace (prefix) for special parts which are local to Akonadi. 
+  These parts, prefixed by "akonadi-" will never be fetched in the ressource. 
+  There are useful for local extensions like agents which might want to add metadata
+  to items in order to handle them but the metadata should not be stored back to the
+  ressource.
 
   This class contains beside some type-agnostic information (unique identifiers, flags)
   a single payload object representing its actual data. Which objects these actually
