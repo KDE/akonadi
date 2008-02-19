@@ -27,7 +27,11 @@
 #include <QtCore/QSettings>
 #include <QtCore/QThreadStorage>
 
-class QLocalSocket;
+#ifdef Q_OS_WIN
+class QTcpSocket;
+#else
+class KLocalSocket;
+#endif
 
 namespace Akonadi {
 
@@ -59,7 +63,11 @@ class SessionPrivate
     Session *mParent;
     QByteArray sessionId;
     QSettings *mConnectionSettings;
-    QLocalSocket* socket;
+#ifdef Q_OS_WIN
+    QTcpSocket* socket;
+#else
+    KLocalSocket* socket;
+#endif
     bool connected;
     int nextTag;
 
