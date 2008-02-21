@@ -21,7 +21,8 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QThread>
-#include <QtNetwork/QLocalSocket>
+#include <QtNetwork/QTcpSocket>
+class QTcpSocket;
 
 #include "akonadi_export.h"
 #include "entities.h"
@@ -41,7 +42,7 @@ class AKONADI_SERVER_EXPORT AkonadiConnection : public QThread
 {
     Q_OBJECT
 public:
-    AkonadiConnection( quintptr socketDescriptor, QObject *parent );
+    AkonadiConnection( int socketDescriptor, QObject *parent );
     virtual ~AkonadiConnection();
     void run();
 
@@ -58,7 +59,7 @@ public:
     QByteArray sessionId() const;
 
 Q_SIGNALS:
-    void error( QLocalSocket::LocalSocketError socketError );
+    void error( QTcpSocket::SocketError socketError );
 
 protected Q_SLOTS:
     void slotDisconnected();
@@ -73,8 +74,8 @@ protected:
 
 
 private:
-    quintptr m_socketDescriptor;
-    QLocalSocket * m_localSocket;
+    int m_socketDescriptor;
+    QTcpSocket * m_tcpSocket;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore* m_backend;

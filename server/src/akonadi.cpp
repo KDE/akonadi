@@ -44,7 +44,11 @@ using namespace Akonadi;
 static AkonadiServer *s_instance = 0;
 
 AkonadiServer::AkonadiServer( QObject* parent )
-    : QLocalServer( parent )
+#ifdef Q_OS_WIN
+    : QTcpServer( parent )
+#else
+    : KLocalSocketServer( parent )
+#endif
     , mCacheCleaner( 0 )
     , mIntervalChecker( 0 )
     , mDatabaseProcess( 0 )
@@ -61,21 +65,31 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
 
+#ifdef Q_OS_WIN
+    int port = settings.value( QLatin1String( "Connection/Port" ), 4444 ).toInt();
+    if ( !listen( QHostAddress::LocalHost, port ) )
+      qFatal("Unable to listen on port %d", port);
+
+    connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "TCP" ) );
+    connectionSettings.setValue( QLatin1String( "Data/Address" ), serverAddress().toString() );
+    connectionSettings.setValue( QLatin1String( "Data/Port" ), serverPort() );
+#else
     const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
     QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
-    if ( !QDir::isAbsolutePath( socketDir ) )
+    if ( socketDir[0] != QLatin1Char( '/' ) )
     {
       QDir::home().mkdir( socketDir );
-      socketDir = QDir::homePath() + QDir::separator() + socketDir;
+      socketDir = QDir::homePath() + QLatin1Char( '/' ) + socketDir;
     }
 
-    const QString socketFile = socketDir + QDir::separator() + QLatin1String( "akonadiserver.socket" );
-    QFile::remove( socketFile );
+    const QString socketFile = socketDir + QLatin1String( "/akonadiserver.socket" );
+    unlink( socketFile.toUtf8().constData() );
     if ( !listen( socketFile ) )
-      qFatal("Unable to listen on socket '%s'", socketFile.toLocal8Bit().data() );
+      qFatal("Unable to listen on Unix socket '%s'", socketFile.toLocal8Bit().data() );
 
     connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "UnixPath" ) );
     connectionSettings.setValue( QLatin1String( "Data/UnixPath" ), socketFile );
+#endif
 
     // initialize the database
     DataStore *db = DataStore::self();
@@ -147,13 +161,14 @@ void AkonadiServer::quit()
     QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
     const QString connectionSettingsFile = XdgBaseDirs::akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
 
+#ifndef Q_OS_WIN
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
     const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
     const QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
 
-    if ( !QDir::home().remove( socketDir + QDir::separator() + QLatin1String( "akonadiserver.socket" ) ) )
+    if ( !QDir::home().remove( socketDir + QLatin1String( "/akonadiserver.socket" ) ) )
         qWarning("Failed to remove Unix socket");
-
+#endif
     if ( !QDir::home().remove( connectionSettingsFile ) )
         qWarning("Failed to remove runtime connection config file");
 
@@ -165,7 +180,7 @@ void AkonadiServer::doQuit()
     QCoreApplication::exit();
 }
 
-void AkonadiServer::incomingConnection( quintptr socketDescriptor )
+void AkonadiServer::incomingConnection( int socketDescriptor )
 {
     QPointer<AkonadiConnection> thread = new AkonadiConnection( socketDescriptor, this );
     connect( thread, SIGNAL( finished() ), thread, SLOT( deleteLater() ) );

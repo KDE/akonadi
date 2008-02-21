@@ -32,10 +32,10 @@
 
 using namespace Akonadi;
 
-AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent )
+AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
     : QThread(parent)
     , m_socketDescriptor(socketDescriptor)
-    , m_localSocket( 0 )
+    , m_tcpSocket( 0 )
     , m_currentHandler( 0 )
     , m_connectionState( NonAuthenticated )
     , m_backend( 0 )
@@ -63,10 +63,10 @@ AkonadiConnection::~AkonadiConnection()
 
 void AkonadiConnection::run()
 {
-    m_localSocket = new QLocalSocket();
+    m_tcpSocket = new QTcpSocket();
 
-    if ( !m_localSocket->setSocketDescriptor( m_socketDescriptor ) ) {
-        emit error( m_localSocket->error() );
+    if ( !m_tcpSocket->setSocketDescriptor( m_socketDescriptor ) ) {
+        emit error(m_tcpSocket->error());
         return;
     }
 
@@ -80,16 +80,16 @@ void AkonadiConnection::run()
      * outgoing data transfers in a streaming manner, without having to
      * hold them in memory 'en gros'. */
 
-    connect( m_localSocket, SIGNAL( readyRead() ),
+    connect( m_tcpSocket, SIGNAL( readyRead() ),
              this, SLOT( slotNewData() ), Qt::DirectConnection );
-    connect( m_localSocket, SIGNAL( disconnected() ),
+    connect( m_tcpSocket, SIGNAL( disconnected() ),
              this, SLOT( slotDisconnected() ), Qt::DirectConnection );
 
     writeOut( "* OK Akonadi Almost IMAP Server");
 
     exec();
-    delete m_localSocket;
-    m_localSocket = 0;
+    delete m_tcpSocket;
+    m_tcpSocket = 0;
 }
 
 void AkonadiConnection::slotDisconnected()
@@ -99,13 +99,13 @@ void AkonadiConnection::slotDisconnected()
 
 void AkonadiConnection::slotNewData()
 {
-  while ( m_localSocket->bytesAvailable() > 0 ) {
+  while ( m_tcpSocket->bytesAvailable() > 0 ) {
     if ( m_parser->continuationSize() > 1 ) {
-      const QByteArray data = m_localSocket->read( qMin( m_localSocket->bytesAvailable(), m_parser->continuationSize() - 1 ) );
+      const QByteArray data = m_tcpSocket->read( qMin( m_tcpSocket->bytesAvailable(), m_parser->continuationSize() - 1 ) );
       Tracer::self()->connectionInput( m_identifier, QLatin1String("[binary data]") );
       m_parser->parseBlock( data );
-    } else if ( m_localSocket->canReadLine() ) {
-      const QByteArray line = m_localSocket->readLine();
+    } else if ( m_tcpSocket->canReadLine() ) {
+      const QByteArray line = m_tcpSocket->readLine();
       Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( line ) );
 
       if ( m_parser->parseNextLine( line ) ) {
@@ -148,8 +148,8 @@ void AkonadiConnection::slotNewData()
 void AkonadiConnection::writeOut( const QByteArray &data )
 {
     QByteArray block = data + "\r\n";
-    m_localSocket->write( block );
-    m_localSocket->waitForBytesWritten();
+    m_tcpSocket->write(block);
+    m_tcpSocket->waitForBytesWritten();
 
     Tracer::self()->connectionOutput( m_identifier, QString::fromUtf8( block ) );
 }
@@ -197,7 +197,7 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
         case Selected:
             break;
         case LoggingOut:
-            m_localSocket->disconnectFromServer();
+            m_tcpSocket->disconnectFromHost();
             break;
     }
 }
