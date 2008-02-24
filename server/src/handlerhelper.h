@@ -76,10 +76,17 @@ class HandlerHelper
     static int parseCachePolicy( const QByteArray &data, Location &loc, int start = 0 );
 
     /**
-      Returns the protocol representation of the cache policy if the given
+      Returns the protocol representation of the cache policy of the given
       Location object.
     */
     static QByteArray cachePolicyToByteArray( const Location &loc );
+
+    /**
+      Returns the protocl representation of the given collection.
+      Make sure DataStore::activeCachePolicy() has been called before to include
+      the effective cache policy
+    */
+    static QByteArray collectionToByteArray( const Location &loc, bool hidden = false );
 };
 
 }

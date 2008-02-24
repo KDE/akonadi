@@ -151,3 +151,27 @@ QByteArray HandlerHelper::cachePolicyToByteArray(const Location & loc)
   rv += ")";
   return rv;
 }
+
+QByteArray HandlerHelper::collectionToByteArray( const Location & loc, bool hidden )
+{
+  QByteArray b = QByteArray::number( loc.id() ) + ' '
+               + QByteArray::number( loc.parentId() ) + " (";
+
+  // FIXME: escape " and "\"
+  b += "NAME \"" + loc.name().toUtf8() + "\" ";
+  if ( hidden )
+    b+= "MIMETYPE () ";
+  else
+    b += "MIMETYPE (" + MimeType::joinByName( loc.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
+  b += "REMOTEID \"" + loc.remoteId().toUtf8() + "\" ";
+  b += "RESOURCE \"" + loc.resource().name().toUtf8() + "\" ";
+
+  b += HandlerHelper::cachePolicyToByteArray( loc ) + ' ';
+
+  LocationAttribute::List attrs = loc.attributes();
+  foreach ( const LocationAttribute attr, attrs )
+    b += attr.type() + ' ' + ImapParser::quote( attr.value() );
+  b+= ')';
+
+  return b;
+}

@@ -155,20 +155,14 @@ bool Create::handleLine(const QByteArray& line )
   response.setUntagged();
 
    // write out collection details
-  QByteArray b = QByteArray::number( location.id() ) + ' '
-               + QByteArray::number( location.parentId() ) + " ()"; // TODO: add attributes
+  db->activeCachePolicy( location );
+  const QByteArray b = HandlerHelper::collectionToByteArray( location );
   response.setString( b );
   emit responseAvailable( response );
 
   if ( !transaction.commit() )
     return failureResponse( "Unable to commit transaction." );
 
-  response.setSuccess();
-  response.setString( "CREATE completed" );
-  response.setTag( tag() );
-  emit responseAvailable( response );
-
-  deleteLater();
-  return true;
+  return successResponse( "CREATE completed" );
 }
 

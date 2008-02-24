@@ -124,31 +124,14 @@ bool AkList::listCollection(const Location & root, int depth )
   if ( !childrenFound && hidden )
     return false;
 
+  // write out collection details
+  Location dummy = root;
+  DataStore *db = connection()->storageBackend();
+  db->activeCachePolicy( dummy );
+  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden );
+
   Response response;
   response.setUntagged();
-
-  // write out collection details
-  QByteArray b = QByteArray::number( root.id() ) + ' '
-               + QByteArray::number( root.parentId() ) + " (";
-
-  // FIXME: escape " and "\"
-  b += "NAME \"" + root.name().toUtf8() + "\" ";
-  if ( hidden )
-    b+= "MIMETYPE () ";
-  else
-    b += "MIMETYPE (" + MimeType::joinByName( root.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
-  b += "REMOTEID \"" + root.remoteId().toUtf8() + "\" ";
-  b += "RESOURCE \"" + root.resource().name().toUtf8() + "\" ";
-
-  DataStore *db = connection()->storageBackend();
-  Location dummy = root;
-  db->activeCachePolicy( dummy );
-  b += HandlerHelper::cachePolicyToByteArray( dummy ) + ' ';
-
-  LocationAttribute::List attrs = root.attributes();
-  foreach ( const LocationAttribute attr, attrs )
-    b += attr.type() + ' ' + ImapParser::quote( attr.value() );
-  b+= ')';
   response.setString( b );
   emit responseAvailable( response );
 
