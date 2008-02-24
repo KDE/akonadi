@@ -40,8 +40,10 @@ CollectionCreator::CollectionCreator( )
   int root = resolver->collection();
   startTime.start();
   for ( int i = 0; i < COLLECTION_COUNT; ++i ) {
-    CollectionCreateJob *job = new CollectionCreateJob( Collection( root ),
-        QLatin1String("col") + QString::number( i ), this );
+    Collection col;
+    col.setParent( root );
+    col.setName( QLatin1String("col") + QString::number( i ) );
+    CollectionCreateJob *job = new CollectionCreateJob( col, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
     ++jobCount;
   }

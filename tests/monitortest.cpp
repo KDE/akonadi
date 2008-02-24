@@ -92,9 +92,12 @@ void MonitorTest::testMonitor()
   QVERIFY( irspy.isValid() );
 
   // create a collection
-  CollectionCreateJob *create = new CollectionCreateJob( res3, "monitor", this );
+  Collection monitorCol;
+  monitorCol.setParent( res3 );
+  monitorCol.setName( "monitor" );
+  CollectionCreateJob *create = new CollectionCreateJob( monitorCol, this );
   QVERIFY( create->exec() );
-  Collection monitorCol = create->collection();
+  monitorCol = create->collection();
   QVERIFY( monitorCol.isValid() );
   QTest::qWait(1000); // make sure the DBus signal has been processed
 

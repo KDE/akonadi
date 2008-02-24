@@ -72,6 +72,11 @@ class AKONADI_EXPORT CachePolicy
     CachePolicy& operator=( const CachePolicy &other );
 
     /**
+      Comparisson operator
+    */
+    bool operator==( const CachePolicy &other ) const;
+
+    /**
       Inherit cache policy from parent collection.
     */
     bool inheritFromParent() const;

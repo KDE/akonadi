@@ -70,6 +70,17 @@ CachePolicy & CachePolicy::operator =(const CachePolicy & other)
   return *this;
 }
 
+bool Akonadi::CachePolicy::operator ==(const CachePolicy & other) const
+{
+  if ( !d->inherit && !other.d->inherit ) {
+    return d->localParts == other.d->localParts
+        && d->timeout == other.d->timeout
+        && d->interval == other.d->interval
+        && d->syncOnDemand == other.d->syncOnDemand;
+  }
+  return d->inherit == other.d->inherit;
+}
+
 bool CachePolicy::inheritFromParent() const
 {
   return d->inherit;

@@ -21,6 +21,7 @@
 #define AKONADI_PROTOCOLHELPER_H
 
 #include <libakonadi/cachepolicy.h>
+#include <libakonadi/collection.h>
 
 namespace Akonadi {
 
@@ -30,6 +31,7 @@ namespace Akonadi {
   representation.
 
   @todo Add unit tests for this.
+  @todo Use exceptions for a useful error handling
 */
 class ProtocolHelper
 {
@@ -39,6 +41,7 @@ class ProtocolHelper
       @param data The input data.
       @param policy The parsed cache policy.
       @param start Start of the data, ie. postion after the label
+      @returns Position in data after the cache policy description.
     */
     static int parseCachePolicy( const QByteArray &data, CachePolicy &policy, int start = 0 );
 
@@ -46,6 +49,15 @@ class ProtocolHelper
       Convert a cache policy object into its protocol representation.
     */
     static QByteArray cachePolicyToByteArray( const CachePolicy &policy );
+
+    /**
+      Parse a collection description.
+      @param data The input data.
+      @param collection The parsed collection
+      @param start Start of the data
+      @returns Position in data after the collection description.
+    */
+    static int parseCollection( const QByteArray &data, Collection &collection, int start = 0 );
 
 };
 

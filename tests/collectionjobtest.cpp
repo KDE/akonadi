@@ -215,102 +215,103 @@ void CollectionJobTest::testResourceFolderList()
   QVERIFY( findCol( list, "bla" ).isValid() );
 }
 
-void CollectionJobTest::testIllegalCreateFolder( )
+void CollectionJobTest::testCreateDeleteFolder_data()
 {
-  // empty
-  CollectionCreateJob *job = new CollectionCreateJob( Collection::root(), QString(), this );
-  QVERIFY( !job->exec() );
+  QTest::addColumn<Collection>("collection");
+  QTest::addColumn<bool>("creatable");
 
-  // search folder
-  job = new CollectionCreateJob( Collection( searchColId ), "New Folder", this );
-  QVERIFY( !job->exec() );
+  Collection col;
+  QTest::newRow("empty") << col << false;
+  col.setName( "new folder" );
+  col.setParent( res3ColId );
+  QTest::newRow("simple") << col << true;
 
-  // already existing folder
-  job = new CollectionCreateJob( Collection( res2ColId ), "foo2", this );
-  QVERIFY( !job->exec() );
+  col.setParent( res3ColId );
+  col.setName( "foo" );
+  QTest::newRow( "existing in different resource" ) << col << true;
 
-  // Parent folder with \Noinferiors flag
-  CollectionPathResolver *resolver = new CollectionPathResolver( "res2/foo2", this );
-  QVERIFY( resolver->exec() );
-  job = new CollectionCreateJob( Collection( resolver->collection() ), "new folder", this );
-  QVERIFY( !job->exec() );
-
-  // folder with missing parents
-  job = new CollectionCreateJob( Collection( INT_MAX ), "sub1", this );
-  QVERIFY( !job->exec() );
-}
-
-void CollectionJobTest::testCreateDeleteFolder( )
-{
-  // simple new folder
-  CollectionCreateJob *job = new CollectionCreateJob( Collection( res3ColId ), "new folder", this );
-  QVERIFY( job->exec() );
-  Collection newCol = job->collection();
-  QVERIFY( newCol.isValid() );
-  QCOMPARE( newCol.parent(), res3ColId );
-  QCOMPARE( newCol.name(), QString( "new folder" ) );
-
-  CollectionListJob *ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
-  QVERIFY( ljob->exec() );
-  QCOMPARE( findCol( ljob->collections(), "new folder" ), newCol );
-
-  CollectionDeleteJob *del = new CollectionDeleteJob( newCol, this );
-  QVERIFY( del->exec() );
-
-  ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
-  QVERIFY( ljob->exec() );
-  QVERIFY( !findCol( ljob->collections(), "new folder" ).isValid() );
-
-  // folder that already exists within another resource
-  job = new CollectionCreateJob( Collection( res3ColId ), "foo", this );
-  QVERIFY( job->exec() );
-  newCol = job->collection();
-  QVERIFY( newCol.isValid() );
-
-  ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
-  QVERIFY( ljob->exec() );
-  QCOMPARE( findCol( ljob->collections(), "foo" ), newCol );
-
-  del = new CollectionDeleteJob( newCol, this );
-  QVERIFY( del->exec() );
-
-  ljob = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat, this );
-  QVERIFY( ljob->exec() );
-  QVERIFY( !findCol( ljob->collections(), "res3/foo" ).isValid() );
-
-  // folder with attributes
-  job = new CollectionCreateJob( Collection( res3ColId ), "mail folder", this );
+  col.setName( "mail folder" );
   QStringList mimeTypes;
   mimeTypes << "inode/directory" << "message/rfc822";
-  job->setContentTypes( mimeTypes );
-  job->setRemoteId( "remote id" );
+  col.setContentTypes( mimeTypes );
+  col.setRemoteId( "remote id" );
   CachePolicy policy;
   policy.setInheritFromParent( false );
   policy.setIntervalCheckTime( 60 );
   policy.setLocalParts( QStringList( Item::PartEnvelope ) );
   policy.enableSyncOnDemand( true );
   policy.setCacheTimeout( 120 );
-  job->setCachePolicy( policy );
-  QVERIFY( job->exec() );
-  newCol = job->collection();
-  QVERIFY( newCol.isValid() );
+  col.setCachePolicy( policy );
+  QTest::newRow( "complex" ) << col << true;
 
-  CollectionListJob *list = new CollectionListJob( newCol, CollectionListJob::Local, this );
-  QVERIFY( list->exec() );
-  QCOMPARE( list->collections().count(), 1 );
-  Collection col = list->collections().first();
-  compareLists( col.contentTypes(), mimeTypes );
-  QCOMPARE( col.remoteId(), QString("remote id") );
-  QCOMPARE( col.resource(), QString("akonadi_dummy_resource_3") );
-  QCOMPARE( col.cachePolicy().inheritFromParent(), false );
-  QCOMPARE( col.cachePolicy().intervalCheckTime(), 60 );
-  QCOMPARE( col.cachePolicy().localParts(), QStringList( Item::PartEnvelope ) );
-  QCOMPARE( col.cachePolicy().cacheTimeout(), 120 );
-  QCOMPARE( col.cachePolicy().syncOnDemand(), true );
+  col = Collection();
+  col.setName( "New Folder" );
+  col.setParent( searchColId );
+  QTest::newRow( "search folder" ) << col << false;
 
-  // cleanup
-  del = new CollectionDeleteJob( newCol, this );
-  QVERIFY( del->exec() );
+  col.setParent( res2ColId );
+  col.setName( "foo2" );
+  QTest::newRow( "already existing" ) << col << false;
+
+  CollectionPathResolver *resolver = new CollectionPathResolver( "res2/foo2", this );
+  QVERIFY( resolver->exec() );
+  col.setParent( resolver->collection() );
+  col.setName( "new folder" );
+  QTest::newRow( "parent noinferior" ) << col << false;
+
+  col.setParent( INT_MAX );
+  QTest::newRow( "missing parent" ) << col << false;
+}
+
+void CollectionJobTest::testCreateDeleteFolder()
+{
+  QFETCH( Collection, collection );
+  QFETCH( bool, creatable );
+
+  CollectionCreateJob *createJob = new CollectionCreateJob( collection, this );
+  QCOMPARE( createJob->exec(), creatable );
+  if ( !creatable )
+    return;
+
+  Collection createdCol = createJob->collection();
+  QVERIFY( createdCol.isValid() );
+  QCOMPARE( createdCol.name(), collection.name() );
+  QCOMPARE( createdCol.parent(), collection.parent() );
+  QCOMPARE( createdCol.remoteId(), collection.remoteId() );
+  QCOMPARE( createdCol.cachePolicy(), collection.cachePolicy() );
+
+  CollectionListJob *listJob = new CollectionListJob( Collection( collection.parent() ), CollectionListJob::Flat, this );
+  QVERIFY( listJob->exec() );
+  Collection listedCol = findCol( listJob->collections(), collection.name() );
+  QCOMPARE( listedCol, createdCol );
+  QCOMPARE( listedCol.remoteId(), collection.remoteId() );
+  QCOMPARE( listedCol.cachePolicy(), collection.cachePolicy() );
+
+  // fetch parent to compare inherited collection properties
+  Collection parentCol = Collection::root();
+  if ( collection.parent() > 0 ) {
+    CollectionListJob *listJob = new CollectionListJob( Collection( collection.parent() ), CollectionListJob::Local, this );
+    QVERIFY( listJob->exec() );
+    QCOMPARE( listJob->collections().count(), 1 );
+    parentCol = listJob->collections().first();
+  }
+
+  if ( collection.contentTypes().isEmpty() )
+    compareLists( listedCol.contentTypes(), parentCol.contentTypes() );
+  else
+    compareLists( listedCol.contentTypes(), collection.contentTypes() );
+
+  if ( collection.resource().isEmpty() )
+    QCOMPARE( listedCol.resource(), parentCol.resource() );
+  else
+    QCOMPARE( listedCol.resource(), collection.resource() );
+
+  CollectionDeleteJob *delJob = new CollectionDeleteJob( createdCol, this );
+  QVERIFY( delJob->exec() );
+
+  listJob = new CollectionListJob( Collection( collection.parent() ), CollectionListJob::Flat, this );
+  QVERIFY( listJob->exec() );
+  QVERIFY( !findCol( listJob->collections(), collection.name() ).isValid() );
 }
 
 void CollectionJobTest::testIllegalDeleteFolder()
@@ -448,9 +449,12 @@ void CollectionJobTest::testUtf8CollectionName()
   QString folderName = QString::fromUtf8( "ä" );
 
   // create collection
-  CollectionCreateJob *create = new CollectionCreateJob( Collection( res3ColId ), folderName, this );
+  Collection col;
+  col.setParent( res3ColId );
+  col.setName( folderName );
+  CollectionCreateJob *create = new CollectionCreateJob( col, this );
   QVERIFY( create->exec() );
-  Collection col = create->collection();
+  col = create->collection();
   QVERIFY( col.isValid() );
 
   // list parent

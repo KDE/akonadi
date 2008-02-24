@@ -21,6 +21,8 @@
 
 #include "imapparser.h"
 
+#include <kdebug.h>
+
 using namespace Akonadi;
 
 int ProtocolHelper::parseCachePolicy(const QByteArray & data, CachePolicy & policy, int start)
@@ -65,4 +67,74 @@ QByteArray ProtocolHelper::cachePolicyToByteArray(const CachePolicy & policy)
   }
   rv += ")";
   return rv;
+}
+
+int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collection, int start)
+{
+  int pos = start;
+
+  // collection and parent id
+  int colId = -1;
+  bool ok = false;
+  pos = ImapParser::parseNumber( data, colId, &ok, pos );
+  if ( !ok || colId <= 0 ) {
+    kDebug( 5250 ) << "Could not parse collection id from response:" << data;
+    return start;
+  }
+
+  int parentId = -1;
+  pos = ImapParser::parseNumber( data, parentId, &ok, pos );
+  if ( !ok || parentId < 0 ) {
+    kDebug( 5250 ) << "Could not parse parent id from response:" << data;
+    return start;
+  }
+
+  collection = Collection( colId );
+  collection.setParent( parentId );
+
+  // attributes
+  QList<QByteArray> attributes;
+  pos = ImapParser::parseParenthesizedList( data, attributes, pos );
+
+  for ( int i = 0; i < attributes.count() - 1; i += 2 ) {
+    const QByteArray key = attributes.at( i );
+    const QByteArray value = attributes.at( i + 1 );
+
+    if ( key == "NAME" ) {
+      collection.setName( QString::fromUtf8( value ) );
+    } else if ( key == "REMOTEID" ) {
+      collection.setRemoteId( QString::fromUtf8( value ) );
+    } else if ( key == "RESOURCE" ) {
+      collection.setResource( QString::fromUtf8( value ) );
+    } else if ( key == "MIMETYPE" ) {
+      QList<QByteArray> ct;
+      ImapParser::parseParenthesizedList( value, ct );
+      QStringList ct2;
+      foreach ( const QByteArray b, ct )
+        ct2 << QString::fromLatin1( b );
+      collection.setContentTypes( ct2 );
+    } else if ( key == "CACHEPOLICY" ) {
+      CachePolicy policy;
+      ProtocolHelper::parseCachePolicy( value, policy );
+      collection.setCachePolicy( policy );
+    } else {
+      collection.addRawAttribute( key, value );
+    }
+  }
+
+  // determine collection type
+  if ( collection.parent() == Collection::root().id() ) {
+    if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) )
+      collection.setType( Collection::VirtualParent );
+    else
+      collection.setType( Collection::Resource );
+  } else if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) ) {
+    collection.setType( Collection::Virtual );
+  } else if ( collection.contentTypes().isEmpty() ) {
+    collection.setType( Collection::Structural );
+  } else {
+    collection.setType( Collection::Folder );
+  }
+
+  return pos;
 }

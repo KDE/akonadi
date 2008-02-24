@@ -30,21 +30,14 @@ class Akonadi::CollectionCreateJobPrivate {
     CollectionCreateJobPrivate()
     {}
 
-    Collection parent;
-    QString name;
-    QStringList contentTypes;
     Collection collection;
-    QString remoteId;
-    QList<QPair<QByteArray, QByteArray> > attributes;
-    CachePolicy cachePolicy;
 };
 
-CollectionCreateJob::CollectionCreateJob( const Collection &parentCollection, const QString &name, QObject * parent ) :
+CollectionCreateJob::CollectionCreateJob( const Collection &collection, QObject * parent ) :
     Job( parent ),
     d( new CollectionCreateJobPrivate )
 {
-  d->parent = parentCollection;
-  d->name = name;
+  d->collection = collection;
 }
 
 CollectionCreateJob::~ CollectionCreateJob( )
@@ -54,28 +47,22 @@ CollectionCreateJob::~ CollectionCreateJob( )
 
 void CollectionCreateJob::doStart( )
 {
-  QByteArray command = newTag() + " CREATE \"" + d->name.toUtf8() + "\" ";
-  command += QByteArray::number( d->parent.id() );
+  QByteArray command = newTag() + " CREATE \"" + d->collection.name().toUtf8() + "\" ";
+  command += QByteArray::number( d->collection.parent() );
   command += " (";
-  if ( !d->contentTypes.isEmpty() )
+  if ( !d->collection.contentTypes().isEmpty() )
   {
     QList<QByteArray> cList;
-    foreach( QString s, d->contentTypes ) cList << s.toLatin1();
+    foreach( QString s, d->collection.contentTypes() ) cList << s.toLatin1();
     command += "MIMETYPE (" + ImapParser::join( cList, QByteArray(" ") ) + ')';
   }
-  command += " REMOTEID \"" + d->remoteId.toUtf8() + '"';
-  typedef QPair<QByteArray,QByteArray> QByteArrayPair;
-  foreach ( const QByteArrayPair bp, d->attributes )
-    command += ' ' + bp.first + ' ' + bp.second;
-  command += " " + ProtocolHelper::cachePolicyToByteArray( d->cachePolicy );
+  command += " REMOTEID \"" + d->collection.remoteId().toUtf8() + '"';
+  foreach ( CollectionAttribute* attr, d->collection.attributes() )
+    command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->toByteArray() );
+  command += " " + ProtocolHelper::cachePolicyToByteArray( d->collection.cachePolicy() );
   command += ")\n";
   writeData( command );
   emitWriteFinished();
-}
-
-void CollectionCreateJob::setContentTypes(const QStringList & contentTypes)
-{
-  d->contentTypes = contentTypes;
 }
 
 Collection CollectionCreateJob::collection() const
@@ -86,50 +73,18 @@ Collection CollectionCreateJob::collection() const
 void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteArray & data)
 {
   if ( tag == "*" ) {
-    // TODO: share the parsing code with CollectionListJob
-    int pos = 0;
-
-    // collection and parent id
-    int colId = -1;
-    bool ok = false;
-    pos = ImapParser::parseNumber( data, colId, &ok, pos );
-    if ( !ok || colId <= 0 ) {
-      kDebug( 5250 ) << "Could not parse collection id from response:" << data;
+    Collection col;
+    ProtocolHelper::parseCollection( data, col );
+    if ( !col.isValid() )
       return;
-    }
 
-    int parentId = -1;
-    pos = ImapParser::parseNumber( data, parentId, &ok, pos );
-    if ( !ok || parentId < 0 ) {
-      kDebug( 5250 ) << "Could not parse parent id from response:" << data;
-      return;
-    }
-
-    d->collection = Collection( colId );
-    d->collection.setParent( parentId );
-    d->collection.setName( d->name );
-    d->collection.setRemoteId( d->remoteId );
-
-  } else
+    col.setParent( d->collection.parent() );
+    col.setName( d->collection.name() );
+    col.setRemoteId( d->collection.remoteId() );
+    d->collection = col;
+  } else {
     Job::doHandleResponse( tag, data );
-}
-
-void CollectionCreateJob::setRemoteId(const QString & remoteId)
-{
-  d->remoteId = remoteId;
-}
-
-void CollectionCreateJob::setAttribute(CollectionAttribute * attr)
-{
-  Q_ASSERT( !attr->type().isEmpty() );
-
-  QByteArray value = ImapParser::quote( attr->toByteArray() );
-  d->attributes.append( qMakePair( attr->type(), value ) );
-}
-
-void CollectionCreateJob::setCachePolicy( const CachePolicy &policy )
-{
-  d->cachePolicy = policy;
+  }
 }
 
 #include "collectioncreatejob.moc"

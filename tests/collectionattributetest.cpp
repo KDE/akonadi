@@ -82,18 +82,18 @@ void CollectionAttributeTest::testAttributes()
   // add a custom attribute
   TestAttribute *attr = new TestAttribute();
   attr->setData( attr1 );
-  CollectionCreateJob *create = new CollectionCreateJob( Collection( parentColId ), "attribute test", this );
-  create->setAttribute( attr );
-  delete attr;
+  Collection col;
+  col.setName( "attribute test" );
+  col.setParent( parentColId );
+  col.addAttribute( attr );
+  CollectionCreateJob *create = new CollectionCreateJob( col, this );
   QVERIFY( create->exec() );
-  Collection col = create->collection();
+  col = create->collection();
   QVERIFY( col.isValid() );
 
   attr = col.attribute<TestAttribute>();
-#if 0
   QVERIFY( attr != 0 );
   QCOMPARE( attr->toByteArray(), QByteArray( attr1 ) );
-#endif
 
   CollectionListJob *list = new CollectionListJob( col, CollectionListJob::Local, this );
   QVERIFY( list->exec() );

@@ -53,12 +53,15 @@ void TransactionTest::testTransaction()
     if ( col.name() == "res3" )
       basisCollection = col;
 
-  CollectionCreateJob *job = new CollectionCreateJob( basisCollection, "transactionTest", Session::defaultSession() );
-  job->setRemoteId( "transactionTestRemoteId" );
+  Collection testCollection;
+  testCollection.setParent( basisCollection );
+  testCollection.setName( "transactionTest" );
+  testCollection.setRemoteId( "transactionTestRemoteId" );
+  CollectionCreateJob *job = new CollectionCreateJob( testCollection, Session::defaultSession() );
 
   QVERIFY( job->exec() );
 
-  const Collection testCollection = job->collection();
+  testCollection = job->collection();
 
   TransactionBeginJob *beginTransaction1 = new TransactionBeginJob( Session::defaultSession() );
   QVERIFY( beginTransaction1->exec() );

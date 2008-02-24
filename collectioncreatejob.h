@@ -30,8 +30,6 @@ class CollectionCreateJobPrivate;
 
 /**
   Job to create collections.
-
-  @todo Support setting the remote id.
 */
 class AKONADI_EXPORT CollectionCreateJob : public Job
 {
@@ -39,11 +37,10 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
   public:
     /**
       Create a new CollectionCreateJob job.
-      @param parentCollection The parent collection.
-      @param name The collection name
+      @param collection The new collection.
       @param parent The parent object.
     */
-    CollectionCreateJob( const Collection &parentCollection, const QString &name, QObject *parent = 0 );
+    CollectionCreateJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -51,33 +48,9 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     virtual ~CollectionCreateJob();
 
     /**
-      Set allowed content mimetypes of the newly created collection.
-      @param contentTypes The allowed content types of the new collection.
-    */
-    void setContentTypes( const QStringList &contentTypes );
-
-    /**
-      Sets the remote id of the collection.
-      @param remoteId The remote identifier of the collection
-    */
-    void setRemoteId( const QString &remoteId );
-
-    /**
       Returns the created collection if the job was executed succesfull.
     */
     Collection collection() const;
-
-    /**
-      Sets the given collection attribute.
-      @param attr A collection attribute, ownership stays with the caller.
-    */
-    void setAttribute( CollectionAttribute* attr );
-
-    /**
-      Sets the cache policy.
-      @param policy The cache policy. Inherting from parent is default.
-    */
-    void setCachePolicy( const CachePolicy &policy );
 
   protected:
     virtual void doStart();

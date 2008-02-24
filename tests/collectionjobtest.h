@@ -33,7 +33,7 @@ class CollectionJobTest : public QObject
     void testEmptyFolderList();
     void testSearchFolderList();
     void testResourceFolderList();
-    void testIllegalCreateFolder();
+    void testCreateDeleteFolder_data();
     void testCreateDeleteFolder();
     void testIllegalDeleteFolder();
     void testStatus();

@@ -185,12 +185,9 @@ void CollectionSync::slotLocalCreateDone(KJob * job)
 void CollectionSync::createLocalCollection(const Collection & c, const Collection & parent)
 {
   d->pendingJobs++;
-  CollectionCreateJob *create = new CollectionCreateJob( parent, c.name(), this );
-  create->setRemoteId( c.remoteId() );
-  create->setContentTypes( c.contentTypes() );
-  create->setCachePolicy( c.cachePolicy() );
-  foreach ( CollectionAttribute *attr, c.attributes() )
-    create->setAttribute( attr );
+  Collection col( c );
+  col.setParent( parent );
+  CollectionCreateJob *create = new CollectionCreateJob( col, this );
   connect( create, SIGNAL(result(KJob*)), SLOT(slotLocalCreateDone(KJob*)) );
 }
 

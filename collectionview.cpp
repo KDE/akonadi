@@ -106,7 +106,10 @@ void CollectionView::Private::createCollection()
   if ( parentId <= 0 )
     return;
 
-  CollectionCreateJob *job = new CollectionCreateJob( Collection( parentId ), name );
+  Collection col;
+  col.setName( name );
+  col.setParent( parentId );
+  CollectionCreateJob *job = new CollectionCreateJob( col );
   mParent->connect( job, SIGNAL(result(KJob*)), mParent, SLOT(createResult(KJob*)) );
 }
 
