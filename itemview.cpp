@@ -17,24 +17,33 @@
     02110-1301, USA.
 */
 
-#include <QtGui/QHeaderView>
 
 #include "itemview.h"
 
 #include "itemmodel.h"
+
+#include <KXMLGUIFactory>
+#include <KXmlGuiWindow>
+
+#include <QtGui/QHeaderView>
+#include <QContextMenuEvent>
+#include <QMenu>
 
 using namespace Akonadi;
 
 class ItemView::Private
 {
   public:
-    Private( ItemView *parent )
-      : mParent( parent )
+    Private( ItemView *parent ) :
+      xmlGuiWindow( 0 ),
+      mParent( parent )
     {
     }
 
     void itemActivated( const QModelIndex& );
     void itemCurrentChanged( const QModelIndex& );
+
+    KXmlGuiWindow *xmlGuiWindow;
 
   private:
     ItemView *mParent;
@@ -92,6 +101,21 @@ void ItemView::setModel( QAbstractItemModel * model )
 
   connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
+}
+
+void ItemView::contextMenuEvent(QContextMenuEvent * event)
+{
+  if ( !d->xmlGuiWindow )
+    return;
+  QMenu *popup = static_cast<QMenu*>( d->xmlGuiWindow->guiFactory()->container(
+                                      QLatin1String("akonadi_itemview_contextmenu"), d->xmlGuiWindow ) );
+  if ( popup )
+    popup->exec( event->globalPos() );
+}
+
+void ItemView::setKXmlGuiWindow(KXmlGuiWindow * xmlGuiWindow)
+{
+  d->xmlGuiWindow = xmlGuiWindow;
 }
 
 #include "itemview.moc"

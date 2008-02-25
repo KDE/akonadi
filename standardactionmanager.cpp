@@ -24,6 +24,7 @@
 #include <libakonadi/collectiondeletejob.h>
 #include <libakonadi/collectionmodel.h>
 #include <libakonadi/collectionpropertiesdialog.h>
+#include <libakonadi/subscriptiondialog.h>
 
 #include <KAction>
 #include <KActionCollection>
@@ -49,10 +50,12 @@ static const struct {
   const char* slot;
 } actionData[] = {
   { "akonadi_collection_create", I18N_NOOP("&New Folder..."), "folder-new", 0, SLOT(slotCreateCollection()) },
-  { "akonadi_collection_copy", I18N_NOOP("&Copy Folder"), "edit-copy", 0, SLOT(slotCopyCollection()) },
+  { "akonadi_collection_copy", I18N_NOOP("&Copy Folder(s)"), "edit-copy", 0, SLOT(slotCopyCollections()) },
   { "akonadi_collection_delete", I18N_NOOP("&Delete Folder"), "edit-delete", 0, SLOT(slotDeleteCollection()) },
   { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()) },
-  { "akonadi_collection_properties", I18N_NOOP("Folder &Properties..."), "configure", 0, SLOT(slotCollectionProperties()) }
+  { "akonadi_collection_properties", I18N_NOOP("Folder &Properties..."), "configure", 0, SLOT(slotCollectionProperties()) },
+  { "akonadi_item_copy", I18N_NOOP("&Copy Item(s)"), "edit-copy", 0, SLOT(slotCopyItems()) },
+  { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()) }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -63,7 +66,8 @@ class StandardActionManager::Private
   public:
     Private( StandardActionManager *parent ) :
       q( parent ),
-      collectionSelectionModel( 0 )
+      collectionSelectionModel( 0 ),
+      itemSelectionModel( 0 )
     {
       actions.fill( 0, StandardActionManager::LastType );
       agentManager = new AgentManager( parent );
@@ -76,36 +80,50 @@ class StandardActionManager::Private
         actions[type]->setEnabled( enable );
     }
 
-    void collectionSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
+    void copy( QItemSelectionModel* selModel )
     {
-      Q_UNUSED( selected );
-      Q_UNUSED( deselected );
-      updateActions();
+      Q_ASSERT( selModel );
+      if ( selModel->selectedRows().count() <= 0 )
+        return;
+      QMimeData *mimeData = selModel->model()->mimeData( selModel->selectedRows() );
+      QApplication::clipboard()->setMimeData( mimeData );
     }
 
     void updateActions()
     {
       bool singleColSelected = false;
+      bool multiColSelected = false;
       QModelIndex selectedIndex;
       if ( collectionSelectionModel ) {
-        singleColSelected = collectionSelectionModel->selectedRows().count() == 1;
+        const int count = collectionSelectionModel->selectedRows().count();
+        singleColSelected = count == 1;
+        multiColSelected = count > 0;
         if ( singleColSelected )
           selectedIndex = collectionSelectionModel->selectedRows().first();
       }
 
-      enableAction( CopyCollection, singleColSelected );
+      enableAction( CopyCollections, multiColSelected );
       enableAction( CollectionProperties, singleColSelected );
 
       if ( singleColSelected && selectedIndex.isValid() ) {
         const Collection col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
         enableAction( CreateCollection, selectedIndex.data( CollectionModel::ChildCreatableRole ).toBool() );
-        enableAction( DeleteCollection, col.type() == Collection::Folder );
-        enableAction( SynchronizeCollection, col.type() == Collection::Folder || col.type() == Collection::Resource );
+        enableAction( DeleteCollections, col.type() == Collection::Folder );
+        enableAction( SynchronizeCollections, col.type() == Collection::Folder || col.type() == Collection::Resource );
       } else {
         enableAction( CreateCollection, false );
-        enableAction( DeleteCollection, false );
-        enableAction( SynchronizeCollection, false );
+        enableAction( DeleteCollections, false );
+        enableAction( SynchronizeCollections, false );
       }
+
+      bool multiItemSelected = false;
+      if ( itemSelectionModel ) {
+        multiItemSelected = itemSelectionModel->selectedRows().count() > 0;
+      }
+
+      enableAction( CopyItems, multiItemSelected );
+
+      emit q->actionStateUpdated();
     }
 
     void slotCreateCollection()
@@ -129,13 +147,9 @@ class StandardActionManager::Private
       q->connect( job, SIGNAL(result(KJob*)), q, SLOT(collectionCreationResult(KJob*)) );
     }
 
-    void slotCopyCollection()
+    void slotCopyCollections()
     {
-      Q_ASSERT( collectionSelectionModel );
-      if ( collectionSelectionModel->selectedRows().count() <= 0 )
-        return;
-      QMimeData *mimeData = collectionSelectionModel->model()->mimeData( collectionSelectionModel->selectedRows() );
-      QApplication::clipboard()->setMimeData( mimeData );
+      copy( collectionSelectionModel );
     }
 
     void slotDeleteCollection()
@@ -176,6 +190,17 @@ class StandardActionManager::Private
       dlg->show();
     }
 
+    void slotCopyItems()
+    {
+      copy( itemSelectionModel );
+    }
+
+    void slotLocalSubscription()
+    {
+      SubscriptionDialog* dlg = new SubscriptionDialog( parentWidget );
+      dlg->show();
+    }
+
     void collectionCreationResult( KJob *job )
     {
       if ( job->error() ) {
@@ -196,6 +221,7 @@ class StandardActionManager::Private
     KActionCollection *actionCollection;
     QWidget *parentWidget;
     QItemSelectionModel *collectionSelectionModel;
+    QItemSelectionModel *itemSelectionModel;
     QVector<KAction*> actions;
     AgentManager *agentManager;
 };
@@ -218,7 +244,14 @@ void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel * se
 {
   d->collectionSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-           SLOT(collectionSelectionChanged(QItemSelection, QItemSelection)) );
+           SLOT(updateActions()) );
+}
+
+void StandardActionManager::setItemSelectionModel(QItemSelectionModel * selectionModel)
+{
+  d->itemSelectionModel = selectionModel;
+  connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
+           SLOT(updateActions()) );
 }
 
 KAction* StandardActionManager::createAction( Type type )

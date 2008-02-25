@@ -42,12 +42,20 @@ namespace Akonadi {
   signal and re-connecting it to your implementation. The actual KAction
   objects can be retrieved by calling createAction() or action() for that.
 
+  If the default look and feel (labels, icons, shortcuts) of the actions
+  is not appropriate for your application, you can access them as noted
+  above and customize them to your needs.
+
+  Finally, if you have special needs for the action states, connect to
+  the actionStateUpdated() signal and adjust the state accordingly.
+
   The following actions are provided (KAction name in parenthesis):
   - Creation of a new collection (@c akonadi_collection_create)
   - Copying of selected collections (@c akonadi_collection_copy)
   - Deletion of selected collections (@c akonadi_collection_delete)
   - Synchronization of selected collections (@c akonadi_collection_sync)
   - Showing the collection properties dialog for the current collection (@c akonadi_collection_properties)
+  - Managing local subscriptions (@c akonadi_manage_local_subscriptions)
 
   The following example shows how to use standard actions in your application:
 @verbatim
@@ -58,7 +66,11 @@ namespace Akonadi {
   Additionally you have to add the actions to the KXMLGUI file of your application,
   using the names listed above.
 
-  @todo collection deleting, copy and sync do not support multi-selection yet
+  If you only need a subset of the actions provided, you can call createAction()
+  instead of createAllActions() for the action types you want.
+
+  @todo collection deleting and sync do not support multi-selection yet
+  @todo Customizable action text for plural action labels?
 */
 class AKONADI_EXPORT StandardActionManager : public QObject
 {
@@ -67,10 +79,12 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     /** List of supported actions. */
     enum Type {
       CreateCollection,
-      CopyCollection,
-      DeleteCollection,
-      SynchronizeCollection,
+      CopyCollections,
+      DeleteCollections,
+      SynchronizeCollections,
       CollectionProperties,
+      CopyItems,
+      ManageLocalSubscriptions,
       LastType
     };
 
@@ -94,6 +108,12 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     void setCollectionSelectionModel( QItemSelectionModel *selectionModel );
 
     /**
+      Sets the item selection model based on which the item related actions
+      should operate. If none is set, all item actions will be disabled.
+    */
+    void setItemSelectionModel( QItemSelectionModel* selectionModel );
+
+    /**
       Creates the action of the given type and adds it to the action collection
       specified in the constructor if it does not exist yet. The action is
       connected to its default implementation provided by this class.
@@ -111,17 +131,27 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     */
     KAction* action( Type type ) const;
 
+  Q_SIGNALS:
+    /**
+      Emitted when the action state has been updated.
+      In case you have special needs for changing the state of some actions,
+      connect to this signal and adjust the action state.
+    */
+    void actionStateUpdated();
+
   private:
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void collectionSelectionChanged(QItemSelection, QItemSelection) )
+    Q_PRIVATE_SLOT( d, void updateActions() )
 
     Q_PRIVATE_SLOT( d, void slotCreateCollection() )
-    Q_PRIVATE_SLOT( d, void slotCopyCollection() )
+    Q_PRIVATE_SLOT( d, void slotCopyCollections() )
     Q_PRIVATE_SLOT( d, void slotDeleteCollection() )
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollection() )
     Q_PRIVATE_SLOT( d, void slotCollectionProperties() )
+    Q_PRIVATE_SLOT( d, void slotCopyItems() )
+    Q_PRIVATE_SLOT( d, void slotLocalSubscription() )
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void collectionDeletionResult(KJob*) )

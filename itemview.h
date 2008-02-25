@@ -23,12 +23,19 @@
 #include "libakonadi_export.h"
 #include <QtGui/QTreeView>
 
+class KXmlGuiWindow;
+
 namespace Akonadi {
 
 class DataReference;
 
 /**
   A view to show an item list provided by an ItemModel.
+
+  When a KXmlGuiWindow is set, the XMLGUI defined context menu
+  @c akonadi_itemview_contextmenu is used if available.
+
+  @todo Convenience ctor including the KXmlGuiWindow for non-designer users?
 */
 class AKONADI_EXPORT ItemView : public QTreeView
 {
@@ -51,6 +58,12 @@ class AKONADI_EXPORT ItemView : public QTreeView
     */
     virtual void setModel( QAbstractItemModel * model );
 
+    /**
+      Sets the KXmlGuiWindow which this view is used in. This is needed
+      if you want to use the built-in context menu.
+      @param xmlGuiWindow The KXmlGuiWindow this view is used in.
+    */
+    void setKXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
 
   Q_SIGNALS:
     /**
@@ -64,6 +77,9 @@ class AKONADI_EXPORT ItemView : public QTreeView
      * in the view has changed.
      */
     void currentChanged( const Akonadi::DataReference &item );
+
+  protected:
+    void contextMenuEvent( QContextMenuEvent *event );
 
   private:
     class Private;

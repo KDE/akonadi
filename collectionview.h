@@ -37,6 +37,8 @@ class Collection;
   When a KXmlGuiWindow is passed to the constructor, the XMLGUI
   defined context menu @c akonadi_collectionview_contextmenu is
   used if available.
+
+  @todo The ctor API is not compatible with designer, change that to match ItemView
 */
 class AKONADI_EXPORT CollectionView : public QTreeView
 {
