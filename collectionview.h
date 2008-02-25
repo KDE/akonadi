@@ -23,6 +23,7 @@
 #include "libakonadi_export.h"
 #include <QtGui/QTreeView>
 
+class KXmlGuiWindow;
 class QDragMoveEvent;
 
 namespace Akonadi {
@@ -32,6 +33,10 @@ class Collection;
 /**
   A view to show a collection tree provided by a CollectionModell.
   It uses an internal QSortFilterProxyModel to provide sorting.
+
+  When a KXmlGuiWindow is passed to the constructor, the XMLGUI
+  defined context menu @c akonadi_collectionview_contextmenu is
+  used if available.
 */
 class AKONADI_EXPORT CollectionView : public QTreeView
 {
@@ -40,9 +45,12 @@ class AKONADI_EXPORT CollectionView : public QTreeView
   public:
     /**
       Create a new collection view.
+      @param xmlGuiWindow The KXmlGuiWindow this is used in. This is needed for the
+      XMLGUI based context menu. Passing 0 is ok and will disable the builtin context
+      menu.
       @param parent the parent widget.
     */
-    explicit CollectionView( QWidget *parent = 0 );
+    explicit CollectionView( KXmlGuiWindow *xmlGuiWindow = 0, QWidget *parent = 0 );
 
     /**
       Destroys this collection view.
@@ -79,13 +87,6 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     Private * const d;
 
     Q_PRIVATE_SLOT( d, void dragExpand() )
-    Q_PRIVATE_SLOT( d, void createCollection() )
-    Q_PRIVATE_SLOT( d, void createResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void deleteCollection() )
-    Q_PRIVATE_SLOT( d, void deleteResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void collectionProperties() )
-    Q_PRIVATE_SLOT( d, void synchronizeCollection() )
-    Q_PRIVATE_SLOT( d, void updateActions( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
 };

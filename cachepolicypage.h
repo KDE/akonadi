@@ -37,6 +37,7 @@ class CachePolicyPage : public CollectionPropertiesPage
   public:
     explicit CachePolicyPage( QWidget * parent );
 
+    bool canHandle( const Collection &collection ) const;
     void load( const Collection &collection );
     void save( Collection &collection );
 

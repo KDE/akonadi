@@ -28,6 +28,11 @@ CachePolicyPage::CachePolicyPage(QWidget * parent) :
   ui.setupUi( this );
 }
 
+bool Akonadi::CachePolicyPage::canHandle(const Collection & collection) const
+{
+  return collection.type() != Collection::VirtualParent && collection.type() != Collection::Virtual;
+}
+
 void CachePolicyPage::load(const Collection & collection)
 {
   CachePolicy policy = collection.cachePolicy();

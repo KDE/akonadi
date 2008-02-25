@@ -85,6 +85,7 @@ set( akonadi_LIB_SRC
 	resourcescheduler.cpp
 	searchcreatejob.cpp
 	session.cpp
+	standardactionmanager.cpp
 	subscriptionjob.cpp
 	subscriptionmodel.cpp
 	subscriptiondialog.cpp
@@ -165,6 +166,7 @@ install( FILES
 	resource.h
 	resourcebase.h
 	session.h
+	standardactionmanager.h
 	transactionjobs.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/libakonadi
 )

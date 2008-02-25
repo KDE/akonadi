@@ -19,24 +19,22 @@
 
 #include "collectionview.h"
 
-#include "agentmanager.h"
+#include "collection.h"
 #include "collectionmodel.h"
-#include "collectioncreatejob.h"
-#include "collectiondeletejob.h"
-#include "collectionpropertiesdialog.h"
 
 #include <kaction.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kurl.h>
+#include <kxmlguifactory.h>
+#include <kxmlguiwindow.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtGui/QDragMoveEvent>
 #include <QtGui/QHeaderView>
-#include <QtGui/QInputDialog>
 #include <QtGui/QMenu>
 #include <QtGui/QSortFilterProxyModel>
 
@@ -46,19 +44,12 @@ class CollectionView::Private
 {
   public:
     Private( CollectionView *parent )
-      : mParent( parent )
+      : mParent( parent ),
+        xmlGuiWindow( 0 )
     {
-      agentManager = new AgentManager( parent );
     }
 
     void dragExpand();
-    void createCollection();
-    void createResult( KJob* );
-    void deleteCollection();
-    void deleteResult( KJob* );
-    void collectionProperties();
-    void synchronizeCollection();
-    void updateActions( const QModelIndex& );
     void itemClicked( const QModelIndex& );
     void itemCurrentChanged( const QModelIndex& );
     bool hasParent( const QModelIndex& idx, int parentId );
@@ -68,12 +59,7 @@ class CollectionView::Private
     QModelIndex dragOverIndex;
     QTimer dragExpandTimer;
 
-    KAction *newCollectionAction;
-    KAction *deleteCollectionAction;
-    KAction *collectionPropertyAction;
-    KAction *synchronizeCollectionAction;
-
-    AgentManager *agentManager;
+    KXmlGuiWindow *xmlGuiWindow;
 };
 
 bool CollectionView::Private::hasParent( const QModelIndex& idx, int parentId )
@@ -92,90 +78,6 @@ void CollectionView::Private::dragExpand()
 {
   mParent->setExpanded( dragOverIndex, true );
   dragOverIndex = QModelIndex();
-}
-
-void CollectionView::Private::createCollection()
-{
-  QModelIndex index = mParent->currentIndex();
-  if ( !index.data( CollectionModel::ChildCreatableRole ).toBool() )
-    return;
-  QString name = QInputDialog::getText( mParent, i18nc( "@title:window", "New Folder"), i18nc( "@label:textbox, name of a thing", "Name") );
-  if ( name.isEmpty() )
-    return;
-  int parentId = index.data( CollectionModel::CollectionIdRole ).toInt();
-  if ( parentId <= 0 )
-    return;
-
-  Collection col;
-  col.setName( name );
-  col.setParent( parentId );
-  CollectionCreateJob *job = new CollectionCreateJob( col );
-  mParent->connect( job, SIGNAL(result(KJob*)), mParent, SLOT(createResult(KJob*)) );
-}
-
-void CollectionView::Private::createResult(KJob * job)
-{
-  if ( job->error() )
-    KMessageBox::error( mParent, i18n("Could not create folder: %1", job->errorString()), i18n("Folder creation failed") );
-}
-
-void CollectionView::Private::deleteCollection()
-{
-  QModelIndex index = mParent->currentIndex();
-  if ( !index.isValid() )
-    return;
-  int colId = index.data( CollectionModel::CollectionIdRole ).toInt();
-  if ( colId <= 0 )
-    return;
-
-  CollectionDeleteJob *job = new CollectionDeleteJob( Collection( colId ) );
-  mParent->connect( job, SIGNAL(result(KJob*)), mParent, SLOT(deleteResult(KJob*)) );
-}
-
-void CollectionView::Private::deleteResult(KJob * job)
-{
-  if ( job->error() )
-    KMessageBox::error( mParent, i18n("Could not delete folder: %1", job->errorString()), i18n("Folder deletion failed") );
-}
-
-void CollectionView::Private::collectionProperties()
-{
-  QModelIndex index = mParent->currentIndex();
-  if ( !index.isValid() )
-    return;
-  const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-  CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( col, mParent );
-  dlg->show();
-}
-
-void CollectionView::Private::synchronizeCollection()
-{
-  QModelIndex index = mParent->currentIndex();
-  if ( !index.isValid() )
-    return;
-  const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-  agentManager->agentInstanceSynchronizeCollection( col );
-}
-
-void CollectionView::Private::updateActions( const QModelIndex &current )
-{
-  if ( !current.isValid() ) {
-    newCollectionAction->setEnabled( false );
-    deleteCollectionAction->setEnabled( false );
-    collectionPropertyAction->setEnabled( false );
-    synchronizeCollectionAction->setEnabled( false );
-    return;
-  }
-
-  newCollectionAction->setEnabled( current.data( CollectionModel::ChildCreatableRole ).toBool() );
-
-  if ( current.parent().isValid() )
-    deleteCollectionAction->setEnabled( true );
-  else
-    deleteCollectionAction->setEnabled( false );
-
-  collectionPropertyAction->setEnabled( true );
-  synchronizeCollectionAction->setEnabled( true );
 }
 
 void CollectionView::Private::itemClicked( const QModelIndex &index )
@@ -202,10 +104,11 @@ void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
   emit mParent->currentChanged( Collection( currentCollection ) );
 }
 
-CollectionView::CollectionView( QWidget * parent ) :
+CollectionView::CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget * parent ) :
     QTreeView( parent ),
     d( new Private( this ) )
 {
+  d->xmlGuiWindow = xmlGuiWindow;
   d->filterModel = new QSortFilterProxyModel( this );
   d->filterModel->setDynamicSortFilter( true );
   d->filterModel->setSortCaseSensitivity( Qt::CaseInsensitive );
@@ -222,15 +125,6 @@ CollectionView::CollectionView( QWidget * parent ) :
 
   d->dragExpandTimer.setSingleShot( true );
   connect( &d->dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()) );
-
-  d->newCollectionAction = new KAction( KIcon(QLatin1String("folder-new")), i18n("New Folder..."), this );
-  connect( d->newCollectionAction, SIGNAL(triggered()), SLOT(createCollection()) );
-  d->synchronizeCollectionAction = new KAction( KIcon(QLatin1String("view-refresh") ), i18n("Synchronize Folder"), this );
-  connect( d->synchronizeCollectionAction, SIGNAL(triggered()), SLOT(synchronizeCollection()) );
-  d->deleteCollectionAction = new KAction( KIcon(QLatin1String("edit-delete")), i18n("Delete Folder"), this );
-  connect( d->deleteCollectionAction, SIGNAL(triggered()), SLOT(deleteCollection()) );
-  d->collectionPropertyAction = new KAction( KIcon(QLatin1String("configure")), i18n("Folder Properties..."), this );
-  connect( d->collectionPropertyAction, SIGNAL(triggered()), SLOT(collectionProperties()) );
 
   connect( this, SIGNAL( clicked( const QModelIndex& ) ),
            this, SLOT( itemClicked( const QModelIndex& ) ) );
@@ -330,13 +224,12 @@ void CollectionView::dropEvent(QDropEvent * event)
 
 void CollectionView::contextMenuEvent(QContextMenuEvent * event)
 {
-  d->updateActions( indexAt( event->pos() ) );
-  QList<QAction*> actions;
-  actions << d->newCollectionAction << d->synchronizeCollectionAction
-          << d->deleteCollectionAction
-          << d->collectionPropertyAction;
-  QMenu::exec( actions, event->globalPos() );
-  d->updateActions( currentIndex() );
+  if ( !d->xmlGuiWindow )
+    return;
+  QMenu *popup = static_cast<QMenu*>( d->xmlGuiWindow->guiFactory()->container(
+                                      QLatin1String("akonadi_collectionview_contextmenu"), d->xmlGuiWindow ) );
+  if ( popup )
+    popup->exec( event->globalPos() );
 }
 
 #include "collectionview.moc"
