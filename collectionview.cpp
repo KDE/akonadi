@@ -142,8 +142,6 @@ void CollectionView::setModel( QAbstractItemModel * model )
   header()->setResizeMode( 0, QHeaderView::Stretch );
 
   connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( updateActions( const QModelIndex& ) ) );
-  connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
 }
 

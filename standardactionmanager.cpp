@@ -27,6 +27,7 @@
 
 #include <KAction>
 #include <KActionCollection>
+#include <KDebug>
 #include <KInputDialog>
 #include <KLocale>
 #include <KMessageBox>
@@ -87,9 +88,9 @@ class StandardActionManager::Private
       bool singleColSelected = false;
       QModelIndex selectedIndex;
       if ( collectionSelectionModel ) {
-        singleColSelected = collectionSelectionModel->selectedIndexes().count() == 1;
+        singleColSelected = collectionSelectionModel->selectedRows().count() == 1;
         if ( singleColSelected )
-          selectedIndex = collectionSelectionModel->selectedIndexes().first();
+          selectedIndex = collectionSelectionModel->selectedRows().first();
       }
 
       enableAction( CopyCollection, singleColSelected );
@@ -131,9 +132,9 @@ class StandardActionManager::Private
     void slotCopyCollection()
     {
       Q_ASSERT( collectionSelectionModel );
-      if ( collectionSelectionModel->selectedIndexes().count() <= 0 )
+      if ( collectionSelectionModel->selectedRows().count() <= 0 )
         return;
-      QMimeData *mimeData = collectionSelectionModel->model()->mimeData( collectionSelectionModel->selectedIndexes() );
+      QMimeData *mimeData = collectionSelectionModel->model()->mimeData( collectionSelectionModel->selectedRows() );
       QApplication::clipboard()->setMimeData( mimeData );
     }
 
