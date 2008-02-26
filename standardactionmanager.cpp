@@ -50,11 +50,11 @@ static const struct {
   const char* slot;
 } actionData[] = {
   { "akonadi_collection_create", I18N_NOOP("&New Folder..."), "folder-new", 0, SLOT(slotCreateCollection()) },
-  { "akonadi_collection_copy", I18N_NOOP("&Copy Folder(s)"), "edit-copy", 0, SLOT(slotCopyCollections()) },
+  { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT(slotCopyCollections()) },
   { "akonadi_collection_delete", I18N_NOOP("&Delete Folder"), "edit-delete", 0, SLOT(slotDeleteCollection()) },
   { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()) },
   { "akonadi_collection_properties", I18N_NOOP("Folder &Properties..."), "configure", 0, SLOT(slotCollectionProperties()) },
-  { "akonadi_item_copy", I18N_NOOP("&Copy Item(s)"), "edit-copy", 0, SLOT(slotCopyItems()) },
+  { "akonadi_item_copy", 0, "edit-copy", 0, SLOT(slotCopyItems()) },
   { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()) }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
@@ -71,6 +71,9 @@ class StandardActionManager::Private
     {
       actions.fill( 0, StandardActionManager::LastType );
       agentManager = new AgentManager( parent );
+
+      pluralLabels.insert( StandardActionManager::CopyCollections, ki18np( "&Copy Folder", "&Copy %1 Folders" ) );
+      pluralLabels.insert( StandardActionManager::CopyItems, ki18np( "&Copy Item", "&Copy %1 Items" ) );
     }
 
     void enableAction( StandardActionManager::Type type, bool enable )
@@ -78,6 +81,14 @@ class StandardActionManager::Private
       Q_ASSERT( type >= 0 && type < StandardActionManager::LastType );
       if ( actions[type] )
         actions[type]->setEnabled( enable );
+    }
+
+    void updatePluralLabel( StandardActionManager::Type type, int count )
+    {
+      Q_ASSERT( type >= 0 && type < StandardActionManager::LastType );
+      if ( actions[type] && pluralLabels.contains( type ) && !pluralLabels.value( type ).isEmpty() ) {
+        actions[type]->setText( pluralLabels.value( type ).subs( qMax( count, 1 ) ).toString() );
+      }
     }
 
     void copy( QItemSelectionModel* selModel )
@@ -93,11 +104,12 @@ class StandardActionManager::Private
     {
       bool singleColSelected = false;
       bool multiColSelected = false;
+      int colCount = 0;
       QModelIndex selectedIndex;
       if ( collectionSelectionModel ) {
-        const int count = collectionSelectionModel->selectedRows().count();
-        singleColSelected = count == 1;
-        multiColSelected = count > 0;
+        colCount = collectionSelectionModel->selectedRows().count();
+        singleColSelected = colCount == 1;
+        multiColSelected = colCount > 0;
         if ( singleColSelected )
           selectedIndex = collectionSelectionModel->selectedRows().first();
       }
@@ -117,11 +129,16 @@ class StandardActionManager::Private
       }
 
       bool multiItemSelected = false;
+      int itemCount = 0;
       if ( itemSelectionModel ) {
-        multiItemSelected = itemSelectionModel->selectedRows().count() > 0;
+        itemCount = itemSelectionModel->selectedRows().count();
+        multiItemSelected = itemCount > 0;
       }
 
       enableAction( CopyItems, multiItemSelected );
+
+      updatePluralLabel( CopyCollections, colCount );
+      updatePluralLabel( CopyItems, itemCount );
 
       emit q->actionStateUpdated();
     }
@@ -224,6 +241,7 @@ class StandardActionManager::Private
     QItemSelectionModel *itemSelectionModel;
     QVector<KAction*> actions;
     AgentManager *agentManager;
+    QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
 };
 
 StandardActionManager::StandardActionManager( KActionCollection * actionCollection,
@@ -261,7 +279,9 @@ KAction* StandardActionManager::createAction( Type type )
   if ( d->actions[type] )
     return d->actions[type];
   KAction *action = new KAction( d->parentWidget );
-  if ( actionData[type].label )
+  if ( d->pluralLabels.contains( type ) && !d->pluralLabels.value( type ).isEmpty() )
+    action->setText( d->pluralLabels.value( type ).subs( 1 ).toString() );
+  else if ( actionData[type].label )
     action->setText( i18n( actionData[type].label ) );
   if ( actionData[type].icon )
     action->setIcon( KIcon( QString::fromLatin1( actionData[type].icon ) ) );
@@ -284,6 +304,12 @@ KAction * StandardActionManager::action( Type type ) const
 {
   Q_ASSERT( type >= 0 && type < LastType );
   return d->actions[type];
+}
+
+void StandardActionManager::setActionText(Type type, const KLocalizedString & text)
+{
+  Q_ASSERT( type >= 0 && type < LastType );
+  d->pluralLabels.insert( type, text );
 }
 
 #include "standardactionmanager.moc"

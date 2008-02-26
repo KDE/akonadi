@@ -22,6 +22,7 @@
 
 #include "libakonadi_export.h"
 
+#include <KLocalizedString>
 #include <QtCore/QObject>
 
 class KAction;
@@ -44,7 +45,10 @@ namespace Akonadi {
 
   If the default look and feel (labels, icons, shortcuts) of the actions
   is not appropriate for your application, you can access them as noted
-  above and customize them to your needs.
+  above and customize them to your needs. Additionally, you can set a
+  KLocalizedString which should be used as a action label with correct
+  plural handling for actions operating on multiple objects with
+  setActionText().
 
   Finally, if you have special needs for the action states, connect to
   the actionStateUpdated() signal and adjust the state accordingly.
@@ -93,7 +97,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       @param actionCollection The action collection to operate on.
       @param parent The parent widget.
     */
-    StandardActionManager( KActionCollection *actionCollection, QWidget *parent = 0 );
+    explicit StandardActionManager( KActionCollection *actionCollection, QWidget *parent = 0 );
 
     /**
       Destructor.
@@ -130,6 +134,20 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       Returns the action of the given type, 0 if it has not been created (yet).
     */
     KAction* action( Type type ) const;
+
+    /**
+      Sets the label of the action @p type to @p text, which is used during
+      updating the action state and substituted according to the number of
+      selected objects. This is mainly useful to customize the label of actions
+      that can operate on multiple objects.
+
+      Example:
+      @verbatim
+      acctMgr->setActionText( Akonadi::StandardActionManager::CopyItems,
+                              ki18np( "Copy Mail", "Copy %1 Mails" ) );
+      @endverbatim
+    */
+    void setActionText( Type type, const KLocalizedString &text );
 
   Q_SIGNALS:
     /**
