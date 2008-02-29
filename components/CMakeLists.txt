@@ -19,7 +19,7 @@ set( akonadi_components_LIB_SRC
 qt4_add_resources( akonadi_components_LIB_SRC agentinstanceview.qrc )
 
 kde4_add_library( akonadicomponents SHARED ${akonadi_components_LIB_SRC} )
-target_link_libraries( akonadicomponents akonadi )
+target_link_libraries( akonadicomponents akonadicore )
 set_target_properties( akonadicomponents PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS akonadicomponents DESTINATION ${LIB_INSTALL_DIR})
 
