@@ -325,7 +325,7 @@ void ItemCollectionFetchJob::collectionJobDone( KJob* job )
 {
   if ( !job->error() ) {
     CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
-    if ( listJob->collections().count() == 0 ) {
+    if ( listJob->collections().isEmpty() ) {
       setError( 1 );
       setErrorText( QLatin1String( "No collection found" ) );
     } else
@@ -337,7 +337,7 @@ void ItemCollectionFetchJob::itemJobDone( KJob* job )
 {
   if ( !job->error() ) {
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-    if ( fetchJob->items().count() == 0 ) {
+    if ( fetchJob->items().isEmpty() ) {
       setError( 2 );
       setErrorText( QLatin1String( "No item found" ) );
     } else

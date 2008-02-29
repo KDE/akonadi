@@ -94,7 +94,7 @@ void TransactionTest::testTransaction()
   ItemFetchJob *fetchJob = new ItemFetchJob( testCollection, Session::defaultSession() );
   QVERIFY( fetchJob->exec() );
 
-  QVERIFY( fetchJob->items().count() == 0 );
+  QVERIFY( fetchJob->items().isEmpty() );
 
   CollectionDeleteJob *deleteJob = new CollectionDeleteJob( testCollection, Session::defaultSession() );
   QVERIFY( deleteJob->exec() );
