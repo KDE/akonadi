@@ -24,6 +24,7 @@
 #include <libakonadi/collectiondeletejob.h>
 #include <libakonadi/collectionmodel.h>
 #include <libakonadi/collectionpropertiesdialog.h>
+#include <libakonadi/pastehelper.h>
 #include <libakonadi/subscriptiondialog.h>
 
 #include <KAction>
@@ -55,6 +56,7 @@ static const struct {
   { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()) },
   { "akonadi_collection_properties", I18N_NOOP("Folder &Properties..."), "configure", 0, SLOT(slotCollectionProperties()) },
   { "akonadi_item_copy", 0, "edit-copy", 0, SLOT(slotCopyItems()) },
+  { "akonadi_paste", I18N_NOOP("&Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()) },
   { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()) }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
@@ -122,10 +124,12 @@ class StandardActionManager::Private
         enableAction( CreateCollection, selectedIndex.data( CollectionModel::ChildCreatableRole ).toBool() );
         enableAction( DeleteCollections, col.type() == Collection::Folder );
         enableAction( SynchronizeCollections, col.type() == Collection::Folder || col.type() == Collection::Resource );
+        enableAction( Paste, PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
       } else {
         enableAction( CreateCollection, false );
         enableAction( DeleteCollections, false );
         enableAction( SynchronizeCollections, false );
+        enableAction( Paste, false );
       }
 
       bool multiItemSelected = false;
@@ -141,6 +145,12 @@ class StandardActionManager::Private
       updatePluralLabel( CopyItems, itemCount );
 
       emit q->actionStateUpdated();
+    }
+
+    void clipboardChanged( QClipboard::Mode mode )
+    {
+      if ( mode == QClipboard::Clipboard )
+        updateActions();
     }
 
     void slotCreateCollection()
@@ -212,6 +222,17 @@ class StandardActionManager::Private
       copy( itemSelectionModel );
     }
 
+    void slotPaste()
+    {
+      const QModelIndex index = collectionSelectionModel->currentIndex();
+      if ( !index.isValid() )
+        return;
+      const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      QList<KJob*> jobs = PasteHelper::paste( QApplication::clipboard()->mimeData(), col );
+      foreach ( KJob* job, jobs )
+        q->connect( job, SIGNAL(result(KJob*)), q, SLOT(pasteResult(KJob*)) );
+    }
+
     void slotLocalSubscription()
     {
       SubscriptionDialog* dlg = new SubscriptionDialog( parentWidget );
@@ -234,6 +255,14 @@ class StandardActionManager::Private
       }
     }
 
+    void pasteResult( KJob *job )
+    {
+      if ( job->error() ) {
+        KMessageBox::error( parentWidget, i18n("Could not paste data: %1", job->errorString()),
+                            i18n("Paste failed") );
+      }
+    }
+
     StandardActionManager *q;
     KActionCollection *actionCollection;
     QWidget *parentWidget;
@@ -251,6 +280,7 @@ StandardActionManager::StandardActionManager( KActionCollection * actionCollecti
 {
   d->parentWidget = parent;
   d->actionCollection = actionCollection;
+  connect( QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)), SLOT(clipboardChanged(QClipboard::Mode)) );
 }
 
 StandardActionManager::~ StandardActionManager()

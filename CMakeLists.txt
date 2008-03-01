@@ -78,6 +78,7 @@ set( akonadi_LIB_SRC
 	messagecollectionmodel.cpp
 	monitor.cpp
 	monitor_p.cpp
+	pastehelper.cpp
 	profilemanager.cpp
 	profilemodel.cpp
 	protocolhelper.cpp

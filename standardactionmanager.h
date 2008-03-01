@@ -59,6 +59,7 @@ namespace Akonadi {
   - Deletion of selected collections (@c akonadi_collection_delete)
   - Synchronization of selected collections (@c akonadi_collection_sync)
   - Showing the collection properties dialog for the current collection (@c akonadi_collection_properties)
+  - Pasting collections, items or raw data (@c akonadi_paste)
   - Managing local subscriptions (@c akonadi_manage_local_subscriptions)
 
   The following example shows how to use standard actions in your application:
@@ -74,7 +75,6 @@ namespace Akonadi {
   instead of createAllActions() for the action types you want.
 
   @todo collection deleting and sync do not support multi-selection yet
-  @todo Customizable action text for plural action labels?
 */
 class AKONADI_EXPORT StandardActionManager : public QObject
 {
@@ -88,6 +88,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       SynchronizeCollections,
       CollectionProperties,
       CopyItems,
+      Paste,
       ManageLocalSubscriptions,
       LastType
     };
@@ -162,6 +163,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void updateActions() )
+    Q_PRIVATE_SLOT( d, void clipboardChanged(QClipboard::Mode) )
 
     Q_PRIVATE_SLOT( d, void slotCreateCollection() )
     Q_PRIVATE_SLOT( d, void slotCopyCollections() )
@@ -169,10 +171,12 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollection() )
     Q_PRIVATE_SLOT( d, void slotCollectionProperties() )
     Q_PRIVATE_SLOT( d, void slotCopyItems() )
+    Q_PRIVATE_SLOT( d, void slotPaste() )
     Q_PRIVATE_SLOT( d, void slotLocalSubscription() )
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void collectionDeletionResult(KJob*) )
+    Q_PRIVATE_SLOT( d, void pasteResult(KJob*) )
 };
 
 }
