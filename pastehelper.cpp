@@ -22,8 +22,10 @@
 #include "collectionmodifyjob.h"
 #include "item.h"
 #include "itemappendjob.h"
+#include "itemcopyjob.h"
 #include "itemstorejob.h"
 
+#include <KDebug>
 #include <KUrl>
 
 #include <QByteArray>
@@ -95,7 +97,8 @@ QList<KJob*> PasteHelper::paste(const QMimeData * mimeData, const Collection & c
         job->noRevCheck();
         rv.append( job );
       } else  {
-        // TODO Wait for a job allowing to copy on server side.
+        ItemCopyJob *job = new ItemCopyJob( Item( ref ), collection );
+        rv.append( job );
       }
     } else {
       // non-akonadi URL

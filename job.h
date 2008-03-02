@@ -69,6 +69,17 @@ class SessionPrivate;
     }
   \endcode
 
+  Warning: Using the synchronous method is error prone, use this only
+  if the asynchronous access is not possible and none of the following
+  known issues apply:
+  - exec() must not be called directly from a result slot of another
+    job in the same Session. This will trigger a dead-lock since the
+    program won't return from the result slot and thus will never complete
+    the finishing of the current job, keeping it in the internal queue
+    and blocking the execution of any following job.
+  - exec() must not be called from within another event-loop that might
+    finish before the newly started inner sub-eventloop. This will crash.
+
   Subclasses must reimplement @see doStart().
 
   Note that KJob-derived objects delete itself, it is thus not possible

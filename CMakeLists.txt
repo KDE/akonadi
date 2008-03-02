@@ -64,6 +64,7 @@ set( akonadi_LIB_SRC
 	item.cpp
 	itemappendjob.cpp
 	itembrowser.cpp
+	itemcopyjob.cpp
 	itemdeletejob.cpp
 	itemdetailsview.cpp
 	itemfetchjob.cpp
@@ -149,6 +150,7 @@ install( FILES
 	item.h
 	itemappendjob.h
 	itembrowser.h
+	itemcopyjob.h
 	itemdeletejob.h
 	itemdetailsview.h
 	itemfetchjob.h
