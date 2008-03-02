@@ -28,6 +28,7 @@
 #include "handler/aklist.h"
 #include "handler/append.h"
 #include "handler/capability.h"
+#include "handler/copy.h"
 #include "handler/create.h"
 #include "handler/delete.h"
 #include "handler/expunge.h"
@@ -142,6 +143,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new AkList();
     if ( command == "SUBSCRIBE" || command == "UNSUBSCRIBE" )
       return new Subscribe();
+    if ( command == "COPY" )
+      return new Copy();
 
     return 0;
 }

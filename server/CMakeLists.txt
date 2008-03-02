@@ -61,6 +61,7 @@ set(libakonadiprivate_SRCS
   src/handler/aklist.cpp
   src/handler/akappend.cpp
   src/handler/append.cpp
+  src/handler/copy.cpp
   src/handler/create.cpp
   src/handler/capability.cpp
   src/handler/delete.cpp
