@@ -59,7 +59,9 @@ namespace Akonadi {
   - Deletion of selected collections (@c akonadi_collection_delete)
   - Synchronization of selected collections (@c akonadi_collection_sync)
   - Showing the collection properties dialog for the current collection (@c akonadi_collection_properties)
+  - Copying of selected items (@c akonadi_itemcopy)
   - Pasting collections, items or raw data (@c akonadi_paste)
+  - Deleting of selected items (@c akonadi_item_delete)
   - Managing local subscriptions (@c akonadi_manage_local_subscriptions)
 
   The following example shows how to use standard actions in your application:
@@ -89,6 +91,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       CollectionProperties,
       CopyItems,
       Paste,
+      DeleteItems,
       ManageLocalSubscriptions,
       LastType
     };
@@ -172,6 +175,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotCollectionProperties() )
     Q_PRIVATE_SLOT( d, void slotCopyItems() )
     Q_PRIVATE_SLOT( d, void slotPaste() )
+    Q_PRIVATE_SLOT( d, void slotDeleteItems() )
     Q_PRIVATE_SLOT( d, void slotLocalSubscription() )
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )

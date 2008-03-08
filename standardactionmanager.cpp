@@ -24,6 +24,8 @@
 #include <libakonadi/collectiondeletejob.h>
 #include <libakonadi/collectionmodel.h>
 #include <libakonadi/collectionpropertiesdialog.h>
+#include <libakonadi/itemdeletejob.h>
+#include <libakonadi/itemmodel.h>
 #include <libakonadi/pastehelper.h>
 #include <libakonadi/subscriptiondialog.h>
 
@@ -57,6 +59,7 @@ static const struct {
   { "akonadi_collection_properties", I18N_NOOP("Folder &Properties..."), "configure", 0, SLOT(slotCollectionProperties()) },
   { "akonadi_item_copy", 0, "edit-copy", 0, SLOT(slotCopyItems()) },
   { "akonadi_paste", I18N_NOOP("&Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()) },
+  { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT(slotDeleteItems()) },
   { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()) }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
@@ -76,6 +79,7 @@ class StandardActionManager::Private
 
       pluralLabels.insert( StandardActionManager::CopyCollections, ki18np( "&Copy Folder", "&Copy %1 Folders" ) );
       pluralLabels.insert( StandardActionManager::CopyItems, ki18np( "&Copy Item", "&Copy %1 Items" ) );
+      pluralLabels.insert( StandardActionManager::DeleteItems, ki18np( "&Delete Item", "&Delete %1 Items" ) );
     }
 
     void enableAction( StandardActionManager::Type type, bool enable )
@@ -140,9 +144,11 @@ class StandardActionManager::Private
       }
 
       enableAction( CopyItems, multiItemSelected );
+      enableAction( DeleteItems, multiItemSelected );
 
       updatePluralLabel( CopyCollections, colCount );
       updatePluralLabel( CopyItems, itemCount );
+      updatePluralLabel( DeleteItems, itemCount );
 
       emit q->actionStateUpdated();
     }
@@ -231,6 +237,22 @@ class StandardActionManager::Private
       QList<KJob*> jobs = PasteHelper::paste( QApplication::clipboard()->mimeData(), col );
       foreach ( KJob* job, jobs )
         q->connect( job, SIGNAL(result(KJob*)), q, SLOT(pasteResult(KJob*)) );
+    }
+
+    void slotDeleteItems()
+    {
+      if ( KMessageBox::questionYesNo( parentWidget,
+           i18n( "Do you really want to delete all selected items?" ),
+           i18n("Delete?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+           QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
+        return;
+
+      Q_ASSERT( itemSelectionModel );
+
+      // TODO: fix this once ItemStoreJob can handle item lists
+      foreach ( const QModelIndex index, itemSelectionModel->selectedRows() ) {
+        new ItemDeleteJob( DataReference( index.data( ItemModel::IdRole ).toInt(), QString() ), q );
+      }
     }
 
     void slotLocalSubscription()
