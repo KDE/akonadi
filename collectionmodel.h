@@ -123,6 +123,12 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
+  Q_SIGNALS:
+    /**
+     * emitted when the unread count of the complete model changes.
+     */
+    void unreadCountChanged( int );
+
   protected:
     /**
       Returns the collection for a given collection id.
