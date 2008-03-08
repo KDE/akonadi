@@ -195,22 +195,37 @@ class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
     */
     static void enableCache( bool enable );
 
-  protected:
-    // delete records
-    static bool remove( const QString &amp;column, const QVariant &amp;value );
-
     // manipulate n:m relations
     <xsl:for-each select="../relation[@table1 = $entityName]">
     <xsl:variable name="rightSideClass"><xsl:value-of select="@table2"/></xsl:variable>
+    /**
+      Checks wether this record is in a n:m relation with the <xsl:value-of select="@table2"/> @p value.
+    */
     bool relatesTo<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const;
     static bool relatesTo<xsl:value-of select="@table2"/>( int leftId, int rightId );
+
+    /**
+      Adds a n:m relation between this record and the <xsl:value-of select="@table2"/> @p value.
+    */
     bool add<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const;
     static bool add<xsl:value-of select="@table2"/>( int leftId, int rightId );
+
+    /**
+      Removes a n:m relation between this record and the <xsl:value-of select="@table2"/> @p value.
+    */
     bool remove<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const;
     static bool remove<xsl:value-of select="@table2"/>( int leftId, int rightId );
+
+    /**
+      Removes all relations between this record and any <xsl:value-of select="@table2"/>.
+    */
     bool clear<xsl:value-of select="@table2"/>s() const;
     static bool clear<xsl:value-of select="@table2"/>s( int id );
     </xsl:for-each>
+
+  protected:
+    // delete records
+    static bool remove( const QString &amp;column, const QVariant &amp;value );
 
   private:
     class Private;

@@ -29,6 +29,7 @@
 #include "handler/append.h"
 #include "handler/capability.h"
 #include "handler/copy.h"
+#include "handler/colcopy.h"
 #include "handler/create.h"
 #include "handler/delete.h"
 #include "handler/expunge.h"
@@ -145,6 +146,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new Subscribe();
     if ( command == "COPY" )
       return new Copy();
+    if ( command == "COLCOPY" )
+      return new ColCopy();
 
     return 0;
 }

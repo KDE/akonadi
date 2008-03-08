@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COPY_H
-#define AKONADI_COPY_H
+#ifndef AKONADI_COLCOPY_H
+#define AKONADI_COLCOPY_H
 
-#include <handler.h>
+#include <handler/copy.h>
 #include <entities.h>
 
 namespace Akonadi {
@@ -28,39 +28,41 @@ namespace Akonadi {
 /**
   @ingroup akonadi_server_handler
 
-  Handler for the COPY command.
+  Handler for the COLCOPY command.
 
-  This command is used to copy a set of items into the specific collection. It
-  is syntactically identical to the IMAP COPY command.
+  This command is used to copy a single collection into another collection, including
+  all sub-collections and their content.
 
   The copied items differ in the following points from the originals:
   - new unique id
   - empty remote id
   - possible located in a different collection (and thus resource)
 
+  The copied collections differ in the following points from the originals:
+  - new unique id
+  - empty remote id
+  - owning resource is the same as the one of the target collection
+
   <h4>Syntax</h4>
 
   Request:
   @verbatim
-  request = tag " COPY " seqeunce-set " " collection-id
+  request = tag " COLCOPY " collection-id " " collection-id
   @endverbatim
 
   There is only the usual status response indicating success or failure of the
-  COPY command
+  COLCOPY command
  */
-class AKONADI_SERVER_EXPORT Copy : public Handler
+class AKONADI_SERVER_EXPORT ColCopy : public Copy
 {
   public:
     bool handleLine(const QByteArray& line);
 
-  protected:
-    /**
-      Copy the given item and all its parts into the @p target.
-      The changes mentioned above are applied.
-    */
-    bool copyItem( const PimItem& item, const Location &target );
+  private:
+    bool copyCollection( const Location& source, const Location &target );
 };
 
 }
+
 
 #endif
