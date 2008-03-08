@@ -122,7 +122,7 @@ class StandardActionManager::Private
       if ( singleColSelected && selectedIndex.isValid() ) {
         const Collection col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
         enableAction( CreateCollection, selectedIndex.data( CollectionModel::ChildCreatableRole ).toBool() );
-        enableAction( DeleteCollections, col.type() == Collection::Folder );
+        enableAction( DeleteCollections, col.type() == Collection::Folder || col.type() == Collection::Structural );
         enableAction( SynchronizeCollections, col.type() == Collection::Folder || col.type() == Collection::Resource );
         enableAction( Paste, PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
       } else {

@@ -19,6 +19,7 @@
 
 #include "pastehelper.h"
 
+#include "collectioncopyjob.h"
 #include "collectionmodifyjob.h"
 #include "item.h"
 #include "itemappendjob.h"
@@ -86,7 +87,9 @@ QList<KJob*> PasteHelper::paste(const QMimeData * mimeData, const Collection & c
         CollectionModifyJob *job = new CollectionModifyJob( col );
         job->setParent( collection );
         rv.append( job );
-      } else { // TODO A Copy Collection Job
+      } else {
+        CollectionCopyJob *job = new CollectionCopyJob( col, collection );
+        rv.append( job );
       }
     } else if ( Item::urlIsValid( url ) ) {
       // TODO Extract mimetype from url and check if collection accepts it
