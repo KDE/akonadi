@@ -84,8 +84,23 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
       default:
         return QVariant();
     }
+  } else if ( role == Qt::EditRole ) {
+    switch ( index.column() ) {
+      case Subject:
+        return msg->subject()->asUnicodeString();
+      case Sender:
+        return msg->from()->asUnicodeString();
+      case Receiver:
+        return msg->to()->asUnicodeString();
+      case Date:
+        return msg->date()->dateTime().dateTime();
+      case Size:
+        // TODO
+        return 0; // pass modeltest
+      default:
+        return QVariant();
+    }
   }
-
   return ItemModel::data( index, role );
 }
 
