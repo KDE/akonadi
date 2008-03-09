@@ -195,6 +195,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
     */
     virtual bool addSubjob( KJob* job );
 
+    virtual bool removeSubjob( KJob* job );
     virtual bool doKill();
 
     /**

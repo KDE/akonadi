@@ -186,6 +186,16 @@ bool Job::addSubjob( KJob * job )
   return rv;
 }
 
+bool Job::removeSubjob(KJob * job)
+{
+  bool rv = KCompositeJob::removeSubjob( job );
+  if ( job == d->mCurrentSubJob ) {
+    d->mCurrentSubJob = 0;
+    QTimer::singleShot( 0, this, SLOT(startNext()) );
+  }
+  return rv;
+}
+
 void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
 {
   kDebug( 5250 ) << "Unhandled response: " << tag << data;
@@ -201,8 +211,8 @@ QByteArray Job::sessionId() const
 void Job::slotResult(KJob * job)
 {
   Q_ASSERT( job == d->mCurrentSubJob );
-  KCompositeJob::slotResult( job );
   d->mCurrentSubJob = 0;
+  KCompositeJob::slotResult( job );
   if ( !job->error() )
     QTimer::singleShot( 0, this, SLOT(startNext()) );
 }

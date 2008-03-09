@@ -104,6 +104,9 @@ class AKONADI_EXPORT TransactionCommitJob : public Job
   As soon as the first subjob is added, the transaction is started.
   As soon as the last subjob has successfully finished, the transaction is committed.
   If any subjob fails, the transaction is rolled back.
+
+  Alternatively, a TransactionSequence object can be used as a parent object for a set
+  of jobs to achive the same behaviour without subclassing.
 */
 class AKONADI_EXPORT TransactionSequence : public Job
 {
@@ -127,6 +130,7 @@ class AKONADI_EXPORT TransactionSequence : public Job
     void commit();
 
     bool addSubjob( KJob* job );
+    void doStart();
 
   protected Q_SLOTS:
     void slotResult( KJob *job );

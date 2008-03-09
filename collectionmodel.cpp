@@ -26,6 +26,7 @@
 #include "itemstorejob.h"
 #include "itemappendjob.h"
 #include "monitor.h"
+#include "pastehelper.h"
 #include "session.h"
 
 #include <kdebug.h>
@@ -68,7 +69,7 @@ class CollectionModel::Private
     void collectionStatusChanged( int, const Akonadi::CollectionStatus& );
     void listDone( KJob* );
     void editDone( KJob* );
-    void appendDone( KJob* );
+    void dropResult( KJob* );
     void collectionsChanged( const Akonadi::Collection::List &cols );
 
     void updateSupportedMimeTypes( Collection col )
@@ -183,10 +184,10 @@ void CollectionModel::Private::editDone( KJob * job )
   }
 }
 
-void CollectionModel::Private::appendDone(KJob * job)
+void CollectionModel::Private::dropResult(KJob * job)
 {
   if ( job->error() ) {
-    kWarning( 5250 ) << "Append failed:" << job->errorString();
+    kWarning( 5250 ) << "Paste failed:" << job->errorString();
     // TODO: error handling
   }
 }
@@ -551,78 +552,9 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
   if (!parentCol.isValid())
     return false;
 
-  // we try to drop data not coming with the akonadi:// url
-  // find a type the target collection supports
-  foreach ( QString type, data->formats() ) {
-    if ( !supportsContentType( idx, QStringList( type ) ) )
-      continue;
-
-    QByteArray item = data->data( type );
-    // HACK for some unknown reason the data is sometimes 0-terminated...
-    if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
-      item.resize( item.size() - 1 );
-
-    Item it;
-    it.setMimeType( type );
-    it.addPart( Item::PartBody, item );
-
-    ItemAppendJob *job = new ItemAppendJob( it, parentCol, d->session );
-    connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-    return job->exec();
-  }
-
-  if ( !KUrl::List::canDecode( data ) )
-    return false;
-
-  // data contains an url list
-  bool success = false;
-  KUrl::List urls = KUrl::List::fromMimeData( data );
-  foreach( KUrl url, urls ) {
-    if ( Collection::urlIsValid( url ) )
-    {
-      Collection col = Collection::fromUrl( url );
-      if (action == Qt::MoveAction) {
-        CollectionModifyJob *job = new CollectionModifyJob( col, d->session );
-        job->setParent( parentCol );
-        connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-        job->exec();
-        if ( !job->exec() ) {
-          success = false;
-          break;
-        } else {
-          success = true; // continue, there might be other urls
-        }
-      }
-      else { // TODO A Copy Collection Job
-        return false;
-      }
-    }
-    else if ( Item::urlIsValid( url ) )
-    {
-      // TODO Extract mimetype from url and check if collection accepts it
-      DataReference ref = Item::fromUrl( url );
-      if (action == Qt::MoveAction) {
-        ItemStoreJob *job = new ItemStoreJob( Item( ref ), d->session );
-        job->setCollection( parentCol );
-        job->noRevCheck();
-        connect( job, SIGNAL(result(KJob*)), SLOT(appendDone(KJob*)) );
-        if ( !job->exec() ) {
-          success = false;
-          break;
-        } else {
-          success = true; // continue, there might be other urls
-        }
-      }
-      else if ( action == Qt::CopyAction ) {
-      // TODO Wait for a job allowing to copy on server side.
-      }
-      else {
-        return false;
-      }
-    }
-  }
-
-  return success;
+  KJob *job = PasteHelper::paste( data, parentCol, action != Qt::MoveAction );
+  connect( job, SIGNAL(result(KJob*)), SLOT(dropResult(KJob*)) );
+  return true;
 }
 
 Collection CollectionModel::collectionForId(int id) const

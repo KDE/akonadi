@@ -50,9 +50,9 @@ namespace PasteHelper
     @param mimeData The pasted/dropped data.
     @param collection The target collection.
     @param copy Indicate wether this is a copy or a move.
-    @returns A list of started jobs.
+    @returns The job performing the paste, 0 if there is nothing to paste.
   */
-  QList<KJob*> paste( const QMimeData* mimeData, const Collection &collection, bool copy = true );
+  KJob* paste( const QMimeData* mimeData, const Collection &collection, bool copy = true );
 }
 
 

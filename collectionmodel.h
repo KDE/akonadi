@@ -121,7 +121,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Reimplemented.
     */
-    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
+   virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
   Q_SIGNALS:
     /**
@@ -184,7 +184,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     Q_PRIVATE_SLOT( d, void collectionStatusChanged( int, const Akonadi::CollectionStatus& ) )
     Q_PRIVATE_SLOT( d, void listDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void editDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void appendDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void dropResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void collectionsChanged( const Akonadi::Collection::List& ) )
 
 };

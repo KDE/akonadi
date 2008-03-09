@@ -25,6 +25,7 @@
 #include "itemappendjob.h"
 #include "itemcopyjob.h"
 #include "itemstorejob.h"
+#include "transactionjobs.h"
 
 #include <KDebug>
 #include <KUrl>
@@ -49,11 +50,10 @@ bool PasteHelper::canPaste(const QMimeData * mimeData, const Collection & collec
   return false;
 }
 
-QList<KJob*> PasteHelper::paste(const QMimeData * mimeData, const Collection & collection, bool copy)
+KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collection, bool copy)
 {
-  QList<KJob*> rv;
   if ( !canPaste( mimeData, collection ) )
-    return rv;
+    return 0;
 
   // we try to drop data not coming with the akonadi:// url
   // find a type the target collection supports
@@ -71,43 +71,40 @@ QList<KJob*> PasteHelper::paste(const QMimeData * mimeData, const Collection & c
     it.addPart( Item::PartBody, item );
 
     ItemAppendJob *job = new ItemAppendJob( it, collection );
-    rv.append( job );
-    return rv;
+    return job;
   }
 
   if ( !KUrl::List::canDecode( mimeData ) )
-    return rv;
+    return 0;
 
   // data contains an url list
+  TransactionSequence *transaction = new TransactionSequence();
   KUrl::List urls = KUrl::List::fromMimeData( mimeData );
   foreach ( const KUrl url, urls ) {
     if ( Collection::urlIsValid( url ) ) {
       Collection col = Collection::fromUrl( url );
       if ( !copy ) {
-        CollectionModifyJob *job = new CollectionModifyJob( col );
+        CollectionModifyJob *job = new CollectionModifyJob( col, transaction );
         job->setParent( collection );
-        rv.append( job );
       } else {
-        CollectionCopyJob *job = new CollectionCopyJob( col, collection );
-        rv.append( job );
+        new CollectionCopyJob( col, collection, transaction );
       }
     } else if ( Item::urlIsValid( url ) ) {
       // TODO Extract mimetype from url and check if collection accepts it
       DataReference ref = Item::fromUrl( url );
       if ( !copy ) {
-        ItemStoreJob *job = new ItemStoreJob( Item( ref ) );
+        ItemStoreJob *job = new ItemStoreJob( Item( ref ), transaction );
         job->setCollection( collection );
         job->noRevCheck();
-        rv.append( job );
       } else  {
-        ItemCopyJob *job = new ItemCopyJob( Item( ref ), collection );
-        rv.append( job );
+        new ItemCopyJob( Item( ref ), collection, transaction );
       }
     } else {
       // non-akonadi URL
       // TODO
+      kDebug() << "Implement me!";
     }
   }
-  return rv;
+  return transaction;
 }
 

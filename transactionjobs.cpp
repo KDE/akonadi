@@ -19,6 +19,8 @@
 
 #include "transactionjobs.h"
 
+#include <kdebug.h>
+
 using namespace Akonadi;
 
 TransactionBeginJob::TransactionBeginJob(QObject * parent) :
@@ -141,8 +143,9 @@ void TransactionSequence::slotResult(KJob * job)
   } else {
     setError( job->error() );
     setErrorText( job->errorText() );
+    removeSubjob( job );
     clearSubjobs();
-    if ( d->state == Private::Running ) {
+    if ( d->state == Private::Running || d->state == Private::WaitingForSubjobs ) {
       d->state = Private::RollingBack;
       TransactionRollbackJob *job = new TransactionRollbackJob( this );
       connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
@@ -168,6 +171,14 @@ void TransactionSequence::commit()
       connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
     }
   }
+}
+
+void TransactionSequence::doStart()
+{
+  if ( d->state == Private::Idle )
+    emitResult();
+  else
+    commit();
 }
 
 #include "transactionjobs.moc"

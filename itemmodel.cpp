@@ -21,6 +21,7 @@
 
 #include "itemfetchjob.h"
 #include "monitor.h"
+#include "pastehelper.h"
 #include "session.h"
 
 #include <kmime/kmime_message.h>
@@ -378,6 +379,15 @@ QMimeData *ItemModel::mimeData( const QModelIndexList &indexes ) const
 QModelIndex ItemModel::indexForItem( const Akonadi::DataReference& ref, const int column ) const
 {
   return index( d->rowForItem( ref ), column );
+}
+
+bool ItemModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent)
+{
+  Q_UNUSED( row );
+  Q_UNUSED( column );
+  Q_UNUSED( parent );
+  KJob* job = PasteHelper::paste( data, d->collection, action != Qt::MoveAction );
+  // TODO: error handling
 }
 
 #include "itemmodel.moc"

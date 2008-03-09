@@ -234,9 +234,8 @@ class StandardActionManager::Private
       if ( !index.isValid() )
         return;
       const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      QList<KJob*> jobs = PasteHelper::paste( QApplication::clipboard()->mimeData(), col );
-      foreach ( KJob* job, jobs )
-        q->connect( job, SIGNAL(result(KJob*)), q, SLOT(pasteResult(KJob*)) );
+      KJob *job = PasteHelper::paste( QApplication::clipboard()->mimeData(), col );
+      q->connect( job, SIGNAL(result(KJob*)), q, SLOT(pasteResult(KJob*)) );
     }
 
     void slotDeleteItems()

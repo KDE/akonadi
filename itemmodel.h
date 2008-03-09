@@ -118,12 +118,15 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     */
     Item itemForIndex( const QModelIndex &index ) const;
 
-    /*
+    /**
       Returns the model index for the given reference, with the given column
       @param ref The reference to find
       @param column The column for the returned index
     */
     QModelIndex indexForItem( const Akonadi::DataReference& ref, const int column ) const;
+
+    /* reimpl */
+    bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
   public Q_SLOTS:
     /**
