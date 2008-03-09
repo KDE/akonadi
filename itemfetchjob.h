@@ -92,21 +92,6 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
-    /**
-      Returns an item with uid, rid and mimetype set. Ie. basically everything
-      the item de-serializer needs to start its work.
-      @param fetchResponse The IMAP fetch response, already split into
-      name/value pairs.
-    */
-    Item createItem( const QList<QByteArray> &fetchResponse );
-
-    /**
-      Parses the given flag data and sets them on the given item.
-      @param flagData The unparsed flag data of the fetch response
-      @param item The corresponding item
-    */
-    void parseFlags( const QByteArray &flagData, Item &item );
-
   private:
     class Private;
     Private* const d;

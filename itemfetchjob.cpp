@@ -134,26 +134,56 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
     if ( begin >= 0 ) {
 
       // split fetch response into key/value pairs
-      QList<QByteArray> fetch;
-      ImapParser::parseParenthesizedList( data, fetch, begin + 6 );
+      QList<QByteArray> fetchResponse;
+      ImapParser::parseParenthesizedList( data, fetchResponse, begin + 6 );
 
       // create a new item object
-      Item item = createItem( fetch );
+      int uid = -1;
+      int rev = -1;
+      QString rid;
+      QString mimeType;
+
+      for ( int i = 0; i < fetchResponse.count() - 1; i += 2 ) {
+        const QByteArray key = fetchResponse.value( i );
+        const QByteArray value = fetchResponse.value( i + 1 );
+
+        if ( key == "UID" )
+          uid = value.toInt();
+        else if ( key == "REV" )
+          rev = value.toInt();
+        else if ( key == "REMOTEID" )
+          rid = QString::fromUtf8( value );
+        else if ( key == "MIMETYPE" )
+          mimeType = QString::fromLatin1( value );
+      }
+
+      if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
+        kWarning( 5250 ) << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
+        return;
+      }
+
+      Item item( DataReference( uid, rid ) );
+      item.setRev( rev );
+      item.setMimeType( mimeType );
       if ( !item.isValid() )
         return;
 
       // parse fetch response fields
-      for ( int i = 0; i < fetch.count() - 1; i += 2 ) {
-        const QByteArray key = fetch.value( i );
+      for ( int i = 0; i < fetchResponse.count() - 1; i += 2 ) {
+        const QByteArray key = fetchResponse.value( i );
         // skip stuff we dealt with already
         if ( key == "UID" || key == "REV" || key == "REMOTEID" || key == "MIMETYPE" )
           continue;
         // flags
-        if ( key == "FLAGS" )
-          parseFlags( fetch[i + 1], item );
-        else {
+        if ( key == "FLAGS" ) {
+          QList<QByteArray> flags;
+          ImapParser::parseParenthesizedList( fetchResponse[i + 1], flags );
+          foreach ( const QByteArray flag, flags ) {
+            item.setFlag( flag );
+          }
+        } else {
           try {
-            item.addPart( QString::fromLatin1(key), fetch.value( i+1 ) );
+            item.addPart( QString::fromLatin1(key), fetchResponse.value( i+1 ) );
           } catch ( ItemSerializerException &e ) {
             // FIXME how do we react to this? Should we still append?
             kWarning( 5250 ) << "Failed to construct the payload of type: " << item.mimeType();
@@ -174,47 +204,6 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
 Item::List ItemFetchJob::items() const
 {
   return d->items;
-}
-
-Item ItemFetchJob::createItem(const QList< QByteArray > & fetchResponse)
-{
-  int uid = -1;
-  int rev = -1;
-  QString rid;
-  QString mimeType;
-
-  for ( int i = 0; i < fetchResponse.count() - 1; i += 2 ) {
-    const QByteArray key = fetchResponse.value( i );
-    const QByteArray value = fetchResponse.value( i + 1 );
-
-    if ( key == "UID" )
-      uid = value.toInt();
-    else if ( key == "REV" )
-      rev = value.toInt();
-    else if ( key == "REMOTEID" )
-      rid = QString::fromUtf8( value );
-    else if ( key == "MIMETYPE" )
-      mimeType = QString::fromLatin1( value );
-  }
-
-  if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
-    kWarning( 5250 ) << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
-    return Item();
-  }
-
-  Item item( DataReference( uid, rid ) );
-  item.setRev( rev );
-  item.setMimeType( mimeType );
-  return item;
-}
-
-void ItemFetchJob::parseFlags(const QByteArray & flagData, Item &item)
-{
-  QList<QByteArray> flags;
-  ImapParser::parseParenthesizedList( flagData, flags );
-  foreach ( const QByteArray flag, flags ) {
-    item.setFlag( flag );
-  }
 }
 
 void ItemFetchJob::setCollection(const Collection &collection)
