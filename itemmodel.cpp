@@ -388,6 +388,7 @@ bool ItemModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int 
   Q_UNUSED( parent );
   KJob* job = PasteHelper::paste( data, d->collection, action != Qt::MoveAction );
   // TODO: error handling
+  return job;
 }
 
 #include "itemmodel.moc"
