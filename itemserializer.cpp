@@ -78,9 +78,9 @@ public:
 namespace {
 
   KPIM_DEFINE_PLUGIN_LOADER( ItemSerializerPluginLoader,
-			     Akonadi::ItemSerializerPlugin,
-			     "create_item_serializer_plugin",
-			     "akonadi/plugins/serializer/*.desktop" )
+                             Akonadi::ItemSerializerPlugin,
+                             "create_item_serializer_plugin",
+                             "akonadi/plugins/serializer/*.desktop" )
 
 }
 
