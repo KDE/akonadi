@@ -24,7 +24,7 @@
 #include <libakonadi/collection.h>
 
 #include <QtCore/QObject>
-#include <qwindowdefs.h>
+#include <QtGui/qwindowdefs.h>
 
 class QIcon;
 

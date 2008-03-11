@@ -26,7 +26,7 @@
 #include "libakonadi_export.h"
 #include <libakonadi/collection.h>
 
-#include <KApplication>
+#include <KDE/KApplication>
 
 #include <QtCore/QSettings>
 #include <QtDBus/QDBusContext>

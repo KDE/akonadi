@@ -22,7 +22,7 @@
 
 #include "libakonadi_export.h"
 
-#include <KLocalizedString>
+#include <KDE/KLocalizedString>
 #include <QtCore/QObject>
 
 class KAction;
