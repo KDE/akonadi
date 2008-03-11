@@ -22,11 +22,11 @@
 
 #include "libakonadi_export.h"
 
-#include <KDE/KLocalizedString>
 #include <QtCore/QObject>
 
 class KAction;
 class KActionCollection;
+class KLocalizedString;
 class QItemSelectionModel;
 class QWidget;
 
