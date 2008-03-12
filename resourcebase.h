@@ -402,6 +402,11 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     */
     Item currentItem() const;
 
+    /**
+      Refetches the Collections.
+    */
+    void synchronizeCollectionTree();
+    
     void changeProcessed();
 
   private:
@@ -410,7 +415,6 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     // dbus resource interface
     friend class ::ResourceAdaptor;
-    void synchronizeCollectionTree();
     void synchronizeCollection( int collectionId );
     bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts );
 
