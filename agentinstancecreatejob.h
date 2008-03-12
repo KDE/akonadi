@@ -24,7 +24,7 @@
 
 #include <kjob.h>
 
-#include <qwindowdefs.h>
+#include <QtGui/qwindowdefs.h>
 
 namespace Akonadi {
 
