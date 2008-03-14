@@ -22,7 +22,7 @@
 
 #include <Soprano/Node>
 
-#include "queryadaptor.h"
+#include "searchqueryadaptor.h"
 #include "queryiterator.h"
 
 #include "query.h"
@@ -115,7 +115,7 @@ void Query::Private::_k_statementsRemoved()
 Query::Query( const QString &queryString, Soprano::Model *model, const QString &id, QObject *parent )
   : QObject( parent ), d( new Private( this, queryString, model, id ) )
 {
-  new QueryAdaptor( this );
+  new SearchQueryAdaptor( this );
 
   QDBusConnection::sessionBus().registerObject( id, this );
 }

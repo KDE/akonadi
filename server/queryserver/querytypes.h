@@ -17,51 +17,15 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QMap>
+#ifndef AKONADI_QUERYTYPES_H
+#define AKONADI_QUERYTYPES_H
+
+#include <QtCore/QMetaType>
+#include <QtCore/QPair>
 #include <QtCore/QVariant>
-#include <Soprano/Node>
 
-#include "queryiterator.h"
+typedef QPair<QString, double> QueryUriMap;
 
-#include "searchqueryiteratoradaptor.h"
+Q_DECLARE_METATYPE( QueryUriMap )
 
-class QueryIterator::Private
-{
-  public:
-    Private( const Soprano::QueryResultIterator &it )
-      : mIterator( it )
-    {
-    }
-
-    Soprano::QueryResultIterator mIterator;
-};
-
-QueryIterator::QueryIterator( const Soprano::QueryResultIterator &it, const QString &id, QObject *parent )
-  : QObject( parent ), d( new Private( it ) )
-{
-  new SearchQueryIteratorAdaptor( this );
-
-  QDBusConnection::sessionBus().registerObject( id, this );
-}
-
-QueryIterator::~QueryIterator()
-{
-  delete d;
-}
-
-bool QueryIterator::next()
-{
-  return d->mIterator.next();
-}
-
-QPair<QString, double> QueryIterator::current()
-{
-  return QPair<QString, double>( d->mIterator.binding( "result" ).uri().toString(), 0 );
-}
-
-void QueryIterator::close()
-{
-  deleteLater();
-}
-
-#include "queryiterator.moc"
+#endif

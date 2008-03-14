@@ -17,51 +17,28 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QMap>
-#include <QtCore/QVariant>
-#include <Soprano/Node>
+#ifndef AKONADI_QUERYSERVERTEST_H
+#define AKONADI_QUERYSERVERTEST_H
 
-#include "queryiterator.h"
+#include <QtCore/QObject>
 
-#include "searchqueryiteratoradaptor.h"
+#include "searchinterface.h"
+#include "searchqueryinterface.h"
 
-class QueryIterator::Private
+class TestObject : public QObject
 {
-  public:
-    Private( const Soprano::QueryResultIterator &it )
-      : mIterator( it )
-    {
-    }
+  Q_OBJECT
 
-    Soprano::QueryResultIterator mIterator;
+  public:
+    TestObject( const QString &query, QObject *parent = 0 );
+
+  private Q_SLOTS:
+    void hitsChanged( const QMap<QString, double> &hits );
+    void hitsRemoved( const QMap<QString, double> &hits );
+
+  private:
+    org::kde::Akonadi::Search *mSearch;
+    org::kde::Akonadi::SearchQuery *mQuery;
 };
 
-QueryIterator::QueryIterator( const Soprano::QueryResultIterator &it, const QString &id, QObject *parent )
-  : QObject( parent ), d( new Private( it ) )
-{
-  new SearchQueryIteratorAdaptor( this );
-
-  QDBusConnection::sessionBus().registerObject( id, this );
-}
-
-QueryIterator::~QueryIterator()
-{
-  delete d;
-}
-
-bool QueryIterator::next()
-{
-  return d->mIterator.next();
-}
-
-QPair<QString, double> QueryIterator::current()
-{
-  return QPair<QString, double>( d->mIterator.binding( "result" ).uri().toString(), 0 );
-}
-
-void QueryIterator::close()
-{
-  deleteLater();
-}
-
-#include "queryiterator.moc"
+#endif
