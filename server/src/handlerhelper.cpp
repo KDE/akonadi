@@ -147,8 +147,8 @@ QByteArray HandlerHelper::cachePolicyToByteArray(const Location & loc)
   rv += " INTERVAL " + QByteArray::number( loc.cachePolicyCheckInterval() );
   rv += " CACHETIMEOUT " + QByteArray::number( loc.cachePolicyCacheTimeout() );
   rv += " SYNCONDEMAND " + ( loc.cachePolicySyncOnDemand() ? QByteArray("true") : QByteArray("false") );
-  rv += " LOCALPARTS (" + loc.cachePolicyLocalParts().toLatin1() + ")";
-  rv += ")";
+  rv += " LOCALPARTS (" + loc.cachePolicyLocalParts().toLatin1() + ')';
+  rv += ')';
   return rv;
 }
 
