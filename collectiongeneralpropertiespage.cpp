@@ -26,7 +26,7 @@ using namespace Akonadi;
 CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage(QWidget * parent) :
     CollectionPropertiesPage( parent )
 {
-  setPageTitle( i18n( "&General" ) );
+  setPageTitle( i18nc( "@title:tab general properties page", "&General" ) );
   ui.setupUi( this );
 }
 
