@@ -140,7 +140,7 @@ QString Job::errorString() const
     case NoError:
       break;
     case ConnectionFailed:
-      str = tr( "Can't connect to pim storage service." );
+      str = tr( "Cannot connect to pim storage service." );
       break;
     case UserCanceled:
       str = tr( "User canceled transmission." );
