@@ -102,7 +102,7 @@ void BenchMarker::agentInstanceStatusChanged( const QString &agentIdentifier, Ag
 
 void BenchMarker::outputStats( const QString &description )
 {
-  output( description + "\t\t" + currentAccount + "\t\t" + QByteArray::number( timer.elapsed() ) + "\n" );
+  output( description + "\t\t" + currentAccount + "\t\t" + QByteArray::number( timer.elapsed() ) + '\n' );
 }
 
 void BenchMarker::output( const QString &message )

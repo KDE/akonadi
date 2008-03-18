@@ -68,7 +68,7 @@ void CollectionModifyJob::doStart()
   if ( !d->collection.remoteId().isNull() )
     changes += " REMOTEID \"" + d->collection.remoteId().toUtf8() + '"';
   if ( d->setPolicy )
-    changes += " " + ProtocolHelper::cachePolicyToByteArray( d->policy );
+    changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->policy );
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   foreach ( const QByteArrayPair bp, d->attributes )
     changes += ' ' + bp.first + ' ' + bp.second;

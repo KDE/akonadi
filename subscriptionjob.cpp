@@ -29,9 +29,9 @@ class SubscriptionJob::Private
     void sendCommand( const QByteArray &cmd, const Collection::List &list )
     {
       tag = q->newTag();
-      QByteArray line = tag + " " + cmd;
+      QByteArray line = tag + ' ' + cmd;
       foreach ( const Collection col, list )
-        line += " " + QByteArray::number( col.id() );
+        line += ' ' + QByteArray::number( col.id() );
       line += '\n';
       q->writeData( line );
       q->newTag(); // prevent automatic response handling

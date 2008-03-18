@@ -61,7 +61,7 @@ void ItemAppendJob::doStart()
   QByteArray remoteId;
 
   if ( !d->item.reference().remoteId().isEmpty() )
-    remoteId = " " + ImapParser::quote( "\\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']' );
+    remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']' );
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
   if ( d->parts.isEmpty() || (d->parts.size() == 1 && d->parts.first() == Item::PartBody) ) {
     if ( d->item.hasPayload() )
@@ -81,12 +81,12 @@ void ItemAppendJob::doStart()
     foreach( const QString partName, d->parts ) {
       QByteArray partData = d->item.part( partName );
       totalSize += partData.size();
-      partSpecs.append( ImapParser::quote( partName.toLatin1() ) + ":" +
+      partSpecs.append( ImapParser::quote( partName.toLatin1() ) + ':' +
         QByteArray::number( partData.size() ) );
       d->data += partData;
     }
-    command += "(" + ImapParser::join( partSpecs, "," ) + ") " +
-      "{" + QByteArray::number( totalSize ) + "}\n";
+    command += '(' + ImapParser::join( partSpecs, "," ) + ") " +
+      '{' + QByteArray::number( totalSize ) + "}\n";
 
     writeData( command );
   }

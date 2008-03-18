@@ -63,9 +63,9 @@ QByteArray ProtocolHelper::cachePolicyToByteArray(const CachePolicy & policy)
     rv += " INTERVAL " + QByteArray::number( policy.intervalCheckTime() );
     rv += " CACHETIMEOUT " + QByteArray::number( policy.cacheTimeout() );
     rv += " SYNCONDEMAND " + ( policy.syncOnDemand() ? QByteArray("true") : QByteArray("false") );
-    rv += " LOCALPARTS (" + policy.localParts().join( QLatin1String(" ") ).toLatin1() + ")";
+    rv += " LOCALPARTS (" + policy.localParts().join( QLatin1String(" ") ).toLatin1() + ')';
   }
-  rv += ")";
+  rv += ')';
   return rv;
 }
 
