@@ -40,7 +40,7 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
       @param collection The new collection.
       @param parent The parent object.
     */
-    CollectionCreateJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionCreateJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.

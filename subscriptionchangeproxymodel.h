@@ -40,7 +40,7 @@ class SubscriptionChangeProxyModel : public QSortFilterProxyModel
       list only newly unsubscribed collections.
       @param parent The parent object.
     */
-    SubscriptionChangeProxyModel( bool subscribed, QObject *parent = 0 );
+    explicit SubscriptionChangeProxyModel( bool subscribed, QObject *parent = 0 );
 
     /**
       Destructor.
