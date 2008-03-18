@@ -30,7 +30,7 @@ class TestObject : public QObject
   Q_OBJECT
 
   public:
-    TestObject( const QString &query, QObject *parent = 0 );
+    explicit TestObject( const QString &query, QObject *parent = 0 );
 
   private Q_SLOTS:
     void hitsChanged( const QMap<QString, double> &hits );
