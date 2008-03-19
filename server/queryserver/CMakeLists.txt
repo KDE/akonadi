@@ -33,7 +33,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Search.service DESTINA
 
 qt4_add_dbus_interface( queryservertestdbus_SRCS ../interfaces/org.kde.Akonadi.Search.xml searchinterface )
 qt4_add_dbus_interface( queryservertestdbus_SRCS ../interfaces/org.kde.Akonadi.SearchQuery.xml searchqueryinterface )
-qt4_add_dbus_interface2( queryservertestdbus_SRCS ../interfaces/org.kde.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface querytypes.h )
+qt4_add_dbus_interface( queryservertestdbus_SRCS ../interfaces/org.kde.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface )
 
 set( queryservertest_SRCS
   queryservertest.cpp

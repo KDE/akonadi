@@ -47,9 +47,14 @@ class QueryIterator : public QObject
     bool next();
 
     /**
-     * Returns the uri and scoring of the current hit.
+     * Returns the uri of the current hit.
      */
-    QPair<QString, double> current();
+    QString currentUri();
+
+    /**
+     * Returns the score of the current hit.
+     */
+    double currentScore();
 
     /**
      * Closes the query iterator and destroys the dbus object.

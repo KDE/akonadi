@@ -38,10 +38,9 @@ TestObject::TestObject( const QString &query, QObject *parent )
 
   org::kde::Akonadi::SearchQueryIterator *iterator = new org::kde::Akonadi::SearchQueryIterator( "org.kde.Akonadi.Search", iteratorPath,
                                                                          QDBusConnection::sessionBus(), this );
-
   while ( iterator->next() ) {
-    QPair<QString, double> data = iterator->current();
-    qDebug("  %s", qPrintable( data.first ) );
+    QString data = iterator->currentUri();
+    qDebug("  %s", qPrintable( data ) );
   }
 
   iterator->close();
@@ -52,6 +51,12 @@ TestObject::TestObject( const QString &query, QObject *parent )
            this, SLOT( hitsRemoved( const QMap<QString, double>& ) ) );
 
   mQuery->start();
+}
+
+TestObject::~TestObject()
+{
+  mQuery->stop();
+  mQuery->close();
 }
 
 void TestObject::hitsChanged( const QMap<QString, double> &hits )
@@ -78,14 +83,23 @@ int main( int argc, char **argv )
 {
   QCoreApplication app( argc, argv );
 
+/*
   if ( argc != 2 ) {
     qDebug( "usage: queryservertest query" );
     return 1;
   }
 
   new TestObject( QString::fromLatin1( argv[ 1 ] ) );
+*/
+  QString query( "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#> select ?result where { ?result a nco:PersonContact . ?result nco:nameGiven ?n . FILTER REGEX(STR(?n), 'Tobias') . }" );
+  TestObject *test = new TestObject( query );
 
-  return app.exec();
+
+  int retval = app.exec();
+
+  delete test;
+
+  return retval;
 }
 
 #include "queryservertest.moc"

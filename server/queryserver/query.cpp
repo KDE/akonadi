@@ -65,7 +65,7 @@ void Query::Private::_k_statementsAdded()
    * in our cache -> they are new
    */
   while ( it.next() ) {
-    const QString uri = it.binding( "result" ).uri().toString();
+    const QString uri = it.binding( 0 ).uri().toString();
 
     if ( !mAllUris.contains( uri ) ) {
       mAllUris.insert( uri );
@@ -84,7 +84,7 @@ void Query::Private::_k_statementsRemoved()
 
   Soprano::QueryResultIterator it = mModel->executeQuery( mQueryString, Soprano::Query::QueryLanguageSparql );
   while ( it.next() ) {
-    const QString uri = it.binding( "result" ).uri().toString();
+    const QString uri = it.binding( 0 ).uri().toString();
     availableUris.insert( uri );
   }
 
@@ -139,7 +139,7 @@ void Query::start()
    */
   Soprano::QueryResultIterator it = d->mModel->executeQuery( d->mQueryString, Soprano::Query::QueryLanguageSparql );
   while ( it.next() )
-    d->mAllUris.insert( it.binding( "result" ).uri().toString() );
+    d->mAllUris.insert( it.binding( 0 ).uri().toString() );
 
   it.close();
 

@@ -5,9 +5,11 @@
     <method name="next">
       <arg name="reply" type="b" direction="out" />
     </method>
-    <method name="current">
-      <arg name="node" type="(sd)" direction="out" />
-      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QPair&lt;QString, double&gt;" />
+    <method name="currentUri">
+      <arg name="reply" type="s" direction="out" />
+    </method>
+    <method name="currentScore">
+      <arg name="reply" type="d" direction="out" />
     </method>
     <method name="close" />
   </interface>

@@ -54,9 +54,14 @@ bool QueryIterator::next()
   return d->mIterator.next();
 }
 
-QPair<QString, double> QueryIterator::current()
+QString QueryIterator::currentUri()
 {
-  return QPair<QString, double>( d->mIterator.binding( "result" ).uri().toString(), 0 );
+  return d->mIterator.binding( 0 ).uri().toString();
+}
+
+double QueryIterator::currentScore()
+{
+  return 1;
 }
 
 void QueryIterator::close()
