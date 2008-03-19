@@ -73,7 +73,7 @@ static QString sortOrderToString( Query::SortOrder order )
     case Query::Descending:
       return QLatin1String( " DESC" );
   }
-  Q_ASSERT_X( false, "QueryBuilder::sortOrderToString()", "Unkown sort order." );
+  Q_ASSERT_X( false, "QueryBuilder::sortOrderToString()", "Unknown sort order." );
   return QString();
 }
 

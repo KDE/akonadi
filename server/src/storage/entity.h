@@ -100,7 +100,7 @@ class Entity
     }
 
     /**
-      Checks wether an entry in a n:m relation table exists.
+      Checks whether an entry in a n:m relation table exists.
       @param leftId Identifier of the left part of the relation.
       @param rightId Identifier of the right part of the relation.
      */
