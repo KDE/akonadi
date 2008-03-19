@@ -276,11 +276,6 @@ void AgentBase::collectionRemoved( int id, const QString &remoteId )
   changeProcessed();
 }
 
-QSettings* AgentBase::settings()
-{
-  return d_ptr->mSettings;
-}
-
 Session* AgentBase::session()
 {
   return d_ptr->session;

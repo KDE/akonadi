@@ -159,14 +159,6 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     virtual void aboutToQuit();
 
     /**
-     * This method returns the settings object which has to be used by the
-     * agent to store its configuration data.
-     *
-     * Don't delete this object!
-     */
-    KDE_DEPRECATED QSettings* settings();
-
-    /**
      * Returns a session for communicating with the storage backend. It should
      * be used for all jobs.
      */
