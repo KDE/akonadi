@@ -18,6 +18,8 @@
 */
 
 #include "knutresource.h"
+#include "settings.h"
+#include "settingsadaptor.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -43,7 +45,10 @@ typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 KnutResource::KnutResource( const QString &id )
   : ResourceBase( id )
 {
-  mDataFile = settings()->value( "General/DataFile" ).toString();
+  new SettingsAdaptor( Settings::self() );
+  QDBusConnection::sessionBus().registerObject( QLatin1String( "/Settings" ),
+                            Settings::self(), QDBusConnection::ExportAdaptors );
+  mDataFile = Settings::self()->dataFile();
 }
 
 KnutResource::~KnutResource()
@@ -54,7 +59,7 @@ void KnutResource::configure( WId windowId )
 {
   QString newFile;
 
-  QString oldFile = settings()->value( "General/DataFile" ).toString();
+  QString oldFile = Settings::self()->dataFile();
   KUrl url;
   if ( !oldFile.isEmpty() )
     url = KUrl::fromPath( oldFile );
@@ -76,7 +81,7 @@ void KnutResource::aboutToQuit()
 bool KnutResource::setConfiguration( const QString &config )
 {
   mDataFile = config;
-  settings()->setValue( "General/DataFile", mDataFile );
+  Settings::self()->setDataFile( mDataFile );
 
   loadData();
   synchronize();
