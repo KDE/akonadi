@@ -100,10 +100,11 @@ bool Store::handleLine( const QByteArray& line )
     }
   }
 
-  while ( pos < line.length() ) {
+  QList<QByteArray> changes;
+  pos = ImapParser::parseParenthesizedList( line, changes, pos );
+  for ( int i = 0; i < changes.size() - 1; i += 2 ) {
     // parse command
-    QByteArray command;
-    pos = ImapParser::parseString( line, command, pos );
+    QByteArray command = changes[ i ];
     Operation op = Replace;
     bool silent = false;
     if ( command.isEmpty() )
@@ -120,12 +121,13 @@ bool Store::handleLine( const QByteArray& line )
       silent = true;
       command.chop( 7 );
     }
+    const QByteArray value = changes[i + 1];
 
     for ( int i = 0; i < pimItems.count(); ++i ) {
       // handle command
       if ( command == "FLAGS" ) {
         QList<QByteArray> flags;
-        pos = ImapParser::parseParenthesizedList( line, flags, pos );
+        ImapParser::parseParenthesizedList( value, flags );
         if ( op == Replace ) {
           if ( !replaceFlags( pimItems[ i ], flags ) )
             return failureResponse( "Unable to replace item flags." );
@@ -138,18 +140,16 @@ bool Store::handleLine( const QByteArray& line )
         }
       } else if ( command == "PARTS" ) {
         QList<QByteArray> parts;
-        pos = ImapParser::parseParenthesizedList( line, parts, pos );
+        ImapParser::parseParenthesizedList( value, parts );
         if ( op == Delete ) {
           if ( !deleteParts( pimItems[ i ], parts ) )
           return failureResponse( "Unable to remove item parts." );
         }
       } else if ( command == "COLLECTION" ) {
-        pos = ImapParser::parseString( line, buffer, pos );
-        if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( buffer ) ) )
+        if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( value ) ) )
           return failureResponse( "Unable to move item." );
       } else if ( command == "REMOTEID" ) {
-        pos = ImapParser::parseString( line, buffer, pos );
-        if ( !store->updatePimItem( pimItems[i], QString::fromUtf8( buffer ) ) )
+        if ( !store->updatePimItem( pimItems[i], QString::fromUtf8( value ) ) )
           return failureResponse( "Unable to change remote id for item." );
       } else if ( command == "DIRTY" ) {
           PimItem item = pimItems.at( i );
@@ -157,7 +157,6 @@ bool Store::handleLine( const QByteArray& line )
           if ( !item.update() )
             return failureResponse( "Unable to update item dirtyness" );
       } else {
-        pos = ImapParser::parseString( line, buffer, pos );
         Part part;
         SelectQueryBuilder<Part> qb;
         qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, pimItems[ i ].id() );
@@ -170,9 +169,9 @@ bool Store::handleLine( const QByteArray& line )
         }
 
         // only update if part contents are not yet in the storage
-        if ( part.data() != buffer )
+        if ( part.data() != value )
         {
-          part.setData( buffer );
+          part.setData( value );
           part.setDatasize( buffer.size() );
           part.setName( QString::fromUtf8( command ) );
           part.setPimItemId( pimItems[ i ].id() );
