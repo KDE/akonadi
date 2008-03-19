@@ -38,7 +38,7 @@ namespace Akonadi {
   during a collection sync (eg. full mail vs. just the headers).
 - A time up to which non-permantly cached item parts have to be kept at
   least (0 - infinity).
-- Wether or not a collection sync is triggered on demand, ie. as soon
+- Whether or not a collection sync is triggered on demand, ie. as soon
   as it is accessed by a client.
 - An optional time interval for regular collection sync (aka interval
   mail check).

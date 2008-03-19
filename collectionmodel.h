@@ -167,7 +167,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     bool canCreateCollection( const QModelIndex &parent ) const;
 
     /**
-      Returns wether the specified collection supports <em>any</em> of the given mime-types.
+      Returns whether the specified collection supports <em>any</em> of the given mime-types.
       @param index The model index.
       @param contentTypes The content types to check.
     */

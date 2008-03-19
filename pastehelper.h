@@ -39,7 +39,7 @@ namespace Akonadi {
 namespace PasteHelper
 {
   /**
-    Check wether the given mime data can be pasted into the given collection.
+    Check whether the given mime data can be pasted into the given collection.
     @param mimeData The pasted/dropped data.
     @param collection The collection to paste/drop into.
   */
@@ -49,7 +49,7 @@ namespace PasteHelper
     Paste/drop the given mime data into the given collection.
     @param mimeData The pasted/dropped data.
     @param collection The target collection.
-    @param copy Indicate wether this is a copy or a move.
+    @param copy Indicate whether this is a copy or a move.
     @returns The job performing the paste, 0 if there is nothing to paste.
   */
   KJob* paste( const QMimeData* mimeData, const Collection &collection, bool copy = true );

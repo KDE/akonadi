@@ -105,8 +105,8 @@ class AKONADI_EXPORT TransactionCommitJob : public Job
   As soon as the last subjob has successfully finished, the transaction is committed.
   If any subjob fails, the transaction is rolled back.
 
-  Alternatively, a TransactionSequence object can be used as a parent object for a set
-  of jobs to achive the same behaviour without subclassing.
+  Alternatively, a TransactionSequence object can be used as a parent object
+  for a set of jobs to achieve the same behaviour without subclassing.
 */
 class AKONADI_EXPORT TransactionSequence : public Job
 {
