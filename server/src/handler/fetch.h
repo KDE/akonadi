@@ -23,6 +23,7 @@
 #include <handler.h>
 
 #include "storage/datastore.h"
+#include "imapset.h"
 
 namespace Akonadi {
 
@@ -44,8 +45,16 @@ class Fetch : public Handler
     bool handleLine(const QByteArray& line);
 
   private:
-    void updateItemAccessTime( const ImapSet &set, bool isUidFetch );
-    void triggerOnDemandFetch( bool isUidFetch );
+    bool parseCommand( const QByteArray &line );
+    void updateItemAccessTime();
+    void triggerOnDemandFetch();
+    QueryBuilder buildPartQuery( const QStringList &partList );
+
+  private:
+    ImapSet mSet;
+    bool mIsUidFetch;
+    bool mAllParts;
+    QList<QByteArray> mAttrList;
 
 };
 

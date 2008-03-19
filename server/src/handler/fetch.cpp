@@ -36,7 +36,9 @@
 using namespace Akonadi;
 
 Fetch::Fetch()
-  : Handler()
+  : Handler(),
+    mIsUidFetch( false ),
+    mAllParts( false )
 {
 }
 
@@ -44,50 +46,53 @@ Fetch::~Fetch()
 {
 }
 
-bool Fetch::handleLine( const QByteArray& line )
+bool Fetch::parseCommand( const QByteArray &line )
 {
   // parse the command
   QByteArray buffer;
   int pos = ImapParser::parseString( line, buffer );
 
   // command
-  bool isUidFetch = false;
   pos = ImapParser::parseString( line, buffer, pos );
   if ( buffer == "UID" ) {
-    isUidFetch = true;
+    mIsUidFetch = true;
     pos = ImapParser::parseString( line, buffer, pos );
   }
 
   // sequence set
-  ImapSet set;
-  pos = ImapParser::parseSequenceSet( line, set, pos );
-  if ( set.isEmpty() )
-    return failureResponse( "Invalid sequence set" );
+  pos = ImapParser::parseSequenceSet( line, mSet, pos );
+  if ( mSet.isEmpty() )
+    return false;
 
   // macro vs. attribute list
   pos = ImapParser::stripLeadingSpaces( line, pos );
   if ( pos >= line.count() )
-    return failureResponse( "Premature end of command" );
-  QList<QByteArray> attrList;
-  bool allParts = false;
+    return false;
   if ( line[pos] == '(' ) {
-    pos = ImapParser::parseParenthesizedList( line, attrList, pos );
+    pos = ImapParser::parseParenthesizedList( line, mAttrList, pos );
   } else {
     pos = ImapParser::parseString( line, buffer, pos );
     if ( buffer == "AKALL" ) {
-      allParts = true;
+      mAllParts = true;
     } else if ( buffer == "ALL" ) {
-      attrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE";
+      mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE";
     } else if ( buffer == "FULL" ) {
-      attrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE";
+      mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE";
     } else if ( buffer == "FAST" ) {
-      attrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE" << "BODY";
+      mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE" << "BODY";
     } else {
-      return failureResponse( "Unsupported macro" );
+      return false;
     }
   }
+  return true;
+}
 
-  triggerOnDemandFetch( isUidFetch );
+bool Fetch::handleLine( const QByteArray& line )
+{
+  if ( !parseCommand( line ) )
+    return failureResponse( "Unable to parse command" );
+
+  triggerOnDemandFetch();
 
   // build item query
   QueryBuilder itemQuery;
@@ -103,7 +108,7 @@ bool Fetch::handleLine( const QByteArray& line )
   itemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
   itemQuery.addColumnCondition( PimItem::locationIdFullColumnName(), Query::Equals, Location::idFullColumnName() );
   itemQuery.addColumnCondition( Location::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
-  imapSetToQuery( set, isUidFetch, itemQuery );
+  imapSetToQuery( mSet, mIsUidFetch, itemQuery );
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   const int itemQueryIdColumn = 0;
   const int itemQueryRevColumn = 1;
@@ -117,7 +122,7 @@ bool Fetch::handleLine( const QByteArray& line )
 
   // build flag query if needed
   QueryBuilder flagQuery;
-  if ( attrList.contains( "FLAGS" ) || allParts ) {
+  if ( mAttrList.contains( "FLAGS" ) || mAllParts ) {
     flagQuery.addTable( PimItem::tableName() );
     flagQuery.addTable( PimItemFlagRelation::tableName() );
     flagQuery.addTable( Flag::tableName() );
@@ -125,7 +130,7 @@ bool Fetch::handleLine( const QByteArray& line )
     flagQuery.addColumn( Flag::nameFullColumnName() );
     flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
     flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
-    imapSetToQuery( set, isUidFetch, flagQuery );
+    imapSetToQuery( mSet, mIsUidFetch, flagQuery );
     flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     if ( !flagQuery.exec() )
@@ -138,7 +143,7 @@ bool Fetch::handleLine( const QByteArray& line )
   // build part query if needed
   QueryBuilder partQuery;
   QStringList partList;
-  foreach( const QByteArray b, attrList ) {
+  foreach( const QByteArray b, mAttrList ) {
     // filter out non-part attributes
     if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" || b.startsWith( "akonadi-" ) )
       continue;
@@ -147,18 +152,8 @@ bool Fetch::handleLine( const QByteArray& line )
     else
       partList << QString::fromLatin1( b );
   }
-  if ( !partList.isEmpty() || allParts || attrList.contains( "RFC822.SIZE" ) ) {
-    partQuery.addTable( PimItem::tableName() );
-    partQuery.addTable( Part::tableName() );
-    partQuery.addColumn( PimItem::idFullColumnName() );
-    partQuery.addColumn( Part::nameFullColumnName() );
-    partQuery.addColumn( Part::dataFullColumnName() );
-    partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
-    if ( !allParts )
-      partQuery.addValueCondition( Part::nameFullColumnName(), Query::In, partList );
-    imapSetToQuery( set, isUidFetch, partQuery );
-    partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
-
+  if ( !partList.isEmpty() || mAllParts || mAttrList.contains( "RFC822.SIZE" ) ) {
+    partQuery = buildPartQuery( partList );
     if ( !partQuery.exec() )
       return failureResponse( "Unable to retrieve item parts" );
     partQuery.query().next();
@@ -170,7 +165,7 @@ bool Fetch::handleLine( const QByteArray& line )
   // fetch not yet cached item parts
   // TODO: I'm sure this can be done with a single query instead of manually
   DataStore *store = connection()->storageBackend();
-  if ( !partList.isEmpty() || allParts ) {
+  if ( !partList.isEmpty() || mAllParts ) {
     while ( itemQuery.query().isValid() ) {
       const int pimItemId = itemQuery.query().value( itemQueryIdColumn ).toInt();
       QStringList missingParts = partList;
@@ -184,7 +179,7 @@ bool Fetch::handleLine( const QByteArray& line )
         }
         const QString partName = partQuery.query().value( partQueryNameColumn ).toString();
         if ( partQuery.query().value( partQueryDataColumn ).toByteArray().isNull() ) {
-          if ( allParts )
+          if ( mAllParts )
             missingParts << partName;
         } else {
           missingParts.removeAll( partName );
@@ -200,7 +195,8 @@ bool Fetch::handleLine( const QByteArray& line )
 
     // re-exec part query, rewind item query
     itemQuery.query().first();
-    if ( !partQuery.query().exec() )
+    partQuery = buildPartQuery( partList );
+    if ( !partQuery.exec() )
       return failureResponse( "Unable to retrieve item parts" );
     partQuery.query().next();
   }
@@ -217,7 +213,7 @@ bool Fetch::handleLine( const QByteArray& line )
     attributes.append( "REMOTEID " + ImapParser::quote( itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8() ) );
     attributes.append( "MIMETYPE " + ImapParser::quote( itemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8() ) );
 
-    if ( attrList.contains( "FLAGS" ) ) {
+    if ( mAttrList.contains( "FLAGS" ) ) {
       QList<QByteArray> flags;
       while ( flagQuery.query().isValid() ) {
         const int id = flagQuery.query().value( flagQueryIdColumn ).toInt();
@@ -253,10 +249,10 @@ bool Fetch::handleLine( const QByteArray& line )
         part += data;
       }
       // return only requested parts (when RFC822.SIZE is requested, RFC822 is retrieved, but should not be returned)
-      if ( attrList.contains( partName ) || allParts )
+      if ( mAttrList.contains( partName ) || mAllParts )
         attributes << part;
 
-      if ( partName == "RFC822" && attrList.contains( "RFC822.SIZE" ) )
+      if ( partName == "RFC822" && mAttrList.contains( "RFC822.SIZE" ) )
         attributes.append( "RFC822.SIZE " + QByteArray::number( data.length() ) );
 
       partQuery.query().next();
@@ -273,11 +269,11 @@ bool Fetch::handleLine( const QByteArray& line )
   }
 
   // update atime
-  updateItemAccessTime( set, isUidFetch );
+  updateItemAccessTime();
 
   response.setTag( tag() );
   response.setSuccess();
-  if ( isUidFetch )
+  if ( mIsUidFetch )
     response.setString( "UID FETCH completed" );
   else
     response.setString( "FETCH completed" );
@@ -286,19 +282,19 @@ bool Fetch::handleLine( const QByteArray& line )
   return true;
 }
 
-void Fetch::updateItemAccessTime(const ImapSet & set, bool isUidFetch)
+void Fetch::updateItemAccessTime()
 {
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.updateColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
-  imapSetToQuery( set, isUidFetch, qb );
+  imapSetToQuery( mSet, mIsUidFetch, qb );
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
 }
 
-void Fetch::triggerOnDemandFetch(bool isUidFetch)
+void Fetch::triggerOnDemandFetch()
 {
-  if ( isUidFetch || connection()->selectedCollection() <= 0 )
+  if ( mIsUidFetch || connection()->selectedCollection() <= 0 )
     return;
   Location loc = connection()->selectedLocation();
   // HACK: don't trigger on-demand syncing if the resource is the one triggering it
@@ -309,4 +305,22 @@ void Fetch::triggerOnDemandFetch(bool isUidFetch)
   if ( !loc.cachePolicySyncOnDemand() )
     return;
   store->triggerCollectionSync( loc );
+}
+
+QueryBuilder Fetch::buildPartQuery( const QStringList &partList )
+{
+  QueryBuilder partQuery;
+  if ( !partList.isEmpty() || mAllParts || mAttrList.contains( "RFC822.SIZE" ) ) {
+    partQuery.addTable( PimItem::tableName() );
+    partQuery.addTable( Part::tableName() );
+    partQuery.addColumn( PimItem::idFullColumnName() );
+    partQuery.addColumn( Part::nameFullColumnName() );
+    partQuery.addColumn( Part::dataFullColumnName() );
+    partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
+    if ( !mAllParts )
+      partQuery.addValueCondition( Part::nameFullColumnName(), Query::In, partList );
+    imapSetToQuery( mSet, mIsUidFetch, partQuery );
+    partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+  }
+  return partQuery;
 }
