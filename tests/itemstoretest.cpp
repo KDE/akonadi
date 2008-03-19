@@ -159,6 +159,7 @@ void ItemStoreTest::testItemMove()
   ItemStoreJob *store = new ItemStoreJob( item, this );
   store->setCollection( res3 );
   QVERIFY( store->exec() );
+  item = store->item();
 
   ItemFetchJob *fetch = new ItemFetchJob( res3, this );
   QVERIFY( fetch->exec() );

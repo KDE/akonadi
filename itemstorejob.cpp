@@ -37,13 +37,8 @@ class ItemStoreJob::Private
       Dirty
     };
 
-    Private( ItemStoreJob *parent, Item & it )
-    : mParent( parent ), item( it ), itemRef( it ), revCheck( true )
-    {
-    }
-
     Private( ItemStoreJob *parent, const Item &it )
-    : mParent( parent ), item( it ), itemRef( item ), revCheck( true )
+    : mParent( parent ), item( it ), revCheck( true )
     {
     }
 
@@ -56,78 +51,10 @@ class ItemStoreJob::Private
     QByteArray tag;
     Collection collection;
     Item item;
-    Item & itemRef; // used for increasing revision number of given item
     bool revCheck;
     QStringList parts;
     QByteArray pendingData;
-
-    void sendNextCommand();
 };
-
-void ItemStoreJob::Private::sendNextCommand()
-{
-  // no further commands to send
-  if ( operations.isEmpty() && parts.isEmpty() ) {
-    mParent->emitResult();
-    return;
-  }
-
-  tag = mParent->newTag();
-  QByteArray command = tag;
-  command += " UID STORE " + QByteArray::number( item.reference().id() ) + ' ';
-  if ( !revCheck || addFlags.contains( "\\Deleted" ) ) {
-    command += "NOREV ";
-  } else {
-    command += "REV " + QByteArray::number( itemRef.rev() ) + ' ';
-  }
-  if ( !operations.isEmpty() ) {
-    int op = *(operations.begin());
-    operations.remove( op );
-    switch ( op ) {
-      case SetFlags:
-        command += "FLAGS.SILENT (" + ImapParser::join( flags, " " ) + ')';
-        break;
-      case AddFlags:
-        command += "+FLAGS.SILENT (" + ImapParser::join( addFlags, " " ) + ')';
-        break;
-      case RemoveFlags:
-        command += "-FLAGS.SILENT (" + ImapParser::join( removeFlags, " " ) + ')';
-        break;
-      case RemoveParts:
-        command += "-PARTS.SILENT (" + ImapParser::join( removeParts, " " ) + ')';
-        break;
-      case Move:
-        command += "COLLECTION.SILENT " + QByteArray::number( collection.id() );
-        break;
-      case RemoteId:
-        if ( item.reference().remoteId().isNull() ) {
-          sendNextCommand();
-          return;
-        }
-        command += "REMOTEID.SILENT \"" + item.reference().remoteId().toLatin1() + '\"';
-        break;
-      case Dirty:
-        command += "DIRTY.SILENT";
-        break;
-    }
-  } else {
-    QString label = parts.takeFirst();
-    pendingData = item.part( label );
-    command += label.toUtf8();
-    command += ".SILENT {" + QByteArray::number( pendingData.size() ) + '}';
-  }
-  command += '\n';
-  mParent->writeData( command );
-  mParent->newTag(); // hack to circumvent automatic response handling
-}
-
-
-ItemStoreJob::ItemStoreJob(Item & item, QObject * parent) :
-    Job( parent ),
-    d( new Private( this, item ) )
-{
-  d->operations.insert( Private::RemoteId );
-}
 
 ItemStoreJob::ItemStoreJob(const Item &item, QObject * parent) :
     Job( parent ),
@@ -178,33 +105,88 @@ void ItemStoreJob::setClean()
 
 void ItemStoreJob::doStart()
 {
-  d->sendNextCommand();
+  // nothing to do
+  if ( d->operations.isEmpty() && d->parts.isEmpty() ) {
+    emitResult();
+    return;
+  }
+
+  d->tag = newTag();
+  QByteArray command = d->tag;
+  command += " UID STORE " + QByteArray::number( d->item.reference().id() ) + ' ';
+  if ( !d->revCheck || d->addFlags.contains( "\\Deleted" ) ) {
+    command += "NOREV ";
+  } else {
+    command += "REV " + QByteArray::number( d->item.rev() );
+  }
+  foreach ( int op, d->operations ) {
+    command += ' ';
+    switch ( op ) {
+      case Private::SetFlags:
+        command += "FLAGS.SILENT (" + ImapParser::join( d->flags, " " ) + ')';
+        break;
+      case Private::AddFlags:
+        command += "+FLAGS.SILENT (" + ImapParser::join( d->addFlags, " " ) + ')';
+        break;
+      case Private::RemoveFlags:
+        command += "-FLAGS.SILENT (" + ImapParser::join( d->removeFlags, " " ) + ')';
+        break;
+      case Private::RemoveParts:
+        command += "-PARTS.SILENT (" + ImapParser::join( d->removeParts, " " ) + ')';
+        break;
+      case Private::Move:
+        command += "COLLECTION.SILENT " + QByteArray::number( d->collection.id() );
+        break;
+      case Private::RemoteId:
+        if ( !d->item.reference().remoteId().isNull() )
+          command += "REMOTEID.SILENT \"" + d->item.reference().remoteId().toLatin1() + '\"';
+        break;
+      case Private::Dirty:
+        command += "DIRTY.SILENT";
+        break;
+    }
+  }
+  if ( !d->parts.isEmpty() ) {
+    QString label = d->parts.takeFirst();
+    d->pendingData = d->item.part( label );
+    command += ' ' + label.toUtf8();
+    command += ".SILENT {" + QByteArray::number( d->pendingData.size() ) + '}';
+  }
+  command += '\n';
+  writeData( command );
+  newTag(); // hack to circumvent automatic response handling
 }
 
 void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
 {
   if ( _tag == "+" ) { // ready for literal data
     writeData( d->pendingData );
-    // ### readLine() would deadlock in the server otherwise, should probably be fixed there
-    if ( !d->pendingData.endsWith( '\n' ) )
-      writeData( "\n" );
+    if ( d->parts.isEmpty() ) {
+      // ### readLine() would deadlock in the server otherwise, should probably be fixed there
+      if ( !d->pendingData.endsWith( '\n' ) )
+        writeData( "\n" );
+    } else {
+      QString label = d->parts.takeFirst();
+      d->pendingData = d->item.part( label );
+      QByteArray command = ' ' + label.toUtf8();
+      command += ".SILENT {" + QByteArray::number( d->pendingData.size() ) + "}\n";
+      writeData( command );
+    }
     return;
   }
   if ( _tag == d->tag ) {
     if ( data.startsWith( "OK" ) ) {
       // increase item revision of item, given by calling function
       if( d->revCheck )
-        d->itemRef.incRev();
+        d->item.incRev();
       else
         // increase item revision of own copy of item
         d->item.incRev();
-
-      d->sendNextCommand();
     } else {
       setError( Unknown );
       setErrorText( QString::fromUtf8( data ) );
-      emitResult();
     }
+    emitResult();
     return;
   }
   kDebug( 5250 ) << "Unhandled response: " << _tag << data;
@@ -219,6 +201,11 @@ void ItemStoreJob::storePayload()
 void ItemStoreJob::noRevCheck()
 {
   d->revCheck = false;
+}
+
+Item ItemStoreJob::item() const
+{
+  return d->item;
 }
 
 #include "itemstorejob.moc"

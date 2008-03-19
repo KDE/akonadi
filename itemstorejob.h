@@ -36,15 +36,6 @@ class AKONADI_EXPORT ItemStoreJob : public Job
 
   public:
     /**
-      Stores the given item.
-      By default only the meta data is stored, you need to explicitly enable storing
-      of the payload data.
-      @param item A reference to the Item object to store.
-      @param parent The parent object.
-    */
-    explicit ItemStoreJob( Item &item, QObject *parent = 0 );
-
-    /**
       Stores data at the item.
       By default only the meta data is stored, you need to explicitly enable storing
       of the payload data.
@@ -103,6 +94,11 @@ class AKONADI_EXPORT ItemStoreJob : public Job
       writing changes back to the corresponding server.
     */
     void setClean();
+
+    /**
+      Returns the stored item (including the changed revision number),
+    */
+    Item item() const;
 
   protected:
     virtual void doStart();
