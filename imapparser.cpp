@@ -423,7 +423,7 @@ bool ImapParser::parseNextLine(const QByteArray &readBuffer)
     // check the remaining (non-literal) part for parentheses
     if ( d->literalSize < 0 ) {
       // the following looks strange but works since literalSize can be negative here
-      d->parenthesesCount = ImapParser::parenthesesBalance( readBuffer, readBuffer.length() + d->literalSize );
+      d->parenthesesCount += ImapParser::parenthesesBalance( readBuffer, readBuffer.length() + d->literalSize );
 
       // check if another literal read was started
       if ( d->checkLiteralStart( readBuffer, readBuffer.length() + d->literalSize ) )

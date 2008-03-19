@@ -474,6 +474,8 @@ void ImapParserTest::testBulkParser_data()
       << QByteArray( "(PRE {2}\nXX\n POST)\n" );
   QTest::newRow( "large block" ) << QByteArray( "* PRE {10}\n0123456789\n" )
       << QByteArray( "PRE {10}\n0123456789\n" );
+  QTest::newRow( "store failure" ) << QByteArray( "3 UID STORE (FOO bar ENV {3}\n(a) HEAD {3}\na\n\n BODY {3}\nabc)\n" )
+      << QByteArray( "UID STORE (FOO bar ENV {3}\n(a) HEAD {3}\na\n\n BODY {3}\nabc)\n" );
 }
 
 void ImapParserTest::testBulkParser()

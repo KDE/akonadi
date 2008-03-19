@@ -54,6 +54,24 @@ class ItemStoreJob::Private
     bool revCheck;
     QStringList parts;
     QByteArray pendingData;
+
+    QByteArray nextPartHeader()
+    {
+      QByteArray command;
+      if ( !parts.isEmpty() ) {
+        QString label = parts.takeFirst();
+        pendingData = item.part( label );
+        command += ' ' + label.toUtf8();
+        command += ".SILENT {" + QByteArray::number( pendingData.size() ) + '}';
+        if ( pendingData.size() > 0 )
+          command += '\n';
+        else
+          command += nextPartHeader();
+      } else {
+        command += ")\n";
+      }
+      return command;
+    }
 };
 
 ItemStoreJob::ItemStoreJob(const Item &item, QObject * parent) :
@@ -119,40 +137,43 @@ void ItemStoreJob::doStart()
   } else {
     command += "REV " + QByteArray::number( d->item.rev() );
   }
+  QList<QByteArray> changes;
   foreach ( int op, d->operations ) {
-    command += ' ';
     switch ( op ) {
       case Private::SetFlags:
-        command += "FLAGS.SILENT (" + ImapParser::join( d->flags, " " ) + ')';
+        changes << "FLAGS.SILENT";
+        changes << "(" + ImapParser::join( d->flags, " " ) + ')';
         break;
       case Private::AddFlags:
-        command += "+FLAGS.SILENT (" + ImapParser::join( d->addFlags, " " ) + ')';
+        changes << "+FLAGS.SILENT";
+        changes << "(" + ImapParser::join( d->addFlags, " " ) + ')';
         break;
       case Private::RemoveFlags:
-        command += "-FLAGS.SILENT (" + ImapParser::join( d->removeFlags, " " ) + ')';
+        changes << "-FLAGS.SILENT";
+        changes << "(" + ImapParser::join( d->removeFlags, " " ) + ')';
         break;
       case Private::RemoveParts:
-        command += "-PARTS.SILENT (" + ImapParser::join( d->removeParts, " " ) + ')';
+        changes << "-PARTS.SILENT";
+        changes << "(" + ImapParser::join( d->removeParts, " " ) + ')';
         break;
       case Private::Move:
-        command += "COLLECTION.SILENT " + QByteArray::number( d->collection.id() );
+        changes << "COLLECTION.SILENT";
+        changes << QByteArray::number( d->collection.id() );
         break;
       case Private::RemoteId:
-        if ( !d->item.reference().remoteId().isNull() )
-          command += "REMOTEID.SILENT \"" + d->item.reference().remoteId().toLatin1() + '\"';
+        if ( !d->item.reference().remoteId().isNull() ) {
+          changes << "REMOTEID.SILENT";
+          changes << ImapParser::quote( d->item.reference().remoteId().toLatin1() );
+        }
         break;
       case Private::Dirty:
-        command += "DIRTY.SILENT";
+        changes << "DIRTY.SILENT";
+        changes << "false";
         break;
     }
   }
-  if ( !d->parts.isEmpty() ) {
-    QString label = d->parts.takeFirst();
-    d->pendingData = d->item.part( label );
-    command += ' ' + label.toUtf8();
-    command += ".SILENT {" + QByteArray::number( d->pendingData.size() ) + '}';
-  }
-  command += '\n';
+  command += " (" + ImapParser::join( changes, " " );
+  command += d->nextPartHeader();
   writeData( command );
   newTag(); // hack to circumvent automatic response handling
 }
@@ -161,17 +182,7 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
 {
   if ( _tag == "+" ) { // ready for literal data
     writeData( d->pendingData );
-    if ( d->parts.isEmpty() ) {
-      // ### readLine() would deadlock in the server otherwise, should probably be fixed there
-      if ( !d->pendingData.endsWith( '\n' ) )
-        writeData( "\n" );
-    } else {
-      QString label = d->parts.takeFirst();
-      d->pendingData = d->item.part( label );
-      QByteArray command = ' ' + label.toUtf8();
-      command += ".SILENT {" + QByteArray::number( d->pendingData.size() ) + "}\n";
-      writeData( command );
-    }
+    writeData( d->nextPartHeader() );
     return;
   }
   if ( _tag == d->tag ) {
