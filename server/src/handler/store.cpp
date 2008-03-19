@@ -83,25 +83,7 @@ bool Store::handleLine( const QByteArray& line )
     }
   }
   else if ( buffer == "NOREV" )
-    revCheck = false;
-
-  // parse command
-  QByteArray command;
-  pos = ImapParser::parseString( line, command, pos );
-  Operation op = Replace;
-  bool silent = false;
-
-  if ( command.startsWith( '+' ) ) {
-    op = Add;
-    command = command.mid( 1 );
-  } else if ( command.startsWith( '-' ) ) {
-    op = Delete;
-    command = command.mid( 1 );
-  }
-  if ( command.endsWith( ".SILENT" ) ) {
-    silent = true;
-    command.chop( 7 );
-  }
+    revCheck   = false;
 
   for ( int i = 0; i < pimItems.count(); ++i ) {
     if ( revCheck ) {
@@ -116,82 +98,106 @@ bool Store::handleLine( const QByteArray& line )
     if ( !pimItems[ i ].update() ) {
       return failureResponse( "Unable to update item revision" );
     }
+  }
 
-    // handle command
-    if ( command == "FLAGS" ) {
-      QList<QByteArray> flags;
-      pos = ImapParser::parseParenthesizedList( line, flags, pos );
-      if ( op == Replace ) {
-        if ( !replaceFlags( pimItems[ i ], flags ) )
-          return failureResponse( "Unable to replace item flags." );
-      } else if ( op == Add ) {
-        if ( !addFlags( pimItems[ i ], flags ) )
-          return failureResponse( "Unable to add item flags." );
-      } else if ( op == Delete ) {
-        if ( !deleteFlags( pimItems[ i ], flags ) )
-          return failureResponse( "Unable to remove item flags." );
-      }
-    } else if ( command == "PARTS" ) {
-      QList<QByteArray> parts;
-      pos = ImapParser::parseParenthesizedList( line, parts, pos );
-      if ( op == Delete ) {
-        if ( !deleteParts( pimItems[ i ], parts ) )
-        return failureResponse( "Unable to remove item parts." );
-      }
-    } else if ( command == "COLLECTION" ) {
-      pos = ImapParser::parseString( line, buffer, pos );
-      if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( buffer ) ) )
-        return failureResponse( "Unable to move item." );
-    } else if ( command == "REMOTEID" ) {
-      pos = ImapParser::parseString( line, buffer, pos );
-      if ( !store->updatePimItem( pimItems[i], QString::fromUtf8( buffer ) ) )
-        return failureResponse( "Unable to change remote id for item." );
-    } else if ( command == "DIRTY" ) {
-        PimItem item = pimItems.at( i );
-        item.setDirty( false );
-        if ( !item.update() )
-          return failureResponse( "Unable to update item dirtyness" );
-    } else {
-      pos = ImapParser::parseString( line, buffer, pos );
-      Part part;
-      SelectQueryBuilder<Part> qb;
-      qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, pimItems[ i ].id() );
-      qb.addValueCondition( Part::nameColumn(), Query::Equals, QString::fromUtf8( command ) );
-      if ( !qb.exec() )
-        return failureResponse( "Unable to check item part existence" );
-      Part::List result = qb.result();
-      if ( !result.isEmpty() ) {
-        part = result.first();
-      }
+  while ( pos < line.length() ) {
+    // parse command
+    QByteArray command;
+    pos = ImapParser::parseString( line, command, pos );
+    Operation op = Replace;
+    bool silent = false;
+    if ( command.isEmpty() )
+      break;
 
-      // only update if part contents are not yet in the storage
-      if ( part.data() != buffer )
-      {
-        part.setData( buffer );
-        part.setDatasize( buffer.size() );
-        part.setName( QString::fromUtf8( command ) );
-        part.setPimItemId( pimItems[ i ].id() );
-        if ( part.isValid() ) {
-          if ( !part.update() )
-            return failureResponse( "Unable to update item part" );
-        } else {
-          if ( !part.insert() )
-            return failureResponse( "Unable to add item part" );
-        }
-        store->updatePimItem( pimItems[ i ] );
-      }
+    if ( command.startsWith( '+' ) ) {
+      op = Add;
+      command = command.mid( 1 );
+    } else if ( command.startsWith( '-' ) ) {
+      op = Delete;
+      command = command.mid( 1 );
+    }
+    if ( command.endsWith( ".SILENT" ) ) {
+      silent = true;
+      command.chop( 7 );
     }
 
-    if ( !silent ) {
-      QList<Flag> flags = pimItems[ i ].flags();
-      QStringList flagList;
-      for ( int j = 0; j < flags.count(); ++j )
-        flagList.append( flags[ j ].name() );
+    for ( int i = 0; i < pimItems.count(); ++i ) {
+      // handle command
+      if ( command == "FLAGS" ) {
+        QList<QByteArray> flags;
+        pos = ImapParser::parseParenthesizedList( line, flags, pos );
+        if ( op == Replace ) {
+          if ( !replaceFlags( pimItems[ i ], flags ) )
+            return failureResponse( "Unable to replace item flags." );
+        } else if ( op == Add ) {
+          if ( !addFlags( pimItems[ i ], flags ) )
+            return failureResponse( "Unable to add item flags." );
+        } else if ( op == Delete ) {
+          if ( !deleteFlags( pimItems[ i ], flags ) )
+            return failureResponse( "Unable to remove item flags." );
+        }
+      } else if ( command == "PARTS" ) {
+        QList<QByteArray> parts;
+        pos = ImapParser::parseParenthesizedList( line, parts, pos );
+        if ( op == Delete ) {
+          if ( !deleteParts( pimItems[ i ], parts ) )
+          return failureResponse( "Unable to remove item parts." );
+        }
+      } else if ( command == "COLLECTION" ) {
+        pos = ImapParser::parseString( line, buffer, pos );
+        if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( buffer ) ) )
+          return failureResponse( "Unable to move item." );
+      } else if ( command == "REMOTEID" ) {
+        pos = ImapParser::parseString( line, buffer, pos );
+        if ( !store->updatePimItem( pimItems[i], QString::fromUtf8( buffer ) ) )
+          return failureResponse( "Unable to change remote id for item." );
+      } else if ( command == "DIRTY" ) {
+          PimItem item = pimItems.at( i );
+          item.setDirty( false );
+          if ( !item.update() )
+            return failureResponse( "Unable to update item dirtyness" );
+      } else {
+        pos = ImapParser::parseString( line, buffer, pos );
+        Part part;
+        SelectQueryBuilder<Part> qb;
+        qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, pimItems[ i ].id() );
+        qb.addValueCondition( Part::nameColumn(), Query::Equals, QString::fromUtf8( command ) );
+        if ( !qb.exec() )
+          return failureResponse( "Unable to check item part existence" );
+        Part::List result = qb.result();
+        if ( !result.isEmpty() ) {
+          part = result.first();
+        }
 
-      response.setUntagged();
-      // IMAP protocol violation: should actually be the sequence number
-      response.setString( QByteArray::number( pimItems[i].id() ) + " FETCH (FLAGS (" + flagList.join( QLatin1String(" ") ).toUtf8() + "))" );
-      emit responseAvailable( response );
+        // only update if part contents are not yet in the storage
+        if ( part.data() != buffer )
+        {
+          part.setData( buffer );
+          part.setDatasize( buffer.size() );
+          part.setName( QString::fromUtf8( command ) );
+          part.setPimItemId( pimItems[ i ].id() );
+          if ( part.isValid() ) {
+            if ( !part.update() )
+              return failureResponse( "Unable to update item part" );
+          } else {
+            if ( !part.insert() )
+              return failureResponse( "Unable to add item part" );
+          }
+          store->updatePimItem( pimItems[ i ] );
+        }
+      }
+
+      if ( !silent ) {
+        QList<Flag> flags = pimItems[ i ].flags();
+        QStringList flagList;
+        for ( int j = 0; j < flags.count(); ++j )
+          flagList.append( flags[ j ].name() );
+
+        response.setUntagged();
+        // IMAP protocol violation: should actually be the sequence number
+        response.setString( QByteArray::number( pimItems[i].id() ) + " FETCH (FLAGS (" + flagList.join( QLatin1String(" ") ).toUtf8() + "))" );
+        emit responseAvailable( response );
+      }
     }
   }
 
