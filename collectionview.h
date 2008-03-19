@@ -79,6 +79,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     void currentChanged( const Akonadi::Collection &collection );
 
   protected:
+    using QTreeView::currentChanged;
     virtual void dragMoveEvent( QDragMoveEvent *event );
     virtual void dragLeaveEvent( QDragLeaveEvent *event );
     virtual void dropEvent( QDropEvent *event );

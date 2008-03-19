@@ -79,6 +79,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
     void currentChanged( const Akonadi::DataReference &item );
 
   protected:
+    using QTreeView::currentChanged;
     void contextMenuEvent( QContextMenuEvent *event );
 
   private:
