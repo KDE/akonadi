@@ -57,4 +57,5 @@ add_akonadi_test(subscriptiontest.cpp)
 add_akonadi_test(transactiontest.cpp)
 add_akonadi_test(itemcopytest.cpp)
 add_akonadi_test(collectioncopytest.cpp)
+add_akonadi_test(itemserializertest.cpp)
 
