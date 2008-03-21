@@ -220,10 +220,10 @@ install( FILES
 )
 
 install( FILES
-  interfaces/org.kde.Akonadi.AgentManager.xml
-  interfaces/org.kde.Akonadi.NotificationManager.xml
-  interfaces/org.kde.Akonadi.ProfileManager.xml
-  interfaces/org.kde.Akonadi.Tracer.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.AgentManager.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.NotificationManager.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.ProfileManager.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Tracer.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml
 DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
