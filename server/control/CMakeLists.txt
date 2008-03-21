@@ -15,7 +15,6 @@ set( control_SRCS
   main.cpp
   processcontrol.cpp
   profilemanager.cpp
-  ../../libakonadi/xdgbasedirs.cpp
 )
 
 qt4_generate_dbus_interface( ../../libakonadi/agent.h org.kde.Akonadi.Agent.xml )

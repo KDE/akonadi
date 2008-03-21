@@ -99,7 +99,6 @@ set(libakonadiprivate_SRCS
   src/resourcemanager.cpp
   src/cachecleaner.cpp
   src/xesammanager.cpp
-  ../libakonadi/xdgbasedirs.cpp
 )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS
