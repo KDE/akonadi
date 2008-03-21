@@ -12,13 +12,11 @@
     </method>
 
     <signal name='hitsChanged'>
-      <arg name='uris' type='a{sd}' />
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="QMap&lt;QString, double&gt;" />
+      <arg name='uris' type='as' />
     </signal>
 
     <signal name='hitsRemoved'>
-      <arg name='uris' type='a{sd}' />
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="QMap&lt;QString, double&gt;" />
+      <arg name='uris' type='as' />
     </signal>
   </interface>
 </node>

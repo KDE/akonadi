@@ -57,7 +57,7 @@ class Query::Private
 
 void Query::Private::_k_statementsAdded()
 {
-  QMap<QString, double> uris;
+  QList<QString> uris;
   Soprano::QueryResultIterator it = mModel->executeQuery( mQueryString, Soprano::Query::QueryLanguageSparql );
 
   /**
@@ -69,7 +69,7 @@ void Query::Private::_k_statementsAdded()
 
     if ( !mAllUris.contains( uri ) ) {
       mAllUris.insert( uri );
-      uris.insert( uri, 0 );
+      uris.append( uri );
     }
   }
 
@@ -103,9 +103,9 @@ void Query::Private::_k_statementsRemoved()
   /**
    * Create result map.
    */
-  QMap<QString, double> uris;
+  QList<QString> uris;
   Q_FOREACH( const QString uri, tmp )
-    uris.insert( uri, 0 );
+    uris.append( uri );
 
   mQueryTime = QDateTime::currentDateTime();
 

@@ -71,12 +71,12 @@ class Query : public QObject
     /**
      * This signal is emitted whenever hits has changed.
      */
-    void hitsChanged( const QMap<QString, double> &hits );
+    void hitsChanged( const QList<QString> &hits );
 
     /**
      * This signal is emitted whenever hits has been removed.
      */
-    void hitsRemoved( const QMap<QString, double> &hits );
+    void hitsRemoved( const QList<QString> &hits );
 
   private:
     class Private;
