@@ -20,12 +20,12 @@
 
 #include "append.h"
 #include "response.h"
-#include <akonadi/private/imapparser.h>
+#include <akonadi/private/imapparser_p.h>
 #include "handlerhelper.h"
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include <akonadi/private/protocol.h>
+#include <akonadi/private/protocol_p.h>
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"

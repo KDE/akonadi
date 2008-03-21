@@ -21,7 +21,7 @@
 
 #include "akonadiconnection.h"
 #include "handlerhelper.h"
-#include <akonadi/private/imapparser.h>
+#include <akonadi/private/imapparser_p.h>
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 

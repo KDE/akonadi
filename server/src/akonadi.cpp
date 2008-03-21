@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-#include <akonadi/private/xdgbasedirs.h>
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include "akonadi.h"
 #include "akonadiconnection.h"

@@ -19,7 +19,7 @@
 
 #include "subscribe.h"
 
-#include <akonadi/private/imapparser.h>
+#include <akonadi/private/imapparser_p.h>
 #include <handlerhelper.h>
 #include <akonadiconnection.h>
 #include <storage/datastore.h>

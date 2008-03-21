@@ -22,8 +22,6 @@
 #include "storage/entity.h"
 #include "handlerhelper.h"
 
-#include <akonadi/private/notificationmessage.h>
-
 #include <QtCore/QDebug>
 
 using namespace Akonadi;

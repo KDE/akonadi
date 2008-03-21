@@ -20,7 +20,7 @@
 #include "profilemanager.h"
 
 #include "profilemanageradaptor.h"
-#include <akonadi/private/xdgbasedirs.h>
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QSettings>

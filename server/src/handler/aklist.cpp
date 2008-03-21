@@ -20,7 +20,7 @@
 #include "aklist.h"
 
 #include <QtCore/QDebug>
-#include <akonadi/private/imapparser.h>
+#include <akonadi/private/imapparser_p.h>
 
 #include "storage/datastore.h"
 #include "storage/entity.h"

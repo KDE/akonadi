@@ -20,7 +20,7 @@
 #ifndef AKONADI_NOTIFICATIONMANAGER_H
 #define AKONADI_NOTIFICATIONMANAGER_H
 
-#include <akonadi/private/notificationmessage.h>
+#include <akonadi/private/notificationmessage_p.h>
 
 #include <QtCore/QHash>
 #include <QtCore/QObject>

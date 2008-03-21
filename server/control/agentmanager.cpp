@@ -23,7 +23,7 @@
 #include "agentmanageradaptor.h"
 #include "processcontrol.h"
 #include "serverinterface.h"
-#include <akonadi/private/xdgbasedirs.h>
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>

@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <akonadi/private/imapparser.h>
+#include <akonadi/private/imapparser_p.h>
 
 #include "append.h"
 #include "akappend.h"

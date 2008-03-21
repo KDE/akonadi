@@ -27,7 +27,7 @@
 #include "storage/countquerybuilder.h"
 
 #include "response.h"
-#include <akonadi/private/imapparser.h>
+#include <akonadi/private/imapparser_p.h>
 #include "handlerhelper.h"
 
 using namespace Akonadi;

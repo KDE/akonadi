@@ -20,7 +20,7 @@
 #include "transaction.h"
 #include "storage/datastore.h"
 #include "akonadiconnection.h"
-#include <akonadi/private/imapparser.h>
+#include <akonadi/private/imapparser_p.h>
 #include "response.h"
 
 Akonadi::TransactionHandler::TransactionHandler()

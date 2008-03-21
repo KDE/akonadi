@@ -21,7 +21,7 @@
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 
-#include <akonadi/private/imapparser.h>
+#include <akonadi/private/imapparser_p.h>
 
 using namespace Akonadi;
 

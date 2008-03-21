@@ -24,7 +24,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 
-#include <akonadi/private/protocol.h>
+#include <akonadi/private/protocol_p.h>
 
 #include "controlmanagerinterface.h"
 #include "akonadistarter.h"

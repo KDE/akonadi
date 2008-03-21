@@ -21,7 +21,7 @@
 #include <QtCore/QDebug>
 
 #include "response.h"
-#include <akonadi/private/imapparser.h>
+#include <akonadi/private/imapparser_p.h>
 #include "akonadiconnection.h"
 
 using namespace Akonadi;

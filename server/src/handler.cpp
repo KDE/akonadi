@@ -22,7 +22,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QLatin1String>
 
-#include <akonadi/private/imapset.h>
+#include <akonadi/private/imapset_p.h>
 
 #include "akonadiconnection.h"
 #include "response.h"
