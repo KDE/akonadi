@@ -190,7 +190,7 @@ void AgentManager::agentInstanceConfigure( const QString &identifier, QWidget *p
 {
   qlonglong winId = 0;
   if ( parent )
-    winId = parent->window()->winId();
+    winId = reinterpret_cast<qlonglong>( parent->window()->winId() );
   d->mManager->agentInstanceConfigure( identifier, winId );
 }
 
