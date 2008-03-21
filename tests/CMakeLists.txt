@@ -14,7 +14,7 @@ macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_executable(${_name} TEST ${_test})
-  target_link_libraries(${_name} akonadicore)
+  target_link_libraries(${_name} akonadi-kde)
 endmacro(add_akonadi_demo)
 
 
@@ -23,7 +23,7 @@ macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME libakonadi-${_name} ${_test})
-  target_link_libraries(${_name} akonadicore ${QT_QTTEST_LIBRARY})
+  target_link_libraries(${_name} akonadi-kde ${QT_QTTEST_LIBRARY})
 endmacro(add_akonadi_test)
 
 # demo applications
@@ -31,8 +31,10 @@ add_akonadi_demo(itemdumper.cpp)
 add_akonadi_demo(collectioncreator.cpp)
 add_akonadi_demo(subscriber.cpp)
 add_akonadi_demo(benchmarker.cpp)
-target_link_libraries(benchmarker akonadicore ${QT_QTTEST_LIBRARY})
+target_link_libraries(benchmarker akonadi-kde ${QT_QTTEST_LIBRARY})
 add_akonadi_demo(headfetcher.cpp)
+add_akonadi_demo(agentinstanceviewtest.cpp)
+add_akonadi_demo(agenttypeviewtest.cpp)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
@@ -56,18 +58,3 @@ add_akonadi_test(transactiontest.cpp)
 add_akonadi_test(itemcopytest.cpp)
 add_akonadi_test(collectioncopytest.cpp)
 
-########### next target ###############
-
-set(agentinstanceviewtest_SRCS agentinstanceviewtest.cpp )
-
-kde4_add_executable(agentinstanceviewtest TEST  ${agentinstanceviewtest_SRCS})
-
-target_link_libraries(agentinstanceviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
-
-########### next target ###############
-
-set(agenttypeviewtest_SRCS agenttypeviewtest.cpp )
-
-kde4_add_executable(agenttypeviewtest TEST  ${agenttypeviewtest_SRCS})
-
-target_link_libraries(agenttypeviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
