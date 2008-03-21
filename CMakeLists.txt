@@ -160,6 +160,7 @@ install( FILES
   collection.h
   collectionattribute.h
   collectionattributefactory.h
+  collectioncombobox.h
   collectioncopyjob.h
   collectioncreatejob.h
   collectiondeletejob.h
