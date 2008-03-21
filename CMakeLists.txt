@@ -153,8 +153,10 @@ install( FILES
   agentfilterproxymodel.h
   agentinstancecreatejob.h
   agentinstancemodel.h
+  agentinstanceview.h
   agentmanager.h
   agenttypemodel.h
+  agenttypeview.h
   cachepolicy.h
   changerecorder.h
   collection.h
