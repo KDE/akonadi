@@ -36,7 +36,6 @@
 #include <QtGui/QDragMoveEvent>
 #include <QtGui/QHeaderView>
 #include <QtGui/QMenu>
-#include <QtGui/QSortFilterProxyModel>
 
 using namespace Akonadi;
 
@@ -55,7 +54,6 @@ class CollectionView::Private
     bool hasParent( const QModelIndex& idx, int parentId );
 
     CollectionView *mParent;
-    QSortFilterProxyModel *filterModel;
     QModelIndex dragOverIndex;
     QTimer dragExpandTimer;
 
@@ -109,9 +107,6 @@ CollectionView::CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget * parent ) 
     d( new Private( this ) )
 {
   d->xmlGuiWindow = xmlGuiWindow;
-  d->filterModel = new QSortFilterProxyModel( this );
-  d->filterModel->setDynamicSortFilter( true );
-  d->filterModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 
   header()->setClickable( true );
   header()->setStretchLastSection( false );
@@ -137,8 +132,7 @@ CollectionView::~CollectionView()
 
 void CollectionView::setModel( QAbstractItemModel * model )
 {
-  d->filterModel->setSourceModel( model );
-  QTreeView::setModel( d->filterModel );
+  QTreeView::setModel( model );
   header()->setResizeMode( 0, QHeaderView::Stretch );
 
   connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),

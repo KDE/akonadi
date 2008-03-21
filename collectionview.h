@@ -32,7 +32,6 @@ class Collection;
 
 /**
   A view to show a collection tree provided by a CollectionModell.
-  It uses an internal QSortFilterProxyModel to provide sorting.
 
   When a KXmlGuiWindow is passed to the constructor, the XMLGUI
   defined context menu @c akonadi_collectionview_contextmenu is
