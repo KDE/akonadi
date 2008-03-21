@@ -24,14 +24,14 @@ set( control_SRCS
   profilemanager.cpp
 )
 
-qt4_add_dbus_adaptor( control_SRCS ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
-qt4_add_dbus_adaptor( control_SRCS ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.ProfileManager.xml profilemanager.h ProfileManager )
+qt4_add_dbus_adaptor( control_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
+qt4_add_dbus_adaptor( control_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.ProfileManager.xml profilemanager.h ProfileManager )
 qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.ControlManager.xml controlmanager.h ControlManager )
 qt4_add_dbus_interfaces( control_SRCS
-  ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Tracer.xml
-  ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Agent.xml
-  ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Resource.xml
-  ../interfaces/org.kde.Akonadi.Server.xml
+  ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Tracer.xml
+  ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Agent.xml
+  ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Resource.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Server.xml
 )
 
 

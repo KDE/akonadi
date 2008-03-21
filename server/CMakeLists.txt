@@ -102,13 +102,13 @@ set(libakonadiprivate_SRCS
 )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
 
-qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.AgentManager.xml ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Resource.xml )
+qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.AgentManager.xml ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Resource.xml )
 
 qt4_add_dbus_interface2( libakonadiprivate_SRCS interfaces/org.freedesktop.xesam.Search.xml xesaminterface xesamtypes.h )
 

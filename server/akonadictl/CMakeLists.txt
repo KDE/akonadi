@@ -13,7 +13,7 @@ set( akonadictl_SRCS
 )
 
 qt4_add_dbus_interfaces( akonadictl_SRCS
-  ../interfaces/org.kde.Akonadi.ControlManager.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.ControlManager.xml
 )
 
 kde4_add_executable(akonadictl NOGUI ${akonadictl_SRCS})
