@@ -206,5 +206,4 @@ install( FILES
   interfaces/org.kde.Akonadi.NotificationManager.xml
   interfaces/org.kde.Akonadi.ProfileManager.xml
   interfaces/org.kde.Akonadi.Tracer.xml
-  interfaces/org.kde.Akonadi.TracerNotification.xml
 DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
