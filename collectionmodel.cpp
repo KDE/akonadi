@@ -18,236 +18,29 @@
 */
 
 #include "collectionmodel.h"
+#include "collectionmodel_p.h"
 
-#include "collection.h"
-#include "collectionstatusjob.h"
-#include "collectionlistjob.h"
 #include "collectionmodifyjob.h"
-#include "itemstorejob.h"
-#include "itemappendjob.h"
 #include "monitor.h"
 #include "pastehelper.h"
 #include "session.h"
 
 #include <kdebug.h>
 #include <kiconloader.h>
-#include <kcomponentdata.h>
 #include <klocale.h>
 #include <kurl.h>
 
-#include <QtCore/QDebug>
-#include <QtCore/QHash>
 #include <QtCore/QMimeData>
-#include <QtCore/QQueue>
-#include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
 #include <QtGui/QPixmap>
 
 using namespace Akonadi;
 
-class CollectionModel::Private
-{
-  public:
-    Private( CollectionModel *parent )
-      : mParent( parent ), fetchStatus( false ), unsubscribed( false )
-    {
-    }
-
-    CollectionModel *mParent;
-    QHash<int, Collection> collections;
-    QHash<int, QList<int> > childCollections;
-    Monitor *monitor;
-    Session *session;
-    QStringList mimeTypes;
-    bool fetchStatus;
-    bool unsubscribed;
-
-    void init();
-    void collectionRemoved( int );
-    void collectionChanged( const Akonadi::Collection& );
-    void updateDone( KJob* );
-    void collectionStatusChanged( int, const Akonadi::CollectionStatus& );
-    void listDone( KJob* );
-    void editDone( KJob* );
-    void dropResult( KJob* );
-    void collectionsChanged( const Akonadi::Collection::List &cols );
-
-    void updateSupportedMimeTypes( Collection col )
-    {
-      QStringList l = col.contentTypes();
-      for ( QStringList::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
-        if ( (*it) == Collection::collectionMimeType() )
-          continue;
-        if ( !mimeTypes.contains( *it  ) )
-          mimeTypes << *it;
-      }
-    }
-};
-
-void CollectionModel::Private::collectionRemoved( int collection )
-{
-  QModelIndex colIndex = mParent->indexForId( collection );
-  if ( colIndex.isValid() ) {
-    QModelIndex parentIndex = mParent->parent( colIndex );
-    // collection is still somewhere in the hierarchy
-    mParent->removeRowFromModel( colIndex.row(), parentIndex );
-  } else {
-    if ( collections.contains( collection ) ) {
-      // collection is orphan, ie. the parent has been removed already
-      collections.remove( collection );
-      childCollections.remove( collection );
-    }
-  }
-}
-
-void CollectionModel::Private::collectionChanged( const Akonadi::Collection &collection )
-{
-  // What kind of change is it ?
-  int oldParentId = collections.value( collection.id() ).parent();
-  int newParentId = collection.parent();
-  if ( newParentId !=  oldParentId && oldParentId >= 0 ) { // It's a move
-    mParent->removeRowFromModel( mParent->indexForId( collections[ collection.id() ].id() ).row(), mParent->indexForId( oldParentId ) );
-    Collection newParent;
-    if ( newParentId == Collection::root().id() )
-      newParent = Collection::root();
-    else
-      newParent = collections.value( newParentId );
-    CollectionListJob *job = new CollectionListJob( newParent, CollectionListJob::Recursive, session );
-    job->includeUnsubscribed( unsubscribed );
-    mParent->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                      mParent, SLOT(collectionsChanged(Akonadi::Collection::List)) );
-    mParent->connect( job, SIGNAL( result( KJob* ) ),
-                    mParent, SLOT( listDone( KJob* ) ) );
-
-  }
-  else { // It's a simple change
-    CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, session );
-    job->includeUnsubscribed( unsubscribed );
-    mParent->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                      mParent, SLOT(collectionsChanged(Akonadi::Collection::List)) );
-    mParent->connect( job, SIGNAL( result( KJob* ) ),
-                    mParent, SLOT( listDone( KJob* ) ) );
-  }
-
-}
-
-void CollectionModel::Private::updateDone( KJob *job )
-{
-  if ( job->error() ) {
-    // TODO: handle job errors
-    kWarning( 5250 ) << "Job error:" << job->errorString();
-  } else {
-    CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
-    Collection result = csjob->collection();
-    collectionStatusChanged( result.id(), csjob->status() );
-  }
-}
-
-void CollectionModel::Private::collectionStatusChanged( int collection, const Akonadi::CollectionStatus & status )
-{
-  if ( !collections.contains( collection ) )
-    kWarning( 5250 ) << "Got status response for non-existing collection:" << collection;
-  else {
-    collections[ collection ].setStatus( status );
-
-    Collection col = collections.value( collection );
-    QModelIndex startIndex = mParent->indexForId( col.id() );
-    QModelIndex endIndex = mParent->indexForId( col.id(), mParent->columnCount( mParent->parent( startIndex ) ) - 1 );
-    emit mParent->dataChanged( startIndex, endIndex );
-
-    // Unread total might have changed now.
-    static int oldTotalUnread = -1;
-    int totalUnread = 0;
-    foreach ( const Collection& col, collections.values() ) {
-      int colUnread = col.status().unreadCount();
-      if ( colUnread > 0 )
-          totalUnread += colUnread;
-    }
-    if ( oldTotalUnread != totalUnread ) {
-        emit mParent->unreadCountChanged( totalUnread );
-        oldTotalUnread = totalUnread;
-    }
-  }
-}
-
-void CollectionModel::Private::listDone( KJob *job )
-{
-  if ( job->error() ) {
-    kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
-  }
-}
-
-void CollectionModel::Private::editDone( KJob * job )
-{
-  if ( job->error() ) {
-    kWarning( 5250 ) << "Edit failed: " << job->errorString();
-  }
-}
-
-void CollectionModel::Private::dropResult(KJob * job)
-{
-  if ( job->error() ) {
-    kWarning( 5250 ) << "Paste failed:" << job->errorString();
-    // TODO: error handling
-  }
-}
-
-void CollectionModel::Private::collectionsChanged( const Collection::List &cols )
-{
-  foreach( Collection col, cols ) {
-    if ( collections.contains( col.id() ) ) {
-      // collection already known
-      col.setStatus( collections.value( col.id() ).status() );
-      collections[ col.id() ] = col;
-      QModelIndex startIndex = mParent->indexForId( col.id() );
-      QModelIndex endIndex = mParent->indexForId( col.id(), mParent->columnCount( mParent->parent( startIndex ) ) - 1 );
-      emit mParent->dataChanged( startIndex, endIndex );
-      continue;
-    }
-    collections.insert( col.id(), col );
-    QModelIndex parentIndex = mParent->indexForId( col.parent() );
-    if ( parentIndex.isValid() || col.parent() == Collection::root().id() ) {
-      mParent->beginInsertRows( parentIndex, mParent->rowCount( parentIndex ), mParent->rowCount( parentIndex ) );
-      childCollections[ col.parent() ].append( col.id() );
-      mParent->endInsertRows();
-    } else {
-      childCollections[ col.parent() ].append( col.id() );
-    }
-
-    updateSupportedMimeTypes( col );
-
-    // start a status job for every collection to get message counts, etc.
-    if ( fetchStatus && col.type() != Collection::VirtualParent ) {
-      CollectionStatusJob* csjob = new CollectionStatusJob( col, session );
-      mParent->connect( csjob, SIGNAL(result(KJob*)), mParent, SLOT(updateDone(KJob*)) );
-    }
-  }
-}
-
-void CollectionModel::Private::init()
-{
-  // start a list job
-  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, session );
-  job->includeUnsubscribed( unsubscribed );
-  connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-           mParent, SLOT(collectionsChanged(Akonadi::Collection::List)) );
-  connect( job, SIGNAL(result(KJob*)), mParent, SLOT(listDone(KJob*)) );
-
-  // monitor collection changes
-  connect( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)),
-           mParent, SLOT(collectionChanged(const Akonadi::Collection&)) );
-  connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-           mParent, SLOT(collectionChanged(Akonadi::Collection)) );
-  connect( monitor, SIGNAL(collectionRemoved(int,QString)),
-           mParent, SLOT(collectionRemoved(int)) );
-  connect( monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)),
-           mParent, SLOT(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
-}
-
 CollectionModel::CollectionModel( QObject * parent ) :
     QAbstractItemModel( parent ),
-    d( new Private( this ) )
+    d_ptr( new CollectionModelPrivate( this ) )
 {
+  Q_D( CollectionModel );
   d->session = new Session( QByteArray("CollectionModel-") + QByteArray::number( qrand() ), this );
   QTimer::singleShot( 0, this, SLOT(init()) );
 
@@ -263,6 +56,7 @@ CollectionModel::CollectionModel( QObject * parent ) :
 
 CollectionModel::~CollectionModel()
 {
+  Q_D( CollectionModel );
   d->childCollections.clear();
   d->collections.clear();
 
@@ -281,6 +75,7 @@ int CollectionModel::columnCount( const QModelIndex & parent ) const
 
 QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 {
+  const Q_D( CollectionModel );
   if ( !index.isValid() )
     return QVariant();
 
@@ -333,6 +128,7 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 
 QModelIndex CollectionModel::index( int row, int column, const QModelIndex & parent ) const
 {
+  const Q_D( CollectionModel );
   if (column >= columnCount() || column < 0) return QModelIndex();
 
   QList<int> list;
@@ -354,6 +150,7 @@ QModelIndex CollectionModel::index( int row, int column, const QModelIndex & par
 
 QModelIndex CollectionModel::parent( const QModelIndex & index ) const
 {
+  const Q_D( CollectionModel );
   if ( !index.isValid() )
     return QModelIndex();
 
@@ -377,6 +174,7 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
 
 int CollectionModel::rowCount( const QModelIndex & parent ) const
 {
+  const  Q_D( CollectionModel );
   QList<int> list;
   if ( parent.isValid() )
     list = d->childCollections.value( parent.internalId() );
@@ -395,6 +193,7 @@ QVariant CollectionModel::headerData( int section, Qt::Orientation orientation, 
 
 bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 {
+  Q_D( CollectionModel );
   QList<int> list;
   Collection parentCol;
   if ( parent.isValid() ) {
@@ -424,6 +223,7 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 
 QModelIndex CollectionModel::indexForId( int id, int column )
 {
+  Q_D( CollectionModel );
   if ( !d->collections.contains( id ) )
     return QModelIndex();
 
@@ -442,6 +242,7 @@ QModelIndex CollectionModel::indexForId( int id, int column )
 
 bool CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
+  Q_D( CollectionModel );
   if ( index.column() == 0 && role == Qt::EditRole ) {
     // rename collection
     Collection col = d->collections.value( index.internalId() );
@@ -457,6 +258,7 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
 
 Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 {
+  const Q_D( CollectionModel );
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
   flags = flags | Qt::ItemIsDragEnabled;
@@ -483,6 +285,7 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 
 bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
 {
+  const Q_D( CollectionModel );
   if ( !parent.isValid() )
     return false; // FIXME: creation of top-level collections??
 
@@ -507,6 +310,7 @@ QStringList CollectionModel::mimeTypes() const
 
 bool CollectionModel::supportsContentType(const QModelIndex & index, const QStringList & contentTypes)
 {
+  Q_D( CollectionModel );
   if ( !index.isValid() )
     return false;
   Collection col = d->collections.value( index.internalId() );
@@ -536,6 +340,7 @@ QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
 
 bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent)
 {
+  Q_D( CollectionModel );
   if ( !(action & supportedDropActions()) )
     return false;
 
@@ -560,17 +365,20 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 
 Collection CollectionModel::collectionForId(int id) const
 {
+  const Q_D( CollectionModel );
   return d->collections.value( id );
 }
 
 void CollectionModel::fetchCollectionStatus(bool enable)
 {
+  Q_D( CollectionModel );
   d->fetchStatus = enable;
   d->monitor->fetchCollectionStatus( enable );
 }
 
 void CollectionModel::includeUnsubscribed(bool include)
 {
+  Q_D( CollectionModel );
   d->unsubscribed = include;
 }
 

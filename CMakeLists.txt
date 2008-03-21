@@ -74,6 +74,7 @@ set( akonadikde_LIB_SRC
   collectiongeneralpropertiespage.cpp
   collectionlistjob.cpp
   collectionmodel.cpp
+  collectionmodel_p.cpp
   collectionmodifyjob.cpp
   collectionpathresolver.cpp
   collectionpropertiesdialog.cpp
