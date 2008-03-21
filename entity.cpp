@@ -24,22 +24,22 @@
 using namespace Akonadi;
 
 Entity::Entity()
-  : d( new EntityPrivate )
+  : d_ptr( new EntityPrivate )
 {
 }
 
 Entity::Entity( Id id )
-  : d( new EntityPrivate( id ) )
+  : d_ptr( new EntityPrivate( id ) )
 {
 }
 
 Entity::Entity( const Entity &other )
-  : d( other.d )
+  : d_ptr( other.d_ptr )
 {
 }
 
 Entity::Entity( EntityPrivate *dd )
-  : d( dd )
+  : d_ptr( dd )
 {
 }
 
@@ -49,23 +49,28 @@ Entity::~Entity()
 
 Entity::Id Entity::id() const
 {
-  return d->mId;
+  return d_ptr->mId;
 }
 
 void Entity::setRemoteId( const QString& id )
 {
-  d->mRemoteId = id;
+  d_ptr->mRemoteId = id;
 }
 
 QString Entity::remoteId() const
 {
-  return d->mRemoteId;
+  return d_ptr->mRemoteId;
 }
 
 Entity& Entity::operator=( const Entity &other )
 {
   if ( this != &other )
-    d = other.d;
+    d_ptr = other.d_ptr;
 
   return *this;
+}
+
+uint qHash( const Akonadi::Entity &entity )
+{
+  return qHash( entity.id() );
 }

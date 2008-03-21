@@ -20,9 +20,21 @@
 #ifndef AKONADI_ENTITY_H
 #define AKONADI_ENTITY_H
 
+#include "akonadi_export.h"
+
+namespace Akonadi {
+class Entity;
+}
+
+AKONADI_EXPORT uint qHash( const Akonadi::Entity& );
+
+#include <QtCore/QHash>
 #include <QtCore/QSharedDataPointer>
 
-#include "akonadi_export.h"
+#define AKONADI_DECLARE_PRIVATE( Class ) \
+    inline Class##Private* d_func() { return reinterpret_cast<Class##Private *>( d_ptr.data() ); } \
+    inline const Class##Private* d_func() const { return reinterpret_cast<const Class##Private *>( d_ptr.data() ); } \
+    friend class Class##Private;
 
 namespace Akonadi {
 
@@ -35,21 +47,6 @@ class AKONADI_EXPORT Entity
      * Describes the unique id type.
      */
     typedef qint64 Id;
-
-    /**
-     * Creates an invalid entity.
-     */
-    Entity();
-
-    /**
-     * Creates an entity with the given unique @p id.
-     */
-    Entity( Id id );
-
-    /**
-     * Creates an entity from an @p other entity.
-     */
-    Entity( const Entity &other );
 
     /**
      * Destroys the entity.
@@ -77,10 +74,27 @@ class AKONADI_EXPORT Entity
     Entity& operator=( const Entity &other );
 
   protected:
+    /**
+     * Creates an invalid entity.
+     */
+    Entity();
+
+    /**
+     * Creates an entity with the given unique @p id.
+     */
+    Entity( Id id );
+
+    /**
+     * Creates an entity from an @p other entity.
+     */
+    Entity( const Entity &other );
+
     //@cond PRIVATE
     Entity( EntityPrivate *dd );
-    QSharedDataPointer<EntityPrivate> d;
+    QSharedDataPointer<EntityPrivate> d_ptr;
     //@endcond
+
+    AKONADI_DECLARE_PRIVATE( Entity )
 };
 
 }
