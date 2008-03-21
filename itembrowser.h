@@ -20,8 +20,8 @@
 #ifndef AKONADI_ITEMBROWSER_H
 #define AKONADI_ITEMBROWSER_H
 
-#include "libakonadi_export.h"
-#include <libakonadi/itemdetailsview.h>
+#include <akonadi_export.h>
+#include <akonadi/itemdetailsview.h>
 #include <ktextbrowser.h>
 
 namespace Akonadi {

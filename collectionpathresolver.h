@@ -20,8 +20,8 @@
 #ifndef AKONADI_COLLECTIONPATHRESOLVER_H
 #define AKONADI_COLLECTIONPATHRESOLVER_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/job.h>
+#include <akonadi/collection.h>
+#include <akonadi/job.h>
 
 namespace Akonadi {
 

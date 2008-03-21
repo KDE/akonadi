@@ -20,7 +20,7 @@
 #ifndef COLLECTIONCOMBOBOX_H
 #define COLLECTIONCOMBOBOX_H
 
-#include <libakonadi/libakonadi_export.h>
+#include <akonadi_export.h>
 #include <QtGui/QWidget>
 
 class QAbstractItemModel;
@@ -34,7 +34,7 @@ class Collection;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_COMPONENTS_EXPORT CollectionComboBox : public QWidget
+class AKONADI_EXPORT CollectionComboBox : public QWidget
 {
   Q_OBJECT
 

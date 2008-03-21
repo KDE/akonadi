@@ -19,14 +19,14 @@
 
 #include "transactiontest.h"
 
-#include <libakonadi/itemappendjob.h>
-#include <libakonadi/itemfetchjob.h>
-#include <libakonadi/collectioncreatejob.h>
-#include <libakonadi/collectiondeletejob.h>
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/control.h>
-#include <libakonadi/session.h>
-#include <libakonadi/transactionjobs.h>
+#include <akonadi/itemappendjob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/collectioncreatejob.h>
+#include <akonadi/collectiondeletejob.h>
+#include <akonadi/collectionlistjob.h>
+#include <akonadi/control.h>
+#include <akonadi/session.h>
+#include <akonadi/transactionjobs.h>
 
 #include <QtCore/QVariant>
 #include <QtGui/QApplication>

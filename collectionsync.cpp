@@ -20,10 +20,10 @@
 #include "collectionsync.h"
 #include "collection.h"
 
-#include <libakonadi/collectioncreatejob.h>
-#include <libakonadi/collectiondeletejob.h>
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/collectionmodifyjob.h>
+#include "collectioncreatejob.h"
+#include "collectiondeletejob.h"
+#include "collectionlistjob.h"
+#include "collectionmodifyjob.h"
 
 
 #include <kdebug.h>

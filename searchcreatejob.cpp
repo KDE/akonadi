@@ -19,7 +19,7 @@
 
 #include "searchcreatejob.h"
 
-#include <libakonadi/imapparser.h>
+#include "imapparser.h"
 
 using namespace Akonadi;
 

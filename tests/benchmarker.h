@@ -22,8 +22,8 @@
 
 #include <QtCore/QTime>
 
-#include <libakonadi/agentmanager.h>
-#include <libakonadi/job.h>
+#include <akonadi/agentmanager.h>
+#include <akonadi/job.h>
 
 using namespace Akonadi;
 

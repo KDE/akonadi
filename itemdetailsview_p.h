@@ -22,9 +22,9 @@
 
 #include <QtCore/QObject>
 
-#include <libakonadi/datareference.h>
-#include <libakonadi/itemfetchjob.h>
-#include <libakonadi/monitor.h>
+#include <akonadi/datareference.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/monitor.h>
 
 namespace Akonadi {
 

@@ -20,9 +20,9 @@
 #ifndef AKONADI_ITEMCOPYJOB_H
 #define AKONADI_ITEMCOPYJOB_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/item.h>
-#include <libakonadi/job.h>
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
+#include <akonadi/job.h>
 
 namespace Akonadi {
 

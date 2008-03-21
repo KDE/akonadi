@@ -20,14 +20,14 @@
 #include "collectionattributetest.h"
 #include "collectionattributetest.moc"
 
-#include <libakonadi/collection.h>
-#include <libakonadi/collectionattributefactory.h>
-#include <libakonadi/collectioncreatejob.h>
-#include <libakonadi/collectiondeletejob.h>
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/collectionmodifyjob.h>
-#include <libakonadi/collectionpathresolver.h>
-#include <libakonadi/control.h>
+#include <akonadi/collection.h>
+#include <akonadi/collectionattributefactory.h>
+#include <akonadi/collectioncreatejob.h>
+#include <akonadi/collectiondeletejob.h>
+#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionmodifyjob.h>
+#include <akonadi/collectionpathresolver.h>
+#include <akonadi/control.h>
 
 #include <qtest_kde.h>
 

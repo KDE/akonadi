@@ -22,7 +22,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QTime>
-#include <libakonadi/job.h>
+#include <akonadi/job.h>
 
 class CollectionCreator : public QObject
 {

@@ -20,9 +20,9 @@
 #ifndef AKONADI_COLLECTIONCREATEJOB_H
 #define AKONADI_COLLECTIONCREATEJOB_H
 
-#include <libakonadi/cachepolicy.h>
-#include <libakonadi/collection.h>
-#include <libakonadi/job.h>
+#include <akonadi/cachepolicy.h>
+#include <akonadi/collection.h>
+#include <akonadi/job.h>
 
 namespace Akonadi {
 

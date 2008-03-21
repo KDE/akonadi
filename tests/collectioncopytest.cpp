@@ -17,9 +17,9 @@
     02110-1301, USA.
 */
 
-#include <libakonadi/control.h>
-#include <libakonadi/collectioncopyjob.h>
-#include <libakonadi/collectionlistjob.h>
+#include <akonadi/control.h>
+#include <akonadi/collectioncopyjob.h>
+#include <akonadi/collectionlistjob.h>
 
 #include <QtCore/QObject>
 

@@ -20,10 +20,10 @@
 #include "searchjobtest.h"
 #include "searchjobtest.moc"
 
-#include <libakonadi/collection.h>
-#include <libakonadi/collectiondeletejob.h>
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/searchcreatejob.h>
+#include <akonadi/collection.h>
+#include <akonadi/collectiondeletejob.h>
+#include <akonadi/collectionlistjob.h>
+#include <akonadi/searchcreatejob.h>
 
 #include <qtest_kde.h>
 

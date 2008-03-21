@@ -20,7 +20,7 @@
 #ifndef AKONADI_CACHEPOLICYPAGE_H
 #define AKONADI_CACHEPOLICYPAGE_H
 
-#include <libakonadi/collectionpropertiespage.h>
+#include <akonadi/collectionpropertiespage.h>
 
 #include "ui_cachepolicypage.h"
 

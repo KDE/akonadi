@@ -17,29 +17,19 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef LIBAKONADI_EXPORT_H
-#define LIBAKONADI_EXPORT_H
+#ifndef AKONADIPROTOCOLINTERNALS_EXPORT_H
+#define AKONADIPROTOCOLINTERNALS_EXPORT_H
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef AKONADI_EXPORT
-# if defined(MAKE_AKONADICORE_LIB)
+#ifndef AKONADIPROTOCOLINTERNALS_EXPORT
+# if defined(MAKE_AKONADIPROTOCOLINTERNALS_LIB)
    /* We are building this library */
-#  define AKONADI_EXPORT KDE_EXPORT
+#  define AKONADIPROTOCOLINTERNALS_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define AKONADI_EXPORT KDE_IMPORT
-# endif
-#endif
-
-#ifndef AKONADI_COMPONENTS_EXPORT
-# if defined(MAKE_AKONADICOMPONENTS_LIB)
-   /* We are building this library */
-#  define AKONADI_COMPONENTS_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define AKONADI_COMPONENTS_EXPORT KDE_IMPORT
+#  define AKONADIPROTOCOLINTERNALS_EXPORT KDE_IMPORT
 # endif
 #endif
 

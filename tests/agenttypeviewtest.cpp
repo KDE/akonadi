@@ -17,24 +17,37 @@
     02110-1301, USA.
 */
 
+#include "agenttypeviewtest.h"
+#include <akonadi/agentfilterproxymodel.h>
+
+#include <kcomponentdata.h>
+
 #include <QtGui/QApplication>
+#include <QtGui/QComboBox>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
-
-#include "profileviewtest.h"
 
 Dialog::Dialog( QWidget *parent )
   : QDialog( parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  mView = new Akonadi::ProfileView( this );
+  mFilter = new QComboBox( this );
+  mFilter->addItem( "None" );
+  mFilter->addItem( "text/calendar" );
+  mFilter->addItem( "text/directory" );
+  mFilter->addItem( "message/rfc822" );
+  connect( mFilter, SIGNAL( activated( int ) ),
+           this, SLOT( filterChanged( int ) ) );
+
+  mView = new Akonadi::AgentTypeView( this );
   connect( mView, SIGNAL( currentChanged( const QString&, const QString& ) ),
            this, SLOT( currentChanged( const QString&, const QString& ) ) );
 
   QDialogButtonBox *box = new QDialogButtonBox( this );
 
+  layout->addWidget( mFilter );
   layout->addWidget( mView );
   layout->addWidget( box );
 
@@ -50,7 +63,7 @@ Dialog::Dialog( QWidget *parent )
 void Dialog::done( int r )
 {
   if ( r == Accepted ) {
-    qDebug( "'%s' selected", qPrintable( mView->currentProfile() ) );
+    qDebug( "'%s' selected", qPrintable( mView->currentAgentType() ) );
   }
 
   QDialog::done( r );
@@ -61,9 +74,17 @@ void Dialog::currentChanged( const QString &current, const QString &previous )
   qDebug( "current changed: %s -> %s", qPrintable( previous ), qPrintable( current ) );
 }
 
+void Dialog::filterChanged( int index )
+{
+  mView->agentFilterProxyModel()->clearFilter();
+  if ( index > 0 )
+    mView->agentFilterProxyModel()->addMimeType( mFilter->itemText( index ) );
+}
+
 int main( int argc, char **argv )
 {
   QApplication app( argc, argv );
+  KComponentData kcd( "agenttypeviewtest" );
 
   Dialog dlg;
   dlg.exec();
@@ -71,4 +92,4 @@ int main( int argc, char **argv )
   return 0;
 }
 
-#include "profileviewtest.moc"
+#include "agenttypeviewtest.moc"

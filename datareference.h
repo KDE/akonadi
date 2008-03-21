@@ -1,6 +1,4 @@
 /*
-    This file is part of libakonadi.
-
     Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -22,7 +20,8 @@
 #ifndef AKONADI_DATAREFERENCE_H
 #define AKONADI_DATAREFERENCE_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
+
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 

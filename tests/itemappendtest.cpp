@@ -19,11 +19,11 @@
 
 #include "control.h"
 #include "itemappendtest.h"
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/collectionpathresolver.h>
-#include <libakonadi/itemappendjob.h>
-#include <libakonadi/itemfetchjob.h>
-#include <libakonadi/itemdeletejob.h>
+#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionpathresolver.h>
+#include <akonadi/itemappendjob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemdeletejob.h>
 
 #include <QtCore/QDebug>
 

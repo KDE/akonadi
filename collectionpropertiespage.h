@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECITONPROPERTYPAGE_H
 #define AKONADI_COLLECITONPROPERTYPAGE_H
 
-#include <libakonadi/collection.h>
+#include <akonadi/collection.h>
 
 #include <QtGui/QWidget>
 

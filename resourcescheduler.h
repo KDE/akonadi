@@ -20,8 +20,8 @@
 #ifndef AKONADI_RESOURCESCHEDULER_H
 #define AKONADI_RESOURCESCHEDULER_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/item.h>
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 #include <QtCore/QObject>
 #include <QDBusMessage>

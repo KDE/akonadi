@@ -26,13 +26,13 @@
 #include <QTest>
 #include <QDBusInterface>
 
-#include <libakonadi/agentinstancecreatejob.h>
-#include <libakonadi/collectionpathresolver.h>
-#include <libakonadi/collectiondeletejob.h>
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/itemdeletejob.h>
-#include <libakonadi/itemfetchjob.h>
-#include <libakonadi/itemstorejob.h>
+#include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/collectionpathresolver.h>
+#include <akonadi/collectiondeletejob.h>
+#include <akonadi/collectionlistjob.h>
+#include <akonadi/itemdeletejob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemstorejob.h>
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>

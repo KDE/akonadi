@@ -23,8 +23,8 @@
 #ifndef AKONADI_AGENTBASE_H
 #define AKONADI_AGENTBASE_H
 
-#include "libakonadi_export.h"
-#include <libakonadi/collection.h>
+#include <akonadi_export.h>
+#include <akonadi/collection.h>
 
 #include <KDE/KApplication>
 

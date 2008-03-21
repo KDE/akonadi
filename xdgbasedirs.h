@@ -23,6 +23,8 @@
 // Qt includes
 #include <QtCore/QFlags>
 
+#include "akonadiprotocolinternals_export.h"
+
 // forward declarations
 class QString;
 class QStringList;
@@ -67,7 +69,7 @@ class XdgBaseDirsPrivate;
 
  @see http://www.freedesktop.org/wiki/Specifications/basedir-spec
  */
-class XdgBaseDirs
+class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
 {
   public:
     /**

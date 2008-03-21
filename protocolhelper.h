@@ -20,8 +20,8 @@
 #ifndef AKONADI_PROTOCOLHELPER_H
 #define AKONADI_PROTOCOLHELPER_H
 
-#include <libakonadi/cachepolicy.h>
-#include <libakonadi/collection.h>
+#include <akonadi/cachepolicy.h>
+#include <akonadi/collection.h>
 
 namespace Akonadi {
 

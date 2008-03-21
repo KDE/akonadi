@@ -20,9 +20,9 @@
 #ifndef AKONADI_ITEMMODEL_H
 #define AKONADI_ITEMMODEL_H
 
-#include "libakonadi_export.h"
-#include <libakonadi/item.h>
-#include <libakonadi/job.h>
+#include <akonadi_export.h>
+#include <akonadi/item.h>
+#include <akonadi/job.h>
 
 #include <QtCore/QAbstractTableModel>
 

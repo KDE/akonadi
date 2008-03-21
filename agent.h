@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENT_H
 #define AKONADI_AGENT_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
 #include <QtCore/QObject>
 
 #ifndef Q_NOREPLY

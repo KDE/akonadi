@@ -20,10 +20,10 @@
 #ifndef AKONADI_COLLECTIONRIGHTSATTRIBUTE_H
 #define AKONADI_COLLECTIONRIGHTSATTRIBUTE_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
 
-#include "collection.h"
-#include "collectionattribute.h"
+#include <akonadi/collection.h>
+#include <akonadi/collectionattribute.h>
 
 namespace Akonadi {
 

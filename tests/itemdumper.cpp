@@ -26,8 +26,8 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
-#include <libakonadi/collectionpathresolver.h>
-#include <libakonadi/transactionjobs.h>
+#include <akonadi/collectionpathresolver.h>
+#include <akonadi/transactionjobs.h>
 
 #define GLOBAL_TRANSACTION 1
 

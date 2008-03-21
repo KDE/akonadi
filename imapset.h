@@ -20,7 +20,7 @@
 #ifndef AKONADI_ImapSet_H
 #define AKONADI_ImapSet_H
 
-#include <libakonadi/akonadiprotocol_export.h>
+#include <akonadi/akonadiprotocolinternals_export.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
@@ -34,7 +34,7 @@ namespace Akonadi {
   Represents a single interval in an ImapSet.
   This class is implicitly shared.
 */
-class AKONADIPROTOCOL_EXPORT ImapInterval
+class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
 {
   public:
     /**
@@ -127,7 +127,7 @@ class AKONADIPROTOCOL_EXPORT ImapInterval
   Used to address Akonadi items via the IMAP protocol or in the database.
   This class is implicitly shared.
 */
-class AKONADIPROTOCOL_EXPORT ImapSet
+class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
 {
   public:
     /**
@@ -186,7 +186,7 @@ class AKONADIPROTOCOL_EXPORT ImapSet
 
 }
 
-AKONADIPROTOCOL_EXPORT QDebug& operator<<( QDebug& d, const Akonadi::ImapInterval &interval );
+AKONADIPROTOCOLINTERNALS_EXPORT QDebug& operator<<( QDebug& d, const Akonadi::ImapInterval &interval );
 
 Q_DECLARE_METATYPE( Akonadi::ImapInterval )
 Q_DECLARE_METATYPE( Akonadi::ImapInterval::List )

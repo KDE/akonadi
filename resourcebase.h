@@ -23,12 +23,12 @@
 #ifndef AKONADI_RESOURCEBASE_H
 #define AKONADI_RESOURCEBASE_H
 
-#include "libakonadi_export.h"
-#include <libakonadi/agentbase.h>
+#include <akonadi_export.h>
+#include <akonadi/agentbase.h>
 
-#include <libakonadi/collection.h>
-#include <libakonadi/item.h>
-#include <libakonadi/job.h>
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
+#include <akonadi/job.h>
 
 #include <kapplication.h>
 

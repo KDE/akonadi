@@ -20,8 +20,8 @@
 #ifndef AKONADI_COLLECTIONPROPERTIESDIALOG_H
 #define AKONADI_COLLECTIONPROPERTIESDIALOG_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/collectionpropertiespage.h>
+#include <akonadi/collection.h>
+#include <akonadi/collectionpropertiespage.h>
 
 
 #include <kdialog.h>

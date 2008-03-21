@@ -20,10 +20,10 @@
 #ifndef AKONADI_MONITOR_H
 #define AKONADI_MONITOR_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/collectionstatus.h>
-#include <libakonadi/item.h>
-#include <libakonadi/job.h>
+#include <akonadi/collection.h>
+#include <akonadi/collectionstatus.h>
+#include <akonadi/item.h>
+#include <akonadi/job.h>
 #include <QtCore/QObject>
 
 namespace Akonadi {

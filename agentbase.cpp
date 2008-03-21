@@ -1,6 +1,4 @@
 /*
-    This file is part of libakonadi.
-
     Copyright (c) 2006 Till Adam <adam@kde.org>
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2007 Bruno Virlet <bruno.virlet@gmail.com>
@@ -25,17 +23,17 @@
 #include "agentbase_p.h"
 
 #include "agent.h"
-#include "kcrash.h"
 #include "agentadaptor.h"
 #include "monitor_p.h"
 #include "xdgbasedirs.h"
 
-#include <libakonadi/session.h>
-#include <libakonadi/changerecorder.h>
-#include <libakonadi/itemfetchjob.h>
+#include "session.h"
+#include "changerecorder.h"
+#include "itemfetchjob.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kcrash.h>
 #include <kdebug.h>
 #include <klocale.h>
 
@@ -51,14 +49,13 @@ using namespace Akonadi;
 
 static AgentBase *sAgentBase = 0;
 
-/* FIXME Already defined in ResourceBase: which one to keep ?
 void crashHandler( int signal )
 {
   if ( sAgentBase )
     sAgentBase->crashHandler( signal );
 
   exit( 255 );
-}*/
+}
 
 //@cond PRIVATE
 
@@ -117,9 +114,8 @@ void AgentBasePrivate::delayedInit()
 AgentBase::AgentBase( const QString & id )
   : d_ptr( new AgentBasePrivate( this ) )
 {
-  KCrash::init();
-  // FIXME See above KCrash::setEmergencyMethod( ::crashHandler );
   sAgentBase = this;
+  KCrash::setEmergencySaveFunction( ::crashHandler );
   d_ptr->mId = id;
   d_ptr->init();
 }
@@ -128,9 +124,8 @@ AgentBase::AgentBase( const QString & id )
 AgentBase::AgentBase( AgentBasePrivate* d, const QString &id ) :
     d_ptr( d )
 {
-  KCrash::init();
-  // FIXME See above KCrash::setEmergencyMethod( ::crashHandler );
   sAgentBase = this;
+  KCrash::setEmergencySaveFunction( ::crashHandler );
   d_ptr->mId = id;
   d_ptr->init();
 }

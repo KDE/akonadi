@@ -24,8 +24,8 @@
 #include <QtGui/QListView>
 #include <QtGui/QPainter>
 
-#include <libakonadi/agenttypemodel.h>
-#include <libakonadi/agentfilterproxymodel.h>
+#include "agenttypemodel.h"
+#include "agentfilterproxymodel.h"
 
 using namespace Akonadi;
 

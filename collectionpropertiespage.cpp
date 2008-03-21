@@ -38,7 +38,7 @@ CollectionPropertiesPage::~CollectionPropertiesPage()
   delete d;
 }
 
-bool CollectionPropertiesPage::canHandle(const Collection & collection) const
+bool CollectionPropertiesPage::canHandle(const Collection&) const
 {
   return true;
 }

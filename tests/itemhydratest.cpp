@@ -20,7 +20,7 @@
 #include "itemhydratest.h"
 
 #include <memory>
-#include <libakonadi/item.h>
+#include <akonadi/item.h>
 #include <qtest_kde.h>
 #include <QDebug>
 #include <boost/shared_ptr.hpp>

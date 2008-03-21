@@ -33,8 +33,8 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-// libkdepim
-#include <libkdepim/pluginloader.h>
+// temporary
+#include "pluginloader.h"
 
 
 

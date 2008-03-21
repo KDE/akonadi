@@ -20,7 +20,7 @@
 #ifndef AKONADI_SUBSCRIPTIONDIALOG_H
 #define AKONADI_SUBSCRIPTIONDIALOG_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
 
 #include <kdialog.h>
 

@@ -27,8 +27,8 @@
 #include <QtGui/QPainter>
 #include <QtGui/QTextDocument>
 
-#include <libakonadi/agentinstancemodel.h>
-#include <libakonadi/agentfilterproxymodel.h>
+#include "agentinstancemodel.h"
+#include "agentfilterproxymodel.h"
 
 using namespace Akonadi;
 
@@ -145,20 +145,20 @@ QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &
 
   const QVariant data = index.model()->data( index, Qt::DecorationRole );
   if ( data.isValid() && data.type() == QVariant::Icon ) {
-    document->addResource( QTextDocument::ImageResource, QUrl( "agent_icon" ),
+    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "agent_icon" ) ),
                            qvariant_cast<QIcon>( data ).pixmap( QSize( 64, 64 ) ) );
   }
 
-  static QPixmap readyPixmap = QIcon( ":/pics/ready.svg" ).pixmap( QSize( 16, 16 ) );
-  static QPixmap syncPixmap = QIcon( ":/pics/sync.svg" ).pixmap( QSize( 16, 16 ) );
-  static QPixmap errorPixmap = QIcon( ":/pics/error.svg" ).pixmap( QSize( 16, 16 ) );
+  static QPixmap readyPixmap = QIcon( QLatin1String( ":/pics/ready.svg" ) ).pixmap( QSize( 16, 16 ) );
+  static QPixmap syncPixmap = QIcon( QLatin1String( ":/pics/sync.svg" ) ).pixmap( QSize( 16, 16 ) );
+  static QPixmap errorPixmap = QIcon( QLatin1String( ":/pics/error.svg" ) ).pixmap( QSize( 16, 16 ) );
 
   if ( status == 0 )
-    document->addResource( QTextDocument::ImageResource, QUrl( "status_icon" ), readyPixmap );
+    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), readyPixmap );
   else if ( status == 1 )
-    document->addResource( QTextDocument::ImageResource, QUrl( "status_icon" ), syncPixmap );
+    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), syncPixmap );
   else
-    document->addResource( QTextDocument::ImageResource, QUrl( "status_icon" ), errorPixmap );
+    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), errorPixmap );
 
 
   QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
@@ -180,11 +180,11 @@ QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &
      "<td rowspan=\"2\"><img src=\"agent_icon\"></td>"
      "<td><b>%2</b></td>"
      "</tr>" ).arg(textColor.name().toUpper()).arg( name );
-  if ( capabilities.contains( "Resource" ) ) {
+  if ( capabilities.contains( QLatin1String( "Resource" ) ) ) {
      content += QString::fromLatin1(
      "<tr>"
      "<td><img src=\"status_icon\"/> %1 %2</td>"
-     "</tr>" ).arg( statusMessage ).arg( status == 1 ? QString( "(%1%)" ).arg( progress ) : "" );
+     "</tr>" ).arg( statusMessage ).arg( status == 1 ? QString( QLatin1String( "(%1%)" ) ).arg( progress ) : QLatin1String( "" ) );
   }
   content += QLatin1String( "</table></body></html>" );
 

@@ -1,6 +1,4 @@
 /*
-    This file is part of libakonadi.
-
     Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
                   2006 Marc Mutz <mutz@kde.org>
                   2006 - 2007 Volker Krause <vkrause@kde.org>

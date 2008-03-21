@@ -20,10 +20,10 @@
 #ifndef AKONADI_COLLECTIONMODIFYJOB_H
 #define AKONADI_COLLECTIONMODIFYJOB_H
 
-#include "libakonadi_export.h"
-#include <libakonadi/cachepolicy.h>
-#include <libakonadi/collection.h>
-#include <libakonadi/job.h>
+#include <akonadi_export.h>
+#include <akonadi/cachepolicy.h>
+#include <akonadi/collection.h>
+#include <akonadi/job.h>
 
 namespace Akonadi {
 

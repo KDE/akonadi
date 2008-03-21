@@ -20,8 +20,8 @@
 #ifndef AKONADI_ITEMDELETEJOB_H
 #define AKONADI_ITEMDELETEJOB_H
 
-#include "libakonadi_export.h"
-#include <libakonadi/job.h>
+#include <akonadi_export.h>
+#include <akonadi/job.h>
 
 namespace Akonadi {
 

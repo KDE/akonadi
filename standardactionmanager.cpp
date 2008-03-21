@@ -19,15 +19,15 @@
 
 #include "standardactionmanager.h"
 
-#include <libakonadi/agentmanager.h>
-#include <libakonadi/collectioncreatejob.h>
-#include <libakonadi/collectiondeletejob.h>
-#include <libakonadi/collectionmodel.h>
-#include <libakonadi/collectionpropertiesdialog.h>
-#include <libakonadi/itemdeletejob.h>
-#include <libakonadi/itemmodel.h>
-#include <libakonadi/pastehelper.h>
-#include <libakonadi/subscriptiondialog.h>
+#include "agentmanager.h"
+#include "collectioncreatejob.h"
+#include "collectiondeletejob.h"
+#include "collectionmodel.h"
+#include "collectionpropertiesdialog.h"
+#include "itemdeletejob.h"
+#include "itemmodel.h"
+#include "pastehelper.h"
+#include "subscriptiondialog.h"
 
 #include <KAction>
 #include <KActionCollection>

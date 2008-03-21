@@ -21,8 +21,8 @@
 
 #include <qtest_kde.h>
 
-#include <libakonadi/agentmanager.h>
-#include <libakonadi/agentinstancecreatejob.h>
+#include <akonadi/agentmanager.h>
+#include <akonadi/agentinstancecreatejob.h>
 
 using namespace Akonadi;
 

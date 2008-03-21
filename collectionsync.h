@@ -20,8 +20,8 @@
 #ifndef AKONADI_COLLECTIONSYNC_H
 #define AKONADI_COLLECTIONSYNC_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/transactionjobs.h>
+#include <akonadi/collection.h>
+#include <akonadi/transactionjobs.h>
 
 namespace Akonadi {
 

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#include <libakonadi/changerecorder.h>
-#include <libakonadi/itemstorejob.h>
+#include <akonadi/changerecorder.h>
+#include <akonadi/itemstorejob.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

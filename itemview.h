@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEM_VIEW
 #define AKONADI_ITEM_VIEW
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
 #include <QtGui/QTreeView>
 
 class KXmlGuiWindow;

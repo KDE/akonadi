@@ -20,7 +20,8 @@
 #ifndef AKONADI_COLLECTIONATTRIBUTE_H
 #define AKONADI_COLLECTIONATTRIBUTE_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
+
 #include <QtCore/QList>
 #include <QtCore/QStringList>
 

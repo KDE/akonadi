@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <libakonadi/subscriptiondialog.h>
+#include <akonadi/subscriptiondialog.h>
 
 #include <kcomponentdata.h>
 #include <QApplication>

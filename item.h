@@ -21,9 +21,9 @@
 #ifndef AKONADI_ITEM_H
 #define AKONADI_ITEM_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
 
-#include <libakonadi/job.h>
+#include <akonadi/job.h>
 
 namespace Akonadi {
 class Item;

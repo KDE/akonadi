@@ -20,7 +20,7 @@
 #ifndef AKONADI_EXPUNGEJOB_H
 #define AKONADI_EXPUNGEJOB_H
 
-#include <libakonadi/job.h>
+#include "job.h"
 
 namespace Akonadi {
 

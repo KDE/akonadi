@@ -53,3 +53,5 @@ void CachePolicyPage::save(Collection & collection)
   policy.setLocalParts( ui.localParts->items() );
   collection.setCachePolicy( policy );
 }
+
+#include "cachepolicypage.moc"

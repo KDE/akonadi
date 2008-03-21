@@ -20,7 +20,7 @@
 #ifndef AKONADI_CHANGERECORDER_H
 #define AKONADI_CHANGERECORDER_H
 
-#include <libakonadi/monitor.h>
+#include <akonadi/monitor.h>
 
 class QSettings;
 

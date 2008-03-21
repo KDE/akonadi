@@ -20,7 +20,7 @@
 #ifndef AKONADI_NOTIFICATIONMESSAGE_H
 #define AKONADI_NOTIFICATIONMESSAGE_H
 
-#include <libakonadi/akonadiprotocol_export.h>
+#include <akonadi/akonadiprotocolinternals_export.h>
 
 #include <QtCore/QList>
 #include <QtCore/QMetaType>
@@ -34,7 +34,7 @@ namespace Akonadi {
   Used for sending notification signals over DBus.
   DBus type: (ayiiisayisas)
 */
-class AKONADIPROTOCOL_EXPORT NotificationMessage
+class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
 {
   public:
     typedef QList<NotificationMessage> List;

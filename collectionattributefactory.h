@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTIONATTRIBUTEFACTORY_H
 #define AKONADI_COLLECTIONATTRIBUTEFACTORY_H
 
-#include <libakonadi/collectionattribute.h>
+#include <akonadi/collectionattribute.h>
 
 namespace Akonadi {
 

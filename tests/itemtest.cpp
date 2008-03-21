@@ -20,7 +20,7 @@
 #include "itemtest.h"
 #include "itemtest.moc"
 
-#include <libakonadi/item.h>
+#include <akonadi/item.h>
 
 #include <qtest_kde.h>
 

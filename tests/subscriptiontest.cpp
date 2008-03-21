@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
-#include <libakonadi/control.h>
-#include <libakonadi/collection.h>
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/subscriptionjob.h>
+#include <akonadi/control.h>
+#include <akonadi/collection.h>
+#include <akonadi/collectionlistjob.h>
+#include <akonadi/subscriptionjob.h>
 
 #include <QtCore/QObject>
 

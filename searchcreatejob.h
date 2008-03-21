@@ -20,7 +20,7 @@
 #ifndef AKONADI_SEARCHCREATEJOB_H
 #define AKONADI_SEARCHCREATEJOB_H
 
-#include <libakonadi/job.h>
+#include <akonadi/job.h>
 
 namespace Akonadi {
 

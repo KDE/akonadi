@@ -20,7 +20,7 @@
 #include "datareferencetest.h"
 #include "datareferencetest.moc"
 
-#include <libakonadi/job.h>
+#include <akonadi/job.h>
 
 using namespace Akonadi;
 

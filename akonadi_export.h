@@ -23,43 +23,13 @@
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef AKONADI_SERVER_EXPORT
-# if defined(MAKE_AKONADIPRIVATE_LIB)
+#ifndef AKONADI_EXPORT
+# if defined(MAKE_AKONADICORE_LIB)
    /* We are building this library */
-#  define AKONADI_SERVER_EXPORT KDE_EXPORT
+#  define AKONADI_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define AKONADI_SERVER_EXPORT KDE_IMPORT
-# endif
-#endif
-
-#ifndef AKONADI_KABC_EXPORT
-# if defined(MAKE_KABCAKONADI_LIB)
-   /* We are building this library */
-#  define AKONADI_KABC_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define AKONADI_KABC_EXPORT KDE_IMPORT
-# endif
-#endif
-
-#ifndef AKONADI_KMIME_EXPORT
-# if defined(MAKE_KMIMEAKONADI_LIB)
-   /* We are building this library */
-#  define AKONADI_KMIME_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define AKONADI_KMIME_EXPORT KDE_IMPORT
-# endif
-#endif
-
-#ifndef AKONADI_KCAL_EXPORT
-# if defined(MAKE_KCALAKONADI_LIB)
-   /* We are building this library */
-#  define AKONADI_KCAL_EXPORT KDE_EXPORT
-# else
-   /* We are using this library */
-#  define AKONADI_KCAL_EXPORT KDE_IMPORT
+#  define AKONADI_EXPORT KDE_IMPORT
 # endif
 #endif
 

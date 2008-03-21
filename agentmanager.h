@@ -20,8 +20,8 @@
 #ifndef AKONADI_AGENTMANAGER_H
 #define AKONADI_AGENTMANAGER_H
 
-#include "libakonadi_export.h"
-#include <libakonadi/collection.h>
+#include <akonadi_export.h>
+#include <akonadi/collection.h>
 
 #include <QtCore/QObject>
 #include <QtGui/qwindowdefs.h>

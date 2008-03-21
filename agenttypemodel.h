@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTTYPEMODEL_H
 #define AKONADI_AGENTTYPEMODEL_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
 #include <QtCore/QAbstractItemModel>
 
 namespace Akonadi {

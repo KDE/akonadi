@@ -1,6 +1,4 @@
 /*
-    This file is part of libakonadi.
-
     Copyright (c) 2006 Till Adam <adam@kde.org>
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
@@ -23,7 +21,6 @@
 #include "resourcebase.h"
 #include "agentbase_p.h"
 
-#include "kcrash.h"
 #include "resourceadaptor.h"
 #include "collectionsync.h"
 #include "itemsync.h"
@@ -31,12 +28,12 @@
 #include "tracerinterface.h"
 #include "xdgbasedirs.h"
 
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/collectionmodifyjob.h>
-#include <libakonadi/itemfetchjob.h>
-#include <libakonadi/itemstorejob.h>
-#include <libakonadi/session.h>
-#include <libakonadi/changerecorder.h>
+#include "akonadi/changerecorder.h"
+#include "akonadi/collectionlistjob.h"
+#include "akonadi/collectionmodifyjob.h"
+#include "akonadi/itemfetchjob.h"
+#include "akonadi/itemstorejob.h"
+#include "akonadi/session.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -50,20 +47,7 @@
 #include <QtGui/QApplication>
 #include <QtDBus/QtDBus>
 
-#include <signal.h>
-#include <stdlib.h>
-
 using namespace Akonadi;
-
-static ResourceBase *sResourceBase = 0;
-
-void crashHandler( int signal )
-{
-  if ( sResourceBase )
-    sResourceBase->crashHandler( signal );
-
-  exit( 255 );
-}
 
 class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 {
@@ -133,9 +117,6 @@ ResourceBase::ResourceBase( const QString & id )
   : AgentBase( new ResourceBasePrivate( this ), id )
 {
   Q_D( ResourceBase );
-  KCrash::init();
-  KCrash::setEmergencyMethod( ::crashHandler );
-  sResourceBase = this;
 
   new ResourceAdaptor( this );
   QDBusConnection::sessionBus().unregisterObject( QLatin1String( "/" ) );
@@ -315,15 +296,6 @@ int ResourceBase::init( ResourceBase *r )
   return rv;
 }
 
-void ResourceBase::crashHandler( int signal )
-{
-  /**
-   * If we retrieved a SIGINT or SIGTERM we close normally
-   */
-  if ( signal == SIGINT || signal == SIGTERM )
-    quit();
-}
-
 void ResourceBase::itemRetrieved( const Item &item )
 {
   Q_D( ResourceBase );
@@ -378,6 +350,7 @@ void ResourceBase::changesCommitted(const Item& item)
 void ResourceBase::changesCommitted( const Collection &collection )
 {
   CollectionModifyJob *job = new CollectionModifyJob( collection, session() );
+  //TODO: error checking
   changeProcessed();
 }
 

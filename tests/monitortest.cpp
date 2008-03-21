@@ -19,16 +19,16 @@
 
 #include "monitortest.h"
 
-#include <libakonadi/monitor.h>
-#include <libakonadi/collectioncreatejob.h>
-#include <libakonadi/collectiondeletejob.h>
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/collectionmodifyjob.h>
-#include <libakonadi/control.h>
-#include <libakonadi/itemappendjob.h>
-#include <libakonadi/itemdeletejob.h>
-#include <libakonadi/itemfetchjob.h>
-#include <libakonadi/itemstorejob.h>
+#include <akonadi/monitor.h>
+#include <akonadi/collectioncreatejob.h>
+#include <akonadi/collectiondeletejob.h>
+#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionmodifyjob.h>
+#include <akonadi/control.h>
+#include <akonadi/itemappendjob.h>
+#include <akonadi/itemdeletejob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemstorejob.h>
 
 #include <QtCore/QVariant>
 #include <QtGui/QApplication>

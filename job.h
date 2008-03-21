@@ -1,6 +1,4 @@
 /*
-    This file is part of libakonadi.
-
     Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
                   2006 Marc Mutz <mutz@kde.org>
                   2006 - 2007 Volker Krause <vkrause@kde.org>
@@ -24,13 +22,13 @@
 #ifndef AKONADI_JOB_H
 #define AKONADI_JOB_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
 #include <kcompositejob.h>
-#include <libakonadi/datareference.h>
+#include <akonadi/datareference.h>
 
 
 namespace Akonadi {

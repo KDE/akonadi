@@ -55,3 +55,19 @@ add_akonadi_test(subscriptiontest.cpp)
 add_akonadi_test(transactiontest.cpp)
 add_akonadi_test(itemcopytest.cpp)
 add_akonadi_test(collectioncopytest.cpp)
+
+########### next target ###############
+
+set(agentinstanceviewtest_SRCS agentinstanceviewtest.cpp )
+
+kde4_add_executable(agentinstanceviewtest TEST  ${agentinstanceviewtest_SRCS})
+
+target_link_libraries(agentinstanceviewtest akonadicomponents ${KDE4_KDECORE_LIBS})
+
+########### next target ###############
+
+set(agenttypeviewtest_SRCS agenttypeviewtest.cpp )
+
+kde4_add_executable(agenttypeviewtest TEST  ${agenttypeviewtest_SRCS})
+
+target_link_libraries(agenttypeviewtest akonadicomponents ${KDE4_KDECORE_LIBS})

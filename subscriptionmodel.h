@@ -20,8 +20,8 @@
 #ifndef AKONADI_SUBSCRIPTIONMODEL_H
 #define AKONADI_SUBSCRIPTIONMODEL_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/collectionmodel.h>
+#include <akonadi/collection.h>
+#include <akonadi/collectionmodel.h>
 
 namespace Akonadi {
 

@@ -1,0 +1,33 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.Akonadi.Tracer">
+    <method name="beginConnection">
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="msg" type="s" direction="in"/>
+    </method>
+    <method name="endConnection">
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="msg" type="s" direction="in"/>
+    </method>
+    <method name="connectionInput">
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="msg" type="s" direction="in"/>
+    </method>
+    <method name="connectionOutput">
+      <arg name="identifier" type="s" direction="in"/>
+      <arg name="msg" type="s" direction="in"/>
+    </method>
+    <method name="signal">
+      <arg name="signalName" type="s" direction="in"/>
+      <arg name="msg" type="s" direction="in"/>
+    </method>
+    <method name="warning">
+      <arg name="componentName" type="s" direction="in"/>
+      <arg name="msg" type="s" direction="in"/>
+    </method>
+    <method name="error">
+      <arg name="componentName" type="s" direction="in"/>
+      <arg name="msg" type="s" direction="in"/>
+    </method>
+  </interface>
+</node>

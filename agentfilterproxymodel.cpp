@@ -72,7 +72,7 @@ void AgentFilterProxyModel::clearFilter()
   invalidateFilter();
 }
 
-bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & parent) const
+bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex&) const
 {
   QModelIndex index = sourceModel()->index( row, 0 );
   if ( !d->mimeTypes.isEmpty() ) {
@@ -99,4 +99,4 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & parent
   return true;
 }
 
-#include "agentfilterproxymodel.h"
+#include "agentfilterproxymodel.moc"

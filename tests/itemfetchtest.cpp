@@ -20,10 +20,10 @@
 #include "itemfetchtest.h"
 #include "itemfetchtest.moc"
 
-#include <libakonadi/collectionpathresolver.h>
-#include <libakonadi/itemappendjob.h>
-#include <libakonadi/itemdeletejob.h>
-#include <libakonadi/itemfetchjob.h>
+#include <akonadi/collectionpathresolver.h>
+#include <akonadi/itemappendjob.h>
+#include <akonadi/itemdeletejob.h>
+#include <akonadi/itemfetchjob.h>
 
 using namespace Akonadi;
 

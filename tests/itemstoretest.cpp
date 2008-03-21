@@ -20,11 +20,11 @@
 
 #include "control.h"
 #include "itemstoretest.h"
-#include <libakonadi/collectionlistjob.h>
-#include <libakonadi/collectionselectjob.h>
-#include <libakonadi/itemdeletejob.h>
-#include <libakonadi/itemfetchjob.h>
-#include <libakonadi/itemstorejob.h>
+#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionselectjob.h>
+#include <akonadi/itemdeletejob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemstorejob.h>
 #include <qtest_kde.h>
 
 using namespace Akonadi;

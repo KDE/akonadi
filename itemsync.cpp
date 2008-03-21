@@ -20,11 +20,11 @@
 
 #include "itemsync.h"
 
-#include <libakonadi/item.h>
-#include <libakonadi/itemappendjob.h>
-#include <libakonadi/itemdeletejob.h>
-#include <libakonadi/itemfetchjob.h>
-#include <libakonadi/itemstorejob.h>
+#include "item.h"
+#include "itemappendjob.h"
+#include "itemdeletejob.h"
+#include "itemfetchjob.h"
+#include "itemstorejob.h"
 
 #include <kdebug.h>
 

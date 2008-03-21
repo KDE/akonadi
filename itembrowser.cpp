@@ -21,7 +21,7 @@
 
 using namespace Akonadi;
 
-#include <libakonadi/item.h>
+#include "item.h"
 
 ItemBrowser::ItemBrowser( QWidget *parent )
   : KTextBrowser( parent ), d( 0 )

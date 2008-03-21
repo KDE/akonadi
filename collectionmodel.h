@@ -20,10 +20,10 @@
 #ifndef AKONADI_COLLECTIONMODEL_H
 #define AKONADI_COLLECTIONMODEL_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
 
-#include <libakonadi/collectionstatus.h>
-#include <libakonadi/job.h>
+#include <akonadi/collectionstatus.h>
+#include <akonadi/job.h>
 
 #include <QtCore/QAbstractItemModel>
 

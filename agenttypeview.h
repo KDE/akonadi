@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
-#ifndef AGENTINSTANCEVIEW_H
-#define AGENTINSTANCEVIEW_H
+#ifndef AGENTTYPEVIEW_H
+#define AGENTTYPEVIEW_H
 
-#include "libakonadi_export.h"
+#include <akonadi_export.h>
 #include <QtGui/QWidget>
 
 namespace Akonadi {
@@ -28,36 +28,36 @@ namespace Akonadi {
 class AgentFilterProxyModel;
 
 /**
- * This class provides a view of all available agent instances.
+ * This class provides a view of all available agent types.
  *
  * Since the view is listening to the dbus for changes, the
- * view is updated automatically as soon as a new agent instance
- * is added or removed to/from the system.
+ * view is updated automatically as soon as a new agent type
+ * is installed or removed to/from the system.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_COMPONENTS_EXPORT AgentInstanceView : public QWidget
+class AKONADI_EXPORT AgentTypeView : public QWidget
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new agent instance view.
+     * Creates a new agent type view.
      *
      * @param parent The parent widget.
      */
-    AgentInstanceView( QWidget *parent = 0 );
+    AgentTypeView( QWidget *parent = 0 );
 
     /**
-     * Destroys the agent instance view.
+     * Destroys the agent type view.
      */
-    ~AgentInstanceView();
+    ~AgentTypeView();
 
     /**
-     * Returns the identifier of the current agent instance or
-     * an empty string if no agent instance is selected.
+     * Returns the identifier of the current agent type or an
+     * empty string if no agent type is selected.
      */
-    QString currentAgentInstance() const;
+    QString currentAgentType() const;
 
     /**
       Returns the agent filter proxy model, use this to filter by
@@ -67,10 +67,10 @@ class AKONADI_COMPONENTS_EXPORT AgentInstanceView : public QWidget
 
   Q_SIGNALS:
     /**
-     * This signal is emitted whenever the current agent instance changes.
+     * This signal is emitted whenever the current agent type changes.
      *
-     * @param current The identifier of the current agent instance.
-     * @param previous The identifier of the previous agent instance.
+     * @param current The identifier of the current agent type.
+     * @param previous The identifier of the previous agent type.
      */
     void currentChanged( const QString &current, const QString &previous );
 
@@ -78,7 +78,7 @@ class AKONADI_COMPONENTS_EXPORT AgentInstanceView : public QWidget
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) )
 };
 
 }

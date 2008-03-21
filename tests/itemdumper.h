@@ -21,8 +21,8 @@
 #ifndef ITEMDUMPER_H
 #define ITEMDUMPER_H
 
-#include <libakonadi/collection.h>
-#include <libakonadi/itemappendjob.h>
+#include <akonadi/collection.h>
+#include <akonadi/itemappendjob.h>
 
 #include <QTime>
 

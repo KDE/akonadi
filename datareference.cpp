@@ -1,6 +1,4 @@
 /*
-    This file is part of libakonadi.
-
     Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
