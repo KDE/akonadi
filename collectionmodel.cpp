@@ -258,6 +258,7 @@ CollectionModel::CollectionModel( QObject * parent ) :
 
   // ### Hack to get the kmail resource folder icons
   KIconLoader::global()->addAppDir( QLatin1String( "kmail" ) );
+  KIconLoader::global()->addAppDir( QLatin1String( "kdepim" ) );
 }
 
 CollectionModel::~CollectionModel()
