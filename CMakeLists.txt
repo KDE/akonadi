@@ -22,6 +22,7 @@ ENDMACRO(QT4_ADD_DBUS_INTERFACE2)
 
 configure_file(akonadi-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi-prefix.h)
 
+add_subdirectory( kmime )
 add_subdirectory( tests )
 
 include_directories(
