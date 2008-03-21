@@ -224,3 +224,8 @@ install( FILES
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml
 DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
+
+install( FILES
+  kcfg2dbus.xsl
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/share/apps/akonadi-kde
+)
