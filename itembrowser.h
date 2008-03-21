@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEMBROWSER_H
 #define AKONADI_ITEMBROWSER_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <akonadi/itemdetailsview.h>
 #include <ktextbrowser.h>
 

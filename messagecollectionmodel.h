@@ -20,7 +20,7 @@
 #ifndef AKONADI_MESSAGECOLLECTIONMODEL_H
 #define AKONADI_MESSAGECOLLECTIONMODEL_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <akonadi/collectionmodel.h>
 
 namespace Akonadi {

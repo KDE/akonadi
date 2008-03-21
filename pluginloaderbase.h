@@ -26,7 +26,7 @@
 #include <QMap>
 #include <KLibrary>
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 class KLibrary;
 class QStringList;

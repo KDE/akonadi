@@ -20,7 +20,7 @@
 #ifndef AKONADI_SESSION_H
 #define AKONADI_SESSION_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <QtCore/QObject>
 
 class KJob;

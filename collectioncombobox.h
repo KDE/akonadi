@@ -20,7 +20,7 @@
 #ifndef COLLECTIONCOMBOBOX_H
 #define COLLECTIONCOMBOBOX_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <QtGui/QWidget>
 
 class QAbstractItemModel;

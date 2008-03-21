@@ -20,7 +20,7 @@
 #ifndef AKONADI_STANDARDACTIONMANAGER_H
 #define AKONADI_STANDARDACTIONMANAGER_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 #include <QtCore/QObject>
 

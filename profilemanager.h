@@ -20,7 +20,7 @@
 #ifndef AKONADI_PROFILEMANAGER_H
 #define AKONADI_PROFILEMANAGER_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <QtCore/QObject>
 
 namespace Akonadi {

@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTIONMODEL_H
 #define AKONADI_COLLECTIONMODEL_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 #include <akonadi/collectionstatus.h>
 #include <akonadi/job.h>

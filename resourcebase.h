@@ -23,7 +23,7 @@
 #ifndef AKONADI_RESOURCEBASE_H
 #define AKONADI_RESOURCEBASE_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <akonadi/agentbase.h>
 
 #include <akonadi/collection.h>

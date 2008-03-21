@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTION_H
 #define AKONADI_COLLECTION_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <akonadi/cachepolicy.h>
 #include <akonadi/collectionattribute.h>
 #include <akonadi/collectionstatus.h>

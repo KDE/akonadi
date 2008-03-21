@@ -20,7 +20,7 @@
 #ifndef AKONADI_PROFILEMODEL_H
 #define AKONADI_PROFILEMODEL_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 #include <QtCore/QAbstractItemModel>
 

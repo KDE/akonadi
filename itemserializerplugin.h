@@ -21,7 +21,7 @@
 #ifndef AKONADI_ITEMSERIALIZERPLUGIN_H
 #define AKONADI_ITEMSERIALIZERPLUGIN_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 class QString;
 class QStringList;

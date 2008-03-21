@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTMANAGER_H
 #define AKONADI_AGENTMANAGER_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <akonadi/collection.h>
 
 #include <QtCore/QObject>

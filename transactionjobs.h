@@ -20,7 +20,7 @@
 #ifndef AKONADI_TRANSACTIONJOBS_H
 #define AKONADI_TRANSACTIONJOBS_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <akonadi/job.h>
 
 namespace Akonadi {

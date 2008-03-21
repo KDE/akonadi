@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTIONLIST_JOB
 #define AKONADI_COLLECTIONLIST_JOB
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <akonadi/collection.h>
 #include <akonadi/job.h>
 

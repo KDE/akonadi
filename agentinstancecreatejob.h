@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTINSTANCECREATEJOB_H
 #define AKONADI_AGENTINSTANCECREATEJOB_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 #include <kjob.h>
 

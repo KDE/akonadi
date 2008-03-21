@@ -22,7 +22,7 @@
 #ifndef AKONADI_RESOURCE_H
 #define AKONADI_RESOURCE_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <QtCore/QObject>
 
 #ifndef Q_NOREPLY

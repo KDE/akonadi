@@ -20,7 +20,7 @@
 #ifndef AKONADI_DATAREFERENCE_H
 #define AKONADI_DATAREFERENCE_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>

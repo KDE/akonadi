@@ -20,7 +20,7 @@
 #ifndef AGENTTYPEVIEW_H
 #define AGENTTYPEVIEW_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <QtGui/QWidget>
 
 namespace Akonadi {

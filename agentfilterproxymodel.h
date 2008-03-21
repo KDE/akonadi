@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTFILTERPROXYMODEL_H
 #define AKONADI_AGENTFILTERPROXYMODEL_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <QtGui/QSortFilterProxyModel>
 
 namespace Akonadi {

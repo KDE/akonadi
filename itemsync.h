@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEMSYNC_H
 #define AKONADI_ITEMSYNC_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 #include <akonadi/item.h>
 #include <akonadi/transactionjobs.h>

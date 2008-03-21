@@ -22,7 +22,7 @@
 #ifndef AKONADI_JOB_H
 #define AKONADI_JOB_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

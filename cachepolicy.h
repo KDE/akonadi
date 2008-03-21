@@ -20,7 +20,7 @@
 #ifndef AKONADI_CACHEPOLICY_H
 #define AKONADI_CACHEPOLICY_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QStringList>

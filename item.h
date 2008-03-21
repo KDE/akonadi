@@ -21,7 +21,7 @@
 #ifndef AKONADI_ITEM_H
 #define AKONADI_ITEM_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 
 #include <akonadi/job.h>
 

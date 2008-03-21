@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEMSTOREJOB_H
 #define AKONADI_ITEMSTOREJOB_H
 
-#include <akonadi_export.h>
+#include "akonadi_export.h"
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 #include <akonadi/job.h>
