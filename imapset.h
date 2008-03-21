@@ -20,7 +20,7 @@
 #ifndef AKONADI_ImapSet_H
 #define AKONADI_ImapSet_H
 
-#include <akonadi/akonadiprotocolinternals_export.h>
+#include "akonadiprotocolinternals_export.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>

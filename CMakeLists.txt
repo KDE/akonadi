@@ -203,6 +203,15 @@ install( FILES
 )
 
 install( FILES
+  akonadiprotocolinternals_export.h
+  imapparser.h
+  imapset.h
+  notificationmessage.h
+  xdgbasedirs.h
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private
+)
+
+install( FILES
   interfaces/org.kde.Akonadi.AgentManager.xml
   interfaces/org.kde.Akonadi.NotificationManager.xml
   interfaces/org.kde.Akonadi.ProfileManager.xml

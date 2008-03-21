@@ -20,7 +20,7 @@
 #ifndef AKONADI_NOTIFICATIONMESSAGE_H
 #define AKONADI_NOTIFICATIONMESSAGE_H
 
-#include <akonadi/akonadiprotocolinternals_export.h>
+#include "akonadiprotocolinternals_export.h"
 
 #include <QtCore/QList>
 #include <QtCore/QMetaType>
