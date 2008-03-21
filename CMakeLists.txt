@@ -207,6 +207,7 @@ install( FILES
   imapparser.h
   imapset.h
   notificationmessage.h
+  protocol.h
   xdgbasedirs.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private
 )
