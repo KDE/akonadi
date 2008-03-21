@@ -19,6 +19,11 @@
 
 #include "agentinstanceview.h"
 
+#include "agentinstancemodel.h"
+#include "agentfilterproxymodel.h"
+
+#include <KIcon>
+
 #include <QtCore/QUrl>
 #include <QtGui/QAbstractTextDocumentLayout>
 #include <QtGui/QApplication>
@@ -26,9 +31,6 @@
 #include <QtGui/QListView>
 #include <QtGui/QPainter>
 #include <QtGui/QTextDocument>
-
-#include "agentinstancemodel.h"
-#include "agentfilterproxymodel.h"
 
 using namespace Akonadi;
 
@@ -149,9 +151,9 @@ QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &
                            qvariant_cast<QIcon>( data ).pixmap( QSize( 64, 64 ) ) );
   }
 
-  static QPixmap readyPixmap = QIcon( QLatin1String( ":/pics/ready.svg" ) ).pixmap( QSize( 16, 16 ) );
-  static QPixmap syncPixmap = QIcon( QLatin1String( ":/pics/sync.svg" ) ).pixmap( QSize( 16, 16 ) );
-  static QPixmap errorPixmap = QIcon( QLatin1String( ":/pics/error.svg" ) ).pixmap( QSize( 16, 16 ) );
+  static QPixmap readyPixmap = KIcon( QLatin1String("user-online") ).pixmap( QSize( 16, 16 ) );
+  static QPixmap syncPixmap = KIcon( QLatin1String("network-connect") ).pixmap( QSize( 16, 16 ) );
+  static QPixmap errorPixmap = KIcon( QLatin1String("dialog-error") ).pixmap( QSize( 16, 16 ) );
 
   if ( status == 0 )
     document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), readyPixmap );
