@@ -126,7 +126,7 @@ set( akonadikde_LIB_SRC
 # DBus interfaces and adaptors
 qt4_generate_dbus_interface( resource.h org.kde.Akonadi.Resource.xml )
 qt4_generate_dbus_interface( agent.h org.kde.Akonadi.Agent.xml )
-qt4_add_dbus_interface2( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanagerinterface notificationmessage.h )
+qt4_add_dbus_interface2( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanagerinterface notificationmessage_p.h )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.AgentManager.xml )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.ProfileManager.xml )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Tracer.xml )
@@ -208,11 +208,11 @@ install( FILES
 
 install( FILES
   akonadiprotocolinternals_export.h
-  imapparser.h
-  imapset.h
-  notificationmessage.h
-  protocol.h
-  xdgbasedirs.h
+  imapparser_p.h
+  imapset_p.h
+  notificationmessage_p.h
+  protocol_p.h
+  xdgbasedirs_p.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private
 )
 

@@ -23,7 +23,7 @@
 
 #include "collectionlistjob.h"
 #include "itemfetchjob.h"
-#include "notificationmessage.h"
+#include "notificationmessage_p.h"
 #include "session.h"
 
 #include <kdebug.h>

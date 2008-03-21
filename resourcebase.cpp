@@ -26,7 +26,7 @@
 #include "itemsync.h"
 #include "resourcescheduler.h"
 #include "tracerinterface.h"
-#include "xdgbasedirs.h"
+#include "xdgbasedirs_p.h"
 
 #include "akonadi/changerecorder.h"
 #include "akonadi/collectionlistjob.h"

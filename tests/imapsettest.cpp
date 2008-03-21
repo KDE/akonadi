@@ -19,7 +19,7 @@
 
 #include "imapsettest.h"
 #include "imapsettest.moc"
-#include <akonadi/imapset.h>
+#include <akonadi/imapset_p.h>
 
 #include <qtest_kde.h>
 

@@ -19,7 +19,7 @@
 
 #include "collectionlistjob.h"
 
-#include "imapparser.h"
+#include "imapparser_p.h"
 #include "protocolhelper.h"
 
 #include <kdebug.h>

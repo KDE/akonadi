@@ -20,10 +20,10 @@
 #include "session.h"
 #include "session_p.h"
 
-#include "imapparser.h"
+#include "imapparser_p.h"
 #include "job.h"
 #include "job_p.h"
-#include "xdgbasedirs.h"
+#include "xdgbasedirs_p.h"
 
 #include <kdebug.h>
 

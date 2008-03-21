@@ -21,7 +21,7 @@
 
 #include "job.h"
 #include "job_p.h"
-#include "imapparser.h"
+#include "imapparser_p.h"
 #include "session.h"
 
 #include <kdebug.h>

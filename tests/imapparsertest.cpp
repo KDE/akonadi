@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "imapparser.h"
+#include "imapparser_p.h"
 #include "imapparsertest.h"
 #include <qtest_kde.h>
 

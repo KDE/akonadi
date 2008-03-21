@@ -22,7 +22,7 @@
 
 #include "akonadiprotocolinternals_export.h"
 
-#include "imapset.h"
+#include "imapset_p.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>

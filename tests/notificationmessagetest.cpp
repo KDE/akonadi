@@ -20,7 +20,7 @@
 #include "notificationmessagetest.h"
 #include "notificationmessagetest.moc"
 
-#include <akonadi/notificationmessage.h>
+#include <akonadi/notificationmessage_p.h>
 
 #include <qtest_kde.h>
 

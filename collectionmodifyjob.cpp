@@ -18,7 +18,7 @@
 */
 
 #include "collectionmodifyjob.h"
-#include "imapparser.h"
+#include "imapparser_p.h"
 #include "protocolhelper.h"
 
 using namespace Akonadi;

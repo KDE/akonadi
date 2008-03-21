@@ -25,7 +25,7 @@
 #include "agent.h"
 #include "agentadaptor.h"
 #include "monitor_p.h"
-#include "xdgbasedirs.h"
+#include "xdgbasedirs_p.h"
 
 #include "session.h"
 #include "changerecorder.h"

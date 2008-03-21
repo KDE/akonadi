@@ -18,7 +18,7 @@
 */
 
 #include "itemstorejob.h"
-#include "imapparser.h"
+#include "imapparser_p.h"
 
 #include <kdebug.h>
 

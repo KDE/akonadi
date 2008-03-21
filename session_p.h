@@ -21,7 +21,7 @@
 #define AKONADI_SESSION_P_H
 
 #include "session.h"
-#include "imapparser.h"
+#include "imapparser_p.h"
 
 #include <QtCore/QQueue>
 #include <QtCore/QSettings>

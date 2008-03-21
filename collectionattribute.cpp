@@ -18,7 +18,7 @@
 */
 
 #include "collectionattribute.h"
-#include "imapparser.h"
+#include "imapparser_p.h"
 
 using namespace Akonadi;
 

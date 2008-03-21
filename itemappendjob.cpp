@@ -19,7 +19,7 @@
 */
 
 #include "itemappendjob.h"
-#include "imapparser.h"
+#include "imapparser_p.h"
 
 #include <kdebug.h>
 

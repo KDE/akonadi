@@ -18,7 +18,7 @@
 */
 
 #include "itemcopyjob.h"
-#include "imapset.h"
+#include "imapset_p.h"
 
 using namespace Akonadi;
 

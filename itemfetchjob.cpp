@@ -21,7 +21,7 @@
 
 #include "collection.h"
 #include "collectionselectjob.h"
-#include "imapparser.h"
+#include "imapparser_p.h"
 #include "itemserializerplugin.h"
 
 #include <kdebug.h>
