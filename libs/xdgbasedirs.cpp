@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "xdgbasedirs.h"
+#include "xdgbasedirs_p.h"
 
 #include "akonadi-prefix.h" // for prefix defines
 

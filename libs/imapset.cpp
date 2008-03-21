@@ -17,9 +17,9 @@
     02110-1301, USA.
 */
 
-#include "imapset.h"
+#include "imapset_p.h"
 
-#include "imapparser.h"
+#include "imapparser_p.h"
 
 #include <QtCore/QSharedData>
 

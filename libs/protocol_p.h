@@ -21,7 +21,7 @@
 #define AKONADI_PROTOCOL_H
 
 /**
-  @file protocol.h Shared constants used in the communication protocol between
+  @file protocol_p.h Shared constants used in the communication protocol between
   the Akonadi server and its clients.
 
   @todo Fill this file with command names, item/collection property names

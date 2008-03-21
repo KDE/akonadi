@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "notificationmessage.h"
+#include "notificationmessage_p.h"
 
 #include <QDBusMetaType>
 #include <QDebug>
