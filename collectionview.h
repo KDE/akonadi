@@ -46,6 +46,12 @@ class AKONADI_EXPORT CollectionView : public QTreeView
   public:
     /**
       Create a new collection view.
+      @param the parent widget.
+    */
+    explicit CollectionView( QWidget *parent );
+
+    /**
+      Create a new collection view.
       @param xmlGuiWindow The KXmlGuiWindow this is used in. This is needed for the
       XMLGUI based context menu. Passing 0 is ok and will disable the builtin context
       menu.
@@ -63,6 +69,12 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     */
     virtual void setModel ( QAbstractItemModel * model );
 
+    /**
+      Sets the KXmlGuiWindow which this view is used in. This is needed
+      if you want to use the built-in context menu.
+      @param xmlGuiWindow The KXmlGuiWindow this view is used in.
+    */
+    void setKXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
 
   Q_SIGNALS:
     /**

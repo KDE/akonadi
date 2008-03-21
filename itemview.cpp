@@ -40,6 +40,7 @@ class ItemView::Private
     {
     }
 
+    void init();
     void itemActivated( const QModelIndex& );
     void itemCurrentChanged( const QModelIndex& );
 
@@ -48,6 +49,17 @@ class ItemView::Private
   private:
     ItemView *mParent;
 };
+
+void ItemView::Private::init()
+{
+  mParent->setRootIsDecorated( false );
+
+  mParent->header()->setClickable( true );
+  mParent->header()->setStretchLastSection( true );
+
+  mParent->connect( mParent, SIGNAL( activated( const QModelIndex& ) ),
+                    mParent, SLOT( itemActivated( const QModelIndex& ) ) );
+}
 
 void ItemView::Private::itemActivated( const QModelIndex &index )
 {
@@ -81,13 +93,15 @@ ItemView::ItemView( QWidget * parent ) :
     QTreeView( parent ),
     d( new Private( this ) )
 {
-  setRootIsDecorated( false );
+  d->init();
+}
 
-  header()->setClickable( true );
-  header()->setStretchLastSection( true );
-
-  connect( this, SIGNAL( activated( const QModelIndex& ) ),
-           this, SLOT( itemActivated( const QModelIndex& ) ) );
+ItemView::ItemView(KXmlGuiWindow * xmlGuiWindow, QWidget * parent) :
+    QTreeView( parent ),
+    d( new Private( this ) )
+{
+  d->xmlGuiWindow = xmlGuiWindow;
+  d->init();
 }
 
 ItemView::~ItemView()

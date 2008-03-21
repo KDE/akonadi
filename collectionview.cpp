@@ -48,6 +48,7 @@ class CollectionView::Private
     {
     }
 
+    void init();
     void dragExpand();
     void itemClicked( const QModelIndex& );
     void itemCurrentChanged( const QModelIndex& );
@@ -59,6 +60,25 @@ class CollectionView::Private
 
     KXmlGuiWindow *xmlGuiWindow;
 };
+
+void CollectionView::Private::init()
+{
+  mParent->header()->setClickable( true );
+  mParent->header()->setStretchLastSection( false );
+
+  mParent->setSortingEnabled( true );
+  mParent->setEditTriggers( QAbstractItemView::EditKeyPressed );
+  mParent->setAcceptDrops( true );
+  mParent->setDropIndicatorShown( true );
+  mParent->setDragDropMode( DragDrop );
+  mParent->setDragEnabled( true );
+
+  dragExpandTimer.setSingleShot( true );
+  mParent->connect( &dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()) );
+
+  mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
+                    mParent, SLOT( itemClicked( const QModelIndex& ) ) );
+}
 
 bool CollectionView::Private::hasParent( const QModelIndex& idx, int parentId )
 {
@@ -102,27 +122,19 @@ void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
   emit mParent->currentChanged( Collection( currentCollection ) );
 }
 
+CollectionView::CollectionView(QWidget * parent) :
+    QTreeView( parent ),
+    d( new Private( this ) )
+{
+  d->init();
+}
+
 CollectionView::CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget * parent ) :
     QTreeView( parent ),
     d( new Private( this ) )
 {
   d->xmlGuiWindow = xmlGuiWindow;
-
-  header()->setClickable( true );
-  header()->setStretchLastSection( false );
-
-  setSortingEnabled( true );
-  setEditTriggers( QAbstractItemView::EditKeyPressed );
-  setAcceptDrops( true );
-  setDropIndicatorShown( true );
-  setDragDropMode( DragDrop );
-  setDragEnabled( true );
-
-  d->dragExpandTimer.setSingleShot( true );
-  connect( &d->dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()) );
-
-  connect( this, SIGNAL( clicked( const QModelIndex& ) ),
-           this, SLOT( itemClicked( const QModelIndex& ) ) );
+  d->init();
 }
 
 CollectionView::~CollectionView()
@@ -222,6 +234,11 @@ void CollectionView::contextMenuEvent(QContextMenuEvent * event)
                                       QLatin1String("akonadi_collectionview_contextmenu"), d->xmlGuiWindow ) );
   if ( popup )
     popup->exec( event->globalPos() );
+}
+
+void CollectionView::setKXmlGuiWindow(KXmlGuiWindow * xmlGuiWindow)
+{
+  d->xmlGuiWindow = xmlGuiWindow;
 }
 
 #include "collectionview.moc"

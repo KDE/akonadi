@@ -46,7 +46,16 @@ class AKONADI_EXPORT ItemView : public QTreeView
       Create a new item view.
       @param parent the parent widget.
     */
-    explicit ItemView( QWidget *parent = 0 );
+    ItemView( QWidget *parent );
+
+    /**
+      Create a new item view.
+      @param xmlGuiWindow The KXmlGuiWindow this is used in. This is needed for the
+      XMLGUI based context menu. Passing 0 is ok and will disable the builtin context
+      menu.
+      @param parent the parent widget.
+    */
+    explicit ItemView( KXmlGuiWindow *xmlGuiWindow = 0, QWidget *parent = 0 );
 
     /**
       Destroys this item view.
