@@ -1,7 +1,0 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-  <file>pics/error.svg</file>
-  <file>pics/ready.svg</file>
-  <file>pics/sync.svg</file>
-</qresource>
-</RCC>
