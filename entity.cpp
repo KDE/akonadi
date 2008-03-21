@@ -62,7 +62,7 @@ QString Entity::remoteId() const
   return d_ptr->mRemoteId;
 }
 
-Entity& Entity::operator=( const Entity &other )
+Entity& Entity ::operator=( const Entity &other )
 {
   if ( this != &other )
     d_ptr = other.d_ptr;
@@ -74,3 +74,5 @@ uint qHash( const Akonadi::Entity &entity )
 {
   return qHash( entity.id() );
 }
+
+AKONADI_DEFINE_PRIVATE( Entity )

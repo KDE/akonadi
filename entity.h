@@ -32,8 +32,8 @@ AKONADI_EXPORT uint qHash( const Akonadi::Entity& );
 #include <QtCore/QSharedDataPointer>
 
 #define AKONADI_DECLARE_PRIVATE( Class ) \
-    inline Class##Private* d_func() { return reinterpret_cast<Class##Private *>( d_ptr.data() ); } \
-    inline const Class##Private* d_func() const { return reinterpret_cast<const Class##Private *>( d_ptr.data() ); } \
+    Class##Private* d_func(); \
+    const Class##Private* d_func() const; \
     friend class Class##Private;
 
 namespace Akonadi {
