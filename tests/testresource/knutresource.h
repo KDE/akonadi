@@ -23,7 +23,7 @@
 #include <kabc/vcardconverter.h>
 #include <kcal/incidence.h>
 #include <kcal/icalformat.h>
-#include <resourcebase.h>
+#include <akonadi/resourcebase.h>
 
 class QDomElement;
 
