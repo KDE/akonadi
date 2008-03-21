@@ -29,7 +29,7 @@
 #include <klocalsocket.h>
 #endif
 
-#include "akonadi_export.h"
+#include "akonadiprivate_export.h"
 
 class QProcess;
 class IntervalCheck;
@@ -41,9 +41,9 @@ class CacheCleaner;
 class XesamManager;
 
 #ifdef Q_OS_WIN
-class AKONADI_SERVER_EXPORT AkonadiServer: public QTcpServer
+class AKONADIPRIVATE_EXPORT AkonadiServer: public QTcpServer
 #else
-class AKONADI_SERVER_EXPORT AkonadiServer: public KLocalSocketServer
+class AKONADIPRIVATE_EXPORT AkonadiServer: public KLocalSocketServer
 #endif
 {
     Q_OBJECT

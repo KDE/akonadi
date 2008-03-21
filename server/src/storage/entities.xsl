@@ -38,7 +38,7 @@
 #ifndef AKONADI_ENTITIES_H
 #define AKONADI_ENTITIES_H
 #include &lt;storage/entity.h&gt;
-#include "akonadi_export.h"
+#include "akonadiprivate_export.h"
 
 #include &lt;QtCore/QDebug&gt;
 #include &lt;QtCore/QSharedDataPointer&gt;

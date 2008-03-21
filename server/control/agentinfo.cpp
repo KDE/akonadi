@@ -19,7 +19,7 @@
 
 #include "agentinfo.h"
 #include "agentmanager.h"
-#include "xdgbasedirs.h"
+#include <akonadi/private/xdgbasedirs.h>
 #include "processcontrol.h"
 
 #include <QSettings>

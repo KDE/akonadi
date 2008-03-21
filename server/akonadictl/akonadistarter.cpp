@@ -19,7 +19,7 @@
 
 #include "akonadistarter.h"
 
-#include <libakonadi/protocol.h>
+#include <akonadi/private/protocol.h>
 
 #include <QCoreApplication>
 #include <QDBusConnection>

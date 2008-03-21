@@ -33,7 +33,7 @@
   </xsl:if>
   This class is implicitly shared.
 */
-class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
+class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
 {
   friend class DataStore;
 
@@ -238,7 +238,7 @@ class AKONADI_SERVER_EXPORT <xsl:value-of select="$className"/> : public Entity
 <xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
 
 // debug stream operator
-AKONADI_SERVER_EXPORT QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const Akonadi::<xsl:value-of select="$className"/>&amp; entity );
+AKONADIPRIVATE_EXPORT QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const Akonadi::<xsl:value-of select="$className"/>&amp; entity );
 </xsl:template>
 
 

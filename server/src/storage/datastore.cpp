@@ -29,7 +29,7 @@
 #include "selectquerybuilder.h"
 #include "handlerhelper.h"
 #include "countquerybuilder.h"
-#include "xdgbasedirs.h"
+#include <akonadi/private/xdgbasedirs.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>

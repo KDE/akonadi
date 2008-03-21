@@ -24,7 +24,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-#include "akonadi_export.h"
+#include "akonadiprivate_export.h"
 #include "global.h"
 
 namespace Akonadi {
@@ -42,7 +42,7 @@ class ImapSet;
 
 /**
 The handler interfaces describes an entity capable of handling an AkonadiIMAP command.*/
-class AKONADI_SERVER_EXPORT Handler : public QObject {
+class AKONADIPRIVATE_EXPORT Handler : public QObject {
     Q_OBJECT
 public:
     Handler();

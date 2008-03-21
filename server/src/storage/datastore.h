@@ -28,7 +28,7 @@
 
 class QSqlQuery;
 
-#include "akonadi_export.h"
+#include "akonadiprivate_export.h"
 #include "entities.h"
 #include "notificationcollector.h"
 
@@ -85,7 +85,7 @@ Name=/home/foo/.local/share/akonadi/akonadi.db
   - Password: Password for the database server
   - Options: Additional options, format is driver-dependent
 */
-class AKONADI_SERVER_EXPORT DataStore : public QObject
+class AKONADIPRIVATE_EXPORT DataStore : public QObject
 {
     Q_OBJECT
   public:

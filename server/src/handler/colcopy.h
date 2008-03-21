@@ -53,7 +53,7 @@ namespace Akonadi {
   There is only the usual status response indicating success or failure of the
   COLCOPY command
  */
-class AKONADI_SERVER_EXPORT ColCopy : public Copy
+class AKONADIPRIVATE_EXPORT ColCopy : public Copy
 {
   public:
     bool handleLine(const QByteArray& line);

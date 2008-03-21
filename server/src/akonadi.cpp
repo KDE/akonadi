@@ -17,6 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
+#include <akonadi/private/xdgbasedirs.h>
+
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "serveradaptor.h"
@@ -27,7 +29,6 @@
 #include "notificationmanager.h"
 #include "resourcemanager.h"
 #include "tracer.h"
-#include "xdgbasedirs.h"
 #include "xesammanager.h"
 
 #include <QtCore/QCoreApplication>

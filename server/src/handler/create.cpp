@@ -28,7 +28,7 @@
 #include "storage/transaction.h"
 #include "handlerhelper.h"
 
-#include "imapparser.h"
+#include <akonadi/private/imapparser.h>
 #include "response.h"
 
 using namespace Akonadi;

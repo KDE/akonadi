@@ -22,6 +22,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QLatin1String>
 
+#include <akonadi/private/imapset.h>
+
 #include "akonadiconnection.h"
 #include "response.h"
 #include "handler/akappend.h"
@@ -49,7 +51,6 @@
 #include "uid.h"
 
 #include "storage/querybuilder.h"
-#include "imapset.h"
 
 using namespace Akonadi;
 

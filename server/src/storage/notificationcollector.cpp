@@ -22,7 +22,7 @@
 #include "storage/entity.h"
 #include "handlerhelper.h"
 
-#include <libakonadi/notificationmessage.h>
+#include <akonadi/private/notificationmessage.h>
 
 #include <QtCore/QDebug>
 

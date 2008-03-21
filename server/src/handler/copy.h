@@ -48,7 +48,7 @@ namespace Akonadi {
   There is only the usual status response indicating success or failure of the
   COPY command
  */
-class AKONADI_SERVER_EXPORT Copy : public Handler
+class AKONADIPRIVATE_EXPORT Copy : public Handler
 {
   public:
     bool handleLine(const QByteArray& line);

@@ -21,7 +21,7 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include "imapparser.h"
+#include <akonadi/private/imapparser.h>
 #include "response.h"
 #include "storage/selectquerybuilder.h"
 #include "resourceinterface.h"

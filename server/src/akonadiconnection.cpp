@@ -26,7 +26,8 @@
 #include "handler.h"
 #include "response.h"
 #include "tracer.h"
-#include "imapparser.h"
+
+#include <akonadi/private/imapparser.h>
 
 #include <assert.h>
 

@@ -20,10 +20,10 @@
 #include "aklist.h"
 
 #include <QtCore/QDebug>
+#include <akonadi/private/imapparser.h>
 
 #include "storage/datastore.h"
 #include "storage/entity.h"
-#include "imapparser.h"
 
 #include "akonadiconnection.h"
 #include "response.h"

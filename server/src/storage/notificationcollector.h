@@ -22,7 +22,7 @@
 
 #include <entities.h>
 
-#include <libakonadi/notificationmessage.h>
+#include <akonadi/private/notificationmessage.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>

@@ -34,7 +34,7 @@ namespace Akonadi {
   This command is used to append an item with multiple parts.
 
  */
-class AKONADI_SERVER_EXPORT AkAppend : public Handler
+class AKONADIPRIVATE_EXPORT AkAppend : public Handler
 {
 public:
     AkAppend();

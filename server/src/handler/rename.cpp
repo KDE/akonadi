@@ -20,7 +20,7 @@
 #include "rename.h"
 #include <akonadiconnection.h>
 #include <handlerhelper.h>
-#include <imapparser.h>
+#include <akonadi/private/imapparser.h>
 #include <response.h>
 #include <storage/datastore.h>
 #include <storage/entity.h>

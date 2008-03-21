@@ -101,28 +101,16 @@ set(libakonadiprivate_SRCS
   src/xesammanager.cpp
 )
 
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS
-  interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS
-  interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
-)
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS
-  interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
 
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS
-  interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer
-)
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
 
-qt4_generate_dbus_interface( ../libakonadi/resource.h org.kde.Akonadi.Resource.xml )
-qt4_add_dbus_interfaces( libakonadiprivate_SRCS
-  interfaces/org.kde.Akonadi.AgentManager.xml
-  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml
-)
-qt4_add_dbus_interface2(libakonadiprivate_SRCS
-  interfaces/org.freedesktop.xesam.Search.xml
-  xesaminterface xesamtypes.h
-)
+qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.AgentManager.xml ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Resource.xml )
+
+qt4_add_dbus_interface2( libakonadiprivate_SRCS interfaces/org.freedesktop.xesam.Search.xml xesaminterface xesamtypes.h )
 
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 
@@ -136,9 +124,9 @@ target_link_libraries( akonadiprivate
   ${QT_QTXML_LIBRARY}
   ${KDE4_KDECORE_LIBRARY}
   ${KDEWIN32_LIBRARY}
-  akonadiprotocol
+  akonadiprotocolinternals
 )
-set_target_properties(akonadiprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties( akonadiprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
 set( akonadiserver_bin_SRCS src/main.cpp control/kcrash.cpp )
@@ -148,12 +136,5 @@ kde4_add_executable( akonadiserver_bin NOGUI ${akonadiserver_bin_SRCS} )
 set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
 target_link_libraries( akonadiserver_bin akonadiprivate )
 
-install(TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
-install(FILES
-  interfaces/org.kde.Akonadi.AgentManager.xml
-  interfaces/org.kde.Akonadi.NotificationManager.xml
-  interfaces/org.kde.Akonadi.ProfileManager.xml
-  interfaces/org.kde.Akonadi.Tracer.xml
-  interfaces/org.kde.Akonadi.TracerNotification.xml
-DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
-install(FILES src/storage/mysql-global.conf DESTINATION ${CONFIG_INSTALL_DIR}/akonadi/)
+install( TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
+install( FILES src/storage/mysql-global.conf DESTINATION ${CONFIG_INSTALL_DIR}/akonadi/ )

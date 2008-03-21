@@ -22,8 +22,9 @@
 
 #include <handler.h>
 
+#include <akonadi/private/imapset.h>
+
 #include "storage/datastore.h"
-#include "imapset.h"
 
 namespace Akonadi {
 
