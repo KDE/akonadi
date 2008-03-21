@@ -23,16 +23,6 @@
 
 using namespace Akonadi;
 
-Entity::Entity()
-  : d_ptr( new EntityPrivate )
-{
-}
-
-Entity::Entity( Id id )
-  : d_ptr( new EntityPrivate( id ) )
-{
-}
-
 Entity::Entity( const Entity &other )
   : d_ptr( other.d_ptr )
 {

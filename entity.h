@@ -75,16 +75,6 @@ class AKONADI_EXPORT Entity
 
   protected:
     /**
-     * Creates an invalid entity.
-     */
-    Entity();
-
-    /**
-     * Creates an entity with the given unique @p id.
-     */
-    Entity( Id id );
-
-    /**
      * Creates an entity from an @p other entity.
      */
     Entity( const Entity &other );
