@@ -24,9 +24,9 @@
 #include <akonadi/collection.h>
 
 #include <QtCore/QObject>
-#include <QtGui/qwindowdefs.h>
 
 class QIcon;
+class QWidget;
 
 namespace Akonadi {
 
@@ -163,9 +163,9 @@ class AKONADI_EXPORT AgentManager : public QObject
     /**
      * Triggers the agent instance with the given @p identifier to show
      * its configuration dialog.
-     * @param windowId Parent window id for the configuration dialog.
+     * @param parent Parent window for the configuration dialog.
      */
-    void agentInstanceConfigure( const QString &identifier, WId windowId );
+    void agentInstanceConfigure( const QString &identifier, QWidget *parent = 0 );
 
     /**
      * Triggers the agent instance with the given @p identifier to start

@@ -25,6 +25,7 @@
 #include <kiconloader.h>
 
 #include <QtGui/QIcon>
+#include <QtGui/QWidget>
 
 
 using namespace Akonadi;
@@ -185,9 +186,12 @@ QString AgentManager::agentInstanceName( const QString &identifier ) const
   return d->mManager->agentInstanceName( identifier );
 }
 
-void AgentManager::agentInstanceConfigure( const QString &identifier, WId windowId )
+void AgentManager::agentInstanceConfigure( const QString &identifier, QWidget *parent )
 {
-  d->mManager->agentInstanceConfigure( identifier, (qlonglong)windowId );
+  qlonglong winId = 0;
+  if ( parent )
+    winId = parent->window()->winId();
+  d->mManager->agentInstanceConfigure( identifier, winId );
 }
 
 void AgentManager::agentInstanceSynchronize( const QString &identifier )

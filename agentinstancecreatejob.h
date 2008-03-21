@@ -24,8 +24,6 @@
 
 #include <kjob.h>
 
-#include <QtGui/qwindowdefs.h>
-
 namespace Akonadi {
 
 /**
@@ -49,9 +47,9 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
 
     /**
       Show agent configuration dialog once it has been successfully started.
-      @param windowId The parent window id for the configuration dialog.
+      @param parent The parent window for the configuration dialog.
     */
-    void configure( WId windowId = 0 );
+    void configure( QWidget *parent = 0 );
 
     /**
       Returns the instance identifier of the newly created agent instance.

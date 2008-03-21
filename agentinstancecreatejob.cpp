@@ -34,7 +34,7 @@ class AgentInstanceCreateJob::Private
   public:
     Private( AgentInstanceCreateJob* parent ) : q( parent ),
       manager( 0 ),
-      windowId( 0 ),
+      parentWidget( 0 ),
       safetyTimer( 0 ),
       doConfig( false ),
       tooLate( false )
@@ -61,7 +61,7 @@ class AgentInstanceCreateJob::Private
 
     void doConfigure()
     {
-      manager->agentInstanceConfigure( instanceId, windowId );
+      manager->agentInstanceConfigure( instanceId, parentWidget );
       q->emitResult();
     }
 
@@ -77,7 +77,7 @@ class AgentInstanceCreateJob::Private
     QString typeIdentifier;
     QString instanceId;
     AgentManager *manager;
-    WId windowId;
+    QWidget* parentWidget;
     QTimer *safetyTimer;
     bool doConfig;
     bool tooLate;
@@ -100,9 +100,9 @@ AgentInstanceCreateJob::~ AgentInstanceCreateJob()
   delete d;
 }
 
-void AgentInstanceCreateJob::configure( WId windowId )
+void AgentInstanceCreateJob::configure( QWidget *parent )
 {
-  d->windowId = windowId;
+  d->parentWidget = parent;
   d->doConfig = true;
 }
 
