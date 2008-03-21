@@ -156,6 +156,7 @@ install( FILES
   agentmanager.h
   agenttypemodel.h
   cachepolicy.h
+  changerecorder.h
   collection.h
   collectionattribute.h
   collectionattributefactory.h
