@@ -170,7 +170,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
 
       Item item( uid );
       item.setRemoteId( rid );
-      item.setRev( rev );
+      item.setRevision( rev );
       item.setMimeType( mimeType );
       if ( !item.isValid() )
         return;

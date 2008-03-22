@@ -161,19 +161,19 @@ class AKONADI_EXPORT Item : public Entity
     /**
       Returns the revision number of this item.
     */
-    int rev() const;
+    int revision() const;
 
     /**
-      Sets the revision number of this item to @p rev.
+      Sets the @p revision number of this item.
       Do not modify this value from within an application,
       it is updated automatically by the revision checking functions.
     */
-    void setRev( const int rev );
+    void setRevision( int revision );
 
     /**
       Increases the revision number of this item.
     */
-    void incRev();
+    void incrementRevision();
 
     /**
       Returns the mime type of this item.

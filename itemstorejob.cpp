@@ -135,7 +135,7 @@ void ItemStoreJob::doStart()
   if ( !d->revCheck || d->addFlags.contains( "\\Deleted" ) ) {
     command += "NOREV ";
   } else {
-    command += "REV " + QByteArray::number( d->item.rev() );
+    command += "REV " + QByteArray::number( d->item.revision() );
   }
   QList<QByteArray> changes;
   foreach ( int op, d->operations ) {
@@ -189,10 +189,10 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
     if ( data.startsWith( "OK" ) ) {
       // increase item revision of item, given by calling function
       if( d->revCheck )
-        d->item.incRev();
+        d->item.incrementRevision();
       else
         // increase item revision of own copy of item
-        d->item.incRev();
+        d->item.incrementRevision();
     } else {
       setError( Unknown );
       setErrorText( QString::fromUtf8( data ) );

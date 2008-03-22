@@ -170,7 +170,7 @@ void ItemSync::slotLocalListDone( KJob * job )
       Item i( remoteItem );
       i.setId( localItem.id() );
       i.setRemoteId( remoteItem.remoteId() );
-      i.setRev( localItem.rev() );
+      i.setRevision( localItem.revision() );
       ItemStoreJob *mod = new ItemStoreJob( (const Item)i, this );
       mod->storePayload();
       mod->setFlags( i.flags() );

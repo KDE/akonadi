@@ -107,17 +107,17 @@ QStringList Item::availableParts() const
   return payloadParts + d_func()->mParts.keys();
 }
 
-int Item::rev() const
+int Item::revision() const
 {
   return d_func()->mRevision;
 }
 
-void Item::setRev( const int rev )
+void Item::setRevision( const int rev )
 {
   d_func()->mRevision = rev;
 }
 
-void Item::incRev()
+void Item::incrementRevision()
 {
   d_func()->mRevision = d_func()->mRevision + 1;
 }
