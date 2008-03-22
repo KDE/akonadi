@@ -87,7 +87,7 @@ class AKONADI_EXPORT Resource : public QObject
      * @param remoteId The remote identifier of the item that is requested.
      * @param parts The item parts that should be fetched.
      */
-    virtual bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts ) = 0;
+    virtual bool requestItemDelivery( qint64 uid, const QString &remoteId, const QStringList &parts ) = 0;
 
     /**
      * This method is called whenever the resource should start synchronize all data.
@@ -103,7 +103,7 @@ class AKONADI_EXPORT Resource : public QObject
      * Synchronize the given collection.
      * @param collectionId The identifier of the collection to synchronize.
      */
-    virtual Q_NOREPLY void synchronizeCollection( int collectionId ) = 0;
+    virtual Q_NOREPLY void synchronizeCollection( qint64 collectionId ) = 0;
 
     /**
      * This method is used to set the name of the resource.

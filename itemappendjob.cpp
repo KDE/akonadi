@@ -37,7 +37,7 @@ class Akonadi::ItemAppendJob::Private
     Collection collection;
     Item item;
     QStringList parts;
-    int uid;
+    Item::Id uid;
     QByteArray data;
 };
 

@@ -211,7 +211,8 @@ void ImapParserTest::testParseParenthesizedList( )
 void ImapParserTest::testParseNumber()
 {
   QByteArray input = " 1a23.4";
-  int result, pos;
+  qint64 result;
+  int pos;
   bool ok;
 
   // empty string
@@ -223,19 +224,19 @@ void ImapParserTest::testParseNumber()
   pos = ImapParser::parseNumber( input, result, &ok, 0 );
   QCOMPARE( ok, true );
   QCOMPARE( pos, 2 );
-  QCOMPARE( result, 1 );
+  QCOMPARE( result, 1ll );
 
   // multiple digits
   pos = ImapParser::parseNumber( input, result, &ok, 3 );
   QCOMPARE( ok, true );
   QCOMPARE( pos, 5 );
-  QCOMPARE( result, 23 );
+  QCOMPARE( result, 23ll );
 
   // number at input end
   pos = ImapParser::parseNumber( input, result, &ok, 6 );
   QCOMPARE( ok, true );
   QCOMPARE( pos, 7 );
-  QCOMPARE( result, 4 );
+  QCOMPARE( result, 4ll );
 
   // out of bounds access
   pos = ImapParser::parseNumber( input, result, &ok, input.length() );

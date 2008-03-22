@@ -89,7 +89,7 @@ class AKONADI_EXPORT Collection : public Entity
 
       @param id The unique identifier of this collection.
     */
-    explicit Collection( int id );
+    explicit Collection( Id id );
 
     /**
       Destroys this collection.

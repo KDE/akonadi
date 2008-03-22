@@ -47,7 +47,7 @@ QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) con
   if ( !index.isValid() )
     return QVariant();
 
-  Collection col = collectionForId( CollectionModel::data( index, CollectionIdRole ).toInt() );
+  Collection col = collectionForId( CollectionModel::data( index, CollectionIdRole ).toLongLong() );
   if ( !col.isValid() )
     return QVariant();
   CollectionStatus status = col.status();

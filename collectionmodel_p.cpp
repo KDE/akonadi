@@ -35,19 +35,19 @@
 using namespace Akonadi;
 
 
-void CollectionModelPrivate::collectionRemoved( int collection )
+void CollectionModelPrivate::collectionRemoved( const Akonadi::Collection &collection )
 {
   Q_Q( CollectionModel );
-  QModelIndex colIndex = q->indexForId( collection );
+  QModelIndex colIndex = q->indexForId( collection.id() );
   if ( colIndex.isValid() ) {
     QModelIndex parentIndex = q->parent( colIndex );
     // collection is still somewhere in the hierarchy
     q->removeRowFromModel( colIndex.row(), parentIndex );
   } else {
-    if ( collections.contains( collection ) ) {
+    if ( collections.contains( collection.id() ) ) {
       // collection is orphan, ie. the parent has been removed already
-      collections.remove( collection );
-      childCollections.remove( collection );
+      collections.remove( collection.id() );
+      childCollections.remove( collection.id() );
     }
   }
 }
@@ -57,8 +57,8 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
   Q_Q( CollectionModel );
 
   // What kind of change is it ?
-  int oldParentId = collections.value( collection.id() ).parent();
-  int newParentId = collection.parent();
+  Collection::Id oldParentId = collections.value( collection.id() ).parent();
+  Collection::Id newParentId = collection.parent();
   if ( newParentId !=  oldParentId && oldParentId >= 0 ) { // It's a move
     q->removeRowFromModel( q->indexForId( collections[ collection.id() ].id() ).row(), q->indexForId( oldParentId ) );
     Collection newParent;
@@ -97,7 +97,7 @@ void CollectionModelPrivate::updateDone( KJob *job )
   }
 }
 
-void CollectionModelPrivate::collectionStatusChanged( int collection, const Akonadi::CollectionStatus & status )
+void CollectionModelPrivate::collectionStatusChanged( Collection::Id collection, const Akonadi::CollectionStatus & status )
 {
   Q_Q( CollectionModel );
 
@@ -197,8 +197,8 @@ void CollectionModelPrivate::init()
               q, SLOT(collectionChanged(const Akonadi::Collection&)) );
   q->connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
               q, SLOT(collectionChanged(Akonadi::Collection)) );
-  q->connect( monitor, SIGNAL(collectionRemoved(int,QString)),
-              q, SLOT(collectionRemoved(int)) );
-  q->connect( monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)),
-              q, SLOT(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
+  q->connect( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+              q, SLOT(collectionRemoved(Akonadi::Collection)) );
+  q->connect( monitor, SIGNAL(collectionStatusChanged(Collection::Id,Akonadi::CollectionStatus)),
+              q, SLOT(collectionStatusChanged(Collection::Id,Akonadi::CollectionStatus)) );
 }

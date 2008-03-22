@@ -134,7 +134,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     /**
       SetCollection emits this signal when the collection has changed.
      */
-     void collectionSet( const Collection &collection );
+     void collectionChanged( const Collection &collection );
 
   protected:
 

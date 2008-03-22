@@ -98,8 +98,8 @@ void AgentBasePrivate::init()
               q, SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
               q, SLOT( collectionChanged( const Akonadi::Collection& ) ) );
-  q->connect( monitor, SIGNAL( collectionRemoved( int, const QString& ) ),
-              q, SLOT( collectionRemoved( int, const QString& ) ) );
+  q->connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+              q, SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
 
   QTimer::singleShot( 0, q, SLOT(delayedInit()) );
 }
@@ -264,10 +264,9 @@ void AgentBase::collectionChanged( const Collection &collection )
   changeProcessed();
 }
 
-void AgentBase::collectionRemoved( int id, const QString &remoteId )
+void AgentBase::collectionRemoved( const Collection &collection )
 {
-  Q_UNUSED( id );
-  Q_UNUSED( remoteId );
+  Q_UNUSED( collection );
   changeProcessed();
 }
 

@@ -50,7 +50,7 @@ void CollectionComboBox::Private::activated( int index )
 
   const QModelIndex modelIndex = mComboBox->model()->index( index, 0 );
   if ( modelIndex.isValid() )
-    emit mParent->selectionChanged( Collection( modelIndex.data( CollectionModel::CollectionIdRole ).toInt() ) );
+    emit mParent->selectionChanged( Collection( modelIndex.data( CollectionModel::CollectionIdRole ).toLongLong() ) );
 }
 
 CollectionComboBox::CollectionComboBox( QWidget *parent )
@@ -84,7 +84,7 @@ Collection CollectionComboBox::selectedCollection() const
 
   const QModelIndex modelIndex = d->mComboBox->model()->index( index, 0 );
   if ( modelIndex.isValid() )
-    return Collection( modelIndex.data( CollectionModel::CollectionIdRole ).toInt() );
+    return Collection( modelIndex.data( CollectionModel::CollectionIdRole ).toLongLong() );
   else
     return Collection();
 }

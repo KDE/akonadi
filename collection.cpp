@@ -34,8 +34,8 @@ using namespace Akonadi;
 class Akonadi::CollectionPrivate : public EntityPrivate
 {
   public:
-    CollectionPrivate() :
-      EntityPrivate(),
+    CollectionPrivate( Collection::Id id = -1 ) :
+      EntityPrivate( id ),
       parentId( -1 ),
       type( Collection::Unknown )
     {}
@@ -92,10 +92,9 @@ Collection::Collection() :
   d->mId = lastId--;
 }
 
-Collection::Collection( int id ) :
-    Entity( new CollectionPrivate )
+Collection::Collection( Id id ) :
+    Entity( new CollectionPrivate( id ) )
 {
-  d_ptr->mId = id;
 }
 
 Collection::Collection(const Collection & other) :
@@ -196,7 +195,7 @@ Collection Collection::fromUrl( const KUrl &url )
 {
   QString colStr = url.queryItem( QLatin1String( "collection" ) );
   bool ok = false;
-  int colId = colStr.toInt( &ok );
+  Collection::Id colId = colStr.toLongLong( &ok );
   if ( !ok )
     return Collection();
   if ( colId == 0 )

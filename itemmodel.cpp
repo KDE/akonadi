@@ -299,7 +299,7 @@ void ItemModel::setCollection( const Collection &collection )
   connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsAdded(Akonadi::Item::List)) );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 
-  emit collectionSet( collection );
+  emit collectionChanged( collection );
 }
 
 void ItemModel::addFetchPart( const QString &identifier )

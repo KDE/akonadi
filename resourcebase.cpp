@@ -354,7 +354,7 @@ void ResourceBase::changesCommitted( const Collection &collection )
   changeProcessed();
 }
 
-bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, const QStringList &parts )
+bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, const QStringList &parts )
 {
   Q_D( ResourceBase );
   if ( !isOnline() ) {
@@ -480,7 +480,7 @@ void ResourceBase::synchronizeCollectionTree()
   d_func()->scheduler->scheduleCollectionTreeSync();
 }
 
-void ResourceBase::synchronizeCollection(int collectionId )
+void ResourceBase::synchronizeCollection(qint64 collectionId )
 {
   CollectionFetchJob* job = new CollectionFetchJob( Collection(collectionId), CollectionFetchJob::Local, session() );
   job->setResource( identifier() );

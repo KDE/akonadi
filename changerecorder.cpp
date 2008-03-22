@@ -71,11 +71,11 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
         msg.setSessionId( settings->value( QLatin1String( "sessionId" ) ).toByteArray() );
         msg.setType( (NotificationMessage::Type)settings->value( QLatin1String( "type" ) ).toInt() );
         msg.setOperation( (NotificationMessage::Operation)settings->value( QLatin1String( "op" ) ).toInt() );
-        msg.setUid( settings->value( QLatin1String( "uid" ) ).toInt() );
+        msg.setUid( settings->value( QLatin1String( "uid" ) ).toLongLong() );
         msg.setRemoteId( settings->value( QLatin1String( "rid" ) ).toString() );
         msg.setResource( settings->value( QLatin1String( "resource" ) ).toByteArray() );
-        msg.setParentCollection( settings->value( QLatin1String( "parentCol" ) ).toInt() );
-        msg.setParentDestCollection( settings->value( QLatin1String( "parentDestCol" ) ).toInt() );
+        msg.setParentCollection( settings->value( QLatin1String( "parentCol" ) ).toLongLong() );
+        msg.setParentDestCollection( settings->value( QLatin1String( "parentDestCol" ) ).toLongLong() );
         msg.setMimeType( settings->value( QLatin1String( "mimeType" ) ).toString() );
         msg.setItemParts( settings->value( QLatin1String( "itemParts" ) ).toStringList() );
         pendingNotifications << msg;

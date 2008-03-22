@@ -41,8 +41,8 @@ class ImapInterval::Private : public QSharedData
       end = other.end;
     }
 
-    int begin;
-    int end;
+    Id begin;
+    Id end;
 };
 
 class ImapSet::Private : public QSharedData
@@ -68,7 +68,7 @@ ImapInterval::ImapInterval(const ImapInterval & other) :
 {
 }
 
-ImapInterval::ImapInterval(int begin, int end) :
+ImapInterval::ImapInterval(Id begin, Id end) :
     d( new Private )
 {
   d->begin = begin;
@@ -91,7 +91,7 @@ bool ImapInterval::operator ==(const ImapInterval & other) const
   return ( d->begin == other.d->begin && d->end == other.d->end );
 }
 
-int ImapInterval::size() const
+ImapInterval::Id ImapInterval::size() const
 {
   if ( !d->begin && !d->end )
     return 0;
@@ -103,7 +103,7 @@ bool ImapInterval::hasDefinedBegin() const
   return d->begin != 0;
 }
 
-int ImapInterval::begin() const
+ImapInterval::Id ImapInterval::begin() const
 {
   return d->begin;
 }
@@ -113,21 +113,21 @@ bool ImapInterval::hasDefinedEnd() const
   return d->end != 0;
 }
 
-int ImapInterval::end() const
+ImapInterval::Id ImapInterval::end() const
 {
   if ( hasDefinedEnd() )
     return d->end;
   return 0xFFFFFFFF; // should be INT_MAX, but where is that defined again?
 }
 
-void ImapInterval::setBegin(int value)
+void ImapInterval::setBegin(Id value)
 {
   Q_ASSERT( value >= 0 );
   Q_ASSERT( value <= d->end || !hasDefinedEnd() );
   d->begin = value;
 }
 
-void ImapInterval::setEnd(int value)
+void ImapInterval::setEnd(Id value)
 {
   Q_ASSERT( value >= 0 );
   Q_ASSERT( value >= d->begin || !hasDefinedBegin() );
@@ -171,9 +171,9 @@ ImapSet & ImapSet::operator =(const ImapSet & other)
   return *this;
 }
 
-void ImapSet::add(const QList< int > & values)
+void ImapSet::add(const QList<Id> & values)
 {
-  QList<int> vals = values;
+  QList<Id> vals = values;
   qSort( vals );
   for( int i = 0; i < vals.count(); ++i ) {
     const int begin = vals[i];

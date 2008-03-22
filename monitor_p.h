@@ -49,21 +49,21 @@ class MonitorPrivate
     org::kde::Akonadi::NotificationManager *nm;
     Collection::List collections;
     QSet<QByteArray> resources;
-    QSet<int> items;
+    QSet<Item::Id> items;
     QSet<QString> mimetypes;
     bool monitorAll;
     QList<QByteArray> sessions;
     QStringList mFetchParts;
     QHash<KJob*,NotificationMessage> pendingJobs;
 
-    bool isCollectionMonitored( int collection, const QByteArray &resource ) const
+    bool isCollectionMonitored( Collection::Id collection, const QByteArray &resource ) const
     {
       if ( monitorAll || isCollectionMonitored( collection ) || resources.contains( resource ) )
         return true;
       return false;
     }
 
-    bool isItemMonitored( uint item, int collection, int collectionDest,
+    bool isItemMonitored( Item::Id item, Collection::Id collection, Collection::Id collectionDest,
                           const QString &mimetype, const QByteArray &resource ) const
     {
       if ( monitorAll || isCollectionMonitored( collection ) ||
@@ -102,9 +102,9 @@ class MonitorPrivate
 
   private:
     // collections that need a status update
-    QSet<int> recentlyChangedCollections;
+    QSet<Collection::Id> recentlyChangedCollections;
 
-    bool isCollectionMonitored( int collection ) const
+    bool isCollectionMonitored( Collection::Id collection ) const
     {
       if ( collections.contains( Collection( collection ) ) )
         return true;
@@ -130,13 +130,13 @@ class MonitorPrivate
       return false;
     }
 
-    void fetchStatus( int colId )
+    void fetchStatus( Collection::Id colId )
     {
       CollectionStatusJob *job = new CollectionStatusJob( Collection( colId ), q_ptr );
       QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotStatusChangedFinished(KJob*)) );
     }
 
-    void notifyCollectionStatusWatchers( int collection, const QByteArray &resource )
+    void notifyCollectionStatusWatchers( Collection::Id collection, const QByteArray &resource )
     {
       if ( isCollectionMonitored( collection, resource ) ) {
         if (recentlyChangedCollections.empty() )
@@ -155,7 +155,7 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
   Q_OBJECT
 
   public:
-    explicit ItemCollectionFetchJob( const Item &item, int collectionId, QObject *parent = 0 );
+    explicit ItemCollectionFetchJob( const Item &item, Collection::Id collectionId, QObject *parent = 0 );
     ~ItemCollectionFetchJob();
 
     Item item() const;
@@ -173,7 +173,7 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
 
   private:
     Item mReferenceItem;
-    int mCollectionId;
+    Collection::Id mCollectionId;
 
     Item mItem;
     Collection mCollection;

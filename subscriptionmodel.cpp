@@ -29,13 +29,13 @@ class SubscriptionModel::Private
   public:
     Private( SubscriptionModel* parent ) : q( parent ) {}
     SubscriptionModel* q;
-    QHash<int, bool> subscriptions;
-    QSet<int> changes;
+    QHash<Collection::Id, bool> subscriptions;
+    QSet<Collection::Id> changes;
 
     Collection::List changedSubscriptions( bool subscribed )
     {
       Collection::List list;
-      foreach ( int id, changes ) {
+      foreach ( Collection::Id id, changes ) {
         if ( subscriptions.value( id ) == subscribed )
           list << Collection( id );
       }
@@ -57,7 +57,7 @@ class SubscriptionModel::Private
       emit q->loaded();
     }
 
-    bool isSubscribable( int id )
+    bool isSubscribable( Collection::Id id )
     {
       Collection col = q->collectionForId( id );
       if ( col.type() == Collection::VirtualParent || col.type() == Collection::Structural )
@@ -87,7 +87,7 @@ QVariant SubscriptionModel::data(const QModelIndex & index, int role) const
   switch ( role ) {
     case Qt::CheckStateRole:
     {
-      int col = index.data( CollectionIdRole ).toInt();
+      const Collection::Id col = index.data( CollectionIdRole ).toLongLong();
       if ( !d->isSubscribable( col ) )
         return QVariant();
       if ( d->subscriptions.value( col ) )
@@ -96,7 +96,7 @@ QVariant SubscriptionModel::data(const QModelIndex & index, int role) const
     }
     case SubscriptionChangedRole:
     {
-      int col = index.data( CollectionIdRole ).toInt();
+      const Collection::Id col = index.data( CollectionIdRole ).toLongLong();
       if ( d->changes.contains( col ) )
         return true;
       return false;
@@ -108,7 +108,7 @@ QVariant SubscriptionModel::data(const QModelIndex & index, int role) const
 Qt::ItemFlags SubscriptionModel::flags(const QModelIndex & index) const
 {
   Qt::ItemFlags flags = CollectionModel::flags( index );
-  if ( d->isSubscribable( index.data( CollectionIdRole ).toInt() ) )
+  if ( d->isSubscribable( index.data( CollectionIdRole ).toLongLong() ) )
     return flags | Qt::ItemIsUserCheckable;
   return flags;
 }
@@ -116,7 +116,7 @@ Qt::ItemFlags SubscriptionModel::flags(const QModelIndex & index) const
 bool SubscriptionModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
   if ( role == Qt::CheckStateRole ) {
-    int col = index.data( CollectionIdRole ).toInt();
+    const Collection::Id col = index.data( CollectionIdRole ).toLongLong();
     if ( d->subscriptions.contains( col ) && d->subscriptions.value( col ) == (value == Qt::Checked) )
       return true; // no change
     d->subscriptions[ col ] = value == Qt::Checked;

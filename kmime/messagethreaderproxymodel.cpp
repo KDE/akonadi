@@ -85,10 +85,10 @@ class MessageThreaderProxyModel::Private
     {
       // Retrieve the item from the source model
       Item item = sourceMessageModel()->itemForIndex( sourceMessageModel()->index( i, 0 ) );
-      int id = item.id();
+      Entity::Id id = item.id();
       // Get his best potential parent using the mail threader parts
       readParentsFromParts( item );
-      int parentId = parentForItem( item.id() );
+      Entity::Id parentId = parentForItem( item.id() );
 
       /*
        * Fill in the tree maps
@@ -104,10 +104,10 @@ class MessageThreaderProxyModel::Private
       /*
        * Look for potential children into real children map
        */
-      QList<int> potentialChildren = realPerfectChildrenMap[ id ]
-                                     << realUnperfectChildrenMap[ id ]
-                                     << realSubjectChildrenMap[ id ];
-      foreach( int potentialChildId, potentialChildren ) {
+      QList<Entity::Id> potentialChildren = realPerfectChildrenMap[ id ]
+                                         << realUnperfectChildrenMap[ id ]
+                                         << realSubjectChildrenMap[ id ];
+      foreach( Entity::Id potentialChildId, potentialChildren ) {
           // This item can be a child of our item if:
           // - it's not the item itself (could we do that check when building the 'real' maps ?)
           // - his parent is set
@@ -120,7 +120,7 @@ class MessageThreaderProxyModel::Private
 
           {
             // Check that the current parent of this item is not better than ours
-            QList<int> realParentsList = realPerfectParentsMap[ potentialChildId ]
+            QList<Entity::Id> realParentsList = realPerfectParentsMap[ potentialChildId ]
                                          << realUnperfectParentsMap[ potentialChildId ]
                                          << realSubjectParentsMap[ potentialChildId ];
             int currentParentPos = realParentsList.indexOf( parentMap[ potentialChildId ] );
@@ -160,12 +160,12 @@ class MessageThreaderProxyModel::Private
     for ( int i = begin; i <= end; i++ )
     {
       Item item = sourceMessageModel()->itemForIndex( sourceMessageModel()->index( i, 0 ) );
-      int id = item.id();
-      int parentId = parentMap[ id ];
+      Entity::Id id = item.id();
+      Entity::Id parentId = parentMap[ id ];
       int row = childrenMap[ parentId ].indexOf( id );
 
       // Reparent the children to the closest parent
-      foreach( int childId, childrenMap[ id ] ) {
+      foreach( Entity::Id childId, childrenMap[ id ] ) {
         int childRow = childrenMap[ id ].indexOf( childId );
         mParent->beginRemoveRows( indexMap[ id ], childRow, childRow );
         childrenMap[ id ].removeAll( childId ); // There is only one ...
@@ -200,32 +200,32 @@ class MessageThreaderProxyModel::Private
    */
   void readParentsFromParts( const Item& item )
   {
-    QList<int> realPerfectParentsList = readParentsFromPart( item, MailThreaderAgent::PartPerfectParents );
-    QList<int> realUnperfectParentsList = readParentsFromPart( item, MailThreaderAgent::PartUnperfectParents );
-    QList<int> realSubjectParentsList = readParentsFromPart( item, MailThreaderAgent::PartSubjectParents );
+    QList<Entity::Id> realPerfectParentsList = readParentsFromPart( item, MailThreaderAgent::PartPerfectParents );
+    QList<Entity::Id> realUnperfectParentsList = readParentsFromPart( item, MailThreaderAgent::PartUnperfectParents );
+    QList<Entity::Id> realSubjectParentsList = readParentsFromPart( item, MailThreaderAgent::PartSubjectParents );
 
     realPerfectParentsMap[ item.id() ] = realPerfectParentsList;
     realUnperfectParentsMap[ item.id() ] = realUnperfectParentsList;
     realSubjectParentsMap[ item.id() ] = realSubjectParentsList;
 
     // Fill in the children maps
-    foreach( int parentId, realPerfectParentsList )
+    foreach( Entity::Id parentId, realPerfectParentsList )
       realPerfectChildrenMap[ parentId ] << item.id();
-    foreach( int parentId, realUnperfectParentsList )
+    foreach( Entity::Id parentId, realUnperfectParentsList )
       realUnperfectChildrenMap[ parentId ] << item.id();
-    foreach( int parentId, realSubjectParentsList )
+    foreach( Entity::Id parentId, realSubjectParentsList )
       realSubjectChildrenMap[ parentId ] << item.id();
   }
 
   // Helper function for the precedent one
-  QList<int> readParentsFromPart( const Item& item, const QLatin1String& part  )
+  QList<Entity::Id> readParentsFromPart( const Item& item, const QLatin1String& part  )
   {
     bool ok = false;
     QList<QByteArray> parentsIds = item.part( part ).split( ',' );
-    QList<int> result;
-    int parentId;
+    QList<Entity::Id> result;
+    Entity::Id parentId;
     foreach( QByteArray s, parentsIds ) {
-      parentId = s.toInt( &ok );
+      parentId = s.toLongLong( &ok );
       if( !ok )
         continue;
       result << parentId;
@@ -239,13 +239,13 @@ class MessageThreaderProxyModel::Private
    * @param id the item id
    * @returns the parent id
    */
-  int parentForItem( int id )
+  Entity::Id parentForItem( Entity::Id id )
   {
 
-    QList<int> parentsIds;
+    QList<Entity::Id> parentsIds;
     parentsIds << realPerfectParentsMap[ id ] << realUnperfectParentsMap[ id ] << realSubjectParentsMap[ id ];
 
-    foreach( int parentId, parentsIds )
+    foreach( Entity::Id parentId, parentsIds )
     {
     // Check that the parent is in the collection
     // This is time consuming but ... required.
@@ -259,7 +259,7 @@ class MessageThreaderProxyModel::Private
   }
 
   // -1 is an invalid id which means 'root'
-  int idForIndex( const QModelIndex& index )
+  Entity::Id idForIndex( const QModelIndex& index )
   {
     return index.isValid() ? index.internalId() : -1;
   }
@@ -271,22 +271,22 @@ class MessageThreaderProxyModel::Private
    * It tries to be as close as possible from the real structure, given that not every parents
    * are present in the collection
    */
-  QHash<int, QList<int> > childrenMap;
-  QHash<int, int> parentMap;
-  QHash<int, QModelIndex> indexMap;
+  QHash<Entity::Id, QList<Entity::Id> > childrenMap;
+  QHash<Entity::Id, Entity::Id> parentMap;
+  QHash<Entity::Id, QModelIndex> indexMap;
 
   /*
    * These maps store the real parents, as read from the item parts
    * In the best case, the list should contain only one element ( = unique parent )
    * If there isn't only one, the algorithm will pick up the first one in the current collection
    */
-  QHash<int, QList<int> > realPerfectParentsMap;
-  QHash<int, QList<int> > realUnperfectParentsMap;
-  QHash<int, QList<int> > realSubjectParentsMap;
+  QHash<Entity::Id, QList<Entity::Id> > realPerfectParentsMap;
+  QHash<Entity::Id, QList<Entity::Id> > realUnperfectParentsMap;
+  QHash<Entity::Id, QList<Entity::Id> > realSubjectParentsMap;
 
-  QHash<int, QList<int> > realPerfectChildrenMap;
-  QHash<int, QList<int> > realUnperfectChildrenMap;
-  QHash<int, QList<int> > realSubjectChildrenMap;
+  QHash<Entity::Id, QList<Entity::Id> > realPerfectChildrenMap;
+  QHash<Entity::Id, QList<Entity::Id> > realUnperfectChildrenMap;
+  QHash<Entity::Id, QList<Entity::Id> > realSubjectChildrenMap;
 };
 
 MessageThreaderProxyModel::MessageThreaderProxyModel( QObject *parent )
@@ -303,7 +303,7 @@ MessageThreaderProxyModel::~MessageThreaderProxyModel()
 
 QModelIndex MessageThreaderProxyModel::index( int row, int column, const QModelIndex& parent ) const
 {
-  int parentId = d->idForIndex( parent );
+  Entity::Id parentId = d->idForIndex( parent );
 
   if ( row < 0
        || column < 0
@@ -312,7 +312,7 @@ QModelIndex MessageThreaderProxyModel::index( int row, int column, const QModelI
        )
     return QModelIndex();
 
-  int id = d->childrenMap[ parentId ].at( row );
+  Entity::Id id = d->childrenMap[ parentId ].at( row );
 
   return createIndex( row, column, id );
 }
@@ -322,7 +322,7 @@ QModelIndex MessageThreaderProxyModel::parent( const QModelIndex & index ) const
   if ( !index.isValid() )
     return QModelIndex();
 
-  int parentId = d->parentMap[ index.internalId() ];
+  Entity::Id parentId = d->parentMap[ index.internalId() ];
 
   if ( parentId == -1 )
     return QModelIndex();
@@ -342,7 +342,7 @@ QModelIndex MessageThreaderProxyModel::mapToSource( const QModelIndex& index ) c
 QModelIndex MessageThreaderProxyModel::mapFromSource( const QModelIndex& index ) const
 {
   Item item = d->sourceMessageModel()->itemForIndex( index );
-  int id = item.id();
+  Entity::Id id = item.id();
   //return d->indexMap[ id  ]; // FIXME take column in account like mapToSource
   return MessageThreaderProxyModel::index( d->indexMap[ id ].row(), index.column(), d->indexMap[ id ].parent() );
 }
@@ -367,7 +367,7 @@ void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
   // TODO disconnect old model
   connect( sourceModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( slotInsertRows( QModelIndex, int, int ) ) );
   connect( sourceModel(), SIGNAL( rowsAboutToBeRemoved( QModelIndex, int, int ) ), SLOT( slotRemoveRows( QModelIndex, int, int ) ) );
-  connect( d->sourceMessageModel(), SIGNAL( collectionSet( Collection ) ), SLOT( slotCollectionChanged() ) );
+  connect( d->sourceMessageModel(), SIGNAL( collectionChanged( Collection ) ), SLOT( slotCollectionChanged() ) );
 }
 
 
@@ -384,7 +384,7 @@ int MessageThreaderProxyModel::columnCount( const QModelIndex& index ) const
 
 int MessageThreaderProxyModel::rowCount( const QModelIndex& index ) const
 {
-  int id = d->idForIndex( index );
+  Entity::Id id = d->idForIndex( index );
   if ( id == -1 )
     return d->childrenMap[ -1 ].count();
 

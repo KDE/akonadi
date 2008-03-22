@@ -217,7 +217,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
       @param id The id of the deleted collection.
       @param remoteId The remote id of the deleted collection.
     */
-    virtual void collectionRemoved( int id, const QString &remoteId );
+    virtual void collectionRemoved( const Akonadi::Collection &collection );
 
   protected:
     //@cond PRIVATE

@@ -22,11 +22,12 @@
 
 #include "akonadi_export.h"
 
+#include <akonadi/collection.h>
+
 #include <QtCore/QAbstractItemModel>
 
 namespace Akonadi {
 
-class Collection;
 class CollectionModelPrivate;
 
 /**
@@ -132,7 +133,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Returns the collection for a given collection id.
       @param id A collection id.
     */
-    Collection collectionForId( int id ) const;
+    Collection collectionForId( Collection::Id id ) const;
 
     /**
       Enable fetching of collection status information.
@@ -151,7 +152,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Helper function to generate a model index for a given collection reference.
     */
-    QModelIndex indexForId( int id, int column = 0 );
+    QModelIndex indexForId( Collection::Id id, int column = 0 );
 
     /**
       Helper method to remove a single row from the model (not from the Akonadi backend).
@@ -177,10 +178,10 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     Q_DECLARE_PRIVATE( CollectionModel )
 
     Q_PRIVATE_SLOT( d_func(), void init() )
-    Q_PRIVATE_SLOT( d_func(), void collectionRemoved( int ) )
+    Q_PRIVATE_SLOT( d_func(), void collectionRemoved( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void collectionChanged( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void updateDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void collectionStatusChanged( int, const Akonadi::CollectionStatus& ) )
+    Q_PRIVATE_SLOT( d_func(), void collectionStatusChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatus& ) )
     Q_PRIVATE_SLOT( d_func(), void listDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void editDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void dropResult( KJob* ) )

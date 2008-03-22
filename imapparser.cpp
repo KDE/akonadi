@@ -46,7 +46,7 @@ class ImapParser::Private {
           return false;
 
         // TODO error handling
-        literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toInt();
+        literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toLongLong();
 
         // empty literal
         if ( literalSize == 0 )
@@ -244,7 +244,7 @@ int ImapParser::parseString(const QByteArray & data, QString & result, int start
   return end;
 }
 
-int ImapParser::parseNumber(const QByteArray & data, int & result, bool * ok, int start)
+int ImapParser::parseNumber(const QByteArray & data, qint64 & result, bool * ok, int start)
 {
   if ( ok )
     *ok = false;
@@ -257,7 +257,7 @@ int ImapParser::parseNumber(const QByteArray & data, int & result, bool * ok, in
       break;
   }
   QByteArray tmp = data.mid( begin, pos - begin );
-  result = tmp.toInt( ok );
+  result = tmp.toLongLong( ok );
   return pos;
 }
 
@@ -277,7 +277,7 @@ QByteArray ImapParser::quote(const QByteArray & data)
 int ImapParser::parseSequenceSet(const QByteArray & data, ImapSet & result, int start)
 {
   int begin = stripLeadingSpaces( data, start );
-  int value = -1, lower = -1, upper = -1;
+  qint64 value = -1, lower = -1, upper = -1;
   for ( int i = begin; i < data.length(); ++i ) {
     if ( data[i] == '*' ) {
       value = 0;

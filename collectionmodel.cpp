@@ -131,7 +131,7 @@ QModelIndex CollectionModel::index( int row, int column, const QModelIndex & par
   const Q_D( CollectionModel );
   if (column >= columnCount() || column < 0) return QModelIndex();
 
-  QList<int> list;
+  QList<Collection::Id> list;
   if ( !parent.isValid() )
     list = d->childCollections.value( Collection::root().id() );
   else
@@ -162,7 +162,7 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
   if ( !parentCol.isValid() )
     return QModelIndex();
 
-  QList<int> list;
+  QList<Collection::Id> list;
   list = d->childCollections.value( parentCol.parent() );
 
   int parentRow = list.indexOf( parentCol.id() );
@@ -175,7 +175,7 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
 int CollectionModel::rowCount( const QModelIndex & parent ) const
 {
   const  Q_D( CollectionModel );
-  QList<int> list;
+  QList<Collection::Id> list;
   if ( parent.isValid() )
     list = d->childCollections.value( parent.internalId() );
   else
@@ -194,7 +194,7 @@ QVariant CollectionModel::headerData( int section, Qt::Orientation orientation, 
 bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
 {
   Q_D( CollectionModel );
-  QList<int> list;
+  QList<Collection::Id> list;
   Collection parentCol;
   if ( parent.isValid() ) {
     parentCol = d->collections.value( parent.internalId() );
@@ -210,8 +210,8 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
   }
 
   beginRemoveRows( parent, row, row );
-  int delColId = list.takeAt( row );
-  foreach( int childColId, d->childCollections[ delColId ] )
+  Collection::Id delColId = list.takeAt( row );
+  foreach( Collection::Id childColId, d->childCollections[ delColId ] )
     d->collections.remove( childColId );
   d->collections.remove( delColId );
   d->childCollections.remove( delColId ); // remove children of deleted collection
@@ -221,18 +221,18 @@ bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
   return true;
 }
 
-QModelIndex CollectionModel::indexForId( int id, int column )
+QModelIndex CollectionModel::indexForId( Collection::Id id, int column )
 {
   Q_D( CollectionModel );
   if ( !d->collections.contains( id ) )
     return QModelIndex();
 
-  int parentId = d->collections.value( id ).parent();
+  Collection::Id parentId = d->collections.value( id ).parent();
   // check if parent still exist or if this is an orphan collection
   if ( parentId != Collection::root().id() && !d->collections.contains( parentId ) )
     return QModelIndex();
 
-  QList<int> list = d->childCollections.value( parentId );
+  QList<Collection::Id> list = d->childCollections.value( parentId );
   int row = list.indexOf( id );
 
   if ( row >= 0 )
@@ -363,7 +363,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
   return true;
 }
 
-Collection CollectionModel::collectionForId(int id) const
+Collection CollectionModel::collectionForId(Collection::Id id) const
 {
   const Q_D( CollectionModel );
   return d->collections.value( id );

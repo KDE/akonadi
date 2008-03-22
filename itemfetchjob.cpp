@@ -144,7 +144,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       ImapParser::parseParenthesizedList( data, fetchResponse, begin + 6 );
 
       // create a new item object
-      int uid = -1;
+      Item::Id uid = -1;
       int rev = -1;
       QString rid;
       QString mimeType;
@@ -154,7 +154,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
         const QByteArray value = fetchResponse.value( i + 1 );
 
         if ( key == "UID" )
-          uid = value.toInt();
+          uid = value.toLongLong();
         else if ( key == "REV" )
           rev = value.toInt();
         else if ( key == "REMOTEID" )

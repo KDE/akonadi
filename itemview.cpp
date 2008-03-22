@@ -66,7 +66,7 @@ void ItemView::Private::itemActivated( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  const int currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toInt();
+  const Item::Id currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toLongLong();
   if ( currentItem <= 0 )
     return;
 
@@ -83,7 +83,7 @@ void ItemView::Private::itemCurrentChanged( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  const int currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toInt();
+  const Item::Id currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toLongLong();
   if ( currentItem <= 0 )
     return;
 

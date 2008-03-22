@@ -159,7 +159,7 @@ void MonitorPrivate::slotStatusChangedFinished( KJob* job )
 
 void MonitorPrivate::slotFlushRecentlyChangedCollections()
 {
-  foreach( int collection, recentlyChangedCollections ) {
+  foreach( Collection::Id collection, recentlyChangedCollections ) {
     if ( fetchCollectionStatus ) {
       fetchStatus( collection );
     } else {
@@ -236,7 +236,7 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
       emit q_ptr->collectionChanged( collection );
       break;
     case NotificationMessage::Remove:
-      emit q_ptr->collectionRemoved( collection.id(), collection.remoteId() );
+      emit q_ptr->collectionRemoved( collection );
       break;
     default:
       Q_ASSERT_X( false, "MonitorPrivate::emitCollectionNotification", "Invalid enum value" );
@@ -291,7 +291,7 @@ void MonitorPrivate::slotCollectionJobFinished( KJob* job )
 }
 
 
-ItemCollectionFetchJob::ItemCollectionFetchJob( const Item &item, int collectionId, QObject *parent )
+ItemCollectionFetchJob::ItemCollectionFetchJob( const Item &item, Collection::Id collectionId, QObject *parent )
   : Job( parent ),
     mReferenceItem( item ), mCollectionId( collectionId ), mFetchAllParts( false )
 {

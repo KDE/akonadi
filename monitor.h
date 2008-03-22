@@ -164,19 +164,18 @@ class AKONADI_EXPORT Monitor : public QObject
 
     /**
       Emitted if a monitored collection has been removed from the storage.
-      @param collection The identifier of the removed collection.
-      @param remoteId The remote identifier of the removed collection.
+      @param collection The removed collection.
     */
-    void collectionRemoved( int collection, const QString &remoteId );
+    void collectionRemoved( const Akonadi::Collection &collection );
 
     /**
       Emitted if the status information of a monitored collection
       has changed.
-      @param collection The collection identifier of the changed collection.
+      @param id The collection identifier of the changed collection.
       @param status The updated collection status, invalid of automatic
       fetching of status changes is disabled.
     */
-    void collectionStatusChanged( int collection, const Akonadi::CollectionStatus &status );
+    void collectionStatusChanged( Akonadi::Collection::Id id, const Akonadi::CollectionStatus &status );
 
   protected:
     //@cond PRIVATE

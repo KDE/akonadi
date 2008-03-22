@@ -415,8 +415,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     // dbus resource interface
     friend class ::ResourceAdaptor;
-    void synchronizeCollection( int collectionId );
-    bool requestItemDelivery( int uid, const QString &remoteId, const QStringList &parts );
+    void synchronizeCollection( qint64 collectionId );
+    bool requestItemDelivery( qint64 uid, const QString &remoteId, const QStringList &parts );
 
   private:
     Q_DECLARE_PRIVATE( ResourceBase )

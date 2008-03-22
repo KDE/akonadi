@@ -169,7 +169,7 @@ class StandardActionManager::Private
                                                   QString(), 0, parentWidget );
       if ( name.isEmpty() )
         return;
-      int parentId = index.data( CollectionModel::CollectionIdRole ).toInt();
+      Collection::Id parentId = index.data( CollectionModel::CollectionIdRole ).toLongLong();
       if ( parentId <= 0 )
         return;
 
@@ -196,7 +196,7 @@ class StandardActionManager::Private
            i18n("Delete folder?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
-      const int colId = index.data( CollectionModel::CollectionIdRole ).toInt();
+      const Collection::Id colId = index.data( CollectionModel::CollectionIdRole ).toLongLong();
       if ( colId <= 0 )
         return;
 

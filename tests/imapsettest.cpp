@@ -25,18 +25,18 @@
 
 QTEST_KDEMAIN( ImapSetTest, NoGUI )
 
-Q_DECLARE_METATYPE( QList<int> )
+Q_DECLARE_METATYPE( QList<qint64> )
 
 using namespace Akonadi;
 
 void ImapSetTest::testAddList_data()
 {
-  QTest::addColumn<QList<int> >( "source" );
+  QTest::addColumn<QList<qint64> >( "source" );
   QTest::addColumn<ImapInterval::List>( "intervals" );
   QTest::addColumn<QByteArray>( "seqset" );
 
   // empty set
-  QList<int> source;
+  QList<qint64> source;
   ImapInterval::List intervals;
   QTest::newRow( "empty" ) << source << intervals << QByteArray();
 
@@ -65,7 +65,7 @@ void ImapSetTest::testAddList_data()
 
 void ImapSetTest::testAddList()
 {
-  QFETCH( QList<int>, source );
+  QFETCH( QList<qint64>, source );
   QFETCH( ImapInterval::List, intervals );
   QFETCH( QByteArray, seqset );
 

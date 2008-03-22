@@ -46,7 +46,7 @@ class CollectionSync::Private
     QSet<Collection> unprocessedLocalCollections;
 
     // remote: mapped id -> collection
-    QHash<int, Collection> remoteCollections;
+    QHash<Collection::Id, Collection> remoteCollections;
 
     // remote collections waiting for a parent
     QList<Collection> orphanRemoteCollections;

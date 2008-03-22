@@ -52,7 +52,7 @@ class CollectionView::Private
     void dragExpand();
     void itemClicked( const QModelIndex& );
     void itemCurrentChanged( const QModelIndex& );
-    bool hasParent( const QModelIndex& idx, int parentId );
+    bool hasParent( const QModelIndex& idx, Collection::Id parentId );
 
     CollectionView *mParent;
     QModelIndex dragOverIndex;
@@ -80,11 +80,11 @@ void CollectionView::Private::init()
                     mParent, SLOT( itemClicked( const QModelIndex& ) ) );
 }
 
-bool CollectionView::Private::hasParent( const QModelIndex& idx, int parentId )
+bool CollectionView::Private::hasParent( const QModelIndex& idx, Collection::Id parentId )
 {
   QModelIndex idx2 = idx;
   while( idx2.isValid() ) {
-    if ( mParent->model()->data( idx2, CollectionModel::CollectionIdRole).toInt() == parentId )
+    if ( mParent->model()->data( idx2, CollectionModel::CollectionIdRole).toLongLong() == parentId )
       return true;
 
     idx2 = idx2.parent();
@@ -103,7 +103,7 @@ void CollectionView::Private::itemClicked( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  int currentCollection = index.model()->data( index, CollectionModel::CollectionIdRole ).toInt();
+  Collection::Id currentCollection = index.model()->data( index, CollectionModel::CollectionIdRole ).toLongLong();
   if ( currentCollection <= 0 )
     return;
 
@@ -115,7 +115,7 @@ void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  int currentCollection = index.model()->data( index, CollectionModel::CollectionIdRole ).toInt();
+  Collection::Id currentCollection = index.model()->data( index, CollectionModel::CollectionIdRole ).toLongLong();
   if ( currentCollection <= 0 )
     return;
 

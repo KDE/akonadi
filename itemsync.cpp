@@ -42,7 +42,7 @@ class ItemSync::Private
 
     Collection syncCollection;
 
-    QHash<int, Akonadi::Item> localItemsById;
+    QHash<Item::Id, Akonadi::Item> localItemsById;
     QHash<QString, Akonadi::Item> localItemsByRemoteId;
     QSet<Akonadi::Item> unprocessedLocalItems;
 

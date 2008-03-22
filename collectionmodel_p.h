@@ -48,8 +48,8 @@ class CollectionModelPrivate
     }
 
     CollectionModel *q_ptr;
-    QHash<int, Collection> collections;
-    QHash<int, QList<int> > childCollections;
+    QHash<Collection::Id, Collection> collections;
+    QHash<Collection::Id, QList<Collection::Id> > childCollections;
     Monitor *monitor;
     Session *session;
     QStringList mimeTypes;
@@ -57,10 +57,10 @@ class CollectionModelPrivate
     bool unsubscribed;
 
     void init();
-    void collectionRemoved( int );
+    void collectionRemoved( const Akonadi::Collection& );
     void collectionChanged( const Akonadi::Collection& );
     void updateDone( KJob* );
-    void collectionStatusChanged( int, const Akonadi::CollectionStatus& );
+    void collectionStatusChanged( Collection::Id, const Akonadi::CollectionStatus& );
     void listDone( KJob* );
     void editDone( KJob* );
     void dropResult( KJob* );
