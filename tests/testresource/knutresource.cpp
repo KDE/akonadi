@@ -26,7 +26,7 @@
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
 
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/itemappendjob.h>
 #include <akonadi/itemfetchjob.h>
