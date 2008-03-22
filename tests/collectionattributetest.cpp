@@ -125,8 +125,8 @@ void CollectionAttributeTest::testAttributes()
 
 
   // delete a custom attribute
+  col.removeAttribute<TestAttribute>();
   modify = new CollectionModifyJob( col, this );
-  modify->removeAttribute( attr->type() );
   QVERIFY( modify->exec() );
 
   list = new CollectionFetchJob( col, CollectionFetchJob::Local, this );

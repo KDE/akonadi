@@ -84,13 +84,14 @@ void Entity::addAttribute(Attribute * attr)
   if ( d_ptr->mAttributes.contains( attr->type() ) )
     delete d_ptr->mAttributes.take( attr->type() );
   d_ptr->mAttributes.insert( attr->type(), attr );
+  d_ptr->mDeletedAttributes.remove( attr->type() );
 }
 
-void Entity::removeAttribute(Attribute * attr)
+void Entity::removeAttribute( const QByteArray &type )
 {
-  if ( d_ptr->mAttributes.contains( attr->type() ) ) {
-    d_ptr->mDeletedAttributes.insert( attr->type() );
-    delete d_ptr->mAttributes.take( attr->type() );
+  if ( d_ptr->mAttributes.contains( type ) ) {
+    d_ptr->mDeletedAttributes.insert( type );
+    delete d_ptr->mAttributes.take( type );
   }
 }
 

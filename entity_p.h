@@ -52,6 +52,7 @@ class EntityPrivate : public QSharedData
       mRemoteId = other.mRemoteId;
       foreach ( Attribute* attr, other.mAttributes )
         mAttributes.insert( attr->type(), attr->clone() );
+      mDeletedAttributes = other.mDeletedAttributes;
     }
 
     virtual void resetChangeLog()

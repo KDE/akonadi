@@ -20,6 +20,7 @@
 #include "collectionmodifyjob.h"
 #include "imapparser_p.h"
 #include "protocolhelper.h"
+#include "entity_p.h"
 
 using namespace Akonadi;
 
@@ -33,8 +34,6 @@ class Akonadi::CollectionModifyJobPrivate
     bool setPolicy;
     QString name;
     Collection parent;
-    QList<QPair<QByteArray,QByteArray> > attributes;
-    QList<QByteArray> removeAttributes;
 };
 
 CollectionModifyJob::CollectionModifyJob(const Collection &collection, QObject * parent) :
@@ -71,7 +70,7 @@ void CollectionModifyJob::doStart()
     changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->policy );
   if ( d->collection.attributes().count() > 0 )
     changes += ' ' + ProtocolHelper::attributesToByteArray( d->collection );
-  foreach ( const QByteArray b, d->removeAttributes )
+  foreach ( const QByteArray b, d->collection.d_ptr->mDeletedAttributes )
     changes += " -" + b;
   if ( changes.isEmpty() ) {
     emitResult();
@@ -101,11 +100,6 @@ void CollectionModifyJob::setName(const QString & name)
 void CollectionModifyJob::setParent(const Collection & parent)
 {
   d->parent = parent;
-}
-
-void CollectionModifyJob::removeAttribute(const QByteArray & attrName)
-{
-  d->removeAttributes << attrName;
 }
 
 #include "collectionmodifyjob.moc"

@@ -73,12 +73,6 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
     */
     void setParent( const Collection &parent );
 
-    /**
-      Removes the given collection attribute.
-      @param attrName The attribute name.
-    */
-    void removeAttribute( const QByteArray &attrName );
-
   protected:
     virtual void doStart();
 
