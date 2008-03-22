@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -21,24 +21,33 @@
 #define AKONADI_AGENTTYPEMODEL_H
 
 #include "akonadi_export.h"
+
 #include <QtCore/QAbstractItemModel>
 
 namespace Akonadi {
 
 /**
- * This class provides a model for available agent types.
+ * @short The AgentTypeModel provides a data model for Akonadi Agent Types.
+ *
+ * This class provides access to the available Agent Types of Akonadi, their identifier,
+ * description, supported mimetypes and capabilities.
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
 {
   Q_OBJECT
 
   public:
+    /**
+     * Describes the roles of this model.
+     */
     enum Role
     {
-      TypeIdentifierRole = Qt::UserRole + 1,
-      CommentRole,
-      MimeTypesRole,
-      CapabilitiesRole
+      TypeIdentifierRole = Qt::UserRole + 1,  ///< The identifier of the agent type
+      CommentRole,                            ///< A description of the agent type
+      MimeTypesRole,                          ///< A list of supported mimetypes
+      CapabilitiesRole                        ///< A list of supported capabilities
     };
 
     /**
@@ -51,12 +60,29 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
      */
     virtual ~AgentTypeModel();
 
+    /**
+     * Reimplemented from QAbstractItemModel.
+     */
     virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
+
+    /**
+     * Reimplemented from QAbstractItemModel.
+     */
     virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
 
+    /**
+     * Reimplemented from QAbstractItemModel.
+     */
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
 
+    /**
+     * Reimplemented from QAbstractItemModel.
+     */
     virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
+
+    /**
+     * Reimplemented from QAbstractItemModel.
+     */
     virtual QModelIndex parent( const QModelIndex &index ) const;
 
   private:

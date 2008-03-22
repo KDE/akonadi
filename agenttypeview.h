@@ -60,9 +60,9 @@ class AKONADI_EXPORT AgentTypeView : public QWidget
     QString currentAgentType() const;
 
     /**
-      Returns the agent filter proxy model, use this to filter by
-      agent mimetype or capabilities.
-    */
+     * Returns the agent filter proxy model, use this to filter by
+     * agent mimetype or capabilities.
+     */
     AgentFilterProxyModel* agentFilterProxyModel() const;
 
   Q_SIGNALS:

@@ -38,6 +38,10 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
       Shows all agents by default.
     */
     AgentFilterProxyModel( QObject *parent = 0 );
+
+    /**
+     * Destroys the agent filter proxy model.
+     */
     ~AgentFilterProxyModel();
 
     /**
@@ -46,7 +50,7 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
     void addMimeType( const QString &mimeType );
 
     /**
-      Accept agents with the given capability.
+      Accept agents with the given @p capability.
     */
     void addCapability( const QString &capability );
 

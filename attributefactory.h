@@ -25,30 +25,50 @@
 namespace Akonadi {
 
 /**
-  Factory for collection attributes.
-*/
+ * @short The AttributeFactory class provides the functionality of registering and creating arbitrary
+ *        entity attributes.
+ *
+ * This class provides the functionality of registering and creating arbitrary Attributes for Entity
+ * and its subclasses (e.g. Item and Collection).
+ */
 class AKONADI_EXPORT AttributeFactory
 {
   public:
     /**
-      Register a custom attribute.
-    */
+     * Register a custom attribute of type T.
+     */
     template <typename T> inline static void registerAttribute()
     {
       AttributeFactory::self()->registerAttribute( new T );
     }
 
     /**
-      Creates a collection attribute object of the given type.
-      @param type The attribute type.
-    */
+     * Creates a collection attribute object of the given type.
+     *
+     * @param type The attribute type.
+     */
     static Attribute* createAttribute( const QByteArray &type );
 
   private:
+    /**
+     * Creates a new attribute factory.
+     */
     AttributeFactory();
+
+    /**
+     * Destroys the attribute factory.
+     */
     ~AttributeFactory();
+
+    /**
+     * Returns the global instance of the attribute factory.
+     */
     static AttributeFactory* self();
-    void registerAttribute( Attribute *attr );
+
+    /**
+     * Registers a new @p attribute to the factory.
+     */
+    void registerAttribute( Attribute *attribute );
 
   private:
     class Private;

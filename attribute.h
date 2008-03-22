@@ -30,40 +30,44 @@ class QString;
 namespace Akonadi {
 
 /**
-  Stores specific collection attributes (ACLs, unread counts, quotas, etc.).
-  Every collection can have zero ore one attribute of every type.
-*/
+ * Stores specific collection attributes (ACLs, unread counts, quotas, etc.).
+ * Every collection can have zero ore one attribute of every type.
+ */
 class AKONADI_EXPORT Attribute
 {
   public:
+    /**
+     * Describes a list of attributes.
+     */
     typedef QList<Attribute*> List;
 
     /**
-      Returns the attribute name of this collection.
-    */
+     * Returns the attribute name of this collection.
+     */
     virtual QByteArray type() const = 0;
 
     /**
-      Destroys this attribute.
-    */
+     * Destroys this attribute.
+     */
     virtual ~Attribute();
 
     /**
-      Creates a copy of this object.
-    */
+     * Creates a copy of this object.
+     */
     virtual Attribute* clone() const = 0;
 
     /**
-      Returns a QByteArray representation of the attribute which will be
-      storaged. This can be raw binary data, no encoding needs to be applied.
-    */
+     * Returns a QByteArray representation of the attribute which will be
+     * storaged. This can be raw binary data, no encoding needs to be applied.
+     */
     virtual QByteArray toByteArray() const = 0;
 
     /**
-      Sets the data of this attribute, using the same encoding
-      as returned by toByteArray().
-      @param data The encoded attribute data.
-    */
+     * Sets the data of this attribute, using the same encoding
+     * as returned by toByteArray().
+     *
+     * @param data The encoded attribute data.
+     */
     virtual void setData( const QByteArray &data ) = 0;
 };
 

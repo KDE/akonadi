@@ -41,7 +41,7 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     explicit AgentInstanceCreateJob( const QString &typeIdentifier, QObject *parent = 0 );
 
     /**
-      Destructor.
+      Destroys the agent instance creation job.
     */
     ~AgentInstanceCreateJob();
 
@@ -56,6 +56,9 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     */
     QString instanceIdentifier() const;
 
+    /**
+     * Starts the instance creation.
+     */
     void start();
 
   private:

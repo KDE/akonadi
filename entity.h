@@ -120,7 +120,7 @@ class AKONADI_EXPORT Entity
     /**
       Returns all attributes.
     */
-    QList<Attribute*> attributes() const;
+    Attribute::List attributes() const;
 
     /**
       Removes all attributes of this object. The attributes are deleted.

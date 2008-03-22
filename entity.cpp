@@ -100,7 +100,7 @@ bool Entity::hasAttribute(const QByteArray & type) const
   return d_ptr->mAttributes.contains( type );
 }
 
-QList< Attribute * > Entity::attributes() const
+Attribute::List Entity::attributes() const
 {
   return d_ptr->mAttributes.values();
 }

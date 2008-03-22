@@ -93,34 +93,34 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
     /**
-      Reimplemented.
+      Reimplemented from QAbstractItemModel.
     */
     bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
 
     /**
-      Reimplemented.
+      Reimplemented from QAbstractItemModel.
     */
     Qt::ItemFlags flags( const QModelIndex &index ) const;
 
     /**
-      Reimplemented.
+      Reimplemented from QAbstractItemModel.
     */
     virtual Qt::DropActions supportedDropActions() const;
+
+    /**
+      Reimplemented from QAbstractItemModel.
+     */
+    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
+
+    /**
+      Reimplemented from QAbstractItemModel.
+    */
+   virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
     /**
       Reimplemented.
     */
     virtual QStringList mimeTypes() const;
-
-    /**
-      Reimplemented.
-     */
-    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
-
-    /**
-      Reimplemented.
-    */
-   virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
   Q_SIGNALS:
     /**

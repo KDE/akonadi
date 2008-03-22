@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -31,8 +31,10 @@ class QWidget;
 namespace Akonadi {
 
 /**
-  This class provides an interface to manage agents.
-*/
+ * This class provides an interface to manage agents.
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ */
 class AKONADI_EXPORT AgentManager : public QObject
 {
   Q_OBJECT
@@ -44,9 +46,9 @@ class AKONADI_EXPORT AgentManager : public QObject
      */
     enum Status
     {
-      Ready = 0,
-      Syncing,
-      Error
+      Ready = 0,   ///< The agent instance is ready to work
+      Syncing,     ///< The agent instance is currently syncing
+      Error        ///< An error occured inside the agent instance
     };
 
     /**
@@ -163,6 +165,7 @@ class AKONADI_EXPORT AgentManager : public QObject
     /**
      * Triggers the agent instance with the given @p identifier to show
      * its configuration dialog.
+     *
      * @param parent Parent window for the configuration dialog.
      */
     void agentInstanceConfigure( const QString &identifier, QWidget *parent = 0 );
@@ -174,25 +177,27 @@ class AKONADI_EXPORT AgentManager : public QObject
     void agentInstanceSynchronize( const QString &identifier );
 
     /**
-      Trigger a synchronization of the collection tree by the given resource agent.
-      @param identifier The resource agent identifier.
-    */
+     * Trigger a synchronization of the collection tree by the given resource agent.
+     *
+     * @param identifier The resource agent identifier.
+     */
     void agentInstanceSynchronizeCollectionTree( const QString &identifier );
 
     /**
-      Trigger a synchronization of the given collection by its owning resource agent.
-      @param collection The collection to synchronize.
-    */
+     * Trigger a synchronization of the given collection by its owning resource agent.
+     *
+     * @param collection The collection to synchronize.
+     */
     void agentInstanceSynchronizeCollection( const Collection &collection );
 
     /**
-      Returns if the agent instance @p identifier is in online mode.
-    */
+     * Returns if the agent instance @p identifier is in online mode.
+     */
     bool agentInstanceOnline( const QString &identifier );
 
     /**
-      Sets agent instance @p identifier to online or offline mode.
-    */
+     * Sets agent instance @p identifier to online or offline mode.
+     */
     void setAgentInstanceOnline( const QString &identifier, bool state );
 
   Q_SIGNALS:
