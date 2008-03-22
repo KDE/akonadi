@@ -267,7 +267,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     if ( found )
       continue;
 
-    Item item( -1 );
+    Item item;
     item.setRemoteId( uid );
     item.setMimeType( "text/vcard" );
     ItemAppendJob *append = new ItemAppendJob( item, collection, session() );
@@ -296,7 +296,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     if ( found )
       continue;
 
-    Item item( -1 )
+    Item item;
     item.setRemoteId( uid );
     item.setMimeType( "text/calendar" );
     ItemAppendJob *append = new ItemAppendJob( item, collection, session() );
