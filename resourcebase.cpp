@@ -119,9 +119,6 @@ ResourceBase::ResourceBase( const QString & id )
   Q_D( ResourceBase );
 
   new ResourceAdaptor( this );
-  QDBusConnection::sessionBus().unregisterObject( QLatin1String( "/" ) );
-  if ( !QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportAdaptors ) )
-    kError() << "Unable to register object at D-Bus!";
 
   const QString name = d->mSettings->value( QLatin1String( "Resource/Name" ) ).toString();
   if ( !name.isEmpty() )
