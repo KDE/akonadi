@@ -75,10 +75,10 @@ template <typename T> static T* extractAttribute( QList<CollectionAttribute*> at
   return 0;
 }
 
-static int res1ColId = -1;
-static int res2ColId = -1;
-static int res3ColId = -1;
-static int searchColId = -1;
+static Collection::Id res1ColId = -1;
+static Collection::Id res2ColId = -1;
+static Collection::Id res3ColId = -1;
+static Collection::Id searchColId = -1;
 
 void CollectionJobTest::testTopLevelList( )
 {

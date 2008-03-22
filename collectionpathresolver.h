@@ -61,7 +61,7 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
     /**
       Returns the collection id. Only valid after the job succeeded.
     */
-    int collection() const;
+    Collection::Id collection() const;
 
     /**
       Returns the collection path. Only valid after the job succeeded.

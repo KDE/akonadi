@@ -18,6 +18,7 @@
 */
 
 #include "collection.h"
+#include "entity_p.h"
 #include "collectionattributefactory.h"
 #include "collectionrightsattribute.h"
 
@@ -30,23 +31,20 @@
 
 using namespace Akonadi;
 
-class Collection::Private : public QSharedData
+class CollectionPrivate : public EntityPrivate
 {
   public:
-    Private() :
-      QSharedData(),
-      id( -1 ),
+    CollectionPrivate() :
+      EntityPrivate(),
       parentId( -1 ),
-      type( Unknown )
+      type( Collection::Unknown )
     {}
 
-    Private( const Private &other ) :
-      QSharedData( other )
+    CollectionPrivate( const CollectionPrivate &other ) :
+      EntityPrivate( other )
     {
-      id = other.id;
       parentId = other.parentId;
       name = other.name;
-      remoteId = other.remoteId;
       parentRemoteId = other.parentRemoteId;
       type = other.type;
       foreach ( CollectionAttribute* attr, other.attributes )
@@ -57,26 +55,29 @@ class Collection::Private : public QSharedData
       cachePolicy = other.cachePolicy;
     }
 
-    ~Private()
+    ~CollectionPrivate()
     {
       qDeleteAll( attributes );
+    }
+
+    CollectionPrivate* clone() const
+    {
+      return new CollectionPrivate( *this );
     }
 
     static Collection newRoot()
     {
       Collection root( 0 );
       QStringList types;
-      types << collectionMimeType();
+      types << Collection::collectionMimeType();
       root.setContentTypes( types );
       return root;
     }
 
-    int id;
-    int parentId;
+    Collection::Id parentId;
     QString name;
-    QString remoteId;
     QString parentRemoteId;
-    Type type;
+    Collection::Type type;
     QHash<QByteArray, CollectionAttribute*> attributes;
     QString resource;
     CollectionStatus status;
@@ -85,23 +86,24 @@ class Collection::Private : public QSharedData
     CachePolicy cachePolicy;
 };
 
-const Collection Collection::Private::root = Collection::Private::newRoot();
+const Collection CollectionPrivate::root = CollectionPrivate::newRoot();
 
 Collection::Collection() :
-    d ( new Private )
+    Entity( new CollectionPrivate )
 {
+  Q_D( Collection );
   static int lastId = -1;
-  d->id = lastId--;
+  d->mId = lastId--;
 }
 
 Collection::Collection( int id ) :
-    d( new Private )
+    Entity( new CollectionPrivate )
 {
-  d->id = id;
+  d_ptr->mId = id;
 }
 
 Collection::Collection(const Collection & other) :
-    d ( other.d )
+    Entity( other )
 {
 }
 
@@ -109,28 +111,25 @@ Collection::~Collection()
 {
 }
 
-int Akonadi::Collection::id() const
-{
-  return d->id;
-}
-
 QString Collection::name( ) const
 {
-  return d->name;
+  return d_func()->name;
 }
 
 void Collection::setName( const QString & name )
 {
+  Q_D( Collection );
   d->name = name;
 }
 
 Collection::Type Collection::type() const
 {
-  return d->type;
+  return d_func()->type;
 }
 
 void Collection::setType( Type type )
 {
+  Q_D( Collection );
   d->type = type;
 }
 
@@ -151,37 +150,41 @@ void Collection::setRights( Rights rights )
 
 QStringList Collection::contentTypes() const
 {
-  return d->contentTypes;
+  return d_func()->contentTypes;
 }
 
 void Collection::setContentTypes( const QStringList & types )
 {
+  Q_D( Collection );
   d->contentTypes = types;
 }
 
-int Collection::parent() const
+Collection::Id Collection::parent() const
 {
-  return d->parentId;
+  return d_func()->parentId;
 }
 
-void Collection::setParent( int parent )
+void Collection::setParent( Id parent )
 {
+  Q_D( Collection );
   d->parentId = parent;
 }
 
 void Collection::setParent(const Collection & collection)
 {
+  Q_D( Collection );
   d->parentId = collection.id();
   d->parentRemoteId = collection.remoteId();
 }
 
 QString Collection::parentRemoteId() const
 {
-  return d->parentRemoteId;
+  return d_func()->parentRemoteId;
 }
 
 void Collection::setParentRemoteId(const QString & remoteParent)
 {
+  Q_D( Collection );
   d->parentRemoteId = remoteParent;
 }
 
@@ -212,7 +215,7 @@ QString Collection::delimiter()
 
 Collection Collection::root()
 {
-  return Private::root;
+  return CollectionPrivate::root;
 }
 
 QString Collection::collectionMimeType( )
@@ -222,11 +225,12 @@ QString Collection::collectionMimeType( )
 
 QList<CollectionAttribute*> Collection::attributes() const
 {
-  return d->attributes.values();
+  return d_func()->attributes.values();
 }
 
 void Collection::addAttribute( CollectionAttribute * attr )
 {
+  Q_D( Collection );
   if ( d->attributes.contains( attr->type() ) )
     delete d->attributes.take( attr->type() );
   d->attributes.insert( attr->type(), attr );
@@ -234,6 +238,7 @@ void Collection::addAttribute( CollectionAttribute * attr )
 
 CollectionAttribute * Collection::attribute( const QByteArray & type ) const
 {
+  const Q_D( Collection );
   if ( d->attributes.contains( type ) )
     return d->attributes.value( type );
   return 0;
@@ -241,7 +246,7 @@ CollectionAttribute * Collection::attribute( const QByteArray & type ) const
 
 bool Collection::hasAttribute( const QByteArray & type ) const
 {
-  return d->attributes.contains( type );
+  return d_func()->attributes.contains( type );
 }
 
 bool Collection::isValid() const
@@ -251,39 +256,22 @@ bool Collection::isValid() const
 
 bool Collection::operator ==(const Collection & other) const
 {
-  return d->id == other.id();
+  return d_func()->mId == other.id();
 }
 
 bool Collection::operator !=(const Collection & other) const
 {
-  return d->id != other.id();
-}
-
-QString Collection::remoteId() const
-{
-  return d->remoteId;
-}
-
-void Collection::setRemoteId(const QString & remoteId)
-{
-  d->remoteId = remoteId;
-}
-
-Collection& Collection::operator =(const Collection & other)
-{
-  if ( this != &other )
-    d = other.d;
-
-  return *this;
+  return d_func()->mId != other.id();
 }
 
 QString Collection::resource() const
 {
-  return d->resource;
+  return d_func()->resource;
 }
 
 void Collection::setResource(const QString & resource)
 {
+  Q_D( Collection );
   d->resource = resource;
 }
 
@@ -302,11 +290,12 @@ void Collection::addRawAttribute(const QByteArray & type, const QByteArray & val
 
 CollectionStatus Collection::status() const
 {
-  return d->status;
+  return d_func()->status;
 }
 
 void Collection::setStatus(const CollectionStatus & status)
 {
+  Q_D( Collection );
   d->status = status;
 }
 
@@ -317,10 +306,13 @@ bool Collection::urlIsValid( const KUrl &url )
 
 CachePolicy Collection::cachePolicy() const
 {
-  return d->cachePolicy;
+  return d_func()->cachePolicy;
 }
 
 void Collection::setCachePolicy(const CachePolicy & cachePolicy)
 {
+  Q_D( Collection );
   d->cachePolicy = cachePolicy;
 }
+
+AKONADI_DEFINE_PRIVATE( Collection )

@@ -38,7 +38,7 @@ class CollectionPathResolver::Private
     void jobResult( KJob* );
 
     CollectionPathResolver *mParent;
-    int colId;
+    Collection::Id colId;
     QString path;
     bool pathToId;
     QStringList pathParts;
@@ -124,7 +124,7 @@ CollectionPathResolver::~CollectionPathResolver()
   delete d;
 }
 
-int CollectionPathResolver::collection() const
+Collection::Id CollectionPathResolver::collection() const
 {
   return d->colId;
 }

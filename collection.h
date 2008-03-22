@@ -24,10 +24,13 @@
 #include <akonadi/cachepolicy.h>
 #include <akonadi/collectionattribute.h>
 #include <akonadi/collectionstatus.h>
+#include <akonadi/entity.h>
 
 #include <QtCore/QSharedDataPointer>
 
 class KUrl;
+
+class CollectionPrivate;
 
 namespace Akonadi {
 
@@ -41,7 +44,7 @@ namespace Akonadi {
 
   @see \ref akonadi_concepts_collections "Akonadi Collection Concept"
  */
-class AKONADI_EXPORT Collection
+class AKONADI_EXPORT Collection : public Entity
 {
   public:
     /**
@@ -88,24 +91,19 @@ class AKONADI_EXPORT Collection
     explicit Collection( int id );
 
     /**
-      Copy constructor.
-    */
-    Collection( const Collection &other );
-
-    /**
       Destroys this collection.
     */
     ~Collection();
 
     /**
+      Copy constructor.
+    */
+    Collection( const Collection &other );
+
+    /**
       Creates a collection from the url
     */
     static Collection fromUrl( const KUrl &url );
-
-    /**
-      Returns the unique identifier of this collection.
-    */
-    int id() const;
 
     /**
       Returns the name of this collection usable for display.
@@ -155,12 +153,12 @@ class AKONADI_EXPORT Collection
     /**
       Returns the identifier of the parent collection.
     */
-    int parent() const;
+    Id parent() const;
 
     /**
       Sets the identifier of the parent collection.
     */
-    void setParent( int parent );
+    void setParent( Id parent );
 
     /**
       Sets the parent collection.
@@ -262,21 +260,6 @@ class AKONADI_EXPORT Collection
     bool operator!=( const Collection &other ) const;
 
     /**
-      Returns the remote identifier of this collection.
-    */
-    QString remoteId() const;
-
-    /**
-      Sets the remote identifier of this collection.
-    */
-    void setRemoteId( const QString &remoteId );
-
-    /**
-      Assignment operator.
-    */
-    Collection& operator=( const Collection &other );
-
-    /**
       Returns the identifier of the resource owning this collection.
     */
     QString resource() const;
@@ -327,8 +310,7 @@ class AKONADI_EXPORT Collection
     static bool urlIsValid( const KUrl &url );
 
   private:
-    class Private;
-    QSharedDataPointer<Private> d;
+    AKONADI_DECLARE_PRIVATE( Collection )
 };
 
 }

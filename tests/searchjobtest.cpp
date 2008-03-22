@@ -45,7 +45,7 @@ void SearchJobTest::testCreateDeleteSearch()
       col = c;
   }
   QVERIFY( col.isValid() );
-  QCOMPARE( col.parent(), 1 );
+  QCOMPARE( col.parent(), 1LL );
   QCOMPARE( col.type(), Collection::Virtual );
 
   CollectionDeleteJob *delJob = new CollectionDeleteJob( col, this );

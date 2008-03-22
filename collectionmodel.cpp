@@ -145,7 +145,7 @@ QModelIndex CollectionModel::index( int row, int column, const QModelIndex & par
     return QModelIndex();
   if ( !d->collections.contains( list.at(row) ) )
     return QModelIndex();
-  return createIndex( row, column, d->collections.value( list.at(row) ).id() );
+  return createIndex( row, column, reinterpret_cast<void*>( d->collections.value( list.at(row) ).id() ) );
 }
 
 QModelIndex CollectionModel::parent( const QModelIndex & index ) const
@@ -169,7 +169,7 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
   if ( parentRow < 0 )
     return QModelIndex();
 
-  return createIndex( parentRow, 0, parentCol.id() );
+  return createIndex( parentRow, 0, reinterpret_cast<void*>( parentCol.id() ) );
 }
 
 int CollectionModel::rowCount( const QModelIndex & parent ) const
@@ -236,7 +236,7 @@ QModelIndex CollectionModel::indexForId( int id, int column )
   int row = list.indexOf( id );
 
   if ( row >= 0 )
-    return createIndex( row, column, d->collections.value( list.at(row) ).id() );
+    return createIndex( row, column, reinterpret_cast<void*>( d->collections.value( list.at(row) ).id() ) );
   return QModelIndex();
 }
 

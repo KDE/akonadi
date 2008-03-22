@@ -128,7 +128,7 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( csspy.count(), 1 );
   arg = csspy.takeFirst();
-  QCOMPARE( arg.at(0).toInt(), monitorCol.id() );
+  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
 
   QCOMPARE( iaspy.count(), 1 );
   arg = iaspy.takeFirst();
@@ -154,7 +154,7 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( csspy.count(), 1 );
   arg = csspy.takeFirst();
-  QCOMPARE( arg.at(0).toInt(), monitorCol.id() );
+  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
 
   QCOMPARE( imspy.count(), 1 );
   arg = imspy.takeFirst();
@@ -175,7 +175,7 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( csspy.count(), 1 );
   arg = csspy.takeFirst();
-  QCOMPARE( arg.at(0).toInt(), monitorCol.id() );
+  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
   cmspy.clear();
 
   QCOMPARE( irspy.count(), 1 );
@@ -217,7 +217,7 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( crspy.count(), 1 );
   arg = crspy.takeFirst();
-  QCOMPARE( arg.at(0).toInt(), monitorCol.id() );
+  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( cmspy.isEmpty() );
