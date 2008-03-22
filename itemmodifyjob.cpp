@@ -19,12 +19,13 @@
 
 #include "itemmodifyjob.h"
 #include "imapparser_p.h"
+#include "job_p.h"
 
 #include <kdebug.h>
 
 using namespace Akonadi;
 
-class ItemModifyJob::Private
+class Akonadi::ItemModifyJobPrivate : public JobPrivate
 {
   public:
     enum Operation {
@@ -37,33 +38,36 @@ class ItemModifyJob::Private
       Dirty
     };
 
-    Private( ItemModifyJob *parent, const Item &it )
-    : mParent( parent ), item( it ), revCheck( true )
+    ItemModifyJobPrivate( ItemModifyJob *parent, const Item &item )
+      : JobPrivate( parent ),
+        mItem( item ),
+        mRevCheck( true )
     {
     }
 
-    ItemModifyJob *mParent;
-    Item::Flags flags;
-    Item::Flags addFlags;
-    Item::Flags removeFlags;
-    QList<QByteArray> removeParts;
-    QSet<int> operations;
-    QByteArray tag;
-    Collection collection;
-    Item item;
-    bool revCheck;
-    QStringList parts;
-    QByteArray pendingData;
+    Q_DECLARE_PUBLIC( ItemModifyJob )
+
+    Item::Flags mFlags;
+    Item::Flags mAddFlags;
+    Item::Flags mRemoveFlags;
+    QList<QByteArray> mRemoveParts;
+    QSet<int> mOperations;
+    QByteArray mTag;
+    Collection mCollection;
+    Item mItem;
+    bool mRevCheck;
+    QStringList mParts;
+    QByteArray mPendingData;
 
     QByteArray nextPartHeader()
     {
       QByteArray command;
-      if ( !parts.isEmpty() ) {
-        QString label = parts.takeFirst();
-        pendingData = item.part( label );
+      if ( !mParts.isEmpty() ) {
+        QString label = mParts.takeFirst();
+        mPendingData = mItem.part( label );
         command += ' ' + label.toUtf8();
-        command += ".SILENT {" + QByteArray::number( pendingData.size() ) + '}';
-        if ( pendingData.size() > 0 )
+        command += ".SILENT {" + QByteArray::number( mPendingData.size() ) + '}';
+        if ( mPendingData.size() > 0 )
           command += '\n';
         else
           command += nextPartHeader();
@@ -74,99 +78,116 @@ class ItemModifyJob::Private
     }
 };
 
-ItemModifyJob::ItemModifyJob(const Item &item, QObject * parent) :
-    Job( parent ),
-    d( new Private( this, item ) )
+ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
+  : Job( new ItemModifyJobPrivate( this, item ) )
 {
-  d->operations.insert( Private::RemoteId );
+  Q_D( ItemModifyJob );
+
+  d->mOperations.insert( ItemModifyJobPrivate::RemoteId );
 }
 
-ItemModifyJob::~ ItemModifyJob()
+ItemModifyJob::~ItemModifyJob()
 {
+  Q_D( ItemModifyJob );
+
   delete d;
 }
 
 void ItemModifyJob::setFlags(const Item::Flags & flags)
 {
-  d->flags = flags;
-  d->operations.insert( Private::SetFlags );
+  Q_D( ItemModifyJob );
+
+  d->mFlags = flags;
+  d->mOperations.insert( ItemModifyJobPrivate::SetFlags );
 }
 
 void ItemModifyJob::addFlag(const Item::Flag & flag)
 {
-  d->addFlags.insert( flag );
-  d->operations.insert( Private::AddFlags );
+  Q_D( ItemModifyJob );
+
+  d->mAddFlags.insert( flag );
+  d->mOperations.insert( ItemModifyJobPrivate::AddFlags );
 }
 
 void ItemModifyJob::removeFlag(const Item::Flag & flag)
 {
-  d->removeFlags.insert( flag );
-  d->operations.insert( Private::RemoveFlags );
+  Q_D( ItemModifyJob );
+
+  d->mRemoveFlags.insert( flag );
+  d->mOperations.insert( ItemModifyJobPrivate::RemoveFlags );
 }
 
 void ItemModifyJob::removePart(const QByteArray & part)
 {
-  d->removeParts.append( part );
-  d->operations.insert( Private::RemoveParts );
+  Q_D( ItemModifyJob );
+
+  d->mRemoveParts.append( part );
+  d->mOperations.insert( ItemModifyJobPrivate::RemoveParts );
 }
 
 void ItemModifyJob::setCollection(const Collection &collection)
 {
-  d->collection = collection;
-  d->operations.insert( Private::Move );
+  Q_D( ItemModifyJob );
+
+  d->mCollection = collection;
+  d->mOperations.insert( ItemModifyJobPrivate::Move );
 }
 
 void ItemModifyJob::setClean()
 {
-  d->operations.insert( Private::Dirty );
+  Q_D( ItemModifyJob );
+
+  d->mOperations.insert( ItemModifyJobPrivate::Dirty );
 }
 
 void ItemModifyJob::doStart()
 {
+  Q_D( ItemModifyJob );
+
   // nothing to do
-  if ( d->operations.isEmpty() && d->parts.isEmpty() ) {
+  if ( d->mOperations.isEmpty() && d->mParts.isEmpty() ) {
     emitResult();
     return;
   }
 
-  d->tag = newTag();
-  QByteArray command = d->tag;
-  command += " UID STORE " + QByteArray::number( d->item.id() ) + ' ';
-  if ( !d->revCheck || d->addFlags.contains( "\\Deleted" ) ) {
+  d->mTag = newTag();
+  QByteArray command = d->mTag;
+  command += " UID STORE " + QByteArray::number( d->mItem.id() ) + ' ';
+  if ( !d->mRevCheck || d->mAddFlags.contains( "\\Deleted" ) ) {
     command += "NOREV ";
   } else {
-    command += "REV " + QByteArray::number( d->item.revision() );
+    command += "REV " + QByteArray::number( d->mItem.revision() );
   }
   QList<QByteArray> changes;
-  foreach ( int op, d->operations ) {
+  foreach ( int op, d->mOperations ) {
     switch ( op ) {
-      case Private::SetFlags:
+      case ItemModifyJobPrivate::SetFlags:
         changes << "FLAGS.SILENT";
-        changes << "(" + ImapParser::join( d->flags, " " ) + ')';
+        changes << "(" + ImapParser::join( d->mFlags, " " ) + ')';
         break;
-      case Private::AddFlags:
+      case ItemModifyJobPrivate::AddFlags:
         changes << "+FLAGS.SILENT";
-        changes << "(" + ImapParser::join( d->addFlags, " " ) + ')';
+        changes << "(" + ImapParser::join( d->mAddFlags, " " ) + ')';
         break;
-      case Private::RemoveFlags:
+      case ItemModifyJobPrivate::RemoveFlags:
         changes << "-FLAGS.SILENT";
-        changes << "(" + ImapParser::join( d->removeFlags, " " ) + ')';
+        changes << "(" + ImapParser::join( d->mRemoveFlags, " " ) + ')';
         break;
-      case Private::RemoveParts:
+      case ItemModifyJobPrivate::RemoveParts:
         changes << "-PARTS.SILENT";
-        changes << "(" + ImapParser::join( d->removeParts, " " ) + ')';
+        changes << "(" + ImapParser::join( d->mRemoveParts, " " ) + ')';
         break;
-      case Private::Move:
+      case ItemModifyJobPrivate::Move:
         changes << "COLLECTION.SILENT";
-        changes << QByteArray::number( d->collection.id() );
+        changes << QByteArray::number( d->mCollection.id() );
         break;
-      case Private::RemoteId:
-        if ( !d->item.remoteId().isNull() ) {
+      case ItemModifyJobPrivate::RemoteId:
+        if ( !d->mItem.remoteId().isNull() ) {
           changes << "REMOTEID.SILENT";
-          changes << ImapParser::quote( d->item.remoteId().toLatin1() );
+          changes << ImapParser::quote( d->mItem.remoteId().toLatin1() );
         }
         break;
-      case Private::Dirty:
+      case ItemModifyJobPrivate::Dirty:
         changes << "DIRTY.SILENT";
         changes << "false";
         break;
@@ -180,19 +201,21 @@ void ItemModifyJob::doStart()
 
 void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
 {
+  Q_D( ItemModifyJob );
+
   if ( _tag == "+" ) { // ready for literal data
-    writeData( d->pendingData );
+    writeData( d->mPendingData );
     writeData( d->nextPartHeader() );
     return;
   }
-  if ( _tag == d->tag ) {
+  if ( _tag == d->mTag ) {
     if ( data.startsWith( "OK" ) ) {
       // increase item revision of item, given by calling function
-      if( d->revCheck )
-        d->item.incrementRevision();
+      if( d->mRevCheck )
+        d->mItem.incrementRevision();
       else
         // increase item revision of own copy of item
-        d->item.incrementRevision();
+        d->mItem.incrementRevision();
     } else {
       setError( Unknown );
       setErrorText( QString::fromUtf8( data ) );
@@ -205,18 +228,24 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
 
 void ItemModifyJob::storePayload()
 {
-  Q_ASSERT( !d->item.mimeType().isEmpty() );
-  d->parts = d->item.availableParts();
+  Q_D( ItemModifyJob );
+
+  Q_ASSERT( !d->mItem.mimeType().isEmpty() );
+  d->mParts = d->mItem.availableParts();
 }
 
 void ItemModifyJob::noRevCheck()
 {
-  d->revCheck = false;
+  Q_D( ItemModifyJob );
+
+  d->mRevCheck = false;
 }
 
 Item ItemModifyJob::item() const
 {
-  return d->item;
+  Q_D( const ItemModifyJob );
+
+  return d->mItem;
 }
 
 #include "itemmodifyjob.moc"

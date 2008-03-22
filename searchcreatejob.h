@@ -24,6 +24,8 @@
 
 namespace Akonadi {
 
+class SearchCreateJobPrivate;
+
 /**
   Creates a virtual/search collection, ie. a collection
   containing search results.
@@ -51,8 +53,7 @@ class AKONADI_EXPORT SearchCreateJob : public Job
     void doStart();
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( SearchCreateJob )
 };
 
 }

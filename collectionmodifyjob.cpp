@@ -19,58 +19,70 @@
 
 #include "collectionmodifyjob.h"
 #include "imapparser_p.h"
+#include "job_p.h"
 #include "protocolhelper.h"
 #include "entity_p.h"
 
 using namespace Akonadi;
 
-class Akonadi::CollectionModifyJobPrivate
+class Akonadi::CollectionModifyJobPrivate : public JobPrivate
 {
   public:
-    Collection collection;
-    QStringList mimeTypes;
-    CachePolicy policy;
-    bool setMimeTypes;
-    bool setPolicy;
-    QString name;
-    Collection parent;
+    CollectionModifyJobPrivate( CollectionModifyJob *parent )
+      : JobPrivate( parent )
+    {
+    }
+
+    Collection mCollection;
+    QStringList mMimeTypes;
+    CachePolicy mPolicy;
+    bool mSetMimeTypes;
+    bool mSetPolicy;
+    QString mName;
+    Collection mParent;
 };
 
-CollectionModifyJob::CollectionModifyJob(const Collection &collection, QObject * parent) :
-    Job( parent ), d( new CollectionModifyJobPrivate )
+CollectionModifyJob::CollectionModifyJob( const Collection &collection, QObject * parent )
+  : Job( new CollectionModifyJobPrivate( this ), parent )
 {
+  Q_D( CollectionModifyJob );
+
   Q_ASSERT( collection.isValid() );
-  d->collection = collection;
-  d->setMimeTypes = false;
-  d->setPolicy = false;
+  d->mCollection = collection;
+  d->mSetMimeTypes = false;
+  d->mSetPolicy = false;
 }
 
-CollectionModifyJob::~ CollectionModifyJob()
+CollectionModifyJob::~CollectionModifyJob()
 {
+  Q_D( CollectionModifyJob );
+
   delete d;
 }
 
 void CollectionModifyJob::doStart()
 {
-  QByteArray command = newTag() + " MODIFY " + QByteArray::number( d->collection.id() );
+  Q_D( CollectionModifyJob );
+
+  QByteArray command = newTag() + " MODIFY " + QByteArray::number( d->mCollection.id() );
   QByteArray changes;
-  if ( d->setMimeTypes )
+  if ( d->mSetMimeTypes )
   {
     QList<QByteArray> bList;
-    foreach( QString s, d->mimeTypes ) bList << s.toLatin1();
+    foreach( QString s, d->mMimeTypes ) bList << s.toLatin1();
     changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
   }
-  if ( d->parent.isValid() )
-    changes += " PARENT " + QByteArray::number( d->parent.id() );
-  if ( !d->name.isEmpty() )
-    changes += " NAME \"" + d->name.toUtf8() + '"';
-  if ( !d->collection.remoteId().isNull() )
-    changes += " REMOTEID \"" + d->collection.remoteId().toUtf8() + '"';
-  if ( d->setPolicy )
-    changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->policy );
-  if ( d->collection.attributes().count() > 0 )
-    changes += ' ' + ProtocolHelper::attributesToByteArray( d->collection );
-  foreach ( const QByteArray b, d->collection.d_ptr->mDeletedAttributes )
+  if ( d->mParent.isValid() )
+    changes += " PARENT " + QByteArray::number( d->mParent.id() );
+  if ( !d->mName.isEmpty() )
+    changes += " NAME \"" + d->mName.toUtf8() + '"';
+  if ( !d->mCollection.remoteId().isNull() )
+    changes += " REMOTEID \"" + d->mCollection.remoteId().toUtf8() + '"';
+  if ( d->mSetPolicy )
+    changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mPolicy );
+  if ( d->mCollection.attributes().count() > 0 )
+    changes += ' ' + ProtocolHelper::attributesToByteArray( d->mCollection );
+  foreach ( const QByteArray b, d->mCollection.d_ptr->mDeletedAttributes )
     changes += " -" + b;
   if ( changes.isEmpty() ) {
     emitResult();
@@ -82,24 +94,32 @@ void CollectionModifyJob::doStart()
 
 void CollectionModifyJob::setContentTypes(const QStringList & mimeTypes)
 {
-  d->setMimeTypes = true;
-  d->mimeTypes = mimeTypes;
+  Q_D( CollectionModifyJob );
+
+  d->mSetMimeTypes = true;
+  d->mMimeTypes = mimeTypes;
 }
 
 void CollectionModifyJob::setCachePolicy( const CachePolicy &policy )
 {
-  d->policy = policy;
-  d->setPolicy = true;
+  Q_D( CollectionModifyJob );
+
+  d->mPolicy = policy;
+  d->mSetPolicy = true;
 }
 
 void CollectionModifyJob::setName(const QString & name)
 {
-  d->name = name;
+  Q_D( CollectionModifyJob );
+
+  d->mName = name;
 }
 
 void CollectionModifyJob::setParent(const Collection & parent)
 {
-  d->parent = parent;
+  Q_D( CollectionModifyJob );
+
+  d->mParent = parent;
 }
 
 #include "collectionmodifyjob.moc"

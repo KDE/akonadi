@@ -26,6 +26,7 @@
 namespace Akonadi {
 
 class Item;
+class ItemDeleteJobPrivate;
 
 /**
   Convenience job which permanently deletes an item, ie. sets the \\Deleted flag
@@ -52,10 +53,9 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
     virtual void doStart();
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( ItemDeleteJob )
 
-    Q_PRIVATE_SLOT( d, void jobDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void jobDone( KJob* ) )
 };
 
 }

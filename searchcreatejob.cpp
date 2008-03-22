@@ -20,34 +20,46 @@
 #include "searchcreatejob.h"
 
 #include "imapparser_p.h"
+#include "job_p.h"
 
 using namespace Akonadi;
 
-class SearchCreateJob::Private
+class Akonadi::SearchCreateJobPrivate : public JobPrivate
 {
   public:
-    QString name;
-    QString query;
+    SearchCreateJobPrivate( SearchCreateJob *parent )
+      : JobPrivate( parent )
+    {
+    }
+
+    QString mName;
+    QString mQuery;
 };
 
-SearchCreateJob::SearchCreateJob(const QString & name, const QString & query, QObject * parent) :
-    Job( parent ), d( new Private )
+SearchCreateJob::SearchCreateJob(const QString & name, const QString & query, QObject * parent)
+  : Job( new SearchCreateJobPrivate( this ), parent )
 {
-  d->name = name;
-  d->query = query;
+  Q_D( SearchCreateJob );
+
+  d->mName = name;
+  d->mQuery = query;
 }
 
 SearchCreateJob::~ SearchCreateJob()
 {
+  Q_D( SearchCreateJob );
+
   delete d;
 }
 
 void SearchCreateJob::doStart()
 {
+  Q_D( SearchCreateJob );
+
   QByteArray command = newTag() + " SEARCH_STORE ";
-  command += ImapParser::quote( d->name.toUtf8() );
+  command += ImapParser::quote( d->mName.toUtf8() );
   command += ' ';
-  command += ImapParser::quote( d->query.toUtf8() );
+  command += ImapParser::quote( d->mQuery.toUtf8() );
   command += '\n';
   writeData( command );
 }

@@ -19,35 +19,47 @@
 
 #include "collectioncopyjob.h"
 
+#include "job_p.h"
+
 using namespace Akonadi;
 
-class CollectionCopyJob::Private
+class Akonadi::CollectionCopyJobPrivate : public JobPrivate
 {
   public:
-    Collection source;
-    Collection target;
+    CollectionCopyJobPrivate( CollectionCopyJob *parent )
+      : JobPrivate( parent )
+    {
+    }
+
+    Collection mSource;
+    Collection mTarget;
 };
 
-CollectionCopyJob::CollectionCopyJob(const Collection & source, const Collection & target, QObject * parent) :
-    Job( parent ),
-    d( new Private )
+CollectionCopyJob::CollectionCopyJob(const Collection & source, const Collection & target, QObject * parent)
+  : Job( new CollectionCopyJobPrivate( this ), parent )
 {
-  d->source = source;
-  d->target = target;
+  Q_D( CollectionCopyJob );
+
+  d->mSource = source;
+  d->mTarget = target;
 }
 
 CollectionCopyJob::~ CollectionCopyJob()
 {
+  Q_D( CollectionCopyJob );
+
   delete d;
 }
 
 void CollectionCopyJob::doStart()
 {
+  Q_D( CollectionCopyJob );
+
   QByteArray command = newTag();
   command += " COLCOPY ";
-  command += QByteArray::number( d->source.id() );
+  command += QByteArray::number( d->mSource.id() );
   command += ' ';
-  command += QByteArray::number( d->target.id() );
+  command += QByteArray::number( d->mTarget.id() );
   command += '\n';
   writeData( command );
 }

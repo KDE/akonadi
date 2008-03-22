@@ -26,6 +26,8 @@
 
 namespace Akonadi {
 
+class ItemCopyJobPrivate;
+
 /**
   Copies a set of items into the specified target collection.
 */
@@ -59,8 +61,7 @@ class AKONADI_EXPORT ItemCopyJob : public Job
     void doStart();
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( ItemCopyJob )
 };
 
 }

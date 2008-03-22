@@ -19,52 +19,62 @@
 
 #include "collectionselectjob.h"
 
+#include "job_p.h"
+
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
 
-class Akonadi::CollectionSelectJobPrivate
+class Akonadi::CollectionSelectJobPrivate : public JobPrivate
 {
   public:
-    CollectionSelectJobPrivate() :
-      unseen( -1 ),
-      silent( true )
+    CollectionSelectJobPrivate( CollectionSelectJob *parent )
+      : JobPrivate( parent ),
+        mUnseen( -1 ),
+        mSilent( true )
     {
     }
 
-    Collection collection;
-    int unseen;
-    bool silent;
+    Collection mCollection;
+    int mUnseen;
+    bool mSilent;
 };
 
-CollectionSelectJob::CollectionSelectJob( const Collection &collection, QObject *parent ) :
-    Job( parent ),
-    d( new CollectionSelectJobPrivate )
+CollectionSelectJob::CollectionSelectJob( const Collection &collection, QObject *parent )
+  : Job( new CollectionSelectJobPrivate( this ), parent )
 {
-  d->collection = collection;
+  Q_D( CollectionSelectJob );
+
+  d->mCollection = collection;
 }
 
-CollectionSelectJob::~ CollectionSelectJob( )
+CollectionSelectJob::~CollectionSelectJob( )
 {
+  Q_D( CollectionSelectJob );
+
   delete d;
 }
 
 void CollectionSelectJob::doStart( )
 {
+  Q_D( CollectionSelectJob );
+
   QByteArray command( newTag() + " SELECT " );
-  if ( d->silent )
+  if ( d->mSilent )
     command += "SILENT ";
-  writeData( command + QByteArray::number( d->collection.id() ) + '\n' );
+  writeData( command + QByteArray::number( d->mCollection.id() ) + '\n' );
 }
 
 void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
+  Q_D( CollectionSelectJob );
+
   if ( tag == "*" ) {
     if ( data.startsWith( "OK [UNSEEN" ) ) {
       int begin = data.indexOf( ' ', 4 );
       int end = data.indexOf( ']' );
       QByteArray number = data.mid( begin + 1, end - begin - 1 );
-      d->unseen = number.toInt();
+      d->mUnseen = number.toInt();
       return;
     }
   }
@@ -72,12 +82,16 @@ void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteA
 
 int CollectionSelectJob::unseen( ) const
 {
-  return d->unseen;
+  Q_D( const CollectionSelectJob );
+
+  return d->mUnseen;
 }
 
 void CollectionSelectJob::setRetrieveStatus(bool status)
 {
-  d->silent = !status;
+  Q_D( CollectionSelectJob );
+
+  d->mSilent = !status;
 }
 
 

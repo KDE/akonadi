@@ -57,7 +57,7 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    CollectionCreateJobPrivate* const d;
+    Q_DECLARE_PRIVATE( CollectionCreateJob )
 };
 
 }

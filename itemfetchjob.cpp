@@ -24,6 +24,7 @@
 #include "imapparser_p.h"
 #include "itemserializer.h"
 #include "itemserializerplugin.h"
+#include "job_p.h"
 
 #include <kdebug.h>
 
@@ -31,51 +32,56 @@
 
 using namespace Akonadi;
 
-class ItemFetchJob::Private
+class Akonadi::ItemFetchJobPrivate : public JobPrivate
 {
   public:
-    Private( ItemFetchJob *parent )
-      : mParent( parent ),
-        fetchAllParts( false ),
-        emitTimer( new QTimer( parent ) )
+    ItemFetchJobPrivate( ItemFetchJob *parent )
+      : JobPrivate( parent ),
+        mFetchAllParts( false ),
+        mEmitTimer( new QTimer( parent ) )
     {
-      emitTimer->setSingleShot( true );
-      emitTimer->setInterval( 100 );
-      QObject::connect( emitTimer, SIGNAL(timeout()), parent, SLOT(timeout()) );
+      mEmitTimer->setSingleShot( true );
+      mEmitTimer->setInterval( 100 );
+      QObject::connect( mEmitTimer, SIGNAL(timeout()), parent, SLOT(timeout()) );
       QObject::connect( parent, SIGNAL(result(KJob*)), parent, SLOT(timeout()) );
     }
 
     void timeout()
     {
-      emitTimer->stop(); // in case we are called by result()
-      if ( !pendingItems.isEmpty() ) {
-        emit mParent->itemsReceived( pendingItems );
-        pendingItems.clear();
+      Q_Q( ItemFetchJob );
+
+      mEmitTimer->stop(); // in case we are called by result()
+      if ( !mPendingItems.isEmpty() ) {
+        emit q->itemsReceived( mPendingItems );
+        mPendingItems.clear();
       }
     }
 
     void startFetchJob();
     void selectDone( KJob * job );
 
-    ItemFetchJob *mParent;
-    Collection collection;
+    Q_DECLARE_PUBLIC( ItemFetchJob )
+
+    Collection mCollection;
     Item mItem;
-    Item::List items;
+    Item::List mItems;
     QStringList mFetchParts;
-    bool fetchAllParts;
-    Item::List pendingItems; // items pending for emitting itemsReceived()
-    QTimer* emitTimer;
+    bool mFetchAllParts;
+    Item::List mPendingItems; // items pending for emitting itemsReceived()
+    QTimer* mEmitTimer;
 };
 
-void ItemFetchJob::Private::startFetchJob()
+void ItemFetchJobPrivate::startFetchJob()
 {
-  QByteArray command = mParent->newTag();
+  Q_Q( ItemFetchJob );
+
+  QByteArray command = q->newTag();
   if ( !mItem.isValid() )
     command += " FETCH 1:*";
   else
     command += " UID FETCH " + QByteArray::number( mItem.id() );
 
-  if ( !fetchAllParts ) {
+  if ( !mFetchAllParts ) {
     command += " (UID REMOTEID FLAGS";
     foreach ( QString part, mFetchParts ) {
       command += ' ' + part.toUtf8();
@@ -84,50 +90,53 @@ void ItemFetchJob::Private::startFetchJob()
   } else {
     command += " AKALL\n";
   }
-  mParent->writeData( command );
+  q->writeData( command );
 }
 
-void ItemFetchJob::Private::selectDone( KJob * job )
+void ItemFetchJobPrivate::selectDone( KJob * job )
 {
   if ( !job->error() )
     // the collection is now selected, fetch the message(s)
     startFetchJob();
 }
 
-ItemFetchJob::ItemFetchJob( QObject *parent ) :
-    Job( parent ),
-    d( new Private( this ) )
+ItemFetchJob::ItemFetchJob( QObject *parent )
+  : Job( new ItemFetchJobPrivate( this ), parent )
 {
 }
 
-ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
-    Job( parent ),
-    d( new Private( this ) )
+ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent )
+  : Job( new ItemFetchJobPrivate( this ), parent )
 {
-  d->collection = collection;
+  Q_D( ItemFetchJob );
+
+  d->mCollection = collection;
 }
 
-ItemFetchJob::ItemFetchJob( const Item & item, QObject * parent) :
-    Job( parent ),
-    d( new Private( this ) )
+ItemFetchJob::ItemFetchJob( const Item & item, QObject * parent)
+  : Job( new ItemFetchJobPrivate( this ), parent )
 {
   setItem( item );
 }
 
-ItemFetchJob::~ ItemFetchJob( )
+ItemFetchJob::~ItemFetchJob()
 {
+  Q_D( ItemFetchJob );
+
   delete d;
 }
 
 void ItemFetchJob::doStart()
 {
+  Q_D( ItemFetchJob );
+
   if ( !d->mItem.isValid() ) { // collection content listing
-    if ( d->collection == Collection::root() ) {
+    if ( d->mCollection == Collection::root() ) {
       setErrorText( QLatin1String("Cannot list root collection.") );
       setError( Unknown );
       emitResult();
     }
-    CollectionSelectJob *job = new CollectionSelectJob( d->collection, this );
+    CollectionSelectJob *job = new CollectionSelectJob( d->mCollection, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)) );
     addSubjob( job );
   } else
@@ -136,6 +145,8 @@ void ItemFetchJob::doStart()
 
 void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
+  Q_D( ItemFetchJob );
+
   if ( tag == "*" ) {
     int begin = data.indexOf( "FETCH" );
     if ( begin >= 0 ) {
@@ -199,10 +210,10 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
         }
       }
 
-      d->items.append( item );
-      d->pendingItems.append( item );
-      if ( !d->emitTimer->isActive() )
-        d->emitTimer->start();
+      d->mItems.append( item );
+      d->mPendingItems.append( item );
+      if ( !d->mEmitTimer->isActive() )
+        d->mEmitTimer->start();
       return;
     }
   }
@@ -211,30 +222,40 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
 
 Item::List ItemFetchJob::items() const
 {
-  return d->items;
+  Q_D( const ItemFetchJob );
+
+  return d->mItems;
 }
 
 void ItemFetchJob::setCollection(const Collection &collection)
 {
-  d->collection = collection;
+  Q_D( ItemFetchJob );
+
+  d->mCollection = collection;
   d->mItem = Item();
 }
 
 void Akonadi::ItemFetchJob::setItem(const Item & item)
 {
-  d->collection = Collection::root();
+  Q_D( ItemFetchJob );
+
+  d->mCollection = Collection::root();
   d->mItem = item;
 }
 
 void ItemFetchJob::addFetchPart( const QString &identifier )
 {
+  Q_D( ItemFetchJob );
+
   if ( !d->mFetchParts.contains( identifier ) )
     d->mFetchParts.append( identifier );
 }
 
 void ItemFetchJob::fetchAllParts()
 {
-  d->fetchAllParts = true;
+  Q_D( ItemFetchJob );
+
+  d->mFetchAllParts = true;
 }
 
 #include "itemfetchjob.moc"

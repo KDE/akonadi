@@ -53,7 +53,7 @@ class AKONADI_EXPORT CollectionDeleteJob : public Job
     virtual void doStart();
 
   private:
-    CollectionDeleteJobPrivate* const d;
+    Q_DECLARE_PRIVATE( CollectionDeleteJob )
 };
 
 }

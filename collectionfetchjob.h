@@ -98,9 +98,9 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     void slotResult( KJob* job );
 
   private:
-    friend class CollectionFetchJobPrivate;
-    CollectionFetchJobPrivate* const d;
-    Q_PRIVATE_SLOT( d, void timeout() )
+    Q_DECLARE_PRIVATE( CollectionFetchJob )
+
+    Q_PRIVATE_SLOT( d_func(), void timeout() )
 
 };
 

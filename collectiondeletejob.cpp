@@ -19,28 +19,41 @@
 
 #include "collectiondeletejob.h"
 
+#include "job_p.h"
+
 using namespace Akonadi;
 
-class Akonadi::CollectionDeleteJobPrivate
+class Akonadi::CollectionDeleteJobPrivate : public JobPrivate
 {
   public:
-    Collection collection;
+    CollectionDeleteJobPrivate( CollectionDeleteJob *parent )
+      : JobPrivate( parent )
+    {
+    }
+
+    Collection mCollection;
 };
 
-CollectionDeleteJob::CollectionDeleteJob(const Collection &collection, QObject * parent) :
-    Job( parent ), d( new CollectionDeleteJobPrivate )
+CollectionDeleteJob::CollectionDeleteJob(const Collection &collection, QObject * parent)
+  : Job( new CollectionDeleteJobPrivate( this ), parent )
 {
-  d->collection = collection;
+  Q_D( CollectionDeleteJob );
+
+  d->mCollection = collection;
 }
 
 CollectionDeleteJob::~ CollectionDeleteJob()
 {
+  Q_D( CollectionDeleteJob );
+
   delete d;
 }
 
 void CollectionDeleteJob::doStart()
 {
-  writeData( newTag() + " DELETE " + QByteArray::number( d->collection.id() ) + '\n' );
+  Q_D( CollectionDeleteJob );
+
+  writeData( newTag() + " DELETE " + QByteArray::number( d->mCollection.id() ) + '\n' );
 }
 
 #include "collectiondeletejob.moc"

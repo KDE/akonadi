@@ -20,6 +20,7 @@
 #include "collectionfetchjob.h"
 
 #include "imapparser_p.h"
+#include "job_p.h"
 #include "protocolhelper.h"
 
 #include <kdebug.h>
@@ -30,84 +31,95 @@
 
 using namespace Akonadi;
 
-class Akonadi::CollectionFetchJobPrivate
+class Akonadi::CollectionFetchJobPrivate : public JobPrivate
 {
   public:
-    CollectionFetchJobPrivate( CollectionFetchJob *parent ) :
-      q( parent ),
-      emitTimer( new QTimer( parent ) ),
-      unsubscribed( false )
+    CollectionFetchJobPrivate( CollectionFetchJob *parent )
+      : JobPrivate( parent ),
+        mEmitTimer( new QTimer( parent ) ),
+        mUnsubscribed( false )
     {
-      emitTimer->setSingleShot( true );
-      emitTimer->setInterval( 100 );
-      QObject::connect( emitTimer, SIGNAL(timeout()), parent, SLOT(timeout()) );
+      mEmitTimer->setSingleShot( true );
+      mEmitTimer->setInterval( 100 );
+      QObject::connect( mEmitTimer, SIGNAL(timeout()), parent, SLOT(timeout()) );
       QObject::connect( parent, SIGNAL(result(KJob*)), parent, SLOT(timeout()) );
     }
 
-    CollectionFetchJob *q;
-    CollectionFetchJob::ListType type;
-    Collection base;
-    Collection::List baseList;
-    Collection::List collections;
-    QString resource;
-    Collection::List pendingCollections;
-    QTimer *emitTimer;
-    bool unsubscribed;
+    Q_DECLARE_PUBLIC( CollectionFetchJob )
+
+    CollectionFetchJob::ListType mType;
+    Collection mBase;
+    Collection::List mBaseList;
+    Collection::List mCollections;
+    QString mResource;
+    Collection::List mPendingCollections;
+    QTimer *mEmitTimer;
+    bool mUnsubscribed;
 
     void timeout()
     {
-      emitTimer->stop(); // in case we are called by result()
-      if ( !pendingCollections.isEmpty() ) {
-        emit q->collectionsReceived( pendingCollections );
-        pendingCollections.clear();
+      Q_Q( CollectionFetchJob );
+
+      mEmitTimer->stop(); // in case we are called by result()
+      if ( !mPendingCollections.isEmpty() ) {
+        emit q->collectionsReceived( mPendingCollections );
+        mPendingCollections.clear();
       }
     }
 };
 
-CollectionFetchJob::CollectionFetchJob( const Collection &collection, ListType type, QObject *parent ) :
-    Job( parent ),
-    d( new CollectionFetchJobPrivate( this ) )
+CollectionFetchJob::CollectionFetchJob( const Collection &collection, ListType type, QObject *parent )
+  : Job( new CollectionFetchJobPrivate( this ), parent )
 {
+  Q_D( CollectionFetchJob );
+
   Q_ASSERT( collection.isValid() );
-  d->base = collection;
-  d->type = type;
+  d->mBase = collection;
+  d->mType = type;
 }
 
-CollectionFetchJob::CollectionFetchJob(const Collection::List & cols, QObject * parent) :
-    Job( parent ),
-    d( new CollectionFetchJobPrivate( this ) )
+CollectionFetchJob::CollectionFetchJob( const Collection::List & cols, QObject * parent )
+  : Job( new CollectionFetchJobPrivate( this ), parent )
 {
+  Q_D( CollectionFetchJob );
+
   Q_ASSERT( !cols.isEmpty() );
-  d->baseList = cols;
+  d->mBaseList = cols;
 }
 
 CollectionFetchJob::~CollectionFetchJob()
 {
+  Q_D( CollectionFetchJob );
+
   delete d;
 }
 
 Collection::List CollectionFetchJob::collections() const
 {
-  return d->collections;
+  Q_D( const CollectionFetchJob );
+
+  return d->mCollections;
 }
 
 void CollectionFetchJob::doStart()
 {
-  if ( !d->baseList.isEmpty() ) {
-    foreach ( const Collection col, d->baseList ) {
+  Q_D( CollectionFetchJob );
+
+  if ( !d->mBaseList.isEmpty() ) {
+    foreach ( const Collection col, d->mBaseList ) {
       new CollectionFetchJob( col, CollectionFetchJob::Local, this );
     }
     return;
   }
 
   QByteArray command = newTag();
-  if ( d->unsubscribed )
+  if ( d->mUnsubscribed )
     command += " X-AKLIST ";
   else
     command += " X-AKLSUB ";
-  command += QByteArray::number( d->base.id() );
+  command += QByteArray::number( d->mBase.id() );
   command += ' ';
-  switch ( d->type ) {
+  switch ( d->mType ) {
     case Local:
       command += "0 (";
       break;
@@ -121,9 +133,9 @@ void CollectionFetchJob::doStart()
       Q_ASSERT( false );
   }
 
-  if ( !d->resource.isEmpty() ) {
+  if ( !d->mResource.isEmpty() ) {
     command += "RESOURCE \"";
-    command += d->resource.toUtf8();
+    command += d->mResource.toUtf8();
     command += '"';
   }
 
@@ -133,16 +145,18 @@ void CollectionFetchJob::doStart()
 
 void CollectionFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
+  Q_D( CollectionFetchJob );
+
   if ( tag == "*" ) {
     Collection collection;
     ProtocolHelper::parseCollection( data, collection );
     if ( !collection.isValid() )
       return;
 
-    d->collections.append( collection );
-    d->pendingCollections.append( collection );
-    if ( !d->emitTimer->isActive() )
-      d->emitTimer->start();
+    d->mCollections.append( collection );
+    d->mPendingCollections.append( collection );
+    if ( !d->mEmitTimer->isActive() )
+      d->mEmitTimer->start();
     return;
   }
   kDebug( 5250 ) << "Unhandled server response" << tag << data;
@@ -150,14 +164,18 @@ void CollectionFetchJob::doHandleResponse( const QByteArray & tag, const QByteAr
 
 void CollectionFetchJob::setResource(const QString & resource)
 {
-  d->resource = resource;
+  Q_D( CollectionFetchJob );
+
+  d->mResource = resource;
 }
 
 void CollectionFetchJob::slotResult(KJob * job)
 {
+  Q_D( CollectionFetchJob );
+
   CollectionFetchJob *list = dynamic_cast<CollectionFetchJob*>( job );
   Q_ASSERT( job );
-  d->collections += list->collections();
+  d->mCollections += list->collections();
   Job::slotResult( job );
   if ( !job->error() && !hasSubjobs() )
     emitResult();
@@ -165,7 +183,9 @@ void CollectionFetchJob::slotResult(KJob * job)
 
 void CollectionFetchJob::includeUnsubscribed(bool include)
 {
-  d->unsubscribed = include;
+  Q_D( CollectionFetchJob );
+
+  d->mUnsubscribed = include;
 }
 
 #include "collectionfetchjob.moc"

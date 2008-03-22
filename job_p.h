@@ -24,14 +24,21 @@
 
 namespace Akonadi {
 
-class Job::Private
+class JobPrivate
 {
   public:
-    Private( Job *parent )
-      : mParent( parent ),
-        writeFinished( false )
+    JobPrivate( Job *parent )
+      : q_ptr( parent ),
+        mCurrentSubJob( 0 ),
+        mWriteFinished( false )
     {
     }
+
+    virtual ~JobPrivate()
+    {
+    }
+
+    void init( QObject *parent );
 
     void handleResponse( const QByteArray &tag, const QByteArray &data );
     void startQueued();
@@ -39,12 +46,14 @@ class Job::Private
     void slotSubJobAboutToStart( Akonadi::Job* );
     void startNext();
 
-    Job *mParent;
+    Job *q_ptr;
+    Q_DECLARE_PUBLIC( Job )
+
     Job *mParentJob;
     Job *mCurrentSubJob;
     QByteArray mTag;
     Session* mSession;
-    bool writeFinished;
+    bool mWriteFinished;
 };
 
 }

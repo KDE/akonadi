@@ -25,6 +25,8 @@
 
 namespace Akonadi {
 
+class SubscriptionJobPrivate;
+
 /**
   Job to manipulate the local subscription state of a set of collections.
 */
@@ -60,8 +62,7 @@ class AKONADI_EXPORT SubscriptionJob : public Job
     void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( SubscriptionJob )
 };
 
 }

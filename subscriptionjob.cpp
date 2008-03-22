@@ -19,17 +19,24 @@
 
 #include "subscriptionjob.h"
 
+#include "job_p.h"
+
 using namespace Akonadi;
 
-class SubscriptionJob::Private
+class Akonadi::SubscriptionJobPrivate : public JobPrivate
 {
   public:
-    Private( SubscriptionJob *parent ) : q( parent ) {}
+    SubscriptionJobPrivate( SubscriptionJob *parent )
+      : JobPrivate( parent )
+    {
+    }
 
     void sendCommand( const QByteArray &cmd, const Collection::List &list )
     {
-      tag = q->newTag();
-      QByteArray line = tag + ' ' + cmd;
+      Q_Q( SubscriptionJob );
+
+      mTag = q->newTag();
+      QByteArray line = mTag + ' ' + cmd;
       foreach ( const Collection col, list )
         line += ' ' + QByteArray::number( col.id() );
       line += '\n';
@@ -39,52 +46,64 @@ class SubscriptionJob::Private
 
     void sendNextCommand()
     {
+      Q_Q( SubscriptionJob );
+
       QByteArray cmd;
-      if ( !sub.isEmpty() ) {
-        sendCommand( "SUBSCRIBE", sub );
-        sub.clear();
-      } else if ( !unsub.isEmpty() ) {
-        sendCommand( "UNSUBSCRIBE", unsub );
-        unsub.clear();
+      if ( !mSub.isEmpty() ) {
+        sendCommand( "SUBSCRIBE", mSub );
+        mSub.clear();
+      } else if ( !mUnsub.isEmpty() ) {
+        sendCommand( "UNSUBSCRIBE", mUnsub );
+        mUnsub.clear();
       } else {
         q->emitResult();
       }
     }
 
-    SubscriptionJob* q;
-    QByteArray tag;
-    Collection::List sub, unsub;
+    Q_DECLARE_PUBLIC( SubscriptionJob )
+
+    QByteArray mTag;
+    Collection::List mSub, mUnsub;
 };
 
-SubscriptionJob::SubscriptionJob(QObject * parent) :
-    Job( parent ),
-    d( new Private( this ) )
+SubscriptionJob::SubscriptionJob(QObject * parent)
+  : Job( new SubscriptionJobPrivate( this ), parent )
 {
 }
 
-SubscriptionJob::~ SubscriptionJob()
+SubscriptionJob::~SubscriptionJob()
 {
+  Q_D( SubscriptionJob );
+
   delete d;
 }
 
 void SubscriptionJob::subscribe(const Collection::List & list)
 {
-  d->sub = list;
+  Q_D( SubscriptionJob );
+
+  d->mSub = list;
 }
 
 void SubscriptionJob::unsubscribe(const Collection::List & list)
 {
-  d->unsub = list;
+  Q_D( SubscriptionJob );
+
+  d->mUnsub = list;
 }
 
 void SubscriptionJob::doStart()
 {
+  Q_D( SubscriptionJob );
+
   d->sendNextCommand();
 }
 
 void SubscriptionJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
 {
-  if ( _tag == d->tag ) {
+  Q_D( SubscriptionJob );
+
+  if ( _tag == d->mTag ) {
     if ( data.startsWith( "OK" ) ) {
       d->sendNextCommand();
     } else {

@@ -19,41 +19,53 @@
 
 #include "itemcopyjob.h"
 #include "imapset_p.h"
+#include "job_p.h"
 
 using namespace Akonadi;
 
-class ItemCopyJob::Private
+class Akonadi::ItemCopyJobPrivate : public JobPrivate
 {
   public:
-    Item::List items;
-    Collection target;
+    ItemCopyJobPrivate( ItemCopyJob *parent )
+      : JobPrivate( parent )
+    {
+    }
+
+    Item::List mItems;
+    Collection mTarget;
 };
 
-ItemCopyJob::ItemCopyJob(const Item & item, const Collection & target, QObject * parent) :
-    Job( parent ),
-    d( new Private )
+ItemCopyJob::ItemCopyJob(const Item & item, const Collection & target, QObject * parent)
+  : Job( new ItemCopyJobPrivate( this ), parent )
 {
-  d->items << item;
-  d->target = target;
+  Q_D( ItemCopyJob );
+
+  d->mItems << item;
+  d->mTarget = target;
 }
 
-ItemCopyJob::ItemCopyJob(const Item::List & items, const Collection & target, QObject * parent) :
-    Job( parent ),
-    d( new Private )
+ItemCopyJob::ItemCopyJob(const Item::List & items, const Collection & target, QObject * parent)
+  : Job( new ItemCopyJobPrivate( this ), parent )
 {
-  d->items = items;
-  d->target = target;
+  Q_D( ItemCopyJob );
+
+  d->mItems = items;
+  d->mTarget = target;
 }
 
 ItemCopyJob::~ ItemCopyJob()
 {
+  Q_D( ItemCopyJob );
+
   delete d;
 }
 
 void ItemCopyJob::doStart()
 {
+  Q_D( ItemCopyJob );
+
   QList<Item::Id> ids;
-  foreach ( const Item item, d->items )
+  foreach ( const Item item, d->mItems )
     ids << item.id();
   ImapSet set;
   set.add( ids );
@@ -61,7 +73,7 @@ void ItemCopyJob::doStart()
   cmd += " COPY ";
   cmd += set.toImapSequenceSet();
   cmd += ' ';
-  cmd += QByteArray::number( d->target.id() );
+  cmd += QByteArray::number( d->mTarget.id() );
   cmd += '\n';
   writeData( cmd );
 }

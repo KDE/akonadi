@@ -49,8 +49,7 @@ class ExpungeJob : public Job
     virtual void doStart();
 
   private:
-    ExpungeJobPrivate *d;
-
+    Q_DECLARE_PRIVATE( ExpungeJob )
 };
 
 }

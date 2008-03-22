@@ -32,6 +32,7 @@
 
 namespace Akonadi {
 
+class JobPrivate;
 class Session;
 class SessionPrivate;
 
@@ -204,12 +205,17 @@ class AKONADI_EXPORT Job : public KCompositeJob
   protected Q_SLOTS:
     virtual void slotResult( KJob* job );
 
-  private:
-    class Private;
-    Private* const d;
+  protected:
+    //@cond PRIVATE
+    Job( JobPrivate *dd, QObject *parent = 0 );
+    JobPrivate* const d_ptr;
+    //@endcond
 
-    Q_PRIVATE_SLOT( d, void slotSubJobAboutToStart( Akonadi::Job* ) )
-    Q_PRIVATE_SLOT( d, void startNext() )
+  private:
+    Q_DECLARE_PRIVATE( Job )
+
+    Q_PRIVATE_SLOT( d_func(), void slotSubJobAboutToStart( Akonadi::Job* ) )
+    Q_PRIVATE_SLOT( d_func(), void startNext() )
 };
 
 }

@@ -21,73 +21,78 @@
 #include "itemcreatejob.h"
 #include "imapparser_p.h"
 #include "itemserializer.h"
+#include "job_p.h"
 
 #include <kdebug.h>
 
 using namespace Akonadi;
 
-class Akonadi::ItemCreateJob::Private
+class Akonadi::ItemCreateJobPrivate : public JobPrivate
 {
   public:
-    Private( ItemCreateJob *parent )
-      : mParent( parent )
+    ItemCreateJobPrivate( ItemCreateJob *parent )
+      : JobPrivate( parent )
     {
     }
 
-    ItemCreateJob *mParent;
-    Collection collection;
-    Item item;
-    QStringList parts;
-    Item::Id uid;
-    QByteArray data;
+    Collection mCollection;
+    Item mItem;
+    QStringList mParts;
+    Item::Id mUid;
+    QByteArray mData;
 };
 
-ItemCreateJob::ItemCreateJob( const Item &item, const Collection &collection, QObject * parent ) :
-    Job( parent ),
-    d( new Private( this ) )
+ItemCreateJob::ItemCreateJob( const Item &item, const Collection &collection, QObject * parent )
+  : Job( new ItemCreateJobPrivate( this ), parent )
 {
+  Q_D( ItemCreateJob );
+
   Q_ASSERT( !item.mimeType().isEmpty() );
-  d->item = item;
-  d->parts = d->item.loadedPayloadParts();
+  d->mItem = item;
+  d->mParts = d->mItem.loadedPayloadParts();
   foreach ( const Attribute *attr, item.attributes() )
-    d->parts << QString::fromLatin1( attr->type() );
-  d->collection = collection;
+    d->mParts << QString::fromLatin1( attr->type() );
+  d->mCollection = collection;
 }
 
 ItemCreateJob::~ ItemCreateJob( )
 {
+  Q_D( ItemCreateJob );
+
   delete d;
 }
 
 void ItemCreateJob::doStart()
 {
+  Q_D( ItemCreateJob );
+
   QByteArray remoteId;
 
-  if ( !d->item.remoteId().isEmpty() )
-    remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->item.remoteId().toUtf8() + ']' );
+  if ( !d->mItem.remoteId().isEmpty() )
+    remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' );
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
-  if ( d->parts.isEmpty() || (d->parts.size() == 1 && d->parts.first() == Item::PartBody) ) {
-    if ( d->item.hasPayload() )
-      ItemSerializer::serialize( d->item, Item::PartBody, d->data );
-    int dataSize = d->data.size();
+  if ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.first() == Item::PartBody) ) {
+    if ( d->mItem.hasPayload() )
+      ItemSerializer::serialize( d->mItem, Item::PartBody, d->mData );
+    int dataSize = d->mData.size();
 
-    writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
-        + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") {"
+    writeData( newTag() + " APPEND " + QByteArray::number( d->mCollection.id() )
+        + " (\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' + remoteId + ") {"
         + QByteArray::number( dataSize ) + "}\n" );
   }
   else { // do a multipart X-AKAPPEND
-    QByteArray command = newTag() + " X-AKAPPEND " + QByteArray::number( d->collection.id() )
-        + " (\\MimeType[" + d->item.mimeType().toLatin1() + ']' + remoteId + ") ";
+    QByteArray command = newTag() + " X-AKAPPEND " + QByteArray::number( d->mCollection.id() )
+        + " (\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' + remoteId + ") ";
 
     QList<QByteArray> partSpecs;
     int totalSize = 0;
-    foreach( const QString partName, d->parts ) {
+    foreach( const QString partName, d->mParts ) {
       QByteArray partData;
-      ItemSerializer::serialize( d->item, partName, partData );
+      ItemSerializer::serialize( d->mItem, partName, partData );
       totalSize += partData.size();
       partSpecs.append( ImapParser::quote( partName.toLatin1() ) + ':' +
         QByteArray::number( partData.size() ) );
-      d->data += partData;
+      d->mData += partData;
     }
     command += '(' + ImapParser::join( partSpecs, "," ) + ") " +
       '{' + QByteArray::number( totalSize ) + "}\n";
@@ -98,16 +103,18 @@ void ItemCreateJob::doStart()
 
 void ItemCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
+  Q_D( ItemCreateJob );
+
   if ( tag == "+" ) { // ready for literal data
-    writeData( d->data );
-    if ( !d->data.endsWith( '\n' ) )
+    writeData( d->mData );
+    if ( !d->mData.endsWith( '\n' ) )
       writeData( "\n" );
     return;
   }
   if ( tag == this->tag() ) {
     if ( int pos = data.indexOf( "UIDNEXT" ) ) {
       bool ok = false;
-      ImapParser::parseNumber( data, d->uid, &ok, pos + 7 );
+      ImapParser::parseNumber( data, d->mUid, &ok, pos + 7 );
       if ( !ok ) {
         kDebug( 5250 ) << "Invalid UIDNEXT response to APPEND command: "
                        << tag << data;
@@ -118,10 +125,14 @@ void ItemCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray &
 
 Item ItemCreateJob::item() const
 {
-  if ( d->uid == 0 )
+  Q_D( const ItemCreateJob );
+
+  if ( d->mUid == 0 )
     return Item();
-  Item item( d->item );
-  item.setId( d->uid );
+
+  Item item( d->mItem );
+  item.setId( d->mUid );
+
   return item;
 }
 

@@ -74,7 +74,7 @@ void SessionPrivate::reconnect()
 void SessionPrivate::socketError()
 {
   if ( currentJob )
-    currentJob->d->lostConnection();
+    currentJob->d_ptr->lostConnection();
   connected = false;
   QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
 }
@@ -108,7 +108,7 @@ void SessionPrivate::dataReceived()
       // work for the current job
       } else {
         if ( currentJob )
-          currentJob->d->handleResponse( parser->tag(), parser->data() );
+          currentJob->d_ptr->handleResponse( parser->tag(), parser->data() );
       }
 
       // reset parser stuff
@@ -124,9 +124,9 @@ bool SessionPrivate::canPipelineNext()
   if ( queue.isEmpty() || pipeline.count() >= PIPELINE_LENGTH )
     return false;
   if ( pipeline.isEmpty() && currentJob )
-    return currentJob->d->writeFinished;
+    return currentJob->d_ptr->mWriteFinished;
   if ( !pipeline.isEmpty() )
-    return pipeline.last()->d->writeFinished;
+    return pipeline.last()->d_ptr->mWriteFinished;
   return false;
 }
 
@@ -137,7 +137,7 @@ void SessionPrivate::doStartNext()
   if ( canPipelineNext() ) {
     Akonadi::Job *nextJob = queue.dequeue();
     pipeline.enqueue( nextJob );
-    nextJob->d->startQueued();
+    nextJob->d_ptr->startQueued();
   }
   if ( jobRunning )
     return;
@@ -146,7 +146,7 @@ void SessionPrivate::doStartNext()
     currentJob = pipeline.dequeue();
   } else {
     currentJob = queue.dequeue();
-    currentJob->d->startQueued();
+    currentJob->d_ptr->startQueued();
   }
 }
 

@@ -42,6 +42,7 @@ class AKONADI_EXPORT Session : public QObject
   Q_OBJECT
 
   friend class Job;
+  friend class JobPrivate;
   friend class SessionPrivate;
 
   public:

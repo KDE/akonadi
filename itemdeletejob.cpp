@@ -17,14 +17,15 @@
     02110-1301, USA.
 */
 
+#include "expungejob.h"
 #include "itemdeletejob.h"
 #include "itemmodifyjob.h"
-#include "expungejob.h"
+#include "job_p.h"
 #include "transactionjobs.h"
 
 using namespace Akonadi;
 
-class ItemDeleteJob::Private
+class Akonadi::ItemDeleteJobPrivate : public JobPrivate
 {
   public:
     enum State {
@@ -34,43 +35,51 @@ class ItemDeleteJob::Private
       Commit
     };
 
-    Private( ItemDeleteJob *parent )
-      : mParent( parent )
+    ItemDeleteJobPrivate( ItemDeleteJob *parent )
+      : JobPrivate( parent )
     {
     }
 
     void jobDone( KJob* );
 
-    ItemDeleteJob *mParent;
-    Item item;
-    State state;
+    Q_DECLARE_PUBLIC( ItemDeleteJob )
+
+    Item mItem;
+    State mState;
 };
 
-void ItemDeleteJob::Private::jobDone( KJob * job )
+void ItemDeleteJobPrivate::jobDone( KJob * job )
 {
+  Q_Q( ItemDeleteJob );
+
   if ( !job->error() ) // error is already handled by KCompositeJob
-    mParent->emitResult();
+    q->emitResult();
 }
 
 ItemDeleteJob::ItemDeleteJob( const Item & item, QObject * parent )
-  : Job( parent ),
-    d( new Private( this ) )
+  : Job( new ItemDeleteJobPrivate( this ), parent )
 {
-  d->item = item;
-  d->state = Private::Begin;
+  Q_D( ItemDeleteJob );
+
+  d->mItem = item;
+  d->mState = ItemDeleteJobPrivate::Begin;
 }
 
-ItemDeleteJob::~ ItemDeleteJob()
+ItemDeleteJob::~ItemDeleteJob()
 {
+  Q_D( ItemDeleteJob );
+
   delete d;
 }
 
 void ItemDeleteJob::doStart()
 {
+  Q_D( ItemDeleteJob );
+
   TransactionBeginJob *begin = new TransactionBeginJob( this );
   addSubjob( begin );
 
-  ItemModifyJob* store = new ItemModifyJob( d->item, this );
+  ItemModifyJob* store = new ItemModifyJob( d->mItem, this );
   store->addFlag( "\\Deleted" );
   addSubjob( store );
 

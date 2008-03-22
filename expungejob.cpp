@@ -19,15 +19,29 @@
 
 #include "expungejob.h"
 
+#include "job_p.h"
+
 using namespace Akonadi;
 
-ExpungeJob::ExpungeJob(QObject * parent) :
-    Job( parent )
+class Akonadi::ExpungeJobPrivate : public JobPrivate
+{
+  public:
+    ExpungeJobPrivate( ExpungeJob * parent )
+      : JobPrivate( parent )
+    {
+    }
+};
+
+ExpungeJob::ExpungeJob(QObject * parent)
+  : Job( new ExpungeJobPrivate( this ), parent )
 {
 }
 
-ExpungeJob::~ ExpungeJob()
+ExpungeJob::~ExpungeJob()
 {
+  Q_D( ExpungeJob );
+
+  delete d;
 }
 
 void ExpungeJob::doStart()

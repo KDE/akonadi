@@ -26,6 +26,8 @@
 
 namespace Akonadi {
 
+class ItemFetchJobPrivate;
+
 /**
   Fetches item data from the backend.
 */
@@ -97,11 +99,10 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( ItemFetchJob )
 
-    Q_PRIVATE_SLOT( d, void selectDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void timeout() )
+    Q_PRIVATE_SLOT( d_func(), void selectDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void timeout() )
 };
 
 }

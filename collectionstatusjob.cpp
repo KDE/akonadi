@@ -19,37 +19,50 @@
 
 #include "collectionstatusjob.h"
 #include "imapparser_p.h"
+#include "job_p.h"
 
 #include <kdebug.h>
 
 using namespace Akonadi;
 
-class Akonadi::CollectionStatusJobPrivate
+class Akonadi::CollectionStatusJobPrivate : public JobPrivate
 {
   public:
-    Collection collection;
-    CollectionStatus status;
+    CollectionStatusJobPrivate( CollectionStatusJob *parent )
+      : JobPrivate( parent )
+    {
+    }
+
+    Collection mCollection;
+    CollectionStatus mStatus;
 };
 
-CollectionStatusJob::CollectionStatusJob( const Collection &collection, QObject * parent ) :
-    Job( parent ),
-    d( new CollectionStatusJobPrivate )
+CollectionStatusJob::CollectionStatusJob( const Collection &collection, QObject * parent )
+  : Job( new CollectionStatusJobPrivate( this ), parent )
 {
-  d->collection = collection;
+  Q_D( CollectionStatusJob );
+
+  d->mCollection = collection;
 }
 
 CollectionStatusJob::~ CollectionStatusJob( )
 {
+  Q_D( CollectionStatusJob );
+
   delete d;
 }
 
 void CollectionStatusJob::doStart( )
 {
-  writeData( newTag() + " STATUS " + QByteArray::number( d->collection.id() ) + " (MESSAGES UNSEEN)\n" );
+  Q_D( CollectionStatusJob );
+
+  writeData( newTag() + " STATUS " + QByteArray::number( d->mCollection.id() ) + " (MESSAGES UNSEEN)\n" );
 }
 
 void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
+  Q_D( CollectionStatusJob );
+
   if ( tag == "*" ) {
     QByteArray token;
     int current = ImapParser::parseString( data, token );
@@ -61,15 +74,15 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
       current = ImapParser::parseParenthesizedList( data, list, current );
       for ( int i = 0; i < list.count() - 1; i += 2 ) {
         if ( list[i] == "MESSAGES" ) {
-          d->status.setCount( list[i+1].toInt() );
+          d->mStatus.setCount( list[i+1].toInt() );
         } else if ( list[i] == "UNSEEN" ) {
-          d->status.setUnreadCount( list[i+1].toInt() );
+          d->mStatus.setUnreadCount( list[i+1].toInt() );
         } else {
           kDebug( 5250 ) << "Unknown STATUS response: " << list[i];
         }
       }
 
-      d->collection.setStatus( d->status );
+      d->mCollection.setStatus( d->mStatus );
       return;
     }
   }
@@ -78,13 +91,16 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
 
 Collection CollectionStatusJob::collection() const
 {
-  return d->collection;
+  Q_D( const CollectionStatusJob );
+
+  return d->mCollection;
 }
 
 CollectionStatus Akonadi::CollectionStatusJob::status() const
 {
-  return d->status;
-}
+  Q_D( const CollectionStatusJob );
 
+  return d->mStatus;
+}
 
 #include "collectionstatusjob.moc"

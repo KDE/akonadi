@@ -21,45 +21,55 @@
 #include "imapparser_p.h"
 #include "protocolhelper.h"
 
+#include "job_p.h"
+
 #include <kdebug.h>
 
 using namespace Akonadi;
 
-class Akonadi::CollectionCreateJobPrivate {
+class Akonadi::CollectionCreateJobPrivate : public JobPrivate
+{
   public:
-    CollectionCreateJobPrivate()
-    {}
+    CollectionCreateJobPrivate( CollectionCreateJob *parent )
+      : JobPrivate( parent )
+    {
+    }
 
-    Collection collection;
+    Collection mCollection;
 };
 
-CollectionCreateJob::CollectionCreateJob( const Collection &collection, QObject * parent ) :
-    Job( parent ),
-    d( new CollectionCreateJobPrivate )
+CollectionCreateJob::CollectionCreateJob( const Collection &collection, QObject * parent )
+  : Job( new CollectionCreateJobPrivate( this ), parent )
 {
-  d->collection = collection;
+  Q_D( CollectionCreateJob );
+
+  d->mCollection = collection;
 }
 
 CollectionCreateJob::~ CollectionCreateJob( )
 {
+  Q_D( CollectionCreateJob );
+
   delete d;
 }
 
 void CollectionCreateJob::doStart( )
 {
-  QByteArray command = newTag() + " CREATE \"" + d->collection.name().toUtf8() + "\" ";
-  command += QByteArray::number( d->collection.parent() );
+  Q_D( CollectionCreateJob );
+
+  QByteArray command = newTag() + " CREATE \"" + d->mCollection.name().toUtf8() + "\" ";
+  command += QByteArray::number( d->mCollection.parent() );
   command += " (";
-  if ( !d->collection.contentTypes().isEmpty() )
+  if ( !d->mCollection.contentTypes().isEmpty() )
   {
     QList<QByteArray> cList;
-    foreach( QString s, d->collection.contentTypes() ) cList << s.toLatin1();
+    foreach( QString s, d->mCollection.contentTypes() ) cList << s.toLatin1();
     command += "MIMETYPE (" + ImapParser::join( cList, QByteArray(" ") ) + ')';
   }
-  command += " REMOTEID \"" + d->collection.remoteId().toUtf8() + '"';
-  foreach ( Attribute* attr, d->collection.attributes() )
+  command += " REMOTEID \"" + d->mCollection.remoteId().toUtf8() + '"';
+  foreach ( Attribute* attr, d->mCollection.attributes() )
     command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->toByteArray() );
-  command += ' ' + ProtocolHelper::cachePolicyToByteArray( d->collection.cachePolicy() );
+  command += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
   command += ")\n";
   writeData( command );
   emitWriteFinished();
@@ -67,21 +77,25 @@ void CollectionCreateJob::doStart( )
 
 Collection CollectionCreateJob::collection() const
 {
-  return d->collection;
+  Q_D( const CollectionCreateJob );
+
+  return d->mCollection;
 }
 
 void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteArray & data)
 {
+  Q_D( CollectionCreateJob );
+
   if ( tag == "*" ) {
     Collection col;
     ProtocolHelper::parseCollection( data, col );
     if ( !col.isValid() )
       return;
 
-    col.setParent( d->collection.parent() );
-    col.setName( d->collection.name() );
-    col.setRemoteId( d->collection.remoteId() );
-    d->collection = col;
+    col.setParent( d->mCollection.parent() );
+    col.setName( d->mCollection.name() );
+    col.setRemoteId( d->mCollection.remoteId() );
+    d->mCollection = col;
   } else {
     Job::doHandleResponse( tag, data );
   }
