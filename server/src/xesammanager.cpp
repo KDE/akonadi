@@ -75,7 +75,7 @@ void XesamManager::slotHitsAdded(const QString & search, int count)
 {
   qDebug() << "hits added: " << search << count;
   mMutex.lock();
-  int colId = mSearchMap.value( search );
+  qint64 colId = mSearchMap.value( search );
   mMutex.unlock();
   if ( colId <= 0 || count <= 0 )
     return;
@@ -86,7 +86,7 @@ void XesamManager::slotHitsAdded(const QString & search, int count)
   foreach ( const VariantList list, results ) {
     if ( list.isEmpty() )
       continue;
-    int itemId = uriToItemId( list.first().toString() );
+    qint64 itemId = uriToItemId( list.first().toString() );
     Entity::addToRelation<LocationPimItemRelation>( colId, itemId );
   }
 }
@@ -95,7 +95,7 @@ void XesamManager::slotHitsRemoved(const QString & search, const QList<int> & hi
 {
   qDebug() << "hits removed: " << search << hits;
   mMutex.lock();
-  int colId = mSearchMap.value( search );
+  qint64 colId = mSearchMap.value( search );
   mMutex.unlock();
   if ( colId <= 0 )
     return;
@@ -104,7 +104,7 @@ void XesamManager::slotHitsRemoved(const QString & search, const QList<int> & hi
   foreach ( const VariantList list, results ) {
     if ( list.isEmpty() )
       continue;
-    int itemId = uriToItemId( list.first().toString() );
+    qint64 itemId = uriToItemId( list.first().toString() );
     Entity::removeFromRelation<LocationPimItemRelation>( colId, itemId );
   }
 }
@@ -150,7 +150,7 @@ bool XesamManager::addSearch(const Location & loc)
   return true;
 }
 
-bool XesamManager::removeSearch(int loc)
+bool XesamManager::removeSearch(qint64 loc)
 {
   QMutexLocker lock( &mMutex );
   if ( !mInvSearchMap.contains( loc ) )
@@ -174,10 +174,10 @@ void XesamManager::stopSearches()
   }
 }
 
-int XesamManager::uriToItemId(const QString & uri)
+qint64 XesamManager::uriToItemId(const QString & uri)
 {
   // TODO implement me!
-  return uri.toInt();
+  return uri.toLongLong();
 }
 
 #include "xesammanager.moc"

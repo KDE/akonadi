@@ -167,10 +167,10 @@ bool Fetch::handleLine( const QByteArray& line )
   DataStore *store = connection()->storageBackend();
   if ( !partList.isEmpty() || mAllParts ) {
     while ( itemQuery.query().isValid() ) {
-      const int pimItemId = itemQuery.query().value( itemQueryIdColumn ).toInt();
+      const qint64 pimItemId = itemQuery.query().value( itemQueryIdColumn ).toLongLong();
       QStringList missingParts = partList;
       while ( partQuery.query().isValid() ) {
-        const int id = partQuery.query().value( partQueryIdColumn ).toInt();
+        const qint64 id = partQuery.query().value( partQueryIdColumn ).toLongLong();
         if ( id < pimItemId ) {
           partQuery.query().next();
           continue;
@@ -205,7 +205,7 @@ bool Fetch::handleLine( const QByteArray& line )
   Response response;
   response.setUntagged();
   while ( itemQuery.query().isValid() ) {
-    const int pimItemId = itemQuery.query().value( itemQueryIdColumn ).toInt();
+    const qint64 pimItemId = itemQuery.query().value( itemQueryIdColumn ).toLongLong();
     const int pimItemRev = itemQuery.query().value( itemQueryRevColumn ).toInt();
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
@@ -216,7 +216,7 @@ bool Fetch::handleLine( const QByteArray& line )
     if ( mAttrList.contains( "FLAGS" ) ) {
       QList<QByteArray> flags;
       while ( flagQuery.query().isValid() ) {
-        const int id = flagQuery.query().value( flagQueryIdColumn ).toInt();
+        const qint64 id = flagQuery.query().value( flagQueryIdColumn ).toLongLong();
         if ( id < pimItemId ) {
           flagQuery.query().next();
           continue;
@@ -230,7 +230,7 @@ bool Fetch::handleLine( const QByteArray& line )
     }
 
     while ( partQuery.query().isValid() ) {
-      const int id = partQuery.query().value( partQueryIdColumn ).toInt();
+      const qint64 id = partQuery.query().value( partQueryIdColumn ).toLongLong();
       if ( id < pimItemId ) {
         partQuery.query().next();
         continue;

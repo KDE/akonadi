@@ -72,7 +72,7 @@ bool Store::handleLine( const QByteArray& line )
     return failureResponse( "No items found" );
 
   // parse revision
-  int rev;
+  qint64 rev;
   bool revCheck = true;
   bool ok;
   pos = ImapParser::parseString( line, buffer, pos ); // skip 'REV'
@@ -88,7 +88,7 @@ bool Store::handleLine( const QByteArray& line )
   for ( int i = 0; i < pimItems.count(); ++i ) {
     if ( revCheck ) {
       // check if revision number of given items and their database equivalents match
-      if ( pimItems.at( i ).rev() != rev ) {
+      if ( pimItems.at( i ).rev() != (int)rev ) {
         return failureResponse( "Item was modified elsewhere, aborting STORE." );
       }
     }

@@ -41,8 +41,8 @@ namespace Akonadi {
 class Entity
 {
   public:
-    int id() const;
-    void setId( int id );
+    qint64 id() const;
+    void setId( qint64 id );
 
     bool isValid() const;
 
@@ -104,7 +104,7 @@ class Entity
       @param leftId Identifier of the left part of the relation.
       @param rightId Identifier of the right part of the relation.
      */
-    template <typename T> inline static bool relatesTo( int leftId, int rightId )
+    template <typename T> inline static bool relatesTo( qint64 leftId, qint64 rightId )
     {
       QSqlDatabase db = database();
       if ( !db.isOpen() )
@@ -131,7 +131,7 @@ class Entity
       @param leftId Identifier of the left part of the relation.
       @param rightId Identifier of the right part of the relation.
     */
-    template <typename T> inline static bool addToRelation( int leftId, int rightId )
+    template <typename T> inline static bool addToRelation( qint64 leftId, qint64 rightId )
     {
       QSqlDatabase db = database();
       if ( !db.isOpen() )
@@ -164,7 +164,7 @@ class Entity
       @param leftId Identifier of the left part of the relation.
       @param rightId Identifier of the right part of the relation.
     */
-    template <typename T> inline static bool removeFromRelation( int leftId, int rightId )
+    template <typename T> inline static bool removeFromRelation( qint64 leftId, qint64 rightId )
     {
       QSqlDatabase db = database();
       if ( !db.isOpen() )
@@ -194,7 +194,7 @@ class Entity
       @param id Identifier on the relation side.
       @param side The side of the relation.
     */
-    template <typename T> inline static bool clearRelation( int id, RelationSide side = Left )
+    template <typename T> inline static bool clearRelation( qint64 id, RelationSide side = Left )
     {
       QSqlDatabase db = database();
       if ( !db.isOpen() )
@@ -223,12 +223,12 @@ class Entity
 
   protected:
     Entity();
-    Entity( int id );
+    Entity( qint64 id );
 
 
   private:
     static QSqlDatabase database();
-    int m_id;
+    qint64 m_id;
 };
 
 }

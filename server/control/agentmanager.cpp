@@ -285,7 +285,7 @@ void AgentManager::agentInstanceSynchronizeCollectionTree(const QString & identi
   mAgentInstances.value( identifier ).resourceInterface->synchronizeCollectionTree();
 }
 
-void AgentManager::agentInstanceSynchronizeCollection(const QString & identifier, int collection)
+void AgentManager::agentInstanceSynchronizeCollection(const QString & identifier, qint64 collection)
 {
   if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceSynchronizeCollection" ) ) )
     return;

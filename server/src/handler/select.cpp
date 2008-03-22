@@ -62,7 +62,7 @@ bool Select::handleLine(const QByteArray& line )
     Location l = HandlerHelper::collectionFromIdOrName( buffer );
     if ( !l.isValid() ) {
       bool ok = false;
-      if ( buffer.toInt( &ok ) == 0 && ok )
+      if ( buffer.toLongLong( &ok ) == 0 && ok )
         silent = true;
       else
         return failureResponse( "Cannot select this collection" );

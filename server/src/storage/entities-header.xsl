@@ -108,7 +108,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
     // check existence
     <xsl:if test="column[@name = 'id']">
     /** Checks if a record with id @p id exists. */
-    static bool exists( int id );
+    static bool exists( qint64 id );
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
     /** Checks if a record with name @name exists. */
@@ -118,7 +118,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
     // data retrieval
     <xsl:if test="column[@name = 'id']">
     /** Returns the record with id @p id. */
-    <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveById( int id );
+    <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveById( qint64 id );
     </xsl:if>
 
     <xsl:if test="column[@name = 'name']">
@@ -158,7 +158,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
       Inserts this record into the DataStore.
       @param insertId pointer to an int, filled with the identifier of this record on success.
     */
-    bool insert( int* insertId = 0 );
+    bool insert( qint64* insertId = 0 );
 
     /**
       Stores all changes made to this record into the database.
@@ -174,7 +174,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
     bool remove();
 
     /** Deletes the record with the given id. */
-    static bool remove( int id );
+    static bool remove( qint64 id );
     </xsl:if>
 
     /**
@@ -202,25 +202,25 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
       Checks wether this record is in a n:m relation with the <xsl:value-of select="@table2"/> @p value.
     */
     bool relatesTo<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const;
-    static bool relatesTo<xsl:value-of select="@table2"/>( int leftId, int rightId );
+    static bool relatesTo<xsl:value-of select="@table2"/>( qint64 leftId, qint64 rightId );
 
     /**
       Adds a n:m relation between this record and the <xsl:value-of select="@table2"/> @p value.
     */
     bool add<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const;
-    static bool add<xsl:value-of select="@table2"/>( int leftId, int rightId );
+    static bool add<xsl:value-of select="@table2"/>( qint64 leftId, qint64 rightId );
 
     /**
       Removes a n:m relation between this record and the <xsl:value-of select="@table2"/> @p value.
     */
     bool remove<xsl:value-of select="@table2"/>( const <xsl:value-of select="$rightSideClass"/> &amp; value ) const;
-    static bool remove<xsl:value-of select="@table2"/>( int leftId, int rightId );
+    static bool remove<xsl:value-of select="@table2"/>( qint64 leftId, qint64 rightId );
 
     /**
       Removes all relations between this record and any <xsl:value-of select="@table2"/>.
     */
     bool clear<xsl:value-of select="@table2"/>s() const;
-    static bool clear<xsl:value-of select="@table2"/>s( int id );
+    static bool clear<xsl:value-of select="@table2"/>s( qint64 id );
     </xsl:for-each>
 
   protected:

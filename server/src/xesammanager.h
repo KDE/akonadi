@@ -38,12 +38,12 @@ class XesamManager : public QObject
 
     static XesamManager* instance() { return mInstance; }
     bool addSearch( const Location &loc );
-    bool removeSearch( int loc );
+    bool removeSearch( qint64 loc );
 
   private:
     void reloadSearches();
     void stopSearches();
-    int uriToItemId( const QString &uri );
+    qint64 uriToItemId( const QString &uri );
 
   private slots:
     void slotHitsAdded( const QString &search, int count );

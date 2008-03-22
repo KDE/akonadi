@@ -49,7 +49,7 @@ bool AkList::handleLine(const QByteArray& line )
   if ( tmp == "X-AKLSUB" )
     mOnlySubscribed = true;
 
-  int baseCollection;
+  qint64 baseCollection;
   bool ok = false;
   pos = ImapParser::parseNumber( line, baseCollection, &ok, pos );
   if ( !ok )

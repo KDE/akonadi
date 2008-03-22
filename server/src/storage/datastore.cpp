@@ -377,7 +377,7 @@ bool Akonadi::DataStore::cleanupLocation(Location & location)
   return location.remove();
 }
 
-bool Akonadi::DataStore::renameLocation(const Location & location, int newParent, const QString & newName)
+bool Akonadi::DataStore::renameLocation(const Location & location, qint64 newParent, const QString & newName)
 {
   if ( location.name() == newName && location.parentId() == newParent )
     return true;
@@ -412,7 +412,7 @@ bool Akonadi::DataStore::renameLocation(const Location & location, int newParent
 }
 
 
-bool DataStore::appendMimeTypeForLocation( int locationId, const QStringList & mimeTypes )
+bool DataStore::appendMimeTypeForLocation( qint64 locationId, const QStringList & mimeTypes )
 {
   if ( mimeTypes.isEmpty() )
     return true;
@@ -432,7 +432,7 @@ bool DataStore::appendMimeTypeForLocation( int locationId, const QStringList & m
 
   // the MIME type doesn't exist, so we have to add it to the db
   foreach ( const QString mtName, missingMimeTypes ) {
-    int mimeTypeId;
+    qint64 mimeTypeId;
     if ( !appendMimeType( mtName, &mimeTypeId ) )
       return false;
     if ( !Location::addMimeType( locationId, mimeTypeId ) )
@@ -442,7 +442,7 @@ bool DataStore::appendMimeTypeForLocation( int locationId, const QStringList & m
   return true;
 }
 
-bool Akonadi::DataStore::removeMimeTypesForLocation(int locationId)
+bool Akonadi::DataStore::removeMimeTypesForLocation(qint64 locationId)
 {
   return Location::clearMimeTypes( locationId );
 }
@@ -473,7 +473,7 @@ void DataStore::activeCachePolicy(Location & loc)
 }
 
 /* --- MimeType ------------------------------------------------------ */
-bool DataStore::appendMimeType( const QString & mimetype, int *insertId )
+bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
 {
   if ( MimeType::exists( mimetype ) ) {
     qDebug() << "Cannot insert mimetype " << mimetype
@@ -621,7 +621,7 @@ bool DataStore::cleanupPimItems( const Location &location )
   QList<PimItem> pimItems;
   while ( qb.query().next() ) {
     PimItem item;
-    item.setId( qb.query().value( 0 ).toInt() );
+    item.setId( qb.query().value( 0 ).toLongLong() );
 
     pimItems.append( item );
   }
@@ -633,7 +633,7 @@ bool DataStore::cleanupPimItems( const Location &location )
   return ok;
 }
 
-void Akonadi::DataStore::retrieveDataFromResource( int uid, const QByteArray& remote_id,
+void Akonadi::DataStore::retrieveDataFromResource( qint64 uid, const QByteArray& remote_id,
                                                    const QString &resource, const QStringList &parts )
 {
   // TODO: error handling
@@ -699,7 +699,7 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
   return qb.result();
 }
 
-int DataStore::highestPimItemId() const
+qint64 DataStore::highestPimItemId() const
 {
   if ( !m_dbOpened )
     return -1;
@@ -717,7 +717,7 @@ int DataStore::highestPimItemId() const
     return -1;
   }
 
-  return query.value( 0 ).toInt();
+  return query.value( 0 ).toLongLong();
 }
 
 
@@ -783,7 +783,7 @@ void DataStore::debugLastQueryError( const QSqlQuery &query, const char* actionD
                        );
 }
 
-int DataStore::uidNext() const
+qint64 DataStore::uidNext() const
 {
     // FIXME We can't use max(id) FROM PimItems because this is wrong if the
     //       entry with the highest id is deleted. Instead we should probably
@@ -793,12 +793,12 @@ int DataStore::uidNext() const
 
 
 //static
-int DataStore::lastInsertId( const QSqlQuery & query )
+qint64 DataStore::lastInsertId( const QSqlQuery & query )
 {
     QVariant v = query.lastInsertId();
     if ( !v.isValid() ) return -1;
     bool ok;
-    int insertId = v.toInt( &ok );
+    qint64 insertId = v.toLongLong( &ok );
     if ( !ok ) return -1;
     return insertId;
 }

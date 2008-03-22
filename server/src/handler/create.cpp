@@ -52,7 +52,7 @@ bool Create::handleLine(const QByteArray& line )
   pos = ImapParser::parseString( line, name, pos );
 
   bool ok = false;
-  int parentId = -1;
+  qint64 parentId = -1;
   Location parent;
   pos = ImapParser::parseNumber( line, parentId, &ok, pos );
   if ( !ok ) { // RFC 3501 compat
@@ -75,7 +75,7 @@ bool Create::handleLine(const QByteArray& line )
   if ( name.isEmpty() )
     return failureResponse( "Invalid collection name" );
 
-  int resourceId = 0;
+  qint64 resourceId = 0;
   MimeType::List parentContentTypes;
   if ( parent.isValid() ) {
     // check if parent can contain a sub-folder

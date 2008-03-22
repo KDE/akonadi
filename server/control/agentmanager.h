@@ -189,7 +189,7 @@ class AgentManager : public QObject
     /**
       Trigger a synchronization of the given collection by its owning resource agent.
     */
-    void agentInstanceSynchronizeCollection( const QString &identifier, int collection );
+    void agentInstanceSynchronizeCollection( const QString &identifier, qint64 collection );
 
 
     /**

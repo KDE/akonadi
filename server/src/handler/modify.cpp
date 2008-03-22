@@ -79,7 +79,7 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
       if ( !db->renameLocation( location, location.parentId(), newName ) )
         return failureResponse( "Unable to rename collection" );
     } else if ( type == "PARENT" ) {
-      int newParent;
+      qint64 newParent;
       bool ok = false;
       pos = ImapParser::parseNumber( line, newParent, &ok, pos );
       if ( !ok )

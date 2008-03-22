@@ -39,7 +39,7 @@ Location HandlerHelper::collectionFromIdOrName(const QByteArray & id)
 {
   // id is a number
   bool ok = false;
-  int collectionId = id.toInt( &ok );
+  qint64 collectionId = id.toLongLong( &ok );
   if ( ok )
     return Location::retrieveById( collectionId );
 

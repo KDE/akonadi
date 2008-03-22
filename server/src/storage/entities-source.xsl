@@ -51,7 +51,7 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     static bool cacheEnabled;
     static QMutex cacheMutex;
     <xsl:if test="column[@name = 'id']">
-    static QHash&lt;int, <xsl:value-of select="$className"/> &gt; idCache;
+    static QHash&lt;qint64, <xsl:value-of select="$className"/> &gt; idCache;
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
     static QHash&lt;QString, <xsl:value-of select="$className"/> &gt; nameCache;
@@ -63,7 +63,7 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
 bool <xsl:value-of select="$className"/>::Private::cacheEnabled = false;
 QMutex <xsl:value-of select="$className"/>::Private::cacheMutex;
 <xsl:if test="column[@name = 'id']">
-QHash&lt;int, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::idCache;
+QHash&lt;qint64, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::idCache;
 </xsl:if>
 <xsl:if test="column[@name = 'name']">
 QHash&lt;QString, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::nameCache;
@@ -201,7 +201,7 @@ int <xsl:value-of select="$className"/>::count( const QString &amp;column, const
 
 // check existence
 <xsl:if test="column[@name = 'id']">
-bool <xsl:value-of select="$className"/>::exists( int id )
+bool <xsl:value-of select="$className"/>::exists( qint64 id )
 {
   if ( Private::cacheEnabled ) {
     Private::cacheMutex.lock();
@@ -247,7 +247,7 @@ QList&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$classN
 
 // data retrieval
 <xsl:if test="column[@name='id']">
-<xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveById( int id )
+<xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveById( qint64 id )
 {
   <xsl:call-template name="data-retrieval">
   <xsl:with-param name="key">id</xsl:with-param>
@@ -367,7 +367,7 @@ bool <xsl:value-of select="$className"/>::relatesTo<xsl:value-of select="@table2
   return Entity::relatesTo&lt;<xsl:value-of select="$relationName"/>&gt;( id(), value.id() );
 }
 
-bool <xsl:value-of select="$className"/>::relatesTo<xsl:value-of select="@table2"/>( int leftId, int rightId )
+bool <xsl:value-of select="$className"/>::relatesTo<xsl:value-of select="@table2"/>( qint64 leftId, qint64 rightId )
 {
   return Entity::relatesTo&lt;<xsl:value-of select="$relationName"/>&gt;( leftId, rightId );
 }
@@ -377,7 +377,7 @@ bool <xsl:value-of select="$className"/>::add<xsl:value-of select="@table2"/>( c
   return Entity::addToRelation&lt;<xsl:value-of select="$relationName"/>&gt;( id(), value.id() );
 }
 
-bool <xsl:value-of select="$className"/>::add<xsl:value-of select="@table2"/>( int leftId, int rightId )
+bool <xsl:value-of select="$className"/>::add<xsl:value-of select="@table2"/>( qint64 leftId, qint64 rightId )
 {
   return Entity::addToRelation&lt;<xsl:value-of select="$relationName"/>&gt;( leftId, rightId );
 }
@@ -387,7 +387,7 @@ bool <xsl:value-of select="$className"/>::remove<xsl:value-of select="@table2"/>
   return Entity::removeFromRelation&lt;<xsl:value-of select="$relationName"/>&gt;( id(), value.id() );
 }
 
-bool <xsl:value-of select="$className"/>::remove<xsl:value-of select="@table2"/>( int leftId, int rightId )
+bool <xsl:value-of select="$className"/>::remove<xsl:value-of select="@table2"/>( qint64 leftId, qint64 rightId )
 {
   return Entity::removeFromRelation&lt;<xsl:value-of select="$relationName"/>&gt;( leftId, rightId );
 }
@@ -397,7 +397,7 @@ bool <xsl:value-of select="$className"/>::clear<xsl:value-of select="@table2"/>s
   return Entity::clearRelation&lt;<xsl:value-of select="$relationName"/>&gt;( id() );
 }
 
-bool <xsl:value-of select="$className"/>::clear<xsl:value-of select="@table2"/>s( int id )
+bool <xsl:value-of select="$className"/>::clear<xsl:value-of select="@table2"/>s( qint64 id )
 {
   return Entity::clearRelation&lt;<xsl:value-of select="$relationName"/>&gt;( id );
 }
@@ -417,7 +417,7 @@ QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$class
 }
 
 // inserting new data
-bool <xsl:value-of select="$className"/>::insert( int* insertId )
+bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
 {
   QSqlDatabase db = DataStore::self()->database();
   if ( !db.isOpen() )
@@ -508,7 +508,7 @@ bool <xsl:value-of select="$className"/>::remove()
   return Entity::remove&lt;<xsl:value-of select="$className"/>&gt;( idColumn(), id() );
 }
 
-bool <xsl:value-of select="$className"/>::remove( int id )
+bool <xsl:value-of select="$className"/>::remove( qint64 id )
 {
   return remove( idColumn(), id );
 }

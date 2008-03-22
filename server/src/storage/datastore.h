@@ -133,10 +133,10 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /// removes the given location and all its content
     bool cleanupLocation( Location &location );
     /// rename the collection @p location to @p newName.
-    bool renameLocation( const Location &location, int newParent, const QString &newName );
+    bool renameLocation( const Location &location, qint64 newParent, const QString &newName );
 
-    bool appendMimeTypeForLocation( int locationId, const QStringList & mimeTypes );
-    bool removeMimeTypesForLocation( int locationId );
+    bool appendMimeTypeForLocation( qint64 locationId, const QStringList & mimeTypes );
+    bool removeMimeTypesForLocation( qint64 locationId );
 
     static QString locationDelimiter() { return QLatin1String("/"); }
 
@@ -147,7 +147,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     void activeCachePolicy( Location &loc );
 
     /* --- MimeType ------------------------------------------------------ */
-    bool appendMimeType( const QString & mimetype, int *insertId = 0 );
+    bool appendMimeType( const QString & mimetype, qint64 *insertId = 0 );
 
     /* --- PimItem ------------------------------------------------------- */
     bool appendPimItem( const QList<Part> & parts,
@@ -172,7 +172,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
      */
     bool cleanupPimItems( const Location &location );
 
-    int highestPimItemId() const;
+    qint64 highestPimItemId() const;
 
     /* --- Collection attributes ------------------------------------------ */
     bool addCollectionAttribute( const Location &loc, const QByteArray &key, const QByteArray &value );
@@ -182,7 +182,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /** Returns the id of the next PIM item that is added to the db.
         @return possible id of the next PIM item that is added to the database
      */
-    int uidNext() const;
+    qint64 uidNext() const;
 
     QString storagePath() const;
 
@@ -250,7 +250,7 @@ protected:
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
   public:
-    void retrieveDataFromResource( int uid, const QByteArray& remote_id,
+    void retrieveDataFromResource( qint64 uid, const QByteArray& remote_id,
                                          const QString &resource, const QStringList &parts );
     void triggerCollectionSync( const Location &location );
 
@@ -259,7 +259,7 @@ protected:
         @param query the query we want to get the last insert id for
         @return id of the most recent inserted row, or -1
      */
-    static int lastInsertId( const QSqlQuery & query );
+    static qint64 lastInsertId( const QSqlQuery & query );
 
   private:
     /** Converts the given date/time to the database format, i.e.

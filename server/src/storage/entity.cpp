@@ -31,17 +31,17 @@ Entity::Entity()
 {
 }
 
-Entity::Entity( int id )
+Entity::Entity( qint64 id )
   : m_id( id )
 {
 }
 
-int Entity::id() const
+qint64 Entity::id() const
 {
   return m_id;
 }
 
-void Entity::setId( int id )
+void Entity::setId( qint64 id )
 {
   m_id = id;
 }

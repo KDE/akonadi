@@ -81,9 +81,9 @@ bool Akonadi::AkAppend::handleLine(const QByteArray& line )
     // by the database
 
     // parse part specification
-    QList<QPair<QByteArray, int> > partSpecs;
+    QList<QPair<QByteArray, qint64> > partSpecs;
     QByteArray partName;
-    int partSize;
+    qint64 partSize;
     bool ok;
 
     int pos = startOfPartSpec + 1; // skip opening '('
@@ -106,7 +106,7 @@ bool Akonadi::AkAppend::handleLine(const QByteArray& line )
 
     // chop up literal data in parts
     pos = 0; // traverse through part data now
-    QPair<QByteArray, int> partSpec;
+    QPair<QByteArray, qint64> partSpec;
     foreach( partSpec, partSpecs ) {
       // wrap data into a part
       Part part;

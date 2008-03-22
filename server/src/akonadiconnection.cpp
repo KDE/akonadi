@@ -203,12 +203,12 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
     }
 }
 
-int Akonadi::AkonadiConnection::selectedCollection( ) const
+qint64 Akonadi::AkonadiConnection::selectedCollection( ) const
 {
     return m_selectedConnection;
 }
 
-void Akonadi::AkonadiConnection::setSelectedCollection( int collection )
+void Akonadi::AkonadiConnection::setSelectedCollection( qint64 collection )
 {
     m_selectedConnection = collection;
 }

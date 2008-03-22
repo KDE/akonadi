@@ -67,7 +67,7 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
     parentPath = newName.mid( index + 1 );
   Location parent = HandlerHelper::collectionFromIdOrName( parentPath.toUtf8() );
   newName = newName.left( index );
-  int parentId = 0;
+  qint64 parentId = 0;
   if ( parent.isValid() )
     parentId = parent.id();
 
