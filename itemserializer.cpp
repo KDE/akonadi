@@ -24,6 +24,7 @@
 
 // KDE core
 #include <kdebug.h>
+#include <kmimetype.h>
 
 // Qt
 #include <QtCore/QBuffer>
@@ -115,9 +116,6 @@ static void loadPlugins() {
       all->insert( t, plugin );
     }
   }
-
-  if ( !all->contains( QLatin1String("application/octet-stream") ) )
-    all->insert( QLatin1String("application/octet-stream"), DefaultItemSerializerPlugin::instance() );
 }
 
 static void setup()
@@ -188,6 +186,15 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
 {
     if ( all->contains( mimetype ) )
         return *(all->value(mimetype));
+
+    KMimeType::Ptr mimeType = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
+    if ( !mimeType.isNull() ) {
+      foreach ( const QString type, all->keys() ) {
+        if ( mimeType->is( type ) ) {
+          return *(all->value( type ) );
+        }
+      }
+    }
 
     kDebug( 5250 ) << "No plugin for mimetype " << mimetype << " found!";
     kDebug( 5250 ) << "Available plugins are: " << all->keys();

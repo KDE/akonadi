@@ -23,6 +23,7 @@
 #include "agentinstancemodel.h"
 
 #include <kdebug.h>
+#include <kmimetype.h>
 
 #include <QStringList>
 
@@ -80,8 +81,19 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex&) const
     foreach ( const QString mt, index.data( AgentTypeModel::MimeTypesRole ).toStringList() ) {
       if ( d->mimeTypes.contains( mt ) ) {
         found = true;
-        break;
+      } else {
+        KMimeType::Ptr mimeType = KMimeType::mimeType( mt, KMimeType::ResolveAliases );
+        if ( !mimeType.isNull() ) {
+          foreach ( const QString type, d->mimeTypes ) {
+            if ( mimeType->is( type )) {
+              found = true;
+              break;
+            }
+          }
+        }
       }
+      if ( found )
+        break;
     }
     if ( !found ) return false;
   }

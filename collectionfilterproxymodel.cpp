@@ -21,6 +21,8 @@
 
 #include "collectionmodel.h"
 
+#include <kmimetype.h>
+
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -47,9 +49,17 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
   QStringList collectionMimeTypes = mParent->sourceModel()->data( index, CollectionModel::CollectionContentTypesRole ).toStringList();
 
   // If this collection directly contains one valid mimetype, it is accepted
-  foreach ( QString type, mimeTypes ) {
-    if ( collectionMimeTypes.contains( type ) )
+  foreach ( QString type, collectionMimeTypes ) {
+    if ( mimeTypes.contains( type ) )
       return true;
+
+    KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
+    if ( !mimeType.isNull() ) {
+      foreach ( const QString mt, mimeTypes ) {
+        if ( mimeType->is( mt ) )
+          return true;
+      }
+    }
   }
   // If this collection has a child which contains valid mimetypes, it is accepted
   QModelIndex childIndex = index.child( 0, 0 );

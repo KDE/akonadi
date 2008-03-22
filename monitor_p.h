@@ -29,6 +29,8 @@
 #include "job.h"
 #include "notificationmanagerinterface.h"
 
+#include <kmimetype.h>
+
 #include <QObject>
 #include <QTimer>
 
@@ -66,7 +68,7 @@ class MonitorPrivate
     {
       if ( monitorAll || isCollectionMonitored( collection ) ||
            isCollectionMonitored( collectionDest ) ||items.contains( item ) ||
-           resources.contains( resource ) || mimetypes.contains( mimetype ) )
+           resources.contains( resource ) || isMimeTypeMonitored( mimetype ) )
         return true;
       return false;
     }
@@ -108,6 +110,23 @@ class MonitorPrivate
         return true;
       if ( collections.contains( Collection::root() ) )
         return true;
+      return false;
+    }
+
+    bool isMimeTypeMonitored( const QString& mimetype ) const
+    {
+      if ( mimetypes.contains( mimetype ) )
+        return true;
+
+      KMimeType::Ptr mimeType = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
+      if ( mimeType.isNull() )
+        return false;
+
+      foreach ( const QString mt, mimetypes ) {
+        if ( mimeType->is( mt ) )
+          return true;
+      }
+
       return false;
     }
 
