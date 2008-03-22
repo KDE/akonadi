@@ -250,14 +250,6 @@ uint qHash( const Akonadi::Collection &collection )
   return qHash( collection.id() );
 }
 
-void Collection::addRawAttribute(const QByteArray & type, const QByteArray & value)
-{
-  Attribute* attr = AttributeFactory::createAttribute( type );
-  Q_ASSERT( attr );
-  attr->setData( value );
-  addAttribute( attr );
-}
-
 CollectionStatus Collection::status() const
 {
   return d_func()->status;

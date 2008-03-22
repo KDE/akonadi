@@ -19,6 +19,7 @@
 
 #include "protocolhelper.h"
 
+#include "attributefactory.h"
 #include "imapparser_p.h"
 
 #include <kdebug.h>
@@ -118,7 +119,10 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       ProtocolHelper::parseCachePolicy( value, policy );
       collection.setCachePolicy( policy );
     } else {
-      collection.addRawAttribute( key, value );
+      Attribute* attr = AttributeFactory::createAttribute( key );
+      Q_ASSERT( attr );
+      attr->setData( value );
+      collection.addAttribute( attr );
     }
   }
 

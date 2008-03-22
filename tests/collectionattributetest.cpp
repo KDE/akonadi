@@ -150,7 +150,10 @@ void CollectionAttributeTest::testDefaultAttributes()
 {
   Collection col;
   QCOMPARE( col.attributes().count(), 0 );
-  col.addRawAttribute( "TYPE", "VALUE" );
+  Attribute* attr = AttributeFactory::createAttribute( "TYPE" );
+  QVERIFY( attr );
+  attr->setData( "VALUE" );
+  col.addAttribute( attr );
   QCOMPARE( col.attributes().count(), 1 );
   QVERIFY( col.hasAttribute( "TYPE" ) );
   QCOMPARE( col.attribute( "TYPE" )->toByteArray(), QByteArray("VALUE") );
