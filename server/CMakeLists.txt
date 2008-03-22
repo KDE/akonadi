@@ -110,7 +110,11 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Server.x
 
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.AgentManager.xml ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Resource.xml )
 
-qt4_add_dbus_interface2( libakonadiprivate_SRCS interfaces/org.freedesktop.xesam.Search.xml xesaminterface xesamtypes.h )
+set(xesam_xml  interfaces/org.freedesktop.xesam.Search.xml)
+
+SET_SOURCE_FILES_PROPERTIES(${xesam_xml} PROPERTIES INCLUDE "xesamtypes.h")
+
+qt4_add_dbus_interface( libakonadiprivate_SRCS ${xesam_xml} xesaminterface )
 
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 
