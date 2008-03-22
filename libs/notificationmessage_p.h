@@ -38,6 +38,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
 {
   public:
     typedef QList<NotificationMessage> List;
+    typedef qint64 Id;
 
     enum Type {
       InvalidType,
@@ -71,8 +72,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
     Operation operation() const;
     void setOperation( Operation op );
 
-    int uid() const;
-    void setUid( int uid );
+    Id uid() const;
+    void setUid( Id uid );
 
     QString remoteId() const;
     void setRemoteId( const QString &rid );
@@ -80,11 +81,11 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
     QByteArray resource() const;
     void setResource( const QByteArray &res );
 
-    int parentCollection() const;
-    void setParentCollection( int parent );
+    Id parentCollection() const;
+    void setParentCollection( Id parent );
 
-    int parentDestCollection() const;
-    void setParentDestCollection( int parent );
+    Id parentDestCollection() const;
+    void setParentDestCollection( Id parent );
 
     QString mimeType() const;
     void setMimeType( const QString &mimeType );

@@ -71,11 +71,11 @@ class NotificationMessage::Private : public QSharedData
     QByteArray sessionId;
     NotificationMessage::Type type;
     NotificationMessage::Operation operation;
-    int uid;
+    Id uid;
     QString remoteId;
     QByteArray resource;
-    int parentCollection;
-    int parentDestCollection;
+    Id parentCollection;
+    Id parentDestCollection;
     QString mimeType;
     QStringList parts;
 };
@@ -142,12 +142,12 @@ void NotificationMessage::setOperation(Operation op)
   d->operation = op;
 }
 
-int NotificationMessage::uid() const
+NotificationMessage::Id NotificationMessage::uid() const
 {
   return d->uid;
 }
 
-void NotificationMessage::setUid(int uid)
+void NotificationMessage::setUid(Id uid)
 {
   d->uid = uid;
 }
@@ -172,22 +172,22 @@ void NotificationMessage::setResource(const QByteArray & res)
   d->resource = res;
 }
 
-int NotificationMessage::parentCollection() const
+NotificationMessage::Id NotificationMessage::parentCollection() const
 {
   return d->parentCollection;
 }
 
-int NotificationMessage::parentDestCollection() const
+NotificationMessage::Id NotificationMessage::parentDestCollection() const
 {
   return d->parentDestCollection;
 }
 
-void NotificationMessage::setParentCollection(int parent)
+void NotificationMessage::setParentCollection(Id parent)
 {
   d->parentCollection = parent;
 }
 
-void NotificationMessage::setParentDestCollection( int parent )
+void NotificationMessage::setParentDestCollection( Id parent )
 {
   d->parentDestCollection = parent;
 }
@@ -294,17 +294,18 @@ const QDBusArgument & operator >>(const QDBusArgument & arg, NotificationMessage
   msg.setType( static_cast<NotificationMessage::Type>( i ) );
   arg >> i;
   msg.setOperation( static_cast<NotificationMessage::Operation>( i ) );
-  arg >> i;
-  msg.setUid( i );
+  NotificationMessage::Id id;
+  arg >> id;
+  msg.setUid( id );
   QString s;
   arg >> s;
   msg.setRemoteId( s );
   arg >> b;
   msg.setResource( b );
-  arg >> i;
-  msg.setParentCollection( i );
-  arg >> i;
-  msg.setParentDestCollection( i );
+  arg >> id;
+  msg.setParentCollection( id );
+  arg >> id;
+  msg.setParentDestCollection( id );
   arg >> s;
   msg.setMimeType( s );
   QStringList l;

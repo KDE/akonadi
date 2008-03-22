@@ -38,6 +38,11 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
 {
   public:
     /**
+     * Describes the ids stored in the interval.
+     */
+    typedef qint64 Id;
+
+    /**
       A list of ImapInterval objects.
     */
     typedef QList<ImapInterval> List;
@@ -57,7 +62,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
       @param begin The begin of the interval.
       @param end Keep default (0) to just set the interval begin
     */
-    explicit ImapInterval( int begin, int end = 0 );
+    explicit ImapInterval( Id begin, Id end = 0 );
 
     /**
       Destructor.
@@ -78,7 +83,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
       Returns the size of this interval.
       Size is only defined for finite intervals.
     */
-    int size() const;
+    Id size() const;
 
     /**
       Returns true if this interval has a defined begin.
@@ -89,7 +94,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
       Returns the begin of this interval. The value is the smallest value part of the interval.
       Only valid if begin is defined.
     */
-    int begin() const;
+    Id begin() const;
 
     /**
       Returns true if this intercal has been defined.
@@ -100,17 +105,17 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
       Returns the end of this interval. This value is the largest value part of the interval.
       Only valid if hasDefinedEnd() returned true.
     */
-    int end() const;
+    Id end() const;
 
     /**
       Sets the begin of the interval.
     */
-    void setBegin( int value );
+    void setBegin( Id value );
 
     /**
       Sets the end of this interval.
     */
-    void setEnd( int value );
+    void setEnd( Id value );
 
     /**
       Converts this set into an IMAP compatible sequence.
@@ -130,6 +135,11 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
 class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
 {
   public:
+    /**
+     * Describes the ids stored in the set.
+     */
+    typedef qint64 Id;
+
     /**
       Constructs an empty set.
     */
@@ -156,7 +166,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
       No interval merging is perofrmed.
       @param values List of positive integer numbers in arbitrary order
     */
-    void add( const QList<int> &values );
+    void add( const QList<Id> &values );
 
     /**
       Adds the given ImapInterval to this set.
