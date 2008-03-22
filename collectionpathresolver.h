@@ -25,6 +25,8 @@
 
 namespace Akonadi {
 
+class CollectionPathResolverPrivate;
+
 /**
   Converts between collection id and collection path.
 
@@ -72,10 +74,9 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
     void doStart();
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( CollectionPathResolver )
 
-    Q_PRIVATE_SLOT( d, void jobResult( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void jobResult( KJob* ) )
 
 };
 

@@ -20,6 +20,7 @@
 #include "collectionpathresolver.h"
 
 #include "collectionfetchjob.h"
+#include "job_p.h"
 
 #include <klocale.h>
 
@@ -27,132 +28,145 @@
 
 using namespace Akonadi;
 
-class CollectionPathResolver::Private
+class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 {
   public:
-    Private( CollectionPathResolver *parent )
-      : mParent( parent )
+    CollectionPathResolverPrivate( CollectionPathResolver *parent )
+      : JobPrivate( parent )
     {
     }
 
     void jobResult( KJob* );
 
-    CollectionPathResolver *mParent;
-    Collection::Id colId;
-    QString path;
-    bool pathToId;
-    QStringList pathParts;
-    Collection currentNode;
+    Q_DECLARE_PUBLIC( CollectionPathResolver )
+
+    Collection::Id mColId;
+    QString mPath;
+    bool mPathToId;
+    QStringList mPathParts;
+    Collection mCurrentNode;
 };
 
-void CollectionPathResolver::Private::jobResult(KJob *job )
+void CollectionPathResolverPrivate::jobResult(KJob *job )
 {
   if ( job->error() )
     return;
+
+  Q_Q( CollectionPathResolver );
 
   CollectionFetchJob *list = static_cast<CollectionFetchJob*>( job );
   CollectionFetchJob *nextJob = 0;
   const Collection::List cols = list->collections();
   if ( cols.isEmpty() ) {
-      mParent->setError( Unknown );
-      mParent->setErrorText( i18n( "No such collection.") );
-      mParent->emitResult();
+      q->setError( CollectionPathResolver::Unknown );
+      q->setErrorText( i18n( "No such collection.") );
+      q->emitResult();
       return;
   }
 
-  if ( pathToId ) {
-    const QString currentPart = pathParts.takeFirst();
+  if ( mPathToId ) {
+    const QString currentPart = mPathParts.takeFirst();
     bool found = false;
     foreach ( const Collection c, cols ) {
       if ( c.name() == currentPart ) {
-        currentNode = c;
+        mCurrentNode = c;
         found = true;
         break;
       }
     }
     if ( !found ) {
-      mParent->setError( Unknown );
-      mParent->setErrorText( i18n( "No such collection.") );
-      mParent->emitResult();
+      q->setError( CollectionPathResolver::Unknown );
+      q->setErrorText( i18n( "No such collection.") );
+      q->emitResult();
       return;
     }
-    if ( pathParts.isEmpty() ) {
-      colId = currentNode.id();
-      mParent->emitResult();
+    if ( mPathParts.isEmpty() ) {
+      mColId = mCurrentNode.id();
+      q->emitResult();
       return;
     }
-    nextJob = new CollectionFetchJob( currentNode, CollectionFetchJob::Flat, mParent );
+    nextJob = new CollectionFetchJob( mCurrentNode, CollectionFetchJob::Flat, q );
   } else {
     Collection col = list->collections().first();
-    currentNode = Collection( col.parent() );
-    pathParts.prepend( col.name() );
-    if ( currentNode == Collection::root() ) {
-      mParent->emitResult();
+    mCurrentNode = Collection( col.parent() );
+    mPathParts.prepend( col.name() );
+    if ( mCurrentNode == Collection::root() ) {
+      q->emitResult();
       return;
     }
-    nextJob = new CollectionFetchJob( currentNode, CollectionFetchJob::Local, mParent );
+    nextJob = new CollectionFetchJob( mCurrentNode, CollectionFetchJob::Local, q );
   }
-  mParent->connect( nextJob, SIGNAL(result(KJob*)), mParent, SLOT(jobResult(KJob*)) );
+  q->connect( nextJob, SIGNAL(result(KJob*)), q, SLOT(jobResult(KJob*)) );
 }
 
 CollectionPathResolver::CollectionPathResolver(const QString & path, QObject * parent)
-  : Job( parent ),
-    d( new Private( this ) )
+  : Job( new CollectionPathResolverPrivate( this ), parent )
 {
-  d->pathToId = true;
-  d->path = path;
-  if ( d->path.startsWith( Collection::delimiter() )  )
-    d->path = d->path.right( d->path.length() - Collection::delimiter().length() );
-  if ( d->path.endsWith( Collection::delimiter() )  )
-    d->path = d->path.left( d->path.length() - Collection::delimiter().length() );
+  Q_D( CollectionPathResolver );
 
-  d->pathParts = d->path.split( Collection::delimiter() );
-  d->currentNode = Collection::root();
+  d->mPathToId = true;
+  d->mPath = path;
+  if ( d->mPath.startsWith( Collection::delimiter() )  )
+    d->mPath = d->mPath.right( d->mPath.length() - Collection::delimiter().length() );
+  if ( d->mPath.endsWith( Collection::delimiter() )  )
+    d->mPath = d->mPath.left( d->mPath.length() - Collection::delimiter().length() );
+
+  d->mPathParts = d->mPath.split( Collection::delimiter() );
+  d->mCurrentNode = Collection::root();
 }
 
 CollectionPathResolver::CollectionPathResolver(const Collection & collection, QObject * parent)
-  : Job( parent ),
-    d( new Private( this ) )
+  : Job( new CollectionPathResolverPrivate( this ), parent )
 {
-  d->pathToId = false;
-  d->colId = collection.id();
-  d->currentNode = collection;
+  Q_D( CollectionPathResolver );
+
+  d->mPathToId = false;
+  d->mColId = collection.id();
+  d->mCurrentNode = collection;
 }
 
 CollectionPathResolver::~CollectionPathResolver()
 {
+  Q_D( CollectionPathResolver );
+
   delete d;
 }
 
 Collection::Id CollectionPathResolver::collection() const
 {
-  return d->colId;
+  Q_D( const CollectionPathResolver );
+
+  return d->mColId;
 }
 
 QString CollectionPathResolver::path() const
 {
-  if ( d->pathToId )
-    return d->path;
-  return d->pathParts.join( Collection::delimiter() );
+  Q_D( const CollectionPathResolver );
+
+  if ( d->mPathToId )
+    return d->mPath;
+  return d->mPathParts.join( Collection::delimiter() );
 }
 
 void CollectionPathResolver::doStart()
 {
+  Q_D( CollectionPathResolver );
+
   CollectionFetchJob *job = 0;
-  if ( d->pathToId ) {
-    if ( d->path.isEmpty() ) {
-      d->colId = Collection::root().id();
+  if ( d->mPathToId ) {
+    if ( d->mPath.isEmpty() ) {
+      d->mColId = Collection::root().id();
       emitResult();
       return;
     }
-    job = new CollectionFetchJob( d->currentNode, CollectionFetchJob::Flat, this );
+    job = new CollectionFetchJob( d->mCurrentNode, CollectionFetchJob::Flat, this );
   } else {
-    if ( d->colId == 0 ) {
-      d->colId = Collection::root().id();
+    if ( d->mColId == 0 ) {
+      d->mColId = Collection::root().id();
       emitResult();
       return;
     }
-    job = new CollectionFetchJob( d->currentNode, CollectionFetchJob::Local, this );
+    job = new CollectionFetchJob( d->mCurrentNode, CollectionFetchJob::Local, this );
   }
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
 }

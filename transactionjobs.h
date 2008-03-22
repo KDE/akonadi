@@ -25,6 +25,11 @@
 
 namespace Akonadi {
 
+class TransactionBeginJobPrivate;
+class TransactionRollbackJobPrivate;
+class TransactionCommitJobPrivate;
+class TransactionSequencePrivate;
+
 /**
   Begins a session-global transaction.
   Note: this will only have an effect when used as a subjob or with a Session.
@@ -47,6 +52,9 @@ class AKONADI_EXPORT TransactionBeginJob : public Job
 
   protected:
     virtual void doStart();
+
+  private:
+    Q_DECLARE_PRIVATE( TransactionBeginJob )
 };
 
 
@@ -72,6 +80,9 @@ class AKONADI_EXPORT TransactionRollbackJob : public Job
 
   protected:
     virtual void doStart();
+
+  private:
+    Q_DECLARE_PRIVATE( TransactionRollbackJob )
 };
 
 
@@ -96,6 +107,9 @@ class AKONADI_EXPORT TransactionCommitJob : public Job
 
   protected:
     virtual void doStart();
+
+  private:
+    Q_DECLARE_PRIVATE( TransactionCommitJob )
 };
 
 
@@ -136,11 +150,10 @@ class AKONADI_EXPORT TransactionSequence : public Job
     void slotResult( KJob *job );
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( TransactionSequence )
 
-    Q_PRIVATE_SLOT( d, void commitResult(KJob*) )
-    Q_PRIVATE_SLOT( d, void rollbackResult(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void commitResult(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void rollbackResult(KJob*) )
 };
 
 }

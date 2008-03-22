@@ -18,19 +18,51 @@
 */
 
 #include "transactionjobs.h"
+#include "job_p.h"
 
 #include <kdebug.h>
 
 using namespace Akonadi;
 
-TransactionBeginJob::TransactionBeginJob(QObject * parent) :
-  Job( parent )
+class Akonadi::TransactionBeginJobPrivate : public JobPrivate
+{
+  public:
+    TransactionBeginJobPrivate( TransactionBeginJob *parent )
+      : JobPrivate( parent )
+    {
+    }
+};
+
+class Akonadi::TransactionRollbackJobPrivate : public JobPrivate
+{
+  public:
+    TransactionRollbackJobPrivate( TransactionRollbackJob *parent )
+      : JobPrivate( parent )
+    {
+    }
+};
+
+class Akonadi::TransactionCommitJobPrivate : public JobPrivate
+{
+  public:
+    TransactionCommitJobPrivate( TransactionCommitJob *parent )
+      : JobPrivate( parent )
+    {
+    }
+};
+
+
+TransactionBeginJob::TransactionBeginJob(QObject * parent)
+  : Job( new TransactionBeginJobPrivate( this ), parent )
 {
   Q_ASSERT( parent );
 }
 
-TransactionBeginJob::~ TransactionBeginJob()
+TransactionBeginJob::~TransactionBeginJob()
 {
+  Q_D( TransactionBeginJob );
+
+  delete d;
 }
 
 void TransactionBeginJob::doStart()
@@ -40,14 +72,17 @@ void TransactionBeginJob::doStart()
 
 
 
-TransactionRollbackJob::TransactionRollbackJob(QObject * parent) :
-    Job( parent )
+TransactionRollbackJob::TransactionRollbackJob(QObject * parent)
+  : Job( new TransactionRollbackJobPrivate( this ), parent )
 {
   Q_ASSERT( parent );
 }
 
-TransactionRollbackJob::~ TransactionRollbackJob()
+TransactionRollbackJob::~TransactionRollbackJob()
 {
+  Q_D( TransactionRollbackJob );
+
+  delete d;
 }
 
 void TransactionRollbackJob::doStart()
@@ -57,14 +92,17 @@ void TransactionRollbackJob::doStart()
 
 
 
-TransactionCommitJob::TransactionCommitJob(QObject * parent) :
-    Job( parent )
+TransactionCommitJob::TransactionCommitJob(QObject * parent)
+  : Job( new TransactionCommitJobPrivate( this ), parent )
 {
   Q_ASSERT( parent );
 }
 
-TransactionCommitJob::~ TransactionCommitJob()
+TransactionCommitJob::~TransactionCommitJob()
 {
+  Q_D( TransactionCommitJob );
+
+  delete d;
 }
 
 void TransactionCommitJob::doStart()
@@ -74,12 +112,12 @@ void TransactionCommitJob::doStart()
 
 
 
-class TransactionSequence::Private
+class Akonadi::TransactionSequencePrivate : public JobPrivate
 {
   public:
-    Private( TransactionSequence *parent ) :
-      q( parent ),
-      state( Idle )
+    TransactionSequencePrivate( TransactionSequence *parent )
+      : JobPrivate( parent ),
+        mState( Idle )
     {
     }
 
@@ -92,11 +130,14 @@ class TransactionSequence::Private
       Committing
     };
 
-    TransactionSequence *q;
-    TransactionState state;
+    Q_DECLARE_PUBLIC( TransactionSequence )
+
+    TransactionState mState;
 
     void commitResult( KJob *job )
     {
+      Q_Q( TransactionSequence );
+
       if ( job->error() ) {
         q->setError( job->error() );
         q->setErrorText( job->errorText() );
@@ -106,26 +147,31 @@ class TransactionSequence::Private
 
     void rollbackResult( KJob *job )
     {
+      Q_Q( TransactionSequence );
+
       Q_UNUSED( job );
       q->emitResult();
     }
 };
 
-TransactionSequence::TransactionSequence( QObject * parent ) :
-    Job( parent ),
-    d( new Private( this ) )
+TransactionSequence::TransactionSequence( QObject * parent )
+  : Job( new TransactionSequencePrivate( this ), parent )
 {
 }
 
 TransactionSequence::~ TransactionSequence()
 {
+  Q_D( TransactionSequence );
+
   delete d;
 }
 
 bool TransactionSequence::addSubjob(KJob * job)
 {
-  if ( d->state == Private::Idle ) {
-    d->state = Private::Running;
+  Q_D( TransactionSequence );
+
+  if ( d->mState == TransactionSequencePrivate::Idle ) {
+    d->mState = TransactionSequencePrivate::Running;
     new TransactionBeginJob( this );
   }
   return Job::addSubjob( job );
@@ -133,10 +179,12 @@ bool TransactionSequence::addSubjob(KJob * job)
 
 void TransactionSequence::slotResult(KJob * job)
 {
+  Q_D( TransactionSequence );
+
   if ( !job->error() ) {
     Job::slotResult( job );
-    if ( subjobs().isEmpty() && d->state == Private::WaitingForSubjobs ) {
-      d->state = Private::Committing;
+    if ( subjobs().isEmpty() && d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
+      d->mState = TransactionSequencePrivate::Committing;
       TransactionCommitJob *job = new TransactionCommitJob( this );
       connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
     }
@@ -145,8 +193,8 @@ void TransactionSequence::slotResult(KJob * job)
     setErrorText( job->errorText() );
     removeSubjob( job );
     clearSubjobs();
-    if ( d->state == Private::Running || d->state == Private::WaitingForSubjobs ) {
-      d->state = Private::RollingBack;
+    if ( d->mState == TransactionSequencePrivate::Running || d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
+      d->mState = TransactionSequencePrivate::RollingBack;
       TransactionRollbackJob *job = new TransactionRollbackJob( this );
       connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
     }
@@ -155,18 +203,20 @@ void TransactionSequence::slotResult(KJob * job)
 
 void TransactionSequence::commit()
 {
-  if ( d->state < Private::WaitingForSubjobs )
-    d->state = Private::WaitingForSubjobs;
+  Q_D( TransactionSequence );
+
+  if ( d->mState < TransactionSequencePrivate::WaitingForSubjobs )
+    d->mState = TransactionSequencePrivate::WaitingForSubjobs;
   else
     return;
 
   if ( subjobs().isEmpty() ) {
     if ( !error() ) {
-      d->state = Private::Committing;
+      d->mState = TransactionSequencePrivate::Committing;
       TransactionCommitJob *job = new TransactionCommitJob( this );
       connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
     } else {
-      d->state = Private::RollingBack;
+      d->mState = TransactionSequencePrivate::RollingBack;
       TransactionRollbackJob *job = new TransactionRollbackJob( this );
       connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
     }
@@ -175,7 +225,9 @@ void TransactionSequence::commit()
 
 void TransactionSequence::doStart()
 {
-  if ( d->state == Private::Idle )
+  Q_D( TransactionSequence );
+
+  if ( d->mState == TransactionSequencePrivate::Idle )
     emitResult();
   else
     commit();
