@@ -37,6 +37,11 @@ Entity::~Entity()
 {
 }
 
+void Entity::setId( Id id )
+{
+  d_ptr->mId = id;
+}
+
 Entity::Id Entity::id() const
 {
   return d_ptr->mId;

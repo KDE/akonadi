@@ -39,12 +39,18 @@ class EntityPrivate : public QSharedData
     {
     }
 
+    virtual ~EntityPrivate()
+    {
+    }
+
     EntityPrivate( const EntityPrivate &other )
       : QSharedData( other )
     {
       mId = other.mId;
       mRemoteId = other.mRemoteId;
     }
+
+    virtual EntityPrivate *clone() const = 0;
 
     Entity::Id mId;
     QString mRemoteId;
