@@ -119,7 +119,7 @@ void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
   if ( !col.isValid() )
     return;
 
-  emit mParent->clicked( col );
+  emit mParent->currentChanged( col );
 }
 
 CollectionView::CollectionView(QWidget * parent) :
