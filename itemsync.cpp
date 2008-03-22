@@ -102,22 +102,22 @@ void ItemSync::slotLocalListDone( KJob * job )
 
   const Item::List list = static_cast<ItemFetchJob*>( job )->items();
   foreach ( const Item item, list ) {
-    d->localItemsById.insert( item.reference().id(), item );
-    d->localItemsByRemoteId.insert( item.reference().remoteId(), item );
+    d->localItemsById.insert( item.id(), item );
+    d->localItemsByRemoteId.insert( item.remoteId(), item );
     d->unprocessedLocalItems.insert( item );
   }
 
   // added / updated
   foreach ( const Item remoteItem, d->remoteItems ) {
 #ifndef NDEBUG
-    if ( remoteItem.reference().remoteId().isEmpty() ) {
-      kWarning( 5250 ) << "Item " << remoteItem.reference().id() << " does not have a remote identifier";
+    if ( remoteItem.remoteId().isEmpty() ) {
+      kWarning( 5250 ) << "Item " << remoteItem.id() << " does not have a remote identifier";
     }
 #endif
 
-    Item localItem = d->localItemsById.value( remoteItem.reference().id() );
+    Item localItem = d->localItemsById.value( remoteItem.id() );
     if ( !localItem.isValid() )
-      localItem = d->localItemsByRemoteId.value( remoteItem.reference().remoteId() );
+      localItem = d->localItemsByRemoteId.value( remoteItem.remoteId() );
     d->unprocessedLocalItems.remove( localItem );
     // missing locally
     if ( !localItem.isValid() ) {
@@ -168,7 +168,8 @@ void ItemSync::slotLocalListDone( KJob * job )
       d->pendingJobs++;
 
       Item i( remoteItem );
-      i.setReference( DataReference( localItem.reference().id(), remoteItem.reference().remoteId() ) );
+      i.setId( localItem.id() );
+      i.setRemoteId( remoteItem.remoteId() );
       i.setRev( localItem.rev() );
       ItemStoreJob *mod = new ItemStoreJob( (const Item)i, this );
       mod->storePayload();
@@ -186,7 +187,7 @@ void ItemSync::slotLocalListDone( KJob * job )
 
   foreach ( const Item item, d->removedRemoteItems ) {
     d->pendingJobs++;
-    ItemDeleteJob *job = new ItemDeleteJob( item.reference(), this );
+    ItemDeleteJob *job = new ItemDeleteJob( item, this );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( slotLocalChangeDone( KJob* ) ) );
   }
   d->localItemsById.clear();

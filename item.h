@@ -23,19 +23,11 @@
 
 #include "akonadi_export.h"
 
-#include <akonadi/job.h>
-
-namespace Akonadi {
-class Item;
-}
-
-AKONADI_EXPORT uint qHash( const Akonadi::Item& );
+#include <akonadi/entity.h>
 
 #include <QtCore/QByteArray>
-#include <QtCore/QDebug>
-#include <QtCore/QHash>
+#include <QtCore/QMetaType>
 #include <QtCore/QSet>
-#include <QtCore/QSharedDataPointer>
 #include <QtCore/QStringList>
 
 #include <typeinfo>
@@ -44,6 +36,8 @@ class KUrl;
 
 namespace Akonadi {
 
+class ItemPrivate;
+
 #include "itempayloadinternals_p.h"
 
 /**
@@ -51,7 +45,7 @@ namespace Akonadi {
 
   A PIM item consists of one or more parts, allowing a fine-grained access on its
   content where needed (eg. mail envelope, mail body and attachments). 
-  
+
   There ise also a namespace (prefix) for special parts which are local to Akonadi. 
   These parts, prefixed by "akonadi-" will never be fetched in the ressource. 
   There are useful for local extensions like agents which might want to add metadata
@@ -64,7 +58,7 @@ namespace Akonadi {
 
   This class is implicitly shared.
 */
-class AKONADI_EXPORT Item
+class AKONADI_EXPORT Item : public Entity
 {
   public:
     typedef QList<Item> List;
@@ -88,15 +82,18 @@ class AKONADI_EXPORT Item
     static const QLatin1String PartHeader;
 
 
+    /**
+     * Creates an invalid item.
+     */
+    Item();
 
     /**
-      Create a new PIM item.
-      @param ref The unique reference of this item.
-    */
-    explicit Item( const DataReference &ref = DataReference() );
+     * Create a new item with the given unique @p id.
+     */
+    explicit Item( Id id );
 
     /**
-      Create a new PIM item with the given mimetype.
+      Create a new item with the given mimetype.
       @param mimeType The mimetype of this item.
     */
     explicit Item( const QString &mimeType );
@@ -107,36 +104,19 @@ class AKONADI_EXPORT Item
     Item( const Item &other );
 
     /**
-      Destroys this PIM item.
+      Destroys this item.
     */
     ~Item();
 
     /**
       Creates an item from the url
     */
-    static DataReference fromUrl( const KUrl &url );
+    static Item fromUrl( const KUrl &url );
 
     /**
      * Returns whether the item is a valid PIM item.
      */
     bool isValid() const;
-
-    /**
-      Returns the DataReference of this item.
-    */
-    DataReference reference() const;
-
-    /**
-      Sets the DataReference for this item.
-      @param ref The DataReference object identifying this item.
-    */
-    void setReference( const DataReference &ref );
-
-    /**
-      Sets the remote identifier of this item.
-      @param remoteId The new remote id.
-     */
-    void setRemoteId( const QString &remoteId );
 
     /**
       Returns the flags of this item.
@@ -307,9 +287,9 @@ class AKONADI_EXPORT Item
     void removeRawPart( const QString &label );
     QByteArray rawPart( const QString &label ) const;
 
+    AKONADI_DECLARE_PRIVATE( Item )
+
   private:
-    class Private;
-    QSharedDataPointer<Private> d;
     PayloadBase*  m_payload; // krazy:exclude=dpointer
 };
 

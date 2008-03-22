@@ -27,7 +27,7 @@ class KXmlGuiWindow;
 
 namespace Akonadi {
 
-class DataReference;
+class Item;
 
 /**
   A view to show an item list provided by an ItemModel.
@@ -79,13 +79,13 @@ class AKONADI_EXPORT ItemView : public QTreeView
      * This signal is emitted whenever the user has activated
      * an item in the view.
      */
-    void activated( const Akonadi::DataReference &item );
+    void activated( const Akonadi::Item &item );
 
     /**
      * This signal is emitted whenever the current item
      * in the view has changed.
      */
-    void currentChanged( const Akonadi::DataReference &item );
+    void currentChanged( const Akonadi::Item &item );
 
   protected:
     using QTreeView::currentChanged;

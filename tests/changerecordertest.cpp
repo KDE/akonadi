@@ -33,7 +33,7 @@ class ChangeRecorderTest : public QObject
   private:
     void triggerChange( int uid )
     {
-      Item item( DataReference( uid, QString() ) );
+      Item item( uid );
       ItemStoreJob *job = new ItemStoreJob( item );
       job->addFlag( "random_flag" );
       job->noRevCheck();

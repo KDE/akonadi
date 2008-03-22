@@ -136,7 +136,7 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
   Q_OBJECT
 
   public:
-    explicit ItemCollectionFetchJob( const DataReference &reference, int collectionId, QObject *parent = 0 );
+    explicit ItemCollectionFetchJob( const Item &item, int collectionId, QObject *parent = 0 );
     ~ItemCollectionFetchJob();
 
     Item item() const;
@@ -153,7 +153,7 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
     void itemJobDone( KJob* job );
 
   private:
-    DataReference mReference;
+    Item mReferenceItem;
     int mCollectionId;
 
     Item mItem;

@@ -22,7 +22,6 @@
 
 #include <QtCore/QObject>
 
-#include <akonadi/datareference.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/monitor.h>
 
@@ -45,7 +44,7 @@ class ItemDetailsView::Private : public QObject
     }
 
     ItemDetailsView *mParent;
-    DataReference mUid;
+    Item::Id mUid;
     Monitor *mMonitor;
 
   private Q_SLOTS:
@@ -59,7 +58,7 @@ class ItemDetailsView::Private : public QObject
       mParent->itemChanged( item );
     }
 
-    void slotItemRemoved( const Akonadi::DataReference& )
+    void slotItemRemoved( const Akonadi::Item& )
     {
       mParent->itemRemoved();
     }

@@ -34,6 +34,11 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     Q_OBJECT
   public:
     /**
+     * Creates an empty item fetch job.
+     */
+    ItemFetchJob( QObject *parent = 0 );
+
+    /**
       Create a new item list job to retrieve envelope parts of all
       items in the given collection.
       @param collection The collection to list.
@@ -43,11 +48,10 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 
     /**
       Creates a new item fetch job to retrieve all parts of the item
-      with the given id.
-      @param ref The unique message id.
+      with the given id in @p item.
       @param parent The parent object.
     */
-    explicit ItemFetchJob( const DataReference &ref, QObject *parent = 0 );
+    explicit ItemFetchJob( const Item &item, QObject *parent = 0 );
 
     /**
       Destroys this job.
@@ -68,9 +72,9 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 
     /**
       Sets the unique identifier of the item that should be fetched.
-      @param ref The unique message id.
+      @param item The item with the unique identifier.
     */
-    void setUid( const DataReference &ref );
+    void setItem( const Item &item );
 
     /**
       Choose which part(s) of the item shall be fetched.

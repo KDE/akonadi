@@ -86,7 +86,6 @@ set( akonadikde_LIB_SRC
   collectionsync.cpp
   collectionview.cpp
   control.cpp
-  datareference.cpp
   entity.cpp
   expungejob.cpp
   flatcollectionproxymodel.cpp
@@ -180,7 +179,6 @@ install( FILES
   collectionstatusjob.h
   collectionview.h
   control.h
-  datareference.h
   entity.h
   expungejob.h
   item.h

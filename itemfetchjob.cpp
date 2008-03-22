@@ -58,7 +58,7 @@ class ItemFetchJob::Private
 
     ItemFetchJob *mParent;
     Collection collection;
-    DataReference uid;
+    Item mItem;
     Item::List items;
     QStringList mFetchParts;
     bool fetchAllParts;
@@ -69,10 +69,10 @@ class ItemFetchJob::Private
 void ItemFetchJob::Private::startFetchJob()
 {
   QByteArray command = mParent->newTag();
-  if ( uid.isNull() )
+  if ( mItem.id() == -1 )
     command += " FETCH 1:*";
   else
-    command += " UID FETCH " + QByteArray::number( uid.id() );
+    command += " UID FETCH " + QByteArray::number( mItem.id() );
 
   if ( !fetchAllParts ) {
     command += " (UID REMOTEID FLAGS";
@@ -93,6 +93,12 @@ void ItemFetchJob::Private::selectDone( KJob * job )
     startFetchJob();
 }
 
+ItemFetchJob::ItemFetchJob( QObject *parent ) :
+    Job( parent ),
+    d( new Private( this ) )
+{
+}
+
 ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
     Job( parent ),
     d( new Private( this ) )
@@ -100,11 +106,11 @@ ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent ) :
   d->collection = collection;
 }
 
-ItemFetchJob::ItemFetchJob(const DataReference & ref, QObject * parent) :
+ItemFetchJob::ItemFetchJob( const Item & item, QObject * parent) :
     Job( parent ),
     d( new Private( this ) )
 {
-  setUid( ref );
+  setItem( item );
 }
 
 ItemFetchJob::~ ItemFetchJob( )
@@ -114,7 +120,7 @@ ItemFetchJob::~ ItemFetchJob( )
 
 void ItemFetchJob::doStart()
 {
-  if ( d->uid.isNull() ) { // collection content listing
+  if ( d->mItem.id() == -1 ) { // collection content listing
     if ( d->collection == Collection::root() ) {
       setErrorText( QLatin1String("Cannot list root collection.") );
       setError( Unknown );
@@ -162,7 +168,8 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
         return;
       }
 
-      Item item( DataReference( uid, rid ) );
+      Item item( uid );
+      item.setRemoteId( rid );
       item.setRev( rev );
       item.setMimeType( mimeType );
       if ( !item.isValid() )
@@ -209,13 +216,13 @@ Item::List ItemFetchJob::items() const
 void ItemFetchJob::setCollection(const Collection &collection)
 {
   d->collection = collection;
-  d->uid = DataReference();
+  d->mItem = Item();
 }
 
-void Akonadi::ItemFetchJob::setUid(const DataReference & ref)
+void Akonadi::ItemFetchJob::setItem(const Item & item)
 {
   d->collection = Collection::root();
-  d->uid = ref;
+  d->mItem = item;
 }
 
 void ItemFetchJob::addFetchPart( const QString &identifier )

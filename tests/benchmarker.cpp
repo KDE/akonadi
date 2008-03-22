@@ -209,7 +209,7 @@ void BenchMarker::testMaildir( QString dir )
     foreach ( Item item, ifj->items() ) {
       // delete read messages
       if( item.hasFlag( "\\Seen" ) ) {
-        ItemDeleteJob *idj = new ItemDeleteJob( item.reference(), this);
+        ItemDeleteJob *idj = new ItemDeleteJob( item, this);
         idj->exec();
       }
     }

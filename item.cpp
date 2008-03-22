@@ -17,62 +17,41 @@
     02110-1301, USA.
 */
 
+#include <kurl.h>
+
 #include "item.h"
+#include "item_p.h"
 #include "itemserializer.h"
 #include "protocol_p.h"
 
-#include <kurl.h>
-
-#include <QtCore/QMap>
-#include <QtCore/QSharedData>
-
 using namespace Akonadi;
-
-class Item::Private : public QSharedData
-{
-  public:
-    Private()
-      : QSharedData(),
-      rev( -1 )
-    {
-    }
-
-    Private( const Private &other )
-      : QSharedData( other )
-    {
-      reference = other.reference;
-      flags = other.flags;
-      rev = other.rev;
-      mimeType = other.mimeType;
-      mParts = other.mParts;
-    }
-
-    DataReference reference;
-    Item::Flags flags;
-    int rev;
-    QString mimeType;
-    QMap<QString, QByteArray> mParts;
-};
 
 const QLatin1String Item::PartBody = QLatin1String( AKONADI_PART_BODY );
 const QLatin1String Item::PartEnvelope = QLatin1String( "ENVELOPE" );
 const QLatin1String Item::PartHeader = QLatin1String( "HEAD" );
 
-
-Item::Item( const DataReference & reference )
-  : d( new Private ), m_payload( 0 )
+Item::Item()
+  : Entity( new ItemPrivate ),
+    m_payload( 0 )
 {
-  d->reference = reference;
 }
 
-Item::Item(const QString & mimeType) :
-    d ( new Private ), m_payload( 0 )
+Item::Item( Id id )
+  : Entity( new ItemPrivate( id ) ),
+    m_payload( 0 )
 {
-  d->mimeType = mimeType;
+}
+
+Item::Item( const QString & mimeType )
+  : Entity( new ItemPrivate ),
+    m_payload( 0 )
+{
+  d_func()->mMimeType = mimeType;
 }
 
 Item::Item( const Item &other )
-  : d( other.d ), m_payload( 0 )
+  : Entity( other ),
+    m_payload( 0 )
 {
   if ( other.m_payload )
     m_payload = other.m_payload->clone();
@@ -80,49 +59,34 @@ Item::Item( const Item &other )
     m_payload = 0;
 }
 
-Item::~Item( )
+Item::~Item()
 {
-    delete m_payload;
+  delete m_payload;
 }
 
 bool Item::isValid() const
 {
-  return !d->reference.isNull();
-}
-
-DataReference Item::reference() const
-{
-  return d->reference;
-}
-
-void Item::setReference(const DataReference & ref)
-{
-  d->reference = ref;
-}
-
-void Item::setRemoteId( const QString &remoteId )
-{
-  d->reference.setRemoteId( remoteId );
+  return (d_func()->mId != -1);
 }
 
 Item::Flags Item::flags() const
 {
-  return d->flags;
+  return d_func()->mFlags;
 }
 
 void Item::setFlag( const QByteArray & name )
 {
-  d->flags.insert( name );
+  d_func()->mFlags.insert( name );
 }
 
 void Item::unsetFlag( const QByteArray & name )
 {
-  d->flags.remove( name );
+  d_func()->mFlags.remove( name );
 }
 
 bool Item::hasFlag( const QByteArray & name ) const
 {
-  return d->flags.contains( name );
+  return d_func()->mFlags.contains( name );
 }
 
 void Item::addPart( const QString &identifier, const QByteArray &data )
@@ -145,38 +109,38 @@ QByteArray Item::part( const QString &identifier ) const
 QStringList Item::availableParts() const
 {
   QStringList payloadParts = ItemSerializer::parts( *this );
-  return payloadParts + d->mParts.keys();
+  return payloadParts + d_func()->mParts.keys();
 }
 
 int Item::rev() const
 {
-  return d->rev;
+  return d_func()->mRevision;
 }
 
 void Item::setRev( const int rev )
 {
-  d->rev = rev;
+  d_func()->mRevision = rev;
 }
 
 void Item::incRev()
 {
-  d->rev = d->rev + 1;
+  d_func()->mRevision = d_func()->mRevision + 1;
 }
 
 QString Item::mimeType() const
 {
-  return d->mimeType;
+  return d_func()->mMimeType;
 }
 
 void Item::setMimeType( const QString & mimeType )
 {
-  d->mimeType = mimeType;
+  d_func()->mMimeType = mimeType;
 }
 
 Item& Item::operator=( const Item & other )
 {
   if ( this != &other ) {
-    d = other.d;
+    Entity::operator=( other );
     if ( other.m_payload )
       m_payload = other.m_payload->clone();
     else
@@ -195,7 +159,7 @@ KUrl Item::url( UrlType type ) const
 {
   KUrl url;
   url.setProtocol( QString::fromLatin1("akonadi") );
-  url.addQueryItem( QLatin1String( "item" ), QString::number( reference().id() ) );
+  url.addQueryItem( QLatin1String( "item" ), QString::number( id() ) );
 
   if ( type == UrlWithMimeType )
     url.addQueryItem( QLatin1String( "type" ), mimeType() );
@@ -203,9 +167,9 @@ KUrl Item::url( UrlType type ) const
   return url;
 }
 
-DataReference Item::fromUrl( const KUrl &url )
+Item Item::fromUrl( const KUrl &url )
 {
-  return DataReference( url.queryItems()[ QString::fromLatin1("item") ].toInt(), QString() );
+  return Item( url.queryItems()[ QString::fromLatin1("item") ].toLongLong() );
 }
 
 bool Item::urlIsValid( const KUrl &url )
@@ -213,27 +177,24 @@ bool Item::urlIsValid( const KUrl &url )
   return url.protocol() == QString::fromLatin1("akonadi") && url.queryItems().contains( QString::fromLatin1("item") );
 }
 
-void Item::addRawPart(const QString & label, const QByteArray & data)
+void Item::addRawPart( const QString & label, const QByteArray & data )
 {
-  d->mParts.insert( label, data );
+  d_func()->mParts.insert( label, data );
 }
 
-void Item::removeRawPart(const QString & label)
+void Item::removeRawPart( const QString & label )
 {
-  d->mParts.remove( label );
+  d_func()->mParts.remove( label );
 }
 
-QByteArray Item::rawPart(const QString & label) const
+QByteArray Item::rawPart( const QString & label ) const
 {
-  return d->mParts.value( label );
+  return d_func()->mParts.value( label );
 }
 
 bool Item::operator==( const Item &other ) const
 {
-  return d->reference.id() == other.d->reference.id();
+  return d_func()->mId == other.d_func()->mId;
 }
 
-uint qHash( const Akonadi::Item &item )
-{
-  return qHash( item.reference().id() );
-}
+AKONADI_DEFINE_PRIVATE( Item )

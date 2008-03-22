@@ -62,9 +62,9 @@ void Monitor::monitorCollection( const Collection &collection )
   d->collections << collection;
 }
 
-void Monitor::monitorItem( const DataReference & ref )
+void Monitor::monitorItem( const Item & item )
 {
-  d->items.insert( ref.id() );
+  d->items.insert( item.id() );
 }
 
 void Monitor::monitorResource(const QByteArray & resource)

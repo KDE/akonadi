@@ -92,8 +92,8 @@ void AgentBasePrivate::init()
               q, SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   q->connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
               q, SLOT( itemChanged( const Akonadi::Item&, const QStringList& ) ) );
-  q->connect( monitor, SIGNAL( itemRemoved( const Akonadi::DataReference& ) ),
-           q, SLOT( itemRemoved( const Akonadi::DataReference& ) ) );
+  q->connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+           q, SLOT( itemRemoved( const Akonadi::Item& ) ) );
   q->connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
               q, SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
@@ -245,9 +245,9 @@ void AgentBase::itemChanged( const Item &item, const QStringList &partIdentifier
   changeProcessed();
 }
 
-void AgentBase::itemRemoved( const DataReference &ref )
+void AgentBase::itemRemoved( const Item &item )
 {
-  Q_UNUSED( ref );
+  Q_UNUSED( item );
   changeProcessed();
 }
 

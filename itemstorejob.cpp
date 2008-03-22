@@ -131,7 +131,7 @@ void ItemStoreJob::doStart()
 
   d->tag = newTag();
   QByteArray command = d->tag;
-  command += " UID STORE " + QByteArray::number( d->item.reference().id() ) + ' ';
+  command += " UID STORE " + QByteArray::number( d->item.id() ) + ' ';
   if ( !d->revCheck || d->addFlags.contains( "\\Deleted" ) ) {
     command += "NOREV ";
   } else {
@@ -161,9 +161,9 @@ void ItemStoreJob::doStart()
         changes << QByteArray::number( d->collection.id() );
         break;
       case Private::RemoteId:
-        if ( !d->item.reference().remoteId().isNull() ) {
+        if ( !d->item.remoteId().isNull() ) {
           changes << "REMOTEID.SILENT";
-          changes << ImapParser::quote( d->item.reference().remoteId().toLatin1() );
+          changes << ImapParser::quote( d->item.remoteId().toLatin1() );
         }
         break;
       case Private::Dirty:

@@ -21,8 +21,8 @@
 #include <akonadi/itemfetchjob.h>
 //#include <agents/mailthreader/mailthreaderagent.h>
 #include "messagemodel.h"
-#include <akonadi/datareference.h>
 
+#include <QtCore/QDebug>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QHash>
@@ -85,17 +85,17 @@ class MessageThreaderProxyModel::Private
     {
       // Retrieve the item from the source model
       Item item = sourceMessageModel()->itemForIndex( sourceMessageModel()->index( i, 0 ) );
-      int id = item.reference().id();
+      int id = item.id();
       // Get his best potential parent using the mail threader parts
       readParentsFromParts( item );
-      int parentId = parentForItem( item.reference().id() );
+      int parentId = parentForItem( item.id() );
 
       /*
        * Fill in the tree maps
        */
       int row = childrenMap[ parentId ].count();
       mParent->beginInsertRows( indexMap[ parentId ], row, row );
-      childrenMap[ parentId ] << item.reference().id();
+      childrenMap[ parentId ] << item.id();
       parentMap[ id ] = parentId;
       QModelIndex index = mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, id );
       mParent->endInsertRows();
@@ -160,7 +160,7 @@ class MessageThreaderProxyModel::Private
     for ( int i = begin; i <= end; i++ )
     {
       Item item = sourceMessageModel()->itemForIndex( sourceMessageModel()->index( i, 0 ) );
-      int id = item.reference().id();
+      int id = item.id();
       int parentId = parentMap[ id ];
       int row = childrenMap[ parentId ].indexOf( id );
 
@@ -204,17 +204,17 @@ class MessageThreaderProxyModel::Private
     QList<int> realUnperfectParentsList = readParentsFromPart( item, MailThreaderAgent::PartUnperfectParents );
     QList<int> realSubjectParentsList = readParentsFromPart( item, MailThreaderAgent::PartSubjectParents );
 
-    realPerfectParentsMap[ item.reference().id() ] = realPerfectParentsList;
-    realUnperfectParentsMap[ item.reference().id() ] = realUnperfectParentsList;
-    realSubjectParentsMap[ item.reference().id() ] = realSubjectParentsList;
+    realPerfectParentsMap[ item.id() ] = realPerfectParentsList;
+    realUnperfectParentsMap[ item.id() ] = realUnperfectParentsList;
+    realSubjectParentsMap[ item.id() ] = realSubjectParentsList;
 
     // Fill in the children maps
     foreach( int parentId, realPerfectParentsList )
-      realPerfectChildrenMap[ parentId ] << item.reference().id();
+      realPerfectChildrenMap[ parentId ] << item.id();
     foreach( int parentId, realUnperfectParentsList )
-      realUnperfectChildrenMap[ parentId ] << item.reference().id();
+      realUnperfectChildrenMap[ parentId ] << item.id();
     foreach( int parentId, realSubjectParentsList )
-      realSubjectChildrenMap[ parentId ] << item.reference().id();
+      realSubjectChildrenMap[ parentId ] << item.id();
   }
 
   // Helper function for the precedent one
@@ -249,7 +249,7 @@ class MessageThreaderProxyModel::Private
     {
     // Check that the parent is in the collection
     // This is time consuming but ... required.
-    if ( sourceMessageModel()->indexForItem( DataReference( parentId, QString() ), 0 ).isValid() )
+    if ( sourceMessageModel()->indexForItem( Item( parentId ), 0 ).isValid() )
       return parentId;
 
     }
@@ -336,13 +336,13 @@ QModelIndex MessageThreaderProxyModel::parent( const QModelIndex & index ) const
 QModelIndex MessageThreaderProxyModel::mapToSource( const QModelIndex& index ) const
 {
   // This function is slow because it relies on rowForItem in the ItemModel (linear time)
-  return d->sourceMessageModel()->indexForItem( DataReference( index.internalId(), QString() ), index.column() );
+  return d->sourceMessageModel()->indexForItem( Item( index.internalId() ), index.column() );
 }
 
 QModelIndex MessageThreaderProxyModel::mapFromSource( const QModelIndex& index ) const
 {
   Item item = d->sourceMessageModel()->itemForIndex( index );
-  int id = item.reference().id();
+  int id = item.id();
   //return d->indexMap[ id  ]; // FIXME take column in account like mapToSource
   return MessageThreaderProxyModel::index( d->indexMap[ id ].row(), index.column(), d->indexMap[ id ].parent() );
 }

@@ -39,7 +39,7 @@ class ItemCopyTest : public QObject
     void testCopy()
     {
       const Collection target( 8 );
-      Item item( DataReference( 1, QString() ) );
+      Item item( 1 );
 
       ItemCopyJob *copy = new ItemCopyJob( item, target );
       QVERIFY( copy->exec() );
@@ -57,11 +57,11 @@ class ItemCopyTest : public QObject
       QVERIFY( !copy->exec() );
 
       // non-existing target
-      copy = new ItemCopyJob( Item( DataReference( 1, QString() ) ), Collection( INT_MAX ) );
+      copy = new ItemCopyJob( Item( 1 ), Collection( INT_MAX ) );
       QVERIFY( !copy->exec() );
 
       // non-existing source
-      copy = new ItemCopyJob( Item( DataReference( INT_MAX, QString() ) ), Collection::root() );
+      copy = new ItemCopyJob( Item( INT_MAX ), Collection::root() );
       QVERIFY( !copy->exec() );
     }
 

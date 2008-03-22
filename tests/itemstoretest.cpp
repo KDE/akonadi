@@ -60,7 +60,7 @@ void ItemStoreTest::initTestCase()
 
 void ItemStoreTest::testFlagChange()
 {
-  ItemFetchJob *fjob = new ItemFetchJob( DataReference( 1, QString() ) );
+  ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   Item item = fjob->items()[0];
@@ -73,7 +73,7 @@ void ItemStoreTest::testFlagChange()
   sjob->addFlag( "added_test_flag_1" );
   QVERIFY( sjob->exec() );
 
-  fjob = new ItemFetchJob( DataReference( 1, QString() ) );
+  fjob = new ItemFetchJob( Item( 1 ) );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -87,7 +87,7 @@ void ItemStoreTest::testFlagChange()
   sjob->setFlags( expectedFlags );
   QVERIFY( sjob->exec() );
 
-  fjob = new ItemFetchJob( DataReference( 1, QString() ) );
+  fjob = new ItemFetchJob( Item( 1 ) );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -101,7 +101,7 @@ void ItemStoreTest::testFlagChange()
   sjob->removeFlag( "added_test_flag_2" );
   QVERIFY( sjob->exec() );
 
-  fjob = new ItemFetchJob( DataReference( 1, QString() ) );
+  fjob = new ItemFetchJob( Item( 1 ) );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -127,9 +127,8 @@ void ItemStoreTest::testDataChange()
 {
   QFETCH( QByteArray, data );
 
-  DataReference ref( 1, QString() );
   Item item;
-  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
   prefetchjob->exec();
   item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
@@ -140,7 +139,7 @@ void ItemStoreTest::testDataChange()
   sjob->storePayload();
   QVERIFY( sjob->exec() );
 
-  ItemFetchJob *fjob = new ItemFetchJob( ref );
+  ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
   fjob->addFetchPart( Item::PartBody );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
@@ -151,8 +150,7 @@ void ItemStoreTest::testDataChange()
 
 void ItemStoreTest::testItemMove()
 {
-  DataReference ref( 1, QString() );
-  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
   prefetchjob->exec();
   Item item = prefetchjob->items()[0];
 
@@ -172,8 +170,7 @@ void ItemStoreTest::testItemMove()
 
 void ItemStoreTest::testIllegalItemMove()
 {
-  DataReference ref( 1, QString() );
-  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
   prefetchjob->exec();
   Item item = prefetchjob->items()[0];
 
@@ -205,27 +202,25 @@ void ItemStoreTest::testRemoteId()
   QFETCH( QString, rid );
   QFETCH( QString, exprid );
 
-  DataReference ref( 1, rid );
-
-  ItemFetchJob *prefetchjob = new ItemFetchJob( DataReference( 1, QString() ) );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
   prefetchjob->exec();
   Item item = prefetchjob->items()[0];
 
-  item.setReference( ref );
+  item.setId( 1 );
+  item.setRemoteId( rid );
   ItemStoreJob *store = new ItemStoreJob( item, this );
   QVERIFY( store->exec() );
 
-  ItemFetchJob *fetch = new ItemFetchJob( ref, this );
+  ItemFetchJob *fetch = new ItemFetchJob( item, this );
   QVERIFY( fetch->exec() );
   QCOMPARE( fetch->items().count(), 1 );
   item = fetch->items().at( 0 );
-  QCOMPARE( item.reference().remoteId(), exprid );
+  QCOMPARE( item.remoteId(), exprid );
 }
 
 void ItemStoreTest::testMultiPart()
 {
-  DataReference ref( 1, QString() );
-  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
   prefetchjob->exec();
   Item item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
@@ -237,7 +232,7 @@ void ItemStoreTest::testMultiPart()
   sjob->storePayload();
   QVERIFY( sjob->exec() );
 
-  ItemFetchJob *fjob = new ItemFetchJob( ref );
+  ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
   fjob->addFetchPart( "EXTRA" );
   fjob->addFetchPart( Item::PartBody );
   QVERIFY( fjob->exec() );
@@ -254,8 +249,7 @@ void ItemStoreTest::testMultiPart()
 
 void ItemStoreTest::testPartRemove()
 {
-  DataReference ref( 2, QString() );
-  ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
+  ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 2 ) );
   prefetchjob->exec();
   Item item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
@@ -267,7 +261,7 @@ void ItemStoreTest::testPartRemove()
   QVERIFY( sjob->exec() );
 
   // fetch item and its parts (should be RFC822, HEAD and EXTRA)
-  ItemFetchJob *fjob = new ItemFetchJob( ref );
+  ItemFetchJob *fjob = new ItemFetchJob( Item( 2 ) );
   fjob->fetchAllParts();
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
@@ -281,7 +275,7 @@ void ItemStoreTest::testPartRemove()
   QVERIFY( sjob->exec() );
 
   // fetch item again (should only have RFC822 and HEAD left)
-  ItemFetchJob *fjob2 = new ItemFetchJob( ref );
+  ItemFetchJob *fjob2 = new ItemFetchJob( Item( 2 ) );
   fjob2->fetchAllParts();
   QVERIFY( fjob2->exec() );
   QCOMPARE( fjob2->items().count(), 1 );
@@ -299,7 +293,7 @@ void ItemStoreTest::testRevisionCheck()
   QVERIFY( sel->exec() );
 
   // fetch same item twice
-  DataReference ref( 2, QString() );
+  Item ref( 2 );
   ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
   prefetchjob->exec();
   Item item1 = prefetchjob->items()[0];

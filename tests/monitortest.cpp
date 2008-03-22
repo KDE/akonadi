@@ -71,7 +71,6 @@ void MonitorTest::testMonitor()
   monitor->addFetchPart( Item::PartBody );
 
   // monitor signals
-  qRegisterMetaType<Akonadi::DataReference>();
   qRegisterMetaType<Akonadi::Collection>();
   qRegisterMetaType<Akonadi::Item>();
   qRegisterMetaType<Akonadi::CollectionStatus>();
@@ -81,7 +80,7 @@ void MonitorTest::testMonitor()
   QSignalSpy csspy( monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
   QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
   QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QStringList&)) );
-  QSignalSpy irspy( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)) );
+  QSignalSpy irspy( monitor, SIGNAL(itemRemoved(const Akonadi::Item&)) );
 
   QVERIFY( caspy.isValid() );
   QVERIFY( cmspy.isValid() );
@@ -122,8 +121,8 @@ void MonitorTest::testMonitor()
   newItem.setMimeType( "application/octet-stream" );
   ItemAppendJob *append = new ItemAppendJob( newItem, monitorCol, this );
   QVERIFY( append->exec() );
-  DataReference monitorRef = append->reference();
-  QVERIFY( !monitorRef.isNull() );
+  Item monitorRef = append->item();
+  QVERIFY( monitorRef.isValid() );
   QTest::qWait(1000);
 
   QCOMPARE( csspy.count(), 1 );
@@ -133,7 +132,7 @@ void MonitorTest::testMonitor()
   QCOMPARE( iaspy.count(), 1 );
   arg = iaspy.takeFirst();
   Item item = arg.at( 0 ).value<Item>();
-  QCOMPARE( item.reference(), monitorRef );
+  QCOMPARE( item, monitorRef );
   QCOMPARE( item.mimeType(), QString::fromLatin1(  "application/octet-stream" ) );
   Collection collection = arg.at( 1 ).value<Collection>();
   QCOMPARE( collection.id(), monitorCol.id() );
@@ -159,7 +158,7 @@ void MonitorTest::testMonitor()
   QCOMPARE( imspy.count(), 1 );
   arg = imspy.takeFirst();
   item = arg.at( 0 ).value<Item>();
-  QCOMPARE( monitorRef, item.reference() );
+  QCOMPARE( monitorRef, item );
   QCOMPARE( item.payload<QByteArray>(), QByteArray( "some new content" ) );
 
   QVERIFY( caspy.isEmpty() );
@@ -180,7 +179,7 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( irspy.count(), 1 );
   arg = irspy.takeFirst();
-  DataReference ref = qvariant_cast<DataReference>( arg.at(0) );
+  Item ref = qvariant_cast<Item>( arg.at(0) );
   QCOMPARE( monitorRef, ref );
 
   QVERIFY( caspy.isEmpty() );

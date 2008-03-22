@@ -32,7 +32,7 @@ ItemDetailsView::~ItemDetailsView()
   delete d;
 }
 
-void ItemDetailsView::setUid( const DataReference &id )
+void ItemDetailsView::setUid( Item::Id id )
 {
   if ( id == d->mUid )
     return;
@@ -49,24 +49,24 @@ void ItemDetailsView::setUid( const DataReference &id )
               d, SLOT( slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   d->connect( d->mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
               d, SLOT( slotItemChanged( const Akonadi::Item&, const QStringList& ) ) );
-  d->connect( d->mMonitor, SIGNAL( itemRemoved( const Akonadi::DataReference& ) ),
-              d, SLOT( slotItemRemoved( const Akonadi::DataReference& ) ) );
+  d->connect( d->mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+              d, SLOT( slotItemRemoved( const Akonadi::Item& ) ) );
 
   const QStringList parts = fetchPartIdentifiers();
   for ( int i = 0; i < parts.count(); ++i )
     d->mMonitor->addFetchPart( parts[ i ] );
 
-  d->mMonitor->monitorItem( d->mUid );
+  d->mMonitor->monitorItem( Item( d->mUid ) );
 
   // start initial fetch of the new item
-  ItemFetchJob* job = new ItemFetchJob( d->mUid );
+  ItemFetchJob* job = new ItemFetchJob( Item( d->mUid ) );
 
   for ( int i = 0; i < parts.count(); ++i )
     job->addFetchPart(  parts[ i ] );
   d->connect( job, SIGNAL( result( KJob* ) ), d, SLOT( initialFetchDone( KJob* ) ) );
 }
 
-DataReference ItemDetailsView::uid() const
+Item::Id ItemDetailsView::uid() const
 {
   return d->mUid;
 }

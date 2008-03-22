@@ -28,7 +28,6 @@
 #include <QtCore/QString>
 
 #include <kcompositejob.h>
-#include <akonadi/datareference.h>
 
 
 namespace Akonadi {

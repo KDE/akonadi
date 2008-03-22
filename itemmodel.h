@@ -101,13 +101,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     virtual QStringList mimeTypes() const;
 
     /**
-      Returns the message reference to the given model index. If the index
-      is invalid, an empty reference is returned.
-      @param index The model index.
-    */
-    virtual DataReference referenceForIndex( const QModelIndex &index ) const;
-
-    /**
       Sets the part identifier of the parts that shall be fetched for
       items. As default no parts are fetched.
     */
@@ -119,11 +112,11 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     Item itemForIndex( const QModelIndex &index ) const;
 
     /**
-      Returns the model index for the given reference, with the given column
-      @param ref The reference to find
+      Returns the model index for the given item, with the given column
+      @param item The item to find
       @param column The column for the returned index
     */
-    QModelIndex indexForItem( const Akonadi::DataReference& ref, const int column ) const;
+    QModelIndex indexForItem( const Akonadi::Item& item, const int column ) const;
 
     /* reimpl */
     bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
@@ -159,7 +152,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     Q_PRIVATE_SLOT( d, void itemMoved( const Akonadi::Item&, const Akonadi::Collection& colSrc, const Akonadi::Collection& colDst ) )
     Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item& ) )
     Q_PRIVATE_SLOT( d, void itemsAdded( const Akonadi::Item::List & ) )
-    Q_PRIVATE_SLOT( d, void itemRemoved( const Akonadi::DataReference& ) )
+    Q_PRIVATE_SLOT( d, void itemRemoved( const Akonadi::Item& ) )
 };
 
 }

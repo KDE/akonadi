@@ -250,7 +250,7 @@ class StandardActionManager::Private
 
       // TODO: fix this once ItemStoreJob can handle item lists
       foreach ( const QModelIndex index, itemSelectionModel->selectedRows() ) {
-        new ItemDeleteJob( DataReference( index.data( ItemModel::IdRole ).toInt(), QString() ), q );
+        new ItemDeleteJob( Item( index.data( ItemModel::IdRole ).toLongLong() ), q );
       }
     }
 

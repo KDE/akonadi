@@ -57,6 +57,16 @@ QString Entity::remoteId() const
   return d_ptr->mRemoteId;
 }
 
+bool Entity::isValid() const
+{
+  return ( d_ptr->mId != -1 );
+}
+
+bool Entity::operator==( const Entity &other ) const
+{
+  return ( d_ptr->mId == other.d_ptr->mId );
+}
+
 Entity& Entity ::operator=( const Entity &other )
 {
   if ( this != &other )

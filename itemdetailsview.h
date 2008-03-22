@@ -22,12 +22,11 @@
 
 #include "akonadi_export.h"
 
+#include <akonadi/item.h>
+
 class QStringList;
 
 namespace Akonadi {
-
-class DataReference;
-class Item;
 
 /**
  * This class can be used to implement item views.
@@ -54,12 +53,12 @@ class AKONADI_EXPORT ItemDetailsView
     /**
      * Sets the id of the item that shall be watched.
      */
-    void setUid( const DataReference &id );
+    void setUid( Item::Id id );
 
     /**
      * Returns the id of the currently watched item.
      */
-    DataReference uid() const;
+     Item::Id uid() const;
 
   protected:
     /**

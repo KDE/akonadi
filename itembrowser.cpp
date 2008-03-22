@@ -33,7 +33,7 @@ ItemBrowser::~ItemBrowser()
   // delete d;
 }
 
-void ItemBrowser::setUid( const Akonadi::DataReference &uid )
+void ItemBrowser::setUid( Akonadi::Item::Id uid )
 {
   ItemDetailsView::setUid( uid );
 }

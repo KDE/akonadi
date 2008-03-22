@@ -91,13 +91,13 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
       }
     } else if ( Item::urlIsValid( url ) ) {
       // TODO Extract mimetype from url and check if collection accepts it
-      DataReference ref = Item::fromUrl( url );
+      const Item item = Item::fromUrl( url );
       if ( !copy ) {
-        ItemStoreJob *job = new ItemStoreJob( Item( ref ), transaction );
+        ItemStoreJob *job = new ItemStoreJob( item, transaction );
         job->setCollection( collection );
         job->noRevCheck();
       } else  {
-        new ItemCopyJob( Item( ref ), collection, transaction );
+        new ItemCopyJob( item, collection, transaction );
       }
     } else {
       // non-akonadi URL

@@ -364,7 +364,9 @@ bool ResourceBase::requestItemDelivery(int uid, const QString & remoteId, const 
 
   setDelayedReply( true );
   // FIXME: we need at least the revision number too
-  d->scheduler->scheduleItemFetch( Item( DataReference( uid, remoteId ) ), parts, message().createReply() );
+  Item item( uid );
+  item.setRemoteId( remoteId );
+  d->scheduler->scheduleItemFetch( item, parts, message().createReply() );
 
   return true;
 }

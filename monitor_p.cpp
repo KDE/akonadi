@@ -89,8 +89,10 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
     notifyCollectionStatusWatchers( msg.parentCollection(), msg.resource() );
     if ( (!mFetchParts.isEmpty() || fetchAllParts) &&
           ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move ) ) {
-      ItemCollectionFetchJob *job = new ItemCollectionFetchJob( DataReference( msg.uid(), msg.remoteId() ),
-                                                                msg.parentCollection(), q_ptr );
+      Item item( msg.uid() );
+      item.setRemoteId( msg.remoteId() );
+
+      ItemCollectionFetchJob *job = new ItemCollectionFetchJob( item, msg.parentCollection(), q_ptr );
       foreach( QString part, mFetchParts )
         job->addFetchPart( part );
       if ( fetchAllParts )
@@ -100,7 +102,9 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
       return true;
     }
     if ( (!mFetchParts.isEmpty() || fetchAllParts) && msg.operation() == NotificationMessage::Modify ) {
-      ItemFetchJob *job = new ItemFetchJob( DataReference( msg.uid(), msg.remoteId() ), q_ptr );
+      Item item( msg.uid() );
+      item.setRemoteId( msg.remoteId() );
+      ItemFetchJob *job = new ItemFetchJob( item, q_ptr );
       foreach( QString part, mFetchParts )
         job->addFetchPart( part );
       if ( fetchAllParts )
@@ -188,7 +192,8 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
   }
   Item it = item;
   if ( !it.isValid() ) {
-    it = Item( DataReference( msg.uid(), msg.remoteId() ) );
+    it = Item( msg.uid() );
+    it.setRemoteId( msg.remoteId() );
     it.setMimeType( msg.mimeType() );
   }
   switch ( msg.operation() ) {
@@ -202,7 +207,7 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
       emit q_ptr->itemMoved( it, col, colDest );
       break;
     case NotificationMessage::Remove:
-      emit q_ptr->itemRemoved( it.reference() );
+      emit q_ptr->itemRemoved( it );
       break;
     default:
       Q_ASSERT_X( false, "MonitorPrivate::emitItemNotification()", "Invalid enum value" );
@@ -286,9 +291,9 @@ void MonitorPrivate::slotCollectionJobFinished( KJob* job )
 }
 
 
-ItemCollectionFetchJob::ItemCollectionFetchJob( const DataReference &reference, int collectionId, QObject *parent )
+ItemCollectionFetchJob::ItemCollectionFetchJob( const Item &item, int collectionId, QObject *parent )
   : Job( parent ),
-    mReference( reference ), mCollectionId( collectionId ), mFetchAllParts( false )
+    mReferenceItem( item ), mCollectionId( collectionId ), mFetchAllParts( false )
 {
 }
 
@@ -312,7 +317,7 @@ void ItemCollectionFetchJob::doStart()
   connect( listJob, SIGNAL( result( KJob* ) ), SLOT( collectionJobDone( KJob* ) ) );
   addSubjob( listJob );
 
-  ItemFetchJob *fetchJob = new ItemFetchJob( mReference, this );
+  ItemFetchJob *fetchJob = new ItemFetchJob( mReferenceItem, this );
   foreach( QString part, mFetchParts )
     fetchJob->addFetchPart( part );
   if ( mFetchAllParts )

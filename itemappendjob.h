@@ -47,10 +47,9 @@ class AKONADI_EXPORT ItemAppendJob : public Job
     ~ItemAppendJob();
 
     /**
-      Returns a DataReference pointing to the new item. The result is invalid
-      if the job failed.
+      Returns the item with the new unique id, or an invalid item if the job failed.
     */
-    DataReference reference() const;
+    Item item() const;
 
   protected:
     virtual void doStart();

@@ -50,3 +50,12 @@ void ItemTest::testMultipart()
   QCOMPARE( item.part( "MYPART" ), myData );
 }
 
+void ItemTest::testInheritance()
+{
+  Item a;
+
+  a.setRemoteId( "Hello World" );
+
+  Item b( a );
+  b.setFlag( "\\send" );
+}

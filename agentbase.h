@@ -37,7 +37,6 @@ namespace Akonadi {
 
 class Session;
 class Item;
-class DataReference;
 class ChangeRecorder;
 class AgentBasePrivate;
 
@@ -196,9 +195,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
     /**
       Reimplement to handle deletion of items.
-      @param ref DataReference to the deleted item.
+      @param item The deleted item.
     */
-    virtual void itemRemoved( const Akonadi::DataReference &ref );
+    virtual void itemRemoved( const Akonadi::Item &item );
 
     /**
       Reimplement to handle adding of new collections.

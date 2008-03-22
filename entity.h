@@ -75,6 +75,17 @@ class AKONADI_EXPORT Entity
     QString remoteId() const;
 
     /**
+     * Returns whether the entity is valid.
+     */
+    bool isValid() const;
+
+    /**
+     * Returns whether the entity's id equals the
+     * id of the @p other entity.
+     */
+    bool operator==( const Entity &other ) const;
+
+    /**
      * @internal
      */
     Entity& operator=( const Entity &other );

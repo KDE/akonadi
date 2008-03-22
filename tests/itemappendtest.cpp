@@ -65,19 +65,20 @@ void ItemAppendTest::testItemAppend_data()
 void ItemAppendTest::testItemAppend()
 {
   QFETCH( QString, remoteId );
-  DataReference ref; // for cleanup
+  Item ref; // for cleanup
 
-  Item item( DataReference( -1, remoteId ) );
+  Item item( -1 );
+  item.setRemoteId( remoteId );
   item.setMimeType( "application/octet-stream" );
   ItemAppendJob *job = new ItemAppendJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
-  ref = job->reference();
+  ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
-  QCOMPARE( fjob->items()[0].reference(), ref );
-  QCOMPARE( fjob->items()[0].reference().remoteId(), remoteId );
+  QCOMPARE( fjob->items()[0], ref );
+  QCOMPARE( fjob->items()[0].remoteId(), remoteId );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );
@@ -107,7 +108,7 @@ void ItemAppendTest::testContent()
 
   ItemAppendJob* job = new ItemAppendJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
-  DataReference ref = job->reference();
+  Item ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
   fjob->addFetchPart( Item::PartBody );
@@ -146,17 +147,15 @@ void ItemAppendTest::testIllegalAppend()
 
 void ItemAppendTest::testMultipartAppend()
 {
-  DataReference::List refs; // for cleanup
-
   Item item;
   item.setMimeType( "application/octet-stream" );
   item.addPart( Item::PartBody, "body data" );
   item.addPart( "EXTRA", "extra data" );
   ItemAppendJob *job = new ItemAppendJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
-  refs << job->reference();
+  Item ref = job->item();
 
-  ItemFetchJob *fjob = new ItemFetchJob( refs.first(), this );
+  ItemFetchJob *fjob = new ItemFetchJob( ref, this );
   fjob->addFetchPart( Item::PartBody );
   fjob->addFetchPart( "EXTRA" );
   QVERIFY( fjob->exec() );
@@ -165,11 +164,8 @@ void ItemAppendTest::testMultipartAppend()
   QCOMPARE( item.part( Item::PartBody ), QByteArray( "body data" ) );
   QCOMPARE( item.part( "EXTRA" ), QByteArray( "extra data" ) );
 
-  // cleanup
-  foreach ( DataReference ref, refs ) {
-    ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-    QVERIFY( djob->exec() );
-  }
+  ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
+  QVERIFY( djob->exec() );
 }
 
 #include "itemappendtest.moc"

@@ -64,7 +64,7 @@ void ItemFetchTest::testFetch()
     Item::List l = spy[i][0].value<Akonadi::Item::List>();
     for ( int j = 0; j < l.count(); ++j ) {
       QVERIFY( items.count() > count + j );
-      QCOMPARE( items[count + j].reference(), l[j].reference() );
+      QCOMPARE( items[count + j], l[j] );
     }
     count += l.count();
   }
@@ -72,7 +72,7 @@ void ItemFetchTest::testFetch()
 
   // check if the fetch response is parsed correctly
   Item item = items[0];
-  QCOMPARE( item.reference().remoteId(), QString( "A" ) );
+  QCOMPARE( item.remoteId(), QString( "A" ) );
 
   QCOMPARE( item.flags().count(), 3 );
   QVERIFY( item.hasFlag( "\\Seen" ) );
@@ -98,20 +98,17 @@ void ItemFetchTest::testIllegalFetch()
   QVERIFY( !job->exec() );
 
   // fetch a non-existing message
-  DataReference ref( INT_MAX, QString() );
-  job = new ItemFetchJob( ref, this );
+  job = new ItemFetchJob( Item( INT_MAX ), this );
   QVERIFY( job->exec() );
   QVERIFY( job->items().isEmpty() );
 
   // fetch message with empty reference
-  ref = DataReference();
-  job = new ItemFetchJob( ref, this );
+  job = new ItemFetchJob( Item(), this );
   QVERIFY( !job->exec() );
 }
 
 void ItemFetchTest::testMultipartFetch()
 {
-  DataReference::List refs; // for cleanup
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );
   QVERIFY( resolver->exec() );
   int colId = resolver->collection();
@@ -122,10 +119,10 @@ void ItemFetchTest::testMultipartFetch()
   item.addPart( "EXTRA", "extra data" );
   ItemAppendJob *job = new ItemAppendJob( item, Collection( colId ), this );
   QVERIFY( job->exec() );
-  refs << job->reference();
+  Item ref = job->item();
 
   // fetch all parts manually
-  ItemFetchJob *fjob = new ItemFetchJob( refs.first(), this );
+  ItemFetchJob *fjob = new ItemFetchJob( ref, this );
   fjob->addFetchPart( Item::PartBody );
   fjob->addFetchPart( "EXTRA" );
   QVERIFY( fjob->exec() );
@@ -136,7 +133,7 @@ void ItemFetchTest::testMultipartFetch()
   QCOMPARE( item.part( "EXTRA" ), QByteArray( "extra data" ) );
 
   // fetch single part
-  fjob = new ItemFetchJob( refs.first(), this );
+  fjob = new ItemFetchJob( ref, this );
   fjob->addFetchPart( Item::PartBody );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
@@ -146,7 +143,7 @@ void ItemFetchTest::testMultipartFetch()
   QCOMPARE( item.part( "EXTRA" ), QByteArray() );
 
   // fetch all parts automatically
-  fjob = new ItemFetchJob( refs.first(), this );
+  fjob = new ItemFetchJob( ref, this );
   fjob->fetchAllParts();
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
@@ -156,11 +153,8 @@ void ItemFetchTest::testMultipartFetch()
   QCOMPARE( item.part( "EXTRA" ), QByteArray( "extra data" ) );
 
   // cleanup
-  foreach ( DataReference ref, refs ) {
-    ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-    QVERIFY( djob->exec() );
-  }
-
+  ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
+  QVERIFY( djob->exec() );
 }
 
 void ItemFetchTest::testVirtualFetch()

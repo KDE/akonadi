@@ -60,8 +60,8 @@ void ItemAppendJob::doStart()
 {
   QByteArray remoteId;
 
-  if ( !d->item.reference().remoteId().isEmpty() )
-    remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->item.reference().remoteId().toUtf8() + ']' );
+  if ( !d->item.remoteId().isEmpty() )
+    remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->item.remoteId().toUtf8() + ']' );
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
   if ( d->parts.isEmpty() || (d->parts.size() == 1 && d->parts.first() == Item::PartBody) ) {
     if ( d->item.hasPayload() )
@@ -112,11 +112,14 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
   }
 }
 
-DataReference ItemAppendJob::reference() const
+Item ItemAppendJob::item() const
 {
-  if ( d->uid == 0 )
-    return DataReference();
-  return DataReference( d->uid, d->item.reference().remoteId() );
+  Item item;
+
+  if ( d->uid != 0 )
+    item.setRemoteId( d->item.remoteId() );
+
+  return item;
 }
 
 #include "itemappendjob.moc"

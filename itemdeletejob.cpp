@@ -42,7 +42,7 @@ class ItemDeleteJob::Private
     void jobDone( KJob* );
 
     ItemDeleteJob *mParent;
-    DataReference ref;
+    Item item;
     State state;
 };
 
@@ -52,11 +52,11 @@ void ItemDeleteJob::Private::jobDone( KJob * job )
     mParent->emitResult();
 }
 
-ItemDeleteJob::ItemDeleteJob( const DataReference & ref, QObject * parent )
+ItemDeleteJob::ItemDeleteJob( const Item & item, QObject * parent )
   : Job( parent ),
     d( new Private( this ) )
 {
-  d->ref = ref;
+  d->item = item;
   d->state = Private::Begin;
 }
 
@@ -70,7 +70,7 @@ void ItemDeleteJob::doStart()
   TransactionBeginJob *begin = new TransactionBeginJob( this );
   addSubjob( begin );
 
-  ItemStoreJob* store = new ItemStoreJob( Item( d->ref ), this );
+  ItemStoreJob* store = new ItemStoreJob( d->item, this );
   store->addFlag( "\\Deleted" );
   addSubjob( store );
 

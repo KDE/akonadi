@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,25 +17,45 @@
     02110-1301, USA.
 */
 
-#include "datareferencetest.h"
-#include "datareferencetest.moc"
+#ifndef AKONADI_ITEM_P_H
+#define AKONADI_ITEM_P_H
 
-#include <akonadi/job.h>
+#include <QtCore/QMap>
 
-using namespace Akonadi;
+#include "entity_p.h"
 
-#include <qtest_kde.h>
+namespace Akonadi {
 
-QTEST_KDEMAIN( DataReferenceTest, NoGUI )
-
-void DataReferenceTest::testIsNull()
+class ItemPrivate : public EntityPrivate
 {
-  DataReference ref;
-  QVERIFY( ref.isNull() );
+  public:
+    ItemPrivate( Item::Id id = -1 )
+      : EntityPrivate( id ),
+        mRevision( -1 )
+    {
+    }
 
-  ref = DataReference( -2, QString() );
-  QVERIFY( ref.isNull() );
+    ItemPrivate( const ItemPrivate &other )
+      : EntityPrivate( other )
+    {
+      mFlags = other.mFlags;
+      mRevision = other.mRevision;
+      mMimeType = other.mMimeType;
+      mParts = other.mParts;
+    }
 
-  ref = DataReference( 2, QString() );
-  QVERIFY( !ref.isNull() );
+    EntityPrivate *clone() const
+    {
+      return new ItemPrivate( *this );
+    }
+
+    Item::Flags mFlags;
+    int mRevision;
+    QString mMimeType;
+    QMap<QString, QByteArray> mParts;
+};
+
 }
+
+#endif
+

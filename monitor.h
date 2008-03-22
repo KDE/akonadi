@@ -67,10 +67,10 @@ class AKONADI_EXPORT Monitor : public QObject
     void monitorCollection( const Collection &collection );
 
     /**
-      Monitors the specified PIM Item for changes.
-      @param ref The item references.
+      Monitors the specified item for changes.
+      @param item The item to monitor.
     */
-    void monitorItem( const DataReference &ref );
+    void monitorItem( const Item &item );
 
     /**
       Monitors the specified resource for changes.
@@ -143,9 +143,9 @@ class AKONADI_EXPORT Monitor : public QObject
 
     /**
       Emitted if a monitored object has been removed from the storage and from a monitored collection.
-      @param ref Reference of the removed object.
+      @param item The removed item.
     */
-    void itemRemoved( const Akonadi::DataReference &ref);
+    void itemRemoved( const Akonadi::Item &item);
 
     /**
       Emitted if a new collection was added in the storage and if

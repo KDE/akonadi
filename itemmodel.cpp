@@ -71,13 +71,13 @@ class ItemModel::Private
     void itemsAdded( const Akonadi::Item::List &list );
     void itemAdded( const Akonadi::Item &item );
     void itemMoved( const Akonadi::Item&, const Akonadi::Collection& src, const Akonadi::Collection& dst );
-    void itemRemoved( const Akonadi::DataReference& );
-    int rowForItem( const Akonadi::DataReference& );
+    void itemRemoved( const Akonadi::Item& );
+    int rowForItem( const Akonadi::Item& );
 
     ItemModel *mParent;
 
     QList<ItemContainer*> items;
-    QHash<DataReference, ItemContainer*> itemHash;
+    QHash<Item::Id, ItemContainer*> itemHash;
 
     Collection collection;
     Monitor *monitor;
@@ -106,13 +106,13 @@ void ItemModel::Private::listingDone( KJob * job )
                     mParent, SLOT(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   mParent->connect( monitor, SIGNAL(itemAdded( const Akonadi::Item&, const Akonadi::Collection& )),
                     mParent, SLOT(itemAdded( const Akonadi::Item& )) );
-  mParent->connect( monitor, SIGNAL(itemRemoved(Akonadi::DataReference)),
-                    mParent, SLOT(itemRemoved(Akonadi::DataReference)) );
+  mParent->connect( monitor, SIGNAL(itemRemoved(Akonadi::Item)),
+                    mParent, SLOT(itemRemoved(Akonadi::Item)) );
 }
 
-int ItemModel::Private::rowForItem( const Akonadi::DataReference& ref )
+int ItemModel::Private::rowForItem( const Akonadi::Item& item )
 {
-  ItemContainer *container = itemHash.value( ref );
+  ItemContainer *container = itemHash.value( item.id() );
   if ( !container )
     return -1;
 
@@ -127,7 +127,7 @@ int ItemModel::Private::rowForItem( const Akonadi::DataReference& ref )
   else { // Slow solution if the fist one has not succeeded
     int row = -1;
     for ( int i = 0; i < items.size(); ++i ) {
-      if ( items.at( i )->item.reference() == ref ) {
+      if ( items.at( i )->item.id() == item.id() ) {
         row = i;
         break;
       }
@@ -139,7 +139,7 @@ int ItemModel::Private::rowForItem( const Akonadi::DataReference& ref )
 
 void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QStringList& )
 {
-  int row = rowForItem( item.reference() );
+  int row = rowForItem( item );
   if ( row < 0 )
     return;
   QModelIndex index = mParent->index( row, 0, QModelIndex() );
@@ -151,7 +151,7 @@ void ItemModel::Private::itemMoved( const Akonadi::Item &item, const Akonadi::Co
 {
   if ( colSrc == collection && colDst != collection ) // item leaving this model
   {
-    itemRemoved( item.reference() );
+    itemRemoved( item );
     return;
   }
 
@@ -171,7 +171,7 @@ void ItemModel::Private::itemsAdded( const Akonadi::Item::List &list )
   foreach( Item item, list ) {
     ItemContainer *c = new ItemContainer( item, items.count() );
     items.append( c );
-    itemHash[ item.reference() ] = c;
+    itemHash[ item.id() ] = c;
   }
   mParent->endInsertRows();
 }
@@ -183,16 +183,16 @@ void ItemModel::Private::itemAdded( const Akonadi::Item &item )
   itemsAdded( l );
 }
 
-void ItemModel::Private::itemRemoved( const DataReference &reference )
+void ItemModel::Private::itemRemoved( const Akonadi::Item &_item )
 {
-  int row = rowForItem( reference );
+  int row = rowForItem( _item );
   if ( row < 0 )
     return;
 
   mParent->beginRemoveRows( QModelIndex(), row, row );
   const Item item = items.at( row )->item;
   Q_ASSERT( item.isValid() );
-  itemHash.remove( item.reference() );
+  itemHash.remove( item.id() );
   delete items.takeAt( row );
   mParent->endRemoveRows();
 }
@@ -222,9 +222,9 @@ QVariant ItemModel::data( const QModelIndex & index, int role ) const
   if ( role == Qt::DisplayRole ) {
     switch ( index.column() ) {
       case Id:
-        return QString::number( item.reference().id() );
+        return QString::number( item.id() );
       case RemoteId:
-        return item.reference().remoteId();
+        return item.remoteId();
       case MimeType:
         return item.mimeType();
     }
@@ -233,9 +233,9 @@ QVariant ItemModel::data( const QModelIndex & index, int role ) const
   if ( role == IdRole ) {
     switch ( index.column() ) {
       case Id:
-        return QString::number( item.reference().id() );
+        return QString::number( item.id() );
       case RemoteId:
-        return item.reference().remoteId();
+        return item.remoteId();
       case MimeType:
         return item.mimeType();
     }
@@ -314,18 +314,6 @@ void ItemModel::addFetchPart( const QString &identifier )
   }
 }
 
-DataReference ItemModel::referenceForIndex( const QModelIndex & index ) const
-{
-  if ( !index.isValid() )
-    return DataReference();
-  if ( index.row() >= d->items.count() )
-    return DataReference();
-
-  const Item item = d->items.at( index.row() )->item;
-  Q_ASSERT( item.isValid() );
-  return item.reference();
-}
-
 Item ItemModel::itemForIndex( const QModelIndex & index ) const
 {
   if ( !index.isValid() )
@@ -376,9 +364,9 @@ QMimeData *ItemModel::mimeData( const QModelIndexList &indexes ) const
   return data;
 }
 
-QModelIndex ItemModel::indexForItem( const Akonadi::DataReference& ref, const int column ) const
+QModelIndex ItemModel::indexForItem( const Akonadi::Item &item, const int column ) const
 {
-  return index( d->rowForItem( ref ), column );
+  return index( d->rowForItem( item ), column );
 }
 
 bool ItemModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent)

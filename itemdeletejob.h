@@ -25,6 +25,8 @@
 
 namespace Akonadi {
 
+class Item;
+
 /**
   Convenience job which permanently deletes an item, ie. sets the \\Deleted flag
   and then executes the EXPUNGE command.
@@ -36,10 +38,10 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
   public:
     /**
       Cretes a new ItemDeleteJob.
-      @param ref The reference of the item to delete.
+      @param item The item to delete.
       @param parent The parent object.
     */
-    explicit ItemDeleteJob( const DataReference &ref, QObject *parent = 0 );
+    explicit ItemDeleteJob( const Item &item, QObject *parent = 0 );
 
     /**
       Destorys this job.

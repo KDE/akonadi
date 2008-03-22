@@ -72,7 +72,10 @@ void ItemView::Private::itemActivated( const QModelIndex &index )
 
   const QString remoteId = index.sibling(index.row(),ItemModel::RemoteId).data(ItemModel::IdRole).toString();
 
-  emit mParent->activated( DataReference( currentItem, remoteId ) );
+  Item item( currentItem );
+  item.setRemoteId( remoteId );
+
+  emit mParent->activated( item );
 }
 
 void ItemView::Private::itemCurrentChanged( const QModelIndex &index )
@@ -86,7 +89,10 @@ void ItemView::Private::itemCurrentChanged( const QModelIndex &index )
 
   const QString remoteId = index.sibling(index.row(),ItemModel::RemoteId).data(ItemModel::IdRole).toString();
 
-  emit mParent->currentChanged( DataReference( currentItem, remoteId ) );
+  Item item( currentItem );
+  item.setRemoteId( remoteId );
+
+  emit mParent->currentChanged( item );
 }
 
 ItemView::ItemView( QWidget * parent ) :

@@ -54,7 +54,7 @@ void ItemCopyJob::doStart()
 {
   QList<int> ids;
   foreach ( const Item item, d->items )
-    ids << item.reference().id();
+    ids << item.id();
   ImapSet set;
   set.add( ids );
   QByteArray cmd( newTag() );
