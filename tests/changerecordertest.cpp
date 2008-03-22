@@ -18,7 +18,7 @@
 */
 
 #include <akonadi/changerecorder.h>
-#include <akonadi/itemstorejob.h>
+#include <akonadi/itemmodifyjob.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -34,11 +34,11 @@ class ChangeRecorderTest : public QObject
     void triggerChange( int uid )
     {
       Item item( uid );
-      ItemStoreJob *job = new ItemStoreJob( item );
+      ItemModifyJob *job = new ItemModifyJob( item );
       job->addFlag( "random_flag" );
       job->noRevCheck();
       QVERIFY( job->exec() );
-      job = new ItemStoreJob( item );
+      job = new ItemModifyJob( item );
       job->removeFlag( "random_flag" );
       job->noRevCheck();
       QVERIFY( job->exec() );

@@ -28,7 +28,7 @@
 #include <akonadi/itemappendjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
-#include <akonadi/itemstorejob.h>
+#include <akonadi/itemmodifyjob.h>
 
 #include <QtCore/QVariant>
 #include <QtGui/QApplication>
@@ -146,7 +146,7 @@ void MonitorTest::testMonitor()
 
   // modify an item
   item.setPayload<QByteArray>( "some new content" );
-  ItemStoreJob *store = new ItemStoreJob( item, this );
+  ItemModifyJob *store = new ItemModifyJob( item, this );
   store->storePayload();
   QVERIFY( store->exec() );
   QTest::qWait(1000);

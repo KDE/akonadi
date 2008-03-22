@@ -24,7 +24,7 @@
 #include "itemappendjob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
-#include "itemstorejob.h"
+#include "itemmodifyjob.h"
 
 #include <kdebug.h>
 
@@ -171,7 +171,7 @@ void ItemSync::slotLocalListDone( KJob * job )
       i.setId( localItem.id() );
       i.setRemoteId( remoteItem.remoteId() );
       i.setRevision( localItem.revision() );
-      ItemStoreJob *mod = new ItemStoreJob( (const Item)i, this );
+      ItemModifyJob *mod = new ItemModifyJob( (const Item)i, this );
       mod->storePayload();
       mod->setFlags( i.flags() );
       mod->setCollection( d->syncCollection );

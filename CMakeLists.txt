@@ -99,7 +99,7 @@ set( akonadikde_LIB_SRC
   itemmodel.cpp
   itemserializer.cpp
   itemserializerplugin.cpp
-  itemstorejob.cpp
+  itemmodifyjob.cpp
   itemsync.cpp
   itemview.cpp
   job.cpp
@@ -191,7 +191,7 @@ install( FILES
   itemmodel.h
   itempayloadinternals_p.h
   itemserializerplugin.h
-  itemstorejob.h
+  itemmodifyjob.h
   itemsync.h
   itemview.h
   job.h

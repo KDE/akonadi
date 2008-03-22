@@ -24,7 +24,7 @@
 #include <akonadi/collectionselectjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
-#include <akonadi/itemstorejob.h>
+#include <akonadi/itemmodifyjob.h>
 #include <qtest_kde.h>
 
 using namespace Akonadi;
@@ -69,7 +69,7 @@ void ItemStoreTest::testFlagChange()
   Item::Flags origFlags = item.flags();
   Item::Flags expectedFlags = origFlags;
   expectedFlags.insert( "added_test_flag_1" );
-  ItemStoreJob *sjob = new ItemStoreJob( item, this );
+  ItemModifyJob *sjob = new ItemModifyJob( item, this );
   sjob->addFlag( "added_test_flag_1" );
   QVERIFY( sjob->exec() );
 
@@ -83,7 +83,7 @@ void ItemStoreTest::testFlagChange()
 
   // set flags
   expectedFlags.insert( "added_test_flag_2" );
-  sjob = new ItemStoreJob( item, this );
+  sjob = new ItemModifyJob( item, this );
   sjob->setFlags( expectedFlags );
   QVERIFY( sjob->exec() );
 
@@ -96,7 +96,7 @@ void ItemStoreTest::testFlagChange()
   QVERIFY( diff.isEmpty() );
 
   // remove a flag
-  sjob = new ItemStoreJob( item, this );
+  sjob = new ItemModifyJob( item, this );
   sjob->removeFlag( "added_test_flag_1" );
   sjob->removeFlag( "added_test_flag_2" );
   QVERIFY( sjob->exec() );
@@ -135,7 +135,7 @@ void ItemStoreTest::testDataChange()
   item.setPayload( data );
 
   // delete data
-  ItemStoreJob *sjob = new ItemStoreJob( item );
+  ItemModifyJob *sjob = new ItemModifyJob( item );
   sjob->storePayload();
   QVERIFY( sjob->exec() );
 
@@ -154,7 +154,7 @@ void ItemStoreTest::testItemMove()
   prefetchjob->exec();
   Item item = prefetchjob->items()[0];
 
-  ItemStoreJob *store = new ItemStoreJob( item, this );
+  ItemModifyJob *store = new ItemModifyJob( item, this );
   store->setCollection( res3 );
   QVERIFY( store->exec() );
   item = store->item();
@@ -163,7 +163,7 @@ void ItemStoreTest::testItemMove()
   QVERIFY( fetch->exec() );
   QCOMPARE( fetch->items().count(), 1 );
 
-  store = new ItemStoreJob( item, this );
+  store = new ItemModifyJob( item, this );
   store->setCollection( res1_foo );
   QVERIFY( store->exec() );
 }
@@ -175,12 +175,12 @@ void ItemStoreTest::testIllegalItemMove()
   Item item = prefetchjob->items()[0];
 
   // move into invalid collection
-  ItemStoreJob *store = new ItemStoreJob( item, this );
+  ItemModifyJob *store = new ItemModifyJob( item, this );
   store->setCollection( Collection( INT_MAX ) );
   QVERIFY( !store->exec() );
 
   // move item into folder that doesn't support its mimetype
-  store = new ItemStoreJob( item, this );
+  store = new ItemModifyJob( item, this );
   store->setCollection( res2 );
   QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
   QVERIFY( !store->exec() );
@@ -208,7 +208,7 @@ void ItemStoreTest::testRemoteId()
 
   item.setId( 1 );
   item.setRemoteId( rid );
-  ItemStoreJob *store = new ItemStoreJob( item, this );
+  ItemModifyJob *store = new ItemModifyJob( item, this );
   QVERIFY( store->exec() );
 
   ItemFetchJob *fetch = new ItemFetchJob( item, this );
@@ -228,7 +228,7 @@ void ItemStoreTest::testMultiPart()
   item.addPart( "EXTRA", "extra" );
 
   // store item
-  ItemStoreJob *sjob = new ItemStoreJob( item );
+  ItemModifyJob *sjob = new ItemModifyJob( item );
   sjob->storePayload();
   QVERIFY( sjob->exec() );
 
@@ -242,7 +242,7 @@ void ItemStoreTest::testMultiPart()
   QCOMPARE( item.part( "EXTRA" ), QByteArray("extra") );
 
   // clean up
-  sjob = new ItemStoreJob( item );
+  sjob = new ItemModifyJob( item );
   sjob->removePart( "EXTRA" );
   QVERIFY( sjob->exec() );
 }
@@ -256,7 +256,7 @@ void ItemStoreTest::testPartRemove()
   item.addPart( "EXTRA", "extra" );
 
   // store item
-  ItemStoreJob *sjob = new ItemStoreJob( item );
+  ItemModifyJob *sjob = new ItemModifyJob( item );
   sjob->storePayload();
   QVERIFY( sjob->exec() );
 
@@ -270,7 +270,7 @@ void ItemStoreTest::testPartRemove()
   QVERIFY( item.availableParts().contains( QLatin1String( "EXTRA" ) ) );
 
   // remove a part
-  sjob = new ItemStoreJob( item );
+  sjob = new ItemModifyJob( item );
   sjob->removePart( "EXTRA" );
   QVERIFY( sjob->exec() );
 
@@ -300,11 +300,11 @@ void ItemStoreTest::testRevisionCheck()
   Item item2 = prefetchjob->items()[0];
 
   // store first item unmodified
-  ItemStoreJob *sjob = new ItemStoreJob( item1 );
+  ItemModifyJob *sjob = new ItemModifyJob( item1 );
   QVERIFY( sjob->exec() );
 
   // try to store second item
-  ItemStoreJob *sjob2 = new ItemStoreJob( item2 );
+  ItemModifyJob *sjob2 = new ItemModifyJob( item2 );
   item2.addPart( "EXTRA", "extra" );
   sjob2->storePayload();
   QVERIFY( !sjob2->exec() );
@@ -319,7 +319,7 @@ void ItemStoreTest::testRevisionCheck()
   djob->exec();
 
   // try to store it
-  sjob = new ItemStoreJob( item1 );
+  sjob = new ItemModifyJob( item1 );
   QVERIFY( !sjob->exec() );
 }
 

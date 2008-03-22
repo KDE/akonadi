@@ -32,7 +32,7 @@
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
-#include <akonadi/itemstorejob.h>
+#include <akonadi/itemmodifyjob.h>
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -168,7 +168,7 @@ void BenchMarker::testMaildir( QString dir )
     Item::List itemlist = ifj->items();
     for ( int i = ifj->items().count() - 1; i >= 0; i -= 5) {
       Item item = itemlist[i];
-      ItemStoreJob *isj = new ItemStoreJob( item, this );
+      ItemModifyJob *isj = new ItemModifyJob( item, this );
       isj->addFlag( "\\Seen" );
       isj->exec();
     }

@@ -17,14 +17,14 @@
     02110-1301, USA.
 */
 
-#include "itemstorejob.h"
+#include "itemmodifyjob.h"
 #include "imapparser_p.h"
 
 #include <kdebug.h>
 
 using namespace Akonadi;
 
-class ItemStoreJob::Private
+class ItemModifyJob::Private
 {
   public:
     enum Operation {
@@ -37,12 +37,12 @@ class ItemStoreJob::Private
       Dirty
     };
 
-    Private( ItemStoreJob *parent, const Item &it )
+    Private( ItemModifyJob *parent, const Item &it )
     : mParent( parent ), item( it ), revCheck( true )
     {
     }
 
-    ItemStoreJob *mParent;
+    ItemModifyJob *mParent;
     Item::Flags flags;
     Item::Flags addFlags;
     Item::Flags removeFlags;
@@ -74,54 +74,54 @@ class ItemStoreJob::Private
     }
 };
 
-ItemStoreJob::ItemStoreJob(const Item &item, QObject * parent) :
+ItemModifyJob::ItemModifyJob(const Item &item, QObject * parent) :
     Job( parent ),
     d( new Private( this, item ) )
 {
   d->operations.insert( Private::RemoteId );
 }
 
-ItemStoreJob::~ ItemStoreJob()
+ItemModifyJob::~ ItemModifyJob()
 {
   delete d;
 }
 
-void ItemStoreJob::setFlags(const Item::Flags & flags)
+void ItemModifyJob::setFlags(const Item::Flags & flags)
 {
   d->flags = flags;
   d->operations.insert( Private::SetFlags );
 }
 
-void ItemStoreJob::addFlag(const Item::Flag & flag)
+void ItemModifyJob::addFlag(const Item::Flag & flag)
 {
   d->addFlags.insert( flag );
   d->operations.insert( Private::AddFlags );
 }
 
-void ItemStoreJob::removeFlag(const Item::Flag & flag)
+void ItemModifyJob::removeFlag(const Item::Flag & flag)
 {
   d->removeFlags.insert( flag );
   d->operations.insert( Private::RemoveFlags );
 }
 
-void ItemStoreJob::removePart(const QByteArray & part)
+void ItemModifyJob::removePart(const QByteArray & part)
 {
   d->removeParts.append( part );
   d->operations.insert( Private::RemoveParts );
 }
 
-void ItemStoreJob::setCollection(const Collection &collection)
+void ItemModifyJob::setCollection(const Collection &collection)
 {
   d->collection = collection;
   d->operations.insert( Private::Move );
 }
 
-void ItemStoreJob::setClean()
+void ItemModifyJob::setClean()
 {
   d->operations.insert( Private::Dirty );
 }
 
-void ItemStoreJob::doStart()
+void ItemModifyJob::doStart()
 {
   // nothing to do
   if ( d->operations.isEmpty() && d->parts.isEmpty() ) {
@@ -178,7 +178,7 @@ void ItemStoreJob::doStart()
   newTag(); // hack to circumvent automatic response handling
 }
 
-void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
+void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
 {
   if ( _tag == "+" ) { // ready for literal data
     writeData( d->pendingData );
@@ -203,20 +203,20 @@ void ItemStoreJob::doHandleResponse(const QByteArray &_tag, const QByteArray & d
   kDebug( 5250 ) << "Unhandled response: " << _tag << data;
 }
 
-void ItemStoreJob::storePayload()
+void ItemModifyJob::storePayload()
 {
   Q_ASSERT( !d->item.mimeType().isEmpty() );
   d->parts = d->item.availableParts();
 }
 
-void ItemStoreJob::noRevCheck()
+void ItemModifyJob::noRevCheck()
 {
   d->revCheck = false;
 }
 
-Item ItemStoreJob::item() const
+Item ItemModifyJob::item() const
 {
   return d->item;
 }
 
-#include "itemstorejob.moc"
+#include "itemmodifyjob.moc"

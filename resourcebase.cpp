@@ -32,7 +32,7 @@
 #include "akonadi/collectionfetchjob.h"
 #include "akonadi/collectionmodifyjob.h"
 #include "akonadi/itemfetchjob.h"
-#include "akonadi/itemstorejob.h"
+#include "akonadi/itemmodifyjob.h"
 #include "akonadi/session.h"
 
 #include <kaboutdata.h>
@@ -314,7 +314,7 @@ void ResourceBase::itemRetrieved( const Item &item )
     }
   }
 
-  ItemStoreJob *job = new ItemStoreJob( i, session() );
+  ItemModifyJob *job = new ItemModifyJob( i, session() );
   job->storePayload();
   // FIXME: remove once the item with which we call retrieveItem() has a revision number
   job->noRevCheck();
@@ -338,7 +338,7 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
 
 void ResourceBase::changesCommitted(const Item& item)
 {
-  ItemStoreJob *job = new ItemStoreJob( item, session() );
+  ItemModifyJob *job = new ItemModifyJob( item, session() );
   job->setClean();
   job->noRevCheck(); // TODO: remove, but where/how do we handle the error?
   changeProcessed();

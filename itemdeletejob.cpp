@@ -18,7 +18,7 @@
 */
 
 #include "itemdeletejob.h"
-#include "itemstorejob.h"
+#include "itemmodifyjob.h"
 #include "expungejob.h"
 #include "transactionjobs.h"
 
@@ -70,7 +70,7 @@ void ItemDeleteJob::doStart()
   TransactionBeginJob *begin = new TransactionBeginJob( this );
   addSubjob( begin );
 
-  ItemStoreJob* store = new ItemStoreJob( d->item, this );
+  ItemModifyJob* store = new ItemModifyJob( d->item, this );
   store->addFlag( "\\Deleted" );
   addSubjob( store );
 

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMSTOREJOB_H
-#define AKONADI_ITEMSTOREJOB_H
+#ifndef AKONADI_ITEMMODIFYJOB_H
+#define AKONADI_ITEMMODIFYJOB_H
 
 #include "akonadi_export.h"
 #include <akonadi/collection.h>
@@ -30,7 +30,7 @@ namespace Akonadi {
 /**
   Modifies an existing Item.
 */
-class AKONADI_EXPORT ItemStoreJob : public Job
+class AKONADI_EXPORT ItemModifyJob : public Job
 {
   Q_OBJECT
 
@@ -42,12 +42,12 @@ class AKONADI_EXPORT ItemStoreJob : public Job
       @param item The Item object to store.
       @param parent The parent object.
     */
-    explicit ItemStoreJob( const Item &item, QObject *parent = 0 );
+    explicit ItemModifyJob( const Item &item, QObject *parent = 0 );
 
     /**
       Destroys this job.
      */
-    virtual ~ItemStoreJob();
+    virtual ~ItemModifyJob();
 
     /**
       Store the payload data.
