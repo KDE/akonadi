@@ -204,6 +204,7 @@ install( FILES
   resource.h
   resourcebase.h
   session.h
+  shareddatapointer.h
   standardactionmanager.h
   transactionjobs.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi
