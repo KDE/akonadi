@@ -21,7 +21,7 @@
 #include "itemsync.h"
 
 #include "item.h"
-#include "itemappendjob.h"
+#include "itemcreatejob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemmodifyjob.h"
@@ -199,7 +199,7 @@ void ItemSync::slotLocalListDone( KJob * job )
 void ItemSync::createLocalItem( const Item & item )
 {
   d->pendingJobs++;
-  ItemAppendJob *create = new ItemAppendJob( item, d->syncCollection, this );
+  ItemCreateJob *create = new ItemCreateJob( item, d->syncCollection, this );
   connect( create, SIGNAL( result( KJob* ) ), SLOT( slotLocalChangeDone( KJob* ) ) );
 }
 

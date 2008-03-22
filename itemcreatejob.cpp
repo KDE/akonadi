@@ -18,22 +18,22 @@
     02110-1301, USA.
 */
 
-#include "itemappendjob.h"
+#include "itemcreatejob.h"
 #include "imapparser_p.h"
 
 #include <kdebug.h>
 
 using namespace Akonadi;
 
-class Akonadi::ItemAppendJob::Private
+class Akonadi::ItemCreateJob::Private
 {
   public:
-    Private( ItemAppendJob *parent )
+    Private( ItemCreateJob *parent )
       : mParent( parent )
     {
     }
 
-    ItemAppendJob *mParent;
+    ItemCreateJob *mParent;
     Collection collection;
     Item item;
     QStringList parts;
@@ -41,7 +41,7 @@ class Akonadi::ItemAppendJob::Private
     QByteArray data;
 };
 
-ItemAppendJob::ItemAppendJob( const Item &item, const Collection &collection, QObject * parent ) :
+ItemCreateJob::ItemCreateJob( const Item &item, const Collection &collection, QObject * parent ) :
     Job( parent ),
     d( new Private( this ) )
 {
@@ -51,12 +51,12 @@ ItemAppendJob::ItemAppendJob( const Item &item, const Collection &collection, QO
   d->collection = collection;
 }
 
-ItemAppendJob::~ ItemAppendJob( )
+ItemCreateJob::~ ItemCreateJob( )
 {
   delete d;
 }
 
-void ItemAppendJob::doStart()
+void ItemCreateJob::doStart()
 {
   QByteArray remoteId;
 
@@ -92,7 +92,7 @@ void ItemAppendJob::doStart()
   }
 }
 
-void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void ItemCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "+" ) { // ready for literal data
     writeData( d->data );
@@ -112,7 +112,7 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
   }
 }
 
-Item ItemAppendJob::item() const
+Item ItemCreateJob::item() const
 {
   if ( d->uid == 0 )
     return Item();
@@ -121,4 +121,4 @@ Item ItemAppendJob::item() const
   return item;
 }
 
-#include "itemappendjob.moc"
+#include "itemcreatejob.moc"

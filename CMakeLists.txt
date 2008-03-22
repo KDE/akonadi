@@ -90,7 +90,7 @@ set( akonadikde_LIB_SRC
   expungejob.cpp
   flatcollectionproxymodel.cpp
   item.cpp
-  itemappendjob.cpp
+  itemcreatejob.cpp
   itembrowser.cpp
   itemcopyjob.cpp
   itemdeletejob.cpp
@@ -182,7 +182,7 @@ install( FILES
   entity.h
   expungejob.h
   item.h
-  itemappendjob.h
+  itemcreatejob.h
   itembrowser.h
   itemcopyjob.h
   itemdeletejob.h

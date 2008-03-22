@@ -22,7 +22,6 @@
 #define ITEMDUMPER_H
 
 #include <akonadi/collection.h>
-#include <akonadi/itemappendjob.h>
 
 #include <QTime>
 

@@ -28,6 +28,7 @@
 
 #include <akonadi/collectionpathresolver.h>
 #include <akonadi/transactionjobs.h>
+#include <akonadi/itemcreatejob.h>
 
 #define GLOBAL_TRANSACTION 1
 
@@ -55,7 +56,7 @@ ItemDumper::ItemDumper( const QString &path, const QString &filename, const QStr
 #endif
   for ( int i = 0; i < count; ++i ) {
     ++mJobCount;
-    ItemAppendJob *job = new ItemAppendJob( item, collection, this );
+    ItemCreateJob *job = new ItemCreateJob( item, collection, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
   }
 #ifdef GLOBAL_TRANSACTION

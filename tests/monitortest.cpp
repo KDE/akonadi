@@ -25,7 +25,7 @@
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/control.h>
-#include <akonadi/itemappendjob.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
@@ -119,7 +119,7 @@ void MonitorTest::testMonitor()
   // add an item
   Item newItem;
   newItem.setMimeType( "application/octet-stream" );
-  ItemAppendJob *append = new ItemAppendJob( newItem, monitorCol, this );
+  ItemCreateJob *append = new ItemCreateJob( newItem, monitorCol, this );
   QVERIFY( append->exec() );
   Item monitorRef = append->item();
   QVERIFY( monitorRef.isValid() );

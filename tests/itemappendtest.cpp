@@ -21,7 +21,7 @@
 #include "itemappendtest.h"
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionpathresolver.h>
-#include <akonadi/itemappendjob.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemdeletejob.h>
 
@@ -70,7 +70,7 @@ void ItemAppendTest::testItemAppend()
   Item item( -1 );
   item.setRemoteId( remoteId );
   item.setMimeType( "application/octet-stream" );
-  ItemAppendJob *job = new ItemAppendJob( item, Collection( testFolder1 ), this );
+  ItemCreateJob *job = new ItemCreateJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
   ref = job->item();
 
@@ -106,7 +106,7 @@ void ItemAppendTest::testContent()
   item.setMimeType( "application/octet-stream" );
   item.setPayload( data );
 
-  ItemAppendJob* job = new ItemAppendJob( item, Collection( testFolder1 ), this );
+  ItemCreateJob* job = new ItemCreateJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
   Item ref = job->item();
 
@@ -127,20 +127,20 @@ void ItemAppendTest::testIllegalAppend()
   item.setMimeType( "application/octet-stream" );
 
   // adding item to non-existing collection
-  ItemAppendJob *job = new ItemAppendJob( item, Collection( INT_MAX ), this );
+  ItemCreateJob *job = new ItemCreateJob( item, Collection( INT_MAX ), this );
   QVERIFY( !job->exec() );
 
   // adding item with non-existing mimetype
   Item item2;
   item2.setMimeType( "wrong/type" );
-  job = new ItemAppendJob( item2, Collection( testFolder1 ), this );
+  job = new ItemCreateJob( item2, Collection( testFolder1 ), this );
   QVERIFY( !job->exec() );
 
   // adding item into a collection which can't handle items of this type
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo/bla", this );
   QVERIFY( resolver->exec() );
   const Collection col = Collection( resolver->collection() );
-  job = new ItemAppendJob( item, col, this );
+  job = new ItemCreateJob( item, col, this );
   QEXPECT_FAIL( "", "Test not yet implemented in the server.", Continue );
   QVERIFY( !job->exec() );
 }
@@ -151,7 +151,7 @@ void ItemAppendTest::testMultipartAppend()
   item.setMimeType( "application/octet-stream" );
   item.addPart( Item::PartBody, "body data" );
   item.addPart( "EXTRA", "extra data" );
-  ItemAppendJob *job = new ItemAppendJob( item, Collection( testFolder1 ), this );
+  ItemCreateJob *job = new ItemCreateJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
   Item ref = job->item();
 

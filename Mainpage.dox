@@ -56,7 +56,7 @@ Items can be retrieved using job classes derived from Akonadi::ItemFetchJob.
 
 The following classes are provided to manipulate PIM items:
 
-- Akonadi::ItemAppendJob
+- Akonadi::ItemCreateJob
 - Akonadi::ItemModifyJob
 - Akonadi::ItemDeleteJob
 - Akonadi::ExpungeJob

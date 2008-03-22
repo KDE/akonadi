@@ -21,7 +21,7 @@
 #include "itemfetchtest.moc"
 
 #include <akonadi/collectionpathresolver.h>
-#include <akonadi/itemappendjob.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 
@@ -117,7 +117,7 @@ void ItemFetchTest::testMultipartFetch()
   item.setMimeType( "application/octet-stream" );
   item.addPart( Item::PartBody, "body data" );
   item.addPart( "EXTRA", "extra data" );
-  ItemAppendJob *job = new ItemAppendJob( item, Collection( colId ), this );
+  ItemCreateJob *job = new ItemCreateJob( item, Collection( colId ), this );
   QVERIFY( job->exec() );
   Item ref = job->item();
 

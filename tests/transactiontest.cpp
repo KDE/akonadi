@@ -19,7 +19,7 @@
 
 #include "transactiontest.h"
 
-#include <akonadi/itemappendjob.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectiondeletejob.h>
@@ -85,7 +85,7 @@ void TransactionTest::testTransaction()
   item.setMimeType( "application/octet-stream" );
   item.addPart( Item::PartBody, "body data" );
   item.addPart( "EXTRA", "extra data" );
-  ItemAppendJob *appendJob = new ItemAppendJob( item, testCollection, Session::defaultSession() );
+  ItemCreateJob *appendJob = new ItemCreateJob( item, testCollection, Session::defaultSession() );
   QVERIFY( appendJob->exec() );
 
   TransactionRollbackJob *rollbackTransaction3 = new TransactionRollbackJob( Session::defaultSession() );

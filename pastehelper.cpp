@@ -22,7 +22,7 @@
 #include "collectioncopyjob.h"
 #include "collectionmodifyjob.h"
 #include "item.h"
-#include "itemappendjob.h"
+#include "itemcreatejob.h"
 #include "itemcopyjob.h"
 #include "itemmodifyjob.h"
 #include "transactionjobs.h"
@@ -70,7 +70,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
     it.setMimeType( type );
     it.addPart( Item::PartBody, item );
 
-    ItemAppendJob *job = new ItemAppendJob( it, collection );
+    ItemCreateJob *job = new ItemCreateJob( it, collection );
     return job;
   }
 

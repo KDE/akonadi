@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMAPPENDJOB_H
-#define AKONADI_ITEMAPPENDJOB_H
+#ifndef AKONADI_ITEMCREATEJOB_H
+#define AKONADI_ITEMCREATEJOB_H
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
@@ -29,7 +29,7 @@ namespace Akonadi {
 /**
   Creates a new PIM item on the backend.
 */
-class AKONADI_EXPORT ItemAppendJob : public Job
+class AKONADI_EXPORT ItemCreateJob : public Job
 {
   Q_OBJECT
   public:
@@ -39,12 +39,12 @@ class AKONADI_EXPORT ItemAppendJob : public Job
       @param collection Parent collection.
       @param parent The parent object.
     */
-    ItemAppendJob( const Item &item, const Collection &collection, QObject *parent = 0 );
+    ItemCreateJob( const Item &item, const Collection &collection, QObject *parent = 0 );
 
     /**
       Deletes this job.
     */
-    ~ItemAppendJob();
+    ~ItemCreateJob();
 
     /**
       Returns the item with the new unique id, or an invalid item if the job failed.
