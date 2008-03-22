@@ -88,6 +88,7 @@ class ItemModel::Private
 void ItemModel::Private::listingDone( KJob * job )
 {
   ItemFetchJob *fetch = static_cast<ItemFetchJob*>( job );
+  Q_UNUSED( fetch );
   if ( job->error() ) {
     // TODO
     kWarning( 5250 ) << "Item query failed:" << job->errorString();

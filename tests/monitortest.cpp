@@ -76,8 +76,8 @@ void MonitorTest::testMonitor()
   qRegisterMetaType<Akonadi::CollectionStatus>();
   QSignalSpy caspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
-  QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(int,QString)) );
-  QSignalSpy csspy( monitor, SIGNAL(collectionStatusChanged(int,Akonadi::CollectionStatus)) );
+  QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)) );
+  QSignalSpy csspy( monitor, SIGNAL(collectionStatusChanged(Collection::Id,Akonadi::CollectionStatus)) );
   QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
   QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QStringList&)) );
   QSignalSpy irspy( monitor, SIGNAL(itemRemoved(const Akonadi::Item&)) );
@@ -216,7 +216,7 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( crspy.count(), 1 );
   arg = crspy.takeFirst();
-  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
+  QCOMPARE( arg.at(0).value<Collection>().id(), monitorCol.id() );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( cmspy.isEmpty() );

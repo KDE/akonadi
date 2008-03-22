@@ -350,6 +350,7 @@ void ResourceBase::changesCommitted(const Item& item)
 void ResourceBase::changesCommitted( const Collection &collection )
 {
   CollectionModifyJob *job = new CollectionModifyJob( collection, session() );
+  Q_UNUSED( job );
   //TODO: error checking
   changeProcessed();
 }
