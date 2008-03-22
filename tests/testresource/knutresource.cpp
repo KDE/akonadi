@@ -98,7 +98,7 @@ bool KnutResource::retrieveItem( const Item &item, const QStringList &parts )
 {
   Q_UNUSED( parts );
 
-  const QString remoteId = item.reference().remoteId();
+  const QString remoteId = item.remoteId();
 
   QMutableMapIterator<QString, CollectionEntry> it( mCollections );
   while ( it.hasNext() ) {
@@ -167,7 +167,7 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QStringList& )
 
     CollectionEntry &entry = it.value();
 
-    if ( entry.addressees.contains( item.reference().remoteId() ) ) {
+    if ( entry.addressees.contains( item.remoteId() ) ) {
       const KABC::Addressee addressee = item.payload<KABC::Addressee>();
       if ( !addressee.isEmpty() ) {
         entry.addressees.insert( addressee.uid(), addressee );
@@ -177,10 +177,10 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QStringList& )
         changesCommitted( i );
         return;
       }
-    } else if ( entry.incidences.contains( item.reference().remoteId() ) ) {
+    } else if ( entry.incidences.contains( item.remoteId() ) ) {
       KCal::Incidence *incidence = mICalConverter.fromString( item.payload<QByteArray>() );
       if ( incidence ) {
-        delete entry.incidences.take( item.reference().remoteId() );
+        delete entry.incidences.take( item.remoteId() );
         entry.incidences.insert( incidence->uid(), incidence );
 
         Item i( item );
@@ -193,7 +193,7 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QStringList& )
   changeProcessed();
 }
 
-void KnutResource::itemRemoved( const Akonadi::DataReference &reference )
+void KnutResource::itemRemoved( const Akonadi::Item &item )
 {
   QMutableMapIterator<QString, CollectionEntry> it( mCollections );
   while ( it.hasNext() ) {
@@ -201,10 +201,10 @@ void KnutResource::itemRemoved( const Akonadi::DataReference &reference )
 
     CollectionEntry &entry = it.value();
 
-    if ( entry.addressees.contains( reference.remoteId() ) ) {
-      entry.addressees.remove( reference.remoteId() );
-    } else if ( entry.incidences.contains( reference.remoteId() ) ) {
-      delete entry.incidences.take( reference.remoteId() );
+    if ( entry.addressees.contains( item.remoteId() ) ) {
+      entry.addressees.remove( item.remoteId() );
+    } else if ( entry.incidences.contains( item.remoteId() ) ) {
+      delete entry.incidences.take( item.remoteId() );
     }
   }
   changeProcessed();
@@ -258,7 +258,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
 
     bool found = false;
     foreach ( Item item, items ) {
-      if ( item.reference().remoteId() == uid ) {
+      if ( item.remoteId() == uid ) {
         found = true;
         break;
       }
@@ -267,7 +267,8 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     if ( found )
       continue;
 
-    Item item( DataReference( -1, uid ) );
+    Item item( -1 );
+    item.setRemoteId( uid );
     item.setMimeType( "text/vcard" );
     ItemAppendJob *append = new ItemAppendJob( item, collection, session() );
     if ( !append->exec() ) {
@@ -286,7 +287,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
 
     bool found = false;
     foreach ( Item item, items ) {
-      if ( item.reference().remoteId() == uid ) {
+      if ( item.remoteId() == uid ) {
         found = true;
         break;
       }
@@ -295,7 +296,8 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     if ( found )
       continue;
 
-    Item item( DataReference( -1, uid ) );
+    Item item( -1 )
+    item.setRemoteId( uid );
     item.setMimeType( "text/calendar" );
     ItemAppendJob *append = new ItemAppendJob( item, collection, session() );
     if ( !append->exec() ) {

@@ -47,7 +47,7 @@ class KnutResource : public Akonadi::ResourceBase
 
     virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     virtual void itemChanged( const Akonadi::Item &item, const QStringList &parts );
-    virtual void itemRemoved( const Akonadi::DataReference &ref );
+    virtual void itemRemoved( const Akonadi::Item &ref );
 
     void retrieveCollections();
     void retrieveItems( const Akonadi::Collection &collection, const QStringList &parts );
