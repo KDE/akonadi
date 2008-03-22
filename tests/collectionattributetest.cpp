@@ -109,9 +109,8 @@ void CollectionAttributeTest::testAttributes()
   // modify a custom attribute
   attr = new TestAttribute();
   attr->setData( attr2 );
+  col.addAttribute( attr );
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
-  modify->setAttribute( attr );
-  delete attr;
   QVERIFY( modify->exec() );
 
   list = new CollectionListJob( col, CollectionListJob::Local, this );

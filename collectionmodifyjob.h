@@ -74,12 +74,6 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
     void setParent( const Collection &parent );
 
     /**
-      Sets the given collection attribute.
-      @param attr A collection attribute, ownership stays with the caller.
-    */
-    void setAttribute( Attribute* attr );
-
-    /**
       Removes the given collection attribute.
       @param attrName The attribute name.
     */

@@ -105,6 +105,15 @@ class AKONADI_EXPORT Entity
     void addAttribute( Attribute *attr );
 
     /**
+      Removes an attribute. If an attribute with the given type exists,
+      it will be deleted.
+      @param attr The attribute to remove. Note that a different attribute
+      of the same type would also be removed. In this case @p attr might
+      still be valid after this call.
+    */
+    void removeAttribute( Attribute *attr );
+
+    /**
       Returns true if the entity has the specified attribute.
       @param type The attribute type.
     */
@@ -114,6 +123,11 @@ class AKONADI_EXPORT Entity
       Returns all attributes.
     */
     QList<Attribute*> attributes() const;
+
+    /**
+      Removes all attributes of this object. The attributes are deleted.
+    */
+    void clearAttributes();
 
     /**
       Returns the attribute of the given type if available, 0 otherwise.
@@ -146,6 +160,15 @@ class AKONADI_EXPORT Entity
       if ( hasAttribute( dummy.type() ) )
         return static_cast<T*>( attribute( dummy.type() ) );
       return 0;
+    }
+
+    /**
+      Removes and deletes the attribute of type @p T, if any.
+    */
+    template <typename T> inline T* removeAttribute()
+    {
+      T dummy;
+      removeAttribute( dummy.type() );
     }
 
   protected:

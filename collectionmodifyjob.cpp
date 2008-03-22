@@ -69,9 +69,8 @@ void CollectionModifyJob::doStart()
     changes += " REMOTEID \"" + d->collection.remoteId().toUtf8() + '"';
   if ( d->setPolicy )
     changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->policy );
-  typedef QPair<QByteArray,QByteArray> QByteArrayPair;
-  foreach ( const QByteArrayPair bp, d->attributes )
-    changes += ' ' + bp.first + ' ' + bp.second;
+  if ( d->collection.attributes().count() > 0 )
+    changes += ' ' + ProtocolHelper::attributesToByteArray( d->collection );
   foreach ( const QByteArray b, d->removeAttributes )
     changes += " -" + b;
   if ( changes.isEmpty() ) {
@@ -102,14 +101,6 @@ void CollectionModifyJob::setName(const QString & name)
 void CollectionModifyJob::setParent(const Collection & parent)
 {
   d->parent = parent;
-}
-
-void CollectionModifyJob::setAttribute(Attribute * attr)
-{
-  Q_ASSERT( !attr->type().isEmpty() );
-
-  QByteArray value = ImapParser::quote( attr->toByteArray() );
-  d->attributes.append( qMakePair( attr->type(), value ) );
 }
 
 void CollectionModifyJob::removeAttribute(const QByteArray & attrName)

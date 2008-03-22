@@ -59,6 +59,11 @@ class ProtocolHelper
     */
     static int parseCollection( const QByteArray &data, Collection &collection, int start = 0 );
 
+    /**
+      Convert attributes to their protocol representation.
+    */
+    static QByteArray attributesToByteArray( const Entity &entity );
+
 };
 
 }

@@ -20,10 +20,11 @@
 #ifndef ENTITY_P_H
 #define ENTITY_P_H
 
+#include "entity.h"
+
 #include <QtCore/QSharedData>
 #include <QtCore/QString>
-
-#include "entity.h"
+#include <QSet>
 
 #define AKONADI_DEFINE_PRIVATE( Class ) \
 Class##Private* Class ::d_func() { return reinterpret_cast<Class##Private *>( d_ptr.data() ); } \
@@ -53,11 +54,17 @@ class EntityPrivate : public QSharedData
         mAttributes.insert( attr->type(), attr->clone() );
     }
 
+    virtual void resetChangeLog()
+    {
+      mDeletedAttributes.clear();
+    }
+
     virtual EntityPrivate *clone() const = 0;
 
     Entity::Id mId;
     QString mRemoteId;
     QHash<QByteArray, Attribute*> mAttributes;
+    QSet<QByteArray> mDeletedAttributes;
 };
 
 }

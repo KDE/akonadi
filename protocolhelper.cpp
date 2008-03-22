@@ -142,3 +142,13 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
 
   return pos;
 }
+
+QByteArray ProtocolHelper::attributesToByteArray(const Entity & entity)
+{
+  QList<QByteArray> l;
+  foreach ( const Attribute *attr, entity.attributes() ) {
+    l << attr->type();
+    l << ImapParser::quote( attr->toByteArray() );
+  }
+  return ImapParser::join( l, " " );
+}

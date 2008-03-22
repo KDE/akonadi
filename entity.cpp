@@ -86,6 +86,14 @@ void Entity::addAttribute(Attribute * attr)
   d_ptr->mAttributes.insert( attr->type(), attr );
 }
 
+void Entity::removeAttribute(Attribute * attr)
+{
+  if ( d_ptr->mAttributes.contains( attr->type() ) ) {
+    d_ptr->mDeletedAttributes.insert( attr->type() );
+    delete d_ptr->mAttributes.take( attr->type() );
+  }
+}
+
 bool Entity::hasAttribute(const QByteArray & type) const
 {
   return d_ptr->mAttributes.contains( type );
@@ -94,6 +102,15 @@ bool Entity::hasAttribute(const QByteArray & type) const
 QList< Attribute * > Entity::attributes() const
 {
   return d_ptr->mAttributes.values();
+}
+
+void Akonadi::Entity::clearAttributes()
+{
+  foreach ( Attribute *attr, d_ptr->mAttributes ) {
+    d_ptr->mDeletedAttributes.insert( attr->type() );
+    delete attr;
+  }
+  d_ptr->mAttributes.clear();
 }
 
 Attribute * Entity::attribute(const QByteArray & type) const
