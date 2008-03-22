@@ -31,7 +31,7 @@ namespace Akonadi {
   total number of items, number of new/unread items, etc.
 
   These information might be expensive to obtain and are thus
-  not included when fetching collection with a CollectionListJob.
+  not included when fetching collection with a CollectionFetchJob.
   They can be retrieved spearately using CollectionStatusJob.
 
   This class is implicitely shared.

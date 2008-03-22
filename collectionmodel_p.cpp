@@ -22,7 +22,7 @@
 #include "collectionmodel_p.h"
 #include "collectionmodel.h"
 
-#include "collectionlistjob.h"
+#include "collectionfetchjob.h"
 #include "collectionstatusjob.h"
 #include "monitor.h"
 #include "session.h"
@@ -66,7 +66,7 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
       newParent = Collection::root();
     else
       newParent = collections.value( newParentId );
-    CollectionListJob *job = new CollectionListJob( newParent, CollectionListJob::Recursive, session );
+    CollectionFetchJob *job = new CollectionFetchJob( newParent, CollectionFetchJob::Recursive, session );
     job->includeUnsubscribed( unsubscribed );
     q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                 q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
@@ -75,7 +75,7 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
 
   }
   else { // It's a simple change
-    CollectionListJob *job = new CollectionListJob( collection, CollectionListJob::Local, session );
+    CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::Local, session );
     job->includeUnsubscribed( unsubscribed );
     q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                 q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
@@ -186,7 +186,7 @@ void CollectionModelPrivate::init()
   Q_Q( CollectionModel );
 
   // start a list job
-  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, session );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, session );
   job->includeUnsubscribed( unsubscribed );
   q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
               q, SLOT(collectionsChanged(Akonadi::Collection::List)) );

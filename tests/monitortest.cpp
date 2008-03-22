@@ -22,7 +22,7 @@
 #include <akonadi/monitor.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/control.h>
 #include <akonadi/itemappendjob.h>
@@ -46,7 +46,7 @@ void MonitorTest::initTestCase()
   Control::start();
 
   // get the collections we run the tests on
-  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
   foreach ( const Collection col, list )

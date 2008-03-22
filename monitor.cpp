@@ -20,7 +20,6 @@
 #include "monitor.h"
 #include "monitor_p.h"
 
-#include "collectionlistjob.h"
 #include "itemfetchjob.h"
 #include "notificationmessage_p.h"
 #include "session.h"

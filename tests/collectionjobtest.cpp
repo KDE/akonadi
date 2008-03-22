@@ -25,7 +25,7 @@
 #include "collection.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
-#include "collectionlistjob.h"
+#include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
 #include "collectionstatus.h"
 #include "collectionstatusjob.h"
@@ -83,7 +83,7 @@ static Collection::Id searchColId = -1;
 void CollectionJobTest::testTopLevelList( )
 {
   // non-recursive top-level list
-  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Flat );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Flat );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
@@ -116,7 +116,7 @@ void CollectionJobTest::testTopLevelList( )
 void CollectionJobTest::testFolderList( )
 {
   // recursive list of physical folders
-  CollectionListJob *job = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Recursive );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Recursive );
   QSignalSpy spy( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)) );
   QVERIFY( spy.isValid() );
   QVERIFY( job->exec() );
@@ -152,7 +152,7 @@ void CollectionJobTest::testFolderList( )
 
 void CollectionJobTest::testNonRecursiveFolderList( )
 {
-  CollectionListJob *job = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Local );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Local );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
@@ -162,7 +162,7 @@ void CollectionJobTest::testNonRecursiveFolderList( )
 
 void CollectionJobTest::testEmptyFolderList( )
 {
-  CollectionListJob *job = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Flat );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::Flat );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
@@ -171,7 +171,7 @@ void CollectionJobTest::testEmptyFolderList( )
 
 void CollectionJobTest::testSearchFolderList( )
 {
-  CollectionListJob *job = new CollectionListJob( Collection( searchColId ), CollectionListJob::Flat );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection( searchColId ), CollectionFetchJob::Flat );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
@@ -187,12 +187,12 @@ void CollectionJobTest::testSearchFolderList( )
 void CollectionJobTest::testResourceFolderList()
 {
   // non-existing resource
-  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Flat );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Flat );
   job->setResource( "i_dont_exist" );
   QVERIFY( !job->exec() );
 
   // recursive listing of all collections of an existing resource
-  job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
+  job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
   job->setResource( "akonadi_dummy_resource_1" );
   QVERIFY( job->exec() );
 
@@ -205,7 +205,7 @@ void CollectionJobTest::testResourceFolderList()
   int fooId = findCol( list, "foo" ).id();
 
   // limited listing of a resource
-  job = new CollectionListJob( Collection( fooId ), CollectionListJob::Recursive );
+  job = new CollectionFetchJob( Collection( fooId ), CollectionFetchJob::Recursive );
   job->setResource( "akonadi_dummy_resource_1" );
   QVERIFY( job->exec() );
 
@@ -280,7 +280,7 @@ void CollectionJobTest::testCreateDeleteFolder()
   QCOMPARE( createdCol.remoteId(), collection.remoteId() );
   QCOMPARE( createdCol.cachePolicy(), collection.cachePolicy() );
 
-  CollectionListJob *listJob = new CollectionListJob( Collection( collection.parent() ), CollectionListJob::Flat, this );
+  CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Flat, this );
   QVERIFY( listJob->exec() );
   Collection listedCol = findCol( listJob->collections(), collection.name() );
   QCOMPARE( listedCol, createdCol );
@@ -290,7 +290,7 @@ void CollectionJobTest::testCreateDeleteFolder()
   // fetch parent to compare inherited collection properties
   Collection parentCol = Collection::root();
   if ( collection.parent() > 0 ) {
-    CollectionListJob *listJob = new CollectionListJob( Collection( collection.parent() ), CollectionListJob::Local, this );
+    CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Local, this );
     QVERIFY( listJob->exec() );
     QCOMPARE( listJob->collections().count(), 1 );
     parentCol = listJob->collections().first();
@@ -309,7 +309,7 @@ void CollectionJobTest::testCreateDeleteFolder()
   CollectionDeleteJob *delJob = new CollectionDeleteJob( createdCol, this );
   QVERIFY( delJob->exec() );
 
-  listJob = new CollectionListJob( Collection( collection.parent() ), CollectionListJob::Flat, this );
+  listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Flat, this );
   QVERIFY( listJob->exec() );
   QVERIFY( !findCol( listJob->collections(), collection.name() ).isValid() );
 }
@@ -352,7 +352,7 @@ void CollectionJobTest::testModify()
   reference << "text/calendar" << "text/vcard" << "message/rfc822" << "application/octet-stream";
 
   Collection col;
-  CollectionListJob *ljob = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Flat );
+  CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Flat );
   QVERIFY( ljob->exec() );
   col = findCol( ljob->collections(), "foo" );
   QVERIFY( col.isValid() );
@@ -361,7 +361,7 @@ void CollectionJobTest::testModify()
   CollectionModifyJob *mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
-  ljob = new CollectionListJob( col, CollectionListJob::Local, this );
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
@@ -372,7 +372,7 @@ void CollectionJobTest::testModify()
   mod->setContentTypes( QStringList() );
   QVERIFY( mod->exec() );
 
-  ljob = new CollectionListJob( col, CollectionListJob::Local, this );
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
@@ -383,7 +383,7 @@ void CollectionJobTest::testModify()
   mod->setContentTypes( reference );
   QVERIFY( mod->exec() );
 
-  ljob = new CollectionListJob( col, CollectionListJob::Local, this );
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
@@ -396,7 +396,7 @@ void CollectionJobTest::testMove()
   mod->setParent( Collection( res2ColId ) );
   QVERIFY( mod->exec() );
 
-  CollectionListJob *ljob = new CollectionListJob( Collection( res2ColId ), CollectionListJob::Recursive );
+  CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res2ColId ), CollectionFetchJob::Recursive );
   QVERIFY( ljob->exec() );
   Collection::List list = ljob->collections();
 
@@ -406,7 +406,7 @@ void CollectionJobTest::testMove()
   QVERIFY( findCol( list, "bar" ).isValid() );
   QVERIFY( findCol( list, "bla" ).isValid() );
 
-  ljob = new CollectionListJob( Collection( res1ColId ), CollectionListJob::Local );
+  ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Local );
   QVERIFY( ljob->exec() );
   list = ljob->collections();
 
@@ -458,7 +458,7 @@ void CollectionJobTest::testUtf8CollectionName()
   QVERIFY( col.isValid() );
 
   // list parent
-  CollectionListJob *list = new CollectionListJob( Collection( res3ColId ), CollectionListJob::Recursive, this );
+  CollectionFetchJob *list = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::Recursive, this );
   QVERIFY( list->exec() );
   QCOMPARE( list->collections().count(), 1 );
   QCOMPARE( col, list->collections().first() );
@@ -487,7 +487,7 @@ void CollectionJobTest::testMultiList()
 {
   Collection::List req;
   req << Collection( res1ColId ) << Collection( res2ColId );
-  CollectionListJob* job = new CollectionListJob( req, this );
+  CollectionFetchJob* job = new CollectionFetchJob( req, this );
   QVERIFY( job->exec() );
 
   Collection::List res;

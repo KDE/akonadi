@@ -34,7 +34,7 @@ about the concept of collections. A collection is represented by the Akonadi::Co
 
 Classes to retrieve information about collections:
 
-- Akonadi::CollectionListJob
+- Akonadi::CollectionFetchJob
 - Akonadi::CollectionSelectJob
 - Akonadi::CollectionStatusJob
 

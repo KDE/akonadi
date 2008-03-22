@@ -26,13 +26,13 @@
 
 namespace Akonadi {
 
-class CollectionListJobPrivate;
+class CollectionFetchJobPrivate;
 
 /**
   This class can be used to retrieve the complete or partial collection tree
   from the PIM storage service.
 */
-class AKONADI_EXPORT CollectionListJob : public Job
+class AKONADI_EXPORT CollectionFetchJob : public Job
 {
   Q_OBJECT
 
@@ -48,24 +48,24 @@ class AKONADI_EXPORT CollectionListJob : public Job
     };
 
     /**
-      Create a new CollectionListJob.
+      Create a new CollectionFetchJob.
       @param collection The base collection for the listing. Must be valid.
       @param type the type of listing to perform
       @param parent The parent object.
     */
-    explicit CollectionListJob( const Collection &collection, ListType type = Flat, QObject *parent = 0 );
+    explicit CollectionFetchJob( const Collection &collection, ListType type = Flat, QObject *parent = 0 );
 
     /**
-      Create a new CollectionListJob to retrieve a list of collections.
+      Create a new CollectionFetchJob to retrieve a list of collections.
       @param cols A list of collections to fetch. Must not be empty, content must be valid.
       @param parent The parent object.
     */
-    explicit CollectionListJob( const Collection::List &cols, QObject *parent = 0 );
+    explicit CollectionFetchJob( const Collection::List &cols, QObject *parent = 0 );
 
     /**
       Destroys this job.
     */
-    virtual ~CollectionListJob();
+    virtual ~CollectionFetchJob();
 
     /**
       Returns a list of collection objects.
@@ -98,8 +98,8 @@ class AKONADI_EXPORT CollectionListJob : public Job
     void slotResult( KJob* job );
 
   private:
-    friend class CollectionListJobPrivate;
-    CollectionListJobPrivate* const d;
+    friend class CollectionFetchJobPrivate;
+    CollectionFetchJobPrivate* const d;
     Q_PRIVATE_SLOT( d, void timeout() )
 
 };

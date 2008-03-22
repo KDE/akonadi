@@ -29,7 +29,7 @@
 #include "xdgbasedirs_p.h"
 
 #include "akonadi/changerecorder.h"
-#include "akonadi/collectionlistjob.h"
+#include "akonadi/collectionfetchjob.h"
 #include "akonadi/collectionmodifyjob.h"
 #include "akonadi/itemfetchjob.h"
 #include "akonadi/itemstorejob.h"
@@ -409,7 +409,7 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob * job)
     q->error( job->errorString() );
   } else {
     if ( scheduler->currentTask().type == ResourceScheduler::SyncAll ) {
-      CollectionListJob *list = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, session );
+      CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, session );
       list->setResource( mId );
       q->connect( list, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)) );
       return;
@@ -426,7 +426,7 @@ void ResourceBasePrivate::slotLocalListDone(KJob * job)
   if ( job->error() ) {
     q->error( job->errorString() );
   } else {
-    Collection::List cols = static_cast<CollectionListJob*>( job )->collections();
+    Collection::List cols = static_cast<CollectionFetchJob*>( job )->collections();
     foreach ( const Collection &col, cols ) {
       scheduler->scheduleSync( col );
     }
@@ -482,7 +482,7 @@ void ResourceBase::synchronizeCollectionTree()
 
 void ResourceBase::synchronizeCollection(int collectionId )
 {
-  CollectionListJob* job = new CollectionListJob( Collection(collectionId), CollectionListJob::Local, session() );
+  CollectionFetchJob* job = new CollectionFetchJob( Collection(collectionId), CollectionFetchJob::Local, session() );
   job->setResource( identifier() );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionListDone(KJob*)) );
 }
@@ -490,7 +490,7 @@ void ResourceBase::synchronizeCollection(int collectionId )
 void ResourceBasePrivate::slotCollectionListDone( KJob *job )
 {
   if ( !job->error() ) {
-    Collection::List list = static_cast<CollectionListJob*>( job )->collections();
+    Collection::List list = static_cast<CollectionFetchJob*>( job )->collections();
     if ( !list.isEmpty() ) {
       Collection col = list.first();
       scheduler->scheduleSync( col );

@@ -21,8 +21,6 @@
 #define HEADFETCHER_H
 
 #include <QtCore/QTime>
-#include <akonadi/collectionlistjob.h>
-#include <akonadi/itemfetchjob.h>
 
 using namespace Akonadi;
 

@@ -72,7 +72,7 @@ set( akonadikde_LIB_SRC
   collectiondeletejob.cpp
   collectionfilterproxymodel.cpp
   collectiongeneralpropertiespage.cpp
-  collectionlistjob.cpp
+  collectionfetchjob.cpp
   collectionmodel.cpp
   collectionmodel_p.cpp
   collectionmodifyjob.cpp
@@ -168,7 +168,7 @@ install( FILES
   collectioncreatejob.h
   collectiondeletejob.h
   collectionfilterproxymodel.h
-  collectionlistjob.h
+  collectionfetchjob.h
   collectionmodel.h
   collectionmodifyjob.h
   collectionpathresolver.h

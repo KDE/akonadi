@@ -29,7 +29,7 @@
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/collectionpathresolver.h>
 #include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemstorejob.h>
@@ -140,7 +140,7 @@ void BenchMarker::testMaildir( QString dir )
   // fetch all headers from each folder
   timer.restart();
   qDebug() << "  Listing all headers of every folder.";
-  CollectionListJob *clj = new CollectionListJob( Collection::root() , CollectionListJob::Recursive );
+  CollectionFetchJob *clj = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
   clj->setResource( instance );
   clj->exec();
   Collection::List list = clj->collections();
@@ -158,7 +158,7 @@ void BenchMarker::testMaildir( QString dir )
   // mark 20% of messages as read
   timer.restart();
   qDebug() << "  Marking 20% of messages as read.";
-  CollectionListJob *clj2 = new CollectionListJob( Collection::root() , CollectionListJob::Recursive );
+  CollectionFetchJob *clj2 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
   clj2->setResource( instance );
   clj2->exec();
   Collection::List list2 = clj2->collections();
@@ -178,7 +178,7 @@ void BenchMarker::testMaildir( QString dir )
   // fetch headers of unread messages from each folder
   timer.restart();
   qDebug() << "  Listing headers of unread messages of every folder.";
-  CollectionListJob *clj3 = new CollectionListJob( Collection::root() , CollectionListJob::Recursive );
+  CollectionFetchJob *clj3 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
   clj3->setResource( instance );
   clj3->exec();
   Collection::List list3 = clj3->collections();
@@ -199,7 +199,7 @@ void BenchMarker::testMaildir( QString dir )
   // remove all read messages from each folder
   timer.restart();
   qDebug() << "  Removing read messages from every folder.";
-  CollectionListJob *clj4 = new CollectionListJob( Collection::root() , CollectionListJob::Recursive );
+  CollectionFetchJob *clj4 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
   clj4->setResource( instance );
   clj4->exec();
   Collection::List list4 = clj4->collections();
@@ -219,7 +219,7 @@ void BenchMarker::testMaildir( QString dir )
   // remove every folder sequentially
   timer.restart();
   qDebug() << "  Removing every folder sequentially.";
-  CollectionListJob *clj5 = new CollectionListJob( Collection::root() , CollectionListJob::Recursive );
+  CollectionFetchJob *clj5 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
   clj5->setResource( instance );
   clj5->exec();
   Collection::List list5 = clj5->collections();

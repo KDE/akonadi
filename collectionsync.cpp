@@ -22,7 +22,7 @@
 
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
-#include "collectionlistjob.h"
+#include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
 
 
@@ -90,7 +90,7 @@ void CollectionSync::setRemoteCollections(const Collection::List & changedCollec
 
 void CollectionSync::doStart()
 {
-  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, this );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
   job->setResource( d->resourceId );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)) );
 }
@@ -100,7 +100,7 @@ void CollectionSync::slotLocalListDone(KJob * job)
   if ( job->error() )
     return;
 
-  Collection::List list = static_cast<CollectionListJob*>( job )->collections();
+  Collection::List list = static_cast<CollectionFetchJob*>( job )->collections();
   foreach ( const Collection c, list ) {
     d->localCollections.insert( c.remoteId(), c );
     d->unprocessedLocalCollections.insert( c );

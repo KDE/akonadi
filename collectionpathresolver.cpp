@@ -19,7 +19,7 @@
 
 #include "collectionpathresolver.h"
 
-#include "collectionlistjob.h"
+#include "collectionfetchjob.h"
 
 #include <klocale.h>
 
@@ -50,8 +50,8 @@ void CollectionPathResolver::Private::jobResult(KJob *job )
   if ( job->error() )
     return;
 
-  CollectionListJob *list = static_cast<CollectionListJob*>( job );
-  CollectionListJob *nextJob = 0;
+  CollectionFetchJob *list = static_cast<CollectionFetchJob*>( job );
+  CollectionFetchJob *nextJob = 0;
   const Collection::List cols = list->collections();
   if ( cols.isEmpty() ) {
       mParent->setError( Unknown );
@@ -81,7 +81,7 @@ void CollectionPathResolver::Private::jobResult(KJob *job )
       mParent->emitResult();
       return;
     }
-    nextJob = new CollectionListJob( currentNode, CollectionListJob::Flat, mParent );
+    nextJob = new CollectionFetchJob( currentNode, CollectionFetchJob::Flat, mParent );
   } else {
     Collection col = list->collections().first();
     currentNode = Collection( col.parent() );
@@ -90,7 +90,7 @@ void CollectionPathResolver::Private::jobResult(KJob *job )
       mParent->emitResult();
       return;
     }
-    nextJob = new CollectionListJob( currentNode, CollectionListJob::Local, mParent );
+    nextJob = new CollectionFetchJob( currentNode, CollectionFetchJob::Local, mParent );
   }
   mParent->connect( nextJob, SIGNAL(result(KJob*)), mParent, SLOT(jobResult(KJob*)) );
 }
@@ -138,21 +138,21 @@ QString CollectionPathResolver::path() const
 
 void CollectionPathResolver::doStart()
 {
-  CollectionListJob *job = 0;
+  CollectionFetchJob *job = 0;
   if ( d->pathToId ) {
     if ( d->path.isEmpty() ) {
       d->colId = Collection::root().id();
       emitResult();
       return;
     }
-    job = new CollectionListJob( d->currentNode, CollectionListJob::Flat, this );
+    job = new CollectionFetchJob( d->currentNode, CollectionFetchJob::Flat, this );
   } else {
     if ( d->colId == 0 ) {
       d->colId = Collection::root().id();
       emitResult();
       return;
     }
-    job = new CollectionListJob( d->currentNode, CollectionListJob::Local, this );
+    job = new CollectionFetchJob( d->currentNode, CollectionFetchJob::Local, this );
   }
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
 }

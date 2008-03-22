@@ -21,7 +21,7 @@
 
 #include "monitor_p.h"
 
-#include "collectionlistjob.h"
+#include "collectionfetchjob.h"
 #include "itemfetchjob.h"
 #include "notificationmessage_p.h"
 #include "session.h"
@@ -122,7 +122,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
       list << Collection( msg.uid() );
       if ( msg.operation() == NotificationMessage::Add )
         list << Collection( msg.parentCollection() );
-      CollectionListJob *job = new CollectionListJob( list, q_ptr );
+      CollectionFetchJob *job = new CollectionFetchJob( list, q_ptr );
       pendingJobs.insert( job, msg );
       QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotCollectionJobFinished(KJob*)) );
       return true;
@@ -278,7 +278,7 @@ void MonitorPrivate::slotCollectionJobFinished( KJob* job )
     kWarning( 5250 ) << "Error on fetching collection:" << job->errorText();
   } else {
     Collection col, parent;
-    CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
+    CollectionFetchJob *listJob = qobject_cast<CollectionFetchJob*>( job );
     if ( listJob && listJob->collections().count() > 0 )
       col = listJob->collections().first();
     if ( listJob && listJob->collections().count() > 1 && msg.operation() == NotificationMessage::Add ) {
@@ -313,7 +313,7 @@ Collection ItemCollectionFetchJob::collection() const
 
 void ItemCollectionFetchJob::doStart()
 {
-  CollectionListJob *listJob = new CollectionListJob( Collection( mCollectionId ), CollectionListJob::Local, this );
+  CollectionFetchJob *listJob = new CollectionFetchJob( Collection( mCollectionId ), CollectionFetchJob::Local, this );
   connect( listJob, SIGNAL( result( KJob* ) ), SLOT( collectionJobDone( KJob* ) ) );
   addSubjob( listJob );
 
@@ -329,7 +329,7 @@ void ItemCollectionFetchJob::doStart()
 void ItemCollectionFetchJob::collectionJobDone( KJob* job )
 {
   if ( !job->error() ) {
-    CollectionListJob *listJob = qobject_cast<CollectionListJob*>( job );
+    CollectionFetchJob *listJob = qobject_cast<CollectionFetchJob*>( job );
     if ( listJob->collections().isEmpty() ) {
       setError( 1 );
       setErrorText( QLatin1String( "No collection found" ) );

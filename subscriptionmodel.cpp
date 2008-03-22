@@ -18,7 +18,7 @@
 */
 
 #include "subscriptionmodel.h"
-#include "collectionlistjob.h"
+#include "collectionfetchjob.h"
 
 #include <kdebug.h>
 
@@ -49,7 +49,7 @@ class SubscriptionModel::Private
         kWarning() << job->errorString();
         return;
       }
-      Collection::List cols = static_cast<CollectionListJob*>( job )->collections();
+      Collection::List cols = static_cast<CollectionFetchJob*>( job )->collections();
       foreach( const Collection col, cols )
         if ( col.type() != Collection::Structural )
           subscriptions[ col.id() ] = true;
@@ -73,7 +73,7 @@ SubscriptionModel::SubscriptionModel(QObject * parent) :
     d( new Private( this ) )
 {
   includeUnsubscribed();
-  CollectionListJob* job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive, this );
+  CollectionFetchJob* job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(listResult(KJob*)) );
 }
 

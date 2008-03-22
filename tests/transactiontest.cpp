@@ -23,7 +23,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/control.h>
 #include <akonadi/session.h>
 #include <akonadi/transactionjobs.h>
@@ -46,7 +46,7 @@ void TransactionTest::testTransaction()
 {
   Collection basisCollection;
 
-  CollectionListJob *listJob = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
+  CollectionFetchJob *listJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
   QVERIFY( listJob->exec() );
   Collection::List list = listJob->collections();
   foreach ( const Collection col, list )

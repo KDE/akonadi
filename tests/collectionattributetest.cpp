@@ -24,7 +24,7 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/collectionpathresolver.h>
 #include <akonadi/control.h>
@@ -95,7 +95,7 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( attr != 0 );
   QCOMPARE( attr->toByteArray(), QByteArray( attr1 ) );
 
-  CollectionListJob *list = new CollectionListJob( col, CollectionListJob::Local, this );
+  CollectionFetchJob *list = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
   QVERIFY( list->exec() );
   QCOMPARE( list->collections().count(), 1 );
   col = list->collections().first();
@@ -113,7 +113,7 @@ void CollectionAttributeTest::testAttributes()
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
   QVERIFY( modify->exec() );
 
-  list = new CollectionListJob( col, CollectionListJob::Local, this );
+  list = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
   QVERIFY( list->exec() );
   QCOMPARE( list->collections().count(), 1 );
   col = list->collections().first();
@@ -129,7 +129,7 @@ void CollectionAttributeTest::testAttributes()
   modify->removeAttribute( attr->type() );
   QVERIFY( modify->exec() );
 
-  list = new CollectionListJob( col, CollectionListJob::Local, this );
+  list = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
   QVERIFY( list->exec() );
   QCOMPARE( list->collections().count(), 1 );
   col = list->collections().first();

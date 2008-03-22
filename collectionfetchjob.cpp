@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionlistjob.h"
+#include "collectionfetchjob.h"
 
 #include "imapparser_p.h"
 #include "protocolhelper.h"
@@ -30,10 +30,10 @@
 
 using namespace Akonadi;
 
-class Akonadi::CollectionListJobPrivate
+class Akonadi::CollectionFetchJobPrivate
 {
   public:
-    CollectionListJobPrivate( CollectionListJob *parent ) :
+    CollectionFetchJobPrivate( CollectionFetchJob *parent ) :
       q( parent ),
       emitTimer( new QTimer( parent ) ),
       unsubscribed( false )
@@ -44,8 +44,8 @@ class Akonadi::CollectionListJobPrivate
       QObject::connect( parent, SIGNAL(result(KJob*)), parent, SLOT(timeout()) );
     }
 
-    CollectionListJob *q;
-    CollectionListJob::ListType type;
+    CollectionFetchJob *q;
+    CollectionFetchJob::ListType type;
     Collection base;
     Collection::List baseList;
     Collection::List collections;
@@ -64,38 +64,38 @@ class Akonadi::CollectionListJobPrivate
     }
 };
 
-CollectionListJob::CollectionListJob( const Collection &collection, ListType type, QObject *parent ) :
+CollectionFetchJob::CollectionFetchJob( const Collection &collection, ListType type, QObject *parent ) :
     Job( parent ),
-    d( new CollectionListJobPrivate( this ) )
+    d( new CollectionFetchJobPrivate( this ) )
 {
   Q_ASSERT( collection.isValid() );
   d->base = collection;
   d->type = type;
 }
 
-CollectionListJob::CollectionListJob(const Collection::List & cols, QObject * parent) :
+CollectionFetchJob::CollectionFetchJob(const Collection::List & cols, QObject * parent) :
     Job( parent ),
-    d( new CollectionListJobPrivate( this ) )
+    d( new CollectionFetchJobPrivate( this ) )
 {
   Q_ASSERT( !cols.isEmpty() );
   d->baseList = cols;
 }
 
-CollectionListJob::~CollectionListJob()
+CollectionFetchJob::~CollectionFetchJob()
 {
   delete d;
 }
 
-Collection::List CollectionListJob::collections() const
+Collection::List CollectionFetchJob::collections() const
 {
   return d->collections;
 }
 
-void CollectionListJob::doStart()
+void CollectionFetchJob::doStart()
 {
   if ( !d->baseList.isEmpty() ) {
     foreach ( const Collection col, d->baseList ) {
-      new CollectionListJob( col, CollectionListJob::Local, this );
+      new CollectionFetchJob( col, CollectionFetchJob::Local, this );
     }
     return;
   }
@@ -131,7 +131,7 @@ void CollectionListJob::doStart()
   writeData( command );
 }
 
-void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void CollectionFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
   if ( tag == "*" ) {
     Collection collection;
@@ -148,14 +148,14 @@ void CollectionListJob::doHandleResponse( const QByteArray & tag, const QByteArr
   kDebug( 5250 ) << "Unhandled server response" << tag << data;
 }
 
-void CollectionListJob::setResource(const QString & resource)
+void CollectionFetchJob::setResource(const QString & resource)
 {
   d->resource = resource;
 }
 
-void CollectionListJob::slotResult(KJob * job)
+void CollectionFetchJob::slotResult(KJob * job)
 {
-  CollectionListJob *list = dynamic_cast<CollectionListJob*>( job );
+  CollectionFetchJob *list = dynamic_cast<CollectionFetchJob*>( job );
   Q_ASSERT( job );
   d->collections += list->collections();
   Job::slotResult( job );
@@ -163,9 +163,9 @@ void CollectionListJob::slotResult(KJob * job)
     emitResult();
 }
 
-void CollectionListJob::includeUnsubscribed(bool include)
+void CollectionFetchJob::includeUnsubscribed(bool include)
 {
   d->unsubscribed = include;
 }
 
-#include "collectionlistjob.moc"
+#include "collectionfetchjob.moc"

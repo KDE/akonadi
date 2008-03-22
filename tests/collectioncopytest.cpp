@@ -19,7 +19,7 @@
 
 #include <akonadi/control.h>
 #include <akonadi/collectioncopyjob.h>
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 
 #include <QtCore/QObject>
 
@@ -44,7 +44,7 @@ class CollectionCopyTest : public QObject
       CollectionCopyJob *copy = new CollectionCopyJob( source, target );
       QVERIFY( copy->exec() );
 
-      CollectionListJob *list = new CollectionListJob( target, CollectionListJob::Recursive );
+      CollectionFetchJob *list = new CollectionFetchJob( target, CollectionFetchJob::Recursive );
       QVERIFY( list->exec() );
       QCOMPARE( list->collections().count(), 4 );
 

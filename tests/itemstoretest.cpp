@@ -20,7 +20,7 @@
 
 #include "control.h"
 #include "itemstoretest.h"
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionselectjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -40,7 +40,7 @@ void ItemStoreTest::initTestCase()
   Control::start();
 
   // get the collections we run the tests on
-  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
   Collection res1;

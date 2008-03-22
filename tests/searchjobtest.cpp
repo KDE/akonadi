@@ -22,7 +22,7 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/searchcreatejob.h>
 
 #include <qtest_kde.h>
@@ -36,7 +36,7 @@ void SearchJobTest::testCreateDeleteSearch()
   SearchCreateJob *create = new SearchCreateJob( "search123456", "<request><userQuery>Akonadi</userQuery></request>", this );
   QVERIFY( create->exec() );
 
-  CollectionListJob *list = new CollectionListJob( Collection( 1 ), CollectionListJob::Recursive, this );
+  CollectionFetchJob *list = new CollectionFetchJob( Collection( 1 ), CollectionFetchJob::Recursive, this );
   QVERIFY( list->exec() );
   Collection::List cols = list->collections();
   Collection col;

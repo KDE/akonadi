@@ -19,7 +19,7 @@
 
 #include <akonadi/control.h>
 #include <akonadi/collection.h>
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/subscriptionjob.h>
 
 #include <QtCore/QObject>
@@ -45,11 +45,11 @@ class SubscriptionTest : public QObject
       sjob->unsubscribe( l );
       QVERIFY( sjob->exec() );
 
-      CollectionListJob *ljob = new CollectionListJob( Collection( 7 ), CollectionListJob::Flat, this );
+      CollectionFetchJob *ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::Flat, this );
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 1 );
 
-      ljob = new CollectionListJob( Collection( 7 ), CollectionListJob::Flat, this );
+      ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::Flat, this );
       ljob->includeUnsubscribed();
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 2 );
@@ -58,7 +58,7 @@ class SubscriptionTest : public QObject
       sjob->subscribe( l );
       QVERIFY( sjob->exec() );
 
-      ljob = new CollectionListJob( Collection( 7 ), CollectionListJob::Flat, this );
+      ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::Flat, this );
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 2 );
     }

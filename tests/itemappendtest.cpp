@@ -19,7 +19,7 @@
 
 #include "control.h"
 #include "itemappendtest.h"
-#include <akonadi/collectionlistjob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionpathresolver.h>
 #include <akonadi/itemappendjob.h>
 #include <akonadi/itemfetchjob.h>
@@ -40,7 +40,7 @@ void ItemAppendTest::initTestCase()
   Control::start();
 
   // get the collections we run the tests on
-  CollectionListJob *job = new CollectionListJob( Collection::root(), CollectionListJob::Recursive );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
   Collection res2;

@@ -19,6 +19,9 @@
 
 #include "headfetcher.h"
 
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/itemfetchjob.h>
+
 #include <QtCore/QDebug>
 #include <QtGui/QApplication>
 #include <QBuffer>
@@ -35,7 +38,7 @@ HeadFetcher::HeadFetcher( bool multipart )
   // fetch all headers from each folder
   timer.start();
   qDebug() << "Listing all headers of every folder, using" << (multipart ? "multi" : "single") << "part.";
-  CollectionListJob *clj = new CollectionListJob( Collection::root() , CollectionListJob::Recursive );
+  CollectionFetchJob *clj = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
   clj->exec();
   Collection::List list = clj->collections();
   foreach ( Collection collection, list ) {
