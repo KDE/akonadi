@@ -28,7 +28,7 @@
 
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
-#include <akonadi/itemappendjob.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/session.h>
 
@@ -269,7 +269,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     Item item;
     item.setRemoteId( uid );
     item.setMimeType( "text/vcard" );
-    ItemAppendJob *append = new ItemAppendJob( item, collection, session() );
+    ItemCreateJob *append = new ItemCreateJob( item, collection, session() );
     if ( !append->exec() ) {
       changeProgress( 0 );
       changeStatus( Error, i18n( "Appending new contact failed: %1", append->errorString() ) );
@@ -298,7 +298,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     Item item;
     item.setRemoteId( uid );
     item.setMimeType( "text/calendar" );
-    ItemAppendJob *append = new ItemAppendJob( item, collection, session() );
+    ItemCreateJob *append = new ItemCreateJob( item, collection, session() );
     if ( !append->exec() ) {
       changeProgress( 0 );
       changeStatus( Error, i18n( "Appending new calendar failed: %1", append->errorString() ) );
