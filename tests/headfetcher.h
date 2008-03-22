@@ -20,9 +20,8 @@
 #ifndef HEADFETCHER_H
 #define HEADFETCHER_H
 
+#include <QtCore/QObject>
 #include <QtCore/QTime>
-
-using namespace Akonadi;
 
 class HeadFetcher : public QObject
 {
