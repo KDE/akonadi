@@ -27,9 +27,13 @@
 #include <QBuffer>
 #include <QTimer>
 
+#include <kmime/kmime_message.h>
+
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 #include <kurl.h>
+
+#include <boost/shared_ptr.hpp>
 
 using namespace Akonadi;
 
@@ -50,10 +54,8 @@ HeadFetcher::HeadFetcher( bool multipart )
     }
     ifj->exec();
     qDebug() << "  Listing" << ifj->items().count() << "item headers.";
-    QByteArray a;
     foreach ( Item item, ifj->items() ) {
-      a = item.part( Item::PartEnvelope );
-      qDebug() << a;
+      qDebug() << item.payload< boost::shared_ptr<KMime::Message> >()->subject()->asUnicodeString();
     }
   }
 

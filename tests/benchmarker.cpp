@@ -34,11 +34,17 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
 
+#include <kmime/kmime_message.h>
+
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kurl.h>
 
+#include <boost/shared_ptr.hpp>
+
 #define WAIT_TIME 100
+
+typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 using namespace Akonadi;
 
@@ -148,9 +154,9 @@ void BenchMarker::testMaildir( QString dir )
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     ifj->addFetchPart( Item::PartEnvelope );
     ifj->exec();
-    QByteArray a;
+    QString a;
     foreach ( Item item, ifj->items() ) {
-      a = item.part( Item::PartEnvelope );
+      a = item.payload<MessagePtr>()->subject()->asUnicodeString();
     }
   }
   outputStats( "fullheaderlist" );
@@ -186,11 +192,11 @@ void BenchMarker::testMaildir( QString dir )
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     ifj->addFetchPart( Item::PartEnvelope );
     ifj->exec();
-    QByteArray a;
+    QString a;
     foreach ( Item item, ifj->items() ) {
       // filter read messages
       if( !item.hasFlag( "\\Seen" ) ) {
-        a = item.part( Item::PartEnvelope );
+        a = item.payload<MessagePtr>()->subject()->asUnicodeString();
       }
     }
   }
