@@ -67,22 +67,22 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="4"/>
+    <data columns="version" values="5"/>
   </table>
 
   <table name="Resource">
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <reference name="locations" table="Location" key="resourceId"/>
     <data columns="name" values="'akonadi_search_resource'"/>
   </table>
 
   <table name="Location">
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remoteId" type="QString"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
-    <column name="parentId" type="int" refTable="Location" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Location(id)"/>
-    <column name="resourceId" type="int" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
+    <column name="parentId" type="qint64" refTable="Location" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Location(id)"/>
+    <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
     <column name="subscribed" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
     <column name="cachePolicyInherit" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
     <column name="cachePolicyCheckInterval" type="int" default="-1" properties="NOT NULL DEFAULT -1"/>
@@ -98,7 +98,7 @@
 
   <table name="MimeType">
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <data columns="name" values="'application/octet-stream'"/>
     <data columns="name" values="'message/rfc822'"/>
@@ -108,11 +108,11 @@
   </table>
 
   <table name="PimItem">
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="rev" type="int" properties="NOT NULL DEFAULT 0"/>
     <column name="remoteId" type="QByteArray"/>
-    <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
-    <column name="mimeTypeId" type="int" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
+    <column name="locationId" type="qint64" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
+    <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP">
       <comment>create/modified time</comment>
     </column>
@@ -128,7 +128,7 @@
 
   <table name="Flag">
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
     <data columns="name" values="'important'"/>
     <data columns="name" values="'has_attachment'"/>
@@ -141,8 +141,8 @@
   </table>
 
   <table name="Part" properties="FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE">
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="pimItemId" type="int" refTable="PimItem" refColumn="id" properties="NOT NULL REFERENCES PimItemTable(id)"/>
+    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" properties="NOT NULL REFERENCES PimItemTable(id)"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="int" properties="NOT NULL"/>
@@ -150,8 +150,8 @@
   </table>
 
   <table name="LocationAttribute">
-    <column name="id" type="int" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="locationId" type="int" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
+    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="locationId" type="qint64" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
     <column name="type" type="QByteArray" properties="NOT NULL"/>
     <column name="value" type="QByteArray"/>
     <index name="locationIndex" columns="locationId" unique="false"/>

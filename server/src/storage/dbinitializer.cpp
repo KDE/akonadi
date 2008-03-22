@@ -304,6 +304,8 @@ QString DbInitializer::sqlType(const QString & type)
 {
   if ( type == QLatin1String("int") )
     return QLatin1String("INTEGER");
+  if ( type == QLatin1String("qint64") )
+    return QLatin1String("BIGINT");
   if ( type == QLatin1String("QString") )
     return QLatin1String("TEXT");
   if (type == QLatin1String("QByteArray") )
