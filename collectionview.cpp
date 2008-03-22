@@ -103,11 +103,11 @@ void CollectionView::Private::itemClicked( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  Collection::Id currentCollection = index.model()->data( index, CollectionModel::CollectionIdRole ).toLongLong();
-  if ( currentCollection <= 0 )
+  const Collection col = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
+  if ( !col.isValid() )
     return;
 
-  emit mParent->clicked( Collection( currentCollection ) );
+  emit mParent->clicked( col );
 }
 
 void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
@@ -115,11 +115,11 @@ void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  Collection::Id currentCollection = index.model()->data( index, CollectionModel::CollectionIdRole ).toLongLong();
-  if ( currentCollection <= 0 )
+  const Collection col = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
+  if ( !col.isValid() )
     return;
 
-  emit mParent->currentChanged( Collection( currentCollection ) );
+  emit mParent->clicked( col );
 }
 
 CollectionView::CollectionView(QWidget * parent) :
