@@ -192,9 +192,4 @@ QByteArray Item::rawPart( const QString & label ) const
   return d_func()->mParts.value( label );
 }
 
-bool Item::operator==( const Item &other ) const
-{
-  return d_func()->mId == other.d_func()->mId;
-}
-
 AKONADI_DEFINE_PRIVATE( Item )

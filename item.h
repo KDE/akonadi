@@ -44,10 +44,10 @@ class ItemPrivate;
   This class represents a PIM item stored in Akonadi.
 
   A PIM item consists of one or more parts, allowing a fine-grained access on its
-  content where needed (eg. mail envelope, mail body and attachments). 
+  content where needed (eg. mail envelope, mail body and attachments).
 
-  There ise also a namespace (prefix) for special parts which are local to Akonadi. 
-  These parts, prefixed by "akonadi-" will never be fetched in the ressource. 
+  There ise also a namespace (prefix) for special parts which are local to Akonadi.
+  These parts, prefixed by "akonadi-" will never be fetched in the ressource.
   There are useful for local extensions like agents which might want to add metadata
   to items in order to handle them but the metadata should not be stored back to the
   ressource.
@@ -194,11 +194,6 @@ class AKONADI_EXPORT Item : public Entity
       Assignment operator.
     */
     Item& operator=( const Item &other );
-
-    /**
-      Compares the id of two items.
-    */
-    bool operator==( const Item &item ) const;
 
     /**
       Sets the payload object of this PIM item.

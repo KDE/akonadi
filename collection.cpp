@@ -224,16 +224,6 @@ bool Collection::isValid() const
   return id() >= 0;
 }
 
-bool Collection::operator ==(const Collection & other) const
-{
-  return d_func()->mId == other.id();
-}
-
-bool Collection::operator !=(const Collection & other) const
-{
-  return d_func()->mId != other.id();
-}
-
 QString Collection::resource() const
 {
   return d_func()->resource;

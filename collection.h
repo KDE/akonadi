@@ -199,16 +199,6 @@ class AKONADI_EXPORT Collection : public Entity
     bool isValid() const;
 
     /**
-      Compares two collections.
-    */
-    bool operator==( const Collection &other ) const;
-
-    /**
-      Compares two collections.
-    */
-    bool operator!=( const Collection &other ) const;
-
-    /**
       Returns the identifier of the resource owning this collection.
     */
     QString resource() const;

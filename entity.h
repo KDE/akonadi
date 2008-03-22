@@ -87,6 +87,12 @@ class AKONADI_EXPORT Entity
     bool operator==( const Entity &other ) const;
 
     /**
+     * Returns wether the entity's id does not equal the id
+     * of the @p other entity.
+     */
+    bool operator!=( const Entity &other ) const;
+
+    /**
      * @internal
      */
     Entity& operator=( const Entity &other );
