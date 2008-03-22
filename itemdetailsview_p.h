@@ -44,7 +44,7 @@ class ItemDetailsView::Private : public QObject
     }
 
     ItemDetailsView *mParent;
-    Item::Id mUid;
+    Item mItem;
     Monitor *mMonitor;
 
   private Q_SLOTS:

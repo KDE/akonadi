@@ -77,7 +77,7 @@ class ItemModel::Private
     ItemModel *mParent;
 
     QList<ItemContainer*> items;
-    QHash<Item::Id, ItemContainer*> itemHash;
+    QHash<Item, ItemContainer*> itemHash;
 
     Collection collection;
     Monitor *monitor;
@@ -112,7 +112,7 @@ void ItemModel::Private::listingDone( KJob * job )
 
 int ItemModel::Private::rowForItem( const Akonadi::Item& item )
 {
-  ItemContainer *container = itemHash.value( item.id() );
+  ItemContainer *container = itemHash.value( item );
   if ( !container )
     return -1;
 
@@ -127,7 +127,7 @@ int ItemModel::Private::rowForItem( const Akonadi::Item& item )
   else { // Slow solution if the fist one has not succeeded
     int row = -1;
     for ( int i = 0; i < items.size(); ++i ) {
-      if ( items.at( i )->item.id() == item.id() ) {
+      if ( items.at( i )->item == item ) {
         row = i;
         break;
       }
@@ -171,7 +171,7 @@ void ItemModel::Private::itemsAdded( const Akonadi::Item::List &list )
   foreach( Item item, list ) {
     ItemContainer *c = new ItemContainer( item, items.count() );
     items.append( c );
-    itemHash[ item.id() ] = c;
+    itemHash[ item ] = c;
   }
   mParent->endInsertRows();
 }
@@ -192,7 +192,7 @@ void ItemModel::Private::itemRemoved( const Akonadi::Item &_item )
   mParent->beginRemoveRows( QModelIndex(), row, row );
   const Item item = items.at( row )->item;
   Q_ASSERT( item.isValid() );
-  itemHash.remove( item.id() );
+  itemHash.remove( item );
   delete items.takeAt( row );
   mParent->endRemoveRows();
 }

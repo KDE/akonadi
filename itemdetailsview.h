@@ -51,14 +51,14 @@ class AKONADI_EXPORT ItemDetailsView
     virtual ~ItemDetailsView();
 
     /**
-     * Sets the id of the item that shall be watched.
+     * Sets the item that shall be watched.
      */
-    void setUid( Item::Id id );
+    void setItem( const Item &id );
 
     /**
-     * Returns the id of the currently watched item.
+     * Returns the currently watched item.
      */
-     Item::Id uid() const;
+     Item item() const;
 
   protected:
     /**

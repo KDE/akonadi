@@ -33,9 +33,9 @@ ItemBrowser::~ItemBrowser()
   // delete d;
 }
 
-void ItemBrowser::setUid( Akonadi::Item::Id uid )
+void ItemBrowser::setItem( const Akonadi::Item &item )
 {
-  ItemDetailsView::setUid( uid );
+  ItemDetailsView::setItem( item );
 }
 
 void ItemBrowser::itemAdded( const Item &item )

@@ -32,12 +32,12 @@ ItemDetailsView::~ItemDetailsView()
   delete d;
 }
 
-void ItemDetailsView::setUid( Item::Id id )
+void ItemDetailsView::setItem( const Item &item )
 {
-  if ( id == d->mUid )
+  if ( item == d->mItem )
     return;
 
-  d->mUid = id;
+  d->mItem = item;
 
   // delete previous monitor
   delete d->mMonitor;
@@ -56,19 +56,19 @@ void ItemDetailsView::setUid( Item::Id id )
   for ( int i = 0; i < parts.count(); ++i )
     d->mMonitor->addFetchPart( parts[ i ] );
 
-  d->mMonitor->monitorItem( Item( d->mUid ) );
+  d->mMonitor->monitorItem( d->mItem );
 
   // start initial fetch of the new item
-  ItemFetchJob* job = new ItemFetchJob( Item( d->mUid ) );
+  ItemFetchJob* job = new ItemFetchJob( d->mItem );
 
   for ( int i = 0; i < parts.count(); ++i )
     job->addFetchPart(  parts[ i ] );
   d->connect( job, SIGNAL( result( KJob* ) ), d, SLOT( initialFetchDone( KJob* ) ) );
 }
 
-Item::Id ItemDetailsView::uid() const
+Item ItemDetailsView::item() const
 {
-  return d->mUid;
+  return d->mItem;
 }
 
 void ItemDetailsView::itemAdded( const Item& )

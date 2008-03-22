@@ -69,7 +69,7 @@ class ItemFetchJob::Private
 void ItemFetchJob::Private::startFetchJob()
 {
   QByteArray command = mParent->newTag();
-  if ( mItem.id() == -1 )
+  if ( !mItem.isValid() )
     command += " FETCH 1:*";
   else
     command += " UID FETCH " + QByteArray::number( mItem.id() );
@@ -120,7 +120,7 @@ ItemFetchJob::~ ItemFetchJob( )
 
 void ItemFetchJob::doStart()
 {
-  if ( d->mItem.id() == -1 ) { // collection content listing
+  if ( !d->mItem.isValid() ) { // collection content listing
     if ( d->collection == Collection::root() ) {
       setErrorText( QLatin1String("Cannot list root collection.") );
       setError( Unknown );

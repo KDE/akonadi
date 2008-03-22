@@ -53,7 +53,7 @@ class AKONADI_EXPORT ItemBrowser : public KTextBrowser, public ItemDetailsView
     virtual ~ItemBrowser();
 
   public Q_SLOTS:
-    void setUid( Akonadi::Item::Id uid );
+    void setItem( const Akonadi::Item &item );
 
   protected:
     /**

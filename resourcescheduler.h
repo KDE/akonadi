@@ -62,7 +62,7 @@ class ResourceScheduler : public QObject
         {
           return type == other.type
               && collection == other.collection
-              && item.id() == other.item.id()
+              && item == other.item
               && itemParts == other.itemParts;
         }
     };
