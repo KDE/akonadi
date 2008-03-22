@@ -114,11 +114,10 @@ void ItemAppendJob::doHandleResponse( const QByteArray & tag, const QByteArray &
 
 Item ItemAppendJob::item() const
 {
-  Item item;
-
-  if ( d->uid != 0 )
-    item.setRemoteId( d->item.remoteId() );
-
+  if ( d->uid == 0 )
+    return Item();
+  Item item( d->item );
+  item.setId( d->uid );
   return item;
 }
 
