@@ -219,11 +219,6 @@ QString Collection::collectionMimeType( )
   return QString::fromLatin1("inode/directory");
 }
 
-bool Collection::isValid() const
-{
-  return id() >= 0;
-}
-
 QString Collection::resource() const
 {
   return d_func()->resource;

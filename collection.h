@@ -194,11 +194,6 @@ class AKONADI_EXPORT Collection : public Entity
     static QString collectionMimeType();
 
     /**
-      Returns true if this is a valid collection.
-    */
-    bool isValid() const;
-
-    /**
       Returns the identifier of the resource owning this collection.
     */
     QString resource() const;

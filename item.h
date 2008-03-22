@@ -114,11 +114,6 @@ class AKONADI_EXPORT Item : public Entity
     static Item fromUrl( const KUrl &url );
 
     /**
-     * Returns whether the item is a valid PIM item.
-     */
-    bool isValid() const;
-
-    /**
       Returns the flags of this item.
     */
     Flags flags() const;

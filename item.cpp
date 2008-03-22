@@ -64,11 +64,6 @@ Item::~Item()
   delete m_payload;
 }
 
-bool Item::isValid() const
-{
-  return (d_func()->mId != -1);
-}
-
 Item::Flags Item::flags() const
 {
   return d_func()->mFlags;
