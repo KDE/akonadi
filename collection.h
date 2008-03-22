@@ -34,6 +34,8 @@ class CollectionPrivate;
 
 namespace Akonadi {
 
+class CollectionPrivate;
+
 /**
   This class represents a collection of PIM objects, such as a folder on a mail- or
   groupware-server.

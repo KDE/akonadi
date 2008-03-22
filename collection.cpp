@@ -31,7 +31,7 @@
 
 using namespace Akonadi;
 
-class CollectionPrivate : public EntityPrivate
+class Akonadi::CollectionPrivate : public EntityPrivate
 {
   public:
     CollectionPrivate() :
@@ -86,7 +86,7 @@ class CollectionPrivate : public EntityPrivate
     CachePolicy cachePolicy;
 };
 
-const Collection CollectionPrivate::root = CollectionPrivate::newRoot();
+const Collection Akonadi::CollectionPrivate::root = CollectionPrivate::newRoot();
 
 Collection::Collection() :
     Entity( new CollectionPrivate )
@@ -315,4 +315,4 @@ void Collection::setCachePolicy(const CachePolicy & cachePolicy)
   d->cachePolicy = cachePolicy;
 }
 
-AKONADI_DEFINE_PRIVATE( Collection )
+AKONADI_DEFINE_PRIVATE( Akonadi::Collection )
