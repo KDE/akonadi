@@ -19,7 +19,7 @@
 
 #include "collection.h"
 #include "entity_p.h"
-#include "collectionattributefactory.h"
+#include "attributefactory.h"
 #include "collectionrightsattribute.h"
 
 #include <QtCore/QDebug>
@@ -47,8 +47,6 @@ class Akonadi::CollectionPrivate : public EntityPrivate
       name = other.name;
       parentRemoteId = other.parentRemoteId;
       type = other.type;
-      foreach ( CollectionAttribute* attr, other.attributes )
-        attributes.insert( attr->type(), attr->clone() );
       resource = other.resource;
       status = other.status;
       contentTypes = other.contentTypes;
@@ -57,7 +55,6 @@ class Akonadi::CollectionPrivate : public EntityPrivate
 
     ~CollectionPrivate()
     {
-      qDeleteAll( attributes );
     }
 
     CollectionPrivate* clone() const
@@ -78,7 +75,6 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     QString name;
     QString parentRemoteId;
     Collection::Type type;
-    QHash<QByteArray, CollectionAttribute*> attributes;
     QString resource;
     CollectionStatus status;
     QStringList contentTypes;
@@ -223,32 +219,6 @@ QString Collection::collectionMimeType( )
   return QString::fromLatin1("inode/directory");
 }
 
-QList<CollectionAttribute*> Collection::attributes() const
-{
-  return d_func()->attributes.values();
-}
-
-void Collection::addAttribute( CollectionAttribute * attr )
-{
-  Q_D( Collection );
-  if ( d->attributes.contains( attr->type() ) )
-    delete d->attributes.take( attr->type() );
-  d->attributes.insert( attr->type(), attr );
-}
-
-CollectionAttribute * Collection::attribute( const QByteArray & type ) const
-{
-  const Q_D( Collection );
-  if ( d->attributes.contains( type ) )
-    return d->attributes.value( type );
-  return 0;
-}
-
-bool Collection::hasAttribute( const QByteArray & type ) const
-{
-  return d_func()->attributes.contains( type );
-}
-
 bool Collection::isValid() const
 {
   return id() >= 0;
@@ -282,7 +252,7 @@ uint qHash( const Akonadi::Collection &collection )
 
 void Collection::addRawAttribute(const QByteArray & type, const QByteArray & value)
 {
-  CollectionAttribute* attr = CollectionAttributeFactory::createAttribute( type );
+  Attribute* attr = AttributeFactory::createAttribute( type );
   Q_ASSERT( attr );
   attr->setData( value );
   addAttribute( attr );

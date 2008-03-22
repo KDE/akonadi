@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONATTRIBUTE_H
-#define AKONADI_COLLECTIONATTRIBUTE_H
+#ifndef AKONADI_ATTRIBUTE_H
+#define AKONADI_ATTRIBUTE_H
 
 #include "akonadi_export.h"
 
@@ -33,10 +33,10 @@ namespace Akonadi {
   Stores specific collection attributes (ACLs, unread counts, quotas, etc.).
   Every collection can have zero ore one attribute of every type.
 */
-class AKONADI_EXPORT CollectionAttribute
+class AKONADI_EXPORT Attribute
 {
   public:
-    typedef QList<CollectionAttribute*> List;
+    typedef QList<Attribute*> List;
 
     /**
       Returns the attribute name of this collection.
@@ -46,12 +46,12 @@ class AKONADI_EXPORT CollectionAttribute
     /**
       Destroys this attribute.
     */
-    virtual ~CollectionAttribute();
+    virtual ~Attribute();
 
     /**
       Creates a copy of this object.
     */
-    virtual CollectionAttribute* clone() const = 0;
+    virtual Attribute* clone() const = 0;
 
     /**
       Returns a QByteArray representation of the attribute which will be

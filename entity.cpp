@@ -18,7 +18,6 @@
 */
 
 #include "entity.h"
-
 #include "entity_p.h"
 
 using namespace Akonadi;
@@ -73,6 +72,30 @@ Entity& Entity ::operator=( const Entity &other )
     d_ptr = other.d_ptr;
 
   return *this;
+}
+
+void Entity::addAttribute(Attribute * attr)
+{
+  if ( d_ptr->mAttributes.contains( attr->type() ) )
+    delete d_ptr->mAttributes.take( attr->type() );
+  d_ptr->mAttributes.insert( attr->type(), attr );
+}
+
+bool Entity::hasAttribute(const QByteArray & type) const
+{
+  return d_ptr->mAttributes.contains( type );
+}
+
+QList< Attribute * > Entity::attributes() const
+{
+  return d_ptr->mAttributes.values();
+}
+
+Attribute * Entity::attribute(const QByteArray & type) const
+{
+  if ( d_ptr->mAttributes.contains( type ) )
+    return d_ptr->mAttributes.value( type );
+  return 0;
 }
 
 uint qHash( const Akonadi::Entity &entity )

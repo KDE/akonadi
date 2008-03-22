@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,12 +17,11 @@
     02110-1301, USA.
 */
 
-#include "collectionattribute.h"
-#include "imapparser_p.h"
+#include "attribute.h"
 
 using namespace Akonadi;
 
-CollectionAttribute::~ CollectionAttribute( )
+Attribute::~ Attribute( )
 {
 }
 

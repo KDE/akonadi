@@ -23,7 +23,7 @@
 #include "akonadi_export.h"
 
 #include <akonadi/collection.h>
-#include <akonadi/collectionattribute.h>
+#include <akonadi/attribute.h>
 
 namespace Akonadi {
 
@@ -33,7 +33,7 @@ namespace Akonadi {
   You shouldn't use this class directly but the convenience methods
   Collection::rights() and Collection::setRights() instead.
 */
-class AKONADI_EXPORT CollectionRightsAttribute : public CollectionAttribute
+class AKONADI_EXPORT CollectionRightsAttribute : public Attribute
 {
   public:
     /**

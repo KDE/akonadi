@@ -68,7 +68,7 @@ static QByteArray rightsToData( Collection::Rights &rights )
 
 
 CollectionRightsAttribute::CollectionRightsAttribute()
-  : CollectionAttribute()
+  : Attribute()
 {
 }
 

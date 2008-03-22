@@ -41,6 +41,7 @@ class EntityPrivate : public QSharedData
 
     virtual ~EntityPrivate()
     {
+      qDeleteAll( mAttributes );
     }
 
     EntityPrivate( const EntityPrivate &other )
@@ -48,12 +49,15 @@ class EntityPrivate : public QSharedData
     {
       mId = other.mId;
       mRemoteId = other.mRemoteId;
+      foreach ( Attribute* attr, other.mAttributes )
+        mAttributes.insert( attr->type(), attr->clone() );
     }
 
     virtual EntityPrivate *clone() const = 0;
 
     Entity::Id mId;
     QString mRemoteId;
+    QHash<QByteArray, Attribute*> mAttributes;
 };
 
 }

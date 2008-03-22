@@ -57,7 +57,7 @@ void CollectionCreateJob::doStart( )
     command += "MIMETYPE (" + ImapParser::join( cList, QByteArray(" ") ) + ')';
   }
   command += " REMOTEID \"" + d->collection.remoteId().toUtf8() + '"';
-  foreach ( CollectionAttribute* attr, d->collection.attributes() )
+  foreach ( Attribute* attr, d->collection.attributes() )
     command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->toByteArray() );
   command += ' ' + ProtocolHelper::cachePolicyToByteArray( d->collection.cachePolicy() );
   command += ")\n";

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 - 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionattributefactory.h"
+#include "attributefactory.h"
 
 #include "collectionrightsattribute.h"
 
@@ -25,18 +25,18 @@
 
 using namespace Akonadi;
 
-class DefaultCollectionAttribute : public CollectionAttribute
+class DefaultAttribute : public Attribute
 {
   public:
-    explicit DefaultCollectionAttribute( const QByteArray &type, const QByteArray &value = QByteArray() ) :
+    explicit DefaultAttribute( const QByteArray &type, const QByteArray &value = QByteArray() ) :
       mType( type ),
       mValue( value )
     {}
 
     QByteArray type() const { return mType; }
-    CollectionAttribute* clone() const
+    Attribute* clone() const
     {
-      return new DefaultCollectionAttribute( mType, mValue );
+      return new DefaultAttribute( mType, mValue );
     }
 
     QByteArray toByteArray() const { return mValue; }
@@ -46,48 +46,48 @@ class DefaultCollectionAttribute : public CollectionAttribute
     QByteArray mType, mValue;
 };
 
-class CollectionAttributeFactory::Private
+class AttributeFactory::Private
 {
   public:
-    QHash<QByteArray, CollectionAttribute*> attributes;
-    static CollectionAttributeFactory* mInstance;
+    QHash<QByteArray, Attribute*> attributes;
+    static AttributeFactory* mInstance;
 };
 
-CollectionAttributeFactory* CollectionAttributeFactory::Private::mInstance = 0;
+AttributeFactory* AttributeFactory::Private::mInstance = 0;
 
-CollectionAttributeFactory* CollectionAttributeFactory::self()
+AttributeFactory* AttributeFactory::self()
 {
   if ( !Private::mInstance ) {
-    Private::mInstance = new CollectionAttributeFactory();
+    Private::mInstance = new AttributeFactory();
 
     // Register built-in attributes
-    CollectionAttributeFactory::registerAttribute<CollectionRightsAttribute>();
+    AttributeFactory::registerAttribute<CollectionRightsAttribute>();
   }
 
   return Private::mInstance;
 }
 
-CollectionAttributeFactory::CollectionAttributeFactory()
+AttributeFactory::AttributeFactory()
   : d( new Private )
 {
 }
 
-CollectionAttributeFactory::~ CollectionAttributeFactory()
+AttributeFactory::~ AttributeFactory()
 {
   qDeleteAll( d->attributes );
   delete d;
 }
 
-void CollectionAttributeFactory::registerAttribute(CollectionAttribute *attr)
+void AttributeFactory::registerAttribute(Attribute *attr)
 {
   Q_ASSERT( !d->attributes.contains( attr->type() ) );
   d->attributes.insert( attr->type(), attr );
 }
 
-CollectionAttribute* CollectionAttributeFactory::createAttribute(const QByteArray &type)
+Attribute* AttributeFactory::createAttribute(const QByteArray &type)
 {
-  CollectionAttribute* attr = self()->d->attributes.value( type );
+  Attribute* attr = self()->d->attributes.value( type );
   if ( attr )
     return attr->clone();
-  return new DefaultCollectionAttribute( type );
+  return new DefaultAttribute( type );
 }

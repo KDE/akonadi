@@ -22,7 +22,6 @@
 
 #include "akonadi_export.h"
 #include <akonadi/cachepolicy.h>
-#include <akonadi/collectionattribute.h>
 #include <akonadi/collectionstatus.h>
 #include <akonadi/entity.h>
 
@@ -178,58 +177,6 @@ class AKONADI_EXPORT Collection : public Entity
       @param remoteParent The remote identifier of the parent.
     */
     void setParentRemoteId( const QString &remoteParent );
-
-    /**
-      Adds a collection attribute. An already existing attribute of the same
-      type is deleted.
-      @param attr The new attribute. The collection takes the ownership of this
-      object.
-    */
-    void addAttribute( CollectionAttribute *attr );
-
-    /**
-      Returns true if the collection has the specified attribute.
-      @param type The attribute type.
-    */
-    bool hasAttribute( const QByteArray &type ) const;
-
-    /**
-      Returns all attributes.
-    */
-    QList<CollectionAttribute*> attributes() const;
-
-    /**
-      Returns the attribute of the given type if available, 0 otherwise.
-      @param type The attribute type.
-    */
-    CollectionAttribute* attribute( const QByteArray &type ) const;
-
-    /**
-      Returns the attribute of the requested type or 0 if not available.
-      @param create Creates the attribute if it doesn't exist.
-    */
-    template <typename T> inline T* attribute( bool create = false )
-    {
-      T dummy;
-      if ( hasAttribute( dummy.type() ) )
-        return static_cast<T*>( attribute( dummy.type() ) );
-      if ( !create )
-        return 0;
-      T* attr = new T();
-      addAttribute( attr );
-      return attr;
-    }
-
-    /**
-      Returns the attribute of the requested type or 0 if not available.
-    */
-    template <typename T> inline T* attribute() const
-    {
-      T dummy;
-      if ( hasAttribute( dummy.type() ) )
-        return static_cast<T*>( attribute( dummy.type() ) );
-      return 0;
-    }
 
     /**
       Returns the collection path delimiter.

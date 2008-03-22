@@ -60,12 +60,12 @@ set( akonadikde_LIB_SRC
   agentmanager.cpp
   agenttypemodel.cpp
   agenttypeview.cpp
+  attribute.cpp
+  attributefactory.cpp
   cachepolicy.cpp
   cachepolicypage.cpp
   changerecorder.cpp
   collection.cpp
-  collectionattribute.cpp
-  collectionattributefactory.cpp
   collectioncombobox.cpp
   collectioncopyjob.cpp
   collectioncreatejob.cpp
@@ -158,11 +158,11 @@ install( FILES
   agentmanager.h
   agenttypemodel.h
   agenttypeview.h
+  attribute.h
+  attributefactory.h
   cachepolicy.h
   changerecorder.h
   collection.h
-  collectionattribute.h
-  collectionattributefactory.h
   collectioncombobox.h
   collectioncopyjob.h
   collectioncreatejob.h

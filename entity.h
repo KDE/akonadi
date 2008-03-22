@@ -28,9 +28,10 @@ class Entity;
 
 AKONADI_EXPORT uint qHash( const Akonadi::Entity& );
 
-#include <QtCore/QHash>
-
+#include <akonadi/attribute.h>
 #include <akonadi/shareddatapointer.h>
+
+#include <QtCore/QHash>
 
 #define AKONADI_DECLARE_PRIVATE( Class ) \
     Class##Private* d_func(); \
@@ -89,6 +90,57 @@ class AKONADI_EXPORT Entity
      * @internal
      */
     Entity& operator=( const Entity &other );
+
+    /**
+      Adds an attribute. An already existing attribute of the same
+      type is deleted.
+      @param attr The new attribute. This object takes the ownership of the attribute.
+    */
+    void addAttribute( Attribute *attr );
+
+    /**
+      Returns true if the entity has the specified attribute.
+      @param type The attribute type.
+    */
+    bool hasAttribute( const QByteArray &type ) const;
+
+    /**
+      Returns all attributes.
+    */
+    QList<Attribute*> attributes() const;
+
+    /**
+      Returns the attribute of the given type if available, 0 otherwise.
+      @param type The attribute type.
+    */
+    Attribute* attribute( const QByteArray &type ) const;
+
+    /**
+      Returns the attribute of the requested type or 0 if not available.
+      @param create Creates the attribute if it doesn't exist.
+    */
+    template <typename T> inline T* attribute( bool create = false )
+    {
+      T dummy;
+      if ( hasAttribute( dummy.type() ) )
+        return static_cast<T*>( attribute( dummy.type() ) );
+      if ( !create )
+        return 0;
+      T* attr = new T();
+      addAttribute( attr );
+      return attr;
+    }
+
+    /**
+      Returns the attribute of the requested type or 0 if not available.
+    */
+    template <typename T> inline T* attribute() const
+    {
+      T dummy;
+      if ( hasAttribute( dummy.type() ) )
+        return static_cast<T*>( attribute( dummy.type() ) );
+      return 0;
+    }
 
   protected:
     /**

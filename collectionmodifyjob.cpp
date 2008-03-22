@@ -104,7 +104,7 @@ void CollectionModifyJob::setParent(const Collection & parent)
   d->parent = parent;
 }
 
-void CollectionModifyJob::setAttribute(CollectionAttribute * attr)
+void CollectionModifyJob::setAttribute(Attribute * attr)
 {
   Q_ASSERT( !attr->type().isEmpty() );
 

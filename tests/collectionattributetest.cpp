@@ -21,7 +21,7 @@
 #include "collectionattributetest.moc"
 
 #include <akonadi/collection.h>
-#include <akonadi/collectionattributefactory.h>
+#include <akonadi/attributefactory.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionlistjob.h>
@@ -35,10 +35,10 @@ using namespace Akonadi;
 
 QTEST_KDEMAIN( CollectionAttributeTest, NoGUI )
 
-class TestAttribute : public CollectionAttribute
+class TestAttribute : public Attribute
 {
   public:
-    TestAttribute() : CollectionAttribute() {}
+    TestAttribute() : Attribute() {}
     TestAttribute* clone() const { return new TestAttribute(); }
     QByteArray type() const { return "TESTATTRIBUTE"; }
     QByteArray toByteArray() const { return mData; }
@@ -52,7 +52,7 @@ static int parentColId = -1;
 void CollectionAttributeTest::initTestCase()
 {
   Control::start();
-  CollectionAttributeFactory::registerAttribute<TestAttribute>();
+  AttributeFactory::registerAttribute<TestAttribute>();
 
   CollectionPathResolver *resolver = new CollectionPathResolver( "res3", this );
   QVERIFY( resolver->exec() );

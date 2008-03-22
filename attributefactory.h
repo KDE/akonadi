@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 - 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,17 +17,17 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONATTRIBUTEFACTORY_H
-#define AKONADI_COLLECTIONATTRIBUTEFACTORY_H
+#ifndef AKONADI_ATTRIBUTEFACTORY_H
+#define AKONADI_ATTRIBUTEFACTORY_H
 
-#include <akonadi/collectionattribute.h>
+#include <akonadi/attribute.h>
 
 namespace Akonadi {
 
 /**
   Factory for collection attributes.
 */
-class AKONADI_EXPORT CollectionAttributeFactory
+class AKONADI_EXPORT AttributeFactory
 {
   public:
     /**
@@ -35,20 +35,20 @@ class AKONADI_EXPORT CollectionAttributeFactory
     */
     template <typename T> inline static void registerAttribute()
     {
-      CollectionAttributeFactory::self()->registerAttribute( new T );
+      AttributeFactory::self()->registerAttribute( new T );
     }
 
     /**
       Creates a collection attribute object of the given type.
       @param type The attribute type.
     */
-    static CollectionAttribute* createAttribute( const QByteArray &type );
+    static Attribute* createAttribute( const QByteArray &type );
 
   private:
-    CollectionAttributeFactory();
-    ~CollectionAttributeFactory();
-    static CollectionAttributeFactory* self();
-    void registerAttribute( CollectionAttribute *attr );
+    AttributeFactory();
+    ~AttributeFactory();
+    static AttributeFactory* self();
+    void registerAttribute( Attribute *attr );
 
   private:
     class Private;

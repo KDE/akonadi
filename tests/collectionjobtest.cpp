@@ -65,10 +65,10 @@ template <class T> static void compareLists( const QList<T> &l1, const QList<T> 
   }
 }
 
-template <typename T> static T* extractAttribute( QList<CollectionAttribute*> attrs )
+template <typename T> static T* extractAttribute( QList<Attribute*> attrs )
 {
   T dummy;
-  foreach ( CollectionAttribute* attr, attrs ) {
+  foreach ( Attribute* attr, attrs ) {
     if ( attr->type() == dummy.type() )
       return dynamic_cast<T*>( attr );
   }

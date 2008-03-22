@@ -61,7 +61,7 @@ class CollectionPropertiesDialog::Private
       job->setName( collection.name() );
       job->setContentTypes( collection.contentTypes() );
       job->setCachePolicy( collection.cachePolicy() );
-      foreach ( CollectionAttribute *attr, collection.attributes() )
+      foreach ( Attribute *attr, collection.attributes() )
         job->setAttribute( attr );
       // TODO complete me
     }

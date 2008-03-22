@@ -77,7 +77,7 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
       Sets the given collection attribute.
       @param attr A collection attribute, ownership stays with the caller.
     */
-    void setAttribute( CollectionAttribute* attr );
+    void setAttribute( Attribute* attr );
 
     /**
       Removes the given collection attribute.
