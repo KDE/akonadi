@@ -20,6 +20,7 @@
 
 #include "itemcreatejob.h"
 #include "imapparser_p.h"
+#include "itemserializer.h"
 
 #include <kdebug.h>
 
@@ -47,7 +48,9 @@ ItemCreateJob::ItemCreateJob( const Item &item, const Collection &collection, QO
 {
   Q_ASSERT( !item.mimeType().isEmpty() );
   d->item = item;
-  d->parts = d->item.availableParts();
+  d->parts = d->item.loadedPayloadParts();
+  foreach ( const Attribute *attr, item.attributes() )
+    d->parts << QString::fromLatin1( attr->type() );
   d->collection = collection;
 }
 
@@ -65,7 +68,7 @@ void ItemCreateJob::doStart()
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
   if ( d->parts.isEmpty() || (d->parts.size() == 1 && d->parts.first() == Item::PartBody) ) {
     if ( d->item.hasPayload() )
-      d->data = d->item.part( Item::PartBody );
+      ItemSerializer::serialize( d->item, Item::PartBody, d->data );
     int dataSize = d->data.size();
 
     writeData( newTag() + " APPEND " + QByteArray::number( d->collection.id() )
@@ -79,7 +82,8 @@ void ItemCreateJob::doStart()
     QList<QByteArray> partSpecs;
     int totalSize = 0;
     foreach( const QString partName, d->parts ) {
-      QByteArray partData = d->item.part( partName );
+      QByteArray partData;
+      ItemSerializer::serialize( d->item, partName, partData );
       totalSize += partData.size();
       partSpecs.append( ImapParser::quote( partName.toLatin1() ) + ':' +
         QByteArray::number( partData.size() ) );

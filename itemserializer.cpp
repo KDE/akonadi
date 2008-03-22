@@ -21,6 +21,7 @@
 #include "itemserializer.h"
 #include "item.h"
 #include "itemserializerplugin.h"
+#include "attributefactory.h"
 
 // KDE core
 #include <kdebug.h>
@@ -143,7 +144,10 @@ void ItemSerializer::deserialize( Item& item, const QString& label, QIODevice& d
     setup();
     if ( !ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data ) ) {
       data.seek( 0 );
-      item.addRawPart( label, data.readAll() );
+      Attribute* attr = AttributeFactory::createAttribute( label.toLatin1() );
+      Q_ASSERT( attr );
+      attr->setData( data.readAll() );
+      item.addAttribute( attr );
     }
 }
 
@@ -165,7 +169,9 @@ void ItemSerializer::serialize( const Item& item, const QString& label, QIODevic
     ItemSerializerPlugin& plugin = pluginForMimeType( item.mimeType() );
     QStringList supportedParts = plugin.parts( item );
     if ( !supportedParts.contains( label ) ) {
-      data.write( item.rawPart( label ) );
+      Attribute* attr = item.attribute( label.toLatin1() );
+      if ( attr )
+        data.write( attr->toByteArray() );
       return;
     }
     if ( !item.hasPayload() )

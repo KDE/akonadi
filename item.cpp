@@ -89,11 +89,6 @@ void Item::addPart( const QString &identifier, const QByteArray &data )
   ItemSerializer::deserialize( *this, identifier, data );
 }
 
-void Item::removePart( const QString &identifier )
-{
-  removeRawPart( identifier );
-}
-
 QByteArray Item::part( const QString &identifier ) const
 {
   QByteArray data;
@@ -101,10 +96,17 @@ QByteArray Item::part( const QString &identifier ) const
   return data;
 }
 
+QStringList Item::loadedPayloadParts() const
+{
+  return ItemSerializer::parts( *this );
+}
+
 QStringList Item::availableParts() const
 {
   QStringList payloadParts = ItemSerializer::parts( *this );
-  return payloadParts + d_func()->mParts.keys();
+  foreach ( const Attribute *attr, attributes() )
+    payloadParts << QString::fromLatin1( attr->type() );
+  return payloadParts;
 }
 
 int Item::revision() const
@@ -170,21 +172,6 @@ Item Item::fromUrl( const KUrl &url )
 bool Item::urlIsValid( const KUrl &url )
 {
   return url.protocol() == QString::fromLatin1("akonadi") && url.queryItems().contains( QString::fromLatin1("item") );
-}
-
-void Item::addRawPart( const QString & label, const QByteArray & data )
-{
-  d_func()->mParts.insert( label, data );
-}
-
-void Item::removeRawPart( const QString & label )
-{
-  d_func()->mParts.remove( label );
-}
-
-QByteArray Item::rawPart( const QString & label ) const
-{
-  return d_func()->mParts.value( label );
 }
 
 AKONADI_DEFINE_PRIVATE( Item )

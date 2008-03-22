@@ -41,7 +41,6 @@ class ItemPrivate : public EntityPrivate
       mFlags = other.mFlags;
       mRevision = other.mRevision;
       mMimeType = other.mMimeType;
-      mParts = other.mParts;
     }
 
     EntityPrivate *clone() const
@@ -52,7 +51,6 @@ class ItemPrivate : public EntityPrivate
     Item::Flags mFlags;
     int mRevision;
     QString mMimeType;
-    QMap<QString, QByteArray> mParts;
 };
 
 }

@@ -22,6 +22,7 @@
 #include "collection.h"
 #include "collectionselectjob.h"
 #include "imapparser_p.h"
+#include "itemserializer.h"
 #include "itemserializerplugin.h"
 
 #include <kdebug.h>
@@ -190,7 +191,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
           }
         } else {
           try {
-            item.addPart( QString::fromLatin1(key), fetchResponse.value( i+1 ) );
+            ItemSerializer::deserialize( item, QString::fromLatin1( key ), fetchResponse.value( i + 1 ) );
           } catch ( ItemSerializerException &e ) {
             // FIXME how do we react to this? Should we still append?
             kWarning( 5250 ) << "Failed to construct the payload of type: " << item.mimeType();

@@ -140,23 +140,21 @@ class AKONADI_EXPORT Item : public Entity
       Adds a new part with the given @p identifier and @p data.
       If a part with the identifier already exists, it is overwritten.
      */
-    void addPart( const QString &identifier, const QByteArray &data );
-
-    /**
-      Removes the part with the given @p identifier.
-     */
-    void removePart( const QString &identifier );
+    KDE_DEPRECATED void addPart( const QString &identifier, const QByteArray &data );
 
     /**
       Returns the data of the part with the given @p identifier or any
       empty byte array if a part with the identifier doesn't exists.
      */
-    QByteArray part( const QString &identifier ) const;
+    KDE_DEPRECATED QByteArray part( const QString &identifier ) const;
 
     /**
-      Returns the list of part identifiers of this item.
+      Returns the list of loaded payload parts. This is not necessarily the
+      identical to all parts in the cache or to all available parts on the backend.
      */
-    QStringList availableParts() const;
+    QStringList loadedPayloadParts() const;
+
+    KDE_DEPRECATED QStringList availableParts() const;
 
     /**
       Returns the revision number of this item.
@@ -272,14 +270,7 @@ class AKONADI_EXPORT Item : public Entity
     static bool urlIsValid( const KUrl &url );
 
   private:
-    friend class ItemSerializer;
-    void addRawPart( const QString &label, const QByteArray &data );
-    void removeRawPart( const QString &label );
-    QByteArray rawPart( const QString &label ) const;
-
     AKONADI_DECLARE_PRIVATE( Item )
-
-  private:
     PayloadBase*  m_payload; // krazy:exclude=dpointer
 };
 
