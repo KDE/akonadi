@@ -25,6 +25,8 @@
 
 #include <QTime>
 
+class KJob;
+
 class ItemDumper : public QObject
 {
   Q_OBJECT
