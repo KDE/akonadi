@@ -1,7 +1,6 @@
 include_directories(
-	${CMAKE_SOURCE_DIR}/akonadi
-	${CMAKE_SOURCE_DIR}/akonadi/libakonadi
-	${QT_QTDBUS_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/akonadi
+    ${QT_QTDBUS_INCLUDE_DIR}
         ${Boost_INCLUDE_DIR}
 )
 
