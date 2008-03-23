@@ -242,8 +242,8 @@ void ItemStoreTest::testMultiPart()
   QCOMPARE( item.part( "EXTRA" ), QByteArray("extra") );
 
   // clean up
+  item.removeAttribute( "EXTRA" );
   sjob = new ItemModifyJob( item );
-  sjob->removePart( "EXTRA" );
   QVERIFY( sjob->exec() );
 }
 
@@ -270,8 +270,8 @@ void ItemStoreTest::testPartRemove()
   QVERIFY( item.availableParts().contains( QLatin1String( "EXTRA" ) ) );
 
   // remove a part
+  item.removeAttribute( "EXTRA" );
   sjob = new ItemModifyJob( item );
-  sjob->removePart( "EXTRA" );
   QVERIFY( sjob->exec() );
 
   // fetch item again (should only have RFC822 and HEAD left)

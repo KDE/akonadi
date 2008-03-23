@@ -80,12 +80,6 @@ class AKONADI_EXPORT ItemModifyJob : public Job
     void removeFlag( const Item::Flag &flag );
 
     /**
-      Removes the given part. Other existing parts will not be changed.
-      @param part The part to be removed.
-    */
-    void removePart( const QByteArray &part );
-
-    /**
       Moves the item to the given collection.
       @param collection Path to the new collection this item is moved into.
     */

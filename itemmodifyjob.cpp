@@ -19,6 +19,8 @@
 
 #include "itemmodifyjob.h"
 #include "imapparser_p.h"
+#include "entity_p.h"
+#include "itemserializer.h"
 #include "job_p.h"
 
 #include <kdebug.h>
@@ -32,7 +34,6 @@ class Akonadi::ItemModifyJobPrivate : public JobPrivate
       SetFlags,
       AddFlags,
       RemoveFlags,
-      RemoveParts,
       Move,
       RemoteId,
       Dirty
@@ -50,7 +51,6 @@ class Akonadi::ItemModifyJobPrivate : public JobPrivate
     Item::Flags mFlags;
     Item::Flags mAddFlags;
     Item::Flags mRemoveFlags;
-    QList<QByteArray> mRemoveParts;
     QSet<int> mOperations;
     QByteArray mTag;
     Collection mCollection;
@@ -64,7 +64,8 @@ class Akonadi::ItemModifyJobPrivate : public JobPrivate
       QByteArray command;
       if ( !mParts.isEmpty() ) {
         QString label = mParts.takeFirst();
-        mPendingData = mItem.part( label );
+        mPendingData.clear();
+        ItemSerializer::serialize( mItem, label, mPendingData );
         command += ' ' + label.toUtf8();
         command += ".SILENT {" + QByteArray::number( mPendingData.size() ) + '}';
         if ( mPendingData.size() > 0 )
@@ -112,14 +113,6 @@ void ItemModifyJob::removeFlag(const Item::Flag & flag)
 
   d->mRemoveFlags.insert( flag );
   d->mOperations.insert( ItemModifyJobPrivate::RemoveFlags );
-}
-
-void ItemModifyJob::removePart(const QByteArray & part)
-{
-  Q_D( ItemModifyJob );
-
-  d->mRemoveParts.append( part );
-  d->mOperations.insert( ItemModifyJobPrivate::RemoveParts );
 }
 
 void ItemModifyJob::setCollection(const Collection &collection)
@@ -170,10 +163,6 @@ void ItemModifyJob::doStart()
         changes << "-FLAGS.SILENT";
         changes << "(" + ImapParser::join( d->mRemoveFlags, " " ) + ')';
         break;
-      case ItemModifyJobPrivate::RemoveParts:
-        changes << "-PARTS.SILENT";
-        changes << "(" + ImapParser::join( d->mRemoveParts, " " ) + ')';
-        break;
       case ItemModifyJobPrivate::Move:
         changes << "COLLECTION.SILENT";
         changes << QByteArray::number( d->mCollection.id() );
@@ -190,6 +179,12 @@ void ItemModifyJob::doStart()
         break;
     }
   }
+
+  if ( !d->mItem.d_ptr->mDeletedAttributes.isEmpty() ) {
+    changes << "-PARTS.SILENT";
+    changes << "(" + ImapParser::join( d->mItem.d_ptr->mDeletedAttributes, " " ) + ')';
+  }
+
   command += " (" + ImapParser::join( changes, " " );
   command += d->nextPartHeader();
   writeData( command );
@@ -207,12 +202,9 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
   }
   if ( _tag == d->mTag ) {
     if ( data.startsWith( "OK" ) ) {
-      // increase item revision of item, given by calling function
-      if( d->mRevCheck )
-        d->mItem.incrementRevision();
-      else
-        // increase item revision of own copy of item
-        d->mItem.incrementRevision();
+      // increase item revision of own copy of item
+      d->mItem.incrementRevision();
+      d->mItem.d_ptr->resetChangeLog();
     } else {
       setError( Unknown );
       setErrorText( QString::fromUtf8( data ) );

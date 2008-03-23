@@ -270,6 +270,7 @@ class AKONADI_EXPORT Item : public Entity
     static bool urlIsValid( const KUrl &url );
 
   private:
+    friend class ItemModifyJob;
     AKONADI_DECLARE_PRIVATE( Item )
     PayloadBase*  m_payload; // krazy:exclude=dpointer
 };
