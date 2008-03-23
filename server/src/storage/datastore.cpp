@@ -878,11 +878,12 @@ bool Akonadi::DataStore::commitTransaction()
       debugLastDbError( "DataStore::commitTransaction" );
       rollbackTransaction();
       return false;
+    } else {
+      emit transactionCommitted();
     }
   }
 
   m_transactionLevel--;
-  emit transactionCommitted();
   return true;
 }
 
