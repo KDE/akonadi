@@ -48,7 +48,7 @@ class Akonadi::CollectionPrivate : public EntityPrivate
       parentRemoteId = other.parentRemoteId;
       type = other.type;
       resource = other.resource;
-      status = other.status;
+      statistics = other.statistics;
       contentTypes = other.contentTypes;
       cachePolicy = other.cachePolicy;
     }
@@ -76,7 +76,7 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     QString parentRemoteId;
     Collection::Type type;
     QString resource;
-    CollectionStatus status;
+    CollectionStatistics statistics;
     QStringList contentTypes;
     static const Collection root;
     CachePolicy cachePolicy;
@@ -234,15 +234,15 @@ uint qHash( const Akonadi::Collection &collection )
   return qHash( collection.id() );
 }
 
-CollectionStatus Collection::status() const
+CollectionStatistics Collection::statistics() const
 {
-  return d_func()->status;
+  return d_func()->statistics;
 }
 
-void Collection::setStatus(const CollectionStatus & status)
+void Collection::setStatistics(const CollectionStatistics & statistics)
 {
   Q_D( Collection );
-  d->status = status;
+  d->statistics = statistics;
 }
 
 bool Collection::urlIsValid( const KUrl &url )

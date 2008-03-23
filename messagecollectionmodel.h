@@ -17,21 +17,25 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_MESSAGECOLLECTIONMODEL_H
-#define AKONADI_MESSAGECOLLECTIONMODEL_H
+#ifndef AKONADI_COLLECTIONSTATISTICSMODEL_H
+#define AKONADI_COLLECTIONSTATISTICSMODEL_H
 
 #include "akonadi_export.h"
 #include <akonadi/collectionmodel.h>
 
 namespace Akonadi {
 
-class MessageCollectionModelPrivate;
+class CollectionStatisticsModelPrivate;
 
 /**
-  Extended model for message collections.
-  Supports columns for message unread/total counts.
+ * Supports columns for everything in the CollectionStatistics for
+ * the collections.
+ * Additionally, it provides special Roles to access those statistics via
+ * data().
+ * With this model, automatic fetching of the CollectionStatistic is enabled
+ * by default.
 */
-class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
+class AKONADI_EXPORT CollectionStatisticsModel : public CollectionModel
 {
   Q_OBJECT
 
@@ -40,28 +44,28 @@ class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
     /**
      * Custom roles for the message collection model
      */
-    enum MessageCollectionRole {
+    enum CollectionStatisticsRole {
 
       /// Get the number of unread items in this collection
-      MessageCollectionUnreadRole = CollectionViewUserRole,
+      CollectionStatisticsUnreadRole = CollectionViewUserRole,
 
       /// Get the number of items in this collection
-      MessageCollectionTotalRole,
+      CollectionStatisticsTotalRole,
 
       /// Get the number of unread items in this collection and its children
-      MessageCollectionUnreadRecursiveRole,
+      CollectionStatisticsUnreadRecursiveRole,
 
       /// Get the number of items in this collection and its children
-      MessageCollectionTotalRecursiveRole,
+      CollectionStatisticsTotalRecursiveRole,
 
-      MessageCollectionUserRole = Qt::UserRole + 64
+      CollectionStatisticsUserRole = Qt::UserRole + 64
     };
 
     /**
       Create a new message collection model.
       @param parent The parent object.
     */
-    explicit MessageCollectionModel( QObject *parent = 0 );
+    explicit CollectionStatisticsModel( QObject *parent = 0 );
 
     /**
       Reimplemented from CollectionModel.
@@ -79,7 +83,7 @@ class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
   private:
-    Q_DECLARE_PRIVATE( MessageCollectionModel )
+    Q_DECLARE_PRIVATE( CollectionStatisticsModel )
 };
 
 }

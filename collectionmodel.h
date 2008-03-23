@@ -136,10 +136,10 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     Collection collectionForId( Collection::Id id ) const;
 
     /**
-      Enable fetching of collection status information.
-      @see CollectionStatus.
+      Enable fetching of collection statistics information.
+      @see CollectionStatistics.
     */
-    void fetchCollectionStatus( bool enable );
+    void fetchCollectionStatistics( bool enable );
 
     /**
       Also include unsubscribed collections.
@@ -183,7 +183,9 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     Q_PRIVATE_SLOT( d_func(), void collectionRemoved( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void collectionChanged( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void updateDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void collectionStatusChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatus& ) )
+    Q_PRIVATE_SLOT( d_func(), void collectionStatisticsChanged(
+                                        Akonadi::Collection::Id,
+                                        const Akonadi::CollectionStatistics& ) )
     Q_PRIVATE_SLOT( d_func(), void listDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void editDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void dropResult( KJob* ) )

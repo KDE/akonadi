@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONSTATUSJOB_H
-#define AKONADI_COLLECTIONSTATUSJOB_H
+#ifndef AKONADI_COLLECTIONSTATISTICSJOB_H
+#define AKONADI_COLLECTIONSTATISTICSJOB_H
 
 #include "akonadi_export.h"
 #include <akonadi/collection.h>
@@ -27,32 +27,32 @@
 
 namespace Akonadi {
 
-class CollectionStatusJobPrivate;
+class CollectionStatisticsJobPrivate;
 
 /**
-  Fetches the CollectionStatus object for a given collection.
+  Fetches the CollectionStatistics object for a given collection.
 */
-class AKONADI_EXPORT CollectionStatusJob : public Job
+class AKONADI_EXPORT CollectionStatisticsJob : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a new collection status job.
+      Creates a new CollectionStatisticsJob
       @param collection The collection.
       @param parent The parent object.
     */
-    explicit CollectionStatusJob( const Collection &collection, QObject *parent = 0 );
+    explicit CollectionStatisticsJob( const Collection &collection, QObject *parent = 0 );
 
     /**
       Destroys this job.
     */
-    virtual ~CollectionStatusJob();
+    virtual ~CollectionStatisticsJob();
 
     /**
-      Returns the fetched collection status.
+      Returns the fetched collection statistics.
     */
-    CollectionStatus status() const;
+    CollectionStatistics statistics() const;
 
     /**
       Returns the corresponding collection, if the job was executed successfully,
@@ -65,7 +65,7 @@ class AKONADI_EXPORT CollectionStatusJob : public Job
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
-    Q_DECLARE_PRIVATE( CollectionStatusJob )
+    Q_DECLARE_PRIVATE( CollectionStatisticsJob )
 };
 
 }

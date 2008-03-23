@@ -93,20 +93,21 @@ void CollectionModelPrivate::updateDone( KJob *job )
     // TODO: handle job errors
     kWarning( 5250 ) << "Job error:" << job->errorString();
   } else {
-    CollectionStatusJob *csjob = static_cast<CollectionStatusJob*>( job );
+    CollectionStatisticsJob *csjob = static_cast<CollectionStatisticsJob*>( job );
     Collection result = csjob->collection();
-    collectionStatusChanged( result.id(), csjob->status() );
+    collectionStatisticsChanged( result.id(), csjob->statistics() );
   }
 }
 
-void CollectionModelPrivate::collectionStatusChanged( Collection::Id collection, const Akonadi::CollectionStatus & status )
+void CollectionModelPrivate::collectionStatisticsChanged( Collection::Id collection,
+                               const Akonadi::CollectionStatistics &statistics )
 {
   Q_Q( CollectionModel );
 
   if ( !collections.contains( collection ) )
-    kWarning( 5250 ) << "Got status response for non-existing collection:" << collection;
+    kWarning( 5250 ) << "Got statistics response for non-existing collection:" << collection;
   else {
-    collections[ collection ].setStatus( status );
+    collections[ collection ].setStatistics( statistics );
 
     Collection col = collections.value( collection );
     QModelIndex startIndex = q->indexForId( col.id() );
@@ -117,7 +118,7 @@ void CollectionModelPrivate::collectionStatusChanged( Collection::Id collection,
     static int oldTotalUnread = -1;
     int totalUnread = 0;
     foreach ( const Collection& col, collections.values() ) {
-      int colUnread = col.status().unreadCount();
+      int colUnread = col.statistics().unreadCount();
       if ( colUnread > 0 )
           totalUnread += colUnread;
     }
@@ -156,7 +157,7 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
   foreach( Collection col, cols ) {
     if ( collections.contains( col.id() ) ) {
       // collection already known
-      col.setStatus( collections.value( col.id() ).status() );
+      col.setStatistics( collections.value( col.id() ).statistics() );
       collections[ col.id() ] = col;
       QModelIndex startIndex = q->indexForId( col.id() );
       QModelIndex endIndex = q->indexForId( col.id(), q->columnCount( q->parent( startIndex ) ) - 1 );
@@ -175,9 +176,9 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
 
     updateSupportedMimeTypes( col );
 
-    // start a status job for every collection to get message counts, etc.
-    if ( fetchStatus && col.type() != Collection::VirtualParent ) {
-      CollectionStatusJob* csjob = new CollectionStatusJob( col, session );
+    // start a statistics job for every collection to get message counts, etc.
+    if ( fetchStatistics && col.type() != Collection::VirtualParent ) {
+      CollectionStatisticsJob* csjob = new CollectionStatisticsJob( col, session );
       q->connect( csjob, SIGNAL(result(KJob*)), q, SLOT(updateDone(KJob*)) );
     }
   }
@@ -206,8 +207,8 @@ void CollectionModelPrivate::init()
               q, SLOT(collectionChanged(Akonadi::Collection)) );
   q->connect( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
               q, SLOT(collectionRemoved(Akonadi::Collection)) );
-  q->connect( monitor, SIGNAL(collectionStatusChanged(Akonadi::Collection::Id,Akonadi::CollectionStatus)),
-              q, SLOT(collectionStatusChanged(Akonadi::Collection::Id,Akonadi::CollectionStatus)) );
+  q->connect( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)),
+              q, SLOT(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
 }
 
 void CollectionModelPrivate::startFirstListJob()

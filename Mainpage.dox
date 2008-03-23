@@ -36,7 +36,7 @@ Classes to retrieve information about collections:
 
 - Akonadi::CollectionFetchJob
 - Akonadi::CollectionSelectJob
-- Akonadi::CollectionStatusJob
+- Akonadi::CollectionStatisticsJob
 
 Classes to manipulate collections:
 

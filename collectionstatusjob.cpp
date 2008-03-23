@@ -25,40 +25,40 @@
 
 using namespace Akonadi;
 
-class Akonadi::CollectionStatusJobPrivate : public JobPrivate
+class Akonadi::CollectionStatisticsJobPrivate : public JobPrivate
 {
   public:
-    CollectionStatusJobPrivate( CollectionStatusJob *parent )
+    CollectionStatisticsJobPrivate( CollectionStatisticsJob *parent )
       : JobPrivate( parent )
     {
     }
 
     Collection mCollection;
-    CollectionStatus mStatus;
+    CollectionStatistics mStatistics;
 };
 
-CollectionStatusJob::CollectionStatusJob( const Collection &collection, QObject * parent )
-  : Job( new CollectionStatusJobPrivate( this ), parent )
+CollectionStatisticsJob::CollectionStatisticsJob( const Collection &collection, QObject * parent )
+  : Job( new CollectionStatisticsJobPrivate( this ), parent )
 {
-  Q_D( CollectionStatusJob );
+  Q_D( CollectionStatisticsJob );
 
   d->mCollection = collection;
 }
 
-CollectionStatusJob::~CollectionStatusJob()
+CollectionStatisticsJob::~CollectionStatisticsJob()
 {
 }
 
-void CollectionStatusJob::doStart( )
+void CollectionStatisticsJob::doStart( )
 {
-  Q_D( CollectionStatusJob );
+  Q_D( CollectionStatisticsJob );
 
   writeData( newTag() + " STATUS " + QByteArray::number( d->mCollection.id() ) + " (MESSAGES UNSEEN)\n" );
 }
 
-void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
+void CollectionStatisticsJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
 {
-  Q_D( CollectionStatusJob );
+  Q_D( CollectionStatisticsJob );
 
   if ( tag == "*" ) {
     QByteArray token;
@@ -71,33 +71,33 @@ void CollectionStatusJob::doHandleResponse( const QByteArray & tag, const QByteA
       current = ImapParser::parseParenthesizedList( data, list, current );
       for ( int i = 0; i < list.count() - 1; i += 2 ) {
         if ( list[i] == "MESSAGES" ) {
-          d->mStatus.setCount( list[i+1].toInt() );
+          d->mStatistics.setCount( list[i+1].toInt() );
         } else if ( list[i] == "UNSEEN" ) {
-          d->mStatus.setUnreadCount( list[i+1].toInt() );
+          d->mStatistics.setUnreadCount( list[i+1].toInt() );
         } else {
           kDebug( 5250 ) << "Unknown STATUS response: " << list[i];
         }
       }
 
-      d->mCollection.setStatus( d->mStatus );
+      d->mCollection.setStatistics( d->mStatistics );
       return;
     }
   }
   kDebug( 5250 ) << "Unhandled response: " << tag << data;
 }
 
-Collection CollectionStatusJob::collection() const
+Collection CollectionStatisticsJob::collection() const
 {
-  Q_D( const CollectionStatusJob );
+  Q_D( const CollectionStatisticsJob );
 
   return d->mCollection;
 }
 
-CollectionStatus Akonadi::CollectionStatusJob::status() const
+CollectionStatistics Akonadi::CollectionStatisticsJob::statistics() const
 {
-  Q_D( const CollectionStatusJob );
+  Q_D( const CollectionStatisticsJob );
 
-  return d->mStatus;
+  return d->mStatistics;
 }
 
 #include "collectionstatusjob.moc"

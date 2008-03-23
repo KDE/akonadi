@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONSTATUS_H
-#define AKONADI_COLLECTIONSTATUS_H
+#ifndef AKONADI_COLLECTIONSTATISTICS_H
+#define AKONADI_COLLECTIONSTATISTICS_H
 
 #include "akonadi_export.h"
 #include <QtCore/QMetaType>
@@ -27,32 +27,32 @@
 namespace Akonadi {
 
 /**
-  Contains status information of a collection, such as
+  Contains statistics information of a collection, such as
   total number of items, number of new/unread items, etc.
 
   These information might be expensive to obtain and are thus
   not included when fetching collection with a CollectionFetchJob.
-  They can be retrieved spearately using CollectionStatusJob.
+  They can be retrieved spearately using CollectionStatisticsJob.
 
   This class is implicitely shared.
 */
-class AKONADI_EXPORT CollectionStatus
+class AKONADI_EXPORT CollectionStatistics
 {
   public:
     /**
-      Creates a new CollectionStatus object.
+      Creates a new CollectionStatistics object.
      */
-    CollectionStatus();
+    CollectionStatistics();
 
     /**
       Copy constructor.
     */
-    CollectionStatus( const CollectionStatus &other );
+    CollectionStatistics( const CollectionStatistics &other );
 
     /**
       Destructor.
     */
-    ~CollectionStatus();
+    ~CollectionStatistics();
 
     /**
       Returns the number of objects in this collection.
@@ -88,7 +88,7 @@ class AKONADI_EXPORT CollectionStatus
       Assignment operator.
       @param other The status object to assign to @c this
     */
-    CollectionStatus& operator=( const CollectionStatus &other );
+    CollectionStatistics& operator=( const CollectionStatistics &other );
 
   private:
     class Private;
@@ -98,6 +98,6 @@ class AKONADI_EXPORT CollectionStatus
 
 }
 
-Q_DECLARE_METATYPE(Akonadi::CollectionStatus)
+Q_DECLARE_METATYPE(Akonadi::CollectionStatistics)
 
 #endif

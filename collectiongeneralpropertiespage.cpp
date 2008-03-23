@@ -33,8 +33,9 @@ CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage(QWidget * paren
 void CollectionGeneralPropertiesPage::load(const Collection & collection)
 {
   ui.nameEdit->setText( collection.name() );
-  if ( collection.status().count() >= 0 ) {
-    ui.countLabel->setText( i18np( "One object", "%1 objects", collection.status().count() ) );
+  if ( collection.statistics().count() >= 0 ) {
+    ui.countLabel->setText( i18np( "One object", "%1 objects",
+                            collection.statistics().count() ) );
   } else {
     ui.statsBox->hide();
   }

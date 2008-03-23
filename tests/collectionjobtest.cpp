@@ -325,23 +325,24 @@ void CollectionJobTest::testIllegalDeleteFolder()
   QVERIFY( !del->exec() );
 }
 
-void CollectionJobTest::testStatus()
+void CollectionJobTest::testStatistics()
 {
   // empty folder
-  CollectionStatusJob *status = new CollectionStatusJob( Collection( res1ColId ), this );
-  QVERIFY( status->exec() );
+  CollectionStatisticsJob *statistics =
+                   new CollectionStatisticsJob( Collection( res1ColId ), this );
+  QVERIFY( statistics->exec() );
 
-  CollectionStatus s = status->status();
+  CollectionStatistics s = statistics->statistics();
   QCOMPARE( s.count(), 0 );
   QCOMPARE( s.unreadCount(), 0 );
 
   // folder with attributes and content
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );;
   QVERIFY( resolver->exec() );
-  status = new CollectionStatusJob( Collection( resolver->collection() ), this );
-  QVERIFY( status->exec() );
+  statistics = new CollectionStatisticsJob( Collection( resolver->collection() ), this );
+  QVERIFY( statistics->exec() );
 
-  s = status->status();
+  s = statistics->statistics();
   QCOMPARE( s.count(), 15 );
   QCOMPARE( s.unreadCount(), 14 );
 }
@@ -471,10 +472,10 @@ void CollectionJobTest::testUtf8CollectionName()
   modify->setContentTypes( contentTypes );
   QVERIFY( modify->exec() );
 
-  // collection status
-  CollectionStatusJob *status = new CollectionStatusJob( col, this );
-  QVERIFY( status->exec() );
-  CollectionStatus s = status->status();
+  // collection statistics
+  CollectionStatisticsJob *statistics = new CollectionStatisticsJob( col, this );
+  QVERIFY( statistics->exec() );
+  CollectionStatistics s = statistics->statistics();
   QCOMPARE( s.count(), 0 );
   QCOMPARE( s.unreadCount(), 0 );
 

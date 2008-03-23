@@ -102,10 +102,10 @@ class AKONADI_EXPORT Monitor : public QObject
     void fetchCollection( bool enable );
 
     /**
-      Enable automatic fetching of changed collection status information.
+      Enable automatic fetching of changed collection statistics information.
       @param enable @c true to enable.
     */
-    void fetchCollectionStatus( bool enable );
+    void fetchCollectionStatistics( bool enable );
 
     /**
       Sets the part identifier of the parts that shall be fetched for
@@ -169,13 +169,14 @@ class AKONADI_EXPORT Monitor : public QObject
     void collectionRemoved( const Akonadi::Collection &collection );
 
     /**
-      Emitted if the status information of a monitored collection
+      Emitted if the statistics information of a monitored collection
       has changed.
       @param id The collection identifier of the changed collection.
-      @param status The updated collection status, invalid of automatic
-      fetching of status changes is disabled.
+      @param statistics The updated collection statistics, invalid if automatic
+                        fetching of statistics changes is disabled.
     */
-    void collectionStatusChanged( Akonadi::Collection::Id id, const Akonadi::CollectionStatus &status );
+    void collectionStatisticsChanged( Akonadi::Collection::Id id,
+                                      const Akonadi::CollectionStatistics &statistics );
 
   protected:
     //@cond PRIVATE
@@ -186,7 +187,7 @@ class AKONADI_EXPORT Monitor : public QObject
   private:
     Q_DECLARE_PRIVATE( Monitor )
 
-    Q_PRIVATE_SLOT( d_ptr, void slotStatusChangedFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotStatisticsChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
 
     Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessage::List &msgs ) )

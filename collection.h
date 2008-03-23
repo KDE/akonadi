@@ -216,14 +216,14 @@ class AKONADI_EXPORT Collection : public Entity
     void setCachePolicy( const CachePolicy &cachePolicy );
 
     /**
-      Returns the CollectionStatus object.
+      Returns the CollectionStatistics object.
     */
-    CollectionStatus status() const;
+    CollectionStatistics statistics() const;
 
     /**
-      Sets the CollectionStatus object for this collection.
+      Sets the CollectionStatistics object for this collection.
     */
-    void setStatus( const CollectionStatus &status );
+    void setStatistics( const CollectionStatistics &statistics );
 
     /**
       Returns the collection url

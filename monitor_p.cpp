@@ -35,7 +35,7 @@ MonitorPrivate::MonitorPrivate(Monitor * parent) :
   nm( 0 ),
   monitorAll( false ),
   fetchCollection( false ),
-  fetchCollectionStatus( false ),
+  fetchCollectionStatistics( false ),
   fetchAllParts( false )
 {
 }
@@ -86,7 +86,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
     return false;
 
   if ( msg.type() == NotificationMessage::Item ) {
-    notifyCollectionStatusWatchers( msg.parentCollection(), msg.resource() );
+    notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
     if ( (!mFetchParts.isEmpty() || fetchAllParts) &&
           ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move ) ) {
       Item item( msg.uid() );
@@ -128,7 +128,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
       return true;
     }
     if ( msg.operation() == NotificationMessage::Remove ) {
-      // no need for status updates anymore
+      // no need for statistics updates anymore
       recentlyChangedCollections.remove( msg.uid() );
     }
     emitCollectionNotification( msg );
@@ -147,24 +147,25 @@ void MonitorPrivate::sessionDestroyed( QObject * object )
     sessions.removeAll( session->sessionId() );
 }
 
-void MonitorPrivate::slotStatusChangedFinished( KJob* job )
+void MonitorPrivate::slotStatisticsChangedFinished( KJob* job )
 {
   if ( job->error() ) {
-    kWarning( 5250 ) << "Error on fetching collection status: " << job->errorText();
+    kWarning( 5250 ) << "Error on fetching collection statistics: " << job->errorText();
   } else {
-    CollectionStatusJob *statusJob = static_cast<CollectionStatusJob*>( job );
-    emit q_ptr->collectionStatusChanged( statusJob->collection().id(), statusJob->status() );
+    CollectionStatisticsJob *statisticsJob = static_cast<CollectionStatisticsJob*>( job );
+    emit q_ptr->collectionStatisticsChanged( statisticsJob->collection().id(),
+                                             statisticsJob->statistics() );
   }
 }
 
 void MonitorPrivate::slotFlushRecentlyChangedCollections()
 {
   foreach( Collection::Id collection, recentlyChangedCollections ) {
-    if ( fetchCollectionStatus ) {
-      fetchStatus( collection );
+    if ( fetchCollectionStatistics ) {
+      fetchStatistics( collection );
     } else {
-      static const CollectionStatus dummyStatus;
-      emit q_ptr->collectionStatusChanged( collection, dummyStatus );
+      static const CollectionStatistics dummyStatistics;
+      emit q_ptr->collectionStatisticsChanged( collection, dummyStatistics );
     }
   }
   recentlyChangedCollections.clear();

@@ -97,9 +97,9 @@ void Monitor::addFetchPart( const QString &identifier )
     d->mFetchParts.append( identifier );
 }
 
-void Monitor::fetchCollectionStatus(bool enable)
+void Monitor::fetchCollectionStatistics(bool enable)
 {
-  d->fetchCollectionStatus = enable;
+  d->fetchCollectionStatistics = enable;
 }
 
 void Monitor::fetchAllParts()

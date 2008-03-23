@@ -366,11 +366,11 @@ Collection CollectionModel::collectionForId(Collection::Id id) const
   return d->collections.value( id );
 }
 
-void CollectionModel::fetchCollectionStatus(bool enable)
+void CollectionModel::fetchCollectionStatistics(bool enable)
 {
   Q_D( CollectionModel );
-  d->fetchStatus = enable;
-  d->monitor->fetchCollectionStatus( enable );
+  d->fetchStatistics = enable;
+  d->monitor->fetchCollectionStatistics( enable );
 }
 
 void CollectionModel::includeUnsubscribed(bool include)

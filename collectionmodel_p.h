@@ -34,7 +34,7 @@ namespace Akonadi {
 
 
 class CollectionModel;
-class CollectionStatus;
+class CollectionStatistics;
 class Monitor;
 class Session;
 
@@ -43,7 +43,7 @@ class CollectionModelPrivate
   public:
     Q_DECLARE_PUBLIC( CollectionModel )
     CollectionModelPrivate( CollectionModel *parent )
-      : q_ptr( parent ), fetchStatus( false ), unsubscribed( false )
+      : q_ptr( parent ), fetchStatistics( false ), unsubscribed( false )
     {
     }
 
@@ -55,7 +55,7 @@ class CollectionModelPrivate
     Monitor *monitor;
     Session *session;
     QStringList mimeTypes;
-    bool fetchStatus;
+    bool fetchStatistics;
     bool unsubscribed;
 
     void init();
@@ -63,7 +63,7 @@ class CollectionModelPrivate
     void collectionRemoved( const Akonadi::Collection& );
     void collectionChanged( const Akonadi::Collection& );
     void updateDone( KJob* );
-    void collectionStatusChanged( Collection::Id, const Akonadi::CollectionStatus& );
+    void collectionStatisticsChanged( Collection::Id, const Akonadi::CollectionStatistics& );
     void listDone( KJob* );
     void editDone( KJob* );
     void dropResult( KJob* );

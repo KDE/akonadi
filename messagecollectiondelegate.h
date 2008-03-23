@@ -16,8 +16,8 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef AKONADI_MESSAGECOLLECTIONDELEGATE_H
-#define AKONADI_MESSAGECOLLECTIONDELEGATE_H
+#ifndef AKONADI_COLLECTIONSTATISTICSDELEGATE_H
+#define AKONADI_COLLECTIONSTATISTICSDELEGATE_H
 
 #include "akonadi_export.h"
 
@@ -27,11 +27,11 @@ class QTreeView;
 
 namespace Akonadi {
 
-class MessageCollectionDelegatePrivate;
+class CollectionStatisticsDelegatePrivate;
 
 /**
- * The MessageCollectionDelegate draws the unread and total count of the
- * underlying MessageCollectionModel in a special way:
+ * The CollectionStatisticsDelegate draws the unread and total count of the
+ * underlying CollectionStatisticsModel in a special way.
  *
  * <li>Collections with unread items will have the foldername and the unread
  *     column marked in bold.
@@ -40,21 +40,21 @@ class MessageCollectionDelegatePrivate;
  * <li>It has the possibility to draw the unread count directly after the
  *     foldername, see toggleUnreadAfterFolderName().
  */
-class AKONADI_EXPORT MessageCollectionDelegate : public QItemDelegate
+class AKONADI_EXPORT CollectionStatisticsDelegate : public QItemDelegate
 {
   Q_OBJECT
 
   public:
 
     /**
-     * Constructs an MessageCollectionDelegate with the given parent.
+     * Constructs an CollectionStatisticsDelegate with the given parent.
      * You still need to call setItemDelegate() yourself.
      *
      * @param parent the parent tree view, which will also take ownership
      */
-    MessageCollectionDelegate( QTreeView *parent );
+    CollectionStatisticsDelegate( QTreeView *parent );
 
-    ~MessageCollectionDelegate();
+    ~CollectionStatisticsDelegate();
 
     /**
      * Sets the color in which the unread count is drawn behind the folder name.
@@ -91,11 +91,11 @@ class AKONADI_EXPORT MessageCollectionDelegate : public QItemDelegate
     virtual void paint( QPainter *painter, const QStyleOptionViewItem &option,
                         const QModelIndex &index ) const;
 
-    MessageCollectionDelegatePrivate *d_ptr;
+    CollectionStatisticsDelegatePrivate *d_ptr;
 
   private:
 
-    Q_DECLARE_PRIVATE( MessageCollectionDelegate )
+    Q_DECLARE_PRIVATE( CollectionStatisticsDelegate )
 };
 
 }

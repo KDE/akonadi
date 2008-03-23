@@ -76,11 +76,11 @@ void MonitorTest::testMonitor()
   qRegisterMetaType<Akonadi::Collection>();
   qRegisterMetaType<Akonadi::Collection::Id>();
   qRegisterMetaType<Akonadi::Item>();
-  qRegisterMetaType<Akonadi::CollectionStatus>();
+  qRegisterMetaType<Akonadi::CollectionStatistics>();
   QSignalSpy caspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
   QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)) );
-  QSignalSpy csspy( monitor, SIGNAL(collectionStatusChanged(Akonadi::Collection::Id,Akonadi::CollectionStatus)) );
+  QSignalSpy csspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
   QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
   QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QStringList&)) );
   QSignalSpy irspy( monitor, SIGNAL(itemRemoved(const Akonadi::Item&)) );

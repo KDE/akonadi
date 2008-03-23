@@ -31,12 +31,12 @@ using namespace Akonadi;
 
 namespace Akonadi {
 
-class MessageCollectionModelPrivate : public CollectionModelPrivate
+class CollectionStatisticsModelPrivate : public CollectionModelPrivate
 {
   public:
     enum CountType { Total, Unread };
-    Q_DECLARE_PUBLIC( MessageCollectionModel )
-    MessageCollectionModelPrivate( MessageCollectionModel *parent )
+    Q_DECLARE_PUBLIC( CollectionStatisticsModel )
+    CollectionStatisticsModelPrivate( CollectionStatisticsModel *parent )
         : CollectionModelPrivate( parent )
     {}
 
@@ -45,14 +45,14 @@ class MessageCollectionModelPrivate : public CollectionModelPrivate
 
 }
 
-qint64 MessageCollectionModelPrivate::countRecursive( Collection::Id collection,
-                                                      CountType type ) const
+qint64 CollectionStatisticsModelPrivate::countRecursive( Collection::Id collection,
+                                                         CountType type ) const
 {
   qint64 result;
   switch ( type ) {
-    case Unread: result = collections.value( collection ).status().unreadCount();
+    case Unread: result = collections.value( collection ).statistics().unreadCount();
                  break;
-    case Total: result = collections.value( collection ).status().count();
+    case Total: result = collections.value( collection ).statistics().count();
                 break;
     default: Q_ASSERT( false );
              break;
@@ -65,44 +65,44 @@ qint64 MessageCollectionModelPrivate::countRecursive( Collection::Id collection,
   return result;
 }
 
-MessageCollectionModel::MessageCollectionModel( QObject * parent ) :
-    CollectionModel( new MessageCollectionModelPrivate( this ), parent )
+CollectionStatisticsModel::CollectionStatisticsModel( QObject * parent ) :
+    CollectionModel( new CollectionStatisticsModelPrivate( this ), parent )
 {
-  fetchCollectionStatus( true );
+  fetchCollectionStatistics( true );
 }
 
-int MessageCollectionModel::columnCount( const QModelIndex & parent ) const
+int CollectionStatisticsModel::columnCount( const QModelIndex & parent ) const
 {
   if ( parent.isValid() && parent.column() != 0 )
     return 0;
   return 3;
 }
 
-QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) const
+QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) const
 {
-  Q_D( const MessageCollectionModel );
+  Q_D( const CollectionStatisticsModel );
   if ( !index.isValid() )
     return QVariant();
 
   Collection col = collectionForId( CollectionModel::data( index, CollectionIdRole ).toLongLong() );
   if ( !col.isValid() )
     return QVariant();
-  CollectionStatus status = col.status();
+  CollectionStatistics statistics = col.statistics();
 
-  qint64 total = status.count();
-  qint64 unread = status.unreadCount();
+  qint64 total = statistics.count();
+  qint64 unread = statistics.unreadCount();
   qint64 totalRecursive = d->countRecursive( col.id(),
-                                             MessageCollectionModelPrivate::Total );
+                                             CollectionStatisticsModelPrivate::Total );
   qint64 unreadRecursive = d->countRecursive( col.id(),
-                                              MessageCollectionModelPrivate::Unread );
+                                              CollectionStatisticsModelPrivate::Unread );
 
-  if ( role == MessageCollectionTotalRole )
+  if ( role == CollectionStatisticsTotalRole )
     return total;
-  else if ( role == MessageCollectionUnreadRole )
+  else if ( role == CollectionStatisticsUnreadRole )
     return unread;
-  else if ( role == MessageCollectionUnreadRecursiveRole )
+  else if ( role == CollectionStatisticsUnreadRecursiveRole )
     return unreadRecursive;
-  else if ( role == MessageCollectionTotalRecursiveRole )
+  else if ( role == CollectionStatisticsTotalRecursiveRole )
     return totalRecursive;
 
   if ( role == Qt::DisplayRole &&
@@ -127,7 +127,7 @@ QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) con
   return CollectionModel::data( index, role );
 }
 
-QVariant MessageCollectionModel::headerData( int section, Qt::Orientation orientation, int role ) const
+QVariant CollectionStatisticsModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole )
     switch ( section ) {

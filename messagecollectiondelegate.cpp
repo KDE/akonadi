@@ -30,7 +30,7 @@ using namespace Akonadi;
 
 namespace Akonadi {
 
-class MessageCollectionDelegatePrivate
+class CollectionStatisticsDelegatePrivate
 {
   public:
     QModelIndex index;
@@ -38,7 +38,7 @@ class MessageCollectionDelegatePrivate
     bool drawUnreadAfterFolder;
     QColor unreadColor;
 
-    MessageCollectionDelegatePrivate( QTreeView *treeView )
+    CollectionStatisticsDelegatePrivate( QTreeView *treeView )
         : parent( treeView ), drawUnreadAfterFolder( false )
     {
       unreadColor = KColorScheme( QPalette::Active ).
@@ -48,44 +48,44 @@ class MessageCollectionDelegatePrivate
 
 }
 
-MessageCollectionDelegate::MessageCollectionDelegate( QTreeView *parent )
+CollectionStatisticsDelegate::CollectionStatisticsDelegate( QTreeView *parent )
   : QItemDelegate( parent ),
-    d_ptr( new MessageCollectionDelegatePrivate( parent ) )
+    d_ptr( new CollectionStatisticsDelegatePrivate( parent ) )
 {
 }
 
-MessageCollectionDelegate::~MessageCollectionDelegate()
+CollectionStatisticsDelegate::~CollectionStatisticsDelegate()
 {
   delete d_ptr;
   d_ptr = 0;
 }
 
-void MessageCollectionDelegate::setUnreadColor( const QColor &color )
+void CollectionStatisticsDelegate::setUnreadColor( const QColor &color )
 {
-  Q_D( MessageCollectionDelegate );
+  Q_D( CollectionStatisticsDelegate );
   d->unreadColor = color;
 }
 
-void MessageCollectionDelegate::toggleUnreadAfterFolderName( bool enable )
+void CollectionStatisticsDelegate::toggleUnreadAfterFolderName( bool enable )
 {
-  Q_D( MessageCollectionDelegate );
+  Q_D( CollectionStatisticsDelegate );
   d->drawUnreadAfterFolder = enable;
 }
 
-void MessageCollectionDelegate::paint( QPainter *painter,
-                                       const QStyleOptionViewItem &option,
-                                       const QModelIndex &index ) const
+void CollectionStatisticsDelegate::paint( QPainter *painter,
+                                          const QStyleOptionViewItem &option,
+                                          const QModelIndex &index ) const
 {
   d_ptr->index = index;
   QItemDelegate::paint( painter, option, index );
 }
 
-void MessageCollectionDelegate::drawDisplay( QPainter *painter,
-                                             const QStyleOptionViewItem &option,
-                                             const QRect &rect,
-                                             const QString &text) const
+void CollectionStatisticsDelegate::drawDisplay( QPainter *painter,
+                                                const QStyleOptionViewItem &option,
+                                                const QRect &rect,
+                                                const QString &text) const
 {
-  Q_D( const MessageCollectionDelegate );
+  Q_D( const CollectionStatisticsDelegate );
 
   // When checking if the item is expanded, we need to check that for the first
   // column, as Qt only recogises the index as expanded for the first column
@@ -96,9 +96,9 @@ void MessageCollectionDelegate::drawDisplay( QPainter *painter,
   // Draw the unread count after the folder name (in parenthesis)
   if ( d->drawUnreadAfterFolder && d->index.column() == 0 ) {
     QVariant unreadCount = d->index.model()->data( d->index,
-                           MessageCollectionModel::MessageCollectionUnreadRole );
+                           CollectionStatisticsModel::CollectionStatisticsUnreadRole );
     QVariant unreadRecursiveCount = d->index.model()->data( d->index,
-                           MessageCollectionModel::MessageCollectionUnreadRecursiveRole );
+                           CollectionStatisticsModel::CollectionStatisticsUnreadRecursiveRole );
     Q_ASSERT( unreadCount.type() == QVariant::LongLong );
     Q_ASSERT( unreadRecursiveCount.type() == QVariant::LongLong );
 
@@ -157,15 +157,15 @@ void MessageCollectionDelegate::drawDisplay( QPainter *painter,
     int role;
     if ( d->index.column() == 1 ) {
       if ( !expanded )
-        role = MessageCollectionModel::MessageCollectionUnreadRecursiveRole;
+        role = CollectionStatisticsModel::CollectionStatisticsUnreadRecursiveRole;
       else
-        role = MessageCollectionModel::MessageCollectionUnreadRole;
+        role = CollectionStatisticsModel::CollectionStatisticsUnreadRole;
     }
     else if ( d->index.column() == 2 ) {
       if ( !expanded )
-        role = MessageCollectionModel::MessageCollectionTotalRecursiveRole;
+        role = CollectionStatisticsModel::CollectionStatisticsTotalRecursiveRole;
       else
-        role = MessageCollectionModel::MessageCollectionTotalRole;
+        role = CollectionStatisticsModel::CollectionStatisticsTotalRole;
     }
 
     QVariant sum = d->index.model()->data( d->index, role );

@@ -23,7 +23,7 @@
 
 using namespace Akonadi;
 
-class CollectionStatus::Private : public QSharedData
+class CollectionStatistics::Private : public QSharedData
 {
   public:
     Private() :
@@ -44,41 +44,41 @@ class CollectionStatus::Private : public QSharedData
 };
 
 
-CollectionStatus::CollectionStatus() :
+CollectionStatistics::CollectionStatistics() :
     d( new Private )
 {
 }
 
-CollectionStatus::CollectionStatus(const CollectionStatus &other) :
+CollectionStatistics::CollectionStatistics(const CollectionStatistics &other) :
     d( other.d )
 {
 }
 
-CollectionStatus::~CollectionStatus()
+CollectionStatistics::~CollectionStatistics()
 {
 }
 
-int CollectionStatus::count( ) const
+int CollectionStatistics::count( ) const
 {
   return d->count;
 }
 
-void CollectionStatus::setCount( int count )
+void CollectionStatistics::setCount( int count )
 {
   d->count = count;
 }
 
-int CollectionStatus::unreadCount( ) const
+int CollectionStatistics::unreadCount( ) const
 {
   return d->unreadCount;
 }
 
-void CollectionStatus::setUnreadCount( int count )
+void CollectionStatistics::setUnreadCount( int count )
 {
   d->unreadCount = count;
 }
 
-CollectionStatus& CollectionStatus::operator =(const CollectionStatus & other)
+CollectionStatistics& CollectionStatistics::operator =(const CollectionStatistics & other)
 {
   d = other.d;
   return *this;

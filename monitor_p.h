@@ -84,7 +84,7 @@ class MonitorPrivate
 
     // private slots
     void sessionDestroyed( QObject* );
-    void slotStatusChangedFinished( KJob* );
+    void slotStatisticsChangedFinished( KJob* );
     void slotFlushRecentlyChangedCollections();
 
     virtual void slotNotify( const NotificationMessage::List &msgs );
@@ -97,11 +97,11 @@ class MonitorPrivate
                                      const Collection &par = Collection() );
 
     bool fetchCollection;
-    bool fetchCollectionStatus;
+    bool fetchCollectionStatistics;
     bool fetchAllParts;
 
   private:
-    // collections that need a status update
+    // collections that need a statistics update
     QSet<Collection::Id> recentlyChangedCollections;
 
     bool isCollectionMonitored( Collection::Id collection ) const
@@ -130,13 +130,13 @@ class MonitorPrivate
       return false;
     }
 
-    void fetchStatus( Collection::Id colId )
+    void fetchStatistics( Collection::Id colId )
     {
-      CollectionStatusJob *job = new CollectionStatusJob( Collection( colId ), q_ptr );
-      QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotStatusChangedFinished(KJob*)) );
+      CollectionStatisticsJob *job = new CollectionStatisticsJob( Collection( colId ), q_ptr );
+      QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotStatisticsChangedFinished(KJob*)) );
     }
 
-    void notifyCollectionStatusWatchers( Collection::Id collection, const QByteArray &resource )
+    void notifyCollectionStatisticsWatchers( Collection::Id collection, const QByteArray &resource )
     {
       if ( isCollectionMonitored( collection, resource ) ) {
         if (recentlyChangedCollections.empty() )
