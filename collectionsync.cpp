@@ -138,12 +138,9 @@ void CollectionSync::slotLocalListDone(KJob * job)
     }
 
     // update local collection
-    if ( c.name() != local.name() ) { // ### real collection comparison
-      d->pendingJobs++;
-      CollectionModifyJob *mod = new CollectionModifyJob( local, this );
-      mod->setName( c.name() );
-      connect( mod, SIGNAL(result(KJob*)), SLOT(slotLocalChangeDone(KJob*)) );
-    }
+    d->pendingJobs++;
+    CollectionModifyJob *mod = new CollectionModifyJob( local, this );
+    connect( mod, SIGNAL(result(KJob*)), SLOT(slotLocalChangeDone(KJob*)) );
   }
 
   // removed

@@ -393,8 +393,9 @@ void CollectionJobTest::testModify()
 
 void CollectionJobTest::testMove()
 {
-  CollectionModifyJob *mod = new CollectionModifyJob( Collection( res1ColId ), this );
-  mod->setParent( Collection( res2ColId ) );
+  Collection col( res1ColId );
+  col.setParent( res2ColId );
+  CollectionModifyJob *mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
   CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res2ColId ), CollectionFetchJob::Recursive );
@@ -412,36 +413,40 @@ void CollectionJobTest::testMove()
   list = ljob->collections();
 
   QCOMPARE( list.count(), 1 );
-  Collection col = list.first();
+  col = list.first();
   QCOMPARE( col.name(), QLatin1String("res1") );
   QCOMPARE( col.parent(), res2ColId );
 
   // cleanup
-  mod = new CollectionModifyJob( Collection( res1ColId ), this );
-  mod->setParent( Collection::root() );
+  col.setParent( Collection::root() );
+  mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 }
 
 void CollectionJobTest::testIllegalModify()
 {
   // non-existing collection
-  CollectionModifyJob *mod = new CollectionModifyJob( Collection( INT_MAX ), this );
-  mod->setParent( Collection( res1ColId ) );
+  Collection col( INT_MAX );
+  col.setParent( res1ColId );
+  CollectionModifyJob *mod = new CollectionModifyJob( col, this );
   QVERIFY( !mod->exec() );
 
   // rename to already existing name
-  mod = new CollectionModifyJob( Collection( res1ColId ), this );
-  mod->setName( "res2" );
+  col = Collection( res1ColId );
+  col.setName( "res2" );
+  mod = new CollectionModifyJob( col, this );
   QVERIFY( !mod->exec() );
 
   // move to non-existing target
-  mod = new CollectionModifyJob( Collection( res1ColId ), this );
-  mod->setParent( Collection( INT_MAX ) );
+  col = Collection( res1ColId );
+  col.setParent( INT_MAX );
+  mod = new CollectionModifyJob( col, this );
   QVERIFY( !mod->exec() );
 
   // moving root
-  mod = new CollectionModifyJob( Collection::root(), this );
-  mod->setParent( Collection( INT_MAX ) );
+  col = Collection::root();
+  col.setParent( res1ColId );
+  mod = new CollectionModifyJob( col, this );
   QVERIFY( !mod->exec() );
 }
 

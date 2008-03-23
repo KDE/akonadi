@@ -84,8 +84,8 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
     if ( Collection::urlIsValid( url ) ) {
       Collection col = Collection::fromUrl( url );
       if ( !copy ) {
+        col.setParent( collection );
         CollectionModifyJob *job = new CollectionModifyJob( col, transaction );
-        job->setParent( collection );
       } else {
         new CollectionCopyJob( col, collection, transaction );
       }

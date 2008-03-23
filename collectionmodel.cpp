@@ -245,8 +245,8 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
     Collection col = d->collections.value( index.internalId() );
     if ( !col.isValid() || value.toString().isEmpty() )
       return false;
+    col.setName( value.toString() );
     CollectionModifyJob *job = new CollectionModifyJob( col, d->session );
-    job->setName( value.toString() );
     connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
     return true;
   }

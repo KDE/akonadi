@@ -61,18 +61,6 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
     */
     void setCachePolicy( const CachePolicy &policy );
 
-    /**
-      Changes name of this collection.
-      @param name The new name.
-    */
-    void setName( const QString &name );
-
-    /**
-      Changes the parent of this collection.
-      @param parent The new parent collection.
-    */
-    void setParent( const Collection &parent );
-
   protected:
     virtual void doStart();
 

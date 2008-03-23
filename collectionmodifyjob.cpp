@@ -38,8 +38,6 @@ class Akonadi::CollectionModifyJobPrivate : public JobPrivate
     CachePolicy mPolicy;
     bool mSetMimeTypes;
     bool mSetPolicy;
-    QString mName;
-    Collection mParent;
 };
 
 CollectionModifyJob::CollectionModifyJob( const Collection &collection, QObject * parent )
@@ -69,10 +67,10 @@ void CollectionModifyJob::doStart()
     foreach( QString s, d->mMimeTypes ) bList << s.toLatin1();
     changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
   }
-  if ( d->mParent.isValid() )
-    changes += " PARENT " + QByteArray::number( d->mParent.id() );
-  if ( !d->mName.isEmpty() )
-    changes += " NAME \"" + d->mName.toUtf8() + '"';
+  if ( d->mCollection.parent() >= 0 )
+    changes += " PARENT " + QByteArray::number( d->mCollection.parent() );
+  if ( !d->mCollection.name().isEmpty() )
+    changes += " NAME " + ImapParser::quote( d->mCollection.name().toUtf8() );
   if ( !d->mCollection.remoteId().isNull() )
     changes += " REMOTEID \"" + d->mCollection.remoteId().toUtf8() + '"';
   if ( d->mSetPolicy )
@@ -103,20 +101,6 @@ void CollectionModifyJob::setCachePolicy( const CachePolicy &policy )
 
   d->mPolicy = policy;
   d->mSetPolicy = true;
-}
-
-void CollectionModifyJob::setName(const QString & name)
-{
-  Q_D( CollectionModifyJob );
-
-  d->mName = name;
-}
-
-void CollectionModifyJob::setParent(const Collection & parent)
-{
-  Q_D( CollectionModifyJob );
-
-  d->mParent = parent;
 }
 
 #include "collectionmodifyjob.moc"

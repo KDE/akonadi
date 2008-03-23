@@ -196,8 +196,8 @@ void MonitorTest::testMonitor()
   imspy.clear();
 
   // modify a collection
+  monitorCol.setName( "changed name" );
   CollectionModifyJob *mod = new CollectionModifyJob( monitorCol, this );
-  mod->setName( "changed name" );
   QVERIFY( mod->exec() );
   QTest::qWait(1000);
 
