@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionstatusjob.h"
+#include "collectionstatisticsjob.h"
 #include "imapparser_p.h"
 #include "job_p.h"
 
@@ -100,4 +100,4 @@ CollectionStatistics Akonadi::CollectionStatisticsJob::statistics() const
   return d->mStatistics;
 }
 
-#include "collectionstatusjob.moc"
+#include "collectionstatisticsjob.moc"

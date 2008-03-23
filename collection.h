@@ -22,7 +22,7 @@
 
 #include "akonadi_export.h"
 #include <akonadi/cachepolicy.h>
-#include <akonadi/collectionstatus.h>
+#include <akonadi/collectionstatistics.h>
 #include <akonadi/entity.h>
 
 #include <QtCore/QSharedDataPointer>

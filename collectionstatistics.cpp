@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionstatus.h"
+#include "collectionstatistics.h"
 
 #include <QtCore/QSharedData>
 

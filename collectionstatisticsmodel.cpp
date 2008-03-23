@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "messagecollectionmodel.h"
+#include "collectionstatisticsmodel.h"
 
 #include "collection.h"
 #include "collectionmodel_p.h"
@@ -138,4 +138,4 @@ QVariant CollectionStatisticsModel::headerData( int section, Qt::Orientation ori
   return CollectionModel::headerData( section, orientation, role );
 }
 
-#include "messagecollectionmodel.moc"
+#include "collectionstatisticsmodel.moc"

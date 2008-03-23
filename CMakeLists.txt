@@ -81,12 +81,10 @@ set( akonadikde_LIB_SRC
   collectionpropertiespage.cpp
   collectionrightsattribute.cpp
   collectionselectjob.cpp
-#  collectionstatisticsdelegate.cpp
-#  collectionstatisticsmodel.cpp
-#collectionstatistics.cpp
-# collectionstatisticsjob.cpp
-messagecollectionmodel.cpp messagecollectiondelegate.cpp
-collectionstatus.cpp collectionstatusjob.cpp
+  collectionstatisticsdelegate.cpp
+  collectionstatisticsmodel.cpp
+  collectionstatistics.cpp
+  collectionstatisticsjob.cpp
   collectionsync.cpp
   collectionview.cpp
   control.cpp
@@ -178,12 +176,10 @@ install( FILES
   collectionpropertiesdialog.h
   collectionpropertiespage.h
   collectionselectjob.h
-#  collectionstatisticsdelegate.h
-#  collectionstatisticsmodel.h
-#collectionstatistics.h
-# collectionstatisticsjob.h
-messagecollectionmodel.h messagecollectiondelegate.h
-collectionstatus.h collectionstatusjob.h
+  collectionstatisticsdelegate.h
+  collectionstatisticsmodel.h
+  collectionstatistics.h
+  collectionstatisticsjob.h
   collectionview.h
   control.h
   entity.h

@@ -24,7 +24,7 @@
 
 #include "monitor.h"
 #include "collection.h"
-#include "collectionstatusjob.h"
+#include "collectionstatisticsjob.h"
 #include "item.h"
 #include "job.h"
 #include "notificationmanagerinterface.h"

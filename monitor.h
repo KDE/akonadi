@@ -21,7 +21,7 @@
 #define AKONADI_MONITOR_H
 
 #include <akonadi/collection.h>
-#include <akonadi/collectionstatus.h>
+#include <akonadi/collectionstatistics.h>
 #include <akonadi/item.h>
 #include <akonadi/job.h>
 #include <QtCore/QObject>

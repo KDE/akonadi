@@ -22,7 +22,7 @@
 
 #include "akonadi_export.h"
 #include <akonadi/collection.h>
-#include <akonadi/collectionstatus.h>
+#include <akonadi/collectionstatistics.h>
 #include <akonadi/job.h>
 
 namespace Akonadi {

@@ -16,9 +16,9 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#include "messagecollectiondelegate.h"
+#include "collectionstatisticsdelegate.h"
 
-#include "messagecollectionmodel.h"
+#include "collectionstatisticsmodel.h"
 
 #include <kcolorscheme.h>
 #include <kdebug.h>
