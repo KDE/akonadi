@@ -175,7 +175,6 @@ install( FILES
   collectionpathresolver.h
   collectionpropertiesdialog.h
   collectionpropertiespage.h
-  collectionselectjob.h
   collectionstatisticsdelegate.h
   collectionstatisticsmodel.h
   collectionstatistics.h
