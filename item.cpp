@@ -31,37 +31,28 @@ const QLatin1String Item::PartEnvelope = QLatin1String( "ENVELOPE" );
 const QLatin1String Item::PartHeader = QLatin1String( "HEAD" );
 
 Item::Item()
-  : Entity( new ItemPrivate ),
-    m_payload( 0 )
+  : Entity( new ItemPrivate )
 {
 }
 
 Item::Item( Id id )
-  : Entity( new ItemPrivate( id ) ),
-    m_payload( 0 )
+  : Entity( new ItemPrivate( id ) )
 {
 }
 
 Item::Item( const QString & mimeType )
-  : Entity( new ItemPrivate ),
-    m_payload( 0 )
+  : Entity( new ItemPrivate )
 {
   d_func()->mMimeType = mimeType;
 }
 
 Item::Item( const Item &other )
-  : Entity( other ),
-    m_payload( 0 )
+  : Entity( other )
 {
-  if ( other.m_payload )
-    m_payload = other.m_payload->clone();
-  else
-    m_payload = 0;
 }
 
 Item::~Item()
 {
-  delete m_payload;
 }
 
 Item::Flags Item::flags() const
@@ -134,22 +125,9 @@ void Item::setMimeType( const QString & mimeType )
   d_func()->mMimeType = mimeType;
 }
 
-Item& Item::operator=( const Item & other )
-{
-  if ( this != &other ) {
-    Entity::operator=( other );
-    if ( other.m_payload )
-      m_payload = other.m_payload->clone();
-    else
-      m_payload = 0;
-  }
-
-  return *this;
-}
-
 bool Item::hasPayload() const
 {
-  return m_payload != 0;
+  return d_func()->mPayload != 0;
 }
 
 KUrl Item::url( UrlType type ) const
@@ -172,6 +150,18 @@ Item Item::fromUrl( const KUrl &url )
 bool Item::urlIsValid( const KUrl &url )
 {
   return url.protocol() == QString::fromLatin1("akonadi") && url.queryItems().contains( QString::fromLatin1("item") );
+}
+
+PayloadBase* Item::payloadBase() const
+{
+  return d_func()->mPayload;
+}
+
+void Item::setPayloadBase( PayloadBase* p )
+{
+  Q_D( Item );
+  delete d->mPayload;
+  d->mPayload = p;
 }
 
 AKONADI_DEFINE_PRIVATE( Item )

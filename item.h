@@ -184,11 +184,6 @@ class AKONADI_EXPORT Item : public Entity
     void setMimeType( const QString &mimeType );
 
     /**
-      Assignment operator.
-    */
-    Item& operator=( const Item &other );
-
-    /**
       Sets the payload object of this PIM item.
       The payload MUST NOT be a pointer, use a boost::shared_ptr instead.
       The payload should be an implicitly shared class.
@@ -196,7 +191,7 @@ class AKONADI_EXPORT Item : public Entity
     template <typename T>
     void setPayload( T p )
     {
-            m_payload = new Payload<T>( p );
+      setPayloadBase( new Payload<T>( p ) );
     }
 
     /**
@@ -206,16 +201,16 @@ class AKONADI_EXPORT Item : public Entity
     template <typename T>
     T payload()
     {
-        if ( !m_payload ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "No valid payload set.");
+        if ( !payloadBase() ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "No valid payload set.");
 
-        Payload<T> *p = dynamic_cast<Payload<T>*>(m_payload);
+        Payload<T> *p = dynamic_cast<Payload<T>*>( payloadBase() );
         // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
-        if ( !p && strcmp( m_payload->typeName(), typeid(p).name() ) == 0 ) {
-          p = reinterpret_cast<Payload<T>*>( m_payload );
+        if ( !p && strcmp( payloadBase()->typeName(), typeid(p).name() ) == 0 ) {
+          p = reinterpret_cast<Payload<T>*>( payloadBase() );
         }
         if ( !p )
           qFatal( "Akonadi::Item::payload(): Wrong payload type (is '%s', requested '%s')",
-                  m_payload->typeName(), typeid(p).name() );
+                  payloadBase()->typeName(), typeid(p).name() );
         return p->payload;
     }
 
@@ -242,10 +237,10 @@ class AKONADI_EXPORT Item : public Entity
     {
         if ( !hasPayload() )
           return false;
-        Payload<T> *p = dynamic_cast<Payload<T>*>(m_payload);
+        Payload<T> *p = dynamic_cast<Payload<T>*>( payloadBase() );
         // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
-        if ( !p && strcmp( m_payload->typeName(), typeid(p).name() ) == 0 ) {
-          p = reinterpret_cast<Payload<T>*>( m_payload );
+        if ( !p && strcmp( payloadBase()->typeName(), typeid(p).name() ) == 0 ) {
+          p = reinterpret_cast<Payload<T>*>( payloadBase() );
         }
         return p;
     }
@@ -271,8 +266,9 @@ class AKONADI_EXPORT Item : public Entity
 
   private:
     friend class ItemModifyJob;
+    PayloadBase* payloadBase() const;
+    void setPayloadBase( PayloadBase* );
     AKONADI_DECLARE_PRIVATE( Item )
-    PayloadBase*  m_payload; // krazy:exclude=dpointer
 };
 
 }

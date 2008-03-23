@@ -23,6 +23,7 @@
 #include <QtCore/QMap>
 
 #include "entity_p.h"
+#include "itempayloadinternals_p.h"
 
 namespace Akonadi {
 
@@ -31,6 +32,7 @@ class ItemPrivate : public EntityPrivate
   public:
     ItemPrivate( Item::Id id = -1 )
       : EntityPrivate( id ),
+        mPayload( 0 ),
         mRevision( -1 )
     {
     }
@@ -41,6 +43,15 @@ class ItemPrivate : public EntityPrivate
       mFlags = other.mFlags;
       mRevision = other.mRevision;
       mMimeType = other.mMimeType;
+      if ( other.mPayload )
+        mPayload = other.mPayload->clone();
+      else
+        mPayload = 0;
+    }
+
+    ~ItemPrivate()
+    {
+      delete mPayload;
     }
 
     EntityPrivate *clone() const
@@ -48,6 +59,7 @@ class ItemPrivate : public EntityPrivate
       return new ItemPrivate( *this );
     }
 
+    PayloadBase*  mPayload;
     Item::Flags mFlags;
     int mRevision;
     QString mMimeType;

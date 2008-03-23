@@ -93,7 +93,7 @@ class AKONADI_EXPORT Entity
     bool operator!=( const Entity &other ) const;
 
     /**
-     * @internal
+     * Assignment operator.
      */
     Entity& operator=( const Entity &other );
 
