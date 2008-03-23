@@ -85,7 +85,7 @@ void MessageCollectionDelegate::drawDisplay( QPainter *painter,
                                              const QRect &rect,
                                              const QString &text) const
 {
-  const Q_D( MessageCollectionDelegate );
+  Q_D( const MessageCollectionDelegate );
 
   // When checking if the item is expanded, we need to check that for the first
   // column, as Qt only recogises the index as expanded for the first column

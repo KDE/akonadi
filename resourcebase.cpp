@@ -244,7 +244,7 @@ void ResourceBase::setName( const QString &name )
 
 QString ResourceBase::name() const
 {
-  const Q_D( ResourceBase );
+  Q_D( const ResourceBase );
   if ( d->mName.isEmpty() )
     return d->mId;
   else
@@ -457,7 +457,7 @@ void ResourceBase::itemsRetrieved()
 
 Collection ResourceBase::currentCollection() const
 {
-  const Q_D( ResourceBase );
+  Q_D( const ResourceBase );
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection ,
               "ResourceBase::currentCollection()",
               "Trying to access current collection although no item retrieval is in progress" );

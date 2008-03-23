@@ -72,7 +72,7 @@ int CollectionModel::columnCount( const QModelIndex & parent ) const
 
 QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 {
-  const Q_D( CollectionModel );
+  Q_D( const CollectionModel );
   if ( !index.isValid() )
     return QVariant();
 
@@ -125,7 +125,7 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 
 QModelIndex CollectionModel::index( int row, int column, const QModelIndex & parent ) const
 {
-  const Q_D( CollectionModel );
+  Q_D( const CollectionModel );
   if (column >= columnCount() || column < 0) return QModelIndex();
 
   QList<Collection::Id> list;
@@ -147,7 +147,7 @@ QModelIndex CollectionModel::index( int row, int column, const QModelIndex & par
 
 QModelIndex CollectionModel::parent( const QModelIndex & index ) const
 {
-  const Q_D( CollectionModel );
+  Q_D( const CollectionModel );
   if ( !index.isValid() )
     return QModelIndex();
 
@@ -255,7 +255,7 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
 
 Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 {
-  const Q_D( CollectionModel );
+  Q_D( const CollectionModel );
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
   flags = flags | Qt::ItemIsDragEnabled;
@@ -282,7 +282,7 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 
 bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
 {
-  const Q_D( CollectionModel );
+  Q_D( const CollectionModel );
   if ( !parent.isValid() )
     return false; // FIXME: creation of top-level collections??
 
@@ -362,7 +362,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 
 Collection CollectionModel::collectionForId(Collection::Id id) const
 {
-  const Q_D( CollectionModel );
+  Q_D( const CollectionModel );
   return d->collections.value( id );
 }
 

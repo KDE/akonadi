@@ -150,7 +150,7 @@ void ChangeRecorder::replayNext()
 
 bool ChangeRecorder::isEmpty() const
 {
-  const Q_D( ChangeRecorder );
+  Q_D( const ChangeRecorder );
   return d->pendingNotifications.isEmpty();
 }
 

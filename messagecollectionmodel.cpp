@@ -80,7 +80,7 @@ int MessageCollectionModel::columnCount( const QModelIndex & parent ) const
 
 QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) const
 {
-  const Q_D( MessageCollectionModel );
+  Q_D( const MessageCollectionModel );
   if ( !index.isValid() )
     return QVariant();
 
