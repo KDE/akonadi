@@ -86,6 +86,7 @@ void CollectionStatisticsDelegate::drawDisplay( QPainter *painter,
 
   // Draw the unread count after the folder name (in parenthesis)
   if ( d->drawUnreadAfterFolder && d->index.column() == 0 ) {
+
     QVariant unreadCount = d->index.model()->data( d->index,
                            CollectionStatisticsModel::CollectionStatisticsUnreadRole );
     QVariant unreadRecursiveCount = d->index.model()->data( d->index,
@@ -109,6 +110,7 @@ void CollectionStatisticsDelegate::drawDisplay( QPainter *painter,
     }
 
     painter->save();
+    QItemDelegate::drawDisplay( painter, option, rect, QString() );
 
     if ( !unread.isEmpty() ) {
       QFont font = painter->font();
