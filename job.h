@@ -207,7 +207,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
 
   protected:
     //@cond PRIVATE
-    Job( JobPrivate *dd, QObject *parent = 0 );
+    Job( JobPrivate *dd, QObject *parent );
     JobPrivate* const d_ptr;
     //@endcond
 

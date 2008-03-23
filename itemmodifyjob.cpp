@@ -79,7 +79,7 @@ class Akonadi::ItemModifyJobPrivate : public JobPrivate
 };
 
 ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
-  : Job( new ItemModifyJobPrivate( this, item ) )
+  : Job( new ItemModifyJobPrivate( this, item ), parent )
 {
   Q_D( ItemModifyJob );
 
