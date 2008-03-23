@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+It comes with ABSOLUTELY NO WARRANTY, to the extent permitted by law. You may
+redistribute copies of update-mime-database under the terms of the GNU General
+Public License. For more information about these matters, see the file named
+COPYING.
+-->
+<!--
+Notes:
+- the mime types in this file are valid with the version 0.20 of the
+  shared-mime-info package.
+- the "fdo #xxxxx" are the wish in the freedesktop.org bug database to include
+  the mime type there.
+-->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-vnd.akonadi.calendar.event">
+    <sub-class-of type="text/calendar"/>
+    <comment>iCal Calendar Event Component</comment>
+  </mime-type>
+  <mime-type type="application/x-vnd.akonadi.calendar.freebusy">
+    <sub-class-of type="text/calendar"/>
+    <comment>iCal Calendar FreeBusy Component</comment>
+  </mime-type>
+  <mime-type type="application/x-vnd.akonadi.calendar.journal">
+    <sub-class-of type="text/calendar"/>
+    <comment>iCal Calendar Journal Component</comment>
+  </mime-type>
+  <mime-type type="application/x-vnd.akonadi.calendar.todo">
+    <sub-class-of type="text/calendar"/>
+    <comment>iCal Calendar TODO Component</comment>
+  </mime-type>
+</mime-info>
