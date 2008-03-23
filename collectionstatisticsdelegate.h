@@ -56,14 +56,6 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QItemDelegate
 
     ~CollectionStatisticsDelegate();
 
-    /**
-     * Sets the color in which the unread count is drawn behind the folder name.
-     * The default is KColorScheme::LinkText.
-     * 
-     * @param color the color for the unread count
-     */
-    void setUnreadColor( const QColor &color );
-
   public Q_SLOTS:
 
     /**
