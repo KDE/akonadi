@@ -11,8 +11,6 @@ macro_log_feature( MYSQLD_EXECUTABLE "MySQL Server" "Database server" "http://ww
 
 include_directories( ${CMAKE_BINARY_DIR}/akonadi )
 include_directories( ${CMAKE_SOURCE_DIR}/akonadi )
-# needed for akonadi_export.h
-include_directories( ${CMAKE_SOURCE_DIR}/akonadi/libakonadi )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
