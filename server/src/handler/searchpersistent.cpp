@@ -27,7 +27,7 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 #include "handlerhelper.h"
-#include "xesammanager.h"
+#include "abstractsearchmanager.h"
 
 #include <QtCore/QStringList>
 
@@ -68,8 +68,8 @@ bool SearchPersistent::handleLine( const QByteArray& line )
   if ( !db->appendLocation( l ) )
     return failureResponse( "Unable to create persistent search" );
 
-  if ( !XesamManager::instance()->addSearch( l ) )
-    return failureResponse( "Unable to start XESAM search" );
+  if ( !AbstractSearchManager::instance()->addSearch( l ) )
+    return failureResponse( "Unable to add search to search manager" );
 
   if ( !transaction.commit() )
     return failureResponse( "Unable to commit transaction" );

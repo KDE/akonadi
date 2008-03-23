@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_XESAMMANAGER_H
-#define AKONADI_XESAMMANAGER_H
+#ifndef AKONADI_NEPOMUKMANAGER_H
+#define AKONADI_NEPOMUKMANAGER_H
 
 #include <QtCore/QHash>
 #include <QtCore/QMutex>
@@ -26,16 +26,18 @@
 
 #include "abstractsearchmanager.h"
 
-class OrgFreedesktopXesamSearchInterface;
+#include "searchinterface.h"
+#include "searchqueryinterface.h"
 
 namespace Akonadi {
 
-class XesamManager : public QObject, public AbstractSearchManager
+class NepomukManager : public QObject, public AbstractSearchManager
 {
   Q_OBJECT
+
   public:
-    XesamManager( QObject* parent = 0 );
-    ~XesamManager();
+    NepomukManager( QObject* parent = 0 );
+    ~NepomukManager();
 
     bool addSearch( const Location &location );
     bool removeSearch( qint64 location );
@@ -43,20 +45,19 @@ class XesamManager : public QObject, public AbstractSearchManager
   private:
     void reloadSearches();
     void stopSearches();
-    qint64 uriToItemId( const QString &uri );
 
-  private slots:
-    void slotHitsAdded( const QString &search, int count );
-    void slotHitsRemoved( const QString &search, const QList<int> &hits );
-    void slotHitsModified( const QString &search, const QList<int> &hits );
+  private Q_SLOTS:
+    void hitsAdded( const QStringList &hits );
+    void hitsRemoved( const QStringList &hits );
 
   private:
-    OrgFreedesktopXesamSearchInterface *mInterface;
-    QString mSession;
-    QHash<QString,int> mSearchMap;
-    QHash<int,QString> mInvSearchMap;
-    QMutex mMutex;
     bool mValid;
+    QMutex mMutex;
+
+    QHash<org::kde::Akonadi::SearchQuery*, qint64> mQueryMap;
+    QHash<qint64, org::kde::Akonadi::SearchQuery*> mQueryInvMap;
+
+    org::kde::Akonadi::Search *mSearchInterface;
 };
 
 }

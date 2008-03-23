@@ -30,6 +30,7 @@
 #include "resourcemanager.h"
 #include "tracer.h"
 #include "xesammanager.h"
+#include "nepomukmanager.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -110,7 +111,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     mIntervalChecker = new IntervalCheck( this );
     mIntervalChecker->start( QThread::IdlePriority );
 
-    mXesamManager = new XesamManager( this );
+    mSearchManager = new DummySearchManager;
 
     new ServerAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );
@@ -140,8 +141,8 @@ void AkonadiServer::quit()
     if ( mIntervalChecker )
       mIntervalChecker->wait();
 
-    delete mXesamManager;
-    mXesamManager = 0;
+    delete mSearchManager;
+    mSearchManager = 0;
 
     for ( int i = 0; i < mConnections.count(); ++i ) {
       if ( mConnections[ i ] ) {

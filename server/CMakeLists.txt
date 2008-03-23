@@ -98,7 +98,9 @@ set(libakonadiprivate_SRCS
   src/notificationmanager.cpp
   src/resourcemanager.cpp
   src/cachecleaner.cpp
+  src/abstractsearchmanager.cpp
   src/xesammanager.cpp
+  src/nepomukmanager.cpp
 )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
@@ -109,6 +111,9 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
 
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.AgentManager.xml ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Resource.xml )
+qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Search.xml searchinterface )
+qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.SearchQuery.xml searchqueryinterface )
+qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface )
 
 set(xesam_xml  interfaces/org.freedesktop.xesam.Search.xml)
 

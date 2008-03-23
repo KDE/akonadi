@@ -20,14 +20,14 @@
 #include "xesammanager.h"
 
 #include "storage/datastore.h"
+#include "entities.h"
+
 #include "xesaminterface.h"
 #include "xesamtypes.h"
 
 #include <QDebug>
 
 using namespace Akonadi;
-
-XesamManager* XesamManager::mInstance = 0;
 
 XesamManager::XesamManager(QObject * parent) :
     QObject( parent ),
@@ -68,7 +68,6 @@ XesamManager::~XesamManager()
   stopSearches();
   if ( !mSession.isEmpty() )
     mInterface->CloseSession( mSession );
-  mInstance = 0;
 }
 
 void XesamManager::slotHitsAdded(const QString & search, int count)

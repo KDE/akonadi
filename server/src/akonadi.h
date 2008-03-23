@@ -38,7 +38,7 @@ namespace Akonadi {
 
 class AkonadiConnection;
 class CacheCleaner;
-class XesamManager;
+class AbstractSearchManager;
 
 #ifdef Q_OS_WIN
 class AKONADIPRIVATE_EXPORT AkonadiServer: public QTcpServer
@@ -75,7 +75,7 @@ class AKONADIPRIVATE_EXPORT AkonadiServer: public KLocalSocketServer
     IntervalCheck *mIntervalChecker;
     QProcess *mDatabaseProcess;
     QList< QPointer<AkonadiConnection> > mConnections;
-    XesamManager *mXesamManager;
+    AbstractSearchManager *mSearchManager;
 };
 
 }
