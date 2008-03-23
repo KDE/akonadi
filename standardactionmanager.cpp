@@ -126,7 +126,7 @@ class StandardActionManager::Private
       if ( singleColSelected && selectedIndex.isValid() ) {
         const Collection col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
         enableAction( CreateCollection, selectedIndex.data( CollectionModel::ChildCreatableRole ).toBool() );
-        enableAction( DeleteCollections, col.type() == Collection::Folder || col.type() == Collection::Structural );
+        enableAction( DeleteCollections, col.type() != Collection::Resource && col.type() != Collection::VirtualParent );
         enableAction( SynchronizeCollections, col.type() == Collection::Folder || col.type() == Collection::Resource );
         enableAction( Paste, PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
       } else {
@@ -191,8 +191,13 @@ class StandardActionManager::Private
       const QModelIndex index = collectionSelectionModel->currentIndex();
       if ( !index.isValid() )
         return;
-      if ( KMessageBox::questionYesNo( parentWidget,
-           i18n( "Do you really want to delete folder '%1' and all its sub-folders?", index.data().toString() ),
+
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      QString text = i18n( "Do you really want to delete folder '%1' and all its sub-folders?", index.data().toString() );
+      if ( collection.type() == Collection::Virtual )
+        text = i18n( "Do you really want to delete the search view '%1'?", index.data().toString() );
+
+      if ( KMessageBox::questionYesNo( parentWidget, text,
            i18n("Delete folder?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;

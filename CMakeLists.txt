@@ -207,6 +207,8 @@ install( FILES
   shareddatapointer.h
   standardactionmanager.h
   transactionjobs.h
+  # temporary test
+  searchcreatejob.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi
 )
 
