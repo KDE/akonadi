@@ -95,12 +95,12 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Reimplemented from QAbstractItemModel.
     */
-    bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
+    virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
 
     /**
       Reimplemented from QAbstractItemModel.
     */
-    Qt::ItemFlags flags( const QModelIndex &index ) const;
+    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
     /**
       Reimplemented from QAbstractItemModel.
@@ -148,6 +148,8 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
 
     Akonadi::CollectionModelPrivate *d_ptr;
 
+    explicit CollectionModel( CollectionModelPrivate *d, QObject *parent = 0 );
+
   private:
     /**
       Helper function to generate a model index for a given collection reference.
@@ -177,7 +179,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
   private:
     Q_DECLARE_PRIVATE( CollectionModel )
 
-    Q_PRIVATE_SLOT( d_func(), void init() )
+    Q_PRIVATE_SLOT( d_func(), void startFirstListJob() )
     Q_PRIVATE_SLOT( d_func(), void collectionRemoved( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void collectionChanged( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void updateDone( KJob* ) )

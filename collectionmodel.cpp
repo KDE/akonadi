@@ -26,12 +26,11 @@
 #include "session.h"
 
 #include <kdebug.h>
-#include <kiconloader.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <kiconloader.h>
 
 #include <QtCore/QMimeData>
-#include <QtCore/QTimer>
 #include <QtGui/QPixmap>
 
 using namespace Akonadi;
@@ -41,17 +40,15 @@ CollectionModel::CollectionModel( QObject * parent ) :
     d_ptr( new CollectionModelPrivate( this ) )
 {
   Q_D( CollectionModel );
-  d->session = new Session( QByteArray("CollectionModel-") + QByteArray::number( qrand() ), this );
-  QTimer::singleShot( 0, this, SLOT(init()) );
+  d->init();
+}
 
-  // monitor collection changes
-  d->monitor = new Monitor();
-  d->monitor->monitorCollection( Collection::root() );
-  d->monitor->fetchCollection( true );
-
-  // ### Hack to get the kmail resource folder icons
-  KIconLoader::global()->addAppDir( QLatin1String( "kmail" ) );
-  KIconLoader::global()->addAppDir( QLatin1String( "kdepim" ) );
+CollectionModel::CollectionModel( CollectionModelPrivate *d,
+                                  QObject *parent )
+  : QAbstractItemModel( parent ),
+    d_ptr( d )
+{
+  d->init();
 }
 
 CollectionModel::~CollectionModel()

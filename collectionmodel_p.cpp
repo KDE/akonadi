@@ -29,8 +29,10 @@
 
 #include <kdebug.h>
 #include <kjob.h>
+#include <kiconloader.h>
 
 #include <QtCore/QModelIndex>
+#include <QtCore/QTimer>
 
 using namespace Akonadi;
 
@@ -185,12 +187,17 @@ void CollectionModelPrivate::init()
 {
   Q_Q( CollectionModel );
 
-  // start a list job
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, session );
-  job->includeUnsubscribed( unsubscribed );
-  q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-              q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
-  q->connect( job, SIGNAL(result(KJob*)), q, SLOT(listDone(KJob*)) );
+  session = new Session( QByteArray("CollectionModel-") + QByteArray::number( qrand() ), q );
+  QTimer::singleShot( 0, q, SLOT(startFirstListJob()) );
+
+  // monitor collection changes
+  monitor = new Monitor();
+  monitor->monitorCollection( Collection::root() );
+  monitor->fetchCollection( true );
+
+  // ### Hack to get the kmail resource folder icons
+  KIconLoader::global()->addAppDir( QLatin1String( "kmail" ) );
+  KIconLoader::global()->addAppDir( QLatin1String( "kdepim" ) );
 
   // monitor collection changes
   q->connect( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)),
@@ -201,4 +208,16 @@ void CollectionModelPrivate::init()
               q, SLOT(collectionRemoved(Akonadi::Collection)) );
   q->connect( monitor, SIGNAL(collectionStatusChanged(Akonadi::Collection::Id,Akonadi::CollectionStatus)),
               q, SLOT(collectionStatusChanged(Akonadi::Collection::Id,Akonadi::CollectionStatus)) );
+}
+
+void CollectionModelPrivate::startFirstListJob()
+{
+  Q_Q( CollectionModel );
+
+  // start a list job
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, session );
+  job->includeUnsubscribed( unsubscribed );
+  q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+              q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
+  q->connect( job, SIGNAL(result(KJob*)), q, SLOT(listDone(KJob*)) );
 }

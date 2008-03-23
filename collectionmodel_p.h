@@ -47,6 +47,8 @@ class CollectionModelPrivate
     {
     }
 
+    virtual ~CollectionModelPrivate() {}
+
     CollectionModel *q_ptr;
     QHash<Collection::Id, Collection> collections;
     QHash<Collection::Id, QList<Collection::Id> > childCollections;
@@ -57,6 +59,7 @@ class CollectionModelPrivate
     bool unsubscribed;
 
     void init();
+    void startFirstListJob();
     void collectionRemoved( const Akonadi::Collection& );
     void collectionChanged( const Akonadi::Collection& );
     void updateDone( KJob* );

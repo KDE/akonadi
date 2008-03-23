@@ -103,6 +103,7 @@ set( akonadikde_LIB_SRC
   itemsync.cpp
   itemview.cpp
   job.cpp
+  messagecollectiondelegate.cpp
   messagecollectionmodel.cpp
   monitor.cpp
   monitor_p.cpp
@@ -195,6 +196,7 @@ install( FILES
   itemsync.h
   itemview.h
   job.h
+  messagecollectiondelegate.h
   messagecollectionmodel.h
   monitor.h
   profilemanager.h

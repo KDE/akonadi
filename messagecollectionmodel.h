@@ -25,6 +25,8 @@
 
 namespace Akonadi {
 
+class MessageCollectionModelPrivate;
+
 /**
   Extended model for message collections.
   Supports columns for message unread/total counts.
@@ -34,6 +36,27 @@ class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
   Q_OBJECT
 
   public:
+
+    /**
+     * Custom roles for the message collection model
+     */
+    enum MessageCollectionRole {
+
+      /// Get the number of unread items in this collection
+      MessageCollectionUnreadRole = CollectionViewUserRole,
+
+      /// Get the number of items in this collection
+      MessageCollectionTotalRole,
+
+      /// Get the number of unread items in this collection and its children
+      MessageCollectionUnreadRecursiveRole,
+
+      /// Get the number of items in this collection and its children
+      MessageCollectionTotalRecursiveRole,
+
+      MessageCollectionUserRole = Qt::UserRole + 64
+    };
+
     /**
       Create a new message collection model.
       @param parent The parent object.
@@ -56,8 +79,7 @@ class AKONADI_EXPORT MessageCollectionModel : public CollectionModel
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
   private:
-    class Private;
-    Private* const d;
+    Q_DECLARE_PRIVATE( MessageCollectionModel )
 };
 
 }

@@ -20,6 +20,7 @@
 #include "messagecollectionmodel.h"
 
 #include "collection.h"
+#include "collectionmodel_p.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -28,22 +29,58 @@
 
 using namespace Akonadi;
 
+namespace Akonadi {
+
+class MessageCollectionModelPrivate : public CollectionModelPrivate
+{
+  public:
+    enum CountType { Total, Unread };
+    Q_DECLARE_PUBLIC( MessageCollectionModel )
+    MessageCollectionModelPrivate( MessageCollectionModel *parent )
+        : CollectionModelPrivate( parent )
+    {}
+
+    qint64 countRecursive( Collection::Id collection, CountType type ) const;
+};
+
+}
+
+qint64 MessageCollectionModelPrivate::countRecursive( Collection::Id collection,
+                                                      CountType type ) const
+{
+  qint64 result;
+  switch ( type ) {
+    case Unread: result = collections.value( collection ).status().unreadCount();
+                 break;
+    case Total: result = collections.value( collection ).status().count();
+                break;
+    default: Q_ASSERT( false );
+             break;
+  }
+
+  QList<Collection::Id> children = childCollections.value( collection );
+  foreach( Collection::Id currentCollection, children ) {
+    result += countRecursive( currentCollection, type );
+  }
+  return result;
+}
+
 MessageCollectionModel::MessageCollectionModel( QObject * parent ) :
-    CollectionModel( parent ),
-    d( 0 )
+    CollectionModel( new MessageCollectionModelPrivate( this ), parent )
 {
   fetchCollectionStatus( true );
 }
 
 int MessageCollectionModel::columnCount( const QModelIndex & parent ) const
 {
-  if (parent.isValid() && parent.column() != 0)
+  if ( parent.isValid() && parent.column() != 0 )
     return 0;
   return 3;
 }
 
 QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) const
 {
+  const Q_D( MessageCollectionModel );
   if ( !index.isValid() )
     return QVariant();
 
@@ -52,11 +89,29 @@ QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) con
     return QVariant();
   CollectionStatus status = col.status();
 
-  if ( role == Qt::DisplayRole && ( index.column() == 1 || index.column() == 2 ) ) {
-    int value = -1;
+  qint64 total = status.count();
+  qint64 unread = status.unreadCount();
+  qint64 totalRecursive = d->countRecursive( col.id(),
+                                             MessageCollectionModelPrivate::Total );
+  qint64 unreadRecursive = d->countRecursive( col.id(),
+                                              MessageCollectionModelPrivate::Unread );
+
+  if ( role == MessageCollectionTotalRole )
+    return total;
+  else if ( role == MessageCollectionUnreadRole )
+    return unread;
+  else if ( role == MessageCollectionUnreadRecursiveRole )
+    return unreadRecursive;
+  else if ( role == MessageCollectionTotalRecursiveRole )
+    return totalRecursive;
+
+  if ( role == Qt::DisplayRole &&
+       ( index.column() == 1 || index.column() == 2 ) ) {
+
+    qint64 value = -1;
     switch ( index.column() ) {
-      case 1: value = status.unreadCount(); break;
-      case 2: value = status.count(); break;
+      case 1 : value = unread; break;
+      case 2 : value = total; break;
     }
     if ( value < 0 )
       return QString();
@@ -68,13 +123,6 @@ QVariant MessageCollectionModel::data( const QModelIndex & index, int role ) con
 
   if ( role == Qt::TextAlignmentRole && ( index.column() == 1 || index.column() == 2 ) )
     return Qt::AlignRight;
-
-  // ### that's wrong, we'll need a custom delegate anyway
-  if ( role == Qt::FontRole && status.unreadCount() > 0 ) {
-    QFont f;
-    f.setBold( true );
-    return f;
-  }
 
   return CollectionModel::data( index, role );
 }
