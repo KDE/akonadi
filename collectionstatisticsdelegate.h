@@ -21,7 +21,7 @@
 
 #include "akonadi_export.h"
 
-#include <QtGui/QItemDelegate>
+#include <QtGui/QStyledItemDelegate>
 
 class QTreeView;
 
@@ -40,7 +40,7 @@ class CollectionStatisticsDelegatePrivate;
  * <li>It has the possibility to draw the unread count directly after the
  *     foldername, see toggleUnreadAfterFolderName().
  */
-class AKONADI_EXPORT CollectionStatisticsDelegate : public QItemDelegate
+class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 
@@ -72,16 +72,16 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QItemDelegate
   protected:
 
     /**
-     * Reimplemented to draw the unread count after the folder name
-     */
-    virtual void drawDisplay( QPainter *painter, const QStyleOptionViewItem &option,
-                              const QRect &rect, const QString &text) const;
-
-    /**
-     * Reimplemented to store the index for use in drawDisplay()
+     * Reimplemented
      */
     virtual void paint( QPainter *painter, const QStyleOptionViewItem &option,
                         const QModelIndex &index ) const;
+
+    /**
+     * Reimplemented
+     */
+    virtual void initStyleOption( QStyleOptionViewItem *option,
+                                  const QModelIndex &index ) const;
 
     CollectionStatisticsDelegatePrivate *d_ptr;
 

@@ -24,6 +24,9 @@
 #include <kdebug.h>
 
 #include <QPainter>
+#include <QStyle>
+#include <QStyleOption>
+#include <QStyleOptionViewItemV4>
 #include <QTreeView>
 
 using namespace Akonadi;
@@ -33,7 +36,6 @@ namespace Akonadi {
 class CollectionStatisticsDelegatePrivate
 {
   public:
-    QModelIndex index;
     QTreeView *parent;
     bool drawUnreadAfterFolder;
 
@@ -46,7 +48,7 @@ class CollectionStatisticsDelegatePrivate
 }
 
 CollectionStatisticsDelegate::CollectionStatisticsDelegate( QTreeView *parent )
-  : QItemDelegate( parent ),
+  : QStyledItemDelegate( parent ),
     d_ptr( new CollectionStatisticsDelegatePrivate( parent ) )
 {
 }
@@ -63,33 +65,47 @@ void CollectionStatisticsDelegate::toggleUnreadAfterFolderName( bool enable )
   d->drawUnreadAfterFolder = enable;
 }
 
+void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option,
+                                                    const QModelIndex &index ) const
+{
+  QStyleOptionViewItemV4 *noTextOption =
+      qstyleoption_cast<QStyleOptionViewItemV4 *>( option );
+  QStyledItemDelegate::initStyleOption( noTextOption, index );
+  noTextOption->text = QString();
+}
+
 void CollectionStatisticsDelegate::paint( QPainter *painter,
                                           const QStyleOptionViewItem &option,
                                           const QModelIndex &index ) const
 {
-  d_ptr->index = index;
-  QItemDelegate::paint( painter, option, index );
-}
-
-void CollectionStatisticsDelegate::drawDisplay( QPainter *painter,
-                                                const QStyleOptionViewItem &option,
-                                                const QRect &rect,
-                                                const QString &text) const
-{
   Q_D( const CollectionStatisticsDelegate );
 
-  // When checking if the item is expanded, we need to check that for the first
+  // First, paint the basic, but without the text. We remove the text
+  // in initStyleOption(), which gets called by QStyledItemDelegate::paint().
+  QStyledItemDelegate::paint( painter, option, index );
+
+  // No, we retrieve the correct style option by calling intiStyleOption from
+  // the superclass.
+  QStyleOptionViewItemV4 option4 = option;
+  QStyledItemDelegate::initStyleOption( &option4, index );
+  QString text = option4.text;
+
+  // Now calculate the rectangle for the text
+  QStyle *s = d->parent->style();
+  const QWidget *widget = option4.widget;
+  QRect textRect = s->subElementRect( QStyle::SE_ItemViewItemText, &option4, widget );
+
+   // When checking if the item is expanded, we need to check that for the first
   // column, as Qt only recogises the index as expanded for the first column
-  QModelIndex firstColumn = d->index.model()->index( d->index.row(), 0,
-                                                     d->index.parent() );
+  QModelIndex firstColumn = index.model()->index( index.row(), 0, index.parent() );
   bool expanded = d->parent->isExpanded( firstColumn );
 
   // Draw the unread count after the folder name (in parenthesis)
-  if ( d->drawUnreadAfterFolder && d->index.column() == 0 ) {
+  if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
 
-    QVariant unreadCount = d->index.model()->data( d->index,
+    QVariant unreadCount = index.model()->data( index,
                            CollectionStatisticsModel::CollectionStatisticsUnreadRole );
-    QVariant unreadRecursiveCount = d->index.model()->data( d->index,
+    QVariant unreadRecursiveCount = index.model()->data( index,
                            CollectionStatisticsModel::CollectionStatisticsUnreadRecursiveRole );
     Q_ASSERT( unreadCount.type() == QVariant::LongLong );
     Q_ASSERT( unreadRecursiveCount.type() == QVariant::LongLong );
@@ -110,7 +126,6 @@ void CollectionStatisticsDelegate::drawDisplay( QPainter *painter,
     }
 
     painter->save();
-    QItemDelegate::drawDisplay( painter, option, rect, QString() );
 
     if ( !unread.isEmpty() ) {
       QFont font = painter->font();
@@ -123,14 +138,14 @@ void CollectionStatisticsDelegate::drawDisplay( QPainter *painter,
     QString folderName = text;
     QFontMetrics fm( painter->fontMetrics() );
     int unreadWidth = fm.width( unread );
-    if ( fm.width( folderName ) + unreadWidth > rect.width() ) {
+    if ( fm.width( folderName ) + unreadWidth > textRect.width() ) {
       folderName = fm.elidedText( folderName, Qt::ElideRight,
-                                  rect.width() - unreadWidth );
+                                  textRect.width() - unreadWidth );
     }
     int folderWidth = fm.width( folderName );
-    QRect folderRect = rect;
-    QRect unreadRect = rect;
-    folderRect.setRight( rect.left() + folderWidth );
+    QRect folderRect = textRect;
+    QRect unreadRect = textRect;
+    folderRect.setRight( textRect.left() + folderWidth );
     unreadRect.setLeft( folderRect.right() );
 
     // Draw folder name and unread count
@@ -147,29 +162,31 @@ void CollectionStatisticsDelegate::drawDisplay( QPainter *painter,
 
   // For the unread/total column, paint the summed up count if the item
   // is collapsed
-  if ( ( d->index.column() == 1 || d->index.column() == 2 ) ) {
+  if ( ( index.column() == 1 || index.column() == 2 ) ) {
 
     painter->save();
 
     int role;
-    if ( d->index.column() == 1 ) {
+    if ( index.column() == 1 ) {
       if ( !expanded )
         role = CollectionStatisticsModel::CollectionStatisticsUnreadRecursiveRole;
       else
         role = CollectionStatisticsModel::CollectionStatisticsUnreadRole;
     }
-    else if ( d->index.column() == 2 ) {
+    else if ( index.column() == 2 ) {
       if ( !expanded )
         role = CollectionStatisticsModel::CollectionStatisticsTotalRecursiveRole;
       else
         role = CollectionStatisticsModel::CollectionStatisticsTotalRole;
     }
 
-    QVariant sum = d->index.model()->data( d->index, role );
+    QVariant sum = index.model()->data( index, role );
     Q_ASSERT( sum.type() == QVariant::LongLong );
     QStyleOptionViewItem opt = option;
-    if ( d->index.column() == 1 && sum.toLongLong() > 0 ) {
-      opt.font.setBold( true );
+    if ( index.column() == 1 && sum.toLongLong() > 0 ) {
+      QFont font = painter->font();
+      font.setBold( true );
+      painter->setFont( font );
     }
     QString sumText;
     if ( sum.toLongLong() <= 0 )
@@ -177,10 +194,10 @@ void CollectionStatisticsDelegate::drawDisplay( QPainter *painter,
     else
       sumText = sum.toString();
 
-    QItemDelegate::drawDisplay( painter, opt, rect, sumText );
+    painter->drawText( textRect, Qt::AlignRight, sumText );
     painter->restore();
     return;
   }
 
-  QItemDelegate::drawDisplay( painter, option, rect, text );
+  painter->drawText( textRect, option4.displayAlignment, text );
 }
