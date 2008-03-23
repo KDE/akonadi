@@ -67,9 +67,6 @@ ItemDeleteJob::ItemDeleteJob( const Item & item, QObject * parent )
 
 ItemDeleteJob::~ItemDeleteJob()
 {
-  Q_D( ItemDeleteJob );
-
-  delete d;
 }
 
 void ItemDeleteJob::doStart()

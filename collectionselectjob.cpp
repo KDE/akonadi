@@ -50,9 +50,6 @@ CollectionSelectJob::CollectionSelectJob( const Collection &collection, QObject 
 
 CollectionSelectJob::~CollectionSelectJob( )
 {
-  Q_D( CollectionSelectJob );
-
-  delete d;
 }
 
 void CollectionSelectJob::doStart( )

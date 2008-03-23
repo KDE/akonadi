@@ -45,11 +45,8 @@ SearchCreateJob::SearchCreateJob(const QString & name, const QString & query, QO
   d->mQuery = query;
 }
 
-SearchCreateJob::~ SearchCreateJob()
+SearchCreateJob::~SearchCreateJob()
 {
-  Q_D( SearchCreateJob );
-
-  delete d;
 }
 
 void SearchCreateJob::doStart()

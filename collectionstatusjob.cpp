@@ -45,11 +45,8 @@ CollectionStatusJob::CollectionStatusJob( const Collection &collection, QObject 
   d->mCollection = collection;
 }
 
-CollectionStatusJob::~ CollectionStatusJob( )
+CollectionStatusJob::~CollectionStatusJob()
 {
-  Q_D( CollectionStatusJob );
-
-  delete d;
 }
 
 void CollectionStatusJob::doStart( )

@@ -55,9 +55,6 @@ CollectionModifyJob::CollectionModifyJob( const Collection &collection, QObject 
 
 CollectionModifyJob::~CollectionModifyJob()
 {
-  Q_D( CollectionModifyJob );
-
-  delete d;
 }
 
 void CollectionModifyJob::doStart()

@@ -60,9 +60,6 @@ TransactionBeginJob::TransactionBeginJob(QObject * parent)
 
 TransactionBeginJob::~TransactionBeginJob()
 {
-  Q_D( TransactionBeginJob );
-
-  delete d;
 }
 
 void TransactionBeginJob::doStart()
@@ -80,9 +77,6 @@ TransactionRollbackJob::TransactionRollbackJob(QObject * parent)
 
 TransactionRollbackJob::~TransactionRollbackJob()
 {
-  Q_D( TransactionRollbackJob );
-
-  delete d;
 }
 
 void TransactionRollbackJob::doStart()
@@ -100,9 +94,6 @@ TransactionCommitJob::TransactionCommitJob(QObject * parent)
 
 TransactionCommitJob::~TransactionCommitJob()
 {
-  Q_D( TransactionCommitJob );
-
-  delete d;
 }
 
 void TransactionCommitJob::doStart()
@@ -159,11 +150,8 @@ TransactionSequence::TransactionSequence( QObject * parent )
 {
 }
 
-TransactionSequence::~ TransactionSequence()
+TransactionSequence::~TransactionSequence()
 {
-  Q_D( TransactionSequence );
-
-  delete d;
 }
 
 bool TransactionSequence::addSubjob(KJob * job)

@@ -46,11 +46,8 @@ CollectionCreateJob::CollectionCreateJob( const Collection &collection, QObject 
   d->mCollection = collection;
 }
 
-CollectionCreateJob::~ CollectionCreateJob( )
+CollectionCreateJob::~CollectionCreateJob( )
 {
-  Q_D( CollectionCreateJob );
-
-  delete d;
 }
 
 void CollectionCreateJob::doStart( )

@@ -73,9 +73,6 @@ SubscriptionJob::SubscriptionJob(QObject * parent)
 
 SubscriptionJob::~SubscriptionJob()
 {
-  Q_D( SubscriptionJob );
-
-  delete d;
 }
 
 void SubscriptionJob::subscribe(const Collection::List & list)

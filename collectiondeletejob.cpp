@@ -42,11 +42,8 @@ CollectionDeleteJob::CollectionDeleteJob(const Collection &collection, QObject *
   d->mCollection = collection;
 }
 
-CollectionDeleteJob::~ CollectionDeleteJob()
+CollectionDeleteJob::~CollectionDeleteJob()
 {
-  Q_D( CollectionDeleteJob );
-
-  delete d;
 }
 
 void CollectionDeleteJob::doStart()

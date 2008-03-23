@@ -199,6 +199,6 @@ void CollectionModelPrivate::init()
               q, SLOT(collectionChanged(Akonadi::Collection)) );
   q->connect( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
               q, SLOT(collectionRemoved(Akonadi::Collection)) );
-  q->connect( monitor, SIGNAL(collectionStatusChanged(Collection::Id,Akonadi::CollectionStatus)),
-              q, SLOT(collectionStatusChanged(Collection::Id,Akonadi::CollectionStatus)) );
+  q->connect( monitor, SIGNAL(collectionStatusChanged(Akonadi::Collection::Id,Akonadi::CollectionStatus)),
+              q, SLOT(collectionStatusChanged(Akonadi::Collection::Id,Akonadi::CollectionStatus)) );
 }

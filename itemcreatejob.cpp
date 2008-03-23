@@ -55,11 +55,8 @@ ItemCreateJob::ItemCreateJob( const Item &item, const Collection &collection, QO
   d->mCollection = collection;
 }
 
-ItemCreateJob::~ ItemCreateJob( )
+ItemCreateJob::~ItemCreateJob()
 {
-  Q_D( ItemCreateJob );
-
-  delete d;
 }
 
 void ItemCreateJob::doStart()

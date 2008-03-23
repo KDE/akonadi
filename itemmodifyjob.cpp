@@ -88,9 +88,6 @@ ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
 
 ItemModifyJob::~ItemModifyJob()
 {
-  Q_D( ItemModifyJob );
-
-  delete d;
 }
 
 void ItemModifyJob::setFlags(const Item::Flags & flags)

@@ -127,9 +127,6 @@ CollectionPathResolver::CollectionPathResolver(const Collection & collection, QO
 
 CollectionPathResolver::~CollectionPathResolver()
 {
-  Q_D( CollectionPathResolver );
-
-  delete d;
 }
 
 Collection::Id CollectionPathResolver::collection() const

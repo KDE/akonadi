@@ -39,9 +39,6 @@ ExpungeJob::ExpungeJob(QObject * parent)
 
 ExpungeJob::~ExpungeJob()
 {
-  Q_D( ExpungeJob );
-
-  delete d;
 }
 
 void ExpungeJob::doStart()

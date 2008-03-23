@@ -53,11 +53,8 @@ ItemCopyJob::ItemCopyJob(const Item::List & items, const Collection & target, QO
   d->mTarget = target;
 }
 
-ItemCopyJob::~ ItemCopyJob()
+ItemCopyJob::~ItemCopyJob()
 {
-  Q_D( ItemCopyJob );
-
-  delete d;
 }
 
 void ItemCopyJob::doStart()

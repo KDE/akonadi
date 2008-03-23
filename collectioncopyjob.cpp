@@ -44,11 +44,8 @@ CollectionCopyJob::CollectionCopyJob(const Collection & source, const Collection
   d->mTarget = target;
 }
 
-CollectionCopyJob::~ CollectionCopyJob()
+CollectionCopyJob::~CollectionCopyJob()
 {
-  Q_D( CollectionCopyJob );
-
-  delete d;
 }
 
 void CollectionCopyJob::doStart()

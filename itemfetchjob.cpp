@@ -37,13 +37,8 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
   public:
     ItemFetchJobPrivate( ItemFetchJob *parent )
       : JobPrivate( parent ),
-        mFetchAllParts( false ),
-        mEmitTimer( new QTimer( parent ) )
+        mFetchAllParts( false )
     {
-      mEmitTimer->setSingleShot( true );
-      mEmitTimer->setInterval( 100 );
-      QObject::connect( mEmitTimer, SIGNAL(timeout()), parent, SLOT(timeout()) );
-      QObject::connect( parent, SIGNAL(result(KJob*)), parent, SLOT(timeout()) );
     }
 
     void timeout()
@@ -103,6 +98,13 @@ void ItemFetchJobPrivate::selectDone( KJob * job )
 ItemFetchJob::ItemFetchJob( QObject *parent )
   : Job( new ItemFetchJobPrivate( this ), parent )
 {
+  Q_D( ItemFetchJob );
+
+  d->mEmitTimer = new QTimer( this );
+  d->mEmitTimer->setSingleShot( true );
+  d->mEmitTimer->setInterval( 100 );
+  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
+  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
 }
 
 ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent )
@@ -110,20 +112,31 @@ ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent )
 {
   Q_D( ItemFetchJob );
 
+  d->mEmitTimer = new QTimer( this );
+  d->mEmitTimer->setSingleShot( true );
+  d->mEmitTimer->setInterval( 100 );
+  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
+  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
+
   d->mCollection = collection;
 }
 
 ItemFetchJob::ItemFetchJob( const Item & item, QObject * parent)
   : Job( new ItemFetchJobPrivate( this ), parent )
 {
+  Q_D( ItemFetchJob );
+
+  d->mEmitTimer = new QTimer( this );
+  d->mEmitTimer->setSingleShot( true );
+  d->mEmitTimer->setInterval( 100 );
+  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
+  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
+
   setItem( item );
 }
 
 ItemFetchJob::~ItemFetchJob()
 {
-  Q_D( ItemFetchJob );
-
-  delete d;
 }
 
 void ItemFetchJob::doStart()
