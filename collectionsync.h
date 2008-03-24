@@ -21,7 +21,7 @@
 #define AKONADI_COLLECTIONSYNC_H
 
 #include <akonadi/collection.h>
-#include <akonadi/transactionjobs.h>
+#include <akonadi/transactionsequence.h>
 
 namespace Akonadi {
 

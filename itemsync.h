@@ -23,7 +23,7 @@
 #include "akonadi_export.h"
 
 #include <akonadi/item.h>
-#include <akonadi/transactionjobs.h>
+#include <akonadi/transactionsequence.h>
 
 namespace Akonadi {
 

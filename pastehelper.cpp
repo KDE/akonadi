@@ -25,7 +25,7 @@
 #include "itemcreatejob.h"
 #include "itemcopyjob.h"
 #include "itemmodifyjob.h"
-#include "transactionjobs.h"
+#include "transactionsequence.h"
 
 #include <KDebug>
 #include <KUrl>

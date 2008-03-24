@@ -117,6 +117,7 @@ set( akonadikde_LIB_SRC
   subscriptiondialog.cpp
   subscriptionmodel.cpp
   transactionjobs.cpp
+  transactionsequence.cpp
 # Temporary until ported to Qt-plugin framework
   pluginloaderbase.cpp
 )
@@ -195,6 +196,7 @@ install( FILES
   shareddatapointer.h
   standardactionmanager.h
   transactionjobs.h
+  transactionsequence.h
   # temporary test
   searchcreatejob.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi

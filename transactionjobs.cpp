@@ -18,9 +18,8 @@
 */
 
 #include "transactionjobs.h"
-#include "job_p.h"
 
-#include <kdebug.h>
+#include "job_p.h"
 
 using namespace Akonadi;
 
@@ -99,126 +98,6 @@ TransactionCommitJob::~TransactionCommitJob()
 void TransactionCommitJob::doStart()
 {
   writeData( newTag() + " COMMIT\n" );
-}
-
-
-
-class Akonadi::TransactionSequencePrivate : public JobPrivate
-{
-  public:
-    TransactionSequencePrivate( TransactionSequence *parent )
-      : JobPrivate( parent ),
-        mState( Idle )
-    {
-    }
-
-    enum TransactionState
-    {
-      Idle,
-      Running,
-      WaitingForSubjobs,
-      RollingBack,
-      Committing
-    };
-
-    Q_DECLARE_PUBLIC( TransactionSequence )
-
-    TransactionState mState;
-
-    void commitResult( KJob *job )
-    {
-      Q_Q( TransactionSequence );
-
-      if ( job->error() ) {
-        q->setError( job->error() );
-        q->setErrorText( job->errorText() );
-      }
-      q->emitResult();
-    }
-
-    void rollbackResult( KJob *job )
-    {
-      Q_Q( TransactionSequence );
-
-      Q_UNUSED( job );
-      q->emitResult();
-    }
-};
-
-TransactionSequence::TransactionSequence( QObject * parent )
-  : Job( new TransactionSequencePrivate( this ), parent )
-{
-}
-
-TransactionSequence::~TransactionSequence()
-{
-}
-
-bool TransactionSequence::addSubjob(KJob * job)
-{
-  Q_D( TransactionSequence );
-
-  if ( d->mState == TransactionSequencePrivate::Idle ) {
-    d->mState = TransactionSequencePrivate::Running;
-    new TransactionBeginJob( this );
-  }
-  return Job::addSubjob( job );
-}
-
-void TransactionSequence::slotResult(KJob * job)
-{
-  Q_D( TransactionSequence );
-
-  if ( !job->error() ) {
-    Job::slotResult( job );
-    if ( subjobs().isEmpty() && d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
-      d->mState = TransactionSequencePrivate::Committing;
-      TransactionCommitJob *job = new TransactionCommitJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
-    }
-  } else {
-    setError( job->error() );
-    setErrorText( job->errorText() );
-    removeSubjob( job );
-    clearSubjobs();
-    if ( d->mState == TransactionSequencePrivate::Running || d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
-      d->mState = TransactionSequencePrivate::RollingBack;
-      TransactionRollbackJob *job = new TransactionRollbackJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
-    }
-  }
-}
-
-void TransactionSequence::commit()
-{
-  Q_D( TransactionSequence );
-
-  if ( d->mState < TransactionSequencePrivate::WaitingForSubjobs )
-    d->mState = TransactionSequencePrivate::WaitingForSubjobs;
-  else
-    return;
-
-  if ( subjobs().isEmpty() ) {
-    if ( !error() ) {
-      d->mState = TransactionSequencePrivate::Committing;
-      TransactionCommitJob *job = new TransactionCommitJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
-    } else {
-      d->mState = TransactionSequencePrivate::RollingBack;
-      TransactionRollbackJob *job = new TransactionRollbackJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
-    }
-  }
-}
-
-void TransactionSequence::doStart()
-{
-  Q_D( TransactionSequence );
-
-  if ( d->mState == TransactionSequencePrivate::Idle )
-    emitResult();
-  else
-    commit();
 }
 
 #include "transactionjobs.moc"

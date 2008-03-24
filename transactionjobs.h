@@ -21,15 +21,14 @@
 #define AKONADI_TRANSACTIONJOBS_H
 
 #include "akonadi_export.h"
+
 #include <akonadi/job.h>
 
-//FIXME_API: split into transactionjobs.(h|cpp) and transactionsequence.(h|cpp)
 namespace Akonadi {
 
 class TransactionBeginJobPrivate;
 class TransactionRollbackJobPrivate;
 class TransactionCommitJobPrivate;
-class TransactionSequencePrivate;
 
 /**
   Begins a session-global transaction.
@@ -113,50 +112,6 @@ class AKONADI_EXPORT TransactionCommitJob : public Job
 
   private:
     Q_DECLARE_PRIVATE( TransactionCommitJob )
-};
-
-
-/**
-  Base class for jobs that need to run a sequence of sub-jobs in a transaction.
-  As soon as the first subjob is added, the transaction is started.
-  As soon as the last subjob has successfully finished, the transaction is committed.
-  If any subjob fails, the transaction is rolled back.
-
-  Alternatively, a TransactionSequence object can be used as a parent object
-  for a set of jobs to achieve the same behaviour without subclassing.
-*/
-class AKONADI_EXPORT TransactionSequence : public Job
-{
-  Q_OBJECT
-  public:
-    /**
-      Creates a new transaction job sequence.
-      @param parent The parent object.
-    */
-    explicit TransactionSequence( QObject *parent = 0 );
-
-    /**
-      Destroys this job.
-    */
-    ~TransactionSequence();
-
-  protected:
-    /**
-      Commit the transaction as soon as all pending sub-jobs finished successfully.
-    */
-    void commit();
-
-    bool addSubjob( KJob* job );
-    void doStart();
-
-  protected Q_SLOTS:
-    void slotResult( KJob *job );
-
-  private:
-    Q_DECLARE_PRIVATE( TransactionSequence )
-
-    Q_PRIVATE_SLOT( d_func(), void commitResult(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void rollbackResult(KJob*) )
 };
 
 }
