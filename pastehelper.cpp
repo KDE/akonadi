@@ -82,7 +82,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
   TransactionSequence *transaction = new TransactionSequence();
   KUrl::List urls = KUrl::List::fromMimeData( mimeData );
   foreach ( const KUrl url, urls ) {
-    if ( Collection::urlIsValid( url ) ) {
+    if ( Collection::fromUrl( url ).isValid() ) {
       Collection col = Collection::fromUrl( url );
       if ( !copy ) {
         col.setParent( collection );
@@ -90,7 +90,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
       } else {
         new CollectionCopyJob( col, collection, transaction );
       }
-    } else if ( Item::urlIsValid( url ) ) {
+    } else if ( Item::fromUrl( url ).isValid() ) {
       // TODO Extract mimetype from url and check if collection accepts it
       const Item item = Item::fromUrl( url );
       if ( !copy ) {

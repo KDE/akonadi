@@ -263,12 +263,6 @@ class AKONADI_EXPORT Item : public Entity
      */
     KUrl url( UrlType type = UrlShort ) const;
 
-    /**
-      Returns true if the url is valid for an item
-     */
-    static bool urlIsValid( const KUrl &url );
-    //FIXME_API: remove urlIsValid
-
   private:
     friend class ItemModifyJob;
     PayloadBase* payloadBase() const;

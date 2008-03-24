@@ -237,12 +237,6 @@ class AKONADI_EXPORT Collection : public Entity
     */
     KUrl url() const;
 
-    /**
-      Returns true if the url is valid for an item
-    */
-    //FIXME_API: drop it
-    static bool urlIsValid( const KUrl &url );
-
   private:
     AKONADI_DECLARE_PRIVATE( Collection )
     friend class CollectionModifyJob;

@@ -146,12 +146,16 @@ KUrl Item::url( UrlType type ) const
 
 Item Item::fromUrl( const KUrl &url )
 {
-  return Item( url.queryItems()[ QString::fromLatin1("item") ].toLongLong() );
-}
+  if ( url.protocol() != QLatin1String( "akonadi" ) )
+    return Item();
 
-bool Item::urlIsValid( const KUrl &url )
-{
-  return url.protocol() == QString::fromLatin1("akonadi") && url.queryItems().contains( QString::fromLatin1("item") );
+  const QString itemStr = url.queryItem( QLatin1String( "item" ) );
+  bool ok = false;
+  Item::Id itemId = itemStr.toLongLong( &ok );
+  if ( !ok )
+    return Item();
+
+  return Item( itemId );
 }
 
 PayloadBase* Item::payloadBase() const

@@ -168,14 +168,14 @@ void CollectionView::dragMoveEvent(QDragMoveEvent * event)
   KUrl::List urls = KUrl::List::fromMimeData( data );
   foreach( KUrl url, urls ) {
 
-    if ( Collection::urlIsValid( url ) )
+    const Collection collection = Collection::fromUrl( url );
+    if ( collection.isValid() )
     {
       if ( !supportedContentTypes.contains( QString::fromLatin1( "inode/directory" ) ) )
         break;
 
       // Check if we don't try to drop on one of the children
-      Collection col = Collection::fromUrl( url );
-      if ( d->hasParent( index, col.id() ) )
+      if ( d->hasParent( index, collection.id() ) )
         break;
     }
     else

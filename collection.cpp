@@ -197,13 +197,18 @@ KUrl Collection::url() const
 
 Collection Collection::fromUrl( const KUrl &url )
 {
-  QString colStr = url.queryItem( QLatin1String( "collection" ) );
+  if ( url.protocol() != QLatin1String( "akonadi" ) )
+    return Collection();
+
+  const QString colStr = url.queryItem( QLatin1String( "collection" ) );
   bool ok = false;
   Collection::Id colId = colStr.toLongLong( &ok );
   if ( !ok )
     return Collection();
+
   if ( colId == 0 )
     return Collection::root();
+
   return Collection( colId );
 }
 
@@ -247,11 +252,6 @@ void Collection::setStatistics(const CollectionStatistics & statistics)
 {
   Q_D( Collection );
   d->statistics = statistics;
-}
-
-bool Collection::urlIsValid( const KUrl &url )
-{
-  return url.protocol() == QString::fromLatin1("akonadi") && url.queryItems().contains( QString::fromLatin1("collection") );
 }
 
 CachePolicy Collection::cachePolicy() const

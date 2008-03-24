@@ -249,6 +249,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 };
 
 }
+
+//FIXME_API: add macro for main() function
 /*
 class DefaultObserver
 {
