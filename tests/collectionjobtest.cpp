@@ -240,7 +240,7 @@ void CollectionJobTest::testCreateDeleteFolder_data()
   policy.setInheritFromParent( false );
   policy.setIntervalCheckTime( 60 );
   policy.setLocalParts( QStringList( Item::PartEnvelope ) );
-  policy.enableSyncOnDemand( true );
+  policy.setSyncOnDemand( true );
   policy.setCacheTimeout( 120 );
   col.setCachePolicy( policy );
   QTest::newRow( "complex" ) << col << true;

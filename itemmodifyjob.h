@@ -61,8 +61,7 @@ class AKONADI_EXPORT ItemModifyJob : public Job
     /**
       Disable revision checking.
     */
-    void noRevCheck();
-    //FIXME_API: rename to disableRevisionCheck()
+    void disableRevisionCheck();
 
     /**
       Sets the item flags to @p flags.

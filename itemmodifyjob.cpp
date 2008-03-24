@@ -227,7 +227,7 @@ void ItemModifyJob::storePayload()
   d->mParts = d->mItem.availableParts();
 }
 
-void ItemModifyJob::noRevCheck()
+void ItemModifyJob::disableRevisionCheck()
 {
   Q_D( ItemModifyJob );
 

@@ -60,10 +60,16 @@ CollectionStatisticsDelegate::~CollectionStatisticsDelegate()
   delete d_ptr;
 }
 
-void CollectionStatisticsDelegate::toggleUnreadAfterFolderName( bool enable )
+void CollectionStatisticsDelegate::setUnreadCountShown( bool enable )
 {
   Q_D( CollectionStatisticsDelegate );
   d->drawUnreadAfterFolder = enable;
+}
+
+bool CollectionStatisticsDelegate::unreadCountShown() const
+{
+  Q_D( const CollectionStatisticsDelegate );
+  return d->drawUnreadAfterFolder;
 }
 
 void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option,

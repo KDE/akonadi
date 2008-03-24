@@ -96,7 +96,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
       if ( !copy ) {
         ItemModifyJob *job = new ItemModifyJob( item, transaction );
         job->setCollection( collection );
-        job->noRevCheck();
+        job->disableRevisionCheck();
       } else  {
         new ItemCopyJob( item, collection, transaction );
       }

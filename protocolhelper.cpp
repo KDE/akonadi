@@ -41,7 +41,7 @@ int ProtocolHelper::parseCachePolicy(const QByteArray & data, CachePolicy & poli
     else if ( key == "CACHETIMEOUT" )
       policy.setCacheTimeout( value.toInt() );
     else if ( key == "SYNCONDEMAND" )
-      policy.enableSyncOnDemand( value == "true" );
+      policy.setSyncOnDemand( value == "true" );
     else if ( key == "LOCALPARTS" ) {
       QList<QByteArray> tmp;
       QStringList parts;

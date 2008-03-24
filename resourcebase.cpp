@@ -318,7 +318,7 @@ void ResourceBase::itemRetrieved( const Item &item )
   ItemModifyJob *job = new ItemModifyJob( i, session() );
   job->storePayload();
   // FIXME: remove once the item with which we call retrieveItem() has a revision number
-  job->noRevCheck();
+  job->disableRevisionCheck();
   connect( job, SIGNAL(result(KJob*)), SLOT(slotDeliveryDone(KJob*)) );
 }
 
@@ -341,7 +341,7 @@ void ResourceBase::changesCommitted(const Item& item)
 {
   ItemModifyJob *job = new ItemModifyJob( item, session() );
   job->setClean();
-  job->noRevCheck(); // TODO: remove, but where/how do we handle the error?
+  job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
   changeProcessed();
 }
 

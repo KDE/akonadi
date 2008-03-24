@@ -70,10 +70,9 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
      * @param enable if true, the unread count is drawn behind the folder name,
      *               if false, the folder name will be drawn normally.
      */
-    //FIXME_API: rename to setUnreadCountShown( bool );
-    void toggleUnreadAfterFolderName( bool enable );
+    void setUnreadCountShown( bool enable );
 
-    //FIXME_API: add unreadCountShown(). Also change it in compat class def below
+    bool unreadCountShown() const;
 
   protected:
 

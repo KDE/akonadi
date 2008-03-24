@@ -52,7 +52,7 @@ void CachePolicyPage::save(Collection & collection)
   policy.setInheritFromParent( ui.inherit->isChecked() );
   policy.setIntervalCheckTime( ui.checkInterval->value() );
   policy.setCacheTimeout( ui.localCacheTimeout->value() );
-  policy.enableSyncOnDemand( ui.syncOnDemand->isChecked() );
+  policy.setSyncOnDemand( ui.syncOnDemand->isChecked() );
   policy.setLocalParts( ui.localParts->items() );
   collection.setCachePolicy( policy );
 }

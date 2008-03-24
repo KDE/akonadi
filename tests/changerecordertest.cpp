@@ -36,11 +36,11 @@ class ChangeRecorderTest : public QObject
       Item item( uid );
       ItemModifyJob *job = new ItemModifyJob( item );
       job->addFlag( "random_flag" );
-      job->noRevCheck();
+      job->disableRevisionCheck();
       QVERIFY( job->exec() );
       job = new ItemModifyJob( item );
       job->removeFlag( "random_flag" );
-      job->noRevCheck();
+      job->disableRevisionCheck();
       QVERIFY( job->exec() );
     }
 

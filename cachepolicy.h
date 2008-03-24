@@ -127,8 +127,7 @@ class AKONADI_EXPORT CachePolicy
     /**
       Enable on-demand syncing.
     */
-    //FIXME_API: rename to setSyncOnDemand
-    void enableSyncOnDemand( bool enable );
+    void setSyncOnDemand( bool enable );
 
   private:
     class Private;

@@ -127,7 +127,7 @@ bool CachePolicy::syncOnDemand() const
   return d->syncOnDemand;
 }
 
-void CachePolicy::enableSyncOnDemand(bool enable)
+void CachePolicy::setSyncOnDemand(bool enable)
 {
   d->syncOnDemand = enable;
 }
