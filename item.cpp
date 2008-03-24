@@ -67,9 +67,20 @@ void Item::setFlag( const QByteArray & name )
   d_func()->mFlags.insert( name );
 }
 
-void Item::unsetFlag( const QByteArray & name )
+void Item::clearFlag( const QByteArray & name )
 {
   d_func()->mFlags.remove( name );
+}
+
+void Item::setFlags( const Flags &flags )
+{
+  //FIXME:(volker) check whether overwriting is valid here
+  d_func()->mFlags = flags;
+}
+
+void Item::clearFlags()
+{
+  d_func()->mFlags.clear();
 }
 
 bool Item::hasFlag( const QByteArray & name ) const

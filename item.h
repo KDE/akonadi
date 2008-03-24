@@ -135,9 +135,17 @@ class AKONADI_EXPORT Item : public Entity
       Removes an item flag.
       @param name The flag name.
     */
-    void unsetFlag( const QByteArray &name );
-    //FIXME_API: rename to clearFlag()
-    //FIXME_API: add clearFlags() and setFlags(Item::Flags)
+    void clearFlag( const QByteArray &name );
+
+    /**
+     * Overwrite the flags of the item by @p flags.
+     */
+    void setFlags( const Flags &flags );
+
+    /**
+     * Clear all flags from the item.
+     */
+    void clearFlags();
 
     /**
       Adds a new part with the given @p identifier and @p data.
