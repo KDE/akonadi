@@ -43,16 +43,11 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Extended item roles for collections.
     */
-    //FIXME_API: rename to Roles
-    enum CollectionItemRole {
-      CollectionIdRole = Qt::UserRole, ///< The collection path.
-      CollectionRole, ///< The actual collection object.
-      ChildCreatableRole, ///< The collection can contain sub-collections.
-      CollectionContentTypesRole, ///< Returns the mimetypes supported by the collection
-      CollectionViewUserRole = Qt::UserRole + 32 ///< Role for user extensions
+    enum Roles {
+      CollectionIdRole = Qt::UserRole,  ///< The collection path.
+      CollectionRole,                   ///< The actual collection object.
+      UserRole = Qt::UserRole + 32      ///< Role for user extensions
     };
-    //FIXME_API: rename CollectionViewUserRole to UserRole
-    //FIXME_API: remove ChildCreatableRole and CollectionContentTypesRole
 
     /**
       Create a new collection model.

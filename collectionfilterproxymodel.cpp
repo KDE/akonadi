@@ -46,7 +46,7 @@ class CollectionFilterProxyModel::Private
 bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex &index )
 {
   // Retrieve supported mimetypes
-  QStringList collectionMimeTypes = mParent->sourceModel()->data( index, CollectionModel::CollectionContentTypesRole ).toStringList();
+  QStringList collectionMimeTypes = mParent->sourceModel()->data( index, CollectionModel::CollectionRole ).value<Collection>().contentTypes();
 
   // If this collection directly contains one valid mimetype, it is accepted
   foreach ( QString type, collectionMimeTypes ) {

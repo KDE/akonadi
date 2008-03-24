@@ -44,26 +44,15 @@ class AKONADI_EXPORT CollectionStatisticsModel : public CollectionModel
     /**
      * Custom roles for the message collection model
      */
-    //FIXME_API: rename to 'Roles'
-    enum CollectionStatisticsRole {
-
-      /// Get the number of unread items in this collection
-      CollectionStatisticsUnreadRole = CollectionViewUserRole,
-
-      /// Get the number of items in this collection
-      CollectionStatisticsTotalRole,
-
-      /// Get the number of unread items in this collection and its children
-      CollectionStatisticsUnreadRecursiveRole,
-
-      /// Get the number of items in this collection and its children
-      CollectionStatisticsTotalRecursiveRole,
-
-      CollectionStatisticsUserRole = CollectionViewUserRole + 42
+    enum Roles {
+      UnreadRole = CollectionModel::UserRole + 1, ///< The number of unread items in this collection.
+      TotalRole,                                  ///< The number of items in this collection.
+      StatisticsRole,                             ///< A statistics object of this collection.
+      RecursiveUnreadRole,                        ///< The number of unread items in this collection and its children.
+      RecursiveTotalRole,                         ///< The number of items in this collection and its children.
+      RecursiveStatisticsRole,                    ///< A statistics object of this collection and its children.
+      UserRole = CollectionModel::UserRole + 42
     };
-    //FIXME_API: remove CollectionStatistics prefix from names
-    //FIXME_API: add  StatisticsRole and RecursiveStatisticsRole
-    //FIXME_API: rename TotalRecursiveRole to RecursiveTotalRole, ff.
 
     /**
       Create a new collection statistics model.

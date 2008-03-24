@@ -143,7 +143,7 @@ QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
     case TypeIdentifierRole:
       return info.identifier;
       break;
-    case CommentRole:
+    case DescriptionRole:
       return info.comment;
       break;
     case MimeTypesRole:

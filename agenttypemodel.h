@@ -42,16 +42,14 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
     /**
      * Describes the roles of this model.
      */
-    //FIXME_API: rename to Roles
-    enum Role
+    enum Roles
     {
       TypeIdentifierRole = Qt::UserRole + 1,  ///< The identifier of the agent type
-      CommentRole,                            ///< A description of the agent type
+      DescriptionRole,                        ///< A description of the agent type
       MimeTypesRole,                          ///< A list of supported mimetypes
       CapabilitiesRole,                       ///< A list of supported capabilities
       UserRole  = Qt::UserRole + 42           ///< For further extensions
     };
-    //FIXME_API: CommentRole -> DescriptionRole
 
     /**
      * Creates a new agent type model.

@@ -105,9 +105,9 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
 
     QVariant unreadCount = index.model()->data( index,
-                           CollectionStatisticsModel::CollectionStatisticsUnreadRole );
+                           CollectionStatisticsModel::UnreadRole );
     QVariant unreadRecursiveCount = index.model()->data( index,
-                           CollectionStatisticsModel::CollectionStatisticsUnreadRecursiveRole );
+                           CollectionStatisticsModel::RecursiveUnreadRole );
     Q_ASSERT( unreadCount.type() == QVariant::LongLong );
     Q_ASSERT( unreadRecursiveCount.type() == QVariant::LongLong );
 
@@ -170,15 +170,15 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     int role = 0;
     if ( index.column() == 1 ) {
       if ( !expanded )
-        role = CollectionStatisticsModel::CollectionStatisticsUnreadRecursiveRole;
+        role = CollectionStatisticsModel::RecursiveUnreadRole;
       else
-        role = CollectionStatisticsModel::CollectionStatisticsUnreadRole;
+        role = CollectionStatisticsModel::UnreadRole;
     }
     else if ( index.column() == 2 ) {
       if ( !expanded )
-        role = CollectionStatisticsModel::CollectionStatisticsTotalRecursiveRole;
+        role = CollectionStatisticsModel::RecursiveTotalRole;
       else
-        role = CollectionStatisticsModel::CollectionStatisticsTotalRole;
+        role = CollectionStatisticsModel::TotalRole;
     }
 
     QVariant sum = index.model()->data( index, role );

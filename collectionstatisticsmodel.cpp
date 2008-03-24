@@ -97,14 +97,23 @@ QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) 
   qint64 unreadRecursive = d->countRecursive( col.id(),
                                               CollectionStatisticsModelPrivate::Unread );
 
-  if ( role == CollectionStatisticsTotalRole )
+  if ( role == TotalRole )
     return total;
-  else if ( role == CollectionStatisticsUnreadRole )
+  else if ( role == UnreadRole )
     return unread;
-  else if ( role == CollectionStatisticsUnreadRecursiveRole )
+  else if ( role == RecursiveUnreadRole )
     return unreadRecursive;
-  else if ( role == CollectionStatisticsTotalRecursiveRole )
+  else if ( role == RecursiveTotalRole )
     return totalRecursive;
+  else if ( role == StatisticsRole ) {
+    QVariant var;
+    var.setValue( statistics );
+    return var;
+  } else if ( role == RecursiveStatisticsRole ) {
+    QVariant var;
+    var.setValue( statistics ); //FIXME:(tmg) returns a recursive statistic object here
+    return var;
+  }
 
   if ( role == Qt::DisplayRole &&
        ( index.column() == 1 || index.column() == 2 ) ) {

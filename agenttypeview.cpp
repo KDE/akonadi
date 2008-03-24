@@ -133,7 +133,7 @@ void AgentTypeViewDelegate::paint( QPainter *painter, const QStyleOptionViewItem
   painter->setRenderHint( QPainter::Antialiasing );
 
   const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
-  const QString comment = index.model()->data( index, AgentTypeModel::CommentRole ).toString();
+  const QString comment = index.model()->data( index, AgentTypeModel::DescriptionRole ).toString();
 
   const QVariant data = index.model()->data( index, Qt::DecorationRole );
 
@@ -191,7 +191,7 @@ QSize AgentTypeViewDelegate::sizeHint( const QStyleOptionViewItem &option, const
     return QSize( 0, 0 );
 
   const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
-  const QString comment = index.model()->data( index, AgentTypeModel::CommentRole ).toString();
+  const QString comment = index.model()->data( index, AgentTypeModel::DescriptionRole ).toString();
 
   QFontMetrics fm = option.fontMetrics;
   int hn = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, name ).height();

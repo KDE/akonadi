@@ -66,6 +66,17 @@ static const int numActionData = sizeof actionData / sizeof *actionData;
 
 BOOST_STATIC_ASSERT( numActionData == StandardActionManager::LastType );
 
+static bool canCreateCollection( const Collection &collection )
+{
+  if ( collection.type() == Collection::Virtual || collection.type() == Collection::VirtualParent )
+    return false;
+
+  if ( !collection.contentTypes().contains( Collection::collectionMimeType() ) )
+    return false;
+
+  return true;
+}
+
 class StandardActionManager::Private
 {
   public:
@@ -125,7 +136,7 @@ class StandardActionManager::Private
 
       if ( singleColSelected && selectedIndex.isValid() ) {
         const Collection col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
-        enableAction( CreateCollection, selectedIndex.data( CollectionModel::ChildCreatableRole ).toBool() );
+        enableAction( CreateCollection, canCreateCollection( col ) );
         enableAction( DeleteCollections, col.type() != Collection::Resource && col.type() != Collection::VirtualParent );
         enableAction( SynchronizeCollections, col.type() == Collection::Folder || col.type() == Collection::Resource );
         enableAction( Paste, PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
@@ -162,8 +173,11 @@ class StandardActionManager::Private
     void slotCreateCollection()
     {
       const QModelIndex index = collectionSelectionModel->currentIndex();
-      if ( !index.data( CollectionModel::ChildCreatableRole ).toBool() )
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+
+      if ( !canCreateCollection( collection ) )
         return;
+
       const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder"),
                                                   i18nc( "@label:textbox, name of a thing", "Name"),
                                                   QString(), 0, parentWidget );

@@ -35,8 +35,8 @@ class SubscriptionModel : public CollectionModel
   Q_OBJECT
   public:
     /** Additional roles. */
-    enum SubscriptionModelRoles {
-      SubscriptionChangedRole = CollectionViewUserRole ///< Indicate the subscription status has been changed.
+    enum Roles {
+      SubscriptionChangedRole = CollectionModel::UserRole + 1 ///< Indicate the subscription status has been changed.
     };
 
     /**

@@ -115,10 +115,6 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
       return col.id();
     case CollectionRole:
       return QVariant::fromValue( col );
-    case CollectionContentTypesRole:
-      return QVariant(col.contentTypes());
-    case ChildCreatableRole:
-      return canCreateCollection( index );
   }
   return QVariant();
 }
@@ -278,21 +274,6 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
   }
 
   return flags;
-}
-
-bool CollectionModel::canCreateCollection( const QModelIndex & parent ) const
-{
-  Q_D( const CollectionModel );
-  if ( !parent.isValid() )
-    return false; // FIXME: creation of top-level collections??
-
-  Collection col = d->collections.value( parent.internalId() );
-  if ( col.type() == Collection::Virtual || col.type() == Collection::VirtualParent )
-    return false;
-  if ( !col.contentTypes().contains( Collection::collectionMimeType() ) )
-    return false;
-
-  return true;
 }
 
 Qt::DropActions CollectionModel::supportedDropActions() const

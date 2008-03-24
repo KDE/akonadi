@@ -43,11 +43,10 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
     /**
      * Describes the roles of this model.
      */
-    //FIXME_API: rename to Roles
-    enum Role
+    enum Roles
     {
       TypeIdentifierRole  = Qt::UserRole + 1,  ///< The identifier of the agent type
-      CommentRole,                             ///< A description of the agent type
+      DescriptionRole,                         ///< A description of the agent type
       MimeTypesRole,                           ///< A list of supported mimetypes
       CapabilitiesRole,                        ///< A list of supported capabilities
       InstanceIdentifierRole,                  ///< The identifier of the agent instance
@@ -58,7 +57,6 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
       OnlineRole,                              ///< The current online/offline status
       UserRole  = Qt::UserRole + 42            ///< For further extensions
     };
-    //FIXME_API: CommentRole -> DescriptionRole
     //FIXME_API: drop progress message, align to Agent.Status iface
 
     /**
