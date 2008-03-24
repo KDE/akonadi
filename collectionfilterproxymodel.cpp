@@ -87,14 +87,16 @@ CollectionFilterProxyModel::~CollectionFilterProxyModel()
   delete d;
 }
 
-void CollectionFilterProxyModel::addMimeTypes(const QStringList &typeList)
+void CollectionFilterProxyModel::addMimeTypeFilters(const QStringList &typeList)
 {
   d->mimeTypes << typeList;
+  invalidateFilter();
 }
 
-void CollectionFilterProxyModel::addMimeType(const QString &type)
+void CollectionFilterProxyModel::addMimeTypeFilter(const QString &type)
 {
   d->mimeTypes << type;
+  invalidateFilter();
 }
 
 bool CollectionFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
@@ -102,9 +104,15 @@ bool CollectionFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIn
   return d->collectionAccepted( sourceModel()->index( sourceRow, 0, sourceParent ) );
 }
 
-QStringList CollectionFilterProxyModel::mimeTypes() const
+QStringList CollectionFilterProxyModel::mimeTypeFilters() const
 {
   return d->mimeTypes;
+}
+
+void CollectionFilterProxyModel::clearFilters()
+{
+  d->mimeTypes.clear();
+  invalidateFilter();
 }
 
 #include "collectionfilterproxymodel.moc"

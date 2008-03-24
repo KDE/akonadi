@@ -133,7 +133,7 @@ void ItemView::contextMenuEvent(QContextMenuEvent * event)
     popup->exec( event->globalPos() );
 }
 
-void ItemView::setKXmlGuiWindow(KXmlGuiWindow * xmlGuiWindow)
+void ItemView::setXmlGuiWindow(KXmlGuiWindow * xmlGuiWindow)
 {
   d->xmlGuiWindow = xmlGuiWindow;
 }

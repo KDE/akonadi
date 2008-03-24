@@ -47,19 +47,17 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
     /**
       Accept agents supporting @p mimeType.
     */
-    void addMimeType( const QString &mimeType );
-    //FIXME_API: rename addMimeTypeFilter
+    void addMimeTypeFilter( const QString &mimeType );
 
     /**
       Accept agents with the given @p capability.
     */
-    void addCapability( const QString &capability );
-    //FIXME_API: rename addCapabilityFilter
+    void addCapabilityFilter( const QString &capability );
 
     /**
       Clear the filters ( mimeTypes & capabilities ).
     */
-    void clearFilter();
+    void clearFilters();
 
   protected:
     bool filterAcceptsRow( int row, const QModelIndex &parent ) const;

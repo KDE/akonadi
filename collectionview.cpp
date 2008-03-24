@@ -236,7 +236,7 @@ void CollectionView::contextMenuEvent(QContextMenuEvent * event)
     popup->exec( event->globalPos() );
 }
 
-void CollectionView::setKXmlGuiWindow(KXmlGuiWindow * xmlGuiWindow)
+void CollectionView::setXmlGuiWindow(KXmlGuiWindow * xmlGuiWindow)
 {
   d->xmlGuiWindow = xmlGuiWindow;
 }

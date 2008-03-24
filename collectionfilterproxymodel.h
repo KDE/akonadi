@@ -60,23 +60,20 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      * Add types to be shown by the filter
      * @param typeList A list of mimetypes to be shown
      */
-    void addMimeTypes( const QStringList &typeList );
-    //FIXME_API: rename to addMimeTypeFilters()
+    void addMimeTypeFilters( const QStringList &typeList );
 
     /**
      * Convenience method for the previous one
      * @param type A type to show
      */
-    void addMimeType( const QString &type );
-    //FIXME_API: rename to addMimeTypeFilter()
+    void addMimeTypeFilter( const QString &type );
 
     /**
      * @return The list of mimetype filter
      */
-    QStringList mimeTypes() const;
-    //FIXME_API: rename to mimeTypeFilters()
+    QStringList mimeTypeFilters() const;
 
-    //FIXME_API: add clearFilters();
+    void clearFilters();
 
   protected:
     /**

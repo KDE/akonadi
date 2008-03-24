@@ -54,19 +54,19 @@ AgentFilterProxyModel::~AgentFilterProxyModel()
   delete d;
 }
 
-void AgentFilterProxyModel::addMimeType(const QString & mimeType)
+void AgentFilterProxyModel::addMimeTypeFilter(const QString & mimeType)
 {
   d->mimeTypes << mimeType;
   invalidateFilter();
 }
 
-void AgentFilterProxyModel::addCapability(const QString & capability)
+void AgentFilterProxyModel::addCapabilityFilter(const QString & capability)
 {
   d->capabilities << capability;
   invalidateFilter();
 }
 
-void AgentFilterProxyModel::clearFilter()
+void AgentFilterProxyModel::clearFilters()
 {
   d->capabilities.clear();
   d->mimeTypes.clear();

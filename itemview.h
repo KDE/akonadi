@@ -72,8 +72,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
       if you want to use the built-in context menu.
       @param xmlGuiWindow The KXmlGuiWindow this view is used in.
     */
-    void setKXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
-    //FIXME_API: rename it to setXmlGuiWindow()
+    void setXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
 
   Q_SIGNALS:
     /**

@@ -76,9 +76,9 @@ void Dialog::currentChanged( const QString &current, const QString &previous )
 
 void Dialog::filterChanged( int index )
 {
-  mView->agentFilterProxyModel()->clearFilter();
+  mView->agentFilterProxyModel()->clearFilters();
   if ( index > 0 )
-    mView->agentFilterProxyModel()->addMimeType( mFilter->itemText( index ) );
+    mView->agentFilterProxyModel()->addMimeTypeFilter( mFilter->itemText( index ) );
 }
 
 int main( int argc, char **argv )
