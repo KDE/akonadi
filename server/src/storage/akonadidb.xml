@@ -67,12 +67,12 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="5"/>
+    <data columns="version" values="6"/>
   </table>
 
   <table name="Resource">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
+    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY NOT NULL UNIQUE"/>
     <reference name="locations" table="Location" key="resourceId"/>
     <data columns="name" values="'akonadi_search_resource'"/>
   </table>
@@ -80,7 +80,7 @@
   <table name="Location">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remoteId" type="QString"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
+    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY NOT NULL"/>
     <column name="parentId" type="qint64" refTable="Location" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Location(id)"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
     <column name="subscribed" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
