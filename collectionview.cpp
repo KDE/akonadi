@@ -145,7 +145,7 @@ CollectionView::~CollectionView()
 void CollectionView::setModel( QAbstractItemModel * model )
 {
   QTreeView::setModel( model );
-  header()->setResizeMode( 0, QHeaderView::Stretch );
+  header()->setStretchLastSection( true );
 
   connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
