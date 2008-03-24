@@ -144,7 +144,7 @@ void CollectionJobTest::testFolderList( )
   QCOMPARE( col.parent(), res1ColId );
   QCOMPARE( col.type(), Collection::Folder );
   contentTypes << "message/rfc822" << "text/calendar" << "text/vcard" << "application/octet-stream";
-  compareLists( col.contentTypes(), contentTypes );
+  compareLists( col.contentMimeTypes(), contentTypes );
 
   QVERIFY( findCol( list, "bar" ).isValid() );
   QCOMPARE( findCol( list, "bar" ).parent(), col.id() );
@@ -234,7 +234,7 @@ void CollectionJobTest::testCreateDeleteFolder_data()
   col.setName( "mail folder" );
   QStringList mimeTypes;
   mimeTypes << "inode/directory" << "message/rfc822";
-  col.setContentTypes( mimeTypes );
+  col.setContentMimeTypes( mimeTypes );
   col.setRemoteId( "remote id" );
   CachePolicy policy;
   policy.setInheritFromParent( false );
@@ -301,10 +301,10 @@ void CollectionJobTest::testCreateDeleteFolder()
     parentCol = listJob->collections().first();
   }
 
-  if ( collection.contentTypes().isEmpty() )
-    compareLists( listedCol.contentTypes(), parentCol.contentTypes() );
+  if ( collection.contentMimeTypes().isEmpty() )
+    compareLists( listedCol.contentMimeTypes(), parentCol.contentMimeTypes() );
   else
-    compareLists( listedCol.contentTypes(), collection.contentTypes() );
+    compareLists( listedCol.contentMimeTypes(), collection.contentMimeTypes() );
 
   if ( collection.resource().isEmpty() )
     QCOMPARE( listedCol.resource(), parentCol.resource() );
@@ -371,10 +371,10 @@ void CollectionJobTest::testModify()
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
-  compareLists( col.contentTypes(), reference );
+  compareLists( col.contentMimeTypes(), reference );
 
   // test clearing content types
-  col.setContentTypes( QStringList() );
+  col.setContentMimeTypes( QStringList() );
   mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
@@ -382,10 +382,10 @@ void CollectionJobTest::testModify()
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
-  QVERIFY( col.contentTypes().isEmpty() );
+  QVERIFY( col.contentMimeTypes().isEmpty() );
 
   // test setting contnet types
-  col.setContentTypes( reference );
+  col.setContentMimeTypes( reference );
   mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
@@ -393,7 +393,7 @@ void CollectionJobTest::testModify()
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
-  compareLists( col.contentTypes(), reference );
+  compareLists( col.contentMimeTypes(), reference );
 
   // renaming
   col.setName( "foo (renamed)" );
@@ -491,7 +491,7 @@ void CollectionJobTest::testUtf8CollectionName()
   QCOMPARE( col.name(), folderName );
 
   // modify collection
-  col.setContentTypes( QStringList( "message/rfc822'" ) );
+  col.setContentMimeTypes( QStringList( "message/rfc822'" ) );
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
   QVERIFY( modify->exec() );
 

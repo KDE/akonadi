@@ -64,7 +64,7 @@ class SubscriptionModel::Private
       Collection col = q->collectionForId( id );
       if ( col.type() == Collection::VirtualParent || col.type() == Collection::Structural )
         return false;
-      if ( col.contentTypes().isEmpty() )
+      if ( col.contentMimeTypes().isEmpty() )
         return false;
       return true;
     }

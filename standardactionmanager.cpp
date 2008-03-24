@@ -71,7 +71,7 @@ static bool canCreateCollection( const Collection &collection )
   if ( collection.type() == Collection::Virtual || collection.type() == Collection::VirtualParent )
     return false;
 
-  if ( !collection.contentTypes().contains( Collection::collectionMimeType() ) )
+  if ( !collection.contentMimeTypes().contains( Collection::mimeType() ) )
     return false;
 
   return true;

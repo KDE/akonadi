@@ -71,9 +71,9 @@ class CollectionModelPrivate
 
     void updateSupportedMimeTypes( Collection col )
     {
-      QStringList l = col.contentTypes();
+      QStringList l = col.contentMimeTypes();
       for ( QStringList::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
-        if ( (*it) == Collection::collectionMimeType() )
+        if ( (*it) == Collection::mimeType() )
           continue;
         if ( !mimeTypes.contains( *it  ) )
           mimeTypes << *it;

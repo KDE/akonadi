@@ -147,14 +147,12 @@ class AKONADI_EXPORT Collection : public Entity
       e.g. message/rfc822, x-akonadi/collection for a mail folder that
       supports sub-folders.
     */
-    QStringList contentTypes() const;
-    //FIXME_API: rename to contentMimeTypes()
+    QStringList contentMimeTypes() const;
 
     /**
       Sets the list of possible content mimetypes.
     */
-    void setContentTypes( const QStringList &types );
-    //FIXME_API: rename to setContentMimeTypes()
+    void setContentMimeTypes( const QStringList &types );
 
     /**
       Returns the identifier of the parent collection.
@@ -197,8 +195,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
       Returns the mimetype used for collections.
     */
-    //FIXME_API: rename to mimeType()
-    static QString collectionMimeType();
+    static QString mimeType();
 
     /**
       Returns the identifier of the resource owning this collection.

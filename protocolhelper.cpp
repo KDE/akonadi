@@ -113,7 +113,7 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       QStringList ct2;
       foreach ( const QByteArray b, ct )
         ct2 << QString::fromLatin1( b );
-      collection.setContentTypes( ct2 );
+      collection.setContentMimeTypes( ct2 );
     } else if ( key == "CACHEPOLICY" ) {
       CachePolicy policy;
       ProtocolHelper::parseCachePolicy( value, policy );
@@ -134,7 +134,7 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       collection.setType( Collection::Resource );
   } else if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) ) {
     collection.setType( Collection::Virtual );
-  } else if ( collection.contentTypes().isEmpty() ) {
+  } else if ( collection.contentMimeTypes().isEmpty() ) {
     collection.setType( Collection::Structural );
   } else {
     collection.setType( Collection::Folder );

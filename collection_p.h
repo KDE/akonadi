@@ -71,8 +71,8 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     {
       Collection root( 0 );
       QStringList types;
-      types << Collection::collectionMimeType();
-      root.setContentTypes( types );
+      types << Collection::mimeType();
+      root.setContentMimeTypes( types );
       return root;
     }
 

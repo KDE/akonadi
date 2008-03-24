@@ -95,8 +95,8 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
           return SmallIcon( QLatin1String( "folder-violet" ) );
         if ( col.type() == Collection::Structural )
           return SmallIcon( QLatin1String( "folder-grey" ) );
-        QStringList content = col.contentTypes();
-        if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::collectionMimeType() )) ) {
+        QStringList content = col.contentMimeTypes();
+        if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::mimeType() )) ) {
           if ( content.contains( QLatin1String( "text/x-vcard" ) ) || content.contains( QLatin1String( "text/directory" ) ) || content.contains( QLatin1String( "text/vcard" ) ) )
             return SmallIcon( QLatin1String( "kmgroupware_folder_contacts" ) );
           // TODO: add all other content types and/or fix their mimetypes
@@ -293,7 +293,7 @@ bool CollectionModel::supportsContentType(const QModelIndex & index, const QStri
     return false;
   Collection col = d->collections.value( index.internalId() );
   Q_ASSERT( col.isValid() );
-  QStringList ct = col.contentTypes();
+  QStringList ct = col.contentMimeTypes();
   foreach ( QString a, ct ) {
     if ( contentTypes.contains( a ) )
       return true;

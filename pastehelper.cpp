@@ -45,7 +45,7 @@ bool PasteHelper::canPaste(const QMimeData * mimeData, const Collection & collec
     return true;
 
   foreach ( const QString format, mimeData->formats() )
-    if ( collection.contentTypes().contains( format ) )
+    if ( collection.contentMimeTypes().contains( format ) )
       return true;
 
   return false;
@@ -59,7 +59,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
   // we try to drop data not coming with the akonadi:// url
   // find a type the target collection supports
   foreach ( const QString type, mimeData->formats() ) {
-    if ( !collection.contentTypes().contains( type ) )
+    if ( !collection.contentMimeTypes().contains( type ) )
       continue;
 
     QByteArray item = mimeData->data( type );

@@ -438,8 +438,8 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col, cons
   Q_Q( ResourceBase );
   currentCollection = col;
   // check if this collection actually can contain anything
-  QStringList contentTypes = currentCollection.contentTypes();
-  contentTypes.removeAll( Collection::collectionMimeType() );
+  QStringList contentTypes = currentCollection.contentMimeTypes();
+  contentTypes.removeAll( Collection::mimeType() );
   if ( !contentTypes.isEmpty() ) {
     q->changeStatus( ResourceBase::Syncing, i18nc( "@info:status", "Syncing collection '%1'", currentCollection.name() ) );
     q->retrieveItems( currentCollection, parts );

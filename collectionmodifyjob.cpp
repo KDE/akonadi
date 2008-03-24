@@ -58,7 +58,7 @@ void CollectionModifyJob::doStart()
   QByteArray changes;
   if ( d->mCollection.d_func()->contentTypesChanged ) {
     QList<QByteArray> bList;
-    foreach( QString s, d->mCollection.contentTypes() ) bList << s.toLatin1();
+    foreach( QString s, d->mCollection.contentMimeTypes() ) bList << s.toLatin1();
     changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
   }
   if ( d->mCollection.parent() >= 0 )

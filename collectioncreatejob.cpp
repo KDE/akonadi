@@ -57,10 +57,10 @@ void CollectionCreateJob::doStart( )
   QByteArray command = newTag() + " CREATE \"" + d->mCollection.name().toUtf8() + "\" ";
   command += QByteArray::number( d->mCollection.parent() );
   command += " (";
-  if ( !d->mCollection.contentTypes().isEmpty() )
+  if ( !d->mCollection.contentMimeTypes().isEmpty() )
   {
     QList<QByteArray> cList;
-    foreach( QString s, d->mCollection.contentTypes() ) cList << s.toLatin1();
+    foreach( QString s, d->mCollection.contentMimeTypes() ) cList << s.toLatin1();
     command += "MIMETYPE (" + ImapParser::join( cList, QByteArray(" ") ) + ')';
   }
   command += " REMOTEID \"" + d->mCollection.remoteId().toUtf8() + '"';

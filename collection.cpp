@@ -81,8 +81,8 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     {
       Collection root( 0 );
       QStringList types;
-      types << Collection::collectionMimeType();
-      root.setContentTypes( types );
+      types << Collection::mimeType();
+      root.setContentMimeTypes( types );
       return root;
     }
 
@@ -160,12 +160,12 @@ void Collection::setRights( Rights rights )
   attr->setRights( rights );
 }
 
-QStringList Collection::contentTypes() const
+QStringList Collection::contentMimeTypes() const
 {
   return d_func()->contentTypes;
 }
 
-void Collection::setContentTypes( const QStringList & types )
+void Collection::setContentMimeTypes( const QStringList & types )
 {
   Q_D( Collection );
   d->contentTypes = types;
@@ -236,7 +236,7 @@ Collection Collection::root()
   return CollectionPrivate::root;
 }
 
-QString Collection::collectionMimeType( )
+QString Collection::mimeType( )
 {
   return QString::fromLatin1("inode/directory");
 }
