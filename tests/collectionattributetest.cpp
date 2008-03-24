@@ -41,8 +41,8 @@ class TestAttribute : public Attribute
     TestAttribute() : Attribute() {}
     TestAttribute* clone() const { return new TestAttribute(); }
     QByteArray type() const { return "TESTATTRIBUTE"; }
-    QByteArray toByteArray() const { return mData; }
-    void setData( const QByteArray &data ) { mData = data; }
+    QByteArray serialized() const { return mData; }
+    void deserialize( const QByteArray &data ) { mData = data; }
   private:
     QByteArray mData;
 };
@@ -81,7 +81,7 @@ void CollectionAttributeTest::testAttributes()
 
   // add a custom attribute
   TestAttribute *attr = new TestAttribute();
-  attr->setData( attr1 );
+  attr->deserialize( attr1 );
   Collection col;
   col.setName( "attribute test" );
   col.setParent( parentColId );
@@ -93,7 +93,7 @@ void CollectionAttributeTest::testAttributes()
 
   attr = col.attribute<TestAttribute>();
   QVERIFY( attr != 0 );
-  QCOMPARE( attr->toByteArray(), QByteArray( attr1 ) );
+  QCOMPARE( attr->serialized(), QByteArray( attr1 ) );
 
   CollectionFetchJob *list = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
   QVERIFY( list->exec() );
@@ -103,12 +103,12 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( col.isValid() );
   attr = col.attribute<TestAttribute>();
   QVERIFY( attr != 0 );
-  QCOMPARE( attr->toByteArray(), QByteArray( attr1 ) );
+  QCOMPARE( attr->serialized(), QByteArray( attr1 ) );
 
 
   // modify a custom attribute
   attr = new TestAttribute();
-  attr->setData( attr2 );
+  attr->deserialize( attr2 );
   col.addAttribute( attr );
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
   QVERIFY( modify->exec() );
@@ -121,7 +121,7 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( col.isValid() );
   attr = col.attribute<TestAttribute>();
   QVERIFY( attr != 0 );
-  QCOMPARE( attr->toByteArray(), QByteArray( attr2 ) );
+  QCOMPARE( attr->serialized(), QByteArray( attr2 ) );
 
 
   // delete a custom attribute
@@ -151,9 +151,9 @@ void CollectionAttributeTest::testDefaultAttributes()
   QCOMPARE( col.attributes().count(), 0 );
   Attribute* attr = AttributeFactory::createAttribute( "TYPE" );
   QVERIFY( attr );
-  attr->setData( "VALUE" );
+  attr->deserialize( "VALUE" );
   col.addAttribute( attr );
   QCOMPARE( col.attributes().count(), 1 );
   QVERIFY( col.hasAttribute( "TYPE" ) );
-  QCOMPARE( col.attribute( "TYPE" )->toByteArray(), QByteArray("VALUE") );
+  QCOMPARE( col.attribute( "TYPE" )->serialized(), QByteArray("VALUE") );
 }

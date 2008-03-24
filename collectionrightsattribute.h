@@ -61,8 +61,8 @@ class AKONADI_EXPORT CollectionRightsAttribute : public Attribute
      */
     virtual QByteArray type() const;
     virtual CollectionRightsAttribute* clone() const;
-    virtual QByteArray toByteArray() const;
-    virtual void setData( const QByteArray& );
+    virtual QByteArray serialized() const;
+    virtual void deserialize( const QByteArray& );
 
   private:
     QByteArray mData;

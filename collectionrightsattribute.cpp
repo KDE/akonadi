@@ -96,12 +96,12 @@ QByteArray CollectionRightsAttribute::type() const
   return s_accessRightsIdentifier;
 }
 
-QByteArray CollectionRightsAttribute::toByteArray() const
+QByteArray CollectionRightsAttribute::serialized() const
 {
   return mData;
 }
 
-void CollectionRightsAttribute::setData( const QByteArray &data )
+void CollectionRightsAttribute::deserialize( const QByteArray &data )
 {
   mData = data;
 }

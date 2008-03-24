@@ -57,8 +57,7 @@ class AKONADI_EXPORT Attribute
      * Returns a QByteArray representation of the attribute which will be
      * storaged. This can be raw binary data, no encoding needs to be applied.
      */
-    //FIXME_API: rename to serialized()
-    virtual QByteArray toByteArray() const = 0;
+    virtual QByteArray serialized() const = 0;
 
     /**
      * Sets the data of this attribute, using the same encoding
@@ -66,8 +65,7 @@ class AKONADI_EXPORT Attribute
      *
      * @param data The encoded attribute data.
      */
-    //FIXME_API: rename to deserialize()
-    virtual void setData( const QByteArray &data ) = 0;
+    virtual void deserialize( const QByteArray &data ) = 0;
 };
 
 }

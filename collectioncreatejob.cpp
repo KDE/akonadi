@@ -65,7 +65,7 @@ void CollectionCreateJob::doStart( )
   }
   command += " REMOTEID \"" + d->mCollection.remoteId().toUtf8() + '"';
   foreach ( Attribute* attr, d->mCollection.attributes() )
-    command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->toByteArray() );
+    command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->serialized() );
   command += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
   command += ")\n";
   writeData( command );

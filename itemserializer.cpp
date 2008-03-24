@@ -146,7 +146,7 @@ void ItemSerializer::deserialize( Item& item, const QString& label, QIODevice& d
       data.seek( 0 );
       Attribute* attr = AttributeFactory::createAttribute( label.toLatin1() );
       Q_ASSERT( attr );
-      attr->setData( data.readAll() );
+      attr->deserialize( data.readAll() );
       item.addAttribute( attr );
     }
 }
@@ -171,7 +171,7 @@ void ItemSerializer::serialize( const Item& item, const QString& label, QIODevic
     if ( !supportedParts.contains( label ) ) {
       Attribute* attr = item.attribute( label.toLatin1() );
       if ( attr )
-        data.write( attr->toByteArray() );
+        data.write( attr->serialized() );
       return;
     }
     if ( !item.hasPayload() )

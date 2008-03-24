@@ -121,7 +121,7 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
     } else {
       Attribute* attr = AttributeFactory::createAttribute( key );
       Q_ASSERT( attr );
-      attr->setData( value );
+      attr->deserialize( value );
       collection.addAttribute( attr );
     }
   }
@@ -148,7 +148,7 @@ QByteArray ProtocolHelper::attributesToByteArray(const Entity & entity)
   QList<QByteArray> l;
   foreach ( const Attribute *attr, entity.attributes() ) {
     l << attr->type();
-    l << ImapParser::quote( attr->toByteArray() );
+    l << ImapParser::quote( attr->serialized() );
   }
   return ImapParser::join( l, " " );
 }

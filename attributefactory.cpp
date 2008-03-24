@@ -39,8 +39,8 @@ class DefaultAttribute : public Attribute
       return new DefaultAttribute( mType, mValue );
     }
 
-    QByteArray toByteArray() const { return mValue; }
-    void setData( const QByteArray &data ) { mValue = data; }
+    QByteArray serialized() const { return mValue; }
+    void deserialize( const QByteArray &data ) { mValue = data; }
 
   private:
     QByteArray mType, mValue;
