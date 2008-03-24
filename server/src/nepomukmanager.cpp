@@ -18,6 +18,7 @@
 */
 
 #include <QtCore/QDebug>
+#include <QtCore/QUrl>
 
 #include "nepomukmanager.h"
 
