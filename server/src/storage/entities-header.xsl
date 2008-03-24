@@ -112,7 +112,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
     /** Checks if a record with name @name exists. */
-    static bool exists( const QString &amp;name );
+    static bool exists( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name );
     </xsl:if>
 
     // data retrieval
@@ -123,7 +123,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
 
     <xsl:if test="column[@name = 'name']">
     /** Returns the record with name @p name. */
-    <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByName( const QString &amp;name );
+    <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByName( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name );
     </xsl:if>
 
     /** Retrieve all records from this table. */

@@ -54,7 +54,7 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     static QHash&lt;qint64, <xsl:value-of select="$className"/> &gt; idCache;
     </xsl:if>
     <xsl:if test="column[@name = 'name']">
-    static QHash&lt;QString, <xsl:value-of select="$className"/> &gt; nameCache;
+    static QHash&lt;<xsl:value-of select="column[@name = 'name']/@type"/>, <xsl:value-of select="$className"/> &gt; nameCache;
     </xsl:if>
 };
 
@@ -66,7 +66,7 @@ QMutex <xsl:value-of select="$className"/>::Private::cacheMutex;
 QHash&lt;qint64, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::idCache;
 </xsl:if>
 <xsl:if test="column[@name = 'name']">
-QHash&lt;QString, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::nameCache;
+QHash&lt;<xsl:value-of select="column[@name = 'name']/@type"/>, <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::Private::nameCache;
 </xsl:if>
 
 
@@ -215,7 +215,7 @@ bool <xsl:value-of select="$className"/>::exists( qint64 id )
 }
 </xsl:if>
 <xsl:if test="column[@name = 'name']">
-bool <xsl:value-of select="$className"/>::exists( const QString &amp;name )
+bool <xsl:value-of select="$className"/>::exists( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name )
 {
   if ( Private::cacheEnabled ) {
     Private::cacheMutex.lock();
@@ -257,7 +257,7 @@ QList&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$classN
 
 </xsl:if>
 <xsl:if test="column[@name = 'name']">
-<xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveByName( const QString &amp;name )
+<xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveByName( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name )
 {
   <xsl:call-template name="data-retrieval">
   <xsl:with-param name="key">name</xsl:with-param>
