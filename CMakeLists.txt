@@ -175,6 +175,7 @@ install( FILES
   collectionstatistics.h
   collectionstatisticsjob.h
   collectionview.h
+  collectioncombobox.h
   control.h
   entity.h
   item.h
