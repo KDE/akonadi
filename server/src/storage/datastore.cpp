@@ -377,7 +377,7 @@ bool Akonadi::DataStore::cleanupLocation(Location & location)
   return location.remove();
 }
 
-bool Akonadi::DataStore::renameLocation( Location & location, qint64 newParent, const QString & newName)
+bool Akonadi::DataStore::renameLocation( Location & location, qint64 newParent, const QByteArray & newName)
 {
   if ( location.name() == newName && location.parentId() == newParent )
     return true;

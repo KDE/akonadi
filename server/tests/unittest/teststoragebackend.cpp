@@ -29,15 +29,15 @@ bool MockBackend::listCollections( const QString& prefix,
     //qDebug() << "Prefix: " << prefix << " pattern: " << mailboxPattern;
     if ( mailboxPattern == QLatin1String("%") ) {
         Location l;
-        l.setName( QLatin1String("INBOX") );
+        l.setName( "INBOX" );
         result << l;
     } else if ( mailboxPattern == QLatin1String("*") ) {
-        Location l1; l1.setName( QLatin1String("INBOX") );
-        Location l2; l2.setName( QLatin1String("INBOX/foo") );
+        Location l1; l1.setName( "INBOX" );
+        Location l2; l2.setName( "INBOX/foo" );
         result << l1 << l2;
-    } else if ( mailboxPattern.startsWith( QLatin1String("INBOX") ) ) {
-        Location l1; l1.setName( QLatin1String("foo") );
-        Location l2; l2.setName( QLatin1String("bar") );
+    } else if ( mailboxPattern.startsWith( "INBOX" ) ) {
+        Location l1; l1.setName( "foo" );
+        Location l2; l2.setName( "bar" );
         result << l1 << l2;
     }
     return true;

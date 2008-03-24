@@ -64,7 +64,7 @@ bool SearchPersistent::handleLine( const QByteArray& line )
   l.setRemoteId( QString::fromUtf8( queryString ) );
   l.setParentId( 1 ); // search root
   l.setResourceId( 1 ); // search resource
-  l.setName( QString::fromUtf8( collectionName ) );
+  l.setName( collectionName );
   if ( !db->appendLocation( l ) )
     return failureResponse( "Unable to create persistent search" );
 

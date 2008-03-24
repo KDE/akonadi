@@ -80,7 +80,7 @@
   <table name="Location">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remoteId" type="QString"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY character set utf8 collate utf8_bin NOT NULL"/>
+    <column name="name" type="QByteArray" sqltype="VARCHAR(255)" properties="BINARY character set utf8 collate utf8_bin NOT NULL"/>
     <column name="parentId" type="qint64" refTable="Location" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Location(id)"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
     <column name="subscribed" type="bool" default="true" properties="NOT NULL DEFAULT true"/>

@@ -37,7 +37,7 @@ class HandlerHelper
     /**
       Removes leading and trailing delimiters.
     */
-    static QString normalizeCollectionName( const QString &name );
+    static QByteArray normalizeCollectionName( const QByteArray &name );
 
     /**
       Returns the collection identified by the given id or path.

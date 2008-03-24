@@ -41,7 +41,7 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
   int pos = line.indexOf( ' ' ) + 1; // skip tag
   pos = line.indexOf( ' ', pos ); // skip command
   QByteArray oldName;
-  QString newName;
+  QByteArray newName;
   if ( pos < 0 )
     return failureResponse( "Bad syntax" );
 
@@ -54,18 +54,18 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = HandlerHelper::collectionFromIdOrName( newName.toUtf8() );
+  Location location = HandlerHelper::collectionFromIdOrName( newName );
   if ( location.isValid() )
     return failureResponse( "Collection already exists" );
   location = HandlerHelper::collectionFromIdOrName( oldName );
   if ( !location.isValid() )
     return failureResponse( "No such collection" );
 
-  QString parentPath;
-  int index = newName.lastIndexOf( QLatin1Char('/') );
+  QByteArray parentPath;
+  int index = newName.lastIndexOf( '/' );
   if ( index > 0 )
     parentPath = newName.mid( index + 1 );
-  Location parent = HandlerHelper::collectionFromIdOrName( parentPath.toUtf8() );
+  Location parent = HandlerHelper::collectionFromIdOrName( parentPath );
   newName = newName.left( index );
   qint64 parentId = 0;
   if ( parent.isValid() )

@@ -103,7 +103,7 @@ bool Create::handleLine(const QByteArray& line )
 
   Location location;
   location.setParentId( parentId );
-  location.setName( name );
+  location.setName( name.toUtf8() );
   location.setResourceId( resourceId );
 
   // attributes

@@ -74,7 +74,7 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
       if ( !location.update() )
         return failureResponse( "Unable to change cache policy" );
     } else if ( type == "NAME" ) {
-      QString newName;
+      QByteArray newName;
       pos = ImapParser::parseString( line, newName, pos );
       if ( !db->renameLocation( location, location.parentId(), newName ) )
         return failureResponse( "Unable to rename collection" );

@@ -25,12 +25,12 @@
 
 using namespace Akonadi;
 
-QString Akonadi::HandlerHelper::normalizeCollectionName(const QString &name)
+QByteArray Akonadi::HandlerHelper::normalizeCollectionName(const QByteArray &name)
 {
-  QString collection = name;
-  if ( collection.startsWith( QLatin1Char('/') )  )
+  QByteArray collection = name;
+  if ( collection.startsWith( '/' )  )
     collection = collection.right( collection.length() - 1 );
-  if ( collection.endsWith( QLatin1Char('/') ) )
+  if ( collection.endsWith( '/' ) )
     collection = collection.left( collection.length() - 1 );
   return collection;
 }
@@ -44,8 +44,7 @@ Location HandlerHelper::collectionFromIdOrName(const QByteArray & id)
     return Location::retrieveById( collectionId );
 
   // id is a path
-  QString path = QString::fromUtf8( id ); // ### should be UTF-7 for real IMAP compatibility
-  path = normalizeCollectionName( path );
+  QString path = QString::fromUtf8( normalizeCollectionName( id ) ); // ### should be UTF-7 for real IMAP compatibility
 
   const QStringList pathParts = path.split( QLatin1Char('/') );
   Location loc;
@@ -71,7 +70,7 @@ QString HandlerHelper::pathForCollection(const Location & loc)
   QStringList parts;
   Location current = loc;
   while ( current.isValid() ) {
-    parts.prepend( current.name() );
+    parts.prepend( QString::fromUtf8( current.name() ) );
     current = current.parent();
   }
   return parts.join( QLatin1String("/") );
@@ -158,7 +157,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Location & loc, bool hidd
                + QByteArray::number( loc.parentId() ) + " (";
 
   // FIXME: escape " and "\"
-  b += "NAME \"" + loc.name().toUtf8() + "\" ";
+  b += "NAME \"" + loc.name() + "\" ";
   if ( hidden )
     b+= "MIMETYPE () ";
   else
