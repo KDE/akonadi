@@ -181,6 +181,23 @@ void AgentBase::configure( WId windowId )
   Q_UNUSED( windowId );
 }
 
+WId AgentBase::winIdForDialogs() const
+{
+  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.akonaditray") );
+  if ( !registered )
+    return 0;
+
+  QDBusInterface dbus( QLatin1String("org.kde.akonaditray"), QLatin1String("/Actions"),
+                       QLatin1String("org.kde.Akonadi.Tray") );
+  QDBusMessage reply = dbus.call( QLatin1String("getWinId") );
+
+  if ( reply.type() == QDBusMessage::ErrorMessage )
+    return 0;
+
+  WId winid = (WId)reply.arguments().at( 0 ).toLongLong();
+  return winid;
+}
+
 void AgentBase::quit()
 {
   Q_D( AgentBase );

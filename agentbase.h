@@ -90,6 +90,11 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     virtual void configure( WId windowId );
 
+    /**
+     * This method returns the winId which should be used for dialogs.
+     */
+    WId winIdForDialogs() const;
+
 #ifdef Q_OS_WIN
     /**
      * Overload of @ref configure needed because WId cannot be automatically casted
