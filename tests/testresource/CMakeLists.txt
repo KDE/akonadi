@@ -17,7 +17,7 @@ set( knutresource_SRCS
 install( FILES knutresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents" )
 
 kde4_add_kcfg_files(knutresource_SRCS settings.kcfgc)
-qt4_generate_dbus_interface(knutresource.kcfg org.kde.Akonadi.Knut.Settings)
+qt4_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/knutresource.kcfg org.kde.Akonadi.Knut.Settings)
 qt4_add_dbus_adaptor(knutresource_SRCS
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Knut.Settings.xml settings.h Settings
 )
