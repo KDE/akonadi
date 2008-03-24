@@ -23,6 +23,7 @@
 #include "job_p.h"
 #include "imapparser_p.h"
 #include "session.h"
+#include "session_p.h"
 
 #include <kdebug.h>
 
@@ -81,7 +82,7 @@ void JobPrivate::init( QObject *parent )
   }
 
   if ( !mParentJob )
-    mSession->addJob( q );
+    mSession->d->addJob( q );
   else
     mParentJob->addSubjob( q );
 }
@@ -181,7 +182,7 @@ QByteArray Job::newTag( )
   if ( d_ptr->mParentJob )
     d_ptr->mTag = d_ptr->mParentJob->newTag();
   else
-    d_ptr->mTag = QByteArray::number( d_ptr->mSession->nextTag() );
+    d_ptr->mTag = QByteArray::number( d_ptr->mSession->d->nextTag() );
   return d_ptr->mTag;
 }
 
@@ -193,7 +194,7 @@ QByteArray Job::tag() const
 void Job::writeData( const QByteArray & data )
 {
   Q_ASSERT_X( !d_ptr->mWriteFinished, "Job::writeData()", "Calling writeData() after emitting writeFinished()" );
-  d_ptr->mSession->writeData( data );
+  d_ptr->mSession->d->writeData( data );
 }
 
 bool Job::addSubjob( KJob * job )

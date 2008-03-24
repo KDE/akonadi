@@ -59,6 +59,21 @@ class SessionPrivate
     void jobWriteFinished( Akonadi::Job* job );
 
     bool canPipelineNext();
+    
+    /**
+      Associates the given Job object with this session.
+    */
+    void addJob( Job* job );
+
+    /**
+      Returns the next IMAP tag.
+    */
+    int nextTag();
+
+    /**
+      Sends the given raw data.
+    */
+    void writeData( const QByteArray &data );
 
     Session *mParent;
     QByteArray sessionId;
@@ -69,7 +84,7 @@ class SessionPrivate
     KLocalSocket* socket;
 #endif
     bool connected;
-    int nextTag;
+    int theNextTag;
 
     // job management
     QQueue<Job*> queue;

@@ -103,7 +103,7 @@ void SessionPrivate::dataReceived()
 
       // send login command
       if ( parser->tag() == "*" && parser->data().startsWith( "OK Akonadi" ) ) {
-        mParent->writeData( "0 LOGIN " + sessionId + '\n' );
+        writeData( "0 LOGIN " + sessionId + '\n' );
 
       // work for the current job
       } else {
@@ -173,6 +173,24 @@ void SessionPrivate::jobWriteFinished( Akonadi::Job* job )
   startNext();
 }
 
+void SessionPrivate::addJob(Job * job)
+{
+  queue.append( job );
+  QObject::connect( job, SIGNAL(result(KJob*)), mParent, SLOT(jobDone(KJob*)) );
+  QObject::connect( job, SIGNAL(writeFinished(Akonadi::Job*)), mParent, SLOT(jobWriteFinished(Akonadi::Job*)) );
+  startNext();
+}
+
+int SessionPrivate::nextTag()
+{
+  return theNextTag++;
+}
+
+void SessionPrivate::writeData(const QByteArray & data)
+{
+  socket->write( data );
+}
+
 //@endcond
 
 
@@ -186,7 +204,7 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
     d->sessionId = QByteArray::number( qrand() );
 
   d->connected = false;
-  d->nextTag = 1;
+  d->theNextTag = 1;
   d->currentJob = 0;
   d->jobRunning = false;
 
@@ -225,19 +243,6 @@ QByteArray Session::sessionId() const
   return d->sessionId;
 }
 
-void Session::addJob(Job * job)
-{
-  d->queue.append( job );
-  connect( job, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
-  connect( job, SIGNAL(writeFinished(Akonadi::Job*)), SLOT(jobWriteFinished(Akonadi::Job*)) );
-  d->startNext();
-}
-
-void Session::writeData(const QByteArray & data)
-{
-  d->socket->write( data );
-}
-
 QThreadStorage<Session*> instances;
 
 Session* Session::defaultSession()
@@ -245,11 +250,6 @@ Session* Session::defaultSession()
   if ( !instances.hasLocalData() )
     instances.setLocalData( new Session() );
   return instances.localData();
-}
-
-int Session::nextTag()
-{
-  return d->nextTag++;
 }
 
 void Session::clear()

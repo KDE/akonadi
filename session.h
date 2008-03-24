@@ -78,25 +78,6 @@ class AKONADI_EXPORT Session : public QObject
     */
     void clear();
 
-  protected:
-    /**
-      Associates the given Job object with this session.
-    */
-    void addJob( Job* job );
-    //FIXME_API: move to private class
-
-    /**
-      Sends the given raw data.
-    */
-    void writeData( const QByteArray &data );
-    //FIXME_API: move to private class
-
-    /**
-      Returns the next IMAP tag.
-    */
-    int nextTag();
-    //FIXME_API: move to private class
-
   private:
     SessionPrivate* const d;
 
