@@ -84,7 +84,7 @@ static Collection::Id searchColId = -1;
 void CollectionJobTest::testTopLevelList( )
 {
   // non-recursive top-level list
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Flat );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
@@ -153,7 +153,7 @@ void CollectionJobTest::testFolderList( )
 
 void CollectionJobTest::testNonRecursiveFolderList( )
 {
-  CollectionFetchJob *job = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Local );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Base );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
@@ -163,7 +163,7 @@ void CollectionJobTest::testNonRecursiveFolderList( )
 
 void CollectionJobTest::testEmptyFolderList( )
 {
-  CollectionFetchJob *job = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::Flat );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::FirstLevel );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
@@ -172,7 +172,7 @@ void CollectionJobTest::testEmptyFolderList( )
 
 void CollectionJobTest::testSearchFolderList( )
 {
-  CollectionFetchJob *job = new CollectionFetchJob( Collection( searchColId ), CollectionFetchJob::Flat );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection( searchColId ), CollectionFetchJob::FirstLevel );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
@@ -188,7 +188,7 @@ void CollectionJobTest::testSearchFolderList( )
 void CollectionJobTest::testResourceFolderList()
 {
   // non-existing resource
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Flat );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
   job->setResource( "i_dont_exist" );
   QVERIFY( !job->exec() );
 
@@ -285,7 +285,7 @@ void CollectionJobTest::testCreateDeleteFolder()
   QCOMPARE( createdCol.remoteId(), collection.remoteId() );
   QCOMPARE( createdCol.cachePolicy(), collection.cachePolicy() );
 
-  CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Flat, this );
+  CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::FirstLevel, this );
   QVERIFY( listJob->exec() );
   Collection listedCol = findCol( listJob->collections(), collection.name() );
   QCOMPARE( listedCol, createdCol );
@@ -295,7 +295,7 @@ void CollectionJobTest::testCreateDeleteFolder()
   // fetch parent to compare inherited collection properties
   Collection parentCol = Collection::root();
   if ( collection.parent() > 0 ) {
-    CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Local, this );
+    CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Base, this );
     QVERIFY( listJob->exec() );
     QCOMPARE( listJob->collections().count(), 1 );
     parentCol = listJob->collections().first();
@@ -314,7 +314,7 @@ void CollectionJobTest::testCreateDeleteFolder()
   CollectionDeleteJob *delJob = new CollectionDeleteJob( createdCol, this );
   QVERIFY( delJob->exec() );
 
-  listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Flat, this );
+  listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::FirstLevel, this );
   QVERIFY( listJob->exec() );
   QVERIFY( !findCol( listJob->collections(), collection.name() ).isValid() );
 }
@@ -358,7 +358,7 @@ void CollectionJobTest::testModify()
   reference << "text/calendar" << "text/vcard" << "message/rfc822" << "application/octet-stream";
 
   Collection col;
-  CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Flat );
+  CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::FirstLevel );
   QVERIFY( ljob->exec() );
   col = findCol( ljob->collections(), "foo" );
   QVERIFY( col.isValid() );
@@ -367,7 +367,7 @@ void CollectionJobTest::testModify()
   CollectionModifyJob *mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
-  ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
@@ -378,7 +378,7 @@ void CollectionJobTest::testModify()
   mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
-  ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
@@ -389,7 +389,7 @@ void CollectionJobTest::testModify()
   mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
-  ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
@@ -400,7 +400,7 @@ void CollectionJobTest::testModify()
   mod = new CollectionModifyJob( col, this );
   QVERIFY( mod->exec() );
 
-  ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   QVERIFY( ljob->exec() );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
@@ -428,7 +428,7 @@ void CollectionJobTest::testMove()
   QVERIFY( findCol( list, "bar" ).isValid() );
   QVERIFY( findCol( list, "bla" ).isValid() );
 
-  ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Local );
+  ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Base );
   QVERIFY( ljob->exec() );
   list = ljob->collections();
 

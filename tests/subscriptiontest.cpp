@@ -45,11 +45,11 @@ class SubscriptionTest : public QObject
       sjob->unsubscribe( l );
       QVERIFY( sjob->exec() );
 
-      CollectionFetchJob *ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::Flat, this );
+      CollectionFetchJob *ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::FirstLevel, this );
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 1 );
 
-      ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::Flat, this );
+      ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::FirstLevel, this );
       ljob->includeUnsubscribed();
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 2 );
@@ -58,7 +58,7 @@ class SubscriptionTest : public QObject
       sjob->subscribe( l );
       QVERIFY( sjob->exec() );
 
-      ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::Flat, this );
+      ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::FirstLevel, this );
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 2 );
     }

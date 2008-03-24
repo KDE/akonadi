@@ -481,7 +481,7 @@ void ResourceBase::synchronizeCollectionTree()
 
 void ResourceBase::synchronizeCollection(qint64 collectionId )
 {
-  CollectionFetchJob* job = new CollectionFetchJob( Collection(collectionId), CollectionFetchJob::Local, session() );
+  CollectionFetchJob* job = new CollectionFetchJob( Collection(collectionId), CollectionFetchJob::Base, session() );
   job->setResource( identifier() );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionListDone(KJob*)) );
 }

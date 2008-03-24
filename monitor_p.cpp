@@ -315,7 +315,7 @@ Collection ItemCollectionFetchJob::collection() const
 
 void ItemCollectionFetchJob::doStart()
 {
-  CollectionFetchJob *listJob = new CollectionFetchJob( Collection( mCollectionId ), CollectionFetchJob::Local, this );
+  CollectionFetchJob *listJob = new CollectionFetchJob( Collection( mCollectionId ), CollectionFetchJob::Base, this );
   connect( listJob, SIGNAL( result( KJob* ) ), SLOT( collectionJobDone( KJob* ) ) );
   addSubjob( listJob );
 

@@ -78,7 +78,7 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
 
   }
   else { // It's a simple change
-    CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::Local, session );
+    CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::Base, session );
     job->includeUnsubscribed( unsubscribed );
     q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                 q, SLOT(collectionsChanged(Akonadi::Collection::List)) );

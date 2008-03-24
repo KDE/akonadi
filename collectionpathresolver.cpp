@@ -85,7 +85,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job )
       q->emitResult();
       return;
     }
-    nextJob = new CollectionFetchJob( mCurrentNode, CollectionFetchJob::Flat, q );
+    nextJob = new CollectionFetchJob( mCurrentNode, CollectionFetchJob::FirstLevel, q );
   } else {
     Collection col = list->collections().first();
     mCurrentNode = Collection( col.parent() );
@@ -94,7 +94,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job )
       q->emitResult();
       return;
     }
-    nextJob = new CollectionFetchJob( mCurrentNode, CollectionFetchJob::Local, q );
+    nextJob = new CollectionFetchJob( mCurrentNode, CollectionFetchJob::Base, q );
   }
   q->connect( nextJob, SIGNAL(result(KJob*)), q, SLOT(jobResult(KJob*)) );
 }
@@ -156,14 +156,14 @@ void CollectionPathResolver::doStart()
       emitResult();
       return;
     }
-    job = new CollectionFetchJob( d->mCurrentNode, CollectionFetchJob::Flat, this );
+    job = new CollectionFetchJob( d->mCurrentNode, CollectionFetchJob::FirstLevel, this );
   } else {
     if ( d->mColId == 0 ) {
       d->mColId = Collection::root().id();
       emitResult();
       return;
     }
-    job = new CollectionFetchJob( d->mCurrentNode, CollectionFetchJob::Local, this );
+    job = new CollectionFetchJob( d->mCurrentNode, CollectionFetchJob::Base, this );
   }
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
 }

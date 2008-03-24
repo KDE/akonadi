@@ -43,7 +43,7 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
 
     Q_DECLARE_PUBLIC( CollectionFetchJob )
 
-    CollectionFetchJob::ListType mType;
+    CollectionFetchJob::Type mType;
     Collection mBase;
     Collection::List mBaseList;
     Collection::List mCollections;
@@ -64,7 +64,7 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
     }
 };
 
-CollectionFetchJob::CollectionFetchJob( const Collection &collection, ListType type, QObject *parent )
+CollectionFetchJob::CollectionFetchJob( const Collection &collection, Type type, QObject *parent )
   : Job( new CollectionFetchJobPrivate( this ), parent )
 {
   Q_D( CollectionFetchJob );
@@ -112,7 +112,7 @@ void CollectionFetchJob::doStart()
 
   if ( !d->mBaseList.isEmpty() ) {
     foreach ( const Collection col, d->mBaseList ) {
-      new CollectionFetchJob( col, CollectionFetchJob::Local, this );
+      new CollectionFetchJob( col, CollectionFetchJob::Base, this );
     }
     return;
   }
@@ -125,10 +125,10 @@ void CollectionFetchJob::doStart()
   command += QByteArray::number( d->mBase.id() );
   command += ' ';
   switch ( d->mType ) {
-    case Local:
+    case Base:
       command += "0 (";
       break;
-    case Flat:
+    case FirstLevel:
       command += "1 (";
       break;
     case Recursive:

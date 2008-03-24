@@ -96,7 +96,7 @@ void CollectionAttributeTest::testAttributes()
   QVERIFY( attr != 0 );
   QCOMPARE( attr->serialized(), QByteArray( attr1 ) );
 
-  CollectionFetchJob *list = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
+  CollectionFetchJob *list = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   QVERIFY( list->exec() );
   QCOMPARE( list->collections().count(), 1 );
   col = list->collections().first();
@@ -112,7 +112,7 @@ void CollectionAttributeTest::testAttributes()
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
   QVERIFY( modify->exec() );
 
-  list = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
+  list = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   QVERIFY( list->exec() );
   QCOMPARE( list->collections().count(), 1 );
   col = list->collections().first();
@@ -128,7 +128,7 @@ void CollectionAttributeTest::testAttributes()
   modify = new CollectionModifyJob( col, this );
   QVERIFY( modify->exec() );
 
-  list = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
+  list = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   QVERIFY( list->exec() );
   QCOMPARE( list->collections().count(), 1 );
   col = list->collections().first();

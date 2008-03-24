@@ -40,14 +40,12 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     /**
       List type.
     */
-    //FIXME_API: rename to Type
-    enum ListType
+    enum Type
     {
-      Local, ///< Only fetch the base collection.
-      Flat, ///< Only list direct sub-collections of the base collection.
-      Recursive ///< List all sub-collections.
+      Base,       ///< Only fetch the base collection.
+      FirstLevel, ///< Only list direct sub-collections of the base collection.
+      Recursive   ///< List all sub-collections.
     };
-    //FIXME_API: rename to Base, FirstLevel, Recursive
 
     /**
       Create a new CollectionFetchJob.
@@ -55,7 +53,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
       @param type the type of listing to perform
       @param parent The parent object.
     */
-    explicit CollectionFetchJob( const Collection &collection, ListType type = Flat, QObject *parent = 0 );
+    explicit CollectionFetchJob( const Collection &collection, Type type = FirstLevel, QObject *parent = 0 );
 
     /**
       Create a new CollectionFetchJob to retrieve a list of collections.
