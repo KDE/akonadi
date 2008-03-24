@@ -69,20 +69,11 @@ class AKONADI_EXPORT ItemSync : public TransactionSequence
     void doStart();
 
   private:
-    //FIXME_API: move to private class
-    void createLocalItem( const Item &item );
-    //FIXME_API: move to private class
-    void checkDone();
-
-  private Q_SLOTS:
-    //FIXME_API: move to private class
-    void slotLocalListDone( KJob *job );
-    //FIXME_API: move to private class
-    void slotLocalChangeDone( KJob *job );
-
-  private:
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotLocalChangeDone( KJob* ) )
 };
 
 }
