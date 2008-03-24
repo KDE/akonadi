@@ -24,7 +24,6 @@
 #include "agentmanager.h"
 #include "controlmanager.h"
 #include "processcontrol.h"
-#include "profilemanager.h"
 
 #include "kcrash.h"
 #include <stdlib.h>
@@ -55,7 +54,6 @@ int main( int argc, char **argv )
   new ControlManager;
 
   sAgentManager = new AgentManager;
-  ProfileManager profileManager;
 
   int retval = app.exec();
 

@@ -21,11 +21,9 @@ set( control_SRCS
   kcrash.cpp
   main.cpp
   processcontrol.cpp
-  profilemanager.cpp
 )
 
 qt4_add_dbus_adaptor( control_SRCS ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
-qt4_add_dbus_adaptor( control_SRCS ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.ProfileManager.xml profilemanager.h ProfileManager )
 qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.ControlManager.xml controlmanager.h ControlManager )
 qt4_add_dbus_interfaces( control_SRCS
   ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Tracer.xml
