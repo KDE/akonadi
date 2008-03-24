@@ -35,13 +35,13 @@ class Akonadi::SubscriptionJobPrivate : public JobPrivate
     {
       Q_Q( SubscriptionJob );
 
-      mTag = q->newTag();
+      mTag = newTag();
       QByteArray line = mTag + ' ' + cmd;
       foreach ( const Collection col, list )
         line += ' ' + QByteArray::number( col.id() );
       line += '\n';
-      q->writeData( line );
-      q->newTag(); // prevent automatic response handling
+      writeData( line );
+      newTag(); // prevent automatic response handling
     }
 
     void sendNextCommand()

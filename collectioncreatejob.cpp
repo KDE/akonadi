@@ -54,7 +54,7 @@ void CollectionCreateJob::doStart( )
 {
   Q_D( CollectionCreateJob );
 
-  QByteArray command = newTag() + " CREATE \"" + d->mCollection.name().toUtf8() + "\" ";
+  QByteArray command = d->newTag() + " CREATE \"" + d->mCollection.name().toUtf8() + "\" ";
   command += QByteArray::number( d->mCollection.parent() );
   command += " (";
   if ( !d->mCollection.contentMimeTypes().isEmpty() )
@@ -68,7 +68,7 @@ void CollectionCreateJob::doStart( )
     command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->serialized() );
   command += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
   command += ")\n";
-  writeData( command );
+  d->writeData( command );
   emitWriteFinished();
 }
 

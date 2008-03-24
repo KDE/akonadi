@@ -63,7 +63,7 @@ TransactionBeginJob::~TransactionBeginJob()
 
 void TransactionBeginJob::doStart()
 {
-  writeData( newTag() + " BEGIN\n" );
+  d_ptr->writeData( d_ptr->newTag() + " BEGIN\n" );
 }
 
 
@@ -80,7 +80,7 @@ TransactionRollbackJob::~TransactionRollbackJob()
 
 void TransactionRollbackJob::doStart()
 {
-  writeData( newTag() + " ROLLBACK\n" );
+  d_ptr->writeData( d_ptr->newTag() + " ROLLBACK\n" );
 }
 
 
@@ -97,7 +97,7 @@ TransactionCommitJob::~TransactionCommitJob()
 
 void TransactionCommitJob::doStart()
 {
-  writeData( newTag() + " COMMIT\n" );
+  d_ptr->writeData( d_ptr->newTag() + " COMMIT\n" );
 }
 
 #include "transactionjobs.moc"

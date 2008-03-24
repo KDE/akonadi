@@ -53,12 +53,12 @@ void SearchCreateJob::doStart()
 {
   Q_D( SearchCreateJob );
 
-  QByteArray command = newTag() + " SEARCH_STORE ";
+  QByteArray command = d->newTag() + " SEARCH_STORE ";
   command += ImapParser::quote( d->mName.toUtf8() );
   command += ' ';
   command += ImapParser::quote( d->mQuery.toUtf8() );
   command += '\n';
-  writeData( command );
+  d->writeData( command );
 }
 
 #include "searchcreatejob.moc"

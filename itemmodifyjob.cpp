@@ -144,7 +144,7 @@ void ItemModifyJob::doStart()
     return;
   }
 
-  d->mTag = newTag();
+  d->mTag = d->newTag();
   QByteArray command = d->mTag;
   command += " UID STORE " + QByteArray::number( d->mItem.id() ) + ' ';
   if ( !d->mRevCheck || d->mAddFlags.contains( "\\Deleted" ) ) {
@@ -191,8 +191,8 @@ void ItemModifyJob::doStart()
 
   command += " (" + ImapParser::join( changes, " " );
   command += d->nextPartHeader();
-  writeData( command );
-  newTag(); // hack to circumvent automatic response handling
+  d->writeData( command );
+  d->newTag(); // hack to circumvent automatic response handling
 }
 
 void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & data)
@@ -200,8 +200,8 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
   Q_D( ItemModifyJob );
 
   if ( _tag == "+" ) { // ready for literal data
-    writeData( d->mPendingData );
-    writeData( d->nextPartHeader() );
+    d->writeData( d->mPendingData );
+    d->writeData( d->nextPartHeader() );
     return;
   }
   if ( _tag == d->mTag ) {

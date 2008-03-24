@@ -117,7 +117,7 @@ void CollectionFetchJob::doStart()
     return;
   }
 
-  QByteArray command = newTag();
+  QByteArray command = d->newTag();
   if ( d->mUnsubscribed )
     command += " X-AKLIST ";
   else
@@ -145,7 +145,7 @@ void CollectionFetchJob::doStart()
   }
 
   command += ")\n";
-  writeData( command );
+  d->writeData( command );
 }
 
 void CollectionFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )

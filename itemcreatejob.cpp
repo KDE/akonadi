@@ -78,12 +78,12 @@ void ItemCreateJob::doStart()
       ItemSerializer::serialize( d->mItem, Item::PartBody, d->mData );
     int dataSize = d->mData.size();
 
-    writeData( newTag() + " APPEND " + QByteArray::number( d->mCollection.id() )
+    d->writeData( d->newTag() + " APPEND " + QByteArray::number( d->mCollection.id() )
         + " (\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' + remoteId + ") {"
         + QByteArray::number( dataSize ) + "}\n" );
   }
   else { // do a multipart X-AKAPPEND
-    QByteArray command = newTag() + " X-AKAPPEND " + QByteArray::number( d->mCollection.id() )
+    QByteArray command = d->newTag() + " X-AKAPPEND " + QByteArray::number( d->mCollection.id() )
         + " (\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' + remoteId + ") ";
 
     QList<QByteArray> partSpecs;
@@ -99,7 +99,7 @@ void ItemCreateJob::doStart()
     command += '(' + ImapParser::join( partSpecs, "," ) + ") " +
       '{' + QByteArray::number( totalSize ) + "}\n";
 
-    writeData( command );
+    d->writeData( command );
   }
 }
 
@@ -108,12 +108,12 @@ void ItemCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray &
   Q_D( ItemCreateJob );
 
   if ( tag == "+" ) { // ready for literal data
-    writeData( d->mData );
+    d->writeData( d->mData );
     if ( !d->mData.endsWith( '\n' ) )
-      writeData( "\n" );
+      d->writeData( "\n" );
     return;
   }
-  if ( tag == this->tag() ) {
+  if ( tag == d->tag() ) {
     if ( int pos = data.indexOf( "UIDNEXT" ) ) {
       bool ok = false;
       ImapParser::parseNumber( data, d->mUid, &ok, pos + 7 );

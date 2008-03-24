@@ -53,13 +53,13 @@ void CollectionCopyJob::doStart()
 {
   Q_D( CollectionCopyJob );
 
-  QByteArray command = newTag();
+  QByteArray command = d->newTag();
   command += " COLCOPY ";
   command += QByteArray::number( d->mSource.id() );
   command += ' ';
   command += QByteArray::number( d->mTarget.id() );
   command += '\n';
-  writeData( command );
+  d->writeData( command );
 }
 
 #include "collectioncopyjob.moc"

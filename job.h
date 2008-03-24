@@ -155,24 +155,6 @@ class AKONADI_EXPORT Job : public KCompositeJob
 
   protected:
     /**
-      Returns a new unique command tag for communication with the backend.
-    */
-    QByteArray newTag();
-    //FIXME_API: move to private class
-
-    /**
-      Return the tag used for the request.
-    */
-    QByteArray tag() const;
-    //FIXME_API: move to private class
-
-    /**
-      Sends raw data to the backend.
-    */
-    void writeData( const QByteArray &data );
-    //FIXME_API: move to private class
-
-    /**
       This method must be reimplemented in the concrete jobs. It will be called
       after the job has been started and a connection to the Akonadi backend has
       been established.

@@ -71,7 +71,7 @@ void ItemFetchJobPrivate::startFetchJob()
 {
   Q_Q( ItemFetchJob );
 
-  QByteArray command = q->newTag();
+  QByteArray command = newTag();
   if ( !mItem.isValid() )
     command += " FETCH 1:*";
   else
@@ -86,7 +86,7 @@ void ItemFetchJobPrivate::startFetchJob()
   } else {
     command += " AKALL\n";
   }
-  q->writeData( command );
+  writeData( command );
 }
 
 void ItemFetchJobPrivate::selectDone( KJob * job )

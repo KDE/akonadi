@@ -51,7 +51,7 @@ void CollectionDeleteJob::doStart()
 {
   Q_D( CollectionDeleteJob );
 
-  writeData( newTag() + " DELETE " + QByteArray::number( d->mCollection.id() ) + '\n' );
+  d->writeData( d->newTag() + " DELETE " + QByteArray::number( d->mCollection.id() ) + '\n' );
 }
 
 #include "collectiondeletejob.moc"

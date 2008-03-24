@@ -45,6 +45,20 @@ class JobPrivate
     void lostConnection();
     void slotSubJobAboutToStart( Akonadi::Job* );
     void startNext();
+    /**
+      Returns a new unique command tag for communication with the backend.
+    */
+    QByteArray newTag();
+    
+    /**
+      Return the tag used for the request.
+    */
+    QByteArray tag() const;
+
+    /**
+      Sends raw data to the backend.
+    */
+    void writeData( const QByteArray &data );
 
     Job *q_ptr;
     Q_DECLARE_PUBLIC( Job )

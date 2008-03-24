@@ -56,10 +56,10 @@ void CollectionSelectJob::doStart( )
 {
   Q_D( CollectionSelectJob );
 
-  QByteArray command( newTag() + " SELECT " );
+  QByteArray command( d->newTag() + " SELECT " );
   if ( d->mSilent )
     command += "SILENT ";
-  writeData( command + QByteArray::number( d->mCollection.id() ) + '\n' );
+  d->writeData( command + QByteArray::number( d->mCollection.id() ) + '\n' );
 }
 
 void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )

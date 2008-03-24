@@ -54,7 +54,7 @@ void CollectionModifyJob::doStart()
 {
   Q_D( CollectionModifyJob );
 
-  QByteArray command = newTag() + " MODIFY " + QByteArray::number( d->mCollection.id() );
+  QByteArray command = d->newTag() + " MODIFY " + QByteArray::number( d->mCollection.id() );
   QByteArray changes;
   if ( d->mCollection.d_func()->contentTypesChanged ) {
     QList<QByteArray> bList;
@@ -78,7 +78,7 @@ void CollectionModifyJob::doStart()
     return;
   }
   command += changes + '\n';
-  writeData( command );
+  d->writeData( command );
 }
 
 #include "collectionmodifyjob.moc"

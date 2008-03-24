@@ -43,7 +43,7 @@ ExpungeJob::~ExpungeJob()
 
 void ExpungeJob::doStart()
 {
-  writeData( newTag() + " EXPUNGE\n" );
+  d_ptr->writeData( d_ptr->newTag() + " EXPUNGE\n" );
 }
 
 #include "expungejob.moc"

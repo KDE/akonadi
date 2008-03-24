@@ -68,13 +68,13 @@ void ItemCopyJob::doStart()
     ids << item.id();
   ImapSet set;
   set.add( ids );
-  QByteArray cmd( newTag() );
+  QByteArray cmd( d->newTag() );
   cmd += " COPY ";
   cmd += set.toImapSequenceSet();
   cmd += ' ';
   cmd += QByteArray::number( d->mTarget.id() );
   cmd += '\n';
-  writeData( cmd );
+  d->writeData( cmd );
 }
 
 #include "itemcopyjob.moc"

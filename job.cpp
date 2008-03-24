@@ -123,6 +123,26 @@ void JobPrivate::startNext()
     job->d_ptr->startQueued();
   }
 }
+
+QByteArray JobPrivate::newTag( )
+{
+  if ( mParentJob )
+    mTag = mParentJob->d_ptr->newTag();
+  else
+    mTag = QByteArray::number( mSession->d->nextTag() );
+  return mTag;
+}
+
+QByteArray JobPrivate::tag() const
+{
+  return mTag;
+}
+
+void JobPrivate::writeData( const QByteArray & data )
+{
+  Q_ASSERT_X( !mWriteFinished, "Job::writeData()", "Calling writeData() after emitting writeFinished()" );
+  mSession->d->writeData( data );
+}
 //@endcond
 
 
@@ -175,26 +195,6 @@ QString Job::errorString() const
     str += QString::fromLatin1( " (%1)" ).arg( errorText() );
   }
   return str;
-}
-
-QByteArray Job::newTag( )
-{
-  if ( d_ptr->mParentJob )
-    d_ptr->mTag = d_ptr->mParentJob->newTag();
-  else
-    d_ptr->mTag = QByteArray::number( d_ptr->mSession->d->nextTag() );
-  return d_ptr->mTag;
-}
-
-QByteArray Job::tag() const
-{
-  return d_ptr->mTag;
-}
-
-void Job::writeData( const QByteArray & data )
-{
-  Q_ASSERT_X( !d_ptr->mWriteFinished, "Job::writeData()", "Calling writeData() after emitting writeFinished()" );
-  d_ptr->mSession->d->writeData( data );
 }
 
 bool Job::addSubjob( KJob * job )
