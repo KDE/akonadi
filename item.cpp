@@ -64,23 +64,32 @@ Item::Flags Item::flags() const
 
 void Item::setFlag( const QByteArray & name )
 {
-  d_func()->mFlags.insert( name );
+  Q_D( Item );
+  d->mFlags.insert( name );
+  if ( !d->mFlagsOverwritten )
+    d->mAddedFlags.insert( name );
 }
 
 void Item::clearFlag( const QByteArray & name )
 {
-  d_func()->mFlags.remove( name );
+  Q_D( Item );
+  d->mFlags.remove( name );
+  if ( !d->mFlagsOverwritten )
+    d->mDeletedFlags.insert( name );
 }
 
 void Item::setFlags( const Flags &flags )
 {
-  //FIXME:(volker) check whether overwriting is valid here
-  d_func()->mFlags = flags;
+  Q_D( Item );
+  d->mFlags = flags;
+  d->mFlagsOverwritten = true;
 }
 
 void Item::clearFlags()
 {
-  d_func()->mFlags.clear();
+  Q_D( Item );
+  d->mFlags.clear();
+  d->mFlagsOverwritten = true;
 }
 
 bool Item::hasFlag( const QByteArray & name ) const

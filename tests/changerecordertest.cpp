@@ -34,12 +34,12 @@ class ChangeRecorderTest : public QObject
     void triggerChange( int uid )
     {
       Item item( uid );
+      item.setFlag( "random_flag" );
       ItemModifyJob *job = new ItemModifyJob( item );
-      job->addFlag( "random_flag" );
       job->disableRevisionCheck();
       QVERIFY( job->exec() );
+      item.clearFlag( "random_flag" );
       job = new ItemModifyJob( item );
-      job->removeFlag( "random_flag" );
       job->disableRevisionCheck();
       QVERIFY( job->exec() );
     }

@@ -25,6 +25,7 @@
 #include "itemserializer.h"
 #include "itemserializerplugin.h"
 #include "job_p.h"
+#include "entity_p.h"
 
 #include <kdebug.h>
 
@@ -219,6 +220,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
         }
       }
 
+      item.d_ptr->resetChangeLog();
       d->mItems.append( item );
       d->mPendingItems.append( item );
       if ( !d->mEmitTimer->isActive() )

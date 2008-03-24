@@ -174,8 +174,8 @@ void BenchMarker::testMaildir( QString dir )
     Item::List itemlist = ifj->items();
     for ( int i = ifj->items().count() - 1; i >= 0; i -= 5) {
       Item item = itemlist[i];
+      item.setFlag( "\\Seen" );
       ItemModifyJob *isj = new ItemModifyJob( item, this );
-      isj->addFlag( "\\Seen" );
       isj->exec();
     }
   }

@@ -64,29 +64,11 @@ class AKONADI_EXPORT ItemModifyJob : public Job
     void disableRevisionCheck();
 
     /**
-      Sets the item flags to @p flags.
-      @param flags The new item flags.
-    */
-    void setFlags( const Item::Flags &flags );
-
-    /**
-      Adds the given flag. Existing flags will not be changed.
-      @param flag The flag to be added.
-    */
-    void addFlag( const Item::Flag &flag );
-
-    /**
-      Removes the given flag. Other already set flags will not be changed.
-      @param flag The flag to be removed.
-    */
-    void removeFlag( const Item::Flag &flag );
-
-    /**
       Moves the item to the given collection.
       @param collection Path to the new collection this item is moved into.
     */
     //FIXME_API: remove this method in favour of an ItemMoveJob.
-    void setCollection( const Collection &collection );
+    KDE_DEPRECATED void setCollection( const Collection &collection );
 
     /**
       Resets the item dirty flag. Should only be used by resources after

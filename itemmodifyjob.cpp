@@ -24,6 +24,7 @@
 #include "imapparser_p.h"
 #include "itemserializer.h"
 #include "job_p.h"
+#include "item_p.h"
 
 #include <kdebug.h>
 
@@ -35,9 +36,6 @@ class Akonadi::ItemModifyJobPrivate : public JobPrivate
 {
   public:
     enum Operation {
-      SetFlags,
-      AddFlags,
-      RemoveFlags,
       Move,
       RemoteId,
       Dirty
@@ -52,9 +50,6 @@ class Akonadi::ItemModifyJobPrivate : public JobPrivate
 
     Q_DECLARE_PUBLIC( ItemModifyJob )
 
-    Item::Flags mFlags;
-    Item::Flags mAddFlags;
-    Item::Flags mRemoveFlags;
     QSet<int> mOperations;
     QByteArray mTag;
     Collection mCollection;
@@ -95,30 +90,6 @@ ItemModifyJob::~ItemModifyJob()
 {
 }
 
-void ItemModifyJob::setFlags(const Item::Flags & flags)
-{
-  Q_D( ItemModifyJob );
-
-  d->mFlags = flags;
-  d->mOperations.insert( ItemModifyJobPrivate::SetFlags );
-}
-
-void ItemModifyJob::addFlag(const Item::Flag & flag)
-{
-  Q_D( ItemModifyJob );
-
-  d->mAddFlags.insert( flag );
-  d->mOperations.insert( ItemModifyJobPrivate::AddFlags );
-}
-
-void ItemModifyJob::removeFlag(const Item::Flag & flag)
-{
-  Q_D( ItemModifyJob );
-
-  d->mRemoveFlags.insert( flag );
-  d->mOperations.insert( ItemModifyJobPrivate::RemoveFlags );
-}
-
 void ItemModifyJob::setCollection(const Collection &collection)
 {
   Q_D( ItemModifyJob );
@@ -138,35 +109,9 @@ void ItemModifyJob::doStart()
 {
   Q_D( ItemModifyJob );
 
-  // nothing to do
-  if ( d->mOperations.isEmpty() && d->mParts.isEmpty() ) {
-    emitResult();
-    return;
-  }
-
-  d->mTag = d->newTag();
-  QByteArray command = d->mTag;
-  command += " UID STORE " + QByteArray::number( d->mItem.id() ) + ' ';
-  if ( !d->mRevCheck || d->mAddFlags.contains( "\\Deleted" ) ) {
-    command += "NOREV ";
-  } else {
-    command += "REV " + QByteArray::number( d->mItem.revision() );
-  }
   QList<QByteArray> changes;
   foreach ( int op, d->mOperations ) {
     switch ( op ) {
-      case ItemModifyJobPrivate::SetFlags:
-        changes << "FLAGS.SILENT";
-        changes << "(" + ImapParser::join( d->mFlags, " " ) + ')';
-        break;
-      case ItemModifyJobPrivate::AddFlags:
-        changes << "+FLAGS.SILENT";
-        changes << "(" + ImapParser::join( d->mAddFlags, " " ) + ')';
-        break;
-      case ItemModifyJobPrivate::RemoveFlags:
-        changes << "-FLAGS.SILENT";
-        changes << "(" + ImapParser::join( d->mRemoveFlags, " " ) + ')';
-        break;
       case ItemModifyJobPrivate::Move:
         changes << "COLLECTION.SILENT";
         changes << QByteArray::number( d->mCollection.id() );
@@ -184,9 +129,38 @@ void ItemModifyJob::doStart()
     }
   }
 
-  if ( !d->mItem.d_ptr->mDeletedAttributes.isEmpty() ) {
+  if ( d->mItem.d_func()->mFlagsOverwritten ) {
+    changes << "FLAGS.SILENT";
+    changes << "(" + ImapParser::join( d->mItem.flags(), " " ) + ')';
+  } else {
+    if ( !d->mItem.d_func()->mAddedFlags.isEmpty() ) {
+      changes << "+FLAGS.SILENT";
+      changes << "(" + ImapParser::join( d->mItem.d_func()->mAddedFlags, " " ) + ')';
+    }
+    if ( !d->mItem.d_func()->mDeletedFlags.isEmpty() ) {
+      changes << "-FLAGS.SILENT";
+      changes << "(" + ImapParser::join( d->mItem.d_func()->mDeletedFlags, " " ) + ')';
+    }
+  }
+
+  if ( !d->mItem.d_func()->mDeletedAttributes.isEmpty() ) {
     changes << "-PARTS.SILENT";
-    changes << "(" + ImapParser::join( d->mItem.d_ptr->mDeletedAttributes, " " ) + ')';
+    changes << "(" + ImapParser::join( d->mItem.d_func()->mDeletedAttributes, " " ) + ')';
+  }
+
+  // nothing to do
+  if ( changes.isEmpty() && d->mParts.isEmpty() ) {
+    emitResult();
+    return;
+  }
+
+  d->mTag = d->newTag();
+  QByteArray command = d->mTag;
+  command += " UID STORE " + QByteArray::number( d->mItem.id() ) + ' ';
+  if ( !d->mRevCheck ) {
+    command += "NOREV ";
+  } else {
+    command += "REV " + QByteArray::number( d->mItem.revision() );
   }
 
   command += " (" + ImapParser::join( changes, " " );

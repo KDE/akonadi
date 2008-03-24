@@ -76,8 +76,9 @@ void ItemDeleteJob::doStart()
   TransactionBeginJob *begin = new TransactionBeginJob( this );
   addSubjob( begin );
 
+  d->mItem.setFlag( "\\Deleted" );
   ItemModifyJob* store = new ItemModifyJob( d->mItem, this );
-  store->addFlag( "\\Deleted" );
+  store->disableRevisionCheck();
   addSubjob( store );
 
   ExpungeJob *expunge = new ExpungeJob( this );

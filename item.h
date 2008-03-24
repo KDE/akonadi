@@ -257,6 +257,7 @@ class AKONADI_EXPORT Item : public Entity
 
   private:
     friend class ItemModifyJob;
+    friend class ItemFetchJob;
     PayloadBase* payloadBase() const;
     void setPayloadBase( PayloadBase* );
     AKONADI_DECLARE_PRIVATE( Item )

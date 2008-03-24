@@ -25,6 +25,7 @@
 #include "itemcreatejob.h"
 #include "itemcopyjob.h"
 #include "itemmodifyjob.h"
+#include "itemmovejob.h"
 #include "transactionsequence.h"
 
 #include <KDebug>
@@ -94,9 +95,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
       // TODO Extract mimetype from url and check if collection accepts it
       const Item item = Item::fromUrl( url );
       if ( !copy ) {
-        ItemModifyJob *job = new ItemModifyJob( item, transaction );
-        job->setCollection( collection );
-        job->disableRevisionCheck();
+        new ItemMoveJob( item, collection, transaction );
       } else  {
         new ItemCopyJob( item, collection, transaction );
       }

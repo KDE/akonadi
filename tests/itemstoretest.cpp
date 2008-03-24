@@ -25,6 +25,7 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/itemmovejob.h>
 #include <qtest_kde.h>
 
 using namespace Akonadi;
@@ -69,8 +70,8 @@ void ItemStoreTest::testFlagChange()
   Item::Flags origFlags = item.flags();
   Item::Flags expectedFlags = origFlags;
   expectedFlags.insert( "added_test_flag_1" );
+  item.setFlag( "added_test_flag_1" );
   ItemModifyJob *sjob = new ItemModifyJob( item, this );
-  sjob->addFlag( "added_test_flag_1" );
   QVERIFY( sjob->exec() );
 
   fjob = new ItemFetchJob( Item( 1 ) );
@@ -83,8 +84,8 @@ void ItemStoreTest::testFlagChange()
 
   // set flags
   expectedFlags.insert( "added_test_flag_2" );
+  item.setFlags( expectedFlags );
   sjob = new ItemModifyJob( item, this );
-  sjob->setFlags( expectedFlags );
   QVERIFY( sjob->exec() );
 
   fjob = new ItemFetchJob( Item( 1 ) );
@@ -96,9 +97,9 @@ void ItemStoreTest::testFlagChange()
   QVERIFY( diff.isEmpty() );
 
   // remove a flag
+  item.clearFlag( "added_test_flag_1" );
+  item.clearFlag( "added_test_flag_2" );
   sjob = new ItemModifyJob( item, this );
-  sjob->removeFlag( "added_test_flag_1" );
-  sjob->removeFlag( "added_test_flag_2" );
   QVERIFY( sjob->exec() );
 
   fjob = new ItemFetchJob( Item( 1 ) );
@@ -154,17 +155,14 @@ void ItemStoreTest::testItemMove()
   prefetchjob->exec();
   Item item = prefetchjob->items()[0];
 
-  ItemModifyJob *store = new ItemModifyJob( item, this );
-  store->setCollection( res3 );
+  ItemMoveJob *store = new ItemMoveJob( item, res3, this );
   QVERIFY( store->exec() );
-  item = store->item();
 
   ItemFetchJob *fetch = new ItemFetchJob( res3, this );
   QVERIFY( fetch->exec() );
   QCOMPARE( fetch->items().count(), 1 );
 
-  store = new ItemModifyJob( item, this );
-  store->setCollection( res1_foo );
+  store = new ItemMoveJob( item, res1_foo, this );
   QVERIFY( store->exec() );
 }
 
@@ -175,13 +173,11 @@ void ItemStoreTest::testIllegalItemMove()
   Item item = prefetchjob->items()[0];
 
   // move into invalid collection
-  ItemModifyJob *store = new ItemModifyJob( item, this );
-  store->setCollection( Collection( INT_MAX ) );
+  ItemMoveJob *store = new ItemMoveJob( item, Collection( INT_MAX ), this );
   QVERIFY( !store->exec() );
 
   // move item into folder that doesn't support its mimetype
-  store = new ItemModifyJob( item, this );
-  store->setCollection( res2 );
+  store = new ItemMoveJob( item, res2, this );
   QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
   QVERIFY( !store->exec() );
 }

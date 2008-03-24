@@ -196,9 +196,9 @@ void ItemSync::Private::slotLocalListDone( KJob * job )
       i.setId( localItem.id() );
       i.setRemoteId( remoteItem.remoteId() );
       i.setRevision( localItem.revision() );
-      ItemModifyJob *mod = new ItemModifyJob( (const Item)i, q );
+      i.setFlags( remoteItem.flags() );
+      ItemModifyJob *mod = new ItemModifyJob( i, q );
       mod->storePayload();
-      mod->setFlags( i.flags() );
       mod->setCollection( mSyncCollection );
       q->connect( mod, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
     } else {

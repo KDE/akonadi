@@ -33,7 +33,8 @@ class ItemPrivate : public EntityPrivate
     ItemPrivate( Item::Id id = -1 )
       : EntityPrivate( id ),
         mPayload( 0 ),
-        mRevision( -1 )
+        mRevision( -1 ),
+        mFlagsOverwritten( false )
     {
     }
 
@@ -54,6 +55,13 @@ class ItemPrivate : public EntityPrivate
       delete mPayload;
     }
 
+    void resetChangeLog()
+    {
+      mFlagsOverwritten = false;
+      mAddedFlags.clear();
+      mDeletedFlags.clear();
+    }
+
     EntityPrivate *clone() const
     {
       return new ItemPrivate( *this );
@@ -63,6 +71,9 @@ class ItemPrivate : public EntityPrivate
     Item::Flags mFlags;
     int mRevision;
     QString mMimeType;
+    Item::Flags mAddedFlags;
+    Item::Flags mDeletedFlags;
+    bool mFlagsOverwritten;
 };
 
 }
