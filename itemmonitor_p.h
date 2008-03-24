@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMDETAILSVIEW_P_H
-#define AKONADI_ITEMDETAILSVIEW_P_H
+#ifndef AKONADI_ITEMMONITOR_P_H
+#define AKONADI_ITEMMONITOR_P_H
 
 #include <QtCore/QObject>
 
@@ -27,12 +27,12 @@
 
 namespace Akonadi {
 
-class ItemDetailsView::Private : public QObject
+class ItemMonitor::Private : public QObject
 {
   Q_OBJECT
 
   public:
-    Private( ItemDetailsView *parent )
+    Private( ItemMonitor *parent )
       : QObject( 0 ),
         mParent( parent ), mMonitor( 0 )
     {
@@ -43,7 +43,7 @@ class ItemDetailsView::Private : public QObject
       delete mMonitor;
     }
 
-    ItemDetailsView *mParent;
+    ItemMonitor *mParent;
     Item mItem;
     Monitor *mMonitor;
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "agenttypeview.h"
+#include "agenttypewidget.h"
 
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
@@ -29,10 +29,10 @@
 
 using namespace Akonadi;
 
-class AgentTypeViewDelegate : public QAbstractItemDelegate
+class AgentTypeWidgetDelegate : public QAbstractItemDelegate
 {
   public:
-    AgentTypeViewDelegate( QObject *parent = 0 );
+    AgentTypeWidgetDelegate( QObject *parent = 0 );
 
     virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
     virtual QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
@@ -42,23 +42,23 @@ class AgentTypeViewDelegate : public QAbstractItemDelegate
 };
 
 
-class AgentTypeView::Private
+class AgentTypeWidget::Private
 {
   public:
-    Private( AgentTypeView *parent )
+    Private( AgentTypeWidget *parent )
       : mParent( parent )
     {
     }
 
     void currentAgentTypeChanged( const QModelIndex&, const QModelIndex& );
 
-    AgentTypeView *mParent;
+    AgentTypeWidget *mParent;
     QListView *mView;
     AgentTypeModel *mModel;
     AgentFilterProxyModel *proxyModel;
 };
 
-void AgentTypeView::Private::currentAgentTypeChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
+void AgentTypeWidget::Private::currentAgentTypeChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
 {
   QString currentIdentifier;
   if ( currentIndex.isValid() )
@@ -71,7 +71,7 @@ void AgentTypeView::Private::currentAgentTypeChanged( const QModelIndex &current
   emit mParent->currentChanged( currentIdentifier, previousIdentifier );
 }
 
-AgentTypeView::AgentTypeView( QWidget *parent )
+AgentTypeWidget::AgentTypeWidget( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
@@ -79,7 +79,7 @@ AgentTypeView::AgentTypeView( QWidget *parent )
   layout->setSpacing( 0 );
 
   d->mView = new QListView( this );
-  d->mView->setItemDelegate( new AgentTypeViewDelegate( d->mView ) );
+  d->mView->setItemDelegate( new AgentTypeWidgetDelegate( d->mView ) );
   layout->addWidget( d->mView );
 
   d->mModel = new AgentTypeModel( d->mView );
@@ -93,12 +93,12 @@ AgentTypeView::AgentTypeView( QWidget *parent )
            this, SLOT( currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) ) );
 }
 
-AgentTypeView::~AgentTypeView()
+AgentTypeWidget::~AgentTypeWidget()
 {
   delete d;
 }
 
-QString AgentTypeView::currentAgentType() const
+QString AgentTypeWidget::currentAgentType() const
 {
   QItemSelectionModel *selectionModel = d->mView->selectionModel();
   if ( !selectionModel )
@@ -111,21 +111,21 @@ QString AgentTypeView::currentAgentType() const
   return index.model()->data( index, AgentTypeModel::TypeIdentifierRole ).toString();
 }
 
-AgentFilterProxyModel* AgentTypeView::agentFilterProxyModel() const
+AgentFilterProxyModel* AgentTypeWidget::agentFilterProxyModel() const
 {
   return d->proxyModel;
 }
 
 /**
- * AgentTypeViewDelegate
+ * AgentTypeWidgetDelegate
  */
 
-AgentTypeViewDelegate::AgentTypeViewDelegate( QObject *parent )
+AgentTypeWidgetDelegate::AgentTypeWidgetDelegate( QObject *parent )
  : QAbstractItemDelegate( parent )
 {
 }
 
-void AgentTypeViewDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+void AgentTypeWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
   if ( !index.isValid() )
     return;
@@ -185,7 +185,7 @@ void AgentTypeViewDelegate::paint( QPainter *painter, const QStyleOptionViewItem
   drawFocus( painter, option, option.rect );
 }
 
-QSize AgentTypeViewDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
+QSize AgentTypeWidgetDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
   if ( !index.isValid() )
     return QSize( 0, 0 );
@@ -218,7 +218,7 @@ QSize AgentTypeViewDelegate::sizeHint( const QStyleOptionViewItem &option, const
   return QSize( width, height );
 }
 
-void AgentTypeViewDelegate::drawFocus( QPainter *painter, const QStyleOptionViewItem &option, const QRect &rect ) const
+void AgentTypeWidgetDelegate::drawFocus( QPainter *painter, const QStyleOptionViewItem &option, const QRect &rect ) const
 {
   if (option.state & QStyle::State_HasFocus) {
     QStyleOptionFocusRect o;
@@ -233,4 +233,4 @@ void AgentTypeViewDelegate::drawFocus( QPainter *painter, const QStyleOptionView
   }
 }
 
-#include "agenttypeview.moc"
+#include "agenttypewidget.moc"

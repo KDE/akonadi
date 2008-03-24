@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,43 +17,42 @@
     02110-1301, USA.
 */
 
-#ifndef AGENTINSTANCEVIEW_H
-#define AGENTINSTANCEVIEW_H
+#ifndef AKONADI_AGENTINSTANCEWIDGET_H
+#define AKONADI_AGENTINSTANCEWIDGET_H
 
 #include "akonadi_export.h"
+
 #include <QtGui/QWidget>
 
 namespace Akonadi {
 
 class AgentFilterProxyModel;
 
-//FIXME_API: rename it to agentinstancewidget
-
 /**
- * This class provides a view of all available agent instances.
+ * This class provides a widget of all available agent instances.
  *
- * Since the view is listening to the dbus for changes, the
- * view is updated automatically as soon as a new agent instance
+ * Since the widget is listening to the dbus for changes, the
+ * widget is updated automatically as soon as a new agent instance
  * is added or removed to/from the system.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT AgentInstanceView : public QWidget
+class AKONADI_EXPORT AgentInstanceWidget : public QWidget
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new agent instance view.
+     * Creates a new agent instance widget.
      *
      * @param parent The parent widget.
      */
-    explicit AgentInstanceView( QWidget *parent = 0 );
+    explicit AgentInstanceWidget( QWidget *parent = 0 );
 
     /**
-     * Destroys the agent instance view.
+     * Destroys the agent instance widget.
      */
-    ~AgentInstanceView();
+    ~AgentInstanceWidget();
 
     /**
      * Returns the identifier of the current agent instance or
@@ -75,7 +74,7 @@ class AKONADI_EXPORT AgentInstanceView : public QWidget
      * @param previous The identifier of the previous agent instance.
      */
     void currentChanged( const QString &current, const QString &previous );
-    
+
     /**
      * This signal is emitted whenever the there is a double click an an instance.
      *

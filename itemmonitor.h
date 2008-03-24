@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMDETAILSVIEW_H
-#define AKONADI_ITEMDETAILSVIEW_H
+#ifndef AKONADI_ITEMMONITOR_H
+#define AKONADI_ITEMMONITOR_H
 
 #include "akonadi_export.h"
 
@@ -29,48 +29,45 @@ namespace Akonadi {
 class Item;
 
 /**
- * This class can be used to implement item views.
+ * The class ItemMonitor is a convenience class to monitor a single item.
  *
- * Item views are widgets that show information about one item
- * in the Akonadi storage. The presentation of the information
- * is up to the user of this class.
- *
- * @see ItemBrowser
+ * This class can be used as a base class for classes that want to show
+ * a single item to the user and keep track of status changes of the item
+ * without having to using a Monitor object themself.
  */
-//FIXME_API: rename class to ItemMonitor
-class AKONADI_EXPORT ItemDetailsView
+class AKONADI_EXPORT ItemMonitor
 {
   public:
     /**
-     * Creates a new item details view.
+     * Creates a new item monitor.
      */
-    ItemDetailsView();
+    ItemMonitor();
 
     /**
-     * Destroys the item details view.
+     * Destroys the item monitor.
      */
-    virtual ~ItemDetailsView();
+    virtual ~ItemMonitor();
 
     /**
-     * Sets the item that shall be watched.
+     * Sets the item that shall be monitored.
      */
     void setItem( const Item &id );
 
     /**
-     * Returns the currently watched item.
+     * Returns the currently monitored item.
      */
      Item item() const;
 
   protected:
     /**
-     * This method is called whenever the watched item has changed.
+     * This method is called whenever the monitored item has changed.
      *
      * @param item The data of the changed item.
      */
     virtual void itemChanged( const Item &item );
 
     /**
-     * This method is called whenever the watched item has been removed.
+     * This method is called whenever the monitored item has been removed.
      */
     virtual void itemRemoved();
 
@@ -78,13 +75,14 @@ class AKONADI_EXPORT ItemDetailsView
      * This method returns the identifiers of the parts that shall be fetched
      * for the item.
      */
+    //FIXME_API: change to public setter for ItemFetchScope
     virtual QStringList fetchPartIdentifiers() const;
 
   private:
     class Private;
     Private* const d;
 
-    Q_DISABLE_COPY( ItemDetailsView )
+    Q_DISABLE_COPY( ItemMonitor )
 };
 
 }

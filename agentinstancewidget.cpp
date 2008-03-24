@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "agentinstanceview.h"
+#include "agentinstancewidget.h"
 
 #include "agentinstancemodel.h"
 #include "agentfilterproxymodel.h"
@@ -34,10 +34,10 @@
 
 using namespace Akonadi;
 
-class AgentInstanceViewDelegate : public QAbstractItemDelegate
+class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 {
   public:
-    AgentInstanceViewDelegate( QObject *parent = 0 );
+    AgentInstanceWidgetDelegate( QObject *parent = 0 );
 
     virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
     virtual QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
@@ -48,10 +48,10 @@ class AgentInstanceViewDelegate : public QAbstractItemDelegate
     QTextDocument* document( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 };
 
-class AgentInstanceView::Private
+class AgentInstanceWidget::Private
 {
   public:
-    Private( AgentInstanceView *parent )
+    Private( AgentInstanceWidget *parent )
       : mParent( parent )
     {
     }
@@ -59,13 +59,13 @@ class AgentInstanceView::Private
     void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& );
     void currentAgentInstanceDoubleClicked( const QModelIndex& );
 
-    AgentInstanceView *mParent;
+    AgentInstanceWidget *mParent;
     QListView *mView;
     AgentInstanceModel *mModel;
     AgentFilterProxyModel *proxy;
 };
 
-void AgentInstanceView::Private::currentAgentInstanceChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
+void AgentInstanceWidget::Private::currentAgentInstanceChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
 {
   QString currentIdentifier;
   if ( currentIndex.isValid() )
@@ -78,7 +78,7 @@ void AgentInstanceView::Private::currentAgentInstanceChanged( const QModelIndex 
   emit mParent->currentChanged( currentIdentifier, previousIdentifier );
 }
 
-void AgentInstanceView::Private::currentAgentInstanceDoubleClicked( const QModelIndex &currentIndex )
+void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked( const QModelIndex &currentIndex )
 {
   QString currentIdentifier;
   if ( currentIndex.isValid() )
@@ -87,7 +87,7 @@ void AgentInstanceView::Private::currentAgentInstanceDoubleClicked( const QModel
   emit mParent->doubleClicked( currentIdentifier );
 }
 
-AgentInstanceView::AgentInstanceView( QWidget *parent )
+AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
@@ -95,7 +95,7 @@ AgentInstanceView::AgentInstanceView( QWidget *parent )
   layout->setSpacing( 0 );
 
   d->mView = new QListView( this );
-  d->mView->setItemDelegate( new AgentInstanceViewDelegate( d->mView ) );
+  d->mView->setItemDelegate( new AgentInstanceWidgetDelegate( d->mView ) );
   layout->addWidget( d->mView );
 
   d->mModel = new AgentInstanceModel( this );
@@ -106,19 +106,19 @@ AgentInstanceView::AgentInstanceView( QWidget *parent )
 
   d->mView->selectionModel()->setCurrentIndex( d->mView->model()->index( 0, 0 ), QItemSelectionModel::Select );
   d->mView->scrollTo( d->mView->model()->index( 0, 0 ) );
-  
+
   connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) ) );
   connect( d->mView, SIGNAL( doubleClicked( const QModelIndex& ) ),
            this, SLOT( currentAgentInstanceDoubleClicked( const QModelIndex& ) ) );
 }
 
-AgentInstanceView::~AgentInstanceView()
+AgentInstanceWidget::~AgentInstanceWidget()
 {
   delete d;
 }
 
-QString AgentInstanceView::currentAgentInstance() const
+QString AgentInstanceWidget::currentAgentInstance() const
 {
   QItemSelectionModel *selectionModel = d->mView->selectionModel();
   if ( !selectionModel )
@@ -131,7 +131,7 @@ QString AgentInstanceView::currentAgentInstance() const
   return index.model()->data( index, AgentInstanceModel::InstanceIdentifierRole ).toString();
 }
 
-AgentFilterProxyModel* AgentInstanceView::agentFilterProxyModel() const
+AgentFilterProxyModel* AgentInstanceWidget::agentFilterProxyModel() const
 {
   return d->proxy;
 }
@@ -140,12 +140,12 @@ AgentFilterProxyModel* AgentInstanceView::agentFilterProxyModel() const
 
 
 
-AgentInstanceViewDelegate::AgentInstanceViewDelegate( QObject *parent )
+AgentInstanceWidgetDelegate::AgentInstanceWidgetDelegate( QObject *parent )
  : QAbstractItemDelegate( parent )
 {
 }
 
-QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &option, const QModelIndex &index ) const
+QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
   if ( !index.isValid() )
     return 0;
@@ -208,7 +208,7 @@ QTextDocument* AgentInstanceViewDelegate::document( const QStyleOptionViewItem &
   return document;
 }
 
-void AgentInstanceViewDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+void AgentInstanceWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
   if ( !index.isValid() )
     return;
@@ -243,7 +243,7 @@ void AgentInstanceViewDelegate::paint( QPainter *painter, const QStyleOptionView
   drawFocus( painter, option, option.rect );
 }
 
-QSize AgentInstanceViewDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
+QSize AgentInstanceWidgetDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
   if ( !index.isValid() )
     return QSize( 0, 0 );
@@ -258,7 +258,7 @@ QSize AgentInstanceViewDelegate::sizeHint( const QStyleOptionViewItem &option, c
   return size;
 }
 
-void AgentInstanceViewDelegate::drawFocus( QPainter *painter, const QStyleOptionViewItem &option, const QRect &rect ) const
+void AgentInstanceWidgetDelegate::drawFocus( QPainter *painter, const QStyleOptionViewItem &option, const QRect &rect ) const
 {
   if ( option.state & QStyle::State_HasFocus ) {
     QStyleOptionFocusRect o;
@@ -272,4 +272,4 @@ void AgentInstanceViewDelegate::drawFocus( QPainter *painter, const QStyleOption
   }
 }
 
-#include "agentinstanceview.moc"
+#include "agentinstancewidget.moc"

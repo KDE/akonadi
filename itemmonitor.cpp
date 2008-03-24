@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,24 +17,24 @@
     02110-1301, USA.
 */
 
-#include "itemdetailsview.h"
-#include "itemdetailsview_p.h"
+#include "itemmonitor.h"
+#include "itemmonitor_p.h"
 
 #include <QtCore/QStringList>
 
 using namespace Akonadi;
 
-ItemDetailsView::ItemDetailsView()
+ItemMonitor::ItemMonitor()
   : d( new Private( this ) )
 {
 }
 
-ItemDetailsView::~ItemDetailsView()
+ItemMonitor::~ItemMonitor()
 {
   delete d;
 }
 
-void ItemDetailsView::setItem( const Item &item )
+void ItemMonitor::setItem( const Item &item )
 {
   if ( item == d->mItem )
     return;
@@ -66,22 +66,22 @@ void ItemDetailsView::setItem( const Item &item )
   d->connect( job, SIGNAL( result( KJob* ) ), d, SLOT( initialFetchDone( KJob* ) ) );
 }
 
-Item ItemDetailsView::item() const
+Item ItemMonitor::item() const
 {
   return d->mItem;
 }
 
-void ItemDetailsView::itemChanged( const Item& )
+void ItemMonitor::itemChanged( const Item& )
 {
 }
 
-void ItemDetailsView::itemRemoved()
+void ItemMonitor::itemRemoved()
 {
 }
 
-QStringList ItemDetailsView::fetchPartIdentifiers() const
+QStringList ItemMonitor::fetchPartIdentifiers() const
 {
   return QStringList( Item::PartBody );
 }
 
-#include "itemdetailsview_p.moc"
+#include "itemmonitor_p.moc"

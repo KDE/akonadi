@@ -56,10 +56,10 @@ set( akonadikde_LIB_SRC
   agentfilterproxymodel.cpp
   agentinstancecreatejob.cpp
   agentinstancemodel.cpp
-  agentinstanceview.cpp
+  agentinstancewidget.cpp
   agentmanager.cpp
   agenttypemodel.cpp
-  agenttypeview.cpp
+  agenttypewidget.cpp
   attribute.cpp
   attributefactory.cpp
   cachepolicy.cpp
@@ -94,9 +94,9 @@ set( akonadikde_LIB_SRC
   itemcreatejob.cpp
   itemcopyjob.cpp
   itemdeletejob.cpp
-  itemdetailsview.cpp
   itemfetchjob.cpp
   itemmodel.cpp
+  itemmonitor.cpp
   itemserializer.cpp
   itemserializerplugin.cpp
   itemmodifyjob.cpp
@@ -150,10 +150,10 @@ install( FILES
   agentfilterproxymodel.h
   agentinstancecreatejob.h
   agentinstancemodel.h
-  agentinstanceview.h
+  agentinstancewidget.h
   agentmanager.h
   agenttypemodel.h
-  agenttypeview.h
+  agenttypewidget.h
   attribute.h
   attributefactory.h
   cachepolicy.h
@@ -180,10 +180,10 @@ install( FILES
   itemcreatejob.h
   itemcopyjob.h
   itemdeletejob.h
-  itemdetailsview.h
   itemfetchjob.h
   itemmodel.h
   itemmodifyjob.h
+  itemmonitor.h
   itempayloadinternals_p.h
   itemserializerplugin.h
   itemsync.h

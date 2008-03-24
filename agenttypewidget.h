@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,43 +17,42 @@
     02110-1301, USA.
 */
 
-#ifndef AGENTTYPEVIEW_H
-#define AGENTTYPEVIEW_H
+#ifndef AKONADI_AGENTTYPEWIDGET_H
+#define AKONADI_AGENTTYPEWIDGET_H
 
 #include "akonadi_export.h"
+
 #include <QtGui/QWidget>
 
 namespace Akonadi {
 
 class AgentFilterProxyModel;
 
-//FIXME_API: rename it to AgentTypeWidget
-
 /**
- * This class provides a view of all available agent types.
+ * This class provides a widget of all available agent types.
  *
- * Since the view is listening to the dbus for changes, the
- * view is updated automatically as soon as a new agent type
+ * Since the widget is listening to the dbus for changes, the
+ * widget is updated automatically as soon as a new agent type
  * is installed or removed to/from the system.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT AgentTypeView : public QWidget
+class AKONADI_EXPORT AgentTypeWidget : public QWidget
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new agent type view.
+     * Creates a new agent type widget.
      *
      * @param parent The parent widget.
      */
-    explicit AgentTypeView( QWidget *parent = 0 );
+    explicit AgentTypeWidget( QWidget *parent = 0 );
 
     /**
-     * Destroys the agent type view.
+     * Destroys the agent type widget.
      */
-    ~AgentTypeView();
+    ~AgentTypeWidget();
 
     /**
      * Returns the identifier of the current agent type or an

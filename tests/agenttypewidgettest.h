@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,12 +17,14 @@
     02110-1301, USA.
 */
 
-#ifndef AGENTINSTANCEVIEWTEST_H
-#define AGENTINSTANCEVIEWTEST_H
+#ifndef AGENTTYPEWIDGETTEST_H
+#define AGENTTYPEWIDGETTEST_H
 
 #include <QtGui/QDialog>
 
-#include "agentinstanceview.h"
+#include "agenttypewidget.h"
+
+class QComboBox;
 
 class Dialog : public QDialog
 {
@@ -35,9 +37,11 @@ class Dialog : public QDialog
 
   private Q_SLOTS:
     void currentChanged( const QString&, const QString& );
+    void filterChanged( int );
 
   private:
-    Akonadi::AgentInstanceView *mView;
+    Akonadi::AgentTypeWidget *mWidget;
+    QComboBox *mFilter;
 };
 
 #endif

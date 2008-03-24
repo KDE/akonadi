@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "agenttypeviewtest.h"
+#include "agenttypewidgettest.h"
 #include <akonadi/agentfilterproxymodel.h>
 
 #include <kcomponentdata.h>
@@ -41,14 +41,14 @@ Dialog::Dialog( QWidget *parent )
   connect( mFilter, SIGNAL( activated( int ) ),
            this, SLOT( filterChanged( int ) ) );
 
-  mView = new Akonadi::AgentTypeView( this );
-  connect( mView, SIGNAL( currentChanged( const QString&, const QString& ) ),
+  mWidget = new Akonadi::AgentTypeWidget( this );
+  connect( mWidget, SIGNAL( currentChanged( const QString&, const QString& ) ),
            this, SLOT( currentChanged( const QString&, const QString& ) ) );
 
   QDialogButtonBox *box = new QDialogButtonBox( this );
 
   layout->addWidget( mFilter );
-  layout->addWidget( mView );
+  layout->addWidget( mWidget );
   layout->addWidget( box );
 
   QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
@@ -63,7 +63,7 @@ Dialog::Dialog( QWidget *parent )
 void Dialog::done( int r )
 {
   if ( r == Accepted ) {
-    qDebug( "'%s' selected", qPrintable( mView->currentAgentType() ) );
+    qDebug( "'%s' selected", qPrintable( mWidget->currentAgentType() ) );
   }
 
   QDialog::done( r );
@@ -76,9 +76,9 @@ void Dialog::currentChanged( const QString &current, const QString &previous )
 
 void Dialog::filterChanged( int index )
 {
-  mView->agentFilterProxyModel()->clearFilters();
+  mWidget->agentFilterProxyModel()->clearFilters();
   if ( index > 0 )
-    mView->agentFilterProxyModel()->addMimeTypeFilter( mFilter->itemText( index ) );
+    mWidget->agentFilterProxyModel()->addMimeTypeFilter( mFilter->itemText( index ) );
 }
 
 int main( int argc, char **argv )
@@ -92,4 +92,4 @@ int main( int argc, char **argv )
   return 0;
 }
 
-#include "agenttypeviewtest.moc"
+#include "agenttypewidgettest.moc"

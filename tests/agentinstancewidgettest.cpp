@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "agentinstanceviewtest.h"
+#include "agentinstancewidgettest.h"
 
 #include <kcomponentdata.h>
 
@@ -31,13 +31,13 @@ Dialog::Dialog( QWidget *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  mView = new Akonadi::AgentInstanceView( this );
-  connect( mView, SIGNAL( currentChanged( const QString&, const QString& ) ),
+  mWidget = new Akonadi::AgentInstanceWidget( this );
+  connect( mWidget, SIGNAL( currentChanged( const QString&, const QString& ) ),
            this, SLOT( currentChanged( const QString&, const QString& ) ) );
 
   QDialogButtonBox *box = new QDialogButtonBox( this );
 
-  layout->addWidget( mView );
+  layout->addWidget( mWidget );
   layout->addWidget( box );
 
   QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
@@ -49,7 +49,7 @@ Dialog::Dialog( QWidget *parent )
 void Dialog::done( int r )
 {
   if ( r == Accepted ) {
-    qDebug( "'%s' selected", qPrintable( mView->currentAgentInstance() ) );
+    qDebug( "'%s' selected", qPrintable( mWidget->currentAgentInstance() ) );
   }
 
   QDialog::done( r );
@@ -71,4 +71,4 @@ int main( int argc, char **argv )
   return 0;
 }
 
-#include "agentinstanceviewtest.moc"
+#include "agentinstancewidgettest.moc"
