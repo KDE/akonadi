@@ -118,12 +118,18 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Reimplemented from QAbstractItemModel.
     */
-   virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
+    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
     /**
       Reimplemented from QAbstractItemModel.
     */
     virtual QStringList mimeTypes() const;
+
+    /**
+      Enable fetching of collection statistics information.
+      @see CollectionStatistics.
+    */
+    void fetchCollectionStatistics( bool enable );
 
   Q_SIGNALS:
     /**
@@ -138,13 +144,6 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       @param id A collection id.
     */
     Collection collectionForId( Collection::Id id ) const;
-
-    /**
-      Enable fetching of collection statistics information.
-      @see CollectionStatistics.
-    */
-    //FIXME_API: move to public
-    void fetchCollectionStatistics( bool enable );
 
     /**
       Also include unsubscribed collections.
