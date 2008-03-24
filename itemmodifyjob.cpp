@@ -207,7 +207,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
   if ( _tag == d->mTag ) {
     if ( data.startsWith( "OK" ) ) {
       // increase item revision of own copy of item
-      d->mItem.incrementRevision();
+      d->mItem.setRevision( d->mItem.revision() + 1 );
       d->mItem.d_ptr->resetChangeLog();
     } else {
       setError( Unknown );

@@ -171,12 +171,6 @@ class AKONADI_EXPORT Item : public Entity
     */
     void setRevision( int revision );
 
-    //FIXME_API: remove incrementRevision
-    /**
-      Increases the revision number of this item.
-    */
-    void incrementRevision();
-
     /**
       Returns the mime type of this item.
     */

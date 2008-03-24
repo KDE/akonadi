@@ -112,11 +112,6 @@ void Item::setRevision( const int rev )
   d_func()->mRevision = rev;
 }
 
-void Item::incrementRevision()
-{
-  d_func()->mRevision = d_func()->mRevision + 1;
-}
-
 QString Item::mimeType() const
 {
   return d_func()->mMimeType;
