@@ -25,6 +25,8 @@
 
 #include <klocale.h>
 
+class QSettings;
+
 //@cond PRIVATE
 namespace Akonadi {
 

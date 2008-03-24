@@ -38,6 +38,7 @@
 #include <klocale.h>
 
 #include <QtCore/QDir>
+#include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtDBus/QtDBus>
