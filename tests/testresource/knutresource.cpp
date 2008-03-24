@@ -339,8 +339,8 @@ bool KnutResource::loadData()
   parentCollection.setRemoteId( mDataFile );
   parentCollection.setName( name() );
   QStringList contentTypes;
-  contentTypes << Collection::collectionMimeType();
-  parentCollection.setContentTypes( contentTypes );
+  contentTypes << Collection::mimeType();
+  parentCollection.setContentMimeTypes( contentTypes );
 
   CollectionEntry entry;
   entry.collection = parentCollection;
@@ -370,7 +370,7 @@ void KnutResource::addCollection( const QDomElement &element, const Akonadi::Col
   collection.setParent( parentCollection );
   collection.setName( element.attribute( "name" ) );
   collection.setRemoteId( mDataFile + QLatin1Char( '#' ) + element.attribute( "name" ) );
-  collection.setContentTypes( element.attribute( "mimetypes" ).split( ";", QString::SkipEmptyParts ) );
+  collection.setContentMimeTypes( element.attribute( "mimetypes" ).split( ";", QString::SkipEmptyParts ) );
 
   CollectionEntry entry;
   entry.collection = collection;
