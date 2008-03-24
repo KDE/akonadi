@@ -133,7 +133,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /// removes the given location and all its content
     bool cleanupLocation( Location &location );
     /// rename the collection @p location to @p newName.
-    bool renameLocation( const Location &location, qint64 newParent, const QString &newName );
+    bool renameLocation( Location &location, qint64 newParent, const QString &newName );
 
     bool appendMimeTypeForLocation( qint64 locationId, const QStringList & mimeTypes );
     bool removeMimeTypesForLocation( qint64 locationId );

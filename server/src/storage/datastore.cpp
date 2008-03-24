@@ -377,7 +377,7 @@ bool Akonadi::DataStore::cleanupLocation(Location & location)
   return location.remove();
 }
 
-bool Akonadi::DataStore::renameLocation(const Location & location, qint64 newParent, const QString & newName)
+bool Akonadi::DataStore::renameLocation( Location & location, qint64 newParent, const QString & newName)
 {
   if ( location.name() == newName && location.parentId() == newParent )
     return true;
@@ -399,15 +399,13 @@ bool Akonadi::DataStore::renameLocation(const Location & location, qint64 newPar
   if ( !qb.exec() || qb.result().count() > 0 )
     return false;
 
-  Location renamedLoc = location;
+  location.setName( newName );
+  location.setParentId( newParent );
 
-  renamedLoc.setName( newName );
-  renamedLoc.setParentId( newParent );
-
-  if ( !renamedLoc.update() )
+  if ( !location.update() )
     return false;
 
-  mNotificationCollector->collectionChanged( renamedLoc );
+  mNotificationCollector->collectionChanged( location );
   return true;
 }
 
