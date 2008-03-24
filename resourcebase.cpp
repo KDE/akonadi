@@ -43,6 +43,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QHash>
+#include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtDBus/QtDBus>
