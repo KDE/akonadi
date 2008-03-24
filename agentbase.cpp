@@ -270,7 +270,7 @@ void AgentBase::collectionRemoved( const Collection &collection )
   changeProcessed();
 }
 
-Session* AgentBase::session()
+Session* AgentBase::session() const
 {
   return d_ptr->session;
 }
@@ -287,7 +287,7 @@ void AgentBase::error( const QString& message )
   d->mTracer->error( QString::fromLatin1( "AgentBase(%1)" ).arg( d->mId ), message );
 }
 
-ChangeRecorder * AgentBase::monitor() const
+ChangeRecorder * AgentBase::changeRecorder() const
 {
   return d_ptr->monitor;
 }

@@ -18,12 +18,16 @@
 */
 
 #include "itemmodifyjob.h"
-#include "imapparser_p.h"
+
+#include "collection.h"
 #include "entity_p.h"
+#include "imapparser_p.h"
 #include "itemserializer.h"
 #include "job_p.h"
 
 #include <kdebug.h>
+
+#include <QtCore/QStringList>
 
 using namespace Akonadi;
 

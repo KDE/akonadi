@@ -44,6 +44,7 @@ class AKONADI_EXPORT CollectionStatisticsModel : public CollectionModel
     /**
      * Custom roles for the message collection model
      */
+    //FIXME_API: rename to 'Roles'
     enum CollectionStatisticsRole {
 
       /// Get the number of unread items in this collection
@@ -58,11 +59,14 @@ class AKONADI_EXPORT CollectionStatisticsModel : public CollectionModel
       /// Get the number of items in this collection and its children
       CollectionStatisticsTotalRecursiveRole,
 
-      CollectionStatisticsUserRole = Qt::UserRole + 64
+      CollectionStatisticsUserRole = CollectionViewUserRole + 42
     };
+    //FIXME_API: remove CollectionStatistics prefix from names
+    //FIXME_API: add  StatisticsRole and RecursiveStatisticsRole
+    //FIXME_API: rename TotalRecursiveRole to RecursiveTotalRole, ff.
 
     /**
-      Create a new message collection model.
+      Create a new collection statistics model.
       @param parent The parent object.
     */
     explicit CollectionStatisticsModel( QObject *parent = 0 );

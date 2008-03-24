@@ -22,11 +22,11 @@
 
 #include "akonadi_export.h"
 
-#include <akonadi/item.h>
-
 class QStringList;
 
 namespace Akonadi {
+
+class Item;
 
 /**
  * This class can be used to implement item views.
@@ -37,6 +37,7 @@ namespace Akonadi {
  *
  * @see ItemBrowser
  */
+//FIXME_API: rename class to ItemMonitor
 class AKONADI_EXPORT ItemDetailsView
 {
   public:
@@ -61,13 +62,6 @@ class AKONADI_EXPORT ItemDetailsView
      Item item() const;
 
   protected:
-    /**
-     * This method is called whenever the watched item has been added.
-     *
-     * @param item The data of the new item.
-     */
-    virtual void itemAdded( const Item &item );
-
     /**
      * This method is called whenever the watched item has changed.
      *

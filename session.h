@@ -70,6 +70,8 @@ class AKONADI_EXPORT Session : public QObject
       Returns the default session for this thread.
     */
     static Session* defaultSession();
+    //FIXME_API: add createDefaultSession which takes custom sessionId
+    //           needed in AgentBase
 
     /**
       Stops all jobs queued for execution.
@@ -81,16 +83,19 @@ class AKONADI_EXPORT Session : public QObject
       Associates the given Job object with this session.
     */
     void addJob( Job* job );
+    //FIXME_API: move to private class
 
     /**
       Sends the given raw data.
     */
     void writeData( const QByteArray &data );
+    //FIXME_API: move to private class
 
     /**
       Returns the next IMAP tag.
     */
     int nextTag();
+    //FIXME_API: move to private class
 
   private:
     SessionPrivate* const d;

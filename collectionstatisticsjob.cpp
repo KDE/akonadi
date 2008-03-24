@@ -18,6 +18,9 @@
 */
 
 #include "collectionstatisticsjob.h"
+
+#include "collection.h"
+#include "collectionstatistics.h"
 #include "imapparser_p.h"
 #include "job_p.h"
 

@@ -81,10 +81,10 @@ set( akonadikde_LIB_SRC
   collectionpropertiespage.cpp
   collectionrightsattribute.cpp
   collectionselectjob.cpp
-  collectionstatisticsdelegate.cpp
-  collectionstatisticsmodel.cpp
   collectionstatistics.cpp
+  collectionstatisticsdelegate.cpp
   collectionstatisticsjob.cpp
+  collectionstatisticsmodel.cpp
   collectionsync.cpp
   collectionview.cpp
   control.cpp
@@ -93,7 +93,6 @@ set( akonadikde_LIB_SRC
   flatcollectionproxymodel.cpp
   item.cpp
   itemcreatejob.cpp
-  itembrowser.cpp
   itemcopyjob.cpp
   itemdeletejob.cpp
   itemdetailsview.cpp
@@ -108,8 +107,6 @@ set( akonadikde_LIB_SRC
   monitor.cpp
   monitor_p.cpp
   pastehelper.cpp
-  profilemanager.cpp
-  profilemodel.cpp
   protocolhelper.cpp
   resourcebase.cpp
   resourcescheduler.cpp
@@ -130,7 +127,6 @@ qt4_generate_dbus_interface( resource.h org.kde.Akonadi.Resource.xml )
 qt4_generate_dbus_interface( agent.h org.kde.Akonadi.Agent.xml )
 qt4_add_dbus_interface2( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanagerinterface notificationmessage_p.h )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.AgentManager.xml )
-qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.ProfileManager.xml )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Tracer.xml )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml agentbase.h Akonadi::AgentBase )
@@ -164,7 +160,6 @@ install( FILES
   cachepolicy.h
   changerecorder.h
   collection.h
-  collectioncombobox.h
   collectioncopyjob.h
   collectioncreatejob.h
   collectiondeletejob.h
@@ -182,25 +177,20 @@ install( FILES
   collectionview.h
   control.h
   entity.h
-  expungejob.h
   item.h
   itemcreatejob.h
-  itembrowser.h
   itemcopyjob.h
   itemdeletejob.h
   itemdetailsview.h
   itemfetchjob.h
   itemmodel.h
+  itemmodifyjob.h
   itempayloadinternals_p.h
   itemserializerplugin.h
-  itemmodifyjob.h
   itemsync.h
   itemview.h
   job.h
   monitor.h
-  profilemanager.h
-  profilemodel.h
-  resource.h
   resourcebase.h
   session.h
   shareddatapointer.h
@@ -224,7 +214,6 @@ install( FILES
 install( FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.AgentManager.xml
   ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.NotificationManager.xml
-  ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.ProfileManager.xml
   ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Tracer.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml

@@ -42,47 +42,31 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
     /**
      * Describes the roles of this model.
      */
+    //FIXME_API: rename to Roles
     enum Role
     {
       TypeIdentifierRole = Qt::UserRole + 1,  ///< The identifier of the agent type
       CommentRole,                            ///< A description of the agent type
       MimeTypesRole,                          ///< A list of supported mimetypes
-      CapabilitiesRole                        ///< A list of supported capabilities
+      CapabilitiesRole,                       ///< A list of supported capabilities
+      UserRole  = Qt::UserRole + 42           ///< For further extensions
     };
+    //FIXME_API: CommentRole -> DescriptionRole
 
     /**
      * Creates a new agent type model.
      */
-    explicit AgentTypeModel( QObject *parent );
+    explicit AgentTypeModel( QObject *parent = 0 );
 
     /**
      * Destroys the agent type model.
      */
     virtual ~AgentTypeModel();
 
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual QModelIndex parent( const QModelIndex &index ) const;
 
   private:

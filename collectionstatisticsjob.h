@@ -21,12 +21,13 @@
 #define AKONADI_COLLECTIONSTATISTICSJOB_H
 
 #include "akonadi_export.h"
-#include <akonadi/collection.h>
-#include <akonadi/collectionstatistics.h>
+
 #include <akonadi/job.h>
 
 namespace Akonadi {
 
+class Collection;
+class CollectionStatistics;
 class CollectionStatisticsJobPrivate;
 
 /**

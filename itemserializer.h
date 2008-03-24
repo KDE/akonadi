@@ -37,6 +37,7 @@ class ItemSerializerPlugin;
   @internal
   Serialization/Deserialization of item parts, serializer plugin management.
 */
+//FIXME_API: add export macros that is valid in debug mode only
 class AKONADI_EXPORT ItemSerializer
 {
   public:

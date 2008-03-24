@@ -19,6 +19,7 @@
 
 #include "collectiondeletejob.h"
 
+#include "collection.h"
 #include "job_p.h"
 
 using namespace Akonadi;

@@ -19,6 +19,8 @@
 
 #include <kurl.h>
 
+#include <QtCore/QStringList>
+
 #include "item.h"
 #include "item_p.h"
 #include "itemserializer.h"

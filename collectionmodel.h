@@ -43,6 +43,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Extended item roles for collections.
     */
+    //FIXME_API: rename to Roles
     enum CollectionItemRole {
       CollectionIdRole = Qt::UserRole, ///< The collection path.
       CollectionRole, ///< The actual collection object.
@@ -50,6 +51,8 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       CollectionContentTypesRole, ///< Returns the mimetypes supported by the collection
       CollectionViewUserRole = Qt::UserRole + 32 ///< Role for user extensions
     };
+    //FIXME_API: rename CollectionViewUserRole to UserRole
+    //FIXME_API: remove ChildCreatableRole and CollectionContentTypesRole
 
     /**
       Create a new collection model.
@@ -118,7 +121,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
     /**
-      Reimplemented.
+      Reimplemented from QAbstractItemModel.
     */
     virtual QStringList mimeTypes() const;
 
@@ -126,6 +129,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
      * emitted when the unread count of the complete model changes.
      */
+    //FIXME_API: drop it
     void unreadCountChanged( int );
 
   protected:
@@ -139,11 +143,13 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       Enable fetching of collection statistics information.
       @see CollectionStatistics.
     */
+    //FIXME_API: move to public
     void fetchCollectionStatistics( bool enable );
 
     /**
       Also include unsubscribed collections.
     */
+    //FIXME_API: move to public
     void includeUnsubscribed( bool include = true );
 
     Akonadi::CollectionModelPrivate *d_ptr;
@@ -154,6 +160,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     /**
       Helper function to generate a model index for a given collection reference.
     */
+    //FIXME_API: move to private class
     QModelIndex indexForId( Collection::Id id, int column = 0 );
 
     /**
@@ -161,12 +168,14 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       @param row The row index.
       @param parent The parent model index.
     */
+    //FIXME_API: move to private class
     bool removeRowFromModel( int row, const QModelIndex & parent = QModelIndex() );
 
     /**
       Returns true if a new sub-collection for the given parent collection can be created.
       @param parent The parent model index.
     */
+    //FIXME_API: move to private class
     bool canCreateCollection( const QModelIndex &parent ) const;
 
     /**
@@ -174,6 +183,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       @param index The model index.
       @param contentTypes The content types to check.
     */
+    //FIXME_API: move to private class
     bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
 
   private:

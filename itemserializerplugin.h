@@ -100,11 +100,6 @@ public:
     virtual QStringList parts( const Item &item ) const;
 };
 
-
-class AKONADI_EXPORT ItemSerializerException
-{
-};
-
 }
 
 #endif

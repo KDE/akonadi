@@ -23,15 +23,12 @@
 #include "akonadi_export.h"
 
 #include <QtCore/QList>
-#include <QtCore/QStringList>
-
-class QString;
 
 namespace Akonadi {
 
 /**
- * Stores specific collection attributes (ACLs, unread counts, quotas, etc.).
- * Every collection can have zero ore one attribute of every type.
+ * Stores specific entity attributes (ACLs, quotas, etc.).
+ * Every entity can have zero ore one attribute of every type.
  */
 class AKONADI_EXPORT Attribute
 {
@@ -42,7 +39,7 @@ class AKONADI_EXPORT Attribute
     typedef QList<Attribute*> List;
 
     /**
-     * Returns the attribute name of this collection.
+     * Returns the type of the attribute.
      */
     virtual QByteArray type() const = 0;
 
@@ -52,7 +49,7 @@ class AKONADI_EXPORT Attribute
     virtual ~Attribute();
 
     /**
-     * Creates a copy of this object.
+     * Creates a copy of this attribute.
      */
     virtual Attribute* clone() const = 0;
 
@@ -60,6 +57,7 @@ class AKONADI_EXPORT Attribute
      * Returns a QByteArray representation of the attribute which will be
      * storaged. This can be raw binary data, no encoding needs to be applied.
      */
+    //FIXME_API: rename to serialized()
     virtual QByteArray toByteArray() const = 0;
 
     /**
@@ -68,6 +66,7 @@ class AKONADI_EXPORT Attribute
      *
      * @param data The encoded attribute data.
      */
+    //FIXME_API: rename to deserialize()
     virtual void setData( const QByteArray &data ) = 0;
 };
 

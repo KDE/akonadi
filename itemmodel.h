@@ -50,7 +50,10 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     };
 
     enum Roles {
-      IdRole = Qt::UserRole + 1
+      IdRole = Qt::UserRole + 1,
+      ItemRole,
+      MimeTypeRole,
+      UserRole = Qt::UserRole + 42
     };
 
     /**
@@ -105,11 +108,13 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       items. As default no parts are fetched.
     */
     void addFetchPart( const QString &identifier );
+    //FIXME_API: creating an ItemFetchScope (see ItemFetchJob)
 
     /**
       Returns the item at given index.
     */
     Item itemForIndex( const QModelIndex &index ) const;
+    //FIXME_API: make it protected
 
     /**
       Returns the model index for the given item, with the given column
@@ -117,6 +122,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       @param column The column for the returned index
     */
     QModelIndex indexForItem( const Akonadi::Item& item, const int column ) const;
+    //FIXME_API: make it protected
 
     /* reimpl */
     bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
@@ -135,6 +141,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       SetCollection emits this signal when the collection has changed.
      */
      void collectionChanged( const Collection &collection );
+    //FIXME_API: check whether this signal is used at all, remove otherwise
 
   protected:
 
@@ -149,9 +156,9 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
     Q_PRIVATE_SLOT( d, void listingDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QStringList& ) )
-    Q_PRIVATE_SLOT( d, void itemMoved( const Akonadi::Item&, const Akonadi::Collection& colSrc, const Akonadi::Collection& colDst ) )
+    Q_PRIVATE_SLOT( d, void itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item& ) )
-    Q_PRIVATE_SLOT( d, void itemsAdded( const Akonadi::Item::List & ) )
+    Q_PRIVATE_SLOT( d, void itemsAdded( const Akonadi::Item::List& ) )
     Q_PRIVATE_SLOT( d, void itemRemoved( const Akonadi::Item& ) )
 };
 

@@ -24,6 +24,7 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
+#include <akonadi/collectionstatistics.h>
 #include <akonadi/control.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>

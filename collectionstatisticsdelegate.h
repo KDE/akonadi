@@ -52,7 +52,7 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
      *
      * @param parent the parent tree view, which will also take ownership
      */
-    CollectionStatisticsDelegate( QTreeView *parent );
+    explicit CollectionStatisticsDelegate( QTreeView *parent );
 
     ~CollectionStatisticsDelegate();
 
@@ -67,7 +67,10 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
      * @param enable if true, the unread count is drawn behind the folder name,
      *               if false, the folder name will be drawn normally.
      */
+    //FIXME_API: rename to setUnreadCountShown( bool );
     void toggleUnreadAfterFolderName( bool enable );
+
+    //FIXME_API: add unreadCountShown()
 
   protected:
 
@@ -83,9 +86,8 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
     virtual void initStyleOption( QStyleOptionViewItem *option,
                                   const QModelIndex &index ) const;
 
-    CollectionStatisticsDelegatePrivate *d_ptr;
-
   private:
+    CollectionStatisticsDelegatePrivate* const d_ptr;
 
     Q_DECLARE_PRIVATE( CollectionStatisticsDelegate )
 };

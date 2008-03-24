@@ -35,6 +35,7 @@ class CollectionPathResolverPrivate;
   collection path instead. Use this class to get a collection id
   from a collection path.
 */
+//FIXME_API: make it private class
 class AKONADI_EXPORT CollectionPathResolver : public Job
 {
   Q_OBJECT

@@ -21,12 +21,13 @@
 #define AKONADI_COLLECTIONMODIFYJOB_H
 
 #include "akonadi_export.h"
-#include <akonadi/cachepolicy.h>
-#include <akonadi/collection.h>
+
 #include <akonadi/job.h>
 
 namespace Akonadi {
 
+class CachePolicy;
+class Collection;
 class CollectionModifyJobPrivate;
 
 /**

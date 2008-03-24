@@ -21,13 +21,13 @@
 #define AKONADI_MONITOR_H
 
 #include <akonadi/collection.h>
-#include <akonadi/collectionstatistics.h>
-#include <akonadi/item.h>
-#include <akonadi/job.h>
+
 #include <QtCore/QObject>
 
 namespace Akonadi {
 
+class CollectionStatistics;
+class Item;
 class MonitorPrivate;
 class Session;
 
@@ -89,6 +89,8 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void monitorAll();
 
+    //FIXME_API: add unmonitorCollection/Item/Resource/MimeType/All()
+
     /**
       Ignore all notifications caused by the given session.
       @param session The session you want to ignore.
@@ -112,11 +114,13 @@ class AKONADI_EXPORT Monitor : public QObject
       items. As default no parts are fetched.
     */
     void addFetchPart( const QString &identifier );
+    //FIXME_API:(volker) use ItemFetchScope here
 
     /**
       Fetch all item parts.
     */
     void fetchAllParts();
+    //FIXME_API:(volker) use ItemFetchScope here
 
   Q_SIGNALS:
     /**
@@ -125,6 +129,7 @@ class AKONADI_EXPORT Monitor : public QObject
       @param partIdentifiers The identifiers of the item parts that has been changed.
     */
     void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
+    //FIXME_API: change 2nd argument to QSet<QByteArray>
 
     /**
       Emitted if a monitored item has been moved between two collections
@@ -145,7 +150,7 @@ class AKONADI_EXPORT Monitor : public QObject
       Emitted if a monitored object has been removed from the storage and from a monitored collection.
       @param item The removed item.
     */
-    void itemRemoved( const Akonadi::Item &item);
+    void itemRemoved( const Akonadi::Item &item );
 
     /**
       Emitted if a new collection was added in the storage and if
@@ -190,9 +195,9 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_PRIVATE_SLOT( d_ptr, void slotStatisticsChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
 
-    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessage::List &msgs ) )
-    Q_PRIVATE_SLOT( d_ptr, void slotItemJobFinished( KJob *job ) )
-    Q_PRIVATE_SLOT( d_ptr, void slotCollectionJobFinished( KJob *job ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessage::List& ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotItemJobFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotCollectionJobFinished( KJob* ) )
 };
 
 }

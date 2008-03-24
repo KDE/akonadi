@@ -185,5 +185,4 @@ class AKONADI_EXPORT StandardActionManager : public QObject
 
 }
 
-
 #endif

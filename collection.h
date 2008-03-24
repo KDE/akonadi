@@ -21,19 +21,19 @@
 #define AKONADI_COLLECTION_H
 
 #include "akonadi_export.h"
-#include <akonadi/cachepolicy.h>
-#include <akonadi/collectionstatistics.h>
+
 #include <akonadi/entity.h>
 
+#include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 
 class KUrl;
 
-class CollectionPrivate;
-
 namespace Akonadi {
 
+class CachePolicy;
 class CollectionPrivate;
+class CollectionStatistics;
 
 /**
   This class represents a collection of PIM objects, such as a folder on a mail- or
@@ -59,6 +59,7 @@ class AKONADI_EXPORT Collection : public Entity
       VirtualParent, /**< The parent collection of all virtual collections. */
       Unknown /**< Unknown collection type. */
     };
+    //FIXME_API: drop the above types completely
 
     /// A list of collections.
     typedef QList<Collection> List;
@@ -112,8 +113,8 @@ class AKONADI_EXPORT Collection : public Entity
     QString name() const;
 
     /**
-      Sets the collection name. Note that this does not change path()!
-      This is used during renaming to fake immediate changes.
+      Sets the collection name.
+
       @param name The new collection name
     */
     void setName( const QString &name );
@@ -123,11 +124,13 @@ class AKONADI_EXPORT Collection : public Entity
       IMAP server, etc.).
     */
     Type type() const;
+    //FIXME_API: drop together with types
 
     /**
       Sets the type of this collection.
     */
     void setType( Type type );
+    //FIXME_API: drop together with types
 
     /**
       Returns the rights the user has on this collection.
@@ -145,11 +148,13 @@ class AKONADI_EXPORT Collection : public Entity
       supports sub-folders.
     */
     QStringList contentTypes() const;
+    //FIXME_API: rename to contentMimeTypes()
 
     /**
       Sets the list of possible content mimetypes.
     */
     void setContentTypes( const QStringList &types );
+    //FIXME_API: rename to setContentMimeTypes()
 
     /**
       Returns the identifier of the parent collection.
@@ -181,6 +186,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
       Returns the collection path delimiter.
     */
+    //FIXME_API: move it to CollectionPathResolver
     static QString delimiter();
 
     /**
@@ -191,6 +197,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
       Returns the mimetype used for collections.
     */
+    //FIXME_API: rename to mimeType()
     static QString collectionMimeType();
 
     /**
@@ -233,6 +240,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
       Returns true if the url is valid for an item
     */
+    //FIXME_API: drop it
     static bool urlIsValid( const KUrl &url );
 
   private:

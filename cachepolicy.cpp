@@ -18,6 +18,7 @@
 */
 
 #include "cachepolicy.h"
+#include "collection.h"
 
 using namespace Akonadi;
 

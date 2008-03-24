@@ -18,9 +18,13 @@
 */
 
 #include "collection.h"
-#include "entity_p.h"
+
+
 #include "attributefactory.h"
+#include "cachepolicy.h"
 #include "collectionrightsattribute.h"
+#include "collectionstatistics.h"
+#include "entity_p.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QHash>
@@ -139,7 +143,7 @@ Collection::Rights Collection::rights() const
 
 void Collection::setRights( Rights rights )
 {
-  CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>( true );
+  CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>( AddIfMissing );
   attr->setRights( rights );
 }
 

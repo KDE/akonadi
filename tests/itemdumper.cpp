@@ -19,6 +19,9 @@
 */
 
 #include "itemdumper.h"
+
+#include <akonadi/item.h>
+
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtGui/QApplication>

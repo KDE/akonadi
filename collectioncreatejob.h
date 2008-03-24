@@ -20,12 +20,11 @@
 #ifndef AKONADI_COLLECTIONCREATEJOB_H
 #define AKONADI_COLLECTIONCREATEJOB_H
 
-#include <akonadi/cachepolicy.h>
-#include <akonadi/collection.h>
 #include <akonadi/job.h>
 
 namespace Akonadi {
 
+class Collection;
 class CollectionCreateJobPrivate;
 
 /**

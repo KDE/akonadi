@@ -20,6 +20,8 @@
 #include "itemdetailsview.h"
 #include "itemdetailsview_p.h"
 
+#include <QtCore/QStringList>
+
 using namespace Akonadi;
 
 ItemDetailsView::ItemDetailsView()
@@ -45,8 +47,6 @@ void ItemDetailsView::setItem( const Item &item )
   // create new monitor
   d->mMonitor = new Monitor();
 
-  d->connect( d->mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-              d, SLOT( slotItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   d->connect( d->mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
               d, SLOT( slotItemChanged( const Akonadi::Item&, const QStringList& ) ) );
   d->connect( d->mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
@@ -69,10 +69,6 @@ void ItemDetailsView::setItem( const Item &item )
 Item ItemDetailsView::item() const
 {
   return d->mItem;
-}
-
-void ItemDetailsView::itemAdded( const Item& )
-{
 }
 
 void ItemDetailsView::itemChanged( const Item& )

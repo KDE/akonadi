@@ -30,8 +30,9 @@
 #include <KDebug>
 #include <KUrl>
 
-#include <QByteArray>
-#include <QMimeData>
+#include <QtCore/QByteArray>
+#include <QtCore/QMimeData>
+#include <QtCore/QStringList>
 
 using namespace Akonadi;
 

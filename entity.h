@@ -133,17 +133,26 @@ class AKONADI_EXPORT Entity
     */
     Attribute* attribute( const QByteArray &type ) const;
 
+    //FIXME_API: add a template based hasAttribute() const
+
+    //FIXME_API: maybe better naming...
+    enum CreateOption
+    {
+      AddIfMissing
+    };
+
     /**
       Returns the attribute of the requested type or 0 if not available.
       @param create Creates the attribute if it doesn't exist.
     */
-    template <typename T> inline T* attribute( bool create = false )
+    template <typename T> inline T* attribute( CreateOption create )
     {
-      T dummy;
+      Q_UNUSED( create );
+
+      const T dummy;
       if ( hasAttribute( dummy.type() ) )
         return static_cast<T*>( attribute( dummy.type() ) );
-      if ( !create )
-        return 0;
+
       T* attr = new T();
       addAttribute( attr );
       return attr;
@@ -154,7 +163,7 @@ class AKONADI_EXPORT Entity
     */
     template <typename T> inline T* attribute() const
     {
-      T dummy;
+      const T dummy;
       if ( hasAttribute( dummy.type() ) )
         return static_cast<T*>( attribute( dummy.type() ) );
       return 0;
@@ -165,7 +174,7 @@ class AKONADI_EXPORT Entity
     */
     template <typename T> inline void removeAttribute()
     {
-      T dummy;
+      const T dummy;
       removeAttribute( dummy.type() );
     }
 

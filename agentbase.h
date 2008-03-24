@@ -24,21 +24,20 @@
 #define AKONADI_AGENTBASE_H
 
 #include "akonadi_export.h"
-#include <akonadi/collection.h>
 
 #include <KDE/KApplication>
 
-#include <QtCore/QSettings>
 #include <QtDBus/QDBusContext>
 
 class AgentAdaptor;
 
 namespace Akonadi {
 
-class Session;
-class Item;
-class ChangeRecorder;
 class AgentBasePrivate;
+class ChangeRecorder;
+class Collection;
+class Item;
+class Session;
 
 /**
   This calls is a base class for all Akonadi agents.
@@ -77,7 +76,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     template <typename T>
     static int init( int argc, char **argv )
     {
-      QString id = parseArguments( argc, argv );
+      const QString id = parseArguments( argc, argv );
       KApplication app;
       T* r = new T( id );
       return init( r );
@@ -96,6 +95,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * Overload of @ref configure needed because WId cannot be automatically casted
      * to qlonglong on Windows.
      */
+    //FIXME_API:
     void configure( qlonglong windowId ) { configure( reinterpret_cast<WId>( windowId ) ); }
 #endif
 
@@ -114,16 +114,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * This method is called from the crash handler, don't call
      * it manually.
      */
+    //FIXME_API: remove crashhandler
     void crashHandler( int signal );
-
-  public Q_SLOTS:
-    /**
-     * This method is called to quit the agent.
-     *
-     * Before the application is terminated @see aboutToQuit() is called,
-     * which can be reimplemented to do some session cleanup.
-     */
-    void quit();
 
   protected:
     /**
@@ -141,11 +133,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     /**
      * This method shall be used to report warnings.
      */
+    //FIXME_API: make them signals
     void warning( const QString& message );
 
     /**
      * This method shall be used to report errors.
      */
+    //FIXME_API: make them signals
     void error( const QString& message );
 
     /**
@@ -161,13 +155,14 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * Returns a session for communicating with the storage backend. It should
      * be used for all jobs.
      */
-    Session* session();
+    //FIXME_API: remove it and create default session in AgentBase ctor
+    Session* session() const;
 
     /**
       Returns the Akonadi::ChangeRecorder object used for monitoring.
       Use this to configure which parts you want to monitor.
     */
-    ChangeRecorder* monitor() const;
+    ChangeRecorder* changeRecorder() const;
 
     /**
       Marks the current change as processes and replays the next change if change
@@ -176,9 +171,17 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
       required when not using change recording, it is nevertheless recommended to
       to call this method when done with processing a change notification.
     */
+    //FIXME_API: move implementation to private class and make it virtual
     virtual void changeProcessed();
 
+    //FIXME_API: make setOnline virtual + template method
+
+  Q_SIGNALS:
+
   protected Q_SLOTS:
+    //FIXME_API: move these 6 slots to new class EntityObserver.
+    //FIXME_API: inherit from this observer and connect dbus signals to them.
+
     /**
       Reimplement to handle adding of new items.
       @param item The newly added item.
@@ -225,6 +228,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     explicit AgentBase( AgentBasePrivate* d, const QString &id );
     //@endcond
 
+  private Q_SLOTS: //FIXME_API: accessed privately by adapter
+    /**
+     * This method is called to quit the agent.
+     *
+     * Before the application is terminated @see aboutToQuit() is called,
+     * which can be reimplemented to do some session cleanup.
+     */
+    void quit();
+
   private:
     static QString parseArguments( int, char** );
     static int init( AgentBase *r );
@@ -237,5 +249,31 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 };
 
 }
+/*
+class DefaultObserver
+{
+  virtual itemAdded
+  ..
+}
 
+class AgentBase
+{
+  AgentBase
+  {
+  }
+
+  registerObserver( Observer *ob )
+  {
+    connect(mon, ob);
+  }
+  registerObserver2( Observer2 *ob )
+  {
+    connect(mon, ob);
+  }
+}
+
+ExampleAgent : public AgentBase, public DefaultObserver
+
+ExampleResource : public ResourceBase, public DefaultObserver
+*/
 #endif

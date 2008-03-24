@@ -21,6 +21,7 @@
 #define AKONADI_ITEMDELETEJOB_H
 
 #include "akonadi_export.h"
+
 #include <akonadi/job.h>
 
 namespace Akonadi {

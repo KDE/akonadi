@@ -37,7 +37,7 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
       Create a new agent filter proxy model.
       Shows all agents by default.
     */
-    AgentFilterProxyModel( QObject *parent = 0 );
+    explicit AgentFilterProxyModel( QObject *parent = 0 );
 
     /**
      * Destroys the agent filter proxy model.
@@ -48,14 +48,16 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
       Accept agents supporting @p mimeType.
     */
     void addMimeType( const QString &mimeType );
+    //FIXME_API: rename addMimeTypeFilter
 
     /**
       Accept agents with the given @p capability.
     */
     void addCapability( const QString &capability );
+    //FIXME_API: rename addCapabilityFilter
 
     /**
-      Clear the filters.
+      Clear the filters ( mimeTypes & capabilities ).
     */
     void clearFilter();
 

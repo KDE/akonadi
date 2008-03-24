@@ -20,12 +20,12 @@
 #ifndef AKONADI_ITEMCREATEJOB_H
 #define AKONADI_ITEMCREATEJOB_H
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
 #include <akonadi/job.h>
 
 namespace Akonadi {
 
+class Collection;
+class Item;
 class ItemCreateJobPrivate;
 
 /**

@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include <akonadi/collection.h>
 #include <akonadi/control.h>
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemfetchjob.h>

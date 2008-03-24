@@ -24,22 +24,16 @@
 #define AKONADI_RESOURCEBASE_H
 
 #include "akonadi_export.h"
-#include <akonadi/agentbase.h>
 
+#include <akonadi/agentbase.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
-#include <akonadi/job.h>
-
-#include <kapplication.h>
 
 class KJob;
 class ResourceAdaptor;
 
 namespace Akonadi {
 
-class Item;
-class Job;
-class Session;
 class ResourceBasePrivate;
 
 /**
@@ -156,6 +150,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       Syncing,
       Error
     };
+    //FIXME_API: idle/running/broken -> move to agentbase
 
     /**
      * Use this method in the main function of your resource
@@ -180,7 +175,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     template <typename T>
     static int init( int argc, char **argv )
     {
-      QString id = parseArguments( argc, argv );
+      const QString id = parseArguments( argc, argv );
       KApplication app;
       T* r = new T( id );
       return init( r );
@@ -196,45 +191,56 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *  2 - Error
      */
     virtual int status() const;
+    //FIXME_API: agentbase -> Agent.Status
 
     /**
      * This method returns an i18n'ed description of the current status code.
      */
     virtual QString statusMessage() const;
+    //FIXME_API: agentbase -> Agent.Status
 
     /**
      * This method returns the current progress of the resource in percentage.
      */
+    //FIXME_API: use 'int' for 'no-progress' indication
+    //FIXME_API: agentbase -> Agent.Status
     virtual uint progress() const;
 
     /**
      * This method returns an i18n'ed description of the current progress.
      */
+    //FIXME_API: agentbase -> Agent.Status
     virtual QString progressMessage() const;
 
     /**
      * This method is called whenever the resource should start synchronize all data.
      */
+    //FIXME_API: non-virtual, make protected
     virtual void synchronize();
 
     /**
      * This method is used to set the name of the resource.
      */
+    //FIXME_API: make sure location is renamed to this by resourcebase, non-virtual
     virtual void setName( const QString &name );
 
     /**
      * Returns the name of the resource.
      */
+    //FIXME_API: non-virtual
     virtual QString name() const;
 
     /**
      * This method is called from the crash handler, don't call
      * it manually.
      */
+    //FIXME_API: remove me
     void crashHandler( int signal );
 
     virtual bool isOnline() const;
+    //FIXME_API: move to agentbase
     virtual void setOnline( bool state );
+    //FIXME_API: move to agentbase
 
   Q_SIGNALS:
     /**
@@ -244,6 +250,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param message An i18n'ed message which describes the status in detail.
      */
     void statusChanged( int status, const QString &message );
+    //FIXME_API: move to agentbase
 
     /**
      * This signal is emitted whenever the progress information of the resource
@@ -252,6 +259,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param progress The progress in percent (0 - 100).
      * @param message An i18n'ed message which describes the progress in detail.
      */
+    //FIXME_API: move to agentbase
     void progressChanged( uint progress, const QString &message );
 
     /**
@@ -284,6 +292,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       @see itemsRetrieved( const Item::List &), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
     */
     virtual void retrieveItems( const Akonadi::Collection &collection, const QStringList &parts ) = 0;
+    //FIXME_API: remove parts parameter
 
     /**
       Retrieve a single item from the backend. The item to retrieve is provided as @p item.
@@ -316,6 +325,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param message An i18n'ed description of the status. If message
      *                is empty, the default description for the status is used.
      */
+    //FIXME_API: make them signals in agentbase -> infoMessage()
     void changeStatus( Status status, const QString &message = QString() );
 
     /**
@@ -324,6 +334,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param progress The new progress of the resource in percentage.
      * @param message An i18n'ed description of the progress.
      */
+    //FIXME_API: make them signals in agentbase -> percent()
     void changeProgress( uint progress, const QString &message = QString() );
 
     /**
@@ -391,6 +402,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       @see retrieveItems()
     */
     void itemsRetrieved();
+    //FIXME_API: rename to itemsRetrievalDone()
 
     /**
       Returns the collection that is currently synchronized.
@@ -406,8 +418,13 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       Refetches the Collections.
     */
     void synchronizeCollectionTree();
-    
+
+    //FIXME_API: make non-public
     void changeProcessed();
+
+    //FIXME_API:
+    //void cancelTask() {};
+    //void cancelTask( const QString &error ) {};
 
   private:
     static QString parseArguments( int, char** );
@@ -415,7 +432,10 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     // dbus resource interface
     friend class ::ResourceAdaptor;
+
     void synchronizeCollection( qint64 collectionId );
+    //FIXME_API: make protected
+
     bool requestItemDelivery( qint64 uid, const QString &remoteId, const QStringList &parts );
 
   private:

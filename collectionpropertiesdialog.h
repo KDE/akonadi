@@ -20,13 +20,15 @@
 #ifndef AKONADI_COLLECTIONPROPERTIESDIALOG_H
 #define AKONADI_COLLECTIONPROPERTIESDIALOG_H
 
-#include <akonadi/collection.h>
-#include <akonadi/collectionpropertiespage.h>
+#include "akonadi_export.h"
 
+#include <akonadi/collectionpropertiespage.h>
 
 #include <kdialog.h>
 
 namespace Akonadi {
+
+class Collection;
 
 /**
   A generic and extensible collection properties dialog.

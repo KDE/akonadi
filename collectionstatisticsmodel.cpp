@@ -21,6 +21,7 @@
 
 #include "collection.h"
 #include "collectionmodel_p.h"
+#include "collectionstatistics.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -48,7 +49,7 @@ class CollectionStatisticsModelPrivate : public CollectionModelPrivate
 qint64 CollectionStatisticsModelPrivate::countRecursive( Collection::Id collection,
                                                          CountType type ) const
 {
-  qint64 result;
+  qint64 result = -1;
   switch ( type ) {
     case Unread: result = collections.value( collection ).statistics().unreadCount();
                  break;

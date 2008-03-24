@@ -60,6 +60,7 @@ class AKONADI_EXPORT CollectionStatistics
       @see setCount()
       @see unreadCount()
      */
+    //FIXME_API: change to qint64
     int count() const;
 
     /**
@@ -67,6 +68,7 @@ class AKONADI_EXPORT CollectionStatistics
       @param count The number of objects
       @see count()
     */
+    //FIXME_API: change to qint64
     void setCount( int count );
 
     /**
@@ -75,6 +77,7 @@ class AKONADI_EXPORT CollectionStatistics
       @see setUnreadCount()
       @see count()
      */
+    //FIXME_API: change to qint64
     int unreadCount() const;
 
     /**
@@ -82,6 +85,7 @@ class AKONADI_EXPORT CollectionStatistics
       @param count The number of unread messages
       @see unreadCount()
     */
+    //FIXME_API: change to qint64
     void setUnreadCount( int count );
 
     /**
@@ -93,7 +97,6 @@ class AKONADI_EXPORT CollectionStatistics
   private:
     class Private;
     QSharedDataPointer<Private> d;
-
 };
 
 }

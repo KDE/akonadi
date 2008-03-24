@@ -22,6 +22,7 @@
 #include "collectionjobtest.h"
 #include <qtest_kde.h>
 
+#include "cachepolicy.h"
 #include "collection.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"

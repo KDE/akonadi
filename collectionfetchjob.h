@@ -40,12 +40,14 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     /**
       List type.
     */
+    //FIXME_API: rename to Type
     enum ListType
     {
       Local, ///< Only fetch the base collection.
       Flat, ///< Only list direct sub-collections of the base collection.
       Recursive ///< List all sub-collections.
     };
+    //FIXME_API: rename to Base, FirstLevel, Recursive
 
     /**
       Create a new CollectionFetchJob.
@@ -69,7 +71,6 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
 
     /**
       Returns a list of collection objects.
-      It's your job to make sure they are deleted.
     */
     Collection::List collections() const;
 
@@ -86,7 +87,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
 
   Q_SIGNALS:
     /**
-      Emitted when collections are received.
+      Emitted whenever collections are received.
     */
     void collectionsReceived( const Akonadi::Collection::List &collections );
 

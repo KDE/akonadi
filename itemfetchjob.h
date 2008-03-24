@@ -20,12 +20,12 @@
 #ifndef AKONADI_ITEMFETCHJOB_H
 #define AKONADI_ITEMFETCHJOB_H
 
-#include <akonadi/collection.h>
 #include <akonadi/item.h>
 #include <akonadi/job.h>
 
 namespace Akonadi {
 
+class Collection;
 class ItemFetchJobPrivate;
 
 /**
@@ -38,7 +38,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     /**
      * Creates an empty item fetch job.
      */
-    ItemFetchJob( QObject *parent = 0 );
+    explicit ItemFetchJob( QObject *parent = 0 );
 
     /**
       Create a new item list job to retrieve envelope parts of all
@@ -82,11 +82,17 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       Choose which part(s) of the item shall be fetched.
     */
     void addFetchPart( const QString &identifier );
+    //FIXME_API:(volker) split into fetchPayloadPart(id, enum),
+    //                   fetchAttribute(attr) and fetchAllAttributes()
+    // make part identifier a QByteArray
+    // move methods into ItemFetchScope
+    // add method setItemFetchScope(ifs) and 'ItemFetchScope &itemFetchScope() const'
 
     /**
       Fetch all item parts.
     */
     void fetchAllParts();
+    //FIXME_API:(volker) rename to fetchAllPayloadParts(enum)
 
   Q_SIGNALS:
     /**

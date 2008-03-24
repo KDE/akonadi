@@ -19,6 +19,9 @@
 
 #include "collectiongeneralpropertiespage.h"
 
+#include "collection.h"
+#include "collectionstatistics.h"
+
 #include <klocale.h>
 
 using namespace Akonadi;

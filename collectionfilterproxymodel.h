@@ -23,9 +23,6 @@
 #include "akonadi_export.h"
 #include <QtGui/QSortFilterProxyModel>
 
-class QString;
-class QModelIndex;
-
 namespace Akonadi {
 
 class CollectionModel;
@@ -52,7 +49,7 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      * Create a new CollectionProxyFilterModel
      * @param parent The parent object
      */
-    CollectionFilterProxyModel( QObject *parent = 0 );
+    explicit CollectionFilterProxyModel( QObject *parent = 0 );
 
     /**
      * Destroy the model
@@ -64,17 +61,22 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      * @param typeList A list of mimetypes to be shown
      */
     void addMimeTypes( const QStringList &typeList );
+    //FIXME_API: rename to addMimeTypeFilters()
 
     /**
      * Convenience method for the previous one
      * @param type A type to show
      */
     void addMimeType( const QString &type );
+    //FIXME_API: rename to addMimeTypeFilter()
 
     /**
-     * @return The list of supported mimetypes
+     * @return The list of mimetype filter
      */
     QStringList mimeTypes() const;
+    //FIXME_API: rename to mimeTypeFilters()
+
+    //FIXME_API: add clearFilters();
 
   protected:
     /**

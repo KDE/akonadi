@@ -31,13 +31,11 @@ namespace Akonadi {
 class Collection;
 
 /**
-  A view to show a collection tree provided by a CollectionModell.
+  A view to show a collection tree provided by a CollectionModel.
 
   When a KXmlGuiWindow is passed to the constructor, the XMLGUI
   defined context menu @c akonadi_collectionview_contextmenu is
   used if available.
-
-  @todo The ctor API is not compatible with designer, change that to match ItemView
 */
 class AKONADI_EXPORT CollectionView : public QTreeView
 {
@@ -48,7 +46,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
       Create a new collection view.
       @param the parent widget.
     */
-    explicit CollectionView( QWidget *parent );
+    explicit CollectionView( QWidget *parent = 0 );
 
     /**
       Create a new collection view.
@@ -57,7 +55,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
       menu.
       @param parent the parent widget.
     */
-    explicit CollectionView( KXmlGuiWindow *xmlGuiWindow = 0, QWidget *parent = 0 );
+    explicit CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
 
     /**
       Destroys this collection view.
@@ -75,6 +73,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
       @param xmlGuiWindow The KXmlGuiWindow this view is used in.
     */
     void setKXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
+    //FIXME_API: rename to setXmlGuiWindow
 
   Q_SIGNALS:
     /**

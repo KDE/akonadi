@@ -56,7 +56,6 @@ CollectionStatisticsDelegate::CollectionStatisticsDelegate( QTreeView *parent )
 CollectionStatisticsDelegate::~CollectionStatisticsDelegate()
 {
   delete d_ptr;
-  d_ptr = 0;
 }
 
 void CollectionStatisticsDelegate::toggleUnreadAfterFolderName( bool enable )
@@ -166,7 +165,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
     painter->save();
 
-    int role;
+    int role = 0;
     if ( index.column() == 1 ) {
       if ( !expanded )
         role = CollectionStatisticsModel::CollectionStatisticsUnreadRecursiveRole;

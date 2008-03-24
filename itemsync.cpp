@@ -20,6 +20,7 @@
 
 #include "itemsync.h"
 
+#include "collection.h"
 #include "item.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
@@ -27,6 +28,8 @@
 #include "itemmodifyjob.h"
 
 #include <kdebug.h>
+
+#include <QtCore/QStringList>
 
 using namespace Akonadi;
 

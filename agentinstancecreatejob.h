@@ -65,7 +65,7 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void agentInstanceAdded( const QString &id ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceAdded( const QString& ) )
     Q_PRIVATE_SLOT( d, void doConfigure() )
     Q_PRIVATE_SLOT( d, void timeout() )
 };

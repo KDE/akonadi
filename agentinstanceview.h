@@ -27,6 +27,8 @@ namespace Akonadi {
 
 class AgentFilterProxyModel;
 
+//FIXME_API: rename it to agentinstancewidget
+
 /**
  * This class provides a view of all available agent instances.
  *
@@ -46,7 +48,7 @@ class AKONADI_EXPORT AgentInstanceView : public QWidget
      *
      * @param parent The parent widget.
      */
-    AgentInstanceView( QWidget *parent = 0 );
+    explicit AgentInstanceView( QWidget *parent = 0 );
 
     /**
      * Destroys the agent instance view.

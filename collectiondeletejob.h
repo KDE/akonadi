@@ -20,11 +20,11 @@
 #ifndef AKONADI_COLLECTIONDELETEJOB_H
 #define AKONADI_COLLECTIONDELETEJOB_H
 
-#include <akonadi/collection.h>
 #include <akonadi/job.h>
 
 namespace Akonadi {
 
+class Collection;
 class CollectionDeleteJobPrivate;
 
 /**

@@ -17,14 +17,16 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECITONPROPERTYPAGE_H
-#define AKONADI_COLLECITONPROPERTYPAGE_H
+#ifndef AKONADI_COLLECITONPROPERTIESPAGE_H
+#define AKONADI_COLLECITONPROPERTIESPAGE_H
 
-#include <akonadi/collection.h>
+#include "akonadi_export.h"
 
 #include <QtGui/QWidget>
 
 namespace Akonadi {
+
+class Collection;
 
 /**
   A single page in a collection property dialog.

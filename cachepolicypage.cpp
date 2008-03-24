@@ -19,6 +19,9 @@
 
 #include "cachepolicypage.h"
 
+#include "cachepolicy.h"
+#include "collection.h"
+
 using namespace Akonadi;
 
 CachePolicyPage::CachePolicyPage(QWidget * parent) :

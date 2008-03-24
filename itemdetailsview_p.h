@@ -48,11 +48,6 @@ class ItemDetailsView::Private : public QObject
     Monitor *mMonitor;
 
   private Q_SLOTS:
-    void slotItemAdded( const Akonadi::Item &item, const Akonadi::Collection& )
-    {
-      mParent->itemAdded( item );
-    }
-
     void slotItemChanged( const Akonadi::Item &item, const QStringList& )
     {
       mParent->itemChanged( item );
@@ -71,7 +66,7 @@ class ItemDetailsView::Private : public QObject
       ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
 
       if ( !fetchJob->items().isEmpty() )
-        mParent->itemAdded( fetchJob->items().first() );
+        mParent->itemChanged( fetchJob->items().first() );
     }
 };
 

@@ -28,11 +28,11 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QMetaType>
 #include <QtCore/QSet>
-#include <QtCore/QStringList>
 
 #include <typeinfo>
 
 class KUrl;
+class QStringList;
 
 namespace Akonadi {
 
@@ -66,6 +66,7 @@ class AKONADI_EXPORT Item : public Entity
     typedef QByteArray Flag;
     typedef QSet<QByteArray> Flags;
 
+    //FIXME_API: move to akonadi/kmime
     /**
       The part identifier for envelope parts.
      */
@@ -135,6 +136,8 @@ class AKONADI_EXPORT Item : public Entity
       @param name The flag name.
     */
     void unsetFlag( const QByteArray &name );
+    //FIXME_API: rename to clearFlag()
+    //FIXME_API: add clearFlags() and setFlags(Item::Flags)
 
     /**
       Adds a new part with the given @p identifier and @p data.
@@ -168,6 +171,7 @@ class AKONADI_EXPORT Item : public Entity
     */
     void setRevision( int revision );
 
+    //FIXME_API: remove incrementRevision
     /**
       Increases the revision number of this item.
     */
@@ -199,7 +203,7 @@ class AKONADI_EXPORT Item : public Entity
       This method will abort if you try to retrieve the wrong payload type.
     */
     template <typename T>
-    T payload()
+    T payload() //const //FIXME_API: the const should be here, or?
     {
         if ( !payloadBase() ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "No valid payload set.");
 
@@ -219,7 +223,7 @@ class AKONADI_EXPORT Item : public Entity
       This method will abort if you try to retrieve the wrong payload type.
     */
     template <typename T>
-    const T payload() const
+    const T payload() const //FIXME_API: is this method needed?
     {
         return const_cast<Item*>( this )->payload<T>();
     }
@@ -263,6 +267,7 @@ class AKONADI_EXPORT Item : public Entity
       Returns true if the url is valid for an item
      */
     static bool urlIsValid( const KUrl &url );
+    //FIXME_API: remove urlIsValid
 
   private:
     friend class ItemModifyJob;

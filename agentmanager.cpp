@@ -20,6 +20,7 @@
 #include "agentmanager.h"
 
 #include "agentmanagerinterface.h"
+#include "collection.h"
 
 #include <kicon.h>
 #include <kiconloader.h>

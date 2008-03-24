@@ -39,10 +39,11 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
   Q_OBJECT
 
   public:
-    // keep in sync with the agenttypemodel.h
+    // keep in sync with the agenttypemodel.h (FIXME_API: look at boost::assert)
     /**
      * Describes the roles of this model.
      */
+    //FIXME_API: rename to Roles
     enum Role
     {
       TypeIdentifierRole  = Qt::UserRole + 1,  ///< The identifier of the agent type
@@ -54,57 +55,29 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
       StatusMessageRole,                       ///< A textual presentation of the current status
       ProgressRole,                            ///< The current progress (numerical in percent) of an operation
       ProgressMessageRole,                     ///< A textual presentation of the current progress
-      OnlineRole                               ///< The current online/offline status
+      OnlineRole,                              ///< The current online/offline status
+      UserRole  = Qt::UserRole + 42            ///< For further extensions
     };
+    //FIXME_API: CommentRole -> DescriptionRole
+    //FIXME_API: drop progress message, align to Agent.Status iface
 
     /**
      * Creates a new agent instance model.
      */
-    explicit AgentInstanceModel( QObject *parent );
+    explicit AgentInstanceModel( QObject *parent = 0 );
 
     /**
      * Destroys the agent instance model.
      */
     virtual ~AgentInstanceModel();
 
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual QModelIndex parent( const QModelIndex &index ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
-
-    /**
-     * Reimplemented from QAbstractItemModel.
-     */
     virtual bool setData( const QModelIndex &index, const QVariant &value, int role );
 
   private:

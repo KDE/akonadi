@@ -28,6 +28,7 @@
 
 #include <kdebug.h>
 
+#include <QtCore/QStringList>
 #include <QtCore/QTimer>
 
 using namespace Akonadi;
@@ -214,12 +215,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
             item.setFlag( flag );
           }
         } else {
-          try {
-            ItemSerializer::deserialize( item, QString::fromLatin1( key ), fetchResponse.value( i + 1 ) );
-          } catch ( ItemSerializerException &e ) {
-            // FIXME how do we react to this? Should we still append?
-            kWarning( 5250 ) << "Failed to construct the payload of type: " << item.mimeType();
-          }
+          ItemSerializer::deserialize( item, QString::fromLatin1( key ), fetchResponse.value( i + 1 ) );
         }
       }
 

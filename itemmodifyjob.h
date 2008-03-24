@@ -21,12 +21,13 @@
 #define AKONADI_ITEMMODIFYJOB_H
 
 #include "akonadi_export.h"
-#include <akonadi/collection.h>
+
 #include <akonadi/item.h>
 #include <akonadi/job.h>
 
 namespace Akonadi {
 
+class Collection;
 class ItemModifyJobPrivate;
 
 /**
@@ -55,11 +56,13 @@ class AKONADI_EXPORT ItemModifyJob : public Job
       Store the payload data.
     */
     void storePayload();
+    //FIXME_API:(volker) remove this method
 
     /**
       Disable revision checking.
     */
     void noRevCheck();
+    //FIXME_API: rename to disableRevisionCheck()
 
     /**
       Sets the item flags to @p flags.
@@ -83,12 +86,14 @@ class AKONADI_EXPORT ItemModifyJob : public Job
       Moves the item to the given collection.
       @param collection Path to the new collection this item is moved into.
     */
+    //FIXME_API: remove this method in favour of an ItemMoveJob.
     void setCollection( const Collection &collection );
 
     /**
       Resets the item dirty flag. Should only be used by resources after
       writing changes back to the corresponding server.
     */
+    //FIXME_API: move to private class, make ResourceBase a friend class
     void setClean();
 
     /**

@@ -24,11 +24,9 @@
 
 #include "akonadi_export.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-
 #include <kcompositejob.h>
 
+class QString;
 
 namespace Akonadi {
 
@@ -102,8 +100,10 @@ class AKONADI_EXPORT Job : public KCompositeJob
     {
       ConnectionFailed = UserDefinedError,
       UserCanceled,
-      Unknown
+      Unknown,
+      UserError = UserDefinedError + 42
     };
+    //FIXME_API: extend error code + renaming
 
     /**
       Creates a new job.
@@ -112,7 +112,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
       instead of the default session.
       @param parent The parent object, job or session.
      */
-    Job( QObject *parent = 0 );
+    explicit Job( QObject *parent = 0 );
 
     /**
       Destroys the job.
@@ -135,6 +135,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
       Returns the identifier of the session that executes this job.
     */
     QByteArray sessionId() const;
+    //FIXME_API: remove it and try whether something breaks
 
   Q_SIGNALS:
     /**
@@ -157,16 +158,19 @@ class AKONADI_EXPORT Job : public KCompositeJob
       Returns a new unique command tag for communication with the backend.
     */
     QByteArray newTag();
+    //FIXME_API: move to private class
 
     /**
       Return the tag used for the request.
     */
     QByteArray tag() const;
+    //FIXME_API: move to private class
 
     /**
       Sends raw data to the backend.
     */
     void writeData( const QByteArray &data );
+    //FIXME_API: move to private class
 
     /**
       This method must be reimplemented in the concrete jobs. It will be called

@@ -21,7 +21,6 @@
 #define AKONADI_AGENTMANAGER_H
 
 #include "akonadi_export.h"
-#include <akonadi/collection.h>
 
 #include <QtCore/QObject>
 
@@ -29,6 +28,11 @@ class QIcon;
 class QWidget;
 
 namespace Akonadi {
+
+class Collection;
+
+//FIXME_API: provide AgentType and AgentInstance classes
+//FIXME_API: using QMap<property,value> instead of single property getter methods
 
 /**
  * This class provides an interface to manage agents.

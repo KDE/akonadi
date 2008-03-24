@@ -20,11 +20,11 @@
 #ifndef AKONADI_COLLECTIONCOPYJOB_H
 #define AKONADI_COLLECTIONCOPYJOB_H
 
-#include <akonadi/collection.h>
 #include <akonadi/job.h>
 
 namespace Akonadi {
 
+class Collection;
 class CollectionCopyJobPrivate;
 
 /**

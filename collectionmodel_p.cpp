@@ -23,6 +23,7 @@
 #include "collectionmodel.h"
 
 #include "collectionfetchjob.h"
+#include "collectionstatistics.h"
 #include "collectionstatisticsjob.h"
 #include "monitor.h"
 #include "session.h"

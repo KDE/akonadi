@@ -46,7 +46,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
       Create a new item view.
       @param parent the parent widget.
     */
-    ItemView( QWidget *parent );
+    explicit ItemView( QWidget *parent = 0 );
 
     /**
       Create a new item view.
@@ -55,7 +55,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
       menu.
       @param parent the parent widget.
     */
-    explicit ItemView( KXmlGuiWindow *xmlGuiWindow = 0, QWidget *parent = 0 );
+    explicit ItemView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
 
     /**
       Destroys this item view.
@@ -73,6 +73,7 @@ class AKONADI_EXPORT ItemView : public QTreeView
       @param xmlGuiWindow The KXmlGuiWindow this view is used in.
     */
     void setKXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
+    //FIXME_API: rename it to setXmlGuiWindow()
 
   Q_SIGNALS:
     /**

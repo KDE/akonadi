@@ -22,6 +22,8 @@
 
 #include <kdebug.h>
 
+#include <QtCore/QStringList>
+
 using namespace Akonadi;
 
 class SubscriptionModel::Private

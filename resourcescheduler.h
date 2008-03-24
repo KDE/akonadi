@@ -24,7 +24,8 @@
 #include <akonadi/item.h>
 
 #include <QtCore/QObject>
-#include <QDBusMessage>
+#include <QtCore/QStringList>
+#include <QtDBus/QDBusMessage>
 
 namespace Akonadi {
 

@@ -23,6 +23,7 @@
 #include "akonadi_export.h"
 #include <akonadi/job.h>
 
+//FIXME_API: split into transactionjobs.(h|cpp) and transactionsequence.(h|cpp)
 namespace Akonadi {
 
 class TransactionBeginJobPrivate;
@@ -69,6 +70,7 @@ class AKONADI_EXPORT TransactionRollbackJob : public Job
   public:
     /**
       Creates a new TransactionRollbackJob.
+      The parent must be the same parent as for the TransactionBeginJob.
       @param parent The parent job or Session, must not be 0.
     */
     explicit TransactionRollbackJob( QObject *parent );
@@ -96,6 +98,7 @@ class AKONADI_EXPORT TransactionCommitJob : public Job
   public:
     /**
       Creates a new TransactionCommitJob.
+      The parent must be the same parent as for the TransactionBeginJob.
       @param parent The parent job or Session, must not be 0.
      */
     explicit TransactionCommitJob( QObject *parent );

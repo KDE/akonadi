@@ -43,7 +43,7 @@ class AKONADI_EXPORT AttributeFactory
     }
 
     /**
-     * Creates a collection attribute object of the given type.
+     * Creates an entity attribute object of the given type.
      *
      * @param type The attribute type.
      */

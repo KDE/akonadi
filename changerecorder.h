@@ -52,7 +52,7 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
     void setConfig( QSettings *settings );
 
     /**
-      Checks if there recorded changes.
+      Check if there are recorded changes.
     */
     bool isEmpty() const;
 
