@@ -22,6 +22,7 @@
 #include "imapparser_p.h"
 #include "job_p.h"
 #include "protocolhelper.h"
+#include "entity_p.h"
 
 #include <kdebug.h>
 
@@ -157,6 +158,7 @@ void CollectionFetchJob::doHandleResponse( const QByteArray & tag, const QByteAr
     if ( !collection.isValid() )
       return;
 
+    collection.d_ptr->resetChangeLog();
     d->mCollections.append( collection );
     d->mPendingCollections.append( collection );
     if ( !d->mEmitTimer->isActive() )

@@ -60,8 +60,6 @@ class CollectionPropertiesDialog::Private
 
       CollectionModifyJob *job = new CollectionModifyJob( collection, q );
       connect( job, SIGNAL(result(KJob*)), q, SLOT(saveResult(KJob*)) );
-      job->setContentTypes( collection.contentTypes() );
-      job->setCachePolicy( collection.cachePolicy() );
     }
 
     void saveResult( KJob *job )

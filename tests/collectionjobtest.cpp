@@ -76,8 +76,8 @@ template <typename T> static T* extractAttribute( QList<Attribute*> attrs )
   return 0;
 }
 
-static Collection::Id res1ColId = -1;
-static Collection::Id res2ColId = -1;
+static Collection::Id res1ColId = 6; // -1;
+static Collection::Id res2ColId = 7; //-1;
 static Collection::Id res3ColId = -1;
 static Collection::Id searchColId = -1;
 
@@ -254,6 +254,10 @@ void CollectionJobTest::testCreateDeleteFolder_data()
   col.setName( "foo2" );
   QTest::newRow( "already existing" ) << col << false;
 
+  col.setName( "Bla" );
+  col.setParent( 2 );
+  QTest::newRow( "already existing with different case" ) << col << true;
+
   CollectionPathResolver *resolver = new CollectionPathResolver( "res2/foo2", this );
   QVERIFY( resolver->exec() );
   col.setParent( resolver->collection() );
@@ -370,8 +374,8 @@ void CollectionJobTest::testModify()
   compareLists( col.contentTypes(), reference );
 
   // test clearing content types
+  col.setContentTypes( QStringList() );
   mod = new CollectionModifyJob( col, this );
-  mod->setContentTypes( QStringList() );
   QVERIFY( mod->exec() );
 
   ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
@@ -381,8 +385,8 @@ void CollectionJobTest::testModify()
   QVERIFY( col.contentTypes().isEmpty() );
 
   // test setting contnet types
+  col.setContentTypes( reference );
   mod = new CollectionModifyJob( col, this );
-  mod->setContentTypes( reference );
   QVERIFY( mod->exec() );
 
   ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
@@ -390,6 +394,21 @@ void CollectionJobTest::testModify()
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
   compareLists( col.contentTypes(), reference );
+
+  // renaming
+  col.setName( "foo (renamed)" );
+  mod = new CollectionModifyJob( col, this );
+  QVERIFY( mod->exec() );
+
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Local, this );
+  QVERIFY( ljob->exec() );
+  QCOMPARE( ljob->collections().count(), 1 );
+  col = ljob->collections().first();
+  QCOMPARE( col.name(), QString( "foo (renamed)" ) );
+
+  col.setName( "foo" );
+  mod = new CollectionModifyJob( col, this );
+  QVERIFY( mod->exec() );
 }
 
 void CollectionJobTest::testMove()
@@ -472,10 +491,8 @@ void CollectionJobTest::testUtf8CollectionName()
   QCOMPARE( col.name(), folderName );
 
   // modify collection
+  col.setContentTypes( QStringList( "message/rfc822'" ) );
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
-  QStringList contentTypes;
-  contentTypes << "message/rfc822";
-  modify->setContentTypes( contentTypes );
   QVERIFY( modify->exec() );
 
   // collection statistics

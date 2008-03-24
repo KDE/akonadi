@@ -39,7 +39,8 @@ class TestAttribute : public Attribute
 {
   public:
     TestAttribute() : Attribute() {}
-    TestAttribute* clone() const { return new TestAttribute(); }
+    TestAttribute( const QByteArray &data ) : mData( data ) {};
+    TestAttribute* clone() const { return new TestAttribute( mData ); }
     QByteArray type() const { return "TESTATTRIBUTE"; }
     QByteArray serialized() const { return mData; }
     void deserialize( const QByteArray &data ) { mData = data; }
@@ -107,9 +108,7 @@ void CollectionAttributeTest::testAttributes()
 
 
   // modify a custom attribute
-  attr = new TestAttribute();
-  attr->deserialize( attr2 );
-  col.addAttribute( attr );
+  col.attribute<TestAttribute>( Collection::AddIfMissing )->deserialize( attr2 );
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
   QVERIFY( modify->exec() );
 

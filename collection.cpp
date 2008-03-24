@@ -41,7 +41,9 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     CollectionPrivate( Collection::Id id = -1 ) :
       EntityPrivate( id ),
       parentId( -1 ),
-      type( Collection::Unknown )
+      type( Collection::Unknown ),
+      contentTypesChanged( false ),
+      cachePolicyChanged( false )
     {}
 
     CollectionPrivate( const CollectionPrivate &other ) :
@@ -55,6 +57,8 @@ class Akonadi::CollectionPrivate : public EntityPrivate
       statistics = other.statistics;
       contentTypes = other.contentTypes;
       cachePolicy = other.cachePolicy;
+      contentTypesChanged = other.contentTypesChanged;
+      cachePolicyChanged = other.cachePolicyChanged;
     }
 
     ~CollectionPrivate()
@@ -64,6 +68,13 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     CollectionPrivate* clone() const
     {
       return new CollectionPrivate( *this );
+    }
+
+    void resetChangeLog()
+    {
+      contentTypesChanged = false;
+      cachePolicyChanged = false;
+      EntityPrivate::resetChangeLog();
     }
 
     static Collection newRoot()
@@ -84,6 +95,8 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     QStringList contentTypes;
     static const Collection root;
     CachePolicy cachePolicy;
+    bool contentTypesChanged;
+    bool cachePolicyChanged;
 };
 
 const Collection Akonadi::CollectionPrivate::root = CollectionPrivate::newRoot();
@@ -156,6 +169,7 @@ void Collection::setContentTypes( const QStringList & types )
 {
   Q_D( Collection );
   d->contentTypes = types;
+  d->contentTypesChanged = true;
 }
 
 Collection::Id Collection::parent() const
@@ -263,6 +277,7 @@ void Collection::setCachePolicy(const CachePolicy & cachePolicy)
 {
   Q_D( Collection );
   d->cachePolicy = cachePolicy;
+  d->cachePolicyChanged = true;
 }
 
 AKONADI_DEFINE_PRIVATE( Akonadi::Collection )

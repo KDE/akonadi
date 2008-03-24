@@ -239,6 +239,7 @@ class AKONADI_EXPORT Collection : public Entity
 
   private:
     AKONADI_DECLARE_PRIVATE( Collection )
+    friend class CollectionFetchJob;
     friend class CollectionModifyJob;
 };
 

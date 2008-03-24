@@ -21,7 +21,8 @@
 #include "imapparser_p.h"
 #include "job_p.h"
 #include "protocolhelper.h"
-#include "entity_p.h"
+#include "collectionstatistics.h"
+#include "collection_p.h"
 
 using namespace Akonadi;
 
@@ -34,10 +35,6 @@ class Akonadi::CollectionModifyJobPrivate : public JobPrivate
     }
 
     Collection mCollection;
-    QStringList mMimeTypes;
-    CachePolicy mPolicy;
-    bool mSetMimeTypes;
-    bool mSetPolicy;
 };
 
 CollectionModifyJob::CollectionModifyJob( const Collection &collection, QObject * parent )
@@ -47,8 +44,6 @@ CollectionModifyJob::CollectionModifyJob( const Collection &collection, QObject 
 
   Q_ASSERT( collection.isValid() );
   d->mCollection = collection;
-  d->mSetMimeTypes = false;
-  d->mSetPolicy = false;
 }
 
 CollectionModifyJob::~CollectionModifyJob()
@@ -61,10 +56,9 @@ void CollectionModifyJob::doStart()
 
   QByteArray command = newTag() + " MODIFY " + QByteArray::number( d->mCollection.id() );
   QByteArray changes;
-  if ( d->mSetMimeTypes )
-  {
+  if ( d->mCollection.d_func()->contentTypesChanged ) {
     QList<QByteArray> bList;
-    foreach( QString s, d->mMimeTypes ) bList << s.toLatin1();
+    foreach( QString s, d->mCollection.contentTypes() ) bList << s.toLatin1();
     changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
   }
   if ( d->mCollection.parent() >= 0 )
@@ -72,12 +66,12 @@ void CollectionModifyJob::doStart()
   if ( !d->mCollection.name().isEmpty() )
     changes += " NAME " + ImapParser::quote( d->mCollection.name().toUtf8() );
   if ( !d->mCollection.remoteId().isNull() )
-    changes += " REMOTEID \"" + d->mCollection.remoteId().toUtf8() + '"';
-  if ( d->mSetPolicy )
-    changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mPolicy );
+    changes += " REMOTEID " + ImapParser::quote( d->mCollection.remoteId().toUtf8() );
+  if ( d->mCollection.d_func()->cachePolicyChanged )
+    changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
   if ( d->mCollection.attributes().count() > 0 )
     changes += ' ' + ProtocolHelper::attributesToByteArray( d->mCollection );
-  foreach ( const QByteArray b, d->mCollection.d_ptr->mDeletedAttributes )
+  foreach ( const QByteArray b, d->mCollection.d_func()->mDeletedAttributes )
     changes += " -" + b;
   if ( changes.isEmpty() ) {
     emitResult();
@@ -85,22 +79,6 @@ void CollectionModifyJob::doStart()
   }
   command += changes + '\n';
   writeData( command );
-}
-
-void CollectionModifyJob::setContentTypes(const QStringList & mimeTypes)
-{
-  Q_D( CollectionModifyJob );
-
-  d->mSetMimeTypes = true;
-  d->mMimeTypes = mimeTypes;
-}
-
-void CollectionModifyJob::setCachePolicy( const CachePolicy &policy )
-{
-  Q_D( CollectionModifyJob );
-
-  d->mPolicy = policy;
-  d->mSetPolicy = true;
 }
 
 #include "collectionmodifyjob.moc"
