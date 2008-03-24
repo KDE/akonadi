@@ -18,6 +18,8 @@
 */
 #include "collectionstatisticsdelegate.h"
 
+#if QT_VERSION >= 0x040400
+
 #include "collectionstatisticsmodel.h"
 
 #include <kcolorscheme.h>
@@ -200,3 +202,5 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
   painter->drawText( textRect, option4.displayAlignment, text );
 }
+
+#endif

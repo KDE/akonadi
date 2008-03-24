@@ -21,6 +21,9 @@
 
 #include "akonadi_export.h"
 
+// FIXME: Qt 4.4: Remove this
+#if QT_VERSION >= 0x040400
+
 #include <QtGui/QStyledItemDelegate>
 
 class QTreeView;
@@ -70,7 +73,7 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
     //FIXME_API: rename to setUnreadCountShown( bool );
     void toggleUnreadAfterFolderName( bool enable );
 
-    //FIXME_API: add unreadCountShown()
+    //FIXME_API: add unreadCountShown(). Also change it in compat class def below
 
   protected:
 
@@ -93,5 +96,29 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
 };
 
 }
+
+#else
+
+#include <QtGui/QItemDelegate>
+#include <QtGui/QTreeView>
+
+namespace Akonadi {
+class AKONADI_EXPORT CollectionStatisticsDelegate : public QItemDelegate
+{
+  Q_OBJECT
+
+  public:
+
+    CollectionStatisticsDelegate( QTreeView *parent ) : QItemDelegate( parent ) {}
+
+    ~CollectionStatisticsDelegate() {}
+
+  public Q_SLOTS:
+
+    void toggleUnreadAfterFolderName( bool ) {}
+};
+}
+
+#endif
 
 #endif
