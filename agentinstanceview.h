@@ -75,12 +75,20 @@ class AKONADI_EXPORT AgentInstanceView : public QWidget
      * @param previous The identifier of the previous agent instance.
      */
     void currentChanged( const QString &current, const QString &previous );
+    
+    /**
+     * This signal is emitted whenever the there is a double click an an instance.
+     *
+     * @param current The identifier of the current agent instance.
+     */
+    void doubleClicked( const QString &current );
 
   private:
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void currentAgentInstanceDoubleClicked( const QModelIndex& ) )
 };
 
 }

@@ -57,6 +57,7 @@ class AgentInstanceView::Private
     }
 
     void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& );
+    void currentAgentInstanceDoubleClicked( const QModelIndex& );
 
     AgentInstanceView *mParent;
     QListView *mView;
@@ -75,6 +76,15 @@ void AgentInstanceView::Private::currentAgentInstanceChanged( const QModelIndex 
     previousIdentifier = previousIndex.model()->data( previousIndex, AgentInstanceModel::InstanceIdentifierRole ).toString();
 
   emit mParent->currentChanged( currentIdentifier, previousIdentifier );
+}
+
+void AgentInstanceView::Private::currentAgentInstanceDoubleClicked( const QModelIndex &currentIndex )
+{
+  QString currentIdentifier;
+  if ( currentIndex.isValid() )
+    currentIdentifier = currentIndex.model()->data( currentIndex, AgentInstanceModel::InstanceIdentifierRole ).toString();
+
+  emit mParent->doubleClicked( currentIdentifier );
 }
 
 AgentInstanceView::AgentInstanceView( QWidget *parent )
@@ -96,8 +106,11 @@ AgentInstanceView::AgentInstanceView( QWidget *parent )
 
   d->mView->selectionModel()->setCurrentIndex( d->mView->model()->index( 0, 0 ), QItemSelectionModel::Select );
   d->mView->scrollTo( d->mView->model()->index( 0, 0 ) );
+  
   connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) ) );
+  connect( d->mView, SIGNAL( doubleClicked( const QModelIndex& ) ),
+           this, SLOT( currentAgentInstanceDoubleClicked( const QModelIndex& ) ) );
 }
 
 AgentInstanceView::~AgentInstanceView()
