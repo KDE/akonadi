@@ -197,7 +197,7 @@ class AKONADI_EXPORT Item : public Entity
       This method will abort if you try to retrieve the wrong payload type.
     */
     template <typename T>
-    T payload() //const //FIXME_API: the const should be here, or?
+    T payload() const
     {
         if ( !payloadBase() ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "No valid payload set.");
 
@@ -210,16 +210,6 @@ class AKONADI_EXPORT Item : public Entity
           qFatal( "Akonadi::Item::payload(): Wrong payload type (is '%s', requested '%s')",
                   payloadBase()->typeName(), typeid(p).name() );
         return p->payload;
-    }
-
-    /**
-      Returns the payload object of this PIM item.
-      This method will abort if you try to retrieve the wrong payload type.
-    */
-    template <typename T>
-    const T payload() const //FIXME_API: is this method needed?
-    {
-        return const_cast<Item*>( this )->payload<T>();
     }
 
     /**
