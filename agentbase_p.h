@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2008 Kevin Krammer <kevin.krammer@gmx.at>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -30,8 +31,9 @@ class QSettings;
 //@cond PRIVATE
 namespace Akonadi {
 
-class AgentBasePrivate
+class AgentBasePrivate : public QObject
 {
+  Q_OBJECT
   public:
     AgentBasePrivate( AgentBase *parent );
     virtual ~AgentBasePrivate();
@@ -54,6 +56,21 @@ class AgentBasePrivate
     ChangeRecorder *monitor;
 
     org::kde::Akonadi::Tracer *mTracer;
+
+    AgentBase::Observer *mObserver;
+
+  protected Q_SLOTS:
+    virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+
+    virtual void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
+
+    virtual void itemRemoved( const Akonadi::Item &item );
+
+    virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
+
+    virtual void collectionChanged( const Akonadi::Collection &collection );
+
+    virtual void collectionRemoved( const Akonadi::Collection &collection );
 };
 
 }

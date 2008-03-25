@@ -135,6 +135,7 @@ class ResourceBasePrivate;
  *
  * @todo Convenience base class for collection-less resources
  */
+ // FIXME_API: API dox need to be updated for Observer approach (kevin)
 class AKONADI_EXPORT ResourceBase : public AgentBase
 {
   Q_OBJECT
@@ -158,7 +159,11 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * This method also takes care of creating a KApplication
      * object and parsing command line arguments.
      *
-     * \code
+     * @note In case the given class is also derived from AgentBase::Observer
+     *       it gets registered as its own observer (see AgentBase::Observer), e.g.
+     *       <tt>resourceInstance->registerObserver( resourceInstance );</tt>
+     *
+     * @code
      *
      *   class MyResource : public ResourceBase
      *   {
@@ -170,7 +175,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *     return ResourceBase::init<MyResource>( argc, argv );
      *   }
      *
-     * \endcode
+     * @endcode
      */
     template <typename T>
     static int init( int argc, char **argv )
@@ -178,6 +183,12 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       const QString id = parseArguments( argc, argv );
       KApplication app;
       T* r = new T( id );
+
+      // check if T also inherits AgentBase::Observer and
+      // if it does, automatically register it on itself
+      Observer *observer = dynamic_cast<Observer*>( r );
+      if ( observer != 0 )
+        r->registerObserver( r );
       return init( r );
     }
 
@@ -271,38 +282,38 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
   protected Q_SLOTS:
     /**
-      Retrieve the collection tree from the remote server and supply it via
-      collectionsRetrieved() or collectionsRetrievedIncremental().
-      @see collectionsRetrieved(), collectionsRetrievedIncremental()
-    */
+     * Retrieve the collection tree from the remote server and supply it via
+     * collectionsRetrieved() or collectionsRetrievedIncremental().
+     * @see collectionsRetrieved(), collectionsRetrievedIncremental()
+     */
     virtual void retrieveCollections() = 0;
 
     /**
-      Retrieve all (new/changed) items in collection @p collection.
-      It is recommended to use incremental retrieval if the backend supports that
-      and provide the result by calling itemsRetrievedIncremental().
-      If incremental retrieval is not possible, provide the full listing by calling
-      itemsRetrieved( const Item::List& ).
-      In any case, ensure that all items have a correctly set remote identifier
-      to allow synchronizing with already locally existing items.
-      In case you don't want to use the built-in item syncing code, store the retrived
-      items manually and call itemsRetrieved() once you are done.
-      @param collection The collection to sync.
-      @param parts The items parts that should be retrieved.
-      @see itemsRetrieved( const Item::List &), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
-    */
+     * Retrieve all (new/changed) items in collection @p collection.
+     * It is recommended to use incremental retrieval if the backend supports that
+     * and provide the result by calling itemsRetrievedIncremental().
+     * If incremental retrieval is not possible, provide the full listing by calling
+     * itemsRetrieved( const Item::List& ).
+     * In any case, ensure that all items have a correctly set remote identifier
+     * to allow synchronizing with already locally existing items.
+     * In case you don't want to use the built-in item syncing code, store the retrived
+     * items manually and call itemsRetrieved() once you are done.
+     * @param collection The collection to sync.
+     * @param parts The items parts that should be retrieved.
+     * @see itemsRetrieved( const Item::List &), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
+     */
     virtual void retrieveItems( const Akonadi::Collection &collection, const QStringList &parts ) = 0;
     //FIXME_API: remove parts parameter
 
     /**
-      Retrieve a single item from the backend. The item to retrieve is provided as @p item.
-      Add the requested payload parts and call itemRetrieved() when done.
-      @param item The empty item which payload should be retrieved. Use this object when delivering
-      the result instead of creating a new item to ensure conflict detection to work.
-      @param parts The item parts that should be retrieved.
-      @return false if there is an immediate error when retrieving the item.
-      @see itemRetrieved()
-    */
+     * Retrieve a single item from the backend. The item to retrieve is provided as @p item.
+     * Add the requested payload parts and call itemRetrieved() when done.
+     * @param item The empty item which payload should be retrieved. Use this object when delivering
+     * the result instead of creating a new item to ensure conflict detection to work.
+     * @param parts The item parts that should be retrieved.
+     * @return false if there is an immediate error when retrieving the item.
+     * @see itemRetrieved()
+     */
     virtual bool retrieveItem( const Akonadi::Item &item, const QStringList &parts ) = 0;
 
   protected:
@@ -338,85 +349,92 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void changeProgress( uint progress, const QString &message = QString() );
 
     /**
-      Call this method from retrieveItem() once the result is available.
-      @param item The retrieved item.
-    */
+     * Call this method from retrieveItem() once the result is available.
+     *
+     * @param item The retrieved item.
+     */
     void itemRetrieved( const Item &item );
 
     /**
-      Resets the dirty flag of the given item and updates the remote id.
-      Call whenever you have successfully written changes back to the server.
-      This implicitly calls changeProcessed().
-      @param item The changed item.
-    */
+     * Resets the dirty flag of the given item and updates the remote id.
+     *
+     * Call whenever you have successfully written changes back to the server.
+     * This implicitly calls changeProcessed().
+     * @param item The changed item.
+     */
     void changesCommitted( const Item &item );
 
     /**
-      Call whenever you have successfully handled or ignored a collection
-      change notification. This will update the remote identifier of
-      @p collection if necessary, as well as any other collection attributes.
-      This implicitly calls changeProcessed().
-      @param collection The collection which changes have been handled.
+     * Call whenever you have successfully handled or ignored a collection
+     * change notification.
+     *
+     * This will update the remote identifier of @p collection if necessary,
+     * as well as any other collection attributes.
+     * This implicitly calls changeProcessed().
+     * @param collection The collection which changes have been handled.
     */
     void changesCommitted( const Collection &collection );
 
     /**
-      Call this to supply the full folder tree retrieved from the remote server.
-      @param collections A list of collections.
-      @see collectionsRetrievedIncremental()
+     * Call this to supply the full folder tree retrieved from the remote server.
+     *
+     * @param collections A list of collections.
+     * @see collectionsRetrievedIncremental()
     */
     void collectionsRetrieved( const Collection::List &collections );
 
     /**
-      Call this to supply incrementally retrieved collections from the remote
-      server.
-      @param changedCollections Collections that have been added or changed.
-      @param removedCollections Collections that have been deleted.
-      @see collectionsRetrieved()
-    */
+     * Call this to supply incrementally retrieved collections from the remote server.
+     *
+     * @param changedCollections Collections that have been added or changed.
+     * @param removedCollections Collections that have been deleted.
+     * @see collectionsRetrieved()
+     */
     void collectionsRetrievedIncremental( const Collection::List &changedCollections,
                                           const Collection::List &removedCollections );
 
     /**
-      Call this methods to supply the full collection listing from the remote
-      server. If the remote server supports incremental listing, it's strongly
-      recommended to use itemsRetrievedIncremental() instead.
-      @param items A list of items.
-      @see itemsRetrievedIncremental().
-    */
+     * Call this methods to supply the full collection listing from the remote server.
+     *
+     * If the remote server supports incremental listing, it's strongly
+     * recommended to use itemsRetrievedIncremental() instead.
+     * @param items A list of items.
+     * @see itemsRetrievedIncremental().
+     */
     void itemsRetrieved( const Item::List &items );
 
     /**
-      Call this method to supply incrementally retrieved items from the remote
-      server.
-      @param changedItems Items changed in the backend
-      @param removedItems Items removed from the backend
-    */
+     * Call this method to supply incrementally retrieved items from the remote server.
+     *
+     * @param changedItems Items changed in the backend
+     * @param removedItems Items removed from the backend
+     */
     void itemsRetrievedIncremental( const Item::List &changedItems,
                                     const Item::List &removedItems );
 
     /**
-      Call this method to indicate you finished synchronizing the current
-      collection. This is not needed if you use the built in syncing
-      and call itemsRetrieved() or itemsRetrievedIncremental() instead.
-      @see retrieveItems()
-    */
+     * Call this method to indicate you finished synchronizing the current collection.
+     *
+     * This is not needed if you use the built in syncing
+     * and call itemsRetrieved() or itemsRetrievedIncremental() instead.
+     * @see retrieveItems()
+     */
     void itemsRetrieved();
     //FIXME_API: rename to itemsRetrievalDone()
 
     /**
-      Returns the collection that is currently synchronized.
-    */
+     * Returns the collection that is currently synchronized.
+     */
     Collection currentCollection() const;
 
     /**
-      Returns the item that is currently retrieved.
-    */
+     * Returns the item that is currently retrieved.
+     */
     Item currentItem() const;
 
     /**
-      Refetches the Collections.
-    */
+     * Refetches the Collections.
+     */
     void synchronizeCollectionTree();
 
     //FIXME_API: make non-public

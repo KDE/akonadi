@@ -2,6 +2,7 @@
     Copyright (c) 2006 Till Adam <adam@kde.org>
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2007 Bruno Virlet <bruno.virlet@gmail.com>
+    Copyright (c) 2008 Kevin Krammer <kevin.krammer@gmx.at>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -58,11 +59,71 @@ void crashHandler( int signal )
   exit( 255 );
 }
 
+AgentBase::Observer::Observer()
+{
+}
+
+AgentBase::Observer::~Observer()
+{
+}
+
+void AgentBase::Observer::itemAdded( const Item &item, const Collection &collection )
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( item );
+  Q_UNUSED( collection );
+  if ( sAgentBase != 0 )
+    sAgentBase->changeProcessed();
+}
+
+void AgentBase::Observer::itemChanged( const Item &item, const QStringList &partIdentifiers )
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( item );
+  Q_UNUSED( partIdentifiers );
+  if ( sAgentBase != 0 )
+    sAgentBase->changeProcessed();
+}
+
+void AgentBase::Observer::itemRemoved( const Item &item )
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( item );
+  if ( sAgentBase != 0 )
+    sAgentBase->changeProcessed();
+}
+
+void AgentBase::Observer::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( collection );
+  Q_UNUSED( parent );
+  if ( sAgentBase != 0 )
+    sAgentBase->changeProcessed();
+}
+
+void AgentBase::Observer::collectionChanged( const Collection &collection )
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( collection );
+  if ( sAgentBase != 0 )
+    sAgentBase->changeProcessed();
+}
+
+void AgentBase::Observer::collectionRemoved( const Collection &collection )
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( collection );
+  if ( sAgentBase != 0 )
+    sAgentBase->changeProcessed();
+}
+
 //@cond PRIVATE
 
 AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
   : q_ptr( parent ),
-    mSettings( 0 )
+    mSettings( 0 ),
+    mObserver( 0 )
 {
 }
 
@@ -89,18 +150,18 @@ void AgentBasePrivate::init()
   monitor->ignoreSession( session );
   monitor->setConfig( mSettings );
 
-  q->connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-              q, SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  q->connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
-              q, SLOT( itemChanged( const Akonadi::Item&, const QStringList& ) ) );
-  q->connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
-           q, SLOT( itemRemoved( const Akonadi::Item& ) ) );
-  q->connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-              q, SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
-              q, SLOT( collectionChanged( const Akonadi::Collection& ) ) );
-  q->connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
-              q, SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
+  connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+           SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+  connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
+           SLOT( itemChanged( const Akonadi::Item&, const QStringList& ) ) );
+  connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+           SLOT( itemRemoved( const Akonadi::Item& ) ) );
+  connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
+           SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+  connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
+           SLOT( collectionChanged( const Akonadi::Collection& ) ) );
+  connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+           SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
 
   QTimer::singleShot( 0, q, SLOT(delayedInit()) );
 }
@@ -111,6 +172,47 @@ void AgentBasePrivate::delayedInit()
     kFatal() << "Unable to register service at dbus:" << QDBusConnection::sessionBus().lastError().message();
 }
 
+void AgentBasePrivate::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  if ( mObserver != 0 )
+    mObserver->itemAdded( item, collection );
+}
+
+void AgentBasePrivate::itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  if ( mObserver != 0 )
+    mObserver->itemChanged( item, partIdentifiers );
+}
+
+void AgentBasePrivate::itemRemoved( const Akonadi::Item &item )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  if ( mObserver != 0 )
+    mObserver->itemRemoved( item );
+}
+
+void AgentBasePrivate::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  if ( mObserver != 0 )
+    mObserver->collectionAdded( collection, parent );
+}
+
+void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  if ( mObserver != 0 )
+    mObserver->collectionChanged( collection );
+}
+
+void AgentBasePrivate::collectionRemoved( const Akonadi::Collection &collection )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  if ( mObserver != 0 )
+    mObserver->collectionRemoved( collection );
+}
 
 AgentBase::AgentBase( const QString & id )
   : d_ptr( new AgentBasePrivate( this ) )
@@ -120,6 +222,7 @@ AgentBase::AgentBase( const QString & id )
   d_ptr->mId = id;
   d_ptr->init();
 }
+
 // @endcond
 
 AgentBase::AgentBase( AgentBasePrivate* d, const QString &id ) :
@@ -244,48 +347,15 @@ void AgentBase::crashHandler( int signal )
     quit();
 }
 
+void AgentBase::registerObserver( Observer *observer )
+{
+  kDebug() << "observer=" << (void*) observer << "this=" << (void*) this;
+  d_ptr->mObserver = observer;
+}
+
 QString AgentBase::identifier() const
 {
   return d_ptr->mId;
-}
-
-void AgentBase::itemAdded( const Item &item, const Collection &collection )
-{
-  Q_UNUSED( item );
-  Q_UNUSED( collection );
-  changeProcessed();
-}
-
-void AgentBase::itemChanged( const Item &item, const QStringList &partIdentifiers )
-{
-  Q_UNUSED( item );
-  Q_UNUSED( partIdentifiers );
-  changeProcessed();
-}
-
-void AgentBase::itemRemoved( const Item &item )
-{
-  Q_UNUSED( item );
-  changeProcessed();
-}
-
-void AgentBase::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
-{
-  Q_UNUSED( collection );
-  Q_UNUSED( parent );
-  changeProcessed();
-}
-
-void AgentBase::collectionChanged( const Collection &collection )
-{
-  Q_UNUSED( collection );
-  changeProcessed();
-}
-
-void AgentBase::collectionRemoved( const Collection &collection )
-{
-  Q_UNUSED( collection );
-  changeProcessed();
 }
 
 Session* AgentBase::session() const
@@ -318,3 +388,4 @@ void AgentBase::changeProcessed()
 
 #include "agent.moc"
 #include "agentbase.moc"
+#include "agentbase_p.moc"

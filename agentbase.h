@@ -3,6 +3,7 @@
 
     Copyright (c) 2006 Till Adam <adam@kde.org>
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2008 Kevin Krammer <kevin.krammer@gmx.at>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -40,28 +41,175 @@ class Item;
 class Session;
 
 /**
-  This calls is a base class for all Akonadi agents.
-
-  It provides:
-  - lifetime management
-  - change monitoring and recording
-  - configuration interface
-  - problem reporting
-*/
+ * This calls is a base class for all Akonadi agents.
+ *
+ * It provides:
+ * - lifetime management
+ * - change monitoring and recording
+ * - configuration interface
+ * - problem reporting
+ */
 class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 {
   Q_OBJECT
 
   public:
     /**
+     * The Observer provides an interface to react on monitored or replayed changes.
+     *
+     * Since the this base class does only tell the change recorder that the change
+     * has been processed, an AgentBase subclass which wants to actually process
+     * the change needs to subclass Observer and reimplement the methods it is
+     * interested in.
+     *
+     * Such an agent specific Observer implementation can either be done
+     * stand-alone, i.e. as a separate object, or by inheriting both AgentBase
+     * and AgentBase::Observer.
+     *
+     * The observer implementation then has registered with the agent, so it
+     * can forward the incoming changes to the observer.
+     *
+     * @note In the multiple inheritance approach the init() method automatically
+     *       registers itself as the observer.
+     *
+     * Example for stand-alone observer:
+     * @code
+     * class ExampleAgent : public AgentBase
+     * {
+     *   public:
+     *     ExampleAgent( const QString &id );
+     *
+     *     ~ExampleAgent();
+     *
+     *   private:
+     *     AgentBase::Observer *mObserver;
+     * };
+     *
+     * class ExampleObserver : public AgentBase::Observer
+     * {
+     *   protected:
+     *     void itemChanged( const Item &item );
+     * };
+     *
+     * ExampleAgent::ExampleAgent( const QString &id )
+     *   : AgentBase( id ), mObserver( 0 )
+     * {
+     *   mObserver = new ExampleObserver();
+     *   registerObserver( mObserver );
+     * }
+     *
+     * ExampleAgent::~ExampleAgent()
+     * {
+     *   delete mObserver;
+     * }
+     *
+     * void ExampleObserver::itemChanged( const Item &item )
+     * {
+     *   // do something with item
+     *   kDebug() << "Item id=" << item.id();
+     *
+     *   // let base implementation tell the change recorder that we
+     *   // have processed the change
+     *   AgentBase::Observer::itemChanged( item );
+     * }
+     * @endcode
+     *
+     * Example for observer through multiple inheritance:
+     * @code
+     * class ExampleAgent : public AgentBase, public AgentBase::Observer
+     * {
+     *   public:
+     *     ExampleAgent( const QString &id );
+     *
+     *   protected:
+     *     void itemChanged( const Item &item );
+     * };
+     *
+     * ExampleAgent::ExampleAgent( const QString &id )
+     *   : AgentBase( id )
+     * {
+     *   // no need to create or register observer since
+     *   // we are the observer and registration happens automatically
+     *   // in init()
+     * }
+     *
+     * void ExampleAgent::itemChanged( const Item &item )
+     * {
+     *   // do something with item
+     *   kDebug() << "Item id=" << item.id();
+     *
+     *   // let base implementation tell the change recorder that we
+     *   // have processed the change
+     *   AgentBase::Observer::itemChanged( item );
+     * }
+     * @endcode
+     */
+    class Observer
+    {
+      public:
+        /**
+         * Creates an observer instance
+         */
+        Observer();
+
+        /**
+         * Destroys the observer instance
+         */
+        virtual ~Observer();
+        /**
+         * Reimplement to handle adding of new items.
+         * @param item The newly added item.
+         * @param collection The collection @p item got added to.
+         */
+        virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+
+        /**
+         * Reimplement to handle changes to existing items.
+         * @param item The changed item.
+         * @param partIdentifiers The identifiers of the item parts that has been changed.
+         */
+        virtual void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
+
+        /**
+         * Reimplement to handle deletion of items.
+         * @param item The deleted item.
+         */
+        virtual void itemRemoved( const Akonadi::Item &item );
+
+        /**
+         * Reimplement to handle adding of new collections.
+         * @param collection The newly added collection.
+         * @param parent The parent collection.
+          */
+        virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
+
+        /**
+         * Reimplement to handle changes to existing collections.
+         * @param collection The changed collection.
+         */
+        virtual void collectionChanged( const Akonadi::Collection &collection );
+
+        /**
+         * Reimplement to handle deletion of collections.
+         * @param id The id of the deleted collection.
+         * @param remoteId The remote id of the deleted collection.
+         */
+        virtual void collectionRemoved( const Akonadi::Collection &collection );
+    };
+
+    /**
      * Use this method in the main function of your agent
      * application to initialize your agent subclass.
      * This method also takes care of creating a KApplication
      * object and parsing command line arguments.
      *
-     * \code
+     * @note In case the given class is also derived from AgentBase::Observer
+     *       it gets registered as its own observer (see AgentBase::Observer), e.g.
+     *       <tt>agentInstance->registerObserver( agentInstance );</tt>
      *
-     *   class MyResource : public ResourceBase
+     * @code
+     *
+     *   class MyAgent : public AgentBase
      *   {
      *     ...
      *   };
@@ -71,7 +219,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *     return AgentBase::init<MyAgent>( argc, argv );
      *   }
      *
-     * \endcode
+     * @endcode
      */
     template <typename T>
     static int init( int argc, char **argv )
@@ -79,6 +227,12 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
       const QString id = parseArguments( argc, argv );
       KApplication app;
       T* r = new T( id );
+
+      // check if T also inherits AgentBase::Observer and
+      // if it does, automatically register it on itself
+      Observer *observer = dynamic_cast<Observer*>( r );
+      if ( observer != 0 )
+        r->registerObserver( r );
       return init( r );
     }
 
@@ -122,6 +276,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     //FIXME_API: remove crashhandler
     void crashHandler( int signal );
 
+    /**
+     * Registers the given observer for reacting on monitored or recorded changes.
+     *
+     * @param observer The change handler to register. No ownership transfer, i.e.
+     *                 the caller stays owner of the pointer and can reset
+     *                 the registration by calling this method with @c 0
+     */
+    void registerObserver( Observer *observer );
+
   protected:
     /**
      * Creates a base agent.
@@ -164,68 +327,22 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     Session* session() const;
 
     /**
-      Returns the Akonadi::ChangeRecorder object used for monitoring.
-      Use this to configure which parts you want to monitor.
-    */
+     * Returns the Akonadi::ChangeRecorder object used for monitoring.
+     * Use this to configure which parts you want to monitor.
+     */
     ChangeRecorder* changeRecorder() const;
 
     /**
-      Marks the current change as processes and replays the next change if change
-      recording is enabled (noop otherwise). This method is called
-      from the default implementation of the change notification slots. While not
-      required when not using change recording, it is nevertheless recommended to
-      to call this method when done with processing a change notification.
-    */
+     * Marks the current change as processes and replays the next change if change
+     * recording is enabled (noop otherwise). This method is called
+     * from the default implementation of the change notification slots. While not
+     * required when not using change recording, it is nevertheless recommended to
+     * to call this method when done with processing a change notification.
+     */
     //FIXME_API: move implementation to private class and make it virtual
     virtual void changeProcessed();
 
     //FIXME_API: make setOnline virtual + template method
-
-  Q_SIGNALS:
-
-  protected Q_SLOTS:
-    //FIXME_API: move these 6 slots to new class EntityObserver.
-    //FIXME_API: inherit from this observer and connect dbus signals to them.
-
-    /**
-      Reimplement to handle adding of new items.
-      @param item The newly added item.
-      @param collection The collection @p item got added to.
-    */
-    virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
-
-    /**
-      Reimplement to handle changes to existing items.
-      @param item The changed item.
-      @param partIdentifiers The identifiers of the item parts that has been changed.
-    */
-    virtual void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
-
-    /**
-      Reimplement to handle deletion of items.
-      @param item The deleted item.
-    */
-    virtual void itemRemoved( const Akonadi::Item &item );
-
-    /**
-      Reimplement to handle adding of new collections.
-      @param collection The newly added collection.
-      @param parent The parent collection.
-    */
-    virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
-
-    /**
-      Reimplement to handle changes to existing collections.
-      @param collection The changed collection.
-    */
-    virtual void collectionChanged( const Akonadi::Collection &collection );
-
-    /**
-      Reimplement to handle deletion of collections.
-      @param id The id of the deleted collection.
-      @param remoteId The remote id of the deleted collection.
-    */
-    virtual void collectionRemoved( const Akonadi::Collection &collection );
 
   protected:
     //@cond PRIVATE
@@ -255,7 +372,6 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
 }
 
-//FIXME_API: add macro for main() function
 /*
 class DefaultObserver
 {
