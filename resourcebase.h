@@ -188,7 +188,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       // if it does, automatically register it on itself
       Observer *observer = dynamic_cast<Observer*>( r );
       if ( observer != 0 )
-        r->registerObserver( r );
+        r->registerObserver( observer );
       return init( r );
     }
 
