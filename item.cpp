@@ -127,7 +127,7 @@ int Item::revision() const
   return d_func()->mRevision;
 }
 
-void Item::setRevision( const int rev )
+void Item::setRevision( int rev )
 {
   d_func()->mRevision = rev;
 }
