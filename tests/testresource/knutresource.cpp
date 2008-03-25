@@ -410,4 +410,6 @@ void KnutResource::addIncidence( const QDomElement &element, CollectionEntry &en
     entry.incidences.insert( incidence->uid(), incidence );
 }
 
+AKONADI_RESOURCE_MAIN( KnutResource )
+
 #include "knutresource.moc"
