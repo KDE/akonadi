@@ -27,7 +27,7 @@
 
 class QDomElement;
 
-class KnutResource : public Akonadi::ResourceBase
+class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer
 {
   Q_OBJECT
 
