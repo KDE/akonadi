@@ -203,14 +203,13 @@ bool DbInitializer::checkTable( const QDomElement &element )
   while ( !columnElement.isNull() ) {
     if ( columnElement.tagName() == QLatin1String( "index" ) ) {
       if ( !hasIndex( tableName, columnElement.attribute( QLatin1String("name") ) ) ) {
-        QString statement = QLatin1String( "ALTER TABLE " );
-        statement += tableName;
-        statement += QLatin1String( " ADD " );
+        QString statement = QLatin1String( "CREATE " );
         if ( columnElement.attribute( QLatin1String("unique") ) == QLatin1String( "true" ) )
           statement += QLatin1String( "UNIQUE " );
-        else
-          statement += QLatin1String( "INDEX  " );
+        statement += QLatin1String( "INDEX " );
         statement += columnElement.attribute( QLatin1String("name") );
+        statement += QLatin1String( " ON " );
+        statement += tableName;
         statement += QLatin1String( " (" );
         statement += columnElement.attribute( QLatin1String("columns") );
         statement += QLatin1Char(')');
