@@ -470,4 +470,15 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
 }
 
+#ifndef AKONADI_RESOURCE_MAIN
+/**
+ * Convenience Macro for the most common main() function for Akonadi resources.
+ */
+#define AKONADI_RESOURCE_MAIN( resourceClass )                       \
+  int main( int argc, char **argv )                            \
+  {                                                            \
+    return Akonadi::ResourceBase::init<resourceClass>( argc, argv ); \
+  }
+#endif
+
 #endif

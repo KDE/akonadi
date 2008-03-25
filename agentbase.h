@@ -372,6 +372,17 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
 }
 
+#ifndef AKONADI_AGENT_MAIN
+/**
+ * Convenience Macro for the most common main() function for Akonadi agents.
+ */
+#define AKONADI_AGENT_MAIN( agentClass )                       \
+  int main( int argc, char **argv )                            \
+  {                                                            \
+    return Akonadi::AgentBase::init<agentClass>( argc, argv ); \
+  }
+#endif
+
 /*
 class DefaultObserver
 {
