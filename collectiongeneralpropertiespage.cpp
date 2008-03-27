@@ -37,7 +37,7 @@ void CollectionGeneralPropertiesPage::load(const Collection & collection)
 {
   ui.nameEdit->setText( collection.name() );
   if ( collection.statistics().count() >= 0 ) {
-    ui.countLabel->setText( i18np( "One object", "%1 objects",
+    ui.countLabel->setText( i18ncp( "@label", "One object", "%1 objects",
                             collection.statistics().count() ) );
   } else {
     ui.statsBox->hide();
