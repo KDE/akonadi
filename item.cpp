@@ -17,14 +17,14 @@
     02110-1301, USA.
 */
 
-#include <kurl.h>
-
-#include <QtCore/QStringList>
-
 #include "item.h"
 #include "item_p.h"
 #include "itemserializer.h"
 #include "protocol_p.h"
+
+#include <kurl.h>
+
+#include <QtCore/QStringList>
 
 using namespace Akonadi;
 

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_IMAPPARSER_H
-#define AKONADI_IMAPPARSER_H
+#ifndef AKONADI_IMAPPARSER_P_H
+#define AKONADI_IMAPPARSER_P_H
 
 #include "akonadiprotocolinternals_export.h"
 

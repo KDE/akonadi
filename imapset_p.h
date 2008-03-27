@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ImapSet_H
-#define AKONADI_ImapSet_H
+#ifndef AKONADI_IMAPSET_P_H
+#define AKONADI_IMAPSET_P_H
 
 #include "akonadiprotocolinternals_export.h"
 

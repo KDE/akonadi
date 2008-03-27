@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
-#include "expungejob.h"
 #include "itemdeletejob.h"
 #include "itemmodifyjob.h"
 #include "job_p.h"
 #include "transactionjobs.h"
+#include "expungejob.h"
 
 using namespace Akonadi;
 

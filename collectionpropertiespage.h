@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECITONPROPERTIESPAGE_H
-#define AKONADI_COLLECITONPROPERTIESPAGE_H
+#ifndef AKONADI_COLLECTIONPROPERTIESPAGE_H
+#define AKONADI_COLLECTIONPROPERTIESPAGE_H
 
 #include "akonadi_export.h"
 
@@ -103,7 +103,7 @@ class AKONADI_EXPORT CollectionPropertiesPageFactory
 /**
   \relates CollectionPropertiesPageFactory
   This macro exports the factory named @param factoryName for @param className class.
-*/ 
+*/
 #define AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(factoryName, className) \
 class factoryName: public CollectionPropertiesPageFactory \
 { \

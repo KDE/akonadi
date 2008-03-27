@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef COLLECTIONFETCHTEST_H
-#define COLLECTIONFETCHTEST_H
+#ifndef COLLECTIONJOBTEST_H
+#define COLLECTIONJOBTEST_H
 
 #include <QtCore/QObject>
 
