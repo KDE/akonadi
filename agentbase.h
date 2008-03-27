@@ -144,7 +144,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * }
      * @endcode
      */
-    class AKONADI_EXPORT Observer
+    class AKONADI_EXPORT Observer  // krazy:exclude=dpointer
     {
       public:
         /**
