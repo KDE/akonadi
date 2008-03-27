@@ -52,7 +52,7 @@ class AKONADI_EXPORT AgentManager : public QObject
     {
       Ready = 0,   ///< The agent instance is ready to work
       Syncing,     ///< The agent instance is currently syncing
-      Error        ///< An error occured inside the agent instance
+      Error        ///< An error occurred inside the agent instance
     };
 
     /**
