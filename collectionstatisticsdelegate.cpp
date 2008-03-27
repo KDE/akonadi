@@ -16,10 +16,8 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+
 #include "collectionstatisticsdelegate.h"
-
-#if QT_VERSION >= 0x040400
-
 #include "collectionstatisticsmodel.h"
 
 #include <kcolorscheme.h>
@@ -208,5 +206,3 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
   painter->drawText( textRect, option4.displayAlignment, text );
 }
-
-#endif
