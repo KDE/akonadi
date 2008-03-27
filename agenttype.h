@@ -116,6 +116,6 @@ class AKONADI_EXPORT AgentType
 
 }
 
-Q_DECLARE_METATYPE( Akonadi::AgentType );
+Q_DECLARE_METATYPE( Akonadi::AgentType )
 
 #endif
