@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Robert Zwerus <arzie@dds.nl>
+    Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,37 +17,41 @@
     02110-1301, USA.
 */
 
-#ifndef BENCHMARKER_H
-#define BENCHMARKER_H
+#ifndef AKONADI_AGENTTYPE_P_H
+#define AKONADI_AGENTTYPE_P_H
 
-#include <QtCore/QTime>
+#include <QtCore/QSharedData>
+#include <QtCore/QStringList>
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/job.h>
-
-using namespace Akonadi;
-
-class BenchMarker : public QObject
+namespace Akonadi
 {
-  Q_OBJECT
+
+class AgentType::Private : public QSharedData
+{
   public:
-    BenchMarker( const QString &maildir );
+    Private()
+    {
+    }
 
-  private Q_SLOTS:
-    AgentInstance createAgent( const QString &name );
-    void instanceRemoved( const AgentInstance &instance );
-    void instanceStatusChanged( const AgentInstance &instance );
-    void outputStats( const QString &description );
-    void output( const QString &message );
-    void stop();
+    Private( const Private &other )
+      : QSharedData( other )
+    {
+      mIdentifier = other.mIdentifier;
+      mName = other.mName;
+      mDescription = other.mDescription;
+      mIconName = other.mIconName;
+      mMimeTypes = other.mMimeTypes;
+      mCapabilities = other.mCapabilities;
+    }
 
-  private:
-    void testMaildir( QString dir );
-
-    AgentInstance currentInstance;
-    QString currentAccount;
-    QTime timer;
-    bool done;
+    QString mIdentifier;
+    QString mName;
+    QString mDescription;
+    QString mIconName;
+    QStringList mMimeTypes;
+    QStringList mCapabilities;
 };
+
+}
 
 #endif

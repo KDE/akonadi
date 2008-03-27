@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include "agentinstance.h"
 #include "agentinstancewidgettest.h"
 
 #include <kcomponentdata.h>
@@ -32,8 +33,8 @@ Dialog::Dialog( QWidget *parent )
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   mWidget = new Akonadi::AgentInstanceWidget( this );
-  connect( mWidget, SIGNAL( currentChanged( const QString&, const QString& ) ),
-           this, SLOT( currentChanged( const QString&, const QString& ) ) );
+  connect( mWidget, SIGNAL( currentChanged( const Akonadi::AgentInstance&, const Akonadi::AgentInstance& ) ),
+           this, SLOT( currentChanged( const Akonadi::AgentInstance&, const Akonadi::AgentInstance& ) ) );
 
   QDialogButtonBox *box = new QDialogButtonBox( this );
 
@@ -49,15 +50,15 @@ Dialog::Dialog( QWidget *parent )
 void Dialog::done( int r )
 {
   if ( r == Accepted ) {
-    qDebug( "'%s' selected", qPrintable( mWidget->currentAgentInstance() ) );
+    qDebug( "'%s' selected", qPrintable( mWidget->currentAgentInstance().identifier() ) );
   }
 
   QDialog::done( r );
 }
 
-void Dialog::currentChanged( const QString &current, const QString &previous )
+void Dialog::currentChanged( const Akonadi::AgentInstance &current, const Akonadi::AgentInstance &previous )
 {
-  qDebug( "current changed: %s -> %s", qPrintable( previous ), qPrintable( current ) );
+  qDebug( "current changed: %s -> %s", qPrintable( previous.identifier() ), qPrintable( current.identifier() ) );
 }
 
 int main( int argc, char **argv )

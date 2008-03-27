@@ -26,6 +26,7 @@
 
 namespace Akonadi {
 
+class AgentInstance;
 class AgentFilterProxyModel;
 
 /**
@@ -55,10 +56,10 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
     ~AgentInstanceWidget();
 
     /**
-     * Returns the identifier of the current agent instance or
-     * an empty string if no agent instance is selected.
+     * Returns the current agent instance or an invalid agent instance
+     * if no agent instance is selected.
      */
-    QString currentAgentInstance() const;
+    AgentInstance currentAgentInstance() const;
 
     /**
       Returns the agent filter proxy model, use this to filter by
@@ -70,17 +71,17 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
     /**
      * This signal is emitted whenever the current agent instance changes.
      *
-     * @param current The identifier of the current agent instance.
-     * @param previous The identifier of the previous agent instance.
+     * @param current The current agent instance.
+     * @param previous The previous agent instance.
      */
-    void currentChanged( const QString &current, const QString &previous );
+    void currentChanged( const AgentInstance &current, const AgentInstance &previous );
 
     /**
-     * This signal is emitted whenever the there is a double click an an instance.
+     * This signal is emitted whenever the there is a double click on an instance.
      *
-     * @param current The identifier of the current agent instance.
+     * @param current The current agent instance.
      */
-    void doubleClicked( const QString &current );
+    void doubleClicked( const AgentInstance &current );
 
   private:
     class Private;

@@ -27,6 +27,7 @@
 namespace Akonadi {
 
 class AgentFilterProxyModel;
+class AgentType;
 
 /**
  * This class provides a widget of all available agent types.
@@ -55,10 +56,10 @@ class AKONADI_EXPORT AgentTypeWidget : public QWidget
     ~AgentTypeWidget();
 
     /**
-     * Returns the identifier of the current agent type or an
-     * empty string if no agent type is selected.
+     * Returns the current agent type or an invalid agent type
+     * if no agent type is selected.
      */
-    QString currentAgentType() const;
+    AgentType currentAgentType() const;
 
     /**
      * Returns the agent filter proxy model, use this to filter by
@@ -70,10 +71,10 @@ class AKONADI_EXPORT AgentTypeWidget : public QWidget
     /**
      * This signal is emitted whenever the current agent type changes.
      *
-     * @param current The identifier of the current agent type.
-     * @param previous The identifier of the previous agent type.
+     * @param current The current agent type.
+     * @param previous The previous agent type.
      */
-    void currentChanged( const QString &current, const QString &previous );
+    void currentChanged( const Akonadi::AgentType &current, const Akonadi::AgentType &previous );
 
   private:
     class Private;

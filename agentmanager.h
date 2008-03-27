@@ -22,16 +22,16 @@
 
 #include "akonadi_export.h"
 
-#include <QtCore/QObject>
+#include <akonadi/agenttype.h>
+#include <akonadi/agentinstance.h>
 
-class QIcon;
-class QWidget;
+#include <QtCore/QObject>
 
 namespace Akonadi {
 
+class AgentManagerPrivate;
 class Collection;
 
-//FIXME_API: provide AgentType and AgentInstance classes
 //FIXME_API: using QMap<property,value> instead of single property getter methods
 
 /**
@@ -41,24 +41,16 @@ class Collection;
  */
 class AKONADI_EXPORT AgentManager : public QObject
 {
+  friend class AgentInstance;
+  friend class AgentManagerPrivate;
+
   Q_OBJECT
 
   public:
     /**
-     * This enum describes the possible states
-     * of an agent.
+     * Returns the global instance of the agent manager.
      */
-    enum Status
-    {
-      Ready = 0,   ///< The agent instance is ready to work
-      Syncing,     ///< The agent instance is currently syncing
-      Error        ///< An error occurred inside the agent instance
-    };
-
-    /**
-     * Creates a new agent manager.
-     */
-    explicit AgentManager( QObject *parent = 0 );
+    static AgentManager *self();
 
     /**
      * Destroys the agent manager.
@@ -66,206 +58,111 @@ class AKONADI_EXPORT AgentManager : public QObject
     ~AgentManager();
 
     /**
-     * Returns the list of identifiers of all available
-     * agent types.
+     * Returns the list of all available agent types.
      */
-    QStringList agentTypes() const;
+    AgentType::List types() const;
 
     /**
-     * Returns the i18n'ed name of the agent type for
-     * the given @p identifier.
+     * Returns the agent type with the given @p identifier or
+     * an invalid agent type if the identifier does not exist.
      */
-    QString agentName( const QString &identifier ) const;
+    AgentType type( const QString &identififer ) const;
 
     /**
-     * Returns the i18n'ed comment of the agent type for
-     * the given @p identifier.
+     * Returns the list of all configured agent instances.
      */
-    QString agentComment( const QString &identifier ) const;
+    AgentInstance::List instances() const;
 
     /**
-     * Returns the icon name of the agent type for the
-     * given @p identifier.
+     * Returns the agent instance with the given @p identifier or
+     * an invalid agent instance if the identifier does not exist.
      */
-    QString agentIconName( const QString &identifier ) const;
+    AgentInstance instance( const QString &identififer ) const;
 
     /**
-     * Returns the icon of the agent type for the
-     * given @p identifier.
-     */
-    QIcon agentIcon( const QString &identifier ) const;
-
-    /**
-     * Returns a list of supported mimetypes of the agent type
-     * for the given @p identifier.
-     */
-    QStringList agentMimeTypes( const QString &identifier ) const;
-
-    /**
-     * Returns a list of supported capabilities of the agent type
-     * for the given @p identifier.
-     */
-    QStringList agentCapabilities( const QString &identifier ) const;
-
-    /**
-     * Creates a new agent of the given agent type @p identifier.
+     * Creates a new agent instance of the given agent @p type.
      *
-     * @return The identifier of the new agent if created successfully,
-     *         an empty string otherwise.
-     *         The identifier consists of two parts, the type of the
-     *         agent and an unique instance number, and looks like
-     *         the following: 'file_1' or 'imap_267'.
+     * @return The new agent instance if created successfully,
+     *         an invalid agent instance otherwise.
      */
-    QString createAgentInstance( const QString &identifier );
+    AgentInstance createInstance( const AgentType &type );
 
     /**
-     * Removes the agent with the given @p identifier.
+     * Removes the given agent @p instance.
      */
-    void removeAgentInstance( const QString &identifier );
-
-    /**
-     * Returns the type of the agent instance with the given @p identifier.
-     */
-    QString agentInstanceType( const QString &identifier );
-
-    /**
-     * Returns the list of identifiers of configured instances.
-     */
-    QStringList agentInstances() const;
-
-    /**
-     * Returns the current status code of the agent with the given @p identifier.
-     */
-    Status agentInstanceStatus( const QString &identifier ) const;
-
-    /**
-     * Returns the i18n'ed description of the current status of the agent with
-     * the given @p identifier.
-     */
-    QString agentInstanceStatusMessage( const QString &identifier ) const;
-
-    /**
-     * Returns the current progress of the agent with the given @p identifier
-     * in percentage.
-     */
-    uint agentInstanceProgress( const QString &identifier ) const;
-
-    /**
-     * Returns the i18n'ed description of the current progress of the agent with
-     * the given @p identifier.
-     */
-    QString agentInstanceProgressMessage( const QString &identifier ) const;
-
-    /**
-     * Sets the @p name of the agent instance with the given @p identifier.
-     */
-    void setAgentInstanceName( const QString &identifier, const QString &name );
-
-    /**
-     * Returns the name of the agent instance with the given @p identifier.
-     */
-    QString agentInstanceName( const QString &identifier ) const;
-
-    /**
-     * Triggers the agent instance with the given @p identifier to show
-     * its configuration dialog.
-     *
-     * @param parent Parent window for the configuration dialog.
-     */
-    void agentInstanceConfigure( const QString &identifier, QWidget *parent = 0 );
-
-    /**
-     * Triggers the agent instance with the given @p identifier to start
-     * synchronization.
-     */
-    void agentInstanceSynchronize( const QString &identifier );
-
-    /**
-     * Trigger a synchronization of the collection tree by the given resource agent.
-     *
-     * @param identifier The resource agent identifier.
-     */
-    void agentInstanceSynchronizeCollectionTree( const QString &identifier );
+    void removeInstance( const AgentInstance &instance );
 
     /**
      * Trigger a synchronization of the given collection by its owning resource agent.
      *
      * @param collection The collection to synchronize.
      */
-    void agentInstanceSynchronizeCollection( const Collection &collection );
-
-    /**
-     * Returns if the agent instance @p identifier is in online mode.
-     */
-    bool agentInstanceOnline( const QString &identifier );
-
-    /**
-     * Sets agent instance @p identifier to online or offline mode.
-     */
-    void setAgentInstanceOnline( const QString &identifier, bool state );
+    void synchronizeCollection( const Collection &collection );
 
   Q_SIGNALS:
     /**
      * This signal is emitted whenever a new agent type was installed on the system.
      *
-     * @param agentType The identifier of the new agent type.
+     * @param type The new agent type.
      */
-    void agentTypeAdded( const QString &agentType );
+    void typeAdded( const AgentType &type );
 
     /**
      * This signal is emitted whenever an agent type was removed from the system.
      *
-     * @param agentType The identifier of the removed agent type.
+     * @param type The removed agent type.
      */
-    void agentTypeRemoved( const QString &agentType );
+    void typeRemoved( const AgentType &type );
 
     /**
      * This signal is emitted whenever a new agent instance was created.
      *
-     * @param agentIdentifier The identifier of the new agent instance.
+     * @param instance The new agent instance.
      */
-    void agentInstanceAdded( const QString &agentIdentifier );
+    void instanceAdded( const AgentInstance &instance );
 
     /**
      * This signal is emitted whenever an agent instance was removed.
      *
-     * @param agentIdentifier The identifier of the removed agent instance.
+     * @param instance The removed agent instance.
      */
-    void agentInstanceRemoved( const QString &agentIdentifier );
+    void instanceRemoved( const AgentInstance &instance );
 
     /**
      * This signal is emitted whenever the status of an agent instance has
      * changed.
      *
-     * @param agentIdentifier The identifier of the agent that has changed.
-     * @param status The new status code.
-     * @param message The i18n'ed description of the new status.
+     * @param instance The agent instance that status has changed.
      */
-    void agentInstanceStatusChanged( const QString &agentIdentifier, AgentManager::Status status, const QString &message );
+    void instanceStatusChanged( const AgentInstance &instance );
 
     /**
      * This signal is emitted whenever the progress of an agent instance has
      * changed.
      *
-     * @param agentIdentifier The identifier of the agent that has changed.
-     * @param progress The new progress in percentage.
-     * @param message The i18n'ed description of the new progress.
+     * @param instance The agent instance that progress has changed.
      */
-    void agentInstanceProgressChanged( const QString &agentIdentifier, uint progress, const QString &message );
+    void instanceProgressChanged( const AgentInstance &instance );
 
     /**
      * This signal is emitted whenever the name of the agent instance has changed.
      *
-     * @param agentIdentifier The identifier of the agent that has changed.
-     * @param name The new name of the agent identifier.
+     * @param instance The agent instance that name has changed.
      */
-    void agentInstanceNameChanged( const QString &agentIdentifier, const QString &name );
+    void instanceNameChanged( const AgentInstance &instance );
 
   private:
-    class Private;
-    Private* const d;
+    AgentManager();
 
+    AgentManagerPrivate* const d;
+
+    Q_PRIVATE_SLOT( d, void agentTypeAdded( const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentTypeRemoved( const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceAdded( const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceRemoved( const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceStatusChanged( const QString&, int, const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceProgressChanged( const QString&, uint, const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceNameChanged( const QString&, const QString& ) )
 };
 
 }

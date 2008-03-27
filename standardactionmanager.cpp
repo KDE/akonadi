@@ -86,7 +86,6 @@ class StandardActionManager::Private
       itemSelectionModel( 0 )
     {
       actions.fill( 0, StandardActionManager::LastType );
-      agentManager = new AgentManager( parent );
 
       pluralLabels.insert( StandardActionManager::CopyCollections, ki18np( "&Copy Folder", "&Copy %1 Folders" ) );
       pluralLabels.insert( StandardActionManager::CopyItems, ki18np( "&Copy Item", "&Copy %1 Items" ) );
@@ -229,7 +228,7 @@ class StandardActionManager::Private
       if ( !index.isValid() )
         return;
       const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      agentManager->agentInstanceSynchronizeCollection( col );
+      AgentManager::self()->synchronizeCollection( col );
     }
 
     void slotCollectionProperties()

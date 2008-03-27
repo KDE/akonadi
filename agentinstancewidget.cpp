@@ -19,8 +19,9 @@
 
 #include "agentinstancewidget.h"
 
-#include "agentinstancemodel.h"
 #include "agentfilterproxymodel.h"
+#include "agentinstance.h"
+#include "agentinstancemodel.h"
 
 #include <KIcon>
 
@@ -67,24 +68,24 @@ class AgentInstanceWidget::Private
 
 void AgentInstanceWidget::Private::currentAgentInstanceChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
 {
-  QString currentIdentifier;
+  AgentInstance currentInstance;
   if ( currentIndex.isValid() )
-    currentIdentifier = currentIndex.model()->data( currentIndex, AgentInstanceModel::InstanceIdentifierRole ).toString();
+    currentInstance = currentIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
 
-  QString previousIdentifier;
+  AgentInstance previousInstance;
   if ( previousIndex.isValid() )
-    previousIdentifier = previousIndex.model()->data( previousIndex, AgentInstanceModel::InstanceIdentifierRole ).toString();
+    previousInstance = previousIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
 
-  emit mParent->currentChanged( currentIdentifier, previousIdentifier );
+  emit mParent->currentChanged( currentInstance, previousInstance );
 }
 
 void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked( const QModelIndex &currentIndex )
 {
-  QString currentIdentifier;
+  AgentInstance currentInstance;
   if ( currentIndex.isValid() )
-    currentIdentifier = currentIndex.model()->data( currentIndex, AgentInstanceModel::InstanceIdentifierRole ).toString();
+    currentInstance = currentIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
 
-  emit mParent->doubleClicked( currentIdentifier );
+  emit mParent->doubleClicked( currentInstance );
 }
 
 AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
@@ -118,17 +119,17 @@ AgentInstanceWidget::~AgentInstanceWidget()
   delete d;
 }
 
-QString AgentInstanceWidget::currentAgentInstance() const
+AgentInstance AgentInstanceWidget::currentAgentInstance() const
 {
   QItemSelectionModel *selectionModel = d->mView->selectionModel();
   if ( !selectionModel )
-    return QString();
+    return AgentInstance();
 
   QModelIndex index = selectionModel->currentIndex();
   if ( !index.isValid() )
-    return QString();
+    return AgentInstance();
 
-  return index.model()->data( index, AgentInstanceModel::InstanceIdentifierRole ).toString();
+  return index.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
 }
 
 AgentFilterProxyModel* AgentInstanceWidget::agentFilterProxyModel() const

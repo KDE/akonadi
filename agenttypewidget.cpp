@@ -24,8 +24,9 @@
 #include <QtGui/QListView>
 #include <QtGui/QPainter>
 
-#include "agenttypemodel.h"
 #include "agentfilterproxymodel.h"
+#include "agenttype.h"
+#include "agenttypemodel.h"
 
 using namespace Akonadi;
 
@@ -60,15 +61,15 @@ class AgentTypeWidget::Private
 
 void AgentTypeWidget::Private::currentAgentTypeChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
 {
-  QString currentIdentifier;
+  AgentType currentType;
   if ( currentIndex.isValid() )
-    currentIdentifier = currentIndex.model()->data( currentIndex, AgentTypeModel::TypeIdentifierRole ).toString();
+    currentType = currentIndex.data( AgentTypeModel::TypeRole ).value<AgentType>();
 
-  QString previousIdentifier;
+  AgentType previousType;
   if ( previousIndex.isValid() )
-    previousIdentifier = previousIndex.model()->data( previousIndex, AgentTypeModel::TypeIdentifierRole ).toString();
+    previousType = previousIndex.data( AgentTypeModel::TypeRole ).value<AgentType>();
 
-  emit mParent->currentChanged( currentIdentifier, previousIdentifier );
+  emit mParent->currentChanged( currentType, previousType );
 }
 
 AgentTypeWidget::AgentTypeWidget( QWidget *parent )
@@ -98,17 +99,17 @@ AgentTypeWidget::~AgentTypeWidget()
   delete d;
 }
 
-QString AgentTypeWidget::currentAgentType() const
+AgentType AgentTypeWidget::currentAgentType() const
 {
   QItemSelectionModel *selectionModel = d->mView->selectionModel();
   if ( !selectionModel )
-    return QString();
+    return AgentType();
 
   QModelIndex index = selectionModel->currentIndex();
   if ( !index.isValid() )
-    return QString();
+    return AgentType();
 
-  return index.model()->data( index, AgentTypeModel::TypeIdentifierRole ).toString();
+  return index.data( AgentTypeModel::TypeRole ).value<AgentType>();
 }
 
 AgentFilterProxyModel* AgentTypeWidget::agentFilterProxyModel() const

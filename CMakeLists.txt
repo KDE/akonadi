@@ -54,10 +54,12 @@ install( TARGETS akonadiprotocolinternals DESTINATION ${LIB_INSTALL_DIR} )
 set( akonadikde_LIB_SRC
   agentbase.cpp
   agentfilterproxymodel.cpp
+  agentinstance.cpp
   agentinstancecreatejob.cpp
   agentinstancemodel.cpp
   agentinstancewidget.cpp
   agentmanager.cpp
+  agenttype.cpp
   agenttypemodel.cpp
   agenttypewidget.cpp
   attribute.cpp
@@ -150,10 +152,12 @@ install( FILES
   akonadi_export.h
   agentbase.h
   agentfilterproxymodel.h
+  agentinstance.h
   agentinstancecreatejob.h
   agentinstancemodel.h
   agentinstancewidget.h
   agentmanager.h
+  agenttype.h
   agenttypemodel.h
   agenttypewidget.h
   attribute.h

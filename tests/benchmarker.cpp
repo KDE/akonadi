@@ -50,10 +50,10 @@ using namespace Akonadi;
 
 BenchMarker::BenchMarker( const QString &maildir )
 {
-  manager = new AgentManager( this );
-  connect( manager, SIGNAL( agentInstanceRemoved( const QString & ) ), SLOT( agentInstanceRemoved( const QString & ) ) );
-  connect( manager, SIGNAL( agentInstanceStatusChanged( const QString &, AgentManager::Status, const QString & ) ),
-           SLOT( agentInstanceStatusChanged( const QString &, AgentManager::Status, const QString & ) ) );
+  connect( AgentManager::self(), SIGNAL( instanceRemoved( const AgentInstance& ) ),
+           this, SLOT( instanceRemoved( const AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL( instanceStatusChanged( const AgentInstance& ) ),
+           this, SLOT( instanceStatusChanged( const AgentInstance& ) ) );
 
   output( "# Description\t\tAccount name\t\tTime\n" );
 
@@ -70,37 +70,39 @@ void BenchMarker::stop()
   qApp->quit();
 }
 
-QString BenchMarker::createAgent( const QString &name )
+AgentInstance BenchMarker::createAgent( const QString &name )
 {
-  AgentInstanceCreateJob *job = new AgentInstanceCreateJob( name );
-  job->exec();
-  const QString instance = job->instanceIdentifier();
+  const AgentType type = AgentManager::self()->type( name );
 
-  if( job->error() || instance.isEmpty() ) {
+  AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
+  job->exec();
+  const AgentInstance instance = job->instance();
+
+  if( job->error() || !instance.isValid() ) {
     qDebug() << "  Unable to create resource" << name;
     exit( -1 );
   }
   else
-    qDebug() << "  Created resource instance" << instance;
+    qDebug() << "  Created resource instance" << instance.identifier();
 
   return instance;
 }
 
-void BenchMarker::agentInstanceRemoved( const QString &instance )
+void BenchMarker::instanceRemoved( const AgentInstance &instance )
 {
   Q_UNUSED( instance );
   done = true;
   // qDebug() << "agent removed:" << instance;
 }
 
-void BenchMarker::agentInstanceStatusChanged( const QString &agentIdentifier, AgentManager::Status status, const QString &message )
+void BenchMarker::instanceStatusChanged( const AgentInstance &instance )
 {
   //qDebug() << "agent status changed:" << agentIdentifier << status << message ;
-  if ( agentIdentifier == currentInstance ) {
-    if ( status == AgentManager::Syncing ) {
+  if ( instance == currentInstance ) {
+    if ( instance.status() == AgentInstance::Syncing ) {
       //qDebug() << "    " << message;
     }
-    if ( status == AgentManager::Ready ) {
+    if ( instance.status() == AgentInstance::Ready ) {
       done = true;
     }
   }
@@ -119,26 +121,25 @@ void BenchMarker::output( const QString &message )
 
 void BenchMarker::testMaildir( QString dir )
 {
-  QString instance = createAgent( "akonadi_maildir_resource" );
-  currentInstance = instance;
+  currentInstance = createAgent( "akonadi_maildir_resource" );
   QTest::qWait( 1000 ); // HACK until resource startup races are fixed
 
   done = false;
   qDebug() << "  Configuring resource to use " << dir << "as source.";
-  QDBusInterface *configIface = new QDBusInterface( "org.kde.Akonadi.Resource." + instance,
+  QDBusInterface *configIface = new QDBusInterface( "org.kde.Akonadi.Resource." + currentInstance.identifier(),
       "/Settings", "org.kde.Akonadi.Maildir.Settings", QDBusConnection::sessionBus(), this );
   if ( configIface && configIface->isValid() ) {
     configIface->call( "setPath", dir );
     configIface->call( "setReadOnly", true );
   } else {
-    qFatal( "Could not configure instance %s.", qPrintable( instance ) );
+    qFatal( "Could not configure instance %s.", qPrintable( currentInstance.identifier() ) );
   }
 
   // import the complete email set
   done = false;
   timer.start();
   qDebug() << "  Synchronising resource.";
-  manager->agentInstanceSynchronize( instance );
+  currentInstance.synchronize();
   while(!done)
     QTest::qWait( WAIT_TIME );
   outputStats( "import" );
@@ -147,7 +148,7 @@ void BenchMarker::testMaildir( QString dir )
   timer.restart();
   qDebug() << "  Listing all headers of every folder.";
   CollectionFetchJob *clj = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj->setResource( instance );
+  clj->setResource( currentInstance.identifier() );
   clj->exec();
   Collection::List list = clj->collections();
   foreach ( Collection collection, list ) {
@@ -165,7 +166,7 @@ void BenchMarker::testMaildir( QString dir )
   timer.restart();
   qDebug() << "  Marking 20% of messages as read.";
   CollectionFetchJob *clj2 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj2->setResource( instance );
+  clj2->setResource( currentInstance.identifier() );
   clj2->exec();
   Collection::List list2 = clj2->collections();
   foreach ( Collection collection, list2 ) {
@@ -185,7 +186,7 @@ void BenchMarker::testMaildir( QString dir )
   timer.restart();
   qDebug() << "  Listing headers of unread messages of every folder.";
   CollectionFetchJob *clj3 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj3->setResource( instance );
+  clj3->setResource( currentInstance.identifier() );
   clj3->exec();
   Collection::List list3 = clj3->collections();
   foreach ( Collection collection, list3 ) {
@@ -206,7 +207,7 @@ void BenchMarker::testMaildir( QString dir )
   timer.restart();
   qDebug() << "  Removing read messages from every folder.";
   CollectionFetchJob *clj4 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj4->setResource( instance );
+  clj4->setResource( currentInstance.identifier() );
   clj4->exec();
   Collection::List list4 = clj4->collections();
   foreach ( Collection collection, list4 ) {
@@ -226,7 +227,7 @@ void BenchMarker::testMaildir( QString dir )
   timer.restart();
   qDebug() << "  Removing every folder sequentially.";
   CollectionFetchJob *clj5 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj5->setResource( instance );
+  clj5->setResource( currentInstance.identifier() );
   clj5->exec();
   Collection::List list5 = clj5->collections();
   foreach ( Collection collection, list5 ) {
@@ -237,7 +238,7 @@ void BenchMarker::testMaildir( QString dir )
 
   // remove resource
   qDebug() << "  Removing resource.";
-  manager->removeAgentInstance( instance );
+  AgentManager::self()->removeInstance( currentInstance );
 }
 
 int main( int argc, char* argv[] )

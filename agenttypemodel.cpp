@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include "agenttype.h"
 #include "agenttypemodel.h"
 #include "agentmanager.h"
 
@@ -25,74 +26,32 @@
 
 using namespace Akonadi;
 
-class AgentTypeInfo
-{
-  public:
-    QString identifier;
-    QString name;
-    QString comment;
-    QIcon icon;
-    QStringList mimeTypes;
-    QStringList capabilities;
-};
-
 class AgentTypeModel::Private
 {
   public:
     Private( AgentTypeModel *parent )
       : mParent( parent )
     {
+      mTypes = AgentManager::self()->types();
     }
 
     AgentTypeModel *mParent;
-    QList<AgentTypeInfo> mInfos;
-    AgentManager mManager;
+    AgentType::List mTypes;
 
-    void init();
-
-    void agentTypeAdded( const QString &agentType );
-    void agentTypeRemoved( const QString &agentType );
-
-    void addAgentType( const QString &agentType );
+    void typeAdded( const AgentType &agentType );
+    void typeRemoved( const AgentType &agentType );
 };
 
-void AgentTypeModel::Private::init()
+void AgentTypeModel::Private::typeAdded( const AgentType &agentType )
 {
-  mInfos.clear();
-
-  const QStringList agentTypes = mManager.agentTypes();
-  for ( int i = 0; i < agentTypes.count(); ++i )
-    addAgentType( agentTypes[ i ] );
-}
-
-void AgentTypeModel::Private::addAgentType( const QString &agentType )
-{
-  AgentTypeInfo info;
-  info.identifier = agentType;
-  info.name = mManager.agentName( agentType );
-  info.comment = mManager.agentComment( agentType );
-  info.icon = mManager.agentIcon( agentType );
-  info.mimeTypes = mManager.agentMimeTypes( agentType );
-  info.capabilities = mManager.agentCapabilities( agentType );
-
-  mInfos.append( info );
-}
-
-void AgentTypeModel::Private::agentTypeAdded( const QString &agentType )
-{
-  addAgentType( agentType );
+  mTypes.append( agentType );
 
   emit mParent->layoutChanged();
 }
 
-void AgentTypeModel::Private::agentTypeRemoved( const QString &agentType )
+void AgentTypeModel::Private::typeRemoved( const AgentType &agentType )
 {
-  for ( int i = 0; i < mInfos.count(); ++i ) {
-    if ( mInfos[ i ].identifier == agentType ) {
-      mInfos.removeAt( i );
-      break;
-    }
-  }
+  mTypes.removeAll( agentType );
 
   emit mParent->layoutChanged();
 }
@@ -100,12 +59,10 @@ void AgentTypeModel::Private::agentTypeRemoved( const QString &agentType )
 AgentTypeModel::AgentTypeModel( QObject *parent )
   : QAbstractItemModel( parent ), d( new Private( this ) )
 {
-  d->init();
-
-  connect( &d->mManager, SIGNAL( agentTypeAdded( const QString& ) ),
-           this, SLOT( agentTypeAdded( const QString& ) ) );
-  connect( &d->mManager, SIGNAL( agentTypeRemoved( const QString& ) ),
-           this, SLOT( agentTypeRemoved( const QString& ) ) );
+  connect( AgentManager::self(), SIGNAL( typeAdded( const AgentType& ) ),
+           this, SLOT( typeAdded( const AgentType& ) ) );
+  connect( AgentManager::self(), SIGNAL( typeRemoved( const AgentType& ) ),
+           this, SLOT( typeRemoved( const AgentType& ) ) );
 }
 
 AgentTypeModel::~AgentTypeModel()
@@ -120,7 +77,7 @@ int AgentTypeModel::columnCount( const QModelIndex& ) const
 
 int AgentTypeModel::rowCount( const QModelIndex& ) const
 {
-  return d->mInfos.count();
+  return d->mTypes.count();
 }
 
 QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
@@ -128,29 +85,36 @@ QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
   if ( !index.isValid() )
     return QVariant();
 
-  if ( index.row() < 0 || index.row() >= d->mInfos.count() )
+  if ( index.row() < 0 || index.row() >= d->mTypes.count() )
     return QVariant();
 
-  const AgentTypeInfo info = d->mInfos[ index.row() ];
+  const AgentType &type = d->mTypes[ index.row() ];
 
   switch ( role ) {
     case Qt::DisplayRole:
-      return info.name;
+      return type.name();
       break;
     case Qt::DecorationRole:
-      return info.icon;
+      return type.icon();
       break;
-    case TypeIdentifierRole:
-      return info.identifier;
+    case TypeRole:
+      {
+        QVariant var;
+        var.setValue( type );
+        return var;
+      }
+      break;
+    case IdentifierRole:
+      return type.identifier();
       break;
     case DescriptionRole:
-      return info.comment;
+      return type.description();
       break;
     case MimeTypesRole:
-      return info.mimeTypes;
+      return type.mimeTypes();
       break;
     case CapabilitiesRole:
-      return info.capabilities;
+      return type.capabilities();
       break;
     default:
       break;
@@ -160,7 +124,7 @@ QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
 
 QModelIndex AgentTypeModel::index( int row, int column, const QModelIndex& ) const
 {
-  if ( row < 0 || row >= d->mInfos.count() )
+  if ( row < 0 || row >= d->mTypes.count() )
     return QModelIndex();
 
   if ( column != 0 )

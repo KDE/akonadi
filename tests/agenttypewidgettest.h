@@ -36,7 +36,7 @@ class Dialog : public QDialog
     virtual void done( int );
 
   private Q_SLOTS:
-    void currentChanged( const QString&, const QString& );
+    void currentChanged( const Akonadi::AgentType&, const Akonadi::AgentType& );
     void filterChanged( int );
 
   private:

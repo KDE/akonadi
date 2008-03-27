@@ -1,0 +1,163 @@
+/*
+    Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+#ifndef AKONADI_AGENTINSTANCE_H
+#define AKONADI_AGENTINSTANCE_H
+
+#include "akonadi_export.h"
+
+#include <QtCore/QList>
+#include <QtCore/QMetaType>
+#include <QtCore/QSharedDataPointer>
+
+class QString;
+class QStringList;
+class QWidget;
+
+namespace Akonadi
+{
+
+class AgentType;
+
+class AKONADI_EXPORT AgentInstance
+{
+  friend class AgentManager;
+  friend class AgentManagerPrivate;
+
+  public:
+    /**
+     * Describes a list of agent instances.
+     */
+    typedef QList<AgentInstance> List;
+
+    /**
+     * Describes the status of the agent instance.
+     */
+    enum Status
+    {
+      Ready = 0,   ///< The agent instance is ready to work
+      Syncing,     ///< The agent instance is currently syncing
+      Error        ///< An error occured inside the agent instance
+    };
+
+    /**
+     * Creates a new agent instance object.
+     */
+    AgentInstance();
+
+    /**
+     * Creates an agent instance from an @p other agent instance.
+     */
+    AgentInstance( const AgentInstance &other );
+
+    /**
+     * Destroys the agent instance object.
+     */
+    ~AgentInstance();
+
+    /**
+     * Returns whether the agent instance object is valid.
+     */
+    bool isValid() const;
+
+    /**
+     * Returns the agent type of this instance.
+     */
+    AgentType type() const;
+
+    /**
+     * Returns the unique identifier of the agent instance.
+     */
+    QString identifier() const;
+
+    /**
+     * Returns the user visible name of the agent instance.
+     */
+    QString name() const;
+
+    /**
+     * Sets the user visible @p name of the agent instance.
+     */
+    void setName( const QString &name );
+
+    /**
+     * Returns the status of the agent instance.
+     */
+    Status status() const;
+
+    /**
+     * Returns a textual presentation of the status of the agent instance.
+     */
+    QString statusMessage() const;
+
+    /**
+     * Returns the progress of the agent instance in percent, or -1 if no
+     * progress information are available.
+     */
+    int progress() const;
+
+    /**
+     * Returns whether the agent instance is online currently.
+     */
+    bool isOnline() const;
+
+    /**
+     * Sets whether the agent instance is @p online.
+     */
+    void setIsOnline( bool online );
+
+    /**
+     * Triggers the agent instance to show its configuration dialog.
+     *
+     * @param parent Parent window for the configuration dialog.
+     */
+    void configure( QWidget *parent = 0 );
+
+    /**
+     * Triggers the agent instance to start synchronization.
+     */
+    void synchronize();
+
+    /**
+     * Triggers a synchronization of the collection tree by the given agent instance.
+     *
+     * @param identifier The resource agent identifier.
+     */
+    void synchronizeCollectionTree();
+
+    /**
+     * @internal
+     */
+    AgentInstance& operator=( const AgentInstance &other );
+
+    /**
+     * @internal
+     */
+    bool operator==( const AgentInstance &other ) const;
+
+  private:
+    class Private;
+    QSharedDataPointer<Private> d;
+};
+
+}
+
+Q_DECLARE_METATYPE( Akonadi::AgentInstance );
+
+#endif

@@ -45,15 +45,16 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
      */
     enum Roles
     {
-      TypeIdentifierRole  = Qt::UserRole + 1,  ///< The identifier of the agent type
+      TypeRole = Qt::UserRole + 1,             ///< The agent type itself
+      TypeIdentifierRole,                      ///< The identifier of the agent type
       DescriptionRole,                         ///< A description of the agent type
       MimeTypesRole,                           ///< A list of supported mimetypes
       CapabilitiesRole,                        ///< A list of supported capabilities
+      InstanceRole,                            ///< The agent instance itself
       InstanceIdentifierRole,                  ///< The identifier of the agent instance
       StatusRole,                              ///< The current status (numerical) of the instance
       StatusMessageRole,                       ///< A textual presentation of the current status
       ProgressRole,                            ///< The current progress (numerical in percent) of an operation
-      ProgressMessageRole,                     ///< A textual presentation of the current progress
       OnlineRole,                              ///< The current online/offline status
       UserRole  = Qt::UserRole + 42            ///< For further extensions
     };
@@ -82,12 +83,9 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void agentInstanceAdded( const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceRemoved( const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceStatusChanged( const QString&, AgentManager::Status, const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceProgressChanged( const QString&, uint, const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentInstanceNameChanged( const QString&, const QString& ) )
-    Q_PRIVATE_SLOT( d, void addAgentInstance( const QString &agentInstance ) )
+    Q_PRIVATE_SLOT( d, void instanceAdded( const AgentInstance& ) )
+    Q_PRIVATE_SLOT( d, void instanceRemoved( const AgentInstance& ) )
+    Q_PRIVATE_SLOT( d, void instanceChanged( const AgentInstance& ) )
 };
 
 }

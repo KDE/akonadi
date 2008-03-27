@@ -22,9 +22,13 @@
 
 #include "akonadi_export.h"
 
+#include <akonadi/agenttype.h>
+
 #include <kjob.h>
 
 namespace Akonadi {
+
+class AgentInstance;
 
 /**
   Takes care of creating and (optionally) configuring a new agent instance.
@@ -35,10 +39,10 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
   public:
     /**
       Create a new agent instance creation job.
-      @param typeIdentifier The type of the agent to create.
+      @param type The type of the agent to create.
       @param parent The parent object.
     */
-    explicit AgentInstanceCreateJob( const QString &typeIdentifier, QObject *parent = 0 );
+    explicit AgentInstanceCreateJob( const AgentType &type, QObject *parent = 0 );
 
     /**
       Destroys the agent instance creation job.
@@ -52,9 +56,9 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     void configure( QWidget *parent = 0 );
 
     /**
-      Returns the instance identifier of the newly created agent instance.
+      Returns the instance of the newly created agent instance.
     */
-    QString instanceIdentifier() const;
+    AgentInstance instance() const;
 
     /**
      * Starts the instance creation.
@@ -65,7 +69,7 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void agentInstanceAdded( const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceAdded( const Akonadi::AgentInstance& ) )
     Q_PRIVATE_SLOT( d, void doConfigure() )
     Q_PRIVATE_SLOT( d, void timeout() )
 };

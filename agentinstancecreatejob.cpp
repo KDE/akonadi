@@ -20,6 +20,8 @@
 #include "agentinstancecreatejob.h"
 #include "agentmanager.h"
 
+#include "agentinstance.h"
+
 #include <kdebug.h>
 #include <klocale.h>
 
@@ -33,7 +35,6 @@ class AgentInstanceCreateJob::Private
 {
   public:
     Private( AgentInstanceCreateJob* parent ) : q( parent ),
-      manager( 0 ),
       parentWidget( 0 ),
       safetyTimer( 0 ),
       doConfig( false ),
@@ -43,16 +44,15 @@ class AgentInstanceCreateJob::Private
 
     ~Private()
     {
-      delete manager;
     }
 
-    void agentInstanceAdded( const QString &id )
+    void agentInstanceAdded( const AgentInstance &instance )
     {
-      if ( instanceId == id && !tooLate ) {
+      if ( agentInstance == instance && !tooLate ) {
         safetyTimer->stop();
         if ( doConfig ) {
           // return from dbus call first before doing the next one
-          QTimer::singleShot( 0, q, SLOT(doConfigure()) );
+          QTimer::singleShot( 0, q, SLOT( doConfigure() ) );
         } else {
           q->emitResult();
         }
@@ -61,7 +61,7 @@ class AgentInstanceCreateJob::Private
 
     void doConfigure()
     {
-      manager->agentInstanceConfigure( instanceId, parentWidget );
+      agentInstance.configure( parentWidget );
       q->emitResult();
     }
 
@@ -74,22 +74,22 @@ class AgentInstanceCreateJob::Private
     }
 
     AgentInstanceCreateJob* q;
-    QString typeIdentifier;
-    QString instanceId;
-    AgentManager *manager;
+    AgentType agentType;
+    AgentInstance agentInstance;
     QWidget* parentWidget;
     QTimer *safetyTimer;
     bool doConfig;
     bool tooLate;
 };
 
-AgentInstanceCreateJob::AgentInstanceCreateJob(const QString & typeIdentifier, QObject * parent) :
+AgentInstanceCreateJob::AgentInstanceCreateJob(const AgentType & agentType, QObject * parent) :
     KJob( parent ),
     d( new Private( this ) )
 {
-  d->typeIdentifier = typeIdentifier;
-  d->manager = new AgentManager( this );
-  connect( d->manager, SIGNAL(agentInstanceAdded(QString)), SLOT(agentInstanceAdded(QString)) );
+  d->agentType = agentType;
+  connect( AgentManager::self(), SIGNAL(instanceAdded(const Akonadi::AgentInstance&)),
+           this, SLOT(agentInstanceAdded(const Akonadi::AgentInstance&)) );
+
   d->safetyTimer = new QTimer( this );
   connect( d->safetyTimer, SIGNAL(timeout()), SLOT(timeout()) );
   d->safetyTimer->start( safetyTimeout );
@@ -106,15 +106,15 @@ void AgentInstanceCreateJob::configure( QWidget *parent )
   d->doConfig = true;
 }
 
-QString AgentInstanceCreateJob::instanceIdentifier() const
+AgentInstance AgentInstanceCreateJob::instance() const
 {
-  return d->instanceId;
+  return d->agentInstance;
 }
 
 void AgentInstanceCreateJob::start()
 {
-  d->instanceId = d->manager->createAgentInstance( d->typeIdentifier );
-  if ( d->instanceId.isEmpty() ) {
+  d->agentInstance = AgentManager::self()->createInstance( d->agentType );
+  if ( !d->agentInstance.isValid() ) {
     setError( KJob::UserDefinedError );
     setErrorText( i18n("Unable to create agent instance." ) );
     emitResult();

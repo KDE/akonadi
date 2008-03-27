@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include "agenttype.h"
 #include "agenttypewidgettest.h"
 #include <akonadi/agentfilterproxymodel.h>
 
@@ -42,8 +43,8 @@ Dialog::Dialog( QWidget *parent )
            this, SLOT( filterChanged( int ) ) );
 
   mWidget = new Akonadi::AgentTypeWidget( this );
-  connect( mWidget, SIGNAL( currentChanged( const QString&, const QString& ) ),
-           this, SLOT( currentChanged( const QString&, const QString& ) ) );
+  connect( mWidget, SIGNAL( currentChanged( const Akonadi::AgentType&, const Akonadi::AgentType& ) ),
+           this, SLOT( currentChanged( const Akonadi::AgentType&, const Akonadi::AgentType& ) ) );
 
   QDialogButtonBox *box = new QDialogButtonBox( this );
 
@@ -63,15 +64,15 @@ Dialog::Dialog( QWidget *parent )
 void Dialog::done( int r )
 {
   if ( r == Accepted ) {
-    qDebug( "'%s' selected", qPrintable( mWidget->currentAgentType() ) );
+    qDebug( "'%s' selected", qPrintable( mWidget->currentAgentType().identifier() ) );
   }
 
   QDialog::done( r );
 }
 
-void Dialog::currentChanged( const QString &current, const QString &previous )
+void Dialog::currentChanged( const Akonadi::AgentType &current, const Akonadi::AgentType &previous )
 {
-  qDebug( "current changed: %s -> %s", qPrintable( previous ), qPrintable( current ) );
+  qDebug( "current changed: %s -> %s", qPrintable( previous.identifier() ), qPrintable( current.identifier() ) );
 }
 
 void Dialog::filterChanged( int index )

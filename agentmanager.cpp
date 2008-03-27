@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,71 +18,172 @@
 */
 
 #include "agentmanager.h"
+#include "agentmanager_p.h"
 
-#include "agentmanagerinterface.h"
+#include "agenttype_p.h"
+#include "agentinstance_p.h"
+
 #include "collection.h"
 
-#include <kicon.h>
-#include <kiconloader.h>
-
-#include <QtGui/QIcon>
 #include <QtGui/QWidget>
 
 
 using namespace Akonadi;
 
-class AgentManager::Private
+void AgentManagerPrivate::agentTypeAdded( const QString &identifier )
 {
-  public:
-    Private( AgentManager *parent )
-      : mParent( parent )
-    {
-    }
+  const AgentType type = fillAgentType( identifier );
+  if ( type.isValid() ) {
+    mTypes.insert( identifier, type );
+    emit mParent->typeAdded( type );
+  }
+}
 
-    void agentInstanceStatusChanged( const QString &agent, int state, const QString &message )
-    {
-      Status status = Ready;
-      switch ( state ) {
-        case 0:
-        default:
-          status = Ready;
-          break;
-        case 1:
-          status = Syncing;
-          break;
-        case 2:
-          status = Error;
-          break;
-      }
+void AgentManagerPrivate::agentTypeRemoved( const QString &identifier )
+{
+  if ( !mTypes.contains( identifier ) )
+    return;
 
-      emit mParent->agentInstanceStatusChanged( agent, status, message );
-    }
+  const AgentType type = mTypes.take( identifier );
+  emit mParent->typeRemoved( type );
+}
 
-    AgentManager *mParent;
-    org::kde::Akonadi::AgentManager *mManager;
-};
+void AgentManagerPrivate::agentInstanceAdded( const QString &identifier )
+{
+  const AgentInstance instance = fillAgentInstance( identifier );
+  if ( instance.isValid() ) {
+    mInstances.insert( identifier, instance );
+    emit mParent->instanceAdded( instance );
+  }
+}
 
-AgentManager::AgentManager( QObject *parent )
-  : QObject( parent ), d( new Private( this ) )
+void AgentManagerPrivate::agentInstanceRemoved( const QString &identifier )
+{
+  if ( !mInstances.contains( identifier ) )
+    return;
+
+  const AgentInstance instance = mInstances.take( identifier );
+  emit mParent->instanceRemoved( instance );
+}
+
+void AgentManagerPrivate::agentInstanceStatusChanged( const QString &identifier, int status, const QString &msg )
+{
+  if ( !mInstances.contains( identifier ) )
+    return;
+
+  AgentInstance &instance = mInstances[ identifier ];
+  instance.d->mStatus = status;
+  instance.d->mStatusMessage = msg;
+
+  emit mParent->instanceStatusChanged( instance );
+}
+
+void AgentManagerPrivate::agentInstanceProgressChanged( const QString &identifier, uint progress, const QString &msg )
+{
+  if ( !mInstances.contains( identifier ) )
+    return;
+
+  AgentInstance &instance = mInstances[ identifier ];
+  instance.d->mProgress = progress;
+  instance.d->mStatusMessage = msg;
+
+  emit mParent->instanceProgressChanged( instance );
+}
+
+void AgentManagerPrivate::agentInstanceNameChanged( const QString &identifier, const QString &name )
+{
+  if ( !mInstances.contains( identifier ) )
+    return;
+
+  AgentInstance &instance = mInstances[ identifier ];
+  instance.d->mName = name;
+
+  emit mParent->instanceNameChanged( instance );
+}
+
+AgentType AgentManagerPrivate::fillAgentType( const QString &identifier ) const
+{
+  AgentType type;
+  type.d->mIdentifier = identifier;
+  type.d->mName = mManager->agentName( identifier );
+  type.d->mDescription = mManager->agentComment( identifier );
+  type.d->mIconName = mManager->agentIcon( identifier );
+  type.d->mMimeTypes = mManager->agentMimeTypes( identifier );
+  type.d->mCapabilities = mManager->agentCapabilities( identifier );
+
+  return type;
+}
+
+void AgentManagerPrivate::setName( const AgentInstance &instance, const QString &name )
+{
+  mManager->setAgentInstanceName( instance.identifier(), name );
+}
+
+void AgentManagerPrivate::setOnline( const AgentInstance &instance, bool state )
+{
+  mManager->setAgentInstanceOnline( instance.identifier(), state );
+}
+
+void AgentManagerPrivate::configure( const AgentInstance &instance, QWidget *parent )
+{
+  qlonglong winId = 0;
+  if ( parent )
+    winId = (qlonglong)( parent->window()->winId() );
+
+  mManager->agentInstanceConfigure( instance.identifier(), winId );
+}
+
+void AgentManagerPrivate::synchronize( const AgentInstance &instance )
+{
+  mManager->agentInstanceSynchronize( instance.identifier() );
+}
+
+void AgentManagerPrivate::synchronizeCollectionTree( const AgentInstance &instance )
+{
+  mManager->agentInstanceSynchronizeCollectionTree( instance.identifier() );
+}
+
+AgentInstance AgentManagerPrivate::fillAgentInstance( const QString &identifier ) const
+{
+  AgentInstance instance;
+
+  const QString agentTypeIdentifier = mManager->agentInstanceType( identifier );
+  Q_ASSERT_X( mTypes.contains( agentTypeIdentifier ), "fillAgentInstance", "Requests non-existing agent type" );
+
+  instance.d->mType = mTypes.value( agentTypeIdentifier );
+  instance.d->mIdentifier = identifier;
+  instance.d->mName = mManager->agentInstanceName( identifier );
+  instance.d->mStatus = mManager->agentInstanceStatus( identifier );
+  instance.d->mStatusMessage = mManager->agentInstanceStatusMessage( identifier );
+  instance.d->mProgress = mManager->agentInstanceProgress( identifier );
+  instance.d->mIsOnline = mManager->agentInstanceOnline( identifier );
+
+  return instance;
+}
+
+AgentManager* AgentManagerPrivate::mSelf = 0;
+
+AgentManager::AgentManager()
+  : QObject( 0 ), d( new AgentManagerPrivate( this ) )
 {
   d->mManager = new org::kde::Akonadi::AgentManager( QLatin1String( "org.kde.Akonadi.Control" ),
                                                      QLatin1String( "/AgentManager" ),
                                                      QDBusConnection::sessionBus(), this );
 
   connect( d->mManager, SIGNAL( agentTypeAdded( const QString& ) ),
-           this, SIGNAL( agentTypeAdded( const QString& ) ) );
+           this, SLOT( agentTypeAdded( const QString& ) ) );
   connect( d->mManager, SIGNAL( agentTypeRemoved( const QString& ) ),
-           this, SIGNAL( agentTypeRemoved( const QString& ) ) );
+           this, SLOT( agentTypeRemoved( const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceAdded( const QString& ) ),
-           this, SIGNAL( agentInstanceAdded( const QString& ) ) );
+           this, SLOT( agentInstanceAdded( const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceRemoved( const QString& ) ),
-           this, SIGNAL( agentInstanceRemoved( const QString& ) ) );
+           this, SLOT( agentInstanceRemoved( const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceStatusChanged( const QString&, int, const QString& ) ),
            this, SLOT( agentInstanceStatusChanged( const QString&, int, const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ),
-           this, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
+           this, SLOT( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
-           this, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ) );
+           this, SLOT( agentInstanceNameChanged( const QString&, const QString& ) ) );
 }
 
 AgentManager::~AgentManager()
@@ -90,132 +191,49 @@ AgentManager::~AgentManager()
   delete d;
 }
 
-QStringList AgentManager::agentTypes() const
+AgentManager* AgentManager::self()
 {
-  return d->mManager->agentTypes();
+  if ( !AgentManagerPrivate::mSelf )
+    AgentManagerPrivate::mSelf = new AgentManager();
+
+  return AgentManagerPrivate::mSelf;
 }
 
-QString AgentManager::agentName( const QString &identifier ) const
+AgentType::List AgentManager::types() const
 {
-  return d->mManager->agentName( identifier );
+  return d->mTypes.values();
 }
 
-QString AgentManager::agentComment( const QString &identifier ) const
+AgentType AgentManager::type( const QString &identifier ) const
 {
-  return d->mManager->agentComment( identifier );
+  return d->mTypes.value( identifier );
 }
 
-QString AgentManager::agentIconName( const QString &identifier ) const
+AgentInstance::List AgentManager::instances() const
 {
-  return d->mManager->agentIcon( identifier );
+  return d->mInstances.values();
 }
 
-QIcon AgentManager::agentIcon( const QString &identifier ) const
+AgentInstance AgentManager::instance( const QString &identifier ) const
 {
-  return KIcon( agentIconName( identifier ), KIconLoader::global() );
+  return d->mInstances.value( identifier );
 }
 
-QStringList AgentManager::agentMimeTypes( const QString &identifier ) const
+AgentInstance AgentManager::createInstance( const AgentType &type )
 {
-  return d->mManager->agentMimeTypes( identifier );
+  const QString &identifier = d->mManager->createAgentInstance( type.identifier() );
+  if ( identifier.isEmpty() )
+    return AgentInstance();
+
+  return d->fillAgentInstance( identifier );
 }
 
-QStringList AgentManager::agentCapabilities( const QString &identifier ) const
+void AgentManager::removeInstance( const AgentInstance &instance )
 {
-  return d->mManager->agentCapabilities( identifier );
+  d->mManager->removeAgentInstance( instance.identifier() );
 }
 
-QString AgentManager::createAgentInstance( const QString &identifier )
-{
-  return d->mManager->createAgentInstance( identifier );
-}
-
-void AgentManager::removeAgentInstance( const QString &identifier )
-{
-  d->mManager->removeAgentInstance( identifier );
-}
-
-QString AgentManager::agentInstanceType( const QString &identifier )
-{
-  return d->mManager->agentInstanceType( identifier );
-}
-
-QStringList AgentManager::agentInstances() const
-{
-  return d->mManager->agentInstances();
-}
-
-AgentManager::Status AgentManager::agentInstanceStatus( const QString &identifier ) const
-{
-  int status = d->mManager->agentInstanceStatus( identifier );
-  switch ( status ) {
-    case 0:
-    default:
-      return Ready;
-      break;
-    case 1:
-      return Syncing;
-      break;
-    case 2:
-      return Error;
-      break;
-  }
-}
-
-QString AgentManager::agentInstanceStatusMessage( const QString &identifier ) const
-{
-  return d->mManager->agentInstanceStatusMessage( identifier );
-}
-
-uint AgentManager::agentInstanceProgress( const QString &identifier ) const
-{
-  return d->mManager->agentInstanceProgress( identifier );
-}
-
-QString AgentManager::agentInstanceProgressMessage( const QString &identifier ) const
-{
-  return d->mManager->agentInstanceProgressMessage( identifier );
-}
-
-void AgentManager::setAgentInstanceName( const QString &identifier, const QString &name )
-{
-  d->mManager->setAgentInstanceName( identifier, name );
-}
-
-QString AgentManager::agentInstanceName( const QString &identifier ) const
-{
-  return d->mManager->agentInstanceName( identifier );
-}
-
-void AgentManager::agentInstanceConfigure( const QString &identifier, QWidget *parent )
-{
-  qlonglong winId = 0;
-  if ( parent )
-    winId = (qlonglong)( parent->window()->winId() );
-  d->mManager->agentInstanceConfigure( identifier, winId );
-}
-
-void AgentManager::agentInstanceSynchronize( const QString &identifier )
-{
-  d->mManager->agentInstanceSynchronize( identifier );
-}
-
-bool AgentManager::agentInstanceOnline(const QString & identifier)
-{
-  return d->mManager->agentInstanceOnline( identifier );
-}
-
-void AgentManager::setAgentInstanceOnline(const QString & identifier, bool state)
-{
-  d->mManager->setAgentInstanceOnline( identifier, state );
-}
-
-void AgentManager::agentInstanceSynchronizeCollectionTree(const QString & identifier)
-{
-  d->mManager->agentInstanceSynchronizeCollectionTree( identifier );
-}
-
-void AgentManager::agentInstanceSynchronizeCollection(const Collection & collection)
+void AgentManager::synchronizeCollection(const Collection & collection)
 {
   const QString resId = collection.resource();
   Q_ASSERT( !resId.isEmpty() );

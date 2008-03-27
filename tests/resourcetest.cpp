@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include <QtCore/QMetaType>
 #include <QtCore/QObject>
 
 #include <qtest_kde.h>
@@ -32,54 +33,54 @@ class ResourceTest : public QObject
   private slots:
     void testResourceManagement()
     {
-      AgentManager *manager = new AgentManager( this );
-      QSignalSpy spyAddInstance( manager, SIGNAL(agentInstanceAdded(QString)) );
+      QSignalSpy spyAddInstance( AgentManager::self(), SIGNAL(instanceAdded(AgentInstance)) );
       QVERIFY( spyAddInstance.isValid() );
-      QSignalSpy spyRemoveInstance( manager, SIGNAL(agentInstanceRemoved(QString)) );
+      QSignalSpy spyRemoveInstance( AgentManager::self(), SIGNAL(instanceRemoved(AgentInstance)) );
       QVERIFY( spyRemoveInstance.isValid() );
 
-      QString instance = manager->createAgentInstance( "non_existing_resource" );
-      QVERIFY( instance.isEmpty() );
+      AgentInstance instance = AgentManager::self()->createInstance( AgentManager::self()->type( "non_existing_resource" ) );
+      QVERIFY( !instance.isValid() );
 
-      QVERIFY( manager->agentTypes().contains( "akonadi_knut_resource" ) );
-      QCOMPARE( manager->agentCapabilities( "akonadi_knut_resource" ), QStringList( "Resource" ) );
-      AgentInstanceCreateJob *job = new AgentInstanceCreateJob( "akonadi_knut_resource" );
+      AgentType type = AgentManager::self()->type( "akonadi_knut_resource" );
+      QVERIFY( type.isValid() );
+
+      QCOMPARE( type.capabilities(), QStringList( "Resource" ) );
+
+      AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
       QVERIFY( job->exec() );
-      instance = job->instanceIdentifier();
-      QVERIFY( !instance.isEmpty() );
+      instance = job->instance();
+      QVERIFY( instance.isValid() );
 
       QTest::qWait( 2000 );
       QCOMPARE( spyAddInstance.count(), 1 );
-      QCOMPARE( spyAddInstance.first().at( 0 ).toString(), instance );
-      QVERIFY( manager->agentInstances().contains( instance ) );
+      QCOMPARE( spyAddInstance.first().at( 0 ).value<AgentInstance>(), instance );
+      QVERIFY( AgentManager::self()->instance( instance.identifier() ).isValid() );
 
-      job = new AgentInstanceCreateJob( "akonadi_knut_resource" );
+      job = new AgentInstanceCreateJob( type );
       QVERIFY( job->exec() );
-      QString instance2 = job->instanceIdentifier();
-      QVERIFY( instance != instance2 );
+      AgentInstance instance2 = job->instance();
+      QVERIFY( !( instance == instance2 ) );
       QTest::qWait( 2000 );
       QCOMPARE( spyAddInstance.count(), 2 );
 
-      manager->removeAgentInstance( instance );
-      manager->removeAgentInstance( instance2 );
+      AgentManager::self()->removeInstance( instance );
+      AgentManager::self()->removeInstance( instance2 );
       QTest::qWait( 2000 );
       QCOMPARE( spyRemoveInstance.count(), 2 );
-      QVERIFY( !manager->agentInstances().contains( instance ) );
-      QVERIFY( !manager->agentInstances().contains( instance2 ) );
-
-      delete manager;
+      QVERIFY( !AgentManager::self()->instances().contains( instance ) );
+      QVERIFY( !AgentManager::self()->instances().contains( instance2 ) );
     }
 
     void testIllegalResourceManagement()
     {
-      AgentManager *manager = new AgentManager( this );
-      QString instance = manager->createAgentInstance( "non_existing_resource" );
-      QVERIFY( instance.isEmpty() );
+      AgentInstance instance = AgentManager::self()->createInstance( AgentManager::self()->type( "non_existing_resource" ) );
+      QVERIFY( !instance.isValid() );
 
       // unique agent
-      QVERIFY( manager->agentTypes().contains( "akonadi_mailthreader_agent" ) );
-      instance = manager->createAgentInstance( "akonadi_mailthreader_agent" );
-      QVERIFY( instance.isEmpty() );
+      const AgentType type = AgentManager::self()->type( "akonadi_mailthreader_agent" );
+      QVERIFY( type.isValid() );
+      instance = AgentManager::self()->createInstance( type );
+      QVERIFY( !instance.isValid() );
     }
 };
 

@@ -44,7 +44,8 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
      */
     enum Roles
     {
-      TypeIdentifierRole = Qt::UserRole + 1,  ///< The identifier of the agent type
+      TypeRole = Qt::UserRole + 1,            ///< The agent type itself
+      IdentifierRole,                         ///< The identifier of the agent type
       DescriptionRole,                        ///< A description of the agent type
       MimeTypesRole,                          ///< A list of supported mimetypes
       CapabilitiesRole,                       ///< A list of supported capabilities
@@ -71,8 +72,8 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void agentTypeAdded( const QString& ) )
-    Q_PRIVATE_SLOT( d, void agentTypeRemoved( const QString& ) )
+    Q_PRIVATE_SLOT( d, void typeAdded( const AgentType& ) )
+    Q_PRIVATE_SLOT( d, void typeRemoved( const AgentType& ) )
 };
 
 }
