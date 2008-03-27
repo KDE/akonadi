@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#include "agenttype.h"
 #include "agenttypemodel.h"
+#include "agenttype.h"
 #include "agentmanager.h"
 
 #include <QtCore/QStringList>
