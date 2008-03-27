@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_PROTOCOL_H
-#define AKONADI_PROTOCOL_H
+#ifndef AKONADI_PROTOCOL_P_H
+#define AKONADI_PROTOCOL_P_H
 
 /**
   @file protocol_p.h Shared constants used in the communication protocol between
