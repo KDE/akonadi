@@ -131,21 +131,21 @@ void ItemModifyJob::doStart()
 
   if ( d->mItem.d_func()->mFlagsOverwritten ) {
     changes << "FLAGS.SILENT";
-    changes << "(" + ImapParser::join( d->mItem.flags(), " " ) + ')';
+    changes << '(' + ImapParser::join( d->mItem.flags(), " " ) + ')';
   } else {
     if ( !d->mItem.d_func()->mAddedFlags.isEmpty() ) {
       changes << "+FLAGS.SILENT";
-      changes << "(" + ImapParser::join( d->mItem.d_func()->mAddedFlags, " " ) + ')';
+      changes << '(' + ImapParser::join( d->mItem.d_func()->mAddedFlags, " " ) + ')';
     }
     if ( !d->mItem.d_func()->mDeletedFlags.isEmpty() ) {
       changes << "-FLAGS.SILENT";
-      changes << "(" + ImapParser::join( d->mItem.d_func()->mDeletedFlags, " " ) + ')';
+      changes << '(' + ImapParser::join( d->mItem.d_func()->mDeletedFlags, " " ) + ')';
     }
   }
 
   if ( !d->mItem.d_func()->mDeletedAttributes.isEmpty() ) {
     changes << "-PARTS.SILENT";
-    changes << "(" + ImapParser::join( d->mItem.d_func()->mDeletedAttributes, " " ) + ')';
+    changes << '(' + ImapParser::join( d->mItem.d_func()->mDeletedAttributes, " " ) + ')';
   }
 
   // nothing to do
