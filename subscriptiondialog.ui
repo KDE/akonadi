@@ -23,7 +23,7 @@
      <item>
       <widget class="QLabel" name="label_4" >
        <property name="text" >
-        <string>Search:</string>
+        <string comment="search folder">Search:</string>
        </property>
        <property name="buddy" >
         <cstring>klineedit</cstring>

@@ -54,7 +54,7 @@
          <string>minutes</string>
         </property>
         <property name="specialValueText" >
-         <string>Never</string>
+         <string comment="never check the cache">Never</string>
         </property>
        </widget>
       </item>
@@ -77,7 +77,7 @@
          <string>minutes</string>
         </property>
         <property name="specialValueText" >
-         <string>Never</string>
+         <string comment="no cache timeout">Never</string>
         </property>
        </widget>
       </item>
