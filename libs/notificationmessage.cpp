@@ -222,6 +222,8 @@ QString NotificationMessage::toString() const
     case Collection:
       rv += QLatin1String( "Collection " );
       break;
+    case InvalidType: // TODO: an error?
+      break;
   }
   rv += QString::fromLatin1( "(%1, %2) " ).arg( uid() ).arg( remoteId() );
   if ( parentDestCollection() >= 0 )
@@ -242,6 +244,8 @@ QString NotificationMessage::toString() const
       break;
     case Remove:
       rv += QLatin1String( "removed" );
+      break;
+    case InvalidOp: // TODO: an error?
       break;
   }
   if ( parentDestCollection() >= 0 )
