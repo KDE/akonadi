@@ -241,13 +241,6 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     //FIXME_API: non-virtual
     virtual QString name() const;
 
-    /**
-     * This method is called from the crash handler, don't call
-     * it manually.
-     */
-    //FIXME_API: remove me
-    void crashHandler( int signal );
-
     virtual bool isOnline() const;
     //FIXME_API: move to agentbase
     virtual void setOnline( bool state );

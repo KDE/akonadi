@@ -270,13 +270,6 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     virtual void cleanup();
 
     /**
-     * This method is called from the crash handler, don't call
-     * it manually.
-     */
-    //FIXME_API: remove crashhandler
-    void crashHandler( int signal );
-
-    /**
      * Registers the given observer for reacting on monitored or recorded changes.
      *
      * @param observer The change handler to register. No ownership transfer, i.e.

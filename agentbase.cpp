@@ -34,7 +34,6 @@
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
-#include <kcrash.h>
 #include <kdebug.h>
 #include <klocale.h>
 
@@ -50,14 +49,6 @@
 using namespace Akonadi;
 
 static AgentBase *sAgentBase = 0;
-
-void crashHandler( int signal )
-{
-  if ( sAgentBase )
-    sAgentBase->crashHandler( signal );
-
-  exit( 255 );
-}
 
 AgentBase::Observer::Observer()
 {
@@ -218,7 +209,6 @@ AgentBase::AgentBase( const QString & id )
   : d_ptr( new AgentBasePrivate( this ) )
 {
   sAgentBase = this;
-  KCrash::setEmergencySaveFunction( ::crashHandler );
   d_ptr->mId = id;
   d_ptr->init();
 }
@@ -229,7 +219,6 @@ AgentBase::AgentBase( AgentBasePrivate* d, const QString &id ) :
     d_ptr( d )
 {
   sAgentBase = this;
-  KCrash::setEmergencySaveFunction( ::crashHandler );
   d_ptr->mId = id;
   d_ptr->init();
 }
@@ -336,15 +325,6 @@ void AgentBase::cleanup()
   QFile::remove( fileName );
 
   QCoreApplication::quit();
-}
-
-void AgentBase::crashHandler( int signal )
-{
-  /**
-   * If we retrieved a SIGINT or SIGTERM we close normally
-   */
-  if ( signal == SIGINT || signal == SIGTERM )
-    quit();
 }
 
 void AgentBase::registerObserver( Observer *observer )
