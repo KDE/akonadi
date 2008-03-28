@@ -26,6 +26,7 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QList>
+#include <QtCore/QModelIndex>
 #include <QtCore/QStringList>
 
 class KJob;
@@ -69,6 +70,11 @@ class CollectionModelPrivate
     void dropResult( KJob* );
     void collectionsChanged( const Akonadi::Collection::List &cols );
 
+    QModelIndex indexForId( Collection::Id id, int column = 0 );
+    bool removeRowFromModel( int row, const QModelIndex & parent = QModelIndex() );
+    bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
+
+  private:
     void updateSupportedMimeTypes( Collection col )
     {
       QStringList l = col.contentMimeTypes();

@@ -151,36 +151,6 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     explicit CollectionModel( CollectionModelPrivate *d, QObject *parent = 0 );
 
   private:
-    /**
-      Helper function to generate a model index for a given collection reference.
-    */
-    //FIXME_API: move to private class
-    QModelIndex indexForId( Collection::Id id, int column = 0 );
-
-    /**
-      Helper method to remove a single row from the model (not from the Akonadi backend).
-      @param row The row index.
-      @param parent The parent model index.
-    */
-    //FIXME_API: move to private class
-    bool removeRowFromModel( int row, const QModelIndex & parent = QModelIndex() );
-
-    /**
-      Returns true if a new sub-collection for the given parent collection can be created.
-      @param parent The parent model index.
-    */
-    //FIXME_API: move to private class
-    bool canCreateCollection( const QModelIndex &parent ) const;
-
-    /**
-      Returns whether the specified collection supports <em>any</em> of the given mime-types.
-      @param index The model index.
-      @param contentTypes The content types to check.
-    */
-    //FIXME_API: move to private class
-    bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
-
-  private:
     Q_DECLARE_PRIVATE( CollectionModel )
 
     Q_PRIVATE_SLOT( d_func(), void startFirstListJob() )

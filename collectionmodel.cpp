@@ -184,55 +184,6 @@ QVariant CollectionModel::headerData( int section, Qt::Orientation orientation, 
   return QAbstractItemModel::headerData( section, orientation, role );
 }
 
-bool CollectionModel::removeRowFromModel( int row, const QModelIndex & parent )
-{
-  Q_D( CollectionModel );
-  QList<Collection::Id> list;
-  Collection parentCol;
-  if ( parent.isValid() ) {
-    parentCol = d->collections.value( parent.internalId() );
-    Q_ASSERT( parentCol.id() == parent.internalId() );
-    list = d->childCollections.value( parentCol.id() );
-  } else {
-    parentCol = Collection::root();
-    list = d->childCollections.value( Collection::root().id() );
-  }
-  if ( row < 0 || row  >= list.size() ) {
-    kWarning( 5250 ) << "Index out of bounds:" << row <<" parent:" << parentCol.id();
-    return false;
-  }
-
-  beginRemoveRows( parent, row, row );
-  Collection::Id delColId = list.takeAt( row );
-  foreach( Collection::Id childColId, d->childCollections[ delColId ] )
-    d->collections.remove( childColId );
-  d->collections.remove( delColId );
-  d->childCollections.remove( delColId ); // remove children of deleted collection
-  d->childCollections.insert( parentCol.id(), list ); // update children of parent
-  endRemoveRows();
-
-  return true;
-}
-
-QModelIndex CollectionModel::indexForId( Collection::Id id, int column )
-{
-  Q_D( CollectionModel );
-  if ( !d->collections.contains( id ) )
-    return QModelIndex();
-
-  Collection::Id parentId = d->collections.value( id ).parent();
-  // check if parent still exist or if this is an orphan collection
-  if ( parentId != Collection::root().id() && !d->collections.contains( parentId ) )
-    return QModelIndex();
-
-  QList<Collection::Id> list = d->childCollections.value( parentId );
-  int row = list.indexOf( id );
-
-  if ( row >= 0 )
-    return createIndex( row, column, reinterpret_cast<void*>( d->collections.value( list.at(row) ).id() ) );
-  return QModelIndex();
-}
-
 bool CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
   Q_D( CollectionModel );
@@ -284,21 +235,6 @@ Qt::DropActions CollectionModel::supportedDropActions() const
 QStringList CollectionModel::mimeTypes() const
 {
   return QStringList() << QLatin1String( "text/uri-list" );
-}
-
-bool CollectionModel::supportsContentType(const QModelIndex & index, const QStringList & contentTypes)
-{
-  Q_D( CollectionModel );
-  if ( !index.isValid() )
-    return false;
-  Collection col = d->collections.value( index.internalId() );
-  Q_ASSERT( col.isValid() );
-  QStringList ct = col.contentMimeTypes();
-  foreach ( QString a, ct ) {
-    if ( contentTypes.contains( a ) )
-      return true;
-  }
-  return false;
 }
 
 QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const

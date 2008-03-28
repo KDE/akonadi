@@ -32,7 +32,6 @@
 #include <kjob.h>
 #include <kiconloader.h>
 
-#include <QtCore/QModelIndex>
 #include <QtCore/QTimer>
 
 using namespace Akonadi;
@@ -41,11 +40,11 @@ using namespace Akonadi;
 void CollectionModelPrivate::collectionRemoved( const Akonadi::Collection &collection )
 {
   Q_Q( CollectionModel );
-  QModelIndex colIndex = q->indexForId( collection.id() );
+  QModelIndex colIndex = indexForId( collection.id() );
   if ( colIndex.isValid() ) {
     QModelIndex parentIndex = q->parent( colIndex );
     // collection is still somewhere in the hierarchy
-    q->removeRowFromModel( colIndex.row(), parentIndex );
+    removeRowFromModel( colIndex.row(), parentIndex );
   } else {
     if ( collections.contains( collection.id() ) ) {
       // collection is orphan, ie. the parent has been removed already
@@ -63,7 +62,7 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
   Collection::Id oldParentId = collections.value( collection.id() ).parent();
   Collection::Id newParentId = collection.parent();
   if ( newParentId !=  oldParentId && oldParentId >= 0 ) { // It's a move
-    q->removeRowFromModel( q->indexForId( collections[ collection.id() ].id() ).row(), q->indexForId( oldParentId ) );
+    removeRowFromModel( indexForId( collections[ collection.id() ].id() ).row(), indexForId( oldParentId ) );
     Collection newParent;
     if ( newParentId == Collection::root().id() )
       newParent = Collection::root();
@@ -111,8 +110,8 @@ void CollectionModelPrivate::collectionStatisticsChanged( Collection::Id collect
     collections[ collection ].setStatistics( statistics );
 
     Collection col = collections.value( collection );
-    QModelIndex startIndex = q->indexForId( col.id() );
-    QModelIndex endIndex = q->indexForId( col.id(), q->columnCount( q->parent( startIndex ) ) - 1 );
+    QModelIndex startIndex = indexForId( col.id() );
+    QModelIndex endIndex = indexForId( col.id(), q->columnCount( q->parent( startIndex ) ) - 1 );
     emit q->dataChanged( startIndex, endIndex );
 
     // Unread total might have changed now.
@@ -160,13 +159,13 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
       // collection already known
       col.setStatistics( collections.value( col.id() ).statistics() );
       collections[ col.id() ] = col;
-      QModelIndex startIndex = q->indexForId( col.id() );
-      QModelIndex endIndex = q->indexForId( col.id(), q->columnCount( q->parent( startIndex ) ) - 1 );
+      QModelIndex startIndex = indexForId( col.id() );
+      QModelIndex endIndex = indexForId( col.id(), q->columnCount( q->parent( startIndex ) ) - 1 );
       emit q->dataChanged( startIndex, endIndex );
       continue;
     }
     collections.insert( col.id(), col );
-    QModelIndex parentIndex = q->indexForId( col.parent() );
+    QModelIndex parentIndex = indexForId( col.parent() );
     if ( parentIndex.isValid() || col.parent() == Collection::root().id() ) {
       q->beginInsertRows( parentIndex, q->rowCount( parentIndex ), q->rowCount( parentIndex ) );
       childCollections[ col.parent() ].append( col.id() );
@@ -183,6 +182,70 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
       q->connect( csjob, SIGNAL(result(KJob*)), q, SLOT(updateDone(KJob*)) );
     }
   }
+}
+
+QModelIndex CollectionModelPrivate::indexForId( Collection::Id id, int column )
+{
+  Q_Q( CollectionModel );
+  if ( !collections.contains( id ) )
+    return QModelIndex();
+
+  Collection::Id parentId = collections.value( id ).parent();
+  // check if parent still exist or if this is an orphan collection
+  if ( parentId != Collection::root().id() && !collections.contains( parentId ) )
+    return QModelIndex();
+
+  QList<Collection::Id> list = childCollections.value( parentId );
+  int row = list.indexOf( id );
+
+  if ( row >= 0 )
+    return q->createIndex( row, column, reinterpret_cast<void*>( collections.value( list.at(row) ).id() ) );
+  return QModelIndex();
+}
+
+bool CollectionModelPrivate::removeRowFromModel( int row, const QModelIndex & parent )
+{
+  Q_Q( CollectionModel );
+  QList<Collection::Id> list;
+  Collection parentCol;
+  if ( parent.isValid() ) {
+    parentCol = collections.value( parent.internalId() );
+    Q_ASSERT( parentCol.id() == parent.internalId() );
+    list = childCollections.value( parentCol.id() );
+  } else {
+    parentCol = Collection::root();
+    list = childCollections.value( Collection::root().id() );
+  }
+  if ( row < 0 || row  >= list.size() ) {
+    kWarning( 5250 ) << "Index out of bounds:" << row <<" parent:" << parentCol.id();
+    return false;
+  }
+
+  q->beginRemoveRows( parent, row, row );
+  Collection::Id delColId = list.takeAt( row );
+  foreach( Collection::Id childColId, childCollections[ delColId ] )
+    collections.remove( childColId );
+  collections.remove( delColId );
+  childCollections.remove( delColId ); // remove children of deleted collection
+  childCollections.insert( parentCol.id(), list ); // update children of parent
+  q->endRemoveRows();
+
+  return true;
+}
+
+bool CollectionModelPrivate::supportsContentType(const QModelIndex & index, const QStringList & contentTypes)
+{
+  Q_Q( CollectionModel );
+  if ( !index.isValid() )
+    return false;
+  Collection col = collections.value( index.internalId() );
+  Q_ASSERT( col.isValid() );
+  QStringList ct = col.contentMimeTypes();
+  foreach ( QString a, ct ) {
+    if ( contentTypes.contains( a ) )
+      return true;
+  }
+  return false;
 }
 
 void CollectionModelPrivate::init()
