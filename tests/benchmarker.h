@@ -35,8 +35,8 @@ class BenchMarker : public QObject
 
   private Q_SLOTS:
     AgentInstance createAgent( const QString &name );
-    void instanceRemoved( const AgentInstance &instance );
-    void instanceStatusChanged( const AgentInstance &instance );
+    void instanceRemoved( const Akonadi::AgentInstance &instance );
+    void instanceStatusChanged( const Akonadi::AgentInstance &instance );
     void outputStats( const QString &description );
     void output( const QString &message );
     void stop();

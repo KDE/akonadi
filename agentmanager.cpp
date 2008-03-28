@@ -184,6 +184,18 @@ AgentManager::AgentManager()
            this, SLOT( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
            this, SLOT( agentInstanceNameChanged( const QString&, const QString& ) ) );
+
+  const QStringList typeIdentifiers = d->mManager->agentTypes();
+  foreach( const QString &type, typeIdentifiers ) {
+    const AgentType agentType = d->fillAgentType( type );
+    d->mTypes.insert( type, agentType );
+  }
+
+  const QStringList instanceIdentifiers = d->mManager->agentInstances();
+  foreach( const QString &instance, instanceIdentifiers ) {
+    const AgentInstance agentInstance = d->fillAgentInstance( instance );
+    d->mInstances.insert( instance, agentInstance );
+  }
 }
 
 AgentManager::~AgentManager()

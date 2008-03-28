@@ -50,10 +50,10 @@ using namespace Akonadi;
 
 BenchMarker::BenchMarker( const QString &maildir )
 {
-  connect( AgentManager::self(), SIGNAL( instanceRemoved( const AgentInstance& ) ),
-           this, SLOT( instanceRemoved( const AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceStatusChanged( const AgentInstance& ) ),
-           this, SLOT( instanceStatusChanged( const AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL( instanceRemoved( const Akonadi::AgentInstance& ) ),
+           this, SLOT( instanceRemoved( const Akonadi::AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL( instanceStatusChanged( const Akonadi::AgentInstance& ) ),
+           this, SLOT( instanceStatusChanged( const Akonadi::AgentInstance& ) ) );
 
   output( "# Description\t\tAccount name\t\tTime\n" );
 

@@ -105,28 +105,28 @@ class AKONADI_EXPORT AgentManager : public QObject
      *
      * @param type The new agent type.
      */
-    void typeAdded( const AgentType &type );
+    void typeAdded( const Akonadi::AgentType &type );
 
     /**
      * This signal is emitted whenever an agent type was removed from the system.
      *
      * @param type The removed agent type.
      */
-    void typeRemoved( const AgentType &type );
+    void typeRemoved( const Akonadi::AgentType &type );
 
     /**
      * This signal is emitted whenever a new agent instance was created.
      *
      * @param instance The new agent instance.
      */
-    void instanceAdded( const AgentInstance &instance );
+    void instanceAdded( const Akonadi::AgentInstance &instance );
 
     /**
      * This signal is emitted whenever an agent instance was removed.
      *
      * @param instance The removed agent instance.
      */
-    void instanceRemoved( const AgentInstance &instance );
+    void instanceRemoved( const Akonadi::AgentInstance &instance );
 
     /**
      * This signal is emitted whenever the status of an agent instance has
@@ -134,7 +134,7 @@ class AKONADI_EXPORT AgentManager : public QObject
      *
      * @param instance The agent instance that status has changed.
      */
-    void instanceStatusChanged( const AgentInstance &instance );
+    void instanceStatusChanged( const Akonadi::AgentInstance &instance );
 
     /**
      * This signal is emitted whenever the progress of an agent instance has
@@ -142,14 +142,14 @@ class AKONADI_EXPORT AgentManager : public QObject
      *
      * @param instance The agent instance that progress has changed.
      */
-    void instanceProgressChanged( const AgentInstance &instance );
+    void instanceProgressChanged( const Akonadi::AgentInstance &instance );
 
     /**
      * This signal is emitted whenever the name of the agent instance has changed.
      *
      * @param instance The agent instance that name has changed.
      */
-    void instanceNameChanged( const AgentInstance &instance );
+    void instanceNameChanged( const Akonadi::AgentInstance &instance );
 
   private:
     AgentManager();

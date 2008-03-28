@@ -83,9 +83,9 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void instanceAdded( const AgentInstance& ) )
-    Q_PRIVATE_SLOT( d, void instanceRemoved( const AgentInstance& ) )
-    Q_PRIVATE_SLOT( d, void instanceChanged( const AgentInstance& ) )
+    Q_PRIVATE_SLOT( d, void instanceAdded( const Akonadi::AgentInstance& ) )
+    Q_PRIVATE_SLOT( d, void instanceRemoved( const Akonadi::AgentInstance& ) )
+    Q_PRIVATE_SLOT( d, void instanceChanged( const Akonadi::AgentInstance& ) )
 };
 
 }

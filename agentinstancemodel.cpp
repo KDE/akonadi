@@ -79,16 +79,16 @@ AgentInstanceModel::AgentInstanceModel( QObject *parent )
 {
   d->mInstances = AgentManager::self()->instances();
 
-  connect( AgentManager::self(), SIGNAL( instanceAdded( const AgentInstance& ) ),
-           this, SLOT( instanceAdded( const AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceRemoved( const AgentInstance& ) ),
-           this, SLOT( instanceRemoved( const AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceStatusChanged( const AgentInstance& ) ),
-           this, SLOT( instanceChanged( const AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceProgressChanged( const AgentInstance& ) ),
-           this, SLOT( instanceChanged( const AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceNameChanged( const AgentInstance& ) ),
-           this, SLOT( instanceChanged( const AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL( instanceAdded( const Akonadi::AgentInstance& ) ),
+           this, SLOT( instanceAdded( const Akonadi::AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL( instanceRemoved( const Akonadi::AgentInstance& ) ),
+           this, SLOT( instanceRemoved( const Akonadi::AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL( instanceStatusChanged( const Akonadi::AgentInstance& ) ),
+           this, SLOT( instanceChanged( const Akonadi::AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL( instanceProgressChanged( const Akonadi::AgentInstance& ) ),
+           this, SLOT( instanceChanged( const Akonadi::AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL( instanceNameChanged( const Akonadi::AgentInstance& ) ),
+           this, SLOT( instanceChanged( const Akonadi::AgentInstance& ) ) );
 }
 
 AgentInstanceModel::~AgentInstanceModel()
