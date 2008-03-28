@@ -214,10 +214,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *     ...
      *   };
      *
-     *   int main( int argc, char **argv )
-     *   {
-     *     return AgentBase::init<MyAgent>( argc, argv );
-     *   }
+     *   AKONADI_AGENT_MAIN( MyAgent )
      *
      * @endcode
      */
@@ -376,31 +373,4 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
   }
 #endif
 
-/*
-class DefaultObserver
-{
-  virtual itemAdded
-  ..
-}
-
-class AgentBase
-{
-  AgentBase
-  {
-  }
-
-  registerObserver( Observer *ob )
-  {
-    connect(mon, ob);
-  }
-  registerObserver2( Observer2 *ob )
-  {
-    connect(mon, ob);
-  }
-}
-
-ExampleAgent : public AgentBase, public DefaultObserver
-
-ExampleResource : public ResourceBase, public DefaultObserver
-*/
 #endif
