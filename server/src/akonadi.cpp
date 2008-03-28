@@ -256,22 +256,26 @@ void AkonadiServer::startDatabaseProcess()
   if ( !mDatabaseProcess->waitForStarted() )
     qFatal( "Could not start database server '%s'", qPrintable( mysqldPath ) );
 
-  QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
-  db.setConnectOptions( QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir ) );
+  {
+    QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
+    db.setConnectOptions( QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir ) );
 
-  bool opened = false;
-  for ( int i = 0; i < 10; ++i ) {
-    opened = db.open();
-    if ( opened )
-      break;
+    bool opened = false;
+    for ( int i = 0; i < 60; ++i ) {
+      opened = db.open();
+      if ( opened )
+        break;
 
-    sleep( 1 );
-  }
+      sleep( 1 );
+    }
 
-  if ( opened ) {
-    QSqlQuery query( db );
-    if ( !query.exec( QLatin1String( "USE DATABASE akonadi" ) ) )
-      query.exec( QLatin1String( "CREATE DATABASE akonadi" ) );
+    if ( opened ) {
+      QSqlQuery query( db );
+      if ( !query.exec( QLatin1String( "USE DATABASE akonadi" ) ) )
+        query.exec( QLatin1String( "CREATE DATABASE akonadi" ) );
+
+      db.close();
+    }
   }
 
   QSqlDatabase::removeDatabase( QLatin1String( "initConnection" ) );
