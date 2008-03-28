@@ -29,9 +29,9 @@ class Entity;
 AKONADI_EXPORT uint qHash( const Akonadi::Entity& );
 
 #include <akonadi/attribute.h>
-#include <akonadi/shareddatapointer.h>
 
 #include <QtCore/QHash>
+#include <QtCore/QSharedDataPointer>
 
 #define AKONADI_DECLARE_PRIVATE( Class ) \
     Class##Private* d_func(); \
@@ -186,7 +186,7 @@ class AKONADI_EXPORT Entity
 
     //@cond PRIVATE
     Entity( EntityPrivate *dd );
-    SharedDataPointer<EntityPrivate> d_ptr;
+    QSharedDataPointer<EntityPrivate> d_ptr;
     //@endcond
 
     AKONADI_DECLARE_PRIVATE( Entity )

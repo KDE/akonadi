@@ -70,4 +70,21 @@ class EntityPrivate : public QSharedData
 
 }
 
+/**
+ * This template specialization is used to change the detach
+ * behaviour of QSharedDataPointer to match our needs.
+ */
+template <>
+Q_INLINE_TEMPLATE void QSharedDataPointer<Akonadi::EntityPrivate>::detach()
+{
+    if (d && d->ref != 1)
+    {
+        Akonadi::EntityPrivate *x = d->clone();
+        x->ref.ref();
+        if (!d->ref.deref())
+            delete d;
+        d = x;
+    }
+}
+
 #endif

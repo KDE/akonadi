@@ -199,7 +199,6 @@ install( FILES
   monitor.h
   resourcebase.h
   session.h
-  shareddatapointer.h
   standardactionmanager.h
   transactionjobs.h
   transactionsequence.h
