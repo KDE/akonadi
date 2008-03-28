@@ -19,7 +19,7 @@
 
 #include "collectioncreator.h"
 #include "collectioncreatejob.h"
-#include "collectionpathresolver.h"
+#include "collectionpathresolver_p.h"
 
 #include <QtCore/QDebug>
 #include <QtGui/QApplication>

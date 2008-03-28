@@ -19,6 +19,7 @@
 
 #include "collectionattributetest.h"
 #include "collectionattributetest.moc"
+#include "collectionpathresolver_p.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/attributefactory.h>
@@ -26,7 +27,6 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
-#include <akonadi/collectionpathresolver.h>
 #include <akonadi/control.h>
 
 #include <qtest_kde.h>

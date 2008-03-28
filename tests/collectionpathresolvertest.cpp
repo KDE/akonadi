@@ -19,8 +19,8 @@
 
 #include "collectionpathresolvertest.h"
 #include "collectionpathresolvertest.moc"
+#include "collectionpathresolver_p.h"
 
-#include <akonadi/collectionpathresolver.h>
 #include <akonadi/control.h>
 
 #include <qtest_kde.h>

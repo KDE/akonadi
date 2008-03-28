@@ -19,6 +19,7 @@
 */
 
 #include "itemdumper.h"
+#include "collectionpathresolver_p.h"
 
 #include <akonadi/item.h>
 
@@ -29,7 +30,6 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 
-#include <akonadi/collectionpathresolver.h>
 #include <akonadi/transactionjobs.h>
 #include <akonadi/itemcreatejob.h>
 

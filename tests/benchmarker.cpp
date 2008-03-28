@@ -18,6 +18,7 @@
 */
 
 #include "benchmarker.h"
+#include "collectionpathresolver_p.h"
 
 #include <QtCore/QDebug>
 #include <QtGui/QApplication>
@@ -27,7 +28,6 @@
 #include <QDBusInterface>
 
 #include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/collectionpathresolver.h>
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemdeletejob.h>

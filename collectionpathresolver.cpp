@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionpathresolver.h"
+#include "collectionpathresolver_p.h"
 
 #include "collectionfetchjob.h"
 #include "job_p.h"
@@ -173,4 +173,4 @@ void CollectionPathResolver::doStart()
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
 }
 
-#include "collectionpathresolver.moc"
+#include "collectionpathresolver_p.moc"

@@ -172,7 +172,6 @@ install( FILES
   collectionfetchjob.h
   collectionmodel.h
   collectionmodifyjob.h
-  collectionpathresolver.h
   collectionpropertiesdialog.h
   collectionpropertiespage.h
   collectionstatisticsdelegate.h
@@ -209,6 +208,7 @@ install( FILES
 
 install( FILES
   akonadiprotocolinternals_export.h
+  collectionpathresolver_p.h
   imapparser_p.h
   imapset_p.h
   notificationmessage_p.h

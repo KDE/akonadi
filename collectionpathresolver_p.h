@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONPATHRESOLVER_H
-#define AKONADI_COLLECTIONPATHRESOLVER_H
+#ifndef AKONADI_COLLECTIONPATHRESOLVER_P_H
+#define AKONADI_COLLECTIONPATHRESOLVER_P_H
 
 #include <akonadi/collection.h>
 #include <akonadi/job.h>
@@ -35,7 +35,6 @@ class CollectionPathResolverPrivate;
   collection path instead. Use this class to get a collection id
   from a collection path.
 */
-//FIXME_API: make it private class
 class AKONADI_EXPORT CollectionPathResolver : public Job
 {
   Q_OBJECT

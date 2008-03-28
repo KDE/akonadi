@@ -19,8 +19,9 @@
 
 #include "control.h"
 #include "itemappendtest.h"
+#include "collectionpathresolver_p.h"
+
 #include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionpathresolver.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemdeletejob.h>

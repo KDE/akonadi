@@ -30,7 +30,7 @@
 #include "collectionmodifyjob.h"
 #include "collectionstatistics.h"
 #include "collectionstatisticsjob.h"
-#include "collectionpathresolver.h"
+#include "collectionpathresolver_p.h"
 #include "collectionselectjob.h"
 #include "control.h"
 #include "item.h"

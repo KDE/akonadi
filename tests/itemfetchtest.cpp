@@ -19,8 +19,8 @@
 
 #include "itemfetchtest.h"
 #include "itemfetchtest.moc"
+#include "collectionpathresolver_p.h"
 
-#include <akonadi/collectionpathresolver.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
