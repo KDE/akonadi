@@ -131,12 +131,6 @@ class AKONADI_EXPORT Job : public KCompositeJob
      */
     virtual QString errorString() const;
 
-    /**
-      Returns the identifier of the session that executes this job.
-    */
-    QByteArray sessionId() const;
-    //FIXME_API: remove it and try whether something breaks
-
   Q_SIGNALS:
     /**
       Emitted directly before the job will be started.

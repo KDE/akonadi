@@ -222,13 +222,6 @@ void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
   kDebug( 5250 ) << "Unhandled response: " << tag << data;
 }
 
-QByteArray Job::sessionId() const
-{
-  if ( d_ptr->mParentJob )
-    return d_ptr->mParentJob->sessionId();
-  return d_ptr->mSession->sessionId();
-}
-
 void Job::slotResult(KJob * job)
 {
   Q_ASSERT( job == d_ptr->mCurrentSubJob );
