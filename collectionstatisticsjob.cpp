@@ -74,9 +74,9 @@ void CollectionStatisticsJob::doHandleResponse( const QByteArray & tag, const QB
       current = ImapParser::parseParenthesizedList( data, list, current );
       for ( int i = 0; i < list.count() - 1; i += 2 ) {
         if ( list[i] == "MESSAGES" ) {
-          d->mStatistics.setCount( list[i+1].toInt() );
+          d->mStatistics.setCount( list[i+1].toLongLong() );
         } else if ( list[i] == "UNSEEN" ) {
-          d->mStatistics.setUnreadCount( list[i+1].toInt() );
+          d->mStatistics.setUnreadCount( list[i+1].toLongLong() );
         } else {
           kDebug( 5250 ) << "Unknown STATUS response: " << list[i];
         }

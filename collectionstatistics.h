@@ -60,16 +60,14 @@ class AKONADI_EXPORT CollectionStatistics
       @see setCount()
       @see unreadCount()
      */
-    //FIXME_API: change to qint64
-    int count() const;
+    qint64 count() const;
 
     /**
       Sets the number of objects in this collection.
       @param count The number of objects
       @see count()
     */
-    //FIXME_API: change to qint64
-    void setCount( int count );
+    void setCount( qint64 count );
 
     /**
       Returns the number of unread messages in this collection.
@@ -77,16 +75,14 @@ class AKONADI_EXPORT CollectionStatistics
       @see setUnreadCount()
       @see count()
      */
-    //FIXME_API: change to qint64
-    int unreadCount() const;
+    qint64 unreadCount() const;
 
     /**
       Sets the number of unread messages in this collection.
       @param count The number of unread messages
       @see unreadCount()
     */
-    //FIXME_API: change to qint64
-    void setUnreadCount( int count );
+    void setUnreadCount( qint64 count );
 
     /**
       Assignment operator.

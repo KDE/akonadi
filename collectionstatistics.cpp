@@ -39,8 +39,8 @@ class CollectionStatistics::Private : public QSharedData
       unreadCount = other.count;
     }
 
-    int count;
-    int unreadCount;
+    qint64 count;
+    qint64 unreadCount;
 };
 
 
@@ -58,22 +58,22 @@ CollectionStatistics::~CollectionStatistics()
 {
 }
 
-int CollectionStatistics::count( ) const
+qint64 CollectionStatistics::count( ) const
 {
   return d->count;
 }
 
-void CollectionStatistics::setCount( int count )
+void CollectionStatistics::setCount( qint64 count )
 {
   d->count = count;
 }
 
-int CollectionStatistics::unreadCount( ) const
+qint64 CollectionStatistics::unreadCount( ) const
 {
   return d->unreadCount;
 }
 
-void CollectionStatistics::setUnreadCount( int count )
+void CollectionStatistics::setUnreadCount( qint64 count )
 {
   d->unreadCount = count;
 }
