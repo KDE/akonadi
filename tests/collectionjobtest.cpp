@@ -338,8 +338,8 @@ void CollectionJobTest::testStatistics()
   QVERIFY( statistics->exec() );
 
   CollectionStatistics s = statistics->statistics();
-  QCOMPARE( s.count(), 0 );
-  QCOMPARE( s.unreadCount(), 0 );
+  QCOMPARE( s.count(), 0ll );
+  QCOMPARE( s.unreadCount(), 0ll );
 
   // folder with attributes and content
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );;
@@ -348,8 +348,8 @@ void CollectionJobTest::testStatistics()
   QVERIFY( statistics->exec() );
 
   s = statistics->statistics();
-  QCOMPARE( s.count(), 15 );
-  QCOMPARE( s.unreadCount(), 14 );
+  QCOMPARE( s.count(), 15ll );
+  QCOMPARE( s.unreadCount(), 14ll );
 }
 
 void CollectionJobTest::testModify()
@@ -499,8 +499,8 @@ void CollectionJobTest::testUtf8CollectionName()
   CollectionStatisticsJob *statistics = new CollectionStatisticsJob( col, this );
   QVERIFY( statistics->exec() );
   CollectionStatistics s = statistics->statistics();
-  QCOMPARE( s.count(), 0 );
-  QCOMPARE( s.unreadCount(), 0 );
+  QCOMPARE( s.count(), 0ll );
+  QCOMPARE( s.unreadCount(), 0ll );
 
   // delete collection
   CollectionDeleteJob *del = new CollectionDeleteJob( col, this );

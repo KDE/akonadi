@@ -222,7 +222,6 @@ bool CollectionModelPrivate::removeRowFromModel( int row, const QModelIndex & pa
 
 bool CollectionModelPrivate::supportsContentType(const QModelIndex & index, const QStringList & contentTypes)
 {
-  Q_Q( CollectionModel );
   if ( !index.isValid() )
     return false;
   Collection col = collections.value( index.internalId() );
