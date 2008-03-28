@@ -106,12 +106,12 @@ CollectionPathResolver::CollectionPathResolver(const QString & path, QObject * p
 
   d->mPathToId = true;
   d->mPath = path;
-  if ( d->mPath.startsWith( Collection::delimiter() )  )
-    d->mPath = d->mPath.right( d->mPath.length() - Collection::delimiter().length() );
-  if ( d->mPath.endsWith( Collection::delimiter() )  )
-    d->mPath = d->mPath.left( d->mPath.length() - Collection::delimiter().length() );
+  if ( d->mPath.startsWith( pathDelimiter() )  )
+    d->mPath = d->mPath.right( d->mPath.length() - pathDelimiter().length() );
+  if ( d->mPath.endsWith( pathDelimiter() )  )
+    d->mPath = d->mPath.left( d->mPath.length() - pathDelimiter().length() );
 
-  d->mPathParts = d->mPath.split( Collection::delimiter() );
+  d->mPathParts = d->mPath.split( pathDelimiter() );
   d->mCurrentNode = Collection::root();
 }
 
@@ -142,7 +142,12 @@ QString CollectionPathResolver::path() const
 
   if ( d->mPathToId )
     return d->mPath;
-  return d->mPathParts.join( Collection::delimiter() );
+  return d->mPathParts.join( pathDelimiter() );
+}
+
+QString CollectionPathResolver::pathDelimiter()
+{
+  return QLatin1String( "/" );
 }
 
 void CollectionPathResolver::doStart()

@@ -226,11 +226,6 @@ Collection Collection::fromUrl( const KUrl &url )
   return Collection( colId );
 }
 
-QString Collection::delimiter()
-{
-  return QLatin1String( "/" );
-}
-
 Collection Collection::root()
 {
   return CollectionPrivate::root;

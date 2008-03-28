@@ -114,7 +114,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       Returns the item at given index.
     */
     Item itemForIndex( const QModelIndex &index ) const;
-    //FIXME_API: make it protected
 
     /**
       Returns the model index for the given item, with the given column
@@ -122,7 +121,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       @param column The column for the returned index
     */
     QModelIndex indexForItem( const Akonadi::Item& item, const int column ) const;
-    //FIXME_API: make it protected
 
     /* reimpl */
     bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
@@ -141,7 +139,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
       SetCollection emits this signal when the collection has changed.
      */
      void collectionChanged( const Collection &collection );
-    //FIXME_API: check whether this signal is used at all, remove otherwise
 
   protected:
 

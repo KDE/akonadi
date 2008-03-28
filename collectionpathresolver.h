@@ -71,6 +71,11 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
     */
     QString path() const;
 
+    /**
+      Returns the path delimiter for collections.
+    */
+    static QString pathDelimiter();
+
   protected:
     void doStart();
 

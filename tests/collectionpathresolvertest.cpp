@@ -48,7 +48,7 @@ void CollectionPathResolverTest::testPathResolver()
 
 void CollectionPathResolverTest::testRoot()
 {
-  CollectionPathResolver *resolver = new CollectionPathResolver( Collection::delimiter(), this );
+  CollectionPathResolver *resolver = new CollectionPathResolver( CollectionPathResolver::pathDelimiter(), this );
   QVERIFY( resolver->exec() );
   QCOMPARE( resolver->collection(), Collection::root().id() );
 

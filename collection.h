@@ -182,12 +182,6 @@ class AKONADI_EXPORT Collection : public Entity
     void setParentRemoteId( const QString &remoteParent );
 
     /**
-      Returns the collection path delimiter.
-    */
-    //FIXME_API: move it to CollectionPathResolver
-    static QString delimiter();
-
-    /**
       Returns the root collection.
     */
     static Collection root();
