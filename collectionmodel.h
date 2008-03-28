@@ -126,12 +126,10 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     */
     void fetchCollectionStatistics( bool enable );
 
-  Q_SIGNALS:
     /**
-     * emitted when the unread count of the complete model changes.
-     */
-    //FIXME_API: drop it
-    void unreadCountChanged( int );
+      Also include unsubscribed collections.
+    */
+    void includeUnsubscribed( bool include = true );
 
   protected:
     /**
@@ -139,12 +137,6 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
       @param id A collection id.
     */
     Collection collectionForId( Collection::Id id ) const;
-
-    /**
-      Also include unsubscribed collections.
-    */
-    //FIXME_API: move to public
-    void includeUnsubscribed( bool include = true );
 
     Akonadi::CollectionModelPrivate *d_ptr;
 

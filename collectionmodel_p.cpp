@@ -113,19 +113,6 @@ void CollectionModelPrivate::collectionStatisticsChanged( Collection::Id collect
     QModelIndex startIndex = indexForId( col.id() );
     QModelIndex endIndex = indexForId( col.id(), q->columnCount( q->parent( startIndex ) ) - 1 );
     emit q->dataChanged( startIndex, endIndex );
-
-    // Unread total might have changed now.
-    static int oldTotalUnread = -1;
-    int totalUnread = 0;
-    foreach ( const Collection& col, collections.values() ) {
-      int colUnread = col.statistics().unreadCount();
-      if ( colUnread > 0 )
-          totalUnread += colUnread;
-    }
-    if ( oldTotalUnread != totalUnread ) {
-        emit q->unreadCountChanged( totalUnread );
-        oldTotalUnread = totalUnread;
-    }
   }
 }
 
