@@ -33,9 +33,9 @@ static QStringList alternateExecPaths( const QString& path )
 
   pathList << path;
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) //krazy:exclude=cpp
   pathList << path + QLatin1String( ".exe" );
-#elif defined(Q_OS_MAC)
+#elif defined(Q_OS_MAC) //krazy:exclude=cpp
   pathList << path + QLatin1String( ".app/Contents/MacOS/" ) + path.section( QLatin1Char( '/' ), -1 );
 #endif
 
