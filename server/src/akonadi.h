@@ -76,6 +76,7 @@ class AKONADIPRIVATE_EXPORT AkonadiServer: public KLocalSocketServer
     QProcess *mDatabaseProcess;
     QList< QPointer<AkonadiConnection> > mConnections;
     AbstractSearchManager *mSearchManager;
+    bool mAlreadyShutdown;
 };
 
 }

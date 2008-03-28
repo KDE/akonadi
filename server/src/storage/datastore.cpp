@@ -160,6 +160,9 @@ void DataStore::open()
 
 void Akonadi::DataStore::close()
 {
+  if ( !m_dbOpened )
+    return;
+
   if ( inTransaction() ) {
     // By setting m_transactionLevel to '1' here, we skip all nested transactions
     // and rollback the outermost transaction.
@@ -170,6 +173,8 @@ void Akonadi::DataStore::close()
   m_database.close();
   m_database = QSqlDatabase();
   QSqlDatabase::removeDatabase( m_connectionName );
+
+  m_dbOpened = false;
 }
 
 bool Akonadi::DataStore::init()

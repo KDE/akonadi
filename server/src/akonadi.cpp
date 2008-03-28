@@ -54,6 +54,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     , mCacheCleaner( 0 )
     , mIntervalChecker( 0 )
     , mDatabaseProcess( 0 )
+    , mAlreadyShutdown( false )
 {
     QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL" )
@@ -130,6 +131,11 @@ AkonadiServer::~AkonadiServer()
 
 void AkonadiServer::quit()
 {
+    if ( mAlreadyShutdown )
+      return;
+
+    mAlreadyShutdown = true;
+
     if ( mCacheCleaner )
       QMetaObject::invokeMethod( mCacheCleaner, "quit", Qt::QueuedConnection );
     if ( mIntervalChecker )
