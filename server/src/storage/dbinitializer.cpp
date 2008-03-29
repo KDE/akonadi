@@ -212,7 +212,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
         statement += tableName;
         statement += QLatin1String( " (" );
         statement += columnElement.attribute( QLatin1String("columns") );
-        statement += QLatin1Char(')');
+        statement += QLatin1String(");");
         QSqlQuery query( mDatabase );
         qDebug() << "adding index" << statement;
         if ( !query.exec( statement ) ) {
@@ -308,7 +308,9 @@ QString DbInitializer::sqlType(const QString & type)
   if ( type == QLatin1String("QString") )
     return QLatin1String("TEXT");
   if (type == QLatin1String("QByteArray") )
-    return QLatin1String("LONGBLOB");
+    return ( mDatabase.driverName() == QLatin1String("QPSQL") )
+            ? QLatin1String("BYTEA")
+            : QLatin1String("LONGBLOB");
   if ( type == QLatin1String("QDateTime") )
     return QLatin1String("TIMESTAMP");
   if ( type == QLatin1String( "bool" ) )
@@ -344,21 +346,24 @@ bool DbInitializer::hasTable(const QString & tableName)
 
 bool DbInitializer::hasIndex(const QString & tableName, const QString & indexName)
 {
+  // create statement
+  QString statement;
   if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
-    QString statement = QString::fromLatin1("SHOW INDEXES FROM %1").arg( tableName );
-    QSqlQuery query( mDatabase );
-    if ( !query.exec( statement ) ) {
-      mErrorMsg = QLatin1String( "Unable to list index information." );
-      return false;
-    }
-    while ( query.next() ) {
-      // FIXME: use column name (key_name) instead of column index!!
-      if ( query.value(2) == indexName )
-        return true;
-    }
-    return false;
+    statement  = QString::fromLatin1( "SHOW INDEXES FROM %1" ).arg( tableName );
+    statement += QString::fromLatin1( " WHERE `Key_name` = '%1'" ).arg( indexName );
+  } else if( mDatabase.driverName() == QLatin1String("PSQL") ) {
+    statement  = QLatin1String( "SELECT indexname FROM pq_indexes" );
+    statement += QString::fromLatin1( " WHERE tablename = '%1'" ).arg( tableName );
+    statement += QString::fromLatin1( " AND  indexname = '%1';" ).arg( indexName );
   } else {
-    qFatal("Implement index support for your database!");
+    qFatal( "Implement index support for your database!" );
   }
-  return false;
+
+  // query it
+  QSqlQuery query( mDatabase );
+  if ( !query.exec( statement ) ) {
+    mErrorMsg = QString::fromLatin1( "Unable to list index information for table %1." ).arg( tableName );
+    return false;
+  }
+  return query.next();
 }
