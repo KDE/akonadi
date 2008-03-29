@@ -129,8 +129,8 @@ set( akonadikde_LIB_SRC
 qt4_add_dbus_interface2( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanagerinterface notificationmessage_p.h )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.AgentManager.xml )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Tracer.xml )
-qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
-qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml agentbase.h Akonadi::AgentBase )
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Agent.xml agentbase.h Akonadi::AgentBase )
 
 kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
