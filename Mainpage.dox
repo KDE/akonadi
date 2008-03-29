@@ -83,4 +83,4 @@ a new resource as easy as possible.
 
 */
 
-// DOXYGEN_REFERENCES = kdecore kdeui akonadi
+// DOXYGEN_REFERENCES = kdecore kdeui
