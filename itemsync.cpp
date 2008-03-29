@@ -96,13 +96,13 @@ ItemSync::~ItemSync()
   delete d;
 }
 
-void ItemSync::setRemoteItems( const Item::List & remoteItems )
+void ItemSync::setFullSyncItems( const Item::List &items )
 {
-  d->mRemoteItems = remoteItems;
+  d->mRemoteItems = items;
   setTotalAmount( KJob::Bytes, d->mRemoteItems.count() );
 }
 
-void ItemSync::setRemoteItems( const Item::List & changedItems, const Item::List & removedItems )
+void ItemSync::setIncrementalSyncItems( const Item::List &changedItems, const Item::List &removedItems )
 {
   d->mIncremental = true;
   d->mRemoteItems = changedItems;

@@ -30,7 +30,22 @@ namespace Akonadi {
 class Collection;
 
 /**
-  Syncs remote and local items.
+  Syncs between items known to a client (usually a resource) and Akonadi.
+
+  Remote Id must only be set by the resource storing the item, other clients
+  should leave it empty, since the resource responsible for the target collection
+  will be notified about the addition and then create a suitable remote Id.
+
+  There are two different forms of ItemSync usage:
+  - Full-Sync: meaning the client provides all valid items, i.e. any item not
+    part of the list but currently stored in Akonadi will be removed
+  - Incremental-Sync: meaning the client provides two lists, one for items which
+    are new or modified and one for items which should be removed. Any item not
+    part of either list but currently stored in Akonadi will not be changed.
+
+  @note This is provided for convenience to implement "save all" like behavior,
+        however it is strongly recommended to use single item jobs whenever
+        possible, e.g. ItemCreateJob, ItemModifyJob and ItemDeleteJob
 */
 class AKONADI_EXPORT ItemSync : public TransactionSequence
 {
@@ -51,19 +66,30 @@ class AKONADI_EXPORT ItemSync : public TransactionSequence
     ~ItemSync();
 
     /**
-      Sets the result of a full remote item listing.
-      @param remoteItems A list of items.
-      Important: All of these need a unique remote identifier.
+      Sets the full item list for the collection.
+
+      Usually the result of a full item listing.
+
+      @warning If the client using this is a resource, all items must have
+               a valid remote identifier.
+
+      @param items A list of items.
     */
-    void setRemoteItems( const Item::List &remoteItems );
+    void setFullSyncItems( const Item::List &items );
 
     /**
-      Sets the result of an incremental remote item listing.
-      @param changedItems A list of remotely added or changed items.
-      @param removedItems A list of remotely deleted items.
+      Sets the partial item lists for incrementally syncing the collection.
+
+      Usually the result of an incremental remote item listing.
+
+      @warning If the client using this is a resource, all items must have
+               a valid remote identifier.
+
+      @param changedItems A list of items added or changed by the client.
+      @param removedItems A list of items deleted by the client.
     */
-    void setRemoteItems( const Item::List &changedItems,
-                         const Item::List &removedItems );
+    void setIncrementalSyncItems( const Item::List &changedItems,
+                                  const Item::List &removedItems );
 
   protected:
     void doStart();

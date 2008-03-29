@@ -498,7 +498,7 @@ void ResourceBasePrivate::slotCollectionListDone( KJob *job )
   // TODO: error handling
 }
 
-void ResourceBase::itemsRetrieved(const Item::List & items)
+void ResourceBase::itemsRetrieved(const Item::List &items)
 {
   Q_D( ResourceBase );
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
@@ -507,10 +507,10 @@ void ResourceBase::itemsRetrieved(const Item::List & items)
   ItemSync *syncer = new ItemSync( currentCollection(), session() );
   connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
-  syncer->setRemoteItems( items );
+  syncer->setFullSyncItems( items );
 }
 
-void ResourceBase::itemsRetrievedIncremental(const Item::List & changedItems, const Item::List & removedItems)
+void ResourceBase::itemsRetrievedIncremental(const Item::List &changedItems, const Item::List &removedItems)
 {
   Q_D( ResourceBase );
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
@@ -519,7 +519,7 @@ void ResourceBase::itemsRetrievedIncremental(const Item::List & changedItems, co
   ItemSync *syncer = new ItemSync( currentCollection(), session() );
   connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
-  syncer->setRemoteItems( changedItems, removedItems );
+  syncer->setIncrementalSyncItems( changedItems, removedItems );
 }
 
 void ResourceBasePrivate::slotItemSyncDone( KJob *job )
