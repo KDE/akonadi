@@ -64,13 +64,6 @@ class AKONADI_EXPORT ItemModifyJob : public Job
     void disableRevisionCheck();
 
     /**
-      Moves the item to the given collection.
-      @param collection Path to the new collection this item is moved into.
-    */
-    //FIXME_API: remove this method in favour of an ItemMoveJob.
-    KDE_DEPRECATED void setCollection( const Collection &collection );
-
-    /**
       Resets the item dirty flag. Should only be used by resources after
       writing changes back to the corresponding server.
     */

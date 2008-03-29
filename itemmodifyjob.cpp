@@ -36,7 +36,6 @@ class Akonadi::ItemModifyJobPrivate : public JobPrivate
 {
   public:
     enum Operation {
-      Move,
       RemoteId,
       Dirty
     };
@@ -52,7 +51,6 @@ class Akonadi::ItemModifyJobPrivate : public JobPrivate
 
     QSet<int> mOperations;
     QByteArray mTag;
-    Collection mCollection;
     Item mItem;
     bool mRevCheck;
     QStringList mParts;
@@ -90,14 +88,6 @@ ItemModifyJob::~ItemModifyJob()
 {
 }
 
-void ItemModifyJob::setCollection(const Collection &collection)
-{
-  Q_D( ItemModifyJob );
-
-  d->mCollection = collection;
-  d->mOperations.insert( ItemModifyJobPrivate::Move );
-}
-
 void ItemModifyJob::setClean()
 {
   Q_D( ItemModifyJob );
@@ -112,10 +102,6 @@ void ItemModifyJob::doStart()
   QList<QByteArray> changes;
   foreach ( int op, d->mOperations ) {
     switch ( op ) {
-      case ItemModifyJobPrivate::Move:
-        changes << "COLLECTION.SILENT";
-        changes << QByteArray::number( d->mCollection.id() );
-        break;
       case ItemModifyJobPrivate::RemoteId:
         if ( !d->mItem.remoteId().isNull() ) {
           changes << "REMOTEID.SILENT";
