@@ -126,8 +126,6 @@ set( akonadikde_LIB_SRC
 )
 
 # DBus interfaces and adaptors
-qt4_generate_dbus_interface( resource.h org.kde.Akonadi.Resource.xml )
-qt4_generate_dbus_interface( agent.h org.kde.Akonadi.Agent.xml )
 qt4_add_dbus_interface2( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanagerinterface notificationmessage_p.h )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.AgentManager.xml )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Tracer.xml )
@@ -218,11 +216,11 @@ install( FILES
 )
 
 install( FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Agent.xml
   ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.AgentManager.xml
   ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.NotificationManager.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Resource.xml
   ${CMAKE_CURRENT_SOURCE_DIR}/interfaces/org.kde.Akonadi.Tracer.xml
-  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Agent.xml
-  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Resource.xml
 DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
 install( FILES

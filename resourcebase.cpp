@@ -549,5 +549,4 @@ void ResourceBase::changeProcessed()
   d->scheduler->taskDone();
 }
 
-#include "resource.moc"
 #include "resourcebase.moc"

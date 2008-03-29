@@ -23,7 +23,6 @@
 #include "agentbase.h"
 #include "agentbase_p.h"
 
-#include "agent.h"
 #include "agentadaptor.h"
 #include "monitor_p.h"
 #include "xdgbasedirs_p.h"
@@ -366,6 +365,5 @@ void AgentBase::changeProcessed()
   QTimer::singleShot( 0, d_ptr->monitor, SLOT(replayNext()) );
 }
 
-#include "agent.moc"
 #include "agentbase.moc"
 #include "agentbase_p.moc"
