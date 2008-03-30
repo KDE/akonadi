@@ -18,6 +18,7 @@
 */
 
 #include "itemmodifyjob.h"
+#include "itemmodifyjob_p.h"
 
 #include "collection.h"
 #include "entity_p.h"
@@ -28,53 +29,39 @@
 
 #include <kdebug.h>
 
-#include <QtCore/QStringList>
-
 using namespace Akonadi;
 
-class Akonadi::ItemModifyJobPrivate : public JobPrivate
+ItemModifyJobPrivate::ItemModifyJobPrivate( ItemModifyJob *parent, const Item &item )
+  : JobPrivate( parent ),
+    mItem( item ),
+    mRevCheck( true )
 {
-  public:
-    enum Operation {
-      RemoteId,
-      Dirty
-    };
+}
 
-    ItemModifyJobPrivate( ItemModifyJob *parent, const Item &item )
-      : JobPrivate( parent ),
-        mItem( item ),
-        mRevCheck( true )
-    {
-    }
+void ItemModifyJobPrivate::setClean()
+{
+  mOperations.insert( Dirty );
+}
 
-    Q_DECLARE_PUBLIC( ItemModifyJob )
+QByteArray ItemModifyJobPrivate::nextPartHeader()
+{
+  QByteArray command;
+  if ( !mParts.isEmpty() ) {
+    QString label = mParts.takeFirst();
+    mPendingData.clear();
+    ItemSerializer::serialize( mItem, label, mPendingData );
+    command += ' ' + label.toUtf8();
+    command += ".SILENT {" + QByteArray::number( mPendingData.size() ) + '}';
+    if ( mPendingData.size() > 0 )
+      command += '\n';
+    else
+      command += nextPartHeader();
+  } else {
+    command += ")\n";
+  }
+  return command;
+}
 
-    QSet<int> mOperations;
-    QByteArray mTag;
-    Item mItem;
-    bool mRevCheck;
-    QStringList mParts;
-    QByteArray mPendingData;
-
-    QByteArray nextPartHeader()
-    {
-      QByteArray command;
-      if ( !mParts.isEmpty() ) {
-        QString label = mParts.takeFirst();
-        mPendingData.clear();
-        ItemSerializer::serialize( mItem, label, mPendingData );
-        command += ' ' + label.toUtf8();
-        command += ".SILENT {" + QByteArray::number( mPendingData.size() ) + '}';
-        if ( mPendingData.size() > 0 )
-          command += '\n';
-        else
-          command += nextPartHeader();
-      } else {
-        command += ")\n";
-      }
-      return command;
-    }
-};
 
 ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
   : Job( new ItemModifyJobPrivate( this, item ), parent )
@@ -86,13 +73,6 @@ ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
 
 ItemModifyJob::~ItemModifyJob()
 {
-}
-
-void ItemModifyJob::setClean()
-{
-  Q_D( ItemModifyJob );
-
-  d->mOperations.insert( ItemModifyJobPrivate::Dirty );
 }
 
 void ItemModifyJob::doStart()

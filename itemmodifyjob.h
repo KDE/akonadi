@@ -35,6 +35,8 @@ class ItemModifyJobPrivate;
 */
 class AKONADI_EXPORT ItemModifyJob : public Job
 {
+  friend class ResourceBase;
+
   Q_OBJECT
 
   public:
@@ -62,13 +64,6 @@ class AKONADI_EXPORT ItemModifyJob : public Job
       Disable revision checking.
     */
     void disableRevisionCheck();
-
-    /**
-      Resets the item dirty flag. Should only be used by resources after
-      writing changes back to the corresponding server.
-    */
-    //FIXME_API: move to private class, make ResourceBase a friend class
-    void setClean();
 
     /**
       Returns the stored item (including the changed revision number),

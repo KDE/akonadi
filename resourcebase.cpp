@@ -34,6 +34,7 @@
 #include "akonadi/itemfetchjob.h"
 #include "akonadi/itemfetchscope.h"
 #include "akonadi/itemmodifyjob.h"
+#include "akonadi/itemmodifyjob_p.h"
 #include "akonadi/session.h"
 
 #include <kaboutdata.h>
@@ -257,7 +258,7 @@ void ResourceBase::changesCommitted(const Item& item)
 {
   Q_D( ResourceBase );
   ItemModifyJob *job = new ItemModifyJob( item, session() );
-  job->setClean();
+  job->d_func()->setClean();
   job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
   d->changeProcessed();
 }
