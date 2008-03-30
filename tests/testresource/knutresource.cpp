@@ -225,11 +225,11 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
 {
   ItemFetchJob *fetch = new ItemFetchJob( collection, session() );
   if ( !fetch->exec() ) {
-    changeStatus( Error, i18n( "Unable to fetch listing of collection '%1': %2", collection.name(), fetch->errorString() ) );
+    emit status( Broken, i18n( "Unable to fetch listing of collection '%1': %2", collection.name(), fetch->errorString() ) );
     return;
   }
 
-  changeProgress( 0 );
+  emit percent( 0 );
 
   Item::List items = fetch->items();
 
@@ -271,13 +271,13 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     item.setMimeType( "text/vcard" );
     ItemCreateJob *append = new ItemCreateJob( item, collection, session() );
     if ( !append->exec() ) {
-      changeProgress( 0 );
-      changeStatus( Error, i18n( "Appending new contact failed: %1", append->errorString() ) );
+      emit percent( 0 );
+      emit status( Broken, i18n( "Appending new contact failed: %1", append->errorString() ) );
       return;
     }
 
     counter++;
-    changeProgress( (counter * 100) / fullcount );
+    emit percent( (counter * 100) / fullcount );
   }
 
   // synchronize events
@@ -300,13 +300,13 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     item.setMimeType( "text/calendar" );
     ItemCreateJob *append = new ItemCreateJob( item, collection, session() );
     if ( !append->exec() ) {
-      changeProgress( 0 );
-      changeStatus( Error, i18n( "Appending new calendar failed: %1", append->errorString() ) );
+      emit percent( 0 );
+      emit status( Broken, i18n( "Appending new calendar failed: %1", append->errorString() ) );
       return;
     }
 
     counter++;
-    changeProgress( (counter * 100) / fullcount );
+    emit percent( (counter * 100) / fullcount );
   }
 
   itemsRetrieved();
@@ -318,19 +318,19 @@ bool KnutResource::loadData()
 
   QFile file( mDataFile );
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    changeStatus( Error, "Unable to open data file" );
+    emit status( Broken, "Unable to open data file" );
     return false;
   }
 
   QDomDocument document;
   if ( !document.setContent( &file, true ) ) {
-    changeStatus( Error, "Unable to parse data file" );
+    emit status( Broken, "Unable to parse data file" );
     return false;
   }
 
   QDomElement element = document.documentElement();
   if ( element.tagName() != QLatin1String( "knut" ) ) {
-    changeStatus( Error, "Data file has invalid format" );
+    emit status( Broken, "Data file has invalid format" );
     return false;
   }
 
