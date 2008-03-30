@@ -393,18 +393,11 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     virtual void doSetOnline( bool online );
 
-  private Q_SLOTS: //FIXME_API: accessed privately by adapter
-    /**
-     * This method is called to quit the agent.
-     *
-     * Before the application is terminated @see aboutToQuit() is called,
-     * which can be reimplemented to do some session cleanup.
-     */
-    void quit();
-
   private:
     static QString parseArguments( int, char** );
     static int init( AgentBase *r );
+
+    void quit();
 
     // dbus resource interface
     friend class ::StatusAdaptor;
