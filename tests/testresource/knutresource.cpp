@@ -309,7 +309,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     emit percent( (counter * 100) / fullcount );
   }
 
-  itemsRetrieved();
+  itemsRetrievalDone();
 }
 
 bool KnutResource::loadData()
