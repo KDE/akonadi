@@ -84,6 +84,8 @@ class ItemModel::Private
     Monitor *monitor;
     Session *session;
     ItemFetchScope mFetchScope;
+    // FIXME_API used during times when there is no monitor, remove when
+    // we have unmonitoring support and can keep the monitor around
 };
 
 void ItemModel::Private::listingDone( KJob * job )
@@ -290,12 +292,14 @@ void ItemModel::setCollection( const Collection &collection )
 
   // stop all running jobs
   d->session->clear();
+  if ( d->monitor )
+    d->mFetchScope = d->monitor->itemFetchScope(); // save until new monitor is created
   delete d->monitor;
   d->monitor = 0;
 
   // start listing job
   ItemFetchJob* job = new ItemFetchJob( collection, session() );
-  job->setFetchScope( d->mFetchScope );
+  job->setFetchScope( d->mFetchScope ); // use internal scope since monitor == 0
   connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsAdded(Akonadi::Item::List)) );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 
@@ -304,15 +308,18 @@ void ItemModel::setCollection( const Collection &collection )
 
 void ItemModel::setFetchScope( const ItemFetchScope &fetchScope )
 {
-  d->mFetchScope = fetchScope;
-
-  // update the monitor
+  // update the monitor or store the new scope until a new monitor is created
   if ( d->monitor )
     d->monitor->setItemFetchScope( d->mFetchScope );
+  else
+    d->mFetchScope = fetchScope;
 }
 
 ItemFetchScope &ItemModel::fetchScope()
 {
+  if ( d->monitor )
+    return d->monitor->itemFetchScope();
+
   return d->mFetchScope;
 }
 

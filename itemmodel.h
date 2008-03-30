@@ -106,8 +106,6 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
     void setFetchScope( const ItemFetchScope &fetchScope );
 
-    // FIXME_API: should probably not return a reference because
-    // internally there are two scopes, one for the model and one for the monitor
     ItemFetchScope &fetchScope();
 
     /**
