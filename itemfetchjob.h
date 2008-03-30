@@ -27,6 +27,7 @@ namespace Akonadi {
 
 class Collection;
 class ItemFetchJobPrivate;
+class ItemFetchScope;
 
 /**
   Fetches item data from the backend.
@@ -78,21 +79,9 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     */
     void setItem( const Item &item );
 
-    /**
-      Choose which part(s) of the item shall be fetched.
-    */
-    void addFetchPart( const QString &identifier );
-    //FIXME_API:(volker) split into fetchPayloadPart(id, enum),
-    //                   fetchAttribute(attr) and fetchAllAttributes()
-    // make part identifier a QByteArray
-    // move methods into ItemFetchScope
-    // add method setItemFetchScope(ifs) and 'ItemFetchScope &itemFetchScope() const'
+    void setFetchScope( ItemFetchScope &fetchScope );
 
-    /**
-      Fetch all item parts.
-    */
-    void fetchAllParts();
-    //FIXME_API:(volker) rename to fetchAllPayloadParts(enum)
+    ItemFetchScope &fetchScope();
 
   Q_SIGNALS:
     /**

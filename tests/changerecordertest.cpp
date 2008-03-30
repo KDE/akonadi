@@ -18,6 +18,7 @@
 */
 
 #include <akonadi/changerecorder.h>
+#include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 
 #include <QtCore/QObject>
@@ -76,7 +77,7 @@ class ChangeRecorderTest : public QObject
       rec = new ChangeRecorder();
       rec->setConfig( settings );
       rec->monitorAll();
-      rec->fetchAllParts();
+      rec->itemFetchScope().setFetchAllParts( true );
       QVERIFY( !rec->isEmpty() );
 
       QSignalSpy spy2( rec, SIGNAL(itemChanged(Akonadi::Item,QStringList)) );

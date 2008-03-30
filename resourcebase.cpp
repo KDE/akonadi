@@ -32,6 +32,7 @@
 #include "akonadi/collectionfetchjob.h"
 #include "akonadi/collectionmodifyjob.h"
 #include "akonadi/itemfetchjob.h"
+#include "akonadi/itemfetchscope.h"
 #include "akonadi/itemmodifyjob.h"
 #include "akonadi/session.h"
 
@@ -129,7 +130,7 @@ ResourceBase::ResourceBase( const QString & id )
 
   d->online = d->mSettings->value( QLatin1String( "Resource/Online" ), true ).toBool();
   if ( d->online )
-    d->monitor->fetchAllParts();
+    d->monitor->itemFetchScope().setFetchAllParts( true );
 
   d->monitor->setChangeRecordingEnabled( true );
   connect( d->monitor, SIGNAL(changesAdded()),

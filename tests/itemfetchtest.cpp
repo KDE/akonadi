@@ -24,6 +24,7 @@
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 
 using namespace Akonadi;
 
@@ -123,8 +124,8 @@ void ItemFetchTest::testMultipartFetch()
 
   // fetch all parts manually
   ItemFetchJob *fjob = new ItemFetchJob( ref, this );
-  fjob->addFetchPart( Item::PartBody );
-  fjob->addFetchPart( "EXTRA" );
+  fjob->fetchScope().addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( "EXTRA" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();
@@ -134,7 +135,7 @@ void ItemFetchTest::testMultipartFetch()
 
   // fetch single part
   fjob = new ItemFetchJob( ref, this );
-  fjob->addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( Item::PartBody );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();
@@ -144,7 +145,7 @@ void ItemFetchTest::testMultipartFetch()
 
   // fetch all parts automatically
   fjob = new ItemFetchJob( ref, this );
-  fjob->fetchAllParts();
+  fjob->fetchScope().setFetchAllParts( true );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();

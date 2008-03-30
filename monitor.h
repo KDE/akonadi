@@ -28,6 +28,7 @@ namespace Akonadi {
 
 class CollectionStatistics;
 class Item;
+class ItemFetchScope;
 class MonitorPrivate;
 class Session;
 
@@ -109,18 +110,9 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void fetchCollectionStatistics( bool enable );
 
-    /**
-      Sets the part identifier of the parts that shall be fetched for
-      items. As default no parts are fetched.
-    */
-    void addFetchPart( const QString &identifier );
-    //FIXME_API:(volker) use ItemFetchScope here
+    void setItemFetchScope( const ItemFetchScope &fetchScope );
 
-    /**
-      Fetch all item parts.
-    */
-    void fetchAllParts();
-    //FIXME_API:(volker) use ItemFetchScope here
+    ItemFetchScope &itemFetchScope();
 
   Q_SIGNALS:
     /**

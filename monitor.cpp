@@ -91,20 +91,19 @@ void Monitor::fetchCollection(bool enable)
   d->fetchCollection = enable;
 }
 
-void Monitor::addFetchPart( const QString &identifier )
-{
-  if ( !d->mFetchParts.contains( identifier ) )
-    d->mFetchParts.append( identifier );
-}
-
 void Monitor::fetchCollectionStatistics(bool enable)
 {
   d->fetchCollectionStatistics = enable;
 }
 
-void Monitor::fetchAllParts()
+void Monitor::setItemFetchScope( const ItemFetchScope &fetchScope )
 {
-  d->fetchAllParts = true;
+  d->mItemFetchScope = fetchScope;
+}
+
+ItemFetchScope &Monitor::itemFetchScope()
+{
+  return d->mItemFetchScope;
 }
 
 #undef d

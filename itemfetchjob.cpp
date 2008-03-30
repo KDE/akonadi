@@ -22,6 +22,7 @@
 #include "collection.h"
 #include "collectionselectjob.h"
 #include "imapparser_p.h"
+#include "itemfetchscope.h"
 #include "itemserializer.h"
 #include "itemserializerplugin.h"
 #include "job_p.h"
@@ -38,8 +39,7 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
 {
   public:
     ItemFetchJobPrivate( ItemFetchJob *parent )
-      : JobPrivate( parent ),
-        mFetchAllParts( false )
+      : JobPrivate( parent )
     {
     }
 
@@ -62,25 +62,22 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
     Collection mCollection;
     Item mItem;
     Item::List mItems;
-    QStringList mFetchParts;
-    bool mFetchAllParts;
+    ItemFetchScope mFetchScope;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
     QTimer* mEmitTimer;
 };
 
 void ItemFetchJobPrivate::startFetchJob()
 {
-  Q_Q( ItemFetchJob );
-
   QByteArray command = newTag();
   if ( !mItem.isValid() )
     command += " FETCH 1:*";
   else
     command += " UID FETCH " + QByteArray::number( mItem.id() );
 
-  if ( !mFetchAllParts ) {
+  if ( !mFetchScope.fetchAllParts() ) {
     command += " (UID REMOTEID FLAGS";
-    foreach ( QString part, mFetchParts ) {
+    foreach ( QString part, mFetchScope.fetchPartList() ) {
       command += ' ' + part.toUtf8();
     }
     command += ")\n";
@@ -254,19 +251,18 @@ void Akonadi::ItemFetchJob::setItem(const Item & item)
   d->mItem = item;
 }
 
-void ItemFetchJob::addFetchPart( const QString &identifier )
+void ItemFetchJob::setFetchScope( ItemFetchScope &fetchScope )
 {
   Q_D( ItemFetchJob );
 
-  if ( !d->mFetchParts.contains( identifier ) )
-    d->mFetchParts.append( identifier );
+  d->mFetchScope = fetchScope;
 }
 
-void ItemFetchJob::fetchAllParts()
+ItemFetchScope &ItemFetchJob::fetchScope()
 {
   Q_D( ItemFetchJob );
 
-  d->mFetchAllParts = true;
+  return d->mFetchScope;
 }
 
 #include "itemfetchjob.moc"

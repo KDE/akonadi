@@ -24,6 +24,7 @@
 #include <akonadi/collectionselectjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemmovejob.h>
 #include <qtest_kde.h>
@@ -141,7 +142,7 @@ void ItemStoreTest::testDataChange()
   QVERIFY( sjob->exec() );
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
-  fjob->addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( Item::PartBody );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -229,8 +230,8 @@ void ItemStoreTest::testMultiPart()
   QVERIFY( sjob->exec() );
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
-  fjob->addFetchPart( "EXTRA" );
-  fjob->addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( "EXTRA" );
+  fjob->fetchScope().addFetchPart( Item::PartBody );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -258,7 +259,7 @@ void ItemStoreTest::testPartRemove()
 
   // fetch item and its parts (should be RFC822, HEAD and EXTRA)
   ItemFetchJob *fjob = new ItemFetchJob( Item( 2 ) );
-  fjob->fetchAllParts();
+  fjob->fetchScope().setFetchAllParts( true );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -272,7 +273,7 @@ void ItemStoreTest::testPartRemove()
 
   // fetch item again (should only have RFC822 and HEAD left)
   ItemFetchJob *fjob2 = new ItemFetchJob( Item( 2 ) );
-  fjob2->fetchAllParts();
+  fjob2->fetchScope().setFetchAllParts( true );
   QVERIFY( fjob2->exec() );
   QCOMPARE( fjob2->items().count(), 1 );
   item = fjob2->items()[0];

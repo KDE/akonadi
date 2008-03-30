@@ -21,6 +21,7 @@
 
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 
 #include <QtCore/QDebug>
 #include <QtGui/QApplication>
@@ -48,9 +49,9 @@ HeadFetcher::HeadFetcher( bool multipart )
   foreach ( Collection collection, list ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     if ( multipart ) {
-      ifj->addFetchPart( Item::PartEnvelope );
+      ifj->fetchScope().addFetchPart( Item::PartEnvelope );
     } else {
-      ifj->addFetchPart( Item::PartBody );
+      ifj->fetchScope().addFetchPart( Item::PartBody );
     }
     ifj->exec();
     qDebug() << "  Listing" << ifj->items().count() << "item headers.";

@@ -97,6 +97,7 @@ set( akonadikde_LIB_SRC
   itemcopyjob.cpp
   itemdeletejob.cpp
   itemfetchjob.cpp
+  itemfetchscope.cpp
   itemmodel.cpp
   itemmonitor.cpp
   itemmovejob.cpp
@@ -184,6 +185,7 @@ install( FILES
   itemcopyjob.h
   itemdeletejob.h
   itemfetchjob.h
+  itemfetchscope.h
   itemmodel.h
   itemmodifyjob.h
   itemmonitor.h

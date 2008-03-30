@@ -24,6 +24,7 @@
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 #include <akonadi/itemdeletejob.h>
 
 #include <QtCore/QDebug>
@@ -112,7 +113,7 @@ void ItemAppendTest::testContent()
   Item ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
-  fjob->addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( Item::PartBody );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();
@@ -157,8 +158,8 @@ void ItemAppendTest::testMultipartAppend()
   Item ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( ref, this );
-  fjob->addFetchPart( Item::PartBody );
-  fjob->addFetchPart( "EXTRA" );
+  fjob->fetchScope().addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( "EXTRA" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();

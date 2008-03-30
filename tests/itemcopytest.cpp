@@ -21,6 +21,7 @@
 #include <akonadi/control.h>
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 
 #include <QtCore/QObject>
 
@@ -46,7 +47,7 @@ class ItemCopyTest : public QObject
       QVERIFY( copy->exec() );
 
       ItemFetchJob *fetch = new ItemFetchJob( target );
-      fetch->fetchAllParts();
+      fetch->fetchScope().setFetchAllParts( true );
       QVERIFY( fetch->exec() );
       QCOMPARE( fetch->items().count(), 1 );
     }

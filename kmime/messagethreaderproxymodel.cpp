@@ -19,6 +19,7 @@
 
 #include "messagethreaderproxymodel.h"
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 //#include <agents/mailthreader/mailthreaderagent.h>
 #include "messagemodel.h"
 
@@ -360,9 +361,11 @@ void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
   // TODO Assert model is a MessageModel
   QAbstractProxyModel::setSourceModel( model );
 
-  d->sourceMessageModel()->addFetchPart( MailThreaderAgent::PartPerfectParents );
-  d->sourceMessageModel()->addFetchPart( MailThreaderAgent::PartUnperfectParents );
-  d->sourceMessageModel()->addFetchPart( MailThreaderAgent::PartSubjectParents );
+  ItemFetchScope fetchScope = d->sourceMessageModel()->fetchScope();
+  fetchScope.addFetchPart( MailThreaderAgent::PartPerfectParents );
+  fetchScope.addFetchPart( MailThreaderAgent::PartUnperfectParents );
+  fetchScope.addFetchPart( MailThreaderAgent::PartSubjectParents );
+  d->sourceMessageModel()->setFetchScope( fetchScope );
 
   // TODO disconnect old model
   connect( sourceModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( slotInsertRows( QModelIndex, int, int ) ) );

@@ -20,6 +20,8 @@
 #include "itemmonitor.h"
 #include "itemmonitor_p.h"
 
+#include "itemfetchscope.h"
+
 #include <QtCore/QStringList>
 
 using namespace Akonadi;
@@ -52,17 +54,18 @@ void ItemMonitor::setItem( const Item &item )
   d->connect( d->mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
               d, SLOT( slotItemRemoved( const Akonadi::Item& ) ) );
 
-  const QStringList parts = fetchPartIdentifiers();
-  for ( int i = 0; i < parts.count(); ++i )
-    d->mMonitor->addFetchPart( parts[ i ] );
+  ItemFetchScope fetchScope;
+  foreach ( const QString part, fetchPartIdentifiers() ) {
+    fetchScope.addFetchPart( part );
+  }
 
+  d->mMonitor->setItemFetchScope( fetchScope );
   d->mMonitor->monitorItem( d->mItem );
 
   // start initial fetch of the new item
   ItemFetchJob* job = new ItemFetchJob( d->mItem );
+  job->setFetchScope( fetchScope );
 
-  for ( int i = 0; i < parts.count(); ++i )
-    job->addFetchPart(  parts[ i ] );
   d->connect( job, SIGNAL( result( KJob* ) ), d, SLOT( initialFetchDone( KJob* ) ) );
 }
 

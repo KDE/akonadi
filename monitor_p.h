@@ -26,6 +26,7 @@
 #include "collection.h"
 #include "collectionstatisticsjob.h"
 #include "item.h"
+#include "itemfetchscope.h"
 #include "job.h"
 #include "notificationmanagerinterface.h"
 
@@ -53,7 +54,7 @@ class MonitorPrivate
     QSet<QString> mimetypes;
     bool monitorAll;
     QList<QByteArray> sessions;
-    QStringList mFetchParts;
+    ItemFetchScope mItemFetchScope;
     QHash<KJob*,NotificationMessage> pendingJobs;
 
     bool isCollectionMonitored( Collection::Id collection, const QByteArray &resource ) const
@@ -98,7 +99,6 @@ class MonitorPrivate
 
     bool fetchCollection;
     bool fetchCollectionStatistics;
-    bool fetchAllParts;
 
   private:
     // collections that need a statistics update
@@ -161,8 +161,7 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
     Item item() const;
     Collection collection() const;
 
-    void addFetchPart( const QString &identifier );
-    void fetchAllParts();
+    void setFetchScope( const ItemFetchScope &fetchScope );
 
   protected:
     virtual void doStart();
@@ -177,8 +176,7 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
 
     Item mItem;
     Collection mCollection;
-    QStringList mFetchParts;
-    bool mFetchAllParts;
+    ItemFetchScope mFetchScope;
 };
 
 }

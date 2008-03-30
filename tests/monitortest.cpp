@@ -29,6 +29,7 @@
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 
 #include <QtCore/QVariant>
@@ -71,7 +72,7 @@ void MonitorTest::testMonitor()
   Monitor *monitor = new Monitor( this );
   monitor->monitorCollection( Collection::root() );
   monitor->fetchCollection( fetchCol );
-  monitor->addFetchPart( Item::PartBody );
+  monitor->itemFetchScope().addFetchPart( Item::PartBody );
 
   // monitor signals
   qRegisterMetaType<Akonadi::Collection>();

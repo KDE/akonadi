@@ -20,6 +20,7 @@
 #include "itemmodel.h"
 
 #include "itemfetchjob.h"
+#include "itemfetchscope.h"
 #include "monitor.h"
 #include "pastehelper.h"
 #include "session.h"
@@ -82,7 +83,7 @@ class ItemModel::Private
     Collection collection;
     Monitor *monitor;
     Session *session;
-    QStringList mFetchParts;
+    ItemFetchScope mFetchScope;
 };
 
 void ItemModel::Private::listingDone( KJob * job )
@@ -96,8 +97,7 @@ void ItemModel::Private::listingDone( KJob * job )
 
   // start monitor
   monitor = new Monitor( mParent );
-  foreach( QString part, mFetchParts )
-    monitor->addFetchPart( part );
+  monitor->setItemFetchScope( mFetchScope );
 
   monitor->ignoreSession( session );
   monitor->monitorCollection( collection );
@@ -295,24 +295,25 @@ void ItemModel::setCollection( const Collection &collection )
 
   // start listing job
   ItemFetchJob* job = new ItemFetchJob( collection, session() );
-  foreach( QString part, d->mFetchParts )
-    job->addFetchPart( part );
+  job->setFetchScope( d->mFetchScope );
   connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsAdded(Akonadi::Item::List)) );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 
   emit collectionChanged( collection );
 }
 
-void ItemModel::addFetchPart( const QString &identifier )
+void ItemModel::setFetchScope( const ItemFetchScope &fetchScope )
 {
-  if ( !d->mFetchParts.contains( identifier ) )
-    d->mFetchParts.append( identifier );
+  d->mFetchScope = fetchScope;
 
   // update the monitor
-  if ( d->monitor ) {
-    foreach( QString part, d->mFetchParts )
-      d->monitor->addFetchPart( part );
-  }
+  if ( d->monitor )
+    d->monitor->setItemFetchScope( d->mFetchScope );
+}
+
+ItemFetchScope &ItemModel::fetchScope()
+{
+  return d->mFetchScope;
 }
 
 Item ItemModel::itemForIndex( const QModelIndex & index ) const

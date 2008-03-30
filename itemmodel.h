@@ -29,6 +29,7 @@
 namespace Akonadi {
 
 class Collection;
+class ItemFetchScope;
 class Job;
 class Session;
 
@@ -103,12 +104,11 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     */
     virtual QStringList mimeTypes() const;
 
-    /**
-      Sets the part identifier of the parts that shall be fetched for
-      items. As default no parts are fetched.
-    */
-    void addFetchPart( const QString &identifier );
-    //FIXME_API: creating an ItemFetchScope (see ItemFetchJob)
+    void setFetchScope( const ItemFetchScope &fetchScope );
+
+    // FIXME_API: should probably not return a reference because
+    // internally there are two scopes, one for the model and one for the monitor
+    ItemFetchScope &fetchScope();
 
     /**
       Returns the item at given index.

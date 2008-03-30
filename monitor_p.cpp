@@ -36,8 +36,7 @@ MonitorPrivate::MonitorPrivate(Monitor * parent) :
   nm( 0 ),
   monitorAll( false ),
   fetchCollection( false ),
-  fetchCollectionStatistics( false ),
-  fetchAllParts( false )
+  fetchCollectionStatistics( false )
 {
 }
 
@@ -88,28 +87,22 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
 
   if ( msg.type() == NotificationMessage::Item ) {
     notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
-    if ( (!mFetchParts.isEmpty() || fetchAllParts) &&
+    if ( (!mItemFetchScope.fetchPartList().isEmpty() || mItemFetchScope.fetchAllParts()) &&
           ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move ) ) {
       Item item( msg.uid() );
       item.setRemoteId( msg.remoteId() );
 
       ItemCollectionFetchJob *job = new ItemCollectionFetchJob( item, msg.parentCollection(), q_ptr );
-      foreach( QString part, mFetchParts )
-        job->addFetchPart( part );
-      if ( fetchAllParts )
-        job->fetchAllParts();
+      job->setFetchScope( mItemFetchScope );
       pendingJobs.insert( job, msg );
       QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotItemJobFinished(KJob*)) );
       return true;
     }
-    if ( (!mFetchParts.isEmpty() || fetchAllParts) && msg.operation() == NotificationMessage::Modify ) {
+    if ( (!mItemFetchScope.fetchPartList().isEmpty() || mItemFetchScope.fetchAllParts()) && msg.operation() == NotificationMessage::Modify ) {
       Item item( msg.uid() );
       item.setRemoteId( msg.remoteId() );
       ItemFetchJob *job = new ItemFetchJob( item, q_ptr );
-      foreach( QString part, mFetchParts )
-        job->addFetchPart( part );
-      if ( fetchAllParts )
-        job->fetchAllParts();
+      job->setFetchScope( mItemFetchScope );
       pendingJobs.insert( job, msg );
       QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotItemJobFinished(KJob*)) );
       return true;
@@ -295,7 +288,7 @@ void MonitorPrivate::slotCollectionJobFinished( KJob* job )
 
 ItemCollectionFetchJob::ItemCollectionFetchJob( const Item &item, Collection::Id collectionId, QObject *parent )
   : Job( parent ),
-    mReferenceItem( item ), mCollectionId( collectionId ), mFetchAllParts( false )
+    mReferenceItem( item ), mCollectionId( collectionId )
 {
 }
 
@@ -313,6 +306,11 @@ Collection ItemCollectionFetchJob::collection() const
   return mCollection;
 }
 
+void ItemCollectionFetchJob::setFetchScope( const ItemFetchScope &fetchScope )
+{
+  mFetchScope = fetchScope;
+}
+
 void ItemCollectionFetchJob::doStart()
 {
   CollectionFetchJob *listJob = new CollectionFetchJob( Collection( mCollectionId ), CollectionFetchJob::Base, this );
@@ -320,10 +318,7 @@ void ItemCollectionFetchJob::doStart()
   addSubjob( listJob );
 
   ItemFetchJob *fetchJob = new ItemFetchJob( mReferenceItem, this );
-  foreach( QString part, mFetchParts )
-    fetchJob->addFetchPart( part );
-  if ( mFetchAllParts )
-    fetchJob->fetchAllParts();
+  fetchJob->setFetchScope( mFetchScope );
   connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( itemJobDone( KJob* ) ) );
   addSubjob( fetchJob );
 }
@@ -352,17 +347,6 @@ void ItemCollectionFetchJob::itemJobDone( KJob* job )
 
     emitResult();
   }
-}
-
-void ItemCollectionFetchJob::addFetchPart( const QString &identifier )
-{
-  if ( !mFetchParts.contains( identifier ) )
-    mFetchParts.append( identifier );
-}
-
-void ItemCollectionFetchJob::fetchAllParts()
-{
-  mFetchAllParts = true;
 }
 
 // @endcond
