@@ -319,8 +319,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * and call itemsRetrieved() or itemsRetrievedIncremental() instead.
      * @see retrieveItems()
      */
-    //FIXME_API: rename to itemsRetrievalDone()
-    void itemsRetrieved();
+    void itemsRetrievalDone();
 
     /**
      * Returns the collection that is currently synchronized.

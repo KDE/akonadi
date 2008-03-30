@@ -351,7 +351,7 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col, cons
   scheduler->taskDone();
 }
 
-void ResourceBase::itemsRetrieved()
+void ResourceBase::itemsRetrievalDone()
 {
   Q_D( ResourceBase );
   if ( d->scheduler->isEmpty() )
