@@ -28,7 +28,17 @@ namespace Akonadi {
 class ItemFetchScopePrivate : public QSharedData
 {
   public:
-    ItemFetchScopePrivate() : QSharedData(), mFetchAllParts( false ) {}
+    ItemFetchScopePrivate()
+      : mFetchAllParts( false )
+    {
+    }
+
+    ItemFetchScopePrivate( const ItemFetchScopePrivate &other )
+      : QSharedData( other )
+    {
+      mFetchParts = other.mFetchParts;
+      mFetchAllParts = other.mFetchAllParts;
+    }
 
   public:
     QSet<QString> mFetchParts;

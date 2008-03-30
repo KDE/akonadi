@@ -31,7 +31,7 @@ ItemFetchScope::ItemFetchScope()
 }
 
 ItemFetchScope::ItemFetchScope( const ItemFetchScope &other )
-  : d(other.d)
+  : d( other.d )
 {
 }
 
@@ -41,10 +41,9 @@ ItemFetchScope::~ItemFetchScope()
 
 ItemFetchScope &ItemFetchScope::operator=( const ItemFetchScope &other )
 {
-  if ( &other == this )
-    return *this;
+  if ( &other != this )
+    d = other.d;
 
-  d = other.d;
   return *this;
 }
 
@@ -55,7 +54,7 @@ void ItemFetchScope::addFetchPart( const QString &identifier )
 
 QStringList ItemFetchScope::fetchPartList() const
 {
-    return d->mFetchParts.toList();
+  return d->mFetchParts.toList();
 }
 
 void ItemFetchScope::setFetchAllParts( bool fetchAll )
