@@ -27,6 +27,7 @@ class QStringList;
 namespace Akonadi {
 
 class Item;
+class ItemFetchScope;
 
 /**
  * The class ItemMonitor is a convenience class to monitor a single item.
@@ -71,12 +72,9 @@ class AKONADI_EXPORT ItemMonitor
      */
     virtual void itemRemoved();
 
-    /**
-     * This method returns the identifiers of the parts that shall be fetched
-     * for the item.
-     */
-    //FIXME_API: change to public setter for ItemFetchScope
-    virtual QStringList fetchPartIdentifiers() const;
+    void setFetchScope( const ItemFetchScope &fetchScope );
+
+    ItemFetchScope &fetchScope();
 
   private:
     class Private;

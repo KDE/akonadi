@@ -41,30 +41,15 @@ void ItemMonitor::setItem( const Item &item )
   if ( item == d->mItem )
     return;
 
+  d->mMonitor->setItemMonitored( d->mItem, false );
+
   d->mItem = item;
 
-  // delete previous monitor
-  delete d->mMonitor;
-
-  // create new monitor
-  d->mMonitor = new Monitor();
-
-  d->connect( d->mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
-              d, SLOT( slotItemChanged( const Akonadi::Item&, const QStringList& ) ) );
-  d->connect( d->mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
-              d, SLOT( slotItemRemoved( const Akonadi::Item& ) ) );
-
-  ItemFetchScope fetchScope;
-  foreach ( const QString part, fetchPartIdentifiers() ) {
-    fetchScope.addFetchPart( part );
-  }
-
-  d->mMonitor->setItemFetchScope( fetchScope );
-  d->mMonitor->setItemMonitored( d->mItem );
+  d->mMonitor->setItemMonitored( d->mItem, true );
 
   // start initial fetch of the new item
   ItemFetchJob* job = new ItemFetchJob( d->mItem );
-  job->setFetchScope( fetchScope );
+  job->setFetchScope( fetchScope() );
 
   d->connect( job, SIGNAL( result( KJob* ) ), d, SLOT( initialFetchDone( KJob* ) ) );
 }
@@ -82,9 +67,14 @@ void ItemMonitor::itemRemoved()
 {
 }
 
-QStringList ItemMonitor::fetchPartIdentifiers() const
+void ItemMonitor::setFetchScope( const ItemFetchScope &fetchScope )
 {
-  return QStringList( Item::PartBody );
+  d->mMonitor->setItemFetchScope( fetchScope );
+}
+
+ItemFetchScope &ItemMonitor::fetchScope()
+{
+  return d->mMonitor->itemFetchScope();
 }
 
 #include "itemmonitor_p.moc"

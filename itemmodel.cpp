@@ -57,9 +57,20 @@ class ItemModel::Private
 {
   public:
     Private( ItemModel *parent )
-      : mParent( parent ), monitor( 0 )
+      : mParent( parent ), monitor( new Monitor() )
     {
       session = new Session( QByteArray("ItemModel-") + QByteArray::number( qrand() ), mParent );
+
+      monitor->ignoreSession( session );
+
+      mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item&, const QStringList& )),
+                        mParent, SLOT(itemChanged( const Akonadi::Item&, const QStringList& )) );
+      mParent->connect( monitor, SIGNAL(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& )),
+                        mParent, SLOT(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+      mParent->connect( monitor, SIGNAL(itemAdded( const Akonadi::Item&, const Akonadi::Collection& )),
+                        mParent, SLOT(itemAdded( const Akonadi::Item& )) );
+      mParent->connect( monitor, SIGNAL(itemRemoved(Akonadi::Item)),
+                        mParent, SLOT(itemRemoved(Akonadi::Item)) );
     }
 
     ~Private()
@@ -83,9 +94,6 @@ class ItemModel::Private
     Collection collection;
     Monitor *monitor;
     Session *session;
-    ItemFetchScope mFetchScope;
-    // FIXME_API used during times when there is no monitor, remove when
-    // we have unmonitoring support and can keep the monitor around
 };
 
 void ItemModel::Private::listingDone( KJob * job )
@@ -96,21 +104,6 @@ void ItemModel::Private::listingDone( KJob * job )
     // TODO
     kWarning( 5250 ) << "Item query failed:" << job->errorString();
   }
-
-  // start monitor
-  monitor = new Monitor( mParent );
-  monitor->setItemFetchScope( mFetchScope );
-
-  monitor->ignoreSession( session );
-  monitor->setCollectionMonitored( collection );
-  mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item&, const QStringList& )),
-                    mParent, SLOT(itemChanged( const Akonadi::Item&, const QStringList& )) );
-  mParent->connect( monitor, SIGNAL(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& )),
-                    mParent, SLOT(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  mParent->connect( monitor, SIGNAL(itemAdded( const Akonadi::Item&, const Akonadi::Collection& )),
-                    mParent, SLOT(itemAdded( const Akonadi::Item& )) );
-  mParent->connect( monitor, SIGNAL(itemRemoved(Akonadi::Item)),
-                    mParent, SLOT(itemRemoved(Akonadi::Item)) );
 }
 
 int ItemModel::Private::rowForItem( const Akonadi::Item& item )
@@ -280,26 +273,27 @@ QVariant ItemModel::headerData( int section, Qt::Orientation orientation, int ro
 
 void ItemModel::setCollection( const Collection &collection )
 {
-  kWarning( 5250 ) << "ItemModel::setPath()";
+  kDebug( 5250 );
   if ( d->collection == collection )
     return;
+
+  d->monitor->setCollectionMonitored( d->collection, false );
+
   d->collection = collection;
+
+  d->monitor->setCollectionMonitored( d->collection, true );
+
   // the query changed, thus everything we have already is invalid
-  foreach( ItemContainer *c, d->items )
-    delete c;
+  qDeleteAll( d->items );
   d->items.clear();
   reset();
 
   // stop all running jobs
   d->session->clear();
-  if ( d->monitor )
-    d->mFetchScope = d->monitor->itemFetchScope(); // save until new monitor is created
-  delete d->monitor;
-  d->monitor = 0;
 
   // start listing job
   ItemFetchJob* job = new ItemFetchJob( collection, session() );
-  job->setFetchScope( d->mFetchScope ); // use internal scope since monitor == 0
+  job->setFetchScope( d->monitor->itemFetchScope() );
   connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsAdded(Akonadi::Item::List)) );
   connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
 
@@ -308,19 +302,12 @@ void ItemModel::setCollection( const Collection &collection )
 
 void ItemModel::setFetchScope( const ItemFetchScope &fetchScope )
 {
-  // update the monitor or store the new scope until a new monitor is created
-  if ( d->monitor )
-    d->monitor->setItemFetchScope( d->mFetchScope );
-  else
-    d->mFetchScope = fetchScope;
+  d->monitor->setItemFetchScope( fetchScope );
 }
 
 ItemFetchScope &ItemModel::fetchScope()
 {
-  if ( d->monitor )
-    return d->monitor->itemFetchScope();
-
-  return d->mFetchScope;
+  return d->monitor->itemFetchScope();
 }
 
 Item ItemModel::itemForIndex( const QModelIndex & index ) const
