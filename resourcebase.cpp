@@ -310,9 +310,8 @@ void ResourceBase::itemRetrieved( const Item &item )
   Item i( item );
   QStringList requestedParts = d->scheduler->currentTask().itemParts;
   foreach ( QString part, requestedParts ) {
-    if ( !item.availableParts().contains( part ) ) {
+    if ( !item.loadedPayloadParts().contains( part ) ) {
       kWarning( 5250 ) << "Item does not provide part" << part;
-      i.addPart( part, QByteArray() );
     }
   }
 

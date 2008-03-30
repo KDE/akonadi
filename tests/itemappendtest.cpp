@@ -21,6 +21,7 @@
 #include "itemappendtest.h"
 #include "collectionpathresolver_p.h"
 
+#include <akonadi/attributefactory.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -147,12 +148,24 @@ void ItemAppendTest::testIllegalAppend()
   QVERIFY( !job->exec() );
 }
 
+class ExtraAttribute : public Attribute
+{
+  public:
+    QByteArray type() const { return "EXTRA"; }
+    QByteArray serialized() const { return data; }
+    void deserialize( const QByteArray &ba ) { data = ba; }
+    ExtraAttribute* clone() const { ExtraAttribute* a = new ExtraAttribute; a->data = data; return a; }
+    QByteArray data;
+};
+
 void ItemAppendTest::testMultipartAppend()
 {
+  AttributeFactory::registerAttribute<ExtraAttribute>();
+
   Item item;
   item.setMimeType( "application/octet-stream" );
-  item.addPart( Item::PartBody, "body data" );
-  item.addPart( "EXTRA", "extra data" );
+  item.setPayload<QByteArray>( "body data" );
+  item.attribute<ExtraAttribute>( Item::AddIfMissing )->data = "extra data";
   ItemCreateJob *job = new ItemCreateJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
   Item ref = job->item();
@@ -163,8 +176,9 @@ void ItemAppendTest::testMultipartAppend()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();
-  QCOMPARE( item.part( Item::PartBody ), QByteArray( "body data" ) );
-  QCOMPARE( item.part( "EXTRA" ), QByteArray( "extra data" ) );
+  QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
+  QVERIFY( item.hasAttribute<ExtraAttribute>() );
+  QCOMPARE( item.attribute<ExtraAttribute>()->data, QByteArray( "extra data" ) );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );

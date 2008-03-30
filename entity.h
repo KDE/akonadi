@@ -133,8 +133,6 @@ class AKONADI_EXPORT Entity
     */
     Attribute* attribute( const QByteArray &type ) const;
 
-    //FIXME_API: add a template based hasAttribute() const
-
     //FIXME_API: maybe better naming...
     enum CreateOption
     {
@@ -176,6 +174,15 @@ class AKONADI_EXPORT Entity
     {
       const T dummy;
       removeAttribute( dummy.type() );
+    }
+
+    /**
+      Checks if this entity has an attribute of type @p T.
+    */
+    template <typename T> inline bool hasAttribute()
+    {
+      const T dummy;
+      return hasAttribute( dummy.type() );
     }
 
   protected:

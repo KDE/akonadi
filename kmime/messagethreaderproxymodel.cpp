@@ -18,10 +18,12 @@
 */
 
 #include "messagethreaderproxymodel.h"
+#include "messagethreadingattribute.h"
+#include "messagemodel.h"
+
+#include <akonadi/attributefactory.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-//#include <agents/mailthreader/mailthreaderagent.h>
-#include "messagemodel.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QString>
@@ -29,13 +31,6 @@
 #include <QtCore/QHash>
 #include <QtCore/QTime>
 #include <QtCore/QModelIndex>
-
-// ### Awful ! Already in mailthreaderagent.cpp ; just for testing purposes, though
-namespace MailThreaderAgent {
-const QLatin1String PartPerfectParents = QLatin1String( "AkonadiMailThreaderAgentPerfectParents" );
-const QLatin1String PartUnperfectParents = QLatin1String( "AkonadiMailThreaderAgentUnperfectParents");
-const QLatin1String PartSubjectParents = QLatin1String( "AkonadiMailThreaderAgentSubjectParents" );
-}
 
 using namespace Akonadi;
 
@@ -201,38 +196,24 @@ class MessageThreaderProxyModel::Private
    */
   void readParentsFromParts( const Item& item )
   {
-    QList<Entity::Id> realPerfectParentsList = readParentsFromPart( item, MailThreaderAgent::PartPerfectParents );
-    QList<Entity::Id> realUnperfectParentsList = readParentsFromPart( item, MailThreaderAgent::PartUnperfectParents );
-    QList<Entity::Id> realSubjectParentsList = readParentsFromPart( item, MailThreaderAgent::PartSubjectParents );
+    MessageThreadingAttribute *attr = item.attribute<MessageThreadingAttribute>();
+    if ( attr ) {
+      QList<Entity::Id> realPerfectParentsList = attr->perfectParents();
+      QList<Entity::Id> realUnperfectParentsList = attr->unperfectParents();
+      QList<Entity::Id> realSubjectParentsList = attr->subjectParents();
 
-    realPerfectParentsMap[ item.id() ] = realPerfectParentsList;
-    realUnperfectParentsMap[ item.id() ] = realUnperfectParentsList;
-    realSubjectParentsMap[ item.id() ] = realSubjectParentsList;
+      realPerfectParentsMap[ item.id() ] = realPerfectParentsList;
+      realUnperfectParentsMap[ item.id() ] = realUnperfectParentsList;
+      realSubjectParentsMap[ item.id() ] = realSubjectParentsList;
 
-    // Fill in the children maps
-    foreach( Entity::Id parentId, realPerfectParentsList )
-      realPerfectChildrenMap[ parentId ] << item.id();
-    foreach( Entity::Id parentId, realUnperfectParentsList )
-      realUnperfectChildrenMap[ parentId ] << item.id();
-    foreach( Entity::Id parentId, realSubjectParentsList )
-      realSubjectChildrenMap[ parentId ] << item.id();
-  }
-
-  // Helper function for the precedent one
-  QList<Entity::Id> readParentsFromPart( const Item& item, const QLatin1String& part  )
-  {
-    bool ok = false;
-    QList<QByteArray> parentsIds = item.part( part ).split( ',' );
-    QList<Entity::Id> result;
-    Entity::Id parentId;
-    foreach( QByteArray s, parentsIds ) {
-      parentId = s.toLongLong( &ok );
-      if( !ok )
-        continue;
-      result << parentId;
+      // Fill in the children maps
+      foreach( Entity::Id parentId, realPerfectParentsList )
+        realPerfectChildrenMap[ parentId ] << item.id();
+      foreach( Entity::Id parentId, realUnperfectParentsList )
+        realUnperfectChildrenMap[ parentId ] << item.id();
+      foreach( Entity::Id parentId, realSubjectParentsList )
+        realSubjectChildrenMap[ parentId ] << item.id();
     }
-
-    return result;
   }
 
   /*
@@ -294,6 +275,7 @@ MessageThreaderProxyModel::MessageThreaderProxyModel( QObject *parent )
   : QAbstractProxyModel( parent ),
     d( new Private( this ) )
 {
+  AttributeFactory::registerAttribute<MessageThreadingAttribute>();
   setSupportedDragActions( Qt::MoveAction | Qt::CopyAction );
 }
 
@@ -361,10 +343,10 @@ void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
   // TODO Assert model is a MessageModel
   QAbstractProxyModel::setSourceModel( model );
 
+  // FIXME
+  MessageThreadingAttribute attr;
   ItemFetchScope fetchScope = d->sourceMessageModel()->fetchScope();
-  fetchScope.addFetchPart( MailThreaderAgent::PartPerfectParents );
-  fetchScope.addFetchPart( MailThreaderAgent::PartUnperfectParents );
-  fetchScope.addFetchPart( MailThreaderAgent::PartSubjectParents );
+  fetchScope.addFetchPart( QString::fromLatin1( attr.type() ) );
   d->sourceMessageModel()->setFetchScope( fetchScope );
 
   // TODO disconnect old model
