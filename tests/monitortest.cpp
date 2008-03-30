@@ -70,7 +70,7 @@ void MonitorTest::testMonitor()
   QFETCH( bool, fetchCol );
 
   Monitor *monitor = new Monitor( this );
-  monitor->monitorCollection( Collection::root() );
+  monitor->setCollectionMonitored( Collection::root() );
   monitor->fetchCollection( fetchCol );
   monitor->itemFetchScope().addFetchPart( Item::PartBody );
 

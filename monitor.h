@@ -65,32 +65,30 @@ class AKONADI_EXPORT Monitor : public QObject
       Monitoring Collection::root() monitors all collections.
       @param collection The collection to monitor.
     */
-    void monitorCollection( const Collection &collection );
+    void setCollectionMonitored( const Collection &collection, bool monitored = true );
 
     /**
       Monitors the specified item for changes.
       @param item The item to monitor.
     */
-    void monitorItem( const Item &item );
+    void setItemMonitored( const Item &item, bool monitored = true );
 
     /**
       Monitors the specified resource for changes.
       @param resource The resource identifier.
     */
-    void monitorResource( const QByteArray &resource );
+    void setResourceMonitored( const QByteArray &resource, bool monitored = true );
 
     /**
       Monitor all items matching the specified mimetype.
       @param mimetype The mimetype.
     */
-    void monitorMimeType( const QString &mimetype );
+    void setMimeTypeMonitored( const QString &mimetype, bool monitored = true );
 
     /**
       Monitor all items.
     */
-    void monitorAll();
-
-    //FIXME_API: add unmonitorCollection/Item/Resource/MimeType/All()
+    void setAllMonitored( bool monitored = true );
 
     /**
       Ignore all notifications caused by the given session.

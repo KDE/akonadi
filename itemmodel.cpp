@@ -102,7 +102,7 @@ void ItemModel::Private::listingDone( KJob * job )
   monitor->setItemFetchScope( mFetchScope );
 
   monitor->ignoreSession( session );
-  monitor->monitorCollection( collection );
+  monitor->setCollectionMonitored( collection );
   mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item&, const QStringList& )),
                     mParent, SLOT(itemChanged( const Akonadi::Item&, const QStringList& )) );
   mParent->connect( monitor, SIGNAL(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& )),

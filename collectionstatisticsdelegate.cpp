@@ -206,3 +206,5 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
   painter->drawText( textRect, option4.displayAlignment, text );
 }
+
+#include "collectionstatisticsdelegate.moc"

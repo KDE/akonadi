@@ -243,7 +243,7 @@ void CollectionModelPrivate::init()
 
   // monitor collection changes
   monitor = new Monitor();
-  monitor->monitorCollection( Collection::root() );
+  monitor->setCollectionMonitored( Collection::root() );
   monitor->fetchCollection( true );
 
   // ### Hack to get the kmail resource folder icons

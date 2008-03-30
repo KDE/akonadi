@@ -40,6 +40,23 @@ class AgentBasePrivate : public QObject
     void init();
     virtual void delayedInit();
 
+    void slotStatus( int status, const QString &message );
+    void slotPercent( int progress );
+
+    virtual void changeProcessed();
+
+    QString defaultReadyMessage() const
+    {
+      if ( mOnline )
+        return i18nc( "@info:status, application ready for work", "Ready" );
+      return i18nc( "@info:status", "Offline" );
+    }
+
+    QString defaultSyncingMessage() const
+    {
+      return i18nc( "@info:status", "Syncing..." );
+    }
+
     QString defaultErrorMessage() const
     {
       return i18nc( "@info:status", "Error!" );
@@ -50,10 +67,18 @@ class AgentBasePrivate : public QObject
 
     QString mId;
 
+    int mStatusCode;
+    QString mStatusMessage;
+
+    uint mProgress;
+    QString mProgressMessage;
+
+    bool mOnline;
+
     QSettings *mSettings;
 
-    Session *session;
-    ChangeRecorder *monitor;
+    Session *mSession;
+    ChangeRecorder *mMonitor;
 
     org::kde::Akonadi::Tracer *mTracer;
 

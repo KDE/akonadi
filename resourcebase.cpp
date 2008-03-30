@@ -56,9 +56,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
   public:
     ResourceBasePrivate( ResourceBase *parent )
       : AgentBasePrivate( parent ),
-        mStatusCode( ResourceBase::Ready ),
-        mProgress( 0 ),
-        online( true ),
         scheduler( 0 )
     {
       mStatusMessage = defaultReadyMessage();
@@ -73,6 +70,14 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       AgentBasePrivate::delayedInit();
     }
 
+    virtual void changeProcessed()
+    {
+      mMonitor->changeProcessed();
+      if ( !mMonitor->isEmpty() )
+        scheduler->scheduleChangeReplay();
+      scheduler->taskDone();
+    }
+
     void slotDeliveryDone( KJob* job );
 
     void slotCollectionSyncDone( KJob *job );
@@ -84,36 +89,13 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void slotPercent( KJob* job, unsigned long percent );
 
-    QString defaultReadyMessage() const;
-    QString defaultSyncingMessage() const;
-
     QString mName;
-
-    int mStatusCode;
-    QString mStatusMessage;
-
-    uint mProgress;
-    QString mProgressMessage;
-
-    bool online;
 
     // synchronize states
     Collection currentCollection;
 
     ResourceScheduler *scheduler;
 };
-
-QString ResourceBasePrivate::defaultReadyMessage() const
-{
-  if ( online )
-    return i18nc( "@info:status, application ready for work", "Ready" );
-  return i18nc( "@info:status", "Offline" );
-}
-
-QString ResourceBasePrivate::defaultSyncingMessage() const
-{
-  return i18nc( "@info:status", "Syncing..." );
-}
 
 ResourceBase::ResourceBase( const QString & id )
   : AgentBase( new ResourceBasePrivate( this ), id )
@@ -128,15 +110,11 @@ ResourceBase::ResourceBase( const QString & id )
 
   d->scheduler = new ResourceScheduler( this );
 
-  d->online = d->mSettings->value( QLatin1String( "Resource/Online" ), true ).toBool();
-  if ( d->online )
-    d->monitor->itemFetchScope().setFetchAllParts( true );
-
-  d->monitor->setChangeRecordingEnabled( true );
-  connect( d->monitor, SIGNAL(changesAdded()),
+  d->mMonitor->setChangeRecordingEnabled( true );
+  connect( d->mMonitor, SIGNAL(changesAdded()),
            d->scheduler, SLOT(scheduleChangeReplay()) );
 
-  d->monitor->monitorResource( d->mId.toLatin1() );
+  d->mMonitor->setResourceMonitored( d->mId.toLatin1() );
 
   connect( d->scheduler, SIGNAL(executeFullSync()),
            SLOT(retrieveCollections()) );
@@ -147,77 +125,15 @@ ResourceBase::ResourceBase( const QString & id )
   connect( d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QStringList)),
            SLOT(retrieveItem(Akonadi::Item,QStringList)) );
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
-           d->monitor, SLOT(replayNext()) );
+           d->mMonitor, SLOT(replayNext()) );
 
-  d->scheduler->setOnline( d->online );
-  if ( !d->monitor->isEmpty() )
+  d->scheduler->setOnline( d->mOnline );
+  if ( !d->mMonitor->isEmpty() )
     d->scheduler->scheduleChangeReplay();
 }
 
 ResourceBase::~ResourceBase()
 {
-}
-
-int ResourceBase::status() const
-{
-  return d_func()->mStatusCode;
-}
-
-QString ResourceBase::statusMessage() const
-{
-  return d_func()->mStatusMessage;
-}
-
-uint ResourceBase::progress() const
-{
-  return d_func()->mProgress;
-}
-
-QString ResourceBase::progressMessage() const
-{
-  return d_func()->mProgressMessage;
-}
-
-void ResourceBase::changeStatus( Status status, const QString &message )
-{
-  Q_D( ResourceBase );
-  d->mStatusMessage = message;
-  d->mStatusCode = 0;
-
-  switch ( status ) {
-    case Ready:
-      if ( d->mStatusMessage.isEmpty() )
-        d->mStatusMessage = d->defaultReadyMessage();
-
-      d->mStatusCode = 0;
-      break;
-    case Syncing:
-      if ( d->mStatusMessage.isEmpty() )
-        d->mStatusMessage = d->defaultSyncingMessage();
-
-      d->mStatusCode = 1;
-      break;
-    case Error:
-      if ( d->mStatusMessage.isEmpty() )
-        d->mStatusMessage = d->defaultErrorMessage();
-
-      d->mStatusCode = 2;
-      break;
-    default:
-      Q_ASSERT( !"Unknown status passed" );
-      break;
-  }
-
-  emit statusChanged( d->mStatusCode, d->mStatusMessage );
-}
-
-void ResourceBase::changeProgress( uint progress, const QString &message )
-{
-  Q_D( ResourceBase );
-  d->mProgress = progress;
-  d->mProgressMessage = message;
-
-  emit progressChanged( d->mProgress, d->mProgressMessage );
 }
 
 void ResourceBase::synchronize()
@@ -339,18 +255,20 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
 
 void ResourceBase::changesCommitted(const Item& item)
 {
+  Q_D( ResourceBase );
   ItemModifyJob *job = new ItemModifyJob( item, session() );
   job->setClean();
   job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
-  changeProcessed();
+  d->changeProcessed();
 }
 
 void ResourceBase::changesCommitted( const Collection &collection )
 {
+  Q_D( ResourceBase );
   CollectionModifyJob *job = new CollectionModifyJob( collection, session() );
   Q_UNUSED( job );
   //TODO: error checking
-  changeProcessed();
+  d->changeProcessed();
 }
 
 bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, const QStringList &parts )
@@ -368,21 +286,6 @@ bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, con
   d->scheduler->scheduleItemFetch( item, parts, message().createReply() );
 
   return true;
-}
-
-bool ResourceBase::isOnline() const
-{
-  return d_func()->online;
-}
-
-void ResourceBase::setOnline(bool state)
-{
-  Q_D( ResourceBase );
-  d->online = state;
-  d->mSettings->setValue( QLatin1String( "Resource/Online" ), state );
-  d->monitor->fetchCollection( state );
-  // TODO: d->monitor->fetchItemData( state );
-  d->scheduler->setOnline( state );
 }
 
 void ResourceBase::collectionsRetrieved(const Collection::List & collections)
@@ -408,14 +311,14 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob * job)
     q->error( job->errorString() );
   } else {
     if ( scheduler->currentTask().type == ResourceScheduler::SyncAll ) {
-      CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, session );
+      CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, mSession );
       list->setResource( mId );
       q->connect( list, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)) );
       return;
     }
   }
   if ( scheduler->isEmpty() )
-    q->changeStatus( ResourceBase::Ready );
+    emit q->status( AgentBase::Idle );
   scheduler->taskDone();
 }
 
@@ -441,7 +344,7 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col, cons
   QStringList contentTypes = currentCollection.contentMimeTypes();
   contentTypes.removeAll( Collection::mimeType() );
   if ( !contentTypes.isEmpty() ) {
-    q->changeStatus( ResourceBase::Syncing, i18nc( "@info:status", "Syncing collection '%1'", currentCollection.name() ) );
+    emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing collection '%1'", currentCollection.name() ) );
     q->retrieveItems( currentCollection, parts );
     return;
   }
@@ -452,7 +355,7 @@ void ResourceBase::itemsRetrieved()
 {
   Q_D( ResourceBase );
   if ( d->scheduler->isEmpty() )
-    changeStatus( Ready );
+    emit status( Idle );
   d->scheduler->taskDone();
 }
 
@@ -477,6 +380,11 @@ Item ResourceBase::currentItem() const
 void ResourceBase::synchronizeCollectionTree()
 {
   d_func()->scheduler->scheduleCollectionTreeSync();
+}
+
+void ResourceBase::doSetOnline( bool state )
+{
+  d_func()->scheduler->setOnline( state );
 }
 
 void ResourceBase::synchronizeCollection(qint64 collectionId )
@@ -529,7 +437,7 @@ void ResourceBasePrivate::slotItemSyncDone( KJob *job )
     q->error( job->errorString() );
   }
   if ( scheduler->isEmpty() )
-    q->changeStatus( ResourceBase::Ready );
+    emit q->status( AgentBase::Idle );
   scheduler->taskDone();
 }
 
@@ -537,16 +445,7 @@ void ResourceBasePrivate::slotPercent( KJob *job, unsigned long percent )
 {
   Q_Q( ResourceBase );
   Q_UNUSED( job );
-  q->changeProgress( percent );
-}
-
-void ResourceBase::changeProcessed()
-{
-  Q_D( ResourceBase );
-  d->monitor->changeProcessed();
-  if ( !d->monitor->isEmpty() )
-    d->scheduler->scheduleChangeReplay();
-  d->scheduler->taskDone();
+  emit q->percent( percent );
 }
 
 #include "resourcebase.moc"

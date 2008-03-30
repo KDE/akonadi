@@ -30,7 +30,8 @@
 
 #include <QtDBus/QDBusContext>
 
-class AgentAdaptor;
+class ControlAdaptor;
+class StatusAdaptor;
 
 namespace Akonadi {
 
@@ -198,6 +199,17 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     };
 
     /**
+     * This enum describes the different states the
+     * agent can be in.
+     */
+    enum Status
+    {
+      Idle = 0,
+      Running,
+      Broken
+    };
+
+    /**
      * Use this method in the main function of your agent
      * application to initialize your agent subclass.
      * This method also takes care of creating a KApplication
@@ -232,6 +244,32 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
         r->registerObserver( observer );
       return init( r );
     }
+
+    /**
+     * This method returns the current status code of the resource.
+     *
+     * The following return values are possible:
+     *
+     *  0 - Idle
+     *  1 - Running
+     *  2 - Broken
+     */
+    virtual int status() const;
+
+    /**
+     * This method returns an i18n'ed description of the current status code.
+     */
+    virtual QString statusMessage() const;
+
+    /**
+     * This method returns the current progress of the resource in percentage.
+     */
+    virtual int progress() const;
+
+    /**
+     * This method returns an i18n'ed description of the current progress.
+     */
+    virtual QString progressMessage() const;
 
     /**
      * This method is called whenever the resource shall show its configuration dialog
@@ -274,6 +312,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *                 the registration by calling this method with @c 0
      */
     void registerObserver( Observer *observer );
+
+  Q_SIGNALS:
+    /**
+     */
+    void status( int status, const QString &message = QString() );
+
+    /**
+     */
+    void percent( int progress );
 
   protected:
     /**
@@ -329,16 +376,22 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * required when not using change recording, it is nevertheless recommended to
      * to call this method when done with processing a change notification.
      */
-    //FIXME_API: move implementation to private class and make it virtual
-    virtual void changeProcessed();
+    void changeProcessed();
 
-    //FIXME_API: make setOnline virtual + template method
+    bool isOnline() const;
+
+    void setOnline( bool state );
 
   protected:
     //@cond PRIVATE
     AgentBasePrivate *d_ptr;
     explicit AgentBase( AgentBasePrivate* d, const QString &id );
     //@endcond
+
+    /**
+     * This method is called whenever the @p online status has changed.
+     */
+    virtual void doSetOnline( bool online );
 
   private Q_SLOTS: //FIXME_API: accessed privately by adapter
     /**
@@ -354,10 +407,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     static int init( AgentBase *r );
 
     // dbus resource interface
-    friend class ::AgentAdaptor;
+    friend class ::StatusAdaptor;
+    friend class ::ControlAdaptor;
 
     Q_DECLARE_PRIVATE( AgentBase )
     Q_PRIVATE_SLOT( d_func(), void delayedInit() )
+    Q_PRIVATE_SLOT( d_func(), void slotStatus( int, const QString& ) )
+    Q_PRIVATE_SLOT( d_func(), void slotPercent( int ) )
 };
 
 }

@@ -23,7 +23,8 @@
 #include "agentbase.h"
 #include "agentbase_p.h"
 
-#include "agentadaptor.h"
+#include "controladaptor.h"
+#include "statusadaptor.h"
 #include "monitor_p.h"
 #include "xdgbasedirs_p.h"
 
@@ -63,7 +64,7 @@ void AgentBase::Observer::itemAdded( const Item &item, const Collection &collect
   Q_UNUSED( item );
   Q_UNUSED( collection );
   if ( sAgentBase != 0 )
-    sAgentBase->changeProcessed();
+    sAgentBase->d_ptr->changeProcessed();
 }
 
 void AgentBase::Observer::itemChanged( const Item &item, const QStringList &partIdentifiers )
@@ -72,7 +73,7 @@ void AgentBase::Observer::itemChanged( const Item &item, const QStringList &part
   Q_UNUSED( item );
   Q_UNUSED( partIdentifiers );
   if ( sAgentBase != 0 )
-    sAgentBase->changeProcessed();
+    sAgentBase->d_ptr->changeProcessed();
 }
 
 void AgentBase::Observer::itemRemoved( const Item &item )
@@ -80,7 +81,7 @@ void AgentBase::Observer::itemRemoved( const Item &item )
   kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
   if ( sAgentBase != 0 )
-    sAgentBase->changeProcessed();
+    sAgentBase->d_ptr->changeProcessed();
 }
 
 void AgentBase::Observer::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
@@ -89,7 +90,7 @@ void AgentBase::Observer::collectionAdded( const Akonadi::Collection &collection
   Q_UNUSED( collection );
   Q_UNUSED( parent );
   if ( sAgentBase != 0 )
-    sAgentBase->changeProcessed();
+    sAgentBase->d_ptr->changeProcessed();
 }
 
 void AgentBase::Observer::collectionChanged( const Collection &collection )
@@ -97,7 +98,7 @@ void AgentBase::Observer::collectionChanged( const Collection &collection )
   kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( collection );
   if ( sAgentBase != 0 )
-    sAgentBase->changeProcessed();
+    sAgentBase->d_ptr->changeProcessed();
 }
 
 void AgentBase::Observer::collectionRemoved( const Collection &collection )
@@ -105,13 +106,16 @@ void AgentBase::Observer::collectionRemoved( const Collection &collection )
   kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( collection );
   if ( sAgentBase != 0 )
-    sAgentBase->changeProcessed();
+    sAgentBase->d_ptr->changeProcessed();
 }
 
 //@cond PRIVATE
 
 AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
   : q_ptr( parent ),
+    mStatusCode( AgentBase::Idle ),
+    mProgress( 0 ),
+    mOnline( true ),
     mSettings( 0 ),
     mObserver( 0 )
 {
@@ -119,7 +123,7 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
 
 AgentBasePrivate::~AgentBasePrivate()
 {
-  monitor->setConfig( 0 );
+  mMonitor->setConfig( 0 );
   delete mSettings;
 }
 
@@ -129,31 +133,39 @@ void AgentBasePrivate::init()
   mTracer = new org::kde::Akonadi::Tracer( QLatin1String( "org.kde.Akonadi" ), QLatin1String( "/tracing" ),
                                            QDBusConnection::sessionBus(), q );
 
-  new AgentAdaptor( q );
+  new ControlAdaptor( q );
+  new StatusAdaptor( q );
   if ( !QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
     q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
 
   mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
 
-  session = new Session( mId.toLatin1(), q );
-  monitor = new ChangeRecorder( q );
-  monitor->ignoreSession( session );
-  monitor->setConfig( mSettings );
+  mSession = new Session( mId.toLatin1(), q );
+  mMonitor = new ChangeRecorder( q );
+  mMonitor->ignoreSession( mSession );
+  mMonitor->setConfig( mSettings );
 
-  connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+  mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
+  if ( mOnline )
+    mMonitor->itemFetchScope().setFetchAllParts( true );
+
+  connect( mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
+  connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
            SLOT( itemChanged( const Akonadi::Item&, const QStringList& ) ) );
-  connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+  connect( mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
            SLOT( itemRemoved( const Akonadi::Item& ) ) );
-  connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
+  connect( mMonitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
            SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
+  connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
            SLOT( collectionChanged( const Akonadi::Collection& ) ) );
-  connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+  connect( mMonitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
            SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
 
-  QTimer::singleShot( 0, q, SLOT(delayedInit()) );
+  connect( q, SIGNAL( status( int, QString ) ), q, SLOT( slotStatus( int, QString ) ) );
+  connect( q, SIGNAL( percent( int ) ), q, SLOT( slotPercent( int ) ) );
+
+  QTimer::singleShot( 0, q, SLOT( delayedInit() ) );
 }
 
 void AgentBasePrivate::delayedInit()
@@ -203,6 +215,48 @@ void AgentBasePrivate::collectionRemoved( const Akonadi::Collection &collection 
   if ( mObserver != 0 )
     mObserver->collectionRemoved( collection );
 }
+
+void AgentBasePrivate::changeProcessed()
+{
+  mMonitor->changeProcessed();
+  QTimer::singleShot( 0, mMonitor, SLOT( replayNext() ) );
+}
+
+void AgentBasePrivate::slotStatus( int status, const QString &message )
+{
+  mStatusMessage = message;
+  mStatusCode = 0;
+
+  switch ( status ) {
+    case AgentBase::Idle:
+      if ( mStatusMessage.isEmpty() )
+        mStatusMessage = defaultReadyMessage();
+
+      mStatusCode = 0;
+      break;
+    case AgentBase::Running:
+      if ( mStatusMessage.isEmpty() )
+        mStatusMessage = defaultSyncingMessage();
+
+      mStatusCode = 1;
+      break;
+    case AgentBase::Broken:
+      if ( mStatusMessage.isEmpty() )
+        mStatusMessage = defaultErrorMessage();
+
+      mStatusCode = 2;
+      break;
+    default:
+      Q_ASSERT( !"Unknown status passed" );
+      break;
+  }
+}
+
+void AgentBasePrivate::slotPercent( int progress )
+{
+  mProgress = progress;
+}
+
 
 AgentBase::AgentBase( const QString & id )
   : d_ptr( new AgentBasePrivate( this ) )
@@ -267,6 +321,55 @@ int AgentBase::init( AgentBase *r )
   return rv;
 }
 
+int AgentBase::status() const
+{
+  Q_D( const AgentBase );
+
+  return d->mStatusCode;
+}
+
+QString AgentBase::statusMessage() const
+{
+  Q_D( const AgentBase );
+
+  return d->mStatusMessage;
+}
+
+int AgentBase::progress() const
+{
+  Q_D( const AgentBase );
+
+  return d->mProgress;
+}
+
+QString AgentBase::progressMessage() const
+{
+  Q_D( const AgentBase );
+
+  return d->mProgressMessage;
+}
+
+bool AgentBase::isOnline() const
+{
+  Q_D( const AgentBase );
+
+  return d->mOnline;
+}
+
+void AgentBase::setOnline( bool state )
+{
+  Q_D( AgentBase );
+  d->mOnline = state;
+  d->mSettings->setValue( QLatin1String( "Agent/Online" ), state );
+  d->mMonitor->fetchCollection( state );
+  // TODO: d->monitor->fetchItemData( state );
+}
+
+void AgentBase::doSetOnline( bool online )
+{
+  Q_UNUSED( online );
+}
+
 void AgentBase::configure( WId windowId )
 {
   Q_UNUSED( windowId );
@@ -295,7 +398,7 @@ void AgentBase::quit()
   aboutToQuit();
 
   if ( d->mSettings ) {
-    d->monitor->setConfig( 0 );
+    d->mMonitor->setConfig( 0 );
     d->mSettings->sync();
   }
 
@@ -314,7 +417,7 @@ void AgentBase::cleanup()
   /**
    * First destroy the settings object...
    */
-  d->monitor->setConfig( 0 );
+  d->mMonitor->setConfig( 0 );
   delete d->mSettings;
   d->mSettings = 0;
 
@@ -339,7 +442,7 @@ QString AgentBase::identifier() const
 
 Session* AgentBase::session() const
 {
-  return d_ptr->session;
+  return d_ptr->mSession;
 }
 
 void AgentBase::warning( const QString& message )
@@ -354,15 +457,15 @@ void AgentBase::error( const QString& message )
   d->mTracer->error( QString::fromLatin1( "AgentBase(%1)" ).arg( d->mId ), message );
 }
 
-ChangeRecorder * AgentBase::changeRecorder() const
-{
-  return d_ptr->monitor;
-}
-
 void AgentBase::changeProcessed()
 {
-  d_ptr->monitor->changeProcessed();
-  QTimer::singleShot( 0, d_ptr->monitor, SLOT(replayNext()) );
+  Q_D( AgentBase );
+  d->changeProcessed();
+}
+
+ChangeRecorder * AgentBase::changeRecorder() const
+{
+  return d_ptr->mMonitor;
 }
 
 #include "agentbase.moc"

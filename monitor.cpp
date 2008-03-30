@@ -56,29 +56,41 @@ Monitor::~Monitor()
   delete d;
 }
 
-void Monitor::monitorCollection( const Collection &collection )
+void Monitor::setCollectionMonitored( const Collection &collection, bool monitored )
 {
-  d->collections << collection;
+  if ( monitored )
+    d->collections << collection;
+  else
+    d->collections.removeAll( collection );
 }
 
-void Monitor::monitorItem( const Item & item )
+void Monitor::setItemMonitored( const Item & item, bool monitored )
 {
-  d->items.insert( item.id() );
+  if ( monitored )
+    d->items.insert( item.id() );
+  else
+    d->items.remove( item.id() );
 }
 
-void Monitor::monitorResource(const QByteArray & resource)
+void Monitor::setResourceMonitored( const QByteArray & resource, bool monitored )
 {
-  d->resources.insert( resource );
+  if ( monitored )
+    d->resources.insert( resource );
+  else
+    d->resources.remove( resource );
 }
 
-void Monitor::monitorMimeType(const QString & mimetype)
+void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
 {
-  d->mimetypes.insert( mimetype );
+  if ( monitored )
+    d->mimetypes.insert( mimetype );
+  else
+    d->mimetypes.remove( mimetype );
 }
 
-void Akonadi::Monitor::monitorAll()
+void Akonadi::Monitor::setAllMonitored( bool monitored )
 {
-  d->monitorAll = true;
+  d->monitorAll = monitored;
 }
 
 void Monitor::ignoreSession(Session * session)

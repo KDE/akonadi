@@ -60,7 +60,7 @@ void ItemMonitor::setItem( const Item &item )
   }
 
   d->mMonitor->setItemFetchScope( fetchScope );
-  d->mMonitor->monitorItem( d->mItem );
+  d->mMonitor->setItemMonitored( d->mItem );
 
   // start initial fetch of the new item
   ItemFetchJob* job = new ItemFetchJob( d->mItem );
