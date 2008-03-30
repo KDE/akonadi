@@ -27,7 +27,8 @@ qt4_add_dbus_adaptor( control_SRCS ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Ak
 qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.ControlManager.xml controlmanager.h ControlManager )
 qt4_add_dbus_interfaces( control_SRCS
   ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Tracer.xml
-  ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Agent.xml
+  ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Agent.Control.xml
+  ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Agent.Status.xml
   ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Resource.xml
   ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Server.xml
 )

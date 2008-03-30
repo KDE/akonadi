@@ -262,8 +262,8 @@ class AgentManager : public QObject
   private Q_SLOTS:
     void updatePluginInfos();
     void serviceOwnerChanged( const QString&, const QString&, const QString& );
-    void resourceStatusChanged( int status, const QString &message );
-    void resourceProgressChanged( uint progress, const QString &message );
+    void status( int status, const QString &message );
+    void percent( int progress );
     void resourceNameChanged( const QString& );
 
   private:
@@ -295,7 +295,7 @@ class AgentManager : public QObject
      */
     void readPluginInfos( const QDir &directory );
 
-    bool checkAgentInterface( const QString &identifier ) const;
+    bool checkAgentInterfaces( const QString &identifier, const QString &method ) const;
     bool checkInstance( const QString &identifier ) const;
     bool checkResourceInterface( const QString &identifier, const QString &method ) const;
     bool checkAgentExists( const QString &identifier ) const;

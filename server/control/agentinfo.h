@@ -20,7 +20,8 @@
 #ifndef AKONADI_AGENTINFO_H
 #define AKONADI_AGENTINFO_H
 
-#include "agentinterface.h"
+#include "controlinterface.h"
+#include "statusinterface.h"
 #include "resourceinterface.h"
 #include "tracerinterface.h"
 
@@ -65,7 +66,8 @@ class AgentInstanceInfo
     QString identifier;
     QString agentType;
     Akonadi::ProcessControl *controller;
-    org::kde::Akonadi::Agent *agentInterface;
+    org::kde::Akonadi::Agent::Control *agentControlInterface;
+    org::kde::Akonadi::Agent::Status *agentStatusInterface;
     org::kde::Akonadi::Resource *resourceInterface;
 };
 

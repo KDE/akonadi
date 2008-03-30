@@ -84,7 +84,8 @@ void AgentInfo::save( QSettings *config ) const
 
 AgentInstanceInfo::AgentInstanceInfo() :
     controller( 0 ),
-    agentInterface( 0 ),
+    agentControlInterface( 0 ),
+    agentStatusInterface( 0 ),
     resourceInterface( 0 )
 {
 }
