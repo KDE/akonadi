@@ -453,7 +453,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
     mAgentInstances[ identifier ].agentControlInterface = 0;
     mAgentInstances[ identifier ].agentStatusInterface = 0;
 
-    org::kde::Akonadi::Agent::Control *agentControlIface = new org::kde::Akonadi::Agent::Control( "org.kde.Akonadi.Agent.Control" + identifier,
+    org::kde::Akonadi::Agent::Control *agentControlIface = new org::kde::Akonadi::Agent::Control( "org.kde.Akonadi.Agent." + identifier,
         "/", QDBusConnection::sessionBus(), this );
     if ( !agentControlIface || !agentControlIface->isValid() ) {
       mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
@@ -466,7 +466,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
     mAgentInstances[ identifier ].agentControlInterface = agentControlIface;
 
 
-    org::kde::Akonadi::Agent::Status *agentStatusIface = new org::kde::Akonadi::Agent::Status( "org.kde.Akonadi.Agent.Status" + identifier,
+    org::kde::Akonadi::Agent::Status *agentStatusIface = new org::kde::Akonadi::Agent::Status( "org.kde.Akonadi.Agent." + identifier,
         "/", QDBusConnection::sessionBus(), this );
     if ( !agentStatusIface || !agentStatusIface->isValid() ) {
       mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
