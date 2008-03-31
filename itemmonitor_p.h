@@ -52,7 +52,7 @@ class ItemMonitor::Private : public QObject
     Monitor *mMonitor;
 
   private Q_SLOTS:
-    void slotItemChanged( const Akonadi::Item &item, const QStringList& )
+    void slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
     {
       mParent->itemChanged( item );
     }

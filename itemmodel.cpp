@@ -79,7 +79,7 @@ class ItemModel::Private
     }
 
     void listingDone( KJob* );
-    void itemChanged( const Akonadi::Item&, const QStringList& );
+    void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& );
     void itemsAdded( const Akonadi::Item::List &list );
     void itemAdded( const Akonadi::Item &item );
     void itemMoved( const Akonadi::Item&, const Akonadi::Collection& src, const Akonadi::Collection& dst );
@@ -133,7 +133,7 @@ int ItemModel::Private::rowForItem( const Akonadi::Item& item )
 
 }
 
-void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QStringList& )
+void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
 {
   int row = rowForItem( item );
   if ( row < 0 )

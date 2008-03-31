@@ -118,8 +118,7 @@ class AKONADI_EXPORT Monitor : public QObject
       @param item The changed item.
       @param partIdentifiers The identifiers of the item parts that has been changed.
     */
-    void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
-    //FIXME_API: change 2nd argument to QSet<QByteArray>
+    void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
 
     /**
       Emitted if a monitored item has been moved between two collections

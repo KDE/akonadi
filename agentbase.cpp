@@ -67,7 +67,7 @@ void AgentBase::Observer::itemAdded( const Item &item, const Collection &collect
     sAgentBase->d_ptr->changeProcessed();
 }
 
-void AgentBase::Observer::itemChanged( const Item &item, const QStringList &partIdentifiers )
+void AgentBase::Observer::itemChanged( const Item &item, const QSet<QByteArray> &partIdentifiers )
 {
   kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
@@ -151,8 +151,8 @@ void AgentBasePrivate::init()
 
   connect( mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
-           SLOT( itemChanged( const Akonadi::Item&, const QStringList& ) ) );
+  connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+           SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
   connect( mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
            SLOT( itemRemoved( const Akonadi::Item& ) ) );
   connect( mMonitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
@@ -181,7 +181,7 @@ void AgentBasePrivate::itemAdded( const Akonadi::Item &item, const Akonadi::Coll
     mObserver->itemAdded( item, collection );
 }
 
-void AgentBasePrivate::itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers )
+void AgentBasePrivate::itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers )
 {
   kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   if ( mObserver != 0 )

@@ -84,7 +84,7 @@ void MonitorTest::testMonitor()
   QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)) );
   QSignalSpy csspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
   QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
-  QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QStringList&)) );
+  QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QSet<QByteArray>&)) );
   QSignalSpy irspy( monitor, SIGNAL(itemRemoved(const Akonadi::Item&)) );
 
   QVERIFY( caspy.isValid() );

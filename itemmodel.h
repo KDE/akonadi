@@ -150,7 +150,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void listingDone( KJob* ) )
-    Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QStringList& ) )
+    Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
     Q_PRIVATE_SLOT( d, void itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item& ) )
     Q_PRIVATE_SLOT( d, void itemsAdded( const Akonadi::Item::List& ) )

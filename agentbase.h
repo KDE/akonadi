@@ -169,7 +169,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param item The changed item.
          * @param partIdentifiers The identifiers of the item parts that has been changed.
          */
-        virtual void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
+        virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
 
         /**
          * Reimplement to handle deletion of items.

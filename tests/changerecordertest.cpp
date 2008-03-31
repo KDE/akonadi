@@ -60,7 +60,7 @@ class ChangeRecorderTest : public QObject
       rec->setConfig( settings );
       rec->setAllMonitored();
 
-      QSignalSpy spy( rec, SIGNAL(itemChanged(Akonadi::Item,QStringList)) );
+      QSignalSpy spy( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
       QVERIFY( spy.isValid() );
       QSignalSpy cspy( rec, SIGNAL(changesAdded()) );
       QVERIFY( cspy.isValid() );
@@ -80,7 +80,7 @@ class ChangeRecorderTest : public QObject
       rec->itemFetchScope().setFetchAllParts( true );
       QVERIFY( !rec->isEmpty() );
 
-      QSignalSpy spy2( rec, SIGNAL(itemChanged(Akonadi::Item,QStringList)) );
+      QSignalSpy spy2( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
       QVERIFY( spy2.isValid() );
       rec->replayNext();
       rec->changeProcessed();

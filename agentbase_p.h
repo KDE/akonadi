@@ -87,7 +87,7 @@ class AgentBasePrivate : public QObject
   protected Q_SLOTS:
     virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
-    virtual void itemChanged( const Akonadi::Item &item, const QStringList &partIdentifiers );
+    virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
 
     virtual void itemRemoved( const Akonadi::Item &item );
 
