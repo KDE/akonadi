@@ -77,7 +77,7 @@ class NotificationMessage::Private : public QSharedData
     Id parentCollection;
     Id parentDestCollection;
     QString mimeType;
-    QStringList parts;
+    QSet<QByteArray> parts;
 };
 
 NotificationMessage::NotificationMessage() :
@@ -202,12 +202,12 @@ void NotificationMessage::setMimeType(const QString & mimeType)
   d->mimeType = mimeType;
 }
 
-QStringList NotificationMessage::itemParts() const
+QSet<QByteArray> NotificationMessage::itemParts() const
 {
   return d->parts;
 }
 
-void NotificationMessage::setItemParts(const QStringList & parts)
+void NotificationMessage::setItemParts(const QSet<QByteArray> & parts)
 {
   d->parts = parts;
 }
@@ -282,7 +282,12 @@ QDBusArgument & operator <<(QDBusArgument & arg, const NotificationMessage & msg
   arg << msg.parentCollection();
   arg << msg.parentDestCollection();
   arg << msg.mimeType();
-  arg << msg.itemParts();
+
+  QStringList itemParts;
+  foreach( const QByteArray &itemPart, msg.itemParts() )
+    itemParts.append( QString::fromLatin1( itemPart ) );
+
+  arg << itemParts;
   arg.endStructure();
   return arg;
 }
@@ -314,7 +319,12 @@ const QDBusArgument & operator >>(const QDBusArgument & arg, NotificationMessage
   msg.setMimeType( s );
   QStringList l;
   arg >> l;
-  msg.setItemParts( l );
+
+  QSet<QByteArray> itemParts;
+  foreach( const QString &itemPart, l )
+    itemParts.insert( itemPart.toLatin1() );
+
+  msg.setItemParts( itemParts );
   arg.endStructure();
   return arg;
 }

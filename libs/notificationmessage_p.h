@@ -90,8 +90,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
     QString mimeType() const;
     void setMimeType( const QString &mimeType );
 
-    QStringList itemParts() const;
-    void setItemParts( const QStringList &parts );
+    QSet<QByteArray> itemParts() const;
+    void setItemParts( const QSet<QByteArray> &parts );
 
     QString toString() const;
 
