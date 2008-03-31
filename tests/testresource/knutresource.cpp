@@ -158,7 +158,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
   changeProcessed();
 }
 
-void KnutResource::itemChanged( const Akonadi::Item &item, const QStringList& )
+void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
 {
   QMutableMapIterator<QString, CollectionEntry> it( mCollections );
   while ( it.hasNext() ) {
