@@ -161,6 +161,19 @@ AgentInstance AgentManagerPrivate::fillAgentInstance( const QString &identifier 
   return instance;
 }
 
+AgentInstance AgentManagerPrivate::fillAgentInstanceLight( const QString &identifier ) const
+{
+  AgentInstance instance;
+
+  const QString agentTypeIdentifier = mManager->agentInstanceType( identifier );
+  Q_ASSERT_X( mTypes.contains( agentTypeIdentifier ), "fillAgentInstanceLight", "Requests non-existing agent type" );
+
+  instance.d->mType = mTypes.value( agentTypeIdentifier );
+  instance.d->mIdentifier = identifier;
+
+  return instance;
+}
+
 AgentManager* AgentManagerPrivate::mSelf = 0;
 
 AgentManager::AgentManager()
@@ -237,7 +250,7 @@ AgentInstance AgentManager::createInstance( const AgentType &type )
   if ( identifier.isEmpty() )
     return AgentInstance();
 
-  return d->fillAgentInstance( identifier );
+  return d->fillAgentInstanceLight( identifier );
 }
 
 void AgentManager::removeInstance( const AgentInstance &instance )

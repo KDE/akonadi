@@ -57,6 +57,7 @@ class AgentManagerPrivate
 
     AgentType fillAgentType( const QString &identifier ) const;
     AgentInstance fillAgentInstance( const QString &identifier ) const;
+    AgentInstance fillAgentInstanceLight( const QString &identifier ) const;
 
     static AgentManager *mSelf;
 
