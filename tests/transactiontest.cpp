@@ -83,8 +83,7 @@ void TransactionTest::testTransaction()
 
   Item item;
   item.setMimeType( "application/octet-stream" );
-  item.addPart( Item::PartBody, "body data" );
-  item.addPart( "EXTRA", "extra data" );
+  item.setPayload<QByteArray>( "body data" );
   ItemCreateJob *appendJob = new ItemCreateJob( item, testCollection, Session::defaultSession() );
   QVERIFY( appendJob->exec() );
 

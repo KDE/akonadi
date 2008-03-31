@@ -20,6 +20,8 @@
 
 #include "control.h"
 #include "itemstoretest.h"
+#include "testattribute.h"
+#include <akonadi/attributefactory.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionselectjob.h>
 #include <akonadi/itemdeletejob.h>
@@ -40,6 +42,7 @@ static Collection res3;
 void ItemStoreTest::initTestCase()
 {
   Control::start();
+  AttributeFactory::registerAttribute<TestAttribute>();
 
   // get the collections we run the tests on
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
@@ -221,8 +224,8 @@ void ItemStoreTest::testMultiPart()
   prefetchjob->exec();
   Item item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
-  item.addPart( Item::PartBody, "testmailbody" );
-  item.addPart( "EXTRA", "extra" );
+  item.setPayload<QByteArray>( "testmailbody" );
+  item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
 
   // store item
   ItemModifyJob *sjob = new ItemModifyJob( item );
@@ -235,8 +238,9 @@ void ItemStoreTest::testMultiPart()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
-  QCOMPARE( item.part( Item::PartBody ), QByteArray("testmailbody") );
-  QCOMPARE( item.part( "EXTRA" ), QByteArray("extra") );
+  QCOMPARE( item.payload<QByteArray>(), QByteArray("testmailbody") );
+  QVERIFY( item.hasAttribute<TestAttribute>() );
+  QCOMPARE( item.attribute<TestAttribute>()->data, QByteArray("extra") );
 
   // clean up
   item.removeAttribute( "EXTRA" );
@@ -250,7 +254,7 @@ void ItemStoreTest::testPartRemove()
   prefetchjob->exec();
   Item item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
-  item.addPart( "EXTRA", "extra" );
+  item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
 
   // store item
   ItemModifyJob *sjob = new ItemModifyJob( item );
@@ -263,11 +267,11 @@ void ItemStoreTest::testPartRemove()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
-  QCOMPARE( item.availableParts().count(), 3 );
-  QVERIFY( item.availableParts().contains( QLatin1String( "EXTRA" ) ) );
+  QCOMPARE( item.attributes().count(), 2 );
+  QVERIFY( item.hasAttribute<TestAttribute>() );
 
   // remove a part
-  item.removeAttribute( "EXTRA" );
+  item.removeAttribute<TestAttribute>();
   sjob = new ItemModifyJob( item );
   QVERIFY( sjob->exec() );
 
@@ -277,8 +281,8 @@ void ItemStoreTest::testPartRemove()
   QVERIFY( fjob2->exec() );
   QCOMPARE( fjob2->items().count(), 1 );
   item = fjob2->items()[0];
-  QCOMPARE( item.availableParts().count(), 2 );
-  QVERIFY( !item.availableParts().contains( QLatin1String( "EXTRA" ) ) );
+  QCOMPARE( item.attributes().count(), 1 );
+  QVERIFY( !item.hasAttribute<TestAttribute>() );
 }
 
 void ItemStoreTest::testRevisionCheck()
@@ -302,7 +306,7 @@ void ItemStoreTest::testRevisionCheck()
 
   // try to store second item
   ItemModifyJob *sjob2 = new ItemModifyJob( item2 );
-  item2.addPart( "EXTRA", "extra" );
+  item2.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
   sjob2->storePayload();
   QVERIFY( !sjob2->exec() );
 

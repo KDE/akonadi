@@ -28,6 +28,8 @@
 
 using namespace Akonadi;
 
+Q_DECLARE_METATYPE(QSet<QByteArray>)
+
 class ChangeRecorderTest : public QObject
 {
   Q_OBJECT
@@ -49,6 +51,7 @@ class ChangeRecorderTest : public QObject
     void initTestCase()
     {
       qRegisterMetaType<Akonadi::Item>();
+      qRegisterMetaType<QSet<QByteArray> >();
     }
 
     void testChangeRecorder()

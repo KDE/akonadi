@@ -19,6 +19,7 @@
 
 #include "itemtest.h"
 #include "itemtest.moc"
+#include "testattribute.h"
 
 #include <akonadi/item.h>
 
@@ -34,20 +35,21 @@ void ItemTest::testMultipart()
   item.setMimeType( "application/octet-stream" );
 
   QStringList parts;
-  QCOMPARE( item.availableParts(), parts );
+  QCOMPARE( item.loadedPayloadParts(), parts );
 
   QByteArray bodyData = "bodydata";
-  item.addPart( Item::PartBody, bodyData );
+  item.setPayload<QByteArray>( bodyData );
   parts << Item::PartBody;
-  QCOMPARE( item.availableParts(), parts );
-  QCOMPARE( item.part( Item::PartBody ), bodyData );
+  QCOMPARE( item.loadedPayloadParts(), parts );
+  QCOMPARE( item.payload<QByteArray>(), bodyData );
 
   QByteArray myData = "mypartdata";
-  parts << "MYPART";
+  item.attribute<TestAttribute>( Item::AddIfMissing )->data = myData;
 
-  item.addPart( "MYPART", myData );
-  QCOMPARE( item.availableParts(), parts );
-  QCOMPARE( item.part( "MYPART" ), myData );
+  QCOMPARE( item.loadedPayloadParts(), parts );
+  QCOMPARE( item.attributes().count(), 1 );
+  QVERIFY( item.hasAttribute<TestAttribute>() );
+  QCOMPARE( item.attribute<TestAttribute>()->data, myData );
 }
 
 void ItemTest::testInheritance()

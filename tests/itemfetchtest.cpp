@@ -20,7 +20,9 @@
 #include "itemfetchtest.h"
 #include "itemfetchtest.moc"
 #include "collectionpathresolver_p.h"
+#include "testattribute.h"
 
+#include <akonadi/attributefactory.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -35,6 +37,7 @@ QTEST_KDEMAIN( ItemFetchTest, NoGUI )
 void ItemFetchTest::initTestCase()
 {
   qRegisterMetaType<Akonadi::Item::List>();
+  AttributeFactory::registerAttribute<TestAttribute>();
 }
 
 void ItemFetchTest::testFetch()
@@ -116,8 +119,8 @@ void ItemFetchTest::testMultipartFetch()
 
   Item item;
   item.setMimeType( "application/octet-stream" );
-  item.addPart( Item::PartBody, "body data" );
-  item.addPart( "EXTRA", "extra data" );
+  item.setPayload<QByteArray>( "body data" );
+  item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
   ItemCreateJob *job = new ItemCreateJob( item, Collection( colId ), this );
   QVERIFY( job->exec() );
   Item ref = job->item();
@@ -129,9 +132,11 @@ void ItemFetchTest::testMultipartFetch()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();
-  QCOMPARE( item.availableParts().count(), 2 );
-  QCOMPARE( item.part( Item::PartBody ), QByteArray( "body data" ) );
-  QCOMPARE( item.part( "EXTRA" ), QByteArray( "extra data" ) );
+  QCOMPARE( item.loadedPayloadParts().count(), 1 );
+  QCOMPARE( item.attributes().count(), 1 );
+  QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
+  QVERIFY( item.hasAttribute<TestAttribute>() );
+  QCOMPARE( item.attribute<TestAttribute>()->data, QByteArray( "extra data" ) );
 
   // fetch single part
   fjob = new ItemFetchJob( ref, this );
@@ -139,9 +144,10 @@ void ItemFetchTest::testMultipartFetch()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();
-  QCOMPARE( item.availableParts().count(), 1 );
-  QCOMPARE( item.part( Item::PartBody ), QByteArray( "body data" ) );
-  QCOMPARE( item.part( "EXTRA" ), QByteArray() );
+  QCOMPARE( item.loadedPayloadParts().count(), 1 );
+  QCOMPARE( item.attributes().count(), 0 );
+  QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
+  QVERIFY( !item.hasAttribute<TestAttribute>() );
 
   // fetch all parts automatically
   fjob = new ItemFetchJob( ref, this );
@@ -149,9 +155,11 @@ void ItemFetchTest::testMultipartFetch()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();
-  QCOMPARE( item.availableParts().count(), 2 );
-  QCOMPARE( item.part( Item::PartBody ), QByteArray( "body data" ) );
-  QCOMPARE( item.part( "EXTRA" ), QByteArray( "extra data" ) );
+  QCOMPARE( item.loadedPayloadParts().count(), 1 );
+  QCOMPARE( item.attributes().count(), 1 );
+  QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
+  QVERIFY( item.hasAttribute<TestAttribute>() );
+  QCOMPARE( item.attribute<TestAttribute>()->data, QByteArray( "extra data" ) );
 
   // cleanup
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );

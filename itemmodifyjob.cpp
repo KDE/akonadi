@@ -26,6 +26,7 @@
 #include "itemserializer.h"
 #include "job_p.h"
 #include "item_p.h"
+#include "protocolhelper.h"
 
 #include <kdebug.h>
 
@@ -130,6 +131,9 @@ void ItemModifyJob::doStart()
   }
 
   command += " (" + ImapParser::join( changes, " " );
+  const QByteArray attrs = ProtocolHelper::attributesToByteArray( d->mItem );
+  if ( !attrs.isEmpty() )
+    command += ' ' + attrs;
   command += d->nextPartHeader();
   d->writeData( command );
   d->newTag(); // hack to circumvent automatic response handling
@@ -164,7 +168,7 @@ void ItemModifyJob::storePayload()
   Q_D( ItemModifyJob );
 
   Q_ASSERT( !d->mItem.mimeType().isEmpty() );
-  d->mParts = d->mItem.availableParts();
+  d->mParts = d->mItem.loadedPayloadParts();
 }
 
 void ItemModifyJob::disableRevisionCheck()
