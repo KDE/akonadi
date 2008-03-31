@@ -42,6 +42,7 @@ class Collection;
 class AKONADI_EXPORT AgentManager : public QObject
 {
   friend class AgentInstance;
+  friend class AgentInstanceCreateJob;
   friend class AgentManagerPrivate;
 
   Q_OBJECT
@@ -78,14 +79,6 @@ class AKONADI_EXPORT AgentManager : public QObject
      * an invalid agent instance if the identifier does not exist.
      */
     AgentInstance instance( const QString &identififer ) const;
-
-    /**
-     * Creates a new agent instance of the given agent @p type.
-     *
-     * @return The new agent instance if created successfully,
-     *         an invalid agent instance otherwise.
-     */
-    AgentInstance createInstance( const AgentType &type );
 
     /**
      * Removes the given agent @p instance.

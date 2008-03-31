@@ -41,6 +41,11 @@ class AgentManagerPrivate
     {
     }
 
+    /*
+     * Used by AgentInstanceCreateJob
+     */
+    AgentInstance createInstance( const AgentType &type );
+
     void agentTypeAdded( const QString& );
     void agentTypeRemoved( const QString& );
     void agentInstanceAdded( const QString& );

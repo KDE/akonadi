@@ -30,6 +30,15 @@
 
 using namespace Akonadi;
 
+AgentInstance AgentManagerPrivate::createInstance( const AgentType &type )
+{
+  const QString &identifier = mManager->createAgentInstance( type.identifier() );
+  if ( identifier.isEmpty() )
+    return AgentInstance();
+
+  return fillAgentInstanceLight( identifier );
+}
+
 void AgentManagerPrivate::agentTypeAdded( const QString &identifier )
 {
   const AgentType type = fillAgentType( identifier );
@@ -242,15 +251,6 @@ AgentInstance::List AgentManager::instances() const
 AgentInstance AgentManager::instance( const QString &identifier ) const
 {
   return d->mInstances.value( identifier );
-}
-
-AgentInstance AgentManager::createInstance( const AgentType &type )
-{
-  const QString &identifier = d->mManager->createAgentInstance( type.identifier() );
-  if ( identifier.isEmpty() )
-    return AgentInstance();
-
-  return d->fillAgentInstanceLight( identifier );
 }
 
 void AgentManager::removeInstance( const AgentInstance &instance )

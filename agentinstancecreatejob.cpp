@@ -19,6 +19,7 @@
 
 #include "agentinstancecreatejob.h"
 #include "agentmanager.h"
+#include "agentmanager_p.h"
 
 #include "agentinstance.h"
 
@@ -113,7 +114,7 @@ AgentInstance AgentInstanceCreateJob::instance() const
 
 void AgentInstanceCreateJob::start()
 {
-  d->agentInstance = AgentManager::self()->createInstance( d->agentType );
+  d->agentInstance = AgentManager::self()->d->createInstance( d->agentType );
   if ( !d->agentInstance.isValid() ) {
     setError( KJob::UserDefinedError );
     setErrorText( i18n("Unable to create agent instance." ) );
