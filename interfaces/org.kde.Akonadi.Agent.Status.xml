@@ -8,6 +8,12 @@
     <signal name="percent">
       <arg name="percent" type="i" direction="out"/>
     </signal>
+    <signal name="warning">
+      <arg name="message" type="s" direction="out"/>
+    </signal>
+    <signal name="error">
+      <arg name="message" type="s" direction="out"/>
+    </signal>
     <method name="status">
       <arg type="i" direction="out"/>
     </method>
