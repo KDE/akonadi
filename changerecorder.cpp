@@ -23,8 +23,6 @@
 #include <kdebug.h>
 #include <QSettings>
 
-Q_DECLARE_METATYPE( QSet<QByteArray> )
-
 using namespace Akonadi;
 
 class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
@@ -65,6 +63,7 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
     void loadNotifications()
     {
       pendingNotifications.clear();
+      QStringList list;
       settings->beginGroup( QLatin1String( "ChangeRecorder" ) );
       int size = settings->beginReadArray( QLatin1String( "change" ) );
       for ( int i = 0; i < size; ++i ) {
@@ -79,7 +78,11 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
         msg.setParentCollection( settings->value( QLatin1String( "parentCol" ) ).toLongLong() );
         msg.setParentDestCollection( settings->value( QLatin1String( "parentDestCol" ) ).toLongLong() );
         msg.setMimeType( settings->value( QLatin1String( "mimeType" ) ).toString() );
-        msg.setItemParts( settings->value( QLatin1String( "itemParts" ) ).value< QSet<QByteArray> >() );
+        list = settings->value( QLatin1String( "itemParts" ) ).toStringList();
+        QSet<QByteArray> itemParts;
+        Q_FOREACH( const QString &entry, list )
+          itemParts.insert( entry.toLatin1() );
+        msg.setItemParts( itemParts );
         pendingNotifications << msg;
       }
       settings->endArray();
@@ -104,9 +107,14 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
         settings->setValue( QLatin1String( "parentCol" ), msg.parentCollection() );
         settings->setValue( QLatin1String( "parentDestCol" ), msg.parentDestCollection() );
         settings->setValue( QLatin1String( "mimeType" ), msg.mimeType() );
-        QVariant var;
-        var.setValue( msg.itemParts() );
-        settings->setValue( QLatin1String( "itemParts" ), var );
+
+        QStringList list;
+        const QSet<QByteArray> itemParts = msg.itemParts();
+        QSetIterator<QByteArray> it( itemParts );
+        while ( it.hasNext() )
+          list.append( QString::fromLatin1( it.next() ) );
+
+        settings->setValue( QLatin1String( "itemParts" ), list );
       }
       settings->endArray();
       settings->endGroup();
