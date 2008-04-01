@@ -221,7 +221,7 @@ void KnutResource::retrieveCollections()
   collectionsRetrieved( collections );
 }
 
-void KnutResource::retrieveItems( const Akonadi::Collection &collection, const QStringList &parts )
+void KnutResource::retrieveItems( const Akonadi::Collection &collection )
 {
   ItemFetchJob *fetch = new ItemFetchJob( collection );
   if ( !fetch->exec() ) {

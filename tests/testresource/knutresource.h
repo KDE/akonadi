@@ -50,7 +50,7 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
     virtual void itemRemoved( const Akonadi::Item &ref );
 
     void retrieveCollections();
-    void retrieveItems( const Akonadi::Collection &collection, const QStringList &parts );
+    void retrieveItems( const Akonadi::Collection &collection );
 
   private:
     class CollectionEntry
