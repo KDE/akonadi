@@ -25,7 +25,6 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include <akonadi/private/protocol_p.h>
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
@@ -122,7 +121,7 @@ bool Akonadi::Append::commit()
 
     // wrap data into a part
     Part part;
-    part.setName( QLatin1String( AKONADI_PART_BODY ) );
+    part.setName( QLatin1String( "RFC822" ) );
     part.setData( m_data );
     part.setPimItemId( item.id() );
     QList<Part> parts;
