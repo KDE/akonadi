@@ -355,13 +355,6 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     virtual void aboutToQuit();
 
     /**
-     * Returns a session for communicating with the storage backend. It should
-     * be used for all jobs.
-     */
-    //FIXME_API: remove it and create default session in AgentBase ctor
-    Session* session() const;
-
-    /**
      * Returns the Akonadi::ChangeRecorder object used for monitoring.
      * Use this to configure which parts you want to monitor.
      */

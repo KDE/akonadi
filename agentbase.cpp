@@ -29,6 +29,7 @@
 #include "xdgbasedirs_p.h"
 
 #include "session.h"
+#include "session_p.h"
 #include "changerecorder.h"
 #include "itemfetchjob.h"
 
@@ -130,6 +131,12 @@ AgentBasePrivate::~AgentBasePrivate()
 void AgentBasePrivate::init()
 {
   Q_Q( AgentBase );
+
+  /**
+   * Create a default session for this process.
+   */
+  SessionPrivate::createDefaultSession( mId.toLatin1() );
+
   mTracer = new org::kde::Akonadi::Tracer( QLatin1String( "org.kde.Akonadi" ), QLatin1String( "/tracing" ),
                                            QDBusConnection::sessionBus(), q );
 
@@ -140,9 +147,8 @@ void AgentBasePrivate::init()
 
   mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
 
-  mSession = new Session( mId.toLatin1(), q );
   mMonitor = new ChangeRecorder( q );
-  mMonitor->ignoreSession( mSession );
+  mMonitor->ignoreSession( Session::defaultSession() );
   mMonitor->setConfig( mSettings );
 
   mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
@@ -450,11 +456,6 @@ void AgentBase::registerObserver( Observer *observer )
 QString AgentBase::identifier() const
 {
   return d_ptr->mId;
-}
-
-Session* AgentBase::session() const
-{
-  return d_ptr->mSession;
 }
 
 void AgentBase::changeProcessed()

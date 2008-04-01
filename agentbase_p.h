@@ -79,7 +79,6 @@ class AgentBasePrivate : public QObject
 
     QSettings *mSettings;
 
-    Session *mSession;
     ChangeRecorder *mMonitor;
 
     org::kde::Akonadi::Tracer *mTracer;

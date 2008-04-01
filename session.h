@@ -70,8 +70,6 @@ class AKONADI_EXPORT Session : public QObject
       Returns the default session for this thread.
     */
     static Session* defaultSession();
-    //FIXME_API: add createDefaultSession which takes custom sessionId
-    //           needed in AgentBase
 
     /**
       Stops all jobs queued for execution.

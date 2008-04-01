@@ -28,14 +28,14 @@
 #include "tracerinterface.h"
 #include "xdgbasedirs_p.h"
 
-#include "akonadi/changerecorder.h"
-#include "akonadi/collectionfetchjob.h"
-#include "akonadi/collectionmodifyjob.h"
-#include "akonadi/itemfetchjob.h"
-#include "akonadi/itemfetchscope.h"
-#include "akonadi/itemmodifyjob.h"
-#include "akonadi/itemmodifyjob_p.h"
-#include "akonadi/session.h"
+#include "changerecorder.h"
+#include "collectionfetchjob.h"
+#include "collectionmodifyjob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "itemmodifyjob.h"
+#include "itemmodifyjob_p.h"
+#include "session.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -232,7 +232,7 @@ void ResourceBase::itemRetrieved( const Item &item )
     }
   }
 
-  ItemModifyJob *job = new ItemModifyJob( i, session() );
+  ItemModifyJob *job = new ItemModifyJob( i );
   job->storePayload();
   // FIXME: remove once the item with which we call retrieveItem() has a revision number
   job->disableRevisionCheck();
@@ -257,7 +257,7 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
 void ResourceBase::changesCommitted(const Item& item)
 {
   Q_D( ResourceBase );
-  ItemModifyJob *job = new ItemModifyJob( item, session() );
+  ItemModifyJob *job = new ItemModifyJob( item );
   job->d_func()->setClean();
   job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
   d->changeProcessed();
@@ -266,7 +266,7 @@ void ResourceBase::changesCommitted(const Item& item)
 void ResourceBase::changesCommitted( const Collection &collection )
 {
   Q_D( ResourceBase );
-  CollectionModifyJob *job = new CollectionModifyJob( collection, session() );
+  CollectionModifyJob *job = new CollectionModifyJob( collection );
   Q_UNUSED( job );
   //TODO: error checking
   d->changeProcessed();
@@ -292,7 +292,7 @@ bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, con
 void ResourceBase::collectionsRetrieved(const Collection::List & collections)
 {
   Q_D( ResourceBase );
-  CollectionSync *syncer = new CollectionSync( d->mId, session() );
+  CollectionSync *syncer = new CollectionSync( d->mId );
   syncer->setRemoteCollections( collections );
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)) );
 }
@@ -300,7 +300,7 @@ void ResourceBase::collectionsRetrieved(const Collection::List & collections)
 void ResourceBase::collectionsRetrievedIncremental(const Collection::List & changedCollections, const Collection::List & removedCollections)
 {
   Q_D( ResourceBase );
-  CollectionSync *syncer = new CollectionSync( d->mId, session() );
+  CollectionSync *syncer = new CollectionSync( d->mId );
   syncer->setRemoteCollections( changedCollections, removedCollections );
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)) );
 }
@@ -312,7 +312,7 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob * job)
     emit q->error( job->errorString() );
   } else {
     if ( scheduler->currentTask().type == ResourceScheduler::SyncAll ) {
-      CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, mSession );
+      CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
       list->setResource( mId );
       q->connect( list, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)) );
       return;
@@ -390,7 +390,7 @@ void ResourceBase::doSetOnline( bool state )
 
 void ResourceBase::synchronizeCollection(qint64 collectionId )
 {
-  CollectionFetchJob* job = new CollectionFetchJob( Collection(collectionId), CollectionFetchJob::Base, session() );
+  CollectionFetchJob* job = new CollectionFetchJob( Collection(collectionId), CollectionFetchJob::Base );
   job->setResource( identifier() );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotCollectionListDone(KJob*)) );
 }
@@ -413,7 +413,7 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
               "ResourceBase::itemsRetrieved()",
               "Calling itemsRetrieved() although no item retrieval is in progress" );
-  ItemSync *syncer = new ItemSync( currentCollection(), session() );
+  ItemSync *syncer = new ItemSync( currentCollection() );
   connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
   syncer->setFullSyncItems( items );
@@ -425,7 +425,7 @@ void ResourceBase::itemsRetrievedIncremental(const Item::List &changedItems, con
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
               "ResourceBase::itemsRetrievedIncremental()",
               "Calling itemsRetrievedIncremental() although no item retrieval is in progress" );
-  ItemSync *syncer = new ItemSync( currentCollection(), session() );
+  ItemSync *syncer = new ItemSync( currentCollection() );
   connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
   connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
   syncer->setIncrementalSyncItems( changedItems, removedItems );

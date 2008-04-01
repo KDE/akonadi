@@ -58,7 +58,6 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
       OnlineRole,                              ///< The current online/offline status
       UserRole  = Qt::UserRole + 42            ///< For further extensions
     };
-    //FIXME_API: drop progress message, align to Agent.Status iface
 
     /**
      * Creates a new agent instance model.

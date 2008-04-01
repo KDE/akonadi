@@ -59,7 +59,18 @@ class SessionPrivate
     void jobWriteFinished( Akonadi::Job* job );
 
     bool canPipelineNext();
-    
+
+    /**
+     * Creates a new default session for this thread with
+     * the given @p sessionId. The session can be accessed
+     * later by defaultSession().
+     *
+     * You only need to call this method if you want that the
+     * default session has a special custom id, otherwise a random unique
+     * id is used automatically.
+     */
+    static void createDefaultSession( const QByteArray &sessionId );
+
     /**
       Associates the given Job object with this session.
     */
