@@ -223,7 +223,7 @@ void KnutResource::retrieveCollections()
 
 void KnutResource::retrieveItems( const Akonadi::Collection &collection, const QStringList &parts )
 {
-  ItemFetchJob *fetch = new ItemFetchJob( collection, session() );
+  ItemFetchJob *fetch = new ItemFetchJob( collection );
   if ( !fetch->exec() ) {
     emit status( Broken, i18n( "Unable to fetch listing of collection '%1': %2", collection.name(), fetch->errorString() ) );
     return;
@@ -269,7 +269,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     Item item;
     item.setRemoteId( uid );
     item.setMimeType( "text/vcard" );
-    ItemCreateJob *append = new ItemCreateJob( item, collection, session() );
+    ItemCreateJob *append = new ItemCreateJob( item, collection );
     if ( !append->exec() ) {
       emit percent( 0 );
       emit status( Broken, i18n( "Appending new contact failed: %1", append->errorString() ) );
@@ -298,7 +298,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection, const Q
     Item item;
     item.setRemoteId( uid );
     item.setMimeType( "text/calendar" );
-    ItemCreateJob *append = new ItemCreateJob( item, collection, session() );
+    ItemCreateJob *append = new ItemCreateJob( item, collection );
     if ( !append->exec() ) {
       emit percent( 0 );
       emit status( Broken, i18n( "Appending new calendar failed: %1", append->errorString() ) );
