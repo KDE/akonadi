@@ -42,6 +42,8 @@ class AgentBasePrivate : public QObject
 
     void slotStatus( int status, const QString &message );
     void slotPercent( int progress );
+    void slotWarning( const QString& message );
+    void slotError( const QString& message );
 
     virtual void changeProcessed();
 

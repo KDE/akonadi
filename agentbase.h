@@ -322,6 +322,16 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     void percent( int progress );
 
+    /**
+     * This signal shall be used to report warnings.
+     */
+    void warning( const QString& message );
+
+    /**
+     * This signal shall be used to report errors.
+     */
+    void error( const QString& message );
+
   protected:
     /**
      * Creates a base agent.
@@ -334,18 +344,6 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * Destroys the base agent.
      */
     ~AgentBase();
-
-    /**
-     * This method shall be used to report warnings.
-     */
-    //FIXME_API: make them signals
-    void warning( const QString& message );
-
-    /**
-     * This method shall be used to report errors.
-     */
-    //FIXME_API: make them signals
-    void error( const QString& message );
 
     /**
      * This method is called whenever the application is about to
@@ -407,6 +405,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     Q_PRIVATE_SLOT( d_func(), void delayedInit() )
     Q_PRIVATE_SLOT( d_func(), void slotStatus( int, const QString& ) )
     Q_PRIVATE_SLOT( d_func(), void slotPercent( int ) )
+    Q_PRIVATE_SLOT( d_func(), void slotWarning( const QString& ) )
+    Q_PRIVATE_SLOT( d_func(), void slotError( const QString& ) )
 };
 
 }

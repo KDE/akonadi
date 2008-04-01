@@ -245,7 +245,7 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
   Q_ASSERT( scheduler->currentTask().type == ResourceScheduler::FetchItem );
   QDBusMessage reply( scheduler->currentTask().dbusMsg );
   if ( job->error() ) {
-    q->error( QLatin1String( "Error while creating item: " ) + job->errorString() );
+    emit q->error( QLatin1String( "Error while creating item: " ) + job->errorString() );
     reply << false;
   } else {
     reply << true;
@@ -276,7 +276,7 @@ bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, con
 {
   Q_D( ResourceBase );
   if ( !isOnline() ) {
-    error( i18nc( "@info", "Cannot fetch item in offline mode." ) );
+    emit error( i18nc( "@info", "Cannot fetch item in offline mode." ) );
     return false;
   }
 
@@ -309,7 +309,7 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob * job)
 {
   Q_Q( ResourceBase );
   if ( job->error() ) {
-    q->error( job->errorString() );
+    emit q->error( job->errorString() );
   } else {
     if ( scheduler->currentTask().type == ResourceScheduler::SyncAll ) {
       CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, mSession );
@@ -327,7 +327,7 @@ void ResourceBasePrivate::slotLocalListDone(KJob * job)
 {
   Q_Q( ResourceBase );
   if ( job->error() ) {
-    q->error( job->errorString() );
+    emit q->error( job->errorString() );
   } else {
     Collection::List cols = static_cast<CollectionFetchJob*>( job )->collections();
     foreach ( const Collection &col, cols ) {
@@ -435,7 +435,7 @@ void ResourceBasePrivate::slotItemSyncDone( KJob *job )
 {
   Q_Q( ResourceBase );
   if ( job->error() ) {
-    q->error( job->errorString() );
+    emit q->error( job->errorString() );
   }
   if ( scheduler->isEmpty() )
     emit q->status( AgentBase::Idle );

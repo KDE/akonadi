@@ -164,6 +164,8 @@ void AgentBasePrivate::init()
 
   connect( q, SIGNAL( status( int, QString ) ), q, SLOT( slotStatus( int, QString ) ) );
   connect( q, SIGNAL( percent( int ) ), q, SLOT( slotPercent( int ) ) );
+  connect( q, SIGNAL( warning( QString ) ), q, SLOT( slotWarning( QString ) ) );
+  connect( q, SIGNAL( error( QString ) ), q, SLOT( slotError( QString ) ) );
 
   QTimer::singleShot( 0, q, SLOT( delayedInit() ) );
 }
@@ -255,6 +257,16 @@ void AgentBasePrivate::slotStatus( int status, const QString &message )
 void AgentBasePrivate::slotPercent( int progress )
 {
   mProgress = progress;
+}
+
+void AgentBasePrivate::slotWarning( const QString& message )
+{
+  mTracer->warning( QString::fromLatin1( "AgentBase(%1)" ).arg( mId ), message );
+}
+
+void AgentBasePrivate::slotError( const QString& message )
+{
+  mTracer->error( QString::fromLatin1( "AgentBase(%1)" ).arg( mId ), message );
 }
 
 
@@ -443,18 +455,6 @@ QString AgentBase::identifier() const
 Session* AgentBase::session() const
 {
   return d_ptr->mSession;
-}
-
-void AgentBase::warning( const QString& message )
-{
-  Q_D( AgentBase );
-  d->mTracer->warning( QString::fromLatin1( "AgentBase(%1)" ).arg( d->mId ), message );
-}
-
-void AgentBase::error( const QString& message )
-{
-  Q_D( AgentBase );
-  d->mTracer->error( QString::fromLatin1( "AgentBase(%1)" ).arg( d->mId ), message );
 }
 
 void AgentBase::changeProcessed()
