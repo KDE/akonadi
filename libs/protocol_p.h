@@ -32,8 +32,4 @@
 #define AKONADI_DBUS_SERVER_SERVICE "org.kde.Akonadi"
 #define AKONADI_DBUS_CONTROL_SERVICE "org.kde.Akonadi.Control"
 
-// item part names
-#define AKONADI_PART_BODY "RFC822"
-
-
 #endif
