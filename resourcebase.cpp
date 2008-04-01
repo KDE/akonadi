@@ -83,7 +83,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void slotCollectionSyncDone( KJob *job );
     void slotLocalListDone( KJob *job );
-    void slotSynchronizeCollection( const Collection &col, const QStringList &parts );
+    void slotSynchronizeCollection( const Collection &col );
     void slotCollectionListDone( KJob *job );
 
     void slotItemSyncDone( KJob *job );
@@ -121,8 +121,8 @@ ResourceBase::ResourceBase( const QString & id )
            SLOT(retrieveCollections()) );
   connect( d->scheduler, SIGNAL(executeCollectionTreeSync()),
            SLOT(retrieveCollections()) );
-  connect( d->scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection,QStringList)),
-           SLOT(slotSynchronizeCollection(Akonadi::Collection,QStringList)) );
+  connect( d->scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection)),
+           SLOT(slotSynchronizeCollection(Akonadi::Collection)) );
   connect( d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QStringList)),
            SLOT(retrieveItem(Akonadi::Item,QStringList)) );
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
@@ -337,7 +337,7 @@ void ResourceBasePrivate::slotLocalListDone(KJob * job)
   scheduler->taskDone();
 }
 
-void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col, const QStringList &parts )
+void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
 {
   Q_Q( ResourceBase );
   currentCollection = col;
@@ -346,7 +346,7 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col, cons
   contentTypes.removeAll( Collection::mimeType() );
   if ( !contentTypes.isEmpty() ) {
     emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing collection '%1'", currentCollection.name() ) );
-    q->retrieveItems( currentCollection, parts );
+    q->retrieveItems( currentCollection );
     return;
   }
   scheduler->taskDone();

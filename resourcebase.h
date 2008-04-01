@@ -218,11 +218,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * In case you don't want to use the built-in item syncing code, store the retrived
      * items manually and call itemsRetrieved() once you are done.
      * @param collection The collection to sync.
-     * @param parts The items parts that should be retrieved.
      * @see itemsRetrieved( const Item::List &), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
      */
-    virtual void retrieveItems( const Akonadi::Collection &collection, const QStringList &parts ) = 0;
-    //FIXME_API: remove parts parameter
+    virtual void retrieveItems( const Akonadi::Collection &collection ) = 0;
 
     /**
      * Retrieve a single item from the backend. The item to retrieve is provided as @p item.
@@ -371,7 +369,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     Q_PRIVATE_SLOT( d_func(), void slotDeliveryDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionSyncDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotLocalListDone( KJob* ) )
-    Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection(const Akonadi::Collection &col, const QStringList &parts) )
+    Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionListDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotItemSyncDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotPercent( KJob*, unsigned long ) )

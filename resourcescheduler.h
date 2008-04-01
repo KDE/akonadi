@@ -122,7 +122,7 @@ class ResourceScheduler : public QObject
 
   Q_SIGNALS:
     void executeFullSync();
-    void executeCollectionSync( const Akonadi::Collection &col, const QStringList &parts );
+    void executeCollectionSync( const Akonadi::Collection &col );
     void executeCollectionTreeSync();
     void executeItemFetch( const Akonadi::Item &item, const QStringList &parts );
     void executeChangeReplay();

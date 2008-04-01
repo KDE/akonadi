@@ -106,7 +106,7 @@ void ResourceScheduler::executeNext()
       emit executeCollectionTreeSync();
       break;
     case SyncCollection:
-      emit executeCollectionSync( mCurrentTask.collection, mCurrentTask.itemParts );
+      emit executeCollectionSync( mCurrentTask.collection );
       break;
     case FetchItem:
       emit executeItemFetch( mCurrentTask.item, mCurrentTask.itemParts );
