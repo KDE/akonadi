@@ -61,7 +61,7 @@ public:
 
     bool deserialize( Item& item, const QString& label, QIODevice& data )
     {
-        if ( label != Item::PartBody )
+        if ( label != Item::FullPayload )
           return false;
         item.setPayload( data.readAll() );
         return true;
@@ -69,7 +69,7 @@ public:
 
     void serialize( const Item& item, const QString& label, QIODevice& data )
     {
-        Q_ASSERT( label == Item::PartBody );
+        Q_ASSERT( label == Item::FullPayload );
         if ( item.hasPayload<QByteArray>() )
             data.write( item.payload<QByteArray>() );
     }

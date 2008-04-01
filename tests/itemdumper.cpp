@@ -50,7 +50,7 @@ ItemDumper::ItemDumper( const QString &path, const QString &filename, const QStr
   f.close();
   Item item;
   item.setMimeType( mimetype );
-  item.addPart( Item::PartBody, data );
+  item.addPart( Item::FullPayload, data );
   mTime.start();
 #ifdef GLOBAL_TRANSACTION
   TransactionBeginJob *begin = new TransactionBeginJob( this );

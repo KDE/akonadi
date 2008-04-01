@@ -14,7 +14,7 @@ macro(add_akonadi_demo _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_executable(${_name} TEST ${_test})
-  target_link_libraries(${_name} akonadi-kde)
+  target_link_libraries(${_name} akonadi-kde akonadi-kmime)
 endmacro(add_akonadi_demo)
 
 
@@ -23,7 +23,7 @@ macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME libakonadi-${_name} ${_test})
-  target_link_libraries(${_name} akonadi-kde ${QT_QTTEST_LIBRARY})
+  target_link_libraries(${_name} akonadi-kde akonadi-kmime ${QT_QTTEST_LIBRARY})
 endmacro(add_akonadi_test)
 
 # demo applications

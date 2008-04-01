@@ -127,7 +127,7 @@ void ItemFetchTest::testMultipartFetch()
 
   // fetch all parts manually
   ItemFetchJob *fjob = new ItemFetchJob( ref, this );
-  fjob->fetchScope().addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( Item::FullPayload );
   fjob->fetchScope().addFetchPart( "EXTRA" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
@@ -140,7 +140,7 @@ void ItemFetchTest::testMultipartFetch()
 
   // fetch single part
   fjob = new ItemFetchJob( ref, this );
-  fjob->fetchScope().addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( Item::FullPayload );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();

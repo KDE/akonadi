@@ -66,22 +66,7 @@ class AKONADI_EXPORT Item : public Entity
     typedef QByteArray Flag;
     typedef QSet<QByteArray> Flags;
 
-    //FIXME_API: move to akonadi/kmime
-    /**
-      The part identifier for envelope parts.
-     */
-    static const QLatin1String PartEnvelope;
-
-    /**
-      The part identifier for the main body part.
-     */
-    static const QLatin1String PartBody;
-
-    /**
-      The part identifier for the header part.
-    */
-    static const QLatin1String PartHeader;
-
+    static const QLatin1String FullPayload;
 
     /**
      * Creates an invalid item.

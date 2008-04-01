@@ -145,7 +145,7 @@ void ItemStoreTest::testDataChange()
   QVERIFY( sjob->exec() );
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
-  fjob->fetchScope().addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( Item::FullPayload );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -234,7 +234,7 @@ void ItemStoreTest::testMultiPart()
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
   fjob->fetchScope().addFetchPart( "EXTRA" );
-  fjob->fetchScope().addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( Item::FullPayload );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];

@@ -10,6 +10,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO
 
 set( kmimeakonadi_LIB_SRC
   messagemodel.cpp
+  messageparts.cpp
   messagethreadingattribute.cpp
   messagethreaderproxymodel.cpp
 )
@@ -25,6 +26,7 @@ install(TARGETS akonadi-kmime DESTINATION ${LIB_INSTALL_DIR})
 install( FILES
   akonadi-kmime_export.h
   messagemodel.h
+  messageparts.h
   messagethreadingattribute.h
   messagethreaderproxymodel.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kmime

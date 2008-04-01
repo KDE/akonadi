@@ -28,9 +28,8 @@
 
 using namespace Akonadi;
 
-const QLatin1String Item::PartBody = QLatin1String( AKONADI_PART_BODY );
-const QLatin1String Item::PartEnvelope = QLatin1String( "ENVELOPE" );
-const QLatin1String Item::PartHeader = QLatin1String( "HEAD" );
+// Change to something != RFC822 as soon as the server supports it
+const QLatin1String Item::FullPayload = QLatin1String( "RFC822" );
 
 Item::Item()
   : Entity( new ItemPrivate )

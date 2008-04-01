@@ -1,5 +1,6 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+                  2007 Till Adam <adam@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,19 +18,34 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_PROTOCOL_P_H
-#define AKONADI_PROTOCOL_P_H
+#ifndef AKONADI_MESSAGEPARTS_H
+#define AKONADI_MESSAGEPARTS_H
 
-/**
-  @file protocol_p.h Shared constants used in the communication protocol between
-  the Akonadi server and its clients.
+#include <QtCore/QLatin1String>
 
-  @todo Fill this file with command names, item/collection property names
-  item part names, etc. and replace the usages accordingly.
-*/
+#include "akonadi-kmime_export.h"
 
-// D-Bus service names
-#define AKONADI_DBUS_SERVER_SERVICE "org.kde.Akonadi"
-#define AKONADI_DBUS_CONTROL_SERVICE "org.kde.Akonadi.Control"
+namespace Akonadi
+{
+  class AKONADI_KMIME_EXPORT MessagePart
+  {
+    public:
+
+      /**
+        The part identifier for envelope parts.
+       */
+      static const QLatin1String Envelope;
+
+      /**
+        The part identifier for the main body part.
+       */
+      static const QLatin1String Body;
+
+      /**
+        The part identifier for the header part.
+      */
+      static const QLatin1String Header;
+  };
+}
 
 #endif

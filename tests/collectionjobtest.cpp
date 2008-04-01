@@ -34,6 +34,7 @@
 #include "collectionselectjob.h"
 #include "control.h"
 #include "item.h"
+#include "kmime/messageparts.h"
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -239,7 +240,7 @@ void CollectionJobTest::testCreateDeleteFolder_data()
   CachePolicy policy;
   policy.setInheritFromParent( false );
   policy.setIntervalCheckTime( 60 );
-  policy.setLocalParts( QStringList( Item::PartEnvelope ) );
+  policy.setLocalParts( QStringList( MessagePart::Envelope ) );
   policy.setSyncOnDemand( true );
   policy.setCacheTimeout( 120 );
   col.setCachePolicy( policy );

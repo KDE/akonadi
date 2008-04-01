@@ -19,6 +19,7 @@
 
 #include "benchmarker.h"
 #include "collectionpathresolver_p.h"
+#include "kmime/messageparts.h"
 
 #include <QtCore/QDebug>
 #include <QtGui/QApplication>
@@ -154,7 +155,7 @@ void BenchMarker::testMaildir( QString dir )
   Collection::List list = clj->collections();
   foreach ( Collection collection, list ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
-    ifj->fetchScope().addFetchPart( Item::PartEnvelope );
+    ifj->fetchScope().addFetchPart( MessagePart::Envelope );
     ifj->exec();
     QString a;
     foreach ( Item item, ifj->items() ) {
@@ -192,7 +193,7 @@ void BenchMarker::testMaildir( QString dir )
   Collection::List list3 = clj3->collections();
   foreach ( Collection collection, list3 ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
-    ifj->fetchScope().addFetchPart( Item::PartEnvelope );
+    ifj->fetchScope().addFetchPart( MessagePart::Envelope );
     ifj->exec();
     QString a;
     foreach ( Item item, ifj->items() ) {

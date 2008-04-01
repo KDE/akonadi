@@ -18,6 +18,7 @@
 */
 
 #include "messagemodel.h"
+#include "messageparts.h"
 
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/monitor.h>
@@ -43,7 +44,7 @@ MessageModel::MessageModel( QObject *parent ) :
     ItemModel( parent ),
     d( new Private() )
 {
-  fetchScope().addFetchPart( Item::PartEnvelope );
+  fetchScope().addFetchPart( MessagePart::Envelope );
 }
 
 MessageModel::~MessageModel( )

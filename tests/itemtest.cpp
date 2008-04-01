@@ -39,7 +39,7 @@ void ItemTest::testMultipart()
 
   QByteArray bodyData = "bodydata";
   item.setPayload<QByteArray>( bodyData );
-  parts << Item::PartBody;
+  parts << Item::FullPayload;
   QCOMPARE( item.loadedPayloadParts(), parts );
   QCOMPARE( item.payload<QByteArray>(), bodyData );
 

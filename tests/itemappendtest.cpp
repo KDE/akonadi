@@ -115,7 +115,7 @@ void ItemAppendTest::testContent()
   Item ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
-  fjob->fetchScope().addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( Item::FullPayload );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();
@@ -162,7 +162,7 @@ void ItemAppendTest::testMultipartAppend()
   Item ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( ref, this );
-  fjob->fetchScope().addFetchPart( Item::PartBody );
+  fjob->fetchScope().addFetchPart( Item::FullPayload );
   fjob->fetchScope().addFetchPart( "EXTRA" );
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );

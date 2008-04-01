@@ -70,7 +70,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
 
     Item it;
     it.setMimeType( type );
-    it.addPart( Item::PartBody, item );
+    it.addPart( Item::FullPayload, item );
 
     ItemCreateJob *job = new ItemCreateJob( it, collection );
     return job;

@@ -73,9 +73,9 @@ void ItemCreateJob::doStart()
   if ( !d->mItem.remoteId().isEmpty() )
     remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' );
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
-  if ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.first() == Item::PartBody) ) {
+  if ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.first() == Item::FullPayload) ) {
     if ( d->mItem.hasPayload() )
-      ItemSerializer::serialize( d->mItem, Item::PartBody, d->mData );
+      ItemSerializer::serialize( d->mItem, Item::FullPayload, d->mData );
     int dataSize = d->mData.size();
 
     d->writeData( d->newTag() + " APPEND " + QByteArray::number( d->mCollection.id() )

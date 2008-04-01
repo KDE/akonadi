@@ -34,6 +34,6 @@ QStringList ItemSerializerPlugin::parts(const Item & item) const
 {
   QStringList list;
   if ( item.hasPayload() )
-    list << Item::PartBody;
+    list << Item::FullPayload;
   return list;
 }

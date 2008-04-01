@@ -94,7 +94,7 @@ public:
 
     /**
       Returns a list of available parts for the given item payload.
-      The default implementation returns Item::PartBody if a payload is set.
+      The default implementation returns Item::FullPayload if a payload is set.
       @param item The item.
     */
     virtual QStringList parts( const Item &item ) const;
