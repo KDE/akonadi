@@ -33,9 +33,10 @@ class ResourceTest : public QObject
   private slots:
     void testResourceManagement()
     {
-      QSignalSpy spyAddInstance( AgentManager::self(), SIGNAL(instanceAdded(AgentInstance)) );
+      qRegisterMetaType<Akonadi::AgentInstance>();
+      QSignalSpy spyAddInstance( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)) );
       QVERIFY( spyAddInstance.isValid() );
-      QSignalSpy spyRemoveInstance( AgentManager::self(), SIGNAL(instanceRemoved(AgentInstance)) );
+      QSignalSpy spyRemoveInstance( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)) );
       QVERIFY( spyRemoveInstance.isValid() );
 
       AgentType type = AgentManager::self()->type( "akonadi_knut_resource" );
@@ -71,17 +72,13 @@ class ResourceTest : public QObject
     void testIllegalResourceManagement()
     {
       AgentInstanceCreateJob *job = new AgentInstanceCreateJob( AgentManager::self()->type( "non_existing_resource" ) );
-      QVERIFY( job->exec() );
-      AgentInstance instance = job->instance();
-      QVERIFY( !instance.isValid() );
+      QVERIFY( !job->exec() );
 
       // unique agent
       const AgentType type = AgentManager::self()->type( "akonadi_mailthreader_agent" );
       QVERIFY( type.isValid() );
       job = new AgentInstanceCreateJob( type );
-      QVERIFY( job->exec() );
-      instance = job->instance();
-      QVERIFY( !instance.isValid() );
+      QVERIFY( !job->exec() );
     }
 };
 

@@ -74,6 +74,11 @@ class AgentInstanceCreateJob::Private
       q->emitResult();
     }
 
+    void emitResult()
+    {
+      q->emitResult();
+    }
+
     AgentInstanceCreateJob* q;
     AgentType agentType;
     AgentInstance agentInstance;
@@ -93,7 +98,6 @@ AgentInstanceCreateJob::AgentInstanceCreateJob(const AgentType & agentType, QObj
 
   d->safetyTimer = new QTimer( this );
   connect( d->safetyTimer, SIGNAL(timeout()), SLOT(timeout()) );
-  d->safetyTimer->start( safetyTimeout );
 }
 
 AgentInstanceCreateJob::~ AgentInstanceCreateJob()
@@ -118,7 +122,9 @@ void AgentInstanceCreateJob::start()
   if ( !d->agentInstance.isValid() ) {
     setError( KJob::UserDefinedError );
     setErrorText( i18n("Unable to create agent instance." ) );
-    emitResult();
+    QTimer::singleShot( 0, this , SLOT(emitResult()) );
+  } else {
+    d->safetyTimer->start( safetyTimeout );
   }
 }
 
