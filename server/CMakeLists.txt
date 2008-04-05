@@ -17,6 +17,11 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
+# FIXME: remove once the server has been moved to kdesupport
+# currently needed because library akonadiprotocolinternals is
+# installed by kdepimlibs
+link_directories( ${KDE4_LIB_DIR} )
+
 add_subdirectory( akonadictl )
 add_subdirectory( control )
 add_subdirectory( src )
