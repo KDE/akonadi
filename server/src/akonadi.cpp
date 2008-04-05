@@ -46,11 +46,7 @@ using namespace Akonadi;
 static AkonadiServer *s_instance = 0;
 
 AkonadiServer::AkonadiServer( QObject* parent )
-#ifdef Q_OS_WIN
-    : QTcpServer( parent )
-#else
-    : KLocalSocketServer( parent )
-#endif
+    : QLocalServer( parent )
     , mCacheCleaner( 0 )
     , mIntervalChecker( 0 )
     , mDatabaseProcess( 0 )
@@ -69,18 +65,16 @@ AkonadiServer::AkonadiServer( QObject* parent )
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
 
 #ifdef Q_OS_WIN
-    int port = settings.value( QLatin1String( "Connection/Port" ), 4444 ).toInt();
-    if ( !listen( QHostAddress::LocalHost, port ) )
-      qFatal("Unable to listen on port %d", port);
+    QString namedPipe = settings.value( QLatin1String( "Connection/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
+    if ( !listen( namedPipe ) )
+      qFatal( "Unable to listen on Named Pipe %s", namedPipe.toLocal8Bit().data() );
 
-    connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "TCP" ) );
-    connectionSettings.setValue( QLatin1String( "Data/Address" ), serverAddress().toString() );
-    connectionSettings.setValue( QLatin1String( "Data/Port" ), serverPort() );
+    connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "NamedPipe" ) );
+    connectionSettings.setValue( QLatin1String( "Data/NamedPipe" ), pipeName );
 #else
     const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
     QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
-    if ( socketDir[0] != QLatin1Char( '/' ) )
-    {
+    if ( socketDir[0] != QLatin1Char( '/' ) ) {
       QDir::home().mkdir( socketDir );
       socketDir = QDir::homePath() + QLatin1Char( '/' ) + socketDir;
     }
@@ -118,12 +112,10 @@ AkonadiServer::AkonadiServer( QObject* parent )
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );
 
     char* dbusAddress = getenv( "DBUS_SESSION_BUS_ADDRESS" );
-    if (dbusAddress != 0)
-    {
+    if ( dbusAddress != 0 ) {
       connectionSettings.setValue( QLatin1String( "DBUS/Address" ), QLatin1String( dbusAddress ) );
     }
 }
-
 
 AkonadiServer::~AkonadiServer()
 {
@@ -188,7 +180,7 @@ void AkonadiServer::doQuit()
     QCoreApplication::exit();
 }
 
-void AkonadiServer::incomingConnection( int socketDescriptor )
+void AkonadiServer::incomingConnection( quintptr socketDescriptor )
 {
     QPointer<AkonadiConnection> thread = new AkonadiConnection( socketDescriptor, this );
     connect( thread, SIGNAL( finished() ), thread, SLOT( deleteLater() ) );
