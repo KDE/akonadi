@@ -104,8 +104,30 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     */
     virtual QStringList mimeTypes() const;
 
+    /**
+      Sets the item fetch scope.
+
+      Controls how much of an item's data is fetched from the server, e.g.
+      whether to fetch the full item payload or only metadata.
+
+      @param fetchScope the new scope for item fetch operations
+
+      @see fetchScope()
+    */
     void setFetchScope( const ItemFetchScope &fetchScope );
 
+    /**
+      Returns the item fetch scope.
+
+      Since this returns a reference it can be used to conveniently modify the
+      current scope in-place, i.e. by calling a method on the returned reference
+      without storing it in a local variable. See the ItemFetchScope documentation
+      for an example.
+
+      @return a reference to the current item fetch scope
+
+      @see setFetchScope() for replacing the current item fetch scope
+    */
     ItemFetchScope &fetchScope();
 
     /**

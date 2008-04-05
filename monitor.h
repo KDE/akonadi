@@ -108,8 +108,30 @@ class AKONADI_EXPORT Monitor : public QObject
     */
     void fetchCollectionStatistics( bool enable );
 
+    /**
+      Sets the item fetch scope.
+
+      Controls how much of an item's data is fetched from the server, e.g.
+      whether to fetch the full item payload or only metadata.
+
+      @param fetchScope the new scope for item fetch operations
+
+      @see itemFetchScope()
+    */
     void setItemFetchScope( const ItemFetchScope &fetchScope );
 
+    /**
+      Returns the item fetch scope.
+
+      Since this returns a reference it can be used to conveniently modify the
+      current scope in-place, i.e. by calling a method on the returned reference
+      without storing it in a local variable. See the ItemFetchScope documentation
+      for an example.
+
+      @return a reference to the current item fetch scope
+
+      @see setItemFetchScope() for replacing the current item fetch scope
+    */
     ItemFetchScope &itemFetchScope();
 
   Q_SIGNALS:
