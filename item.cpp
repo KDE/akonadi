@@ -96,29 +96,21 @@ bool Item::hasFlag( const QByteArray & name ) const
   return d_func()->mFlags.contains( name );
 }
 
-void Item::addPart( const QString &identifier, const QByteArray &data )
-{
-  ItemSerializer::deserialize( *this, identifier, data );
-}
-
-QByteArray Item::part( const QString &identifier ) const
-{
-  QByteArray data;
-  ItemSerializer::serialize( *this, identifier, data );
-  return data;
-}
-
 QStringList Item::loadedPayloadParts() const
 {
   return ItemSerializer::parts( *this );
 }
 
-QStringList Item::availableParts() const
+QByteArray Item::payloadData() const
 {
-  QStringList payloadParts = ItemSerializer::parts( *this );
-  foreach ( const Attribute *attr, attributes() )
-    payloadParts << QString::fromLatin1( attr->type() );
-  return payloadParts;
+  QByteArray data;
+  ItemSerializer::serialize( *this, FullPayload, data );
+  return data;
+}
+
+void Item::setPayloadFromData( const QByteArray &data )
+{
+  ItemSerializer::deserialize( *this, FullPayload, data );
 }
 
 int Item::revision() const

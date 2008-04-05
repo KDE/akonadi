@@ -133,24 +133,26 @@ class AKONADI_EXPORT Item : public Entity
     void clearFlags();
 
     /**
-      Adds a new part with the given @p identifier and @p data.
-      If a part with the identifier already exists, it is overwritten.
-     */
-    KDE_DEPRECATED void addPart( const QString &identifier, const QByteArray &data );
+      Returns the full payload in its canonical representation, ie. the
+      binary or textual format usually used for data with this mimetype.
+      This is useful when communicating with non-Akonadi application by
+      eg. drag&drop, copy&paste or stored files.
+    */
+    QByteArray payloadData() const;
 
     /**
-      Returns the data of the part with the given @p identifier or any
-      empty byte array if a part with the identifier doesn't exists.
-     */
-    KDE_DEPRECATED QByteArray part( const QString &identifier ) const;
+      Sets the payload based on the canonical representation normally
+      used for data of this mimetype.
+      @param data The encoded data.
+      @see fullPayloadData
+    */
+    void setPayloadFromData( const QByteArray &data );
 
     /**
       Returns the list of loaded payload parts. This is not necessarily the
       identical to all parts in the cache or to all available parts on the backend.
      */
     QStringList loadedPayloadParts() const;
-
-    KDE_DEPRECATED QStringList availableParts() const;
 
     /**
       Returns the revision number of this item.

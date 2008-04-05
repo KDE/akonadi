@@ -48,6 +48,7 @@ class ItemSync::Private
     void checkDone();
     void slotLocalListDone( KJob* );
     void slotLocalChangeDone( KJob* );
+    bool itemNeedsUpdate( const Item &localItem, const Item &remoteItem );
 
     ItemSync *q;
     Collection mSyncCollection;
@@ -120,6 +121,40 @@ void ItemSync::doStart()
   connect( job, SIGNAL( result( KJob* ) ), SLOT( slotLocalListDone( KJob* ) ) );
 }
 
+bool ItemSync::Private::itemNeedsUpdate( const Item &localItem, const Item &remoteItem )
+{
+  // Check whether the flags differ
+  if ( localItem.flags() != remoteItem.flags() ) {
+    kDebug( 5250 ) << "Local flags "  << localItem.flags()
+                    << "remote flags " << remoteItem.flags();
+    return true;
+  }
+
+  // Check whether the new item contains unknown parts
+  const QStringList localParts = localItem.loadedPayloadParts();
+  QStringList missingParts = localParts;
+  foreach( const QString remotePart, remoteItem.loadedPayloadParts() )
+    missingParts.removeAll( remotePart );
+  if ( !missingParts.isEmpty() )
+    return true;
+
+  // ### FIXME SLOW!!!
+  // If the available part identifiers don't differ, check
+  // whether the content of the payload differs
+  if ( localItem.payloadData() != remoteItem.payloadData() )
+    return true;
+
+  // check if remote attributes have been changed
+  foreach ( Attribute* attr, remoteItem.attributes() ) {
+    if ( !localItem.hasAttribute( attr->type() ) )
+      return true;
+    if ( attr->serialized() != localItem.attribute( attr->type() )->serialized() )
+      return true;
+  }
+
+  return false;
+}
+
 void ItemSync::Private::slotLocalListDone( KJob * job )
 {
   if ( job->error() )
@@ -160,33 +195,7 @@ void ItemSync::Private::slotLocalListDone( KJob * job )
        */
       needsUpdate = true;
     } else {
-      if ( localItem.flags() != remoteItem.flags() ) { // Check whether the flags differ
-        kDebug( 5250 ) << "Local flags "  << localItem.flags()
-                       << "remote flags " << remoteItem.flags();
-        needsUpdate = true;
-      } else {
-        /*
-         * Check whether the new item contains unknown parts
-         */
-        const QStringList localParts = localItem.availableParts();
-        QStringList missingParts = localParts;
-        foreach( const QString remotePart, remoteItem.availableParts() )
-          missingParts.removeAll( remotePart );
-        if ( !missingParts.isEmpty() )
-          needsUpdate = true;
-        else {
-          /**
-           * If the available part identifiers don't differ, check
-           * whether the content of the parts differs.
-           */
-          foreach ( const QString partId, localParts ) {
-            if ( localItem.part( partId ) != remoteItem.part( partId ) ) {
-              needsUpdate = true;
-              break;
-            }
-          }
-        }
-      }
+      needsUpdate = itemNeedsUpdate( localItem, remoteItem );
     }
 
     if ( needsUpdate ) {
