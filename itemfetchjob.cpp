@@ -94,18 +94,6 @@ void ItemFetchJobPrivate::selectDone( KJob * job )
     startFetchJob();
 }
 
-ItemFetchJob::ItemFetchJob( QObject *parent )
-  : Job( new ItemFetchJobPrivate( this ), parent )
-{
-  Q_D( ItemFetchJob );
-
-  d->mEmitTimer = new QTimer( this );
-  d->mEmitTimer->setSingleShot( true );
-  d->mEmitTimer->setInterval( 100 );
-  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
-  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
-}
-
 ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent )
   : Job( new ItemFetchJobPrivate( this ), parent )
 {
@@ -131,7 +119,8 @@ ItemFetchJob::ItemFetchJob( const Item & item, QObject * parent)
   connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
   connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
 
-  setItem( item );
+  d->mCollection = Collection::root();
+  d->mItem = item;
 }
 
 ItemFetchJob::~ItemFetchJob()
@@ -233,22 +222,6 @@ Item::List ItemFetchJob::items() const
   Q_D( const ItemFetchJob );
 
   return d->mItems;
-}
-
-void ItemFetchJob::setCollection(const Collection &collection)
-{
-  Q_D( ItemFetchJob );
-
-  d->mCollection = collection;
-  d->mItem = Item();
-}
-
-void Akonadi::ItemFetchJob::setItem(const Item & item)
-{
-  Q_D( ItemFetchJob );
-
-  d->mCollection = Collection::root();
-  d->mItem = item;
 }
 
 void ItemFetchJob::setFetchScope( ItemFetchScope &fetchScope )

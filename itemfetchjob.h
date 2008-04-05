@@ -37,11 +37,6 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     Q_OBJECT
   public:
     /**
-     * Creates an empty item fetch job.
-     */
-    explicit ItemFetchJob( QObject *parent = 0 );
-
-    /**
       Create a new item list job to retrieve envelope parts of all
       items in the given collection.
       @param collection The collection to list.
@@ -66,18 +61,6 @@ class AKONADI_EXPORT ItemFetchJob : public Job
       signal has been emitted or if an error occurred.
     */
     Item::List items() const;
-
-    /**
-      Sets the collection that should be listed.
-      @param collection The collection that should be listed.
-    */
-    void setCollection( const Collection &collection );
-
-    /**
-      Sets the unique identifier of the item that should be fetched.
-      @param item The item with the unique identifier.
-    */
-    void setItem( const Item &item );
 
     /**
       Sets the item fetch scope.
