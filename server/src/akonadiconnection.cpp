@@ -67,7 +67,9 @@ void AkonadiConnection::run()
     m_socket = new QLocalSocket();
 
     if ( !m_socket->setSocketDescriptor( m_socketDescriptor ) ) {
-        emit error( m_socket->error() );
+        qWarning() << "AkonadiConnection(" << m_identifier
+                 << ")::run: failed to set socket descriptor: "
+                 << m_socket->error() << "(" << m_socket->errorString() << ")";
         return;
     }
 

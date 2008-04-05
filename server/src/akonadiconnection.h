@@ -57,9 +57,6 @@ public:
     void setSessionId( const QByteArray &id );
     QByteArray sessionId() const;
 
-Q_SIGNALS:
-    void error( QLocalSocket::LocalSocketError socketError );
-
 protected Q_SLOTS:
     void slotDisconnected();
     void slotNewData();
