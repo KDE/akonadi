@@ -76,9 +76,7 @@ bool Fetch::parseCommand( const QByteArray &line )
       break;
     } else {
       pos = ImapParser::parseString( line, buffer, pos );
-      if ( buffer == "AKALL" ) { // ### DEPRECATED
-        mAllParts = true;
-      } else if ( buffer == AKONADI_PARAM_CACHEONLY ) {
+      if ( buffer == AKONADI_PARAM_CACHEONLY ) {
         mCacheOnly = true;
       } else if ( buffer == AKONADI_PARAM_ALLATTRIBUTES ) {
         mAllParts = true; // ### temporary
