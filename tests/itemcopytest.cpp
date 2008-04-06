@@ -47,7 +47,8 @@ class ItemCopyTest : public QObject
       QVERIFY( copy->exec() );
 
       ItemFetchJob *fetch = new ItemFetchJob( target );
-      fetch->fetchScope().setFetchAllParts( true );
+      fetch->fetchScope().fetchFullPayload();
+      fetch->fetchScope().fetchAllAttributes();
       QVERIFY( fetch->exec() );
       QCOMPARE( fetch->items().count(), 1 );
     }

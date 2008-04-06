@@ -49,20 +49,91 @@ ItemFetchScope &ItemFetchScope::operator=( const ItemFetchScope &other )
 
 void ItemFetchScope::addFetchPart( const QString &identifier )
 {
-  d->mFetchParts.insert( identifier );
+  fetchPayloadPart( identifier );
 }
 
 QStringList ItemFetchScope::fetchPartList() const
 {
-  return d->mFetchParts.toList();
+  QStringList list;
+  foreach ( const QByteArray b, d->mPayloadParts )
+    list << QString::fromLatin1( b );
+  return list;
 }
 
 void ItemFetchScope::setFetchAllParts( bool fetchAll )
 {
-  d->mFetchAllParts = fetchAll;
+  d->mFullPayload = fetchAll;
+  d->mAllAttributes = fetchAll;
 }
 
 bool ItemFetchScope::fetchAllParts() const
 {
-  return d->mFetchAllParts;
+  return d->mFullPayload && d->mAllAttributes;
+}
+
+
+QSet< QByteArray > ItemFetchScope::payloadParts() const
+{
+  return d->mPayloadParts;
+}
+
+void ItemFetchScope::fetchPayloadPart(const QByteArray & part, bool fetch)
+{
+  if ( fetch )
+    d->mPayloadParts.insert( part );
+  else
+    d->mPayloadParts.remove( part );
+}
+
+void ItemFetchScope::fetchPayloadPart(const QString & part, bool fetch)
+{
+  fetchPayloadPart( part.toLatin1(), fetch );
+}
+
+bool ItemFetchScope::fullPayload() const
+{
+  return d->mFullPayload;
+}
+
+void ItemFetchScope::fetchFullPayload(bool fetch)
+{
+  d->mFullPayload = fetch;
+}
+
+QSet< QByteArray > ItemFetchScope::attributes() const
+{
+  return d->mAttributes;
+}
+
+void ItemFetchScope::fetchAttribute(const QByteArray & type, bool fetch)
+{
+  if ( fetch )
+    d->mAttributes.insert( type );
+  else
+    d->mAttributes.remove( type );
+}
+
+bool ItemFetchScope::allAttributes() const
+{
+  return d->mAllAttributes;
+}
+
+void ItemFetchScope::fetchAllAttributes(bool fetch)
+{
+  d->mAllAttributes = fetch;
+}
+
+bool ItemFetchScope::isEmpty() const
+{
+  return d->mPayloadParts.isEmpty() && d->mAttributes.isEmpty() && !d->mFullPayload && !d->mAllAttributes;
+}
+
+bool ItemFetchScope::cacheOnly() const
+{
+  return d->mCacheOnly;
+}
+
+void ItemFetchScope::setCacheOnly(bool cacheOnly)
+{
+  d->mCacheOnly = cacheOnly;
 }

@@ -29,20 +29,28 @@ class ItemFetchScopePrivate : public QSharedData
 {
   public:
     ItemFetchScopePrivate()
-      : mFetchAllParts( false )
+      : mFullPayload( false ),
+        mAllAttributes( false ),
+        mCacheOnly( false )
     {
     }
 
     ItemFetchScopePrivate( const ItemFetchScopePrivate &other )
       : QSharedData( other )
     {
-      mFetchParts = other.mFetchParts;
-      mFetchAllParts = other.mFetchAllParts;
+      mPayloadParts = other.mPayloadParts;
+      mAttributes = other.mAttributes;
+      mFullPayload = other.mFullPayload;
+      mAllAttributes = other.mAllAttributes;
+      mCacheOnly = other.mCacheOnly;
     }
 
   public:
-    QSet<QString> mFetchParts;
-    bool mFetchAllParts;
+    QSet<QByteArray> mPayloadParts;
+    QSet<QByteArray> mAttributes;
+    bool mFullPayload;
+    bool mAllAttributes;
+    bool mCacheOnly;
 };
 
 }

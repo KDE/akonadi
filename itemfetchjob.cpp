@@ -27,6 +27,7 @@
 #include "itemserializerplugin.h"
 #include "job_p.h"
 #include "entity_p.h"
+#include "protocol_p.h"
 
 #include <kdebug.h>
 
@@ -71,19 +72,26 @@ void ItemFetchJobPrivate::startFetchJob()
 {
   QByteArray command = newTag();
   if ( !mItem.isValid() )
-    command += " FETCH 1:*";
+    command += " " AKONADI_CMD_ITEMFETCH " 1:*";
   else
-    command += " UID FETCH " + QByteArray::number( mItem.id() );
+    command += " " AKONADI_CMD_UID " " AKONADI_CMD_ITEMFETCH " " + QByteArray::number( mItem.id() );
 
-  if ( !mFetchScope.fetchAllParts() ) {
-    command += " (UID REMOTEID FLAGS";
-    foreach ( QString part, mFetchScope.fetchPartList() ) {
-      command += ' ' + part.toUtf8();
-    }
-    command += ")\n";
-  } else {
-    command += " AKALL\n";
-  }
+  if ( mFetchScope.fullPayload() )
+    command += " " AKONADI_PARAM_FULLPAYLOAD;
+  if ( mFetchScope.allAttributes() )
+    command += " " AKONADI_PARAM_ALLATTRIBUTES;
+  if ( mFetchScope.cacheOnly() )
+    command += " " AKONADI_PARAM_CACHEONLY;
+  if ( mFetchScope.fetchAllParts() ) // ### DEPRECATED
+    command += " AKALL";
+
+  command += " (UID REMOTEID FLAGS";
+  foreach ( const QByteArray part, mFetchScope.payloadParts() )
+    command += ' ' + part;
+  foreach ( const QByteArray part, mFetchScope.attributes() )
+    command += ' ' + part;
+  command += ")\n";
+
   writeData( command );
 }
 

@@ -343,11 +343,7 @@ void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
   // TODO Assert model is a MessageModel
   QAbstractProxyModel::setSourceModel( model );
 
-  // FIXME
-  MessageThreadingAttribute attr;
-  ItemFetchScope fetchScope = d->sourceMessageModel()->fetchScope();
-  fetchScope.addFetchPart( QString::fromLatin1( attr.type() ) );
-  d->sourceMessageModel()->setFetchScope( fetchScope );
+  d->sourceMessageModel()->fetchScope().fetchAttribute<MessageThreadingAttribute>();
 
   // TODO disconnect old model
   connect( sourceModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( slotInsertRows( QModelIndex, int, int ) ) );

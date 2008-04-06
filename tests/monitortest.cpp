@@ -72,7 +72,7 @@ void MonitorTest::testMonitor()
   Monitor *monitor = new Monitor( this );
   monitor->setCollectionMonitored( Collection::root() );
   monitor->fetchCollection( fetchCol );
-  monitor->itemFetchScope().addFetchPart( Item::FullPayload );
+  monitor->itemFetchScope().fetchFullPayload();
 
   // monitor signals
   qRegisterMetaType<Akonadi::Collection>();

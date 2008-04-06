@@ -87,7 +87,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
 
   if ( msg.type() == NotificationMessage::Item ) {
     notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
-    if ( (!mItemFetchScope.fetchPartList().isEmpty() || mItemFetchScope.fetchAllParts()) &&
+    if ( !mItemFetchScope.isEmpty() &&
           ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move ) ) {
       Item item( msg.uid() );
       item.setRemoteId( msg.remoteId() );
@@ -98,7 +98,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
       QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotItemJobFinished(KJob*)) );
       return true;
     }
-    if ( (!mItemFetchScope.fetchPartList().isEmpty() || mItemFetchScope.fetchAllParts()) && msg.operation() == NotificationMessage::Modify ) {
+    if ( !mItemFetchScope.isEmpty() && msg.operation() == NotificationMessage::Modify ) {
       Item item( msg.uid() );
       item.setRemoteId( msg.remoteId() );
       ItemFetchJob *job = new ItemFetchJob( item, q_ptr );

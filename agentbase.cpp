@@ -153,7 +153,7 @@ void AgentBasePrivate::init()
 
   mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
   if ( mOnline )
-    mMonitor->itemFetchScope().setFetchAllParts( true );
+    mMonitor->itemFetchScope().fetchFullPayload();
 
   connect( mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );

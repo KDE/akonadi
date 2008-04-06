@@ -25,6 +25,7 @@
 #include <QtCore/QSharedDataPointer>
 
 class QStringList;
+template <typename T> class QSet;
 
 namespace Akonadi {
 
@@ -45,13 +46,15 @@ class ItemFetchScopePrivate;
   Example: modifying an ItemFetchJob's scope @c in-place
   @code
   ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
-  job->fetchScope().setFetchAllParts( true );
+  job->fetchScope().fetchFullPayload();
+  job->fetchScope().fetchAttribute<MyAttribute>();
   @endcode
 
   Example: @c replacing an ItemFetchJob's scope
   @code
   Akonadi::ItemFetchScope scope;
-  scope.setAllFetchAllParts( true );
+  scope.fetchFullPayload();
+  scope.fetchAttribute<MyAttribute>();
 
   ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
   job->setFetchScope( scope );
@@ -94,12 +97,7 @@ class AKONADI_EXPORT ItemFetchScope
 
       @see fetchPartList()
     */
-    void addFetchPart( const QString &identifier );
-    //FIXME_API:(volker) split into fetchPayloadPart(id, enum),
-    //                   fetchAttribute(attr) and fetchAllAttributes()
-    // make part identifier a QByteArray
-    // move methods into ItemFetchScope
-    // add method setItemFetchScope(ifs) and 'ItemFetchScope &itemFetchScope() const'
+    KDE_DEPRECATED void addFetchPart( const QString &identifier ); //FIXME_API: kill me
 
     /**
       Returns which item parts sould be fetched.
@@ -108,7 +106,7 @@ class AKONADI_EXPORT ItemFetchScope
 
       @see fetchAllParts()
     */
-    QStringList fetchPartList() const;
+    KDE_DEPRECATED QStringList fetchPartList() const; //FIXME_API: kill me
 
     /**
       Fetch all item parts.
@@ -118,8 +116,7 @@ class AKONADI_EXPORT ItemFetchScope
 
       @see fetchAllParts()
     */
-    void setFetchAllParts( bool fetchAll );
-    //FIXME_API:(volker) rename to fetchAllPayloadParts(enum)
+    KDE_DEPRECATED void setFetchAllParts( bool fetchAll ); //FIXME_API: kill me
 
     /**
       Returns whether all parts sould be fetched.
@@ -129,7 +126,92 @@ class AKONADI_EXPORT ItemFetchScope
 
       @see setFetchAllParts()
     */
-    bool fetchAllParts() const;
+    KDE_DEPRECATED bool fetchAllParts() const; //FIXME_API: kill me
+
+
+    /**
+      Returns the payload parts that should be fetched.
+      @see fetchPayloadPart()
+    */
+    QSet<QByteArray> payloadParts() const;
+
+    /**
+      Select which payload parts you want to retrieve.
+      @param part The payload part identifier. Valid values depend
+      on the item type.
+      @param fetch @c true to fetch this part, @c false otherwise.
+    */
+    void fetchPayloadPart( const QByteArray &part, bool fetch = true );
+
+    KDE_DEPRECATED void fetchPayloadPart( const QString &part, bool fetch = true ); // FIXME_API: make part identifiers QByteArrays
+
+    /**
+      Returns whether the full payload should be retrieved.
+      @see fetchFullPayload()
+    */
+    bool fullPayload() const;
+
+    /**
+      Select if you want to fetch the full payload.
+      @param fetch @c true if the full payload should be fetched, @c false otherwise.
+    */
+    void fetchFullPayload( bool fetch = true );
+
+    /**
+      Returns all explicitly fetched attributes.
+      Undefined if fetchAllAttributes() returns true.
+      @see fetchAttribute()
+    */
+    QSet<QByteArray> attributes() const;
+
+    /**
+      Select if attribute of type @p type should be fetched.
+      @param type The attribute type to fetch.
+      @param fetch Select if this attribute should be fetched or not.
+    */
+    void fetchAttribute( const QByteArray &type, bool fetch = true );
+
+    /**
+      Selects if attributes of type @p T should be fetched.
+      @param fetch Select if this attribute should be fetched or not.
+    */
+    template <typename T> inline void fetchAttribute( bool fetch = true )
+    {
+      T dummy;
+      fetchAttribute( dummy.type(), fetch );
+    }
+
+    /**
+      Returns whether all available attributes should be fetched.
+      @see fetchAllAttributes()
+    */
+    bool allAttributes() const;
+
+    /**
+      Select whether or not all available item attributes should be fetched.
+      @param fetch Select if all attributes should be fetched or not.
+    */
+    void fetchAllAttributes( bool fetch = true );
+
+    /**
+      Returns whether payload data should be requested from remote sources or just
+      from the local cache.
+      @see setCacheOnly()
+    */
+    bool cacheOnly() const;
+
+    /**
+      Select whether payload data should be requested from remote sources or just
+      from the local cache.
+      @param chacheOnly @c true if no remote data should be requested,
+      @c false otherwise (the default).
+    */
+    void setCacheOnly( bool cacheOnly );
+
+    /**
+      Returns @c true if there is nothing to fetch.
+    */
+    bool isEmpty() const;
 
   private:
     //@cond PRIVATE

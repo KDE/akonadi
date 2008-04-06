@@ -155,7 +155,7 @@ void BenchMarker::testMaildir( QString dir )
   Collection::List list = clj->collections();
   foreach ( Collection collection, list ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
-    ifj->fetchScope().addFetchPart( MessagePart::Envelope );
+    ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
     ifj->exec();
     QString a;
     foreach ( Item item, ifj->items() ) {
@@ -193,7 +193,7 @@ void BenchMarker::testMaildir( QString dir )
   Collection::List list3 = clj3->collections();
   foreach ( Collection collection, list3 ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
-    ifj->fetchScope().addFetchPart( MessagePart::Envelope );
+    ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
     ifj->exec();
     QString a;
     foreach ( Item item, ifj->items() ) {

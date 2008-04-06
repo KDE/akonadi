@@ -80,7 +80,8 @@ class ChangeRecorderTest : public QObject
       rec = new ChangeRecorder();
       rec->setConfig( settings );
       rec->setAllMonitored();
-      rec->itemFetchScope().setFetchAllParts( true );
+      rec->itemFetchScope().fetchFullPayload();
+      rec->itemFetchScope().fetchAllAttributes();
       QVERIFY( !rec->isEmpty() );
 
       QSignalSpy spy2( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );

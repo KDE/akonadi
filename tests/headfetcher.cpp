@@ -50,9 +50,9 @@ HeadFetcher::HeadFetcher( bool multipart )
   foreach ( Collection collection, list ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     if ( multipart ) {
-      ifj->fetchScope().addFetchPart( MessagePart::Envelope );
+      ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
     } else {
-      ifj->fetchScope().addFetchPart( Item::FullPayload );
+      ifj->fetchScope().fetchFullPayload();
     }
     ifj->exec();
     qDebug() << "  Listing" << ifj->items().count() << "item headers.";
