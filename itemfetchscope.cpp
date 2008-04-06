@@ -47,31 +47,6 @@ ItemFetchScope &ItemFetchScope::operator=( const ItemFetchScope &other )
   return *this;
 }
 
-void ItemFetchScope::addFetchPart( const QString &identifier )
-{
-  fetchPayloadPart( identifier );
-}
-
-QStringList ItemFetchScope::fetchPartList() const
-{
-  QStringList list;
-  foreach ( const QByteArray b, d->mPayloadParts )
-    list << QString::fromLatin1( b );
-  return list;
-}
-
-void ItemFetchScope::setFetchAllParts( bool fetchAll )
-{
-  d->mFullPayload = fetchAll;
-  d->mAllAttributes = fetchAll;
-}
-
-bool ItemFetchScope::fetchAllParts() const
-{
-  return d->mFullPayload && d->mAllAttributes;
-}
-
-
 QSet< QByteArray > ItemFetchScope::payloadParts() const
 {
   return d->mPayloadParts;

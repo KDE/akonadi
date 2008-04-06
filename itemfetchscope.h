@@ -91,45 +91,6 @@ class AKONADI_EXPORT ItemFetchScope
     ItemFetchScope &operator=( const ItemFetchScope &other );
 
     /**
-      Choose which part(s) of the item shall be fetched.
-
-      @param identifier identifier of an item part to be fetched
-
-      @see fetchPartList()
-    */
-    KDE_DEPRECATED void addFetchPart( const QString &identifier ); //FIXME_API: kill me
-
-    /**
-      Returns which item parts sould be fetched.
-
-      @return a list of item part identifiers added through addFetchPart()
-
-      @see fetchAllParts()
-    */
-    KDE_DEPRECATED QStringList fetchPartList() const; //FIXME_API: kill me
-
-    /**
-      Fetch all item parts.
-
-      @param fetchAll if @c true all item parts should be fetched independent of
-             the parts specified in fetchPartList()
-
-      @see fetchAllParts()
-    */
-    KDE_DEPRECATED void setFetchAllParts( bool fetchAll ); //FIXME_API: kill me
-
-    /**
-      Returns whether all parts sould be fetched.
-
-      @return @c true if all available item parts should be fetched,
-              @c false if only the parts specified by fetchPartList() should be fetched
-
-      @see setFetchAllParts()
-    */
-    KDE_DEPRECATED bool fetchAllParts() const; //FIXME_API: kill me
-
-
-    /**
       Returns the payload parts that should be fetched.
       @see fetchPayloadPart()
     */

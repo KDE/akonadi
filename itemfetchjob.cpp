@@ -82,8 +82,6 @@ void ItemFetchJobPrivate::startFetchJob()
     command += " " AKONADI_PARAM_ALLATTRIBUTES;
   if ( mFetchScope.cacheOnly() )
     command += " " AKONADI_PARAM_CACHEONLY;
-  if ( mFetchScope.fetchAllParts() ) // ### DEPRECATED
-    command += " AKALL";
 
   command += " (UID REMOTEID FLAGS";
   foreach ( const QByteArray part, mFetchScope.payloadParts() )
