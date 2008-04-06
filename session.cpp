@@ -51,7 +51,7 @@ void SessionPrivate::reconnect()
   // should be checking connection method and value validity
   if ( socket->state() != QLocalSocket::ConnectedState &&
        socket->state() != QLocalSocket::ConnectingState ) {
-#ifdef Q_OS_WIN
+#ifdef Q_OS_WIN  //krazy:exclude=cpp
     const QString namedPipe = mConnectionSettings->value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
     socket->connectToServer( namedPipe );
 #else

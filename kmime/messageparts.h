@@ -27,7 +27,7 @@
 
 namespace Akonadi
 {
-  class AKONADI_KMIME_EXPORT MessagePart
+  class AKONADI_KMIME_EXPORT MessagePart  //krazy:exclude=dpointer
   {
     public:
 
