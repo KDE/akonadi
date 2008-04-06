@@ -22,6 +22,7 @@
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include <akonadi/private/imapparser_p.h>
+#include <akonadi/private/protocol_p.h>
 #include "response.h"
 #include "storage/selectquerybuilder.h"
 #include "resourceinterface.h"
@@ -38,7 +39,8 @@ using namespace Akonadi;
 Fetch::Fetch()
   : Handler(),
     mIsUidFetch( false ),
-    mAllParts( false )
+    mAllParts( false ),
+    mCacheOnly( false )
 {
 }
 
@@ -54,7 +56,7 @@ bool Fetch::parseCommand( const QByteArray &line )
 
   // command
   pos = ImapParser::parseString( line, buffer, pos );
-  if ( buffer == "UID" ) {
+  if ( buffer == AKONADI_CMD_UID ) {
     mIsUidFetch = true;
     pos = ImapParser::parseString( line, buffer, pos );
   }
@@ -65,25 +67,38 @@ bool Fetch::parseCommand( const QByteArray &line )
     return false;
 
   // macro vs. attribute list
-  pos = ImapParser::stripLeadingSpaces( line, pos );
-  if ( pos >= line.count() )
-    return false;
-  if ( line[pos] == '(' ) {
-    pos = ImapParser::parseParenthesizedList( line, mAttrList, pos );
-  } else {
-    pos = ImapParser::parseString( line, buffer, pos );
-    if ( buffer == "AKALL" ) {
-      mAllParts = true;
-    } else if ( buffer == "ALL" ) {
-      mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE";
-    } else if ( buffer == "FULL" ) {
-      mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE";
-    } else if ( buffer == "FAST" ) {
-      mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE" << "BODY";
+  forever {
+    pos = ImapParser::stripLeadingSpaces( line, pos );
+    if ( pos >= line.count() )
+      break;
+    if ( line[pos] == '(' ) {
+      pos = ImapParser::parseParenthesizedList( line, mAttrList, pos );
+      break;
     } else {
-      return false;
+      pos = ImapParser::parseString( line, buffer, pos );
+      if ( buffer == "AKALL" ) { // ### DEPRECATED
+        mAllParts = true;
+      } else if ( buffer == AKONADI_PARAM_CACHEONLY ) {
+        mCacheOnly = true;
+      } else if ( buffer == AKONADI_PARAM_ALLATTRIBUTES ) {
+        mAllParts = true; // ### temporary
+      } else if ( buffer == AKONADI_PARAM_FULLPAYLOAD ) {
+        mAllParts = true; // ### temporary;
+        mAttrList << "RFC822"; // HACK: temporary workaround until we have support for detecting the availability of the full payload in the server
+      }
+      // IMAP compat stuff
+      else if ( buffer == "ALL" ) {
+        mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE";
+      } else if ( buffer == "FULL" ) {
+        mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE";
+      } else if ( buffer == "FAST" ) {
+        mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE" << "BODY";
+      } else {
+        return false;
+      }
     }
   }
+
   return true;
 }
 
@@ -165,7 +180,7 @@ bool Fetch::handleLine( const QByteArray& line )
   // fetch not yet cached item parts
   // TODO: I'm sure this can be done with a single query instead of manually
   DataStore *store = connection()->storageBackend();
-  if ( !partList.isEmpty() || mAllParts ) {
+  if ( !mCacheOnly && (!partList.isEmpty() || mAllParts) ) {
     while ( itemQuery.query().isValid() ) {
       const qint64 pimItemId = itemQuery.query().value( itemQueryIdColumn ).toLongLong();
       QStringList missingParts = partList;

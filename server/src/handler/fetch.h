@@ -53,10 +53,10 @@ class Fetch : public Handler
 
   private:
     ImapSet mSet;
+    QList<QByteArray> mAttrList;
     bool mIsUidFetch;
     bool mAllParts;
-    QList<QByteArray> mAttrList;
-
+    bool mCacheOnly;
 };
 
 }

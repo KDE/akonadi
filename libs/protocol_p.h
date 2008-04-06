@@ -32,4 +32,13 @@
 #define AKONADI_DBUS_SERVER_SERVICE "org.kde.Akonadi"
 #define AKONADI_DBUS_CONTROL_SERVICE "org.kde.Akonadi.Control"
 
+// Commands
+#define AKONADI_CMD_ITEMFETCH "FETCH"
+#define AKONADI_CMD_UID "UID"
+
+// Command parameters
+#define AKONADI_PARAM_FULLPAYLOAD "FULLPAYLOAD"
+#define AKONADI_PARAM_ALLATTRIBUTES "ALLATTR"
+#define AKONADI_PARAM_CACHEONLY "CACHEONLY"
+
 #endif
