@@ -23,29 +23,25 @@
 
 #include <QtCore/QLatin1String>
 
-#include "akonadi-kmime_export.h"
-
 namespace Akonadi
 {
-  class AKONADI_KMIME_EXPORT MessagePart  //krazy:exclude=dpointer
+  namespace MessagePart
   {
-    public:
-
       /**
         The part identifier for envelope parts.
        */
-      static const QLatin1String Envelope;
+      static const QLatin1String Envelope( "ENVELOPE" );
 
       /**
         The part identifier for the main body part.
        */
-      static const QLatin1String Body;
+      static const QLatin1String Body( "RFC822" );
 
       /**
         The part identifier for the header part.
       */
-      static const QLatin1String Header;
-  };
+      static const QLatin1String Header( "HEAD" );
+  }
 }
 
 #endif
