@@ -70,7 +70,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
       qFatal( "Unable to listen on Named Pipe %s", namedPipe.toLocal8Bit().data() );
 
     connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "NamedPipe" ) );
-    connectionSettings.setValue( QLatin1String( "Data/NamedPipe" ), pipeName );
+    connectionSettings.setValue( QLatin1String( "Data/NamedPipe" ), namedPipe );
 #else
     const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
     QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
