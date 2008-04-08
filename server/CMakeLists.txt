@@ -133,6 +133,10 @@ target_link_libraries( akonadiprivate
   ${QT_QTXML_LIBRARY}
   akonadiprotocolinternals
 )
+if(WIN32)
+  target_link_libraries( akonadiprivate ${KDEWIN32_LIBRARIES} )
+endif(WIN32)
+
 set_target_properties( akonadiprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
