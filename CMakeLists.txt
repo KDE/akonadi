@@ -1,5 +1,10 @@
 project(akonadi-kde)
 
+if (KDE4_BUILD_TESTS)
+   # only with this macro the AKONADI_TESTS_EXPORT macro will do something
+   add_definitions(-DCOMPILING_TESTS)
+endif (KDE4_BUILD_TESTS)
+
 configure_file(akonadi-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi-prefix.h)
 
 add_subdirectory( kmime )

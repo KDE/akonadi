@@ -21,7 +21,7 @@
 #ifndef AKONADI_ITEM_SERIALIZER_H
 #define AKONADI_ITEM_SERIALIZER_H
 
-#include "akonadi_export.h"
+#include "akonadiprivate_export.h"
 
 class QString;
 class QStringList;
@@ -37,8 +37,7 @@ class ItemSerializerPlugin;
   @internal
   Serialization/Deserialization of item parts, serializer plugin management.
 */
-//FIXME_API: add export macros that is valid in debug mode only
-class AKONADI_EXPORT ItemSerializer
+class AKONADI_TESTS_EXPORT ItemSerializer
 {
   public:
       /** throws ItemSerializerException on failure */
