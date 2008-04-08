@@ -27,7 +27,7 @@ kde4_add_library( akonadiprotocolinternals SHARED ${akonadiprotocolinternals_src
 
 target_link_libraries( akonadiprotocolinternals ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
 set_target_properties( akonadiprotocolinternals PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install( TARGETS akonadiprotocolinternals DESTINATION ${LIB_INSTALL_DIR} )
+install( TARGETS akonadiprotocolinternals DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 # libakonadi-kde
 
@@ -126,7 +126,7 @@ kde4_add_library( akonadi-kde SHARED ${akonadikde_LIB_SRC} )
 
 target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KDE3SUPPORT_LIBS} akonadiprotocolinternals )
 set_target_properties( akonadi-kde PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install( TARGETS akonadi-kde  DESTINATION ${LIB_INSTALL_DIR} )
+install( TARGETS akonadi-kde  DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 
