@@ -48,6 +48,7 @@ class ItemModifyJobPrivate : public JobPrivate
     bool mRevCheck;
     QStringList mParts;
     QByteArray mPendingData;
+    bool mIgnorePayload;
 };
 
 }

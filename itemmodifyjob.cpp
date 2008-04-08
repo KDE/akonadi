@@ -35,8 +35,10 @@ using namespace Akonadi;
 ItemModifyJobPrivate::ItemModifyJobPrivate( ItemModifyJob *parent, const Item &item )
   : JobPrivate( parent ),
     mItem( item ),
-    mRevCheck( true )
+    mRevCheck( true ),
+    mIgnorePayload( false )
 {
+  mParts = mItem.loadedPayloadParts();
 }
 
 void ItemModifyJobPrivate::setClean()
@@ -163,12 +165,27 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
   kDebug( 5250 ) << "Unhandled response: " << _tag << data;
 }
 
-void ItemModifyJob::storePayload()
+void ItemModifyJob::setIgnorePayload( bool ignore )
 {
   Q_D( ItemModifyJob );
 
-  Q_ASSERT( !d->mItem.mimeType().isEmpty() );
-  d->mParts = d->mItem.loadedPayloadParts();
+  if ( d->mIgnorePayload == ignore )
+    return;
+
+  d->mIgnorePayload = ignore;
+  if ( d->mIgnorePayload )
+    d->mParts = QStringList();
+  else {
+    Q_ASSERT( !d->mItem.mimeType().isEmpty() );
+    d->mParts = d->mItem.loadedPayloadParts();
+  }
+}
+
+bool ItemModifyJob::ignorePayload() const
+{
+  Q_D( const ItemModifyJob );
+
+  return d->mIgnorePayload;
 }
 
 void ItemModifyJob::disableRevisionCheck()

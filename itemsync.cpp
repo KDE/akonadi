@@ -207,7 +207,6 @@ void ItemSync::Private::slotLocalListDone( KJob * job )
       i.setRevision( localItem.revision() );
       i.setFlags( remoteItem.flags() );
       ItemModifyJob *mod = new ItemModifyJob( i, q );
-      mod->storePayload();
       q->connect( mod, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
     } else {
       mProgress++;

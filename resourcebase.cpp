@@ -233,7 +233,6 @@ void ResourceBase::itemRetrieved( const Item &item )
   }
 
   ItemModifyJob *job = new ItemModifyJob( i );
-  job->storePayload();
   // FIXME: remove once the item with which we call retrieveItem() has a revision number
   job->disableRevisionCheck();
   connect( job, SIGNAL(result(KJob*)), SLOT(slotDeliveryDone(KJob*)) );

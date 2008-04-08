@@ -54,11 +54,9 @@ class AKONADI_EXPORT ItemModifyJob : public Job
      */
     virtual ~ItemModifyJob();
 
-    /**
-      Store the payload data.
-    */
-    void storePayload();
-    //FIXME_API:(volker) remove this method
+    void setIgnorePayload( bool ignore );
+
+    bool ignorePayload() const;
 
     /**
       Disable revision checking.

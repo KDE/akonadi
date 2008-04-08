@@ -141,7 +141,6 @@ void ItemStoreTest::testDataChange()
 
   // delete data
   ItemModifyJob *sjob = new ItemModifyJob( item );
-  sjob->storePayload();
   QVERIFY( sjob->exec() );
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
@@ -229,7 +228,6 @@ void ItemStoreTest::testMultiPart()
 
   // store item
   ItemModifyJob *sjob = new ItemModifyJob( item );
-  sjob->storePayload();
   QVERIFY( sjob->exec() );
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
@@ -258,7 +256,6 @@ void ItemStoreTest::testPartRemove()
 
   // store item
   ItemModifyJob *sjob = new ItemModifyJob( item );
-  sjob->storePayload();
   QVERIFY( sjob->exec() );
 
   // fetch item and its parts (should be RFC822, HEAD and EXTRA)
@@ -307,7 +304,6 @@ void ItemStoreTest::testRevisionCheck()
   // try to store second item
   ItemModifyJob *sjob2 = new ItemModifyJob( item2 );
   item2.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
-  sjob2->storePayload();
   QVERIFY( !sjob2->exec() );
 
   // fetch same again

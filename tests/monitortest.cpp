@@ -153,7 +153,6 @@ void MonitorTest::testMonitor()
   // modify an item
   item.setPayload<QByteArray>( "some new content" );
   ItemModifyJob *store = new ItemModifyJob( item, this );
-  store->storePayload();
   QVERIFY( store->exec() );
   QTest::qWait(1000);
 
