@@ -289,8 +289,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * Overload of @ref configure needed because WId cannot be automatically casted
      * to qlonglong on Windows.
      */
-    //FIXME_API:
-    void configure( qlonglong windowId ) { configure( reinterpret_cast<WId>( windowId ) ); }
+    void configure( qlonglong windowId );
 #endif
 
     /**

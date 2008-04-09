@@ -345,9 +345,16 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void synchronizeCollectionTree();
 
-    //FIXME_API:
-    //void cancelTask() {};
-    //void cancelTask( const QString &error ) {};
+    /**
+     * Stops the execution of the current task and continues with the next one.
+     */
+    void cancelTask();
+
+    /**
+     * Stops the execution of the current task and continues with the next one.
+     * Additionaly an error message is emitted.
+     */
+    void cancelTask( const QString &error );
 
     /**
      * Inherited from AgentBase.

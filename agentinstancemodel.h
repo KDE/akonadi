@@ -39,7 +39,6 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
   Q_OBJECT
 
   public:
-    // keep in sync with the agenttypemodel.h (FIXME_API: look at boost::assert)
     /**
      * Describes the roles of this model.
      */

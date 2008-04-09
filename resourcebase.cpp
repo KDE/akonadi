@@ -370,7 +370,7 @@ Collection ResourceBase::currentCollection() const
 
 Item ResourceBase::currentItem() const
 {
-  const Q_D( ResourceBase );
+  Q_D( const ResourceBase );
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::FetchItem ,
               "ResourceBase::currentItem()",
               "Trying to access current item although no item retrieval is in progress" );
@@ -380,6 +380,18 @@ Item ResourceBase::currentItem() const
 void ResourceBase::synchronizeCollectionTree()
 {
   d_func()->scheduler->scheduleCollectionTreeSync();
+}
+
+void ResourceBase::cancelTask()
+{
+  d_func()->changeProcessed();
+}
+
+void ResourceBase::cancelTask( const QString &msg )
+{
+  cancelTask();
+
+  emit error( msg );
 }
 
 void ResourceBase::doSetOnline( bool state )

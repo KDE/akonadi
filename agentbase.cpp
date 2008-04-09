@@ -393,6 +393,13 @@ void AgentBase::configure( WId windowId )
   Q_UNUSED( windowId );
 }
 
+#ifdef Q_OS_WIN
+void AgentBase::configure( qlonglong windowId )
+{
+  configure( reinterpret_cast<WId>( windowId ) );
+}
+#endif
+
 WId AgentBase::winIdForDialogs() const
 {
   bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.akonaditray") );

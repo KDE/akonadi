@@ -32,8 +32,6 @@ namespace Akonadi {
 class AgentManagerPrivate;
 class Collection;
 
-//FIXME_API: using QMap<property,value> instead of single property getter methods
-
 /**
  * This class provides an interface to manage agents.
  *
