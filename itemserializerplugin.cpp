@@ -30,9 +30,9 @@ ItemSerializerPlugin::~ItemSerializerPlugin()
 {
 }
 
-QStringList ItemSerializerPlugin::parts(const Item & item) const
+QList<QByteArray> ItemSerializerPlugin::parts(const Item & item) const
 {
-  QStringList list;
+  QList<QByteArray> list;
   if ( item.hasPayload() )
     list << Item::FullPayload;
   return list;

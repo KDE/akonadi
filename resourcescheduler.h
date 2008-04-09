@@ -56,7 +56,7 @@ class ResourceScheduler : public QObject
         TaskType type;
         Collection collection;
         Item item;
-        QStringList itemParts;
+        QList<QByteArray> itemParts;
         QDBusMessage dbusMsg;
 
         bool operator==( const Task &other ) const
@@ -92,7 +92,7 @@ class ResourceScheduler : public QObject
       @param parts List of names of the parts of the item to fetch.
       @param msg The associated D-Bus message.
     */
-    void scheduleItemFetch( const Item &item, const QStringList &parts, const QDBusMessage &msg );
+    void scheduleItemFetch( const Item &item, const QList<QByteArray> &parts, const QDBusMessage &msg );
 
     /**
       The current task has been finished
@@ -124,7 +124,7 @@ class ResourceScheduler : public QObject
     void executeFullSync();
     void executeCollectionSync( const Akonadi::Collection &col );
     void executeCollectionTreeSync();
-    void executeItemFetch( const Akonadi::Item &item, const QStringList &parts );
+    void executeItemFetch( const Akonadi::Item &item, const QList<QByteArray> &parts );
     void executeChangeReplay();
 
   private slots:

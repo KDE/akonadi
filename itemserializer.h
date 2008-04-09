@@ -21,11 +21,11 @@
 #ifndef AKONADI_ITEM_SERIALIZER_H
 #define AKONADI_ITEM_SERIALIZER_H
 
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
+
 #include "akonadiprivate_export.h"
 
-class QString;
-class QStringList;
-class QByteArray;
 class QIODevice;
 
 namespace Akonadi {
@@ -41,16 +41,16 @@ class AKONADI_TESTS_EXPORT ItemSerializer
 {
   public:
       /** throws ItemSerializerException on failure */
-      static void deserialize( Item& item, const QString& label, const QByteArray& data );
+      static void deserialize( Item& item, const QByteArray& label, const QByteArray& data );
       /** throws ItemSerializerException on failure */
-      static void deserialize( Item& item, const QString& label, QIODevice& data );
+      static void deserialize( Item& item, const QByteArray& label, QIODevice& data );
       /** throws ItemSerializerException on failure */
-      static void serialize( const Item& item, const QString& label, QByteArray& data );
+      static void serialize( const Item& item, const QByteArray& label, QByteArray& data );
       /** throws ItemSerializerException on failure */
-      static void serialize( const Item& item, const QString& label, QIODevice& data );
+      static void serialize( const Item& item, const QByteArray& label, QIODevice& data );
 
       /** Returns a list of parts available in the item payload. */
-      static QStringList parts( const Item &item );
+      static QList<QByteArray> parts( const Item &item );
 
   private:
       static ItemSerializerPlugin& pluginForMimeType( const QString& mimetype );

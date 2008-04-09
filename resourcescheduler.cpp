@@ -56,7 +56,7 @@ void ResourceScheduler::scheduleSync(const Collection & col)
   scheduleNext();
 }
 
-void ResourceScheduler::scheduleItemFetch(const Item & item, const QStringList &parts, const QDBusMessage & msg)
+void ResourceScheduler::scheduleItemFetch(const Item & item, const QList<QByteArray> &parts, const QDBusMessage & msg)
 {
   Task t;
   t.type = FetchItem;

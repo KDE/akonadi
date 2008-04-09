@@ -104,8 +104,6 @@ class AKONADI_EXPORT ItemFetchScope
     */
     void fetchPayloadPart( const QByteArray &part, bool fetch = true );
 
-    KDE_DEPRECATED void fetchPayloadPart( const QString &part, bool fetch = true ); // FIXME_API: make part identifiers QByteArrays
-
     /**
       Returns whether the full payload should be retrieved.
       @see fetchFullPayload()

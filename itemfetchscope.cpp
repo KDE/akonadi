@@ -60,11 +60,6 @@ void ItemFetchScope::fetchPayloadPart(const QByteArray & part, bool fetch)
     d->mPayloadParts.remove( part );
 }
 
-void ItemFetchScope::fetchPayloadPart(const QString & part, bool fetch)
-{
-  fetchPayloadPart( part.toLatin1(), fetch );
-}
-
 bool ItemFetchScope::fullPayload() const
 {
   return d->mFullPayload;

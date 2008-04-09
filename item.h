@@ -32,7 +32,6 @@
 #include <typeinfo>
 
 class KUrl;
-class QStringList;
 
 namespace Akonadi {
 
@@ -66,7 +65,7 @@ class AKONADI_EXPORT Item : public Entity
     typedef QByteArray Flag;
     typedef QSet<QByteArray> Flags;
 
-    static const QLatin1String FullPayload;
+    static const char* FullPayload;
 
     /**
      * Creates an invalid item.
@@ -152,7 +151,7 @@ class AKONADI_EXPORT Item : public Entity
       Returns the list of loaded payload parts. This is not necessarily the
       identical to all parts in the cache or to all available parts on the backend.
      */
-    QStringList loadedPayloadParts() const;
+    QList<QByteArray> loadedPayloadParts() const;
 
     /**
       Returns the revision number of this item.

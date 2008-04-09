@@ -208,7 +208,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
             item.setFlag( flag );
           }
         } else {
-          ItemSerializer::deserialize( item, QString::fromLatin1( key ), fetchResponse.value( i + 1 ) );
+          ItemSerializer::deserialize( item, key, fetchResponse.value( i + 1 ) );
         }
       }
 

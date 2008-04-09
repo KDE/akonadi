@@ -21,6 +21,8 @@
 #ifndef AKONADI_MESSAGEPARTS_H
 #define AKONADI_MESSAGEPARTS_H
 
+#include "akonadi-kmime_export.h"
+
 #include <QtCore/QLatin1String>
 
 namespace Akonadi
@@ -30,17 +32,17 @@ namespace Akonadi
       /**
         The part identifier for envelope parts.
        */
-      static const QLatin1String Envelope( "ENVELOPE" );
+      AKONADI_KMIME_EXPORT extern const char* Envelope;
 
       /**
         The part identifier for the main body part.
        */
-      static const QLatin1String Body( "RFC822" );
+      AKONADI_KMIME_EXPORT extern const char* Body;
 
       /**
         The part identifier for the header part.
       */
-      static const QLatin1String Header( "HEAD" );
+      AKONADI_KMIME_EXPORT extern const char* Header;
   }
 }
 

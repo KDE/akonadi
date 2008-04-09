@@ -42,7 +42,7 @@ class Akonadi::ItemCreateJobPrivate : public JobPrivate
 
     Collection mCollection;
     Item mItem;
-    QStringList mParts;
+    QList<QByteArray> mParts;
     Item::Id mUid;
     QByteArray mData;
 };
@@ -56,7 +56,7 @@ ItemCreateJob::ItemCreateJob( const Item &item, const Collection &collection, QO
   d->mItem = item;
   d->mParts = d->mItem.loadedPayloadParts();
   foreach ( const Attribute *attr, item.attributes() )
-    d->mParts << QString::fromLatin1( attr->type() );
+    d->mParts << attr->type();
   d->mCollection = collection;
 }
 
@@ -88,11 +88,11 @@ void ItemCreateJob::doStart()
 
     QList<QByteArray> partSpecs;
     int totalSize = 0;
-    foreach( const QString partName, d->mParts ) {
+    foreach( const QByteArray partName, d->mParts ) {
       QByteArray partData;
       ItemSerializer::serialize( d->mItem, partName, partData );
       totalSize += partData.size();
-      partSpecs.append( ImapParser::quote( partName.toLatin1() ) + ':' +
+      partSpecs.append( ImapParser::quote( partName ) + ':' +
         QByteArray::number( partData.size() ) );
       d->mData += partData;
     }

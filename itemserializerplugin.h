@@ -21,10 +21,11 @@
 #ifndef AKONADI_ITEMSERIALIZERPLUGIN_H
 #define AKONADI_ITEMSERIALIZERPLUGIN_H
 
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
+
 #include "akonadi_export.h"
 
-class QString;
-class QStringList;
 class QIODevice;
 
 namespace Akonadi {
@@ -75,7 +76,7 @@ public:
       @return false if the specified part is not supported by this plugin, true if the part
       could be de-serialized successfully.
     */
-    virtual bool deserialize( Item& item, const QString& label, QIODevice& data ) = 0;
+    virtual bool deserialize( Item& item, const QByteArray& label, QIODevice& data ) = 0;
 
     /**
       Convert the payload object provided in @p item into its serialzed form into @p data.
@@ -90,14 +91,14 @@ public:
       The QIODevice is opened in write-only mode and positioned at the beginning.
       The QIODevice is guaranteed to be valid.
     */
-    virtual void serialize( const Item& item, const QString& label, QIODevice& data ) = 0;
+    virtual void serialize( const Item& item, const QByteArray& label, QIODevice& data ) = 0;
 
     /**
       Returns a list of available parts for the given item payload.
       The default implementation returns Item::FullPayload if a payload is set.
       @param item The item.
     */
-    virtual QStringList parts( const Item &item ) const;
+    virtual QList<QByteArray> parts( const Item &item ) const;
 };
 
 }

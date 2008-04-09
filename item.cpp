@@ -29,7 +29,7 @@
 using namespace Akonadi;
 
 // Change to something != RFC822 as soon as the server supports it
-const QLatin1String Item::FullPayload = QLatin1String( "RFC822" );
+const char* Item::FullPayload = "RFC822";
 
 Item::Item()
   : Entity( new ItemPrivate )
@@ -96,7 +96,7 @@ bool Item::hasFlag( const QByteArray & name ) const
   return d_func()->mFlags.contains( name );
 }
 
-QStringList Item::loadedPayloadParts() const
+QList<QByteArray> Item::loadedPayloadParts() const
 {
   return ItemSerializer::parts( *this );
 }

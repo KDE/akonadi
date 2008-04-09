@@ -123,8 +123,8 @@ ResourceBase::ResourceBase( const QString & id )
            SLOT(retrieveCollections()) );
   connect( d->scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection)),
            SLOT(slotSynchronizeCollection(Akonadi::Collection)) );
-  connect( d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QStringList)),
-           SLOT(retrieveItem(Akonadi::Item,QStringList)) );
+  connect( d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QList<QByteArray>)),
+           SLOT(retrieveItem(Akonadi::Item,QList<QByteArray>)) );
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
            d->mMonitor, SLOT(replayNext()) );
 
@@ -225,8 +225,8 @@ void ResourceBase::itemRetrieved( const Item &item )
   }
 
   Item i( item );
-  QStringList requestedParts = d->scheduler->currentTask().itemParts;
-  foreach ( QString part, requestedParts ) {
+  QList<QByteArray> requestedParts = d->scheduler->currentTask().itemParts;
+  foreach ( QByteArray part, requestedParts ) {
     if ( !item.loadedPayloadParts().contains( part ) ) {
       kWarning( 5250 ) << "Item does not provide part" << part;
     }
@@ -271,7 +271,7 @@ void ResourceBase::changesCommitted( const Collection &collection )
   d->changeProcessed();
 }
 
-bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, const QStringList &parts )
+bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, const QStringList &_parts )
 {
   Q_D( ResourceBase );
   if ( !isOnline() ) {
@@ -283,6 +283,11 @@ bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, con
   // FIXME: we need at least the revision number too
   Item item( uid );
   item.setRemoteId( remoteId );
+
+  QList<QByteArray> parts;
+  Q_FOREACH( const QString &str, _parts )
+    parts.append( str.toLatin1() );
+
   d->scheduler->scheduleItemFetch( item, parts, message().createReply() );
 
   return true;

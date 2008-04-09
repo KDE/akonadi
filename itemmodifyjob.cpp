@@ -50,10 +50,10 @@ QByteArray ItemModifyJobPrivate::nextPartHeader()
 {
   QByteArray command;
   if ( !mParts.isEmpty() ) {
-    QString label = mParts.takeFirst();
+    const QByteArray label = mParts.takeFirst();
     mPendingData.clear();
     ItemSerializer::serialize( mItem, label, mPendingData );
-    command += ' ' + label.toUtf8();
+    command += ' ' + label;
     command += ".SILENT {" + QByteArray::number( mPendingData.size() ) + '}';
     if ( mPendingData.size() > 0 )
       command += '\n';
@@ -174,7 +174,7 @@ void ItemModifyJob::setIgnorePayload( bool ignore )
 
   d->mIgnorePayload = ignore;
   if ( d->mIgnorePayload )
-    d->mParts = QStringList();
+    d->mParts = QList<QByteArray>();
   else {
     Q_ASSERT( !d->mItem.mimeType().isEmpty() );
     d->mParts = d->mItem.loadedPayloadParts();

@@ -131,9 +131,9 @@ bool ItemSync::Private::itemNeedsUpdate( const Item &localItem, const Item &remo
   }
 
   // Check whether the new item contains unknown parts
-  const QStringList localParts = localItem.loadedPayloadParts();
-  QStringList missingParts = localParts;
-  foreach( const QString remotePart, remoteItem.loadedPayloadParts() )
+  const QList<QByteArray> localParts = localItem.loadedPayloadParts();
+  QList<QByteArray> missingParts = localParts;
+  foreach( const QByteArray remotePart, remoteItem.loadedPayloadParts() )
     missingParts.removeAll( remotePart );
   if ( !missingParts.isEmpty() )
     return true;

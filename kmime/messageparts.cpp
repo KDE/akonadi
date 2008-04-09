@@ -1,5 +1,6 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+                  2007 Till Adam <adam@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,40 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMMODIFYJOB_P_H
-#define AKONADI_ITEMMODIFYJOB_P_H
+#include "messageparts.h"
 
-#include "job_p.h"
-
-#include <QtCore/QStringList>
-
-namespace Akonadi {
-
-class ItemModifyJobPrivate : public JobPrivate
-{
-  public:
-    enum Operation
-    {
-      RemoteId,
-      Dirty
-    };
-
-    ItemModifyJobPrivate( ItemModifyJob *parent, const Item &item );
-
-    void setClean();
-    QByteArray nextPartHeader();
-
-    Q_DECLARE_PUBLIC( ItemModifyJob )
-
-    QSet<int> mOperations;
-    QByteArray mTag;
-    Item mItem;
-    bool mRevCheck;
-    QList<QByteArray> mParts;
-    QByteArray mPendingData;
-    bool mIgnorePayload;
-};
-
-}
-
-#endif
+const char* Akonadi::MessagePart::Envelope = "ENVELOPE";
+const char* Akonadi::MessagePart::Body = "RFC822";
+const char* Akonadi::MessagePart::Header = "HEAD";

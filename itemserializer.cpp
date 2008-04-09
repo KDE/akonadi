@@ -29,7 +29,6 @@
 
 // Qt
 #include <QtCore/QBuffer>
-#include <QtCore/QByteArray>
 #include <QtCore/QIODevice>
 #include <QtCore/QHash>
 #include <QtCore/QString>
@@ -59,7 +58,7 @@ public:
         return s_p;
     }
 
-    bool deserialize( Item& item, const QString& label, QIODevice& data )
+    bool deserialize( Item& item, const QByteArray& label, QIODevice& data )
     {
         if ( label != Item::FullPayload )
           return false;
@@ -67,7 +66,7 @@ public:
         return true;
     }
 
-    void serialize( const Item& item, const QString& label, QIODevice& data )
+    void serialize( const Item& item, const QByteArray& label, QIODevice& data )
     {
         Q_ASSERT( label == Item::FullPayload );
         if ( item.hasPayload<QByteArray>() )
@@ -128,7 +127,7 @@ static void setup()
 }
 
 /*static*/
-void ItemSerializer::deserialize( Item& item, const QString& label, const QByteArray& data )
+void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QByteArray& data )
 {
     QBuffer buffer;
     buffer.setData( data );
@@ -139,12 +138,12 @@ void ItemSerializer::deserialize( Item& item, const QString& label, const QByteA
 }
 
 /*static*/
-void ItemSerializer::deserialize( Item& item, const QString& label, QIODevice& data )
+void ItemSerializer::deserialize( Item& item, const QByteArray& label, QIODevice& data )
 {
     setup();
     if ( !ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data ) ) {
       data.seek( 0 );
-      Attribute* attr = AttributeFactory::createAttribute( label.toLatin1() );
+      Attribute* attr = AttributeFactory::createAttribute( label );
       Q_ASSERT( attr );
       attr->deserialize( data.readAll() );
       item.addAttribute( attr );
@@ -152,7 +151,7 @@ void ItemSerializer::deserialize( Item& item, const QString& label, QIODevice& d
 }
 
 /*static*/
-void ItemSerializer::serialize( const Item& item, const QString& label, QByteArray& data )
+void ItemSerializer::serialize( const Item& item, const QByteArray& label, QByteArray& data )
 {
     QBuffer buffer;
     buffer.setBuffer( &data );
@@ -163,13 +162,13 @@ void ItemSerializer::serialize( const Item& item, const QString& label, QByteArr
 }
 
 /*static*/
-void ItemSerializer::serialize( const Item& item, const QString& label, QIODevice& data )
+void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODevice& data )
 {
     setup();
     ItemSerializerPlugin& plugin = pluginForMimeType( item.mimeType() );
-    QStringList supportedParts = plugin.parts( item );
+    QList<QByteArray> supportedParts = plugin.parts( item );
     if ( !supportedParts.contains( label ) ) {
-      Attribute* attr = item.attribute( label.toLatin1() );
+      Attribute* attr = item.attribute( label );
       if ( attr )
         data.write( attr->serialized() );
       return;
@@ -179,10 +178,10 @@ void ItemSerializer::serialize( const Item& item, const QString& label, QIODevic
     plugin.serialize( item, label, data );
 }
 
-QStringList ItemSerializer::parts(const Item & item)
+QList<QByteArray> ItemSerializer::parts(const Item & item)
 {
   if ( !item.hasPayload() )
-    return QStringList();
+    return QList<QByteArray>();
   setup();
   return pluginForMimeType( item.mimeType() ).parts( item );
 }
