@@ -93,7 +93,7 @@ QString KnutResource::configuration() const
   return mDataFile;
 }
 
-bool KnutResource::retrieveItem( const Item &item, const QStringList &parts )
+bool KnutResource::retrieveItem( const Item &item, const QList<QByteArray> &parts )
 {
   Q_UNUSED( parts );
 
