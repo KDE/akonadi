@@ -23,8 +23,6 @@
 
 #include "akonadi-kmime_export.h"
 
-#include <QtCore/QLatin1String>
-
 namespace Akonadi
 {
   namespace MessagePart
