@@ -96,7 +96,7 @@ bool Item::hasFlag( const QByteArray & name ) const
   return d_func()->mFlags.contains( name );
 }
 
-QList<QByteArray> Item::loadedPayloadParts() const
+QSet<QByteArray> Item::loadedPayloadParts() const
 {
   return ItemSerializer::parts( *this );
 }

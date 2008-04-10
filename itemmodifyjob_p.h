@@ -22,8 +22,6 @@
 
 #include "job_p.h"
 
-#include <QtCore/QStringList>
-
 namespace Akonadi {
 
 class ItemModifyJobPrivate : public JobPrivate
@@ -46,7 +44,7 @@ class ItemModifyJobPrivate : public JobPrivate
     QByteArray mTag;
     Item mItem;
     bool mRevCheck;
-    QList<QByteArray> mParts;
+    QSet<QByteArray> mParts;
     QByteArray mPendingData;
     bool mIgnorePayload;
 };

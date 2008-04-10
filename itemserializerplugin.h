@@ -22,7 +22,7 @@
 #define AKONADI_ITEMSERIALIZERPLUGIN_H
 
 #include <QtCore/QByteArray>
-#include <QtCore/QList>
+#include <QtCore/QSet>
 
 #include "akonadi_export.h"
 
@@ -98,7 +98,7 @@ public:
       The default implementation returns Item::FullPayload if a payload is set.
       @param item The item.
     */
-    virtual QList<QByteArray> parts( const Item &item ) const;
+    virtual QSet<QByteArray> parts( const Item &item ) const;
 };
 
 }

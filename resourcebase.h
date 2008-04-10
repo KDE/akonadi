@@ -231,7 +231,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @return false if there is an immediate error when retrieving the item.
      * @see itemRetrieved()
      */
-    virtual bool retrieveItem( const Akonadi::Item &item, const QList<QByteArray> &parts ) = 0;
+    virtual bool retrieveItem( const Akonadi::Item &item, const QSet<QByteArray> &parts ) = 0;
 
   protected:
     /**

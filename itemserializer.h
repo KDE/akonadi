@@ -22,7 +22,7 @@
 #define AKONADI_ITEM_SERIALIZER_H
 
 #include <QtCore/QByteArray>
-#include <QtCore/QList>
+#include <QtCore/QSet>
 
 #include "akonadiprivate_export.h"
 
@@ -50,7 +50,7 @@ class AKONADI_TESTS_EXPORT ItemSerializer
       static void serialize( const Item& item, const QByteArray& label, QIODevice& data );
 
       /** Returns a list of parts available in the item payload. */
-      static QList<QByteArray> parts( const Item &item );
+      static QSet<QByteArray> parts( const Item &item );
 
   private:
       static ItemSerializerPlugin& pluginForMimeType( const QString& mimetype );

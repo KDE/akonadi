@@ -151,7 +151,7 @@ class AKONADI_EXPORT Item : public Entity
       Returns the list of loaded payload parts. This is not necessarily the
       identical to all parts in the cache or to all available parts on the backend.
      */
-    QList<QByteArray> loadedPayloadParts() const;
+    QSet<QByteArray> loadedPayloadParts() const;
 
     /**
       Returns the revision number of this item.

@@ -28,8 +28,6 @@
 
 #include <kdebug.h>
 
-#include <QtCore/QStringList>
-
 using namespace Akonadi;
 
 class Akonadi::ItemCreateJobPrivate : public JobPrivate
@@ -42,7 +40,7 @@ class Akonadi::ItemCreateJobPrivate : public JobPrivate
 
     Collection mCollection;
     Item mItem;
-    QList<QByteArray> mParts;
+    QSet<QByteArray> mParts;
     Item::Id mUid;
     QByteArray mData;
 };
@@ -73,7 +71,7 @@ void ItemCreateJob::doStart()
   if ( !d->mItem.remoteId().isEmpty() )
     remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' );
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
-  if ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.first() == Item::FullPayload) ) {
+  if ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.contains( Item::FullPayload )) ) {
     if ( d->mItem.hasPayload() )
       ItemSerializer::serialize( d->mItem, Item::FullPayload, d->mData );
     int dataSize = d->mData.size();

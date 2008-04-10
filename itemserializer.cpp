@@ -166,7 +166,7 @@ void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODe
 {
     setup();
     ItemSerializerPlugin& plugin = pluginForMimeType( item.mimeType() );
-    QList<QByteArray> supportedParts = plugin.parts( item );
+    const QSet<QByteArray> supportedParts = plugin.parts( item );
     if ( !supportedParts.contains( label ) ) {
       Attribute* attr = item.attribute( label );
       if ( attr )
@@ -178,10 +178,10 @@ void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODe
     plugin.serialize( item, label, data );
 }
 
-QList<QByteArray> ItemSerializer::parts(const Item & item)
+QSet<QByteArray> ItemSerializer::parts(const Item & item)
 {
   if ( !item.hasPayload() )
-    return QList<QByteArray>();
+    return QSet<QByteArray>();
   setup();
   return pluginForMimeType( item.mimeType() ).parts( item );
 }

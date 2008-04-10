@@ -21,19 +21,16 @@
 #include "itemserializerplugin.h"
 #include "item.h"
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-
 using namespace Akonadi;
 
 ItemSerializerPlugin::~ItemSerializerPlugin()
 {
 }
 
-QList<QByteArray> ItemSerializerPlugin::parts(const Item & item) const
+QSet<QByteArray> ItemSerializerPlugin::parts(const Item & item) const
 {
-  QList<QByteArray> list;
+  QSet<QByteArray> set;
   if ( item.hasPayload() )
-    list << Item::FullPayload;
-  return list;
+    set.insert( Item::FullPayload );
+  return set;
 }
