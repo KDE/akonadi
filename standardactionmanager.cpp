@@ -23,6 +23,7 @@
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectionmodel.h"
+#include "collectionutils_p.h"
 #include "collectionpropertiesdialog.h"
 #include "itemdeletejob.h"
 #include "itemmodel.h"
@@ -68,7 +69,7 @@ BOOST_STATIC_ASSERT( numActionData == StandardActionManager::LastType );
 
 static bool canCreateCollection( const Collection &collection )
 {
-  if ( collection.type() == Collection::Virtual || collection.type() == Collection::VirtualParent )
+  if ( !( collection.rights() & Collection::CanCreateCollection ) )
     return false;
 
   if ( !collection.contentMimeTypes().contains( Collection::mimeType() ) )
@@ -136,8 +137,8 @@ class StandardActionManager::Private
       if ( singleColSelected && selectedIndex.isValid() ) {
         const Collection col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
         enableAction( CreateCollection, canCreateCollection( col ) );
-        enableAction( DeleteCollections, col.type() != Collection::Resource && col.type() != Collection::VirtualParent );
-        enableAction( SynchronizeCollections, col.type() == Collection::Folder || col.type() == Collection::Resource );
+        enableAction( DeleteCollections, col.rights() & Collection::CanDeleteCollection );
+        enableAction( SynchronizeCollections, CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col ) );
         enableAction( Paste, PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
       } else {
         enableAction( CreateCollection, false );
@@ -207,7 +208,7 @@ class StandardActionManager::Private
 
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       QString text = i18n( "Do you really want to delete folder '%1' and all its sub-folders?", index.data().toString() );
-      if ( collection.type() == Collection::Virtual )
+      if ( CollectionUtils::isVirtual( collection ) )
         text = i18n( "Do you really want to delete the search view '%1'?", index.data().toString() );
 
       if ( KMessageBox::questionYesNo( parentWidget, text,

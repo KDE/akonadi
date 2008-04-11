@@ -19,6 +19,7 @@
 
 #include "subscriptionmodel.h"
 #include "collectionfetchjob.h"
+#include "collectionutils_p.h"
 
 #include <kdebug.h>
 
@@ -53,7 +54,7 @@ class SubscriptionModel::Private
       }
       Collection::List cols = static_cast<CollectionFetchJob*>( job )->collections();
       foreach( const Collection col, cols )
-        if ( col.type() != Collection::Structural )
+        if ( !CollectionUtils::isStructural( col ) )
           subscriptions[ col.id() ] = true;
       q->reset();
       emit q->loaded();
@@ -62,7 +63,7 @@ class SubscriptionModel::Private
     bool isSubscribable( Collection::Id id )
     {
       Collection col = q->collectionForId( id );
-      if ( col.type() == Collection::VirtualParent || col.type() == Collection::Structural )
+      if ( CollectionUtils::isVirtualParent( col ) || CollectionUtils::isStructural( col ) )
         return false;
       if ( col.contentMimeTypes().isEmpty() )
         return false;

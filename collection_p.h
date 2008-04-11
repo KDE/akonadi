@@ -31,7 +31,6 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     CollectionPrivate( Collection::Id id = -1 ) :
       EntityPrivate( id ),
       parentId( -1 ),
-      type( Collection::Unknown ),
       contentTypesChanged( false ),
       cachePolicyChanged( false )
     {}
@@ -42,7 +41,6 @@ class Akonadi::CollectionPrivate : public EntityPrivate
       parentId = other.parentId;
       name = other.name;
       parentRemoteId = other.parentRemoteId;
-      type = other.type;
       resource = other.resource;
       statistics = other.statistics;
       contentTypes = other.contentTypes;
@@ -79,7 +77,6 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     Collection::Id parentId;
     QString name;
     QString parentRemoteId;
-    Collection::Type type;
     QString resource;
     CollectionStatistics statistics;
     QStringList contentTypes;

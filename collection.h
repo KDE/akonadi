@@ -48,19 +48,6 @@ class CollectionStatistics;
 class AKONADI_EXPORT Collection : public Entity
 {
   public:
-    /**
-      Collection types.
-    */
-    enum Type {
-      Folder, /**< 'Real' folder on an IMAP server for example. */
-      Virtual, /**< Virtual collection (aka search folder). */
-      Structural, /**< Structural node to keep the collection tree consistent but cannot contain any content. */
-      Resource, /**< Resource or account. */
-      VirtualParent, /**< The parent collection of all virtual collections. */
-      Unknown /**< Unknown collection type. */
-    };
-    //FIXME_API: drop the above types completely
-
     /// A list of collections.
     typedef QList<Collection> List;
 
@@ -118,19 +105,6 @@ class AKONADI_EXPORT Collection : public Entity
       @param name The new collection name
     */
     void setName( const QString &name );
-
-    /**
-      Returns the type of this collection (e.g. virtual folder, folder on an
-      IMAP server, etc.).
-    */
-    Type type() const;
-    //FIXME_API: drop together with types
-
-    /**
-      Sets the type of this collection.
-    */
-    void setType( Type type );
-    //FIXME_API: drop together with types
 
     /**
       Returns the rights the user has on this collection.

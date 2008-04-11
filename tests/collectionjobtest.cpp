@@ -28,10 +28,11 @@
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
+#include "collectionselectjob.h"
 #include "collectionstatistics.h"
 #include "collectionstatisticsjob.h"
 #include "collectionpathresolver_p.h"
-#include "collectionselectjob.h"
+#include "collectionutils_p.h"
 #include "control.h"
 #include "item.h"
 #include "kmime/messageparts.h"
@@ -97,7 +98,7 @@ void CollectionJobTest::testTopLevelList( )
   QVERIFY( col.isValid() );
   res1ColId = col.id(); // for the next test
   QVERIFY( res1ColId > 0 );
-  QCOMPARE( col.type(), Collection::Resource );
+  QVERIFY( CollectionUtils::isResource( col ) );
   QCOMPARE( col.parent(), Collection::root().id() );
   QCOMPARE( col.resource(), QLatin1String("akonadi_dummy_resource_1") );
 
@@ -111,7 +112,7 @@ void CollectionJobTest::testTopLevelList( )
   col = findCol( list, "Search" );
   searchColId = col.id();
   QVERIFY( col.isValid() );
-  QCOMPARE( col.type(), Collection::VirtualParent );
+  QVERIFY( CollectionUtils::isVirtualParent( col ) );
   QCOMPARE( col.resource(), QLatin1String("akonadi_search_resource") );
 }
 
@@ -143,7 +144,7 @@ void CollectionJobTest::testFolderList( )
   col = findCol( list, "foo" );
   QVERIFY( col.isValid() );
   QCOMPARE( col.parent(), res1ColId );
-  QCOMPARE( col.type(), Collection::Folder );
+  QVERIFY( CollectionUtils::isFolder( col ) );
   contentTypes << "message/rfc822" << "text/calendar" << "text/vcard" << "application/octet-stream";
   compareLists( col.contentMimeTypes(), contentTypes );
 
@@ -180,7 +181,7 @@ void CollectionJobTest::testSearchFolderList( )
   QCOMPARE( list.count(), 3 );
   Collection col = findCol( list, "Test ?er" );
   QVERIFY( col.isValid() );
-  QCOMPARE( col.type(), Collection::Virtual );
+  QVERIFY( CollectionUtils::isVirtual( col ) );
   QCOMPARE( col.resource(), QLatin1String("akonadi_search_resource" ) );
   QVERIFY( findCol( list, "all" ).isValid() );
   QVERIFY( findCol( list, "kde-core-devel" ).isValid() );

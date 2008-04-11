@@ -19,6 +19,7 @@
 
 #include "collectionmodel.h"
 #include "collectionmodel_p.h"
+#include "collectionutils_p.h"
 
 #include "collectionmodifyjob.h"
 #include "monitor.h"
@@ -87,17 +88,19 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
   switch ( role ) {
     case Qt::DecorationRole:
       if ( index.column() == 0 ) {
-        if ( col.type() == Collection::Resource )
-          return SmallIcon( QLatin1String( "network-wired" ) );
-        if ( col.type() == Collection::VirtualParent )
+        if ( CollectionUtils::isVirtualParent( col ) )
           return SmallIcon( QLatin1String( "edit-find" ) );
-        if ( col.type() == Collection::Virtual )
+        if ( CollectionUtils::isVirtual( col ) )
           return SmallIcon( QLatin1String( "folder-violet" ) );
-        if ( col.type() == Collection::Structural )
+        if ( CollectionUtils::isResource( col ) )
+          return SmallIcon( QLatin1String( "network-wired" ) );
+        if ( CollectionUtils::isStructural( col ) )
           return SmallIcon( QLatin1String( "folder-grey" ) );
-        QStringList content = col.contentMimeTypes();
+
+        const QStringList content = col.contentMimeTypes();
         if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::mimeType() )) ) {
-          if ( content.contains( QLatin1String( "text/x-vcard" ) ) || content.contains( QLatin1String( "text/directory" ) ) || content.contains( QLatin1String( "text/vcard" ) ) )
+          if ( content.contains( QLatin1String( "text/x-vcard" ) ) || content.contains( QLatin1String( "text/directory" ) )
+                                                                   || content.contains( QLatin1String( "text/vcard" ) ) )
             return SmallIcon( QLatin1String( "kmgroupware_folder_contacts" ) );
           // TODO: add all other content types and/or fix their mimetypes
           if ( content.contains( QLatin1String( "akonadi/event" ) ) || content.contains( QLatin1String( "text/ical" ) ) )
@@ -216,11 +219,14 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
     return flags | Qt::ItemIsDropEnabled; // HACK Workaround for a probable bug in Qt
 
   if ( col.isValid() ) {
-    if ( col.type() != Collection::VirtualParent )  {
+    if ( col.rights() & (Collection::CanChangeCollection |
+                         Collection::CanCreateCollection |
+                         Collection::CanDeleteCollection |
+                         Collection::CanCreateItem) )  {
       if ( index.column() == 0 )
         flags = flags | Qt::ItemIsEditable;
-      if ( col.type() != Collection::Virtual )
-        flags = flags | Qt::ItemIsDropEnabled;
+
+      flags = flags | Qt::ItemIsDropEnabled;
     }
   }
 

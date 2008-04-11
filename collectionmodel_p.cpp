@@ -21,6 +21,7 @@
 
 #include "collectionmodel_p.h"
 #include "collectionmodel.h"
+#include "collectionutils_p.h"
 
 #include "collectionfetchjob.h"
 #include "collectionstatistics.h"
@@ -164,7 +165,7 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
     updateSupportedMimeTypes( col );
 
     // start a statistics job for every collection to get message counts, etc.
-    if ( fetchStatistics && col.type() != Collection::VirtualParent ) {
+    if ( fetchStatistics && !CollectionUtils::isVirtualParent( col ) ) {
       CollectionStatisticsJob* csjob = new CollectionStatisticsJob( col, session );
       q->connect( csjob, SIGNAL(result(KJob*)), q, SLOT(updateDone(KJob*)) );
     }

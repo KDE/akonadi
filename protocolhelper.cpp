@@ -126,20 +126,6 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
     }
   }
 
-  // determine collection type
-  if ( collection.parent() == Collection::root().id() ) {
-    if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) )
-      collection.setType( Collection::VirtualParent );
-    else
-      collection.setType( Collection::Resource );
-  } else if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) ) {
-    collection.setType( Collection::Virtual );
-  } else if ( collection.contentMimeTypes().isEmpty() ) {
-    collection.setType( Collection::Structural );
-  } else {
-    collection.setType( Collection::Folder );
-  }
-
   return pos;
 }
 

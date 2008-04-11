@@ -25,6 +25,8 @@
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/searchcreatejob.h>
 
+#include "collectionutils_p.h"
+
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( SearchJobTest, NoGUI )
@@ -46,7 +48,7 @@ void SearchJobTest::testCreateDeleteSearch()
   }
   QVERIFY( col.isValid() );
   QCOMPARE( col.parent(), 1LL );
-  QCOMPARE( col.type(), Collection::Virtual );
+  QVERIFY( CollectionUtils::isVirtual( col ) );
 
   CollectionDeleteJob *delJob = new CollectionDeleteJob( col, this );
   QVERIFY( delJob->exec() );

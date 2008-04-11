@@ -21,6 +21,7 @@
 
 #include "cachepolicy.h"
 #include "collection.h"
+#include "collectionutils_p.h"
 
 using namespace Akonadi;
 
@@ -33,7 +34,7 @@ CachePolicyPage::CachePolicyPage(QWidget * parent) :
 
 bool Akonadi::CachePolicyPage::canHandle(const Collection & collection) const
 {
-  return collection.type() != Collection::VirtualParent && collection.type() != Collection::Virtual;
+  return !CollectionUtils::isVirtual( collection );
 }
 
 void CachePolicyPage::load(const Collection & collection)
