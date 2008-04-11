@@ -224,6 +224,10 @@ AgentManager::AgentManager()
            this, SLOT( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
            this, SLOT( agentInstanceNameChanged( const QString&, const QString& ) ) );
+  connect( d->mManager, SIGNAL( agentInstanceWarning( const QString&, const QString& ) ),
+           this, SLOT( agentInstanceWarning( const QString&, const QString& ) ) );
+  connect( d->mManager, SIGNAL( agentInstanceError( const QString&, const QString& ) ),
+           this, SLOT( agentInstanceError( const QString&, const QString& ) ) );
 
   const QStringList typeIdentifiers = d->mManager->agentTypes();
   foreach( const QString &type, typeIdentifiers ) {
