@@ -259,12 +259,12 @@ void AkonadiServer::startDatabaseProcess()
     db.setConnectOptions( QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir ) );
 
     bool opened = false;
-    for ( int i = 0; i < 60; ++i ) {
+    for ( int i = 0; i < 120; ++i ) {
       opened = db.open();
       if ( opened )
         break;
-
-      sleep( 1 );
+      if ( mDatabaseProcess->waitForFinished( 500 ) )
+        qFatal( "Database server exited unexpectedly, exit code %d", mDatabaseProcess->exitCode() );
     }
 
     if ( opened ) {
