@@ -142,6 +142,22 @@ class AKONADI_EXPORT AgentManager : public QObject
      */
     void instanceNameChanged( const Akonadi::AgentInstance &instance );
 
+    /**
+     * This signal is emitted whenever the agent instance raised an error.
+     *
+     * @param instance The agent instance that raised the error.
+     * @param message The user visible error message.
+     */
+    void instanceError( const Akonadi::AgentInstance &instance, const QString &message );
+
+    /**
+     * This signal is emitted whenever the agent instance raised a warning.
+     *
+     * @param instance The agent instance that raised the warning.
+     * @param message The user visible warning message.
+     */
+    void instanceWarning( const Akonadi::AgentInstance &instance, const QString &message );
+
   private:
     AgentManager();
 
@@ -154,6 +170,8 @@ class AKONADI_EXPORT AgentManager : public QObject
     Q_PRIVATE_SLOT( d, void agentInstanceStatusChanged( const QString&, int, const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceProgressChanged( const QString&, uint, const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceNameChanged( const QString&, const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceWarning( const QString&, const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceError( const QString&, const QString& ) )
 };
 
 }

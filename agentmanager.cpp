@@ -99,6 +99,24 @@ void AgentManagerPrivate::agentInstanceProgressChanged( const QString &identifie
   emit mParent->instanceProgressChanged( instance );
 }
 
+void AgentManagerPrivate::agentInstanceWarning( const QString &identifier, const QString &msg )
+{
+  if ( !mInstances.contains( identifier ) )
+    return;
+
+  AgentInstance &instance = mInstances[ identifier ];
+  emit mParent->instanceWarning( instance, msg );
+}
+
+void AgentManagerPrivate::agentInstanceError( const QString &identifier, const QString &msg )
+{
+  if ( !mInstances.contains( identifier ) )
+    return;
+
+  AgentInstance &instance = mInstances[ identifier ];
+  emit mParent->instanceError( instance, msg );
+}
+
 void AgentManagerPrivate::agentInstanceNameChanged( const QString &identifier, const QString &name )
 {
   if ( !mInstances.contains( identifier ) )
