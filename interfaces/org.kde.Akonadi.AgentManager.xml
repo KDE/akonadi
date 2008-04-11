@@ -27,6 +27,15 @@
       <arg name="agentIdentifier" type="s" direction="out"/>
       <arg name="name" type="s" direction="out"/>
     </signal>
+    <signal name="agentInstanceWarning">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+      <arg name="message" type="s" direction="out"/>
+    </signal>
+    <signal name="agentInstanceError">
+      <arg name="agentIdentifier" type="s" direction="out"/>
+      <arg name="message" type="s" direction="out"/>
+    </signal>
+
     <method name="agentTypes">
       <arg type="as" direction="out"/>
     </method>
