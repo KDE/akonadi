@@ -482,6 +482,10 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
             this, SLOT( status( int, const QString& ) ) );
     connect( agentStatusIface, SIGNAL( percent( int ) ),
             this, SLOT( percent( int ) ) );
+    connect( agentStatusIface, SIGNAL( warning( const QString& ) ),
+            this, SLOT( warning( const QString& ) ) );
+    connect( agentStatusIface, SIGNAL( error( const QString& ) ),
+            this, SLOT( error( const QString& ) ) );
 
     if ( !restarting )
       emit agentInstanceAdded( identifier );
@@ -550,6 +554,44 @@ void AgentManager::percent( int progress )
   }
 
   emit agentInstanceProgressChanged( identifier, progress, QString() );
+}
+
+void AgentManager::warning( const QString &message )
+{
+  org::kde::Akonadi::Agent::Status *interface = static_cast<org::kde::Akonadi::Agent::Status*>( sender() );
+  if ( !interface ) {
+    mTracer->error( QLatin1String( "AgentManager::warning" ),
+                    QLatin1String( "Got signal from unknown sender" ) );
+    return;
+  }
+
+  const QString identifier = interface->objectName();
+  if ( identifier.isEmpty() ) {
+    mTracer->error( QLatin1String( "AgentManager::warning" ),
+                    QLatin1String( "Sender of warning signal has no identifier" ) );
+    return;
+  }
+
+  emit agentInstanceWarning( identifier, message );
+}
+
+void AgentManager::error( const QString &message )
+{
+  org::kde::Akonadi::Agent::Status *interface = static_cast<org::kde::Akonadi::Agent::Status*>( sender() );
+  if ( !interface ) {
+    mTracer->error( QLatin1String( "AgentManager::error" ),
+                    QLatin1String( "Got signal from unknown sender" ) );
+    return;
+  }
+
+  const QString identifier = interface->objectName();
+  if ( identifier.isEmpty() ) {
+    mTracer->error( QLatin1String( "AgentManager::error" ),
+                    QLatin1String( "Sender of error signal has no identifier" ) );
+    return;
+  }
+
+  emit agentInstanceError( identifier, message );
 }
 
 void AgentManager::resourceNameChanged( const QString &data )

@@ -252,6 +252,22 @@ class AgentManager : public QObject
     void agentInstanceProgressChanged( const QString &agentIdentifier, uint progress, const QString &message );
 
     /**
+     * This signal is emitted whenever an agent instance raised a warning.
+     *
+     * @param agentIdentifier The identifier of the agent instance.
+     * @param message The i18n'ed warning message.
+     */
+    void agentInstanceWarning( const QString &agentIdentifier, const QString &message );
+
+    /**
+     * This signal is emitted whenever an agent instance raised an error.
+     *
+     * @param agentIdentifier The identifier of the agent instance.
+     * @param message The i18n'ed error message.
+     */
+    void agentInstanceError( const QString &agentIdentifier, const QString &message );
+
+    /**
      * This signal is emitted whenever the name of the agent instance has changed.
      *
      * @param agentIdentifier The identifier of the agent that has changed.
@@ -264,6 +280,8 @@ class AgentManager : public QObject
     void serviceOwnerChanged( const QString&, const QString&, const QString& );
     void status( int status, const QString &message );
     void percent( int progress );
+    void warning( const QString &message );
+    void error( const QString &message );
     void resourceNameChanged( const QString& );
 
   private:
