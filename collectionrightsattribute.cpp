@@ -25,7 +25,7 @@ static const char* s_accessRightsIdentifier = "AccessRights";
 
 static Collection::Rights dataToRights( const QByteArray &data )
 {
-  Collection::Rights rights = Collection::NoRights;
+  Collection::Rights rights = Collection::ReadOnly;
 
   if ( data.isEmpty() || data.at( 0 ) == 'a' )
     return Collection::AllRights;

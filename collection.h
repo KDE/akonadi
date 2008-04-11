@@ -55,7 +55,7 @@ class AKONADI_EXPORT Collection : public Entity
      Collection rights.
     */
     enum Right {
-      NoRights = 0x0,                   ///< Has no rights on this collection
+      ReadOnly = 0x0,                   ///< Can only read items or subcollection of this collection
       CanChangeItem = 0x1,              ///< Can change items in this collection
       CanCreateItem = 0x2,              ///< Can create new items in this collection
       CanDeleteItem = 0x4,              ///< Can delete items in this collection
