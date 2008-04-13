@@ -63,8 +63,8 @@ class ItemModel::Private
 
       monitor->ignoreSession( session );
 
-      mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item&, const QStringList& )),
-                        mParent, SLOT(itemChanged( const Akonadi::Item&, const QStringList& )) );
+      mParent->connect( monitor, SIGNAL(itemChanged( const Akonadi::Item&, const QSet<QByteArray>& )),
+                        mParent, SLOT(itemChanged( const Akonadi::Item&, const QSet<QByteArray>& )) );
       mParent->connect( monitor, SIGNAL(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& )),
                         mParent, SLOT(itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
       mParent->connect( monitor, SIGNAL(itemAdded( const Akonadi::Item&, const Akonadi::Collection& )),

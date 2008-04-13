@@ -36,8 +36,8 @@ class ItemMonitor::Private : public QObject
       : QObject( 0 ),
         mParent( parent ), mMonitor( new Monitor() )
     {
-      connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QStringList& ) ),
-               SLOT( slotItemChanged( const Akonadi::Item&, const QStringList& ) ) );
+      connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+               SLOT( slotItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
       connect( mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
                SLOT( slotItemRemoved( const Akonadi::Item& ) ) );
     }
