@@ -90,7 +90,44 @@ namespace {
 
 using namespace Akonadi;
 
-static QHash<QString, ItemSerializerPlugin*> * all = 0;
+class PluginEntry
+{
+  public:
+    PluginEntry()
+      : mPlugin( 0 )
+    {
+    }
+
+    PluginEntry( const QString &identifier )
+      : mIdentifier( identifier ), mPlugin( 0 )
+    {
+    }
+
+    inline ItemSerializerPlugin* plugin() const
+    {
+      if ( mPlugin )
+        return mPlugin;
+
+      mPlugin = ItemSerializerPluginLoader::instance()->createForName( mIdentifier );
+      if ( !mPlugin ) {
+        kWarning( 5250 ) << "ItemSerializerPluginLoader: "
+                         << "plugin" << mIdentifier << "is not valid!" << endl;
+
+        // we try to use the default in that case
+        mPlugin = DefaultItemSerializerPlugin::instance();
+      }
+
+      Q_ASSERT( mPlugin );
+
+      return mPlugin;
+    }
+
+  private:
+    QString mIdentifier;
+    mutable ItemSerializerPlugin *mPlugin;
+};
+
+static QHash<QString, PluginEntry> * all = 0;
 
 static void loadPlugins() {
   const ItemSerializerPluginLoader* pl = ItemSerializerPluginLoader::instance();
@@ -102,18 +139,11 @@ static void loadPlugins() {
   kDebug( 5250 ) << "ItemSerializerPluginLoader: "
                  << "found" << types.size() << "plugins." << endl;
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
-    ItemSerializerPlugin * plugin = pl->createForName( *it );
-    if ( !plugin ) {
-      kWarning( 5250 ) << "ItemSerializerPluginLoader: "
-                       << "plugin" << *it << "is not valid!" << endl;
-      continue;
-    }
-
     QStringList supportedTypes = (*it).split( QLatin1Char(',') );
     foreach ( const QString t, supportedTypes ) {
       kDebug( 5250 ) << "ItemSerializerPluginLoader: "
                      << "inserting plugin for type:" << t;
-      all->insert( t, plugin );
+      all->insert( t, PluginEntry( *it ) );
     }
   }
 }
@@ -121,7 +151,7 @@ static void loadPlugins() {
 static void setup()
 {
     if (!all) {
-        all = new QHash<QString, ItemSerializerPlugin*>();
+        all = new QHash<QString, PluginEntry>();
         loadPlugins();
     }
 }
@@ -190,13 +220,13 @@ QSet<QByteArray> ItemSerializer::parts(const Item & item)
 ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetype )
 {
     if ( all->contains( mimetype ) )
-        return *(all->value(mimetype));
+        return *(all->value( mimetype ).plugin());
 
     KMimeType::Ptr mimeType = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
     if ( !mimeType.isNull() ) {
       foreach ( const QString type, all->keys() ) {
         if ( mimeType->is( type ) ) {
-          return *(all->value( type ) );
+          return *(all->value( type ).plugin() );
         }
       }
     }
