@@ -78,7 +78,29 @@ class AKONADI_EXPORT ItemSync : public TransactionSequence
     void setFullSyncItems( const Item::List &items );
 
     /**
-      Sets the partial item lists for incrementally syncing the collection.
+      Sets the item list for the collection, but not the full list, 
+      a part of the list. Call this as many times as you wish. But you
+      need to remember to call setTotalItems() first. 
+
+      @warning Do not pass more or less items then announced in setTotalItems();
+
+      @warning If the client using this is a resource, all items must have
+               a valid remote identifier.
+ 
+      @param items A list of items.
+     */
+    void setPartSyncItems( const Item::List &items );
+
+    /**
+      Set the amount of items which you are going to return in total
+      by using the setPartSyncItems() method.
+
+      @params amount The amount of items in total.
+     */
+    void setTotalItems( int amount );
+
+    /**
+      Sets the item lists for incrementally syncing the collection.
 
       Usually the result of an incremental remote item listing.
 

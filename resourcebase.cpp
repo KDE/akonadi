@@ -96,6 +96,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     Collection currentCollection;
 
     ResourceScheduler *scheduler;
+    ItemSync *mPartSyncer;
 };
 
 ResourceBase::ResourceBase( const QString & id )
@@ -423,7 +424,30 @@ void ResourceBasePrivate::slotCollectionListDone( KJob *job )
   // TODO: error handling
 }
 
-void ResourceBase::itemsRetrieved(const Item::List &items)
+void ResourceBase::setTotalItems( int amount )
+{
+  kDebug() << amount;
+  Q_D( ResourceBase );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
+              "ResourceBase::itemsRetrieved()",
+              "Calling itemsRetrieved() although no item retrieval is in progress" );
+  d->mPartSyncer = new ItemSync( currentCollection() );
+  connect( d->mPartSyncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
+  connect( d->mPartSyncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
+  d->mPartSyncer->setTotalItems( amount );
+}
+
+void ResourceBase::itemsPartlyRetrieved( const Item::List &items )
+{
+  kDebug();
+  Q_D( ResourceBase );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
+              "ResourceBase::itemsPartlyRetrieved()",
+              "Calling itemsPartlyRetrieved() although no item retrieval is in progress" );
+  d->mPartSyncer->setPartSyncItems( items );
+}
+
+void ResourceBase::itemsRetrieved( const Item::List &items )
 {
   Q_D( ResourceBase );
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,

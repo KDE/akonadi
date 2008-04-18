@@ -40,7 +40,10 @@ class ItemSync::Private
       q( parent ),
       mPendingJobs( 0 ),
       mProgress( 0 ),
-      mIncremental( false )
+      mTotalItems( 0 ),
+      mTotalItemsProcessed( 0 ),
+      mIncremental( false ),
+      mParts( false )
     {
     }
 
@@ -66,8 +69,11 @@ class ItemSync::Private
     // create counter
     int mPendingJobs;
     int mProgress;
+    int mTotalItems;
+    int mTotalItemsProcessed;
 
     bool mIncremental;
+    bool mParts;
 };
 
 void ItemSync::Private::createLocalItem( const Item & item )
@@ -109,6 +115,23 @@ void ItemSync::setFullSyncItems( const Item::List &items )
   d->mRemoteItems = items;
   setTotalAmount( KJob::Bytes, d->mRemoteItems.count() );
   d->execute();
+}
+
+void ItemSync::setTotalItems( int amount )
+{
+  kDebug() << amount;
+  d->mParts = true;
+  d->mTotalItems = amount;
+  setTotalAmount( KJob::Bytes, amount );
+}
+
+void ItemSync::setPartSyncItems( const Item::List &items )
+{
+  d->mRemoteItems += items;
+  d->mTotalItemsProcessed += items.count();
+  kDebug() << "Received: " << items.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
+  if ( d->mTotalItemsProcessed == d->mTotalItems )
+    d->execute();
 }
 
 void ItemSync::setIncrementalSyncItems( const Item::List &changedItems, const Item::List &removedItems )

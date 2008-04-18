@@ -292,7 +292,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
                                           const Collection::List &removedCollections );
 
     /**
-     * Call this methods to supply the full collection listing from the remote server.
+     * Call this method to supply the full collection listing from the remote server.
      *
      * If the remote server supports incremental listing, it's strongly
      * recommended to use itemsRetrievedIncremental() instead.
@@ -300,6 +300,24 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @see itemsRetrievedIncremental().
      */
     void itemsRetrieved( const Item::List &items );
+
+    /**
+      * Call this method when you want to use the itemsPartlyRetrieved() method
+      * and indicate the amount of items that will arrive that way.
+      */
+    void setTotalItems( int amount );
+
+    /**
+     * Call this method to supply a part of the collection listing from the remote server.
+     * Set the total amount of items you are going to pass via subsequent calls to this 
+     * method by calling setTotalItems() first.
+     *
+     * If the remote server supports incremental listing, it's strongly
+     * recommended to use itemsRetrievedIncremental() instead.
+     * @param items A list of items.
+     * @see itemsRetrievedIncremental().
+     */
+    void itemsPartlyRetrieved( const Item::List &items );
 
     /**
      * Call this method to supply incrementally retrieved items from the remote server.
