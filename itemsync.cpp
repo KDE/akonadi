@@ -49,6 +49,7 @@ class ItemSync::Private
     void slotLocalListDone( KJob* );
     void slotLocalChangeDone( KJob* );
     bool itemNeedsUpdate( const Item &localItem, const Item &remoteItem );
+    void execute();
 
     ItemSync *q;
     Collection mSyncCollection;
@@ -90,6 +91,12 @@ ItemSync::ItemSync( const Collection &collection, QObject *parent ) :
     d( new Private( this ) )
 {
   d->mSyncCollection = collection;
+  ItemFetchJob* job = new ItemFetchJob( d->mSyncCollection, this );
+  // FIXME this will deadlock, we only can fetch parts already in the cache
+//   if ( !d->incremental )
+//     job->fetchAllParts();
+
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotLocalListDone( KJob* ) ) );
 }
 
 ItemSync::~ItemSync()
@@ -101,6 +108,7 @@ void ItemSync::setFullSyncItems( const Item::List &items )
 {
   d->mRemoteItems = items;
   setTotalAmount( KJob::Bytes, d->mRemoteItems.count() );
+  d->execute();
 }
 
 void ItemSync::setIncrementalSyncItems( const Item::List &changedItems, const Item::List &removedItems )
@@ -109,16 +117,11 @@ void ItemSync::setIncrementalSyncItems( const Item::List &changedItems, const It
   d->mRemoteItems = changedItems;
   d->mRemovedRemoteItems = removedItems;
   setTotalAmount( KJob::Bytes, d->mRemoteItems.count() + d->mRemovedRemoteItems.count() );
+  d->execute();
 }
 
 void ItemSync::doStart()
 {
-  ItemFetchJob* job = new ItemFetchJob( d->mSyncCollection, this );
-  // FIXME this will deadlock, we only can fetch parts already in the cache
-//   if ( !d->incremental )
-//     job->fetchAllParts();
-
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotLocalListDone( KJob* ) ) );
 }
 
 bool ItemSync::Private::itemNeedsUpdate( const Item &localItem, const Item &remoteItem )
@@ -164,7 +167,10 @@ void ItemSync::Private::slotLocalListDone( KJob * job )
     mLocalItemsByRemoteId.insert( item.remoteId(), item );
     mUnprocessedLocalItems.insert( item );
   }
+}
 
+void ItemSync::Private::execute()
+{
   // added / updated
   foreach ( const Item remoteItem, mRemoteItems ) {
 #ifndef NDEBUG
