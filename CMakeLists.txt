@@ -108,7 +108,7 @@ set( akonadikde_LIB_SRC
   transactionjobs.cpp
   transactionsequence.cpp
 # Temporary until ported to Qt-plugin framework
-  pluginloaderbase.cpp
+  pluginloader.cpp
 )
 
 # DBus interfaces and adaptors

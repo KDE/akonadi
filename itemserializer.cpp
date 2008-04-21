@@ -75,17 +75,6 @@ public:
 
 };
 
-
-namespace {
-
-  KPIM_DEFINE_PLUGIN_LOADER( ItemSerializerPluginLoader,
-                             Akonadi::ItemSerializerPlugin,
-                             "create_item_serializer_plugin",
-                             "akonadi/plugins/serializer/*.desktop" )
-
-}
-
-
 }
 
 using namespace Akonadi;
@@ -108,10 +97,19 @@ class PluginEntry
       if ( mPlugin )
         return mPlugin;
 
-      mPlugin = ItemSerializerPluginLoader::instance()->createForName( mIdentifier );
-      if ( !mPlugin ) {
+      QObject *object = PluginLoader::self()->createForName( mIdentifier );
+      if ( !object ) {
         kWarning( 5250 ) << "ItemSerializerPluginLoader: "
                          << "plugin" << mIdentifier << "is not valid!" << endl;
+
+        // we try to use the default in that case
+        mPlugin = DefaultItemSerializerPlugin::instance();
+      }
+
+      mPlugin = qobject_cast<ItemSerializerPlugin*>( object );
+      if ( !mPlugin ) {
+        kWarning( 5250 ) << "ItemSerializerPluginLoader: "
+                         << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
 
         // we try to use the default in that case
         mPlugin = DefaultItemSerializerPlugin::instance();
@@ -130,7 +128,7 @@ class PluginEntry
 static QHash<QString, PluginEntry> * all = 0;
 
 static void loadPlugins() {
-  const ItemSerializerPluginLoader* pl = ItemSerializerPluginLoader::instance();
+  const PluginLoader* pl = PluginLoader::self();
   if ( !pl ) {
     kWarning( 5250 ) << "Cannot instantiate plugin loader!" << endl;
     return;
@@ -139,12 +137,7 @@ static void loadPlugins() {
   kDebug( 5250 ) << "ItemSerializerPluginLoader: "
                  << "found" << types.size() << "plugins." << endl;
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
-    QStringList supportedTypes = (*it).split( QLatin1Char(',') );
-    foreach ( const QString t, supportedTypes ) {
-      kDebug( 5250 ) << "ItemSerializerPluginLoader: "
-                     << "inserting plugin for type:" << t;
-      all->insert( t, PluginEntry( *it ) );
-    }
+    all->insert( *it, PluginEntry( *it ) );
   }
 }
 

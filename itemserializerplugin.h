@@ -103,4 +103,6 @@ public:
 
 }
 
+Q_DECLARE_INTERFACE( Akonadi::ItemSerializerPlugin, "org.kde.Akonadi.ItemSerializerPlugin/1.0" );
+
 #endif

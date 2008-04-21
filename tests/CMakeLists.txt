@@ -35,6 +35,7 @@ target_link_libraries(benchmarker akonadi-kde ${QT_QTTEST_LIBRARY})
 add_akonadi_demo(headfetcher.cpp)
 add_akonadi_demo(agentinstancewidgettest.cpp)
 add_akonadi_demo(agenttypewidgettest.cpp)
+add_akonadi_demo(pluginloadertest.cpp)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)

@@ -1,7 +1,5 @@
 /*  -*- c++ -*-
-    This file is part of libkdepim.
-
-    Copyright (c) 2002,2004 Marc Mutz <mutz@kde.org>
+    Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -19,118 +17,53 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef __KPIM_SHARED_PLUGINLOADER_H__
-#define __KPIM_SHARED_PLUGINLOADER_H__
+#ifndef AKONADI_PLUGINLOADER_H
+#define AKONADI_PLUGINLOADER_H
 
-#include <pluginloaderbase.h>
-#include <KLibrary>
+#include "akonadiprivate_export.h"
 
-namespace KPIM {
+#include <QtCore/QHash>
+#include <QtCore/QString>
 
-  /**
-   * @short A generic plugin loader for when KPart::Plugin is overkill
-   * @author Marc Mutz <mutz@kde.org> based on KABC's FormatFactory
-   *
-   * This is a generic plugin loader / factory for small plugins that
-   * don't want to be QObjects.
-   *
-   * @section Usage
-   *
-   * A PluginLoader takes two template arguments, <code>T</code> and
-   * <code>T_config</code>:
-   *
-   * <dl>
-   * <dt>T</dt><dd>The type of object to return</dd>
-   * <dt>T_config::mainfunc</dt><dd>The suffix of the factory function to call
-   *          in the library to obtain a new object of type <code>T</code>.
-   *          The string passed to <code>KLibrary::symbol()</code> is
-   *          <code>libName_mainfunc</code>.</dd>
-   * <dt>T_config::path</dt><dd>The search pattern for <tt>.desktop</tt> files
-   *          containing the plugin descriptions. This is the string passed as
-   *          the @p filter argument to
-   *          <code>KStandardDirs::findAllResources</code>.</dd>
-   * </dl>
-   *
-   * The last two parameters being strings, they are passed via an
-   * encapsulating class, of which <code>mainfunc</code> and
-   * <code>path</code> are public static members:
-   *
-   * <pre>
-   * struct MyObjectPluginLoaderConfig {
-   *   static const char * const mainfunc;
-   *   static const char * const path;
-   * };
-   * const char * const MyObjectPluginLoaderConfig::mainfunc = "myapp_create_myobject";
-   * const char * const MyObjectPluginLoaderConfig::path = "myapp/plugins/ *.desktop";
-   * </pre>
-   *
-   * You would then use a <tt>typedef</tt> to create a less unwieldy
-   * name for your plugin loader:
-   *
-   * <pre>
-   * typedef KPIM::PluginLoader< MyObject, MyObjectPluginLoaderConfig > MyObjectPluginLoader;
-   * </pre>
-   *
-   * All of this is what the
-   * <code>KPIM_DEFINE_PLUGIN_LOADER(pluginloadername,type,mainfunc,path)</code> macro
-   * achieves.
-   *
-   **/
-  template< typename T, typename T_config >
-  class KDE_EXPORT PluginLoader : public PluginLoaderBase {
-  protected:
-    PluginLoader() : PluginLoaderBase() {}
+class QPluginLoader;
+
+namespace Akonadi {
+
+class AKONADI_TESTS_EXPORT PluginMetaData
+{
+  public:
+    PluginMetaData();
+    PluginMetaData( const QString & lib, const QString & name, const QString & comment );
+
+    QString library;
+    QString nameLabel;
+    QString descriptionLabel;
+    bool loaded;
+};
+
+class AKONADI_TESTS_EXPORT PluginLoader
+{
+  public:
+    ~PluginLoader();
+
+    static PluginLoader* self();
+
+    QStringList types() const;
+
+    QObject* createForName( const QString &type );
+
+    PluginMetaData infoForName( const QString & type ) const;
+
+    void scan();
 
   private:
-    static PluginLoader<T,T_config> * mSelf;
+    PluginLoader();
 
-  public:
-    virtual ~PluginLoader() { mSelf = 0; }
-
-    /** Returns the single instance of this loader. */
-    static PluginLoader<T,T_config> * instance() {
-      if ( !mSelf ) {
-	mSelf = new PluginLoader<T,T_config>();
-	mSelf->scan();
-      }
-      return mSelf;
-    }
-
-    /** Rescans the plugin directory to find any newly installed
-	plugins.
-    **/
-    virtual void scan() {
-      doScan( T_config::path );
-    }
-
-    /** Returns a pointer to a plugin object (of type @p T) or a null
-        pointer if the type wasn't found. You can extend this method
-        for when you want to handle builtin types */
-    virtual T * createForName( const QString & type ) const {
-      KLibrary::void_function_ptr main_func = mainFunc( type, T_config::mainfunc );
-      if ( !main_func ) return 0;
-
-      // cast to a pointer to a function returning T*, call it and
-      // return the result; don't you love C? ;-)
-      return ((T* (*)())( main_func ))();
-    }
-  };
-
-  template< typename T, typename T_config >
-  PluginLoader<T,T_config> * PluginLoader<T,T_config>::mSelf = 0;
+    static PluginLoader *mSelf;
+    QHash<QString, QPluginLoader*> mPluginLoaders;
+    QHash<QString, PluginMetaData> mPluginInfos;
+};
 
 }
 
-#define KPIM_DEFINE_PLUGIN_LOADER( pl, t, mf, p ) \
-  namespace { /* don't pollute namespaces */ \
-    struct KDE_EXPORT pl##Config { \
-      static const char * const mainfunc; \
-      static const char * const path; \
-    }; \
-    const char * const pl##Config::mainfunc = mf; \
-    const char * const pl##Config::path = p; \
-  } \
-  typedef KPIM::PluginLoader< t, pl##Config > pl; \
-
-
-#endif // __KPIM_SHARED_PLUGINLOADER_H__
+#endif
