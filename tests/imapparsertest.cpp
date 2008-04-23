@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#include "imapparser_p.h"
 #include "imapparsertest.h"
+#include <akonadi/private/imapparser_p.h>
 #include <qtest_kde.h>
 
 #include <QtCore/QDebug>
