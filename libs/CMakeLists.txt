@@ -16,7 +16,7 @@ set( akonadiprotocolinternals_srcs
 kde4_add_library( akonadiprotocolinternals SHARED ${akonadiprotocolinternals_srcs} )
 
 target_link_libraries( akonadiprotocolinternals ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
-set_target_properties( akonadiprotocolinternals PROPERTIES VERSION "4.1.0" SOVERSION "4" )
+set_target_properties( akonadiprotocolinternals PROPERTIES VERSION "0.80.0" SOVERSION "0" )
 install( TARGETS akonadiprotocolinternals ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( FILES
