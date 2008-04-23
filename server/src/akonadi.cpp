@@ -38,7 +38,10 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
-#include <unistd.h>
+#include <config-akonadi.h>
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 #include <stdlib.h>
 
 using namespace Akonadi;

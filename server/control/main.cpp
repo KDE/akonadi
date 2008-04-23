@@ -27,7 +27,10 @@
 
 #include "kcrash.h"
 #include <stdlib.h>
-#include <unistd.h>
+#include <config-akonadi.h>
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 
 static AgentManager *sAgentManager = 0;
 
