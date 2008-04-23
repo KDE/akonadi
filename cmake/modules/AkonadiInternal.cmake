@@ -25,6 +25,8 @@ set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
       set(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.shell )
    endif (WIN32)
 
+   # when building, make automoc depend on the executable...
+   set( _KDE4_AUTOMOC_EXECUTABLE_DEP kde4automoc)
 
 if (WIN32)
 # use relative install prefix to avoid hardcoded install paths in cmake_install.cmake files
