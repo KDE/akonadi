@@ -105,13 +105,13 @@ set(libakonadiprivate_SRCS
 )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_SOURCE_DIR}/akonadi/interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_SOURCE_DIR}/akonadi/interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
 
-qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${CMAKE_SOURCE_DIR}/akonadi/interfaces/org.kde.Akonadi.AgentManager.xml ${CMAKE_SOURCE_DIR}/akonadi/interfaces/org.kde.Akonadi.Resource.xml )
+qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.AgentManager.xml ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Resource.xml )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Search.xml searchinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.SearchQuery.xml searchqueryinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface )
