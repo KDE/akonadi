@@ -15,7 +15,7 @@ INCLUDE(CheckIncludeFiles)
 check_include_files(execinfo.h HAVE_EXECINFO_H)
 configure_file(config-akonadi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi.h)
 
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${QT_INCLUDES})
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/akonadi ${QT_INCLUDES})
 
 # we need the absolute directories where stuff will be installed too
 # but since the variables which contain the destinations can be relative
