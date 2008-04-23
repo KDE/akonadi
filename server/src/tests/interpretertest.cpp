@@ -19,9 +19,9 @@
 
 #include "interpretertest.h"
 
-#include <qtest_kde.h>
+#include <QtTest/QtTest>
 
-QTEST_KDEMAIN_CORE( InterpreterTest )
+QTEST_MAIN( InterpreterTest )
 
 using namespace Akonadi;
 

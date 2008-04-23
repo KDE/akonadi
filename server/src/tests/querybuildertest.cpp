@@ -25,9 +25,9 @@
 #include "storage/query.cpp"
 #include "storage/querybuilder.cpp"
 
-#include <qtest_kde.h>
+#include <QtTest/QtTest>
 
-QTEST_KDEMAIN_CORE( QueryBuilderTest )
+QTEST_MAIN( QueryBuilderTest )
 
 Q_DECLARE_METATYPE( Akonadi::QueryBuilder )
 
