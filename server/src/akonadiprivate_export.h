@@ -20,7 +20,6 @@
 #ifndef AKONADIPRIVATE_EXPORT_H
 #define AKONADIPRIVATE_EXPORT_H
 
-/* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <QtCore/QtGlobal>
 
 #ifndef AKONADIPRIVATE_EXPORT

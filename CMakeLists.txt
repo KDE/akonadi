@@ -9,7 +9,6 @@ include(AkonadiInternal)
 
 add_subdirectory(cmake)
 
-configure_file(kdemacros.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h )
 configure_file(akonadi-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi-prefix.h)
 
 INCLUDE(CheckIncludeFiles)
