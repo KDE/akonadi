@@ -10,10 +10,9 @@ macro_log_feature( MYSQLD_EXECUTABLE "MySQL Server" "Database server" "http://ww
                    "Akonadi server requires the mysqld binary" )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
-include_directories( ${CMAKE_BINARY_DIR}/akonadi )
-include_directories( ${CMAKE_SOURCE_DIR}/akonadi )
-include_directories( ${CMAKE_SOURCE_DIR}/akonadi/libs )
-include_directories( ${CMAKE_BINARY_DIR}/akonadi/libs )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/libs )
+include_directories( ${CMAKE_CURRENT_BINARY_DIR}/libs )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
