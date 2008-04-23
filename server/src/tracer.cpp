@@ -26,7 +26,7 @@
 #include "dbustracer.h"
 #include "filetracer.h"
 #include "nulltracer.h"
-#include <akonadi/private/xdgbasedirs_p.h>
+#include "../libs/xdgbasedirs_p.h"
 
 using namespace Akonadi;
 

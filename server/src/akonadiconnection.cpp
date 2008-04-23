@@ -27,7 +27,7 @@
 #include "response.h"
 #include "tracer.h"
 
-#include <akonadi/private/imapparser_p.h>
+#include "../libs/imapparser_p.h"
 
 #include <assert.h>
 

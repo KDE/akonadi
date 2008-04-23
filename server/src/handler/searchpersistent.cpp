@@ -21,7 +21,7 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include <akonadi/private/imapparser_p.h>
+#include "../../libs/imapparser_p.h"
 #include "response.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"

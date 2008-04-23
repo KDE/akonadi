@@ -9,12 +9,14 @@ find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec )
 macro_log_feature( MYSQLD_EXECUTABLE "MySQL Server" "Database server" "http://www.mysql.com" FALSE ""
                    "Akonadi server requires the mysqld binary" )
 
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${CMAKE_BINARY_DIR}/akonadi )
 include_directories( ${CMAKE_SOURCE_DIR}/akonadi )
+include_directories( ${CMAKE_SOURCE_DIR}/akonadi/libs )
+include_directories( ${CMAKE_BINARY_DIR}/akonadi/libs )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
-include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
 # FIXME: remove once the server has been moved to kdesupport
@@ -87,8 +89,7 @@ set(libakonadiprivate_SRCS
   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   src/storage/datastore.cpp
   src/storage/dbinitializer.cpp
-  src/storage/dbupdater.cpp
-  src/storage/notificationcollector.cpp
+  src/storage/dbupdater.cpp src/storage/notificationcollector.cpp
   src/storage/query.cpp
   src/storage/querybuilder.cpp
   src/storage/transaction.cpp
@@ -104,13 +105,13 @@ set(libakonadiprivate_SRCS
 )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_SOURCE_DIR}/akonadi/interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_SOURCE_DIR}/akonadi/interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
 
-qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.AgentManager.xml ${KDEPIMLIBS4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Resource.xml )
+qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${CMAKE_SOURCE_DIR}/akonadi/interfaces/org.kde.Akonadi.AgentManager.xml ${CMAKE_SOURCE_DIR}/akonadi/interfaces/org.kde.Akonadi.Resource.xml )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Search.xml searchinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.SearchQuery.xml searchqueryinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface )
@@ -149,3 +150,15 @@ target_link_libraries( akonadiserver_bin akonadiprivate )
 
 install( TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
 install( FILES src/storage/mysql-global.conf DESTINATION ${CONFIG_INSTALL_DIR}/akonadi/ )
+
+## DBus XML files
+
+install( FILES
+   interfaces/org.kde.Akonadi.Search.xml
+   interfaces/org.kde.Akonadi.ControlManager.xml
+   interfaces/org.kde.Akonadi.Server.xml
+   interfaces/org.kde.Akonadi.SearchQueryIterator.xml
+   interfaces/org.kde.Akonadi.TracerNotification.xml
+   interfaces/org.kde.Akonadi.SearchQuery.xml
+DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
+

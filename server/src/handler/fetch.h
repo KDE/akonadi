@@ -22,7 +22,7 @@
 
 #include <handler.h>
 
-#include <akonadi/private/imapset_p.h>
+#include "../../libs/imapset_p.h"
 
 #include "storage/datastore.h"
 

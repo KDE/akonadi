@@ -23,7 +23,7 @@
 #include <storage/datastore.h>
 #include <storage/entity.h>
 #include <storage/transaction.h>
-#include <akonadi/private/imapparser_p.h>
+#include "../../libs/imapparser_p.h"
 #include <handlerhelper.h>
 #include <response.h>
 
