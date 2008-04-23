@@ -4,7 +4,6 @@ include_directories(
    ${CMAKE_BINARY_DIR}/akonadi
    ${QT_QTDBUS_INCLUDE_DIR}
    )
-message(status "QtDBUS -I${QT_QTDBUS_INCLUDE_DIR}")
 
 # libakonadiprotocolinternals
 set( akonadiprotocolinternals_srcs
