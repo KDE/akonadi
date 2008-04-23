@@ -103,6 +103,8 @@ set(libakonadiprivate_SRCS
   src/nepomukmanager.cpp
 )
 
+qt4_automoc(${libakonadiprivate_SRCS})
+
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
@@ -124,7 +126,7 @@ qt4_add_dbus_interface( libakonadiprivate_SRCS ${xesam_xml} xesaminterface )
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 
 
-kde4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
+add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
 target_link_libraries( akonadiprivate
   ${QT_QTCORE_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}

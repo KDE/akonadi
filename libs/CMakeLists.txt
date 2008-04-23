@@ -13,7 +13,7 @@ set( akonadiprotocolinternals_srcs
   xdgbasedirs.cpp
 )
 
-kde4_add_library( akonadiprotocolinternals SHARED ${akonadiprotocolinternals_srcs} )
+add_library( akonadiprotocolinternals SHARED ${akonadiprotocolinternals_srcs} )
 
 target_link_libraries( akonadiprotocolinternals ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
 set_target_properties( akonadiprotocolinternals PROPERTIES VERSION "0.80.0" SOVERSION "0" )
