@@ -19,7 +19,7 @@ qt4_add_dbus_adaptor( queryserver_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces
 qt4_add_dbus_adaptor( queryserver_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.SearchQuery.xml query.h Query )
 qt4_add_dbus_adaptor( queryserver_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.SearchQueryIterator.xml queryiterator.h QueryIterator )
 
-kde4_add_executable( akonadi_queryserver NOGUI ${queryserver_SRCS} )
+add_executable( akonadi_queryserver ${queryserver_SRCS} )
 set_target_properties( akonadi_queryserver PROPERTIES OUTPUT_NAME akonadi_queryserver )
 
 target_link_libraries( akonadi_queryserver ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${NEPOMUK_LIBRARY} )
@@ -40,7 +40,7 @@ set( queryservertest_SRCS
   ${queryservertestdbus_SRCS}
 )
 
-kde4_add_executable( akonadi_queryservertest NOGUI ${queryservertest_SRCS} )
+add_executable( akonadi_queryservertest ${queryservertest_SRCS} )
 set_target_properties( akonadi_queryservertest PROPERTIES OUTPUT_NAME akonadi_queryservertest )
 
 target_link_libraries( akonadi_queryservertest ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${NEPOMUK_LIBRARY} ${SOPRANO_LIBRARY} )
