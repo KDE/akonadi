@@ -3,6 +3,9 @@ project(akonadi)
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
+set(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"             CACHE
+PATH "The subdirectory to the header prefix" FORCE)
+
 set( QT_MIN_VERSION 4.4.0)
 
 find_package(Qt4 REQUIRED)
