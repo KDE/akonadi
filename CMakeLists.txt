@@ -6,7 +6,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 set( QT_MIN_VERSION 4.4.0)
 
 find_package(Qt4 REQUIRED)
-set (QT_QTDBUS_FOUND "NOTFOUND")
 if (QT_QTDBUS_FOUND)
    include(AkonadiInternal)
 
