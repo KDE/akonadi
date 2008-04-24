@@ -16,6 +16,15 @@ check_include_files(execinfo.h HAVE_EXECINFO_H)
 check_include_files(unistd.h HAVE_UNISTD_H)
 configure_file(config-akonadi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi.h)
 
+
+if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
+  set (_ENABLE_EXCEPTIONS -fexceptions)
+else (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
+  if (MSVC)
+    set (_ENABLE_EXCEPTIONS -EHsc)
+  endif (MSVC)
+endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
+ 
 include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/akonadi ${QT_INCLUDES})
 
 # we need the absolute directories where stuff will be installed too
