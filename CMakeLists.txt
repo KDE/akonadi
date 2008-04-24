@@ -14,7 +14,8 @@ include_directories(
   ${CMAKE_BINARY_DIR}/akonadi
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
-  ${INCLUDE_INSTALL_DIR}/akonadi/private
+  ${KDE4_INCLUDE_DIR}
+  ${KDE4_INCLUDE_DIR}/akonadi/private
 )
 
 # libakonadi-kde
@@ -95,14 +96,14 @@ set( akonadikde_LIB_SRC
 )
 
 # DBus interfaces and adaptors
-set(akonadi_xml ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.NotificationManager.xml)
+set(akonadi_xml ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.NotificationManager.xml)
 set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
 qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationmanagerinterface )
-qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.AgentManager.xml )
-qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Tracer.xml )
-qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
-qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Agent.Status.xml agentbase.h Akonadi::AgentBase )
-qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${DBUS_INTERFACES_INSTALL_DIR}/org.kde.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase )
+qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.AgentManager.xml )
+qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Tracer.xml )
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Agent.Status.xml agentbase.h Akonadi::AgentBase )
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${KDE4_DBUS_INTERFACES_DIR}/org.kde.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase )
 
 kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
