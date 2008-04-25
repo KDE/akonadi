@@ -139,7 +139,11 @@ if(WIN32)
   target_link_libraries( akonadiprivate ${KDEWIN32_LIBRARIES} )
 endif(WIN32)
 
-set_target_properties( akonadiprivate PROPERTIES VERSION "0.80.0" SOVERSION "0" )
+set_target_properties( akonadiprivate PROPERTIES
+                        VERSION "0.80.0"
+                        SOVERSION "0"
+                        DEFINE_SYMBOL MAKE_AKONADIPRIVATE_LIB
+                      )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
 set( akonadiserver_bin_SRCS src/main.cpp control/kcrash.cpp )
