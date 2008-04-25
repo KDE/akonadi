@@ -137,8 +137,8 @@ target_link_libraries( akonadiprivate
 )
 
 set_target_properties( akonadiprivate PROPERTIES
-                        VERSION "0.80.0"
-                        SOVERSION "0"
+                        VERSION ${AKONADI_LIB_VERSION_STRING}
+                        SOVERSION ${AKONADI_LIB_MAJOR_VERSION}
                         DEFINE_SYMBOL MAKE_AKONADIPRIVATE_LIB
                       )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )

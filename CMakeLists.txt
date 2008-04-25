@@ -3,10 +3,15 @@ project(akonadi)
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
-set(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include"             CACHE
-PATH "The subdirectory to the header prefix" FORCE)
+set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "The subdirectory to the header prefix" FORCE)
 
-set( QT_MIN_VERSION 4.4.0)
+set(QT_MIN_VERSION 4.4.0)
+
+SET(AKONADI_LIB_MAJOR_VERSION "0")
+SET(AKONADI_LIB_MINOR_VERSION "80")
+SET(AKONADI_LIB_PATCH_VERSION "0")
+
+SET(AKONADI_LIB_VERSION_STRING "${AKONADI_LIB_MAJOR_VERSION}.${AKONADI_LIB_MINOR_VERSION}.${AKONADI_LIB_PATCH_VERSION}")
 
 find_package(Qt4 REQUIRED)
 if (QT_QTDBUS_FOUND)
