@@ -65,7 +65,7 @@ void AgentManager::continueStartup()
 
   QStringList pathList = pluginInfoPathList();
 
-  foreach ( QString path, pathList ) {
+  foreach ( const QString &path, pathList ) {
     QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
     watcher->addPath( path );
 
@@ -74,7 +74,7 @@ void AgentManager::continueStartup()
   }
 
   load();
-  foreach ( const AgentInfo info, mAgents )
+  foreach ( const AgentInfo &info, mAgents )
     ensureAutoStart( info );
 }
 
@@ -85,7 +85,7 @@ AgentManager::~AgentManager()
 
 void AgentManager::cleanup()
 {
-  foreach ( const AgentInstanceInfo info, mAgentInstances ) {
+  foreach ( const AgentInstanceInfo &info, mAgentInstances ) {
     info.controller->setCrashPolicy( ProcessControl::StopOnCrash );
     if ( info.agentControlInterface && info.agentControlInterface->isValid() )
       info.agentControlInterface->quit();
@@ -311,12 +311,12 @@ void AgentManager::updatePluginInfos()
   QHash<QString, AgentInfo> oldInfos = mAgents;
   readPluginInfos();
 
-  foreach ( const AgentInfo oldInfo, oldInfos ) {
+  foreach ( const AgentInfo &oldInfo, oldInfos ) {
     if ( !mAgents.contains( oldInfo.identifier ) )
       emit agentTypeRemoved( oldInfo.identifier );
   }
 
-  foreach ( const AgentInfo newInfo, mAgents ) {
+  foreach ( const AgentInfo &newInfo, mAgents ) {
     if ( !oldInfos.contains( newInfo.identifier ) ) {
       emit agentTypeAdded( newInfo.identifier );
       ensureAutoStart( newInfo );
@@ -330,7 +330,7 @@ void AgentManager::readPluginInfos()
 
   QStringList pathList = pluginInfoPathList();
 
-  foreach ( QString path, pathList ) {
+  foreach ( const QString &path, pathList ) {
       QDir directory( path, "*.desktop" );
       readPluginInfos( directory );
   }
@@ -416,12 +416,12 @@ void AgentManager::save()
   QSettings file( configPath( true ), QSettings::IniFormat );
 
   file.clear();
-  foreach ( const AgentInfo info, mAgents )
+  foreach ( const AgentInfo &info, mAgents )
     info.save( &file );
 
   file.beginGroup( "Instances" );
 
-  foreach ( const AgentInstanceInfo info, mAgentInstances ) {
+  foreach ( const AgentInstanceInfo &info, mAgentInstances ) {
     file.beginGroup( info.identifier );
     file.setValue( "AgentType", info.agentType );
     file.endGroup();

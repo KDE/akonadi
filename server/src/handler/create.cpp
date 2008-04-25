@@ -81,7 +81,7 @@ bool Create::handleLine(const QByteArray& line )
     // check if parent can contain a sub-folder
     parentContentTypes = parent.mimeTypes();
     bool found = false;
-    foreach ( const MimeType mt, parentContentTypes ) {
+    foreach ( const MimeType &mt, parentContentTypes ) {
       if ( mt.name() == QLatin1String( "inode/directory" ) ) {
         found = true;
         break;
@@ -135,10 +135,10 @@ bool Create::handleLine(const QByteArray& line )
 
   QStringList effectiveMimeTypes;
   if ( mimeTypesSet ) {
-    foreach ( const QByteArray b, mimeTypes )
+    foreach ( const QByteArray &b, mimeTypes )
       effectiveMimeTypes << QString::fromUtf8( b );
   } else {
-    foreach ( const MimeType mt, parentContentTypes )
+    foreach ( const MimeType &mt, parentContentTypes )
       effectiveMimeTypes << mt.name();
   }
   if ( !db->appendMimeTypeForLocation( location.id(), effectiveMimeTypes ) )
@@ -146,7 +146,7 @@ bool Create::handleLine(const QByteArray& line )
 
   // store user defined attributes
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
-  foreach ( const QByteArrayPair attr, userDefAttrs ) {
+  foreach ( const QByteArrayPair &attr, userDefAttrs ) {
     if ( !db->addCollectionAttribute( location, attr.first, attr.second ) )
       return failureResponse( "Unable to add collection attribute." );
   }

@@ -127,7 +127,7 @@ bool QueryBuilder::exec()
       Q_ASSERT_X( mUpdateColumns.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed" );
       typedef QPair<QString,QVariant> StringVariantPair;
       QStringList updStmts;
-      foreach ( const StringVariantPair p, mUpdateColumns ) {
+      foreach ( const StringVariantPair &p, mUpdateColumns ) {
         QString updStmt = p.first;
         updStmt += QLatin1String( " = " );
         updStmt += bindValue( p.second );
@@ -154,7 +154,7 @@ bool QueryBuilder::exec()
     Q_ASSERT_X( mType == Select, "QueryBuilder::exec()", "Order statements are only valid for SELECT queries" );
     QStringList orderStmts;
     typedef QPair<QString, Query::SortOrder> SortColumnInfo;
-    foreach ( const SortColumnInfo order, mSortColumns ) {
+    foreach ( const SortColumnInfo &order, mSortColumns ) {
       QString orderStmt;
       orderStmt += order.first;
       orderStmt += sortOrderToString( order.second );
@@ -198,7 +198,7 @@ QString QueryBuilder::buildWhereCondition(const Query::Condition & cond)
 {
   if ( !cond.isEmpty() ) {
     QStringList conds;
-    foreach ( const Query::Condition c, cond.subConditions() ) {
+    foreach ( const Query::Condition &c, cond.subConditions() ) {
       conds << buildWhereCondition( c );
     }
     return QLatin1String( "( " ) + conds.join( logicOperatorToString( cond.mCombineOp ) ) + QLatin1String( " )" );
@@ -212,7 +212,7 @@ QString QueryBuilder::buildWhereCondition(const Query::Condition & cond)
           QStringList entries;
           Q_ASSERT_X( !cond.mComparedValue.toStringList().isEmpty(),
                       "QueryBuilder::buildWhereCondition()", "No values given for IN condition." );
-          foreach ( const QString entry, cond.mComparedValue.toStringList() ) {
+          foreach ( const QString &entry, cond.mComparedValue.toStringList() ) {
             entries << bindValue( entry );
           }
           stmt += entries.join( QLatin1String( ", " ) );

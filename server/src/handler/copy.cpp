@@ -55,7 +55,7 @@ bool Copy::handleLine(const QByteArray & line)
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  foreach ( const PimItem item, items ) {
+  foreach ( const PimItem &item, items ) {
     if ( !copyItem( item, loc ) )
       return failureResponse( "Unable to copy item" );
   }
@@ -74,7 +74,7 @@ bool Copy::copyItem(const PimItem & item, const Location & target)
   newItem.setRemoteId( QByteArray() );
   newItem.setLocationId( target.id() );
   Part::List parts;
-  foreach ( const Part part, item.parts() ) {
+  foreach ( const Part &part, item.parts() ) {
     Part newPart( part );
     newPart.setPimItemId( -1 );
     parts << newPart;

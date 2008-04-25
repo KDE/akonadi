@@ -232,7 +232,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
     return false;
   }
   if ( query.size() == 0  || !query.first() ) {
-    foreach ( QString stmt, dataList ) {
+    foreach ( const QString &stmt, dataList ) {
       if ( !query.exec( stmt ) ) {
         mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'." ).arg( tableName );
         mErrorMsg += QString::fromLatin1( "Query was: %1" ).arg( stmt );

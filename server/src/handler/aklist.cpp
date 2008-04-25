@@ -113,7 +113,7 @@ bool AkList::listCollection(const Location & root, int depth )
   bool childrenFound = false;
   if ( depth > 0 ) {
     Location::List children = root.children();
-    foreach ( const Location loc, children ) {
+    foreach ( const Location &loc, children ) {
       if ( listCollection( loc, depth - 1 ) )
         childrenFound = true;
     }

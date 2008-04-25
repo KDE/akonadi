@@ -98,7 +98,7 @@ bool Akonadi::Append::commit()
     QByteArray mt;
     QByteArray remote_id;
     QList<QByteArray> flags;
-    foreach( QByteArray flag, m_flags ) {
+    foreach( const QByteArray &flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.indexOf( ']', pos1 );

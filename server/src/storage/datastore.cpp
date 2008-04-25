@@ -313,7 +313,7 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<QByteArray> &f
                                  bool checkIfExists, const Location &loc )
 {
   Flag::List list;
-  foreach ( const QByteArray f, flags ) {
+  foreach ( const QByteArray &f, flags ) {
     Flag flag = Flag::retrieveByName( QString::fromUtf8( f ) );
     if ( !flag.isValid() ) {
       flag = Flag( QString::fromUtf8( f ) );
@@ -425,7 +425,7 @@ bool DataStore::appendMimeTypeForLocation( qint64 locationId, const QStringList 
     return false;
   QStringList missingMimeTypes = mimeTypes;
 
-  foreach ( const MimeType mt, qb.result() ) {
+  foreach ( const MimeType &mt, qb.result() ) {
     // unique index on n:m relation prevents duplicates, ie. this will fail
     // if this mimetype is already set
     if ( !Location::addMimeType( locationId, mt.id() ) )
@@ -434,7 +434,7 @@ bool DataStore::appendMimeTypeForLocation( qint64 locationId, const QStringList 
   }
 
   // the MIME type doesn't exist, so we have to add it to the db
-  foreach ( const QString mtName, missingMimeTypes ) {
+  foreach ( const QString &mtName, missingMimeTypes ) {
     qint64 mimeTypeId;
     if ( !appendMimeType( mtName, &mimeTypeId ) )
       return false;

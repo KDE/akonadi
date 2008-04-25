@@ -82,7 +82,7 @@ void XesamManager::slotHitsAdded(const QString & search, int count)
   QList<QList<QVariant> > results = mInterface->GetHits( search, count );
   qDebug() << "GetHits returned:" << results.count();
   typedef QList<QVariant> VariantList;
-  foreach ( const VariantList list, results ) {
+  foreach ( const VariantList &list, results ) {
     if ( list.isEmpty() )
       continue;
     qint64 itemId = uriToItemId( list.first().toString() );
@@ -100,7 +100,7 @@ void XesamManager::slotHitsRemoved(const QString & search, const QList<int> & hi
     return;
   QList<QList<QVariant> > results = mInterface->GetHitData( search, hits, QStringList( QLatin1String("uri") ) );
   typedef QList<QVariant> VariantList;
-  foreach ( const VariantList list, results ) {
+  foreach ( const VariantList &list, results ) {
     if ( list.isEmpty() )
       continue;
     qint64 itemId = uriToItemId( list.first().toString() );
@@ -121,7 +121,7 @@ void XesamManager::reloadSearches()
     return;
   }
   Location::List locs = res.locations();
-  foreach ( const Location l, locs ) {
+  foreach ( const Location &l, locs ) {
     addSearch( l );
   }
 }
@@ -168,7 +168,7 @@ void XesamManager::stopSearches()
     return;
   }
   Location::List locs = res.locations();
-  foreach ( const Location l, locs ) {
+  foreach ( const Location &l, locs ) {
     removeSearch( l.id() );
   }
 }

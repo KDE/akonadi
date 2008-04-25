@@ -48,7 +48,7 @@ Location HandlerHelper::collectionFromIdOrName(const QByteArray & id)
 
   const QStringList pathParts = path.split( QLatin1Char('/') );
   Location loc;
-  foreach ( const QString part, pathParts ) {
+  foreach ( const QString &part, pathParts ) {
     SelectQueryBuilder<Location> qb;
     qb.addValueCondition( Location::nameColumn(), Query::Equals, part );
     if ( loc.isValid() )
@@ -131,7 +131,7 @@ int HandlerHelper::parseCachePolicy(const QByteArray & data, Location & loc, int
       QList<QByteArray> tmp;
       QStringList parts;
       Akonadi::ImapParser::parseParenthesizedList( value, tmp );
-      foreach ( const QByteArray ba, tmp )
+      foreach ( const QByteArray &ba, tmp )
         parts << QString::fromLatin1( ba );
       loc.setCachePolicyLocalParts( parts.join( QLatin1String(" ") ) );
     }
@@ -168,7 +168,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Location & loc, bool hidd
   b += HandlerHelper::cachePolicyToByteArray( loc ) + ' ';
 
   LocationAttribute::List attrs = loc.attributes();
-  foreach ( const LocationAttribute attr, attrs )
+  foreach ( const LocationAttribute &attr, attrs )
     b += attr.type() + ' ' + ImapParser::quote( attr.value() );
   b+= ')';
 

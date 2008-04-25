@@ -151,7 +151,7 @@ void NepomukManager::reloadSearches()
   }
 
   const Location::List locations = resource.locations();
-  Q_FOREACH ( const Location location, locations ) {
+  Q_FOREACH ( const Location &location, locations ) {
     addSearch( location );
   }
 }
@@ -165,7 +165,7 @@ void NepomukManager::stopSearches()
   }
 
   const Location::List locations = resource.locations();
-  Q_FOREACH ( const Location location, locations ) {
+  Q_FOREACH ( const Location &location, locations ) {
     removeSearch( location.id() );
   }
 }
@@ -186,7 +186,7 @@ void NepomukManager::hitsAdded( const QStringList &hits )
   qint64 locationId = mQueryMap.value( query );
   mMutex.unlock();
 
-  Q_FOREACH( const QString uri, hits ) {
+  Q_FOREACH( const QString &uri, hits ) {
     const qint64 itemId = uriToItemId( uri );
 
     if ( itemId == -1 ) {
@@ -214,7 +214,7 @@ void NepomukManager::hitsRemoved( const QStringList &hits )
   qint64 locationId = mQueryMap.value( query );
   mMutex.unlock();
 
-  Q_FOREACH( const QString uri, hits ) {
+  Q_FOREACH( const QString &uri, hits ) {
     const qint64 itemId = uriToItemId( uri );
 
     if ( itemId == -1 ) {

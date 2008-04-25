@@ -64,7 +64,7 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
       if ( !db->removeMimeTypesForLocation( location.id() ) )
         return failureResponse( "Unable to modify collection mimetypes." );
       QStringList mts;
-      foreach ( QByteArray ba, mimeTypes )
+      foreach ( const QByteArray &ba, mimeTypes )
         mts << QString::fromLatin1(ba);
       if ( !db->appendMimeTypeForLocation( location.id(), mts ) )
         return failureResponse( "Unable to modify collection mimetypes." );

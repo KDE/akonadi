@@ -156,7 +156,7 @@ bool Fetch::handleLine( const QByteArray& line )
   // build part query if needed
   QueryBuilder partQuery;
   QStringList partList;
-  foreach( const QByteArray b, mAttrList ) {
+  foreach( const QByteArray &b, mAttrList ) {
     // filter out non-part attributes
     if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" || b.startsWith( "akonadi-" ) )
       continue;

@@ -62,7 +62,7 @@ void NotificationManager::connectDatastore( DataStore * store )
 
 void NotificationManager::slotNotify(const Akonadi::NotificationMessage::List &msgs)
 {
-  foreach ( const NotificationMessage msg, msgs )
+  foreach ( const NotificationMessage &msg, msgs )
     NotificationMessage::appendAndCompress( mNotifications, msg );
   if ( !mTimer.isActive() )
     mTimer.start();
@@ -72,7 +72,7 @@ void NotificationManager::slotEmitNotification()
 {
   if ( mNotifications.isEmpty() )
     return;
-  foreach ( const NotificationMessage msg, mNotifications ) {
+  foreach ( const NotificationMessage &msg, mNotifications ) {
     Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
   }
   emit notify( mNotifications );

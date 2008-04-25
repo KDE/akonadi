@@ -65,12 +65,12 @@ bool ColCopy::copyCollection(const Location & source, const Location & target)
   if ( !db->appendLocation( loc ) )
     return false;
 
-  foreach ( const MimeType mt, source.mimeTypes() ) {
+  foreach ( const MimeType &mt, source.mimeTypes() ) {
     if ( !loc.addMimeType( mt ) )
       return false;
   }
 
-  foreach ( const LocationAttribute attr, source.attributes() ) {
+  foreach ( const LocationAttribute &attr, source.attributes() ) {
     LocationAttribute newAttr = attr;
     newAttr.setId( -1 );
     newAttr.setLocationId( loc.id() );
@@ -79,13 +79,13 @@ bool ColCopy::copyCollection(const Location & source, const Location & target)
   }
 
   // copy sub-collections
-  foreach ( const Location child, source.children() ) {
+  foreach ( const Location &child, source.children() ) {
     if ( !copyCollection( child, loc ) )
       return false;
   }
 
   // copy items
-  foreach ( const PimItem item, source.items() ) {
+  foreach ( const PimItem &item, source.items() ) {
     if ( !copyItem( item, loc ) )
       return false;
   }

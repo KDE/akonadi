@@ -104,7 +104,7 @@ void Query::Private::_k_statementsRemoved()
    * Create result map.
    */
   QList<QString> uris;
-  Q_FOREACH( const QString uri, tmp )
+  Q_FOREACH( const QString &uri, tmp )
     uris.append( uri );
 
   mQueryTime = QDateTime::currentDateTime();
