@@ -252,11 +252,11 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection )
   int fullcount = addressees.count() + incidences.count();
 
   // synchronize contacts
-  foreach ( KABC::Addressee addressee, addressees ) {
+  foreach ( const KABC::Addressee &addressee, addressees ) {
     const QString uid = addressee.uid();
 
     bool found = false;
-    foreach ( Item item, items ) {
+    foreach ( const Item &item, items ) {
       if ( item.remoteId() == uid ) {
         found = true;
         break;
@@ -285,7 +285,7 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection )
     const QString uid = incidence->uid();
 
     bool found = false;
-    foreach ( Item item, items ) {
+    foreach ( const Item &item, items ) {
       if ( item.remoteId() == uid ) {
         found = true;
         break;
