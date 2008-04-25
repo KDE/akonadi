@@ -3,6 +3,12 @@ project(akonadi)
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
+set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
+set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX} CACHE PATH "Base directory for executables and libraries" FORCE)
+
+## the following are directories where stuff will be installed to
+set(BIN_INSTALL_DIR  "${EXEC_INSTALL_PREFIX}/bin" CACHE PATH "The binary install dir (default prefix/bin)" FORCE)
+set(LIB_INSTALL_DIR "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib${LIB_SUFFIX})" FORCE)
 set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "The subdirectory to the header prefix" FORCE)
 
 set(QT_MIN_VERSION 4.4.0)
@@ -18,6 +24,9 @@ if (QT_QTDBUS_FOUND)
    include(AkonadiInternal)
 
    configure_file(akonadi-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi-prefix.h)
+   if(NOT WIN32)
+      configure_file(${CMAKE_CURRENT_SOURCE_DIR}/akonadi.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi.pc @ONLY)
+   endif(NOT WIN32)
 
    INCLUDE(CheckIncludeFiles)
    check_include_files(execinfo.h HAVE_EXECINFO_H)
@@ -83,6 +92,12 @@ if (QT_QTDBUS_FOUND)
 
    install(FILES akonadi-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
    update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+
+   if(NOT WIN32)
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/akonadi.pc
+             DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
+   endif(NOT WIN32)
+
 else(QT_QTDBUS_FOUND)
    message(STATUS "Akonadi requires Qt4 with QtDBus module in order to built.")
 endif(QT_QTDBUS_FOUND)
