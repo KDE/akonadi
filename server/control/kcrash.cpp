@@ -88,7 +88,7 @@ static void defaultCrashHandler( int sig )
       s_shutdownMethod( sig );
   }
 
-  _exit(255);
+  exit(255);
 }
 
 void KCrash::init()
