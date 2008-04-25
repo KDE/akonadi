@@ -11,13 +11,15 @@ set(BIN_INSTALL_DIR  "${EXEC_INSTALL_PREFIX}/bin" CACHE PATH "The binary install
 set(LIB_INSTALL_DIR "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" CACHE PATH "The subdirectory relative to the install prefix where libraries will be installed (default is /lib${LIB_SUFFIX})" FORCE)
 set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "The subdirectory to the header prefix" FORCE)
 
+
+set(AKONADI_LIB_MAJOR_VERSION "0")
+set(AKONADI_LIB_MINOR_VERSION "80")
+set(AKONADI_LIB_PATCH_VERSION "0")
+
+set(AKONADI_LIB_VERSION_STRING "${AKONADI_LIB_MAJOR_VERSION}.${AKONADI_LIB_MINOR_VERSION}.${AKONADI_LIB_PATCH_VERSION}")
+
+# does akonadi actually require Qt 4.4.0 or would an older version also be good enough ? Alex
 set(QT_MIN_VERSION 4.4.0)
-
-SET(AKONADI_LIB_MAJOR_VERSION "0")
-SET(AKONADI_LIB_MINOR_VERSION "80")
-SET(AKONADI_LIB_PATCH_VERSION "0")
-
-SET(AKONADI_LIB_VERSION_STRING "${AKONADI_LIB_MAJOR_VERSION}.${AKONADI_LIB_MINOR_VERSION}.${AKONADI_LIB_PATCH_VERSION}")
 
 find_package(Qt4 REQUIRED)
 if (QT_QTDBUS_FOUND)
@@ -28,7 +30,7 @@ if (QT_QTDBUS_FOUND)
       configure_file(${CMAKE_CURRENT_SOURCE_DIR}/akonadi.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi.pc @ONLY)
    endif(NOT WIN32)
 
-   INCLUDE(CheckIncludeFiles)
+   include(CheckIncludeFiles)
    check_include_files(execinfo.h HAVE_EXECINFO_H)
    check_include_files(unistd.h HAVE_UNISTD_H)
    configure_file(config-akonadi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi.h)
@@ -101,4 +103,5 @@ if (QT_QTDBUS_FOUND)
 else(QT_QTDBUS_FOUND)
    message(STATUS "Akonadi requires Qt4 with QtDBus module in order to built.")
 endif(QT_QTDBUS_FOUND)
+
 macro_display_feature_log()
