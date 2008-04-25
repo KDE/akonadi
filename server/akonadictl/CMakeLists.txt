@@ -12,7 +12,7 @@ set( akonadictl_SRCS
   main.cpp
 )
 
-qt4_automoc(${akonadictl_SRCS})
+automoc4_handle_automoc(akonadictl akonadictl_SRCS)
 
 qt4_add_dbus_interfaces( akonadictl_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.ControlManager.xml

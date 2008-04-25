@@ -103,7 +103,7 @@ set(libakonadiprivate_SRCS
   src/nepomukmanager.cpp
 )
 
-qt4_automoc(${libakonadiprivate_SRCS})
+automoc4_handle_automoc(akonadiprivate libakonadiprivate_SRCS)
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
@@ -119,7 +119,7 @@ qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Search
 
 set(xesam_xml  interfaces/org.freedesktop.xesam.Search.xml)
 
-SET_SOURCE_FILES_PROPERTIES(${xesam_xml} PROPERTIES INCLUDE "xesamtypes.h")
+set_source_files_properties(${xesam_xml} PROPERTIES INCLUDE "xesamtypes.h")
 
 qt4_add_dbus_interface( libakonadiprivate_SRCS ${xesam_xml} xesaminterface )
 

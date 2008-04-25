@@ -3,6 +3,11 @@ project(akonadi)
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
+# if we are inside kdesupport, let's use automoc directly from kdesupport
+if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+   set(CMAKE_MODULE_PATH ${KDESupport_SOURCE_DIR}/automoc ${CMAKE_MODULE_PATH})
+endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX} CACHE PATH "Base directory for executables and libraries" FORCE)
 
@@ -23,6 +28,8 @@ set(QT_MIN_VERSION 4.4.0)
 
 find_package(Qt4 REQUIRED)
 if (QT_QTDBUS_FOUND)
+   find_package(Automoc4 REQUIRED)
+
    include(AkonadiInternal)
 
    configure_file(akonadi-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi-prefix.h)
@@ -46,7 +53,7 @@ if (QT_QTDBUS_FOUND)
       endif (MSVC)
    endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
 
-   add_subdirectory(cmake)
+#   add_subdirectory(cmake)
 
    include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/akonadi ${QT_INCLUDES})
 
