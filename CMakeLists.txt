@@ -9,13 +9,12 @@ add_subdirectory( kmime )
 add_subdirectory( tests )
 
 include_directories(
-  ${CMAKE_SOURCE_DIR}/
-  ${CMAKE_SOURCE_DIR}/akonadi
-  ${CMAKE_BINARY_DIR}/akonadi
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${KDE4_INCLUDE_DIR}
-  ${KDE4_INCLUDE_DIR}/akonadi/private
+  ${AKONADI_INCLUDE_DIR}/akonadi/private
 )
 
 # libakonadi-kde
@@ -113,7 +112,7 @@ kde4_add_ui_files( akonadikde_LIB_SRC
 
 kde4_add_library( akonadi-kde SHARED ${akonadikde_LIB_SRC} )
 
-target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KDE3SUPPORT_LIBS} akonadiprotocolinternals )
+target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${AKONADI_COMMON_LIBRARIES} )
 set_target_properties( akonadi-kde PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install( TARGETS akonadi-kde  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

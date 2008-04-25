@@ -7,6 +7,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${Boost_INCLUDE_DIR}
+    ${AKONADI_INCLUDE_DIR}
 )
 
 # convenience macro to add akonadi demo application
