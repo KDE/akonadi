@@ -135,9 +135,6 @@ target_link_libraries( akonadiprivate
   ${QT_QTXML_LIBRARY}
   akonadiprotocolinternals
 )
-if(WIN32)
-  target_link_libraries( akonadiprivate ${KDEWIN32_LIBRARIES} )
-endif(WIN32)
 
 set_target_properties( akonadiprivate PROPERTIES
                         VERSION "0.80.0"
