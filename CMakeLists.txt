@@ -1,5 +1,7 @@
 project(akonadi)
 
+cmake_minimum_required(VERSION 2.4.5 FATAL_ERROR)
+
 # enable unit tests
 enable_testing()
 

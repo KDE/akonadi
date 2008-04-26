@@ -21,6 +21,7 @@ set_target_properties( akonadiprotocolinternals PROPERTIES
                         SOVERSION ${AKONADI_LIB_MAJOR_VERSION}
                         DEFINE_SYMBOL MAKE_AKONADIPROTOCOLINTERNALS_LIB
                       )
+
 install( TARGETS akonadiprotocolinternals ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( FILES
