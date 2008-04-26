@@ -88,7 +88,11 @@ static void defaultCrashHandler( int sig )
       s_shutdownMethod( sig );
   }
 
-  exit(255);
+#ifdef Q_CC_MINGW
+  _Exit(255);
+#else
+  _exit(255);
+#endif
 }
 
 void KCrash::init()
