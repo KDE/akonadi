@@ -25,7 +25,7 @@ set( control_SRCS
   processcontrol.cpp
 )
 
-automoc4_handle_automoc(akonadi_control control_SRCS)
+automoc4(akonadi_control control_SRCS)
 
 qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
 qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.ControlManager.xml controlmanager.h ControlManager )

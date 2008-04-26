@@ -1,12 +1,10 @@
 project(akonadi)
 
+enable_testing()
+
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
-# if we are inside kdesupport, let's use automoc directly from kdesupport
-if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-   set(CMAKE_MODULE_PATH ${KDESupport_SOURCE_DIR}/automoc ${CMAKE_MODULE_PATH})
-endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
 set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 set(EXEC_INSTALL_PREFIX  ${CMAKE_INSTALL_PREFIX} CACHE PATH "Base directory for executables and libraries" FORCE)

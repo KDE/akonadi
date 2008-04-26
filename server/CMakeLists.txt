@@ -98,7 +98,7 @@ set(libakonadiprivate_SRCS
   src/nepomukmanager.cpp
 )
 
-automoc4_handle_automoc(akonadiprivate libakonadiprivate_SRCS)
+automoc4(akonadiprivate libakonadiprivate_SRCS)
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer

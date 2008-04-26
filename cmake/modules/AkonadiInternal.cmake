@@ -3,30 +3,17 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-include(FindQt4)
-include(KDE4Macros)
 include(MacroAdditionalCleanFiles)
 include(MacroLogFeature)
 
 set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
-   if (WIN32)
-      set(LIBRARY_OUTPUT_PATH            ${EXECUTABLE_OUTPUT_PATH} )
-      # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
-      set(KDE4_KCFGC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
-      set(KDE4_AUTOMOC_EXECUTABLE        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc )
-      set(KDE4_MEINPROC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
-      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
-   else (WIN32)
-      set(LIBRARY_OUTPUT_PATH            ${CMAKE_BINARY_DIR}/lib )
-      set(KDE4_KCFGC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler.shell )
-      set(KDE4_AUTOMOC_EXECUTABLE        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kde4automoc )
-      set(KDE4_MEINPROC_EXECUTABLE       ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4.shell )
-      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets.shell )
-   endif (WIN32)
+if (WIN32)
+   set(LIBRARY_OUTPUT_PATH            ${EXECUTABLE_OUTPUT_PATH} )
+else (WIN32)
+   set(LIBRARY_OUTPUT_PATH            ${CMAKE_BINARY_DIR}/lib )
+endif (WIN32)
 
-   # when building, make automoc depend on the executable...
-   set( _KDE4_AUTOMOC_EXECUTABLE_DEP kde4automoc)
 
 if (WIN32)
 # use relative install prefix to avoid hardcoded install paths in cmake_install.cmake files
