@@ -3,17 +3,7 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-include(MacroAdditionalCleanFiles)
-include(MacroLogFeature)
-
-set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-
-if (WIN32)
-   set(LIBRARY_OUTPUT_PATH            ${EXECUTABLE_OUTPUT_PATH} )
-else (WIN32)
-   set(LIBRARY_OUTPUT_PATH            ${CMAKE_BINARY_DIR}/lib )
-endif (WIN32)
-
+set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
 
 if (WIN32)
 # use relative install prefix to avoid hardcoded install paths in cmake_install.cmake files
@@ -71,14 +61,8 @@ else (WIN32)
    # parents. So modifying CMAKE_INSTALL_PREFIX later on will have the desired effect.
    # But once you decide to set e.g. EXEC_INSTALL_PREFIX to some special location
    # this will go into the cache and it will no longer depend on CMAKE_INSTALL_PREFIX.
-   #
-   # additionally if installing to the same location as kdelibs, the other install
-   # directories are reused from the installed kdelibs
    macro(_SET_FANCY _var _value _comment)
       set(predefinedvalue "${_value}")
-      if ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
-         set(predefinedvalue "${KDE4_${_var}}")
-      endif ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
 
       if (NOT DEFINED ${_var})
          set(${_var} ${predefinedvalue})
