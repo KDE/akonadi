@@ -74,7 +74,7 @@ CollectionSync::~CollectionSync()
 
 void CollectionSync::setRemoteCollections(const Collection::List & remoteCollections)
 {
-  foreach ( const Collection c, remoteCollections ) {
+  foreach ( const Collection &c, remoteCollections ) {
     d->remoteCollections.insert( c.id(), c );
   }
 }
@@ -82,7 +82,7 @@ void CollectionSync::setRemoteCollections(const Collection::List & remoteCollect
 void CollectionSync::setRemoteCollections(const Collection::List & changedCollections, const Collection::List & removedCollections)
 {
   d->incremental = true;
-  foreach ( const Collection c, changedCollections ) {
+  foreach ( const Collection &c, changedCollections ) {
     d->remoteCollections.insert( c.id(), c );
   }
   d->removedRemoteCollections = removedCollections;
@@ -101,14 +101,14 @@ void CollectionSync::slotLocalListDone(KJob * job)
     return;
 
   Collection::List list = static_cast<CollectionFetchJob*>( job )->collections();
-  foreach ( const Collection c, list ) {
+  foreach ( const Collection &c, list ) {
     d->localCollections.insert( c.remoteId(), c );
     d->unprocessedLocalCollections.insert( c );
   }
 
 
   // added / updated
-  foreach ( const Collection c, d->remoteCollections ) {
+  foreach ( const Collection &c, d->remoteCollections ) {
     if ( c.remoteId().isEmpty() ) {
       kWarning( 5250 ) << "Collection '" << c.name() <<"' does not have a remote identifier - skipping";
       continue;
@@ -146,7 +146,7 @@ void CollectionSync::slotLocalListDone(KJob * job)
   // removed
   if ( !d->incremental )
     d->removedRemoteCollections = d->unprocessedLocalCollections.toList();
-  foreach ( const Collection c, d->removedRemoteCollections ) {
+  foreach ( const Collection &c, d->removedRemoteCollections ) {
     d->pendingJobs++;
     CollectionDeleteJob *job = new CollectionDeleteJob( c, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(slotLocalChangeDone(KJob*)) );
@@ -167,7 +167,7 @@ void CollectionSync::slotLocalCreateDone(KJob * job)
 
   // search for children we can create now
   Collection::List stillOrphans;
-  foreach ( Collection orphan, d->orphanRemoteCollections ) {
+  foreach ( const Collection &orphan, d->orphanRemoteCollections ) {
     if ( orphan.parentRemoteId() == newLocal.remoteId() ) {
       createLocalCollection( orphan, newLocal );
     } else {
@@ -198,7 +198,7 @@ void CollectionSync::checkDone()
   if ( !d->orphanRemoteCollections.isEmpty() ) {
     setError( Unknown );
     setErrorText( QLatin1String( "Found unresolved orphan collections" ) );
-    foreach ( const Collection col, d->orphanRemoteCollections )
+    foreach ( const Collection &col, d->orphanRemoteCollections )
       kDebug() << "found orphan collection:" << col.remoteId() << "parent:" << col.parentRemoteId();
   }
 

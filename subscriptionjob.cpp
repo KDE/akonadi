@@ -37,7 +37,7 @@ class Akonadi::SubscriptionJobPrivate : public JobPrivate
 
       mTag = newTag();
       QByteArray line = mTag + ' ' + cmd;
-      foreach ( const Collection col, list )
+      foreach ( const Collection &col, list )
         line += ' ' + QByteArray::number( col.id() );
       line += '\n';
       writeData( line );

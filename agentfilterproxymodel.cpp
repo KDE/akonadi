@@ -78,13 +78,13 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex&) const
   QModelIndex index = sourceModel()->index( row, 0 );
   if ( !d->mimeTypes.isEmpty() ) {
     bool found = false;
-    foreach ( const QString mt, index.data( AgentTypeModel::MimeTypesRole ).toStringList() ) {
+    foreach ( const QString &mt, index.data( AgentTypeModel::MimeTypesRole ).toStringList() ) {
       if ( d->mimeTypes.contains( mt ) ) {
         found = true;
       } else {
         KMimeType::Ptr mimeType = KMimeType::mimeType( mt, KMimeType::ResolveAliases );
         if ( !mimeType.isNull() ) {
-          foreach ( const QString type, d->mimeTypes ) {
+          foreach ( const QString &type, d->mimeTypes ) {
             if ( mimeType->is( type )) {
               found = true;
               break;
@@ -100,7 +100,7 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex&) const
 
   if ( !d->capabilities.isEmpty() ) {
     bool found = false;
-    foreach ( const QString cap, index.data( AgentTypeModel::CapabilitiesRole ).toStringList() ) {
+    foreach ( const QString &cap, index.data( AgentTypeModel::CapabilitiesRole ).toStringList() ) {
       if ( d->capabilities.contains( cap ) ) {
         found = true;
         break;

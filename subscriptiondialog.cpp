@@ -61,13 +61,13 @@ class SubscriptionDialog::Private
 
     void subscribeClicked()
     {
-      foreach( const QModelIndex index, ui.collectionView->selectionModel()->selectedIndexes() )
+      foreach( const QModelIndex &index, ui.collectionView->selectionModel()->selectedIndexes() )
         model->setData( index, Qt::Checked, Qt::CheckStateRole );
     }
 
     void unsubscribeClicked()
     {
-      foreach( const QModelIndex index, ui.collectionView->selectionModel()->selectedIndexes() )
+      foreach( const QModelIndex &index, ui.collectionView->selectionModel()->selectedIndexes() )
         model->setData( index, Qt::Unchecked, Qt::CheckStateRole );
     }
 

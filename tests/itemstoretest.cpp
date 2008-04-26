@@ -49,7 +49,7 @@ void ItemStoreTest::initTestCase()
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
   Collection res1;
-  foreach ( const Collection col, list ) {
+  foreach ( const Collection &col, list ) {
     if ( col.name() == "res1" )
       res1 = col;
     if ( col.name() == "res2" )
@@ -57,7 +57,7 @@ void ItemStoreTest::initTestCase()
     if ( col.name() == "res3" )
       res3 = col;
   }
-  foreach ( const Collection col, list ) {
+  foreach ( const Collection &col, list ) {
     if ( col.name() == "foo" && col.parent() == res1.id() )
       res1_foo = col;
   }

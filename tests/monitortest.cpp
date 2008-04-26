@@ -53,7 +53,7 @@ void MonitorTest::initTestCase()
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
-  foreach ( const Collection col, list )
+  foreach ( const Collection &col, list )
     if ( col.name() == "res3" )
       res3 = col;
 }

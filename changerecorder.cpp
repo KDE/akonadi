@@ -43,14 +43,14 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
     virtual void slotNotify( const NotificationMessage::List &msgs )
     {
       if ( !enableChangeRecording ) {
-        foreach( const NotificationMessage msg, msgs )
+        foreach( const NotificationMessage &msg, msgs )
           processNotification( msg );
         return;
       }
 
       Q_Q( ChangeRecorder );
       int oldChanges = pendingNotifications.count();
-      foreach ( const NotificationMessage msg, msgs ) {
+      foreach ( const NotificationMessage &msg, msgs ) {
         if ( acceptNotification( msg ) )
           NotificationMessage::appendAndCompress( pendingNotifications, msg );
       }

@@ -49,13 +49,13 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
   QStringList collectionMimeTypes = mParent->sourceModel()->data( index, CollectionModel::CollectionRole ).value<Collection>().contentMimeTypes();
 
   // If this collection directly contains one valid mimetype, it is accepted
-  foreach ( QString type, collectionMimeTypes ) {
+  foreach ( const QString &type, collectionMimeTypes ) {
     if ( mimeTypes.contains( type ) )
       return true;
 
     KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
     if ( !mimeType.isNull() ) {
-      foreach ( const QString mt, mimeTypes ) {
+      foreach ( const QString &mt, mimeTypes ) {
         if ( mimeType->is( mt ) )
           return true;
       }

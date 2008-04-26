@@ -164,7 +164,7 @@ void ItemModel::Private::itemsAdded( const Akonadi::Item::List &list )
   if ( list.isEmpty() )
     return;
   mParent->beginInsertRows( QModelIndex(), items.count(), items.count() + list.count() - 1 );
-  foreach( Item item, list ) {
+  foreach( const Item &item, list ) {
     ItemContainer *c = new ItemContainer( item, items.count() );
     items.append( c );
     itemHash[ item ] = c;
@@ -349,7 +349,7 @@ QMimeData *ItemModel::mimeData( const QModelIndexList &indexes ) const
   QMimeData *data = new QMimeData();
   // Add item uri to the mimedata for dropping in external applications
   KUrl::List urls;
-  foreach ( QModelIndex index, indexes ) {
+  foreach ( const QModelIndex &index, indexes ) {
     if ( index.column() != 0 )
       continue;
 

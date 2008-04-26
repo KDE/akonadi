@@ -48,10 +48,10 @@ void ItemAppendTest::initTestCase()
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
   Collection res2;
-  foreach ( const Collection col, list )
+  foreach ( const Collection &col, list )
     if ( col.name() == "res2" )
       res2 = col;
-  foreach ( const Collection col, list )
+  foreach ( const Collection &col, list )
     if ( col.name() == "space folder" && col.parent() == res2.id() )
       testFolder1 = col;
 }

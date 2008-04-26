@@ -53,7 +53,7 @@ void CollectionJobTest::initTestCase()
 }
 
 static Collection findCol( const Collection::List &list, const QString &name ) {
-  foreach ( const Collection col, list )
+  foreach ( const Collection &col, list )
     if ( col.name() == name )
       return col;
   return Collection();

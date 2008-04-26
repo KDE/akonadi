@@ -60,7 +60,7 @@ void CollectionCreateJob::doStart( )
   if ( !d->mCollection.contentMimeTypes().isEmpty() )
   {
     QList<QByteArray> cList;
-    foreach( QString s, d->mCollection.contentMimeTypes() ) cList << s.toLatin1();
+    foreach( const QString &s, d->mCollection.contentMimeTypes() ) cList << s.toLatin1();
     command += "MIMETYPE (" + ImapParser::join( cList, QByteArray(" ") ) + ')';
   }
   command += " REMOTEID \"" + d->mCollection.remoteId().toUtf8() + '"';

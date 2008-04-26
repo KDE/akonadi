@@ -247,7 +247,7 @@ QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
 {
     QMimeData *data = new QMimeData();
     KUrl::List urls;
-    foreach ( QModelIndex index, indexes ) {
+    foreach ( const QModelIndex &index, indexes ) {
         if ( index.column() != 0 )
           continue;
 

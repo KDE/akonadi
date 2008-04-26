@@ -153,12 +153,12 @@ void BenchMarker::testMaildir( QString dir )
   clj->setResource( currentInstance.identifier() );
   clj->exec();
   Collection::List list = clj->collections();
-  foreach ( Collection collection, list ) {
+  foreach ( const Collection &collection, list ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
     ifj->exec();
     QString a;
-    foreach ( Item item, ifj->items() ) {
+    foreach ( const Item &item, ifj->items() ) {
       a = item.payload<MessagePtr>()->subject()->asUnicodeString();
     }
   }
@@ -171,7 +171,7 @@ void BenchMarker::testMaildir( QString dir )
   clj2->setResource( currentInstance.identifier() );
   clj2->exec();
   Collection::List list2 = clj2->collections();
-  foreach ( Collection collection, list2 ) {
+  foreach ( const Collection &collection, list2 ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     ifj->exec();
     Item::List itemlist = ifj->items();
@@ -191,12 +191,12 @@ void BenchMarker::testMaildir( QString dir )
   clj3->setResource( currentInstance.identifier() );
   clj3->exec();
   Collection::List list3 = clj3->collections();
-  foreach ( Collection collection, list3 ) {
+  foreach ( const Collection &collection, list3 ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
     ifj->exec();
     QString a;
-    foreach ( Item item, ifj->items() ) {
+    foreach ( const Item &item, ifj->items() ) {
       // filter read messages
       if( !item.hasFlag( "\\Seen" ) ) {
         a = item.payload<MessagePtr>()->subject()->asUnicodeString();
@@ -212,10 +212,10 @@ void BenchMarker::testMaildir( QString dir )
   clj4->setResource( currentInstance.identifier() );
   clj4->exec();
   Collection::List list4 = clj4->collections();
-  foreach ( Collection collection, list4 ) {
+  foreach ( const Collection &collection, list4 ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     ifj->exec();
-    foreach ( Item item, ifj->items() ) {
+    foreach ( const Item &item, ifj->items() ) {
       // delete read messages
       if( item.hasFlag( "\\Seen" ) ) {
         ItemDeleteJob *idj = new ItemDeleteJob( item, this);
@@ -232,7 +232,7 @@ void BenchMarker::testMaildir( QString dir )
   clj5->setResource( currentInstance.identifier() );
   clj5->exec();
   Collection::List list5 = clj5->collections();
-  foreach ( Collection collection, list5 ) {
+  foreach ( const Collection &collection, list5 ) {
     CollectionDeleteJob *cdj = new CollectionDeleteJob( collection, this );
     cdj->exec();
   }

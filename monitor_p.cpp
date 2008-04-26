@@ -167,7 +167,7 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
 
 void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
 {
-  foreach ( const NotificationMessage msg, msgs )
+  foreach ( const NotificationMessage &msg, msgs )
     processNotification( msg );
 }
 

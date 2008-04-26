@@ -185,7 +185,7 @@ void ItemSync::Private::slotLocalListDone( KJob * job )
     return;
 
   const Item::List list = static_cast<ItemFetchJob*>( job )->items();
-  foreach ( const Item item, list ) {
+  foreach ( const Item &item, list ) {
     mLocalItemsById.insert( item.id(), item );
     mLocalItemsByRemoteId.insert( item.remoteId(), item );
     mUnprocessedLocalItems.insert( item );
@@ -195,7 +195,7 @@ void ItemSync::Private::slotLocalListDone( KJob * job )
 void ItemSync::Private::execute()
 {
   // added / updated
-  foreach ( const Item remoteItem, mRemoteItems ) {
+  foreach ( const Item &remoteItem, mRemoteItems ) {
 #ifndef NDEBUG
     if ( remoteItem.remoteId().isEmpty() ) {
       kWarning( 5250 ) << "Item " << remoteItem.id() << " does not have a remote identifier";
@@ -244,7 +244,7 @@ void ItemSync::Private::execute()
   if ( !mIncremental )
     mRemovedRemoteItems = mUnprocessedLocalItems.toList();
 
-  foreach ( const Item item, mRemovedRemoteItems ) {
+  foreach ( const Item &item, mRemovedRemoteItems ) {
     mPendingJobs++;
     ItemDeleteJob *job = new ItemDeleteJob( item, q );
     q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );

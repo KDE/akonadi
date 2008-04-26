@@ -217,7 +217,7 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
 
     KMimeType::Ptr mimeType = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
     if ( !mimeType.isNull() ) {
-      foreach ( const QString type, all->keys() ) {
+      foreach ( const QString &type, all->keys() ) {
         if ( mimeType->is( type ) ) {
           return *(all->value( type ).plugin() );
         }

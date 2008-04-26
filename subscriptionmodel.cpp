@@ -53,7 +53,7 @@ class SubscriptionModel::Private
         return;
       }
       Collection::List cols = static_cast<CollectionFetchJob*>( job )->collections();
-      foreach( const Collection col, cols )
+      foreach( const Collection &col, cols )
         if ( !CollectionUtils::isStructural( col ) )
           subscriptions[ col.id() ] = true;
       q->reset();

@@ -49,7 +49,7 @@ void TransactionTest::testTransaction()
   CollectionFetchJob *listJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
   QVERIFY( listJob->exec() );
   Collection::List list = listJob->collections();
-  foreach ( const Collection col, list )
+  foreach ( const Collection &col, list )
     if ( col.name() == "res3" )
       basisCollection = col;
 

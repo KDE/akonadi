@@ -45,7 +45,7 @@ bool PasteHelper::canPaste(const QMimeData * mimeData, const Collection & collec
   if ( KUrl::List::canDecode( mimeData ) )
     return true;
 
-  foreach ( const QString format, mimeData->formats() )
+  foreach ( const QString &format, mimeData->formats() )
     if ( collection.contentMimeTypes().contains( format ) )
       return true;
 
@@ -59,7 +59,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
 
   // we try to drop data not coming with the akonadi:// url
   // find a type the target collection supports
-  foreach ( const QString type, mimeData->formats() ) {
+  foreach ( const QString &type, mimeData->formats() ) {
     if ( !collection.contentMimeTypes().contains( type ) )
       continue;
 
@@ -82,7 +82,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
   // data contains an url list
   TransactionSequence *transaction = new TransactionSequence();
   KUrl::List urls = KUrl::List::fromMimeData( mimeData );
-  foreach ( const KUrl url, urls ) {
+  foreach ( const KUrl &url, urls ) {
     if ( Collection::fromUrl( url ).isValid() ) {
       Collection col = Collection::fromUrl( url );
       if ( !copy ) {

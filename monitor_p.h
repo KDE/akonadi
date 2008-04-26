@@ -122,7 +122,7 @@ class MonitorPrivate
       if ( mimeType.isNull() )
         return false;
 
-      foreach ( const QString mt, mimetypes ) {
+      foreach ( const QString &mt, mimetypes ) {
         if ( mimeType->is( mt ) )
           return true;
       }

@@ -111,7 +111,7 @@ void CollectionFetchJob::doStart()
   Q_D( CollectionFetchJob );
 
   if ( !d->mBaseList.isEmpty() ) {
-    foreach ( const Collection col, d->mBaseList ) {
+    foreach ( const Collection &col, d->mBaseList ) {
       new CollectionFetchJob( col, CollectionFetchJob::Base, this );
     }
     return;

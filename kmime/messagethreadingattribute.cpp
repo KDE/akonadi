@@ -81,7 +81,7 @@ QByteArray MessageThreadingAttribute::serialized() const
 static void parseIdList( const QByteArray &data, QList<Item::Id> &result )
 {
   bool ok = false;
-  foreach( const QByteArray s, data.split( ',' ) ) {
+  foreach( const QByteArray &s, data.split( ',' ) ) {
     Item::Id id = s.toLongLong( &ok );
     if( !ok )
       continue;

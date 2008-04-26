@@ -46,7 +46,7 @@ int ProtocolHelper::parseCachePolicy(const QByteArray & data, CachePolicy & poli
       QList<QByteArray> tmp;
       QStringList parts;
       Akonadi::ImapParser::parseParenthesizedList( value, tmp );
-      foreach ( const QByteArray ba, tmp )
+      foreach ( const QByteArray &ba, tmp )
         parts << QString::fromLatin1( ba );
       policy.setLocalParts( parts );
     }
@@ -111,7 +111,7 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       QList<QByteArray> ct;
       ImapParser::parseParenthesizedList( value, ct );
       QStringList ct2;
-      foreach ( const QByteArray b, ct )
+      foreach ( const QByteArray &b, ct )
         ct2 << QString::fromLatin1( b );
       collection.setContentMimeTypes( ct2 );
     } else if ( key == "CACHEPOLICY" ) {

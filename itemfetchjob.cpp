@@ -84,9 +84,9 @@ void ItemFetchJobPrivate::startFetchJob()
     command += " " AKONADI_PARAM_CACHEONLY;
 
   command += " (UID REMOTEID FLAGS";
-  foreach ( const QByteArray part, mFetchScope.payloadParts() )
+  foreach ( const QByteArray &part, mFetchScope.payloadParts() )
     command += ' ' + part;
-  foreach ( const QByteArray part, mFetchScope.attributes() )
+  foreach ( const QByteArray &part, mFetchScope.attributes() )
     command += ' ' + part;
   command += ")\n";
 
@@ -204,7 +204,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
         if ( key == "FLAGS" ) {
           QList<QByteArray> flags;
           ImapParser::parseParenthesizedList( fetchResponse[i + 1], flags );
-          foreach ( const QByteArray flag, flags ) {
+          foreach ( const QByteArray &flag, flags ) {
             item.setFlag( flag );
           }
         } else {

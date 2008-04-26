@@ -58,7 +58,7 @@ void CollectionModifyJob::doStart()
   QByteArray changes;
   if ( d->mCollection.d_func()->contentTypesChanged ) {
     QList<QByteArray> bList;
-    foreach( QString s, d->mCollection.contentMimeTypes() ) bList << s.toLatin1();
+    foreach( const QString &s, d->mCollection.contentMimeTypes() ) bList << s.toLatin1();
     changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
   }
   if ( d->mCollection.parent() >= 0 )
@@ -71,7 +71,7 @@ void CollectionModifyJob::doStart()
     changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
   if ( d->mCollection.attributes().count() > 0 )
     changes += ' ' + ProtocolHelper::attributesToByteArray( d->mCollection );
-  foreach ( const QByteArray b, d->mCollection.d_func()->mDeletedAttributes )
+  foreach ( const QByteArray &b, d->mCollection.d_func()->mDeletedAttributes )
     changes += " -" + b;
   if ( changes.isEmpty() ) {
     emitResult();

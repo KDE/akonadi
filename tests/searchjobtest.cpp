@@ -42,7 +42,7 @@ void SearchJobTest::testCreateDeleteSearch()
   QVERIFY( list->exec() );
   Collection::List cols = list->collections();
   Collection col;
-  foreach ( const Collection c, cols ) {
+  foreach ( const Collection &c, cols ) {
     if ( c.name() == "search123456" )
       col = c;
   }

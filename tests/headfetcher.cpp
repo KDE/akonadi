@@ -47,7 +47,7 @@ HeadFetcher::HeadFetcher( bool multipart )
   CollectionFetchJob *clj = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
   clj->exec();
   Collection::List list = clj->collections();
-  foreach ( Collection collection, list ) {
+  foreach ( const Collection &collection, list ) {
     ItemFetchJob *ifj = new ItemFetchJob( collection, this );
     if ( multipart ) {
       ifj->fetchScope().fetchPayloadPart( MessagePart::Envelope );
@@ -56,7 +56,7 @@ HeadFetcher::HeadFetcher( bool multipart )
     }
     ifj->exec();
     qDebug() << "  Listing" << ifj->items().count() << "item headers.";
-    foreach ( Item item, ifj->items() ) {
+    foreach ( const Item &item, ifj->items() ) {
       qDebug() << item.payload< boost::shared_ptr<KMime::Message> >()->subject()->asUnicodeString();
     }
   }
