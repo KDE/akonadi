@@ -26,7 +26,7 @@ find_package(LibXslt)
 macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "xsltproc" "http://xmlsoft.org/XSLT/" FALSE "" "Needed to generate Akonadi database code")
 
 # this one actually sets only install locations
-include(AkonadiInternal)
+include(InstallSettings)
 
 ################ configure checks and similar things ##############################
 
