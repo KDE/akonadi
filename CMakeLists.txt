@@ -12,7 +12,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
 include(MacroLogFeature)
 
-# does akonadi actually require Qt 4.4.0 or would an older version also be good enough ? Alex
 set(QT_MIN_VERSION 4.4.0)
 find_package(Qt4 REQUIRED)
 if (NOT QT_QTDBUS_FOUND)
