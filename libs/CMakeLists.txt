@@ -31,7 +31,7 @@ install( FILES
   notificationmessage_p.h
   protocol_p.h
   xdgbasedirs_p.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/akonadi/private
 )
 
 
