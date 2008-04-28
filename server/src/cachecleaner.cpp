@@ -78,10 +78,10 @@ void CacheCleaner::cleanCache()
     qDebug() << "found" << parts.count() << "item parts to expire in collection" << location.name();
 
     // clear data field
-    foreach ( Part part, parts ) {
-      part.setData( QByteArray() );
-      if ( !part.update() )
-        qDebug() << "failed to update item part" << part.id();
+    for ( int i = 0; i < parts.count(); ++i) {
+      parts[ i ].setData( QByteArray() );
+      if ( !parts[ i ].update() )
+        qDebug() << "failed to update item part" << parts[ i ].id();
     }
   }
 
