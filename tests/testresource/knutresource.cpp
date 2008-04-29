@@ -107,12 +107,10 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
     Item i( item );
 
     if ( entry.addressees.contains( remoteId ) ) {
-      i.setMimeType( "text/vcard" );
       i.setPayload<KABC::Addressee>( entry.addressees.value( remoteId ) );
     }
 
     if ( entry.incidences.contains( remoteId ) ) {
-      i.setMimeType( "text/calendar" );
       i.setPayload<IncidencePtr>( IncidencePtr( entry.incidences.value( remoteId ) ) );
     }
 
