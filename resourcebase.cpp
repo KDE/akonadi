@@ -254,7 +254,7 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
   scheduler->taskDone();
 }
 
-void ResourceBase::changesCommitted(const Item& item)
+void ResourceBase::changeCommitted(const Item& item)
 {
   Q_D( ResourceBase );
   ItemModifyJob *job = new ItemModifyJob( item );
@@ -263,7 +263,7 @@ void ResourceBase::changesCommitted(const Item& item)
   d->changeProcessed();
 }
 
-void ResourceBase::changesCommitted( const Collection &collection )
+void ResourceBase::changeCommitted( const Collection &collection )
 {
   Q_D( ResourceBase );
   CollectionModifyJob *job = new CollectionModifyJob( collection );

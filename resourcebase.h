@@ -99,7 +99,7 @@ class ResourceBasePrivate;
  * - itemAdded()
  * - itemChanged()
  * - itemRemoved()
- * Once you have handled changes in these methods call changesCommitted().
+ * Once you have handled changes in these methods call changeCommitted().
  * These methods are called whenever a local item related to this resource is
  * added, modified or deleted. They are only called if the resource is online, otherwise
  * all changes are recorded and replayed as soon the resource is online again.
@@ -128,7 +128,7 @@ class ResourceBasePrivate;
  * - collectionAdded()
  * - collectionChanged()
  * - collectionRemoved()
- * Once you have handled changes in these methods call changesCommitted().
+ * Once you have handled changes in these methods call changeCommitted().
  * These methods are called whenever a local collection related to this resource is
  * added, modified or deleted. They are only called if the resource is online, otherwise
  * all changes are recorded and replayed as soon the resource is online again.
@@ -260,7 +260,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * This implicitly calls changeProcessed().
      * @param item The changed item.
      */
-    void changesCommitted( const Item &item );
+    void changeCommitted( const Item &item );
 
     /**
      * Call whenever you have successfully handled or ignored a collection
@@ -271,7 +271,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * This implicitly calls changeProcessed().
      * @param collection The collection which changes have been handled.
     */
-    void changesCommitted( const Collection &collection );
+    void changeCommitted( const Collection &collection );
 
     /**
      * Call this to supply the full folder tree retrieved from the remote server.
