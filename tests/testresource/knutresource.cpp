@@ -139,7 +139,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
 
       Item i( item );
       i.setRemoteId( addressee.uid() );
-      changesCommitted( i );
+      changeCommitted( i );
       return;
     }
   } else if ( item.mimeType() == QLatin1String( "text/calendar" ) ) {
@@ -149,7 +149,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
 
       Item i( item );
       i.setRemoteId( incidence->uid() );
-      changesCommitted( i );
+      changeCommitted( i );
       return;
     }
   }
@@ -171,7 +171,7 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
 
         Item i( item );
         i.setRemoteId( addressee.uid() );
-        changesCommitted( i );
+        changeCommitted( i );
         return;
       }
     } else if ( entry.incidences.contains( item.remoteId() ) ) {
@@ -182,7 +182,7 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
 
         Item i( item );
         i.setRemoteId( incidence->uid() );
-        changesCommitted( i );
+        changeCommitted( i );
         return;
       }
     }
