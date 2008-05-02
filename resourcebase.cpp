@@ -272,7 +272,8 @@ void ResourceBase::changeCommitted( const Collection &collection )
   d->changeProcessed();
 }
 
-bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, const QStringList &_parts )
+bool ResourceBase::requestItemDelivery( qint64 uid, const QString & remoteId,
+                                        const QString &mimeType, const QStringList &_parts )
 {
   Q_D( ResourceBase );
   if ( !isOnline() ) {
@@ -283,6 +284,7 @@ bool ResourceBase::requestItemDelivery(qint64 uid, const QString & remoteId, con
   setDelayedReply( true );
   // FIXME: we need at least the revision number too
   Item item( uid );
+  item.setMimeType( mimeType );
   item.setRemoteId( remoteId );
 
   QSet<QByteArray> parts;

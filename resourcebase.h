@@ -386,7 +386,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     // dbus resource interface
     friend class ::ResourceAdaptor;
 
-    bool requestItemDelivery( qint64 uid, const QString &remoteId, const QStringList &parts );
+    bool requestItemDelivery( qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &parts );
 
   private:
     Q_DECLARE_PRIVATE( ResourceBase )
