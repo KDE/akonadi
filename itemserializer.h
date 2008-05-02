@@ -41,13 +41,13 @@ class AKONADI_TESTS_EXPORT ItemSerializer
 {
   public:
       /** throws ItemSerializerException on failure */
-      static void deserialize( Item& item, const QByteArray& label, const QByteArray& data );
+      static void deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version );
       /** throws ItemSerializerException on failure */
-      static void deserialize( Item& item, const QByteArray& label, QIODevice& data );
+      static void deserialize( Item& item, const QByteArray& label, QIODevice& data, int version );
       /** throws ItemSerializerException on failure */
-      static void serialize( const Item& item, const QByteArray& label, QByteArray& data );
+      static void serialize( const Item& item, const QByteArray& label, QByteArray& data, int &version );
       /** throws ItemSerializerException on failure */
-      static void serialize( const Item& item, const QByteArray& label, QIODevice& data );
+      static void serialize( const Item& item, const QByteArray& label, QIODevice& data, int &version );
 
       /** Returns a list of parts available in the item payload. */
       static QSet<QByteArray> parts( const Item &item );

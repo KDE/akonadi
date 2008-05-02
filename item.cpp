@@ -103,14 +103,15 @@ QSet<QByteArray> Item::loadedPayloadParts() const
 
 QByteArray Item::payloadData() const
 {
+  int version = 0;
   QByteArray data;
-  ItemSerializer::serialize( *this, FullPayload, data );
+  ItemSerializer::serialize( *this, FullPayload, data, version );
   return data;
 }
 
 void Item::setPayloadFromData( const QByteArray &data )
 {
-  ItemSerializer::deserialize( *this, FullPayload, data );
+  ItemSerializer::deserialize( *this, FullPayload, data, 0 );
 }
 
 int Item::revision() const

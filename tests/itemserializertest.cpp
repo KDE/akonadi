@@ -35,7 +35,7 @@ void ItemSerializerTest::testEmptyPayload()
   // should not crash
   QByteArray data;
   Item item;
-  ItemSerializer::deserialize( item, Item::FullPayload, data );
+  ItemSerializer::deserialize( item, Item::FullPayload, data, 0 );
   QVERIFY( data.isEmpty() );
 }
 
@@ -44,13 +44,14 @@ void ItemSerializerTest::testDefaultSerializer()
   QByteArray serialized = "\0\r\n\0bla";
   Item item;
   item.setMimeType( "application/octet-stream" );
-  ItemSerializer::deserialize( item, Item::FullPayload, serialized );
+  ItemSerializer::deserialize( item, Item::FullPayload, serialized, 0 );
 
   QVERIFY( item.hasPayload<QByteArray>() );
   QCOMPARE( item.payload<QByteArray>(), serialized );
 
   QByteArray data;
-  ItemSerializer::serialize( item, Item::FullPayload, data );
+  int version = 0;
+  ItemSerializer::serialize( item, Item::FullPayload, data, version );
   QCOMPARE( serialized, data );
 }
 
@@ -61,7 +62,7 @@ void ItemSerializerTest::testExtraPart()
   QByteArray data = "foo";
   Item item;
   item.setMimeType( "application/octet-stream" );
-  ItemSerializer::deserialize( item, "EXTRA", data );
+  ItemSerializer::deserialize( item, "EXTRA", data, 0 );
 
   QVERIFY( !item.hasPayload() );
   QVERIFY( item.loadedPayloadParts().isEmpty() );
@@ -70,7 +71,8 @@ void ItemSerializerTest::testExtraPart()
   QCOMPARE( item.attribute<TestAttribute>()->data, data );
 
   QByteArray ser;
-  ItemSerializer::serialize( item, "EXTRA", ser );
+  int version = 0;
+  ItemSerializer::serialize( item, "EXTRA", ser, version );
   QCOMPARE( ser, data );
 }
 

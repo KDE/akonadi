@@ -208,7 +208,12 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
             item.setFlag( flag );
           }
         } else {
-          ItemSerializer::deserialize( item, key, fetchResponse.value( i + 1 ) );
+          int version = 0;
+          QByteArray plainKey( key );
+
+          ImapParser::splitVersionedKey( key, plainKey, version );
+
+          ItemSerializer::deserialize( item, plainKey, fetchResponse.value( i + 1 ), version );
         }
       }
 

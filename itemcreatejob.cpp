@@ -72,8 +72,10 @@ void ItemCreateJob::doStart()
     remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' );
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
   if ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.contains( Item::FullPayload )) ) {
-    if ( d->mItem.hasPayload() )
-      ItemSerializer::serialize( d->mItem, Item::FullPayload, d->mData );
+    if ( d->mItem.hasPayload() ) {
+      int version = 0;
+      ItemSerializer::serialize( d->mItem, Item::FullPayload, d->mData, version );
+    }
     int dataSize = d->mData.size();
 
     d->writeData( d->newTag() + " APPEND " + QByteArray::number( d->mCollection.id() )
@@ -88,9 +90,11 @@ void ItemCreateJob::doStart()
     int totalSize = 0;
     foreach( const QByteArray &partName, d->mParts ) {
       QByteArray partData;
-      ItemSerializer::serialize( d->mItem, partName, partData );
+      int version = 0;
+      ItemSerializer::serialize( d->mItem, partName, partData, version );
       totalSize += partData.size();
-      partSpecs.append( ImapParser::quote( partName ) + ':' +
+      QByteArray versionString( version != 0 ? "[" + QByteArray::number( version ) + "]" : "" );
+      partSpecs.append( ImapParser::quote( partName + versionString ) + ':' +
         QByteArray::number( partData.size() ) );
       d->mData += partData;
     }

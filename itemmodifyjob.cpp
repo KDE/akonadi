@@ -55,8 +55,11 @@ QByteArray ItemModifyJobPrivate::nextPartHeader()
     mParts.remove( label );
 
     mPendingData.clear();
-    ItemSerializer::serialize( mItem, label, mPendingData );
+    int version = 0;
+    ItemSerializer::serialize( mItem, label, mPendingData, version );
     command += ' ' + label;
+    if ( version != 0 )  // '0' is the default
+      command += '[' + QByteArray::number( version ) + ']';
     command += ".SILENT {" + QByteArray::number( mPendingData.size() ) + '}';
     if ( mPendingData.size() > 0 )
       command += '\n';

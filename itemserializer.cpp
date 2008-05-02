@@ -58,7 +58,7 @@ public:
         return s_p;
     }
 
-    bool deserialize( Item& item, const QByteArray& label, QIODevice& data )
+    bool deserialize( Item& item, const QByteArray& label, QIODevice& data, int )
     {
         if ( label != Item::FullPayload )
           return false;
@@ -66,7 +66,7 @@ public:
         return true;
     }
 
-    void serialize( const Item& item, const QByteArray& label, QIODevice& data )
+    void serialize( const Item& item, const QByteArray& label, QIODevice& data, int& )
     {
         Q_ASSERT( label == Item::FullPayload );
         if ( item.hasPayload<QByteArray>() )
@@ -150,21 +150,21 @@ static void setup()
 }
 
 /*static*/
-void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QByteArray& data )
+void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version )
 {
     QBuffer buffer;
     buffer.setData( data );
     buffer.open( QIODevice::ReadOnly );
     buffer.seek( 0 );
-    deserialize( item, label, buffer );
+    deserialize( item, label, buffer, version );
     buffer.close();
 }
 
 /*static*/
-void ItemSerializer::deserialize( Item& item, const QByteArray& label, QIODevice& data )
+void ItemSerializer::deserialize( Item& item, const QByteArray& label, QIODevice& data, int version )
 {
     setup();
-    if ( !ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data ) ) {
+    if ( !ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data, version ) ) {
       data.seek( 0 );
       Attribute* attr = AttributeFactory::createAttribute( label );
       Q_ASSERT( attr );
@@ -174,18 +174,18 @@ void ItemSerializer::deserialize( Item& item, const QByteArray& label, QIODevice
 }
 
 /*static*/
-void ItemSerializer::serialize( const Item& item, const QByteArray& label, QByteArray& data )
+void ItemSerializer::serialize( const Item& item, const QByteArray& label, QByteArray& data, int &version )
 {
     QBuffer buffer;
     buffer.setBuffer( &data );
     buffer.open( QIODevice::WriteOnly );
     buffer.seek( 0 );
-    serialize( item, label, buffer );
+    serialize( item, label, buffer, version );
     buffer.close();
 }
 
 /*static*/
-void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODevice& data )
+void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODevice& data, int &version )
 {
     setup();
     ItemSerializerPlugin& plugin = pluginForMimeType( item.mimeType() );
@@ -198,7 +198,7 @@ void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODe
     }
     if ( !item.hasPayload() )
       return;
-    plugin.serialize( item, label, data );
+    plugin.serialize( item, label, data, version );
 }
 
 QSet<QByteArray> ItemSerializer::parts(const Item & item)
