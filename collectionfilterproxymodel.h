@@ -33,12 +33,12 @@ class CollectionModel;
  * folders containing mail.
  *
  * Example use:
- * <code>
+ * \code
  * m_folderModel = new Akonadi::CollectionModel(this);
  * m_folderProxyModel = new Akonadi::CollectionFilterProxyModel();
- * m_folderProxyModel->addMimeType("message/rfc822");
+ * m_folderProxyModel->addMimeTypeFilter("message/rfc822");
  * m_folderProxyModel->setSourceModel(m_folderModel);
- * </code>
+ * \endcode
 */
 class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
 {
