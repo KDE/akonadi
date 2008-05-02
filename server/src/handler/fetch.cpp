@@ -201,6 +201,7 @@ bool Fetch::handleLine( const QByteArray& line )
       }
       if ( !missingParts.isEmpty() ) {
         store->retrieveDataFromResource( pimItemId, itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
+                                         itemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8(),
                                          itemQuery.query().value( itemQueryResouceColumn ).toString(), missingParts );
       }
       itemQuery.query().next();

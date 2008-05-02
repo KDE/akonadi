@@ -250,7 +250,7 @@ protected:
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
   public:
-    void retrieveDataFromResource( qint64 uid, const QByteArray& remote_id,
+    void retrieveDataFromResource( qint64 uid, const QByteArray& remote_id, const QByteArray& mimeType,
                                          const QString &resource, const QStringList &parts );
     void triggerCollectionSync( const Location &location );
 

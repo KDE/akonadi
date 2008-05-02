@@ -636,7 +636,7 @@ bool DataStore::cleanupPimItems( const Location &location )
   return ok;
 }
 
-void Akonadi::DataStore::retrieveDataFromResource( qint64 uid, const QByteArray& remote_id,
+void Akonadi::DataStore::retrieveDataFromResource( qint64 uid, const QByteArray& remote_id, const QByteArray& mimeType,
                                                    const QString &resource, const QStringList &parts )
 {
   // TODO: error handling
@@ -666,7 +666,7 @@ void Akonadi::DataStore::retrieveDataFromResource( qint64 uid, const QByteArray&
       // call the resource
       org::kde::Akonadi::Resource *interface = resourceInterface( resource );
       if ( interface )
-        interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), parts );
+        interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), QString::fromUtf8(mimeType), parts );
 
       mPendingItemDeliveriesMutex.lock();
       qDebug() << "requestItemDelivery(): freeing uid" << uid;
