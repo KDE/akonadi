@@ -146,6 +146,7 @@
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="int" properties="NOT NULL"/>
+    <column name="version" type="int" properties="DEFAULT 0"/>
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 

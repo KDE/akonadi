@@ -81,7 +81,7 @@ bool Akonadi::AkAppend::handleLine(const QByteArray& line )
     // by the database
 
     // parse part specification
-    QList<QPair<QByteArray, qint64> > partSpecs;
+    QList<QPair<QByteArray, QPair<qint64, int> > > partSpecs;
     QByteArray partName;
     qint64 partSize;
     bool ok;
@@ -98,7 +98,11 @@ bool Akonadi::AkAppend::handleLine(const QByteArray& line )
       if( !ok )
         partSize = 0;
 
-      partSpecs.append( qMakePair( partName, partSize ) );
+      int version = 0;
+      QByteArray plainPartName;
+      ImapParser::splitVersionedKey( partName, plainPartName, version );
+
+      partSpecs.append( qMakePair( plainPartName, qMakePair( partSize, version ) ) );
     }
 
     QByteArray allParts;
@@ -106,14 +110,16 @@ bool Akonadi::AkAppend::handleLine(const QByteArray& line )
 
     // chop up literal data in parts
     pos = 0; // traverse through part data now
-    QPair<QByteArray, qint64> partSpec;
+    QPair<QByteArray, QPair<qint64, int> > partSpec;
     foreach( partSpec, partSpecs ) {
       // wrap data into a part
       Part part;
       part.setName( QLatin1String( partSpec.first ) );
-      part.setData( allParts.mid( pos, partSpec.second ) );
+      part.setData( allParts.mid( pos, partSpec.second.first ) );
+      if ( partSpec.second.second != 0 )
+        part.setVersion( partSpec.second.second );
       m_parts.append( part );
-      pos += partSpec.second;
+      pos += partSpec.second.first;
     }
 
     return commit();

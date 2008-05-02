@@ -137,6 +137,13 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapParser
     */
     static int parseDateTime( const QByteArray &data, QDateTime &dateTime, int start = 0 );
 
+    /**
+      Split a versioned key of the form 'key[version]' into its components.
+      @param data The versioned key.
+      @param key The unversioned key.
+      @param version The version of the key or 0 if no version was set.
+     */
+    static void splitVersionedKey( const QByteArray &data, QByteArray &key, int &version );
 
     /**
       Constructs a new IMAP parser.

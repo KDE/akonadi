@@ -386,6 +386,25 @@ int ImapParser::parseDateTime(const QByteArray & data, QDateTime & dateTime, int
   return pos;
 }
 
+void ImapParser::splitVersionedKey( const QByteArray &data, QByteArray &key, int &version )
+{
+  if ( data.contains( '[' ) && data.contains( ']' ) ) {
+    int startPos = data.indexOf( '[' );
+    int endPos = data.indexOf( ']' );
+    if ( startPos != -1 && endPos != -1 && endPos > startPos ) {
+      bool ok = false;
+
+      version = data.mid( startPos + 1, endPos - startPos - 1 ).toInt( &ok );
+      if ( !ok )
+        version = 0;
+
+      key = data.left( startPos );
+    }
+  } else {
+    key = data;
+    version = 0;
+  }
+}
 
 ImapParser::ImapParser() :
     d ( new Private )

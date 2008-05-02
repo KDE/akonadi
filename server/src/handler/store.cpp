@@ -158,9 +158,14 @@ bool Store::handleLine( const QByteArray& line )
             return failureResponse( "Unable to update item dirtyness" );
       } else {
         Part part;
+        int version = 0;
+        QByteArray plainCommand;
+
+        ImapParser::splitVersionedKey( command, plainCommand, version );
+
         SelectQueryBuilder<Part> qb;
         qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, pimItems[ i ].id() );
-        qb.addValueCondition( Part::nameColumn(), Query::Equals, QString::fromUtf8( command ) );
+        qb.addValueCondition( Part::nameColumn(), Query::Equals, QString::fromUtf8( plainCommand ) );
         if ( !qb.exec() )
           return failureResponse( "Unable to check item part existence" );
         Part::List result = qb.result();
@@ -173,7 +178,8 @@ bool Store::handleLine( const QByteArray& line )
         {
           part.setData( value );
           part.setDatasize( buffer.size() );
-          part.setName( QString::fromUtf8( command ) );
+          part.setName( QString::fromUtf8( plainCommand ) );
+          part.setVersion( version );
           part.setPimItemId( pimItems[ i ].id() );
           if ( part.isValid() ) {
             if ( !part.update() )

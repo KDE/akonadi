@@ -174,6 +174,7 @@ bool Fetch::handleLine( const QByteArray& line )
   const int partQueryIdColumn = 0;
   const int partQueryNameColumn = 1;
   const int partQueryDataColumn = 2;
+  const int partQueryVersionColumn = 3;
 
   // fetch not yet cached item parts
   // TODO: I'm sure this can be done with a single query instead of manually
@@ -254,6 +255,10 @@ bool Fetch::handleLine( const QByteArray& line )
       QByteArray partName = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
       QByteArray part = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
       QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
+      int version = partQuery.query().value( partQueryVersionColumn ).toInt();
+      if ( version != 0 ) { // '0' is the default, so don't send it
+        part += "[" + QByteArray::number( version ) + "]";
+      }
       if ( data.isNull() ) {
         part += " NIL";
       } else if ( data.isEmpty() ) {
@@ -330,6 +335,7 @@ QueryBuilder Fetch::buildPartQuery( const QStringList &partList )
     partQuery.addColumn( PimItem::idFullColumnName() );
     partQuery.addColumn( Part::nameFullColumnName() );
     partQuery.addColumn( Part::dataFullColumnName() );
+    partQuery.addColumn( Part::versionFullColumnName() );
     partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
     if ( !mAllParts )
       partQuery.addValueCondition( Part::nameFullColumnName(), Query::In, partList );
