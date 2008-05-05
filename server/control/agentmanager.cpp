@@ -525,7 +525,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
 
 void AgentManager::status( int status, const QString &message )
 {
-  org::freedesktop::Akonadi::Agent::Status *interface = static_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
+  org::freedesktop::Akonadi::Agent::Status *interface = dynamic_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
   if ( !interface ) {
     mTracer->error( QLatin1String( "AgentManager::status" ),
                     QLatin1String( "Got signal from unknown sender" ) );
@@ -544,7 +544,7 @@ void AgentManager::status( int status, const QString &message )
 
 void AgentManager::percent( int progress )
 {
-  org::freedesktop::Akonadi::Agent::Status *interface = static_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
+  org::freedesktop::Akonadi::Agent::Status *interface = dynamic_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
   if ( !interface ) {
     mTracer->error( QLatin1String( "AgentManager::percent" ),
                     QLatin1String( "Got signal from unknown sender" ) );
@@ -563,7 +563,7 @@ void AgentManager::percent( int progress )
 
 void AgentManager::warning( const QString &message )
 {
-  org::freedesktop::Akonadi::Agent::Status *interface = static_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
+  org::freedesktop::Akonadi::Agent::Status *interface = dynamic_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
   if ( !interface ) {
     mTracer->error( QLatin1String( "AgentManager::warning" ),
                     QLatin1String( "Got signal from unknown sender" ) );
@@ -582,7 +582,7 @@ void AgentManager::warning( const QString &message )
 
 void AgentManager::error( const QString &message )
 {
-  org::freedesktop::Akonadi::Agent::Status *interface = static_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
+  org::freedesktop::Akonadi::Agent::Status *interface = dynamic_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
   if ( !interface ) {
     mTracer->error( QLatin1String( "AgentManager::error" ),
                     QLatin1String( "Got signal from unknown sender" ) );
@@ -601,7 +601,7 @@ void AgentManager::error( const QString &message )
 
 void AgentManager::resourceNameChanged( const QString &data )
 {
-  org::freedesktop::Akonadi::Resource *resource = static_cast<org::freedesktop::Akonadi::Resource*>( sender() );
+  org::freedesktop::Akonadi::Resource *resource = dynamic_cast<org::freedesktop::Akonadi::Resource*>( sender() );
   if ( !resource ) {
     mTracer->error( QLatin1String( "AgentManager::resourceNameChanged" ),
                     QLatin1String( "Got signal from unknown sender" ) );
