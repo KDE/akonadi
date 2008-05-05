@@ -42,7 +42,7 @@ namespace Akonadi {
 class AgentManager : public QObject
 {
   Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.Akonadi.AgentManager" )
+  Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.AgentManager" )
 
   public:
     /**
@@ -68,7 +68,7 @@ class AgentManager : public QObject
      */
     static QString configPath( bool writeable );
 
-    org::kde::Akonadi::Tracer* tracer() const { return mTracer; }
+    org::freedesktop::Akonadi::Tracer* tracer() const { return mTracer; }
 
   public Q_SLOTS:
     /**
@@ -336,7 +336,7 @@ class AgentManager : public QObject
      */
     QHash<QString, AgentInstanceInfo> mAgentInstances;
 
-    org::kde::Akonadi::Tracer *mTracer;
+    org::freedesktop::Akonadi::Tracer *mTracer;
 
     Akonadi::ProcessControl *mStorageController;
 };

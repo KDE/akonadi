@@ -1,10 +1,10 @@
 SET(DBUS_INTERFACE_XMLS
-  org.kde.Akonadi.AgentManager.xml
-  org.kde.Akonadi.NotificationManager.xml
-  org.kde.Akonadi.Tracer.xml
-  org.kde.Akonadi.Agent.Control.xml
-  org.kde.Akonadi.Agent.Status.xml
-  org.kde.Akonadi.Resource.xml
+  org.freedesktop.Akonadi.AgentManager.xml
+  org.freedesktop.Akonadi.NotificationManager.xml
+  org.freedesktop.Akonadi.Tracer.xml
+  org.freedesktop.Akonadi.Agent.Control.xml
+  org.freedesktop.Akonadi.Agent.Status.xml
+  org.freedesktop.Akonadi.Resource.xml
   )
 
 install( FILES ${DBUS_INTERFACE_XMLS}

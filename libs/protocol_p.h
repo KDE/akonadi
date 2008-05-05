@@ -29,8 +29,8 @@
 */
 
 // D-Bus service names
-#define AKONADI_DBUS_SERVER_SERVICE "org.kde.Akonadi"
-#define AKONADI_DBUS_CONTROL_SERVICE "org.kde.Akonadi.Control"
+#define AKONADI_DBUS_SERVER_SERVICE "org.freedesktop.Akonadi"
+#define AKONADI_DBUS_CONTROL_SERVICE "org.freedesktop.Akonadi.Control"
 
 // Commands
 #define AKONADI_CMD_ITEMFETCH "FETCH"

@@ -100,17 +100,17 @@ set(libakonadiprivate_SRCS
 
 automoc4(akonadiprivate libakonadiprivate_SRCS)
 
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
 
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
 
-qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.AgentManager.xml ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Resource.xml )
-qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.Search.xml searchinterface )
-qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.SearchQuery.xml searchqueryinterface )
-qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.kde.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface )
+qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.AgentManager.xml ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.Resource.xml )
+qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.Search.xml searchinterface )
+qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.SearchQuery.xml searchqueryinterface )
+qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface )
 
 set(xesam_xml  interfaces/org.freedesktop.xesam.Search.xml)
 
@@ -151,11 +151,11 @@ install( FILES src/storage/mysql-global.conf DESTINATION ${CONFIG_INSTALL_DIR}/a
 ## DBus XML files
 
 install( FILES
-   interfaces/org.kde.Akonadi.Search.xml
-   interfaces/org.kde.Akonadi.ControlManager.xml
-   interfaces/org.kde.Akonadi.Server.xml
-   interfaces/org.kde.Akonadi.SearchQueryIterator.xml
-   interfaces/org.kde.Akonadi.TracerNotification.xml
-   interfaces/org.kde.Akonadi.SearchQuery.xml
+   interfaces/org.freedesktop.Akonadi.Search.xml
+   interfaces/org.freedesktop.Akonadi.ControlManager.xml
+   interfaces/org.freedesktop.Akonadi.Server.xml
+   interfaces/org.freedesktop.Akonadi.SearchQueryIterator.xml
+   interfaces/org.freedesktop.Akonadi.TracerNotification.xml
+   interfaces/org.freedesktop.Akonadi.SearchQuery.xml
 DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 

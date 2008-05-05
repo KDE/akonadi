@@ -46,7 +46,7 @@ class ResourceManager : public QObject
 
   private:
     static ResourceManager* mSelf;
-    org::kde::Akonadi::AgentManager *mManager;
+    org::freedesktop::Akonadi::AgentManager *mManager;
 };
 
 }

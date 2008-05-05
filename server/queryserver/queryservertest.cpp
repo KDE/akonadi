@@ -28,16 +28,17 @@
 TestObject::TestObject( const QString &query, QObject *parent )
   : QObject( parent )
 {
-  mSearch = new org::kde::Akonadi::Search( "org.kde.Akonadi.Search", "/Search", QDBusConnection::sessionBus(), this );
+  mSearch = new org::freedesktop::Akonadi::Search( "org.freedesktop.Akonadi.Search", "/Search", QDBusConnection::sessionBus(), this );
 
   const QString queryPath = mSearch->createQuery( query );
 
-  mQuery = new org::kde::Akonadi::SearchQuery( "org.kde.Akonadi.Search", queryPath, QDBusConnection::sessionBus(), this );
+  mQuery = new org::freedesktop::Akonadi::SearchQuery( "org.freedesktop.Akonadi.Search", queryPath, QDBusConnection::sessionBus(), this );
 
   const QString iteratorPath = mQuery->allHits();
 
-  org::kde::Akonadi::SearchQueryIterator *iterator = new org::kde::Akonadi::SearchQueryIterator( "org.kde.Akonadi.Search", iteratorPath,
-                                                                         QDBusConnection::sessionBus(), this );
+  org::freedesktop::Akonadi::SearchQueryIterator *iterator =
+    new org::freedesktop::Akonadi::SearchQueryIterator( "org.freedesktop.Akonadi.Search", iteratorPath,
+                                                        QDBusConnection::sessionBus(), this );
   while ( iterator->next() ) {
     QString data = iterator->currentUri();
     qDebug("  %s", qPrintable( data ) );

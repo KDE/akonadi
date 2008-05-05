@@ -52,7 +52,7 @@ static bool startServer()
 
 static bool stopServer()
 {
-  org::kde::Akonadi::ControlManager iface( AKONADI_DBUS_CONTROL_SERVICE, "/ControlManager", QDBusConnection::sessionBus(), 0 );
+  org::freedesktop::Akonadi::ControlManager iface( AKONADI_DBUS_CONTROL_SERVICE, "/ControlManager", QDBusConnection::sessionBus(), 0 );
   iface.shutdown();
 
   return true;

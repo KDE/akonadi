@@ -38,8 +38,8 @@ class TestObject : public QObject
     void hitsRemoved( const QMap<QString, double> &hits );
 
   private:
-    org::kde::Akonadi::Search *mSearch;
-    org::kde::Akonadi::SearchQuery *mQuery;
+    org::freedesktop::Akonadi::Search *mSearch;
+    org::freedesktop::Akonadi::SearchQuery *mQuery;
 };
 
 #endif

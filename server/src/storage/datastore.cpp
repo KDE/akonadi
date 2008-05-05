@@ -664,7 +664,7 @@ void Akonadi::DataStore::retrieveDataFromResource( qint64 uid, const QByteArray&
       qDebug() << "requestItemDelivery(): requested parts:" << parts;
 
       // call the resource
-      org::kde::Akonadi::Resource *interface = resourceInterface( resource );
+      org::freedesktop::Akonadi::Resource *interface = resourceInterface( resource );
       if ( interface )
         interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), QString::fromUtf8(mimeType), parts );
 
@@ -678,7 +678,7 @@ void Akonadi::DataStore::retrieveDataFromResource( qint64 uid, const QByteArray&
 
 void DataStore::triggerCollectionSync( const Location &location )
 {
-  org::kde::Akonadi::Resource *interface = resourceInterface( location.resource().name() );
+  org::freedesktop::Akonadi::Resource *interface = resourceInterface( location.resource().name() );
   if ( interface )
     interface->synchronizeCollection( location.id() );
 }
@@ -895,17 +895,17 @@ bool Akonadi::DataStore::inTransaction() const
   return m_transactionLevel > 0;
 }
 
-org::kde::Akonadi::Resource * Akonadi::DataStore::resourceInterface( const QString &res )
+org::freedesktop::Akonadi::Resource * Akonadi::DataStore::resourceInterface( const QString &res )
 {
-  org::kde::Akonadi::Resource* iface = 0;
+  org::freedesktop::Akonadi::Resource* iface = 0;
   if ( mResourceInterfaceCache.contains( res ) )
     iface = mResourceInterfaceCache.value( res );
   if ( iface && iface->isValid() )
     return iface;
 
   delete iface;
-  iface = new org::kde::Akonadi::Resource( QLatin1String("org.kde.Akonadi.Resource.") + res,
-                                           QLatin1String("/"), QDBusConnection::sessionBus(), this );
+  iface = new org::freedesktop::Akonadi::Resource( QLatin1String("org.freedesktop.Akonadi.Resource.") + res,
+                                                   QLatin1String("/"), QDBusConnection::sessionBus(), this );
   if ( !iface || !iface->isValid() ) {
     qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
                                     .arg( res, iface ? iface->lastError().message() : QString() );

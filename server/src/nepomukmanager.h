@@ -54,10 +54,10 @@ class NepomukManager : public QObject, public AbstractSearchManager
     bool mValid;
     QMutex mMutex;
 
-    QHash<org::kde::Akonadi::SearchQuery*, qint64> mQueryMap;
-    QHash<qint64, org::kde::Akonadi::SearchQuery*> mQueryInvMap;
+    QHash<org::freedesktop::Akonadi::SearchQuery*, qint64> mQueryMap;
+    QHash<qint64, org::freedesktop::Akonadi::SearchQuery*> mQueryInvMap;
 
-    org::kde::Akonadi::Search *mSearchInterface;
+    org::freedesktop::Akonadi::Search *mSearchInterface;
 };
 
 }

@@ -27,14 +27,14 @@ set( control_SRCS
 
 automoc4(akonadi_control control_SRCS)
 
-qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.kde.Akonadi.AgentManager.xml agentmanager.h AgentManager )
-qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.ControlManager.xml controlmanager.h ControlManager )
+qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.freedesktop.Akonadi.AgentManager.xml agentmanager.h AgentManager )
+qt4_add_dbus_adaptor( control_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.ControlManager.xml controlmanager.h ControlManager )
 qt4_add_dbus_interfaces( control_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.kde.Akonadi.Tracer.xml
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.kde.Akonadi.Agent.Control.xml
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.kde.Akonadi.Agent.Status.xml
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.kde.Akonadi.Resource.xml
-  ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.kde.Akonadi.Server.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.freedesktop.Akonadi.Tracer.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.freedesktop.Akonadi.Agent.Control.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.freedesktop.Akonadi.Agent.Status.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../interfaces/org.freedesktop.Akonadi.Resource.xml
+  ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.Server.xml
 )
 
 
@@ -45,5 +45,5 @@ target_link_libraries(akonadi_control ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} 
 
 install(TARGETS akonadi_control DESTINATION ${BIN_INSTALL_DIR})
 
-configure_file(org.kde.Akonadi.Control.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Control.service)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Control.service DESTINATION ${CMAKE_INSTALL_PREFIX}/share/dbus-1/services)
+configure_file(org.freedesktop.Akonadi.Control.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.Control.service DESTINATION ${CMAKE_INSTALL_PREFIX}/share/dbus-1/services)

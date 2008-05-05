@@ -49,7 +49,7 @@ int main( int argc, char **argv )
 
   QCoreApplication app( argc, argv );
 
-  if ( !QDBusConnection::sessionBus().registerService( "org.kde.Akonadi.Control" ) ) {
+  if ( !QDBusConnection::sessionBus().registerService( "org.freedesktop.Akonadi.Control" ) ) {
     qDebug( "Unable to register service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
     return 1;
   }

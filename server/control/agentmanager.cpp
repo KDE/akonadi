@@ -41,12 +41,12 @@ AgentManager::AgentManager( QObject *parent )
   new AgentManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/AgentManager", this );
 
-  mTracer = new org::kde::Akonadi::Tracer( "org.kde.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
+  mTracer = new org::freedesktop::Akonadi::Tracer( "org.freedesktop.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
 
   connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
            this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.Akonadi" ) )
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.freedesktop.Akonadi" ) )
     qFatal( "akonadiserver already running!" );
 
   mStorageController = new Akonadi::ProcessControl;
@@ -94,8 +94,9 @@ void AgentManager::cleanup()
   mAgentInstances.clear();
 
   mStorageController->setCrashPolicy( ProcessControl::StopOnCrash );
-  org::kde::Akonadi::Server *serverIface = new org::kde::Akonadi::Server( "org.kde.Akonadi", "/Server",
-                                                                          QDBusConnection::sessionBus(), this );
+  org::freedesktop::Akonadi::Server *serverIface =
+    new org::freedesktop::Akonadi::Server( "org.freedesktop.Akonadi", "/Server",
+                                           QDBusConnection::sessionBus(), this );
   serverIface->quit();
 
   delete mStorageController;
@@ -434,16 +435,16 @@ void AgentManager::save()
 
 void AgentManager::serviceOwnerChanged( const QString &name, const QString&, const QString &newOwner )
 {
-  if ( name == "org.kde.Akonadi" && !newOwner.isEmpty() ) {
+  if ( name == "org.freedesktop.Akonadi" && !newOwner.isEmpty() ) {
     // server is operational, start agents
     continueStartup();
   }
 
-  if ( name.startsWith( "org.kde.Akonadi.Agent." ) ) {
+  if ( name.startsWith( "org.freedesktop.Akonadi.Agent." ) ) {
     if ( newOwner.isEmpty() )
       return;
 
-    const QString identifier = name.mid( 22 );
+    const QString identifier = name.mid( 30 );
     if ( !mAgentInstances.contains( identifier ) )
       return;
 
@@ -453,8 +454,9 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
     mAgentInstances[ identifier ].agentControlInterface = 0;
     mAgentInstances[ identifier ].agentStatusInterface = 0;
 
-    org::kde::Akonadi::Agent::Control *agentControlIface = new org::kde::Akonadi::Agent::Control( "org.kde.Akonadi.Agent." + identifier,
-        "/", QDBusConnection::sessionBus(), this );
+    org::freedesktop::Akonadi::Agent::Control *agentControlIface =
+      new org::freedesktop::Akonadi::Agent::Control( "org.freedesktop.Akonadi.Agent." + identifier,
+                                                     "/", QDBusConnection::sessionBus(), this );
     if ( !agentControlIface || !agentControlIface->isValid() ) {
       mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
                       QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
@@ -466,8 +468,9 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
     mAgentInstances[ identifier ].agentControlInterface = agentControlIface;
 
 
-    org::kde::Akonadi::Agent::Status *agentStatusIface = new org::kde::Akonadi::Agent::Status( "org.kde.Akonadi.Agent." + identifier,
-        "/", QDBusConnection::sessionBus(), this );
+    org::freedesktop::Akonadi::Agent::Status *agentStatusIface =
+      new org::freedesktop::Akonadi::Agent::Status( "org.freedesktop.Akonadi.Agent." + identifier,
+                                                    "/", QDBusConnection::sessionBus(), this );
     if ( !agentStatusIface || !agentStatusIface->isValid() ) {
       mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
                       QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
@@ -491,18 +494,20 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
       emit agentInstanceAdded( identifier );
   }
 
-  else if ( name.startsWith( "org.kde.Akonadi.Resource." ) ) {
+  else if ( name.startsWith( "org.freedesktop.Akonadi.Resource." ) ) {
     if ( newOwner.isEmpty() )
       return;
 
-    const QString identifier = name.mid( 25 );
+    const QString identifier = name.mid( 33 );
     if ( !mAgentInstances.contains( identifier ) )
       return;
 
     delete mAgentInstances[ identifier ].resourceInterface;
     mAgentInstances[ identifier ].resourceInterface = 0;
 
-    org::kde::Akonadi::Resource *resInterface = new org::kde::Akonadi::Resource( "org.kde.Akonadi.Resource." + identifier, "/", QDBusConnection::sessionBus(), this );
+    org::freedesktop::Akonadi::Resource *resInterface =
+      new org::freedesktop::Akonadi::Resource( "org.freedesktop.Akonadi.Resource." + identifier,
+                                               "/", QDBusConnection::sessionBus(), this );
 
     if ( !resInterface || !resInterface->isValid() ) {
       mTracer->error( QLatin1String( "AgentManager::resourceRegistered" ),
@@ -520,7 +525,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
 
 void AgentManager::status( int status, const QString &message )
 {
-  org::kde::Akonadi::Agent::Status *interface = static_cast<org::kde::Akonadi::Agent::Status*>( sender() );
+  org::freedesktop::Akonadi::Agent::Status *interface = static_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
   if ( !interface ) {
     mTracer->error( QLatin1String( "AgentManager::status" ),
                     QLatin1String( "Got signal from unknown sender" ) );
@@ -539,7 +544,7 @@ void AgentManager::status( int status, const QString &message )
 
 void AgentManager::percent( int progress )
 {
-  org::kde::Akonadi::Agent::Status *interface = static_cast<org::kde::Akonadi::Agent::Status*>( sender() );
+  org::freedesktop::Akonadi::Agent::Status *interface = static_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
   if ( !interface ) {
     mTracer->error( QLatin1String( "AgentManager::percent" ),
                     QLatin1String( "Got signal from unknown sender" ) );
@@ -558,7 +563,7 @@ void AgentManager::percent( int progress )
 
 void AgentManager::warning( const QString &message )
 {
-  org::kde::Akonadi::Agent::Status *interface = static_cast<org::kde::Akonadi::Agent::Status*>( sender() );
+  org::freedesktop::Akonadi::Agent::Status *interface = static_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
   if ( !interface ) {
     mTracer->error( QLatin1String( "AgentManager::warning" ),
                     QLatin1String( "Got signal from unknown sender" ) );
@@ -577,7 +582,7 @@ void AgentManager::warning( const QString &message )
 
 void AgentManager::error( const QString &message )
 {
-  org::kde::Akonadi::Agent::Status *interface = static_cast<org::kde::Akonadi::Agent::Status*>( sender() );
+  org::freedesktop::Akonadi::Agent::Status *interface = static_cast<org::freedesktop::Akonadi::Agent::Status*>( sender() );
   if ( !interface ) {
     mTracer->error( QLatin1String( "AgentManager::error" ),
                     QLatin1String( "Got signal from unknown sender" ) );
@@ -596,7 +601,7 @@ void AgentManager::error( const QString &message )
 
 void AgentManager::resourceNameChanged( const QString &data )
 {
-  org::kde::Akonadi::Resource *resource = static_cast<org::kde::Akonadi::Resource*>( sender() );
+  org::freedesktop::Akonadi::Resource *resource = static_cast<org::freedesktop::Akonadi::Resource*>( sender() );
   if ( !resource ) {
     mTracer->error( QLatin1String( "AgentManager::resourceNameChanged" ),
                     QLatin1String( "Got signal from unknown sender" ) );

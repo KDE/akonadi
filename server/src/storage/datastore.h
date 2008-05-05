@@ -32,7 +32,15 @@ class QSqlQuery;
 #include "entities.h"
 #include "notificationcollector.h"
 
-class OrgKdeAkonadiResourceInterface;
+class OrgFreedesktopAkonadiResourceInterface;
+namespace org {
+  namespace freedesktop {
+    namespace Akonadi {
+      typedef ::OrgFreedesktopAkonadiResourceInterface Resource;
+    }
+  }
+}
+
 
 namespace Akonadi {
 
@@ -280,7 +288,7 @@ protected:
     /**
       Returns the D-Bus interface of the given resource.
     */
-    OrgKdeAkonadiResourceInterface* resourceInterface( const QString &res );
+    org::freedesktop::Akonadi::Resource *resourceInterface( const QString &res );
 
 private:
     QString m_connectionName;
@@ -303,7 +311,7 @@ private:
     static QString mDbConnectionOptions;
 
     // resource dbus interface cache
-    QHash<QString, OrgKdeAkonadiResourceInterface*> mResourceInterfaceCache;
+    QHash<QString, org::freedesktop::Akonadi::Resource*> mResourceInterfaceCache;
 };
 
 }

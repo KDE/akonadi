@@ -30,7 +30,7 @@ ResourceManager* ResourceManager::mSelf = 0;
 Akonadi::ResourceManager::ResourceManager(QObject * parent) :
   QObject( parent )
 {
-  mManager = new org::kde::Akonadi::AgentManager( QLatin1String("org.kde.Akonadi.Control"),
+  mManager = new org::freedesktop::Akonadi::AgentManager( QLatin1String("org.freedesktop.Akonadi.Control"),
       QLatin1String("/AgentManager"), QDBusConnection::sessionBus(), this );
 
   connect( mManager, SIGNAL(agentInstanceAdded(const QString&)),

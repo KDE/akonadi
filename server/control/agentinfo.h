@@ -66,9 +66,9 @@ class AgentInstanceInfo
     QString identifier;
     QString agentType;
     Akonadi::ProcessControl *controller;
-    org::kde::Akonadi::Agent::Control *agentControlInterface;
-    org::kde::Akonadi::Agent::Status *agentStatusInterface;
-    org::kde::Akonadi::Resource *resourceInterface;
+    org::freedesktop::Akonadi::Agent::Control *agentControlInterface;
+    org::freedesktop::Akonadi::Agent::Status *agentStatusInterface;
+    org::freedesktop::Akonadi::Resource *resourceInterface;
 };
 
 

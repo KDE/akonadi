@@ -51,8 +51,8 @@ NepomukManager::NepomukManager( QObject* parent )
   Q_ASSERT( mInstance == 0 );
   mInstance = this;
 
-  mSearchInterface = new org::kde::Akonadi::Search( QLatin1String( "org.kde.Akonadi.Search" ), QLatin1String( "/Search" ),
-                                                    QDBusConnection::sessionBus(), this );
+  mSearchInterface = new org::freedesktop::Akonadi::Search( QLatin1String( "org.freedesktop.Akonadi.Search" ), QLatin1String( "/Search" ),
+                                                            QDBusConnection::sessionBus(), this );
 
   if ( !mSearchInterface->isValid() ) {
     qWarning() << "Nepomuk QueryServer interface not found!";
@@ -78,8 +78,9 @@ bool NepomukManager::addSearch( const Location &location )
   const QString searchStatement = location.remoteId();
 
   const QString queryPath = mSearchInterface->createQuery( searchStatement );
-  org::kde::Akonadi::SearchQuery *query = new org::kde::Akonadi::SearchQuery( QLatin1String( "org.kde.Akonadi.Search" ),
-                                                                              queryPath, QDBusConnection::sessionBus(), 0 );
+  org::freedesktop::Akonadi::SearchQuery *query =
+    new org::freedesktop::Akonadi::SearchQuery( QLatin1String( "org.freedesktop.Akonadi.Search" ),
+                                                queryPath, QDBusConnection::sessionBus(), 0 );
 
   if ( !query->isValid() ) {
     qWarning() << "Nepomuk QueryServer: Query could not be instantiated!";
@@ -97,9 +98,9 @@ bool NepomukManager::addSearch( const Location &location )
   // load all hits that are currently available...
   const QString iteratorPath = query->allHits();
 
-  org::kde::Akonadi::SearchQueryIterator *iterator =
-                  new org::kde::Akonadi::SearchQueryIterator( QLatin1String( "org.kde.Akonadi.Search" ), iteratorPath,
-                                                              QDBusConnection::sessionBus(), 0 );
+  org::freedesktop::Akonadi::SearchQueryIterator *iterator =
+    new org::freedesktop::Akonadi::SearchQueryIterator( QLatin1String( "org.freedesktop.Akonadi.Search" ), iteratorPath,
+                                                        QDBusConnection::sessionBus(), 0 );
 
   while ( iterator->next() ) {
     const QString uri = iterator->currentUri();
@@ -125,7 +126,7 @@ bool NepomukManager::addSearch( const Location &location )
 
 bool NepomukManager::removeSearch( qint64 locationId )
 {
-  org::kde::Akonadi::SearchQuery *query = mQueryInvMap.value( locationId );
+  org::freedesktop::Akonadi::SearchQuery *query = mQueryInvMap.value( locationId );
   if ( !query || !query->isValid() ) {
     qWarning() << "Nepomuk QueryServer: Query could not be removed!";
   } else {
@@ -174,7 +175,7 @@ void NepomukManager::hitsAdded( const QStringList &hits )
 {
   qDebug( "--------------- hits added 1" );
 
-  org::kde::Akonadi::SearchQuery *query = qobject_cast<org::kde::Akonadi::SearchQuery*>( sender() );
+  org::freedesktop::Akonadi::SearchQuery *query = qobject_cast<org::freedesktop::Akonadi::SearchQuery*>( sender() );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Got signal from non-existing search query!";
     return;
@@ -202,7 +203,7 @@ void NepomukManager::hitsRemoved( const QStringList &hits )
 {
   qDebug( "--------------- hits removed 1" );
 
-  org::kde::Akonadi::SearchQuery *query = qobject_cast<org::kde::Akonadi::SearchQuery*>( sender() );
+  org::freedesktop::Akonadi::SearchQuery *query = qobject_cast<org::freedesktop::Akonadi::SearchQuery*>( sender() );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Got signal from non-existing search query!";
     return;
