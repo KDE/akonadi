@@ -47,7 +47,7 @@ class MonitorPrivate
 
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
-    org::kde::Akonadi::NotificationManager *nm;
+    org::freedesktop::Akonadi::NotificationManager *nm;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;

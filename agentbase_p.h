@@ -81,7 +81,7 @@ class AgentBasePrivate : public QObject
 
     ChangeRecorder *mMonitor;
 
-    org::kde::Akonadi::Tracer *mTracer;
+    org::freedesktop::Akonadi::Tracer *mTracer;
 
     AgentBase::Observer *mObserver;
 

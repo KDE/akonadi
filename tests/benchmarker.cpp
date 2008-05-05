@@ -128,7 +128,7 @@ void BenchMarker::testMaildir( QString dir )
 
   done = false;
   qDebug() << "  Configuring resource to use " << dir << "as source.";
-  QDBusInterface *configIface = new QDBusInterface( "org.kde.Akonadi.Resource." + currentInstance.identifier(),
+  QDBusInterface *configIface = new QDBusInterface( "org.freedesktop.Akonadi.Resource." + currentInstance.identifier(),
       "/Settings", "org.kde.Akonadi.Maildir.Settings", QDBusConnection::sessionBus(), this );
   if ( configIface && configIface->isValid() ) {
     configIface->call( "setPath", dir );

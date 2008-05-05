@@ -69,7 +69,7 @@ class AgentManagerPrivate
     static AgentManager *mSelf;
 
     AgentManager *mParent;
-    org::kde::Akonadi::AgentManager *mManager;
+    org::freedesktop::Akonadi::AgentManager *mManager;
 
     QHash<QString, AgentType> mTypes;
     QHash<QString, AgentInstance> mInstances;

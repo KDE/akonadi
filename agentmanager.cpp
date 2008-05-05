@@ -206,7 +206,7 @@ AgentManager* AgentManagerPrivate::mSelf = 0;
 AgentManager::AgentManager()
   : QObject( 0 ), d( new AgentManagerPrivate( this ) )
 {
-  d->mManager = new org::kde::Akonadi::AgentManager( QLatin1String( "org.kde.Akonadi.Control" ),
+  d->mManager = new org::freedesktop::Akonadi::AgentManager( QLatin1String( "org.freedesktop.Akonadi.Control" ),
                                                      QLatin1String( "/AgentManager" ),
                                                      QDBusConnection::sessionBus(), this );
 

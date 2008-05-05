@@ -66,7 +66,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void delayedInit()
     {
-      if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Resource." ) + mId ) )
+      if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + mId ) )
         kFatal() << "Unable to register service at D-Bus: " << QDBusConnection::sessionBus().lastError().message();
       AgentBasePrivate::delayedInit();
     }

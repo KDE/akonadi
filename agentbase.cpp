@@ -137,7 +137,7 @@ void AgentBasePrivate::init()
    */
   SessionPrivate::createDefaultSession( mId.toLatin1() );
 
-  mTracer = new org::kde::Akonadi::Tracer( QLatin1String( "org.kde.Akonadi" ), QLatin1String( "/tracing" ),
+  mTracer = new org::freedesktop::Akonadi::Tracer( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/tracing" ),
                                            QDBusConnection::sessionBus(), q );
 
   new ControlAdaptor( q );
@@ -178,7 +178,7 @@ void AgentBasePrivate::init()
 
 void AgentBasePrivate::delayedInit()
 {
-  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Agent." ) + mId ) )
+  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
     kFatal() << "Unable to register service at dbus:" << QDBusConnection::sessionBus().lastError().message();
 }
 
@@ -402,12 +402,12 @@ void AgentBase::configure( qlonglong windowId )
 
 WId AgentBase::winIdForDialogs() const
 {
-  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.akonaditray") );
+  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.freedesktop.akonaditray") );
   if ( !registered )
     return 0;
 
-  QDBusInterface dbus( QLatin1String("org.kde.akonaditray"), QLatin1String("/Actions"),
-                       QLatin1String("org.kde.Akonadi.Tray") );
+  QDBusInterface dbus( QLatin1String("org.freedesktop.akonaditray"), QLatin1String("/Actions"),
+                       QLatin1String("org.freedesktop.Akonadi.Tray") );
   QDBusMessage reply = dbus.call( QLatin1String("getWinId") );
 
   if ( reply.type() == QDBusMessage::ErrorMessage )

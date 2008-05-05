@@ -45,7 +45,7 @@ bool MonitorPrivate::connectToNotificationManager()
   NotificationMessage::registerDBusTypes();
 
   if ( !nm )
-    nm = new org::kde::Akonadi::NotificationManager( QLatin1String( "org.kde.Akonadi" ),
+    nm = new org::freedesktop::Akonadi::NotificationManager( QLatin1String( "org.freedesktop.Akonadi" ),
                                                      QLatin1String( "/notifications" ),
                                                      QDBusConnection::sessionBus(), q_ptr );
   else
