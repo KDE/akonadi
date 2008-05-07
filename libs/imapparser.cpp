@@ -136,12 +136,14 @@ int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, 
   if ( begin >= data.length() )
     return data.length();
 
+  bool foundSlash = false;
   // quoted string
   if ( data[begin] == '"' ) {
     ++begin;
     for ( int i = begin; i < data.length(); ++i ) {
       if ( data[i] == '\\' ) {
         ++i;
+        foundSlash = true;
         continue;
       }
       if ( data[i] == '"' ) {
@@ -161,6 +163,8 @@ int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, 
         reachedInputEnd = false;
         break;
       }
+      if (data[i] == '\\') 
+        foundSlash = true;
     }
     if ( reachedInputEnd )
       end = data.length();
@@ -172,12 +176,12 @@ int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, 
   }
 
   // strip quotes
-  // FIXME: this can be done more efficiently
-  while ( result.contains( "\\\"" ) )
-    result.replace( "\\\"", "\"" );
-  while ( result.contains( "\\\\" ) )
-    result.replace( "\\\\", "\\" );
-
+  if ( foundSlash ) {
+    while ( result.contains( "\\\"" ) )
+      result.replace( "\\\"", "\"" );
+    while ( result.contains( "\\\\" ) )
+      result.replace( "\\\\", "\\" );
+  }
   return end;
 }
 
