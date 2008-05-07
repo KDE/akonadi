@@ -44,7 +44,6 @@ namespace org {
 
 namespace Akonadi {
 
-class FetchQuery;
 class NotificationCollector;
 
 /**
