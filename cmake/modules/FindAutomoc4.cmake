@@ -24,8 +24,8 @@ if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 else("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
    # when building this project outside kdesupport
    find_file(AUTOMOC4_CONFIG_FILE NAMES Automoc4Config.cmake 
-             PATH_SUFFIXES automoc4
-             PATHS ${CMAKE_SYSTEM_LIBRARY_PATH} ${CMAKE_INSTALL_PREFIX}/lib 
+             PATH_SUFFIXES automoc4 lib/automoc4 lib64/automoc4
+             PATHS ${CMAKE_SYSTEM_PREFIX_PATH} ${CMAKE_SYSTEM_LIBRARY_PATH} ${CMAKE_INSTALL_PREFIX}/lib 
              NO_DEFAULT_PATH )
 endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
