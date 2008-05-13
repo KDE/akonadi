@@ -17,8 +17,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QtCore/QDebug>
-#include <QtCore/QPluginLoader>
+#include "pluginloader.h"
 
 #include <kconfiggroup.h>
 #include <kdebug.h>
@@ -27,7 +26,8 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
-#include "pluginloader.h"
+#include <QtCore/QDebug>
+#include <QtCore/QPluginLoader>
 
 using namespace Akonadi;
 

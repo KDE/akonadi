@@ -93,7 +93,7 @@ void ItemCreateJob::doStart()
       int version = 0;
       ItemSerializer::serialize( d->mItem, partName, partData, version );
       totalSize += partData.size();
-      QByteArray versionString( version != 0 ? "[" + QByteArray::number( version ) + "]" : "" );
+      QByteArray versionString( version != 0 ? '[' + QByteArray::number( version ) + ']' : "" );
       partSpecs.append( ImapParser::quote( partName + versionString ) + ':' +
         QByteArray::number( partData.size() ) );
       d->mData += partData;
