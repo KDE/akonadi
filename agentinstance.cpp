@@ -69,12 +69,12 @@ AgentInstance::Status AgentInstance::status() const
 {
   switch ( d->mStatus ) {
     case 0:
-      return Ready;
+      return Idle;
     case 1:
-      return Syncing;
+      return Running;
     case 2:
     default:
-      return Error;
+      return Broken;
   }
 }
 

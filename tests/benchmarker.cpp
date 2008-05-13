@@ -101,10 +101,10 @@ void BenchMarker::instanceStatusChanged( const AgentInstance &instance )
 {
   //qDebug() << "agent status changed:" << agentIdentifier << status << message ;
   if ( instance == currentInstance ) {
-    if ( instance.status() == AgentInstance::Syncing ) {
+    if ( instance.status() == AgentInstance::Running ) {
       //qDebug() << "    " << message;
     }
-    if ( instance.status() == AgentInstance::Ready ) {
+    if ( instance.status() == AgentInstance::Idle ) {
       done = true;
     }
   }
