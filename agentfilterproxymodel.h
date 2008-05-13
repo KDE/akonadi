@@ -26,17 +26,35 @@
 namespace Akonadi {
 
 /**
-  Filter agent type or agent instance models for supported mime types
-  and/or agent capabilities.
-*/
+ * @short A proxy model for filtering AgentType or AgentInstance
+ *
+ * This filter proxy model works on top of a AgentTypeModel or AgentInstanceModel
+ * and can be used to show only AgentType or AgentInstance objects
+ * which provide a given mime type or capability.
+ *
+ * @code
+ *
+ * // Show only running agent instances that provide contacts
+ * Akonadi::AgentInstanceModel *model = new Akonadi::AgentInstanceModel( this );
+ *
+ * Akonadi::AgentFilterProxyModel *proxy = new Akonadi::AgentFilterProxyModel( this );
+ * proxy->addMimeTypeFilter( "text/directory" );
+ *
+ * proxy->setSourceModel( model );
+ *
+ * QListView *view = new QListView( this );
+ * view->setModel( proxy );
+ *
+ * @endcode
+ */
 class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
   public:
     /**
-      Create a new agent filter proxy model.
-      Shows all agents by default.
-    */
+     * Create a new agent filter proxy model.
+     * By default no filtering is done.
+     */
     explicit AgentFilterProxyModel( QObject *parent = 0 );
 
     /**
@@ -45,18 +63,18 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
     ~AgentFilterProxyModel();
 
     /**
-      Accept agents supporting @p mimeType.
-    */
+     * Accept agents supporting @p mimeType.
+     */
     void addMimeTypeFilter( const QString &mimeType );
 
     /**
-      Accept agents with the given @p capability.
-    */
+     * Accept agents with the given @p capability.
+     */
     void addCapabilityFilter( const QString &capability );
 
     /**
-      Clear the filters ( mimeTypes & capabilities ).
-    */
+     * Clear the filters ( mimeTypes & capabilities ).
+     */
     void clearFilters();
 
   protected:

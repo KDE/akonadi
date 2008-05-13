@@ -42,6 +42,8 @@ class Item;
 class Session;
 
 /**
+ * @short The base class for all Akonadi agents and resources.
+ *
  * This class is a base class for all Akonadi agents, which covers the real
  * agent processes and all resources.
  *
@@ -57,6 +59,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
   public:
     /**
+     * @short The interface for reacting on monitored or replayed changes.
+     *
      * The Observer provides an interface to react on monitored or replayed changes.
      *
      * Since the this base class does only tell the change recorder that the change
