@@ -78,7 +78,7 @@ class SessionPrivate;
 
   Subclasses must reimplement @see doStart().
 
-  Note that KJob-derived objects delete itself, it is thus not possible
+  @note KJob-derived objects delete itself, it is thus not possible
   to create job objects on the stack!
  */
 class AKONADI_EXPORT Job : public KCompositeJob

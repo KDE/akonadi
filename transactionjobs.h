@@ -32,7 +32,7 @@ class TransactionCommitJobPrivate;
 
 /**
   Begins a session-global transaction.
-  Note: this will only have an effect when used as a subjob or with a Session.
+  @note This will only have an effect when used as a subjob or with a Session.
 */
 class AKONADI_EXPORT TransactionBeginJob : public Job
 {
@@ -60,7 +60,7 @@ class AKONADI_EXPORT TransactionBeginJob : public Job
 
 /**
   Aborts a session-global transaction.
-  Note: this will only have an effect when used as a subjob or with a Session.
+  @note This will only have an effect when used as a subjob or with a Session.
 */
 class AKONADI_EXPORT TransactionRollbackJob : public Job
 {

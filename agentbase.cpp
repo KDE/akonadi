@@ -439,14 +439,14 @@ void AgentBase::cleanup()
   Q_D( AgentBase );
   const QString fileName = d->mSettings->fileName();
 
-  /**
+  /*
    * First destroy the settings object...
    */
   d->mMonitor->setConfig( 0 );
   delete d->mSettings;
   d->mSettings = 0;
 
-  /**
+  /*
    * ... then remove the file from hd.
    */
   QFile::remove( fileName );

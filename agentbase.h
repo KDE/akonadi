@@ -42,7 +42,8 @@ class Item;
 class Session;
 
 /**
- * This calls is a base class for all Akonadi agents.
+ * This class is a base class for all Akonadi agents, which covers the real
+ * agent processes and all resources.
  *
  * It provides:
  * - lifetime management
@@ -149,14 +150,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     {
       public:
         /**
-         * Creates an observer instance
+         * Creates an observer instance.
          */
         Observer();
 
         /**
-         * Destroys the observer instance
+         * Destroys the observer instance.
          */
         virtual ~Observer();
+
         /**
          * Reimplement to handle adding of new items.
          * @param item The newly added item.
@@ -192,8 +194,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
         /**
          * Reimplement to handle deletion of collections.
-         * @param id The id of the deleted collection.
-         * @param remoteId The remote id of the deleted collection.
+         * @param collection The deleted collection.
          */
         virtual void collectionRemoved( const Akonadi::Collection &collection );
     };
@@ -204,9 +205,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     enum Status
     {
-      Idle = 0,
-      Running,
-      Broken
+      Idle = 0, ///< The agent does currently nothing.
+      Running,  ///< The agent is working on something.
+      Broken    ///< The agent encountered an error state.
     };
 
     /**
@@ -246,13 +247,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     }
 
     /**
-     * This method returns the current status code of the resource.
+     * This method returns the current status code of the agent.
      *
      * The following return values are possible:
      *
-     *  0 - Idle
-     *  1 - Running
-     *  2 - Broken
+     *  - 0 - Idle
+     *  - 1 - Running
+     *  - 2 - Broken
      */
     virtual int status() const;
 
@@ -262,7 +263,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     virtual QString statusMessage() const;
 
     /**
-     * This method returns the current progress of the resource in percentage.
+     * This method returns the current progress of the agent in percentage.
      */
     virtual int progress() const;
 
@@ -272,15 +273,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     virtual QString progressMessage() const;
 
     /**
-     * This method is called whenever the resource shall show its configuration dialog
-     * to the user. It will be automatically called when the resource is started for
+     * This method is called whenever the agent shall show its configuration dialog
+     * to the user. It will be automatically called when the agent is started for
      * the first time.
      * @param windowId The parent window id.
      */
     virtual void configure( WId windowId );
 
     /**
-     * This method returns the winId which should be used for dialogs.
+     * This method returns the windows id, which should be used for dialogs.
      */
     WId winIdForDialogs() const;
 
@@ -314,38 +315,49 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
   Q_SIGNALS:
     /**
+     * This signal should be emitted whenever the status of the agent has been changed.
+     * @param status The new Status code.
+     * @param message A i18n'ed description of the new status.
      */
     void status( int status, const QString &message = QString() );
 
     /**
+     * This signal should be emitted whenever the progress of an action in the agent
+     * (e.g. data transfer, connection establishment to remote server etc.) has changed.
+     *
+     * @param progress The progress of the action in percent.
      */
     void percent( int progress );
 
     /**
      * This signal shall be used to report warnings.
+     *
+     * @param message The i18n'ed warning message.
      */
     void warning( const QString& message );
 
     /**
      * This signal shall be used to report errors.
+     *
+     * @param message The i18n'ed error message.
      */
     void error( const QString& message );
 
   protected:
     /**
-     * Creates a base agent.
+     * Creates an agent base.
      *
      * @param id The instance id of the agent.
      */
     AgentBase( const QString & id );
 
     /**
-     * Destroys the base agent.
+     * Destroys the agent base.
      */
     ~AgentBase();
 
     /**
-     * This method is called whenever the application is about to
+     * This method is called whenever the agent application is about to
      * quit.
      *
      * Reimplement this method to do session cleanup (e.g. disconnecting
@@ -363,13 +375,19 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * Marks the current change as processes and replays the next change if change
      * recording is enabled (noop otherwise). This method is called
      * from the default implementation of the change notification slots. While not
-     * required when not using change recording, it is nevertheless recommended to
+     * required when not using change recording, it is nevertheless recommended
      * to call this method when done with processing a change notification.
      */
     void changeProcessed();
 
+    /**
+     * Returns whether the agent is currently online.
+     */
     bool isOnline() const;
 
+    /**
+     * Sets whether the agent shall be online or not.
+     */
     void setOnline( bool state );
 
   protected:
@@ -380,6 +398,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
     /**
      * This method is called whenever the @p online status has changed.
+     * Reimplement this method to react on online status changes.
      */
     virtual void doSetOnline( bool online );
 
@@ -389,7 +408,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
     void quit();
 
-    // dbus resource interface
+    // dbus agent interface
     friend class ::StatusAdaptor;
     friend class ::ControlAdaptor;
 

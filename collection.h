@@ -145,7 +145,7 @@ class AKONADI_EXPORT Collection : public Entity
 
     /**
       Returns the parent remote identifier.
-      Note: This usually returns nothing for collections retrieved from the backend.
+      @note This usually returns nothing for collections retrieved from the backend.
     */
     QString parentRemoteId() const;
 
