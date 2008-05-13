@@ -28,7 +28,7 @@ using namespace Akonadi;
 
 int ProtocolHelper::parseCachePolicy(const QByteArray & data, CachePolicy & policy, int start)
 {
-  QList<QByteArray> params;
+  QVarLengthArray<QByteArray,16> params;
   int end = Akonadi::ImapParser::parseParenthesizedList( data, params, start );
   for ( int i = 0; i < params.count() - 1; i += 2 ) {
     const QByteArray key = params[i];
@@ -43,11 +43,11 @@ int ProtocolHelper::parseCachePolicy(const QByteArray & data, CachePolicy & poli
     else if ( key == "SYNCONDEMAND" )
       policy.setSyncOnDemand( value == "true" );
     else if ( key == "LOCALPARTS" ) {
-      QList<QByteArray> tmp;
+      QVarLengthArray<QByteArray,16> tmp;
       QStringList parts;
       Akonadi::ImapParser::parseParenthesizedList( value, tmp );
-      foreach ( const QByteArray &ba, tmp )
-        parts << QString::fromLatin1( ba );
+      for ( int j=0; j<tmp.size(); j++ ) 
+        parts << QString::fromLatin1( tmp[j] );
       policy.setLocalParts( parts );
     }
   }
@@ -94,12 +94,12 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
   collection.setParent( parentId );
 
   // attributes
-  QList<QByteArray> attributes;
+  QVarLengthArray<QByteArray,16> attributes;
   pos = ImapParser::parseParenthesizedList( data, attributes, pos );
 
   for ( int i = 0; i < attributes.count() - 1; i += 2 ) {
-    const QByteArray key = attributes.at( i );
-    const QByteArray value = attributes.at( i + 1 );
+    const QByteArray key = attributes[i];
+    const QByteArray value = attributes[i + 1];
 
     if ( key == "NAME" ) {
       collection.setName( QString::fromUtf8( value ) );
@@ -108,11 +108,11 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
     } else if ( key == "RESOURCE" ) {
       collection.setResource( QString::fromUtf8( value ) );
     } else if ( key == "MIMETYPE" ) {
-      QList<QByteArray> ct;
+      QVarLengthArray<QByteArray,16> ct;
       ImapParser::parseParenthesizedList( value, ct );
       QStringList ct2;
-      foreach ( const QByteArray &b, ct )
-        ct2 << QString::fromLatin1( b );
+      for ( int j=0; j<ct.size(); j++ )
+        ct2 << QString::fromLatin1( ct[j] );
       collection.setContentMimeTypes( ct2 );
     } else if ( key == "CACHEPOLICY" ) {
       CachePolicy policy;
