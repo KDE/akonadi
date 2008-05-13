@@ -35,6 +35,24 @@ namespace Akonadi
 
 class AgentType;
 
+/**
+ * @short A representation of an agent instance.
+ *
+ * The agent instance is a representation of a running agent process.
+ * It provides information about the instance and a reference to the
+ * AgentType of that instance.
+ *
+ * All available agent instances can be retrieved from the AgentManager.
+ *
+ * @code
+ *
+ * Akonadi::AgentInstance::List instances = Akonadi::AgentManager::self()->instances();
+ * foreach ( const Akonadi::AgentInstance &instance, instances ) {
+ *   qDebug() << "Name:" << instance.name() << "(" << instance.identifier() << ")";
+ * }
+ *
+ * @endcode
+ */
 class AKONADI_EXPORT AgentInstance
 {
   friend class AgentManager;
@@ -51,9 +69,9 @@ class AKONADI_EXPORT AgentInstance
      */
     enum Status
     {
-      Ready = 0,   ///< The agent instance is ready to work
-      Syncing,     ///< The agent instance is currently syncing
-      Error        ///< An error occurred inside the agent instance
+      Idle = 0, ///< The agent instance does currently nothing.
+      Running,  ///< The agent instance is working on something.
+      Broken    ///< The agent instance encountered an error state.
     };
 
     /**
@@ -118,7 +136,7 @@ class AKONADI_EXPORT AgentInstance
     bool isOnline() const;
 
     /**
-     * Sets whether the agent instance is @p online.
+     * Sets @p online status of the agent instance.
      */
     void setIsOnline( bool online );
 
@@ -136,8 +154,6 @@ class AKONADI_EXPORT AgentInstance
 
     /**
      * Triggers a synchronization of the collection tree by the given agent instance.
-     *
-     * @param identifier The resource agent identifier.
      */
     void synchronizeCollectionTree();
 

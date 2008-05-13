@@ -31,33 +31,66 @@ namespace Akonadi {
 class AgentInstance;
 
 /**
-  Takes care of creating and (optionally) configuring a new agent instance.
-*/
+ * @short Job for creating new agent instances.
+ *
+ * This class encapsulates the procedure of creating a new agent instance
+ * and optionally configuring it immediately.
+ *
+ * @code
+ *
+ * MyClass::MyClass( QWidget *parent )
+ *   : QWidget( parent )
+ * {
+ *   // Get agent type object
+ *   Akonadi::AgentType type = Akonadi::AgentManager::type( "akonadi_vcard_resource" );
+ *
+ *   Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( type );
+ *   connect( job, SIGNAL( result( KJob * ) ),
+ *            this, SLOT( slotCreated( KJob * ) ) );
+ *
+ *   // show config dialog with this widget as parent
+ *   job->configure( this );
+ *
+ *   job->start();
+ * }
+ *
+ * ...
+ *
+ * void MyClass::slotCreated( KJob *job )
+ * {
+ *   Akonadi::AgentInstanceCreateJob *createJob = static_cast<Akonadi::AgentInstanceCreateJob*>( job );
+ *
+ *   qDebug() << "Created agent instance:" << createJob->instance().identifier();
+ * }
+ *
+ * @endcode
+ */
 class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
 {
   Q_OBJECT
   public:
     /**
-      Create a new agent instance creation job.
-      @param type The type of the agent to create.
-      @param parent The parent object.
-    */
+     * Create a new agent instance creation job.
+     * @param type The type of the agent to create.
+     * @param parent The parent object.
+     */
     explicit AgentInstanceCreateJob( const AgentType &type, QObject *parent = 0 );
 
     /**
-      Destroys the agent instance creation job.
-    */
+     * Destroys the agent instance creation job.
+     */
     ~AgentInstanceCreateJob();
 
     /**
-      Show agent configuration dialog once it has been successfully started.
-      @param parent The parent window for the configuration dialog.
-    */
+     * Setup the job to show agent configuration dialog once it has
+     * been successfully started.
+     * @param parent The parent window for the configuration dialog.
+     */
     void configure( QWidget *parent = 0 );
 
     /**
-      Returns the instance of the newly created agent instance.
-    */
+     * Returns the AgentInstance object of the newly created agent instance.
+     */
     AgentInstance instance() const;
 
     /**
