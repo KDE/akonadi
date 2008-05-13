@@ -26,6 +26,7 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
+#include <QtCore/QVarLengthArray>
 
 namespace Akonadi {
 
@@ -45,6 +46,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapParser
       @param start Start parsing at this index.
     */
     static int parseParenthesizedList( const QByteArray &data, QList<QByteArray> &result, int start = 0 );
+    static int parseParenthesizedList( const QByteArray &data, QVarLengthArray<QByteArray,16> &result, int start = 0 );
 
     /**
       Parse the next string in @p data (quoted or literal) starting from @p start
