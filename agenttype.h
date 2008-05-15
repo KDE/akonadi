@@ -33,6 +33,26 @@ class QStringList;
 namespace Akonadi
 {
 
+/**
+ * @short A representation of an agent type.
+ *
+ * The agent type is a representation of an available agent, that can
+ * be started as an agent instance.
+ * It provides all information about the type.
+ *
+ * All available agent types can be retrieved from the AgentManager.
+ *
+ * @code
+ *
+ * Akonadi::AgentType::List types = Akonadi::AgentManager::self()->types();
+ * foreach ( const Akonadi::AgentType &type, types ) {
+ *   qDebug() << "Name:" << type.name() << "(" << type.identifier() << ")";
+ * }
+ *
+ * @endcode
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ */
 class AKONADI_EXPORT AgentType
 {
   friend class AgentManager;
@@ -40,12 +60,12 @@ class AKONADI_EXPORT AgentType
 
   public:
     /**
-     * Describes a list of agent type objects.
+     * Describes a list of agent types.
      */
     typedef QList<AgentType> List;
 
     /**
-     * Creates a new agent type object.
+     * Creates a new agent type.
      */
     AgentType();
 
@@ -55,12 +75,12 @@ class AKONADI_EXPORT AgentType
     AgentType( const AgentType &other );
 
     /**
-     * Destroys the agent type object.
+     * Destroys the agent type.
      */
     ~AgentType();
 
     /**
-     * Returns whether the agent type object is valid.
+     * Returns whether the agent type is valid.
      */
     bool isValid() const;
 
@@ -70,7 +90,7 @@ class AKONADI_EXPORT AgentType
     QString identifier() const;
 
     /**
-     * Returns the user visible name of the agent type.
+     * Returns the i18n'ed name of the agent type.
      */
     QString name() const;
 
@@ -110,8 +130,10 @@ class AKONADI_EXPORT AgentType
     bool operator==( const AgentType &other ) const;
 
   private:
+    //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
+    //@endcond
 };
 
 }

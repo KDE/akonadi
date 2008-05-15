@@ -30,11 +30,34 @@ class AgentFilterProxyModel;
 class AgentType;
 
 /**
- * This class provides a widget of all available agent types.
+ * @short Provides a widget that lists all available agent types.
  *
- * Since the widget is listening to the dbus for changes, the
- * widget is updated automatically as soon as a new agent type
- * is installed or removed to/from the system.
+ * The widget is listening on the dbus for changes, so the
+ * widget is updated automatically as soon as new agent types
+ * are added to or removed from the system.
+ *
+ * @code
+ *
+ * MyWidget::MyWidget( QWidget *parent )
+ *   : QWidget( parent )
+ * {
+ *   QVBoxLayout *layout = new QVBoxLayout( this );
+ *
+ *   mAgentTypeWidget = new Akonadi::AgentTypeWidget( this );
+ *   layout->addWidget( mAgentTypeWidget );
+ *
+ *   connect( mAgentTypeWidget, SIGNAL( currentChanged( Akonadi::AgentType&, Akonadi::AgentType& ) ),
+ *            this, SLOT( slotTypeChanged( Akonadi::AgentType& ) ) );
+ * }
+ *
+ * ...
+ *
+ * MyWidget::slotTypeChanged( Akonadi::AgentType &current, Akonadi::AgentType& )
+ * {
+ *   qDebug() << "New selected type:" << current.name();
+ * }
+ *
+ * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
@@ -77,10 +100,12 @@ class AKONADI_EXPORT AgentTypeWidget : public QWidget
     void currentChanged( const Akonadi::AgentType &current, const Akonadi::AgentType &previous );
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) )
+    //@endcond
 };
 
 }

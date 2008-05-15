@@ -31,120 +31,92 @@ namespace Akonadi {
 class CollectionModelPrivate;
 
 /**
-  Model to handle a collection tree.
-
-  @todo Split into generic and KDE dependent parts?
-*/
+ * @short A model for collections.
+ *
+ * This class provides the interface of QAbstractItemModel for the
+ * collection tree of the Akonadi storage.
+ *
+ * @code
+ *
+ *   Akonadi::CollectionModel *model = new Akonadi::CollectionModel( this );
+ *
+ *   QTreeView *view = new QTreeView( this );
+ *   view->setModel( model );
+ *
+ * @endcode
+ *
+ * If you want to list only collections of a special mime type, use
+ * CollectionFilterProxyModel on top of this model.
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
 {
   Q_OBJECT
 
   public:
     /**
-      Extended item roles for collections.
-    */
+     * Describes the roles for collections.
+     */
     enum Roles {
-      CollectionIdRole = Qt::UserRole,  ///< The collection path.
-      CollectionRole,                   ///< The actual collection object.
-      UserRole = Qt::UserRole + 32      ///< Role for user extensions
+      CollectionIdRole = Qt::UserRole + 1,  ///< The collection identifier.
+      CollectionRole,                       ///< The actual collection object.
+      UserRole = Qt::UserRole + 42          ///< Role for user extensions.
     };
 
     /**
-      Create a new collection model.
-      @param parent The parent object.
-    */
+     * Creates a new collection model.
+     *
+     * @param parent The parent object.
+     */
     explicit CollectionModel( QObject *parent = 0 );
 
     /**
-      Destroys this model.
-    */
+     * Destroys the collection model.
+     */
     virtual ~CollectionModel();
 
     /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual QModelIndex index( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual QModelIndex parent( const QModelIndex & index ) const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual Qt::DropActions supportedDropActions() const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
+     * Sets whether collection statistics information shall be provided
+     * by the model.
+     *
+     * @see CollectionStatistics.
      */
-    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
-
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
-    virtual QStringList mimeTypes() const;
-
-    /**
-      Enable fetching of collection statistics information.
-      @see CollectionStatistics.
-    */
     void fetchCollectionStatistics( bool enable );
 
     /**
-      Also include unsubscribed collections.
-    */
+     * Sets whether unsubscribed collections shall be listed in the model.
+     */
     void includeUnsubscribed( bool include = true );
+
+    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    virtual QModelIndex index( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
+    virtual QModelIndex parent( const QModelIndex & index ) const;
+    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
+    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+    virtual Qt::DropActions supportedDropActions() const;
+    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
+    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
+    virtual QStringList mimeTypes() const;
 
   protected:
     /**
-      Returns the collection for a given collection id.
-      @param id A collection id.
-    */
+     * Returns the collection for a given collection @p id.
+     */
     Collection collectionForId( Collection::Id id ) const;
 
+    //@cond PRIVATE
     Akonadi::CollectionModelPrivate *d_ptr;
-
     explicit CollectionModel( CollectionModelPrivate *d, QObject *parent = 0 );
+    //@endcond
 
   private:
     Q_DECLARE_PRIVATE( CollectionModel )
 
+    //@cond PRIVATE
     Q_PRIVATE_SLOT( d_func(), void startFirstListJob() )
     Q_PRIVATE_SLOT( d_func(), void collectionRemoved( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void collectionChanged( const Akonadi::Collection& ) )
@@ -156,7 +128,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     Q_PRIVATE_SLOT( d_func(), void editDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void dropResult( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void collectionsChanged( const Akonadi::Collection::List& ) )
-
+    //@endcond
 };
 
 }

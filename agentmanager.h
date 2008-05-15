@@ -33,7 +33,22 @@ class AgentManagerPrivate;
 class Collection;
 
 /**
- * This class provides an interface to manage agents.
+ * @short Provides an interface to retrieve agent types and manage agent instances.
+ *
+ * This singleton class can be used to create or remove agent instances or trigger
+ * synchronization of collections. Furthermore it provides information about status
+ * changes of the agents.
+ *
+ * @code
+ *
+ *   Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
+ *
+ *   Akonadi::AgentType::List types = manager->types();
+ *   foreach( const Akonadi::AgentType type&, types ) {
+ *     qDebug() << "Type:" << type.name() << type.description();
+ *   }
+ *
+ * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
@@ -68,7 +83,7 @@ class AKONADI_EXPORT AgentManager : public QObject
     AgentType type( const QString &identififer ) const;
 
     /**
-     * Returns the list of all configured agent instances.
+     * Returns the list of all available agent instances.
      */
     AgentInstance::List instances() const;
 
@@ -146,7 +161,7 @@ class AKONADI_EXPORT AgentManager : public QObject
      * This signal is emitted whenever the agent instance raised an error.
      *
      * @param instance The agent instance that raised the error.
-     * @param message The user visible error message.
+     * @param message The i18n'ed error message.
      */
     void instanceError( const Akonadi::AgentInstance &instance, const QString &message );
 
@@ -154,11 +169,12 @@ class AKONADI_EXPORT AgentManager : public QObject
      * This signal is emitted whenever the agent instance raised a warning.
      *
      * @param instance The agent instance that raised the warning.
-     * @param message The user visible warning message.
+     * @param message The i18n'ed warning message.
      */
     void instanceWarning( const Akonadi::AgentInstance &instance, const QString &message );
 
   private:
+    //@cond PRIVATE
     AgentManager();
 
     AgentManagerPrivate* const d;
@@ -172,6 +188,7 @@ class AKONADI_EXPORT AgentManager : public QObject
     Q_PRIVATE_SLOT( d, void agentInstanceNameChanged( const QString&, const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceWarning( const QString&, const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceError( const QString&, const QString& ) )
+    //@endcond
 };
 
 }

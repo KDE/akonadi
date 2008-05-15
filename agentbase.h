@@ -52,6 +52,8 @@ class Session;
  * - change monitoring and recording
  * - configuration interface
  * - problem reporting
+ *
+ * @author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 {
@@ -149,6 +151,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *   AgentBase::Observer::itemChanged( item );
      * }
      * @endcode
+     *
+     * @author Kevin Krammer <kevin.krammer@gmx.at>
      */
     class AKONADI_EXPORT Observer  // krazy:exclude=dpointer
     {
@@ -407,6 +411,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     virtual void doSetOnline( bool online );
 
   private:
+    //@cond PRIVATE
     static QString parseArguments( int, char** );
     static int init( AgentBase *r );
 
@@ -422,6 +427,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     Q_PRIVATE_SLOT( d_func(), void slotPercent( int ) )
     Q_PRIVATE_SLOT( d_func(), void slotWarning( const QString& ) )
     Q_PRIVATE_SLOT( d_func(), void slotError( const QString& ) )
+    //@endcond
 };
 
 }

@@ -25,11 +25,25 @@
 namespace Akonadi {
 
 /**
- * @short The AttributeFactory class provides the functionality of registering and creating arbitrary
+ * @short Provides the functionality of registering and creating arbitrary
  *        entity attributes.
  *
  * This class provides the functionality of registering and creating arbitrary Attributes for Entity
  * and its subclasses (e.g. Item and Collection).
+ *
+ * @code
+ *
+ * // register the type first
+ * Akonadi::AttributeFactory::registerAttribute<SecrecyAttribute>();
+ *
+ * ...
+ *
+ * // use it anywhere else in the application
+ * SecrecyAttribute *attr = Akonadi::AttributeFactory::createAttribute( "secrecy" );
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT AttributeFactory
 {
@@ -50,29 +64,16 @@ class AKONADI_EXPORT AttributeFactory
     static Attribute* createAttribute( const QByteArray &type );
 
   private:
-    /**
-     * Creates a new attribute factory.
-     */
+    //@cond PRIVATE
     AttributeFactory();
-
-    /**
-     * Destroys the attribute factory.
-     */
     ~AttributeFactory();
 
-    /**
-     * Returns the global instance of the attribute factory.
-     */
     static AttributeFactory* self();
-
-    /**
-     * Registers a new @p attribute to the factory.
-     */
     void registerAttribute( Attribute *attribute );
 
-  private:
     class Private;
     Private* const d;
+    //@endcond
 };
 
 }

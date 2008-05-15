@@ -28,27 +28,50 @@ class Collection;
 class CollectionCreateJobPrivate;
 
 /**
-  Job to create collections.
-*/
+ * @short Job that creates a new collection in the Akonadi storage.
+ *
+ * This job creates a new collection with all the set properties.
+ * You have to use setParentCollection() to define the collection, the
+ * new collection shall be located in.
+ *
+ * @code
+ *
+ * // create a new top-level collection
+ * Akonadi::Collection collection;
+ * collection.setParentCollection( Collection::root() );
+ * collection.setName( "Events" );
+ * collection.setContentMimeTypes( "text/calendar" );
+ *
+ * Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( collection );
+ * if ( job->exec() )
+ *   qDebug() << "Created successfully";
+ * else
+ *   qDebug() << "Error occured";
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionCreateJob : public Job
 {
   Q_OBJECT
   public:
     /**
-      Create a new CollectionCreateJob job.
-      @param collection The new collection.
-      @param parent The parent object.
-    */
+     * Creates a new collection create job.
+     *
+     * @param collection The new collection.
+     * @param parent The parent object.
+     */
     explicit CollectionCreateJob( const Collection &collection, QObject *parent = 0 );
 
     /**
-      Destroys this job.
-    */
+     * Destroys the collection create job.
+     */
     virtual ~CollectionCreateJob();
 
     /**
-      Returns the created collection if the job was executed succesfull.
-    */
+     * Returns the created collection if the job was executed succesfull.
+     */
     Collection collection() const;
 
   protected:

@@ -28,24 +28,43 @@ class Collection;
 class CollectionCopyJobPrivate;
 
 /**
-  Copies a single collection into the specified target collection.
-*/
+ * @short Job that copies a collection into another collection in the Akonadi storage.
+ *
+ * This job copies a single collection into a specified target collection.
+ *
+ * @code
+ *
+ * Akonadi::Collection source = ...
+ * Akonadi::Collection target = ...
+ *
+ * Akonadi::CollectionCopyJob *job = new Akonadi::CollectionCopyJob( source, target );
+ *
+ * if ( job->exec() )
+ *   qDebug() << "Copied successfully";
+ * else
+ *   qDebug() << "Error occured";
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionCopyJob : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      Create a new copy job to copy the given collection into @p target.
-      @param source The collection to copy.
-      @param target The target collection.
-      @param parent The parent object.
-    */
+     * Creates a new collection copy job to copy the given @p source collection into @p target.
+     *
+     * @param source The collection to copy.
+     * @param target The target collection.
+     * @param parent The parent object.
+     */
     CollectionCopyJob( const Collection &source, const Collection &target, QObject *parent = 0 );
 
     /**
-      Destructor.
-    */
+     * Destroys the collection copy job.
+     */
     ~CollectionCopyJob();
 
   protected:

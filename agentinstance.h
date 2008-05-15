@@ -52,6 +52,8 @@ class AgentType;
  * }
  *
  * @endcode
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADI_EXPORT AgentInstance
 {
@@ -168,8 +170,10 @@ class AKONADI_EXPORT AgentInstance
     bool operator==( const AgentInstance &other ) const;
 
   private:
+    //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
+    //@endcond
 };
 
 }

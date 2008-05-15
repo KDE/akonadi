@@ -29,55 +29,62 @@ namespace Akonadi {
 class ChangeRecorderPrivate;
 
 /**
-  Records and replays change notification.
-*/
+ * @short Records and replays change notification.
+ *
+ * This class is responsible for recording change notification during
+ * an agent is not online and replay the notifications when the agent
+ * is online again. Therefor the agent doesn't have to care about
+ * online/offline mode in its synchronization algorithm.
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT ChangeRecorder : public Monitor
 {
   Q_OBJECT
   public:
     /**
-      Creates a new change recorder.
-    */
+     * Creates a new change recorder.
+     */
     explicit ChangeRecorder( QObject *parent = 0 );
 
     /**
-      Destroys this ChangeRecorder object and writes all not yet processed changes
-      to the config file.
-    */
+     * Destroys the change recorder.
+     * All not yet processed changes are written back to the config file.
+     */
     ~ChangeRecorder();
 
     /**
-      Set the QSettings object used for persisting recorded changes.
-    */
+     * Sets the QSettings object used for persisting recorded changes.
+     */
     void setConfig( QSettings *settings );
 
     /**
-      Check if there are recorded changes.
-    */
+     * Returns whether there are recorded changes.
+     */
     bool isEmpty() const;
 
     /**
-      Remove the previously emitted change from the records.
-    */
+     * Removes the previously emitted change from the records.
+     */
     void changeProcessed();
 
     /**
-      Enable change recording. If change recording is disabled, this class
-      behaves exactly like Akonadi::Monitor.
-      Change recording is enabled by default.
-    */
+     * Enables change recording. If change recording is disabled, this class
+     * behaves exactly like Akonadi::Monitor.
+     * Change recording is enabled by default.
+     */
     void setChangeRecordingEnabled( bool enable );
 
   public Q_SLOTS:
     /**
-      Replay the next change notification and erase the previous one from the record.
-    */
+     * Replay the next change notification and erase the previous one from the record.
+     */
     void replayNext();
 
   Q_SIGNALS:
     /**
-      Emitted when new changes are recorded.
-    */
+     * Emitted when new changes are recorded.
+     */
     void changesAdded();
 
   private:

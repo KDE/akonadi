@@ -29,17 +29,36 @@ namespace Akonadi {
 class CollectionFetchJobPrivate;
 
 /**
-  This class can be used to retrieve the complete or partial collection tree
-  from the PIM storage service.
-*/
+ * @short Job that fetches collections from the Akonadi storage.
+ *
+ * This class can be used to retrieve the complete or partial collection tree
+ * from the Akonadi storage.
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * // fetching all collections recursive, starting at the root collection
+ * CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
+ * if ( job->exec() ) {
+ *   Collection::List collections = job->collections();
+ *   foreach( const Collection &collection, collections ) {
+ *     qDebug() << "Name:" << collection.name();
+ *   }
+ * }
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionFetchJob : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      List type.
-    */
+     * Describes the type of fetch depth.
+     */
     enum Type
     {
       Base,       ///< Only fetch the base collection.
@@ -48,45 +67,50 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     };
 
     /**
-      Create a new CollectionFetchJob.
-      @param collection The base collection for the listing. Must be valid.
-      @param type the type of listing to perform
-      @param parent The parent object.
-    */
+     * Creates a new collection fetch job.
+     *
+     * @param collection The base collection for the listing. Must be valid.
+     * @param type The type of fetch depth.
+     * @param parent The parent object.
+     */
     explicit CollectionFetchJob( const Collection &collection, Type type = FirstLevel, QObject *parent = 0 );
 
     /**
-      Create a new CollectionFetchJob to retrieve a list of collections.
-      @param cols A list of collections to fetch. Must not be empty, content must be valid.
-      @param parent The parent object.
-    */
-    explicit CollectionFetchJob( const Collection::List &cols, QObject *parent = 0 );
+     * Creates a new collection fetch job to retrieve a list of collections.
+     *
+     * @param collections A list of collections to fetch. Must not be empty, content must be valid.
+     * @param parent The parent object.
+     */
+    explicit CollectionFetchJob( const Collection::List &colletions, QObject *parent = 0 );
 
     /**
-      Destroys this job.
-    */
+     * Destroys the collection fetch job.
+     */
     virtual ~CollectionFetchJob();
 
     /**
-      Returns a list of collection objects.
-    */
+     * Returns the list of fetched collection.
+     */
     Collection::List collections() const;
 
     /**
-      Sets a resource identifier to limit collection listing to one resource.
-      @param resource The resource identifier.
-    */
+     * Sets a resource identifier to limit collection listing to one resource.
+     *
+     * @param resource The resource identifier.
+     */
     void setResource( const QString &resource );
 
     /**
-      Include also unsubscribed collections.
-    */
+     * Include also unsubscribed collections.
+     */
     void includeUnsubscribed( bool include = true );
 
   Q_SIGNALS:
     /**
-      Emitted whenever collections are received.
-    */
+     * This signal is emitted whenever the job has received collections.
+     *
+     * @param collections The received collections.
+     */
     void collectionsReceived( const Akonadi::Collection::List &collections );
 
   protected:
@@ -94,13 +118,16 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   protected Q_SLOTS:
+    //@cond PRIVATE
     void slotResult( KJob* job );
+    //@endcond
 
   private:
     Q_DECLARE_PRIVATE( CollectionFetchJob )
 
+    //@cond PRIVATE
     Q_PRIVATE_SLOT( d_func(), void timeout() )
-
+    //@endcond
 };
 
 }

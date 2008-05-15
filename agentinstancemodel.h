@@ -27,10 +27,23 @@
 namespace Akonadi {
 
 /**
- * @short The AgentInstanceModel provides a data model for Akonadi Agent Instances.
+ * @short Provides a data model for agent instances.
  *
- * This class provides access to the Agent Instances of Akonadi, their name, identifier,
+ * This class provides the interface of a QAbstractItemModel to
+ * access all available agent instances: their name, identifier,
  * supported mimetypes and capabilities.
+ *
+ * @code
+ *
+ * Akonadi::AgentInstanceModel *model = new Akonadi::AgentInstanceModel( this );
+ *
+ * QListView *view = new QListView( this );
+ * view->setModel( model );
+ *
+ * @endcode
+ *
+ * To show only agent instances that match a given mime type or special
+ * capabilities, use the AgentFilterProxyModel on top of this model.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
@@ -60,6 +73,8 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
 
     /**
      * Creates a new agent instance model.
+     *
+     * @param parent The parent object.
      */
     explicit AgentInstanceModel( QObject *parent = 0 );
 
@@ -78,12 +93,14 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
     virtual bool setData( const QModelIndex &index, const QVariant &value, int role );
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void instanceAdded( const Akonadi::AgentInstance& ) )
     Q_PRIVATE_SLOT( d, void instanceRemoved( const Akonadi::AgentInstance& ) )
     Q_PRIVATE_SLOT( d, void instanceChanged( const Akonadi::AgentInstance& ) )
+    //@endcond
 };
 
 }

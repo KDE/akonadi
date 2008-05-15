@@ -30,11 +30,34 @@ class AgentInstance;
 class AgentFilterProxyModel;
 
 /**
- * This class provides a widget of all available agent instances.
+ * @short Provides a widget that lists all available agent instances.
  *
- * Since the widget is listening to the dbus for changes, the
- * widget is updated automatically as soon as a new agent instance
- * is added or removed to/from the system.
+ * The widget is listening on the dbus for changes, so the
+ * widget is updated automatically as soon as new agent instances
+ * are added to or removed from the system.
+ *
+ * @code
+ *
+ * MyWidget::MyWidget( QWidget *parent )
+ *   : QWidget( parent )
+ * {
+ *   QVBoxLayout *layout = new QVBoxLayout( this );
+ *
+ *   mAgentInstanceWidget = new Akonadi::AgentInstanceWidget( this );
+ *   layout->addWidget( mAgentInstanceWidget );
+ *
+ *   connect( mAgentInstanceWidget, SIGNAL( doubleClicked( Akonadi::AgentInstance& ) ),
+ *            this, SLOT( slotInstanceSelected( Akonadi::AgentInstance& ) ) );
+ * }
+ *
+ * ...
+ *
+ * MyWidget::slotInstanceSelected( Akonadi::AgentInstance &instance )
+ * {
+ *   qDebug() << "Selected instance" << instance.name();
+ * }
+ *
+ * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
@@ -77,18 +100,20 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
     void currentChanged( const Akonadi::AgentInstance &current, const Akonadi::AgentInstance &previous );
 
     /**
-     * This signal is emitted whenever the there is a double click on an instance.
+     * This signal is emitted whenever the there is a double click on an agent instance.
      *
      * @param current The current agent instance.
      */
     void doubleClicked( const Akonadi::AgentInstance &current );
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void currentAgentInstanceDoubleClicked( const QModelIndex& ) )
+    //@endcond
 };
 
 }

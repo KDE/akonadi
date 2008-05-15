@@ -26,9 +26,8 @@
 namespace Akonadi {
 
 /**
-  General page of the collection property dialog.
-  @internal
-*/
+ * @internal
+ */
 class CollectionGeneralPropertiesPage : public CollectionPropertiesPage
 {
   Q_OBJECT

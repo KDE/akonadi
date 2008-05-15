@@ -27,10 +27,23 @@
 namespace Akonadi {
 
 /**
- * @short The AgentTypeModel provides a data model for Akonadi Agent Types.
+ * @short Provides a data model for agent types.
  *
- * This class provides access to the available Agent Types of Akonadi, their identifier,
- * description, supported mimetypes and capabilities.
+ * This class provides the interface of a QAbstractItemModel to
+ * access all available agent types: their name, identifier,
+ * supported mimetypes and capabilities.
+ *
+ * @code
+ *
+ * Akonadi::AgentTypeModel *model = new Akonadi::AgentTypeModel( this );
+ *
+ * QListView *view = new QListView( this );
+ * view->setModel( model );
+ *
+ * @endcode
+ *
+ * To show only agent types that match a given mime type or special
+ * capabilities, use the AgentFilterProxyModel on top of this model.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
@@ -69,11 +82,13 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
     virtual QModelIndex parent( const QModelIndex &index ) const;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void typeAdded( const Akonadi::AgentType& ) )
     Q_PRIVATE_SLOT( d, void typeRemoved( const Akonadi::AgentType& ) )
+    //@endcond
 };
 
 }

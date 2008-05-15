@@ -46,6 +46,8 @@ namespace Akonadi {
  * view->setModel( proxy );
  *
  * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
 {
@@ -81,8 +83,10 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
     bool filterAcceptsRow( int row, const QModelIndex &parent ) const;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
+    //@endcond
 };
 
 }

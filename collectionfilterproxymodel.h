@@ -28,62 +28,78 @@ namespace Akonadi {
 class CollectionModel;
 
 /**
- * Proxy model to filter collections : only shows collections containing a given types.
- * For instance, a mail application will useful addMimeType("message/rfc822") to only show
- * folders containing mail.
+ * @short A proxy model that filters collections by mime type.
  *
- * Example use:
- * \code
- * m_folderModel = new Akonadi::CollectionModel(this);
- * m_folderProxyModel = new Akonadi::CollectionFilterProxyModel();
- * m_folderProxyModel->addMimeTypeFilter("message/rfc822");
- * m_folderProxyModel->setSourceModel(m_folderModel);
- * \endcode
-*/
+ * This class can be used on top of a CollectionModel to filter out
+ * all collections that doesn't match a given mime type.
+ *
+ * For instance, a mail application will use addMimeType( "message/rfc822" ) to only show
+ * collections containing mail.
+ *
+ * @code
+ *
+ *   Akonadi::CollectionModel *model = new Akonadi::CollectionModel( this );
+ *
+ *   Akonadi::CollectionFilterProxy *proxy = new Akonadi::CollectionFilterProxyModel();
+ *   proxy->addMimeTypeFilter( "message/rfc822" );
+ *   proxy->setSourceModel( model );
+ *
+ *   QTreeView *view = new QTreeView( this );
+ *   view->setModel( proxy );
+ *
+ * @endcode
+ *
+ * @author Bruno Virlet <bruno.virlet@gmail.com>
+ */
 class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
   public:
     /**
-     * Create a new CollectionProxyFilterModel
+     * Creates a new collection proxy filter model.
+     *
      * @param parent The parent object
      */
     explicit CollectionFilterProxyModel( QObject *parent = 0 );
 
     /**
-     * Destroy the model
-     **/
+     * Destroys the collection proxy filter model.
+     */
     virtual ~CollectionFilterProxyModel();
 
     /**
-     * Add types to be shown by the filter
-     * @param typeList A list of mimetypes to be shown
+     * Add mime types to be shown by the filter.
+     *
+     * @param mimeTypes A list of mime types to be shown.
      */
-    void addMimeTypeFilters( const QStringList &typeList );
+    void addMimeTypeFilters( const QStringList &mimeTypes );
 
     /**
-     * Convenience method for the previous one
-     * @param type A type to show
+     * Add mime type to be shown by the filter.
+     *
+     * @param mimeType A mime type to be shown.
      */
-    void addMimeTypeFilter( const QString &type );
+    void addMimeTypeFilter( const QString &mimeType );
 
     /**
-     * @return The list of mimetype filter
+     * Returns the list of mime type filters.
      */
     QStringList mimeTypeFilters() const;
 
+    /**
+     * Clear all mime type filters.
+     */
     void clearFilters();
 
   protected:
-    /**
-     * Reimplemented to only accept rows (collections) which are able to contain the filter mimetypes.
-     */
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
+    //@endcond
 };
 
 }

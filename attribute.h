@@ -27,8 +27,94 @@
 namespace Akonadi {
 
 /**
- * Stores specific entity attributes (ACLs, quotas, etc.).
- * Every entity can have zero ore one attribute of every type.
+ * @short Provides interface for custom attributes for Entity.
+ *
+ * This class is an interface for custom attributes, that can be stored
+ * in an entity. Attributes should be meta data, e.g. ACLs, quotas etc.
+ * that are not part of the entities' data itself.
+ *
+ * To provide custom attributes, you have to subclass from this interface
+ * and reimplement the pure virtual methods.
+ *
+ * @code
+ *
+ * class SecrecyAttribute : public Akonadi::Attribute
+ * {
+ *    public:
+ *      enum Secrecy
+ *      {
+ *        Public,
+ *        Private,
+ *        Confidential
+ *      };
+ *
+ *      SecrecyAttribute( Secrecy secrecy = Public )
+ *        : mSecrecy( secrecy )
+ *      {
+ *      }
+ *
+ *      Secrecy secrecy() const
+ *      {
+ *        return mSecrecy;
+ *      }
+ *
+ *      virtual QByteArray type() const
+ *      {
+ *        return "secrecy";
+ *      }
+ *
+ *      virtual Attribute* clone() const
+ *      {
+ *        return new SecrecyAttribute( mSecrecy );
+ *      }
+ *
+ *      virtual QByteArray serialized() const
+ *      {
+ *        switch ( mSecrecy ) {
+ *          case Public: return "public"; break;
+ *          case Private: return "private"; break;
+ *          case Confidential: return "confidential"; break;
+ *        }
+ *      }
+ *
+ *      virtual void deserialize( const QByteArray &data )
+ *      {
+ *        if ( data == "public" )
+ *          mSecrecy = Public;
+ *        else if ( data == "private" )
+ *          mSecrecy = Private;
+ *        else if ( data == "confidential" )
+ *          mSecrecy = Confidential;
+ *      }
+ * }
+ *
+ * @endcode
+ *
+ * The custom attributes can be used in the following way:
+ *
+ * @code
+ *
+ * Akonadi::Item item( "text/directory" );
+ *
+ * item.addAttribute( new SecrecyAttribute( SecrecyAttribute::Confidential ) );
+ *
+ * @endcode
+ *
+ * and
+ *
+ * @code
+ *
+ * Akonadi::Item item = ...
+ *
+ * if ( item.hasAttribute( "secrecy" ) ) {
+ *   SecrecyAttribute *attr = item.attribute( "secrecy" );
+ *
+ *   SecrecyAttribute::Secrecy secrecy = attr->secrecy();
+ *   ...
+ * }
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT Attribute
 {

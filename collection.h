@@ -36,24 +36,43 @@ class CollectionPrivate;
 class CollectionStatistics;
 
 /**
-  This class represents a collection of PIM objects, such as a folder on a mail- or
-  groupware-server.
-
-  Collections are hierarchical, i.e., they may have a parent collection.
-
-  This class is implicitly shared.
-
-  @see \ref akonadi_concepts_collections "Akonadi Collection Concept"
+ * @short Represents a collection of PIM objects.
+ *
+ * This class represents a collection of PIM objects, such as a folder on a mail- or
+ * groupware-server.
+ *
+ * Collections are hierarchical, i.e., they may have a parent collection.
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * // fetching all collections recursive, starting at the root collection
+ * CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
+ * if ( job->exec() ) {
+ *   Collection::List collections = job->collections();
+ *   foreach( const Collection &collection, collections ) {
+ *     qDebug() << "Name:" << collection.name();
+ *   }
+ * }
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ *
+ * @see \ref akonadi_concepts_collections "Akonadi Collection Concept"
  */
 class AKONADI_EXPORT Collection : public Entity
 {
   public:
-    /// A list of collections.
+    /**
+     * Describes a list of collections.
+     */
     typedef QList<Collection> List;
 
     /**
-     Collection rights.
-    */
+     * Describes rights of a collection.
+     */
     enum Right {
       ReadOnly = 0x0,                   ///< Can only read items or subcollection of this collection
       CanChangeItem = 0x1,              ///< Can change items in this collection
@@ -68,138 +87,135 @@ class AKONADI_EXPORT Collection : public Entity
     Q_DECLARE_FLAGS(Rights, Right)
 
     /**
-      Creates an invalid collection.
-    */
+     * Creates an invalid collection.
+     */
     Collection();
 
     /**
-      Create a new collection.
-
-      @param id The unique identifier of this collection.
-    */
+     * Create a new collection.
+     *
+     * @param id The unique identifier of the collection.
+     */
     explicit Collection( Id id );
 
     /**
-      Destroys this collection.
-    */
+     * Destroys the collection.
+     */
     ~Collection();
 
     /**
-      Copy constructor.
-    */
+     * Creates a collection from an @p other collection.
+     */
     Collection( const Collection &other );
 
     /**
-      Creates a collection from the url
-    */
+     * Creates a collection from the given @p url.
+     */
     static Collection fromUrl( const KUrl &url );
 
     /**
-      Returns the name of this collection usable for display.
-    */
+     * Returns the i18n'ed name of the collection.
+     */
     QString name() const;
 
     /**
-      Sets the collection name.
-
-      @param name The new collection name
-    */
+     * Sets the i18n'ed name of the collection.
+     *
+     * @param name The new collection name
+     */
     void setName( const QString &name );
 
     /**
-      Returns the rights the user has on this collection.
+     * Returns the rights the user has on the collection.
      */
     Rights rights() const;
 
     /**
-      Sets the @p rights the user has on this collection.
+     * Sets the @p rights the user has on the collection.
      */
     void setRights( Rights rights );
 
     /**
-      Returns a list of possible content mimetypes,
-      e.g. message/rfc822, x-akonadi/collection for a mail folder that
-      supports sub-folders.
+     * Returns a list of possible content mimetypes,
+     * e.g. message/rfc822, x-akonadi/collection for a mail folder that
+     * supports sub-folders.
     */
     QStringList contentMimeTypes() const;
 
     /**
-      Sets the list of possible content mimetypes.
-    */
+     * Sets the list of possible content mime @p types.
+     */
     void setContentMimeTypes( const QStringList &types );
 
     /**
-      Returns the identifier of the parent collection.
-    */
+     * Returns the identifier of the parent collection.
+     */
     Id parent() const;
 
     /**
-      Sets the identifier of the parent collection.
-    */
+     * Sets the identifier of the @p parent collection.
+     */
     void setParent( Id parent );
 
     /**
-      Sets the parent collection.
-    */
+     * Sets the parent @p collection.
+     */
     void setParent( const Collection &collection );
 
     /**
-      Returns the parent remote identifier.
-      @note This usually returns nothing for collections retrieved from the backend.
-    */
+     * Returns the parent remote identifier.
+     * @note This usually returns nothing for collections retrieved from the backend.
+     */
     QString parentRemoteId() const;
 
     /**
-      Sets the parent remote identifier.
-      @param remoteParent The remote identifier of the parent.
-    */
-    void setParentRemoteId( const QString &remoteParent );
+     * Sets the parent's remote @p identifier.
+     */
+    void setParentRemoteId( const QString &identifier );
 
     /**
-      Returns the root collection.
-    */
+     * Returns the root collection.
+     */
     static Collection root();
 
     /**
-      Returns the mimetype used for collections.
-    */
+     * Returns the mimetype used for collections.
+     */
     static QString mimeType();
 
     /**
-      Returns the identifier of the resource owning this collection.
-    */
+     * Returns the identifier of the resource owning the collection.
+     */
     QString resource() const;
 
     /**
-      Sets the identifier of the resource owning this collection.
-      @param resource The resource identifier.
-    */
-    void setResource( const QString &resource );
+     * Sets the @p identifier of the resource owning the collection.
+     */
+    void setResource( const QString &identifier );
 
     /**
-      Returns the cache policy of this collection.
-    */
+     * Returns the cache policy of the collection.
+     */
     CachePolicy cachePolicy() const;
 
     /**
-      Sets the cache policy of this collection.
-      @param cachePolicy The new cache policy.
-    */
-    void setCachePolicy( const CachePolicy &cachePolicy );
+     * Sets the cache @p policy of the collection.
+     */
+    void setCachePolicy( const CachePolicy &policy );
 
     /**
-      Returns the CollectionStatistics object.
-    */
+     * Returns the collection statistics of the collection.
+     */
     CollectionStatistics statistics() const;
 
     /**
-      Sets the CollectionStatistics object for this collection.
-    */
+     * Sets the collection @p statistics for the collection.
+     */
     void setStatistics( const CollectionStatistics &statistics );
 
     /**
-      Returns the collection url
-    */
+     * Returns the collection url
+     */
     KUrl url() const;
 
   private:

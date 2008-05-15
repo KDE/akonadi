@@ -28,25 +28,41 @@ class Collection;
 class CollectionDeleteJobPrivate;
 
 /**
-  Job to delete collections.
-  Be carefull with using this: It deletes not only the specified collection
-  but also all its sub-collections as well as all associated content!
-*/
+ * @short Job that deletes a collection in the Akonadi storage.
+ *
+ * This job deletes a collection and all its sub-collections as well as all associated content.
+ *
+ * @code
+ *
+ * Akonadi::Collection collection = ...
+ *
+ * Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( collection );
+ *
+ * if ( job->exec() )
+ *   qDebug() << "Deleted successfully";
+ * else
+ *   qDebug() << "Error occured";
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionDeleteJob : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a new CollectionDeleteJob.
-      @param collection The collection to delete.
-      @param parent The parent object.
-    */
+     * Creates a new collection delete job.
+     *
+     * @param collection The collection to delete.
+     * @param parent The parent object.
+     */
     explicit CollectionDeleteJob( const Collection &collection, QObject *parent = 0 );
 
     /**
-      Destroys this job.
-    */
+     * Destroys the collection delete job.
+     */
     ~CollectionDeleteJob();
 
   protected:

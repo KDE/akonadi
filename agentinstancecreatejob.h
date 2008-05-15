@@ -48,7 +48,7 @@ class AgentInstance;
  *   connect( job, SIGNAL( result( KJob * ) ),
  *            this, SLOT( slotCreated( KJob * ) ) );
  *
- *   // show config dialog with this widget as parent
+ *   // use this widget as parent for the config dialog
  *   job->configure( this );
  *
  *   job->start();
@@ -64,6 +64,8 @@ class AgentInstance;
  * }
  *
  * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
 {
@@ -82,8 +84,8 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     ~AgentInstanceCreateJob();
 
     /**
-     * Setup the job to show agent configuration dialog once it has
-     * been successfully started.
+     * Setup the job to show agent configuration dialog once the agent instance
+     * has been successfully started.
      * @param parent The parent window for the configuration dialog.
      */
     void configure( QWidget *parent = 0 );
@@ -99,6 +101,7 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     void start();
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
 
@@ -106,6 +109,7 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     Q_PRIVATE_SLOT( d, void doConfigure() )
     Q_PRIVATE_SLOT( d, void timeout() )
     Q_PRIVATE_SLOT( d, void emitResult() )
+    //@endcond
 };
 
 }
