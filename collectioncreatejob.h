@@ -46,7 +46,7 @@ class CollectionCreateJobPrivate;
  * if ( job->exec() )
  *   qDebug() << "Created successfully";
  * else
- *   qDebug() << "Error occured";
+ *   qDebug() << "Error occurred";
  *
  * @endcode
  *

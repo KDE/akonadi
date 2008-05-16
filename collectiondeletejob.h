@@ -41,7 +41,7 @@ class CollectionDeleteJobPrivate;
  * if ( job->exec() )
  *   qDebug() << "Deleted successfully";
  * else
- *   qDebug() << "Error occured";
+ *   qDebug() << "Error occurred";
  *
  * @endcode
  *

@@ -42,7 +42,7 @@ class CollectionCopyJobPrivate;
  * if ( job->exec() )
  *   qDebug() << "Copied successfully";
  * else
- *   qDebug() << "Error occured";
+ *   qDebug() << "Error occurred";
  *
  * @endcode
  *
