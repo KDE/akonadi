@@ -72,7 +72,9 @@ bool Fetch::parseCommand( const QByteArray &line )
     if ( pos >= line.count() )
       break;
     if ( line[pos] == '(' ) {
-      pos = ImapParser::parseParenthesizedList( line, mAttrList, pos );
+      QList<QByteArray> tmp;
+      pos = ImapParser::parseParenthesizedList( line, tmp, pos );
+      mAttrList += tmp;
       break;
     } else {
       pos = ImapParser::parseString( line, buffer, pos );
