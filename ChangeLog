@@ -1,0 +1,633 @@
+2008-05-18 11:31 +0000 [r809101]  Volker Krause vkrause@kde.org
+
+	* trunk/KDE/kdepimlibs/akonadi/session.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/session_p.h,
+	  trunk/KDE/kdepimlibs/akonadi/job.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/job.h: Check if the server protocol
+	  version is recent enough.
+
+2008-05-17 16:26 +0000 [r808811]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/fetch.cpp: Don't
+	  overwrite the part list, it might have content here already.
+
+2008-05-13 19:03 +0000 [r807399]  Jakub Stachowski qbast@go2.pl
+
+	* trunk/kdesupport/akonadi/libs/imapparser.cpp,
+	  trunk/kdesupport/akonadi/libs/imapparser_p.h: Collection parsing
+	  optimization, server part. Duplication is rather ugly, but
+	  porting everything to QVarLengthArray would make lots of code
+	  even more ugly.
+
+2008-05-10 20:54 +0000 [r806282]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake: with
+	  cmake 2.6, also search in the dirs in CMAKE_PREFIX_PATH Alex
+
+2008-05-07 19:50 +0000 [r805182]  Jakub Stachowski qbast@go2.pl
+
+	* trunk/kdesupport/akonadi/libs/imapparser.cpp: Trivial
+	  optimization for quoted string parsing - if during string scan no
+	  slash was found then there is no need to try and replace \\ and
+	  \"
+
+2008-05-07 10:59 +0000 [r804999]  Laurent Montel montel@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/datastore.h: Fix
+	  forward declaration
+
+2008-05-05 18:20 +0000 [r804336]  Kevin Krammer kevin.krammer@gmx.at
+
+	* trunk/kdesupport/akonadi/server/control/agentmanager.cpp:
+	  dynamic_cast provides a runtime check, static_cast doesn't
+
+2008-05-05 17:48 +0000 [r804324-804326]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Agent.Control.xml
+	  (removed): two seconds to late...
+
+	* trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Agent.Control.xml
+	  (added): we need this one
+
+2008-05-05 17:44 +0000 [r804320]  Kevin Krammer kevin.krammer@gmx.at
+
+	* trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Agent.Control.xml
+	  (added): Adding missing file
+
+2008-05-05 16:39 +0000 [r804301]  Kevin Krammer kevin.krammer@gmx.at
+
+	* trunk/kdesupport/akonadi/server/control/org.freedesktop.Akonadi.Control.service.cmake
+	  (added),
+	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.SearchQueryIterator.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.Search.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.Server.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Agent.Control.xml
+	  (removed), trunk/kdesupport/akonadi/server/src/nepomukmanager.h,
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Tracer.xml
+	  (removed), trunk/kdesupport/akonadi/libs/protocol_p.h,
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.NotificationManager.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/resourcemanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/src/main.cpp,
+	  trunk/kdesupport/akonadi/server/src/notificationmanager.h,
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Resource.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Agent.Status.xml
+	  (added), trunk/kdesupport/akonadi/server/queryserver/main.cpp,
+	  trunk/kdesupport/akonadi/server/interfaces/org.freedesktop.Akonadi.ControlManager.xml
+	  (added),
+	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.TracerNotification.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
+	  trunk/kdesupport/akonadi/server/queryserver/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.AgentManager.xml
+	  (added),
+	  trunk/kdesupport/akonadi/server/control/org.kde.Akonadi.Control.service.cmake
+	  (removed), trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/queryserver/queryservertest.h,
+	  trunk/kdesupport/akonadi/server/akonadictl/main.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentinfo.h,
+	  trunk/kdesupport/akonadi/server/src/nepomukmanager.cpp,
+	  trunk/kdesupport/akonadi/server/interfaces/org.freedesktop.Akonadi.SearchQuery.xml
+	  (added), trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Agent.Status.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.ControlManager.xml
+	  (removed), trunk/kdesupport/akonadi/interfaces/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/interfaces/org.freedesktop.Akonadi.SearchQueryIterator.xml
+	  (added),
+	  trunk/kdesupport/akonadi/server/interfaces/org.freedesktop.Akonadi.Search.xml
+	  (added),
+	  trunk/kdesupport/akonadi/server/interfaces/org.freedesktop.Akonadi.Server.xml
+	  (added), trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.h,
+	  trunk/kdesupport/akonadi/server/src/resourcemanager.h,
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Tracer.xml
+	  (added),
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.NotificationManager.xml
+	  (added),
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.AgentManager.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Resource.xml
+	  (added),
+	  trunk/kdesupport/akonadi/server/queryserver/queryservertest.cpp,
+	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.SearchQuery.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/queryserver/org.kde.Akonadi.Search.service.cmake,
+	  trunk/kdesupport/akonadi/server/interfaces/org.freedesktop.Akonadi.TracerNotification.xml
+	  (added): Since Akonadi is not a KDE-only service, replace the
+	  org.kde namespacing with appropriate org.freedesktop Lets hope I
+	  didn't miss any occurencies
+
+2008-05-02 15:10 +0000 [r803320]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/akonadidb.xml,
+	  trunk/kdesupport/akonadi/libs/imapparser.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/libs/imapparser_p.h,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp: Extend
+	  database and protocol to have format version numbers for parts
+
+2008-05-02 15:02 +0000 [r803316]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp,
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Resource.xml:
+	  Extend requestItemDelivery() by mimeType to provide a sane API on
+	  ResourceBase side.
+
+2008-04-29 23:04 +0000 [r802602]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/cmake/modules/COPYING-CMAKE-SCRIPTS
+	  (added): Referenced by some of the files in here.
+
+2008-04-28 19:14 +0000 [r802188]  André Wöbbeking woebbeking@kde.org
+
+	* trunk/kdesupport/akonadi/akonadi.pc.cmake: INCLUDE_INSTALL_DIR is
+	  set by KDE4 or QImagaBlitz in kdesupport
+
+2008-04-28 18:55 +0000 [r802182]  André Wöbbeking woebbeking@kde.org
+
+	* trunk/kdesupport/akonadi/libs/CMakeLists.txt: don't install
+	  includes in ../include/qimageblitz/akonadi INCLUDE_INSTALL_DIR is
+	  set by KDE4 or QImagaBlitz in kdesupport
+
+2008-04-28 13:12 +0000 [r802065]  Robert Zwerus arzie@dds.nl
+
+	* trunk/kdesupport/akonadi/server/src/cachecleaner.cpp: Fixed
+	  foreach misuse.
+
+2008-04-26 14:16 +0000 [r801397]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: yes, 4.4 is needed
+
+2008-04-26 11:30 +0000 [r801335]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake,
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: -add docs and
+	  standard argument handling to FindAutomoc4.cmake -state minimum
+	  required cmake version Alex
+
+2008-04-26 10:43 +0000 [r801313-801315]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: AkonadiInternal.cmake
+	  renamed to InstallSettings.cmake Alex
+
+	* trunk/kdesupport/akonadi/cmake/modules/AkonadiInternal.cmake
+	  (removed),
+	  trunk/kdesupport/akonadi/cmake/modules/InstallSettings.cmake
+	  (added): rename AkonadiInternal.cmake to InstallSettings.cmake,
+	  since it doesn't contains anything else anymore Alex
+
+	* trunk/kdesupport/akonadi/cmake/modules/AkonadiInternal.cmake,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: I think the
+	  AKONADI_DBUS_INTERFACES_DIR and AKONADI_DBUS_SERVICES_DIR are
+	  completely unused, so remove them let me know if this breaks
+	  something some restructuring Alex
+
+2008-04-26 10:03 +0000 [r801303]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: -don't indent almost the
+	  whole file, but exit quickly at the beginning in the error case
+	  Alex
+
+2008-04-26 09:28 +0000 [r801295]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/automoc (removed),
+	  trunk/kdesupport/akonadi/cmake/CMakeLists.txt: no kde4automoc
+	  anymore in akonadi Alex
+
+2008-04-26 09:23 +0000 [r801291]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/AkonadiInternal.cmake,
+	  trunk/kdesupport/akonadi/cmake/modules/kde4_exec_via_sh.cmake
+	  (removed),
+	  trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/tests/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/cmake/modules/kde4automoc.files.in
+	  (removed), trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/cmake/modules/KDE4Macros.cmake
+	  (removed), trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/tests/unittest/CMakeLists.txt:
+	  -remove kde4 files -use add_executable() + add_test() instead of
+	  kde4_add_unit_test(), it does 95% the same -insert
+	  enable_testing() so we get a "make test" target to run all tests
+	  -rename automoc4_handle_automoc() to automoc4() Alex
+
+2008-04-26 09:14 +0000 [r801283]  Laurent Montel montel@kde.org
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt: Not necessary now
+
+2008-04-26 08:28 +0000 [r801268]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake
+	  (added): -add FindAutomoc4.cmake, forgot that last night Alex
+
+2008-04-26 08:06 +0000 [r801261]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/server/control/kcrash.cpp: mingw doesn't
+	  have _exit(), only _Exit() or better - it has _exit() but not
+	  when __STRICT_ANSI__ is defined
+
+2008-04-25 22:29 +0000 [r801204]  Albert Astals Cid tsdgeos@terra.es
+
+	* trunk/kdesupport/akonadi/server/src/nepomukmanager.cpp,
+	  trunk/kdesupport/akonadi/server/queryserver/query.cpp,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/create.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/querybuilder.cpp,
+	  trunk/kdesupport/akonadi/server/src/notificationmanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/colcopy.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/list.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbinitializer.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/aklist.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp,
+	  trunk/kdesupport/akonadi/server/src/xesammanager.cpp: const & in
+	  foreach avoids unnecessary constructor calls
+
+2008-04-25 22:23 +0000 [r801203]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/automoc/Automoc4Config.cmake,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt: build
+	  akonadi using automoc4 from kdesupport (that's the first automoc4
+	  user !) I think we need a shorter name for the macro:
+	  automoc4_handle_automoc() is not ideal automoc4(),
+	  automoc4_wrap(), automoc4_do(), automoc4_run() ? Alex CCMAIL:
+	  winter@kde.org CCMAIL: kretz@kde.org
+
+2008-04-25 21:24 +0000 [r801189]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: -does akonadi really
+	  require Qt 4.4 or is for akonadi an older Qt version good enough
+	  ? -just some cosmetics Alex CCMAIL: winter@kde.org
+
+2008-04-25 20:51 +0000 [r801177]  Ingo Klöcker kloecker@kde.org
+
+	* trunk/kdesupport/akonadi/AUTHORS: Removed stray commas and a
+	  dupe. SVN_SILENT
+
+2008-04-25 19:52 +0000 [r801148]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/akonadi.pc.cmake (added): new akonadi.pc
+	  file is created and installed in lib/pkgconfig set variables for
+	  installation dirs bin, lib, ...
+
+2008-04-25 19:20 +0000 [r801136]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: set variables for
+	  the version, and use them for the library versioning.
+
+2008-04-25 16:24 +0000 [r801083]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/README (added),
+	  trunk/kdesupport/akonadi/INSTALL (added): Add INSTALL and README
+	  file
+
+2008-04-25 15:12 +0000 [r801052]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt: no need to link
+	  against kdewin32 lib here
+
+2008-04-25 14:25 +0000 [r801042]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/server/control/kcrash.cpp: _exit() ->
+	  exit() because _exit() is not available when compiling on
+	  windows/mingw
+
+2008-04-25 07:22 +0000 [r800908]  André Wöbbeking woebbeking@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: - use KDE's compiler
+	  flags for -Wno-long-long and more warnings - add the cmake
+	  directory after that flags are set
+
+2008-04-25 05:09 +0000 [r800884]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: win32 compile++
+
+2008-04-24 23:15 +0000 [r800838]  Patrick Spendrin ps_ml@gmx.de
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: add feature output log
+	  as mentioned by pusling
+
+2008-04-24 16:37 +0000 [r800686]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: set an INSTALL dir for
+	  include files
+
+2008-04-24 14:01 +0000 [r800608-800609]  Will Stephenson wstephenson@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Disable testing stuff!
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Check that Qt has DBus
+
+2008-04-24 10:23 +0000 [r800462]  Nicolas Lécureuil neoclust@mandriva.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Require Qt 4.4 minimum
+
+2008-04-24 08:17 +0000 [r800427]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindQt4.cmake: Find Qt on
+	  the mac without frameworks but with debugging.
+
+2008-04-24 07:02 +0000 [r800391]  Will Stephenson wstephenson@kde.org
+
+	* trunk/KDE/kdepim/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/KDE/kdepim/akonadi/server (removed): Post Akonadi move
+	  tidying part 11: Remove unused macro from akonadi, and remove
+	  empty server dir from kdepim
+
+2008-04-24 00:11 +0000 [r800361]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/queryserver/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: we need to compute
+	  our own _ENABLE_EXCEPTIONS variable and use it instead of the
+	  KDE4_ENABLE_EXCEPTIONS variable.
+
+2008-04-23 23:41 +0000 [r800354]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/tests/CMakeLists.txt: remove
+	  ${KDE4_KDECORE_LIBS}
+
+2008-04-23 23:31 +0000 [r800352]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: kde4_add_library()
+	  -> add_library() must use qt4_automoc() now.
+
+2008-04-23 23:26 +0000 [r800351]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/queryserver/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt:
+	  kde4_add_executable() -> add_executable() must use qt4_automoc()
+	  now.
+
+2008-04-23 21:50 +0000 [r800311]  Patrick Spendrin ps_ml@gmx.de
+
+	* trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/config-akonadi.h.cmake,
+	  trunk/kdesupport/akonadi/server/control/kcrash.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp: as unistd.h is
+	  not available on msvc, do not use it - rather check with cmake
+	  for availability - msvc compiles now
+
+2008-04-23 21:20 +0000 [r800304]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/lgpl-license (added),
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/AUTHORS (added),
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: After discussion we
+	  will start at version 0.80.0 and the final tarball will have
+	  1.0.0. Add the license and a list of authors.
+
+2008-04-23 21:06 +0000 [r800301]  Will Stephenson wstephenson@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/automoc/CMakeLists.txt: Don't
+	  install our borrowed automoc.
+
+2008-04-23 20:39 +0000 [r800285]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: We can no longer
+	  use KDE's generic version numbers. hard code them for now.
+
+2008-04-23 20:27 +0000 [r800281]  Andreas Hartmetz ahartmetz@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/tests/CMakeLists.txt: this
+	  fixes the build when using the gold linker.
+
+2008-04-23 19:54 +0000 [r800270-800271]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: look in builddir/akonadi
+	  for include files too
+
+	* trunk/kdesupport/akonadi/libs/CMakeLists.txt: remove broken
+	  message() statement that was probably around for debugging
+	  purposes.
+
+2008-04-23 19:23 +0000 [r800264]  Will Stephenson wstephenson@kde.org
+
+	* trunk/kdesupport/akonadi/libs/akonadiprotocolinternals_export.h,
+	  trunk/kdesupport/akonadi/kdemacros.h.cmake (removed),
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/akonadiprivate_export.h: Last
+	  few kdemacros.h dependencies; thanks Allen
+
+2008-04-23 19:16 +0000 [r800261]  Will Stephenson wstephenson@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadiprivate_export.h:
+	  Another KDE dependency off to the salt mines.
+
+2008-04-23 19:06 +0000 [r800257]  Matthew Woehlke mw_triad@users.sourceforge.net
+
+	* trunk/kdesupport/akonadi/cmake/modules/AkonadiInternal.cmake: Fix
+	  kde4automoc dependency so parallel builds work.
+
+2008-04-23 18:48 +0000 [r800246]  Kevin Krammer kevin.krammer@gmx.at
+
+	* trunk/kdesupport/akonadi/server/src/tests/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/tests/unittest/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/tests/CMakeLists.txt: Fix include
+	  dirs for unittests
+
+2008-04-23 18:42 +0000 [r800245]  Kevin Krammer kevin.krammer@gmx.at
+
+	* trunk/kdesupport/akonadi/server/src/tests/querybuildertest.cpp,
+	  trunk/kdesupport/akonadi/server/src/tests/interpretertest.cpp:
+	  Must not use KDE includes
+
+2008-04-23 17:51 +0000 [r800226]  Will Stephenson wstephenson@kde.org
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt: Use relatively
+	  specified include directories
+
+2008-04-23 17:48 +0000 [r800225]  Kevin Krammer kevin.krammer@gmx.at
+
+	* trunk/kdesupport/akonadi/server/control/CMakeLists.txt: More
+	  relative paths
+
+2008-04-23 17:44 +0000 [r800224]  Kevin Krammer kevin.krammer@gmx.at
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt: Use paths
+	  relative to current source dir
+
+2008-04-23 17:38 +0000 [r800219-800223]  Will Stephenson wstephenson@kde.org
+
+	* trunk/kdesupport/akonadi/kdemacros.h.cmake (added): another
+	  missing file
+
+	* trunk/kdesupport/akonadi/cmake/automoc (added),
+	  trunk/kdesupport/akonadi/cmake/automoc/kde4automoc.cpp (added),
+	  trunk/kdesupport/akonadi/cmake/modules/MacroAdditionalCleanFiles.cmake
+	  (added), trunk/kdesupport/akonadi/cmake/modules (added),
+	  trunk/kdesupport/akonadi/cmake/modules/FindLibXslt.cmake (added),
+	  trunk/kdesupport/akonadi/cmake/modules/AkonadiInternal.cmake
+	  (added),
+	  trunk/kdesupport/akonadi/cmake/modules/kde4_exec_via_sh.cmake
+	  (added),
+	  trunk/kdesupport/akonadi/cmake/modules/kde4automoc.files.in
+	  (added), trunk/kdesupport/akonadi/cmake/modules/FindQt4.cmake
+	  (added),
+	  trunk/kdesupport/akonadi/cmake/modules/MacroEnsureVersion.cmake
+	  (added),
+	  trunk/kdesupport/akonadi/cmake/modules/FindSharedMimeInfo.cmake
+	  (added), trunk/kdesupport/akonadi/cmake/modules/KDE4Macros.cmake
+	  (added), trunk/kdesupport/akonadi/cmake/automoc/CMakeLists.txt
+	  (added),
+	  trunk/kdesupport/akonadi/cmake/modules/MacroPushRequiredVars.cmake
+	  (added),
+	  trunk/kdesupport/akonadi/cmake/modules/MacroLogFeature.cmake
+	  (added): Add cmake infrastructure
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: also build when not
+	  building all of kdesupport
+
+2008-04-23 17:29 +0000 [r800215]  Will Stephenson wstephenson@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt (added),
+	  trunk/kdesupport/akonadi/cmake/CMakeLists.txt (added),
+	  trunk/kdesupport/akonadi/interfaces/CMakeLists.txt (added),
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt (added): Oops,
+	  forgot these.
+
+2008-04-23 17:25 +0000 [r800213]  Will Stephenson wstephenson@kde.org
+
+	* trunk/kdesupport/akonadi/libs/notificationmessage_p.h (added),
+	  trunk/kdesupport/akonadi/server/interfaces (added),
+	  trunk/KDE/kdepim/akonadi/config-akonadi.h.cmake (removed),
+	  trunk/KDE/kdepim/akonadi/server/akonadictl (removed),
+	  trunk/KDE/kdepim/akonadi/server/Mainpage.dox (removed),
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Agent.Control.xml
+	  (added), trunk/kdesupport/akonadi/server/src (added),
+	  trunk/KDE/kdepimlibs/akonadi/imapparser_p.h (removed),
+	  trunk/kdesupport/akonadi/libs/protocol_p.h (added),
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.NotificationManager.xml
+	  (added), trunk/kdesupport/akonadi/libs/imapset_p.h (added),
+	  trunk/kdesupport/akonadi/libs/imapparser_p.h (added),
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/kdesupport/akonadi/server/src/notificationmanager.h,
+	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp,
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Resource.xml
+	  (added), trunk/KDE/kdepimlibs/akonadi/xdgbasedirs.cpp (removed),
+	  trunk/kdesupport/akonadi/server/tests (added),
+	  trunk/kdesupport/akonadi/config-akonadi.h.cmake (added),
+	  trunk/KDE/kdepim/akonadi/server/queryserver (removed),
+	  trunk/kdesupport/akonadi/server/akonadictl (added),
+	  trunk/kdesupport/akonadi/server/Mainpage.dox (added),
+	  trunk/KDE/kdepim/akonadi/server/templates (removed),
+	  trunk/kdesupport/akonadi/cmake (added),
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/interfaces (added),
+	  trunk/kdesupport/akonadi/server/akonadictl/main.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/akonadiprotocolinternals_export.h
+	  (removed), trunk/KDE/kdepimlibs/akonadi/notificationmessage_p.h
+	  (removed),
+	  trunk/KDE/kdepimlibs/akonadi/interfaces/org.kde.Akonadi.Resource.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/delete.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/imapset_p.h (removed),
+	  trunk/KDE/kdepim/akonadi/server/control (removed),
+	  trunk/kdesupport/akonadi/server/queryserver (added),
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/handler/colcopy.cpp,
+	  trunk/kdesupport/akonadi/server/templates (added),
+	  trunk/kdesupport/akonadi/libs/notificationmessage.cpp (added),
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.AgentManager.xml
+	  (added), trunk/KDE/kdepimlibs/akonadi/imapparser.cpp (removed),
+	  trunk/kdesupport/akonadi/server/akonadictl/akonadistarter.cpp,
+	  trunk/kdesupport/akonadi/libs/imapset.cpp (added),
+	  trunk/kdesupport/akonadi/libs/imapparser.cpp (added),
+	  trunk/kdesupport/akonadi/server/src/handler/aklist.cpp,
+	  trunk/KDE/kdepim/akonadi/clients/akonadiconsole/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp,
+	  trunk/KDE/kdepim/akonadi/clients/akonamail/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control (added),
+	  trunk/kdesupport/akonadi/libs/akonadiprotocolinternals_export.h
+	  (added), trunk/kdesupport/akonadi/libs (added),
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/protocol_p.h (removed),
+	  trunk/KDE/kdepimlibs/akonadi/akonadi-prefix.h.cmake (removed),
+	  trunk/kdesupport/akonadi/libs/xdgbasedirs_p.h (added),
+	  trunk/KDE/kdepimlibs/akonadi/interfaces/org.kde.Akonadi.AgentManager.xml
+	  (removed), trunk/KDE/kdepim/akonadi/server/CMakeLists.txt
+	  (removed),
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Tracer.xml
+	  (added), trunk/kdesupport/akonadi (added),
+	  trunk/kdesupport/akonadi/server/src/handler/rename.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/notificationmessage.cpp (removed),
+	  trunk/KDE/kdepimlibs/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/handler/login.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
+	  trunk/KDE/kdepim/akonadi/akonadi-mime.xml (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/list.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/imapset.cpp (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/transaction.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/interfaces/org.kde.Akonadi.Agent.Control.xml
+	  (removed), trunk/kdesupport/akonadi/server/CMakeLists.txt
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.h,
+	  trunk/KDE/kdepimlibs/akonadi/interfaces/org.kde.Akonadi.Tracer.xml
+	  (removed),
+	  trunk/KDE/kdepimlibs/akonadi/interfaces/org.kde.Akonadi.NotificationManager.xml
+	  (removed), trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.h,
+	  trunk/KDE/kdepim/akonadi/CMakeLists.txt,
+	  trunk/KDE/kdepimlibs/akonadi/xdgbasedirs_p.h (removed),
+	  trunk/kdesupport/akonadi/akonadi-mime.xml (added),
+	  trunk/kdesupport/akonadi/server/src/handler.cpp,
+	  trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/handler/create.cpp,
+	  trunk/kdesupport/akonadi/server/src/tracer.cpp,
+	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Agent.Status.xml
+	  (added), trunk/KDE/kdepim/akonadi/server/interfaces (removed),
+	  trunk/kdesupport/akonadi/server (added),
+	  trunk/kdesupport/akonadi/akonadi-prefix.h.cmake (added),
+	  trunk/kdesupport/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp (added),
+	  trunk/KDE/kdepim/akonadi/server/src (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/select.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/subscribe.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/status.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/searchpersistent.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentinfo.cpp,
+	  trunk/KDE/kdepim/akonadi/server/tests (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/interfaces/org.kde.Akonadi.Agent.Status.xml
+	  (removed): Move Akonadi server and shared components to
+	  kdesupport.
+

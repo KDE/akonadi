@@ -1,0 +1,13 @@
+0.81.0                            10-May-2008
+---------------------------------------------
+- Fix bug where full part was not fetched when a partial part was available already.
+- Collection parsing optimalisation.
+- Optimization for quoted string parsing.
+- Use org.freedesktop namespace, instead of org.kde for the dbus interfaces.
+- Add support for version numbers for database and protocol.
+- Fixed foreach misusage.
+- Depend on external automoc package instead of a copy.
+
+0.80.0                            24-Apr-2008 
+---------------------------------------------
+- Initial release
