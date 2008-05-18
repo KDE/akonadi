@@ -35,7 +35,7 @@ class SessionPrivate
 {
   public:
     SessionPrivate( Session *parent )
-      : mParent( parent ), mConnectionSettings( 0 )
+      : mParent( parent ), mConnectionSettings( 0 ), protocolVersion( 0 )
     {
       parser = new ImapParser();
     }
@@ -51,6 +51,7 @@ class SessionPrivate
     void socketError();
     void dataReceived();
     void doStartNext();
+    void startJob( Job* job );
     void jobDone( KJob* job );
     void jobWriteFinished( Akonadi::Job* job );
 
@@ -88,6 +89,7 @@ class SessionPrivate
     QLocalSocket* socket;
     bool connected;
     int theNextTag;
+    int protocolVersion;
 
     // job management
     QQueue<Job*> queue;

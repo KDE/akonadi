@@ -26,6 +26,7 @@
 #include "xdgbasedirs_p.h"
 
 #include <kdebug.h>
+#include <klocale.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QQueue>
@@ -40,6 +41,8 @@ using namespace Akonadi;
 
 
 //@cond PRIVATE
+
+static const int minimumProtocolVersion = 0;
 
 void SessionPrivate::startNext()
 {
@@ -94,6 +97,14 @@ void SessionPrivate::dataReceived()
 
       // send login command
       if ( parser->tag() == "*" && parser->data().startsWith( "OK Akonadi" ) ) {
+        const int pos = parser->data().indexOf( "[PROTOCOL" );
+        if ( pos > 0 ) {
+          qint64 tmp = 0;
+          ImapParser::parseNumber( parser->data(), tmp, 0, pos + 9 );
+          protocolVersion = tmp;
+        }
+        kDebug( 5250 ) << "Server protocol version is:" << protocolVersion;
+
         writeData( "0 LOGIN " + sessionId + '\n' );
 
       // work for the current job
@@ -128,7 +139,7 @@ void SessionPrivate::doStartNext()
   if ( canPipelineNext() ) {
     Akonadi::Job *nextJob = queue.dequeue();
     pipeline.enqueue( nextJob );
-    nextJob->d_ptr->startQueued();
+    startJob( nextJob );
   }
   if ( jobRunning )
     return;
@@ -137,7 +148,18 @@ void SessionPrivate::doStartNext()
     currentJob = pipeline.dequeue();
   } else {
     currentJob = queue.dequeue();
-    currentJob->d_ptr->startQueued();
+    startJob( currentJob );
+  }
+}
+
+void SessionPrivate::startJob( Job *job )
+{
+  if ( protocolVersion < minimumProtocolVersion ) {
+    job->setError( Job::ProtocolVersionMismatch );
+    job->setErrorText( i18n( "Protocol version %1 found, expected at least %2", protocolVersion, minimumProtocolVersion ) );
+    job->emitResult();
+  } else {
+    job->d_ptr->startQueued();
   }
 }
 

@@ -98,10 +98,11 @@ class AKONADI_EXPORT Job : public KCompositeJob
      */
     enum Error
     {
-      ConnectionFailed = UserDefinedError,
-      UserCanceled,
-      Unknown,
-      UserError = UserDefinedError + 42
+      ConnectionFailed = UserDefinedError, ///< The connection to the Akonadi server failed.
+      ProtocolVersionMismatch, ///< The server protocol version is too old or too new.
+      UserCanceled, ///< The user canceld this job.
+      Unknown, ///< Unknown error.
+      UserError = UserDefinedError + 42 ///< Starting point for error codes defined by sub-classes.
     };
     //FIXME_API: extend error code + renaming
 

@@ -26,6 +26,7 @@
 #include "session_p.h"
 
 #include <kdebug.h>
+#include <klocale.h>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
@@ -181,14 +182,17 @@ QString Job::errorString() const
     case NoError:
       break;
     case ConnectionFailed:
-      str = tr( "Cannot connect to pim storage service." );
+      str = i18n( "Cannot connect to the Akonadi service." );
+      break;
+    case ProtocolVersionMismatch:
+      str = i18n( "The protocol version of the Akonadi server is incompatible. Make sure you have a compatible version installed." );
       break;
     case UserCanceled:
-      str = tr( "User canceled transmission." );
+      str = i18n( "User canceled operation." );
       break;
     case Unknown:
     default:
-      str = tr( "Unknown Error." );
+      str = i18n( "Unknown error." );
       break;
   }
   if ( !errorText().isEmpty() ) {
