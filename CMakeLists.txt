@@ -64,6 +64,12 @@ else (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
    endif (MSVC)
 endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
 
+if(WIN32)
+    set(LIB_INSTALL_DIR ${LIB_INSTALL_DIR}
+                        RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+                        LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+                        ARCHIVE DESTINATION ${LIB_INSTALL_DIR} )
+endif(WIN32)
 
 ################# build targets ########################
 
