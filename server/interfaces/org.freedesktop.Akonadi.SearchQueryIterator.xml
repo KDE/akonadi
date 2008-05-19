@@ -1,0 +1,16 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.Akonadi.SearchQueryIterator">
+    <method name="next">
+      <arg name="reply" type="b" direction="out" />
+    </method>
+    <method name="currentUri">
+      <arg name="reply" type="s" direction="out" />
+    </method>
+    <method name="currentScore">
+      <arg name="reply" type="d" direction="out" />
+    </method>
+    <method name="close" />
+  </interface>
+</node>
