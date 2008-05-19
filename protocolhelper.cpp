@@ -22,6 +22,8 @@
 #include "attributefactory.h"
 #include "imapparser_p.h"
 
+#include <QtCore/QVarLengthArray>
+
 #include <kdebug.h>
 
 using namespace Akonadi;
