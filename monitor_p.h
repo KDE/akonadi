@@ -28,6 +28,7 @@
 #include "item.h"
 #include "itemfetchscope.h"
 #include "job.h"
+#include <akonadi/private/notificationmessage_p.h>
 #include "notificationmanagerinterface.h"
 
 #include <kmimetype.h>
