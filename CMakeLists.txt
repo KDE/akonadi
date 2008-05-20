@@ -45,6 +45,12 @@ else (WIN32)
    set(LIBRARY_OUTPUT_PATH            ${CMAKE_BINARY_DIR}/lib )
 endif (WIN32)
 
+set (LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
+set (LIB_DESTINATION "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" CACHE STRING "Library directory name" FORCE)
+
+IF(APPLE)
+	set(CMAKE_INSTALL_NAME_DIR ${LIB_DESTINATION})
+ENDIF(APPLE)
 
 configure_file(akonadi-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi-prefix.h)
 
