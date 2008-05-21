@@ -21,6 +21,8 @@
 
 #include "collectionrightsattribute.h"
 
+#include <KGlobal>
+
 #include <QtCore/QHash>
 
 using namespace Akonadi;
@@ -50,21 +52,29 @@ class AttributeFactory::Private
 {
   public:
     QHash<QByteArray, Attribute*> attributes;
-    static AttributeFactory* mInstance;
 };
 
-AttributeFactory* AttributeFactory::Private::mInstance = 0;
+class StaticAttributeFactory : public AttributeFactory
+{
+  public:
+    StaticAttributeFactory() : AttributeFactory(), initialized( false ) {}
+    void init() {
+      if ( initialized )
+        return;
+      // Register built-in attributes
+      AttributeFactory::registerAttribute<CollectionRightsAttribute>();
+      initialized = true;
+    }
+    bool initialized;
+};
+
+K_GLOBAL_STATIC( StaticAttributeFactory, s_instance )
+
 
 AttributeFactory* AttributeFactory::self()
 {
-  if ( !Private::mInstance ) {
-    Private::mInstance = new AttributeFactory();
-
-    // Register built-in attributes
-    AttributeFactory::registerAttribute<CollectionRightsAttribute>();
-  }
-
-  return Private::mInstance;
+  s_instance->init();
+  return s_instance;
 }
 
 AttributeFactory::AttributeFactory()

@@ -24,6 +24,7 @@
 #include "agentinstancemodel.h"
 
 #include <KIcon>
+#include <KGlobal>
 
 #include <QtCore/QUrl>
 #include <QtGui/QAbstractTextDocumentLayout>
@@ -34,6 +35,19 @@
 #include <QtGui/QTextDocument>
 
 using namespace Akonadi;
+
+struct Icons
+{
+  Icons()
+   : readyPixmap( KIcon( QLatin1String("user-online") ).pixmap( QSize( 16, 16 ) ) )
+   , syncPixmap( KIcon( QLatin1String("network-connect") ).pixmap( QSize( 16, 16 ) ) )
+   , errorPixmap( KIcon( QLatin1String("dialog-error") ).pixmap( QSize( 16, 16 ) ) )
+  {
+  }
+  QPixmap readyPixmap, syncPixmap, errorPixmap;
+};
+
+K_GLOBAL_STATIC( Icons, s_icons )
 
 class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 {
@@ -165,16 +179,12 @@ QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem
                            qvariant_cast<QIcon>( data ).pixmap( QSize( 64, 64 ) ) );
   }
 
-  static QPixmap readyPixmap = KIcon( QLatin1String("user-online") ).pixmap( QSize( 16, 16 ) );
-  static QPixmap syncPixmap = KIcon( QLatin1String("network-connect") ).pixmap( QSize( 16, 16 ) );
-  static QPixmap errorPixmap = KIcon( QLatin1String("dialog-error") ).pixmap( QSize( 16, 16 ) );
-
   if ( status == 0 )
-    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), readyPixmap );
+    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->readyPixmap );
   else if ( status == 1 )
-    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), syncPixmap );
+    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->syncPixmap );
   else
-    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), errorPixmap );
+    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->errorPixmap );
 
 
   QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
