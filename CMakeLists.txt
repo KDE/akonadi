@@ -23,8 +23,10 @@ find_package(Automoc4 REQUIRED)
 set(SHARED_MIME_INFO_MINIMUM_VERSION "0.20")
 find_package(SharedMimeInfo REQUIRED)
 
-find_package(LibXslt)
-macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "xsltproc" "http://xmlsoft.org/XSLT/" FALSE "" "Needed to generate Akonadi database code")
+FIND_PROGRAM(XSLTPROC_EXECUTABLE xsltproc)
+if(NOT XSLTPROC_EXECUTABLE)
+  message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install libxslt.\n")
+endif(NOT XSLTPROC_EXECUTABLE)
 
 # this one actually sets only install locations
 include(InstallSettings)
