@@ -44,9 +44,10 @@ class AKONADI_EXPORT Control : public QObject
      */
     static bool start();
 
-  private:
+  protected:
     Control();
 
+  private:
     class Private;
     Private* const d;
 

@@ -26,6 +26,7 @@
 // KDE core
 #include <kdebug.h>
 #include <kmimetype.h>
+#include <kglobal.h>
 
 // Qt
 #include <QtCore/QBuffer>
@@ -43,20 +44,10 @@ namespace Akonadi {
 
 class DefaultItemSerializerPlugin;
 
-static DefaultItemSerializerPlugin * s_p = 0;
-
 class DefaultItemSerializerPlugin : public ItemSerializerPlugin
 {
-private:
-    DefaultItemSerializerPlugin() { }
 public:
-    static DefaultItemSerializerPlugin * instance()
-    {
-        if ( !s_p ) {
-            s_p = new DefaultItemSerializerPlugin;
-        }
-        return s_p;
-    }
+    DefaultItemSerializerPlugin() { }
 
     bool deserialize( Item& item, const QByteArray& label, QIODevice& data, int )
     {
@@ -75,7 +66,10 @@ public:
 
 };
 
+K_GLOBAL_STATIC( DefaultItemSerializerPlugin, s_defaultItemSerializerPlugin )
+
 }
+
 
 using namespace Akonadi;
 
@@ -103,7 +97,7 @@ class PluginEntry
                          << "plugin" << mIdentifier << "is not valid!" << endl;
 
         // we try to use the default in that case
-        mPlugin = DefaultItemSerializerPlugin::instance();
+        mPlugin = s_defaultItemSerializerPlugin;
       }
 
       mPlugin = qobject_cast<ItemSerializerPlugin*>( object );
@@ -112,7 +106,7 @@ class PluginEntry
                          << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
 
         // we try to use the default in that case
-        mPlugin = DefaultItemSerializerPlugin::instance();
+        mPlugin = s_defaultItemSerializerPlugin;
       }
 
       Q_ASSERT( mPlugin );
@@ -227,7 +221,7 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
     kDebug( 5250 ) << "No plugin for mimetype " << mimetype << " found!";
     kDebug( 5250 ) << "Available plugins are: " << all->keys();
 
-    ItemSerializerPlugin *plugin = DefaultItemSerializerPlugin::instance();
+    ItemSerializerPlugin *plugin = s_defaultItemSerializerPlugin;
     Q_ASSERT(plugin);
     return *plugin;
 }

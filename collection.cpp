@@ -31,7 +31,8 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include <kurl.h>
+#include <KUrl>
+#include <KGlobal>
 
 using namespace Akonadi;
 
@@ -75,28 +76,28 @@ class Akonadi::CollectionPrivate : public EntityPrivate
       EntityPrivate::resetChangeLog();
     }
 
-    static Collection newRoot()
-    {
-      Collection root( 0 );
-      QStringList types;
-      types << Collection::mimeType();
-      root.setContentMimeTypes( types );
-      return root;
-    }
-
     Collection::Id parentId;
     QString name;
     QString parentRemoteId;
     QString resource;
     CollectionStatistics statistics;
     QStringList contentTypes;
-    static const Collection root;
     CachePolicy cachePolicy;
     bool contentTypesChanged;
     bool cachePolicyChanged;
 };
 
-const Collection Akonadi::CollectionPrivate::root = CollectionPrivate::newRoot();
+class CollectionRoot : public Collection
+{
+  public:
+    CollectionRoot() : Collection( 0 ) {
+      QStringList types;
+      types << Collection::mimeType();
+      setContentMimeTypes( types );
+    }
+};
+
+K_GLOBAL_STATIC( CollectionRoot, s_root )
 
 Collection::Collection() :
     Entity( new CollectionPrivate )
@@ -214,7 +215,7 @@ Collection Collection::fromUrl( const KUrl &url )
 
 Collection Collection::root()
 {
-  return CollectionPrivate::root;
+  return *s_root;
 }
 
 QString Collection::mimeType( )

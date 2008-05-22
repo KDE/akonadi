@@ -20,7 +20,7 @@
 #include "control.h"
 
 #include <kdebug.h>
-#include <k3staticdeleter.h>
+#include <kglobal.h>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QProcess>
@@ -33,8 +33,6 @@
 
 using namespace Akonadi;
 
-static K3StaticDeleter<Control> sControlDeleter;
-
 class Control::Private
 {
   public:
@@ -45,24 +43,20 @@ class Control::Private
 
     bool startInternal();
     void serviceOwnerChanged( const QString&, const QString&, const QString& );
-    static Control* self();
 
     Control *mParent;
     QEventLoop *mEventLoop;
     bool mSuccess;
-
-    static Control* mInstance;
 };
 
-Control* Control::Private::mInstance = 0;
-
-Control* Control::Private::self()
+class StaticControl : public Control
 {
-  if ( !mInstance )
-    sControlDeleter.setObject( mInstance, new Control() );
+  public:
+    StaticControl() : Control() {}
+};
 
-  return mInstance;
-}
+K_GLOBAL_STATIC( StaticControl, s_instance )
+
 
 bool Control::Private::startInternal()
 {
@@ -122,7 +116,7 @@ Control::~Control()
 
 bool Control::start()
 {
-  return Private::self()->d->startInternal();
+  return s_instance->d->startInternal();
 }
 
 #include "control.moc"

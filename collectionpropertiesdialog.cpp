@@ -34,22 +34,12 @@ using namespace Akonadi;
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPropertiesPageFactory, CollectionGeneralPropertiesPage)
 
-// FIXME: we leak d->pages!
-
 class CollectionPropertiesDialog::Private
 {
   public:
-    Private( CollectionPropertiesDialog *parent ) : q( parent )
-    {
-      if ( pages.isEmpty() )
-        registerBuiltinPages();
-    }
+    Private( CollectionPropertiesDialog *parent );
 
-    static void registerBuiltinPages()
-    {
-      pages.append( new CollectionGeneralPropertiesPageFactory() );
-      pages.append( new CachePolicyPageFactory() );
-    }
+    static void registerBuiltinPages();
 
     void save()
     {
@@ -72,12 +62,26 @@ class CollectionPropertiesDialog::Private
     }
 
     Collection collection;
-    static QList<CollectionPropertiesPageFactory*> pages;
     QTabWidget* tabWidget;
     CollectionPropertiesDialog *q;
 };
 
-QList<CollectionPropertiesPageFactory*> CollectionPropertiesDialog::Private::pages;
+typedef QList<CollectionPropertiesPageFactory*> CollectionPropertiesPageFactoryList;
+
+K_GLOBAL_STATIC( CollectionPropertiesPageFactoryList, s_pages )
+
+CollectionPropertiesDialog::Private::Private( CollectionPropertiesDialog *parent ) : q( parent )
+{
+  if ( s_pages->isEmpty() )
+    registerBuiltinPages();
+}
+
+void CollectionPropertiesDialog::Private::registerBuiltinPages()
+{
+  s_pages->append( new CollectionGeneralPropertiesPageFactory() );
+  s_pages->append( new CachePolicyPageFactory() );
+}
+
 
 CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection & collection, QWidget * parent) :
     KDialog( parent ),
@@ -90,7 +94,7 @@ CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection & collec
   d->tabWidget = new QTabWidget( mainWidget() );
   layout->addWidget( d->tabWidget );
 
-  foreach ( CollectionPropertiesPageFactory *factory, d->pages ) {
+  foreach ( CollectionPropertiesPageFactory *factory, *s_pages ) {
     CollectionPropertiesPage *page = factory->createWidget( d->tabWidget );
     if ( page->canHandle( d->collection ) ) {
       d->tabWidget->addTab( page, page->pageTitle() );
@@ -111,9 +115,9 @@ CollectionPropertiesDialog::~CollectionPropertiesDialog()
 
 void CollectionPropertiesDialog::registerPage(CollectionPropertiesPageFactory * factory)
 {
-  if ( Private::pages.isEmpty() )
+  if ( s_pages->isEmpty() )
     Private::registerBuiltinPages();
-  Private::pages.append( factory );
+  s_pages->append( factory );
 }
 
 #include "collectionpropertiesdialog.moc"

@@ -48,6 +48,10 @@ namespace Akonadi {
 class AKONADI_EXPORT AttributeFactory
 {
   public:
+    //@cond PRIVATE
+    ~AttributeFactory();
+    //@endcond
+
     /**
      * Register a custom attribute of type T.
      */
@@ -63,11 +67,11 @@ class AKONADI_EXPORT AttributeFactory
      */
     static Attribute* createAttribute( const QByteArray &type );
 
-  private:
+  protected:
     //@cond PRIVATE
     AttributeFactory();
-    ~AttributeFactory();
 
+  private:
     static AttributeFactory* self();
     void registerAttribute( Attribute *attribute );
 
