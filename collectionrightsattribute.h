@@ -28,44 +28,53 @@
 namespace Akonadi {
 
 /**
-  Stores the rights attributes of a collection.
-
-  You shouldn't use this class directly but the convenience methods
-  Collection::rights() and Collection::setRights() instead.
-*/
+ * @short Attribute that stores the rights of a collection.
+ *
+ * Every collection can have rights set which describes whether
+ * the collection is readable or writable. That information is stored
+ * in this custom attribute.
+ *
+ * @note You shouldn't use this class directly but the convenience methods
+ * Collection::rights() and Collection::setRights() instead.
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ */
 class AKONADI_EXPORT CollectionRightsAttribute : public Attribute
 {
   public:
     /**
-      Creates a new collection rights attribute.
+     * Creates a new collection rights attribute.
      */
     CollectionRightsAttribute();
 
     /**
-      Destroys the collection rights attribute.
+     * Destroys the collection rights attribute.
      */
     ~CollectionRightsAttribute();
 
     /**
-      Sets the @p rights of the collection.
+     * Sets the @p rights of the collection.
      */
     void setRights( Collection::Rights rights );
 
     /**
-      Returns the rights of the collection.
+     * Returns the rights of the collection.
      */
     Collection::Rights rights() const;
 
-    /**
-      Inherited from CollectionAttribute.
-     */
     virtual QByteArray type() const;
+
     virtual CollectionRightsAttribute* clone() const;
+
     virtual QByteArray serialized() const;
+
     virtual void deserialize( const QByteArray& );
 
   private:
-    QByteArray mData;
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+    //@endcond
 };
 
 }

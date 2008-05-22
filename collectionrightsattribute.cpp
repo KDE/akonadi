@@ -66,29 +66,38 @@ static QByteArray rightsToData( Collection::Rights &rights )
   return data;
 }
 
+class CollectionRightsAttribute::Private
+{
+  public:
+    QByteArray mData;
+};
 
 CollectionRightsAttribute::CollectionRightsAttribute()
-  : Attribute()
+  : Attribute(), d( new Private )
 {
 }
 
 CollectionRightsAttribute::~CollectionRightsAttribute()
 {
+  delete d;
 }
 
 void CollectionRightsAttribute::setRights( Collection::Rights rights )
 {
-  mData = rightsToData( rights );
+  d->mData = rightsToData( rights );
 }
 
 Collection::Rights CollectionRightsAttribute::rights() const
 {
-  return dataToRights( mData );
+  return dataToRights( d->mData );
 }
 
 CollectionRightsAttribute* CollectionRightsAttribute::clone() const
 {
-  return new CollectionRightsAttribute();
+  CollectionRightsAttribute *attr = new CollectionRightsAttribute();
+  attr->d->mData = d->mData;
+
+  return attr;
 }
 
 QByteArray CollectionRightsAttribute::type() const
@@ -98,10 +107,10 @@ QByteArray CollectionRightsAttribute::type() const
 
 QByteArray CollectionRightsAttribute::serialized() const
 {
-  return mData;
+  return d->mData;
 }
 
 void CollectionRightsAttribute::deserialize( const QByteArray &data )
 {
-  mData = data;
+  d->mData = data;
 }
