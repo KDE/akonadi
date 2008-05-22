@@ -83,4 +83,10 @@ a new resource as easy as possible.
 
 */
 
+/**
+
+\defgroup AkonadiMacros Akonadi Macros
+
+*/
+
 // DOXYGEN_REFERENCES = kdecore kdeui

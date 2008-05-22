@@ -28,82 +28,182 @@ namespace Akonadi {
 
 class Collection;
 
-/**
-  A single page in a collection property dialog.
-  @see Akonadi::CollectionPropertiesDialog, Akonadi::CollectionPropertiesPageFactory
-*/
+/*
+ *
+ * @short A single page in a collection properties dialog.
+ *
+ * The collection properties dialog can be extended by custom
+ * collection properties pages, which provide gui elements for
+ * viewing and changing collection attributes.
+ *
+ * The following example shows how to create a simple collection
+ * properties page for the secercy attribute from the Akonadi::Attribute
+ * example.
+ *
+ * @code
+ *
+ * class SecrecyPage : public CollectionPropertiesPage
+ * {
+ *    public:
+ *      SecrecyPage( QWidget *parent = 0 )
+ *        : CollectionPropertiesPage( parent )
+ *      {
+ *        QVBoxLayout *layout = new QVBoxLayout( this );
+ *
+ *        mSecrecy = new QComboBox( this );
+ *        mSecrecy->addItem( "Public" );
+ *        mSecrecy->addItem( "Private" );
+ *        mSecrecy->addItem( "Confidential" );
+ *
+ *        layout->addWidget( new QLabel( "Secrecy:" ) );
+ *        layout->addWidget( mSecrecy );
+ *
+ *        setPageTitle( i18n( "Secrecy" ) );
+ *      }
+ *
+ *      void load( const Collection &collection )
+ *      {
+ *        SecrecyAttribute *attr = collection.attribute( "secrecy" );
+ *
+ *        switch ( attr->secrecy() ) {
+ *          case SecrecyAttribute::Public: mSecrecy->setCurrentIndex( 0 ); break;
+ *          case SecrecyAttribute::Private: mSecrecy->setCurrentIndex( 1 ); break;
+ *          case SecrecyAttribute::Confidential: mSecrecy->setCurrentIndex( 2 ); break;
+ *        }
+ *      }
+ *
+ *      void save( Collection &collection )
+ *      {
+ *        SecrecyAttribute *attr = collection.attribute( "secrecy" );
+ *
+ *        switch ( mSecrecy->currentIndex() ) {
+ *          case 0: attr->setSecrecy( SecrecyAttribute::Public ); break;
+ *          case 1: attr->setSecrecy( SecrecyAttribute::Private ); break;
+ *          case 2: attr->setSecrecy( SecrecyAttribute::Confidential ); break;
+ *        }
+ *      }
+ *
+ *      bool canHandle( const Collection &collection ) const
+ *      {
+ *        return collection.hasAttribute( "secrecy" );
+ *      }
+ * };
+ *
+ * AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( SecrecyPageFactory, SecrecyPage )
+ *
+ * @endcode
+ *
+ * @see Akonadi::CollectionPropertiesDialog, Akonadi::CollectionPropertiesPageFactory
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionPropertiesPage : public QWidget
 {
   Q_OBJECT
   public:
     /**
-      Create a new property page widget.
-      @param parent The parent widget.
-    */
+     * Creates a new collection properties page.
+     *
+     * @param parent The parent widget.
+     */
     explicit CollectionPropertiesPage( QWidget *parent = 0 );
 
     /**
-      Destructor.
-    */
+     * Destroys the collection properties page.
+     */
     ~CollectionPropertiesPage();
 
     /**
-      Load page content from the given collection.
-      @param collection The collection to load.
-    */
+     * Loads the page content from the given collection.
+     *
+     * @param collection The collection to load.
+     */
     virtual void load( const Collection &collection ) = 0;
 
     /**
-      Save page content to the given collection.
-      @param collection Reference to the collection to save to.
-    */
+     * Saves page content to the given collection.
+     *
+     * @param collection Reference to the collection to save to.
+     */
     virtual void save( Collection &collection ) = 0;
 
     /**
-      Check if this page can actually handle the given collection.
-      @return @c true if the collection can be handled, @c false otherwise
-      The default implementation returns always @c true. When @c false is returned
-      this page is not shown in the properties dialog.
-    */
+     * Checks if this page can actually handle the given collection.
+     *
+     * Returns @c true if the collection can be handled, @c false otherwise
+     * The default implementation returns always @c true. When @c false is returned
+     * this page is not shown in the properties dialog.
+     */
     virtual bool canHandle( const Collection &collection ) const;
 
     /**
-      Returns the page title.
-    */
-    QString pageTitle() const;
-
-    /**
-      Set the page title.
-      @param title Translated, preferrably short tab title.
-    */
+     * Sets the page title.
+     *
+     * @param title Translated, preferrably short tab title.
+     */
     void setPageTitle( const QString &title );
 
+    /**
+     * Returns the page title.
+     */
+    QString pageTitle() const;
+
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
+    //@endcond
 };
 
 /**
-  Factory class for collection property dialog pages.
-  You probably want to use Akonadi::CollectionPropertiesPageFactory instead.
-  @see AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY
-*/
+ * @short A factory class for collection properties dialog pages.
+ *
+ * The factory encapsulates the creation of the collection properties
+ * dialog page.
+ * You can use the AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY macro
+ * to create a factory class automatically.
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionPropertiesPageFactory
 {
   public:
+    /**
+     * Destroys the collection properties page factory.
+     */
     virtual ~CollectionPropertiesPageFactory();
 
     /**
-      Returns the actual page widget.
-      @param parent The parent widget.
-    */
+     * Returns the actual page widget.
+     *
+     * @param parent The parent widget.
+     */
     virtual CollectionPropertiesPage* createWidget( QWidget *parent = 0 ) const = 0;
 };
 
 /**
-  \relates CollectionPropertiesPageFactory
-  This macro exports the factory named @param factoryName for @param className class.
-*/
+ * @def AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY
+ *
+ * The AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY macro can be used to
+ * create a factory for a custom collection properties page.
+ *
+ * @code
+ *
+ * class MyPage : public Akonadi::CollectionPropertiesPage
+ * {
+ *   ...
+ * }
+ *
+ * AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( MyPageFactory, MyPage )
+ *
+ * @endcode
+ *
+ * The macro takes two arguments, where the first one is the name of the
+ * factory class that shall be created and the second arguments is the name
+ * of the custom collection properties page class.
+ *
+ * @ingroup AkonadiMacros
+ */
 #define AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(factoryName, className) \
 class factoryName: public CollectionPropertiesPageFactory \
 { \

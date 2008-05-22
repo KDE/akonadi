@@ -28,51 +28,57 @@ namespace Akonadi {
 class CollectionPathResolverPrivate;
 
 /**
-  Converts between collection id and collection path.
-
-  While it is generally recommended to use collection ids, it can
-  be necessary in some cases (eg. a command line client) to use the
-  collection path instead. Use this class to get a collection id
-  from a collection path.
-*/
+ * @internal
+ *
+ * Converts between collection id and collection path.
+ *
+ * While it is generally recommended to use collection ids, it can
+ * be necessary in some cases (eg. a command line client) to use the
+ * collection path instead. Use this class to get a collection id
+ * from a collection path.
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionPathResolver : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a new CollectionPathResolver to convert a path into a id.
-      @param path The collection path.
-      @param parent The parent object.
-    */
+     * Creates a new collection path resolver to convert a path into a id.
+     *
+     * @param path The collection path.
+     * @param parent The parent object.
+     */
     explicit CollectionPathResolver( const QString &path, QObject *parent = 0 );
 
     /**
-      Creates a new CollectionPathResolver to determine the path of
-      the given collection.
-      @param collection The collection
-      @param parent The parent object.
-    */
+     * Creates a new collection path resolver to determine the path of
+     * the given collection.
+     *
+     * @param collection The collection
+     * @param parent The parent object.
+     */
     explicit CollectionPathResolver( const Collection &collection, QObject *parent = 0 );
 
     /**
-      Destroys this object.
-    */
+     * Destroys the collection path resolver.
+     */
     ~CollectionPathResolver();
 
     /**
-      Returns the collection id. Only valid after the job succeeded.
-    */
+     * Returns the collection id. Only valid after the job succeeded.
+     */
     Collection::Id collection() const;
 
     /**
-      Returns the collection path. Only valid after the job succeeded.
-    */
+     * Returns the collection path. Only valid after the job succeeded.
+     */
     QString path() const;
 
     /**
-      Returns the path delimiter for collections.
-    */
+     * Returns the path delimiter for collections.
+     */
     static QString pathDelimiter();
 
   protected:
@@ -81,8 +87,9 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
   private:
     Q_DECLARE_PRIVATE( CollectionPathResolver )
 
+    //@cond PRIVATE
     Q_PRIVATE_SLOT( d_func(), void jobResult( KJob* ) )
-
+    //@endcond
 };
 
 }

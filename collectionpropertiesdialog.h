@@ -31,37 +31,62 @@ namespace Akonadi {
 class Collection;
 
 /**
-  A generic and extensible collection properties dialog.
-  @see Akonadi::CollectionPropertiesPage
-*/
+ * @short A generic and extensible dialog for collection properties.
+ *
+ * This dialog allows you to show or modify the properties of a collection.
+ *
+ * @code
+ *
+ * Akonadi::Collection collection = ...
+ *
+ * CollectionPropertiesDialog dlg( collection, this );
+ * dlg.exec();
+ *
+ * @endcode
+ *
+ * It can be extended by custom pages, which contains gui elements for custom
+ * properties.
+ *
+ * @see Akonadi::CollectionPropertiesPage
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
 {
   Q_OBJECT
   public:
     /**
-      Create a new collection properties dialog.
-      @param collection The collection which properties should be shown.
-      @param parent The parent widget.
-    */
+     * Creates a new collection properties dialog.
+     *
+     * @param collection The collection which properties should be shown.
+     * @param parent The parent widget.
+     */
     explicit CollectionPropertiesDialog( const Collection &collection, QWidget *parent = 0 );
 
     /**
-      Destructor.
-      Never call manually, the dialog is deleted automatically once all changes
-      are written back to the Akonadi server.
-    */
+     * Destroys the collection properties dialog.
+     *
+     * @note Never call manually, the dialog is deleted automatically once all changes
+     *       are written back to the Akonadi storage.
+     */
     ~CollectionPropertiesDialog();
 
     /**
-      Register additional pages for the collection properties dialog.
-    */
+     * Register custom pages for the collection properties dialog.
+     *
+     * @param factory The properties page factory that provides the custom page.
+     *
+     * @see Akonadi::CollectionPropertiesPageFactory
+     */
     static void registerPage( CollectionPropertiesPageFactory *factory );
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
     Q_PRIVATE_SLOT( d, void save() )
     Q_PRIVATE_SLOT( d, void saveResult(KJob*) )
+    //@endcond
 };
 
 }
