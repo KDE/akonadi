@@ -31,23 +31,41 @@ class Collection;
 class CollectionModifyJobPrivate;
 
 /**
-  Job to modify properties of existing collections.
-*/
+ * @short Job that modifies a collection in the Akonadi storage.
+ *
+ * This job modifies the properties of an existing collection.
+ *
+ * @code
+ *
+ * Akonadi::Collection collection = ...
+ *
+ * Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection );
+ *
+ * if ( job->exec() )
+ *   qDebug() << "Modified successfully";
+ * else
+ *   qDebug() << "Error occurred";
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionModifyJob : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      Create a new modify job for the given collection.
-      @param collection The Collection to modify
-      @param parent The parent object
-    */
+     * Creates a new collection modify job for the given collection.
+     *
+     * @param collection The collection to modify.
+     * @param parent The parent object.
+     */
     explicit CollectionModifyJob( const Collection &collection, QObject *parent = 0 );
 
     /**
-      Destroys this job.
-    */
+     * Destroys the collection modify job.
+     */
     ~CollectionModifyJob();
 
   protected:

@@ -53,6 +53,11 @@ namespace Akonadi {
  *      {
  *      }
  *
+ *      void setSecrecy( Secrecy secrecy )
+ *      {
+ *        mSecrecy = secrecy;
+ *      }
+ *
  *      Secrecy secrecy() const
  *      {
  *        return mSecrecy;
