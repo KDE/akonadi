@@ -121,7 +121,7 @@ bool Akonadi::Append::commit()
 
     // wrap data into a part
     Part part;
-    part.setName( QLatin1String( "RFC822" ) );
+    part.setName( QLatin1String( "PLD:RFC822" ) );
     part.setData( m_data );
     part.setPimItemId( item.id() );
     QList<Part> parts;

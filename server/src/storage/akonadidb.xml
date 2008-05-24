@@ -67,7 +67,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="7"/>
+    <data columns="version" values="8"/>
   </table>
 
   <table name="Resource">

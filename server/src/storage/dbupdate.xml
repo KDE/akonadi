@@ -48,4 +48,11 @@
     DROP TABLE CachePolicyTable;
   </update>
 
+  <update version="8" abortOnFailure="false">
+    UPDATE parttable SET name = 'PLD:ENVELOPE' WHERE name = 'ENVELOPE';
+    UPDATE parttable SET name = 'PLD:RFC822' WHERE name = 'RFC822';
+    UPDATE parttable SET name = 'PLD:HEAD' WHERE name = 'HEAD';
+    UPDATE parttable SET name = concat( 'ATR:', name ) WHERE left( name, 4 ) != 'PLD:';
+  </update>
+
 </updates>

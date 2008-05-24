@@ -84,8 +84,9 @@ bool Fetch::parseCommand( const QByteArray &line )
         mAllParts = true; // ### temporary
       } else if ( buffer == AKONADI_PARAM_FULLPAYLOAD ) {
         mAllParts = true; // ### temporary;
-        mAttrList << "RFC822"; // HACK: temporary workaround until we have support for detecting the availability of the full payload in the server
+        mAttrList << "PLD:RFC822"; // HACK: temporary workaround until we have support for detecting the availability of the full payload in the server
       }
+#if 0
       // IMAP compat stuff
       else if ( buffer == "ALL" ) {
         mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE";
@@ -93,7 +94,9 @@ bool Fetch::parseCommand( const QByteArray &line )
         mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE";
       } else if ( buffer == "FAST" ) {
         mAttrList << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE" << "BODY";
-      } else {
+      }
+#endif
+      else {
         return false;
       }
     }
@@ -157,17 +160,16 @@ bool Fetch::handleLine( const QByteArray& line )
 
   // build part query if needed
   QueryBuilder partQuery;
-  QStringList partList;
+  QStringList partList, payloadList;
   foreach( const QByteArray &b, mAttrList ) {
     // filter out non-part attributes
-    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" || b.startsWith( "akonadi-" ) )
+    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
       continue;
-    if ( b == "RFC822.SIZE" )
-      partList << QString::fromLatin1( "RFC822" );
-    else
-      partList << QString::fromLatin1( b );
+    partList << QString::fromLatin1( b );
+    if ( b.startsWith( "PLD:" ) )
+      payloadList << QString::fromLatin1( b.mid( 4 ) );
   }
-  if ( !partList.isEmpty() || mAllParts || mAttrList.contains( "RFC822.SIZE" ) ) {
+  if ( !partList.isEmpty() || mAllParts ) {
     partQuery = buildPartQuery( partList );
     if ( !partQuery.exec() )
       return failureResponse( "Unable to retrieve item parts" );
@@ -184,7 +186,7 @@ bool Fetch::handleLine( const QByteArray& line )
   if ( !mCacheOnly && (!partList.isEmpty() || mAllParts) ) {
     while ( itemQuery.query().isValid() ) {
       const qint64 pimItemId = itemQuery.query().value( itemQueryIdColumn ).toLongLong();
-      QStringList missingParts = partList;
+      QStringList missingParts = payloadList;
       while ( partQuery.query().isValid() ) {
         const qint64 id = partQuery.query().value( partQueryIdColumn ).toLongLong();
         if ( id < pimItemId ) {
@@ -193,12 +195,15 @@ bool Fetch::handleLine( const QByteArray& line )
         } else if ( id > pimItemId ) {
           break;
         }
-        const QString partName = partQuery.query().value( partQueryNameColumn ).toString();
-        if ( partQuery.query().value( partQueryDataColumn ).toByteArray().isNull() ) {
-          if ( mAllParts )
-            missingParts << partName;
-        } else {
-          missingParts.removeAll( partName );
+        QString partName = partQuery.query().value( partQueryNameColumn ).toString();
+        if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
+          partName = partName.mid( 4 );
+          if ( partQuery.query().value( partQueryDataColumn ).toByteArray().isNull() ) {
+            if ( mAllParts && !missingParts.contains( partName ) )
+              missingParts << partName;
+          } else {
+            missingParts.removeAll( partName );
+          }
         }
         partQuery.query().next();
       }
@@ -269,12 +274,9 @@ bool Fetch::handleLine( const QByteArray& line )
         part += " {" + QByteArray::number( data.length() ) + "}\n";
         part += data;
       }
-      // return only requested parts (when RFC822.SIZE is requested, RFC822 is retrieved, but should not be returned)
+
       if ( mAttrList.contains( partName ) || mAllParts )
         attributes << part;
-
-      if ( partName == "RFC822" && mAttrList.contains( "RFC822.SIZE" ) )
-        attributes.append( "RFC822.SIZE " + QByteArray::number( data.length() ) );
 
       partQuery.query().next();
     }
@@ -331,7 +333,7 @@ void Fetch::triggerOnDemandFetch()
 QueryBuilder Fetch::buildPartQuery( const QStringList &partList )
 {
   QueryBuilder partQuery;
-  if ( !partList.isEmpty() || mAllParts || mAttrList.contains( "RFC822.SIZE" ) ) {
+  if ( !partList.isEmpty() || mAllParts ) {
     partQuery.addTable( PimItem::tableName() );
     partQuery.addTable( Part::tableName() );
     partQuery.addColumn( PimItem::idFullColumnName() );
