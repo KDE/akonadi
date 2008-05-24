@@ -48,7 +48,7 @@ int ProtocolHelper::parseCachePolicy(const QByteArray & data, CachePolicy & poli
       QVarLengthArray<QByteArray,16> tmp;
       QStringList parts;
       Akonadi::ImapParser::parseParenthesizedList( value, tmp );
-      for ( int j=0; j<tmp.size(); j++ ) 
+      for ( int j=0; j<tmp.size(); j++ )
         parts << QString::fromLatin1( tmp[j] );
       policy.setLocalParts( parts );
     }
@@ -113,7 +113,7 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       QVarLengthArray<QByteArray,16> ct;
       ImapParser::parseParenthesizedList( value, ct );
       QStringList ct2;
-      for ( int j=0; j<ct.size(); j++ )
+      for ( int j = 0; j < ct.size(); j++ )
         ct2 << QString::fromLatin1( ct[j] );
       collection.setContentMimeTypes( ct2 );
     } else if ( key == "CACHEPOLICY" ) {
@@ -131,12 +131,42 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
   return pos;
 }
 
-QByteArray ProtocolHelper::attributesToByteArray(const Entity & entity)
+QByteArray ProtocolHelper::attributesToByteArray(const Entity & entity, bool ns )
 {
   QList<QByteArray> l;
   foreach ( const Attribute *attr, entity.attributes() ) {
-    l << attr->type();
+    l << encodePartIdentifier( ns ? PartAttribute : PartGlobal, attr->type() );
     l << ImapParser::quote( attr->serialized() );
   }
   return ImapParser::join( l, " " );
+}
+
+QByteArray ProtocolHelper::encodePartIdentifier(PartNamespace ns, const QByteArray & label, int version )
+{
+  const QByteArray versionString( version != 0 ? '[' + QByteArray::number( version ) + ']' : "" );
+  switch ( ns ) {
+    case PartGlobal:
+      return label + versionString;
+    case PartPayload:
+      return "PLD:" + label + versionString;
+    case PartAttribute:
+      return "ATR:" + label + versionString;
+    default:
+      Q_ASSERT( false );
+  }
+  return QByteArray();
+}
+
+QByteArray ProtocolHelper::decodePartIdentifier( const QByteArray &data, PartNamespace & ns )
+{
+  if ( data.startsWith( "PLD:" ) ) {
+    ns = PartPayload;
+    return data.mid( 4 );
+  } else if ( data.startsWith( "ATR:" ) ) {
+    ns = PartAttribute;
+    return data.mid( 4 );
+  } else {
+    ns = PartGlobal;
+    return data;
+  }
 }

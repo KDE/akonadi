@@ -19,6 +19,7 @@
 
 #include "itemfetchjob.h"
 
+#include "attributefactory.h"
 #include "collection.h"
 #include "collectionselectjob.h"
 #include "imapparser_p.h"
@@ -28,6 +29,7 @@
 #include "job_p.h"
 #include "entity_p.h"
 #include "protocol_p.h"
+#include "protocolhelper.h"
 
 #include <kdebug.h>
 
@@ -85,9 +87,9 @@ void ItemFetchJobPrivate::startFetchJob()
 
   command += " (UID REMOTEID FLAGS";
   foreach ( const QByteArray &part, mFetchScope.payloadParts() )
-    command += ' ' + part;
+    command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, part );
   foreach ( const QByteArray &part, mFetchScope.attributes() )
-    command += ' ' + part;
+    command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartAttribute, part );
   command += ")\n";
 
   writeData( command );
@@ -210,10 +212,27 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
         } else {
           int version = 0;
           QByteArray plainKey( key );
+          ProtocolHelper::PartNamespace ns;
 
           ImapParser::splitVersionedKey( key, plainKey, version );
+          plainKey = ProtocolHelper::decodePartIdentifier( plainKey, ns );
 
-          ItemSerializer::deserialize( item, plainKey, fetchResponse.value( i + 1 ), version );
+          switch ( ns ) {
+            case ProtocolHelper::PartPayload:
+              ItemSerializer::deserialize( item, plainKey, fetchResponse.value( i + 1 ), version );
+              break;
+            case ProtocolHelper::PartAttribute:
+            {
+              Attribute* attr = AttributeFactory::createAttribute( plainKey );
+              Q_ASSERT( attr );
+              attr->deserialize( fetchResponse.value( i + 1 ) );
+              item.addAttribute( attr );
+              break;
+            }
+            case ProtocolHelper::PartGlobal:
+            default:
+              kWarning() << "Unknown item part type:" << key;
+          }
         }
       }
 

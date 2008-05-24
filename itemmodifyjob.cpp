@@ -57,9 +57,7 @@ QByteArray ItemModifyJobPrivate::nextPartHeader()
     mPendingData.clear();
     int version = 0;
     ItemSerializer::serialize( mItem, label, mPendingData, version );
-    command += ' ' + label;
-    if ( version != 0 )  // '0' is the default
-      command += '[' + QByteArray::number( version ) + ']';
+    command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, label, version );
     command += ".SILENT {" + QByteArray::number( mPendingData.size() ) + '}';
     if ( mPendingData.size() > 0 )
       command += '\n';
@@ -120,7 +118,10 @@ void ItemModifyJob::doStart()
 
   if ( !d->mItem.d_func()->mDeletedAttributes.isEmpty() ) {
     changes << "-PARTS.SILENT";
-    changes << '(' + ImapParser::join( d->mItem.d_func()->mDeletedAttributes, " " ) + ')';
+    QList<QByteArray> attrs;
+    foreach ( const QByteArray &attr, d->mItem.d_func()->mDeletedAttributes )
+      attrs << ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartAttribute, attr );
+    changes << '(' + ImapParser::join( attrs, " " ) + ')';
   }
 
   // nothing to do
@@ -139,7 +140,7 @@ void ItemModifyJob::doStart()
   }
 
   command += " (" + ImapParser::join( changes, " " );
-  const QByteArray attrs = ProtocolHelper::attributesToByteArray( d->mItem );
+  const QByteArray attrs = ProtocolHelper::attributesToByteArray( d->mItem, true );
   if ( !attrs.isEmpty() )
     command += ' ' + attrs;
   command += d->nextPartHeader();
