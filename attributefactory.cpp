@@ -61,9 +61,10 @@ class StaticAttributeFactory : public AttributeFactory
     void init() {
       if ( initialized )
         return;
+      initialized = true;
+
       // Register built-in attributes
       AttributeFactory::registerAttribute<CollectionRightsAttribute>();
-      initialized = true;
     }
     bool initialized;
 };
