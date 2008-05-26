@@ -261,6 +261,7 @@ void ItemStoreTest::testPartRemove()
   // fetch item and its parts (should be RFC822, HEAD and EXTRA)
   ItemFetchJob *fjob = new ItemFetchJob( Item( 2 ) );
   fjob->fetchScope().fetchFullPayload();
+  fjob->fetchScope().fetchAllAttributes();
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
@@ -275,6 +276,7 @@ void ItemStoreTest::testPartRemove()
   // fetch item again (should only have RFC822 and HEAD left)
   ItemFetchJob *fjob2 = new ItemFetchJob( Item( 2 ) );
   fjob2->fetchScope().fetchFullPayload();
+  fjob2->fetchScope().fetchAllAttributes();
   QVERIFY( fjob2->exec() );
   QCOMPARE( fjob2->items().count(), 1 );
   item = fjob2->items()[0];
