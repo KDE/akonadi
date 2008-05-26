@@ -62,6 +62,8 @@ void AgentManager::continueStartup()
   first = false;
 
   readPluginInfos();
+  foreach ( const AgentInfo &info, mAgents )
+    emit agentTypeAdded( info.identifier );
 
   QStringList pathList = pluginInfoPathList();
 
