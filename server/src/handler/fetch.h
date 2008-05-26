@@ -46,17 +46,21 @@ class Fetch : public Handler
     bool handleLine(const QByteArray& line);
 
   private:
-    bool parseCommand( const QByteArray &line );
+    void parseCommand( const QByteArray &line );
     void updateItemAccessTime();
     void triggerOnDemandFetch();
-    QueryBuilder buildPartQuery( const QStringList &partList );
+    void buildItemQuery();
+    QueryBuilder buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
+    void retrieveMissingPayloads( const QStringList &payloadList );
 
   private:
+    QueryBuilder mItemQuery;
     ImapSet mSet;
-    QList<QByteArray> mAttrList;
+    QList<QByteArray> mRequestedParts;
     bool mIsUidFetch;
-    bool mAllParts;
     bool mCacheOnly;
+    bool mFullPayload;
+    bool mAllAttrs;
 };
 
 }
