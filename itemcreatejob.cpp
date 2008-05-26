@@ -25,6 +25,7 @@
 #include "item.h"
 #include "itemserializer.h"
 #include "job_p.h"
+#include "protocolhelper.h"
 
 #include <kdebug.h>
 
@@ -53,8 +54,6 @@ ItemCreateJob::ItemCreateJob( const Item &item, const Collection &collection, QO
   Q_ASSERT( !item.mimeType().isEmpty() );
   d->mItem = item;
   d->mParts = d->mItem.loadedPayloadParts();
-  foreach ( const Attribute *attr, item.attributes() )
-    d->mParts << attr->type();
   d->mCollection = collection;
 }
 
@@ -71,7 +70,7 @@ void ItemCreateJob::doStart()
   if ( !d->mItem.remoteId().isEmpty() )
     remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' );
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
-  if ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.contains( Item::FullPayload )) ) {
+  if ( d->mItem.attributes().isEmpty() && ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.contains( Item::FullPayload )) ) ) {
     if ( d->mItem.hasPayload() ) {
       int version = 0;
       ItemSerializer::serialize( d->mItem, Item::FullPayload, d->mData, version );
@@ -93,10 +92,16 @@ void ItemCreateJob::doStart()
       int version = 0;
       ItemSerializer::serialize( d->mItem, partName, partData, version );
       totalSize += partData.size();
-      QByteArray versionString( version != 0 ? '[' + QByteArray::number( version ) + ']' : "" );
-      partSpecs.append( ImapParser::quote( partName + versionString ) + ':' +
-        QByteArray::number( partData.size() ) );
+      const QByteArray partId = ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, partName, version );
+      partSpecs.append( ImapParser::quote( partId ) + ':' + QByteArray::number( partData.size() ) );
       d->mData += partData;
+    }
+    foreach ( const Attribute* attr, d->mItem.attributes() ) {
+      const QByteArray data = attr->serialized();
+      totalSize += data.size();
+      const QByteArray partId = ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartAttribute, attr->type() );
+      partSpecs.append( ImapParser::quote( partId ) + ':' + QByteArray::number( data.size() ) );
+      d->mData += data;
     }
     command += '(' + ImapParser::join( partSpecs, "," ) + ") " +
       '{' + QByteArray::number( totalSize ) + "}\n";

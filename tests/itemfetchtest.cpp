@@ -111,8 +111,34 @@ void ItemFetchTest::testIllegalFetch()
   QVERIFY( !job->exec() );
 }
 
+void ItemFetchTest::testMultipartFetch_data()
+{
+  QTest::addColumn<bool>( "fetchFullPayload" );
+  QTest::addColumn<bool>( "fetchAllAttrs" );
+  QTest::addColumn<bool>( "fetchSinglePayload" );
+  QTest::addColumn<bool>( "fetchSingleAttr" );
+
+  QTest::newRow( "empty" ) << false << false << false << false;
+  QTest::newRow( "full" ) << true << true << false << false;
+  QTest::newRow( "full payload" ) << true << false << false << false;
+  QTest::newRow( "single payload" ) << false << false << true << false;
+  QTest::newRow( "single" ) << false << false << true << true;
+  QTest::newRow( "attr full" ) << false << true << false << false;
+  QTest::newRow( "attr single" ) << false << false << false << true;
+  QTest::newRow( "mixed cross 1" ) << true << false << false << true;
+  QTest::newRow( "mixed cross 2" ) << false << true << true << false;
+  QTest::newRow( "all" ) << true << true << true << true;
+  QTest::newRow( "all payload" ) << true << false << true << false;
+  QTest::newRow( "all attr" ) << false << true << true << false;
+}
+
 void ItemFetchTest::testMultipartFetch()
 {
+  QFETCH( bool, fetchFullPayload );
+  QFETCH( bool, fetchAllAttrs );
+  QFETCH( bool, fetchSinglePayload );
+  QFETCH( bool, fetchSingleAttr );
+
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );
   QVERIFY( resolver->exec() );
   int colId = resolver->collection();
@@ -125,45 +151,36 @@ void ItemFetchTest::testMultipartFetch()
   QVERIFY( job->exec() );
   Item ref = job->item();
 
-  // fetch all parts manually
   ItemFetchJob *fjob = new ItemFetchJob( ref, this );
-  fjob->fetchScope().fetchFullPayload();
-  fjob->fetchScope().fetchAttribute<TestAttribute>();
+  if ( fetchFullPayload )
+    fjob->fetchScope().fetchFullPayload();
+  if ( fetchAllAttrs )
+    fjob->fetchScope().fetchAttribute<TestAttribute>();
+  if ( fetchSinglePayload )
+    fjob->fetchScope().fetchPayloadPart( Item::FullPayload );
+  if ( fetchSingleAttr )
+    fjob->fetchScope().fetchAttribute<TestAttribute>();
+
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();
-  QCOMPARE( item.loadedPayloadParts().count(), 1 );
-  QCOMPARE( item.attributes().count(), 1 );
-  QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
-  QVERIFY( item.hasAttribute<TestAttribute>() );
-  QCOMPARE( item.attribute<TestAttribute>()->data, QByteArray( "extra data" ) );
 
-  // fetch single part
-  fjob = new ItemFetchJob( ref, this );
-  fjob->fetchScope().fetchFullPayload();
-  QVERIFY( fjob->exec() );
-  QCOMPARE( fjob->items().count(), 1 );
-  item = fjob->items().first();
-  QCOMPARE( item.loadedPayloadParts().count(), 1 );
-  QEXPECT_FAIL( "", "Missing pieces in server-side FETCH implementation + missing attribute/payload namespacing", Continue );
-  QCOMPARE( item.attributes().count(), 0 );
-  QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
-  QEXPECT_FAIL( "", "Missing pieces in server-side FETCH implementation + missing attribute/payload namespacing", Continue );
-  QVERIFY( !item.hasAttribute<TestAttribute>() );
+  if ( fetchFullPayload || fetchSinglePayload ) {
+    QCOMPARE( item.loadedPayloadParts().count(), 1 );
+    QVERIFY( item.hasPayload() );
+    QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
+  } else {
+    QCOMPARE( item.loadedPayloadParts().count(), 0 );
+    QVERIFY( !item.hasPayload() );
+  }
 
-  // TODO: fetch single attribute, fetch all attributes
-
-  // fetch all parts automatically
-  fjob = new ItemFetchJob( ref, this );
-  fjob->fetchScope().fetchFullPayload();
-  QVERIFY( fjob->exec() );
-  QCOMPARE( fjob->items().count(), 1 );
-  item = fjob->items().first();
-  QCOMPARE( item.loadedPayloadParts().count(), 1 );
-  QCOMPARE( item.attributes().count(), 1 );
-  QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
-  QVERIFY( item.hasAttribute<TestAttribute>() );
-  QCOMPARE( item.attribute<TestAttribute>()->data, QByteArray( "extra data" ) );
+  if ( fetchAllAttrs || fetchSingleAttr ) {
+    QCOMPARE( item.attributes().count(), 1 );
+    QVERIFY( item.hasAttribute<TestAttribute>() );
+    QCOMPARE( item.attribute<TestAttribute>()->data, QByteArray( "extra data" ) );
+  } else {
+    QCOMPARE( item.attributes().count(), 0 );
+  }
 
   // cleanup
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );

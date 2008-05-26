@@ -18,7 +18,6 @@
 */
 
 #include "itemserializertest.h"
-#include "testattribute.h"
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/item.h>
@@ -53,27 +52,6 @@ void ItemSerializerTest::testDefaultSerializer()
   int version = 0;
   ItemSerializer::serialize( item, Item::FullPayload, data, version );
   QCOMPARE( serialized, data );
-}
-
-void ItemSerializerTest::testExtraPart()
-{
-  AttributeFactory::registerAttribute<TestAttribute>();
-
-  QByteArray data = "foo";
-  Item item;
-  item.setMimeType( "application/octet-stream" );
-  ItemSerializer::deserialize( item, "EXTRA", data, 0 );
-
-  QVERIFY( !item.hasPayload() );
-  QVERIFY( item.loadedPayloadParts().isEmpty() );
-  QCOMPARE( item.attributes().count(), 1 );
-  QVERIFY( item.hasAttribute<TestAttribute>() );
-  QCOMPARE( item.attribute<TestAttribute>()->data, data );
-
-  QByteArray ser;
-  int version = 0;
-  ItemSerializer::serialize( item, "EXTRA", ser, version );
-  QCOMPARE( ser, data );
 }
 
 #include "itemserializertest.moc"

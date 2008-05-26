@@ -36,6 +36,13 @@ namespace Akonadi {
 class ProtocolHelper
 {
   public:
+    /** Part namespaces. */
+    enum PartNamespace {
+      PartGlobal,
+      PartPayload,
+      PartAttribute
+    };
+
     /**
       Parse a cache policy definition.
       @param data The input data.
@@ -62,8 +69,17 @@ class ProtocolHelper
     /**
       Convert attributes to their protocol representation.
     */
-    static QByteArray attributesToByteArray( const Entity &entity );
+    static QByteArray attributesToByteArray( const Entity &entity, bool ns = false );
 
+    /**
+      Encodes part label and namespace.
+    */
+    static QByteArray encodePartIdentifier( PartNamespace ns, const QByteArray &label, int version = 0 );
+
+    /**
+      Decode part label and namespace.
+    */
+    static QByteArray decodePartIdentifier( const QByteArray &data, PartNamespace &ns );
 };
 
 }

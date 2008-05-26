@@ -157,14 +157,9 @@ void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QBy
 /*static*/
 void ItemSerializer::deserialize( Item& item, const QByteArray& label, QIODevice& data, int version )
 {
-    setup();
-    if ( !ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data, version ) ) {
-      data.seek( 0 );
-      Attribute* attr = AttributeFactory::createAttribute( label );
-      Q_ASSERT( attr );
-      attr->deserialize( data.readAll() );
-      item.addAttribute( attr );
-    }
+  setup();
+  if ( !ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data, version ) )
+    kWarning() << "Unable to deserialize payload part:" << label;
 }
 
 /*static*/
@@ -181,18 +176,11 @@ void ItemSerializer::serialize( const Item& item, const QByteArray& label, QByte
 /*static*/
 void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODevice& data, int &version )
 {
-    setup();
-    ItemSerializerPlugin& plugin = pluginForMimeType( item.mimeType() );
-    const QSet<QByteArray> supportedParts = plugin.parts( item );
-    if ( !supportedParts.contains( label ) ) {
-      Attribute* attr = item.attribute( label );
-      if ( attr )
-        data.write( attr->serialized() );
-      return;
-    }
-    if ( !item.hasPayload() )
-      return;
-    plugin.serialize( item, label, data, version );
+  if ( !item.hasPayload() )
+    return;
+  setup();
+  ItemSerializerPlugin& plugin = pluginForMimeType( item.mimeType() );
+  plugin.serialize( item, label, data, version );
 }
 
 QSet<QByteArray> ItemSerializer::parts(const Item & item)
