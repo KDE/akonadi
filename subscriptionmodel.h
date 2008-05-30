@@ -26,10 +26,10 @@
 namespace Akonadi {
 
 /**
-  An extended collection model used for the subscription dialog.
-
-  @internal
-*/
+ * @internal
+ *
+ * An extended collection model used for the subscription dialog.
+ */
 class SubscriptionModel : public CollectionModel
 {
   Q_OBJECT

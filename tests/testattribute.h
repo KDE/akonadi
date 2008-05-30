@@ -22,7 +22,7 @@
 
 #include <akonadi/attribute.h>
 
-/** Attribute used for testing by various unit tests. */
+/* Attribute used for testing by various unit tests. */
 class TestAttribute : public Akonadi::Attribute
 {
   public:

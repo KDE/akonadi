@@ -28,8 +28,10 @@ namespace Akonadi {
 class SubscriptionJobPrivate;
 
 /**
-  Job to manipulate the local subscription state of a set of collections.
-*/
+ * @internal
+ *
+ * Job to manipulate the local subscription state of a set of collections.
+ */
 class AKONADI_EXPORT SubscriptionJob : public Job
 {
   Q_OBJECT

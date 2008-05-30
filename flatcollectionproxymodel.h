@@ -25,11 +25,12 @@
 namespace Akonadi {
 
 /**
-  Converts the hierarchical collection model into a flat one.
-
-  @internal
-  @todo Make this fast. And maybe even generic.
-*/
+ * @internal
+ *
+ * Converts the hierarchical collection model into a flat one.
+ *
+ * @todo Make this fast. And maybe even generic.
+ */
 class FlatCollectionProxyModel : public QAbstractProxyModel
 {
   Q_OBJECT

@@ -27,76 +27,99 @@
 namespace Akonadi {
 
 /**
-  Contains statistics information of a collection, such as
-  total number of items, number of new/unread items, etc.
-
-  These information might be expensive to obtain and are thus
-  not included when fetching collection with a CollectionFetchJob.
-  They can be retrieved spearately using CollectionStatisticsJob.
-
-  This class is implicitely shared.
-*/
+ * @short Provides statistics information of a Collection.
+ *
+ * This class contains information such as total number of items,
+ * number of new and unread items, etc.
+ *
+ * These information might be expensive to obtain and are thus
+ * not included when fetching collection with a CollectionFetchJob.
+ * They can be retrieved spearately using CollectionStatisticsJob.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * Akonadi::Collection collection = ...
+ *
+ * Akonadi::CollectionStatisticsJob *job = new Akonadi::CollectionStatisticsJob( collection );
+ * if ( job->exec() ) {
+ *   Akonadi::CollectionStatistics statistics = job->statistics();
+ *   qDebug( "Unread items: %lu", statistics.unreadCount() );
+ * }
+ *
+ * @endcode
+ *
+ * This class is implicitely shared.
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionStatistics
 {
   public:
     /**
-      Creates a new CollectionStatistics object.
+     * Creates a new collection statistics object.
      */
     CollectionStatistics();
 
     /**
-      Copy constructor.
-    */
+     * Creates a collection statistics object from an @p other one.
+     */
     CollectionStatistics( const CollectionStatistics &other );
 
     /**
-      Destructor.
-    */
+     * Destroys the collection statistics object.
+     */
     ~CollectionStatistics();
 
     /**
-      Returns the number of objects in this collection.
-      @return @c -1 if this information is not available.
-      @see setCount()
-      @see unreadCount()
+     * Returns the number of items in this collection or @c -1 if
+     * this information is not available.
+     *
+     * @see setCount()
+     * @see unreadCount()
      */
     qint64 count() const;
 
     /**
-      Sets the number of objects in this collection.
-      @param count The number of objects
-      @see count()
-    */
+     * Sets the number of items in this collection.
+     *
+     * @param count The number of items.
+     * @see count()
+     */
     void setCount( qint64 count );
 
     /**
-      Returns the number of unread messages in this collection.
-      @return @c -1 if this information is not available.
-      @see setUnreadCount()
-      @see count()
+     * Returns the number of unread items in this collection or @c -1 if
+     * this information is not available.
+     *
+     * @see setUnreadCount()
+     * @see count()
      */
     qint64 unreadCount() const;
 
     /**
-      Sets the number of unread messages in this collection.
-      @param count The number of unread messages
-      @see unreadCount()
-    */
+     * Sets the number of unread items in this collection.
+     *
+     * @param count The number of unread messages
+     * @see unreadCount()
+     */
     void setUnreadCount( qint64 count );
 
     /**
-      Assignment operator.
-      @param other The status object to assign to @c this
-    */
+     * Assigns @p other to this statistics object and returns a reference to this one.
+     */
     CollectionStatistics& operator=( const CollectionStatistics &other );
 
   private:
+    //@cond PRIVATE
     class Private;
     QSharedDataPointer<Private> d;
+    //@endcond
 };
 
 }
 
-Q_DECLARE_METATYPE(Akonadi::CollectionStatistics)
+Q_DECLARE_METATYPE( Akonadi::CollectionStatistics )
 
 #endif

@@ -42,6 +42,9 @@ namespace Akonadi {
 
 class EntityPrivate;
 
+/**
+ * @short The base class for Item and Collection.
+ */
 class AKONADI_EXPORT Entity
 {
   public:
