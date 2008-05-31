@@ -18,7 +18,7 @@
 */
 
 #include "collection.h"
-
+#include "collection_p.h"
 
 #include "attributefactory.h"
 #include "cachepolicy.h"
@@ -35,57 +35,6 @@
 #include <KGlobal>
 
 using namespace Akonadi;
-
-class Akonadi::CollectionPrivate : public EntityPrivate
-{
-  public:
-    CollectionPrivate( Collection::Id id = -1 ) :
-      EntityPrivate( id ),
-      parentId( -1 ),
-      contentTypesChanged( false ),
-      cachePolicyChanged( false )
-    {}
-
-    CollectionPrivate( const CollectionPrivate &other ) :
-      EntityPrivate( other )
-    {
-      parentId = other.parentId;
-      name = other.name;
-      parentRemoteId = other.parentRemoteId;
-      resource = other.resource;
-      statistics = other.statistics;
-      contentTypes = other.contentTypes;
-      cachePolicy = other.cachePolicy;
-      contentTypesChanged = other.contentTypesChanged;
-      cachePolicyChanged = other.cachePolicyChanged;
-    }
-
-    ~CollectionPrivate()
-    {
-    }
-
-    CollectionPrivate* clone() const
-    {
-      return new CollectionPrivate( *this );
-    }
-
-    void resetChangeLog()
-    {
-      contentTypesChanged = false;
-      cachePolicyChanged = false;
-      EntityPrivate::resetChangeLog();
-    }
-
-    Collection::Id parentId;
-    QString name;
-    QString parentRemoteId;
-    QString resource;
-    CollectionStatistics statistics;
-    QStringList contentTypes;
-    CachePolicy cachePolicy;
-    bool contentTypesChanged;
-    bool cachePolicyChanged;
-};
 
 class CollectionRoot : public Collection
 {

@@ -21,7 +21,11 @@
 #define AKONADI_COLLECTION_P_H
 
 #include "collection.h"
+#include "cachepolicy.h"
+#include "collectionstatistics.h"
 #include "entity_p.h"
+
+#include "qstringlist.h"
 
 using namespace Akonadi;
 

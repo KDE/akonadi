@@ -299,7 +299,7 @@ AgentBase::~AgentBase()
   delete d_ptr;
 }
 
-static char* sAppName = 0;
+static char* sAgentAppName = 0;
 
 QString AgentBase::parseArguments( int argc, char **argv )
 {
@@ -319,8 +319,8 @@ QString AgentBase::parseArguments( int argc, char **argv )
     exit( 1 );
   }
 
-  sAppName = qstrdup( identifier.toLatin1().constData() );
-  KCmdLineArgs::init( argc, argv, sAppName, 0, ki18n("Akonadi Agent"),"0.1" ,
+  sAgentAppName = qstrdup( identifier.toLatin1().constData() );
+  KCmdLineArgs::init( argc, argv, sAgentAppName, 0, ki18n("Akonadi Agent"),"0.1" ,
                       ki18n("Akonadi Agent") );
 
   KCmdLineOptions options;
@@ -335,7 +335,7 @@ int AgentBase::init( AgentBase *r )
   QApplication::setQuitOnLastWindowClosed( false );
   int rv = kapp->exec();
   delete r;
-  delete[] sAppName;
+  delete[] sAgentAppName;
   return rv;
 }
 

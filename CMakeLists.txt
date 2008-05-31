@@ -21,6 +21,7 @@ include_directories(
 # libakonadi-kde
 
 set( akonadikde_LIB_SRC
+  entity.cpp /* keep it at top to not break enable-final */
   agentbase.cpp
   agentfilterproxymodel.cpp
   agentinstance.cpp
@@ -58,7 +59,6 @@ set( akonadikde_LIB_SRC
   collectionsync.cpp
   collectionview.cpp
   control.cpp
-  entity.cpp
   expungejob.cpp
   flatcollectionproxymodel.cpp
   item.cpp
