@@ -21,7 +21,7 @@ include_directories(
 # libakonadi-kde
 
 set( akonadikde_LIB_SRC
-  entity.cpp /* keep it at top to not break enable-final */
+  entity.cpp # keep it at top to not break enable-final
   agentbase.cpp
   agentfilterproxymodel.cpp
   agentinstance.cpp
