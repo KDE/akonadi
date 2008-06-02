@@ -116,7 +116,7 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
   : q_ptr( parent ),
     mStatusCode( AgentBase::Idle ),
     mProgress( 0 ),
-    mOnline( true ),
+    mOnline( false ),
     mSettings( 0 ),
     mObserver( 0 )
 {
@@ -149,11 +149,10 @@ void AgentBasePrivate::init()
 
   mMonitor = new ChangeRecorder( q );
   mMonitor->ignoreSession( Session::defaultSession() );
+  mMonitor->itemFetchScope().setCacheOnly( true );
   mMonitor->setConfig( mSettings );
 
   mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
-  if ( mOnline )
-    mMonitor->itemFetchScope().fetchFullPayload();
 
   connect( mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
@@ -178,8 +177,10 @@ void AgentBasePrivate::init()
 
 void AgentBasePrivate::delayedInit()
 {
+  Q_Q( AgentBase );
   if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
     kFatal() << "Unable to register service at dbus:" << QDBusConnection::sessionBus().lastError().message();
+  q->setOnline( mOnline );
 }
 
 void AgentBasePrivate::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
@@ -379,8 +380,7 @@ void AgentBase::setOnline( bool state )
   Q_D( AgentBase );
   d->mOnline = state;
   d->mSettings->setValue( QLatin1String( "Agent/Online" ), state );
-  d->mMonitor->fetchCollection( state );
-  // TODO: d->monitor->fetchItemData( state );
+  doSetOnline( state );
 }
 
 void AgentBase::doSetOnline( bool online )
