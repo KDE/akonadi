@@ -43,7 +43,9 @@ class ItemSync::Private
       mTotalItems( 0 ),
       mTotalItemsProcessed( 0 ),
       mIncremental( false ),
-      mParts( false )
+      mParts( false ),
+      mLocalListDone( false ),
+      mDeliveryDone( false )
     {
     }
 
@@ -53,6 +55,8 @@ class ItemSync::Private
     void slotLocalChangeDone( KJob* );
     bool itemNeedsUpdate( const Item &localItem, const Item &remoteItem );
     void execute();
+    void processItems();
+    void deleteItems( const Item::List &items );
 
     ItemSync *q;
     Collection mSyncCollection;
@@ -74,6 +78,8 @@ class ItemSync::Private
 
     bool mIncremental;
     bool mParts;
+    bool mLocalListDone;
+    bool mDeliveryDone;
 };
 
 void ItemSync::Private::createLocalItem( const Item & item )
@@ -86,7 +92,7 @@ void ItemSync::Private::createLocalItem( const Item & item )
 void ItemSync::Private::checkDone()
 {
   q->setProcessedAmount( KJob::Bytes, mProgress );
-  if ( mPendingJobs > 0 )
+  if ( mPendingJobs > 0 || !mDeliveryDone )
     return;
 
   q->commit();
@@ -112,6 +118,8 @@ ItemSync::~ItemSync()
 
 void ItemSync::setFullSyncItems( const Item::List &items )
 {
+  Q_ASSERT( !d->mIncremental );
+  d->mDeliveryDone = true;
   d->mRemoteItems = items;
   setTotalAmount( KJob::Bytes, d->mRemoteItems.count() );
   d->execute();
@@ -119,6 +127,7 @@ void ItemSync::setFullSyncItems( const Item::List &items )
 
 void ItemSync::setTotalItems( int amount )
 {
+  Q_ASSERT( !d->mIncremental );
   kDebug() << amount;
   d->mParts = true;
   d->mTotalItems = amount;
@@ -127,16 +136,19 @@ void ItemSync::setTotalItems( int amount )
 
 void ItemSync::setPartSyncItems( const Item::List &items )
 {
+  Q_ASSERT( !d->mIncremental );
   d->mRemoteItems += items;
   d->mTotalItemsProcessed += items.count();
   kDebug() << "Received: " << items.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
   if ( d->mTotalItemsProcessed == d->mTotalItems )
-    d->execute();
+    d->mDeliveryDone = true;
+  d->execute();
 }
 
 void ItemSync::setIncrementalSyncItems( const Item::List &changedItems, const Item::List &removedItems )
 {
   d->mIncremental = true;
+  d->mDeliveryDone = true;
   d->mRemoteItems = changedItems;
   d->mRemovedRemoteItems = removedItems;
   setTotalAmount( KJob::Bytes, d->mRemoteItems.count() + d->mRemovedRemoteItems.count() );
@@ -190,9 +202,32 @@ void ItemSync::Private::slotLocalListDone( KJob * job )
     mLocalItemsByRemoteId.insert( item.remoteId(), item );
     mUnprocessedLocalItems.insert( item );
   }
+
+  mLocalListDone = true;
+  execute();
 }
 
 void ItemSync::Private::execute()
+{
+  if ( !mLocalListDone )
+    return;
+
+  processItems();
+  if ( !mDeliveryDone )
+    return;
+
+  // removed
+  if ( !mIncremental )
+    mRemovedRemoteItems = mUnprocessedLocalItems.toList();
+
+  deleteItems( mRemovedRemoteItems );
+  mLocalItemsById.clear();
+  mLocalItemsByRemoteId.clear();
+
+  checkDone();
+}
+
+void ItemSync::Private::processItems()
 {
   // added / updated
   foreach ( const Item &remoteItem, mRemoteItems ) {
@@ -215,7 +250,7 @@ void ItemSync::Private::execute()
     bool needsUpdate = false;
 
     if ( mIncremental ) {
-      /**
+      /*
        * We know that this item has changed (as it is part of the
        * incremental changed list), so we just put it into the
        * storage.
@@ -239,20 +274,16 @@ void ItemSync::Private::execute()
       mProgress++;
     }
   }
+  mRemoteItems.clear();
+}
 
-  // removed
-  if ( !mIncremental )
-    mRemovedRemoteItems = mUnprocessedLocalItems.toList();
-
-  foreach ( const Item &item, mRemovedRemoteItems ) {
+void ItemSync::Private::deleteItems( const Item::List &items )
+{
+  foreach ( const Item &item, items ) {
     mPendingJobs++;
     ItemDeleteJob *job = new ItemDeleteJob( item, q );
     q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
   }
-  mLocalItemsById.clear();
-  mLocalItemsByRemoteId.clear();
-
-  checkDone();
 }
 
 void ItemSync::Private::slotLocalChangeDone( KJob * job )
