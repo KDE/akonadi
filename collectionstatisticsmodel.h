@@ -63,7 +63,7 @@ class AKONADI_EXPORT CollectionStatisticsModel : public CollectionModel
       RecursiveUnreadRole,                        ///< The number of unread items in this collection and its children.
       RecursiveTotalRole,                         ///< The number of items in this collection and its children.
       RecursiveStatisticsRole,                    ///< A statistics object of this collection and its children.
-      UserRole = CollectionModel::UserRole + 42
+      UserRole = CollectionModel::UserRole + 42   ///< Role for user extensions.
     };
 
     /**

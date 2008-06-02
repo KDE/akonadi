@@ -29,28 +29,60 @@ class Item;
 class ItemCreateJobPrivate;
 
 /**
-  Creates a new PIM item on the backend.
-*/
+ * @short Job that creates a new item in the Akonadi storage.
+ *
+ * This job creates a new item with all the set properties in the
+ * given target collection.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * // Create a contact item in the root collection
+ *
+ * KABC::Addressee addr;
+ * addr.setNameFromString( "Joe Jr. Miller" );
+ *
+ * Akonadi::Item item;
+ * item.setMimeType( "text/directory" );
+ * item.setPayload<KABC::Addressee>( addr );
+ *
+ * Akonadi::Collection collection = Akonadi::Collection::root();
+ *
+ * Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
+ *
+ * if ( job->exec() )
+ *   qDebug() << "Contact item created successfully";
+ * else
+ *   qDebug() << "Error occurred";
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT ItemCreateJob : public Job
 {
   Q_OBJECT
+
   public:
     /**
-      Create a new item append job.
-      @param item The item to append. It must have a mimetype set.
-      @param collection Parent collection.
-      @param parent The parent object.
-    */
+     * Creates a new item create job.
+     *
+     * @param item The item to create.
+     *             @note It must have a mime type set.
+     * @param collection The parent collection where the new item shall be located in.
+     * @param parent The parent object.
+     */
     ItemCreateJob( const Item &item, const Collection &collection, QObject *parent = 0 );
 
     /**
-      Deletes this job.
-    */
+     * Destroys the item create job.
+     */
     ~ItemCreateJob();
 
     /**
-      Returns the item with the new unique id, or an invalid item if the job failed.
-    */
+     * Returns the created item with the new unique id, or an invalid item if the job failed.
+     */
     Item item() const;
 
   protected:

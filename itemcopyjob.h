@@ -29,32 +29,54 @@ class Collection;
 class ItemCopyJobPrivate;
 
 /**
-  Copies a set of items into the specified target collection.
-*/
+ * @short Job that copies a set of items to a target collection in the Akonadi storage.
+ *
+ * The job can be used to copy one or several Item objects to another collection.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * Akonadi::Item::List items = ...
+ * Akonadi::Collection collection = ...
+ *
+ * Akonadi::ItemCopyJob *job = new Akonadi::ItemCopyJob( items, collection );
+ *
+ * if ( job->exec() )
+ *   qDebug() << "Items copied successfully";
+ * else
+ *   qDebug() << "Error occurred";
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT ItemCopyJob : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      Create a new copy job to copy the given item into @p target.
-      @param item The item to copy.
-      @param target The target collection.
-      @param parent The parent object.
-    */
+     * Creates a new item copy job.
+     *
+     * @param item The item to copy.
+     * @param target The target collection.
+     * @param parent The parent object.
+     */
     ItemCopyJob( const Item &item, const Collection &target, QObject *parent = 0 );
 
     /**
-      Create a new copy job to copy the given items into @p target.
-      @param items A list of items to copy.
-      @param target The target collection.
-      @param parent The parent object.
-    */
+     * Creates a new item copy job.
+     *
+     * @param items A list of items to copy.
+     * @param target The target collection.
+     * @param parent The parent object.
+     */
     ItemCopyJob( const Item::List &items, const Collection &target, QObject *parent = 0 );
 
     /**
-      Destructor.
-    */
+     * Destroys the item copy job.
+     */
     ~ItemCopyJob();
 
   protected:

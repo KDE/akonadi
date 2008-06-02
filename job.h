@@ -59,7 +59,7 @@ class SessionPrivate;
   \code
     Akonadi::SomeJob *job = new Akonadi::SomeJob( some parameter );
     if ( !job->exec() ) {
-      qDebug( "Error: %s", qPrintable( job->errorString() ) );
+      qDebug() << "Error:" << job->errorString();
     } else {
       // do something
     }

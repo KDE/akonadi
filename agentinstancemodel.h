@@ -68,7 +68,7 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
       StatusMessageRole,                       ///< A textual presentation of the current status
       ProgressRole,                            ///< The current progress (numerical in percent) of an operation
       OnlineRole,                              ///< The current online/offline status
-      UserRole  = Qt::UserRole + 42            ///< For further extensions
+      UserRole  = Qt::UserRole + 42            ///< Role for user extensions
     };
 
     /**

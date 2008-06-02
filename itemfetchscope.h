@@ -32,108 +32,116 @@ namespace Akonadi {
 class ItemFetchScopePrivate;
 
 /**
-  Specifies which parts of an item should be fetched from the Akonadi server.
-
-  When items are fetched from server either by using ItemFetchJob explicitly or
-  when it is being used internally by other classes, e.g. ItemModel, the scope
-  of the fetch operation can be tailored to the application's current needs.
-
-  There are two supported ways of changing the currently active ItemFetchScope
-  of classes:
-  - in-place: modify the ItemFetchScope object the other class holds as a member
-  - replace: replace the other class' member with a new scope object
-
-  Example: modifying an ItemFetchJob's scope @c in-place
-  @code
-  ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
-  job->fetchScope().fetchFullPayload();
-  job->fetchScope().fetchAttribute<MyAttribute>();
-  @endcode
-
-  Example: @c replacing an ItemFetchJob's scope
-  @code
-  Akonadi::ItemFetchScope scope;
-  scope.fetchFullPayload();
-  scope.fetchAttribute<MyAttribute>();
-
-  ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
-  job->setFetchScope( scope );
-  @endcode
-*/
+ * @short Specifies which parts of an item should be fetched from the Akonadi storage.
+ *
+ * When items are fetched from server either by using ItemFetchJob explicitly or
+ * when it is being used internally by other classes, e.g. ItemModel, the scope
+ * of the fetch operation can be tailored to the application's current needs.
+ *
+ * There are two supported ways of changing the currently active ItemFetchScope
+ * of classes:
+ * - in-place: modify the ItemFetchScope object the other class holds as a member
+ * - replace: replace the other class' member with a new scope object
+ *
+ * Example: modifying an ItemFetchJob's scope @c in-place
+ * @code
+ * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
+ * job->fetchScope().fetchFullPayload();
+ * job->fetchScope().fetchAttribute<MyAttribute>();
+ * @endcode
+ *
+ * Example: @c replacing an ItemFetchJob's scope
+ * @code
+ * Akonadi::ItemFetchScope scope;
+ * scope.fetchFullPayload();
+ * scope.fetchAttribute<MyAttribute>();
+ *
+ * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
+ * job->setFetchScope( scope );
+ * @endcode
+ *
+ * This class is implicitly shared.
+ *
+ * @author Kevin Krammer <kevin.krammer@gmx.at>
+ */
 class AKONADI_EXPORT ItemFetchScope
 {
   public:
     /**
-      Creates an empty scope.
-
-      Using an empty scope will only fetch the very basic metadata of items,
-      e.g. Akonadi ID, remote ID, MIME type
-    */
+     * Creates an empty item fetch scope.
+     *
+     * Using an empty scope will only fetch the very basic meta data of items,
+     * e.g. local id, remote id and mime type
+     */
     ItemFetchScope();
 
     /**
-      Copies a given @p other scope.
-
-      Since ItemFetchScope is an implicitly shared object, this is a cheap operation
-    */
+     * Creates a new item fetch scope from an @p other.
+     */
     ItemFetchScope( const ItemFetchScope &other );
 
     /**
-      Destroys the scope instance
-    */
+     * Destroys the item fetch scope.
+     */
     ~ItemFetchScope();
 
     /**
-      Copies a given @p other scope.
-
-      Since ItemFetchScope is an implicitly shared object, this is a cheap operation
-    */
+     * Assigns the @p other to this scope and returns a reference to this scope.
+     */
     ItemFetchScope &operator=( const ItemFetchScope &other );
 
     /**
-      Returns the payload parts that should be fetched.
-      @see fetchPayloadPart()
-    */
+     * Returns the payload parts that should be fetched.
+     *
+     * @see fetchPayloadPart()
+     */
     QSet<QByteArray> payloadParts() const;
 
     /**
-      Select which payload parts you want to retrieve.
-      @param part The payload part identifier. Valid values depend
-      on the item type.
-      @param fetch @c true to fetch this part, @c false otherwise.
-    */
+     * Sets which payload parts shall be fetched.
+     *
+     * @param part The payload part identifier.
+     *             Valid values depend on the item type.
+     * @param fetch @c true to fetch this part, @c false otherwise.
+     */
     void fetchPayloadPart( const QByteArray &part, bool fetch = true );
 
     /**
-      Returns whether the full payload should be retrieved.
-      @see fetchFullPayload()
-    */
+     * Returns whether the full payload should be fetched.
+     *
+     * @see fetchFullPayload()
+     */
     bool fullPayload() const;
 
     /**
-      Select if you want to fetch the full payload.
-      @param fetch @c true if the full payload should be fetched, @c false otherwise.
-    */
+     * Sets whether the full payload shall be fetched.
+     *
+     * @param fetch @c true if the full payload should be fetched, @c false otherwise.
+     */
     void fetchFullPayload( bool fetch = true );
 
     /**
-      Returns all explicitly fetched attributes.
-      Undefined if fetchAllAttributes() returns true.
-      @see fetchAttribute()
-    */
+     * Returns all explicitly fetched attributes.
+     *
+     * Undefined if fetchAllAttributes() returns true.
+     *
+     * @see fetchAttribute()
+     */
     QSet<QByteArray> attributes() const;
 
     /**
-      Select if attribute of type @p type should be fetched.
-      @param type The attribute type to fetch.
-      @param fetch Select if this attribute should be fetched or not.
-    */
+     * Sets whether the attribute of the given @p type should be fetched.
+     *
+     * @param type The attribute type to fetch.
+     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
+     */
     void fetchAttribute( const QByteArray &type, bool fetch = true );
 
     /**
-      Selects if attributes of type @p T should be fetched.
-      @param fetch Select if this attribute should be fetched or not.
-    */
+     * Sets whether the attribute of the requested type should be fetched.
+     *
+     * @param fetch @c true if the attribute should be fetched, @c false otherwise.
+     */
     template <typename T> inline void fetchAttribute( bool fetch = true )
     {
       T dummy;
@@ -141,35 +149,39 @@ class AKONADI_EXPORT ItemFetchScope
     }
 
     /**
-      Returns whether all available attributes should be fetched.
-      @see fetchAllAttributes()
-    */
+     * Returns whether all available attributes should be fetched.
+     *
+     * @see fetchAllAttributes()
+     */
     bool allAttributes() const;
 
     /**
-      Select whether or not all available item attributes should be fetched.
-      @param fetch Select if all attributes should be fetched or not.
-    */
+     * Sets whether all available attributes should be fetched.
+     *
+     * @param fetch @c true if all available attributes should be fetched, @c false otherwise.
+     */
     void fetchAllAttributes( bool fetch = true );
 
     /**
-      Returns whether payload data should be requested from remote sources or just
-      from the local cache.
-      @see setCacheOnly()
-    */
+     * Returns whether payload data should be requested from remote sources or just
+     * from the local cache.
+     *
+     * @see setCacheOnly()
+     */
     bool cacheOnly() const;
 
     /**
-      Select whether payload data should be requested from remote sources or just
-      from the local cache.
-      @param chacheOnly @c true if no remote data should be requested,
-      @c false otherwise (the default).
-    */
+     * Sets whether payload data should be requested from remote sources or just
+     * from the local cache.
+     *
+     * @param chacheOnly @c true if no remote data should be requested,
+     * @c false otherwise (the default).
+     */
     void setCacheOnly( bool cacheOnly );
 
     /**
-      Returns @c true if there is nothing to fetch.
-    */
+     * Returns @c true if there is nothing to fetch.
+     */
     bool isEmpty() const;
 
   private:

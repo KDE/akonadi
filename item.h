@@ -40,146 +40,164 @@ class ItemPrivate;
 #include "itempayloadinternals_p.h"
 
 /**
-  This class represents a PIM item stored in Akonadi.
-
-  A PIM item consists of one or more parts, allowing a fine-grained access on its
-  content where needed (eg. mail envelope, mail body and attachments).
-
-  There ise also a namespace (prefix) for special parts which are local to Akonadi.
-  These parts, prefixed by "akonadi-" will never be fetched in the ressource.
-  There are useful for local extensions like agents which might want to add metadata
-  to items in order to handle them but the metadata should not be stored back to the
-  ressource.
-
-  This class contains beside some type-agnostic information (unique identifiers, flags)
-  a single payload object representing its actual data. Which objects these actually
-  are depends on the mimetype of the item and the corresponding serializer plugin.
-
-  This class is implicitly shared.
-*/
+ * @short Represents a PIM item stored in Akonadi storage.
+ *
+ * A PIM item consists of one or more parts, allowing a fine-grained access on its
+ * content where needed (eg. mail envelope, mail body and attachments).
+ *
+ * There is also a namespace (prefix) for special parts which are local to Akonadi.
+ * These parts, prefixed by "akonadi-" will never be fetched in the resource.
+ * They are useful for local extensions like agents which might want to add metadata
+ * to items in order to handle them but the metadata should not be stored back to the
+ * resource.
+ *
+ * This class contains beside some type-agnostic information (flags, revision)
+ * a single payload object representing its actual data. Which objects these actually
+ * are depends on the mimetype of the item and the corresponding serializer plugin.
+ *
+ * This class is implicitly shared.
+ *
+ * @author Volker Krause <vkrause@kde.org>, Till Adam <adam@kde.org>
+ */
 class AKONADI_EXPORT Item : public Entity
 {
   public:
+    /**
+     * Describes a list of items.
+     */
     typedef QList<Item> List;
 
+    /**
+     * Describes a flag name.
+     */
     typedef QByteArray Flag;
+
+    /**
+     * Describes a set of flag names.
+     */
     typedef QSet<QByteArray> Flags;
 
+    /**
+     * Describes the part name that is used to fetch the
+     * full payload of an item.
+     */
     static const char* FullPayload;
 
     /**
-     * Creates an invalid item.
+     * Creates a new item.
      */
     Item();
 
     /**
-     * Create a new item with the given unique @p id.
+     * Creates a new item with the given unique @p id.
      */
     explicit Item( Id id );
 
     /**
-      Create a new item with the given mimetype.
-      @param mimeType The mimetype of this item.
-    */
+     * Creates a new item with the given mime type.
+     *
+     * @param mimeType The mime type of the item.
+     */
     explicit Item( const QString &mimeType );
 
     /**
-     * Copy constructor.
+     * Creates a new item from an @p other item.
      */
     Item( const Item &other );
 
     /**
-      Destroys this item.
-    */
+     * Destroys the item.
+     */
     ~Item();
 
     /**
-      Creates an item from the url
-    */
+     * Creates an item from the given @p url.
+     */
     static Item fromUrl( const KUrl &url );
 
     /**
-      Returns the flags of this item.
-    */
+     * Returns all flags of this item.
+     */
     Flags flags() const;
 
     /**
-      Checks if the given flag is set.
-      @param name The flag name.
-    */
+     * Returns whether the flag with the given @p name is
+     * set in the item.
+     */
     bool hasFlag( const QByteArray &name ) const;
 
     /**
-      Sets an item flag.
-      @param name The flag name.
-    */
+     * Sets the flag with the given @p name in the item.
+     */
     void setFlag( const QByteArray &name );
 
     /**
-      Removes an item flag.
-      @param name The flag name.
-    */
+     * Removes the flag with the given @p name from the item.
+     */
     void clearFlag( const QByteArray &name );
 
     /**
-     * Overwrite the flags of the item by @p flags.
+     * Overwrites all flags of the item by the given @p flags.
      */
     void setFlags( const Flags &flags );
 
     /**
-     * Clear all flags from the item.
+     * Removes all flags from the item.
      */
     void clearFlags();
 
     /**
-      Returns the full payload in its canonical representation, ie. the
-      binary or textual format usually used for data with this mimetype.
-      This is useful when communicating with non-Akonadi application by
-      eg. drag&drop, copy&paste or stored files.
-    */
-    QByteArray payloadData() const;
-
-    /**
-      Sets the payload based on the canonical representation normally
-      used for data of this mimetype.
-      @param data The encoded data.
-      @see fullPayloadData
-    */
+     * Sets the payload based on the canonical representation normally
+     * used for data of this mime type.
+     *
+     * @param data The encoded data.
+     * @see fullPayloadData
+     */
     void setPayloadFromData( const QByteArray &data );
 
     /**
-      Returns the list of loaded payload parts. This is not necessarily the
-      identical to all parts in the cache or to all available parts on the backend.
+     * Returns the full payload in its canonical representation, e.g. the
+     * binary or textual format usually used for data with this mime type.
+     * This is useful when communicating with non-Akonadi application by
+     * e.g. drag&drop, copy&paste or stored files.
+     */
+    QByteArray payloadData() const;
+
+    /**
+     * Returns the list of loaded payload parts. This is not necessarily
+     * identical to all parts in the cache or to all available parts on the backend.
      */
     QSet<QByteArray> loadedPayloadParts() const;
 
     /**
-      Returns the revision number of this item.
-    */
-    int revision() const;
-
-    /**
-      Sets the @p revision number of this item.
-      Do not modify this value from within an application,
-      it is updated automatically by the revision checking functions.
-    */
+     * Sets the @p revision number of the item.
+     *
+     * @note Do not modify this value from within an application,
+     * it is updated automatically by the revision checking functions.
+     */
     void setRevision( int revision );
 
     /**
-      Returns the mime type of this item.
-    */
-    QString mimeType() const;
+     * Returns the revision number of the item.
+     */
+    int revision() const;
 
     /**
-      Sets the mime type of this item to @p mimeType.
-    */
+     * Sets the mime type of the item to @p mimeType.
+     */
     void setMimeType( const QString &mimeType );
 
     /**
-      Sets the payload object of this PIM item.
-      The payload MUST NOT be a pointer, use a boost::shared_ptr instead.
-      The payload should be an implicitly shared class.
-    */
+     * Returns the mime type of the item.
+     */
+    QString mimeType() const;
+
+    /**
+     * Sets the payload object of this PIM item.
+     *
+     * The payload MUST NOT be a pointer, use a boost::shared_ptr instead.
+     * The payload should be an implicitly shared class.
+     */
     template <typename T>
     void setPayload( T p )
     {
@@ -187,9 +205,12 @@ class AKONADI_EXPORT Item : public Entity
     }
 
     /**
-      Returns the payload object of this PIM item.
-      This method will abort if you try to retrieve the wrong payload type.
-    */
+     * Returns the payload object of this PIM item.
+     *
+     * @note This method will abort the application if you try to
+     *       retrieve the wrong payload type, so better always check
+     *       the mime type first.
+     */
     template <typename T>
     T payload() const
     {
@@ -207,13 +228,13 @@ class AKONADI_EXPORT Item : public Entity
     }
 
     /**
-      Returns true if this item has a payload object.
-    */
+     * Returns whether the item has a payload object.
+     */
     bool hasPayload() const;
 
     /**
-      Returns true if this item has a payload of type @c T.
-    */
+     * Returns whether the item has a payload of type @c T.
+     */
     template <typename T>
     bool hasPayload() const
     {
@@ -237,15 +258,18 @@ class AKONADI_EXPORT Item : public Entity
     };
 
     /**
-      Returns the url for the item
+     * Returns the url of the item.
      */
     KUrl url( UrlType type = UrlShort ) const;
 
   private:
+    //@cond PRIVATE
     friend class ItemModifyJob;
     friend class ItemFetchJob;
     PayloadBase* payloadBase() const;
     void setPayloadBase( PayloadBase* );
+    //@endcond
+
     AKONADI_DECLARE_PRIVATE( Item )
 };
 

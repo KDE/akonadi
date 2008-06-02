@@ -45,7 +45,7 @@ namespace Akonadi {
  * Akonadi::CollectionStatisticsJob *job = new Akonadi::CollectionStatisticsJob( collection );
  * if ( job->exec() ) {
  *   Akonadi::CollectionStatistics statistics = job->statistics();
- *   qDebug( "Unread items: %lu", statistics.unreadCount() );
+ *   qDebug() << "Unread items:" << statistics.unreadCount();
  * }
  *
  * @endcode

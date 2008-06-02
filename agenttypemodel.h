@@ -62,7 +62,7 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
       DescriptionRole,                        ///< A description of the agent type
       MimeTypesRole,                          ///< A list of supported mimetypes
       CapabilitiesRole,                       ///< A list of supported capabilities
-      UserRole  = Qt::UserRole + 42           ///< For further extensions
+      UserRole  = Qt::UserRole + 42           ///< Role for user extensions
     };
 
     /**

@@ -34,140 +34,139 @@ class Job;
 class Session;
 
 /**
-  A flat self-updating message model.
-*/
+ * @short A table model for items.
+ *
+ * A self-updating table model that shows all items of
+ * a collection.
+ *
+ * @code
+ *
+ * QTableView *view = new QTableView( this );
+ *
+ * Akonadi::ItemModel *model = new Akonadi::ItemModel();
+ * view->setModel( model );
+ *
+ * model->setCollection( Akonadi::Collection::root() );
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 {
   Q_OBJECT
 
   public:
     /**
-      Columns types.
-    */
+     * Describes the types of the columns in the model.
+     */
     enum Column {
-      Id = 0, /**< The unique id. */
-      RemoteId, /**< The remote identifier. */
-      MimeType /**< Item mimetype. */
-    };
-
-    enum Roles {
-      IdRole = Qt::UserRole + 1,
-      ItemRole,
-      MimeTypeRole,
-      UserRole = Qt::UserRole + 42
+      Id = 0,     ///< The unique id.
+      RemoteId,   ///< The remote identifier.
+      MimeType    ///< The item's mime type.
     };
 
     /**
-      Creates a new message model.
+     * Describes the roles of the model.
+     */
+    enum Roles {
+      IdRole = Qt::UserRole + 1,      ///< The id of the item.
+      ItemRole,                       ///< The item object.
+      MimeTypeRole,                   ///< The mime type of the item.
+      UserRole = Qt::UserRole + 42    ///< Role for user extensions.
+    };
 
-      @param parent The parent object.
-    */
+    /**
+     * Creates a new item model.
+     *
+     * @param parent The parent object.
+     */
     explicit ItemModel( QObject* parent = 0 );
 
     /**
-      Deletes the message model.
-    */
+     * Destroys the item model.
+     */
     virtual ~ItemModel();
 
-    /**
-      Reimplemented from QAbstractItemModel.
-     */
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
 
-    /**
-      Reimplemented from QAbstractItemModel.
-     */
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 
-    /**
-      Reimplemented from QAbstractItemModel.
-     */
     virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
 
-    /**
-      Reimplemented from QAbstractItemModel.
-     */
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
-    /**
-      Reimplemented from QAbstractItemModel
-     */
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
-    /**
-      Reimplemented from QAbstractItemModel
-     */
     virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
 
-    /**
-      Reimplemented from QAbstractItemModel
-    */
     virtual QStringList mimeTypes() const;
 
     /**
-      Sets the item fetch scope.
-
-      Controls how much of an item's data is fetched from the server, e.g.
-      whether to fetch the full item payload or only metadata.
-
-      @param fetchScope the new scope for item fetch operations
-
-      @see fetchScope()
-    */
+     * Sets the item fetch scope.
+     *
+     * The ItemFetchScope controls how much of an item's data is fetched from the
+     * server, e.g. whether to fetch the full item payload or only meta data.
+     *
+     * @param fetchScope the new scope for item fetch operations
+     *
+     * @see fetchScope()
+     */
     void setFetchScope( const ItemFetchScope &fetchScope );
 
     /**
-      Returns the item fetch scope.
-
-      Since this returns a reference it can be used to conveniently modify the
-      current scope in-place, i.e. by calling a method on the returned reference
-      without storing it in a local variable. See the ItemFetchScope documentation
-      for an example.
-
-      @return a reference to the current item fetch scope
-
-      @see setFetchScope() for replacing the current item fetch scope
-    */
+     * Returns the item fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the ItemFetchScope documentation
+     * for an example.
+     *
+     * @return a reference to the current item fetch scope.
+     *
+     * @see setFetchScope() for replacing the current item fetch scope.
+     */
     ItemFetchScope &fetchScope();
 
     /**
-      Returns the item at given index.
-    */
+     * Returns the item at the given @p index.
+     */
     Item itemForIndex( const QModelIndex &index ) const;
 
     /**
-      Returns the model index for the given item, with the given column
-      @param item The item to find
-      @param column The column for the returned index
-    */
+     * Returns the model index for the given item, with the given column.
+     *
+     * @param item The item to find.
+     * @param column The column for the returned index.
+     */
     QModelIndex indexForItem( const Akonadi::Item& item, const int column ) const;
 
-    /* reimpl */
     bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
   public Q_SLOTS:
     /**
-      Sets the collection the model should display. If the collection has
-      changed, the model is reset and a new message listing is requested
-      from the storage backend.
-      @param collection The collection.
-    */
+     * Sets the collection the model should display. If the collection has
+     * changed, the model is reset and a new message listing is requested
+     * from the Akonadi storage.
+     *
+     * @param collection The collection.
+     */
     void setCollection( const Akonadi::Collection &collection );
 
   Q_SIGNALS:
     /**
-      SetCollection emits this signal when the collection has changed.
+     * This signal is emitted whenever setCollection is called.
      */
      void collectionChanged( const Collection &collection );
 
   protected:
-
     /**
-      Returns the Session object used for all operations by this model.
-    */
+     * Returns the Session object used for all operations by this model.
+     */
     Session* session() const;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
 
@@ -177,6 +176,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
     Q_PRIVATE_SLOT( d, void itemAdded( const Akonadi::Item& ) )
     Q_PRIVATE_SLOT( d, void itemsAdded( const Akonadi::Item::List& ) )
     Q_PRIVATE_SLOT( d, void itemRemoved( const Akonadi::Item& ) )
+    //@endcond
 };
 
 }

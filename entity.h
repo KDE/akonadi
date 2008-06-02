@@ -44,6 +44,13 @@ class EntityPrivate;
 
 /**
  * @short The base class for Item and Collection.
+ *
+ * Entity is the common base class for Item and Collection that provides
+ * unique IDs and attributes handling.
+ *
+ * This class is not meant to be used directly, use Item or Collection instead.
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADI_EXPORT Entity
 {
@@ -96,59 +103,66 @@ class AKONADI_EXPORT Entity
     bool operator!=( const Entity &other ) const;
 
     /**
-     * Assignment operator.
+     * Assigns the @p other to this entity and returns a reference to this entity.
      */
     Entity& operator=( const Entity &other );
 
     /**
-      Adds an attribute. An already existing attribute of the same
-      type is deleted.
-      @param attr The new attribute. This object takes the ownership of the attribute.
-    */
-    void addAttribute( Attribute *attr );
+     * Adds an attribute to the entity.
+     *
+     * If an attribute of the same type name already exists, it is deleted and
+     * replaced with the new one.
+     *
+     * @param attribute The new attribute.
+     *
+     * @note The entity takes the ownership of the attribute.
+     */
+    void addAttribute( Attribute *attribute );
 
     /**
-      Removes an attribute. If an attribute with the given type exists,
-      it will be deleted.
-      @param type The attribute type to remove.
-    */
-    void removeAttribute( const QByteArray &type );
+     * Removes and deletes the attribute of the given type @p name.
+     */
+    void removeAttribute( const QByteArray &name );
 
     /**
-      Returns true if the entity has the specified attribute.
-      @param type The attribute type.
-    */
-    bool hasAttribute( const QByteArray &type ) const;
+     * Returns @c true if the entity has an attribute of the given type @p name,
+     * false otherwise.
+     */
+    bool hasAttribute( const QByteArray &name ) const;
 
     /**
-      Returns all attributes.
-    */
+     * Returns a list of all attributes of the entity.
+     */
     Attribute::List attributes() const;
 
     /**
-      Removes all attributes of this object. The attributes are deleted.
-    */
+     * Removes and deletes all attributes of the entity.
+     */
     void clearAttributes();
 
     /**
-      Returns the attribute of the given type if available, 0 otherwise.
-      @param type The attribute type.
-    */
-    Attribute* attribute( const QByteArray &type ) const;
+     * Returns the attribute of the given type @p name if available, 0 otherwise.
+     */
+    Attribute* attribute( const QByteArray &name ) const;
 
-    //FIXME_API: maybe better naming...
+    /**
+     * Describes the options that can be passed to access attributes.
+     */
     enum CreateOption
     {
-      AddIfMissing
+      AddIfMissing    ///< Creates the attribute if it is missing
     };
 
     /**
-      Returns the attribute of the requested type or 0 if not available.
-      @param create Creates the attribute if it doesn't exist.
-    */
-    template <typename T> inline T* attribute( CreateOption create )
+     * Returns the attribute of the requested type.
+     * If the entity has no attribute of that type yet, a new one
+     * is created and added to the entity.
+     *
+     * @param option The create options.
+     */
+    template <typename T> inline T* attribute( CreateOption option )
     {
-      Q_UNUSED( create );
+      Q_UNUSED( option );
 
       const T dummy;
       if ( hasAttribute( dummy.type() ) )
@@ -160,8 +174,8 @@ class AKONADI_EXPORT Entity
     }
 
     /**
-      Returns the attribute of the requested type or 0 if not available.
-    */
+     * Returns the attribute of the requested type or 0 if it is not available.
+     */
     template <typename T> inline T* attribute() const
     {
       const T dummy;
@@ -171,8 +185,8 @@ class AKONADI_EXPORT Entity
     }
 
     /**
-      Removes and deletes the attribute of type @p T, if any.
-    */
+     * Removes and deletes the attribute of the requested type.
+     */
     template <typename T> inline void removeAttribute()
     {
       const T dummy;
@@ -180,8 +194,8 @@ class AKONADI_EXPORT Entity
     }
 
     /**
-      Checks if this entity has an attribute of type @p T.
-    */
+     * Returns whether the entity has an attribute of the requested type.
+     */
     template <typename T> inline bool hasAttribute()
     {
       const T dummy;

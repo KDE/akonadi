@@ -30,68 +30,101 @@ class ItemFetchJobPrivate;
 class ItemFetchScope;
 
 /**
-  Fetches item data from the backend.
-*/
+ * @short Job that fetches items from the Akonadi storage.
+ *
+ * This class is used to fetch items from the Akonadi storage.
+ * Which parts of the items (e.g. headers only, attachments or all)
+ * can be specified by the ItemFetchScope.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * // Fetch all items with full payload from the root collection
+ * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Collection::root() );
+ * job->fetchScope().fetchFullPayload();
+ *
+ * if ( job->exec() ) {
+ *   qDebug() << "Item deleted successfully";
+ *
+ *   Akonadi::Item::List items = job->items();
+ *   foreach( const Akonadi::Item &item, items ) {
+ *     qDebug() "Item ID:" << item.id();
+ *   }
+ * } else {
+ *   qDebug() << "Error occurred";
+ * }
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT ItemFetchJob : public Job
 {
     Q_OBJECT
   public:
     /**
-      Create a new item list job to retrieve envelope parts of all
-      items in the given collection.
-      @param collection The collection to list.
-      @param parent The parent object.
-    */
+     * Creates a new item fetch job.
+     *
+     * @param collection The parent collection to fetch all items from.
+     * @param parent The parent object.
+     */
     explicit ItemFetchJob( const Collection &collection, QObject *parent = 0 );
 
     /**
-      Creates a new item fetch job to retrieve all parts of the item
-      with the given id in @p item.
-      @param parent The parent object.
-    */
+     * Creates a new item fetch job.
+     *
+     * @param item The item to fetch.
+     * @param parent The parent object.
+     */
     explicit ItemFetchJob( const Item &item, QObject *parent = 0 );
 
     /**
-      Destroys this job.
-    */
+     * Destroys the item fetch job.
+     */
     virtual ~ItemFetchJob();
 
     /**
-      Returns the fetched item objects. Invalid before the result(KJob*)
-      signal has been emitted or if an error occurred.
-    */
+     * Returns the fetched item.
+     *
+     * @note The items are invalid before the result( KJob* )
+     *       signal has been emitted or if an error occurred.
+     */
     Item::List items() const;
 
     /**
-      Sets the item fetch scope.
-
-      Controls how much of an item's data is fetched from the server, e.g.
-      whether to fetch the full item payload or only metadata.
-
-      @param fetchScope the new scope for item fetch operations
-
-      @see fetchScope()
-    */
+     * Sets the item fetch scope.
+     *
+     * The ItemFetchScope controls how much of an item's data is fetched
+     * from the server, e.g. whether to fetch the full item payload or
+     * only meta data.
+     *
+     * @param fetchScope the new scope for item fetch operations
+     *
+     * @see fetchScope()
+     */
     void setFetchScope( ItemFetchScope &fetchScope );
 
     /**
-      Returns the item fetch scope.
-
-      Since this returns a reference it can be used to conveniently modify the
-      current scope in-place, i.e. by calling a method on the returned reference
-      without storing it in a local variable. See the ItemFetchScope documentation
-      for an example.
-
-      @return a reference to the current item fetch scope
-
-      @see setFetchScope() for replacing the current item fetch scope
-    */
+     * Returns the item fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the ItemFetchScope documentation
+     * for an example.
+     *
+     * @return a reference to the current item fetch scope
+     *
+     * @see setFetchScope() for replacing the current item fetch scope
+     */
     ItemFetchScope &fetchScope();
 
   Q_SIGNALS:
     /**
-     Emitted when items are received.
-    */
+     * This signal is emitted when the items are fetched completely.
+     *
+     * @param items The fetched items.
+     */
     void itemsReceived( const Akonadi::Item::List &items );
 
   protected:
@@ -101,8 +134,10 @@ class AKONADI_EXPORT ItemFetchJob : public Job
   private:
     Q_DECLARE_PRIVATE( ItemFetchJob )
 
+    //@cond PRIVATE
     Q_PRIVATE_SLOT( d_func(), void selectDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void timeout() )
+    //@endcond
 };
 
 }

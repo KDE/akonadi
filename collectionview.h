@@ -31,59 +31,85 @@ namespace Akonadi {
 class Collection;
 
 /**
-  A view to show a collection tree provided by a CollectionModel.
-
-  When a KXmlGuiWindow is passed to the constructor, the XMLGUI
-  defined context menu @c akonadi_collectionview_contextmenu is
-  used if available.
-*/
+ * @short A view to show a collection tree provided by a CollectionModel.
+ *
+ * When a KXmlGuiWindow is passed to the constructor, the XMLGUI
+ * defined context menu @c akonadi_collectionview_contextmenu is
+ * used if available.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * class MyWindow : public KXmlGuiWindow
+ * {
+ *   public:
+ *    MyWindow()
+ *      : KXmlGuiWindow()
+ *    {
+ *      Akonadi::CollectionView *view = new Akonadi::CollectionView( this, this );
+ *      setCentralWidget( view );
+ *
+ *      Akonadi::CollectionModel *model = new Akonadi::CollectionModel( this );
+ *      view->setModel( model );
+ *    }
+ * }
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionView : public QTreeView
 {
   Q_OBJECT
 
   public:
     /**
-      Create a new collection view.
-      @param the parent widget.
-    */
+     * Creates a new collection view.
+     *
+     * @param The parent widget.
+     */
     explicit CollectionView( QWidget *parent = 0 );
 
     /**
-      Create a new collection view.
-      @param xmlGuiWindow The KXmlGuiWindow this is used in. This is needed for the
-      XMLGUI based context menu. Passing 0 is ok and will disable the builtin context
-      menu.
-      @param parent the parent widget.
-    */
+     * Creates a new collection view.
+     *
+     * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
+     *                     This is needed for the XMLGUI based context menu.
+     *                     Passing 0 is ok and will disable the builtin context menu.
+     * @param parent The parent widget.
+     */
     explicit CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
 
     /**
-      Destroys this collection view.
-    */
+     * Destroys the collection view.
+     */
     virtual ~CollectionView();
 
     /**
-      Reimplemented from QAbstractItemView.
-    */
-    virtual void setModel ( QAbstractItemModel * model );
-
-    /**
-      Sets the KXmlGuiWindow which this view is used in. This is needed
-      if you want to use the built-in context menu.
-      @param xmlGuiWindow The KXmlGuiWindow this view is used in.
-    */
+     * Sets the KXmlGuiWindow which the view is used in.
+     * This is needed if you want to use the built-in context menu.
+     *
+     * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
+     */
     void setXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
+
+    virtual void setModel ( QAbstractItemModel * model );
 
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has clicked
      * a collection in the view.
+     *
+     * @param collection The clicked collection.
      */
     void clicked( const Akonadi::Collection &collection );
 
     /**
      * This signal is emitted whenever the current collection
      * in the view has changed.
+     *
+     * @param collection The new current collection.
      */
     void currentChanged( const Akonadi::Collection &collection );
 
@@ -95,12 +121,14 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     virtual void contextMenuEvent( QContextMenuEvent *event );
 
   private:
+    //@cond PRIVATE
     class Private;
     Private * const d;
 
     Q_PRIVATE_SLOT( d, void dragExpand() )
     Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
+    //@endcond
 };
 
 }
