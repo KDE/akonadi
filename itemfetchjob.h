@@ -45,8 +45,6 @@ class ItemFetchScope;
  * job->fetchScope().fetchFullPayload();
  *
  * if ( job->exec() ) {
- *   qDebug() << "Item deleted successfully";
- *
  *   Akonadi::Item::List items = job->items();
  *   foreach( const Akonadi::Item &item, items ) {
  *     qDebug() "Item ID:" << item.id();
