@@ -27,6 +27,9 @@
 
 namespace Akonadi {
 
+/**
+ * @internal
+ */
 class ItemPrivate : public EntityPrivate
 {
   public:

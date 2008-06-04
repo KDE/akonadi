@@ -27,6 +27,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class DefaultAttribute : public Attribute
 {
   public:
@@ -48,12 +51,18 @@ class DefaultAttribute : public Attribute
     QByteArray mType, mValue;
 };
 
+/**
+ * @internal
+ */
 class AttributeFactory::Private
 {
   public:
     QHash<QByteArray, Attribute*> attributes;
 };
 
+/**
+ * @internal
+ */
 class StaticAttributeFactory : public AttributeFactory
 {
   public:

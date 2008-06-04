@@ -36,7 +36,9 @@
 
 using namespace Akonadi;
 
-/*
+/**
+ * @internal
+ *
  * This struct is used for optimization reasons.
  * because it embeds the row.
  *
@@ -53,6 +55,9 @@ struct ItemContainer
   int row;
 };
 
+/**
+ * @internal
+ */
 class ItemModel::Private
 {
   public:

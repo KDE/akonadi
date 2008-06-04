@@ -20,8 +20,6 @@
 #ifndef AKONADI_MONITOR_P_H
 #define AKONADI_MONITOR_P_H
 
-// @cond PRIVATE
-
 #include "monitor.h"
 #include "collection.h"
 #include "collectionstatisticsjob.h"
@@ -40,6 +38,9 @@ namespace Akonadi {
 
 class Monitor;
 
+/**
+ * @internal
+ */
 class MonitorPrivate
 {
   public:
@@ -149,7 +150,9 @@ class MonitorPrivate
 
 
 /**
-  A job which fetches a job and a collection.
+ * @internal
+ *
+ * A job which fetches a job and a collection.
  */
 class AKONADI_EXPORT ItemCollectionFetchJob : public Job
 {
@@ -181,7 +184,5 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
 };
 
 }
-
-// @endcond
 
 #endif

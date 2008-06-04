@@ -49,6 +49,9 @@ struct Icons
 
 K_GLOBAL_STATIC( Icons, s_icons )
 
+/**
+ * @internal
+ */
 class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 {
   public:
@@ -63,6 +66,9 @@ class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
     QTextDocument* document( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 };
 
+/**
+ * @internal
+ */
 class AgentInstanceWidget::Private
 {
   public:

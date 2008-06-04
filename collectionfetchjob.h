@@ -81,7 +81,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * @param collections A list of collections to fetch. Must not be empty, content must be valid.
      * @param parent The parent object.
      */
-    explicit CollectionFetchJob( const Collection::List &colletions, QObject *parent = 0 );
+    explicit CollectionFetchJob( const Collection::List &collections, QObject *parent = 0 );
 
     /**
      * Destroys the collection fetch job.

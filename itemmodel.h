@@ -156,6 +156,8 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
   Q_SIGNALS:
     /**
      * This signal is emitted whenever setCollection is called.
+     *
+     * @param collection The new collection.
      */
      void collectionChanged( const Collection &collection );
 

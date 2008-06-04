@@ -33,6 +33,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class ItemSync::Private
 {
   public:

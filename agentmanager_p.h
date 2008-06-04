@@ -31,6 +31,9 @@ namespace Akonadi {
 
 class AgentManager;
 
+/**
+ * @internal
+ */
 class AgentManagerPrivate
 {
   friend class AgentManager;

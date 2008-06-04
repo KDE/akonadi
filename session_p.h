@@ -31,6 +31,9 @@ class QLocalSocket;
 
 namespace Akonadi {
 
+/**
+ * @internal
+ */
 class SessionPrivate
 {
   public:

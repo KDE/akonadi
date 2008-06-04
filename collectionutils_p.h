@@ -24,6 +24,9 @@
 
 namespace Akonadi {
 
+/**
+ * @internal
+ */
 namespace CollectionUtils
 {
   inline bool isVirtualParent( const Collection &collection )

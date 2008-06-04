@@ -20,8 +20,6 @@
 #ifndef ITEMPAYLOADINTERNALS_P_H
 #define ITEMPAYLOADINTERNALS_P_H
 
-//@cond PRIVATE
-
 #include <QtCore/QtGlobal>
 
 #include <typeinfo>
@@ -31,6 +29,9 @@
  * considered public API, and subject to change without notice
  */
 
+/**
+ * @internal
+ */
 struct PayloadBase
 {
     virtual ~PayloadBase() { }
@@ -38,6 +39,9 @@ struct PayloadBase
     virtual const char* typeName() const = 0;
 };
 
+/**
+ * @internal
+ */
 template <typename T>
 struct Payload : public PayloadBase
 {
@@ -64,6 +68,9 @@ struct Payload : public PayloadBase
     T payload;
 };
 
+/**
+ * @internal
+ */
 template <typename T>
 struct Payload<T*> : public PayloadBase
 {
@@ -72,7 +79,6 @@ struct Payload<T*> : public PayloadBase
         Q_ASSERT_X( false, "Akonadi::Payload", "The Item class is not intended to be used with raw pointer types. Please use a smart pointer instead." );
     }
 };
-//@endcond
 
 #endif
 

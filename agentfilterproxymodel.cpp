@@ -35,6 +35,9 @@ using namespace Akonadi;
 BOOST_STATIC_ASSERT( (int)AgentTypeModel::CapabilitiesRole == (int)AgentInstanceModel::CapabilitiesRole );
 BOOST_STATIC_ASSERT( (int)AgentTypeModel::MimeTypesRole == (int)AgentInstanceModel::MimeTypesRole );
 
+/**
+ * @internal
+ */
 class AgentFilterProxyModel::Private
 {
   public:

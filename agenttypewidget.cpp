@@ -30,6 +30,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class AgentTypeWidgetDelegate : public QAbstractItemDelegate
 {
   public:
@@ -43,6 +46,9 @@ class AgentTypeWidgetDelegate : public QAbstractItemDelegate
 };
 
 
+/**
+ * @internal
+ */
 class AgentTypeWidget::Private
 {
   public:

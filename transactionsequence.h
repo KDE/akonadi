@@ -29,33 +29,37 @@ namespace Akonadi {
 class TransactionSequencePrivate;
 
 /**
-  Base class for jobs that need to run a sequence of sub-jobs in a transaction.
-  As soon as the first subjob is added, the transaction is started.
-  As soon as the last subjob has successfully finished, the transaction is committed.
-  If any subjob fails, the transaction is rolled back.
-
-  Alternatively, a TransactionSequence object can be used as a parent object
-  for a set of jobs to achieve the same behaviour without subclassing.
-*/
+ * @short Base class for jobs that need to run a sequence of sub-jobs in a transaction.
+ *
+ * As soon as the first subjob is added, the transaction is started.
+ * As soon as the last subjob has successfully finished, the transaction is committed.
+ * If any subjob fails, the transaction is rolled back.
+ *
+ * Alternatively, a TransactionSequence object can be used as a parent object
+ * for a set of jobs to achieve the same behaviour without subclassing.
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT TransactionSequence : public Job
 {
   Q_OBJECT
   public:
     /**
-      Creates a new transaction job sequence.
-      @param parent The parent object.
-    */
+     * Creates a new transaction sequence.
+     *
+     * @param parent The parent object.
+     */
     explicit TransactionSequence( QObject *parent = 0 );
 
     /**
-      Destroys this job.
-    */
+     * Destroys the transaction sequence.
+     */
     ~TransactionSequence();
 
   protected:
     /**
-      Commit the transaction as soon as all pending sub-jobs finished successfully.
-    */
+     * Commits the transaction as soon as all pending sub-jobs finished successfully.
+     */
     void commit();
 
     bool addSubjob( KJob* job );
@@ -67,8 +71,10 @@ class AKONADI_EXPORT TransactionSequence : public Job
   private:
     Q_DECLARE_PRIVATE( TransactionSequence )
 
+    //@cond PRIVATE
     Q_PRIVATE_SLOT( d_func(), void commitResult(KJob*) )
     Q_PRIVATE_SLOT( d_func(), void rollbackResult(KJob*) )
+    //@endcond
 };
 
 }

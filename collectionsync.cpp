@@ -30,6 +30,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class CollectionSync::Private
 {
   public:

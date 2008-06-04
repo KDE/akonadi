@@ -24,6 +24,9 @@
 
 namespace Akonadi {
 
+/**
+ * @internal
+ */
 class JobPrivate
 {
   public:
@@ -49,7 +52,7 @@ class JobPrivate
       Returns a new unique command tag for communication with the backend.
     */
     QByteArray newTag();
-    
+
     /**
       Return the tag used for the request.
     */

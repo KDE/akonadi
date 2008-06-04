@@ -78,6 +78,9 @@ static bool canCreateCollection( const Collection &collection )
   return true;
 }
 
+/**
+ * @internal
+ */
 class StandardActionManager::Private
 {
   public:

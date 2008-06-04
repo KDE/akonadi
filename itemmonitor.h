@@ -92,9 +92,9 @@ class AKONADI_EXPORT ItemMonitor
     virtual ~ItemMonitor();
 
     /**
-     * Sets the item that shall be monitored.
+     * Sets the @p item that shall be monitored.
      */
-    void setItem( const Item &id );
+    void setItem( const Item &item );
 
     /**
      * Returns the currently monitored item.

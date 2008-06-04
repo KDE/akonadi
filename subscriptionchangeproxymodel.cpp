@@ -25,6 +25,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class SubscriptionChangeProxyModel::Private
 {
   public:

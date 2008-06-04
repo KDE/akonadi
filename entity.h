@@ -66,9 +66,9 @@ class AKONADI_EXPORT Entity
     ~Entity();
 
     /**
-     * Sets the unique identifier of the entity.
+     * Sets the unique @p identifier of the entity.
      */
-    void setId( Id id );
+    void setId( Id identifier );
 
     /**
      * Returns the unique identifier of the entity.

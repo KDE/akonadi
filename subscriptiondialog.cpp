@@ -28,6 +28,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class SubscriptionDialog::Private
 {
   public:

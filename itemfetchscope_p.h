@@ -25,6 +25,9 @@
 
 namespace Akonadi {
 
+/**
+ * @internal
+ */
 class ItemFetchScopePrivate : public QSharedData
 {
   public:
