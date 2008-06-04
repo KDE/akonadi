@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTIONMODEL_P_H
 #define AKONADI_COLLECTIONMODEL_P_H
 
-// @cond PRIVATE
+//@cond PRIVATE
 
 #include "collection.h"
 
@@ -88,5 +88,7 @@ class CollectionModelPrivate
 };
 
 }
+
+//@endcond
 
 #endif
