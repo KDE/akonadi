@@ -69,13 +69,13 @@ class StaticAttributeFactory : public AttributeFactory
     bool initialized;
 };
 
-K_GLOBAL_STATIC( StaticAttributeFactory, s_instance )
+K_GLOBAL_STATIC( StaticAttributeFactory, s_attributeInstance )
 
 
 AttributeFactory* AttributeFactory::self()
 {
-  s_instance->init();
-  return s_instance;
+  s_attributeInstance->init();
+  return s_attributeInstance;
 }
 
 AttributeFactory::AttributeFactory()

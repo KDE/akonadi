@@ -28,13 +28,25 @@ namespace Akonadi {
 class CollectionStatisticsModelPrivate;
 
 /**
- * Supports columns for everything in the CollectionStatistics for
- * the collections.
- * Additionally, it provides special Roles to access those statistics via
- * data().
- * With this model, automatic fetching of the CollectionStatistic is enabled
- * by default.
-*/
+ * @short A model that provides statistics for collections.
+ *
+ * This model extends the CollectionModel by providing additional
+ * information about the collections, e.g. the number of items
+ * in a collection or the number of read/unread items.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * QTreeView *view = new QTreeView( this );
+ *
+ * Akonadi::CollectionStatisticsModel *model = new Akonadi::CollectionStatisticsModel( view );
+ * view->setModel( model );
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT CollectionStatisticsModel : public CollectionModel
 {
   Q_OBJECT
@@ -42,7 +54,7 @@ class AKONADI_EXPORT CollectionStatisticsModel : public CollectionModel
   public:
 
     /**
-     * Custom roles for the message collection model
+     * Describes the roles for the statistics collection model.
      */
     enum Roles {
       UnreadRole = CollectionModel::UserRole + 1, ///< The number of unread items in this collection.
@@ -51,28 +63,19 @@ class AKONADI_EXPORT CollectionStatisticsModel : public CollectionModel
       RecursiveUnreadRole,                        ///< The number of unread items in this collection and its children.
       RecursiveTotalRole,                         ///< The number of items in this collection and its children.
       RecursiveStatisticsRole,                    ///< A statistics object of this collection and its children.
-      UserRole = CollectionModel::UserRole + 42
+      UserRole = CollectionModel::UserRole + 42   ///< Role for user extensions.
     };
 
     /**
-      Create a new collection statistics model.
-      @param parent The parent object.
-    */
+     * Creates a new collection statistics model.
+     * @param parent The parent object.
+     */
     explicit CollectionStatisticsModel( QObject *parent = 0 );
 
-    /**
-      Reimplemented from CollectionModel.
-    */
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
 
-    /**
-      Reimplemented from CollectionModel.
-    */
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 
-    /**
-      Reimplemented from QAbstractItemModel.
-    */
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
   private:

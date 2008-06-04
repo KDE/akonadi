@@ -30,15 +30,31 @@ namespace Akonadi {
 class CollectionStatisticsDelegatePrivate;
 
 /**
- * The CollectionStatisticsDelegate draws the unread and total count of the
- * underlying CollectionStatisticsModel in a special way.
+ * @short A delegate that draws unread and total count for CollectionStatisticsModel.
  *
- * <li>Collections with unread items will have the foldername and the unread
- *     column marked in bold.
- * <li>If a folder is collapsed, the unread and the total column will contain
- *     the total sum of all child folders
- * <li>It has the possibility to draw the unread count directly after the
- *     foldername, see toggleUnreadAfterFolderName().
+ * The delegate provides the following features:
+ *
+ *    - Collections with unread items will have the foldername and the unread
+ *      column marked in bold.
+ *    - If a folder is collapsed, the unread and the total column will contain
+ *      the total sum of all child folders</li>
+ *    - It has the possibility to draw the unread count directly after the
+ *      foldername, see toggleUnreadAfterFolderName().</li>
+ *
+ * Example:
+ * @code
+ *
+ * QTreeView *view = new QTreeView( this );
+ *
+ * Akonadi::CollectionStatisticsModel *model = new Akonadi::CollectionStatisticsModel( view );
+ * view->setModel( model );
+ *
+ * Akonadi::CollectionStatisticsDelegate *delegate = new Akonadi::CollectionStatisticsDelegate( view );
+ * view->setItemDelegate( delegate );
+ *
+ * @endcode
+ *
+ * @author Thomas McGuire <thomas.mcguire@gmx.net>
  */
 class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
 {
@@ -47,46 +63,45 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
   public:
 
     /**
-     * Constructs an CollectionStatisticsDelegate with the given parent.
-     * You still need to call setItemDelegate() yourself.
+     * Creates a new collection statistics delegate.
      *
      * @param parent the parent tree view, which will also take ownership
      */
     explicit CollectionStatisticsDelegate( QTreeView *parent );
 
+    /**
+     * Destroys the collection statistics delegate.
+     */
     ~CollectionStatisticsDelegate();
 
   public Q_SLOTS:
-
     /**
-     * Enable or disable the drawing of the unread count behind the folder
-     * name.
+     * Sets whether the unread count is drawn next to the folder name.
+     *
      * You probably want to enable this when the unread count is hidden only.
      * This is disabled by default.
      *
-     * @param enable if true, the unread count is drawn behind the folder name,
-     *               if false, the folder name will be drawn normally.
+     * @param enable If @c true, the unread count is drawn next to the folder name,
+     *               if @c false, the folder name will be drawn normally.
      */
     void setUnreadCountShown( bool enable );
 
+    /**
+     * Returns whether the unread count is drawn next to the folder name.
+     */
     bool unreadCountShown() const;
 
   protected:
-
-    /**
-     * Reimplemented
-     */
     virtual void paint( QPainter *painter, const QStyleOptionViewItem &option,
                         const QModelIndex &index ) const;
 
-    /**
-     * Reimplemented
-     */
     virtual void initStyleOption( QStyleOptionViewItem *option,
                                   const QModelIndex &index ) const;
 
   private:
+    //@cond PRIVATE
     CollectionStatisticsDelegatePrivate* const d_ptr;
+    //@endcond
 
     Q_DECLARE_PRIVATE( CollectionStatisticsDelegate )
 };

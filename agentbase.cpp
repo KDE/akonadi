@@ -116,7 +116,7 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
   : q_ptr( parent ),
     mStatusCode( AgentBase::Idle ),
     mProgress( 0 ),
-    mOnline( true ),
+    mOnline( false ),
     mSettings( 0 ),
     mObserver( 0 )
 {
@@ -149,11 +149,10 @@ void AgentBasePrivate::init()
 
   mMonitor = new ChangeRecorder( q );
   mMonitor->ignoreSession( Session::defaultSession() );
+  mMonitor->itemFetchScope().setCacheOnly( true );
   mMonitor->setConfig( mSettings );
 
   mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
-  if ( mOnline )
-    mMonitor->itemFetchScope().fetchFullPayload();
 
   connect( mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
@@ -178,8 +177,10 @@ void AgentBasePrivate::init()
 
 void AgentBasePrivate::delayedInit()
 {
+  Q_Q( AgentBase );
   if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
     kFatal() << "Unable to register service at dbus:" << QDBusConnection::sessionBus().lastError().message();
+  q->setOnline( mOnline );
 }
 
 void AgentBasePrivate::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
@@ -299,7 +300,7 @@ AgentBase::~AgentBase()
   delete d_ptr;
 }
 
-static char* sAppName = 0;
+static char* sAgentAppName = 0;
 
 QString AgentBase::parseArguments( int argc, char **argv )
 {
@@ -319,8 +320,8 @@ QString AgentBase::parseArguments( int argc, char **argv )
     exit( 1 );
   }
 
-  sAppName = qstrdup( identifier.toLatin1().constData() );
-  KCmdLineArgs::init( argc, argv, sAppName, 0, ki18n("Akonadi Agent"),"0.1" ,
+  sAgentAppName = qstrdup( identifier.toLatin1().constData() );
+  KCmdLineArgs::init( argc, argv, sAgentAppName, 0, ki18n("Akonadi Agent"),"0.1" ,
                       ki18n("Akonadi Agent") );
 
   KCmdLineOptions options;
@@ -335,7 +336,7 @@ int AgentBase::init( AgentBase *r )
   QApplication::setQuitOnLastWindowClosed( false );
   int rv = kapp->exec();
   delete r;
-  delete[] sAppName;
+  delete[] sAgentAppName;
   return rv;
 }
 
@@ -379,8 +380,7 @@ void AgentBase::setOnline( bool state )
   Q_D( AgentBase );
   d->mOnline = state;
   d->mSettings->setValue( QLatin1String( "Agent/Online" ), state );
-  d->mMonitor->fetchCollection( state );
-  // TODO: d->monitor->fetchItemData( state );
+  doSetOnline( state );
 }
 
 void AgentBase::doSetOnline( bool online )

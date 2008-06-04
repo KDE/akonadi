@@ -27,31 +27,58 @@
 namespace Akonadi {
 
 /**
-  This class provides methods to control the Akonadi server.
-*/
+ * @short Provides methods to control the Akonadi server process.
+ *
+ * This class provides a method to start the Akonadi server
+ * process synchronously.
+ *
+ * Normally the Akonadi server is started by the KDE session
+ * manager, however for unit tests or special needs one can
+ * use this class to start it explicitly.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * if ( !Akonadi::Control::start() ) {
+ *   qDebug() << "Unable to start server, exit application";
+ *   return 1;
+ * } else {
+ *   ...
+ * }
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT Control : public QObject
 {
   Q_OBJECT
 
   public:
     /**
-      Destructor
+     * Destroys the control object.
      */
     ~Control();
 
     /**
-      Starts the Akonadi server synchronously if necessary.
+     * Starts the Akonadi server synchronously if it is not already running.
      */
     static bool start();
 
   protected:
+    /**
+     * Creates the control object.
+     */
     Control();
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void serviceOwnerChanged( const QString&, const QString&, const QString& ) )
+    //@endcond
 };
 
 }

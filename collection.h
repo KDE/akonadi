@@ -36,9 +36,9 @@ class CollectionPrivate;
 class CollectionStatistics;
 
 /**
- * @short Represents a collection of PIM objects.
+ * @short Represents a collection of PIM items.
  *
- * This class represents a collection of PIM objects, such as a folder on a mail- or
+ * This class represents a collection of PIM items, such as a folder on a mail- or
  * groupware-server.
  *
  * Collections are hierarchical, i.e., they may have a parent collection.

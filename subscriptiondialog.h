@@ -27,8 +27,10 @@
 namespace Akonadi {
 
 /**
-  Local subsription dialog.
-*/
+ * @internal
+ *
+ * Local subsription dialog.
+ */
 class AKONADI_EXPORT SubscriptionDialog : public KDialog
 {
   Q_OBJECT

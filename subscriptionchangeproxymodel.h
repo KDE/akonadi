@@ -25,11 +25,11 @@
 namespace Akonadi {
 
 /**
-  Proxy model that can be used on top of a SubscriptionModel to filter out
-  only the actual changes.
-
-  @internal
-*/
+ * @internal
+ *
+ * Proxy model that can be used on top of a SubscriptionModel to filter out
+ * only the actual changes.
+ */
 class SubscriptionChangeProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT

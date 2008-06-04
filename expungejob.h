@@ -27,8 +27,10 @@ namespace Akonadi {
 class ExpungeJobPrivate;
 
 /**
-  Permanently removes all items marked for deletion.
-*/
+ * @internal
+ *
+ * Permanently removes all items marked for deletion.
+ */
 class ExpungeJob : public Job
 {
   Q_OBJECT

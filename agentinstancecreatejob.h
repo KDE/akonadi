@@ -42,7 +42,7 @@ class AgentInstance;
  *   : QWidget( parent )
  * {
  *   // Get agent type object
- *   Akonadi::AgentType type = Akonadi::AgentManager::type( "akonadi_vcard_resource" );
+ *   Akonadi::AgentType type = Akonadi::AgentManager::self()->type( "akonadi_vcard_resource" );
  *
  *   Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( type );
  *   connect( job, SIGNAL( result( KJob * ) ),

@@ -30,24 +30,43 @@ class Item;
 class ItemDeleteJobPrivate;
 
 /**
-  Convenience job which permanently deletes an item, ie. sets the \\Deleted flag
-  and then executes the EXPUNGE command.
-*/
+ * @short Job that deletes an item from the Akonadi storage.
+ *
+ * This job removes the given item from the Akonadi storage.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * Akonadi::Item item = ...
+ *
+ * ItemDeleteJob *job = new ItemDeleteJob( item );
+ *
+ * if ( job->exec() )
+ *   qDebug() << "Item deleted successfully";
+ * else
+ *   qDebug() << "Error occurred";
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT ItemDeleteJob : public Job
 {
   Q_OBJECT
 
   public:
     /**
-      Cretes a new ItemDeleteJob.
-      @param item The item to delete.
-      @param parent The parent object.
-    */
+     * Creates a new item delete job.
+     *
+     * @param item The item to delete.
+     * @param parent The parent object.
+     */
     explicit ItemDeleteJob( const Item &item, QObject *parent = 0 );
 
     /**
-      Destorys this job.
-    */
+     * Destroys the item delete job.
+     */
     ~ItemDeleteJob();
 
   protected:
@@ -56,7 +75,9 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
   private:
     Q_DECLARE_PRIVATE( ItemDeleteJob )
 
+    //@cond PRIVATE
     Q_PRIVATE_SLOT( d_func(), void jobDone( KJob* ) )
+    //@endcond
 };
 
 }

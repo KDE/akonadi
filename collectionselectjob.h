@@ -28,8 +28,9 @@ namespace Akonadi {
 class CollectionSelectJobPrivate;
 
 /**
-  Selects a specific collection. See RFC 3501 for select semantics.
-*/
+ * @internal
+ *  Selects a specific collection. See RFC 3501 for select semantics.
+ */
 class AKONADI_EXPORT CollectionSelectJob : public Job
 {
   Q_OBJECT
