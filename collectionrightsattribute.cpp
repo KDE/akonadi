@@ -66,6 +66,9 @@ static QByteArray rightsToData( Collection::Rights &rights )
   return data;
 }
 
+/**
+ * @internal
+ */
 class CollectionRightsAttribute::Private
 {
   public:

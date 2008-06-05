@@ -30,23 +30,42 @@ class Item;
 class ItemMoveJobPrivate;
 
 /**
-  Moves items into a different collection.
-*/
+ * @short Job that moves an item into a different collection in the Akonadi storage.
+ *
+ * This job takes an item and moves it to a collection in the Akonadi storage.
+ *
+ * @code
+ *
+ * Akonadi::Item item = ...
+ * Akonadi::Collection collection = Akonadi::Collection::root();
+ *
+ * Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( item, collection );
+ * if ( job->exec() )
+ *   qDebug() << "Item moved successfully";
+ * else
+ *   qDebug() << "Error occurred";
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT ItemMoveJob : public Job
 {
   Q_OBJECT
+
   public:
     /**
-      Move the given item into collection @p target.
-      @param item The item to move.
-      @param target The target collection.
-      @param parent The parent object.
-    */
+     * Move the given item into the given collection.
+     *
+     * @param item The item to move.
+     * @param target The target collection.
+     * @param parent The parent object.
+     */
     ItemMoveJob( const Item &item, const Collection &target, QObject *parent = 0 );
 
     /**
-      Destructor.
-    */
+     * Destroys the item move job.
+     */
     ~ItemMoveJob();
 
   protected:

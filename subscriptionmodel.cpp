@@ -27,6 +27,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class SubscriptionModel::Private
 {
   public:

@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-// @cond PRIVATE
+//@cond PRIVATE
 
 #include "collectionmodel_p.h"
 #include "collectionmodel.h"
@@ -273,3 +273,5 @@ void CollectionModelPrivate::startFirstListJob()
               q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
   q->connect( job, SIGNAL(result(KJob*)), q, SLOT(listDone(KJob*)) );
 }
+
+//@endcond

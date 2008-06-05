@@ -23,6 +23,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class CollectionStatistics::Private : public QSharedData
 {
   public:

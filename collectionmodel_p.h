@@ -20,8 +20,6 @@
 #ifndef AKONADI_COLLECTIONMODEL_P_H
 #define AKONADI_COLLECTIONMODEL_P_H
 
-// @cond PRIVATE
-
 #include "collection.h"
 
 #include <QtCore/QHash>
@@ -39,6 +37,9 @@ class CollectionStatistics;
 class Monitor;
 class Session;
 
+/**
+ * @internal
+ */
 class CollectionModelPrivate
 {
   public:

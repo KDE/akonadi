@@ -32,6 +32,9 @@ const Class##Private* Class ::d_func() const { return reinterpret_cast<const Cla
 
 namespace Akonadi {
 
+/**
+ * @internal
+ */
 class EntityPrivate : public QSharedData
 {
   public:
@@ -71,6 +74,8 @@ class EntityPrivate : public QSharedData
 }
 
 /**
+ * @internal
+ *
  * This template specialization is used to change the detach
  * behaviour of QSharedDataPointer to match our needs.
  */

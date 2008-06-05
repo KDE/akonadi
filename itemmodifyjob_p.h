@@ -24,6 +24,9 @@
 
 namespace Akonadi {
 
+/**
+ * @internal
+ */
 class ItemModifyJobPrivate : public JobPrivate
 {
   public:

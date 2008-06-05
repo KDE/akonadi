@@ -31,8 +31,39 @@ class Collection;
 class ItemModifyJobPrivate;
 
 /**
-  Modifies an existing Item.
-*/
+ * @short Job that modifies an existing item in the Akonadi storage.
+ *
+ * This job is used to writing back items to the Akonadi storage, after
+ * the user has changed them in any way.
+ * For performance reasons either the full item (including the full payload)
+ * can written back or only the meta data of the item.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * // Fetch item with unique id 125
+ * Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( Akonadi::Item( 125 ) );
+ * if ( fetchJob->exec() ) {
+ *   Akonadi::Item item = fetchJob->items().first();
+ *
+ *   // Set a custom flag
+ *   item.setFlag( "\GotIt" );
+ *
+ *   // Store back modified item
+ *   Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item );
+ *   if ( modifyJob->exec() )
+ *     qDebug() << "Item modified successfully";
+ *   else
+ *     qDebug() << "Error occurred";
+ * } else {
+ *   qDebug() << "Error occurred";
+ * }
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT ItemModifyJob : public Job
 {
   friend class ResourceBase;
@@ -41,31 +72,42 @@ class AKONADI_EXPORT ItemModifyJob : public Job
 
   public:
     /**
-      Stores data at the item.
-      By default only the meta data is stored, you need to explicitly enable storing
-      of the payload data.
-      @param item The Item object to store.
-      @param parent The parent object.
-    */
+     * Creates a new item modify job.
+     *
+     * @param item The modified item object to store.
+     * @param parent The parent object.
+     */
     explicit ItemModifyJob( const Item &item, QObject *parent = 0 );
 
     /**
-      Destroys this job.
+     * Destroys the item modify job.
      */
     virtual ~ItemModifyJob();
 
+    /**
+     * Sets whether the payload of the modified item shall be
+     * transmitted to the Akonadi storage as well.
+     * The default is @c true, however it can be disabled for
+     * performance reasons.
+     */
     void setIgnorePayload( bool ignore );
 
+    /**
+     * Returns whether the payload of the modified item shall be
+     * transmitted to the Akonadi storage as well.
+     */
     bool ignorePayload() const;
 
     /**
-      Disable revision checking.
-    */
+     * Disables the check of the revision number.
+     *
+     * @note If disabled, no conflict detection is available.
+     */
     void disableRevisionCheck();
 
     /**
-      Returns the stored item (including the changed revision number),
-    */
+     * Returns the modified and stored item including the changed revision number.
+     */
     Item item() const;
 
   protected:

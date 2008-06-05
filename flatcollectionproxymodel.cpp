@@ -23,6 +23,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class FlatCollectionProxyModel::Private
 {
   public:

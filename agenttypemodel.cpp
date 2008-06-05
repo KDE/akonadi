@@ -26,6 +26,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class AgentTypeModel::Private
 {
   public:

@@ -28,9 +28,11 @@
 
 class QSettings;
 
-//@cond PRIVATE
 namespace Akonadi {
 
+/**
+ * @internal
+ */
 class AgentBasePrivate : public QObject
 {
   Q_OBJECT
@@ -100,6 +102,5 @@ class AgentBasePrivate : public QObject
 };
 
 }
-//@endcond
 
 #endif

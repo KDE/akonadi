@@ -32,6 +32,9 @@ using namespace Akonadi;
 
 static const int safetyTimeout = 10000; // ms
 
+/**
+ * @internal
+ */
 class AgentInstanceCreateJob::Private
 {
   public:

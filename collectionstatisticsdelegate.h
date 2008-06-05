@@ -37,9 +37,9 @@ class CollectionStatisticsDelegatePrivate;
  *    - Collections with unread items will have the foldername and the unread
  *      column marked in bold.
  *    - If a folder is collapsed, the unread and the total column will contain
- *      the total sum of all child folders</li>
+ *      the total sum of all child folders
  *    - It has the possibility to draw the unread count directly after the
- *      foldername, see toggleUnreadAfterFolderName().</li>
+ *      foldername, see toggleUnreadAfterFolderName().
  *
  * Example:
  * @code

@@ -174,7 +174,7 @@ class AKONADI_EXPORT ItemFetchScope
      * Sets whether payload data should be requested from remote sources or just
      * from the local cache.
      *
-     * @param chacheOnly @c true if no remote data should be requested,
+     * @param cacheOnly @c true if no remote data should be requested,
      * @c false otherwise (the default).
      */
     void setCacheOnly( bool cacheOnly );

@@ -31,6 +31,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class ItemView::Private
 {
   public:

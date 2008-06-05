@@ -21,6 +21,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class CollectionPropertiesPage::Private
 {
   public:

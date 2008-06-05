@@ -39,6 +39,9 @@
 
 using namespace Akonadi;
 
+/**
+ * @internal
+ */
 class CollectionView::Private
 {
   public:
