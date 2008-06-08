@@ -26,6 +26,7 @@
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemmodifyjob.h"
+#include "transactionsequence.h"
 
 #include <kdebug.h>
 
@@ -41,6 +42,9 @@ class ItemSync::Private
   public:
     Private( ItemSync *parent ) :
       q( parent ),
+      mTransactionMode( Single ),
+      mCurrentTransaction( 0 ),
+      mTransactionJobs( 0 ),
       mPendingJobs( 0 ),
       mProgress( 0 ),
       mTotalItems( 0 ),
@@ -60,12 +64,24 @@ class ItemSync::Private
     void execute();
     void processItems();
     void deleteItems( const Item::List &items );
+    void slotTransactionResult( KJob *job );
+    Job* subjobParent() const;
 
     ItemSync *q;
     Collection mSyncCollection;
     QHash<Item::Id, Akonadi::Item> mLocalItemsById;
     QHash<QString, Akonadi::Item> mLocalItemsByRemoteId;
     QSet<Akonadi::Item> mUnprocessedLocalItems;
+
+    // transaction mode, TODO: make this public API?
+    enum TransactionMode {
+      Single,
+      Chunkwise,
+      None
+    };
+    TransactionMode mTransactionMode;
+    TransactionSequence *mCurrentTransaction;
+    int mTransactionJobs;
 
     // remote items
     Akonadi::Item::List mRemoteItems;
@@ -88,21 +104,21 @@ class ItemSync::Private
 void ItemSync::Private::createLocalItem( const Item & item )
 {
   mPendingJobs++;
-  ItemCreateJob *create = new ItemCreateJob( item, mSyncCollection, q );
+  ItemCreateJob *create = new ItemCreateJob( item, mSyncCollection, subjobParent() );
   q->connect( create, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
 }
 
 void ItemSync::Private::checkDone()
 {
   q->setProcessedAmount( KJob::Bytes, mProgress );
-  if ( mPendingJobs > 0 || !mDeliveryDone )
+  if ( mPendingJobs > 0 || !mDeliveryDone || mTransactionJobs > 0 )
     return;
 
-  q->commit();
+  q->emitResult();
 }
 
 ItemSync::ItemSync( const Collection &collection, QObject *parent ) :
-    TransactionSequence( parent ),
+    Job( parent ),
     d( new Private( this ) )
 {
   d->mSyncCollection = collection;
@@ -215,9 +231,20 @@ void ItemSync::Private::execute()
   if ( !mLocalListDone )
     return;
 
+  if ( (mTransactionMode == Single && !mCurrentTransaction) || mTransactionMode == Chunkwise ) {
+    ++mTransactionJobs;
+    mCurrentTransaction = new TransactionSequence( q );
+    connect( mCurrentTransaction, SIGNAL(result(KJob*)), q, SLOT(slotTransactionResult(KJob*)) );
+  }
+
   processItems();
-  if ( !mDeliveryDone )
+  if ( !mDeliveryDone ) {
+    if ( mTransactionMode == Chunkwise && mCurrentTransaction ) {
+      mCurrentTransaction->commit();
+      mCurrentTransaction = 0;
+    }
     return;
+  }
 
   // removed
   if ( !mIncremental )
@@ -226,6 +253,11 @@ void ItemSync::Private::execute()
   deleteItems( mRemovedRemoteItems );
   mLocalItemsById.clear();
   mLocalItemsByRemoteId.clear();
+
+  if ( mCurrentTransaction ) {
+    mCurrentTransaction->commit();
+    mCurrentTransaction = 0;
+  }
 
   checkDone();
 }
@@ -271,7 +303,7 @@ void ItemSync::Private::processItems()
       i.setRemoteId( remoteItem.remoteId() );
       i.setRevision( localItem.revision() );
       i.setFlags( remoteItem.flags() );
-      ItemModifyJob *mod = new ItemModifyJob( i, q );
+      ItemModifyJob *mod = new ItemModifyJob( i, subjobParent() );
       q->connect( mod, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
     } else {
       mProgress++;
@@ -284,7 +316,7 @@ void ItemSync::Private::deleteItems( const Item::List &items )
 {
   foreach ( const Item &item, items ) {
     mPendingJobs++;
-    ItemDeleteJob *job = new ItemDeleteJob( item, q );
+    ItemDeleteJob *job = new ItemDeleteJob( item, subjobParent() );
     q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
   }
 }
@@ -298,6 +330,23 @@ void ItemSync::Private::slotLocalChangeDone( KJob * job )
   mProgress++;
 
   checkDone();
+}
+
+void ItemSync::Private::slotTransactionResult( KJob *job )
+{
+  if ( job->error() )
+    return;
+
+  --mTransactionJobs;
+
+  checkDone();
+}
+
+Job * ItemSync::Private::subjobParent() const
+{
+  if ( mCurrentTransaction && mTransactionMode != None )
+    return mCurrentTransaction;
+  return q;
 }
 
 #include "itemsync.moc"

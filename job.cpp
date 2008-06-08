@@ -91,9 +91,11 @@ void JobPrivate::init( QObject *parent )
 void JobPrivate::startQueued()
 {
   Q_Q( Job );
+  mStarted = true;
 
   emit q->aboutToStart( q );
   q->doStart();
+  QTimer::singleShot( 0, q, SLOT(startNext()) );
 }
 
 void JobPrivate::lostConnection()
@@ -118,7 +120,7 @@ void JobPrivate::startNext()
 {
   Q_Q( Job );
 
-  if ( !mCurrentSubJob && q->hasSubjobs() ) {
+  if ( mStarted && !mCurrentSubJob && q->hasSubjobs() ) {
     Job *job = dynamic_cast<Akonadi::Job*>( q->subjobs().first() );
     Q_ASSERT( job );
     job->d_ptr->startQueued();

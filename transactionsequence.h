@@ -56,12 +56,12 @@ class AKONADI_EXPORT TransactionSequence : public Job
      */
     ~TransactionSequence();
 
-  protected:
     /**
      * Commits the transaction as soon as all pending sub-jobs finished successfully.
      */
     void commit();
 
+  protected:
     bool addSubjob( KJob* job );
     void doStart();
 
