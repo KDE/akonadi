@@ -101,7 +101,7 @@ class AKONADI_EXPORT CollectionStatistics
     /**
      * Sets the number of unread items in this collection.
      *
-     * @param count The number of unread messages
+     * @param count The number of unread messages.
      * @see unreadCount()
      */
     void setUnreadCount( qint64 count );

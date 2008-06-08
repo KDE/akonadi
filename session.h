@@ -31,12 +31,30 @@ class Job;
 class SessionPrivate;
 
 /**
-  A communication session with the Akonadi storage. Every Job object has to
-  be associated with a Session. The session is responsible of scheduling its
-  jobs. For now only a simple serial execution is impleneted (the IMAP-like
-  protocol to communicate with the storage backend is capable of parallel
-  execution on a single session though).
-*/
+ * @short A communication session with the Akonadi storage.
+ *
+ * Every Job object has to be associated with a Session.
+ * The session is responsible of scheduling its jobs.
+ * For now only a simple serial execution is impleneted (the IMAP-like
+ * protocol to communicate with the storage backend is capable of parallel
+ * execution on a single session though).
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * Session *session = new Session( "mySession" );
+ *
+ * CollectionFetchJob *job = new CollectionFetchJob( Collection::root(),
+ *                                                   CollectionFetchJob::Recursive,
+ *                                                   session );
+ *
+ * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT Session : public QObject
 {
   Q_OBJECT
@@ -47,36 +65,38 @@ class AKONADI_EXPORT Session : public QObject
 
   public:
     /**
-      Open a new session to the Akonadi storage.
-      @param sessionId The identifier for this session, will be a
-      random vaule if empty.
-      @param parent The parent object.
-
-      @see defaultSession()
-    */
+     * Creates a new session.
+     *
+     * @param sessionId The identifier for this session, will be a
+     *                  random value if empty.
+     * @param parent The parent object.
+     *
+     * @see defaultSession()
+     */
     explicit Session( const QByteArray &sessionId = QByteArray(), QObject *parent = 0 );
 
     /**
-      Closes this session.
-    */
+     * Destroys the session.
+     */
     ~Session();
 
     /**
-      Returns the session identifier.
-    */
+     * Returns the session identifier.
+     */
     QByteArray sessionId() const;
 
     /**
-      Returns the default session for this thread.
-    */
+     * Returns the default session for this thread.
+     */
     static Session* defaultSession();
 
     /**
-      Stops all jobs queued for execution.
-    */
+     * Stops all jobs queued for execution.
+     */
     void clear();
 
   private:
+    //@cond PRIVATE
     SessionPrivate* const d;
 
     Q_PRIVATE_SLOT( d, void reconnect() )
@@ -85,6 +105,7 @@ class AKONADI_EXPORT Session : public QObject
     Q_PRIVATE_SLOT( d, void doStartNext() )
     Q_PRIVATE_SLOT( d, void jobDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void jobWriteFinished( Akonadi::Job* ) )
+    //@endcond PRIVATE
 };
 
 }

@@ -56,7 +56,7 @@ class AKONADI_EXPORT CollectionPathResolver : public Job
      * Creates a new collection path resolver to determine the path of
      * the given collection.
      *
-     * @param collection The collection
+     * @param collection The collection.
      * @param parent The parent object.
      */
     explicit CollectionPathResolver( const Collection &collection, QObject *parent = 0 );

@@ -140,7 +140,7 @@ public:
      * @param data A QIODevice providing access to the serialized data.
      *             The QIODevice is opened in read-only mode and positioned at the beginning.
      *             The QIODevice is guaranteed to be valid.
-     * @param version The version of the data format as set by the user in serialize() or @c 0 (default)
+     * @param version The version of the data format as set by the user in serialize() or @c 0 (default).
      * @return @c false if the specified part is not supported by this plugin, @c true if the part
      *            could be de-serialized successfully.
      */

@@ -41,7 +41,7 @@ class SubscriptionModel : public CollectionModel
 
     /**
       Create a new subscription model.
-      @param parent the parent object
+      @param parent The parent object.
     */
     explicit SubscriptionModel( QObject *parent = 0 );
 

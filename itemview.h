@@ -30,60 +30,84 @@ namespace Akonadi {
 class Item;
 
 /**
-  A view to show an item list provided by an ItemModel.
-
-  When a KXmlGuiWindow is set, the XMLGUI defined context menu
-  @c akonadi_itemview_contextmenu is used if available.
-
-  @todo Convenience ctor including the KXmlGuiWindow for non-designer users?
-*/
+ * @short A view to show an item list provided by an ItemModel.
+ *
+ * When a KXmlGuiWindow is set, the XMLGUI defined context menu
+ * @c akonadi_itemview_contextmenu is used if available.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * class MyWindow : public KXmlGuiWindow
+ * {
+ *   public:
+ *    MyWindow()
+ *      : KXmlGuiWindow()
+ *    {
+ *      Akonadi::ItemView *view = new Akonadi::ItemView( this, this );
+ *      setCentralWidget( view );
+ *
+ *      Akonadi::ItemModel *model = new Akonadi::ItemModel( this );
+ *      view->setModel( model );
+ *    }
+ * }
+ *
+ * @endcode
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ */
 class AKONADI_EXPORT ItemView : public QTreeView
 {
   Q_OBJECT
 
   public:
     /**
-      Create a new item view.
-      @param parent the parent widget.
-    */
+     * Creates a new item view.
+     *
+     * @param parent The parent widget.
+     */
     explicit ItemView( QWidget *parent = 0 );
 
     /**
-      Create a new item view.
-      @param xmlGuiWindow The KXmlGuiWindow this is used in. This is needed for the
-      XMLGUI based context menu. Passing 0 is ok and will disable the builtin context
-      menu.
-      @param parent the parent widget.
-    */
+     * Creates a new item view.
+     *
+     * @param xmlGuiWindow The KXmlGuiWindow this is used in.
+     *                     This is needed for the XMLGUI based context menu.
+     *                     Passing 0 is ok and will disable the builtin context menu.
+     * @param parent The parent widget.
+     */
     explicit ItemView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
 
     /**
-      Destroys this item view.
-    */
+     * Destroys the item view.
+     */
     virtual ~ItemView();
 
     /**
-      Reimplemented from QAbstractItemView.
-    */
-    virtual void setModel( QAbstractItemModel * model );
-
-    /**
-      Sets the KXmlGuiWindow which this view is used in. This is needed
-      if you want to use the built-in context menu.
-      @param xmlGuiWindow The KXmlGuiWindow this view is used in.
-    */
+     * Sets the KXmlGuiWindow which this view is used in.
+     * This is needed if you want to use the built-in context menu.
+     *
+     * @param xmlGuiWindow The KXmlGuiWindow this view is used in.
+     */
     void setXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
+
+    virtual void setModel( QAbstractItemModel * model );
 
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has activated
      * an item in the view.
+     *
+     * @param item The activated item.
      */
     void activated( const Akonadi::Item &item );
 
     /**
      * This signal is emitted whenever the current item
      * in the view has changed.
+     *
+     * @param item The current item.
      */
     void currentChanged( const Akonadi::Item &item );
 
@@ -92,11 +116,13 @@ class AKONADI_EXPORT ItemView : public QTreeView
     void contextMenuEvent( QContextMenuEvent *event );
 
   private:
+    //@cond PRIVATE
     class Private;
     Private * const d;
 
     Q_PRIVATE_SLOT( d, void itemActivated( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
+    //@endcond
 };
 
 }

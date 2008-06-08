@@ -121,7 +121,7 @@ class AKONADI_EXPORT Collection : public Entity
     /**
      * Sets the i18n'ed name of the collection.
      *
-     * @param name The new collection name
+     * @param name The new collection name.
      */
     void setName( const QString &name );
 

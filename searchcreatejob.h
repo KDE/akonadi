@@ -27,26 +27,45 @@ namespace Akonadi {
 class SearchCreateJobPrivate;
 
 /**
-  Creates a virtual/search collection, ie. a collection
-  containing search results.
-
-  @todo Add method that returns the new collection.
-*/
+ * @short Job that creates a virtual/search collection in the Akonadi storage.
+ *
+ * This job creates so called virtual or search collections, which don't contain
+ * real data, but references to items that match a given search query.
+ *
+ * @code
+ *
+ * const QString name = "My search folder";
+ * const QString query = "...";
+ *
+ * Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob( name, query );
+ * if ( job->exec() )
+ *   qDebug() << "Created search folder successfully";
+ * else
+ *   qDebug() << "Error occurred";
+ *
+ * @endcode
+ *
+ * @todo Add method that returns the new search collection.
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT SearchCreateJob : public Job
 {
   Q_OBJECT
+
   public:
     /**
-      Creates a virtual/search collection.
-      @param name The name of the collection.
-      @param query The XESAM query.
-      @param parent The parent object.
-    */
+     * Creates a search create job.
+     *
+     * @param name The name of the search collection.
+     * @param query The search query (format not defined yet).
+     * @param parent The parent object.
+     */
     SearchCreateJob( const QString &name, const QString &query, QObject *parent = 0 );
 
     /**
-      Destroys this job.
-    */
+     * Destroys the search create job.
+     */
     ~SearchCreateJob();
 
   protected:

@@ -47,7 +47,7 @@ class ProtocolHelper
       Parse a cache policy definition.
       @param data The input data.
       @param policy The parsed cache policy.
-      @param start Start of the data, ie. postion after the label
+      @param start Start of the data, ie. postion after the label.
       @returns Position in data after the cache policy description.
     */
     static int parseCachePolicy( const QByteArray &data, CachePolicy &policy, int start = 0 );
@@ -60,8 +60,8 @@ class ProtocolHelper
     /**
       Parse a collection description.
       @param data The input data.
-      @param collection The parsed collection
-      @param start Start of the data
+      @param collection The parsed collection.
+      @param start Start of the data.
       @returns Position in data after the collection description.
     */
     static int parseCollection( const QByteArray &data, Collection &collection, int start = 0 );

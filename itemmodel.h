@@ -108,7 +108,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
      * The ItemFetchScope controls how much of an item's data is fetched from the
      * server, e.g. whether to fetch the full item payload or only meta data.
      *
-     * @param fetchScope the new scope for item fetch operations
+     * @param fetchScope The new scope for item fetch operations.
      *
      * @see fetchScope()
      */

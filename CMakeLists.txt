@@ -169,12 +169,11 @@ install( FILES
   job.h
   monitor.h
   resourcebase.h
+  searchcreatejob.h
   session.h
   standardactionmanager.h
   transactionjobs.h
   transactionsequence.h
-  # temporary test
-  searchcreatejob.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi
 )
 

@@ -37,9 +37,11 @@ namespace Akonadi {
 class ResourceBasePrivate;
 
 /**
+ * @short The base class for all Akonadi resources.
+ *
  * This class should be used as a base class by all resource agents,
- * since it encapsulates large parts of the protocol between
- * resource agent, agent manager and storage.
+ * because it encapsulates large parts of the protocol between
+ * resource agent, agent manager and the Akonadi storage.
  *
  * It provides many convenience methods to make implementing a
  * new Akonadi resource agent as simple as possible.
@@ -322,8 +324,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
      * Call this method to supply incrementally retrieved items from the remote server.
      *
-     * @param changedItems Items changed in the backend
-     * @param removedItems Items removed from the backend
+     * @param changedItems Items changed in the backend.
+     * @param removedItems Items removed from the backend.
      */
     void itemsRetrievedIncremental( const Item::List &changedItems,
                                     const Item::List &removedItems );

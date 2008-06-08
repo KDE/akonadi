@@ -28,8 +28,7 @@ namespace Akonadi {
 
 class Collection;
 
-/*
- *
+/**
  * @short A single page in a collection properties dialog.
  *
  * The collection properties dialog can be extended by custom
