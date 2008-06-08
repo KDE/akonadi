@@ -475,6 +475,7 @@ void ResourceBase::itemsRetrievedIncremental(const Item::List &changedItems, con
 
 void ResourceBasePrivate::slotItemSyncDone( KJob *job )
 {
+  mPartSyncer = 0;
   Q_Q( ResourceBase );
   if ( job->error() ) {
     emit q->error( job->errorString() );

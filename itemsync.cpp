@@ -338,6 +338,8 @@ void ItemSync::Private::slotTransactionResult( KJob *job )
     return;
 
   --mTransactionJobs;
+  if ( mCurrentTransaction == job )
+    mCurrentTransaction = 0;
 
   checkDone();
 }
