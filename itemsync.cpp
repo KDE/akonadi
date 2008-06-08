@@ -147,10 +147,15 @@ void ItemSync::setFullSyncItems( const Item::List &items )
 void ItemSync::setTotalItems( int amount )
 {
   Q_ASSERT( !d->mIncremental );
+  Q_ASSERT( amount >= 0 );
   kDebug() << amount;
   d->mParts = true;
   d->mTotalItems = amount;
   setTotalAmount( KJob::Bytes, amount );
+  if ( d->mTotalItems == 0 ) {
+    d->mDeliveryDone = true;
+    d->execute();
+  }
 }
 
 void ItemSync::setPartSyncItems( const Item::List &items )

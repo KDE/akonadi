@@ -446,6 +446,7 @@ void ResourceBase::itemsPartlyRetrieved( const Item::List &items )
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
               "ResourceBase::itemsPartlyRetrieved()",
               "Calling itemsPartlyRetrieved() although no item retrieval is in progress" );
+  Q_ASSERT( d->mPartSyncer );
   d->mPartSyncer->setPartSyncItems( items );
 }
 
