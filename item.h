@@ -47,8 +47,8 @@ class ItemPrivate;
  *
  * There is also a namespace (prefix) for special parts which are local to Akonadi.
  * These parts, prefixed by "akonadi-" will never be fetched in the resource.
- * They are useful for local extensions like agents which might want to add metadata
- * to items in order to handle them but the metadata should not be stored back to the
+ * They are useful for local extensions like agents which might want to add meta data
+ * to items in order to handle them but the meta data should not be stored back to the
  * resource.
  *
  * This class contains beside some type-agnostic information (flags, revision)

@@ -65,7 +65,7 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
     /**
      * Creates a new collection statistics delegate.
      *
-     * @param parent the parent tree view, which will also take ownership
+     * @param parent The parent tree view, which will also take ownership.
      */
     explicit CollectionStatisticsDelegate( QTreeView *parent );
 

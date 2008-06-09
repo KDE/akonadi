@@ -446,6 +446,7 @@ void ResourceBase::itemsPartlyRetrieved( const Item::List &items )
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
               "ResourceBase::itemsPartlyRetrieved()",
               "Calling itemsPartlyRetrieved() although no item retrieval is in progress" );
+  Q_ASSERT( d->mPartSyncer );
   d->mPartSyncer->setPartSyncItems( items );
 }
 
@@ -475,6 +476,7 @@ void ResourceBase::itemsRetrievedIncremental(const Item::List &changedItems, con
 
 void ResourceBasePrivate::slotItemSyncDone( KJob *job )
 {
+  mPartSyncer = 0;
   Q_Q( ResourceBase );
   if ( job->error() ) {
     emit q->error( job->errorString() );

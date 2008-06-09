@@ -88,7 +88,7 @@ class ResourceScheduler : public QObject
 
     /**
       Schedules fetching of a single PIM item.
-      @param item the item to fetch.
+      @param item The item to fetch.
       @param parts List of names of the parts of the item to fetch.
       @param msg The associated D-Bus message.
     */

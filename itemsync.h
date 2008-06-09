@@ -23,7 +23,7 @@
 #include "akonadi_export.h"
 
 #include <akonadi/item.h>
-#include <akonadi/transactionsequence.h>
+#include <akonadi/job.h>
 
 namespace Akonadi {
 
@@ -49,7 +49,7 @@ class Collection;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT ItemSync : public TransactionSequence
+class AKONADI_EXPORT ItemSync : public Job
 {
   Q_OBJECT
 
@@ -125,6 +125,7 @@ class AKONADI_EXPORT ItemSync : public TransactionSequence
 
     Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotLocalChangeDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotTransactionResult( KJob* ) )
     //@endcond
 };
 

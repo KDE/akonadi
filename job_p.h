@@ -33,7 +33,8 @@ class JobPrivate
     JobPrivate( Job *parent )
       : q_ptr( parent ),
         mCurrentSubJob( 0 ),
-        mWriteFinished( false )
+        mWriteFinished( false ),
+        mStarted( false )
     {
     }
 
@@ -71,6 +72,7 @@ class JobPrivate
     QByteArray mTag;
     Session* mSession;
     bool mWriteFinished;
+    bool mStarted;
 };
 
 }

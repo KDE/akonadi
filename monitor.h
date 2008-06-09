@@ -33,164 +33,187 @@ class MonitorPrivate;
 class Session;
 
 /**
-  Monitors an Item or Collection for changes and emits signals if some
-  of these objects are changed or removed or new ones are added to the storage
-  backend.
-
-  Optionally, the changed objects can be fetched automatically from the server.
-  To enable this, see fetchCollection(), fetchItemMetaData(), fetchItemData().
-
-  @todo: support un-monitoring
-  @todo: distinguish between monitoring collection properties and collection content.
-  @todo: special case for collection content counts changed
-*/
+ * @short Monitors an item or collection for changes.
+ *
+ * The Monitor emits signals if some of these objects are changed or
+ * removed or new ones are added to the Akonadi storage.
+ *
+ * Optionally, the changed objects can be fetched automatically from the server.
+ * To enable this, see fetchCollection(), fetchItemMetaData(), fetchItemData().
+ *
+ * @todo: distinguish between monitoring collection properties and collection content.
+ * @todo: special case for collection content counts changed
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
 class AKONADI_EXPORT Monitor : public QObject
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a new monitor.
-      @param parent The parent object.
-    */
+     * Creates a new monitor.
+     *
+     * @param parent The parent object.
+     */
     explicit Monitor( QObject *parent = 0 );
 
     /**
-      Destroys this monitor.
-    */
+     * Destroys the monitor.
+     */
     virtual ~Monitor();
 
     /**
-      Monitors the specified collection for changes.
-      Monitoring Collection::root() monitors all collections.
-      @param collection The collection to monitor.
-    */
+     * Sets whether the specified collection shall be monitored for changes.
+     *
+     * @param collection The collection to monitor.
+     *                   If this collection is Collection::root(), all collections
+     *                   in the Akonadi storage will be monitored.
+     */
     void setCollectionMonitored( const Collection &collection, bool monitored = true );
 
     /**
-      Monitors the specified item for changes.
-      @param item The item to monitor.
-    */
+     * Sets whether the specified item shall be monitored for changes.
+     *
+     * @param item The item to monitor.
+     */
     void setItemMonitored( const Item &item, bool monitored = true );
 
     /**
-      Monitors the specified resource for changes.
-      @param resource The resource identifier.
-    */
+     * Sets whether the specified resource shall be monitored for changes.
+     *
+     * @param resource The resource identifier.
+     */
     void setResourceMonitored( const QByteArray &resource, bool monitored = true );
 
     /**
-      Monitor all items matching the specified mimetype.
-      @param mimetype The mimetype.
-    */
+     * Sets whether objects of the specified mime type shall be monitored for changes.
+     *
+     * @param mimetype The mime type to monitor.
+     */
     void setMimeTypeMonitored( const QString &mimetype, bool monitored = true );
 
     /**
-      Monitor all items.
-    */
+     * Sets whether all items shall be monitored.
+     */
     void setAllMonitored( bool monitored = true );
 
     /**
-      Ignore all notifications caused by the given session.
-      @param session The session you want to ignore.
-    */
+     * Ignores all change notifications caused by the given session.
+     *
+     * @param session The session you want to ignore.
+     */
     void ignoreSession( Session *session );
 
     /**
-      Enable automatic fetching of changed collections from the server.
-      @param enable @c true enables auto-fetching, @c false disables auto-fetching.
-    */
+     * Enables automatic fetching of changed collections from the Akonadi storage.
+     *
+     * @param enable @c true enables automatic fetching, @c false disables automatic fetching.
+     */
     void fetchCollection( bool enable );
 
     /**
-      Enable automatic fetching of changed collection statistics information.
-      @param enable @c true to enable.
-    */
+     * Enables automatic fetching of changed collection statistics information from
+     * the Akonadi storage.
+     *
+     * @param enable @c true to enables automatic fetching, @c false disables automatic fetching.
+     */
     void fetchCollectionStatistics( bool enable );
 
     /**
-      Sets the item fetch scope.
-
-      Controls how much of an item's data is fetched from the server, e.g.
-      whether to fetch the full item payload or only metadata.
-
-      @param fetchScope the new scope for item fetch operations
-
-      @see itemFetchScope()
-    */
+     * Sets the item fetch scope.
+     *
+     * Controls how much of an item's data is fetched from the server, e.g.
+     * whether to fetch the full item payload or only meta data.
+     *
+     * @param fetchScope The new scope for item fetch operations.
+     *
+     * @see itemFetchScope()
+     */
     void setItemFetchScope( const ItemFetchScope &fetchScope );
 
     /**
-      Returns the item fetch scope.
-
-      Since this returns a reference it can be used to conveniently modify the
-      current scope in-place, i.e. by calling a method on the returned reference
-      without storing it in a local variable. See the ItemFetchScope documentation
-      for an example.
-
-      @return a reference to the current item fetch scope
-
-      @see setItemFetchScope() for replacing the current item fetch scope
-    */
+     * Returns the item fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the ItemFetchScope documentation
+     * for an example.
+     *
+     * @return a reference to the current item fetch scope
+     *
+     * @see setItemFetchScope() for replacing the current item fetch scope
+     */
     ItemFetchScope &itemFetchScope();
 
   Q_SIGNALS:
     /**
-      Emitted if a monitored item has changed: item parts have been modified.
-      @param item The changed item.
-      @param partIdentifiers The identifiers of the item parts that has been changed.
-    */
+     * This signal is emitted if a monitored item has changed, e.g. item parts have been modified.
+     *
+     * @param item The changed item.
+     * @param partIdentifiers The identifiers of the item parts that has been changed.
+     */
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
 
     /**
-      Emitted if a monitored item has been moved between two collections
-      @param item The moved item
-      @param collectionSource The collection the item has been moved from
-      @param collectionDestination The collection the item has been moved to
-    */
-    void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination);
+     * This signal is emitted if a monitored item has been moved between two collections
+     *
+     * @param item The moved item.
+     * @param collectionSource The collection the item has been moved from.
+     * @param collectionDestination The collection the item has been moved to.
+     */
+    void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource,
+                                               const Akonadi::Collection &collectionDestination );
 
     /**
-      Emitted if a item has been added to the storage, in a monitored collection.
-      @param item The new item.
-      @param collection The collection the item is added to.
-    */
+     * This signal is emitted if an item has been added to a monitored collection in the Akonadi storage.
+     *
+     * @param item The new item.
+     * @param collection The collection the item has been added to.
+     */
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
     /**
-      Emitted if a monitored object has been removed from the storage and from a monitored collection.
-      @param item The removed item.
-    */
+     * This signal is emitted if
+     *   - a monitored item has been removed from the Akonadi storage
+     * or
+     *   - a item has been removed from a monitored collection.
+     *
+     * @param item The removed item.
+     */
     void itemRemoved( const Akonadi::Item &item );
 
     /**
-      Emitted if a new collection was added in the storage and if
-      a monitored collection got this new collection as a child.
-      @param collection The new collection.
-      @param parent The parent collection.
-    */
+     * This signal is emitted if a new collection has been added to a monitored collection in the Akonadi storage.
+     *
+     * @param collection The new collection.
+     * @param parent The parent collection.
+     */
     void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
 
     /**
-      Emitted if a monitored collection changed (properties and
-      content). Also emitted if the collection was reparented.
-      @param collection The changed collection.
+     * This signal is emitted if a monitored collection has been changed (properties or content)
+     * or has been reparented.
+     *
+     * @param collection The changed collection.
      */
     void collectionChanged( const Akonadi::Collection &collection );
 
     /**
-      Emitted if a monitored collection has been removed from the storage.
-      @param collection The removed collection.
-    */
+     * This signal is emitted if a monitored collection has been removed from the Akonadi storage.
+     *
+     * @param collection The removed collection.
+     */
     void collectionRemoved( const Akonadi::Collection &collection );
 
     /**
-      Emitted if the statistics information of a monitored collection
-      has changed.
-      @param id The collection identifier of the changed collection.
-      @param statistics The updated collection statistics, invalid if automatic
-                        fetching of statistics changes is disabled.
-    */
+     * This signal is emitted if the statistics information of a monitored collection
+     * has changed.
+     *
+     * @param id The collection identifier of the changed collection.
+     * @param statistics The updated collection statistics, invalid if automatic
+     *                   fetching of statistics changes is disabled.
+     */
     void collectionStatisticsChanged( Akonadi::Collection::Id id,
                                       const Akonadi::CollectionStatistics &statistics );
 
@@ -203,12 +226,13 @@ class AKONADI_EXPORT Monitor : public QObject
   private:
     Q_DECLARE_PRIVATE( Monitor )
 
+    //@cond PRIVATE
     Q_PRIVATE_SLOT( d_ptr, void slotStatisticsChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
-
     Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessage::List& ) )
     Q_PRIVATE_SLOT( d_ptr, void slotItemJobFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotCollectionJobFinished( KJob* ) )
+    //@endcond
 };
 
 }

@@ -26,7 +26,10 @@
 namespace Akonadi
 {
   /**
-   * Namespace that contains predefined part identifiers.
+   * @short Contains predefined part identifiers.
+   *
+   * This namespace contains identifiers of item parts that are used for
+   * handling email items.
    */
   namespace MessagePart
   {

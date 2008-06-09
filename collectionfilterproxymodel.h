@@ -59,7 +59,7 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
     /**
      * Creates a new collection proxy filter model.
      *
-     * @param parent The parent object
+     * @param parent The parent object.
      */
     explicit CollectionFilterProxyModel( QObject *parent = 0 );
 

@@ -68,10 +68,12 @@ class ItemsyncTest : public QObject
 
       ItemSync* syncer = new ItemSync( Collection( 10 ) );
       syncer->setTotalItems( origItems.count() );
-      foreach ( const Item &item, origItems ) {
+      for ( int i = 0; i < origItems.count(); ++i ) {
         Item::List l;
-        l << item;
+        l << origItems[i];
         syncer->setPartSyncItems( l );
+        if ( i < origItems.count() - 1 )
+          QTest::qWait( 10 ); // enter the event loop so itemsync actually can do something
       }
       QVERIFY( syncer->exec() );
 
