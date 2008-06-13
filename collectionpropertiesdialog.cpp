@@ -26,9 +26,9 @@
 #include "collectionmodifyjob.h"
 
 #include <kdebug.h>
+#include <ktabwidget.h>
 
 #include <QtGui/QBoxLayout>
-#include <QtGui/QTabWidget>
 
 using namespace Akonadi;
 
@@ -65,7 +65,7 @@ class CollectionPropertiesDialog::Private
     }
 
     Collection collection;
-    QTabWidget* tabWidget;
+    KTabWidget* tabWidget;
     CollectionPropertiesDialog *q;
 };
 
@@ -94,7 +94,7 @@ CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection & collec
 
   QBoxLayout *layout = new QHBoxLayout( mainWidget() );
   layout->setMargin( 0 );
-  d->tabWidget = new QTabWidget( mainWidget() );
+  d->tabWidget = new KTabWidget( mainWidget() );
   layout->addWidget( d->tabWidget );
 
   foreach ( CollectionPropertiesPageFactory *factory, *s_pages ) {
