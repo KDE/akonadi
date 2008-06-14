@@ -70,6 +70,7 @@ void CollectionView::Private::init()
   mParent->header()->setStretchLastSection( false );
 
   mParent->setSortingEnabled( true );
+  mParent->sortByColumn( 0, Qt::AscendingOrder );
   mParent->setEditTriggers( QAbstractItemView::EditKeyPressed );
   mParent->setAcceptDrops( true );
   mParent->setDropIndicatorShown( true );
