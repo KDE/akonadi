@@ -102,6 +102,20 @@ class AKONADI_EXPORT ItemSync : public Job
     void setTotalItems( int amount );
 
     /**
+      Enable item streaming. Item streaming means that the items delivered by setXItems() calls
+      are delivered in chunks and you manually indicate when all items have been delivered
+      by calling deliveryDone().
+      @param enable @c true to enable item streaming
+    */
+    void setStreamingEnabled( bool enable );
+
+    /**
+      Notify ItemSync that all remote items have been delivered.
+      Only call this in streaming mode.
+    */
+    void deliveryDone();
+
+    /**
      * Sets the item lists for incrementally syncing the collection.
      *
      * Usually the result of an incremental remote item listing.

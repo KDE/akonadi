@@ -62,7 +62,7 @@ class ItemsyncTest : public QObject
       QCOMPARE( resultItems.count(), origItems.count() );
     }
 
-    void testPartialSync()
+    void testFullStreamingSync()
     {
       Item::List origItems = fetchItems();
 
@@ -87,6 +87,26 @@ class ItemsyncTest : public QObject
 
       ItemSync* syncer = new ItemSync( Collection( 10 ) );
       syncer->setIncrementalSyncItems( origItems, Item::List() );
+      QVERIFY( syncer->exec() );
+
+      Item::List resultItems = fetchItems();
+      QCOMPARE( resultItems.count(), origItems.count() );
+    }
+
+    void testIncrementalStreamingSync()
+    {
+      Item::List origItems = fetchItems();
+
+      ItemSync* syncer = new ItemSync( Collection( 10 ) );
+      syncer->setStreamingEnabled( true );
+      for ( int i = 0; i < origItems.count(); ++i ) {
+        Item::List l;
+        l << origItems[i];
+        syncer->setIncrementalSyncItems( l, Item::List() );
+        if ( i < origItems.count() - 1 )
+          QTest::qWait( 10 ); // enter the event loop so itemsync actually can do something
+      }
+      syncer->deliveryDone();
       QVERIFY( syncer->exec() );
 
       Item::List resultItems = fetchItems();
