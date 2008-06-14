@@ -95,13 +95,20 @@ namespace Akonadi {
  *
  * @endcode
  *
+ * Additionally, you need to register your attribute with Akonadi::AttributeFactory
+ * for automatic deserialization during retrieving of collecitons or items:
+ *
+ * @code
+ * AttributeFactory::registerAttribute<SecrecyAttribute>();
+ * @endcode
+ *
  * The custom attributes can be used in the following way:
  *
  * @code
  *
  * Akonadi::Item item( "text/directory" );
- *
- * item.addAttribute( new SecrecyAttribute( SecrecyAttribute::Confidential ) );
+ * SecrecyAttribute* attr = item.attribute<SecrecyAttribute>( Item::AddIfMissing );
+ * attr.setSecrecy( SecrecyAttribute::Confidential );
  *
  * @endcode
  *
@@ -111,8 +118,8 @@ namespace Akonadi {
  *
  * Akonadi::Item item = ...
  *
- * if ( item.hasAttribute( "secrecy" ) ) {
- *   SecrecyAttribute *attr = item.attribute( "secrecy" );
+ * if ( item.hasAttribute<SecrecyAttribute>() ) {
+ *   SecrecyAttribute *attr = item.attribute<SecrecyAttribute>();
  *
  *   SecrecyAttribute::Secrecy secrecy = attr->secrecy();
  *   ...
