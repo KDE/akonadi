@@ -48,7 +48,7 @@
          <number>-1</number>
         </property>
         <property name="minimum" >
-         <number>-1</number>
+         <number>0</number>
         </property>
         <property name="suffix" >
          <string>minutes</string>
@@ -71,7 +71,7 @@
          <number>-1</number>
         </property>
         <property name="minimum" >
-         <number>-1</number>
+         <number>0</number>
         </property>
         <property name="suffix" >
          <string>minutes</string>

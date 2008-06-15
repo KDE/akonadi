@@ -44,6 +44,9 @@ class CachePolicyPage : public CollectionPropertiesPage
   private:
     Ui::CachePolicyPage ui;
 
+  private slots:
+    void slotIntervalValueChanged( int );
+    void slotCacheValueChanged( int );
 };
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CachePolicyPageFactory, CachePolicyPage)
