@@ -28,8 +28,12 @@ using namespace Akonadi;
 CachePolicyPage::CachePolicyPage(QWidget * parent) :
     CollectionPropertiesPage( parent )
 {
-  setPageTitle( i18n( "&Cache" ) );
+  setPageTitle( i18n( "Cache" ) );
   ui.setupUi( this );
+  connect( ui.checkInterval, SIGNAL( valueChanged( int ) ),
+           SLOT( slotIntervalValueChanged( int ) ) );
+  connect( ui.localCacheTimeout, SIGNAL( valueChanged( int ) ),
+           SLOT( slotCacheValueChanged( int ) ) );
 }
 
 bool Akonadi::CachePolicyPage::canHandle(const Collection & collection) const
@@ -40,22 +44,49 @@ bool Akonadi::CachePolicyPage::canHandle(const Collection & collection) const
 void CachePolicyPage::load(const Collection & collection)
 {
   CachePolicy policy = collection.cachePolicy();
+  
+  int interval = policy.intervalCheckTime();
+  if (interval == -1)
+    interval = 0;
+
+  int cache = policy.cacheTimeout();
+  if (cache == -1)
+    cache = 0;
+
   ui.inherit->setChecked( policy.inheritFromParent() );
-  ui.checkInterval->setValue( policy.intervalCheckTime() );
-  ui.localCacheTimeout->setValue( policy.cacheTimeout() );
+  ui.checkInterval->setValue( interval );
+  ui.localCacheTimeout->setValue( cache );
   ui.syncOnDemand->setChecked( policy.syncOnDemand() );
   ui.localParts->setItems( policy.localParts() );
 }
 
 void CachePolicyPage::save(Collection & collection)
 {
+  int interval = ui.checkInterval->value();
+  if (interval == 0)
+    interval = -1;
+
+  int cache = ui.localCacheTimeout->value();
+  if (cache == 0)
+    cache = -1;
+
   CachePolicy policy = collection.cachePolicy();
   policy.setInheritFromParent( ui.inherit->isChecked() );
-  policy.setIntervalCheckTime( ui.checkInterval->value() );
-  policy.setCacheTimeout( ui.localCacheTimeout->value() );
+  policy.setIntervalCheckTime( interval );
+  policy.setCacheTimeout( cache );
   policy.setSyncOnDemand( ui.syncOnDemand->isChecked() );
   policy.setLocalParts( ui.localParts->items() );
   collection.setCachePolicy( policy );
+}
+
+void CachePolicyPage::slotIntervalValueChanged( int i )
+{
+    ui.checkInterval->setSuffix( ' ' + i18np( "minute", "minutes", i ) );
+}
+
+void CachePolicyPage::slotCacheValueChanged( int i )
+{
+    ui.localCacheTimeout->setSuffix( ' ' + i18np( "minute", "minutes", i ) );
 }
 
 #include "cachepolicypage.moc"

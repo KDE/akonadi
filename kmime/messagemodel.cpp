@@ -80,7 +80,7 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
       case Receiver:
         return msg->to()->asUnicodeString();
       case Date:
-        return KGlobal::locale()->formatDateTime( msg->date()->dateTime().dateTime(), KLocale::FancyLongDate );
+        return KGlobal::locale()->formatDateTime( msg->date()->dateTime().toLocalZone(), KLocale::FancyLongDate );
       case Size:
         // TODO
         return 0; // pass modeltest
