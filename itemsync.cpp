@@ -49,8 +49,8 @@ class ItemSync::Private
       mProgress( 0 ),
       mTotalItems( 0 ),
       mTotalItemsProcessed( 0 ),
+      mStreaming( false ),
       mIncremental( false ),
-      mParts( false ),
       mLocalListDone( false ),
       mDeliveryDone( false )
     {
@@ -95,8 +95,8 @@ class ItemSync::Private
     int mTotalItems;
     int mTotalItemsProcessed;
 
+    bool mStreaming;
     bool mIncremental;
-    bool mParts;
     bool mLocalListDone;
     bool mDeliveryDone;
 };
@@ -138,8 +138,9 @@ ItemSync::~ItemSync()
 void ItemSync::setFullSyncItems( const Item::List &items )
 {
   Q_ASSERT( !d->mIncremental );
-  d->mDeliveryDone = true;
-  d->mRemoteItems = items;
+  if ( !d->mStreaming )
+    d->mDeliveryDone = true;
+  d->mRemoteItems += items;
   setTotalAmount( KJob::Bytes, d->mRemoteItems.count() );
   d->execute();
 }
@@ -148,8 +149,8 @@ void ItemSync::setTotalItems( int amount )
 {
   Q_ASSERT( !d->mIncremental );
   Q_ASSERT( amount >= 0 );
+  setStreamingEnabled( true );
   kDebug() << amount;
-  d->mParts = true;
   d->mTotalItems = amount;
   setTotalAmount( KJob::Bytes, amount );
   if ( d->mTotalItems == 0 ) {
@@ -161,6 +162,7 @@ void ItemSync::setTotalItems( int amount )
 void ItemSync::setPartSyncItems( const Item::List &items )
 {
   Q_ASSERT( !d->mIncremental );
+  Q_ASSERT( d->mStreaming );
   d->mRemoteItems += items;
   d->mTotalItemsProcessed += items.count();
   kDebug() << "Received: " << items.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
@@ -172,9 +174,10 @@ void ItemSync::setPartSyncItems( const Item::List &items )
 void ItemSync::setIncrementalSyncItems( const Item::List &changedItems, const Item::List &removedItems )
 {
   d->mIncremental = true;
-  d->mDeliveryDone = true;
-  d->mRemoteItems = changedItems;
-  d->mRemovedRemoteItems = removedItems;
+  if ( !d->mStreaming )
+    d->mDeliveryDone = true;
+  d->mRemoteItems += changedItems;
+  d->mRemovedRemoteItems += removedItems;
   setTotalAmount( KJob::Bytes, d->mRemoteItems.count() + d->mRemovedRemoteItems.count() );
   d->execute();
 }
@@ -252,12 +255,15 @@ void ItemSync::Private::execute()
   }
 
   // removed
-  if ( !mIncremental )
+  if ( !mIncremental ) {
     mRemovedRemoteItems = mUnprocessedLocalItems.toList();
+    mUnprocessedLocalItems.clear();
+  }
 
   deleteItems( mRemovedRemoteItems );
   mLocalItemsById.clear();
   mLocalItemsByRemoteId.clear();
+  mRemovedRemoteItems.clear();
 
   if ( mCurrentTransaction ) {
     mCurrentTransaction->commit();
@@ -354,6 +360,18 @@ Job * ItemSync::Private::subjobParent() const
   if ( mCurrentTransaction && mTransactionMode != None )
     return mCurrentTransaction;
   return q;
+}
+
+void ItemSync::setStreamingEnabled(bool enable)
+{
+  d->mStreaming = enable;
+}
+
+void ItemSync::deliveryDone()
+{
+  Q_ASSERT( d->mStreaming );
+  d->mDeliveryDone = true;
+  d->execute();
 }
 
 #include "itemsync.moc"
