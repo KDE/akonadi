@@ -1,3 +1,88 @@
+2008-06-05 21:22 +0000 [r817369]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake: -sync
+	  with FindAutomoc4.cmake from kdelibs, support all cmake search
+	  variables Alex
+
+2008-05-29 17:22 +0000 [r814221]  Frank Osterfeld frank.osterfeld@kdemail.net
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt: one more
+	  hardcoded search path doesn't hurt
+
+2008-05-27 17:42 +0000 [r813424]  Will Stephenson wstephenson@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Fix the error message
+
+2008-05-26 06:27 +0000 [r812698]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/fetch.h,
+	  trunk/kdesupport/akonadi/server/src/cachecleaner.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/tests/itemfetchtest.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/tests/itemstoretest.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/tests/itemfetchtest.h: Finally
+	  implement all the fetch modes advertised in ItemFetchScope in the
+	  server and improve the tests for them a bit.
+
+2008-05-26 06:21 +0000 [r812696]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/agentmanager.cpp: Notify
+	  already running clieants about all found types during startup.
+	  This fixes a crash in akonaditray when starting the server.
+
+2008-05-24 16:47 +0000 [r812135]  Volker Krause vkrause@kde.org
+
+	* trunk/KDE/kdepimlibs/akonadi/itemmodifyjob.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/protocolhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbupdate.xml,
+	  trunk/KDE/kdepimlibs/akonadi/itemfetchjob.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/session.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/akonadidb.xml,
+	  trunk/kdesupport/akonadi/server/src/storage/create-unittest-values.sql,
+	  trunk/KDE/kdepimlibs/akonadi/protocolhelper.h,
+	  trunk/KDE/kdepimlibs/akonadi/itemserializer.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/tests/itemserializertest.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/itemcreatejob.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/tests/itemserializertest.h: Add item
+	  part namespaces. This is necessary to distinguish between remote
+	  parts that can be retrieved from the resource (payload) and local
+	  parts (attributes), which again is necessary to finally implement
+	  all the fetch modes advertised in ItemFetchScope. Existing data
+	  should be converted correctly, but you need to update the server
+	  as well as the client library.
+
+2008-05-22 12:09 +0000 [r811139]  Allen Winter winter@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindLibXslt.cmake
+	  (removed), trunk/kdesupport/akonadi/CMakeLists.txt: We require
+	  xsltproc, but don't need libxslt development stuff. CCMAIL:
+	  vkrause@kde.org, kevin.krammer@gmx.at
+
+2008-05-20 15:17 +0000 [r810378]  Benjamin Reed ranger@befunk.com
+
+	* trunk/kdesupport/phonon/CMakeLists.txt,
+	  trunk/kdesupport/soprano/CMakeLists.txt,
+	  trunk/kdesupport/taglib/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: fix install_name RPATH
+	  stuff on OSX
+
+2008-05-19 10:26 +0000 [r809711]  Jaroslaw Staniek js@iidea.pl
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: make libs install to bin
+	  on Windows, so far this fixes akonadiprivate.dll destination
+
+2008-05-18 22:03 +0000 [r809435]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/ChangeLog (added),
+	  trunk/kdesupport/akonadi/NEWS (added),
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/makechangelog (added): Prepare for
+	  release: - add NEWS file - add makechangelog scripts which
+	  generates the ChangeLog - bump version number to 0.81.0
+
 2008-05-18 11:31 +0000 [r809101]  Volker Krause vkrause@kde.org
 
 	* trunk/KDE/kdepimlibs/akonadi/session.cpp,

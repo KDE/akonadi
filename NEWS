@@ -1,3 +1,11 @@
+0.82.0                           18-June-2008
+---------------------------------------------
+- Several build and installation fixes for windows and mac.
+- Some improvements in the build system.
+- Add item part namespaces.
+- Implemented all the fetch modes advertised in ItemFetchScope.
+- Notify already running clieants about all found types during startup.
+
 0.81.0                            10-May-2008
 ---------------------------------------------
 - Fix bug where full part was not fetched when a partial part was available already.
