@@ -57,7 +57,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
   public:
     ResourceBasePrivate( ResourceBase *parent )
       : AgentBasePrivate( parent ),
-        scheduler( 0 )
+        scheduler( 0 ),
+        mItemSyncer( 0 )
     {
       mStatusMessage = defaultReadyMessage();
     }
@@ -96,7 +97,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     Collection currentCollection;
 
     ResourceScheduler *scheduler;
-    ItemSync *mPartSyncer;
+    ItemSync *mItemSyncer;
 };
 
 ResourceBase::ResourceBase( const QString & id )
@@ -362,9 +363,16 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
 void ResourceBase::itemsRetrievalDone()
 {
   Q_D( ResourceBase );
-  if ( d->scheduler->isEmpty() )
-    emit status( Idle );
-  d->scheduler->taskDone();
+  // streaming enabled, so finalize the sync
+  if ( d->mItemSyncer ) {
+    d->mItemSyncer->deliveryDone();
+  }
+  // user did the sync himself, we are done now
+  else {
+    if ( d->scheduler->isEmpty() )
+      emit status( Idle );
+    d->scheduler->taskDone();
+  }
 }
 
 Collection ResourceBase::currentCollection() const
@@ -430,24 +438,22 @@ void ResourceBase::setTotalItems( int amount )
 {
   kDebug() << amount;
   Q_D( ResourceBase );
-  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
-              "ResourceBase::itemsRetrieved()",
-              "Calling itemsRetrieved() although no item retrieval is in progress" );
-  d->mPartSyncer = new ItemSync( currentCollection() );
-  connect( d->mPartSyncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
-  connect( d->mPartSyncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
-  d->mPartSyncer->setTotalItems( amount );
+  setItemStreamingEnabled( true );
+  d->mItemSyncer->setTotalItems( amount );
 }
 
-void ResourceBase::itemsPartlyRetrieved( const Item::List &items )
+void ResourceBase::setItemStreamingEnabled( bool enable )
 {
-  kDebug();
   Q_D( ResourceBase );
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
-              "ResourceBase::itemsPartlyRetrieved()",
-              "Calling itemsPartlyRetrieved() although no item retrieval is in progress" );
-  Q_ASSERT( d->mPartSyncer );
-  d->mPartSyncer->setPartSyncItems( items );
+              "ResourceBase::setItemStreamingEnabled()",
+              "Calling setItemStreamingEnabled() although no item retrieval is in progress" );
+  if ( !d->mItemSyncer ) {
+    d->mItemSyncer = new ItemSync( currentCollection() );
+    connect( d->mItemSyncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
+    connect( d->mItemSyncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
+  }
+  d->mItemSyncer->setStreamingEnabled( enable );
 }
 
 void ResourceBase::itemsRetrieved( const Item::List &items )
@@ -456,10 +462,12 @@ void ResourceBase::itemsRetrieved( const Item::List &items )
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
               "ResourceBase::itemsRetrieved()",
               "Calling itemsRetrieved() although no item retrieval is in progress" );
-  ItemSync *syncer = new ItemSync( currentCollection() );
-  connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
-  connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
-  syncer->setFullSyncItems( items );
+  if ( !d->mItemSyncer ) {
+    d->mItemSyncer = new ItemSync( currentCollection() );
+    connect( d->mItemSyncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
+    connect( d->mItemSyncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
+  }
+  d->mItemSyncer->setFullSyncItems( items );
 }
 
 void ResourceBase::itemsRetrievedIncremental(const Item::List &changedItems, const Item::List &removedItems)
@@ -468,15 +476,17 @@ void ResourceBase::itemsRetrievedIncremental(const Item::List &changedItems, con
   Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
               "ResourceBase::itemsRetrievedIncremental()",
               "Calling itemsRetrievedIncremental() although no item retrieval is in progress" );
-  ItemSync *syncer = new ItemSync( currentCollection() );
-  connect( syncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
-  connect( syncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
-  syncer->setIncrementalSyncItems( changedItems, removedItems );
+  if ( !d->mItemSyncer ) {
+    d->mItemSyncer = new ItemSync( currentCollection() );
+    connect( d->mItemSyncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
+    connect( d->mItemSyncer, SIGNAL(result(KJob*)), SLOT(slotItemSyncDone(KJob*)) );
+  }
+  d->mItemSyncer->setIncrementalSyncItems( changedItems, removedItems );
 }
 
 void ResourceBasePrivate::slotItemSyncDone( KJob *job )
 {
-  mPartSyncer = 0;
+  mItemSyncer = 0;
   Q_Q( ResourceBase );
   if ( job->error() ) {
     emit q->error( job->errorString() );

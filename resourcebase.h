@@ -304,22 +304,20 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void itemsRetrieved( const Item::List &items );
 
     /**
-      * Call this method when you want to use the itemsPartlyRetrieved() method
-      * and indicate the amount of items that will arrive that way.
-      */
+     * Call this method when you want to use the itemsRetrieved() method
+     * in streaming mode and indicate the amount of items that will arrive
+     * that way.
+     * @deprecated Use setItemStreamingEnabled( true ) + itemsRetrieved[Incremental]()
+     * + itemsRetrieved() instead.
+     */
     void setTotalItems( int amount );
 
     /**
-     * Call this method to supply a part of the collection listing from the remote server.
-     * Set the total amount of items you are going to pass via subsequent calls to this 
-     * method by calling setTotalItems() first.
-     *
-     * If the remote server supports incremental listing, it's strongly
-     * recommended to use itemsRetrievedIncremental() instead.
-     * @param items A list of items.
-     * @see itemsRetrievedIncremental().
+     * Enable item streaming.
+     * Item streaming is disabled by default.
+     * @param enable @c true if items are delivered in chunks rather in one big block.
      */
-    void itemsPartlyRetrieved( const Item::List &items );
+    void setItemStreamingEnabled( bool enable );
 
     /**
      * Call this method to supply incrementally retrieved items from the remote server.
@@ -333,8 +331,10 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
      * Call this method to indicate you finished synchronizing the current collection.
      *
-     * This is not needed if you use the built in syncing
+     * This is not needed if you use the built in syncing without item streaming
      * and call itemsRetrieved() or itemsRetrievedIncremental() instead.
+     * If item streaming is enabled, call this method once all items have been delivered
+     * using itemsRetrieved() or itemsRetrievedIncremental().
      * @see retrieveItems()
      */
     void itemsRetrievalDone();

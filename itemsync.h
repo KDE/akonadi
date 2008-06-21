@@ -80,22 +80,8 @@ class AKONADI_EXPORT ItemSync : public Job
     void setFullSyncItems( const Item::List &items );
 
     /**
-     * Sets the item list for the collection, but not the full list,
-     * a part of the list. Call this as many times as you wish. But you
-     * need to remember to call setTotalItems() first.
-     *
-     * @warning Do not pass more or less items then announced in setTotalItems();
-     *
-     * @warning If the client using this is a resource, all items must have
-     *          a valid remote identifier.
-     *
-     * @param items A list of items.
-     */
-    void setPartSyncItems( const Item::List &items );
-
-    /**
      * Set the amount of items which you are going to return in total
-     * by using the setPartSyncItems() method.
+     * by using the setFullSyncItems() method.
      *
      * @param amount The amount of items in total.
      */
