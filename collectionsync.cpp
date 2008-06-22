@@ -142,7 +142,9 @@ void CollectionSync::slotLocalListDone(KJob * job)
 
     // update local collection
     d->pendingJobs++;
-    CollectionModifyJob *mod = new CollectionModifyJob( local, this );
+    Collection upd( c );
+    upd.setId( local.id() );
+    CollectionModifyJob *mod = new CollectionModifyJob( upd, this );
     connect( mod, SIGNAL(result(KJob*)), SLOT(slotLocalChangeDone(KJob*)) );
   }
 
