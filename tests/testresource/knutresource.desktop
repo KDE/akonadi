@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Akonadi Knut Resource
 Name[ca]=Recurs Knut de l'Akonadi
+Name[da]=Akonadi Knut-ressource
 Name[de]=Akonadi-Ressource für Knut
 Name[el]=Πόρος Knut του Akonadi
 Name[es]=Recurso Knut de Akonadi
@@ -27,6 +28,7 @@ Name[zh_CN]=Akonadi Knut 资源
 Name[zh_TW]=Akonadi Knut 資源
 Comment=An agent for debugging purpose
 Comment[ca]=Un agent amb la finalitat de depuració
+Comment[da]=En agent til fejlretningsformål
 Comment[de]=Agent für Zwecke der Fehlersuche
 Comment[el]=Ένας πελάτης με σκοπό την αποσφαλμάτωση
 Comment[es]=Un agente para depurar
