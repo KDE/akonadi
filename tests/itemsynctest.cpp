@@ -112,6 +112,18 @@ class ItemsyncTest : public QObject
       Item::List resultItems = fetchItems();
       QCOMPARE( resultItems.count(), origItems.count() );
     }
+
+    void testEmptyIncrementalSync()
+    {
+      Item::List origItems = fetchItems();
+
+      ItemSync* syncer = new ItemSync( Collection( 10 ) );
+      syncer->setIncrementalSyncItems( Item::List(), Item::List() );
+      QVERIFY( syncer->exec() );
+
+      Item::List resultItems = fetchItems();
+      QCOMPARE( resultItems.count(), origItems.count() );
+    }
 };
 
 QTEST_KDEMAIN( ItemsyncTest, NoGUI )
