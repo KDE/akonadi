@@ -174,12 +174,12 @@ install( FILES
   standardactionmanager.h
   transactionjobs.h
   transactionsequence.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel
 )
 
 install( FILES
    collectionpathresolver_p.h
-   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private
+   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private COMPONENT Devel
    )
 
 install( FILES
