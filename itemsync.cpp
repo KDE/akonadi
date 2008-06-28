@@ -27,6 +27,7 @@
 #include "itemfetchjob.h"
 #include "itemmodifyjob.h"
 #include "transactionsequence.h"
+#include "itemfetchscope.h"
 
 #include <kdebug.h>
 
@@ -54,13 +55,15 @@ class ItemSync::Private
       mLocalListDone( false ),
       mDeliveryDone( false )
     {
+      // we want to fetch all data by default
+      mFetchScope.fetchFullPayload();
+      mFetchScope.fetchAllAttributes();
     }
 
     void createLocalItem( const Item &item );
     void checkDone();
     void slotLocalListDone( KJob* );
     void slotLocalChangeDone( KJob* );
-    bool itemNeedsUpdate( const Item &localItem, const Item &remoteItem );
     void execute();
     void processItems();
     void deleteItems( const Item::List &items );
@@ -82,6 +85,9 @@ class ItemSync::Private
     TransactionMode mTransactionMode;
     TransactionSequence *mCurrentTransaction;
     int mTransactionJobs;
+
+    // fetch scope for initial item listing
+    ItemFetchScope mFetchScope;
 
     // remote items
     Akonadi::Item::List mRemoteItems;
@@ -122,12 +128,6 @@ ItemSync::ItemSync( const Collection &collection, QObject *parent ) :
     d( new Private( this ) )
 {
   d->mSyncCollection = collection;
-  ItemFetchJob* job = new ItemFetchJob( d->mSyncCollection, this );
-  // FIXME this will deadlock, we only can fetch parts already in the cache
-//   if ( !d->incremental )
-//     job->fetchAllParts();
-
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotLocalListDone( KJob* ) ) );
 }
 
 ItemSync::~ItemSync()
@@ -177,36 +177,61 @@ void ItemSync::setIncrementalSyncItems( const Item::List &changedItems, const It
   d->execute();
 }
 
-void ItemSync::doStart()
+void ItemSync::setFetchScope( ItemFetchScope &fetchScope )
 {
+  d->mFetchScope = fetchScope;
 }
 
-bool ItemSync::Private::itemNeedsUpdate( const Item &localItem, const Item &remoteItem )
+ItemFetchScope &ItemSync::fetchScope()
 {
+  return d->mFetchScope;
+}
+
+void ItemSync::doStart()
+{
+  ItemFetchJob* job = new ItemFetchJob( d->mSyncCollection, this );
+  job->setFetchScope( d->mFetchScope );
+
+  // we only can fetch parts already in the cache, otherwise this will deadlock
+  job->fetchScope().setCacheOnly( true );
+
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotLocalListDone( KJob* ) ) );
+}
+
+bool ItemSync::updateItem( const Item &storedItem, Item &newItem )
+{
+  /*
+   * We know that this item has changed (as it is part of the
+   * incremental changed list), so we just put it into the
+   * storage.
+   */
+  if ( d->mIncremental )
+    return true;
+
   // Check whether the flags differ
-  if ( localItem.flags() != remoteItem.flags() ) {
-    kDebug( 5250 ) << "Local flags "  << localItem.flags()
-                    << "remote flags " << remoteItem.flags();
+  if ( storedItem.flags() != newItem.flags() ) {
+    kDebug( 5250 ) << "Stored flags "  << storedItem.flags()
+                    << "new flags " << newItem.flags();
     return true;
   }
 
   // Check whether the new item contains unknown parts
-  QSet<QByteArray> missingParts = localItem.loadedPayloadParts();
-  missingParts.subtract( remoteItem.loadedPayloadParts() );
+  QSet<QByteArray> missingParts = storedItem.loadedPayloadParts();
+  missingParts.subtract( newItem.loadedPayloadParts() );
   if ( !missingParts.isEmpty() )
     return true;
 
   // ### FIXME SLOW!!!
   // If the available part identifiers don't differ, check
   // whether the content of the payload differs
-  if ( localItem.payloadData() != remoteItem.payloadData() )
+  if ( storedItem.payloadData() != newItem.payloadData() )
     return true;
 
   // check if remote attributes have been changed
-  foreach ( Attribute* attr, remoteItem.attributes() ) {
-    if ( !localItem.hasAttribute( attr->type() ) )
+  foreach ( Attribute* attr, newItem.attributes() ) {
+    if ( !storedItem.hasAttribute( attr->type() ) )
       return true;
-    if ( attr->serialized() != localItem.attribute( attr->type() )->serialized() )
+    if ( attr->serialized() != storedItem.attribute( attr->type() )->serialized() )
       return true;
   }
 
@@ -271,7 +296,7 @@ void ItemSync::Private::execute()
 void ItemSync::Private::processItems()
 {
   // added / updated
-  foreach ( const Item &remoteItem, mRemoteItems ) {
+  foreach ( Item remoteItem, mRemoteItems ) {
 #ifndef NDEBUG
     if ( remoteItem.remoteId().isEmpty() ) {
       kWarning( 5250 ) << "Item " << remoteItem.id() << " does not have a remote identifier";
@@ -288,28 +313,13 @@ void ItemSync::Private::processItems()
       continue;
     }
 
-    bool needsUpdate = false;
-
-    if ( mIncremental ) {
-      /*
-       * We know that this item has changed (as it is part of the
-       * incremental changed list), so we just put it into the
-       * storage.
-       */
-      needsUpdate = true;
-    } else {
-      needsUpdate = itemNeedsUpdate( localItem, remoteItem );
-    }
-
-    if ( needsUpdate ) {
+    if ( q->updateItem( localItem, remoteItem ) ) {
       mPendingJobs++;
 
-      Item i( remoteItem );
-      i.setId( localItem.id() );
-      i.setRemoteId( remoteItem.remoteId() );
-      i.setRevision( localItem.revision() );
-      i.setFlags( remoteItem.flags() );
-      ItemModifyJob *mod = new ItemModifyJob( i, subjobParent() );
+      remoteItem.setId( localItem.id() );
+      remoteItem.setRevision( localItem.revision() );
+      remoteItem.setRemoteId( localItem.remoteId() );  // in case someone clears remoteId by accident
+      ItemModifyJob *mod = new ItemModifyJob( remoteItem, subjobParent() );
       q->connect( mod, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
     } else {
       mProgress++;
