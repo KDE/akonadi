@@ -388,4 +388,9 @@ bool ItemModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int 
   return job;
 }
 
+Collection ItemModel::collection() const
+{
+  return d->collection;
+}
+
 #include "itemmodel.moc"

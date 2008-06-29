@@ -143,6 +143,11 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
     bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
+    /**
+     * Returns the collection being displayed in the model.
+     */
+    Collection collection() const;
+
   public Q_SLOTS:
     /**
      * Sets the collection the model should display. If the collection has
