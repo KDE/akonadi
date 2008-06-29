@@ -116,11 +116,42 @@ class AKONADI_EXPORT ItemSync : public Job
     void setIncrementalSyncItems( const Item::List &changedItems,
                                   const Item::List &removedItems );
 
+    /**
+     * Sets the item fetch scope.
+     *
+     * The ItemFetchScope controls how much of an item's data is fetched
+     * from the server, e.g. whether to fetch the full item payload or
+     * only meta data.
+     *
+     * @param fetchScope The new scope for item fetch operations.
+     *
+     * @see fetchScope()
+     */
     void setFetchScope( ItemFetchScope &fetchScope );
+
+    /**
+     * Returns the item fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the ItemFetchScope documentation
+     * for an example.
+     *
+     * @return a reference to the current item fetch scope
+     *
+     * @see setFetchScope() for replacing the current item fetch scope
+     */
     ItemFetchScope &fetchScope();
 
   protected:
     void doStart();
+
+    /**
+     * Reimplement this method to customize the synchronization algorithm.
+     *
+     * You can update the @p newItem according to the @p storedItem before
+     * it gets commited.
+     */
     virtual bool updateItem( const Item &storedItem, Item &newItem );
 
   private:
