@@ -233,19 +233,22 @@ QVariant ItemModel::data( const QModelIndex & index, int role ) const
         return item.remoteId();
       case MimeType:
         return item.mimeType();
+      default:
+        return QVariant();
     }
   }
 
-  if ( role == IdRole ) {
-    switch ( index.column() ) {
-      case Id:
-        return QString::number( item.id() );
-      case RemoteId:
-        return item.remoteId();
-      case MimeType:
-        return item.mimeType();
-    }
+  if ( role == IdRole )
+    return item.id();
+
+  if ( role == ItemRole ) {
+    QVariant var;
+    var.setValue( item );
+    return var;
   }
+
+  if ( role == MimeTypeRole )
+    return item.mimeType();
 
   return QVariant();
 }
