@@ -148,9 +148,10 @@ void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QSet<QByt
   itemHash.remove( item );
   itemHash[ item ] = items[ row ];
 
-  QModelIndex index = mParent->index( row, 0, QModelIndex() );
+  QModelIndex start = mParent->index( row, 0, QModelIndex() );
+  QModelIndex end = mParent->index( row, mParent->columnCount( QModelIndex() ) - 1 , QModelIndex() );
 
-  mParent->dataChanged( index, index );
+  mParent->dataChanged( start, end );
 }
 
 void ItemModel::Private::itemMoved( const Akonadi::Item &item, const Akonadi::Collection& colSrc, const Akonadi::Collection& colDst )
