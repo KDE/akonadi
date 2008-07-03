@@ -150,7 +150,7 @@ class AKONADI_EXPORT ItemSync : public Job
      * Reimplement this method to customize the synchronization algorithm.
      *
      * You can update the @p newItem according to the @p storedItem before
-     * it gets commited.
+     * it gets committed.
      */
     virtual bool updateItem( const Item &storedItem, Item &newItem );
 
