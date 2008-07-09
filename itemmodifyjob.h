@@ -86,15 +86,15 @@ class AKONADI_EXPORT ItemModifyJob : public Job
 
     /**
      * Sets whether the payload of the modified item shall be
-     * transmitted to the Akonadi storage as well.
-     * The default is @c true, however it can be disabled for
+     * omitted from transmission to the Akonadi storage.
+     * The default is @c false, however it can be set for
      * performance reasons.
      */
     void setIgnorePayload( bool ignore );
 
     /**
      * Returns whether the payload of the modified item shall be
-     * transmitted to the Akonadi storage as well.
+     * omitted from transmission to the Akonadi storage.
      */
     bool ignorePayload() const;
 
