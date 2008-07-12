@@ -196,7 +196,7 @@ class AKONADI_EXPORT Entity
     /**
      * Returns whether the entity has an attribute of the requested type.
      */
-    template <typename T> inline bool hasAttribute()
+    template <typename T> inline bool hasAttribute() const
     {
       const T dummy;
       return hasAttribute( dummy.type() );
