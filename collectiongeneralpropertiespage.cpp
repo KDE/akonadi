@@ -20,7 +20,9 @@
 #include "collectiongeneralpropertiespage.h"
 
 #include "collection.h"
+#include "collectiondisplayattribute.h"
 #include "collectionstatistics.h"
+#include "collectionutils_p.h"
 
 #include <klocale.h>
 
@@ -35,7 +37,24 @@ CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage(QWidget * paren
 
 void CollectionGeneralPropertiesPage::load(const Collection & collection)
 {
-  ui.nameEdit->setText( collection.name() );
+  QString displayName;
+  QString iconName;
+  if ( collection.hasAttribute<CollectionDisplayAttribute>() ) {
+    displayName = collection.attribute<CollectionDisplayAttribute>()->displayName();
+    iconName = collection.attribute<CollectionDisplayAttribute>()->iconName();
+  }
+
+  if ( displayName.isEmpty() )
+    ui.nameEdit->setText( collection.name() );
+  else
+    ui.nameEdit->setText( displayName );
+
+  if ( iconName.isEmpty() )
+    ui.customIcon->setIcon( CollectionUtils::defaultIconName( collection ) );
+  else
+    ui.customIcon->setIcon( iconName );
+  ui.customIconCheckbox->setChecked( !iconName.isEmpty() );
+
   if ( collection.statistics().count() >= 0 ) {
     ui.countLabel->setText( i18ncp( "@label", "One object", "%1 objects",
                             collection.statistics().count() ) );
@@ -46,7 +65,16 @@ void CollectionGeneralPropertiesPage::load(const Collection & collection)
 
 void CollectionGeneralPropertiesPage::save(Collection & collection)
 {
-  collection.setName( ui.nameEdit->text() );
+  if ( collection.hasAttribute<CollectionDisplayAttribute>() &&
+       !collection.attribute<CollectionDisplayAttribute>()->displayName().isEmpty() )
+    collection.attribute<CollectionDisplayAttribute>()->setDisplayName( ui.nameEdit->text() );
+  else
+    collection.setName( ui.nameEdit->text() );
+
+  if ( ui.customIconCheckbox->isChecked() )
+    collection.attribute<CollectionDisplayAttribute>( Collection::AddIfMissing )->setIconName( ui.customIcon->icon() );
+  else if ( collection.hasAttribute<CollectionDisplayAttribute>() )
+    collection.attribute<CollectionDisplayAttribute>()->setIconName( QString() );
 }
 
 #include "collectiongeneralpropertiespage.moc"
