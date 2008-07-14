@@ -76,7 +76,7 @@ void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option
   QStyleOptionViewItemV4 *noTextOption =
       qstyleoption_cast<QStyleOptionViewItemV4 *>( option );
   QStyledItemDelegate::initStyleOption( noTextOption, index );
-  noTextOption->text = QString();
+  noTextOption->text.clear();
 }
 
 void CollectionStatisticsDelegate::paint( QPainter *painter,

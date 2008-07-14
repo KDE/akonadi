@@ -85,7 +85,7 @@ QByteArray CollectionDisplayAttribute::serialized() const
   QList<QByteArray> l;
   l << ImapParser::quote( d->name.toUtf8() );
   l << ImapParser::quote( d->icon.toUtf8() );
-  return "(" + ImapParser::join( l, " " ) + ")";
+  return '(' + ImapParser::join( l, " " ) + ')';
 }
 
 void CollectionDisplayAttribute::deserialize(const QByteArray &data)
