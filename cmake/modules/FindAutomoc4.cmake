@@ -20,7 +20,7 @@
 # check if we are inside KDESupport and automoc is enabled
 if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
    # when building this project as part of kdesupport
-   set(AUTOMOC4_CONFIG_FILE "${KDESupport_SOURCE_DIR}/automoc/Automoc4Config.cmake")
+   set(AUTOMOC4_CONFIG_FILE "${KDESupport_BINARY_DIR}/automoc/Automoc4Config.cmake")
 else("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
    # when building this project outside kdesupport
 
