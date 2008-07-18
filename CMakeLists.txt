@@ -184,5 +184,5 @@ install( FILES
 
 install( FILES
   kcfg2dbus.xsl
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/share/apps/akonadi-kde
+  DESTINATION ${KDE4_DATA_INSTALL_DIR}/akonadi-kde
 )
