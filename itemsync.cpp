@@ -47,7 +47,7 @@ class ItemSync::Private
       mTransactionJobs( 0 ),
       mPendingJobs( 0 ),
       mProgress( 0 ),
-      mTotalItems( 0 ),
+      mTotalItems( -1 ),
       mTotalItemsProcessed( 0 ),
       mStreaming( false ),
       mIncremental( false ),
@@ -141,7 +141,11 @@ void ItemSync::setFullSyncItems( const Item::List &items )
   if ( !d->mStreaming )
     d->mDeliveryDone = true;
   d->mRemoteItems += items;
-  setTotalAmount( KJob::Bytes, d->mRemoteItems.count() );
+  d->mTotalItemsProcessed += items.count();
+  kDebug() << "Received: " << items.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
+  setTotalAmount( KJob::Bytes, d->mTotalItemsProcessed );
+  if ( d->mTotalItemsProcessed == d->mTotalItems )
+    d->mDeliveryDone = true;
   d->execute();
 }
 
@@ -159,18 +163,6 @@ void ItemSync::setTotalItems( int amount )
   }
 }
 
-void ItemSync::setPartSyncItems( const Item::List &items )
-{
-  Q_ASSERT( !d->mIncremental );
-  Q_ASSERT( d->mStreaming );
-  d->mRemoteItems += items;
-  d->mTotalItemsProcessed += items.count();
-  kDebug() << "Received: " << items.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
-  if ( d->mTotalItemsProcessed == d->mTotalItems )
-    d->mDeliveryDone = true;
-  d->execute();
-}
-
 void ItemSync::setIncrementalSyncItems( const Item::List &changedItems, const Item::List &removedItems )
 {
   d->mIncremental = true;
@@ -178,7 +170,10 @@ void ItemSync::setIncrementalSyncItems( const Item::List &changedItems, const It
     d->mDeliveryDone = true;
   d->mRemoteItems += changedItems;
   d->mRemovedRemoteItems += removedItems;
-  setTotalAmount( KJob::Bytes, d->mRemoteItems.count() + d->mRemovedRemoteItems.count() );
+  d->mTotalItemsProcessed += changedItems.count() + removedItems.count();
+  setTotalAmount( KJob::Bytes, d->mTotalItemsProcessed );
+  if ( d->mTotalItemsProcessed == d->mTotalItems )
+    d->mDeliveryDone = true;
   d->execute();
 }
 

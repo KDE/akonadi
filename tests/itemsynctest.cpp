@@ -71,7 +71,7 @@ class ItemsyncTest : public QObject
       for ( int i = 0; i < origItems.count(); ++i ) {
         Item::List l;
         l << origItems[i];
-        syncer->setPartSyncItems( l );
+        syncer->setFullSyncItems( l );
         if ( i < origItems.count() - 1 )
           QTest::qWait( 10 ); // enter the event loop so itemsync actually can do something
       }
