@@ -87,6 +87,8 @@ bool Control::Private::startInternal()
   // safety timeout
   QTimer::singleShot( 10000, mEventLoop, SLOT(quit()) );
   mEventLoop->exec();
+  mEventLoop->deleteLater();
+  mEventLoop = 0;
 
   if ( !mSuccess )
     kWarning( 5250 ) << "Could not start Akonadi!";
@@ -96,10 +98,8 @@ bool Control::Private::startInternal()
 void Control::Private::serviceOwnerChanged( const QString & name, const QString & oldOwner, const QString & newOwner )
 {
   Q_UNUSED( oldOwner );
-  if ( name == AKONADI_SERVER_SERVICE && !newOwner.isEmpty() && mEventLoop ) {
+  if ( name == AKONADI_SERVER_SERVICE && !newOwner.isEmpty() && mEventLoop && mEventLoop->isRunning() ) {
     mEventLoop->quit();
-    delete mEventLoop;
-    mEventLoop = 0;
     mSuccess = true;
   }
 }
