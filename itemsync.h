@@ -28,6 +28,7 @@
 namespace Akonadi {
 
 class Collection;
+class ItemFetchScope;
 
 /**
  * @short Syncs between items known to a client (usually a resource) and the Akonadi storage.
@@ -115,8 +116,12 @@ class AKONADI_EXPORT ItemSync : public Job
     void setIncrementalSyncItems( const Item::List &changedItems,
                                   const Item::List &removedItems );
 
+    void setFetchScope( ItemFetchScope &fetchScope );
+    ItemFetchScope &fetchScope();
+
   protected:
     void doStart();
+    virtual bool updateItem( const Item &storedItem, Item &newItem );
 
   private:
     //@cond PRIVATE
