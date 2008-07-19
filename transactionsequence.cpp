@@ -114,7 +114,7 @@ void TransactionSequence::commit()
 {
   Q_D( TransactionSequence );
 
-  if ( d->mState < TransactionSequencePrivate::WaitingForSubjobs )
+  if ( d->mState == TransactionSequencePrivate::Running )
     d->mState = TransactionSequencePrivate::WaitingForSubjobs;
   else
     return;
