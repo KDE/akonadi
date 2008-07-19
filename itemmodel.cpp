@@ -143,6 +143,11 @@ void ItemModel::Private::itemChanged( const Akonadi::Item &item, const QSet<QByt
   int row = rowForItem( item );
   if ( row < 0 )
     return;
+
+  items[ row ]->item = item;
+  itemHash.remove( item );
+  itemHash[ item ] = items[ row ];
+
   QModelIndex index = mParent->index( row, 0, QModelIndex() );
 
   mParent->dataChanged( index, index );
