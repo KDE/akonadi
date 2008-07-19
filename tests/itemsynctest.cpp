@@ -25,10 +25,13 @@
 #include <akonadi/itemsync.h>
 
 #include <QtCore/QObject>
+#include <QSignalSpy>
 
 #include <qtest_kde.h>
 
 using namespace Akonadi;
+
+Q_DECLARE_METATYPE( KJob* )
 
 class ItemsyncTest : public QObject
 {
@@ -48,6 +51,7 @@ class ItemsyncTest : public QObject
     void initTestCase()
     {
       Control::start();
+      qRegisterMetaType<KJob*>();
     }
 
     void testFullSync()
@@ -67,15 +71,25 @@ class ItemsyncTest : public QObject
       Item::List origItems = fetchItems();
 
       ItemSync* syncer = new ItemSync( Collection( 10 ) );
+      QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
+      QVERIFY( spy.isValid() );
       syncer->setTotalItems( origItems.count() );
+      QTest::qWait( 10 );
+      QCOMPARE( spy.count(), 0 );
+
       for ( int i = 0; i < origItems.count(); ++i ) {
         Item::List l;
         l << origItems[i];
         syncer->setFullSyncItems( l );
         if ( i < origItems.count() - 1 )
           QTest::qWait( 10 ); // enter the event loop so itemsync actually can do something
+        QCOMPARE( spy.count(), 0 );
       }
-      QVERIFY( syncer->exec() );
+      QTest::qWait( 1000 ); // let it finish its job
+      QCOMPARE( spy.count(), 1 );
+      KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
+      QVERIFY( job );
+      QCOMPARE( job->error(), 0 );
 
       Item::List resultItems = fetchItems();
       QCOMPARE( resultItems.count(), origItems.count() );
@@ -98,16 +112,26 @@ class ItemsyncTest : public QObject
       Item::List origItems = fetchItems();
 
       ItemSync* syncer = new ItemSync( Collection( 10 ) );
+      QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
+      QVERIFY( spy.isValid() );
       syncer->setStreamingEnabled( true );
+      QTest::qWait( 10 );
+      QCOMPARE( spy.count(), 0 );
+
       for ( int i = 0; i < origItems.count(); ++i ) {
         Item::List l;
         l << origItems[i];
         syncer->setIncrementalSyncItems( l, Item::List() );
         if ( i < origItems.count() - 1 )
           QTest::qWait( 10 ); // enter the event loop so itemsync actually can do something
+        QCOMPARE( spy.count(), 0 );
       }
       syncer->deliveryDone();
-      QVERIFY( syncer->exec() );
+      QTest::qWait( 1000 ); // let it finish its job
+      QCOMPARE( spy.count(), 1 );
+      KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
+      QVERIFY( job );
+      QCOMPARE( job->error(), 0 );
 
       Item::List resultItems = fetchItems();
       QCOMPARE( resultItems.count(), origItems.count() );
