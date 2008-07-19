@@ -56,6 +56,33 @@ namespace CollectionUtils
             collection.resource() != QLatin1String( "akonadi_search_resource" ) &&
             !collection.contentMimeTypes().isEmpty());
   }
+
+  inline QString defaultIconName( const Collection &col )
+  {
+    if ( CollectionUtils::isVirtualParent( col ) )
+      return QLatin1String( "edit-find" );
+    if ( CollectionUtils::isVirtual( col ) )
+      return QLatin1String( "document-preview" );
+    if ( CollectionUtils::isResource( col ) )
+      return QLatin1String( "network-server" );
+    if ( CollectionUtils::isStructural( col ) )
+      return QLatin1String( "folder-grey" );
+
+    const QStringList content = col.contentMimeTypes();
+    if ( content.size() == 1 || (content.size() == 2 && content.contains( Collection::mimeType() )) ) {
+      if ( content.contains( QLatin1String( "text/x-vcard" ) ) || content.contains( QLatin1String( "text/directory" ) )
+                                                               || content.contains( QLatin1String( "text/vcard" ) ) )
+        return QLatin1String( "x-office-address-book" );
+      // TODO: add all other content types and/or fix their mimetypes
+      if ( content.contains( QLatin1String( "akonadi/event" ) ) || content.contains( QLatin1String( "text/ical" ) ) )
+        return QLatin1String( "view-pim-calendar" );
+      if ( content.contains( QLatin1String( "akonadi/task" ) ) )
+        return QLatin1String( "view-pim-tasks" );
+    } else if ( content.isEmpty() ) {
+      return QLatin1String( "folder-grey" );
+    }
+    return QLatin1String( "folder" );
+  }
 }
 
 }
