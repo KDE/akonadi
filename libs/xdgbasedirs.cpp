@@ -295,12 +295,12 @@ QString XdgBaseDirs::akonadiConfigFile( const QString &file, FileAccessMode open
 
 QString XdgBaseDirsSingleton::homePath( const char *variable, const char *defaultSubDir )
 {
-  char *env = std::getenv( variable );
+  const QByteArray env = qgetenv( variable );
 
   QString xdgPath;
-  if ( env == 0 || *env == '\0' ) {
+  if ( env.isEmpty() ) {
     xdgPath = QDir::homePath() + QLatin1Char( '/' ) + QLatin1String( defaultSubDir );
-  } else if ( *env == '/' ) {
+  } else if ( env == "/" ) {
     xdgPath = QString::fromLocal8Bit( env );
   } else {
     xdgPath = QDir::homePath() + QLatin1Char( '/' ) + QString::fromLocal8Bit( env );
@@ -311,14 +311,18 @@ QString XdgBaseDirsSingleton::homePath( const char *variable, const char *defaul
 
 QStringList XdgBaseDirsSingleton::systemPathList( const char *variable, const char *defaultDirList )
 {
-  char *env = std::getenv( variable );
+  const QByteArray env = qgetenv( variable );
 
   QString xdgDirList;
-  if ( env == 0 || *env == '\0' ) {
+  if ( env.isEmpty() ) {
     xdgDirList = QLatin1String( defaultDirList );
   } else {
     xdgDirList = QString::fromLocal8Bit( env );
   }
 
+#if defined(Q_OS_WIN) //krazy:exclude=cpp
+  return xdgDirList.split( QLatin1Char( ';' ) );
+#else
   return xdgDirList.split( QLatin1Char( ':' ) );
+#endif
 }

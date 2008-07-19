@@ -114,8 +114,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
     new ServerAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );
 
-    char* dbusAddress = getenv( "DBUS_SESSION_BUS_ADDRESS" );
-    if ( dbusAddress != 0 ) {
+    const QByteArray dbusAddress = qgetenv( "DBUS_SESSION_BUS_ADDRESS" );
+    if ( !dbusAddress.isEmpty() ) {
       connectionSettings.setValue( QLatin1String( "DBUS/Address" ), QLatin1String( dbusAddress ) );
     }
 }
