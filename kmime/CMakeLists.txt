@@ -29,5 +29,5 @@ install( FILES
   messageparts.h
   messagethreadingattribute.h
   messagethreaderproxymodel.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kmime
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kmime COMPONENT Devel
 )
