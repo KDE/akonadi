@@ -334,7 +334,7 @@ StandardActionManager::~ StandardActionManager()
 void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel * selectionModel)
 {
   d->collectionSelectionModel = selectionModel;
-  connect( selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+  connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
            SLOT(updateActions()) );
 }
 
