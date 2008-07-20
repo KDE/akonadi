@@ -300,7 +300,11 @@ QString XdgBaseDirsSingleton::homePath( const char *variable, const char *defaul
   QString xdgPath;
   if ( env.isEmpty() ) {
     xdgPath = QDir::homePath() + QLatin1Char( '/' ) + QLatin1String( defaultSubDir );
-  } else if ( env == "/" ) {
+#if defined(Q_OS_WIN) //krazy:exclude=cpp
+  } else if ( QDir::isAbsolutePath( QString::fromLocal8Bit( env ) ) ) {
+#else
+  } else if ( env.startsWith( '/' ) ) {
+#endif
     xdgPath = QString::fromLocal8Bit( env );
   } else {
     xdgPath = QDir::homePath() + QLatin1Char( '/' ) + QString::fromLocal8Bit( env );
