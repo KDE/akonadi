@@ -71,6 +71,8 @@ bool Copy::copyItem(const PimItem & item, const Location & target)
   DataStore *store = connection()->storageBackend();
   PimItem newItem = item;
   newItem.setId( -1 );
+  newItem.setRev( 0 );
+  newItem.setDatetime( QDateTime::currentDateTime() );
   newItem.setRemoteId( QByteArray() );
   newItem.setLocationId( target.id() );
   Part::List parts;

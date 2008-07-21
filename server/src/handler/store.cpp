@@ -95,6 +95,7 @@ bool Store::handleLine( const QByteArray& line )
 
     // update item revision
     pimItems[ i ].setRev( pimItems[ i ].rev() + 1 );
+    pimItems[ i ].setDatetime( QDateTime::currentDateTime() );
     if ( !pimItems[ i ].update() ) {
       return failureResponse( "Unable to update item revision" );
     }
