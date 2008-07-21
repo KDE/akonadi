@@ -17,11 +17,8 @@
     02110-1301, USA.
 */
 
-
 #include "collectionstatisticsdelegate.h"
 #include "collectionstatisticsmodel.h"
-
-#if QT_VERSION >= 0x040400
 
 #include <kcolorscheme.h>
 #include <kdebug.h>
@@ -209,7 +206,5 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
   painter->drawText( textRect, option4.displayAlignment, text );
 }
-
-#endif
 
 #include "collectionstatisticsdelegate.moc"
