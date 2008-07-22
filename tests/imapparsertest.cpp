@@ -443,10 +443,15 @@ void ImapParserTest::testParseDateTime_data()
   QTest::newRow( "emtpy" ) << QByteArray() << 0 << QDateTime() << 0;
 
   QByteArray data( " \"28-May-2006 01:03:35 +0200\"" );
+  QByteArray data2( "22-Jul-2008 16:31:48 +0000" );
+
   QDateTime dt( QDate( 2006, 5, 27 ), QTime( 23, 3, 35 ), Qt::UTC );
+  QDateTime dt2( QDate( 2008, 7, 22 ), QTime( 16, 31, 48 ), Qt::UTC );
+
   QTest::newRow( "quoted 1" ) << data << 0 << dt << 29;
   QTest::newRow( "quoted 2" ) << data << 1 << dt << 29;
   QTest::newRow( "unquoted" ) << data << 2 << dt << 28;
+  QTest::newRow( "unquoted2" ) << data2 << 0 << dt2 << 26;
   QTest::newRow( "invalid" ) << data << 4 << QDateTime() << 4;
 }
 
