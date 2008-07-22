@@ -382,9 +382,13 @@ int ImapParser::parseDateTime(const QByteArray & data, QDateTime & dateTime, int
   if ( data[pos] == '"' ) {
     quoted = true;
     ++pos;
+
+    if ( data.length() <= pos + 26 )
+      return start;
+  } else {
+    if ( data.length() < pos + 26 )
+      return start;
   }
-  if ( data.length() <= pos + 26 )
-    return start;
 
   bool ok = true;
   const int day = ( data[pos] == ' ' ? data[pos + 1] - '0' // single digit day
