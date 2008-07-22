@@ -33,8 +33,8 @@ include(InstallSettings)
 
 ################ configure checks and similar things ##############################
 
-set(AKONADI_LIB_MAJOR_VERSION "0")
-set(AKONADI_LIB_MINOR_VERSION "82")
+set(AKONADI_LIB_MAJOR_VERSION "1")
+set(AKONADI_LIB_MINOR_VERSION "0")
 set(AKONADI_LIB_PATCH_VERSION "0")
 set(AKONADI_LIB_VERSION_STRING "${AKONADI_LIB_MAJOR_VERSION}.${AKONADI_LIB_MINOR_VERSION}.${AKONADI_LIB_PATCH_VERSION}")
 

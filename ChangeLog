@@ -1,3 +1,59 @@
+2008-07-22 20:40 +0000 [r836713]  Tom Albers tomalbers@kde.nl
+
+	* branches/akonadi/1.0 (added): This is the stable 1.0 branch.
+
+2008-07-22 15:32 +0000 [r836583]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/libs/imapparser.cpp: Unquoted date time
+	  with a lenght of 26 characters was not parsed properly. Fixed by
+	  this commit. Updated test will be committed soon after this.
+	  example of correct date which did not get parsed correctly:
+	  22-Jul-2008 16:31:48 +0000
+
+2008-07-21 15:33 +0000 [r836028]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp: Add
+	  serverside timestamp support for items.
+
+2008-07-20 08:55 +0000 [r835215]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp: better fix for
+	  windows
+
+2008-07-19 13:19 +0000 [r834689]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp: make msvc and
+	  ebn happy
+
+2008-07-18 23:20 +0000 [r834451]  Michel Hermier michel.hermier@gmail.com
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake,
+	  trunk/kdesupport/phonon/cmake/FindAutomoc4.cmake: Revert 834172
+	  so that automoc4 is found at the correct place.
+
+2008-07-18 10:14 +0000 [r834172]  Matthias Kretz kretz@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake,
+	  trunk/kdesupport/phonon/cmake/FindAutomoc4.cmake: inside
+	  kdesupport the location for Automoc4Config.cmake has changed
+
+2008-07-08 21:59 +0000 [r829707]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake,
+	  trunk/kdesupport/phonon/cmake/FindAutomoc4.cmake: -apply same
+	  patch as in kdelibs/cmake/modules/, don't append /lib to
+	  CMAKE_INSTALL_PREFIX, since this is already part of PATH_SUFFIXES
+	  Alex
+
+2008-06-18 16:00 +0000 [r821830]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: Bump version, run
+	  changelog script and update news file.
+
 2008-06-05 21:22 +0000 [r817369]  Alexander Neundorf neundorf@kde.org
 
 	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake: -sync

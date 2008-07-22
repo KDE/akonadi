@@ -1,3 +1,11 @@
+1.0.0                            22-July-2008
+---------------------------------------------
+- First official stable release
+- Bugfix: Unquoted date time with a lenght of 
+  26 characters was not parsed properly.
+- Add serverside timestamp support for items.
+- Build system fixes (windows & automoc)
+
 0.82.0                           18-June-2008
 ---------------------------------------------
 - Several build and installation fixes for windows and mac.
