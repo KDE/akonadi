@@ -20,6 +20,7 @@
 #ifndef AKONADI_ITEM_P_H
 #define AKONADI_ITEM_P_H
 
+#include <QtCore/QDateTime>
 #include <QtCore/QMap>
 
 #include "entity_p.h"
@@ -37,6 +38,7 @@ class ItemPrivate : public EntityPrivate
       : EntityPrivate( id ),
         mPayload( 0 ),
         mRevision( -1 ),
+        mModificationTime(),
         mFlagsOverwritten( false )
     {
     }
@@ -46,6 +48,7 @@ class ItemPrivate : public EntityPrivate
     {
       mFlags = other.mFlags;
       mRevision = other.mRevision;
+      mModificationTime = other.mModificationTime;
       mMimeType = other.mMimeType;
       if ( other.mPayload )
         mPayload = other.mPayload->clone();
@@ -73,6 +76,7 @@ class ItemPrivate : public EntityPrivate
     PayloadBase*  mPayload;
     Item::Flags mFlags;
     int mRevision;
+    QDateTime mModificationTime;
     QString mMimeType;
     Item::Flags mAddedFlags;
     Item::Flags mDeletedFlags;

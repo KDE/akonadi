@@ -24,6 +24,7 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionselectjob.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
@@ -322,4 +323,52 @@ void ItemStoreTest::testRevisionCheck()
   QVERIFY( !sjob->exec() );
 }
 
+void ItemStoreTest::testModificationTime()
+{
+  Item item;
+  item.setMimeType( "text/directory" );
+  QVERIFY( item.modificationTime().isNull() );
+
+  ItemCreateJob *job = new ItemCreateJob( item, res1_foo );
+  QVERIFY( job->exec() );
+
+  // The item should have a datetime set now.
+  item = job->item();
+  QVERIFY( !item.modificationTime().isNull() );
+  QDateTime initialDateTime = item.modificationTime();
+
+  // Fetch the same item again.
+  Item item2( item.id() );
+  ItemFetchJob *fjob = new ItemFetchJob( item2, this );
+  QVERIFY( fjob->exec() );
+  item2 = fjob->items().first();
+  QCOMPARE( initialDateTime, item2.modificationTime() );
+
+  // Lets wait 5 secs.
+  QTest::qWait( 5000 );
+
+  // Modify the item
+  ItemModifyJob *mjob = new ItemModifyJob( item );
+  item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
+  QVERIFY( mjob->exec() );
+
+  // The item should still have a datetime set and that date should be somewhere
+  // after the initialDateTime.
+  item = mjob->item();
+  QVERIFY( !item.modificationTime().isNull() );
+  QVERIFY( initialDateTime < item.modificationTime() );
+
+  // Fetch the item after modification.
+  Item item3( item.id() );
+  ItemFetchJob *fjob2 = new ItemFetchJob( item3, this );
+  QVERIFY( fjob2->exec() );
+
+  // item3 should have the same modification time as item.
+  item3 = fjob2->items().first();
+  QCOMPARE( item3.modificationTime(), item.modificationTime() );
+
+  // Clean up
+  ItemDeleteJob *idjob = new ItemDeleteJob( item, this );
+  QVERIFY( idjob->exec() );
+}
 #include "itemstoretest.moc"

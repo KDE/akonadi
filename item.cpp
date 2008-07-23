@@ -91,6 +91,16 @@ void Item::clearFlags()
   d->mFlagsOverwritten = true;
 }
 
+QDateTime Item::modificationTime() const
+{
+  return d_func()->mModificationTime;
+}
+
+void Item::setModificationTime( const QDateTime &datetime )
+{
+  d_func()->mModificationTime = datetime;
+}
+
 bool Item::hasFlag( const QByteArray & name ) const
 {
   return d_func()->mFlags.contains( name );

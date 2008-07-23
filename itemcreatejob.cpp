@@ -27,6 +27,8 @@
 #include "job_p.h"
 #include "protocolhelper.h"
 
+#include <QtCore/QDateTime>
+
 #include <kdebug.h>
 
 using namespace Akonadi;
@@ -43,6 +45,7 @@ class Akonadi::ItemCreateJobPrivate : public JobPrivate
     Item mItem;
     QSet<QByteArray> mParts;
     Item::Id mUid;
+    QDateTime mDatetime;
     QByteArray mData;
 };
 
@@ -129,6 +132,13 @@ void ItemCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray &
                        << tag << data;
       }
     }
+    if ( int pos = data.indexOf( "DATETIME" ) ) {
+      int resultPos = ImapParser::parseDateTime( data, d->mDatetime, pos + 8 );
+      if ( resultPos == (pos + 8) ) {
+        kDebug( 5250 ) << "Invalid DATETIME response to APPEND command: "
+            << tag << data;
+      }
+    }
   }
 }
 
@@ -141,6 +151,8 @@ Item ItemCreateJob::item() const
 
   Item item( d->mItem );
   item.setId( d->mUid );
+  item.setRevision( 0 );
+  item.setModificationTime( d->mDatetime );
 
   return item;
 }
