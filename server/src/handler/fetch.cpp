@@ -50,9 +50,10 @@ class HandlerException : public std::exception
 
 static const int itemQueryIdColumn = 0;
 static const int itemQueryRevColumn = 1;
-static const int itemQueryRidColumn = 2;
-static const int itemQueryMimeTypeColumn = 3;
-static const int itemQueryResouceColumn = 4;
+static const int itemQueryDatetimeColumn = 2;
+static const int itemQueryRidColumn = 3;
+static const int itemQueryMimeTypeColumn = 4;
+static const int itemQueryResouceColumn = 5;
 
 static const int partQueryIdColumn = 0;
 static const int partQueryNameColumn = 1;
@@ -183,9 +184,15 @@ bool Fetch::handleLine( const QByteArray& line )
     while ( mItemQuery.query().isValid() ) {
       const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
       const int pimItemRev = mItemQuery.query().value( itemQueryRevColumn ).toInt();
+      const QDateTime pimItemDatetime = mItemQuery.query().value( itemQueryDatetimeColumn ).toDateTime();
+
+      QString datetime = pimItemDatetime.toString( QLatin1String( "dd-MMM-yyyy hh:mm:ss" ) );
+      datetime.append( QLatin1String( " +0000" ) );
+
       QList<QByteArray> attributes;
       attributes.append( "UID " + QByteArray::number( pimItemId ) );
       attributes.append( "REV " + QByteArray::number( pimItemRev ) );
+      attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
       attributes.append( "REMOTEID " + ImapParser::quote( mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8() ) );
       attributes.append( "MIMETYPE " + ImapParser::quote( mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8() ) );
 
@@ -323,6 +330,7 @@ void Fetch::buildItemQuery()
   // make sure the columns indexes here and in the constants defined above match
   mItemQuery.addColumn( PimItem::idFullColumnName() );
   mItemQuery.addColumn( PimItem::revFullColumnName() );
+  mItemQuery.addColumn( PimItem::datetimeFullColumnName() );
   mItemQuery.addColumn( PimItem::remoteIdFullColumnName() );
   mItemQuery.addColumn( MimeType::nameFullColumnName() );
   mItemQuery.addColumn( Resource::nameFullColumnName() );

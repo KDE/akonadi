@@ -116,8 +116,14 @@ bool Akonadi::Append::commit()
     if ( !mimeType.isValid() ) {
       return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
     }
+
+    if( m_dateTime == QDateTime() ) {
+      m_dateTime = QDateTime::currentDateTime();
+    }
+
     PimItem item;
     item.setRev( 0 );
+    item.setDatetime( m_dateTime );
 
     // wrap data into a part
     Part part;
@@ -144,9 +150,16 @@ bool Akonadi::Append::commit()
     if ( !transaction.commit() )
         return failureResponse( "Unable to commit transaction." );
 
+    QString datetime = item.datetime().toString( QLatin1String( "dd-MMM-yyyy hh:mm:ss" ) );
+    datetime.append( QLatin1String( " +0000" ) );
+
+    QByteArray res( "[UIDNEXT " + QByteArray::number( item.id() ) + " " );
+    res.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
+    res.append( ']' );
+
     response.setTag( tag() );
     response.setUserDefined();
-    response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + ']' );
+    response.setString( res );
     emit responseAvailable( response );
 
     response.setSuccess();

@@ -85,6 +85,9 @@ bool Store::handleLine( const QByteArray& line )
   else if ( buffer == "NOREV" )
     revCheck   = false;
 
+  // Set the same modification time for each item.
+  QDateTime modificationtime = QDateTime::currentDateTime();
+
   for ( int i = 0; i < pimItems.count(); ++i ) {
     if ( revCheck ) {
       // check if revision number of given items and their database equivalents match
@@ -95,7 +98,7 @@ bool Store::handleLine( const QByteArray& line )
 
     // update item revision
     pimItems[ i ].setRev( pimItems[ i ].rev() + 1 );
-    pimItems[ i ].setDatetime( QDateTime::currentDateTime() );
+    pimItems[ i ].setDatetime( modificationtime );
     if ( !pimItems[ i ].update() ) {
       return failureResponse( "Unable to update item revision" );
     }
@@ -210,9 +213,12 @@ bool Store::handleLine( const QByteArray& line )
   if ( !transaction.commit() )
     return failureResponse( "Cannot commit transaction." );
 
+  QString datetime = modificationtime.toString( QLatin1String( "dd-MMM-yyyy hh:mm:ss" ) );
+  datetime.append( QLatin1String( " +0000" ) );
+
   response.setTag( tag() );
   response.setSuccess();
-  response.setString( "STORE completed" );
+  response.setString( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) + " STORE completed" );
 
   emit responseAvailable( response );
   deleteLater();
