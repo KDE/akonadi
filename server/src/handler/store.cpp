@@ -86,7 +86,7 @@ bool Store::handleLine( const QByteArray& line )
     revCheck   = false;
 
   // Set the same modification time for each item.
-  QDateTime modificationtime = QDateTime::currentDateTime();
+  QDateTime modificationtime = QDateTime::currentDateTime().toUTC();
 
   for ( int i = 0; i < pimItems.count(); ++i ) {
     if ( revCheck ) {

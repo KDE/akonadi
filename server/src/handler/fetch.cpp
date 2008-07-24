@@ -186,6 +186,7 @@ bool Fetch::handleLine( const QByteArray& line )
       const int pimItemRev = mItemQuery.query().value( itemQueryRevColumn ).toInt();
       const QDateTime pimItemDatetime = mItemQuery.query().value( itemQueryDatetimeColumn ).toDateTime();
 
+      // Date time is always stored in UTC time zone by the server.
       QString datetime = pimItemDatetime.toString( QLatin1String( "dd-MMM-yyyy hh:mm:ss" ) );
       datetime.append( QLatin1String( " +0000" ) );
 

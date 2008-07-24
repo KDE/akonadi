@@ -75,10 +75,13 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     int startOfLiteral = startOfDateTime;
     if ( line[startOfDateTime] == '"' ) {
         startOfLiteral = ImapParser::parseDateTime( line, m_dateTime, startOfDateTime );
+        m_dateTime = m_dateTime.toUTC();
         // FIXME Should we return an error if m_dateTime is invalid?
+    } else {
+        // if date/time is not given then it will be set to the current date/time
+        // converted to UTC.
+        m_dateTime = QDateTime::currentDateTime().toUTC();
     }
-    // if date/time is not given then it will be set to the current date/time
-    // by the database
 
     ImapParser::parseString( line, m_data, startOfLiteral );
     return commit();
@@ -117,10 +120,6 @@ bool Akonadi::Append::commit()
       return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
     }
 
-    if( m_dateTime == QDateTime() ) {
-      m_dateTime = QDateTime::currentDateTime();
-    }
-
     PimItem item;
     item.setRev( 0 );
     item.setDatetime( m_dateTime );
@@ -150,6 +149,7 @@ bool Akonadi::Append::commit()
     if ( !transaction.commit() )
         return failureResponse( "Unable to commit transaction." );
 
+    // Date time is always stored in UTC time zone by the server.
     QString datetime = item.datetime().toString( QLatin1String( "dd-MMM-yyyy hh:mm:ss" ) );
     datetime.append( QLatin1String( " +0000" ) );
 
