@@ -97,6 +97,9 @@ void ResourceScheduler::scheduleNext()
 
 void ResourceScheduler::executeNext()
 {
+  if( mCurrentTask.type != Invalid || mTaskList.isEmpty() )
+    return;
+
   mCurrentTask = mTaskList.takeFirst();
   switch ( mCurrentTask.type ) {
     case SyncAll:
