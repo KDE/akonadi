@@ -42,7 +42,7 @@ using namespace Akonadi;
 
 //@cond PRIVATE
 
-static const int minimumProtocolVersion = 2;
+static const int minimumProtocolVersion = 3;
 
 void SessionPrivate::startNext()
 {
