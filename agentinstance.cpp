@@ -23,6 +23,8 @@
 #include "agentmanager.h"
 #include "agentmanager_p.h"
 
+#include <KDebug>
+
 using namespace Akonadi;
 
 AgentInstance::AgentInstance()
@@ -124,4 +126,13 @@ AgentInstance& AgentInstance::operator=( const AgentInstance &other )
 bool AgentInstance::operator==( const AgentInstance &other ) const
 {
   return (d->mIdentifier == other.d->mIdentifier);
+}
+
+void AgentInstance::reconfigure() const
+{
+  QDBusInterface iface( "org.freedesktop.Akonadi.Agent." + identifier(), "/", "org.freedesktop.Akonadi.Agent.Control" );
+  if ( iface.isValid() )
+    iface.call( "reconfigure" );
+  else
+    kWarning() << "Unable to obtain agent interface";
 }

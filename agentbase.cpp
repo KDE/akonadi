@@ -476,5 +476,10 @@ ChangeRecorder * AgentBase::changeRecorder() const
   return d_ptr->mMonitor;
 }
 
+void AgentBase::reconfigure()
+{
+  emit reloadConfiguration();
+}
+
 #include "agentbase.moc"
 #include "agentbase_p.moc"

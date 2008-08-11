@@ -351,6 +351,12 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     void error( const QString& message );
 
+    /**
+     * Emitted if another application has changed the agents configuration remotely
+     * and called AgentInstance::reconfigure().
+     */
+    void reloadConfiguration();
+
   protected:
     /**
      * Creates an agent base.
@@ -415,6 +421,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     static QString parseArguments( int, char** );
     static int init( AgentBase *r );
 
+    // D-Bus interface stuff
+    void reconfigure();
     void quit();
 
     // dbus agent interface

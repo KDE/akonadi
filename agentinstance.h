@@ -169,6 +169,11 @@ class AKONADI_EXPORT AgentInstance
      */
     bool operator==( const AgentInstance &other ) const;
 
+    /**
+     * Tell the agent that its configuration has been changed remotely via D-Bus
+     */
+    void reconfigure() const;
+
   private:
     //@cond PRIVATE
     class Private;
