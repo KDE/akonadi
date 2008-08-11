@@ -9,5 +9,7 @@
       <arg name="windowId" type="x" direction="in"/>
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
+    <method name="reconfigure">
+    </method>
   </interface>
 </node>
