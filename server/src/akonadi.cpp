@@ -94,7 +94,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     // initialize the database
     DataStore *db = DataStore::self();
     if ( !db->database().isOpen() )
-      qFatal("Unable to open database.");
+      qFatal("Unable to open database: '%s'", qPrintable(db->database().lastError().text()));
     if ( !db->init() )
       qFatal("Unable to initialize database.");
 
@@ -255,7 +255,7 @@ void AkonadiServer::startDatabaseProcess()
   mDatabaseProcess = new QProcess( this );
   mDatabaseProcess->start( mysqldPath, arguments );
   if ( !mDatabaseProcess->waitForStarted() )
-    qFatal( "Could not start database server '%s'", qPrintable( mysqldPath ) );
+    qFatal( "Could not start database server '%s': '%s'", qPrintable( mysqldPath ), qPrintable( mDatabaseProcess->errorString()) );
 
   {
     QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
@@ -266,8 +266,13 @@ void AkonadiServer::startDatabaseProcess()
       opened = db.open();
       if ( opened )
         break;
-      if ( mDatabaseProcess->waitForFinished( 500 ) )
-        qFatal( "Database server exited unexpectedly, exit code %d", mDatabaseProcess->exitCode() );
+      if ( mDatabaseProcess->waitForFinished( 500 ) ) {
+        qDebug( "Database stdout: '%s'", mDatabaseProcess->readAllStandardOutput().constData() );
+        qFatal( "Database server exited unexpectedly, exit code %d,\n process error: '%s'\n DB error: '%s'",
+                mDatabaseProcess->exitCode(),
+                qPrintable( mDatabaseProcess->errorString() ),
+                mDatabaseProcess->readAllStandardError().constData() );
+      }
     }
 
     if ( opened ) {
