@@ -159,18 +159,8 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
   }
   if ( _tag == d->mTag ) {
     if ( data.startsWith( "OK" ) ) {
-      QDateTime modificationDateTime;
-      if ( int pos = data.indexOf( "DATETIME" ) ) {
-        int resultPos = ImapParser::parseDateTime( data, modificationDateTime, pos + 8 );
-        if ( resultPos == (pos + 8) ) {
-          kDebug( 5250 ) << "Invalid DATETIME response to STORE command: "
-              << _tag << data;
-        }
-      }
-
       // increase item revision of own copy of item
       d->mItem.setRevision( d->mItem.revision() + 1 );
-      d->mItem.setModificationTime( modificationDateTime );
       d->mItem.d_ptr->resetChangeLog();
     } else {
       setError( Unknown );
