@@ -33,6 +33,7 @@
 
 #include <kdebug.h>
 
+#include <QtCore/QDateTime>
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>
 
@@ -167,6 +168,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       // create a new item object
       Item::Id uid = -1;
       int rev = -1;
+      QDateTime datetime;
       QString rid;
       QString mimeType;
 
@@ -178,20 +180,23 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
           uid = value.toLongLong();
         else if ( key == "REV" )
           rev = value.toInt();
+        else if ( key == "DATETIME" )
+          ImapParser::parseDateTime( value, datetime );
         else if ( key == "REMOTEID" )
           rid = QString::fromUtf8( value );
         else if ( key == "MIMETYPE" )
           mimeType = QString::fromLatin1( value );
       }
 
-      if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
-        kWarning( 5250 ) << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
+      if ( uid < 0 || rev < 0 || datetime.isNull() || mimeType.isEmpty() ) {
+        kWarning( 5250 ) << "Broken fetch response: UID, RID, REV, DATETIME or MIMETYPE missing!";
         return;
       }
 
       Item item( uid );
       item.setRemoteId( rid );
       item.setRevision( rev );
+      item.setModificationTime( datetime );
       item.setMimeType( mimeType );
       if ( !item.isValid() )
         return;
@@ -200,7 +205,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       for ( int i = 0; i < fetchResponse.count() - 1; i += 2 ) {
         const QByteArray key = fetchResponse.value( i );
         // skip stuff we dealt with already
-        if ( key == "UID" || key == "REV" || key == "REMOTEID" || key == "MIMETYPE" )
+        if ( key == "UID" || key == "REV" || key == "DATETIME" || key == "REMOTEID" || key == "MIMETYPE" )
           continue;
         // flags
         if ( key == "FLAGS" ) {

@@ -38,6 +38,7 @@ class ItemStoreTest : public QObject
     void testMultiPart();
     void testPartRemove();
     void testRevisionCheck();
+    void testModificationTime();
 };
 
 #endif
