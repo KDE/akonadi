@@ -105,6 +105,11 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   QModelIndex firstColumn = index.model()->index( index.row(), 0, index.parent() );
   bool expanded = d->parent->isExpanded( firstColumn );
 
+  if ( option.state & QStyle::State_Selected ) {
+    painter->save();
+    painter->setPen( option.palette.highlightedText().color() );
+  }
+
   // Draw the unread count after the folder name (in parenthesis)
   if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
 
@@ -162,6 +167,10 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     painter->setPen( unreadColor );
     painter->drawText( unreadRect, Qt::AlignLeft, unread );
     painter->restore();
+
+    if ( option.state & QStyle::State_Selected ) {
+      painter->restore();
+    }
     return;
   }
 
@@ -201,10 +210,18 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
     painter->drawText( textRect, Qt::AlignRight, sumText );
     painter->restore();
+
+    if ( option.state & QStyle::State_Selected ) {
+      painter->restore();
+    }
     return;
   }
 
   painter->drawText( textRect, option4.displayAlignment, text );
+
+  if ( option.state & QStyle::State_Selected ) {
+    painter->restore();
+  }
 }
 
 #include "collectionstatisticsdelegate.moc"
