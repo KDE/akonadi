@@ -37,6 +37,7 @@
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
@@ -450,6 +451,12 @@ void AgentBase::cleanup()
    * ... then remove the file from hd.
    */
   QFile::remove( fileName );
+
+  /*
+   * ... and also remove the agent configuration file if there is one.
+   */
+  QString configFile = KStandardDirs::locateLocal( "config", KGlobal::config()->name() );
+  QFile::remove( configFile );
 
   QCoreApplication::quit();
 }
