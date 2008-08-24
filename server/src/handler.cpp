@@ -228,17 +228,17 @@ void Handler::imapSetToQuery(const ImapSet & set, bool isUid, QueryBuilder & qb)
 
   if ( !isUid && connection()->selectedCollection() >= 0 ) {
     const Location loc = connection()->selectedLocation();
-    Query::Condition colCond( Query::Or );
-    qb.addTable( LocationPimItemRelation::tableName() );
-    Query::Condition virtualColCond( Query::And );
-    virtualColCond.addValueCondition( LocationPimItemRelation::leftFullColumnName(), Query::Equals, loc.id() );
-    virtualColCond.addColumnCondition( LocationPimItemRelation::rightFullColumnName(), Query::Equals,
-                                       PimItem::idFullColumnName() );
-    colCond.addCondition( virtualColCond );
-    colCond.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, loc.id() );
-    qb.addCondition( colCond );
-    // FIXME: use a query that doesn't include duplicates in the first place!
-    qb.setDistinct( true );
+    // FIXME: we probably want to do both paths here in all cases, but that is apparently
+    // non-trivial with SQL
+    if ( loc.resource().name() == QLatin1String("akonadi_search_resource") ||
+         loc.resource().name().contains( QLatin1String("nepomuk") ) ) {
+      qb.addTable( LocationPimItemRelation::tableName() );
+      qb.addValueCondition( LocationPimItemRelation::leftFullColumnName(), Query::Equals, loc.id() );
+      qb.addColumnCondition( LocationPimItemRelation::rightFullColumnName(), Query::Equals,
+                             PimItem::idFullColumnName() );
+    } else {
+      qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, loc.id() );
+    }
   }
 }
 
