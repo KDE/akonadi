@@ -27,7 +27,10 @@ static Collection::Rights dataToRights( const QByteArray &data )
 {
   Collection::Rights rights = Collection::ReadOnly;
 
-  if ( data.isEmpty() || data.at( 0 ) == 'a' )
+  if ( data.isEmpty() )
+    return Collection::ReadOnly;
+
+  if ( data.at( 0 ) == 'a' )
     return Collection::AllRights;
 
   for ( int i = 0; i < data.count(); ++i ) {
