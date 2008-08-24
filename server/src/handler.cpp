@@ -36,6 +36,7 @@
 #include "handler/delete.h"
 #include "handler/expunge.h"
 #include "handler/fetch.h"
+#include "handler/link.h"
 #include "handler/list.h"
 #include "handler/login.h"
 #include "handler/logout.h"
@@ -149,6 +150,10 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new Copy();
     if ( command == "COLCOPY" )
       return new ColCopy();
+    if ( command == "LINK" )
+      return new Link( true );
+    if ( command == "UNLINK" )
+      return new Link( false );
 
     return 0;
 }

@@ -65,6 +65,7 @@ set(libakonadiprivate_SRCS
   src/handler/delete.cpp
   src/handler/expunge.cpp
   src/handler/fetch.cpp
+  src/handler/link.cpp
   src/handler/list.cpp
   src/handler/login.cpp
   src/handler/logout.cpp
