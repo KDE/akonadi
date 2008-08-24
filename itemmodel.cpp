@@ -76,6 +76,10 @@ class ItemModel::Private
                         mParent, SLOT(itemAdded( const Akonadi::Item& )) );
       mParent->connect( monitor, SIGNAL(itemRemoved(Akonadi::Item)),
                         mParent, SLOT(itemRemoved(Akonadi::Item)) );
+      mParent->connect( monitor, SIGNAL(itemLinked(const Akonadi::Item&, const Akonadi::Collection&)),
+                        mParent, SLOT(itemAdded(const Akonadi::Item&)) );
+      mParent->connect( monitor, SIGNAL(itemUnlinked(const Akonadi::Item&, const Akonadi::Collection&)),
+                        mParent, SLOT(itemRemoved(const Akonadi::Item&)) );
     }
 
     ~Private()

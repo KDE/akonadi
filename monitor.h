@@ -184,6 +184,20 @@ class AKONADI_EXPORT Monitor : public QObject
     void itemRemoved( const Akonadi::Item &item );
 
     /**
+     * This signal is emitted if a reference to an item is added to a virtual collection.
+     * @param item The linked item.
+     * @param collection The collection the item is linked to.
+     */
+    void itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+
+    /**
+     * This signal is emitted if a reference to an item is removed from a virtual collection.
+     * @param item The unlinked item.
+     * @param collection The collection the item is unlinked from.
+     */
+    void itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+
+    /**
      * This signal is emitted if a new collection has been added to a monitored collection in the Akonadi storage.
      *
      * @param collection The new collection.

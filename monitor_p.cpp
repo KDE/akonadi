@@ -204,8 +204,15 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
     case NotificationMessage::Remove:
       emit q_ptr->itemRemoved( it );
       break;
+    case NotificationMessage::Remove + 1: // ### change as soon as the new protocol lib is released, NotificationMessage::Link
+      emit q_ptr->itemLinked( it, col );
+      break;
+    case NotificationMessage::Remove + 2: // ### change as soon as the new protocol lib is released, NotificationMessage::Unlink
+      emit q_ptr->itemUnlinked( it, col );
+      break;
     default:
-      Q_ASSERT_X( false, "MonitorPrivate::emitItemNotification()", "Invalid enum value" );
+      kDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
+      break;
   }
 }
 
