@@ -111,6 +111,12 @@ class QueryBuilder
     void updateColumnValue( const QString &column, const QVariant &value );
 
     /**
+     * Specify whether duplicates should be included in the result.
+     * @param distinct @c true to remove duplicates, @c false is the default
+     */
+    void setDistinct( bool distinct );
+
+    /**
       Returns the query, only valid after exec().
     */
     QSqlQuery& query();
@@ -133,6 +139,7 @@ class QueryBuilder
     QList<QVariant> mBindValues;
     QList<QPair<QString, Query::SortOrder> > mSortColumns;
     QList<QPair<QString, QVariant> > mUpdateColumns;
+    bool mDistinct;
 #ifdef QUERYBUILDER_UNITTEST
     QString mStatement;
     friend class ::QueryBuilderTest;

@@ -112,6 +112,8 @@ bool QueryBuilder::exec()
   switch ( mType ) {
     case Select:
       statement += QLatin1String( "SELECT " );
+      if ( mDistinct )
+        statement += QLatin1String( "DISTINCT " );
       Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
       statement += mColumns.join( QLatin1String( ", " ) );
       statement += QLatin1String(" FROM ");
@@ -248,4 +250,9 @@ void QueryBuilder::addSortColumn(const QString & column, Query::SortOrder order 
 void QueryBuilder::updateColumnValue(const QString & column, const QVariant & value)
 {
   mUpdateColumns << qMakePair( column, value );
+}
+
+void QueryBuilder::setDistinct(bool distinct)
+{
+  mDistinct = distinct;
 }
