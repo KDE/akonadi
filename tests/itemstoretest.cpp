@@ -348,8 +348,8 @@ void ItemStoreTest::testModificationTime()
   QTest::qWait( 5000 );
 
   // Modify the item
-  ItemModifyJob *mjob = new ItemModifyJob( item );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
+  ItemModifyJob *mjob = new ItemModifyJob( item );
   QVERIFY( mjob->exec() );
 
   // The item should still have a datetime set and that date should be somewhere

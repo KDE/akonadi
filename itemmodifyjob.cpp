@@ -125,7 +125,7 @@ void ItemModifyJob::doStart()
   }
 
   // nothing to do
-  if ( changes.isEmpty() && d->mParts.isEmpty() ) {
+  if ( changes.isEmpty() && d->mParts.isEmpty() && d->mItem.attributes().isEmpty() ) {
     emitResult();
     return;
   }
