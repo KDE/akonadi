@@ -57,19 +57,22 @@ bool Link::handleLine(const QByteArray & line)
 
   PimItem::List items = qb.result();
 
+  DataStore *store = connection()->storageBackend();
+  Transaction transaction( store );
+
   foreach ( const PimItem &item, items ) {
     const bool alreadyLinked = collection.relatesToPimItem( item );
     bool result = true;
-    if ( mCreateLinks && !alreadyLinked )
+    if ( mCreateLinks && !alreadyLinked ) {
       result = collection.addPimItem( item );
-    else if ( !mCreateLinks && alreadyLinked )
+      store->notificationCollector()->itemLinked( item, collection );
+    } else if ( !mCreateLinks && alreadyLinked ) {
       result = collection.removePimItem( item );
+      store->notificationCollector()->itemUnlinked( item, collection );
+    }
     if ( !result )
       return failureResponse( "Failed to modify item reference" );
   }
-
-  DataStore *store = connection()->storageBackend();
-  Transaction transaction( store );
 
   if ( !transaction.commit() )
     return failureResponse( "Cannot commit transaction." );

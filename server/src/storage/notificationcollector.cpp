@@ -72,6 +72,16 @@ void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
   itemNotification( NotificationMessage::Remove, item, collection, Location(), mimeType, resource );
 }
 
+void NotificationCollector::itemLinked(const PimItem & item, const Location & collection)
+{
+  itemNotification( NotificationMessage::Link, item, collection, Location(), QString(), QByteArray() );
+}
+
+void NotificationCollector::itemUnlinked(const PimItem & item, const Location & collection)
+{
+  itemNotification( NotificationMessage::Unlink, item, collection, Location(), QString(), QByteArray() );
+}
+
 void Akonadi::NotificationCollector::collectionAdded( const Location &collection,
                                                       const QByteArray &resource )
 {

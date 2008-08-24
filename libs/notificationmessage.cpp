@@ -245,6 +245,12 @@ QString NotificationMessage::toString() const
     case Remove:
       rv += QLatin1String( "removed" );
       break;
+    case Link:
+      rv += QLatin1String( "linked" );
+      break;
+    case Unlink:
+      rv += QLatin1String( "unlinked" );
+      break;
     case InvalidOp: // TODO: an error?
       break;
   }

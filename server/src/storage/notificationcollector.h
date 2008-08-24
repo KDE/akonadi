@@ -97,6 +97,16 @@ class NotificationCollector : public QObject
                       const QByteArray &resource = QByteArray() );
 
     /**
+     * Notify about a linked item.
+     */
+    void itemLinked( const PimItem &item, const Location &collection );
+
+    /**
+     * Notify about a unlinked item.
+     */
+    void itemUnlinked( const PimItem &item, const Location &collection );
+
+    /**
       Notify about a added collection.
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
