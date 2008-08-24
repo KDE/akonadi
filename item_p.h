@@ -54,6 +54,9 @@ class ItemPrivate : public EntityPrivate
         mPayload = other.mPayload->clone();
       else
         mPayload = 0;
+      mAddedFlags = other.mAddedFlags;
+      mDeletedFlags = other.mDeletedFlags;
+      mFlagsOverwritten = other.mFlagsOverwritten;
     }
 
     ~ItemPrivate()
