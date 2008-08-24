@@ -44,7 +44,6 @@ void IntervalCheck::run()
 
 void IntervalCheck::doIntervalCheck()
 {
-  qDebug() << "doing interval checks...";
 
   // cycle over all locations
   QList<Location> locations = Location::retrieveAll();
@@ -64,8 +63,6 @@ void IntervalCheck::doIntervalCheck()
     qDebug() << "interval checking  collection " << location.id() << "(" << location.name() << ")";
     DataStore::self()->triggerCollectionSync( location );
   }
-
-  qDebug() << "interval checks done";
 
   QTimer::singleShot( 60 * 1000, this, SLOT(doIntervalCheck()) );
 }

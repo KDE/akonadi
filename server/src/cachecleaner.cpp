@@ -45,7 +45,6 @@ void CacheCleaner::run()
 
 void CacheCleaner::cleanCache()
 {
-  qDebug() << "cleaning cache...";
 
   // cycle over all locations
   QList<Location> locations = Location::retrieveAll();
@@ -86,7 +85,6 @@ void CacheCleaner::cleanCache()
     }
   }
 
-  qDebug() << "cleaning cache done";
   QTimer::singleShot( 60 * 1000, this, SLOT(cleanCache()) );
 }
 
