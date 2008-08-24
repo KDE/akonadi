@@ -77,6 +77,7 @@ set( akonadikde_LIB_SRC
   itemsync.cpp
   itemview.cpp
   job.cpp
+  linkjob.cpp
   monitor.cpp
   monitor_p.cpp
   pastehelper.cpp
@@ -92,6 +93,7 @@ set( akonadikde_LIB_SRC
   subscriptionmodel.cpp
   transactionjobs.cpp
   transactionsequence.cpp
+  unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
 )
@@ -169,6 +171,7 @@ install( FILES
   itemsync.h
   itemview.h
   job.h
+  linkjob.h
   monitor.h
   resourcebase.h
   searchcreatejob.h
@@ -176,6 +179,7 @@ install( FILES
   standardactionmanager.h
   transactionjobs.h
   transactionsequence.h
+  unlinkjob.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel
 )
 
