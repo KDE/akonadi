@@ -81,7 +81,8 @@ QueryBuilder::QueryBuilder( QueryType type ) :
 #ifndef QUERYBUILDER_UNITTEST
     mQuery( DataStore::self()->database() ),
 #endif
-    mType( type )
+    mType( type ),
+    mDistinct( false )
 {
 }
 
