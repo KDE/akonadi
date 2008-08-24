@@ -205,7 +205,7 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
       emit q_ptr->itemRemoved( it );
       break;
     default:
-      Q_ASSERT_X( false, "MonitorPrivate::emitItemNotification()", "Invalid enum value" );
+      break;
   }
 }
 
