@@ -22,6 +22,8 @@
 #include <akonadi/linkjob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/unlinkjob.h>
+#include <akonadi/monitor.h>
+#include <akonadi/itemfetchscope.h>
 
 #include <QtCore/QObject>
 
@@ -44,8 +46,30 @@ class LinkTest : public QObject
       Item::List items;
       items << Item( 3 ) << Item( 4 ) << Item( 6 );
 
+      Monitor *monitor = new Monitor( this );
+      monitor->setCollectionMonitored( col );
+      monitor->itemFetchScope().fetchFullPayload();
+
+      qRegisterMetaType<Akonadi::Collection>();
+      qRegisterMetaType<Akonadi::Item>();
+      QSignalSpy lspy( monitor, SIGNAL(itemLinked(const Akonadi::Item&, const Akonadi::Collection&)) );
+      QSignalSpy uspy( monitor, SIGNAL(itemUnlinked(const Akonadi::Item&, const Akonadi::Collection&)) );
+      QVERIFY( lspy.isValid() );
+      QVERIFY( uspy.isValid() );
+
       LinkJob *link = new LinkJob( col, items, this );
       QVERIFY( link->exec() );
+
+      QTest::qWait( 1000 );
+      QVERIFY( uspy.isEmpty() );
+      QCOMPARE( lspy.count(), 3 );
+
+      QList<QVariant> arg = lspy.takeFirst();
+      Item item = arg.at( 0 ).value<Item>();
+      QCOMPARE( item.mimeType(), QString::fromLatin1(  "application/octet-stream" ) );
+      QVERIFY( item.hasPayload<QByteArray>() );
+
+      lspy.clear();
 
       ItemFetchJob *fetch = new ItemFetchJob( col );
       QVERIFY( fetch->exec() );
@@ -55,6 +79,10 @@ class LinkTest : public QObject
 
       UnlinkJob *unlink = new UnlinkJob( col, items, this );
       QVERIFY( unlink->exec() );
+
+      QTest::qWait( 1000 );
+      QVERIFY( lspy.isEmpty() );
+      QCOMPARE( uspy.count(), 3 );
 
       fetch = new ItemFetchJob( col );
       QVERIFY( fetch->exec() );

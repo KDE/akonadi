@@ -88,7 +88,8 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
   if ( msg.type() == NotificationMessage::Item ) {
     notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
     if ( !mItemFetchScope.isEmpty() &&
-          ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move ) ) {
+          ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move ||
+            msg.operation() == NotificationMessage::Remove + 1 ) ) { // ### Link, change when protocol lib is releaded in the next version
       Item item( msg.uid() );
       item.setRemoteId( msg.remoteId() );
 
