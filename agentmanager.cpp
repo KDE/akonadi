@@ -61,8 +61,24 @@ void AgentManagerPrivate::agentInstanceAdded( const QString &identifier )
 {
   const AgentInstance instance = fillAgentInstance( identifier );
   if ( instance.isValid() ) {
-    mInstances.insert( identifier, instance );
-    emit mParent->instanceAdded( instance );
+
+    // It is possible that this function is called when the instance is already
+    // in our list we filled initally in the constructor.
+    // This happens when the constructor is called during Akonadi startup, when
+    // the agent processes are not fully loaded and have no D-Bus interface yet.
+    // The server-side agent manager then emits the instance added signal when
+    // the D-Bus interface for the agent comes up.
+    // In this case, we simply notify that the instance status has changed.
+    bool newAgentInstance = !mInstances.contains( identifier );
+    if ( newAgentInstance ) {
+      mInstances.insert( identifier, instance );
+      emit mParent->instanceAdded( instance );
+    }
+    else {
+      mInstances.remove( identifier );
+      mInstances.insert( identifier, instance );
+      emit mParent->instanceStatusChanged( instance );
+    }
   }
 }
 
