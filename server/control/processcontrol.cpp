@@ -21,6 +21,12 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
+#include <QtDebug>
+
+#ifdef Q_OS_UNIX
+#include <sys/types.h>
+#include <signal.h>
+#endif
 
 using namespace Akonadi;
 
@@ -119,12 +125,48 @@ void ProcessControl::slotErrorMessages()
 
 void ProcessControl::start()
 {
+#ifdef Q_OS_UNIX
+  QString agentValgrind = QString::fromLocal8Bit( qgetenv("AKONADI_VALGRIND") );
+  if ( !agentValgrind.isEmpty() && mApplication.contains( agentValgrind ) ) {
+    qDebug();
+    qDebug() << "============================================================";
+    qDebug() << "ProcessControl: Valgrinding process" << mApplication;
+    qDebug() << "============================================================";
+    qDebug();
+    QString valgrindSkin = QString::fromLocal8Bit( qgetenv( "AKONADI_VALGRIND_SKIN" ) );
+
+    mArguments.prepend( mApplication );
+    mApplication = QString::fromLocal8Bit( "valgrind" );
+    if ( !valgrindSkin.isEmpty() )
+      mArguments.prepend( QLatin1String( "--tool=" ) + valgrindSkin );
+    else
+      mArguments.prepend (QLatin1String( "--tool=memcheck") );
+  }
+#endif
+
   mProcess.start( mApplication, mArguments );
   if ( !mProcess.waitForStarted( ) ) {
     qDebug( "ProcessControl: Unable to start application '%s' (%s)",
             qPrintable( mApplication ), qPrintable( mProcess.errorString() ) );
     return;
   }
+
+#ifdef Q_OS_UNIX
+  else {
+    QString agentDebug = QString::fromLocal8Bit( qgetenv( "AKONADI_DEBUG_WAIT" ) );
+    pid_t pid = mProcess.pid();
+    if ( !agentDebug.isEmpty() && mApplication.contains( agentDebug ) ) {
+      qDebug();
+      qDebug() << "============================================================";
+      qDebug() << "ProcessControl: Suspending process" << mApplication;
+      qDebug() << "'gdb" << pid << "' to debug";
+      qDebug() << "'kill -SIGCONT" << pid << "' to continue";
+      qDebug() << "============================================================";
+      qDebug();
+      kill( pid, SIGSTOP );
+    }
+  }
+#endif
 }
 
 void Akonadi::ProcessControl::slotStdoutMessages()
