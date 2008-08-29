@@ -47,7 +47,7 @@ class ItemFetchScope;
  * if ( job->exec() ) {
  *   Akonadi::Item::List items = job->items();
  *   foreach( const Akonadi::Item &item, items ) {
- *     qDebug() "Item ID:" << item.id();
+ *     qDebug() << "Item ID:" << item.id();
  *   }
  * } else {
  *   qDebug() << "Error occurred";
