@@ -27,6 +27,7 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
+#include <akonadi/collectionrightsattribute.h>
 #include <akonadi/control.h>
 
 #include <qtest_kde.h>
@@ -155,4 +156,25 @@ void CollectionAttributeTest::testDefaultAttributes()
   QCOMPARE( col.attributes().count(), 1 );
   QVERIFY( col.hasAttribute( "TYPE" ) );
   QCOMPARE( col.attribute( "TYPE" )->serialized(), QByteArray("VALUE") );
+}
+
+void CollectionAttributeTest::testCollectionRightsAttribute()
+{
+  CollectionRightsAttribute attribute;
+  Collection::Rights rights;
+
+  QCOMPARE( attribute.rights(), rights );
+
+  for ( int mask = 0; mask <= Collection::AllRights; ++mask ) {
+    rights = Collection::AllRights;
+    rights &= mask;
+    QCOMPARE( rights, mask );
+
+    attribute.setRights( rights );
+    QCOMPARE( attribute.rights(), rights );
+
+    QByteArray data = attribute.serialized();
+    attribute.deserialize( data );
+    QCOMPARE( attribute.rights(), rights );
+  }
 }

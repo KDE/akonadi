@@ -30,6 +30,7 @@ class CollectionAttributeTest : public QObject
     void testAttributes_data();
     void testAttributes();
     void testDefaultAttributes();
+    void testCollectionRightsAttribute();
 };
 
 
