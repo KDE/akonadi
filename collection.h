@@ -79,8 +79,8 @@ class AKONADI_EXPORT Collection : public Entity
       CanCreateItem = 0x2,              ///< Can create new items in this collection
       CanDeleteItem = 0x4,              ///< Can delete items in this collection
       CanChangeCollection = 0x8,        ///< Can change subcollections in this collection
-      CanCreateCollection = 0x16,       ///< Can create new subcollections in this collection
-      CanDeleteCollection = 0x32,       ///< Can delete subcollections in this collection
+      CanCreateCollection = 0x10,       ///< Can create new subcollections in this collection
+      CanDeleteCollection = 0x20,       ///< Can delete subcollections in this collection
       AllRights = (CanChangeItem | CanCreateItem | CanDeleteItem |
                    CanChangeCollection | CanCreateCollection | CanDeleteCollection) ///< Has all rights on this collection
     };
