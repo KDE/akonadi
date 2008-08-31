@@ -152,7 +152,7 @@ class MonitorPrivate
 /**
  * @internal
  *
- * A job which fetches a job and a collection.
+ * A job which fetches an item and a collection.
  */
 class AKONADI_EXPORT ItemCollectionFetchJob : public Job
 {
