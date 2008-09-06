@@ -61,4 +61,4 @@ The different parts are layed out as follows:
 */
 
 // DOXYGEN_REFERENCES = akonadi
-// DOXYGEN_EXCLUDE = sqlplugin
+// DOXYGEN_EXCLUDE = sqlplugin server/control server/akonadictl server/tests
