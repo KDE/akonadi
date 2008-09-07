@@ -42,9 +42,13 @@ class SelfTestDialog : public KDialog
     void reportError( const QString &summary, const QString &details );
     void runTests();
     QVariant serverSetting( const QString &group, const QString &key, const QVariant &def ) const;
+    bool runProcess( const QString &app, const QStringList &args, QString &result ) const;
 
     void testSQLDriver();
     void testMySQLServer();
+    void testAkonadiCtl();
+    void testServerStatus();
+    void testResources();
 
   private slots:
     void selectionChanged( const QModelIndex &index );

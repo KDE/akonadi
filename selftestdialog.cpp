@@ -18,6 +18,7 @@
 */
 
 #include "selftestdialog.h"
+#include "agentmanager.h"
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
@@ -25,13 +26,18 @@
 #include <KFileDialog>
 #include <KLocale>
 #include <KMessageBox>
+#include <KStandardDirs>
 
+#include <QtDBus>
 #include <QFileInfo>
 #include <QProcess>
 #include <QSettings>
 #include <QStandardItemModel>
 #include <QSqlDatabase>
 #include <QTextStream>
+
+#define AKONADI_CONTROL_SERVICE QLatin1String("org.freedesktop.Akonadi.Control")
+#define AKONADI_SERVER_SERVICE QLatin1String("org.freedesktop.Akonadi")
 
 using namespace Akonadi;
 
@@ -86,6 +92,9 @@ void SelfTestDialog::runTests()
 {
   testSQLDriver();
   testMySQLServer();
+  testAkonadiCtl();
+  testServerStatus();
+  testResources();
 }
 
 QVariant SelfTestDialog::serverSetting(const QString & group, const QString & key, const QVariant &def ) const
@@ -94,6 +103,17 @@ QVariant SelfTestDialog::serverSetting(const QString & group, const QString & ke
   QSettings settings( serverConfigFile, QSettings::IniFormat );
   settings.beginGroup( group );
   return settings.value( key, def );
+}
+
+bool SelfTestDialog::runProcess(const QString & app, const QStringList & args, QString & result) const
+{
+  QProcess proc;
+  proc.start( app, args );
+  const bool rv = proc.waitForFinished();
+  result.clear();
+  result += QString::fromLocal8Bit( proc.readAllStandardError() );
+  result += QString::fromLocal8Bit( proc.readAllStandardOutput() );
+  return rv;
 }
 
 void SelfTestDialog::testSQLDriver()
@@ -134,20 +154,83 @@ void SelfTestDialog::testMySQLServer()
     reportSuccess( i18n( "MySQL server found." ), details );
 
   // be extra sure and get the server version while we are at it
-  QProcess proc;
-  proc.start( serverPath, QStringList() << QLatin1String("--version") );
-  if ( !proc.waitForFinished() ) {
-    const QString details = i18n( "Executing the MySQL server '%1' failed with the following error message: '%2'",
-                                  QString::fromLocal8Bit( proc.readAllStandardError() ) );
-    reportError( i18n( "Executing the MySQL server failed." ), details );
-  } else {
-    const QString details = i18n( "MySQL server found: %1",
-                                  QString::fromLocal8Bit( proc.readAllStandardOutput() ) );
+  QString result;
+  if ( runProcess( serverPath, QStringList() << QLatin1String( "--version" ), result ) ) {
+    const QString details = i18n( "MySQL server found: %1", result );
     reportSuccess( i18n( "MySQL server is executable." ), details );
+  } else {
+    const QString details = i18n( "Executing the MySQL server '%1' failed with the following error message: '%2'",
+                                  result );
+    reportError( i18n( "Executing the MySQL server failed." ), details );
   }
 }
 
-void Akonadi::SelfTestDialog::saveReport()
+void SelfTestDialog::testAkonadiCtl()
+{
+  const QString path = KStandardDirs::findExe( QLatin1String("akonadictl") );
+  if ( path.isEmpty() ) {
+    reportError( i18n( "akonadictl not found" ),
+                 i18n( "The program 'akonadictl' needs to be accessible in $PATH. "
+                       "Make sure you have the Akonadi server installed." ) );
+    return;
+  }
+  QString result;
+  if ( runProcess( path, QStringList() << QLatin1String( "status" ), result ) ) {
+    reportSuccess( i18n( "akonadictl found and usable" ),
+                   i18n( "The program '%1' to control the Akonadi server was found "
+                         "and could be executed successfully.\nResult:\n%2", path, result ) );
+  } else {
+    reportError( i18n( "akonadictl found but not usable" ),
+                 i18n( "The program '%1' to control the Akonadi server was found "
+                       "but could not be executed successfully.\nResult:\n%2\n"
+                       "Make sure the Akonadi server is installed correctly.", path, result ) );
+  }
+}
+
+void SelfTestDialog::testServerStatus()
+{
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) ) {
+    reportSuccess( i18n( "Akonadi control process registered at D-Bus." ),
+                   i18n( "The Akonadi control process is registed at D-Bus which typically indicates it is operational." ) );
+  } else {
+    reportError( i18n( "Akonadi control process not registed at D-Bus." ),
+                 i18n( "The Akonadi control process is not registed at D-Bus which typically means it was not started "
+                       "or encountered a fatal error during startup."  ) );
+  }
+
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE ) ) {
+    reportSuccess( i18n( "Akonadi server process registered at D-Bus." ),
+                   i18n( "The Akonadi server process is registed at D-Bus which typically indicates it is operational." ) );
+  } else {
+    reportError( i18n( "Akonadi server process not registed at D-Bus." ),
+                 i18n( "The Akonadi server process is not registed at D-Bus which typically means it was not started "
+                       "or encountered a fatal error during startup."  ) );
+  }
+}
+
+void SelfTestDialog::testResources()
+{
+  AgentType::List agentTypes = AgentManager::self()->types();
+  bool resourceFound = false;
+  foreach ( const AgentType &type, agentTypes ) {
+    if ( type.capabilities().contains( "Resource" ) ) {
+      resourceFound = true;
+      break;
+    }
+  }
+
+  if ( resourceFound ) {
+    reportSuccess( i18n( "Resource agents found." ), i18n( "At least one resource agent has been found." ) );
+  } else {
+    // TODO: add details on XDG_WHATEVER env var needed to find agents
+    reportError( i18n( "No resource agents found." ),
+                 i18n( "No resource agents have been found, Akonadi is not usable without at least one. "
+                       "This usually means that no resource agents are installed or that there is a setup problem." ) );
+  }
+}
+
+
+void SelfTestDialog::saveReport()
 {
   const QString fileName =  KFileDialog::getSaveFileName( KUrl(), QString(), this, i18n("Save Test Report") );
   QFile file( fileName );
