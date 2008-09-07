@@ -123,7 +123,9 @@ bool Control::Private::exec()
   mStarting = false;
   mStopping = false;
 
-  return mSuccess;
+  const bool rv = mSuccess;
+  mSuccess = false;
+  return rv;
 }
 
 void Control::Private::serverStarted()
