@@ -69,6 +69,8 @@ Host=localhost
 User=foo
 Password=*****
 #Options=UNIX_SOCKET=/home/foo/.local/share/akonadi/db_misc/mysql.socket
+StartServer=true
+ServerPath=/usr/sbin/mysqld
 
 [QSQLITE]
 Name=/home/foo/.local/share/akonadi/akonadi.db
@@ -91,6 +93,8 @@ Name=/home/foo/.local/share/akonadi/akonadi.db
   - User: Username for the database server
   - Password: Password for the database server
   - Options: Additional options, format is driver-dependent
+  - StartServer: Start the database locally just for Akonadi instead of using an existing one
+  - ServerPath: Path to the server executable
 */
 class AKONADIPRIVATE_EXPORT DataStore : public QObject
 {

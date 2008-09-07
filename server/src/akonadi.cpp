@@ -58,7 +58,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
     if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL" )
          && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
-      startDatabaseProcess();
+      startDatabaseProcess( settings.value( QLatin1String("QMYSQL/ServerPath"), QString() ).toString() );
 
     s_instance = this;
 
@@ -199,15 +199,16 @@ AkonadiServer * AkonadiServer::instance()
     return s_instance;
 }
 
-void AkonadiServer::startDatabaseProcess()
+void AkonadiServer::startDatabaseProcess( const QString &serverPath )
 {
+  QString mysqldPath = serverPath;
 #ifdef MYSQLD_EXECUTABLE
-  const QString mysqldPath = QLatin1String( MYSQLD_EXECUTABLE );
-#else
-  const QString mysqldPath;
-  Q_ASSERT_X( false, "AkonadiServer::startDatabaseProcess()",
-              "mysqld was not found during compile time, you need to start a MySQL server yourself first and configure Akonadi accordingly" );
+  if ( mysqldPath.isEmpty() )
+    mysqldPath = QLatin1String( MYSQLD_EXECUTABLE );
 #endif
+
+  if ( mysqldPath.isEmpty() )
+    qFatal( "No path to mysqld set in server configuration!" );
 
   // create the database directories if they don't exists
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
