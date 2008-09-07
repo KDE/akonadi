@@ -50,6 +50,8 @@ AgentManager::AgentManager( QObject *parent )
     qFatal( "akonadiserver already running!" );
 
   mStorageController = new Akonadi::ProcessControl;
+  connect( mStorageController, SIGNAL(unableToStart()),
+           QCoreApplication::instance(), SLOT(quit()) );
   mStorageController->start( "akonadiserver", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
 }
 

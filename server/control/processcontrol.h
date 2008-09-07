@@ -85,6 +85,12 @@ class ProcessControl : public QObject
      */
     void processErrorMessages( const QString &errorMsg );
 
+    /**
+     * Emitted if the process could not be started since it terminated
+     * too often.
+     */
+    void unableToStart();
+
   private Q_SLOTS:
     void slotError( QProcess::ProcessError );
     void slotFinished( int, QProcess::ExitStatus );

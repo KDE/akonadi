@@ -100,9 +100,10 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
       qDebug( "ProcessControl: Application '%s' returned with exit code %d (%s)",
               qPrintable( mApplication ), exitCode, qPrintable( mProcess.errorString() ) );
       if ( mPolicy == RestartOnCrash ) {
-        if ( mCrashCount > 3 ) {
+        if ( mCrashCount > 2 ) {
           qWarning() << mApplication << "crashed too often and will not be restarted!";
           mPolicy = StopOnCrash;
+          emit unableToStart();
           return;
         }
         ++mCrashCount;
