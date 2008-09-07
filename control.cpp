@@ -20,6 +20,7 @@
 #include "control.h"
 #include "servermanager.h"
 #include "ui_controlprogressindicator.h"
+#include "selftestdialog.h"
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -108,13 +109,20 @@ bool Control::Private::exec()
   mEventLoop->exec();
   mEventLoop->deleteLater();
   mEventLoop = 0;
-  mStarting = false;
-  mStopping = false;
+
+  if ( !mSuccess ) {
+    kWarning( 5250 ) << "Could not start/stop Akonadi!";
+    if ( mProgressIndicator && mStarting ) {
+      SelfTestDialog dlg( mProgressIndicator->parentWidget() );
+      dlg.exec();
+    }
+  }
+
   delete mProgressIndicator;
   mProgressIndicator = 0;
+  mStarting = false;
+  mStopping = false;
 
-  if ( !mSuccess )
-    kWarning( 5250 ) << "Could not start/stop Akonadi!";
   return mSuccess;
 }
 
