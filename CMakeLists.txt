@@ -86,6 +86,7 @@ set( akonadikde_LIB_SRC
   resourcescheduler.cpp
   searchcreatejob.cpp
   session.cpp
+  servermanager.cpp
   standardactionmanager.cpp
   subscriptionjob.cpp
   subscriptionchangeproxymodel.cpp
@@ -176,6 +177,7 @@ install( FILES
   resourcebase.h
   searchcreatejob.h
   session.h
+  servermanager.h
   standardactionmanager.h
   transactionjobs.h
   transactionsequence.h

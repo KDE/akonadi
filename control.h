@@ -29,19 +29,23 @@ namespace Akonadi {
 /**
  * @short Provides methods to control the Akonadi server process.
  *
- * This class provides a method to start the Akonadi server
- * process synchronously.
+ * This class provides high-level methods to control the Akonadi
+ * server. These methods are synchronously (ie. use a sub-eventloop)
+ * and can show dialogs. For more low-level methods see
+ * Akonadi::ServerManager.
  *
- * Normally the Akonadi server is started by the KDE session
- * manager, however for unit tests or special needs one can
- * use this class to start it explicitly.
+ * While the Akonadi server normally is started by the KDE session
+ * manager, it is not guaranteed that your application is running
+ * inside a KDE session. Therefore it is recommended to execute
+ * Akonadi::Control::start() during startup to ensure the Akonadi
+ * server is running.
  *
  * Example:
  *
  * @code
  *
  * if ( !Akonadi::Control::start() ) {
- *   qDebug() << "Unable to start server, exit application";
+ *   qDebug() << "Unable to start Akonadi server, exit application";
  *   return 1;
  * } else {
  *   ...
@@ -50,6 +54,8 @@ namespace Akonadi {
  * @endcode
  *
  * @author Volker Krause <vkrause@kde.org>
+ *
+ * @see Akonadi::ServerManager
  */
 class AKONADI_EXPORT Control : public QObject
 {
@@ -63,8 +69,24 @@ class AKONADI_EXPORT Control : public QObject
 
     /**
      * Starts the Akonadi server synchronously if it is not already running.
+     * @return @c true if the server was started successfully or was already
+     * running, @c false otherwise
      */
     static bool start();
+
+    /**
+     * Stops the Akonadi server synchronously if it is currently running.
+     * @return @c true if the server was shutdown successfully or was
+     * not running at all, @c false otherwise.
+     */
+    static bool stop();
+
+    /**
+     * Restarts the Akonadi server synchronously.
+     * @return @c true if the the restart was successful, @c false otherwise,
+     * the server state is undefined in this case.
+     */
+    static bool restart();
 
   protected:
     /**
@@ -77,7 +99,8 @@ class AKONADI_EXPORT Control : public QObject
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void serviceOwnerChanged( const QString&, const QString&, const QString& ) )
+    Q_PRIVATE_SLOT( d, void serverStarted() )
+    Q_PRIVATE_SLOT( d, void serverStopped() )
     //@endcond
 };
 

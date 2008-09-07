@@ -18,18 +18,13 @@
 */
 
 #include "control.h"
+#include "servermanager.h"
 
 #include <kdebug.h>
 #include <kglobal.h>
 
 #include <QtCore/QEventLoop>
-#include <QtCore/QProcess>
 #include <QtCore/QTimer>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusConnectionInterface>
-
-#define AKONADI_CONTROL_SERVICE QLatin1String("org.freedesktop.Akonadi.Control")
-#define AKONADI_SERVER_SERVICE QLatin1String("org.freedesktop.Akonadi")
 
 using namespace Akonadi;
 
@@ -40,16 +35,21 @@ class Control::Private
 {
   public:
     Private( Control *parent )
-      : mParent( parent ), mEventLoop( 0 ), mSuccess( false )
+      : mParent( parent ), mEventLoop( 0 ), mSuccess( false ),
+        mStarting( false ), mStopping( false )
     {
     }
 
-    bool startInternal();
-    void serviceOwnerChanged( const QString&, const QString&, const QString& );
+    bool exec();
+    void serverStarted();
+    void serverStopped();
 
     Control *mParent;
     QEventLoop *mEventLoop;
     bool mSuccess;
+
+    bool mStarting;
+    bool mStopping;
 };
 
 class StaticControl : public Control
@@ -61,44 +61,33 @@ class StaticControl : public Control
 K_GLOBAL_STATIC( StaticControl, s_instance )
 
 
-bool Control::Private::startInternal()
+bool Control::Private::exec()
 {
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) || mEventLoop )
-    return true;
-
-  QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
-  if ( !reply.isValid() ) {
-    kWarning( 5250 ) << "Unable to start Akonadi control process: "
-                     << reply.error().message();
-
-    // start via D-Bus .service file didn't work, let's try starting the process manually
-    if ( reply.error().type() == QDBusError::ServiceUnknown ) {
-      const bool ok = QProcess::startDetached( QLatin1String("akonadi_control") );
-      if ( !ok ) {
-        kWarning( 5250 ) << "Error: unable to execute binary akonadi_control";
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
   mEventLoop = new QEventLoop( mParent );
   // safety timeout
   QTimer::singleShot( 10000, mEventLoop, SLOT(quit()) );
   mEventLoop->exec();
   mEventLoop->deleteLater();
   mEventLoop = 0;
+  mStarting = false;
+  mStopping = false;
 
   if ( !mSuccess )
-    kWarning( 5250 ) << "Could not start Akonadi!";
+    kWarning( 5250 ) << "Could not start/stop Akonadi!";
   return mSuccess;
 }
 
-void Control::Private::serviceOwnerChanged( const QString & name, const QString & oldOwner, const QString & newOwner )
+void Control::Private::serverStarted()
 {
-  Q_UNUSED( oldOwner );
-  if ( name == AKONADI_SERVER_SERVICE && !newOwner.isEmpty() && mEventLoop && mEventLoop->isRunning() ) {
+  if ( mEventLoop && mEventLoop->isRunning() && mStarting ) {
+    mEventLoop->quit();
+    mSuccess = true;
+  }
+}
+
+void Control::Private::serverStopped()
+{
+  if ( mEventLoop && mEventLoop->isRunning() && mStopping ) {
     mEventLoop->quit();
     mSuccess = true;
   }
@@ -108,8 +97,8 @@ void Control::Private::serviceOwnerChanged( const QString & name, const QString 
 Control::Control()
   : d( new Private( this ) )
 {
-  connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
-           SLOT( serviceOwnerChanged( QString, QString, QString ) ) );
+  connect( ServerManager::instance(), SIGNAL(started()), SLOT(serverStarted()) );
+  connect( ServerManager::instance(), SIGNAL(stopped()), SLOT(serverStopped()) );
 }
 
 Control::~Control()
@@ -119,7 +108,32 @@ Control::~Control()
 
 bool Control::start()
 {
-  return s_instance->d->startInternal();
+  if ( s_instance->d->mStopping )
+    return false;
+  if ( ServerManager::isRunning() || s_instance->d->mEventLoop )
+    return true;
+  s_instance->d->mStarting = true;
+  if ( !ServerManager::start() )
+    return false;
+  return s_instance->d->exec();
+}
+
+bool Control::stop()
+{
+  if ( s_instance->d->mStarting )
+    return false;
+  if ( !ServerManager::isRunning() || s_instance->d->mEventLoop )
+    return true;
+  s_instance->d->mStopping = true;
+  if ( !ServerManager::stop() )
+    return false;
+  return s_instance->d->exec();
+}
+
+bool Control::restart()
+{
+  stop();
+  start();
 }
 
 #include "control.moc"
