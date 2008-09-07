@@ -19,6 +19,7 @@
 
 #include "control.h"
 #include "servermanager.h"
+#include "ui_controlprogressindicator.h"
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -26,7 +27,32 @@
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
 
+#include <QFrame>
+
 using namespace Akonadi;
+
+class ControlProgressIndicator : public QFrame
+{
+  public:
+    ControlProgressIndicator( QWidget *parent = 0 ) :
+      QFrame( parent )
+    {
+      setWindowModality( Qt::ApplicationModal );
+      resize( 400, 100 );
+      setWindowFlags( Qt::SplashScreen );
+      ui.setupUi( this );
+
+      setFrameShadow( QFrame::Plain );
+      setFrameShape( QFrame::Box );
+    }
+
+    void setMessage( const QString &msg )
+    {
+      ui.statusLabel->setText( msg );
+    }
+
+    Ui::ControlProgressIndicator ui;
+};
 
 /**
  * @internal
@@ -35,9 +61,19 @@ class Control::Private
 {
   public:
     Private( Control *parent )
-      : mParent( parent ), mEventLoop( 0 ), mSuccess( false ),
+      : mParent( parent ), mEventLoop( 0 ),
+        mProgressIndicator( 0 ),
+        mSuccess( false ),
         mStarting( false ), mStopping( false )
     {
+    }
+
+    void setupProgressIndicator( const QString &msg, QWidget *parent = 0 )
+    {
+      if ( mProgressIndicator )
+        return;
+      mProgressIndicator = new ControlProgressIndicator( parent );
+      mProgressIndicator->setMessage( msg );
     }
 
     bool exec();
@@ -46,6 +82,7 @@ class Control::Private
 
     Control *mParent;
     QEventLoop *mEventLoop;
+    ControlProgressIndicator *mProgressIndicator;
     bool mSuccess;
 
     bool mStarting;
@@ -63,6 +100,8 @@ K_GLOBAL_STATIC( StaticControl, s_instance )
 
 bool Control::Private::exec()
 {
+  if ( mProgressIndicator )
+    mProgressIndicator->show();
   mEventLoop = new QEventLoop( mParent );
   // safety timeout
   QTimer::singleShot( 10000, mEventLoop, SLOT(quit()) );
@@ -71,6 +110,8 @@ bool Control::Private::exec()
   mEventLoop = 0;
   mStarting = false;
   mStopping = false;
+  delete mProgressIndicator;
+  mProgressIndicator = 0;
 
   if ( !mSuccess )
     kWarning( 5250 ) << "Could not start/stop Akonadi!";
@@ -132,8 +173,32 @@ bool Control::stop()
 
 bool Control::restart()
 {
-  stop();
-  start();
+  if ( ServerManager::isRunning() ) {
+    if ( !stop() )
+      return false;
+  }
+  return start();
+}
+
+bool Control::start(QWidget * parent)
+{
+  s_instance->d->setupProgressIndicator( i18n( "Starting Akonadi server..." ), parent );
+  return start();
+}
+
+bool Control::stop(QWidget * parent)
+{
+  s_instance->d->setupProgressIndicator( i18n( "Stopping Akonadi server..." ), parent );
+  return stop();
+}
+
+bool Control::restart(QWidget * parent)
+{
+  if ( ServerManager::isRunning() ) {
+    if ( !stop( parent ) )
+      return false;
+  }
+  return start( parent );
 }
 
 #include "control.moc"

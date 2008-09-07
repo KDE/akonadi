@@ -113,6 +113,7 @@ kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
   collectiongeneralpropertiespage.ui
   subscriptiondialog.ui
+  controlprogressindicator.ui
 )
 
 kde4_add_library( akonadi-kde SHARED ${akonadikde_LIB_SRC} )
