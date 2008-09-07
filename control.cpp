@@ -39,7 +39,7 @@ class ControlProgressIndicator : public QFrame
     {
       setWindowModality( Qt::ApplicationModal );
       resize( 400, 100 );
-      setWindowFlags( Qt::SplashScreen );
+      setWindowFlags( Qt::FramelessWindowHint | Qt::Dialog );
       ui.setupUi( this );
 
       setFrameShadow( QFrame::Plain );
