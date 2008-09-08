@@ -117,13 +117,6 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
   }
 }
 
-void ProcessControl::slotErrorMessages()
-{
-  QString message = QString::fromUtf8( mProcess.readAllStandardError() );
-  emit processErrorMessages( message );
-  qDebug( "[%s] %s", qPrintable( mApplication ), qPrintable( message.trimmed() ) );
-}
-
 void ProcessControl::start()
 {
 #ifdef Q_OS_UNIX
@@ -172,8 +165,21 @@ void ProcessControl::start()
 
 void Akonadi::ProcessControl::slotStdoutMessages()
 {
-  QString message = QString::fromUtf8( mProcess.readAllStandardOutput() );
-  qDebug() << mApplication << "[out]" << message;
+  mProcess.setReadChannel( QProcess::StandardOutput );
+  if ( mProcess.canReadLine() ) {
+    QString message = QString::fromUtf8( mProcess.readLine() );
+    qDebug() << mApplication << "[out]" << message;
+  }
+}
+
+void ProcessControl::slotErrorMessages()
+{
+  mProcess.setReadChannel( QProcess::StandardError );
+  if ( mProcess.canReadLine() ) {
+    QString message = QString::fromUtf8( mProcess.readLine() );
+    emit processErrorMessages( message );
+    qDebug( "[%s] %s", qPrintable( mApplication ), qPrintable( message.trimmed() ) );
+  }
 }
 
 void ProcessControl::resetCrashCount()
