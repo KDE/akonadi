@@ -191,19 +191,19 @@ void SelfTestDialog::testServerStatus()
 {
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) ) {
     reportSuccess( i18n( "Akonadi control process registered at D-Bus." ),
-                   i18n( "The Akonadi control process is registed at D-Bus which typically indicates it is operational." ) );
+                   i18n( "The Akonadi control process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
-    reportError( i18n( "Akonadi control process not registed at D-Bus." ),
-                 i18n( "The Akonadi control process is not registed at D-Bus which typically means it was not started "
+    reportError( i18n( "Akonadi control process not registered at D-Bus." ),
+                 i18n( "The Akonadi control process is not registered at D-Bus which typically means it was not started "
                        "or encountered a fatal error during startup."  ) );
   }
 
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE ) ) {
     reportSuccess( i18n( "Akonadi server process registered at D-Bus." ),
-                   i18n( "The Akonadi server process is registed at D-Bus which typically indicates it is operational." ) );
+                   i18n( "The Akonadi server process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
-    reportError( i18n( "Akonadi server process not registed at D-Bus." ),
-                 i18n( "The Akonadi server process is not registed at D-Bus which typically means it was not started "
+    reportError( i18n( "Akonadi server process not registered at D-Bus." ),
+                 i18n( "The Akonadi server process is not registered at D-Bus which typically means it was not started "
                        "or encountered a fatal error during startup."  ) );
   }
 }
