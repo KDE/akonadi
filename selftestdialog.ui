@@ -16,7 +16,7 @@
    <item>
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string>An error occured during the startup of the Akonadi server. The following self-tests are suposed to help with tracking down and solving this problem. When requesting support or reporting bugs, please always include this report.</string>
+      <string>An error occurred during the startup of the Akonadi server. The following self-tests are suposed to help with tracking down and solving this problem. When requesting support or reporting bugs, please always include this report.</string>
      </property>
      <property name="wordWrap" >
       <bool>true</bool>

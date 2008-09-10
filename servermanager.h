@@ -30,7 +30,7 @@ class ServerManagerPrivate;
 
 /**
  * Low-level control of the Akonadi server.
- * Usually Akonadi::Control should be prefered over this.
+ * Usually Akonadi::Control should be preferred over this.
  * @see Akonadi::Control
  */
 class AKONADI_EXPORT ServerManager : public QObject
@@ -41,8 +41,8 @@ class AKONADI_EXPORT ServerManager : public QObject
      * Starts the server. This method returns imediately and does not wait
      * until the server is actually up and running. It is not checked if the
      * server is already running.
-     * @return @c true if the start was possible (which not necessarily means the server
-     * is really running though) and @c false if an error occured.
+     * @return @c true if the start was possible (which not necessarily means
+     * the server is really running though) and @c false if an error occurred.
      * @see Akonadi::Control::start()
      */
     static bool start();
