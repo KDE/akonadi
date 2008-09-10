@@ -159,8 +159,7 @@ void SelfTestDialog::testMySQLServer()
     const QString details = i18n( "MySQL server found: %1", result );
     reportSuccess( i18n( "MySQL server is executable." ), details );
   } else {
-    const QString details = i18n( "Executing the MySQL server '%1' failed with the following error message: '%2'",
-                                  result );
+    const QString details = i18n( "Executing the MySQL server '%1' failed with the following error message: '%2'", serverPath, result );
     reportError( i18n( "Executing the MySQL server failed." ), details );
   }
 }
