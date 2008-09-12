@@ -5,6 +5,7 @@ if (KDE4_BUILD_TESTS)
    add_definitions(-DCOMPILING_TESTS)
 endif (KDE4_BUILD_TESTS)
 
+add_subdirectory( kabc )
 add_subdirectory( kmime )
 add_subdirectory( tests )
 
