@@ -32,6 +32,7 @@ class ServerManagerPrivate;
  * Low-level control of the Akonadi server.
  * Usually Akonadi::Control should be preferred over this.
  * @see Akonadi::Control
+ * @since 4.2
  */
 class AKONADI_EXPORT ServerManager : public QObject
 {

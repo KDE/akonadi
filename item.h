@@ -122,6 +122,7 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Returns the timestamp of the last modification of this item.
+     * @since 4.2
      */
     QDateTime modificationTime() const;
 
@@ -130,6 +131,7 @@ class AKONADI_EXPORT Item : public Entity
      *
      * @note Do not modify this value from within an application,
      * it is updated automatically by the revision checking functions.
+     * @since 4.2
      */
     void setModificationTime( const QDateTime &datetime );
 

@@ -35,6 +35,7 @@ namespace Akonadi
       /**
        * The part identifier for a small contact version,
        * that contains only name and email addresses.
+       * @since 4.2
        */
       AKONADI_KABC_EXPORT extern const char* Lookup;
 
@@ -44,6 +45,7 @@ namespace Akonadi
        *
        * @note Use Akonadi::Item::FullPayload to retrieve the
        *       full contact including images and sounds.
+       * @since 4.2
        */
       AKONADI_KABC_EXPORT extern const char* Standard;
   }

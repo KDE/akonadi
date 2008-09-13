@@ -77,6 +77,7 @@ class AKONADI_EXPORT Control : public QObject
     /**
      * Same as start(), but with GUI feedback.
      * @param parent The parent widget.
+     * @since 4.2
      */
     static bool start( QWidget *parent );
 
@@ -84,12 +85,14 @@ class AKONADI_EXPORT Control : public QObject
      * Stops the Akonadi server synchronously if it is currently running.
      * @return @c true if the server was shutdown successfully or was
      * not running at all, @c false otherwise.
+     * @since 4.2
      */
     static bool stop();
 
     /**
      * Same as stop(), but with GUI feedback.
      * @param parent The parent widget.
+     * @since 4.2
      */
     static bool stop( QWidget *parent );
 
@@ -97,12 +100,14 @@ class AKONADI_EXPORT Control : public QObject
      * Restarts the Akonadi server synchronously.
      * @return @c true if the the restart was successful, @c false otherwise,
      * the server state is undefined in this case.
+     * @since 4.2
      */
     static bool restart();
 
     /**
      * Same as restart(), but with GUI feedback.
      * @param parent The parent widget.
+     * @since 4.2
      */
     static bool restart( QWidget *parent );
 
