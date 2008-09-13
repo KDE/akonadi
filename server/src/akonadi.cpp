@@ -31,6 +31,7 @@
 #include "tracer.h"
 #include "xesammanager.h"
 #include "nepomukmanager.h"
+#include "debuginterface.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -100,6 +101,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     NotificationManager::self();
     Tracer::self();
+    new DebugInterface( this );
     ResourceManager::self();
     if ( settings.value( QLatin1String( "Cache/EnableCleaner" ), true ).toBool() ) {
       mCacheCleaner = new CacheCleaner( this );

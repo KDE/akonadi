@@ -117,13 +117,23 @@ class Tracer : public QObject, public TracerInterface
      */
     void error( const char* componentName, const QString &msg );
 
+    /**
+     * Returns the currently activated tracer type.
+     */
+    QString currentTracer() const;
+
+    /**
+     * Activates the given tracer type.
+     */
+    void activateTracer( const QString &type );
+
   private:
     Tracer();
 
     static Tracer *mSelf;
 
     TracerInterface *mTracerBackend;
-    QMutex mMutex;
+    mutable QMutex mMutex;
 };
 
 }

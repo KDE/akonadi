@@ -97,16 +97,19 @@ set(libakonadiprivate_SRCS
   src/abstractsearchmanager.cpp
   src/xesammanager.cpp
   src/nepomukmanager.cpp
+  src/debuginterface.cpp
 )
 
 automoc4(akonadiprivate libakonadiprivate_SRCS)
+
+qt4_generate_dbus_interface( src/debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
-
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml debuginterface.h DebugInterface )
 
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.AgentManager.xml ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.Resource.xml )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.Search.xml searchinterface )
@@ -158,5 +161,6 @@ install( FILES
    interfaces/org.freedesktop.Akonadi.SearchQueryIterator.xml
    interfaces/org.freedesktop.Akonadi.TracerNotification.xml
    interfaces/org.freedesktop.Akonadi.SearchQuery.xml
+   ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml
 DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
