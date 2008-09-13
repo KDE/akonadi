@@ -22,6 +22,7 @@
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "serveradaptor.h"
+#include "akdebug.h"
 
 #include "cachecleaner.h"
 #include "intervalcheck.h"
@@ -71,7 +72,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
 #ifdef Q_OS_WIN
     QString namedPipe = settings.value( QLatin1String( "Connection/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
     if ( !listen( namedPipe ) )
-      qFatal( "Unable to listen on Named Pipe %s", namedPipe.toLocal8Bit().data() );
+      akFatal() << "Unable to listen on Named Pipe" << namedPipe;
 
     connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "NamedPipe" ) );
     connectionSettings.setValue( QLatin1String( "Data/NamedPipe" ), namedPipe );
@@ -86,7 +87,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     const QString socketFile = socketDir + QLatin1String( "/akonadiserver.socket" );
     unlink( socketFile.toUtf8().constData() );
     if ( !listen( socketFile ) )
-      qFatal("Unable to listen on Unix socket '%s'", socketFile.toLocal8Bit().data() );
+      akFatal() << "Unable to listen on Unix socket" << socketFile;
 
     connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "UnixPath" ) );
     connectionSettings.setValue( QLatin1String( "Data/UnixPath" ), socketFile );
@@ -95,9 +96,9 @@ AkonadiServer::AkonadiServer( QObject* parent )
     // initialize the database
     DataStore *db = DataStore::self();
     if ( !db->database().isOpen() )
-      qFatal("Unable to open database: '%s'", qPrintable(db->database().lastError().text()));
+      akFatal() << "Unable to open database" << db->database().lastError().text();
     if ( !db->init() )
-      qFatal("Unable to initialize database.");
+      akFatal() << "Unable to initialize database.";
 
     NotificationManager::self();
     Tracer::self();
@@ -172,10 +173,10 @@ void AkonadiServer::quit()
     const QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
 
     if ( !QDir::home().remove( socketDir + QLatin1String( "/akonadiserver.socket" ) ) )
-        qWarning("Failed to remove Unix socket");
+        akError() << "Failed to remove Unix socket";
 #endif
     if ( !QDir::home().remove( connectionSettingsFile ) )
-        qWarning("Failed to remove runtime connection config file");
+        akError() << "Failed to remove runtime connection config file";
 
     QTimer::singleShot( 0, this, SLOT( doQuit() ) );
 }
@@ -210,7 +211,7 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
 #endif
 
   if ( mysqldPath.isEmpty() )
-    qFatal( "No path to mysqld set in server configuration!" );
+    akFatal() << "No path to mysqld set in server configuration!";
 
   // create the database directories if they don't exists
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
@@ -222,7 +223,7 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
   const QString localConfig  = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
   const QString actualConfig = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
   if ( globalConfig.isEmpty() )
-    qFatal("Where is my MySQL config file??");
+    akFatal() << "Where is my MySQL config file??";
   QFile globalFile( globalConfig );
   QFile actualFile( actualConfig );
   if ( globalFile.open( QFile::ReadOnly ) && actualFile.open( QFile::WriteOnly ) ) {
@@ -237,17 +238,17 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
     actualFile.close();
     globalFile.close();
   } else {
-    qFatal("What did you do to my MySQL config file??");
+    akFatal() << "What did you do to my MySQL config file??";
   }
 
   if ( dataDir.isEmpty() )
-    qFatal("Akonadi server was not able not create database data directory");
+    akFatal() << "Akonadi server was not able not create database data directory";
 
   if ( akDir.isEmpty() )
-    qFatal("Akonadi server was not able not create database log directory");
+    akFatal() << "Akonadi server was not able not create database log directory";
 
   if ( miscDir.isEmpty() )
-    qFatal("Akonadi server was not able not create database misc directory");
+    akFatal() << "Akonadi server was not able not create database misc directory";
 
   // synthesize the mysqld command
   QStringList arguments;
@@ -258,7 +259,7 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
   mDatabaseProcess = new QProcess( this );
   mDatabaseProcess->start( mysqldPath, arguments );
   if ( !mDatabaseProcess->waitForStarted() )
-    qFatal( "Could not start database server '%s': '%s'", qPrintable( mysqldPath ), qPrintable( mDatabaseProcess->errorString()) );
+    akFatal() << "Could not start database server" << mysqldPath << ": " << mDatabaseProcess->errorString();
 
   {
     QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
@@ -270,11 +271,11 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
       if ( opened )
         break;
       if ( mDatabaseProcess->waitForFinished( 500 ) ) {
-        qDebug( "Database stdout: '%s'", mDatabaseProcess->readAllStandardOutput().constData() );
-        qFatal( "Database server exited unexpectedly, exit code %d,\n process error: '%s'\n DB error: '%s'",
-                mDatabaseProcess->exitCode(),
-                qPrintable( mDatabaseProcess->errorString() ),
-                mDatabaseProcess->readAllStandardError().constData() );
+        akError() << "Database process existed unexpectedly!";
+        akError() << "stdout:" << mDatabaseProcess->readAllStandardOutput();
+        akError() << "stderr:" << mDatabaseProcess->readAllStandardError();
+        akError() << "exit code:" << mDatabaseProcess->exitCode();
+        akFatal() << "process error:" << mDatabaseProcess->errorString();
       }
     }
 

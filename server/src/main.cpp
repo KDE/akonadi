@@ -24,6 +24,7 @@
 #include <QtDBus/QDBusError>
 
 #include "akonadi.h"
+#include "akdebug.h"
 #include <cstdlib>
 
 #include "../control/kcrash.h"
@@ -39,6 +40,7 @@ void shutdownHandler( int )
 
 int main( int argc, char ** argv )
 {
+    akInitLog();
     KCrash::init();
     KCrash::setShutdownMethod( shutdownHandler );
 

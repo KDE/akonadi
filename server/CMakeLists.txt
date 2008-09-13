@@ -98,6 +98,7 @@ set(libakonadiprivate_SRCS
   src/xesammanager.cpp
   src/nepomukmanager.cpp
   src/debuginterface.cpp
+  src/akdebug.cpp
 )
 
 automoc4(akonadiprivate libakonadiprivate_SRCS)
