@@ -95,6 +95,7 @@ void SelfTestDialog::runTests()
   testAkonadiCtl();
   testServerStatus();
   testResources();
+  testServerLog();
 }
 
 QVariant SelfTestDialog::serverSetting(const QString & group, const QString & key, const QVariant &def ) const
@@ -225,6 +226,30 @@ void SelfTestDialog::testResources()
     reportError( i18n( "No resource agents found." ),
                  i18n( "No resource agents have been found, Akonadi is not usable without at least one. "
                        "This usually means that no resource agents are installed or that there is a setup problem." ) );
+  }
+}
+
+void Akonadi::SelfTestDialog::testServerLog()
+{
+  QString serverLog = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) )
+      + QDir::separator() + QString::fromLatin1( "akonadiserver.error" );
+  QFileInfo info( serverLog );
+  if ( !info.exists() || info.size() <= 0 ) {
+    reportSuccess( i18n( "No current error log found." ),
+                   i18n( "The Akonadi server did not report any errors during its current startup." ) );
+  } else {
+    reportError( i18n( "Current error log found." ),
+                 i18n( "The Akonadi server did report error during startup into '%1'.", serverLog ) );
+  }
+
+  serverLog += ".old";
+  info.setFile( serverLog );
+  if ( !info.exists() || info.size() <= 0 ) {
+    reportSuccess( i18n( "No previous error log found." ),
+                   i18n( "The Akonadi server did not report any errors during its previous startup." ) );
+  } else {
+    reportError( i18n( "Previous error log found." ),
+                 i18n( "The Akonadi server did report error during its previous startup into '%1'.", serverLog ) );
   }
 }
 
