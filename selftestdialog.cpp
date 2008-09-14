@@ -109,6 +109,7 @@ void SelfTestDialog::runTests()
   testServerStatus();
   testResources();
   testServerLog();
+  testControlLog();
 }
 
 QVariant SelfTestDialog::serverSetting(const QString & group, const QString & key, const QVariant &def ) const
@@ -248,10 +249,10 @@ void Akonadi::SelfTestDialog::testServerLog()
       + QDir::separator() + QString::fromLatin1( "akonadiserver.error" );
   QFileInfo info( serverLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    reportSuccess( i18n( "No current error log found." ),
+    reportSuccess( i18n( "No current Akonadi server error log found." ),
                    i18n( "The Akonadi server did not report any errors during its current startup." ) );
   } else {
-    reportError( i18n( "Current error log found." ),
+    reportError( i18n( "Current Akonadi server error log found." ),
                  i18n( "The Akonadi server did report error during startup into %1.", makeLink( serverLog ) ),
                  serverLog );
   }
@@ -259,12 +260,38 @@ void Akonadi::SelfTestDialog::testServerLog()
   serverLog += ".old";
   info.setFile( serverLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    reportSuccess( i18n( "No previous error log found." ),
+    reportSuccess( i18n( "No previous Akonadi server error log found." ),
                    i18n( "The Akonadi server did not report any errors during its previous startup." ) );
   } else {
-    reportError( i18n( "Previous error log found." ),
+    reportError( i18n( "Previous Akonadi server error log found." ),
                  i18n( "The Akonadi server did report error during its previous startup into %1.", makeLink( serverLog ) ),
                  serverLog );
+  }
+}
+
+void SelfTestDialog::testControlLog()
+{
+  QString controlLog = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) )
+      + QDir::separator() + QString::fromLatin1( "akonadi_control.error" );
+  QFileInfo info( controlLog );
+  if ( !info.exists() || info.size() <= 0 ) {
+    reportSuccess( i18n( "No current Akonadi control error log found." ),
+                   i18n( "The Akonadi control process did not report any errors during its current startup." ) );
+  } else {
+    reportError( i18n( "Current Akonadi control error log found." ),
+                 i18n( "The Akonadi control process did report error during startup into %1.", makeLink( controlLog ) ),
+                 controlLog );
+  }
+
+  controlLog += ".old";
+  info.setFile( controlLog );
+  if ( !info.exists() || info.size() <= 0 ) {
+    reportSuccess( i18n( "No previous Akonadi control error log found." ),
+                   i18n( "The Akonadi control process did not report any errors during its previous startup." ) );
+  } else {
+    reportError( i18n( "Previous Akonadi control error log found." ),
+                 i18n( "The Akonadi control process did report error during its previous startup into %1.", makeLink( controlLog ) ),
+                 controlLog );
   }
 }
 
@@ -303,6 +330,7 @@ void SelfTestDialog::saveReport()
     }
   }
 
+  s << endl;
   s.flush();
   file.close();
 }

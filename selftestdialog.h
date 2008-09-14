@@ -50,6 +50,7 @@ class SelfTestDialog : public KDialog
     void testServerStatus();
     void testResources();
     void testServerLog();
+    void testControlLog();
 
   private slots:
     void selectionChanged( const QModelIndex &index );
