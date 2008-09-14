@@ -24,7 +24,7 @@
 #include "agentmanager.h"
 #include "controlmanager.h"
 #include "processcontrol.h"
-#include "kcrash.h"
+#include "akcrash.h"
 #include "akdebug.h"
 
 #include <stdlib.h>
@@ -46,7 +46,7 @@ void crashHandler( int )
 int main( int argc, char **argv )
 {
   akInit( QString::fromLatin1( "akonadi_control" ) );
-  KCrash::setEmergencyMethod( crashHandler );
+  AkonadiCrash::setEmergencyMethod( crashHandler );
 
   QCoreApplication app( argc, argv );
 

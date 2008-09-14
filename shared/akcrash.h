@@ -19,11 +19,11 @@
  *
  */
 
-#ifndef KCRASH_H
-#define KCRASH_H
+#ifndef AKCRASH_H
+#define AKCRASH_H
 
 
-class KCrash
+class AkonadiCrash
 {
   public:
     typedef void (*HandlerType)(int);

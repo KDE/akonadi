@@ -20,7 +20,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shared )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
 set( AKONADI_SHARED_SOURCES
-  ${CMAKE_CURRENT_SOURCE_DIR}/shared/kcrash.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akcrash.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdebug.cpp
 )
 

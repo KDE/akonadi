@@ -25,7 +25,7 @@
 
 #include "akonadi.h"
 #include "akdebug.h"
-#include "kcrash.h"
+#include "akcrash.h"
 
 #include <cstdlib>
 
@@ -41,7 +41,7 @@ void shutdownHandler( int )
 int main( int argc, char ** argv )
 {
     akInit( QString::fromLatin1( "akonadiserver" ) );
-    KCrash::setShutdownMethod( shutdownHandler );
+    AkonadiCrash::setShutdownMethod( shutdownHandler );
 
     QCoreApplication app( argc, argv );
 

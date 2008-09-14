@@ -22,7 +22,7 @@
 */
 
 #include "akdebug.h"
-#include "kcrash.h"
+#include "akcrash.h"
 #include "../libs/xdgbasedirs_p.h"
 using Akonadi::XdgBaseDirs;
 
@@ -135,7 +135,7 @@ QDebug akDebug()
 
 void akInit( const QString &baseName )
 {
-  KCrash::init();
+  AkonadiCrash::init();
   sInstance()->setName( baseName );
 
   QFileInfo infoOld( sInstance()->errorLogFileName() + QString::fromLatin1(".old") );

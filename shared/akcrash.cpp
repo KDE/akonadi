@@ -19,7 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "kcrash.h"
+#include "akcrash.h"
 #include "akdebug.h"
 
 #include <QtCore/QString>
@@ -66,16 +66,16 @@ QString kBacktrace()
   return s;
 }
 
-static KCrash::HandlerType s_emergencyMethod = 0;
-static KCrash::HandlerType s_shutdownMethod = 0;
+static AkonadiCrash::HandlerType s_emergencyMethod = 0;
+static AkonadiCrash::HandlerType s_shutdownMethod = 0;
 static int recursionCount = 0;
 
-void KCrash::setEmergencyMethod( HandlerType method )
+void AkonadiCrash::setEmergencyMethod( HandlerType method )
 {
   s_emergencyMethod = method;
 }
 
-void KCrash::setShutdownMethod( HandlerType method )
+void AkonadiCrash::setShutdownMethod( HandlerType method )
 {
   s_shutdownMethod = method;
 }
@@ -105,7 +105,7 @@ static void defaultCrashHandler( int sig )
 #endif
 }
 
-void KCrash::init()
+void AkonadiCrash::init()
 {
   HandlerType handler = defaultCrashHandler;
 
