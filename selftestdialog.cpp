@@ -54,7 +54,7 @@ SelfTestDialog::SelfTestDialog(QWidget * parent) :
 {
   setCaption( i18n( "Akonadi Server Self-Test" ) );
   setButtons( Close | User1 );
-  setButtonText( User1, i18n( "Save Resport" ) );
+  setButtonText( User1, i18n( "Save Report" ) );
   setButtonIcon( User1, KIcon( "document-save" ) );
   showButtonSeparator( true );
   ui.setupUi( mainWidget() );
