@@ -20,6 +20,7 @@
  */
 
 #include "kcrash.h"
+#include "akdebug.h"
 
 #include <QtCore/QString>
 
@@ -51,11 +52,12 @@ QString kBacktrace()
 
   s = QLatin1String("[\n");
 
-  for (int i = 0; i < n; ++i)
+  for ( int i = 0; i < n; ++i ) {
     s += QString::number(i) +
          QLatin1String(": ") +
          QLatin1String(strings[i]) + QLatin1String("\n");
-    s += QLatin1String("]\n");
+  }
+  s += QLatin1String("]\n");
 
   if (strings)
     free (strings);
@@ -63,8 +65,10 @@ QString kBacktrace()
 
   return s;
 }
+
 static KCrash::HandlerType s_emergencyMethod = 0;
 static KCrash::HandlerType s_shutdownMethod = 0;
+static int recursionCount = 0;
 
 void KCrash::setEmergencyMethod( HandlerType method )
 {
@@ -78,14 +82,20 @@ void KCrash::setShutdownMethod( HandlerType method )
 
 static void defaultCrashHandler( int sig )
 {
-  if ( sig != SIGTERM && sig != SIGINT ) {
-    fprintf( stderr, "%s", kBacktrace().toLatin1().data() );
+  ++recursionCount;
+  if ( recursionCount <= 2 ) {
+    if ( sig != SIGTERM && sig != SIGINT ) {
+      if ( recursionCount == 1 )
+        akError() << kBacktrace();
+      else // fall back to something more simple in case the other one crashed itself
+        fprintf( stderr, "%s", kBacktrace().toLatin1().data() );
 
-    if ( s_emergencyMethod )
-      s_emergencyMethod( sig );
-  } else {
-    if ( s_shutdownMethod )
-      s_shutdownMethod( sig );
+      if ( s_emergencyMethod )
+        s_emergencyMethod( sig );
+    } else {
+      if ( s_shutdownMethod )
+        s_shutdownMethod( sig );
+    }
   }
 
 #ifdef Q_CC_MINGW

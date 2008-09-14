@@ -22,6 +22,7 @@
 */
 
 #include "akdebug.h"
+#include "kcrash.h"
 #include "../libs/xdgbasedirs_p.h"
 using Akonadi::XdgBaseDirs;
 
@@ -35,9 +36,8 @@ using Akonadi::XdgBaseDirs;
 class FileDebugStream : public QIODevice
 {
   public:
-    FileDebugStream( const QString &fileName, QtMsgType type ) :
-      mFileName( fileName ),
-      mType( type )
+    FileDebugStream() :
+      mType( QtCriticalMsg )
     {
       open( WriteOnly );
     }
@@ -49,14 +49,21 @@ class FileDebugStream : public QIODevice
     {
       QByteArray buf = QByteArray::fromRawData(data, len);
 
-      QFile outputFile( mFileName );
-      outputFile.open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered );
-      outputFile.write( data, len );
-      outputFile.putChar( '\n' );
-      outputFile.close();
+      if ( !mFileName.isEmpty() ) {
+        QFile outputFile( mFileName );
+        outputFile.open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered );
+        outputFile.write( data, len );
+        outputFile.putChar( '\n' );
+        outputFile.close();
+      }
 
       qt_message_output( mType, buf.trimmed().constData() );
       return len;
+    }
+
+    void setFileName( const QString &fileName )
+    {
+      mFileName = fileName;
     }
 
     void setType( QtMsgType type )
@@ -72,7 +79,7 @@ class DebugPrivate
 {
   public:
     DebugPrivate() :
-      fileStream( new FileDebugStream( errorLogFileName(), QtCriticalMsg ) )
+      fileStream( new FileDebugStream() )
     {
     }
 
@@ -85,7 +92,8 @@ class DebugPrivate
     {
       return XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) )
           + QDir::separator()
-          + QString::fromLatin1( "akonadiserver.error" );
+          + name
+          + QString::fromLatin1( ".error" );
     }
 
     QDebug stream( QtMsgType type )
@@ -97,8 +105,15 @@ class DebugPrivate
       return QDebug( fileStream );
     }
 
+    void setName( const QString &baseName )
+    {
+      name = baseName;
+      fileStream->setFileName( errorLogFileName() );
+    }
+
     QMutex mutex;
     FileDebugStream *fileStream;
+    QString name;
 };
 
 Q_GLOBAL_STATIC( DebugPrivate, sInstance )
@@ -118,8 +133,11 @@ QDebug akDebug()
   return sInstance()->stream( QtDebugMsg );
 }
 
-void akInitLog()
+void akInit( const QString &baseName )
 {
+  KCrash::init();
+  sInstance()->setName( baseName );
+
   QFileInfo infoOld( sInstance()->errorLogFileName() + QString::fromLatin1(".old") );
   if ( infoOld.exists() ) {
     QFile fileOld( infoOld.absoluteFilePath() );

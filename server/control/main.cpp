@@ -24,8 +24,9 @@
 #include "agentmanager.h"
 #include "controlmanager.h"
 #include "processcontrol.h"
-
 #include "kcrash.h"
+#include "akdebug.h"
+
 #include <stdlib.h>
 #include <config-akonadi.h>
 #ifdef HAVE_UNISTD_H
@@ -44,7 +45,7 @@ void crashHandler( int )
 
 int main( int argc, char **argv )
 {
-  KCrash::init();
+  akInit( QString::fromLatin1( "akonadi_control" ) );
   KCrash::setEmergencyMethod( crashHandler );
 
   QCoreApplication app( argc, argv );

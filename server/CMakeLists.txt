@@ -16,7 +16,13 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR}/libs )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shared )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
+
+set( AKONADI_SHARED_SOURCES
+  ${CMAKE_CURRENT_SOURCE_DIR}/shared/kcrash.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdebug.cpp
+)
 
 add_subdirectory( akonadictl )
 add_subdirectory( control )
@@ -49,6 +55,7 @@ add_custom_command(
 )
 
 set(libakonadiprivate_SRCS
+  ${AKONADI_SHARED_SOURCES}
   src/akonadi.cpp
   src/akonadiconnection.cpp
   src/handler.cpp
@@ -98,7 +105,6 @@ set(libakonadiprivate_SRCS
   src/xesammanager.cpp
   src/nepomukmanager.cpp
   src/debuginterface.cpp
-  src/akdebug.cpp
 )
 
 automoc4(akonadiprivate libakonadiprivate_SRCS)
@@ -143,7 +149,7 @@ set_target_properties( akonadiprivate PROPERTIES
                       )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
-set( akonadiserver_bin_SRCS src/main.cpp control/kcrash.cpp )
+set( akonadiserver_bin_SRCS src/main.cpp )
 
 
 add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )

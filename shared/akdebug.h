@@ -41,6 +41,6 @@ QDebug akDebug();
 /**
  * Rotate error logs.
  */
-void akInitLog();
+void akInit( const QString &baseName );
 
 #endif
