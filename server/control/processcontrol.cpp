@@ -166,7 +166,7 @@ void ProcessControl::start()
 void Akonadi::ProcessControl::slotStdoutMessages()
 {
   mProcess.setReadChannel( QProcess::StandardOutput );
-  if ( mProcess.canReadLine() ) {
+  while ( mProcess.canReadLine() ) {
     QString message = QString::fromUtf8( mProcess.readLine() );
     qDebug() << mApplication << "[out]" << message;
   }
@@ -175,7 +175,7 @@ void Akonadi::ProcessControl::slotStdoutMessages()
 void ProcessControl::slotErrorMessages()
 {
   mProcess.setReadChannel( QProcess::StandardError );
-  if ( mProcess.canReadLine() ) {
+  while ( mProcess.canReadLine() ) {
     QString message = QString::fromUtf8( mProcess.readLine() );
     emit processErrorMessages( message );
     qDebug( "[%s] %s", qPrintable( mApplication ), qPrintable( message.trimmed() ) );
