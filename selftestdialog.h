@@ -38,8 +38,8 @@ class SelfTestDialog : public KDialog
     SelfTestDialog( QWidget *parent = 0 );
 
   private:
-    void reportSuccess( const QString &summary, const QString &details );
-    void reportError( const QString &summary, const QString &details );
+    void reportSuccess( const QString &summary, const QString &details, const QString &file = QString() );
+    void reportError( const QString &summary, const QString &details, const QString &file = QString() );
     void runTests();
     QVariant serverSetting( const QString &group, const QString &key, const QVariant &def ) const;
     bool runProcess( const QString &app, const QStringList &args, QString &result ) const;
@@ -54,6 +54,7 @@ class SelfTestDialog : public KDialog
   private slots:
     void selectionChanged( const QModelIndex &index );
     void saveReport();
+    void linkActivated( const QString &link );
 
   private:
     Ui::SelfTestDialog ui;

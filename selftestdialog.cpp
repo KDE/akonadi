@@ -26,6 +26,7 @@
 #include <KFileDialog>
 #include <KLocale>
 #include <KMessageBox>
+#include <KRun>
 #include <KStandardDirs>
 
 #include <QtDBus>
@@ -41,6 +42,13 @@
 
 using namespace Akonadi;
 
+static QString makeLink( const QString &file )
+{
+  return QString::fromLatin1( "<a href=\"%1\">%2</a>" ).arg( file, file );
+}
+
+static const int FileIncludeRole = Qt::UserRole + 1;
+
 SelfTestDialog::SelfTestDialog(QWidget * parent) :
     KDialog( parent )
 {
@@ -55,25 +63,30 @@ SelfTestDialog::SelfTestDialog(QWidget * parent) :
   ui.testView->setModel( mTestModel );
   connect( ui.testView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
            SLOT(selectionChanged(QModelIndex)) );
+  connect( ui.detailsLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated(QString)) );
 
   connect( this, SIGNAL(user1Clicked()), SLOT(saveReport()) );
 
   runTests();
 }
 
-void SelfTestDialog::reportSuccess(const QString & summary, const QString & details)
+void SelfTestDialog::reportSuccess(const QString & summary, const QString & details, const QString &file)
 {
   QStandardItem *item = new QStandardItem( KIcon( "dialog-ok" ), summary );
   item->setEditable( false );
   item->setWhatsThis( details );
+  if ( !file.isEmpty() )
+    item->setData( file, FileIncludeRole );
   mTestModel->appendRow( item );
 }
 
-void SelfTestDialog::reportError(const QString & summary, const QString & details)
+void SelfTestDialog::reportError(const QString & summary, const QString & details, const QString &file)
 {
   QStandardItem *item = new QStandardItem( KIcon( "dialog-error" ), summary );
   item->setEditable( false );
   item->setWhatsThis( details );
+  if ( !file.isEmpty() )
+    item->setData( file, FileIncludeRole );
   mTestModel->appendRow( item );
 }
 
@@ -125,9 +138,9 @@ void SelfTestDialog::testSQLDriver()
       "The following drivers are installed: %2.\n"
       "Make sure the required driver is installed.", driver, availableDrivers.join( QLatin1String(", ") ) );
   if ( availableDrivers.contains( driver ) )
-    reportSuccess( i18n( "Database driver found." ), details );
+    reportSuccess( i18n( "Database driver found." ), details, XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite ) );
   else
-    reportError( i18n( "Database driver not found." ), details );
+    reportError( i18n( "Database driver not found." ), details, XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite ) );
 }
 
 void SelfTestDialog::testMySQLServer()
@@ -239,7 +252,8 @@ void Akonadi::SelfTestDialog::testServerLog()
                    i18n( "The Akonadi server did not report any errors during its current startup." ) );
   } else {
     reportError( i18n( "Current error log found." ),
-                 i18n( "The Akonadi server did report error during startup into '%1'.", serverLog ) );
+                 i18n( "The Akonadi server did report error during startup into %1.", makeLink( serverLog ) ),
+                 serverLog );
   }
 
   serverLog += ".old";
@@ -249,7 +263,8 @@ void Akonadi::SelfTestDialog::testServerLog()
                    i18n( "The Akonadi server did not report any errors during its previous startup." ) );
   } else {
     reportError( i18n( "Previous error log found." ),
-                 i18n( "The Akonadi server did report error during its previous startup into '%1'.", serverLog ) );
+                 i18n( "The Akonadi server did report error during its previous startup into %1.", makeLink( serverLog ) ),
+                 serverLog );
   }
 }
 
@@ -265,16 +280,36 @@ void SelfTestDialog::saveReport()
 
   QTextStream s( &file );
   s << "Akonadi Server Self-Test Report" << endl;
+  s << "===============================" << endl;
 
   for ( int i = 0; i < mTestModel->rowCount(); ++i ) {
+    s << endl;
+    s << "Test " << i << endl;
+    s << "-------" << endl;
     QStandardItem *item = mTestModel->item( i );
     s << endl;
-    s << "Test " << i << ": " << item->text() << endl;
-    s << item->whatsThis() << endl;
+    s << item->text() << endl;
+    s << "Details: " << item->whatsThis() << endl;
+    if ( item->data( FileIncludeRole ).isValid() ) {
+      s << endl;
+      const QString fileName = item->data( FileIncludeRole ).toString();
+      QFile f( fileName );
+      if ( f.open( QFile::ReadOnly ) ) {
+        s << "File content of '" << fileName << "':" << endl;
+        s << f.readAll() << endl;
+      } else {
+        s << "File '" << fileName << "' could not be opened" << endl;
+      }
+    }
   }
 
   s.flush();
   file.close();
+}
+
+void SelfTestDialog::linkActivated(const QString & link)
+{
+  KRun::runUrl( KUrl::fromPath( link ), "text/plain", this );
 }
 
 #include "selftestdialog.moc"
