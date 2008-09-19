@@ -149,7 +149,8 @@ set_target_properties( akonadiprivate PROPERTIES
                       )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
-set( akonadiserver_bin_SRCS src/main.cpp )
+set( akonadiserver_bin_SRCS src/main.cpp 
+  ${AKONADI_SHARED_SOURCES} )
 
 
 add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
