@@ -29,6 +29,8 @@
 #include <KRun>
 #include <KStandardDirs>
 
+#include <QApplication>
+#include <QClipboard>
 #include <QtDBus>
 #include <QFileInfo>
 #include <QProcess>
@@ -48,14 +50,17 @@ static QString makeLink( const QString &file )
 }
 
 static const int FileIncludeRole = Qt::UserRole + 1;
+static const int ListDirectoryRole = Qt::UserRole + 2;
 
 SelfTestDialog::SelfTestDialog(QWidget * parent) :
     KDialog( parent )
 {
   setCaption( i18n( "Akonadi Server Self-Test" ) );
-  setButtons( Close | User1 );
-  setButtonText( User1, i18n( "Save Report" ) );
+  setButtons( Close | User1 | User2 );
+  setButtonText( User1, i18n( "Save Report..." ) );
   setButtonIcon( User1, KIcon( "document-save" ) );
+  setButtonText( User2, i18n( "Copy Report to Clipboard" ) );
+  setButtonIcon( User2, KIcon( "edit-copy" ) );
   showButtonSeparator( true );
   ui.setupUi( mainWidget() );
 
@@ -66,28 +71,29 @@ SelfTestDialog::SelfTestDialog(QWidget * parent) :
   connect( ui.detailsLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated(QString)) );
 
   connect( this, SIGNAL(user1Clicked()), SLOT(saveReport()) );
+  connect( this, SIGNAL(user2Clicked()), SLOT(copyReport()) );
 
   runTests();
 }
 
-void SelfTestDialog::reportSuccess(const QString & summary, const QString & details, const QString &file)
+QStandardItem* SelfTestDialog::report( ResultType type, const QString & summary, const QString & details)
 {
-  QStandardItem *item = new QStandardItem( KIcon( "dialog-ok" ), summary );
+  QStandardItem *item = new QStandardItem( summary );
+  switch ( type ) {
+    case Success:
+      item->setIcon( KIcon( "dialog-ok" ) );
+      break;
+    case Warning:
+      item->setIcon( KIcon( "dialog-warning" ) );
+      break;
+    case Error:
+    default:
+      item->setIcon( KIcon( "dialog-error" ) );
+  }
   item->setEditable( false );
   item->setWhatsThis( details );
-  if ( !file.isEmpty() )
-    item->setData( file, FileIncludeRole );
   mTestModel->appendRow( item );
-}
-
-void SelfTestDialog::reportError(const QString & summary, const QString & details, const QString &file)
-{
-  QStandardItem *item = new QStandardItem( KIcon( "dialog-error" ), summary );
-  item->setEditable( false );
-  item->setWhatsThis( details );
-  if ( !file.isEmpty() )
-    item->setData( file, FileIncludeRole );
-  mTestModel->appendRow( item );
+  return item;
 }
 
 void SelfTestDialog::selectionChanged(const QModelIndex &index )
@@ -138,10 +144,12 @@ void SelfTestDialog::testSQLDriver()
   const QString details = i18n( "The QtSQL driver '%1' is required by your current Akonadi server configuration.\n"
       "The following drivers are installed: %2.\n"
       "Make sure the required driver is installed.", driver, availableDrivers.join( QLatin1String(", ") ) );
+  QStandardItem *item = 0;
   if ( availableDrivers.contains( driver ) )
-    reportSuccess( i18n( "Database driver found." ), details, XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite ) );
+    item = report( Success, i18n( "Database driver found." ), details );
   else
-    reportError( i18n( "Database driver not found." ), details, XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite ) );
+    item = report( Error, i18n( "Database driver not found." ), details );
+  item->setData( XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite ), FileIncludeRole );
 }
 
 void SelfTestDialog::testMySQLServer()
@@ -156,26 +164,29 @@ void SelfTestDialog::testMySQLServer()
 
   const QString details = i18n( "You currently have configured Akonadi to use the MySQL server '%1'.\n"
       "Make sure you have the MySQL server installed, set the correct path and ensure you have the "
-      "necessary read and execution rights on the server executable.", serverPath );
+      "necessary read and execution rights on the server executable. The server executable is typically "
+      "called 'mysqld', its locations varies depending on the distribution.", serverPath );
 
   QFileInfo info( serverPath );
   if ( !info.exists() )
-    reportError( i18n( "MySQL server not found." ), details );
+    report( Error, i18n( "MySQL server not found." ), details );
   else if ( !info.isReadable() )
-    reportError( i18n( "MySQL server not readable." ), details );
+    report( Error, i18n( "MySQL server not readable." ), details );
   else if ( !info.isExecutable() )
-    reportError( i18n( "MySQL server not executable." ), details );
+    report( Error, i18n( "MySQL server not executable." ), details );
+  else if ( !serverPath.contains( "mysqld" ) )
+    report( Warning, i18n( "MySQL found with unexpected name." ), details );
   else
-    reportSuccess( i18n( "MySQL server found." ), details );
+    report( Success, i18n( "MySQL server found." ), details );
 
   // be extra sure and get the server version while we are at it
   QString result;
   if ( runProcess( serverPath, QStringList() << QLatin1String( "--version" ), result ) ) {
     const QString details = i18n( "MySQL server found: %1", result );
-    reportSuccess( i18n( "MySQL server is executable." ), details );
+    report( Success, i18n( "MySQL server is executable." ), details );
   } else {
     const QString details = i18n( "Executing the MySQL server '%1' failed with the following error message: '%2'", serverPath, result );
-    reportError( i18n( "Executing the MySQL server failed." ), details );
+    report( Error, i18n( "Executing the MySQL server failed." ), details );
   }
 }
 
@@ -183,18 +194,18 @@ void SelfTestDialog::testAkonadiCtl()
 {
   const QString path = KStandardDirs::findExe( QLatin1String("akonadictl") );
   if ( path.isEmpty() ) {
-    reportError( i18n( "akonadictl not found" ),
+    report( Error, i18n( "akonadictl not found" ),
                  i18n( "The program 'akonadictl' needs to be accessible in $PATH. "
                        "Make sure you have the Akonadi server installed." ) );
     return;
   }
   QString result;
   if ( runProcess( path, QStringList() << QLatin1String( "status" ), result ) ) {
-    reportSuccess( i18n( "akonadictl found and usable" ),
+    report( Success, i18n( "akonadictl found and usable" ),
                    i18n( "The program '%1' to control the Akonadi server was found "
                          "and could be executed successfully.\nResult:\n%2", path, result ) );
   } else {
-    reportError( i18n( "akonadictl found but not usable" ),
+    report( Error, i18n( "akonadictl found but not usable" ),
                  i18n( "The program '%1' to control the Akonadi server was found "
                        "but could not be executed successfully.\nResult:\n%2\n"
                        "Make sure the Akonadi server is installed correctly.", path, result ) );
@@ -204,19 +215,19 @@ void SelfTestDialog::testAkonadiCtl()
 void SelfTestDialog::testServerStatus()
 {
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) ) {
-    reportSuccess( i18n( "Akonadi control process registered at D-Bus." ),
+    report( Success, i18n( "Akonadi control process registered at D-Bus." ),
                    i18n( "The Akonadi control process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
-    reportError( i18n( "Akonadi control process not registered at D-Bus." ),
+    report( Error, i18n( "Akonadi control process not registered at D-Bus." ),
                  i18n( "The Akonadi control process is not registered at D-Bus which typically means it was not started "
                        "or encountered a fatal error during startup."  ) );
   }
 
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE ) ) {
-    reportSuccess( i18n( "Akonadi server process registered at D-Bus." ),
+    report( Success, i18n( "Akonadi server process registered at D-Bus." ),
                    i18n( "The Akonadi server process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
-    reportError( i18n( "Akonadi server process not registered at D-Bus." ),
+    report( Error, i18n( "Akonadi server process not registered at D-Bus." ),
                  i18n( "The Akonadi server process is not registered at D-Bus which typically means it was not started "
                        "or encountered a fatal error during startup."  ) );
   }
@@ -233,14 +244,18 @@ void SelfTestDialog::testResources()
     }
   }
 
+  const QStringList pathList = XdgBaseDirs::findAllResourceDirs( "data", QLatin1String( "akonadi/agents" ) );
+  QStandardItem *item = 0;
   if ( resourceFound ) {
-    reportSuccess( i18n( "Resource agents found." ), i18n( "At least one resource agent has been found." ) );
+    item = report( Success, i18n( "Resource agents found." ), i18n( "At least one resource agent has been found." ) );
   } else {
     // TODO: add details on XDG_WHATEVER env var needed to find agents
-    reportError( i18n( "No resource agents found." ),
-                 i18n( "No resource agents have been found, Akonadi is not usable without at least one. "
-                       "This usually means that no resource agents are installed or that there is a setup problem." ) );
+    item = report( Error, i18n( "No resource agents found." ),
+      i18n( "No resource agents have been found, Akonadi is not usable without at least one. "
+            "This usually means that no resource agents are installed or that there is a setup problem."
+            "The following paths have been searched: %1", pathList.join( QLatin1String(" ") ) ) );
   }
+  item->setData( pathList, ListDirectoryRole );
 }
 
 void Akonadi::SelfTestDialog::testServerLog()
@@ -249,23 +264,23 @@ void Akonadi::SelfTestDialog::testServerLog()
       + QDir::separator() + QString::fromLatin1( "akonadiserver.error" );
   QFileInfo info( serverLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    reportSuccess( i18n( "No current Akonadi server error log found." ),
+    report( Success, i18n( "No current Akonadi server error log found." ),
                    i18n( "The Akonadi server did not report any errors during its current startup." ) );
   } else {
-    reportError( i18n( "Current Akonadi server error log found." ),
-                 i18n( "The Akonadi server did report error during startup into %1.", makeLink( serverLog ) ),
-                 serverLog );
+    QStandardItem *item = report( Error, i18n( "Current Akonadi server error log found." ),
+      i18n( "The Akonadi server did report error during startup into %1.", makeLink( serverLog ) ) );
+    item->setData( serverLog, FileIncludeRole );
   }
 
   serverLog += ".old";
   info.setFile( serverLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    reportSuccess( i18n( "No previous Akonadi server error log found." ),
+    report( Success, i18n( "No previous Akonadi server error log found." ),
                    i18n( "The Akonadi server did not report any errors during its previous startup." ) );
   } else {
-    reportError( i18n( "Previous Akonadi server error log found." ),
-                 i18n( "The Akonadi server did report error during its previous startup into %1.", makeLink( serverLog ) ),
-                 serverLog );
+    QStandardItem *item = report( Error, i18n( "Previous Akonadi server error log found." ),
+      i18n( "The Akonadi server did report error during its previous startup into %1.", makeLink( serverLog ) ) );
+    item->setData( serverLog, FileIncludeRole );
   }
 }
 
@@ -275,37 +290,31 @@ void SelfTestDialog::testControlLog()
       + QDir::separator() + QString::fromLatin1( "akonadi_control.error" );
   QFileInfo info( controlLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    reportSuccess( i18n( "No current Akonadi control error log found." ),
+    report( Success, i18n( "No current Akonadi control error log found." ),
                    i18n( "The Akonadi control process did not report any errors during its current startup." ) );
   } else {
-    reportError( i18n( "Current Akonadi control error log found." ),
-                 i18n( "The Akonadi control process did report error during startup into %1.", makeLink( controlLog ) ),
-                 controlLog );
+    QStandardItem *item = report( Error, i18n( "Current Akonadi control error log found." ),
+      i18n( "The Akonadi control process did report error during startup into %1.", makeLink( controlLog ) ) );
+    item->setData( controlLog, FileIncludeRole );
   }
 
   controlLog += ".old";
   info.setFile( controlLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    reportSuccess( i18n( "No previous Akonadi control error log found." ),
+    report( Success, i18n( "No previous Akonadi control error log found." ),
                    i18n( "The Akonadi control process did not report any errors during its previous startup." ) );
   } else {
-    reportError( i18n( "Previous Akonadi control error log found." ),
-                 i18n( "The Akonadi control process did report error during its previous startup into %1.", makeLink( controlLog ) ),
-                 controlLog );
+    QStandardItem *item = report( Error, i18n( "Previous Akonadi control error log found." ),
+      i18n( "The Akonadi control process did report error during its previous startup into %1.", makeLink( controlLog ) ) );
+    item->setData( controlLog, FileIncludeRole );
   }
 }
 
 
-void SelfTestDialog::saveReport()
+QString SelfTestDialog::createReport()
 {
-  const QString fileName =  KFileDialog::getSaveFileName( KUrl(), QString(), this, i18n("Save Test Report") );
-  QFile file( fileName );
-  if ( !file.open( QFile::ReadWrite ) ) {
-    KMessageBox::error( this, i18n( "Could not open file '%1'", fileName ) );
-    return;
-  }
-
-  QTextStream s( &file );
+  QString result;
+  QTextStream s( &result );
   s << "Akonadi Server Self-Test Report" << endl;
   s << "===============================" << endl;
 
@@ -328,11 +337,40 @@ void SelfTestDialog::saveReport()
         s << "File '" << fileName << "' could not be opened" << endl;
       }
     }
+    if ( item->data( ListDirectoryRole ).isValid() ) {
+      s << endl;
+      const QStringList pathList = item->data( ListDirectoryRole ).toStringList();
+      foreach ( const QString &path, pathList ) {
+        s << "Directory listing of '" << path << "':" << endl;
+        QDir dir( path );
+        dir.setFilter( QDir::AllEntries | QDir::NoDotAndDotDot );
+        foreach ( const QString &entry, dir.entryList() )
+          s << entry << endl;
+      }
+    }
   }
 
   s << endl;
   s.flush();
+  return result;
+}
+
+void SelfTestDialog::saveReport()
+{
+  const QString fileName =  KFileDialog::getSaveFileName( KUrl(), QString(), this, i18n("Save Test Report") );
+  QFile file( fileName );
+  if ( !file.open( QFile::ReadWrite ) ) {
+    KMessageBox::error( this, i18n( "Could not open file '%1'", fileName ) );
+    return;
+  }
+
+  file.write( createReport().toUtf8() );
   file.close();
+}
+
+void SelfTestDialog::copyReport()
+{
+  QApplication::clipboard()->setText( createReport() );
 }
 
 void SelfTestDialog::linkActivated(const QString & link)
