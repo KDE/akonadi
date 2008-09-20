@@ -85,6 +85,7 @@ class AKONADI_EXPORT ServerManager : public QObject
     ServerManager( ServerManagerPrivate *dd );
     ServerManagerPrivate* const d;
     Q_PRIVATE_SLOT( d, void serviceOwnerChanged( const QString&, const QString&, const QString& ) )
+    Q_PRIVATE_SLOT( d, void checkStatusChanged() )
     //@endcond
 };
 

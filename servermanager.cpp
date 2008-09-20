@@ -19,6 +19,9 @@
 
 #include "servermanager.h"
 
+#include "agenttype.h"
+#include "agentmanager.h"
+
 #include <KDebug>
 #include <KGlobal>
 
@@ -34,6 +37,7 @@ class Akonadi::ServerManagerPrivate
   public:
     ServerManagerPrivate() : instance( new ServerManager( this ) )
     {
+      operational = instance->isRunning();
     }
 
     ~ServerManagerPrivate()
@@ -43,15 +47,27 @@ class Akonadi::ServerManagerPrivate
 
     void serviceOwnerChanged( const QString &service, const QString &oldOwner, const QString &newOwner )
     {
-      if ( service != AKONADI_SERVER_SERVICE )
+      Q_UNUSED( oldOwner );
+      Q_UNUSED( newOwner );
+      if ( service != AKONADI_SERVER_SERVICE && service != AKONADI_CONTROL_SERVICE )
         return;
-      if ( newOwner.isEmpty() && !oldOwner.isEmpty() )
-        emit instance->stopped();
-      if ( !newOwner.isEmpty() && oldOwner.isEmpty() )
+      checkStatusChanged();
+    }
+
+    void checkStatusChanged()
+    {
+      const bool status = instance->isRunning();
+      if ( status == operational )
+        return;
+      operational = status;
+      if ( operational )
         emit instance->started();
+      else
+        emit instance->stopped();
     }
 
     ServerManager *instance;
+    bool operational;
 };
 
 K_GLOBAL_STATIC( ServerManagerPrivate, sInstance )
@@ -62,6 +78,8 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
   connect( QDBusConnection::sessionBus().interface(),
            SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(serviceOwnerChanged(QString,QString,QString)) );
+  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
+  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
 }
 
 ServerManager * Akonadi::ServerManager::instance()
@@ -102,8 +120,18 @@ bool ServerManager::stop()
 
 bool ServerManager::isRunning()
 {
-  return QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE )
-      && QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
+  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) ||
+       !QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE ) ) {
+    return false;
+  }
+
+  // besides the running server processes we also need at least one resource to be operational
+  AgentType::List agentTypes = AgentManager::self()->types();
+  foreach ( const AgentType &type, agentTypes ) {
+    if ( type.capabilities().contains( "Resource" ) )
+      return true;
+  }
+  return false;
 }
 
 
