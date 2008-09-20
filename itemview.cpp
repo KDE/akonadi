@@ -20,6 +20,7 @@
 
 #include "itemview.h"
 
+#include "control.h"
 #include "itemmodel.h"
 
 #include <KXMLGUIFactory>
@@ -62,6 +63,8 @@ void ItemView::Private::init()
 
   mParent->connect( mParent, SIGNAL( activated( const QModelIndex& ) ),
                     mParent, SLOT( itemActivated( const QModelIndex& ) ) );
+
+  Control::widgetNeedsAkonadi( mParent );
 }
 
 void ItemView::Private::itemActivated( const QModelIndex &index )

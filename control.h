@@ -111,6 +111,15 @@ class AKONADI_EXPORT Control : public QObject
      */
     static bool restart( QWidget *parent );
 
+    /**
+     * Disable the given widget when Akonadi is not operational and show
+     * an error overlay (given enough space). Cascading use is automatically
+     * detected.
+     * @param widget The widget depending on Akonadi being operational.
+     * @since 4.2
+     */
+    static void widgetNeedsAkonadi( QWidget *widget );
+
   protected:
     /**
      * Creates the control object.
@@ -124,6 +133,7 @@ class AKONADI_EXPORT Control : public QObject
 
     Q_PRIVATE_SLOT( d, void serverStarted() )
     Q_PRIVATE_SLOT( d, void serverStopped() )
+    Q_PRIVATE_SLOT( d, void createErrorOverlays() )
     //@endcond
 };
 

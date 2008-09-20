@@ -21,6 +21,7 @@
 #include "servermanager.h"
 #include "ui_controlprogressindicator.h"
 #include "selftestdialog.h"
+#include "erroroverlay.h"
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -77,6 +78,13 @@ class Control::Private
       mProgressIndicator->setMessage( msg );
     }
 
+    void createErrorOverlays()
+    {
+      foreach ( QWidget* widget, mPendingOverlays )
+        new ErrorOverlay( widget );
+      mPendingOverlays.clear();
+    }
+
     bool exec();
     void serverStarted();
     void serverStopped();
@@ -84,6 +92,7 @@ class Control::Private
     Control *mParent;
     QEventLoop *mEventLoop;
     ControlProgressIndicator *mProgressIndicator;
+    QList<QWidget*> mPendingOverlays;
     bool mSuccess;
 
     bool mStarting;
@@ -209,6 +218,14 @@ bool Control::restart(QWidget * parent)
       return false;
   }
   return start( parent );
+}
+
+void Control::widgetNeedsAkonadi(QWidget * widget)
+{
+  s_instance->d->mPendingOverlays.append( widget );
+  // delay the overlay creation since we rely on widget being reparented
+  // correctly already
+  QTimer::singleShot( 0, s_instance, SLOT(createErrorOverlays()) );
 }
 
 #include "control.moc"

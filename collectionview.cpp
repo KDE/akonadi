@@ -21,6 +21,7 @@
 
 #include "collection.h"
 #include "collectionmodel.h"
+#include "control.h"
 
 #include <kaction.h>
 #include <kdebug.h>
@@ -82,6 +83,8 @@ void CollectionView::Private::init()
 
   mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
                     mParent, SLOT( itemClicked( const QModelIndex& ) ) );
+
+  Control::widgetNeedsAkonadi( mParent );
 }
 
 bool CollectionView::Private::hasParent( const QModelIndex& idx, Collection::Id parentId )

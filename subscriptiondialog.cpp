@@ -23,6 +23,7 @@
 #include "subscriptionjob.h"
 #include "subscriptionchangeproxymodel.h"
 #include "flatcollectionproxymodel.h"
+#include "control.h"
 
 #include <kdebug.h>
 
@@ -114,6 +115,8 @@ SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
   connect( d->ui.unsubscribeButton, SIGNAL(clicked()), SLOT(unsubscribeClicked()) );
   connect( this, SIGNAL(okClicked()), SLOT(done()) );
   connect( this, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
+
+  Control::widgetNeedsAkonadi( mainWidget() );
 }
 
 SubscriptionDialog::~ SubscriptionDialog()

@@ -61,6 +61,7 @@ set( akonadikde_LIB_SRC
   collectionsync.cpp
   collectionview.cpp
   control.cpp
+  erroroverlay.cpp
   expungejob.cpp
   flatcollectionproxymodel.cpp
   item.cpp
