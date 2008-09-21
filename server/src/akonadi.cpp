@@ -250,6 +250,21 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
   if ( miscDir.isEmpty() )
     akFatal() << "Akonadi server was not able not create database misc directory";
 
+  // move mysql error log file out of the way
+  const QFileInfo errorLog( dataDir + QDir::separator() + QString::fromLatin1( "mysql.err" ) );
+  if ( errorLog.exists() ) {
+    QFile logFile( errorLog.absoluteFilePath() );
+    QFile oldLogFile( dataDir + QDir::separator() + QString::fromLatin1( "mysql.err.old" ) );
+    if ( logFile.open( QFile::ReadOnly ) && oldLogFile.open( QFile::Append ) ) {
+      oldLogFile.write( logFile.readAll() );
+      oldLogFile.close();
+      logFile.close();
+      logFile.remove();
+    } else {
+      akError() << "Failed to open MySQL error log.";
+    }
+  }
+
   // synthesize the mysqld command
   QStringList arguments;
   arguments << QString::fromLatin1( "--defaults-file=%1/mysql.conf" ).arg( akDir );
@@ -258,8 +273,12 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
 
   mDatabaseProcess = new QProcess( this );
   mDatabaseProcess->start( mysqldPath, arguments );
-  if ( !mDatabaseProcess->waitForStarted() )
-    akFatal() << "Could not start database server" << mysqldPath << ": " << mDatabaseProcess->errorString();
+  if ( !mDatabaseProcess->waitForStarted() ) {
+    akError() << "Could not start database server!";
+    akError() << "executable:" << mysqldPath;
+    akError() << "arguments:" << arguments;
+    akFatal() << "process error:" << mDatabaseProcess->errorString();
+  }
 
   {
     QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
@@ -271,7 +290,9 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
       if ( opened )
         break;
       if ( mDatabaseProcess->waitForFinished( 500 ) ) {
-        akError() << "Database process existed unexpectedly!";
+        akError() << "Database process existed unexpectedly during intial connection!";
+        akError() << "executable:" << mysqldPath;
+        akError() << "arguments:" << arguments;
         akError() << "stdout:" << mDatabaseProcess->readAllStandardOutput();
         akError() << "stderr:" << mDatabaseProcess->readAllStandardError();
         akError() << "exit code:" << mDatabaseProcess->exitCode();
