@@ -118,6 +118,7 @@ void SelfTestDialog::runTests()
   testSQLDriver();
   testMySQLServer();
   testMySQLServerLog();
+  testMySQLServerConfig();
   testAkonadiCtl();
   testServerStatus();
   testResources();
@@ -256,6 +257,56 @@ void SelfTestDialog::testMySQLServerLog()
   item->setData( logFileName, FileIncludeRole );
 
   logFile.close();
+}
+
+void SelfTestDialog::testMySQLServerConfig()
+{
+  if ( !useStandaloneMysqlServer() ) {
+    report( Skip, i18n( "MySQL server configuration not tested." ),
+            i18n( "The current configuration does not require an internal MySQL server." ) );
+    return;
+  }
+
+  QStandardItem *item = 0;
+  const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
+  const QFileInfo globalConfigInfo( globalConfig );
+  if ( !globalConfig.isEmpty() && globalConfigInfo.exists() && globalConfigInfo.isReadable() ) {
+    item = report( Success, i18n( "MySQL server default configuration found." ),
+                   i18n( "The default configuration for the MySQL server was found and is readable at %1",
+                   makeLink( globalConfig ) ) );
+    item->setData( globalConfig, FileIncludeRole );
+  } else {
+    report( Error, i18n( "MySQL server default configuration not found." ),
+            i18n( "The default configuration for the MySQL server was not found or was not readable. "
+                  "Check your Akonadi installation is complete and you have all required access rights." ) );
+  }
+
+  const QString localConfig  = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
+  const QFileInfo localConfigInfo( localConfig );
+  if ( localConfig.isEmpty() || !localConfigInfo.exists() ) {
+    report( Skip, i18n( "MySQL server custom configuration not available." ),
+            i18n( "The custom configuration for the MySQL server was not found but is optional." ) );
+  } else if ( localConfigInfo.exists() && localConfigInfo.isReadable() ) {
+    item = report( Success, i18n( "MySQL server custom configuration found." ),
+                   i18n( "The custom configuration for the MySQL server was found and is readable at %1",
+                   makeLink( localConfig ) ) );
+    item->setData( localConfig, FileIncludeRole );
+  } else {
+    report( Error, i18n( "MySQL server custom configuration not readable." ),
+            i18n( "The custom configuration for the MySQL server was found at %1 but is not readable. "
+                  "Check your access rights.", makeLink( localConfig ) ) );
+  }
+
+  const QString actualConfig = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
+  const QFileInfo actualConfigInfo( actualConfig );
+  if ( actualConfig.isEmpty() || !actualConfigInfo.exists() || !actualConfigInfo.isReadable() ) {
+    report( Error, i18n( "MySQL server configuration not found or not readable." ),
+            i18n( "The MySQL server configuration was not found or is not readable." ) );
+  } else {
+    item = report( Success, i18n( "MySQL server configuration is usable." ),
+                   i18n( "The MySQL server configuration was found at %1 and is readable.", makeLink( actualConfig ) ) );
+    item->setData( actualConfig, FileIncludeRole );
+  }
 }
 
 void SelfTestDialog::testAkonadiCtl()

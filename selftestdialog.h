@@ -55,6 +55,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
     void testSQLDriver();
     void testMySQLServer();
     void testMySQLServerLog();
+    void testMySQLServerConfig();
     void testAkonadiCtl();
     void testServerStatus();
     void testResources();
