@@ -223,7 +223,7 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
   const QString localConfig  = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
   const QString actualConfig = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
   if ( globalConfig.isEmpty() )
-    akFatal() << "Where is my MySQL config file??";
+    akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
   QFile globalFile( globalConfig );
   QFile actualFile( actualConfig );
   if ( globalFile.open( QFile::ReadOnly ) && actualFile.open( QFile::WriteOnly ) ) {
@@ -238,7 +238,9 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
     actualFile.close();
     globalFile.close();
   } else {
-    akFatal() << "What did you do to my MySQL config file??";
+    akError() << "Unable to create MySQL server configuration file.";
+    akError() << "This means that either the default configuration file (mysql-global.conf) was not readable";
+    akFatal() << "or the target file (mysql.conf) could not be written.";
   }
 
   if ( dataDir.isEmpty() )
