@@ -6,6 +6,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/akonadi
     ${CMAKE_CURRENT_SOURCE_DIR}/../
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/../
     ${Boost_INCLUDE_DIR}
     ${AKONADI_INCLUDE_DIR}
 )
@@ -37,6 +38,7 @@ add_akonadi_demo(headfetcher.cpp)
 add_akonadi_demo(agentinstancewidgettest.cpp)
 add_akonadi_demo(agenttypewidgettest.cpp)
 add_akonadi_demo(pluginloadertest.cpp)
+add_akonadi_demo(selftester.cpp)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)

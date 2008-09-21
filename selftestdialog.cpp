@@ -22,6 +22,7 @@
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
+#include <KDebug>
 #include <KIcon>
 #include <KFileDialog>
 #include <KLocale>
@@ -49,6 +50,7 @@ static QString makeLink( const QString &file )
   return QString::fromLatin1( "<a href=\"%1\">%2</a>" ).arg( file, file );
 }
 
+static const int ResultTypeRole = Qt::UserRole;
 static const int FileIncludeRole = Qt::UserRole + 1;
 static const int ListDirectoryRole = Qt::UserRole + 2;
 
@@ -80,8 +82,11 @@ QStandardItem* SelfTestDialog::report( ResultType type, const QString & summary,
 {
   QStandardItem *item = new QStandardItem( summary );
   switch ( type ) {
-    case Success:
+    case Skip:
       item->setIcon( KIcon( "dialog-ok" ) );
+      break;
+    case Success:
+      item->setIcon( KIcon( "dialog-ok-apply" ) );
       break;
     case Warning:
       item->setIcon( KIcon( "dialog-warning" ) );
@@ -92,6 +97,7 @@ QStandardItem* SelfTestDialog::report( ResultType type, const QString & summary,
   }
   item->setEditable( false );
   item->setWhatsThis( details );
+  item->setData( type, ResultTypeRole );
   mTestModel->appendRow( item );
   return item;
 }
@@ -111,6 +117,7 @@ void SelfTestDialog::runTests()
 {
   testSQLDriver();
   testMySQLServer();
+  testMySQLServerLog();
   testAkonadiCtl();
   testServerStatus();
   testResources();
@@ -124,6 +131,17 @@ QVariant SelfTestDialog::serverSetting(const QString & group, const QString & ke
   QSettings settings( serverConfigFile, QSettings::IniFormat );
   settings.beginGroup( group );
   return settings.value( key, def );
+}
+
+bool SelfTestDialog::useStandaloneMysqlServer() const
+{
+  const QString driver = serverSetting( "General", "Driver", "QMYSQL" ).toString();
+  if ( driver != QLatin1String( "QMYSQL" ) )
+    return false;
+  const bool startServer = serverSetting( driver, "StartServer", true ).toBool();
+  if ( !startServer )
+    return false;
+  return true;
 }
 
 bool SelfTestDialog::runProcess(const QString & app, const QStringList & args, QString & result) const
@@ -154,12 +172,13 @@ void SelfTestDialog::testSQLDriver()
 
 void SelfTestDialog::testMySQLServer()
 {
+  if ( !useStandaloneMysqlServer() ) {
+    report( Skip, i18n( "MySQL server executable not tested." ),
+            i18n( "The current configuration does not require an internal MySQL server." ) );
+    return;
+  }
+
   const QString driver = serverSetting( "General", "Driver", "QMYSQL" ).toString();
-  if ( driver != QLatin1String( "QMYSQL" ) )
-    return;
-  const bool startServer = serverSetting( driver, "StartServer", true ).toBool();
-  if ( !startServer )
-    return;
   const QString serverPath = serverSetting( driver,  "ServerPath", "" ).toString(); // ### default?
 
   const QString details = i18n( "You currently have configured Akonadi to use the MySQL server '%1'.\n"
@@ -188,6 +207,55 @@ void SelfTestDialog::testMySQLServer()
     const QString details = i18n( "Executing the MySQL server '%1' failed with the following error message: '%2'", serverPath, result );
     report( Error, i18n( "Executing the MySQL server failed." ), details );
   }
+}
+
+void SelfTestDialog::testMySQLServerLog()
+{
+  if ( !useStandaloneMysqlServer() ) {
+    report( Skip, i18n( "MySQL server error log not tested." ),
+            i18n( "The current configuration does not require an internal MySQL server." ) );
+    return;
+  }
+
+  const QString logFileName = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) )
+      + QDir::separator() + QString::fromLatin1( "mysql.err" );
+  const QFileInfo logFileInfo( logFileName );
+  if ( !logFileInfo.exists() || logFileInfo.size() == 0 ) {
+    report( Success, i18n( "No current MySQL error log found." ),
+      i18n( "The MySQL server did not report any errors during this startup into '%1'.", logFileName ) );
+    return;
+  }
+  QFile logFile( logFileName );
+  if ( !logFile.open( QFile::ReadOnly | QFile::Text  ) ) {
+    report( Error, i18n( "MySQL error log not readable." ),
+      i18n( "A MySQL server error log file was found but is not readable: %1", makeLink( logFileName ) ) );
+    return;
+  }
+  bool warningsFound = false;
+  QStandardItem *item = 0;
+  while ( !logFile.atEnd() ) {
+    const QString line = QString::fromUtf8( logFile.readLine() );
+    if ( line.contains( QLatin1String( "error" ), Qt::CaseInsensitive ) ) {
+      item = report( Error, i18n( "MySQL server log contains errors." ),
+        i18n( "The MySQL server error log file '%1' contains errors.", makeLink( logFileName ) ) );
+      item->setData( logFileName, FileIncludeRole );
+      return;
+    }
+    if ( !warningsFound && line.contains( QLatin1String( "warn" ), Qt::CaseInsensitive ) ) {
+      warningsFound = true;
+    }
+  }
+  if ( warningsFound ) {
+    item = report( Warning, i18n( "MySQL server log contains warnings." ),
+                   i18n( "The MySQL server log file '%1' contains warnings.", makeLink( logFileName ) ) );
+  } else {
+    item = report( Success, i18n( "MySQL server log contains no errors." ),
+                   i18n( "The MySQL server log file '%1' does not contain any errors or warnings.",
+                         makeLink( logFileName ) ) );
+  }
+  item->setData( logFileName, FileIncludeRole );
+
+  logFile.close();
 }
 
 void SelfTestDialog::testAkonadiCtl()
@@ -319,10 +387,21 @@ QString SelfTestDialog::createReport()
   s << "===============================" << endl;
 
   for ( int i = 0; i < mTestModel->rowCount(); ++i ) {
-    s << endl;
-    s << "Test " << i << endl;
-    s << "-------" << endl;
     QStandardItem *item = mTestModel->item( i );
+    s << endl;
+    s << "Test " << (i + 1) << ":  ";
+    switch ( item->data( ResultTypeRole ).toInt() ) {
+      case Skip:
+        s << "SKIP"; break;
+      case Success:
+        s << "SUCCESS"; break;
+      case Warning:
+        s << "WARNING"; break;
+      case Error:
+      default:
+        s << "ERROR"; break;
+    }
+    s << endl << "--------" << endl;
     s << endl;
     s << item->text() << endl;
     s << "Details: " << item->whatsThis() << endl;

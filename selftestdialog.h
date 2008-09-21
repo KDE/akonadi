@@ -20,6 +20,7 @@
 #ifndef AKONADI_SELFTESTDIALOG_H
 #define AKONADI_SELFTESTDIALOG_H
 
+#include "akonadiprivate_export.h"
 #include "ui_selftestdialog.h"
 
 #include <KDialog>
@@ -32,7 +33,7 @@ namespace Akonadi {
 /**
  * @internal
  */
-class SelfTestDialog : public KDialog
+class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
 {
   Q_OBJECT
   public:
@@ -40,6 +41,7 @@ class SelfTestDialog : public KDialog
 
   private:
     enum ResultType {
+      Skip,
       Success,
       Warning,
       Error
@@ -47,10 +49,12 @@ class SelfTestDialog : public KDialog
     QStandardItem* report( ResultType type, const QString &summary, const QString &details );
     void runTests();
     QVariant serverSetting( const QString &group, const QString &key, const QVariant &def ) const;
+    bool useStandaloneMysqlServer() const;
     bool runProcess( const QString &app, const QStringList &args, QString &result ) const;
 
     void testSQLDriver();
     void testMySQLServer();
+    void testMySQLServerLog();
     void testAkonadiCtl();
     void testServerStatus();
     void testResources();
