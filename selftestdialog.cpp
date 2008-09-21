@@ -371,7 +371,7 @@ void SelfTestDialog::testResources()
     // TODO: add details on XDG_WHATEVER env var needed to find agents
     item = report( Error, i18n( "No resource agents found." ),
       i18n( "No resource agents have been found, Akonadi is not usable without at least one. "
-            "This usually means that no resource agents are installed or that there is a setup problem."
+            "This usually means that no resource agents are installed or that there is a setup problem. "
             "The following paths have been searched: %1", pathList.join( QLatin1String(" ") ) ) );
   }
   item->setData( pathList, ListDirectoryRole );
