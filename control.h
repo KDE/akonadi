@@ -98,7 +98,7 @@ class AKONADI_EXPORT Control : public QObject
 
     /**
      * Restarts the Akonadi server synchronously.
-     * @return @c true if the the restart was successful, @c false otherwise,
+     * @return @c true if the restart was successful, @c false otherwise,
      * the server state is undefined in this case.
      * @since 4.2
      */
