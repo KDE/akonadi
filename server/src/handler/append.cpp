@@ -30,6 +30,7 @@
 #include "storage/transaction.h"
 
 #include <QtCore/QDebug>
+#include <QLocale>
 
 using namespace Akonadi;
 
@@ -150,8 +151,7 @@ bool Akonadi::Append::commit()
         return failureResponse( "Unable to commit transaction." );
 
     // Date time is always stored in UTC time zone by the server.
-    QString datetime = item.datetime().toString( QLatin1String( "dd-MMM-yyyy hh:mm:ss" ) );
-    datetime.append( QLatin1String( " +0000" ) );
+    QString datetime = QLocale::c().toString( item.datetime(), QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
 
     QByteArray res( "[UIDNEXT " + QByteArray::number( item.id() ) + " " );
     res.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );

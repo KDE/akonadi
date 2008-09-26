@@ -33,6 +33,7 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
+#include <QLocale>
 
 #include <exception>
 
@@ -187,8 +188,7 @@ bool Fetch::handleLine( const QByteArray& line )
       const QDateTime pimItemDatetime = mItemQuery.query().value( itemQueryDatetimeColumn ).toDateTime();
 
       // Date time is always stored in UTC time zone by the server.
-      QString datetime = pimItemDatetime.toString( QLatin1String( "dd-MMM-yyyy hh:mm:ss" ) );
-      datetime.append( QLatin1String( " +0000" ) );
+      QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
 
       QList<QByteArray> attributes;
       attributes.append( "UID " + QByteArray::number( pimItemId ) );

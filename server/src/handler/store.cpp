@@ -20,6 +20,7 @@
 #include "store.h"
 
 #include <QtCore/QStringList>
+#include <QLocale>
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
@@ -213,8 +214,7 @@ bool Store::handleLine( const QByteArray& line )
   if ( !transaction.commit() )
     return failureResponse( "Cannot commit transaction." );
 
-  QString datetime = modificationtime.toString( QLatin1String( "dd-MMM-yyyy hh:mm:ss" ) );
-  datetime.append( QLatin1String( " +0000" ) );
+  QString datetime = QLocale::c().toString( modificationtime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
 
   response.setTag( tag() );
   response.setSuccess();
