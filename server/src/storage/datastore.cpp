@@ -22,6 +22,7 @@
 
 #include "agentmanagerinterface.h"
 #include "resourceinterface.h"
+#include "dbconfig.h"
 #include "dbinitializer.h"
 #include "dbupdater.h"
 #include "notificationmanager.h"
@@ -53,13 +54,6 @@ QList<int> DataStore::mPendingItemDeliveries;
 QMutex DataStore::mPendingItemDeliveriesMutex;
 QWaitCondition DataStore::mPendingItemDeliveriesCondition;
 
-QString DataStore::mDbDriverName;
-QString DataStore::mDbName;
-QString DataStore::mDbHostName;
-QString DataStore::mDbUserName;
-QString DataStore::mDbPassword;
-QString DataStore::mDbConnectionOptions;
-
 /***************************************************************************
  *   DataStore                                                           *
  ***************************************************************************/
@@ -69,53 +63,6 @@ DataStore::DataStore() :
   m_transactionLevel( 0 ),
   mNotificationCollector( new NotificationCollector( this ) )
 {
-  // load database settings if needed
-  if ( mDbDriverName.isEmpty() ) {
-    const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
-
-    QSettings settings( serverConfigFile, QSettings::IniFormat );
-    QString defaultDriver = QLatin1String("QMYSQL");
-
-    mDbDriverName = settings.value( QLatin1String("General/Driver"), defaultDriver ).toString();
-
-    // ensure we have a database driver
-    if ( mDbDriverName.isEmpty() )
-      mDbDriverName = defaultDriver;
-
-    // useful defaults depending on the driver
-    QString defaultDbName;
-    QString defaultOptions;
-    if ( mDbDriverName == QLatin1String("QMYSQL_EMBEDDED") ) {
-      defaultDbName = QLatin1String( "akonadi" );
-      defaultOptions = QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( storagePath() );
-    } else if ( mDbDriverName == QLatin1String( "QMYSQL" ) ) {
-      defaultDbName = QLatin1String( "akonadi" );
-      const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
-      defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir );
-    } else if ( mDbDriverName == QLatin1String( "QSQLITE" ) ) {
-      defaultDbName = storagePath();
-    }
-
-    // read settings for current driver
-    settings.beginGroup( mDbDriverName );
-    mDbName = settings.value( QLatin1String( "Name" ), defaultDbName ).toString();
-    mDbHostName = settings.value( QLatin1String( "Host" ) ).toString();
-    mDbUserName = settings.value( QLatin1String( "User" ) ).toString();
-    mDbPassword = settings.value( QLatin1String( "Password" ) ).toString();
-    mDbConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
-    settings.endGroup();
-
-    // store back the default values
-    settings.setValue( QLatin1String( "General/Driver" ), mDbDriverName );
-    settings.beginGroup( mDbDriverName );
-    settings.setValue( QLatin1String( "Name" ), mDbName );
-    settings.setValue( QLatin1String( "User" ), mDbUserName );
-    settings.setValue( QLatin1String( "Password" ), mDbPassword );
-    settings.setValue( QLatin1String( "Options" ), mDbConnectionOptions );
-    settings.endGroup();
-    settings.sync();
-  }
-
   open();
 
   m_transactionLevel = 0;
@@ -132,16 +79,8 @@ void DataStore::open()
   m_connectionName = QUuid::createUuid().toString() + QString::number( reinterpret_cast<qulonglong>( QThread::currentThread() ) );
   Q_ASSERT( !QSqlDatabase::contains( m_connectionName ) );
 
-  m_database = QSqlDatabase::addDatabase( driverName(), m_connectionName );
-  if ( !mDbName.isEmpty() )
-    m_database.setDatabaseName( mDbName );
-  if ( !mDbHostName.isEmpty() )
-    m_database.setHostName( mDbHostName );
-  if ( !mDbUserName.isEmpty() )
-    m_database.setUserName( mDbUserName );
-  if ( !mDbPassword.isEmpty() )
-    m_database.setPassword( mDbPassword );
-  m_database.setConnectOptions( mDbConnectionOptions );
+  m_database = QSqlDatabase::addDatabase( DbConfig::driverName(), m_connectionName );
+  DbConfig::configure( m_database );
 
   if ( !m_database.isValid() ) {
     m_dbOpened = false;
@@ -153,9 +92,6 @@ void DataStore::open()
     debugLastDbError( "Cannot open database." );
   else
     qDebug() << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
-
-  Q_ASSERT( m_database.driver()->hasFeature( QSqlDriver::LastInsertId ) );
-  //Q_ASSERT( m_database.driver()->hasFeature( QSqlDriver::Transactions ) );
 }
 
 void Akonadi::DataStore::close()
@@ -205,57 +141,6 @@ DataStore * Akonadi::DataStore::self()
   if ( !instances.hasLocalData() )
     instances.setLocalData( new DataStore() );
   return instances.localData();
-}
-
-
-
-QString DataStore::storagePath() const
-{
-  /**
-   * We need the following path for the database directory:
-   *   $XDG_DATA_HOME/akonadi/db/akonadi/
-   */
-  QString akonadiHomeDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
-  if ( akonadiHomeDir.isEmpty() ) {
-    Tracer::self()->error( "DataStore::storagePath",
-                           QString::fromLatin1( "Unable to create directory '%1/akonadi'" ).arg( XdgBaseDirs::homePath( "data" ) ) );
-  }
-
-  akonadiHomeDir += QLatin1Char( '/' );
-
-  if ( driverName() == QLatin1String( "QSQLITE" ) ) {
-    const QString akonadiPath = akonadiHomeDir + QLatin1String("akonadi.db");
-    if ( !QFile::exists( akonadiPath ) ) {
-      QFile file( akonadiPath );
-      if ( !file.open( QIODevice::WriteOnly ) ) {
-        Tracer::self()->error( "DataStore::storagePath", QString::fromLatin1( "Unable to create file '%1'" ).arg( akonadiPath ) );
-      } else {
-        file.close();
-      }
-    }
-    return akonadiPath;
-  }
-  if ( driverName() == QLatin1String( "QMYSQL_EMBEDDED" ) ) {
-    const QString dbDataDir = akonadiHomeDir + QLatin1String( "db" ) + QDir::separator();
-    if ( !QDir( dbDataDir ).exists() ) {
-      QDir dir;
-      if ( !dir.mkdir( dbDataDir ) )
-        Tracer::self()->error( "DataStore::storagePath",
-                              QString::fromLatin1( "Unable to create directory '%1'" ).arg( dbDataDir ) );
-    }
-
-    const QString dbDir = dbDataDir + QLatin1String("akonadi");
-
-    if ( !QDir( dbDir ).exists() ) {
-      QDir dir;
-      if ( !dir.mkdir( dbDir ) )
-        Tracer::self()->error( "DataStore::storagePath",
-                              QString::fromLatin1( "Unable to create directory '%1'" ).arg( dbDir ) );
-    }
-    return dbDataDir;
-  }
-
-  return QString();
 }
 
 

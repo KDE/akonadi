@@ -26,6 +26,7 @@
 
 #include "cachecleaner.h"
 #include "intervalcheck.h"
+#include "storage/dbconfig.h"
 #include "storage/datastore.h"
 #include "notificationmanager.h"
 #include "resourcemanager.h"
@@ -57,16 +58,15 @@ AkonadiServer::AkonadiServer( QObject* parent )
     , mDatabaseProcess( 0 )
     , mAlreadyShutdown( false )
 {
-    QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
-    if ( settings.value( QLatin1String("General/Driver"), QLatin1String( "QMYSQL" ) ).toString() == QLatin1String( "QMYSQL" )
-         && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
-      startDatabaseProcess( settings.value( QLatin1String("QMYSQL/ServerPath"), QString() ).toString() );
+    DbConfig::init();
+    startDatabaseProcess();
 
     s_instance = this;
 
-    const QString connectionSettingsFile = XdgBaseDirs::akonadiConnectionConfigFile(
-    XdgBaseDirs::WriteOnly );
+    const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+    QSettings settings( serverConfigFile, QSettings::IniFormat );
 
+    const QString connectionSettingsFile = XdgBaseDirs::akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
 
 #ifdef Q_OS_WIN
@@ -161,8 +161,7 @@ void AkonadiServer::quit()
     // and the following db termination will work
     QCoreApplication::instance()->processEvents();
 
-    if ( mDatabaseProcess )
-      stopDatabaseProcess();
+    stopDatabaseProcess();
 
     QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
     const QString connectionSettingsFile = XdgBaseDirs::akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
@@ -202,14 +201,12 @@ AkonadiServer * AkonadiServer::instance()
     return s_instance;
 }
 
-void AkonadiServer::startDatabaseProcess( const QString &serverPath )
+void AkonadiServer::startDatabaseProcess()
 {
-  QString mysqldPath = serverPath;
-#ifdef MYSQLD_EXECUTABLE
-  if ( mysqldPath.isEmpty() )
-    mysqldPath = QLatin1String( MYSQLD_EXECUTABLE );
-#endif
+  if ( !DbConfig::useInternalServer() )
+    return;
 
+  const QString mysqldPath = DbConfig::serverPath();
   if ( mysqldPath.isEmpty() )
     akFatal() << "No path to mysqld set in server configuration!";
 
@@ -284,7 +281,7 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
 
   {
     QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
-    db.setConnectOptions( QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir ) );
+    DbConfig::configure( db );
 
     bool opened = false;
     for ( int i = 0; i < 120; ++i ) {
@@ -316,6 +313,8 @@ void AkonadiServer::startDatabaseProcess( const QString &serverPath )
 
 void AkonadiServer::stopDatabaseProcess()
 {
+  if ( !mDatabaseProcess )
+    return;
   mDatabaseProcess->terminate();
   mDatabaseProcess->waitForFinished();
 }

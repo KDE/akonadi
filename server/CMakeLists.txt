@@ -90,6 +90,7 @@ set(libakonadiprivate_SRCS
   src/storage/entity.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   src/storage/datastore.cpp
+  src/storage/dbconfig.cpp
   src/storage/dbinitializer.cpp
   src/storage/dbupdater.cpp src/storage/notificationcollector.cpp
   src/storage/query.cpp
@@ -149,7 +150,7 @@ set_target_properties( akonadiprivate PROPERTIES
                       )
 install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
 
-set( akonadiserver_bin_SRCS src/main.cpp 
+set( akonadiserver_bin_SRCS src/main.cpp
   ${AKONADI_SHARED_SOURCES} )
 
 

@@ -60,7 +60,7 @@ class AKONADIPRIVATE_EXPORT AkonadiServer: public QLocalServer
     void incomingConnection( quintptr socketDescriptor );
 
   private:
-    void startDatabaseProcess( const QString &serverPath );
+    void startDatabaseProcess();
     void stopDatabaseProcess();
 
     CacheCleaner *mCacheCleaner;

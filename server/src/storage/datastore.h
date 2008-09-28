@@ -195,8 +195,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
      */
     qint64 uidNext() const;
 
-    QString storagePath() const;
-
     /**
       Begins a transaction. No changes will be written to the database and
       no notification signal will be emitted unless you call commitTransaction().
@@ -236,11 +234,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
       Sets the current session id.
     */
     void setSessionId( const QByteArray &sessionId ) { mSessionId = sessionId; }
-
-    /**
-      Returns the name of the used database driver.
-    */
-    static QString driverName() { return mDbDriverName; }
 
 Q_SIGNALS:
     /**
@@ -304,14 +297,6 @@ private:
     static QList<int> mPendingItemDeliveries;
     static QMutex mPendingItemDeliveriesMutex;
     static QWaitCondition mPendingItemDeliveriesCondition;
-
-    // database configuration
-    static QString mDbDriverName;
-    static QString mDbName;
-    static QString mDbHostName;
-    static QString mDbUserName;
-    static QString mDbPassword;
-    static QString mDbConnectionOptions;
 
     // resource dbus interface cache
     QHash<QString, org::freedesktop::Akonadi::Resource*> mResourceInterfaceCache;
