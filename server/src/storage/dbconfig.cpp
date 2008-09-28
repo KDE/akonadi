@@ -91,6 +91,8 @@ class DbConfigStatic
       if ( mDriverName == QLatin1String( "QMYSQL" ) ) {
         if ( mInternalServer && mConnectionOptions.isEmpty() )
           mConnectionOptions = defaultOptions;
+        if ( mInternalServer && mServerPath.isEmpty() )
+          mServerPath = defaultServerPath;
       }
 
       // store back the default values
@@ -102,6 +104,7 @@ class DbConfigStatic
       settings.setValue( QLatin1String( "Options" ), mConnectionOptions );
       if ( !mServerPath.isEmpty() )
         settings.setValue( QLatin1String( "ServerPath" ), mServerPath );
+      settings.setValue( QLatin1String( "StartServer" ), mInternalServer );
       settings.endGroup();
       settings.sync();
 
