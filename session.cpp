@@ -23,6 +23,7 @@
 #include "imapparser_p.h"
 #include "job.h"
 #include "job_p.h"
+#include "servermanager_p.h"
 #include "xdgbasedirs_p.h"
 
 #include <kdebug.h>
@@ -41,8 +42,6 @@ using namespace Akonadi;
 
 
 //@cond PRIVATE
-
-static const int minimumProtocolVersion = 4;
 
 void SessionPrivate::startNext()
 {
@@ -102,6 +101,7 @@ void SessionPrivate::dataReceived()
           qint64 tmp = 0;
           ImapParser::parseNumber( parser->data(), tmp, 0, pos + 9 );
           protocolVersion = tmp;
+          Internal::setServerProtocolVersion( tmp );
         }
         kDebug( 5250 ) << "Server protocol version is:" << protocolVersion;
 
@@ -154,9 +154,9 @@ void SessionPrivate::doStartNext()
 
 void SessionPrivate::startJob( Job *job )
 {
-  if ( protocolVersion < minimumProtocolVersion ) {
+  if ( protocolVersion < minimumProtocolVersion() ) {
     job->setError( Job::ProtocolVersionMismatch );
-    job->setErrorText( i18n( "Protocol version %1 found, expected at least %2", protocolVersion, minimumProtocolVersion ) );
+    job->setErrorText( i18n( "Protocol version %1 found, expected at least %2", protocolVersion, minimumProtocolVersion() ) );
     job->emitResult();
   } else {
     job->d_ptr->startQueued();

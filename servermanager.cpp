@@ -18,9 +18,11 @@
 */
 
 #include "servermanager.h"
+#include "servermanager_p.h"
 
 #include "agenttype.h"
 #include "agentmanager.h"
+#include "session_p.h"
 
 #include <KDebug>
 #include <KGlobal>
@@ -35,7 +37,9 @@ using namespace Akonadi;
 class Akonadi::ServerManagerPrivate
 {
   public:
-    ServerManagerPrivate() : instance( new ServerManager( this ) )
+    ServerManagerPrivate() :
+      instance( new ServerManager( this ) ),
+      serverProtocolVersion( -1 )
     {
       operational = instance->isRunning();
     }
@@ -51,6 +55,7 @@ class Akonadi::ServerManagerPrivate
       Q_UNUSED( newOwner );
       if ( service != AKONADI_SERVER_SERVICE && service != AKONADI_CONTROL_SERVICE )
         return;
+      serverProtocolVersion = -1,
       checkStatusChanged();
     }
 
@@ -67,6 +72,7 @@ class Akonadi::ServerManagerPrivate
     }
 
     ServerManager *instance;
+    int serverProtocolVersion;
     bool operational;
 };
 
@@ -125,6 +131,12 @@ bool ServerManager::isRunning()
     return false;
   }
 
+  // check if the server protocol is recent enough
+  if ( sInstance.exists() ) {
+    if ( sInstance->serverProtocolVersion >= 0 && sInstance->serverProtocolVersion < SessionPrivate::minimumProtocolVersion() )
+      return false;
+  }
+
   // besides the running server processes we also need at least one resource to be operational
   AgentType::List agentTypes = AgentManager::self()->types();
   foreach ( const AgentType &type, agentTypes ) {
@@ -134,5 +146,15 @@ bool ServerManager::isRunning()
   return false;
 }
 
+int Internal::serverProtocolVersion()
+{
+  return sInstance->serverProtocolVersion;
+}
+
+void Internal::setServerProtocolVersion( int version )
+{
+  sInstance->serverProtocolVersion = version;
+  sInstance->checkStatusChanged();
+}
 
 #include "servermanager.moc"

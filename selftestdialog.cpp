@@ -19,6 +19,8 @@
 
 #include "selftestdialog.h"
 #include "agentmanager.h"
+#include "session_p.h"
+#include "servermanager_p.h"
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
@@ -121,6 +123,7 @@ void SelfTestDialog::runTests()
   testMySQLServerConfig();
   testAkonadiCtl();
   testServerStatus();
+  testProtocolVersion();
   testResources();
   testServerLog();
   testControlLog();
@@ -349,6 +352,25 @@ void SelfTestDialog::testServerStatus()
     report( Error, i18n( "Akonadi server process not registered at D-Bus." ),
                  i18n( "The Akonadi server process is not registered at D-Bus which typically means it was not started "
                        "or encountered a fatal error during startup."  ) );
+  }
+}
+
+void SelfTestDialog::testProtocolVersion()
+{
+  if ( Internal::serverProtocolVersion() < 0 ) {
+    report( Skip, i18n( "Protocol version check not possible." ),
+            i18n( "Without a connection to the server it is not possible to check if the protocol version meets the requirements." ) );
+    return;
+  }
+  if ( Internal::serverProtocolVersion() < SessionPrivate::minimumProtocolVersion() ) {
+    report( Error, i18n( "Server protocol version is too old." ),
+            i18n( "The server protocol version is %1, but at least version %2 is required. "
+                  "Install a newer version of the Akonadi server.",
+                  Internal::serverProtocolVersion(), SessionPrivate::minimumProtocolVersion() ) );
+  } else {
+    report( Success, i18n( "Server protocol version is recent enough." ),
+            i18n( "The server Protocol version is %1, which equal or newer than the required version %2.",
+                  Internal::serverProtocolVersion(), SessionPrivate::minimumProtocolVersion() ) );
   }
 }
 

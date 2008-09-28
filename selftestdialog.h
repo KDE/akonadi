@@ -58,6 +58,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
     void testMySQLServerConfig();
     void testAkonadiCtl();
     void testServerStatus();
+    void testProtocolVersion();
     void testResources();
     void testServerLog();
     void testControlLog();
