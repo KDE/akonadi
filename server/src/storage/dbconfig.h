@@ -53,6 +53,11 @@ namespace DbConfig {
    */
   QString serverPath();
 
+  /**
+   * Returns the database name.
+   */
+  QString databaseName();
+
 }
 
 #endif

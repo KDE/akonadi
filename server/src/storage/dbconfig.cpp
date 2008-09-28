@@ -220,3 +220,8 @@ QString DbConfig::serverPath()
   return sInstance()->mServerPath;
 }
 
+QString DbConfig::databaseName()
+{
+  return sInstance()->mName;
+}
+

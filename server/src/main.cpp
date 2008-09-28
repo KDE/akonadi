@@ -52,9 +52,9 @@ int main( int argc, char ** argv )
       return 1;
     }
 
-    app.exec();
+    const int result = app.exec();
 
     Akonadi::AkonadiServer::instance()->quit();
 
-    return 0;
+    return result;
 }

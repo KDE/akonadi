@@ -279,9 +279,13 @@ void AkonadiServer::startDatabaseProcess()
     akFatal() << "process error:" << mDatabaseProcess->errorString();
   }
 
+  const QLatin1String initCon( "initConnection" );
   {
-    QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
+    QSqlDatabase db = QSqlDatabase::addDatabase( DbConfig::driverName(), initCon );
     DbConfig::configure( db );
+    db.setDatabaseName( QString() ); // might not exist yet, then connecting to the actual db will fail
+    if ( !db.isValid() )
+      akFatal() << "Invalid database object during database server startup";
 
     bool opened = false;
     for ( int i = 0; i < 120; ++i ) {
@@ -301,14 +305,22 @@ void AkonadiServer::startDatabaseProcess()
 
     if ( opened ) {
       QSqlQuery query( db );
-      if ( !query.exec( QLatin1String( "USE DATABASE akonadi" ) ) )
-        query.exec( QLatin1String( "CREATE DATABASE akonadi" ) );
-
+      if ( !query.exec( QString::fromLatin1( "USE %1" ).arg( DbConfig::databaseName() ) ) ) {
+        akDebug() << "Failed to use database" << DbConfig::databaseName();
+        akDebug() << "Query error:" << query.lastError().text();
+        akDebug() << "Database error:" << db.lastError().text();
+        akDebug() << "Trying to create database now...";
+        if ( !query.exec( QLatin1String( "CREATE DATABASE akonadi" ) ) ) {
+          akError() << "Failed to create database";
+          akError() << "Query error:" << query.lastError().text();
+          akFatal() << "Database error:" << db.lastError().text();
+        }
+      }
       db.close();
     }
   }
 
-  QSqlDatabase::removeDatabase( QLatin1String( "initConnection" ) );
+  QSqlDatabase::removeDatabase( initCon );
 }
 
 void AkonadiServer::stopDatabaseProcess()
