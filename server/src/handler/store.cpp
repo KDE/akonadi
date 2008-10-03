@@ -73,18 +73,17 @@ bool Store::handleLine( const QByteArray& line )
     return failureResponse( "No items found" );
 
   // parse revision
-  qint64 rev;
-  bool revCheck = true;
+  qint64 rev = 0;
+  bool revCheck = false;
   bool ok;
   pos = ImapParser::parseString( line, buffer, pos ); // skip 'REV'
   if ( buffer == "REV" ) {
+    revCheck = true;
     pos = ImapParser::parseNumber( line, rev, &ok, pos );
     if ( !ok ) {
       return failureResponse( "Unable to parse item revision number." );
     }
   }
-  else if ( buffer == "NOREV" )
-    revCheck   = false;
 
   // Set the same modification time for each item.
   QDateTime modificationtime = QDateTime::currentDateTime().toUTC();
