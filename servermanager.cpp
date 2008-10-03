@@ -84,8 +84,9 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
   connect( QDBusConnection::sessionBus().interface(),
            SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(serviceOwnerChanged(QString,QString,QString)) );
-  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
-  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
+// ### disabled until D-Bus deadlocks caused by AgentManager usage in agents itself is fixed
+//  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
+//  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
 }
 
 ServerManager * Akonadi::ServerManager::instance()
@@ -138,12 +139,13 @@ bool ServerManager::isRunning()
   }
 
   // besides the running server processes we also need at least one resource to be operational
-  AgentType::List agentTypes = AgentManager::self()->types();
+// ### disabled until D-Bus deadlocks caused by AgentManager usage in agents itself is fixed
+/*  AgentType::List agentTypes = AgentManager::self()->types();
   foreach ( const AgentType &type, agentTypes ) {
     if ( type.capabilities().contains( "Resource" ) )
       return true;
   }
-  return false;
+  return false;*/ return true;
 }
 
 int Internal::serverProtocolVersion()
