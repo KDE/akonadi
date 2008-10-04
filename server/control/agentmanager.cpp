@@ -24,6 +24,7 @@
 #include "processcontrol.h"
 #include "serverinterface.h"
 #include "../../libs/xdgbasedirs_p.h"
+#include "akdebug.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -109,6 +110,8 @@ void AgentManager::cleanup()
 
 QStringList AgentManager::agentTypes() const
 {
+  if ( !checkDBusDeadlock() )
+    return QStringList();
   return mAgents.keys();
 }
 
@@ -220,6 +223,8 @@ QString AgentManager::agentInstanceType( const QString &identifier )
 
 QStringList AgentManager::agentInstances() const
 {
+  if ( !checkDBusDeadlock() )
+    return QStringList();
   return mAgentInstances.keys();
 }
 
@@ -283,7 +288,7 @@ QString AgentManager::agentInstanceName( const QString &identifier ) const
   if ( !checkInstance( identifier ) )
     return QString();
   const AgentInstanceInfo inst = mAgentInstances.value( identifier );
-  if ( inst.isResource() )
+  if ( inst.isResource() && checkResourceInterface( identifier, QLatin1String( "agentInstanceName" ) ) )
     return inst.resourceInterface->name();
   if ( !checkAgentExists( inst.agentType ) )
     return QString();
@@ -452,6 +457,8 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
     if ( !mAgentInstances.contains( identifier ) )
       return;
 
+    mAgentServiceOwners.insert( QDBusConnection::sender().interface()->serviceOwner( name ) );
+
     const bool restarting = mAgentInstances[ identifier ].agentControlInterface != 0;
     delete mAgentInstances[ identifier ].agentControlInterface;
     delete mAgentInstances[ identifier ].agentStatusInterface;
@@ -506,6 +513,8 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
     if ( !mAgentInstances.contains( identifier ) )
       return;
 
+    mAgentServiceOwners.insert( QDBusConnection::sender().interface()->serviceOwner( name ) );
+
     delete mAgentInstances[ identifier ].resourceInterface;
     mAgentInstances[ identifier ].resourceInterface = 0;
 
@@ -524,6 +533,10 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
     connect( resInterface, SIGNAL( nameChanged( const QString& ) ),
             this, SLOT( resourceNameChanged( const QString& ) ) );
     mAgentInstances[ identifier ].resourceInterface = resInterface;
+  }
+
+  else if ( newOwner.isEmpty() ) {
+    mAgentServiceOwners.remove( name );
   }
 }
 
@@ -622,13 +635,28 @@ void AgentManager::resourceNameChanged( const QString &data )
   emit agentInstanceNameChanged( identifier, data );
 }
 
+bool AgentManager::checkDBusDeadlock() const
+{
+  // if we are called from a resource itself we will end up in a deadlock sooner or later
+  // this needs to be prevented on the client side already, but we can at least warn about it here
+  if ( calledFromDBus() ) {
+    const QString callingService = message().service();
+    if ( mAgentServiceOwners.contains( callingService ) ) {
+      akError() << "Call to AgentManager from an agent detected, this will deadlock!";
+      return false;
+    }
+  }
+  return true;
+}
+
 bool AgentManager::checkInstance(const QString & identifier) const
 {
   if ( !mAgentInstances.contains( identifier ) ) {
     qWarning() << "Agent instance with identifier " << identifier << " does not exist";
     return false;
   }
-  return true;
+
+  return checkDBusDeadlock();
 }
 
 bool AgentManager::checkResourceInterface( const QString &identifier, const QString &method ) const
@@ -652,7 +680,7 @@ bool AgentManager::checkAgentExists(const QString & identifier) const
     qWarning() << "Agent instance " << identifier << " does not exist.";
     return false;
   }
-  return true;
+  return checkDBusDeadlock();
 }
 
 bool AgentManager::checkAgentInterfaces(const QString & identifier, const QString &method) const

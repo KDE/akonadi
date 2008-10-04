@@ -24,6 +24,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
+#include <QDBusContext>
 
 #include "agentinfo.h"
 #include "tracerinterface.h"
@@ -39,7 +40,7 @@ namespace Akonadi {
  * for .desktop files in the agent directory) and the available configured
  * instances.
  */
-class AgentManager : public QObject
+class AgentManager : public QObject, protected QDBusContext
 {
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.AgentManager" )
@@ -313,6 +314,7 @@ class AgentManager : public QObject
      */
     void readPluginInfos( const QDir &directory );
 
+    bool checkDBusDeadlock() const;
     bool checkAgentInterfaces( const QString &identifier, const QString &method ) const;
     bool checkInstance( const QString &identifier ) const;
     bool checkResourceInterface( const QString &identifier, const QString &method ) const;
@@ -335,6 +337,8 @@ class AgentManager : public QObject
      * Key is the instance identifier.
      */
     QHash<QString, AgentInstanceInfo> mAgentInstances;
+
+    QSet<QString> mAgentServiceOwners;
 
     org::freedesktop::Akonadi::Tracer *mTracer;
 
