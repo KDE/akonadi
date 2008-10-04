@@ -44,6 +44,7 @@ class ErrorOverlay : public QWidget
      * @p parent must not be equal to @p baseWidget
      */
     explicit ErrorOverlay( QWidget *baseWidget, QWidget *parent = 0 );
+    ~ErrorOverlay();
 
   protected:
     bool eventFilter( QObject *object, QEvent *event );
