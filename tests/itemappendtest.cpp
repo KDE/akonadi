@@ -74,6 +74,7 @@ void ItemAppendTest::testItemAppend()
   Item item( -1 );
   item.setRemoteId( remoteId );
   item.setMimeType( "application/octet-stream" );
+  item.setFlag( "TestFlag" );
   ItemCreateJob *job = new ItemCreateJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
   ref = job->item();
@@ -83,6 +84,7 @@ void ItemAppendTest::testItemAppend()
   QCOMPARE( fjob->items().count(), 1 );
   QCOMPARE( fjob->items()[0], ref );
   QCOMPARE( fjob->items()[0].remoteId(), remoteId );
+  QVERIFY( fjob->items()[0].flags().contains( "TestFlag" ) );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );
@@ -157,6 +159,7 @@ void ItemAppendTest::testMultipartAppend()
   item.setMimeType( "application/octet-stream" );
   item.setPayload<QByteArray>( "body data" );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
+  item.setFlag( "TestFlag" );
   ItemCreateJob *job = new ItemCreateJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
   Item ref = job->item();
@@ -170,6 +173,7 @@ void ItemAppendTest::testMultipartAppend()
   QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
   QVERIFY( item.hasAttribute<TestAttribute>() );
   QCOMPARE( item.attribute<TestAttribute>()->data, QByteArray( "extra data" ) );
+  QVERIFY( item.flags().contains( "TestFlag" ) );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );

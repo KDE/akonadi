@@ -70,8 +70,12 @@ void ItemCreateJob::doStart()
 
   QByteArray remoteId;
 
+  QList<QByteArray> flags;
+  flags.append( "\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' );
   if ( !d->mItem.remoteId().isEmpty() )
-    remoteId = ' ' + ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' );
+    flags.append( ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' ) );
+  flags += d->mItem.flags().toList();
+
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts
   if ( d->mItem.attributes().isEmpty() && ( d->mParts.isEmpty() || (d->mParts.size() == 1 && d->mParts.contains( Item::FullPayload )) ) ) {
     if ( d->mItem.hasPayload() ) {
@@ -81,12 +85,12 @@ void ItemCreateJob::doStart()
     int dataSize = d->mData.size();
 
     d->writeData( d->newTag() + " APPEND " + QByteArray::number( d->mCollection.id() )
-        + " (\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' + remoteId + ") {"
+        + " (" + ImapParser::join( flags, " " ) + ") {"
         + QByteArray::number( dataSize ) + "}\n" );
   }
   else { // do a multipart X-AKAPPEND
     QByteArray command = d->newTag() + " X-AKAPPEND " + QByteArray::number( d->mCollection.id() )
-        + " (\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' + remoteId + ") ";
+        + " (" + ImapParser::join( flags, " " ) + ") ";
 
     QList<QByteArray> partSpecs;
     int totalSize = 0;
