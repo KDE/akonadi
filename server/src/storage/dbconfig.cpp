@@ -65,7 +65,7 @@ class DbConfigStatic
 #ifdef MYSQLD_EXECUTABLE
         defaultServerPath = QLatin1String( MYSQLD_EXECUTABLE );
 #endif
-        mInternalServer = settings.value( QLatin1String("StartServer"), defaultInternalServer ).toBool();
+        mInternalServer = settings.value( QLatin1String("QMYSQL/StartServer"), defaultInternalServer ).toBool();
         if ( mInternalServer ) {
           const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
           defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir );
@@ -84,7 +84,7 @@ class DbConfigStatic
       mUserName = settings.value( QLatin1String( "User" ) ).toString();
       mPassword = settings.value( QLatin1String( "Password" ) ).toString();
       mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
-      mServerPath = settings.value( QLatin1String("QMYSQL/ServerPath"), defaultServerPath ).toString();
+      mServerPath = settings.value( QLatin1String("ServerPath"), defaultServerPath ).toString();
       settings.endGroup();
 
       // verify settings and apply permanent changes (written out below)
