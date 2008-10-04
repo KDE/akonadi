@@ -38,8 +38,7 @@ class Akonadi::ServerManagerPrivate
 {
   public:
     ServerManagerPrivate() :
-      instance( new ServerManager( this ) ),
-      serverProtocolVersion( -1 )
+      instance( new ServerManager( this ) )
     {
       operational = instance->isRunning();
     }
@@ -72,9 +71,11 @@ class Akonadi::ServerManagerPrivate
     }
 
     ServerManager *instance;
-    int serverProtocolVersion;
+    static int serverProtocolVersion;
     bool operational;
 };
+
+int ServerManagerPrivate::serverProtocolVersion = -1;
 
 K_GLOBAL_STATIC( ServerManagerPrivate, sInstance )
 
@@ -84,9 +85,8 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
   connect( QDBusConnection::sessionBus().interface(),
            SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(serviceOwnerChanged(QString,QString,QString)) );
-// ### disabled until D-Bus deadlocks caused by AgentManager usage in agents itself is fixed
-//  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
-//  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
+  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
+  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
 }
 
 ServerManager * Akonadi::ServerManager::instance()
@@ -134,29 +134,30 @@ bool ServerManager::isRunning()
 
   // check if the server protocol is recent enough
   if ( sInstance.exists() ) {
-    if ( sInstance->serverProtocolVersion >= 0 && sInstance->serverProtocolVersion < SessionPrivate::minimumProtocolVersion() )
+    if ( Internal::serverProtocolVersion() >= 0 &&
+         Internal::serverProtocolVersion() < SessionPrivate::minimumProtocolVersion() )
       return false;
   }
 
   // besides the running server processes we also need at least one resource to be operational
-// ### disabled until D-Bus deadlocks caused by AgentManager usage in agents itself is fixed
-/*  AgentType::List agentTypes = AgentManager::self()->types();
+  AgentType::List agentTypes = AgentManager::self()->types();
   foreach ( const AgentType &type, agentTypes ) {
     if ( type.capabilities().contains( "Resource" ) )
       return true;
   }
-  return false;*/ return true;
+  return false;
 }
 
 int Internal::serverProtocolVersion()
 {
-  return sInstance->serverProtocolVersion;
+  return ServerManagerPrivate::serverProtocolVersion;
 }
 
 void Internal::setServerProtocolVersion( int version )
 {
-  sInstance->serverProtocolVersion = version;
-  sInstance->checkStatusChanged();
+  ServerManagerPrivate::serverProtocolVersion = version;
+  if ( sInstance.exists() )
+    sInstance->checkStatusChanged();
 }
 
 #include "servermanager.moc"
