@@ -20,16 +20,15 @@
 #include "control.h"
 #include "servermanager.h"
 #include "ui_controlprogressindicator.h"
-#include "selftestdialog.h"
-#include "erroroverlay.h"
+#include "selftestdialog_p.h"
+#include "erroroverlay_p.h"
 
 #include <kdebug.h>
 #include <kglobal.h>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
-
-#include <QFrame>
+#include <QtGui/QFrame>
 
 using namespace Akonadi;
 

@@ -25,7 +25,7 @@
 #include <kdebug.h>
 #include <kmimetype.h>
 
-#include <QStringList>
+#include <QtCore/QStringList>
 
 #include <boost/static_assert.hpp>
 

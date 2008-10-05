@@ -26,7 +26,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <QTimer>
+#include <QtCore/QTimer>
 
 using namespace Akonadi;
 

@@ -31,8 +31,8 @@
 
 #include <kmimetype.h>
 
-#include <QObject>
-#include <QTimer>
+#include <QtCore/QObject>
+#include <QtCore/QTimer>
 
 namespace Akonadi {
 

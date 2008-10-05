@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <akonadi/selftestdialog.h>
+#include <akonadi/selftestdialog_p.h>
 
 #include <KComponentData>
 #include <QApplication>

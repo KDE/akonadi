@@ -22,9 +22,9 @@
 
 #include "entity.h"
 
+#include <QtCore/QSet>
 #include <QtCore/QSharedData>
 #include <QtCore/QString>
-#include <QSet>
 
 #define AKONADI_DEFINE_PRIVATE( Class ) \
 Class##Private* Class ::d_func() { return reinterpret_cast<Class##Private *>( d_ptr.data() ); } \

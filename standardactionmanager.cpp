@@ -37,10 +37,10 @@
 #include <KLocale>
 #include <KMessageBox>
 
-#include <QApplication>
-#include <QClipboard>
-#include <QItemSelectionModel>
-#include <QMimeData>
+#include <QtCore/QMimeData>
+#include <QtGui/QApplication>
+#include <QtGui/QClipboard>
+#include <QtGui/QItemSelectionModel>
 
 #include <boost/static_assert.hpp>
 

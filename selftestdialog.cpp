@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "selftestdialog.h"
+#include "selftestdialog_p.h"
 #include "agentmanager.h"
 #include "session_p.h"
 #include "servermanager_p.h"
@@ -32,15 +32,15 @@
 #include <KRun>
 #include <KStandardDirs>
 
-#include <QApplication>
-#include <QClipboard>
-#include <QtDBus>
-#include <QFileInfo>
-#include <QProcess>
-#include <QSettings>
-#include <QStandardItemModel>
-#include <QSqlDatabase>
-#include <QTextStream>
+#include <QtCore/QFileInfo>
+#include <QtCore/QProcess>
+#include <QtCore/QSettings>
+#include <QtCore/QTextStream>
+#include <QtDBus/QtDBus>
+#include <QtGui/QApplication>
+#include <QtGui/QClipboard>
+#include <QtGui/QStandardItemModel>
+#include <QtSql/QSqlDatabase>
 
 #define AKONADI_CONTROL_SERVICE QLatin1String("org.freedesktop.Akonadi.Control")
 #define AKONADI_SERVER_SERVICE QLatin1String("org.freedesktop.Akonadi")
@@ -530,4 +530,4 @@ void SelfTestDialog::linkActivated(const QString & link)
   KRun::runUrl( KUrl::fromPath( link ), "text/plain", this );
 }
 
-#include "selftestdialog.moc"
+#include "selftestdialog_p.moc"

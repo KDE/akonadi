@@ -23,11 +23,11 @@
 #include <kcolorscheme.h>
 #include <kdebug.h>
 
-#include <QPainter>
-#include <QStyle>
-#include <QStyleOption>
-#include <QStyleOptionViewItemV4>
-#include <QTreeView>
+#include <QtGui/QPainter>
+#include <QtGui/QStyle>
+#include <QtGui/QStyleOption>
+#include <QtGui/QStyleOptionViewItemV4>
+#include <QtGui/QTreeView>
 
 using namespace Akonadi;
 

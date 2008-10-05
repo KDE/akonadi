@@ -17,18 +17,18 @@
     02110-1301, USA.
 */
 
-#include "erroroverlay.h"
+#include "erroroverlay_p.h"
 #include "servermanager.h"
-#include "selftestdialog.h"
+#include "selftestdialog_p.h"
 
 #include <KDebug>
 #include <KIcon>
 #include <KLocale>
 
-#include <QBoxLayout>
-#include <QEvent>
-#include <QLabel>
-#include <QPalette>
+#include <QtCore/QEvent>
+#include <QtGui/QBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPalette>
 
 using namespace Akonadi;
 
@@ -194,4 +194,4 @@ void ErrorOverlay::stopped()
   reposition();
 }
 
-#include "erroroverlay.moc"
+#include "erroroverlay_p.moc"

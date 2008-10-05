@@ -20,8 +20,8 @@
 #ifndef AKONADI_ERROROVERLAY_H
 #define AKONADI_ERROROVERLAY_H
 
-#include <QWidget>
-#include <QPointer>
+#include <QtCore/QPointer>
+#include <QtGui/QWidget>
 
 class QLabel;
 

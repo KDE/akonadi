@@ -26,9 +26,9 @@
 #include <KXMLGUIFactory>
 #include <KXmlGuiWindow>
 
+#include <QtGui/QContextMenuEvent>
 #include <QtGui/QHeaderView>
-#include <QContextMenuEvent>
-#include <QMenu>
+#include <QtGui/QMenu>
 
 using namespace Akonadi;
 

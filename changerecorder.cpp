@@ -21,7 +21,7 @@
 #include "monitor_p.h"
 
 #include <kdebug.h>
-#include <QSettings>
+#include <QtCore/QSettings>
 
 using namespace Akonadi;
 
