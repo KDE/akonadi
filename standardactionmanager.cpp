@@ -137,8 +137,9 @@ class StandardActionManager::Private
       enableAction( CopyCollections, multiColSelected );
       enableAction( CollectionProperties, singleColSelected );
 
+      Collection col;
       if ( singleColSelected && selectedIndex.isValid() ) {
-        const Collection col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
+        col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
         enableAction( CreateCollection, canCreateCollection( col ) );
         enableAction( DeleteCollections, col.rights() & Collection::CanDeleteCollection );
         enableAction( SynchronizeCollections, CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col ) );
@@ -158,7 +159,8 @@ class StandardActionManager::Private
       }
 
       enableAction( CopyItems, multiItemSelected );
-      enableAction( DeleteItems, multiItemSelected );
+      const bool canDeleteItem = !col.isValid() || (col.rights() & Collection::CanDeleteItem);
+      enableAction( DeleteItems, multiItemSelected && canDeleteItem );
 
       updatePluralLabel( CopyCollections, colCount );
       updatePluralLabel( CopyItems, itemCount );

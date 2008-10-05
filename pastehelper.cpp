@@ -42,6 +42,10 @@ bool PasteHelper::canPaste(const QMimeData * mimeData, const Collection & collec
   if ( !mimeData || !collection.isValid() )
     return false;
 
+  // TODO check acls depending on mimetype
+  if ( (collection.rights() & (Collection::CanCreateItem | Collection::CanCreateCollection) ) == 0 )
+    return false;
+
   if ( KUrl::List::canDecode( mimeData ) )
     return true;
 
