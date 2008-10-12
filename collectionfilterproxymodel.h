@@ -40,7 +40,7 @@ class CollectionModel;
  *
  *   Akonadi::CollectionModel *model = new Akonadi::CollectionModel( this );
  *
- *   Akonadi::CollectionFilterProxy *proxy = new Akonadi::CollectionFilterProxyModel();
+ *   Akonadi::CollectionFilterProxyModel *proxy = new Akonadi::CollectionFilterProxyModel();
  *   proxy->addMimeTypeFilter( "message/rfc822" );
  *   proxy->setSourceModel( model );
  *
