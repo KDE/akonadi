@@ -23,6 +23,8 @@
 #include "collection.h"
 #include "collectionutils_p.h"
 
+//@cond PRIVATE
+
 using namespace Akonadi;
 
 CachePolicyPage::CachePolicyPage(QWidget * parent) :
@@ -44,7 +46,7 @@ bool Akonadi::CachePolicyPage::canHandle(const Collection & collection) const
 void CachePolicyPage::load(const Collection & collection)
 {
   CachePolicy policy = collection.cachePolicy();
-  
+
   int interval = policy.intervalCheckTime();
   if (interval == -1)
     interval = 0;
@@ -88,5 +90,7 @@ void CachePolicyPage::slotCacheValueChanged( int i )
 {
     ui.localCacheTimeout->setSuffix( ' ' + i18np( "minute", "minutes", i ) );
 }
+
+//@endcond
 
 #include "cachepolicypage.moc"

@@ -46,6 +46,8 @@
 
 using namespace Akonadi;
 
+//@cond PRIVATE
+
 static const struct {
   const char *name;
   const char *label;
@@ -317,6 +319,8 @@ class StandardActionManager::Private
     AgentManager *agentManager;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
 };
+
+//@endcond
 
 StandardActionManager::StandardActionManager( KActionCollection * actionCollection,
                                               QWidget * parent) :

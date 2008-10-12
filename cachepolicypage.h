@@ -26,6 +26,8 @@
 
 namespace Akonadi {
 
+//@cond PRIVATE
+
 /**
   @internal
 
@@ -50,6 +52,8 @@ class CachePolicyPage : public CollectionPropertiesPage
 };
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CachePolicyPageFactory, CachePolicyPage)
+
+//@endcond
 
 }
 

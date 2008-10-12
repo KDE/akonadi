@@ -25,6 +25,8 @@
 
 using namespace Akonadi;
 
+//@cond PRIVATE
+
 ResourceScheduler::ResourceScheduler( QObject *parent ) :
     QObject( parent ),
     mOnline( false )
@@ -140,5 +142,7 @@ void ResourceScheduler::setOnline(bool state)
     mCurrentTask = Task();
   }
 }
+
+//@endcond
 
 #include "resourcescheduler.moc"

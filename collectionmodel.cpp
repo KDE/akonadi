@@ -45,6 +45,7 @@ CollectionModel::CollectionModel( QObject * parent ) :
   d->init();
 }
 
+//@cond PRIVATE
 CollectionModel::CollectionModel( CollectionModelPrivate *d,
                                   QObject *parent )
   : QAbstractItemModel( parent ),
@@ -52,6 +53,7 @@ CollectionModel::CollectionModel( CollectionModelPrivate *d,
 {
   d->init();
 }
+//@endcond
 
 CollectionModel::~CollectionModel()
 {

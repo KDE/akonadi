@@ -28,6 +28,8 @@
 
 using namespace Akonadi;
 
+//@cond PRIVATE
+
 class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 {
   public:
@@ -172,5 +174,7 @@ void CollectionPathResolver::doStart()
   }
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
 }
+
+//@endcond
 
 #include "collectionpathresolver_p.moc"

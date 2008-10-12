@@ -25,6 +25,8 @@
 
 namespace Akonadi {
 
+//@cond PRIVATE
+
 /**
  * @internal
  */
@@ -40,6 +42,8 @@ class CollectionGeneralPropertiesPage : public CollectionPropertiesPage
   private:
     Ui::CollectionGeneralPropertiesPage ui;
 };
+
+//@endcond
 
 }
 

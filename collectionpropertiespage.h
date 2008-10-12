@@ -132,6 +132,7 @@ class AKONADI_EXPORT CollectionPropertiesPage : public QWidget
      * Returns @c true if the collection can be handled, @c false otherwise
      * The default implementation returns always @c true. When @c false is returned
      * this page is not shown in the properties dialog.
+     * @param collection The collection to check.
      */
     virtual bool canHandle( const Collection &collection ) const;
 

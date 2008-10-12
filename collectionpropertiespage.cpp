@@ -21,6 +21,8 @@
 
 using namespace Akonadi;
 
+//@cond PRIVATE
+
 /**
  * @internal
  */
@@ -29,6 +31,8 @@ class CollectionPropertiesPage::Private
   public:
     QString title;
 };
+
+//@endcond
 
 CollectionPropertiesPage::CollectionPropertiesPage( QWidget *parent ) :
     QWidget( parent ),

@@ -30,6 +30,8 @@
 
 using namespace Akonadi;
 
+// @cond PRIVATE
+
 AgentInstance AgentManagerPrivate::createInstance( const AgentType &type )
 {
   const QString &identifier = mManager->createAgentInstance( type.identifier() );
@@ -257,6 +259,8 @@ AgentManager::AgentManager()
     d->mInstances.insert( instance, agentInstance );
   }
 }
+
+// @endcond
 
 AgentManager::~AgentManager()
 {

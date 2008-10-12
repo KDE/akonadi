@@ -28,6 +28,8 @@
 
 using namespace Akonadi;
 
+//@cond PRIVATE
+
 CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage(QWidget * parent) :
     CollectionPropertiesPage( parent )
 {
@@ -76,5 +78,7 @@ void CollectionGeneralPropertiesPage::save(Collection & collection)
   else if ( collection.hasAttribute<CollectionDisplayAttribute>() )
     collection.attribute<CollectionDisplayAttribute>()->setIconName( QString() );
 }
+
+//@endcond
 
 #include "collectiongeneralpropertiespage.moc"

@@ -32,6 +32,8 @@
 
 using namespace Akonadi;
 
+//@cond PRIVATE
+
 class ErrorOverlayStatic
 {
   public:
@@ -193,5 +195,7 @@ void ErrorOverlay::stopped()
   mBaseWidget->setEnabled( false );
   reposition();
 }
+
+//@endcond
 
 #include "erroroverlay_p.moc"

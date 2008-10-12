@@ -286,8 +286,6 @@ AgentBase::AgentBase( const QString & id )
   d_ptr->init();
 }
 
-// @endcond
-
 AgentBase::AgentBase( AgentBasePrivate* d, const QString &id ) :
     d_ptr( d )
 {
@@ -331,6 +329,8 @@ QString AgentBase::parseArguments( int argc, char **argv )
 
   return identifier;
 }
+
+// @endcond
 
 int AgentBase::init( AgentBase *r )
 {

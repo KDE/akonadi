@@ -29,6 +29,8 @@
 
 namespace Akonadi {
 
+//@cond PRIVATE
+
 /**
   @internal
 
@@ -136,6 +138,8 @@ class ResourceScheduler : public QObject
     Task mCurrentTask;
     bool mOnline;
 };
+
+//@endcond
 
 }
 

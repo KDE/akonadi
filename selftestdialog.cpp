@@ -42,6 +42,8 @@
 #include <QtGui/QStandardItemModel>
 #include <QtSql/QSqlDatabase>
 
+// @cond PRIVATE
+
 #define AKONADI_CONTROL_SERVICE QLatin1String("org.freedesktop.Akonadi.Control")
 #define AKONADI_SERVER_SERVICE QLatin1String("org.freedesktop.Akonadi")
 
@@ -529,5 +531,7 @@ void SelfTestDialog::linkActivated(const QString & link)
 {
   KRun::runUrl( KUrl::fromPath( link ), "text/plain", this );
 }
+
+// @endcond
 
 #include "selftestdialog_p.moc"
