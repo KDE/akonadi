@@ -8,24 +8,37 @@ server (\ref akonadi_design_agents "agents"), are considered clients.
 
 Functionality provided by libakonadi:
 
-- \ref libakonadi_jobs
-- \ref libakonadi_monitor
+- \ref libakonadi_objects
 - \ref libakonadi_collections
 - \ref libakonadi_pimitems
+- \ref libakonadi_jobs
+- \ref libakonadi_monitor
 - \ref libakonadi_serializer
 - \ref libakonadi_resource
+- \ref libakonadi_integration
 
-\section libakonadi_jobs Accessing the Akonadi server
 
-Accessing the Akonadi server is done using job-classes derived from Akonadi::Job. The
-communication channel with the server is provided by Akonadi::Session.
+\section libakonadi_objects Akonadi Objects
 
-\todo Complete this section.
+Akonadi works on two basic object types: collections and items.
 
-\section libakonadi_monitor Change notifications
+Collections are comparable to folders in a file system and are represented by
+the class Akonadi::Collection. Every collection has an associated cache policy
+represented by the class Akonadi::CachePolicy which defines what part of its
+content is cached for how long. All available ways to work with collections are
+listed in the \ref libakonadi_collections "Collections" section.
 
-The Akonadi::Monitor class allows you to monitor specific resources,
-\ref akonadi_concepts_collections "collections" and PIM items for changes.
+Akonadi utems are comparable to files in a file system and are represented by
+the class Akonadi::Item. Each item represents a single PIM object such as a mail
+or a contact. The actual object it represents is its so-called payload. All
+available ways to work with items are listed in the \ref libakonadi_pimitems "Items"
+section.
+
+Both, items and collections, are identified by a persistent unique identifier.
+Also, they can contain arbitrary attributes (derived from Akonadi::Attribute) to
+attach general or application specific meta data to them. Functionality common
+to both is provided by their base class Akonadi::Entity.
+
 
 \section libakonadi_collections Collection retrieval and manipulation
 
@@ -41,28 +54,57 @@ Classes to retrieve information about collections:
 Classes to manipulate collections:
 
 - Akonadi::CollectionCreateJob
+- Akonadi::CollectionCopyJob
 - Akonadi::CollectionModifyJob
 - Akonadi::CollectionDeleteJob
 
 There is also Akonadi::CollectionModel, which is a self-updating model class which can
 be used in combination with Akonadi::CollectionView. Akonadi::CollectionFilterProxyModel
 can be used to limit a displayed collection tree to collections supporting a certain
-type of PIM items.
+type of PIM items. Akonadi::CollectionPropertiesDialog provides an extensible properties
+dialog for collections. Often needed KAction for collection operations are provided by
+Akonadi::StandardActionManager.
+
 
 \section libakonadi_pimitems PIM item retrieval and manipulation
 
 PIM items are represented by classes derived from Akonadi::Item.
-Items can be retrieved using job classes derived from Akonadi::ItemFetchJob.
+Items can be retrieved using Akonadi::ItemFetchJob.
 
 The following classes are provided to manipulate PIM items:
 
 - Akonadi::ItemCreateJob
+- Akonadi::ItemCopyJob
 - Akonadi::ItemModifyJob
 - Akonadi::ItemDeleteJob
 - Akonadi::ExpungeJob
 
 Akonadi::ItemModel provides a self-updating model class which can be used to display the content
-of a collection.
+of a collection. Akonadi::ItemView is the base-class for a corresponding view. Often needed KAction
+for item operations are provided by Akonadi::StandardActionManager.
+
+
+\section libakonadi_jobs Low-level access to the Akonadi server
+
+Accessing the Akonadi server is done using job-classes derived from Akonadi::Job. The
+communication channel with the server is provided by Akonadi::Session.
+
+To use server-side transactions, the following jobs are provided:
+
+- Akonadi::TransactionBeginJob
+- Akonadi::TransactionCommitJob
+- Akonadi::TransactionRollbackJob
+
+There also is Akonadi::TransactionSequence which can be used to automatically group
+a set of jobs to a single transaction.
+
+
+\section libakonadi_monitor Change notifications
+
+The Akonadi::Monitor class allows you to monitor specific resources,
+collections and PIM items for changes. Akonadi::ChangeRecorder augments this
+by providing a way to record and replay change notifications.
+
 
 \section libakonadi_serializer PIM item serializer
 
@@ -72,6 +114,7 @@ of a PIM item and the objects used to handle these items provided by the corresp
 Serializer plugins allow you to add support for new kinds of PIM items to Akonadi.
 Akonadi::ItemSerializerPlugin can be used as a base class for such a plugin.
 
+
 \section libakonadi_resource Agents and Resources
 
 The class Akonadi::AgentBase is the commen base class for all agents. It provides commonly needed
@@ -80,6 +123,16 @@ functionality such as change monitoring and recording.
 Resources are special type of agents, Akonadi::ResourceBase is the base class them. It provides the
 necessary interfaces to the server as well as many convenience functions to make implementing
 a new resource as easy as possible.
+
+
+\section libakonadi_integration Integration in your application
+
+Akonadi::Control provides ways to ensure that the Akonadi server is running, to monitor its availability
+and provide help on server-side errors. A more low-level interface to the Akonadi server is provided
+by Akonadi::ServerManager.
+
+A set of standard actions is provided by Akonadi::StandardActionManager. These provided consistent
+look and feel across applications.
 
 */
 
