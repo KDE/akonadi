@@ -71,7 +71,7 @@ class CollectionModelPrivate
     void dropResult( KJob* );
     void collectionsChanged( const Akonadi::Collection::List &cols );
 
-    QModelIndex indexForId( Collection::Id id, int column = 0 );
+    QModelIndex indexForId( Collection::Id id, int column = 0 ) const;
     bool removeRowFromModel( int row, const QModelIndex & parent = QModelIndex() );
     bool supportsContentType( const QModelIndex &index, const QStringList &contentTypes );
 

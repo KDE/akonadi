@@ -172,9 +172,9 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
   }
 }
 
-QModelIndex CollectionModelPrivate::indexForId( Collection::Id id, int column )
+QModelIndex CollectionModelPrivate::indexForId( Collection::Id id, int column ) const
 {
-  Q_Q( CollectionModel );
+  Q_Q( const CollectionModel );
   if ( !collections.contains( id ) )
     return QModelIndex();
 
