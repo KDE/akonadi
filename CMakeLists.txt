@@ -68,6 +68,7 @@ set( akonadikde_LIB_SRC
   itemcreatejob.cpp
   itemcopyjob.cpp
   itemdeletejob.cpp
+  itemdisplayattribute.cpp
   itemfetchjob.cpp
   itemfetchscope.cpp
   itemmodel.cpp
@@ -166,6 +167,7 @@ install( FILES
   itemcreatejob.h
   itemcopyjob.h
   itemdeletejob.h
+  itemdisplayattribute.h
   itemfetchjob.h
   itemfetchscope.h
   itemmodel.h
