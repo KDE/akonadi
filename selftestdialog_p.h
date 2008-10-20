@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SELFTESTDIALOG_H
-#define AKONADI_SELFTESTDIALOG_H
+#ifndef AKONADI_SELFTESTDIALOG_P_H
+#define AKONADI_SELFTESTDIALOG_P_H
 
 #include "akonadiprivate_export.h"
 #include "ui_selftestdialog.h"

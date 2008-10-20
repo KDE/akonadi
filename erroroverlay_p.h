@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ERROROVERLAY_H
-#define AKONADI_ERROROVERLAY_H
+#ifndef AKONADI_ERROROVERLAY_P_H
+#define AKONADI_ERROROVERLAY_P_H
 
 #include <QtCore/QPointer>
 #include <QtGui/QWidget>
@@ -31,7 +31,7 @@ namespace Akonadi {
  * @internal
  * Overlay widget to block Akonadi-dependent widgets if the Akonadi server
  * is unavailable.
- * @todo handle intial parent == 0 case correctly, reparent later and hide as long as parent widget is 0
+ * @todo handle initial parent == 0 case correctly, reparent later and hide as long as parent widget is 0
  * @todo fix hiding in dock widget tabs
  */
 class ErrorOverlay : public QWidget
