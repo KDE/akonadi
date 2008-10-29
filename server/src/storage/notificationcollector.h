@@ -20,7 +20,7 @@
 #ifndef AKONADI_NOTIFICATIONCOLLECTOR_H
 #define AKONADI_NOTIFICATIONCOLLECTOR_H
 
-#include <entities.h>
+#include "entities.h"
 
 #include "../../libs/notificationmessage_p.h"
 
