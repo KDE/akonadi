@@ -28,7 +28,7 @@ represented by the class Akonadi::CachePolicy which defines what part of its
 content is cached for how long. All available ways to work with collections are
 listed in the \ref libakonadi_collections "Collections" section.
 
-Akonadi utems are comparable to files in a file system and are represented by
+Akonadi items are comparable to files in a file system and are represented by
 the class Akonadi::Item. Each item represents a single PIM object such as a mail
 or a contact. The actual object it represents is its so-called payload. All
 available ways to work with items are listed in the \ref libakonadi_pimitems "Items"
@@ -117,10 +117,10 @@ Akonadi::ItemSerializerPlugin can be used as a base class for such a plugin.
 
 \section libakonadi_resource Agents and Resources
 
-The class Akonadi::AgentBase is the commen base class for all agents. It provides commonly needed
+The class Akonadi::AgentBase is the common base class for all agents. It provides commonly needed
 functionality such as change monitoring and recording.
 
-Resources are special type of agents, Akonadi::ResourceBase is the base class them. It provides the
+Resources are a special kind of agents. Akonadi::ResourceBase is the base class for them. It provides the
 necessary interfaces to the server as well as many convenience functions to make implementing
 a new resource as easy as possible.
 
