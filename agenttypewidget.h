@@ -36,28 +36,7 @@ class AgentType;
  * widget is updated automatically as soon as new agent types
  * are added to or removed from the system.
  *
- * @code
- *
- * MyWidget::MyWidget( QWidget *parent )
- *   : QWidget( parent )
- * {
- *   QVBoxLayout *layout = new QVBoxLayout( this );
- *
- *   mAgentTypeWidget = new Akonadi::AgentTypeWidget( this );
- *   layout->addWidget( mAgentTypeWidget );
- *
- *   connect( mAgentTypeWidget, SIGNAL( currentChanged( Akonadi::AgentType&, Akonadi::AgentType& ) ),
- *            this, SLOT( slotTypeChanged( Akonadi::AgentType& ) ) );
- * }
- *
- * ...
- *
- * MyWidget::slotTypeChanged( Akonadi::AgentType &current, Akonadi::AgentType& )
- * {
- *   qDebug() << "New selected type:" << current.name();
- * }
- *
- * @endcode
+ * If you want a dialog, you can use the Akonadi::AgentTypeDialog.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */

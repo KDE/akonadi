@@ -33,6 +33,7 @@ set( akonadikde_LIB_SRC
   agenttype.cpp
   agenttypemodel.cpp
   agenttypewidget.cpp
+  agenttypedialog.cpp
   attribute.cpp
   attributefactory.cpp
   cachepolicy.cpp
@@ -141,6 +142,7 @@ install( FILES
   agenttype.h
   agenttypemodel.h
   agenttypewidget.h
+  agenttypedialog.h
   attribute.h
   attributefactory.h
   cachepolicy.h
