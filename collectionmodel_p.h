@@ -54,6 +54,10 @@ class CollectionModelPrivate
     CollectionModel *q_ptr;
     QHash<Collection::Id, Collection> collections;
     QHash<Collection::Id, QList<Collection::Id> > childCollections;
+
+    QHash<Collection::Id, Collection> m_newCollections;
+    QHash< Collection::Id, QList< Collection::Id > > m_newChildCollections;
+
     Monitor *monitor;
     Session *session;
     QStringList mimeTypes;

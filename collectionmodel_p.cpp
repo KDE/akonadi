@@ -58,7 +58,6 @@ void CollectionModelPrivate::collectionRemoved( const Akonadi::Collection &colle
 void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &collection )
 {
   Q_Q( CollectionModel );
-
   // What kind of change is it ?
   Collection::Id oldParentId = collections.value( collection.id() ).parent();
   Collection::Id newParentId = collection.parent();
@@ -142,9 +141,11 @@ void CollectionModelPrivate::dropResult(KJob * job)
 void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
 {
   Q_Q( CollectionModel );
-  foreach( Collection col, cols ) {
+
+  foreach ( Collection col, cols )
+  {
     if ( collections.contains( col.id() ) ) {
-      // collection already known
+      // If the collection is already known to the model, we simply update it...
       col.setStatistics( collections.value( col.id() ).statistics() );
       collections[ col.id() ] = col;
       QModelIndex startIndex = indexForId( col.id() );
@@ -152,25 +153,75 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
       emit q->dataChanged( startIndex, endIndex );
       continue;
     }
-    collections.insert( col.id(), col );
-    QModelIndex parentIndex = indexForId( col.parent() );
-    if ( parentIndex.isValid() || col.parent() == Collection::root().id() ) {
-      q->beginInsertRows( parentIndex, q->rowCount( parentIndex ), q->rowCount( parentIndex ) );
-      childCollections[ col.parent() ].append( col.id() );
-      q->endInsertRows();
-    } else {
-      childCollections[ col.parent() ].append( col.id() );
+    // ... otherwise we add it to the set of collections we need to handle.
+    m_newChildCollections[ col.parent() ].append( col.id() );
+    m_newCollections.insert( col.id(), col );
+  }
+
+  // Handle the collections in m_newChildCollections. If the collections
+  // parent is already in the model, the collection can be added to the model.
+  // Otherwise it is persisted until it has a valid parent in the model.
+  int currentSize = m_newChildCollections.size();
+  int lastSize = -1;
+
+  while ( currentSize != 0 && m_newChildCollections.size() > 0 )
+  {
+    QMutableHashIterator< Collection::Id, QList< Collection::Id > > i( m_newChildCollections );
+    while ( i.hasNext() )
+    {
+      i.next();
+
+      // the key is the parent of new collections. It may itself also be new,
+      // but that will be handled later.
+      Collection::Id colId = i.key();
+
+      QList< Collection::Id > newChildCols = i.value();
+      int newChildCount = newChildCols.size();
+//       if ( newChildCount == 0 )
+//       {
+//         // Sanity check.
+//         kDebug() << "No new child collections have been added to the collection:" << colId;
+//         i.remove();
+//         lastSize = currentSize;
+//         currentSize--;
+//         break;
+//       }
+
+
+      if ( collections.contains( colId ) || colId == Collection::root().id() )
+      {
+        QModelIndex parentIndex = indexForId( colId );
+        int currentChildCount = childCollections.value( colId ).size();
+
+        q->beginInsertRows( parentIndex,
+                            currentChildCount,      // Start index is at the end of existing collections.
+                            currentChildCount + newChildCount - 1 ); // End index is the result of the insertion.
+        foreach( Collection::Id id, newChildCols )
+        {
+          Collection c = m_newCollections.take( id );
+          collections.insert( id, c );
+        }
+        childCollections[ colId ] << newChildCols;
+        q->endInsertRows();
+        i.remove();
+        lastSize = currentSize;
+        currentSize--;
+        break;
+      }
     }
 
-    updateSupportedMimeTypes( col );
-
-    // start a statistics job for every collection to get message counts, etc.
-    if ( fetchStatistics && !CollectionUtils::isVirtualParent( col ) ) {
-      CollectionStatisticsJob* csjob = new CollectionStatisticsJob( col, session );
-      q->connect( csjob, SIGNAL(result(KJob*)), q, SLOT(updateDone(KJob*)) );
+    // We iterated through once without adding any more collections to the model.
+    if ( currentSize == lastSize )
+    {
+      // The remaining collections in the list do not have a valid parent in the model yet. They
+      // might arrive in the next batch from the monitor, so they're still in m_newCollections
+      // and m_newChildCollections.
+      kDebug() << "Some collections did not have a parent in the model yet!";
+      break;
     }
   }
 }
+
 
 QModelIndex CollectionModelPrivate::indexForId( Collection::Id id, int column ) const
 {

@@ -140,10 +140,12 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
   if ( !col.isValid() )
     return QModelIndex();
 
+
   Collection parentCol = d->collections.value( col.parent() );
   if ( !parentCol.isValid() )
+  {
     return QModelIndex();
-
+}
   QList<Collection::Id> list;
   list = d->childCollections.value( parentCol.parent() );
 
