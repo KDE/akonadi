@@ -74,7 +74,6 @@ bool Akonadi::AkAppend::handleLine(const QByteArray& line )
     if ( line[startOfFlags] == '(' ) {
         startOfDateTime = ImapParser::parseParenthesizedList( line, m_flags, startOfFlags ) + 1;
     }
-    m_flags.append( "\\Recent" ); // the Recent flag always has to be set
 
     // parse optional date/time string
     int startOfPartSpec = startOfDateTime;
