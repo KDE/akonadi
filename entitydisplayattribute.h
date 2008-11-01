@@ -27,15 +27,15 @@ class KIcon;
 namespace Akonadi {
 
 /**
- * Display properties of a collection, such as translated names and icons.
- * @todo add active icon, eg. when folder contains unread mail
+ * Display properties of a collection or item, such as translated names and icons.
+ * @todo add active icon, eg. when folder contains unread mail, or a mail is unread
  * @since 4.2
  */
 class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
 {
   public:
     /**
-     * Creates a new collection display attribute.
+     * Creates a new entity display attribute.
      */
     EntityDisplayAttribute();
 
@@ -46,7 +46,7 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
 
     /**
      * Returns the name that should be used for display.
-     * Fall back to Collection::name() if this is empty.
+     * Users of this should fall back to Collection::name() if this is empty.
      */
     QString displayName() const;
 
@@ -56,7 +56,7 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
     void setDisplayName( const QString &name );
 
     /**
-     * Returns the icon that should be used for this collection.
+     * Returns the icon that should be used for this collection or item.
      */
     KIcon icon() const;
 
@@ -66,7 +66,7 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
     QString iconName() const;
 
     /**
-     * Set the icon name for the collections default icon.
+     * Set the icon name for the default icon.
      */
     void setIconName( const QString &icon );
 
