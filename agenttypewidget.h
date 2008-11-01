@@ -99,6 +99,12 @@ class AKONADI_EXPORT AgentTypeWidget : public QWidget
      */
     void currentChanged( const Akonadi::AgentType &current, const Akonadi::AgentType &previous );
 
+    /**
+      * This signal is emitted whenever the user doubleclicks on an agent.
+      * @since 4.2
+      */
+    void doubleClicked();
+
   private:
     //@cond PRIVATE
     class Private;

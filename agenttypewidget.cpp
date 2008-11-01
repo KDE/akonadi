@@ -92,12 +92,15 @@ AgentTypeWidget::AgentTypeWidget( QWidget *parent )
   d->mModel = new AgentTypeModel( d->mView );
   d->proxyModel = new AgentFilterProxyModel( this );
   d->proxyModel->setSourceModel( d->mModel );
+  d->proxyModel->sort( 0 );
   d->mView->setModel( d->proxyModel );
 
   d->mView->selectionModel()->setCurrentIndex( d->mView->model()->index( 0, 0 ), QItemSelectionModel::Select );
   d->mView->scrollTo( d->mView->model()->index( 0, 0 ) );
   connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) ) );
+  connect( d->mView, SIGNAL( doubleClicked( const QModelIndex& ) ),
+           SIGNAL( doubleClicked() ) );
 }
 
 AgentTypeWidget::~AgentTypeWidget()
