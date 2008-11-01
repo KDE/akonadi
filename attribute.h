@@ -108,7 +108,7 @@ namespace Akonadi {
  *
  * Akonadi::Item item( "text/directory" );
  * SecrecyAttribute* attr = item.attribute<SecrecyAttribute>( Item::AddIfMissing );
- * attr.setSecrecy( SecrecyAttribute::Confidential );
+ * attr->setSecrecy( SecrecyAttribute::Confidential );
  *
  * @endcode
  *
