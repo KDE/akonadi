@@ -21,6 +21,7 @@
 #include "servermanager_p.h"
 
 #include "agenttype.h"
+#include "agentbase.h"
 #include "agentmanager.h"
 #include "session_p.h"
 
@@ -85,6 +86,11 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
   connect( QDBusConnection::sessionBus().interface(),
            SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            SLOT(serviceOwnerChanged(QString,QString,QString)) );
+
+  // HACK see if we are a agent ourselves and skip AgentManager creation since that can cause deadlocks
+  QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String("/") );
+  if ( obj && dynamic_cast<AgentBase*>( obj ) )
+    return;
   connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
   connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
 }
@@ -138,6 +144,12 @@ bool ServerManager::isRunning()
          Internal::serverProtocolVersion() < SessionPrivate::minimumProtocolVersion() )
       return false;
   }
+
+  // HACK see if we are a agent ourselves and skip the test below which can in some cases deadlock the server
+  // and is not really needed in this case anyway since we happen to know at least one agent is available
+  QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String("/") );
+  if ( obj && dynamic_cast<AgentBase*>( obj ) )
+    return true;
 
   // besides the running server processes we also need at least one resource to be operational
   AgentType::List agentTypes = AgentManager::self()->types();
