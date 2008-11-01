@@ -198,6 +198,16 @@ class AKONADI_EXPORT Item : public Entity
     int revision() const;
 
     /**
+     * Set the size of the item in bytes.
+     */
+    void setSize( qint64 size );
+
+    /**
+      * Returns the size of the items in bytes.
+      */
+    qint64 size() const;
+
+    /**
      * Sets the mime type of the item to @p mimeType.
      */
     void setMimeType( const QString &mimeType );

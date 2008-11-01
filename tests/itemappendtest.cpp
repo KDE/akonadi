@@ -75,6 +75,7 @@ void ItemAppendTest::testItemAppend()
   item.setRemoteId( remoteId );
   item.setMimeType( "application/octet-stream" );
   item.setFlag( "TestFlag" );
+  item.setSize( 3456 );
   ItemCreateJob *job = new ItemCreateJob( item, Collection( testFolder1 ), this );
   QVERIFY( job->exec() );
   ref = job->item();
@@ -85,6 +86,9 @@ void ItemAppendTest::testItemAppend()
   QCOMPARE( fjob->items()[0], ref );
   QCOMPARE( fjob->items()[0].remoteId(), remoteId );
   QVERIFY( fjob->items()[0].flags().contains( "TestFlag" ) );
+
+  qint64 size = 3456;
+  QCOMPARE( fjob->items()[0].size(), size );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );

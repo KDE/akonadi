@@ -85,11 +85,13 @@ void ItemCreateJob::doStart()
     int dataSize = d->mData.size();
 
     d->writeData( d->newTag() + " APPEND " + QByteArray::number( d->mCollection.id() )
+        + " " + QByteArray::number( d->mItem.size() )
         + " (" + ImapParser::join( flags, " " ) + ") {"
         + QByteArray::number( dataSize ) + "}\n" );
   }
   else { // do a multipart X-AKAPPEND
     QByteArray command = d->newTag() + " X-AKAPPEND " + QByteArray::number( d->mCollection.id() )
+        + " " + QByteArray::number( d->mItem.size() )
         + " (" + ImapParser::join( flags, " " ) + ") ";
 
     QList<QByteArray> partSpecs;

@@ -31,6 +31,7 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <kio/job.h>
 
 #include <QtCore/QDebug>
 
@@ -82,8 +83,7 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
       case Date:
         return KGlobal::locale()->formatDateTime( msg->date()->dateTime().toLocalZone(), KLocale::FancyLongDate );
       case Size:
-        // TODO
-        return 0; // pass modeltest
+        return KIO::convertSize( KIO::filesize_t( item.size() ) );
       default:
         return QVariant();
     }
@@ -98,8 +98,7 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
       case Date:
         return msg->date()->dateTime().dateTime();
       case Size:
-        // TODO
-        return 0; // pass modeltest
+        return item.size();
       default:
         return QVariant();
     }

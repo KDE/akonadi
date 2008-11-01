@@ -38,6 +38,7 @@ class ItemPrivate : public EntityPrivate
       : EntityPrivate( id ),
         mPayload( 0 ),
         mRevision( -1 ),
+        mSize( 0 ),
         mModificationTime(),
         mFlagsOverwritten( false )
     {
@@ -48,6 +49,7 @@ class ItemPrivate : public EntityPrivate
     {
       mFlags = other.mFlags;
       mRevision = other.mRevision;
+      mSize = other.mSize;
       mModificationTime = other.mModificationTime;
       mMimeType = other.mMimeType;
       if ( other.mPayload )
@@ -79,6 +81,7 @@ class ItemPrivate : public EntityPrivate
     PayloadBase*  mPayload;
     Item::Flags mFlags;
     int mRevision;
+    qint64 mSize;
     QDateTime mModificationTime;
     QString mMimeType;
     Item::Flags mAddedFlags;

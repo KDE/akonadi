@@ -136,8 +136,10 @@ void ItemModifyJob::doStart()
   if ( !d->mRevCheck ) {
     command += "NOREV ";
   } else {
-    command += "REV " + QByteArray::number( d->mItem.revision() );
+    command += "REV " + QByteArray::number( d->mItem.revision() ) + ' ';
   }
+
+  command += "SIZE " + QByteArray::number( d->mItem.size() );
 
   command += " (" + ImapParser::join( changes, " " );
   const QByteArray attrs = ProtocolHelper::attributesToByteArray( d->mItem, true );

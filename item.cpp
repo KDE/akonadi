@@ -139,6 +139,16 @@ QString Item::mimeType() const
   return d_func()->mMimeType;
 }
 
+void Item::setSize( qint64 size )
+{
+  d_func()->mSize = size;
+}
+
+qint64 Item::size() const
+{
+  return d_func()->mSize;
+}
+
 void Item::setMimeType( const QString & mimeType )
 {
   d_func()->mMimeType = mimeType;
