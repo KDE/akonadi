@@ -41,7 +41,7 @@ class AKONADI_EXPORT AgentTypeDialog : public QDialog
   public:
     AgentTypeDialog( QWidget *parent = 0 );
     AgentType agentType() const;
-    AgentFilterProxyModel* agentFilterProxyModel() const
+    AgentFilterProxyModel* agentFilterProxyModel() const;
 
   public Q_SLOTS:
     virtual void done( int result );
