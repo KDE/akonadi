@@ -354,6 +354,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     /**
      * Emitted if another application has changed the agents configuration remotely
      * and called AgentInstance::reconfigure().
+     *
+     * @since 4.2
      */
     void reloadConfiguration();
 
