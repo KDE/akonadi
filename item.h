@@ -199,12 +199,16 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Set the size of the item in bytes.
+     *
+     * @since 4.2
      */
     void setSize( qint64 size );
 
     /**
-      * Returns the size of the items in bytes.
-      */
+     * Returns the size of the items in bytes.
+     *
+     * @since 4.2
+     */
     qint64 size() const;
 
     /**
