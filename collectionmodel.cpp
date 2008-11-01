@@ -22,7 +22,7 @@
 
 #include "collectionutils_p.h"
 #include "collectionmodifyjob.h"
-#include "collectiondisplayattribute.h"
+#include "entitydisplayattribute.h"
 #include "monitor.h"
 #include "pastehelper.h"
 #include "session.h"
@@ -85,18 +85,18 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
     return QVariant();
 
   if ( index.column() == 0 && (role == Qt::DisplayRole || role == Qt::EditRole) ) {
-    if ( col.hasAttribute<CollectionDisplayAttribute>() &&
-         !col.attribute<CollectionDisplayAttribute>()->displayName().isEmpty() )
-      return col.attribute<CollectionDisplayAttribute>()->displayName();
+    if ( col.hasAttribute<EntityDisplayAttribute>() &&
+         !col.attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
+      return col.attribute<EntityDisplayAttribute>()->displayName();
     return col.name();
   }
 
   switch ( role ) {
     case Qt::DecorationRole:
       if ( index.column() == 0 ) {
-        if ( col.hasAttribute<CollectionDisplayAttribute>() &&
-             !col.attribute<CollectionDisplayAttribute>()->iconName().isEmpty() )
-          return col.attribute<CollectionDisplayAttribute>()->icon();
+        if ( col.hasAttribute<EntityDisplayAttribute>() &&
+             !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty() )
+          return col.attribute<EntityDisplayAttribute>()->icon();
         return KIcon( CollectionUtils::defaultIconName( col ) );
       }
       break;

@@ -43,7 +43,6 @@ set( akonadikde_LIB_SRC
   collectioncopyjob.cpp
   collectioncreatejob.cpp
   collectiondeletejob.cpp
-  collectiondisplayattribute.cpp
   collectionfilterproxymodel.cpp
   collectiongeneralpropertiespage.cpp
   collectionfetchjob.cpp
@@ -62,6 +61,7 @@ set( akonadikde_LIB_SRC
   collectionsync.cpp
   collectionview.cpp
   control.cpp
+  entitydisplayattribute.cpp
   erroroverlay.cpp
   expungejob.cpp
   flatcollectionproxymodel.cpp
@@ -69,7 +69,6 @@ set( akonadikde_LIB_SRC
   itemcreatejob.cpp
   itemcopyjob.cpp
   itemdeletejob.cpp
-  itemdisplayattribute.cpp
   itemfetchjob.cpp
   itemfetchscope.cpp
   itemmodel.cpp
@@ -151,7 +150,6 @@ install( FILES
   collectioncopyjob.h
   collectioncreatejob.h
   collectiondeletejob.h
-  collectiondisplayattribute.h
   collectionfilterproxymodel.h
   collectionfetchjob.h
   collectionmodel.h
@@ -165,11 +163,11 @@ install( FILES
   collectionview.h
   control.h
   entity.h
+  entitydisplayattribute.h
   item.h
   itemcreatejob.h
   itemcopyjob.h
   itemdeletejob.h
-  itemdisplayattribute.h
   itemfetchjob.h
   itemfetchscope.h
   itemmodel.h

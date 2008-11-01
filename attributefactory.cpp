@@ -19,8 +19,8 @@
 
 #include "attributefactory.h"
 
-#include "collectiondisplayattribute.h"
 #include "collectionrightsattribute.h"
+#include "entitydisplayattribute.h"
 
 #include <KGlobal>
 
@@ -74,8 +74,8 @@ class StaticAttributeFactory : public AttributeFactory
       initialized = true;
 
       // Register built-in attributes
-      AttributeFactory::registerAttribute<CollectionDisplayAttribute>();
       AttributeFactory::registerAttribute<CollectionRightsAttribute>();
+      AttributeFactory::registerAttribute<EntityDisplayAttribute>();
     }
     bool initialized;
 };

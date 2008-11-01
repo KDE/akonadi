@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "itemdisplayattribute.h"
+#include "entitydisplayattribute.h"
 
 #include "imapparser_p.h"
 
@@ -25,62 +25,62 @@
 
 using namespace Akonadi;
 
-class ItemDisplayAttribute::Private
+class EntityDisplayAttribute::Private
 {
   public:
     QString name;
     QString icon;
 };
 
-ItemDisplayAttribute::ItemDisplayAttribute() :
+EntityDisplayAttribute::EntityDisplayAttribute() :
     d( new Private )
 {
 }
 
-ItemDisplayAttribute::~ ItemDisplayAttribute()
+EntityDisplayAttribute::~ EntityDisplayAttribute()
 {
   delete d;
 }
 
-QString ItemDisplayAttribute::displayName() const
+QString EntityDisplayAttribute::displayName() const
 {
   return d->name;
 }
 
-void ItemDisplayAttribute::setDisplayName(const QString & name)
+void EntityDisplayAttribute::setDisplayName(const QString & name)
 {
   d->name = name;
 }
 
-KIcon ItemDisplayAttribute::icon() const
+KIcon EntityDisplayAttribute::icon() const
 {
   return KIcon( d->icon );
 }
 
-QString ItemDisplayAttribute::iconName() const
+QString EntityDisplayAttribute::iconName() const
 {
   return d->icon;
 }
 
-void ItemDisplayAttribute::setIconName(const QString & icon)
+void EntityDisplayAttribute::setIconName(const QString & icon)
 {
   d->icon = icon;
 }
 
-QByteArray Akonadi::ItemDisplayAttribute::type() const
+QByteArray Akonadi::EntityDisplayAttribute::type() const
 {
-  return "ITEMDISPLAY";
+  return "COLDISPLAY";
 }
 
-ItemDisplayAttribute * ItemDisplayAttribute::clone() const
+EntityDisplayAttribute * EntityDisplayAttribute::clone() const
 {
-  ItemDisplayAttribute *attr = new ItemDisplayAttribute();
+  EntityDisplayAttribute *attr = new EntityDisplayAttribute();
   attr->d->name = d->name;
   attr->d->icon = d->icon;
   return attr;
 }
 
-QByteArray ItemDisplayAttribute::serialized() const
+QByteArray EntityDisplayAttribute::serialized() const
 {
   QList<QByteArray> l;
   l << ImapParser::quote( d->name.toUtf8() );
@@ -88,7 +88,7 @@ QByteArray ItemDisplayAttribute::serialized() const
   return '(' + ImapParser::join( l, " " ) + ')';
 }
 
-void ItemDisplayAttribute::deserialize(const QByteArray &data)
+void EntityDisplayAttribute::deserialize(const QByteArray &data)
 {
   QList<QByteArray> l;
   ImapParser::parseParenthesizedList( data, l );

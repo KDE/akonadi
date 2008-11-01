@@ -20,7 +20,7 @@
 #include "collectiongeneralpropertiespage.h"
 
 #include "collection.h"
-#include "collectiondisplayattribute.h"
+#include "entitydisplayattribute.h"
 #include "collectionstatistics.h"
 #include "collectionutils_p.h"
 
@@ -41,9 +41,9 @@ void CollectionGeneralPropertiesPage::load(const Collection & collection)
 {
   QString displayName;
   QString iconName;
-  if ( collection.hasAttribute<CollectionDisplayAttribute>() ) {
-    displayName = collection.attribute<CollectionDisplayAttribute>()->displayName();
-    iconName = collection.attribute<CollectionDisplayAttribute>()->iconName();
+  if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
+    displayName = collection.attribute<EntityDisplayAttribute>()->displayName();
+    iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
   }
 
   if ( displayName.isEmpty() )
@@ -67,16 +67,16 @@ void CollectionGeneralPropertiesPage::load(const Collection & collection)
 
 void CollectionGeneralPropertiesPage::save(Collection & collection)
 {
-  if ( collection.hasAttribute<CollectionDisplayAttribute>() &&
-       !collection.attribute<CollectionDisplayAttribute>()->displayName().isEmpty() )
-    collection.attribute<CollectionDisplayAttribute>()->setDisplayName( ui.nameEdit->text() );
+  if ( collection.hasAttribute<EntityDisplayAttribute>() &&
+       !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
+    collection.attribute<EntityDisplayAttribute>()->setDisplayName( ui.nameEdit->text() );
   else
     collection.setName( ui.nameEdit->text() );
 
   if ( ui.customIconCheckbox->isChecked() )
-    collection.attribute<CollectionDisplayAttribute>( Collection::AddIfMissing )->setIconName( ui.customIcon->icon() );
-  else if ( collection.hasAttribute<CollectionDisplayAttribute>() )
-    collection.attribute<CollectionDisplayAttribute>()->setIconName( QString() );
+    collection.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( ui.customIcon->icon() );
+  else if ( collection.hasAttribute<EntityDisplayAttribute>() )
+    collection.attribute<EntityDisplayAttribute>()->setIconName( QString() );
 }
 
 //@endcond

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEMDISPLAYATTRIBUTE_H
-#define AKONADI_ITEMDISPLAYATTRIBUTE_H
+#ifndef AKONADI_ENTITIYDISPLAYATTRIBUTE_H
+#define AKONADI_ENTITIYDISPLAYATTRIBUTE_H
 
 #include <akonadi/attribute.h>
 
@@ -27,24 +27,26 @@ class KIcon;
 namespace Akonadi {
 
 /**
- * Display properties of an item, such as translated names and icons.
+ * Display properties of a collection, such as translated names and icons.
+ * @todo add active icon, eg. when folder contains unread mail
  * @since 4.2
  */
-class AKONADI_EXPORT ItemDisplayAttribute : public Attribute
+class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
 {
   public:
     /**
-     * Creates a new item display attribute.
+     * Creates a new collection display attribute.
      */
-    ItemDisplayAttribute();
+    EntityDisplayAttribute();
 
     /**
      * Destructor.
      */
-    ~ItemDisplayAttribute();
+    ~EntityDisplayAttribute();
 
     /**
      * Returns the name that should be used for display.
+     * Fall back to Collection::name() if this is empty.
      */
     QString displayName() const;
 
@@ -54,7 +56,7 @@ class AKONADI_EXPORT ItemDisplayAttribute : public Attribute
     void setDisplayName( const QString &name );
 
     /**
-     * Returns the icon that should be used for this item.
+     * Returns the icon that should be used for this collection.
      */
     KIcon icon() const;
 
@@ -64,13 +66,13 @@ class AKONADI_EXPORT ItemDisplayAttribute : public Attribute
     QString iconName() const;
 
     /**
-     * Set the icon name for the items default icon.
+     * Set the icon name for the collections default icon.
      */
     void setIconName( const QString &icon );
 
     /* reimpl */
     QByteArray type() const;
-    ItemDisplayAttribute* clone() const;
+    EntityDisplayAttribute* clone() const;
     QByteArray serialized() const;
     void deserialize( const QByteArray &data );
 
