@@ -72,6 +72,7 @@ bool Copy::copyItem(const PimItem & item, const Location & target)
   PimItem newItem = item;
   newItem.setId( -1 );
   newItem.setRev( 0 );
+  newItem.setSize( 0 );
   newItem.setDatetime( QDateTime::currentDateTime() );
   newItem.setRemoteId( QByteArray() );
   newItem.setLocationId( target.id() );

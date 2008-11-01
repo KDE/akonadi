@@ -43,6 +43,7 @@ protected:
     bool commit();
 
 private:
+    qint64 m_size;
     QByteArray m_data;
     QByteArray m_mailbox;
     QDateTime m_dateTime;

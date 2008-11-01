@@ -47,6 +47,7 @@ protected:
     bool commit();
 
 private:
+    qint64 m_size;
     QList<Part> m_parts;
     QByteArray m_mailbox;
     QDateTime m_dateTime;

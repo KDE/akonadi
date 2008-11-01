@@ -104,6 +104,16 @@ bool Store::handleLine( const QByteArray& line )
     }
   }
 
+  // parse size
+  qint64 size = 0;
+  pos = ImapParser::parseString( line, buffer, pos );
+  if ( buffer == "SIZE" ) {
+    pos = ImapParser::parseNumber( line, size, &ok, pos );
+    if ( !ok ) {
+      return failureResponse( "Unable to parse the size." + line);
+    }
+  }
+
   QList<QByteArray> changes;
   pos = ImapParser::parseParenthesizedList( line, changes, pos );
   for ( int i = 0; i < changes.size() - 1; i += 2 ) {

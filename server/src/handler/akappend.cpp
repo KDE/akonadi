@@ -51,11 +51,16 @@ bool Akonadi::AkAppend::handleLine(const QByteArray& line )
     //        (partname literal)+
     //
     // Syntax:
-    // x-akappend = "X-AKAPPEND" SP mailbox [SP flag-list] [SP date-time] SP (partname SP literal)+
+    // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
 
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    const int startOfFlags = ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
+
+    QString size;
+    const int startOfSize = ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
+    m_size = size.toLongLong();
+
+    const int startOfFlags = ImapParser::parseString( line, size, startOfSize ) + 1;
 
     // parse optional flag parenthesized list
     // Syntax:
@@ -160,6 +165,7 @@ bool Akonadi::AkAppend::commit()
 
     PimItem item;
     item.setRev( 0 );
+    item.setSize( m_size );
 
     bool ok = db->appendPimItem( m_parts, mimeType, l, m_dateTime, remote_id, item );
 

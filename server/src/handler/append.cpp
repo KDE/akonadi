@@ -52,11 +52,20 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     //        message literal
     //
     // Syntax:
-    // append = "APPEND" SP mailbox [SP flag-list] [SP date-time] SP literal
+    // append = "APPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP literal
 
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    const int startOfFlags = ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
+
+    QString size;
+    const int startOfSize = ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
+    m_size = size.toLongLong();
+
+    const int startOfFlags = ImapParser::parseString( line, size, startOfSize ) + 1;
+
+    QString data;
+    ImapParser::parseString( line, data, startOfSize);
+    m_size = data.toLongLong();
 
     // parse optional flag parenthesized list
     // Syntax:
@@ -123,6 +132,7 @@ bool Akonadi::Append::commit()
 
     PimItem item;
     item.setRev( 0 );
+    item.setSize( m_size );
     item.setDatetime( m_dateTime );
 
     // wrap data into a part

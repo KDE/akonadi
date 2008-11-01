@@ -67,7 +67,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="8"/>
+    <data columns="version" values="9"/>
   </table>
 
   <table name="Resource">
@@ -122,6 +122,7 @@
     <column name="dirty" type="bool">
       <comment>Indicates that this item has unsaved changes.</comment>
     </column>
+    <column name="size" type="qint64" properties="NOT NULL DEFAULT 0"/>
     <index name="locationIndex" columns="locationId" unique="false"/>
     <reference name="parts" table="Part" key="pimItemId"/>
   </table>
