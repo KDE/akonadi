@@ -38,6 +38,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
   Q_OBJECT
   public:
     SelfTestDialog( QWidget *parent = 0 );
+    void hideIntroduction();
 
   private:
     enum ResultType {

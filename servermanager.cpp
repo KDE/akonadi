@@ -23,6 +23,7 @@
 #include "agenttype.h"
 #include "agentbase.h"
 #include "agentmanager.h"
+#include "selftestdialog_p.h"
 #include "session_p.h"
 
 #include <KDebug>
@@ -129,6 +130,13 @@ bool ServerManager::stop()
     return false;
   iface.call( QDBus::NoBlock, "shutdown" );
   return true;
+}
+
+void ServerManager::showSelfTestDialog( QWidget *parent )
+{
+  Akonadi::SelfTestDialog dlg( parent );
+  dlg.hideIntroduction();
+  dlg.exec();
 }
 
 bool ServerManager::isRunning()

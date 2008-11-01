@@ -58,6 +58,13 @@ class AKONADI_EXPORT ServerManager : public QObject
     static bool stop();
 
     /**
+     * Shows the Akonadi self test dialog, which tests Akonadi for various problems
+     * and reports these to the user if.
+     * @param parent the parent widget for the dialog
+     */
+    static void showSelfTestDialog( QWidget *parent );
+
+    /**
      * Checks if the server is available currently.
      */
     static bool isRunning();

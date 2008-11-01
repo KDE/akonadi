@@ -82,6 +82,11 @@ SelfTestDialog::SelfTestDialog(QWidget * parent) :
   runTests();
 }
 
+void SelfTestDialog::hideIntroduction()
+{
+  ui.introductionLabel->hide();
+}
+
 QStandardItem* SelfTestDialog::report( ResultType type, const QString & summary, const QString & details)
 {
   QStandardItem *item = new QStandardItem( summary );
