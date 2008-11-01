@@ -173,6 +173,11 @@ void AgentBasePrivate::init()
   connect( q, SIGNAL( warning( QString ) ), q, SLOT( slotWarning( QString ) ) );
   connect( q, SIGNAL( error( QString ) ), q, SLOT( slotError( QString ) ) );
 
+  // Use reference counting to allow agents to finish internal jobs when the
+  // agent is stopped.
+  KGlobal::ref();
+  KGlobal::setAllowQuit(true);
+  
   QTimer::singleShot( 0, q, SLOT( delayedInit() ) );
 }
 
@@ -428,7 +433,7 @@ void AgentBase::quit()
     d->mSettings->sync();
   }
 
-  QCoreApplication::exit( 0 );
+  KGlobal::deref();
 }
 
 void AgentBase::aboutToQuit()
