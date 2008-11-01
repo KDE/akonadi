@@ -83,7 +83,10 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
       case Date:
         return KGlobal::locale()->formatDateTime( msg->date()->dateTime().toLocalZone(), KLocale::FancyLongDate );
       case Size:
-        return KIO::convertSize( KIO::filesize_t( item.size() ) );
+        if ( item.size() == 0 )
+          return i18nc( "No size available", "-" );
+        else
+          return KIO::convertSize( KIO::filesize_t( item.size() ) );
       default:
         return QVariant();
     }
