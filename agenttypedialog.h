@@ -42,7 +42,7 @@ class AKONADI_EXPORT AgentTypeDialog : public QDialog
     AgentTypeDialog( QWidget *parent = 0 );
     AgentType agentType() const;
 
-  public slot:
+  public slots:
     virtual void done( int result );
 
   private:
