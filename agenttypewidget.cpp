@@ -99,8 +99,8 @@ AgentTypeWidget::AgentTypeWidget( QWidget *parent )
   d->mView->scrollTo( d->mView->model()->index( 0, 0 ) );
   connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) ) );
-  connect( d->mView, SIGNAL( doubleClicked( const QModelIndex& ) ),
-           SIGNAL( doubleClicked() ) );
+  connect( d->mView, SIGNAL( activated( const QModelIndex& ) ),
+           SIGNAL( activated() ) );
 }
 
 AgentTypeWidget::~AgentTypeWidget()
