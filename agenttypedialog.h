@@ -26,7 +26,7 @@
 #include "agenttypewidget.h"
 #include "agenttype.h"
 
-#include <QtGui/QDialog>
+#include <KDE/KDialog>
 
 namespace Akonadi {
 
@@ -34,12 +34,13 @@ namespace Akonadi {
   * Shows a dialog with the AgentTypeWidget in there and an ok and cancel button.
   * @since 4.2
   */
-class AKONADI_EXPORT AgentTypeDialog : public QDialog
+class AKONADI_EXPORT AgentTypeDialog : public KDialog
 {
   Q_OBJECT
 
   public:
     AgentTypeDialog( QWidget *parent = 0 );
+    ~AgentTypeDialog();
     AgentType agentType() const;
     AgentFilterProxyModel* agentFilterProxyModel() const;
 

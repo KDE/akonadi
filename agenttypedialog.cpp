@@ -23,33 +23,28 @@
 #include "agenttypedialog.h"
 
 #include <QObject>
-#include <QtGui/QDialog>
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QPushButton>
 
 using namespace Akonadi;
 
 AgentTypeDialog::AgentTypeDialog( QWidget *parent )
-      : QDialog( parent )
+      : KDialog( parent )
 {
-  QVBoxLayout *layout = new QVBoxLayout( this );
+  setButtons( Ok | Cancel );
+  QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
 
-  mWidget = new Akonadi::AgentTypeWidget( this );
+  mWidget = new Akonadi::AgentTypeWidget( mainWidget() );
   connect( mWidget, SIGNAL( doubleClicked() ), this, SLOT( accept() ) );
 
-  QDialogButtonBox *box = new QDialogButtonBox( this );
-
   layout->addWidget( mWidget );
-  layout->addWidget( box );
 
-  QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
-  connect( ok, SIGNAL( clicked() ), this, SLOT( accept() ) );
-
-  QPushButton *cancel = box->addButton( QDialogButtonBox::Cancel );
-  connect( cancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
+  connect( this, SIGNAL( okClicked() ), this, SLOT( accept() ) );
 
   resize( 450, 320 );
+}
+
+AgentTypeDialog::~AgentTypeDialog()
+{
 }
 
 void AgentTypeDialog::done( int result )
