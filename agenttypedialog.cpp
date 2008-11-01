@@ -21,9 +21,12 @@
 */
 
 #include "agenttypedialog.h"
+#include "agentfilterproxymodel.h"
 
 #include <QObject>
 #include <QtGui/QVBoxLayout>
+
+#include <kfilterproxysearchline.h>
 
 using namespace Akonadi;
 
@@ -33,8 +36,13 @@ AgentTypeDialog::AgentTypeDialog( QWidget *parent )
   setButtons( Ok | Cancel );
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
 
+  KFilterProxySearchLine* searchLine = new KFilterProxySearchLine( mainWidget() );
+  layout->addWidget( searchLine );
+
   mWidget = new Akonadi::AgentTypeWidget( mainWidget() );
   connect( mWidget, SIGNAL( doubleClicked() ), this, SLOT( accept() ) );
+
+  searchLine->setProxy( mWidget->agentFilterProxyModel() );
 
   layout->addWidget( mWidget );
 
