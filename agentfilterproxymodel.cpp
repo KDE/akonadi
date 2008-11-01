@@ -79,6 +79,11 @@ void AgentFilterProxyModel::clearFilters()
 bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex&) const
 {
   QModelIndex index = sourceModel()->index( row, 0 );
+
+  // First see if the name matches a set regexp filter.
+  if ( !filterRegExp().isEmpty() && !index.data().toString().contains( filterRegExp() ) )
+    return false;
+
   if ( !d->mimeTypes.isEmpty() ) {
     bool found = false;
     foreach ( const QString &mt, index.data( AgentTypeModel::MimeTypesRole ).toStringList() ) {
