@@ -21,6 +21,7 @@
 
 #include "collectionmodel.h"
 
+#include <kdebug.h>
 #include <kmimetype.h>
 
 #include <QtCore/QString>
@@ -40,36 +41,73 @@ class CollectionFilterProxyModel::Private
       mimeTypes << QLatin1String( "text/uri-list" );
     }
 
-    bool collectionAccepted( const QModelIndex &index );
+    bool collectionAccepted( const QModelIndex &index, bool checkResourceVisibility = true );
 
+    QList< QModelIndex > acceptedResources;
     CollectionFilterProxyModel *mParent;
     QStringList mimeTypes;
 };
 
-bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex &index )
+bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex &index, bool checkResourceVisibility )
 {
   // Retrieve supported mimetypes
   QStringList collectionMimeTypes = mParent->sourceModel()->data( index, CollectionModel::CollectionRole ).value<Collection>().contentMimeTypes();
 
   // If this collection directly contains one valid mimetype, it is accepted
   foreach ( const QString &type, collectionMimeTypes ) {
-    if ( mimeTypes.contains( type ) )
+    if ( mimeTypes.contains( type ) ) {
+
+      // The folder will be accepted, but we need to make sure the resource is visible too.
+      if ( checkResourceVisibility ) {
+
+        // find the resource
+        QModelIndex resource = index;
+        while ( resource.parent().isValid() )
+          resource = resource.parent();
+
+        // See if that resource is visible, if not, reset the model.
+        if ( resource != index && !acceptedResources.contains( resource ) ) {
+          kDebug() << "We got a new collection:" << mParent->sourceModel()->data( index ).toString() 
+                   << "but the resource is not visible:" << mParent->sourceModel()->data( resource ).toString();
+          acceptedResources.clear(); 
+          mParent->reset();
+          return true;
+        }
+      }
+
+      // Keep track of all the resources that are visible.
+      if ( !index.parent().isValid() )
+        acceptedResources.append( index );
+      
       return true;
+    }
 
     KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
     if ( !mimeType.isNull() ) {
       foreach ( const QString &mt, mimeTypes ) {
-        if ( mimeType->is( mt ) )
+        if ( mimeType->is( mt ) ) {
+          
+          // Keep track of all the resources that are visible.
+          if ( !index.parent().isValid() )
+            acceptedResources.append( index );
+          
           return true;
+        }
       }
     }
   }
+
   // If this collection has a child which contains valid mimetypes, it is accepted
   QModelIndex childIndex = index.child( 0, 0 );
   while ( childIndex.isValid() ) {
-    if ( collectionAccepted( childIndex ) )
-      return true;
+    if ( collectionAccepted( childIndex, false /* don't check visibility of the parent, as we are checking the child now */ ) ) {
 
+      // Keep track of all the resources that are visible.
+      if ( !index.parent().isValid())
+        acceptedResources.append( index );
+
+      return true;
+    }
     childIndex = childIndex.sibling( childIndex.row() + 1, 0 );
   }
 
