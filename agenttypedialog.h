@@ -27,25 +27,67 @@
 namespace Akonadi {
 
 /**
-  * Shows a dialog with the AgentTypeWidget in there and an ok and cancel button.
-  * @since 4.2
-  */
+ * @short A dialog to select an available agent type.
+ *
+ * This dialogs allows the user to select an agent type from the
+ * list of all available agent types. The list can be filtered
+ * by the proxy model returned by agentFilterProxyModel().
+ *
+ * @code
+ *
+ * Akonadi::AgentTypeDialog dlg( this );
+ *
+ * // only list agent types that provide contacts
+ * dlg.agentFilterProxyModel()->addMimeTypeFilter( "text/directory" );
+ *
+ * if ( dlg.exec() ) {
+ *   const AgentType agentType = dlg.agentType();
+ *   ...
+ * }
+ *
+ * @endcode
+ *
+ * @author Tom Albers <tomalbers@kde.nl>
+ * @since 4.2
+ */
 class AKONADI_EXPORT AgentTypeDialog : public KDialog
 {
   Q_OBJECT
 
   public:
+    /**
+     * Creates a new agent type dialog.
+     *
+     * @param parent The parent widget of the dialog.
+     */
     AgentTypeDialog( QWidget *parent = 0 );
+
+    /**
+     * Destroys the agent type dialog.
+     */
     ~AgentTypeDialog();
+
+    /**
+     * Returns the agent type that was selected by the user,
+     * or an empty agent type object if no agent type has been selected.
+     */
     AgentType agentType() const;
+
+    /**
+     * Returns the agent filter proxy model that can be used
+     * to filter the agent types that shall be shown in the
+     * dialog.
+     */
     AgentFilterProxyModel* agentFilterProxyModel() const;
 
   public Q_SLOTS:
     virtual void done( int result );
 
   private:
+    //@cond PRIVATE
     class Private;
     Private * const d;
+    //@endcond
 };
 
 }

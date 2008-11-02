@@ -27,8 +27,12 @@ class KIcon;
 namespace Akonadi {
 
 /**
+ * @short Attribute that stores the properties that are used to display an entity.
+ *
  * Display properties of a collection or item, such as translated names and icons.
  * @todo add active icon, eg. when folder contains unread mail, or a mail is unread
+ *
+ * @author Volker Krause <vkrause@kde.org>
  * @since 4.2
  */
 class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
@@ -40,9 +44,14 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
     EntityDisplayAttribute();
 
     /**
-     * Destructor.
+     * Destroys the entity display attribute.
      */
     ~EntityDisplayAttribute();
+
+    /**
+     * Sets the @p name that should be used for display.
+     */
+    void setDisplayName( const QString &name );
 
     /**
      * Returns the name that should be used for display.
@@ -51,9 +60,9 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
     QString displayName() const;
 
     /**
-     * Set the display name.
+     * Sets the icon @p name for the default icon.
      */
-    void setDisplayName( const QString &name );
+    void setIconName( const QString &name );
 
     /**
      * Returns the icon that should be used for this collection or item.
@@ -64,11 +73,6 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
      * Returns the icon name of the icon returned by icon().
      */
     QString iconName() const;
-
-    /**
-     * Set the icon name for the default icon.
-     */
-    void setIconName( const QString &icon );
 
     /* reimpl */
     QByteArray type() const;

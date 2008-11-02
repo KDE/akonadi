@@ -36,6 +36,15 @@ class AgentType;
  * widget is updated automatically as soon as new agent types
  * are added to or removed from the system.
  *
+ * @code
+ *
+ * Akonadi::AgentTypeWidget *widget = new Akonadi::AgentTypeWidget( this );
+ *
+ * // only list agent types that provide contacts
+ * widget->agentFilterProxyModel()->addMimeTypeFilter( "text/directory" );
+ *
+ * @endcode
+ *
  * If you want a dialog, you can use the Akonadi::AgentTypeDialog.
  *
  * @author Tobias Koenig <tokoe@kde.org>
