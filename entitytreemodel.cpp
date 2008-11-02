@@ -73,42 +73,43 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 {
   Q_D( const EntityTreeModel );
   if ( isItem( index ) ) {
+    Item::Id itemId = index.internalId() * -1;
     switch ( role ) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-      if ( d->m_items.value( index.internalId() ).hasAttribute<EntityDisplayAttribute>() &&
-           ! d->m_items.value( index.internalId() ).attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
-        return d->m_items.value( index.internalId() ).attribute<EntityDisplayAttribute>()->displayName();
-      return d->m_items.value( index.internalId() ).remoteId();
+      if ( d->m_items.value( itemId ).hasAttribute<EntityDisplayAttribute>() &&
+          ! d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
+        return d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->displayName();
+      return d->m_items.value( itemId ).remoteId();
       break;
 
     case Qt::DecorationRole:
-      if ( d->m_items.value( index.internalId() ).hasAttribute<EntityDisplayAttribute>() &&
-           ! d->m_items.value( index.internalId() ).attribute<EntityDisplayAttribute>()->iconName().isEmpty() )
-        return d->m_items.value( index.internalId() ).attribute<EntityDisplayAttribute>()->icon();
+      if ( d->m_items.value( itemId ).hasAttribute<EntityDisplayAttribute>() &&
+          ! d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->iconName().isEmpty() )
+        return d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->icon();
       break;
 
     case ItemRole:
-      return QVariant::fromValue( d->m_items.value( index.internalId() ) );
+      return QVariant::fromValue( d->m_items.value( itemId ) );
       break;
 
     case ItemIdRole:
-      return d->m_items.value( index.internalId() ).id();
+      return d->m_items.value( itemId ).id();
       break;
 
     case MimeTypeRole:
-      return d->m_items.value( index.internalId() ).mimeType();
+      return d->m_items.value( itemId ).mimeType();
       break;
 
     case RemoteIdRole:
-      return d->m_items.value( index.internalId() ).remoteId();
+      return d->m_items.value( itemId ).remoteId();
       break;
 
 //     case EntityAboveRole:
-//       if (  d->m_items.value(index.internalId()).hasAttribute<EntityAboveAttribute>() &&
-//         !d->m_items.value(index.internalId()).attribute<EntityAboveAttribute>()->entityAbove().isEmpty() )
-//         return d->m_items.value(index.internalId()).attribute<EntityAboveAttribute>()->entityAbove();
-      break;
+//       if (  d->m_items.value( itemId ).hasAttribute<EntityAboveAttribute>() &&
+//           !d->m_items.value( itemId ).attribute<EntityAboveAttribute>()->entityAbove().isEmpty() )
+//         return d->m_items.value( itemId ).attribute<EntityAboveAttribute>()->entityAbove();
+//       break;
 
     default:
       break;
@@ -128,7 +129,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 //       if (  d->collections.value(index.internalId()).hasAttribute<EntityAboveAttribute>() &&
 //         ! d->collections.value(index.internalId()).attribute<EntityAboveAttribute>()->entityAbove().isEmpty() )
 //         return d->collections.value(index.internalId()).attribute<EntityAboveAttribute>()->entityAbove();
-      break;
+//       break;
 
       break;
     default:
@@ -154,7 +155,7 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 
   Item item;
   if ( index.isValid() ) {
-    item = d->m_items.value( index.internalId() );
+    item = d->m_items.value( index.internalId() * -1 );
     Q_ASSERT( item.isValid() );
   } else
     return flags | Qt::ItemIsDropEnabled; // HACK Workaround for a probable bug in Qt
@@ -198,7 +199,10 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
 
   Q_D( const EntityTreeModel );
 
-  if ( row < d->childCollections.value( parent.internalId() ).size() ) {
+  Collection::Id parentCollectionId =  parent.internalId();
+
+  if ( row < d->childCollections.value( parentCollectionId ).size() ) {
+    // We're asked for an index for a collection.
     // This will return an invalid index where necessary.
     return CollectionModel::index( row, column, parent );
   }
@@ -207,7 +211,7 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
   // For example, if a parent collection has 5 child collections and 4 child items, the
   // 7th row of that parent is the 3rd item in the internal list of items (recalling that
   // row is zero indexed). offsetRow would be 3 in that case.
-  const int offsetRow = row - d->childCollections.value( parent.internalId() ).size();
+  const int offsetRow = row - d->childCollections.value( parentCollectionId ).size();
 
   const QList<Item::Id> list = d->m_itemsInCollection[ parent.internalId()];
 
@@ -216,7 +220,14 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
   if ( !d->m_items.contains( list.at( offsetRow ) ) )
     return QModelIndex();
 
-  return createIndex( row, column, reinterpret_cast<void*>( list.at( offsetRow ) ) );
+  // Note: Items and Collections have unique ids (from separate database tables), but an item and
+  // an id can both use the same id. This causes problems when trying to determine if an indexForId
+  // is a collection or an item. To workaround that design limitation, we take advantage of the id
+  // being a signed uint64. The internalId of the index will be a negative number for items, and
+  // a positive number for collections. This is only true for internal ids of indexes. Everywhere
+  // else, the real positive unique id from akonadi is used and conversion must be done, but only
+  // when dealing with items.
+  return createIndex( row, column, reinterpret_cast<void*>( list.at( offsetRow ) * -1 ) );
 }
 
 QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
@@ -229,7 +240,7 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
     return idx;
   }
 
-  const Item item = d->m_items.value( index.internalId() );
+  const Item item = d->m_items.value( index.internalId() * -1 );
   if ( !item.isValid() )
     return QModelIndex();
 
@@ -237,7 +248,7 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
   while ( iter.hasNext() ) {
     iter.next();
     if ( iter.value().contains( item.id() ) ) {
-      return d->indexForId( iter.key() );
+      return d->indexForId( iter.key() ); // iter.key is the collection we found the item in.
     }
   }
 
@@ -263,7 +274,7 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
     }
 
     if ( isItem( index ) ) {
-      urls << Item( index.internalId() ).url();
+      urls << Item( index.internalId() * -1 ).url();
     }
   }
   urls.populateMimeData( data );
@@ -286,7 +297,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
       return true;
     }
     if ( isItem( index ) ) {
-      Item item = d->m_items.value( index.internalId() );
+      Item item = d->m_items.value( index.internalId() * -1 );
       if ( !item.isValid() || value.toString().isEmpty() )
         return false;
 
@@ -305,59 +316,20 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
   return QAbstractItemModel::setData( index, value, role );
 }
 
-
-
-// Item.id() is unique to an item, Collection.id() is unique to a collection.
-// However, a collection and an item can have the same id.
 bool EntityTreeModel::isItem( const QModelIndex &index ) const
 {
-  Q_D( const EntityTreeModel );
-
-  if ( d->m_items.contains( index.internalId() ) ) {
-    if ( !d->collections.contains( index.internalId() ) ) {
-      return true;
-    }
-
-    // The id is common to a collection and an item.
-    // Assume the index is a collection and proove myself wrong.
-    const Collection::Id parentId = d->collections.value( index.internalId() ).parent();
-    if ( d->collections.contains( parentId ) ) {
-      const int row = index.row();
-      const int childColsCount = d->childCollections.value( parentId ).size();
-      const int childItemsCount = d->m_itemsInCollection.value( parentId ).size();
-      if (( row >= childColsCount ) && ( row < ( childColsCount + childItemsCount ) ) ) {
-        // I don't have enough collections for this to be a row, and it is within the bounds of being
-        // an item.
-        return true;
-      }
-    }
-  }
-
-  return false;
+  if ( index.internalId() < 0 )
+    return true;
+  else
+    return false;
 }
 
 bool EntityTreeModel::isCollection( const QModelIndex &index ) const
 {
-  Q_D( const EntityTreeModel );
-
-  if ( d->collections.contains( index.internalId() ) ) {
-    if ( !d->m_items.contains( index.internalId() ) ) {
-      return true;
-    }
-
-    // The id is common to a collection and an item.
-    // Assume the index is a collection and proove myself right.
-    const Collection::Id parentId = d->collections.value( index.internalId() ).parent();
-    if ( d->collections.contains( parentId ) ) {
-      const int row = index.row();
-      const int childColsCount = d->childCollections.value( parentId ).size();
-      if ( row < childColsCount ) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  if ( index.internalId() > 0 )
+    return true;
+  else
+    return false;
 }
 
 #include "entitytreemodel.moc"

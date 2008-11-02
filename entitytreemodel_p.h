@@ -51,7 +51,13 @@ class EntityTreeModelPrivate : public CollectionModelPrivate
     void listDone( KJob* );
     void itemChanged( const Item&, const QSet<QByteArray>& );
     void itemsAdded( const Item::List &list );
+
+    /**
+    Warning: This slot should never be called directly. It should only be connected to by the itemsRetrieved signal
+    of the ItemFetchJob.
+    */
     void itemAdded( const Item &item, const Collection& );
+
     void itemMoved( const Item&, const Collection& src, const Collection& dst );
     void itemRemoved( const Item& );
 
@@ -70,6 +76,10 @@ class EntityTreeModelPrivate : public CollectionModelPrivate
 
     QModelIndex indexForItem( Item );
 
+    /**
+    The id of the collection which starts an item fetch job. This is part of a hack with QObject::sender
+    in itemsAdded to correctly insert items into the model.
+    */
     static QByteArray ItemFetchCollectionId() {
       return "ItemFetchCollectionId";
     }

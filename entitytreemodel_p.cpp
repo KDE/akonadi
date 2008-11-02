@@ -49,7 +49,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
   itemMonitor->setCollectionMonitored( Collection::root() );
   itemMonitor->fetchCollection( true );
 //   itemMonitor->itemFetchScope().fetchAttribute<EntityAboveAttribute>();
-  itemMonitor->itemFetchScope().fetchAttribute<EntityDisplayAttribute>();
+  itemMonitor->itemFetchScope().fetchAttribute< EntityDisplayAttribute >();
 }
 
 
@@ -81,7 +81,7 @@ void EntityTreeModelPrivate::onRowsInserted( const QModelIndex & parent, int sta
 
     Akonadi::ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( col );
     itemJob->fetchScope().fetchFullPayload();
-    itemJob->fetchScope().fetchAttribute<EntityDisplayAttribute>();
+    itemJob->fetchScope().fetchAttribute< EntityDisplayAttribute >();
 //     itemJob->fetchScope().fetchAttribute<EntityAboveAttribute>();
 
     itemJob->setProperty( ItemFetchCollectionId(), QVariant( col.id() ) );
@@ -152,29 +152,31 @@ void EntityTreeModelPrivate::itemsAdded( const Akonadi::Item::List &list )
 {
   Q_Q( EntityTreeModel );
   QObject *job = q->sender();
-  Collection::Id colId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
+  if (job)
+  {
+    Collection::Id colId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
 
-  Item::List itemsToInsert;
+    Item::List itemsToInsert;
 
-  foreach( Item item, list ) {
-    if ( mimetypeMatches( QStringList() << item.mimeType() ) ) {
-      itemsToInsert << item;
+    foreach( Item item, list ) {
+      if ( mimetypeMatches( QStringList() << item.mimeType() ) ) {
+        itemsToInsert << item;
+      }
+    }
+
+    if ( itemsToInsert.size() > 0 ) {
+      QModelIndex parentIndex = indexForId( colId );
+  // //         beginInsertRows( parent, d->childEntitiesCount( parent ), d->childEntitiesCount( parent ) + itemsToInsert.size() - 1 );
+      foreach( Item item, itemsToInsert ) {
+        Item::Id itemId = item.id();
+        q->beginInsertRows( parentIndex, childEntitiesCount( parentIndex ), childEntitiesCount( parentIndex ) );
+        m_items.insert( itemId, item );
+        m_itemsInCollection[ colId ].append( itemId );
+        q->endInsertRows();
+      }
+      //       endInsertRows();
     }
   }
-
-  if ( itemsToInsert.size() > 0 ) {
-    QModelIndex parentIndex = indexForId( colId );
-// //         beginInsertRows( parent, d->childEntitiesCount( parent ), d->childEntitiesCount( parent ) + itemsToInsert.size() - 1 );
-    foreach( Item item, itemsToInsert ) {
-      Item::Id itemId = item.id();
-      q->beginInsertRows( parentIndex, childEntitiesCount( parentIndex ), childEntitiesCount( parentIndex ) );
-      m_items.insert( itemId, item );
-      m_itemsInCollection[ colId ].append( itemId );
-      q->endInsertRows();
-    }
-    //       endInsertRows();
-  }
-
 }
 
 void EntityTreeModelPrivate::itemAdded( const Akonadi::Item &item, const Akonadi::Collection& col )
