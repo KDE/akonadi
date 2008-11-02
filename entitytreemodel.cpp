@@ -64,51 +64,6 @@ EntityTreeModel::EntityTreeModel ( const QStringList &mimetypes, QObject *parent
 
 }
 
-void EntityTreeModel::onRowsInserted ( const QModelIndex & parent, int start, int end )
-{
-  Q_D( EntityTreeModel );
-
-  QHash<Collection::Id, Item::List> items;
-
-  // This slot can be notified of several new collections in the model.
-  // Iterate to add items for each one.
-  for (int iCount = start; iCount <= end; iCount++)
-  {
-    QModelIndex i = CollectionModel::index( iCount, 0, parent );
-
-    if (!i.isValid())
-      continue; // This is not a collection, so it doesn't have any items.
-
-    QVariant datav = data(i, CollectionModel::CollectionRole);
-
-    if (datav == QVariant())
-    {
-      // This is not a collection, so it doesn't have any items.
-      continue;
-    }
-
-    Akonadi::Collection col = qvariant_cast< Akonadi::Collection > ( datav );
-
-    if ( !d->mimetypeMatches( col.contentMimeTypes() ) )
-    {
-      // New collection shouldn't have its items added to the model.
-      continue;
-    }
-
-    Akonadi::ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( col );
-    itemJob->fetchScope().fetchFullPayload();
-    itemJob->fetchScope().fetchAttribute<EntityDisplayAttribute>();
-//     itemJob->fetchScope().fetchAttribute<EntityAboveAttribute>();
-
-    itemJob->setProperty( d->ItemFetchCollectionId(), QVariant( col.id() ) );
-
-    connect( itemJob, SIGNAL( itemsReceived( Akonadi::Item::List ) ),
-              this, SLOT( itemsAdded( Akonadi::Item::List ) ) );
-    connect( itemJob, SIGNAL( result( KJob* ) ),
-              this, SLOT( listDone( KJob* ) ) );
-  }
-}
-
 EntityTreeModel::~EntityTreeModel()
 {
 

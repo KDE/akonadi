@@ -113,14 +113,6 @@ protected:
   */
   bool isCollection( const QModelIndex &index ) const;
 
-protected Q_SLOTS:
-  /**
-  This slot adds items to the model when notified to do so for @p parent.
-
-  */
-  void onRowsInserted ( const QModelIndex &parent, int start, int end );
-
-
 private:
     Q_DECLARE_PRIVATE( EntityTreeModel )
 
@@ -130,6 +122,7 @@ private:
     Q_PRIVATE_SLOT( d_func(), void itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void itemsAdded( const Akonadi::Item::List& ) )
     Q_PRIVATE_SLOT( d_func(), void itemRemoved( const Akonadi::Item& ) )
+    Q_PRIVATE_SLOT( d_func(), void onRowsInserted( const QModelIndex &parent, int start, int end ) )
 
 };
 

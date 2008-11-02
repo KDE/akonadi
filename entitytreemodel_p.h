@@ -54,6 +54,11 @@ class EntityTreeModelPrivate : public CollectionModelPrivate
     void itemMoved( const Item&, const Collection& src, const Collection& dst );
     void itemRemoved( const Item& );
 
+    /**
+    Adds items to the model when notified to do so for @p parent.
+    */
+    void onRowsInserted ( const QModelIndex &parent, int start, int end );
+
     int childEntitiesCount ( const QModelIndex & parent ) const;
 
     QHash< Collection::Id, QList< Item::Id > > m_itemsInCollection;
