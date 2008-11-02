@@ -29,8 +29,12 @@ namespace Akonadi {
 class ServerManagerPrivate;
 
 /**
+ * @short Provides methods to control the Akonadi server process.
+ *
  * Low-level control of the Akonadi server.
  * Usually Akonadi::Control should be preferred over this.
+ *
+ * @author Volker Krause <vkrause@kde.org>
  * @see Akonadi::Control
  * @since 4.2
  */

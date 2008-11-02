@@ -29,9 +29,12 @@ class Collection;
 class LinkJobPrivate;
 
 /**
+ * @short Job that links items inside the Akonadi storage.
+ *
  * This job allows you to create references to a set of items in a virtual
  * collection.
  *
+ * @author Volker Krause <vkrause@kde.org>
  * @since 4.2
  * @see UnlinkJob
  */
@@ -40,7 +43,10 @@ class AKONADI_EXPORT LinkJob : public Job
   Q_OBJECT
   public:
     /**
-     * Create references to the given items in the given collection.
+     * Creates the link job.
+     *
+     * The job will create references to the given items in the given collection.
+     *
      * @param collection The collection in which the references should be created.
      * @param items The items of which the references should be created.
      * @param parent The parent object.
@@ -48,7 +54,7 @@ class AKONADI_EXPORT LinkJob : public Job
     LinkJob( const Collection &collection, const Item::List &items, QObject *parent = 0 );
 
     /**
-     * Destructor.
+     * Destroys the link job.
      */
     ~LinkJob();
 

@@ -29,9 +29,12 @@ class Collection;
 class UnlinkJobPrivate;
 
 /**
+ * @short Job that unlinks items inside the Akonadi storage.
+ *
  * This job allows you to remove references to a set of items in a virtual
  * collection.
  *
+ * @author Volker Krause <vkrause@kde.org>
  * @since 4.2
  * @see LinkJob
  */
@@ -40,7 +43,10 @@ class AKONADI_EXPORT UnlinkJob : public Job
   Q_OBJECT
   public:
     /**
-     * Remove references to the given items from the given collection.
+     * Creates a new unlink job.
+     *
+     * The job will remove references to the given items from the given collection.
+     *
      * @param collection The collection from which the references should be removed.
      * @param items The items of which the references should be removed.
      * @param parent The parent object.
@@ -48,7 +54,7 @@ class AKONADI_EXPORT UnlinkJob : public Job
     UnlinkJob( const Collection &collection, const Item::List &items, QObject *parent = 0 );
 
     /**
-     * Destructor.
+     * Destroys the unlink job.
      */
     ~UnlinkJob();
 
