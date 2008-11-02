@@ -50,6 +50,7 @@ EntityTreeModel::EntityTreeModel( const QStringList &mimetypes, QObject *parent 
   : CollectionModel( new EntityTreeModelPrivate( this ), parent )
 {
   Q_D( EntityTreeModel );
+
   d->m_mimeTypeFilter = mimetypes;
 
   connect( this, SIGNAL( rowsInserted( const QModelIndex &, int, int ) ),
@@ -66,44 +67,45 @@ EntityTreeModel::EntityTreeModel( const QStringList &mimetypes, QObject *parent 
 
 EntityTreeModel::~EntityTreeModel()
 {
-
 }
 
 QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 {
   Q_D( const EntityTreeModel );
+
   if ( isItem( index ) ) {
-    Item::Id itemId = index.internalId() * -1;
+    const Item::Id itemId = index.internalId() * -1;
+
     switch ( role ) {
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-      if ( d->m_items.value( itemId ).hasAttribute<EntityDisplayAttribute>() &&
-          ! d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
-        return d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->displayName();
-      return d->m_items.value( itemId ).remoteId();
-      break;
+      case Qt::DisplayRole:
+      case Qt::EditRole:
+        if ( d->m_items.value( itemId ).hasAttribute<EntityDisplayAttribute>() &&
+            ! d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
+          return d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->displayName();
+        return d->m_items.value( itemId ).remoteId();
+        break;
 
-    case Qt::DecorationRole:
-      if ( d->m_items.value( itemId ).hasAttribute<EntityDisplayAttribute>() &&
-          ! d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->iconName().isEmpty() )
-        return d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->icon();
-      break;
+      case Qt::DecorationRole:
+        if ( d->m_items.value( itemId ).hasAttribute<EntityDisplayAttribute>() &&
+            ! d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->iconName().isEmpty() )
+          return d->m_items.value( itemId ).attribute<EntityDisplayAttribute>()->icon();
+        break;
 
-    case ItemRole:
-      return QVariant::fromValue( d->m_items.value( itemId ) );
-      break;
+      case ItemRole:
+        return QVariant::fromValue( d->m_items.value( itemId ) );
+        break;
 
-    case ItemIdRole:
-      return d->m_items.value( itemId ).id();
-      break;
+      case ItemIdRole:
+        return d->m_items.value( itemId ).id();
+        break;
 
-    case MimeTypeRole:
-      return d->m_items.value( itemId ).mimeType();
-      break;
+      case MimeTypeRole:
+        return d->m_items.value( itemId ).mimeType();
+        break;
 
-    case RemoteIdRole:
-      return d->m_items.value( itemId ).remoteId();
-      break;
+      case RemoteIdRole:
+        return d->m_items.value( itemId ).remoteId();
+        break;
 
 //     case EntityAboveRole:
 //       if (  d->m_items.value( itemId ).hasAttribute<EntityAboveAttribute>() &&
@@ -111,19 +113,19 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 //         return d->m_items.value( itemId ).attribute<EntityAboveAttribute>()->entityAbove();
 //       break;
 
-    default:
-      break;
+      default:
+        break;
     }
   }
 
   if ( isCollection( index ) ) {
     switch ( role ) {
-    case MimeTypeRole:
-      return d->collections.value( index.internalId() ).mimeType();
-      break;
+      case MimeTypeRole:
+        return d->collections.value( index.internalId() ).mimeType();
+        break;
 
-    case RemoteIdRole:
-      return d->collections.value( index.internalId() ).remoteId();
+      case RemoteIdRole:
+        return d->collections.value( index.internalId() ).remoteId();
 
 //     case EntityAboveRole:
 //       if (  d->collections.value(index.internalId()).hasAttribute<EntityAboveAttribute>() &&
@@ -131,9 +133,9 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 //         return d->collections.value(index.internalId()).attribute<EntityAboveAttribute>()->entityAbove();
 //       break;
 
-      break;
-    default:
-      break;
+        break;
+      default:
+        break;
     }
 
   }
@@ -145,6 +147,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 {
   Q_D( const EntityTreeModel );
+
   if ( isCollection( index ) ) {
     return CollectionModel::flags( index );
   }
@@ -196,10 +199,9 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 
 QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & parent ) const
 {
-
   Q_D( const EntityTreeModel );
 
-  Collection::Id parentCollectionId =  parent.internalId();
+  const Collection::Id parentCollectionId =  parent.internalId();
 
   if ( row < d->childCollections.value( parentCollectionId ).size() ) {
     // We're asked for an index for a collection.
@@ -258,6 +260,7 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
 int EntityTreeModel::rowCount( const QModelIndex & parent ) const
 {
   Q_D( const EntityTreeModel );
+
   return d->childEntitiesCount( parent );
 }
 
@@ -285,12 +288,14 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
 bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
   Q_D( EntityTreeModel );
+
   if ( index.column() == 0 && role == Qt::EditRole ) {
     if ( isCollection( index ) ) {
       // rename collection
       Collection col = d->collections.value( index.internalId() );
       if ( !col.isValid() || value.toString().isEmpty() )
         return false;
+
       col.setName( value.toString() );
       CollectionModifyJob *job = new CollectionModifyJob( col );
       connect( job, SIGNAL( result( KJob* ) ), SLOT( editDone( KJob* ) ) );
