@@ -166,15 +166,15 @@ void EntityTreeModelPrivate::itemsAdded( const Akonadi::Item::List &list )
 
     if ( itemsToInsert.size() > 0 ) {
       QModelIndex parentIndex = indexForId( colId );
-  // //         beginInsertRows( parent, d->childEntitiesCount( parent ), d->childEntitiesCount( parent ) + itemsToInsert.size() - 1 );
+      q->beginInsertRows( parentIndex,
+          childEntitiesCount( parentIndex ),
+          childEntitiesCount( parentIndex ) + itemsToInsert.size() - 1 );
       foreach( Item item, itemsToInsert ) {
         Item::Id itemId = item.id();
-        q->beginInsertRows( parentIndex, childEntitiesCount( parentIndex ), childEntitiesCount( parentIndex ) );
         m_items.insert( itemId, item );
         m_itemsInCollection[ colId ].append( itemId );
-        q->endInsertRows();
       }
-      //       endInsertRows();
+      q->endInsertRows();
     }
   }
 }
