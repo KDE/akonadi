@@ -28,7 +28,8 @@
 
 class QStringList;
 
-namespace Akonadi{
+namespace Akonadi
+{
 
 class Collection;
 class Item;
@@ -60,60 +61,61 @@ class EntityTreeModelPrivate;
  * @since 4.2
  * @todo Implement dropMimeData. Currently just a stub.
  * @todo Also need to implement a new view to use this.
+ * @todo Implement itemMoved.
  */
 class AKONADI_EXPORT EntityTreeModel : public CollectionModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  /**
-   * Describes the roles for items. Roles for collections are defined by the superclass.
-   */
-  enum Roles {
-    ItemRole = Akonadi::CollectionModel::UserRole + 1,              ///< The item.
-    ItemIdRole,                                                     ///< The item id
-    MimeTypeRole,                                                   ///< The mimetype of the entity
-    RemoteIdRole,                                                   ///< The remoteId of the entity
+  public:
+    /**
+     * Describes the roles for items. Roles for collections are defined by the superclass.
+     */
+    enum Roles {
+      ItemRole = Akonadi::CollectionModel::UserRole + 1,              ///< The item.
+      ItemIdRole,                                                     ///< The item id
+      MimeTypeRole,                                                   ///< The mimetype of the entity
+      RemoteIdRole,                                                   ///< The remoteId of the entity
 //    EntityAboveRole,                                                ///< The remoteId of the entity above @p index.
-    UserRole = Akonadi::CollectionModel::UserRole + 20              ///< Role for user extensions.
-  };
+      UserRole = Akonadi::CollectionModel::UserRole + 20              ///< Role for user extensions.
+    };
 
-  /**
-   * Creates a new collection and item model.
-   *
-   * @param parent The parent object.
-   * @param mimeTypes The list of mimetypes to be retrieved in the model.
-   */
-  explicit EntityTreeModel ( const QStringList &mimeTypes, QObject *parent = 0 );
+    /**
+     * Creates a new collection and item model.
+     *
+     * @param parent The parent object.
+     * @param mimeTypes The list of mimetypes to be retrieved in the model.
+     */
+    explicit EntityTreeModel( const QStringList &mimeTypes, QObject *parent = 0 );
 
-  /**
-   * Destroys the collection and item model.
-   */
-  virtual ~EntityTreeModel();
+    /**
+     * Destroys the collection and item model.
+     */
+    virtual ~EntityTreeModel();
 
-  virtual QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-  virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
-  virtual QModelIndex parent ( const QModelIndex & index ) const;
-  virtual int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
-  virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
-  virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
-  virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
+    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    virtual QModelIndex index( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
+    virtual QModelIndex parent( const QModelIndex & index ) const;
+    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+    virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
+    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+    virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
 
-  // TODO:
-  virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
+    // TODO:
+    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
-protected:
-  /**
-  Returns true if the index @p index refers to an item.
-  */
-  bool isItem( const QModelIndex &index ) const;
+  protected:
+    /**
+    Returns true if the index @p index refers to an item.
+    */
+    bool isItem( const QModelIndex &index ) const;
 
-  /**
-  Returns true if the index @p index refers to a collection.
-  */
-  bool isCollection( const QModelIndex &index ) const;
+    /**
+    Returns true if the index @p index refers to a collection.
+    */
+    bool isCollection( const QModelIndex &index ) const;
 
-private:
+  private:
     Q_DECLARE_PRIVATE( EntityTreeModel )
 
     Q_PRIVATE_SLOT( d_func(), void listDone( KJob* ) )

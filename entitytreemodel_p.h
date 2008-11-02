@@ -37,7 +37,8 @@ class Monitor;
 
 #include "entitytreemodel.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class EntityTreeModelPrivate : public CollectionModelPrivate
 {
@@ -45,7 +46,7 @@ class EntityTreeModelPrivate : public CollectionModelPrivate
 
     EntityTreeModelPrivate( EntityTreeModel *parent );
 
-    bool mimetypeMatches(const QStringList &mimetypes );
+    bool mimetypeMatches( const QStringList &mimetypes );
 
     void listDone( KJob* );
     void itemChanged( const Item&, const QSet<QByteArray>& );
@@ -57,9 +58,9 @@ class EntityTreeModelPrivate : public CollectionModelPrivate
     /**
     Adds items to the model when notified to do so for @p parent.
     */
-    void onRowsInserted ( const QModelIndex &parent, int start, int end );
+    void onRowsInserted( const QModelIndex &parent, int start, int end );
 
-    int childEntitiesCount ( const QModelIndex & parent ) const;
+    int childEntitiesCount( const QModelIndex & parent ) const;
 
     QHash< Collection::Id, QList< Item::Id > > m_itemsInCollection;
     QHash< Item::Id, Item > m_items;
@@ -69,7 +70,9 @@ class EntityTreeModelPrivate : public CollectionModelPrivate
 
     QModelIndex indexForItem( Item );
 
-    static QByteArray ItemFetchCollectionId() {  return "ItemFetchCollectionId"; }
+    static QByteArray ItemFetchCollectionId() {
+      return "ItemFetchCollectionId";
+    }
 
     Q_DECLARE_PUBLIC( EntityTreeModel )
 };
