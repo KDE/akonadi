@@ -77,6 +77,7 @@ class AgentBasePrivate : public QObject
     uint mProgress;
     QString mProgressMessage;
 
+    bool mNeedsNetwork;
     bool mOnline;
 
     QSettings *mSettings;

@@ -117,6 +117,7 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
   : q_ptr( parent ),
     mStatusCode( AgentBase::Idle ),
     mProgress( 0 ),
+    mNeedsNetwork( false ),
     mOnline( false ),
     mSettings( 0 ),
     mObserver( 0 )
@@ -379,6 +380,15 @@ bool AgentBase::isOnline() const
   Q_D( const AgentBase );
 
   return d->mOnline;
+}
+
+void AgentBase::setNeedsNetwork( bool needsNetwork )
+{
+  Q_D( AgentBase );
+  d->mNeedsNetwork = needsNetwork;
+  // TODO: when needsNetwork is true we need to start listening to
+  //       Solid::Networking::Notifier and change the online state of the agent
+  //       appropriatly.
 }
 
 void AgentBase::setOnline( bool state )

@@ -402,6 +402,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     bool isOnline() const;
 
     /**
+     * Sets whether the agent needs network or not.
+     * 
+     * @since 4.2
+     * @todo use this in combination with Solid::Networking::Notifier to change
+     *       the onLine status of the agent.
+     */
+    void setNeedsNetwork( bool needsNetwork );
+    
+    /**
      * Sets whether the agent shall be online or not.
      */
     void setOnline( bool state );
