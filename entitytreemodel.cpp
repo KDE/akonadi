@@ -22,10 +22,10 @@
 
 
 #include <QtCore/QAbstractItemModel>
-#include <QHash>
-#include <QMimeData>
-#include <QStringList>
-#include <QTimer>
+#include <QtCore/QHash>
+#include <QtCore/QMimeData>
+#include <QtCore/QStringList>
+#include <QtCore/QTimer>
 
 #include "collection.h"
 #include "collectionfetchjob.h"
@@ -46,8 +46,8 @@
 
 using namespace Akonadi;
 
-EntityTreeModel::EntityTreeModel( const QStringList &mimetypes, QObject *parent ) :
-    CollectionModel( new EntityTreeModelPrivate( this ), parent )
+EntityTreeModel::EntityTreeModel( const QStringList &mimetypes, QObject *parent )
+  : CollectionModel( new EntityTreeModelPrivate( this ), parent )
 {
   Q_D( EntityTreeModel );
   d->m_mimeTypeFilter = mimetypes;
@@ -138,7 +138,6 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   }
 
   return CollectionModel::data( index, role );
-
 }
 
 
@@ -160,7 +159,7 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
   } else
     return flags | Qt::ItemIsDropEnabled; // HACK Workaround for a probable bug in Qt
 
-  Collection col( index.parent().internalId() );
+  const Collection col( index.parent().internalId() );
   if ( col.isValid() ) {
     if ( col.rights() & ( Collection::CanChangeItem  |
                           Collection::CanCreateItem |
@@ -172,6 +171,7 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
       flags = flags | Qt::ItemIsDropEnabled;
     }
   }
+
   return flags;
 }
 
@@ -186,7 +186,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 //     CollectionModel::dropMimeData(data, action, row, column, parent);
   }
 
-  Collection col( parent.internalId() );
+  const Collection col( parent.internalId() );
 
   KJob* job = PasteHelper::paste( data, col, action != Qt::MoveAction );
   // TODO: error handling
@@ -207,11 +207,9 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
   // For example, if a parent collection has 5 child collections and 4 child items, the
   // 7th row of that parent is the 3rd item in the internal list of items (recalling that
   // row is zero indexed). offsetRow would be 3 in that case.
-  int offsetRow = row - d->childCollections.value( parent.internalId() ).size();
+  const int offsetRow = row - d->childCollections.value( parent.internalId() ).size();
 
-  QList<Item::Id> list;
-
-  list = d->m_itemsInCollection[ parent.internalId()];
+  const QList<Item::Id> list = d->m_itemsInCollection[ parent.internalId()];
 
   if ( offsetRow < 0 || offsetRow >= list.size() )
     return QModelIndex();
@@ -219,7 +217,6 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
     return QModelIndex();
 
   return createIndex( row, column, reinterpret_cast<void*>( list.at( offsetRow ) ) );
-
 }
 
 QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
@@ -228,11 +225,11 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
 
 //   if ( !d->m_items.contains( index.internalId() ) )
   if ( isCollection( index ) ) {
-    QModelIndex i = CollectionModel::parent( index );
-    return i;
+    const QModelIndex idx = CollectionModel::parent( index );
+    return idx;
   }
 
-  Item item = d->m_items.value( index.internalId() );
+  const Item item = d->m_items.value( index.internalId() );
   if ( !item.isValid() )
     return QModelIndex();
 
@@ -243,8 +240,8 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
       return d->indexForId( iter.key() );
     }
   }
-  return CollectionModel::parent( index );
 
+  return CollectionModel::parent( index );
 }
 
 int EntityTreeModel::rowCount( const QModelIndex & parent ) const
@@ -295,18 +292,16 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
 //       if ( item.hasAttribute< EntityDisplayAttribute >() )
 //       {
-      EntityDisplayAttribute *displayAttribute
-      = item.attribute< EntityDisplayAttribute > ( Entity::AddIfMissing );
-
+      EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>( Entity::AddIfMissing );
       displayAttribute->setDisplayName( value.toString() );
 //       }
 
       ItemModifyJob *job = new ItemModifyJob( item );
       connect( job, SIGNAL( result( KJob* ) ), SLOT( editDone( KJob* ) ) );
       return true;
-
     }
   }
+
   return QAbstractItemModel::setData( index, value, role );
 }
 
@@ -325,11 +320,11 @@ bool EntityTreeModel::isItem( const QModelIndex &index ) const
 
     // The id is common to a collection and an item.
     // Assume the index is a collection and proove myself wrong.
-    Collection::Id parentId = d->collections.value( index.internalId() ).parent();
+    const Collection::Id parentId = d->collections.value( index.internalId() ).parent();
     if ( d->collections.contains( parentId ) ) {
-      int row = index.row();
-      int childColsCount = d->childCollections.value( parentId ).size();
-      int childItemsCount = d->m_itemsInCollection.value( parentId ).size();
+      const int row = index.row();
+      const int childColsCount = d->childCollections.value( parentId ).size();
+      const int childItemsCount = d->m_itemsInCollection.value( parentId ).size();
       if (( row >= childColsCount ) && ( row < ( childColsCount + childItemsCount ) ) ) {
         // I don't have enough collections for this to be a row, and it is within the bounds of being
         // an item.
@@ -337,8 +332,8 @@ bool EntityTreeModel::isItem( const QModelIndex &index ) const
       }
     }
   }
-  return false;
 
+  return false;
 }
 
 bool EntityTreeModel::isCollection( const QModelIndex &index ) const
@@ -352,17 +347,17 @@ bool EntityTreeModel::isCollection( const QModelIndex &index ) const
 
     // The id is common to a collection and an item.
     // Assume the index is a collection and proove myself right.
-    Collection::Id parentId = d->collections.value( index.internalId() ).parent();
+    const Collection::Id parentId = d->collections.value( index.internalId() ).parent();
     if ( d->collections.contains( parentId ) ) {
-      int row = index.row();
-      int childColsCount = d->childCollections.value( parentId ).size();
+      const int row = index.row();
+      const int childColsCount = d->childCollections.value( parentId ).size();
       if ( row < childColsCount ) {
         return true;
       }
     }
   }
+
   return false;
 }
-
 
 #include "entitytreemodel.moc"

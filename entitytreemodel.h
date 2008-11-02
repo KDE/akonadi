@@ -106,13 +106,13 @@ class AKONADI_EXPORT EntityTreeModel : public CollectionModel
 
   protected:
     /**
-    Returns true if the index @p index refers to an item.
-    */
+     * Returns true if the index @p index refers to an item.
+     */
     bool isItem( const QModelIndex &index ) const;
 
     /**
-    Returns true if the index @p index refers to a collection.
-    */
+     * Returns true if the index @p index refers to a collection.
+     */
     bool isCollection( const QModelIndex &index ) const;
 
   private:
@@ -125,7 +125,6 @@ class AKONADI_EXPORT EntityTreeModel : public CollectionModel
     Q_PRIVATE_SLOT( d_func(), void itemsAdded( const Akonadi::Item::List& ) )
     Q_PRIVATE_SLOT( d_func(), void itemRemoved( const Akonadi::Item& ) )
     Q_PRIVATE_SLOT( d_func(), void onRowsInserted( const QModelIndex &parent, int start, int end ) )
-
 };
 
 } // namespace
