@@ -67,7 +67,7 @@ void AgentTypeDialog::done( int result )
   else
     d->agentType = AgentType();
 
-  QDialog::done( result );
+  KDialog::done( result );
 }
 
 AgentType AgentTypeDialog::agentType() const
