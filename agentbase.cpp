@@ -283,6 +283,12 @@ void AgentBasePrivate::slotError( const QString& message )
   mTracer->error( QString::fromLatin1( "AgentBase(%1)" ).arg( mId ), message );
 }
 
+void AgentBasePrivate::slotNetworkStatusChange( Solid::Networking::Status stat )
+{
+  Q_Q( AgentBase );
+  q->setOnline( stat == Solid::Networking::Connected );
+}
+
 
 AgentBase::AgentBase( const QString & id )
   : d_ptr( new AgentBasePrivate( this ) )
@@ -386,9 +392,15 @@ void AgentBase::setNeedsNetwork( bool needsNetwork )
 {
   Q_D( AgentBase );
   d->mNeedsNetwork = needsNetwork;
-  // TODO: when needsNetwork is true we need to start listening to
-  //       Solid::Networking::Notifier and change the online state of the agent
-  //       appropriatly.
+
+  if ( d->mNeedsNetwork ) {
+    connect( Solid::Networking::notifier()
+           , SIGNAL( statusChanged( Solid::Networking::Status ) )
+           , d, SLOT( slotNetworkStatusChange( Solid::Networking::Status ) ) );
+  } else {
+    disconnect( Solid::Networking::notifier(), 0, 0, 0 );
+    setOnline( true );
+  }
 }
 
 void AgentBase::setOnline( bool state )

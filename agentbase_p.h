@@ -25,6 +25,7 @@
 #include "tracerinterface.h"
 
 #include <klocale.h>
+#include <solid/networking.h>
 
 class QSettings;
 
@@ -46,6 +47,7 @@ class AgentBasePrivate : public QObject
     void slotPercent( int progress );
     void slotWarning( const QString& message );
     void slotError( const QString& message );
+    void slotNetworkStatusChange( Solid::Networking::Status );
 
     virtual void changeProcessed();
 
