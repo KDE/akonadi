@@ -57,11 +57,11 @@ bool Akonadi::Append::handleLine(const QByteArray& line )
     const int startOfCommand = line.indexOf( ' ' ) + 1;
     const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
 
-    QString size;
     const int startOfSize = ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
-    m_size = size.toLongLong();
 
+    QString size;
     const int startOfFlags = ImapParser::parseString( line, size, startOfSize ) + 1;
+    m_size = size.toLongLong();
 
     QString data;
     ImapParser::parseString( line, data, startOfSize);
