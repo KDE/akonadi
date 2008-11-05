@@ -164,8 +164,10 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
   int currentSize = m_newChildCollections.size();
   int lastSize = -1;
 
-  while ( currentSize != 0 && m_newChildCollections.size() > 0 )
+  while ( currentSize > 0 )
   {
+    lastSize = currentSize;
+
     QMutableHashIterator< Collection::Id, QList< Collection::Id > > i( m_newChildCollections );
     while ( i.hasNext() )
     {
@@ -182,7 +184,6 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
 //         // Sanity check.
 //         kDebug() << "No new child collections have been added to the collection:" << colId;
 //         i.remove();
-//         lastSize = currentSize;
 //         currentSize--;
 //         break;
 //       }
@@ -204,7 +205,6 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
         childCollections[ colId ] << newChildCols;
         q->endInsertRows();
         i.remove();
-        lastSize = currentSize;
         currentSize--;
         break;
       }
