@@ -42,9 +42,10 @@ struct Icons
    : readyPixmap( KIcon( QLatin1String("user-online") ).pixmap( QSize( 16, 16 ) ) )
    , syncPixmap( KIcon( QLatin1String("network-connect") ).pixmap( QSize( 16, 16 ) ) )
    , errorPixmap( KIcon( QLatin1String("dialog-error") ).pixmap( QSize( 16, 16 ) ) )
+   , offlinePixmap( KIcon( QLatin1String("network-disconnect") ).pixmap( QSize( 16, 16 ) ) )
   {
   }
-  QPixmap readyPixmap, syncPixmap, errorPixmap;
+  QPixmap readyPixmap, syncPixmap, errorPixmap, offlinePixmap;
 };
 
 K_GLOBAL_STATIC( Icons, s_icons )
@@ -185,9 +186,11 @@ QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem
                            qvariant_cast<QIcon>( data ).pixmap( QSize( 64, 64 ) ) );
   }
 
-  if ( status == 0 )
+  if ( !index.data( AgentInstanceModel::OnlineRole ).toBool() )
+    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->offlinePixmap );
+  else if ( status == AgentInstance::Idle )
     document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->readyPixmap );
-  else if ( status == 1 )
+  else if ( status == AgentInstance::Running )
     document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->syncPixmap );
   else
     document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->errorPixmap );

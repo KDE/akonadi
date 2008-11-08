@@ -359,6 +359,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     void reloadConfiguration();
 
+    /**
+     * Emitted when the online state changed.
+     * @param state The online state.
+     * @since 4.2
+     */
+    void onlineChanged( bool b );
+
   protected:
     /**
      * Creates an agent base.
@@ -403,13 +410,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
     /**
      * Sets whether the agent needs network or not.
-     * 
+     *
      * @since 4.2
      * @todo use this in combination with Solid::Networking::Notifier to change
      *       the onLine status of the agent.
      */
     void setNeedsNetwork( bool needsNetwork );
-    
+
     /**
      * Sets whether the agent shall be online or not.
      */

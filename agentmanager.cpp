@@ -135,6 +135,16 @@ void AgentManagerPrivate::agentInstanceError( const QString &identifier, const Q
   emit mParent->instanceError( instance, msg );
 }
 
+void AgentManagerPrivate::agentInstanceOnlineChanged( const QString &identifier, bool state )
+{
+  if ( !mInstances.contains( identifier ) )
+    return;
+
+  AgentInstance &instance = mInstances[ identifier ];
+  instance.d->mIsOnline = state;
+  emit mParent->instanceOnline( instance, state );
+}
+
 void AgentManagerPrivate::agentInstanceNameChanged( const QString &identifier, const QString &name )
 {
   if ( !mInstances.contains( identifier ) )
@@ -246,6 +256,8 @@ AgentManager::AgentManager()
            this, SLOT( agentInstanceWarning( const QString&, const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceError( const QString&, const QString& ) ),
            this, SLOT( agentInstanceError( const QString&, const QString& ) ) );
+  connect( d->mManager, SIGNAL(agentInstanceOnlineChanged(QString,bool)),
+           SLOT(agentInstanceOnlineChanged(QString,bool)) );
 
   const QStringList typeIdentifiers = d->mManager->agentTypes();
   foreach( const QString &type, typeIdentifiers ) {

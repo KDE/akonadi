@@ -58,6 +58,7 @@ class AgentManagerPrivate
     void agentInstanceNameChanged( const QString&, const QString& );
     void agentInstanceWarning( const QString&, const QString& );
     void agentInstanceError( const QString&, const QString& );
+    void agentInstanceOnlineChanged( const QString&, bool );
 
     void setName( const AgentInstance&, const QString& );
     void setOnline( const AgentInstance&, bool );

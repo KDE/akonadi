@@ -173,6 +173,15 @@ class AKONADI_EXPORT AgentManager : public QObject
      */
     void instanceWarning( const Akonadi::AgentInstance &instance, const QString &message );
 
+    /**
+     * This signal is emitted whenever the online state of an agent changed.
+     *
+     * @param instance The agent instance that changed its online state.
+     * @param online The new online state.
+     * @since 4.2
+     */
+    void instanceOnline( const Akonadi::AgentInstance &instance, bool online );
+
   private:
     //@cond PRIVATE
     AgentManager();
@@ -188,6 +197,7 @@ class AKONADI_EXPORT AgentManager : public QObject
     Q_PRIVATE_SLOT( d, void agentInstanceNameChanged( const QString&, const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceWarning( const QString&, const QString& ) )
     Q_PRIVATE_SLOT( d, void agentInstanceError( const QString&, const QString& ) )
+    Q_PRIVATE_SLOT( d, void agentInstanceOnlineChanged( const QString&, bool ) )
     //@endcond
 };
 

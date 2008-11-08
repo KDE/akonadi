@@ -92,6 +92,8 @@ AgentInstanceModel::AgentInstanceModel( QObject *parent )
            this, SLOT( instanceChanged( const Akonadi::AgentInstance& ) ) );
   connect( AgentManager::self(), SIGNAL( instanceNameChanged( const Akonadi::AgentInstance& ) ),
            this, SLOT( instanceChanged( const Akonadi::AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)),
+           SLOT(instanceChanged(Akonadi::AgentInstance)) );
 }
 
 AgentInstanceModel::~AgentInstanceModel()

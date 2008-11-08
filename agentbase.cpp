@@ -178,7 +178,7 @@ void AgentBasePrivate::init()
   // agent is stopped.
   KGlobal::ref();
   KGlobal::setAllowQuit(true);
-  
+
   QTimer::singleShot( 0, q, SLOT( delayedInit() ) );
 }
 
@@ -409,6 +409,7 @@ void AgentBase::setOnline( bool state )
   d->mOnline = state;
   d->mSettings->setValue( QLatin1String( "Agent/Online" ), state );
   doSetOnline( state );
+  emit onlineChanged( state );
 }
 
 void AgentBase::doSetOnline( bool online )
