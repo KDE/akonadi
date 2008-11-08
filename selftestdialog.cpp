@@ -282,7 +282,7 @@ void SelfTestDialog::testMySQLServerConfig()
   const QFileInfo globalConfigInfo( globalConfig );
   if ( !globalConfig.isEmpty() && globalConfigInfo.exists() && globalConfigInfo.isReadable() ) {
     item = report( Success, i18n( "MySQL server default configuration found." ),
-                   i18n( "The default configuration for the MySQL server was found and is readable at %1",
+                   i18n( "The default configuration for the MySQL server was found and is readable at %1.",
                    makeLink( globalConfig ) ) );
     item->setData( globalConfig, FileIncludeRole );
   } else {
