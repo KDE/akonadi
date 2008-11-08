@@ -14,6 +14,9 @@
     <signal name="error">
       <arg name="message" type="s" direction="out"/>
     </signal>
+    <signal name="onlineChanged">
+      <arg name="state" type="b" direction="out"/>
+    </signal>
     <method name="status">
       <arg type="i" direction="out"/>
     </method>
@@ -28,6 +31,7 @@
     </method>
     <method name="setOnline">
       <arg name="state" type="b" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
   </interface>
 </node>

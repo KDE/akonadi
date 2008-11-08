@@ -56,20 +56,4 @@ class AgentInfo
     static QLatin1String CapabilityAutostart;
 };
 
-class AgentInstanceInfo
-{
-  public:
-    AgentInstanceInfo();
-    bool start( const AgentInfo &agentInfo, AgentManager* manager );
-    bool isResource() const { return resourceInterface; }
-
-    QString identifier;
-    QString agentType;
-    Akonadi::ProcessControl *controller;
-    org::freedesktop::Akonadi::Agent::Control *agentControlInterface;
-    org::freedesktop::Akonadi::Agent::Status *agentStatusInterface;
-    org::freedesktop::Akonadi::Resource *resourceInterface;
-};
-
-
 #endif

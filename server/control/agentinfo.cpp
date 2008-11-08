@@ -81,29 +81,3 @@ void AgentInfo::save( QSettings *config ) const
     config->setValue( QString::fromLatin1( "InstanceCounters/%1/InstanceCounter" ).arg( identifier ), instanceCounter );
   }
 }
-
-AgentInstanceInfo::AgentInstanceInfo() :
-    controller( 0 ),
-    agentControlInterface( 0 ),
-    agentStatusInterface( 0 ),
-    resourceInterface( 0 )
-{
-}
-
-bool AgentInstanceInfo::start( const AgentInfo &agentInfo, AgentManager *manager )
-{
-  Q_ASSERT( !identifier.isEmpty() );
-  if ( identifier.isEmpty() )
-    return false;
-  const QString executable = Akonadi::XdgBaseDirs::findExecutableFile( agentInfo.exec );
-  if ( executable.isEmpty() ) {
-    manager->tracer()->error( QLatin1String( "AgentInstanceInfo::start" ),
-                              QString::fromLatin1( "Unable to find agent executable '%1'" ).arg( agentInfo.exec ) );
-    return false;
-  }
-  controller = new Akonadi::ProcessControl( manager );
-  QStringList arguments;
-  arguments << "--identifier" << identifier;
-  controller->start( executable, arguments );
-  return true;
-}

@@ -24,9 +24,9 @@
 #include <QtCore/QHash>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
-#include <QDBusContext>
 
 #include "agentinfo.h"
+#include "agentinstance.h"
 #include "tracerinterface.h"
 
 class QDir;
@@ -40,7 +40,7 @@ namespace Akonadi {
  * for .desktop files in the agent directory) and the available configured
  * instances.
  */
-class AgentManager : public QObject, protected QDBusContext
+class AgentManager : public QObject
 {
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.AgentManager" )
@@ -276,14 +276,14 @@ class AgentManager : public QObject, protected QDBusContext
      */
     void agentInstanceNameChanged( const QString &agentIdentifier, const QString &name );
 
+    /**
+     * Emitted when the online state of an agent changed.
+     */
+    void agentInstanceOnlineChanged( const QString &agentIdentifier, bool state );
+
   private Q_SLOTS:
     void updatePluginInfos();
     void serviceOwnerChanged( const QString&, const QString&, const QString& );
-    void status( int status, const QString &message );
-    void percent( int progress );
-    void warning( const QString &message );
-    void error( const QString &message );
-    void resourceNameChanged( const QString& );
 
   private:
     /**
@@ -314,7 +314,6 @@ class AgentManager : public QObject, protected QDBusContext
      */
     void readPluginInfos( const QDir &directory );
 
-    bool checkDBusDeadlock() const;
     bool checkAgentInterfaces( const QString &identifier, const QString &method ) const;
     bool checkInstance( const QString &identifier ) const;
     bool checkResourceInterface( const QString &identifier, const QString &method ) const;
@@ -336,13 +335,13 @@ class AgentManager : public QObject, protected QDBusContext
      *
      * Key is the instance identifier.
      */
-    QHash<QString, AgentInstanceInfo> mAgentInstances;
-
-    QSet<QString> mAgentServiceOwners;
+    QHash<QString, AgentInstance::Ptr> mAgentInstances;
 
     org::freedesktop::Akonadi::Tracer *mTracer;
 
     Akonadi::ProcessControl *mStorageController;
+
+    friend class AgentInstance;
 };
 
 #endif
