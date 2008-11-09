@@ -57,6 +57,7 @@ static QString makeLink( const QString &file )
 static const int ResultTypeRole = Qt::UserRole;
 static const int FileIncludeRole = Qt::UserRole + 1;
 static const int ListDirectoryRole = Qt::UserRole + 2;
+static const int EnvVarRole = Qt::UserRole + 3;
 
 SelfTestDialog::SelfTestDialog(QWidget * parent) :
     KDialog( parent )
@@ -397,13 +398,16 @@ void SelfTestDialog::testResources()
   if ( resourceFound ) {
     item = report( Success, i18n( "Resource agents found." ), i18n( "At least one resource agent has been found." ) );
   } else {
-    // TODO: add details on XDG_WHATEVER env var needed to find agents
     item = report( Error, i18n( "No resource agents found." ),
       i18n( "No resource agents have been found, Akonadi is not usable without at least one. "
             "This usually means that no resource agents are installed or that there is a setup problem. "
-            "The following paths have been searched: %1", pathList.join( QLatin1String(" ") ) ) );
+            "The following paths have been searched: '%1'. "
+            "The XDG_DATA_DIRS environment variable is set to '%2', make sure this includes all paths "
+            "where Akonadi agents are installed to.", pathList.join( QLatin1String(" ") ),
+            QString::fromLocal8Bit( qgetenv( "XDG_DATA_DIRS" ) ) ) );
   }
   item->setData( pathList, ListDirectoryRole );
+  item->setData( QByteArray( "XDG_DATA_DIRS" ), EnvVarRole );
 }
 
 void Akonadi::SelfTestDialog::testServerLog()
@@ -499,6 +503,8 @@ QString SelfTestDialog::createReport()
     if ( item->data( ListDirectoryRole ).isValid() ) {
       s << endl;
       const QStringList pathList = item->data( ListDirectoryRole ).toStringList();
+      if ( pathList.isEmpty() )
+        s << "Directory list is empty." << endl;
       foreach ( const QString &path, pathList ) {
         s << "Directory listing of '" << path << "':" << endl;
         QDir dir( path );
@@ -506,6 +512,12 @@ QString SelfTestDialog::createReport()
         foreach ( const QString &entry, dir.entryList() )
           s << entry << endl;
       }
+    }
+    if ( item->data( EnvVarRole ).isValid() ) {
+      s << endl;
+      const QByteArray envVarName = item->data( EnvVarRole ).toByteArray();
+      const QByteArray envVarValue = qgetenv( envVarName );
+      s << "Environment variable " << envVarName << " is set to '" << envVarValue << "'" << endl;
     }
   }
 
