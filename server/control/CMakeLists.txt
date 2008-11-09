@@ -19,7 +19,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}" )
 
 set( control_SRCS
   ${AKONADI_SHARED_SOURCES}
-  agentinfo.cpp
+  agenttype.cpp
   agentinstance.cpp
   agentmanager.cpp
   controlmanager.cpp

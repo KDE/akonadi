@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 - 2008 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,13 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_AGENTINFO_H
-#define AKONADI_AGENTINFO_H
-
-#include "controlinterface.h"
-#include "statusinterface.h"
-#include "resourceinterface.h"
-#include "tracerinterface.h"
+#ifndef AGENTTYPE_H
+#define AGENTTYPE_H
 
 #include <QString>
 #include <QStringList>
@@ -35,10 +30,10 @@ namespace Akonadi {
 class AgentManager;
 class QSettings;
 
-class AgentInfo
+class AgentType
 {
   public:
-    AgentInfo();
+    AgentType();
     bool load( const QString &fileName, AgentManager *manager );
     void save( QSettings *config ) const;
 

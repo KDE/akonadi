@@ -25,7 +25,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 
-#include "agentinfo.h"
+#include "agenttype.h"
 #include "agentinstance.h"
 #include "tracerinterface.h"
 
@@ -318,7 +318,7 @@ class AgentManager : public QObject
     bool checkInstance( const QString &identifier ) const;
     bool checkResourceInterface( const QString &identifier, const QString &method ) const;
     bool checkAgentExists( const QString &identifier ) const;
-    void ensureAutoStart( const AgentInfo &info );
+    void ensureAutoStart( const AgentType &info );
     void continueStartup();
 
   private:
@@ -328,7 +328,7 @@ class AgentManager : public QObject
      *
      * Key is the agent type (e.g. 'file' or 'imap').
      */
-    QHash<QString, AgentInfo> mAgents;
+    QHash<QString, AgentType> mAgents;
 
     /**
      * The map which stores the active instances.

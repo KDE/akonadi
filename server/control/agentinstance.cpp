@@ -19,7 +19,7 @@
 
 #include "agentinstance.h"
 
-#include "agentinfo.h"
+#include "agenttype.h"
 #include "agentmanager.h"
 #include "../../libs/xdgbasedirs_p.h"
 #include "processcontrol.h"
@@ -37,7 +37,7 @@ AgentInstance::AgentInstance(AgentManager * manager) :
 {
 }
 
-bool AgentInstance::start( const AgentInfo &agentInfo )
+bool AgentInstance::start( const AgentType &agentInfo )
 {
   Q_ASSERT( !mIdentifier.isEmpty() );
   if ( mIdentifier.isEmpty() )

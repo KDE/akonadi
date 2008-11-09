@@ -65,7 +65,7 @@ void AgentManager::continueStartup()
   first = false;
 
   readPluginInfos();
-  foreach ( const AgentInfo &info, mAgents )
+  foreach ( const AgentType &info, mAgents )
     emit agentTypeAdded( info.identifier );
 
   QStringList pathList = pluginInfoPathList();
@@ -79,7 +79,7 @@ void AgentManager::continueStartup()
   }
 
   load();
-  foreach ( const AgentInfo &info, mAgents )
+  foreach ( const AgentType &info, mAgents )
     ensureAutoStart( info );
 }
 
@@ -128,7 +128,7 @@ QString AgentManager::agentIcon( const QString &identifier ) const
 {
   if ( !checkAgentExists( identifier ) )
     return QString();
-  const AgentInfo info = mAgents.value( identifier );
+  const AgentType info = mAgents.value( identifier );
   if ( !info.icon.isEmpty() )
     return info.icon;
   return "application-x-executable";
@@ -152,12 +152,12 @@ QString AgentManager::createAgentInstance( const QString &identifier )
 {
   if ( !checkAgentExists( identifier ) )
     return QString();
-  AgentInfo agentInfo = mAgents.value( identifier );
+  AgentType agentInfo = mAgents.value( identifier );
   mAgents[ identifier ].instanceCounter++;
 
 
   AgentInstance::Ptr instance( new AgentInstance( this ) );
-  if ( agentInfo.capabilities.contains( AgentInfo::CapabilityUnique ) )
+  if ( agentInfo.capabilities.contains( AgentType::CapabilityUnique ) )
     instance->setIdentifier( identifier );
   else
     instance->setIdentifier( QString::fromLatin1( "%1_%2" ).arg( identifier, QString::number( agentInfo.instanceCounter ) ) );
@@ -305,15 +305,15 @@ void AgentManager::agentInstanceSynchronizeCollection(const QString & identifier
 
 void AgentManager::updatePluginInfos()
 {
-  QHash<QString, AgentInfo> oldInfos = mAgents;
+  QHash<QString, AgentType> oldInfos = mAgents;
   readPluginInfos();
 
-  foreach ( const AgentInfo &oldInfo, oldInfos ) {
+  foreach ( const AgentType &oldInfo, oldInfos ) {
     if ( !mAgents.contains( oldInfo.identifier ) )
       emit agentTypeRemoved( oldInfo.identifier );
   }
 
-  foreach ( const AgentInfo &newInfo, mAgents ) {
+  foreach ( const AgentType &newInfo, mAgents ) {
     if ( !oldInfos.contains( newInfo.identifier ) ) {
       emit agentTypeAdded( newInfo.identifier );
       ensureAutoStart( newInfo );
@@ -341,7 +341,7 @@ void AgentManager::readPluginInfos( const QDir& directory )
   for ( int i = 0; i < files.count(); ++i ) {
     const QString fileName = directory.absoluteFilePath( files[ i ] );
 
-    AgentInfo agentInfo;
+    AgentType agentInfo;
     if ( agentInfo.load( fileName, this ) ) {
       if ( mAgents.contains( agentInfo.identifier ) ) {
         mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
@@ -412,7 +412,7 @@ void AgentManager::save()
   QSettings file( configPath( true ), QSettings::IniFormat );
 
   file.clear();
-  foreach ( const AgentInfo &info, mAgents )
+  foreach ( const AgentType &info, mAgents )
     info.save( &file );
 
   file.beginGroup( "Instances" );
@@ -509,9 +509,9 @@ bool AgentManager::checkAgentInterfaces(const QString & identifier, const QStrin
   return true;
 }
 
-void AgentManager::ensureAutoStart(const AgentInfo & info)
+void AgentManager::ensureAutoStart(const AgentType & info)
 {
-  if ( !info.capabilities.contains( AgentInfo::CapabilityAutostart ) )
+  if ( !info.capabilities.contains( AgentType::CapabilityAutostart ) )
     return; // no an autostart agent
   if ( mAgentInstances.contains( info.identifier ) )
     return; // already running

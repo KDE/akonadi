@@ -36,7 +36,7 @@ namespace Akonadi {
 }
 
 class AgentManager;
-class AgentInfo;
+class AgentType;
 
 /**
  * Represents one agent instance and takes care of communication with it.
@@ -59,7 +59,7 @@ class AgentInstance : public QObject
     bool isOnline() const { return mOnline; }
     QString resourceName() const { return mResourceName; }
 
-    bool start( const AgentInfo &agentInfo );
+    bool start( const AgentType &agentInfo );
     void quit();
     void cleanup();
 

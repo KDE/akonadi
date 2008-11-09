@@ -17,25 +17,25 @@
     02110-1301, USA.
 */
 
-#include "agentinfo.h"
+#include "agenttype.h"
 #include "agentmanager.h"
+#include "tracerinterface.h"
 #include "../../libs/xdgbasedirs_p.h"
-#include "processcontrol.h"
 
 #include <QSettings>
 
 using namespace Akonadi;
 
-QLatin1String AgentInfo::CapabilityUnique = QLatin1String( "Unique" );
-QLatin1String AgentInfo::CapabilityResource = QLatin1String( "Resource" );
-QLatin1String AgentInfo::CapabilityAutostart = QLatin1String( "Autostart" );
+QLatin1String AgentType::CapabilityUnique = QLatin1String( "Unique" );
+QLatin1String AgentType::CapabilityResource = QLatin1String( "Resource" );
+QLatin1String AgentType::CapabilityAutostart = QLatin1String( "Autostart" );
 
-AgentInfo::AgentInfo() :
+AgentType::AgentType() :
     instanceCounter( 0 )
 {
 }
 
-bool AgentInfo::load(const QString & fileName, AgentManager * manager)
+bool AgentType::load(const QString & fileName, AgentManager * manager)
 {
   QSettings file( fileName, QSettings::IniFormat );
   file.beginGroup( "Desktop Entry" );
@@ -50,12 +50,12 @@ bool AgentInfo::load(const QString & fileName, AgentManager * manager)
   file.endGroup();
 
   if ( identifier.isEmpty() ) {
-    manager->tracer()->error( QLatin1String( "AgentInfo::readInfo" ),
+    manager->tracer()->error( QLatin1String( "AgentType::readInfo" ),
                              QString( "Agent desktop file '%1' contains empty identifier" ).arg( fileName ) );
     return false;
   }
   if ( exec.isEmpty() ) {
-    manager->tracer()->error( QLatin1String( "AgentInfo::readInfo" ),
+    manager->tracer()->error( QLatin1String( "AgentType::readInfo" ),
                     QString( "Agent desktop file '%1' contains empty Exec entry" ).arg( fileName ) );
     return false;
   }
@@ -74,7 +74,7 @@ bool AgentInfo::load(const QString & fileName, AgentManager * manager)
   return true;
 }
 
-void AgentInfo::save( QSettings *config ) const
+void AgentType::save( QSettings *config ) const
 {
   Q_ASSERT( config );
   if ( !capabilities.contains( CapabilityUnique ) ) {
