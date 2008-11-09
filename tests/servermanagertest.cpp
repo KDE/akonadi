@@ -37,9 +37,9 @@ class ServerManagerTest : public QObject
 
     void testStartStop()
     {
-      QSignalSpy startSpy( ServerManager::instance(), SIGNAL(started()) );
+      QSignalSpy startSpy( ServerManager::self(), SIGNAL(started()) );
       QVERIFY( startSpy.isValid() );
-      QSignalSpy stopSpy( ServerManager::instance(), SIGNAL(stopped()) );
+      QSignalSpy stopSpy( ServerManager::self(), SIGNAL(stopped()) );
       QVERIFY( stopSpy.isValid() );
 
       QVERIFY( ServerManager::isRunning() );
@@ -64,7 +64,7 @@ class ServerManagerTest : public QObject
 
     void testRestart()
     {
-      QSignalSpy startSpy( ServerManager::instance(), SIGNAL(started()) );
+      QSignalSpy startSpy( ServerManager::self(), SIGNAL(started()) );
       QVERIFY( startSpy.isValid() );
 
       QVERIFY( Control::restart() );

@@ -77,7 +77,7 @@ class AKONADI_EXPORT ServerManager : public QObject
      * Returns the singleton instance of this class, for connecting to its
      * signals
      */
-    static ServerManager* instance();
+    static ServerManager* self();
 
   Q_SIGNALS:
     /**

@@ -96,7 +96,7 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
   connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
 }
 
-ServerManager * Akonadi::ServerManager::instance()
+ServerManager * Akonadi::ServerManager::self()
 {
   return sInstance->instance;
 }

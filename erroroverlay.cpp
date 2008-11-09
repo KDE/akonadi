@@ -110,8 +110,8 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
     started();
   else
     stopped();
-  connect( ServerManager::instance(), SIGNAL(started()), SLOT(started()) );
-  connect( ServerManager::instance(), SIGNAL(stopped()), SLOT(stopped()) );
+  connect( ServerManager::self(), SIGNAL(started()), SLOT(started()) );
+  connect( ServerManager::self(), SIGNAL(stopped()), SLOT(stopped()) );
 
   QPalette p = palette();
   p.setColor( backgroundRole(), QColor( 0, 0, 0, 128 ) );

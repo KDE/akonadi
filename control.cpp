@@ -156,8 +156,8 @@ void Control::Private::serverStopped()
 Control::Control()
   : d( new Private( this ) )
 {
-  connect( ServerManager::instance(), SIGNAL(started()), SLOT(serverStarted()) );
-  connect( ServerManager::instance(), SIGNAL(stopped()), SLOT(serverStopped()) );
+  connect( ServerManager::self(), SIGNAL(started()), SLOT(serverStarted()) );
+  connect( ServerManager::self(), SIGNAL(stopped()), SLOT(serverStopped()) );
 }
 
 Control::~Control()
