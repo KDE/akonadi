@@ -63,8 +63,6 @@ set( akonadikde_LIB_SRC
   control.cpp
   entitydisplayattribute.cpp
   #entitysortfilterproxymodel.cpp
-  entitytreemodel.cpp
-  entitytreemodel_p.cpp
   erroroverlay.cpp
   expungejob.cpp
   flatcollectionproxymodel.cpp
@@ -168,7 +166,6 @@ install( FILES
   entity.h
   entitydisplayattribute.h
   #  entitysortfilterproxymodel.h
-  entitytreemodel.h
   item.h
   itemcreatejob.h
   itemcopyjob.h
