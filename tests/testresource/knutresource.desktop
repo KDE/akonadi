@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Knut
+Name[x-test]=xxKnutxx
 Comment=An agent for debugging purpose
 Comment[ca]=Un agent amb la finalitat de depuració
 Comment[da]=En agent til fejlretningsformål
