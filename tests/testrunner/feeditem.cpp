@@ -21,7 +21,7 @@
 #include <syndication/feed.h>
 #include <syndication/loader.h>
 #include <QDir>
-#include <QtTest> 
+#include <QtTest>
 #include <QEventLoop>
 
 
@@ -33,24 +33,25 @@ FeedItem::FeedItem(QFile *file, const QString &mimetype)
     kurl = KUrl( file->fileName() );
   else
     kurl = KUrl("file://" + QDir::currentPath() + '/', file->fileName() );
-  
+
   Syndication::Loader* loader = Syndication::Loader::create(this,
                                            SLOT(feedLoaded(Syndication::Loader*,
                                            Syndication::FeedPtr,
                                            Syndication::ErrorCode)));
   loader->loadFrom(kurl);
-  
+
   QEventLoop *test = new QEventLoop(this);
-  while(test->processEvents(QEventLoop::WaitForMoreEvents)); //workaround  
+  while(test->processEvents(QEventLoop::WaitForMoreEvents)) {} //workaround
 }
 
 void FeedItem::feedLoaded(Syndication::Loader* loader,
                             Syndication::FeedPtr feed,
                             Syndication::ErrorCode error)
 {
+  Q_UNUSED( loader )
   if( error != Syndication::Success)
     return;
-  
+
   foreach(const Syndication::ItemPtr &itemptr, feed->items()){
     Akonadi::Item i;
     i.setMimeType(mimetype);

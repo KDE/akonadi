@@ -25,7 +25,7 @@
 
 AkonadiTesting::AkonadiTesting( const QString &configfilename )
 {
-
+  Q_UNUSED( configfilename ) // TODO use this if !isNull()
 }
 
 AkonadiTesting::AkonadiTesting()
@@ -43,7 +43,7 @@ void AkonadiTesting::insertItem(const QString &filename, const QString &colname)
   file->open(QFile::ReadOnly);
 
   Item *item = factory.createItem(file);
-  
+
   foreach(const Akonadi::Item &akonaditem, item->getItem()){
     if( dao.insertItem(akonaditem, collection ) ){
       qDebug()<<"Item loaded to Akonadi";
@@ -51,7 +51,7 @@ void AkonadiTesting::insertItem(const QString &filename, const QString &colname)
       qDebug()<<"Item can not be loaded";
     }
   }
-  
+
   delete file;
 }
 
@@ -59,7 +59,7 @@ void AkonadiTesting::insertItemFromList()
 {
   Config *config = Config::getInstance();
   QPair<QString, QString> confitem;
-  
+
   foreach(confitem, config->getItemConfig() ){
     insertItem(confitem.first, confitem.second);
   }

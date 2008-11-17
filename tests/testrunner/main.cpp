@@ -37,12 +37,15 @@ int main(int argc, char **argv) {
 
   KCmdLineOptions options;
 
+  // TODO: add --config option for overriding with a specific one
+
   KCmdLineArgs::addCmdLineOptions(options);
 
   KApplication app;
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
+  Q_UNUSED( args ) // TODO pass value of --config once available
   SetupTest *setup = new SetupTest();
 
   setup->startAkonadiDaemon();

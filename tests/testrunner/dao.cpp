@@ -22,24 +22,26 @@
 
 Akonadi::Collection::List  DAO::showCollections(){
   Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(
-                                        Akonadi::Collection::root(), 
+                                        Akonadi::Collection::root(),
                                         Akonadi::CollectionFetchJob::Recursive);
 
-    job->exec();     
+    job->exec();
     Akonadi::Collection::List collections = job->collections();
     return collections;
 }
 
 Akonadi::Collection  DAO::getCollectionByName(const QString &colname){
   Akonadi::Collection::List colist = showCollections();
-  
+
   foreach(const Akonadi::Collection &col, colist){
-    if( colname == col.name()  ) return col;  
+    if( colname == col.name()  ) return col;
   }
-} 
+
+  return Akonadi::Collection();
+}
 
 bool DAO::insertItem(Akonadi::Item item, Akonadi::Collection collection){
   Akonadi::ItemCreateJob *ijob = new Akonadi::ItemCreateJob(item, collection);
-  
+
   return ijob->exec();
 }
