@@ -11,6 +11,11 @@ include_directories(
     ${AKONADI_INCLUDE_DIR}
 )
 
+# add testrunner (application for managing a self-contained test
+# environment)
+
+add_subdirectory(testrunner)
+
 # convenience macro to add akonadi demo application
 macro(add_akonadi_demo _source)
   set(_test ${_source})
