@@ -1,3 +1,25 @@
+1.0.80                            19-Nov-2008
+---------------------------------------------
+- Query agent status information asynchronously and answer all queries from
+  cached values, reduces the risk of an agents blocking the Akonadi server.
+- Increase mysql limits to more realistical values.
+- Don't mark all new items as recent.
+- Changes so it can store the size of an item.
+- Better error detection.
+- Prevent translated month names in the protocol.
+- Some build fixes.
+- Handle multiline output correctly.
+- Terminate the control process when the server process failed to start.
+- Add the ability to debug or valgrind a resource right from the
+  beginning, similar to the way this can be done with KIO slaves.
+- Fix fetching of linked items in arbitrary collections.
+- Add notification support for item references in virtual collections.
+- Add LINK/UNLINK commands to edit references to items in virtual collections.
+- Add a way to notify agents that their configuration has been changed remotely.
+- Make sure that all modification times are stored in UTC time zone.
+- Unquoted date time with a lenght of 26 characters was not parsed properly.
+- Add serverside timestamp support for items.
+
 0.82.0                           18-June-2008
 ---------------------------------------------
 - Several build and installation fixes for windows and mac.

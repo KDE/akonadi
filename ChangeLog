@@ -1,3 +1,412 @@
+2008-11-09 14:23 +0000 [r881993]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/agenttype.cpp (added),
+	  trunk/kdesupport/akonadi/server/control/agentinstance.cpp,
+	  trunk/kdesupport/akonadi/server/control/agenttype.h (added),
+	  trunk/kdesupport/akonadi/server/control/agentinstance.h,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentinfo.cpp (removed),
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.h,
+	  trunk/kdesupport/akonadi/server/control/agentinfo.h (removed):
+	  Rename to reflect what is left here after yesterdays changes.
+
+2008-11-08 16:59 +0000 [r881636]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Agent.Status.xml,
+	  trunk/kdesupport/akonadi/server/control/agentinstance.cpp
+	  (added), trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/agentinstance.h (added),
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.AgentManager.xml,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentinfo.cpp,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.h,
+	  trunk/kdesupport/akonadi/server/control/agentinfo.h: Query agent
+	  status information asynchronously and answer all queries from
+	  cached values. This massively reduces the risk of a misbehaving
+	  agents blocking the Akonadi server and thus all clients. This
+	  also removes the restriction that agents were not allowed to
+	  access the agent manager themselves to avoid deadlocks.
+
+2008-11-04 21:16 +0000 [r880161]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp: Fix the
+	  size parsing.
+
+2008-11-01 16:14 +0000 [r878678]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/mysql-global.conf:
+	  Increase the limit to something more realistical.
+
+2008-11-01 10:09 +0000 [r878448]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp: Don't
+	  mark all new items as recent. No users for that, and if there are
+	  users, they should simply set it in the resource. Fixes the
+	  Mailody problem that opening a folder for the first time all
+	  messages are marked as recent, although they also contain the
+	  \Seen flag.
+
+2008-11-01 09:26 +0000 [r878427]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/server/src/handler/append.h,
+	  trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/akonadidb.xml,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.h,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp: Changes to
+	  akonadi so it can store the size of an item. - database update -
+	  protocol update - adjustments to the parsing code
+
+2008-10-29 08:11 +0000 [r877324]  Loic Marteau loic.marteau@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/notificationcollector.h:
+	  build fix CCMAIL vkrause@kde.org
+
+2008-10-04 23:05 +0000 [r867919]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/server/src/storage/mysql-global.conf: 1M
+	  is to restrictive, messages can and will be bigger.
+
+2008-10-04 13:33 +0000 [r867782]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp: Fix
+	  config keys.
+
+2008-10-04 13:02 +0000 [r867771]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.h: Warn
+	  about deadlock-prone D-Bus calls from agents and do the best we
+	  can to limit the damage. However, it's likely too late at this
+	  point already, these calls have to be prevented on the client
+	  side.
+
+2008-10-03 17:30 +0000 [r867514]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp: Make sure
+	  rev is always initialized. Detected by Christoph Bartoschek
+	  <bartoschek@gmx.de>.
+
+2008-09-28 10:54 +0000 [r865601]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp,
+	  trunk/kdesupport/akonadi/server/src/main.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfig.h,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp: Fix database
+	  creation, add some more error handling.
+
+2008-09-28 09:32 +0000 [r865589]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp: a few
+	  more fallbacks
+
+2008-09-28 09:27 +0000 [r865587]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadi.h,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp (added),
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfig.h (added),
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp: Factor out the
+	  database configuration handling so that we use the same default
+	  settings everywhere. Also, add some more error checking and
+	  automatically fall back to using the defaults if the provided
+	  settings don't work.
+
+2008-09-26 21:27 +0000 [r865167]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp: Patch by
+	  Olivier Trichet <nive@nivalis.org> to prevent translated month
+	  names in the protocol.
+
+2008-09-21 17:34 +0000 [r863284]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadi.cpp: Improve error
+	  messages.
+
+2008-09-21 10:31 +0000 [r863143]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadi.cpp: - more verbose
+	  error messages - always start with an empty MySQL error log
+
+2008-09-19 07:56 +0000 [r862528]  Andreas Pakulat apaku@gmx.de
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt: win32 fix. The
+	  functions from akdebug and akcrash are not exported, hence they
+	  need to be built into the server the same way as they're built
+	  into the control binary.
+
+2008-09-14 15:49 +0000 [r860911]  Kevin Krammer kevin.krammer@gmx.at
+
+	* trunk/kdesupport/akonadi/server/shared/kcrash.cpp (removed),
+	  trunk/kdesupport/akonadi/server/shared/akcrash.cpp (added),
+	  trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/server/shared/kcrash.h (removed),
+	  trunk/kdesupport/akonadi/server/shared/akcrash.h (added),
+	  trunk/kdesupport/akonadi/server/shared/akdebug.cpp,
+	  trunk/kdesupport/akonadi/server/src/main.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt: Renamed
+	  kcrash.h/.cpp to akcrash.h/.cpp to avoid picking up the one from
+	  KDE
+
+2008-09-14 13:35 +0000 [r860860]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/kcrash.h (removed),
+	  trunk/kdesupport/akonadi/server/shared/kcrash.cpp (added),
+	  trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/server/shared (added),
+	  trunk/kdesupport/akonadi/server/shared/kcrash.h (added),
+	  trunk/kdesupport/akonadi/server/shared/akdebug.cpp (added),
+	  trunk/kdesupport/akonadi/server/src/akdebug.cpp (removed),
+	  trunk/kdesupport/akonadi/server/control/kcrash.cpp (removed),
+	  trunk/kdesupport/akonadi/server/src/main.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/shared/akdebug.h (added),
+	  trunk/kdesupport/akonadi/server/src/akdebug.h (removed):
+	  Reorganize shared code a bit and write backtraces also to the
+	  error log file.
+
+2008-09-14 11:16 +0000 [r860807]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/processcontrol.cpp:
+	  handle multiline output correctly
+
+2008-09-13 17:33 +0000 [r860654]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akdebug.cpp (added),
+	  trunk/kdesupport/akonadi/server/src/main.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp,
+	  trunk/kdesupport/akonadi/server/src/akdebug.h (added): Add
+	  akError()/akFatal(), which replace the corresponding Qt methods
+	  and also log the errors into a file so we have access to them
+	  from the client side.
+
+2008-09-13 12:23 +0000 [r860581]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/debuginterface.h (added),
+	  trunk/kdesupport/akonadi/server/src/tracer.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/tracer.h,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp,
+	  trunk/kdesupport/akonadi/server/src/debuginterface.cpp (added):
+	  Disable the protocol debugging by default and allow to switch it
+	  on during runtime via D-Bus.
+
+2008-09-08 20:01 +0000 [r858839]  Thomas McGuire mcguire@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/processcontrol.cpp: Make
+	  valgrind output nice again by only writing out full lines.
+
+2008-09-07 19:09 +0000 [r858315]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/processcontrol.h,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/processcontrol.cpp:
+	  Terminate the control process when the server process failed to
+	  start.
+
+2008-09-07 18:05 +0000 [r858304]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadi.h,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp: Allow to
+	  configure the path to the MySQL server instead of hardcoding that
+	  during runtime.
+
+2008-09-06 12:47 +0000 [r857792]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/Mainpage.dox (added),
+	  trunk/kdesupport/akonadi/server/Mainpage.dox (removed): Move the
+	  Mainpage.dox one level up to hopefully get API docs again.
+
+2008-08-29 19:23 +0000 [r854557]  Thomas McGuire mcguire@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/processcontrol.cpp: Up
+	  the time for the crash timer reset to one minute. Now it actually
+	  seems to work for me.
+
+2008-08-29 13:19 +0000 [r854427]  Thomas McGuire mcguire@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/processcontrol.cpp: Add
+	  the ability to debug or valgrind a resource right from the
+	  beginning, similar to the way this can be done with KIO slaves.
+	  Use AKONADI_VALGRIND for valgrinding (skin can be defined with
+	  AKONADI_VALGRIND_SKIN) Use AKONADI_DEBUG_WAIT for debugging.
+	  Example: <kill the existing akonadi_control process> export
+	  AKONADI_DEBUG_WAIT=maildir akonadiconsole <attach gdb to the
+	  stopped maildir process>
+
+2008-08-24 17:14 +0000 [r851806]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler.cpp: Revert last,
+	  breaks item listing under some conditions. Instead add a
+	  temporary hack to make the tag resource work for now.
+
+2008-08-24 16:16 +0000 [r851795]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/querybuilder.cpp:
+	  initialize
+
+2008-08-24 15:26 +0000 [r851771]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/querybuilder.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/querybuilder.h: Fix
+	  fetching of linked items in arbitrary collections. At least with
+	  a bit of cheating since I didn't manage to come up with a query
+	  that contains the results I want without duplicates. So, this
+	  probably can be optimized.
+
+2008-08-24 11:41 +0000 [r851696]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/link.cpp,
+	  trunk/kdesupport/akonadi/libs/notificationmessage_p.h,
+	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.h,
+	  trunk/kdesupport/akonadi/libs/notificationmessage.cpp: Change
+	  notification support for item references in virtual collections.
+
+2008-08-24 10:21 +0000 [r851658]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/cachecleaner.cpp,
+	  trunk/kdesupport/akonadi/server/src/intervalcheck.cpp: be less
+	  noisy
+
+2008-08-24 09:36 +0000 [r851642]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/.kateconfig (added),
+	  trunk/kdesupport/akonadi/server/src/handler/link.cpp (added),
+	  trunk/kdesupport/akonadi/server/src/handler.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/link.h (added),
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp: Add
+	  LINK/UNLINK commands to edit references to items in virtual
+	  collections. No change notifications yet though.
+
+2008-08-23 13:47 +0000 [r851287]  Harald Fernengel harry@kdevelop.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: integrate 851286 from
+	  akonadi-1.0 branch - set rpath correctly
+
+2008-08-13 17:59 +0000 [r846588]  Harald Fernengel harry@kdevelop.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadi.cpp: integrate
+	  message verbosity from 1.0 branch
+
+2008-08-11 09:31 +0000 [r845126]  Volker Krause vkrause@kde.org
+
+	* trunk/KDE/kdepim/akonadi/CMakeLists.txt,
+	  trunk/KDE/kdepimlibs/akonadi/agentinstance.cpp,
+	  trunk/KDE/kdepim/akonadi/migration/kres/kabcmigrator.cpp (added),
+	  trunk/KDE/kdepimlibs/akonadi/agentinstance.h,
+	  trunk/KDE/kdepimlibs/akonadi/agentbase.cpp,
+	  trunk/KDE/kdepim/akonadi/migration/kres/kresmigrator.cpp (added),
+	  trunk/KDE/kdepim/akonadi/migration/kres/kabcmigrator.h (added),
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Agent.Control.xml,
+	  trunk/KDE/kdepim/akonadi/migration (added),
+	  trunk/KDE/kdepimlibs/akonadi/agentbase.h,
+	  trunk/KDE/kdepim/akonadi/migration/kres/kresmigrator.h (added),
+	  trunk/KDE/kdepim/akonadi/migration/kres (added),
+	  trunk/KDE/kdepim/akonadi/resources/vcard/vcardresource.cpp,
+	  trunk/KDE/kdepim/akonadi/migration/kres/main.cpp (added),
+	  trunk/KDE/kdepim/akonadi/migration/CMakeLists.txt (added),
+	  trunk/KDE/kdepim/akonadi/resources/vcard/vcardresource.h,
+	  trunk/KDE/kdepim/akonadi/migration/kres/CMakeLists.txt (added): -
+	  provide a way to notify agents that their configuration has been
+	  changed remotely and make use of that in the vcard resource - add
+	  an initial kabc kresources migrator, mostly infrastructure, so
+	  far it can only handle vcard files
+
+2008-08-07 08:54 +0000 [r843430]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp:
+	  increment protocol version to detect the modification time
+	  support
+
+2008-07-24 12:27 +0000 [r837311]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp: Make sure
+	  that all modification times are stored in UTC time zone.
+
+2008-07-23 08:31 +0000 [r836883]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp: Return the
+	  modification time when an item is appended/stored/fetcehd.
+
+2008-07-22 20:52 +0000 [r836720]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Move version from 0.82.0
+	  to 1.0.80. This is now akonadi unstable branch. Akonadi stable is
+	  in /branches/akonadi/1.0.
+
+2008-07-22 15:32 +0000 [r836583]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/libs/imapparser.cpp: Unquoted date time
+	  with a lenght of 26 characters was not parsed properly. Fixed by
+	  this commit. Updated test will be committed soon after this.
+	  example of correct date which did not get parsed correctly:
+	  22-Jul-2008 16:31:48 +0000
+
+2008-07-21 15:33 +0000 [r836028]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp: Add
+	  serverside timestamp support for items.
+
+2008-07-20 08:55 +0000 [r835215]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp: better fix for
+	  windows
+
+2008-07-19 13:19 +0000 [r834689]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp: make msvc and
+	  ebn happy
+
+2008-07-18 23:20 +0000 [r834451]  Michel Hermier michel.hermier@gmail.com
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake,
+	  trunk/kdesupport/phonon/cmake/FindAutomoc4.cmake: Revert 834172
+	  so that automoc4 is found at the correct place.
+
+2008-07-18 10:14 +0000 [r834172]  Matthias Kretz kretz@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake,
+	  trunk/kdesupport/phonon/cmake/FindAutomoc4.cmake: inside
+	  kdesupport the location for Automoc4Config.cmake has changed
+
+2008-07-08 21:59 +0000 [r829707]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake,
+	  trunk/kdesupport/phonon/cmake/FindAutomoc4.cmake: -apply same
+	  patch as in kdelibs/cmake/modules/, don't append /lib to
+	  CMAKE_INSTALL_PREFIX, since this is already part of PATH_SUFFIXES
+	  Alex
+
+2008-06-18 16:00 +0000 [r821830]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: Bump version, run
+	  changelog script and update news file.
+
 2008-06-05 21:22 +0000 [r817369]  Alexander Neundorf neundorf@kde.org
 
 	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake: -sync
