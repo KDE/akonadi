@@ -191,7 +191,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
           mimeType = QString::fromLatin1( value );
       }
 
-      if ( uid < 0 || rev < 0 || size < 0 | datetime.isNull() || mimeType.isEmpty() ) {
+      if ( uid < 0 || rev < 0 || size < 0 || datetime.isNull() || mimeType.isEmpty() ) {
         kWarning( 5250 ) << "Broken fetch response: UID, RID, REV, SIZE, DATETIME or MIMETYPE missing!";
         return;
       }
