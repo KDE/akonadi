@@ -43,9 +43,28 @@ AgentInstance AgentManagerPrivate::createInstance( const AgentType &type )
 
 void AgentManagerPrivate::agentTypeAdded( const QString &identifier )
 {
+  // Ignore agent types we already know about, for example because we called
+  // readAgentTypes before.
+  if ( mTypes.contains( identifier ) )
+    return;
+
   const AgentType type = fillAgentType( identifier );
   if ( type.isValid() ) {
     mTypes.insert( identifier, type );
+
+    // The Akonadi ServerManager assumes that the server is up and running as soon
+    // as it knows about at least one agent type.
+    // If we emit the typeAdded() signal here, it therefore thinks the server is
+    // running. However, the AgentManager does not know about all agent types yet,
+    // as the server might still have pending agentTypeAdded() signals, even though
+    // it internally knows all agent types already.
+    // This can cause situations where the client gets told by the ServerManager that
+    // the server is running, yet the client will encounter an error because the
+    // AgentManager doesn't know all types yet.
+    //
+    // Therefore, we read all agent types from the server here so they are known.
+    readAgentTypes();
+
     emit mParent->typeAdded( type );
   }
 }
@@ -154,6 +173,17 @@ void AgentManagerPrivate::agentInstanceNameChanged( const QString &identifier, c
   instance.d->mName = name;
 
   emit mParent->instanceNameChanged( instance );
+}
+
+void AgentManagerPrivate::readAgentTypes()
+{
+  QDBusReply<QStringList> types = mManager->agentTypes();
+  if ( types.isValid() ) {
+    foreach ( const QString &type, types.value() ) {
+      if ( !mTypes.contains( type ) )
+        agentTypeAdded( type );
+    }
+  }
 }
 
 AgentType AgentManagerPrivate::fillAgentType( const QString &identifier ) const

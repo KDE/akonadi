@@ -60,6 +60,15 @@ class AgentManagerPrivate
     void agentInstanceError( const QString&, const QString& );
     void agentInstanceOnlineChanged( const QString&, bool );
 
+    /**
+     * Reads the information about all known agent types from the serverside
+     * agent manager and updates mTypes, like agentTypeAdded() does.
+     *
+     * This will not remove agents from the internal map that are no longer on
+     * the server.
+     */
+    void readAgentTypes();
+
     void setName( const AgentInstance&, const QString& );
     void setOnline( const AgentInstance&, bool );
     void configure( const AgentInstance&, QWidget* );
