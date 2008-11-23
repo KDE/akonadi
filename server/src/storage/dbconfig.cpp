@@ -99,7 +99,7 @@ class DbConfigStatic
       if ( mDriverName == QLatin1String( "QMYSQL" ) ) {
         if ( mInternalServer && mConnectionOptions.isEmpty() )
           mConnectionOptions = defaultOptions;
-        if ( mInternalServer && mServerPath.isEmpty() )
+        if ( mInternalServer && (mServerPath.isEmpty() || !QFile::exists(mServerPath) ) )
           mServerPath = defaultServerPath;
       }
 
