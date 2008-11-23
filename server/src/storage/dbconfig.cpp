@@ -65,6 +65,14 @@ class DbConfigStatic
 #ifdef MYSQLD_EXECUTABLE
         defaultServerPath = QLatin1String( MYSQLD_EXECUTABLE );
 #endif
+        if ( defaultServerPath.isEmpty() ) {
+          const QStringList mysqldSearchPath = QStringList()
+              << QLatin1String("/usr/sbin")
+              << QLatin1String("/usr/local/sbin")
+              << QLatin1String("/usr/libexec")
+              << QLatin1String("/opt/mysql/libexec");
+          defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String("mysqld"), mysqldSearchPath );
+        }
         mInternalServer = settings.value( QLatin1String("QMYSQL/StartServer"), defaultInternalServer ).toBool();
         if ( mInternalServer ) {
           const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );

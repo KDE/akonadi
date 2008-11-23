@@ -22,12 +22,12 @@
 
 // Qt includes
 #include <QtCore/QFlags>
+#include <QtCore/QStringList>
 
 #include "akonadiprotocolinternals_export.h"
 
 // forward declarations
 class QString;
-class QStringList;
 
 namespace Akonadi {
 
@@ -154,13 +154,15 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
 
      @param relPath relative path of a file to look for,
             e.g."akonadiserver"
+     @param searchPath additional paths to search for the executable,
+            only used if the file was not found in PATH and the install prefix
 
      @returns the file path of the first match, or @c QString() if no such
               relative path exists in any of the base directories
 
      @see findResourceFile()
      */
-    static QString findExecutableFile( const QString &relPath );
+    static QString findExecutableFile( const QString &relPath, const QStringList &searchPath = QStringList() );
 
     /**
      @brief Searches the resource specific directories for a given subdirectory

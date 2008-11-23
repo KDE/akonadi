@@ -154,7 +154,7 @@ QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relP
   return QString();
 }
 
-QString XdgBaseDirs::findExecutableFile( const QString &relPath )
+QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringList &searchPath )
 {
   if ( instance()->mExecutableDirs.isEmpty() ) {
     QStringList executableDirs = instance()->systemPathList( "PATH", "/usr/local/bin:/usr/bin" );
@@ -163,6 +163,8 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath )
     if ( !executableDirs.contains( prefixExecutableDir ) ) {
       executableDirs << prefixExecutableDir;
     }
+
+    executableDirs += searchPath;
 
     instance()->mExecutableDirs = executableDirs;
   }
