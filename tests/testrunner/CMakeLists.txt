@@ -38,7 +38,7 @@ target_link_libraries(akonaditest
   kabc
   kcal
   syndication
-  ${KDE4_KDEUI_LIB}
+  ${KDE4_KDEUI_LIBS}
   ${Boost_LIBRARIES}
   ${KDE4_AKONADI_LIBS}
   ${KDE4_KABC_LIBS}
