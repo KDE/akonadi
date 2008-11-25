@@ -25,6 +25,7 @@ bool MockBackend::listCollections( const QString& prefix,
                                    const QString& mailboxPattern,
                                    QList<Location> &result ) const
 {
+    Q_UNUSED(prefix);
     result.clear();
     //qDebug() << "Prefix: " << prefix << " pattern: " << mailboxPattern;
     if ( mailboxPattern == QLatin1String("%") ) {

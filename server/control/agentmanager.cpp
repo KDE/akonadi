@@ -238,6 +238,8 @@ uint AgentManager::agentInstanceProgress( const QString &identifier ) const
 
 QString AgentManager::agentInstanceProgressMessage( const QString &identifier ) const
 {
+  Q_UNUSED(identifier);
+
   return QString();
 }
 

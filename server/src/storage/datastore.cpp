@@ -281,8 +281,6 @@ bool Akonadi::DataStore::renameLocation( Location & location, qint64 newParent, 
       return false;
   }
 
-  const bool move = location.parentId() != newParent;
-
   SelectQueryBuilder<Location> qb;
   qb.addValueCondition( Location::parentIdColumn(), Query::Equals, newParent );
   qb.addValueCondition( Location::nameColumn(), Query::Equals, newName );
