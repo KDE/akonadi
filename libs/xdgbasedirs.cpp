@@ -142,8 +142,8 @@ QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relP
 
   QStringList pathList = systemPathList( resource );
 
-  QStringList::const_iterator it    = pathList.begin();
-  QStringList::const_iterator endIt = pathList.end();
+  QStringList::const_iterator it    = pathList.constBegin();
+  QStringList::const_iterator endIt = pathList.constEnd();
   for ( ; it != endIt; ++it ) {
     fileInfo = QFileInfo( *it + QLatin1Char('/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isFile() && fileInfo.isReadable() ) {
@@ -169,13 +169,13 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
     instance()->mExecutableDirs = executableDirs;
   }
 
-  QStringList::const_iterator pathIt    = instance()->mExecutableDirs.begin();
-  QStringList::const_iterator pathEndIt = instance()->mExecutableDirs.end();
+  QStringList::const_iterator pathIt    = instance()->mExecutableDirs.constBegin();
+  QStringList::const_iterator pathEndIt = instance()->mExecutableDirs.constEnd();
   for ( ; pathIt != pathEndIt; ++pathIt ) {
     QStringList fullPathList = alternateExecPaths(*pathIt + QLatin1Char( '/' ) + relPath );
 
-    QStringList::const_iterator it    = fullPathList.begin();
-    QStringList::const_iterator endIt = fullPathList.end();
+    QStringList::const_iterator it    = fullPathList.constBegin();
+    QStringList::const_iterator endIt = fullPathList.constEnd();
     for ( ; it != endIt; ++it ) {
       QFileInfo fileInfo(*it);
 
@@ -199,8 +199,8 @@ QString XdgBaseDirs::findResourceDir( const char *resource, const QString &relPa
 
   QStringList pathList = systemPathList( resource );
 
-  QStringList::const_iterator it    = pathList.begin();
-  QStringList::const_iterator endIt = pathList.end();
+  QStringList::const_iterator it    = pathList.constBegin();
+  QStringList::const_iterator endIt = pathList.constEnd();
   for ( ; it != endIt; ++it ) {
     fileInfo = QFileInfo( *it + QLatin1Char('/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
@@ -224,8 +224,8 @@ QStringList XdgBaseDirs::findAllResourceDirs( const char *resource, const QStrin
 
   QStringList pathList = systemPathList( resource );
 
-  QStringList::const_iterator it    = pathList.begin();
-  QStringList::const_iterator endIt = pathList.end();
+  QStringList::const_iterator it    = pathList.constBegin();
+  QStringList::const_iterator endIt = pathList.constEnd();
   for ( ; it != endIt; ++it ) {
     fileInfo = QFileInfo( *it + QLatin1Char('/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
