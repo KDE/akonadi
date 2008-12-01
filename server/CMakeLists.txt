@@ -111,8 +111,6 @@ set(libakonadiprivate_SRCS
   src/debuginterface.cpp
 )
 
-automoc4(akonadiprivate libakonadiprivate_SRCS)
-
 qt4_generate_dbus_interface( src/debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
@@ -136,7 +134,7 @@ qt4_add_dbus_interface( libakonadiprivate_SRCS ${xesam_xml} xesaminterface )
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 
 
-add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
+automoc4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
 target_link_libraries( akonadiprivate
   ${QT_QTCORE_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}

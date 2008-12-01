@@ -12,13 +12,11 @@ set( akonadictl_SRCS
   main.cpp
 )
 
-automoc4(akonadictl akonadictl_SRCS)
-
 qt4_add_dbus_interfaces( akonadictl_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.ControlManager.xml
 )
 
-add_executable(akonadictl ${akonadictl_SRCS})
+automoc4_add_executable(akonadictl ${akonadictl_SRCS})
 set_target_properties(akonadictl PROPERTIES OUTPUT_NAME akonadictl)
 
 target_link_libraries(akonadictl ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
