@@ -1,6 +1,4 @@
 include_directories(
-  ${CMAKE_BINARY_DIR}/akonadi
-  ${QT_QTDBUS_INCLUDE_DIR}
   ${SOPRANO_INCLUDE_DIR}
 )
 

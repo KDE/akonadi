@@ -6,7 +6,11 @@
 # macro_log_feature(OPENSSL_FOUND "OpenSSL" "A toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols" "http://openssl.org" FALSE "" "Required for building the Akonadi SQL plugin with MySQL embedded.")
 
 
-cmake_policy(SET CMP0003 NEW)
+# according to akonadi/CMakeLists.txt still cmake 2.4.5 is required,
+# which doesn't have this command, so only do it if it exists. Alex
+if(COMMAND cmake_policy)
+   cmake_policy(SET CMP0003 NEW)
+endif(COMMAND cmake_policy)
 
 find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /opt/mysql/libexec )
 macro_log_feature( MYSQLD_EXECUTABLE "MySQL Server" "Database server" "http://www.mysql.com" FALSE ""
@@ -20,7 +24,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shared )
-include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
 set( AKONADI_SHARED_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akcrash.cpp

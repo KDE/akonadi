@@ -1,4 +1,4 @@
-project(akonadi)
+project(Akonadi)
 
 cmake_minimum_required(VERSION 2.4.5 FATAL_ERROR)
 
@@ -89,8 +89,12 @@ endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
 
 ################# build targets ########################
 
-#message(STATUS "akonadi src: ${akonadi_SOURCE_DIR} bin: ${akonadi_BINARY_DIR}")
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/akonadi ${QT_INCLUDES})
+# Use the project specific source and binary directories, they are always the same
+# both when building akonadi as part of kdesupport or separate CMAKE_(SOURCE|BINARY)_DIR
+# are the root directory of the cmake build tree, i.e. kdesupport/ if akonadi is built
+# as part o kdesupport and kdesupport/akonadi/ if it is build separate.
+# (CMAKE_CURRENT_(SOURCE|BINARY)_DIR are also always the same). Alex
+include_directories(${Akonadi_SOURCE_DIR} ${Akonadi_BINARY_DIR} ${QT_INCLUDES})
 
 # if something breaks because the block below is commented out, 
 # please send me an email, Alex <neundorf@kde.org>

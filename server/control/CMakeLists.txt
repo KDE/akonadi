@@ -1,6 +1,4 @@
 include_directories( BEFORE
-  ${CMAKE_BINARY_DIR}/akonadi
-  ${QT_QTDBUS_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
   ${Boost_INCLUDE_DIR}
