@@ -19,7 +19,7 @@ kde4_add_library( akonadi-kmime SHARED ${kmimeakonadi_LIB_SRC} )
 
 target_link_libraries( akonadi-kmime akonadi-kde kmime ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} )
 set_target_properties( akonadi-kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS akonadi-kmime ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonadi-kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 

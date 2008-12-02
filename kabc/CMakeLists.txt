@@ -15,7 +15,7 @@ kde4_add_library( akonadi-kabc SHARED ${kabcakonadi_LIB_SRC} )
 
 target_link_libraries( akonadi-kabc akonadi-kde ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} )
 set_target_properties( akonadi-kabc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS akonadi-kabc ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonadi-kabc EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
