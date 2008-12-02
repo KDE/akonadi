@@ -149,7 +149,8 @@ set_target_properties( akonadiprivate PROPERTIES
                         SOVERSION ${AKONADI_LIB_MAJOR_VERSION}
                         DEFINE_SYMBOL MAKE_AKONADIPRIVATE_LIB
                       )
-install( TARGETS akonadiprivate DESTINATION ${LIB_INSTALL_DIR} )
+
+install( TARGETS akonadiprivate ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 set( akonadiserver_bin_SRCS src/main.cpp
   ${AKONADI_SHARED_SOURCES} )

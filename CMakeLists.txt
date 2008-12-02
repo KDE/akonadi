@@ -8,9 +8,6 @@ enable_testing()
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
-set(CMAKE_SKIP_BUILD_RPATH FALSE)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
 ######## find packages ####################
 
 include(MacroLogFeature)
@@ -26,7 +23,7 @@ find_package(Automoc4 REQUIRED)
 set(SHARED_MIME_INFO_MINIMUM_VERSION "0.20")
 find_package(SharedMimeInfo REQUIRED)
 
-FIND_PROGRAM(XSLTPROC_EXECUTABLE xsltproc)
+find_program(XSLTPROC_EXECUTABLE xsltproc)
 if(NOT XSLTPROC_EXECUTABLE)
   message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
 endif(NOT XSLTPROC_EXECUTABLE)
@@ -55,12 +52,20 @@ else (WIN32)
    set(LIBRARY_OUTPUT_PATH            ${CMAKE_BINARY_DIR}/lib )
 endif (WIN32)
 
-set (LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)" )
-set (LIB_DESTINATION "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" CACHE STRING "Library directory name" FORCE)
 
-IF(APPLE)
-	set(CMAKE_INSTALL_NAME_DIR ${LIB_DESTINATION})
-ENDIF(APPLE)
+# Set up RPATH handling, so the libs are found if they are installed to a non-standard location.
+# By default cmake builds the targets with full RPATH to everything in the build directory,
+# but then removes the RPATH when installing.
+# These two options below make it set the RPATH of the installed targets to all
+# RPATH directories outside the current CMAKE_BINARY_DIR and also the library 
+# install directory. Alex
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH  TRUE)
+set(CMAKE_INSTALL_RPATH                "${LIB_INSTALL_DIR}" )
+
+if(APPLE)
+   set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
+endif(APPLE)
+
 
 configure_file(akonadi-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi-prefix.h)
 
@@ -70,6 +75,7 @@ check_include_files(unistd.h HAVE_UNISTD_H)
 configure_file(config-akonadi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi.h)
 
 
+# maybe the handling for the different compilers could be split out into a separate file, Alex 
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
    set (_ENABLE_EXCEPTIONS -fexceptions)
    set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
@@ -80,17 +86,10 @@ else (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
    endif (MSVC)
 endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
 
-if(WIN32)
-    set(LIB_INSTALL_DIR ${LIB_INSTALL_DIR}
-                        RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-                        LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-                        ARCHIVE DESTINATION ${LIB_INSTALL_DIR} )
-endif(WIN32)
 
 ################# build targets ########################
 
-#add_subdirectory(cmake)
-
+#message(STATUS "akonadi src: ${akonadi_SOURCE_DIR} bin: ${akonadi_BINARY_DIR}")
 include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_BINARY_DIR}/akonadi ${QT_INCLUDES})
 
 # if something breaks because the block below is commented out, 
