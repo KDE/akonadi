@@ -194,6 +194,12 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
 Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 {
   Q_D( const CollectionModel );
+
+  // Pass modeltest.
+  // http://labs.trolltech.com/forums/topic/79
+  if (!index.isValid())
+    return 0;
+
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
   flags = flags | Qt::ItemIsDragEnabled;
