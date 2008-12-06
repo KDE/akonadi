@@ -348,7 +348,7 @@ void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
   // TODO disconnect old model
   connect( sourceModel(), SIGNAL( rowsInserted( QModelIndex, int, int ) ), SLOT( slotInsertRows( QModelIndex, int, int ) ) );
   connect( sourceModel(), SIGNAL( rowsAboutToBeRemoved( QModelIndex, int, int ) ), SLOT( slotRemoveRows( QModelIndex, int, int ) ) );
-  connect( d->sourceMessageModel(), SIGNAL( collectionChanged( Collection ) ), SLOT( slotCollectionChanged() ) );
+  connect( d->sourceMessageModel(), SIGNAL( collectionChanged( Akonadi::Collection ) ), SLOT( slotCollectionChanged() ) );
 }
 
 

@@ -164,7 +164,7 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
      *
      * @param collection The new collection.
      */
-     void collectionChanged( const Collection &collection );
+     void collectionChanged( const Akonadi::Collection &collection );
 
   protected:
     /**
