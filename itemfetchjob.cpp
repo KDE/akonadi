@@ -86,7 +86,7 @@ void ItemFetchJobPrivate::startFetchJob()
   if ( mFetchScope.cacheOnly() )
     command += " " AKONADI_PARAM_CACHEONLY;
 
-  command += " (UID REMOTEID FLAGS";
+  command += " (UID REMOTEID FLAGS SIZE DATETIME";
   foreach ( const QByteArray &part, mFetchScope.payloadParts() )
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, part );
   foreach ( const QByteArray &part, mFetchScope.attributes() )
@@ -168,8 +168,6 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       // create a new item object
       Item::Id uid = -1;
       int rev = -1;
-      qint64 size = 0;
-      QDateTime datetime;
       QString rid;
       QString mimeType;
 
@@ -181,26 +179,20 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
           uid = value.toLongLong();
         else if ( key == "REV" )
           rev = value.toInt();
-        else if ( key == "SIZE" )
-          size = value.toLongLong();
-        else if ( key == "DATETIME" )
-          ImapParser::parseDateTime( value, datetime );
         else if ( key == "REMOTEID" )
           rid = QString::fromUtf8( value );
         else if ( key == "MIMETYPE" )
           mimeType = QString::fromLatin1( value );
       }
 
-      if ( uid < 0 || rev < 0 || size < 0 || datetime.isNull() || mimeType.isEmpty() ) {
-        kWarning( 5250 ) << "Broken fetch response: UID, RID, REV, SIZE, DATETIME or MIMETYPE missing!";
+      if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
+        kWarning( 5250 ) << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
         return;
       }
 
       Item item( uid );
       item.setRemoteId( rid );
       item.setRevision( rev );
-      item.setSize( size );
-      item.setModificationTime( datetime );
       item.setMimeType( mimeType );
       if ( !item.isValid() )
         return;
@@ -209,7 +201,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       for ( int i = 0; i < fetchResponse.count() - 1; i += 2 ) {
         const QByteArray key = fetchResponse.value( i );
         // skip stuff we dealt with already
-        if ( key == "UID" || key == "REV" || key == "SIZE" || key == "DATETIME" || key == "REMOTEID" || key == "MIMETYPE" )
+        if ( key == "UID" || key == "REV" || key == "REMOTEID" || key == "MIMETYPE" )
           continue;
         // flags
         if ( key == "FLAGS" ) {
@@ -218,6 +210,13 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
           foreach ( const QByteArray &flag, flags ) {
             item.setFlag( flag );
           }
+        } else if ( key == "SIZE" ) {
+          const quint64 size = fetchResponse[i + 1].toLongLong();
+          item.setSize( size );
+        } else if ( key == "DATETIME" ) {
+          QDateTime datetime;
+          ImapParser::parseDateTime( fetchResponse[i + 1], datetime );
+          item.setModificationTime( datetime );
         } else {
           int version = 0;
           QByteArray plainKey( key );
