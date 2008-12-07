@@ -51,11 +51,11 @@ class HandlerException : public std::exception
 
 static const int itemQueryIdColumn = 0;
 static const int itemQueryRevColumn = 1;
-static const int itemQuerySizeColumn = 2;
-static const int itemQueryDatetimeColumn = 3;
-static const int itemQueryRidColumn = 4;
-static const int itemQueryMimeTypeColumn = 5;
-static const int itemQueryResouceColumn = 6;
+static const int itemQueryRidColumn = 2;
+static const int itemQueryMimeTypeColumn = 3;
+static const int itemQueryResouceColumn = 4;
+static const int itemQuerySizeColumn = 5;
+static const int itemQueryDatetimeColumn = 6;
 
 static const int partQueryIdColumn = 0;
 static const int partQueryNameColumn = 1;
@@ -67,7 +67,9 @@ Fetch::Fetch()
     mIsUidFetch( false ),
     mCacheOnly( false ),
     mFullPayload( false ),
-    mAllAttrs( false )
+    mAllAttrs( false ),
+    mSizeRequested( false ),
+    mMTimeRequested( false )
 {
 }
 
@@ -163,8 +165,16 @@ bool Fetch::handleLine( const QByteArray& line )
     QStringList partList, payloadList;
     foreach( const QByteArray &b, mRequestedParts ) {
       // filter out non-part attributes
-      if ( b == "REV" || b == "SIZE" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
+      if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
         continue;
+      if ( b == "SIZE" ) {
+        mSizeRequested = true;
+        continue;
+      }
+      if ( b == "DATETIME" ) {
+        mMTimeRequested = true;
+        continue;
+      }
       partList << QString::fromLatin1( b );
       if ( b.startsWith( "PLD:" ) )
         payloadList << QString::fromLatin1( b );
@@ -186,19 +196,23 @@ bool Fetch::handleLine( const QByteArray& line )
     while ( mItemQuery.query().isValid() ) {
       const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
       const int pimItemRev = mItemQuery.query().value( itemQueryRevColumn ).toInt();
-      const qint64 pimItemSize = mItemQuery.query().value( itemQuerySizeColumn ).toLongLong();
-      const QDateTime pimItemDatetime = mItemQuery.query().value( itemQueryDatetimeColumn ).toDateTime();
-
-      // Date time is always stored in UTC time zone by the server.
-      QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
 
       QList<QByteArray> attributes;
       attributes.append( "UID " + QByteArray::number( pimItemId ) );
       attributes.append( "REV " + QByteArray::number( pimItemRev ) );
-      attributes.append( "SIZE " + QByteArray::number( pimItemSize ) );
-      attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
       attributes.append( "REMOTEID " + ImapParser::quote( mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8() ) );
       attributes.append( "MIMETYPE " + ImapParser::quote( mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8() ) );
+
+      if ( mSizeRequested ) {
+        const qint64 pimItemSize = mItemQuery.query().value( itemQuerySizeColumn ).toLongLong();
+        attributes.append( "SIZE " + QByteArray::number( pimItemSize ) );
+      }
+      if ( mMTimeRequested ) {
+        const QDateTime pimItemDatetime = mItemQuery.query().value( itemQueryDatetimeColumn ).toDateTime();
+        // Date time is always stored in UTC time zone by the server.
+        QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
+        attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
+      }
 
       if ( mRequestedParts.contains( "FLAGS" ) ) {
         QList<QByteArray> flags;
@@ -334,11 +348,11 @@ void Fetch::buildItemQuery()
   // make sure the columns indexes here and in the constants defined above match
   mItemQuery.addColumn( PimItem::idFullColumnName() );
   mItemQuery.addColumn( PimItem::revFullColumnName() );
-  mItemQuery.addColumn( PimItem::sizeFullColumnName() );
-  mItemQuery.addColumn( PimItem::datetimeFullColumnName() );
   mItemQuery.addColumn( PimItem::remoteIdFullColumnName() );
   mItemQuery.addColumn( MimeType::nameFullColumnName() );
   mItemQuery.addColumn( Resource::nameFullColumnName() );
+  mItemQuery.addColumn( PimItem::sizeFullColumnName() );
+  mItemQuery.addColumn( PimItem::datetimeFullColumnName() );
   mItemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
   mItemQuery.addColumnCondition( PimItem::locationIdFullColumnName(), Query::Equals, Location::idFullColumnName() );
   mItemQuery.addColumnCondition( Location::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );

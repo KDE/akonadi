@@ -61,6 +61,8 @@ class Fetch : public Handler
     bool mCacheOnly;
     bool mFullPayload;
     bool mAllAttrs;
+    bool mSizeRequested;
+    bool mMTimeRequested;
 };
 
 }

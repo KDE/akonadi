@@ -88,7 +88,7 @@ void AkonadiConnection::run()
     connect( m_socket, SIGNAL( disconnected() ),
              this, SLOT( slotDisconnected() ), Qt::DirectConnection );
 
-    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 5]");
+    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 6]");
 
     exec();
     delete m_socket;
