@@ -13,7 +13,7 @@
    <item>
     <widget class="QLabel" name="statusLabel" >
      <property name="text" >
-      <string>TextLabel</string>
+      <string/>
      </property>
     </widget>
    </item>
