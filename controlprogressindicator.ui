@@ -13,7 +13,7 @@
    <item>
     <widget class="QLabel" name="statusLabel" >
      <property name="text" >
-      <string/>
+      <string comment="KDE::DoNotExtract" >TextLabel</string>
      </property>
     </widget>
    </item>
