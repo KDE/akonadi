@@ -1,3 +1,11 @@
+1.0.81                            16-Dec-2008
+---------------------------------------------
+- Restore protocol backward compatibility with Akonadi 1.0.x servers.
+- Build system fixes.
+- Fix compiler warnings.
+- Fall back to the default server path if the configured one points
+  to a non-existing file.
+
 1.0.80                            19-Nov-2008
 ---------------------------------------------
 - Query agent status information asynchronously and answer all queries from

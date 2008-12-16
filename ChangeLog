@@ -1,3 +1,95 @@
+2008-12-07 11:49 +0000 [r893730]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/fetch.h,
+	  trunk/KDE/kdepimlibs/akonadi/itemfetchjob.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/session_p.h,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp: Restore
+	  protocol backward compatibility with Akonadi 1.0.x servers.
+
+2008-12-02 10:36 +0000 [r891506]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/queryserver/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: -renamed project()
+	  from "akonadi" to "Akonadi" -remove some unnecessary include dirs
+	  (CMAKE_SOURCE_DIR/akonadi was probably added by somebody building
+	  akonadi as part of kdesupport, and CMAKE_SOURCE_DIR was probably
+	  added by somebody building akonadi separate, so now use the
+	  project specific Akonadi_(SOURCE|BINARY)_DIR variables instead
+	  which point always to the same directory) It still builds both
+	  separate and as part of kdesupport, so I think it should be ok.
+	  Alex CCMAIL: winter@kde.org CCMAIL: kde-pim@kde.org
+
+2008-12-02 10:14 +0000 [r891498]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/CMakeLists.txt (removed),
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt: -proper RPATH
+	  handling (see comments in CMakeLists.txt) -remove LIB_DESTINATION
+	  variable, LIB_INSTALL_DIR does just that -remove LIB_INSTALL_DIR
+	  hack for Windows, this is already handled in
+	  INSTALL_TARGETS_DEFAULT_ARGS -use INSTALL_TARGETS_DEFAULT_ARGS
+	  everywhere for installing libs (handles the bin/lib directories
+	  on Windows) -remove empty cmake/CMakeLists.txt Alex
+
+2008-12-01 14:09 +0000 [r891268]  Matthias Kretz kretz@kde.org
+
+	* trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/tests/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/tests/unittest/CMakeLists.txt:
+	  switch to recommended automoc macros
+
+2008-11-28 08:30 +0000 [r889987]  Laurent Montel montel@kde.org
+
+	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp: Fix iterator
+
+2008-11-25 02:50 +0000 [r888664]  Jesse Lee Zamora xtremek2008@aim.com
+
+	* trunk/kdesupport/soprano/server/sparql/sparqlmodel.cpp,
+	  trunk/kdesupport/phonon/phonon/experimental/videodataoutput.cpp,
+	  trunk/kdesupport/phonon/xine/audiodataoutput.cpp,
+	  trunk/kdesupport/soprano/test/multithreadingtest.cpp,
+	  trunk/kdesupport/phonon/xine/bytestream.cpp,
+	  trunk/kdesupport/soprano/index/CMakeLists.txt,
+	  trunk/kdesupport/soprano/test/cluceneindextest.cpp,
+	  trunk/kdesupport/strigi/src/xmlindexer/cgixmlindexer.cpp,
+	  trunk/kdesupport/phonon/xine/mediaobject.cpp,
+	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: Fixes unused
+	  variable warnings for cleaner compilation.
+
+2008-11-25 01:57 +0000 [r888661]  Jesse Lee Zamora xtremek2008@aim.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/tests/unittest/teststoragebackend.cpp:
+	  Fixes variable unused warnings for cleaner compilation.
+
+2008-11-23 13:28 +0000 [r888019]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp: Fall
+	  back to the default server path if the configured one points to a
+	  non-existing file.
+
+2008-11-23 13:00 +0000 [r888015]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp,
+	  trunk/kdesupport/akonadi/libs/xdgbasedirs_p.h,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp: Try
+	  harder to find the mysqld executable during runtime.
+
+2008-11-19 19:31 +0000 [r886652]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS: Prep for release.
+
 2008-11-09 14:23 +0000 [r881993]  Volker Krause vkrause@kde.org
 
 	* trunk/kdesupport/akonadi/server/control/agenttype.cpp (added),
