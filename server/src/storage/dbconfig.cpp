@@ -69,6 +69,7 @@ class DbConfigStatic
           const QStringList mysqldSearchPath = QStringList()
               << QLatin1String("/usr/sbin")
               << QLatin1String("/usr/local/sbin")
+              << QLatin1String("/usr/local/libexec")
               << QLatin1String("/usr/libexec")
               << QLatin1String("/opt/mysql/libexec");
           defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String("mysqld"), mysqldSearchPath );
