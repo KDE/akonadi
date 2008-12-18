@@ -111,6 +111,8 @@ bool Control::Private::exec()
 {
   if ( mProgressIndicator )
     mProgressIndicator->show();
+
+  kDebug( 5250 ) << "Starting Akonadi (using an event loop).";
   mEventLoop = new QEventLoop( mParent );
   // safety timeout
   QTimer::singleShot( 10000, mEventLoop, SLOT(quit()) );
