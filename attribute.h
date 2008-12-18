@@ -102,6 +102,10 @@ namespace Akonadi {
  * AttributeFactory::registerAttribute<SecrecyAttribute>();
  * @endcode
  *
+ * Third party attributes need to be registered once by each application that uses
+ * them. So the above snippet needs to be in the resource that adds the attribute,
+ * and each application that uses the resource. This may be simplified in the future.
+ *
  * The custom attributes can be used in the following way:
  *
  * @code
