@@ -54,10 +54,14 @@ static QString makeLink( const QString &file )
   return QString::fromLatin1( "<a href=\"%1\">%2</a>" ).arg( file, file );
 }
 
-static const int ResultTypeRole = Qt::UserRole;
-static const int FileIncludeRole = Qt::UserRole + 1;
-static const int ListDirectoryRole = Qt::UserRole + 2;
-static const int EnvVarRole = Qt::UserRole + 3;
+enum SelfTestRole {
+  ResultTypeRole = Qt::UserRole,
+  FileIncludeRole,
+  ListDirectoryRole,
+  EnvVarRole,
+  SummaryRole,
+  DetailsRole
+};
 
 SelfTestDialog::SelfTestDialog(QWidget * parent) :
     KDialog( parent )
@@ -88,9 +92,9 @@ void SelfTestDialog::hideIntroduction()
   ui.introductionLabel->hide();
 }
 
-QStandardItem* SelfTestDialog::report( ResultType type, const QString & summary, const QString & details)
+QStandardItem* SelfTestDialog::report( ResultType type, const KLocalizedString & summary, const KLocalizedString & details)
 {
-  QStandardItem *item = new QStandardItem( summary );
+  QStandardItem *item = new QStandardItem( summary.toString() );
   switch ( type ) {
     case Skip:
       item->setIcon( KIcon( "dialog-ok" ) );
@@ -106,8 +110,10 @@ QStandardItem* SelfTestDialog::report( ResultType type, const QString & summary,
       item->setIcon( KIcon( "dialog-error" ) );
   }
   item->setEditable( false );
-  item->setWhatsThis( details );
+  item->setWhatsThis( details.toString() );
   item->setData( type, ResultTypeRole );
+  item->setData( summary.toString( 0 ), SummaryRole );
+  item->setData( details.toString( 0 ), DetailsRole );
   mTestModel->appendRow( item );
   return item;
 }
@@ -171,61 +177,64 @@ void SelfTestDialog::testSQLDriver()
 {
   const QString driver = serverSetting( "General", "Driver", "QMYSQL" ).toString();
   const QStringList availableDrivers = QSqlDatabase::drivers();
-  const QString details = i18n( "The QtSQL driver '%1' is required by your current Akonadi server configuration.\n"
+  const KLocalizedString details = ki18n( "The QtSQL driver '%1' is required by your current Akonadi server configuration.\n"
       "The following drivers are installed: %2.\n"
-      "Make sure the required driver is installed.", driver, availableDrivers.join( QLatin1String(", ") ) );
+      "Make sure the required driver is installed." )
+      .subs( driver )
+      .subs( availableDrivers.join( QLatin1String(", ") ) );
   QStandardItem *item = 0;
   if ( availableDrivers.contains( driver ) )
-    item = report( Success, i18n( "Database driver found." ), details );
+    item = report( Success, ki18n( "Database driver found." ), details );
   else
-    item = report( Error, i18n( "Database driver not found." ), details );
+    item = report( Error, ki18n( "Database driver not found." ), details );
   item->setData( XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite ), FileIncludeRole );
 }
 
 void SelfTestDialog::testMySQLServer()
 {
   if ( !useStandaloneMysqlServer() ) {
-    report( Skip, i18n( "MySQL server executable not tested." ),
-            i18n( "The current configuration does not require an internal MySQL server." ) );
+    report( Skip, ki18n( "MySQL server executable not tested." ),
+            ki18n( "The current configuration does not require an internal MySQL server." ) );
     return;
   }
 
   const QString driver = serverSetting( "General", "Driver", "QMYSQL" ).toString();
   const QString serverPath = serverSetting( driver,  "ServerPath", "" ).toString(); // ### default?
 
-  const QString details = i18n( "You currently have configured Akonadi to use the MySQL server '%1'.\n"
+  const KLocalizedString details = ki18n( "You currently have configured Akonadi to use the MySQL server '%1'.\n"
       "Make sure you have the MySQL server installed, set the correct path and ensure you have the "
       "necessary read and execution rights on the server executable. The server executable is typically "
-      "called 'mysqld', its locations varies depending on the distribution.", serverPath );
+      "called 'mysqld', its locations varies depending on the distribution." ).subs( serverPath );
 
   QFileInfo info( serverPath );
   if ( !info.exists() )
-    report( Error, i18n( "MySQL server not found." ), details );
+    report( Error, ki18n( "MySQL server not found." ), details );
   else if ( !info.isReadable() )
-    report( Error, i18n( "MySQL server not readable." ), details );
+    report( Error, ki18n( "MySQL server not readable." ), details );
   else if ( !info.isExecutable() )
-    report( Error, i18n( "MySQL server not executable." ), details );
+    report( Error, ki18n( "MySQL server not executable." ), details );
   else if ( !serverPath.contains( "mysqld" ) )
-    report( Warning, i18n( "MySQL found with unexpected name." ), details );
+    report( Warning, ki18n( "MySQL found with unexpected name." ), details );
   else
-    report( Success, i18n( "MySQL server found." ), details );
+    report( Success, ki18n( "MySQL server found." ), details );
 
   // be extra sure and get the server version while we are at it
   QString result;
   if ( runProcess( serverPath, QStringList() << QLatin1String( "--version" ), result ) ) {
-    const QString details = i18n( "MySQL server found: %1", result );
-    report( Success, i18n( "MySQL server is executable." ), details );
+    const KLocalizedString details = ki18n( "MySQL server found: %1" ).subs( result );
+    report( Success, ki18n( "MySQL server is executable." ), details );
   } else {
-    const QString details = i18n( "Executing the MySQL server '%1' failed with the following error message: '%2'", serverPath, result );
-    report( Error, i18n( "Executing the MySQL server failed." ), details );
+    const KLocalizedString details = ki18n( "Executing the MySQL server '%1' failed with the following error message: '%2'" )
+        .subs( serverPath ).subs( result );
+    report( Error, ki18n( "Executing the MySQL server failed." ), details );
   }
 }
 
 void SelfTestDialog::testMySQLServerLog()
 {
   if ( !useStandaloneMysqlServer() ) {
-    report( Skip, i18n( "MySQL server error log not tested." ),
-            i18n( "The current configuration does not require an internal MySQL server." ) );
+    report( Skip, ki18n( "MySQL server error log not tested." ),
+            ki18n( "The current configuration does not require an internal MySQL server." ) );
     return;
   }
 
@@ -233,14 +242,14 @@ void SelfTestDialog::testMySQLServerLog()
       + QDir::separator() + QString::fromLatin1( "mysql.err" );
   const QFileInfo logFileInfo( logFileName );
   if ( !logFileInfo.exists() || logFileInfo.size() == 0 ) {
-    report( Success, i18n( "No current MySQL error log found." ),
-      i18n( "The MySQL server did not report any errors during this startup into '%1'.", logFileName ) );
+    report( Success, ki18n( "No current MySQL error log found." ),
+      ki18n( "The MySQL server did not report any errors during this startup into '%1'." ).subs( logFileName ) );
     return;
   }
   QFile logFile( logFileName );
   if ( !logFile.open( QFile::ReadOnly | QFile::Text  ) ) {
-    report( Error, i18n( "MySQL error log not readable." ),
-      i18n( "A MySQL server error log file was found but is not readable: %1", makeLink( logFileName ) ) );
+    report( Error, ki18n( "MySQL error log not readable." ),
+      ki18n( "A MySQL server error log file was found but is not readable: %1" ).subs( makeLink( logFileName ) ) );
     return;
   }
   bool warningsFound = false;
@@ -248,8 +257,8 @@ void SelfTestDialog::testMySQLServerLog()
   while ( !logFile.atEnd() ) {
     const QString line = QString::fromUtf8( logFile.readLine() );
     if ( line.contains( QLatin1String( "error" ), Qt::CaseInsensitive ) ) {
-      item = report( Error, i18n( "MySQL server log contains errors." ),
-        i18n( "The MySQL server error log file '%1' contains errors.", makeLink( logFileName ) ) );
+      item = report( Error, ki18n( "MySQL server log contains errors." ),
+        ki18n( "The MySQL server error log file '%1' contains errors." ).subs( makeLink( logFileName ) ) );
       item->setData( logFileName, FileIncludeRole );
       return;
     }
@@ -258,12 +267,12 @@ void SelfTestDialog::testMySQLServerLog()
     }
   }
   if ( warningsFound ) {
-    item = report( Warning, i18n( "MySQL server log contains warnings." ),
-                   i18n( "The MySQL server log file '%1' contains warnings.", makeLink( logFileName ) ) );
+    item = report( Warning, ki18n( "MySQL server log contains warnings." ),
+                   ki18n( "The MySQL server log file '%1' contains warnings." ).subs( makeLink( logFileName ) ) );
   } else {
-    item = report( Success, i18n( "MySQL server log contains no errors." ),
-                   i18n( "The MySQL server log file '%1' does not contain any errors or warnings.",
-                         makeLink( logFileName ) ) );
+    item = report( Success, ki18n( "MySQL server log contains no errors." ),
+                   ki18n( "The MySQL server log file '%1' does not contain any errors or warnings." )
+                         .subs( makeLink( logFileName ) ) );
   }
   item->setData( logFileName, FileIncludeRole );
 
@@ -273,8 +282,8 @@ void SelfTestDialog::testMySQLServerLog()
 void SelfTestDialog::testMySQLServerConfig()
 {
   if ( !useStandaloneMysqlServer() ) {
-    report( Skip, i18n( "MySQL server configuration not tested." ),
-            i18n( "The current configuration does not require an internal MySQL server." ) );
+    report( Skip, ki18n( "MySQL server configuration not tested." ),
+            ki18n( "The current configuration does not require an internal MySQL server." ) );
     return;
   }
 
@@ -282,40 +291,40 @@ void SelfTestDialog::testMySQLServerConfig()
   const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
   const QFileInfo globalConfigInfo( globalConfig );
   if ( !globalConfig.isEmpty() && globalConfigInfo.exists() && globalConfigInfo.isReadable() ) {
-    item = report( Success, i18n( "MySQL server default configuration found." ),
-                   i18n( "The default configuration for the MySQL server was found and is readable at %1.",
-                   makeLink( globalConfig ) ) );
+    item = report( Success, ki18n( "MySQL server default configuration found." ),
+                   ki18n( "The default configuration for the MySQL server was found and is readable at %1." )
+                   .subs( makeLink( globalConfig ) ) );
     item->setData( globalConfig, FileIncludeRole );
   } else {
-    report( Error, i18n( "MySQL server default configuration not found." ),
-            i18n( "The default configuration for the MySQL server was not found or was not readable. "
+    report( Error, ki18n( "MySQL server default configuration not found." ),
+            ki18n( "The default configuration for the MySQL server was not found or was not readable. "
                   "Check your Akonadi installation is complete and you have all required access rights." ) );
   }
 
   const QString localConfig  = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
   const QFileInfo localConfigInfo( localConfig );
   if ( localConfig.isEmpty() || !localConfigInfo.exists() ) {
-    report( Skip, i18n( "MySQL server custom configuration not available." ),
-            i18n( "The custom configuration for the MySQL server was not found but is optional." ) );
+    report( Skip, ki18n( "MySQL server custom configuration not available." ),
+            ki18n( "The custom configuration for the MySQL server was not found but is optional." ) );
   } else if ( localConfigInfo.exists() && localConfigInfo.isReadable() ) {
-    item = report( Success, i18n( "MySQL server custom configuration found." ),
-                   i18n( "The custom configuration for the MySQL server was found and is readable at %1",
-                   makeLink( localConfig ) ) );
+    item = report( Success, ki18n( "MySQL server custom configuration found." ),
+                   ki18n( "The custom configuration for the MySQL server was found and is readable at %1" )
+                   .subs( makeLink( localConfig ) ) );
     item->setData( localConfig, FileIncludeRole );
   } else {
-    report( Error, i18n( "MySQL server custom configuration not readable." ),
-            i18n( "The custom configuration for the MySQL server was found at %1 but is not readable. "
-                  "Check your access rights.", makeLink( localConfig ) ) );
+    report( Error, ki18n( "MySQL server custom configuration not readable." ),
+            ki18n( "The custom configuration for the MySQL server was found at %1 but is not readable. "
+                  "Check your access rights." ).subs( makeLink( localConfig ) ) );
   }
 
   const QString actualConfig = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
   const QFileInfo actualConfigInfo( actualConfig );
   if ( actualConfig.isEmpty() || !actualConfigInfo.exists() || !actualConfigInfo.isReadable() ) {
-    report( Error, i18n( "MySQL server configuration not found or not readable." ),
-            i18n( "The MySQL server configuration was not found or is not readable." ) );
+    report( Error, ki18n( "MySQL server configuration not found or not readable." ),
+            ki18n( "The MySQL server configuration was not found or is not readable." ) );
   } else {
-    item = report( Success, i18n( "MySQL server configuration is usable." ),
-                   i18n( "The MySQL server configuration was found at %1 and is readable.", makeLink( actualConfig ) ) );
+    item = report( Success, ki18n( "MySQL server configuration is usable." ),
+                   ki18n( "The MySQL server configuration was found at %1 and is readable.").subs( makeLink( actualConfig ) ) );
     item->setData( actualConfig, FileIncludeRole );
   }
 }
@@ -324,41 +333,41 @@ void SelfTestDialog::testAkonadiCtl()
 {
   const QString path = KStandardDirs::findExe( QLatin1String("akonadictl") );
   if ( path.isEmpty() ) {
-    report( Error, i18n( "akonadictl not found" ),
-                 i18n( "The program 'akonadictl' needs to be accessible in $PATH. "
+    report( Error, ki18n( "akonadictl not found" ),
+                 ki18n( "The program 'akonadictl' needs to be accessible in $PATH. "
                        "Make sure you have the Akonadi server installed." ) );
     return;
   }
   QString result;
   if ( runProcess( path, QStringList() << QLatin1String( "status" ), result ) ) {
-    report( Success, i18n( "akonadictl found and usable" ),
-                   i18n( "The program '%1' to control the Akonadi server was found "
-                         "and could be executed successfully.\nResult:\n%2", path, result ) );
+    report( Success, ki18n( "akonadictl found and usable" ),
+                   ki18n( "The program '%1' to control the Akonadi server was found "
+                         "and could be executed successfully.\nResult:\n%2" ).subs( path ).subs( result ) );
   } else {
-    report( Error, i18n( "akonadictl found but not usable" ),
-                 i18n( "The program '%1' to control the Akonadi server was found "
+    report( Error, ki18n( "akonadictl found but not usable" ),
+                 ki18n( "The program '%1' to control the Akonadi server was found "
                        "but could not be executed successfully.\nResult:\n%2\n"
-                       "Make sure the Akonadi server is installed correctly.", path, result ) );
+                       "Make sure the Akonadi server is installed correctly." ).subs( path ).subs( result ) );
   }
 }
 
 void SelfTestDialog::testServerStatus()
 {
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) ) {
-    report( Success, i18n( "Akonadi control process registered at D-Bus." ),
-                   i18n( "The Akonadi control process is registered at D-Bus which typically indicates it is operational." ) );
+    report( Success, ki18n( "Akonadi control process registered at D-Bus." ),
+                   ki18n( "The Akonadi control process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
-    report( Error, i18n( "Akonadi control process not registered at D-Bus." ),
-                 i18n( "The Akonadi control process is not registered at D-Bus which typically means it was not started "
+    report( Error, ki18n( "Akonadi control process not registered at D-Bus." ),
+                 ki18n( "The Akonadi control process is not registered at D-Bus which typically means it was not started "
                        "or encountered a fatal error during startup."  ) );
   }
 
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE ) ) {
-    report( Success, i18n( "Akonadi server process registered at D-Bus." ),
-                   i18n( "The Akonadi server process is registered at D-Bus which typically indicates it is operational." ) );
+    report( Success, ki18n( "Akonadi server process registered at D-Bus." ),
+                   ki18n( "The Akonadi server process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
-    report( Error, i18n( "Akonadi server process not registered at D-Bus." ),
-                 i18n( "The Akonadi server process is not registered at D-Bus which typically means it was not started "
+    report( Error, ki18n( "Akonadi server process not registered at D-Bus." ),
+                 ki18n( "The Akonadi server process is not registered at D-Bus which typically means it was not started "
                        "or encountered a fatal error during startup."  ) );
   }
 }
@@ -366,19 +375,21 @@ void SelfTestDialog::testServerStatus()
 void SelfTestDialog::testProtocolVersion()
 {
   if ( Internal::serverProtocolVersion() < 0 ) {
-    report( Skip, i18n( "Protocol version check not possible." ),
-            i18n( "Without a connection to the server it is not possible to check if the protocol version meets the requirements." ) );
+    report( Skip, ki18n( "Protocol version check not possible." ),
+            ki18n( "Without a connection to the server it is not possible to check if the protocol version meets the requirements." ) );
     return;
   }
   if ( Internal::serverProtocolVersion() < SessionPrivate::minimumProtocolVersion() ) {
-    report( Error, i18n( "Server protocol version is too old." ),
-            i18n( "The server protocol version is %1, but at least version %2 is required. "
-                  "Install a newer version of the Akonadi server.",
-                  Internal::serverProtocolVersion(), SessionPrivate::minimumProtocolVersion() ) );
+    report( Error, ki18n( "Server protocol version is too old." ),
+            ki18n( "The server protocol version is %1, but at least version %2 is required. "
+                  "Install a newer version of the Akonadi server." )
+                  .subs( Internal::serverProtocolVersion() )
+                  .subs( SessionPrivate::minimumProtocolVersion() ) );
   } else {
-    report( Success, i18n( "Server protocol version is recent enough." ),
-            i18n( "The server Protocol version is %1, which equal or newer than the required version %2.",
-                  Internal::serverProtocolVersion(), SessionPrivate::minimumProtocolVersion() ) );
+    report( Success, ki18n( "Server protocol version is recent enough." ),
+            ki18n( "The server Protocol version is %1, which equal or newer than the required version %2." )
+                .subs( Internal::serverProtocolVersion() )
+                .subs( SessionPrivate::minimumProtocolVersion() ) );
   }
 }
 
@@ -396,15 +407,16 @@ void SelfTestDialog::testResources()
   const QStringList pathList = XdgBaseDirs::findAllResourceDirs( "data", QLatin1String( "akonadi/agents" ) );
   QStandardItem *item = 0;
   if ( resourceFound ) {
-    item = report( Success, i18n( "Resource agents found." ), i18n( "At least one resource agent has been found." ) );
+    item = report( Success, ki18n( "Resource agents found." ), ki18n( "At least one resource agent has been found." ) );
   } else {
-    item = report( Error, i18n( "No resource agents found." ),
-      i18n( "No resource agents have been found, Akonadi is not usable without at least one. "
+    item = report( Error, ki18n( "No resource agents found." ),
+      ki18n( "No resource agents have been found, Akonadi is not usable without at least one. "
             "This usually means that no resource agents are installed or that there is a setup problem. "
             "The following paths have been searched: '%1'. "
             "The XDG_DATA_DIRS environment variable is set to '%2', make sure this includes all paths "
-            "where Akonadi agents are installed to.", pathList.join( QLatin1String(" ") ),
-            QString::fromLocal8Bit( qgetenv( "XDG_DATA_DIRS" ) ) ) );
+            "where Akonadi agents are installed to." )
+          .subs( pathList.join( QLatin1String(" ") ) )
+          .subs( QString::fromLocal8Bit( qgetenv( "XDG_DATA_DIRS" ) ) ) );
   }
   item->setData( pathList, ListDirectoryRole );
   item->setData( QByteArray( "XDG_DATA_DIRS" ), EnvVarRole );
@@ -416,22 +428,22 @@ void Akonadi::SelfTestDialog::testServerLog()
       + QDir::separator() + QString::fromLatin1( "akonadiserver.error" );
   QFileInfo info( serverLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    report( Success, i18n( "No current Akonadi server error log found." ),
-                   i18n( "The Akonadi server did not report any errors during its current startup." ) );
+    report( Success, ki18n( "No current Akonadi server error log found." ),
+                   ki18n( "The Akonadi server did not report any errors during its current startup." ) );
   } else {
-    QStandardItem *item = report( Error, i18n( "Current Akonadi server error log found." ),
-      i18n( "The Akonadi server did report error during startup into %1.", makeLink( serverLog ) ) );
+    QStandardItem *item = report( Error, ki18n( "Current Akonadi server error log found." ),
+      ki18n( "The Akonadi server did report error during startup into %1." ).subs( makeLink( serverLog ) ) );
     item->setData( serverLog, FileIncludeRole );
   }
 
   serverLog += ".old";
   info.setFile( serverLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    report( Success, i18n( "No previous Akonadi server error log found." ),
-                   i18n( "The Akonadi server did not report any errors during its previous startup." ) );
+    report( Success, ki18n( "No previous Akonadi server error log found." ),
+                   ki18n( "The Akonadi server did not report any errors during its previous startup." ) );
   } else {
-    QStandardItem *item = report( Error, i18n( "Previous Akonadi server error log found." ),
-      i18n( "The Akonadi server did report error during its previous startup into %1.", makeLink( serverLog ) ) );
+    QStandardItem *item = report( Error, ki18n( "Previous Akonadi server error log found." ),
+      ki18n( "The Akonadi server did report error during its previous startup into %1." ).subs( makeLink( serverLog ) ) );
     item->setData( serverLog, FileIncludeRole );
   }
 }
@@ -442,22 +454,22 @@ void SelfTestDialog::testControlLog()
       + QDir::separator() + QString::fromLatin1( "akonadi_control.error" );
   QFileInfo info( controlLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    report( Success, i18n( "No current Akonadi control error log found." ),
-                   i18n( "The Akonadi control process did not report any errors during its current startup." ) );
+    report( Success, ki18n( "No current Akonadi control error log found." ),
+                   ki18n( "The Akonadi control process did not report any errors during its current startup." ) );
   } else {
-    QStandardItem *item = report( Error, i18n( "Current Akonadi control error log found." ),
-      i18n( "The Akonadi control process did report error during startup into %1.", makeLink( controlLog ) ) );
+    QStandardItem *item = report( Error, ki18n( "Current Akonadi control error log found." ),
+      ki18n( "The Akonadi control process did report error during startup into %1." ).subs( makeLink( controlLog ) ) );
     item->setData( controlLog, FileIncludeRole );
   }
 
   controlLog += ".old";
   info.setFile( controlLog );
   if ( !info.exists() || info.size() <= 0 ) {
-    report( Success, i18n( "No previous Akonadi control error log found." ),
-                   i18n( "The Akonadi control process did not report any errors during its previous startup." ) );
+    report( Success, ki18n( "No previous Akonadi control error log found." ),
+                   ki18n( "The Akonadi control process did not report any errors during its previous startup." ) );
   } else {
-    QStandardItem *item = report( Error, i18n( "Previous Akonadi control error log found." ),
-      i18n( "The Akonadi control process did report error during its previous startup into %1.", makeLink( controlLog ) ) );
+    QStandardItem *item = report( Error, ki18n( "Previous Akonadi control error log found." ),
+      ki18n( "The Akonadi control process did report error during its previous startup into %1." ).subs( makeLink( controlLog ) ) );
     item->setData( controlLog, FileIncludeRole );
   }
 }
@@ -487,8 +499,8 @@ QString SelfTestDialog::createReport()
     }
     s << endl << "--------" << endl;
     s << endl;
-    s << item->text() << endl;
-    s << "Details: " << item->whatsThis() << endl;
+    s << item->data( SummaryRole ).toString() << endl;
+    s << "Details: " << item->data( DetailsRole ).toString() << endl;
     if ( item->data( FileIncludeRole ).isValid() ) {
       s << endl;
       const QString fileName = item->data( FileIncludeRole ).toString();

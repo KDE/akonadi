@@ -24,6 +24,7 @@
 #include "ui_selftestdialog.h"
 
 #include <KDialog>
+#include <KLocalizedString>
 
 class QStandardItem;
 class QStandardItemModel;
@@ -47,7 +48,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
       Warning,
       Error
     };
-    QStandardItem* report( ResultType type, const QString &summary, const QString &details );
+    QStandardItem* report( ResultType type, const KLocalizedString &summary, const KLocalizedString &details );
     void runTests();
     QVariant serverSetting( const QString &group, const QString &key, const QVariant &def ) const;
     bool useStandaloneMysqlServer() const;
