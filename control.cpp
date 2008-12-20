@@ -25,6 +25,7 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
+#include <klocale.h>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
@@ -67,6 +68,7 @@ class Control::Private
         mSuccess( false ),
         mStarting( false ), mStopping( false )
     {
+      KGlobal::locale()->insertCatalog( "libakonadi" );
     }
 
     void setupProgressIndicator( const QString &msg, QWidget *parent = 0 )

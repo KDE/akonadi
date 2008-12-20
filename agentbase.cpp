@@ -349,6 +349,7 @@ QString AgentBase::parseArguments( int argc, char **argv )
 int AgentBase::init( AgentBase *r )
 {
   QApplication::setQuitOnLastWindowClosed( false );
+  KGlobal::locale()->insertCatalog( "libakonadi" );
   int rv = kapp->exec();
   delete r;
   delete[] sAgentAppName;
