@@ -240,6 +240,14 @@ void AkonadiServer::startDatabaseProcess()
     akFatal() << "or the target file (mysql.conf) could not be written.";
   }
 
+  // MySQL doesn't like world writeable config files (which makes sense), but
+  // our config file somehow ends up being world-writable on some systems for no
+  // apparent reason nevertheless, so fix that
+  const QFile::Permissions allowedPerms = actualFile.permissions()
+      & ( QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther );
+  if ( allowedPerms != actualFile.permissions() )
+    actualFile.setPermissions( allowedPerms );
+
   if ( dataDir.isEmpty() )
     akFatal() << "Akonadi server was not able not create database data directory";
 
