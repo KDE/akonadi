@@ -21,9 +21,11 @@
 #include "notificationmanageradaptor.h"
 #include "tracer.h"
 #include "storage/datastore.h"
+#include "../../libs/xdgbasedirs_p.h"
 
 #include <QtCore/QDebug>
 #include <QDBusConnection>
+#include <QSettings>
 
 using namespace Akonadi;
 
@@ -37,9 +39,15 @@ NotificationManager::NotificationManager()
   new NotificationManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications"),
     this, QDBusConnection::ExportAdaptors );
-  mTimer.setInterval( 50 );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications/debug"),
+    this, QDBusConnection::ExportScriptableSlots );
+
+  const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+  QSettings settings( serverConfigFile, QSettings::IniFormat );
+
+  mTimer.setInterval( settings.value( QLatin1String("NotificationManager/Interval"), 50 ).toInt() );
   mTimer.setSingleShot( true );
-  connect( &mTimer, SIGNAL(timeout()), SLOT(slotEmitNotification()) );
+  connect( &mTimer, SIGNAL(timeout()), SLOT(emitPendingNotifications()) );
 }
 
 NotificationManager::~NotificationManager()
@@ -68,7 +76,7 @@ void NotificationManager::slotNotify(const Akonadi::NotificationMessage::List &m
     mTimer.start();
 }
 
-void NotificationManager::slotEmitNotification()
+void NotificationManager::emitPendingNotifications()
 {
   if ( mNotifications.isEmpty() )
     return;

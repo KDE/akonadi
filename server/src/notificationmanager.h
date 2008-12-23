@@ -44,12 +44,14 @@ class NotificationManager : public QObject
 
     void connectDatastore( DataStore* );
 
+  public Q_SLOTS:
+    Q_SCRIPTABLE void emitPendingNotifications();
+
   Q_SIGNALS:
     Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
 
   private Q_SLOTS:
     void slotNotify( const Akonadi::NotificationMessage::List &msgs );
-    void slotEmitNotification();
 
   private:
     NotificationManager();
