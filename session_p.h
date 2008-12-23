@@ -57,6 +57,7 @@ class SessionPrivate
     void startJob( Job* job );
     void jobDone( KJob* job );
     void jobWriteFinished( Akonadi::Job* job );
+    void jobDestroyed( QObject *job );
 
     bool canPipelineNext();
 

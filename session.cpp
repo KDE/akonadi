@@ -186,11 +186,21 @@ void SessionPrivate::jobWriteFinished( Akonadi::Job* job )
   startNext();
 }
 
+void SessionPrivate::jobDestroyed(QObject * job)
+{
+  queue.removeAll( static_cast<Akonadi::Job*>( job ) );
+  // ### likely not enough to really cancel already running jobs
+  pipeline.removeAll( static_cast<Akonadi::Job*>( job ) );
+  if ( currentJob == job )
+    currentJob = 0;
+}
+
 void SessionPrivate::addJob(Job * job)
 {
   queue.append( job );
   QObject::connect( job, SIGNAL(result(KJob*)), mParent, SLOT(jobDone(KJob*)) );
   QObject::connect( job, SIGNAL(writeFinished(Akonadi::Job*)), mParent, SLOT(jobWriteFinished(Akonadi::Job*)) );
+  QObject::connect( job, SIGNAL(destroyed(QObject*)), mParent, SLOT(jobDestroyed(QObject*)) );
   startNext();
 }
 
