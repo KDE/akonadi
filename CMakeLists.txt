@@ -43,6 +43,16 @@ set(AKONADI_LIB_MINOR_VERSION "0")
 set(AKONADI_LIB_PATCH_VERSION "81")
 set(AKONADI_LIB_VERSION_STRING "${AKONADI_LIB_MAJOR_VERSION}.${AKONADI_LIB_MINOR_VERSION}.${AKONADI_LIB_PATCH_VERSION}")
 
+set( AKONADI_VERSION_STRING "${AKONADI_LIB_VERSION_STRING}" )
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
+  if ( NOT Subversion_FOUND )
+    find_package( Subversion )
+  endif ( NOT Subversion_FOUND )
+  if ( Subversion_FOUND )
+    Subversion_WC_INFO( ${PROJECT_SOURCE_DIR} Akonadi )
+    set( AKONADI_VERSION_STRING "${AKONADI_LIB_VERSION_STRING} (revision ${Akonadi_WC_LAST_CHANGED_REV})" )
+  endif ( Subversion_FOUND )
+endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
 
 # set the output paths
 set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
@@ -57,7 +67,7 @@ endif (WIN32)
 # By default cmake builds the targets with full RPATH to everything in the build directory,
 # but then removes the RPATH when installing.
 # These two options below make it set the RPATH of the installed targets to all
-# RPATH directories outside the current CMAKE_BINARY_DIR and also the library 
+# RPATH directories outside the current CMAKE_BINARY_DIR and also the library
 # install directory. Alex
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH  TRUE)
 set(CMAKE_INSTALL_RPATH                "${LIB_INSTALL_DIR}" )
@@ -75,7 +85,7 @@ check_include_files(unistd.h HAVE_UNISTD_H)
 configure_file(config-akonadi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi.h)
 
 
-# maybe the handling for the different compilers could be split out into a separate file, Alex 
+# maybe the handling for the different compilers could be split out into a separate file, Alex
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
    set (_ENABLE_EXCEPTIONS -fexceptions)
    set ( CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
@@ -96,7 +106,7 @@ endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
 # (CMAKE_CURRENT_(SOURCE|BINARY)_DIR are also always the same). Alex
 include_directories(${Akonadi_SOURCE_DIR} ${Akonadi_BINARY_DIR} ${QT_INCLUDES})
 
-# if something breaks because the block below is commented out, 
+# if something breaks because the block below is commented out,
 # please send me an email, Alex <neundorf@kde.org>
 
 # # we need the absolute directories where stuff will be installed too
@@ -117,10 +127,10 @@ include_directories(${Akonadi_SOURCE_DIR} ${Akonadi_BINARY_DIR} ${QT_INCLUDES})
 #       endif ("${in}" MATCHES "^[a-zA-Z]:.*")
 #    endif (UNIX)
 # endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
-# 
+#
 # make_install_path_absolute(AKONADI_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL_DIR})
 # make_install_path_absolute(AKONADI_DBUS_SERVICES_DIR   ${DBUS_SERVICES_INSTALL_DIR})
-# 
+#
 # set(AKONADI_DBUS_INTERFACES_DIR \"${AKONADI_DBUS_INTERFACES_DIR}\")
 # set(AKONADI_DBUS_SERVICES_DIR   \"${AKONADI_DBUS_SERVICES_DIR}\")
 
