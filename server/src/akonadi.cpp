@@ -17,8 +17,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-#include "../libs/xdgbasedirs_p.h"
-
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "serveradaptor.h"
@@ -34,6 +32,9 @@
 #include "xesammanager.h"
 #include "nepomukmanager.h"
 #include "debuginterface.h"
+
+#include "../libs/xdgbasedirs_p.h"
+#include "../libs/protocol_p.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -121,6 +122,9 @@ AkonadiServer::AkonadiServer( QObject* parent )
     if ( !dbusAddress.isEmpty() ) {
       connectionSettings.setValue( QLatin1String( "DBUS/Address" ), QLatin1String( dbusAddress ) );
     }
+
+    connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+             SLOT(serviceOwnerChanged(QString,QString,QString)) );
 }
 
 AkonadiServer::~AkonadiServer()
@@ -337,6 +341,15 @@ void AkonadiServer::stopDatabaseProcess()
     return;
   mDatabaseProcess->terminate();
   mDatabaseProcess->waitForFinished();
+}
+
+void AkonadiServer::serviceOwnerChanged(const QString & name, const QString & oldOwner, const QString & newOwner)
+{
+  Q_UNUSED( oldOwner );
+  if ( name == QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ) && newOwner.isEmpty() ) {
+    akError() << "Control process died, committing suicide!";
+    quit();
+  }
 }
 
 #include "akonadi.moc"

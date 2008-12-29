@@ -54,6 +54,7 @@ class AKONADIPRIVATE_EXPORT AkonadiServer: public QLocalServer
 
   private Q_SLOTS:
     void doQuit();
+    void serviceOwnerChanged ( const QString &name, const QString &oldOwner, const QString &newOwner );
 
   protected:
     /** reimpl */

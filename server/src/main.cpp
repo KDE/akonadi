@@ -19,14 +19,17 @@
  ***************************************************************************/
 
 
-#include <QtCore/QCoreApplication>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
-
 #include "akonadi.h"
 #include "akapplication.h"
 #include "akdebug.h"
 #include "akcrash.h"
+
+#include "../libs/protocol_p.h"
+
+#include <QtCore/QCoreApplication>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusError>
 
 #include <cstdlib>
 
@@ -44,13 +47,16 @@ int main( int argc, char ** argv )
     AkApplication app( argc, argv );
     app.parseCommandLine();
 
+    if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) ) ) {
+      akError() << "Akonadi control process not found - aborting.";
+      akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
+    }
+
     Akonadi::AkonadiServer::instance(); // trigger singleton creation
     AkonadiCrash::setShutdownMethod( shutdownHandler );
 
-    if ( !QDBusConnection::sessionBus().registerService( QLatin1String("org.freedesktop.Akonadi") ) ) {
-      qDebug( "Unable to connect to dbus service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
-      return 1;
-    }
+    if ( !QDBusConnection::sessionBus().registerService( QLatin1String(AKONADI_DBUS_SERVER_SERVICE) ) )
+      akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
 
     const int result = app.exec();
 
