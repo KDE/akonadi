@@ -26,6 +26,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shared )
 
 set( AKONADI_SHARED_SOURCES
+  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akapplication.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akcrash.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdebug.cpp
 )
@@ -145,6 +146,7 @@ target_link_libraries( akonadiprivate
   ${QT_QTDBUS_LIBRARY}
   ${QT_QTXML_LIBRARY}
   akonadiprotocolinternals
+  ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 set_target_properties( akonadiprivate PROPERTIES

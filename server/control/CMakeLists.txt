@@ -39,7 +39,7 @@ qt4_add_dbus_interfaces( control_SRCS
 automoc4_add_executable(akonadi_control ${control_SRCS})
 set_target_properties(akonadi_control PROPERTIES OUTPUT_NAME akonadi_control)
 
-target_link_libraries(akonadi_control ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS})
+target_link_libraries(akonadi_control ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS}  ${Boost_PROGRAM_OPTIONS_LIBRARY})
 
 install(TARGETS akonadi_control DESTINATION ${BIN_INSTALL_DIR})
 

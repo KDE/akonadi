@@ -24,8 +24,8 @@
 #include "agentmanager.h"
 #include "controlmanager.h"
 #include "processcontrol.h"
+#include "akapplication.h"
 #include "akcrash.h"
-#include "akdebug.h"
 
 #include <stdlib.h>
 #include <config-akonadi.h>
@@ -45,10 +45,8 @@ void crashHandler( int )
 
 int main( int argc, char **argv )
 {
-  akInit( QString::fromLatin1( "akonadi_control" ) );
-  AkonadiCrash::setEmergencyMethod( crashHandler );
-
-  QCoreApplication app( argc, argv );
+  AkApplication app( argc, argv );
+  app.parseCommandLine();
 
   if ( !QDBusConnection::sessionBus().registerService( "org.freedesktop.Akonadi.Control" ) ) {
     qDebug( "Unable to register service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
@@ -58,6 +56,7 @@ int main( int argc, char **argv )
   new ControlManager;
 
   sAgentManager = new AgentManager;
+  AkonadiCrash::setEmergencyMethod( crashHandler );
 
   int retval = app.exec();
 

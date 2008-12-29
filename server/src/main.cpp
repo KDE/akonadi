@@ -24,6 +24,7 @@
 #include <QtDBus/QDBusError>
 
 #include "akonadi.h"
+#include "akapplication.h"
 #include "akdebug.h"
 #include "akcrash.h"
 
@@ -40,12 +41,11 @@ void shutdownHandler( int )
 
 int main( int argc, char ** argv )
 {
-    akInit( QString::fromLatin1( "akonadiserver" ) );
-    AkonadiCrash::setShutdownMethod( shutdownHandler );
-
-    QCoreApplication app( argc, argv );
+    AkApplication app( argc, argv );
+    app.parseCommandLine();
 
     Akonadi::AkonadiServer::instance(); // trigger singleton creation
+    AkonadiCrash::setShutdownMethod( shutdownHandler );
 
     if ( !QDBusConnection::sessionBus().registerService( QLatin1String("org.freedesktop.Akonadi") ) ) {
       qDebug( "Unable to connect to dbus service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );

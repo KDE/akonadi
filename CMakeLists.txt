@@ -28,7 +28,7 @@ if(NOT XSLTPROC_EXECUTABLE)
   message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
 endif(NOT XSLTPROC_EXECUTABLE)
 
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS program_options)
 if(NOT Boost_FOUND)
   message(FATAL_ERROR "Akonadi requires the Boost C++ libraries.")
 endif(NOT Boost_FOUND)
