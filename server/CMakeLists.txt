@@ -25,6 +25,8 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shared )
 
+set( AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akonadiprotocolinternals)
+
 set( AKONADI_SHARED_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akapplication.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akcrash.cpp
@@ -145,7 +147,7 @@ target_link_libraries( akonadiprivate
   ${QT_QTSQL_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${QT_QTXML_LIBRARY}
-  akonadiprotocolinternals
+  ${AKONADI_PROTOCOLINTERNALS_LIBS}
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 

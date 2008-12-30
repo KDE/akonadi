@@ -24,20 +24,11 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 
-#include "../../libs/protocol_p.h"
+#include "akapplication.h"
+#include "protocol_p.h"
 
 #include "controlmanagerinterface.h"
 #include "akonadistarter.h"
-
-static void printHelp( const QString &app )
-{
-  qDebug( "Usage: %s start|stop|status\n\n"
-          "Options:\n"
-          "  start      : Starts the Akonadi server with all its processes\n"
-          "  stop       : Stops the Akonadi server and all its processes cleanly\n"
-          "  status     : Shows a status overview of the Akonadi server"
-          "", qPrintable( app ) );
-}
 
 static bool startServer()
 {
@@ -71,7 +62,16 @@ static bool statusServer()
 
 int main( int argc, char **argv )
 {
-  QCoreApplication app( argc, argv );
+  AkApplication app( argc, argv );
+  app.setDescription( "Akonadi server manipulation tool\n"
+      "Usage: akonadictl [command]\n\n"
+      "Commands:\n"
+      "  start      : Starts the Akonadi server with all its processes\n"
+      "  stop       : Stops the Akonadi server and all its processes cleanly\n"
+      "  status     : Shows a status overview of the Akonadi server"
+  );
+
+  app.parseCommandLine();
 
   QString optionsList;
   optionsList.append( QLatin1String( "start" ) );
@@ -79,11 +79,11 @@ int main( int argc, char **argv )
   optionsList.append( QLatin1String( "status" ) );
 
   const QStringList arguments = app.arguments();
-  if ( arguments.count() == 1 ) {
-    printHelp( arguments.first() );
+  if ( arguments.count() != 2 ) {
+    app.printUsage();
     return 1;
   } else if ( !optionsList.contains( arguments[ 1 ] ) ) {
-    printHelp( arguments.first() );
+    app.printUsage();
     return 2;
   }
 

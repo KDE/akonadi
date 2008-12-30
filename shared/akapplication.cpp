@@ -59,15 +59,13 @@ void AkApplication::parseCommandLine()
     po::notify( mCmdLineArguments );
 
     if ( mCmdLineArguments.count( "help" ) ) {
-      if ( !mDescription.isEmpty() )
-        std::cout << qPrintable( mDescription ) << std::endl;
-      std::cout << mCmdLineOptions << std::endl;
+      printUsage();
       ::exit( 0 );
     }
 
     if ( mCmdLineArguments.count( "version" ) ) {
       std::cout << "Akonadi " << AKONADI_VERSION_STRING << std::endl;
-        ::exit( 0 );
+      ::exit( 0 );
     }
   } catch ( std::exception &e ) {
     std::cerr << "Failed to parse command line arguments: " << e.what() << std::endl;
@@ -87,6 +85,13 @@ void AkApplication::pollSessionBus() const
 void AkApplication::addCommandLineOptions(const boost::program_options::options_description & desc)
 {
   mCmdLineOptions.add( desc );
+}
+
+void AkApplication::printUsage() const
+{
+  if ( !mDescription.isEmpty() )
+    std::cout << qPrintable( mDescription ) << std::endl;
+  std::cout << mCmdLineOptions << std::endl;
 }
 
 #include "akapplication.moc"

@@ -9,8 +9,6 @@ include_directories( BEFORE
 #  ${CMAKE_LIBRARY_PATH}
 #  ${CMAKE_INSTALL_PREFIX}/lib
 #)
-set( AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akonadiprotocolinternals)
-
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}" )
 
 ########### next target ###############

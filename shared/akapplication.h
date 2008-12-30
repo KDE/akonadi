@@ -38,6 +38,8 @@ class AkApplication : public QCoreApplication
     void addCommandLineOptions( const boost::program_options::options_description &desc );
     const boost::program_options::variables_map& commandLineArguments() const { return mCmdLineArguments; }
 
+    void printUsage() const;
+
   private slots:
     void pollSessionBus() const;
 
