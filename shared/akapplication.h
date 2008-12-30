@@ -22,12 +22,21 @@
 
 #include <QtCore/QCoreApplication>
 
+#include <boost/program_options.hpp>
+
+/**
+ * D-Bus session bus monitoring and command line handling.
+ */
 class AkApplication : public QCoreApplication
 {
   Q_OBJECT
   public:
     AkApplication( int & argc, char ** argv );
     void parseCommandLine();
+    void setDescription( const QString &desc ) { mDescription = desc; }
+
+    void addCommandLineOptions( const boost::program_options::options_description &desc );
+    const boost::program_options::variables_map& commandLineArguments() const { return mCmdLineArguments; }
 
   private slots:
     void pollSessionBus() const;
@@ -35,6 +44,10 @@ class AkApplication : public QCoreApplication
   private:
     int mArgc;
     char **mArgv;
+    QString mDescription;
+
+    boost::program_options::options_description mCmdLineOptions;
+    boost::program_options::variables_map mCmdLineArguments;
 };
 
 #endif

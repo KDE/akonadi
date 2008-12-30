@@ -24,7 +24,7 @@
 #include "akdebug.h"
 #include "akcrash.h"
 
-#include "../libs/protocol_p.h"
+#include "protocol_p.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusConnection>
@@ -32,6 +32,8 @@
 #include <QtDBus/QDBusError>
 
 #include <cstdlib>
+
+namespace po = boost::program_options;
 
 void shutdownHandler( int )
 {
@@ -45,9 +47,19 @@ void shutdownHandler( int )
 int main( int argc, char ** argv )
 {
     AkApplication app( argc, argv );
+    app.setDescription( QLatin1String( "Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
+
+#ifndef NDEBUG
+    po::options_description debugOptions( "Debug options (use with care)" );
+    debugOptions.add_options()
+        ( "start-without-control", "Allow to start the Akonadi server even without the Akonadi control process being available" );
+    app.addCommandLineOptions( debugOptions );
+#endif
+
     app.parseCommandLine();
 
-    if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) ) ) {
+    if ( !app.commandLineArguments().count( "start-without-control" ) &&
+         !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) ) ) {
       akError() << "Akonadi control process not found - aborting.";
       akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
     }

@@ -17,15 +17,18 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QCoreApplication>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
-
 #include "agentmanager.h"
 #include "controlmanager.h"
 #include "processcontrol.h"
 #include "akapplication.h"
 #include "akcrash.h"
+#include "akdebug.h"
+
+#include "protocol_p.h"
+
+#include <QtCore/QCoreApplication>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusError>
 
 #include <stdlib.h>
 #include <config-akonadi.h>
@@ -46,12 +49,11 @@ void crashHandler( int )
 int main( int argc, char **argv )
 {
   AkApplication app( argc, argv );
+  app.setDescription( "Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi." );
   app.parseCommandLine();
 
-  if ( !QDBusConnection::sessionBus().registerService( "org.freedesktop.Akonadi.Control" ) ) {
-    qDebug( "Unable to register service: %s", qPrintable( QDBusConnection::sessionBus().lastError().message() ) );
-    return 1;
-  }
+  if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE ) )
+    akFatal() << "Unable to register service: %s" << QDBusConnection::sessionBus().lastError().message();
 
   new ControlManager;
 

@@ -24,8 +24,6 @@
 #include <QDBusConnection>
 #include <QTimer>
 
-#include <boost/program_options.hpp>
-
 #include <iostream>
 
 namespace po = boost::program_options;
@@ -50,26 +48,30 @@ AkApplication::AkApplication(int & argc, char ** argv) :
 void AkApplication::parseCommandLine()
 {
   try {
-    po::options_description desc("General options");
-    desc.add_options()
-      ("help", "show this help message")
+    po::options_description generalOptions("General options");
+    generalOptions.add_options()
+      ("help,h", "show this help message")
       ("version","show version information");
 
-    po::variables_map vm;
-    po::store( po::parse_command_line( mArgc, mArgv, desc ), vm );
-    po::notify( vm );
+    mCmdLineOptions.add( generalOptions );
 
-    if ( vm.count( "help" ) ) {
-      std::cout << desc << std::endl;
+    po::store( po::parse_command_line( mArgc, mArgv, mCmdLineOptions ), mCmdLineArguments );
+    po::notify( mCmdLineArguments );
+
+    if ( mCmdLineArguments.count( "help" ) ) {
+      if ( !mDescription.isEmpty() )
+        std::cout << qPrintable( mDescription ) << std::endl;
+      std::cout << mCmdLineOptions << std::endl;
       ::exit( 0 );
     }
 
-    if ( vm.count( "version" ) ) {
+    if ( mCmdLineArguments.count( "version" ) ) {
       std::cout << "Akonadi " << AKONADI_VERSION_STRING << std::endl;
         ::exit( 0 );
     }
   } catch ( std::exception &e ) {
     std::cerr << "Failed to parse command line arguments: " << e.what() << std::endl;
+    std::cerr << "Run '" << mArgv[0] << " --help' to obtain a list of valid command line arguments." << std::endl;
     ::exit( 1 );
   }
 }
@@ -80,6 +82,11 @@ void AkApplication::pollSessionBus() const
     akError() << "D-Bus session bus went down - quitting";
     quit();
   }
+}
+
+void AkApplication::addCommandLineOptions(const boost::program_options::options_description & desc)
+{
+  mCmdLineOptions.add( desc );
 }
 
 #include "akapplication.moc"
