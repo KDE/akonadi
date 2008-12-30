@@ -1,4 +1,7 @@
 ########### next target ###############
+# QTEST_MAIN is using QApplication when QT_GUI_LIB is defined
+remove_definitions(-DQT_GUI_LIB)
+
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )

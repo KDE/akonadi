@@ -14,6 +14,8 @@ include(MacroLogFeature)
 
 set(QT_MIN_VERSION 4.4.0)
 find_package(Qt4 REQUIRED)
+# properly set up compile flags (QT_DEBUG/QT_NO_DEBUG, ...)
+include(${QT_USE_FILE})
 if (NOT QT_QTDBUS_FOUND)
    message(FATAL_ERROR  "Akonadi requires Qt4 with QtDBus module in order to built.")
 endif(NOT QT_QTDBUS_FOUND)
@@ -28,10 +30,20 @@ if(NOT XSLTPROC_EXECUTABLE)
   message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
 endif(NOT XSLTPROC_EXECUTABLE)
 
+if(MSVC)
+  # otherwise we get an undefined reference to
+  # boost::program_options::options_description::m_default_line_length
+  set(Boost_USE_STATIC_LIBS ON)
+endif(MSVC)
 find_package(Boost REQUIRED COMPONENTS program_options)
 if(NOT Boost_FOUND)
   message(FATAL_ERROR "Akonadi requires the Boost C++ libraries.")
 endif(NOT Boost_FOUND)
+include_directories(${Boost_INCLUDE_DIR})
+# should be handled by FindBoost.cmake -> cmake bug #8335
+if(NOT Boost_USE_STATIC_LIBS)
+  add_definitions(-DBOOST_DYN_LINK)
+endif(NOT Boost_USE_STATIC_LIBS)
 
 # this one actually sets only install locations
 include(InstallSettings)
