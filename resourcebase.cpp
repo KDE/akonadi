@@ -127,6 +127,8 @@ ResourceBase::ResourceBase( const QString & id )
            SLOT(slotSynchronizeCollection(Akonadi::Collection)) );
   connect( d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)),
            SLOT(retrieveItem(Akonadi::Item,QSet<QByteArray>)) );
+  connect( d->scheduler, SIGNAL( status( int, QString ) ),
+           SIGNAL( status( int, QString ) ) );
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
            d->mMonitor, SLOT(replayNext()) );
 
@@ -326,8 +328,6 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob * job)
       return;
     }
   }
-  if ( scheduler->isEmpty() )
-    emit q->status( AgentBase::Idle );
   scheduler->taskDone();
 }
 
@@ -369,8 +369,6 @@ void ResourceBase::itemsRetrievalDone()
   }
   // user did the sync himself, we are done now
   else {
-    if ( d->scheduler->isEmpty() )
-      emit status( Idle );
     d->scheduler->taskDone();
   }
 }
@@ -491,8 +489,6 @@ void ResourceBasePrivate::slotItemSyncDone( KJob *job )
   if ( job->error() ) {
     emit q->error( job->errorString() );
   }
-  if ( scheduler->isEmpty() )
-    emit q->status( AgentBase::Idle );
   scheduler->taskDone();
 }
 

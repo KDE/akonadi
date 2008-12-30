@@ -20,6 +20,7 @@
 #ifndef AKONADI_RESOURCESCHEDULER_H
 #define AKONADI_RESOURCESCHEDULER_H
 
+#include <akonadi/agentbase.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
@@ -128,6 +129,7 @@ class ResourceScheduler : public QObject
     void executeCollectionTreeSync();
     void executeItemFetch( const Akonadi::Item &item, const QSet<QByteArray> &parts );
     void executeChangeReplay();
+    void status( int status, const QString &message = QString() );
 
   private slots:
     void scheduleNext();

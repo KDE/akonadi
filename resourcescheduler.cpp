@@ -81,6 +81,8 @@ void ResourceScheduler::scheduleChangeReplay()
 
 void ResourceScheduler::taskDone()
 {
+  if ( isEmpty() )
+    emit status( AgentBase::Idle );
   mCurrentTask = Task();
   scheduleNext();
 }
