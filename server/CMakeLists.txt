@@ -18,6 +18,7 @@ macro_log_feature( MYSQLD_EXECUTABLE "MySQL Server" "Database server" "http://ww
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories( ${Boost_INCLUDE_DIR} )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../libs )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/../libs )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
