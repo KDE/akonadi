@@ -33,6 +33,7 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
+#include <QtCore/QUuid>
 #include <QtXml/QDomElement>
 
 #ifdef HAVE_LIBXML2
@@ -149,6 +150,8 @@ void KnutResource::load()
 
 void KnutResource::save()
 {
+  if ( Settings::self()->readOnly() )
+    return;
   const QString fileName = Settings::self()->dataFile();
   QFile file( fileName );
   if  ( !file.open( QIODevice::WriteOnly ) ) {
@@ -184,39 +187,6 @@ void KnutResource::configure( WId windowId )
 
 
 #if 0
-void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
-{
-  if ( !mCollections.contains( collection.remoteId() ) ) {
-    changeProcessed();
-    return;
-  }
-
-  CollectionEntry &entry = mCollections[ collection.remoteId() ];
-
-  if ( item.mimeType() == QLatin1String( "text/vcard" ) ) {
-    const KABC::Addressee addressee = item.payload<KABC::Addressee>();
-    if ( !addressee.isEmpty() ) {
-      entry.addressees.insert( addressee.uid(), addressee );
-
-      Item i( item );
-      i.setRemoteId( addressee.uid() );
-      changeCommitted( i );
-      return;
-    }
-  } else if ( item.mimeType() == QLatin1String( "text/calendar" ) ) {
-    KCal::Incidence *incidence = mICalConverter.fromString( QString::fromUtf8( item.payload<QByteArray>() ) );
-    if ( incidence ) {
-      entry.incidences.insert( incidence->uid(), incidence );
-
-      Item i( item );
-      i.setRemoteId( incidence->uid() );
-      changeCommitted( i );
-      return;
-    }
-  }
-  changeProcessed();
-}
-
 void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
 {
   QMutableMapIterator<QString, CollectionEntry> it( mCollections );
@@ -352,7 +322,7 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
 
   const QDomNodeList l = itemElem.elementsByTagName( "payload" );
   if ( l.count() != 1 ) {
-    emit error( "No payload found for item " + item.remoteId() );
+    emit error( "No payload found for item '" + item.remoteId() + "'." );
     return false;
   }
 
@@ -362,6 +332,22 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
   return true;
 }
 
+
+void KnutResource::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
+{
+  QDomElement parentElem = findElementByRid( parent.remoteId() );
+  if ( parentElem.isNull() ) {
+    emit error( "Parent collection not found in DOM tree." );
+    changeProcessed();
+    return;
+  }
+
+  Collection c( collection );
+  const QDomElement newCol = serializeCollection( c );
+  parentElem.insertBefore( newCol, QDomNode() );
+  save();
+  changeCommitted( c );
+}
 
 void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
 {
@@ -373,10 +359,26 @@ void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
   }
 
   colElem.parentNode().removeChild( colElem );
-  changeProcessed();
   save();
+  changeProcessed();
 }
 
+
+void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
+{
+  QDomElement parentElem = findElementByRid( collection.remoteId() );
+  if ( parentElem.isNull() ) {
+    emit error( "Parent collection not found in DOM tree." );
+    changeProcessed();
+    return;
+  }
+
+  Item i( item );
+  const QDomElement newItem = serializeItem( i );
+  parentElem.appendChild( newItem );
+  save();
+  changeCommitted( i );
+}
 
 void KnutResource::itemRemoved( const Akonadi::Item &item )
 {
@@ -388,8 +390,8 @@ void KnutResource::itemRemoved( const Akonadi::Item &item )
   }
 
   itemElem.parentNode().removeChild( itemElem );
-  changeProcessed();
   save();
+  changeProcessed();
 }
 
 
@@ -414,6 +416,32 @@ static QDomElement findElementByRidHelper( const QDomElement &elem, const QStrin
 QDomElement KnutResource::findElementByRid( const QString &rid ) const
 {
   return findElementByRidHelper( mDocument.documentElement(), rid );
+}
+
+
+QDomElement KnutResource::serializeCollection( Akonadi::Collection &collection )
+{
+  if ( collection.remoteId().isEmpty() )
+    collection.setRemoteId( QUuid::createUuid().toString() );
+  QDomElement top = mDocument.createElement( "collection" );
+  top.setAttribute( "rid", collection.remoteId() );
+  top.setAttribute( "name", collection.name() );
+  top.setAttribute( "content", collection.contentMimeTypes().join( "," ) );
+  return top;
+}
+
+QDomElement KnutResource::serializeItem( Akonadi::Item &item )
+{
+  if ( item.remoteId().isEmpty() )
+    item.setRemoteId( QUuid::createUuid().toString() );
+  QDomElement top = mDocument.createElement( "item" );
+  top.setAttribute( "rid", item.remoteId() );
+  top.setAttribute( "mimetype", item.mimeType() );
+  QDomElement payloadElem = mDocument.createElement( "payload" );
+  QDomText payloadText = mDocument.createTextNode( QString::fromUtf8( item.payloadData() ) );
+  payloadElem.appendChild( payloadText );
+  top.appendChild( payloadElem );
+  return top;
 }
 
 
