@@ -5,7 +5,7 @@
       </collection>
       <collection rid="c112" name="Akonadi" content="inode/directory,message/rfc822">
       </collection>
-      <item rid="i1" mimetype="message/rfc822">
+      <item rid="mail1" mimetype="message/rfc822">
         <payload>Subject: Welcome to the Knut resource
 To: new-user@this-computer.local
 From: knut@your.computer.local
@@ -22,8 +22,46 @@ This is a mail body
     <collection rid="c21" name="My Calendar" content="text/calendar">
     </collection>
     <collection rid="c22" name="My Addressbook" content="text/directory">
+      <item rid="contact1" mimetype="text/directory">
+        <payload>
+BEGIN:VCARD
+EMAIL:vkrause@kde.org
+FN:Volker Krause
+GEO:52.500000;13.366667
+N:Krause;Volker;;;
+NAME:Volker Krause
+ORG:KDE
+REV:2003-02-27T20:08:42Z
+ROLE:Author of this file
+TZ:+02:00
+UID:bb2slGmqxb
+URL:http://www.akonadi-project.org
+VERSION:3.0
+END:VCARD       
+        </payload>
+      </item>
     </collection>
     <collection rid="c23" name="My Tasks" content="text/calendar">
+      <item rid="task1" mimetype="text/calendar">
+        <payload>
+BEGIN:VCALENDAR
+PRODID:-//K Desktop Environment//NONSGML libkcal 3.5//EN
+VERSION:2.0
+BEGIN:VTODO
+DTSTAMP:20090101T154017Z
+ORGANIZER:MAILTO:vkrause@kde.org
+CREATED:20040505T094143Z
+UID:libkcal-1506191911.958
+LAST-MODIFIED:20040512T133925Z
+SUMMARY:Add a demo task to this file
+PRIORITY:3
+DUE;VALUE=DATE:20090101
+COMPLETED:20090101T133925Z
+PERCENT-COMPLETE:100
+END:VTODO
+END:VCALENDAR
+        </payload>
+      </item>
     </collection>
     <collection rid="c24" name="My Journal" content="text/calendar">
     </collection>

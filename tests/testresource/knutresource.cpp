@@ -241,7 +241,6 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection )
 
 static void addItemPayload( Item &item, const QDomElement &elem )
 {
-  kDebug() << elem.tagName() << elem.text();
   if ( elem.isNull() )
     return;
   const QByteArray payloadData = elem.text().toUtf8();
