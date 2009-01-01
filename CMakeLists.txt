@@ -124,8 +124,16 @@ kde4_add_ui_files( akonadikde_LIB_SRC
 
 kde4_add_library( akonadi-kde SHARED ${akonadikde_LIB_SRC} )
 
+macro_ensure_version( "4.2.0" ${KDEVERSION} KDE_IS_AT_LEAST_42 )
+
 target_link_libraries( akonadi-kde ${KDE4_SOLID_LIBS} ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${AKONADI_COMMON_LIBRARIES} )
-target_link_libraries( akonadi-kde LINK_INTERFACE_LIBRARIES ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
+set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
+
+if(${KDE_IS_AT_LEAST_42})
+target_link_libraries( akonadi-kde LINK_INTERFACE_LIBRARIES ${AKONADI_KDE_DEPS})
+else(${KDE_IS_AT_LEAST_42})
+target_link_libraries( akonadi-kde ${AKONADI_KDE_DEPS})
+endif(${KDE_IS_AT_LEAST_42})
 
 
 set_target_properties( akonadi-kde PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

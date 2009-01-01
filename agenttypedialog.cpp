@@ -22,7 +22,11 @@
 #include <QObject>
 #include <QtGui/QVBoxLayout>
 
+#include <kdeversion.h>
+
+#if KDE_IS_VERSION(4,2,0 )
 #include <kfilterproxysearchline.h>
+#endif
 
 using namespace Akonadi;
 
@@ -40,13 +44,14 @@ AgentTypeDialog::AgentTypeDialog( QWidget *parent )
   setButtons( Ok | Cancel );
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
 
-  KFilterProxySearchLine* searchLine = new KFilterProxySearchLine( mainWidget() );
-  layout->addWidget( searchLine );
-
   d->Widget = new Akonadi::AgentTypeWidget( mainWidget() );
   connect( d->Widget, SIGNAL( activated() ), this, SLOT( accept() ) );
 
+#if KDE_IS_VERSION(4,2,0 )
+  KFilterProxySearchLine* searchLine = new KFilterProxySearchLine( mainWidget() );
+  layout->addWidget( searchLine );
   searchLine->setProxy( d->Widget->agentFilterProxyModel() );
+#endif
 
   layout->addWidget( d->Widget );
 
