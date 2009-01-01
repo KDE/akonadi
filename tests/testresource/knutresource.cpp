@@ -363,6 +363,36 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
 }
 
 
+void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
+{
+  const QDomElement colElem = findElementByRid( collection.remoteId() );
+  if ( colElem.isNull() ) {
+    emit error( "Deleted collection not found in DOM tree." );
+    changeProcessed();
+    return;
+  }
+
+  colElem.parentNode().removeChild( colElem );
+  changeProcessed();
+  save();
+}
+
+
+void KnutResource::itemRemoved( const Akonadi::Item &item )
+{
+  const QDomElement itemElem = findElementByRid( item.remoteId() );
+  if ( itemElem.isNull() ) {
+    emit error( "Deleted item not found in DOM tree." );
+    changeProcessed();
+    return;
+  }
+
+  itemElem.parentNode().removeChild( itemElem );
+  changeProcessed();
+  save();
+}
+
+
 static QDomElement findElementByRidHelper( const QDomElement &elem, const QString &rid )
 {
   if ( elem.isNull() )

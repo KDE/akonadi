@@ -36,18 +36,21 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
     ~KnutResource();
 
   public Q_SLOTS:
-    virtual bool retrieveItem( const Akonadi::Item &item, const QSet<QByteArray> &parts );
     virtual void configure( WId windowId );
 
   protected:
+    void retrieveCollections();
+    void retrieveItems( const Akonadi::Collection &collection );
+    bool retrieveItem( const Akonadi::Item &item, const QSet<QByteArray> &parts );
+
+    void collectionRemoved( const Akonadi::Collection &collection );
+
 #if 0
     virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts );
-    virtual void itemRemoved( const Akonadi::Item &ref );
 #endif
+    void itemRemoved( const Akonadi::Item &ref );
 
-    void retrieveCollections();
-    void retrieveItems( const Akonadi::Collection &collection );
 
   private:
     QDomElement findElementByRid( const QString &rid ) const;
