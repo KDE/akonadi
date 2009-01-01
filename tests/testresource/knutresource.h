@@ -25,6 +25,8 @@
 #include <kcal/icalformat.h>
 #include <akonadi/resourcebase.h>
 
+#include <QDomDocument>
+
 class QDomElement;
 
 class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer
@@ -70,6 +72,8 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
     KABC::VCardConverter mVCardConverter;
     KCal::ICalFormat mICalConverter;
     QMap<QString, CollectionEntry> mCollections;
+
+    QDomDocument mDocument;
 };
 
 #endif

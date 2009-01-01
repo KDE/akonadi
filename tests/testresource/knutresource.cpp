@@ -23,7 +23,6 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
 
 #include <akonadi/collectionfetchjob.h>
@@ -207,17 +206,39 @@ void KnutResource::itemRemoved( const Akonadi::Item &item )
   changeProcessed();
 }
 
+
+static Collection buildCollection( const QDomElement &node, const QString &parentRid )
+{
+  Collection c;
+  c.setRemoteId( node.attribute( "rid" ) );
+  c.setParentRemoteId( parentRid );
+  c.setName( node.attribute( "name" ) );
+  c.setContentMimeTypes( node.attribute( "content" ).split( ',' ) );
+  return c;
+}
+
+static Collection::List buildCollectionTree( const QDomElement &parent )
+{
+  Collection::List rv;
+  if ( parent.isNull() )
+    return rv;
+  const QDomNodeList children = parent.childNodes();
+  for ( int i = 0; i < children.count(); ++i ) {
+    const QDomElement child = children.at( i ).toElement();
+    if ( child.isNull() || child.tagName() != "collection" )
+      continue;
+    rv += buildCollection( child, parent.attribute( "rid" ) );
+    rv += buildCollectionTree( child );
+  }
+  return rv;
+}
+
 void KnutResource::retrieveCollections()
 {
-  Akonadi::Collection::List collections;
-  QMapIterator<QString, CollectionEntry> it( mCollections );
-  while ( it.hasNext() ) {
-    it.next();
-    collections.append( it.value().collection );
-  }
-
+  const Collection::List collections = buildCollectionTree( mDocument.documentElement() );
   collectionsRetrieved( collections );
 }
+
 
 void KnutResource::retrieveItems( const Akonadi::Collection &collection )
 {
@@ -320,13 +341,12 @@ bool KnutResource::loadData()
     return false;
   }
 
-  QDomDocument document;
-  if ( !document.setContent( &file, true ) ) {
+  if ( !mDocument.setContent( &file, true ) ) {
     emit status( Broken, "Unable to parse data file" );
     return false;
   }
 
-  QDomElement element = document.documentElement();
+  QDomElement element = mDocument.documentElement();
   if ( element.tagName() != QLatin1String( "knut" ) ) {
     emit status( Broken, "Data file has invalid format" );
     return false;

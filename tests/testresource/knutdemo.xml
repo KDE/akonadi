@@ -1,0 +1,28 @@
+<knut>
+  <collection rid="c1" name="Mail Account" content="inode/directory">
+    <collection rid="c11" name="Inbox" content="inode/directory,message/rfc822">
+      <collection rid="c111" name="KDE PIM" content="inode/directory,message/rfc822">
+      </collection>
+      <collection rid="c112" name="Akonadi" content="inode/directory,message/rfc822">
+      </collection>
+      <item rid="i1" mimetype="message/rfc822">
+        <payload>Subject: Welcome to the Knut resource
+To: new-user@this-computer.local
+From: knut@your.computer.local
+
+This is a mail body
+        </payload>
+      </item>
+    </collection>
+  </collection>
+  <collection rid="c2" name="Groupware Account" content="inode/directory">
+    <collection rid="c21" name="My Calendar" content="text/calendar">
+    </collection>
+    <collection rid="c22" name="My Addressbook" content="text/directory">
+    </collection>
+    <collection rid="c23" name="My Tasks" content="text/calendar">
+    </collection>
+    <collection rid="c24" name="My Journal" content="text/calendar">
+    </collection>
+  </collection>
+</knut>
