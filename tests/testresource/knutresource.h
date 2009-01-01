@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,9 +21,6 @@
 #ifndef KNUTRESOURCE_H
 #define KNUTRESOURCE_H
 
-#include <kabc/vcardconverter.h>
-#include <kcal/incidence.h>
-#include <kcal/icalformat.h>
 #include <akonadi/resourcebase.h>
 
 #include <QDomDocument>

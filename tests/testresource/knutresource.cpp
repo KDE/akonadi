@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2006 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -21,28 +22,56 @@
 #include "settings.h"
 #include "settingsadaptor.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QDir>
-#include <QtXml/QDomElement>
-
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionmodifyjob.h>
-#include <akonadi/itemcreatejob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/session.h>
+#include <akonadi/changerecorder.h>
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
+#include <akonadi/itemfetchscope.h>
 
 #include <kfiledialog.h>
 #include <klocale.h>
 
-#include <boost/shared_ptr.hpp>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtXml/QDomElement>
+
+#include <libxml/parser.h>
+#include <libxml/xmlIO.h>
+#include <libxml/xmlschemas.h>
 
 using namespace Akonadi;
 
-typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
+// helper class for dealing with libxml resource management
+template <typename T, void FreeFunc(T)> class XmlPtr
+{
+  public:
+    XmlPtr( const T &t ) : p( t ) {}
+      
+    ~XmlPtr()
+    {
+      FreeFunc( p );
+    }
+
+    operator T() const
+    {
+      return p;
+    }
+
+    operator bool() const
+    {
+      return p != NULL;
+    }
+
+  private:
+    T p;
+};
+
 
 KnutResource::KnutResource( const QString &id )
   : ResourceBase( id )
 {
+  changeRecorder()->itemFetchScope().fetchFullPayload();
+  changeRecorder()->fetchCollection( true );
+
   new SettingsAdaptor( Settings::self() );
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/Settings" ),
                             Settings::self(), QDBusConnection::ExportAdaptors );
@@ -56,6 +85,7 @@ KnutResource::~KnutResource()
 
 void KnutResource::load()
 {
+  // file loading
   const QString fileName = Settings::self()->dataFile();
   if ( fileName.isEmpty() ) {
     emit status( Broken, i18n( "No data file selected." ) );
@@ -66,19 +96,49 @@ void KnutResource::load()
     emit status( Broken, i18n( "Unable to open data file '%1'.", fileName ) );
     return;
   }
+  const QByteArray data = file.readAll();
 
+  // schema validation
+  XmlPtr<xmlDocPtr, xmlFreeDoc> sourceDoc( xmlParseMemory( data.constData(), data.length() ) );
+  if ( !sourceDoc ) {
+    emit status( Broken, i18n( "Unable to parse data file '%1'.", fileName ) );
+    return;
+  }
+
+  XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( "/k/kde4/src/playground/pim/akonadi/knut/knut.xsd", NULL, XML_PARSE_NONET ) );
+  if ( !schemaDoc ) {
+    emit status( Broken, "Schema definition could not be loaded and parsed." );
+    return;
+  }
+  XmlPtr<xmlSchemaParserCtxtPtr, xmlSchemaFreeParserCtxt> parserContext( xmlSchemaNewDocParserCtxt( schemaDoc ) );
+  if ( !parserContext ) {
+    emit status( Broken, "Unable to create schema parser context." );
+    return;
+  }
+  XmlPtr<xmlSchemaPtr, xmlSchemaFree> schema( xmlSchemaParse( parserContext ) );
+  if ( !schema ) {
+    emit status( Broken, "Unable to create schema." );
+    return;
+  }
+  XmlPtr<xmlSchemaValidCtxtPtr, xmlSchemaFreeValidCtxt> validationContext( xmlSchemaNewValidCtxt( schema ) );
+  if ( !validationContext ) {
+    emit status( Broken, "Unable to create schema validation context." );
+    return;
+  }
+
+  if ( xmlSchemaValidateDoc( validationContext, sourceDoc ) != 0 ) {
+    emit status( Broken, i18n( "Invalid file format." ) );
+    return;
+  }
+
+  // DOM loading
   QString errMsg;
-  if ( !mDocument.setContent( &file, true, &errMsg ) ) {
+  if ( !mDocument.setContent( data, true, &errMsg ) ) {
     emit status( Broken, i18n( "Unable to parse data file: %1", errMsg ) );
     return;
   }
 
-  // TODO: real schema validation
-  QDomElement element = mDocument.documentElement();
-  if ( element.tagName() != QLatin1String( "knut" ) ) {
-    emit status( Broken, "Data file has invalid format" );
-    return;
-  }
+  emit status( Idle, i18n( "File '%1' loaded successfully.", fileName ) );
 }
 
 void KnutResource::save()
@@ -112,7 +172,8 @@ void KnutResource::configure( WId windowId )
   Settings::self()->setDataFile( newFile );
   Settings::self()->writeConfig();
   load();
-  synchronize();
+  if ( status() != Broken )
+    synchronize();
 }
 
 
