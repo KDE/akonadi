@@ -9,6 +9,9 @@
         <payload>Subject: Welcome to the Knut resource
 To: new-user@this-computer.local
 From: knut@your.computer.local
+MIME-Version: 1.0
+Content-Type: text/plain
+Date: Thu, 01 Jan 2009 15:08:50 +0000
 
 This is a mail body
         </payload>

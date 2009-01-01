@@ -92,36 +92,6 @@ QString KnutResource::configuration() const
   return mDataFile;
 }
 
-bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts )
-{
-  Q_UNUSED( parts );
-
-  const QString remoteId = item.remoteId();
-
-  QMutableMapIterator<QString, CollectionEntry> it( mCollections );
-  while ( it.hasNext() ) {
-    it.next();
-
-    const CollectionEntry &entry = it.value();
-    Item i( item );
-
-    if ( entry.addressees.contains( remoteId ) ) {
-      i.setPayload<KABC::Addressee>( entry.addressees.value( remoteId ) );
-    }
-
-    if ( entry.incidences.contains( remoteId ) ) {
-      i.setPayload<IncidencePtr>( IncidencePtr( entry.incidences.value( remoteId ) ) );
-    }
-
-    if ( i.hasPayload() ) {
-      itemRetrieved( i );
-      return true;
-    }
-  }
-
-  return false;
-}
-
 void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
   if ( !mCollections.contains( collection.remoteId() ) ) {
@@ -267,6 +237,39 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection )
 
   itemsRetrieved( items );
 }
+
+
+static void addItemPayload( Item &item, const QDomElement &elem )
+{
+  kDebug() << elem.tagName() << elem.text();
+  if ( elem.isNull() )
+    return;
+  const QByteArray payloadData = elem.text().toUtf8();
+  item.setPayloadFromData( payloadData );
+}
+
+bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts )
+{
+  Q_UNUSED( parts );
+
+  const QDomElement itemElem = findElementByRid( item.remoteId() );
+  if ( itemElem.isNull() ) {
+    emit error( "No item found for remoteid " + item.remoteId() );
+    return false;
+  }
+
+  const QDomNodeList l = itemElem.elementsByTagName( "payload" );
+  if ( l.count() != 1 ) {
+    emit error( "No payload found for item " + item.remoteId() );
+    return false;
+  }
+
+  Item i( item );
+  addItemPayload( i, l.at( 0 ).toElement() );
+  itemRetrieved( i );
+  return true;
+}
+
 
 bool KnutResource::loadData()
 {
