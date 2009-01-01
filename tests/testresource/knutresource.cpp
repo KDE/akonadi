@@ -29,6 +29,7 @@
 
 #include <kfiledialog.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -105,7 +106,8 @@ void KnutResource::load()
     return;
   }
 
-  XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( "/k/kde4/src/playground/pim/akonadi/knut/knut.xsd", NULL, XML_PARSE_NONET ) );
+  const QString &schemaFileName = KGlobal::dirs()->findResource( "data", "akonadi_knut_resource/knut.xsd" );
+  XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit(), NULL, XML_PARSE_NONET ) );
   if ( !schemaDoc ) {
     emit status( Broken, "Schema definition could not be loaded and parsed." );
     return;
