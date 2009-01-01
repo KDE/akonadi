@@ -46,12 +46,52 @@ KnutResource::KnutResource( const QString &id )
   new SettingsAdaptor( Settings::self() );
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/Settings" ),
                             Settings::self(), QDBusConnection::ExportAdaptors );
-  mDataFile = Settings::self()->dataFile();
+  connect( this, SIGNAL(reloadConfiguration()), SLOT(load()) );
+  load();
 }
 
 KnutResource::~KnutResource()
 {
 }
+
+void KnutResource::load()
+{
+  const QString fileName = Settings::self()->dataFile();
+  if ( fileName.isEmpty() ) {
+    emit status( Broken, i18n( "No data file selected." ) );
+    return;
+  }
+  QFile file( fileName );
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    emit status( Broken, i18n( "Unable to open data file '%1'.", fileName ) );
+    return;
+  }
+
+  QString errMsg;
+  if ( !mDocument.setContent( &file, true, &errMsg ) ) {
+    emit status( Broken, i18n( "Unable to parse data file: %1", errMsg ) );
+    return;
+  }
+
+  // TODO: real schema validation
+  QDomElement element = mDocument.documentElement();
+  if ( element.tagName() != QLatin1String( "knut" ) ) {
+    emit status( Broken, "Data file has invalid format" );
+    return;
+  }
+}
+
+void KnutResource::save()
+{
+  const QString fileName = Settings::self()->dataFile();
+  QFile file( fileName );
+  if  ( !file.open( QIODevice::WriteOnly ) ) {
+    emit error( i18n( "Unable to write to file '%1'.", fileName ) );
+    return;
+  }
+  file.write( mDocument.toByteArray( 2 ) );
+}
+
 
 void KnutResource::configure( WId windowId )
 {
@@ -69,29 +109,14 @@ void KnutResource::configure( WId windowId )
   if ( newFile.isEmpty() || oldFile == newFile )
     return;
 
-  setConfiguration( newFile );
-}
-
-void KnutResource::aboutToQuit()
-{
-}
-
-bool KnutResource::setConfiguration( const QString &config )
-{
-  mDataFile = config;
-  Settings::self()->setDataFile( mDataFile );
-
-  loadData();
+  Settings::self()->setDataFile( newFile );
+  Settings::self()->writeConfig();
+  load();
   synchronize();
-
-  return true;
 }
 
-QString KnutResource::configuration() const
-{
-  return mDataFile;
-}
 
+#if 0
 void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
   if ( !mCollections.contains( collection.remoteId() ) ) {
@@ -175,6 +200,7 @@ void KnutResource::itemRemoved( const Akonadi::Item &item )
   }
   changeProcessed();
 }
+#endif
 
 
 static Collection buildCollection( const QDomElement &node, const QString &parentRid )
@@ -267,104 +293,6 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
   addItemPayload( i, l.at( 0 ).toElement() );
   itemRetrieved( i );
   return true;
-}
-
-
-bool KnutResource::loadData()
-{
-  mCollections.clear();
-
-  QFile file( mDataFile );
-  if ( !file.open( QIODevice::ReadOnly ) ) {
-    emit status( Broken, "Unable to open data file" );
-    return false;
-  }
-
-  if ( !mDocument.setContent( &file, true ) ) {
-    emit status( Broken, "Unable to parse data file" );
-    return false;
-  }
-
-  QDomElement element = mDocument.documentElement();
-  if ( element.tagName() != QLatin1String( "knut" ) ) {
-    emit status( Broken, "Data file has invalid format" );
-    return false;
-  }
-
-  Collection parentCollection;
-  parentCollection.setParent( Collection::root() );
-  parentCollection.setRemoteId( mDataFile );
-  parentCollection.setName( name() );
-  QStringList contentTypes;
-  contentTypes << Collection::mimeType();
-  parentCollection.setContentMimeTypes( contentTypes );
-
-  CollectionEntry entry;
-  entry.collection = parentCollection;
-
-  element = element.firstChildElement();
-  while ( !element.isNull() ) {
-    if ( element.tagName() == QLatin1String( "collection" ) ) {
-      addCollection( element, parentCollection );
-    } else if ( element.tagName() == QLatin1String( "item" ) ) {
-      if ( element.attribute( "mimetype" ) == QLatin1String( "text/vcard" ) )
-        addAddressee( element, entry );
-      else if ( element.attribute( "mimetype" ) == QLatin1String( "text/calendar" ) )
-        addIncidence( element, entry );
-    }
-
-    element = element.nextSiblingElement();
-  }
-
-  mCollections.insert( entry.collection.remoteId(), entry );
-
-  return true;
-}
-
-void KnutResource::addCollection( const QDomElement &element, const Akonadi::Collection &parentCollection )
-{
-  Collection collection;
-  collection.setParent( parentCollection );
-  collection.setName( element.attribute( "name" ) );
-  collection.setRemoteId( mDataFile + QLatin1Char( '#' ) + element.attribute( "name" ) );
-  collection.setContentMimeTypes( element.attribute( "mimetypes" ).split( ";", QString::SkipEmptyParts ) );
-
-  CollectionEntry entry;
-  entry.collection = collection;
-
-  QDomElement childElement = element.firstChildElement();
-  while ( !childElement.isNull() ) {
-    if ( childElement.tagName() == QLatin1String( "collection" ) ) {
-      addCollection( childElement, collection );
-    } else if ( childElement.tagName() == QLatin1String( "item" ) ) {
-      if ( childElement.attribute( "mimetype" ) == QLatin1String( "text/x-vcard" ) )
-        addAddressee( childElement, entry );
-      else if ( childElement.attribute( "mimetype" ) == QLatin1String( "text/x-calendar" ) )
-        addIncidence( childElement, entry );
-    }
-
-    childElement = childElement.nextSiblingElement();
-  }
-
-  mCollections.insert( entry.collection.remoteId(), entry );
-}
-
-void KnutResource::addAddressee( const QDomElement &element, CollectionEntry &entry )
-{
-  const QString data = element.text();
-
-  KABC::Addressee addressee = mVCardConverter.parseVCard( data.toUtf8() );
-  if ( !addressee.isEmpty() )
-    entry.addressees.insert( addressee.uid(), addressee );
-}
-
-void KnutResource::addIncidence( const QDomElement &element, CollectionEntry &entry )
-{
-  const QString data = element.text();
-
-  KCal::Incidence *incidence = mICalConverter.fromString( data );
-  if ( incidence )
-    entry.incidences.insert( incidence->uid(), incidence );
 }
 
 

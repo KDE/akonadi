@@ -41,15 +41,12 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
     virtual bool retrieveItem( const Akonadi::Item &item, const QSet<QByteArray> &parts );
     virtual void configure( WId windowId );
 
-    virtual bool setConfiguration( const QString& );
-    virtual QString configuration() const;
-
   protected:
-    virtual void aboutToQuit();
-
+#if 0
     virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts );
     virtual void itemRemoved( const Akonadi::Item &ref );
+#endif
 
     void retrieveCollections();
     void retrieveItems( const Akonadi::Collection &collection );
@@ -57,25 +54,11 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
   private:
     QDomElement findElementByRid( const QString &rid ) const;
 
+  private slots:
+    void load();
+    void save();
+
   private:
-    class CollectionEntry
-    {
-      public:
-        Akonadi::Collection collection;
-        QMap<QString, KABC::Addressee> addressees;
-        QMap<QString, KCal::Incidence*> incidences;
-    };
-
-    bool loadData();
-    void addCollection( const QDomElement &element, const Akonadi::Collection &parentCollection );
-    void addAddressee( const QDomElement &element, CollectionEntry &entry );
-    void addIncidence( const QDomElement &element, CollectionEntry &entry );
-
-    QString mDataFile;
-    KABC::VCardConverter mVCardConverter;
-    KCal::ICalFormat mICalConverter;
-    QMap<QString, CollectionEntry> mCollections;
-
     QDomDocument mDocument;
 };
 
