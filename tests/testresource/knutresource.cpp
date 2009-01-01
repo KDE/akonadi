@@ -35,9 +35,11 @@
 #include <QtCore/QDir>
 #include <QtXml/QDomElement>
 
+#ifdef HAVE_LIBXML2
 #include <libxml/parser.h>
 #include <libxml/xmlIO.h>
 #include <libxml/xmlschemas.h>
+#endif
 
 using namespace Akonadi;
 
@@ -99,6 +101,7 @@ void KnutResource::load()
   }
   const QByteArray data = file.readAll();
 
+#ifdef HAVE_LIBXML2
   // schema validation
   XmlPtr<xmlDocPtr, xmlFreeDoc> sourceDoc( xmlParseMemory( data.constData(), data.length() ) );
   if ( !sourceDoc ) {
@@ -132,6 +135,7 @@ void KnutResource::load()
     emit status( Broken, i18n( "Invalid file format." ) );
     return;
   }
+#endif
 
   // DOM loading
   QString errMsg;
