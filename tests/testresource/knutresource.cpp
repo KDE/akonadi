@@ -186,60 +186,6 @@ void KnutResource::configure( WId windowId )
 }
 
 
-#if 0
-void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
-{
-  QMutableMapIterator<QString, CollectionEntry> it( mCollections );
-  while ( it.hasNext() ) {
-    it.next();
-
-    CollectionEntry &entry = it.value();
-
-    if ( entry.addressees.contains( item.remoteId() ) ) {
-      const KABC::Addressee addressee = item.payload<KABC::Addressee>();
-      if ( !addressee.isEmpty() ) {
-        entry.addressees.insert( addressee.uid(), addressee );
-
-        Item i( item );
-        i.setRemoteId( addressee.uid() );
-        changeCommitted( i );
-        return;
-      }
-    } else if ( entry.incidences.contains( item.remoteId() ) ) {
-      KCal::Incidence *incidence = mICalConverter.fromString( item.payload<QByteArray>() );
-      if ( incidence ) {
-        delete entry.incidences.take( item.remoteId() );
-        entry.incidences.insert( incidence->uid(), incidence );
-
-        Item i( item );
-        i.setRemoteId( incidence->uid() );
-        changeCommitted( i );
-        return;
-      }
-    }
-  }
-  changeProcessed();
-}
-
-void KnutResource::itemRemoved( const Akonadi::Item &item )
-{
-  QMutableMapIterator<QString, CollectionEntry> it( mCollections );
-  while ( it.hasNext() ) {
-    it.next();
-
-    CollectionEntry &entry = it.value();
-
-    if ( entry.addressees.contains( item.remoteId() ) ) {
-      entry.addressees.remove( item.remoteId() );
-    } else if ( entry.incidences.contains( item.remoteId() ) ) {
-      delete entry.incidences.take( item.remoteId() );
-    }
-  }
-  changeProcessed();
-}
-#endif
-
-
 static Collection buildCollection( const QDomElement &node, const QString &parentRid )
 {
   Collection c;
@@ -349,6 +295,22 @@ void KnutResource::collectionAdded( const Akonadi::Collection &collection, const
   changeCommitted( c );
 }
 
+void KnutResource::collectionChanged( const Akonadi::Collection &collection )
+{
+  const QDomElement oldElem = findElementByRid( collection.remoteId() );
+  if ( oldElem.isNull() ) {
+    emit error( "Modified collection not found in DOM tree." );
+    changeProcessed();
+    return;
+  }
+
+  Collection c( collection );
+  const QDomElement newElem = serializeCollection( c );
+  oldElem.parentNode().replaceChild( newElem, oldElem );
+  save();
+  changeCommitted( c );
+}
+
 void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
 {
   const QDomElement colElem = findElementByRid( collection.remoteId() );
@@ -376,6 +338,22 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
   Item i( item );
   const QDomElement newItem = serializeItem( i );
   parentElem.appendChild( newItem );
+  save();
+  changeCommitted( i );
+}
+
+void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
+{
+  const QDomElement oldElem = findElementByRid( item.remoteId() );
+  if ( oldElem.isNull() ) {
+    emit error( "Modified item not found in DOM tree." );
+    changeProcessed();
+    return;
+  }
+
+  Item i( item );
+  const QDomElement newElem = serializeItem( i );
+  oldElem.parentNode().replaceChild( newElem, oldElem );
   save();
   changeCommitted( i );
 }

@@ -44,11 +44,11 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
     bool retrieveItem( const Akonadi::Item &item, const QSet<QByteArray> &parts );
 
     void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
-//     void collectionChanged( const Akonadi::Collection &collection );
+    void collectionChanged( const Akonadi::Collection &collection );
     void collectionRemoved( const Akonadi::Collection &collection );
 
     void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
-//     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts );
+    void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts );
     void itemRemoved( const Akonadi::Item &ref );
 
 
