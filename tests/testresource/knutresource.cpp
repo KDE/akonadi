@@ -240,95 +240,32 @@ void KnutResource::retrieveCollections()
 }
 
 
+static Item buildItem( const QDomElement &elem )
+{
+  Item i( elem.attribute( "mimetype", "application/octet-stream" ) );
+  i.setRemoteId( elem.attribute( "rid" ) );
+  return i;
+}
+
 void KnutResource::retrieveItems( const Akonadi::Collection &collection )
 {
-  ItemFetchJob *fetch = new ItemFetchJob( collection );
-  if ( !fetch->exec() ) {
-    emit status( Broken, i18n( "Unable to fetch listing of collection '%1': %2", collection.name(), fetch->errorString() ) );
+  const QDomElement colElem = findElementByRid( collection.remoteId() );
+  if ( colElem.isNull() ) {
+    emit error( "Unable to find collection " + collection.name() );
+    itemsRetrievalDone();
     return;
   }
 
-  emit percent( 0 );
-
-  Item::List items = fetch->items();
-
-  KABC::Addressee::List addressees;
-  KCal::Incidence::List incidences;
-  QMapIterator<QString, CollectionEntry> it( mCollections );
-  while ( it.hasNext() ) {
-    it.next();
-    if ( it.value().collection.id() == collection.id() ) {
-      addressees = it.value().addressees.values();
-
-      const QList<KCal::Incidence*> list = it.value().incidences.values();
-      for ( int i = 0; i < list.count(); ++i )
-        incidences.append( list[ i ] );
-      break;
-    }
-  }
-
-  int counter = 0;
-  int fullcount = addressees.count() + incidences.count();
-
-  // synchronize contacts
-  foreach ( const KABC::Addressee &addressee, addressees ) {
-    const QString uid = addressee.uid();
-
-    bool found = false;
-    foreach ( const Item &item, items ) {
-      if ( item.remoteId() == uid ) {
-        found = true;
-        break;
-      }
-    }
-
-    if ( found )
+  Item::List items;
+  const QDomNodeList children = colElem.childNodes();
+  for ( int i = 0; i < children.count(); ++i ) {
+    const QDomElement itemElem = children.at( i ).toElement();
+    if ( itemElem.isNull() || itemElem.tagName() != "item" )
       continue;
-
-    Item item;
-    item.setRemoteId( uid );
-    item.setMimeType( "text/vcard" );
-    ItemCreateJob *append = new ItemCreateJob( item, collection );
-    if ( !append->exec() ) {
-      emit percent( 0 );
-      emit status( Broken, i18n( "Appending new contact failed: %1", append->errorString() ) );
-      return;
-    }
-
-    counter++;
-    emit percent( (counter * 100) / fullcount );
+    items += buildItem( itemElem );
   }
 
-  // synchronize events
-  foreach ( KCal::Incidence *incidence, incidences ) {
-    const QString uid = incidence->uid();
-
-    bool found = false;
-    foreach ( const Item &item, items ) {
-      if ( item.remoteId() == uid ) {
-        found = true;
-        break;
-      }
-    }
-
-    if ( found )
-      continue;
-
-    Item item;
-    item.setRemoteId( uid );
-    item.setMimeType( "text/calendar" );
-    ItemCreateJob *append = new ItemCreateJob( item, collection );
-    if ( !append->exec() ) {
-      emit percent( 0 );
-      emit status( Broken, i18n( "Appending new calendar failed: %1", append->errorString() ) );
-      return;
-    }
-
-    counter++;
-    emit percent( (counter * 100) / fullcount );
-  }
-
-  itemsRetrievalDone();
+  itemsRetrieved( items );
 }
 
 bool KnutResource::loadData()
@@ -427,6 +364,31 @@ void KnutResource::addIncidence( const QDomElement &element, CollectionEntry &en
   if ( incidence )
     entry.incidences.insert( incidence->uid(), incidence );
 }
+
+
+static QDomElement findElementByRidHelper( const QDomElement &elem, const QString &rid )
+{
+  if ( elem.isNull() )
+    return QDomElement();
+  if ( elem.attribute( "rid" ) == rid )
+    return elem;
+  const QDomNodeList children = elem.childNodes();
+  for ( int i = 0; i < children.count(); ++i ) {
+    const QDomElement child = children.at( i ).toElement();
+    if ( child.isNull() )
+      continue;
+    const QDomElement rv = findElementByRidHelper( child, rid );
+    if ( !rv.isNull() )
+      return rv;
+  }
+  return QDomElement();
+}
+
+QDomElement KnutResource::findElementByRid( const QString &rid ) const
+{
+  return findElementByRidHelper( mDocument.documentElement(), rid );
+}
+
 
 AKONADI_RESOURCE_MAIN( KnutResource )
 

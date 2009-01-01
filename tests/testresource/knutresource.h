@@ -55,6 +55,9 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
     void retrieveItems( const Akonadi::Collection &collection );
 
   private:
+    QDomElement findElementByRid( const QString &rid ) const;
+
+  private:
     class CollectionEntry
     {
       public:
