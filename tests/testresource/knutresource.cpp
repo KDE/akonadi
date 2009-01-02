@@ -117,12 +117,24 @@ void KnutResource::load()
     emit status( Broken, i18n( "No data file selected." ) );
     return;
   }
+
   QFile file( fileName );
-  if ( !file.open( QIODevice::ReadOnly ) ) {
-    emit status( Broken, i18n( "Unable to open data file '%1'.", fileName ) );
-    return;
+  QByteArray data;
+  if ( file.exists() ) {
+    if ( !file.open( QIODevice::ReadOnly ) ) {
+      emit status( Broken, i18n( "Unable to open data file '%1'.", fileName ) );
+      return;
+    }
+    data = file.readAll();
+  } else {
+    const QString tmplFilename = KGlobal::dirs()->findResource( "data", "akonadi_knut_resource/knut-template.xml" );
+    QFile tmpl( tmplFilename );
+    if ( !tmpl.open( QFile::ReadOnly ) ) {
+      emit status( Broken, i18n( "Unable to open template file '%1'.", tmplFilename ) );
+      return;
+    }
+    data = tmpl.readAll();
   }
-  const QByteArray data = file.readAll();
 
 #ifdef HAVE_LIBXML2
   // schema validation
@@ -195,7 +207,7 @@ void KnutResource::configure( WId windowId )
   else
     url = KUrl::fromPath( QDir::homePath() );
 
-  newFile = KFileDialog::getOpenFileNameWId( url, "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ), windowId, i18n( "Select Data File" ) );
+  newFile = KFileDialog::getSaveFileNameWId( url, "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ), windowId, i18n( "Select Data File" ) );
 
   if ( newFile.isEmpty() || oldFile == newFile )
     return;
