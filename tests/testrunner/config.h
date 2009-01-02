@@ -33,7 +33,8 @@ class Config
     static Config *instance;
 
   public:
-    static Config *getInstance();
+    static Config *getInstance(); //to maintain the compatibility
+    static Config *getInstance(const QString &pathToConfig);
     static void destroyInstance();
     QString getKdeHome() const;
     QString getXdgDataHome() const;

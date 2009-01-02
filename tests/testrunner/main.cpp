@@ -36,16 +36,16 @@ int main(int argc, char **argv) {
   KCmdLineArgs::init(argc, argv, &aboutdata);
 
   KCmdLineOptions options;
-
-  // TODO: add --config option for overriding with a specific one
-
-  KCmdLineArgs::addCmdLineOptions(options);
+  options.add("+[config]", ki18n("Configuration file to open")); 
+  KCmdLineArgs::addCmdLineOptions(options); 
 
   KApplication app;
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-  Q_UNUSED( args ) // TODO pass value of --config once available
+  
+  if(args->count())
+    Config *config = Config::getInstance(QString(args->arg(0))); 	
+  
   SetupTest *setup = new SetupTest();
 
   setup->startAkonadiDaemon();

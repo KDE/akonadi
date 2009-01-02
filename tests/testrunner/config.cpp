@@ -35,10 +35,18 @@ Config *Config::getInstance()
   if(instance == 0){
     const QString pathToConfig = KStandardDirs::locate("config","akonaditest.xml");
     instance = new ConfigReader(pathToConfig);
-    //instance= new ConfigReader("/home/igor/codes/kde/tests/test_akonadi/config.xml");
   }
   return instance;
 }
+
+Config *Config::getInstance(const QString &pathToConfig)
+{
+  if(instance == 0){
+    instance = new ConfigReader(pathToConfig);
+  }
+  return instance;
+}
+
 
 void Config::destroyInstance()
 {
