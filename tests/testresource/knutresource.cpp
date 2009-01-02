@@ -334,7 +334,7 @@ void KnutResource::collectionAdded( const Akonadi::Collection &collection, const
 
 void KnutResource::collectionChanged( const Akonadi::Collection &collection )
 {
-  const QDomElement oldElem = findElementByRid( collection.remoteId() );
+  QDomElement oldElem = findElementByRid( collection.remoteId() );
   if ( oldElem.isNull() ) {
     emit error( "Modified collection not found in DOM tree." );
     changeProcessed();
@@ -342,7 +342,19 @@ void KnutResource::collectionChanged( const Akonadi::Collection &collection )
   }
 
   Collection c( collection );
-  const QDomElement newElem = serializeCollection( c );
+  QDomElement newElem = serializeCollection( c );
+  // move all items/collections over to the new node
+  const QDomNodeList children = oldElem.childNodes();
+  for ( int i = 0; i < children.count(); ++i ) {
+    const QDomElement child = children.at( i ).toElement();
+    kDebug() << "reparenting " << child.tagName() << child.attribute( "rid" );
+    if ( child.isNull() )
+      continue;
+    if ( child.tagName() == "item" || child.tagName() == "collection" ) {
+      newElem.appendChild( child ); // reparents
+      --i; // children, despite being const is modified by the reparenting
+    }
+  }
   oldElem.parentNode().replaceChild( newElem, oldElem );
   save();
   changeCommitted( c );
@@ -434,6 +446,17 @@ QDomElement KnutResource::findElementByRid( const QString &rid ) const
 }
 
 
+void KnutResource::serializeAttributes( const Akonadi::Entity &entity, QDomElement &entityElem )
+{
+  foreach ( Attribute *attr, entity.attributes() ) {
+    QDomElement top = mDocument.createElement( "attribute" );
+    top.setAttribute( "type", QString::fromUtf8( attr->type() ) );
+    QDomText attrText = mDocument.createTextNode( QString::fromUtf8( attr->serialized() ) );
+    top.appendChild( attrText );
+    entityElem.appendChild( top );
+  }
+}
+
 QDomElement KnutResource::serializeCollection( Akonadi::Collection &collection )
 {
   if ( collection.remoteId().isEmpty() )
@@ -442,6 +465,7 @@ QDomElement KnutResource::serializeCollection( Akonadi::Collection &collection )
   top.setAttribute( "rid", collection.remoteId() );
   top.setAttribute( "name", collection.name() );
   top.setAttribute( "content", collection.contentMimeTypes().join( "," ) );
+  serializeAttributes( collection, top );
   return top;
 }
 
@@ -456,6 +480,7 @@ QDomElement KnutResource::serializeItem( Akonadi::Item &item )
   QDomText payloadText = mDocument.createTextNode( QString::fromUtf8( item.payloadData() ) );
   payloadElem.appendChild( payloadText );
   top.appendChild( payloadElem );
+  serializeAttributes( item, top );
   return top;
 }
 
