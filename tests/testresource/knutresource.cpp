@@ -485,11 +485,21 @@ QDomElement KnutResource::serializeItem( Akonadi::Item &item )
   QDomElement top = mDocument.createElement( "item" );
   top.setAttribute( "rid", item.remoteId() );
   top.setAttribute( "mimetype", item.mimeType() );
+
   QDomElement payloadElem = mDocument.createElement( "payload" );
   QDomText payloadText = mDocument.createTextNode( QString::fromUtf8( item.payloadData() ) );
   payloadElem.appendChild( payloadText );
   top.appendChild( payloadElem );
+
   serializeAttributes( item, top );
+
+  foreach ( const Item::Flag &flag, item.flags() ) {
+    QDomElement flagElem = mDocument.createElement( "flag" );
+    QDomText flagText = mDocument.createTextNode( QString::fromUtf8( flag ) );
+    flagElem.appendChild( flagText );
+    top.appendChild( flagElem );
+  }
+
   return top;
 }
 
