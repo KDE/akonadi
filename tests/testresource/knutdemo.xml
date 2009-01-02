@@ -1,9 +1,11 @@
 <knut>
   <collection rid="c1" name="Mail Account" content="inode/directory">
     <collection rid="c11" name="Inbox" content="inode/directory,message/rfc822">
+      <attribute type="ENTITYDISPLAY" >("Posteingang" "mail-folder-inbox")</attribute>
       <collection rid="c111" name="KDE PIM" content="inode/directory,message/rfc822">
       </collection>
       <collection rid="c112" name="Akonadi" content="inode/directory,message/rfc822">
+        <attribute type="AccessRights">wcW</attribute>
       </collection>
       <item rid="mail1" mimetype="message/rfc822">
         <payload>Subject: Welcome to the Knut resource
@@ -37,7 +39,7 @@ TZ:+02:00
 UID:bb2slGmqxb
 URL:http://www.akonadi-project.org
 VERSION:3.0
-END:VCARD       
+END:VCARD
         </payload>
       </item>
     </collection>

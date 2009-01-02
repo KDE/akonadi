@@ -70,6 +70,28 @@ template <typename T, void FreeFunc(T)> class XmlPtr
 };
 
 
+class GenericAttribute : public Attribute
+{
+  public:
+    explicit GenericAttribute( const QByteArray &type, const QByteArray &value = QByteArray() ) :
+      mType( type ),
+      mValue( value )
+    {}
+
+    QByteArray type() const { return mType; }
+    Attribute* clone() const
+    {
+      return new GenericAttribute( mType, mValue );
+    }
+
+    QByteArray serialized() const { return mValue; }
+    void deserialize( const QByteArray &data ) { mValue = data; }
+
+  private:
+    QByteArray mType, mValue;
+};
+
+
 KnutResource::KnutResource( const QString &id )
   : ResourceBase( id )
 {
@@ -186,6 +208,19 @@ void KnutResource::configure( WId windowId )
 }
 
 
+static void deserializeAttributes( const QDomElement &node, Entity &entity )
+{
+  const QDomNodeList children = node.childNodes();
+  for ( int i = 0; i < children.count(); ++i ) {
+    const QDomElement attrElem = children.at( i ).toElement();
+    if ( attrElem.isNull() || attrElem.tagName() != "attribute" )
+      continue;
+    GenericAttribute *attr = new GenericAttribute( attrElem.attribute( "type" ).toUtf8(),
+                                                   attrElem.text().toUtf8() );
+    entity.addAttribute( attr );
+  }
+}
+
 static Collection buildCollection( const QDomElement &node, const QString &parentRid )
 {
   Collection c;
@@ -193,6 +228,7 @@ static Collection buildCollection( const QDomElement &node, const QString &paren
   c.setParentRemoteId( parentRid );
   c.setName( node.attribute( "name" ) );
   c.setContentMimeTypes( node.attribute( "content" ).split( ',' ) );
+  deserializeAttributes( node, c );
   return c;
 }
 
@@ -223,6 +259,7 @@ static Item buildItem( const QDomElement &elem )
 {
   Item i( elem.attribute( "mimetype", "application/octet-stream" ) );
   i.setRemoteId( elem.attribute( "rid" ) );
+  deserializeAttributes( elem, i );
   return i;
 }
 
