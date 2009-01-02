@@ -17,6 +17,7 @@ Date: Thu, 01 Jan 2009 15:08:50 +0000
 
 This is a mail body
         </payload>
+        <flag>\Seen</flag>
       </item>
     </collection>
   </collection>

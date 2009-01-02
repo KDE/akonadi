@@ -45,6 +45,7 @@
     <xsd:sequence>
       <xsd:element name="payload"    type="payloadType"   minOccurs="0" maxOccurs="1"/>
       <xsd:element name="attribute"  type="attributeType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="flag"       type="flagType"      minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="rid"        type="xsd:string" use="required"/>
     <xsd:attribute name="mimetype"   type="xsd:string" use="required"/>
@@ -61,6 +62,12 @@
       <xsd:extension base="xsd:string">
         <xsd:attribute name="type" type="xsd:string" use="required"/>
       </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="flagType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string"/>
     </xsd:simpleContent>
   </xsd:complexType>
 

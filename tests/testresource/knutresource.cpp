@@ -257,10 +257,19 @@ void KnutResource::retrieveCollections()
 
 static Item buildItem( const QDomElement &elem )
 {
-  Item i( elem.attribute( "mimetype", "application/octet-stream" ) );
-  i.setRemoteId( elem.attribute( "rid" ) );
-  deserializeAttributes( elem, i );
-  return i;
+  Item item( elem.attribute( "mimetype", "application/octet-stream" ) );
+  item.setRemoteId( elem.attribute( "rid" ) );
+  deserializeAttributes( elem, item );
+
+  const QDomNodeList children = elem.childNodes();
+  for ( int i = 0; i < children.count(); ++i ) {
+    const QDomElement flagElem = children.at( i ).toElement();
+    if ( flagElem.isNull() || flagElem.tagName() != "flag" )
+      continue;
+    item.setFlag( flagElem.text().toUtf8() );
+  }
+
+  return item;
 }
 
 void KnutResource::retrieveItems( const Akonadi::Collection &collection )
