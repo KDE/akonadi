@@ -31,6 +31,7 @@
 #include <klocale.h>
 #include <kurl.h>
 
+#include <QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QMimeData>
 
@@ -64,7 +65,8 @@ class ItemModel::Private
     Private( ItemModel *parent )
       : mParent( parent ), monitor( new Monitor() )
     {
-      session = new Session( QByteArray("ItemModel-") + QByteArray::number( qrand() ), mParent );
+      session = new Session( QCoreApplication::instance()->applicationName().toUtf8()
+          + QByteArray("-ItemModel-") + QByteArray::number( qrand() ), mParent );
 
       monitor->ignoreSession( session );
 

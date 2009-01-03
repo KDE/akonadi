@@ -29,6 +29,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include <QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QQueue>
 #include <QtCore/QThreadStorage>
@@ -221,10 +222,12 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
     QObject( parent ),
     d( new SessionPrivate( this ) )
 {
-  if ( !sessionId.isEmpty() )
+  if ( !sessionId.isEmpty() ) {
     d->sessionId = sessionId;
-  else
-    d->sessionId = QByteArray::number( qrand() );
+  } else {
+    d->sessionId = QCoreApplication::instance()->applicationName().toUtf8()
+        + "-" + QByteArray::number( qrand() );
+  }
 
   d->connected = false;
   d->theNextTag = 1;
