@@ -21,13 +21,14 @@ class shellScript
 {
   private:
     Symbols *symbol;
-    QString script; 
+    QString script;
 
-    void writeEnvironmentVariables();   
+    void writeEnvironmentVariables();
+    void writeShutdownFunction();
 
   public:
     shellScript();
     void makeShellScript();
-    
+
 };
-  
+

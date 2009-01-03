@@ -187,6 +187,7 @@ SetupTest::SetupTest()
   symbol->insertSymbol("KDEHOME", config->getKdeHome());
   symbol->insertSymbol("XDG_DATA_HOME", config->getXdgDataHome());
   symbol->insertSymbol("XDG_CONFIG_HOME", config->getXdgConfigHome());
+  symbol->insertSymbol("AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
 
   dpid = startDBusDaemon();
 

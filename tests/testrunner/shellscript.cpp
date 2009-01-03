@@ -23,26 +23,44 @@
 
 shellScript::shellScript()
 {
-  symbol = Symbols::getInstance();  
+  symbol = Symbols::getInstance();
 }
 
 void shellScript::writeEnvironmentVariables()
 {
   QHashIterator<QString, QString> i( symbol->getSymbols() );
-  
+
   while( i.hasNext() )
   {
     i.next();
     script.append( i.key() );
     script.append( "=" );
     script.append( i.value() );
-    script.append( "\n" );   
-       
+    script.append( "\n" );
+
     script.append("export ");
     script.append( i.key() );
-    script.append("\n");   
+    script.append("\n");
   }
-  script.append("\n\n");    
+  script.append("\n\n");
+}
+
+void shellScript::writeShutdownFunction()
+{
+  const QString s =
+    "function shutdown-testenvironment()\n"
+    "{\n"
+    "  echo Stopping Akonadi server\n"
+    "  qdbus org.freedesktop.Akonadi.Control /ControlManager org.freedesktop.Akonadi.ControlManager.shutdown\n"
+    "  echo \"Stopping testrunner with PID \" $TESTRUNNER_PID\n"
+    "  kill $AKONADI_TESTRUNNER_PID\n"
+    "  # wait a bit before killing D-Bus\n"
+    "  echo \"Waiting 10 seconds before killing D-Bus\"\n"
+    "  sleep 10\n"
+    "  echo \"Killing D-Bus with PID \" $DBUS_SESSION_BUS_PID\n"
+    "  kill $DBUS_SESSION_BUS_PID\n"
+    "}\n\n";
+  script.append( s );
 }
 
 void shellScript::makeShellScript()
@@ -50,13 +68,13 @@ void shellScript::makeShellScript()
   QFile file("testenvironment.sh"); //can user define the file name/location?
 
   file.open( QIODevice::WriteOnly );
-  
+
   writeEnvironmentVariables();
-  
+  writeShutdownFunction();
+
   //script.append("exec /usr/bin/dbus-launch \n");
-  //script.append("exec akonadiconsole\n"); 
+  //script.append("exec akonadiconsole\n");
   file.write(script.toAscii(), qstrlen(script.toAscii()) );
   file.close();
 }
-
 
