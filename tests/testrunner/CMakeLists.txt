@@ -31,7 +31,7 @@ set(akonaditest_SRCS
   symbols.cpp
 )
 
-#kde4_add_executable(akonaditest ${akonaditest_SRCS})
+kde4_add_executable(akonaditest ${akonaditest_SRCS})
 
 target_link_libraries(akonaditest
   akonadi-kde
