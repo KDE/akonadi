@@ -2,7 +2,11 @@
 Name=Knut
 Comment=An agent for debugging purpose
 Comment[ga]=Gníomhaire dífhabhtaithe
+Comment[gl]=Un cliente para depuración
 Comment[hi]=डिबगिंग कार्य के लिए एक एजेंट
+Comment[pt]=Um agente para fins de depuração
+Comment[pt_BR]=Um agente para fins de depuração
+Comment[uk]=Агент, створений з метою усування вад
 Type=AkonadiResource
 Exec=akonadi_knut_resource
 Icon=tools-report-bug
