@@ -1,3 +1,15 @@
+1.1.0                             03-Jan-2009
+---------------------------------------------
+- Restart agents when their executable changed.
+- Buildsystem fixes to find and link boost on all platforms.
+- Improvements to the startup to prevent partial startup.
+- Include revision number in the version string when building from SVN.
+- Shut down when we lost the connection to the D-Bus session bus.
+- add some basic handling of command line args.
+- Add a D-Bus call to flush the notification queue.
+- Automatically fix world-writeable mySQL config files.
+- Fix for FreeBSD mysql path.
+
 1.0.81                            16-Dec-2008
 ---------------------------------------------
 - Restore protocol backward compatibility with Akonadi 1.0.x servers.
@@ -27,6 +39,14 @@
 - Make sure that all modification times are stored in UTC time zone.
 - Unquoted date time with a lenght of 26 characters was not parsed properly.
 - Add serverside timestamp support for items.
+
+1.0.0                            22-July-2008
+---------------------------------------------
+- First official stable release
+- Bugfix: Unquoted date time with a lenght of
+  26 characters was not parsed properly.
+- Add serverside timestamp support for items.
+- Build system fixes (windows & automoc)
 
 0.82.0                           18-June-2008
 ---------------------------------------------

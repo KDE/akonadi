@@ -1,3 +1,118 @@
+2009-01-03 10:14 +0000 [r904820]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/agentinstance.cpp,
+	  trunk/kdesupport/akonadi/server/control/processcontrol.h,
+	  trunk/kdesupport/akonadi/server/control/agentinstance.h,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.h,
+	  trunk/kdesupport/akonadi/server/control/processcontrol.cpp:
+	  Restart agents when their executable changed, much easier to test
+	  changes this way :)
+
+2008-12-30 17:49 +0000 [r903502]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+
+	* trunk/kdesupport/akonadi/server/src/tests/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/tests/CMakeLists.txt: - properly
+	  set up compile flags (QT_DEBUG/QT_NO_DEBUG, ...) to make sure
+	  that the plugins have the correct Q_PLUGIN_VERIFICATION_DATA -
+	  Fix link against boost on windows/msvc
+
+2008-12-30 16:22 +0000 [r903484]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindBoost.cmake (added):
+	  We need to use kde's script for finding boost, not cmake's, as
+	  otherwise Boost_PROGRAM_OPTIONS_LIBRARY for example is not
+	  defined.
+
+2008-12-30 16:14 +0000 [r903479]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt: Add the boost
+	  include dir explicitely, fixes the build on OSX.
+
+2008-12-30 14:45 +0000 [r903426]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/shared/akapplication.cpp,
+	  trunk/kdesupport/akonadi/server/shared/akapplication.h,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/akonadictl/main.cpp: Use
+	  AkApplication here as well so we get the same command line
+	  handling as with the other applications.
+
+2008-12-30 10:21 +0000 [r903251]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/server/shared/akapplication.cpp,
+	  trunk/kdesupport/akonadi/server/shared/akapplication.h,
+	  trunk/kdesupport/akonadi/server/src/main.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt: While not
+	  starting the server without the control process being available
+	  is the right thing to do, it is rather inconvenient during
+	  debugging/testing, so allow to overwrite that check with a
+	  command line option.
+
+2008-12-29 21:34 +0000 [r903076]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadi.h,
+	  trunk/kdesupport/akonadi/server/src/main.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp: Try harder to
+	  prevent one of the partial running states (control dead, server
+	  running) by only allowing the server to start if the control
+	  process is registered at D-Bus and terminating it when the
+	  control process dies.
+
+2008-12-29 21:01 +0000 [r903068]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/config-akonadi.h.cmake: Include revision
+	  number in the version string when building from SVN.
+
+2008-12-29 20:05 +0000 [r903051]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/server/shared/akapplication.cpp (added),
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/config-akonadi.h.cmake,
+	  trunk/kdesupport/akonadi/server/shared/akapplication.h (added),
+	  trunk/kdesupport/akonadi/server/src/main.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt: - shut
+	  down when we lost the connection to the D-Bus session bus (which
+	  likely means the session was closed, but as a non-gui application
+	  we have no way of knowing that). - add some basic handling of
+	  command line args, at least 'akonadiserver --help' does no longer
+	  accidentally start a partial Akonadi server. - add a --version
+	  command line option which will be useful for the self-tests BUG:
+	  178916
+
+2008-12-23 17:29 +0000 [r900813]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/notificationmanager.cpp,
+	  trunk/kdesupport/akonadi/server/src/notificationmanager.h: Add a
+	  D-Bus call to flush the notification queue. This is needed for
+	  unit tests to avoid ugly and unreliable QTest::qWait() hacks
+	  there. While at it, also made the notification interval
+	  configurable so this is easier to test.
+
+2008-12-21 12:43 +0000 [r899677]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadi.cpp: MySQL doesn't
+	  like world-writeable config files, so adjust the access rights of
+	  our file if it somehow ends up being world-writable.
+
+2008-12-18 15:55 +0000 [r898650]  Manolo Valdes nolis71cu@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp: add
+	  FreeBSD mysqld default path
+
+2008-12-16 19:06 +0000 [r897748]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: Prep for release
+
 2008-12-07 11:49 +0000 [r893730]  Volker Krause vkrause@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/handler/fetch.h,
