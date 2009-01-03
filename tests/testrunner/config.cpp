@@ -39,7 +39,7 @@ Config *Config::getInstance()
   return instance;
 }
 
-Config *Config::getInstance(const QString &pathToConfig)
+Config *Config::getInstance(const QString &pathToConfig = NULL)
 {
   if(instance == 0){
     instance = new ConfigReader(pathToConfig);
