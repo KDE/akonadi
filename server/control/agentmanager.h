@@ -30,6 +30,7 @@
 #include "tracerinterface.h"
 
 class QDir;
+class QFileSystemWatcher;
 
 namespace Akonadi {
   class ProcessControl;
@@ -284,6 +285,7 @@ class AgentManager : public QObject
   private Q_SLOTS:
     void updatePluginInfos();
     void serviceOwnerChanged( const QString&, const QString&, const QString& );
+    void agentExeChanged( const QString &fileName );
 
   private:
     /**
@@ -340,6 +342,7 @@ class AgentManager : public QObject
     org::freedesktop::Akonadi::Tracer *mTracer;
 
     Akonadi::ProcessControl *mStorageController;
+    QFileSystemWatcher *mAgentWatcher;
 
     friend class AgentInstance;
 };

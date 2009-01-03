@@ -225,4 +225,12 @@ void AgentInstance::errorHandler(const QDBusError & error)
   // TODO try again after some time, esp. on timeout errors
 }
 
+void AgentInstance::restartWhenIdle()
+{
+  if ( mStatus == 0 ) {
+    mController->restartOnceWhenFinished();
+    quit();
+  }
+}
+
 #include "agentinstance.moc"

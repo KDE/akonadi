@@ -31,7 +31,8 @@
 using namespace Akonadi;
 
 ProcessControl::ProcessControl( QObject *parent )
-  : QObject( parent ), mFailedToStart( false ), mCrashCount( 0 )
+  : QObject( parent ), mFailedToStart( false ), mCrashCount( 0 ),
+  mRestartOnceOnExit( false )
 {
   connect( &mProcess, SIGNAL( error( QProcess::ProcessError ) ),
            this, SLOT( slotError( QProcess::ProcessError ) ) );
@@ -112,7 +113,13 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
           start();
       }
     } else {
-      qDebug( "Application '%s' exited normally...", qPrintable( mApplication ) );
+      if ( mRestartOnceOnExit ) {
+        mRestartOnceOnExit = false;
+        qDebug( "Restarting application '%s'.", qPrintable( mApplication ) );
+        start();
+      } else {
+        qDebug( "Application '%s' exited normally...", qPrintable( mApplication ) );
+      }
     }
   }
 }

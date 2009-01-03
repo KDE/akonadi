@@ -37,7 +37,8 @@
 using Akonadi::ProcessControl;
 
 AgentManager::AgentManager( QObject *parent )
-  : QObject( parent )
+  : QObject( parent ),
+  mAgentWatcher( new QFileSystemWatcher( this ) )
 {
   new AgentManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/AgentManager", this );
@@ -54,6 +55,8 @@ AgentManager::AgentManager( QObject *parent )
   connect( mStorageController, SIGNAL(unableToStart()),
            QCoreApplication::instance(), SLOT(quit()) );
   mStorageController->start( "akonadiserver", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
+
+  connect( mAgentWatcher, SIGNAL(fileChanged(QString)), SLOT(agentExeChanged(QString)) );
 }
 
 void AgentManager::continueStartup()
@@ -325,6 +328,8 @@ void AgentManager::updatePluginInfos()
 
 void AgentManager::readPluginInfos()
 {
+  if ( !mAgentWatcher->files().isEmpty() )
+    mAgentWatcher->removePaths( mAgentWatcher->files() );
   mAgents.clear();
 
   QStringList pathList = pluginInfoPathList();
@@ -353,6 +358,7 @@ void AgentManager::readPluginInfos( const QDir& directory )
       }
       qDebug() << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
       mAgents.insert( agentInfo.identifier, agentInfo );
+      mAgentWatcher->addPath( Akonadi::XdgBaseDirs::findExecutableFile( agentInfo.exec ) );
     }
   }
 }
@@ -522,6 +528,18 @@ void AgentManager::ensureAutoStart(const AgentType & info)
   if ( instance->start( info ) ) {
     mAgentInstances.insert( instance->identifier(), instance );
     save();
+  }
+}
+
+void AgentManager::agentExeChanged(const QString & fileName)
+{
+  foreach ( const AgentType &type, mAgents ) {
+    if ( fileName.endsWith( type.exec ) ) {
+      foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
+        if ( instance->agentType() == type.identifier )
+          instance->restartWhenIdle();
+      }
+    }
   }
 }
 

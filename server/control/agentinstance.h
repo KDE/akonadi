@@ -62,6 +62,7 @@ class AgentInstance : public QObject
     bool start( const AgentType &agentInfo );
     void quit();
     void cleanup();
+    void restartWhenIdle();
 
     bool hasResourceInterface() const { return mResourceInterface; }
     bool hasAgentInterface() const { return mAgentControlInterface && mAgentStatusInterface; }

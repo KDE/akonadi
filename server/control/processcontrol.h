@@ -75,6 +75,11 @@ class ProcessControl : public QObject
      */
     void setCrashPolicy( CrashPolicy policy );
 
+    /**
+     * Restart the application the next time it exits normally.
+     */
+    void restartOnceWhenFinished() { mRestartOnceOnExit = true; }
+
 
   Q_SIGNALS:
     /**
@@ -107,6 +112,7 @@ class ProcessControl : public QObject
     CrashPolicy mPolicy;
     bool mFailedToStart;
     int mCrashCount;
+    bool mRestartOnceOnExit;
 };
 
 }
