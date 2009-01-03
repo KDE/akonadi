@@ -159,11 +159,12 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
   Q_OBJECT
 
   public:
-    explicit ItemCollectionFetchJob( const Item &item, Collection::Id collectionId, QObject *parent = 0 );
+    explicit ItemCollectionFetchJob( const Item &item, Collection::Id collectionId, Collection::Id destCollectionId, QObject *parent = 0 );
     ~ItemCollectionFetchJob();
 
     Item item() const;
     Collection collection() const;
+    Collection destCollection() const;
 
     void setFetchScope( const ItemFetchScope &fetchScope );
 
@@ -172,14 +173,17 @@ class AKONADI_EXPORT ItemCollectionFetchJob : public Job
 
   private Q_SLOTS:
     void collectionJobDone( KJob* job );
+    void destCollectionJobDone( KJob* job );
     void itemJobDone( KJob* job );
 
   private:
     Item mReferenceItem;
     Collection::Id mCollectionId;
+    Collection::Id mDestCollectionId;
 
     Item mItem;
     Collection mCollection;
+    Collection mDestCollection;
     ItemFetchScope mFetchScope;
 };
 

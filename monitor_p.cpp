@@ -93,7 +93,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
       Item item( msg.uid() );
       item.setRemoteId( msg.remoteId() );
 
-      ItemCollectionFetchJob *job = new ItemCollectionFetchJob( item, msg.parentCollection(), q_ptr );
+      ItemCollectionFetchJob *job = new ItemCollectionFetchJob( item, msg.parentCollection(), msg.parentDestCollection(), q_ptr );
       job->setFetchScope( mItemFetchScope );
       pendingJobs.insert( job, msg );
       QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotItemJobFinished(KJob*)) );
@@ -258,6 +258,7 @@ void MonitorPrivate::slotItemJobFinished( KJob* job )
   } else {
     Item item;
     Collection col;
+    Collection destCol;
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
     if ( fetchJob && fetchJob->items().count() > 0 )
       item = fetchJob->items().first();
@@ -265,8 +266,9 @@ void MonitorPrivate::slotItemJobFinished( KJob* job )
     if ( cfjob ) {
       item = cfjob->item();
       col = cfjob->collection();
+      destCol = cfjob->destCollection();
     }
-    emitItemNotification( msg, item, col );
+    emitItemNotification( msg, item, col, destCol );
   }
 }
 
@@ -294,9 +296,9 @@ void MonitorPrivate::slotCollectionJobFinished( KJob* job )
 }
 
 
-ItemCollectionFetchJob::ItemCollectionFetchJob( const Item &item, Collection::Id collectionId, QObject *parent )
+ItemCollectionFetchJob::ItemCollectionFetchJob( const Item &item, Collection::Id collectionId, Collection::Id destCollectionId, QObject *parent )
   : Job( parent ),
-    mReferenceItem( item ), mCollectionId( collectionId )
+    mReferenceItem( item ), mCollectionId( collectionId ), mDestCollectionId( destCollectionId )
 {
 }
 
@@ -314,6 +316,11 @@ Collection ItemCollectionFetchJob::collection() const
   return mCollection;
 }
 
+Collection ItemCollectionFetchJob::destCollection() const
+{
+  return mDestCollection;
+}
+
 void ItemCollectionFetchJob::setFetchScope( const ItemFetchScope &fetchScope )
 {
   mFetchScope = fetchScope;
@@ -324,6 +331,11 @@ void ItemCollectionFetchJob::doStart()
   CollectionFetchJob *listJob = new CollectionFetchJob( Collection( mCollectionId ), CollectionFetchJob::Base, this );
   connect( listJob, SIGNAL( result( KJob* ) ), SLOT( collectionJobDone( KJob* ) ) );
   addSubjob( listJob );
+
+  CollectionFetchJob *destListJob = new CollectionFetchJob( Collection( mDestCollectionId ), CollectionFetchJob::Base, this );
+  connect( destListJob, SIGNAL( result( KJob* ) ), SLOT( destCollectionJobDone( KJob* ) ) );
+  addSubjob( destListJob );
+
 
   ItemFetchJob *fetchJob = new ItemFetchJob( mReferenceItem, this );
   fetchJob->setFetchScope( mFetchScope );
@@ -340,6 +352,18 @@ void ItemCollectionFetchJob::collectionJobDone( KJob* job )
       setErrorText( QLatin1String( "No collection found" ) );
     } else
       mCollection = listJob->collections().first();
+  }
+}
+
+void ItemCollectionFetchJob::destCollectionJobDone( KJob* job )
+{
+  if ( !job->error() ) {
+    CollectionFetchJob *listJob = qobject_cast<CollectionFetchJob*>( job );
+    if ( listJob->collections().isEmpty() ) {
+      setError( 1 );
+      setErrorText( QLatin1String( "No collection found" ) );
+    } else
+      mDestCollection = listJob->collections().first();
   }
 }
 
