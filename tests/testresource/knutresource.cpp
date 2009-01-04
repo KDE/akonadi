@@ -32,6 +32,7 @@
 #include <kstandarddirs.h>
 
 #include <QtCore/QFile>
+#include <QFileSystemWatcher>
 #include <QtCore/QDir>
 #include <QtCore/QUuid>
 #include <QtXml/QDomElement>
@@ -93,7 +94,8 @@ class GenericAttribute : public Attribute
 
 
 KnutResource::KnutResource( const QString &id )
-  : ResourceBase( id )
+  : ResourceBase( id ),
+  mWatcher( new QFileSystemWatcher( this ) )
 {
   changeRecorder()->itemFetchScope().fetchFullPayload();
   changeRecorder()->fetchCollection( true );
@@ -102,6 +104,7 @@ KnutResource::KnutResource( const QString &id )
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/Settings" ),
                             Settings::self(), QDBusConnection::ExportAdaptors );
   connect( this, SIGNAL(reloadConfiguration()), SLOT(load()) );
+  connect( mWatcher, SIGNAL(fileChanged(QString)), SLOT(load()) );
   load();
 }
 
@@ -111,6 +114,9 @@ KnutResource::~KnutResource()
 
 void KnutResource::load()
 {
+  if ( !mWatcher->files().isEmpty() )
+    mWatcher->removePaths( mWatcher->files() );
+
   // file loading
   const QString fileName = Settings::self()->dataFile();
   if ( fileName.isEmpty() ) {
@@ -135,6 +141,7 @@ void KnutResource::load()
     }
     data = tmpl.readAll();
   }
+  mWatcher->addPath( fileName );
 
 #ifdef HAVE_LIBXML2
   // schema validation
@@ -180,6 +187,7 @@ void KnutResource::load()
   }
 
   emit status( Idle, i18n( "File '%1' loaded successfully.", fileName ) );
+  synchronize();
 }
 
 void KnutResource::save()
@@ -215,8 +223,6 @@ void KnutResource::configure( WId windowId )
   Settings::self()->setDataFile( newFile );
   Settings::self()->writeConfig();
   load();
-  if ( status() != Broken )
-    synchronize();
 }
 
 

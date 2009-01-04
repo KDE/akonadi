@@ -26,6 +26,7 @@
 #include <QDomDocument>
 
 class QDomElement;
+class QFileSystemWatcher;
 
 class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer
 {
@@ -65,6 +66,7 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
 
   private:
     QDomDocument mDocument;
+    QFileSystemWatcher *mWatcher;
 };
 
 #endif
