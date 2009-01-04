@@ -533,6 +533,8 @@ void AgentManager::ensureAutoStart(const AgentType & info)
 
 void AgentManager::agentExeChanged(const QString & fileName)
 {
+  if ( !QFile::exists( fileName ) )
+    return;
   foreach ( const AgentType &type, mAgents ) {
     if ( fileName.endsWith( type.exec ) ) {
       foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
