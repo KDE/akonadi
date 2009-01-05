@@ -16,7 +16,7 @@
  */
 
 #ifndef CONFIGREADER_H
-#define CONFIGHEADER_H
+#define CONFIGREADER_H
 
 #include <QString>
 #include "config.h"

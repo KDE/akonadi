@@ -14,6 +14,10 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef SHELLSCRIPT_H
+#define SHELLSCRIPT_H
+
+
 #include <QHash>
 #include "symbols.h"
 
@@ -31,4 +35,4 @@ class shellScript
     void makeShellScript();
 
 };
-
+#endif

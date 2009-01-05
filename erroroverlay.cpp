@@ -40,7 +40,7 @@ class ErrorOverlayStatic
     QList<QPair<QPointer<QWidget>, QPointer<QWidget> > > baseWidgets;
 };
 
-K_GLOBAL_STATIC( ErrorOverlayStatic, sInstance )
+K_GLOBAL_STATIC( ErrorOverlayStatic, sInstanceOverlay )
 
 static bool isParentOf( QObject* o1, QObject* o2 )
 {
@@ -59,11 +59,11 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   Q_ASSERT( parentWidget() != baseWidget );
 
   // check existing overlays to detect cascading
-  for ( QList<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstance->baseWidgets.begin();
-        it != sInstance->baseWidgets.end(); ) {
+  for ( QList<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
+        it != sInstanceOverlay->baseWidgets.end(); ) {
     if ( (*it).first == 0 || (*it).second == 0 ) {
       // garbage collection
-      it = sInstance->baseWidgets.erase( it );
+      it = sInstanceOverlay->baseWidgets.erase( it );
       continue;
     }
     if ( isParentOf( (*it).first, baseWidget ) ) {
@@ -76,12 +76,12 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
     if ( isParentOf( baseWidget, (*it).first ) ) {
       // child already has overlay, kill that one
       delete (*it).second;
-      it = sInstance->baseWidgets.erase( it );
+      it = sInstanceOverlay->baseWidgets.erase( it );
       continue;
     }
     ++it;
   }
-  sInstance->baseWidgets.append( qMakePair( mBaseWidget, QPointer<QWidget>( this ) ) );
+  sInstanceOverlay->baseWidgets.append( qMakePair( mBaseWidget, QPointer<QWidget>( this ) ) );
 
   connect( baseWidget, SIGNAL(destroyed()), SLOT(deleteLater()) );
   mPreviousState = mBaseWidget->isEnabled();
