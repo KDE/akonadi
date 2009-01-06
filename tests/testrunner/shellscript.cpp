@@ -52,7 +52,7 @@ void shellScript::writeShutdownFunction()
     "{\n"
     "  echo Stopping Akonadi server\n"
     "  qdbus org.freedesktop.Akonadi.Control /ControlManager org.freedesktop.Akonadi.ControlManager.shutdown\n"
-    "  echo \"Stopping testrunner with PID \" $TESTRUNNER_PID\n"
+    "  echo \"Stopping testrunner with PID \" $AKONADI_TESTRUNNER_PID\n"
     "  kill $AKONADI_TESTRUNNER_PID\n"
     "  # wait a bit before killing D-Bus\n"
     "  echo \"Waiting 10 seconds before killing D-Bus\"\n"
