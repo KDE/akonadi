@@ -46,7 +46,7 @@ namespace Akonadi {
   @endverbatim
 
   @c X-AKLIST will include all known collections, @c X-AKLSUB only those that are
-  subscribed or contains subscribed collections (cf. RFC 3591, LIST vs. LSUB).
+  subscribed or contains subscribed collections (cf. RFC 3501, LIST vs. LSUB).
 
   @c depths chooses between recursive (@c INF), flat (1) and local (0, ie. just the
   base collection) listing, 0 indicates the root collection.
