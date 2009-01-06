@@ -339,7 +339,7 @@ void SelfTestDialog::testAkonadiCtl()
     return;
   }
   QString result;
-  if ( runProcess( path, QStringList() << QLatin1String( "status" ), result ) ) {
+  if ( runProcess( path, QStringList() << QLatin1String( "--version" ), result ) ) {
     report( Success, ki18n( "akonadictl found and usable" ),
                    ki18n( "The program '%1' to control the Akonadi server was found "
                          "and could be executed successfully.\nResult:\n%2" ).subs( path ).subs( result ) );
