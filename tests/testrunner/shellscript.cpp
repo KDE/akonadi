@@ -59,6 +59,7 @@ void shellScript::writeShutdownFunction()
     "  sleep 10\n"
     "  echo \"Killing D-Bus with PID \" $DBUS_SESSION_BUS_PID\n"
     "  kill $DBUS_SESSION_BUS_PID\n"
+    "  rm -fr /tmp/akonadi_testrunner\n"
     "}\n\n";
   script.append( s );
 }
@@ -72,8 +73,6 @@ void shellScript::makeShellScript()
   writeEnvironmentVariables();
   writeShutdownFunction();
 
-  //script.append("exec /usr/bin/dbus-launch \n");
-  //script.append("exec akonadiconsole\n");
   file.write(script.toAscii(), qstrlen(script.toAscii()) );
   file.close();
 }

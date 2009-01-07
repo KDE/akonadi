@@ -35,7 +35,10 @@ class SetupTest : public QObject
     void stopDBusDaemon(int dbuspid);
     void registerWithInternalDBus( const QString &address );
     void setupAgents();
-
+    void copyDirectory(const QString &src, const QString &dst);
+    void createTempEnvironment();
+    void deleteDirectory(const QString &dirName);
+    void cleanTempEnvironment();
   private Q_SLOTS:
     void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
 
