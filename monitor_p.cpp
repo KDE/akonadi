@@ -332,9 +332,11 @@ void ItemCollectionFetchJob::doStart()
   connect( listJob, SIGNAL( result( KJob* ) ), SLOT( collectionJobDone( KJob* ) ) );
   addSubjob( listJob );
 
-  CollectionFetchJob *destListJob = new CollectionFetchJob( Collection( mDestCollectionId ), CollectionFetchJob::Base, this );
-  connect( destListJob, SIGNAL( result( KJob* ) ), SLOT( destCollectionJobDone( KJob* ) ) );
-  addSubjob( destListJob );
+  if ( mDestCollectionId > 0 ) {
+    CollectionFetchJob *destListJob = new CollectionFetchJob( Collection( mDestCollectionId ), CollectionFetchJob::Base, this );
+    connect( destListJob, SIGNAL( result( KJob* ) ), SLOT( destCollectionJobDone( KJob* ) ) );
+    addSubjob( destListJob );
+  }
 
 
   ItemFetchJob *fetchJob = new ItemFetchJob( mReferenceItem, this );
