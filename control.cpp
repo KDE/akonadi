@@ -22,6 +22,7 @@
 #include "ui_controlprogressindicator.h"
 #include "selftestdialog_p.h"
 #include "erroroverlay_p.h"
+#include "firstrun.h"
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -65,10 +66,13 @@ class Control::Private
     Private( Control *parent )
       : mParent( parent ), mEventLoop( 0 ),
         mProgressIndicator( 0 ),
+        mFirstRunner( 0 ),
         mSuccess( false ),
         mStarting( false ), mStopping( false )
     {
       KGlobal::locale()->insertCatalog( QString::fromLatin1("libakonadi") );
+      if ( ServerManager::isRunning() )
+        mFirstRunner = new Firstrun( mParent );
     }
 
     void setupProgressIndicator( const QString &msg, QWidget *parent = 0 )
@@ -94,6 +98,7 @@ class Control::Private
     QEventLoop *mEventLoop;
     ControlProgressIndicator *mProgressIndicator;
     QList<QWidget*> mPendingOverlays;
+    Firstrun *mFirstRunner;
     bool mSuccess;
 
     bool mStarting;
@@ -146,6 +151,8 @@ void Control::Private::serverStarted()
     mEventLoop->quit();
     mSuccess = true;
   }
+  if ( !mFirstRunner )
+    mFirstRunner = new Firstrun( mParent );
 }
 
 void Control::Private::serverStopped()
