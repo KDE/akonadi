@@ -130,9 +130,11 @@ bool AgentInstance::operator==( const AgentInstance &other ) const
 
 void AgentInstance::reconfigure() const
 {
-  QDBusInterface iface( "org.freedesktop.Akonadi.Agent." + identifier(), "/", "org.freedesktop.Akonadi.Agent.Control" );
+  QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( identifier() ),
+                        QString::fromLatin1("/"),
+                        QString::fromLatin1("org.freedesktop.Akonadi.Agent.Control") );
   if ( iface.isValid() )
-    iface.call( "reconfigure" );
+    iface.call( QString::fromLatin1("reconfigure") );
   else
     kWarning() << "Unable to obtain agent interface";
 }

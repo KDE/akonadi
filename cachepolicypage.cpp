@@ -83,12 +83,12 @@ void CachePolicyPage::save(Collection & collection)
 
 void CachePolicyPage::slotIntervalValueChanged( int i )
 {
-    ui.checkInterval->setSuffix( ' ' + i18np( "minute", "minutes", i ) );
+    ui.checkInterval->setSuffix( QLatin1Char(' ') + i18np( "minute", "minutes", i ) );
 }
 
 void CachePolicyPage::slotCacheValueChanged( int i )
 {
-    ui.localCacheTimeout->setSuffix( ' ' + i18np( "minute", "minutes", i ) );
+    ui.localCacheTimeout->setSuffix( QLatin1Char(' ') + i18np( "minute", "minutes", i ) );
 }
 
 //@endcond

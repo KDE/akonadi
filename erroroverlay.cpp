@@ -89,7 +89,7 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   QBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->addStretch();
   mIconLabel = new QLabel( this );
-  mIconLabel->setPixmap( KIcon( "dialog-error" ).pixmap( 64 ) );
+  mIconLabel->setPixmap( KIcon( QString::fromLatin1("dialog-error") ).pixmap( 64 ) );
   mIconLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
   topLayout->addWidget( mIconLabel );
 

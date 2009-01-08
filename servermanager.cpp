@@ -125,10 +125,12 @@ bool ServerManager::start()
 
 bool ServerManager::stop()
 {
-  QDBusInterface iface( AKONADI_CONTROL_SERVICE, "/ControlManager", "org.freedesktop.Akonadi.ControlManager" );
+  QDBusInterface iface( AKONADI_CONTROL_SERVICE,
+                        QString::fromLatin1("/ControlManager"),
+                        QString::fromLatin1("org.freedesktop.Akonadi.ControlManager") );
   if ( !iface.isValid() )
     return false;
-  iface.call( QDBus::NoBlock, "shutdown" );
+  iface.call( QDBus::NoBlock, QString::fromLatin1("shutdown") );
   return true;
 }
 
@@ -162,7 +164,7 @@ bool ServerManager::isRunning()
   // besides the running server processes we also need at least one resource to be operational
   AgentType::List agentTypes = AgentManager::self()->types();
   foreach ( const AgentType &type, agentTypes ) {
-    if ( type.capabilities().contains( "Resource" ) )
+    if ( type.capabilities().contains( QLatin1String("Resource") ) )
       return true;
   }
   return false;

@@ -50,7 +50,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
     };
     QStandardItem* report( ResultType type, const KLocalizedString &summary, const KLocalizedString &details );
     void runTests();
-    QVariant serverSetting( const QString &group, const QString &key, const QVariant &def ) const;
+    QVariant serverSetting( const QString &group, const char *key, const QVariant &def ) const;
     bool useStandaloneMysqlServer() const;
     bool runProcess( const QString &app, const QStringList &args, QString &result ) const;
 

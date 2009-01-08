@@ -68,7 +68,7 @@ class Control::Private
         mSuccess( false ),
         mStarting( false ), mStopping( false )
     {
-      KGlobal::locale()->insertCatalog( "libakonadi" );
+      KGlobal::locale()->insertCatalog( QString::fromLatin1("libakonadi") );
     }
 
     void setupProgressIndicator( const QString &msg, QWidget *parent = 0 )

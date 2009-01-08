@@ -69,9 +69,9 @@ SelfTestDialog::SelfTestDialog(QWidget * parent) :
   setCaption( i18n( "Akonadi Server Self-Test" ) );
   setButtons( Close | User1 | User2 );
   setButtonText( User1, i18n( "Save Report..." ) );
-  setButtonIcon( User1, KIcon( "document-save" ) );
+  setButtonIcon( User1, KIcon( QString::fromLatin1("document-save") ) );
   setButtonText( User2, i18n( "Copy Report to Clipboard" ) );
-  setButtonIcon( User2, KIcon( "edit-copy" ) );
+  setButtonIcon( User2, KIcon( QString::fromLatin1("edit-copy") ) );
   showButtonSeparator( true );
   ui.setupUi( mainWidget() );
 
@@ -97,17 +97,17 @@ QStandardItem* SelfTestDialog::report( ResultType type, const KLocalizedString &
   QStandardItem *item = new QStandardItem( summary.toString() );
   switch ( type ) {
     case Skip:
-      item->setIcon( KIcon( "dialog-ok" ) );
+      item->setIcon( KIcon( QString::fromLatin1("dialog-ok") ) );
       break;
     case Success:
-      item->setIcon( KIcon( "dialog-ok-apply" ) );
+      item->setIcon( KIcon( QString::fromLatin1("dialog-ok-apply") ) );
       break;
     case Warning:
-      item->setIcon( KIcon( "dialog-warning" ) );
+      item->setIcon( KIcon( QString::fromLatin1("dialog-warning") ) );
       break;
     case Error:
     default:
-      item->setIcon( KIcon( "dialog-error" ) );
+      item->setIcon( KIcon( QString::fromLatin1("dialog-error") ) );
   }
   item->setEditable( false );
   item->setWhatsThis( details.toString() );
@@ -143,17 +143,17 @@ void SelfTestDialog::runTests()
   testControlLog();
 }
 
-QVariant SelfTestDialog::serverSetting(const QString & group, const QString & key, const QVariant &def ) const
+QVariant SelfTestDialog::serverSetting(const QString & group, const char *key, const QVariant &def ) const
 {
   const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
   QSettings settings( serverConfigFile, QSettings::IniFormat );
   settings.beginGroup( group );
-  return settings.value( key, def );
+  return settings.value( QString::fromLatin1(key), def );
 }
 
 bool SelfTestDialog::useStandaloneMysqlServer() const
 {
-  const QString driver = serverSetting( "General", "Driver", "QMYSQL" ).toString();
+  const QString driver = serverSetting( QLatin1String("General"), "Driver", QLatin1String("QMYSQL") ).toString();
   if ( driver != QLatin1String( "QMYSQL" ) )
     return false;
   const bool startServer = serverSetting( driver, "StartServer", true ).toBool();
@@ -175,7 +175,7 @@ bool SelfTestDialog::runProcess(const QString & app, const QStringList & args, Q
 
 void SelfTestDialog::testSQLDriver()
 {
-  const QString driver = serverSetting( "General", "Driver", "QMYSQL" ).toString();
+  const QString driver = serverSetting( QLatin1String("General"), "Driver", QLatin1String("QMYSQL") ).toString();
   const QStringList availableDrivers = QSqlDatabase::drivers();
   const KLocalizedString details = ki18n( "The QtSQL driver '%1' is required by your current Akonadi server configuration.\n"
       "The following drivers are installed: %2.\n"
@@ -198,8 +198,8 @@ void SelfTestDialog::testMySQLServer()
     return;
   }
 
-  const QString driver = serverSetting( "General", "Driver", "QMYSQL" ).toString();
-  const QString serverPath = serverSetting( driver,  "ServerPath", "" ).toString(); // ### default?
+  const QString driver = serverSetting( QLatin1String("General"), "Driver", QLatin1String("QMYSQL") ).toString();
+  const QString serverPath = serverSetting( driver,  "ServerPath", QLatin1String("") ).toString(); // ### default?
 
   const KLocalizedString details = ki18n( "You currently have configured Akonadi to use the MySQL server '%1'.\n"
       "Make sure you have the MySQL server installed, set the correct path and ensure you have the "
@@ -213,7 +213,7 @@ void SelfTestDialog::testMySQLServer()
     report( Error, ki18n( "MySQL server not readable." ), details );
   else if ( !info.isExecutable() )
     report( Error, ki18n( "MySQL server not executable." ), details );
-  else if ( !serverPath.contains( "mysqld" ) )
+  else if ( !serverPath.contains( QLatin1String("mysqld") ) )
     report( Warning, ki18n( "MySQL found with unexpected name." ), details );
   else
     report( Success, ki18n( "MySQL server found." ), details );
@@ -398,7 +398,7 @@ void SelfTestDialog::testResources()
   AgentType::List agentTypes = AgentManager::self()->types();
   bool resourceFound = false;
   foreach ( const AgentType &type, agentTypes ) {
-    if ( type.capabilities().contains( "Resource" ) ) {
+    if ( type.capabilities().contains( QLatin1String("Resource") ) ) {
       resourceFound = true;
       break;
     }
@@ -436,7 +436,7 @@ void Akonadi::SelfTestDialog::testServerLog()
     item->setData( serverLog, FileIncludeRole );
   }
 
-  serverLog += ".old";
+  serverLog += QLatin1String(".old");
   info.setFile( serverLog );
   if ( !info.exists() || info.size() <= 0 ) {
     report( Success, ki18n( "No previous Akonadi server error log found." ),
@@ -462,7 +462,7 @@ void SelfTestDialog::testControlLog()
     item->setData( controlLog, FileIncludeRole );
   }
 
-  controlLog += ".old";
+  controlLog += QLatin1String(".old");
   info.setFile( controlLog );
   if ( !info.exists() || info.size() <= 0 ) {
     report( Success, ki18n( "No previous Akonadi control error log found." ),
@@ -558,7 +558,7 @@ void SelfTestDialog::copyReport()
 
 void SelfTestDialog::linkActivated(const QString & link)
 {
-  KRun::runUrl( KUrl::fromPath( link ), "text/plain", this );
+  KRun::runUrl( KUrl::fromPath( link ), QLatin1String("text/plain"), this );
 }
 
 // @endcond
