@@ -68,6 +68,7 @@ set( akonadikde_LIB_SRC
   #entitysortfilterproxymodel.cpp
   erroroverlay.cpp
   expungejob.cpp
+  firstrun.cpp
   flatcollectionproxymodel.cpp
   item.cpp
   itemcreatejob.cpp

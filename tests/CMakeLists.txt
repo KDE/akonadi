@@ -45,6 +45,9 @@ add_akonadi_demo(agenttypewidgettest.cpp)
 add_akonadi_demo(pluginloadertest.cpp)
 add_akonadi_demo(selftester.cpp)
 
+kde4_add_executable( akonadi-firstrun TEST ../firstrun.cpp firstrunner.cpp )
+target_link_libraries( akonadi-firstrun akonadi-kde )
+
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
 add_akonadi_test(imapsettest.cpp)
