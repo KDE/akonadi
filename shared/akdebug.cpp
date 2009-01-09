@@ -141,11 +141,15 @@ void akInit( const QString &baseName )
   QFileInfo infoOld( sInstance()->errorLogFileName() + QString::fromLatin1(".old") );
   if ( infoOld.exists() ) {
     QFile fileOld( infoOld.absoluteFilePath() );
-    assert( fileOld.remove() );
+    const bool success = fileOld.remove();
+    if ( !success )
+      qFatal( "Cannot remove old log file - running on a readlony filesystem maybe?" );
   }
   QFileInfo info( sInstance()->errorLogFileName() );
   if ( info.exists() ) {
     QFile file( info.absoluteFilePath() );
-    assert( file.rename( sInstance()->errorLogFileName() + QString::fromLatin1(".old") ) );
+    const bool success = file.rename( sInstance()->errorLogFileName() + QString::fromLatin1(".old") );
+    if ( !success )
+      qFatal( "Cannot rename log file - running on a readonly filesystem maybe?" );
   }
 }
