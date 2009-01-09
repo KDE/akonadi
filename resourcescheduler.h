@@ -50,7 +50,8 @@ class ResourceScheduler : public QObject
       SyncCollectionTree,
       SyncCollection,
       FetchItem,
-      ChangeReplay
+      ChangeReplay,
+      DeleteResourceCollection
     };
 
     class Task {
@@ -98,6 +99,12 @@ class ResourceScheduler : public QObject
     void scheduleItemFetch( const Item &item, const QSet<QByteArray> &parts, const QDBusMessage &msg );
 
     /**
+      Schedules deletion of the resource collection.
+      This method is used to implement the ResourceBase::clearCache() functionality.
+     */
+    void scheduleResourceCollectionDeletion();
+
+    /**
       The current task has been finished
     */
     void taskDone();
@@ -128,6 +135,7 @@ class ResourceScheduler : public QObject
     void executeCollectionSync( const Akonadi::Collection &col );
     void executeCollectionTreeSync();
     void executeItemFetch( const Akonadi::Item &item, const QSet<QByteArray> &parts );
+    void executeResourceCollectionDeletion();
     void executeChangeReplay();
     void status( int status, const QString &message = QString() );
 

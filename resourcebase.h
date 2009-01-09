@@ -340,6 +340,17 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void itemsRetrievalDone();
 
     /**
+     * Call this method to remove all items and collections of the resource from the
+     * server cache.
+     *
+     * The method should be used whenever the configuration of the resource has changed
+     * and therefor the cached items might not be valid any longer.
+     *
+     * @since 4.3
+     */
+    void clearCache();
+
+    /**
      * Returns the collection that is currently synchronized.
      */
     Collection currentCollection() const;
@@ -395,6 +406,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     Q_PRIVATE_SLOT( d_func(), void slotDeliveryDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionSyncDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotDeleteResourceCollection() )
+    Q_PRIVATE_SLOT( d_func(), void slotDeleteResourceCollectionDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotCollectionDeletionDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotLocalListDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionListDone( KJob* ) )

@@ -69,6 +69,14 @@ void ResourceScheduler::scheduleItemFetch(const Item & item, const QSet<QByteArr
   scheduleNext();
 }
 
+void ResourceScheduler::scheduleResourceCollectionDeletion()
+{
+  Task t;
+  t.type = DeleteResourceCollection;
+  mTaskList << t;
+  scheduleNext();
+}
+
 void ResourceScheduler::scheduleChangeReplay()
 {
   Task t;
@@ -117,6 +125,9 @@ void ResourceScheduler::executeNext()
       break;
     case FetchItem:
       emit executeItemFetch( mCurrentTask.item, mCurrentTask.itemParts );
+      break;
+    case DeleteResourceCollection:
+      emit executeResourceCollectionDeletion();
       break;
     case ChangeReplay:
       emit executeChangeReplay();

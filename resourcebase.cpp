@@ -22,6 +22,7 @@
 #include "agentbase_p.h"
 
 #include "resourceadaptor.h"
+#include "collectiondeletejob.h"
 #include "collectionsync.h"
 #include "itemsync.h"
 #include "resourcescheduler.h"
@@ -81,7 +82,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     }
 
     void slotDeliveryDone( KJob* job );
-
     void slotCollectionSyncDone( KJob *job );
     void slotLocalListDone( KJob *job );
     void slotSynchronizeCollection( const Collection &col );
@@ -90,6 +90,9 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     void slotItemSyncDone( KJob *job );
 
     void slotPercent( KJob* job, unsigned long percent );
+    void slotDeleteResourceCollection();
+    void slotDeleteResourceCollectionDone( KJob *job );
+    void slotCollectionDeletionDone( KJob *job );
 
     QString mName;
 
@@ -127,6 +130,8 @@ ResourceBase::ResourceBase( const QString & id )
            SLOT(slotSynchronizeCollection(Akonadi::Collection)) );
   connect( d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)),
            SLOT(retrieveItem(Akonadi::Item,QSet<QByteArray>)) );
+  connect( d->scheduler, SIGNAL(executeResourceCollectionDeletion()),
+           SLOT(slotDeleteResourceCollection()) );
   connect( d->scheduler, SIGNAL( status( int, QString ) ),
            SIGNAL( status( int, QString ) ) );
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
@@ -257,6 +262,39 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
   scheduler->taskDone();
 }
 
+void ResourceBasePrivate::slotDeleteResourceCollection()
+{
+  Q_Q( ResourceBase );
+
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
+  job->setResource( q->identifier() );
+  connect( job, SIGNAL(result(KJob*)), q, SLOT(slotDeleteResourceCollectionDone(KJob*)) );
+}
+
+void ResourceBasePrivate::slotDeleteResourceCollectionDone( KJob *job )
+{
+  Q_Q( ResourceBase );
+  if ( job->error() ) {
+    emit q->error( job->errorString() );
+    scheduler->taskDone();
+  } else {
+    const CollectionFetchJob *fetchJob = static_cast<const CollectionFetchJob*>( job );
+
+    CollectionDeleteJob *job = new CollectionDeleteJob( fetchJob->collections().first() );
+    connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotCollectionDeletionDone( KJob* ) ) );
+  }
+}
+
+void ResourceBasePrivate::slotCollectionDeletionDone( KJob *job )
+{
+  Q_Q( ResourceBase );
+  if ( job->error() ) {
+    emit q->error( job->errorString() );
+  }
+
+  scheduler->taskDone();
+}
+
 void ResourceBase::changeCommitted(const Item& item)
 {
   Q_D( ResourceBase );
@@ -371,6 +409,12 @@ void ResourceBase::itemsRetrievalDone()
   else {
     d->scheduler->taskDone();
   }
+}
+
+void ResourceBase::clearCache()
+{
+  Q_D( ResourceBase );
+  d->scheduler->scheduleResourceCollectionDeletion();
 }
 
 Collection ResourceBase::currentCollection() const
