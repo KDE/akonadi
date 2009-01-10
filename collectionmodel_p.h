@@ -22,6 +22,8 @@
 
 #include "collection.h"
 
+#include <klocale.h>
+
 #include <QtCore/QHash>
 #include <QtCore/QList>
 #include <QtCore/QModelIndex>
@@ -45,7 +47,8 @@ class CollectionModelPrivate
   public:
     Q_DECLARE_PUBLIC( CollectionModel )
     CollectionModelPrivate( CollectionModel *parent )
-      : q_ptr( parent ), fetchStatistics( false ), unsubscribed( false )
+      : q_ptr( parent ), fetchStatistics( false ), unsubscribed( false ),
+        headerContent( i18nc( "@title:column, name of a thing", "Name" ) )
     {
     }
 
@@ -63,6 +66,7 @@ class CollectionModelPrivate
     QStringList mimeTypes;
     bool fetchStatistics;
     bool unsubscribed;
+    QString headerContent;
 
     void init();
     void startFirstListJob();

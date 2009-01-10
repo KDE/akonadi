@@ -28,7 +28,6 @@
 #include "session.h"
 
 #include <kdebug.h>
-#include <klocale.h>
 #include <kurl.h>
 #include <kicon.h>
 
@@ -170,9 +169,23 @@ int CollectionModel::rowCount( const QModelIndex & parent ) const
 
 QVariant CollectionModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
+  const  Q_D( CollectionModel );
+
   if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole )
-    return i18nc( "@title:column, name of a thing", "Name" );
+    return d->headerContent;
   return QAbstractItemModel::headerData( section, orientation, role );
+}
+
+bool CollectionModel::setHeaderData( int section, Qt::Orientation orientation, const QVariant &value, int role )
+{
+  Q_D( CollectionModel );
+
+  if ( section == 0 && orientation == Qt::Horizontal && role == Qt::EditRole ) {
+    d->headerContent = value.toString();
+    return true;
+  }
+
+  return false;
 }
 
 bool CollectionModel::setData( const QModelIndex & index, const QVariant & value, int role )

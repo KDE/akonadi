@@ -95,6 +95,7 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     virtual QModelIndex parent( const QModelIndex & index ) const;
     virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual bool setHeaderData( int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole );
     virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
     virtual Qt::DropActions supportedDropActions() const;
