@@ -64,9 +64,9 @@ void shellScript::writeShutdownFunction()
   script.append( s );
 }
 
-void shellScript::makeShellScript()
+void shellScript::makeShellScript(const QString &filename)
 {
-  QFile file("testenvironment.sh"); //can user define the file name/location?
+  QFile file(filename); //can user define the file name/location?
 
   file.open( QIODevice::WriteOnly );
 

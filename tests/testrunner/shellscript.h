@@ -32,7 +32,7 @@ class shellScript
 
   public:
     shellScript();
-    void makeShellScript();
+    void makeShellScript(const QString &filename = "testenvironment.sh");
 
 };
 #endif
