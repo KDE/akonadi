@@ -280,8 +280,13 @@ void ResourceBasePrivate::slotDeleteResourceCollectionDone( KJob *job )
   } else {
     const CollectionFetchJob *fetchJob = static_cast<const CollectionFetchJob*>( job );
 
-    CollectionDeleteJob *job = new CollectionDeleteJob( fetchJob->collections().first() );
-    connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotCollectionDeletionDone( KJob* ) ) );
+    if ( !fetchJob->collections().isEmpty() ) {
+      CollectionDeleteJob *job = new CollectionDeleteJob( fetchJob->collections().first() );
+      connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotCollectionDeletionDone( KJob* ) ) );
+    } else {
+      // there is no resource collection, so just ignore the request
+      scheduler->taskDone();
+    }
   }
 }
 
