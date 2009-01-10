@@ -85,9 +85,11 @@ Item ItemView::Private::itemForIndex( const QModelIndex &index )
     return Item();
 
   const QString remoteId = index.sibling( index.row(), ItemModel::RemoteId ).data( ItemModel::IdRole ).toString();
+  const QString mimeType = index.sibling( index.row(), ItemModel::MimeType ).data( ItemModel::MimeTypeRole ).toString();
 
   Item item( currentItem );
   item.setRemoteId( remoteId );
+  item.setMimeType( mimeType );
 
   return item;
 }
