@@ -29,6 +29,7 @@ set(akonaditest_SRCS
   config.cpp
   shellscript.cpp
   symbols.cpp
+  testrunner.cpp
 )
 
 kde4_add_executable(akonaditest ${akonaditest_SRCS})
@@ -50,4 +51,4 @@ target_link_libraries(akonaditest
   ${QT_QTDBUS_LIBRARY}
 )
 
-#install(TARGETS akonaditest ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonaditest ${INSTALL_TARGETS_DEFAULT_ARGS})

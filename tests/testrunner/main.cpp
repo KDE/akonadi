@@ -19,11 +19,13 @@
 #include <KApplication>
 #include <KAboutData>
 #include <KCmdLineArgs>
+#include <KDebug>
 #include <QtTest>
 #include "akonaditesting.h"
 #include "setup.h"
 #include "config.h"
 #include "shellscript.h"
+#include "testrunner.h"
 
 int main(int argc, char **argv) {
   KAboutData aboutdata("akonadi-TES", 0,
@@ -36,16 +38,17 @@ int main(int argc, char **argv) {
   KCmdLineArgs::init(argc, argv, &aboutdata);
 
   KCmdLineOptions options;
-  options.add("+[config]", ki18n("Configuration file to open")); 
+  options.add("c").add( "config <configfile>", ki18n("Configuration file to open"), "config.xml" );
+  options.add( "!+[test]", ki18n("Test to run automatically, interactive if none specified") );
   KCmdLineArgs::addCmdLineOptions(options); 
 
   KApplication app;
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   
-  if(args->count())
-    Config *config = Config::getInstance(QString(args->arg(0))); 	
-  
+  if ( args->isSet("config") )
+    Config::getInstance( args->getOption("config") );
+
   SetupTest *setup = new SetupTest();
 
   setup->startAkonadiDaemon();
@@ -57,8 +60,14 @@ int main(int argc, char **argv) {
   shellScript *sh = new shellScript();
   sh->makeShellScript();
 
-  int result = app.exec();
+  if ( args->count() > 0 ) {
+    QStringList testArgs;
+    for ( int i = 0; i < args->count(); ++i )
+      testArgs << args->arg( i );
+     new TestRunner( testArgs );
+  }
 
+  int result = app.exec();
   Config::destroyInstance();
   delete testing;
   delete setup;

@@ -30,12 +30,13 @@ Config::Config()
 {
 }
 
-Config *Config::getInstance(QString pathToConfig)
+Config *Config::getInstance( const QString& pathToConfig)
 {
   if(instance == 0){
-     if(pathToConfig == NULL)
-       const QString pathToConfig = KStandardDirs::locate("config","akonaditest.xml");
-     instance = new ConfigReader(pathToConfig);
+    QString cfgFile = pathToConfig;
+    if ( cfgFile.isEmpty() )
+       cfgFile = KStandardDirs::locate("config","akonaditest.xml");
+     instance = new ConfigReader( cfgFile );
   }
   return instance;
 }
