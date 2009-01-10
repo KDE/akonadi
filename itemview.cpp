@@ -47,6 +47,10 @@ class ItemView::Private
     void init();
     void itemActivated( const QModelIndex& );
     void itemCurrentChanged( const QModelIndex& );
+    void itemClicked( const QModelIndex& );
+    void itemDoubleClicked( const QModelIndex& );
+
+    Item itemForIndex( const QModelIndex& );
 
     KXmlGuiWindow *xmlGuiWindow;
 
@@ -63,42 +67,69 @@ void ItemView::Private::init()
 
   mParent->connect( mParent, SIGNAL( activated( const QModelIndex& ) ),
                     mParent, SLOT( itemActivated( const QModelIndex& ) ) );
+  mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
+                    mParent, SLOT( itemClicked( const QModelIndex& ) ) );
+  mParent->connect( mParent, SIGNAL( doubleClicked( const QModelIndex& ) ),
+                    mParent, SLOT( itemDoubleClicked( const QModelIndex& ) ) );
 
   Control::widgetNeedsAkonadi( mParent );
 }
 
-void ItemView::Private::itemActivated( const QModelIndex &index )
+Item ItemView::Private::itemForIndex( const QModelIndex &index )
 {
   if ( !index.isValid() )
-    return;
+    return Item();
 
-  const Item::Id currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toLongLong();
+  const Item::Id currentItem = index.sibling( index.row(), ItemModel::Id ).data( ItemModel::IdRole ).toLongLong();
   if ( currentItem <= 0 )
-    return;
+    return Item();
 
-  const QString remoteId = index.sibling(index.row(),ItemModel::RemoteId).data(ItemModel::IdRole).toString();
+  const QString remoteId = index.sibling( index.row(), ItemModel::RemoteId ).data( ItemModel::IdRole ).toString();
 
   Item item( currentItem );
   item.setRemoteId( remoteId );
+
+  return item;
+}
+
+void ItemView::Private::itemActivated( const QModelIndex &index )
+{
+  const Item item = itemForIndex( index );
+
+  if ( !item.isValid() )
+    return;
 
   emit mParent->activated( item );
 }
 
 void ItemView::Private::itemCurrentChanged( const QModelIndex &index )
 {
-  if ( !index.isValid() )
+  const Item item = itemForIndex( index );
+
+  if ( !item.isValid() )
     return;
-
-  const Item::Id currentItem = index.sibling(index.row(),ItemModel::Id).data(ItemModel::IdRole).toLongLong();
-  if ( currentItem <= 0 )
-    return;
-
-  const QString remoteId = index.sibling(index.row(),ItemModel::RemoteId).data(ItemModel::IdRole).toString();
-
-  Item item( currentItem );
-  item.setRemoteId( remoteId );
 
   emit mParent->currentChanged( item );
+}
+
+void ItemView::Private::itemClicked( const QModelIndex &index )
+{
+  const Item item = itemForIndex( index );
+
+  if ( !item.isValid() )
+    return;
+
+  emit mParent->clicked( item );
+}
+
+void ItemView::Private::itemDoubleClicked( const QModelIndex &index )
+{
+  const Item item = itemForIndex( index );
+
+  if ( !item.isValid() )
+    return;
+
+  emit mParent->doubleClicked( item );
 }
 
 ItemView::ItemView( QWidget * parent ) :

@@ -111,6 +111,24 @@ class AKONADI_EXPORT ItemView : public QTreeView
      */
     void currentChanged( const Akonadi::Item &item );
 
+    /**
+     * This signal is emitted whenever the user clicked on an item
+     * in the view.
+     *
+     * @param item The item the user clicked on.
+     * @since 4.3
+     */
+    void clicked( const Akonadi::Item &item );
+
+    /**
+     * This signal is emitted whenever the user double clicked on an item
+     * in the view.
+     *
+     * @param item The item the user double clicked on.
+     * @since 4.3
+     */
+    void doubleClicked( const Akonadi::Item &item );
+
   protected:
     using QTreeView::currentChanged;
     void contextMenuEvent( QContextMenuEvent *event );
@@ -122,6 +140,8 @@ class AKONADI_EXPORT ItemView : public QTreeView
 
     Q_PRIVATE_SLOT( d, void itemActivated( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void itemDoubleClicked( const QModelIndex& ) )
     //@endcond
 };
 
