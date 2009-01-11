@@ -64,7 +64,8 @@ int main(int argc, char **argv) {
     QStringList testArgs;
     for ( int i = 0; i < args->count(); ++i )
       testArgs << args->arg( i );
-     new TestRunner( testArgs );
+    TestRunner *runner = new TestRunner( testArgs );
+    QObject::connect( setup, SIGNAL(setupDone()), runner, SLOT(run()) );
   }
 
   int result = app.exec();

@@ -163,6 +163,8 @@ void SetupTest::setupAgents()
     kDebug() << "inserting resource:"<<agent;
     kDebug() << agentDBus.call( QLatin1String( "createAgentInstance" ), agent);
   }
+
+  emit setupDone();
 }
 
 void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )

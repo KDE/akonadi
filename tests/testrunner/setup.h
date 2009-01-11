@@ -47,6 +47,9 @@ class SetupTest : public QObject
     void stopAkonadiDaemon();
     SetupTest();
     ~SetupTest();
+
+  signals:
+    void setupDone();
 };
 
 #endif

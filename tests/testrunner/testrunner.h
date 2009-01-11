@@ -19,6 +19,7 @@
 #define TESTRUNNER_H
 
 #include <QObject>
+#include <QStringList>
 
 class TestRunner : public QObject
 {
@@ -27,9 +28,14 @@ class TestRunner : public QObject
   public:
     TestRunner( const QStringList &args, QObject *parent = 0 );
 
+  public slots:
+    void run();
+
   private slots:
     void processFinished( int exitCode );
-    void emitExit();
+
+  private:
+    QStringList mArguments;
 };
 
 #endif // TESTRUNNER_H

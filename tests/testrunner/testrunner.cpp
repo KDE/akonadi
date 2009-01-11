@@ -24,18 +24,22 @@
 #include <QTimer>
 
 TestRunner::TestRunner(const QStringList& args, QObject* parent) :
-  QObject( parent )
+  QObject( parent ),
+  mArguments( args )
 {
-  kDebug() << args;
+}
+
+void TestRunner::run()
+{
+  kDebug() << mArguments;
   KProcess *process = new KProcess( this );
-  process->setProgram( args );
+  process->setProgram( mArguments );
   connect( process, SIGNAL(finished(int)), SLOT(processFinished(int)) );
   // environment setup seems to have been done by setuptest globally already
   process->start();
   if ( !process->waitForStarted() ) {
-    kWarning() << args << "failed to start!";
-    // QCoreApplication::exit() does not have any effect before the event loop is running, so delay calling it
-    QTimer::singleShot( 0, this, SLOT(emitExit()) );
+    kWarning() << mArguments << "failed to start!";
+    QCoreApplication::exit( 255 );
   }
 }
 
@@ -43,11 +47,6 @@ TestRunner::TestRunner(const QStringList& args, QObject* parent) :
 {
   kDebug() << exitCode;
   QCoreApplication::instance()->exit( exitCode );
-}
-
-void TestRunner::emitExit()
-{
-  QCoreApplication::instance()->exit( 255 );
 }
 
 #include "testrunner.moc"
