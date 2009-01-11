@@ -46,6 +46,7 @@ set( akonadikde_LIB_SRC
   collectioncopyjob.cpp
   collectioncreatejob.cpp
   collectiondeletejob.cpp
+  collectiondialog.cpp
   collectionfilterproxymodel.cpp
   collectiongeneralpropertiespage.cpp
   collectionfetchjob.cpp
@@ -55,6 +56,7 @@ set( akonadikde_LIB_SRC
   collectionpathresolver.cpp
   collectionpropertiesdialog.cpp
   collectionpropertiespage.cpp
+  collectionrequester.cpp
   collectionrightsattribute.cpp
   collectionselectjob.cpp
   collectionstatistics.cpp
@@ -166,12 +168,14 @@ install( FILES
   collectioncopyjob.h
   collectioncreatejob.h
   collectiondeletejob.h
+  collectiondialog.h
   collectionfilterproxymodel.h
   collectionfetchjob.h
   collectionmodel.h
   collectionmodifyjob.h
   collectionpropertiesdialog.h
   collectionpropertiespage.h
+  collectionrequester.h
   collectionstatisticsdelegate.h
   collectionstatisticsmodel.h
   collectionstatistics.h
