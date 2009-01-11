@@ -93,15 +93,18 @@ void Firstrun::migrateKresType( const QString& resourceFamily )
   KConfig config( QLatin1String("kres-migratorrc") );
   KConfigGroup migrationCfg( &config, "Migration" );
   const bool enabled = migrationCfg.readEntry( "Enabled", false );
+  const bool setupClientBridge = migrationCfg.readEntry( "SetupClientBridge", true );
   const int currentVersion = migrationCfg.readEntry( QString::fromLatin1("Version-%1").arg( resourceFamily ), 0 );
   const int targetVersion = migrationCfg.readEntry( "TargetVersion", 0 );
   if ( enabled && currentVersion < targetVersion ) {
     kDebug() << "Performing migration of legacy KResource settings. Good luck!";
     mProcess = new KProcess( this );
     connect( mProcess, SIGNAL(finished(int)), SLOT(migrationFinished(int)) );
-    mProcess->setProgram( QLatin1String("kres-migrator"),
-                          QStringList() << QLatin1String("--interactive-on-change")
-                                        << QLatin1String("--type") << resourceFamily );
+    QStringList args = QStringList() << QLatin1String("--interactive-on-change")
+                                     << QLatin1String("--type") << resourceFamily;
+    if ( !setupClientBridge )
+      args << QLatin1String( "--omit-client-bridge" );
+    mProcess->setProgram( QLatin1String("kres-migrator"), args );
     mProcess->start();
     if ( !mProcess->waitForStarted() )
       migrationFinished( -1 );
