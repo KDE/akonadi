@@ -25,20 +25,20 @@
 #include <kpushbutton.h>
 #include <kstandardshortcut.h>
 
-#include <QAction>
-#include <QApplication>
-#include <QEvent>
+#include <QtCore/QEvent>
+#include <QtGui/QAction>
+#include <QtGui/QApplication>
 
 using namespace Akonadi;
 
 class CollectionRequester::Private
 {
-public:
+  public:
     Private( CollectionRequester *parent )
-        : q( parent )
-        , edit( 0 )
-        , button( 0 )
-        , collectionDialog( 0 )
+      : q( parent ),
+        edit( 0 ),
+        button( 0 ),
+        collectionDialog( 0 )
     {
     }
 
@@ -61,99 +61,91 @@ public:
 
 void CollectionRequester::Private::init()
 {
-    q->setMargin( 0 );
+  q->setMargin( 0 );
 
-    edit = new KLineEdit( q );
-    edit->setReadOnly( true );
-    edit->setClearButtonShown( false );
+  edit = new KLineEdit( q );
+  edit->setReadOnly( true );
+  edit->setClearButtonShown( false );
 
-    button = new KPushButton( q );
-    button->setIcon( KIcon( QLatin1String("document-open") ) );
-    const int buttonSize = edit->sizeHint().height();
-    button->setFixedSize( buttonSize, buttonSize );
-    button->setToolTip( i18n("Open collection dialog") );
+  button = new KPushButton( q );
+  button->setIcon( KIcon( QLatin1String( "document-open" ) ) );
+  const int buttonSize = edit->sizeHint().height();
+  button->setFixedSize( buttonSize, buttonSize );
+  button->setToolTip( i18n( "Open collection dialog" ) );
 
-    q->setSpacing( KDialog::spacingHint() );
+  q->setSpacing( KDialog::spacingHint() );
 
-    edit->installEventFilter( q );
-    q->setFocusProxy( edit );
-    q->setFocusPolicy( Qt::StrongFocus );
+  edit->installEventFilter( q );
+  q->setFocusProxy( edit );
+  q->setFocusPolicy( Qt::StrongFocus );
 
-    q->connect( button, SIGNAL(clicked()), q, SLOT(_k_slotOpenDialog()) );
+  q->connect( button, SIGNAL( clicked() ), q, SLOT( _k_slotOpenDialog() ) );
 
-    QAction *openAction = new QAction( q );
-    openAction->setShortcut( KStandardShortcut::Open );
-    q->connect( openAction, SIGNAL(triggered(bool)), q, SLOT(_k_slotOpenDialog()) );
+  QAction *openAction = new QAction( q );
+  openAction->setShortcut( KStandardShortcut::Open );
+  q->connect( openAction, SIGNAL( triggered( bool ) ), q, SLOT( _k_slotOpenDialog() ) );
 
-    collectionDialog = new CollectionDialog( q );
-    collectionDialog->setSelectionMode( QAbstractItemView::SingleSelection );
+  collectionDialog = new CollectionDialog( q );
+  collectionDialog->setSelectionMode( QAbstractItemView::SingleSelection );
 }
 
 void CollectionRequester::Private::_k_slotOpenDialog()
 {
-    CollectionDialog *dlg = collectionDialog;
+  CollectionDialog *dlg = collectionDialog;
 
-    if ( dlg->exec() != QDialog::Accepted )
-    {
-        return;
-    }
+  if ( dlg->exec() != QDialog::Accepted )
+    return;
 
-    q->setCollection( dlg->selectedCollection() );
+  q->setCollection( dlg->selectedCollection() );
 }
 
 CollectionRequester::CollectionRequester( QWidget *parent )
-    : KHBox( parent )
-    , d( new Private( this ) )
+  : KHBox( parent ),
+    d( new Private( this ) )
 {
-    d->init();
+  d->init();
 }
 
 
-CollectionRequester::CollectionRequester( const Akonadi::Collection &col, QWidget *parent )
-    : KHBox( parent )
-    , d( new Private( this ) )
+CollectionRequester::CollectionRequester( const Akonadi::Collection &collection, QWidget *parent )
+  : KHBox( parent ),
+    d( new Private( this ) )
 {
-    d->init();
-    setCollection( col );
+  d->init();
+  setCollection( collection );
 }
 
 
 CollectionRequester::~CollectionRequester()
 {
-    delete d;
+  delete d;
 }
 
 
 Collection CollectionRequester::collection() const
 {
-    return d->collection;
+  return d->collection;
 }
 
 
-void CollectionRequester::setCollection( const Collection& col )
+void CollectionRequester::setCollection( const Collection& collection )
 {
-    d->collection = col;
-    d->edit->setText( col.isValid() ? col.name() : i18n("no collection") );
+  d->collection = collection;
+  d->edit->setText( collection.isValid() ? collection.name() : i18n( "no collection" ) );
 }
 
 void CollectionRequester::setMimeTypeFilter( const QStringList &mimeTypes )
 {
-    if ( d->collectionDialog )
-    {
-         d->collectionDialog->setMimeTypeFilter( mimeTypes );
-    }
+  if ( d->collectionDialog )
+    d->collectionDialog->setMimeTypeFilter( mimeTypes );
 }
 
 QStringList CollectionRequester::mimeTypeFilter() const
 {
-    if ( d->collectionDialog )
-    {
-        return d->collectionDialog->mimeTypeFilter();
-    }
-    else
-    {
-        return QStringList();
-    }
+  if ( d->collectionDialog )
+    return d->collectionDialog->mimeTypeFilter();
+  else
+    return QStringList();
 }
 
 #include "collectionrequester.moc"

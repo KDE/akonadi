@@ -19,11 +19,11 @@
 
 #include "collectiondialog.h"
 
+#include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectionview.h>
-#include <akonadi/collectionfilterproxymodel.h>
 
-#include <QVBoxLayout>
+#include <QtGui/QVBoxLayout>
 
 using namespace Akonadi;
 
@@ -38,92 +38,83 @@ class CollectionDialog::Private
 };
 
 CollectionDialog::Private::Private()
-    : collectionModel( 0 )
-    , filterModel( 0 )
-    , collectionView( 0 )
+  : collectionModel( 0 ),
+    filterModel( 0 ),
+    collectionView( 0 )
 {
 }
 
 
 CollectionDialog::CollectionDialog( QWidget *parent )
-    : KDialog( parent )
-    , d( new Private )
+  : KDialog( parent ),
+    d( new Private )
 {
-    QWidget *w = mainWidget();
+  QWidget *widget = mainWidget();
+  QVBoxLayout *layout = new QVBoxLayout( widget );
 
-    QVBoxLayout *l = new QVBoxLayout( w );
+  d->collectionModel = new CollectionModel( this );
 
-    d->collectionModel = new CollectionModel( this );
+  d->filterModel = new CollectionFilterProxyModel( this );
+  d->filterModel->setDynamicSortFilter( true );
+  d->filterModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+  d->filterModel->setSourceModel( d->collectionModel );
 
-    d->filterModel = new CollectionFilterProxyModel( this );
-    d->filterModel->setDynamicSortFilter( true );
-    d->filterModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-    d->filterModel->setSourceModel( d->collectionModel );
-
-    d->collectionView = new CollectionView( w );
-    d->collectionView->setModel( d->filterModel );
-    l->addWidget( d->collectionView );
+  d->collectionView = new CollectionView( widget );
+  d->collectionView->setModel( d->filterModel );
+  layout->addWidget( d->collectionView );
 }
 
 CollectionDialog::~CollectionDialog()
 {
-    delete d;
+  delete d;
 }
 
 Akonadi::Collection CollectionDialog::selectedCollection() const
 {
-    if ( selectionMode() == QAbstractItemView::SingleSelection )
-    {
-        const QModelIndex index = d->collectionView->currentIndex();
-        if ( index.isValid() )
-        {
-            Collection col = index.model()->data( index,
-                CollectionModel::CollectionRole ).value<Collection>();
-            return col;
-        }
-    }
-    return Collection();
+  if ( selectionMode() == QAbstractItemView::SingleSelection ) {
+    const QModelIndex index = d->collectionView->currentIndex();
+    if ( index.isValid() )
+      return index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
+  }
+
+  return Collection();
 }
 
 Akonadi::Collection::List CollectionDialog::selectedCollections() const
 {
-    Collection::List collections;
-    const QItemSelectionModel *selectionModel = d->collectionView->selectionModel();
-    const QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
-    foreach ( const QModelIndex &index, selectedIndexes )
-    {
-        if ( index.isValid() )
-        {
-            Collection col = index.model()->data( index,
-                CollectionModel::CollectionRole ).value<Collection>();
-            if ( col.isValid() )
-            {
-                collections.append( col );
-            }
-        }
+  Collection::List collections;
+  const QItemSelectionModel *selectionModel = d->collectionView->selectionModel();
+  const QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
+  foreach ( const QModelIndex &index, selectedIndexes ) {
+    if ( index.isValid() ) {
+      const Collection collection = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
+      if ( collection.isValid() )
+        collections.append( collection );
     }
-    return collections;
+  }
+
+  return collections;
 }
 
 void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )
 {
-    d->filterModel->clearFilters();
-    d->filterModel->addMimeTypeFilters( mimeTypes );
+  d->filterModel->clearFilters();
+  d->filterModel->addMimeTypeFilters( mimeTypes );
 }
 
 QStringList CollectionDialog::mimeTypeFilter() const
 {
-    return d->filterModel->mimeTypeFilters();
+  return d->filterModel->mimeTypeFilters();
 }
 
 void CollectionDialog::setSelectionMode( QAbstractItemView::SelectionMode mode )
 {
-    d->collectionView->setSelectionMode( mode );
+  d->collectionView->setSelectionMode( mode );
 }
 
 QAbstractItemView::SelectionMode CollectionDialog::selectionMode() const
 {
-    return d->collectionView->selectionMode();
+  return d->collectionView->selectionMode();
 }
 
 #include "collectiondialog.moc"

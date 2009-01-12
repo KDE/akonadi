@@ -33,7 +33,24 @@ namespace Akonadi {
 /**
  * @short A collection selection dialog.
  *
- * Provides a user (and developer) friendly way to select collections.
+ * Provides a dialog that lists all collections that are available
+ * on the Akonadi storage.
+ * The list of shown collections can be filtered by mime type.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * // show the user a dialog to select a collection of contacts
+ * Akonadi::CollectionDialog dlg( this );
+ * dlg.setMimeTypeFilter( QStringList() << QString( "text/directory" ) );
+ *
+ * if ( dlg.exec() ) {
+ *   const Akonadi::Collection collection = dlg.selectedCollection();
+ *   ...
+ * }
+ *
+ * @endcode
  *
  * @author Ingo Klöcker <kloecker@kde.org>
  * @since 4.3
@@ -46,22 +63,24 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
   public:
 
     /**
-     * Constructs a CollectionRequester widget.
+     * Creates a collection dialog.
+     *
+     * @param parent The parent widget.
      */
     explicit CollectionDialog( QWidget *parent = 0 );
 
     /**
-     * Destructs the CollectionRequester.
+     * Destroys the collection dialog.
      */
     ~CollectionDialog();
 
     /**
-     * @returns The selected collection.
+     * Returns the selected collection.
      */
     Akonadi::Collection selectedCollection() const;
 
     /**
-     * @returns The list of selected collections.
+     * Returns the list of selected collections.
      */
     Akonadi::Collection::List selectedCollections() const;
 
@@ -72,7 +91,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     void setMimeTypeFilter( const QStringList &mimeTypes );
 
     /**
-     * @returns the mime types any of which the selected collection(s) shall support.
+     * Returns the mime types any of which the selected collection(s) shall support.
      * @see Akonadi::CollectionDialog::mimeTypeFilter()
      */
     QStringList mimeTypeFilter() const;
@@ -84,16 +103,14 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     void setSelectionMode( QAbstractItemView::SelectionMode mode );
 
     /**
-     * @returns The selection mode.
+     * Returns the selection mode.
      * @see QAbstractItemView::selectionMode()
      */
     QAbstractItemView::SelectionMode selectionMode() const;
 
-
   private:
     class Private;
     Private * const d;
-
 };
 
 } // namespace Akonadi
