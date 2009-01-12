@@ -26,7 +26,7 @@
 
 #include <akonadi/collection.h>
 
-#include <QAbstractItemView>
+#include <QtGui/QAbstractItemView>
 
 namespace Akonadi {
 
