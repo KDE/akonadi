@@ -1,5 +1,6 @@
 /*
-    Copyright (c) 2007 Robert Zwerus <arzie@dds.nl>
+    Copyright (c) 2009 Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
+    based on kdepimlibs/akonadi/tests/benchmarker.cpp wrote by Robert Zwerus <arzie@dds.nl>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,37 +18,22 @@
     02110-1301, USA.
 */
 
-#ifndef BENCHMARKER_H
-#define BENCHMARKER_H
+#ifndef TESTMAILDIR_H
+#define TESTMAILDIR_H
 
-#include <QtCore/QTime>
+#include "test.h"
 
-#include <akonadi/agentmanager.h>
-#include <akonadi/job.h>
+class TestMailDir: public Test {
 
-using namespace Akonadi;
-
-class BenchMarker : public QObject
-{
-  Q_OBJECT
   public:
-    BenchMarker( const QString &maildir );
-
-  private Q_SLOTS:
-    AgentInstance createAgent( const QString &name );
-    void instanceRemoved( const Akonadi::AgentInstance &instance );
-    void instanceStatusChanged( const Akonadi::AgentInstance &instance );
-    void outputStats( const QString &description );
-    void output( const QString &message );
-    void stop();
-
+    TestMailDir(const QString &dir);
+    void runBenchMarker();
   private:
-    void testMaildir( QString dir );
-
-    AgentInstance currentInstance;
-    QString currentAccount;
-    QTime timer;
-    bool done;
+    void importMailDir();
+    void fetchAllHeaders();
+    void mark20PercentAsRead();
+    void fetchUnreadHeaders();
+    void removeAllReadMessages();
 };
 
 #endif

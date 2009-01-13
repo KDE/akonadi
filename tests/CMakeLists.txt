@@ -16,6 +16,9 @@ include_directories(
 
 add_subdirectory(testrunner)
 
+# add benchmarker
+add_subdirectory(benchmarker)
+
 # convenience macro to add akonadi demo application
 macro(add_akonadi_demo _source)
   set(_test ${_source})
@@ -37,8 +40,6 @@ endmacro(add_akonadi_test)
 add_akonadi_demo(itemdumper.cpp)
 add_akonadi_demo(collectioncreator.cpp)
 add_akonadi_demo(subscriber.cpp)
-add_akonadi_demo(benchmarker.cpp)
-target_link_libraries(benchmarker akonadi-kde ${QT_QTTEST_LIBRARY} ${KDE4_KDEUI_LIBS})
 add_akonadi_demo(headfetcher.cpp)
 add_akonadi_demo(agentinstancewidgettest.cpp)
 add_akonadi_demo(agenttypewidgettest.cpp)
