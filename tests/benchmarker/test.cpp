@@ -30,6 +30,14 @@
 
 using namespace Akonadi;
 
+Test::Test()
+{
+ connect( AgentManager::self(), SIGNAL( instanceRemoved( const Akonadi::AgentInstance& ) ),
+           this, SLOT( instanceRemoved( const Akonadi::AgentInstance& ) ) );
+ connect( AgentManager::self(), SIGNAL( instanceStatusChanged( const Akonadi::AgentInstance& ) ),
+           this, SLOT( instanceStatusChanged( const Akonadi::AgentInstance& ) ) );
+}
+
 void Test::createAgent(const QString &name)
 {
   const AgentType type = AgentManager::self()->type( name );
@@ -45,7 +53,7 @@ void Test::createAgent(const QString &name)
   else
     qDebug() << "  Created resource instance" << currentInstance.identifier();
 
-  QTest::qWait(100);
+  QTest::qWait(100); //fix this hack
 }
 
 void Test::configureDBusIface(const QString &name,const QString &dir)

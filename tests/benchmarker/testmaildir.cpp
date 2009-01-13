@@ -41,7 +41,7 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 using namespace Akonadi;
 
-TestMailDir::TestMailDir(const QString &dir)
+TestMailDir::TestMailDir(const QString &dir) : Test()
 {
   createAgent("akonadi_maildir_resource");
   configureDBusIface("Maildir",dir);

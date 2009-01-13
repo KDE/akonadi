@@ -44,6 +44,9 @@ class Test: public QObject {
     bool done;
     void removeCollections();
     void removeResource();
+
+  public:
+    Test();
 };
 
 #endif
