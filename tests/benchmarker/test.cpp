@@ -20,104 +20,14 @@
 
 #include "test.h"
 
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionfetchjob.h>
-
-#include <QDebug>
-#include <QTest>
-#include <QDBusInterface>
-
-using namespace Akonadi;
-
-Test::Test()
+void Test::addTest(MakeTest *test)
 {
- connect( AgentManager::self(), SIGNAL( instanceRemoved( const Akonadi::AgentInstance& ) ),
-           this, SLOT( instanceRemoved( const Akonadi::AgentInstance& ) ) );
- connect( AgentManager::self(), SIGNAL( instanceStatusChanged( const Akonadi::AgentInstance& ) ),
-           this, SLOT( instanceStatusChanged( const Akonadi::AgentInstance& ) ) );
+  mListTest.append(test);
 }
 
-void Test::createAgent(const QString &name)
+void Test::runTests()
 {
-  const AgentType type = AgentManager::self()->type( name );
-
-  AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
-  job->exec();
-  currentInstance = job->instance();
-
-  if( job->error() || !currentInstance.isValid() ) {
-    qDebug() << "  Unable to create resource" << name;
-    exit( -1 );
-  }
-  else
-    qDebug() << "  Created resource instance" << currentInstance.identifier();
-
-  QTest::qWait(100); //fix this hack
-}
-
-void Test::configureDBusIface(const QString &name,const QString &dir)
-{
-  QDBusInterface *configIface = new QDBusInterface( "org.freedesktop.Akonadi.Resource." + currentInstance.identifier(),
-      "/Settings", "org.kde.Akonadi." + name + ".Settings", QDBusConnection::sessionBus(), this );
-
-  configIface->call( "setPath", dir );
-  configIface->call( "setReadOnly", true );
-  
-  if( !configIface->isValid())
-    qFatal( "Could not configure instance %s.", qPrintable( currentInstance.identifier() ) );
-}
-
-void Test::instanceRemoved( const AgentInstance &instance )
-{
-  Q_UNUSED( instance );
-  done = true;
-  // qDebug() << "agent removed:" << instance;
-}
-
-void Test::instanceStatusChanged( const AgentInstance &instance )
-{
-  //qDebug() << "agent status changed:" << agentIdentifier << status << message ;
-  if ( instance == currentInstance ) {
-    if ( instance.status() == AgentInstance::Running ) {
-      //qDebug() << "    " << message;
-    }
-    if ( instance.status() == AgentInstance::Idle ) {
-      done = true;
-    }
+  for (int i = 0; i < mListTest.size(); ++i) {
+         mListTest.at(i)->start();
   }
 }
-
-void Test::outputStats( const QString &description )
-{
-  output( description + "\t\t" + currentAccount + "\t\t" + QByteArray::number( timer.elapsed() ) + '\n' );
-}
-
-void Test::output( const QString &message )
-{
-  QTextStream out( stdout );
-  out << message;
-}
-
-void Test::removeCollections()
-{
-  timer.restart();
-  qDebug() << "  Removing every folder sequentially.";
-  CollectionFetchJob *clj5 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj5->setResource( currentInstance.identifier() );
-  clj5->exec();
-  Collection::List list5 = clj5->collections();
-  foreach ( const Collection &collection, list5 ) {
-    CollectionDeleteJob *cdj = new CollectionDeleteJob( collection, this );
-    cdj->exec();
-  }
-  outputStats( "removeallcollections" );
-}
-
-void Test::removeResource()
-{
-  qDebug() << "  Removing resource.";
-  AgentManager::self()->removeInstance( currentInstance );
-}
-
-

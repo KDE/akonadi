@@ -18,19 +18,22 @@
     02110-1301, USA.
 */
 
-#ifndef TEST_H
-#define TEST_H
+#ifndef TESTMAILDIR_H
+#define TESTMAILDIR_H
 
 #include "maketest.h"
 
-class Test {
- 
-  protected:
-    QList<MakeTest *> mListTest;
+class MailDir: public MakeTest {
 
   public:
-    void addTest(MakeTest *test);
-    void runTests();
+    MailDir(const QString &dir);
+    MailDir();
+  private:
+    void importMailDir();
+    void fetchAllHeaders();
+    void mark20PercentAsRead();
+    void fetchUnreadHeaders();
+    void removeAllReadMessages();
 };
 
-#endif    
+#endif

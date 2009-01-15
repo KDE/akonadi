@@ -18,19 +18,33 @@
     02110-1301, USA.
 */
 
-#ifndef TEST_H
-#define TEST_H
+#include "maildir.h"
 
-#include "maketest.h"
+#include <akonadi/collectiondeletejob.h>
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/itemdeletejob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/itemmodifyjob.h>
 
-class Test {
- 
-  protected:
-    QList<MakeTest *> mListTest;
+#include <kmime/kmime_message.h>
+#include "kmime/messageparts.h"
 
-  public:
-    void addTest(MakeTest *test);
-    void runTests();
-};
+#include <QDebug>
+#include <QTest>
 
-#endif    
+#include <boost/shared_ptr.hpp>
+
+#define WAIT_TIME 100
+
+typedef boost::shared_ptr<KMime::Message> MessagePtr;
+
+using namespace Akonadi;
+
+MailDir::MailDir(const QString &dir) : MakeTest()
+{
+  createAgent("akonadi_maildir_resource");
+  configureDBusIface("Maildir",dir);
+}
+
+MailDir::MailDir() : MakeTest(){}

@@ -18,19 +18,36 @@
     02110-1301, USA.
 */
 
-#ifndef TEST_H
-#define TEST_H
+#ifndef MAKETEST_H
+#define MAKETEST_H
 
-#include "maketest.h"
+#include <akonadi/agentmanager.h>
+#include <akonadi/job.h>
 
-class Test {
- 
+#include <QTime>
+
+class MakeTest: public QObject {
+
+  Q_OBJECT
+  protected Q_SLOTS:
+    void createAgent( const QString &name );
+    void configureDBusIface(const QString &name, const QString &dir );
+    void instanceRemoved( const Akonadi::AgentInstance &instance );
+    void instanceStatusChanged( const Akonadi::AgentInstance &instance );
+    void outputStats( const QString &description );
+    void output( const QString &message );
+
   protected:
-    QList<MakeTest *> mListTest;
-
+    Akonadi::AgentInstance currentInstance;
+    QString currentAccount;
+    QTime timer;
+    bool done;
+    void removeCollections();
+    void removeResource();
+    virtual void runTest()=0;
   public:
-    void addTest(MakeTest *test);
-    void runTests();
+    MakeTest();
+    void start();
 };
 
-#endif    
+#endif
