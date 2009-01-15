@@ -1,5 +1,5 @@
 #ifndef MAILDIRFETCHALLHEADERS_H
-#define MAILDIRIMPORT_H
+#define MAILDIRFETCHALLHEADERS_H
 
 #include "maildir.h"
 
