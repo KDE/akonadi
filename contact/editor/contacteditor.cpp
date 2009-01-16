@@ -21,6 +21,7 @@
 #include "contacteditor.h"
 
 #include "addresseditwidget.h"
+#include "emaileditwidget.h"
 #include "imagewidget.h"
 
 #include <klineedit.h>
@@ -61,7 +62,7 @@ class ContactEditor::Private
     QLabel *mSoundWidget;
 
     // widgets from internet group
-    KLineEdit *mEmailWidget;
+    EmailEditWidget *mEmailWidget;
     KLineEdit *mHomepageWidget;
     KLineEdit *mBlogWidget;
     KLineEdit *mIMWidget;
@@ -177,7 +178,7 @@ void ContactEditor::Private::initGuiContactTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   internetLayout->addWidget( label, 0, 0 );
 
-  mEmailWidget = new KLineEdit;
+  mEmailWidget = new EmailEditWidget;
   label->setBuddy( mEmailWidget );
   internetLayout->addWidget( mEmailWidget, 0, 1 );
 
@@ -412,6 +413,7 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
   d->mNickNameWidget->setText( contact.nickName() );
 
   // internet group
+  d->mEmailWidget->loadContact( contact );
   d->mHomepageWidget->setUrl( contact.url() );
   d->mBlogWidget->setText( d->loadCustom( contact, "BlogFeed" ) );
 
@@ -449,6 +451,7 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
   contact.setNickName( d->mNickNameWidget->text().trimmed() );
 
   // internet group
+  d->mEmailWidget->storeContact( contact );
   contact.setUrl( KUrl( d->mHomepageWidget->text().trimmed() ) );
   d->storeCustom( contact, "BlogFeed", d->mBlogWidget->text().trimmed() );
 
