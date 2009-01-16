@@ -47,6 +47,9 @@ class ContactEditor::Private
     void initGuiBusinessTab();
     void initGuiPersonalTab();
 
+    QString loadCustom( const KABC::Addressee &contact, const QString &key ) const;
+    void storeCustom( KABC::Addressee &contact, const QString &key, const QString &value ) const;
+
     ContactEditor *mParent;
     KTabWidget *mTabWidget;
 
@@ -379,6 +382,18 @@ void ContactEditor::Private::initGuiPersonalTab()
   familyLayout->setRowStretch( 1, 1 );
 }
 
+QString ContactEditor::Private::loadCustom( const KABC::Addressee &contact, const QString &key ) const
+{
+  return contact.custom( "KADDRESSBOOK", key );
+}
+
+void ContactEditor::Private::storeCustom( KABC::Addressee &contact, const QString &key, const QString &value ) const
+{
+  if ( value.isEmpty() )
+    contact.removeCustom( "KADDRESSBOOK", key );
+  else
+    contact.insertCustom( "KADDRESSBOOK", key, value );
+}
 
 ContactEditor::ContactEditor( QWidget *parent )
   : d( new Private(this) )
@@ -392,14 +407,74 @@ ContactEditor::~ContactEditor()
 
 void ContactEditor::loadContact( const KABC::Addressee &contact )
 {
+  // name group
   d->mPhotoWidget->loadContact( contact );
+  d->mNickNameWidget->setText( contact.nickName() );
+
+  // internet group
+  d->mHomepageWidget->setUrl( contact.url() );
+  d->mBlogWidget->setText( d->loadCustom( contact, "BlogFeed" ) );
+
+  // phones group
+
+  // address group
   d->mAddressesWidget->loadContact( contact );
+
+  // coordinates group
+
+  // general group
   d->mLogoWidget->loadContact( contact );
+  d->mProfessionWidget->setText( d->loadCustom( contact, "X-Profession" ) );
+  d->mTitleWidget->setText( contact.title() );
+  d->mDepartmentWidget->setText( contact.department() );
+  d->mOfficeWidget->setText( d->loadCustom( contact, "X-Office" ) );
+  d->mManagerWidget->setText( d->loadCustom( contact, "X-ManagersName" ) );
+  d->mAssistantWidget->setText( d->loadCustom( contact, "X-AssistantsName" ) );
+
+  // groupware group
+
+  // notes group
+  d->mNotesWidget->setPlainText( contact.note() );
+
+  // dates group
+
+  // family group
+  d->mPartnerWidget->setText( d->loadCustom( contact, "X-SpousesName" ) );
 }
 
 void ContactEditor::storeContact( KABC::Addressee &contact ) const
 {
+  // name group
   d->mPhotoWidget->storeContact( contact );
+  contact.setNickName( d->mNickNameWidget->text().trimmed() );
+
+  // internet group
+  contact.setUrl( KUrl( d->mHomepageWidget->text().trimmed() ) );
+  d->storeCustom( contact, "BlogFeed", d->mBlogWidget->text().trimmed() );
+
+  // phones group
+
+  // address group
   d->mAddressesWidget->storeContact( contact );
+
+  // coordinates group
+
+  // general group
   d->mLogoWidget->storeContact( contact );
+  d->storeCustom( contact, "X-Profession", d->mProfessionWidget->text().trimmed() );
+  contact.setTitle( d->mTitleWidget->text().trimmed() );
+  contact.setDepartment( d->mDepartmentWidget->text().trimmed() );
+  d->storeCustom( contact, "X-Office", d->mOfficeWidget->text().trimmed() );
+  d->storeCustom( contact, "X-ManagersName", d->mManagerWidget->text().trimmed() );
+  d->storeCustom( contact, "X-AssistantsName", d->mAssistantWidget->text().trimmed() );
+
+  // groupware group
+
+  // notes group
+  contact.setNote( d->mNotesWidget->toPlainText() );
+
+  // dates group
+
+  // family group
+  d->storeCustom( contact, "X-SpousesName", d->mPartnerWidget->text().trimmed() );
 }
