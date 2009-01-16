@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef TESTMAILDIR_H
-#define TESTMAILDIR_H
+#ifndef MAILDIR_H
+#define MAILDIR_H
 
 #include "maketest.h"
 

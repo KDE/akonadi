@@ -17,7 +17,7 @@ include_directories(
 add_subdirectory(testrunner)
 
 # add benchmarker
-#add_subdirectory(benchmarker)
+add_subdirectory(benchmarker)
 
 # convenience macro to add akonadi demo application
 macro(add_akonadi_demo _source)

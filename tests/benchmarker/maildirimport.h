@@ -3,8 +3,7 @@
 
 #include "maildir.h"
 
-class MailDirImport: public MailDir 
-{
+class MailDirImport: public MailDir {
 
   public:
     MailDirImport(const QString &dir);
