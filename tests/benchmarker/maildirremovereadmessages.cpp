@@ -24,15 +24,9 @@
 #include <QDebug>
 #include <QTest>
 
-#include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
-
-#include <kmime/kmime_message.h>
-#include "kmime/messageparts.h"
 
 using namespace Akonadi;
 
@@ -59,5 +53,3 @@ void MailDirRemoveReadMessages::runTest() {
   outputStats( "removereaditems" );
 
 }
-
-

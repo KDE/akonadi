@@ -25,11 +25,8 @@
 #include <QDebug>
 #include <QTest>
 
-#include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 
 using namespace Akonadi;
@@ -37,7 +34,7 @@ using namespace Akonadi;
 MailDir20PercentAsRead::MailDir20PercentAsRead():MailDir(){}
 
 void MailDir20PercentAsRead::runTest() {
-  timer.restart();
+  timer.start();
   qDebug() << "  Marking 20% of messages as read.";
   CollectionFetchJob *clj2 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
   clj2->setResource( currentInstance.identifier() );
@@ -56,5 +53,3 @@ void MailDir20PercentAsRead::runTest() {
   }
   outputStats( "mark20percentread" );
 }
-
-

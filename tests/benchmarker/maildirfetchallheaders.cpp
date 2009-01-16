@@ -25,19 +25,14 @@
 #include <QDebug>
 #include <QTest>
 
-#include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/itemmodifyjob.h>
 
 #include <kmime/kmime_message.h>
 #include "kmime/messageparts.h"
 
 #include <boost/shared_ptr.hpp>
-
-#define WAIT_TIME 100
 
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
