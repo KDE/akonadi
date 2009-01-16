@@ -21,6 +21,7 @@
 #include "contacteditor.h"
 
 #include "addresseditwidget.h"
+#include "imagewidget.h"
 
 #include <klineedit.h>
 #include <klocale.h>
@@ -51,7 +52,7 @@ class ContactEditor::Private
 
     // widgets from name group
     KLineEdit *mNameWidget;
-    QLabel *mPhotoWidget;
+    ImageWidget *mPhotoWidget;
     KLineEdit *mDisplayNameWidget;
     KLineEdit *mNickNameWidget;
     QLabel *mSoundWidget;
@@ -72,6 +73,7 @@ class ContactEditor::Private
     QWidget *mCoordinatesWidget;
 
     // widgets from general group
+    ImageWidget *mLogoWidget;
     KLineEdit *mProfessionWidget;
     KLineEdit *mTitleWidget;
     KLineEdit *mDepartmentWidget;
@@ -137,7 +139,7 @@ void ContactEditor::Private::initGuiContactTab()
   label->setBuddy( mNameWidget );
   nameLayout->addWidget( mNameWidget, 0, 1 );
 
-  mPhotoWidget = new QLabel;
+  mPhotoWidget = new ImageWidget( ImageWidget::Photo );
   mPhotoWidget->setMinimumSize( QSize( 100, 140 ) );
   nameLayout->addWidget( mPhotoWidget, 0, 2, 4, 1 );
 
@@ -259,6 +261,9 @@ void ContactEditor::Private::initGuiBusinessTab()
   QLabel *label = 0;
 
   // setup general group box
+  mLogoWidget = new ImageWidget( ImageWidget::Logo );
+  generalLayout->addWidget( mLogoWidget, 0, 2, 6, 1, Qt::AlignTop );
+
   label = new QLabel( i18n( "Profession:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 0, 0 );
@@ -387,10 +392,14 @@ ContactEditor::~ContactEditor()
 
 void ContactEditor::loadContact( const KABC::Addressee &contact )
 {
+  d->mPhotoWidget->loadContact( contact );
   d->mAddressesWidget->loadContact( contact );
+  d->mLogoWidget->loadContact( contact );
 }
 
 void ContactEditor::storeContact( KABC::Addressee &contact ) const
 {
+  d->mPhotoWidget->storeContact( contact );
   d->mAddressesWidget->storeContact( contact );
+  d->mLogoWidget->storeContact( contact );
 }
