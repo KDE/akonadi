@@ -23,6 +23,7 @@
 #include "addresseditwidget.h"
 #include "emaileditwidget.h"
 #include "imagewidget.h"
+#include "soundeditwidget.h"
 
 #include <klineedit.h>
 #include <klocale.h>
@@ -59,7 +60,7 @@ class ContactEditor::Private
     ImageWidget *mPhotoWidget;
     KLineEdit *mDisplayNameWidget;
     KLineEdit *mNickNameWidget;
-    QLabel *mSoundWidget;
+    SoundEditWidget *mPronunciationWidget;
 
     // widgets from internet group
     EmailEditWidget *mEmailWidget;
@@ -163,13 +164,13 @@ void ContactEditor::Private::initGuiContactTab()
   label->setBuddy( mNickNameWidget );
   nameLayout->addWidget( mNickNameWidget, 2, 1 );
 
-  label = new QLabel( i18n( "Sound:" ) );
+  label = new QLabel( i18n( "Pronunciation:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   nameLayout->addWidget( label, 3, 0 );
 
-  mSoundWidget = new QLabel;
-  label->setBuddy( mSoundWidget );
-  nameLayout->addWidget( mSoundWidget, 3, 1 );
+  mPronunciationWidget = new SoundEditWidget;
+  label->setBuddy( mPronunciationWidget );
+  nameLayout->addWidget( mPronunciationWidget, 3, 1 );
 
   nameLayout->setRowStretch( 4, 1 );
 
@@ -411,6 +412,7 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
   // name group
   d->mPhotoWidget->loadContact( contact );
   d->mNickNameWidget->setText( contact.nickName() );
+  d->mPronunciationWidget->loadContact( contact );
 
   // internet group
   d->mEmailWidget->loadContact( contact );
@@ -449,6 +451,7 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
   // name group
   d->mPhotoWidget->storeContact( contact );
   contact.setNickName( d->mNickNameWidget->text().trimmed() );
+  d->mPronunciationWidget->storeContact( contact );
 
   // internet group
   d->mEmailWidget->storeContact( contact );

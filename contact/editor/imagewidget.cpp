@@ -35,7 +35,6 @@
 #include <QtGui/QDragEnterEvent>
 #include <QtGui/QDropEvent>
 #include <QtGui/QMenu>
-#include <QtGui/QPainter>
 
 /**
  * @short Small helper class to load image from network
@@ -266,6 +265,7 @@ void ImageWidget::saveImage()
 void ImageWidget::deleteImage()
 {
   mHasImage = false;
+  mImage = QImage();
   updateView();
 }
 
