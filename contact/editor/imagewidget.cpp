@@ -120,6 +120,8 @@ ImageWidget::ImageWidget( Type type, QWidget *parent )
   setFixedSize( QSize( 120, 160 ) );
 
   connect( this, SIGNAL( clicked() ), SLOT( changeImage() ) );
+
+  updateView();
 }
 
 ImageWidget::~ImageWidget()

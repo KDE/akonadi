@@ -21,6 +21,7 @@
 #include "contacteditor.h"
 
 #include "addresseditwidget.h"
+#include "dateeditwidget.h"
 #include "emaileditwidget.h"
 #include "imagewidget.h"
 #include "soundeditwidget.h"
@@ -93,8 +94,8 @@ class ContactEditor::Private
     KTextEdit *mNotesWidget;
 
     // widgets from dates group
-    QWidget *mBirthdateWidget;
-    QWidget *mAnniversaryWidget;
+    DateEditWidget *mBirthdateWidget;
+    DateEditWidget *mAnniversaryWidget;
 
     // widgets from family group
     KLineEdit *mPartnerWidget;
@@ -358,7 +359,7 @@ void ContactEditor::Private::initGuiPersonalTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   datesLayout->addWidget( label, 0, 0 );
 
-  mBirthdateWidget = new QWidget;
+  mBirthdateWidget = new DateEditWidget;
   label->setBuddy( mBirthdateWidget );
   datesLayout->addWidget( mBirthdateWidget, 0, 1 );
 
@@ -366,11 +367,12 @@ void ContactEditor::Private::initGuiPersonalTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   datesLayout->addWidget( label, 1, 0 );
 
-  mAnniversaryWidget = new QWidget;
+  mAnniversaryWidget = new DateEditWidget;
   label->setBuddy( mAnniversaryWidget );
   datesLayout->addWidget( mAnniversaryWidget, 1, 1 );
 
   datesLayout->setRowStretch( 2, 1 );
+  datesLayout->setColumnStretch( 1, 1 );
 
   // widgets from family group
   label = new QLabel( i18n( "Partner's name:" ) );
@@ -441,6 +443,8 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
   d->mNotesWidget->setPlainText( contact.note() );
 
   // dates group
+  d->mBirthdateWidget->setDate( contact.birthday().date() );
+  d->mAnniversaryWidget->setDate( QDate::fromString( d->loadCustom( contact, "X-Anniversary" ), Qt::ISODate ) );
 
   // family group
   d->mPartnerWidget->setText( d->loadCustom( contact, "X-SpousesName" ) );
@@ -480,6 +484,8 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
   contact.setNote( d->mNotesWidget->toPlainText() );
 
   // dates group
+  contact.setBirthday( QDateTime( d->mBirthdateWidget->date(), QTime() ) );
+  d->storeCustom( contact, "X-Anniversary", d->mAnniversaryWidget->date().toString( Qt::ISODate ) );
 
   // family group
   d->storeCustom( contact, "X-SpousesName", d->mPartnerWidget->text().trimmed() );
