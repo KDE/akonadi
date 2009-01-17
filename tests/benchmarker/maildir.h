@@ -28,12 +28,6 @@ class MailDir: public MakeTest {
   public:
     MailDir(const QString &dir);
     MailDir();
-  private:
-    void importMailDir();
-    void fetchAllHeaders();
-    void mark20PercentAsRead();
-    void fetchUnreadHeaders();
-    void removeAllReadMessages();
 };
 
 #endif
