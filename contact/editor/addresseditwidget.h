@@ -32,7 +32,6 @@
 #include <kcombobox.h>
 #include <kdialog.h>
 
-class QButtonGroup;
 class QCheckBox;
 class QLabel;
 

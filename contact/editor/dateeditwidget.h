@@ -26,11 +26,6 @@
 
 #include <klineedit.h>
 
-namespace KABC
-{
-class Addressee;
-}
-
 namespace KPIM
 {
 class KDatePickerPopup;
