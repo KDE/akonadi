@@ -24,6 +24,7 @@
 #include "dateeditwidget.h"
 #include "emaileditwidget.h"
 #include "imagewidget.h"
+#include "phoneeditwidget.h"
 #include "soundeditwidget.h"
 
 #include <klineedit.h>
@@ -70,7 +71,7 @@ class ContactEditor::Private
     KLineEdit *mIMWidget;
 
     // widgets from phones group
-    KLineEdit *mPhonesWidget;
+    PhoneEditWidget *mPhonesWidget;
 
     // widgets from addresses group
     AddressEditWidget *mAddressesWidget;
@@ -211,7 +212,7 @@ void ContactEditor::Private::initGuiContactTab()
   internetLayout->setRowStretch( 4, 1 );
 
   // setup phones group box
-  mPhonesWidget = new KLineEdit;
+  mPhonesWidget = new PhoneEditWidget;
   phonesLayout->addWidget( mPhonesWidget, 0, 0 );
 
   phonesLayout->setRowStretch( 1, 1 );
@@ -422,6 +423,7 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
   d->mBlogWidget->setText( d->loadCustom( contact, "BlogFeed" ) );
 
   // phones group
+  d->mPhonesWidget->loadContact( contact );
 
   // address group
   d->mAddressesWidget->loadContact( contact );
@@ -463,6 +465,7 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
   d->storeCustom( contact, "BlogFeed", d->mBlogWidget->text().trimmed() );
 
   // phones group
+  d->mPhonesWidget->storeContact( contact );
 
   // address group
   d->mAddressesWidget->storeContact( contact );
