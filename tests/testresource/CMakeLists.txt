@@ -1,8 +1,4 @@
-find_package(LibXml2)
-
-if ( LIBXML2_FOUND )
-  add_definitions( -DHAVE_LIBXML2 )
-endif ( LIBXML2_FOUND )
+add_definitions( -DHAVE_LIBXML2 )
 
 include_directories(
     ${Boost_INCLUDE_DIR}
