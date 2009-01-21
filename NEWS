@@ -1,3 +1,9 @@
+1.1.1                             21-Jan-2009
+---------------------------------------------
+- Fix code that was not executed in a release build.
+- Require CMake 2.6.0 which fixes boost detection.
+- Don't try to restart an agent that has been deleted.
+
 1.1.0                             03-Jan-2009
 ---------------------------------------------
 - Restart agents when their executable changed.

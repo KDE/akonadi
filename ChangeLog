@@ -1,3 +1,37 @@
+2009-01-16 09:46 +0000 [r911844]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.1/server/shared/akdebug.cpp: Backport SVN
+	  commit 908591 by vkrause from trunk: Don't put essential code
+	  into assert(), doesn't seem to be executed in release builds.
+
+2009-01-09 21:34 +0000 [r908531]  Tom Albers tomalbers@kde.nl
+
+	* branches/akonadi/1.1/CMakeLists.txt,
+	  branches/akonadi/1.1/cmake/modules/FindBoost.cmake (removed):
+	  Backport: SVN commit 906112 by dfaure: Require cmake-2.6.0 and
+	  its much nicer FindBoost.cmake
+
+2009-01-04 22:14 +0000 [r905716]  Tom Albers tomalbers@kde.nl
+
+	* branches/akonadi/1.1/cmake/modules/FindBoost.cmake: Backport SVN
+	  commit 905714 by sengels: add 1.37 release
+
+2009-01-04 16:26 +0000 [r905559]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.1/server/control/agentmanager.cpp: Backport
+	  SVN commit 905553 by vkrause from trunk: Don't try to restart an
+	  agent that has been deleted.
+
+2009-01-03 16:17 +0000 [r905029]  Tom Albers tomalbers@kde.nl
+
+	* branches/akonadi/1.1 (added): Branch off Akonadi 1.1
+
+2009-01-03 16:10 +0000 [r905016]  Tom Albers tomalbers@kde.nl
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: Prep for release 1.1.0
+
 2009-01-03 10:14 +0000 [r904820]  Volker Krause vkrause@kde.org
 
 	* trunk/kdesupport/akonadi/server/control/agentinstance.cpp,
