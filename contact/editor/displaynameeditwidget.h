@@ -62,6 +62,7 @@ class DisplayNameEditWidget : public QWidget
 
   public Q_SLOTS:
     void changeName( const KABC::Addressee &contact );
+    void changeOrganization( const QString &organization );
 
   protected:
     // context menu handling

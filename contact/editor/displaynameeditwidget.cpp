@@ -98,8 +98,17 @@ void DisplayNameEditWidget::storeContact( KABC::Addressee &contact ) const
 
 void DisplayNameEditWidget::changeName( const KABC::Addressee &contact )
 {
+  const QString organization = mContact.organization();
   mContact = contact;
+  mContact.setOrganization( organization );
   mContact.setFormattedName( mView->text() );
+
+  updateView();
+}
+
+void DisplayNameEditWidget::changeOrganization( const QString &organization )
+{
+  mContact.setOrganization( organization );
 
   updateView();
 }

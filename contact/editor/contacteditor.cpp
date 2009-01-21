@@ -85,6 +85,7 @@ class ContactEditor::Private
 
     // widgets from general group
     ImageWidget *mLogoWidget;
+    KLineEdit *mOrganizationWidget;
     KLineEdit *mProfessionWidget;
     KLineEdit *mTitleWidget;
     KLineEdit *mDepartmentWidget;
@@ -161,9 +162,6 @@ void ContactEditor::Private::initGuiContactTab()
   mDisplayNameWidget = new DisplayNameEditWidget;
   label->setBuddy( mDisplayNameWidget );
   nameLayout->addWidget( mDisplayNameWidget, 1, 1 );
-
-  connect( mNameWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
-           mDisplayNameWidget, SLOT( changeName( const KABC::Addressee& ) ) );
 
   label = new QLabel( i18n( "Nickname:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
@@ -278,55 +276,63 @@ void ContactEditor::Private::initGuiBusinessTab()
   mLogoWidget = new ImageWidget( ImageWidget::Logo );
   generalLayout->addWidget( mLogoWidget, 0, 2, 6, 1, Qt::AlignTop );
 
-  label = new QLabel( i18n( "Profession:" ) );
+  label = new QLabel( i18n( "Organization:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 0, 0 );
 
-  mProfessionWidget = new KLineEdit;
-  label->setBuddy( mProfessionWidget );
-  generalLayout->addWidget( mProfessionWidget, 0, 1 );
+  mOrganizationWidget = new KLineEdit;
+  label->setBuddy( mOrganizationWidget );
+  generalLayout->addWidget( mOrganizationWidget, 0, 1 );
 
-  label = new QLabel( i18n( "Title:" ) );
+  label = new QLabel( i18n( "Profession:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 1, 0 );
 
-  mTitleWidget = new KLineEdit;
-  label->setBuddy( mTitleWidget );
-  generalLayout->addWidget( mTitleWidget , 1, 1 );
+  mProfessionWidget = new KLineEdit;
+  label->setBuddy( mProfessionWidget );
+  generalLayout->addWidget( mProfessionWidget, 1, 1 );
 
-  label = new QLabel( i18n( "Department:" ) );
+  label = new QLabel( i18n( "Title:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 2, 0 );
 
-  mDepartmentWidget = new KLineEdit;
-  label->setBuddy( mDepartmentWidget );
-  generalLayout->addWidget( mDepartmentWidget, 2, 1 );
+  mTitleWidget = new KLineEdit;
+  label->setBuddy( mTitleWidget );
+  generalLayout->addWidget( mTitleWidget , 2, 1 );
 
-  label = new QLabel( i18n( "Office:" ) );
+  label = new QLabel( i18n( "Department:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 3, 0 );
 
-  mOfficeWidget = new KLineEdit;
-  label->setBuddy( mOfficeWidget );
-  generalLayout->addWidget( mOfficeWidget, 3, 1 );
+  mDepartmentWidget = new KLineEdit;
+  label->setBuddy( mDepartmentWidget );
+  generalLayout->addWidget( mDepartmentWidget, 3, 1 );
 
-  label = new QLabel( i18n( "Manager's name:" ) );
+  label = new QLabel( i18n( "Office:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 4, 0 );
 
-  mManagerWidget = new KLineEdit;
-  label->setBuddy( mManagerWidget );
-  generalLayout->addWidget( mManagerWidget, 4, 1 );
+  mOfficeWidget = new KLineEdit;
+  label->setBuddy( mOfficeWidget );
+  generalLayout->addWidget( mOfficeWidget, 4, 1 );
 
-  label = new QLabel( i18n( "Assistant's name:" ) );
+  label = new QLabel( i18n( "Manager's name:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 5, 0 );
 
+  mManagerWidget = new KLineEdit;
+  label->setBuddy( mManagerWidget );
+  generalLayout->addWidget( mManagerWidget, 5, 1 );
+
+  label = new QLabel( i18n( "Assistant's name:" ) );
+  label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
+  generalLayout->addWidget( label, 6, 0 );
+
   mAssistantWidget = new KLineEdit;
   label->setBuddy( mAssistantWidget );
-  generalLayout->addWidget( mAssistantWidget, 5, 1 );
+  generalLayout->addWidget( mAssistantWidget, 6, 1 );
 
-  generalLayout->setRowStretch( 6, 1 );
+  generalLayout->setRowStretch( 7, 1 );
 
   // setup groupware group box
   label = new QLabel( i18n( "Free/Busy:" ) );
@@ -416,6 +422,11 @@ ContactEditor::ContactEditor( QWidget* )
   KConfigGroup group( &config, "General" );
 
   d->mDisplayNameWidget->setDisplayType( DisplayNameEditWidget::DisplayType( group.readEntry( "DisplayNameType", 1 ) ) );
+
+  connect( d->mNameWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
+           d->mDisplayNameWidget, SLOT( changeName( const KABC::Addressee& ) ) );
+  connect( d->mOrganizationWidget, SIGNAL( textChanged( const QString& ) ),
+           d->mDisplayNameWidget, SLOT( changeOrganization( const QString& ) ) );
 }
 
 ContactEditor::~ContactEditor()
@@ -450,6 +461,7 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
 
   // general group
   d->mLogoWidget->loadContact( contact );
+  d->mOrganizationWidget->setText( contact.organization() );
   d->mProfessionWidget->setText( d->loadCustom( contact, "X-Profession" ) );
   d->mTitleWidget->setText( contact.title() );
   d->mDepartmentWidget->setText( contact.department() );
@@ -494,6 +506,7 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
 
   // general group
   d->mLogoWidget->storeContact( contact );
+  contact.setOrganization( d->mOrganizationWidget->text() );
   d->storeCustom( contact, "X-Profession", d->mProfessionWidget->text().trimmed() );
   contact.setTitle( d->mTitleWidget->text().trimmed() );
   contact.setDepartment( d->mDepartmentWidget->text().trimmed() );
