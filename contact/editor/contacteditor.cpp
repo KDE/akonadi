@@ -22,11 +22,15 @@
 
 #include "addresseditwidget.h"
 #include "dateeditwidget.h"
+#include "displaynameeditwidget.h"
 #include "emaileditwidget.h"
 #include "imagewidget.h"
+#include "nameeditwidget.h"
 #include "phoneeditwidget.h"
 #include "soundeditwidget.h"
 
+#include <kconfig.h>
+#include <kconfiggroup.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <ktabwidget.h>
@@ -58,9 +62,9 @@ class ContactEditor::Private
     KTabWidget *mTabWidget;
 
     // widgets from name group
-    KLineEdit *mNameWidget;
+    NameEditWidget *mNameWidget;
     ImageWidget *mPhotoWidget;
-    KLineEdit *mDisplayNameWidget;
+    DisplayNameEditWidget *mDisplayNameWidget;
     KLineEdit *mNickNameWidget;
     SoundEditWidget *mPronunciationWidget;
 
@@ -142,7 +146,7 @@ void ContactEditor::Private::initGuiContactTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   nameLayout->addWidget( label, 0, 0 );
 
-  mNameWidget = new KLineEdit;
+  mNameWidget = new NameEditWidget;
   label->setBuddy( mNameWidget );
   nameLayout->addWidget( mNameWidget, 0, 1 );
 
@@ -154,9 +158,12 @@ void ContactEditor::Private::initGuiContactTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   nameLayout->addWidget( label, 1, 0 );
 
-  mDisplayNameWidget = new KLineEdit;
+  mDisplayNameWidget = new DisplayNameEditWidget;
   label->setBuddy( mDisplayNameWidget );
   nameLayout->addWidget( mDisplayNameWidget, 1, 1 );
+
+  connect( mNameWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
+           mDisplayNameWidget, SLOT( changeName( const KABC::Addressee& ) ) );
 
   label = new QLabel( i18n( "Nickname:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
@@ -400,20 +407,31 @@ void ContactEditor::Private::storeCustom( KABC::Addressee &contact, const QStrin
     contact.insertCustom( "KADDRESSBOOK", key, value );
 }
 
-ContactEditor::ContactEditor( QWidget *parent )
-  : d( new Private(this) )
+ContactEditor::ContactEditor( QWidget* )
+  : d( new Private( this ) )
 {
   d->initGui();
+
+  KConfig config( "kcontactmanagerrc" );
+  KConfigGroup group( &config, "General" );
+
+  d->mDisplayNameWidget->setDisplayType( DisplayNameEditWidget::DisplayType( group.readEntry( "DisplayNameType", 1 ) ) );
 }
 
 ContactEditor::~ContactEditor()
 {
+  KConfig config( "kcontactmanagerrc" );
+  KConfigGroup group( &config, "General" );
+
+  group.writeEntry( "DisplayNameType", (int)d->mDisplayNameWidget->displayType() );
 }
 
 void ContactEditor::loadContact( const KABC::Addressee &contact )
 {
   // name group
   d->mPhotoWidget->loadContact( contact );
+  d->mNameWidget->loadContact( contact );
+  d->mDisplayNameWidget->loadContact( contact );
   d->mNickNameWidget->setText( contact.nickName() );
   d->mPronunciationWidget->loadContact( contact );
 
@@ -456,6 +474,8 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
 {
   // name group
   d->mPhotoWidget->storeContact( contact );
+  d->mNameWidget->storeContact( contact );
+  d->mDisplayNameWidget->storeContact( contact );
   contact.setNickName( d->mNickNameWidget->text().trimmed() );
   d->mPronunciationWidget->storeContact( contact );
 
