@@ -40,7 +40,7 @@ DummySearchManager::DummySearchManager()
   mInstance = this;
 }
 
-bool DummySearchManager::addSearch( const Location& )
+bool DummySearchManager::addSearch( const Collection& )
 {
   return true;
 }

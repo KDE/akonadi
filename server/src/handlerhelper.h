@@ -42,51 +42,51 @@ class HandlerHelper
     /**
       Returns the collection identified by the given id or path.
     */
-    static Location collectionFromIdOrName( const QByteArray &id );
+    static Collection collectionFromIdOrName( const QByteArray &id );
 
     /**
       Returns the full path for the given collection.
     */
-    static QString pathForCollection( const Location &loc );
+    static QString pathForCollection( const Collection &col );
 
     /**
       Returns the amount of existing items in the given collection.
       @return -1 on error
     */
-    static int itemCount( const Location &loc );
+    static int itemCount( const Collection &col );
 
     /**
       Returns the amount of existing items in the given collection
       which have a given flag set.
       @return -1 on error.
     */
-    static int itemWithFlagCount( const Location &loc, const QString &flag );
+    static int itemWithFlagCount( const Collection &col, const QString &flag );
 
     /**
       Returns the amount of existing items in the given collection
       which have a given flag not set.
       @return -1 on error
     */
-    static int itemWithoutFlagCount( const Location &loc, const QString &flag );
+    static int itemWithoutFlagCount( const Collection &col, const QString &flag );
 
     /**
-      Parse cache policy and update the given Location object accoordingly.
+      Parse cache policy and update the given Collection object accoordingly.
       @todo Error handling.
     */
-    static int parseCachePolicy( const QByteArray &data, Location &loc, int start = 0 );
+    static int parseCachePolicy( const QByteArray &data, Collection &col, int start = 0 );
 
     /**
       Returns the protocol representation of the cache policy of the given
-      Location object.
+      Collection object.
     */
-    static QByteArray cachePolicyToByteArray( const Location &loc );
+    static QByteArray cachePolicyToByteArray( const Collection &col );
 
     /**
-      Returns the protocl representation of the given collection.
+      Returns the protocol representation of the given collection.
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static QByteArray collectionToByteArray( const Location &loc, bool hidden = false );
+    static QByteArray collectionToByteArray( const Collection &col, bool hidden = false );
 };
 
 }

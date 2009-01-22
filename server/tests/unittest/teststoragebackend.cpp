@@ -23,23 +23,23 @@ using namespace Akonadi;
 
 bool MockBackend::listCollections( const QString& prefix,
                                    const QString& mailboxPattern,
-                                   QList<Location> &result ) const
+                                   QList<Collection> &result ) const
 {
     Q_UNUSED(prefix);
     result.clear();
     //qDebug() << "Prefix: " << prefix << " pattern: " << mailboxPattern;
     if ( mailboxPattern == QLatin1String("%") ) {
-        Location l;
-        l.setName( "INBOX" );
-        result << l;
+        Collection col;
+        col.setName( "INBOX" );
+        result << col;
     } else if ( mailboxPattern == QLatin1String("*") ) {
-        Location l1; l1.setName( "INBOX" );
-        Location l2; l2.setName( "INBOX/foo" );
-        result << l1 << l2;
+        Collection col1; col1.setName( "INBOX" );
+        Collection col2; col2.setName( "INBOX/foo" );
+        result << col1 << col2;
     } else if ( mailboxPattern.startsWith( "INBOX" ) ) {
-        Location l1; l1.setName( "foo" );
-        Location l2; l2.setName( "bar" );
-        result << l1 << l2;
+        Collection col1; col1.setName( "foo" );
+        Collection col2; col2.setName( "bar" );
+        result << col1 << col2;
     }
     return true;
 }

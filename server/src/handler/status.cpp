@@ -60,9 +60,9 @@ bool Status::handleLine( const QByteArray& line )
     Response response;
 
     DataStore *db = connection()->storageBackend();
-    Location l = HandlerHelper::collectionFromIdOrName( mailbox );
+    Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
 
-    if ( !l.isValid() )
+    if ( !col.isValid() )
         return failureResponse( "No status for this folder" );
 
     // Responses:
@@ -73,7 +73,7 @@ bool Status::handleLine( const QByteArray& line )
     // MESSAGES - The number of messages in the mailbox
     if ( attributeList.contains( "MESSAGES" ) ) {
         statusResponse += "MESSAGES ";
-        const int count = HandlerHelper::itemCount( l );
+        const int count = HandlerHelper::itemCount( col );
         if ( count < 0 )
           return failureResponse( "Could not determine message count." );
         statusResponse += QByteArray::number( count );
@@ -84,7 +84,7 @@ bool Status::handleLine( const QByteArray& line )
             statusResponse += " RECENT ";
         else
             statusResponse += "RECENT ";
-        const int count = HandlerHelper::itemWithFlagCount( l, QLatin1String( "\\Recent" ) );
+        const int count = HandlerHelper::itemWithFlagCount( col, QLatin1String( "\\Recent" ) );
         if ( count < 0 )
           return failureResponse( "Could not determine recent item count" );
         statusResponse += QByteArray::number( count );
@@ -110,14 +110,14 @@ bool Status::handleLine( const QByteArray& line )
         else
             statusResponse += "UNSEEN ";
 
-        const int count = HandlerHelper::itemWithoutFlagCount( l, QLatin1String( "\\Seen" ) );
+        const int count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) );
         if ( count < 0 )
           return failureResponse( "Unable to retrieve unread count" );
         statusResponse += QByteArray::number( count );
     }
 
     response.setUntagged();
-    response.setString( "STATUS \"" + HandlerHelper::pathForCollection( l ).toUtf8() + "\" (" + statusResponse + ')' );
+    response.setString( "STATUS \"" + HandlerHelper::pathForCollection( col ).toUtf8() + "\" (" + statusResponse + ')' );
     emit responseAvailable( response );
 
     response.setSuccess();

@@ -86,7 +86,7 @@ void XesamManager::slotHitsAdded(const QString & search, int count)
     if ( list.isEmpty() )
       continue;
     qint64 itemId = uriToItemId( list.first().toString() );
-    Entity::addToRelation<LocationPimItemRelation>( colId, itemId );
+    Entity::addToRelation<CollectionPimItemRelation>( colId, itemId );
   }
 }
 
@@ -104,7 +104,7 @@ void XesamManager::slotHitsRemoved(const QString & search, const QList<int> & hi
     if ( list.isEmpty() )
       continue;
     qint64 itemId = uriToItemId( list.first().toString() );
-    Entity::removeFromRelation<LocationPimItemRelation>( colId, itemId );
+    Entity::removeFromRelation<CollectionPimItemRelation>( colId, itemId );
   }
 }
 
@@ -120,23 +120,23 @@ void XesamManager::reloadSearches()
     qWarning() << "No valid search resource found!";
     return;
   }
-  Location::List locs = res.locations();
-  foreach ( const Location &l, locs ) {
-    addSearch( l );
+  Collection::List cols = res.collections();
+  foreach ( const Collection &col, cols ) {
+    addSearch( col );
   }
 }
 
-bool XesamManager::addSearch(const Location & loc)
+bool XesamManager::addSearch(const Collection & col)
 {
   if ( !mInterface->isValid() || !mValid )
     return false;
   QMutexLocker lock( &mMutex );
-  if ( loc.remoteId().isEmpty() )
+  if ( col.remoteId().isEmpty() )
     return false;
-  QString searchId = mInterface->NewSearch( mSession, loc.remoteId() );
-  qDebug() << "XesamManager::addSeach" << loc << searchId;
-  mSearchMap[ searchId ] = loc.id();
-  mInvSearchMap[ loc.id() ] = searchId;
+  QString searchId = mInterface->NewSearch( mSession, col.remoteId() );
+  qDebug() << "XesamManager::addSeach" << col << searchId;
+  mSearchMap[ searchId ] = col.id();
+  mInvSearchMap[ col.id() ] = searchId;
   mInterface->StartSearch( searchId );
 
 #if 0
@@ -149,13 +149,13 @@ bool XesamManager::addSearch(const Location & loc)
   return true;
 }
 
-bool XesamManager::removeSearch(qint64 loc)
+bool XesamManager::removeSearch(qint64 col)
 {
   QMutexLocker lock( &mMutex );
-  if ( !mInvSearchMap.contains( loc ) )
+  if ( !mInvSearchMap.contains( col ) )
     return false;
-  QString searchId = mInvSearchMap.value( loc );
-  mInvSearchMap.remove( loc );
+  QString searchId = mInvSearchMap.value( col );
+  mInvSearchMap.remove( col );
   mSearchMap.remove( searchId );
   return true;
 }
@@ -167,9 +167,9 @@ void XesamManager::stopSearches()
     qWarning() << "No valid search resource found!";
     return;
   }
-  Location::List locs = res.locations();
-  foreach ( const Location &l, locs ) {
-    removeSearch( l.id() );
+  Collection::List cols = res.collections();
+  foreach ( const Collection &col, cols ) {
+    removeSearch( col.id() );
   }
 }
 

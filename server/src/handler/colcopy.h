@@ -59,7 +59,7 @@ class AKONADIPRIVATE_EXPORT ColCopy : public Copy
     bool handleLine(const QByteArray& line);
 
   private:
-    bool copyCollection( const Location& source, const Location &target );
+    bool copyCollection( const Collection& source, const Collection &target );
 };
 
 }

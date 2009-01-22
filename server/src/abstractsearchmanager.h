@@ -24,7 +24,7 @@
 
 namespace Akonadi {
 
-class Location;
+class Collection;
 
 /**
  * AbstractSearchManager is an abstract interface for search managers.
@@ -46,16 +46,16 @@ class AbstractSearchManager
     static AbstractSearchManager* instance();
 
     /**
-     * Adds the given @p location to the search.
+     * Adds the given @p collection to the search.
      *
-     * @returns true if the location was added successfully, false otherwise.
+     * @returns true if the collection was added successfully, false otherwise.
      */
-    virtual bool addSearch( const Location &location ) = 0;
+    virtual bool addSearch( const Collection &collection ) = 0;
 
     /**
-     * Removes the location with the given @p id from the search.
+     * Removes the collection with the given @p id from the search.
      *
-     * @returns true if the location was removed successfully, false otherwise.
+     * @returns true if the collection was removed successfully, false otherwise.
      */
     virtual bool removeSearch( qint64 id ) = 0;
 
@@ -71,7 +71,7 @@ class DummySearchManager : public AbstractSearchManager
 {
   public:
     DummySearchManager();
-    bool addSearch( const Location &location );
+    bool addSearch( const Collection &collection );
     bool removeSearch( qint64 id );
 };
 

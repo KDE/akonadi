@@ -46,36 +46,36 @@ void CacheCleaner::run()
 void CacheCleaner::cleanCache()
 {
 
-  // cycle over all locations
-  QList<Location> locations = Location::retrieveAll();
-  foreach ( Location location, locations ) {
+  // cycle over all collection
+  QList<Collection> collections = Collection::retrieveAll();
+  foreach ( Collection collection, collections ) {
     // determine active cache policy
-    DataStore::self()->activeCachePolicy( location );
+    DataStore::self()->activeCachePolicy( collection );
 
     // check if there is something to expire at all
-    if ( location.cachePolicyLocalParts() == QLatin1String( "ALL" ) || location.cachePolicyCacheTimeout() < 0
-       || !location.subscribed() )
+    if ( collection.cachePolicyLocalParts() == QLatin1String( "ALL" ) || collection.cachePolicyCacheTimeout() < 0
+       || !collection.subscribed() )
       continue;
-    const int expireTime = qMax( 5, location.cachePolicyCacheTimeout() );
+    const int expireTime = qMax( 5, collection.cachePolicyCacheTimeout() );
 
     // find all expired item parts
     SelectQueryBuilder<Part> qb;
     qb.addTable( PimItem::tableName() );
     qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
-    qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, location.id() );
+    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
     qb.addValueCondition( PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
     qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
     qb.addValueCondition( QString::fromLatin1( "left( %1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
     qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
-    if ( !location.cachePolicyLocalParts().isEmpty() )
-      qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, location.cachePolicyLocalParts().split( QLatin1String(" ") ) );
+    if ( !collection.cachePolicyLocalParts().isEmpty() )
+      qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, collection.cachePolicyLocalParts().split( QLatin1String(" ") ) );
     if ( !qb.exec() )
       continue;
     QList<Part> parts = qb.result();
 
     if ( parts.isEmpty() )
       continue;
-    qDebug() << "found" << parts.count() << "item parts to expire in collection" << location.name();
+    qDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
 
     // clear data field
     for ( int i = 0; i < parts.count(); ++i) {

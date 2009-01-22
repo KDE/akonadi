@@ -37,8 +37,8 @@ class XesamManager : public QObject, public AbstractSearchManager
     XesamManager( QObject* parent = 0 );
     ~XesamManager();
 
-    bool addSearch( const Location &location );
-    bool removeSearch( qint64 location );
+    bool addSearch( const Collection &collection );
+    bool removeSearch( qint64 collection );
 
   private:
     void reloadSearches();

@@ -301,17 +301,17 @@ void Fetch::updateItemAccessTime()
 
 void Fetch::triggerOnDemandFetch()
 {
-  if ( mIsUidFetch || connection()->selectedCollection() <= 0 )
+  if ( mIsUidFetch || connection()->selectedCollectionId() <= 0 )
     return;
-  Location loc = connection()->selectedLocation();
+  Collection col = connection()->selectedCollection();
   // HACK: don't trigger on-demand syncing if the resource is the one triggering it
-  if ( connection()->sessionId() == loc.resource().name().toLatin1() )
+  if ( connection()->sessionId() == col.resource().name().toLatin1() )
     return;
   DataStore *store = connection()->storageBackend();
-  store->activeCachePolicy( loc );
-  if ( !loc.cachePolicySyncOnDemand() )
+  store->activeCachePolicy( col );
+  if ( !col.cachePolicySyncOnDemand() )
     return;
-  store->triggerCollectionSync( loc );
+  store->triggerCollectionSync( col );
 }
 
 QueryBuilder Fetch::buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs )
@@ -343,7 +343,7 @@ void Fetch::buildItemQuery()
 {
   mItemQuery.addTable( PimItem::tableName() );
   mItemQuery.addTable( MimeType::tableName() );
-  mItemQuery.addTable( Location::tableName() );
+  mItemQuery.addTable( Collection::tableName() );
   mItemQuery.addTable( Resource::tableName() );
   // make sure the columns indexes here and in the constants defined above match
   mItemQuery.addColumn( PimItem::idFullColumnName() );
@@ -354,8 +354,8 @@ void Fetch::buildItemQuery()
   mItemQuery.addColumn( PimItem::sizeFullColumnName() );
   mItemQuery.addColumn( PimItem::datetimeFullColumnName() );
   mItemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
-  mItemQuery.addColumnCondition( PimItem::locationIdFullColumnName(), Query::Equals, Location::idFullColumnName() );
-  mItemQuery.addColumnCondition( Location::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
+  mItemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
+  mItemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
   imapSetToQuery( mSet, mIsUidFetch, mItemQuery );
   mItemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 

@@ -40,7 +40,7 @@ bool Expunge::handleLine( const QByteArray& )
 {
   Response response;
 
-  Location location = connection()->selectedLocation();
+  Collection collection = connection()->selectedCollection();
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
@@ -55,7 +55,7 @@ bool Expunge::handleLine( const QByteArray& )
     return true;
   }
 
-  QList<PimItem> items = store->listPimItems( location, flag );
+  QList<PimItem> items = store->listPimItems( collection, flag );
   for ( int i = 0; i < items.count(); ++i ) {
     if ( store->cleanupPimItem( items[ i ] ) ) {
       response.setUntagged();

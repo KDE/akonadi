@@ -44,12 +44,12 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
   if ( pos < 0 )
     return failureResponse( "Invalid syntax" );
 
-  QByteArray collection;
-  pos = ImapParser::parseString( line, collection, pos );
-  Location location = HandlerHelper::collectionFromIdOrName( collection );
-  if ( !location.isValid() )
+  QByteArray collectionByteArray;
+  pos = ImapParser::parseString( line, collectionByteArray, pos );
+  Collection collection = HandlerHelper::collectionFromIdOrName( collectionByteArray );
+  if ( !collection.isValid() )
     return failureResponse( "No such collection" );
-  if ( location.id() == 0 )
+  if ( collection.id() == 0 )
     return failureResponse( "Cannot modify root collection" );
 
   DataStore *db = connection()->storageBackend();
@@ -61,22 +61,22 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
     if ( type == "MIMETYPE" ) {
       QList<QByteArray> mimeTypes;
       pos = ImapParser::parseParenthesizedList( line, mimeTypes, pos );
-      if ( !db->removeMimeTypesForLocation( location.id() ) )
+      if ( !db->removeMimeTypesForCollection( collection.id() ) )
         return failureResponse( "Unable to modify collection mimetypes." );
       QStringList mts;
       foreach ( const QByteArray &ba, mimeTypes )
         mts << QString::fromLatin1(ba);
-      if ( !db->appendMimeTypeForLocation( location.id(), mts ) )
+      if ( !db->appendMimeTypeForCollection( collection.id(), mts ) )
         return failureResponse( "Unable to modify collection mimetypes." );
     } else if ( type == "CACHEPOLICY" ) {
-      pos = HandlerHelper::parseCachePolicy( line, location, pos );
-      db->notificationCollector()->collectionChanged( location );
-      if ( !location.update() )
+      pos = HandlerHelper::parseCachePolicy( line, collection, pos );
+      db->notificationCollector()->collectionChanged( collection );
+      if ( !collection.update() )
         return failureResponse( "Unable to change cache policy" );
     } else if ( type == "NAME" ) {
       QByteArray newName;
       pos = ImapParser::parseString( line, newName, pos );
-      if ( !db->renameLocation( location, location.parentId(), newName ) )
+      if ( !db->renameCollection( collection, collection.parentId(), newName ) )
         return failureResponse( "Unable to rename collection" );
     } else if ( type == "PARENT" ) {
       qint64 newParent;
@@ -84,16 +84,16 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
       pos = ImapParser::parseNumber( line, newParent, &ok, pos );
       if ( !ok )
         return failureResponse( "Invalid syntax" );
-      if ( !db->renameLocation( location, newParent, location.name() ) )
-        return failureResponse( "Unable to reparent colleciton" );
+      if ( !db->renameCollection( collection, newParent, collection.name() ) )
+        return failureResponse( "Unable to reparent collection" );
     } else if ( type == "REMOTEID" ) {
       // FIXME: missing change notification
       QString rid;
       pos = ImapParser::parseString( line, rid, pos );
-      if ( rid == location.remoteId() )
+      if ( rid == collection.remoteId() )
         continue;
-      location.setRemoteId( rid );
-      if ( !location.update() )
+      collection.setRemoteId( rid );
+      if ( !collection.update() )
         return failureResponse( "Unable to change remote identifier" );
     } else if ( type.isEmpty() ) {
       break; // input end
@@ -104,12 +104,12 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
         type = type.mid( 1 );
         removeOnly = true;
       }
-      if ( !db->removeCollectionAttribute( location, type ) )
+      if ( !db->removeCollectionAttribute( collection, type ) )
         return failureResponse( "Unable to remove custom collection attribute" );
       if ( ! removeOnly ) {
         QByteArray value;
         pos = ImapParser::parseString( line, value, pos );
-        if ( !db->addCollectionAttribute( location, type, value ) )
+        if ( !db->addCollectionAttribute( collection, type, value ) )
           return failureResponse( "Unable to add custom collection attribute" );
       }
     }

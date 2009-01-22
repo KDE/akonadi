@@ -205,7 +205,7 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
     }
 }
 
-qint64 Akonadi::AkonadiConnection::selectedCollection( ) const
+qint64 Akonadi::AkonadiConnection::selectedCollectionId( ) const
 {
     return m_selectedConnection;
 }
@@ -215,9 +215,9 @@ void Akonadi::AkonadiConnection::setSelectedCollection( qint64 collection )
     m_selectedConnection = collection;
 }
 
-const Location Akonadi::AkonadiConnection::selectedLocation()
+const Collection Akonadi::AkonadiConnection::selectedCollection()
 {
-  return Location::retrieveById( selectedCollection() );
+  return Collection::retrieveById( selectedCollectionId() );
 }
 
 void Akonadi::AkonadiConnection::addStatusMessage( const QByteArray& msg )

@@ -32,7 +32,7 @@ namespace Akonadi {
     class Response;
     class DataStore;
     class ImapParser;
-    class Location;
+    class Collection;
 
 /**
     An AkonadiConnection represents one connection of a client to the server.
@@ -46,10 +46,10 @@ public:
     void run();
 
     virtual DataStore* storageBackend();
-    qint64 selectedCollection() const;
+    qint64 selectedCollectionId() const;
     void setSelectedCollection( qint64 collection );
 
-    const Location selectedLocation();
+    const Collection selectedCollection();
 
     void addStatusMessage( const QByteArray& msg );
     void flushStatusMessageQueue();

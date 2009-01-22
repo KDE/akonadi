@@ -42,8 +42,8 @@ bool Copy::handleLine(const QByteArray & line)
     return failureResponse( "No items specified" );
 
   ImapParser::parseString( line, tmp, pos );
-  const Location loc = HandlerHelper::collectionFromIdOrName( tmp );
-  if ( !loc.isValid() )
+  const Collection col = HandlerHelper::collectionFromIdOrName( tmp );
+  if ( !col.isValid() )
     return failureResponse( "No valid target specified" );
 
   SelectQueryBuilder<PimItem> qb;
@@ -56,7 +56,7 @@ bool Copy::handleLine(const QByteArray & line)
   Transaction transaction( store );
 
   foreach ( const PimItem &item, items ) {
-    if ( !copyItem( item, loc ) )
+    if ( !copyItem( item, col ) )
       return failureResponse( "Unable to copy item" );
   }
 
@@ -66,7 +66,7 @@ bool Copy::handleLine(const QByteArray & line)
   return successResponse( "COPY complete" );
 }
 
-bool Copy::copyItem(const PimItem & item, const Location & target)
+bool Copy::copyItem(const PimItem & item, const Collection & target)
 {
   DataStore *store = connection()->storageBackend();
   PimItem newItem = item;
@@ -75,7 +75,7 @@ bool Copy::copyItem(const PimItem & item, const Location & target)
   newItem.setSize( 0 );
   newItem.setDatetime( QDateTime::currentDateTime() );
   newItem.setRemoteId( QByteArray() );
-  newItem.setLocationId( target.id() );
+  newItem.setCollectionId( target.id() );
   Part::List parts;
   foreach ( const Part &part, item.parts() ) {
     Part newPart( part );

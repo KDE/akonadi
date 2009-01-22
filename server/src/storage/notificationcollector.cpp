@@ -39,24 +39,24 @@ Akonadi::NotificationCollector::~NotificationCollector()
 }
 
 void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
-                                                const Location &collection,
+                                                const Collection &collection,
                                                 const QString & mimeType,
                                                 const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Add, item, collection, Location(), mimeType, resource );
+  itemNotification( NotificationMessage::Add, item, collection, Collection(), mimeType, resource );
 }
 
 void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
-                                                  const Location &collection,
+                                                  const Collection &collection,
                                                   const QString & mimeType,
                                                   const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Modify, item, collection, Location(), mimeType, resource );
+  itemNotification( NotificationMessage::Modify, item, collection, Collection(), mimeType, resource );
 }
 
 void Akonadi::NotificationCollector::itemMoved( const PimItem &item,
-                                                const Location &collectionSrc,
-                                                const Location &collectionDest,
+                                                const Collection &collectionSrc,
+                                                const Collection &collectionDest,
                                                 const QString &mimeType,
                                                 const QByteArray &resource )
 {
@@ -65,36 +65,36 @@ void Akonadi::NotificationCollector::itemMoved( const PimItem &item,
 
 
 void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
-                                                  const Location &collection,
+                                                  const Collection &collection,
                                                   const QString & mimeType,
                                                   const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Remove, item, collection, Location(), mimeType, resource );
+  itemNotification( NotificationMessage::Remove, item, collection, Collection(), mimeType, resource );
 }
 
-void NotificationCollector::itemLinked(const PimItem & item, const Location & collection)
+void NotificationCollector::itemLinked(const PimItem & item, const Collection & collection)
 {
-  itemNotification( NotificationMessage::Link, item, collection, Location(), QString(), QByteArray() );
+  itemNotification( NotificationMessage::Link, item, collection, Collection(), QString(), QByteArray() );
 }
 
-void NotificationCollector::itemUnlinked(const PimItem & item, const Location & collection)
+void NotificationCollector::itemUnlinked(const PimItem & item, const Collection & collection)
 {
-  itemNotification( NotificationMessage::Unlink, item, collection, Location(), QString(), QByteArray() );
+  itemNotification( NotificationMessage::Unlink, item, collection, Collection(), QString(), QByteArray() );
 }
 
-void Akonadi::NotificationCollector::collectionAdded( const Location &collection,
+void Akonadi::NotificationCollector::collectionAdded( const Collection &collection,
                                                       const QByteArray &resource )
 {
   collectionNotification( NotificationMessage::Add, collection, resource );
 }
 
-void Akonadi::NotificationCollector::collectionChanged( const Location &collection,
+void Akonadi::NotificationCollector::collectionChanged( const Collection &collection,
                                                         const QByteArray &resource )
 {
   collectionNotification( NotificationMessage::Modify, collection, resource );
 }
 
-void Akonadi::NotificationCollector::collectionRemoved( const Location &collection,
+void Akonadi::NotificationCollector::collectionRemoved( const Collection &collection,
                                                         const QByteArray &resource )
 {
   collectionNotification( NotificationMessage::Remove, collection, resource );
@@ -123,8 +123,8 @@ void NotificationCollector::setSessionId(const QByteArray &sessionId)
 
 void NotificationCollector::itemNotification( NotificationMessage::Operation op,
                                               const PimItem & item,
-                                              const Location & collection,
-                                              const Location & collectionDest,
+                                              const Collection & collection,
+                                              const Collection & collectionDest,
                                               const QString & mimeType,
                                               const QByteArray & resource)
 {
@@ -135,10 +135,10 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
   msg.setUid( item.id() );
   msg.setRemoteId( QString::fromUtf8( item.remoteId() ) );
 
-  Location loc = collection;
-  if ( !loc.isValid() )
-    loc = item.location();
-  msg.setParentCollection( loc.id() );
+  Collection col = collection;
+  if ( !col.isValid() )
+    col = item.collection();
+  msg.setParentCollection( col.id() );
   // will be valid if it is a move message
   msg.setParentDestCollection( collectionDest.id() );
   QString mt = mimeType;
@@ -147,13 +147,13 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
   msg.setMimeType( mt );
   QByteArray res = resource;
   if ( res.isEmpty() )
-    res = loc.resource().name().toLatin1();
+    res = col.resource().name().toLatin1();
   msg.setResource( res );
   dispatchNotification( msg );
 }
 
 void NotificationCollector::collectionNotification( NotificationMessage::Operation op,
-                                                    const Location & collection,
+                                                    const Collection & collection,
                                                     const QByteArray & resource)
 {
   NotificationMessage msg;

@@ -129,7 +129,7 @@ bool Akonadi::DataStore::init()
   MimeType::enableCache( true );
   Flag::enableCache( true );
   Resource::enableCache( true );
-  Location::enableCache( true );
+  Collection::enableCache( true );
 
   return true;
 }
@@ -176,7 +176,7 @@ bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
 }
 
 bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags,
-                                 bool checkIfExists, const Location &loc )
+                                 bool checkIfExists, const Collection &col )
 {
   if ( !item.isValid() )
     return false;
@@ -190,12 +190,12 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags,
     }
   }
 
-  mNotificationCollector->itemChanged( item, loc );
+  mNotificationCollector->itemChanged( item, col );
   return true;
 }
 
 bool DataStore::appendItemFlags( const PimItem &item, const QList<QByteArray> &flags,
-                                 bool checkIfExists, const Location &loc )
+                                 bool checkIfExists, const Collection &col )
 {
   Flag::List list;
   foreach ( const QByteArray &f, flags ) {
@@ -207,7 +207,7 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<QByteArray> &f
     }
     list << flag;
   }
-  return appendItemFlags( item, list, checkIfExists, loc );
+  return appendItemFlags( item, list, checkIfExists, col );
 }
 
 bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
@@ -234,71 +234,71 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
   return true;
 }
 
-/* --- Location ------------------------------------------------------ */
-bool DataStore::appendLocation( Location &location )
+/* --- Collection ------------------------------------------------------ */
+bool DataStore::appendCollection( Collection &collection )
 {
   // no need to check for already existing collection with the same name,
   // a unique index on parent + name prevents that in the database
-  if ( !location.insert() )
+  if ( !collection.insert() )
     return false;
 
-  mNotificationCollector->collectionAdded( location );
+  mNotificationCollector->collectionAdded( collection );
   return true;
 }
 
-bool Akonadi::DataStore::cleanupLocation(Location & location)
+bool Akonadi::DataStore::cleanupCollection(Collection &collection)
 {
   // delete the content
-  PimItem::List items = location.items();
+  PimItem::List items = collection.items();
   foreach ( PimItem item, items )
     cleanupPimItem( item );
 
-  // delete location mimetypes
-  removeMimeTypesForLocation( location.id() );
-  Location::clearPimItems( location.id() );
+  // delete collection mimetypes
+  removeMimeTypesForCollection( collection.id() );
+  Collection::clearPimItems( collection.id() );
 
   // delete attributes
-  foreach ( LocationAttribute attr, location.attributes() )
+  foreach ( CollectionAttribute attr, collection.attributes() )
     if ( !attr.remove() )
       return false;
 
-  // delete the location itself
-  mNotificationCollector->collectionRemoved( location );
-  return location.remove();
+  // delete the collection itself
+  mNotificationCollector->collectionRemoved( collection );
+  return collection.remove();
 }
 
-bool Akonadi::DataStore::renameLocation( Location & location, qint64 newParent, const QByteArray & newName)
+bool Akonadi::DataStore::renameCollection( Collection & collection, qint64 newParent, const QByteArray & newName)
 {
-  if ( location.name() == newName && location.parentId() == newParent )
+  if ( collection.name() == newName && collection.parentId() == newParent )
     return true;
 
   if ( !m_dbOpened )
     return false;
 
   if ( newParent > 0 ) {
-    Location parent = Location::retrieveById( newParent );
+    Collection parent = Collection::retrieveById( newParent );
     if ( !parent.isValid() )
       return false;
   }
 
-  SelectQueryBuilder<Location> qb;
-  qb.addValueCondition( Location::parentIdColumn(), Query::Equals, newParent );
-  qb.addValueCondition( Location::nameColumn(), Query::Equals, newName );
+  SelectQueryBuilder<Collection> qb;
+  qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, newParent );
+  qb.addValueCondition( Collection::nameColumn(), Query::Equals, newName );
   if ( !qb.exec() || qb.result().count() > 0 )
     return false;
 
-  location.setName( newName );
-  location.setParentId( newParent );
+  collection.setName( newName );
+  collection.setParentId( newParent );
 
-  if ( !location.update() )
+  if ( !collection.update() )
     return false;
 
-  mNotificationCollector->collectionChanged( location );
+  mNotificationCollector->collectionChanged( collection );
   return true;
 }
 
 
-bool DataStore::appendMimeTypeForLocation( qint64 locationId, const QStringList & mimeTypes )
+bool DataStore::appendMimeTypeForCollection( qint64 collectionId, const QStringList & mimeTypes )
 {
   if ( mimeTypes.isEmpty() )
     return true;
@@ -311,7 +311,7 @@ bool DataStore::appendMimeTypeForLocation( qint64 locationId, const QStringList 
   foreach ( const MimeType &mt, qb.result() ) {
     // unique index on n:m relation prevents duplicates, ie. this will fail
     // if this mimetype is already set
-    if ( !Location::addMimeType( locationId, mt.id() ) )
+    if ( !Collection::addMimeType( collectionId, mt.id() ) )
       return false;
     missingMimeTypes.removeAll( mt.name() );
   }
@@ -321,41 +321,41 @@ bool DataStore::appendMimeTypeForLocation( qint64 locationId, const QStringList 
     qint64 mimeTypeId;
     if ( !appendMimeType( mtName, &mimeTypeId ) )
       return false;
-    if ( !Location::addMimeType( locationId, mimeTypeId ) )
+    if ( !Collection::addMimeType( collectionId, mimeTypeId ) )
       return false;
   }
 
   return true;
 }
 
-bool Akonadi::DataStore::removeMimeTypesForLocation(qint64 locationId)
+bool Akonadi::DataStore::removeMimeTypesForCollection(qint64 collectionId)
 {
-  return Location::clearMimeTypes( locationId );
+  return Collection::clearMimeTypes( collectionId );
 }
 
 
-void DataStore::activeCachePolicy(Location & loc)
+void DataStore::activeCachePolicy(Collection & col)
 {
-  if ( !loc.cachePolicyInherit() )
+  if ( !col.cachePolicyInherit() )
     return;
 
-  Location parent = loc.parent();
+  Collection parent = col.parent();
   while ( parent.isValid() ) {
     if ( !parent.cachePolicyInherit() ) {
-      loc.setCachePolicyCheckInterval( parent.cachePolicyCheckInterval() );
-      loc.setCachePolicyCacheTimeout( parent.cachePolicyCacheTimeout() );
-      loc.setCachePolicySyncOnDemand( parent.cachePolicySyncOnDemand() );
-      loc.setCachePolicyLocalParts( parent.cachePolicyLocalParts() );
+      col.setCachePolicyCheckInterval( parent.cachePolicyCheckInterval() );
+      col.setCachePolicyCacheTimeout( parent.cachePolicyCacheTimeout() );
+      col.setCachePolicySyncOnDemand( parent.cachePolicySyncOnDemand() );
+      col.setCachePolicyLocalParts( parent.cachePolicyLocalParts() );
       return;
     }
     parent = parent.parent();
   }
 
   // ### system default
-  loc.setCachePolicyCheckInterval( -1 );
-  loc.setCachePolicyCacheTimeout( -1 );
-  loc.setCachePolicySyncOnDemand( false );
-  loc.setCachePolicyLocalParts( QLatin1String("ALL") );
+  col.setCachePolicyCheckInterval( -1 );
+  col.setCachePolicyCacheTimeout( -1 );
+  col.setCachePolicySyncOnDemand( false );
+  col.setCachePolicyLocalParts( QLatin1String("ALL") );
 }
 
 /* --- MimeType ------------------------------------------------------ */
@@ -376,13 +376,13 @@ bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
 /* --- PimItem ------------------------------------------------------- */
 bool DataStore::appendPimItem( const QList<Part> & parts,
                                const MimeType & mimetype,
-                               const Location & location,
+                               const Collection & collection,
                                const QDateTime & dateTime,
                                const QByteArray & remote_id,
                                PimItem &pimItem )
 {
   pimItem.setMimeTypeId( mimetype.id() );
-  pimItem.setLocationId( location.id() );
+  pimItem.setCollectionId( collection.id() );
   if ( dateTime.isValid() )
     pimItem.setDatetime( dateTime );
   if ( remote_id.isEmpty() ) {
@@ -409,14 +409,14 @@ bool DataStore::appendPimItem( const QList<Part> & parts,
     }
   }
 
-  mNotificationCollector->itemAdded( pimItem, location, mimetype.name() );
+  mNotificationCollector->itemAdded( pimItem, collection, mimetype.name() );
   return true;
 }
 
 bool Akonadi::DataStore::updatePimItem(PimItem & pimItem)
 {
   pimItem.setAtime( QDateTime::currentDateTime() );
-  if ( mSessionId != pimItem.location().resource().name().toLatin1() )
+  if ( mSessionId != pimItem.collection().resource().name().toLatin1() )
     pimItem.setDirty( true );
   if ( !pimItem.update() )
     return false;
@@ -425,21 +425,21 @@ bool Akonadi::DataStore::updatePimItem(PimItem & pimItem)
   return true;
 }
 
-bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const Location & destination)
+bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const Collection & destination)
 {
   if ( !pimItem.isValid() || !destination.isValid() )
     return false;
-  if ( pimItem.locationId() == destination.id() )
+  if ( pimItem.collectionId() == destination.id() )
     return true;
 
-  Location source = pimItem.location();
+  Collection source = pimItem.collection();
   if ( !source.isValid() )
     return false;
   mNotificationCollector->collectionChanged( source );
 
-  pimItem.setLocationId( destination.id() );
+  pimItem.setCollectionId( destination.id() );
   pimItem.setAtime( QDateTime::currentDateTime() );
-  if ( mSessionId != pimItem.location().resource().name().toLatin1() )
+  if ( mSessionId != pimItem.collection().resource().name().toLatin1() )
     pimItem.setDirty( true );
   if ( !pimItem.update() )
     return false;
@@ -481,15 +481,15 @@ bool DataStore::cleanupPimItem( const PimItem &item )
   if ( !PimItem::remove( PimItem::idColumn(), item.id() ) )
     return false;
 
-  if ( !Entity::clearRelation<LocationPimItemRelation>( item.id(), Entity::Right ) )
+  if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) )
     return false;
 
   return true;
 }
 
-bool DataStore::cleanupPimItems( const Location &location )
+bool DataStore::cleanupPimItems( const Collection &collection )
 {
-  if ( !m_dbOpened || !location.isValid() )
+  if ( !m_dbOpened || !collection.isValid() )
     return false;
 
   QueryBuilder qb( QueryBuilder::Select );
@@ -498,7 +498,7 @@ bool DataStore::cleanupPimItems( const Location &location )
   qb.addTable( PimItem::tableName() );
   qb.addColumn( PimItemFlagRelation::leftFullColumnName() );
   qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, QLatin1String("\\Deleted") );
-  qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, location.id() );
+  qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
   qb.addColumnCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, Flag::idFullColumnName() );
 
   if ( !qb.exec() )
@@ -559,14 +559,14 @@ void Akonadi::DataStore::retrieveDataFromResource( qint64 uid, const QByteArray&
   }
 }
 
-void DataStore::triggerCollectionSync( const Location &location )
+void DataStore::triggerCollectionSync( const Collection &collection )
 {
-  org::freedesktop::Akonadi::Resource *interface = resourceInterface( location.resource().name() );
+  org::freedesktop::Akonadi::Resource *interface = resourceInterface( collection.resource().name() );
   if ( interface )
-    interface->synchronizeCollection( location.id() );
+    interface->synchronizeCollection( collection.id() );
 }
 
-QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &flag )
+QList<PimItem> DataStore::listPimItems( const Collection & collection, const Flag &flag )
 {
   if ( !m_dbOpened )
     return QList<PimItem>();
@@ -576,8 +576,8 @@ QList<PimItem> DataStore::listPimItems( const Location & location, const Flag &f
   qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
   qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id() );
 
-  if ( location.isValid() )
-    qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, location.id() );
+  if ( collection.isValid() )
+    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
 
    if ( !qb.exec() )
     return QList<PimItem>();
@@ -607,45 +607,45 @@ qint64 DataStore::highestPimItemId() const
 }
 
 
-bool DataStore::addCollectionAttribute(const Location & loc, const QByteArray & key, const QByteArray & value)
+bool DataStore::addCollectionAttribute(const Collection & col, const QByteArray & key, const QByteArray & value)
 {
-  SelectQueryBuilder<LocationAttribute> qb;
-  qb.addValueCondition( LocationAttribute::locationIdColumn(), Query::Equals, loc.id() );
-  qb.addValueCondition( LocationAttribute::typeColumn(), Query::Equals, key );
+  SelectQueryBuilder<CollectionAttribute> qb;
+  qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, col.id() );
+  qb.addValueCondition( CollectionAttribute::typeColumn(), Query::Equals, key );
   if ( !qb.exec() )
     return false;
 
   if ( qb.result().count() > 0 ) {
-    qDebug() << "Attribute" << key << "already exists for location" << loc.id();
+    qDebug() << "Attribute" << key << "already exists for collection" << col.id();
     return false;
   }
 
-  LocationAttribute attr;
-  attr.setLocationId( loc.id() );
+  CollectionAttribute attr;
+  attr.setCollectionId( col.id() );
   attr.setType( key );
   attr.setValue( value );
 
   if ( !attr.insert() )
     return false;
 
-  mNotificationCollector->collectionChanged( loc );
+  mNotificationCollector->collectionChanged( col );
   return true;
 }
 
-bool Akonadi::DataStore::removeCollectionAttribute(const Location & loc, const QByteArray & key)
+bool Akonadi::DataStore::removeCollectionAttribute(const Collection & col, const QByteArray & key)
 {
-  SelectQueryBuilder<LocationAttribute> qb;
-  qb.addValueCondition( LocationAttribute::locationIdColumn(), Query::Equals, loc.id() );
-  qb.addValueCondition( LocationAttribute::typeColumn(), Query::Equals, key );
+  SelectQueryBuilder<CollectionAttribute> qb;
+  qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, col.id() );
+  qb.addValueCondition( CollectionAttribute::typeColumn(), Query::Equals, key );
   if ( !qb.exec() )
     return false;
 
-  foreach ( LocationAttribute attr, qb.result() ) {
+  foreach ( CollectionAttribute attr, qb.result() ) {
     if ( !attr.remove() )
       return false;
   }
 
-  mNotificationCollector->collectionChanged( loc );
+  mNotificationCollector->collectionChanged( col );
   return true;
 }
 

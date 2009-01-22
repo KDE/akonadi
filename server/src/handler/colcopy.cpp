@@ -34,12 +34,12 @@ bool ColCopy::handleLine(const QByteArray & line)
   pos = ImapParser::parseString( line, tmp, pos ); // skip command
 
   pos = ImapParser::parseString( line, tmp, pos );
-  const Location source = HandlerHelper::collectionFromIdOrName( tmp );
+  const Collection source = HandlerHelper::collectionFromIdOrName( tmp );
   if ( !source.isValid() )
     return failureResponse( "No valid source specified" );
 
   ImapParser::parseString( line, tmp, pos );
-  const Location target = HandlerHelper::collectionFromIdOrName( tmp );
+  const Collection target = HandlerHelper::collectionFromIdOrName( tmp );
   if ( !target.isValid() )
     return failureResponse( "No valid target specified" );
 
@@ -55,38 +55,38 @@ bool ColCopy::handleLine(const QByteArray & line)
   return successResponse( "COLCOPY complete" );
 }
 
-bool ColCopy::copyCollection(const Location & source, const Location & target)
+bool ColCopy::copyCollection(const Collection & source, const Collection & target)
 {
   // copy the source collection
-  Location loc = source;
-  loc.setParentId( target.id() );
-  loc.setResourceId( target.resourceId() );
+  Collection col = source;
+  col.setParentId( target.id() );
+  col.setResourceId( target.resourceId() );
   DataStore *db = connection()->storageBackend();
-  if ( !db->appendLocation( loc ) )
+  if ( !db->appendCollection( col ) )
     return false;
 
   foreach ( const MimeType &mt, source.mimeTypes() ) {
-    if ( !loc.addMimeType( mt ) )
+    if ( !col.addMimeType( mt ) )
       return false;
   }
 
-  foreach ( const LocationAttribute &attr, source.attributes() ) {
-    LocationAttribute newAttr = attr;
+  foreach ( const CollectionAttribute &attr, source.attributes() ) {
+    CollectionAttribute newAttr = attr;
     newAttr.setId( -1 );
-    newAttr.setLocationId( loc.id() );
+    newAttr.setCollectionId( col.id() );
     if ( !newAttr.insert() )
       return false;
   }
 
   // copy sub-collections
-  foreach ( const Location &child, source.children() ) {
-    if ( !copyCollection( child, loc ) )
+  foreach ( const Collection &child, source.children() ) {
+    if ( !copyCollection( child, col ) )
       return false;
   }
 
   // copy items
   foreach ( const PimItem &item, source.items() ) {
-    if ( !copyItem( item, loc ) )
+    if ( !copyItem( item, col ) )
       return false;
   }
 

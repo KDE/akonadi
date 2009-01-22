@@ -27,48 +27,48 @@ using namespace Akonadi;
 
 QByteArray Akonadi::HandlerHelper::normalizeCollectionName(const QByteArray &name)
 {
-  QByteArray collection = name;
-  if ( collection.startsWith( '/' )  )
-    collection = collection.right( collection.length() - 1 );
-  if ( collection.endsWith( '/' ) )
-    collection = collection.left( collection.length() - 1 );
-  return collection;
+  QByteArray collectionByteArray = name;
+  if ( collectionByteArray.startsWith( '/' )  )
+    collectionByteArray = collectionByteArray.right( collectionByteArray.length() - 1 );
+  if ( collectionByteArray.endsWith( '/' ) )
+    collectionByteArray = collectionByteArray.left( collectionByteArray.length() - 1 );
+  return collectionByteArray;
 }
 
-Location HandlerHelper::collectionFromIdOrName(const QByteArray & id)
+Collection HandlerHelper::collectionFromIdOrName(const QByteArray & id)
 {
   // id is a number
   bool ok = false;
   qint64 collectionId = id.toLongLong( &ok );
   if ( ok )
-    return Location::retrieveById( collectionId );
+    return Collection::retrieveById( collectionId );
 
   // id is a path
   QString path = QString::fromUtf8( normalizeCollectionName( id ) ); // ### should be UTF-7 for real IMAP compatibility
 
   const QStringList pathParts = path.split( QLatin1Char('/') );
-  Location loc;
+  Collection col;
   foreach ( const QString &part, pathParts ) {
-    SelectQueryBuilder<Location> qb;
-    qb.addValueCondition( Location::nameColumn(), Query::Equals, part );
-    if ( loc.isValid() )
-      qb.addValueCondition( Location::parentIdColumn(), Query::Equals, loc.id() );
+    SelectQueryBuilder<Collection> qb;
+    qb.addValueCondition( Collection::nameColumn(), Query::Equals, part );
+    if ( col.isValid() )
+      qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, col.id() );
     else
-      qb.addValueCondition( Location::parentIdColumn(), Query::Equals, 0 );
+      qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, 0 );
     if ( !qb.exec() )
-      return Location();
-    Location::List list = qb.result();
+      return Collection();
+    Collection::List list = qb.result();
     if ( list.count() != 1 )
-      return Location();
-    loc = list.first();
+      return Collection();
+    col = list.first();
   }
-  return loc;
+  return col;
 }
 
-QString HandlerHelper::pathForCollection(const Location & loc)
+QString HandlerHelper::pathForCollection(const Collection & col)
 {
   QStringList parts;
-  Location current = loc;
+  Collection current = col;
   while ( current.isValid() ) {
     parts.prepend( QString::fromUtf8( current.name() ) );
     current = current.parent();
@@ -76,23 +76,23 @@ QString HandlerHelper::pathForCollection(const Location & loc)
   return parts.join( QLatin1String("/") );
 }
 
-int HandlerHelper::itemCount(const Location & loc)
+int HandlerHelper::itemCount(const Collection & col)
 {
   CountQueryBuilder qb;
   qb.addTable( PimItem::tableName() );
-  qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, loc.id() );
+  qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
   if ( !qb.exec() )
     return -1;
   return qb.result();
 }
 
-int HandlerHelper::itemWithFlagCount(const Location & loc, const QString & flag)
+int HandlerHelper::itemWithFlagCount(const Collection & col, const QString & flag)
 {
   CountQueryBuilder qb;
   qb.addTable( PimItem::tableName() );
   qb.addTable( Flag::tableName() );
   qb.addTable( PimItemFlagRelation::tableName() );
-  qb.addValueCondition( PimItem::locationIdFullColumnName(), Query::Equals, loc.id() );
+  qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, col.id() );
   qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
   qb.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
   qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, flag );
@@ -101,17 +101,17 @@ int HandlerHelper::itemWithFlagCount(const Location & loc, const QString & flag)
   return qb.result();
 }
 
-int HandlerHelper::itemWithoutFlagCount(const Location & loc, const QString & flag)
+int HandlerHelper::itemWithoutFlagCount(const Collection & col, const QString & flag)
 {
   // FIXME optimize me: use only one query or reuse previously done count
-  const int flagCount = itemWithFlagCount( loc, flag );
-  const int totalCount = itemCount( loc );
+  const int flagCount = itemWithFlagCount( col, flag );
+  const int totalCount = itemCount( col );
   if ( totalCount < 0 || flagCount < 0 )
     return -1;
   return totalCount - flagCount;
 }
 
-int HandlerHelper::parseCachePolicy(const QByteArray & data, Location & loc, int start)
+int HandlerHelper::parseCachePolicy(const QByteArray & data, Collection & col, int start)
 {
   QList<QByteArray> params;
   int end = Akonadi::ImapParser::parseParenthesizedList( data, params, start );
@@ -120,55 +120,55 @@ int HandlerHelper::parseCachePolicy(const QByteArray & data, Location & loc, int
     const QByteArray value = params[i + 1];
 
     if ( key == "INHERIT" )
-      loc.setCachePolicyInherit( value == "true" );
+      col.setCachePolicyInherit( value == "true" );
     else if ( key == "INTERVAL" )
-      loc.setCachePolicyCheckInterval( value.toInt() );
+      col.setCachePolicyCheckInterval( value.toInt() );
     else if ( key == "CACHETIMEOUT" )
-      loc.setCachePolicyCacheTimeout( value.toInt() );
+      col.setCachePolicyCacheTimeout( value.toInt() );
     else if ( key == "SYNCONDEMAND" )
-      loc.setCachePolicySyncOnDemand( value == "true" );
+      col.setCachePolicySyncOnDemand( value == "true" );
     else if ( key == "LOCALPARTS" ) {
       QList<QByteArray> tmp;
       QStringList parts;
       Akonadi::ImapParser::parseParenthesizedList( value, tmp );
       foreach ( const QByteArray &ba, tmp )
         parts << QString::fromLatin1( ba );
-      loc.setCachePolicyLocalParts( parts.join( QLatin1String(" ") ) );
+      col.setCachePolicyLocalParts( parts.join( QLatin1String(" ") ) );
     }
   }
   return end;
 }
 
-QByteArray HandlerHelper::cachePolicyToByteArray(const Location & loc)
+QByteArray HandlerHelper::cachePolicyToByteArray(const Collection & col)
 {
   QByteArray rv = "CACHEPOLICY (";
-  rv += "INHERIT " + ( loc.cachePolicyInherit() ? QByteArray("true") : QByteArray("false") );
-  rv += " INTERVAL " + QByteArray::number( loc.cachePolicyCheckInterval() );
-  rv += " CACHETIMEOUT " + QByteArray::number( loc.cachePolicyCacheTimeout() );
-  rv += " SYNCONDEMAND " + ( loc.cachePolicySyncOnDemand() ? QByteArray("true") : QByteArray("false") );
-  rv += " LOCALPARTS (" + loc.cachePolicyLocalParts().toLatin1() + ')';
+  rv += "INHERIT " + ( col.cachePolicyInherit() ? QByteArray("true") : QByteArray("false") );
+  rv += " INTERVAL " + QByteArray::number( col.cachePolicyCheckInterval() );
+  rv += " CACHETIMEOUT " + QByteArray::number( col.cachePolicyCacheTimeout() );
+  rv += " SYNCONDEMAND " + ( col.cachePolicySyncOnDemand() ? QByteArray("true") : QByteArray("false") );
+  rv += " LOCALPARTS (" + col.cachePolicyLocalParts().toLatin1() + ')';
   rv += ')';
   return rv;
 }
 
-QByteArray HandlerHelper::collectionToByteArray( const Location & loc, bool hidden )
+QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hidden )
 {
-  QByteArray b = QByteArray::number( loc.id() ) + ' '
-               + QByteArray::number( loc.parentId() ) + " (";
+  QByteArray b = QByteArray::number( col.id() ) + ' '
+               + QByteArray::number( col.parentId() ) + " (";
 
   // FIXME: escape " and "\"
-  b += "NAME \"" + loc.name() + "\" ";
+  b += "NAME \"" + col.name() + "\" ";
   if ( hidden )
     b+= "MIMETYPE () ";
   else
-    b += "MIMETYPE (" + MimeType::joinByName( loc.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
-  b += "REMOTEID \"" + loc.remoteId().toUtf8() + "\" ";
-  b += "RESOURCE \"" + loc.resource().name().toUtf8() + "\" ";
+    b += "MIMETYPE (" + MimeType::joinByName( col.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
+  b += "REMOTEID \"" + col.remoteId().toUtf8() + "\" ";
+  b += "RESOURCE \"" + col.resource().name().toUtf8() + "\" ";
 
-  b += HandlerHelper::cachePolicyToByteArray( loc ) + ' ';
+  b += HandlerHelper::cachePolicyToByteArray( col ) + ' ';
 
-  LocationAttribute::List attrs = loc.attributes();
-  foreach ( const LocationAttribute &attr, attrs )
+  CollectionAttribute::List attrs = col.attributes();
+  foreach ( const CollectionAttribute &attr, attrs )
     b += attr.type() + ' ' + ImapParser::quote( attr.value() );
   b+= ')';
 

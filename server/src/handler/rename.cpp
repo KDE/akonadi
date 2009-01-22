@@ -54,24 +54,24 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = HandlerHelper::collectionFromIdOrName( newName );
-  if ( location.isValid() )
+  Collection collection = HandlerHelper::collectionFromIdOrName( newName );
+  if ( collection.isValid() )
     return failureResponse( "Collection already exists" );
-  location = HandlerHelper::collectionFromIdOrName( oldName );
-  if ( !location.isValid() )
+  collection = HandlerHelper::collectionFromIdOrName( oldName );
+  if ( !collection.isValid() )
     return failureResponse( "No such collection" );
 
   QByteArray parentPath;
   int index = newName.lastIndexOf( '/' );
   if ( index > 0 )
     parentPath = newName.mid( index + 1 );
-  Location parent = HandlerHelper::collectionFromIdOrName( parentPath );
+  Collection parent = HandlerHelper::collectionFromIdOrName( parentPath );
   newName = newName.left( index );
   qint64 parentId = 0;
   if ( parent.isValid() )
     parentId = parent.id();
 
-  if ( !db->renameLocation( location, parentId, newName ) )
+  if ( !db->renameCollection( collection, parentId, newName ) )
     return failureResponse( "Failed to rename collection." );
 
   if ( !transaction.commit() )

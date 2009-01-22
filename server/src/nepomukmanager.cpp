@@ -65,17 +65,17 @@ NepomukManager::~NepomukManager()
   stopSearches();
 }
 
-bool NepomukManager::addSearch( const Location &location )
+bool NepomukManager::addSearch( const Collection &collection )
 {
   if ( !mSearchInterface->isValid() || !mValid )
     return false;
 
   QMutexLocker lock( &mMutex );
-  if ( location.remoteId().isEmpty() )
+  if ( collection.remoteId().isEmpty() )
     return false;
 
   // TODO: search statement is stored in remoteId currently, port to attributes!
-  const QString searchStatement = location.remoteId();
+  const QString searchStatement = collection.remoteId();
 
   const QString queryPath = mSearchInterface->createQuery( searchStatement );
   org::freedesktop::Akonadi::SearchQuery *query =
@@ -92,8 +92,8 @@ bool NepomukManager::addSearch( const Location &location )
   connect( query, SIGNAL( hitsRemoved( const QStringList& ) ),
            this, SLOT( hitsRemoved( const QStringList& ) ) );
 
-  mQueryMap.insert( query, location.id() );
-  mQueryInvMap.insert( location.id(), query ); // needed for fast lookup in removeSearch()
+  mQueryMap.insert( query, collection.id() );
+  mQueryInvMap.insert( collection.id(), query ); // needed for fast lookup in removeSearch()
 
   // load all hits that are currently available...
   const QString iteratorPath = query->allHits();
@@ -111,7 +111,7 @@ bool NepomukManager::addSearch( const Location &location )
       continue;
     }
 
-    Entity::addToRelation<LocationPimItemRelation>( location.id(), itemId );
+    Entity::addToRelation<CollectionPimItemRelation>( collection.id(), itemId );
   }
 
   iterator->close();
@@ -119,14 +119,14 @@ bool NepomukManager::addSearch( const Location &location )
   // ... and start the change monitoring for future changes
   query->start();
 
-  qDebug( "--------------- added search for loc %lld", location.id() );
+  qDebug( "--------------- added search for col %lld", collection.id() );
 
   return true;
 }
 
-bool NepomukManager::removeSearch( qint64 locationId )
+bool NepomukManager::removeSearch( qint64 collectionId )
 {
-  org::freedesktop::Akonadi::SearchQuery *query = mQueryInvMap.value( locationId );
+  org::freedesktop::Akonadi::SearchQuery *query = mQueryInvMap.value( collectionId );
   if ( !query || !query->isValid() ) {
     qWarning() << "Nepomuk QueryServer: Query could not be removed!";
   } else {
@@ -135,10 +135,10 @@ bool NepomukManager::removeSearch( qint64 locationId )
   }
 
   // cleanup mappings
-  mQueryInvMap.remove( locationId );
+  mQueryInvMap.remove( collectionId );
   mQueryMap.remove( query );
 
-  qDebug( "--------------- removed search for loc %lld", locationId );
+  qDebug( "--------------- removed search for col %lld", collectionId );
 
   return true;
 }
@@ -151,9 +151,9 @@ void NepomukManager::reloadSearches()
     return;
   }
 
-  const Location::List locations = resource.locations();
-  Q_FOREACH ( const Location &location, locations ) {
-    addSearch( location );
+  const Collection::List collections = resource.collections();
+  Q_FOREACH ( const Collection &collection, collections ) {
+    addSearch( collection );
   }
 }
 
@@ -165,9 +165,9 @@ void NepomukManager::stopSearches()
     return;
   }
 
-  const Location::List locations = resource.locations();
-  Q_FOREACH ( const Location &location, locations ) {
-    removeSearch( location.id() );
+  const Collection::List collections = resource.collections();
+  Q_FOREACH ( const Collection &collection, collections ) {
+    removeSearch( collection.id() );
   }
 }
 
@@ -184,7 +184,7 @@ void NepomukManager::hitsAdded( const QStringList &hits )
   qDebug( "--------------- hits added 2" );
 
   mMutex.lock();
-  qint64 locationId = mQueryMap.value( query );
+  qint64 collectionId = mQueryMap.value( query );
   mMutex.unlock();
 
   Q_FOREACH( const QString &uri, hits ) {
@@ -195,7 +195,7 @@ void NepomukManager::hitsAdded( const QStringList &hits )
       continue;
     }
 
-    Entity::addToRelation<LocationPimItemRelation>( locationId, itemId );
+    Entity::addToRelation<CollectionPimItemRelation>( collectionId, itemId );
   }
 }
 
@@ -212,7 +212,7 @@ void NepomukManager::hitsRemoved( const QStringList &hits )
   qDebug( "--------------- hits removed 2" );
 
   mMutex.lock();
-  qint64 locationId = mQueryMap.value( query );
+  qint64 collectionId = mQueryMap.value( query );
   mMutex.unlock();
 
   Q_FOREACH( const QString &uri, hits ) {
@@ -223,7 +223,7 @@ void NepomukManager::hitsRemoved( const QStringList &hits )
       continue;
     }
 
-    Entity::removeFromRelation<LocationPimItemRelation>( locationId, itemId );
+    Entity::removeFromRelation<CollectionPimItemRelation>( collectionId, itemId );
   }
 }
 

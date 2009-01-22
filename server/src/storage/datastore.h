@@ -131,31 +131,31 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
     bool appendItemFlags( const PimItem &item, const QList<Flag> &flags,
-                          bool checkIfExists = true, const Location &loc = Location() );
+                          bool checkIfExists = true, const Collection &col = Collection() );
     bool appendItemFlags( const PimItem &item, const QList<QByteArray> &flags,
-                          bool checkIfExists = true, const Location &loc = Location() );
+                          bool checkIfExists = true, const Collection &col = Collection() );
     bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
 
     /* --- ItemParts ----------------------------------------------------- */
     bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
 
-    /* --- Location ------------------------------------------------------ */
-    bool appendLocation( Location &location );
-    /// removes the given location and all its content
-    bool cleanupLocation( Location &location );
-    /// rename the collection @p location to @p newName.
-    bool renameLocation( Location &location, qint64 newParent, const QByteArray &newName );
+    /* --- Collection ------------------------------------------------------ */
+    bool appendCollection( Collection &collection );
+    /// removes the given collection and all its content
+    bool cleanupCollection( Collection &collection );
+    /// rename the collection @p collection to @p newName.
+    bool renameCollection( Collection &collection, qint64 newParent, const QByteArray &newName );
 
-    bool appendMimeTypeForLocation( qint64 locationId, const QStringList & mimeTypes );
-    bool removeMimeTypesForLocation( qint64 locationId );
+    bool appendMimeTypeForCollection( qint64 collectionId, const QStringList & mimeTypes );
+    bool removeMimeTypesForCollection( qint64 collectionId );
 
-    static QString locationDelimiter() { return QLatin1String("/"); }
+    static QString collectionDelimiter() { return QLatin1String("/"); }
 
     /**
-      Determines the active cache policy for this Location.
-      The active cache policy is set in the corresponding Location fields.
+      Determines the active cache policy for this Collection.
+      The active cache policy is set in the corresponding Collection fields.
     */
-    void activeCachePolicy( Location &loc );
+    void activeCachePolicy( Collection &col );
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype, qint64 *insertId = 0 );
@@ -163,15 +163,15 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /* --- PimItem ------------------------------------------------------- */
     bool appendPimItem( const QList<Part> & parts,
                         const MimeType & mimetype,
-                        const Location & location,
+                        const Collection & collection,
                         const QDateTime & dateTime,
                         const QByteArray & remote_id,
                         PimItem &pimItem );
     bool updatePimItem( PimItem &pimItem );
-    bool updatePimItem( PimItem &pimItem, const Location &destination );
+    bool updatePimItem( PimItem &pimItem, const Collection &destination );
     bool updatePimItem( PimItem &pimItem, const QString &remoteId );
 
-    QList<PimItem> listPimItems( const Location & location, const Flag &flag );
+    QList<PimItem> listPimItems( const Collection & collection, const Flag &flag );
 
     /**
      * Removes the pim item and all referenced data ( e.g. flags )
@@ -181,13 +181,13 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /**
      * Cleanups all items which have the '\\Deleted' flag set
      */
-    bool cleanupPimItems( const Location &location );
+    bool cleanupPimItems( const Collection &collection );
 
     qint64 highestPimItemId() const;
 
     /* --- Collection attributes ------------------------------------------ */
-    bool addCollectionAttribute( const Location &loc, const QByteArray &key, const QByteArray &value );
-    bool removeCollectionAttribute( const Location &loc, const QByteArray &key );
+    bool addCollectionAttribute( const Collection &col, const QByteArray &key, const QByteArray &value );
+    bool removeCollectionAttribute( const Collection &col, const QByteArray &key );
 
     /* --- Helper functions ---------------------------------------------- */
     /** Returns the id of the next PIM item that is added to the db.
@@ -256,7 +256,7 @@ protected:
   public:
     void retrieveDataFromResource( qint64 uid, const QByteArray& remote_id, const QByteArray& mimeType,
                                          const QString &resource, const QStringList &parts );
-    void triggerCollectionSync( const Location &location );
+    void triggerCollectionSync( const Collection &collection );
 
     /** Returns the id of the most recent inserted row, or -1 if there's no such
         id.

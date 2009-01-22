@@ -64,7 +64,7 @@ class NotificationCollector : public QObject
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemAdded( const PimItem &item, const Location &collection = Location(),
+    void itemAdded( const PimItem &item, const Collection &collection = Collection(),
                     const QString &mimeType = QString(),
                     const QByteArray &resource = QByteArray() );
 
@@ -73,7 +73,7 @@ class NotificationCollector : public QObject
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemChanged( const PimItem &item, const Location &collection = Location(),
+    void itemChanged( const PimItem &item, const Collection &collection = Collection(),
                       const QString &mimeType = QString(),
                       const QByteArray &resource = QByteArray() );
 
@@ -82,8 +82,8 @@ class NotificationCollector : public QObject
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemMoved( const PimItem &item, const Location &collectionSrc = Location(),
-                    const Location &collectionDest = Location(),
+    void itemMoved( const PimItem &item, const Collection &collectionSrc = Collection(),
+                    const Collection &collectionDest = Collection(),
                     const QString &mimeType = QString(),
                     const QByteArray &resource = QByteArray() );
 
@@ -92,26 +92,26 @@ class NotificationCollector : public QObject
       Make sure you either provide all parameters or call this function before
       actually removing the item from database.
     */
-    void itemRemoved( const PimItem &item, const Location &collection = Location(),
+    void itemRemoved( const PimItem &item, const Collection &collection = Collection(),
                       const QString &mimeType = QString(),
                       const QByteArray &resource = QByteArray() );
 
     /**
      * Notify about a linked item.
      */
-    void itemLinked( const PimItem &item, const Location &collection );
+    void itemLinked( const PimItem &item, const Collection &collection );
 
     /**
      * Notify about a unlinked item.
      */
-    void itemUnlinked( const PimItem &item, const Location &collection );
+    void itemUnlinked( const PimItem &item, const Collection &collection );
 
     /**
       Notify about a added collection.
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
      */
-    void collectionAdded( const Location &collection,
+    void collectionAdded( const Collection &collection,
                           const QByteArray &resource = QByteArray() );
 
     /**
@@ -119,7 +119,7 @@ class NotificationCollector : public QObject
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void collectionChanged( const Location &collection,
+    void collectionChanged( const Collection &collection,
                             const QByteArray &resource = QByteArray() );
 
     /**
@@ -127,7 +127,7 @@ class NotificationCollector : public QObject
       Make sure you either provide all parameters or call this function before
       actually removing the item from database.
      */
-    void collectionRemoved( const Location &collection,
+    void collectionRemoved( const Collection &collection,
                             const QByteArray &resource = QByteArray() );
 
   Q_SIGNALS:
@@ -135,12 +135,12 @@ class NotificationCollector : public QObject
 
   private:
     void itemNotification( NotificationMessage::Operation op, const PimItem &item,
-                           const Location &collection,
-                           const Location &collectionDest,
+                           const Collection &collection,
+                           const Collection &collectionDest,
                            const QString &mimeType,
                            const QByteArray &resource );
     void collectionNotification( NotificationMessage::Operation op,
-                                 const Location &collection,
+                                 const Collection &collection,
                                  const QByteArray &resource );
     void dispatchNotification( const NotificationMessage &msg );
     void clear();

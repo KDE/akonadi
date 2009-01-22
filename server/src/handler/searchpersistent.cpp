@@ -60,15 +60,15 @@ bool SearchPersistent::handleLine( const QByteArray& line )
   if ( queryString.isEmpty() )
     return failureResponse( "No query specified" );
 
-  Location l;
-  l.setRemoteId( QString::fromUtf8( queryString ) );
-  l.setParentId( 1 ); // search root
-  l.setResourceId( 1 ); // search resource
-  l.setName( collectionName );
-  if ( !db->appendLocation( l ) )
+  Collection col;
+  col.setRemoteId( QString::fromUtf8( queryString ) );
+  col.setParentId( 1 ); // search root
+  col.setResourceId( 1 ); // search resource
+  col.setName( collectionName );
+  if ( !db->appendCollection( col ) )
     return failureResponse( "Unable to create persistent search" );
 
-  if ( !AbstractSearchManager::instance()->addSearch( l ) )
+  if ( !AbstractSearchManager::instance()->addSearch( col ) )
     return failureResponse( "Unable to add search to search manager" );
 
   if ( !transaction.commit() )

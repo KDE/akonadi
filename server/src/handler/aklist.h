@@ -72,7 +72,7 @@ class AKONADIPRIVATE_EXPORT AkList : public Handler
     virtual bool handleLine(const QByteArray& line);
 
   private:
-    bool listCollection( const Location &root, int depth );
+    bool listCollection( const Collection &root, int depth );
 
   private:
     Resource mResource;

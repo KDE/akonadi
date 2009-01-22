@@ -41,33 +41,33 @@ Delete::~Delete()
 bool Delete::handleLine(const QByteArray & line)
 {
   int begin = line.indexOf( " DELETE" ) + 7;
-  QByteArray collection;
+  QByteArray collectionByteArray;
   if ( line.length() > begin )
-    ImapParser::parseString( line, collection, begin );
+    ImapParser::parseString( line, collectionByteArray, begin );
 
   // prevent deletion of the root node
-  if ( collection.isEmpty() )
+  if ( collectionByteArray.isEmpty() )
     return failureResponse( "Deleting everything is not allowed." );
 
   // check if collection exists
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Location location = HandlerHelper::collectionFromIdOrName( collection );
-  if ( !location.isValid() )
+  Collection collection = HandlerHelper::collectionFromIdOrName( collectionByteArray );
+  if ( !collection.isValid() )
     return failureResponse( "No such collection." );
 
   // handle virtual folders
-  if ( location.resource().name() == QLatin1String("akonadi_search_resource") ) {
+  if ( collection.resource().name() == QLatin1String("akonadi_search_resource") ) {
     // don't delete virtual root
-    if ( location.parentId() == 0 )
+    if ( collection.parentId() == 0 )
       return failureResponse( "Cannot delete virtual root collection" );
 
-    if ( !AbstractSearchManager::instance()->removeSearch( location.id() ) )
+    if ( !AbstractSearchManager::instance()->removeSearch( collection.id() ) )
       return failureResponse( "Failed to remove search from search manager" );
   }
 
-  if ( !deleteRecursive( location ) )
+  if ( !deleteRecursive( collection ) )
     return failureResponse( "Unable to delete collection" );
 
   if ( !transaction.commit() )
@@ -81,13 +81,13 @@ bool Delete::handleLine(const QByteArray & line)
   return true;
 }
 
-bool Delete::deleteRecursive(Location & loc)
+bool Delete::deleteRecursive(Collection & col)
 {
-  Location::List children = loc.children();
-  foreach ( Location child, children ) {
+  Collection::List children = col.children();
+  foreach ( Collection child, children ) {
     if ( !deleteRecursive( child ) )
       return false;
   }
   DataStore *db = connection()->storageBackend();
-  return db->cleanupLocation( loc );
+  return db->cleanupCollection( col );
 }

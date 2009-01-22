@@ -53,7 +53,7 @@ bool Create::handleLine(const QByteArray& line )
 
   bool ok = false;
   qint64 parentId = -1;
-  Location parent;
+  Collection parent;
   pos = ImapParser::parseNumber( line, parentId, &ok, pos );
   if ( !ok ) { // RFC 3501 compat
     QString parentPath;
@@ -66,7 +66,7 @@ bool Create::handleLine(const QByteArray& line )
       parentId = 0;
   } else {
     if ( parentId > 0 )
-      parent = Location::retrieveById( parentId );
+      parent = Collection::retrieveById( parentId );
   }
 
   if ( parentId != 0 && !parent.isValid() )
@@ -101,10 +101,10 @@ bool Create::handleLine(const QByteArray& line )
     resourceId = res.id();
   }
 
-  Location location;
-  location.setParentId( parentId );
-  location.setName( name.toUtf8() );
-  location.setResourceId( resourceId );
+  Collection collection;
+  collection.setParentId( parentId );
+  collection.setName( name.toUtf8() );
+  collection.setResourceId( resourceId );
 
   // attributes
   QList<QByteArray> attributes;
@@ -116,12 +116,12 @@ bool Create::handleLine(const QByteArray& line )
     const QByteArray key = attributes.at( i );
     const QByteArray value = attributes.at( i + 1 );
     if ( key == "REMOTEID" ) {
-      location.setRemoteId( QString::fromUtf8( value ) );
+      collection.setRemoteId( QString::fromUtf8( value ) );
     } else if ( key == "MIMETYPE" ) {
       ImapParser::parseParenthesizedList( value, mimeTypes );
       mimeTypesSet = true;
     } else if ( key == "CACHEPOLICY" ) {
-      HandlerHelper::parseCachePolicy( value, location );
+      HandlerHelper::parseCachePolicy( value, collection );
     } else {
       userDefAttrs << qMakePair( key, value );
     }
@@ -130,7 +130,7 @@ bool Create::handleLine(const QByteArray& line )
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  if ( !db->appendLocation( location ) )
+  if ( !db->appendCollection( collection ) )
     return failureResponse( "Could not create collection" );
 
   QStringList effectiveMimeTypes;
@@ -141,13 +141,13 @@ bool Create::handleLine(const QByteArray& line )
     foreach ( const MimeType &mt, parentContentTypes )
       effectiveMimeTypes << mt.name();
   }
-  if ( !db->appendMimeTypeForLocation( location.id(), effectiveMimeTypes ) )
+  if ( !db->appendMimeTypeForCollection( collection.id(), effectiveMimeTypes ) )
     return failureResponse( "Unable to append mimetype for collection." );
 
   // store user defined attributes
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   foreach ( const QByteArrayPair &attr, userDefAttrs ) {
-    if ( !db->addCollectionAttribute( location, attr.first, attr.second ) )
+    if ( !db->addCollectionAttribute( collection, attr.first, attr.second ) )
       return failureResponse( "Unable to add collection attribute." );
   }
 
@@ -155,8 +155,8 @@ bool Create::handleLine(const QByteArray& line )
   response.setUntagged();
 
    // write out collection details
-  db->activeCachePolicy( location );
-  const QByteArray b = HandlerHelper::collectionToByteArray( location );
+  db->activeCachePolicy( collection );
+  const QByteArray b = HandlerHelper::collectionToByteArray( collection );
   response.setString( b );
   emit responseAvailable( response );
 
@@ -165,4 +165,3 @@ bool Create::handleLine(const QByteArray& line )
 
   return successResponse( "CREATE completed" );
 }
-

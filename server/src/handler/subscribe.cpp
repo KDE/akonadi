@@ -43,14 +43,14 @@ bool Subscribe::handleLine(const QByteArray & line)
     pos = ImapParser::parseString( line, buffer, pos );
     if ( pos == line.length() || buffer.isEmpty() )
       break;
-    Location loc = HandlerHelper::collectionFromIdOrName( buffer );
-    if ( !loc.isValid() )
+    Collection col = HandlerHelper::collectionFromIdOrName( buffer );
+    if ( !col.isValid() )
       return failureResponse( "Invalid collection" );
-    if ( loc.subscribed() == subscribe )
+    if ( col.subscribed() == subscribe )
       continue;
     // TODO do all changes in one db operation
-    loc.setSubscribed( subscribe );
-    if ( !loc.update() )
+    col.setSubscribed( subscribe );
+    if ( !col.update() )
       return failureResponse( "Unable to change subscription" );
   }
 

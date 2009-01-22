@@ -41,7 +41,7 @@ bool Link::handleLine(const QByteArray & line)
   pos = ImapParser::parseString( line, tmp, pos ); // skip command
 
   pos = ImapParser::parseString( line, tmp, pos );
-  const Location collection = HandlerHelper::collectionFromIdOrName( tmp );
+  const Collection collection = HandlerHelper::collectionFromIdOrName( tmp );
   if ( !collection.isValid() )
     return failureResponse( "No valid collection specified" );
 

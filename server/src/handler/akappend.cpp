@@ -136,8 +136,8 @@ bool Akonadi::AkAppend::commit()
     DataStore *db = connection()->storageBackend();
     Transaction transaction( db );
 
-    Location l = HandlerHelper::collectionFromIdOrName( m_mailbox );
-    if ( !l.isValid() )
+    Collection col = HandlerHelper::collectionFromIdOrName( m_mailbox );
+    if ( !col.isValid() )
       return failureResponse( "Unknown collection." );
 
     QByteArray mt;
@@ -166,7 +166,7 @@ bool Akonadi::AkAppend::commit()
     item.setRev( 0 );
     item.setSize( m_size );
 
-    bool ok = db->appendPimItem( m_parts, mimeType, l, m_dateTime, remote_id, item );
+    bool ok = db->appendPimItem( m_parts, mimeType, col, m_dateTime, remote_id, item );
 
     response.setTag( tag() );
     if ( !ok ) {
@@ -174,7 +174,7 @@ bool Akonadi::AkAppend::commit()
     }
 
     // set message flags
-    if ( !db->appendItemFlags( item, flags, false, l ) )
+    if ( !db->appendItemFlags( item, flags, false, col ) )
       return failureResponse( "Unable to append item flags." );
 
     // TODO if the mailbox is currently selected, the normal new message

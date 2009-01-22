@@ -59,8 +59,8 @@ bool Select::handleLine(const QByteArray& line )
     }
 
     // collection
-    Location l = HandlerHelper::collectionFromIdOrName( buffer );
-    if ( !l.isValid() ) {
+    Collection col = HandlerHelper::collectionFromIdOrName( buffer );
+    if ( !col.isValid() ) {
       bool ok = false;
       if ( buffer.toLongLong( &ok ) == 0 && ok )
         silent = true;
@@ -76,19 +76,19 @@ bool Select::handleLine(const QByteArray& line )
       response.setString( Flag::joinByName<Flag>( Flag::retrieveAll(), QLatin1String(" ") ) );
       emit responseAvailable( response );
 
-      int count = HandlerHelper::itemCount( l );
+      int count = HandlerHelper::itemCount( col );
       if ( count < 0 )
         return failureResponse( "Unable to determine item count" );
       response.setString( QByteArray::number( count ) + " EXISTS" );
       emit responseAvailable( response );
 
-      count = HandlerHelper::itemWithFlagCount( l, QLatin1String( "\\Recent" ) );
+      count = HandlerHelper::itemWithFlagCount( col, QLatin1String( "\\Recent" ) );
       if ( count < 0 )
         return failureResponse( "Unable to determine recent count" );
       response.setString( QByteArray::number( count ) + " RECENT" );
       emit responseAvailable( response );
 
-      count = HandlerHelper::itemWithoutFlagCount( l, QLatin1String( "\\Seen" ) );
+      count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) );
       if ( count < 0 )
         return failureResponse( "Unable to retrieve unseen count" );
       response.setString( "OK [UNSEEN " + QByteArray::number( count ) + "] Message 0 is first unseen" );
@@ -103,8 +103,7 @@ bool Select::handleLine(const QByteArray& line )
     response.setString( "Completed" );
     emit responseAvailable( response );
 
-    connection()->setSelectedCollection( l.id() );
+    connection()->setSelectedCollection( col.id() );
     deleteLater();
     return true;
 }
-

@@ -45,23 +45,23 @@ void IntervalCheck::run()
 void IntervalCheck::doIntervalCheck()
 {
 
-  // cycle over all locations
-  QList<Location> locations = Location::retrieveAll();
-  foreach ( Location location, locations ) {
+  // cycle over all collections
+  QList<Collection> collections = Collection::retrieveAll();
+  foreach ( Collection collection, collections ) {
     // determine active cache policy
-    DataStore::self()->activeCachePolicy( location );
+    DataStore::self()->activeCachePolicy( collection );
 
     // check if there is something to expire at all
-    if ( location.cachePolicyCheckInterval() < 0 || !location.subscribed() )
+    if ( collection.cachePolicyCheckInterval() < 0 || !collection.subscribed() )
       continue;
 
-    QDateTime lastExpectedCheck = QDateTime::currentDateTime().addSecs( location.cachePolicyCheckInterval() * -60 );
-    if ( mLastChecks.contains( location.id() ) && mLastChecks.value( location.id() ) > lastExpectedCheck )
+    QDateTime lastExpectedCheck = QDateTime::currentDateTime().addSecs( collection.cachePolicyCheckInterval() * -60 );
+    if ( mLastChecks.contains( collection.id() ) && mLastChecks.value( collection.id() ) > lastExpectedCheck )
       continue;
 
-    mLastChecks[ location.id() ] = QDateTime::currentDateTime();
-    qDebug() << "interval checking  collection " << location.id() << "(" << location.name() << ")";
-    DataStore::self()->triggerCollectionSync( location );
+    mLastChecks[ collection.id() ] = QDateTime::currentDateTime();
+    qDebug() << "interval checking  collection " << collection.id() << "(" << collection.name() << ")";
+    DataStore::self()->triggerCollectionSync( collection );
   }
 
   QTimer::singleShot( 60 * 1000, this, SLOT(doIntervalCheck()) );

@@ -76,27 +76,27 @@ bool AkList::handleLine(const QByteArray& line )
       return failureResponse( "Invalid filter parameter" );
   }
 
-  Location::List locations;
+  Collection::List collections;
   if ( baseCollection != 0 ) { // not root
-    Location loc = Location::retrieveById( baseCollection );
-    if ( !loc.isValid() )
+    Collection col = Collection::retrieveById( baseCollection );
+    if ( !col.isValid() )
       return failureResponse( "Collection " + QByteArray::number( baseCollection ) + " does not exist" );
     if ( depth == 0 )
-      locations << loc;
+      collections << col;
     else {
-      locations << loc.children();
+      collections << col.children();
       --depth;
     }
   } else {
     if ( depth != 0 ) {
-      Location::List list = Location::retrieveFiltered( Location::parentIdColumn(), 0 );
-      locations << list;
+      Collection::List list = Collection::retrieveFiltered( Collection::parentIdColumn(), 0 );
+      collections << list;
     }
     --depth;
   }
 
-  foreach ( const Location &loc, locations )
-    listCollection( loc, depth );
+  foreach ( const Collection &col, collections )
+    listCollection( col, depth );
 
   Response response;
   response.setSuccess();
@@ -107,14 +107,14 @@ bool AkList::handleLine(const QByteArray& line )
   return true;
 }
 
-bool AkList::listCollection(const Location & root, int depth )
+bool AkList::listCollection(const Collection & root, int depth )
 {
   // recursive listing of child collections
   bool childrenFound = false;
   if ( depth > 0 ) {
-    Location::List children = root.children();
-    foreach ( const Location &loc, children ) {
-      if ( listCollection( loc, depth - 1 ) )
+    Collection::List children = root.children();
+    foreach ( const Collection &col, children ) {
+      if ( listCollection( col, depth - 1 ) )
         childrenFound = true;
     }
   }
@@ -125,7 +125,7 @@ bool AkList::listCollection(const Location & root, int depth )
     return false;
 
   // write out collection details
-  Location dummy = root;
+  Collection dummy = root;
   DataStore *db = connection()->storageBackend();
   db->activeCachePolicy( dummy );
   const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden );

@@ -73,15 +73,15 @@
   <table name="Resource">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY NOT NULL UNIQUE"/>
-    <reference name="locations" table="Location" key="resourceId"/>
+    <reference name="collections" table="Collection" key="resourceId"/>
     <data columns="name" values="'akonadi_search_resource'"/>
   </table>
 
-  <table name="Location">
+  <table name="Collection">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remoteId" type="QString"/>
     <column name="name" type="QByteArray" sqltype="VARCHAR(255)" properties="BINARY character set utf8 collate utf8_bin NOT NULL"/>
-    <column name="parentId" type="qint64" refTable="Location" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Location(id)"/>
+    <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent" properties="DEFAULT 0 REFERENCES Collection(id)"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" properties="NOT NULL REFERENCES Resource(id)"/>
     <column name="subscribed" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
     <column name="cachePolicyInherit" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
@@ -90,9 +90,9 @@
     <column name="cachePolicySyncOnDemand" type="bool" default="false" properties="NOT NULL DEFAULT false"/>
     <column name="cachePolicyLocalParts" type="QString"/>
     <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
-    <reference name="children" table="Location" key="parentId"/>
-    <reference name="items" table="PimItem" key="locationId"/>
-    <reference name="attributes" table="LocationAttribute" key="locationId"/>
+    <reference name="children" table="Collection" key="parentId"/>
+    <reference name="items" table="PimItem" key="collectionId"/>
+    <reference name="attributes" table="CollectionAttribute" key="collectionId"/>
     <data columns="parentId,name,resourceId" values="0,'Search',1"/>
   </table>
 
@@ -111,7 +111,7 @@
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="rev" type="int" properties="NOT NULL DEFAULT 0"/>
     <column name="remoteId" type="QByteArray"/>
-    <column name="locationId" type="qint64" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
+    <column name="collectionId" type="qint64" refTable="Collection" refColumn="id" properties="REFERENCES Collection(id)"/>
     <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP">
       <comment>create/modified time</comment>
@@ -123,7 +123,7 @@
       <comment>Indicates that this item has unsaved changes.</comment>
     </column>
     <column name="size" type="qint64" properties="NOT NULL DEFAULT 0"/>
-    <index name="locationIndex" columns="locationId" unique="false"/>
+    <index name="collectionIndex" columns="collectionId" unique="false"/>
     <reference name="parts" table="Part" key="pimItemId"/>
   </table>
 
@@ -151,21 +151,21 @@
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 
-  <table name="LocationAttribute">
+  <table name="CollectionAttribute">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="locationId" type="qint64" refTable="Location" refColumn="id" properties="REFERENCES Location(id)"/>
+    <column name="collectionId" type="qint64" refTable="Collection" refColumn="id" properties="REFERENCES Collection(id)"/>
     <column name="type" type="QByteArray" properties="NOT NULL"/>
     <column name="value" type="QByteArray"/>
-    <index name="locationIndex" columns="locationId" unique="false"/>
+    <index name="collectionIndex" columns="collectionId" unique="false"/>
   </table>
 
   <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
 
-  <relation table1="Location" column1="id" table2="MimeType" column2="id">
-    <comment>Specifies allowed MimeType for a Location</comment>
+  <relation table1="Collection" column1="id" table2="MimeType" column2="id">
+    <comment>Specifies allowed MimeType for a Collection</comment>
   </relation>
 
-  <relation table1="Location" column1="id" table2="PimItem" column2="id">
+  <relation table1="Collection" column1="id" table2="PimItem" column2="id">
     <comment>Used to associate items with search folders.</comment>
   </relation>
 </database>

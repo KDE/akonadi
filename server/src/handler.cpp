@@ -226,18 +226,18 @@ void Handler::imapSetToQuery(const ImapSet & set, bool isUid, QueryBuilder & qb)
   if ( !cond.isEmpty() )
     qb.addCondition( cond );
 
-  if ( !isUid && connection()->selectedCollection() >= 0 ) {
-    const Location loc = connection()->selectedLocation();
+  if ( !isUid && connection()->selectedCollectionId() >= 0 ) {
+    const Collection col = connection()->selectedCollection();
     // FIXME: we probably want to do both paths here in all cases, but that is apparently
     // non-trivial with SQL
-    if ( loc.resource().name() == QLatin1String("akonadi_search_resource") ||
-         loc.resource().name().contains( QLatin1String("nepomuk") ) ) {
-      qb.addTable( LocationPimItemRelation::tableName() );
-      qb.addValueCondition( LocationPimItemRelation::leftFullColumnName(), Query::Equals, loc.id() );
-      qb.addColumnCondition( LocationPimItemRelation::rightFullColumnName(), Query::Equals,
+    if ( col.resource().name() == QLatin1String("akonadi_search_resource") ||
+         col.resource().name().contains( QLatin1String("nepomuk") ) ) {
+      qb.addTable( CollectionPimItemRelation::tableName() );
+      qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id() );
+      qb.addColumnCondition( CollectionPimItemRelation::rightFullColumnName(), Query::Equals,
                              PimItem::idFullColumnName() );
     } else {
-      qb.addValueCondition( PimItem::locationIdColumn(), Query::Equals, loc.id() );
+      qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
     }
   }
 }
