@@ -19,8 +19,8 @@
 
 #include "dbupdater.h"
 #include "entities.h"
+#include "akdebug.h"
 
-#include <QDebug>
 #include <QDomDocument>
 #include <QFile>
 
@@ -34,7 +34,7 @@ bool DbUpdater::run()
 {
   QFile file( m_filename );
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    qWarning() << "Unable to open update description file" << m_filename;
+    akError() << "Unable to open update description file" << m_filename;
     return false;
   }
 
@@ -43,13 +43,13 @@ bool DbUpdater::run()
   QString errorMsg;
   int line, column;
   if ( !document.setContent( &file, &errorMsg, &line, &column ) ) {
-    qWarning() << "Unable to parse update description file" << m_filename << ":"
+    akError() << "Unable to parse update description file" << m_filename << ":"
         << errorMsg << "at line" << line << "column" << column;
     return false;
   }
   const QDomElement documentElement = document.documentElement();
   if ( documentElement.tagName() != QLatin1String( "updates" ) ) {
-    qWarning() << "Invalid update description file formant";
+    akError() << "Invalid update description file formant";
     return false;
   }
 
@@ -62,17 +62,17 @@ bool DbUpdater::run()
     if ( updateElement.tagName() == QLatin1String("update") ) {
       int version = updateElement.attribute( QLatin1String( "version" ), QLatin1String( "-1" ) ).toInt();
       if ( version <= 0 ) {
-        qWarning() << "Invalid version attribute in database update description";
+        akError() << "Invalid version attribute in database update description";
         return false;
       }
       if ( updates.contains( version ) ) {
-        qWarning() << "Duplicate version attribute in database update description";
+        akError() << "Duplicate version attribute in database update description";
         return false;
       }
       if ( version > currentVersion.version() ) {
         updates.insert( version, updateElement );
       } else {
-        qDebug() << "skipping update" << version;
+        akDebug() << "skipping update" << version;
       }
     }
     updateElement = updateElement.nextSiblingElement();
@@ -85,12 +85,18 @@ bool DbUpdater::run()
     bool abortOnFailure = false;
     if ( it.value().attribute( QLatin1String( "abortOnFailure" ) ) == QLatin1String( "true" ) )
       abortOnFailure = true;
-    qDebug() << "DbUpdater: update to version:" << it.key() << " mandatory:" << abortOnFailure << " code:" << sql;
+    akDebug() << "DbUpdater: update to version:" << it.key() << " mandatory:" << abortOnFailure << " code:" << sql;
 
     bool success = m_database.transaction();
     if ( success ) {
       QSqlQuery query( m_database );
       success = query.exec( sql );
+      if ( !success ) {
+        akError() << "DBUpdater: query error:" << query.lastError().text() << m_database.lastError().text();
+        akError() << "Query was: " << sql;
+        akError() << "Target version was: " << it.key();
+        akError() << "Mandatory: " << abortOnFailure;
+      }
     }
     if ( success ) {
       currentVersion.setVersion( it.key() );
@@ -98,7 +104,7 @@ bool DbUpdater::run()
     }
 
     if ( !success || !m_database.commit() ) {
-      qWarning() << "Failed to commit transaction for database update";
+      akError() << "Failed to commit transaction for database update";
       m_database.rollback();
       if ( abortOnFailure )
         return false;

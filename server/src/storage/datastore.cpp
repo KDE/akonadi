@@ -30,7 +30,8 @@
 #include "selectquerybuilder.h"
 #include "handlerhelper.h"
 #include "countquerybuilder.h"
-#include "../../libs/xdgbasedirs_p.h"
+#include "xdgbasedirs_p.h"
+#include "akdebug.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -117,7 +118,7 @@ bool Akonadi::DataStore::init()
 {
   DbInitializer initializer( m_database, QLatin1String(":akonadidb.xml") );
   if (! initializer.run() ) {
-    qWarning() << initializer.errorMsg();
+    akError() << initializer.errorMsg();
     return false;
   }
 
