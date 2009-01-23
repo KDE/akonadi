@@ -435,6 +435,8 @@ ContactEditor::~ContactEditor()
   KConfigGroup group( &config, "General" );
 
   group.writeEntry( "DisplayNameType", (int)d->mDisplayNameWidget->displayType() );
+  
+  delete d;
 }
 
 void ContactEditor::loadContact( const KABC::Addressee &contact )
