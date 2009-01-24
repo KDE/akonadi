@@ -117,6 +117,7 @@ AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
   layout->setSpacing( 0 );
 
   d->mView = new QListView( this );
+  d->mView->setContextMenuPolicy( Qt::NoContextMenu );
   d->mView->setItemDelegate( new AgentInstanceWidgetDelegate( d->mView ) );
   layout->addWidget( d->mView );
 

@@ -138,3 +138,14 @@ void AgentInstance::reconfigure() const
   else
     kWarning() << "Unable to obtain agent interface";
 }
+
+void Akonadi::AgentInstance::restart() const
+{
+  QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Control"),
+                        QString::fromLatin1("/AgentManager"),
+                        QString::fromLatin1("org.freedesktop.Akonadi.AgentManager") );
+  if ( iface.isValid() )
+    iface.call( QString::fromLatin1("restartAgentInstance"), identifier() );
+  else
+    kWarning() << "Unable to obtain control interface" << iface.lastError().message();
+}

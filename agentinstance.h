@@ -174,6 +174,11 @@ class AKONADI_EXPORT AgentInstance
      */
     void reconfigure() const;
 
+    /**
+     * Restart the agent process.
+     */
+    void restart() const;
+
   private:
     //@cond PRIVATE
     class Private;
