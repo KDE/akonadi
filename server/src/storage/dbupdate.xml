@@ -55,4 +55,22 @@
     UPDATE parttable SET name = concat( 'ATR:', name ) WHERE left( name, 4 ) != 'PLD:';
   </update>
 
+  <!-- the initializer runs first, so we will have all the new tables and columns already
+       therefore we have to clean that up first -->
+  <update version="10" abortOnFailure="true">
+    DROP TABLE CollectionTable;
+    ALTER TABLE LocationTable RENAME TO CollectionTable;
+    ALTER TABLE PimItemTable DROP COLUMN collectionId;
+    ALTER TABLE PimItemTable CHANGE locationId collectionId BIGINT;
+    DROP TABLE CollectionAttributeTable;
+    ALTER TABLE LocationAttributeTable CHANGE locationId collectionId BIGINT;
+    ALTER TABLE LocationAttributeTable RENAME TO CollectionAttributeTable;
+    DROP TABLE CollectionMimeTypeRelation;
+    ALTER TABLE LocationMimeTypeRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';
+    ALTER TABLE LocationMimeTypeRelation RENAME TO CollectionMimeTypeRelation;
+    DROP TABLE CollectionPimItemRelation;
+    ALTER TABLE LocationPimItemRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';
+    ALTER TABLE LocationPimItemRelation RENAME TO CollectionPimItemRelation;
+  </update>
+
 </updates>
