@@ -308,6 +308,13 @@ void AgentManager::agentInstanceSynchronizeCollection(const QString & identifier
   mAgentInstances.value( identifier )->resourceInterface()->synchronizeCollection( collection );
 }
 
+void AgentManager::restartAgentInstance(const QString& identifier)
+{
+  if ( !checkInstance( identifier ) )
+    return;
+  mAgentInstances.value( identifier )->restartWhenIdle();
+}
+
 void AgentManager::updatePluginInfos()
 {
   QHash<QString, AgentType> oldInfos = mAgents;
@@ -544,5 +551,6 @@ void AgentManager::agentExeChanged(const QString & fileName)
     }
   }
 }
+
 
 #include "agentmanager.moc"

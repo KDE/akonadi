@@ -123,5 +123,8 @@
       <arg name="identifier" type="s" direction="in"/>
       <arg name="state" type="b" direction="in"/>
     </method>
+    <method name="restartAgentInstance">
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
   </interface>
 </node>

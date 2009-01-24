@@ -204,6 +204,13 @@ class AgentManager : public QObject
     */
     void setAgentInstanceOnline( const QString &identifier, bool state );
 
+
+    /**
+      Restarts the agent instance @p identifier. This is supposed to be used as a
+      development aid and not something to use during normal operations.
+    */
+    void restartAgentInstance( const QString &identifier );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever a new agent type was installed on the system.
