@@ -24,6 +24,7 @@
 #include "dateeditwidget.h"
 #include "displaynameeditwidget.h"
 #include "emaileditwidget.h"
+#include "freebusyeditwidget.h"
 #include "imagewidget.h"
 #include "imeditwidget.h"
 #include "nameeditwidget.h"
@@ -95,7 +96,7 @@ class ContactEditor::Private
     KLineEdit *mAssistantWidget;
 
     // widgets from groupware group
-    KUrlRequester *mFreeBusyWidget;
+    FreeBusyEditWidget *mFreeBusyWidget;
 
     // widgets from notes group
     KTextEdit *mNotesWidget;
@@ -340,7 +341,7 @@ void ContactEditor::Private::initGuiBusinessTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   groupwareLayout->addWidget( label, 0, 0 );
 
-  mFreeBusyWidget = new KUrlRequester;
+  mFreeBusyWidget = new FreeBusyEditWidget;
   label->setBuddy( mFreeBusyWidget );
   groupwareLayout->addWidget( mFreeBusyWidget, 0, 1 );
 
@@ -436,7 +437,7 @@ ContactEditor::~ContactEditor()
   KConfigGroup group( &config, "General" );
 
   group.writeEntry( "DisplayNameType", (int)d->mDisplayNameWidget->displayType() );
-  
+
   delete d;
 }
 
@@ -474,6 +475,7 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
   d->mAssistantWidget->setText( d->loadCustom( contact, "X-AssistantsName" ) );
 
   // groupware group
+  d->mFreeBusyWidget->loadContact( contact );
 
   // notes group
   d->mNotesWidget->setPlainText( contact.note() );
@@ -520,6 +522,7 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
   d->storeCustom( contact, "X-AssistantsName", d->mAssistantWidget->text().trimmed() );
 
   // groupware group
+  d->mFreeBusyWidget->storeContact( contact );
 
   // notes group
   contact.setNote( d->mNotesWidget->toPlainText() );
