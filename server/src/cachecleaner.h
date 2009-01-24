@@ -46,6 +46,10 @@ class CacheCleaner : public QThread
   private slots:
     void cleanCache();
 
+  private:
+    short int mTime;
+    qint64 mLoops;
+
 };
 
 }

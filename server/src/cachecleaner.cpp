@@ -29,6 +29,8 @@ using namespace Akonadi;
 CacheCleaner::CacheCleaner(QObject * parent) :
     QThread( parent )
 {
+  mTime = 60; 
+  mLoops = 0;
 }
 
 CacheCleaner::~CacheCleaner()
@@ -38,14 +40,14 @@ CacheCleaner::~CacheCleaner()
 void CacheCleaner::run()
 {
   DataStore::self();
-  QTimer::singleShot( 60 * 1000, this, SLOT(cleanCache()) );
+  QTimer::singleShot( mTime * 1000, this, SLOT(cleanCache()) );
   exec();
   DataStore::self()->close();
 }
 
 void CacheCleaner::cleanCache()
 {
-
+  qint64 loopsWithExpiredItem = 0;
   // cycle over all collection
   QList<Collection> collections = Collection::retrieveAll();
   foreach ( Collection collection, collections ) {
@@ -83,9 +85,28 @@ void CacheCleaner::cleanCache()
       if ( !parts[ i ].update() )
         qDebug() << "failed to update item part" << parts[ i ].id();
     }
+    loopsWithExpiredItem++;
   }
 
-  QTimer::singleShot( 60 * 1000, this, SLOT(cleanCache()) );
+  /* if we have item parts to expire in collection the mTime is
+   * decreased of 60 and if there are lot of collection need to be clean 
+   * mTime is 60 otherwise we increment mTime in 60
+   */
+
+  if( mLoops < loopsWithExpiredItem) {
+    if( (mTime > 60) && (loopsWithExpiredItem - mLoops) < 50 )
+      mTime -= 60;
+    else
+      mTime = 60;
+  } else {
+    if( mTime < 600)
+      mTime += 60;
+  }
+
+  // measured arithmetic between mLoops and loopsWithExpiredItem
+  mLoops = (loopsWithExpiredItem + mLoops) >> 2;
+     
+  QTimer::singleShot( mTime * 1000, this, SLOT(cleanCache()) );
 }
 
 #include "cachecleaner.moc"
