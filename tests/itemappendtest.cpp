@@ -19,8 +19,8 @@
 
 #include "control.h"
 #include "itemappendtest.h"
-#include "collectionpathresolver_p.h"
 #include "testattribute.h"
+#include "test_utils.h"
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/collectionfetchjob.h>
@@ -33,27 +33,11 @@
 
 using namespace Akonadi;
 
-#include <qtest_akonadi.h>
-
 QTEST_AKONADIMAIN( ItemAppendTest, NoGUI )
-
-static Collection testFolder1;
 
 void ItemAppendTest::initTestCase()
 {
   Control::start();
-
-  // get the collections we run the tests on
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  QVERIFY( job->exec() );
-  Collection::List list = job->collections();
-  Collection res2;
-  foreach ( const Collection &col, list )
-    if ( col.name() == "res2" )
-      res2 = col;
-  foreach ( const Collection &col, list )
-    if ( col.name() == "space folder" && col.parent() == res2.id() )
-      testFolder1 = col;
 }
 
 void ItemAppendTest::testItemAppend_data()
@@ -68,6 +52,9 @@ void ItemAppendTest::testItemAppend_data()
 
 void ItemAppendTest::testItemAppend()
 {
+  const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
+  QVERIFY( testFolder1.isValid() );
+
   QFETCH( QString, remoteId );
   Item ref; // for cleanup
 
@@ -110,13 +97,16 @@ void ItemAppendTest::testContent_data()
 
 void ItemAppendTest::testContent()
 {
+  const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
+  QVERIFY( testFolder1.isValid() );
+
   QFETCH( QByteArray, data );
 
   Item item;
   item.setMimeType( "application/octet-stream" );
   item.setPayload( data );
 
-  ItemCreateJob* job = new ItemCreateJob( item, Collection( testFolder1 ), this );
+  ItemCreateJob* job = new ItemCreateJob( item, testFolder1, this );
   QVERIFY( job->exec() );
   Item ref = job->item();
 
@@ -133,6 +123,9 @@ void ItemAppendTest::testContent()
 
 void ItemAppendTest::testIllegalAppend()
 {
+  const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
+  QVERIFY( testFolder1.isValid() );
+
   Item item;
   item.setMimeType( "application/octet-stream" );
 
@@ -143,13 +136,12 @@ void ItemAppendTest::testIllegalAppend()
   // adding item with non-existing mimetype
   Item item2;
   item2.setMimeType( "wrong/type" );
-  job = new ItemCreateJob( item2, Collection( testFolder1 ), this );
+  job = new ItemCreateJob( item2, testFolder1, this );
   QVERIFY( !job->exec() );
 
   // adding item into a collection which can't handle items of this type
-  CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo/bla", this );
-  QVERIFY( resolver->exec() );
-  const Collection col = Collection( resolver->collection() );
+  const Collection col( collectionIdFromPath( "res1/foo/bla" ) );
+  QVERIFY( col.isValid() );
   job = new ItemCreateJob( item, col, this );
   QEXPECT_FAIL( "", "Test not yet implemented in the server.", Continue );
   QVERIFY( !job->exec() );
@@ -159,12 +151,15 @@ void ItemAppendTest::testMultipartAppend()
 {
   AttributeFactory::registerAttribute<TestAttribute>();
 
+  const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
+  QVERIFY( testFolder1.isValid() );
+
   Item item;
   item.setMimeType( "application/octet-stream" );
   item.setPayload<QByteArray>( "body data" );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
   item.setFlag( "TestFlag" );
-  ItemCreateJob *job = new ItemCreateJob( item, Collection( testFolder1 ), this );
+  ItemCreateJob *job = new ItemCreateJob( item, testFolder1, this );
   QVERIFY( job->exec() );
   Item ref = job->item();
 

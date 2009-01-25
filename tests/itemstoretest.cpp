@@ -237,6 +237,7 @@ void ItemStoreTest::testMultiPart()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
+  QVERIFY( item.hasPayload<QByteArray>() );
   QCOMPARE( item.payload<QByteArray>(), QByteArray("testmailbody") );
   QVERIFY( item.hasAttribute<TestAttribute>() );
   QCOMPARE( item.attribute<TestAttribute>()->data, QByteArray("extra") );
