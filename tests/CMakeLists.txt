@@ -50,6 +50,7 @@ kde4_add_executable( akonadi-firstrun TEST ../firstrun.cpp firstrunner.cpp )
 target_link_libraries( akonadi-firstrun akonadi-kde ${KDE4_KDEUI_LIBS} )
 
 # qtestlib unit tests
+add_akonadi_test(testenvironmenttest.cpp)
 add_akonadi_test(imapparsertest.cpp)
 add_akonadi_test(imapsettest.cpp)
 add_akonadi_test(collectionjobtest.cpp)

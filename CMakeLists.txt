@@ -202,6 +202,7 @@ install( FILES
   job.h
   linkjob.h
   monitor.h
+  qtest_akonadi.h
   resourcebase.h
   searchcreatejob.h
   session.h
