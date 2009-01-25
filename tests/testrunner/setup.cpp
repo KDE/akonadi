@@ -232,9 +232,9 @@ void SetupTest::createTempEnvironment()
   }
 
   Config *config = Config::getInstance();
-  copyDirectory(testRunnerKdeHomeDir, config->getKdeHome());
-  copyDirectory(testRunnerConfigDir, config->getXdgConfigHome());
-  copyDirectory(testRunnerDataDir, config->getXdgDataHome());
+  copyDirectory( config->getKdeHome(), QDir::tempPath() + QDir::separator() + testRunnerKdeHomeDir );
+  copyDirectory( config->getXdgConfigHome(), QDir::tempPath() + QDir::separator() + testRunnerConfigDir  );
+  copyDirectory( config->getXdgDataHome(), QDir::tempPath() + QDir::separator() + testRunnerDataDir );
 }
 
 void SetupTest::deleteDirectory(const QString &dirName)
