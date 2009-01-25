@@ -27,9 +27,12 @@ class SetupTest : public QObject
   private:
     QProcess *akonadiDaemonProcess;
     int dpid;
+    QDBusConnection *mInternalBus;
+    QList<QString> mPendingAgents;
+
+  private:
     bool clearEnvironment();
     QMap<QString, QString> getEnvironment();
-    QDBusConnection *mInternalBus;
     int addDBusToEnvironment(QIODevice& io);
     int startDBusDaemon();
     void stopDBusDaemon(int dbuspid);

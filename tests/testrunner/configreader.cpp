@@ -29,20 +29,16 @@ ConfigReader::ConfigReader(const QString &configfile) {
   QDomDocument doc;
   QFile file( configfile );
 
-  if( !file.open( QIODevice::ReadOnly ) ){
-    qDebug()<<"error reading file:"<<configfile;
-    return;
-  }else{
-    if( !doc.setContent( &file ) ) {
-      file.close();
-      return;
-    }
-  }
-  file.close();
+  if ( !file.open( QIODevice::ReadOnly ) )
+    qFatal( "error reading file: %s", qPrintable( configfile ) );
+
+  QString errorMsg;
+  if( !doc.setContent( &file, &errorMsg ) )
+    qFatal( "unable to parse config file: %s", qPrintable( errorMsg ) );
 
   QDomElement root = doc.documentElement();
   if( root.tagName() != "config" )
-    qDebug()<<"could not file root tag";
+    qFatal( "could not file root tag" );
 
   QDomNode n = root.firstChild();
   while( !n.isNull() ) {

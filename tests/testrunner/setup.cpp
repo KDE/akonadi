@@ -26,6 +26,7 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
+#include <QDBusReply>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -153,18 +154,23 @@ void SetupTest::stopAkonadiDaemon()
 void SetupTest::setupAgents()
 {
   Config *config = Config::getInstance();
-  QDBusInterface  agentDBus( "org.freedesktop.Akonadi.Control", "/AgentManager",
-                           "org.freedesktop.Akonadi.AgentManager", *mInternalBus );
+  QDBusInterface agentDBus( "org.freedesktop.Akonadi.Control", "/AgentManager",
+                            "org.freedesktop.Akonadi.AgentManager", *mInternalBus );
 
   kDebug() << "available agent types:" << agentDBus.call( QLatin1String( "agentTypes" ) );
 
   kDebug() << config->getAgents();
   foreach(const QString &agent, config->getAgents()){
-    kDebug() << "inserting resource:"<<agent;
-    kDebug() << agentDBus.call( QLatin1String( "createAgentInstance" ), agent);
+    kDebug() << "inserting resource:" << agent;
+    QDBusReply<QString> reply = agentDBus.call( QLatin1String( "createAgentInstance" ), agent );
+    if ( reply.isValid() && !reply.value().isEmpty() )
+      mPendingAgents << reply.value();
+    else
+      kError() << "createAgentInstance call failed:" << reply.error();
   }
 
-  emit setupDone();
+  if ( mPendingAgents.isEmpty() )
+    emit setupDone();
 }
 
 void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
@@ -173,10 +179,21 @@ void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwn
 
   // TODO: find out why it does not work properly when reacting on
   // org.freedesktop.Akonadi.Control
-  if ( name == QLatin1String( "org.freedesktop.Akonadi" ) )
+  if ( name == QLatin1String( "org.freedesktop.Akonadi" ) ) {
     setupAgents();
+    return;
+  }
+
+  if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Agent." ) ) ) {
+    const QString identifier = name.mid( 30 );
+    if ( mPendingAgents.contains( identifier ) ) {
+      mPendingAgents.removeAll( identifier );
+      if ( mPendingAgents.isEmpty() )
+        emit setupDone();
+    }
+  }
 }
-         
+
 void SetupTest::copyDirectory(const QString &src, const QString &dst)
 {
   QDir srcDir(src);
@@ -198,7 +215,7 @@ void SetupTest::createTempEnvironment()
 {
   QDir tmpDir = QDir::temp();
   const QString testRunnerDir = QString("akonadi_testrunner");
-  const QString testRunnerKdeHomeDir = testRunnerDir + QString("/kdehome"); 
+  const QString testRunnerKdeHomeDir = testRunnerDir + QString("/kdehome");
   const QString testRunnerDataDir = testRunnerDir + QString("/data");
   const QString testRunnerConfigDir = testRunnerDir + QString("/config");
 
@@ -212,8 +229,8 @@ void SetupTest::createTempEnvironment()
   Config *config = Config::getInstance();
   copyDirectory(testRunnerKdeHomeDir, config->getKdeHome());
   copyDirectory(testRunnerConfigDir, config->getXdgConfigHome());
-  copyDirectory(testRunnerDataDir, config->getXdgDataHome()); 
-}  
+  copyDirectory(testRunnerDataDir, config->getXdgDataHome());
+}
 
 void SetupTest::deleteDirectory(const QString &dirName)
 {
@@ -242,7 +259,7 @@ SetupTest::SetupTest()
 
   clearEnvironment();
   createTempEnvironment();
-  
+
   setenv("KDEHOME", "/tmp/akonadi_testrunner/kdehome", 1 );
   setenv("XDG_DATA_HOME", "/tmp/akonadi_testrunner/data", 1 );
   setenv("XDG_CONFIG_HOME", "/tmp/akonadi_testrunner/config", 1 );
