@@ -48,7 +48,7 @@ int main( int argc, char **argv )
   const KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   if ( args->isSet( "config" ) )
-    Config::getInstance( args->getOption( "config" ) );
+    Config::instance( args->getOption( "config" ) );
 
   SetupTest *setup = new SetupTest();
 

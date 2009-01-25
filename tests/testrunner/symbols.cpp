@@ -17,29 +17,29 @@
 
 #include "symbols.h"
 
-Symbols* Symbols::instance = 0;
+Symbols* Symbols::mInstance = 0;
 
-Symbols *Symbols::getInstance()
+Symbols *Symbols::instance()
 {
-  if ( instance == 0 ) {
-    instance= new Symbols();
+  if ( mInstance == 0 ) {
+    mInstance= new Symbols();
   }
 
-  return instance;
+  return mInstance;
 }
 
 void Symbols::destroyInstance()
 {
-  delete instance;
+  delete mInstance;
 }
 
 void Symbols::insertSymbol( const QString &key, const QString &item )
 {
-  symbols.insert( key, item );
+  mSymbols.insert( key, item );
 }
 
-QHash<QString, QString> Symbols::getSymbols() const
+QHash<QString, QString> Symbols::symbols() const
 {
-  return symbols;
+  return mSymbols;
 }
 

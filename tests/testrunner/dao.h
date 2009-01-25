@@ -25,8 +25,8 @@ class DAO
 {
   public:
     bool insertItem( const Akonadi::Item &item, const Akonadi::Collection &collection );
-    Akonadi::Collection::List showCollections() const;
-    Akonadi::Collection getCollectionByName( const QString &collectionName ) const;
+    Akonadi::Collection::List collections() const;
+    Akonadi::Collection collectionByName( const QString &collectionName ) const;
 };
 
 #endif

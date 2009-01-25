@@ -26,8 +26,8 @@
 #include <QtCore/QEventLoop>
 
 
-FeedItem::FeedItem( const QString &fileName, const QString &mimetype )
-  : Item( mimetype )
+FeedItem::FeedItem( const QString &fileName, const QString &mimeType )
+  : Item( mimeType )
 {
   KUrl url;
   if ( !KUrl::isRelativeUrl( fileName ) )

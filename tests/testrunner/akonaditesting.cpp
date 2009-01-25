@@ -45,11 +45,11 @@ void AkonadiTesting::insertItem( const QString &fileName, const QString &collect
   ItemFactory factory;
   DAO dao;
 
-  const Akonadi::Collection collection = dao.getCollectionByName( collectionName );
+  const Akonadi::Collection collection = dao.collectionByName( collectionName );
 
   const Item *item = factory.createItem( fileName );
 
-  foreach ( const Akonadi::Item &akonadItem, item->getItem() ) {
+  foreach ( const Akonadi::Item &akonadItem, item->items() ) {
     if ( dao.insertItem( akonadItem, collection ) ) {
       qDebug()<<"Item loaded to Akonadi";
     } else {
@@ -60,10 +60,10 @@ void AkonadiTesting::insertItem( const QString &fileName, const QString &collect
 
 void AkonadiTesting::insertItemFromList()
 {
-  const Config *config = Config::getInstance();
+  const Config *config = Config::instance();
   QPair<QString, QString> configItem;
 
-  foreach (configItem, config->getItemConfig() ) {
+  foreach (configItem, config->itemConfig() ) {
     insertItem( configItem.first, configItem.second );
   }
 }

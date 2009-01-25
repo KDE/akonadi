@@ -23,80 +23,80 @@
 #include <QtCore/QDir>
 #include <QtCore/QPair>
 
-Config* Config::instance = 0;
+Config* Config::mInstance = 0;
 
 Config::Config()
 {
 }
 
-Config *Config::getInstance( const QString& pathToConfig )
+Config *Config::instance( const QString& pathToConfig )
 {
-  if ( instance == 0 ) {
+  if ( mInstance == 0 ) {
     QString cfgFile = pathToConfig;
     if ( cfgFile.isEmpty() )
        cfgFile = KStandardDirs::locate( "config", "akonaditest.xml" );
 
-     instance = new ConfigReader( cfgFile );
+     mInstance = new ConfigReader( cfgFile );
   }
 
-  return instance;
+  return mInstance;
 }
 
 
 void Config::destroyInstance()
 {
-  delete instance;
+  delete mInstance;
 }
 
-QString Config::getKdeHome() const
+QString Config::kdeHome() const
 {
-  return kdehome;
+  return mKdeHome;
 }
 
-QString Config::getXdgDataHome() const
+QString Config::xdgDataHome() const
 {
-  return xdgdatahome;
+  return mXdgDataHome;
 }
 
-QString Config::getXdgConfigHome() const
+QString Config::xdgConfigHome() const
 {
-  return xdgconfighome;
+  return mXdgConfigHome;
 }
 
 void Config::setKdeHome( const QString &home )
 {
   const QDir kdeHomeDir( home );
-  kdehome = kdeHomeDir.absolutePath();
+  mKdeHome = kdeHomeDir.absolutePath();
 }
 
-void Config::setXdgDataHome( const QString &datahome )
+void Config::setXdgDataHome( const QString &dataHome )
 {
-  const QDir dataHomeDir( datahome );
-  xdgdatahome = dataHomeDir.absolutePath();
+  const QDir dataHomeDir( dataHome );
+  mXdgDataHome = dataHomeDir.absolutePath();
 }
 
-void Config::setXdgConfigHome( const QString &confighome )
+void Config::setXdgConfigHome( const QString &configHome )
 {
-  const QDir configHomeDir( confighome );
-  xdgconfighome = configHomeDir.absolutePath();
+  const QDir configHomeDir( configHome );
+  mXdgConfigHome = configHomeDir.absolutePath();
 }
 
-void Config::insertItemConfig( const QString &itemname, const QString &colname )
+void Config::insertItemConfig( const QString &itemName, const QString &collectionName )
 {
-  itemconfig.append( qMakePair( itemname, colname ) );
+  mItemConfig.append( qMakePair( itemName, collectionName ) );
 }
 
-QList< QPair<QString, QString> > Config::getItemConfig() const
+QList< QPair<QString, QString> > Config::itemConfig() const
 {
-  return itemconfig;
+  return mItemConfig;
 }
 
 void Config::insertAgent( const QString &agent )
 {
-  mAgents << agent;
+  mAgents.append( agent );
 }
 
-QStringList Config::getAgents() const
+QStringList Config::agents() const
 {
   return mAgents;
 }

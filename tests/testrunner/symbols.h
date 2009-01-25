@@ -23,15 +23,15 @@
 class Symbols
 {
   public:
-    static Symbols *getInstance();
+    static Symbols *instance();
     static void destroyInstance();
 
-    QHash<QString, QString> getSymbols() const;
+    QHash<QString, QString> symbols() const;
     void insertSymbol( const QString &key, const QString &item );
 
   private:
-    QHash<QString,QString> symbols;
-    static Symbols *instance;
+    QHash<QString,QString> mSymbols;
+    static Symbols *mInstance;
 };
 
 #endif

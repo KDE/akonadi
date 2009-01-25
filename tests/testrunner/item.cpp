@@ -17,12 +17,12 @@
 
 #include "item.h"
 
-Item::Item(const QString &mimetype )
+Item::Item( const QString &mimetype )
 {
   mMimeType = mimetype;
 }
 
-QList<Akonadi::Item> Item::getItem() const
+Akonadi::Item::List Item::items() const
 {
   return mItems;
 }

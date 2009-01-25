@@ -24,7 +24,7 @@
 class CalItem: public Item
 {
   public:
-    CalItem( const QString &fileName, const QString &mimetype );
+    CalItem( const QString &fileName, const QString &mimeType );
 };
 
 #endif

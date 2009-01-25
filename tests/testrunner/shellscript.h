@@ -32,7 +32,7 @@ class ShellScript
     void writeEnvironmentVariables();
     void writeShutdownFunction();
 
-    Symbols *symbol;
-    QString script;
+    Symbols *mSymbol;
+    QString mScript;
 };
 #endif

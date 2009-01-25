@@ -29,7 +29,7 @@ class FeedItem : public QObject, public Item
   Q_OBJECT
 
   public:
-    FeedItem( const QString &fileName, const QString &mimetype );
+    FeedItem( const QString &fileName, const QString &mimeType );
 
   private  Q_SLOTS:
     void feedLoaded( Syndication::Loader* loader,

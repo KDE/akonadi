@@ -25,26 +25,26 @@
 
 ShellScript::ShellScript()
 {
-  symbol = Symbols::getInstance();
+  mSymbol = Symbols::instance();
 }
 
 void ShellScript::writeEnvironmentVariables()
 {
-  QHashIterator<QString, QString> i( symbol->getSymbols() );
+  QHashIterator<QString, QString> it( mSymbol->symbols() );
 
-  while ( i.hasNext() ) {
-    i.next();
-    script.append( i.key() );
-    script.append( QLatin1Char( '=' ) );
-    script.append( i.value() );
-    script.append( QLatin1Char( '\n' ) );
+  while ( it.hasNext() ) {
+    it.next();
+    mScript.append( it.key() );
+    mScript.append( QLatin1Char( '=' ) );
+    mScript.append( it.value() );
+    mScript.append( QLatin1Char( '\n' ) );
 
-    script.append( QLatin1String( "export " ) );
-    script.append( i.key() );
-    script.append( QLatin1Char( '\n' ) );
+    mScript.append( QLatin1String( "export " ) );
+    mScript.append( it.key() );
+    mScript.append( QLatin1Char( '\n' ) );
   }
 
-  script.append( QLatin1String( "\n\n" ) );
+  mScript.append( QLatin1String( "\n\n" ) );
 }
 
 void ShellScript::writeShutdownFunction()
@@ -63,19 +63,19 @@ void ShellScript::writeShutdownFunction()
     "  kill $DBUS_SESSION_BUS_PID\n"
     "  rm -fr /tmp/akonadi_testrunner\n"
     "}\n\n";
-  script.append( s );
+  mScript.append( s );
 }
 
-void ShellScript::makeShellScript( const QString &filename )
+void ShellScript::makeShellScript( const QString &fileName )
 {
-  QFile file( filename ); //can user define the file name/location?
+  QFile file( fileName ); //can user define the file name/location?
 
   file.open( QIODevice::WriteOnly );
 
   writeEnvironmentVariables();
   writeShutdownFunction();
 
-  file.write( script.toAscii(), qstrlen( script.toAscii() ) );
+  file.write( mScript.toAscii(), qstrlen( mScript.toAscii() ) );
   file.close();
 }
 

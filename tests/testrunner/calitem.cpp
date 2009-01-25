@@ -26,8 +26,8 @@
 
 typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 
-CalItem::CalItem( const QString &fileName, const QString &mimetype )
-  : Item( mimetype )
+CalItem::CalItem( const QString &fileName, const QString &mimeType )
+  : Item( mimeType )
 {
   KCal::CalendarLocal calendarlocal( KDateTime::UTC );
 
@@ -35,7 +35,7 @@ CalItem::CalItem( const QString &fileName, const QString &mimetype )
     KCal::Incidence::List incidence = calendarlocal.rawIncidences();
     for ( int i = 0; i < incidence.size(); i++ ) {
       Akonadi::Item item;
-      item.setMimeType( mimetype );
+      item.setMimeType( mMimeType );
       item.setPayload<IncidencePtr>( IncidencePtr( incidence.at( i )->clone() ) );
       mItems.append( item );
     }

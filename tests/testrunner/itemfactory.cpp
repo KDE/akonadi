@@ -23,11 +23,11 @@
 
 Item *ItemFactory::createItem( const QString &fileName )
 {
-  if( fileName.endsWith( ".vcf" ) ) {
+  if ( fileName.endsWith( QLatin1String( ".vcf" ) ) ) {
     return new VCardItem( fileName, QLatin1String( "text/vcard" ) );
-  } else if( fileName.endsWith( ".ics" ) ) {
+  } else if ( fileName.endsWith( QLatin1String( ".ics" ) ) ) {
     return new CalItem( fileName, QLatin1String( "text/calendar" ) );
-  } else if( fileName.endsWith( ".xml" ) ) {
+  } else if ( fileName.endsWith( QLatin1String( ".xml" ) ) ) {
     return new FeedItem( fileName, QLatin1String( "application/rss+xml" ) );
   }
 

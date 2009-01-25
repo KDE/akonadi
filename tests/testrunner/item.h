@@ -27,10 +27,10 @@ class Item
 {
   public:
     Item( const QString &mimetype );
-    QList<Akonadi::Item> getItem() const;
+    Akonadi::Item::List items() const;
 
   protected:
-    QList<Akonadi::Item> mItems;
+    Akonadi::Item::List mItems;
     QString mMimeType;
     Akonadi::Collection mCollection;
 };

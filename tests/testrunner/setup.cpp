@@ -36,7 +36,7 @@
 #include <signal.h>
 #include <unistd.h>
 
-QMap<QString, QString> SetupTest::getEnvironment()
+QMap<QString, QString> SetupTest::environment() const
 {
   QMap<QString, QString> env;
 
@@ -53,11 +53,11 @@ QMap<QString, QString> SetupTest::getEnvironment()
 
 bool SetupTest::clearEnvironment()
 {
-  const QMap<QString, QString> environment = getEnvironment();
+  const QStringList keys = environment().keys();
 
-  foreach ( const QString& s, environment.keys() ) {
-    if ( s != QLatin1String( "HOME" ) ) {
-      if ( !unsetenv( s.toAscii() ) ) {
+  foreach ( const QString& key, keys ) {
+    if ( key != QLatin1String( "HOME" ) ) {
+      if ( !unsetenv( key.toAscii() ) ) {
         return false;
       }
     }
@@ -70,7 +70,7 @@ int SetupTest::addDBusToEnvironment( QIODevice& io )
 {
   QByteArray data = io.readLine();
   int pid = -1;
-  Symbols *symbol = Symbols::getInstance();
+  Symbols *symbol = Symbols::instance();
 
   while ( data.size() ) {
     if ( data[ data.size() - 1 ] == '\n' ) {
@@ -142,32 +142,31 @@ void SetupTest::registerWithInternalDBus( const QString &address )
 
 void SetupTest::startAkonadiDaemon()
 {
-  QLatin1String akonadiDaemon( "akonadi_control" );
-  QStringList args;
-  akonadiDaemonProcess->start( akonadiDaemon, args );
-  akonadiDaemonProcess->waitForStarted( 5000 );
-  kDebug() << akonadiDaemonProcess->pid();
+  mAkonadiDaemonProcess->start( QLatin1String( "akonadi_control" ), QStringList() );
+  mAkonadiDaemonProcess->waitForStarted( 5000 );
+  kDebug() << mAkonadiDaemonProcess->pid();
 }
 
 void SetupTest::stopAkonadiDaemon()
 {
-  akonadiDaemonProcess->terminate();
-  if ( !akonadiDaemonProcess->waitForFinished( 5000 ) ) {
+  mAkonadiDaemonProcess->terminate();
+  if ( !mAkonadiDaemonProcess->waitForFinished( 5000 ) ) {
     kDebug() << "Problem finishing process.";
   }
-  akonadiDaemonProcess->close();
+  mAkonadiDaemonProcess->close();
 }
 
 void SetupTest::setupAgents()
 {
-  Config *config = Config::getInstance();
-  QDBusInterface agentDBus( "org.freedesktop.Akonadi.Control", "/AgentManager",
-                            "org.freedesktop.Akonadi.AgentManager", *mInternalBus );
+  Config *config = Config::instance();
+  QDBusInterface agentDBus( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/AgentManager" ),
+                            QLatin1String( "org.freedesktop.Akonadi.AgentManager" ), *mInternalBus );
 
   kDebug() << "available agent types:" << agentDBus.call( QLatin1String( "agentTypes" ) );
 
-  kDebug() << config->getAgents();
-  foreach ( const QString &agent, config->getAgents() ) {
+  const QStringList agents = config->agents();
+  kDebug() << agents;
+  foreach ( const QString &agent, agents ) {
     kDebug() << "inserting resource:" << agent;
     QDBusReply<QString> reply = agentDBus.call( QLatin1String( "createAgentInstance" ), agent );
     if ( reply.isValid() && !reply.value().isEmpty() )
@@ -236,10 +235,10 @@ void SetupTest::createTempEnvironment()
     tmpDir.mkdir( testRunnerDataDir );
   }
 
-  const Config *config = Config::getInstance();
-  copyDirectory( config->getKdeHome(), QDir::tempPath() + QDir::separator() + testRunnerKdeHomeDir );
-  copyDirectory( config->getXdgConfigHome(), QDir::tempPath() + QDir::separator() + testRunnerConfigDir  );
-  copyDirectory( config->getXdgDataHome(), QDir::tempPath() + QDir::separator() + testRunnerDataDir );
+  const Config *config = Config::instance();
+  copyDirectory( config->kdeHome(), QDir::tempPath() + QDir::separator() + testRunnerKdeHomeDir );
+  copyDirectory( config->xdgConfigHome(), QDir::tempPath() + QDir::separator() + testRunnerConfigDir  );
+  copyDirectory( config->xdgDataHome(), QDir::tempPath() + QDir::separator() + testRunnerDataDir );
 }
 
 void SetupTest::deleteDirectory( const QString &dirName )
@@ -275,7 +274,7 @@ SetupTest::SetupTest()
   setenv( "XDG_DATA_HOME", "/tmp/akonadi_testrunner/data", 1 );
   setenv( "XDG_CONFIG_HOME", "/tmp/akonadi_testrunner/config", 1 );
 
-  Symbols *symbol = Symbols::getInstance();
+  Symbols *symbol = Symbols::instance();
   symbol->insertSymbol( "KDEHOME", QLatin1String( "/tmp/akonadi_testrunner/kdehome" ) );
   symbol->insertSymbol( "XDG_DATA_HOME", QLatin1String( "/tmp/akonadi_testrunner/data" ) );
   symbol->insertSymbol( "XDG_CONFIG_HOME", QLatin1String( "/tmp/akonadi_testrunner/config" ) );
@@ -284,25 +283,25 @@ SetupTest::SetupTest()
   mDBusDaemonPid = startDBusDaemon();
 
 #if (QT_VERSION >= QT_VERSION_CHECK(4, 4, 2))
-  const QString dbusAddress = symbol->getSymbols()[ QLatin1String( "DBUS_SESSION_BUS_ADDRESS" ) ];
+  const QString dbusAddress = symbol->symbols()[ QLatin1String( "DBUS_SESSION_BUS_ADDRESS" ) ];
   registerWithInternalDBus( dbusAddress );
 #endif
 
-  akonadiDaemonProcess = new QProcess();
+  mAkonadiDaemonProcess = new QProcess();
 }
 
 SetupTest::~SetupTest()
 {
   cleanTempEnvironment();
-  delete akonadiDaemonProcess;
+  delete mAkonadiDaemonProcess;
 }
 
 void SetupTest::shutdown()
 {
   kDebug();
   mShuttingDown = true;
-  QDBusInterface controlIface( "org.freedesktop.Akonadi.Control", "/ControlManager",
-                               "org.freedesktop.Akonadi.ControlManager", *mInternalBus );
+  QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
+                               QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), *mInternalBus );
   QDBusReply<void> reply = controlIface.call( "shutdown" );
   if ( !reply.isValid() ) {
     kWarning() << "Failed to shutdown Akonadi server: " << reply.error().message();

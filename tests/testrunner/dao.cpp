@@ -20,7 +20,7 @@
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 
-Akonadi::Collection::List DAO::showCollections() const
+Akonadi::Collection::List DAO::collections() const
 {
   Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(),
                                                                       Akonadi::CollectionFetchJob::Recursive );
@@ -29,11 +29,11 @@ Akonadi::Collection::List DAO::showCollections() const
   return job->collections();
 }
 
-Akonadi::Collection DAO::getCollectionByName( const QString &collectionName ) const
+Akonadi::Collection DAO::collectionByName( const QString &collectionName ) const
 {
-  const Akonadi::Collection::List collections = showCollections();
+  const Akonadi::Collection::List collectionList = collections();
 
-  foreach ( const Akonadi::Collection &collection, collections ) {
+  foreach ( const Akonadi::Collection &collection, collectionList ) {
     if ( collectionName == collection.name() )
       return collection;
   }

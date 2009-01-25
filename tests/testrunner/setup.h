@@ -47,10 +47,10 @@ class SetupTest : public QObject
 
   private:
     bool clearEnvironment();
-    QMap<QString, QString> getEnvironment();
-    int addDBusToEnvironment( QIODevice& io );
+    QMap<QString, QString> environment() const;
+    int addDBusToEnvironment( QIODevice &device );
     int startDBusDaemon();
-    void stopDBusDaemon( int dbuspid );
+    void stopDBusDaemon( int dbusPid );
     void registerWithInternalDBus( const QString &address );
     void setupAgents();
     void copyDirectory( const QString &src, const QString &dst );
@@ -58,7 +58,7 @@ class SetupTest : public QObject
     void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
 
-    QProcess *akonadiDaemonProcess;
+    QProcess *mAkonadiDaemonProcess;
     int mDBusDaemonPid;
     QDBusConnection *mInternalBus;
     QList<QString> mPendingAgents;

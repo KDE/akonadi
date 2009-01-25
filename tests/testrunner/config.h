@@ -25,29 +25,29 @@
 class Config
 {
   public:
-    static Config *getInstance( const QString &pathToConfig = QString() );
+    static Config *instance( const QString &pathToConfig = QString() );
     static void destroyInstance();
-    QString getKdeHome() const;
-    QString getXdgDataHome() const;
-    QString getXdgConfigHome() const;
-    QList<QPair<QString, QString> > getItemConfig() const;
-    QStringList getAgents() const;
+    QString kdeHome() const;
+    QString xdgDataHome() const;
+    QString xdgConfigHome() const;
+    QList<QPair<QString, QString> > itemConfig() const;
+    QStringList agents() const;
 
   protected:
     Config();
     void setKdeHome( const QString &home );
-    void setXdgDataHome( const QString &datahome );
-    void setXdgConfigHome( const QString &confighome );
-    void insertItemConfig( const QString &itemname, const QString &colname );
+    void setXdgDataHome( const QString &dataHome );
+    void setXdgConfigHome( const QString &configHome );
+    void insertItemConfig( const QString &itemName, const QString &collectionName );
     void insertAgent( const QString &agent );
 
   private:
-    QString kdehome;
-    QString xdgdatahome;
-    QString xdgconfighome;
-    QList <QPair <QString, QString> >  itemconfig;
+    QString mKdeHome;
+    QString mXdgDataHome;
+    QString mXdgConfigHome;
+    QList <QPair <QString, QString> >  mItemConfig;
     QStringList mAgents;
-    static Config *instance;
+    static Config *mInstance;
 };
 
 #endif
