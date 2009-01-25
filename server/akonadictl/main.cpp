@@ -30,6 +30,8 @@
 #include "controlmanagerinterface.h"
 #include "akonadistarter.h"
 
+#include <unistd.h>
+
 static bool startServer()
 {
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE )
@@ -68,7 +70,8 @@ int main( int argc, char **argv )
       "Commands:\n"
       "  start      : Starts the Akonadi server with all its processes\n"
       "  stop       : Stops the Akonadi server and all its processes cleanly\n"
-      "  status     : Shows a status overview of the Akonadi server"
+      "  status     : Shows a status overview of the Akonadi server\n"
+      "  restart    : Restart the Akonadi"
   );
 
   app.parseCommandLine();
@@ -77,6 +80,7 @@ int main( int argc, char **argv )
   optionsList.append( QLatin1String( "start" ) );
   optionsList.append( QLatin1String( "stop" ) );
   optionsList.append( QLatin1String( "status" ) );
+  optionsList.append( QLatin1String( "restart" ) );
 
   const QStringList arguments = app.arguments();
   if ( arguments.count() != 2 ) {
@@ -96,6 +100,16 @@ int main( int argc, char **argv )
   } else if ( arguments[ 1 ] == QLatin1String( "status" ) ) {
     if ( !statusServer() )
       return 5;
+  } else if ( arguments[ 1 ] == QLatin1String( "restart") ) {
+      if ( !stopServer() )
+        return 4;
+      else {
+        do {
+          usleep(100000);
+        } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE ) );
+        if ( !startServer() )
+          return 3;
+      } 
   }
 
   return 0;
