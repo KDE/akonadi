@@ -20,6 +20,7 @@
 #include "symbols.h"
 
 #include <QFile>
+#include <QFileInfo>
 #include <QDomDocument>
 #include <QDomElement>
 #include <QDomNode>
@@ -40,28 +41,22 @@ ConfigReader::ConfigReader(const QString &configfile) {
   if( root.tagName() != "config" )
     qFatal( "could not file root tag" );
 
+  const QString basePath = QFileInfo( configfile ).absolutePath() + "/";
+
   QDomNode n = root.firstChild();
   while( !n.isNull() ) {
     QDomElement e = n.toElement();
     if( !e.isNull() ) {
-      if( e.tagName() == "kdehome" ){
-        setKdeHome( e.text() );
-      } else {
-        if( e.tagName() == "confighome" ){
-          setXdgConfigHome( e.text() );
-        } else {
-          if( e.tagName() == "datahome" ){
-            setXdgDataHome( e.text() );
-          } else {
-            if( e.tagName() == "item"){
-              insertItemConfig( e.attribute("location"), e.attribute("collection") );
-            } else {
-              if( e.tagName() == "agent"){
-                insertAgent( e.text() );
-              }
-            }
-          }
-        }
+      if( e.tagName() == "kdehome" ) {
+        setKdeHome( basePath + e.text() );
+      } else if( e.tagName() == "confighome" ) {
+        setXdgConfigHome( basePath + e.text() );
+      } else if( e.tagName() == "datahome" ) {
+        setXdgDataHome( basePath + e.text() );
+      } else if( e.tagName() == "item") {
+        insertItemConfig( e.attribute("location"), e.attribute("collection") );
+      } else if( e.tagName() == "agent") {
+        insertAgent( e.text() );
       }
     }
 
