@@ -25,7 +25,8 @@
 
 TestRunner::TestRunner(const QStringList& args, QObject* parent) :
   QObject( parent ),
-  mArguments( args )
+  mArguments( args ),
+  mExitCode( 0 )
 {
 }
 
@@ -39,14 +40,16 @@ void TestRunner::run()
   process->start();
   if ( !process->waitForStarted() ) {
     kWarning() << mArguments << "failed to start!";
-    QCoreApplication::exit( 255 );
+    mExitCode = 255;
+    emit finished();
   }
 }
 
  void TestRunner::processFinished(int exitCode)
 {
   kDebug() << exitCode;
-  QCoreApplication::instance()->exit( exitCode );
+  mExitCode = exitCode;
+  emit finished();
 }
 
 #include "testrunner.moc"

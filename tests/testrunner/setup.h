@@ -26,9 +26,10 @@ class SetupTest : public QObject
   Q_OBJECT
   private:
     QProcess *akonadiDaemonProcess;
-    int dpid;
+    int mDBusDaemonPid;
     QDBusConnection *mInternalBus;
     QList<QString> mPendingAgents;
+    bool mShuttingDown;
 
   private:
     bool clearEnvironment();
@@ -44,12 +45,16 @@ class SetupTest : public QObject
     void cleanTempEnvironment();
   private Q_SLOTS:
     void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
+    void shutdownHarder();
 
   public:
     void startAkonadiDaemon();
     void stopAkonadiDaemon();
     SetupTest();
     ~SetupTest();
+
+  public slots:
+    void shutdown();
 
   signals:
     void setupDone();

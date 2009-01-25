@@ -27,9 +27,11 @@
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QTimer>
 
 #include <signal.h>
 #include <unistd.h>
@@ -180,11 +182,14 @@ void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwn
   // TODO: find out why it does not work properly when reacting on
   // org.freedesktop.Akonadi.Control
   if ( name == QLatin1String( "org.freedesktop.Akonadi" ) ) {
-    setupAgents();
+    if ( oldOwner.isEmpty() ) // startup
+      setupAgents();
+    else if ( mShuttingDown ) // our own shutdown
+      shutdownHarder();
     return;
   }
 
-  if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Agent." ) ) ) {
+  if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Agent." ) ) && oldOwner.isEmpty() ) {
     const QString identifier = name.mid( 30 );
     if ( mPendingAgents.contains( identifier ) ) {
       mPendingAgents.removeAll( identifier );
@@ -271,7 +276,7 @@ SetupTest::SetupTest()
   symbol->insertSymbol("XDG_CONFIG_HOME", QString("/tmp/akonadi_testrunner/config"));
   symbol->insertSymbol("AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
 
-  dpid = startDBusDaemon();
+  mDBusDaemonPid = startDBusDaemon();
 
 #if (QT_VERSION >= QT_VERSION_CHECK(4, 4, 2))
   const QString dbusAddress = symbol->getSymbols()[ "DBUS_SESSION_BUS_ADDRESS" ];
@@ -283,9 +288,31 @@ SetupTest::SetupTest()
 
 SetupTest::~SetupTest()
 {
-  stopAkonadiDaemon();
-  stopDBusDaemon(dpid);
   cleanTempEnvironment();
-
   delete akonadiDaemonProcess;
+}
+
+void SetupTest::shutdown()
+{
+  kDebug();
+  mShuttingDown = true;
+  QDBusInterface controlIface( "org.freedesktop.Akonadi.Control", "/ControlManager",
+                               "org.freedesktop.Akonadi.ControlManager", *mInternalBus );
+  QDBusReply<void> reply = controlIface.call( "shutdown" );
+  if ( !reply.isValid() ) {
+    kWarning() << "Failed to shutdown Akonadi server: " << reply.error().message();
+    shutdownHarder();
+  } else {
+    // safety timeout
+    QTimer::singleShot( 30 * 1000, this, SLOT(shutdownHarder()) );
+  }
+}
+
+void SetupTest::shutdownHarder()
+{
+  kDebug();
+  mShuttingDown = false;
+  stopAkonadiDaemon();
+  stopDBusDaemon( mDBusDaemonPid );
+  QCoreApplication::instance()->quit();
 }

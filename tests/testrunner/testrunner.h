@@ -27,15 +27,20 @@ class TestRunner : public QObject
 
   public:
     TestRunner( const QStringList &args, QObject *parent = 0 );
+    int exitCode() const { return mExitCode; }
 
   public slots:
     void run();
+
+  signals:
+    void finished();
 
   private slots:
     void processFinished( int exitCode );
 
   private:
     QStringList mArguments;
+    int mExitCode;
 };
 
 #endif // TESTRUNNER_H

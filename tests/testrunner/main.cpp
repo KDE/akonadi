@@ -40,12 +40,12 @@ int main(int argc, char **argv) {
   KCmdLineOptions options;
   options.add("c").add( "config <configfile>", ki18n("Configuration file to open"), "config.xml" );
   options.add( "!+[test]", ki18n("Test to run automatically, interactive if none specified") );
-  KCmdLineArgs::addCmdLineOptions(options); 
+  KCmdLineArgs::addCmdLineOptions(options);
 
   KApplication app;
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  
+
   if ( args->isSet("config") )
     Config::getInstance( args->getOption("config") );
 
@@ -60,20 +60,23 @@ int main(int argc, char **argv) {
   shellScript *sh = new shellScript();
   sh->makeShellScript();
 
+  int exitCode = 0;
   if ( args->count() > 0 ) {
     QStringList testArgs;
     for ( int i = 0; i < args->count(); ++i )
       testArgs << args->arg( i );
     TestRunner *runner = new TestRunner( testArgs );
     QObject::connect( setup, SIGNAL(setupDone()), runner, SLOT(run()) );
+    QObject::connect( runner, SIGNAL(finished()), setup, SLOT(shutdown()) );
+    exitCode = runner->exitCode();
   }
 
-  int result = app.exec();
+  exitCode = app.exec() + exitCode;
   Config::destroyInstance();
   delete testing;
   delete setup;
   delete sh;
 
-  return result;
+  return exitCode;
 }
 
