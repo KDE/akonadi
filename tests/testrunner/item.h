@@ -18,21 +18,21 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#include <QString>
-#include <akonadi/item.h>
 #include <akonadi/collection.h>
-#include <QStringList>
+#include <akonadi/item.h>
 
-class Item{
-protected:
-  QList<Akonadi::Item> item;
-  QString mimetype;
-  Akonadi::Collection collection;
-  
-public:
-  
-  Item(QString mimetype);
-  QList<Akonadi::Item> getItem() const;
+#include <QtCore/QString>
+
+class Item
+{
+  public:
+    Item( const QString &mimetype );
+    QList<Akonadi::Item> getItem() const;
+
+  protected:
+    QList<Akonadi::Item> mItems;
+    QString mMimeType;
+    Akonadi::Collection mCollection;
 };
 
 #endif

@@ -16,46 +16,47 @@
  */
 
 #include "feeditem.h"
-#include <kurl.h>
+
 #include <akonadi/item.h>
+#include <kurl.h>
 #include <syndication/feed.h>
 #include <syndication/loader.h>
-#include <QDir>
-#include <QtTest>
-#include <QEventLoop>
+
+#include <QtCore/QDir>
+#include <QtCore/QEventLoop>
 
 
-FeedItem::FeedItem(QFile *file, const QString &mimetype)
-:Item(mimetype)
+FeedItem::FeedItem( const QString &fileName, const QString &mimetype )
+  : Item( mimetype )
 {
-  KUrl kurl;
-  if (!KUrl::isRelativeUrl( file->fileName() ))
-    kurl = KUrl( file->fileName() );
+  KUrl url;
+  if ( !KUrl::isRelativeUrl( fileName ) )
+    url = KUrl( fileName );
   else
-    kurl = KUrl("file://" + QDir::currentPath() + '/', file->fileName() );
+    url = KUrl( QLatin1String( "file://" ) + QDir::currentPath() + QLatin1Char( '/' ), fileName );
 
-  Syndication::Loader* loader = Syndication::Loader::create(this,
-                                           SLOT(feedLoaded(Syndication::Loader*,
-                                           Syndication::FeedPtr,
-                                           Syndication::ErrorCode)));
-  loader->loadFrom(kurl);
+  Syndication::Loader* loader = Syndication::Loader::create( this,
+                                           SLOT( feedLoaded( Syndication::Loader*,
+                                                             Syndication::FeedPtr,
+                                                             Syndication::ErrorCode ) ) );
+  loader->loadFrom( url );
 
-  QEventLoop *test = new QEventLoop(this);
-  while(test->processEvents(QEventLoop::WaitForMoreEvents)) {} //workaround
+  QEventLoop *test = new QEventLoop( this );
+  while( test->processEvents( QEventLoop::WaitForMoreEvents ) ) {} //workaround
 }
 
-void FeedItem::feedLoaded(Syndication::Loader* loader,
-                            Syndication::FeedPtr feed,
-                            Syndication::ErrorCode error)
+void FeedItem::feedLoaded( Syndication::Loader* loader,
+                           Syndication::FeedPtr feed,
+                           Syndication::ErrorCode error )
 {
   Q_UNUSED( loader )
-  if( error != Syndication::Success)
+  if ( error != Syndication::Success )
     return;
 
-  foreach(const Syndication::ItemPtr &itemptr, feed->items()){
-    Akonadi::Item i;
-    i.setMimeType(mimetype);
-    i.setPayload<Syndication::ItemPtr>( itemptr );
-    item.append( i );
+  foreach ( const Syndication::ItemPtr &itemptr, feed->items() ) {
+    Akonadi::Item item;
+    item.setMimeType( mMimeType );
+    item.setPayload<Syndication::ItemPtr>( itemptr );
+    mItems.append( item );
   }
 }

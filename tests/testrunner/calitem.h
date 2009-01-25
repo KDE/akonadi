@@ -20,20 +20,11 @@
 #define CALITEM_H
 
 #include "item.h"
-#include <QFile>
-#include <kcal/todo.h>
-#include <kcal/event.h>
-#include <kcal/calendarlocal.h>
-#include <kcal/listbase.h>
 
-
-
-class CalItem: public Item{
-private:
-  void insertTodo( KCal::Todo::List todolist );
-  void insertEvent(KCal::Event::List eventlist);
-public:
-  CalItem(QFile *file, const QString &mimetype);
+class CalItem: public Item
+{
+  public:
+    CalItem( const QString &fileName, const QString &mimetype );
 };
 
 #endif

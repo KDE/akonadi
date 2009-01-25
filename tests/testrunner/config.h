@@ -18,37 +18,36 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <QString>
-#include <QHash>
-#include <QStringList>
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 class Config
 {
-  private:
-    QString kdehome;
-    QString xdgdatahome;
-    QString xdgconfighome;
-    QList <QPair <QString, QString> >  itemconfig; 
-    QStringList mAgents;
-    static Config *instance;
-
   public:
     static Config *getInstance( const QString &pathToConfig = QString() );
     static void destroyInstance();
     QString getKdeHome() const;
     QString getXdgDataHome() const;
     QString getXdgConfigHome() const;
-    QList<QPair<QString, QString> > getItemConfig();
-    QStringList getAgents();
+    QList<QPair<QString, QString> > getItemConfig() const;
+    QStringList getAgents() const;
 
   protected:
     Config();
-    void setKdeHome(const QString &home);
-    void setXdgDataHome(const QString &datahome);
-    void setXdgConfigHome(const QString &confighome);
-    void insertItemConfig(const QString &itemname, const QString &colname);
-    void insertAgent(QString agent);
+    void setKdeHome( const QString &home );
+    void setXdgDataHome( const QString &datahome );
+    void setXdgConfigHome( const QString &confighome );
+    void insertItemConfig( const QString &itemname, const QString &colname );
+    void insertAgent( const QString &agent );
 
+  private:
+    QString kdehome;
+    QString xdgdatahome;
+    QString xdgconfighome;
+    QList <QPair <QString, QString> >  itemconfig;
+    QStringList mAgents;
+    static Config *instance;
 };
 
 #endif

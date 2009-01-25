@@ -19,14 +19,14 @@
 #include "config.h"
 #include "symbols.h"
 
-#include <QFile>
-#include <QFileInfo>
-#include <QDomDocument>
-#include <QDomElement>
-#include <QDomNode>
-#include <QtTest>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
+#include <QtXml/QDomNode>
 
-ConfigReader::ConfigReader(const QString &configfile) {
+ConfigReader::ConfigReader( const QString &configfile )
+{
   QDomDocument doc;
   QFile file( configfile );
 
@@ -34,32 +34,32 @@ ConfigReader::ConfigReader(const QString &configfile) {
     qFatal( "error reading file: %s", qPrintable( configfile ) );
 
   QString errorMsg;
-  if( !doc.setContent( &file, &errorMsg ) )
+  if ( !doc.setContent( &file, &errorMsg ) )
     qFatal( "unable to parse config file: %s", qPrintable( errorMsg ) );
 
-  QDomElement root = doc.documentElement();
-  if( root.tagName() != "config" )
+  const QDomElement root = doc.documentElement();
+  if ( root.tagName() != "config" )
     qFatal( "could not file root tag" );
 
   const QString basePath = QFileInfo( configfile ).absolutePath() + "/";
 
-  QDomNode n = root.firstChild();
-  while( !n.isNull() ) {
-    QDomElement e = n.toElement();
-    if( !e.isNull() ) {
-      if( e.tagName() == "kdehome" ) {
-        setKdeHome( basePath + e.text() );
-      } else if( e.tagName() == "confighome" ) {
-        setXdgConfigHome( basePath + e.text() );
-      } else if( e.tagName() == "datahome" ) {
-        setXdgDataHome( basePath + e.text() );
-      } else if( e.tagName() == "item") {
-        insertItemConfig( e.attribute("location"), e.attribute("collection") );
-      } else if( e.tagName() == "agent") {
-        insertAgent( e.text() );
+  QDomNode node = root.firstChild();
+  while ( !node.isNull() ) {
+    const QDomElement element = node.toElement();
+    if ( !element.isNull() ) {
+      if ( element.tagName() == "kdehome" ) {
+        setKdeHome( basePath + element.text() );
+      } else if ( element.tagName() == "confighome" ) {
+        setXdgConfigHome( basePath + element.text() );
+      } else if ( element.tagName() == "datahome" ) {
+        setXdgDataHome( basePath + element.text() );
+      } else if ( element.tagName() == "item" ) {
+        insertItemConfig( element.attribute( "location" ), element.attribute( "collection" ) );
+      } else if ( element.tagName() == "agent" ) {
+        insertAgent( element.text() );
       }
     }
 
-    n = n.nextSibling();
+    node = node.nextSibling();
   }
 }

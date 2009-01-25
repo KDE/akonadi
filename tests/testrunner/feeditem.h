@@ -16,25 +16,25 @@
  */
 
 #ifndef FEEDITEM_H
-#define	FEEDITEM_H
+#define FEEDITEM_H
 
 #include "item.h"
-#include<QFile>
-#include<syndication/loader.h>
-#include <QObject>
 
-class FeedItem : public QObject, public Item 
+#include <syndication/loader.h>
+
+#include <QtCore/QObject>
+
+class FeedItem : public QObject, public Item
 {
   Q_OBJECT
-    
+
   public:
-    FeedItem(QFile *file, const QString &mimetype);
-    
+    FeedItem( const QString &fileName, const QString &mimetype );
+
   private  Q_SLOTS:
-    void feedLoaded(Syndication::Loader* loader,
-                            Syndication::FeedPtr feed,
-                            Syndication::ErrorCode error);
-  
+    void feedLoaded( Syndication::Loader* loader,
+                     Syndication::FeedPtr feed,
+                     Syndication::ErrorCode error );
 };
 
-#endif	
+#endif

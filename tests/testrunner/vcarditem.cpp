@@ -17,27 +17,27 @@
 
 
 #include "vcarditem.h"
-#include <kabc/vcardconverter.h>
+
 #include <kabc/addressee.h>
-#include <kabc/vcardformat.h>
-#include <kabc/addressbook.h>
-#include <kabc/format.h>
-#include <kabc/resource.h>
+#include <kabc/vcardconverter.h>
 
-VCardItem::VCardItem(QFile *file, const QString &mimetype)
-:Item(mimetype) {
+#include <QtCore/QFile>
+
+VCardItem::VCardItem( const QString &fileName, const QString &mimetype )
+  : Item( mimetype )
+{
   KABC::VCardConverter converter;
-  
-  QByteArray data = file->readAll();
-  vcardlist = converter.parseVCards( data );
-  
-  foreach(const KABC::Addressee &tmp, vcardlist){
-    Akonadi::Item tmpitem;
-    tmpitem.setMimeType(mimetype);
-    tmpitem.setPayload<KABC::Addressee>( tmp );
-    item.append( tmpitem  );
+
+  QFile file( fileName );
+  file.open( QIODevice::ReadOnly );
+
+  const QByteArray data = file.readAll();
+  const KABC::Addressee::List addressees = converter.parseVCards( data );
+
+  foreach ( const KABC::Addressee &addressee, addressees ) {
+    Akonadi::Item item;
+    item.setMimeType( mimetype );
+    item.setPayload<KABC::Addressee>( addressee );
+    mItems.append( item  );
   }
-  
 }
-
-

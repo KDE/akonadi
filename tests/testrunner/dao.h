@@ -20,16 +20,13 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
-#include <akonadi/collectionfetchjob.h>
-#include <QList>
 
-class DAO{
-  
-  
-public:
-  bool insertItem(Akonadi::Item item, Akonadi::Collection collection);
-  Akonadi::Collection::List showCollections();
-  Akonadi::Collection getCollectionByName(const QString &colname);
+class DAO
+{
+  public:
+    bool insertItem( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    Akonadi::Collection::List showCollections() const;
+    Akonadi::Collection getCollectionByName( const QString &collectionName ) const;
 };
 
 #endif

@@ -18,11 +18,10 @@
 #include "config.h"
 #include "configreader.h"
 
-#include <QPair>
-#include <QtTest>
-
 #include <kstandarddirs.h>
 
+#include <QtCore/QDir>
+#include <QtCore/QPair>
 
 Config* Config::instance = 0;
 
@@ -30,14 +29,16 @@ Config::Config()
 {
 }
 
-Config *Config::getInstance( const QString& pathToConfig)
+Config *Config::getInstance( const QString& pathToConfig )
 {
-  if(instance == 0){
+  if ( instance == 0 ) {
     QString cfgFile = pathToConfig;
     if ( cfgFile.isEmpty() )
-       cfgFile = KStandardDirs::locate("config","akonaditest.xml");
+       cfgFile = KStandardDirs::locate( "config", "akonaditest.xml" );
+
      instance = new ConfigReader( cfgFile );
   }
+
   return instance;
 }
 
@@ -62,40 +63,40 @@ QString Config::getXdgConfigHome() const
   return xdgconfighome;
 }
 
-void Config::setKdeHome(const QString &home)
+void Config::setKdeHome( const QString &home )
 {
-  QDir kdeHomeDir( home );
+  const QDir kdeHomeDir( home );
   kdehome = kdeHomeDir.absolutePath();
 }
 
-void Config::setXdgDataHome(const QString &datahome)
+void Config::setXdgDataHome( const QString &datahome )
 {
-  QDir dataHomeDir( datahome );
+  const QDir dataHomeDir( datahome );
   xdgdatahome = dataHomeDir.absolutePath();
 }
 
-void Config::setXdgConfigHome(const QString &confighome)
+void Config::setXdgConfigHome( const QString &confighome )
 {
-  QDir configHomeDir( confighome );
+  const QDir configHomeDir( confighome );
   xdgconfighome = configHomeDir.absolutePath();
 }
 
-void Config::insertItemConfig(const QString &itemname, const QString &colname)
+void Config::insertItemConfig( const QString &itemname, const QString &colname )
 {
-  itemconfig.append( qMakePair(itemname, colname) );
+  itemconfig.append( qMakePair( itemname, colname ) );
 }
 
-QList< QPair<QString, QString> > Config::getItemConfig()
+QList< QPair<QString, QString> > Config::getItemConfig() const
 {
   return itemconfig;
 }
 
-void Config::insertAgent(QString agent)
+void Config::insertAgent( const QString &agent )
 {
   mAgents << agent;
 }
 
-QStringList Config::getAgents()
+QStringList Config::getAgents() const
 {
   return mAgents;
 }

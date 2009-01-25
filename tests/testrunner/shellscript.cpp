@@ -15,37 +15,39 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 #include "shellscript.h"
-#include <QHashIterator>
-#include <QFile>
-#include <QtTest>
 
-shellScript::shellScript()
+#include "config.h"
+#include "symbols.h"
+
+#include <QtCore/QFile>
+#include <QtCore/QHashIterator>
+
+ShellScript::ShellScript()
 {
   symbol = Symbols::getInstance();
 }
 
-void shellScript::writeEnvironmentVariables()
+void ShellScript::writeEnvironmentVariables()
 {
   QHashIterator<QString, QString> i( symbol->getSymbols() );
 
-  while( i.hasNext() )
-  {
+  while ( i.hasNext() ) {
     i.next();
     script.append( i.key() );
-    script.append( "=" );
+    script.append( QLatin1Char( '=' ) );
     script.append( i.value() );
-    script.append( "\n" );
+    script.append( QLatin1Char( '\n' ) );
 
-    script.append("export ");
+    script.append( QLatin1String( "export " ) );
     script.append( i.key() );
-    script.append("\n");
+    script.append( QLatin1Char( '\n' ) );
   }
-  script.append("\n\n");
+
+  script.append( QLatin1String( "\n\n" ) );
 }
 
-void shellScript::writeShutdownFunction()
+void ShellScript::writeShutdownFunction()
 {
   const QString s =
     "function shutdown-testenvironment()\n"
@@ -64,16 +66,16 @@ void shellScript::writeShutdownFunction()
   script.append( s );
 }
 
-void shellScript::makeShellScript(const QString &filename)
+void ShellScript::makeShellScript( const QString &filename )
 {
-  QFile file(filename); //can user define the file name/location?
+  QFile file( filename ); //can user define the file name/location?
 
   file.open( QIODevice::WriteOnly );
 
   writeEnvironmentVariables();
   writeShutdownFunction();
 
-  file.write(script.toAscii(), qstrlen(script.toAscii()) );
+  file.write( script.toAscii(), qstrlen( script.toAscii() ) );
   file.close();
 }
 

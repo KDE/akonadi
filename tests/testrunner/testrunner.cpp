@@ -20,14 +20,19 @@
 #include <KDebug>
 #include <KProcess>
 
-#include <QCoreApplication>
-#include <QTimer>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QTimer>
 
-TestRunner::TestRunner(const QStringList& args, QObject* parent) :
-  QObject( parent ),
-  mArguments( args ),
-  mExitCode( 0 )
+TestRunner::TestRunner(const QStringList& args, QObject* parent)
+  : QObject( parent ),
+    mArguments( args ),
+    mExitCode( 0 )
 {
+}
+
+int TestRunner::exitCode() const
+{
+  return mExitCode;
 }
 
 void TestRunner::run()
@@ -35,7 +40,7 @@ void TestRunner::run()
   kDebug() << mArguments;
   KProcess *process = new KProcess( this );
   process->setProgram( mArguments );
-  connect( process, SIGNAL(finished(int)), SLOT(processFinished(int)) );
+  connect( process, SIGNAL( finished( int ) ), SLOT( processFinished( int ) ) );
   // environment setup seems to have been done by setuptest globally already
   process->start();
   if ( !process->waitForStarted() ) {
@@ -45,7 +50,7 @@ void TestRunner::run()
   }
 }
 
- void TestRunner::processFinished(int exitCode)
+void TestRunner::processFinished( int exitCode )
 {
   kDebug() << exitCode;
   mExitCode = exitCode;

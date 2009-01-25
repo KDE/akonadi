@@ -18,25 +18,26 @@
 
 #include "calitem.h"
 #include "item.h"
-#include <kcal/calendarlocal.h>
+
 #include <akonadi/item.h>
-#include <kcal/incidence.h>
 #include <boost/shared_ptr.hpp>
+#include <kcal/calendarlocal.h>
+#include <kcal/incidence.h>
 
 typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 
-CalItem::CalItem( QFile *file, const QString &mimetype)
-:Item(mimetype) {
-  KCal::CalendarLocal calendarlocal(KDateTime::UTC);
-  
-  if( calendarlocal.load(file->fileName() )){
+CalItem::CalItem( const QString &fileName, const QString &mimetype )
+  : Item( mimetype )
+{
+  KCal::CalendarLocal calendarlocal( KDateTime::UTC );
+
+  if ( calendarlocal.load( fileName ) ) {
     KCal::Incidence::List incidence = calendarlocal.rawIncidences();
-    for(int i = 0; i < incidence.size(); i++){
-      Akonadi::Item itemtmp;
-      itemtmp.setMimeType(mimetype);
-      itemtmp.setPayload<IncidencePtr>(IncidencePtr( incidence.at(i)->clone() ));
-      item.append(itemtmp);
+    for ( int i = 0; i < incidence.size(); i++ ) {
+      Akonadi::Item item;
+      item.setMimeType( mimetype );
+      item.setPayload<IncidencePtr>( IncidencePtr( incidence.at( i )->clone() ) );
+      mItems.append( item );
     }
   }
 }
-

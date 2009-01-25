@@ -16,58 +16,54 @@
  */
 
 #include "akonaditesting.h"
+#include "dao.h"
+#include "item.h"
 #include "itemfactory.h"
 #include "config.h"
-#include <QFile>
-#include <akonadi/item.h>
-#include <QtTest>
-#include <QList>
 
-AkonadiTesting::AkonadiTesting( const QString &configfilename )
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
+
+#include <QtCore/QDebug>
+#include <QtCore/QFile>
+
+AkonadiTesting::AkonadiTesting( const QString &configFileName )
 {
-  Q_UNUSED( configfilename ) // TODO use this if !isNull()
+  Q_UNUSED( configFileName ) // TODO use this if !isNull()
 }
 
 AkonadiTesting::AkonadiTesting()
 {
 }
-void AkonadiTesting::insertItem(const QString &filename, const QString &colname)
+
+AkonadiTesting::~AkonadiTesting()
+{
+}
+
+void AkonadiTesting::insertItem( const QString &fileName, const QString &collectionName )
 {
   ItemFactory factory;
   DAO dao;
 
-  Akonadi::Collection collection = dao.getCollectionByName(colname);
+  const Akonadi::Collection collection = dao.getCollectionByName( collectionName );
 
-  QFile *file = new QFile(filename);
-  qDebug()<<file->fileName();
-  file->open(QFile::ReadOnly);
+  const Item *item = factory.createItem( fileName );
 
-  Item *item = factory.createItem(file);
-
-  foreach(const Akonadi::Item &akonaditem, item->getItem()){
-    if( dao.insertItem(akonaditem, collection ) ){
+  foreach ( const Akonadi::Item &akonadItem, item->getItem() ) {
+    if ( dao.insertItem( akonadItem, collection ) ) {
       qDebug()<<"Item loaded to Akonadi";
     } else {
       qDebug()<<"Item can not be loaded";
     }
   }
-
-  delete file;
 }
 
 void AkonadiTesting::insertItemFromList()
 {
-  Config *config = Config::getInstance();
-  QPair<QString, QString> confitem;
+  const Config *config = Config::getInstance();
+  QPair<QString, QString> configItem;
 
-  foreach(confitem, config->getItemConfig() ){
-    insertItem(confitem.first, confitem.second);
+  foreach (configItem, config->getItemConfig() ) {
+    insertItem( configItem.first, configItem.second );
   }
-
-  //delete config;
 }
-AkonadiTesting::~AkonadiTesting()
-{
-}
-
-

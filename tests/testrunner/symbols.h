@@ -18,19 +18,20 @@
 #ifndef SYMBOLS_H
 #define SYMBOLS_H
 
-#include <QHash>
+#include <QtCore/QHash>
 
 class Symbols
 {
-  private:
-    QHash<QString,QString> symbols;
-    static Symbols *instance;    
-
   public:
     static Symbols *getInstance();
     static void destroyInstance();
-    QHash<QString, QString> getSymbols();
-    void insertSymbol(QString key, QString item);
-};    
+
+    QHash<QString, QString> getSymbols() const;
+    void insertSymbol( const QString &key, const QString &item );
+
+  private:
+    QHash<QString,QString> symbols;
+    static Symbols *instance;
+};
 
 #endif

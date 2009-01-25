@@ -1,4 +1,4 @@
-/*people
+/*
  *
  * Copyright (c) 2008  Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
  *
@@ -16,38 +16,39 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "akonaditesting.h"
+#include "config.h"
+#include "setup.h"
+#include "shellscript.h"
+#include "testrunner.h"
+
 #include <KApplication>
 #include <KAboutData>
 #include <KCmdLineArgs>
 #include <KDebug>
-#include <QtTest>
-#include "akonaditesting.h"
-#include "setup.h"
-#include "config.h"
-#include "shellscript.h"
-#include "testrunner.h"
 
-int main(int argc, char **argv) {
-  KAboutData aboutdata("akonadi-TES", 0,
-          ki18n("Akonadi Testing Environment Setup"),
-          "1.0",
-          ki18n("Setup Environmnet"),
-          KAboutData::License_GPL,
-          ki18n("(c) 2008 Igor Trindade Oliveira"));
+int main( int argc, char **argv )
+{
+  KAboutData aboutdata( "akonadi-TES", 0,
+                        ki18n( "Akonadi Testing Environment Setup" ),
+                        "1.0",
+                        ki18n( "Setup Environmnet" ),
+                        KAboutData::License_GPL,
+                        ki18n( "(c) 2008 Igor Trindade Oliveira" ) );
 
-  KCmdLineArgs::init(argc, argv, &aboutdata);
+  KCmdLineArgs::init( argc, argv, &aboutdata );
 
   KCmdLineOptions options;
-  options.add("c").add( "config <configfile>", ki18n("Configuration file to open"), "config.xml" );
-  options.add( "!+[test]", ki18n("Test to run automatically, interactive if none specified") );
-  KCmdLineArgs::addCmdLineOptions(options);
+  options.add( "c" ).add( "config <configfile>", ki18n( "Configuration file to open" ), "config.xml" );
+  options.add( "!+[test]", ki18n( "Test to run automatically, interactive if none specified" ) );
+  KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  const KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  if ( args->isSet("config") )
-    Config::getInstance( args->getOption("config") );
+  if ( args->isSet( "config" ) )
+    Config::getInstance( args->getOption( "config" ) );
 
   SetupTest *setup = new SetupTest();
 
@@ -57,7 +58,7 @@ int main(int argc, char **argv) {
 
   testing->insertItemFromList();
 
-  shellScript *sh = new shellScript();
+  ShellScript *sh = new ShellScript();
   sh->makeShellScript();
 
   TestRunner *runner = 0;
@@ -66,8 +67,8 @@ int main(int argc, char **argv) {
     for ( int i = 0; i < args->count(); ++i )
       testArgs << args->arg( i );
     runner = new TestRunner( testArgs );
-    QObject::connect( setup, SIGNAL(setupDone()), runner, SLOT(run()) );
-    QObject::connect( runner, SIGNAL(finished()), setup, SLOT(shutdown()) );
+    QObject::connect( setup, SIGNAL( setupDone() ), runner, SLOT( run() ) );
+    QObject::connect( runner, SIGNAL( finished() ), setup, SLOT( shutdown() ) );
   }
 
   int exitCode = app.exec();
@@ -75,6 +76,7 @@ int main(int argc, char **argv) {
     exitCode += runner->exitCode();
     delete runner;
   }
+
   Config::destroyInstance();
   delete testing;
   delete setup;

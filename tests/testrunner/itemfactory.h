@@ -20,9 +20,10 @@
 
 #include "item.h"
 
-class ItemFactory{
-public:
-  Item * createItem(QFile *file);
+class ItemFactory
+{
+  public:
+    Item* createItem( const QString &fileName );
 };
 
 #endif

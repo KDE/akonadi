@@ -18,46 +18,51 @@
 #ifndef SETUP_H
 #define SETUP_H
 
-#include <QProcess>
-#include <QDBusConnection>
+#include <QtCore/QMap>
+#include <QtCore/QObject>
+
+class QDBusConnection;
+class QIODevice;
+class QProcess;
 
 class SetupTest : public QObject
 {
   Q_OBJECT
+
+  public:
+    SetupTest();
+    ~SetupTest();
+    void startAkonadiDaemon();
+    void stopAkonadiDaemon();
+
+  public Q_SLOTS:
+    void shutdown();
+
+  Q_SIGNALS:
+    void setupDone();
+
+  private Q_SLOTS:
+    void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
+    void shutdownHarder();
+
   private:
+    bool clearEnvironment();
+    QMap<QString, QString> getEnvironment();
+    int addDBusToEnvironment( QIODevice& io );
+    int startDBusDaemon();
+    void stopDBusDaemon( int dbuspid );
+    void registerWithInternalDBus( const QString &address );
+    void setupAgents();
+    void copyDirectory( const QString &src, const QString &dst );
+    void createTempEnvironment();
+    void deleteDirectory( const QString &dirName );
+    void cleanTempEnvironment();
+
     QProcess *akonadiDaemonProcess;
     int mDBusDaemonPid;
     QDBusConnection *mInternalBus;
     QList<QString> mPendingAgents;
     bool mShuttingDown;
-
-  private:
-    bool clearEnvironment();
-    QMap<QString, QString> getEnvironment();
-    int addDBusToEnvironment(QIODevice& io);
-    int startDBusDaemon();
-    void stopDBusDaemon(int dbuspid);
-    void registerWithInternalDBus( const QString &address );
-    void setupAgents();
-    void copyDirectory(const QString &src, const QString &dst);
-    void createTempEnvironment();
-    void deleteDirectory(const QString &dirName);
-    void cleanTempEnvironment();
-  private Q_SLOTS:
-    void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
-    void shutdownHarder();
-
-  public:
-    void startAkonadiDaemon();
-    void stopAkonadiDaemon();
-    SetupTest();
-    ~SetupTest();
-
-  public slots:
-    void shutdown();
-
-  signals:
-    void setupDone();
 };
 
 #endif

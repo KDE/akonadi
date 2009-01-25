@@ -18,19 +18,17 @@
 #ifndef AKONADITESTING_H
 #define AKONADITESTING_H
 
-#include "item.h"
-#include "dao.h"
-#include <akonadi/collection.h>
-#include <QFile>
+#include <QtCore/QString>
 
-class AkonadiTesting{
+class AkonadiTesting
+{
+  public:
+    AkonadiTesting( const QString &fileName );
+    AkonadiTesting();
+    ~AkonadiTesting();
 
-public:
-  void insertItem(const QString &filename, const QString &colname);
-  void insertItemFromList();
-  AkonadiTesting(const QString &filename);
-  AkonadiTesting();
-  ~AkonadiTesting();
+    void insertItem( const QString &fileName, const QString &collectionName );
+    void insertItemFromList();
 };
 
 #endif

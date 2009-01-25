@@ -18,13 +18,14 @@
 #ifndef CONFIGREADER_H
 #define CONFIGREADER_H
 
-#include <QString>
 #include "config.h"
 
-class ConfigReader:public Config
+class QString;
+
+class ConfigReader : public Config
 {
   public:
-    ConfigReader(const QString &configfile);
+    ConfigReader( const QString &configfile );
 };
 
-#endif  
+#endif

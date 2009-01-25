@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #ifndef SHELLSCRIPT_H
 #define SHELLSCRIPT_H
 
+#include <QtCore/QString>
 
-#include <QHash>
-#include "symbols.h"
+class Symbols;
 
-class shellScript
+class ShellScript
 {
-  private:
-    Symbols *symbol;
-    QString script;
+  public:
+    ShellScript();
+    void makeShellScript( const QString &filename = QLatin1String( "testenvironment.sh" ) );
 
+  private:
     void writeEnvironmentVariables();
     void writeShutdownFunction();
 
-  public:
-    shellScript();
-    void makeShellScript(const QString &filename = "testenvironment.sh");
-
+    Symbols *symbol;
+    QString script;
 };
 #endif

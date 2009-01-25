@@ -18,8 +18,8 @@
 #ifndef TESTRUNNER_H
 #define TESTRUNNER_H
 
-#include <QObject>
-#include <QStringList>
+#include <QtCore/QObject>
+#include <QtCore/QStringList>
 
 class TestRunner : public QObject
 {
@@ -27,15 +27,15 @@ class TestRunner : public QObject
 
   public:
     TestRunner( const QStringList &args, QObject *parent = 0 );
-    int exitCode() const { return mExitCode; }
+    int exitCode() const;
 
-  public slots:
+  public Q_SLOTS:
     void run();
 
-  signals:
+  Q_SIGNALS:
     void finished();
 
-  private slots:
+  private Q_SLOTS:
     void processFinished( int exitCode );
 
   private:

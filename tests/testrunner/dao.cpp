@@ -16,32 +16,34 @@
  */
 
 #include "dao.h"
-#include <QtTest>
+
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 
-Akonadi::Collection::List  DAO::showCollections(){
-  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob(
-                                        Akonadi::Collection::root(),
-                                        Akonadi::CollectionFetchJob::Recursive);
+Akonadi::Collection::List DAO::showCollections() const
+{
+  Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(),
+                                                                      Akonadi::CollectionFetchJob::Recursive );
+  job->exec();
 
-    job->exec();
-    Akonadi::Collection::List collections = job->collections();
-    return collections;
+  return job->collections();
 }
 
-Akonadi::Collection  DAO::getCollectionByName(const QString &colname){
-  Akonadi::Collection::List colist = showCollections();
+Akonadi::Collection DAO::getCollectionByName( const QString &collectionName ) const
+{
+  const Akonadi::Collection::List collections = showCollections();
 
-  foreach(const Akonadi::Collection &col, colist){
-    if( colname == col.name()  ) return col;
+  foreach ( const Akonadi::Collection &collection, collections ) {
+    if ( collectionName == collection.name() )
+      return collection;
   }
 
   return Akonadi::Collection();
 }
 
-bool DAO::insertItem(Akonadi::Item item, Akonadi::Collection collection){
-  Akonadi::ItemCreateJob *ijob = new Akonadi::ItemCreateJob(item, collection);
+bool DAO::insertItem( const Akonadi::Item &item, const Akonadi::Collection &collection )
+{
+  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
 
-  return ijob->exec();
+  return job->exec();
 }

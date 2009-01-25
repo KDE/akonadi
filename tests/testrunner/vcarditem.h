@@ -19,16 +19,11 @@
 #define VCARDITEM_H
 
 #include "item.h"
-#include <kabc/addressee.h>
-#include <akonadi/item.h>
-#include <QFile>
 
-class VCardItem: public Item {
-private:
-  KABC::Addressee::List vcardlist;
-  
-public:
-  VCardItem( QFile *file, const QString &mimetype );
+class VCardItem : public Item
+{
+  public:
+    VCardItem( const QString &fileName, const QString &mimetype );
 };
 
 #endif

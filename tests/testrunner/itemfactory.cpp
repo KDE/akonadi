@@ -15,25 +15,21 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "vcarditem.h"
-#include "calitem.h"
 #include "itemfactory.h"
-#include <QFile>
-#include "feeditem.h"
 
-Item *ItemFactory::createItem( QFile *file ){
-  if( file->fileName().endsWith(".vcf") ){
-    return new VCardItem(file, QString("text/vcard") );
-  } else {
-    if( file->fileName().endsWith(".ics") ){
-      return new CalItem( file, QString("text/calendar") );
-    } else {
-      if( file->fileName().endsWith(".xml") ){
-        return new FeedItem( file, QString("application/rss+xml") );
-      }
-    }
+#include "calitem.h"
+#include "feeditem.h"
+#include "vcarditem.h"
+
+Item *ItemFactory::createItem( const QString &fileName )
+{
+  if( fileName.endsWith( ".vcf" ) ) {
+    return new VCardItem( fileName, QLatin1String( "text/vcard" ) );
+  } else if( fileName.endsWith( ".ics" ) ) {
+    return new CalItem( fileName, QLatin1String( "text/calendar" ) );
+  } else if( fileName.endsWith( ".xml" ) ) {
+    return new FeedItem( fileName, QLatin1String( "application/rss+xml" ) );
   }
-  
+
   return 0;
 }
-
