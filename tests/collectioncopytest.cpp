@@ -50,7 +50,7 @@ class CollectionCopyTest : public QObject
 
       Collection copied = list->collections().first();
       QVERIFY( copied.remoteId().isEmpty() );
-      QCOMPARE( copied.resource(), QString("akonadi_dummy_resource_3") );
+      QCOMPARE( copied.resource(), QString("akonadi_knut_resource_2") );
     }
 
     void testIlleagalCopy()

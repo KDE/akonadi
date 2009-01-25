@@ -100,7 +100,7 @@ void CollectionJobTest::testTopLevelList( )
   QVERIFY( res1ColId > 0 );
   QVERIFY( CollectionUtils::isResource( col ) );
   QCOMPARE( col.parent(), Collection::root().id() );
-  QCOMPARE( col.resource(), QLatin1String("akonadi_dummy_resource_1") );
+  QCOMPARE( col.resource(), QLatin1String("akonadi_knut_resource_0") );
 
   QVERIFY( findCol( list, "res2" ).isValid() );
   res2ColId = findCol( list, "res2" ).id();
@@ -145,7 +145,8 @@ void CollectionJobTest::testFolderList( )
   QVERIFY( col.isValid() );
   QCOMPARE( col.parent(), res1ColId );
   QVERIFY( CollectionUtils::isFolder( col ) );
-  contentTypes << "message/rfc822" << "text/calendar" << "text/vcard" << "application/octet-stream";
+  contentTypes << "message/rfc822" << "text/calendar" << "text/directory"
+               << "application/octet-stream" << "inode/directory";
   compareLists( col.contentMimeTypes(), contentTypes );
 
   QVERIFY( findCol( list, "bar" ).isValid() );
@@ -196,7 +197,7 @@ void CollectionJobTest::testResourceFolderList()
 
   // recursive listing of all collections of an existing resource
   job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  job->setResource( "akonadi_dummy_resource_1" );
+  job->setResource( "akonadi_knut_resource_0" );
   QVERIFY( job->exec() );
 
   Collection::List list = job->collections();
@@ -209,7 +210,7 @@ void CollectionJobTest::testResourceFolderList()
 
   // limited listing of a resource
   job = new CollectionFetchJob( Collection( fooId ), CollectionFetchJob::Recursive );
-  job->setResource( "akonadi_dummy_resource_1" );
+  job->setResource( "akonadi_knut_resource_0" );
   QVERIFY( job->exec() );
 
   list = job->collections();
@@ -357,7 +358,7 @@ void CollectionJobTest::testStatistics()
 void CollectionJobTest::testModify()
 {
   QStringList reference;
-  reference << "text/calendar" << "text/vcard" << "message/rfc822" << "application/octet-stream";
+  reference << "text/calendar" << "text/directory" << "message/rfc822" << "application/octet-stream";
 
   Collection col;
   CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::FirstLevel );

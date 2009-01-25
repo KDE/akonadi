@@ -1,6 +1,6 @@
 <knut>
  <collection rid="6" name="res1" content="inode/directory">
-  <collection rid="10" name="foo" content="inode/directory,application/octet-stream,text/directory,text/calendar">
+  <collection rid="10" name="foo" content="inode/directory,application/octet-stream,text/directory,text/calendar,message/rfc822">
    <collection rid="2" name="bar" content="inode/directory">
     <collection rid="3" name="bla" content="inode/directory">
     </collection>
