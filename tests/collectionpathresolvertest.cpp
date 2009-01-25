@@ -23,11 +23,11 @@
 
 #include <akonadi/control.h>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
-QTEST_KDEMAIN( CollectionPathResolverTest, NoGUI )
+QTEST_AKONADIMAIN( CollectionPathResolverTest, NoGUI )
 
 void CollectionPathResolverTest::initTestCase()
 {

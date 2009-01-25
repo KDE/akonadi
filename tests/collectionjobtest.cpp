@@ -20,7 +20,7 @@
 #include <sys/types.h>
 
 #include "collectionjobtest.h"
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 #include "cachepolicy.h"
 #include "collection.h"
@@ -44,7 +44,7 @@
 
 using namespace Akonadi;
 
-QTEST_KDEMAIN( CollectionJobTest, NoGUI )
+QTEST_AKONADIMAIN( CollectionJobTest, NoGUI )
 
 void CollectionJobTest::initTestCase()
 {

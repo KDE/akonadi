@@ -27,7 +27,7 @@
 
 #include <QtCore/QObject>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
@@ -91,6 +91,6 @@ class LinkTest : public QObject
 
 };
 
-QTEST_KDEMAIN( LinkTest, NoGUI )
+QTEST_AKONADIMAIN( LinkTest, NoGUI )
 
 #include "linktest.moc"

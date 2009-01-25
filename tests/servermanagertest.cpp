@@ -22,7 +22,7 @@
 
 #include <QtCore/QObject>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
@@ -75,6 +75,6 @@ class ServerManagerTest : public QObject
 
 };
 
-QTEST_KDEMAIN( ServerManagerTest, NoGUI )
+QTEST_AKONADIMAIN( ServerManagerTest, NoGUI )
 
 #include "servermanagertest.moc"

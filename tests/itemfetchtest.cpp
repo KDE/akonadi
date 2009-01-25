@@ -30,9 +30,9 @@
 
 using namespace Akonadi;
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
-QTEST_KDEMAIN( ItemFetchTest, NoGUI )
+QTEST_AKONADIMAIN( ItemFetchTest, NoGUI )
 
 void ItemFetchTest::initTestCase()
 {

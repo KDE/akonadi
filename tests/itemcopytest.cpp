@@ -25,7 +25,7 @@
 
 #include <QtCore/QObject>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
@@ -70,6 +70,6 @@ class ItemCopyTest : public QObject
 
 };
 
-QTEST_KDEMAIN( ItemCopyTest, NoGUI )
+QTEST_AKONADIMAIN( ItemCopyTest, NoGUI )
 
 #include "itemcopytest.moc"

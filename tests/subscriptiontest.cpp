@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
@@ -82,6 +82,6 @@ class SubscriptionTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( SubscriptionTest, NoGUI )
+QTEST_AKONADIMAIN( SubscriptionTest, NoGUI )
 
 #include "subscriptiontest.moc"

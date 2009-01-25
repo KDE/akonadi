@@ -30,11 +30,11 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemmovejob.h>
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
-QTEST_KDEMAIN( ItemStoreTest, NoGUI )
+QTEST_AKONADIMAIN( ItemStoreTest, NoGUI )
 
 static Collection res1_foo;
 static Collection res2;

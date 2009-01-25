@@ -20,7 +20,7 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QObject>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 #include <akonadi/agentmanager.h>
 #include <akonadi/agentinstancecreatejob.h>
@@ -78,10 +78,13 @@ class ResourceTest : public QObject
       const AgentType type = AgentManager::self()->type( "akonadi_mailthreader_agent" );
       QVERIFY( type.isValid() );
       job = new AgentInstanceCreateJob( type );
+      QVERIFY( job->exec() );
+
+      job = new AgentInstanceCreateJob( type );
       QVERIFY( !job->exec() );
     }
 };
 
-QTEST_KDEMAIN( ResourceTest, NoGUI )
+QTEST_AKONADIMAIN( ResourceTest, NoGUI )
 
 #include "resourcetest.moc"

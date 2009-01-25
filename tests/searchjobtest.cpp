@@ -27,9 +27,9 @@
 
 #include "collectionutils_p.h"
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
-QTEST_KDEMAIN( SearchJobTest, NoGUI )
+QTEST_AKONADIMAIN( SearchJobTest, NoGUI )
 
 using namespace Akonadi;
 

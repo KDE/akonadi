@@ -31,11 +31,11 @@
 #include <QtCore/QVariant>
 #include <QtGui/QApplication>
 #include <QtTest/QSignalSpy>
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
-QTEST_KDEMAIN( TransactionTest, NoGUI )
+QTEST_AKONADIMAIN( TransactionTest, NoGUI )
 
 void TransactionTest::initTestCase()
 {

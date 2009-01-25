@@ -35,11 +35,11 @@
 #include <QtCore/QVariant>
 #include <QtGui/QApplication>
 #include <QtTest/QSignalSpy>
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
-QTEST_KDEMAIN( MonitorTest, NoGUI )
+QTEST_AKONADIMAIN( MonitorTest, NoGUI )
 
 static Collection res3;
 

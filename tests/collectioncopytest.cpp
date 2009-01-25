@@ -23,7 +23,7 @@
 
 #include <QtCore/QObject>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
@@ -74,6 +74,6 @@ class CollectionCopyTest : public QObject
 
 };
 
-QTEST_KDEMAIN( CollectionCopyTest, NoGUI )
+QTEST_AKONADIMAIN( CollectionCopyTest, NoGUI )
 
 #include "collectioncopytest.moc"

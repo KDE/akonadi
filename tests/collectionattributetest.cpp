@@ -30,11 +30,11 @@
 #include <akonadi/collectionrightsattribute.h>
 #include <akonadi/control.h>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
-QTEST_KDEMAIN( CollectionAttributeTest, NoGUI )
+QTEST_AKONADIMAIN( CollectionAttributeTest, NoGUI )
 
 class TestAttribute : public Attribute
 {

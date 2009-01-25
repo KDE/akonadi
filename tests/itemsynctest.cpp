@@ -27,7 +27,7 @@
 #include <QtCore/QObject>
 #include <QSignalSpy>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
@@ -150,6 +150,6 @@ class ItemsyncTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( ItemsyncTest, NoGUI )
+QTEST_AKONADIMAIN( ItemsyncTest, NoGUI )
 
 #include "itemsynctest.moc"

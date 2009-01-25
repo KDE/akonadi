@@ -24,7 +24,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 
@@ -106,6 +106,6 @@ class ChangeRecorderTest : public QObject
     }
 };
 
-QTEST_KDEMAIN( ChangeRecorderTest, NoGUI )
+QTEST_AKONADIMAIN( ChangeRecorderTest, NoGUI )
 
 #include "changerecordertest.moc"

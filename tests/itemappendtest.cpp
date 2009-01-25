@@ -33,9 +33,9 @@
 
 using namespace Akonadi;
 
-#include <qtest_kde.h>
+#include <qtest_akonadi.h>
 
-QTEST_KDEMAIN( ItemAppendTest, NoGUI )
+QTEST_AKONADIMAIN( ItemAppendTest, NoGUI )
 
 static Collection testFolder1;
 
