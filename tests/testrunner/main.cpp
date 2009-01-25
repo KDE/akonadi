@@ -60,18 +60,21 @@ int main(int argc, char **argv) {
   shellScript *sh = new shellScript();
   sh->makeShellScript();
 
-  int exitCode = 0;
+  TestRunner *runner = 0;
   if ( args->count() > 0 ) {
     QStringList testArgs;
     for ( int i = 0; i < args->count(); ++i )
       testArgs << args->arg( i );
-    TestRunner *runner = new TestRunner( testArgs );
+    runner = new TestRunner( testArgs );
     QObject::connect( setup, SIGNAL(setupDone()), runner, SLOT(run()) );
     QObject::connect( runner, SIGNAL(finished()), setup, SLOT(shutdown()) );
-    exitCode = runner->exitCode();
   }
 
-  exitCode = app.exec() + exitCode;
+  int exitCode = app.exec();
+  if ( runner ) {
+    exitCode += runner->exitCode();
+    delete runner;
+  }
   Config::destroyInstance();
   delete testing;
   delete setup;
