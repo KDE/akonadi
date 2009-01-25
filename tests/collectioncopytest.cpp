@@ -23,7 +23,7 @@
 
 #include <QtCore/QObject>
 
-#include <qtest_akonadi.h>
+#include "test_utils.h"
 
 using namespace Akonadi;
 
@@ -38,8 +38,10 @@ class CollectionCopyTest : public QObject
 
     void testCopy()
     {
-      const Collection target( 8 );
-      const Collection source( 10 );
+      const Collection target( collectionIdFromPath( "res3" ) );
+      const Collection source( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( target.isValid() );
+      QVERIFY( source.isValid() );
 
       CollectionCopyJob *copy = new CollectionCopyJob( source, target );
       QVERIFY( copy->exec() );
