@@ -70,8 +70,8 @@ int main( int argc, char **argv )
       "Commands:\n"
       "  start      : Starts the Akonadi server with all its processes\n"
       "  stop       : Stops the Akonadi server and all its processes cleanly\n"
-      "  status     : Shows a status overview of the Akonadi server\n"
-      "  restart    : Restart the Akonadi"
+      "  restart    : Restart Akonadi server with all its processes\n"
+      "  status     : Shows a status overview of the Akonadi server"
   );
 
   app.parseCommandLine();
