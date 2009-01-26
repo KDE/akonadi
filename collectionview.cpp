@@ -110,11 +110,11 @@ void CollectionView::Private::itemClicked( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  const Collection col = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
-  if ( !col.isValid() )
+  const Collection collection = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
+  if ( !collection.isValid() )
     return;
 
-  emit mParent->clicked( col );
+  emit mParent->clicked( collection );
 }
 
 void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
@@ -122,22 +122,22 @@ void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
   if ( !index.isValid() )
     return;
 
-  const Collection col = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
-  if ( !col.isValid() )
+  const Collection collection = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
+  if ( !collection.isValid() )
     return;
 
-  emit mParent->currentChanged( col );
+  emit mParent->currentChanged( collection );
 }
 
-CollectionView::CollectionView(QWidget * parent) :
-    QTreeView( parent ),
+CollectionView::CollectionView( QWidget * parent )
+  : QTreeView( parent ),
     d( new Private( this ) )
 {
   d->init();
 }
 
-CollectionView::CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget * parent ) :
-    QTreeView( parent ),
+CollectionView::CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget * parent )
+  : QTreeView( parent ),
     d( new Private( this ) )
 {
   d->xmlGuiWindow = xmlGuiWindow;
@@ -158,7 +158,7 @@ void CollectionView::setModel( QAbstractItemModel * model )
            this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
 }
 
-void CollectionView::dragMoveEvent(QDragMoveEvent * event)
+void CollectionView::dragMoveEvent( QDragMoveEvent * event )
 {
   QModelIndex index = indexAt( event->pos() );
   if ( d->dragOverIndex != index ) {
@@ -170,24 +170,21 @@ void CollectionView::dragMoveEvent(QDragMoveEvent * event)
   }
 
   // Check if the collection under the cursor accepts this data type
-  QStringList supportedContentTypes = model()->data( index, CollectionModel::CollectionRole ).value<Collection>().contentMimeTypes();
+  const QStringList supportedContentTypes = model()->data( index, CollectionModel::CollectionRole ).value<Collection>().contentMimeTypes();
   const QMimeData *data = event->mimeData();
-  KUrl::List urls = KUrl::List::fromMimeData( data );
+  const KUrl::List urls = KUrl::List::fromMimeData( data );
   foreach( const KUrl &url, urls ) {
 
     const Collection collection = Collection::fromUrl( url );
-    if ( collection.isValid() )
-    {
+    if ( collection.isValid() ) {
       if ( !supportedContentTypes.contains( QString::fromLatin1( "inode/directory" ) ) )
         break;
 
       // Check if we don't try to drop on one of the children
       if ( d->hasParent( index, collection.id() ) )
         break;
-    }
-    else
-    {
-      QString type = url.queryItems()[ QString::fromLatin1("type") ];
+    } else {
+      const QString type = url.queryItems()[ QString::fromLatin1( "type" ) ];
       if ( !supportedContentTypes.contains( type ) )
         break;
     }
@@ -197,18 +194,16 @@ void CollectionView::dragMoveEvent(QDragMoveEvent * event)
   }
 
   event->setDropAction( Qt::IgnoreAction );
-  return;
 }
 
-void CollectionView::dragLeaveEvent(QDragLeaveEvent * event)
+void CollectionView::dragLeaveEvent( QDragLeaveEvent * event )
 {
   d->dragExpandTimer.stop();
   d->dragOverIndex = QModelIndex();
   QTreeView::dragLeaveEvent( event );
 }
 
-
-void CollectionView::dropEvent(QDropEvent * event)
+void CollectionView::dropEvent( QDropEvent * event )
 {
   d->dragExpandTimer.stop();
   d->dragOverIndex = QModelIndex();
@@ -216,34 +211,34 @@ void CollectionView::dropEvent(QDropEvent * event)
   // open a context menu offering different drop actions (move, copy and cancel)
   // TODO If possible, hide non available actions ...
   QMenu popup( this );
-  QAction* moveDropAction = popup.addAction( KIcon( QString::fromLatin1("edit-rename") ), i18n("&Move here") );
-  QAction* copyDropAction = popup.addAction( KIcon( QString::fromLatin1("edit-copy") ), i18n("&Copy here") );
+  QAction* moveDropAction = popup.addAction( KIcon( QString::fromLatin1( "edit-rename" ) ), i18n( "&Move here" ) );
+  QAction* copyDropAction = popup.addAction( KIcon( QString::fromLatin1( "edit-copy" ) ), i18n( "&Copy here" ) );
   popup.addSeparator();
-  popup.addAction( KIcon( QString::fromLatin1("process-stop") ), i18n("Cancel"));
+  popup.addAction( KIcon( QString::fromLatin1( "process-stop" ) ), i18n( "Cancel" ) );
 
   QAction *activatedAction = popup.exec( QCursor::pos() );
-  if (activatedAction == moveDropAction) {
+  if ( activatedAction == moveDropAction ) {
     event->setDropAction( Qt::MoveAction );
-  }
-  else if (activatedAction == copyDropAction) {
+  } else if ( activatedAction == copyDropAction ) {
     event->setDropAction( Qt::CopyAction );
+  } else {
+    return;
   }
-  else return;
 
   QTreeView::dropEvent( event );
 }
 
-void CollectionView::contextMenuEvent(QContextMenuEvent * event)
+void CollectionView::contextMenuEvent( QContextMenuEvent * event )
 {
   if ( !d->xmlGuiWindow )
     return;
   QMenu *popup = static_cast<QMenu*>( d->xmlGuiWindow->guiFactory()->container(
-                                      QLatin1String("akonadi_collectionview_contextmenu"), d->xmlGuiWindow ) );
+                                      QLatin1String( "akonadi_collectionview_contextmenu" ), d->xmlGuiWindow ) );
   if ( popup )
     popup->exec( event->globalPos() );
 }
 
-void CollectionView::setXmlGuiWindow(KXmlGuiWindow * xmlGuiWindow)
+void CollectionView::setXmlGuiWindow( KXmlGuiWindow * xmlGuiWindow )
 {
   d->xmlGuiWindow = xmlGuiWindow;
 }
