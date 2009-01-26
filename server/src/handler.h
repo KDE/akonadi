@@ -68,11 +68,27 @@ public:
      */
     virtual bool handleLine( const QByteArray & line );
 
+    /**
+     * Find a handler for a command that is always allowed, like LOGOUT.
+     * @param line the command string
+     * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
+     */
     static Handler* findHandlerForCommandAlwaysAllowed( const QByteArray& line );
+    
+    /**
+     * Find a handler for a command that is allowed when the client is not yet authenticated, like LOGIN.
+     * @param line the command string
+     * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
+     */
     static Handler* findHandlerForCommandNonAuthenticated( const QByteArray& line );
+    
+    /**
+     * Find a handler for a command that is allowed when the client is authenticated, like LIST, FETCH, etc.
+     * @param line the command string
+     * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
+     */
     static Handler* findHandlerForCommandAuthenticated( const QByteArray& line );
-    static Handler* findHandlerForCommandSelected( const QByteArray& line );
-
+   
     void setConnection( AkonadiConnection* connection );
     AkonadiConnection* connection();
 
