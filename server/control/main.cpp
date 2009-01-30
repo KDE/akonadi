@@ -53,7 +53,7 @@ int main( int argc, char **argv )
   app.parseCommandLine();
 
   if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE ) )
-    akFatal() << "Unable to register service: %s" << QDBusConnection::sessionBus().lastError().message();
+    akFatal() << "Unable to register service: " << QDBusConnection::sessionBus().lastError().message();
 
   new ControlManager;
 
