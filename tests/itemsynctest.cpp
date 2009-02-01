@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include "test_utils.h"
+
 #include <akonadi/control.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
@@ -37,9 +39,9 @@ class ItemsyncTest : public QObject
 {
   Q_OBJECT
   private:
-    Item::List fetchItems()
+    Item::List fetchItems( const Collection &col )
     {
-      ItemFetchJob *fetch = new ItemFetchJob( Collection( 10 ) );
+      ItemFetchJob *fetch = new ItemFetchJob( col, this );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().fetchAllAttributes();
       Q_ASSERT( fetch->exec() );
@@ -56,21 +58,25 @@ class ItemsyncTest : public QObject
 
     void testFullSync()
     {
-      Item::List origItems = fetchItems();
+      const Collection col = Collection( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( col.isValid() );
+      Item::List origItems = fetchItems( col );
 
-      ItemSync* syncer = new ItemSync( Collection( 10 ) );
+      ItemSync* syncer = new ItemSync( col );
       syncer->setFullSyncItems( origItems );
       QVERIFY( syncer->exec() );
 
-      Item::List resultItems = fetchItems();
+      Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
     }
 
     void testFullStreamingSync()
     {
-      Item::List origItems = fetchItems();
+      const Collection col = Collection( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( col.isValid() );
+      Item::List origItems = fetchItems( col );
 
-      ItemSync* syncer = new ItemSync( Collection( 10 ) );
+      ItemSync* syncer = new ItemSync( col );
       QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
       QVERIFY( spy.isValid() );
       syncer->setTotalItems( origItems.count() );
@@ -91,27 +97,31 @@ class ItemsyncTest : public QObject
       QVERIFY( job );
       QCOMPARE( job->error(), 0 );
 
-      Item::List resultItems = fetchItems();
+      Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
     }
 
     void testIncrementalSync()
     {
-      Item::List origItems = fetchItems();
+      const Collection col = Collection( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( col.isValid() );
+      Item::List origItems = fetchItems( col );
 
-      ItemSync* syncer = new ItemSync( Collection( 10 ) );
+      ItemSync* syncer = new ItemSync( col );
       syncer->setIncrementalSyncItems( origItems, Item::List() );
       QVERIFY( syncer->exec() );
 
-      Item::List resultItems = fetchItems();
+      Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
     }
 
     void testIncrementalStreamingSync()
     {
-      Item::List origItems = fetchItems();
+      const Collection col = Collection( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( col.isValid() );
+      Item::List origItems = fetchItems( col );
 
-      ItemSync* syncer = new ItemSync( Collection( 10 ) );
+      ItemSync* syncer = new ItemSync( col );
       QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
       QVERIFY( spy.isValid() );
       syncer->setStreamingEnabled( true );
@@ -133,19 +143,21 @@ class ItemsyncTest : public QObject
       QVERIFY( job );
       QCOMPARE( job->error(), 0 );
 
-      Item::List resultItems = fetchItems();
+      Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
     }
 
     void testEmptyIncrementalSync()
     {
-      Item::List origItems = fetchItems();
+      const Collection col = Collection( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( col.isValid() );
+      Item::List origItems = fetchItems( col );
 
-      ItemSync* syncer = new ItemSync( Collection( 10 ) );
+      ItemSync* syncer = new ItemSync( col );
       syncer->setIncrementalSyncItems( Item::List(), Item::List() );
       QVERIFY( syncer->exec() );
 
-      Item::List resultItems = fetchItems();
+      Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
     }
 };

@@ -18,6 +18,7 @@
 */
 
 #include "monitortest.h"
+#include "test_utils.h"
 
 #include <akonadi/monitor.h>
 #include <akonadi/collectioncreatejob.h>
@@ -49,13 +50,7 @@ void MonitorTest::initTestCase()
 {
   Control::start();
 
-  // get the collections we run the tests on
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  QVERIFY( job->exec() );
-  Collection::List list = job->collections();
-  foreach ( const Collection &col, list )
-    if ( col.name() == "res3" )
-      res3 = col;
+  res3 = Collection( collectionIdFromPath( "res3" ) );
 }
 
 void MonitorTest::testMonitor_data()
@@ -142,17 +137,17 @@ void MonitorTest::testMonitor()
   QCOMPARE( item.mimeType(), QString::fromLatin1(  "application/octet-stream" ) );
   Collection collection = arg.at( 1 ).value<Collection>();
   QCOMPARE( collection.id(), monitorCol.id() );
-  QCOMPARE( collection.remoteId(), monitorCol.remoteId() );
 
   QVERIFY( caspy.isEmpty() );
   QVERIFY( cmspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
-  QVERIFY( imspy.isEmpty() );
+  imspy.clear(); // can happen if the resource set the remoteId inbetween
   QVERIFY( irspy.isEmpty() );
 
   // modify an item
   item.setPayload<QByteArray>( "some new content" );
   ItemModifyJob *store = new ItemModifyJob( item, this );
+  store->disableRevisionCheck(); // resource might have set the remote id in the meantime
   QVERIFY( store->exec() );
   QTest::qWait(1000);
 
