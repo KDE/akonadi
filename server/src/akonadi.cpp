@@ -191,6 +191,8 @@ void AkonadiServer::doQuit()
 
 void AkonadiServer::incomingConnection( quintptr socketDescriptor )
 {
+    if ( mAlreadyShutdown )
+      return;
     QPointer<AkonadiConnection> thread = new AkonadiConnection( socketDescriptor, this );
     connect( thread, SIGNAL( finished() ), thread, SLOT( deleteLater() ) );
     mConnections.append( thread );
