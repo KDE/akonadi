@@ -204,6 +204,11 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void nameChanged( const QString &name );
 
+    /**
+     * Emitted when a full synchronization has been completed.
+     */
+    void synchronized();
+
   protected Q_SLOTS:
     /**
      * Retrieve the collection tree from the remote server and supply it via

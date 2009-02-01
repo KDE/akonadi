@@ -51,7 +51,8 @@ class ResourceScheduler : public QObject
       SyncCollection,
       FetchItem,
       ChangeReplay,
-      DeleteResourceCollection
+      DeleteResourceCollection,
+      SyncAllDone
     };
 
     class Task {
@@ -105,9 +106,9 @@ class ResourceScheduler : public QObject
     void scheduleResourceCollectionDeletion();
 
     /**
-      The current task has been finished
+      Insert synchronization completetion marker into the task queue.
     */
-    void taskDone();
+    void scheduleFullSyncCompletion();
 
     /**
       Returns true if no tasks are running or in the queue.
@@ -130,6 +131,11 @@ class ResourceScheduler : public QObject
     */
     void scheduleChangeReplay();
 
+    /**
+      The current task has been finished
+    */
+    void taskDone();
+
   Q_SIGNALS:
     void executeFullSync();
     void executeCollectionSync( const Akonadi::Collection &col );
@@ -137,6 +143,7 @@ class ResourceScheduler : public QObject
     void executeItemFetch( const Akonadi::Item &item, const QSet<QByteArray> &parts );
     void executeResourceCollectionDeletion();
     void executeChangeReplay();
+    void fullSyncComplete();
     void status( int status, const QString &message = QString() );
 
   private slots:

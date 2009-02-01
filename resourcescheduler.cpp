@@ -87,6 +87,14 @@ void ResourceScheduler::scheduleChangeReplay()
   scheduleNext();
 }
 
+void Akonadi::ResourceScheduler::scheduleFullSyncCompletion()
+{
+  Task t;
+  t.type = SyncAllDone;
+  mTaskList << t;
+  scheduleNext();
+}
+
 void ResourceScheduler::taskDone()
 {
   if ( isEmpty() )
@@ -131,6 +139,9 @@ void ResourceScheduler::executeNext()
       break;
     case ChangeReplay:
       emit executeChangeReplay();
+      break;
+    case SyncAllDone:
+      emit fullSyncComplete();
       break;
     default:
       Q_ASSERT( false );

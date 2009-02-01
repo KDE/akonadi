@@ -136,6 +136,8 @@ ResourceBase::ResourceBase( const QString & id )
            SIGNAL( status( int, QString ) ) );
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
            d->mMonitor, SLOT(replayNext()) );
+  connect( d->scheduler, SIGNAL(fullSyncComplete()), SIGNAL(synchronized()) );
+  connect( this, SIGNAL(synchronized()), d->scheduler, SLOT(taskDone()) );
 
   d->scheduler->setOnline( d->mOnline );
   if ( !d->mMonitor->isEmpty() )
@@ -384,6 +386,7 @@ void ResourceBasePrivate::slotLocalListDone(KJob * job)
     foreach ( const Collection &col, cols ) {
       scheduler->scheduleSync( col );
     }
+    scheduler->scheduleFullSyncCompletion();
   }
   scheduler->taskDone();
 }
