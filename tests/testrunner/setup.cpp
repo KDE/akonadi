@@ -28,6 +28,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
 #include <QtCore/QTimer>
+#include <QSignalMapper>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
@@ -162,20 +163,23 @@ void SetupTest::setupAgents()
   QDBusInterface agentDBus( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/AgentManager" ),
                             QLatin1String( "org.freedesktop.Akonadi.AgentManager" ), *mInternalBus );
 
-  kDebug() << "available agent types:" << agentDBus.call( QLatin1String( "agentTypes" ) );
-
-  const QStringList agents = config->agents();
+  const QList<QPair<QString,bool> > agents = config->agents();
+  typedef QPair<QString,bool> StringBoolPair;
   kDebug() << agents;
-  foreach ( const QString &agent, agents ) {
-    kDebug() << "inserting resource:" << agent;
-    QDBusReply<QString> reply = agentDBus.call( QLatin1String( "createAgentInstance" ), agent );
-    if ( reply.isValid() && !reply.value().isEmpty() )
+  foreach ( const StringBoolPair &agent, agents ) {
+    kDebug() << "inserting resource:" << agent.first;
+    QDBusReply<QString> reply = agentDBus.call( QLatin1String( "createAgentInstance" ), agent.first );
+    if ( reply.isValid() && !reply.value().isEmpty() ) {
       mPendingAgents << reply.value();
-    else
+      if ( agent.second ) {
+        mPendingSyncs << reply.value();
+      }
+    } else {
       kError() << "createAgentInstance call failed:" << reply.error();
+    }
   }
 
-  if ( mPendingAgents.isEmpty() )
+  if ( mPendingAgents.isEmpty() && mPendingSyncs.isEmpty() )
     emit setupDone();
 }
 
@@ -197,9 +201,29 @@ void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwn
     const QString identifier = name.mid( 30 );
     if ( mPendingAgents.contains( identifier ) ) {
       mPendingAgents.removeAll( identifier );
-      if ( mPendingAgents.isEmpty() )
+      if ( mPendingAgents.isEmpty() && mPendingSyncs.isEmpty() )
         emit setupDone();
     }
+  }
+
+  if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Resource." ) ) && oldOwner.isEmpty() ) {
+    const QString identifier = name.mid( 33 );
+    QDBusInterface *iface = new QDBusInterface( name, "/", "org.freedesktop.Akonadi.Resource", *mInternalBus, this );
+    mSyncMapper->setMapping( iface, identifier );
+    connect( iface, SIGNAL(synchronized()), mSyncMapper, SLOT(map()) );
+    if ( mPendingSyncs.contains( identifier ) )
+      iface->call( "synchronize" );
+    kDebug() << identifier << mPendingSyncs;
+  }
+}
+
+void SetupTest::resourceSynchronized(const QString& agentId)
+{
+  kDebug() << agentId;
+  if ( mPendingSyncs.contains( agentId ) ) {
+    mPendingSyncs.removeAll( agentId );
+    if ( mPendingAgents.isEmpty() && mPendingSyncs.isEmpty() )
+      emit setupDone();
   }
 }
 
@@ -264,10 +288,12 @@ void SetupTest::cleanTempEnvironment()
   deleteDirectory( QDir::tempPath() + QDir::separator() + QLatin1String( "akonadi_testrunner" ) );
 }
 
-SetupTest::SetupTest()
+SetupTest::SetupTest() :
+  mSyncMapper( new QSignalMapper( this ) )
 {
 
   clearEnvironment();
+  cleanTempEnvironment();
   createTempEnvironment();
 
   setenv( "KDEHOME", "/tmp/akonadi_testrunner/kdehome", 1 );
@@ -288,6 +314,8 @@ SetupTest::SetupTest()
 #endif
 
   mAkonadiDaemonProcess = new QProcess();
+
+  connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
 }
 
 SetupTest::~SetupTest()

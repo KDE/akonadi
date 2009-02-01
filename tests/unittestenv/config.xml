@@ -2,7 +2,7 @@
   <kdehome>kdehome</kdehome>
   <confighome>xdgconfig</confighome>
   <datahome>xdglocal</datahome>
-  <agent>akonadi_knut_resource</agent>
-  <agent>akonadi_knut_resource</agent>
-  <agent>akonadi_knut_resource</agent>
+  <agent synchronize="true">akonadi_knut_resource</agent>
+  <agent synchronize="true">akonadi_knut_resource</agent>
+  <agent synchronize="true">akonadi_knut_resource</agent>
 </config>

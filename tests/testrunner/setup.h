@@ -20,10 +20,12 @@
 
 #include <QtCore/QMap>
 #include <QtCore/QObject>
+#include <QStringList>
 
 class QDBusConnection;
 class QIODevice;
 class QProcess;
+class QSignalMapper;
 
 class SetupTest : public QObject
 {
@@ -44,6 +46,7 @@ class SetupTest : public QObject
   private Q_SLOTS:
     void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
     void shutdownHarder();
+    void resourceSynchronized( const QString &agentId );
 
   private:
     bool clearEnvironment();
@@ -61,8 +64,10 @@ class SetupTest : public QObject
     QProcess *mAkonadiDaemonProcess;
     int mDBusDaemonPid;
     QDBusConnection *mInternalBus;
-    QList<QString> mPendingAgents;
+    QStringList mPendingAgents;
+    QStringList mPendingSyncs;
     bool mShuttingDown;
+    QSignalMapper *mSyncMapper;
 };
 
 #endif

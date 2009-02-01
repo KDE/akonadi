@@ -31,7 +31,7 @@ class Config
     QString xdgDataHome() const;
     QString xdgConfigHome() const;
     QList<QPair<QString, QString> > itemConfig() const;
-    QStringList agents() const;
+    QList<QPair<QString, bool> > agents() const;
 
   protected:
     Config();
@@ -39,14 +39,14 @@ class Config
     void setXdgDataHome( const QString &dataHome );
     void setXdgConfigHome( const QString &configHome );
     void insertItemConfig( const QString &itemName, const QString &collectionName );
-    void insertAgent( const QString &agent );
+    void insertAgent( const QString &agent, bool sync );
 
   private:
     QString mKdeHome;
     QString mXdgDataHome;
     QString mXdgConfigHome;
-    QList <QPair <QString, QString> >  mItemConfig;
-    QStringList mAgents;
+    QList<QPair<QString, QString> >  mItemConfig;
+    QList<QPair<QString, bool> > mAgents;
     static Config *mInstance;
 };
 

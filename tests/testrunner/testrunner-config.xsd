@@ -28,7 +28,7 @@
         <xsd:element name="confighome" type="simpleTextTag" minOccurs="1" maxOccurs="1"/>
         <xsd:element name="datahome"   type="simpleTextTag" minOccurs="1" maxOccurs="1"/>
         <xsd:element name="item"       type="itemType"      minOccurs="0" maxOccurs="unbounded"/>
-        <xsd:element name="agent"      type="simpleTextTag" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element name="agent"      type="agentType"     minOccurs="0" maxOccurs="unbounded"/>
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
@@ -38,6 +38,14 @@
       <xsd:extension base="xsd:string">
         <xsd:attribute name="location"   type="xsd:string" use="required"/>
         <xsd:attribute name="collection" type="xsd:string" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="agentType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="synchronize" type="xsd:boolean"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>

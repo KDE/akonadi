@@ -91,12 +91,12 @@ QList< QPair<QString, QString> > Config::itemConfig() const
   return mItemConfig;
 }
 
-void Config::insertAgent( const QString &agent )
+void Config::insertAgent( const QString &agent, bool sync )
 {
-  mAgents.append( agent );
+  mAgents.append( qMakePair( agent, sync ) );
 }
 
-QStringList Config::agents() const
+QList<QPair<QString, bool> > Config::agents() const
 {
   return mAgents;
 }

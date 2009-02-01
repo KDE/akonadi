@@ -56,7 +56,7 @@ ConfigReader::ConfigReader( const QString &configfile )
       } else if ( element.tagName() == "item" ) {
         insertItemConfig( element.attribute( "location" ), element.attribute( "collection" ) );
       } else if ( element.tagName() == "agent" ) {
-        insertAgent( element.text() );
+        insertAgent( element.text(), element.attribute( "synchronize", "false" ) == QLatin1String("true") );
       }
     }
 
