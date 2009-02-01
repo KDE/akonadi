@@ -308,6 +308,7 @@ void ResourceBase::changeCommitted(const Item& item)
   ItemModifyJob *job = new ItemModifyJob( item );
   job->d_func()->setClean();
   job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
+  job->ignorePayload(); // we only want to reset the dirty flag and update the remote id
   d->changeProcessed();
 }
 
