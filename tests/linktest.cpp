@@ -23,7 +23,9 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/unlinkjob.h>
 #include <akonadi/monitor.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/searchcreatejob.h>
 
 #include <QtCore/QObject>
 
@@ -42,7 +44,18 @@ class LinkTest : public QObject
 
     void testLink()
     {
-      const Collection col( 12 );
+      SearchCreateJob *create = new SearchCreateJob( "linkTestFolder", "dummy query", this );
+      QVERIFY( create->exec() );
+      
+      CollectionFetchJob *list = new CollectionFetchJob( Collection( 1 ), CollectionFetchJob::Recursive, this );
+      QVERIFY( list->exec() );
+      Collection col;
+      foreach ( const Collection &c, list->collections() ) {
+        if ( c.name() == "linkTestFolder" )
+          col = c;
+      }
+      QVERIFY( col.isValid() );
+      
       Item::List items;
       items << Item( 3 ) << Item( 4 ) << Item( 6 );
 

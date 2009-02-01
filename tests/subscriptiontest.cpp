@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include "test_utils.h"
+
 #include <akonadi/control.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
@@ -40,16 +42,19 @@ class SubscriptionTest : public QObject
     void testSubscribe()
     {
       Collection::List l;
-      l << Collection( 5 );
+      l << Collection( collectionIdFromPath( "res2/foo2" ) );
+      QVERIFY( l.first().isValid() );
       SubscriptionJob *sjob = new SubscriptionJob( this );
       sjob->unsubscribe( l );
       QVERIFY( sjob->exec() );
 
-      CollectionFetchJob *ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::FirstLevel, this );
+      const Collection res2Col = Collection( collectionIdFromPath( "res2" ) );
+      QVERIFY( res2Col.isValid() );
+      CollectionFetchJob *ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 1 );
 
-      ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::FirstLevel, this );
+      ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
       ljob->includeUnsubscribed();
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 2 );
@@ -58,7 +63,7 @@ class SubscriptionTest : public QObject
       sjob->subscribe( l );
       QVERIFY( sjob->exec() );
 
-      ljob = new CollectionFetchJob( Collection( 7 ), CollectionFetchJob::FirstLevel, this );
+      ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 2 );
     }
