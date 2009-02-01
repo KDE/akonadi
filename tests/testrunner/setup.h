@@ -68,6 +68,7 @@ class SetupTest : public QObject
     QStringList mPendingSyncs;
     bool mShuttingDown;
     QSignalMapper *mSyncMapper;
+    bool mAgentsCreated;
 };
 
 #endif

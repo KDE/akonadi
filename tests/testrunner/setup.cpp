@@ -159,13 +159,15 @@ void SetupTest::stopAkonadiDaemon()
 
 void SetupTest::setupAgents()
 {
+  if ( mAgentsCreated )
+    return;
+  mAgentsCreated = true;
   Config *config = Config::instance();
   QDBusInterface agentDBus( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/AgentManager" ),
                             QLatin1String( "org.freedesktop.Akonadi.AgentManager" ), *mInternalBus );
 
   const QList<QPair<QString,bool> > agents = config->agents();
   typedef QPair<QString,bool> StringBoolPair;
-  kDebug() << agents;
   foreach ( const StringBoolPair &agent, agents ) {
     kDebug() << "inserting resource:" << agent.first;
     QDBusReply<QString> reply = agentDBus.call( QLatin1String( "createAgentInstance" ), agent.first );
@@ -289,7 +291,9 @@ void SetupTest::cleanTempEnvironment()
 }
 
 SetupTest::SetupTest() :
-  mSyncMapper( new QSignalMapper( this ) )
+  mShuttingDown( false ),
+  mSyncMapper( new QSignalMapper( this ) ),
+  mAgentsCreated( false )
 {
 
   clearEnvironment();
