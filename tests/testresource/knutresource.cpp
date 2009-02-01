@@ -141,7 +141,8 @@ void KnutResource::load()
     }
     data = tmpl.readAll();
   }
-  mWatcher->addPath( fileName );
+  if ( Settings::self()->fileWatchingEnabled() )
+    mWatcher->addPath( fileName );
 
 #ifdef HAVE_LIBXML2
   // schema validation
