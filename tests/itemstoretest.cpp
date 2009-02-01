@@ -139,9 +139,11 @@ void ItemStoreTest::testDataChange()
   item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
   item.setPayload( data );
+  QCOMPARE( item.payload<QByteArray>(), data );
 
   // delete data
   ItemModifyJob *sjob = new ItemModifyJob( item );
+  sjob->disableRevisionCheck();  // resource unsets the dirty flag in the meantime
   QVERIFY( sjob->exec() );
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
@@ -150,6 +152,7 @@ void ItemStoreTest::testDataChange()
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
   QVERIFY( item.hasPayload<QByteArray>() );
+  QEXPECT_FAIL( "empty", "Item does not detect QByteArray() as loaded payload part", Continue );
   QCOMPARE( item.payload<QByteArray>(), data );
 }
 
@@ -173,7 +176,8 @@ void ItemStoreTest::testItemMove()
 void ItemStoreTest::testIllegalItemMove()
 {
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
-  prefetchjob->exec();
+  QVERIFY( prefetchjob->exec() );
+  QCOMPARE( prefetchjob->items().count(), 1 );
   Item item = prefetchjob->items()[0];
 
   // move into invalid collection
@@ -209,6 +213,7 @@ void ItemStoreTest::testRemoteId()
   item.setId( 1 );
   item.setRemoteId( rid );
   ItemModifyJob *store = new ItemModifyJob( item, this );
+  store->disableRevisionCheck(); // resource unsets the dirty flag in the meantime
   QVERIFY( store->exec() );
 
   ItemFetchJob *fetch = new ItemFetchJob( item, this );
@@ -221,7 +226,8 @@ void ItemStoreTest::testRemoteId()
 void ItemStoreTest::testMultiPart()
 {
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
-  prefetchjob->exec();
+  QVERIFY( prefetchjob->exec() );
+  QCOMPARE( prefetchjob->items().count(), 1 );
   Item item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
   item.setPayload<QByteArray>( "testmailbody" );
@@ -297,7 +303,8 @@ void ItemStoreTest::testRevisionCheck()
   // fetch same item twice
   Item ref( 2 );
   ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
-  prefetchjob->exec();
+  QVERIFY( prefetchjob->exec() );
+  QCOMPARE( prefetchjob->items().count(), 1 );
   Item item1 = prefetchjob->items()[0];
   Item item2 = prefetchjob->items()[0];
 
@@ -372,4 +379,5 @@ void ItemStoreTest::testModificationTime()
   ItemDeleteJob *idjob = new ItemDeleteJob( item, this );
   QVERIFY( idjob->exec() );
 }
+
 #include "itemstoretest.moc"
