@@ -179,13 +179,7 @@ void CollectionJobTest::testSearchFolderList( )
   QVERIFY( job->exec() );
   Collection::List list = job->collections();
 
-  QCOMPARE( list.count(), 3 );
-  Collection col = findCol( list, "Test ?er" );
-  QVERIFY( col.isValid() );
-  QVERIFY( CollectionUtils::isVirtual( col ) );
-  QCOMPARE( col.resource(), QLatin1String("akonadi_search_resource" ) );
-  QVERIFY( findCol( list, "all" ).isValid() );
-  QVERIFY( findCol( list, "kde-core-devel" ).isValid() );
+  QCOMPARE( list.count(), 0 );
 }
 
 void CollectionJobTest::testResourceFolderList()
@@ -358,7 +352,7 @@ void CollectionJobTest::testStatistics()
 void CollectionJobTest::testModify()
 {
   QStringList reference;
-  reference << "text/calendar" << "text/directory" << "message/rfc822" << "application/octet-stream";
+  reference << "text/calendar" << "text/directory" << "message/rfc822" << "application/octet-stream" << "inode/directory";
 
   Collection col;
   CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::FirstLevel );

@@ -186,14 +186,3 @@ void ItemFetchTest::testMultipartFetch()
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );
 }
-
-void ItemFetchTest::testVirtualFetch()
-{
-  CollectionPathResolver *resolver = new CollectionPathResolver( "Search/kde-core-devel", this );
-  QVERIFY( resolver->exec() );
-  Collection col = Collection( resolver->collection() );
-
-  ItemFetchJob *job = new ItemFetchJob( col, this );
-  QVERIFY( job->exec() );
-  QCOMPARE( job->items().count(), 3 );
-}

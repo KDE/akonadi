@@ -31,7 +31,6 @@ class ItemFetchTest : public QObject
     void testIllegalFetch();
     void testMultipartFetch_data();
     void testMultipartFetch();
-    void testVirtualFetch();
 };
 
 
