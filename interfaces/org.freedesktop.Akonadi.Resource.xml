@@ -4,6 +4,7 @@
     <signal name="nameChanged">
       <arg name="name" type="s" direction="out"/>
     </signal>
+    <signal name="synchronized"/>
     <method name="requestItemDelivery">
       <arg type="b" direction="out"/>
       <arg name="uid" type="x" direction="in"/>
