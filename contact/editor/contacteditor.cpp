@@ -21,6 +21,7 @@
 #include "contacteditor.h"
 
 #include "addresseditwidget.h"
+#include "contactmetadata.h"
 #include "dateeditwidget.h"
 #include "displaynameeditwidget.h"
 #include "emaileditwidget.h"
@@ -420,11 +421,6 @@ ContactEditor::ContactEditor( QWidget* )
 {
   d->initGui();
 
-  KConfig config( "kcontactmanagerrc" );
-  KConfigGroup group( &config, "General" );
-
-  d->mDisplayNameWidget->setDisplayType( DisplayNameEditWidget::DisplayType( group.readEntry( "DisplayNameType", 1 ) ) );
-
   connect( d->mNameWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
            d->mDisplayNameWidget, SLOT( changeName( const KABC::Addressee& ) ) );
   connect( d->mOrganizationWidget, SIGNAL( textChanged( const QString& ) ),
@@ -433,11 +429,6 @@ ContactEditor::ContactEditor( QWidget* )
 
 ContactEditor::~ContactEditor()
 {
-  KConfig config( "kcontactmanagerrc" );
-  KConfigGroup group( &config, "General" );
-
-  group.writeEntry( "DisplayNameType", (int)d->mDisplayNameWidget->displayType() );
-
   delete d;
 }
 
@@ -486,6 +477,9 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
 
   // family group
   d->mPartnerWidget->setText( d->loadCustom( contact, "X-SpousesName" ) );
+
+  const ContactMetaData metaData( contact );
+  d->mDisplayNameWidget->setDisplayType( (DisplayNameEditWidget::DisplayType)metaData.displayNameMode() );
 }
 
 void ContactEditor::storeContact( KABC::Addressee &contact ) const
@@ -533,4 +527,7 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
 
   // family group
   d->storeCustom( contact, "X-SpousesName", d->mPartnerWidget->text().trimmed() );
+
+  ContactMetaData metaData( contact );
+  metaData.setDisplayNameMode( d->mDisplayNameWidget->displayType() );
 }
