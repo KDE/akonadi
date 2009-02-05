@@ -30,7 +30,12 @@
 #include "controlmanagerinterface.h"
 #include "akonadistarter.h"
 
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#else
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
 
 static bool startServer()
 {
@@ -105,7 +110,11 @@ int main( int argc, char **argv )
         return 4;
       else {
         do {
+#ifdef HAVE_UNISTD_H
           usleep(100000);
+#else
+          Sleep(100000);
+#endif
         } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE ) );
         if ( !startServer() )
           return 3;
