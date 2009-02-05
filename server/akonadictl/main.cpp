@@ -24,6 +24,8 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 
+#include <config-akonadi.h>
+
 #include "akapplication.h"
 #include "protocol_p.h"
 
