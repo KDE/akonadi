@@ -32,7 +32,7 @@ set(akonaditest_SRCS
   testrunner.cpp
 )
 
-kde4_add_executable(akonaditest ${akonaditest_SRCS})
+kde4_add_executable(akonaditest NOGUI ${akonaditest_SRCS})
 
 target_link_libraries(akonaditest
   akonadi-kde
