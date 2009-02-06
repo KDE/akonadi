@@ -59,6 +59,9 @@ public:
 
 protected Q_SLOTS:
     void slotDisconnected();
+    /**
+     * New data arrived from the client. Creates a handler for it and passes the data to the handler. 
+     */
     void slotNewData();
     void slotResponseAvailable( const Response& );
     void slotConnectionStateChange( ConnectionState );

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
+ *   Copyright (C) 2009 by Andras Mantia <amantia@kde.org>                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -14,23 +14,47 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#ifndef GLOBAL_H
-#define GLOBAL_H
 
-namespace Akonadi {
-    
-    // rfc1730 section 3
-  /** The state of the client
-  */
-    enum ConnectionState {
-        NonAuthenticated, ///< Not yet authenticated
-        Authenticated, ///< The client is authenticated
-        Selected, 
-        LoggingOut
-    };
+#ifndef PARTHELPER_H
+#define PARTHELPER_H
 
+#include <QtGlobal>
+#include "entities.h"
+
+class QString;
+class QVariant;
+
+namespace Akonadi
+{
+/**
+A specialized Part class that stores data in a file instead of the database.
+
+	@author Andras Mantia <amantia@kde.org>
+*/
+class PartHelper
+{
+  public:
+    PartHelper();
+    ~PartHelper();
+
+    static bool update( Part *part );
+    static bool insert( Part *part, qint64* insertId = 0 );
+    static bool remove( Part *part);
+    static bool remove( qint64 id );
+    static bool remove( const QString &column, const QVariant &value );
+    static void loadData( Part::List &parts );
+    static void loadData( Part &part );
+    static QByteArray translateData( qint64 id, const QByteArray &data  );
+    /** Returns the record with id @p id. */
+    static Part retrieveById( qint64 id );
+
+    /** Returns the record with name @p name. */
+    static Part retrieveByName( const QString &name );
+
+    static QString fileNameForId( qint64 id );
+};
 }
 
 #endif

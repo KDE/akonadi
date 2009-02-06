@@ -32,6 +32,7 @@
 #include "countquerybuilder.h"
 #include "xdgbasedirs_p.h"
 #include "akdebug.h"
+#include "parthelper.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -229,7 +230,7 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
   Part::List existingParts = item.parts();
   foreach ( Part part, existingParts )
     if( parts.contains( part.name().toLatin1() ) )
-      part.remove();
+      PartHelper::remove(&part);
 
   mNotificationCollector->itemChanged( item );
   return true;
@@ -405,7 +406,8 @@ bool DataStore::appendPimItem( const QList<Part> & parts,
       part.setPimItemId( pimItem.id() );
       part.setDatasize( part.data().size() );
 
-      if( !part.insert() )
+      qDebug() << "Insert from DataStore::appendPimItem";
+      if( !PartHelper::insert(&part) )
         return false;
     }
   }
@@ -477,7 +479,7 @@ bool DataStore::cleanupPimItem( const PimItem &item )
 
   if ( !item.clearFlags() )
     return false;
-  if ( !Part::remove( Part::pimItemIdColumn(), item.id() ) )
+  if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) )
     return false;
   if ( !PimItem::remove( PimItem::idColumn(), item.id() ) )
     return false;

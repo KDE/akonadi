@@ -223,7 +223,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
     static bool clear<xsl:value-of select="@table2"/>s( qint64 id );
     </xsl:for-each>
 
-  protected:
+//   protected:
     // delete records
     static bool remove( const QString &amp;column, const QVariant &amp;value );
 

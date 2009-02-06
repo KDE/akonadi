@@ -30,6 +30,7 @@
 #include "handlerhelper.h"
 #include "../../libs/imapparser_p.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/parthelper.h"
 
 using namespace Akonadi;
 
@@ -183,6 +184,7 @@ bool Store::handleLine( const QByteArray& line )
         if ( !qb.exec() )
           return failureResponse( "Unable to check item part existence" );
         Part::List result = qb.result();
+        PartHelper::loadData(result);
         if ( !result.isEmpty() ) {
           part = result.first();
         }
@@ -196,10 +198,11 @@ bool Store::handleLine( const QByteArray& line )
           part.setVersion( version );
           part.setPimItemId( pimItems[ i ].id() );
           if ( part.isValid() ) {
-            if ( !part.update() )
+            if ( !PartHelper::update(&part) )
               return failureResponse( "Unable to update item part" );
           } else {
-            if ( !part.insert() )
+            qDebug() << "insert from Store::handleLine";
+            if ( !PartHelper::insert(&part) )
               return failureResponse( "Unable to add item part" );
           }
           store->updatePimItem( pimItems[ i ] );
@@ -324,7 +327,7 @@ bool Store::deleteParts( const PimItem &item, const QList<QByteArray> &parts )
 
   QList<QByteArray> partList;
   for ( int i = 0; i < parts.count(); ++i ) {
-    Part part = Part::retrieveByName( QString::fromUtf8( parts[ i ] ) );
+    Part part = PartHelper::retrieveByName( QString::fromUtf8( parts[ i ] ) );
     if ( !part.isValid() )
       continue;
 

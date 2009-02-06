@@ -67,7 +67,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="10"/>
+    <data columns="version" values="11"/>
   </table>
 
   <table name="Resource">
@@ -148,6 +148,7 @@
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="int" properties="NOT NULL"/>
     <column name="version" type="int" properties="DEFAULT 0"/>
+    <column name="external" type="bool" default="false" />
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 

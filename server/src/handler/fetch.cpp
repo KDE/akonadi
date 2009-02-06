@@ -26,6 +26,7 @@
 #include "response.h"
 #include "storage/selectquerybuilder.h"
 #include "resourceinterface.h"
+#include "../storage/parthelper.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QUuid>
@@ -240,7 +241,7 @@ bool Fetch::handleLine( const QByteArray& line )
         }
         QByteArray partName = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
         QByteArray part = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
-        QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
+        QByteArray data = PartHelper::translateData(id, partQuery.query().value( partQueryDataColumn ).toByteArray());
         int version = partQuery.query().value( partQueryVersionColumn ).toInt();
         if ( version != 0 ) { // '0' is the default, so don't send it
           part += "[" + QByteArray::number( version ) + "]";
@@ -390,7 +391,10 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
       }
       QString partName = partQuery.query().value( partQueryNameColumn ).toString();
       if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
-        if ( partQuery.query().value( partQueryDataColumn ).toByteArray().isNull() ) {
+        qint64 partId = partQuery.query().value( partQueryIdColumn ).toLongLong();
+        QByteArray data = PartHelper::translateData(partId, partQuery.query().value( partQueryDataColumn ).toByteArray());
+        data = PartHelper::translateData(partId, data);
+        if ( data.isNull() ) {
           if ( mFullPayload && !missingParts.contains( partName ) )
             missingParts << partName;
         } else {

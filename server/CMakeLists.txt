@@ -106,6 +106,7 @@ set(libakonadiprivate_SRCS
   src/storage/query.cpp
   src/storage/querybuilder.cpp
   src/storage/transaction.cpp
+  src/storage/parthelper.cpp
   src/tracer.cpp
   src/dbustracer.cpp
   src/filetracer.cpp

@@ -68,6 +68,7 @@ bool Copy::handleLine(const QByteArray & line)
 
 bool Copy::copyItem(const PimItem & item, const Collection & target)
 {
+  qDebug() << "Copy::copyItem";
   DataStore *store = connection()->storageBackend();
   PimItem newItem = item;
   newItem.setId( -1 );

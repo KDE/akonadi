@@ -18,6 +18,7 @@
 */
 
 #include "cachecleaner.h"
+#include "storage/parthelper.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 
@@ -73,8 +74,9 @@ void CacheCleaner::cleanCache()
       qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, collection.cachePolicyLocalParts().split( QLatin1String(" ") ) );
     if ( !qb.exec() )
       continue;
-    QList<Part> parts = qb.result();
-
+    Part::List parts = qb.result();
+    PartHelper::loadData(parts);
+                                 
     if ( parts.isEmpty() )
       continue;
     qDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
@@ -82,7 +84,7 @@ void CacheCleaner::cleanCache()
     // clear data field
     for ( int i = 0; i < parts.count(); ++i) {
       parts[ i ].setData( QByteArray() );
-      if ( !parts[ i ].update() )
+      if ( !PartHelper::update(&(parts[ i ])) )
         qDebug() << "failed to update item part" << parts[ i ].id();
     }
     loopsWithExpiredItem++;

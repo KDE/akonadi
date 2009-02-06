@@ -220,6 +220,7 @@ void AkonadiServer::startDatabaseProcess()
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
   const QString akDir   = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/" ) );
   const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+  const QString fileDataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) );
 
   // generate config file
   const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
