@@ -26,7 +26,8 @@
 TestRunner::TestRunner(const QStringList& args, QObject* parent)
   : QObject( parent ),
     mArguments( args ),
-    mExitCode( 0 )
+    mExitCode( 0 ),
+    mProcess( 0 )
 {
 }
 
@@ -38,12 +39,12 @@ int TestRunner::exitCode() const
 void TestRunner::run()
 {
   kDebug() << mArguments;
-  KProcess *process = new KProcess( this );
-  process->setProgram( mArguments );
-  connect( process, SIGNAL( finished( int ) ), SLOT( processFinished( int ) ) );
+  mProcess = new KProcess( this );
+  mProcess->setProgram( mArguments );
+  connect( mProcess, SIGNAL( finished( int ) ), SLOT( processFinished( int ) ) );
   // environment setup seems to have been done by setuptest globally already
-  process->start();
-  if ( !process->waitForStarted() ) {
+  mProcess->start();
+  if ( !mProcess->waitForStarted() ) {
     kWarning() << mArguments << "failed to start!";
     mExitCode = 255;
     emit finished();
@@ -56,5 +57,12 @@ void TestRunner::processFinished( int exitCode )
   mExitCode = exitCode;
   emit finished();
 }
+
+void TestRunner::terminate()
+{
+  if ( mProcess )
+    mProcess->terminate();
+}
+
 
 #include "testrunner.moc"

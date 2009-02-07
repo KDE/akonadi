@@ -21,6 +21,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
+class KProcess;
+
 class TestRunner : public QObject
 {
   Q_OBJECT
@@ -28,6 +30,7 @@ class TestRunner : public QObject
   public:
     TestRunner( const QStringList &args, QObject *parent = 0 );
     int exitCode() const;
+    void terminate();
 
   public Q_SLOTS:
     void run();
@@ -41,6 +44,7 @@ class TestRunner : public QObject
   private:
     QStringList mArguments;
     int mExitCode;
+    KProcess *mProcess;
 };
 
 #endif // TESTRUNNER_H

@@ -331,6 +331,8 @@ SetupTest::~SetupTest()
 void SetupTest::shutdown()
 {
   kDebug();
+  if ( mShuttingDown )
+    return;
   mShuttingDown = true;
   QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
                                QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), *mInternalBus );

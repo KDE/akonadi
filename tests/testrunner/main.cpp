@@ -27,6 +27,20 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 
+#include <signal.h>
+
+static SetupTest *setup = 0;
+static TestRunner *runner = 0;
+
+void sigHandler( int signal )
+{
+  kDebug() << "Received signal" << signal;
+  if ( runner )
+    runner->terminate();
+  if ( setup )
+    setup->shutdown();
+}
+
 int main( int argc, char **argv )
 {
   KAboutData aboutdata( "akonadi-TES", 0,
@@ -50,7 +64,12 @@ int main( int argc, char **argv )
   if ( args->isSet( "config" ) )
     Config::instance( args->getOption( "config" ) );
 
-  SetupTest *setup = new SetupTest();
+#ifdef Q_OS_UNIX
+  signal( SIGINT, sigHandler );
+  signal( SIGQUIT, sigHandler );
+#endif
+
+  setup = new SetupTest();
 
   setup->startAkonadiDaemon();
 
@@ -61,7 +80,6 @@ int main( int argc, char **argv )
   ShellScript *sh = new ShellScript();
   sh->makeShellScript();
 
-  TestRunner *runner = 0;
   if ( args->count() > 0 ) {
     QStringList testArgs;
     for ( int i = 0; i < args->count(); ++i )
@@ -80,6 +98,7 @@ int main( int argc, char **argv )
   Config::destroyInstance();
   delete testing;
   delete setup;
+  setup = 0;
   delete sh;
 
   return exitCode;
