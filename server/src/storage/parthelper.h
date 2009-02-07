@@ -50,9 +50,6 @@ class PartHelper
     /** Returns the record with id @p id. */
     static Part retrieveById( qint64 id );
 
-    /** Returns the record with name @p name. */
-    static Part retrieveByName( const QString &name );
-
     static QString fileNameForId( qint64 id );
 };
 }

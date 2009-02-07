@@ -53,7 +53,6 @@ class Store : public Handler
     bool replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool addFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool deleteFlags( const PimItem &item, const QList<QByteArray> &flags );
-    bool deleteParts( const PimItem &item, const QList<QByteArray> &parts );
 };
 
 }

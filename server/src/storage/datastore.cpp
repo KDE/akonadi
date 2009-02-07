@@ -228,9 +228,12 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
 bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &parts )
 {
   Part::List existingParts = item.parts();
-  foreach ( Part part, existingParts )
-    if( parts.contains( part.name().toLatin1() ) )
-      PartHelper::remove(&part);
+  foreach ( Part part, existingParts ) {
+    if( parts.contains( part.name().toLatin1() ) ) {
+      if ( !PartHelper::remove(&part) )
+        return false;
+    }
+  }
 
   mNotificationCollector->itemChanged( item );
   return true;

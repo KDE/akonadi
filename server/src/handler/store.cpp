@@ -157,8 +157,8 @@ bool Store::handleLine( const QByteArray& line )
         QList<QByteArray> parts;
         ImapParser::parseParenthesizedList( value, parts );
         if ( op == Delete ) {
-          if ( !deleteParts( pimItems[ i ], parts ) )
-          return failureResponse( "Unable to remove item parts." );
+          if ( !store->removeItemParts( pimItems[ i ], parts ) )
+            return failureResponse( "Unable to remove item parts." );
         }
       } else if ( command == "COLLECTION" ) {
         if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( value ) ) )
@@ -320,24 +320,3 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
   }
   return true;
 }
-
-bool Store::deleteParts( const PimItem &item, const QList<QByteArray> &parts )
-{
-  DataStore *store = connection()->storageBackend();
-
-  QList<QByteArray> partList;
-  for ( int i = 0; i < parts.count(); ++i ) {
-    Part part = PartHelper::retrieveByName( QString::fromUtf8( parts[ i ] ) );
-    if ( !part.isValid() )
-      continue;
-
-    partList.append( part.name().toLatin1() );
-  }
-
-  if ( !store->removeItemParts( item, partList ) ) {
-    qDebug( "Store::deleteParts: Unable to remove item parts" );
-    return false;
-  }
-  return true;
-}
-

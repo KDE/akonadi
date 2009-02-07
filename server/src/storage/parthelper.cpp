@@ -228,14 +228,6 @@ Part PartHelper::retrieveById( qint64 id )
   return part;
 }
 
-/** Returns the record with name @p name. */
-Part PartHelper::retrieveByName( const QString &name )
-{
-  Part part = Part::retrieveByName( name );
-  loadData(part);
-  return part;
-}
-
 QString PartHelper::fileNameForId( qint64 id )
 {
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) ) + QDir::separator();
