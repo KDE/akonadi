@@ -29,7 +29,6 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemmovejob.h>
 #include <qtest_akonadi.h>
 
 using namespace Akonadi;
@@ -154,40 +153,6 @@ void ItemStoreTest::testDataChange()
   QVERIFY( item.hasPayload<QByteArray>() );
   QEXPECT_FAIL( "empty", "Item does not detect QByteArray() as loaded payload part", Continue );
   QCOMPARE( item.payload<QByteArray>(), data );
-}
-
-void ItemStoreTest::testItemMove()
-{
-  ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
-  prefetchjob->exec();
-  Item item = prefetchjob->items()[0];
-
-  ItemMoveJob *store = new ItemMoveJob( item, res3, this );
-  QVERIFY( store->exec() );
-
-  ItemFetchJob *fetch = new ItemFetchJob( res3, this );
-  QVERIFY( fetch->exec() );
-  QCOMPARE( fetch->items().count(), 1 );
-
-  store = new ItemMoveJob( item, res1_foo, this );
-  QVERIFY( store->exec() );
-}
-
-void ItemStoreTest::testIllegalItemMove()
-{
-  ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
-  QVERIFY( prefetchjob->exec() );
-  QCOMPARE( prefetchjob->items().count(), 1 );
-  Item item = prefetchjob->items()[0];
-
-  // move into invalid collection
-  ItemMoveJob *store = new ItemMoveJob( item, Collection( INT_MAX ), this );
-  QVERIFY( !store->exec() );
-
-  // move item into folder that doesn't support its mimetype
-  store = new ItemMoveJob( item, res2, this );
-  QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
-  QVERIFY( !store->exec() );
 }
 
 void ItemStoreTest::testRemoteId_data()

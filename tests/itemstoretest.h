@@ -31,8 +31,6 @@ class ItemStoreTest : public QObject
     void testFlagChange();
     void testDataChange_data();
     void testDataChange();
-    void testItemMove();
-    void testIllegalItemMove();
     void testRemoteId_data();
     void testRemoteId();
     void testMultiPart();
