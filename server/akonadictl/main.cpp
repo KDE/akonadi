@@ -32,7 +32,7 @@
 #include "controlmanagerinterface.h"
 #include "akonadistarter.h"
 
-#ifdef HAVE_UNISTD_H
+#if defined(HAVE_UNISTD_H) && !defined(Q_WS_WIN)
 #include <unistd.h>
 #else
 #define WIN32_LEAN_AND_MEAN
@@ -112,7 +112,7 @@ int main( int argc, char **argv )
         return 4;
       else {
         do {
-#ifdef HAVE_UNISTD_H
+#if defined(HAVE_UNISTD_H) && !defined(Q_WS_WIN)
           usleep(100000);
 #else
           Sleep(100000);
