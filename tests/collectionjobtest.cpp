@@ -22,6 +22,8 @@
 #include "collectionjobtest.h"
 #include <qtest_akonadi.h>
 
+#include "agentmanager.h"
+#include "agentinstance.h"
 #include "cachepolicy.h"
 #include "collection.h"
 #include "collectioncreatejob.h"
@@ -50,6 +52,10 @@ void CollectionJobTest::initTestCase()
 {
   qRegisterMetaType<Akonadi::Collection::List>();
   Control::start();
+
+  // switch all resources offline to reduce interference from them
+  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+    agent.setIsOnline( false );
 }
 
 static Collection findCol( const Collection::List &list, const QString &name ) {

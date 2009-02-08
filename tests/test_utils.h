@@ -27,8 +27,10 @@ qint64 collectionIdFromPath( const QString &path )
 {
   Akonadi::CollectionPathResolver *resolver = new Akonadi::CollectionPathResolver( path );
   bool success = resolver->exec();
-  if ( !success )
+  if ( !success ) {
     qDebug() << "path resolution for " << path << " failed: " << resolver->errorText();
+    return -1;
+  }
   qint64 id = resolver->collection();
   return id;
 }

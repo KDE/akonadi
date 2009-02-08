@@ -20,6 +20,8 @@
 #include "monitortest.h"
 #include "test_utils.h"
 
+#include <akonadi/agentmanager.h>
+#include <akonadi/agentinstance.h>
 #include <akonadi/monitor.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectiondeletejob.h>
@@ -51,6 +53,10 @@ void MonitorTest::initTestCase()
   Control::start();
 
   res3 = Collection( collectionIdFromPath( "res3" ) );
+
+  // switch all resources offline to reduce interference from them
+  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+    agent.setIsOnline( false );
 }
 
 void MonitorTest::testMonitor_data()
@@ -141,13 +147,12 @@ void MonitorTest::testMonitor()
   QVERIFY( caspy.isEmpty() );
   QVERIFY( cmspy.isEmpty() );
   QVERIFY( crspy.isEmpty() );
-  imspy.clear(); // can happen if the resource set the remoteId inbetween
+  QVERIFY( imspy.isEmpty() );
   QVERIFY( irspy.isEmpty() );
 
   // modify an item
   item.setPayload<QByteArray>( "some new content" );
   ItemModifyJob *store = new ItemModifyJob( item, this );
-  store->disableRevisionCheck(); // resource might have set the remote id in the meantime
   QVERIFY( store->exec() );
   QTest::qWait(1000);
 

@@ -21,6 +21,8 @@
 #include "control.h"
 #include "itemstoretest.h"
 #include "testattribute.h"
+#include <akonadi/agentmanager.h>
+#include <akonadi/agentinstance.h>
 #include <akonadi/attributefactory.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionselectjob.h>
@@ -30,6 +32,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <qtest_akonadi.h>
+#include "test_utils.h"
 
 using namespace Akonadi;
 
@@ -45,22 +48,16 @@ void ItemStoreTest::initTestCase()
   AttributeFactory::registerAttribute<TestAttribute>();
 
   // get the collections we run the tests on
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  QVERIFY( job->exec() );
-  Collection::List list = job->collections();
-  Collection res1;
-  foreach ( const Collection &col, list ) {
-    if ( col.name() == "res1" )
-      res1 = col;
-    if ( col.name() == "res2" )
-      res2 = col;
-    if ( col.name() == "res3" )
-      res3 = col;
-  }
-  foreach ( const Collection &col, list ) {
-    if ( col.name() == "foo" && col.parent() == res1.id() )
-      res1_foo = col;
-  }
+  res1_foo = Collection( collectionIdFromPath( "res1/foo" ) );
+  QVERIFY( res1_foo.isValid() );
+  res2 = Collection( collectionIdFromPath( "res2" ) );
+  QVERIFY( res2.isValid() );
+  res3 = Collection( collectionIdFromPath( "res3" ) );
+  QVERIFY( res3.isValid() );
+
+  // switch all resources offline to reduce interference from them
+  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+    agent.setIsOnline( false );
 }
 
 void ItemStoreTest::testFlagChange()
@@ -142,7 +139,6 @@ void ItemStoreTest::testDataChange()
 
   // delete data
   ItemModifyJob *sjob = new ItemModifyJob( item );
-  sjob->disableRevisionCheck();  // resource unsets the dirty flag in the meantime
   QVERIFY( sjob->exec() );
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
@@ -178,7 +174,6 @@ void ItemStoreTest::testRemoteId()
   item.setId( 1 );
   item.setRemoteId( rid );
   ItemModifyJob *store = new ItemModifyJob( item, this );
-  store->disableRevisionCheck(); // resource unsets the dirty flag in the meantime
   QVERIFY( store->exec() );
 
   ItemFetchJob *fetch = new ItemFetchJob( item, this );

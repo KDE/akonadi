@@ -19,6 +19,8 @@
 
 #include "test_utils.h"
 
+#include <akonadi/agentmanager.h>
+#include <akonadi/agentinstance.h>
 #include <akonadi/control.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
@@ -54,6 +56,10 @@ class ItemsyncTest : public QObject
     {
       Control::start();
       qRegisterMetaType<KJob*>();
+
+      // switch all resources offline to reduce interference from them
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+        agent.setIsOnline( false );
     }
 
     void testFullSync()
