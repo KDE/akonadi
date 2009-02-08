@@ -35,10 +35,19 @@ static TestRunner *runner = 0;
 void sigHandler( int signal )
 {
   kDebug() << "Received signal" << signal;
-  if ( runner )
-    runner->terminate();
-  if ( setup )
-    setup->shutdown();
+  static int sigCounter = 0;
+  if ( sigCounter == 0 ) { // try clean shutdown
+    if ( runner )
+      runner->terminate();
+    if ( setup )
+      setup->shutdown();
+  } else if ( sigCounter == 1 ) { // force shutdown
+    if ( setup )
+      setup->shutdownHarder();
+  } else { // give up and just exit
+    exit( 255 );
+  }
+  ++sigCounter;
 }
 
 int main( int argc, char **argv )

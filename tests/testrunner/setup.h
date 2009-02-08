@@ -24,7 +24,7 @@
 
 class QDBusConnection;
 class QIODevice;
-class QProcess;
+class KProcess;
 class QSignalMapper;
 
 class SetupTest : public QObject
@@ -39,13 +39,13 @@ class SetupTest : public QObject
 
   public Q_SLOTS:
     void shutdown();
+    void shutdownHarder();
 
   Q_SIGNALS:
     void setupDone();
 
   private Q_SLOTS:
     void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
-    void shutdownHarder();
     void resourceSynchronized( const QString &agentId );
 
   private:
@@ -61,10 +61,15 @@ class SetupTest : public QObject
     void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
 
-    QProcess *mAkonadiDaemonProcess;
+  private slots:
+    void synchronizeResources();
+
+  private:
+    KProcess *mAkonadiDaemonProcess;
     int mDBusDaemonPid;
     QDBusConnection *mInternalBus;
     QStringList mPendingAgents;
+    QStringList mPendingResources;
     QStringList mPendingSyncs;
     bool mShuttingDown;
     QSignalMapper *mSyncMapper;
