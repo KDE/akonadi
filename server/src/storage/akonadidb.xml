@@ -67,7 +67,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="11"/>
+    <data columns="version" values="12"/>
   </table>
 
   <table name="Resource">
@@ -146,7 +146,7 @@
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" properties="NOT NULL REFERENCES PimItemTable(id)"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="data" type="QByteArray"/>
-    <column name="datasize" type="int" properties="NOT NULL"/>
+    <column name="datasize" type="qint64" properties="NOT NULL"/>
     <column name="version" type="int" properties="DEFAULT 0"/>
     <column name="external" type="bool" default="false" />
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>

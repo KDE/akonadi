@@ -61,9 +61,9 @@ namespace DbConfig {
   /**
    * Payload data bigger than this value will be stored in separate files, instead of the database. Valid
    * only if @ref useExternalPayloadFile returns true, otherwise it is ignored.
-   * @return the size threshold in bytes, defaults to 4048.
+   * @return the size threshold in bytes, defaults to 4096.
    */
-  int sizeThreshold();
+  qint64 sizeThreshold();
 
   /**
    * Check if big payload data (@ref sizeThreshold) is stored in external files instead of the database.

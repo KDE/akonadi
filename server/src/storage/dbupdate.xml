@@ -73,4 +73,8 @@
     ALTER TABLE LocationPimItemRelation RENAME TO CollectionPimItemRelation;
   </update>
 
+  <update version="12" abortOnFailure="false">
+    ALTER TABLE PartTable CHANGE datasize datasize BIGINT;
+ </update>
+
 </updates>

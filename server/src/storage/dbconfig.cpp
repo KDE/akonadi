@@ -50,10 +50,17 @@ class DbConfigStatic
           akFatal() << "No usable database driver found.";
       }
 
-      bool ok;
-      mSizeThreshold = 4048;
-      mSizeThreshold = settings.value( QLatin1String("General/SizeThreshold"), mSizeThreshold ).toInt( &ok );
-      if ( !ok || mSizeThreshold < 0 )
+      mSizeThreshold = 4096;
+      QVariant v = settings.value( QLatin1String("General/SizeThreshold"), mSizeThreshold );
+      if ( v.canConvert<qint64>() )
+      {
+        mSizeThreshold = v.value<qint64>();
+      } else
+      {
+        mSizeThreshold = 0;
+      }
+
+      if ( mSizeThreshold < 0 )
         mSizeThreshold = 0;
 
       mUseExternalPayloadFile = false;
@@ -200,7 +207,7 @@ class DbConfigStatic
     QString mServerPath;
     bool mInternalServer;
     bool mUseExternalPayloadFile;
-    int mSizeThreshold;
+    qint64 mSizeThreshold;
 };
 
 Q_GLOBAL_STATIC( DbConfigStatic, sInstance )
@@ -247,7 +254,7 @@ QString DbConfig::databaseName()
   return sInstance()->mName;
 }
 
-int DbConfig::sizeThreshold()
+qint64 DbConfig::sizeThreshold()
 {
   return sInstance()->mSizeThreshold;
 }
