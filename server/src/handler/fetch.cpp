@@ -62,6 +62,7 @@ static const int partQueryIdColumn = 0;
 static const int partQueryNameColumn = 1;
 static const int partQueryDataColumn = 2;
 static const int partQueryVersionColumn = 3;
+static const int partQueryExternalColumn = 4;
 
 Fetch::Fetch()
   : Handler(),
@@ -241,7 +242,7 @@ bool Fetch::handleLine( const QByteArray& line )
         }
         QByteArray partName = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
         QByteArray part = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
-        QByteArray data = PartHelper::translateData(id, partQuery.query().value( partQueryDataColumn ).toByteArray());
+        QByteArray data = PartHelper::translateData(id, partQuery.query().value( partQueryDataColumn ).toByteArray(), partQuery.query().value( partQueryExternalColumn ).toBool());
         int version = partQuery.query().value( partQueryVersionColumn ).toInt();
         if ( version != 0 ) { // '0' is the default, so don't send it
           part += "[" + QByteArray::number( version ) + "]";
@@ -325,6 +326,7 @@ QueryBuilder Fetch::buildPartQuery( const QStringList &partList, bool allPayload
     partQuery.addColumn( Part::nameFullColumnName() );
     partQuery.addColumn( Part::dataFullColumnName() );
     partQuery.addColumn( Part::versionFullColumnName() );
+    partQuery.addColumn( Part::externalFullColumnName() );
     partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
     Query::Condition cond( Query::Or );
     if ( !partList.isEmpty() )
@@ -392,8 +394,8 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
       QString partName = partQuery.query().value( partQueryNameColumn ).toString();
       if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
         qint64 partId = partQuery.query().value( partQueryIdColumn ).toLongLong();
-        QByteArray data = PartHelper::translateData(partId, partQuery.query().value( partQueryDataColumn ).toByteArray());
-        data = PartHelper::translateData(partId, data);
+        QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
+        data = PartHelper::translateData(partId, data, partQuery.query().value( partQueryExternalColumn ).toBool());
         if ( data.isNull() ) {
           if ( mFullPayload && !missingParts.contains( partName ) )
             missingParts << partName;

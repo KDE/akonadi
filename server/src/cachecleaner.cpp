@@ -30,7 +30,7 @@ using namespace Akonadi;
 CacheCleaner::CacheCleaner(QObject * parent) :
     QThread( parent )
 {
-  mTime = 60; 
+  mTime = 60;
   mLoops = 0;
 }
 
@@ -75,8 +75,8 @@ void CacheCleaner::cleanCache()
     if ( !qb.exec() )
       continue;
     Part::List parts = qb.result();
-    PartHelper::loadData(parts);
-                                 
+    PartHelper::loadData(parts); //FIXME: not needed anymore to read back the data itself?
+
     if ( parts.isEmpty() )
       continue;
     qDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
@@ -91,7 +91,7 @@ void CacheCleaner::cleanCache()
   }
 
   /* if we have item parts to expire in collection the mTime is
-   * decreased of 60 and if there are lot of collection need to be clean 
+   * decreased of 60 and if there are lot of collection need to be clean
    * mTime is 60 otherwise we increment mTime in 60
    */
 
@@ -107,7 +107,7 @@ void CacheCleaner::cleanCache()
 
   // measured arithmetic between mLoops and loopsWithExpiredItem
   mLoops = (loopsWithExpiredItem + mLoops) >> 2;
-     
+
   QTimer::singleShot( mTime * 1000, this, SLOT(cleanCache()) );
 }
 

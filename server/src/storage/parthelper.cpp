@@ -20,14 +20,12 @@
 #include "parthelper.h"
 #include "entities.h"
 #include "selectquerybuilder.h"
+#include "dbconfig.h"
 #include "../../libs/xdgbasedirs_p.h"
 
 #include <QDir>
 #include <QFile>
 #include <QDebug>
-
-//set to true in order to store the payload data in a file
-#define AKONADI_USE_FILE_DATA false
 
 using namespace Akonadi;
 
@@ -45,7 +43,7 @@ bool PartHelper::update( Part *part )
   if (!part)
     return false;
 
-  if (AKONADI_USE_FILE_DATA)
+  if (DbConfig::useExternalPayloadFile() && part->external())
   {
     QString fileName = PartHelper::fileNameForId( part->id() );
 
@@ -54,7 +52,7 @@ bool PartHelper::update( Part *part )
     if (file.open( QIODevice::WriteOnly | QIODevice::Truncate ))
     {
       QByteArray data = part->data();
-      //qDebug() << "Update part file " << part->id() << "_data with " << QString::fromUtf8(data).left(50);
+      qDebug() << "Update part file " << part->id() << "_data with " << QString::fromUtf8(data).left(50);
 
       file.write( data );
       QByteArray fileNameData = fileName.toLocal8Bit();
@@ -64,6 +62,7 @@ bool PartHelper::update( Part *part )
       file.close();
     } else
     {
+      qDebug() << "Payload file " << fileName << " could not be open for writing!";
       return false;
     }
   }
@@ -75,13 +74,14 @@ bool PartHelper::insert( Part *part, qint64* insertId )
   if (!part)
     return false;
 
-  //qDebug() << "Insert original data " << part->data();
+  qDebug() << "Insert original data " << part->data();
   QByteArray fileNameData("");
   QByteArray data;
+  bool storeInFile = DbConfig::useExternalPayloadFile()  && (part->datasize() > DbConfig::sizeThreshold() );
 
   //it is needed to insert first the metadata so a new id is generated for the part,
   //and we need this id for the payload file name
-  if (AKONADI_USE_FILE_DATA)
+  if (storeInFile)
   {
     data = part->data();
     part->setData( fileNameData );
@@ -92,7 +92,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
 
   bool result = part->insert( insertId );
 
-  if (AKONADI_USE_FILE_DATA && result)
+  if (storeInFile && result)
   {
     QString fileName = PartHelper::fileNameForId( part->id() );
 
@@ -100,7 +100,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
 
     if (file.open( QIODevice::WriteOnly | QIODevice::Truncate ))
     {
-      //qDebug() << "Insert part file " << part->id() << "_data with " << QString::fromUtf8(data).left(50);
+      qDebug() << "Insert part file " << part->id() << "_data with " << QString::fromUtf8(data).left(50);
 
       file.write(data);
       fileNameData = fileName.toLocal8Bit();
@@ -110,6 +110,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
       file.close();
     } else
     {
+      qDebug() << "Payload file " << fileName << " could not be open for writing!";
       return false;
     }
   }
@@ -121,9 +122,9 @@ bool PartHelper::remove( Akonadi::Part *part )
   if (!part)
     return false;
 
-  if (AKONADI_USE_FILE_DATA && part->external())
+  if (DbConfig::useExternalPayloadFile()  && part->external())
   {
-    //qDebug() << "remove part file " << part->id();
+    qDebug() << "remove part file " << part->id();
     QString fileName = PartHelper::fileNameForId( part->id() );
     QFile file( fileName );
     file.remove();
@@ -133,19 +134,19 @@ bool PartHelper::remove( Akonadi::Part *part )
 
 bool PartHelper::remove(qint64 id)
 {
-  if (AKONADI_USE_FILE_DATA)
+  if ( DbConfig::useExternalPayloadFile() )
   {
-    //qDebug() << "remove part file " <<id;
+    qDebug() << "remove part file " <<id;
     QString fileName = PartHelper::fileNameForId( id );
     QFile file( fileName );
-    file.remove();
+    file.remove(); //might fail if the part is not externally stored, but we don't really care
   }
   return Part::remove(id);
 }
 
 bool PartHelper::remove( const QString &column, const QVariant &value )
 {
-  if (AKONADI_USE_FILE_DATA)
+  if ( DbConfig::useExternalPayloadFile() )
   {
     SelectQueryBuilder<Part> builder;
     builder.addValueCondition( column, Query::Equals, value );
@@ -159,52 +160,63 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
     Part::List::Iterator end = parts.end();
     for ( ; it != end; ++it )
     {
-    //qDebug() << "remove part file " <<value.toString();
-      QString fileName = PartHelper::fileNameForId( (*it).id() );
-      QFile file( fileName );
-      file.remove();
+      if ((*it).external())
+      {
+      //qDebug() << "remove part file " <<value.toString();
+        QString fileName = PartHelper::fileNameForId( (*it).id() );
+        QFile file( fileName );
+        file.remove();
+      }
     }
   }
   return Part::remove( column, value );
 }
 
-void PartHelper::loadData( Part::List &parts )
+bool PartHelper::loadData( Part::List &parts )
 {
-  if (AKONADI_USE_FILE_DATA)
+
+  if ( DbConfig::useExternalPayloadFile() )
   {
     Part::List::Iterator it = parts.begin();
     Part::List::Iterator end = parts.end();
     for ( ; it != end; ++it )
     {
-      loadData( (*it) );
-    }
-  }
-}
-
-void PartHelper::loadData( Part &part )
-{
-  if (AKONADI_USE_FILE_DATA)
-  {
-    if (part.external())
-    {
-      QString fileName = PartHelper::fileNameForId( part.id() );
-      //qDebug() << "loadData " << fileName;
-      QFile file( fileName );
-      if (file.open( QIODevice::ReadOnly ))
+      if ( !loadData( (*it) ) )
       {
-        QByteArray data = file.readAll();
-        part.setData(data);
-        part.setDatasize( data.size() );
-        //qDebug() << "load part file " << part.id() << QString::fromUtf8(data).left(50);
-        file.close();
+        return false;
       }
     }
   }
+  return true;
 }
 
-QByteArray PartHelper::translateData( qint64 id, const QByteArray &data )
+bool PartHelper::loadData( Part &part )
 {
-  if (AKONADI_USE_FILE_DATA)
+  if ( DbConfig::useExternalPayloadFile() && part.external() )
+  {
+    QString fileName = PartHelper::fileNameForId( part.id() );
+    qDebug() << "loadData " << fileName;
+    QFile file( fileName );
+    if (file.open( QIODevice::ReadOnly ))
+    {
+      QByteArray data = file.readAll();
+      part.setData( data );
+      part.setDatasize( data.size() );
+      qDebug() << "load part file " << part.id() << QString::fromUtf8(data).left(50);
+      file.close();
+    } else
+    {
+      qDebug() << "Payload file " << fileName << " could not be open for reading!";
+      return false;
+    }
+  }
+
+  return true;
+}
+
+QByteArray PartHelper::translateData( qint64 id, const QByteArray &data, bool isExternal )
+{
+  if ( DbConfig::useExternalPayloadFile() && isExternal )
   {
     //qDebug() << "translateData " << id;
     QString fileName = PartHelper::fileNameForId( id );
@@ -215,7 +227,10 @@ QByteArray PartHelper::translateData( qint64 id, const QByteArray &data )
       file.close();
       return payload;
     } else
-      return data;
+    {
+      qDebug() << "Payload file " << fileName << " could not be open for reading!";
+      return QByteArray();
+    }
   } else
     return data;
 }
