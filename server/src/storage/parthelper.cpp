@@ -58,13 +58,16 @@ bool PartHelper::update( Part *part )
       QByteArray fileNameData = fileName.toLocal8Bit();
       part->setData( fileNameData );
       part->setDatasize( fileNameData.size() );
-      part->setExternal (true );
+      part->setExternal( true );
       file.close();
     } else
     {
       qDebug() << "Payload file " << fileName << " could not be open for writing!";
       return false;
     }
+  } else
+  {
+    part->setExternal( false );
   }
   return part->update();
 }
@@ -86,8 +89,10 @@ bool PartHelper::insert( Part *part, qint64* insertId )
     data = part->data();
     part->setData( fileNameData );
     part->setDatasize( fileNameData.size() );
-    part->setExternal(true);
-
+    part->setExternal( true );
+  } else
+  {
+    part->setExternal( false );
   }
 
   bool result = part->insert( insertId );
@@ -174,19 +179,16 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
 
 bool PartHelper::loadData( Part::List &parts )
 {
-
-  if ( DbConfig::useExternalPayloadFile() )
+  Part::List::Iterator it = parts.begin();
+  Part::List::Iterator end = parts.end();
+  for ( ; it != end; ++it )
   {
-    Part::List::Iterator it = parts.begin();
-    Part::List::Iterator end = parts.end();
-    for ( ; it != end; ++it )
+    if ( !loadData( (*it) ) )
     {
-      if ( !loadData( (*it) ) )
-      {
-        return false;
-      }
+      return false;
     }
   }
+
   return true;
 }
 
@@ -209,6 +211,10 @@ bool PartHelper::loadData( Part &part )
       qDebug() << "Payload file " << fileName << " could not be open for reading!";
       return false;
     }
+  } else
+  if ( part.external() ) //external payload is disabled, but the item is marked as external
+  {
+    return false;
   }
 
   return true;
@@ -231,6 +237,10 @@ QByteArray PartHelper::translateData( qint64 id, const QByteArray &data, bool is
       qDebug() << "Payload file " << fileName << " could not be open for reading!";
       return QByteArray();
     }
+  } else
+  if ( isExternal ) //external payload is disabled, but the item is marked as external
+  {
+    return QByteArray();
   } else
     return data;
 }

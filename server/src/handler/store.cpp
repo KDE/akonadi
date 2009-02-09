@@ -184,13 +184,13 @@ bool Store::handleLine( const QByteArray& line )
         if ( !qb.exec() )
           return failureResponse( "Unable to check item part existence" );
         Part::List result = qb.result();
-        PartHelper::loadData(result);
+
         if ( !result.isEmpty() ) {
           part = result.first();
         }
 
         // only update if part contents are not yet in the storage
-        if ( part.data() != value )
+        if ( !PartHelper::loadData(part) || part.data() != value )
         {
           part.setData( value );
           part.setDatasize( buffer.size() );
