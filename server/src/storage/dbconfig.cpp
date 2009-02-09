@@ -50,6 +50,15 @@ class DbConfigStatic
           akFatal() << "No usable database driver found.";
       }
 
+      bool ok;
+      mSizeThreshold = 4048;
+      mSizeThreshold = settings.value( QLatin1String("General/SizeThreshold"), mSizeThreshold ).toInt( &ok );
+      if ( !ok || mSizeThreshold < 0 )
+        mSizeThreshold = 0;
+
+      mUseExternalPayloadFile = false;
+      mUseExternalPayloadFile = settings.value( QLatin1String("General/ExternalPayload"), mUseExternalPayloadFile ).toBool();
+
       // determine default settings depending on the driver
       QString defaultDbName;
       QString defaultOptions;
@@ -106,6 +115,8 @@ class DbConfigStatic
 
       // store back the default values
       settings.setValue( QLatin1String( "General/Driver" ), mDriverName );
+      settings.setValue( QLatin1String( "General/SizeThreshold" ), mSizeThreshold );
+      settings.setValue( QLatin1String( "General/ExternalPayload" ), mUseExternalPayloadFile );
       settings.beginGroup( mDriverName );
       settings.setValue( QLatin1String( "Name" ), mName );
       settings.setValue( QLatin1String( "User" ), mUserName );
@@ -188,6 +199,8 @@ class DbConfigStatic
     QString mConnectionOptions;
     QString mServerPath;
     bool mInternalServer;
+    bool mUseExternalPayloadFile;
+    int mSizeThreshold;
 };
 
 Q_GLOBAL_STATIC( DbConfigStatic, sInstance )
@@ -232,5 +245,15 @@ QString DbConfig::serverPath()
 QString DbConfig::databaseName()
 {
   return sInstance()->mName;
+}
+
+int DbConfig::sizeThreshold()
+{
+  return sInstance()->mSizeThreshold;
+}
+
+bool DbConfig::useExternalPayloadFile()
+{
+  return sInstance()->mUseExternalPayloadFile;
 }
 

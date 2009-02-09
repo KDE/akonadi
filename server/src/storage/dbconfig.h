@@ -58,6 +58,19 @@ namespace DbConfig {
    */
   QString databaseName();
 
+  /**
+   * Payload data bigger than this value will be stored in separate files, instead of the database. Valid
+   * only if @ref useExternalPayloadFile returns true, otherwise it is ignored.
+   * @return the size threshold in bytes, defaults to 4048.
+   */
+  int sizeThreshold();
+
+  /**
+   * Check if big payload data (@ref sizeThreshold) is stored in external files instead of the database.
+   * @return true, if the big data is stored in external files. Default is false.
+   */
+  bool useExternalPayloadFile();
+
 }
 
 #endif
