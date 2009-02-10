@@ -121,6 +121,22 @@ void ItemAppendTest::testContent()
   QVERIFY( djob->exec() );
 }
 
+void ItemAppendTest::testNewMimetype()
+{
+  const Collection col( collectionIdFromPath( "res2/space folder" ) );
+  QVERIFY( col.isValid() );
+
+  Item item;
+  item.setMimeType( "application/new-type" );
+  ItemCreateJob *job = new ItemCreateJob( item, col, this );
+  QVERIFY( job->exec() );
+
+  ItemFetchJob *fetch = new ItemFetchJob( item, this );
+  QVERIFY( fetch->exec() );
+  QCOMPARE( fetch->items().count(), 1 );
+  QCOMPARE( fetch->items().first().mimeType(), item.mimeType() );
+}
+
 void ItemAppendTest::testIllegalAppend()
 {
   const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
@@ -131,12 +147,6 @@ void ItemAppendTest::testIllegalAppend()
 
   // adding item to non-existing collection
   ItemCreateJob *job = new ItemCreateJob( item, Collection( INT_MAX ), this );
-  QVERIFY( !job->exec() );
-
-  // adding item with non-existing mimetype
-  Item item2;
-  item2.setMimeType( "wrong/type" );
-  job = new ItemCreateJob( item2, testFolder1, this );
   QVERIFY( !job->exec() );
 
   // adding item into a collection which can't handle items of this type
