@@ -159,7 +159,10 @@ bool Akonadi::AkAppend::commit()
     if ( mt.isEmpty() ) mt = "message/rfc822";
     MimeType mimeType = MimeType::retrieveByName( QString::fromLatin1( mt ) );
     if ( !mimeType.isValid() ) {
-      return failureResponse( QString::fromLatin1( "Unknown mime type '%1'.").arg( QString::fromLatin1( mt ) ) );
+      MimeType m( QString::fromLatin1( mt ) );
+      if ( !m.insert() )
+        return failureResponse( QString::fromLatin1( "Unable to create mimetype '%1'.").arg( QString::fromLatin1( mt ) ) );
+      mimeType = m;
     }
 
     PimItem item;
