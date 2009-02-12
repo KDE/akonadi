@@ -63,6 +63,7 @@ class Fetch : public Handler
     bool mAllAttrs;
     bool mSizeRequested;
     bool mMTimeRequested;
+    bool mExternalPayloadSupported;
 };
 
 }

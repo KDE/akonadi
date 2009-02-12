@@ -71,7 +71,8 @@ Fetch::Fetch()
     mFullPayload( false ),
     mAllAttrs( false ),
     mSizeRequested( false ),
-    mMTimeRequested( false )
+    mMTimeRequested( false ),
+    mExternalPayloadSupported( false )
 {
 }
 
@@ -113,7 +114,9 @@ void Fetch::parseCommand( const QByteArray &line )
         mCacheOnly = true;
       } else if ( buffer == AKONADI_PARAM_ALLATTRIBUTES ) {
         mAllAttrs = true;
-      } else if ( buffer == AKONADI_PARAM_FULLPAYLOAD ) {
+      } else if ( buffer == AKONADI_PARAM_EXTERNALPAYLOAD ) {
+        mExternalPayloadSupported = true;
+      }else if ( buffer == AKONADI_PARAM_FULLPAYLOAD ) {
         mRequestedParts << "PLD:RFC822"; // HACK: temporary workaround until we have support for detecting the availability of the full payload in the server
         mFullPayload = true;
       }
@@ -242,10 +245,16 @@ bool Fetch::handleLine( const QByteArray& line )
         }
         QByteArray partName = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
         QByteArray part = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
-        QByteArray data = PartHelper::translateData(id, partQuery.query().value( partQueryDataColumn ).toByteArray(), partQuery.query().value( partQueryExternalColumn ).toBool());
+        QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
+        bool partIsExternal = partQuery.query().value( partQueryExternalColumn ).toBool();
+        if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
+          data = PartHelper::translateData(id, data, partIsExternal );
         int version = partQuery.query().value( partQueryVersionColumn ).toInt();
         if ( version != 0 ) { // '0' is the default, so don't send it
           part += "[" + QByteArray::number( version ) + "]";
+        }
+        if (  mExternalPayloadSupported && partIsExternal ) { // external data and this is supported by the client
+          part += " [FILE] ";
         }
         if ( data.isNull() ) {
           part += " NIL";
