@@ -42,9 +42,10 @@ void ItemSerializerTest::testDefaultSerializer_data()
 {
   QTest::addColumn<QByteArray>( "serialized" );
 
-  QTest::newRow( "empty" ) << QByteArray();
-  QTest::newRow( "null" ) << QByteArray( "\0" );
-  QTest::newRow( "mixed" ) << QByteArray( "\0\r\n\0bla" );
+  QTest::newRow( "null" ) << QByteArray();
+  QTest::newRow( "empty" ) << QByteArray( "" );
+  QTest::newRow( "nullbytei" ) << QByteArray( "\0", 1 );
+  QTest::newRow( "mixed" ) << QByteArray( "\0\r\n\0bla", 7 );
 }
 
 void ItemSerializerTest::testDefaultSerializer()
@@ -60,7 +61,9 @@ void ItemSerializerTest::testDefaultSerializer()
   QByteArray data;
   int version = 0;
   ItemSerializer::serialize( item, Item::FullPayload, data, version );
-  QCOMPARE( serialized, data );
+  QCOMPARE( data, serialized );
+  QEXPECT_FAIL( "null", "Serializer cannot distinguish null vs. empty", Continue );
+  QCOMPARE( data.isNull(), serialized.isNull() );
 }
 
 #include "itemserializertest.moc"

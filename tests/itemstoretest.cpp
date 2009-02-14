@@ -116,13 +116,14 @@ void ItemStoreTest::testDataChange_data()
 {
   QTest::addColumn<QByteArray>( "data" );
 
-  QTest::newRow( "empty" ) << QByteArray();
-  QTest::newRow( "nullbyte" ) << QByteArray("\0" );
-  QTest::newRow( "nullbyte2" ) << QByteArray( "\0X" );
+  QTest::newRow( "simple" ) << QByteArray( "testbody" );
+  QTest::newRow( "null" ) << QByteArray();
+  QTest::newRow( "empty" ) << QByteArray( "" );
+  QTest::newRow( "nullbyte" ) << QByteArray( "\0", 1 );
+  QTest::newRow( "nullbyte2" ) << QByteArray( "\0X", 2 );
   QTest::newRow( "linebreaks" ) << QByteArray( "line1\nline2\n\rline3\rline4\r\n" );
   QTest::newRow( "linebreaks2" ) << QByteArray( "line1\r\nline2\r\n\r\n" );
   QTest::newRow( "linebreaks3" ) << QByteArray( "line1\nline2" );
-  QTest::newRow( "simple" ) << QByteArray( "testbody" );
   QByteArray b;
   QTest::newRow( "big" ) << b.fill( 'a', 1 << 20 );
   QTest::newRow( "bignull" ) << b.fill( '\0', 1 << 20 );
@@ -153,6 +154,8 @@ void ItemStoreTest::testDataChange()
   item = fjob->items()[0];
   QVERIFY( item.hasPayload<QByteArray>() );
   QCOMPARE( item.payload<QByteArray>(), data );
+  QEXPECT_FAIL( "null", "Serializer cannot distinguish null vs. empty", Continue );
+  QCOMPARE( item.payload<QByteArray>().isNull(), data.isNull() );
 }
 
 void ItemStoreTest::testRemoteId_data()
