@@ -38,9 +38,18 @@ void ItemSerializerTest::testEmptyPayload()
   QVERIFY( data.isEmpty() );
 }
 
+void ItemSerializerTest::testDefaultSerializer_data()
+{
+  QTest::addColumn<QByteArray>( "serialized" );
+
+  QTest::newRow( "empty" ) << QByteArray();
+  QTest::newRow( "null" ) << QByteArray( "\0" );
+  QTest::newRow( "mixed" ) << QByteArray( "\0\r\n\0bla" );
+}
+
 void ItemSerializerTest::testDefaultSerializer()
 {
-  QByteArray serialized = "\0\r\n\0bla";
+  QFETCH( QByteArray, serialized );
   Item item;
   item.setMimeType( "application/octet-stream" );
   ItemSerializer::deserialize( item, Item::FullPayload, serialized, 0 );

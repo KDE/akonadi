@@ -58,11 +58,16 @@ QByteArray ItemModifyJobPrivate::nextPartHeader()
     int version = 0;
     ItemSerializer::serialize( mItem, label, mPendingData, version );
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, label, version );
-    command += ".SILENT {" + QByteArray::number( mPendingData.size() ) + '}';
-    if ( mPendingData.size() > 0 )
-      command += '\n';
-    else
+    command += ".SILENT";
+    if ( mPendingData.size() > 0 ) {
+      command += " {" + QByteArray::number( mPendingData.size() ) + "}\n";
+    } else {
+      if ( mPendingData.isNull() )
+        command += " NIL";
+      else
+        command += " \"\"";
       command += nextPartHeader();
+    }
   } else {
     command += ")\n";
   }

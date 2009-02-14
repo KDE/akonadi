@@ -123,6 +123,11 @@ void ItemStoreTest::testDataChange_data()
   QTest::newRow( "linebreaks2" ) << QByteArray( "line1\r\nline2\r\n\r\n" );
   QTest::newRow( "linebreaks3" ) << QByteArray( "line1\nline2" );
   QTest::newRow( "simple" ) << QByteArray( "testbody" );
+  QByteArray b;
+  QTest::newRow( "big" ) << b.fill( 'a', 1 << 20 );
+  QTest::newRow( "bignull" ) << b.fill( '\0', 1 << 20 );
+  QTest::newRow( "bigcr" ) << b.fill( '\r', 1 << 20 );
+  QTest::newRow( "biglf" ) << b.fill( '\n', 1 << 20 );
 }
 
 void ItemStoreTest::testDataChange()
@@ -137,7 +142,7 @@ void ItemStoreTest::testDataChange()
   item.setPayload( data );
   QCOMPARE( item.payload<QByteArray>(), data );
 
-  // delete data
+  // modify data
   ItemModifyJob *sjob = new ItemModifyJob( item );
   QVERIFY( sjob->exec() );
 
@@ -147,7 +152,6 @@ void ItemStoreTest::testDataChange()
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
   QVERIFY( item.hasPayload<QByteArray>() );
-  QEXPECT_FAIL( "empty", "Item does not detect QByteArray() as loaded payload part", Continue );
   QCOMPARE( item.payload<QByteArray>(), data );
 }
 
