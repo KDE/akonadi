@@ -60,6 +60,7 @@ class SetupTest : public QObject
     void createTempEnvironment();
     void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
+    QString basePath() const;
 
   private slots:
     void synchronizeResources();

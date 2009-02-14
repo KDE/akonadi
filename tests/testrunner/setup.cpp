@@ -267,34 +267,30 @@ void SetupTest::copyDirectory( const QString &src, const QString &dst )
 
 void SetupTest::createTempEnvironment()
 {
-  const QDir tmpDir = QDir::temp();
-  const QString testRunnerDir = QLatin1String( "akonadi_testrunner" );
-  const QString testRunnerKdeHomeDir = testRunnerDir + QLatin1String( "/kdehome" );
-  const QString testRunnerDataDir = testRunnerDir + QLatin1String( "/data" );
-  const QString testRunnerConfigDir = testRunnerDir + QLatin1String( "/config" );
+  const QDir tmpDir( basePath() );
+  const QString testRunnerKdeHomeDir = QLatin1String( "kdehome" );
+  const QString testRunnerDataDir = QLatin1String( "data" );
+  const QString testRunnerConfigDir = QLatin1String( "config" );
 
-  if ( !tmpDir.exists( testRunnerDir ) ) {
-    tmpDir.mkdir( testRunnerDir );
-    tmpDir.mkdir( testRunnerKdeHomeDir );
-    tmpDir.mkdir( testRunnerConfigDir );
-    tmpDir.mkdir( testRunnerDataDir );
-  }
+  tmpDir.mkdir( testRunnerKdeHomeDir );
+  tmpDir.mkdir( testRunnerConfigDir );
+  tmpDir.mkdir( testRunnerDataDir );
 
   const Config *config = Config::instance();
-  copyDirectory( config->kdeHome(), QDir::tempPath() + QDir::separator() + testRunnerKdeHomeDir );
-  copyDirectory( config->xdgConfigHome(), QDir::tempPath() + QDir::separator() + testRunnerConfigDir  );
-  copyDirectory( config->xdgDataHome(), QDir::tempPath() + QDir::separator() + testRunnerDataDir );
+  copyDirectory( config->kdeHome(), basePath() + testRunnerKdeHomeDir );
+  copyDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir  );
+  copyDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
 }
 
 void SetupTest::deleteDirectory( const QString &dirName )
 {
   Q_ASSERT( dirName.startsWith( QDir::tempPath() ) ); // just to be sure we don't run amok anywhere
   QDir dir( dirName );
-  dir.setFilter( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot );
+  dir.setFilter( QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot );
 
   const QFileInfoList list = dir.entryInfoList();
   for ( int i = 0; i < list.size(); ++i ) {
-    if ( list.at( i ).isDir() ) {
+    if ( list.at( i ).isDir() && !list.at( i ).isSymLink() ) {
       deleteDirectory( list.at( i ).absoluteFilePath() );
       const QDir tmpDir( list.at( i ).absoluteDir() );
       tmpDir.rmdir( list.at( i ).fileName() );
@@ -302,11 +298,13 @@ void SetupTest::deleteDirectory( const QString &dirName )
       QFile::remove( list.at( i ).absoluteFilePath() );
     }
   }
+  dir.cdUp();
+  dir.rmdir( dirName );
 }
 
 void SetupTest::cleanTempEnvironment()
 {
-  deleteDirectory( QDir::tempPath() + QDir::separator() + QLatin1String( "akonadi_testrunner" ) );
+  deleteDirectory( basePath() );
 }
 
 SetupTest::SetupTest() :
@@ -319,14 +317,14 @@ SetupTest::SetupTest() :
   cleanTempEnvironment();
   createTempEnvironment();
 
-  setenv( "KDEHOME", "/tmp/akonadi_testrunner/kdehome", 1 );
-  setenv( "XDG_DATA_HOME", "/tmp/akonadi_testrunner/data", 1 );
-  setenv( "XDG_CONFIG_HOME", "/tmp/akonadi_testrunner/config", 1 );
+  setenv( "KDEHOME", qPrintable( basePath() + "kdehome" ), 1 );
+  setenv( "XDG_DATA_HOME", qPrintable( basePath() + "data" ), 1 );
+  setenv( "XDG_CONFIG_HOME", qPrintable( basePath() + "config" ), 1 );
 
   Symbols *symbol = Symbols::instance();
-  symbol->insertSymbol( "KDEHOME", QLatin1String( "/tmp/akonadi_testrunner/kdehome" ) );
-  symbol->insertSymbol( "XDG_DATA_HOME", QLatin1String( "/tmp/akonadi_testrunner/data" ) );
-  symbol->insertSymbol( "XDG_CONFIG_HOME", QLatin1String( "/tmp/akonadi_testrunner/config" ) );
+  symbol->insertSymbol( "KDEHOME", basePath() + QLatin1String( "kdehome" ) );
+  symbol->insertSymbol( "XDG_DATA_HOME", basePath() + QLatin1String( "data" ) );
+  symbol->insertSymbol( "XDG_CONFIG_HOME", basePath() + QLatin1String( "config" ) );
   symbol->insertSymbol( "AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
 
   mDBusDaemonPid = startDBusDaemon();
@@ -377,4 +375,13 @@ void SetupTest::shutdownHarder()
   stopAkonadiDaemon();
   stopDBusDaemon( mDBusDaemonPid );
   QCoreApplication::instance()->quit();
+}
+
+QString SetupTest::basePath() const
+{
+  const QString tempDir = QString::fromLatin1( "akonadi_testrunner-%1" )
+    .arg( QCoreApplication::instance()->applicationPid() );
+  if ( !QDir::temp().exists( tempDir ) )
+    QDir::temp().mkdir( tempDir );
+  return QDir::tempPath() + QDir::separator() + tempDir + QDir::separator();
 }
