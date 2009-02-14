@@ -89,10 +89,18 @@ void ItemAppendTest::testContent_data()
 {
   QTest::addColumn<QByteArray>( "data" );
 
-  QTest::newRow( "empty" ) << QByteArray();
+  QTest::newRow( "null" ) << QByteArray();
+  QTest::newRow( "empty" ) << QByteArray( "" );
+  QTest::newRow( "nullbyte" ) << QByteArray( "\0", 1 );
+  QTest::newRow( "nullbyte2" ) << QByteArray( "\0X", 2 );
   QString utf8string = QString::fromUtf8("äöüß@€µøđ¢©®");
   QTest::newRow( "utf8" ) << utf8string.toUtf8();
   QTest::newRow( "newlines" ) << QByteArray("\nsome\n\nbreaked\ncontent\n\n");
+  QByteArray b;
+  QTest::newRow( "big" ) << b.fill( 'a', 1 << 20 );
+  QTest::newRow( "bignull" ) << b.fill( '\0', 1 << 20 );
+  QTest::newRow( "bigcr" ) << b.fill( '\r', 1 << 20 );
+  QTest::newRow( "biglf" ) << b.fill( '\n', 1 << 20 );
 }
 
 void ItemAppendTest::testContent()
@@ -115,7 +123,9 @@ void ItemAppendTest::testContent()
   QVERIFY( fjob->exec() );
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();
-  QCOMPARE( data, item2.payload<QByteArray>() );
+  QCOMPARE( item2.payload<QByteArray>(), data );
+  QEXPECT_FAIL( "null", "Serializer cannot distinguish null vs. empty", Continue );
+  QCOMPARE( item2.payload<QByteArray>().isNull(), data.isNull() );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );
@@ -130,6 +140,9 @@ void ItemAppendTest::testNewMimetype()
   item.setMimeType( "application/new-type" );
   ItemCreateJob *job = new ItemCreateJob( item, col, this );
   QVERIFY( job->exec() );
+
+  item = job->item();
+  QVERIFY( item.isValid() );
 
   ItemFetchJob *fetch = new ItemFetchJob( item, this );
   QVERIFY( fetch->exec() );
