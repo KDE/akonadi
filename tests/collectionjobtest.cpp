@@ -414,38 +414,6 @@ void CollectionJobTest::testModify()
   QVERIFY( mod->exec() );
 }
 
-void CollectionJobTest::testMove()
-{
-  Collection col( res1ColId );
-  col.setParent( res2ColId );
-  CollectionModifyJob *mod = new CollectionModifyJob( col, this );
-  QVERIFY( mod->exec() );
-
-  CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res2ColId ), CollectionFetchJob::Recursive );
-  QVERIFY( ljob->exec() );
-  Collection::List list = ljob->collections();
-
-  QCOMPARE( list.count(), 7 );
-  QVERIFY( findCol( list, "res1" ).isValid() );
-  QVERIFY( findCol( list, "foo" ).isValid() );
-  QVERIFY( findCol( list, "bar" ).isValid() );
-  QVERIFY( findCol( list, "bla" ).isValid() );
-
-  ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Base );
-  QVERIFY( ljob->exec() );
-  list = ljob->collections();
-
-  QCOMPARE( list.count(), 1 );
-  col = list.first();
-  QCOMPARE( col.name(), QLatin1String("res1") );
-  QCOMPARE( col.parent(), res2ColId );
-
-  // cleanup
-  col.setParent( Collection::root() );
-  mod = new CollectionModifyJob( col, this );
-  QVERIFY( mod->exec() );
-}
-
 void CollectionJobTest::testIllegalModify()
 {
   // non-existing collection
@@ -457,18 +425,6 @@ void CollectionJobTest::testIllegalModify()
   // rename to already existing name
   col = Collection( res1ColId );
   col.setName( "res2" );
-  mod = new CollectionModifyJob( col, this );
-  QVERIFY( !mod->exec() );
-
-  // move to non-existing target
-  col = Collection( res1ColId );
-  col.setParent( INT_MAX );
-  mod = new CollectionModifyJob( col, this );
-  QVERIFY( !mod->exec() );
-
-  // moving root
-  col = Collection::root();
-  col.setParent( res1ColId );
   mod = new CollectionModifyJob( col, this );
   QVERIFY( !mod->exec() );
 }
