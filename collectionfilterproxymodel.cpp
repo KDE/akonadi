@@ -20,9 +20,9 @@
 #include "collectionfilterproxymodel.h"
 
 #include "collectionmodel.h"
+#include "mimetypechecker.h"
 
 #include <kdebug.h>
-#include <kmimetype.h>
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -38,63 +38,46 @@ class CollectionFilterProxyModel::Private
     Private( CollectionFilterProxyModel *parent )
       : mParent( parent )
     {
-      mimeTypes << QLatin1String( "text/uri-list" );
+      mimeChecker.addWantedMimeType( QLatin1String( "text/uri-list" ) );
     }
 
     bool collectionAccepted( const QModelIndex &index, bool checkResourceVisibility = true );
 
     QList< QModelIndex > acceptedResources;
     CollectionFilterProxyModel *mParent;
-    QStringList mimeTypes;
+    MimeTypeChecker mimeChecker;
 };
 
 bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex &index, bool checkResourceVisibility )
 {
   // Retrieve supported mimetypes
-  QStringList collectionMimeTypes = mParent->sourceModel()->data( index, CollectionModel::CollectionRole ).value<Collection>().contentMimeTypes();
+  const Collection collection = mParent->sourceModel()->data( index, CollectionModel::CollectionRole ).value<Collection>();
 
   // If this collection directly contains one valid mimetype, it is accepted
-  foreach ( const QString &type, collectionMimeTypes ) {
-    if ( mimeTypes.contains( type ) ) {
+  if ( mimeChecker.isWantedCollection( collection ) ) {
+    // The folder will be accepted, but we need to make sure the resource is visible too.
+    if ( checkResourceVisibility ) {
 
-      // The folder will be accepted, but we need to make sure the resource is visible too.
-      if ( checkResourceVisibility ) {
+      // find the resource
+      QModelIndex resource = index;
+      while ( resource.parent().isValid() )
+        resource = resource.parent();
 
-        // find the resource
-        QModelIndex resource = index;
-        while ( resource.parent().isValid() )
-          resource = resource.parent();
-
-        // See if that resource is visible, if not, reset the model.
-        if ( resource != index && !acceptedResources.contains( resource ) ) {
-          kDebug() << "We got a new collection:" << mParent->sourceModel()->data( index ).toString() 
-                   << "but the resource is not visible:" << mParent->sourceModel()->data( resource ).toString();
-          acceptedResources.clear(); 
-          mParent->reset();
-          return true;
-        }
-      }
-
-      // Keep track of all the resources that are visible.
-      if ( !index.parent().isValid() )
-        acceptedResources.append( index );
-      
-      return true;
-    }
-
-    KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
-    if ( !mimeType.isNull() ) {
-      foreach ( const QString &mt, mimeTypes ) {
-        if ( mimeType->is( mt ) ) {
-          
-          // Keep track of all the resources that are visible.
-          if ( !index.parent().isValid() )
-            acceptedResources.append( index );
-          
-          return true;
-        }
+      // See if that resource is visible, if not, reset the model.
+      if ( resource != index && !acceptedResources.contains( resource ) ) {
+        kDebug() << "We got a new collection:" << mParent->sourceModel()->data( index ).toString()
+                 << "but the resource is not visible:" << mParent->sourceModel()->data( resource ).toString();
+        acceptedResources.clear();
+        mParent->reset();
+        return true;
       }
     }
+
+    // Keep track of all the resources that are visible.
+    if ( !index.parent().isValid() )
+      acceptedResources.append( index );
+
+    return true;
   }
 
   // If this collection has a child which contains valid mimetypes, it is accepted
@@ -130,13 +113,14 @@ CollectionFilterProxyModel::~CollectionFilterProxyModel()
 
 void CollectionFilterProxyModel::addMimeTypeFilters(const QStringList &typeList)
 {
-  d->mimeTypes << typeList;
+  QStringList mimeTypes = d->mimeChecker.wantedMimeTypes() + typeList;
+  d->mimeChecker.setWantedMimeTypes( mimeTypes );
   invalidateFilter();
 }
 
 void CollectionFilterProxyModel::addMimeTypeFilter(const QString &type)
 {
-  d->mimeTypes << type;
+  d->mimeChecker.addWantedMimeType( type );
   invalidateFilter();
 }
 
@@ -147,12 +131,12 @@ bool CollectionFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIn
 
 QStringList CollectionFilterProxyModel::mimeTypeFilters() const
 {
-  return d->mimeTypes;
+  return d->mimeChecker.wantedMimeTypes();
 }
 
 void CollectionFilterProxyModel::clearFilters()
 {
-  d->mimeTypes.clear();
+  d->mimeChecker = MimeTypeChecker();
   invalidateFilter();
 }
 
