@@ -280,10 +280,18 @@ bool Akonadi::DataStore::renameCollection( Collection & collection, qint64 newPa
   if ( !m_dbOpened )
     return false;
 
-  if ( newParent > 0 ) {
+  if ( newParent > 0 && collection.parentId() != newParent ) {
     Collection parent = Collection::retrieveById( newParent );
     if ( !parent.isValid() )
       return false;
+
+    forever {
+      if ( parent.id() == collection.id() )
+        return false; // target is child of source
+      if ( parent.parentId() == 0 )
+        break;
+      parent = parent.parent();
+    }
   }
 
   SelectQueryBuilder<Collection> qb;
