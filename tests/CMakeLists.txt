@@ -67,7 +67,6 @@ endmacro(add_akonadi_isolated_test)
 
 # demo applications
 add_akonadi_demo(itemdumper.cpp)
-add_akonadi_demo(collectioncreator.cpp)
 add_akonadi_demo(subscriber.cpp)
 add_akonadi_demo(headfetcher.cpp)
 add_akonadi_demo(agentinstancewidgettest.cpp)
@@ -106,3 +105,4 @@ add_akonadi_isolated_test(collectioncopytest.cpp)
 add_akonadi_isolated_test(itemsynctest.cpp)
 add_akonadi_isolated_test(linktest.cpp)
 add_akonadi_isolated_test(servermanagertest.cpp)
+add_akonadi_isolated_test(collectioncreator.cpp)

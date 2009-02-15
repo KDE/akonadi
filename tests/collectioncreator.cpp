@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006, 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,57 +17,72 @@
     02110-1301, USA.
 */
 
-#include "collectioncreator.h"
+#include "agentinstance.h"
+#include "agentmanager.h"
 #include "collectioncreatejob.h"
 #include "collectionpathresolver_p.h"
+#include "transactionjobs.h"
+
+#include "qtest_akonadi.h"
+#include "test_utils.h"
 
 #include <QtCore/QDebug>
-#include <QtGui/QApplication>
-
-#include <kapplication.h>
-#include <kcmdlineargs.h>
-
-#define COLLECTION_COUNT 1000
 
 using namespace Akonadi;
 
-CollectionCreator::CollectionCreator( )
+class CollectionCreator : public QObject
 {
-  jobCount = 0;
-  CollectionPathResolver *resolver = new CollectionPathResolver( "res3", this );
-  if ( !resolver->exec() )
-    qFatal( "Cannot resolve path." );
-  int root = resolver->collection();
-  startTime.start();
-  for ( int i = 0; i < COLLECTION_COUNT; ++i ) {
-    Collection col;
-    col.setParent( root );
-    col.setName( QLatin1String("col") + QString::number( i ) );
-    CollectionCreateJob *job = new CollectionCreateJob( col, this );
-    connect( job, SIGNAL(result(KJob*)), SLOT(done(KJob*)) );
-    ++jobCount;
-  }
-}
+  Q_OBJECT
+  private slots:
+    void initTestCase()
+    {
+      // switch all resources offline to reduce interference from them
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+        agent.setIsOnline( false );
+    }
+    
+    void createCollections_data()
+    {
+      QTest::addColumn<int>( "count" );
+      QTest::addColumn<bool>( "useTransaction" );
 
-void CollectionCreator::done( KJob * job )
-{
-  if ( job->error() )
-    qWarning() << "collection creation failed: " << job->errorString();
-  --jobCount;
-  if ( jobCount <= 0 ) {
-    qDebug() << "creation took: " << startTime.elapsed() << "ms.";
-    qApp->quit();
-  }
-}
+      QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000;
+      QList<bool> transactions = QList<bool>() << false << true;
+      foreach( int count, counts )
+        foreach( bool transaction, transactions )
+          QTest::newRow( QString::fromLatin1( "%1-%2" ).arg( count ).arg( transaction ? "trans" : "notrans" ).toLatin1().constData() )
+            << count << transaction;
+    }
 
+    void createCollections()
+    {
+      QFETCH( int, count );
+      QFETCH( bool, useTransaction );
 
-int main( int argc, char** argv )
-{
-  KCmdLineArgs::init( argc, argv, "test", 0, ki18n("Test") ,"1.0" ,ki18n("test app") );
-  KApplication app;
-  CollectionCreator *cc = new CollectionCreator();
-  return app.exec();
-  delete cc;
-}
+      const Collection parent( collectionIdFromPath( "res3" ) );
+      QVERIFY( parent.isValid() );
+
+      static int index = 0;
+      Job *lastJob = 0;
+#if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
+      QBENCHMARK
+#endif
+      {
+        if ( useTransaction )
+          lastJob = new TransactionBeginJob( this );
+        for ( int i = 0; i < count; ++i ) {
+          Collection col;
+          col.setParent( parent );
+          col.setName( QLatin1String("col") + QString::number( ++index ) );
+          lastJob = new CollectionCreateJob( col, this );
+        }
+        if ( useTransaction )
+          lastJob = new TransactionCommitJob( this );
+        QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
+      }
+    }
+};
+
+QTEST_AKONADIMAIN( CollectionCreator, NoGUI )
 
 #include "collectioncreator.moc"
