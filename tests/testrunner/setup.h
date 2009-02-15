@@ -30,16 +30,18 @@ class QSignalMapper;
 class SetupTest : public QObject
 {
   Q_OBJECT
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.Akonadi.Testrunner" )
 
   public:
     SetupTest();
     ~SetupTest();
     void startAkonadiDaemon();
     void stopAkonadiDaemon();
-
+    QString basePath() const;
+    
   public Q_SLOTS:
-    void shutdown();
-    void shutdownHarder();
+    Q_SCRIPTABLE void shutdown();
+    Q_SCRIPTABLE void shutdownHarder();
 
   Q_SIGNALS:
     void setupDone();
@@ -60,7 +62,6 @@ class SetupTest : public QObject
     void createTempEnvironment();
     void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
-    QString basePath() const;
 
   private slots:
     void synchronizeResources();

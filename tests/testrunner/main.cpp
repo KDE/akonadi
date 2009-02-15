@@ -87,7 +87,7 @@ int main( int argc, char **argv )
   testing->insertItemFromList();
 
   ShellScript *sh = new ShellScript();
-  sh->makeShellScript();
+  sh->makeShellScript( setup->basePath() + "testenvironment.sh" );
 
   if ( args->count() > 0 ) {
     QStringList testArgs;

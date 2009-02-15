@@ -20,6 +20,7 @@
 #include "config.h"
 #include "symbols.h"
 
+#include <KDebug>
 #include <QtCore/QFile>
 #include <QtCore/QHashIterator>
 
@@ -34,6 +35,7 @@ void ShellScript::writeEnvironmentVariables()
 
   while ( it.hasNext() ) {
     it.next();
+    mScript.append( QString::fromLatin1("_old_%1=$%2\n").arg( it.key(), it.key() ) );
     mScript.append( it.key() );
     mScript.append( QLatin1Char( '=' ) );
     mScript.append( it.value() );
@@ -49,33 +51,33 @@ void ShellScript::writeEnvironmentVariables()
 
 void ShellScript::writeShutdownFunction()
 {
-  const QString s =
+  QString s =
     "function shutdown-testenvironment()\n"
     "{\n"
-    "  echo Stopping Akonadi server\n"
-    "  qdbus org.freedesktop.Akonadi.Control /ControlManager org.freedesktop.Akonadi.ControlManager.shutdown\n"
-    "  echo \"Stopping testrunner with PID \" $AKONADI_TESTRUNNER_PID\n"
-    "  kill $AKONADI_TESTRUNNER_PID\n"
-    "  # wait a bit before killing D-Bus\n"
-    "  echo \"Waiting 10 seconds before killing D-Bus\"\n"
-    "  sleep 10\n"
-    "  echo \"Killing D-Bus with PID \" $DBUS_SESSION_BUS_PID\n"
-    "  kill $DBUS_SESSION_BUS_PID\n"
-    "  rm -fr /tmp/akonadi_testrunner\n"
-    "}\n\n";
+    "  qdbus org.kde.Akonadi.Testrunner / org.kde.Akonadi.Testrunner.shutdown\n";
+  QHashIterator<QString, QString> it( mSymbol->symbols() );
+  while ( it.hasNext() ) {
+    it.next();
+    s.append( QString::fromLatin1( "  %1=$_old_%2\n" ).arg( it.key(), it.key() ) );
+    s.append( QString::fromLatin1( "  export %1\n" ).arg( it.key() ) );
+  }
+  s.append( "}\n\n" );
   mScript.append( s );
 }
 
 void ShellScript::makeShellScript( const QString &fileName )
 {
+  kDebug() << fileName;
   QFile file( fileName ); //can user define the file name/location?
 
-  file.open( QIODevice::WriteOnly );
+  if ( file.open( QIODevice::WriteOnly ) ) {
+    writeEnvironmentVariables();
+    writeShutdownFunction();
 
-  writeEnvironmentVariables();
-  writeShutdownFunction();
-
-  file.write( mScript.toAscii(), qstrlen( mScript.toAscii() ) );
-  file.close();
+    file.write( mScript.toAscii(), qstrlen( mScript.toAscii() ) );
+    file.close();
+  } else {
+    kError() << "Failed to write" << fileName;
+  }
 }
 

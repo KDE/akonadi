@@ -129,12 +129,13 @@ void SetupTest::stopDBusDaemon( int dbuspid )
 void SetupTest::registerWithInternalDBus( const QString &address )
 {
   mInternalBus = new QDBusConnection( QDBusConnection::connectToBus( address, QLatin1String( "InternalBus" ) ) );
-  mInternalBus->registerService( QLatin1String( "org.kde.Akonaditest" ) );
+  mInternalBus->registerService( QLatin1String( "org.kde.Akonadi.Testrunner" ) );
   mInternalBus->registerObject( QLatin1String( "/MainApplication" ),
                                 KApplication::kApplication(),
                                 QDBusConnection::ExportScriptableSlots |
                                 QDBusConnection::ExportScriptableProperties |
                                 QDBusConnection::ExportAdaptors );
+  mInternalBus->registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
 
   QDBusConnectionInterface *busInterface = mInternalBus->interface();
   connect( busInterface, SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),

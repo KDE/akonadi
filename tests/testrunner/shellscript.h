@@ -26,7 +26,7 @@ class ShellScript
 {
   public:
     ShellScript();
-    void makeShellScript( const QString &filename = QLatin1String( "testenvironment.sh" ) );
+    void makeShellScript( const QString &filename );
 
   private:
     void writeEnvironmentVariables();
