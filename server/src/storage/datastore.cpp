@@ -272,6 +272,21 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
   return collection.remove();
 }
 
+static bool recursiveSetResourceId( const Collection & collection, qint64 resourceId )
+{
+  QueryBuilder qb( QueryBuilder::Update );
+  qb.addTable( Collection::tableName() );
+  qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, collection.id() );
+  qb.updateColumnValue( Collection::resourceIdColumn(), resourceId );
+  if ( !qb.exec() )
+    return false;
+  foreach ( const Collection &col, collection.children() ) {
+    if ( !recursiveSetResourceId( col, resourceId ) )
+      return false;
+  }
+  return true;
+}
+
 bool Akonadi::DataStore::renameCollection( Collection & collection, qint64 newParent, const QByteArray & newName)
 {
   if ( collection.name() == newName && collection.parentId() == newParent )
@@ -280,8 +295,10 @@ bool Akonadi::DataStore::renameCollection( Collection & collection, qint64 newPa
   if ( !m_dbOpened )
     return false;
 
+  int resourceId = collection.resourceId();
   if ( newParent > 0 && collection.parentId() != newParent ) {
     Collection parent = Collection::retrieveById( newParent );
+    resourceId = parent.resourceId();
     if ( !parent.isValid() )
       return false;
 
@@ -302,6 +319,11 @@ bool Akonadi::DataStore::renameCollection( Collection & collection, qint64 newPa
 
   collection.setName( newName );
   collection.setParentId( newParent );
+  if ( collection.resourceId() != resourceId ) {
+    collection.setResourceId( resourceId );
+    if ( !recursiveSetResourceId( collection, resourceId ) )
+      return false;
+  }
 
   if ( !collection.update() )
     return false;
