@@ -22,15 +22,13 @@
 #include "collection.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
+#include "item.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+
+#include <QHash>
 
 using namespace Akonadi;
-
-static Collection findCol( const Collection::List &list, const QString &name ) {
-  foreach ( const Collection &col, list )
-    if ( col.name() == name )
-      return col;
-    return Collection();
-}
 
 class CollectionMoveTest : public QObject
 {
@@ -40,60 +38,110 @@ class CollectionMoveTest : public QObject
     {
       QTest::addColumn<Collection>( "source" );
       QTest::addColumn<Collection>( "destination" );
-      
+
       const Collection res1( collectionIdFromPath( "res1" ) );
-      QVERIFY( res1.isValid() );
       const Collection res1foo( collectionIdFromPath( "res1/foo" ) );
-      QVERIFY( res1foo.isValid() );
-      
+      const Collection res1bla( collectionIdFromPath( "res1/foo/bar/bla" ) );
+
       QTest::newRow( "non-existing-target" ) << res1 << Collection( INT_MAX );
       QTest::newRow( "root" ) << Collection::root() << res1;
       QTest::newRow( "move-into-child" ) << res1 << res1foo;
+      QTest::newRow( "same-name-in-target" ) << res1bla << res1foo;
+      QTest::newRow( "non-existing-source" ) << Collection( INT_MAX ) << res1;
     }
-    
+
     void testIllegalMove()
     {
       QFETCH( Collection, source );
       QFETCH( Collection, destination );
-      
+      QVERIFY( source.isValid() );
+      QVERIFY( destination.isValid() );
+
       source.setParent( destination );
       CollectionModifyJob* mod = new CollectionModifyJob( source, this );
       QVERIFY( !mod->exec() );
     }
 
+    void testMove_data()
+    {
+      QTest::addColumn<Collection>( "source" );
+      QTest::addColumn<Collection>( "destination" );
+      QTest::addColumn<bool>( "crossResource" );
+
+      QTest::newRow( "inter-resource" ) << Collection( collectionIdFromPath( "res1" ) )
+                                        << Collection( collectionIdFromPath( "res2" ) )
+                                        << true;
+      QTest::newRow( "intra-resource" ) << Collection( collectionIdFromPath( "res1/foo/bla" ) )
+                                        << Collection( collectionIdFromPath( "res1/foo/bar/bla" ) )
+                                        << false;
+    }
+
+    // TODO: test signals
     void testMove()
     {
-      const Collection res1( collectionIdFromPath( "res1" ) );
-      QVERIFY( res1.isValid() );
-      const Collection res2( collectionIdFromPath( "res2" ) );
-      QVERIFY( res2.isValid() );
+      QFETCH( Collection, source );
+      QFETCH( Collection, destination );
+      QFETCH( bool, crossResource );
+      QVERIFY( source.isValid() );
+      QVERIFY( destination.isValid() );
 
-      Collection col( res1 );
-      col.setParent( res2 );
+      CollectionFetchJob *fetch = new CollectionFetchJob( source, CollectionFetchJob::Base, this );
+      QVERIFY( fetch->exec() );
+      QCOMPARE( fetch->collections().count(), 1 );
+      source = fetch->collections().first();
+
+      // obtain reference listing
+      fetch = new CollectionFetchJob( source, CollectionFetchJob::Recursive );
+      QVERIFY( fetch->exec() );
+      QHash<Collection, Item::List> referenceData;
+      foreach ( const Collection c, fetch->collections() ) {
+        ItemFetchJob *job = new ItemFetchJob( c, this );
+        QVERIFY( job->exec() );
+        referenceData.insert( c, job->items() );
+      }
+
+      // move collection
+      Collection col( source );
+      col.setParent( destination );
       CollectionModifyJob *mod = new CollectionModifyJob( col, this );
       QVERIFY( mod->exec() );
-      
-      CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res2 ), CollectionFetchJob::Recursive );
+
+      // check if source was modified correctly
+      CollectionFetchJob *ljob = new CollectionFetchJob( source, CollectionFetchJob::Base );
       QVERIFY( ljob->exec() );
       Collection::List list = ljob->collections();
-      
-      QCOMPARE( list.count(), 7 );
-      QVERIFY( findCol( list, "res1" ).isValid() );
-      QVERIFY( findCol( list, "foo" ).isValid() );
-      QVERIFY( findCol( list, "bar" ).isValid() );
-      QVERIFY( findCol( list, "bla" ).isValid() );
-      
-      ljob = new CollectionFetchJob( res1, CollectionFetchJob::Base );
-      QVERIFY( ljob->exec() );
-      list = ljob->collections();
-      
+
       QCOMPARE( list.count(), 1 );
       col = list.first();
-      QCOMPARE( col.name(), QLatin1String("res1") );
-      QCOMPARE( col.parent(), res2.id() );
-      
+      QCOMPARE( col.name(), source.name() );
+      QCOMPARE( col.parent(), destination.id() );
+
+      // list destination and check if everything is still there
+      ljob = new CollectionFetchJob( destination, CollectionFetchJob::Recursive );
+      QVERIFY( ljob->exec() );
+      list = ljob->collections();
+
+      QVERIFY( list.count() >= referenceData.count() );
+      for ( QHash<Collection, Item::List>::ConstIterator it = referenceData.constBegin(); it != referenceData.constEnd(); ++it ) {
+        QVERIFY( list.contains( it.key() ) );
+        if ( crossResource ) {
+          QVERIFY( list[ list.indexOf( it.key() ) ].resource() != it.key().resource() );
+        } else {
+          QCOMPARE( list[ list.indexOf( it.key() ) ].resource(), it.key().resource() );
+        }
+        ItemFetchJob *job = new ItemFetchJob( it.key(), this );
+        job->fetchScope().fetchFullPayload();
+        QVERIFY( job->exec() );
+        QCOMPARE( job->items().count(), it.value().count() );
+        foreach ( const Item item, job->items() ) {
+          QVERIFY( it.value().contains( item ) );
+          QEXPECT_FAIL( "inter-resource", "server bug", Continue );
+          QVERIFY( item.hasPayload() );
+        }
+      }
+
       // cleanup
-      col.setParent( Collection::root() );
+      col.setParent( source.parent() );
       mod = new CollectionModifyJob( col, this );
       QVERIFY( mod->exec() );
     }
