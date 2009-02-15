@@ -49,13 +49,17 @@ class ItemMoveTest: public QObject
       ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
       prefetchjob->exec();
       Item item = prefetchjob->items()[0];
-      
+
       ItemMoveJob *store = new ItemMoveJob( item, col, this );
       QVERIFY( store->exec() );
-      
+
       ItemFetchJob *fetch = new ItemFetchJob( col, this );
+      fetch->fetchScope().fetchFullPayload();
       QVERIFY( fetch->exec() );
       QCOMPARE( fetch->items().count(), 1 );
+      item = fetch->items().first();
+      QEXPECT_FAIL( "", "server bug", Continue );
+      QVERIFY( item.hasPayload() );
     }
 
     void testIllegalMove()
