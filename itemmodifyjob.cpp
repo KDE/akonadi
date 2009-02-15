@@ -165,7 +165,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
     return;
   }
   if ( _tag == d->mTag ) {
-    if ( data.startsWith( "OK" ) ) {
+    if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
       QDateTime modificationDateTime;
       if ( int pos = data.indexOf( "DATETIME" ) ) {
         int resultPos = ImapParser::parseDateTime( data, modificationDateTime, pos + 8 );

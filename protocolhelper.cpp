@@ -159,10 +159,10 @@ QByteArray ProtocolHelper::encodePartIdentifier(PartNamespace ns, const QByteArr
 
 QByteArray ProtocolHelper::decodePartIdentifier( const QByteArray &data, PartNamespace & ns )
 {
-  if ( data.startsWith( "PLD:" ) ) {
+  if ( data.startsWith( "PLD:" ) ) { //krazy:exclude=strings
     ns = PartPayload;
     return data.mid( 4 );
-  } else if ( data.startsWith( "ATR:" ) ) {
+  } else if ( data.startsWith( "ATR:" ) ) { //krazy:exclude=strings
     ns = PartAttribute;
     return data.mid( 4 );
   } else {

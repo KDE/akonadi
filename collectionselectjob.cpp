@@ -67,7 +67,7 @@ void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteA
   Q_D( CollectionSelectJob );
 
   if ( tag == "*" ) {
-    if ( data.startsWith( "OK [UNSEEN" ) ) {
+    if ( data.startsWith( "OK [UNSEEN" ) ) { //krazy:exclude=strings
       int begin = data.indexOf( ' ', 4 );
       int end = data.indexOf( ']' );
       QByteArray number = data.mid( begin + 1, end - begin - 1 );

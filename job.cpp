@@ -47,7 +47,7 @@ void JobPrivate::handleResponse( const QByteArray & tag, const QByteArray & data
   }
 
   if ( tag == mTag ) {
-    if ( data.startsWith( "NO " ) || data.startsWith( "BAD " ) ) {
+    if ( data.startsWith( "NO " ) || data.startsWith( "BAD " ) ) { //krazy:exclude=strings
       QString msg = QString::fromUtf8( data );
 
       msg.remove( 0, msg.startsWith( QLatin1String( "NO " ) ) ? 3 : 4 );
@@ -59,7 +59,7 @@ void JobPrivate::handleResponse( const QByteArray & tag, const QByteArray & data
       q->setErrorText( msg );
       q->emitResult();
       return;
-    } else if ( data.startsWith( "OK" ) ) {
+    } else if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
       q->emitResult();
       return;
     }

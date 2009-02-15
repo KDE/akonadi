@@ -101,7 +101,7 @@ void SubscriptionJob::doHandleResponse(const QByteArray &_tag, const QByteArray 
   Q_D( SubscriptionJob );
 
   if ( _tag == d->mTag ) {
-    if ( data.startsWith( "OK" ) ) {
+    if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
       d->sendNextCommand();
     } else {
       setError( Unknown );

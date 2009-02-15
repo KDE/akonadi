@@ -85,7 +85,7 @@ void SessionPrivate::dataReceived()
 
       // handle login response
       if ( parser->tag() == QByteArray("0") ) {
-        if ( parser->data().startsWith( "OK" ) ) {
+        if ( parser->data().startsWith( "OK" ) ) { //krazy:exclude=strings
           connected = true;
           startNext();
         } else {
@@ -226,7 +226,7 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
     d->sessionId = sessionId;
   } else {
     d->sessionId = QCoreApplication::instance()->applicationName().toUtf8()
-        + "-" + QByteArray::number( qrand() );
+        + '-' + QByteArray::number( qrand() );
   }
 
   d->connected = false;
