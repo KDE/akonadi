@@ -41,7 +41,7 @@ class AKONADI_TESTS_EXPORT ItemSerializer
 {
   public:
       /** throws ItemSerializerException on failure */
-      static void deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version );
+      static void deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version, bool external );
       /** throws ItemSerializerException on failure */
       static void deserialize( Item& item, const QByteArray& label, QIODevice& data, int version );
       /** throws ItemSerializerException on failure */

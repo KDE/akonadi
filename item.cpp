@@ -121,7 +121,7 @@ QByteArray Item::payloadData() const
 
 void Item::setPayloadFromData( const QByteArray &data )
 {
-  ItemSerializer::deserialize( *this, FullPayload, data, 0 );
+  ItemSerializer::deserialize( *this, FullPayload, data, 0, false );
 }
 
 int Item::revision() const

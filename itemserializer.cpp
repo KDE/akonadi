@@ -30,6 +30,7 @@
 
 // Qt
 #include <QtCore/QBuffer>
+#include <QtCore/QFile>
 #include <QtCore/QIODevice>
 #include <QtCore/QHash>
 #include <QtCore/QString>
@@ -144,14 +145,23 @@ static void setup()
 }
 
 /*static*/
-void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version )
+void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version, bool external )
 {
-    QBuffer buffer;
-    buffer.setData( data );
-    buffer.open( QIODevice::ReadOnly );
-    buffer.seek( 0 );
-    deserialize( item, label, buffer, version );
-    buffer.close();
+
+    if ( external ) {
+      QFile file( QString::fromUtf8(data) );
+      if ( file.open( QIODevice:: ReadOnly ) ) {
+        deserialize( item, label, file, version );
+        file.close();
+      }
+    } else {
+      QBuffer buffer;
+      buffer.setData( data );
+      buffer.open( QIODevice::ReadOnly );
+      buffer.seek( 0 );
+      deserialize( item, label, buffer, version );
+      buffer.close();
+    }
 }
 
 /*static*/

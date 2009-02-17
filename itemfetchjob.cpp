@@ -86,6 +86,9 @@ void ItemFetchJobPrivate::startFetchJob()
   if ( mFetchScope.cacheOnly() )
     command += " " AKONADI_PARAM_CACHEONLY;
 
+  //TODO: detect somehow if server supports external payload attribute
+  command += " " AKONADI_PARAM_EXTERNALPAYLOAD;
+
   command += " (UID REMOTEID FLAGS SIZE DATETIME";
   foreach ( const QByteArray &part, mFetchScope.payloadParts() )
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, part );
@@ -227,8 +230,17 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
 
           switch ( ns ) {
             case ProtocolHelper::PartPayload:
-              ItemSerializer::deserialize( item, plainKey, fetchResponse.value( i + 1 ), version );
+            {
+              bool isExternal = false;
+              QByteArray fileKey = fetchResponse.value( i + 1 );
+              if (fileKey == "[FILE]") {
+                isExternal = true;
+                i++;
+                kDebug( 5250 ) << "Payload is external: " << isExternal << " filename: " << fetchResponse.value( i + 1 );
+              }
+              ItemSerializer::deserialize( item, plainKey, fetchResponse.value( i + 1 ), version, isExternal );
               break;
+            }
             case ProtocolHelper::PartAttribute:
             {
               Attribute* attr = AttributeFactory::createAttribute( plainKey );
