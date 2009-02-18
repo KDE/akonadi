@@ -39,15 +39,15 @@ class PartHelper
     PartHelper();
     ~PartHelper();
 
-    static bool update( Part *part );
+    static bool update( Part *part, const QByteArray &data, qint64 dataSize );
     static bool insert( Part *part, qint64* insertId = 0 );
     static bool remove( Part *part);
-    static bool remove( qint64 id );
     static bool remove( const QString &column, const QVariant &value );
     static bool loadData( Part::List &parts );
     static bool loadData( Part &part );
     static QByteArray translateData( qint64 id, const QByteArray &data, bool isExternal  );
-    /** Returns the record with id @p id. */
+    static QByteArray translateData( const Part& part );
+        /** Returns the record with id @p id. */
     static Part retrieveById( qint64 id );
 
     static QString fileNameForId( qint64 id );

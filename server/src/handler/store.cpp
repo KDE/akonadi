@@ -190,18 +190,19 @@ bool Store::handleLine( const QByteArray& line )
         }
 
         // only update if part contents are not yet in the storage
-        if ( !PartHelper::loadData(part) || part.data() != value )
+        QByteArray origData = PartHelper::translateData( part );
+        if ( origData != value )
         {
-          part.setData( value );
-          part.setDatasize( buffer.size() );
           part.setName( QString::fromUtf8( plainCommand ) );
           part.setVersion( version );
           part.setPimItemId( pimItems[ i ].id() );
           if ( part.isValid() ) {
-            if ( !PartHelper::update(&part) )
+            if ( !PartHelper::update( &part, value, buffer.size() ) )
               return failureResponse( "Unable to update item part" );
           } else {
             qDebug() << "insert from Store::handleLine";
+            part.setData( value );
+            part.setDatasize( buffer.size() );
             if ( !PartHelper::insert(&part) )
               return failureResponse( "Unable to add item part" );
           }

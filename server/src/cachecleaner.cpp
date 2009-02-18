@@ -83,8 +83,7 @@ void CacheCleaner::cleanCache()
 
     // clear data field
     for ( int i = 0; i < parts.count(); ++i) {
-      parts[ i ].setData( QByteArray() );
-      if ( !PartHelper::update(&(parts[ i ])) )
+      if ( !PartHelper::update( &(parts[ i ]), QByteArray(), 0) )
         qDebug() << "failed to update item part" << parts[ i ].id();
     }
     loopsWithExpiredItem++;
