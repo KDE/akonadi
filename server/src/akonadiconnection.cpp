@@ -27,7 +27,9 @@
 #include "response.h"
 #include "tracer.h"
 
-#include "../libs/imapparser_p.h"
+#include "libs/imapparser_p.h"
+#include "shared/akdebug.h"
+#include "shared/akcrash.h"
 
 #include <assert.h>
 
@@ -128,9 +130,17 @@ void AkonadiConnection::slotNewData()
             // FIXME: remove the tag, it's only there for backward compatibility with the handlers!
             if ( m_currentHandler->handleLine( m_parser->tag() + ' ' + m_parser->data() ) )
                 m_currentHandler = 0;
+        } catch ( const Akonadi::HandlerException &e ) {
+          m_currentHandler->failureResponse( e.what() );
+          m_currentHandler->deleteLater();
+        } catch ( const Akonadi::Exception &e ) {
+          m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
+            + QLatin1String( ": " ) + QString::fromLatin1( e.what()  ) );
+          m_currentHandler->deleteLater();
         } catch ( ... ) {
-            delete m_currentHandler;
-            m_currentHandler = 0;
+          akError() << "Unknown exception caught: " << akBacktrace();
+          delete m_currentHandler;
+          m_currentHandler = 0;
         }
         m_parser->reset();
       } else {

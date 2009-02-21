@@ -36,19 +36,7 @@
 #include <QtSql/QSqlQuery>
 #include <QLocale>
 
-#include <exception>
-
 using namespace Akonadi;
-
-class HandlerException : public std::exception
-{
-  public:
-    HandlerException( const char *what ) throw() : mWhat( what ) {}
-    ~HandlerException() throw() {}
-    const char* what() const throw() { return mWhat.data(); }
-  private:
-    QByteArray mWhat;
-};
 
 static const int itemQueryIdColumn = 0;
 static const int itemQueryRevColumn = 1;
@@ -139,163 +127,154 @@ void Fetch::parseCommand( const QByteArray &line )
 
 bool Fetch::handleLine( const QByteArray& line )
 {
-  try {
-    parseCommand( line );
+  parseCommand( line );
 
-    triggerOnDemandFetch();
+  triggerOnDemandFetch();
 
-    buildItemQuery();
+  buildItemQuery();
 
-    // build flag query if needed
-    QueryBuilder flagQuery;
+  // build flag query if needed
+  QueryBuilder flagQuery;
+  if ( mRequestedParts.contains( "FLAGS" ) ) {
+    flagQuery.addTable( PimItem::tableName() );
+    flagQuery.addTable( PimItemFlagRelation::tableName() );
+    flagQuery.addTable( Flag::tableName() );
+    flagQuery.addColumn( PimItem::idFullColumnName() );
+    flagQuery.addColumn( Flag::nameFullColumnName() );
+    flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
+    flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
+    imapSetToQuery( mSet, mIsUidFetch, flagQuery );
+    flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+
+    if ( !flagQuery.exec() )
+      return failureResponse( "Unable to retrieve item flags" );
+    flagQuery.query().next();
+  }
+  const int flagQueryIdColumn = 0;
+  const int flagQueryNameColumn = 1;
+
+  // retrieve missing parts
+  QStringList partList, payloadList;
+  foreach( const QByteArray &b, mRequestedParts ) {
+    // filter out non-part attributes
+    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
+      continue;
+    if ( b == "SIZE" ) {
+      mSizeRequested = true;
+      continue;
+    }
+    if ( b == "DATETIME" ) {
+      mMTimeRequested = true;
+      continue;
+    }
+    partList << QString::fromLatin1( b );
+    if ( b.startsWith( "PLD:" ) )
+      payloadList << QString::fromLatin1( b );
+  }
+  retrieveMissingPayloads( payloadList );
+
+  // build part query if needed
+  QueryBuilder partQuery;
+  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
+    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
+    if ( !partQuery.exec() )
+      return failureResponse( "Unable to retrieve item parts" );
+    partQuery.query().next();
+  }
+
+  // build responses
+  Response response;
+  response.setUntagged();
+  while ( mItemQuery.query().isValid() ) {
+    const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
+    const int pimItemRev = mItemQuery.query().value( itemQueryRevColumn ).toInt();
+
+    QList<QByteArray> attributes;
+    attributes.append( "UID " + QByteArray::number( pimItemId ) );
+    attributes.append( "REV " + QByteArray::number( pimItemRev ) );
+    attributes.append( "REMOTEID " + ImapParser::quote( mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8() ) );
+    attributes.append( "MIMETYPE " + ImapParser::quote( mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8() ) );
+
+    if ( mSizeRequested ) {
+      const qint64 pimItemSize = mItemQuery.query().value( itemQuerySizeColumn ).toLongLong();
+      attributes.append( "SIZE " + QByteArray::number( pimItemSize ) );
+    }
+    if ( mMTimeRequested ) {
+      const QDateTime pimItemDatetime = mItemQuery.query().value( itemQueryDatetimeColumn ).toDateTime();
+      // Date time is always stored in UTC time zone by the server.
+      QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
+      attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
+    }
+
     if ( mRequestedParts.contains( "FLAGS" ) ) {
-      flagQuery.addTable( PimItem::tableName() );
-      flagQuery.addTable( PimItemFlagRelation::tableName() );
-      flagQuery.addTable( Flag::tableName() );
-      flagQuery.addColumn( PimItem::idFullColumnName() );
-      flagQuery.addColumn( Flag::nameFullColumnName() );
-      flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
-      flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
-      imapSetToQuery( mSet, mIsUidFetch, flagQuery );
-      flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
-
-      if ( !flagQuery.exec() )
-        return failureResponse( "Unable to retrieve item flags" );
-      flagQuery.query().next();
-    }
-    const int flagQueryIdColumn = 0;
-    const int flagQueryNameColumn = 1;
-
-    // retrieve missing parts
-    QStringList partList, payloadList;
-    foreach( const QByteArray &b, mRequestedParts ) {
-      // filter out non-part attributes
-      if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
-        continue;
-      if ( b == "SIZE" ) {
-        mSizeRequested = true;
-        continue;
-      }
-      if ( b == "DATETIME" ) {
-        mMTimeRequested = true;
-        continue;
-      }
-      partList << QString::fromLatin1( b );
-      if ( b.startsWith( "PLD:" ) )
-        payloadList << QString::fromLatin1( b );
-    }
-    retrieveMissingPayloads( payloadList );
-
-    // build part query if needed
-    QueryBuilder partQuery;
-    if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
-      partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
-      if ( !partQuery.exec() )
-        return failureResponse( "Unable to retrieve item parts" );
-      partQuery.query().next();
-    }
-
-    // build responses
-    Response response;
-    response.setUntagged();
-    while ( mItemQuery.query().isValid() ) {
-      const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
-      const int pimItemRev = mItemQuery.query().value( itemQueryRevColumn ).toInt();
-
-      QList<QByteArray> attributes;
-      attributes.append( "UID " + QByteArray::number( pimItemId ) );
-      attributes.append( "REV " + QByteArray::number( pimItemRev ) );
-      attributes.append( "REMOTEID " + ImapParser::quote( mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8() ) );
-      attributes.append( "MIMETYPE " + ImapParser::quote( mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8() ) );
-
-      if ( mSizeRequested ) {
-        const qint64 pimItemSize = mItemQuery.query().value( itemQuerySizeColumn ).toLongLong();
-        attributes.append( "SIZE " + QByteArray::number( pimItemSize ) );
-      }
-      if ( mMTimeRequested ) {
-        const QDateTime pimItemDatetime = mItemQuery.query().value( itemQueryDatetimeColumn ).toDateTime();
-        // Date time is always stored in UTC time zone by the server.
-        QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
-        attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
-      }
-
-      if ( mRequestedParts.contains( "FLAGS" ) ) {
-        QList<QByteArray> flags;
-        while ( flagQuery.query().isValid() ) {
-          const qint64 id = flagQuery.query().value( flagQueryIdColumn ).toLongLong();
-          if ( id < pimItemId ) {
-            flagQuery.query().next();
-            continue;
-          } else if ( id > pimItemId ) {
-            break;
-          }
-          flags << flagQuery.query().value( flagQueryNameColumn ).toString().toUtf8();
-          flagQuery.query().next();
-        }
-        attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
-      }
-
-      while ( partQuery.query().isValid() ) {
-        const qint64 id = partQuery.query().value( partQueryIdColumn ).toLongLong();
+      QList<QByteArray> flags;
+      while ( flagQuery.query().isValid() ) {
+        const qint64 id = flagQuery.query().value( flagQueryIdColumn ).toLongLong();
         if ( id < pimItemId ) {
-          partQuery.query().next();
+          flagQuery.query().next();
           continue;
         } else if ( id > pimItemId ) {
           break;
         }
-        QByteArray partName = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
-        QByteArray part = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
-        QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
-        bool partIsExternal = partQuery.query().value( partQueryExternalColumn ).toBool();
-        if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
-          data = PartHelper::translateData(id, data, partIsExternal );
-        int version = partQuery.query().value( partQueryVersionColumn ).toInt();
-        if ( version != 0 ) { // '0' is the default, so don't send it
-          part += "[" + QByteArray::number( version ) + "]";
-        }
-        if (  mExternalPayloadSupported && partIsExternal ) { // external data and this is supported by the client
-          part += " [FILE] ";
-        }
-        if ( data.isNull() ) {
-          part += " NIL";
-        } else if ( data.isEmpty() ) {
-          part += " \"\"";
-        } else {
-          part += " {" + QByteArray::number( data.length() ) + "}\n";
-          part += data;
-        }
-
-        if ( mRequestedParts.contains( partName ) || mFullPayload || mAllAttrs )
-          attributes << part;
-
-        partQuery.query().next();
+        flags << flagQuery.query().value( flagQueryNameColumn ).toString().toUtf8();
+        flagQuery.query().next();
       }
-
-      // IMAP protocol violation: should actually be the sequence number
-      QByteArray attr = QByteArray::number( pimItemId ) + " FETCH (";
-      attr += ImapParser::join( attributes, " " ) + ')';
-      response.setUntagged();
-      response.setString( attr );
-      emit responseAvailable( response );
-
-      mItemQuery.query().next();
+      attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
     }
 
-    // update atime
-    updateItemAccessTime();
+    while ( partQuery.query().isValid() ) {
+      const qint64 id = partQuery.query().value( partQueryIdColumn ).toLongLong();
+      if ( id < pimItemId ) {
+        partQuery.query().next();
+        continue;
+      } else if ( id > pimItemId ) {
+        break;
+      }
+      QByteArray partName = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
+      QByteArray part = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
+      QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
+      bool partIsExternal = partQuery.query().value( partQueryExternalColumn ).toBool();
+      if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
+        data = PartHelper::translateData(id, data, partIsExternal );
+      int version = partQuery.query().value( partQueryVersionColumn ).toInt();
+      if ( version != 0 ) { // '0' is the default, so don't send it
+        part += "[" + QByteArray::number( version ) + "]";
+      }
+      if (  mExternalPayloadSupported && partIsExternal ) { // external data and this is supported by the client
+        part += " [FILE] ";
+      }
+      if ( data.isNull() ) {
+        part += " NIL";
+      } else if ( data.isEmpty() ) {
+        part += " \"\"";
+      } else {
+        part += " {" + QByteArray::number( data.length() ) + "}\n";
+        part += data;
+      }
 
-  } catch ( std::exception &e ) {
-    return failureResponse( e.what() );
+      if ( mRequestedParts.contains( partName ) || mFullPayload || mAllAttrs )
+        attributes << part;
+
+      partQuery.query().next();
+    }
+
+    // IMAP protocol violation: should actually be the sequence number
+    QByteArray attr = QByteArray::number( pimItemId ) + " FETCH (";
+    attr += ImapParser::join( attributes, " " ) + ')';
+    response.setUntagged();
+    response.setString( attr );
+    emit responseAvailable( response );
+
+    mItemQuery.query().next();
   }
 
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
+  // update atime
+  updateItemAccessTime();
+
   if ( mIsUidFetch )
-    response.setString( "UID FETCH completed" );
+    successResponse( "UID FETCH completed" );
   else
-    response.setString( "FETCH completed" );
-  emit responseAvailable( response );
+    successResponse( "FETCH completed" );
   deleteLater();
   return true;
 }

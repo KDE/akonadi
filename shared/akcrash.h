@@ -22,6 +22,9 @@
 #ifndef AKCRASH_H
 #define AKCRASH_H
 
+#include <QString>
+
+QString akBacktrace();
 
 class AkonadiCrash
 {

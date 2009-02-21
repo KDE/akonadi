@@ -26,6 +26,7 @@
 
 #include "akonadiprivate_export.h"
 #include "global.h"
+#include "exception.h"
 
 namespace Akonadi {
 
@@ -33,6 +34,8 @@ class Response;
 class AkonadiConnection;
 class QueryBuilder;
 class ImapSet;
+
+AKONADI_EXCEPTION_MAKE_INSTANCE( HandlerException );
 
 /**
   \defgroup akonadi_server_handler Command handlers
@@ -74,21 +77,21 @@ public:
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
     static Handler* findHandlerForCommandAlwaysAllowed( const QByteArray& line );
-    
+
     /**
      * Find a handler for a command that is allowed when the client is not yet authenticated, like LOGIN.
      * @param line the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
     static Handler* findHandlerForCommandNonAuthenticated( const QByteArray& line );
-    
+
     /**
      * Find a handler for a command that is allowed when the client is authenticated, like LIST, FETCH, etc.
      * @param line the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
     static Handler* findHandlerForCommandAuthenticated( const QByteArray& line );
-   
+
     void setConnection( AkonadiConnection* connection );
     AkonadiConnection* connection();
 

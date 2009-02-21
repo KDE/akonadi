@@ -37,7 +37,7 @@
 # include <execinfo.h>
 #endif
 
-QString kBacktrace()
+QString akBacktrace()
 {
   QString s;
 
@@ -86,9 +86,9 @@ static void defaultCrashHandler( int sig )
   if ( recursionCount <= 2 ) {
     if ( sig != SIGTERM && sig != SIGINT ) {
       if ( recursionCount == 1 )
-        akError() << kBacktrace();
+        akError() << akBacktrace();
       else // fall back to something more simple in case the other one crashed itself
-        fprintf( stderr, "%s", kBacktrace().toLatin1().data() );
+        fprintf( stderr, "%s", akBacktrace().toLatin1().data() );
 
       if ( s_emergencyMethod )
         s_emergencyMethod( sig );
