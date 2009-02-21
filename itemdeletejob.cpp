@@ -20,7 +20,7 @@
 #include "itemdeletejob.h"
 #include "itemmodifyjob.h"
 #include "job_p.h"
-#include "transactionjobs.h"
+#include "transactionsequence.h"
 #include "expungejob.h"
 
 using namespace Akonadi;
@@ -73,20 +73,16 @@ void ItemDeleteJob::doStart()
 {
   Q_D( ItemDeleteJob );
 
-  TransactionBeginJob *begin = new TransactionBeginJob( this );
-  addSubjob( begin );
+  TransactionSequence  *transaction = new TransactionSequence( this );
+  connect( transaction, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
+  addSubjob( transaction );
 
   d->mItem.setFlag( "\\Deleted" );
-  ItemModifyJob* store = new ItemModifyJob( d->mItem, this );
+  ItemModifyJob* store = new ItemModifyJob( d->mItem, transaction );
   store->disableRevisionCheck();
-  addSubjob( store );
 
-  ExpungeJob *expunge = new ExpungeJob( this );
-  addSubjob( expunge );
-
-  TransactionCommitJob *commit = new TransactionCommitJob( this );
-  connect( commit, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
-  addSubjob( commit );
+  new ExpungeJob( transaction );
+  transaction->commit();
 }
 
 #include "itemdeletejob.moc"
