@@ -18,6 +18,7 @@
 */
 
 #ifndef AKONADI_EXCEPTION_H
+#define AKONADI_EXCEPTION_H
 
 #include <QByteArray>
 #include <exception>
