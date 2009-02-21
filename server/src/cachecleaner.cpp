@@ -57,7 +57,7 @@ void CacheCleaner::cleanCache()
 
     // check if there is something to expire at all
     if ( collection.cachePolicyLocalParts() == QLatin1String( "ALL" ) || collection.cachePolicyCacheTimeout() < 0
-       || !collection.subscribed() )
+       || !collection.subscribed() || !collection.resourceId() )
       continue;
     const int expireTime = qMax( 5, collection.cachePolicyCacheTimeout() );
 
