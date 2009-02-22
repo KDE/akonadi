@@ -21,14 +21,16 @@
 
 #include "akonadiconnection.h"
 #include "handlerhelper.h"
-#include "../../libs/imapparser_p.h"
-#include "../../libs/imapset_p.h"
 
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
+#include "storage/itemretriever.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 #include "storage/parthelper.h"
+
+#include "libs/imapparser_p.h"
+#include "libs/imapset_p.h"
 
 using namespace Akonadi;
 
@@ -42,6 +44,11 @@ bool Copy::handleLine(const QByteArray & line)
   pos = ImapParser::parseSequenceSet( line, set, pos );
   if ( set.isEmpty() )
     return failureResponse( "No items specified" );
+
+  ItemRetriever retriever( connection() );
+  retriever.setItemSet( set );
+  retriever.setRetrieveFullPayload( true );
+  retriever.exec();
 
   ImapParser::parseString( line, tmp, pos );
   const Collection col = HandlerHelper::collectionFromIdOrName( tmp );

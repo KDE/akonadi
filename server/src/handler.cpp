@@ -165,7 +165,7 @@ void Akonadi::Handler::setConnection( AkonadiConnection* connection )
 }
 
 
-AkonadiConnection* Akonadi::Handler::connection()
+AkonadiConnection* Akonadi::Handler::connection() const
 {
     return m_connection;
 }

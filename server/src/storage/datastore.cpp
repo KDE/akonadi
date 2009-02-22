@@ -584,8 +584,12 @@ void Akonadi::DataStore::retrieveDataFromResource( qint64 uid, const QByteArray&
 
       // call the resource
       org::freedesktop::Akonadi::Resource *interface = resourceInterface( resource );
-      if ( interface )
-        interface->requestItemDelivery( uid, QString::fromUtf8(remote_id), QString::fromUtf8(mimeType), parts );
+      if ( interface ) {
+        QDBusReply<bool> reply = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id),
+                                                                 QString::fromUtf8(mimeType), parts );
+        if ( !reply.isValid() || reply.value() == false )
+          qDebug() << "Retrieval from resource" << resource << "failed!" << reply.value() << reply.error();
+      }
 
       mPendingItemDeliveriesMutex.lock();
       qDebug() << "requestItemDelivery(): freeing uid" << uid;

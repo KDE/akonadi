@@ -93,7 +93,7 @@ public:
     static Handler* findHandlerForCommandAuthenticated( const QByteArray& line );
 
     void setConnection( AkonadiConnection* connection );
-    AkonadiConnection* connection();
+    AkonadiConnection* connection() const;
 
     /** Send a failure response with the given message. */
     bool failureResponse( const QString& failureMessage );

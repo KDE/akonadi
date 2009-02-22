@@ -41,6 +41,7 @@ namespace Akonadi {
 class Entity
 {
   public:
+    typedef qint64 Id;
     qint64 id() const;
     void setId( qint64 id );
 
