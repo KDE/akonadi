@@ -3,8 +3,8 @@ project(akonadi-kde)
 if (KDE4_BUILD_TESTS)
    # only with this macro the AKONADI_TESTS_EXPORT macro will do something
    add_definitions(-DCOMPILING_TESTS)
-endif (KDE4_BUILD_TESTS)
 add_subdirectory( tests )
+endif (KDE4_BUILD_TESTS)
 
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
