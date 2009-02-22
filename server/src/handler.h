@@ -128,13 +128,6 @@ Q_SIGNALS:
      */
     void connectionStateChange( ConnectionState state );
 
-  protected:
-    /**
-      Adds WHERE conditions to the given query builder which represent
-      the given IMAP sequence set.
-    */
-    void imapSetToQuery( const ImapSet &set, bool isUid, QueryBuilder &qb );
-
 private:
     QByteArray m_tag;
     AkonadiConnection* m_connection;

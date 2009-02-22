@@ -25,6 +25,7 @@
 #include "../../libs/imapset_p.h"
 
 #include "storage/datastore.h"
+#include "storage/itemqueryhelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 #include "storage/parthelper.h"
@@ -48,7 +49,7 @@ bool Copy::handleLine(const QByteArray & line)
     return failureResponse( "No valid target specified" );
 
   SelectQueryBuilder<PimItem> qb;
-  imapSetToQuery( set, true, qb );
+  ItemQueryHelper::itemSetToQuery( set, qb );
   if ( !qb.exec() )
     return failureResponse( "Unable to retrieve items" );
   PimItem::List items = qb.result();

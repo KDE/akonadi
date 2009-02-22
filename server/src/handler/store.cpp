@@ -19,18 +19,20 @@
 
 #include "store.h"
 
-#include <QtCore/QStringList>
-#include <QLocale>
-
 #include "akonadi.h"
 #include "akonadiconnection.h"
+#include "handlerhelper.h"
 #include "response.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
-#include "handlerhelper.h"
-#include "../../libs/imapparser_p.h"
+#include "storage/itemqueryhelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/parthelper.h"
+
+#include "libs/imapparser_p.h"
+
+#include <QtCore/QStringList>
+#include <QLocale>
 
 using namespace Akonadi;
 
@@ -66,7 +68,7 @@ bool Store::handleLine( const QByteArray& line )
   Transaction transaction( store );
 
   SelectQueryBuilder<PimItem> qb;
-  imapSetToQuery( set, uidStore, qb );
+  ItemQueryHelper::itemSetToQuery( set, uidStore, connection(), qb );
   if ( !qb.exec() )
     return failureResponse( "Unable to retrieve items" );
   QList<PimItem> pimItems = qb.result();

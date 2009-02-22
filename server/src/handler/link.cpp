@@ -22,11 +22,12 @@
 #include "akonadiconnection.h"
 #include "handlerhelper.h"
 #include "storage/datastore.h"
+#include "storage/itemqueryhelper.h"
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
 #include "entities.h"
 
-#include "../../libs/imapparser_p.h"
+#include "libs/imapparser_p.h"
 
 using namespace Akonadi;
 
@@ -51,7 +52,7 @@ bool Link::handleLine(const QByteArray & line)
     return failureResponse( "No valid sequence set specified" );
 
   SelectQueryBuilder<PimItem> qb;
-  imapSetToQuery( set, true, qb );
+  ItemQueryHelper::itemSetToQuery( set, qb );
   if ( !qb.exec() )
     return failureResponse( "Unable to execute item query" );
 

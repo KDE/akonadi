@@ -102,7 +102,9 @@ set(libakonadiprivate_SRCS
   src/storage/datastore.cpp
   src/storage/dbconfig.cpp
   src/storage/dbinitializer.cpp
-  src/storage/dbupdater.cpp src/storage/notificationcollector.cpp
+  src/storage/dbupdater.cpp
+  src/storage/itemqueryhelper.cpp
+  src/storage/notificationcollector.cpp
   src/storage/query.cpp
   src/storage/querybuilder.cpp
   src/storage/transaction.cpp

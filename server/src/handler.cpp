@@ -22,7 +22,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QLatin1String>
 
-#include "../libs/imapset_p.h"
+#include "libs/imapset_p.h"
 
 #include "akonadiconnection.h"
 #include "response.h"
@@ -202,44 +202,6 @@ bool Handler::successResponse(const char * successMessage)
   emit responseAvailable( response );
   deleteLater();
   return true;
-}
-
-void Handler::imapSetToQuery(const ImapSet & set, bool isUid, QueryBuilder & qb)
-{
-  Query::Condition cond( Query::Or );
-  foreach ( const ImapInterval i, set.intervals() ) {
-    if ( i.hasDefinedBegin() && i.hasDefinedEnd() ) {
-      if ( i.size() == 1 ) {
-        cond.addValueCondition( PimItem::idFullColumnName(), Query::Equals, i.begin() );
-      } else {
-        Query::Condition subCond( Query::And );
-        subCond.addValueCondition( PimItem::idFullColumnName(), Query::GreaterOrEqual, i.begin() );
-        subCond.addValueCondition( PimItem::idFullColumnName(), Query::LessOrEqual, i.end() );
-        cond.addCondition( subCond );
-      }
-    } else if ( i.hasDefinedBegin() ) {
-      cond.addValueCondition( PimItem::idFullColumnName(), Query::GreaterOrEqual, i.begin() );
-    } else if ( i.hasDefinedEnd() ) {
-      cond.addValueCondition( PimItem::idFullColumnName(), Query::LessOrEqual, i.end() );
-    }
-  }
-  if ( !cond.isEmpty() )
-    qb.addCondition( cond );
-
-  if ( !isUid && connection()->selectedCollectionId() >= 0 ) {
-    const Collection col = connection()->selectedCollection();
-    // FIXME: we probably want to do both paths here in all cases, but that is apparently
-    // non-trivial with SQL
-    if ( col.resource().name() == QLatin1String("akonadi_search_resource") ||
-         col.resource().name().contains( QLatin1String("nepomuk") ) ) {
-      qb.addTable( CollectionPimItemRelation::tableName() );
-      qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id() );
-      qb.addColumnCondition( CollectionPimItemRelation::rightFullColumnName(), Query::Equals,
-                             PimItem::idFullColumnName() );
-    } else {
-      qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
-    }
-  }
 }
 
 #include "handler.moc"

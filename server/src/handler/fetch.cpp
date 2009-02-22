@@ -21,12 +21,13 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include "../../libs/imapparser_p.h"
-#include "../../libs/protocol_p.h"
+#include "libs/imapparser_p.h"
+#include "libs/protocol_p.h"
 #include "response.h"
 #include "storage/selectquerybuilder.h"
 #include "resourceinterface.h"
-#include "../storage/parthelper.h"
+#include "storage/itemqueryhelper.h"
+#include "storage/parthelper.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QUuid>
@@ -143,7 +144,7 @@ bool Fetch::handleLine( const QByteArray& line )
     flagQuery.addColumn( Flag::nameFullColumnName() );
     flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
     flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
-    imapSetToQuery( mSet, mIsUidFetch, flagQuery );
+    ItemQueryHelper::itemSetToQuery( mSet, mIsUidFetch, connection(), flagQuery );
     flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     if ( !flagQuery.exec() )
@@ -284,7 +285,7 @@ void Fetch::updateItemAccessTime()
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.updateColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
-  imapSetToQuery( mSet, mIsUidFetch, qb );
+  ItemQueryHelper::itemSetToQuery( mSet, mIsUidFetch, connection(), qb );
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
 }
@@ -324,7 +325,7 @@ QueryBuilder Fetch::buildPartQuery( const QStringList &partList, bool allPayload
     if ( allAttrs )
       cond.addValueCondition( QString::fromLatin1( "left( %1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
-    imapSetToQuery( mSet, mIsUidFetch, partQuery );
+    ItemQueryHelper::itemSetToQuery( mSet, mIsUidFetch, connection(), partQuery );
     partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   }
   return partQuery;
@@ -347,7 +348,7 @@ void Fetch::buildItemQuery()
   mItemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
   mItemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
   mItemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
-  imapSetToQuery( mSet, mIsUidFetch, mItemQuery );
+  ItemQueryHelper::itemSetToQuery( mSet, mIsUidFetch, connection(), mItemQuery );
   mItemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
   if ( !mItemQuery.exec() )
