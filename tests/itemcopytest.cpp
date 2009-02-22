@@ -54,8 +54,6 @@ class ItemCopyTest : public QObject
       ItemCopyJob *copy = new ItemCopyJob( Item( 1 ), target );
       QVERIFY( copy->exec() );
 
-      QTest::qWait( 1000 );
-
       ItemFetchJob *fetch = new ItemFetchJob( target );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().fetchAllAttributes();
