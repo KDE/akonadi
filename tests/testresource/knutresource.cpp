@@ -50,7 +50,7 @@ template <typename T, void FreeFunc(T)> class XmlPtr
 {
   public:
     XmlPtr( const T &t ) : p( t ) {}
-      
+
     ~XmlPtr()
     {
       FreeFunc( p );
@@ -327,13 +327,13 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
 
   const QDomElement itemElem = findElementByRid( item.remoteId() );
   if ( itemElem.isNull() ) {
-    emit error( "No item found for remoteid " + item.remoteId() );
+    cancelTask( "No item found for remoteid " + item.remoteId() );
     return false;
   }
 
   const QDomNodeList l = itemElem.elementsByTagName( "payload" );
   if ( l.count() != 1 ) {
-    emit error( "No payload found for item '" + item.remoteId() + "'." );
+    cancelTask( "No payload found for item '" + item.remoteId() + "'." );
     return false;
   }
 
