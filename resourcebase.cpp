@@ -451,7 +451,17 @@ void ResourceBase::synchronizeCollectionTree()
 
 void ResourceBase::cancelTask()
 {
-  d_func()->changeProcessed();
+  Q_D( ResourceBase );
+  switch ( d->scheduler->currentTask().type ) {
+    case ResourceScheduler::FetchItem:
+      itemRetrieved( Item() ); // sends the error reply and
+      break;
+    case ResourceScheduler::ChangeReplay:
+      d->changeProcessed();
+      break;
+    default:
+      d->scheduler->taskDone();
+  }
 }
 
 void ResourceBase::cancelTask( const QString &msg )

@@ -46,6 +46,7 @@ class ItemsyncTest : public QObject
       ItemFetchJob *fetch = new ItemFetchJob( col, this );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().fetchAllAttributes();
+      fetch->fetchScope().setCacheOnly( true ); // resources are switched off anyway
       Q_ASSERT( fetch->exec() );
       Q_ASSERT( !fetch->items().isEmpty() );
       return fetch->items();
