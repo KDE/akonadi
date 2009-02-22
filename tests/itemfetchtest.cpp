@@ -91,6 +91,35 @@ void ItemFetchTest::testFetch()
   QVERIFY( item.flags().isEmpty() );
 }
 
+void ItemFetchTest::testResourceRetrieval()
+{
+  Item item( 1 );
+
+  ItemFetchJob *job = new ItemFetchJob( item, this );
+  job->fetchScope().fetchFullPayload( true );
+  job->fetchScope().fetchAllAttributes( true );
+  job->fetchScope().setCacheOnly( true );
+  QVERIFY( job->exec() );
+  QCOMPARE( job->items().count(), 1 );
+  item = job->items().first();
+  QCOMPARE( item.id(), 1ll );
+  QVERIFY( !item.remoteId().isEmpty() );
+  QVERIFY( !item.hasPayload() ); // not yet in cache
+  QCOMPARE( item.attributes().count(), 1 );
+
+  job = new ItemFetchJob( item, this );
+  job->fetchScope().fetchFullPayload( true );
+  job->fetchScope().fetchAllAttributes( true );
+  job->fetchScope().setCacheOnly( false );
+  QVERIFY( job->exec() );
+  QCOMPARE( job->items().count(), 1 );
+  item = job->items().first();
+  QCOMPARE( item.id(), 1ll );
+  QVERIFY( !item.remoteId().isEmpty() );
+  QVERIFY( item.hasPayload() );
+  QCOMPARE( item.attributes().count(), 1 );
+}
+
 void ItemFetchTest::testIllegalFetch()
 {
   // fetch non-existing folder
