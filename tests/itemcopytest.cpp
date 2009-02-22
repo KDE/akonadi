@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
 #include <akonadi/itemcopyjob.h>
@@ -25,6 +27,7 @@
 
 #include <QtCore/QObject>
 
+#include "test_utils.h"
 #include <qtest_akonadi.h>
 
 using namespace Akonadi;
@@ -36,21 +39,34 @@ class ItemCopyTest : public QObject
     void initTestCase()
     {
       Control::start();
+      // switch target resources offline to reduce interference from them
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) {
+        if ( agent.identifier() == "akonadi_knut_resource_2" )
+          agent.setIsOnline( false );
+      }
     }
 
     void testCopy()
     {
-      const Collection target( 8 );
-      Item item( 1 );
+      const Collection target( collectionIdFromPath( "res3" ) );
+      QVERIFY( target.isValid() );
 
-      ItemCopyJob *copy = new ItemCopyJob( item, target );
+      ItemCopyJob *copy = new ItemCopyJob( Item( 1 ), target );
       QVERIFY( copy->exec() );
+
+      QTest::qWait( 1000 );
 
       ItemFetchJob *fetch = new ItemFetchJob( target );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().fetchAllAttributes();
+      fetch->fetchScope().setCacheOnly( true );
       QVERIFY( fetch->exec() );
       QCOMPARE( fetch->items().count(), 1 );
+
+      Item item = fetch->items().first();
+      QVERIFY( item.hasPayload() );
+      QCOMPARE( item.attributes().count(), 1 );
+      QVERIFY( item.remoteId().isEmpty() );
     }
 
     void testIlleagalCopy()
