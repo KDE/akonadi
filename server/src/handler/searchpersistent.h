@@ -36,6 +36,7 @@ namespace Akonadi {
 */
 class SearchPersistent : public Handler
 {
+  Q_OBJECT
   public:
     SearchPersistent();
 

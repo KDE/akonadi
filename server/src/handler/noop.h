@@ -31,6 +31,7 @@ namespace Akonadi {
  */
 class Noop : public Handler
 {
+  Q_OBJECT
 public:
     Noop();
 

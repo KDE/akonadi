@@ -55,6 +55,7 @@ namespace Akonadi {
  */
 class AKONADIPRIVATE_EXPORT ColCopy : public Copy
 {
+  Q_OBJECT
   public:
     bool handleLine(const QByteArray& line);
 

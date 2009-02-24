@@ -45,6 +45,7 @@ namespace Akonadi {
 */
 class Modify : public Handler
 {
+  Q_OBJECT
   public:
     Modify();
     ~Modify();

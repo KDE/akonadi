@@ -45,6 +45,7 @@ namespace Akonadi {
  */
 class Link : public Handler
 {
+  Q_OBJECT
   public:
     /**
      * @param create @c true adds references, @c false removes them

@@ -43,6 +43,7 @@ namespace Akonadi {
  */
 class Create : public Handler
 {
+  Q_OBJECT
 public:
     Create();
 

@@ -30,7 +30,8 @@ namespace Akonadi {
  */
 class Select : public Handler
 {
-public:
+  Q_OBJECT
+  public:
     Select();
 
     ~Select();

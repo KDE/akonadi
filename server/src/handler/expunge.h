@@ -31,6 +31,7 @@ namespace Akonadi {
  */
 class Expunge : public Handler
 {
+  Q_OBJECT
   public:
     Expunge();
 

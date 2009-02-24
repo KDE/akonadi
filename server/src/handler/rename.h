@@ -31,6 +31,7 @@ namespace Akonadi {
 */
 class Rename : public Handler
 {
+  Q_OBJECT
   public:
     Rename();
     ~Rename();

@@ -30,7 +30,8 @@ namespace Akonadi {
 */
 class Login : public Handler
 {
-public:
+  Q_OBJECT
+  public:
     Login();
 
     ~Login();

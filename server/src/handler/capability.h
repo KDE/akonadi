@@ -30,6 +30,7 @@ namespace Akonadi {
  */
 class Capability : public Handler
 {
+  Q_OBJECT
 public:
     Capability();
 

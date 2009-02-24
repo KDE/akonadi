@@ -32,6 +32,7 @@ namespace Akonadi {
  */
 class Append : public Handler
 {
+  Q_OBJECT
 public:
     Append();
 

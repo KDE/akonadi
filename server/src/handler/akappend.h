@@ -36,6 +36,7 @@ namespace Akonadi {
  */
 class AKONADIPRIVATE_EXPORT AkAppend : public Handler
 {
+  Q_OBJECT
 public:
     AkAppend();
 

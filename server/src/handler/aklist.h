@@ -65,6 +65,8 @@ namespace Akonadi {
  */
 class AKONADIPRIVATE_EXPORT AkList : public Handler
 {
+  Q_OBJECT
+
   public:
     AkList();
     ~AkList();

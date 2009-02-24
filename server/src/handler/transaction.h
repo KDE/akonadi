@@ -31,6 +31,7 @@ namespace Akonadi {
 */
 class TransactionHandler : public Handler
 {
+  Q_OBJECT
   public:
     TransactionHandler();
     ~TransactionHandler();

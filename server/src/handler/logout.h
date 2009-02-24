@@ -30,7 +30,8 @@ namespace Akonadi {
  */
 class Logout : public Handler
 {
-public:
+  Q_OBJECT
+  public:
     Logout();
 
     ~Logout();

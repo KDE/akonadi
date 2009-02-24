@@ -33,6 +33,7 @@ namespace Akonadi {
 */
 class Delete : public Handler
 {
+  Q_OBJECT
   public:
     Delete();
     ~Delete();

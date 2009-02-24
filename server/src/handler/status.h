@@ -30,6 +30,7 @@ namespace Akonadi {
  */
 class Status : public Handler
 {
+  Q_OBJECT
 public:
     Status();
 
