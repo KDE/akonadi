@@ -225,30 +225,31 @@ void AkonadiServer::startDatabaseProcess()
   const QString actualConfig = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
   if ( globalConfig.isEmpty() )
     akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
-  QFile globalFile( globalConfig );
-  QFile localFile ( localConfig );
-  QFile actualFile ( actualConfig );
   bool confUpdate = false;
-  // update conf only if either global (or local) is newer than actual 
-  if ( ( ( QFileInfo(globalFile).lastModified() > QFileInfo(actualFile).lastModified()) ||
-         ( QFileInfo(localFile).lastModified()  > QFileInfo(actualFile).lastModified()) ) &&
-       ( globalFile.open( QFile::ReadOnly ) && actualFile.open( QFile::WriteOnly ) ) ) { 
-    actualFile.write( globalFile.readAll() );
-    if ( !localConfig.isEmpty() ) {
-      if ( localFile.open( QFile::ReadOnly ) ) {
-        actualFile.write( localFile.readAll() );
+  QFile actualFile ( actualConfig );
+  // update conf only if either global (or local) is newer than actual
+  if ( (QFileInfo( globalConfig ).lastModified() > QFileInfo( actualFile ).lastModified()) ||
+       (QFileInfo( localConfig ).lastModified()  > QFileInfo( actualFile ).lastModified()) )
+  {
+    QFile globalFile( globalConfig );
+    QFile localFile ( localConfig );
+    if ( globalFile.open( QFile::ReadOnly ) && actualFile.open( QFile::WriteOnly ) ) {
+      actualFile.write( globalFile.readAll() );
+      if ( !localConfig.isEmpty() ) {
+        if ( localFile.open( QFile::ReadOnly ) ) {
+          actualFile.write( localFile.readAll() );
+          localFile.close();
+        }
       }
+      globalFile.close();
+      actualFile.close();
+      confUpdate = true;
+    } else {
+      akError() << "Unable to create MySQL server configuration file.";
+      akError() << "This means that either the default configuration file (mysql-global.conf) was not readable";
+      akFatal() << "or the target file (mysql.conf) could not be written.";
     }
-    confUpdate = true;
-  } else {
-    akError() << "Unable to create MySQL server configuration file.";
-    akError() << "This means that either the default configuration file (mysql-global.conf) was not readable";
-    akFatal() << "or the target file (mysql.conf) could not be written.";
   }
-
-  globalFile.close();
-  localFile.close();
-  actualFile.close();
 
   // MySQL doesn't like world writeable config files (which makes sense), but
   // our config file somehow ends up being world-writable on some systems for no
