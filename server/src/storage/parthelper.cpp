@@ -224,6 +224,8 @@ bool PartHelper::loadData( Part &part )
 
 QByteArray PartHelper::translateData( qint64 id, const QByteArray &data, bool isExternal )
 {
+  Q_UNUSED(id);
+
   if ( DbConfig::useExternalPayloadFile() && isExternal )
   {
     //qDebug() << "translateData " << id;
