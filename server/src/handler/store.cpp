@@ -28,11 +28,13 @@
 #include "storage/itemqueryhelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/parthelper.h"
+#include "storage/dbconfig.h"
 
 #include "libs/imapparser_p.h"
 
 #include <QtCore/QStringList>
 #include <QLocale>
+#include <QDebug>
 
 using namespace Akonadi;
 
@@ -47,6 +49,7 @@ Store::~Store()
 
 bool Store::handleLine( const QByteArray& line )
 {
+
   int pos = line.indexOf( ' ' ) + 1; // skip tag
   QByteArray buffer;
   pos = ImapParser::parseString( line, buffer, pos );
@@ -322,4 +325,14 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
     return false;
   }
   return true;
+}
+
+bool Store::supportsStreamParser()
+{
+  return false; //partial data parsing makes sense only for external payload files
+}
+
+bool Store::parseStream()
+{
+    return false;
 }

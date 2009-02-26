@@ -34,6 +34,7 @@ class Response;
 class AkonadiConnection;
 class QueryBuilder;
 class ImapSet;
+class ImapStreamParser;
 
 AKONADI_EXCEPTION_MAKE_INSTANCE( HandlerException );
 
@@ -111,6 +112,23 @@ public:
     /** Send a success response with the given message. */
     bool successResponse( const char *successMessage );
 
+    /**
+     *  @return true if the handler supports the streaming IMAP parser
+     */
+    virtual bool supportsStreamParser();
+
+    /**
+     * Assigns the streaming IMAP parser to the handler. Useful only if @ref supportsStreamParser returns true.
+     * @param parser the imap parser object
+     */
+    void setStreamParser( ImapStreamParser *parser );
+
+    /**
+     * Parse and handle the IMAP message using the streaming parser.
+     * @return true if parsed succesfully
+     */
+    virtual bool parseStream();
+
 Q_SIGNALS:
 
     /**
@@ -131,6 +149,9 @@ Q_SIGNALS:
 private:
     QByteArray m_tag;
     AkonadiConnection* m_connection;
+
+protected:
+    ImapStreamParser *m_streamParser;
 };
 
 }

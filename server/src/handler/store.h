@@ -35,6 +35,8 @@ class PimItem;
  */
 class Store : public Handler
 {
+  Q_OBJECT
+
   public:
     Store();
     ~Store();
@@ -48,8 +50,12 @@ class Store : public Handler
       Delete
     };
 
+    bool supportsStreamParser();
+
+    bool parseStream();
 
   private:
+
     bool replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool addFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool deleteFlags( const PimItem &item, const QList<QByteArray> &flags );

@@ -204,4 +204,19 @@ bool Handler::successResponse(const char * successMessage)
   return true;
 }
 
+bool Handler::supportsStreamParser()
+{
+  return false;
+}
+
+void Handler::setStreamParser( ImapStreamParser *parser )
+{
+  m_streamParser = parser;
+}
+
+bool Handler::parseStream()
+{
+  return false;
+}
+
 #include "handler.moc"

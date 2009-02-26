@@ -25,6 +25,10 @@
 #include "fetch.h"
 #include "store.h"
 
+#include "imapstreamparser.h"
+
+#include <QDebug>
+
 using namespace Akonadi;
 
 Uid::Uid()
@@ -91,6 +95,77 @@ bool Uid::handleLine( const QByteArray& line )
   else
     return false;
 
+  deleteLater();
+
+  return true;
+}
+
+bool Uid::supportsStreamParser()
+{
+  return true;
+}
+
+bool Uid::parseStream()
+{
+  qDebug() << "Uid::parseStream";
+
+  m_streamParser->readString(); //reads UID
+
+  QByteArray subCommand;
+  if ( !mSubHandler ) {
+    if ( !m_streamParser->hasString() ) {
+      Response response;
+      response.setTag( tag() );
+      response.setError();
+      response.setString( "Syntax error" );
+
+      emit responseAvailable( response );
+      deleteLater();
+
+      return true;
+    }
+
+    subCommand = m_streamParser->readString().toUpper();
+
+    mSubHandler = 0;
+    if ( subCommand == "FETCH" )
+      mSubHandler = new Fetch();
+    else if ( subCommand == "STORE" )
+      mSubHandler = new Store();
+
+    if ( !mSubHandler ) {
+      Response response;
+      response.setTag( tag() );
+      response.setError();
+      response.setString( "Syntax error" );
+
+      emit responseAvailable( response );
+      deleteLater();
+
+      return true;
+    }
+
+    mSubHandler->setTag( tag() );
+    mSubHandler->setConnection( connection() );
+
+    connect( mSubHandler, SIGNAL( responseAvailable( const Response & ) ),
+             this, SIGNAL( responseAvailable( const Response & ) ) );
+    connect( mSubHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
+             this, SIGNAL( connectionStateChange( ConnectionState ) ) );
+  }
+
+  if ( mSubHandler->supportsStreamParser() )
+  {
+    qDebug() << "mSubHandler supports stream parsing";
+    mSubHandler->parseStream();
+  } else
+  {
+    qDebug() << "mSubHandler doesn't support stream parsing";
+    QByteArray data = tag() + " UID " + subCommand + " " + m_streamParser->readUntilCommandEnd();
+    mSubHandler->handleLine( data );
+  }
+
+  mSubHandler = 0;
   deleteLater();
 
   return true;

@@ -33,6 +33,7 @@ namespace Akonadi {
     class DataStore;
     class ImapParser;
     class Collection;
+    class ImapStreamParser;
 
 /**
     An AkonadiConnection represents one connection of a client to the server.
@@ -60,7 +61,7 @@ public:
 protected Q_SLOTS:
     void slotDisconnected();
     /**
-     * New data arrived from the client. Creates a handler for it and passes the data to the handler. 
+     * New data arrived from the client. Creates a handler for it and passes the data to the handler.
      */
     void slotNewData();
     void slotResponseAvailable( const Response& );
@@ -83,6 +84,7 @@ private:
     QString m_identifier;
     QByteArray m_sessionId;
     ImapParser *m_parser;
+    ImapStreamParser *m_streamParser;
 };
 
 }

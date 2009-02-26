@@ -33,11 +33,16 @@ namespace Akonadi {
  */
 class Uid : public Handler
 {
+  Q_OBJECT
   public:
     Uid();
     ~Uid();
 
     bool handleLine(const QByteArray& line);
+
+    bool supportsStreamParser();
+
+    bool parseStream();
 
   private:
     QPointer<Handler> mSubHandler;

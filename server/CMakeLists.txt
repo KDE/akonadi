@@ -120,6 +120,7 @@ set(libakonadiprivate_SRCS
   src/xesammanager.cpp
   src/nepomukmanager.cpp
   src/debuginterface.cpp
+  src/imapstreamparser.cpp
 )
 
 qt4_generate_dbus_interface( src/debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml )
