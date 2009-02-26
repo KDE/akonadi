@@ -21,7 +21,7 @@
 #ifndef AKONADI_IMAPSTREAMPARSER_P_H
 #define AKONADI_IMAPSTREAMPARSER_P_H
 
-#include "akonadiprotocolinternals_export.h"
+#include "akonadiprivate_export.h"
 
 #include "imapset_p.h"
 
@@ -41,7 +41,7 @@ namespace Akonadi {
 /**
   Parser for IMAP messages that operates on a local socket stream.
 */
-class AKONADIPROTOCOLINTERNALS_EXPORT ImapStreamParser
+class AKONADIPRIVATE_EXPORT ImapStreamParser
 {
   public:
     /**
