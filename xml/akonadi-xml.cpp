@@ -103,7 +103,7 @@ Collection::List AkonadiXML::buildCollectionTree( const QDomElement &parent )
   return rv;
 }
 
-void addItemPayload( Item &item, const QDomElement &elem )
+void AkonadiXML::addItemPayload( Item &item, const QDomElement &elem )
 {
   if ( elem.isNull() )
     return;
