@@ -9,8 +9,6 @@ include(CheckIncludeFiles)
 
 include_directories(
     ${AKONADI_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIR}
-    ${LIBXML2_INCLUDE_DIR}
     ${KDE4_INCLUDES} 
     ${KDEPIMLIBS_INCLUDE_DIR}
 )
@@ -28,7 +26,8 @@ target_link_libraries(libakonadixml
   ${KDE4_KIO_LIBS}
   ${KDE4_AKONADI_LIBS}
   ${QT_QTXML_LIBRARY}
-  ${LIBXML2_LIBRARIES}
 )
 
 set_target_properties(libakonadixml PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+install (TARGETS libakonadixml ${INSTALL_TARGETS_DEFAULT_ARGS})
+
