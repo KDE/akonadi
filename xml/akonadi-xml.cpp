@@ -29,38 +29,7 @@
 #include <QtCore/QUuid>
 #include <QtXml/QDomElement>
 
-#ifdef HAVE_LIBXML2
-#include <libxml/parser.h>
-#include <libxml/xmlIO.h>
-#include <libxml/xmlschemas.h>
-#endif
-
 using namespace Akonadi;
-
-// helper class for dealing with libxml resource management
-template <typename T, void FreeFunc(T)> class XmlPtr
-{
-  public:
-    XmlPtr( const T &t ) : p( t ) {}
-
-    ~XmlPtr()
-    {
-      FreeFunc( p );
-    }
-
-    operator T() const
-    {
-      return p;
-    }
-
-    operator bool() const
-    {
-      return p != NULL;
-    }
-
-  private:
-    T p;
-};
 
 class GenericAttribute : public Attribute
 {

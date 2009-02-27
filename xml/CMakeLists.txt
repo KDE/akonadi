@@ -7,8 +7,6 @@ include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
 include(CheckIncludeFiles)
 
-add_definitions( -DHAVE_LIBXML2 )
-
 include_directories(
     ${AKONADI_INCLUDE_DIR}
     ${Boost_INCLUDE_DIR}
