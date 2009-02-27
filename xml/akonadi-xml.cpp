@@ -153,4 +153,14 @@ QDomElement AkonadiXML::serializeItem( Akonadi::Item &item )
   return top;
 }
 
-
+QDomElement AkonadiXML::serializeCollection( Akonadi::Collection &collection )
+{
+  if ( collection.remoteId().isEmpty() )
+    collection.setRemoteId( QUuid::createUuid().toString() );
+  QDomElement top = mDocument.createElement( "collection" );
+  top.setAttribute( "rid", collection.remoteId() );
+  top.setAttribute( "name", collection.name() );
+  top.setAttribute( "content", collection.contentMimeTypes().join( "," ) );
+  serializeAttributes( collection, top );
+  return top;
+}

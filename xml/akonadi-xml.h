@@ -30,13 +30,15 @@ using namespace Akonadi;
 
 class AkonadiXML {
 
-  void deserializeAttributes( const QDomElement &node, Entity &entity );
-  Collection buildCollection( const QDomElement &node, const QString &parentRid );
-  Collection::List buildCollectionTree( const QDomElement &parent );
-  void addItemPayload( Item &item, const QDomElement &elem );
-  Item buildItem( const QDomElement &elem );
-  QDomElement serializeItem( Akonadi::Item &item );
-  void serializeAttributes( const Akonadi::Entity &entity, QDomElement &entityElem );
+  public:
+    void deserializeAttributes( const QDomElement &node, Entity &entity );
+    Collection buildCollection( const QDomElement &node, const QString &parentRid );
+    Collection::List buildCollectionTree( const QDomElement &parent );
+    void addItemPayload( Item &item, const QDomElement &elem );
+    Item buildItem( const QDomElement &elem );
+    QDomElement serializeItem( Akonadi::Item &item );
+    void serializeAttributes( const Akonadi::Entity &entity, QDomElement &entityElem );
+    QDomElement serializeCollection( Akonadi::Collection &collection );
 
   private:
     QDomDocument mDocument;
