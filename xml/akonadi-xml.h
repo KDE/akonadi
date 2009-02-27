@@ -21,6 +21,8 @@
 #ifndef AKONADIXML_H
 #define AKONADIXML_H
 
+#include "akonadi-xml_export.h"
+
 #include <QDomDocument>
 
 #include <akonadi/collection.h>
@@ -28,7 +30,7 @@
 
 using namespace Akonadi;
 
-class AkonadiXML {
+class AKONADI_XML_EXPORT AkonadiXML {
 
   public:
     void deserializeAttributes( const QDomElement &node, Entity &entity );
