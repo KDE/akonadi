@@ -99,7 +99,6 @@ class CollectionCopyTest : public QObject
         foreach ( const Item &item, job->items() ) {
           QVERIFY( !it.value().contains( item ) );
           QVERIFY( item.remoteId().isEmpty() );
-          QEXPECT_FAIL( "", "server bug", Continue );
           QVERIFY( item.hasPayload() );
         }
       }
