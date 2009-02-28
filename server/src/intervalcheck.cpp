@@ -19,6 +19,7 @@
 
 #include "intervalcheck.h"
 #include "storage/datastore.h"
+#include "storage/itemretrievalmanager.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -61,7 +62,7 @@ void IntervalCheck::doIntervalCheck()
 
     mLastChecks[ collection.id() ] = QDateTime::currentDateTime();
     qDebug() << "interval checking  collection " << collection.id() << "(" << collection.name() << ")";
-    DataStore::self()->triggerCollectionSync( collection );
+    ItemRetrievalManager::instance()->requestCollectionSync( collection );
   }
 
   QTimer::singleShot( 60 * 1000, this, SLOT(doIntervalCheck()) );

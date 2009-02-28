@@ -21,7 +21,6 @@
 #include "datastore.h"
 
 #include "agentmanagerinterface.h"
-#include "resourceinterface.h"
 #include "dbconfig.h"
 #include "dbinitializer.h"
 #include "dbupdater.h"
@@ -551,13 +550,6 @@ bool DataStore::cleanupPimItems( const Collection &collection )
   return ok;
 }
 
-void DataStore::triggerCollectionSync( const Collection &collection )
-{
-  org::freedesktop::Akonadi::Resource *interface = resourceInterface( collection.resource().name() );
-  if ( interface )
-    interface->synchronizeCollection( collection.id() );
-}
-
 QList<PimItem> DataStore::listPimItems( const Collection & collection, const Flag &flag )
 {
   if ( !m_dbOpened )
@@ -768,27 +760,6 @@ bool Akonadi::DataStore::commitTransaction()
 bool Akonadi::DataStore::inTransaction() const
 {
   return m_transactionLevel > 0;
-}
-
-org::freedesktop::Akonadi::Resource * Akonadi::DataStore::resourceInterface( const QString &res )
-{
-  org::freedesktop::Akonadi::Resource* iface = 0;
-  if ( mResourceInterfaceCache.contains( res ) )
-    iface = mResourceInterfaceCache.value( res );
-  if ( iface && iface->isValid() )
-    return iface;
-
-  delete iface;
-  iface = new org::freedesktop::Akonadi::Resource( QLatin1String("org.freedesktop.Akonadi.Resource.") + res,
-                                                   QLatin1String("/"), QDBusConnection::sessionBus(), this );
-  if ( !iface || !iface->isValid() ) {
-    qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-                                    .arg( res, iface ? iface->lastError().message() : QString() );
-    delete iface;
-    return 0;
-  }
-  mResourceInterfaceCache.insert( res, iface );
-  return iface;
 }
 
 #include "datastore.moc"

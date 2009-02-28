@@ -32,16 +32,6 @@ class QSqlQuery;
 #include "entities.h"
 #include "notificationcollector.h"
 
-class OrgFreedesktopAkonadiResourceInterface;
-namespace org {
-  namespace freedesktop {
-    namespace Akonadi {
-      typedef ::OrgFreedesktopAkonadiResourceInterface Resource;
-    }
-  }
-}
-
-
 namespace Akonadi {
 
 class NotificationCollector;
@@ -254,8 +244,6 @@ protected:
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
   public:
-    void triggerCollectionSync( const Collection &collection );
-
     /** Returns the id of the most recent inserted row, or -1 if there's no such
         id.
         @param query the query we want to get the last insert id for
@@ -279,11 +267,6 @@ protected:
      */
     static QDateTime dateTimeToQDateTime( const QByteArray & dateTime );
 
-    /**
-      Returns the D-Bus interface of the given resource.
-    */
-    org::freedesktop::Akonadi::Resource *resourceInterface( const QString &res );
-
 private:
     QString m_connectionName;
     QSqlDatabase m_database;
@@ -291,9 +274,6 @@ private:
     uint m_transactionLevel;
     QByteArray mSessionId;
     NotificationCollector* mNotificationCollector;
-
-    // resource dbus interface cache
-    QHash<QString, org::freedesktop::Akonadi::Resource*> mResourceInterfaceCache;
 };
 
 }

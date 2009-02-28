@@ -304,7 +304,7 @@ void Fetch::triggerOnDemandFetch()
   store->activeCachePolicy( col );
   if ( !col.cachePolicySyncOnDemand() )
     return;
-  store->triggerCollectionSync( col );
+  ItemRetrievalManager::instance()->requestCollectionSync( col );
 }
 
 QueryBuilder Fetch::buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs )

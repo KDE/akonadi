@@ -32,6 +32,8 @@ class OrgFreedesktopAkonadiResourceInterface;
 
 namespace Akonadi {
 
+class Collection;
+
 /** Manages and processes item retrieval requests. */
 class ItemRetrievalManager : public QObject
 {
@@ -42,11 +44,13 @@ class ItemRetrievalManager : public QObject
 
     void requestItemDelivery( qint64 uid, const QByteArray& remoteId, const QByteArray& mimeType,
                               const QString &resource, const QStringList &parts );
+    void requestCollectionSync( const Collection &collection );
 
     static ItemRetrievalManager* instance();
 
   signals:
     void requestAdded();
+    void syncCollection( const QString &resource, qint64 colId );
 
   private:
     OrgFreedesktopAkonadiResourceInterface* resourceInterface( const QString &id );
@@ -54,6 +58,7 @@ class ItemRetrievalManager : public QObject
   private slots:
     void serviceOwnerChanged( const QString &serviceName, const QString &oldOwner, const QString &newOwner );
     void processRequest();
+    void triggerCollectionSync( const QString &resource, qint64 colId );
 
   private:
     class Request

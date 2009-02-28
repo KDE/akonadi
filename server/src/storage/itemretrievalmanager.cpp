@@ -52,6 +52,7 @@ ItemRetrievalManager::ItemRetrievalManager( QObject *parent ) :
   connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
   connect( this, SIGNAL(requestAdded()), this, SLOT(processRequest()), Qt::QueuedConnection );
+  connect( this, SIGNAL(syncCollection(QString,qint64)), this, SLOT(triggerCollectionSync(QString,qint64)), Qt::QueuedConnection );
 }
 
 ItemRetrievalManager::~ItemRetrievalManager()
@@ -82,6 +83,9 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString& serviceName, const
 // called within the retrieval thread
 OrgFreedesktopAkonadiResourceInterface* ItemRetrievalManager::resourceInterface(const QString& id)
 {
+  if ( id.isEmpty() )
+    return 0;
+
   OrgFreedesktopAkonadiResourceInterface *iface = 0;
   if ( mResourceInterfaces.contains( id ) )
     iface = mResourceInterfaces.value( id );
@@ -195,6 +199,18 @@ void ItemRetrievalManager::processRequest()
   }
   mWaitCondition->wakeAll();
   mLock->unlock();
+}
+
+void ItemRetrievalManager::requestCollectionSync(const Collection& collection)
+{
+  emit syncCollection( collection.resource().name(), collection.id() );
+}
+
+void ItemRetrievalManager::triggerCollectionSync(const QString& resource, qint64 colId)
+{
+  OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface( resource );
+  if ( interface )
+    interface->synchronizeCollection( colId );
 }
 
 #include "itemretrievalmanager.moc"
