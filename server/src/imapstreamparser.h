@@ -94,7 +94,7 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
      * @param ok true if the data found was a number
      * @return the number
      */
-    qint64 readNumber( bool * ok );
+    qint64 readNumber( bool * ok = 0 );
 
     /**
      * Check if the next data is a string or not. This call might block.
@@ -135,7 +135,7 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
      * Check if the literal data end was reached. See @ref hasLiteral and @ref readLiteralPart .
      * @return true if the literal was completely read.
      */
-    bool atLiteralEnd();
+    bool atLiteralEnd() const;
 
     /**
      * Check if the next data is an IMAP sequence set. This call might block.
@@ -173,7 +173,7 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
      */
     QByteArray readRemainingData();
 
-    void setData( QByteArray data );
+    void setData( const QByteArray &data );
 
 
   private:

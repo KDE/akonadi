@@ -161,7 +161,7 @@ bool ImapStreamParser::hasLiteral()
   }
 }
 
-bool ImapStreamParser::atLiteralEnd()
+bool ImapStreamParser::atLiteralEnd() const
 {
   return (m_literalSize == 0);
 }
@@ -331,6 +331,8 @@ QList<QByteArray> ImapStreamParser::readParenthesizedList()
     }
     ++i;
   }
+
+  throw ImapParserException( "Something went very very wrong!" );
 }
 
 
@@ -435,7 +437,7 @@ qint64 ImapStreamParser::readNumber( bool * ok )
       break;
     ++i;
   }
-  QByteArray tmp = m_data.mid( m_position, i - m_position );
+  const QByteArray tmp = m_data.mid( m_position, i - m_position );
   result = tmp.toLongLong( ok );
   m_position = i;
   return result;
@@ -467,7 +469,7 @@ bool ImapStreamParser::waitForMoreData( bool wait)
    return true;
 }
 
-void ImapStreamParser::setData( QByteArray data )
+void ImapStreamParser::setData( const QByteArray &data )
 {
   m_data = data;
 }

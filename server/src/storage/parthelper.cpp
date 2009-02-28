@@ -93,7 +93,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
   if (!part)
     return false;
 
-  qDebug() << "Insert original data " << part->data();
+//   qDebug() << "Insert original data " << part->data();
   QByteArray fileNameData("");
   QByteArray data;
   bool storeInFile = DbConfig::useExternalPayloadFile()  && (part->datasize() > DbConfig::sizeThreshold() );

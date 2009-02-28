@@ -58,6 +58,7 @@ using namespace Akonadi;
 Handler::Handler()
     :QObject()
     , m_connection( 0 )
+    , m_streamParser( 0 )
 {
 }
 

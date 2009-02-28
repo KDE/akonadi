@@ -159,8 +159,8 @@ void AkonadiConnection::slotNewData()
           ImapParser::parseString( m_parser->data(), command );
 
           m_currentHandler = findHandlerForCommand( command );
-          m_currentHandler->setTag( m_parser->tag() );
           assert( m_currentHandler );
+          m_currentHandler->setTag( m_parser->tag() );
           connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
                    this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
           connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
@@ -176,21 +176,16 @@ void AkonadiConnection::slotNewData()
              try {
               if ( m_currentHandler->parseStream() ) {
                 prependBuffer = m_streamParser->readRemainingData();
-              } else
-              {
-                prependBuffer = m_parser->tag() + " " + m_parser->data();
+              } else {
+                prependBuffer = m_parser->tag() + ' ' + m_parser->data();
               }
              } catch ( const Akonadi::HandlerException &e ) {
                m_currentHandler->failureResponse( e.what() );
-               m_currentHandler->deleteLater();
              }catch ( const Akonadi::Exception &e ) {
                m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
                    + QLatin1String( ": " ) + QString::fromLatin1( e.what()  ) );
-               m_currentHandler->deleteLater();
              } catch ( ... ) {
                akError() << "Unknown exception caught: " << akBacktrace();
-               delete m_currentHandler;
-               m_currentHandler = 0;
              }
              delete m_streamParser;
              m_streamParser = 0;

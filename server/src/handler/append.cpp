@@ -141,7 +141,7 @@ bool Akonadi::Append::commit()
     Part part;
     part.setName( QLatin1String( "PLD:RFC822" ) );
     part.setData( m_data );
-    qDebug() << "Data appended " << m_data;
+//     qDebug() << "Data appended " << m_data;
     part.setPimItemId( item.id() );
     QList<Part> parts;
     parts.append( part );

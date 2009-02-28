@@ -118,7 +118,7 @@ public:
     virtual bool supportsStreamParser();
 
     /**
-     * Assigns the streaming IMAP parser to the handler. Useful only if @ref supportsStreamParser returns true.
+     * Assigns the streaming IMAP parser to the handler. Useful only if supportsStreamParser() returns true.
      * @param parser the imap parser object
      */
     void setStreamParser( ImapStreamParser *parser );
