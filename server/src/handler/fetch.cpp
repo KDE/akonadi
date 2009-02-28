@@ -27,7 +27,9 @@
 #include "storage/selectquerybuilder.h"
 #include "resourceinterface.h"
 #include "storage/itemqueryhelper.h"
+#include "storage/itemretrievalmanager.h"
 #include "storage/parthelper.h"
+#include "akdebug.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QUuid>
@@ -361,8 +363,6 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
   if ( mCacheOnly || (payloadList.isEmpty() && !mFullPayload) )
     return;
 
-  DataStore *store = connection()->storageBackend();
-
   // TODO: I'm sure this can be done with a single query instead of manually
   QueryBuilder partQuery = buildPartQuery( payloadList, mFullPayload, false );
   if ( !partQuery.exec() )
@@ -398,9 +398,16 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
       QStringList missingPayloadIds;
       foreach ( const QString &s, missingParts )
         missingPayloadIds << s.mid( 4 );
-      store->retrieveDataFromResource( pimItemId, mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
-                                        mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8(),
-                                        mItemQuery.query().value( itemQueryResouceColumn ).toString(), missingPayloadIds );
+      // TODO: how should we handle retrieval errors here? so far they have been ignored,
+      // which makes sense in some cases, do we need a command parameter for this?
+      try {
+        ItemRetrievalManager::instance()->requestItemDelivery( pimItemId,
+          mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
+          mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8(),
+          mItemQuery.query().value( itemQueryResouceColumn ).toString(), missingPayloadIds );
+      } catch ( const ItemRetrieverException &e ) {
+        akError() << e.type() << ": " << e.what();
+      }
     }
     mItemQuery.query().next();
   }
