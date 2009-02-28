@@ -17,9 +17,14 @@
     02110-1301, USA.
 */
 
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
 #include <akonadi/control.h>
 #include <akonadi/collectioncopyjob.h>
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/item.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 
 #include <QtCore/QObject>
 
@@ -34,25 +39,70 @@ class CollectionCopyTest : public QObject
     void initTestCase()
     {
       Control::start();
+      // switch target resources offline to reduce interference from them
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) {
+        if ( agent.identifier() == "akonadi_knut_resource_2" )
+          agent.setIsOnline( false );
+      }
     }
 
     void testCopy()
     {
       const Collection target( collectionIdFromPath( "res3" ) );
-      const Collection source( collectionIdFromPath( "res1/foo" ) );
+      Collection source( collectionIdFromPath( "res1/foo" ) );
       QVERIFY( target.isValid() );
       QVERIFY( source.isValid() );
 
+      // obtain reference listing
+      CollectionFetchJob *fetch = new CollectionFetchJob( source, CollectionFetchJob::Base );
+      QVERIFY( fetch->exec() );
+      QCOMPARE( fetch->collections().count(), 1 );
+      source = fetch->collections().first();
+      QVERIFY( source.isValid() );
+
+      fetch = new CollectionFetchJob( source, CollectionFetchJob::Recursive );
+      QVERIFY( fetch->exec() );
+      QHash<Collection, Item::List> referenceData;
+      Collection::List cols = fetch->collections();
+      cols << source;
+      foreach ( const Collection c, cols ) {
+        ItemFetchJob *job = new ItemFetchJob( c, this );
+        QVERIFY( job->exec() );
+        referenceData.insert( c, job->items() );
+      }
+
+      // actually copy the collection
       CollectionCopyJob *copy = new CollectionCopyJob( source, target );
       QVERIFY( copy->exec() );
 
+      // list destination and check if everything has arrived
       CollectionFetchJob *list = new CollectionFetchJob( target, CollectionFetchJob::Recursive );
       QVERIFY( list->exec() );
-      QCOMPARE( list->collections().count(), 4 );
+      cols = list->collections();
+      QCOMPARE( cols.count(), referenceData.count() );
+      for ( QHash<Collection, Item::List>::ConstIterator it = referenceData.constBegin(); it != referenceData.constEnd(); ++it ) {
+        QVERIFY( !cols.contains( it.key() ) );
+        Collection col;
+        foreach ( const Collection &c, cols ) {
+          if ( it.key().name() == c.name() )
+            col = c;
+        }
 
-      Collection copied = list->collections().first();
-      QVERIFY( copied.remoteId().isEmpty() );
-      QCOMPARE( copied.resource(), QString("akonadi_knut_resource_2") );
+        QVERIFY( col.isValid() );
+        QCOMPARE( col.resource(), QLatin1String("akonadi_knut_resource_2") );
+        QVERIFY( col.remoteId().isEmpty() );
+        ItemFetchJob *job = new ItemFetchJob( col, this );
+        job->fetchScope().fetchFullPayload();
+        job->fetchScope().setCacheOnly( true );
+        QVERIFY( job->exec() );
+        QCOMPARE( job->items().count(), it.value().count() );
+        foreach ( const Item &item, job->items() ) {
+          QVERIFY( !it.value().contains( item ) );
+          QVERIFY( item.remoteId().isEmpty() );
+          QEXPECT_FAIL( "", "server bug", Continue );
+          QVERIFY( item.hasPayload() );
+        }
+      }
     }
 
     void testIlleagalCopy()
