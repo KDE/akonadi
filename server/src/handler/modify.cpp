@@ -53,11 +53,18 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
   if ( collection.id() == 0 )
     return failureResponse( "Cannot modify root collection" );
 
-  if ( line.indexOf( "PARENT ", pos ) > 0 ) {
-    ItemRetriever retriever( connection() );
-    retriever.setCollection( collection, true );
-    retriever.setRetrieveFullPayload( true );
-    retriever.exec();
+  int p = 0;
+  if ( (p = line.indexOf( "PARENT ", pos )) > 0 ) {
+    ImapParser::parseString( line, collectionByteArray, pos );
+    const Collection newParent = HandlerHelper::collectionFromIdOrName( collectionByteArray );
+    if ( newParent.isValid() && collection.parentId() != newParent.id()
+         && collection.resourceId() != newParent.resourceId() )
+    {
+      ItemRetriever retriever( connection() );
+      retriever.setCollection( collection, true );
+      retriever.setRetrieveFullPayload( true );
+      retriever.exec();
+    }
   }
 
   DataStore *db = connection()->storageBackend();
