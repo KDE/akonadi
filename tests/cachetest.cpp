@@ -45,6 +45,18 @@ class CacheTest : public QObject
     }
 
   private slots:
+    void testRetrievalErrorBurst() // caused rare server crashs with old item retrieval code
+    {
+      Collection col( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( col.isValid() );
+
+      enableAgent( "akonadi_knut_resource_0", false );
+
+      ItemFetchJob *fetch = new ItemFetchJob( col, this );
+      fetch->fetchScope().fetchFullPayload( true );
+      QVERIFY( fetch->exec() );
+    }
+
     void testResourceRetrievalOnFetch_data()
     {
       QTest::addColumn<Item>( "item" );
