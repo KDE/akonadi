@@ -55,7 +55,7 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
 
   int p = 0;
   if ( (p = line.indexOf( "PARENT ", pos )) > 0 ) {
-    ImapParser::parseString( line, collectionByteArray, pos );
+    ImapParser::parseString( line, collectionByteArray, p + 6 );
     const Collection newParent = HandlerHelper::collectionFromIdOrName( collectionByteArray );
     if ( newParent.isValid() && collection.parentId() != newParent.id()
          && collection.resourceId() != newParent.resourceId() )
