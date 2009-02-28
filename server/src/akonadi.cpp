@@ -32,9 +32,10 @@
 #include "xesammanager.h"
 #include "nepomukmanager.h"
 #include "debuginterface.h"
+#include "storage/itemretrievalthread.h"
 
-#include "../libs/xdgbasedirs_p.h"
-#include "../libs/protocol_p.h"
+#include "libs/xdgbasedirs_p.h"
+#include "libs/protocol_p.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -56,6 +57,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     : QLocalServer( parent )
     , mCacheCleaner( 0 )
     , mIntervalChecker( 0 )
+    , mItemRetrievalThread( 0 )
     , mDatabaseProcess( 0 )
     , mAlreadyShutdown( false )
 {
@@ -113,6 +115,9 @@ AkonadiServer::AkonadiServer( QObject* parent )
     mIntervalChecker = new IntervalCheck( this );
     mIntervalChecker->start( QThread::IdlePriority );
 
+    mItemRetrievalThread = new ItemRetrievalThread( this );
+    mItemRetrievalThread->start( QThread::HighPriority );
+
     mSearchManager = new DummySearchManager;
 
     new ServerAdaptor( this );
@@ -138,6 +143,8 @@ void AkonadiServer::quit()
 
     mAlreadyShutdown = true;
 
+    if ( mItemRetrievalThread )
+      QMetaObject::invokeMethod( mItemRetrievalThread, "quit", Qt::QueuedConnection );
     if ( mCacheCleaner )
       QMetaObject::invokeMethod( mCacheCleaner, "quit", Qt::QueuedConnection );
     if ( mIntervalChecker )
@@ -148,6 +155,8 @@ void AkonadiServer::quit()
       mCacheCleaner->wait();
     if ( mIntervalChecker )
       mIntervalChecker->wait();
+    if ( mItemRetrievalThread )
+      mItemRetrievalThread->wait();
 
     delete mSearchManager;
     mSearchManager = 0;

@@ -21,6 +21,7 @@
 #define AKONADI_EXCEPTION_H
 
 #include <QByteArray>
+#include <QString>
 #include <exception>
 
 namespace Akonadi {
@@ -32,6 +33,8 @@ class Exception : public std::exception
 {
   public:
     Exception( const char *what ) throw() : mWhat( what ) {}
+    Exception( const QByteArray &what ) throw() : mWhat( what ) {}
+    Exception( const QString &what ) throw() : mWhat( what.toUtf8() ) {}
     Exception( const Exception &other ) throw() : mWhat( other.what() ) {}
     virtual ~Exception() throw() {}
     const char* what() const throw() { return mWhat.constData(); }
@@ -45,6 +48,8 @@ class classname : public Akonadi::Exception \
 { \
   public: \
     classname ( const char *what ) throw() : Akonadi::Exception( what ) {} \
+    classname ( const QByteArray &what ) throw() : Akonadi::Exception( what ) {} \
+    classname ( const QString &what ) throw() : Akonadi::Exception( what ) {} \
     const char* type() const throw() { return "" #classname; } \
 }
 

@@ -36,6 +36,8 @@ namespace Akonadi {
 /**
   Helper class for retrieving missing items parts from remote resources.
 
+  Stuff in here happens in the calling thread and does not access shared data.
+
   @todo make usable for Fetch by allowing to share queries
 */
 class ItemRetriever

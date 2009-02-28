@@ -20,8 +20,8 @@
 #include "itemretriever.h"
 
 #include "akonadiconnection.h"
-#include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
+#include "storage/itemretrievalmanager.h"
 #include "storage/parthelper.h"
 #include "storage/querybuilder.h"
 
@@ -186,8 +186,7 @@ void ItemRetriever::exec()
       QStringList missingPayloadIds;
       foreach ( const QString &s, missingParts )
         missingPayloadIds << s.mid( 4 );
-      // TODO: check result
-      DataStore::self()->retrieveDataFromResource( pimItemId,
+      ItemRetrievalManager::instance()->requestItemDelivery( pimItemId,
         itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
         itemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8(),
         itemQuery.query().value( itemQueryResouceColumn ).toString(), missingPayloadIds );
@@ -207,4 +206,3 @@ void ItemRetriever::exec()
   }
   qDebug() << "ItemRetriever::exec() done";
 }
-
