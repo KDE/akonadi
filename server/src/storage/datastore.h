@@ -254,8 +254,6 @@ protected:
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
   public:
-    void retrieveDataFromResource( qint64 uid, const QByteArray& remote_id, const QByteArray& mimeType,
-                                         const QString &resource, const QStringList &parts );
     void triggerCollectionSync( const Collection &collection );
 
     /** Returns the id of the most recent inserted row, or -1 if there's no such
@@ -293,10 +291,6 @@ private:
     uint m_transactionLevel;
     QByteArray mSessionId;
     NotificationCollector* mNotificationCollector;
-
-    static QList<int> mPendingItemDeliveries;
-    static QMutex mPendingItemDeliveriesMutex;
-    static QWaitCondition mPendingItemDeliveriesCondition;
 
     // resource dbus interface cache
     QHash<QString, org::freedesktop::Akonadi::Resource*> mResourceInterfaceCache;

@@ -52,10 +52,6 @@
 
 using namespace Akonadi;
 
-QList<int> DataStore::mPendingItemDeliveries;
-QMutex DataStore::mPendingItemDeliveriesMutex;
-QWaitCondition DataStore::mPendingItemDeliveriesCondition;
-
 /***************************************************************************
  *   DataStore                                                           *
  ***************************************************************************/
@@ -553,50 +549,6 @@ bool DataStore::cleanupPimItems( const Collection &collection )
     ok = ok && cleanupPimItem( pimItems[ i ] );
 
   return ok;
-}
-
-void Akonadi::DataStore::retrieveDataFromResource( qint64 uid, const QByteArray& remote_id, const QByteArray& mimeType,
-                                                   const QString &resource, const QStringList &parts )
-{
-  // TODO: error handling
-  qDebug() << "retrieveDataFromResource()" << uid;
-
-  // check if that item is already being fetched by someone else
-  mPendingItemDeliveriesMutex.lock();
-  if ( mPendingItemDeliveries.contains( uid ) ) {
-      qDebug() << "requestItemDelivery(): item already requested by other thread - waiting" << uid;
-      mPendingItemDeliveriesCondition.wait( &mPendingItemDeliveriesMutex );
-      qDebug() << "requestItemDelivery(): continuing";
-      forever {
-        if ( !mPendingItemDeliveries.contains( uid ) ) {
-          mPendingItemDeliveriesMutex.unlock();
-          break;
-        }
-        qDebug() << "requestItemDelivery(): item still requested by other thread - waiting again" << uid;
-        mPendingItemDeliveriesCondition.wait( &mPendingItemDeliveriesMutex );
-      }
-  } else {
-      qDebug() << "requestItemDelivery(): blocking uid" << uid;
-      mPendingItemDeliveries << uid;
-      mPendingItemDeliveriesMutex.unlock();
-
-      qDebug() << "requestItemDelivery(): requested parts:" << parts;
-
-      // call the resource
-      org::freedesktop::Akonadi::Resource *interface = resourceInterface( resource );
-      if ( interface ) {
-        QDBusReply<bool> reply = interface->requestItemDelivery( uid, QString::fromUtf8(remote_id),
-                                                                 QString::fromUtf8(mimeType), parts );
-        if ( !reply.isValid() || reply.value() == false )
-          qDebug() << "Retrieval from resource" << resource << "failed!" << reply.value() << reply.error();
-      }
-
-      mPendingItemDeliveriesMutex.lock();
-      qDebug() << "requestItemDelivery(): freeing uid" << uid;
-      mPendingItemDeliveries.removeAll( uid );
-      mPendingItemDeliveriesCondition.wakeAll();
-      mPendingItemDeliveriesMutex.unlock();
-  }
 }
 
 void DataStore::triggerCollectionSync( const Collection &collection )
