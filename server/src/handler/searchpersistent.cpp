@@ -83,3 +83,5 @@ bool SearchPersistent::handleLine( const QByteArray& line )
   deleteLater();
   return true;
 }
+
+#include "searchpersistent.moc"

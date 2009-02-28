@@ -84,3 +84,5 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
   deleteLater();
   return true;
 }
+
+#include "rename.moc"

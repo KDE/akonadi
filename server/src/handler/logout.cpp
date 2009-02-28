@@ -51,3 +51,5 @@ bool Logout::handleLine(const QByteArray& )
     return true;
 }
 
+
+#include "logout.moc"

@@ -68,3 +68,5 @@ bool Akonadi::TransactionHandler::handleLine(const QByteArray & line)
   return true;
 }
 
+
+#include "transaction.moc"

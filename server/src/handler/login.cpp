@@ -60,3 +60,5 @@ bool Login::handleLine( const QByteArray &line )
   return true;
 }
 
+
+#include "login.moc"

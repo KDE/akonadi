@@ -137,3 +137,5 @@ bool AkList::listCollection(const Collection & root, int depth )
 
   return true;
 }
+
+#include "aklist.moc"

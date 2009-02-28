@@ -198,3 +198,5 @@ bool Akonadi::AkAppend::commit()
     deleteLater();
     return true;
 }
+
+#include "akappend.moc"

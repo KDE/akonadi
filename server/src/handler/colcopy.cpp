@@ -103,3 +103,5 @@ bool ColCopy::copyCollection(const Collection & source, const Collection & targe
 
   return true;
 }
+
+#include "colcopy.moc"

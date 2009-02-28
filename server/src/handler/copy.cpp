@@ -95,3 +95,5 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   }
   return store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QByteArray(), newItem );
 }
+
+#include "copy.moc"

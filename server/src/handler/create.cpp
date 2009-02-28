@@ -165,3 +165,5 @@ bool Create::handleLine(const QByteArray& line )
 
   return successResponse( "CREATE completed" );
 }
+
+#include "create.moc"

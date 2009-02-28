@@ -48,3 +48,5 @@ bool Capability::handleLine( const QByteArray& )
     return true;
 }
 
+
+#include "capability.moc"

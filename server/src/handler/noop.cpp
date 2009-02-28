@@ -49,3 +49,5 @@ bool Noop::handleLine( const QByteArray& )
 
   return true;
 }
+
+#include "noop.moc"

@@ -356,3 +356,5 @@ bool Store::parseStream()
 {
     return false;
 }
+
+#include "store.moc"

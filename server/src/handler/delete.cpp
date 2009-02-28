@@ -91,3 +91,5 @@ bool Delete::deleteRecursive(Collection & col)
   DataStore *db = connection()->storageBackend();
   return db->cleanupCollection( col );
 }
+
+#include "delete.moc"

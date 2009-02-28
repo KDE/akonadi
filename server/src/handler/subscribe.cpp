@@ -60,3 +60,5 @@ bool Subscribe::handleLine(const QByteArray & line)
   return successResponse( "Completed" );
 }
 
+
+#include "subscribe.moc"

@@ -107,3 +107,5 @@ bool Select::handleLine(const QByteArray& line )
     deleteLater();
     return true;
 }
+
+#include "select.moc"

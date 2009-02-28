@@ -80,3 +80,5 @@ bool Link::handleLine(const QByteArray & line)
 
   return successResponse( "LINK complete" );
 }
+
+#include "link.moc"

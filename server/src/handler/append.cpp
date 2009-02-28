@@ -182,3 +182,5 @@ bool Akonadi::Append::commit()
 
     return true;
 }
+
+#include "append.moc"

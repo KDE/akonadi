@@ -128,3 +128,5 @@ bool Status::handleLine( const QByteArray& line )
     deleteLater();
     return true;
 }
+
+#include "status.moc"

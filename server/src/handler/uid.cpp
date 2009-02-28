@@ -170,3 +170,5 @@ bool Uid::parseStream()
 
   return true;
 }
+
+#include "uid.moc"

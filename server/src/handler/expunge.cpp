@@ -86,3 +86,5 @@ bool Expunge::handleLine( const QByteArray& )
 
   return true;
 }
+
+#include "expunge.moc"

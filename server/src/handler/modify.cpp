@@ -132,3 +132,5 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
   emit responseAvailable( response );
   return true;
 }
+
+#include "modify.moc"
