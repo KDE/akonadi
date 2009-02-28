@@ -23,9 +23,10 @@
 #include <storage/datastore.h>
 #include <storage/entity.h>
 #include <storage/transaction.h>
-#include "../../libs/imapparser_p.h"
+#include "libs/imapparser_p.h"
 #include <handlerhelper.h>
 #include <response.h>
+#include <storage/itemretriever.h>
 
 using namespace Akonadi;
 
@@ -51,6 +52,13 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
     return failureResponse( "No such collection" );
   if ( collection.id() == 0 )
     return failureResponse( "Cannot modify root collection" );
+
+  if ( line.indexOf( "PARENT ", pos ) > 0 ) {
+    ItemRetriever retriever( connection() );
+    retriever.setCollection( collection, true );
+    retriever.setRetrieveFullPayload( true );
+    retriever.exec();
+  }
 
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
