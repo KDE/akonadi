@@ -23,6 +23,7 @@
 #include <handler.h>
 
 #include "storage/entity.h"
+#include "libs/imapset_p.h"
 
 namespace Akonadi {
 
@@ -55,10 +56,18 @@ class Store : public Handler
     bool parseStream();
 
   private:
+    void parseCommand( const QByteArray &line );
 
     bool replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool addFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool deleteFlags( const PimItem &item, const QList<QByteArray> &flags );
+
+  private:
+    ImapSet mItemSet;
+    int mPos;
+    qint64 mPreviousRevision;
+    qint64 mSize;
+    bool mUidStore;
 };
 
 }

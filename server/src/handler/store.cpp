@@ -29,6 +29,7 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/parthelper.h"
 #include "storage/dbconfig.h"
+#include "storage/itemretriever.h"
 
 #include "libs/imapparser_p.h"
 
@@ -40,6 +41,10 @@ using namespace Akonadi;
 
 Store::Store()
   : Handler()
+  , mPos( 0 )
+  , mPreviousRevision( -1 )
+  , mSize( 0 )
+  , mUidStore( false )
 {
 }
 
@@ -47,57 +52,82 @@ Store::~Store()
 {
 }
 
-bool Store::handleLine( const QByteArray& line )
+void Store::parseCommand(const QByteArray& line)
 {
-
-  int pos = line.indexOf( ' ' ) + 1; // skip tag
+  mPos = line.indexOf( ' ' ) + 1; // skip tag
   QByteArray buffer;
-  pos = ImapParser::parseString( line, buffer, pos );
-  bool uidStore = false;
+  mPos = ImapParser::parseString( line, buffer, mPos );
   if ( buffer == "UID" ) {
-    uidStore = true;
-    pos = ImapParser::parseString( line, buffer, pos ); // skip 'STORE'
+    mUidStore = true;
+    mPos = ImapParser::parseString( line, buffer, mPos ); // skip 'STORE'
   }
 
-  Response response;
-  response.setUntagged();
+  mPos = ImapParser::parseSequenceSet( line, mItemSet, mPos );
+  if ( mItemSet.isEmpty() )
+    throw HandlerException( "No item specified" );
 
-  ImapSet set;
-  pos = ImapParser::parseSequenceSet( line, set, pos );
-  if ( set.isEmpty() )
-    return failureResponse( "No item specified" );
+  // parse revision
+  mPos = ImapParser::parseString( line, buffer, mPos ); // skip 'REV'
+  if ( buffer == "REV" ) {
+    bool ok;
+    mPos = ImapParser::parseNumber( line, mPreviousRevision, &ok, mPos );
+    if ( !ok ) {
+      throw HandlerException( "Unable to parse item revision number." );
+    }
+  }
+
+  // parse size
+  mPos = ImapParser::parseString( line, buffer, mPos );
+  if ( buffer == "SIZE" ) {
+    bool ok;
+    mPos = ImapParser::parseNumber( line, mSize, &ok, mPos );
+    if ( !ok ) {
+      throw HandlerException( "Unable to parse the size." + line);
+    }
+  }
+}
+
+bool Store::handleLine( const QByteArray& line )
+{
+  parseCommand( line );
+  QList<QByteArray> changes;
+  mPos = ImapParser::parseParenthesizedList( line, changes, mPos );
+
+  // check if this is a item move, and fetch all items in that case
+  // TODO: strictly only needed for inter-resource moves
+  bool isMove = false;
+  for ( int i = 0; i < changes.size() - 1 && !isMove; i += 2 ) {
+    QByteArray command = changes.at( i );
+    if ( command.endsWith( ".SILENT" ) )
+      command.chop( 7 );
+    if ( command == "COLLECTION" )
+      isMove = true;
+  }
+  if ( isMove ) {
+    ItemRetriever retriever( connection() );
+    retriever.setItemSet( mItemSet, mUidStore );
+    retriever.setRetrieveFullPayload( true );
+    retriever.exec();
+  }
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
   SelectQueryBuilder<PimItem> qb;
-  ItemQueryHelper::itemSetToQuery( set, uidStore, connection(), qb );
+  ItemQueryHelper::itemSetToQuery( mItemSet, mUidStore, connection(), qb );
   if ( !qb.exec() )
     return failureResponse( "Unable to retrieve items" );
   QList<PimItem> pimItems = qb.result();
   if ( pimItems.isEmpty() )
     return failureResponse( "No items found" );
 
-  // parse revision
-  qint64 rev = 0;
-  bool revCheck = false;
-  bool ok;
-  pos = ImapParser::parseString( line, buffer, pos ); // skip 'REV'
-  if ( buffer == "REV" ) {
-    revCheck = true;
-    pos = ImapParser::parseNumber( line, rev, &ok, pos );
-    if ( !ok ) {
-      return failureResponse( "Unable to parse item revision number." );
-    }
-  }
-
   // Set the same modification time for each item.
   QDateTime modificationtime = QDateTime::currentDateTime().toUTC();
 
   for ( int i = 0; i < pimItems.count(); ++i ) {
-    if ( revCheck ) {
+    if ( mPreviousRevision >= 0 ) {
       // check if revision number of given items and their database equivalents match
-      if ( pimItems.at( i ).rev() != (int)rev ) {
+      if ( pimItems.at( i ).rev() != (int)mPreviousRevision ) {
         return failureResponse( "Item was modified elsewhere, aborting STORE." );
       }
     }
@@ -110,18 +140,6 @@ bool Store::handleLine( const QByteArray& line )
     }
   }
 
-  // parse size
-  qint64 size = 0;
-  pos = ImapParser::parseString( line, buffer, pos );
-  if ( buffer == "SIZE" ) {
-    pos = ImapParser::parseNumber( line, size, &ok, pos );
-    if ( !ok ) {
-      return failureResponse( "Unable to parse the size." + line);
-    }
-  }
-
-  QList<QByteArray> changes;
-  pos = ImapParser::parseParenthesizedList( line, changes, pos );
   for ( int i = 0; i < changes.size() - 1; i += 2 ) {
     // parse command
     QByteArray command = changes[ i ];
@@ -202,12 +220,12 @@ bool Store::handleLine( const QByteArray& line )
           part.setVersion( version );
           part.setPimItemId( pimItems[ i ].id() );
           if ( part.isValid() ) {
-            if ( !PartHelper::update( &part, value, buffer.size() ) )
+            if ( !PartHelper::update( &part, value, value.size() ) )
               return failureResponse( "Unable to update item part" );
           } else {
             qDebug() << "insert from Store::handleLine";
             part.setData( value );
-            part.setDatasize( buffer.size() );
+            part.setDatasize( value.size() );
             if ( !PartHelper::insert(&part) )
               return failureResponse( "Unable to add item part" );
           }
@@ -221,6 +239,7 @@ bool Store::handleLine( const QByteArray& line )
         for ( int j = 0; j < flags.count(); ++j )
           flagList.append( flags[ j ].name() );
 
+        Response response;
         response.setUntagged();
         // IMAP protocol violation: should actually be the sequence number
         response.setString( QByteArray::number( pimItems[i].id() ) + " FETCH (FLAGS (" + flagList.join( QLatin1String(" ") ).toUtf8() + "))" );
@@ -234,6 +253,7 @@ bool Store::handleLine( const QByteArray& line )
 
   QString datetime = QLocale::c().toString( modificationtime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
 
+  Response response;
   response.setTag( tag() );
   response.setSuccess();
   response.setString( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) + " STORE completed" );
