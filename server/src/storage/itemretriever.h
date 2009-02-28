@@ -43,11 +43,13 @@ class ItemRetriever
   public:
     ItemRetriever( AkonadiConnection *connection );
 
-    void setRetrievePart( const QStringList &parts );
+    void setRetrieveParts( const QStringList &parts );
     void setRetrieveFullPayload( bool fullPayload );
     void setItemSet( const ImapSet &set, const Collection &collection = Collection() );
     void setItemSet( const ImapSet &set, bool isUid );
     void setItem( const Akonadi::Entity::Id &id );
+    /** Retrieve all items in the given collection. */
+    void setCollection( const Akonadi::Collection &collection, bool recursive = true );
 
     void exec();
 
@@ -61,6 +63,7 @@ class ItemRetriever
     AkonadiConnection* mConnection;
     QStringList mParts;
     bool mFullPayload;
+    bool mRecursive;
 };
 
 }

@@ -21,9 +21,10 @@
 
 #include "akonadiconnection.h"
 #include "handlerhelper.h"
-#include "../../libs/imapparser_p.h"
+#include "libs/imapparser_p.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
+#include "storage/itemretriever.h"
 
 using namespace Akonadi;
 
@@ -42,6 +43,12 @@ bool ColCopy::handleLine(const QByteArray & line)
   const Collection target = HandlerHelper::collectionFromIdOrName( tmp );
   if ( !target.isValid() )
     return failureResponse( "No valid target specified" );
+
+  // retrieve all not yet cached items of the source
+  ItemRetriever retriever( connection() );
+  retriever.setCollection( source, true );
+  retriever.setRetrieveFullPayload( true );
+  retriever.exec();
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );

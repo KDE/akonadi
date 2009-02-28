@@ -31,11 +31,12 @@ using namespace Akonadi;
 
 ItemRetriever::ItemRetriever( AkonadiConnection *connection ) :
   mConnection( connection ),
-  mFullPayload( false )
+  mFullPayload( false ),
+  mRecursive( false )
 {
 }
 
-void ItemRetriever::setRetrievePart(const QStringList& parts)
+void ItemRetriever::setRetrieveParts(const QStringList& parts)
 {
   mParts = parts;
 }
@@ -69,6 +70,13 @@ void ItemRetriever::setRetrieveFullPayload(bool fullPayload)
   // HACK, we need a full payload available flag in PimItem
   if ( fullPayload && !mParts.contains( QLatin1String( "PLD:RFC822" ) ) )
     mParts += QLatin1String( "PLD:RFC822" );
+}
+
+void ItemRetriever::setCollection(const Collection& collection, bool recursive)
+{
+  mCollection = collection;
+  mItemSet = ImapSet();
+  mRecursive = recursive;
 }
 
 static const int itemQueryIdColumn = 0;
@@ -185,6 +193,17 @@ void ItemRetriever::exec()
         itemQuery.query().value( itemQueryResouceColumn ).toString(), missingPayloadIds );
     }
     itemQuery.query().next();
+  }
+
+  // retrieve items in child collections if requested
+  if ( mRecursive && mCollection.isValid() ) {
+    foreach ( const Collection &col, mCollection.children() ) {
+      ItemRetriever retriever( mConnection );
+      retriever.setCollection( col, mRecursive );
+      retriever.setRetrieveParts( mParts );
+      retriever.setRetrieveFullPayload( mFullPayload );
+      retriever.exec();
+    }
   }
   qDebug() << "ItemRetriever::exec() done";
 }
