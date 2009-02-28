@@ -58,7 +58,6 @@ class ItemMoveTest: public QObject
       QVERIFY( fetch->exec() );
       QCOMPARE( fetch->items().count(), 1 );
       item = fetch->items().first();
-      QEXPECT_FAIL( "", "server bug", Continue );
       QVERIFY( item.hasPayload() );
     }
 
@@ -66,16 +65,16 @@ class ItemMoveTest: public QObject
     {
       Collection col( collectionIdFromPath( "res2" ) );
       QVERIFY( col.isValid() );
-      
+
       ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
       QVERIFY( prefetchjob->exec() );
       QCOMPARE( prefetchjob->items().count(), 1 );
       Item item = prefetchjob->items()[0];
-      
+
       // move into invalid collection
       ItemMoveJob *store = new ItemMoveJob( item, Collection( INT_MAX ), this );
       QVERIFY( !store->exec() );
-      
+
       // move item into folder that doesn't support its mimetype
       store = new ItemMoveJob( item, col, this );
       QEXPECT_FAIL( "", "Check not yet implemented by the server.", Continue );
