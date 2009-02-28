@@ -135,7 +135,6 @@ class CollectionMoveTest : public QObject
         QCOMPARE( job->items().count(), it.value().count() );
         foreach ( const Item item, job->items() ) {
           QVERIFY( it.value().contains( item ) );
-          QEXPECT_FAIL( "inter-resource", "server bug", Continue );
           QVERIFY( item.hasPayload() );
         }
       }
