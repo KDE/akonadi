@@ -36,6 +36,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>
+#include <QtCore/QFile>
 
 using namespace Akonadi;
 
@@ -245,7 +246,18 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
             {
               Attribute* attr = AttributeFactory::createAttribute( plainKey );
               Q_ASSERT( attr );
-              attr->deserialize( fetchResponse.value( i + 1 ) );
+              if ( fetchResponse.value( i + 1 ) == "[FILE]" ) {
+                ++i;
+                QFile f( QString::fromUtf8( fetchResponse.value( i + 1 ) ) );
+                if ( f.open( QFile::ReadOnly ) )
+                  attr->deserialize( f.readAll() );
+                else {
+                  kWarning() << "Failed to open attribute file: " << fetchResponse.value( i + 1 );
+                  delete attr;
+                }
+              } else {
+                attr->deserialize( fetchResponse.value( i + 1 ) );
+              }
               item.addAttribute( attr );
               break;
             }
