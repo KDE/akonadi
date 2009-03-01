@@ -117,7 +117,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     mItemRetrievalThread = new ItemRetrievalThread( this );
     mItemRetrievalThread->start( QThread::HighPriority );
-
+ 
     mSearchManager = new DummySearchManager;
 
     new ServerAdaptor( this );
@@ -136,44 +136,39 @@ AkonadiServer::~AkonadiServer()
 {
 }
 
+template <typename T> static void quitThread( T & thread )
+{
+  if ( !thread )
+    return;
+  thread->quit();
+  thread->wait();
+  delete thread;
+  thread = 0;
+}
+
 void AkonadiServer::quit()
 {
     if ( mAlreadyShutdown )
       return;
-
     mAlreadyShutdown = true;
 
-    if ( mItemRetrievalThread )
-      QMetaObject::invokeMethod( mItemRetrievalThread, "quit", Qt::QueuedConnection );
-    if ( mCacheCleaner )
-      QMetaObject::invokeMethod( mCacheCleaner, "quit", Qt::QueuedConnection );
-    if ( mIntervalChecker )
-      QMetaObject::invokeMethod( mIntervalChecker, "quit", Qt::QueuedConnection );
-    QCoreApplication::instance()->processEvents();
-
-    if ( mCacheCleaner )
-      mCacheCleaner->wait();
-    if ( mIntervalChecker )
-      mIntervalChecker->wait();
-    if ( mItemRetrievalThread )
-      mItemRetrievalThread->wait();
+    qDebug() << "terminating service threads";
+    quitThread( mCacheCleaner );
+    quitThread( mIntervalChecker );
+    quitThread( mItemRetrievalThread );
 
     delete mSearchManager;
     mSearchManager = 0;
 
-    for ( int i = 0; i < mConnections.count(); ++i ) {
-      if ( mConnections[ i ] ) {
-        mConnections[ i ]->quit();
-        mConnections[ i ]->wait();
-      }
-    }
+    qDebug() << "terminating connection threads";
+    for ( int i = 0; i < mConnections.count(); ++i )
+      quitThread( mConnections[ i ] );
+    mConnections.clear();
 
     DataStore::self()->close();
+    Q_ASSERT( QSqlDatabase::connectionNames().isEmpty() );
 
-    // execute the deleteLater() calls for the threads so they free their db connections
-    // and the following db termination will work
-    QCoreApplication::instance()->processEvents();
-
+    qDebug() << "stopping db process";
     stopDatabaseProcess();
 
     QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );

@@ -36,7 +36,6 @@ void ItemRetrievalThread::run()
   ItemRetrievalManager *mgr = new ItemRetrievalManager();
   exec();
   delete mgr;
-  deleteLater();
 }
 
 #include "itemretrievalthread.moc"
