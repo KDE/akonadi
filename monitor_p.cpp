@@ -89,7 +89,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
     notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
     if ( !mItemFetchScope.isEmpty() &&
           ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move ||
-            msg.operation() == NotificationMessage::Remove + 1 ) ) { // ### Link, change when protocol lib is releaded in the next version
+            msg.operation() == NotificationMessage::Link ) ) {
       Item item( msg.uid() );
       item.setRemoteId( msg.remoteId() );
 
@@ -205,10 +205,10 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
     case NotificationMessage::Remove:
       emit q_ptr->itemRemoved( it );
       break;
-    case NotificationMessage::Remove + 1: // ### change as soon as the new protocol lib is released, NotificationMessage::Link
+    case NotificationMessage::Link:
       emit q_ptr->itemLinked( it, col );
       break;
-    case NotificationMessage::Remove + 2: // ### change as soon as the new protocol lib is released, NotificationMessage::Unlink
+    case NotificationMessage::Unlink:
       emit q_ptr->itemUnlinked( it, col );
       break;
     default:
@@ -253,12 +253,12 @@ void MonitorPrivate::slotItemJobFinished( KJob* job )
     return;
   }
   NotificationMessage msg = pendingJobs.take( job );
+  Item item;
+  Collection col;
+  Collection destCol;
   if ( job->error() ) {
     kWarning( 5250 ) << "Error on fetching item:" << job->errorText();
   } else {
-    Item item;
-    Collection col;
-    Collection destCol;
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
     if ( fetchJob && fetchJob->items().count() > 0 )
       item = fetchJob->items().first();
@@ -268,8 +268,8 @@ void MonitorPrivate::slotItemJobFinished( KJob* job )
       col = cfjob->collection();
       destCol = cfjob->destCollection();
     }
-    emitItemNotification( msg, item, col, destCol );
   }
+  emitItemNotification( msg, item, col, destCol );
 }
 
 void MonitorPrivate::slotCollectionJobFinished( KJob* job )
