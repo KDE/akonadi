@@ -29,6 +29,7 @@ class CollectionTest : public QObject {
   private:
     void verifyCollection(Collection::List colist, int listPosition,QString remoteId, QString name, QStringList mimeType);
   private Q_SLOTS:
+    void serializeCollection();
     void testBuildCollection();
 };
 
