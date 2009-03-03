@@ -14,7 +14,7 @@ This directory contains the sources of the Akonadi server and all the infrastruc
 that is needed to build the client libraries and the application which want to make
 use of Akonadi.
 
-Struture
+Structure
 ----------
 
   * cmake/
