@@ -1,4 +1,4 @@
-project (akonadixml)
+project (akonadixml)    
 
 find_package(KDE4 REQUIRED)
 find_package (KdepimLibs REQUIRED)

@@ -93,7 +93,7 @@ Collection::List AkonadiXML::buildCollectionTree( const QDomElement &parent )
   if ( parent.isNull() )
     return rv;
   const QDomNodeList children = parent.childNodes();
-  for ( int i = 0; i < children.count(); ++i ) {
+  for ( int i = 0; i < children.count(); i++ ) {
     const QDomElement child = children.at( i ).toElement();
     if ( child.isNull() || child.tagName() != "collection" )
       continue;

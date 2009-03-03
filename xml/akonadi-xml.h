@@ -28,16 +28,15 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
-using namespace Akonadi;
 
 class AKONADI_XML_EXPORT AkonadiXML {
 
   public:
-    void deserializeAttributes( const QDomElement &node, Entity &entity );
-    Collection buildCollection( const QDomElement &node, const QString &parentRid );
-    Collection::List buildCollectionTree( const QDomElement &parent );
-    void addItemPayload( Item &item, const QDomElement &elem );
-    Item buildItem( const QDomElement &elem );
+    void deserializeAttributes( const QDomElement &node, Akonadi::Entity &entity );
+    Akonadi::Collection buildCollection( const QDomElement &node, const QString &parentRid );
+    Akonadi::Collection::List buildCollectionTree( const QDomElement &parent );
+    void addItemPayload( Akonadi::Item &item, const QDomElement &elem );
+    Akonadi::Item buildItem( const QDomElement &elem );
     QDomElement serializeItem( Akonadi::Item &item );
     void serializeAttributes( const Akonadi::Entity &entity, QDomElement &entityElem );
     QDomElement serializeCollection( Akonadi::Collection &collection );

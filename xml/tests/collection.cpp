@@ -21,16 +21,20 @@
 #include <akonadi-xml.h>
 
 #include <qtest_kde.h>
+#include <kdebug.h>
 
 QTEST_KDEMAIN(CollectionTest, NoGUI)
 
- QByteArray collection1(
-"<collection rid=\"c11\" name=\"Inbox\" content=\"inode/directory,message/rfc822\">           \
-      <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\")</attribute>  \
- </collection>");
+QByteArray collection1(
+"<test>	\	
+<collection rid=\"c11\" name=\"Inbox\" content=\"inode/directory,message/rfc822\">           \
+      <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\")</attribute> \
+</collection>										     \		
+</test>");
 
-const QByteArray collection2(
-"<collection rid=\"c11\" name=\"Inbox\" content=\"inode/directory,message/rfc822\">           \
+QByteArray collection2(
+"<test> \
+  <collection rid=\"c11\" name=\"Inbox\" content=\"inode/directory,message/rfc822\">           \
       <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\")</attribute>  \
       <collection rid=\"c111\" name=\"KDE PIM\" content=\"inode/directory,message/rfc822\">   \
       </collection>            								      \
@@ -38,17 +42,39 @@ const QByteArray collection2(
         <attribute type=\"AccessRights\">wcW</attribute> 		                      \
       </collection>									      \
     </collection>									      \
-");
+<test>");
 
-void CollectionTest::testCollection()
+void CollectionTest::testBuildCollection()
 {
   QDomDocument mDocument;
   AkonadiXML test;
 
   mDocument.setContent(collection1, true, 0);
+  Collection::List colist = test.buildCollectionTree( mDocument.documentElement());
 
-  Collection::List colist = test.buildCollectionTree(mDocument.documentElement());
+  QStringList mimeType;
 
-//  QCOMPARE(colist.count(), 1);
-   
+  mimeType << "inode/directory" << "message/rfc822";
+  QCOMPARE(colist.size(), 1);
+  verifyCollection(colist, 0, "c11", "Inbox", mimeType);
+
+  mDocument.setContent(collection2, true, 0);
+  colist = test.buildCollectionTree( mDocument.documentElement());
+
+  QCOMPARE(colist.size(), 3);
+  verifyCollection(colist, 0, "c11", "Inbox", mimeType);
+  verifyCollection(colist, 1, "c111", "KDE PIM", mimeType);
+  verifyCollection(colist, 2, "c112", "Akonadi", mimeType);
+}
+
+void CollectionTest::serializeCollection()
+{
+}
+
+void CollectionTest::verifyCollection(Collection::List colist, int listPosition,QString remoteId, 
+    QString name, QStringList mimeType)
+{
+  QVERIFY(colist.at(listPosition).name() == name);
+  QVERIFY(colist.at(listPosition).remoteId() == remoteId);
+  QVERIFY(colist.at(listPosition).contentMimeTypes() == mimeType);
 }
