@@ -27,6 +27,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 
+#include <memory>
+
 AkonadiTesting::AkonadiTesting( const QString &configFileName )
 {
   Q_UNUSED( configFileName ) // TODO use this if !isNull()
@@ -47,7 +49,7 @@ void AkonadiTesting::insertItem( const QString &fileName, const QString &collect
 
   const Akonadi::Collection collection = dao.collectionByName( collectionName );
 
-  const Item *item = factory.createItem( fileName );
+  std::auto_ptr<const Item> item(factory.createItem( fileName ));
 
   foreach ( const Akonadi::Item &akonadItem, item->items() ) {
     if ( dao.insertItem( akonadItem, collection ) ) {

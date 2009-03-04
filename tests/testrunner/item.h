@@ -28,7 +28,7 @@ class Item
   public:
     Item( const QString &mimetype );
     Akonadi::Item::List items() const;
-
+    virtual ~Item() {};
   protected:
     Akonadi::Item::List mItems;
     QString mMimeType;
