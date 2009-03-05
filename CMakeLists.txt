@@ -1,5 +1,9 @@
 project(akonadi-kde)
 
+if(CMAKE_COMPILE_GCOV)
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+endif(CMAKE_COMPILE_GCOV)
+
 if (KDE4_BUILD_TESTS)
    # only with this macro the AKONADI_TESTS_EXPORT macro will do something
    add_definitions(-DCOMPILING_TESTS)
