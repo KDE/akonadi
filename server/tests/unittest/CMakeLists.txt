@@ -12,8 +12,9 @@ target_link_libraries(handlertest akonadiprivate ${QT_QTTEST_LIBRARY})
 
 set(imapstreamparsertest_SRCS imapstreamparsertest.cpp)
 
-automoc4_add_executable(imapstreamparsertest ${imapstreamparsertest_SRCS})
-add_test(akonadi-imapstreamparsertest imapstreamparsertest)
+if(NOT WIN32)
+  automoc4_add_executable(imapstreamparsertest ${imapstreamparsertest_SRCS})
+  add_test(akonadi-imapstreamparsertest imapstreamparsertest)
 
-target_link_libraries(imapstreamparsertest akonadiprivate ${QT_QTTEST_LIBRARY})
-
+  target_link_libraries(imapstreamparsertest akonadiprivate ${QT_QTTEST_LIBRARY})
+endif(NOT WIN32)
