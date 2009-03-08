@@ -65,7 +65,7 @@ class AgentBasePrivate : public QObject
 
     QString defaultErrorMessage() const
     {
-      return i18nc( "@info:status", "Error!" );
+      return i18nc( "@info:status", "Error." );
     }
 
     AgentBase *q_ptr;
