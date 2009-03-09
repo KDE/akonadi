@@ -30,6 +30,8 @@
 #include <QtSql/QSqlQuery>
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlError>
 
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
   : mDatabase( database ), mTemplateFile( templateFile )
@@ -159,7 +161,8 @@ bool DbInitializer::checkTable( const QDomElement &element )
     qDebug() << statement;
 
     if ( !query.exec( statement ) ) {
-      mErrorMsg = QLatin1String( "Unable to create entire table." );
+      mErrorMsg = QLatin1String( "Unable to create entire table.\n" );
+      mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
       return false;
     }
   } else {
@@ -189,7 +192,8 @@ bool DbInitializer::checkTable( const QDomElement &element )
                                          .arg( tableName, entry.first, entry.second );
 
         if ( !query.exec( statement ) ) {
-          mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'." ).arg( entry.first, tableName );
+          mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'.\n" ).arg( entry.first, tableName );
+          mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
           return false;
         }
       }
@@ -216,7 +220,8 @@ bool DbInitializer::checkTable( const QDomElement &element )
         QSqlQuery query( mDatabase );
         qDebug() << "adding index" << statement;
         if ( !query.exec( statement ) ) {
-          mErrorMsg = QLatin1String( "Unable to create index." );
+          mErrorMsg = QLatin1String( "Unable to create index.\n" );
+          mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
           return false;
         }
       }
@@ -228,13 +233,15 @@ bool DbInitializer::checkTable( const QDomElement &element )
   // add initial data if table is empty
   const QString statement = QString::fromLatin1( "SELECT * FROM %1 LIMIT 1" ).arg( tableName );
   if ( !query.exec( statement ) ) {
-    mErrorMsg = QString::fromLatin1( "Unable to retrieve data from table '%1'." ).arg( tableName );
+    mErrorMsg = QString::fromLatin1( "Unable to retrieve data from table '%1'.\n" ).arg( tableName );
+    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
     return false;
   }
   if ( query.size() == 0  || !query.first() ) {
     foreach ( const QString &stmt, dataList ) {
       if ( !query.exec( stmt ) ) {
-        mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'." ).arg( tableName );
+        mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'.\n" ).arg( tableName );
+        mErrorMsg += QString::fromLatin1( "Query error: '%1'\n" ).arg( query.lastError().text() );
         mErrorMsg += QString::fromLatin1( "Query was: %1" ).arg( stmt );
         return false;
       }
@@ -270,7 +277,8 @@ bool DbInitializer::checkRelation(const QDomElement & element)
 
     QSqlQuery query( mDatabase );
     if ( !query.exec( statement ) ) {
-      mErrorMsg = QLatin1String( "Unable to create entire table." );
+      mErrorMsg = QLatin1String( "Unable to create entire table.\n" );
+      mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
       return false;
     }
   }
@@ -286,7 +294,8 @@ bool DbInitializer::checkRelation(const QDomElement & element)
     QSqlQuery query( mDatabase );
     qDebug() << "adding index" << statement;
     if ( !query.exec( statement ) ) {
-      mErrorMsg = QLatin1String( "Unable to create index." );
+      mErrorMsg = QLatin1String( "Unable to create index.\n" );
+      mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
       return false;
     }
   }
@@ -333,7 +342,8 @@ bool DbInitializer::hasTable(const QString & tableName)
 
   QSqlQuery query( mDatabase );
   if ( !query.exec( statement ) ) {
-    mErrorMsg = QLatin1String( "Unable to retrieve table information from database." );
+    mErrorMsg = QLatin1String( "Unable to retrieve table information from database.\n" );
+    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
     return false;
   }
 
@@ -362,7 +372,8 @@ bool DbInitializer::hasIndex(const QString & tableName, const QString & indexNam
   // query it
   QSqlQuery query( mDatabase );
   if ( !query.exec( statement ) ) {
-    mErrorMsg = QString::fromLatin1( "Unable to list index information for table %1." ).arg( tableName );
+    mErrorMsg = QString::fromLatin1( "Unable to list index information for table %1.\n" ).arg( tableName );
+    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
     return false;
   }
   return query.next();
