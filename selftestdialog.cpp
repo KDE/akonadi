@@ -541,6 +541,9 @@ QString SelfTestDialog::createReport()
 void SelfTestDialog::saveReport()
 {
   const QString fileName =  KFileDialog::getSaveFileName( KUrl(), QString(), this, i18n("Save Test Report") );
+  if ( fileName.isEmpty() )
+    return;
+
   QFile file( fileName );
   if ( !file.open( QFile::ReadWrite ) ) {
     KMessageBox::error( this, i18n( "Could not open file '%1'", fileName ) );
