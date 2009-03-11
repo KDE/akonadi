@@ -24,6 +24,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QProcess>
 
 #include <cstdlib>
 
@@ -40,6 +41,15 @@ static QStringList alternateExecPaths( const QString& path )
 #endif
 
   return pathList;
+}
+
+static QStringList splitPathList( const QString &pathList )
+{
+#if defined(Q_OS_WIN) //krazy:exclude=cpp
+  return pathList.split( QLatin1Char( ';' ) );
+#else
+  return pathList.split( QLatin1Char( ':' ) );
+#endif
 }
 
 namespace Akonadi {
@@ -109,6 +119,20 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
       const QString prefixDataDir = QLatin1String( AKONADIDATA );
       if ( !dataDirs.contains( prefixDataDir ) ) {
         dataDirs << prefixDataDir;
+      }
+
+      // fallback for users with KDE in a different prefix and not correctly set up XDG_DATA_DIRS, hi David ;-)
+      QProcess proc;
+      // ### should probably rather be --path xdg-something
+      const QStringList args = QStringList() << QLatin1String( "--prefix" );
+      proc.start( QLatin1String( "kde4-config" ), args );
+      if ( proc.waitForStarted() && proc.waitForFinished() && proc.exitCode() == 0 ) {
+        proc.setReadChannel( QProcess::StandardOutput );
+        foreach ( const QString &basePath, splitPathList( QString::fromLocal8Bit( proc.readLine().trimmed() ) ) ) {
+          const QString path = basePath + QDir::separator() + QLatin1String( "share" );
+          if ( !dataDirs.contains( path ) )
+            dataDirs << path;
+        }
       }
 
       instance()->mDataDirs = dataDirs;
@@ -326,9 +350,5 @@ QStringList XdgBaseDirsSingleton::systemPathList( const char *variable, const ch
     xdgDirList = QString::fromLocal8Bit( env );
   }
 
-#if defined(Q_OS_WIN) //krazy:exclude=cpp
-  return xdgDirList.split( QLatin1Char( ';' ) );
-#else
-  return xdgDirList.split( QLatin1Char( ':' ) );
-#endif
+  return splitPathList( xdgDirList );
 }
