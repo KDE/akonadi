@@ -32,4 +32,9 @@ target_link_libraries(akonadixml
 
 set_target_properties(akonadixml PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install (TARGETS akonadixml ${INSTALL_TARGETS_DEFAULT_ARGS})
+install( FILES
+   akonadi-xml.h
+   akonadi-xml_export.h
+   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/ COMPONENT Devel
+   )
 
