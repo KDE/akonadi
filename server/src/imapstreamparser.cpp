@@ -187,6 +187,8 @@ QByteArray ImapStreamParser::readLiteralPart()
   m_position += size;
   m_literalSize -= size;
   Q_ASSERT(m_literalSize >= 0);
+  m_data = m_data.right( m_data.size() - m_position );
+  m_position = 0;
   return result;
 }
 
