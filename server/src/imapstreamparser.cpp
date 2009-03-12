@@ -235,6 +235,7 @@ ImapSet ImapStreamParser::readSequenceSet()
     } else if ( isdigit( m_data[i] ) ) {
       bool ok = false;
       value = readNumber( &ok );
+      i = m_position;
       Q_ASSERT( ok ); // TODO handle error
       --i;
     } else {
@@ -574,4 +575,9 @@ void ImapStreamParser::sendContinuationResponse()
   identifier.sprintf( "%p", static_cast<void*>( this ) );
   Tracer::self()->connectionOutput( identifier, QString::fromUtf8( block ) );
 
+}
+
+void ImapStreamParser::insertData( const QByteArray& data)
+{
+  m_data = m_data.insert(m_position, data);
 }

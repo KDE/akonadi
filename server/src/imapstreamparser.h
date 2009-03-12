@@ -175,6 +175,11 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
 
     void setData( const QByteArray &data );
 
+    /**
+     * Inserts some data back into the parse buffer at the current position.
+     * @param data data to be inserted
+     */
+    void insertData( const QByteArray &data );
 
   private:
     void stripLeadingSpaces();
