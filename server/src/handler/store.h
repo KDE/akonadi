@@ -57,6 +57,7 @@ class Store : public Handler
 
   private:
     void parseCommand( const QByteArray &line );
+    void parseCommandStream();
 
     bool replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool addFlags( const PimItem &item, const QList<QByteArray> &flags );

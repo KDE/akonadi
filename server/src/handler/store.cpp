@@ -32,6 +32,7 @@
 #include "storage/itemretriever.h"
 
 #include "libs/imapparser_p.h"
+#include "imapstreamparser.h"
 
 #include <QtCore/QStringList>
 #include <QLocale>
@@ -349,12 +350,221 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
 
 bool Store::supportsStreamParser()
 {
-  return false; //partial data parsing makes sense only for external payload files
+  return true; //partial data parsing makes sense only for external payload files
 }
 
 bool Store::parseStream()
 {
-    return false;
+  qDebug() << "Store::parseStream";
+  parseCommandStream();
+  QList<QByteArray> changes;
+  changes = m_streamParser->readParenthesizedList();
+
+  // check if this is a item move, and fetch all items in that case
+  // TODO: strictly only needed for inter-resource moves
+  bool isMove = false;
+  for ( int i = 0; i < changes.size() - 1 && !isMove; i += 2 ) {
+    QByteArray command = changes.at( i );
+    if ( command.endsWith( ".SILENT" ) )
+      command.chop( 7 );
+    if ( command == "COLLECTION" )
+      isMove = true;
+  }
+  if ( isMove ) {
+    ItemRetriever retriever( connection() );
+    retriever.setItemSet( mItemSet, mUidStore );
+    retriever.setRetrieveFullPayload( true );
+    retriever.exec();
+  }
+
+  DataStore *store = connection()->storageBackend();
+  Transaction transaction( store );
+
+  SelectQueryBuilder<PimItem> qb;
+  ItemQueryHelper::itemSetToQuery( mItemSet, mUidStore, connection(), qb );
+  if ( !qb.exec() )
+    return failureResponse( "Unable to retrieve items" );
+  QList<PimItem> pimItems = qb.result();
+  if ( pimItems.isEmpty() )
+    return failureResponse( "No items found" );
+
+  // Set the same modification time for each item.
+  QDateTime modificationtime = QDateTime::currentDateTime().toUTC();
+
+  for ( int i = 0; i < pimItems.count(); ++i ) {
+    if ( mPreviousRevision >= 0 ) {
+      // check if revision number of given items and their database equivalents match
+      if ( pimItems.at( i ).rev() != (int)mPreviousRevision ) {
+        return failureResponse( "Item was modified elsewhere, aborting STORE." );
+      }
+    }
+
+    // update item revision
+    pimItems[ i ].setRev( pimItems[ i ].rev() + 1 );
+    pimItems[ i ].setDatetime( modificationtime );
+    if ( !pimItems[ i ].update() ) {
+      return failureResponse( "Unable to update item revision" );
+    }
+  }
+
+  for ( int i = 0; i < changes.size() - 1; i += 2 ) {
+    // parse command
+    QByteArray command = changes[ i ];
+    Operation op = Replace;
+    bool silent = false;
+    if ( command.isEmpty() )
+      break;
+
+    if ( command.startsWith( '+' ) ) {
+      op = Add;
+      command = command.mid( 1 );
+    } else if ( command.startsWith( '-' ) ) {
+      op = Delete;
+      command = command.mid( 1 );
+    }
+    if ( command.endsWith( ".SILENT" ) ) {
+      silent = true;
+      command.chop( 7 );
+    }
+    const QByteArray value = changes[i + 1];
+
+    for ( int i = 0; i < pimItems.count(); ++i ) {
+      // handle command
+      if ( command == "FLAGS" ) {
+        QList<QByteArray> flags;
+        ImapParser::parseParenthesizedList( value, flags );
+        if ( op == Replace ) {
+          if ( !replaceFlags( pimItems[ i ], flags ) )
+            return failureResponse( "Unable to replace item flags." );
+        } else if ( op == Add ) {
+          if ( !addFlags( pimItems[ i ], flags ) )
+            return failureResponse( "Unable to add item flags." );
+        } else if ( op == Delete ) {
+          if ( !deleteFlags( pimItems[ i ], flags ) )
+            return failureResponse( "Unable to remove item flags." );
+        }
+      } else if ( command == "PARTS" ) {
+        QList<QByteArray> parts;
+        ImapParser::parseParenthesizedList( value, parts );
+        if ( op == Delete ) {
+          if ( !store->removeItemParts( pimItems[ i ], parts ) )
+            return failureResponse( "Unable to remove item parts." );
+        }
+      } else if ( command == "COLLECTION" ) {
+        if ( !store->updatePimItem( pimItems[ i ], HandlerHelper::collectionFromIdOrName( value ) ) )
+          return failureResponse( "Unable to move item." );
+      } else if ( command == "REMOTEID" ) {
+        if ( !store->updatePimItem( pimItems[i], QString::fromUtf8( value ) ) )
+          return failureResponse( "Unable to change remote id for item." );
+      } else if ( command == "DIRTY" ) {
+        PimItem item = pimItems.at( i );
+        item.setDirty( false );
+        if ( !item.update() )
+          return failureResponse( "Unable to update item dirtyness" );
+      } else {
+        Part part;
+        int version = 0;
+        QByteArray plainCommand;
+
+        ImapParser::splitVersionedKey( command, plainCommand, version );
+
+        SelectQueryBuilder<Part> qb;
+        qb.addValueCondition( Part::pimItemIdColumn(), Query::Equals, pimItems[ i ].id() );
+        qb.addValueCondition( Part::nameColumn(), Query::Equals, QString::fromUtf8( plainCommand ) );
+        if ( !qb.exec() )
+          return failureResponse( "Unable to check item part existence" );
+        Part::List result = qb.result();
+
+        if ( !result.isEmpty() ) {
+          part = result.first();
+        }
+
+        // only update if part contents are not yet in the storage
+        QByteArray origData = PartHelper::translateData( part );
+        if ( origData != value )
+        {
+          part.setName( QString::fromUtf8( plainCommand ) );
+          part.setVersion( version );
+          part.setPimItemId( pimItems[ i ].id() );
+          if ( part.isValid() ) {
+            if ( !PartHelper::update( &part, value, value.size() ) )
+              return failureResponse( "Unable to update item part" );
+          } else {
+            qDebug() << "insert from Store::handleLine";
+            part.setData( value );
+            part.setDatasize( value.size() );
+            if ( !PartHelper::insert(&part) )
+              return failureResponse( "Unable to add item part" );
+          }
+          store->updatePimItem( pimItems[ i ] );
+        }
+      }
+
+      if ( !silent ) {
+        QList<Flag> flags = pimItems[ i ].flags();
+        QStringList flagList;
+        for ( int j = 0; j < flags.count(); ++j )
+          flagList.append( flags[ j ].name() );
+
+        Response response;
+        response.setUntagged();
+        // IMAP protocol violation: should actually be the sequence number
+        response.setString( QByteArray::number( pimItems[i].id() ) + " FETCH (FLAGS (" + flagList.join( QLatin1String(" ") ).toUtf8() + "))" );
+        emit responseAvailable( response );
+      }
+    }
+  }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Cannot commit transaction." );
+
+  QString datetime = QLocale::c().toString( modificationtime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
+
+  Response response;
+  response.setTag( tag() );
+  response.setSuccess();
+  response.setString( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) + " STORE completed" );
+
+  emit responseAvailable( response );
+  deleteLater();
+
+  return true;
+}
+
+void Store::parseCommandStream()
+{
+  QByteArray buffer = m_streamParser->readString();
+  if ( buffer == "UID" ) {
+    mUidStore = true;
+    buffer = m_streamParser->readString(); // skip 'STORE'
+  } else {
+    //put back what was read
+    m_streamParser->insertData(' ' + buffer + ' ');
+  }
+
+  mItemSet = m_streamParser->readSequenceSet();
+  if ( mItemSet.isEmpty() )
+    throw HandlerException( "No item specified" );
+
+  // parse revision
+  buffer = m_streamParser->readString(); // skip 'REV'
+  if ( buffer == "REV" ) {
+    bool ok;
+    mPreviousRevision = m_streamParser->readNumber( &ok );
+    if ( !ok ) {
+      throw HandlerException( "Unable to parse item revision number." );
+    }
+  }
+
+  // parse size
+  buffer = m_streamParser->readString();
+  if ( buffer == "SIZE" ) {
+    bool ok;
+    mSize = m_streamParser->readNumber( &ok );
+    if ( !ok ) {
+      throw HandlerException( "Unable to parse the size.");
+    }
+  }
 }
 
 #include "store.moc"

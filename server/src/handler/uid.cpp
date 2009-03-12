@@ -133,6 +133,7 @@ bool Uid::parseStream()
     else if ( subCommand == "STORE" )
       mSubHandler = new Store();
 
+    mSubHandler->setStreamParser(m_streamParser);
     if ( !mSubHandler ) {
       Response response;
       response.setTag( tag() );

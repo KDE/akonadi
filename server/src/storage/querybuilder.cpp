@@ -169,8 +169,13 @@ bool QueryBuilder::exec()
 
 #ifndef QUERYBUILDER_UNITTEST
   mQuery.prepare( statement );
+  //too heavy debug info but worths to have from time to time
+//   qDebug() << "Executing query" << statement;
   for ( int i = 0; i < mBindValues.count(); ++i )
+  {
     mQuery.bindValue( QString::fromLatin1( ":%1" ).arg( i ), mBindValues[i] );
+//     qDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
+  }
   if ( !mQuery.exec() ) {
     qDebug() << "Error during executing query" << statement << ": " << mQuery.lastError().text();
     return false;
