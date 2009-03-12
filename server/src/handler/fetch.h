@@ -44,6 +44,8 @@ class Fetch : public Handler
     ~Fetch();
 
     bool handleLine(const QByteArray& line);
+    bool supportsStreamParser();
+    bool parseStream();
 
   private:
     void parseCommand( const QByteArray &line );
@@ -52,6 +54,7 @@ class Fetch : public Handler
     void buildItemQuery();
     QueryBuilder buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
     void retrieveMissingPayloads( const QStringList &payloadList );
+    void parseCommandStream();
 
   private:
     QueryBuilder mItemQuery;
