@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "../../libs/imapparser_p.h"
+#include "imapstreamparser.h"
 
 #include "append.h"
 #include "akappend.h"
@@ -197,6 +198,103 @@ bool Akonadi::AkAppend::commit()
     emit responseAvailable( response );
     deleteLater();
     return true;
+}
+
+bool AkAppend::supportsStreamParser()
+{
+  return true;
+}
+
+bool AkAppend::parseStream()
+{
+    // Arguments:  mailbox name
+    //        OPTIONAL flag parenthesized list
+    //        OPTIONAL date/time string
+    //        (partname literal)+
+    //
+    // Syntax:
+    // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
+
+  qDebug() << "AkAppend::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "X-AKAPPEND") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+  m_mailbox = m_streamParser->readString();
+
+  bool ok = false;
+  m_size = m_streamParser->readNumber(&ok);
+
+  // parse optional flag parenthesized list
+  // Syntax:
+  // flag-list      = "(" [flag *(SP flag)] ")"
+  // flag           = "\Answered" / "\Flagged" / "\Deleted" / "\Seen" /
+  //                  "\Draft" / flag-keyword / flag-extension
+  //                    ; Does not include "\Recent"
+  // flag-extension = "\" atom
+  // flag-keyword   = atom
+  if ( m_streamParser->hasList() ) {
+    m_flags = m_streamParser->readParenthesizedList();
+  }
+
+  // parse optional date/time string
+  if ( m_streamParser->hasDateTime() ) {
+    m_dateTime = m_streamParser->readDateTime();
+    // FIXME Should we return an error if m_dateTime is invalid?
+  }
+  // if date/time is not given then it will be set to the current date/time
+  // by the database
+
+  // parse part specification
+  QList<QPair<QByteArray, QPair<qint64, int> > > partSpecs;
+  QByteArray partName = "";
+  qint64 partSize = -1;
+  ok = false;
+
+  QList<QByteArray> list = m_streamParser->readParenthesizedList();
+  Q_FOREACH(QByteArray item, list)
+  {
+    if (partName.isEmpty() && partSize == -1)
+    {
+      partName = item;
+      continue;
+    }
+    if (item.startsWith(':'))
+    {
+      int pos = 1;
+      ImapParser::parseNumber( item, partSize, &ok, pos );
+      if( !ok )
+        partSize = 0;
+
+      int version = 0;
+      QByteArray plainPartName;
+      ImapParser::splitVersionedKey( partName, plainPartName, version );
+
+      partSpecs.append( qMakePair( plainPartName, qMakePair( partSize, version ) ) );
+      partName = "";
+      partSize = -1;
+    }
+  }
+
+  QByteArray allParts = m_streamParser->readString();
+
+  // chop up literal data in parts
+  int pos = 0; // traverse through part data now
+  QPair<QByteArray, QPair<qint64, int> > partSpec;
+  foreach( partSpec, partSpecs ) {
+    // wrap data into a part
+    Part part;
+    part.setName( QLatin1String( partSpec.first ) );
+    part.setData( allParts.mid( pos, partSpec.second.first ) );
+    if ( partSpec.second.second != 0 )
+      part.setVersion( partSpec.second.second );
+    m_parts.append( part );
+    pos += partSpec.second.first;
+  }
+
+  return commit();
 }
 
 #include "akappend.moc"
