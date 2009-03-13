@@ -215,29 +215,26 @@ ImapSet ImapStreamParser::readSequenceSet()
     throw ImapParserException("Unable to read more data");
   stripLeadingSpaces();
   qint64 value = -1, lower = -1, upper = -1;
-  int i = m_position;
   Q_FOREVER {
-    if ( !waitForMoreData( m_data.length() <= i ) )
+    if ( !waitForMoreData( m_data.length() <= m_position ) )
     {
       upper = value;
       if ( lower < 0 )
         lower = value;
       if ( lower >= 0 && upper >= 0 )
         result.add( ImapInterval( lower, upper ) );
-      m_position = i;
       return result;
     }
 
-    if ( m_data[i] == '*' ) {
+    if ( m_data[m_position] == '*' ) {
       value = 0;
-    } else if ( m_data[i] == ':' ) {
+    } else if ( m_data[m_position] == ':' ) {
       lower = value;
-    } else if ( isdigit( m_data[i] ) ) {
+    } else if ( isdigit( m_data[m_position] ) ) {
       bool ok = false;
       value = readNumber( &ok );
-      i = m_position;
       Q_ASSERT( ok ); // TODO handle error
-      --i;
+      --m_position;
     } else {
       upper = value;
       if ( lower < 0 )
@@ -246,12 +243,11 @@ ImapSet ImapStreamParser::readSequenceSet()
       lower = -1;
       upper = -1;
       value = -1;
-      if ( m_data[i] != ',' ) {
-        m_position = i;
+      if ( m_data[m_position] != ',' ) {
         return result;
       }
     }
-    ++i;
+    ++m_position;
   }
 }
 
