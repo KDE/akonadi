@@ -22,6 +22,7 @@
 #include "akonadiconnection.h"
 #include "../../libs/imapparser_p.h"
 #include "response.h"
+#include "imapstreamparser.h"
 
 Akonadi::TransactionHandler::TransactionHandler()
 {
@@ -68,5 +69,45 @@ bool Akonadi::TransactionHandler::handleLine(const QByteArray & line)
   return true;
 }
 
+bool Akonadi::TransactionHandler::supportsStreamParser()
+{
+  return true;
+}
+
+bool Akonadi::TransactionHandler::parseStream()
+{
+  qDebug() << "TransactionHandler::parseStream";
+
+  QByteArray command = m_streamParser->readString();
+
+  DataStore *store = connection()->storageBackend();
+
+  if ( command == "BEGIN" ) {
+    if ( !store->beginTransaction() )
+      return failureResponse( "Unable to begin transaction." );
+  }
+
+  if ( command == "ROLLBACK" ) {
+    if ( !store->inTransaction() )
+      return failureResponse( "There is no transaction in progress." );
+    if ( !store->rollbackTransaction() )
+      return failureResponse( "Unable to roll back transaction." );
+  }
+
+  if ( command == "COMMIT" ) {
+    if ( !store->inTransaction() )
+      return failureResponse( "There is no transaction in progress." );
+    if ( !store->commitTransaction() )
+      return failureResponse( "Unable to commit transaction." );
+  }
+
+  Response response;
+  response.setTag( tag() );
+  response.setSuccess();
+  response.setString( command + " completed." );
+  emit responseAvailable( response );
+
+  return true;
+}
 
 #include "transaction.moc"
