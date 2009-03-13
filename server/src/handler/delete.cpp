@@ -27,6 +27,7 @@
 #include <storage/entity.h>
 #include <storage/transaction.h>
 #include "abstractsearchmanager.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -90,6 +91,57 @@ bool Delete::deleteRecursive(Collection & col)
   }
   DataStore *db = connection()->storageBackend();
   return db->cleanupCollection( col );
+}
+
+bool Delete::supportsStreamParser()
+{
+  return true;
+}
+
+bool Delete::parseStream()
+{
+  qDebug() << "Delete::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "DELETE") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+  QByteArray collectionByteArray = m_streamParser->readString();
+
+  // prevent deletion of the root node
+  if ( collectionByteArray.isEmpty() )
+    return failureResponse( "Deleting everything is not allowed." );
+
+  // check if collection exists
+  DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
+
+  Collection collection = HandlerHelper::collectionFromIdOrName( collectionByteArray );
+  if ( !collection.isValid() )
+    return failureResponse( "No such collection." );
+
+  // handle virtual folders
+  if ( collection.resource().name() == QLatin1String("akonadi_search_resource") ) {
+    // don't delete virtual root
+    if ( collection.parentId() == 0 )
+      return failureResponse( "Cannot delete virtual root collection" );
+
+    if ( !AbstractSearchManager::instance()->removeSearch( collection.id() ) )
+      return failureResponse( "Failed to remove search from search manager" );
+  }
+
+  if ( !deleteRecursive( collection ) )
+    return failureResponse( "Unable to delete collection" );
+
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction." );
+
+  Response response;
+  response.setTag( tag() );
+  response.setString( "DELETE completed" );
+  emit responseAvailable( response );
+  deleteLater();
+  return true;
 }
 
 #include "delete.moc"

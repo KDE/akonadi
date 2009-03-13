@@ -24,6 +24,7 @@
 #include "response.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -38,6 +39,64 @@ Expunge::~Expunge()
 
 bool Expunge::handleLine( const QByteArray& )
 {
+  Response response;
+
+  Collection collection = connection()->selectedCollection();
+  DataStore *store = connection()->storageBackend();
+  Transaction transaction( store );
+
+  Flag flag = Flag::retrieveByName( QLatin1String("\\Deleted") );
+  if ( !flag.isValid() ) {
+    response.setError();
+    response.setString( "\\Deleted flag unknown" );
+
+    emit responseAvailable( response );
+    deleteLater();
+
+    return true;
+  }
+
+  QList<PimItem> items = store->listPimItems( collection, flag );
+  for ( int i = 0; i < items.count(); ++i ) {
+    if ( store->cleanupPimItem( items[ i ] ) ) {
+      response.setUntagged();
+      // IMAP protocol violation: should actually be the sequence number
+      response.setString( QByteArray::number( items[i].id() ) + " EXPUNGE" );
+
+      emit responseAvailable( response );
+    } else {
+      response.setTag( tag() );
+      response.setError();
+      response.setString( "internal error" );
+
+      emit responseAvailable( response );
+      deleteLater();
+      return true;
+    }
+  }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction." );
+
+  response.setTag( tag() );
+  response.setSuccess();
+  response.setString( "EXPUNGE completed" );
+
+  emit responseAvailable( response );
+  deleteLater();
+
+  return true;
+}
+
+bool Expunge::supportsStreamParser()
+{
+  return true;
+}
+
+bool Expunge::parseStream()
+{
+  qDebug() << "Expunge::parseStream";
+
   Response response;
 
   Collection collection = connection()->selectedCollection();

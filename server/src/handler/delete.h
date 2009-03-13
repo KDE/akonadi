@@ -38,6 +38,8 @@ class Delete : public Handler
     Delete();
     ~Delete();
     virtual bool handleLine( const QByteArray &line );
+    bool supportsStreamParser();
+    bool parseStream();
 
   private:
     bool deleteRecursive( Collection &col );

@@ -99,7 +99,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
 
 bool Copy::supportsStreamParser()
 {
-  return true; //partial data parsing makes sense only for external payload files
+  return true;
 }
 
 bool Copy::parseStream()
