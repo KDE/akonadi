@@ -52,6 +52,8 @@ class Link : public Handler
      */
     Link( bool create );
     bool handleLine( const QByteArray &line );
+    bool supportsStreamParser();
+    bool parseStream();
 
   private:
     bool mCreateLinks;

@@ -28,6 +28,7 @@
 #include "entities.h"
 
 #include "libs/imapparser_p.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -48,6 +49,60 @@ bool Link::handleLine(const QByteArray & line)
 
   ImapSet set;
   ImapParser::parseSequenceSet( line, set, pos );
+  if ( set.isEmpty() )
+    return failureResponse( "No valid sequence set specified" );
+
+  SelectQueryBuilder<PimItem> qb;
+  ItemQueryHelper::itemSetToQuery( set, qb );
+  if ( !qb.exec() )
+    return failureResponse( "Unable to execute item query" );
+
+  PimItem::List items = qb.result();
+
+  DataStore *store = connection()->storageBackend();
+  Transaction transaction( store );
+
+  foreach ( const PimItem &item, items ) {
+    const bool alreadyLinked = collection.relatesToPimItem( item );
+    bool result = true;
+    if ( mCreateLinks && !alreadyLinked ) {
+      result = collection.addPimItem( item );
+      store->notificationCollector()->itemLinked( item, collection );
+    } else if ( !mCreateLinks && alreadyLinked ) {
+      result = collection.removePimItem( item );
+      store->notificationCollector()->itemUnlinked( item, collection );
+    }
+    if ( !result )
+      return failureResponse( "Failed to modify item reference" );
+  }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Cannot commit transaction." );
+
+  return successResponse( "LINK complete" );
+}
+
+bool Link::supportsStreamParser()
+{
+  return true;
+}
+
+bool Link::parseStream()
+{
+  qDebug() << "Link::parseStream";
+
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "LINK") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+  tmp = m_streamParser->readString();
+  const Collection collection = HandlerHelper::collectionFromIdOrName( tmp );
+  if ( !collection.isValid() )
+    return failureResponse( "No valid collection specified" );
+
+  ImapSet set = m_streamParser->readSequenceSet();
   if ( set.isEmpty() )
     return failureResponse( "No valid sequence set specified" );
 
