@@ -25,6 +25,7 @@
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/itemretriever.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -103,5 +104,48 @@ bool ColCopy::copyCollection(const Collection & source, const Collection & targe
 
   return true;
 }
+
+bool ColCopy::supportsStreamParser()
+{
+  return true;
+}
+
+bool ColCopy::parseStream()
+{
+  qDebug() << "ColCopy::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "COLCOPY") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+  tmp =  m_streamParser->readString();
+  const Collection source = HandlerHelper::collectionFromIdOrName( tmp );
+  if ( !source.isValid() )
+    return failureResponse( "No valid source specified" );
+
+  tmp =  m_streamParser->readString();
+  const Collection target = HandlerHelper::collectionFromIdOrName( tmp );
+  if ( !target.isValid() )
+    return failureResponse( "No valid target specified" );
+
+  // retrieve all not yet cached items of the source
+  ItemRetriever retriever( connection() );
+  retriever.setCollection( source, true );
+  retriever.setRetrieveFullPayload( true );
+  retriever.exec();
+
+  DataStore *store = connection()->storageBackend();
+  Transaction transaction( store );
+
+  if ( !copyCollection( source, target ) )
+    return failureResponse( "Failed to copy collection" );
+
+  if ( !transaction.commit() )
+    return failureResponse( "Cannot commit transaction." );
+
+  return successResponse( "COLCOPY complete" );
+}
+
 
 #include "colcopy.moc"
