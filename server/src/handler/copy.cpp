@@ -31,6 +31,7 @@
 
 #include "libs/imapparser_p.h"
 #include "libs/imapset_p.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -94,6 +95,55 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
     parts << newPart;
   }
   return store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QByteArray(), newItem );
+}
+
+bool Copy::supportsStreamParser()
+{
+  return true; //partial data parsing makes sense only for external payload files
+}
+
+bool Copy::parseStream()
+{
+  qDebug() << "Copy::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "COPY") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+
+  ImapSet set = m_streamParser->readSequenceSet();
+  if ( set.isEmpty() )
+    return failureResponse( "No items specified" );
+
+  ItemRetriever retriever( connection() );
+  retriever.setItemSet( set );
+  retriever.setRetrieveFullPayload( true );
+  retriever.exec();
+
+  tmp = m_streamParser->readString();
+  const Collection col = HandlerHelper::collectionFromIdOrName( tmp );
+  if ( !col.isValid() )
+    return failureResponse( "No valid target specified" );
+
+  SelectQueryBuilder<PimItem> qb;
+  ItemQueryHelper::itemSetToQuery( set, qb );
+  if ( !qb.exec() )
+    return failureResponse( "Unable to retrieve items" );
+  PimItem::List items = qb.result();
+
+  DataStore *store = connection()->storageBackend();
+  Transaction transaction( store );
+
+  foreach ( const PimItem &item, items ) {
+    if ( !copyItem( item, col ) )
+      return failureResponse( "Unable to copy item" );
+  }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Cannot commit transaction." );
+
+  return successResponse( "COPY complete" );
 }
 
 #include "copy.moc"

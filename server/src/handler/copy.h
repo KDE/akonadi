@@ -53,6 +53,8 @@ class AKONADIPRIVATE_EXPORT Copy : public Handler
   Q_OBJECT
   public:
     bool handleLine(const QByteArray& line);
+    bool supportsStreamParser();
+    bool parseStream();
 
   protected:
     /**
