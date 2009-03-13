@@ -92,7 +92,7 @@ bool Link::parseStream()
   qDebug() << "Link::parseStream";
 
   QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "LINK") {
+  if (tmp != "LINK" && tmp != "UNLINK") {
     //put back what was read
     m_streamParser->insertData(' ' + tmp + ' ');
   }
