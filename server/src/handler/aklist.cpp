@@ -28,6 +28,7 @@
 #include "akonadiconnection.h"
 #include "response.h"
 #include "handlerhelper.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -135,6 +136,81 @@ bool AkList::listCollection(const Collection & root, int depth )
   response.setString( b );
   emit responseAvailable( response );
 
+  return true;
+}
+
+bool AkList::supportsStreamParser()
+{
+  return true;
+}
+
+bool AkList::parseStream()
+{
+  qDebug() << "AkList::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "X-AKLIST" && tmp != "X-AKLSUB") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+  // command
+  if ( tmp == "X-AKLSUB" )
+    mOnlySubscribed = true;
+
+  qint64 baseCollection;
+  bool ok = false;
+  baseCollection = m_streamParser->readNumber( &ok );
+  if ( !ok )
+    return failureResponse( "Invalid base collection" );
+
+  int depth;
+  tmp = m_streamParser->readString();
+  if ( tmp.isEmpty() )
+    return failureResponse( "Specify listing depth" );
+  if ( tmp == "INF" )
+    depth = INT_MAX;
+  else
+    depth = tmp.toInt();
+
+  QList<QByteArray> filter = m_streamParser->readParenthesizedList();
+
+  for ( int i = 0; i < filter.count() - 1; i += 2 ) {
+    if ( filter.at( i ) == "RESOURCE" ) {
+      mResource = Resource::retrieveByName( QString::fromLatin1( filter.at(i + 1) ) );
+      if ( !mResource.isValid() )
+        return failureResponse( "Unknown resource" );
+    } else
+      return failureResponse( "Invalid filter parameter" );
+  }
+
+  Collection::List collections;
+  if ( baseCollection != 0 ) { // not root
+    Collection col = Collection::retrieveById( baseCollection );
+    if ( !col.isValid() )
+      return failureResponse( "Collection " + QByteArray::number( baseCollection ) + " does not exist" );
+    if ( depth == 0 )
+      collections << col;
+    else {
+      collections << col.children();
+      --depth;
+    }
+  } else {
+    if ( depth != 0 ) {
+      Collection::List list = Collection::retrieveFiltered( Collection::parentIdColumn(), 0 );
+      collections << list;
+    }
+    --depth;
+  }
+
+  foreach ( const Collection &col, collections )
+    listCollection( col, depth );
+
+  Response response;
+  response.setSuccess();
+  response.setTag( tag() );
+  response.setString( "List completed" );
+  emit responseAvailable( response );
+  deleteLater();
   return true;
 }
 

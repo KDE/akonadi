@@ -36,6 +36,16 @@ Noop::~Noop()
 
 bool Noop::handleLine( const QByteArray& )
 {
+  return parseStream();
+}
+
+bool Noop::supportsStreamParser()
+{
+  return true;
+}
+
+bool Noop::parseStream()
+{
   Response response;
   response.setTag( tag() );
   response.setSuccess();
@@ -49,5 +59,6 @@ bool Noop::handleLine( const QByteArray& )
 
   return true;
 }
+
 
 #include "noop.moc"

@@ -38,6 +38,8 @@ public:
     ~Noop();
 
     bool handleLine(const QByteArray& line);
+    bool supportsStreamParser();
+    bool parseStream();
 
 };
 
