@@ -36,20 +36,29 @@ Logout::~Logout()
 
 bool Logout::handleLine(const QByteArray& )
 {
-    Response response;
-    response.setBye();
-    response.setString( "Akonadi server logging out" );
-    response.setUntagged();
-    emit responseAvailable( response );
-
-    response.setSuccess();
-    response.setTag( tag() );
-    response.setString( "Logout completed" );
-    emit responseAvailable( response );
-    emit connectionStateChange( LoggingOut );
-    deleteLater();
-    return true;
+  return parseStream();
 }
 
+bool Logout::supportsStreamParser()
+{
+  return true;
+}
+
+bool Logout::parseStream()
+{
+  Response response;
+  response.setBye();
+  response.setString( "Akonadi server logging out" );
+  response.setUntagged();
+  emit responseAvailable( response );
+
+  response.setSuccess();
+  response.setTag( tag() );
+  response.setString( "Logout completed" );
+  emit responseAvailable( response );
+  emit connectionStateChange( LoggingOut );
+  deleteLater();
+  return true;
+}
 
 #include "logout.moc"

@@ -37,6 +37,8 @@ class Logout : public Handler
     ~Logout();
 
     bool handleLine(const QByteArray& line);
+    bool supportsStreamParser();
+    bool parseStream();
 
 };
 

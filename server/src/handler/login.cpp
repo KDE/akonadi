@@ -23,6 +23,7 @@
 #include "response.h"
 #include "../../libs/imapparser_p.h"
 #include "akonadiconnection.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -60,5 +61,34 @@ bool Login::handleLine( const QByteArray &line )
   return true;
 }
 
+bool Login::supportsStreamParser()
+{
+  return true;
+}
+
+bool Login::parseStream()
+{
+  qDebug() << "Login::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "LOGIN") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+  QByteArray sessionId = m_streamParser->readString();
+  if ( sessionId.isEmpty() )
+    return failureResponse( "Missing session identifier." );
+  connection()->setSessionId( sessionId );
+
+  Response response;
+  response.setTag( tag() );
+  response.setSuccess();
+  response.setString( "User logged in" );
+
+  emit responseAvailable( response );
+  emit connectionStateChange( Authenticated );
+  deleteLater();
+  return true;
+}
 
 #include "login.moc"
