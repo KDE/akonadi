@@ -24,6 +24,7 @@
 #include <storage/entity.h>
 #include <storage/transaction.h>
 #include "libs/imapparser_p.h"
+#include "imapstreamparser.h"
 #include <handlerhelper.h>
 #include <response.h>
 #include <storage/itemretriever.h>
@@ -70,6 +71,118 @@ bool Akonadi::Modify::handleLine(const QByteArray & line)
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
+  while ( pos < line.length() ) {
+    QByteArray type;
+    pos = ImapParser::parseString( line, type, pos );
+    if ( type == "MIMETYPE" ) {
+      QList<QByteArray> mimeTypes;
+      pos = ImapParser::parseParenthesizedList( line, mimeTypes, pos );
+      if ( !db->removeMimeTypesForCollection( collection.id() ) )
+        return failureResponse( "Unable to modify collection mimetypes." );
+      QStringList mts;
+      foreach ( const QByteArray &ba, mimeTypes )
+        mts << QString::fromLatin1(ba);
+      if ( !db->appendMimeTypeForCollection( collection.id(), mts ) )
+        return failureResponse( "Unable to modify collection mimetypes." );
+    } else if ( type == "CACHEPOLICY" ) {
+      pos = HandlerHelper::parseCachePolicy( line, collection, pos );
+      db->notificationCollector()->collectionChanged( collection );
+      if ( !collection.update() )
+        return failureResponse( "Unable to change cache policy" );
+    } else if ( type == "NAME" ) {
+      QByteArray newName;
+      pos = ImapParser::parseString( line, newName, pos );
+      if ( !db->renameCollection( collection, collection.parentId(), newName ) )
+        return failureResponse( "Unable to rename collection" );
+    } else if ( type == "PARENT" ) {
+      qint64 newParent;
+      bool ok = false;
+      pos = ImapParser::parseNumber( line, newParent, &ok, pos );
+      if ( !ok )
+        return failureResponse( "Invalid syntax" );
+      if ( !db->renameCollection( collection, newParent, collection.name() ) )
+        return failureResponse( "Unable to reparent collection" );
+    } else if ( type == "REMOTEID" ) {
+      // FIXME: missing change notification
+      QString rid;
+      pos = ImapParser::parseString( line, rid, pos );
+      if ( rid == collection.remoteId() )
+        continue;
+      collection.setRemoteId( rid );
+      if ( !collection.update() )
+        return failureResponse( "Unable to change remote identifier" );
+    } else if ( type.isEmpty() ) {
+      break; // input end
+    } else {
+      // custom attribute
+      bool removeOnly = false;
+      if ( type.startsWith( '-' ) ) {
+        type = type.mid( 1 );
+        removeOnly = true;
+      }
+      if ( !db->removeCollectionAttribute( collection, type ) )
+        return failureResponse( "Unable to remove custom collection attribute" );
+      if ( ! removeOnly ) {
+        QByteArray value;
+        pos = ImapParser::parseString( line, value, pos );
+        if ( !db->addCollectionAttribute( collection, type, value ) )
+          return failureResponse( "Unable to add custom collection attribute" );
+      }
+    }
+  }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction." );
+
+  Response response;
+  response.setTag( tag() );
+  response.setString( "MODIFY done" );
+  emit responseAvailable( response );
+  return true;
+}
+
+bool Modify::supportsStreamParser()
+{
+  return true;
+}
+
+bool Modify::parseStream()
+{
+  qDebug() << "Modify::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "MODIFY") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+  QByteArray collectionByteArray = m_streamParser->readString();
+  Collection collection = HandlerHelper::collectionFromIdOrName( collectionByteArray );
+  if ( !collection.isValid() )
+    return failureResponse( "No such collection" );
+  if ( collection.id() == 0 )
+    return failureResponse( "Cannot modify root collection" );
+
+
+  //TODO: do it cleanly with the streaming parser, which doesn't have look-ahead at this moment
+  QByteArray line = m_streamParser->readUntilCommandEnd();
+
+  int p = 0;
+  if ( (p = line.indexOf( "PARENT ")) > 0 ) {
+    ImapParser::parseString( line, collectionByteArray, p + 6 );
+    const Collection newParent = HandlerHelper::collectionFromIdOrName( collectionByteArray );
+    if ( newParent.isValid() && collection.parentId() != newParent.id()
+         && collection.resourceId() != newParent.resourceId() )
+    {
+      ItemRetriever retriever( connection() );
+      retriever.setCollection( collection, true );
+      retriever.setRetrieveFullPayload( true );
+      retriever.exec();
+    }
+  }
+
+  DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
+  int pos = 0;
   while ( pos < line.length() ) {
     QByteArray type;
     pos = ImapParser::parseString( line, type, pos );

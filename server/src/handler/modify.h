@@ -50,6 +50,8 @@ class Modify : public Handler
     Modify();
     ~Modify();
     bool handleLine( const QByteArray &line );
+    bool supportsStreamParser();
+    bool parseStream();
 };
 
 }
