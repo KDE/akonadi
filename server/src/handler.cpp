@@ -52,6 +52,7 @@
 #include "uid.h"
 
 #include "storage/querybuilder.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -217,7 +218,14 @@ void Handler::setStreamParser( ImapStreamParser *parser )
 
 bool Handler::parseStream()
 {
-  return false;
+  Response response;
+  response.setError();
+  response.setTag( m_tag );
+  response.setString( "Unrecognized command: " + m_streamParser->readString() );
+
+  emit responseAvailable( response );
+  deleteLater();
+  return true;
 }
 
 #include "handler.moc"

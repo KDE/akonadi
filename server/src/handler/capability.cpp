@@ -35,18 +35,27 @@ Capability::~Capability()
 
 bool Capability::handleLine( const QByteArray& )
 {
-    Response response;
-    response.setString( "CAPABILITY IMAP4 IMAP4rev1" );
-    response.setUntagged();
-    emit responseAvailable( response );
-
-    response.setSuccess();
-    response.setTag( tag() );
-    response.setString( "CAPABILITY completed" );
-    emit responseAvailable( response );
-    deleteLater();
-    return true;
+  return parseStream();
 }
 
+bool Capability::supportsStreamParser()
+{
+  return true;
+}
+
+bool Capability::parseStream()
+{
+  Response response;
+  response.setString( "CAPABILITY IMAP4 IMAP4rev1" );
+  response.setUntagged();
+  emit responseAvailable( response );
+
+  response.setSuccess();
+  response.setTag( tag() );
+  response.setString( "CAPABILITY completed" );
+  emit responseAvailable( response );
+  deleteLater();
+  return true;
+}
 
 #include "capability.moc"

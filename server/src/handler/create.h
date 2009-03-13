@@ -50,6 +50,8 @@ public:
     ~Create();
 
     bool handleLine(const QByteArray& line);
+    bool supportsStreamParser();
+    bool parseStream();
 
 };
 

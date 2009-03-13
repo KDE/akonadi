@@ -30,6 +30,7 @@
 
 #include "../../libs/imapparser_p.h"
 #include "response.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -112,6 +113,136 @@ bool Create::handleLine(const QByteArray& line )
   QList< QPair<QByteArray, QByteArray> > userDefAttrs;
   bool mimeTypesSet = false;
   pos = ImapParser::parseParenthesizedList( line, attributes, pos );
+  for ( int i = 0; i < attributes.count() - 1; i += 2 ) {
+    const QByteArray key = attributes.at( i );
+    const QByteArray value = attributes.at( i + 1 );
+    if ( key == "REMOTEID" ) {
+      collection.setRemoteId( QString::fromUtf8( value ) );
+    } else if ( key == "MIMETYPE" ) {
+      ImapParser::parseParenthesizedList( value, mimeTypes );
+      mimeTypesSet = true;
+    } else if ( key == "CACHEPOLICY" ) {
+      HandlerHelper::parseCachePolicy( value, collection );
+    } else {
+      userDefAttrs << qMakePair( key, value );
+    }
+  }
+
+  DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
+
+  if ( !db->appendCollection( collection ) )
+    return failureResponse( "Could not create collection" );
+
+  QStringList effectiveMimeTypes;
+  if ( mimeTypesSet ) {
+    foreach ( const QByteArray &b, mimeTypes )
+      effectiveMimeTypes << QString::fromUtf8( b );
+  } else {
+    foreach ( const MimeType &mt, parentContentTypes )
+      effectiveMimeTypes << mt.name();
+  }
+  if ( !db->appendMimeTypeForCollection( collection.id(), effectiveMimeTypes ) )
+    return failureResponse( "Unable to append mimetype for collection." );
+
+  // store user defined attributes
+  typedef QPair<QByteArray,QByteArray> QByteArrayPair;
+  foreach ( const QByteArrayPair &attr, userDefAttrs ) {
+    if ( !db->addCollectionAttribute( collection, attr.first, attr.second ) )
+      return failureResponse( "Unable to add collection attribute." );
+  }
+
+  Response response;
+  response.setUntagged();
+
+   // write out collection details
+  db->activeCachePolicy( collection );
+  const QByteArray b = HandlerHelper::collectionToByteArray( collection );
+  response.setString( b );
+  emit responseAvailable( response );
+
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction." );
+
+  return successResponse( "CREATE completed" );
+}
+
+bool Create::supportsStreamParser()
+{
+  return true;
+}
+
+bool Create::parseStream()
+{
+  qDebug() << "Create::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "CREATE") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+  QString name = m_streamParser->readUtf8String();
+
+  bool ok = false;
+  Collection parent;
+  qint64 parentId = m_streamParser->readNumber( &ok );
+  if ( !ok ) { // RFC 3501 compat
+    QString parentPath;
+    int index = name.lastIndexOf( QLatin1Char('/') );
+    if ( index > 0 ) {
+      parentPath = name.left( index );
+      name = name.mid( index + 1 );
+      parent = HandlerHelper::collectionFromIdOrName( parentPath.toUtf8() );
+    } else
+      parentId = 0;
+  } else {
+    if ( parentId > 0 )
+      parent = Collection::retrieveById( parentId );
+  }
+
+  if ( parentId != 0 && !parent.isValid() )
+    return failureResponse( "Parent collection not found" );
+
+  if ( name.isEmpty() )
+    return failureResponse( "Invalid collection name" );
+
+  qint64 resourceId = 0;
+  MimeType::List parentContentTypes;
+  if ( parent.isValid() ) {
+    // check if parent can contain a sub-folder
+    parentContentTypes = parent.mimeTypes();
+    bool found = false;
+    foreach ( const MimeType &mt, parentContentTypes ) {
+      if ( mt.name() == QLatin1String( "inode/directory" ) ) {
+        found = true;
+        break;
+      }
+    }
+    if ( !found )
+      return failureResponse( "Parent collection can not contain sub-collections" );
+
+    // inherit resource
+    resourceId = parent.resourceId();
+  } else {
+    // deduce owning resource from current session id
+    QString sessionId = QString::fromUtf8( connection()->sessionId() );
+    Resource res = Resource::retrieveByName( sessionId );
+    if ( !res.isValid() )
+      return failureResponse( "Cannot create top-level collection" );
+    resourceId = res.id();
+  }
+
+  Collection collection;
+  collection.setParentId( parentId );
+  collection.setName( name.toUtf8() );
+  collection.setResourceId( resourceId );
+
+  // attributes
+  QList<QByteArray> attributes;
+  QList<QByteArray> mimeTypes;
+  QList< QPair<QByteArray, QByteArray> > userDefAttrs;
+  bool mimeTypesSet = false;
+  attributes = m_streamParser->readParenthesizedList();
   for ( int i = 0; i < attributes.count() - 1; i += 2 ) {
     const QByteArray key = attributes.at( i );
     const QByteArray value = attributes.at( i + 1 );

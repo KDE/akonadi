@@ -22,6 +22,7 @@
 #include "response.h"
 #include "../../libs/imapparser_p.h"
 #include "handlerhelper.h"
+#include "imapstreamparser.h"
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
@@ -181,6 +182,66 @@ bool Akonadi::Append::commit()
     deleteLater();
 
     return true;
+}
+
+bool Append::supportsStreamParser()
+{
+  return true;
+}
+
+bool Append::parseStream()
+{
+    // Arguments:  mailbox name
+    //        OPTIONAL flag parenthesized list
+    //        OPTIONAL date/time string
+    //        message literal
+  //
+    // Syntax:
+    // append = "APPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP literal
+
+  qDebug() << "Append::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "APPEND") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+  m_mailbox = m_streamParser->readString();
+
+  bool ok = false;
+  m_size = m_streamParser->readNumber( &ok );
+
+  //FIXME: Andras: why do we read another "size" here ???
+/*
+  QString data;
+  ImapParser::parseString( line, data, startOfSize);
+  m_size = data.toLongLong();
+*/
+    // parse optional flag parenthesized list
+    // Syntax:
+    // flag-list      = "(" [flag *(SP flag)] ")"
+  // flag           = "\Answered" / "\Flagged" / "\Deleted" / "\Seen" /
+    //                  "\Draft" / flag-keyword / flag-extension
+    //                    ; Does not include "\Recent"
+    // flag-extension = "\" atom
+    // flag-keyword   = atom
+  if ( m_streamParser->hasList() ) {
+    m_flags = m_streamParser->readParenthesizedList();
+  }
+
+    // parse optional date/time string
+  if ( m_streamParser->hasDateTime() ) {
+    m_dateTime = m_streamParser->readDateTime();
+    m_dateTime = m_dateTime.toUTC();
+        // FIXME Should we return an error if m_dateTime is invalid?
+  } else {
+        // if date/time is not given then it will be set to the current date/time
+        // converted to UTC.
+    m_dateTime = QDateTime::currentDateTime().toUTC();
+  }
+
+  m_data = m_streamParser->readString();
+  return commit();
 }
 
 #include "append.moc"
