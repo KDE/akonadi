@@ -136,9 +136,19 @@ void AkonadiConnection::slotNewData()
                    this, SLOT( slotConnectionStateChange( ConnectionState ) ),
                                Qt::DirectConnection );
           try {
+            //Rempve 0 && to enable the streaming parser usage
+            if ( 0 && m_currentHandler->supportsStreamParser() )
+            {
+              qDebug() << "Using the streaming parser";
+              m_streamParser = new ImapStreamParser( m_socket );
+              m_streamParser->setData(m_parser->data());
+              m_currentHandler->setStreamParser( m_streamParser );
+              m_currentHandler->parseStream();
+            } else {
           // FIXME: remove the tag, it's only there for backward compatibility with the handlers!
-            if ( m_currentHandler->handleLine( m_parser->tag() + ' ' + m_parser->data() ) )
-              m_currentHandler = 0;
+              if ( m_currentHandler->handleLine( m_parser->tag() + ' ' + m_parser->data() ) )
+                m_currentHandler = 0;
+            }
           } catch ( const Akonadi::HandlerException &e ) {
             m_currentHandler->failureResponse( e.what() );
             m_currentHandler->deleteLater();
