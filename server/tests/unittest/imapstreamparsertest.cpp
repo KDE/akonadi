@@ -296,86 +296,104 @@ void ImapStreamParserTest::testParseNumber()
 }
 }
 
-/*
+
 void ImapStreamParserTest::testParseSequenceSet_data()
 {
   QTest::addColumn<QByteArray>( "data" );
-  QTest::addColumn<int>( "begin" );
   QTest::addColumn<ImapInterval::List>( "result" );
-  QTest::addColumn<int>( "end" );
 
   QByteArray data( " 1 0:* 3:4,8:* *:5,1" );
 
-  QTest::newRow( "empty" ) << QByteArray() << 0 << ImapInterval::List() << 0;
-  QTest::newRow( "input end" ) << data << 20 << ImapInterval::List() << 20;
+  QTest::newRow( "empty" ) << QByteArray() << ImapInterval::List() ;
 
   ImapInterval::List result;
   result << ImapInterval( 1, 1 );
-  QTest::newRow( "single value 1" ) << data << 0 << result << 2;
-  QTest::newRow( "single value 2" ) << data << 1 << result << 2;
-  QTest::newRow( "single value 3" ) << data << 19 << result << 20;
+  data = " 1 ";
+  QTest::newRow( "single value" ) << data  << result;
 
   result.clear();
   result << ImapInterval();
-  QTest::newRow( "full interval" ) << data << 2 << result << 6;
+  data = "  0:* ";
+  QTest::newRow( "full interval" ) << data << result;
 
+  data = " 3:4,8:*";
   result.clear();
   result << ImapInterval( 3, 4 ) << ImapInterval( 8 );
-  QTest::newRow( "complex 1" ) << data << 7 << result << 14;
+  QTest::newRow( "complex 1" ) << data << result ;
 
+  data = " *:5,1";
   result.clear();
   result << ImapInterval( 0, 5 ) << ImapInterval( 1, 1 );
-  QTest::newRow( "complex 2" ) << data << 14 << result << 20;
+  QTest::newRow( "complex 2" ) << data  << result ;
 }
 
 void ImapStreamParserTest::testParseSequenceSet()
 {
   QFETCH( QByteArray, data );
-  QFETCH( int, begin );
   QFETCH( ImapInterval::List, result );
-  QFETCH( int, end );
+
+  QBuffer buffer;
+  buffer.open( QBuffer::ReadWrite);
+  ImapStreamParser parser(&buffer);
+  buffer.write( data );
+  buffer.seek(0);
 
   ImapSet res;
-  int pos = parser.parseSequenceSet( data, res, begin );
-  QCOMPARE( res.intervals(), result );
-  QCOMPARE( pos, end );
+  try {
+    res = parser.readSequenceSet();
+    QCOMPARE( res.intervals(), result );
+} catch ( const Akonadi::Exception &e ) {
+  qDebug() << "Caught exception: " << e.type() << " : " <<
+      e.what();
+} catch (...)
+{
+  qDebug() << "Unknown exception caught: " << akBacktrace();
 }
+}
+
 
 void ImapStreamParserTest::testParseDateTime_data()
 {
   QTest::addColumn<QByteArray>( "data" );
-  QTest::addColumn<int>( "begin" );
   QTest::addColumn<QDateTime>( "result" );
-  QTest::addColumn<int>( "end" );
 
-  QTest::newRow( "emtpy" ) << QByteArray() << 0 << QDateTime() << 0;
+  QTest::newRow( "empty" ) << QByteArray() <<  QDateTime() ;
 
   QByteArray data( " \"28-May-2006 01:03:35 +0200\"" );
   QByteArray data2( "22-Jul-2008 16:31:48 +0000" );
+  QByteArray data3( "ul-2008 16:31:48 +0000" );
 
   QDateTime dt( QDate( 2006, 5, 27 ), QTime( 23, 3, 35 ), Qt::UTC );
   QDateTime dt2( QDate( 2008, 7, 22 ), QTime( 16, 31, 48 ), Qt::UTC );
 
-  QTest::newRow( "quoted 1" ) << data << 0 << dt << 29;
-  QTest::newRow( "quoted 2" ) << data << 1 << dt << 29;
-  QTest::newRow( "unquoted" ) << data << 2 << dt << 28;
-  QTest::newRow( "unquoted2" ) << data2 << 0 << dt2 << 26;
-  QTest::newRow( "invalid" ) << data << 4 << QDateTime() << 4;
+  QTest::newRow( "quoted" ) << data  << dt ;
+  QTest::newRow( "unquoted" ) << data2 <<  dt2 ;
+  QTest::newRow( "invalid" ) << data3 << QDateTime();
 }
 
 void ImapStreamParserTest::testParseDateTime()
 {
   QFETCH( QByteArray, data );
-  QFETCH( int, begin );
   QFETCH( QDateTime, result );
-  QFETCH( int, end );
+
+  QBuffer buffer;
+  buffer.open( QBuffer::ReadWrite);
+  ImapStreamParser parser(&buffer);
+  buffer.write( data );
+  buffer.seek(0);
 
   QDateTime actualResult;
-  int actualEnd = parser.parseDateTime( data, actualResult, begin );
-  QCOMPARE( actualResult, result );
-  QCOMPARE( actualEnd, end );
+  try {
+    actualResult = parser.readDateTime();
+    QCOMPARE( actualResult, result );
+  } catch ( const Akonadi::Exception &e ) {
+    qDebug() << "Caught exception: " << e.type() << " : " <<
+        e.what();
+  } catch (...)
+  {
+    qDebug() << "Unknown exception caught: " << akBacktrace();
+  }
 }
 
 
-*/
 #include "imapstreamparsertest.moc"

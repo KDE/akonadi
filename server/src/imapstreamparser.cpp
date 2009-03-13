@@ -361,6 +361,132 @@ QList<QByteArray> ImapStreamParser::readParenthesizedList()
   throw ImapParserException( "Something went very very wrong!" );
 }
 
+QDateTime ImapStreamParser::readDateTime()
+{
+  // Syntax:
+  // date-time      = DQUOTE date-day-fixed "-" date-month "-" date-year
+  //                  SP time SP zone DQUOTE
+  // date-day-fixed = (SP DIGIT) / 2DIGIT
+  //                    ; Fixed-format version of date-day
+  // date-month     = "Jan" / "Feb" / "Mar" / "Apr" / "May" / "Jun" /
+  //                  "Jul" / "Aug" / "Sep" / "Oct" / "Nov" / "Dec"
+  // date-year      = 4DIGIT
+  // time           = 2DIGIT ":" 2DIGIT ":" 2DIGIT
+  //                    ; Hours minutes seconds
+  // zone           = ("+" / "-") 4DIGIT
+  //                    ; Signed four-digit value of hhmm representing
+  //                    ; hours and minutes east of Greenwich (that is,
+  //                    ; the amount that the given time differs from
+  //                    ; Universal Time).  Subtracting the timezone
+  //                    ; from the given time will give the UT form.
+  //                    ; The Universal Time zone is "+0000".
+  // Example : "28-May-2006 01:03:35 +0200"
+  // Position: 0123456789012345678901234567
+  //                     1         2
+
+  int savedPos = m_position;
+  if (! waitForMoreData( m_data.length() == 0 ) )
+    throw ImapParserException("Unable to read more data");
+  stripLeadingSpaces();
+
+  bool quoted = false;
+  if ( m_data[m_position] == '"' ) {
+    quoted = true;
+    ++m_position;
+
+    if ( m_data.length() <= m_position + 26 ) {
+      m_position = savedPos;
+      return QDateTime();
+    }
+  } else {
+    if ( m_data.length() < m_position + 26 ) {
+      m_position = savedPos;
+      return QDateTime();
+    }
+  }
+
+  bool ok = true;
+  const int day = ( m_data[m_position] == ' ' ? m_data[m_position + 1] - '0' // single digit day
+  : m_data.mid( m_position, 2 ).toInt( &ok ) );
+  if ( !ok ) {
+    m_position = savedPos;
+    return QDateTime();
+  }
+  m_position += 3;
+  const QByteArray shortMonthNames( "janfebmaraprmayjunjulaugsepoctnovdec" );
+  int month = shortMonthNames.indexOf( m_data.mid( m_position, 3 ).toLower() );
+  if ( month == -1 ) {
+    m_position = savedPos;
+    return QDateTime();
+  }
+  month = month / 3 + 1;
+  m_position += 4;
+  const int year = m_data.mid( m_position, 4 ).toInt( &ok );
+  if ( !ok ) {
+    m_position = savedPos;
+    return QDateTime();
+  }
+  m_position += 5;
+  const int hours = m_data.mid( m_position, 2 ).toInt( &ok );
+  if ( !ok ) {
+    m_position = savedPos;
+    return QDateTime();
+  }
+  m_position += 3;
+  const int minutes = m_data.mid( m_position, 2 ).toInt( &ok );
+  if ( !ok ) {
+    m_position = savedPos;
+    return QDateTime();
+  }
+  m_position += 3;
+  const int seconds = m_data.mid( m_position, 2 ).toInt( &ok );
+  if ( !ok ) {
+    m_position = savedPos;
+    return QDateTime();
+  }
+  m_position += 4;
+  const int tzhh = m_data.mid( m_position, 2 ).toInt( &ok );
+  if ( !ok ) {
+    m_position = savedPos;
+    return QDateTime();
+  }
+  m_position += 2;
+  const int tzmm = m_data.mid( m_position, 2 ).toInt( &ok );
+  if ( !ok ) {
+    m_position = savedPos;
+    return QDateTime();
+  }
+  int tzsecs = tzhh*60*60 + tzmm*60;
+  if ( m_data[m_position - 3] == '-' )
+    tzsecs = -tzsecs;
+  const QDate date( year, month, day );
+  const QTime time( hours, minutes, seconds );
+  QDateTime dateTime;
+  dateTime = QDateTime( date, time, Qt::UTC );
+  if ( !dateTime.isValid() ) {
+    m_position = savedPos;
+    return QDateTime();
+  }
+  dateTime = dateTime.addSecs( -tzsecs );
+
+  m_position += 2;
+  if ( m_data.length() <= m_position || !quoted )
+    return dateTime;
+  if ( m_data[m_position] == '"' )
+    ++m_position;
+  return dateTime;
+}
+
+bool ImapStreamParser::hasDateTime()
+{
+  int savedPos = m_position;
+  QDateTime dateTime = readDateTime();
+  m_position = savedPos;
+  if (dateTime.isNull())
+    return false;
+  else
+    return true;
+}
 
 QByteArray ImapStreamParser::parseQuotedString()
 {

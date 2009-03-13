@@ -32,11 +32,11 @@ class ImapStreamParserTest : public QObject
     void testParseString();
     void testParseParenthesizedList();
     void testParseNumber();
-/*    void testParseSequenceSet_data();
+    void testParseSequenceSet_data();
     void testParseSequenceSet();
     void testParseDateTime_data();
     void testParseDateTime();
-    */
+
 };
 
 

@@ -29,6 +29,7 @@
 #include <QtCore/QList>
 #include <QtCore/QVarLengthArray>
 #include <QtCore/QObject>
+#include <QtCore/QDateTime>
 
 #include "exception.h"
 
@@ -155,7 +156,12 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
       */
     bool atListEnd();
 
-    /**
+    QDateTime readDateTime();
+
+    bool hasDateTime();
+
+
+     /**
      * Check if the command end was reached
      * @return true if the end of command is reached
      */
