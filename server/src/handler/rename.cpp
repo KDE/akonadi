@@ -21,6 +21,7 @@
 #include <akonadiconnection.h>
 #include <handlerhelper.h>
 #include "../../libs/imapparser_p.h"
+#include "imapstreamparser.h"
 #include <response.h>
 #include <storage/datastore.h>
 #include <storage/entity.h>
@@ -47,6 +48,59 @@ bool Akonadi::Rename::handleLine(const QByteArray & line)
 
   pos = ImapParser::parseString( line, oldName, pos );
   ImapParser::parseString( line, newName, pos );
+
+  if ( oldName.isEmpty() || newName.isEmpty() )
+    return failureResponse( "Collection name must not be empty" );
+
+  DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
+
+  Collection collection = HandlerHelper::collectionFromIdOrName( newName );
+  if ( collection.isValid() )
+    return failureResponse( "Collection already exists" );
+  collection = HandlerHelper::collectionFromIdOrName( oldName );
+  if ( !collection.isValid() )
+    return failureResponse( "No such collection" );
+
+  QByteArray parentPath;
+  int index = newName.lastIndexOf( '/' );
+  if ( index > 0 )
+    parentPath = newName.mid( index + 1 );
+  Collection parent = HandlerHelper::collectionFromIdOrName( parentPath );
+  newName = newName.left( index );
+  qint64 parentId = 0;
+  if ( parent.isValid() )
+    parentId = parent.id();
+
+  if ( !db->renameCollection( collection, parentId, newName ) )
+    return failureResponse( "Failed to rename collection." );
+
+  if ( !transaction.commit() )
+    return failureResponse( "Failed to commit transaction." );
+
+  Response response;
+  response.setTag( tag() );
+  response.setString( "RENAME done" );
+  emit responseAvailable( response );
+  deleteLater();
+  return true;
+}
+
+bool Akonadi::Rename::supportsStreamParser()
+{
+  return true;
+}
+
+bool Akonadi::Rename::parseStream()
+{
+  qDebug() << "Rename::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "RENAME") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+  QByteArray oldName = m_streamParser->readString();
+  QByteArray newName = m_streamParser->readString();
 
   if ( oldName.isEmpty() || newName.isEmpty() )
     return failureResponse( "Collection name must not be empty" );

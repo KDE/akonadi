@@ -28,6 +28,7 @@
 #include "storage/transaction.h"
 #include "handlerhelper.h"
 #include "abstractsearchmanager.h"
+#include "imapstreamparser.h"
 
 #include <QtCore/QStringList>
 
@@ -57,6 +58,55 @@ bool SearchPersistent::handleLine( const QByteArray& line )
 
   QByteArray queryString;
   ImapParser::parseString( line, queryString, pos );
+  if ( queryString.isEmpty() )
+    return failureResponse( "No query specified" );
+
+  Collection col;
+  col.setRemoteId( QString::fromUtf8( queryString ) );
+  col.setParentId( 1 ); // search root
+  col.setResourceId( 1 ); // search resource
+  col.setName( collectionName );
+  if ( !db->appendCollection( col ) )
+    return failureResponse( "Unable to create persistent search" );
+
+  if ( !AbstractSearchManager::instance()->addSearch( col ) )
+    return failureResponse( "Unable to add search to search manager" );
+
+  if ( !transaction.commit() )
+    return failureResponse( "Unable to commit transaction" );
+
+  Response response;
+  response.setTag( tag() );
+  response.setSuccess();
+  response.setString( "SEARCH_STORE completed" );
+  emit responseAvailable( response );
+
+  deleteLater();
+  return true;
+}
+
+bool SearchPersistent::supportsStreamParser()
+{
+  return true;
+}
+
+bool SearchPersistent::parseStream()
+{
+  qDebug() << "SearchPersistent::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "SEARCH_STORE") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+  QByteArray collectionName = m_streamParser->readString();
+  if ( collectionName.isEmpty() )
+    return failureResponse( "No name specified" );
+
+  DataStore *db = connection()->storageBackend();
+  Transaction transaction( db );
+
+  QByteArray queryString = m_streamParser->readString();
   if ( queryString.isEmpty() )
     return failureResponse( "No query specified" );
 

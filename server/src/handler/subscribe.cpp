@@ -20,6 +20,7 @@
 #include "subscribe.h"
 
 #include "../../libs/imapparser_p.h"
+#include "imapstreamparser.h"
 #include <handlerhelper.h>
 #include <akonadiconnection.h>
 #include <storage/datastore.h>
@@ -42,6 +43,46 @@ bool Subscribe::handleLine(const QByteArray & line)
   forever {
     pos = ImapParser::parseString( line, buffer, pos );
     if ( pos == line.length() || buffer.isEmpty() )
+      break;
+    Collection col = HandlerHelper::collectionFromIdOrName( buffer );
+    if ( !col.isValid() )
+      return failureResponse( "Invalid collection" );
+    if ( col.subscribed() == subscribe )
+      continue;
+    // TODO do all changes in one db operation
+    col.setSubscribed( subscribe );
+    if ( !col.update() )
+      return failureResponse( "Unable to change subscription" );
+  }
+
+  if ( !transaction.commit() )
+    return failureResponse( "Cannot commit transaction." );
+
+  return successResponse( "Completed" );
+}
+
+bool Subscribe::supportsStreamParser()
+{
+  return true;
+}
+
+bool Subscribe::parseStream()
+{
+  qDebug() << "Subscribe::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "SUBSCRIBE" && tmp != "UNSUBSCRIBE") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+  const bool subscribe = tmp == QByteArray( "SUBSCRIBE" );
+
+  DataStore *store = connection()->storageBackend();
+  Transaction transaction( store );
+
+  QByteArray buffer;
+  while (!m_streamParser->atCommandEnd()) {
+    buffer = m_streamParser->readString();
+    if ( buffer.isEmpty() )
       break;
     Collection col = HandlerHelper::collectionFromIdOrName( buffer );
     if ( !col.isValid() )

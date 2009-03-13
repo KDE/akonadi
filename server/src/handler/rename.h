@@ -36,6 +36,8 @@ class Rename : public Handler
     Rename();
     ~Rename();
     virtual bool handleLine( const QByteArray &line );
+    bool supportsStreamParser();
+    bool parseStream();
 };
 
 }

@@ -26,6 +26,7 @@
 #include "storage/entity.h"
 #include "handlerhelper.h"
 #include "../../libs/imapparser_p.h"
+#include "imapstreamparser.h"
 
 #include "response.h"
 
@@ -107,5 +108,82 @@ bool Select::handleLine(const QByteArray& line )
     deleteLater();
     return true;
 }
+
+bool Select::supportsStreamParser()
+{
+  return true;
+}
+
+bool Select::parseStream()
+{
+  qDebug() << "Select::parseStream";
+  QByteArray tmp = m_streamParser->readString(); // skip command
+  if (tmp != "SELECT") {
+    //put back what was read
+    m_streamParser->insertData(' ' + tmp + ' ');
+  }
+
+    // as per rfc, even if the following select fails, we need to reset
+  connection()->setSelectedCollection( 0 );
+
+  QByteArray buffer = m_streamParser->readString();
+
+  bool silent = false;
+  if ( buffer == "SILENT" ) {
+    silent = true;
+    buffer = m_streamParser->readString();
+  }
+
+    // collection
+  Collection col = HandlerHelper::collectionFromIdOrName( buffer );
+  if ( !col.isValid() ) {
+    bool ok = false;
+    if ( buffer.toLongLong( &ok ) == 0 && ok )
+      silent = true;
+    else
+      return failureResponse( "Cannot select this collection" );
+  }
+
+    // Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT
+    // OPTIONAL OK untagged responses: UNSEEN, PERMANENTFLAGS
+  Response response;
+  if ( !silent ) {
+    response.setUntagged();
+    response.setString( Flag::joinByName<Flag>( Flag::retrieveAll(), QLatin1String(" ") ) );
+    emit responseAvailable( response );
+
+    int count = HandlerHelper::itemCount( col );
+    if ( count < 0 )
+      return failureResponse( "Unable to determine item count" );
+    response.setString( QByteArray::number( count ) + " EXISTS" );
+    emit responseAvailable( response );
+
+    count = HandlerHelper::itemWithFlagCount( col, QLatin1String( "\\Recent" ) );
+    if ( count < 0 )
+      return failureResponse( "Unable to determine recent count" );
+    response.setString( QByteArray::number( count ) + " RECENT" );
+    emit responseAvailable( response );
+
+    count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) );
+    if ( count < 0 )
+      return failureResponse( "Unable to retrieve unseen count" );
+    response.setString( "OK [UNSEEN " + QByteArray::number( count ) + "] Message 0 is first unseen" );
+    emit responseAvailable( response );
+
+    response.setString( "OK [UIDVALIDITY 1] UIDs valid" );
+    emit responseAvailable( response );
+  }
+
+  response.setSuccess();
+  response.setTag( tag() );
+  response.setString( "Completed" );
+  emit responseAvailable( response );
+
+  connection()->setSelectedCollection( col.id() );
+  deleteLater();
+  return true;
+}
+
+
 
 #include "select.moc"

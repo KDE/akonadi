@@ -43,6 +43,8 @@ class Subscribe : public Handler
   Q_OBJECT
   public:
     bool handleLine( const QByteArray &line );
+    bool supportsStreamParser();
+    bool parseStream();
 };
 
 }
