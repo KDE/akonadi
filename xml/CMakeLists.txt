@@ -33,21 +33,21 @@ set( akonadixml_SRCS
   xmlwriter.cpp
 )
 
-kde4_add_library(akonadixml SHARED ${akonadixml_SRCS})
+kde4_add_library(akonadi-xml SHARED ${akonadixml_SRCS})
 
-target_link_libraries(akonadixml
+target_link_libraries(akonadi-xml
   ${KDE4_KIO_LIBS}
   ${KDE4_AKONADI_LIBS}
   ${QT_QTXML_LIBRARY}
   ${LIBXML2_LIBRARIES}
 )
 
-set_target_properties(akonadixml PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
-install (TARGETS akonadixml ${INSTALL_TARGETS_DEFAULT_ARGS})
+set_target_properties(akonadi-xml PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+install (TARGETS akonadi-xml ${INSTALL_TARGETS_DEFAULT_ARGS})
 install( FILES
    akonadi-xml_export.h
    xmldocument.h
    xmlreader.h
    xmlwriter.h
-   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/ COMPONENT Devel
+   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/xml/ COMPONENT Devel
 )
