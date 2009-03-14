@@ -16,3 +16,4 @@ macro(add_libakonadixml_test _source)
 endmacro(add_libakonadixml_test)
 
 add_libakonadixml_test(collection.cpp)
+add_libakonadixml_test(xmldocumenttest.cpp)
