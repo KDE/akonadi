@@ -39,13 +39,18 @@ class XmlDocumentTest : public QObject
       Collection col = doc.collectionByRemoteId( "c11" );
       QCOMPARE( col.name(), QString( "Inbox" ) );
       QCOMPARE( col.attributes().count(), 1 );
+      QCOMPARE( col.parentRemoteId(), QString("c1") );
 
       Item item = doc.itemByRemoteId( "contact1" );
       QCOMPARE( item.mimeType(), QString( "text/directory" ) );
-//       QVERIFY( item.hasPayload() );
+      QVERIFY( item.hasPayload() );
 
       Item::List items = doc.items( col );
       QCOMPARE( items.count(), 1 );
+      item = items.first();
+      QVERIFY( item.hasPayload() );
+      QCOMPARE( item.flags().count(), 1 );
+      QVERIFY( item.hasFlag( "\\Seen" ) );
     }
 };
 

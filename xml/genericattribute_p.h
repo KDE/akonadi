@@ -1,6 +1,5 @@
 /*
-    Copyright (c) Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
-    based on  kdepim/akonadi/resources/knut
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,27 +17,34 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADIXML_H
-#define AKONADIXML_H
+#ifndef AKONADI_XML_GENERICATTRIBUTE_P_H
+#define AKONADI_XML_GENERICATTRIBUTE_P_H
 
-#include "akonadi-xml_export.h"
+#include <akonadi/attribute.h>
 
-#include <QDomDocument>
+namespace Akonadi {
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-
-
-class AKONADI_XML_EXPORT AkonadiXML {
-
+class GenericAttribute : public Attribute
+{
   public:
-    static Akonadi::Collection::List buildCollectionTree( const QDomElement &parent );
-    QDomElement serializeItem( Akonadi::Item &item );
-    void serializeAttributes( const Akonadi::Entity &entity, QDomElement &entityElem );
-    QDomElement serializeCollection( Akonadi::Collection &collection );
+    explicit GenericAttribute( const QByteArray &type, const QByteArray &value = QByteArray() ) :
+    mType( type ),
+    mValue( value )
+    {}
+
+    QByteArray type() const { return mType; }
+    Attribute* clone() const
+    {
+      return new GenericAttribute( mType, mValue );
+    }
+
+    QByteArray serialized() const { return mValue; }
+    void deserialize( const QByteArray &data ) { mValue = data; }
 
   private:
-    QDomDocument mDocument;
+    QByteArray mType, mValue;
 };
+  
+}
 
 #endif

@@ -20,6 +20,7 @@
 #include "xmldocument.h"
 #include "akonadi-xml.h"
 #include "format_p.h"
+#include "xmlreader.h"
 
 #include <KDebug>
 #include <KGlobal>
@@ -204,16 +205,12 @@ QDomElement XmlDocument::itemElementByRemoteId(const QString& rid) const
 Collection XmlDocument::collectionByRemoteId(const QString& rid) const
 {
   const QDomElement elem = collectionElementByRemoteId( rid );
-  const QDomElement parentElem = elem.parentNode().toElement();
-  QString parentRid;
-  if ( !parentElem.isNull() && parentElem.tagName() == Format::Tag::collection() )
-    parentRid = parentElem.attribute( Format::Attr::remoteId() );
-  return AkonadiXML::buildCollection( elem, parentRid );
+  return XmlReader::elementToCollection( elem );
 }
 
-Item XmlDocument::itemByRemoteId(const QString& rid) const
+Item XmlDocument::itemByRemoteId(const QString& rid, bool includePayload) const
 {
-  return AkonadiXML::buildItem( itemElementByRemoteId( rid ) );
+  return XmlReader::elementToItem( itemElementByRemoteId( rid ), includePayload );
 }
 
 Collection::List XmlDocument::collections() const
@@ -221,7 +218,7 @@ Collection::List XmlDocument::collections() const
   return AkonadiXML::buildCollectionTree( d->document.documentElement() );
 }
 
-Item::List XmlDocument::items(const Akonadi::Collection& collection) const
+Item::List XmlDocument::items(const Akonadi::Collection& collection, bool includePayload) const
 {
   const QDomElement colElem = collectionElementByRemoteId( collection.remoteId() );
   if ( colElem.isNull() ) {
@@ -237,7 +234,7 @@ Item::List XmlDocument::items(const Akonadi::Collection& collection) const
     const QDomElement itemElem = children.at( i ).toElement();
     if ( itemElem.isNull() || itemElem.tagName() != Format::Tag::item() )
       continue;
-    items += AkonadiXML::buildItem( itemElem );
+    items += XmlReader::elementToItem( itemElem, includePayload );
   }
 
   return items;

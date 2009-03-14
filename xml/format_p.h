@@ -30,12 +30,19 @@ namespace Tag {
 
   inline QString collection() { return QString::fromLatin1( "collection" ); }
   inline QString item() { return QString::fromLatin1( "item" ); }
+  inline QString attribute() { return QString::fromLatin1( "attribute" ); }
+  inline QString flag() { return QString::fromLatin1( "flag" ); }
+  inline QString payload() { return QString::fromLatin1( "payload" ); }
 
 }
 
 namespace Attr {
 
   inline QString remoteId() { return QString::fromLatin1( "rid" ); }
+  inline QString attributeType() { return QString::fromLatin1( "type" ); }
+  inline QString collectionName() { return QString::fromLatin1( "name" ); }
+  inline QString collectionContentTypes() { return QString::fromLatin1( "content" ); }
+  inline QString itemMimeType() { return QString::fromLatin1( "mimetype" ); }
 
 }
 

@@ -83,7 +83,7 @@ class AKONADI_XML_EXPORT XmlDocument
     /**
       Returns the item with the given remote id.
     */
-    Item itemByRemoteId( const QString &rid ) const;
+    Item itemByRemoteId( const QString& rid, bool includePayload = true ) const;
 
     /**
       Returns the collections defined in this document.
@@ -93,7 +93,7 @@ class AKONADI_XML_EXPORT XmlDocument
     /**
       Returns the items in the given collection.
     */
-    Item::List items( const Collection &collection ) const;
+    Item::List items( const Akonadi::Collection& collection, bool includePayload = true ) const;
 
   private:
     XmlDocumentPrivate * const d;
