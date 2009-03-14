@@ -19,8 +19,9 @@
 */
 
 #include "xmlreader.h"
-#include "genericattribute_p.h"
 #include "format_p.h"
+
+#include <akonadi/attributefactory.h>
 
 #include <QStringList>
 
@@ -30,8 +31,9 @@ Attribute* XmlReader::elementToAttribute(const QDomElement& elem)
 {
   if ( elem.isNull() || elem.tagName() != Format::Tag::attribute() )
     return 0;
-  GenericAttribute *attr = new GenericAttribute( elem.attribute( Format::Attr::attributeType() ).toUtf8(),
-                                                 elem.text().toUtf8() );
+  Attribute *attr = AttributeFactory::createAttribute( elem.attribute( Format::Attr::attributeType() ).toUtf8() );
+  Q_ASSERT( attr );
+  attr->deserialize( elem.text().toUtf8() );
   return attr;
 }
 

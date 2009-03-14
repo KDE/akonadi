@@ -67,6 +67,10 @@ void CollectionTest::testBuildCollection()
   verifyCollection(colist, 0, "c11", "Inbox", mimeType);
   verifyCollection(colist, 1, "c111", "KDE PIM", mimeType);
   verifyCollection(colist, 2, "c112", "Akonadi", mimeType);
+
+  QVERIFY( colist.at( 0 ).hasAttribute<EntityDisplayAttribute>() );
+  EntityDisplayAttribute *attr = colist.at( 0 ).attribute<EntityDisplayAttribute>();
+  QCOMPARE( attr->displayName(), QString( "Posteingang" ) );
 }
 
 void CollectionTest::serializeCollection()
