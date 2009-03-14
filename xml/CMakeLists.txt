@@ -25,9 +25,9 @@ include_directories(
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set( akonadixml_SRCS
-  akonadi-xml.cpp
   xmldocument.cpp
   xmlreader.cpp
+  xmlwriter.cpp
 )
 
 kde4_add_library(akonadixml SHARED ${akonadixml_SRCS})
@@ -42,9 +42,9 @@ target_link_libraries(akonadixml
 set_target_properties(akonadixml PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install (TARGETS akonadixml ${INSTALL_TARGETS_DEFAULT_ARGS})
 install( FILES
-   akonadi-xml.h
    akonadi-xml_export.h
    xmldocument.h
    xmlreader.h
+   xmlwriter.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/ COMPONENT Devel
 )

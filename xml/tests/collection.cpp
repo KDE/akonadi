@@ -18,7 +18,10 @@
 */
 
 #include "collection.h"
-#include <akonadi-xml.h>
+#include <xmlreader.h>
+#include <xmlwriter.h>
+
+#include <akonadi/entitydisplayattribute.h>
 
 #include <qtest_kde.h>
 #include <kdebug.h>
@@ -26,11 +29,11 @@
 QTEST_KDEMAIN(CollectionTest, NoGUI)
 
 QByteArray collection1(
-"<test>	\	
-<collection rid=\"c11\" name=\"Inbox\" content=\"inode/directory,message/rfc822\">           \
-      <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\")</attribute> \
-</collection>										     \		
-</test>");
+"<test>\n"
+" <collection content=\"inode/directory,message/rfc822\" rid=\"c11\" name=\"Inbox\" >\n"
+"  <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\")</attribute>\n"
+" </collection>\n"
+"</test>\n");
 
 QByteArray collection2(
 "<test> \
@@ -47,10 +50,9 @@ QByteArray collection2(
 void CollectionTest::testBuildCollection()
 {
   QDomDocument mDocument;
-  AkonadiXML test;
 
   mDocument.setContent(collection1, true, 0);
-  Collection::List colist = test.buildCollectionTree( mDocument.documentElement());
+  Collection::List colist = XmlReader::readCollections( mDocument.documentElement());
 
   QStringList mimeType;
 
@@ -59,7 +61,7 @@ void CollectionTest::testBuildCollection()
   verifyCollection(colist, 0, "c11", "Inbox", mimeType);
 
   mDocument.setContent(collection2, true, 0);
-  colist = test.buildCollectionTree( mDocument.documentElement());
+  colist = XmlReader::readCollections( mDocument.documentElement());
 
   QCOMPARE(colist.size(), 3);
   verifyCollection(colist, 0, "c11", "Inbox", mimeType);
@@ -69,6 +71,19 @@ void CollectionTest::testBuildCollection()
 
 void CollectionTest::serializeCollection()
 {
+  Collection c;
+  c.setRemoteId( "c11" );
+  c.setName( "Inbox" );
+  c.setContentMimeTypes( QStringList() << Collection::mimeType() << "message/rfc822" );
+  c.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setDisplayName( "Posteingang" );
+  c.attribute<EntityDisplayAttribute>()->setIconName( "mail-folder-inbox" );
+
+  QDomDocument doc;
+  QDomElement root = doc.createElement( "test" );
+  doc.appendChild( root );
+  XmlWriter::writeCollection( c, root );
+
+  QCOMPARE( doc.toString(), QString::fromUtf8( collection1 ) );
 }
 
 void CollectionTest::verifyCollection(Collection::List colist, int listPosition,QString remoteId, 

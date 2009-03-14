@@ -18,7 +18,6 @@
 */
 
 #include "xmldocument.h"
-#include "akonadi-xml.h"
 #include "format_p.h"
 #include "xmlreader.h"
 
@@ -215,7 +214,7 @@ Item XmlDocument::itemByRemoteId(const QString& rid, bool includePayload) const
 
 Collection::List XmlDocument::collections() const
 {
-  return AkonadiXML::buildCollectionTree( d->document.documentElement() );
+  return XmlReader::readCollections( d->document.documentElement() );
 }
 
 Item::List XmlDocument::items(const Akonadi::Collection& collection, bool includePayload) const

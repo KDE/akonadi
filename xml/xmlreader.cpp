@@ -1,7 +1,7 @@
 /*
     Copyright (c) 2009 Volker Krause <vkrause@kde.org>
     Copyright (c) 2009 Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
-    
+
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
     the Free Software Foundation; either version 2 of the License, or (at your
@@ -64,6 +64,23 @@ Collection XmlReader::elementToCollection(const QDomElement& elem)
     c.setParentRemoteId( parentElem.attribute( Format::Attr::remoteId() ) );
 
   return c;
+}
+
+Collection::List XmlReader::readCollections(const QDomElement& elem)
+{
+  Collection::List rv;
+  if ( elem.isNull() )
+    return rv;
+  if ( elem.tagName() == Format::Tag::collection() )
+    rv += elementToCollection( elem );
+  const QDomNodeList children = elem.childNodes();
+  for ( int i = 0; i < children.count(); i++ ) {
+    const QDomElement child = children.at( i ).toElement();
+    if ( child.isNull() || child.tagName() != Format::Tag::collection() )
+      continue;
+    rv += readCollections( child );
+  }
+  return rv;
 }
 
 Item XmlReader::elementToItem(const QDomElement& elem, bool includePayload)

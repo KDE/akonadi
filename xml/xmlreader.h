@@ -36,7 +36,8 @@ class Attribute;
   Low-level methods to transform DOM elements into the corresponding Akonadi objects.
   @see Akonadi::XmlDocument
 */
-namespace XmlReader {
+namespace XmlReader
+{
   /**
     Converts an attribute element.
   */
@@ -52,6 +53,11 @@ namespace XmlReader {
     Converts a collection element.
   */
   AKONADI_XML_EXPORT Collection elementToCollection( const QDomElement &elem );
+
+  /**
+    Reads recursively all collections starting from the given DOM element.
+  */
+  AKONADI_XML_EXPORT Collection::List readCollections( const QDomElement &elem );
 
   /**
     Converts an item element.
