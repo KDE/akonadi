@@ -60,7 +60,7 @@ QDomElement XmlWriter::collectionToElement(const Akonadi::Collection& collection
   QDomElement top = document.createElement( Format::Tag::collection() );
   top.setAttribute( Format::Attr::remoteId(), collection.remoteId() );
   top.setAttribute( Format::Attr::collectionName(), collection.name() );
-  top.setAttribute( Format::Attr::collectionContentTypes(), collection.contentMimeTypes().join( "," ) );
+  top.setAttribute( Format::Attr::collectionContentTypes(), collection.contentMimeTypes().join( QLatin1String(",") ) );
   writeAttributes( collection, top );
 
   return top;

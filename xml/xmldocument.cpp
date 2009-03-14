@@ -116,7 +116,7 @@ XmlDocument::XmlDocument(const QString& fileName) :
     }
     data = file.readAll();
   } else {
-    const QString tmplFilename = KGlobal::dirs()->findResource( "data", "akonadi_knut_resource/knut-template.xml" );
+    const QString tmplFilename = KGlobal::dirs()->findResource( "data", QLatin1String("akonadi_knut_resource/knut-template.xml") );
     QFile tmpl( tmplFilename );
     if ( !tmpl.open( QFile::ReadOnly ) ) {
       d->lastError = i18n( "Unable to open template file '%1'.", tmplFilename );
@@ -133,7 +133,7 @@ XmlDocument::XmlDocument(const QString& fileName) :
     return;
   }
 
-  const QString &schemaFileName = KGlobal::dirs()->findResource( "data", "akonadi_knut_resource/knut.xsd" );
+  const QString &schemaFileName = KGlobal::dirs()->findResource( "data", QLatin1String("akonadi_knut_resource/knut.xsd") );
   XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit(), NULL, XML_PARSE_NONET ) );
   if ( !schemaDoc ) {
     d->lastError = i18n( "Schema definition could not be loaded and parsed." );

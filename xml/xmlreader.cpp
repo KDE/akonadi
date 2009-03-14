@@ -58,7 +58,7 @@ Collection XmlReader::elementToCollection(const QDomElement& elem)
   Collection c;
   c.setRemoteId( elem.attribute( Format::Attr::remoteId() ) );
   c.setName( elem.attribute( Format::Attr::collectionName() ) );
-  c.setContentMimeTypes( elem.attribute( Format::Attr::collectionContentTypes() ).split( ',' ) );
+  c.setContentMimeTypes( elem.attribute( Format::Attr::collectionContentTypes() ).split( QLatin1Char(',') ) );
   XmlReader::readAttributes( elem, c );
 
   const QDomElement parentElem = elem.parentNode().toElement();
@@ -87,7 +87,7 @@ Collection::List XmlReader::readCollections(const QDomElement& elem)
 
 Item XmlReader::elementToItem(const QDomElement& elem, bool includePayload)
 {
-  Item item( elem.attribute( Format::Attr::itemMimeType(), "application/octet-stream" ) );
+  Item item( elem.attribute( Format::Attr::itemMimeType(), QLatin1String("application/octet-stream") ) );
   item.setRemoteId( elem.attribute( Format::Attr::remoteId() ) );
   XmlReader::readAttributes( elem, item );
   
