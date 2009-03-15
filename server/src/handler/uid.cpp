@@ -113,17 +113,8 @@ bool Uid::parseStream()
 
   QByteArray subCommand;
   if ( !mSubHandler ) {
-    if ( !m_streamParser->hasString() ) {
-      Response response;
-      response.setTag( tag() );
-      response.setError();
-      response.setString( "Syntax error" );
-
-      emit responseAvailable( response );
-      deleteLater();
-
-      return true;
-    }
+    if ( !m_streamParser->hasString() )
+      throw HandlerException( "Syntax error" );
 
     subCommand = m_streamParser->readString().toUpper();
 
@@ -131,21 +122,12 @@ bool Uid::parseStream()
     if ( subCommand == "FETCH" )
       mSubHandler = new Fetch();
     else if ( subCommand == "STORE" )
-      mSubHandler = new Store();
+      mSubHandler = new Store( true );
 
-    mSubHandler->setStreamParser(m_streamParser);
-    if ( !mSubHandler ) {
-      Response response;
-      response.setTag( tag() );
-      response.setError();
-      response.setString( "Syntax error" );
+    if ( !mSubHandler )
+      throw HandlerException( "Unknown UID subcommand" );
 
-      emit responseAvailable( response );
-      deleteLater();
-
-      return true;
-    }
-
+    mSubHandler->setStreamParser( m_streamParser );
     mSubHandler->setTag( tag() );
     mSubHandler->setConnection( connection() );
 

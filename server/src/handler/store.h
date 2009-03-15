@@ -39,7 +39,7 @@ class Store : public Handler
   Q_OBJECT
 
   public:
-    Store();
+    Store( bool isUid = false );
     ~Store();
 
     bool handleLine(const QByteArray& line);

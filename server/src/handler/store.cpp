@@ -40,12 +40,12 @@
 
 using namespace Akonadi;
 
-Store::Store()
+Store::Store(bool isUid)
   : Handler()
   , mPos( 0 )
   , mPreviousRevision( -1 )
   , mSize( 0 )
-  , mUidStore( false )
+  , mUidStore( isUid )
 {
 }
 
@@ -534,10 +534,7 @@ bool Store::parseStream()
 void Store::parseCommandStream()
 {
   QByteArray buffer = m_streamParser->readString();
-  if ( buffer == "UID" ) {
-    mUidStore = true;
-    buffer = m_streamParser->readString(); // skip 'STORE'
-  } else {
+  if ( buffer != "STORE" ) {
     //put back what was read
     m_streamParser->insertData(' ' + buffer + ' ');
   }
