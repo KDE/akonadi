@@ -41,6 +41,8 @@ class XmlDocumentTest : public QObject
       QCOMPARE( col.attributes().count(), 1 );
       QCOMPARE( col.parentRemoteId(), QString("c1") );
 
+      QCOMPARE( doc.childCollections( col.remoteId() ).count(), 2 );
+
       Item item = doc.itemByRemoteId( "contact1" );
       QCOMPARE( item.mimeType(), QString( "text/directory" ) );
       QVERIFY( item.hasPayload() );

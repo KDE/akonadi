@@ -235,6 +235,32 @@ Collection::List XmlDocument::collections() const
   return XmlReader::readCollections( d->document.documentElement() );
 }
 
+Collection::List XmlDocument::childCollections(const QString& parentCollectionRid) const
+{
+  QDomElement parentElem;
+  if ( parentCollectionRid.isEmpty() )
+    parentElem = d->document.documentElement();
+  else
+    parentElem = collectionElementByRemoteId( parentCollectionRid );
+
+  if ( parentElem.isNull() ) {
+    d->lastError = QLatin1String( "Parent node not found." );
+    return Collection::List();
+  }
+
+  Collection::List rv;
+  const QDomNodeList children = parentElem.childNodes();
+  for ( int i = 0; i < children.count(); ++i ) {
+    const QDomElement childElem = children.at( i ).toElement();
+    if ( childElem.isNull() || childElem.tagName() != Format::Tag::collection() )
+      continue;
+    rv += XmlReader::elementToCollection( childElem );
+  }
+
+  return rv;
+}
+
+
 Item::List XmlDocument::items(const Akonadi::Collection& collection, bool includePayload) const
 {
   const QDomElement colElem = collectionElementByRemoteId( collection.remoteId() );

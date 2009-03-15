@@ -103,6 +103,11 @@ class AKONADI_XML_EXPORT XmlDocument
     Collection::List collections() const;
 
     /**
+      Returns immediate child collections of the specified parent collection.
+    */
+    Collection::List childCollections( const QString &parentCollectionRid ) const;
+
+    /**
       Returns the items in the given collection.
     */
     Item::List items( const Collection& collection, bool includePayload = true ) const;
