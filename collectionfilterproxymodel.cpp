@@ -26,6 +26,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
+#include <QTimer>
 
 using namespace Akonadi;
 
@@ -42,6 +43,11 @@ class CollectionFilterProxyModel::Private
     }
 
     bool collectionAccepted( const QModelIndex &index, bool checkResourceVisibility = true );
+
+    void slotReset()
+    {
+      mParent->reset();
+    }
 
     QList< QModelIndex > acceptedResources;
     CollectionFilterProxyModel *mParent;
@@ -68,7 +74,8 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
         kDebug() << "We got a new collection:" << mParent->sourceModel()->data( index ).toString()
                  << "but the resource is not visible:" << mParent->sourceModel()->data( resource ).toString();
         acceptedResources.clear();
-        mParent->reset();
+        // defer reset, the model might still be supplying new items at this point which crashs
+        QTimer::singleShot( 0, mParent, SLOT(slotReset()) );
         return true;
       }
     }
