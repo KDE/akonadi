@@ -38,14 +38,26 @@ class AKONADI_XML_EXPORT XmlDocument
 {
   public:
     /**
+      Creates an empty, invalid XmlDocument.
+    */
+    XmlDocument();
+
+    /**
+      Creates a new XmlDocument object and calls loadFile().
+
+      @see loadFile()
+    */
+    XmlDocument( const QString &fileName );
+    ~XmlDocument();
+
+    /**
       Parses the given XML file and validates it.
       In case of an error, isValid() will return @c false and
       lastError() will return an error message.
 
        @see isValid(), lastError()
     */
-    XmlDocument( const QString &fileName );
-    ~XmlDocument();
+    bool loadFile( const QString &fileName );
 
     /**
       Returns true if the document could be parsed successfully.
@@ -93,7 +105,7 @@ class AKONADI_XML_EXPORT XmlDocument
     /**
       Returns the items in the given collection.
     */
-    Item::List items( const Akonadi::Collection& collection, bool includePayload = true ) const;
+    Item::List items( const Collection& collection, bool includePayload = true ) const;
 
   private:
     XmlDocumentPrivate * const d;

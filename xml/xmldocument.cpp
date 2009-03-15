@@ -87,7 +87,9 @@ class XmlDocumentPrivate
   public:
     XmlDocumentPrivate() :
       valid( false )
-    {}
+    {
+      lastError = i18n( "No data loaded." );
+    }
 
     QDomElement findElementByRid( const QString &rid, const QString &elemName ) const
     {
@@ -101,18 +103,37 @@ class XmlDocumentPrivate
 
 }
 
+XmlDocument::XmlDocument() :
+  d( new XmlDocumentPrivate )
+{}
+
 XmlDocument::XmlDocument(const QString& fileName) :
   d( new XmlDocumentPrivate )
 {
-  if ( fileName.isEmpty() )
-    return;
+  loadFile( fileName );
+}
+
+XmlDocument::~XmlDocument()
+{
+  delete d;
+}
+
+bool Akonadi::XmlDocument::loadFile(const QString& fileName)
+{
+  d->valid = false;
+  d->document = QDomDocument();
+
+  if ( fileName.isEmpty() ) {
+    d->lastError = i18n( "No filename specified" );
+    return false;
+  }
 
   QFile file( fileName );
   QByteArray data;
   if ( file.exists() ) {
     if ( !file.open( QIODevice::ReadOnly ) ) {
       d->lastError = i18n( "Unable to open data file '%1'.", fileName );
-      return;
+      return false;
     }
     data = file.readAll();
   } else {
@@ -120,7 +141,7 @@ XmlDocument::XmlDocument(const QString& fileName) :
     QFile tmpl( tmplFilename );
     if ( !tmpl.open( QFile::ReadOnly ) ) {
       d->lastError = i18n( "Unable to open template file '%1'.", tmplFilename );
-      return;
+      return false;
     }
     data = tmpl.readAll();
   }
@@ -130,34 +151,34 @@ XmlDocument::XmlDocument(const QString& fileName) :
   XmlPtr<xmlDocPtr, xmlFreeDoc> sourceDoc( xmlParseMemory( data.constData(), data.length() ) );
   if ( !sourceDoc ) {
     d->lastError = i18n( "Unable to parse data file '%1'.", fileName );
-    return;
+    return false;
   }
 
   const QString &schemaFileName = KGlobal::dirs()->findResource( "data", QLatin1String("akonadi_knut_resource/knut.xsd") );
   XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit(), NULL, XML_PARSE_NONET ) );
   if ( !schemaDoc ) {
     d->lastError = i18n( "Schema definition could not be loaded and parsed." );
-    return;
+    return false;
   }
   XmlPtr<xmlSchemaParserCtxtPtr, xmlSchemaFreeParserCtxt> parserContext( xmlSchemaNewDocParserCtxt( schemaDoc ) );
   if ( !parserContext ) {
     d->lastError = i18n( "Unable to create schema parser context." );
-    return;
+    return false;
   }
   XmlPtr<xmlSchemaPtr, xmlSchemaFree> schema( xmlSchemaParse( parserContext ) );
   if ( !schema ) {
     d->lastError = i18n( "Unable to create schema." );
-    return;
+    return false;
   }
   XmlPtr<xmlSchemaValidCtxtPtr, xmlSchemaFreeValidCtxt> validationContext( xmlSchemaNewValidCtxt( schema ) );
   if ( !validationContext ) {
     d->lastError = i18n( "Unable to create schema validation context." );
-    return;
+    return false;
   }
 
   if ( xmlSchemaValidateDoc( validationContext, sourceDoc ) != 0 ) {
     d->lastError = i18n( "Invalid file format." );
-    return;
+    return false;
   }
 #endif
 
@@ -165,15 +186,12 @@ XmlDocument::XmlDocument(const QString& fileName) :
   QString errMsg;
   if ( !d->document.setContent( data, true, &errMsg ) ) {
     d->lastError = i18n( "Unable to parse data file: %1", errMsg );
-    return;
+    return false;
   }
 
   d->valid = true;
-}
-
-XmlDocument::~XmlDocument()
-{
-  delete d;
+  d->lastError.clear();
+  return true;
 }
 
 bool XmlDocument::isValid() const
@@ -226,7 +244,7 @@ Item::List XmlDocument::items(const Akonadi::Collection& collection, bool includ
   } else {
     d->lastError.clear();
   }
-  
+
   Item::List items;
   const QDomNodeList children = colElem.childNodes();
   for ( int i = 0; i < children.count(); ++i ) {
