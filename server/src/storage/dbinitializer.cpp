@@ -31,7 +31,6 @@
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
 #include <QtSql/QSqlError>
-#include <QtSql/QSqlError>
 
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
   : mDatabase( database ), mTemplateFile( templateFile )
