@@ -1,6 +1,6 @@
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/libakonadi-xml
+    ${CMAKE_SOURCE_DIR}/xml
     ${CMAKE_SOURCE_DIR}
     ${AKONADI_INCLUDE_DIR}
     ${KDE4_INCLUDES}
