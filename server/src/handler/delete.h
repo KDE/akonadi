@@ -37,8 +37,6 @@ class Delete : public Handler
   public:
     Delete();
     ~Delete();
-    virtual bool handleLine( const QByteArray &line );
-    bool supportsStreamParser();
     bool parseStream();
 
   private:

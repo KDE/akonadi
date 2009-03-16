@@ -21,7 +21,6 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include "../../libs/imapparser_p.h"
 #include "response.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
@@ -43,52 +42,6 @@ SearchPersistent::~SearchPersistent()
 {
 }
 
-bool SearchPersistent::handleLine( const QByteArray& line )
-{
-  int pos = line.indexOf( ' ' ) + 1; // skip tag
-  pos = line.indexOf( ' ', pos ) + 1; // skip command
-
-  QByteArray collectionName;
-  pos = ImapParser::parseString( line, collectionName, pos );
-  if ( collectionName.isEmpty() )
-    return failureResponse( "No name specified" );
-
-  DataStore *db = connection()->storageBackend();
-  Transaction transaction( db );
-
-  QByteArray queryString;
-  ImapParser::parseString( line, queryString, pos );
-  if ( queryString.isEmpty() )
-    return failureResponse( "No query specified" );
-
-  Collection col;
-  col.setRemoteId( QString::fromUtf8( queryString ) );
-  col.setParentId( 1 ); // search root
-  col.setResourceId( 1 ); // search resource
-  col.setName( collectionName );
-  if ( !db->appendCollection( col ) )
-    return failureResponse( "Unable to create persistent search" );
-
-  if ( !AbstractSearchManager::instance()->addSearch( col ) )
-    return failureResponse( "Unable to add search to search manager" );
-
-  if ( !transaction.commit() )
-    return failureResponse( "Unable to commit transaction" );
-
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( "SEARCH_STORE completed" );
-  emit responseAvailable( response );
-
-  deleteLater();
-  return true;
-}
-
-bool SearchPersistent::supportsStreamParser()
-{
-  return true;
-}
 
 bool SearchPersistent::parseStream()
 {

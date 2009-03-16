@@ -42,8 +42,6 @@ public:
 
     ~AkAppend();
 
-    bool handleLine(const QByteArray& line);
-    bool supportsStreamParser();
     bool parseStream();
 
 protected:

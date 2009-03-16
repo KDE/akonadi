@@ -40,70 +40,6 @@ Uid::~Uid()
 {
 }
 
-bool Uid::handleLine( const QByteArray& line )
-{
-  int start = line.indexOf( ' ' ); // skip tag
-
-  QByteArray subCommand;
-  if ( !mSubHandler ) {
-    start = line.indexOf( ' ', start + 1 );
-    if ( start == -1 ) {
-      Response response;
-      response.setTag( tag() );
-      response.setError();
-      response.setString( "Syntax error" );
-
-      emit responseAvailable( response );
-      deleteLater();
-
-      return true;
-    }
-
-    int end = line.indexOf( ' ', start + 1 );
-
-    subCommand = line.mid( start + 1, end - start - 1 ).toUpper();
-
-    mSubHandler = 0;
-    if ( subCommand == "FETCH" )
-      mSubHandler = new Fetch();
-    else if ( subCommand == "STORE" )
-      mSubHandler = new Store();
-
-    if ( !mSubHandler ) {
-      Response response;
-      response.setTag( tag() );
-      response.setError();
-      response.setString( "Syntax error" );
-
-      emit responseAvailable( response );
-      deleteLater();
-
-      return true;
-    }
-
-    mSubHandler->setTag( tag() );
-    mSubHandler->setConnection( connection() );
-
-    connect( mSubHandler, SIGNAL( responseAvailable( const Response & ) ),
-             this, SIGNAL( responseAvailable( const Response & ) ) );
-    connect( mSubHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
-             this, SIGNAL( connectionStateChange( ConnectionState ) ) );
-  }
-
-  if ( mSubHandler->handleLine( line ) )
-    mSubHandler = 0;
-  else
-    return false;
-
-  deleteLater();
-
-  return true;
-}
-
-bool Uid::supportsStreamParser()
-{
-  return true;
-}
 
 bool Uid::parseStream()
 {
@@ -130,6 +66,7 @@ bool Uid::parseStream()
     mSubHandler->setStreamParser( m_streamParser );
     mSubHandler->setTag( tag() );
     mSubHandler->setConnection( connection() );
+    m_streamParser->insertData( " UID " + subCommand + ' ' );
 
     connect( mSubHandler, SIGNAL( responseAvailable( const Response & ) ),
              this, SIGNAL( responseAvailable( const Response & ) ) );
@@ -137,17 +74,13 @@ bool Uid::parseStream()
              this, SIGNAL( connectionStateChange( ConnectionState ) ) );
   }
 
-  if ( mSubHandler->supportsStreamParser() )
-  {
-    qDebug() << "mSubHandler supports stream parsing";
+  try {
     mSubHandler->parseStream();
-  } else
-  {
-    qDebug() << "mSubHandler doesn't support stream parsing";
-    QByteArray data = tag() + " UID " + subCommand + " " + m_streamParser->readUntilCommandEnd();
-    mSubHandler->handleLine( data );
   }
-
+  catch ( const Akonadi::HandlerException &e ) {
+    mSubHandler->failureResponse( e.what() );
+    mSubHandler->deleteLater();
+  }
   mSubHandler = 0;
   deleteLater();
 

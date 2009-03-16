@@ -36,8 +36,6 @@ class Select : public Handler
 
     ~Select();
 
-    bool handleLine(const QByteArray& line);
-    bool supportsStreamParser();
     bool parseStream();
 
 };

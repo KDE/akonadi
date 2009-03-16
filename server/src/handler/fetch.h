@@ -38,13 +38,12 @@ class QueryBuilder;
  */
 class Fetch : public Handler
 {
+  Q_OBJECT
   public:
     Fetch();
 
     ~Fetch();
 
-    bool handleLine(const QByteArray& line);
-    bool supportsStreamParser();
     bool parseStream();
 
   private:

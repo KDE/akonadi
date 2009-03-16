@@ -57,8 +57,6 @@ class AKONADIPRIVATE_EXPORT ColCopy : public Copy
 {
   Q_OBJECT
   public:
-    bool handleLine(const QByteArray& line);
-    bool supportsStreamParser();
     bool parseStream();
 
   private:

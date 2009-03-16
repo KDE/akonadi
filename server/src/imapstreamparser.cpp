@@ -42,15 +42,6 @@ ImapStreamParser::~ImapStreamParser()
 {
 }
 
-QByteArray ImapStreamParser::tag()
-{
-  if (m_tag.isEmpty())
-  {
-    m_tag = readString();
-  }
-  return m_tag;
-}
-
 QString ImapStreamParser::readUtf8String()
 {
   QByteArray tmp;
@@ -659,6 +650,9 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
       ++i;
   }
   m_position = i + 1;
+    // We'd better empty m_data from time to time before it grows out of control
+  m_data = m_data.right(m_data.size()-m_position);
+  m_position = 0;
   return result;
 }
 
@@ -678,4 +672,9 @@ void ImapStreamParser::sendContinuationResponse()
 void ImapStreamParser::insertData( const QByteArray& data)
 {
   m_data = m_data.insert(m_position, data);
+}
+
+void ImapStreamParser::appendData( const QByteArray& data)
+{
+  m_data = m_data + data;
 }

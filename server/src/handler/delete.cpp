@@ -21,7 +21,6 @@
 
 #include <akonadiconnection.h>
 #include <handlerhelper.h>
-#include "../../libs/imapparser_p.h"
 #include <response.h>
 #include <storage/datastore.h>
 #include <storage/entity.h>
@@ -39,49 +38,6 @@ Delete::~Delete()
 {
 }
 
-bool Delete::handleLine(const QByteArray & line)
-{
-  int begin = line.indexOf( " DELETE" ) + 7;
-  QByteArray collectionByteArray;
-  if ( line.length() > begin )
-    ImapParser::parseString( line, collectionByteArray, begin );
-
-  // prevent deletion of the root node
-  if ( collectionByteArray.isEmpty() )
-    return failureResponse( "Deleting everything is not allowed." );
-
-  // check if collection exists
-  DataStore *db = connection()->storageBackend();
-  Transaction transaction( db );
-
-  Collection collection = HandlerHelper::collectionFromIdOrName( collectionByteArray );
-  if ( !collection.isValid() )
-    return failureResponse( "No such collection." );
-
-  // handle virtual folders
-  if ( collection.resource().name() == QLatin1String("akonadi_search_resource") ) {
-    // don't delete virtual root
-    if ( collection.parentId() == 0 )
-      return failureResponse( "Cannot delete virtual root collection" );
-
-    if ( !AbstractSearchManager::instance()->removeSearch( collection.id() ) )
-      return failureResponse( "Failed to remove search from search manager" );
-  }
-
-  if ( !deleteRecursive( collection ) )
-    return failureResponse( "Unable to delete collection" );
-
-  if ( !transaction.commit() )
-    return failureResponse( "Unable to commit transaction." );
-
-  Response response;
-  response.setTag( tag() );
-  response.setString( "DELETE completed" );
-  emit responseAvailable( response );
-  deleteLater();
-  return true;
-}
-
 bool Delete::deleteRecursive(Collection & col)
 {
   Collection::List children = col.children();
@@ -91,11 +47,6 @@ bool Delete::deleteRecursive(Collection & col)
   }
   DataStore *db = connection()->storageBackend();
   return db->cleanupCollection( col );
-}
-
-bool Delete::supportsStreamParser()
-{
-  return true;
 }
 
 bool Delete::parseStream()

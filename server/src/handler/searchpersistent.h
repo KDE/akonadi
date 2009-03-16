@@ -42,8 +42,6 @@ class SearchPersistent : public Handler
 
     ~SearchPersistent();
 
-    bool handleLine( const QByteArray& line );
-    bool supportsStreamParser();
     bool parseStream();
 };
 

@@ -42,7 +42,6 @@ class Store : public Handler
     Store( bool isUid = false );
     ~Store();
 
-    bool handleLine(const QByteArray& line);
 
     enum Operation
     {
@@ -50,8 +49,6 @@ class Store : public Handler
       Add,
       Delete
     };
-
-    bool supportsStreamParser();
 
     bool parseStream();
 

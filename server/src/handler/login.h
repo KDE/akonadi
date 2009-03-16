@@ -36,11 +36,7 @@ class Login : public Handler
 
     ~Login();
 
-    bool handleLine(const QByteArray& line);
-    bool supportsStreamParser();
     bool parseStream();
-
-
 };
 
 }

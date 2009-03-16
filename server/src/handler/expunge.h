@@ -37,8 +37,6 @@ class Expunge : public Handler
 
     ~Expunge();
 
-    bool handleLine(const QByteArray& line);
-    bool supportsStreamParser();
     bool parseStream();
 };
 

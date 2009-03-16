@@ -19,7 +19,6 @@
 
 #include "subscribe.h"
 
-#include "../../libs/imapparser_p.h"
 #include "imapstreamparser.h"
 #include <handlerhelper.h>
 #include <akonadiconnection.h>
@@ -27,44 +26,6 @@
 #include <storage/transaction.h>
 
 using namespace Akonadi;
-
-bool Subscribe::handleLine(const QByteArray & line)
-{
-  QByteArray buffer;
-  int pos = ImapParser::parseString( line, buffer ); // tag
-
-  // command
-  pos = ImapParser::parseString( line, buffer, pos );
-  const bool subscribe = buffer == QByteArray( "SUBSCRIBE" );
-
-  DataStore *store = connection()->storageBackend();
-  Transaction transaction( store );
-
-  forever {
-    pos = ImapParser::parseString( line, buffer, pos );
-    if ( pos == line.length() || buffer.isEmpty() )
-      break;
-    Collection col = HandlerHelper::collectionFromIdOrName( buffer );
-    if ( !col.isValid() )
-      return failureResponse( "Invalid collection" );
-    if ( col.subscribed() == subscribe )
-      continue;
-    // TODO do all changes in one db operation
-    col.setSubscribed( subscribe );
-    if ( !col.update() )
-      return failureResponse( "Unable to change subscription" );
-  }
-
-  if ( !transaction.commit() )
-    return failureResponse( "Cannot commit transaction." );
-
-  return successResponse( "Completed" );
-}
-
-bool Subscribe::supportsStreamParser()
-{
-  return true;
-}
 
 bool Subscribe::parseStream()
 {

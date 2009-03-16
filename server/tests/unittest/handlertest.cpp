@@ -26,6 +26,7 @@
 #include "mockobjects.h"
 
 #include "handlertest.h"
+#include "imapstreamparser.h"
 
 using namespace Akonadi;
 
@@ -44,10 +45,18 @@ void HandlerTest::testSeparatorList()
     Handler* l = getHandlerFor("LIST");
     QVERIFY( dynamic_cast<List*>(l) != 0 );
 
-    const QByteArray line = "1 LIST \"\" \"\"";
+    QBuffer buffer;
+    buffer.open( QBuffer::ReadWrite);
+    ImapStreamParser parser(&buffer);
+
+    const QByteArray line = "LIST \"\" \"\"";
+    buffer.write( line );
+    buffer.seek(0);
+
+    l->setStreamParser(&parser);
 
     QSignalSpy spy(l, SIGNAL( responseAvailable( const Response& )));
-    l->handleLine( line );
+    l->parseStream();
     QCOMPARE(spy.count(), 2);
 
     const QString expectedFirstResponse = "* LIST (\\Noselect) \"/\" \"\"";
@@ -63,10 +72,18 @@ void HandlerTest::testRootPercentList()
     Handler* l = getHandlerFor("LIST");
     QVERIFY( dynamic_cast<List*>(l) != 0 );
 
-    const QByteArray line = "1 LIST \"\" \"%\"";
+    QBuffer buffer;
+    buffer.open( QBuffer::ReadWrite);
+    ImapStreamParser parser(&buffer);
+
+    const QByteArray line = "LIST \"\" \"%\"";
+    buffer.write( line );
+    buffer.seek(0);
+
+    l->setStreamParser(&parser);
 
     QSignalSpy spy(l, SIGNAL( responseAvailable( const Response& )));
-    l->handleLine( line );
+    l->parseStream();
     QCOMPARE(spy.count(), 2);
 
     const QByteArray expectedFirstResponse = "* LIST () \"/\" \"INBOX\"";
@@ -82,10 +99,18 @@ void HandlerTest::testRootStarList()
     Handler* l = getHandlerFor("LIST");
     QVERIFY( dynamic_cast<List*>(l) != 0 );
 
-    const QByteArray line = "1 LIST \"\" \"*\"";
+    const QByteArray line = "LIST \"\" \"*\"";
+    QBuffer buffer;
+    buffer.open( QBuffer::ReadWrite);
+    ImapStreamParser parser(&buffer);
+
+    buffer.write( line );
+    buffer.seek(0);
+
+    l->setStreamParser(&parser);
 
     QSignalSpy spy(l, SIGNAL( responseAvailable( const Response& )));
-    l->handleLine( line );
+    l->parseStream();
     QCOMPARE(spy.count(), 3);
 
     const QByteArray expectedFirstResponse = "* LIST () \"/\" \"INBOX\"";
@@ -104,10 +129,18 @@ void HandlerTest::testInboxList()
     Handler* l = getHandlerFor("LIST");
     QVERIFY( dynamic_cast<List*>(l) != 0 );
 
-    const QByteArray line = "1 LIST \"\" \"INBOX\"";
+    const QByteArray line = "LIST \"\" \"INBOX\"";
+    QBuffer buffer;
+    buffer.open( QBuffer::ReadWrite);
+    ImapStreamParser parser(&buffer);
+
+    buffer.write( line );
+    buffer.seek(0);
+
+    l->setStreamParser(&parser);
 
     QSignalSpy spy(l, SIGNAL( responseAvailable( const Response& )));
-    l->handleLine( line );
+    l->parseStream();
     QCOMPARE(spy.count(), 3);
 
     const QByteArray expectedFirstResponse = "* LIST () \"/\" \"foo\"";

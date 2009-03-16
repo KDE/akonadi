@@ -33,16 +33,6 @@ Capability::~Capability()
 }
 
 
-bool Capability::handleLine( const QByteArray& )
-{
-  return parseStream();
-}
-
-bool Capability::supportsStreamParser()
-{
-  return true;
-}
-
 bool Capability::parseStream()
 {
   Response response;

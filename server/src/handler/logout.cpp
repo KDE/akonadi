@@ -33,17 +33,6 @@ Logout::~Logout()
 {
 }
 
-
-bool Logout::handleLine(const QByteArray& )
-{
-  return parseStream();
-}
-
-bool Logout::supportsStreamParser()
-{
-  return true;
-}
-
 bool Logout::parseStream()
 {
   Response response;

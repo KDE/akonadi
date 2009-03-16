@@ -94,9 +94,12 @@ void AkonadiConnection::run()
 
     writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 7]");
 
+    m_streamParser = new ImapStreamParser( m_socket );
     exec();
     delete m_socket;
     m_socket = 0;
+    delete m_streamParser;
+    m_streamParser = 0;
 }
 
 void AkonadiConnection::slotDisconnected()
@@ -106,117 +109,44 @@ void AkonadiConnection::slotDisconnected()
 
 void AkonadiConnection::slotNewData()
 {
-  QByteArray prependBuffer;
-
-  while ( m_socket->bytesAvailable() > 0 || !prependBuffer.isEmpty() ) {
-    if ( !m_streamParser && m_parser->continuationSize() > 1 ) {
-      const QByteArray data = m_socket->read( qMin( m_socket->bytesAvailable(), m_parser->continuationSize() - 1 ) );
-      Tracer::self()->connectionInput( m_identifier, QLatin1String("[binary data]") );
-      m_parser->parseBlock( data );
-    } else if ( m_socket->canReadLine() || !prependBuffer.isEmpty() ) {
-      QByteArray line = prependBuffer;
-      if ( m_socket->canReadLine() )
-        line.append( m_socket->readLine() );
-      prependBuffer.clear();
-
-      Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( line ) );
-
-      if ( m_parser->parseNextLine( line ) ) {
-        // parse the command
-          QByteArray command;
-          ImapParser::parseString( m_parser->data(), command );
-
-          m_currentHandler = findHandlerForCommand( command );
-          m_currentHandler->setTag( m_parser->tag() );
-          qDebug() << "Handler found, data is fully available: " << m_currentHandler->metaObject()->className();
-          assert( m_currentHandler );
-          connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
-                   this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
-          connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
-                   this, SLOT( slotConnectionStateChange( ConnectionState ) ),
-                               Qt::DirectConnection );
-          try {
-            //Rempve 0 && to enable the streaming parser usage
-            if ( 0 && m_currentHandler->supportsStreamParser() )
-            {
-              qDebug() << "Using the streaming parser";
-              m_streamParser = new ImapStreamParser( m_socket );
-              m_streamParser->setData(m_parser->data());
-              m_currentHandler->setStreamParser( m_streamParser );
-              m_currentHandler->parseStream();
-            } else {
-          // FIXME: remove the tag, it's only there for backward compatibility with the handlers!
-              if ( m_currentHandler->handleLine( m_parser->tag() + ' ' + m_parser->data() ) )
-                m_currentHandler = 0;
-            }
-          } catch ( const Akonadi::HandlerException &e ) {
-            m_currentHandler->failureResponse( e.what() );
-            m_currentHandler->deleteLater();
-          } catch ( const Akonadi::Exception &e ) {
-            m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
-                + QLatin1String( ": " ) + QString::fromLatin1( e.what()  ) );
-            m_currentHandler->deleteLater();
-          } catch ( ... ) {
-            akError() << "Unknown exception caught: " << akBacktrace();
-            delete m_currentHandler;
-            m_currentHandler = 0;
-          }
-          m_parser->reset();
-
-      } else {
-        if ( !m_currentHandler ) { //find a handler, even if the full data is not yet available
-          QByteArray command;
-          ImapParser::parseString( m_parser->data(), command );
-
-          m_currentHandler = findHandlerForCommand( command );
-          assert( m_currentHandler );
-          m_currentHandler->setTag( m_parser->tag() );
-          connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
-                   this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
-          connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
-                   this, SLOT( slotConnectionStateChange( ConnectionState ) ),
-                               Qt::DirectConnection );
-          prependBuffer.clear();
-          if ( m_currentHandler->supportsStreamParser() )
-          {
-             qDebug() << "Handler found, data is NOT fully available: " << m_currentHandler->metaObject()->className();
-             m_streamParser = new ImapStreamParser( m_socket );
-             m_streamParser->setData(m_parser->data());
-             m_currentHandler->setStreamParser( m_streamParser );
-             try {
-              if ( m_currentHandler->parseStream() ) {
-                prependBuffer = m_streamParser->readRemainingData();
-              } else {
-                prependBuffer = m_parser->tag() + ' ' + m_parser->data();
-              }
-             } catch ( const Akonadi::HandlerException &e ) {
-               m_currentHandler->failureResponse( e.what() );
-             }catch ( const Akonadi::Exception &e ) {
-               m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
-                   + QLatin1String( ": " ) + QString::fromLatin1( e.what()  ) );
-             } catch ( ... ) {
-               akError() << "Unknown exception caught: " << akBacktrace();
-             }
-             delete m_streamParser;
-             m_streamParser = 0;
-             m_parser->reset();
-          }
-          delete m_currentHandler;
-          m_currentHandler = 0;
-        }
-        if ( m_parser->continuationStarted() ) {
-          Response response;
-          response.setContinuation();
-          response.setString( "Ready for literal data (expecting " +
-              QByteArray::number( m_parser->continuationSize() ) + " bytes)" );
-          slotResponseAvailable( response );
-        }
-      }
-    } else {
-      break; // nothing we can do for now with the available data
+  while ( m_socket->bytesAvailable() > 0 || !m_streamParser->readRemainingData().isEmpty()) {
+    QByteArray tag = m_streamParser->readString();
+    QByteArray command = m_streamParser->readString();
+    m_currentHandler = findHandlerForCommand( command );
+    m_currentHandler->setTag( tag );
+    m_streamParser->insertData( command );
+    Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( tag + " " + m_streamParser->readRemainingData() ) );
+    qDebug() << "Handler found: " << m_currentHandler->metaObject()->className();
+    assert( m_currentHandler );
+    connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
+             this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
+    connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
+             this, SLOT( slotConnectionStateChange( ConnectionState ) ),
+                         Qt::DirectConnection );
+    try {
+      m_currentHandler->setStreamParser( m_streamParser );
+      m_currentHandler->parseStream();
+      m_currentHandler = 0;
+    } catch ( const Akonadi::HandlerException &e ) {
+      m_currentHandler->failureResponse( e.what() );
+      m_currentHandler->deleteLater();
+      m_currentHandler = 0;
+    } catch ( const Akonadi::Exception &e ) {
+      m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
+          + QLatin1String( ": " ) + QString::fromLatin1( e.what()  ) );
+      m_currentHandler->deleteLater();
+      m_currentHandler = 0;
+    } catch ( ... ) {
+      akError() << "Unknown exception caught: " << akBacktrace();
+      delete m_currentHandler;
+      m_currentHandler = 0;
     }
+
+    if (m_streamParser->readRemainingData().startsWith('\n') || m_streamParser->readRemainingData().startsWith("\r\n"))
+      m_streamParser->readUntilCommandEnd(); //just eat the ending newline
   }
 }
+
 
 void AkonadiConnection::writeOut( const QByteArray &data )
 {

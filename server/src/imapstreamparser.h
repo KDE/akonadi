@@ -57,12 +57,6 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
     ~ImapStreamParser();
 
     /**
-     * Gets the message tag. Further calls to it do nothing. This call might block.
-     * @return the tag of the parsed message.
-     */
-    QByteArray tag();
-
-    /**
      * Get a string from the message. If the upcoming data is not a quoted string, unquoted string or a literal,
      * the behavior is undefined. Use @ref hasString to be sure a string comes. This call might block.
      * @return the next string from the message as an utf8 string
@@ -186,6 +180,12 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
      * @param data data to be inserted
      */
     void insertData( const QByteArray &data );
+
+    /**
+     * Appends some data to the end of the parse buffer.
+     * @param data data to be appended
+     */
+    void appendData( const QByteArray &data );
 
   private:
     void stripLeadingSpaces();

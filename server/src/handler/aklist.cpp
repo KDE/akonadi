@@ -20,7 +20,6 @@
 #include "aklist.h"
 
 #include <QtCore/QDebug>
-#include "../../libs/imapparser_p.h"
 
 #include "storage/datastore.h"
 #include "storage/entity.h"
@@ -38,75 +37,6 @@ AkList::AkList():
 {}
 
 AkList::~AkList() {}
-
-bool AkList::handleLine(const QByteArray& line )
-{
-  // parse out the reference name and mailbox name
-  int pos = line.indexOf( ' ' ) + 1; // skip tag
-  QByteArray tmp;
-
-  // command
-  pos = ImapParser::parseString( line, tmp, pos );
-  if ( tmp == "X-AKLSUB" )
-    mOnlySubscribed = true;
-
-  qint64 baseCollection;
-  bool ok = false;
-  pos = ImapParser::parseNumber( line, baseCollection, &ok, pos );
-  if ( !ok )
-    return failureResponse( "Invalid base collection" );
-
-  int depth;
-  pos = ImapParser::parseString( line, tmp, pos );
-  if ( tmp.isEmpty() )
-    return failureResponse( "Specify listing depth" );
-  if ( tmp == "INF" )
-    depth = INT_MAX;
-  else
-    depth = tmp.toInt();
-
-  QList<QByteArray> filter;
-  pos = ImapParser::parseParenthesizedList( line, filter, pos );
-
-  for ( int i = 0; i < filter.count() - 1; i += 2 ) {
-    if ( filter.at( i ) == "RESOURCE" ) {
-      mResource = Resource::retrieveByName( QString::fromLatin1( filter.at(i + 1) ) );
-      if ( !mResource.isValid() )
-        return failureResponse( "Unknown resource" );
-    } else
-      return failureResponse( "Invalid filter parameter" );
-  }
-
-  Collection::List collections;
-  if ( baseCollection != 0 ) { // not root
-    Collection col = Collection::retrieveById( baseCollection );
-    if ( !col.isValid() )
-      return failureResponse( "Collection " + QByteArray::number( baseCollection ) + " does not exist" );
-    if ( depth == 0 )
-      collections << col;
-    else {
-      collections << col.children();
-      --depth;
-    }
-  } else {
-    if ( depth != 0 ) {
-      Collection::List list = Collection::retrieveFiltered( Collection::parentIdColumn(), 0 );
-      collections << list;
-    }
-    --depth;
-  }
-
-  foreach ( const Collection &col, collections )
-    listCollection( col, depth );
-
-  Response response;
-  response.setSuccess();
-  response.setTag( tag() );
-  response.setString( "List completed" );
-  emit responseAvailable( response );
-  deleteLater();
-  return true;
-}
 
 bool AkList::listCollection(const Collection & root, int depth )
 {
@@ -136,11 +66,6 @@ bool AkList::listCollection(const Collection & root, int depth )
   response.setString( b );
   emit responseAvailable( response );
 
-  return true;
-}
-
-bool AkList::supportsStreamParser()
-{
   return true;
 }
 

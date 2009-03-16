@@ -68,18 +68,6 @@ Handler::~Handler()
 {
 }
 
-bool Handler::handleLine( const QByteArray & command )
-{
-    Response response;
-    response.setError();
-    response.setTag( m_tag );
-    response.setString( "Unrecognized command: " + command );
-
-    emit responseAvailable( response );
-    deleteLater();
-    return true;
-}
-
 Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & command )
 {
     // allowed are LOGIN and AUTHENTICATE
@@ -206,11 +194,6 @@ bool Handler::successResponse(const char * successMessage)
   return true;
 }
 
-bool Handler::supportsStreamParser()
-{
-  return false;
-}
-
 void Handler::setStreamParser( ImapStreamParser *parser )
 {
   m_streamParser = parser;
@@ -221,7 +204,8 @@ bool Handler::parseStream()
   Response response;
   response.setError();
   response.setTag( m_tag );
-  response.setString( "Unrecognized command: " + m_streamParser->readString() );
+  response.setString( "Unrecognized command: "  + m_streamParser->readString() );
+  m_streamParser->readUntilCommandEnd();
 
   emit responseAvailable( response );
   deleteLater();

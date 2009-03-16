@@ -44,92 +44,6 @@ AkAppend::~AkAppend()
 {
 }
 
-bool Akonadi::AkAppend::handleLine(const QByteArray& line )
-{
-    // Arguments:  mailbox name
-    //        OPTIONAL flag parenthesized list
-    //        OPTIONAL date/time string
-    //        (partname literal)+
-    //
-    // Syntax:
-    // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
-
-    const int startOfCommand = line.indexOf( ' ' ) + 1;
-    const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-
-    const int startOfSize = ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
-
-    QString size;
-    const int startOfFlags = ImapParser::parseString( line, size, startOfSize ) + 1;
-    m_size = size.toLongLong();
-
-    // parse optional flag parenthesized list
-    // Syntax:
-    // flag-list      = "(" [flag *(SP flag)] ")"
-    // flag           = "\Answered" / "\Flagged" / "\Deleted" / "\Seen" /
-    //                  "\Draft" / flag-keyword / flag-extension
-    //                    ; Does not include "\Recent"
-    // flag-extension = "\" atom
-    // flag-keyword   = atom
-    int startOfDateTime = startOfFlags;
-    if ( line[startOfFlags] == '(' ) {
-        startOfDateTime = ImapParser::parseParenthesizedList( line, m_flags, startOfFlags ) + 1;
-    }
-
-    // parse optional date/time string
-    int startOfPartSpec = startOfDateTime;
-    if ( line[startOfDateTime] == '"' ) {
-      startOfPartSpec = ImapParser::parseDateTime( line, m_dateTime, startOfDateTime );
-      // FIXME Should we return an error if m_dateTime is invalid?
-    }
-    // if date/time is not given then it will be set to the current date/time
-    // by the database
-
-    // parse part specification
-    QList<QPair<QByteArray, QPair<qint64, int> > > partSpecs;
-    QByteArray partName;
-    qint64 partSize;
-    bool ok;
-
-    int pos = startOfPartSpec + 1; // skip opening '('
-    int endOfPartSpec = line.indexOf( ')', startOfPartSpec );
-    while( pos < endOfPartSpec ) {
-      if( line[pos] == ',' )
-        pos++; // skip ','
-
-      pos = ImapParser::parseQuotedString( line, partName, pos );
-      pos++; // skip ':'
-      pos = ImapParser::parseNumber( line, partSize, &ok, pos );
-      if( !ok )
-        partSize = 0;
-
-      int version = 0;
-      QByteArray plainPartName;
-      ImapParser::splitVersionedKey( partName, plainPartName, version );
-
-      partSpecs.append( qMakePair( plainPartName, qMakePair( partSize, version ) ) );
-    }
-
-    QByteArray allParts;
-    ImapParser::parseString( line, allParts, endOfPartSpec + 1 );
-
-    // chop up literal data in parts
-    pos = 0; // traverse through part data now
-    QPair<QByteArray, QPair<qint64, int> > partSpec;
-    foreach( partSpec, partSpecs ) {
-      // wrap data into a part
-      Part part;
-      part.setName( QLatin1String( partSpec.first ) );
-      part.setData( allParts.mid( pos, partSpec.second.first ) );
-      if ( partSpec.second.second != 0 )
-        part.setVersion( partSpec.second.second );
-      m_parts.append( part );
-      pos += partSpec.second.first;
-    }
-
-    return commit();
-}
-
 bool Akonadi::AkAppend::commit()
 {
     Response response;
@@ -198,11 +112,6 @@ bool Akonadi::AkAppend::commit()
     emit responseAvailable( response );
     deleteLater();
     return true;
-}
-
-bool AkAppend::supportsStreamParser()
-{
-  return true;
 }
 
 bool AkAppend::parseStream()

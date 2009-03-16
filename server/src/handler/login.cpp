@@ -21,7 +21,6 @@
 #include <QtCore/QDebug>
 
 #include "response.h"
-#include "../../libs/imapparser_p.h"
 #include "akonadiconnection.h"
 #include "imapstreamparser.h"
 
@@ -36,35 +35,6 @@ Login::~Login()
 {
 }
 
-
-bool Login::handleLine( const QByteArray &line )
-{
-  int pos = line.indexOf( ' ' ) + 1; // skip tag
-  pos = line.indexOf( ' ', pos ); // skip command
-  if ( pos < 0 )
-    return failureResponse( "Invalid syntax" );
-
-  QByteArray sessionId;
-  pos = ImapParser::parseString( line, sessionId, pos );
-  if ( sessionId.isEmpty() )
-    return failureResponse( "Missing session identifier." );
-  connection()->setSessionId( sessionId );
-
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( "User logged in" );
-
-  emit responseAvailable( response );
-  emit connectionStateChange( Authenticated );
-  deleteLater();
-  return true;
-}
-
-bool Login::supportsStreamParser()
-{
-  return true;
-}
 
 bool Login::parseStream()
 {

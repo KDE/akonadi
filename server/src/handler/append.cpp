@@ -20,8 +20,8 @@
 
 #include "append.h"
 #include "response.h"
-#include "../../libs/imapparser_p.h"
 #include "handlerhelper.h"
+#include "libs/imapparser_p.h"
 #include "imapstreamparser.h"
 
 #include "akonadi.h"
@@ -45,59 +45,7 @@ Append::~Append()
 {
 }
 
-bool Akonadi::Append::handleLine(const QByteArray& line )
-{
-    // Arguments:  mailbox name
-    //        OPTIONAL flag parenthesized list
-    //        OPTIONAL date/time string
-    //        message literal
-    //
-    // Syntax:
-    // append = "APPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP literal
-
-    const int startOfCommand = line.indexOf( ' ' ) + 1;
-    const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-
-    const int startOfSize = ImapParser::parseString( line, m_mailbox, startOfMailbox ) + 1;
-
-    QString size;
-    const int startOfFlags = ImapParser::parseString( line, size, startOfSize ) + 1;
-    m_size = size.toLongLong();
-
-    QString data;
-    ImapParser::parseString( line, data, startOfSize);
-    m_size = data.toLongLong();
-
-    // parse optional flag parenthesized list
-    // Syntax:
-    // flag-list      = "(" [flag *(SP flag)] ")"
-    // flag           = "\Answered" / "\Flagged" / "\Deleted" / "\Seen" /
-    //                  "\Draft" / flag-keyword / flag-extension
-    //                    ; Does not include "\Recent"
-    // flag-extension = "\" atom
-    // flag-keyword   = atom
-    int startOfDateTime = startOfFlags;
-    if ( line[startOfFlags] == '(' ) {
-        startOfDateTime = ImapParser::parseParenthesizedList( line, m_flags, startOfFlags ) + 1;
-    }
-
-    // parse optional date/time string
-    int startOfLiteral = startOfDateTime;
-    if ( line[startOfDateTime] == '"' ) {
-        startOfLiteral = ImapParser::parseDateTime( line, m_dateTime, startOfDateTime );
-        m_dateTime = m_dateTime.toUTC();
-        // FIXME Should we return an error if m_dateTime is invalid?
-    } else {
-        // if date/time is not given then it will be set to the current date/time
-        // converted to UTC.
-        m_dateTime = QDateTime::currentDateTime().toUTC();
-    }
-
-    ImapParser::parseString( line, m_data, startOfLiteral );
-    return commit();
-}
-
-bool Akonadi::Append::commit()
+bool Append::commit()
 {
     Response response;
 
@@ -184,11 +132,6 @@ bool Akonadi::Append::commit()
     return true;
 }
 
-bool Append::supportsStreamParser()
-{
-  return true;
-}
-
 bool Append::parseStream()
 {
     // Arguments:  mailbox name
@@ -211,12 +154,6 @@ bool Append::parseStream()
   bool ok = false;
   m_size = m_streamParser->readNumber( &ok );
 
-  //FIXME: Andras: why do we read another "size" here ???
-/*
-  QString data;
-  ImapParser::parseString( line, data, startOfSize);
-  m_size = data.toLongLong();
-*/
     // parse optional flag parenthesized list
     // Syntax:
     // flag-list      = "(" [flag *(SP flag)] ")"

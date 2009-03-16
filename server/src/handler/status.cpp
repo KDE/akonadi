@@ -27,7 +27,6 @@
 #include "storage/countquerybuilder.h"
 
 #include "response.h"
-#include "../../libs/imapparser_p.h"
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
 
@@ -40,99 +39,6 @@ Status::Status(): Handler()
 
 Status::~Status()
 {
-}
-
-
-bool Status::handleLine( const QByteArray& line )
-{
-    // Arguments: mailbox name
-    //            status data item names
-
-    // Syntax:
-    // status     = "STATUS" SP mailbox SP "(" status-att *(SP status-att) ")"
-    // status-att = "MESSAGES" / "RECENT" / "UIDNEXT" / "UIDVALIDITY" / "UNSEEN"
-    const int startOfCommand = line.indexOf( ' ' ) + 1;
-    const int startOfMailbox = line.indexOf( ' ', startOfCommand ) + 1;
-    QByteArray mailbox;
-    const int endOfMailbox = ImapParser::parseString( line, mailbox, startOfMailbox );
-    QList<QByteArray> attributeList;
-    ImapParser::parseParenthesizedList( line, attributeList, endOfMailbox );
-
-    Response response;
-
-    DataStore *db = connection()->storageBackend();
-    Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
-
-    if ( !col.isValid() )
-        return failureResponse( "No status for this folder" );
-
-    // Responses:
-    // REQUIRED untagged responses: STATUS
-
-    // build STATUS response
-    QByteArray statusResponse;
-    // MESSAGES - The number of messages in the mailbox
-    if ( attributeList.contains( "MESSAGES" ) ) {
-        statusResponse += "MESSAGES ";
-        const int count = HandlerHelper::itemCount( col );
-        if ( count < 0 )
-          return failureResponse( "Could not determine message count." );
-        statusResponse += QByteArray::number( count );
-    }
-    // RECENT - The number of messages with the \Recent flag set
-    if ( attributeList.contains( "RECENT" ) ) {
-        if ( !statusResponse.isEmpty() )
-            statusResponse += " RECENT ";
-        else
-            statusResponse += "RECENT ";
-        const int count = HandlerHelper::itemWithFlagCount( col, QLatin1String( "\\Recent" ) );
-        if ( count < 0 )
-          return failureResponse( "Could not determine recent item count" );
-        statusResponse += QByteArray::number( count );
-    }
-    // UIDNEXT - The next unique identifier value of the mailbox
-    if ( attributeList.contains( "UIDNEXT" ) ) {
-        if ( !statusResponse.isEmpty() )
-            statusResponse += " UIDNEXT ";
-        else
-            statusResponse += "UIDNEXT ";
-        statusResponse += QByteArray::number( db->uidNext() );
-    }
-    // UIDVALIDITY - The unique identifier validity value of the mailbox
-    if ( attributeList.contains( "UIDVALIDITY" ) ) {
-        if ( !statusResponse.isEmpty() )
-            statusResponse += " UIDVALIDITY 1";
-        else
-            statusResponse += "UIDVALIDITY 1";
-    }
-    if ( attributeList.contains( "UNSEEN" ) ) {
-        if ( !statusResponse.isEmpty() )
-            statusResponse += " UNSEEN ";
-        else
-            statusResponse += "UNSEEN ";
-
-        const int count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) );
-        if ( count < 0 )
-          return failureResponse( "Unable to retrieve unread count" );
-        statusResponse += QByteArray::number( count );
-    }
-
-    response.setUntagged();
-    response.setString( "STATUS \"" + HandlerHelper::pathForCollection( col ).toUtf8() + "\" (" + statusResponse + ')' );
-    emit responseAvailable( response );
-
-    response.setSuccess();
-    response.setTag( tag() );
-    response.setString( "STATUS completed" );
-    emit responseAvailable( response );
-
-    deleteLater();
-    return true;
-}
-
-bool Status::supportsStreamParser()
-{
-  return true;
 }
 
 bool Status::parseStream()

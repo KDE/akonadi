@@ -38,10 +38,6 @@ class Uid : public Handler
     Uid();
     ~Uid();
 
-    bool handleLine(const QByteArray& line);
-
-    bool supportsStreamParser();
-
     bool parseStream();
 
   private:

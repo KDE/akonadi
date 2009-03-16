@@ -66,13 +66,6 @@ public:
     QByteArray tag() const;
 
     /**
-     * Process one line of input.
-     * @param line The input.
-     * @return false if the handler expects to read more data from the client, true otherwise.
-     */
-    virtual bool handleLine( const QByteArray & line );
-
-    /**
      * Find a handler for a command that is always allowed, like LOGOUT.
      * @param line the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
@@ -111,11 +104,6 @@ public:
 
     /** Send a success response with the given message. */
     bool successResponse( const char *successMessage );
-
-    /**
-     *  @return true if the handler supports the streaming IMAP parser
-     */
-    virtual bool supportsStreamParser();
 
     /**
      * Assigns the streaming IMAP parser to the handler. Useful only if supportsStreamParser() returns true.

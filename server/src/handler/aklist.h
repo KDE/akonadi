@@ -71,8 +71,6 @@ class AKONADIPRIVATE_EXPORT AkList : public Handler
     AkList();
     ~AkList();
 
-    virtual bool handleLine(const QByteArray& line);
-    bool supportsStreamParser();
     bool parseStream();
 
   private:

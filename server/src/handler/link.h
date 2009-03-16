@@ -51,8 +51,6 @@ class Link : public Handler
      * @param create @c true adds references, @c false removes them
      */
     Link( bool create );
-    bool handleLine( const QByteArray &line );
-    bool supportsStreamParser();
     bool parseStream();
 
   private:

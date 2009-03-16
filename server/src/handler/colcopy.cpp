@@ -21,47 +21,12 @@
 
 #include "akonadiconnection.h"
 #include "handlerhelper.h"
-#include "libs/imapparser_p.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/itemretriever.h"
 #include "imapstreamparser.h"
 
 using namespace Akonadi;
-
-bool ColCopy::handleLine(const QByteArray & line)
-{
-  QByteArray tmp;
-  int pos = ImapParser::parseString( line, tmp ); // skip tag
-  pos = ImapParser::parseString( line, tmp, pos ); // skip command
-
-  pos = ImapParser::parseString( line, tmp, pos );
-  const Collection source = HandlerHelper::collectionFromIdOrName( tmp );
-  if ( !source.isValid() )
-    return failureResponse( "No valid source specified" );
-
-  ImapParser::parseString( line, tmp, pos );
-  const Collection target = HandlerHelper::collectionFromIdOrName( tmp );
-  if ( !target.isValid() )
-    return failureResponse( "No valid target specified" );
-
-  // retrieve all not yet cached items of the source
-  ItemRetriever retriever( connection() );
-  retriever.setCollection( source, true );
-  retriever.setRetrieveFullPayload( true );
-  retriever.exec();
-
-  DataStore *store = connection()->storageBackend();
-  Transaction transaction( store );
-
-  if ( !copyCollection( source, target ) )
-    return failureResponse( "Failed to copy collection" );
-
-  if ( !transaction.commit() )
-    return failureResponse( "Cannot commit transaction." );
-
-  return successResponse( "COLCOPY complete" );
-}
 
 bool ColCopy::copyCollection(const Collection & source, const Collection & target)
 {
@@ -102,11 +67,6 @@ bool ColCopy::copyCollection(const Collection & source, const Collection & targe
       return false;
   }
 
-  return true;
-}
-
-bool ColCopy::supportsStreamParser()
-{
   return true;
 }
 
