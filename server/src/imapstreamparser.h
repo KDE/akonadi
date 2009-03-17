@@ -83,6 +83,12 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
      */
     QList<QByteArray> readParenthesizedList();
 
+    /**
+     * Read a single character. This call might block.
+     * @return the read character
+     */
+    QByteRef readChar();
+
 
     /**
      * Get the next data as a number. This call might block.
@@ -133,6 +139,13 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
     bool atLiteralEnd() const;
 
     /**
+     * Get the amount of data that needs to be read for the last literal. If this is called right after hasLiteral, the actual size of the literal data
+     * is returned.
+     * @return the remaining literal size
+     */
+    qint64 remainingLiteralSize();
+
+    /**
      * Check if the next data is an IMAP sequence set. This call might block.
      * @return true if an IMAP sequence set comes.
      */
@@ -150,8 +163,16 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
       */
     bool atListEnd();
 
+    /**
+     * Read a date/time.
+     * @return the date and time or a null QDateTime, if no valid date/time was found
+     */
     QDateTime readDateTime();
 
+    /**
+     * Check if the next element in the data stream is a date or not.
+     * @return true, if a valid date follows
+     */
     bool hasDateTime();
 
 
@@ -187,8 +208,12 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
      */
     void appendData( const QByteArray &data );
 
-  private:
+    /**
+     * Skips everything until the first character that isn't a space.
+     */
     void stripLeadingSpaces();
+
+  private:
     QByteArray parseQuotedString();
 
     /**

@@ -137,6 +137,11 @@ bool ImapStreamParser::atLiteralEnd() const
   return (m_literalSize == 0);
 }
 
+qint64 ImapStreamParser::remainingLiteralSize()
+{
+  return m_literalSize;
+}
+
 QByteArray ImapStreamParser::readLiteralPart()
 {
   static qint64 maxLiteralPartSize = 4096;
@@ -326,6 +331,16 @@ QList<QByteArray> ImapStreamParser::readParenthesizedList()
   }
 
   throw ImapParserException( "Something went very very wrong!" );
+}
+
+QByteRef ImapStreamParser::readChar()
+{
+  if ( !waitForMoreData( m_position >= m_data.length() ) )
+  {
+    throw ImapParserException("Unable to read more data");
+  }
+  m_position++;
+  return m_data[m_position - 1];
 }
 
 QDateTime ImapStreamParser::readDateTime()

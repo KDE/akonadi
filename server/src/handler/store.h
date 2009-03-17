@@ -59,6 +59,7 @@ class Store : public Handler
     bool replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool addFlags( const PimItem &item, const QList<QByteArray> &flags );
     bool deleteFlags( const PimItem &item, const QList<QByteArray> &flags );
+    void sendPimItemResponse( const PimItem &pimItem );
 
   private:
     ImapSet mItemSet;
