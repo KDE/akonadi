@@ -96,7 +96,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
 //   qDebug() << "Insert original data " << part->data();
   QByteArray fileNameData("");
   QByteArray data;
-  bool storeInFile = DbConfig::useExternalPayloadFile()  && (part->datasize() > DbConfig::sizeThreshold() );
+  bool storeInFile = DbConfig::useExternalPayloadFile()  && ( part->datasize() > DbConfig::sizeThreshold() || part->external() );
 
   //it is needed to insert first the metadata so a new id is generated for the part,
   //and we need this id for the payload file name

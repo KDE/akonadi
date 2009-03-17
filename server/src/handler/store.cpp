@@ -342,6 +342,9 @@ bool Store::parseStream()
                     file.write( value );
                   }
                   file.close();
+                } else
+                {
+                  return failureResponse( "Unable to update item part" );
                 }
 
                 store->updatePimItem( pimItems[ i ] );

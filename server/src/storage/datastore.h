@@ -151,7 +151,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool appendMimeType( const QString & mimetype, qint64 *insertId = 0 );
 
     /* --- PimItem ------------------------------------------------------- */
-    bool appendPimItem( const QList<Part> & parts,
+    bool appendPimItem( QList<Part> & parts,
                         const MimeType & mimetype,
                         const Collection & collection,
                         const QDateTime & dateTime,

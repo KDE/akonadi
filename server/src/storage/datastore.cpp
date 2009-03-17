@@ -404,7 +404,7 @@ bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
 
 
 /* --- PimItem ------------------------------------------------------- */
-bool DataStore::appendPimItem( const QList<Part> & parts,
+bool DataStore::appendPimItem( QList<Part> & parts,
                                const MimeType & mimetype,
                                const Collection & collection,
                                const QDateTime & dateTime,
@@ -430,12 +430,14 @@ bool DataStore::appendPimItem( const QList<Part> & parts,
 
   // insert every part
   if ( !parts.isEmpty() ) {
-    foreach( Part part, parts ) {
-      part.setPimItemId( pimItem.id() );
-      part.setDatasize( part.data().size() );
+    //don't use foreach, the caller depends on knowing the part has changed, see the Append handler
+    for(QList<Part>::iterator it = parts.begin(); it != parts.end(); ++it ) {
+
+      (*it).setPimItemId( pimItem.id() );
+      (*it).setDatasize( (*it).data().size() );
 
       qDebug() << "Insert from DataStore::appendPimItem";
-      if( !PartHelper::insert(&part) )
+      if( !PartHelper::insert(&(*it)) )
         return false;
     }
   }

@@ -29,9 +29,13 @@
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
+#include "storage/parthelper.h"
+#include "storage/dbconfig.h"
 
 #include <QtCore/QDebug>
 #include <QLocale>
+#include <QFile>
+#include <QTemporaryFile>
 
 using namespace Akonadi;
 
@@ -47,6 +51,37 @@ Append::~Append()
 
 bool Append::commit()
 {
+    bool storeInFile = false;
+    qint64 dataSize = 0;
+    QTemporaryFile tmpFile;
+
+    //need to read out the data before the below code to avoid hangs, probably at some place the eventloop is reentered
+    //and more data is read into the stream and that causes the problems.
+    if ( m_streamParser->hasLiteral() ) {
+      dataSize = m_streamParser->remainingLiteralSize();
+      storeInFile = DbConfig::useExternalPayloadFile() && dataSize > DbConfig::sizeThreshold();
+      if ( storeInFile ) {
+        if ( !tmpFile.open() ) {
+          storeInFile =  false;
+        }
+      }
+      while ( !m_streamParser->atLiteralEnd() ) {
+        if ( !storeInFile ) {
+          m_data += m_streamParser->readLiteralPart();
+        } else
+        {
+          m_data = m_streamParser->readLiteralPart();
+          tmpFile.write( m_data );
+        }
+      }
+      if ( storeInFile ) {
+        tmpFile.close();
+        m_data = "";
+      }
+    } else {
+      m_data = m_streamParser->readString();
+    }
+
     Response response;
 
     DataStore *db = connection()->storageBackend();
@@ -90,8 +125,12 @@ bool Append::commit()
     Part part;
     part.setName( QLatin1String( "PLD:RFC822" ) );
     part.setData( m_data );
-//     qDebug() << "Data appended " << m_data;
     part.setPimItemId( item.id() );
+    if (storeInFile) {
+      part.setDatasize( dataSize );
+      part.setExternal( true );//force external storage
+    }
+
     QList<Part> parts;
     parts.append( part );
 
@@ -104,6 +143,20 @@ bool Append::commit()
     // set message flags
     if ( !db->appendItemFlags( item, flags, false, col ) )
       return failureResponse( "Unable to append item flags." );
+
+    if (storeInFile) {
+      part.setExternal( true );
+      //the new item was just created and the transaction is not yet committed, so delete + overwrite should be safe, as no
+      //client knows about the item yet
+      QString fileName = QString::fromUtf8( parts[0].data() );
+      QFile f( fileName );
+      if ( !f.remove() ) {
+        return failureResponse( "Unable to remove item part file" );
+      }
+      if ( !tmpFile.copy( fileName ) ) {
+        return failureResponse( "Unable to copy item part data from the temporary file" );
+      }
+    }
 
     // TODO if the mailbox is currently selected, the normal new message
     //      actions SHOULD occur.  Specifically, the server SHOULD notify the
@@ -177,7 +230,6 @@ bool Append::parseStream()
     m_dateTime = QDateTime::currentDateTime().toUTC();
   }
 
-  m_data = m_streamParser->readString();
   return commit();
 }
 
