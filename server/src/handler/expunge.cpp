@@ -40,7 +40,6 @@ Expunge::~Expunge()
 bool Expunge::parseStream()
 {
   qDebug() << "Expunge::parseStream";
-  qDebug() << "Delete::parseStream";
   QByteArray tmp = m_streamParser->readString(); // skip command
   if (tmp != "EXPUNGE") {
     //put back what was read
