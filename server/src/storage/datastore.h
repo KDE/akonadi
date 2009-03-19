@@ -161,8 +161,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool updatePimItem( PimItem &pimItem, const Collection &destination );
     bool updatePimItem( PimItem &pimItem, const QString &remoteId );
 
-    QList<PimItem> listPimItems( const Collection & collection, const Flag &flag );
-
     /**
      * Removes the pim item and all referenced data ( e.g. flags )
      */

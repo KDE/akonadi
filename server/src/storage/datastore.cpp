@@ -552,25 +552,6 @@ bool DataStore::cleanupPimItems( const Collection &collection )
   return ok;
 }
 
-QList<PimItem> DataStore::listPimItems( const Collection & collection, const Flag &flag )
-{
-  if ( !m_dbOpened )
-    return QList<PimItem>();
-
-  SelectQueryBuilder<PimItem> qb;
-  qb.addTable( PimItemFlagRelation::tableName() );
-  qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
-  qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id() );
-
-  if ( collection.isValid() )
-    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
-
-   if ( !qb.exec() )
-    return QList<PimItem>();
-
-  return qb.result();
-}
-
 qint64 DataStore::highestPimItemId() const
 {
   if ( !m_dbOpened )

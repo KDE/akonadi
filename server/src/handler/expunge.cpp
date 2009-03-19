@@ -23,6 +23,7 @@
 #include "akonadiconnection.h"
 #include "response.h"
 #include "storage/datastore.h"
+#include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 #include "imapstreamparser.h"
 
@@ -48,7 +49,6 @@ bool Expunge::parseStream()
 
   Response response;
 
-  Collection collection = connection()->selectedCollection();
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
@@ -63,23 +63,32 @@ bool Expunge::parseStream()
     return true;
   }
 
-  QList<PimItem> items = store->listPimItems( collection, flag );
-  for ( int i = 0; i < items.count(); ++i ) {
-    if ( store->cleanupPimItem( items[ i ] ) ) {
-      response.setUntagged();
-      // IMAP protocol violation: should actually be the sequence number
-      response.setString( QByteArray::number( items[i].id() ) + " EXPUNGE" );
+  SelectQueryBuilder<PimItem> qb;
+  qb.addTable( PimItemFlagRelation::tableName() );
+  qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
+  qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id() );
 
-      emit responseAvailable( response );
-    } else {
-      response.setTag( tag() );
-      response.setError();
-      response.setString( "internal error" );
+  if ( qb.exec() ) {
+    const QList<PimItem> items = qb.result();
+    foreach ( const PimItem &item, items ) {
+      if ( store->cleanupPimItem( item ) ) {
+        response.setUntagged();
+        // IMAP protocol violation: should actually be the sequence number
+        response.setString( QByteArray::number( item.id() ) + " EXPUNGE" );
 
-      emit responseAvailable( response );
-      deleteLater();
-      return true;
+        emit responseAvailable( response );
+      } else {
+        response.setTag( tag() );
+        response.setError();
+        response.setString( "internal error" );
+
+        emit responseAvailable( response );
+        deleteLater();
+        return true;
+      }
     }
+  } else {
+    throw HandlerException( "Unable to execute query." );
   }
 
   if ( !transaction.commit() )
