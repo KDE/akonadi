@@ -20,10 +20,11 @@
 #include "transaction.h"
 #include "storage/datastore.h"
 
-Akonadi::Transaction::Transaction(DataStore * db) :
-  mDb( db ), mCommitted( false )
+Akonadi::Transaction::Transaction(DataStore * db, bool beginTransaction ) :
+    mDb( db ), mCommitted( false )
 {
-  mDb->beginTransaction();
+  if ( beginTransaction )
+    mDb->beginTransaction();
 }
 
 Akonadi::Transaction::~Transaction()
@@ -36,4 +37,9 @@ bool Akonadi::Transaction::commit()
 {
   mCommitted = true;
   return mDb->commitTransaction();
+}
+
+void Akonadi::Transaction::begin()
+{
+  mDb->beginTransaction();
 }

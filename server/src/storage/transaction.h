@@ -41,8 +41,9 @@ class Transaction
       instead of creating a new one.
       @param db The corresponding DataStore. You must not delete @p db during
       the lifetime of a Transaction object.
+      @param beginTransaction if false, the transaction won't be started, until begin is eplicitely called. The default is to begin the transaction right away.
     */
-    Transaction( DataStore *db );
+    Transaction( DataStore *db, bool beginTransaction = true);
 
     /**
       Rolls back the transaction if it hasn't been committed explicitly.
@@ -56,6 +57,8 @@ class Transaction
       to be committed explicitly.
     */
     bool commit();
+
+    void begin();
 
   private:
     Q_DISABLE_COPY( Transaction )

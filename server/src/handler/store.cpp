@@ -141,7 +141,7 @@ bool Store::parseStream()
   qDebug() << "Store::parseStream";
   parseCommandStream();
   DataStore *store = connection()->storageBackend();
-  Transaction transaction( store );
+  Transaction transaction( store, false );
    // Set the same modification time for each item.
   QDateTime modificationtime = QDateTime::currentDateTime().toUTC();
 
@@ -244,6 +244,7 @@ bool Store::parseStream()
           //this is executed only once, before the first command is processed
           firstCommand = false;
 
+          transaction.begin();
           SelectQueryBuilder<PimItem> qb;
           ItemQueryHelper::itemSetToQuery( mItemSet, mUidStore, connection(), qb );
           if ( !qb.exec() )
