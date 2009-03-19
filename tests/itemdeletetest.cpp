@@ -19,6 +19,8 @@
 
 #include <qtest_akonadi.h>
 #include <akonadi/collection.h>
+#include <akonadi/collectionpathresolver_p.h>
+#include <akonadi/collectionselectjob.h>
 #include <akonadi/control.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -39,7 +41,7 @@ class ItemDeleteTest : public QObject
       Control::start();
     }
 
-    void testIleagalDelete()
+    void testIllegalDelete()
     {
       ItemDeleteJob *djob = new ItemDeleteJob( Item( INT_MAX ), this );
       QVERIFY( !djob->exec() );
@@ -55,6 +57,31 @@ class ItemDeleteTest : public QObject
       QVERIFY( djob->exec() );
 
       ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ), this );
+      fjob->exec();
+      QCOMPARE( fjob->items().count(), 0 );
+    }
+
+    void testDeleteFromUnselectedCollection()
+    {
+      const QString path = QLatin1String( "res1" ) +
+                           CollectionPathResolver::pathDelimiter() +
+                           QLatin1String( "foo" );
+      CollectionPathResolver *rjob = new CollectionPathResolver( path, this );
+      QVERIFY( rjob->exec() );
+
+      ItemFetchJob *fjob = new ItemFetchJob( Collection( rjob->collection() ), this );
+      QVERIFY( fjob->exec() );
+
+      const Item::List items = fjob->items();
+      QVERIFY( items.count() > 0 );
+
+      CollectionSelectJob *sjob = new CollectionSelectJob( Collection( 2 ), this );
+      QVERIFY( sjob->exec() );
+
+      ItemDeleteJob *djob = new ItemDeleteJob( items[ 0 ], this );
+      QVERIFY( djob->exec() );
+
+      fjob = new ItemFetchJob( items[ 0 ], this );
       fjob->exec();
       QCOMPARE( fjob->items().count(), 0 );
     }
