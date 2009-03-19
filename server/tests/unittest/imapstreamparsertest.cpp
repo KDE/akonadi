@@ -395,5 +395,30 @@ void ImapStreamParserTest::testParseDateTime()
   }
 }
 
+void ImapStreamParserTest::testReadUntilCommandEnd()
+{
+  QByteArray input( "2 UID STORE 2 NOREV SIZE 0 (+FLAGS.SILENT (\\Deleted))\n3 EXPUNGE\n" );
+  QBuffer buffer( &input, this );
+  buffer.open( QIODevice::ReadOnly );
+  ImapStreamParser parser( &buffer );
+
+  try {
+    QCOMPARE( parser.readString(), QByteArray( "2" ) );
+    QCOMPARE( parser.readString(), QByteArray( "UID" ) );
+    QCOMPARE( parser.readString(), QByteArray( "STORE" ) );
+    QCOMPARE( parser.readString(), QByteArray( "2" ) );
+    QCOMPARE( parser.readString(), QByteArray( "NOREV" ) );
+    QCOMPARE( parser.readString(), QByteArray( "SIZE" ) );
+    QCOMPARE( parser.readString(), QByteArray( "0" ) );
+    parser.stripLeadingSpaces();
+    QCOMPARE( static_cast<char>( parser.readChar() ), '(' );
+    QVERIFY( !parser.atCommandEnd() );
+    parser.readUntilCommandEnd();
+    QCOMPARE( parser.readString(), QByteArray( "3" ) );
+  } catch ( const Akonadi::Exception &e ) {
+    qDebug() << e.type() << e.what();
+    QFAIL( "Exception caught" );
+  }
+}
 
 #include "imapstreamparsertest.moc"
