@@ -30,7 +30,7 @@
 
 using namespace Akonadi;
 
-class LinkTest : public QObject
+class ItemDeleteTest : public QObject
 {
   Q_OBJECT
   private slots:
@@ -60,6 +60,6 @@ class LinkTest : public QObject
     }
 };
 
-QTEST_AKONADIMAIN( LinkTest, NoGUI )
+QTEST_AKONADIMAIN( ItemDeleteTest, NoGUI )
 
 #include "itemdeletetest.moc"
