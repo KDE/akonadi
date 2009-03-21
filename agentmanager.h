@@ -91,7 +91,7 @@ class AKONADI_EXPORT AgentManager : public QObject
      * Returns the agent instance with the given @p identifier or
      * an invalid agent instance if the identifier does not exist.
      */
-    AgentInstance instance( const QString &identififer ) const;
+    AgentInstance instance( const QString &identifier ) const;
 
     /**
      * Removes the given agent @p instance.

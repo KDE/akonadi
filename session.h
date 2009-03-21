@@ -100,7 +100,8 @@ class AKONADI_EXPORT Session : public QObject
     SessionPrivate* const d;
 
     Q_PRIVATE_SLOT( d, void reconnect() )
-    Q_PRIVATE_SLOT( d, void socketError() )
+    Q_PRIVATE_SLOT( d, void socketError(QLocalSocket::LocalSocketError) )
+    Q_PRIVATE_SLOT( d, void socketDisconnected() )
     Q_PRIVATE_SLOT( d, void dataReceived() )
     Q_PRIVATE_SLOT( d, void doStartNext() )
     Q_PRIVATE_SLOT( d, void jobDone( KJob* ) )

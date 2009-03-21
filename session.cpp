@@ -65,7 +65,14 @@ void SessionPrivate::reconnect()
   }
 }
 
-void SessionPrivate::socketError()
+void SessionPrivate::socketError( QLocalSocket::LocalSocketError error )
+{
+  Q_ASSERT( mParent->sender() == socket );
+  kWarning( 5250 ) << "Socket error occurred:" << socket->errorString();
+  socketDisconnected();
+}
+
+void SessionPrivate::socketDisconnected()
 {
   if ( currentJob )
     currentJob->d_ptr->lostConnection();
@@ -249,8 +256,8 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
   // should check connection method
   d->socket = new QLocalSocket( this );
 
-  connect( d->socket, SIGNAL(disconnected()), SLOT(socketError()) );
-  connect( d->socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError()) );
+  connect( d->socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
+  connect( d->socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError(QLocalSocket::LocalSocketError)) );
   connect( d->socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
   d->reconnect();
 }

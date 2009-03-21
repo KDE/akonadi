@@ -23,6 +23,8 @@
 #include "session.h"
 #include "imapparser_p.h"
 
+#include <QtNetwork/QLocalSocket>
+
 #include <QtCore/QQueue>
 #include <QtCore/QSettings>
 #include <QtCore/QThreadStorage>
@@ -51,7 +53,8 @@ class SessionPrivate
 
     void startNext();
     void reconnect();
-    void socketError();
+    void socketDisconnected();
+    void socketError( QLocalSocket::LocalSocketError error );
     void dataReceived();
     void doStartNext();
     void startJob( Job* job );
