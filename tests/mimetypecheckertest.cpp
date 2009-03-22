@@ -23,6 +23,8 @@
 #include "akonadi/collection.h"
 #include "akonadi/item.h"
 
+#include "krandom.h"
+
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( MimeTypeCheckerTest, NoGUI )
@@ -241,6 +243,59 @@ void MimeTypeCheckerTest::testItemCheck()
     QVERIFY( mAliasChecker.isWantedItem( item ) );
     QVERIFY( MimeTypeChecker::isWantedItem( item, textDirectory ) );
   }
+}
+
+void MimeTypeCheckerTest::testStringMatchEquivalent()
+{
+  // check that a random and thus not installed MIME type
+  // can still be checked just like with direct string comparison
+
+  const QLatin1String installedMimeType( "text/plain" );
+  const QString randomMimeType = QLatin1String( "application/x-vnd.test." ) +
+                                 KRandom::randomString( 10 );
+
+  MimeTypeChecker installedTypeChecker;
+  installedTypeChecker.addWantedMimeType( installedMimeType );
+
+  MimeTypeChecker randomTypeChecker;
+  randomTypeChecker.addWantedMimeType( randomMimeType );
+
+  Item item1( 1 );
+  item1.setMimeType( installedMimeType );
+  Item item2( 2 );
+  item2.setMimeType( randomMimeType );
+
+  Collection collection1( 1 );
+  collection1.setContentMimeTypes( QStringList() << installedMimeType );
+  Collection collection2( 2 );
+  collection2.setContentMimeTypes( QStringList() << randomMimeType );
+  Collection collection3( 3 );
+  collection3.setContentMimeTypes( QStringList() << installedMimeType << randomMimeType );
+
+  QVERIFY( installedTypeChecker.isWantedItem( item1 ) );
+  QVERIFY( !randomTypeChecker.isWantedItem( item1 ) );
+  QVERIFY( MimeTypeChecker::isWantedItem( item1, installedMimeType ) );
+  QVERIFY( !MimeTypeChecker::isWantedItem( item1, randomMimeType ) );
+
+  QVERIFY( !installedTypeChecker.isWantedItem( item2 ) );
+  QVERIFY( randomTypeChecker.isWantedItem( item2 ) );
+  QVERIFY( !MimeTypeChecker::isWantedItem( item2, installedMimeType ) );
+  QVERIFY( MimeTypeChecker::isWantedItem( item2, randomMimeType ) );
+
+  QVERIFY( installedTypeChecker.isWantedCollection( collection1 ) );
+  QVERIFY( !randomTypeChecker.isWantedCollection( collection1 ) );
+  QVERIFY( MimeTypeChecker::isWantedCollection( collection1, installedMimeType ) );
+  QVERIFY( !MimeTypeChecker::isWantedCollection( collection1, randomMimeType ) );
+
+  QVERIFY( !installedTypeChecker.isWantedCollection( collection2 ) );
+  QVERIFY( randomTypeChecker.isWantedCollection( collection2 ) );
+  QVERIFY( !MimeTypeChecker::isWantedCollection( collection2, installedMimeType ) );
+  QVERIFY( MimeTypeChecker::isWantedCollection( collection2, randomMimeType ) );
+
+  QVERIFY( installedTypeChecker.isWantedCollection( collection3 ) );
+  QVERIFY( randomTypeChecker.isWantedCollection( collection3 ) );
+  QVERIFY( MimeTypeChecker::isWantedCollection( collection3, installedMimeType ) );
+  QVERIFY( MimeTypeChecker::isWantedCollection( collection3, randomMimeType ) );
 }
 
 #include "mimetypecheckertest.moc"

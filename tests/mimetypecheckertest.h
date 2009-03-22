@@ -43,6 +43,7 @@ class MimeTypeCheckerTest : public QObject
     void initTestCase();
     void testCollectionCheck();
     void testItemCheck();
+    void testStringMatchEquivalent();
 };
 
 

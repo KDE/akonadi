@@ -104,6 +104,9 @@ bool MimeTypeChecker::isWantedItem( const Item &item, const QString &wantedMimeT
   if ( mimeType.isEmpty() )
     return false;
 
+  if ( mimeType == wantedMimeType )
+    return true;
+
   KMimeType::Ptr mimeTypePtr = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
   if ( mimeTypePtr.isNull() )
     return false;
@@ -123,6 +126,9 @@ bool MimeTypeChecker::isWantedCollection( const Collection &collection, const QS
   foreach ( const QString &mimeType, contentMimeTypes ) {
     if ( mimeType.isEmpty() )
       continue;
+
+    if ( mimeType == wantedMimeType )
+      return true;
 
     KMimeType::Ptr mimeTypePtr = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
     if ( mimeTypePtr.isNull() )
