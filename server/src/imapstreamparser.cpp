@@ -638,31 +638,39 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
   QByteArray result;
   int i = m_position;
   int paranthesisBalance = 0;
+  bool inQuotedString = false;
   Q_FOREVER {
     if ( !waitForMoreData( m_data.length() <= i ) )
     {
       m_position = i;
       throw ImapParserException("Unable to read more data");
     }
-    if ( m_data[i] == '{' )
+    if ( !inQuotedString && m_data[i] == '{' )
     {
-      m_position = i - 1;
+      m_position = i;
       hasLiteral(); //init literal size
-      result.append(m_data.mid(i-1, m_position - i +1));
+      result.append( m_data.mid( i - 1, m_position - i ) );
       while (!atLiteralEnd())
       {
         result.append( readLiteralPart() );
       }
       i = m_position;
     }
-    if ( m_data[i] == '(' )
+
+    if ( !inQuotedString && m_data[i] == '(' )
       paranthesisBalance++;
-    if ( m_data[i] == ')' )
+    if ( !inQuotedString && m_data[i] == ')' )
       paranthesisBalance--;
     result.append( m_data[i]);
+
+    if ( m_data[i] == '"' ) {
+      if ( m_data[i - 1] != '\\' )
+        inQuotedString = !inQuotedString;
+    }
+
     if ( ( i == m_data.length() && paranthesisBalance == 0 ) || m_data[i] == '\n'  || m_data[i] == '\r')
       break; //command end
-      ++i;
+    ++i;
   }
   m_position = i + 1;
     // We'd better empty m_data from time to time before it grows out of control

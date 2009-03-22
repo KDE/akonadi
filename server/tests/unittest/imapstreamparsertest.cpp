@@ -424,7 +424,7 @@ void ImapStreamParserTest::testReadUntilCommandEnd()
 // real bug, infinite loop with { as first char in a quoted string
 void ImapStreamParserTest::testReadUntilCommandEnd2()
 {
-  QByteArray input( "4 MODIFY 595 MIMETYPE (message/rfc822 inode/directory) NAME \"child2\" REMOTEID \"{b42}\"\nNETXCOMMAND\n" );
+  QByteArray input( "4 MODIFY 595 MIMETYPE (message/rfc822 inode/directory) NAME \"child2\" REMOTEID \"{b42}\"\nNEXTCOMMAND\n" );
   QBuffer buffer( &input, this );
   buffer.open( QIODevice::ReadOnly );
   ImapStreamParser parser( &buffer );
@@ -432,7 +432,8 @@ void ImapStreamParserTest::testReadUntilCommandEnd2()
   try {
     QCOMPARE( parser.readString(), QByteArray( "4" ) );
     QCOMPARE( parser.readString(), QByteArray( "MODIFY" ) );
-    parser.readUntilCommandEnd();
+    QCOMPARE( parser.readString(), QByteArray( "595" ) );
+    QCOMPARE( parser.readUntilCommandEnd(), QByteArray( " MIMETYPE (message/rfc822 inode/directory) NAME \"child2\" REMOTEID \"{b42}\"\n" ) );
     QCOMPARE( parser.readString(), QByteArray( "NEXTCOMMAND" ) );
   } catch ( const Akonadi::Exception &e ) {
     qDebug() << e.type() << e.what();
