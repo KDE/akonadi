@@ -44,6 +44,8 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     , m_connectionState( NonAuthenticated )
     , m_backend( 0 )
     , m_selectedConnection( 0 )
+    , m_parser( 0 )
+    , m_streamParser( 0 )
 {
     m_identifier.sprintf( "%p", static_cast<void*>( this ) );
     Tracer::self()->beginConnection( m_identifier, QString() );
@@ -74,6 +76,8 @@ void AkonadiConnection::run()
         qWarning() << "AkonadiConnection(" << m_identifier
                  << ")::run: failed to set socket descriptor: "
                  << m_socket->error() << "(" << m_socket->errorString() << ")";
+        delete m_socket;
+        m_socket = 0;
         return;
     }
 
