@@ -50,7 +50,6 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     m_identifier.sprintf( "%p", static_cast<void*>( this ) );
     Tracer::self()->beginConnection( m_identifier, QString() );
     m_parser = new ImapParser;
-    m_streamParser = 0;
 }
 
 DataStore * Akonadi::AkonadiConnection::storageBackend()
