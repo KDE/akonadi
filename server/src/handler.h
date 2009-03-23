@@ -113,7 +113,7 @@ public:
 
     /**
      * Parse and handle the IMAP message using the streaming parser.
-     * @return true if parsed succesfully
+     * @return true if parsed successfully
      */
     virtual bool parseStream();
 
