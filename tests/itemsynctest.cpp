@@ -28,6 +28,8 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemsync.h>
 
+#include <krandom.h>
+
 #include <QtCore/QObject>
 #include <QSignalSpy>
 
@@ -120,6 +122,25 @@ class ItemsyncTest : public QObject
 
       Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
+
+      Item::List delItems;
+      delItems << resultItems.front();
+      resultItems.pop_front();
+
+      Item itemWithOnlyRemoteId;
+      itemWithOnlyRemoteId.setRemoteId( resultItems.front().remoteId() );
+      delItems << itemWithOnlyRemoteId;
+      resultItems.pop_front();
+
+      Item itemWithRandomRemoteId;
+      itemWithRandomRemoteId.setRemoteId( KRandom::randomString( 100 ) );
+      delItems << itemWithRandomRemoteId;
+
+      syncer = new ItemSync( col );
+      syncer->setIncrementalSyncItems( resultItems, delItems );
+
+      Item::List resultItems2 = fetchItems( col );
+      QCOMPARE( resultItems2.count(), resultItems.count() );
     }
 
     void testIncrementalStreamingSync()
