@@ -61,6 +61,7 @@ DateEditWidget::DateEditWidget( QWidget *parent )
   layout->addWidget( mView );
 
   mButton = new QToolButton;
+  mButton->setPopupMode(QToolButton::InstantPopup);
   mButton->setIcon( KIcon( "view-calendar-day" ) );
   layout->addWidget( mButton );
 
