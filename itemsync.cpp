@@ -332,8 +332,22 @@ void ItemSync::Private::processItems()
 void ItemSync::Private::deleteItems( const Item::List &items )
 {
   foreach ( const Item &item, items ) {
+    Item delItem( item );
+    if ( !item.isValid() ) {
+      delItem = mLocalItemsByRemoteId.value( item.remoteId() );
+    }
+
+    if ( !delItem.isValid() ) {
+#ifndef NDEBUG
+      kWarning( 5250 ) << "Delete item (remoteeId=" << delItem.remoteId()
+                       << "mimeType=" << delItem.mimeType()
+                       << ") does not have a valid UID and no item with that remote ID exists either";
+#endif
+      continue;
+    }
+
     mPendingJobs++;
-    ItemDeleteJob *job = new ItemDeleteJob( item, subjobParent() );
+    ItemDeleteJob *job = new ItemDeleteJob( delItem, subjobParent() );
     q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
   }
 }
