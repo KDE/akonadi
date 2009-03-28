@@ -22,10 +22,13 @@
 #define KNUTRESOURCE_H
 
 #include <akonadi/resourcebase.h>
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 #include <QDomDocument>
 
-class QDomElement;
+#include <akonadi/xml/xmldocument.h>
+
 class QFileSystemWatcher;
 
 class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer
@@ -56,8 +59,6 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
   private:
     QDomElement findElementByRid( const QString &rid ) const;
 
-    void serializeAttributes( const Akonadi::Entity &entity, QDomElement &entityElem );
-    QDomElement serializeCollection( Akonadi::Collection &collection );
     QDomElement serializeItem( Akonadi::Item &item );
 
   private slots:
@@ -65,7 +66,7 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
     void save();
 
   private:
-    QDomDocument mDocument;
+    Akonadi::XmlDocument mDocument;
     QFileSystemWatcher *mWatcher;
 };
 

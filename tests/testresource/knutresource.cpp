@@ -21,6 +21,8 @@
 #include "knutresource.h"
 #include "settings.h"
 #include "settingsadaptor.h"
+#include "akonadi/xml/xmlwriter.h"
+#include "akonadi/xml/xmlreader.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
@@ -35,63 +37,8 @@
 #include <QFileSystemWatcher>
 #include <QtCore/QDir>
 #include <QtCore/QUuid>
-#include <QtXml/QDomElement>
-
-#ifdef HAVE_LIBXML2
-#include <libxml/parser.h>
-#include <libxml/xmlIO.h>
-#include <libxml/xmlschemas.h>
-#endif
 
 using namespace Akonadi;
-
-// helper class for dealing with libxml resource management
-template <typename T, void FreeFunc(T)> class XmlPtr
-{
-  public:
-    XmlPtr( const T &t ) : p( t ) {}
-
-    ~XmlPtr()
-    {
-      FreeFunc( p );
-    }
-
-    operator T() const
-    {
-      return p;
-    }
-
-    operator bool() const
-    {
-      return p != NULL;
-    }
-
-  private:
-    T p;
-};
-
-
-class GenericAttribute : public Attribute
-{
-  public:
-    explicit GenericAttribute( const QByteArray &type, const QByteArray &value = QByteArray() ) :
-      mType( type ),
-      mValue( value )
-    {}
-
-    QByteArray type() const { return mType; }
-    Attribute* clone() const
-    {
-      return new GenericAttribute( mType, mValue );
-    }
-
-    QByteArray serialized() const { return mValue; }
-    void deserialize( const QByteArray &data ) { mValue = data; }
-
-  private:
-    QByteArray mType, mValue;
-};
-
 
 KnutResource::KnutResource( const QString &id )
   : ResourceBase( id ),
@@ -124,68 +71,10 @@ void KnutResource::load()
     return;
   }
 
-  QFile file( fileName );
-  QByteArray data;
-  if ( file.exists() ) {
-    if ( !file.open( QIODevice::ReadOnly ) ) {
-      emit status( Broken, i18n( "Unable to open data file '%1'.", fileName ) );
-      return;
-    }
-    data = file.readAll();
-  } else {
-    const QString tmplFilename = KGlobal::dirs()->findResource( "data", "akonadi_knut_resource/knut-template.xml" );
-    QFile tmpl( tmplFilename );
-    if ( !tmpl.open( QFile::ReadOnly ) ) {
-      emit status( Broken, i18n( "Unable to open template file '%1'.", tmplFilename ) );
-      return;
-    }
-    data = tmpl.readAll();
-  }
-  if ( Settings::self()->fileWatchingEnabled() )
-    mWatcher->addPath( fileName );
-
-#ifdef HAVE_LIBXML2
-  // schema validation
-  XmlPtr<xmlDocPtr, xmlFreeDoc> sourceDoc( xmlParseMemory( data.constData(), data.length() ) );
-  if ( !sourceDoc ) {
+  if( !mDocument.loadFile(fileName)) {
     emit status( Broken, i18n( "Unable to parse data file '%1'.", fileName ) );
     return;
-  }
-
-  const QString &schemaFileName = KGlobal::dirs()->findResource( "data", "akonadi_knut_resource/knut.xsd" );
-  XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit(), NULL, XML_PARSE_NONET ) );
-  if ( !schemaDoc ) {
-    emit status( Broken, "Schema definition could not be loaded and parsed." );
-    return;
-  }
-  XmlPtr<xmlSchemaParserCtxtPtr, xmlSchemaFreeParserCtxt> parserContext( xmlSchemaNewDocParserCtxt( schemaDoc ) );
-  if ( !parserContext ) {
-    emit status( Broken, "Unable to create schema parser context." );
-    return;
-  }
-  XmlPtr<xmlSchemaPtr, xmlSchemaFree> schema( xmlSchemaParse( parserContext ) );
-  if ( !schema ) {
-    emit status( Broken, "Unable to create schema." );
-    return;
-  }
-  XmlPtr<xmlSchemaValidCtxtPtr, xmlSchemaFreeValidCtxt> validationContext( xmlSchemaNewValidCtxt( schema ) );
-  if ( !validationContext ) {
-    emit status( Broken, "Unable to create schema validation context." );
-    return;
-  }
-
-  if ( xmlSchemaValidateDoc( validationContext, sourceDoc ) != 0 ) {
-    emit status( Broken, i18n( "Invalid file format." ) );
-    return;
-  }
-#endif
-
-  // DOM loading
-  QString errMsg;
-  if ( !mDocument.setContent( data, true, &errMsg ) ) {
-    emit status( Broken, i18n( "Unable to parse data file: %1", errMsg ) );
-    return;
-  }
+  } 
 
   emit status( Idle, i18n( "File '%1' loaded successfully.", fileName ) );
   synchronize();
@@ -201,7 +90,7 @@ void KnutResource::save()
     emit error( i18n( "Unable to write to file '%1'.", fileName ) );
     return;
   }
-  file.write( mDocument.toByteArray( 2 ) );
+  file.write( mDocument.document().toByteArray( 2 ) );
 }
 
 
@@ -226,74 +115,15 @@ void KnutResource::configure( WId windowId )
   load();
 }
 
-
-static void deserializeAttributes( const QDomElement &node, Entity &entity )
-{
-  const QDomNodeList children = node.childNodes();
-  for ( int i = 0; i < children.count(); ++i ) {
-    const QDomElement attrElem = children.at( i ).toElement();
-    if ( attrElem.isNull() || attrElem.tagName() != "attribute" )
-      continue;
-    GenericAttribute *attr = new GenericAttribute( attrElem.attribute( "type" ).toUtf8(),
-                                                   attrElem.text().toUtf8() );
-    entity.addAttribute( attr );
-  }
-}
-
-static Collection buildCollection( const QDomElement &node, const QString &parentRid )
-{
-  Collection c;
-  c.setRemoteId( node.attribute( "rid" ) );
-  c.setParentRemoteId( parentRid );
-  c.setName( node.attribute( "name" ) );
-  c.setContentMimeTypes( node.attribute( "content" ).split( ',' ) );
-  deserializeAttributes( node, c );
-  return c;
-}
-
-static Collection::List buildCollectionTree( const QDomElement &parent )
-{
-  Collection::List rv;
-  if ( parent.isNull() )
-    return rv;
-  const QDomNodeList children = parent.childNodes();
-  for ( int i = 0; i < children.count(); ++i ) {
-    const QDomElement child = children.at( i ).toElement();
-    if ( child.isNull() || child.tagName() != "collection" )
-      continue;
-    rv += buildCollection( child, parent.attribute( "rid" ) );
-    rv += buildCollectionTree( child );
-  }
-  return rv;
-}
-
 void KnutResource::retrieveCollections()
 {
-  const Collection::List collections = buildCollectionTree( mDocument.documentElement() );
+  const Collection::List collections = mDocument.collections();
   collectionsRetrieved( collections );
-}
-
-
-static Item buildItem( const QDomElement &elem )
-{
-  Item item( elem.attribute( "mimetype", "application/octet-stream" ) );
-  item.setRemoteId( elem.attribute( "rid" ) );
-  deserializeAttributes( elem, item );
-
-  const QDomNodeList children = elem.childNodes();
-  for ( int i = 0; i < children.count(); ++i ) {
-    const QDomElement flagElem = children.at( i ).toElement();
-    if ( flagElem.isNull() || flagElem.tagName() != "flag" )
-      continue;
-    item.setFlag( flagElem.text().toUtf8() );
-  }
-
-  return item;
 }
 
 void KnutResource::retrieveItems( const Akonadi::Collection &collection )
 {
-  const QDomElement colElem = findElementByRid( collection.remoteId() );
+  const QDomElement colElem = mDocument.itemElementByRemoteId( collection.remoteId() );
   if ( colElem.isNull() ) {
     emit error( "Unable to find collection " + collection.name() );
     itemsRetrievalDone();
@@ -306,26 +136,18 @@ void KnutResource::retrieveItems( const Akonadi::Collection &collection )
     const QDomElement itemElem = children.at( i ).toElement();
     if ( itemElem.isNull() || itemElem.tagName() != "item" )
       continue;
-    items += buildItem( itemElem );
+    items += XmlReader::elementToItem( itemElem );
   }
 
   itemsRetrieved( items );
 }
 
 
-static void addItemPayload( Item &item, const QDomElement &elem )
-{
-  if ( elem.isNull() )
-    return;
-  const QByteArray payloadData = elem.text().toUtf8();
-  item.setPayloadFromData( payloadData );
-}
-
 bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts )
 {
   Q_UNUSED( parts );
 
-  const QDomElement itemElem = findElementByRid( item.remoteId() );
+  const QDomElement itemElem = mDocument.itemElementByRemoteId( item.remoteId() );
   if ( itemElem.isNull() ) {
     cancelTask( "No item found for remoteid " + item.remoteId() );
     return false;
@@ -338,7 +160,7 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
   }
 
   Item i( item );
-  addItemPayload( i, l.at( 0 ).toElement() );
+  XmlReader::readAttributes( l.at( 0 ).toElement(), i );
   itemRetrieved( i );
   return true;
 }
@@ -346,7 +168,7 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
 
 void KnutResource::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
-  QDomElement parentElem = findElementByRid( parent.remoteId() );
+  QDomElement parentElem = mDocument.itemElementByRemoteId( parent.remoteId() );
   if ( parentElem.isNull() ) {
     emit error( "Parent collection not found in DOM tree." );
     changeProcessed();
@@ -354,7 +176,8 @@ void KnutResource::collectionAdded( const Akonadi::Collection &collection, const
   }
 
   Collection c( collection );
-  const QDomElement newCol = serializeCollection( c );
+  QDomElement newCol;
+  XmlWriter::writeCollection( c, newCol );
   parentElem.insertBefore( newCol, QDomNode() );
   save();
   changeCommitted( c );
@@ -362,7 +185,7 @@ void KnutResource::collectionAdded( const Akonadi::Collection &collection, const
 
 void KnutResource::collectionChanged( const Akonadi::Collection &collection )
 {
-  QDomElement oldElem = findElementByRid( collection.remoteId() );
+  QDomElement oldElem = mDocument.itemElementByRemoteId( collection.remoteId() );
   if ( oldElem.isNull() ) {
     emit error( "Modified collection not found in DOM tree." );
     changeProcessed();
@@ -370,7 +193,8 @@ void KnutResource::collectionChanged( const Akonadi::Collection &collection )
   }
 
   Collection c( collection );
-  QDomElement newElem = serializeCollection( c );
+  QDomElement newElem;
+  XmlWriter::writeCollection( c, newElem );
   // move all items/collections over to the new node
   const QDomNodeList children = oldElem.childNodes();
   for ( int i = 0; i < children.count(); ++i ) {
@@ -390,7 +214,7 @@ void KnutResource::collectionChanged( const Akonadi::Collection &collection )
 
 void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
 {
-  const QDomElement colElem = findElementByRid( collection.remoteId() );
+  const QDomElement colElem = mDocument.itemElementByRemoteId( collection.remoteId() );
   if ( colElem.isNull() ) {
     emit error( "Deleted collection not found in DOM tree." );
     changeProcessed();
@@ -405,7 +229,7 @@ void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
 
 void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  QDomElement parentElem = findElementByRid( collection.remoteId() );
+  QDomElement parentElem = mDocument.itemElementByRemoteId( collection.remoteId() );
   if ( parentElem.isNull() ) {
     emit error( "Parent collection not found in DOM tree." );
     changeProcessed();
@@ -421,7 +245,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
 
 void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
 {
-  const QDomElement oldElem = findElementByRid( item.remoteId() );
+  const QDomElement oldElem = mDocument.itemElementByRemoteId( item.remoteId() );
   if ( oldElem.isNull() ) {
     emit error( "Modified item not found in DOM tree." );
     changeProcessed();
@@ -437,7 +261,7 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
 
 void KnutResource::itemRemoved( const Akonadi::Item &item )
 {
-  const QDomElement itemElem = findElementByRid( item.remoteId() );
+  const QDomElement itemElem = mDocument.itemElementByRemoteId( item.remoteId() );
   if ( itemElem.isNull() ) {
     emit error( "Deleted item not found in DOM tree." );
     changeProcessed();
@@ -449,57 +273,9 @@ void KnutResource::itemRemoved( const Akonadi::Item &item )
   changeProcessed();
 }
 
-
-static QDomElement findElementByRidHelper( const QDomElement &elem, const QString &rid )
-{
-  if ( elem.isNull() )
-    return QDomElement();
-  if ( elem.attribute( "rid" ) == rid )
-    return elem;
-  const QDomNodeList children = elem.childNodes();
-  for ( int i = 0; i < children.count(); ++i ) {
-    const QDomElement child = children.at( i ).toElement();
-    if ( child.isNull() )
-      continue;
-    const QDomElement rv = findElementByRidHelper( child, rid );
-    if ( !rv.isNull() )
-      return rv;
-  }
-  return QDomElement();
-}
-
-QDomElement KnutResource::findElementByRid( const QString &rid ) const
-{
-  return findElementByRidHelper( mDocument.documentElement(), rid );
-}
-
-
-void KnutResource::serializeAttributes( const Akonadi::Entity &entity, QDomElement &entityElem )
-{
-  foreach ( Attribute *attr, entity.attributes() ) {
-    QDomElement top = mDocument.createElement( "attribute" );
-    top.setAttribute( "type", QString::fromUtf8( attr->type() ) );
-    QDomText attrText = mDocument.createTextNode( QString::fromUtf8( attr->serialized() ) );
-    top.appendChild( attrText );
-    entityElem.appendChild( top );
-  }
-}
-
-QDomElement KnutResource::serializeCollection( Akonadi::Collection &collection )
-{
-  if ( collection.remoteId().isEmpty() )
-    collection.setRemoteId( QUuid::createUuid().toString() );
-  QDomElement top = mDocument.createElement( "collection" );
-  top.setAttribute( "rid", collection.remoteId() );
-  top.setAttribute( "name", collection.name() );
-  top.setAttribute( "content", collection.contentMimeTypes().join( "," ) );
-  serializeAttributes( collection, top );
-  return top;
-}
-
 QDomElement KnutResource::serializeItem( Akonadi::Item &item )
 {
-  if ( item.remoteId().isEmpty() )
+ /* if ( item.remoteId().isEmpty() )
     item.setRemoteId( QUuid::createUuid().toString() );
   QDomElement top = mDocument.createElement( "item" );
   top.setAttribute( "rid", item.remoteId() );
@@ -519,7 +295,7 @@ QDomElement KnutResource::serializeItem( Akonadi::Item &item )
     top.appendChild( flagElem );
   }
 
-  return top;
+  return top; */
 }
 
 
