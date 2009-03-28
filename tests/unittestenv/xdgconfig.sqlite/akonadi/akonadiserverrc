@@ -1,0 +1,6 @@
+[%General]
+Driver=QSQLITE
+
+[Debug]
+Tracer=null
+
