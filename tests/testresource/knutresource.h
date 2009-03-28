@@ -59,8 +59,6 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
   private:
     QDomElement findElementByRid( const QString &rid ) const;
 
-    QDomElement serializeItem( Akonadi::Item &item );
-
   private slots:
     void load();
     void save();

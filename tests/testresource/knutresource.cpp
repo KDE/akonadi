@@ -118,6 +118,7 @@ void KnutResource::configure( WId windowId )
 void KnutResource::retrieveCollections()
 {
   const Collection::List collections = mDocument.collections();
+  qDebug()<<"i am here";
   collectionsRetrieved( collections );
 }
 
@@ -237,7 +238,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
   }
 
   Item i( item );
-  const QDomElement newItem = serializeItem( i );
+  const QDomElement newItem = XmlWriter::itemToElement(i, mDocument.document()); //serializeItem( i );
   parentElem.appendChild( newItem );
   save();
   changeCommitted( i );
@@ -253,7 +254,7 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
   }
 
   Item i( item );
-  const QDomElement newElem = serializeItem( i );
+  const QDomElement newElem = XmlWriter::itemToElement(i, mDocument.document());
   oldElem.parentNode().replaceChild( newElem, oldElem );
   save();
   changeCommitted( i );
@@ -272,32 +273,6 @@ void KnutResource::itemRemoved( const Akonadi::Item &item )
   save();
   changeProcessed();
 }
-
-QDomElement KnutResource::serializeItem( Akonadi::Item &item )
-{
- /* if ( item.remoteId().isEmpty() )
-    item.setRemoteId( QUuid::createUuid().toString() );
-  QDomElement top = mDocument.createElement( "item" );
-  top.setAttribute( "rid", item.remoteId() );
-  top.setAttribute( "mimetype", item.mimeType() );
-
-  QDomElement payloadElem = mDocument.createElement( "payload" );
-  QDomText payloadText = mDocument.createTextNode( QString::fromUtf8( item.payloadData() ) );
-  payloadElem.appendChild( payloadText );
-  top.appendChild( payloadElem );
-
-  serializeAttributes( item, top );
-
-  foreach ( const Item::Flag &flag, item.flags() ) {
-    QDomElement flagElem = mDocument.createElement( "flag" );
-    QDomText flagText = mDocument.createTextNode( QString::fromUtf8( flag ) );
-    flagElem.appendChild( flagText );
-    top.appendChild( flagElem );
-  }
-
-  return top; */
-}
-
 
 AKONADI_RESOURCE_MAIN( KnutResource )
 
