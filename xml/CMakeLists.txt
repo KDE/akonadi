@@ -1,4 +1,4 @@
-project (akonadixml)    
+project (akonadixml)
 
 find_package(KDE4 REQUIRED)
 find_package (KdepimLibs REQUIRED)
@@ -19,7 +19,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 include_directories(
     ${AKONADI_INCLUDE_DIR}
-    ${KDE4_INCLUDES} 
+    ${KDE4_INCLUDES}
     ${KDEPIMLIBS_INCLUDE_DIR}
     ${LIBXML2_INCLUDE_DIR}
 )
@@ -31,6 +31,7 @@ set( akonadixml_SRCS
   xmldocument.cpp
   xmlreader.cpp
   xmlwriter.cpp
+  xmlwritejob.cpp
 )
 
 kde4_add_library(akonadi-xml SHARED ${akonadixml_SRCS})
@@ -49,5 +50,10 @@ install( FILES
    xmldocument.h
    xmlreader.h
    xmlwriter.h
+   xmlwritejob.h
    DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/xml/ COMPONENT Devel
 )
+
+kde4_add_executable(akonadi2xml akonadi2xml.cpp)
+target_link_libraries(akonadi2xml akonadi-xml)
+install( TARGETS akonadi2xml ${INSTALL_TARGETS_DEFAULT_ARGS} )

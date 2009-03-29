@@ -52,7 +52,7 @@ template <typename T, void FreeFunc(T)> class XmlPtr
     {
       return p;
     }
-  
+
     operator bool() const
     {
       return p != NULL;
@@ -105,7 +105,10 @@ class XmlDocumentPrivate
 
 XmlDocument::XmlDocument() :
   d( new XmlDocumentPrivate )
-{}
+{
+  const QDomElement rootElem = d->document.createElement( Format::Tag::root() );
+  d->document.appendChild( rootElem );
+}
 
 XmlDocument::XmlDocument(const QString& fileName) :
   d( new XmlDocumentPrivate )
@@ -190,6 +193,20 @@ bool Akonadi::XmlDocument::loadFile(const QString& fileName)
   }
 
   d->valid = true;
+  d->lastError.clear();
+  return true;
+}
+
+bool XmlDocument::writeToFile(const QString& fileName) const
+{
+  QFile f( fileName );
+  if ( !f.open( QFile::WriteOnly ) ) {
+    d->lastError = f.errorString();
+    return false;
+  }
+
+  f.write( d->document.toByteArray( 2 ) );
+
   d->lastError.clear();
   return true;
 }

@@ -28,6 +28,7 @@ namespace Format {
 
 namespace Tag {
 
+  inline QString root() { return QString::fromLatin1( "knut" ); }
   inline QString collection() { return QString::fromLatin1( "collection" ); }
   inline QString item() { return QString::fromLatin1( "item" ); }
   inline QString attribute() { return QString::fromLatin1( "attribute" ); }

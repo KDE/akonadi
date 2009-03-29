@@ -38,7 +38,7 @@ class AKONADI_XML_EXPORT XmlDocument
 {
   public:
     /**
-      Creates an empty, invalid XmlDocument.
+      Creates an empty document.
     */
     XmlDocument();
 
@@ -58,6 +58,11 @@ class AKONADI_XML_EXPORT XmlDocument
        @see isValid(), lastError()
     */
     bool loadFile( const QString &fileName );
+
+    /**
+      Writes the current document into the given file.
+    */
+    bool writeToFile( const QString &fileName ) const;
 
     /**
       Returns true if the document could be parsed successfully.

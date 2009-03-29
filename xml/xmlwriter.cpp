@@ -66,13 +66,15 @@ QDomElement XmlWriter::collectionToElement(const Akonadi::Collection& collection
   return top;
 }
 
-void XmlWriter::writeCollection(const Akonadi::Collection& collection, QDomElement& parentElem)
+QDomElement XmlWriter::writeCollection(const Akonadi::Collection& collection, QDomElement& parentElem)
 {
   if ( parentElem.isNull() )
-    return;
+    return QDomElement();
 
   QDomDocument doc = parentElem.ownerDocument();
-  parentElem.appendChild( collectionToElement( collection, doc ) );
+  const QDomElement elem = collectionToElement( collection, doc );
+  parentElem.appendChild( elem );
+  return elem;
 }
 
 QDomElement XmlWriter::itemToElement(const Akonadi::Item& item, QDomDocument& document)
@@ -101,5 +103,16 @@ QDomElement XmlWriter::itemToElement(const Akonadi::Item& item, QDomDocument& do
   }
 
   return top;
+}
+
+QDomElement XmlWriter::writeItem(const Item& item, QDomElement& parentElem)
+{
+  if ( parentElem.isNull() )
+    return QDomElement();
+
+  QDomDocument doc = parentElem.ownerDocument();
+  const QDomElement elem = itemToElement( item, doc );
+  parentElem.appendChild( elem );
+  return elem;
 }
 

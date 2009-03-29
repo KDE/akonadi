@@ -49,19 +49,24 @@ namespace XmlWriter
   AKONADI_XML_EXPORT void writeAttributes( const Entity &entity, QDomElement &parentElem );
 
   /**
-    Creates an collection element for the given document, not yet attached to the DOM tree.
+    Creates a collection element for the given document, not yet attached to the DOM tree.
   */
   AKONADI_XML_EXPORT QDomElement collectionToElement( const Collection &collection, QDomDocument &document );
 
   /**
     Serializes the given collection into a DOM element with the given parent.
   */
-  AKONADI_XML_EXPORT void writeCollection( const Collection &collection, QDomElement &parentElem );
+  AKONADI_XML_EXPORT QDomElement writeCollection( const Collection &collection, QDomElement &parentElem );
 
   /**
-    Serializes the given item into a DOM element with the given parent.
+    Creates an item element for the given document, not yet attached to the DOM tree
   */
   AKONADI_XML_EXPORT QDomElement itemToElement( const Item &item, QDomDocument &document );
+
+  /**
+    Serializes the given item into a DOM element and attaches it to the given item.
+  */
+  AKONADI_XML_EXPORT QDomElement writeItem( const Akonadi::Item& item, QDomElement& parentElem );
 }
 
 }
