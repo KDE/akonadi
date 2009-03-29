@@ -64,6 +64,7 @@ int main( int argc, char **argv )
   KCmdLineOptions options;
   options.add( "c" ).add( "config <configfile>", ki18n( "Configuration file to open" ), "config.xml" );
   options.add( "!+[test]", ki18n( "Test to run automatically, interactive if none specified" ) );
+  options.add("testenv <path>", ki18n("Path where testenvironment would be saved"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
@@ -87,7 +88,11 @@ int main( int argc, char **argv )
   testing->insertItemFromList();
 
   ShellScript *sh = new ShellScript();
-  sh->makeShellScript( setup->basePath() + "testenvironment.sh" );
+
+  if( args->isSet("testenv"))
+    sh->makeShellScript( args->getOption("testenv"));
+  else
+    sh->makeShellScript( setup->basePath() + "testenvironment.sh" );
 
   if ( args->count() > 0 ) {
     QStringList testArgs;
