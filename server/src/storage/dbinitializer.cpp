@@ -104,9 +104,21 @@ bool DbInitializer::checkTable( const QDomElement &element )
       ColumnEntry entry;
       entry.first = columnElement.attribute( QLatin1String("name") );
       if ( columnElement.attribute( QLatin1String("sqltype") ).isEmpty() )
-        entry.second = sqlType( columnElement.attribute( QLatin1String("type") ) ) + QLatin1String( " " ) + columnElement.attribute( QLatin1String("properties") );
+        entry.second = sqlType( columnElement.attribute( QLatin1String("type") ) );
       else
-        entry.second = columnElement.attribute( QLatin1String("sqltype") ) + QLatin1String( " " ) + columnElement.attribute( QLatin1String("properties") );
+        entry.second = columnElement.attribute( QLatin1String("sqltype") );
+      QString props = columnElement.attribute(QLatin1String("properties"));
+      if ( mDatabase.driverName().startsWith( QLatin1String("QSQLITE") ) ) {
+        if ( props.contains(QLatin1String("PRIMARY KEY")) )
+          if ( entry.second == QLatin1String("BIGINT") )
+            entry.second = QLatin1String("INTEGER");
+      if ( props.contains(QLatin1String("BINARY")) )
+        if ( !(props.contains(QLatin1String("COLLATE BINARY"))) )
+          props.replace(QLatin1String("BINARY"), QLatin1String("COLLATE BINARY"));
+      if ( props.contains(QLatin1String("character set utf8 collate utf8_bin")) )
+        props.remove(QLatin1String("character set utf8 collate utf8_bin"));
+      }
+      entry.second += QLatin1String(" ")+props;
       if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) ) {
         if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
           entry.second = QLatin1String("SERIAL PRIMARY KEY NOT NULL");
@@ -205,12 +217,13 @@ bool DbInitializer::checkTable( const QDomElement &element )
   columnElement = element.firstChildElement();
   while ( !columnElement.isNull() ) {
     if ( columnElement.tagName() == QLatin1String( "index" ) ) {
-      if ( !hasIndex( tableName, columnElement.attribute( QLatin1String("name") ) ) ) {
+      QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableName ).arg( columnElement.attribute( QLatin1String("name") ) ); // sqlite3 needs unique index identifiers per db
+      if ( !hasIndex( tableName, indexName ) ) {
         QString statement = QLatin1String( "CREATE " );
         if ( columnElement.attribute( QLatin1String("unique") ) == QLatin1String( "true" ) )
           statement += QLatin1String( "UNIQUE " );
         statement += QLatin1String( "INDEX " );
-        statement += columnElement.attribute( QLatin1String("name") );
+        statement += indexName;
         statement += QLatin1String( " ON " );
         statement += tableName;
         statement += QLatin1String( " (" );
@@ -267,11 +280,12 @@ bool DbInitializer::checkRelation(const QDomElement & element)
         .arg( col1 )
         .arg( table1 )
         .arg( col1 );
-    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4))" )
+    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4), " )
         .arg( table2 )
         .arg( col2 )
         .arg( table2 )
         .arg( col2 );
+    statement += QString::fromLatin1("PRIMARY KEY (%1_%2, %3_%4));" ).arg( table1 ).arg( col1 ).arg( table2 ).arg( col2 );
     qDebug() << statement;
 
     QSqlQuery query( mDatabase );
@@ -281,24 +295,6 @@ bool DbInitializer::checkRelation(const QDomElement & element)
       return false;
     }
   }
-
-  if ( !hasIndex( tableName, QLatin1String("PRIMARY") ) ) {
-    QString statement = QLatin1String( "ALTER TABLE " );
-    statement += tableName;
-    statement += QLatin1String( " ADD PRIMARY KEY (" );
-    statement += QString::fromLatin1( "%1_%2" ).arg( table1 ).arg( col1 );
-    statement += QLatin1String( ", " );
-    statement += QString::fromLatin1( "%1_%2" ).arg( table2 ).arg( col2 );
-    statement += QLatin1Char(')');
-    QSqlQuery query( mDatabase );
-    qDebug() << "adding index" << statement;
-    if ( !query.exec( statement ) ) {
-      mErrorMsg = QLatin1String( "Unable to create index.\n" );
-      mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
-      return false;
-    }
-  }
-
   return true;
 }
 
@@ -364,6 +360,8 @@ bool DbInitializer::hasIndex(const QString & tableName, const QString & indexNam
     statement  = QLatin1String( "SELECT indexname FROM pq_indexes" );
     statement += QString::fromLatin1( " WHERE tablename = '%1'" ).arg( tableName );
     statement += QString::fromLatin1( " AND  indexname = '%1';" ).arg( indexName );
+  } else if ( mDatabase.driverName() == QLatin1String("QSQLITE") ) {
+    statement  = QString::fromLatin1( "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';" ).arg( tableName ).arg( indexName );
   } else {
     qFatal( "Implement index support for your database!" );
   }
