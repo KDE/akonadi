@@ -1,12 +1,6 @@
 project (akonadixml)
 
-find_package(KDE4 REQUIRED)
-find_package (KdepimLibs REQUIRED)
 find_package( LibXml2 )
-include(KDE4Defaults)
-include(MacroLibrary)
-include(MacroOptionalAddSubdirectory)
-include(CheckIncludeFiles)
 
 if ( LIBXML2_FOUND )
   add_definitions( -DHAVE_LIBXML2 )
