@@ -157,7 +157,7 @@ bool Akonadi::XmlDocument::loadFile(const QString& fileName)
     return false;
   }
 
-  const QString &schemaFileName = KGlobal::dirs()->findResource( "data", QLatin1String("akonadi_knut_resource/knut.xsd") );
+  const QString &schemaFileName = KGlobal::dirs()->findResource( "data", QLatin1String("akonadi/akonadi-xml.xsd") );
   XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit(), NULL, XML_PARSE_NONET ) );
   if ( !schemaDoc ) {
     d->lastError = i18n( "Schema definition could not be loaded and parsed." );
