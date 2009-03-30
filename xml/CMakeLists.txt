@@ -1,6 +1,7 @@
 project (akonadixml)
 
-find_package( LibXml2 )
+macro_optional_find_package(LibXml2)
+macro_log_feature(LIBXML2_FOUND "LibXML2" "Libraries used to develop XML applications" "http://xmlsoft.org" FALSE "" "Needed for building the knut Akonadi resource.")
 
 if ( LIBXML2_FOUND )
   add_definitions( -DHAVE_LIBXML2 )
