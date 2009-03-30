@@ -71,10 +71,13 @@ void KnutResource::load()
     return;
   }
 
-  if( !mDocument.loadFile(fileName)) {
-    emit status( Broken, i18n( "Unable to parse data file '%1'.", fileName ) );
+  if( !mDocument.loadFile(fileName) ) {
+    emit status( Broken, mDocument.lastError() );
     return;
   }
+
+  if ( Settings::self()->fileWatchingEnabled() )
+    mWatcher->addPath( fileName );
 
   emit status( Idle, i18n( "File '%1' loaded successfully.", fileName ) );
   synchronize();
@@ -85,12 +88,10 @@ void KnutResource::save()
   if ( Settings::self()->readOnly() )
     return;
   const QString fileName = Settings::self()->dataFile();
-  QFile file( fileName );
-  if  ( !file.open( QIODevice::WriteOnly ) ) {
-    emit error( i18n( "Unable to write to file '%1'.", fileName ) );
+  if  ( !mDocument.writeToFile( fileName ) ) {
+    emit error( mDocument.lastError() );
     return;
   }
-  file.write( mDocument.document().toByteArray( 2 ) );
 }
 
 
