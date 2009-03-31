@@ -140,13 +140,8 @@ bool Akonadi::XmlDocument::loadFile(const QString& fileName)
     }
     data = file.readAll();
   } else {
-    const QString tmplFilename = KGlobal::dirs()->findResource( "data", QLatin1String("akonadi_knut_resource/knut-template.xml") );
-    QFile tmpl( tmplFilename );
-    if ( !tmpl.open( QFile::ReadOnly ) ) {
-      d->lastError = i18n( "Unable to open template file '%1'.", tmplFilename );
-      return false;
-    }
-    data = tmpl.readAll();
+    d->lastError = i18n( "File %1 does not exist.", fileName );
+    return false;
   }
 
 #ifdef HAVE_LIBXML2
