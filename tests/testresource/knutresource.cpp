@@ -65,11 +65,14 @@ void KnutResource::load()
     mWatcher->removePaths( mWatcher->files() );
 
   // file loading
-  const QString fileName = Settings::self()->dataFile();
+  QString fileName = Settings::self()->dataFile();
   if ( fileName.isEmpty() ) {
     emit status( Broken, i18n( "No data file selected." ) );
     return;
   }
+
+  if ( !QFile::exists( fileName ) )
+    fileName = KGlobal::dirs()->findResource( "data", QLatin1String("akonadi_knut_resource/knut-template.xml") );
 
   if( !mDocument.loadFile(fileName) ) {
     emit status( Broken, mDocument.lastError() );
