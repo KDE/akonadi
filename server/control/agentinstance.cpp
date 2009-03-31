@@ -218,10 +218,8 @@ void AgentInstance::refreshResourceStatus()
 
 void AgentInstance::errorHandler(const QDBusError & error)
 {
-  mManager->tracer()->error( QLatin1String( "AgentInstance::errorHandler" ),
-      QString( "D-Bus communication error '%1': '%2'" )
-          .arg( error.name(), error.message() ) );
-
+  //avoid using the server tracer, can result in D-BUS lockups
+  qDebug() <<  QString( "D-Bus communication error '%1': '%2'" ).arg( error.name(), error.message() ) ;
   // TODO try again after some time, esp. on timeout errors
 }
 
