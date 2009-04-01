@@ -122,7 +122,7 @@ bool ImapStreamParser::hasLiteral()
       ++m_position;
 
     m_continuationSize = qMin(m_position + m_literalSize - m_data.length(), (qint64)4096);
-    if (m_continuationSize > 0)
+    if (m_continuationSize >= 0)
       sendContinuationResponse();
     return true;
   } else
