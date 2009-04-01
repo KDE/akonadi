@@ -170,7 +170,7 @@ bool Akonadi::Handler::failureResponse( const QString& failureMessage )
     response.setString( failureMessage );
     emit responseAvailable( response );
     deleteLater();
-    return true;
+    return false;
 }
 
 bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )

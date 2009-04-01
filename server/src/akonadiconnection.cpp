@@ -119,7 +119,7 @@ void AkonadiConnection::slotNewData()
     m_currentHandler->setTag( tag );
     m_streamParser->insertData( command );
     Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( tag + " " + m_streamParser->readRemainingData() ) );
-    qDebug() << "Handler found: " << m_currentHandler->metaObject()->className();
+    qDebug() << "Handler found: " << m_currentHandler->metaObject()->className() << " command: " <<  m_streamParser->readRemainingData();
     assert( m_currentHandler );
     connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
              this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
@@ -128,21 +128,26 @@ void AkonadiConnection::slotNewData()
                          Qt::DirectConnection );
     try {
       m_currentHandler->setStreamParser( m_streamParser );
-      m_currentHandler->parseStream();
+      if ( !m_currentHandler->parseStream() ) {
+        m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+      }
       m_currentHandler = 0;
     } catch ( const Akonadi::HandlerException &e ) {
       m_currentHandler->failureResponse( e.what() );
       m_currentHandler->deleteLater();
       m_currentHandler = 0;
+      m_streamParser->readUntilCommandEnd(); //just eat the ending newline
     } catch ( const Akonadi::Exception &e ) {
       m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
           + QLatin1String( ": " ) + QString::fromLatin1( e.what()  ) );
       m_currentHandler->deleteLater();
       m_currentHandler = 0;
+      m_streamParser->readUntilCommandEnd(); //just eat the ending newline
     } catch ( ... ) {
       akError() << "Unknown exception caught: " << akBacktrace();
       delete m_currentHandler;
       m_currentHandler = 0;
+      m_streamParser->readUntilCommandEnd(); //just eat the ending newline
     }
 
     if (m_streamParser->readRemainingData().startsWith('\n') || m_streamParser->readRemainingData().startsWith("\r\n"))

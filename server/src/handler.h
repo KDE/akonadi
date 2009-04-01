@@ -112,8 +112,8 @@ public:
     void setStreamParser( ImapStreamParser *parser );
 
     /**
-     * Parse and handle the IMAP message using the streaming parser.
-     * @return true if parsed successfully
+     * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
+     * @return true if parsed successfully, false in case of parse failure
      */
     virtual bool parseStream();
 

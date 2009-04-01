@@ -58,6 +58,7 @@ bool Modify::parseStream()
 
   //TODO: do it cleanly with the streaming parser, which doesn't have look-ahead at this moment
   QByteArray line = m_streamParser->readUntilCommandEnd();
+  m_streamParser->insertData( "\n" );
 
   int p = 0;
   if ( (p = line.indexOf( "PARENT ")) > 0 ) {

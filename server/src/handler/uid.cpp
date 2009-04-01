@@ -74,17 +74,19 @@ bool Uid::parseStream()
              this, SIGNAL( connectionStateChange( ConnectionState ) ) );
   }
 
+  bool result = true;
   try {
-    mSubHandler->parseStream();
+    result = mSubHandler->parseStream();
   }
   catch ( const Akonadi::HandlerException &e ) {
     mSubHandler->failureResponse( e.what() );
     mSubHandler->deleteLater();
+    result = false;
   }
   mSubHandler = 0;
   deleteLater();
 
-  return true;
+  return result;
 }
 
 #include "uid.moc"
