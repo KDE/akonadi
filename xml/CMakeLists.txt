@@ -51,5 +51,9 @@ install( FILES
 install( FILES akonadi-xml.xsd DESTINATION ${DATA_INSTALL_DIR}/akonadi/ )
 
 kde4_add_executable(akonadi2xml akonadi2xml.cpp)
-target_link_libraries(akonadi2xml akonadi-xml)
+target_link_libraries(akonadi2xml
+   akonadi-xml
+   ${KDE4_KDEUI_LIBS}
+   ${KDE4_AKONADI_LIBS}
+)
 install( TARGETS akonadi2xml ${INSTALL_TARGETS_DEFAULT_ARGS} )
