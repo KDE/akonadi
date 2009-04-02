@@ -21,6 +21,7 @@
 #define AKONADI_MONITOR_H
 
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 #include <QtCore/QObject>
 
@@ -146,6 +147,41 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     ItemFetchScope &itemFetchScope();
 
+    /**
+     * Returns the list of collections being monitored.
+     *
+     * @since 4.3
+     */
+    Collection::List collectionsMonitored();
+
+    /**
+     * Returns the set of items being monitored.
+     *
+     * @since 4.3
+     */
+    QSet<Item::Id> itemsMonitored();
+
+    /**
+     * Returns the set of mimetypes being monitored.
+     *
+     * @since 4.3
+     */
+    QSet<QString> mimeTypesMonitored();
+
+    /**
+     * Returns the set of identifiers for resources being monitored.
+     *
+     * @since 4.3
+     */
+    QSet<QByteArray> resourcesMonitored();
+
+    /**
+     * Returns true if everything is being monitored.
+     *
+     * @since 4.3
+     */
+    bool isAllMonitored();
+
   Q_SIGNALS:
     /**
      * This signal is emitted if a monitored item has changed, e.g. item parts have been modified.
@@ -234,6 +270,50 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     void collectionStatisticsChanged( Akonadi::Collection::Id id,
                                       const Akonadi::CollectionStatistics &statistics );
+
+    /**
+     * This signal is emitted if the Monitor starts or stops monitoring @p collection explicitly.
+     * @param collection The collection
+     * @param monitored Whether the collection is now being monitored or not.
+     *
+     * @since 4.3
+     */
+    void collectionMonitored(const Akonadi::Collection &collection, bool monitored);
+
+    /**
+     * This signal is emitted if the Monitor starts or stops monitoring @p item explicitly.
+     * @param item The item
+     * @param monitored Whether the item is now being monitored or not.
+     *
+     * @since 4.3
+     */
+    void itemMonitored(const Akonadi::Item &item, bool monitored);
+
+    /**
+     * This signal is emitted if the Monitor starts or stops monitoring the resource with the identifier @p identifier explicitly.
+     * @param identifier The identifier of the resource.
+     * @param monitored Whether the resource is now being monitored or not.
+     *
+     * @since 4.3
+     */
+    void resourceMonitored(const QByteArray &identifier, bool monitored);
+
+    /**
+     * This signal is emitted if the Monitor starts or stops monitoring @p mimeType explicitly.
+     * @param mimeType The mimeType.
+     * @param monitored Whether the mimeType is now being monitored or not.
+     *
+     * @since 4.3
+     */
+    void mimeTypeMonitored(const QString &mimeType, bool monitored);
+
+    /**
+     * This signal is emitted if the Monitor starts or stops monitoring everything.
+     * @param monitored Whether everything is now being monitored or not.
+     *
+     * @since 4.3
+     */
+    void allMonitored(bool monitored);
 
   protected:
     //@cond PRIVATE

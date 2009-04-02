@@ -62,6 +62,8 @@ void Monitor::setCollectionMonitored( const Collection &collection, bool monitor
     d->collections << collection;
   else
     d->collections.removeAll( collection );
+
+  emit collectionMonitored( collection, monitored );
 }
 
 void Monitor::setItemMonitored( const Item & item, bool monitored )
@@ -70,6 +72,8 @@ void Monitor::setItemMonitored( const Item & item, bool monitored )
     d->items.insert( item.id() );
   else
     d->items.remove( item.id() );
+
+  emit itemMonitored( item,  monitored );
 }
 
 void Monitor::setResourceMonitored( const QByteArray & resource, bool monitored )
@@ -78,6 +82,8 @@ void Monitor::setResourceMonitored( const QByteArray & resource, bool monitored 
     d->resources.insert( resource );
   else
     d->resources.remove( resource );
+
+  emit resourceMonitored( resource, monitored );
 }
 
 void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
@@ -86,11 +92,15 @@ void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
     d->mimetypes.insert( mimetype );
   else
     d->mimetypes.remove( mimetype );
+
+  emit mimeTypeMonitored( mimetype, monitored );
 }
 
 void Akonadi::Monitor::setAllMonitored( bool monitored )
 {
   d->monitorAll = monitored;
+
+  emit allMonitored( monitored );
 }
 
 void Monitor::ignoreSession(Session * session)
@@ -116,6 +126,31 @@ void Monitor::setItemFetchScope( const ItemFetchScope &fetchScope )
 ItemFetchScope &Monitor::itemFetchScope()
 {
   return d->mItemFetchScope;
+}
+
+Collection::List Monitor::collectionsMonitored()
+{
+  return d->collections;
+}
+
+QSet<Item::Id> Monitor::itemsMonitored()
+{
+  return d->items;
+}
+
+QSet<QString> Monitor::mimeTypesMonitored()
+{
+  return d->mimetypes;
+}
+
+QSet<QByteArray> Monitor::resourcesMonitored()
+{
+  return d->resources;
+}
+
+bool Monitor::isAllMonitored()
+{
+  return d->monitorAll;
 }
 
 #undef d
