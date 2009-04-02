@@ -233,7 +233,8 @@ AgentInstance AgentManagerPrivate::fillAgentInstance( const QString &identifier 
   AgentInstance instance;
 
   const QString agentTypeIdentifier = mManager->agentInstanceType( identifier );
-  Q_ASSERT_X( mTypes.contains( agentTypeIdentifier ), "fillAgentInstance", "Requests non-existing agent type" );
+  if ( !mTypes.contains( agentTypeIdentifier ) )
+    return instance;
 
   instance.d->mType = mTypes.value( agentTypeIdentifier );
   instance.d->mIdentifier = identifier;
