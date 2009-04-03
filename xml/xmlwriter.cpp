@@ -73,7 +73,7 @@ QDomElement XmlWriter::writeCollection(const Akonadi::Collection& collection, QD
 
   QDomDocument doc = parentElem.ownerDocument();
   const QDomElement elem = collectionToElement( collection, doc );
-  parentElem.appendChild( elem );
+  parentElem.insertBefore( elem, QDomNode() ); // collection need to be before items to pass schema validation
   return elem;
 }
 
