@@ -35,7 +35,7 @@ class Exception : public std::exception
     Exception( const char *what ) throw() : mWhat( what ) {}
     Exception( const QByteArray &what ) throw() : mWhat( what ) {}
     Exception( const QString &what ) throw() : mWhat( what.toUtf8() ) {}
-    Exception( const Exception &other ) throw() : mWhat( other.what() ) {}
+    Exception( const Exception &other ) throw() : std::exception(other), mWhat( other.what() ) {}
     virtual ~Exception() throw() {}
     const char* what() const throw() { return mWhat.constData(); }
     virtual const char* type() const throw() { return "General Exception"; }
