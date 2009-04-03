@@ -164,11 +164,14 @@ void KnutResource::collectionAdded( const Akonadi::Collection &collection, const
   }
 
   Collection c( collection );
-  QDomElement newCol;
-  XmlWriter::writeCollection( c, newCol );
-  parentElem.insertBefore( newCol, QDomNode() );
-  save();
-  changeCommitted( c );
+  c.setRemoteId( QUuid::createUuid().toString() );
+  if ( XmlWriter::writeCollection( c, parentElem ).isNull() ) {
+    emit error( "Unable to write collection." );
+    changeProcessed();
+  } else {
+    save();
+    changeCommitted( c );
+  }
 }
 
 void KnutResource::collectionChanged( const Akonadi::Collection &collection )
@@ -182,7 +185,7 @@ void KnutResource::collectionChanged( const Akonadi::Collection &collection )
 
   Collection c( collection );
   QDomElement newElem;
-  XmlWriter::writeCollection( c, newElem );
+  newElem = XmlWriter::collectionToElement( c, mDocument.document() );
   // move all items/collections over to the new node
   const QDomNodeList children = oldElem.childNodes();
   for ( int i = 0; i < children.count(); ++i ) {
