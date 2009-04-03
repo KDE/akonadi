@@ -220,18 +220,22 @@ void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
 
 void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  QDomElement parentElem = mDocument.itemElementByRemoteId( collection.remoteId() );
+  QDomElement parentElem = mDocument.collectionElementByRemoteId( collection.remoteId() );
   if ( parentElem.isNull() ) {
-    emit error( "Parent collection not found in DOM tree." );
+    emit error( QString::fromLatin1( "Parent collection '%1' not found in DOM tree." ).arg( collection.remoteId() ) );
     changeProcessed();
     return;
   }
 
   Item i( item );
-  const QDomElement newItem = XmlWriter::itemToElement(i, mDocument.document()); //serializeItem( i );
-  parentElem.appendChild( newItem );
-  save();
-  changeCommitted( i );
+  i.setRemoteId( QUuid::createUuid().toString() );
+  if ( XmlWriter::writeItem( i, parentElem ).isNull() ) {
+    emit error( "Unable to write item." );
+    changeProcessed();
+  } else {
+    save();
+    changeCommitted( i );
+  }
 }
 
 void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
