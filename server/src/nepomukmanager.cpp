@@ -22,20 +22,17 @@
 
 #include "nepomukmanager.h"
 
-#include "searchqueryiteratorinterface.h"
+#include "search/result.h"
+#include "search/query.h"
 
 #include "entities.h"
 
 using namespace Akonadi;
 
-static qint64 uriToItemId( const QString &uri )
+static qint64 uriToItemId( const QUrl &url )
 {
-  if ( uri.isEmpty() )
-    return -1;
-
   bool ok = false;
 
-  const QUrl url( uri );
   const qint64 id = url.queryItemValue( QLatin1String( "item" ) ).toLongLong( &ok );
 
   if ( !ok )
@@ -51,23 +48,23 @@ NepomukManager::NepomukManager( QObject* parent )
   Q_ASSERT( mInstance == 0 );
   mInstance = this;
 
-  mSearchInterface = new org::freedesktop::Akonadi::Search( QLatin1String( "org.freedesktop.Akonadi.Search" ), QLatin1String( "/Search" ),
-                                                            QDBusConnection::sessionBus(), this );
-
-  if ( !mSearchInterface->isValid() ) {
-    qWarning() << "Nepomuk QueryServer interface not found!";
+  if ( !Nepomuk::Search::QueryServiceClient::serviceAvailable() ) {
+    qWarning() << "Nepomuk QueryServer interface not available!";
     mValid = false;
+  } else {
+    reloadSearches();
   }
 }
 
 NepomukManager::~NepomukManager()
 {
-  stopSearches();
+  if ( mValid )
+    stopSearches();
 }
 
 bool NepomukManager::addSearch( const Collection &collection )
 {
-  if ( !mSearchInterface->isValid() || !mValid )
+  if ( !mValid )
     return false;
 
   QMutexLocker lock( &mMutex );
@@ -77,60 +74,29 @@ bool NepomukManager::addSearch( const Collection &collection )
   // TODO: search statement is stored in remoteId currently, port to attributes!
   const QString searchStatement = collection.remoteId();
 
-  const QString queryPath = mSearchInterface->createQuery( searchStatement );
-  org::freedesktop::Akonadi::SearchQuery *query =
-    new org::freedesktop::Akonadi::SearchQuery( QLatin1String( "org.freedesktop.Akonadi.Search" ),
-                                                queryPath, QDBusConnection::sessionBus(), 0 );
+  Nepomuk::Search::QueryServiceClient *query = new Nepomuk::Search::QueryServiceClient( this );
 
-  if ( !query->isValid() ) {
-    qWarning() << "Nepomuk QueryServer: Query could not be instantiated!";
-    return false;
-  }
-
-  connect( query, SIGNAL( hitsChanged( const QStringList& ) ),
-           this, SLOT( hitsAdded( const QStringList& ) ) );
-  connect( query, SIGNAL( hitsRemoved( const QStringList& ) ),
-           this, SLOT( hitsRemoved( const QStringList& ) ) );
+  connect( query, SIGNAL( newEntries( const QList<Nepomuk::Search::Result>& ) ),
+           this, SLOT( hitsAdded( const QList<Nepomuk::Search::Result>& ) ) );
+  connect( query, SIGNAL( entriesRemoved( const QList<QUrl>& ) ),
+           this, SLOT( hitsRemoved( const QList<QUrl>& ) ) );
 
   mQueryMap.insert( query, collection.id() );
   mQueryInvMap.insert( collection.id(), query ); // needed for fast lookup in removeSearch()
 
-  // load all hits that are currently available...
-  const QString iteratorPath = query->allHits();
-
-  org::freedesktop::Akonadi::SearchQueryIterator *iterator =
-    new org::freedesktop::Akonadi::SearchQueryIterator( QLatin1String( "org.freedesktop.Akonadi.Search" ), iteratorPath,
-                                                        QDBusConnection::sessionBus(), 0 );
-
-  while ( iterator->next() ) {
-    const QString uri = iterator->currentUri();
-
-    const qint64 itemId = uriToItemId( uri );
-    if ( itemId == -1 ) {
-      qWarning() << "Nepomuk QueryServer: Retrieved invalid item id from server!";
-      continue;
-    }
-
-    Entity::addToRelation<CollectionPimItemRelation>( collection.id(), itemId );
-  }
-
-  iterator->close();
-
-  // ... and start the change monitoring for future changes
-  query->start();
-
-  qDebug( "--------------- added search for col %lld", collection.id() );
+  // query with SPARQL statement
+  query->query( Nepomuk::Search::Query( searchStatement ) );
 
   return true;
 }
 
 bool NepomukManager::removeSearch( qint64 collectionId )
 {
-  org::freedesktop::Akonadi::SearchQuery *query = mQueryInvMap.value( collectionId );
-  if ( !query || !query->isValid() ) {
+  Nepomuk::Search::QueryServiceClient *query = mQueryInvMap.value( collectionId );
+  if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Query could not be removed!";
+    return false;
   } else {
-    query->stop();
     query->close();
   }
 
@@ -138,7 +104,7 @@ bool NepomukManager::removeSearch( qint64 collectionId )
   mQueryInvMap.remove( collectionId );
   mQueryMap.remove( query );
 
-  qDebug( "--------------- removed search for col %lld", collectionId );
+  query->deleteLater();
 
   return true;
 }
@@ -171,24 +137,20 @@ void NepomukManager::stopSearches()
   }
 }
 
-void NepomukManager::hitsAdded( const QStringList &hits )
+void NepomukManager::hitsAdded( const QList<Nepomuk::Search::Result>& entries )
 {
-  qDebug( "--------------- hits added 1" );
-
-  org::freedesktop::Akonadi::SearchQuery *query = qobject_cast<org::freedesktop::Akonadi::SearchQuery*>( sender() );
+  Nepomuk::Search::QueryServiceClient *query = qobject_cast<Nepomuk::Search::QueryServiceClient*>( sender() );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Got signal from non-existing search query!";
     return;
   }
 
-  qDebug( "--------------- hits added 2" );
-
   mMutex.lock();
   qint64 collectionId = mQueryMap.value( query );
   mMutex.unlock();
 
-  Q_FOREACH( const QString &uri, hits ) {
-    const qint64 itemId = uriToItemId( uri );
+  Q_FOREACH( const Nepomuk::Search::Result &result, entries ) {
+    const qint64 itemId = uriToItemId( result.resourceUri() );
 
     if ( itemId == -1 ) {
       qWarning() << "Nepomuk QueryServer: Retrieved invalid item id from server!";
@@ -199,23 +161,19 @@ void NepomukManager::hitsAdded( const QStringList &hits )
   }
 }
 
-void NepomukManager::hitsRemoved( const QStringList &hits )
+void NepomukManager::hitsRemoved( const QList<QUrl> &entries )
 {
-  qDebug( "--------------- hits removed 1" );
-
-  org::freedesktop::Akonadi::SearchQuery *query = qobject_cast<org::freedesktop::Akonadi::SearchQuery*>( sender() );
+  Nepomuk::Search::QueryServiceClient *query = qobject_cast<Nepomuk::Search::QueryServiceClient*>( sender() );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Got signal from non-existing search query!";
     return;
   }
 
-  qDebug( "--------------- hits removed 2" );
-
   mMutex.lock();
   qint64 collectionId = mQueryMap.value( query );
   mMutex.unlock();
 
-  Q_FOREACH( const QString &uri, hits ) {
+  Q_FOREACH( const QUrl &uri, entries ) {
     const qint64 itemId = uriToItemId( uri );
 
     if ( itemId == -1 ) {

@@ -26,8 +26,7 @@
 
 #include "abstractsearchmanager.h"
 
-#include "searchinterface.h"
-#include "searchqueryinterface.h"
+#include "search/queryserviceclient.h"
 
 namespace Akonadi {
 
@@ -47,17 +46,15 @@ class NepomukManager : public QObject, public AbstractSearchManager
     void stopSearches();
 
   private Q_SLOTS:
-    void hitsAdded( const QStringList &hits );
-    void hitsRemoved( const QStringList &hits );
+    void hitsAdded( const QList<Nepomuk::Search::Result>& entries );
+    void hitsRemoved( const QList<QUrl> &entries );
 
   private:
     bool mValid;
     QMutex mMutex;
 
-    QHash<org::freedesktop::Akonadi::SearchQuery*, qint64> mQueryMap;
-    QHash<qint64, org::freedesktop::Akonadi::SearchQuery*> mQueryInvMap;
-
-    org::freedesktop::Akonadi::Search *mSearchInterface;
+    QHash<Nepomuk::Search::QueryServiceClient*, qint64> mQueryMap;
+    QHash<qint64, Nepomuk::Search::QueryServiceClient*> mQueryInvMap;
 };
 
 }

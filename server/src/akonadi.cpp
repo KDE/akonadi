@@ -117,8 +117,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     mItemRetrievalThread = new ItemRetrievalThread( this );
     mItemRetrievalThread->start( QThread::HighPriority );
- 
-    mSearchManager = new DummySearchManager;
+
+    mSearchManager = new NepomukManager( this );
 
     new ServerAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );

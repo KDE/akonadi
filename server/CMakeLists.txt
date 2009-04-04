@@ -21,8 +21,10 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../libs )
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/../libs )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/search )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shared )
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../../soprano/includes )
 include_directories( BEFORE ${CMAKE_CURRENT_SOURCE_DIR} )
 include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
 
@@ -37,7 +39,6 @@ set( AKONADI_SHARED_SOURCES
 add_subdirectory( akonadictl )
 add_subdirectory( control )
 add_subdirectory( src )
-#add_subdirectory( queryserver )
 add_subdirectory( tests )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
@@ -97,6 +98,13 @@ set(libakonadiprivate_SRCS
   src/handler/store.cpp
   src/handler/transaction.cpp
   src/handler/uid.cpp
+
+  src/search/dbusoperators.cpp
+  src/search/query.cpp
+  src/search/queryserviceclient.cpp
+  src/search/result.cpp
+  src/search/term.cpp
+
   src/storage/entity.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   src/storage/datastore.cpp
@@ -145,10 +153,17 @@ set_source_files_properties(${xesam_xml} PROPERTIES INCLUDE "xesamtypes.h")
 
 qt4_add_dbus_interface( libakonadiprivate_SRCS ${xesam_xml} xesaminterface )
 
+set_source_files_properties(src/search/org.kde.nepomuk.QueryService.xml PROPERTIES INCLUDE "querymetatype.h")
+set_source_files_properties(src/search/org.kde.nepomuk.Query.xml PROPERTIES INCLUDE "result.h")
+
+qt4_add_dbus_interface(libakonadiprivate_SRCS src/search/org.kde.nepomuk.QueryService.xml queryserviceinterface)
+qt4_add_dbus_interface(libakonadiprivate_SRCS src/search/org.kde.nepomuk.Query.xml queryinterface)
+
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 
 
 automoc4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
+
 target_link_libraries( akonadiprivate
   ${QT_QTCORE_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}
@@ -157,6 +172,7 @@ target_link_libraries( akonadiprivate
   ${QT_QTXML_LIBRARY}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
+  soprano
 )
 
 set_target_properties( akonadiprivate PROPERTIES
