@@ -55,7 +55,7 @@ namespace {
         QMutex m_mutex;
     };
 
-    Q_GLOBAL_STATIC(QDBusConnectionPerThreadHelper, s_globalDBusConnectionPerThreadHelper);
+    Q_GLOBAL_STATIC(QDBusConnectionPerThreadHelper, s_globalDBusConnectionPerThreadHelper)
 }
 
 
