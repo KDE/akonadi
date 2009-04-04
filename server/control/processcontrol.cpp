@@ -124,24 +124,38 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
   }
 }
 
+namespace {
+  static QString getEnv( const char* name, const QString& defaultValue=QString() ) {
+    const QString v = QString::fromLocal8Bit( qgetenv( "AKONADI_VALGRIND_SKIN" ) );
+    return !v.isEmpty() ? v : defaultValue;
+  }
+}
+
 void ProcessControl::start()
 {
 #ifdef Q_OS_UNIX
-  QString agentValgrind = QString::fromLocal8Bit( qgetenv("AKONADI_VALGRIND") );
+  QString agentValgrind = getEnv( "AKONADI_VALGRIND" );
   if ( !agentValgrind.isEmpty() && mApplication.contains( agentValgrind ) ) {
-    qDebug();
-    qDebug() << "============================================================";
-    qDebug() << "ProcessControl: Valgrinding process" << mApplication;
-    qDebug() << "============================================================";
-    qDebug();
-    QString valgrindSkin = QString::fromLocal8Bit( qgetenv( "AKONADI_VALGRIND_SKIN" ) );
 
     mArguments.prepend( mApplication );
     mApplication = QString::fromLocal8Bit( "valgrind" );
+
+    const QString valgrindSkin = getEnv( "AKONADI_VALGRIND_SKIN", QString::fromLocal8Bit( "memcheck" ) );
+    mArguments.prepend( QLatin1String( "--tool=" ) + valgrindSkin );
+
+    const QString valgrindOptions = getEnv( "AKONADI_VALGRIND_OPTIONS" );
+    if ( !valgrindOptions.isEmpty() )
+      mArguments.prepend( valgrindOptions );
+
+    qDebug();
+    qDebug() << "============================================================";
+    qDebug() << "ProcessControl: Valgrinding process" << mApplication;
     if ( !valgrindSkin.isEmpty() )
-      mArguments.prepend( QLatin1String( "--tool=" ) + valgrindSkin );
-    else
-      mArguments.prepend (QLatin1String( "--tool=memcheck") );
+      qDebug() << "ProcessControl: Valgrind skin:" << valgrindSkin;
+    if ( !valgrindOptions.isEmpty() )
+      qDebug() << "ProcessControl: Additional Valgrind options:" << valgrindOptions;
+    qDebug() << "============================================================";
+    qDebug();
   }
 #endif
 
