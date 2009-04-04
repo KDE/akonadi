@@ -24,7 +24,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/search )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shared )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../../soprano/includes )
+include_directories( ${SOPRANO_INCLUDE_DIR} )
 include_directories( BEFORE ${CMAKE_CURRENT_SOURCE_DIR} )
 include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
 
@@ -172,7 +172,7 @@ target_link_libraries( akonadiprivate
   ${QT_QTXML_LIBRARY}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
-  soprano
+  ${SOPRANO_LIBRARIES}
 )
 
 set_target_properties( akonadiprivate PROPERTIES

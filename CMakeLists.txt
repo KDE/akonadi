@@ -22,6 +22,8 @@ endif(NOT QT_QTDBUS_FOUND)
 
 find_package(Automoc4 REQUIRED)
 
+find_package(Soprano REQUIRED)
+
 set(SHARED_MIME_INFO_MINIMUM_VERSION "0.20")
 find_package(SharedMimeInfo REQUIRED)
 
