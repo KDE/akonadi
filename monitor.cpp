@@ -128,27 +128,27 @@ ItemFetchScope &Monitor::itemFetchScope()
   return d->mItemFetchScope;
 }
 
-Collection::List Monitor::collectionsMonitored()
+Collection::List Monitor::collectionsMonitored() const
 {
   return d->collections;
 }
 
-QSet<Item::Id> Monitor::itemsMonitored()
+QSet<Item::Id> Monitor::itemsMonitored() const
 {
   return d->items;
 }
 
-QSet<QString> Monitor::mimeTypesMonitored()
+QSet<QString> Monitor::mimeTypesMonitored() const
 {
   return d->mimetypes;
 }
 
-QSet<QByteArray> Monitor::resourcesMonitored()
+QSet<QByteArray> Monitor::resourcesMonitored() const
 {
   return d->resources;
 }
 
-bool Monitor::isAllMonitored()
+bool Monitor::isAllMonitored() const
 {
   return d->monitorAll;
 }

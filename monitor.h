@@ -152,35 +152,35 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    Collection::List collectionsMonitored();
+    Collection::List collectionsMonitored() const;
 
     /**
      * Returns the set of items being monitored.
      *
      * @since 4.3
      */
-    QSet<Item::Id> itemsMonitored();
+    QSet<Item::Id> itemsMonitored() const;
 
     /**
      * Returns the set of mimetypes being monitored.
      *
      * @since 4.3
      */
-    QSet<QString> mimeTypesMonitored();
+    QSet<QString> mimeTypesMonitored() const;
 
     /**
      * Returns the set of identifiers for resources being monitored.
      *
      * @since 4.3
      */
-    QSet<QByteArray> resourcesMonitored();
+    QSet<QByteArray> resourcesMonitored() const;
 
     /**
      * Returns true if everything is being monitored.
      *
      * @since 4.3
      */
-    bool isAllMonitored();
+    bool isAllMonitored() const;
 
   Q_SIGNALS:
     /**
@@ -278,7 +278,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void collectionMonitored(const Akonadi::Collection &collection, bool monitored);
+    void collectionMonitored( const Akonadi::Collection &collection, bool monitored );
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p item explicitly.
@@ -287,7 +287,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void itemMonitored(const Akonadi::Item &item, bool monitored);
+    void itemMonitored( const Akonadi::Item &item, bool monitored );
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring the resource with the identifier @p identifier explicitly.
@@ -296,7 +296,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void resourceMonitored(const QByteArray &identifier, bool monitored);
+    void resourceMonitored( const QByteArray &identifier, bool monitored );
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p mimeType explicitly.
@@ -305,7 +305,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void mimeTypeMonitored(const QString &mimeType, bool monitored);
+    void mimeTypeMonitored( const QString &mimeType, bool monitored );
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring everything.
@@ -313,7 +313,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    void allMonitored(bool monitored);
+    void allMonitored( bool monitored );
 
   protected:
     //@cond PRIVATE
