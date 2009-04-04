@@ -133,19 +133,19 @@ Collection::List Monitor::collectionsMonitored() const
   return d->collections;
 }
 
-QSet<Item::Id> Monitor::itemsMonitored() const
+QList<Item::Id> Monitor::itemsMonitored() const
 {
-  return d->items;
+  return d->items.toList();
 }
 
-QSet<QString> Monitor::mimeTypesMonitored() const
+QStringList Monitor::mimeTypesMonitored() const
 {
-  return d->mimetypes;
+  return d->mimetypes.toList();
 }
 
-QSet<QByteArray> Monitor::resourcesMonitored() const
+QList<QByteArray> Monitor::resourcesMonitored() const
 {
-  return d->resources;
+  return d->resources.toList();
 }
 
 bool Monitor::isAllMonitored() const

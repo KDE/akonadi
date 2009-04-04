@@ -159,21 +159,21 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @since 4.3
      */
-    QSet<Item::Id> itemsMonitored() const;
+    QList<Item::Id> itemsMonitored() const;
 
     /**
      * Returns the set of mimetypes being monitored.
      *
      * @since 4.3
      */
-    QSet<QString> mimeTypesMonitored() const;
+    QStringList mimeTypesMonitored() const;
 
     /**
      * Returns the set of identifiers for resources being monitored.
      *
      * @since 4.3
      */
-    QSet<QByteArray> resourcesMonitored() const;
+    QList<QByteArray> resourcesMonitored() const;
 
     /**
      * Returns true if everything is being monitored.
