@@ -325,7 +325,7 @@ void AkonadiServer::startDatabaseProcess()
       if ( opened )
         break;
       if ( mDatabaseProcess->waitForFinished( 500 ) ) {
-        akError() << "Database process existed unexpectedly during intial connection!";
+        akError() << "Database process existed unexpectedly during initial connection!";
         akError() << "executable:" << mysqldPath;
         akError() << "arguments:" << arguments;
         akError() << "stdout:" << mDatabaseProcess->readAllStandardOutput();
