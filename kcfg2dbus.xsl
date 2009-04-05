@@ -93,6 +93,7 @@
   <xsl:when test="@type = 'Size'">QSize</xsl:when>
   <xsl:when test="@type = 'Point'">QPoint</xsl:when>
   <xsl:when test="@type = 'DateTime'">QDateTime</xsl:when>
+  <xsl:when test="@type = 'IntList'">QList&lt;int&gt;</xsl:when>
   <xsl:otherwise></xsl:otherwise>
 </xsl:choose>
 </xsl:template>
