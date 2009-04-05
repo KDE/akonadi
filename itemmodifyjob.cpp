@@ -167,9 +167,10 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
   if ( _tag == d->mTag ) {
     if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
       QDateTime modificationDateTime;
-      if ( int pos = data.indexOf( "DATETIME" ) ) {
-        int resultPos = ImapParser::parseDateTime( data, modificationDateTime, pos + 8 );
-        if ( resultPos == (pos + 8) ) {
+      int dateTimePos = data.indexOf( "DATETIME" );
+      if ( dateTimePos != -1 ) {
+        int resultPos = ImapParser::parseDateTime( data, modificationDateTime, dateTimePos + 8 );
+        if ( resultPos == (dateTimePos + 8) ) {
           kDebug( 5250 ) << "Invalid DATETIME response to STORE command: "
               << _tag << data;
         }

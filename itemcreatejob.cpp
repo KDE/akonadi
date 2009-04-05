@@ -130,17 +130,19 @@ void ItemCreateJob::doHandleResponse( const QByteArray & tag, const QByteArray &
     return;
   }
   if ( tag == d->tag() ) {
-    if ( int pos = data.indexOf( "UIDNEXT" ) ) {
+    int uidNextPos = data.indexOf( "UIDNEXT" );
+    if ( uidNextPos != -1 ) {
       bool ok = false;
-      ImapParser::parseNumber( data, d->mUid, &ok, pos + 7 );
+      ImapParser::parseNumber( data, d->mUid, &ok, uidNextPos + 7 );
       if ( !ok ) {
         kDebug( 5250 ) << "Invalid UIDNEXT response to APPEND command: "
                        << tag << data;
       }
     }
-    if ( int pos = data.indexOf( "DATETIME" ) ) {
-      int resultPos = ImapParser::parseDateTime( data, d->mDatetime, pos + 8 );
-      if ( resultPos == (pos + 8) ) {
+    int dateTimePos = data.indexOf( "DATETIME" );
+    if ( dateTimePos != -1 ) {
+      int resultPos = ImapParser::parseDateTime( data, d->mDatetime, dateTimePos + 8 );
+      if ( resultPos == (dateTimePos + 8) ) {
         kDebug( 5250 ) << "Invalid DATETIME response to APPEND command: "
             << tag << data;
       }
