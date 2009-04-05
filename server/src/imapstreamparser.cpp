@@ -320,6 +320,13 @@ QList<QByteArray> ImapStreamParser::readParenthesizedList()
       } else {
         ba = readString();
       }
+
+      // We might sometime get some unwanted CRLF, but we're still not at the end
+      // of the list, would make further string reads fail so eat the CRLFs.
+      while ( m_data[m_position]=='\r' || m_data[m_position]=='\n' ) {
+        m_position++;
+      }
+
       i = m_position - 1;
       if (concatToLast) {
         result.last() += ba;
