@@ -126,7 +126,7 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
 
 namespace {
   static QString getEnv( const char* name, const QString& defaultValue=QString() ) {
-    const QString v = QString::fromLocal8Bit( qgetenv( "AKONADI_VALGRIND_SKIN" ) );
+    const QString v = QString::fromLocal8Bit( qgetenv( name ) );
     return !v.isEmpty() ? v : defaultValue;
   }
 }
