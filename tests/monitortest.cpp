@@ -34,6 +34,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/searchcreatejob.h>
 
 #include <QtCore/QVariant>
 #include <QtGui/QApplication>
@@ -231,6 +232,20 @@ void MonitorTest::testMonitor()
   QVERIFY( iaspy.isEmpty() );
   QVERIFY( imspy.isEmpty() );
   QVERIFY( irspy.isEmpty() );
+}
+
+void MonitorTest::testVirtualCollectionsMonitoring()
+{
+  Monitor *monitor = new Monitor( this );
+  monitor->setCollectionMonitored( Collection( 1 ) );   // top-level 'Search' collection
+
+  QSignalSpy caspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+  QVERIFY( caspy.isValid() );
+
+  SearchCreateJob *job = new SearchCreateJob( "Test search collection", "test-search-query" );
+  QVERIFY( job->exec() );
+  QTest::qWait( 1000 );
+  QCOMPARE( caspy.count(), 1 );
 }
 
 #include "monitortest.moc"

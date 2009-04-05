@@ -29,6 +29,7 @@ class MonitorTest : public QObject
     void initTestCase();
     void testMonitor_data();
     void testMonitor();
+    void testVirtualCollectionsMonitoring();
 };
 
 #endif
