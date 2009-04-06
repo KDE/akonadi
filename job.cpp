@@ -86,6 +86,9 @@ void JobPrivate::init( QObject *parent )
     mSession->d->addJob( q );
   else
     mParentJob->addSubjob( q );
+
+  // if there's a job tracer running, tell it about the new job
+  // FIXME
 }
 
 void JobPrivate::startQueued()
@@ -96,6 +99,9 @@ void JobPrivate::startQueued()
   emit q->aboutToStart( q );
   q->doStart();
   QTimer::singleShot( 0, q, SLOT(startNext()) );
+
+  // if there's a job tracer running, tell it a job started
+  // FIXME
 }
 
 void JobPrivate::lostConnection()
@@ -166,6 +172,9 @@ Job::Job( JobPrivate *dd, QObject *parent )
 Job::~Job()
 {
   delete d_ptr;
+
+  // if there is a job tracer listening, tell it the job is done now
+  // FIXME emit error code and string
 }
 
 void Job::start()
