@@ -37,15 +37,7 @@ Link::Link(bool create) : Handler(), mCreateLinks( create )
 
 bool Link::parseStream()
 {
-  qDebug() << "Link::parseStream";
-
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "LINK" && tmp != "UNLINK") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
-  tmp = m_streamParser->readString();
+  QByteArray tmp = m_streamParser->readString();
   const Collection collection = HandlerHelper::collectionFromIdOrName( tmp );
   if ( !collection.isValid() )
     return failureResponse( "No valid collection specified" );

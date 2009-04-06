@@ -117,9 +117,7 @@ void AkonadiConnection::slotNewData()
     QByteArray command = m_streamParser->readString();
     m_currentHandler = findHandlerForCommand( command );
     m_currentHandler->setTag( tag );
-    m_streamParser->insertData( command );
-    Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( tag + " " + m_streamParser->readRemainingData() ) );
-    qDebug() << "Handler found: " << m_currentHandler->metaObject()->className() << " command: " <<  m_streamParser->readRemainingData();
+    Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( tag + " " + command + " " + m_streamParser->readRemainingData() ) );
     assert( m_currentHandler );
     connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
              this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );

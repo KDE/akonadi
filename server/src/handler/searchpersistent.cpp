@@ -45,13 +45,6 @@ SearchPersistent::~SearchPersistent()
 
 bool SearchPersistent::parseStream()
 {
-  qDebug() << "SearchPersistent::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "SEARCH_STORE") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
   QByteArray collectionName = m_streamParser->readString();
   if ( collectionName.isEmpty() )
     return failureResponse( "No name specified" );

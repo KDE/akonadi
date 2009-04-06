@@ -27,16 +27,13 @@
 
 using namespace Akonadi;
 
+Subscribe::Subscribe(bool subscribe) :
+  mSubscribe( subscribe )
+{
+}
+
 bool Subscribe::parseStream()
 {
-  qDebug() << "Subscribe::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "SUBSCRIBE" && tmp != "UNSUBSCRIBE") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-  const bool subscribe = tmp == QByteArray( "SUBSCRIBE" );
-
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
@@ -48,10 +45,10 @@ bool Subscribe::parseStream()
     Collection col = HandlerHelper::collectionFromIdOrName( buffer );
     if ( !col.isValid() )
       return failureResponse( "Invalid collection" );
-    if ( col.subscribed() == subscribe )
+    if ( col.subscribed() == mSubscribe )
       continue;
     // TODO do all changes in one db operation
-    col.setSubscribed( subscribe );
+    col.setSubscribed( mSubscribe );
     if ( !col.update() )
       return failureResponse( "Unable to change subscription" );
   }

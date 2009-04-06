@@ -57,19 +57,15 @@ static const int partQueryDataColumn = 2;
 static const int partQueryVersionColumn = 3;
 static const int partQueryExternalColumn = 4;
 
-Fetch::Fetch()
+Fetch::Fetch( bool isUid )
   : Handler(),
-    mIsUidFetch( false ),
+    mIsUidFetch( isUid ),
     mCacheOnly( false ),
     mFullPayload( false ),
     mAllAttrs( false ),
     mSizeRequested( false ),
     mMTimeRequested( false ),
     mExternalPayloadSupported( false )
-{
-}
-
-Fetch::~Fetch()
 {
 }
 
@@ -209,7 +205,6 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
 
 bool Fetch::parseStream()
 {
-  qDebug() << "Fetch::parseStream";
   parseCommandStream();
 
   triggerOnDemandFetch();
@@ -364,18 +359,6 @@ bool Fetch::parseStream()
 
 void Fetch::parseCommandStream()
 {
-  // command
-  QByteArray buffer = m_streamParser->readString();
-  if ( buffer == AKONADI_CMD_UID ) {
-    mIsUidFetch = true;
-    buffer = m_streamParser->readString();
-  } else
-  if ( buffer != "FETCH" ) {
-    //put back what was read
-    m_streamParser->insertData(' ' + buffer + ' ');
-  }
-
-
   // sequence set
   mSet = m_streamParser->readSequenceSet();
   if ( mSet.isEmpty() )
@@ -390,7 +373,7 @@ void Fetch::parseCommandStream()
       mRequestedParts += tmp;
       break;
     } else {
-      buffer = m_streamParser->readString();
+      const QByteArray buffer = m_streamParser->readString();
       if ( buffer == AKONADI_PARAM_CACHEONLY ) {
         mCacheOnly = true;
       } else if ( buffer == AKONADI_PARAM_ALLATTRIBUTES ) {
@@ -411,9 +394,9 @@ void Fetch::parseCommandStream()
                               mRequestedParts << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE" << "BODY";
     }
 #endif
-                              else {
-                            throw HandlerException( "Invalid command argument" );
-                              }
+      else {
+        throw HandlerException( "Invalid command argument" );
+      }
     }
   }
 }

@@ -51,12 +51,6 @@ bool Delete::deleteRecursive(Collection & col)
 
 bool Delete::parseStream()
 {
-  qDebug() << "Delete::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "DELETE") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
   QByteArray collectionByteArray = m_streamParser->readString();
 
   // prevent deletion of the root node

@@ -46,13 +46,6 @@ Create::~Create()
 
 bool Create::parseStream()
 {
-  qDebug() << "Create::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "CREATE") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
   QString name = m_streamParser->readUtf8String();
 
   bool ok = false;

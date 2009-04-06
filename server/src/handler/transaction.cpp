@@ -23,48 +23,39 @@
 #include "response.h"
 #include "imapstreamparser.h"
 
-Akonadi::TransactionHandler::TransactionHandler()
-{
-}
+#include <QMetaEnum>
 
-Akonadi::TransactionHandler::~ TransactionHandler()
+Akonadi::TransactionHandler::TransactionHandler( Mode mode ) :
+  mMode( mode )
 {
 }
 
 bool Akonadi::TransactionHandler::parseStream()
 {
-  qDebug() << "TransactionHandler::parseStream";
-
-  QByteArray command = m_streamParser->readString();
-
   DataStore *store = connection()->storageBackend();
 
-  if ( command == "BEGIN" ) {
+  if ( mMode == Begin ) {
     if ( !store->beginTransaction() )
       return failureResponse( "Unable to begin transaction." );
   }
 
-  if ( command == "ROLLBACK" ) {
+  if ( mMode == Rollback ) {
     if ( !store->inTransaction() )
       return failureResponse( "There is no transaction in progress." );
     if ( !store->rollbackTransaction() )
       return failureResponse( "Unable to roll back transaction." );
   }
 
-  if ( command == "COMMIT" ) {
+  if ( mMode == Commit ) {
     if ( !store->inTransaction() )
       return failureResponse( "There is no transaction in progress." );
     if ( !store->commitTransaction() )
       return failureResponse( "Unable to commit transaction." );
   }
 
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( command + " completed." );
-  emit responseAvailable( response );
-
-  return true;
+  deleteLater();
+  const QMetaEnum me = metaObject()->enumerator( metaObject()->indexOfEnumerator( "Mode" ) );
+  return successResponse( me.valueToKey( mMode ) + QByteArray( " completed" ) );
 }
 
 #include "transaction.moc"

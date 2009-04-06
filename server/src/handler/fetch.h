@@ -40,9 +40,7 @@ class Fetch : public Handler
 {
   Q_OBJECT
   public:
-    Fetch();
-
-    ~Fetch();
+    Fetch( bool isUid );
 
     bool parseStream();
 

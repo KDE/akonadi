@@ -68,7 +68,7 @@ class AKONADIPRIVATE_EXPORT AkList : public Handler
   Q_OBJECT
 
   public:
-    AkList();
+    AkList( bool onlySubscribed );
     ~AkList();
 
     bool parseStream();

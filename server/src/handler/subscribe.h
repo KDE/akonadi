@@ -42,7 +42,11 @@ class Subscribe : public Handler
 {
   Q_OBJECT
   public:
+    Subscribe( bool subscribe );
     bool parseStream();
+
+  private:
+    bool mSubscribe;
 };
 
 }

@@ -113,7 +113,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     if ( command == "NOOP" )
         return new Noop();
     if ( command == "FETCH" )
-        return new Fetch();
+        return new Fetch( false );
     if ( command == "EXPUNGE" )
         return new Expunge();
     if ( command == "UID" )
@@ -128,14 +128,22 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new Modify();
     if ( command == "RENAME" )
       return new Rename();
-    if ( command == "BEGIN" || command == "ROLLBACK" || command == "COMMIT" )
-      return new TransactionHandler();
+    if ( command == "BEGIN" )
+      return new TransactionHandler( TransactionHandler::Begin );
+    if ( command == "ROLLBACK" )
+      return new TransactionHandler( TransactionHandler::Rollback );
+    if ( command == "COMMIT" )
+      return new TransactionHandler( TransactionHandler::Commit );
     if ( command == "X-AKAPPEND" )
       return new AkAppend();
-    if ( command == "X-AKLIST" || command == "X-AKLSUB" )
-      return new AkList();
-    if ( command == "SUBSCRIBE" || command == "UNSUBSCRIBE" )
-      return new Subscribe();
+    if ( command == "X-AKLIST" )
+      return new AkList( false );
+    if ( command == "X-AKLSUB" )
+      return new AkList( true );
+    if ( command == "SUBSCRIBE" )
+      return new Subscribe( true );
+    if ( command == "UNSUBSCRIBE" )
+      return new Subscribe( false );
     if ( command == "COPY" )
       return new Copy();
     if ( command == "COLCOPY" )

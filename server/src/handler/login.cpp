@@ -38,13 +38,6 @@ Login::~Login()
 
 bool Login::parseStream()
 {
-  qDebug() << "Login::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "LOGIN") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
   QByteArray sessionId = m_streamParser->readString();
   if ( sessionId.isEmpty() )
     return failureResponse( "Missing session identifier." );

@@ -31,9 +31,9 @@
 
 using namespace Akonadi;
 
-AkList::AkList():
+AkList::AkList( bool onlySubscribed ):
     Handler(),
-    mOnlySubscribed( false )
+    mOnlySubscribed( onlySubscribed )
 {}
 
 AkList::~AkList() {}
@@ -71,25 +71,13 @@ bool AkList::listCollection(const Collection & root, int depth )
 
 bool AkList::parseStream()
 {
-  qDebug() << "AkList::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "X-AKLIST" && tmp != "X-AKLSUB") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
-  // command
-  if ( tmp == "X-AKLSUB" )
-    mOnlySubscribed = true;
-
-  qint64 baseCollection;
   bool ok = false;
-  baseCollection = m_streamParser->readNumber( &ok );
+  const qint64 baseCollection = m_streamParser->readNumber( &ok );
   if ( !ok )
     return failureResponse( "Invalid base collection" );
 
   int depth;
-  tmp = m_streamParser->readString();
+  const QByteArray tmp = m_streamParser->readString();
   if ( tmp.isEmpty() )
     return failureResponse( "Specify listing depth" );
   if ( tmp == "INF" )

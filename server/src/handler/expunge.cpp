@@ -40,13 +40,6 @@ Expunge::~Expunge()
 
 bool Expunge::parseStream()
 {
-  qDebug() << "Expunge::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "EXPUNGE") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
   Response response;
 
   DataStore *store = connection()->storageBackend();

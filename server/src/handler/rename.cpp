@@ -38,12 +38,6 @@ Akonadi::Rename::~ Rename()
 
 bool Akonadi::Rename::parseStream()
 {
-  qDebug() << "Rename::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "RENAME") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
   QByteArray oldName = m_streamParser->readString();
   QByteArray newName = m_streamParser->readString();
 

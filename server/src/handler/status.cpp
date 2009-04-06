@@ -49,13 +49,7 @@ bool Status::parseStream()
     // Syntax:
     // status     = "STATUS" SP mailbox SP "(" status-att *(SP status-att) ")"
     // status-att = "MESSAGES" / "RECENT" / "UIDNEXT" / "UIDVALIDITY" / "UNSEEN"
-  qDebug() << "Status::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "STATUS") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
+  
   QByteArray mailbox = m_streamParser->readString();
   QList<QByteArray> attributeList = m_streamParser->readParenthesizedList();
 

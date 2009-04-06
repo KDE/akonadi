@@ -138,7 +138,6 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
 
 bool Store::parseStream()
 {
-  qDebug() << "Store::parseStream";
   parseCommandStream();
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store, false );
@@ -431,21 +430,12 @@ bool Store::parseStream()
 
 void Store::parseCommandStream()
 {
-  QByteArray buffer = m_streamParser->readString();
-  if ( buffer == "UID" ) {
-    buffer = m_streamParser->readString();
-  }
-  if ( buffer != "STORE" ) {
-    //put back what was read
-    m_streamParser->insertData(' ' + buffer + ' ');
-  }
-
   mItemSet = m_streamParser->readSequenceSet();
   if ( mItemSet.isEmpty() )
     throw HandlerException( "No item specified" );
 
   // parse revision
-  buffer = m_streamParser->readString(); // skip 'REV'
+  QByteArray buffer = m_streamParser->readString(); // skip 'REV'
   if ( buffer == "REV" ) {
     bool ok;
     mPreviousRevision = m_streamParser->readNumber( &ok );

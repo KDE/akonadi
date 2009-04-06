@@ -72,14 +72,7 @@ bool ColCopy::copyCollection(const Collection & source, const Collection & targe
 
 bool ColCopy::parseStream()
 {
-  qDebug() << "ColCopy::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "COLCOPY") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
-  tmp =  m_streamParser->readString();
+  QByteArray tmp =  m_streamParser->readString();
   const Collection source = HandlerHelper::collectionFromIdOrName( tmp );
   if ( !source.isValid() )
     return failureResponse( "No valid source specified" );

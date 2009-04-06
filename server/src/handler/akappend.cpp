@@ -123,14 +123,7 @@ bool AkAppend::parseStream()
     //
     // Syntax:
     // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
-
-  qDebug() << "AkAppend::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "X-AKAPPEND") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
+  
   m_mailbox = m_streamParser->readString();
 
   bool ok = false;

@@ -43,14 +43,7 @@ Select::~Select()
 
 bool Select::parseStream()
 {
-  qDebug() << "Select::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "SELECT") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
-    // as per rfc, even if the following select fails, we need to reset
+  // as per rfc, even if the following select fails, we need to reset
   connection()->setSelectedCollection( 0 );
 
   QByteArray buffer = m_streamParser->readString();

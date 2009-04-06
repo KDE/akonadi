@@ -195,13 +195,6 @@ bool Append::parseStream()
     // Syntax:
     // append = "APPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP literal
 
-  qDebug() << "Append::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "APPEND") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
   m_mailbox = m_streamParser->readString();
 
   bool ok = false;

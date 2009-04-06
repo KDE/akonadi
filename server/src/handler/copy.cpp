@@ -57,14 +57,6 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
 
 bool Copy::parseStream()
 {
-  qDebug() << "Copy::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "COPY") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
-
   ImapSet set = m_streamParser->readSequenceSet();
   if ( set.isEmpty() )
     return failureResponse( "No items specified" );
@@ -74,7 +66,7 @@ bool Copy::parseStream()
   retriever.setRetrieveFullPayload( true );
   retriever.exec();
 
-  tmp = m_streamParser->readString();
+  const QByteArray tmp = m_streamParser->readString();
   const Collection col = HandlerHelper::collectionFromIdOrName( tmp );
   if ( !col.isValid() )
     return failureResponse( "No valid target specified" );

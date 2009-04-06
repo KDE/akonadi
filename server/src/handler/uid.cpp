@@ -43,20 +43,15 @@ Uid::~Uid()
 
 bool Uid::parseStream()
 {
-  qDebug() << "Uid::parseStream";
-
-  m_streamParser->readString(); //reads UID
-
-  QByteArray subCommand;
   if ( !mSubHandler ) {
     if ( !m_streamParser->hasString() )
       throw HandlerException( "Syntax error" );
 
-    subCommand = m_streamParser->readString().toUpper();
+    const QByteArray subCommand = m_streamParser->readString().toUpper();
 
     mSubHandler = 0;
     if ( subCommand == "FETCH" )
-      mSubHandler = new Fetch();
+      mSubHandler = new Fetch( true );
     else if ( subCommand == "STORE" )
       mSubHandler = new Store( true );
 
@@ -66,7 +61,6 @@ bool Uid::parseStream()
     mSubHandler->setStreamParser( m_streamParser );
     mSubHandler->setTag( tag() );
     mSubHandler->setConnection( connection() );
-    m_streamParser->insertData( " UID " + subCommand + ' ' );
 
     connect( mSubHandler, SIGNAL( responseAvailable( const Response & ) ),
              this, SIGNAL( responseAvailable( const Response & ) ) );

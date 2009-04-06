@@ -41,13 +41,6 @@ Akonadi::Modify::~ Modify()
 
 bool Modify::parseStream()
 {
-  qDebug() << "Modify::parseStream";
-  QByteArray tmp = m_streamParser->readString(); // skip command
-  if (tmp != "MODIFY") {
-    //put back what was read
-    m_streamParser->insertData(' ' + tmp + ' ');
-  }
-
   QByteArray collectionByteArray = m_streamParser->readString();
   Collection collection = HandlerHelper::collectionFromIdOrName( collectionByteArray );
   if ( !collection.isValid() )
