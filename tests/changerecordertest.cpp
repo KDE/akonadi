@@ -20,6 +20,8 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/agentmanager.h>
+#include <akonadi/agentmanager.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -52,6 +54,10 @@ class ChangeRecorderTest : public QObject
     {
       qRegisterMetaType<Akonadi::Item>();
       qRegisterMetaType<QSet<QByteArray> >();
+
+      // switch all resources offline to reduce interference from them
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+        agent.setIsOnline( false );
     }
 
     void testChangeRecorder()
