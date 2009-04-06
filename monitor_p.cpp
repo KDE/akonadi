@@ -74,7 +74,9 @@ bool MonitorPrivate::acceptNotification(const NotificationMessage & msg)
           || isCollectionMonitored( msg.parentCollection(), msg.resource() )
           || isCollectionMonitored( msg.parentDestCollection(), msg.resource() );
     case NotificationMessage::Collection:
-      return isCollectionMonitored( msg.uid(), msg.resource() );
+      return isCollectionMonitored( msg.uid(), msg.resource() )
+          || isCollectionMonitored( msg.parentCollection(), msg.resource() )
+          || isCollectionMonitored( msg.parentDestCollection(), msg.resource() );
   }
   Q_ASSERT( false );
   return false;
