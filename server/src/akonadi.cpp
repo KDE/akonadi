@@ -118,7 +118,11 @@ AkonadiServer::AkonadiServer( QObject* parent )
     mItemRetrievalThread = new ItemRetrievalThread( this );
     mItemRetrievalThread->start( QThread::HighPriority );
 
-    mSearchManager = new NepomukManager( this );
+    const QString searchManager = settings.value( QLatin1String( "Search/Manager" ), QLatin1String( "Nepomuk" ) ).toString();
+    if ( searchManager == QLatin1String( "Nepomuk" ) )
+      mSearchManager = new NepomukManager( this );
+    else
+      mSearchManager = new DummySearchManager;
 
     new ServerAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );
