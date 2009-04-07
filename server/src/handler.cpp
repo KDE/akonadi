@@ -142,9 +142,9 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     if ( command == "X-AKAPPEND" )
       return new AkAppend();
     if ( command == "X-AKLIST" )
-      return new AkList( false );
+      return new AkList( Scope::None, false );
     if ( command == "X-AKLSUB" )
-      return new AkList( true );
+      return new AkList( Scope::None, true );
     if ( command == "SUBSCRIBE" )
       return new Subscribe( true );
     if ( command == "UNSUBSCRIBE" )

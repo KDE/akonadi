@@ -22,6 +22,7 @@
 #include "akonadi.h"
 #include "response.h"
 
+#include "aklist.h"
 #include "fetch.h"
 #include "select.h"
 #include "store.h"
@@ -58,6 +59,10 @@ bool Uid::parseStream()
       mSubHandler = new Store( true );
     else if ( subCommand == "SELECT" )
       mSubHandler = new Select( mScope );
+    else if ( subCommand == "X-AKLIST" )
+      mSubHandler = new AkList( mScope, false );
+    else if ( subCommand == "X-AKLSUB" )
+      mSubHandler = new AkList( mScope, true );
 
     if ( !mSubHandler )
       throw HandlerException( "Unknown UID/RID subcommand" );

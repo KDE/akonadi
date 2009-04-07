@@ -23,6 +23,7 @@
 
 #include "storage/datastore.h"
 #include "storage/entity.h"
+#include "storage/selectquerybuilder.h"
 
 #include "akonadiconnection.h"
 #include "response.h"
@@ -31,8 +32,9 @@
 
 using namespace Akonadi;
 
-AkList::AkList( bool onlySubscribed ):
+AkList::AkList( Scope::SelectionScope scope, bool onlySubscribed ):
     Handler(),
+    mScope( scope ),
     mOnlySubscribed( onlySubscribed )
 {}
 
@@ -71,10 +73,19 @@ bool AkList::listCollection(const Collection & root, int depth )
 
 bool AkList::parseStream()
 {
-  bool ok = false;
-  const qint64 baseCollection = m_streamParser->readNumber( &ok );
-  if ( !ok )
-    return failureResponse( "Invalid base collection" );
+  qint64 baseCollection = -1;
+  QString rid;
+  if ( mScope == Scope::None || mScope == Scope::Uid ) {
+    bool ok = false;
+    baseCollection = m_streamParser->readNumber( &ok );
+    if ( !ok )
+      return failureResponse( "Invalid base collection" );
+  } else if ( mScope == Scope::Rid ) {
+    rid = m_streamParser->readUtf8String();
+    if ( rid.isEmpty() )
+      throw HandlerException( "No remote identifier specified" );
+  } else
+    throw HandlerException( "WTF" );
 
   int depth;
   const QByteArray tmp = m_streamParser->readString();
@@ -98,7 +109,28 @@ bool AkList::parseStream()
 
   Collection::List collections;
   if ( baseCollection != 0 ) { // not root
-    Collection col = Collection::retrieveById( baseCollection );
+    Collection col;
+    if ( mScope == Scope::None || mScope == Scope::Uid ) {
+       col = Collection::retrieveById( baseCollection );
+    } else if ( mScope == Scope::Rid ) {
+      SelectQueryBuilder<Collection> qb;
+      qb.addTable( Resource::tableName() );
+      qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::Equals, rid );
+      qb.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
+      if ( mResource.isValid() )
+        qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, mResource.id() );
+      else if ( connection()->resourceContext().isValid() )
+        qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, connection()->resourceContext().id() );
+      else
+        throw HandlerException( "Cannot retrieve collection based on remote identifier without a resource context" );
+      if ( !qb.exec() )
+        throw HandlerException( "Unable to retrieve collection for listing" );
+      Collection::List results = qb.result();
+      if ( results.count() != 1 )
+        throw HandlerException( QByteArray::number( results.count() ) + " collections found" );
+      col = results.first();
+    } else
+      throw HandlerException( "WTF" );
     if ( !col.isValid() )
       return failureResponse( "Collection " + QByteArray::number( baseCollection ) + " does not exist" );
     if ( depth == 0 )

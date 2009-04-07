@@ -22,6 +22,7 @@
 
 #include <entities.h>
 #include <handler.h>
+#include <scope.h>
 #include "akonadiprivate_export.h"
 
 namespace Akonadi {
@@ -39,7 +40,7 @@ namespace Akonadi {
   Request:
   @verbatim
   request = tag " " command " " collection-id " " depth " (" filter-list ")"
-  command = "X-AKLIST" | "X-AKLSUB"
+  command = "X-AKLIST" | "X-AKLSUB" | "RID X-AKLIST" | "RID X-AKLSUB"
   depth = number | "INF"
   filter-list = *(filter-key " " filter-value)
   filter-key = "RESOURCE"
@@ -47,6 +48,10 @@ namespace Akonadi {
 
   @c X-AKLIST will include all known collections, @c X-AKLSUB only those that are
   subscribed or contains subscribed collections (cf. RFC 3501, LIST vs. LSUB).
+
+  The @c RID command prefix indicates that @c collection-id is a remote identifier
+  instead of a unique identifier. In this case a resource context has to be specified
+  previously using the @c RESSELECT command.
 
   @c depths chooses between recursive (@c INF), flat (1) and local (0, ie. just the
   base collection) listing, 0 indicates the root collection.
@@ -68,7 +73,7 @@ class AKONADIPRIVATE_EXPORT AkList : public Handler
   Q_OBJECT
 
   public:
-    AkList( bool onlySubscribed );
+    AkList( Scope::SelectionScope scope, bool onlySubscribed );
     ~AkList();
 
     bool parseStream();
@@ -78,6 +83,7 @@ class AKONADIPRIVATE_EXPORT AkList : public Handler
 
   private:
     Resource mResource;
+    Scope::SelectionScope mScope;
     bool mOnlySubscribed;
 
 };
