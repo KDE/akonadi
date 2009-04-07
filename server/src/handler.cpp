@@ -23,9 +23,11 @@
 #include <QtCore/QLatin1String>
 
 #include "libs/imapset_p.h"
+#include "libs/protocol_p.h"
 
 #include "akonadiconnection.h"
 #include "response.h"
+#include "scope.h"
 #include "handler/akappend.h"
 #include "handler/aklist.h"
 #include "handler/append.h"
@@ -43,13 +45,14 @@
 #include "handler/modify.h"
 #include "handler/noop.h"
 #include "handler/rename.h"
+#include "handler/resourceselect.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
 #include "handler/subscribe.h"
 #include "handler/status.h"
 #include "handler/store.h"
 #include "handler/transaction.h"
-#include "uid.h"
+#include "handler/uid.h"
 
 #include "storage/querybuilder.h"
 #include "imapstreamparser.h"
@@ -107,17 +110,19 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     if ( command == "LIST" )
         return new List();
     if ( command == "SELECT" )
-        return new Select();
+        return new Select( Scope::None );
     if ( command == "SEARCH_STORE" )
         return new SearchPersistent();
     if ( command == "NOOP" )
         return new Noop();
     if ( command == "FETCH" )
-        return new Fetch( false );
+        return new Fetch( Scope::None );
     if ( command == "EXPUNGE" )
         return new Expunge();
-    if ( command == "UID" )
-        return new Uid();
+    if ( command == AKONADI_CMD_UID )
+        return new Uid( Scope::Uid );
+    if ( command == AKONADI_CMD_RID )
+        return new Uid( Scope::Rid );
     if ( command == "STORE" )
         return new Store();
     if ( command == "STATUS" )
@@ -152,6 +157,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new Link( true );
     if ( command == "UNLINK" )
       return new Link( false );
+    if ( command == AKONADI_CMD_RESOURCESELECT )
+      return new ResourceSelect();
 
     return 0;
 }

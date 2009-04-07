@@ -95,7 +95,7 @@ void AkonadiConnection::run()
     connect( m_socket, SIGNAL( disconnected() ),
              this, SLOT( slotDisconnected() ), Qt::DirectConnection );
 
-    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 7]");
+    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 8]");
 
     m_streamParser = new ImapStreamParser( m_socket );
     exec();
@@ -255,5 +255,16 @@ QByteArray AkonadiConnection::sessionId() const
 {
   return m_sessionId;
 }
+
+Resource Akonadi::AkonadiConnection::resourceContext() const
+{
+  return m_resourceContext;
+}
+
+void AkonadiConnection::setResourceContext(const Resource& res)
+{
+  m_resourceContext = res;
+}
+
 
 #include "akonadiconnection.moc"

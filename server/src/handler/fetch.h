@@ -22,8 +22,8 @@
 
 #include <handler.h>
 
-#include "../../libs/imapset_p.h"
-
+#include "scope.h"
+#include "libs/imapset_p.h"
 #include "storage/datastore.h"
 
 namespace Akonadi {
@@ -40,7 +40,7 @@ class Fetch : public Handler
 {
   Q_OBJECT
   public:
-    Fetch( bool isUid );
+    Fetch( Scope::SelectionScope scope );
 
     bool parseStream();
 
@@ -52,12 +52,14 @@ class Fetch : public Handler
     QueryBuilder buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
     void retrieveMissingPayloads( const QStringList &payloadList );
     void parseCommandStream();
+    void addQueryConditions( QueryBuilder &qb );
 
   private:
     QueryBuilder mItemQuery;
     ImapSet mSet;
+    QString mRid;
     QList<QByteArray> mRequestedParts;
-    bool mIsUidFetch;
+    Scope::SelectionScope mScope;
     bool mCacheOnly;
     bool mFullPayload;
     bool mAllAttrs;

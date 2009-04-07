@@ -43,12 +43,12 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
 
     // constructor
     <xsl:value-of select="$className"/>();
-    <xsl:value-of select="$className"/>(
+    explicit <xsl:value-of select="$className"/>(
     <xsl:for-each select="column[@name != 'id']">
       <xsl:call-template name="argument"/><xsl:if test="position() != last()">, </xsl:if>
     </xsl:for-each> );
     <xsl:if test="column[@name = 'id']">
-    <xsl:value-of select="$className"/>(
+    explicit <xsl:value-of select="$className"/>(
     <xsl:for-each select="column">
       <xsl:call-template name="argument"/><xsl:if test="position() != last()">, </xsl:if>
     </xsl:for-each> );

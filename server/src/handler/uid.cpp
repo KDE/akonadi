@@ -23,6 +23,7 @@
 #include "response.h"
 
 #include "fetch.h"
+#include "select.h"
 #include "store.h"
 
 #include "imapstreamparser.h"
@@ -31,8 +32,9 @@
 
 using namespace Akonadi;
 
-Uid::Uid()
-  : Handler()
+Uid::Uid( Scope::SelectionScope scope ) :
+  Handler(),
+  mScope( scope )
 {
 }
 
@@ -51,12 +53,14 @@ bool Uid::parseStream()
 
     mSubHandler = 0;
     if ( subCommand == "FETCH" )
-      mSubHandler = new Fetch( true );
+      mSubHandler = new Fetch( mScope );
     else if ( subCommand == "STORE" )
       mSubHandler = new Store( true );
+    else if ( subCommand == "SELECT" )
+      mSubHandler = new Select( mScope );
 
     if ( !mSubHandler )
-      throw HandlerException( "Unknown UID subcommand" );
+      throw HandlerException( "Unknown UID/RID subcommand" );
 
     mSubHandler->setStreamParser( m_streamParser );
     mSubHandler->setTag( tag() );

@@ -50,6 +50,9 @@ public:
     qint64 selectedCollectionId() const;
     void setSelectedCollection( qint64 collection );
 
+    Resource resourceContext() const;
+    void setResourceContext( const Resource &res );
+
     const Collection selectedCollection();
 
     void addStatusMessage( const QByteArray& msg );
@@ -85,6 +88,7 @@ private:
     QByteArray m_sessionId;
     ImapParser *m_parser;
     ImapStreamParser *m_streamParser;
+    Resource m_resourceContext;
 };
 
 }

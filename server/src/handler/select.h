@@ -20,6 +20,7 @@
 #define AKONADISELECT_H
 
 #include <handler.h>
+#include "scope.h"
 
 namespace Akonadi {
 
@@ -32,11 +33,14 @@ class Select : public Handler
 {
   Q_OBJECT
   public:
-    Select();
+    Select( Scope::SelectionScope scope );
 
     ~Select();
 
     bool parseStream();
+
+  private:
+    Scope::SelectionScope mScope;
 
 };
 

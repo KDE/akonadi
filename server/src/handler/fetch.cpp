@@ -57,9 +57,9 @@ static const int partQueryDataColumn = 2;
 static const int partQueryVersionColumn = 3;
 static const int partQueryExternalColumn = 4;
 
-Fetch::Fetch( bool isUid )
+Fetch::Fetch( Scope::SelectionScope scope )
   : Handler(),
-    mIsUidFetch( isUid ),
+    mScope( scope ),
     mCacheOnly( false ),
     mFullPayload( false ),
     mAllAttrs( false ),
@@ -74,14 +74,14 @@ void Fetch::updateItemAccessTime()
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.updateColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
-  ItemQueryHelper::itemSetToQuery( mSet, mIsUidFetch, connection(), qb );
+  addQueryConditions( qb );
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
 }
 
 void Fetch::triggerOnDemandFetch()
 {
-  if ( mIsUidFetch || connection()->selectedCollectionId() <= 0 )
+  if ( mScope != Scope::None || connection()->selectedCollectionId() <= 0 )
     return;
   Collection col = connection()->selectedCollection();
   // HACK: don't trigger on-demand syncing if the resource is the one triggering it
@@ -114,7 +114,7 @@ QueryBuilder Fetch::buildPartQuery( const QStringList &partList, bool allPayload
     if ( allAttrs )
       cond.addValueCondition( QString::fromLatin1( "left( %1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
-    ItemQueryHelper::itemSetToQuery( mSet, mIsUidFetch, connection(), partQuery );
+    addQueryConditions( partQuery );
     partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   }
   return partQuery;
@@ -137,7 +137,7 @@ void Fetch::buildItemQuery()
   mItemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
   mItemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
   mItemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
-  ItemQueryHelper::itemSetToQuery( mSet, mIsUidFetch, connection(), mItemQuery );
+  addQueryConditions( mItemQuery );
   mItemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
   if ( !mItemQuery.exec() )
@@ -221,7 +221,7 @@ bool Fetch::parseStream()
     flagQuery.addColumn( Flag::nameFullColumnName() );
     flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
     flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
-    ItemQueryHelper::itemSetToQuery( mSet, mIsUidFetch, connection(), flagQuery );
+    addQueryConditions( flagQuery );
     flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     if ( !flagQuery.exec() )
@@ -349,8 +349,10 @@ bool Fetch::parseStream()
   // update atime
   updateItemAccessTime();
 
-  if ( mIsUidFetch )
+  if ( mScope == Scope::Uid )
     successResponse( "UID FETCH completed" );
+  else if ( mScope == Scope::Rid )
+    successResponse( "RID FETCH completed" );
   else
     successResponse( "FETCH completed" );
   deleteLater();
@@ -360,9 +362,16 @@ bool Fetch::parseStream()
 void Fetch::parseCommandStream()
 {
   // sequence set
-  mSet = m_streamParser->readSequenceSet();
-  if ( mSet.isEmpty() )
-    throw HandlerException( "No items selected" );
+  if ( mScope == Scope::None || mScope == Scope::Uid ) {
+    mSet = m_streamParser->readSequenceSet();
+    if ( mSet.isEmpty() )
+      throw HandlerException( "No items selected" );
+  } else if ( mScope == Scope::Rid ) {
+    mRid = m_streamParser->readUtf8String();
+    if ( mRid.isEmpty() )
+      throw HandlerException( "Empty remote identifier specified" );
+  } else
+    throw HandlerException( "WTF?!?" );
 
   // macro vs. attribute list
   forever {
@@ -400,4 +409,15 @@ void Fetch::parseCommandStream()
     }
   }
 }
+
+void Fetch::addQueryConditions(Akonadi::QueryBuilder& qb)
+{
+  if ( mScope == Scope::Uid || mScope == Scope::None )
+    ItemQueryHelper::itemSetToQuery( mSet, mScope == Scope::Uid, connection(), qb );
+  else if ( mScope == Scope::Rid )
+    ItemQueryHelper::remoteIdToQuery( mRid, connection(), qb );
+  else
+    throw HandlerException( "WTF?!?" );
+}
+
 

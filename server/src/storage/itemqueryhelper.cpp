@@ -71,3 +71,14 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet& set, bool isUid, AkonadiConn
   else
     itemSetToQuery( set, qb );
 }
+
+void ItemQueryHelper::remoteIdToQuery(const QString& rid, AkonadiConnection* connection, QueryBuilder& qb)
+{
+  qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::Equals, rid );
+  if ( connection->selectedCollectionId() > 0 )
+    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, connection->selectedCollectionId() );
+  else if ( connection->resourceContext().isValid() ) {
+    qb.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
+    qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->resourceContext().id() );
+  }
+}

@@ -26,12 +26,15 @@
 #include "storage/entity.h"
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
+#include "storage/selectquerybuilder.h"
 
 #include "response.h"
 
 using namespace Akonadi;
 
-Select::Select(): Handler()
+Select::Select( Scope::SelectionScope scope ) :
+  Handler(),
+  mScope( scope )
 {
 }
 
@@ -54,14 +57,34 @@ bool Select::parseStream()
     buffer = m_streamParser->readString();
   }
 
-    // collection
-  Collection col = HandlerHelper::collectionFromIdOrName( buffer );
-  if ( !col.isValid() ) {
-    bool ok = false;
-    if ( buffer.toLongLong( &ok ) == 0 && ok )
-      silent = true;
-    else
-      return failureResponse( "Cannot select this collection" );
+  // collection
+  Collection col;
+
+  if ( mScope == Scope::None || mScope == Scope::Uid ) {
+    col = HandlerHelper::collectionFromIdOrName( buffer );
+    if ( !col.isValid() ) {
+      bool ok = false;
+      if ( buffer.toLongLong( &ok ) == 0 && ok )
+        silent = true;
+      else
+        return failureResponse( "Cannot select this collection" );
+    }
+  } else if ( mScope == Scope::Rid ) {
+    if ( buffer.isEmpty() ) {
+      silent = true; // unselect
+    } else {
+      if ( !connection()->resourceContext().isValid() )
+        throw HandlerException( "Cannot select based on remote identifier without a resource scope" );
+      SelectQueryBuilder<Collection> qb;
+      qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, buffer );
+      qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->resourceContext().id() );
+      if ( !qb.exec() )
+        throw HandlerException( "Failed to select collection" );
+      Collection::List results = qb.result();
+      if ( results.count() != 1 )
+        throw HandlerException( QByteArray::number( results.count() ) + " collections found" );
+      col = results.first();
+    }
   }
 
     // Responses:  REQUIRED untagged responses: FLAGS, EXISTS, RECENT

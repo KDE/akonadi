@@ -90,6 +90,7 @@ set(libakonadiprivate_SRCS
   src/handler/modify.cpp
   src/handler/noop.cpp
   src/handler/rename.cpp
+  src/handler/resourceselect.cpp
   src/handler/searchhelper.cpp
   src/handler/searchpersistent.cpp
   src/handler/select.cpp

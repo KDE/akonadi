@@ -21,6 +21,7 @@
 #define AKONADI_ITEMQUERYHELPER_H
 
 #include "entities.h"
+#include "handler/scope.h"
 
 namespace Akonadi {
 
@@ -44,6 +45,12 @@ namespace ItemQueryHelper
     Convenience method, does essentially the same as the one above.
   */
   void itemSetToQuery( const ImapSet &set, bool isUid, AkonadiConnection *connection, QueryBuilder &qb );
+
+  /**
+    Add conditions to @p qb for the given remote identifier @p rid.
+    The rid context is taken from @p connection.
+  */
+  void remoteIdToQuery( const QString &rid, AkonadiConnection* connection, QueryBuilder &qb );
 }
 
 }

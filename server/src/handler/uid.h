@@ -23,25 +23,27 @@
 #include <QtCore/QPointer>
 
 #include <handler.h>
+#include <scope.h>
 
 namespace Akonadi {
 
 /**
   @ingroup akonadi_server_handler
 
-  Proxy handler for the uid command.
+  Proxy handler for uid/rid commands.
  */
 class Uid : public Handler
 {
   Q_OBJECT
   public:
-    Uid();
+    Uid( Scope::SelectionScope scope );
     ~Uid();
 
     bool parseStream();
 
   private:
     QPointer<Handler> mSubHandler;
+    Scope::SelectionScope mScope;
 };
 
 }
