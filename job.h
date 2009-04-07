@@ -225,6 +225,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
     //@cond PRIVATE
     Q_PRIVATE_SLOT( d_func(), void slotSubJobAboutToStart( Akonadi::Job* ) )
     Q_PRIVATE_SLOT( d_func(), void startNext() )
+    Q_PRIVATE_SLOT( d_func(), void signalCreationToJobTracker() )
     //@endcond
 };
 

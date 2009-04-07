@@ -33,8 +33,12 @@
 #include <QtCore/QTextStream>
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QTcpSocket>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusConnectionInterface>
 
 using namespace Akonadi;
+
+static QDBusAbstractInterface *s_jobtracker = 0;
 
 //@cond PRIVATE
 void JobPrivate::handleResponse( const QByteArray & tag, const QByteArray & data )
@@ -88,7 +92,29 @@ void JobPrivate::init( QObject *parent )
     mParentJob->addSubjob( q );
 
   // if there's a job tracer running, tell it about the new job
-  // FIXME
+  if ( !s_jobtracker && QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole") ) ) {
+      s_jobtracker = new QDBusInterface( QLatin1String("org.kde.akonadiconsole"),
+                                         QLatin1String("/jobtracker"),
+                                         QLatin1String("org.freedesktop.Akonadi.JobTracker"),
+                                         QDBusConnection::sessionBus(), 0 );
+  }
+  QMetaObject::invokeMethod( q, "signalCreationToJobTracker", Qt::QueuedConnection );
+}
+
+void JobPrivate::signalCreationToJobTracker()
+{
+  Q_Q( Job );
+  if ( s_jobtracker ) {
+      // We do these dbus calls manually, so as to avoid having to install (or copy) the console's
+      // xml interface document. Since this is purely a debugging aid, that seems preferable to
+      // publishing something not intended for public consumption.
+      QList<QVariant> argumentList;
+      argumentList << QLatin1String( mSession->sessionId() )
+                   << QString::number(reinterpret_cast<unsigned long>( q ), 16)
+                   << ( mParentJob ? QString::number( reinterpret_cast<unsigned long>( mParentJob ), 16) : QLatin1String("top level job") )
+                   << QString::fromLatin1( q->metaObject()->className() );
+      s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobCreated"), argumentList);
+  }
 }
 
 void JobPrivate::startQueued()
@@ -101,7 +127,12 @@ void JobPrivate::startQueued()
   QTimer::singleShot( 0, q, SLOT(startNext()) );
 
   // if there's a job tracer running, tell it a job started
-  // FIXME
+  if ( s_jobtracker ) {
+      QList<QVariant> argumentList;
+      argumentList << QString::number(reinterpret_cast<unsigned long>( q ), 16);
+      s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobStarted"), argumentList);
+  }
+
 }
 
 void JobPrivate::lostConnection()
@@ -174,7 +205,11 @@ Job::~Job()
   delete d_ptr;
 
   // if there is a job tracer listening, tell it the job is done now
-  // FIXME emit error code and string
+  if ( s_jobtracker ) {
+      QList<QVariant> argumentList;
+      argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16);
+      s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+  }
 }
 
 void Job::start()

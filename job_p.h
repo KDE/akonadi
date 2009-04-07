@@ -49,6 +49,7 @@ class JobPrivate
     void lostConnection();
     void slotSubJobAboutToStart( Akonadi::Job* );
     void startNext();
+    void signalCreationToJobTracker();
     /**
       Returns a new unique command tag for communication with the backend.
     */
