@@ -1,8 +1,8 @@
 #include "testmaildir.h"
-#include "maildirimport.h"
-#include "maildirfetchallheaders.h"
-#include "maildir20percentread.h"
-#include "maildirfetchunreadheaders.h"
+#include "maildir/maildirimport.h"
+#include "maildir/maildirfetchallheaders.h"
+#include "maildir/maildir20percentread.h"
+#include "maildir/maildirfetchunreadheaders.h"
 
 TestMailDir::TestMailDir(const QString &dir)
 {
@@ -10,4 +10,4 @@ TestMailDir::TestMailDir(const QString &dir)
   addTest( new MailDirFetchAllHeaders());
   addTest( new MailDir20PercentAsRead());
   addTest( new MailDirFetchUnreadHeaders());
-}   
+}

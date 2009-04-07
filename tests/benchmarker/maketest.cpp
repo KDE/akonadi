@@ -63,7 +63,7 @@ void MakeTest::configureDBusIface(const QString &name,const QString &dir)
 
   configIface->call( "setPath", dir );
   configIface->call( "setReadOnly", true );
-  
+
   if( !configIface->isValid())
     qFatal( "Could not configure instance %s.", qPrintable( currentInstance.identifier() ) );
 }

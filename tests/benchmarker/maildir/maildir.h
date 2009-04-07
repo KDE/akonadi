@@ -21,7 +21,7 @@
 #ifndef MAILDIR_H
 #define MAILDIR_H
 
-#include "maketest.h"
+#include "../maketest.h"
 
 class MailDir: public MakeTest {
 

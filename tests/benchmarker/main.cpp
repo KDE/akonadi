@@ -19,6 +19,7 @@
 */
 
 #include "testmaildir.h"
+#include "testvcard.h"
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 
@@ -28,13 +29,18 @@ int main(int argc, char *argv[])
 
   KCmdLineOptions options;
   options.add("maildir <argument>", ki18n("Path to maildir to be used as data source"));
+  options.add("vcarddir <argument>", ki18n("Path to vvcarddir to be used as data source"));
   KCmdLineArgs::addCmdLineOptions( options );
   KApplication app;
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  QString maildir = args->getOption( "maildir" );
+  const QString maildir = args->getOption( "maildir" );
+  const QString vcarddir = args->getOption( "vcarddir" );
 
   TestMailDir *mailDirTest = new TestMailDir(maildir);
+  TestVCard *vcardTest = new TestVCard(vcarddir);
+
   mailDirTest->runTests();
+  vcardTest->runTests();
 
   return app.exec();
 }

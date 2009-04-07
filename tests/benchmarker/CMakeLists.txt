@@ -12,16 +12,20 @@ include_directories(
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(benchmarker_SRCS
-  maildir.cpp  
-  maildirimport.cpp  
+  maildir/maildir.cpp  
+  maildir/maildirimport.cpp  
   main.cpp  
   maketest.cpp  
   test.cpp  
   testmaildir.cpp
-  maildirfetchallheaders.cpp
-  maildir20percentread.cpp
-  maildirfetchunreadheaders.cpp
-  maildirremovereadmessages.cpp
+  maildir/maildirfetchallheaders.cpp
+  maildir/maildir20percentread.cpp
+  maildir/maildirfetchunreadheaders.cpp
+  maildir/maildirremovereadmessages.cpp
+
+  testvcard.cpp
+  vcard/vcard.cpp
+  vcard/vcardimport.cpp
 )
 
 kde4_add_executable(akonadi_benchmarker ${benchmarker_SRCS})
