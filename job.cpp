@@ -127,12 +127,16 @@ void JobPrivate::startQueued()
   QTimer::singleShot( 0, q, SLOT(startNext()) );
 
   // if there's a job tracer running, tell it a job started
+<<<<<<< HEAD:akonadi/job.cpp
   if ( s_jobtracker ) {
       QList<QVariant> argumentList;
       argumentList << QString::number(reinterpret_cast<unsigned long>( q ), 16);
       s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobStarted"), argumentList);
   }
 
+=======
+  // FIXME
+>>>>>>> Some fixmes.:akonadi/job.cpp
 }
 
 void JobPrivate::lostConnection()
@@ -205,11 +209,15 @@ Job::~Job()
   delete d_ptr;
 
   // if there is a job tracer listening, tell it the job is done now
+<<<<<<< HEAD:akonadi/job.cpp
   if ( s_jobtracker ) {
       QList<QVariant> argumentList;
       argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16);
       s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
   }
+=======
+  // FIXME emit error code and string
+>>>>>>> Some fixmes.:akonadi/job.cpp
 }
 
 void Job::start()
