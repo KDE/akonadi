@@ -47,7 +47,7 @@
     ${INCLUDE_INSTALL_DIR}
     )
 
-  find_library(SOPRANO_INDEX_LIBRARIES 
+  find_library_with_debug(SOPRANO_INDEX_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoindex
@@ -56,7 +56,7 @@
     ${LIB_INSTALL_DIR}
     )
 
-  find_library(SOPRANO_CLIENT_LIBRARIES 
+  find_library_with_debug(SOPRANO_CLIENT_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoclient
@@ -65,7 +65,7 @@
     ${LIB_INSTALL_DIR}
     )
 
-  find_library(SOPRANO_LIBRARIES
+  find_library_with_debug(SOPRANO_LIBRARIES
     WIN32_DEBUG_POSTFIX d
     NAMES soprano
     PATHS
@@ -73,7 +73,7 @@
     ${LIB_INSTALL_DIR}
   )
 
-  find_library(SOPRANO_SERVER_LIBRARIES 
+  find_library_with_debug(SOPRANO_SERVER_LIBRARIES 
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoserver
