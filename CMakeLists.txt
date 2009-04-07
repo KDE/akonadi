@@ -99,6 +99,7 @@ set( akonadikde_LIB_SRC
   protocolhelper.cpp
   resourcebase.cpp
   resourcescheduler.cpp
+  resourceselectjob.cpp
   searchcreatejob.cpp
   selftestdialog.cpp
   session.cpp
@@ -210,6 +211,7 @@ install( FILES
   monitor.h
   qtest_akonadi.h
   resourcebase.h
+  resourceselectjob.h
   searchcreatejob.h
   session.h
   servermanager.h

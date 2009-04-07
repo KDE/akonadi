@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,23 +17,38 @@
     02110-1301, USA.
 */
 
-#ifndef ITEMFETCHTEST_H
-#define ITEMFETCHTEST_H
+#ifndef AKONADI_RESOURCESELECTJOB_H
+#define AKONADI_RESOURCESELECTJOB_H
 
-#include <QtCore/QObject>
+#include <akonadi/job.h>
 
-class ItemFetchTest : public QObject
+namespace Akonadi {
+
+class ResourceSelectJobPrivate;
+
+/**
+  Selects a resource context for remote identifier based operations.
+  @internal
+*/
+class AKONADI_EXPORT ResourceSelectJob : public Job
 {
   Q_OBJECT
-  private slots:
-    void initTestCase();
-    void testFetch();
-    void testResourceRetrieval();
-    void testIllegalFetch();
-    void testMultipartFetch_data();
-    void testMultipartFetch();
-    void testRidFetch();
+  public:
+    /**
+      Selects the the spcified resource for all following remote identifier
+      based operations in the same session.
+      @param identifier The resource identifier.
+      @param parent The parent object.
+    */
+    explicit ResourceSelectJob( const QString &identifier, QObject *parent = 0 );
+
+  protected:
+    void doStart();
+
+  private:
+    Q_DECLARE_PRIVATE( ResourceSelectJob )
 };
 
+}
 
 #endif

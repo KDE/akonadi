@@ -20,6 +20,7 @@
 #include "collectionselectjob.h"
 
 #include "job_p.h"
+#include "protocol_p.h"
 
 #include <QtCore/QDebug>
 
@@ -56,10 +57,21 @@ void CollectionSelectJob::doStart( )
 {
   Q_D( CollectionSelectJob );
 
-  QByteArray command( d->newTag() + " SELECT " );
-  if ( d->mSilent )
-    command += "SILENT ";
-  d->writeData( command + QByteArray::number( d->mCollection.id() ) + '\n' );
+  if ( d->mCollection.isValid() ) {
+    QByteArray command( d->newTag() + " SELECT " );
+    if ( d->mSilent )
+      command += "SILENT ";
+    d->writeData( command + QByteArray::number( d->mCollection.id() ) + '\n' );
+  } else if ( !d->mCollection.remoteId().isEmpty() ) {
+    QByteArray command( d->newTag() + " " AKONADI_CMD_RID " SELECT " );
+    if ( d->mSilent )
+      command += "SILENT ";
+    d->writeData( command + d->mCollection.remoteId().toUtf8() + '\n' );
+  } else {
+    setError( Unknown );
+    setErrorText( QLatin1String("Invalid collection specified") );
+    emitResult();
+  }
 }
 
 void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )

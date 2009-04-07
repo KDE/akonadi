@@ -62,7 +62,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     Q_OBJECT
   public:
     /**
-     * Creates a new item fetch job.
+     * Creates a new item fetch job that retrieves all items inside the given collection.
      *
      * @param collection The parent collection to fetch all items from.
      * @param parent The parent object.
@@ -70,7 +70,12 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     explicit ItemFetchJob( const Collection &collection, QObject *parent = 0 );
 
     /**
-     * Creates a new item fetch job.
+     * Creates a new item fetch job that retrieves the specified item.
+     * If the item has an uid set, this is used to identify the item on the Akonadi
+     * server. If only a remote identifier is available, that one is used.
+     * However, as remote identifier are not necessarily globally unique, you
+     * need to specify the resource and/or collection to search in in that case,
+     * using setCollection() or Akonadi::ResourceSelectJob.
      *
      * @param item The item to fetch.
      * @param parent The parent object.
@@ -116,6 +121,15 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      * @see setFetchScope() for replacing the current item fetch scope
      */
     ItemFetchScope &fetchScope();
+
+    /**
+      Specifies the collection the item is in.
+      This is only required when retrieving an item based on its remote id which might not be
+      unique globally.
+
+      @see Akonadi::ResourceSelectJob
+    */
+    void setCollection( const Collection &collection );
 
   Q_SIGNALS:
     /**

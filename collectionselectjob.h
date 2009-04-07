@@ -36,7 +36,9 @@ class AKONADI_EXPORT CollectionSelectJob : public Job
   Q_OBJECT
   public:
     /**
-      Creates a new collection select job.
+      Creates a new collection select job. When providing a collection with just a remote
+      identifier, make sure to specify in which resource to search for that using
+      Akonadi::ResourceSelectJob.
       @param collection The collection to select.
       @param parent The parent object.
     */

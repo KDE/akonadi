@@ -27,6 +27,7 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/resourceselectjob.h>
 
 using namespace Akonadi;
 
@@ -214,4 +215,24 @@ void ItemFetchTest::testMultipartFetch()
   // cleanup
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   QVERIFY( djob->exec() );
+}
+
+void ItemFetchTest::testRidFetch()
+{
+  Item item;
+  item.setRemoteId( "A" );
+  Collection col;
+  col.setRemoteId( "10" );
+
+  ResourceSelectJob *select = new ResourceSelectJob( "akonadi_knut_resource_0", this );
+  QVERIFY( select->exec() );
+
+  ItemFetchJob *job = new ItemFetchJob( item, this );
+  job->setCollection( col );
+  QVERIFY( job->exec() );
+  QCOMPARE( job->items().count(), 1 );
+  item = job->items().first();
+  QVERIFY( item.isValid() );
+  QCOMPARE( item.remoteId(), QString::fromLatin1( "A" ) );
+  QCOMPARE( item.mimeType(), QString::fromLatin1( "application/octet-stream" ) );
 }

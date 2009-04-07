@@ -75,10 +75,12 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
 void ItemFetchJobPrivate::startFetchJob()
 {
   QByteArray command = newTag();
-  if ( !mItem.isValid() )
-    command += " " AKONADI_CMD_ITEMFETCH " 1:*";
-  else
+  if ( mItem.isValid() )
     command += " " AKONADI_CMD_UID " " AKONADI_CMD_ITEMFETCH " " + QByteArray::number( mItem.id() );
+  else if ( !mItem.remoteId().isEmpty() )
+    command += " " AKONADI_CMD_RID " " AKONADI_CMD_ITEMFETCH " " + mItem.remoteId().toUtf8();
+  else
+    command += " " AKONADI_CMD_ITEMFETCH " 1:*";
 
   if ( mFetchScope.fullPayload() )
     command += " " AKONADI_PARAM_FULLPAYLOAD;
@@ -299,5 +301,12 @@ ItemFetchScope &ItemFetchJob::fetchScope()
 
   return d->mFetchScope;
 }
+
+void ItemFetchJob::setCollection(const Akonadi::Collection& collection)
+{
+  Q_D( ItemFetchJob );
+  d->mCollection = collection;
+}
+
 
 #include "itemfetchjob.moc"
