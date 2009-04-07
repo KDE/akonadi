@@ -111,7 +111,7 @@ void JobPrivate::signalCreationToJobTracker()
       QList<QVariant> argumentList;
       argumentList << QLatin1String( mSession->sessionId() )
                    << QString::number(reinterpret_cast<unsigned long>( q ), 16)
-                   << ( mParentJob ? QString::number( reinterpret_cast<unsigned long>( mParentJob ), 16) : QLatin1String("top level job") )
+                   << ( mParentJob ? QString::number( reinterpret_cast<unsigned long>( mParentJob ), 16) : QString() )
                    << QString::fromLatin1( q->metaObject()->className() );
       s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobCreated"), argumentList);
   }
