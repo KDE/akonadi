@@ -500,4 +500,18 @@ void CollectionJobTest::testSelect()
   QVERIFY( !job->exec() );
 }
 
+void CollectionJobTest::testRidFetch()
+{
+  Collection col;
+  col.setRemoteId( "10" );
+
+  CollectionFetchJob *job = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
+  job->setResource( "akonadi_knut_resource_0" );
+  QVERIFY( job->exec() );
+  QCOMPARE( job->collections().count(), 1 );
+  col = job->collections().first();
+  QVERIFY( col.isValid() );
+  QCOMPARE( col.remoteId(), QString::fromLatin1( "10" ) );
+}
+
 #include "collectionjobtest.moc"

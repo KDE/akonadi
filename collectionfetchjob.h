@@ -67,9 +67,14 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     };
 
     /**
-     * Creates a new collection fetch job.
+     * Creates a new collection fetch job. If the given base collection
+     * has a unique identifier, this is used to identify the collection in the
+     * Akonadi server. If only a remote identifier is avaiable the collection
+     * is identified using that, given a resource search context has been
+     * specified. There two ways of doing that: by calling setResource()
+     * or globally using Akonadi::ResourceSelectJob.
      *
-     * @param collection The base collection for the listing. Must be valid.
+     * @param collection The base collection for the listing.
      * @param type The type of fetch depth.
      * @param parent The parent object.
      */
@@ -77,8 +82,9 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
 
     /**
      * Creates a new collection fetch job to retrieve a list of collections.
+     * The same rules for identifiers apply as noted in the constructor above.
      *
-     * @param collections A list of collections to fetch. Must not be empty, content must be valid.
+     * @param collections A list of collections to fetch. Must not be empty.
      * @param parent The parent object.
      */
     explicit CollectionFetchJob( const Collection::List &collections, QObject *parent = 0 );

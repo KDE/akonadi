@@ -21,6 +21,7 @@
 
 #include "imapparser_p.h"
 #include "job_p.h"
+#include "protocol_p.h"
 #include "protocolhelper.h"
 #include "entity_p.h"
 
@@ -69,7 +70,6 @@ CollectionFetchJob::CollectionFetchJob( const Collection &collection, Type type,
 {
   Q_D( CollectionFetchJob );
 
-  Q_ASSERT( collection.isValid() );
   d->mBase = collection;
   d->mType = type;
 
@@ -117,12 +117,24 @@ void CollectionFetchJob::doStart()
     return;
   }
 
+  if ( !d->mBase.isValid() && d->mBase.remoteId().isEmpty() ) {
+    setError( Unknown );
+    setErrorText( QLatin1String( "Invalid collection given." ) );
+    emitResult();
+    return;
+  }
+
   QByteArray command = d->newTag();
+  if ( !d->mBase.isValid() )
+    command += " " AKONADI_CMD_RID;
   if ( d->mUnsubscribed )
     command += " X-AKLIST ";
   else
     command += " X-AKLSUB ";
-  command += QByteArray::number( d->mBase.id() );
+  if ( d->mBase.isValid() )
+    command += QByteArray::number( d->mBase.id() );
+  else
+    command += ImapParser::quote( d->mBase.remoteId().toUtf8() );
   command += ' ';
   switch ( d->mType ) {
     case Base:
