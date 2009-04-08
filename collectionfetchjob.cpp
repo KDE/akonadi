@@ -86,7 +86,12 @@ CollectionFetchJob::CollectionFetchJob( const Collection::List & cols, QObject *
   Q_D( CollectionFetchJob );
 
   Q_ASSERT( !cols.isEmpty() );
-  d->mBaseList = cols;
+  if ( cols.size() == 1 ) {
+    d->mBase = cols.first();
+    d->mType = CollectionFetchJob::Base;
+  } else {
+    d->mBaseList = cols;
+  }
 
   d->mEmitTimer = new QTimer( this );
   d->mEmitTimer->setSingleShot( true );
