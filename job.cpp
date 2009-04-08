@@ -206,10 +206,10 @@ Job::~Job()
   // if there is a job tracer listening, tell it the job is done now
   if ( s_jobtracker ) {
       QList<QVariant> argumentList;
-      argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16);
+      argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16)
+                   << errorString();
       s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
   }
-  // FIXME emit error code and string
 }
 
 void Job::start()
