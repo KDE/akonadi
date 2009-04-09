@@ -76,6 +76,8 @@ void AutoIncrementTest::testAutoIncrement()
   ItemCreateJob *job = createItemCreateJob();
   QVERIFY( job->exec() );
   Item newItem = job->item();
+
+  // If this fails, this is http://bugs.mysql.com/bug.php?id=199
   QVERIFY( newItem.id() > lastId );
   lastId = newItem.id();
 }
