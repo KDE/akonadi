@@ -89,6 +89,7 @@ add_akonadi_test(mimetypecheckertest.cpp)
 add_akonadi_test(notificationmessagetest.cpp)
 
 # testrunner tests
+add_akonadi_isolated_test(autoincrementtest.cpp)
 add_akonadi_isolated_test(testenvironmenttest.cpp)
 add_akonadi_isolated_test(collectionjobtest.cpp)
 add_akonadi_isolated_test(collectionpathresolvertest.cpp)
