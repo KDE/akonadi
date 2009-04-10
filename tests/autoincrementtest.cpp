@@ -18,10 +18,10 @@
 */
 #include "autoincrementtest.h"
 
-#include <Akonadi/Control>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/ItemDeleteJob>
+#include "control.h"
+#include "item.h"
+#include "itemcreatejob.h"
+#include "itemdeletejob.h"
 
 #include <qtest_akonadi.h>
 #include "test_utils.h"

@@ -19,7 +19,7 @@
 #ifndef AUTOINCREMENTTEST_H
 #define AUTOINCREMENTTEST_H
 
-#include <Akonadi/Collection>
+#include "collection.h"
 
 #include <QtCore/QObject>
 
