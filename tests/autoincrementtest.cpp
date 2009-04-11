@@ -18,6 +18,8 @@
 */
 #include "autoincrementtest.h"
 
+#include "collectioncreatejob.h"
+#include "collectiondeletejob.h"
 #include "control.h"
 #include "item.h"
 #include "itemcreatejob.h"
@@ -34,8 +36,11 @@ void AutoIncrementTest::initTestCase()
 {
   QVERIFY( Control::start() );
 
-  targetCollection = Collection( collectionIdFromPath( "res2/space folder" ) );
-  QVERIFY( targetCollection.isValid() );
+  itemTargetCollection = Collection( collectionIdFromPath( "res2/space folder" ) );
+  QVERIFY( itemTargetCollection.isValid() );
+
+  collectionTargetCollection = Collection( collectionIdFromPath( "res3" ) );
+  QVERIFY( collectionTargetCollection.isValid() );
 }
 
 Akonadi::ItemCreateJob* AutoIncrementTest::createItemCreateJob()
@@ -44,10 +49,18 @@ Akonadi::ItemCreateJob* AutoIncrementTest::createItemCreateJob()
   Item item( -1 );
   item.setMimeType( "application/octet-stream" );
   item.setPayload( payload );
-  return new ItemCreateJob( item, targetCollection );
+  return new ItemCreateJob( item, itemTargetCollection );
 }
 
-void AutoIncrementTest::testAutoIncrement()
+Akonadi::CollectionCreateJob* AutoIncrementTest::createCollectionCreateJob( int number )
+{
+  Collection collection;
+  collection.setParent( collectionTargetCollection );
+  collection.setName( "testCollection" + QString::number( number) );
+  return new CollectionCreateJob( collection );
+}
+
+void AutoIncrementTest::testItemAutoIncrement()
 {
   QList<Item> itemsToDelete;
   Item::Id lastId = -1;
@@ -62,7 +75,7 @@ void AutoIncrementTest::testAutoIncrement()
     itemsToDelete.append( newItem );
   }
 
-  // Delete the 20 item
+  // Delete the 20 items
   foreach( const Item &item, itemsToDelete ) {
     ItemDeleteJob *job = new ItemDeleteJob( item );
     QVERIFY( job->exec() );
@@ -81,4 +94,40 @@ void AutoIncrementTest::testAutoIncrement()
   QVERIFY( newItem.id() > lastId );
   lastId = newItem.id();
 }
+
+void AutoIncrementTest::testCollectionAutoIncrement()
+{
+  QList<Collection> collectionsToDelete;
+  Collection::Id lastId = -1;
+
+  // Create 20 test collections
+  for( int i = 0; i < 20; i++ ) {
+    CollectionCreateJob *job = createCollectionCreateJob( i );
+    QVERIFY( job->exec() );
+    Collection newCollection = job->collection();
+    QVERIFY( newCollection.id() > lastId );
+    lastId = newCollection.id();
+    collectionsToDelete.append( newCollection );
+  }
+
+  // Delete the 20 collections
+  foreach( const Collection &collection, collectionsToDelete ) {
+    CollectionDeleteJob *job = new CollectionDeleteJob( collection );
+    QVERIFY( job->exec() );
+  }
+
+  // Restart the server, then test collection creation again. The new id of the collection
+  // should be higher than all ids before.
+  QVERIFY( Control::stop() );
+  QVERIFY( Control::start() );
+
+  CollectionCreateJob *job = createCollectionCreateJob( 0 );
+  QVERIFY( job->exec() );
+  Collection newCollection = job->collection();
+
+  // If this fails, this is http://bugs.mysql.com/bug.php?id=199
+  QVERIFY( newCollection.id() > lastId );
+  lastId = newCollection.id();
+}
+
 
