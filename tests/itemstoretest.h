@@ -37,6 +37,7 @@ class ItemStoreTest : public QObject
     void testPartRemove();
     void testRevisionCheck();
     void testModificationTime();
+    void testRemoteIdRace();
 };
 
 #endif

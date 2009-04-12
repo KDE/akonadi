@@ -185,8 +185,12 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
           uid = value.toLongLong();
         else if ( key == "REV" )
           rev = value.toInt();
-        else if ( key == "REMOTEID" )
-          rid = QString::fromUtf8( value );
+        else if ( key == "REMOTEID" ) {
+          if ( !value.isEmpty() )
+            rid = QString::fromUtf8( value );
+          else
+            rid = QString();
+        }
         else if ( key == "MIMETYPE" )
           mimeType = QString::fromLatin1( value );
       }

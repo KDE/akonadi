@@ -347,4 +347,24 @@ void ItemStoreTest::testModificationTime()
   QVERIFY( idjob->exec() );
 }
 
+void ItemStoreTest::testRemoteIdRace()
+{
+  // Create an item and store it
+  Item item;
+  item.setMimeType( "text/directory" );
+  ItemCreateJob *job = new ItemCreateJob( item, res1_foo );
+  QVERIFY( job->exec() );
+
+  // Fetch the same item again. It should not have a remote Id yet, as the resource
+  // didn't have the time to modify it yet.
+  // The remote id should be null, not only empty, so that item modify jobs with this
+  // item don't overwrite the remote id.
+  Item item2( job->item().id() );
+  ItemFetchJob *fetchJob = new ItemFetchJob( item2 );
+  QVERIFY( fetchJob->exec() );
+  QCOMPARE( fetchJob->items().size(), 1 );
+  QVERIFY( fetchJob->items().first().remoteId().isNull() );
+}
+
+
 #include "itemstoretest.moc"
