@@ -22,7 +22,7 @@
 #include <QtCore/QSharedData>
 #include <QtCore/QHash>
 
-#include <Soprano/Node> // for qHash( QUrl() )
+#include "soprano/node.h" // for qHash( QUrl() )
 
 class Nepomuk::Search::Result::Private : public QSharedData
 {

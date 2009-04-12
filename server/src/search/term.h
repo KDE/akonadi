@@ -24,7 +24,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QSharedDataPointer>
 
-#include <Soprano/LiteralValue>
+#include "soprano/literalvalue.h"
 
 namespace Nepomuk {
     namespace Search {

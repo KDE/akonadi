@@ -25,7 +25,7 @@
 #include <QtCore/QList>
 #include <QtCore/QHash>
 
-#include <Soprano/Statement>
+#include "soprano/statement.h"
 
 namespace Nepomuk {
     namespace Search {

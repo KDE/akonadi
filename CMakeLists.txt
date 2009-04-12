@@ -20,9 +20,21 @@ if (NOT QT_QTDBUS_FOUND)
    message(FATAL_ERROR  "Akonadi requires Qt4 with QtDBus module in order to built.")
 endif(NOT QT_QTDBUS_FOUND)
 
-find_package(Automoc4 REQUIRED)
+find_package(Soprano)
 
-find_package(Soprano REQUIRED)
+if (NOT SOPRANO_FOUND)
+  #Are we building KDESupport?
+  if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+    message(STATUS "Soprano is needed to build Akonadi but is not installed yet. Let's use the source and build dirs instead.")
+    set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano)
+    set (SOPRANO_LIBRARIES ${KDESupport_BINARY_DIR}/soprano/soprano/libsoprano.so) # Doesn't exist yet.
+  else("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+    #We're not building kdesupport and Soprano wasn't found, we display an error.
+    message(FATAL_ERROR "Soprano is required to build Akonadi")
+  endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+endif (NOT SOPRANO_FOUND)
+
+find_package(Automoc4 REQUIRED)
 
 set(SHARED_MIME_INFO_MINIMUM_VERSION "0.20")
 find_package(SharedMimeInfo REQUIRED)
