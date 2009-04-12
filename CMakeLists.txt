@@ -22,7 +22,7 @@ endif(NOT QT_QTDBUS_FOUND)
 
 find_package(Soprano)
 
-if (NOT SOPRANO_FOUND)
+if (NOT Soprano_FOUND)
   #Are we building KDESupport?
   if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     message(STATUS "Soprano is needed to build Akonadi but is not installed yet. Let's use the source and build dirs instead.")
@@ -32,7 +32,7 @@ if (NOT SOPRANO_FOUND)
     #We're not building kdesupport and Soprano wasn't found, we display an error.
     message(FATAL_ERROR "Soprano is required to build Akonadi")
   endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-endif (NOT SOPRANO_FOUND)
+endif (NOT Soprano_FOUND)
 
 find_package(Automoc4 REQUIRED)
 
