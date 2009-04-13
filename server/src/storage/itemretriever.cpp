@@ -134,7 +134,7 @@ Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
   partQuery.addColumn( Part::dataFullColumnName() );
   partQuery.addColumn( Part::externalFullColumnName() );
   partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
-  partQuery.addValueCondition( QString::fromLatin1( "left( %1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+  partQuery.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
 
   if ( !mParts.isEmpty() )
     partQuery.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );

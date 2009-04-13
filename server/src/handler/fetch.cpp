@@ -110,9 +110,9 @@ QueryBuilder Fetch::buildPartQuery( const QStringList &partList, bool allPayload
     if ( !partList.isEmpty() )
       cond.addValueCondition( Part::nameFullColumnName(), Query::In, partList );
     if ( allPayload )
-      cond.addValueCondition( QString::fromLatin1( "left( %1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+      cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
     if ( allAttrs )
-      cond.addValueCondition( QString::fromLatin1( "left( %1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
+      cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
     addQueryConditions( partQuery );
     partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );

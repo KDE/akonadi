@@ -68,7 +68,7 @@ void CacheCleaner::cleanCache()
     qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
     qb.addValueCondition( PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
     qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
-    qb.addValueCondition( QString::fromLatin1( "left( %1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+    qb.addValueCondition( QString::fromLatin1( "substr( %1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
     qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
     if ( !collection.cachePolicyLocalParts().isEmpty() )
       qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, collection.cachePolicyLocalParts().split( QLatin1String(" ") ) );
