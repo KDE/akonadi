@@ -90,7 +90,7 @@ void AutoIncrementTest::testItemAutoIncrement()
   QVERIFY( job->exec() );
   Item newItem = job->item();
 
-  // If this fails, this is http://bugs.mysql.com/bug.php?id=199
+  QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
   QVERIFY( newItem.id() > lastId );
   lastId = newItem.id();
 }
@@ -125,7 +125,7 @@ void AutoIncrementTest::testCollectionAutoIncrement()
   QVERIFY( job->exec() );
   Collection newCollection = job->collection();
 
-  // If this fails, this is http://bugs.mysql.com/bug.php?id=199
+  QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
   QVERIFY( newCollection.id() > lastId );
   lastId = newCollection.id();
 }
