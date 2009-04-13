@@ -43,7 +43,6 @@
     NAMES
     soprano/soprano.h
     PATHS
-    ${KDE4_INCLUDE_DIR}
     ${INCLUDE_INSTALL_DIR}
     )
 
@@ -52,7 +51,6 @@
     NAMES
     sopranoindex
     PATHS
-    ${KDE4_LIB_DIR}
     ${LIB_INSTALL_DIR}
     )
 
@@ -61,7 +59,6 @@
     NAMES
     sopranoclient
     PATHS
-    ${KDE4_LIB_DIR}
     ${LIB_INSTALL_DIR}
     )
 
@@ -69,7 +66,6 @@
     WIN32_DEBUG_POSTFIX d
     NAMES soprano
     PATHS
-    ${KDE4_LIB_DIR}
     ${LIB_INSTALL_DIR}
   )
 
@@ -78,7 +74,6 @@
     NAMES
     sopranoserver
     PATHS
-    ${KDE4_LIB_DIR}
     ${LIB_INSTALL_DIR}
     )
 
