@@ -81,7 +81,10 @@ int main( int argc, char **argv )
 
   setup = new SetupTest();
 
-  setup->startAkonadiDaemon();
+  if ( !setup->startAkonadiDaemon() ) {
+      delete setup;
+      return 1;
+  }
 
   AkonadiTesting *testing = new AkonadiTesting();
 

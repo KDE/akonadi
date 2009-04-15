@@ -19,6 +19,7 @@
 #define TESTRUNNER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QProcess>
 #include <QtCore/QStringList>
 
 class KProcess;
@@ -40,6 +41,7 @@ class TestRunner : public QObject
 
   private Q_SLOTS:
     void processFinished( int exitCode );
+    void processError( QProcess::ProcessError error );
 
   private:
     QStringList mArguments;

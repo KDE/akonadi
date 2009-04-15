@@ -42,6 +42,7 @@ void TestRunner::run()
   mProcess = new KProcess( this );
   mProcess->setProgram( mArguments );
   connect( mProcess, SIGNAL( finished( int ) ), SLOT( processFinished( int ) ) );
+  connect( mProcess, SIGNAL( error( QProcess::ProcessError ) ), SLOT( processError( QProcess::ProcessError ) ) );
   // environment setup seems to have been done by setuptest globally already
   mProcess->start();
   if ( !mProcess->waitForStarted() ) {
@@ -56,6 +57,12 @@ void TestRunner::processFinished( int exitCode )
   kDebug() << exitCode;
   mExitCode = exitCode;
   emit finished();
+}
+
+void TestRunner::processError( QProcess::ProcessError error ) {
+    kWarning() << mArguments << "exited with an error:" << error;
+    mExitCode = 255;
+    emit finished();
 }
 
 void TestRunner::terminate()

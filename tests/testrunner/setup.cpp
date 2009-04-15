@@ -152,21 +152,24 @@ void SetupTest::registerWithInternalDBus( const QString &address )
            this, SLOT( dbusNameOwnerChanged( QString, QString, QString ) ) );
 }
 
-void SetupTest::startAkonadiDaemon()
+bool SetupTest::startAkonadiDaemon()
 {
   mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ) );
   mAkonadiDaemonProcess->start();
-  mAkonadiDaemonProcess->waitForStarted( 5000 );
+  const bool started = mAkonadiDaemonProcess->waitForStarted( 5000 );
   kDebug() << mAkonadiDaemonProcess->pid();
+  return started;
 }
 
-void SetupTest::stopAkonadiDaemon()
+bool SetupTest::stopAkonadiDaemon()
 {
   mAkonadiDaemonProcess->terminate();
-  if ( !mAkonadiDaemonProcess->waitForFinished( 5000 ) ) {
+  const bool finished = mAkonadiDaemonProcess->waitForFinished( 5000 );
+  if ( !finished ) {
     kDebug() << "Problem finishing process.";
   }
   mAkonadiDaemonProcess->close();
+  return finished;
 }
 
 void SetupTest::setupAgents()

@@ -35,10 +35,10 @@ class SetupTest : public QObject
   public:
     SetupTest();
     ~SetupTest();
-    void startAkonadiDaemon();
-    void stopAkonadiDaemon();
+    bool startAkonadiDaemon();
+    bool stopAkonadiDaemon();
     QString basePath() const;
-    
+
   public Q_SLOTS:
     Q_SCRIPTABLE void shutdown();
     Q_SCRIPTABLE void shutdownHarder();
