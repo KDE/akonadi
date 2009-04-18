@@ -469,6 +469,8 @@ void AgentBase::aboutToQuit()
 void AgentBase::cleanup()
 {
   Q_D( AgentBase );
+  aboutToQuit();
+
   const QString fileName = d->mSettings->fileName();
 
   /*
@@ -489,7 +491,7 @@ void AgentBase::cleanup()
   QString configFile = KStandardDirs::locateLocal( "config", KGlobal::config()->name() );
   QFile::remove( configFile );
 
-  QCoreApplication::quit();
+  KGlobal::deref();
 }
 
 void AgentBase::registerObserver( Observer *observer )
