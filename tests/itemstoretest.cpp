@@ -31,6 +31,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/resourceselectjob.h>
 #include <qtest_akonadi.h>
 #include "test_utils.h"
 
@@ -63,7 +64,7 @@ void ItemStoreTest::initTestCase()
 void ItemStoreTest::testFlagChange()
 {
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   Item item = fjob->items()[0];
 
@@ -73,10 +74,10 @@ void ItemStoreTest::testFlagChange()
   expectedFlags.insert( "added_test_flag_1" );
   item.setFlag( "added_test_flag_1" );
   ItemModifyJob *sjob = new ItemModifyJob( item, this );
-  QVERIFY( sjob->exec() );
+  AKVERIFYEXEC( sjob );
 
   fjob = new ItemFetchJob( Item( 1 ) );
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
   QCOMPARE( item.flags().count(), expectedFlags.count() );
@@ -87,10 +88,10 @@ void ItemStoreTest::testFlagChange()
   expectedFlags.insert( "added_test_flag_2" );
   item.setFlags( expectedFlags );
   sjob = new ItemModifyJob( item, this );
-  QVERIFY( sjob->exec() );
+  AKVERIFYEXEC( sjob );
 
   fjob = new ItemFetchJob( Item( 1 ) );
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
   QCOMPARE( item.flags().count(), expectedFlags.count() );
@@ -101,10 +102,10 @@ void ItemStoreTest::testFlagChange()
   item.clearFlag( "added_test_flag_1" );
   item.clearFlag( "added_test_flag_2" );
   sjob = new ItemModifyJob( item, this );
-  QVERIFY( sjob->exec() );
+  AKVERIFYEXEC( sjob );
 
   fjob = new ItemFetchJob( Item( 1 ) );
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
   QCOMPARE( item.flags().count(), origFlags.count() );
@@ -145,11 +146,11 @@ void ItemStoreTest::testDataChange()
 
   // modify data
   ItemModifyJob *sjob = new ItemModifyJob( item );
-  QVERIFY( sjob->exec() );
+  AKVERIFYEXEC( sjob );
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
   fjob->fetchScope().fetchFullPayload();
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
   QVERIFY( item.hasPayload<QByteArray>() );
@@ -174,20 +175,27 @@ void ItemStoreTest::testRemoteId()
   QFETCH( QString, rid );
   QFETCH( QString, exprid );
 
+  // pretend to be a resource, we cannot change remote identifiers otherwise
+  ResourceSelectJob *rsel = new ResourceSelectJob( "akonadi_knut_resource_0", this );
+  AKVERIFYEXEC( rsel );
+
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
-  prefetchjob->exec();
+  AKVERIFYEXEC( prefetchjob );
   Item item = prefetchjob->items()[0];
 
-  item.setId( 1 );
   item.setRemoteId( rid );
   ItemModifyJob *store = new ItemModifyJob( item, this );
-  QVERIFY( store->exec() );
+  AKVERIFYEXEC( store );
 
   ItemFetchJob *fetch = new ItemFetchJob( item, this );
-  QVERIFY( fetch->exec() );
+  AKVERIFYEXEC( fetch );
   QCOMPARE( fetch->items().count(), 1 );
   item = fetch->items().at( 0 );
   QCOMPARE( item.remoteId(), exprid );
+
+  // no longer pretend to be a resource
+  rsel = new ResourceSelectJob( QString(), this );
+  AKVERIFYEXEC( rsel );
 }
 
 void ItemStoreTest::testMultiPart()
@@ -356,7 +364,7 @@ void ItemStoreTest::testRemoteIdRace()
   QVERIFY( job->exec() );
 
   // Fetch the same item again. It should not have a remote Id yet, as the resource
-  // didn't have the time to modify it yet.
+  // is offline.
   // The remote id should be null, not only empty, so that item modify jobs with this
   // item don't overwrite the remote id.
   Item item2( job->item().id() );

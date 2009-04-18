@@ -53,4 +53,12 @@ int main(int argc, char *argv[]) \
   return QTest::qExec( &tc, argc, argv ); \
 }
 
+/**
+ * Runs an Akonadi::Job synchronously and aborts if the job failed.
+ * Similar to QVERIFY( job->exec() ) but includes the job error message
+ * in the output in case of a failure.
+ */
+#define AKVERIFYEXEC( job ) \
+  QVERIFY2( job->exec(), job->errorString().toUtf8().constData() )
+
 #endif
