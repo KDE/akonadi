@@ -281,8 +281,12 @@ bool Store::parseStream()
           } else
           if ( command == "REMOTEID" ) {
             value = m_streamParser->readString();
-            if ( !store->updatePimItem( pimItems[i], QString::fromUtf8( value ) ) )
-              return failureResponse( "Unable to change remote id for item." );
+            if ( pimItems[i].remoteId() != value ) {
+              if ( !connection()->isOwnerResource( pimItems[i] ) )
+                throw HandlerException( "Only resources can modify remote identifiers" );
+              if ( !store->updatePimItem( pimItems[i], QString::fromUtf8( value ) ) )
+                return failureResponse( "Unable to change remote id for item." );
+            }
           } else
           if ( command == "DIRTY" ) {
             value = m_streamParser->readString();

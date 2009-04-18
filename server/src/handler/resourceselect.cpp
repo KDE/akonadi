@@ -33,6 +33,12 @@ ResourceSelect::ResourceSelect() :
 bool ResourceSelect::parseStream()
 {
   const QString resourceName = m_streamParser->readUtf8String();
+  if ( resourceName.isEmpty() ) {
+    connection()->setResourceContext( Resource() );
+    deleteLater();
+    return successResponse( "Resource deselected" );
+  }
+
   const Resource res = Resource::retrieveByName( resourceName );
   if ( !res.isValid() )
     throw HandlerException( resourceName.toUtf8() + " is not a valid resource identifier" );

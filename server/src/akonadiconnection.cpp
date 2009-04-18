@@ -266,5 +266,14 @@ void AkonadiConnection::setResourceContext(const Resource& res)
   m_resourceContext = res;
 }
 
+bool AkonadiConnection::isOwnerResource(const PimItem& item) const
+{
+  if ( resourceContext().isValid() )
+    return true;
+  // fallback for older resources
+  if ( sessionId() == item.collection().resource().name().toUtf8() )
+    return true;
+  return false;
+}
 
 #include "akonadiconnection.moc"

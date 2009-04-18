@@ -52,6 +52,10 @@ public:
 
     Resource resourceContext() const;
     void setResourceContext( const Resource &res );
+    /**
+      Returns @c true if this connection belongs to the owning resource of @p item.
+    */
+    bool isOwnerResource( const PimItem &item ) const;
 
     const Collection selectedCollection();
 
