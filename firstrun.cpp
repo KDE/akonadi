@@ -205,6 +205,7 @@ void Firstrun::instanceCreated( KJob *job )
   if ( !iface->isValid() ) {
     kError() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
     setupNext();
+    delete iface;
     return;
   }
 
