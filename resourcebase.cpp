@@ -37,6 +37,7 @@
 #include "itemmodifyjob.h"
 #include "itemmodifyjob_p.h"
 #include "session.h"
+#include "resourceselectjob.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -142,6 +143,8 @@ ResourceBase::ResourceBase( const QString & id )
   d->scheduler->setOnline( d->mOnline );
   if ( !d->mMonitor->isEmpty() )
     d->scheduler->scheduleChangeReplay();
+
+  new ResourceSelectJob( identifier() );
 }
 
 ResourceBase::~ResourceBase()
