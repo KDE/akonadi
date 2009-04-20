@@ -22,8 +22,13 @@
 #include <kdebug.h>
 
 #include <QtCore/QTimer>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusConnectionInterface>
 
 using namespace Akonadi;
+
+qint64 ResourceScheduler::Task::latestSerial = 0;
+static QDBusAbstractInterface *s_jobtracker = 0;
 
 //@cond PRIVATE
 
@@ -38,6 +43,7 @@ void ResourceScheduler::scheduleFullSync()
   Task t;
   t.type = SyncAll;
   mTaskList << t;
+  signalTaskToTracker( t, "SyncAll" );
   scheduleNext();
 }
 
@@ -46,6 +52,7 @@ void ResourceScheduler::scheduleCollectionTreeSync()
   Task t;
   t.type = SyncCollectionTree;
   mTaskList << t;
+  signalTaskToTracker( t, "SyncCollectionTree" );
   scheduleNext();
 }
 
@@ -55,6 +62,7 @@ void ResourceScheduler::scheduleSync(const Collection & col)
   t.type = SyncCollection;
   t.collection = col;
   mTaskList << t;
+  signalTaskToTracker( t, "SyncCollection" );
   scheduleNext();
 }
 
@@ -66,6 +74,7 @@ void ResourceScheduler::scheduleItemFetch(const Item & item, const QSet<QByteArr
   t.itemParts = parts;
   t.dbusMsg = msg;
   mTaskList << t;
+  signalTaskToTracker( t, "FetchItem" );
   scheduleNext();
 }
 
@@ -74,6 +83,7 @@ void ResourceScheduler::scheduleResourceCollectionDeletion()
   Task t;
   t.type = DeleteResourceCollection;
   mTaskList << t;
+  signalTaskToTracker( t, "DeleteResourceCollection" );
   scheduleNext();
 }
 
@@ -84,6 +94,7 @@ void ResourceScheduler::scheduleChangeReplay()
   if ( mTaskList.contains( t ) )
     return;
   mTaskList << t;
+  signalTaskToTracker( t, "ChangeRelay" );
   scheduleNext();
 }
 
@@ -92,6 +103,7 @@ void Akonadi::ResourceScheduler::scheduleFullSyncCompletion()
   Task t;
   t.type = SyncAllDone;
   mTaskList << t;
+  signalTaskToTracker( t, "SyncAllDone" );
   scheduleNext();
 }
 
@@ -99,6 +111,14 @@ void ResourceScheduler::taskDone()
 {
   if ( isEmpty() )
     emit status( AgentBase::Idle );
+
+  if ( s_jobtracker ) {
+    QList<QVariant> argumentList;
+    argumentList << QString::number( mCurrentTask.serial )
+                 << QString();
+    s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+  }
+
   mCurrentTask = Task();
   scheduleNext();
 }
@@ -121,6 +141,13 @@ void ResourceScheduler::executeNext()
     return;
 
   mCurrentTask = mTaskList.takeFirst();
+
+  if ( s_jobtracker ) {
+    QList<QVariant> argumentList;
+    argumentList << QString::number( mCurrentTask.serial );
+    s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobStarted"), argumentList);
+  }
+
   switch ( mCurrentTask.type ) {
     case SyncAll:
       emit executeFullSync();
@@ -164,6 +191,26 @@ void ResourceScheduler::setOnline(bool state)
     // abort running task
     mTaskList.prepend( mCurrentTask );
     mCurrentTask = Task();
+  }
+}
+
+void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray &taskType )
+{
+  // if there's a job tracer running, tell it about the new job
+  if ( !s_jobtracker && QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole") ) ) {
+    s_jobtracker = new QDBusInterface( QLatin1String("org.kde.akonadiconsole"),
+                                       QLatin1String("/resourcesJobtracker"),
+                                       QLatin1String("org.freedesktop.Akonadi.JobTracker"),
+                                       QDBusConnection::sessionBus(), 0 );
+  }
+
+  if ( s_jobtracker ) {
+    QList<QVariant> argumentList;
+    argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16)
+                 << QString::number( task.serial )
+                 << QString()
+                 << QString::fromLatin1( taskType );
+    s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobCreated"), argumentList);
   }
 }
 

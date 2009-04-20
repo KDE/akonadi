@@ -56,8 +56,11 @@ class ResourceScheduler : public QObject
     };
 
     class Task {
+      static qint64 latestSerial;
+
       public:
-        Task() : type( Invalid ) {}
+        Task() : serial( ++latestSerial ), type( Invalid ) {}
+        qint64 serial;
         TaskType type;
         Collection collection;
         Item item;
@@ -151,6 +154,8 @@ class ResourceScheduler : public QObject
     void executeNext();
 
   private:
+    void signalTaskToTracker( const Task &task, const QByteArray &taskType );
+
     QList<Task> mTaskList;
     Task mCurrentTask;
     bool mOnline;
