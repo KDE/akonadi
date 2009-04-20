@@ -13,8 +13,11 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /opt/mysql/libexec )
-macro_log_feature( MYSQLD_EXECUTABLE "MySQL Server" "Database server" "http://www.mysql.com" FALSE ""
-                   "Akonadi server requires the mysqld binary" )
+if( MYSQLD_EXECUTABLE)
+   message( STATUS "MySQL Server found." )
+else ( MYSQLD_EXECUTABLE )
+   message( STATUS "MySQL Server wasn't found. it is required to run Akonadi" )
+endif( MYSQLD_EXECUTABLE )
 
 include_directories( ${Boost_INCLUDE_DIR} )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../libs )
