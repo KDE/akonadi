@@ -39,7 +39,7 @@ class ItemView::Private
 {
   public:
     Private( ItemView *parent ) :
-      xmlGuiWindow( 0 ),
+      xmlGuiClient( 0 ),
       mParent( parent )
     {
     }
@@ -52,7 +52,7 @@ class ItemView::Private
 
     Item itemForIndex( const QModelIndex& );
 
-    KXmlGuiWindow *xmlGuiWindow;
+    KXMLGUIClient *xmlGuiClient;
 
   private:
     ItemView *mParent;
@@ -145,7 +145,15 @@ ItemView::ItemView(KXmlGuiWindow * xmlGuiWindow, QWidget * parent) :
     QTreeView( parent ),
     d( new Private( this ) )
 {
-  d->xmlGuiWindow = xmlGuiWindow;
+  d->xmlGuiClient = static_cast<KXMLGUIClient*>( xmlGuiWindow );
+  d->init();
+}
+
+ItemView::ItemView(KXMLGUIClient * xmlGuiClient, QWidget * parent) :
+    QTreeView( parent ),
+    d( new Private( this ) )
+{
+  d->xmlGuiClient = xmlGuiClient;
   d->init();
 }
 
@@ -164,17 +172,22 @@ void ItemView::setModel( QAbstractItemModel * model )
 
 void ItemView::contextMenuEvent(QContextMenuEvent * event)
 {
-  if ( !d->xmlGuiWindow )
+  if ( !d->xmlGuiClient )
     return;
-  QMenu *popup = static_cast<QMenu*>( d->xmlGuiWindow->guiFactory()->container(
-                                      QLatin1String("akonadi_itemview_contextmenu"), d->xmlGuiWindow ) );
+  QMenu *popup = static_cast<QMenu*>( d->xmlGuiClient->factory()->container(
+                                      QLatin1String("akonadi_itemview_contextmenu"), d->xmlGuiClient ) );
   if ( popup )
     popup->exec( event->globalPos() );
 }
 
 void ItemView::setXmlGuiWindow(KXmlGuiWindow * xmlGuiWindow)
 {
-  d->xmlGuiWindow = xmlGuiWindow;
+  d->xmlGuiClient = static_cast<KXMLGUIClient*>( xmlGuiWindow );
+}
+
+void ItemView::setXmlGuiClient(KXMLGUIClient * xmlGuiClient)
+{
+  d->xmlGuiClient = xmlGuiClient;
 }
 
 #include "itemview.moc"

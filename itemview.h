@@ -24,7 +24,7 @@
 #include <QtGui/QTreeView>
 
 class KXmlGuiWindow;
-
+class KXMLGUIClient;
 namespace Akonadi {
 
 class Item;
@@ -77,7 +77,18 @@ class AKONADI_EXPORT ItemView : public QTreeView
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit ItemView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
+    explicit KDE_DEPRECATED ItemView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
+
+    /**
+     * Creates a new item view.
+     *
+     * @param xmlGuiClient The KXMLGUIClient this is used in.
+     *                     This is needed for the XMLGUI based context menu.
+     *                     Passing 0 is ok and will disable the builtin context menu.
+     * @param parent The parent widget.
+     * @since 4.3
+     */
+    explicit ItemView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
 
     /**
      * Destroys the item view.
@@ -90,7 +101,16 @@ class AKONADI_EXPORT ItemView : public QTreeView
      *
      * @param xmlGuiWindow The KXmlGuiWindow this view is used in.
      */
-    void setXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
+    KDE_DEPRECATED void setXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
+
+    /**
+     * Sets the KXMLGUIFactory which this view is used in.
+     * This is needed if you want to use the built-in context menu.
+     *
+     * @param xmlGuiClient The KXMLGUIClient this view is used in.
+     */
+     void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
+
 
     virtual void setModel( QAbstractItemModel * model );
 

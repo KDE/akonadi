@@ -23,6 +23,7 @@
 #include "akonadi_export.h"
 #include <QtGui/QTreeView>
 
+class KXMLGUIClient;
 class KXmlGuiWindow;
 class QDragMoveEvent;
 
@@ -79,7 +80,16 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
+    explicit KDE_DEPRECATED CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
+    /**
+     * Creates a new collection view.
+     *
+     * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
+     *                     This is needed for the XMLGUI based context menu.
+     *                     Passing 0 is ok and will disable the builtin context menu.
+     * @param parent The parent widget.
+     */
+    explicit CollectionView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
 
     /**
      * Destroys the collection view.
@@ -92,7 +102,16 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      *
      * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
      */
-    void setXmlGuiWindow( KXmlGuiWindow *xmlGuiWindow );
+     KDE_DEPRECATED void setXmlGuiWindow( KXmlGuiWindow * xmlGuiWindow );
+
+    /**
+     * Sets the KXMLGUIClient which the view is used in.
+     * This is needed if you want to use the built-in context menu.
+     *
+     * @param xmlGuiClient The KXMLGUIClient the view is used in.
+     * @since 4.3
+     */
+     void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
 
     virtual void setModel ( QAbstractItemModel * model );
 

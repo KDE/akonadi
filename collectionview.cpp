@@ -48,7 +48,7 @@ class CollectionView::Private
   public:
     Private( CollectionView *parent )
       : mParent( parent ),
-        xmlGuiWindow( 0 )
+        xmlGuiClient( 0 )
     {
     }
 
@@ -62,7 +62,7 @@ class CollectionView::Private
     QModelIndex dragOverIndex;
     QTimer dragExpandTimer;
 
-    KXmlGuiWindow *xmlGuiWindow;
+    KXMLGUIClient *xmlGuiClient;
 };
 
 void CollectionView::Private::init()
@@ -136,11 +136,19 @@ CollectionView::CollectionView( QWidget * parent )
   d->init();
 }
 
+CollectionView::CollectionView( KXMLGUIClient *xmlGuiClient, QWidget * parent )
+  : QTreeView( parent ),
+    d( new Private( this ) )
+{
+  d->xmlGuiClient = xmlGuiClient;
+  d->init();
+}
+
 CollectionView::CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget * parent )
   : QTreeView( parent ),
     d( new Private( this ) )
 {
-  d->xmlGuiWindow = xmlGuiWindow;
+  d->xmlGuiClient = static_cast<KXMLGUIClient*>( xmlGuiWindow );
   d->init();
 }
 
@@ -230,17 +238,22 @@ void CollectionView::dropEvent( QDropEvent * event )
 
 void CollectionView::contextMenuEvent( QContextMenuEvent * event )
 {
-  if ( !d->xmlGuiWindow )
+  if ( !d->xmlGuiClient )
     return;
-  QMenu *popup = static_cast<QMenu*>( d->xmlGuiWindow->guiFactory()->container(
-                                      QLatin1String( "akonadi_collectionview_contextmenu" ), d->xmlGuiWindow ) );
+  QMenu *popup = static_cast<QMenu*>( d->xmlGuiClient->factory()->container(
+                                      QLatin1String( "akonadi_collectionview_contextmenu" ), d->xmlGuiClient ) );
   if ( popup )
     popup->exec( event->globalPos() );
 }
 
+void CollectionView::setXmlGuiClient( KXMLGUIClient * xmlGuiClient )
+{
+  d->xmlGuiClient = xmlGuiClient;
+}
+
 void CollectionView::setXmlGuiWindow( KXmlGuiWindow * xmlGuiWindow )
 {
-  d->xmlGuiWindow = xmlGuiWindow;
+  d->xmlGuiClient = static_cast<KXMLGUIClient*>( xmlGuiWindow );
 }
 
 #include "collectionview.moc"
