@@ -28,7 +28,7 @@
 using namespace Akonadi;
 
 qint64 ResourceScheduler::Task::latestSerial = 0;
-static QDBusAbstractInterface *s_jobtracker = 0;
+static QDBusAbstractInterface *s_resourcetracker = 0;
 
 //@cond PRIVATE
 
@@ -112,11 +112,11 @@ void ResourceScheduler::taskDone()
   if ( isEmpty() )
     emit status( AgentBase::Idle );
 
-  if ( s_jobtracker ) {
+  if ( s_resourcetracker ) {
     QList<QVariant> argumentList;
     argumentList << QString::number( mCurrentTask.serial )
                  << QString();
-    s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+    s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
   }
 
   mCurrentTask = Task();
@@ -142,10 +142,10 @@ void ResourceScheduler::executeNext()
 
   mCurrentTask = mTaskList.takeFirst();
 
-  if ( s_jobtracker ) {
+  if ( s_resourcetracker ) {
     QList<QVariant> argumentList;
     argumentList << QString::number( mCurrentTask.serial );
-    s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobStarted"), argumentList);
+    s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobStarted"), argumentList);
   }
 
   switch ( mCurrentTask.type ) {
@@ -197,20 +197,20 @@ void ResourceScheduler::setOnline(bool state)
 void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray &taskType )
 {
   // if there's a job tracer running, tell it about the new job
-  if ( !s_jobtracker && QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole") ) ) {
-    s_jobtracker = new QDBusInterface( QLatin1String("org.kde.akonadiconsole"),
+  if ( !s_resourcetracker && QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole") ) ) {
+    s_resourcetracker = new QDBusInterface( QLatin1String("org.kde.akonadiconsole"),
                                        QLatin1String("/resourcesJobtracker"),
                                        QLatin1String("org.freedesktop.Akonadi.JobTracker"),
                                        QDBusConnection::sessionBus(), 0 );
   }
 
-  if ( s_jobtracker ) {
+  if ( s_resourcetracker ) {
     QList<QVariant> argumentList;
     argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16)
                  << QString::number( task.serial )
                  << QString()
                  << QString::fromLatin1( taskType );
-    s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobCreated"), argumentList);
+    s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobCreated"), argumentList);
   }
 }
 
