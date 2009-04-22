@@ -39,11 +39,19 @@
 #else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
   include(FindLibraryWithDebug)
 
+  # have packageconfig set variables to find Soprano: 
+  # package config dirs are used as secondary search paths after install_dir
+  find_package(PkgConfig)
+  if (PKG_CONFIG_FOUND)
+    pkg_check_modules(Soprano_PKGCONF soprano)
+  endif()
+
   find_path(SOPRANO_INCLUDE_DIR 
     NAMES
     soprano/soprano.h
     PATHS
     ${INCLUDE_INSTALL_DIR}
+    ${Soprano_PKGCONF_INCLUDE_DIRS}
     )
 
   find_library_with_debug(SOPRANO_INDEX_LIBRARIES 
@@ -52,6 +60,7 @@
     sopranoindex
     PATHS
     ${LIB_INSTALL_DIR}
+    ${Soprano_PKGCONF_LIBRARY_DIRS}
     )
 
   find_library_with_debug(SOPRANO_CLIENT_LIBRARIES 
@@ -60,6 +69,7 @@
     sopranoclient
     PATHS
     ${LIB_INSTALL_DIR}
+    ${Soprano_PKGCONF_LIBRARY_DIRS}
     )
 
   find_library_with_debug(SOPRANO_LIBRARIES
@@ -67,6 +77,7 @@
     NAMES soprano
     PATHS
     ${LIB_INSTALL_DIR}
+    ${Soprano_PKGCONF_LIBRARY_DIRS}
   )
 
   find_library_with_debug(SOPRANO_SERVER_LIBRARIES 
@@ -75,6 +86,7 @@
     sopranoserver
     PATHS
     ${LIB_INSTALL_DIR}
+    ${Soprano_PKGCONF_LIBRARY_DIRS}
     )
 
   # check for all the libs as required to make sure that we do not try to compile with an old version
