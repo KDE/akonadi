@@ -94,7 +94,7 @@ void ResourceScheduler::scheduleChangeReplay()
   if ( mTaskList.contains( t ) )
     return;
   mTaskList << t;
-  signalTaskToTracker( t, "ChangeRelay" );
+  signalTaskToTracker( t, "ChangeReplay" );
   scheduleNext();
 }
 
