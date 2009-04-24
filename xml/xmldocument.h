@@ -71,7 +71,7 @@ class AKONADI_XML_EXPORT XmlDocument
     bool isValid() const;
 
     /**
-      Returns the last error occured during file loading/parsing.
+      Returns the last error occurred during file loading/parsing.
       Empty if isValid() returns @c true.
       @see isValid()
     */
