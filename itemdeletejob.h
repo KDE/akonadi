@@ -26,13 +26,14 @@
 
 namespace Akonadi {
 
+class Collection;
 class Item;
 class ItemDeleteJobPrivate;
 
 /**
- * @short Job that deletes an item from the Akonadi storage.
+ * @short Job that deletes items from the Akonadi storage.
  *
- * This job removes the given item from the Akonadi storage.
+ * This job removes the given items from the Akonadi storage.
  *
  * Example:
  *
@@ -41,11 +42,7 @@ class ItemDeleteJobPrivate;
  * Akonadi::Item item = ...
  *
  * ItemDeleteJob *job = new ItemDeleteJob( item );
- *
- * if ( job->exec() )
- *   qDebug() << "Item deleted successfully";
- * else
- *   qDebug() << "Error occurred";
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
  *
  * @endcode
  *
@@ -57,12 +54,36 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
 
   public:
     /**
-     * Creates a new item delete job.
+     * Creates a new item delete job that deletes @p item. The item
+     * needs to either have a unique identifier or a remote identifier
+     * set. In the latter case a collection or resource context needs
+     * to be selected (using CollectionSelectJob or ResourceSelectJob).
      *
      * @param item The item to delete.
      * @param parent The parent object.
      */
     explicit ItemDeleteJob( const Item &item, QObject *parent = 0 );
+
+    /**
+     * Creates a new item delete job that deletes all items in the list
+     * @p items. These items can be located in any collection. The same
+     * restrictions on item identifiers apply as in the constructor above.
+     *
+     * @param items The items to delete.
+     * @param parent The parent object.
+     */
+    explicit ItemDeleteJob( const QList<Item> &items, QObject *parent = 0 );
+
+    /**
+     * Creates a new item delete job that deletes all items in the collection
+     * @p collection. The collection needs to have either a unique identifier
+     * or a remote identifier set. In the latter case a resource context
+     * needs to be selected using ResourceSelectJob.
+     *
+     * @param collection The collection which content should be deleted.
+     * @param parent The parent object.
+     */
+    explicit ItemDeleteJob( const Collection &collection, QObject *parent = 0 );
 
     /**
      * Destroys the item delete job.
@@ -73,10 +94,9 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
     virtual void doStart();
 
   private:
-    Q_DECLARE_PRIVATE( ItemDeleteJob )
-
     //@cond PRIVATE
-    Q_PRIVATE_SLOT( d_func(), void jobDone( KJob* ) )
+    Q_DECLARE_PRIVATE( ItemDeleteJob )
+    Q_PRIVATE_SLOT( d_func(), void selectResult( KJob* ) )
     //@endcond
 };
 

@@ -87,9 +87,10 @@ class ItemBenchmark : public QObject
 
       QBENCHMARK
       {
-        lastJob = 0;
+        Item::List items;
         for ( int i = 0; i < count && !mCreatedItems.isEmpty(); ++i )
-          lastJob = new ItemDeleteJob( mCreatedItems.takeFirst(), this );
+          items << mCreatedItems.takeFirst();
+        lastJob = new ItemDeleteJob( items, this );
         if ( lastJob )
           QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
       }

@@ -18,42 +18,46 @@
 */
 
 #include "itemdeletejob.h"
-#include "itemmodifyjob.h"
+
+#include "collection.h"
+#include "collectionselectjob.h"
+#include "item.h"
 #include "job_p.h"
-#include "transactionsequence.h"
-#include "expungejob.h"
+
+#include <akonadi/private/imapparser_p.h>
+#include <akonadi/private/imapset_p.h>
+#include <akonadi/private/protocol_p.h>
+
+#include <KLocale>
+
+#include <boost/bind.hpp>
+#include <algorithm>
 
 using namespace Akonadi;
 
 class Akonadi::ItemDeleteJobPrivate : public JobPrivate
 {
   public:
-    enum State {
-      Begin,
-      Store,
-      Expunge,
-      Commit
-    };
-
     ItemDeleteJobPrivate( ItemDeleteJob *parent )
       : JobPrivate( parent )
     {
     }
 
-    void jobDone( KJob* );
+    void selectResult( KJob *job );
 
     Q_DECLARE_PUBLIC( ItemDeleteJob )
 
-    Item mItem;
-    State mState;
+    Item::List mItems;
+    Collection mCollection;
 };
 
-void ItemDeleteJobPrivate::jobDone( KJob * job )
+void ItemDeleteJobPrivate::selectResult( KJob *job )
 {
-  Q_Q( ItemDeleteJob );
+  if ( job->error() )
+    return; // KCompositeJob takes care of errors
 
-  if ( !job->error() ) // error is already handled by KCompositeJob
-    q->emitResult();
+  const QByteArray command = newTag() + " " AKONADI_CMD_ITEMDELETE " 1:*\n";
+  writeData( command );
 }
 
 ItemDeleteJob::ItemDeleteJob( const Item & item, QObject * parent )
@@ -61,8 +65,21 @@ ItemDeleteJob::ItemDeleteJob( const Item & item, QObject * parent )
 {
   Q_D( ItemDeleteJob );
 
-  d->mItem = item;
-  d->mState = ItemDeleteJobPrivate::Begin;
+  d->mItems << item;
+}
+
+ItemDeleteJob::ItemDeleteJob(const Item::List& items, QObject* parent)
+  : Job( new ItemDeleteJobPrivate( this ), parent )
+{
+  Q_D( ItemDeleteJob );
+  d->mItems = items;
+}
+
+ItemDeleteJob::ItemDeleteJob(const Collection& collection, QObject* parent)
+  : Job( new ItemDeleteJobPrivate( this ), parent )
+{
+  Q_D( ItemDeleteJob );
+  d->mCollection = collection;
 }
 
 ItemDeleteJob::~ItemDeleteJob()
@@ -73,16 +90,40 @@ void ItemDeleteJob::doStart()
 {
   Q_D( ItemDeleteJob );
 
-  TransactionSequence  *transaction = new TransactionSequence( this );
-  connect( transaction, SIGNAL(result(KJob*)), SLOT(jobDone(KJob*)) );
-  addSubjob( transaction );
+  if ( !d->mItems.isEmpty() ) {
+    QByteArray command = d->newTag();
+    std::sort( d->mItems.begin(), d->mItems.end(), boost::bind( &Item::id, _1 ) < boost::bind( &Item::id, _2 ) );
+    if ( d->mItems.first().isValid() ) {
+      // all items have a uid set
+      command += " " AKONADI_CMD_UID " " AKONADI_CMD_ITEMDELETE " ";
+      QList<Item::Id>  uids;
+      foreach ( const Item &item, d->mItems )
+        uids << item.id();
+      ImapSet set;
+      set.add( uids );
+      command += set.toImapSequenceSet();
+    } else {
+      // delete by remote identifier
+      foreach ( const Item &item, d->mItems ) {
+        if ( item.remoteId().isEmpty() ) {
+          setError( Unknown );
+          setErrorText( i18n( "No remote identifier specified" ) );
+          emitResult();
+          return;
+        }
+      }
 
-  d->mItem.setFlag( "\\Deleted" );
-  ItemModifyJob* store = new ItemModifyJob( d->mItem, transaction );
-  store->disableRevisionCheck();
-
-  new ExpungeJob( transaction );
-  transaction->commit();
+      command += " " AKONADI_CMD_RID " " AKONADI_CMD_ITEMDELETE " ";
+      Q_ASSERT( d->mItems.count() == 1 ); // TODO implement support for multiple items
+      command += ImapParser::quote( d->mItems.first().remoteId().toUtf8() );
+    }
+    command += '\n';
+    d->writeData( command );
+  } else {
+    CollectionSelectJob *job = new CollectionSelectJob( d->mCollection, this );
+    connect( job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)) );
+    addSubjob( job );
+  }
 }
 
 #include "itemdeletejob.moc"

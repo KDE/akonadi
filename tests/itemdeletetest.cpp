@@ -25,6 +25,7 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/transactionjobs.h>
+#include "test_utils.h"
 
 #include <QtCore/QObject>
 
@@ -54,10 +55,10 @@ class ItemDeleteTest : public QObject
     void testDelete()
     {
       ItemDeleteJob *djob = new ItemDeleteJob( Item( 1 ), this );
-      QVERIFY( djob->exec() );
+      AKVERIFYEXEC( djob );
 
       ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ), this );
-      fjob->exec();
+      AKVERIFYEXEC( fjob );
       QCOMPARE( fjob->items().count(), 0 );
     }
 
@@ -67,24 +68,44 @@ class ItemDeleteTest : public QObject
                            CollectionPathResolver::pathDelimiter() +
                            QLatin1String( "foo" );
       CollectionPathResolver *rjob = new CollectionPathResolver( path, this );
-      QVERIFY( rjob->exec() );
+      AKVERIFYEXEC( rjob );
 
       ItemFetchJob *fjob = new ItemFetchJob( Collection( rjob->collection() ), this );
-      QVERIFY( fjob->exec() );
+      AKVERIFYEXEC( fjob );
 
       const Item::List items = fjob->items();
       QVERIFY( items.count() > 0 );
 
       CollectionSelectJob *sjob = new CollectionSelectJob( Collection( 2 ), this );
-      QVERIFY( sjob->exec() );
+      AKVERIFYEXEC( sjob );
 
       ItemDeleteJob *djob = new ItemDeleteJob( items[ 0 ], this );
-      QVERIFY( djob->exec() );
+      AKVERIFYEXEC( djob );
 
       fjob = new ItemFetchJob( items[ 0 ], this );
-      fjob->exec();
+      AKVERIFYEXEC( fjob );
       QCOMPARE( fjob->items().count(), 0 );
     }
+
+    void testRidDelete()
+    {
+      const Collection col ( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( col.isValid() );
+
+      CollectionSelectJob *sel = new CollectionSelectJob( col );
+      AKVERIFYEXEC( sel );
+
+      Item i;
+      i.setRemoteId( "C" );
+      ItemDeleteJob *djob = new ItemDeleteJob( i, this );
+      AKVERIFYEXEC( djob );
+
+      ItemFetchJob *fjob = new ItemFetchJob( i, this );
+      fjob->setCollection( col );
+      AKVERIFYEXEC( fjob );
+      QCOMPARE( fjob->items().count(), 0 );
+    }
+
 };
 
 QTEST_AKONADIMAIN( ItemDeleteTest, NoGUI )
