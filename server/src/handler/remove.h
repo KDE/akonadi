@@ -17,36 +17,44 @@
     02110-1301, USA.
 */
 
-#include "resourceselect.h"
+#ifndef AKONADI_REMOVE_H
+#define AKONADI_REMOVE_H
 
-#include <akonadiconnection.h>
-#include <entities.h>
-#include <imapstreamparser.h>
+#include "handler.h"
+#include "scope.h"
 
-using namespace Akonadi;
+namespace Akonadi {
 
-ResourceSelect::ResourceSelect() :
-  Handler()
+/**
+  @ingroup akonadi_server_handler
+
+  Handler for the item deletion command.
+
+  <h4>Syntax</h4>
+  One of the following three:
+  @verbatim
+  <tag> REMOVE <uid-set>
+  <tag> UID REMOVE <uid-set>
+  <tag> RID REMOVE <remote-identifier>
+  @endverbatim
+
+  <h4>Semantics</h4>
+  Removes the selected items. Item selection can happen within the usual three scopes:
+  - based on a uid set relative to the currently selected collection
+  - based on a global uid set (UID)
+  - based on a remote identifier within the currently selected collection (RID)
+*/
+class  Remove : public Handler
 {
+  Q_OBJECT
+  public:
+    Remove( Scope::SelectionScope scope );
+    bool parseStream();
+
+  private:
+    Scope::SelectionScope mScope;
+};
+
 }
 
-bool ResourceSelect::parseStream()
-{
-  const QString resourceName = m_streamParser->readUtf8String();
-  if ( resourceName.isEmpty() ) {
-    connection()->setResourceContext( Resource() );
-    deleteLater();
-    return successResponse( "Resource deselected" );
-  }
-
-  const Resource res = Resource::retrieveByName( resourceName );
-  if ( !res.isValid() )
-    throw HandlerException( resourceName.toUtf8() + " is not a valid resource identifier" );
-
-  connection()->setResourceContext( res );
-
-  deleteLater();
-  return successResponse( resourceName.toUtf8() + " selected" );
-}
-
-#include "resourceselect.moc"
+#endif

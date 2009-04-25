@@ -24,10 +24,12 @@
 
 #include "aklist.h"
 #include "fetch.h"
+#include "remove.h"
 #include "select.h"
 #include "store.h"
 
 #include "imapstreamparser.h"
+#include "libs/protocol_p.h"
 
 #include <QDebug>
 
@@ -53,7 +55,7 @@ bool Uid::parseStream()
     const QByteArray subCommand = m_streamParser->readString().toUpper();
 
     mSubHandler = 0;
-    if ( subCommand == "FETCH" )
+    if ( subCommand == AKONADI_CMD_ITEMFETCH )
       mSubHandler = new Fetch( mScope );
     else if ( subCommand == "STORE" )
       mSubHandler = new Store( true );
@@ -63,6 +65,8 @@ bool Uid::parseStream()
       mSubHandler = new AkList( mScope, false );
     else if ( subCommand == "X-AKLSUB" )
       mSubHandler = new AkList( mScope, true );
+    else if ( subCommand == AKONADI_CMD_ITEMDELETE )
+      mSubHandler = new Remove ( mScope );
 
     if ( !mSubHandler )
       throw HandlerException( "Unknown UID/RID subcommand" );

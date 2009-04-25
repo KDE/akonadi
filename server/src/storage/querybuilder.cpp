@@ -88,7 +88,8 @@ QueryBuilder::QueryBuilder( QueryType type ) :
 
 void QueryBuilder::addTable(const QString & table)
 {
-  mTables << table;
+  if ( !mTables.contains( table ) )
+    mTables << table;
 }
 
 void QueryBuilder::addValueCondition(const QString & column, Query::CompareOperator op, const QVariant & value)

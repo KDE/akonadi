@@ -92,6 +92,7 @@ set(libakonadiprivate_SRCS
   src/handler/logout.cpp
   src/handler/modify.cpp
   src/handler/noop.cpp
+  src/handler/remove.cpp
   src/handler/rename.cpp
   src/handler/resourceselect.cpp
   src/handler/searchhelper.cpp

@@ -44,6 +44,7 @@
 #include "handler/logout.h"
 #include "handler/modify.h"
 #include "handler/noop.h"
+#include "handler/remove.h"
 #include "handler/rename.h"
 #include "handler/resourceselect.h"
 #include "handler/searchpersistent.h"
@@ -159,6 +160,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new Link( false );
     if ( command == AKONADI_CMD_RESOURCESELECT )
       return new ResourceSelect();
+    if ( command == AKONADI_CMD_ITEMDELETE )
+      return new Remove( Scope::None );
 
     return 0;
 }
