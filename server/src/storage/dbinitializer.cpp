@@ -325,28 +325,7 @@ QString DbInitializer::sqlType(const QString & type)
 
 bool DbInitializer::hasTable(const QString & tableName)
 {
-  QString statement;
-  if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) )
-    statement = QLatin1String("SELECT tablename FROM pg_tables ORDER BY tablename;" );
-  else if ( mDatabase.driverName() == QLatin1String( "QSQLITE" ) )
-    statement = QLatin1String("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;");
-  else if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) )
-    statement = QLatin1String("SHOW TABLES");
-  else
-    Q_ASSERT( false ); // unknown driver
-
-  QSqlQuery query( mDatabase );
-  if ( !query.exec( statement ) ) {
-    mErrorMsg = QLatin1String( "Unable to retrieve table information from database.\n" );
-    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
-    return false;
-  }
-
-  while ( query.next() ) {
-    if ( query.value( 0 ).toString().toLower() == tableName.toLower() )
-      return true;
-  }
-  return false;
+   return mDatabase.tables().contains( tableName, Qt::CaseInsensitive );
 }
 
 bool DbInitializer::hasIndex(const QString & tableName, const QString & indexName)
