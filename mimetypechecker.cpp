@@ -63,6 +63,11 @@ void MimeTypeChecker::addWantedMimeType( const QString &mimeType )
   d->mWantedMimeTypes.insert( mimeType );
 }
 
+void MimeTypeChecker::removeWantedMimeType(const QString &mimeType )
+{
+  d->mWantedMimeTypes.remove( mimeType ); 
+}
+
 bool MimeTypeChecker::isWantedItem( const Item &item ) const
 {
   if ( d->mWantedMimeTypes.isEmpty() || !item.isValid() )

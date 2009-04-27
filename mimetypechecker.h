@@ -157,6 +157,15 @@ class AKONADI_EXPORT MimeTypeChecker
     void addWantedMimeType( const QString &mimeType );
 
     /**
+     * Removes a MIME type from the list of wanted MIME types this instance checks against.
+     *
+     * @param mimeType The MIME type to remove from the checklist.
+     *
+     * @see addWantedMimeType()
+     */
+    void removeWantedMimeType(const QString &mimeType );
+
+    /**
      * Checks whether a given @p item has one of the wanted MIME types
      *
      * @param item The item to check the MIME type of.
