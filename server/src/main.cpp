@@ -1,6 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Till Adam   *
- *   adam@kde.org   *
+ *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -15,7 +14,7 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
 
