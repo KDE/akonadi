@@ -46,18 +46,31 @@ class ResourceSelectJobPrivate;
  * // Find out the akonadi id of the item with the remote id 'd1627013c6d5a2e7bb58c12560c27047'
  * // that is stored in the resource with identifier 'my_mail_resource'
  *
- * Session *resourceSession = new Session( "resourceSession" );
+ * Session *m_resourceSession = new Session( "resourceSession" );
  *
  * ResourceSelectJob *job = new ResourceSelectJob( "my_mail_resource", resourceSession );
  *
- * if ( job->exec() ) {
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( resourceSelected( KJob* ) ) );
+ * ...
+ *
+ * void resourceSelected( KJob *job )
+ * {
+ *   if ( job->error() )
+ *     return;
+ *
  *   Item item;
  *   item.setRemoteIdentifier( "d1627013c6d5a2e7bb58c12560c27047" );
  *
- *   ItemFetchJob *fetchJob = new ItemFetchJob( fetchJob, resourceSession );
- *   fetchJob->exec();
+ *   ItemFetchJob *fetchJob = new ItemFetchJob( item, m_resourceSession );
+ *   connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( itemFetched( KJob* ) ) );
+ * }
  *
- *   item = fetchJob->items().first();
+ * void itemFetched( KJob *job )
+ * {
+ *   if ( job->error() )
+ *     return;
+ *
+ *   const Item item = job->items().first();
  *
  *   qDebug() << "Remote id" << item.remoteId() << "has akonadi id" << item.id();
  * }
