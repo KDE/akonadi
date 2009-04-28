@@ -37,6 +37,33 @@ class ResourceSelectJobPrivate;
  * based operations ( e.g. fetch items or collections by remote identifier ) are
  * executed.
  *
+ * Example:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * // Find out the akonadi id of the item with the remote id 'd1627013c6d5a2e7bb58c12560c27047'
+ * // that is stored in the resource with identifier 'my_mail_resource'
+ *
+ * Session *resourceSession = new Session( "resourceSession" );
+ *
+ * ResourceSelectJob *job = new ResourceSelectJob( "my_mail_resource", resourceSession );
+ *
+ * if ( job->exec() ) {
+ *   Item item;
+ *   item.setRemoteIdentifier( "d1627013c6d5a2e7bb58c12560c27047" );
+ *
+ *   ItemFetchJob *fetchJob = new ItemFetchJob( fetchJob, resourceSession );
+ *   fetchJob->exec();
+ *
+ *   item = fetchJob->items().first();
+ *
+ *   qDebug() << "Remote id" << item.remoteId() << "has akonadi id" << item.id();
+ * }
+ *
+ * @endcode
+ *
  * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_TESTS_EXPORT ResourceSelectJob : public Job
@@ -47,7 +74,8 @@ class AKONADI_TESTS_EXPORT ResourceSelectJob : public Job
      * Selects the specified resource for all following remote identifier
      * based operations in the same session.
      *
-     * @param identifier The resource identifier.
+     * @param identifier The resource identifier, or any empty string to reset
+     *                   the selection.
      * @param parent The parent object.
      */
     explicit ResourceSelectJob( const QString &identifier, QObject *parent = 0 );
