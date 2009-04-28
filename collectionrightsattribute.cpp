@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionrightsattribute.h"
+#include "collectionrightsattribute_p.h"
 
 using namespace Akonadi;
 

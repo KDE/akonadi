@@ -27,7 +27,7 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
-#include <akonadi/collectionrightsattribute.h>
+#include <akonadi/collectionrightsattribute_p.h>
 #include <akonadi/control.h>
 
 #include <qtest_akonadi.h>

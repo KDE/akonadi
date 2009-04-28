@@ -20,6 +20,8 @@
 #ifndef AKONADI_RESOURCESELECTJOB_H
 #define AKONADI_RESOURCESELECTJOB_H
 
+#include "akonadiprivate_export.h"
+
 #include <akonadi/job.h>
 
 namespace Akonadi {
@@ -27,26 +29,36 @@ namespace Akonadi {
 class ResourceSelectJobPrivate;
 
 /**
-  Selects a resource context for remote identifier based operations.
-  @internal
-*/
-class AKONADI_EXPORT ResourceSelectJob : public Job
+ * @internal
+ *
+ * @short Job that selects a resource context for remote identifier based operations.
+ *
+ * This job selects a resource context that is used whenever remote identifier
+ * based operations ( e.g. fetch items or collections by remote identifier ) are
+ * executed.
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ */
+class AKONADI_TESTS_EXPORT ResourceSelectJob : public Job
 {
   Q_OBJECT
   public:
     /**
-      Selects the the spcified resource for all following remote identifier
-      based operations in the same session.
-      @param identifier The resource identifier.
-      @param parent The parent object.
-    */
+     * Selects the specified resource for all following remote identifier
+     * based operations in the same session.
+     *
+     * @param identifier The resource identifier.
+     * @param parent The parent object.
+     */
     explicit ResourceSelectJob( const QString &identifier, QObject *parent = 0 );
 
   protected:
     void doStart();
 
   private:
+    //@cond PRIVATE
     Q_DECLARE_PRIVATE( ResourceSelectJob )
+    //@endcond PRIVATE
 };
 
 }

@@ -28,6 +28,8 @@
 namespace Akonadi {
 
 /**
+ * @internal
+ *
  * @short Attribute that stores the rights of a collection.
  *
  * Every collection can have rights set which describes whether

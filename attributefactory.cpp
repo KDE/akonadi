@@ -19,7 +19,7 @@
 
 #include "attributefactory.h"
 
-#include "collectionrightsattribute.h"
+#include "collectionrightsattribute_p.h"
 #include "entitydisplayattribute.h"
 
 #include <KGlobal>

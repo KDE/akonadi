@@ -22,7 +22,7 @@
 
 #include "attributefactory.h"
 #include "cachepolicy.h"
-#include "collectionrightsattribute.h"
+#include "collectionrightsattribute_p.h"
 #include "collectionstatistics.h"
 #include "entity_p.h"
 
