@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "pastehelper.h"
+#include "pastehelper_p.h"
 
 #include "collectioncopyjob.h"
 #include "collectionmodifyjob.h"

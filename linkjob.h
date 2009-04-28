@@ -34,6 +34,24 @@ class LinkJobPrivate;
  * This job allows you to create references to a set of items in a virtual
  * collection.
  *
+ * Example:
+ *
+ * @code
+ *
+ * // Links the given items to the given virtual collection
+ * const Akonadi::Collection virtualCollection = ...
+ * const Akonadi::Item::List items = ...
+ *
+ * Akonadi::LinkJob *job = new Akonadi::LinkJob( virtualCollection, items );
+ *
+ * if ( job->exec() ) {
+ *   qDebug() << "Linked items successfully";
+ * } else {
+ *   qDebug() << "Error occurred";
+ * }
+ *
+ * @endcode
+ *
  * @author Volker Krause <vkrause@kde.org>
  * @since 4.2
  * @see UnlinkJob

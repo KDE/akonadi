@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "resourcescheduler.h"
+#include "resourcescheduler_p.h"
 
 #include <kdebug.h>
 
@@ -216,4 +216,4 @@ void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray 
 
 //@endcond
 
-#include "resourcescheduler.moc"
+#include "resourcescheduler_p.moc"

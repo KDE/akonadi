@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "firstrun.h"
+#include "firstrun_p.h"
 
 #include <KComponentData>
 #include <QApplication>

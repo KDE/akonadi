@@ -21,7 +21,7 @@
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/item.h>
-#include <akonadi/itemserializer.h>
+#include <akonadi/itemserializer_p.h>
 
 #include <qtest_kde.h>
 

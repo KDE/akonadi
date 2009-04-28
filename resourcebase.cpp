@@ -23,9 +23,9 @@
 
 #include "resourceadaptor.h"
 #include "collectiondeletejob.h"
-#include "collectionsync.h"
+#include "collectionsync_p.h"
 #include "itemsync.h"
-#include "resourcescheduler.h"
+#include "resourcescheduler_p.h"
 #include "tracerinterface.h"
 #include "xdgbasedirs_p.h"
 
@@ -37,7 +37,7 @@
 #include "itemmodifyjob.h"
 #include "itemmodifyjob_p.h"
 #include "session.h"
-#include "resourceselectjob.h"
+#include "resourceselectjob_p.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>

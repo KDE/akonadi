@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "firstrun.h"
+#include "firstrun_p.h"
 
 #include <akonadi/agenttype.h>
 #include <akonadi/agentmanager.h>
@@ -253,4 +253,4 @@ QVariant::Type Firstrun::argumentType( const QMetaObject *mo, const QString &met
   return QVariant::nameToType( argTypes.first() );
 }
 
-#include "firstrun.moc"
+#include "firstrun_p.moc"

@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionsync.h"
+#include "collectionsync_p.h"
 #include "collection.h"
 
 #include "collectioncreatejob.h"
@@ -218,4 +218,4 @@ void CollectionSync::slotLocalChangeDone(KJob * job)
   checkDone();
 }
 
-#include "collectionsync.moc"
+#include "collectionsync_p.moc"

@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "subscriptionmodel.h"
+#include "subscriptionmodel_p.h"
 #include "collectionfetchjob.h"
 #include "collectionutils_p.h"
 
@@ -146,4 +146,4 @@ Collection::List SubscriptionModel::unsubscribed() const
   return d->changedSubscriptions( false );
 }
 
-#include "subscriptionmodel.moc"
+#include "subscriptionmodel_p.moc"

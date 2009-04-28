@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#include "subscriptionchangeproxymodel.h"
-#include "subscriptionmodel.h"
+#include "subscriptionchangeproxymodel_p.h"
+#include "subscriptionmodel_p.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -75,4 +75,4 @@ QVariant SubscriptionChangeProxyModel::headerData(int section, Qt::Orientation o
   return QSortFilterProxyModel::headerData( section, orientation, role );
 }
 
-#include "subscriptionchangeproxymodel.moc"
+#include "subscriptionchangeproxymodel_p.moc"

@@ -20,9 +20,9 @@
 #include "collectionpropertiesdialog.h"
 
 #include "cachepolicy.h"
-#include "cachepolicypage.h"
+#include "cachepolicypage_p.h"
 #include "collection.h"
-#include "collectiongeneralpropertiespage.h"
+#include "collectiongeneralpropertiespage_p.h"
 #include "collectionmodifyjob.h"
 
 #include <kdebug.h>

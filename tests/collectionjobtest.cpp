@@ -30,7 +30,7 @@
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
-#include "collectionselectjob.h"
+#include "collectionselectjob_p.h"
 #include "collectionstatistics.h"
 #include "collectionstatisticsjob.h"
 #include "collectionpathresolver_p.h"

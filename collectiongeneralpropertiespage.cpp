@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectiongeneralpropertiespage.h"
+#include "collectiongeneralpropertiespage_p.h"
 
 #include "collection.h"
 #include "entitydisplayattribute.h"
@@ -81,4 +81,4 @@ void CollectionGeneralPropertiesPage::save(Collection & collection)
 
 //@endcond
 
-#include "collectiongeneralpropertiespage.moc"
+#include "collectiongeneralpropertiespage_p.moc"

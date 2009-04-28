@@ -163,7 +163,7 @@ class AKONADI_EXPORT MimeTypeChecker
      *
      * @see addWantedMimeType()
      */
-    void removeWantedMimeType(const QString &mimeType );
+    void removeWantedMimeType( const QString &mimeType );
 
     /**
      * Checks whether a given @p item has one of the wanted MIME types

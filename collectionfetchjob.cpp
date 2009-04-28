@@ -22,7 +22,7 @@
 #include "imapparser_p.h"
 #include "job_p.h"
 #include "protocol_p.h"
-#include "protocolhelper.h"
+#include "protocolhelper_p.h"
 #include "entity_p.h"
 
 #include <kdebug.h>

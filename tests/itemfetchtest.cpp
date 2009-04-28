@@ -27,7 +27,7 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/resourceselectjob.h>
+#include <akonadi/resourceselectjob_p.h>
 
 using namespace Akonadi;
 

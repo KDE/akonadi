@@ -34,6 +34,24 @@ class UnlinkJobPrivate;
  * This job allows you to remove references to a set of items in a virtual
  * collection.
  *
+ * Example:
+ *
+ * @code
+ *
+ * // Unlink the given items from the given collection
+ * const Akonadi::Collection virtualCollection = ...
+ * const Akonadi::Item::List items = ...
+ *
+ * Akonadi::UnlinkJob *job = new Akonadi::UnlinkJob( virtualCollection, items );
+ *
+ * if ( job->exec() ) {
+ *   qDebug() << "Unlinked items successfully";
+ * } else {
+ *   qDebug() << "Error occurred";
+ * }
+ *
+ * @endcode
+ *
  * @author Volker Krause <vkrause@kde.org>
  * @since 4.2
  * @see LinkJob

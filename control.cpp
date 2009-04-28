@@ -22,7 +22,7 @@
 #include "ui_controlprogressindicator.h"
 #include "selftestdialog_p.h"
 #include "erroroverlay_p.h"
-#include "firstrun.h"
+#include "firstrun_p.h"
 
 #include <kdebug.h>
 #include <kglobal.h>

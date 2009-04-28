@@ -30,34 +30,37 @@ class SubscriptionJobPrivate;
 /**
  * @internal
  *
- * Job to manipulate the local subscription state of a set of collections.
+ * @short Job to manipulate the local subscription state of a set of collections.
  */
 class AKONADI_EXPORT SubscriptionJob : public Job
 {
   Q_OBJECT
   public:
     /**
-      Create a new subscription job.
-      @param parent The parent object.
-    */
+     * Creates a new subscription job.
+     *
+     * @param parent The parent object.
+     */
     explicit SubscriptionJob( QObject *parent = 0 );
 
     /**
-      Destroys this job.
-    */
+     * Destroys the subscription job.
+     */
     ~SubscriptionJob();
 
     /**
-      Subscribe to the given list of collections.
-      @param list List of collections to subscribe to.
-    */
-    void subscribe( const Collection::List &list );
+     * Subscribes to the given list of collections.
+     *
+     * @param collections List of collections to subscribe to.
+     */
+    void subscribe( const Collection::List &collections );
 
     /**
-      Unsubscribe from the given list of collections.
-      @param list List of collections to unsubscribe from.
-    */
-    void unsubscribe( const Collection::List &list );
+     * Unsubscribes from the given list of collections.
+     *
+     * @param collections List of collections to unsubscribe from.
+     */
+    void unsubscribe( const Collection::List &collections );
 
   protected:
     void doStart();

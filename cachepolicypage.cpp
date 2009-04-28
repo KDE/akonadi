@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "cachepolicypage.h"
+#include "cachepolicypage_p.h"
 
 #include "cachepolicy.h"
 #include "collection.h"
@@ -93,4 +93,4 @@ void CachePolicyPage::slotCacheValueChanged( int i )
 
 //@endcond
 
-#include "cachepolicypage.moc"
+#include "cachepolicypage_p.moc"

@@ -20,7 +20,7 @@
 #include <qtest_akonadi.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionpathresolver_p.h>
-#include <akonadi/collectionselectjob.h>
+#include <akonadi/collectionselectjob_p.h>
 #include <akonadi/control.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>

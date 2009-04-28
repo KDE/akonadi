@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "flatcollectionproxymodel.h"
+#include "flatcollectionproxymodel_p.h"
 
 #include <kdebug.h>
 
@@ -161,4 +161,4 @@ QVariant FlatCollectionProxyModel::data(const QModelIndex & index, int role) con
   return QAbstractProxyModel::data( index, role );
 }
 
-#include "flatcollectionproxymodel.moc"
+#include "flatcollectionproxymodel_p.moc"

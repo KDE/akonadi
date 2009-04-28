@@ -27,8 +27,8 @@
 #include "collectionpropertiesdialog.h"
 #include "itemdeletejob.h"
 #include "itemmodel.h"
-#include "pastehelper.h"
-#include "subscriptiondialog.h"
+#include "pastehelper_p.h"
+#include "subscriptiondialog_p.h"
 
 #include <KAction>
 #include <KActionCollection>

@@ -23,9 +23,9 @@
 #include "collection.h"
 #include "imapparser_p.h"
 #include "item.h"
-#include "itemserializer.h"
+#include "itemserializer_p.h"
 #include "job_p.h"
-#include "protocolhelper.h"
+#include "protocolhelper_p.h"
 
 #include <QtCore/QDateTime>
 

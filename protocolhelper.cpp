@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "protocolhelper.h"
+#include "protocolhelper_p.h"
 
 #include "attributefactory.h"
 #include "imapparser_p.h"

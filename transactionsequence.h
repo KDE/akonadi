@@ -38,6 +38,23 @@ class TransactionSequencePrivate;
  * Alternatively, a TransactionSequence object can be used as a parent object
  * for a set of jobs to achieve the same behaviour without subclassing.
  *
+ * Example:
+ *
+ * @code
+ *
+ * // Delete a couple of items inside a transaction
+ * Akonadi::TransactionSequence *transaction = new TransactionSequence;
+ *
+ * const Akonadi::Item::List items = ...
+ *
+ * foreach ( const Akonadi::Item &item, items ) {
+ *   new Akonadi::ItemDeleteJob( item, transaction );
+ * }
+ *
+ * transaction->exec();
+ *
+ * @endcode
+ *
  * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT TransactionSequence : public Job

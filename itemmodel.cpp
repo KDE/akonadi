@@ -22,7 +22,7 @@
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "monitor.h"
-#include "pastehelper.h"
+#include "pastehelper_p.h"
 #include "session.h"
 
 #include <kmime/kmime_message.h>

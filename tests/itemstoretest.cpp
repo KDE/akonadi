@@ -25,13 +25,13 @@
 #include <akonadi/agentinstance.h>
 #include <akonadi/attributefactory.h>
 #include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionselectjob.h>
+#include <akonadi/collectionselectjob_p.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
-#include <akonadi/resourceselectjob.h>
+#include <akonadi/resourceselectjob_p.h>
 #include <qtest_akonadi.h>
 #include "test_utils.h"
 

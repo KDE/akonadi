@@ -22,7 +22,7 @@
 #include <akonadi/control.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
-#include <akonadi/subscriptionjob.h>
+#include <akonadi/subscriptionjob_p.h>
 
 #include <QtCore/QObject>
 

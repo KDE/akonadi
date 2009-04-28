@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionselectjob.h"
+#include "collectionselectjob_p.h"
 
 #include "job_p.h"
 #include "protocol_p.h"
@@ -104,4 +104,4 @@ void CollectionSelectJob::setRetrieveStatus(bool status)
 }
 
 
-#include "collectionselectjob.moc"
+#include "collectionselectjob_p.moc"

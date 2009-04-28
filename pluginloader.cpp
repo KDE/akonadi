@@ -17,7 +17,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "pluginloader.h"
+#include "pluginloader_p.h"
 
 #include <kconfiggroup.h>
 #include <kdebug.h>

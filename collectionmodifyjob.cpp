@@ -20,7 +20,7 @@
 #include "collectionmodifyjob.h"
 #include "imapparser_p.h"
 #include "job_p.h"
-#include "protocolhelper.h"
+#include "protocolhelper_p.h"
 #include "collectionstatistics.h"
 #include "collection_p.h"
 

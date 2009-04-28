@@ -19,7 +19,7 @@
 
 #include "item.h"
 #include "item_p.h"
-#include "itemserializer.h"
+#include "itemserializer_p.h"
 #include "protocol_p.h"
 
 #include <kurl.h>

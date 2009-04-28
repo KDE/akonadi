@@ -22,12 +22,12 @@
 
 #include "akonadi_export.h"
 
+#include <akonadi/item.h>
 #include <akonadi/job.h>
 
 namespace Akonadi {
 
 class Collection;
-class Item;
 class ItemDeleteJobPrivate;
 
 /**
@@ -39,10 +39,21 @@ class ItemDeleteJobPrivate;
  *
  * @code
  *
- * Akonadi::Item item = ...
+ * const Akonadi::Item item = ...
  *
  * ItemDeleteJob *job = new ItemDeleteJob( item );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
+ * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deletionResult( KJob* ) ) );
+ *
+ * @endcode
+ *
+ * Example:
+ *
+ * @code
+ *
+ * const Akonadi::Item::List items = ...
+ *
+ * ItemDeleteJob *job = new ItemDeleteJob( items );
+ * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deletionResult( KJob* ) ) );
  *
  * @endcode
  *
@@ -71,8 +82,10 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
      *
      * @param items The items to delete.
      * @param parent The parent object.
+     *
+     * @since 4.3
      */
-    explicit ItemDeleteJob( const QList<Item> &items, QObject *parent = 0 );
+    explicit ItemDeleteJob( const Item::List &items, QObject *parent = 0 );
 
     /**
      * Creates a new item delete job that deletes all items in the collection
@@ -82,6 +95,8 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
      *
      * @param collection The collection which content should be deleted.
      * @param parent The parent object.
+     *
+     * @since 4.3
      */
     explicit ItemDeleteJob( const Collection &collection, QObject *parent = 0 );
 

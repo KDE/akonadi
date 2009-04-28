@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "resourceselectjob.h"
+#include "resourceselectjob_p.h"
 
 #include "imapparser_p.h"
 #include "job_p.h"
@@ -51,4 +51,4 @@ void ResourceSelectJob::doStart()
   emitWriteFinished();
 }
 
-#include "resourceselectjob.moc"
+#include "resourceselectjob_p.moc"

@@ -24,7 +24,7 @@
 #include "collectionmodifyjob.h"
 #include "entitydisplayattribute.h"
 #include "monitor.h"
-#include "pastehelper.h"
+#include "pastehelper_p.h"
 #include "session.h"
 
 #include <kdebug.h>

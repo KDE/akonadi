@@ -17,12 +17,13 @@
     02110-1301, USA.
 */
 
-#include "subscriptiondialog.h"
+#include "subscriptiondialog_p.h"
+
 #include "ui_subscriptiondialog.h"
-#include "subscriptionmodel.h"
-#include "subscriptionjob.h"
-#include "subscriptionchangeproxymodel.h"
-#include "flatcollectionproxymodel.h"
+#include "subscriptionmodel_p.h"
+#include "subscriptionjob_p.h"
+#include "subscriptionchangeproxymodel_p.h"
+#include "flatcollectionproxymodel_p.h"
 #include "control.h"
 
 #include <kdebug.h>
@@ -124,4 +125,4 @@ SubscriptionDialog::~ SubscriptionDialog()
   delete d;
 }
 
-#include "subscriptiondialog.moc"
+#include "subscriptiondialog_p.moc"

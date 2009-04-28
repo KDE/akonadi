@@ -211,7 +211,6 @@ install( FILES
   monitor.h
   qtest_akonadi.h
   resourcebase.h
-  resourceselectjob.h
   searchcreatejob.h
   session.h
   servermanager.h

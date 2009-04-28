@@ -36,15 +36,19 @@ class AKONADI_EXPORT SubscriptionDialog : public KDialog
   Q_OBJECT
   public:
     /**
-      Create a new subscription dialog.
-      @param parent The parent widget.
-    */
+     * Creates a new subscription dialog.
+     *
+     * @param parent The parent widget.
+     */
     explicit SubscriptionDialog( QWidget *parent = 0 );
 
     /**
-      Destructor, don't call manually. The dialog will be destructed automatically
-      as soon as all changes are written back to the server.
-    */
+     * Destroys the subscription dialog.
+     *
+     * @note Don't call the destructor manually, the dialog will
+     *       be destructed automatically as soon as all changes
+     *       are written back to the server.
+     */
     ~SubscriptionDialog();
 
   private:

@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-#include "itemserializer.h"
+#include "itemserializer_p.h"
 #include "item.h"
 #include "itemserializerplugin.h"
 #include "attributefactory.h"
@@ -37,7 +37,7 @@
 #include <QtCore/QStringList>
 
 // temporary
-#include "pluginloader.h"
+#include "pluginloader_p.h"
 
 
 

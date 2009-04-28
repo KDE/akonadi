@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "expungejob.h"
+#include "expungejob_p.h"
 
 #include "job_p.h"
 
@@ -46,4 +46,4 @@ void ExpungeJob::doStart()
   d_ptr->writeData( d_ptr->newTag() + " EXPUNGE\n" );
 }
 
-#include "expungejob.moc"
+#include "expungejob_p.moc"

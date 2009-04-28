@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "subscriptionjob.h"
+#include "subscriptionjob_p.h"
 
 #include "job_p.h"
 
@@ -33,8 +33,6 @@ class Akonadi::SubscriptionJobPrivate : public JobPrivate
 
     void sendCommand( const QByteArray &cmd, const Collection::List &list )
     {
-      Q_Q( SubscriptionJob );
-
       mTag = newTag();
       QByteArray line = mTag + ' ' + cmd;
       foreach ( const Collection &col, list )
@@ -112,4 +110,4 @@ void SubscriptionJob::doHandleResponse(const QByteArray &_tag, const QByteArray 
   }
 }
 
-#include "subscriptionjob.moc"
+#include "subscriptionjob_p.moc"

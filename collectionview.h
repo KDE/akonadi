@@ -81,6 +81,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      * @param parent The parent widget.
      */
     explicit KDE_DEPRECATED CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
+
     /**
      * Creates a new collection view.
      *
