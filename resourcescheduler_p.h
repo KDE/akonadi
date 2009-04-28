@@ -139,6 +139,11 @@ class ResourceScheduler : public QObject
     */
     void taskDone();
 
+    /**
+      The current task can't be finished now and will be rescheduled later
+    */
+    void deferTask();
+
   Q_SIGNALS:
     void executeFullSync();
     void executeCollectionSync( const Akonadi::Collection &col );

@@ -396,6 +396,12 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void cancelTask( const QString &error );
 
     /**
+     * Stops the execution of the current task and continues with the next one.
+     * The current task will be tried again later.
+     */
+    void deferTask();
+
+    /**
      * Inherited from AgentBase.
      */
     void doSetOnline( bool online );

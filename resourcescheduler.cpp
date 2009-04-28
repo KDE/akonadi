@@ -123,6 +123,23 @@ void ResourceScheduler::taskDone()
   scheduleNext();
 }
 
+void ResourceScheduler::deferTask()
+{
+  if ( s_resourcetracker ) {
+    QList<QVariant> argumentList;
+    argumentList << QString::number( mCurrentTask.serial )
+                 << QString();
+    s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+  }
+
+  Task t = mCurrentTask;
+  mCurrentTask = Task();
+  mTaskList << t;
+  signalTaskToTracker( t, "DeferedTask" );
+
+  scheduleNext();
+}
+
 bool ResourceScheduler::isEmpty()
 {
   return mTaskList.isEmpty();

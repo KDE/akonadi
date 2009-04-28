@@ -474,6 +474,12 @@ void ResourceBase::cancelTask( const QString &msg )
   emit error( msg );
 }
 
+void ResourceBase::deferTask()
+{
+  Q_D( ResourceBase );
+  d->scheduler->deferTask();
+}
+
 void ResourceBase::doSetOnline( bool state )
 {
   d_func()->scheduler->setOnline( state );
