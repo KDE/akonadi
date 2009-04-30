@@ -1,16 +1,3 @@
-# disable MySQL/Embedded plugin for now since it is unused and causes linker problems on Debian based 64bit systems
-# macro_optional_find_package(MySQL)
-# macro_log_feature(MYSQL_EMBEDDED_FOUND "mysql-embedded" "MySQL/Embedded Library" "http://www.mysql.org" FALSE "" "Needed for the MySQL/Embedded Akonadi backend. Sqlite will be used instead.")
-#
-# macro_optional_find_package(OpenSSL)
-# macro_log_feature(OPENSSL_FOUND "OpenSSL" "A toolkit implementing the Secure Sockets Layer (SSL v2/v3) and Transport Layer Security (TLS v1) protocols" "http://openssl.org" FALSE "" "Required for building the Akonadi SQL plugin with MySQL embedded.")
-
-
-# according to akonadi/CMakeLists.txt still cmake 2.4.5 is required,
-# which doesn't have this command, so only do it if it exists. Alex
-if(COMMAND cmake_policy)
-   cmake_policy(SET CMP0003 NEW)
-endif(COMMAND cmake_policy)
 
 find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /opt/mysql/libexec )
 if( MYSQLD_EXECUTABLE)
@@ -20,8 +7,8 @@ else ( MYSQLD_EXECUTABLE )
 endif( MYSQLD_EXECUTABLE )
 
 include_directories( ${Boost_INCLUDE_DIR} )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../libs )
-include_directories( ${CMAKE_CURRENT_BINARY_DIR}/../libs )
+include_directories( ${Akonadi_SOURCE_DIR}/libs )
+include_directories( ${Akonadi_BINARY_DIR}/libs )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/search )
@@ -141,13 +128,13 @@ set(libakonadiprivate_SRCS
 qt4_generate_dbus_interface( src/debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml )
 
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
 )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
+qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
 qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml debuginterface.h DebugInterface )
 
-qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.AgentManager.xml ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.Resource.xml )
+qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManager.xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.Search.xml searchinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.SearchQuery.xml searchqueryinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface )
@@ -181,8 +168,8 @@ target_link_libraries( akonadiprivate
 )
 
 set_target_properties( akonadiprivate PROPERTIES
-                        VERSION ${AKONADI_LIB_VERSION_STRING}
-                        SOVERSION ${AKONADI_LIB_MAJOR_VERSION}
+                        VERSION ${AKONADI_VERSION}
+                        SOVERSION ${AKONADI_MAJOR_VERSION}
                         DEFINE_SYMBOL MAKE_AKONADIPRIVATE_LIB
                       )
 

@@ -1,11 +1,5 @@
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${_ENABLE_EXCEPTIONS}" )
 
-# according to akonadi/CMakeLists.txt still cmake 2.4.5 is required,
-# which doesn't have this command, so only do it if it exists. Alex
-if(COMMAND cmake_policy)
-   cmake_policy(SET CMP0003 NEW)
-endif(COMMAND cmake_policy)
-
 # libakonadiprotocolinternals
 set( akonadiprotocolinternals_srcs
   imapparser.cpp
@@ -18,8 +12,8 @@ add_library( akonadiprotocolinternals SHARED ${akonadiprotocolinternals_srcs} )
 
 target_link_libraries( akonadiprotocolinternals ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
 set_target_properties( akonadiprotocolinternals PROPERTIES
-                        VERSION ${AKONADI_LIB_VERSION_STRING}
-                        SOVERSION ${AKONADI_LIB_MAJOR_VERSION}
+                        VERSION ${AKONADI_VERSION}
+                        SOVERSION ${AKONADI_MAJOR_VERSION}
                         DEFINE_SYMBOL MAKE_AKONADIPROTOCOLINTERNALS_LIB
                       )
 
