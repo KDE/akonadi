@@ -23,10 +23,10 @@ include(CheckIncludeFiles)
 
 ############### The Akonadi version (used in AkonadiConfig.cmake) ###############
 
-set(AKONADI_MAJOR_VERSION "1")
-set(AKONADI_MINOR_VERSION "1")
-set(AKONADI_PATCH_VERSION "85")
-set(AKONADI_VERSION "${AKONADI_MAJOR_VERSION}.${AKONADI_MINOR_VERSION}.${AKONADI_PATCH_VERSION}")
+set(AKONADI_VERSION_MAJOR "1")
+set(AKONADI_VERSION_MINOR "1")
+set(AKONADI_VERSION_PATCH "85")
+set(AKONADI_VERSION "${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
 
 # If Subversion is installed, and a '.svn' directory is found,
 # we append the SVN revision to AKONADI_VERSION_STRING.
@@ -145,6 +145,16 @@ set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
 if(APPLE)
    set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
 endif(APPLE)
+
+
+############### Macros ###############
+macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
+   if (IS_ABSOLUTE "${in}")
+      set(${out} "${in}")
+   else (IS_ABSOLUTE "${in}")
+      set(${out} "\${KDEPIMLIBS_INSTALL_DIR}/${in}")
+   endif (IS_ABSOLUTE "${in}")
+endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 
 
 ############### Generate files ###############

@@ -13,7 +13,7 @@ add_library( akonadiprotocolinternals SHARED ${akonadiprotocolinternals_srcs} )
 target_link_libraries( akonadiprotocolinternals ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
 set_target_properties( akonadiprotocolinternals PROPERTIES
                         VERSION ${AKONADI_VERSION}
-                        SOVERSION ${AKONADI_MAJOR_VERSION}
+                        SOVERSION ${AKONADI_VERSION_MAJOR}
                         DEFINE_SYMBOL MAKE_AKONADIPROTOCOLINTERNALS_LIB
                       )
 

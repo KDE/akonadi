@@ -169,7 +169,7 @@ target_link_libraries( akonadiprivate
 
 set_target_properties( akonadiprivate PROPERTIES
                         VERSION ${AKONADI_VERSION}
-                        SOVERSION ${AKONADI_MAJOR_VERSION}
+                        SOVERSION ${AKONADI_VERSION_MAJOR}
                         DEFINE_SYMBOL MAKE_AKONADIPRIVATE_LIB
                       )
 
