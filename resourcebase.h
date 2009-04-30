@@ -398,6 +398,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
      * Stops the execution of the current task and continues with the next one.
      * The current task will be tried again later.
+     *
+     * @since 4.3
      */
     void deferTask();
 
