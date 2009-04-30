@@ -1,3 +1,8 @@
+1.1.2                             30-Apr-2009
+---------------------------------------------
+- Avoid DBUS lockups, reported at: https://bugs.kde.org/182198
+- Update user mysql.conf only if global/local one's are newer
+
 1.1.1                             21-Jan-2009
 ---------------------------------------------
 - Fix code that was not executed in a release build.

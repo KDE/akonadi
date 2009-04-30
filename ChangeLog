@@ -1,17 +1,41 @@
+2009-03-31 15:17 +0000 [r947472]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.1/server/control/agentinstance.cpp: Backport
+	  SVN commit 947310 by amantia from trunk: Avoid DBUS lockups BUG:
+	  182198
+
+2009-02-25 10:55 +0000 [r931467]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.1/server/src/akonadi.cpp: Backport SVN commit
+	  931461 by vkrause: Fix startup when the MySQL config files didn't
+	  change.
+
+2009-02-24 18:33 +0000 [r931066]  Rex Dieter rdieter@math.unl.edu
+
+	* branches/akonadi/1.1/server/src/akonadi.cpp: backport from trunk:
+	  update user mysql.conf only if global/local one's are newer, and
+	  in doing so, clear mysql ib_logfile's
+
+2009-01-21 18:16 +0000 [r914764]  Tom Albers toma@kde.org
+
+	* branches/akonadi/1.1/ChangeLog, branches/akonadi/1.1/NEWS,
+	  branches/akonadi/1.1/CMakeLists.txt,
+	  branches/akonadi/1.1/makechangelog: Prep for 1.1.1
+
 2009-01-16 09:46 +0000 [r911844]  Volker Krause vkrause@kde.org
 
 	* branches/akonadi/1.1/server/shared/akdebug.cpp: Backport SVN
 	  commit 908591 by vkrause from trunk: Don't put essential code
 	  into assert(), doesn't seem to be executed in release builds.
 
-2009-01-09 21:34 +0000 [r908531]  Tom Albers tomalbers@kde.nl
+2009-01-09 21:34 +0000 [r908531]  Tom Albers toma@kde.org
 
 	* branches/akonadi/1.1/CMakeLists.txt,
 	  branches/akonadi/1.1/cmake/modules/FindBoost.cmake (removed):
 	  Backport: SVN commit 906112 by dfaure: Require cmake-2.6.0 and
 	  its much nicer FindBoost.cmake
 
-2009-01-04 22:14 +0000 [r905716]  Tom Albers tomalbers@kde.nl
+2009-01-04 22:14 +0000 [r905716]  Tom Albers toma@kde.org
 
 	* branches/akonadi/1.1/cmake/modules/FindBoost.cmake: Backport SVN
 	  commit 905714 by sengels: add 1.37 release
@@ -22,11 +46,11 @@
 	  SVN commit 905553 by vkrause from trunk: Don't try to restart an
 	  agent that has been deleted.
 
-2009-01-03 16:17 +0000 [r905029]  Tom Albers tomalbers@kde.nl
+2009-01-03 16:17 +0000 [r905029]  Tom Albers toma@kde.org
 
 	* branches/akonadi/1.1 (added): Branch off Akonadi 1.1
 
-2009-01-03 16:10 +0000 [r905016]  Tom Albers tomalbers@kde.nl
+2009-01-03 16:10 +0000 [r905016]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/ChangeLog,
 	  trunk/kdesupport/akonadi/NEWS,
@@ -141,7 +165,7 @@
 	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp: add
 	  FreeBSD mysqld default path
 
-2008-12-16 19:06 +0000 [r897748]  Tom Albers tomalbers@kde.nl
+2008-12-16 19:06 +0000 [r897748]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/ChangeLog,
 	  trunk/kdesupport/akonadi/NEWS,
@@ -234,7 +258,7 @@
 	  trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp: Try
 	  harder to find the mysqld executable during runtime.
 
-2008-11-19 19:31 +0000 [r886652]  Tom Albers tomalbers@kde.nl
+2008-11-19 19:31 +0000 [r886652]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/ChangeLog,
 	  trunk/kdesupport/akonadi/NEWS: Prep for release.
@@ -270,7 +294,7 @@
 	  also removes the restriction that agents were not allowed to
 	  access the agent manager themselves to avoid deadlocks.
 
-2008-11-04 21:16 +0000 [r880161]  Tom Albers tomalbers@kde.nl
+2008-11-04 21:16 +0000 [r880161]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/append.cpp: Fix the
@@ -281,7 +305,7 @@
 	* trunk/kdesupport/akonadi/server/src/storage/mysql-global.conf:
 	  Increase the limit to something more realistical.
 
-2008-11-01 10:09 +0000 [r878448]  Tom Albers tomalbers@kde.nl
+2008-11-01 10:09 +0000 [r878448]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/append.cpp: Don't
@@ -291,7 +315,7 @@
 	  messages are marked as recent, although they also contain the
 	  \Seen flag.
 
-2008-11-01 09:26 +0000 [r878427]  Tom Albers tomalbers@kde.nl
+2008-11-01 09:26 +0000 [r878427]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/handler/append.h,
 	  trunk/kdesupport/akonadi/server/src/handler/store.cpp,
@@ -310,7 +334,7 @@
 	* trunk/kdesupport/akonadi/server/src/storage/notificationcollector.h:
 	  build fix CCMAIL vkrause@kde.org
 
-2008-10-04 23:05 +0000 [r867919]  Tom Albers tomalbers@kde.nl
+2008-10-04 23:05 +0000 [r867919]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/storage/mysql-global.conf: 1M
 	  is to restrictive, messages can and will be bigger.
@@ -590,7 +614,7 @@
 	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp: Return the
 	  modification time when an item is appended/stored/fetcehd.
 
-2008-07-22 20:52 +0000 [r836720]  Tom Albers tomalbers@kde.nl
+2008-07-22 20:52 +0000 [r836720]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt: Move version from 0.82.0
 	  to 1.0.80. This is now akonadi unstable branch. Akonadi stable is
@@ -641,7 +665,7 @@
 	  CMAKE_INSTALL_PREFIX, since this is already part of PATH_SUFFIXES
 	  Alex
 
-2008-06-18 16:00 +0000 [r821830]  Tom Albers tomalbers@kde.nl
+2008-06-18 16:00 +0000 [r821830]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/ChangeLog,
 	  trunk/kdesupport/akonadi/NEWS,
@@ -719,12 +743,12 @@
 	  trunk/kdesupport/akonadi/CMakeLists.txt: fix install_name RPATH
 	  stuff on OSX
 
-2008-05-19 10:26 +0000 [r809711]  Jaroslaw Staniek js@iidea.pl
+2008-05-19 10:26 +0000 [r809711]  Jarosław Staniek staniek@kde.org
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt: make libs install to bin
 	  on Windows, so far this fixes akonadiprivate.dll destination
 
-2008-05-18 22:03 +0000 [r809435]  Tom Albers tomalbers@kde.nl
+2008-05-18 22:03 +0000 [r809435]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/ChangeLog (added),
 	  trunk/kdesupport/akonadi/NEWS (added),
@@ -880,7 +904,7 @@
 	  Extend requestItemDelivery() by mimeType to provide a sane API on
 	  ResourceBase side.
 
-2008-04-29 23:04 +0000 [r802602]  Tom Albers tomalbers@kde.nl
+2008-04-29 23:04 +0000 [r802602]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/cmake/modules/COPYING-CMAKE-SCRIPTS
 	  (added): Referenced by some of the files in here.
@@ -1138,7 +1162,7 @@
 	  not available on msvc, do not use it - rather check with cmake
 	  for availability - msvc compiles now
 
-2008-04-23 21:20 +0000 [r800304]  Tom Albers tomalbers@kde.nl
+2008-04-23 21:20 +0000 [r800304]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/lgpl-license (added),
 	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
@@ -1152,7 +1176,7 @@
 	* trunk/kdesupport/akonadi/cmake/automoc/CMakeLists.txt: Don't
 	  install our borrowed automoc.
 
-2008-04-23 20:39 +0000 [r800285]  Tom Albers tomalbers@kde.nl
+2008-04-23 20:39 +0000 [r800285]  Tom Albers toma@kde.org
 
 	* trunk/kdesupport/akonadi/server/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: We can no longer
