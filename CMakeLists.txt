@@ -3,7 +3,7 @@ project(Akonadi)
 cmake_minimum_required(VERSION 2.6.0 FATAL_ERROR)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 
 
 ############### Build Options ###############
@@ -12,6 +12,10 @@ option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 if (AKONADI_BUILD_TESTS)
   enable_testing()
 endif (AKONADI_BUILD_TESTS)
+
+if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
+  option(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead of lib/<package>/cmake" TRUE)
+endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
 
 
 ############### CMake Macros ###############
@@ -31,7 +35,7 @@ set(AKONADI_VERSION "${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI
 # If Subversion is installed, and a '.svn' directory is found,
 # we append the SVN revision to AKONADI_VERSION_STRING.
 set(AKONADI_VERSION_STRING "${AKONADI_VERSION}")
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
+if (EXISTS "${Akonadi_SOURCE_DIR}/.svn")
   if (NOT Subversion_FOUND)
     find_package( Subversion)
   endif (NOT Subversion_FOUND)
@@ -39,7 +43,7 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
     Subversion_WC_INFO( ${PROJECT_SOURCE_DIR} Akonadi)
     set(AKONADI_VERSION_STRING "${AKONADI_VERSION_STRING} (revision ${Akonadi_WC_LAST_CHANGED_REV})")
   endif (Subversion_FOUND)
-endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
+endif (EXISTS "${Akonadi_SOURCE_DIR}/.svn")
 
 
 ############### Find what we need ###############
@@ -148,6 +152,7 @@ endif(APPLE)
 
 
 ############### Macros ###############
+
 macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
    if (IS_ABSOLUTE "${in}")
       set(${out} "${in}")
@@ -157,14 +162,30 @@ macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 
 
+############### Prepare AkonadiConfig.cmake ###############
+
+# all the following variables are put into AkonadiConfig.cmake, so
+# they are usable by projects using Akonadi.
+make_install_path_absolute(AKONADI_BIN_DIR             ${BIN_INSTALL_DIR})
+make_install_path_absolute(AKONADI_INCLUDE_DIR         ${INCLUDE_INSTALL_DIR})
+make_install_path_absolute(AKONADI_LIB_DIR             ${LIB_INSTALL_DIR})
+make_install_path_absolute(AKONADI_CONFIG_DIR          ${CONFIG_INSTALL_DIR})
+make_install_path_absolute(AKONADI_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL_DIR})
+make_install_path_absolute(AKONADI_DBUS_SERVICES_DIR   ${DBUS_SERVICES_INSTALL_DIR})
+make_install_path_absolute(AKONADI_XDG_MIME_DIR        ${XDG_MIME_INSTALL_DIR})
+
+# Used in configure_file() and install(EXPORT)
+#set(AKONADI_TARGET_PREFIX Akonadi__)
+
+
 ############### Generate files ###############
 
-configure_file(akonadi-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi-prefix.h)
-configure_file(config-akonadi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi.h)
-#configure_file(AkonadiConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/AkonadiConfig.cmake" @ONLY)
+configure_file(akonadi-prefix.h.cmake ${Akonadi_BINARY_DIR}/akonadi-prefix.h)
+configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
+configure_file(AkonadiConfig.cmake.in "${Akonadi_BINARY_DIR}/AkonadiConfig.cmake" @ONLY)
 
 if (NOT WIN32)
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/akonadi.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadi.pc @ONLY)
+  configure_file(${Akonadi_SOURCE_DIR}/akonadi.pc.cmake ${Akonadi_BINARY_DIR}/akonadi.pc @ONLY)
 endif (NOT WIN32)
 
 
@@ -182,11 +203,19 @@ endif (XSLTPROC_EXECUTABLE)
 
 ############### install stuff ###############
 
+if(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
+   set(_AkonadiConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/Akonadi-${AKONADI_VERSION})
+else(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
+   set(_AkonadiConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/Akonadi-${AKONADI_VERSION}/cmake)
+endif(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
+
+install(FILES ${Akonadi_BINARY_DIR}/AkonadiConfig.cmake DESTINATION ${_AkonadiConfig_INSTALL_DIR})
+
 install(FILES akonadi-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
 
 if(NOT WIN32)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/akonadi.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+  install(FILES ${Akonadi_BINARY_DIR}/akonadi.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
 endif(NOT WIN32)
 
 macro_display_feature_log()
