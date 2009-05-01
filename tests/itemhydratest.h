@@ -36,6 +36,8 @@ class ItemHydra: public QObject
     void testEmptyPayload();
     void testPointerPayload();
     void testPolymorphicPayload();
+    void testNullPointerPayload();
+    void testQSharedPointerPayload();
     void testHasPayload();
 };
 

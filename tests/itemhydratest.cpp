@@ -23,6 +23,7 @@
 #include <akonadi/item.h>
 #include <qtest_kde.h>
 #include <QDebug>
+#include <QSharedPointer>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
@@ -39,6 +40,7 @@ struct Volker
     QString who;
 };
 typedef shared_ptr<Volker> VolkerPtr;
+typedef QSharedPointer<Volker> VolkerQPtr;
 
 struct Rudi: public Volker
 {
@@ -47,11 +49,21 @@ struct Rudi: public Volker
 };
 
 typedef shared_ptr<Rudi> RudiPtr;
+typedef QSharedPointer<Rudi> RudiQPtr;
 
 struct Gerd: public Volker
 {
     Gerd() { who = "Gerd"; }
 };
+
+typedef shared_ptr<Gerd> GerdPtr;
+typedef QSharedPointer<Gerd> GerdQPtr;
+
+namespace KPIMUtils
+{
+  template <> struct SuperClass<Rudi> : public SuperClassTrait<Volker>{};
+  template <> struct SuperClass<Gerd> : public SuperClassTrait<Volker>{};
+}
 
 
 QTEST_KDEMAIN( ItemHydra, NoGUI )
@@ -88,15 +100,18 @@ void ItemHydra::testItemPointerPayload()
     Item f;
     Rudi *rudi = new Rudi;
 
-    // the below should assert
+    // the below should not compile
     //f.setPayload( rudi );
 
-    f.setPayload( std::auto_ptr<Rudi>( rudi ) );
-    QVERIFY( f.hasPayload() );
-    QCOMPARE( f.payload< std::auto_ptr<Rudi> >()->who, rudi->who );
+    // std::auto_ptr is not copyconstructable and assignable, therefore this will fail as well
+    //f.setPayload( std::auto_ptr<Rudi>( rudi ) );
+    //QVERIFY( f.hasPayload() );
+    //QCOMPARE( f.payload< std::auto_ptr<Rudi> >()->who, rudi->who );
 
     // below doesn't compile, hopefully
     //QCOMPARE( f.payload< Rudi* >()->who, rudi->who );
+
+    delete rudi;
 }
 
 void ItemHydra::testItemCopy()
@@ -123,6 +138,17 @@ void ItemHydra::testEmptyPayload()
 
     QVERIFY( !i1.hasPayload() );
     QVERIFY( !i2.hasPayload() );
+    QVERIFY( !i1.hasPayload<Rudi>() );
+    QVERIFY( !i1.hasPayload<RudiPtr>() );
+
+    bool caughtException = false;
+    try {
+      Rudi r = i1.payload<Rudi>();
+    } catch ( const Akonadi::PayloadException &e ) {
+      qDebug() << e.what();
+      caughtException = true;
+    }
+    QVERIFY( caughtException );
 }
 
 void ItemHydra::testPointerPayload()
@@ -138,9 +164,17 @@ void ItemHydra::testPointerPayload()
       QVERIFY( i1.hasPayload() );
       QCOMPARE( p.use_count(), (long)2 );
       {
+        QVERIFY( i1.hasPayload< RudiPtr >() );
         RudiPtr p2 = i1.payload< RudiPtr >();
         QCOMPARE( p.use_count(), (long)3 );
       }
+
+      {
+        QVERIFY( i1.hasPayload< VolkerPtr >() );
+        VolkerPtr p2 = i1.payload< VolkerPtr >();
+        QCOMPARE( p.use_count(), (long)3 );
+      }
+
       QCOMPARE( p.use_count(), (long)2 );
     }
     QCOMPARE( p.use_count(), (long)1 );
@@ -158,15 +192,78 @@ void ItemHydra::testPolymorphicPayload()
       Item i1;
       i1.setPayload(p);
       QVERIFY( i1.hasPayload() );
+      QVERIFY( i1.hasPayload<VolkerPtr>() );
+      QVERIFY( i1.hasPayload<RudiPtr>() );
+      QVERIFY( !i1.hasPayload<GerdPtr>() );
       QCOMPARE( p.use_count(), (long)2 );
       {
         RudiPtr p2 = boost::dynamic_pointer_cast<Rudi, Volker>( i1.payload< VolkerPtr >() );
         QCOMPARE( p.use_count(), (long)3 );
         QCOMPARE( p2->who, QString("Rudi") );
       }
+
+      {
+        RudiPtr p2 = i1.payload< RudiPtr >();
+        QCOMPARE( p.use_count(), (long)3 );
+        QCOMPARE( p2->who, QString("Rudi") );
+      }
+
+      bool caughtException = false;
+      try {
+        GerdPtr p3 = i1.payload<GerdPtr>();
+      } catch ( const Akonadi::PayloadException &e ) {
+        qDebug() << e.what();
+        caughtException = true;
+      }
+      QVERIFY( caughtException );
+
       QCOMPARE( p.use_count(), (long)2 );
   }
 }
+
+void ItemHydra::testNullPointerPayload()
+{
+  RudiPtr p( (Rudi*)0 );
+  Item i;
+  i.setPayload( p );
+  QVERIFY( i.hasPayload() );
+  QVERIFY( i.hasPayload<RudiPtr>() );
+  QVERIFY( i.hasPayload<VolkerPtr>() );
+  QVERIFY( i.hasPayload<GerdPtr>() );
+  QCOMPARE( i.payload<RudiPtr>().get(), (Rudi*)0 );
+  QCOMPARE( i.payload<VolkerPtr>().get(), (Volker*)0 );
+}
+
+void ItemHydra::testQSharedPointerPayload()
+{
+  RudiQPtr p( new Rudi );
+  Item i;
+  i.setPayload( p );
+  QVERIFY( i.hasPayload() );
+  QVERIFY( i.hasPayload<VolkerQPtr>() );
+  QVERIFY( i.hasPayload<RudiQPtr>() );
+  QVERIFY( !i.hasPayload<GerdQPtr>() );
+
+  {
+    VolkerQPtr p2 = i.payload< VolkerQPtr >();
+    QCOMPARE( p2->who, QString("Rudi") );
+  }
+
+  {
+    RudiQPtr p2 = i.payload< RudiQPtr >();
+    QCOMPARE( p2->who, QString("Rudi") );
+  }
+
+  bool caughtException = false;
+  try {
+    GerdQPtr p3 = i.payload<GerdQPtr>();
+  } catch ( const Akonadi::PayloadException &e ) {
+    qDebug() << e.what();
+    caughtException = true;
+  }
+  QVERIFY( caughtException );
+}
+
 
 void ItemHydra::testHasPayload()
 {

@@ -1,5 +1,6 @@
 project(akonadi-kde)
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 if(CMAKE_COMPILE_GCOV)
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 endif(CMAKE_COMPILE_GCOV)
@@ -73,6 +74,7 @@ set( akonadikde_LIB_SRC
   entitydisplayattribute.cpp
   #entitysortfilterproxymodel.cpp
   erroroverlay.cpp
+  exception.cpp
   expungejob.cpp
   firstrun.cpp
   flatcollectionproxymodel.cpp
@@ -191,6 +193,7 @@ install( FILES
   entity.h
   entitydisplayattribute.h
   #  entitysortfilterproxymodel.h
+  exception.h
   item.h
   itemcreatejob.h
   itemcopyjob.h

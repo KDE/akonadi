@@ -24,20 +24,26 @@
 #include "akonadi_export.h"
 
 #include <akonadi/entity.h>
+#include <akonadi/exception.h>
+#include "itempayloadinternals_p.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QMetaType>
 #include <QtCore/QSet>
 
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_pointer.hpp>
 #include <typeinfo>
 
 class KUrl;
 
+namespace std {
+  template <typename T> class auto_ptr;
+}
+
 namespace Akonadi {
 
 class ItemPrivate;
-
-#include "itempayloadinternals_p.h"
 
 /**
  * @short Represents a PIM item stored in Akonadi storage.
@@ -56,6 +62,24 @@ class ItemPrivate;
  * are depends on the mimetype of the item and the corresponding serializer plugin.
  *
  * This class is implicitly shared.
+ *
+ * <h4>Payload</h4>
+ *
+ * Technically the only restriction on payload objects is that they have to be copyable.
+ * For safety reasons, pointer payloads are forbidden as well though, as the
+ * ownership would not be clear. In this case, usage of a shared pointer is
+ * recommended (such as boost::shared_ptr or QSharedPointer).
+ *
+ * Using a shared pointer is also recommended in case the payload uses polymorphic
+ * types. For supported shared pointer types implicit casting is provided when possible.
+ *
+ * When using a value-based class as payload, it is recommended to use one that does
+ * support implicit sharing as setting and retrieving a payload as well as copying
+ * an Akonadi::Item object imply copying of the payload object.
+ *
+ * The availability of a payload of a specific type can be checked using hasPayload(),
+ * payloads can be retrieved by using payload() and set by using setPayload(). Refer
+ * to the documentation of those methods for more details.
  *
  * @author Volker Krause <vkrause@kde.org>, Till Adam <adam@kde.org>
  */
@@ -224,37 +248,34 @@ class AKONADI_EXPORT Item : public Entity
     /**
      * Sets the payload object of this PIM item.
      *
-     * The payload MUST NOT be a pointer, use a boost::shared_ptr instead.
-     * The payload should be an implicitly shared class.
+     * @param p The payload object. Must be copyable and must not be a pointer,
+     * will cause a compilation failure otherwise. Using a type that can be copied
+     * fast (such as implicitly shared classes) is recommended.
+     * If the payload type is polymorphic and you intend to set and retrieve payload
+     * objects with mismatching but castable types, make sure to use a supported
+     * shared pointer implementation (currently boost::shared_ptr and QSharedPointer)
+     * and make sure there is a specialization of Akonadi::super_trait for your class.
      */
-    template <typename T>
-    void setPayload( T p )
-    {
-      setPayloadBase( new Payload<T>( p ) );
-    }
+    template <typename T> void setPayload( const T &p );
+    //@cond PRIVATE
+    template <typename T> void setPayload( T* p );
+    template <typename T> void setPayload( std::auto_ptr<T> p );
+    //@endcond
 
     /**
-     * Returns the payload object of this PIM item.
+     * Returns the payload object of this PIM item. This method will only succeed if either
+     * you requested the exact same payload type that was put in or the payload uses a
+     * supported shared pointer type (currently boost::shared_ptr and QSharedPointer), and
+     * is castable to the requested type. For this to work there needs to be a specialization
+     * of Akonadi::super_trait of the used classes.
      *
-     * @note This method will abort the application if you try to
-     *       retrieve the wrong payload type, so better always check
-     *       the mime type first.
+     * If a mismatching or non-castable payload type is requested, an Akonadi::PayloadException
+     * is thrown. Therefore it is generally recommended to guard calls to payload() with a
+     * corresponding hasPayload() call.
+     *
+     * Trying to retrieve a pointer type will fail to compile.
      */
-    template <typename T>
-    T payload() const
-    {
-        if ( !payloadBase() ) Q_ASSERT_X(false, "Akonadi::Item::payload()", "No valid payload set.");
-
-        Payload<T> *p = dynamic_cast<Payload<T>*>( payloadBase() );
-        // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
-        if ( !p && strcmp( payloadBase()->typeName(), typeid(p).name() ) == 0 ) {
-          p = reinterpret_cast<Payload<T>*>( payloadBase() );
-        }
-        if ( !p )
-          qFatal( "Akonadi::Item::payload(): Wrong payload type (is '%s', requested '%s')",
-                  payloadBase()->typeName(), typeid(p).name() );
-        return p->payload;
-    }
+    template <typename T> T payload() const;
 
     /**
      * Returns whether the item has a payload object.
@@ -263,19 +284,14 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Returns whether the item has a payload of type @c T.
+     * This method will only return @c true if either you requested the exact same payload type
+     * that was put in or the payload uses a supported shared pointer type (currently boost::shared_ptr
+     * and QSharedPointer), and is castable to the requested type. For this to work there needs
+     * to be a specialization of Akonadi::super_trait of the used classes.
+     *
+     * Trying to retrieve a pointer type will fail to compile.
      */
-    template <typename T>
-    bool hasPayload() const
-    {
-        if ( !hasPayload() )
-          return false;
-        Payload<T> *p = dynamic_cast<Payload<T>*>( payloadBase() );
-        // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
-        if ( !p && strcmp( payloadBase()->typeName(), typeid(p).name() ) == 0 ) {
-          p = reinterpret_cast<Payload<T>*>( payloadBase() );
-        }
-        return p;
-    }
+    template <typename T> bool hasPayload() const;
 
     /**
      * Describes the type of url which is returned in url().
@@ -301,6 +317,80 @@ class AKONADI_EXPORT Item : public Entity
 
     AKONADI_DECLARE_PRIVATE( Item )
 };
+
+
+template <typename T>
+T Item::payload() const
+{
+  BOOST_STATIC_ASSERT( !boost::is_pointer<T>::value );
+
+  if ( !payloadBase() )
+    throw PayloadException( "No payload set" );
+
+  typedef Internal::PayloadTrait<T> PayloadType;
+  if ( PayloadType::isPolymorphic ) {
+    try {
+      const typename PayloadType::SuperType sp = payload<typename PayloadType::SuperType>();
+      return PayloadType::castFrom( sp );
+    } catch ( const Akonadi::PayloadException& ) {}
+  }
+
+  Internal::Payload<T> *p = Internal::payload_cast<T>( payloadBase() );
+  if ( !p ) {
+    throw PayloadException( QString::fromLatin1( "Wrong payload type (is '%1', requested '%2')" )
+      .arg( QLatin1String( payloadBase()->typeName() ) )
+      .arg( QLatin1String( typeid(p).name() ) ) );
+  }
+  return p->payload;
+}
+
+template <typename T>
+bool Item::hasPayload() const
+{
+  BOOST_STATIC_ASSERT( !boost::is_pointer<T>::value );
+
+  if ( !hasPayload() )
+    return false;
+
+  typedef Internal::PayloadTrait<T> PayloadType;
+  if ( PayloadType::isPolymorphic ) {
+    try {
+      const typename PayloadType::SuperType sp = payload<typename PayloadType::SuperType>();
+      return PayloadType::canCastFrom( sp );
+    } catch ( const Akonadi::PayloadException& ) {}
+  }
+
+  return Internal::payload_cast<T>( payloadBase() );
+}
+
+template <typename T>
+void Item::setPayload( const T &p )
+{
+  typedef Internal::PayloadTrait<T> PayloadType;
+  if ( PayloadType::isPolymorphic ) {
+    const typename PayloadType::SuperType sp
+      = PayloadType::template castTo<typename PayloadType::SuperElementType>( p );
+    if ( !Internal::PayloadTrait<typename PayloadType::SuperType>::isNull( sp )
+         || PayloadType::isNull( p ) )
+    {
+      setPayload( sp );
+      return;
+    }
+  }
+  setPayloadBase( new Internal::Payload<T>( p ) );
+}
+
+template <typename T>
+void Item::setPayload( T* p )
+{
+  p.You_MUST_NOT_use_a_pointer_as_payload;
+}
+
+template <typename T>
+void Item::setPayload( std::auto_ptr<T> p )
+{
+  p.Nice_try_but_a_std_auto_ptr_is_not_allowed_as_payload_either;
+}
 
 }
 

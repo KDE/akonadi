@@ -19,6 +19,7 @@
 
 #include <akonadi/item.h>
 #include <kurl.h>
+#include <syndication/item.h>
 #include <syndication/feed.h>
 #include <syndication/loader.h>
 
