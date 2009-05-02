@@ -157,11 +157,10 @@ struct PayloadBase
     virtual const char* typeName() const = 0;
 };
 
-namespace Internal {
-
 /**
  * @internal
  * Container for the actual payload object.
+ * @note Move to Internal namespace for KDE5
  */
 template <typename T>
 struct Payload : public PayloadBase
@@ -198,16 +197,18 @@ struct Payload<T*> : public PayloadBase
 {
 };
 
+namespace Internal {
+
 /**
   @internal
   Basically a dynamic_cast that also works across DSO boundaries.
 */
 template <typename T> inline Payload<T>* payload_cast( PayloadBase* payloadBase )
 {
-  Internal::Payload<T> *p = dynamic_cast<Internal::Payload<T>*>( payloadBase );
+  Payload<T> *p = dynamic_cast<Payload<T>*>( payloadBase );
   // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
   if ( !p && strcmp( payloadBase->typeName(), typeid(p).name() ) == 0 ) {
-    p = static_cast<Internal::Payload<T>*>( payloadBase );
+    p = static_cast<Payload<T>*>( payloadBase );
   }
   return p;
 }

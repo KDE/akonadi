@@ -335,7 +335,7 @@ T Item::payload() const
     } catch ( const Akonadi::PayloadException& ) {}
   }
 
-  Internal::Payload<T> *p = Internal::payload_cast<T>( payloadBase() );
+  Payload<T> *p = Internal::payload_cast<T>( payloadBase() );
   if ( !p ) {
     throw PayloadException( QString::fromLatin1( "Wrong payload type (is '%1', requested '%2')" )
       .arg( QLatin1String( payloadBase()->typeName() ) )
@@ -377,7 +377,7 @@ void Item::setPayload( const T &p )
       return;
     }
   }
-  setPayloadBase( new Internal::Payload<T>( p ) );
+  setPayloadBase( new Payload<T>( p ) );
 }
 
 template <typename T>
