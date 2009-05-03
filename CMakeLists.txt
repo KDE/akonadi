@@ -23,7 +23,7 @@ endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSI
 include(MacroLogFeature)
 include(InstallSettings)
 include(CheckIncludeFiles)
-
+include(MacroWriteBasicCMakeVersionFile)
 
 ############### The Akonadi version (used in AkonadiConfig.cmake) ###############
 
@@ -188,6 +188,9 @@ if (NOT WIN32)
   configure_file(${Akonadi_SOURCE_DIR}/akonadi.pc.cmake ${Akonadi_BINARY_DIR}/akonadi.pc @ONLY)
 endif (NOT WIN32)
 
+# this file is used by to check if the installed version can be used.
+macro_write_basic_cmake_version_file(${Akonadi_BINARY_DIR}/AkonadiConfigVersion.cmake
+                                     ${AKONADI_VERSION_MAJOR} ${AKONADI_VERSION_MINOR} ${AKONADI_VERSION_PATCH})
 
 ############### build targets ###############
 
@@ -209,7 +212,9 @@ else(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
    set(_AkonadiConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/Akonadi-${AKONADI_VERSION}/cmake)
 endif(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
 
-install(FILES ${Akonadi_BINARY_DIR}/AkonadiConfig.cmake DESTINATION ${_AkonadiConfig_INSTALL_DIR})
+install(FILES ${Akonadi_BINARY_DIR}/AkonadiConfigVersion.cmake
+              ${Akonadi_BINARY_DIR}/AkonadiConfig.cmake
+        DESTINATION ${_AkonadiConfig_INSTALL_DIR} )
 
 install(FILES akonadi-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
