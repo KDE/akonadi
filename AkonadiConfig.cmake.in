@@ -22,3 +22,6 @@ set(AKONADI_LIB_DIR              "@AKONADI_LIB_DIR@")
 set(AKONADI_SHARE_DIR            "@SHARE_INSTALL_PREFIX@")
 set(AKONADI_XDG_MIME_INSTALL_DIR "@AKONADI_XDG_MIME_DIR@")
 
+# Compatibility
+set(AKONADI_COMMON_LIBRARIES     "@AKONADI_LIB_DIR@/libakonadiprotocolinternals.so")
+
