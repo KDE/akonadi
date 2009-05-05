@@ -59,7 +59,7 @@ static const struct {
   { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT(slotCopyCollections()) },
   { "akonadi_collection_delete", I18N_NOOP("&Delete Folder"), "edit-delete", 0, SLOT(slotDeleteCollection()) },
   { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()) },
-  { "akonadi_collection_properties", I18N_NOOP("Folder &Properties..."), "configure", 0, SLOT(slotCollectionProperties()) },
+  { "akonadi_collection_properties", I18N_NOOP("Folder &Properties"), "configure", 0, SLOT(slotCollectionProperties()) },
   { "akonadi_item_copy", 0, "edit-copy", 0, SLOT(slotCopyItems()) },
   { "akonadi_paste", I18N_NOOP("&Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()) },
   { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT(slotDeleteItems()) },
