@@ -276,7 +276,10 @@ class StandardActionManager::Private
 
       // TODO: fix this once ItemModifyJob can handle item lists
       foreach ( const QModelIndex &index, itemSelectionModel->selectedRows() ) {
-        new ItemDeleteJob( Item( index.data( ItemModel::IdRole ).toLongLong() ), q );
+        bool ok;
+        qlonglong id = index.data( ItemModel::IdRole ).toLongLong(&ok);
+        Q_ASSERT(ok);
+        new ItemDeleteJob( Item( id ), q );
       }
     }
 
