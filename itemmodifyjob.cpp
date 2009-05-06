@@ -97,7 +97,7 @@ void ItemModifyJob::doStart()
       case ItemModifyJobPrivate::RemoteId:
         if ( !d->mItem.remoteId().isNull() ) {
           changes << "REMOTEID.SILENT";
-          changes << ImapParser::quote( d->mItem.remoteId().toLatin1() );
+          changes << ImapParser::quote( d->mItem.remoteId().toUtf8() );
         }
         break;
       case ItemModifyJobPrivate::Dirty:
