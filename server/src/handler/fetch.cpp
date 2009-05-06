@@ -50,7 +50,8 @@ static const int itemQueryMimeTypeColumn = 3;
 static const int itemQueryResouceColumn = 4;
 static const int itemQuerySizeColumn = 5;
 static const int itemQueryDatetimeColumn = 6;
-
+static const int itemQueryCollectionIdColumn = 7;
+    
 static const int partQueryIdColumn = 0;
 static const int partQueryNameColumn = 1;
 static const int partQueryDataColumn = 2;
@@ -134,6 +135,7 @@ void Fetch::buildItemQuery()
   mItemQuery.addColumn( Resource::nameFullColumnName() );
   mItemQuery.addColumn( PimItem::sizeFullColumnName() );
   mItemQuery.addColumn( PimItem::datetimeFullColumnName() );
+  mItemQuery.addColumn( PimItem::collectionIdFullColumnName() );
   mItemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
   mItemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
   mItemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
@@ -272,6 +274,7 @@ bool Fetch::parseStream()
     attributes.append( "REV " + QByteArray::number( pimItemRev ) );
     attributes.append( "REMOTEID " + ImapParser::quote( mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8() ) );
     attributes.append( "MIMETYPE " + ImapParser::quote( mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8() ) );
+    attributes.append( "COLLECTIONID " + ImapParser::quote( mItemQuery.query().value( itemQueryCollectionIdColumn ).toString().toUtf8() ) );
 
     if ( mSizeRequested ) {
       const qint64 pimItemSize = mItemQuery.query().value( itemQuerySizeColumn ).toLongLong();
