@@ -56,7 +56,7 @@ bool Akonadi::AkAppend::commit()
       return failureResponse( "Unknown collection." );
 
     QByteArray mt;
-    QByteArray remote_id;
+    QString remote_id;
     QList<QByteArray> flags;
     foreach( const QByteArray &flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
@@ -66,7 +66,7 @@ bool Akonadi::AkAppend::commit()
       } else if ( flag.startsWith( "\\RemoteId" ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.indexOf( ']', pos1 );
-        remote_id = flag.mid( pos1 + 1, pos2 - pos1 - 1 );
+        remote_id = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
       } else
         flags << flag;
     }

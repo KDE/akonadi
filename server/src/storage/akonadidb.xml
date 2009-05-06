@@ -110,7 +110,7 @@
   <table name="PimItem">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="rev" type="int" properties="NOT NULL DEFAULT 0"/>
-    <column name="remoteId" type="QByteArray"/>
+    <column name="remoteId" type="QString"/>
     <column name="collectionId" type="qint64" refTable="Collection" refColumn="id" properties="REFERENCES Collection(id)"/>
     <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id" properties="REFERENCES MimeType(id)"/>
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP">

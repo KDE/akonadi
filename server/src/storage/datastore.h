@@ -155,7 +155,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
                         const MimeType & mimetype,
                         const Collection & collection,
                         const QDateTime & dateTime,
-                        const QByteArray & remote_id,
+                        const QString & remote_id,
                         PimItem &pimItem );
     bool updatePimItem( PimItem &pimItem );
     bool updatePimItem( PimItem &pimItem, const Collection &destination );

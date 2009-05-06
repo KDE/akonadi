@@ -43,7 +43,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   newItem.setRev( 0 );
   newItem.setSize( 0 );
   newItem.setDatetime( QDateTime::currentDateTime() );
-  newItem.setRemoteId( QByteArray() );
+  newItem.setRemoteId( QString() );
   newItem.setCollectionId( target.id() );
   Part::List parts;
   foreach ( const Part &part, item.parts() ) {
@@ -52,7 +52,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
     newPart.setPimItemId( -1 );
     parts << newPart;
   }
-  return store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QByteArray(), newItem );
+  return store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), newItem );
 }
 
 bool Copy::parseStream()

@@ -133,7 +133,7 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
   msg.setType( NotificationMessage::Item );
   msg.setOperation( op );
   msg.setUid( item.id() );
-  msg.setRemoteId( QString::fromUtf8( item.remoteId() ) );
+  msg.setRemoteId( item.remoteId() );
 
   Collection col = collection;
   if ( !col.isValid() )

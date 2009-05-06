@@ -281,7 +281,7 @@ bool Store::parseStream()
           } else
           if ( command == "REMOTEID" ) {
             value = m_streamParser->readString();
-            if ( pimItems[i].remoteId() != value ) {
+            if ( pimItems[i].remoteId() != QString::fromUtf8( value ) ) {
               if ( !connection()->isOwnerResource( pimItems[i] ) )
                 throw HandlerException( "Only resources can modify remote identifiers" );
               if ( !store->updatePimItem( pimItems[i], QString::fromUtf8( value ) ) )

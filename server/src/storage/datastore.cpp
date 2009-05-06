@@ -408,7 +408,7 @@ bool DataStore::appendPimItem( QList<Part> & parts,
                                const MimeType & mimetype,
                                const Collection & collection,
                                const QDateTime & dateTime,
-                               const QByteArray & remote_id,
+                               const QString & remote_id,
                                PimItem &pimItem )
 {
   pimItem.setMimeTypeId( mimetype.id() );
@@ -486,10 +486,10 @@ bool DataStore::updatePimItem(PimItem & pimItem, const QString & remoteId)
 {
   if ( !pimItem.isValid() )
     return false;
-  if ( pimItem.remoteId() == remoteId.toLatin1() )
+  if ( pimItem.remoteId() == remoteId )
     return true;
 
-  pimItem.setRemoteId( remoteId.toLatin1() );
+  pimItem.setRemoteId( remoteId );
   pimItem.setAtime( QDateTime::currentDateTime() );
   if ( !pimItem.update() )
     return false;
