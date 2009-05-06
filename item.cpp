@@ -134,6 +134,16 @@ void Item::setRevision( int rev )
   d_func()->mRevision = rev;
 }
 
+Entity::Id Item::collectionId() const
+{
+  return d_func()->mCollectionId;
+}
+
+void Item::setCollectionId( Entity::Id collectionId )
+{
+  d_func()->mCollectionId = collectionId;
+}
+
 QString Item::mimeType() const
 {
   return d_func()->mMimeType;

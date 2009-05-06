@@ -222,6 +222,18 @@ class AKONADI_EXPORT Item : public Entity
     int revision() const;
 
     /**
+     * Set the collection ID to where the item belongs to.
+     * @param collectionId 
+     */
+    void setCollectionId( Entity::Id collectionId);
+    
+    /**
+     * Get the collection ID of the item. 
+     * @return -1 if the collection ID is not know, use ItemFetchJob to query for the collection id.
+     */
+    Entity::Id collectionId() const;
+
+    /**
      * Set the size of the item in bytes.
      *
      * @since 4.2
