@@ -168,6 +168,7 @@ void ItemStoreTest::testRemoteId_data()
   QTest::newRow( "no-change" ) << QString() << QString( "A" );
   QTest::newRow( "clear" ) << QString( "" ) << QString( "" );
   QTest::newRow( "reset" ) << QString( "A" ) << QString( "A" );
+  QTest::newRow( "utf8" ) << QString( "ä ö ü @" ) << QString( "ä ö ü @" );
 }
 
 void ItemStoreTest::testRemoteId()
@@ -191,7 +192,7 @@ void ItemStoreTest::testRemoteId()
   AKVERIFYEXEC( fetch );
   QCOMPARE( fetch->items().count(), 1 );
   item = fetch->items().at( 0 );
-  QCOMPARE( item.remoteId(), exprid );
+  QCOMPARE( item.remoteId().toUtf8(), exprid.toUtf8() );
 
   // no longer pretend to be a resource
   rsel = new ResourceSelectJob( QString(), this );
