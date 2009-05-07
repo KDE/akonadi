@@ -83,10 +83,11 @@ AgentTypeWidget::AgentTypeWidget( QWidget *parent )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setMargin( 0 );
-  layout->setSpacing( 0 );
 
   d->mView = new QListView( this );
   d->mView->setItemDelegate( new AgentTypeWidgetDelegate( d->mView ) );
+  d->mView->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
+  d->mView->setAlternatingRowColors( true );
   layout->addWidget( d->mView );
 
   d->mModel = new AgentTypeModel( d->mView );
@@ -165,13 +166,16 @@ void AgentTypeWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewIt
   int wc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, comment ).width();
   int wp = pixmap.width();
 
+  QStyleOptionViewItemV4 opt(option);
+  opt.showDecorationSelected = true;
+  QApplication::style()->drawPrimitive( QStyle::PE_PanelItemViewItem, &opt, painter );
+
   QPen pen = painter->pen();
   QPalette::ColorGroup cg = option.state & QStyle::State_Enabled
                             ? QPalette::Normal : QPalette::Disabled;
   if (cg == QPalette::Normal && !(option.state & QStyle::State_Active))
     cg = QPalette::Inactive;
   if (option.state & QStyle::State_Selected) {
-    painter->fillRect(option.rect, option.palette.brush(cg, QPalette::Highlight));
     painter->setPen(option.palette.color(cg, QPalette::HighlightedText));
   } else {
     painter->setPen(option.palette.color(cg, QPalette::Text));

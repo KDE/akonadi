@@ -114,11 +114,12 @@ AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setMargin( 0 );
-  layout->setSpacing( 0 );
 
   d->mView = new QListView( this );
   d->mView->setContextMenuPolicy( Qt::NoContextMenu );
   d->mView->setItemDelegate( new AgentInstanceWidgetDelegate( d->mView ) );
+  d->mView->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
+  d->mView->setAlternatingRowColors( true );
   layout->addWidget( d->mView );
 
   d->mModel = new AgentInstanceModel( this );
@@ -213,7 +214,7 @@ QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem
      "<body>"
      "<table>"
      "<tr>"
-     "<td rowspan=\"2\"><img src=\"agent_icon\"></td>"
+     "<td rowspan=\"2\"><img src=\"agent_icon\">&nbsp;&nbsp;</td>"
      "<td><b>%2</b></td>"
      "</tr>" ).arg(textColor.name().toUpper()).arg( name );
   if ( capabilities.contains( QLatin1String( "Resource" ) ) ) {
@@ -246,12 +247,9 @@ void AgentInstanceWidgetDelegate::paint( QPainter *painter, const QStyleOptionVi
   if ( cg == QPalette::Normal && !(option.state & QStyle::State_Active) )
     cg = QPalette::Inactive;
 
-  if ( option.state & QStyle::State_Selected ) {
-    painter->fillRect( option.rect, option.palette.brush( cg, QPalette::Highlight ) );
-    painter->setPen( option.palette.color( cg, QPalette::HighlightedText ) );
-  } else {
-    painter->setPen(option.palette.color( cg, QPalette::Text ) );
-  }
+  QStyleOptionViewItemV4 opt(option);
+  opt.showDecorationSelected = true;
+  QApplication::style()->drawPrimitive( QStyle::PE_PanelItemViewItem, &opt, painter );
 
   painter->save();
   painter->translate( option.rect.topLeft() );

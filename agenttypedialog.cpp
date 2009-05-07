@@ -43,6 +43,7 @@ AgentTypeDialog::AgentTypeDialog( QWidget *parent )
 {
   setButtons( Ok | Cancel );
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
+  layout->setMargin(0);
 
   d->Widget = new Akonadi::AgentTypeWidget( mainWidget() );
   connect( d->Widget, SIGNAL( activated() ), this, SLOT( accept() ) );
