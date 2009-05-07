@@ -222,14 +222,9 @@ class AKONADI_EXPORT Item : public Entity
     int revision() const;
 
     /**
-     * Set the collection ID to where the item belongs to.
-     * @param collectionId 
-     */
-    void setCollectionId( Entity::Id collectionId);
-    
-    /**
-     * Get the collection ID of the item. 
-     * @return -1 if the collection ID is not know, use ItemFetchJob to query for the collection id.
+     * Get the main collection ID of the item. Calling this method makes sense only after running an ItemFetchJob on the item.
+     * Returns the collection ID if it is know, -1 otherwise. 
+     * @since 4.3
      */
     Entity::Id collectionId() const;
 
@@ -325,6 +320,13 @@ class AKONADI_EXPORT Item : public Entity
     friend class ItemFetchJob;
     PayloadBase* payloadBase() const;
     void setPayloadBase( PayloadBase* );
+    /**
+     * Set the collection ID to where the item belongs to. Should be set only by the ItemFetchJob.
+     * @param collectionId the main collection ID
+     * @since 4.3
+     */
+    void setCollectionId( Entity::Id collectionId);
+    
     //@endcond
 
     AKONADI_DECLARE_PRIVATE( Item )
