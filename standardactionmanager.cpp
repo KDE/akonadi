@@ -179,8 +179,14 @@ class StandardActionManager::Private
 
     void slotCreateCollection()
     {
-      const QModelIndex index = collectionSelectionModel->currentIndex();
+      Q_ASSERT( collectionSelectionModel );
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
 
       if ( !canCreateCollection( collection ) )
         return;
@@ -209,11 +215,14 @@ class StandardActionManager::Private
     void slotDeleteCollection()
     {
       Q_ASSERT( collectionSelectionModel );
-      const QModelIndex index = collectionSelectionModel->currentIndex();
-      if ( !index.isValid() )
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+
       QString text = i18n( "Do you really want to delete folder '%1' and all its sub-folders?", index.data().toString() );
       if ( CollectionUtils::isVirtual( collection ) )
         text = i18n( "Do you really want to delete the search view '%1'?", index.data().toString() );
@@ -232,19 +241,27 @@ class StandardActionManager::Private
 
     void slotSynchronizeCollection()
     {
-      QModelIndex index = collectionSelectionModel->currentIndex();
-      if ( !index.isValid() )
+      Q_ASSERT( collectionSelectionModel );
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
+
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
       const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( col.isValid() );
+
       AgentManager::self()->synchronizeCollection( col );
     }
 
     void slotCollectionProperties()
     {
-      const QModelIndex index = collectionSelectionModel->currentIndex();
-      if ( !index.isValid() )
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
-      const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( col.isValid() );
+
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( col, parentWidget );
       dlg->show();
     }
@@ -256,10 +273,15 @@ class StandardActionManager::Private
 
     void slotPaste()
     {
-      const QModelIndex index = collectionSelectionModel->currentIndex();
-      if ( !index.isValid() )
+      Q_ASSERT( collectionSelectionModel );
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
+
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
       const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( col.isValid() );
+
       KJob *job = PasteHelper::paste( QApplication::clipboard()->mimeData(), col );
       q->connect( job, SIGNAL(result(KJob*)), q, SLOT(pasteResult(KJob*)) );
     }
