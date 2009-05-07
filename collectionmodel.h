@@ -59,8 +59,8 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
      * Describes the roles for collections.
      */
     enum Roles {
-      CollectionIdRole = Qt::UserRole + 1,  ///< The collection identifier.
-      CollectionRole,                       ///< The actual collection object.
+      CollectionIdRole = Qt::UserRole + 10, ///< The collection identifier.
+      CollectionRole = Qt::UserRole + 11,   ///< The actual collection object.
       UserRole = Qt::UserRole + 42          ///< Role for user extensions.
     };
 
