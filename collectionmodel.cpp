@@ -99,8 +99,10 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
         return KIcon( CollectionUtils::defaultIconName( col ) );
       }
       break;
+    case OldCollectionIdRole: // fall-through
     case CollectionIdRole:
       return col.id();
+    case OldCollectionRole: // fall-through
     case CollectionRole:
       return QVariant::fromValue( col );
   }
