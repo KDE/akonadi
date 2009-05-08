@@ -33,7 +33,7 @@ kde4_add_library(akonadi-xml SHARED ${akonadixml_SRCS})
 
 target_link_libraries(akonadi-xml
   ${KDE4_KIO_LIBS}
-  ${KDE4_AKONADI_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   ${QT_QTXML_LIBRARY}
   ${LIBXML2_LIBRARIES}
 )
@@ -54,6 +54,6 @@ kde4_add_executable(akonadi2xml akonadi2xml.cpp)
 target_link_libraries(akonadi2xml
    akonadi-xml
    ${KDE4_KDEUI_LIBS}
-   ${KDE4_AKONADI_LIBS}
+   ${KDEPIMLIBS_AKONADI_LIBS}
 )
 install( TARGETS akonadi2xml ${INSTALL_TARGETS_DEFAULT_ARGS} )
