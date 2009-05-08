@@ -18,7 +18,7 @@ kde4_add_executable(akonadi_knut_resource RUN_UNINSTALLED ${knutresource_SRCS})
 target_link_libraries(akonadi_knut_resource
   akonadi-xml
   ${KDE4_KIO_LIBS}
-  ${KDE4_AKONADI_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   ${QT_QTXML_LIBRARY}
 )
 
