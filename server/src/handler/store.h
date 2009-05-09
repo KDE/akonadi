@@ -21,6 +21,7 @@
 #define AKONADISTORE_H
 
 #include <handler.h>
+#include <scope.h>
 
 #include "storage/entity.h"
 #include "libs/imapset_p.h"
@@ -39,7 +40,7 @@ class Store : public Handler
   Q_OBJECT
 
   public:
-    Store( bool isUid = false );
+    Store( Scope::SelectionScope scope );
     ~Store();
 
 

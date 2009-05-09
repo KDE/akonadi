@@ -84,7 +84,7 @@ public:
      * @param line the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
-    static Handler* findHandlerForCommandAuthenticated( const QByteArray& line );
+    static Handler* findHandlerForCommandAuthenticated( const QByteArray& line, ImapStreamParser *streamParser );
 
     void setConnection( AkonadiConnection* connection );
     AkonadiConnection* connection() const;

@@ -53,7 +53,6 @@
 #include "handler/status.h"
 #include "handler/store.h"
 #include "handler/transaction.h"
-#include "handler/uid.h"
 
 #include "storage/querybuilder.h"
 #include "imapstreamparser.h"
@@ -101,8 +100,20 @@ QByteArray Handler::tag( ) const
     return m_tag;
 }
 
-Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & command )
+Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_command, ImapStreamParser *streamParser )
 {
+  QByteArray command( _command );
+  Scope::SelectionScope scope = Scope::None;
+
+  // deal with command prefixes
+  if ( command == AKONADI_CMD_UID ) {
+    scope = Scope::Uid;
+    command = streamParser->readString();
+  } else if ( command == AKONADI_CMD_RID ) {
+    scope = Scope::Rid;
+    command = streamParser->readString();
+  }
+
     // allowed commands are listed below ;-).
     if ( command == "APPEND" )
         return new Append();
@@ -111,21 +122,17 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     if ( command == "LIST" )
         return new List();
     if ( command == "SELECT" )
-        return new Select( Scope::None );
+        return new Select( scope );
     if ( command == "SEARCH_STORE" )
         return new SearchPersistent();
     if ( command == "NOOP" )
         return new Noop();
-    if ( command == "FETCH" )
-        return new Fetch( Scope::None );
+    if ( command == AKONADI_CMD_ITEMFETCH )
+        return new Fetch( scope );
     if ( command == "EXPUNGE" )
         return new Expunge();
-    if ( command == AKONADI_CMD_UID )
-        return new Uid( Scope::Uid );
-    if ( command == AKONADI_CMD_RID )
-        return new Uid( Scope::Rid );
     if ( command == "STORE" )
-        return new Store();
+        return new Store( scope);
     if ( command == "STATUS" )
         return new Status();
     if ( command == "DELETE" )
@@ -143,9 +150,9 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     if ( command == "X-AKAPPEND" )
       return new AkAppend();
     if ( command == "X-AKLIST" )
-      return new AkList( Scope::None, false );
+      return new AkList( scope, false );
     if ( command == "X-AKLSUB" )
-      return new AkList( Scope::None, true );
+      return new AkList( scope, true );
     if ( command == "SUBSCRIBE" )
       return new Subscribe( true );
     if ( command == "UNSUBSCRIBE" )
@@ -161,7 +168,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
     if ( command == AKONADI_CMD_RESOURCESELECT )
       return new ResourceSelect();
     if ( command == AKONADI_CMD_ITEMDELETE )
-      return new Remove( Scope::None );
+      return new Remove( scope );
 
     return 0;
 }
@@ -187,7 +194,6 @@ bool Akonadi::Handler::failureResponse( const QString& failureMessage )
     response.setFailure();
     response.setString( failureMessage );
     emit responseAvailable( response );
-    deleteLater();
     return false;
 }
 
@@ -208,7 +214,6 @@ bool Handler::successResponse(const char * successMessage)
   response.setSuccess();
   response.setString( QString::fromLatin1(successMessage) );
   emit responseAvailable( response );
-  deleteLater();
   return true;
 }
 

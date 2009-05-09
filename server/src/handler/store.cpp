@@ -41,12 +41,12 @@
 
 using namespace Akonadi;
 
-Store::Store(bool isUid)
+Store::Store( Scope::SelectionScope scope )
   : Handler()
   , mPos( 0 )
   , mPreviousRevision( -1 )
   , mSize( 0 )
-  , mUidStore( isUid )
+  , mUidStore( scope == Scope::Uid )
 {
 }
 

@@ -113,40 +113,36 @@ void AkonadiConnection::slotDisconnected()
 void AkonadiConnection::slotNewData()
 {
   while ( m_socket->bytesAvailable() > 0 || !m_streamParser->readRemainingData().isEmpty()) {
-    QByteArray tag = m_streamParser->readString();
-    QByteArray command = m_streamParser->readString();
-    m_currentHandler = findHandlerForCommand( command );
-    m_currentHandler->setTag( tag );
-    Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( tag + " " + command + " " + m_streamParser->readRemainingData() ) );
-    assert( m_currentHandler );
-    connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
-             this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
-    connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
-             this, SLOT( slotConnectionStateChange( ConnectionState ) ),
-                         Qt::DirectConnection );
     try {
+      const QByteArray tag = m_streamParser->readString();
+      const QByteArray command = m_streamParser->readString();
+      Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( tag + " " + command + " " + m_streamParser->readRemainingData() ) );
+      m_currentHandler = findHandlerForCommand( command );
+      assert( m_currentHandler );
+      connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
+              this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
+      connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
+              this, SLOT( slotConnectionStateChange( ConnectionState ) ),
+               Qt::DirectConnection );
+      m_currentHandler->setTag( tag );
       m_currentHandler->setStreamParser( m_streamParser );
       if ( !m_currentHandler->parseStream() ) {
         m_streamParser->readUntilCommandEnd(); //just eat the ending newline
       }
-      m_currentHandler = 0;
     } catch ( const Akonadi::HandlerException &e ) {
       m_currentHandler->failureResponse( e.what() );
-      m_currentHandler->deleteLater();
-      m_currentHandler = 0;
       m_streamParser->readUntilCommandEnd(); //just eat the ending newline
     } catch ( const Akonadi::Exception &e ) {
       m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
           + QLatin1String( ": " ) + QString::fromLatin1( e.what()  ) );
-      m_currentHandler->deleteLater();
-      m_currentHandler = 0;
       m_streamParser->readUntilCommandEnd(); //just eat the ending newline
     } catch ( ... ) {
       akError() << "Unknown exception caught: " << akBacktrace();
-      delete m_currentHandler;
-      m_currentHandler = 0;
+      m_currentHandler->failureResponse( "Unknown exception caught" );
       m_streamParser->readUntilCommandEnd(); //just eat the ending newline
     }
+    delete m_currentHandler;
+    m_currentHandler = 0;
 
     if (m_streamParser->readRemainingData().startsWith('\n') || m_streamParser->readRemainingData().startsWith("\r\n"))
       m_streamParser->readUntilCommandEnd(); //just eat the ending newline
@@ -171,9 +167,10 @@ Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
 
     switch ( m_connectionState ) {
         case NonAuthenticated:
-            handler =  Handler::findHandlerForCommandNonAuthenticated( command );            break;
+            handler =  Handler::findHandlerForCommandNonAuthenticated( command );
+            break;
         case Authenticated:
-            handler =  Handler::findHandlerForCommandAuthenticated( command );
+            handler =  Handler::findHandlerForCommandAuthenticated( command, m_streamParser );
             break;
         case Selected:
             break;

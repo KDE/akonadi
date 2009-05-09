@@ -42,9 +42,6 @@ void HandlerTest::testInit()
 /// ---- List ----
 void HandlerTest::testSeparatorList()
 {
-    Handler* l = getHandlerFor("LIST");
-    QVERIFY( dynamic_cast<List*>(l) != 0 );
-
     QBuffer buffer;
     buffer.open( QBuffer::ReadWrite);
     ImapStreamParser parser(&buffer);
@@ -53,6 +50,8 @@ void HandlerTest::testSeparatorList()
     buffer.write( line );
     buffer.seek(0);
 
+    Handler* l = getHandlerFor("LIST", &parser);
+    QVERIFY( dynamic_cast<List*>(l) != 0 );
     l->setStreamParser(&parser);
 
     QSignalSpy spy(l, SIGNAL( responseAvailable( const Response& )));
@@ -69,9 +68,6 @@ void HandlerTest::testSeparatorList()
 void HandlerTest::testRootPercentList()
 {
     QSKIP( "Does not work without MockBackend", SkipAll );
-    Handler* l = getHandlerFor("LIST");
-    QVERIFY( dynamic_cast<List*>(l) != 0 );
-
     QBuffer buffer;
     buffer.open( QBuffer::ReadWrite);
     ImapStreamParser parser(&buffer);
@@ -80,6 +76,8 @@ void HandlerTest::testRootPercentList()
     buffer.write( line );
     buffer.seek(0);
 
+    Handler* l = getHandlerFor("LIST", &parser);
+    QVERIFY( dynamic_cast<List*>(l) != 0 );
     l->setStreamParser(&parser);
 
     QSignalSpy spy(l, SIGNAL( responseAvailable( const Response& )));
@@ -96,9 +94,6 @@ void HandlerTest::testRootPercentList()
 void HandlerTest::testRootStarList()
 {
     QSKIP( "Does not work without MockBackend", SkipAll );
-    Handler* l = getHandlerFor("LIST");
-    QVERIFY( dynamic_cast<List*>(l) != 0 );
-
     const QByteArray line = "LIST \"\" \"*\"";
     QBuffer buffer;
     buffer.open( QBuffer::ReadWrite);
@@ -107,6 +102,8 @@ void HandlerTest::testRootStarList()
     buffer.write( line );
     buffer.seek(0);
 
+    Handler* l = getHandlerFor("LIST", &parser);
+    QVERIFY( dynamic_cast<List*>(l) != 0 );
     l->setStreamParser(&parser);
 
     QSignalSpy spy(l, SIGNAL( responseAvailable( const Response& )));
@@ -126,9 +123,6 @@ void HandlerTest::testRootStarList()
 void HandlerTest::testInboxList()
 {
     QSKIP( "Does not work without MockBackend", SkipAll );
-    Handler* l = getHandlerFor("LIST");
-    QVERIFY( dynamic_cast<List*>(l) != 0 );
-
     const QByteArray line = "LIST \"\" \"INBOX\"";
     QBuffer buffer;
     buffer.open( QBuffer::ReadWrite);
@@ -137,6 +131,8 @@ void HandlerTest::testInboxList()
     buffer.write( line );
     buffer.seek(0);
 
+    Handler* l = getHandlerFor("LIST", &parser);
+    QVERIFY( dynamic_cast<List*>(l) != 0 );
     l->setStreamParser(&parser);
 
     QSignalSpy spy(l, SIGNAL( responseAvailable( const Response& )));
@@ -168,9 +164,9 @@ Response HandlerTest::nextResponse( QSignalSpy& spy )
     return r;
 }
 
-Handler* HandlerTest::getHandlerFor(const QByteArray& command )
+Handler* HandlerTest::getHandlerFor( const QByteArray& command, ImapStreamParser *parser )
 {
-    Handler *h = Handler::findHandlerForCommandAuthenticated( command );
+    Handler *h = Handler::findHandlerForCommandAuthenticated( command, parser );
     if( h != 0 ) {
         h->setTag("1");
         h->setConnection( MockObjects::mockConnection() );

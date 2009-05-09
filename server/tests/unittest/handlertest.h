@@ -27,6 +27,10 @@
 
 using namespace Akonadi;
 
+namespace Akonadi {
+  class ImapStreamParser;
+}
+
 class HandlerTest: public QObject
 {
   Q_OBJECT
@@ -43,7 +47,7 @@ class HandlerTest: public QObject
   private:
     // Helper
     Response nextResponse( QSignalSpy& spy );
-    Handler* getHandlerFor( const QByteArray& command );
+    Handler* getHandlerFor( const QByteArray& command, ImapStreamParser *parser );
 };
 
 #endif
