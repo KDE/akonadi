@@ -29,6 +29,8 @@
 #include <boost/type_traits/is_same.hpp>
 #include <typeinfo>
 
+#include "exception.h"
+
 /* WARNING
  * The below is an implementation detail of the Item class. It is not to be
  * considered public API, and subject to change without notice
