@@ -39,7 +39,7 @@
 #else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
   include(FindLibraryWithDebug)
 
-  # have packageconfig set variables to find Soprano: 
+  # have packageconfig set variables to find Soprano:
   # package config dirs are used as secondary search paths after install_dir
   find_package(PkgConfig)
   if (PKG_CONFIG_FOUND)
@@ -49,7 +49,7 @@
   find_path(SOPRANO_INCLUDE_DIR 
     NAMES
     soprano/soprano.h
-    PATHS
+    HINTS
     ${INCLUDE_INSTALL_DIR}
     ${Soprano_PKGCONF_INCLUDE_DIRS}
     )
@@ -58,7 +58,7 @@
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoindex
-    PATHS
+    HINTS
     ${LIB_INSTALL_DIR}
     ${Soprano_PKGCONF_LIBRARY_DIRS}
     )
@@ -67,7 +67,7 @@
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoclient
-    PATHS
+    HINTS
     ${LIB_INSTALL_DIR}
     ${Soprano_PKGCONF_LIBRARY_DIRS}
     )
@@ -75,7 +75,7 @@
   find_library_with_debug(SOPRANO_LIBRARIES
     WIN32_DEBUG_POSTFIX d
     NAMES soprano
-    PATHS
+    HINTS
     ${LIB_INSTALL_DIR}
     ${Soprano_PKGCONF_LIBRARY_DIRS}
   )
@@ -84,7 +84,7 @@
     WIN32_DEBUG_POSTFIX d
     NAMES
     sopranoserver
-    PATHS
+    HINTS
     ${LIB_INSTALL_DIR}
     ${Soprano_PKGCONF_LIBRARY_DIRS}
     )
@@ -129,14 +129,18 @@
       endif(SOPRANO_VERSION STRLESS "${SOPRANO_MIN_VERSION}")
     endif(SOPRANO_VERSION_MATCH)
   endif(Soprano_FOUND)
-  
+
+
   #look for parser plugins
   if(Soprano_FOUND)
     find_path(SOPRANO_PLUGIN_DIR 
       NAMES
       soprano/plugins
       PATHS
-      ${SHARE_INSTALL_PREFIX} /usr/share /usr/local/share
+      ${SOPRANO_INCLUDE_DIR}/../share
+      ${SHARE_INSTALL_PREFIX} 
+      /usr/share 
+      /usr/local/share
       NO_DEFAULT_PATH
       NO_SYSTEM_ENVIRONMENT_PATH
       )
@@ -181,7 +185,7 @@
 
   if(Soprano_FOUND)
     if(NOT Soprano_FIND_QUIETLY)
-      message(STATUS "Found Soprano: ${SOPRANO_LIBRARIES}")
+      message(STATUS "Found Soprano version ${SOPRANO_VERSION}: ${SOPRANO_LIBRARIES}")
       message(STATUS "Found Soprano includes: ${SOPRANO_INCLUDE_DIR}")
       message(STATUS "Found Soprano Index: ${SOPRANO_INDEX_LIBRARIES}")
       message(STATUS "Found Soprano Client: ${SOPRANO_CLIENT_LIBRARIES}")
