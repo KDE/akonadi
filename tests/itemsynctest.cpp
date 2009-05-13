@@ -86,6 +86,7 @@ class ItemsyncTest : public QObject
       Item::List origItems = fetchItems( col );
 
       ItemSync* syncer = new ItemSync( col );
+      syncer->setAutoDelete( false );
       QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
       QVERIFY( spy.isValid() );
       syncer->setTotalItems( origItems.count() );
@@ -103,11 +104,13 @@ class ItemsyncTest : public QObject
       QTest::qWait( 1000 ); // let it finish its job
       QCOMPARE( spy.count(), 1 );
       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
-      QVERIFY( job );
+      QCOMPARE( job, syncer );
       QCOMPARE( job->error(), 0 );
 
       Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
+
+      delete syncer;
     }
 
     void testIncrementalSync()
@@ -150,6 +153,7 @@ class ItemsyncTest : public QObject
       Item::List origItems = fetchItems( col );
 
       ItemSync* syncer = new ItemSync( col );
+      syncer->setAutoDelete( false );
       QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
       QVERIFY( spy.isValid() );
       syncer->setStreamingEnabled( true );
@@ -168,11 +172,13 @@ class ItemsyncTest : public QObject
       QTest::qWait( 1000 ); // let it finish its job
       QCOMPARE( spy.count(), 1 );
       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
-      QVERIFY( job );
+      QCOMPARE( job, syncer );
       QCOMPARE( job->error(), 0 );
 
       Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
+
+      delete syncer;
     }
 
     void testEmptyIncrementalSync()
