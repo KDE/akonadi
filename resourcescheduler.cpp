@@ -223,7 +223,7 @@ void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray 
 
   if ( s_resourcetracker ) {
     QList<QVariant> argumentList;
-    argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16)
+    argumentList << static_cast<AgentBase*>(  parent() )->identifier()
                  << QString::number( task.serial )
                  << QString()
                  << QString::fromLatin1( taskType );
