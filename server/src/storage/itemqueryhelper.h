@@ -28,6 +28,7 @@ namespace Akonadi {
 class AkonadiConnection;
 class ImapSet;
 class QueryBuilder;
+class Scope;
 
 /**
   Helper methods to generate WHERE clauses for item queries based on the item set
@@ -51,6 +52,12 @@ namespace ItemQueryHelper
     The rid context is taken from @p connection.
   */
   void remoteIdToQuery( const QStringList &rids, AkonadiConnection* connection, QueryBuilder &qb );
+
+  /**
+    Add conditions to @p qb for the given item operation scope @p scope.
+    The rid context is taken from @p connection, if none is specified an exception is thrown.
+  */
+  void scopeToQuery( const Scope &scope, AkonadiConnection* connection, QueryBuilder &qb );
 }
 
 }

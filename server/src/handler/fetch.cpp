@@ -75,7 +75,7 @@ void Fetch::updateItemAccessTime()
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.updateColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
-  addQueryConditions( qb );
+  ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
 }
@@ -115,7 +115,7 @@ QueryBuilder Fetch::buildPartQuery( const QStringList &partList, bool allPayload
     if ( allAttrs )
       cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
-    addQueryConditions( partQuery );
+    ItemQueryHelper::scopeToQuery( mScope, connection(), partQuery );
     partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   }
   return partQuery;
@@ -139,7 +139,7 @@ void Fetch::buildItemQuery()
   mItemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
   mItemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
   mItemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
-  addQueryConditions( mItemQuery );
+  ItemQueryHelper::scopeToQuery( mScope, connection(), mItemQuery );
   mItemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
   if ( !mItemQuery.exec() )
@@ -223,7 +223,7 @@ bool Fetch::parseStream()
     flagQuery.addColumn( Flag::nameFullColumnName() );
     flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
     flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
-    addQueryConditions( flagQuery );
+    ItemQueryHelper::scopeToQuery( mScope, connection(), flagQuery );
     flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     if ( !flagQuery.exec() )
@@ -403,15 +403,4 @@ void Fetch::parseCommandStream()
     }
   }
 }
-
-void Fetch::addQueryConditions(Akonadi::QueryBuilder& qb)
-{
-  if ( mScope.scope() == Scope::Uid || mScope.scope() == Scope::None )
-    ItemQueryHelper::itemSetToQuery( mScope.uidSet(), mScope.scope() == Scope::Uid, connection(), qb );
-  else if ( mScope.scope() == Scope::Rid )
-    ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection(), qb );
-  else
-    throw HandlerException( "WTF?!?" );
-}
-
 

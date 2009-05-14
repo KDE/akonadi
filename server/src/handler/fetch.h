@@ -52,7 +52,6 @@ class Fetch : public Handler
     QueryBuilder buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
     void retrieveMissingPayloads( const QStringList &payloadList );
     void parseCommandStream();
-    void addQueryConditions( QueryBuilder &qb );
 
   private:
     QueryBuilder mItemQuery;

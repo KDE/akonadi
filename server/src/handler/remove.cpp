@@ -39,14 +39,7 @@ bool Remove::parseStream()
 {
   mScope.parseScope( m_streamParser );
   SelectQueryBuilder<PimItem> qb;
-  if ( mScope.scope() == Scope::None || mScope.scope() == Scope::Uid ) {
-    ItemQueryHelper::itemSetToQuery( mScope.uidSet(), mScope.scope() == Scope::Uid, connection(), qb );
-  } else if ( mScope.scope() == Scope::Rid ) {
-    if ( connection()->selectedCollectionId() <= 0 && !connection()->resourceContext().isValid() )
-      throw HandlerException( "Deletion based on remote identifier requires a resource or collection context" );
-    ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection(), qb );
-  } else
-    throw HandlerException( "WTF?" );
+  ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );

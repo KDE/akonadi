@@ -23,6 +23,8 @@
 #include "entities.h"
 #include "storage/querybuilder.h"
 #include "libs/imapset_p.h"
+#include "handler/scope.h"
+#include "handler.h"
 
 using namespace Akonadi;
 
@@ -87,4 +89,16 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection
     qb.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
     qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->resourceContext().id() );
   }
+}
+
+void ItemQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* connection, QueryBuilder& qb)
+{
+  if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
+    itemSetToQuery( scope.uidSet(), scope.scope() == Scope::Uid, connection, qb );
+  } else if ( scope.scope() == Scope::Rid ) {
+    if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() )
+      throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
+    ItemQueryHelper::remoteIdToQuery( scope.ridSet(), connection, qb );
+  } else
+    throw HandlerException( "WTF?" );
 }
