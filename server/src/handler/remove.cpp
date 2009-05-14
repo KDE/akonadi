@@ -37,19 +37,14 @@ Remove::Remove( Scope::SelectionScope scope ) :
 
 bool Remove::parseStream()
 {
+  mScope.parseScope( m_streamParser );
   SelectQueryBuilder<PimItem> qb;
-  if ( mScope == Scope::None || mScope == Scope::Uid ) {
-    ImapSet set = m_streamParser->readSequenceSet();
-    if ( set.isEmpty() )
-      throw HandlerException( "Empty uid set specified" );
-    ItemQueryHelper::itemSetToQuery( set, mScope == Scope::Uid, connection(), qb );
-  } else if ( mScope == Scope::Rid ) {
+  if ( mScope.scope() == Scope::None || mScope.scope() == Scope::Uid ) {
+    ItemQueryHelper::itemSetToQuery( mScope.uidSet(), mScope.scope() == Scope::Uid, connection(), qb );
+  } else if ( mScope.scope() == Scope::Rid ) {
     if ( connection()->selectedCollectionId() <= 0 && !connection()->resourceContext().isValid() )
       throw HandlerException( "Deletion based on remote identifier requires a resource or collection context" );
-    QString rid = m_streamParser->readUtf8String();
-    if ( rid.isEmpty() )
-      throw HandlerException( "Empty remote identifier specified" );
-    ItemQueryHelper::remoteIdToQuery( rid, connection(), qb );
+    ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection(), qb );
   } else
     throw HandlerException( "WTF?" );
 

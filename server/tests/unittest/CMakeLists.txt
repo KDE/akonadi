@@ -3,18 +3,16 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
-set(handlertest_SRCS handlertest.cpp teststoragebackend.cpp)
+macro(add_server_test _source)
+  set(_test ${_source})
+  get_filename_component(_name ${_source} NAME_WE)
+  automoc4_add_executable(${_name} ${_source})
+  add_test(akonadi-${_name} ${_name})
+  target_link_libraries(${_name} akonadiprivate ${QT_QTTEST_LIBRARY})
+endmacro(add_server_test)
 
-automoc4_add_executable(handlertest ${handlertest_SRCS})
-add_test(akonadi-handlertest handlertest)
-
-target_link_libraries(handlertest akonadiprivate ${QT_QTTEST_LIBRARY})
-
-set(imapstreamparsertest_SRCS imapstreamparsertest.cpp)
-
+add_server_test(handlertest.cpp)
 if(NOT WIN32)
-  automoc4_add_executable(imapstreamparsertest ${imapstreamparsertest_SRCS})
-  add_test(akonadi-imapstreamparsertest imapstreamparsertest)
-
-  target_link_libraries(imapstreamparsertest akonadiprivate ${QT_QTTEST_LIBRARY})
+  add_server_test(imapstreamparsertest.cpp)
 endif(NOT WIN32)
+add_server_test(scopetest.cpp)

@@ -20,17 +20,42 @@
 #ifndef AKONADI_SCOPE_H
 #define AKONADI_SCOPE_H
 
-namespace Akonadi
-{
+#include "libs/imapset_p.h"
+#include <QStringList>
 
-namespace Scope {
-  enum SelectionScope
-  {
-    None,
-    Uid,
-    Rid
-  };
-}
+namespace Akonadi {
+
+class ImapStreamParser;
+
+/**
+  Represents a set of items selected for an operations.
+*/
+class Scope
+{
+  public:
+    enum SelectionScope
+    {
+      None,
+      Uid,
+      Rid
+    };
+
+    Scope( SelectionScope scope );
+    /**
+      Parse the item set dependent on the set selection scope.
+      The set has to be non-empty. If not a HandlerException is thrown.
+    */
+    void parseScope( ImapStreamParser *parser );
+
+    SelectionScope scope() const;
+    ImapSet uidSet() const;
+    QStringList ridSet() const;
+
+  private:
+    SelectionScope mScope;
+    ImapSet mUidSet;
+    QStringList mRidSet;
+};
 
 }
 

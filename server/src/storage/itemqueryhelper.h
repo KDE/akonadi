@@ -50,7 +50,7 @@ namespace ItemQueryHelper
     Add conditions to @p qb for the given remote identifier @p rid.
     The rid context is taken from @p connection.
   */
-  void remoteIdToQuery( const QString &rid, AkonadiConnection* connection, QueryBuilder &qb );
+  void remoteIdToQuery( const QStringList &rids, AkonadiConnection* connection, QueryBuilder &qb );
 }
 
 }

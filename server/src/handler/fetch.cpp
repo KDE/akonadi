@@ -82,7 +82,7 @@ void Fetch::updateItemAccessTime()
 
 void Fetch::triggerOnDemandFetch()
 {
-  if ( mScope != Scope::None || connection()->selectedCollectionId() <= 0 )
+  if ( mScope.scope() != Scope::None || connection()->selectedCollectionId() <= 0 )
     return;
   Collection col = connection()->selectedCollection();
   // HACK: don't trigger on-demand syncing if the resource is the one triggering it
@@ -352,9 +352,9 @@ bool Fetch::parseStream()
   // update atime
   updateItemAccessTime();
 
-  if ( mScope == Scope::Uid )
+  if ( mScope.scope() == Scope::Uid )
     successResponse( "UID FETCH completed" );
-  else if ( mScope == Scope::Rid )
+  else if ( mScope.scope() == Scope::Rid )
     successResponse( "RID FETCH completed" );
   else
     successResponse( "FETCH completed" );
@@ -365,16 +365,7 @@ bool Fetch::parseStream()
 void Fetch::parseCommandStream()
 {
   // sequence set
-  if ( mScope == Scope::None || mScope == Scope::Uid ) {
-    mSet = m_streamParser->readSequenceSet();
-    if ( mSet.isEmpty() )
-      throw HandlerException( "No items selected" );
-  } else if ( mScope == Scope::Rid ) {
-    mRid = m_streamParser->readUtf8String();
-    if ( mRid.isEmpty() )
-      throw HandlerException( "Empty remote identifier specified" );
-  } else
-    throw HandlerException( "WTF?!?" );
+  mScope.parseScope( m_streamParser );
 
   // macro vs. attribute list
   forever {
@@ -415,10 +406,10 @@ void Fetch::parseCommandStream()
 
 void Fetch::addQueryConditions(Akonadi::QueryBuilder& qb)
 {
-  if ( mScope == Scope::Uid || mScope == Scope::None )
-    ItemQueryHelper::itemSetToQuery( mSet, mScope == Scope::Uid, connection(), qb );
-  else if ( mScope == Scope::Rid )
-    ItemQueryHelper::remoteIdToQuery( mRid, connection(), qb );
+  if ( mScope.scope() == Scope::Uid || mScope.scope() == Scope::None )
+    ItemQueryHelper::itemSetToQuery( mScope.uidSet(), mScope.scope() == Scope::Uid, connection(), qb );
+  else if ( mScope.scope() == Scope::Rid )
+    ItemQueryHelper::remoteIdToQuery( mScope.ridSet(), connection(), qb );
   else
     throw HandlerException( "WTF?!?" );
 }

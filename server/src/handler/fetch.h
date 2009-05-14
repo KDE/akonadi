@@ -56,10 +56,8 @@ class Fetch : public Handler
 
   private:
     QueryBuilder mItemQuery;
-    ImapSet mSet;
-    QString mRid;
     QList<QByteArray> mRequestedParts;
-    Scope::SelectionScope mScope;
+    Scope mScope;
     bool mCacheOnly;
     bool mFullPayload;
     bool mAllAttrs;

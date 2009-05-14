@@ -52,7 +52,7 @@ class  Remove : public Handler
     bool parseStream();
 
   private:
-    Scope::SelectionScope mScope;
+    Scope mScope;
 };
 
 }
