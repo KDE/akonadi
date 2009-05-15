@@ -22,6 +22,7 @@
 
 #include <akonadi/cachepolicy.h>
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 namespace Akonadi {
 
@@ -80,6 +81,12 @@ class ProtocolHelper
       Decode part label and namespace.
     */
     static QByteArray decodePartIdentifier( const QByteArray &data, PartNamespace &ns );
+
+    /**
+      Converts the given set of items into a protocol representation.
+      @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
+    */
+    static QByteArray itemSetToByteArray( const Item::List &items, const QByteArray &command );
 };
 
 }

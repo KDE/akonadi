@@ -23,15 +23,13 @@
 #include "collectionselectjob_p.h"
 #include "item.h"
 #include "job_p.h"
+#include "protocolhelper_p.h"
 
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/imapset_p.h>
 #include <akonadi/private/protocol_p.h>
 
 #include <KLocale>
-
-#include <boost/bind.hpp>
-#include <algorithm>
 
 using namespace Akonadi;
 
@@ -92,30 +90,13 @@ void ItemDeleteJob::doStart()
 
   if ( !d->mItems.isEmpty() ) {
     QByteArray command = d->newTag();
-    std::sort( d->mItems.begin(), d->mItems.end(), boost::bind( &Item::id, _1 ) < boost::bind( &Item::id, _2 ) );
-    if ( d->mItems.first().isValid() ) {
-      // all items have a uid set
-      command += " " AKONADI_CMD_UID " " AKONADI_CMD_ITEMDELETE " ";
-      QList<Item::Id>  uids;
-      foreach ( const Item &item, d->mItems )
-        uids << item.id();
-      ImapSet set;
-      set.add( uids );
-      command += set.toImapSequenceSet();
-    } else {
-      // delete by remote identifier
-      foreach ( const Item &item, d->mItems ) {
-        if ( item.remoteId().isEmpty() ) {
-          setError( Unknown );
-          setErrorText( i18n( "No remote identifier specified" ) );
-          emitResult();
-          return;
-        }
-      }
-
-      command += " " AKONADI_CMD_RID " " AKONADI_CMD_ITEMDELETE " ";
-      Q_ASSERT( d->mItems.count() == 1 ); // TODO implement support for multiple items
-      command += ImapParser::quote( d->mItems.first().remoteId().toUtf8() );
+    try {
+      command += ProtocolHelper::itemSetToByteArray( d->mItems, AKONADI_CMD_ITEMDELETE );
+    } catch ( const std::exception &e ) {
+      setError( Unknown );
+      setErrorText( QString::fromUtf8( e.what() ) );
+      emitResult();
+      return;
     }
     command += '\n';
     d->writeData( command );

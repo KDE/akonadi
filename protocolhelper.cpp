@@ -20,11 +20,17 @@
 #include "protocolhelper_p.h"
 
 #include "attributefactory.h"
-#include "imapparser_p.h"
+#include "exception.h"
+#include <akonadi/private/imapparser_p.h>
+#include <akonadi/private/protocol_p.h>
 
 #include <QtCore/QVarLengthArray>
 
 #include <kdebug.h>
+#include <klocale.h>
+
+#include <boost/bind.hpp>
+#include <algorithm>
 
 using namespace Akonadi;
 
@@ -169,4 +175,42 @@ QByteArray ProtocolHelper::decodePartIdentifier( const QByteArray &data, PartNam
     ns = PartGlobal;
     return data;
   }
+}
+
+QByteArray ProtocolHelper::itemSetToByteArray( const Item::List &_items, const QByteArray &command )
+{
+  if ( _items.isEmpty() )
+    throw Exception( "No items specified" );
+
+  Item::List items( _items );
+
+  QByteArray rv;
+  std::sort( items.begin(), items.end(), boost::bind( &Item::id, _1 ) < boost::bind( &Item::id, _2 ) );
+  if ( items.first().isValid() ) {
+    // all items have a uid set
+    rv += " " AKONADI_CMD_UID " ";
+    rv += command;
+    rv += ' ';
+    QList<Item::Id>  uids;
+    foreach ( const Item &item, items )
+      uids << item.id();
+    ImapSet set;
+    set.add( uids );
+    rv += set.toImapSequenceSet();
+  } else {
+    // check if all items have a remote id
+    QList<QByteArray> rids;
+    foreach ( const Item &item, items ) {
+      if ( item.remoteId().isEmpty() )
+        throw Exception( i18n( "No remote identifier specified" ) );
+      rids << ImapParser::quote( item.remoteId().toUtf8() );
+    }
+
+    rv += " " AKONADI_CMD_RID " ";
+    rv += command;
+    rv += " (";
+    rv += ImapParser::join( rids, " " );
+    rv += ')';
+  }
+  return rv;
 }
