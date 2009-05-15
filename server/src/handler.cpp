@@ -43,6 +43,7 @@
 #include "handler/login.h"
 #include "handler/logout.h"
 #include "handler/modify.h"
+#include "handler/move.h"
 #include "handler/noop.h"
 #include "handler/remove.h"
 #include "handler/rename.h"
@@ -131,8 +132,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
         return new Fetch( scope );
     if ( command == "EXPUNGE" )
         return new Expunge();
-    if ( command == "STORE" )
-        return new Store( scope);
+    if ( command == AKONADI_CMD_ITEMMODIFY )
+        return new Store( scope );
     if ( command == "STATUS" )
         return new Status();
     if ( command == "DELETE" )
@@ -147,7 +148,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
       return new TransactionHandler( TransactionHandler::Rollback );
     if ( command == "COMMIT" )
       return new TransactionHandler( TransactionHandler::Commit );
-    if ( command == "X-AKAPPEND" )
+    if ( command == AKONADI_CMD_ITEMCREATE )
       return new AkAppend();
     if ( command == "X-AKLIST" )
       return new AkList( scope, false );
@@ -157,7 +158,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
       return new Subscribe( true );
     if ( command == "UNSUBSCRIBE" )
       return new Subscribe( false );
-    if ( command == "COPY" )
+    if ( command == AKONADI_CMD_ITEMCOPY )
       return new Copy();
     if ( command == "COLCOPY" )
       return new ColCopy();
@@ -169,6 +170,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
       return new ResourceSelect();
     if ( command == AKONADI_CMD_ITEMDELETE )
       return new Remove( scope );
+    if ( command == AKONADI_CMD_ITEMMOVE )
+      return new Move( scope );
 
     return 0;
 }

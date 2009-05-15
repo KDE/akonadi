@@ -239,6 +239,17 @@ bool ImapStreamParser::hasList()
   return false;
 }
 
+void ImapStreamParser::beginList()
+{
+  if ( !waitForMoreData( m_position >= m_data.length() ) )
+    throw ImapParserException("Unable to read more data");
+  stripLeadingSpaces();
+  if ( m_data[m_position] != '(' )
+    throw ImapParserException( "Stream not at a beginning of a list" );
+  ++m_position;
+  return;
+}
+
 bool ImapStreamParser::atListEnd()
 {
   if ( !waitForMoreData( m_position >= m_data.length() ) )

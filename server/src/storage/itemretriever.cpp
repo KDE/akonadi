@@ -30,6 +30,7 @@
 using namespace Akonadi;
 
 ItemRetriever::ItemRetriever( AkonadiConnection *connection ) :
+  mScope( Scope::Invalid ),
   mConnection( connection ),
   mFullPayload( false ),
   mRecursive( false )
@@ -79,6 +80,11 @@ void ItemRetriever::setCollection(const Collection& collection, bool recursive)
   mRecursive = recursive;
 }
 
+void ItemRetriever::setScope(const Scope& scope)
+{
+  mScope = scope;
+}
+
 static const int itemQueryIdColumn = 0;
 static const int itemQueryRidColumn = 1;
 static const int itemQueryMimeTypeColumn = 2;
@@ -106,7 +112,10 @@ Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
                                  QString::fromLatin1( mConnection->sessionId() ) );
   }
 
-  ItemQueryHelper::itemSetToQuery( mItemSet, itemQuery, mCollection );
+  if ( mScope.scope() != Scope::Invalid )
+    ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
+  else
+    ItemQueryHelper::itemSetToQuery( mItemSet, itemQuery, mCollection );
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
 

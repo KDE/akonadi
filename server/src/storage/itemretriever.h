@@ -22,6 +22,7 @@
 
 #include "exception.h"
 #include "entities.h"
+#include "handler/scope.h"
 
 #include "libs/imapset_p.h"
 
@@ -52,6 +53,8 @@ class ItemRetriever
     void setItem( const Akonadi::Entity::Id &id );
     /** Retrieve all items in the given collection. */
     void setCollection( const Akonadi::Collection &collection, bool recursive = true );
+    /** Retrieve all items matching the given item scope. */
+    void setScope( const Scope &scope );
 
     void exec();
 
@@ -62,6 +65,7 @@ class ItemRetriever
   private:
     ImapSet mItemSet;
     Collection mCollection;
+    Scope mScope;
     AkonadiConnection* mConnection;
     QStringList mParts;
     bool mFullPayload;

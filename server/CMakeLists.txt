@@ -78,6 +78,7 @@ set(libakonadiprivate_SRCS
   src/handler/login.cpp
   src/handler/logout.cpp
   src/handler/modify.cpp
+  src/handler/move.cpp
   src/handler/noop.cpp
   src/handler/remove.cpp
   src/handler/rename.cpp

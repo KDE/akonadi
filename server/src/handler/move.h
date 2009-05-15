@@ -17,47 +17,44 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SCOPE_H
-#define AKONADI_SCOPE_H
+#ifndef AKONADI_MOVE_H
+#define AKONADI_MOVE_H
 
-#include "libs/imapset_p.h"
-#include <QStringList>
+#include "handler.h"
+#include "scope.h"
 
 namespace Akonadi {
 
-class ImapStreamParser;
-
 /**
-  Represents a set of items selected for an operations.
+  @ingroup akonadi_server_handler
+
+  Handler for the item move command.
+
+  <h4>Syntax</h4>
+  One of the following three:
+  @verbatim
+  <tag> MOVE <uid-set> <destination>
+  <tag> UID MOVE <uid-set> <destination>
+  <tag> RID MOVE <remote-identifiers> <destination>
+  @endverbatim
+
+  <h4>Semantics</h4>
+  Moves the selected items. Item selection can happen within the usual three scopes:
+  - based on a uid set relative to the currently selected collection
+  - based on a global uid set (UID)
+  - based on a list of remote identifiers within the currently selected collection (RID)
+
+  Destination is a collection id.
 */
-class Scope
+class  Move : public Handler
 {
+  Q_OBJECT
   public:
-    enum SelectionScope
-    {
-      Invalid,
-      None,
-      Uid,
-      Rid
-    };
-
-    Scope( SelectionScope scope );
-    /**
-      Parse the item set dependent on the set selection scope.
-      The set has to be non-empty. If not a HandlerException is thrown.
-    */
-    void parseScope( ImapStreamParser *parser );
-
-    SelectionScope scope() const;
-    void setScope( SelectionScope scope );
-    ImapSet uidSet() const;
-    void setUidSet( const ImapSet &set );
-    QStringList ridSet() const;
+    Move( Scope::SelectionScope scope );
+    bool parseStream();
 
   private:
-    SelectionScope mScope;
-    ImapSet mUidSet;
-    QStringList mRidSet;
+    Scope mScope;
 };
 
 }

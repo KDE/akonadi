@@ -38,7 +38,7 @@ void Scope::parseScope( ImapStreamParser* parser )
       throw HandlerException( "Empty uid set specified" );
   } else if ( mScope == Rid ) {
     if ( parser->hasList() ) {
-      parser->readChar();
+      parser->beginList();
       while ( !parser->atListEnd() )
         mRidSet << parser->readUtf8String();
     } else {
@@ -56,9 +56,19 @@ Scope::SelectionScope Scope::scope() const
   return mScope;
 }
 
+void Scope::setScope( SelectionScope scope )
+{
+  mScope = scope;
+}
+
 ImapSet Scope::uidSet() const
 {
   return mUidSet;
+}
+
+void Scope::setUidSet(const ImapSet& set)
+{
+  mUidSet = set;
 }
 
 QStringList Scope::ridSet() const

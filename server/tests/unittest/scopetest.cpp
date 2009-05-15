@@ -46,22 +46,40 @@ class ScopeTest : public QObject
       QVERIFY( scope.ridSet().isEmpty() );
     }
 
+    void testRid_data()
+    {
+      QTest::addColumn<QByteArray>( "input" );
+      QTest::addColumn<QString>( "rid" );
+      QTest::addColumn<QByteArray>( "remainder" );
+
+      QTest::newRow( "no list, remainder" )
+        << QByteArray( "\"(my remote id)\" FOO\n" )
+        << QString::fromLatin1( "(my remote id)" )
+        << QByteArray( " FOO\n" );
+      QTest::newRow( "list, no remainder" ) << QByteArray( "(\"A\")" ) << QString::fromLatin1( "A" ) << QByteArray();
+      QTest::newRow( "list, no reaminder, leading space" )
+        << QByteArray( " (\"A\")\n" ) << QString::fromLatin1( "A" ) << QByteArray( "\n" );
+    }
+
     void testRid()
     {
+      QFETCH( QByteArray, input );
+      QFETCH( QString, rid );
+      QFETCH( QByteArray, remainder );
+
       Scope scope( Scope::Rid );
 
-      QByteArray input( "\"(my remote id)\" FOO\n" );
       QBuffer buffer( &input, this );
       buffer.open( QIODevice::ReadOnly );
       ImapStreamParser parser( &buffer );
 
       scope.parseScope( &parser );
-      QCOMPARE( parser.readRemainingData(), QByteArray( " FOO\n" ) );
+      QCOMPARE( parser.readRemainingData(), remainder );
 
       QCOMPARE( scope.scope(), Scope::Rid );
       QVERIFY( scope.uidSet().isEmpty() );
       QCOMPARE( scope.ridSet().size(), 1 );
-      QCOMPARE( scope.ridSet().first(), QLatin1String( "(my remote id)" ) );
+      QCOMPARE( scope.ridSet().first(), rid );
     }
 
     void testRidSet()

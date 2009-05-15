@@ -157,9 +157,18 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
     */
     bool hasList();
 
+    /**
+     * Begin reading a parenthesized list. This call might block.
+     * This call will throw an exception if the parser is not at a beginning of a list,
+     * that is hasList() returns false.
+     * @see hasList(), atListEnd
+     */
+    void beginList();
+
      /**
      * Check if the next data is a parenthesized list end. This call might block.
-     * @return true if a parenthesized list end.
+     * @return true if a parenthesized list end. In this case the closing parenthesis
+     * is read from the stream.
       */
     bool atListEnd();
 
