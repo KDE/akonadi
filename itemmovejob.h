@@ -37,13 +37,10 @@ class ItemMoveJobPrivate;
  * @code
  *
  * Akonadi::Item item = ...
- * Akonadi::Collection collection = Akonadi::Collection::root();
+ * Akonadi::Collection collection = ...
  *
  * Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( item, collection );
- * if ( job->exec() )
- *   qDebug() << "Item moved successfully";
- * else
- *   qDebug() << "Error occurred";
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(moveResult(KJob*)) );
  *
  * @endcode
  *
@@ -62,6 +59,15 @@ class AKONADI_EXPORT ItemMoveJob : public Job
      * @param parent The parent object.
      */
     ItemMoveJob( const Item &item, const Collection &target, QObject *parent = 0 );
+
+    /**
+     * Move the given items into @p target.
+     *
+     * @param items A list of items to move.
+     * @param target The destination collection.
+     * @param parent The parent object.
+     */
+    ItemMoveJob( const QList<Item> &items, const Collection &target, QObject *parent = 0 );
 
     /**
      * Destroys the item move job.

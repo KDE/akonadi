@@ -22,6 +22,7 @@
 #include "collection.h"
 #include "item.h"
 #include "job_p.h"
+#include "protocolhelper_p.h"
 
 using namespace Akonadi;
 
@@ -34,7 +35,7 @@ class Akonadi::ItemMoveJobPrivate: public JobPrivate
     }
 
     Collection mTarget;
-    Item mItem;
+    Item::List mItems;
 };
 
 ItemMoveJob::ItemMoveJob(const Item & item, const Collection & target, QObject * parent) :
@@ -42,7 +43,15 @@ ItemMoveJob::ItemMoveJob(const Item & item, const Collection & target, QObject *
 {
   Q_D( ItemMoveJob );
   d->mTarget = target;
-  d->mItem = item;
+  d->mItems << item;
+}
+
+ItemMoveJob::ItemMoveJob( const Item::List& items, const Collection& target, QObject* parent) :
+  Job( new ItemMoveJobPrivate( this ), parent )
+{
+  Q_D( ItemMoveJob );
+  d->mTarget = target;
+  d->mItems = items;
 }
 
 ItemMoveJob::~ ItemMoveJob()
@@ -52,10 +61,18 @@ ItemMoveJob::~ ItemMoveJob()
 void ItemMoveJob::doStart()
 {
   Q_D( ItemMoveJob );
-
   QByteArray command = d->newTag();
-  command += " UID STORE " + QByteArray::number( d->mItem.id() );
-  command += " NOREV (COLLECTION.SILENT " + QByteArray::number( d->mTarget.id() ) + ")\n";
+  try {
+    command += ProtocolHelper::itemSetToByteArray( d->mItems, "MOVE" );
+  } catch ( const std::exception &e ) {
+    setError( Unknown );
+    setErrorText( QString::fromUtf8( e.what() ) );
+    emitResult();
+    return;
+  }
+  command += ' ';
+  command += QByteArray::number( d->mTarget.id() );
+  command += '\n';
   d->writeData( command );
 }
 

@@ -20,6 +20,7 @@
 #include "test_utils.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/collectionselectjob_p.h>
 #include <akonadi/control.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmovejob.h>
@@ -40,25 +41,43 @@ class ItemMoveTest: public QObject
       Control::start();
     }
 
-    // TODO: test inter and intra resource moves, check content on cold caches
+    // TODO: test inter and intra resource moves
+    void testMove_data()
+    {
+      QTest::addColumn<Item::List>( "items" );
+
+      QTest::newRow( "single uid" ) << (Item::List() << Item( 1 ));
+//       QTest::newRow( "two uid" ) << (Item::List() << Item( 2 ) << Item( 3 ));
+//       Item r1; r1.setRemoteId( "D" );
+//       QTest::newRow( "single rid" ) << (Item::List() << r1);
+    }
+
     void testMove()
     {
-      Collection col( collectionIdFromPath( "res3" ) );
-      QVERIFY( col.isValid() );
+      QFETCH( Item::List, items );
 
-      ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
-      prefetchjob->exec();
-      Item item = prefetchjob->items()[0];
+      Collection destination( collectionIdFromPath( "res3" ) );
+      QVERIFY( destination.isValid() );
+      Collection source( collectionIdFromPath( "res1/foo" ) );
+      QVERIFY( source.isValid() );
 
-      ItemMoveJob *store = new ItemMoveJob( item, col, this );
-      QVERIFY( store->exec() );
+      ItemFetchJob *prefetchjob = new ItemFetchJob( destination, this );
+      AKVERIFYEXEC( prefetchjob );
+      int baseline = prefetchjob->items().size();
 
-      ItemFetchJob *fetch = new ItemFetchJob( col, this );
+      CollectionSelectJob *select = new CollectionSelectJob( source );
+      AKVERIFYEXEC( select ); // for rid based moves
+      ItemMoveJob *move = new ItemMoveJob( items, destination, this );
+      AKVERIFYEXEC( move );
+
+      ItemFetchJob *fetch = new ItemFetchJob( destination, this );
       fetch->fetchScope().fetchFullPayload();
-      QVERIFY( fetch->exec() );
-      QCOMPARE( fetch->items().count(), 1 );
-      item = fetch->items().first();
-      QVERIFY( item.hasPayload() );
+      AKVERIFYEXEC( fetch );
+      QCOMPARE( fetch->items().count(), items.count() + baseline );
+      foreach ( const Item& movedItem, fetch->items() ) {
+        QVERIFY( movedItem.hasPayload() );
+        QVERIFY( !movedItem.payload<QByteArray>().isEmpty() );
+      }
     }
 
     void testIllegalMove()
