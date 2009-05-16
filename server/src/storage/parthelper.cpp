@@ -77,6 +77,7 @@ bool PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
     } else
     {
       qDebug() << "Update: payload file " << fileName << " could not be open for writing!";
+      qDebug() << "Error: " << file.errorString();
       return false;
     }
   } else
@@ -133,6 +134,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
     } else
     {
       qDebug() << "Insert: payload file " << fileName << " could not be open for writing!";
+      qDebug() << "Error: " << file.errorString();
       return false;
     }
   }
@@ -211,6 +213,7 @@ bool PartHelper::loadData( Part &part )
     } else
     {
       qDebug() << "Payload file " << fileName << " could not be open for reading!";
+      qDebug() << "Error: " << file.errorString();
       return false;
     }
   } else
@@ -239,6 +242,7 @@ QByteArray PartHelper::translateData( qint64 id, const QByteArray &data, bool is
     } else
     {
       qDebug() << "Payload file " << fileName << " could not be open for reading!";
+      qDebug() << "Error: " << file.errorString();
       return QByteArray();
     }
   } else
