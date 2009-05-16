@@ -115,7 +115,7 @@ public:
      * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
      * @return true if parsed successfully, false in case of parse failure
      */
-    virtual bool parseStream();
+    virtual bool parseStream() = 0;
 
 Q_SIGNALS:
 
@@ -140,6 +140,17 @@ private:
 
 protected:
     ImapStreamParser *m_streamParser;
+};
+
+class UnknownCommandHandler : public Handler
+{
+  Q_OBJECT
+  public:
+    UnknownCommandHandler( const QByteArray command );
+    bool parseStream();
+
+  private:
+    QByteArray mCommand;
 };
 
 }

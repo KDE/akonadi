@@ -178,7 +178,7 @@ Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
             break;
     }
     // we didn't have a handler for this, let the default one do its thing
-    if ( !handler ) handler = new Handler();
+    if ( !handler ) handler = new UnknownCommandHandler( command );
     handler->setConnection( this );
     return handler;
 }

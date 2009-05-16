@@ -225,16 +225,24 @@ void Handler::setStreamParser( ImapStreamParser *parser )
   m_streamParser = parser;
 }
 
-bool Handler::parseStream()
+
+UnknownCommandHandler::UnknownCommandHandler(const QByteArray command) :
+  mCommand( command )
+{
+}
+
+bool UnknownCommandHandler::parseStream()
 {
   Response response;
   response.setError();
-  response.setTag( m_tag );
-  response.setString( "Unrecognized command: "  + m_streamParser->readString() );
+  response.setTag( tag() );
+  if ( mCommand.isEmpty() )
+    response.setString( "No command specified" );
+  else
+    response.setString( "Unrecognized command: "  + mCommand );
   m_streamParser->readUntilCommandEnd();
 
   emit responseAvailable( response );
-  deleteLater();
   return true;
 }
 
