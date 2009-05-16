@@ -115,6 +115,9 @@ void AkonadiConnection::slotNewData()
   while ( m_socket->bytesAvailable() > 0 || !m_streamParser->readRemainingData().isEmpty()) {
     try {
       const QByteArray tag = m_streamParser->readString();
+      // deal with stray newlines
+      if ( tag.isEmpty() && m_streamParser->atCommandEnd() )
+        continue;
       const QByteArray command = m_streamParser->readString();
       Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( tag + " " + command + " " + m_streamParser->readRemainingData() ) );
       m_currentHandler = findHandlerForCommand( command );
