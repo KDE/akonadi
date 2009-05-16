@@ -18,6 +18,8 @@
 */
 #include "autoincrementtest.h"
 
+#include "agentinstance.h"
+#include "agentmanager.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "control.h"
@@ -35,6 +37,10 @@ QTEST_AKONADIMAIN( AutoIncrementTest, NoGUI )
 void AutoIncrementTest::initTestCase()
 {
   QVERIFY( Control::start() );
+
+  // switch all resources offline to reduce interference from them
+  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+    agent.setIsOnline( false );
 
   itemTargetCollection = Collection( collectionIdFromPath( "res2/space folder" ) );
   QVERIFY( itemTargetCollection.isValid() );
@@ -68,7 +74,7 @@ void AutoIncrementTest::testItemAutoIncrement()
   // Create 20 test items
   for( int i = 0; i < 20; i++ ) {
     ItemCreateJob *job = createItemCreateJob();
-    QVERIFY( job->exec() );
+    AKVERIFYEXEC( job );
     Item newItem = job->item();
     QVERIFY( newItem.id() > lastId );
     lastId = newItem.id();
@@ -78,7 +84,7 @@ void AutoIncrementTest::testItemAutoIncrement()
   // Delete the 20 items
   foreach( const Item &item, itemsToDelete ) {
     ItemDeleteJob *job = new ItemDeleteJob( item );
-    QVERIFY( job->exec() );
+    AKVERIFYEXEC( job );
   }
 
   // Restart the server, then test item creation again. The new id of the item
@@ -87,7 +93,7 @@ void AutoIncrementTest::testItemAutoIncrement()
   QVERIFY( Control::start() );
 
   ItemCreateJob *job = createItemCreateJob();
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Item newItem = job->item();
 
   QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
@@ -103,7 +109,7 @@ void AutoIncrementTest::testCollectionAutoIncrement()
   // Create 20 test collections
   for( int i = 0; i < 20; i++ ) {
     CollectionCreateJob *job = createCollectionCreateJob( i );
-    QVERIFY( job->exec() );
+    AKVERIFYEXEC( job );
     Collection newCollection = job->collection();
     QVERIFY( newCollection.id() > lastId );
     lastId = newCollection.id();
@@ -113,7 +119,7 @@ void AutoIncrementTest::testCollectionAutoIncrement()
   // Delete the 20 collections
   foreach( const Collection &collection, collectionsToDelete ) {
     CollectionDeleteJob *job = new CollectionDeleteJob( collection );
-    QVERIFY( job->exec() );
+    AKVERIFYEXEC( job );
   }
 
   // Restart the server, then test collection creation again. The new id of the collection
@@ -122,7 +128,7 @@ void AutoIncrementTest::testCollectionAutoIncrement()
   QVERIFY( Control::start() );
 
   CollectionCreateJob *job = createCollectionCreateJob( 0 );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Collection newCollection = job->collection();
 
   QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
