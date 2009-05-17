@@ -1,5 +1,5 @@
 
-find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /opt/mysql/libexec )
+find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec )
 if( MYSQLD_EXECUTABLE)
    message( STATUS "MySQL Server found." )
 else ( MYSQLD_EXECUTABLE )
