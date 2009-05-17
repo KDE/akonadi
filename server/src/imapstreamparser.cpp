@@ -590,7 +590,12 @@ qint64 ImapStreamParser::readNumber( bool * ok )
     ++i;
   }
   const QByteArray tmp = m_data.mid( m_position, i - m_position );
-  result = tmp.toLongLong( ok );
+  bool success = false;
+  result = tmp.toLongLong( &success );
+  if ( ok )
+    *ok = success;
+  else if ( !success )
+    throw ImapParserException( "Unable to parse number" );
   m_position = i;
   return result;
 }

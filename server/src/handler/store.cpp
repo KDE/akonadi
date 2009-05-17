@@ -32,6 +32,7 @@
 #include "storage/itemretriever.h"
 
 #include "libs/imapparser_p.h"
+#include "libs/protocol_p.h"
 #include "imapstreamparser.h"
 
 #include <QtCore/QStringList>
@@ -43,14 +44,10 @@ using namespace Akonadi;
 
 Store::Store( Scope::SelectionScope scope )
   : Handler()
+  , mScope( scope )
   , mPos( 0 )
   , mPreviousRevision( -1 )
   , mSize( 0 )
-  , mUidStore( scope == Scope::Uid )
-{
-}
-
-Store::~Store()
 {
 }
 
@@ -138,7 +135,7 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
 
 bool Store::parseStream()
 {
-  parseCommandStream();
+  parseCommand();
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store, false );
    // Set the same modification time for each item.
@@ -234,7 +231,7 @@ bool Store::parseStream()
         //NOTE: COLLECTION must be ALWAYS the first in the list
         if ( command == "COLLECTION" ) {
           ItemRetriever retriever( connection() );
-          retriever.setItemSet( mItemSet, mUidStore );
+          retriever.setScope( mScope );
           retriever.setRetrieveFullPayload( true );
           retriever.exec();
         }
@@ -245,7 +242,7 @@ bool Store::parseStream()
 
           transaction.begin();
           SelectQueryBuilder<PimItem> qb;
-          ItemQueryHelper::itemSetToQuery( mItemSet, mUidStore, connection(), qb );
+          ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
           if ( !qb.exec() )
             return failureResponse( "Unable to retrieve items" );
           pimItems = qb.result();
@@ -432,29 +429,19 @@ bool Store::parseStream()
   return true;
 }
 
-void Store::parseCommandStream()
+void Store::parseCommand()
 {
-  mItemSet = m_streamParser->readSequenceSet();
-  if ( mItemSet.isEmpty() )
-    throw HandlerException( "No item specified" );
+  mScope.parseScope( m_streamParser );
 
-  // parse revision
-  QByteArray buffer = m_streamParser->readString(); // skip 'REV'
-  if ( buffer == "REV" ) {
-    bool ok;
-    mPreviousRevision = m_streamParser->readNumber( &ok );
-    if ( !ok ) {
-      throw HandlerException( "Unable to parse item revision number." );
-    }
-  }
-
-  // parse size
-  buffer = m_streamParser->readString();
-  if ( buffer == "SIZE" ) {
-    bool ok;
-    mSize = m_streamParser->readNumber( &ok );
-    if ( !ok ) {
-      throw HandlerException( "Unable to parse the size.");
+  // parse the stuff before the modification list
+  while ( !m_streamParser->hasList() ) {
+    const QByteArray command = m_streamParser->readString();
+    if ( command.isEmpty() ) { // ie. we are at command end
+      throw HandlerException( "No modification list provided in STORE command" );
+    } else if ( command == AKONADI_PARAM_REVISION ) {
+      mPreviousRevision = m_streamParser->readNumber();
+    } else if ( command == AKONADI_PARAM_SIZE ) {
+      mSize = m_streamParser->readNumber();
     }
   }
 }
