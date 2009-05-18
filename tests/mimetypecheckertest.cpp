@@ -23,6 +23,8 @@
 #include "akonadi/collection.h"
 #include "akonadi/item.h"
 
+#include <kmimetype.h>
+
 #include "krandom.h"
 
 #include <qtest_kde.h>
@@ -40,6 +42,8 @@ MimeTypeCheckerTest::MimeTypeCheckerTest( QObject *parent )
 
 void MimeTypeCheckerTest::initTestCase()
 {
+  QVERIFY( KMimeType::mimeType( "application/x-vnd.akonadi.calendar.event" ) );
+
   MimeTypeChecker emptyChecker;
   MimeTypeChecker calendarChecker;
   MimeTypeChecker subTypeChecker;
