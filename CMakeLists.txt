@@ -207,9 +207,9 @@ endif (XSLTPROC_EXECUTABLE)
 ############### install stuff ###############
 
 if(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
-   set(_AkonadiConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/Akonadi-${AKONADI_VERSION})
+   set(_AkonadiConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/Akonadi)
 else(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
-   set(_AkonadiConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/Akonadi-${AKONADI_VERSION}/cmake)
+   set(_AkonadiConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/Akonadi/cmake)
 endif(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
 
 install(FILES ${Akonadi_BINARY_DIR}/AkonadiConfigVersion.cmake
