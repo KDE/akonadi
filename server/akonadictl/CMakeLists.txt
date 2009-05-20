@@ -10,7 +10,7 @@ set( akonadictl_SRCS
 )
 
 qt4_add_dbus_interfaces( akonadictl_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/../interfaces/org.freedesktop.Akonadi.ControlManager.xml
+  ${Akonadi_SOURCE_DIR}/server/interfaces/org.freedesktop.Akonadi.ControlManager.xml
 )
 
 automoc4_add_executable(akonadictl ${akonadictl_SRCS})
