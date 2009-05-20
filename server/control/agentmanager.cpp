@@ -25,6 +25,7 @@
 #include "serverinterface.h"
 #include "../../libs/xdgbasedirs_p.h"
 #include "akdebug.h"
+#include "resource_manager.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -175,6 +176,9 @@ QString AgentManager::createAgentInstance( const QString &identifier )
     return QString();
   mAgentInstances.insert( instance->identifier(), instance );
 
+  org::freedesktop::Akonadi::ResourceManager * resmanager = new org::freedesktop::Akonadi::ResourceManager( QLatin1String("org.freedesktop.Akonadi"), QLatin1String("/ResourceManager"), QDBusConnection::sessionBus(), this );
+  resmanager->addResourceInstance(instance->identifier());
+
   save();
   return instance->identifier();
 }
@@ -198,6 +202,9 @@ void AgentManager::removeAgentInstance( const QString &identifier )
   mAgentInstances.remove( identifier );
 
   save();
+  
+  org::freedesktop::Akonadi::ResourceManager * resmanager = new org::freedesktop::Akonadi::ResourceManager( QLatin1String("org.freedesktop.Akonadi"), QLatin1String("/ResourceManager"), QDBusConnection::sessionBus(), this );
+  resmanager->removeResourceInstance(instance->identifier());
 
   emit agentInstanceRemoved( identifier );
 }

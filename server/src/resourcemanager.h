@@ -40,9 +40,9 @@ class ResourceManager : public QObject
   private:
     ResourceManager( QObject *parent = 0 );
 
-  private Q_SLOTS:
-    void resourceAdded( const QString &name );
-    void resourceRemoved( const QString &name );
+  public Q_SLOTS:
+    bool addResourceInstance( const QString &name );
+    bool removeResourceInstance( const QString &name );
 
   private:
     static ResourceManager* mSelf;

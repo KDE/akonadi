@@ -20,6 +20,7 @@
 #include "resourcemanager.h"
 #include "tracer.h"
 #include "storage/datastore.h"
+#include "resourcemanageradaptor.h"
 
 #include <QtDBus/QDBusConnection>
 
@@ -30,34 +31,30 @@ ResourceManager* ResourceManager::mSelf = 0;
 Akonadi::ResourceManager::ResourceManager(QObject * parent) :
   QObject( parent )
 {
-  mManager = new org::freedesktop::Akonadi::AgentManager( QLatin1String("org.freedesktop.Akonadi.Control"),
-      QLatin1String("/AgentManager"), QDBusConnection::sessionBus(), this );
-
-  connect( mManager, SIGNAL(agentInstanceAdded(const QString&)),
-           SLOT(resourceAdded(const QString&)) );
-  connect( mManager, SIGNAL(agentInstanceRemoved(const QString&)),
-           SLOT(resourceRemoved(const QString& )) );
+  new ResourceManagerAdaptor( this );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/ResourceManager"), this );
 }
 
-void Akonadi::ResourceManager::resourceAdded(const QString & name)
+bool Akonadi::ResourceManager::addResourceInstance(const QString & name)
 {
   DataStore *db = DataStore::self();
 
   Resource resource = Resource::retrieveByName( name );
   if ( resource.isValid() )
-    return; // resource already exists
+    return false; // resource already exists
 
   // create the resource
   resource.setName( name );
   if ( !resource.insert() ) {
     Tracer::self()->error( "ResourceManager", QString::fromLatin1("Could not create resource '%1'.").arg(name) );
     delete db;
-    return;
+    return false;
   }
   resource = Resource::retrieveByName( name );
+  return true;
 }
 
-void Akonadi::ResourceManager::resourceRemoved(const QString & name)
+bool Akonadi::ResourceManager::removeResourceInstance(const QString & name)
 {
   DataStore *db = DataStore::self();
 
@@ -71,6 +68,7 @@ void Akonadi::ResourceManager::resourceRemoved(const QString & name)
     // remove resource
     resource.remove();
   }
+  return true;
 }
 
 ResourceManager * Akonadi::ResourceManager::self()
