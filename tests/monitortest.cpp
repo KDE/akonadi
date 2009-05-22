@@ -34,6 +34,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/itemmovejob.h>
 #include <akonadi/searchcreatejob.h>
 
 #include <QtCore/QVariant>
@@ -81,21 +82,23 @@ void MonitorTest::testMonitor()
   qRegisterMetaType<Akonadi::Collection::Id>();
   qRegisterMetaType<Akonadi::Item>();
   qRegisterMetaType<Akonadi::CollectionStatistics>();
-  QSignalSpy caspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  QSignalSpy cmspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
-  QSignalSpy crspy( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)) );
-  QSignalSpy csspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
-  QSignalSpy iaspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
-  QSignalSpy imspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QSet<QByteArray>&)) );
-  QSignalSpy irspy( monitor, SIGNAL(itemRemoved(const Akonadi::Item&)) );
+  QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+  QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
+  QSignalSpy crmspy( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)) );
+  QSignalSpy cstatspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
+  QSignalSpy iaddspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
+  QSignalSpy imodspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QSet<QByteArray>&)) );
+  QSignalSpy imvspy( monitor, SIGNAL(itemMoved(const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection&)) );
+  QSignalSpy irmspy( monitor, SIGNAL(itemRemoved(const Akonadi::Item&)) );
 
-  QVERIFY( caspy.isValid() );
-  QVERIFY( cmspy.isValid() );
-  QVERIFY( crspy.isValid() );
-  QVERIFY( csspy.isValid() );
-  QVERIFY( iaspy.isValid() );
-  QVERIFY( imspy.isValid() );
-  QVERIFY( irspy.isValid() );
+  QVERIFY( caddspy.isValid() );
+  QVERIFY( cmodspy.isValid() );
+  QVERIFY( crmspy.isValid() );
+  QVERIFY( cstatspy.isValid() );
+  QVERIFY( iaddspy.isValid() );
+  QVERIFY( imodspy.isValid() );
+  QVERIFY( imvspy.isValid() );
+  QVERIFY( irmspy.isValid() );
 
   // create a collection
   Collection monitorCol;
@@ -107,8 +110,8 @@ void MonitorTest::testMonitor()
   QVERIFY( monitorCol.isValid() );
   QTest::qWait(1000); // make sure the DBus signal has been processed
 
-  QCOMPARE( caspy.count(), 1 );
-  QList<QVariant> arg = caspy.takeFirst();
+  QCOMPARE( caddspy.count(), 1 );
+  QList<QVariant> arg = caddspy.takeFirst();
   Collection col = arg.at(0).value<Collection>();
   QCOMPARE( col, monitorCol );
   if ( fetchCol )
@@ -116,12 +119,13 @@ void MonitorTest::testMonitor()
   Collection parent = arg.at(1).value<Collection>();
   QCOMPARE( parent, res3 );
 
-  QVERIFY( cmspy.isEmpty() );
-  QVERIFY( crspy.isEmpty() );
-  QVERIFY( csspy.isEmpty() );
-  QVERIFY( iaspy.isEmpty() );
-  QVERIFY( imspy.isEmpty() );
-  QVERIFY( irspy.isEmpty() );
+  QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( crmspy.isEmpty() );
+  QVERIFY( cstatspy.isEmpty() );
+  QVERIFY( iaddspy.isEmpty() );
+  QVERIFY( imodspy.isEmpty() );
+  QVERIFY( imvspy.isEmpty() );
+  QVERIFY( irmspy.isEmpty() );
 
   // add an item
   Item newItem;
@@ -132,24 +136,47 @@ void MonitorTest::testMonitor()
   QVERIFY( monitorRef.isValid() );
   QTest::qWait(1000);
 
-  QCOMPARE( csspy.count(), 1 );
-  arg = csspy.takeFirst();
+  QCOMPARE( cstatspy.count(), 1 );
+  arg = cstatspy.takeFirst();
   QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
   QCOMPARE( arg.at(0).value<Akonadi::Collection::Id>(), monitorCol.id() );
 
-  QCOMPARE( iaspy.count(), 1 );
-  arg = iaspy.takeFirst();
+  /*
+     qRegisterMetaType<Akonadi::Collection::Id>() registers the type with a
+     name of "qlonglong".  Doing
+     qRegisterMetaType<Akonadi::Collection::Id>( "Akonadi::Collection::Id" ) 
+     doesn't help.
+
+     The problem here is that Akonadi::Collection::Id is a typedef to qlonglong,
+     and qlonglong is already a registered meta type.  So the signal spy will
+     give us a QVariant of type Akonadi::Collection::Id, but calling
+     .value<Akonadi::Collection::Id>() on that variant will in fact end up
+     calling qvariant_cast<qlonglong>.  From the point of view of QMetaType,
+     Akonadi::Collection::Id and qlonglong are different types, so QVariant
+     can't convert, and returns a default-constructed qlonglong, zero.
+
+     When connecting to a real slot (without QSignalSpy), this problem is
+     avoided, because the casting is done differently (via a lot of void
+     pointers).
+
+     The docs say nothing about qRegisterMetaType -ing a typedef, so I'm not
+     sure if this is a bug or not. (cberzan)
+   */
+
+  QCOMPARE( iaddspy.count(), 1 );
+  arg = iaddspy.takeFirst();
   Item item = arg.at( 0 ).value<Item>();
   QCOMPARE( item, monitorRef );
   QCOMPARE( item.mimeType(), QString::fromLatin1(  "application/octet-stream" ) );
   Collection collection = arg.at( 1 ).value<Collection>();
   QCOMPARE( collection.id(), monitorCol.id() );
 
-  QVERIFY( caspy.isEmpty() );
-  QVERIFY( cmspy.isEmpty() );
-  QVERIFY( crspy.isEmpty() );
-  QVERIFY( imspy.isEmpty() );
-  QVERIFY( irspy.isEmpty() );
+  QVERIFY( caddspy.isEmpty() );
+  QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( crmspy.isEmpty() );
+  QVERIFY( imodspy.isEmpty() );
+  QVERIFY( imvspy.isEmpty() );
+  QVERIFY( irmspy.isEmpty() );
 
   // modify an item
   item.setPayload<QByteArray>( "some new content" );
@@ -157,45 +184,81 @@ void MonitorTest::testMonitor()
   QVERIFY( store->exec() );
   QTest::qWait(1000);
 
-  QCOMPARE( csspy.count(), 1 );
-  arg = csspy.takeFirst();
+  QCOMPARE( cstatspy.count(), 1 );
+  arg = cstatspy.takeFirst();
   QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
   QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
 
-  QCOMPARE( imspy.count(), 1 );
-  arg = imspy.takeFirst();
+  QCOMPARE( imodspy.count(), 1 );
+  arg = imodspy.takeFirst();
   item = arg.at( 0 ).value<Item>();
   QCOMPARE( monitorRef, item );
   QCOMPARE( item.payload<QByteArray>(), QByteArray( "some new content" ) );
 
-  QVERIFY( caspy.isEmpty() );
-  QVERIFY( cmspy.isEmpty() );
-  QVERIFY( crspy.isEmpty() );
-  QVERIFY( iaspy.isEmpty() );
-  QVERIFY( irspy.isEmpty() );
+  QVERIFY( caddspy.isEmpty() );
+  QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( crmspy.isEmpty() );
+  QVERIFY( iaddspy.isEmpty() );
+  QVERIFY( imvspy.isEmpty() );
+  QVERIFY( irmspy.isEmpty() );
+
+  // move an item
+  ItemMoveJob *move = new ItemMoveJob( item, res3 );
+  QVERIFY( move->exec() );
+  QTest::qWait( 1000 );
+
+  QCOMPARE( cstatspy.count(), 1 );
+  arg = cstatspy.takeFirst();
+  QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
+  QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
+
+  QCOMPARE( imvspy.count(), 1 );
+  arg = imvspy.takeFirst();
+  item = arg.at( 0 ).value<Item>(); // the item
+  QCOMPARE( monitorRef, item );
+  col = arg.at( 1 ).value<Collection>(); // the source collection
+  QCOMPARE( col.id(), monitorCol.id() );
+  col = arg.at( 2 ).value<Collection>(); // the destination collection
+  QCOMPARE( col.id(), res3.id() );
+
+  QCOMPARE( cmodspy.count(), 2 );
+  arg = cmodspy.takeFirst();
+  Collection col1 = arg.at( 0 ).value<Collection>();
+  arg = cmodspy.takeFirst();
+  Collection col2 = arg.at( 0 ).value<Collection>();
+  // source and dest collections, in any order
+  QVERIFY( ( col1.id() == monitorCol.id() && col2.id() == res3.id() ) ||
+           ( col2.id() == monitorCol.id() && col1.id() == res3.id() ) );
+
+  QVERIFY( caddspy.isEmpty() );
+  QVERIFY( crmspy.isEmpty() );
+  QVERIFY( iaddspy.isEmpty() );
+  QVERIFY( imodspy.isEmpty() );
+  QVERIFY( irmspy.isEmpty() );
 
   // delete an item
   ItemDeleteJob *del = new ItemDeleteJob( monitorRef, this );
   QVERIFY( del->exec() );
   QTest::qWait(1000);
 
-  QCOMPARE( csspy.count(), 1 );
-  arg = csspy.takeFirst();
+  QCOMPARE( cstatspy.count(), 1 );
+  arg = cstatspy.takeFirst();
   QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
   QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
-  cmspy.clear();
+  cmodspy.clear();
 
-  QCOMPARE( irspy.count(), 1 );
-  arg = irspy.takeFirst();
+  QCOMPARE( irmspy.count(), 1 );
+  arg = irmspy.takeFirst();
   Item ref = qvariant_cast<Item>( arg.at(0) );
   QCOMPARE( monitorRef, ref );
 
-  QVERIFY( caspy.isEmpty() );
-  QVERIFY( cmspy.isEmpty() );
-  QVERIFY( crspy.isEmpty() );
-  QVERIFY( iaspy.isEmpty() );
-  QVERIFY( imspy.isEmpty() );
-  imspy.clear();
+  QVERIFY( caddspy.isEmpty() );
+  QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( crmspy.isEmpty() );
+  QVERIFY( iaddspy.isEmpty() );
+  QVERIFY( imodspy.isEmpty() );
+  QVERIFY( imvspy.isEmpty() );
+  imvspy.clear();
 
   // modify a collection
   monitorCol.setName( "changed name" );
@@ -203,35 +266,37 @@ void MonitorTest::testMonitor()
   QVERIFY( mod->exec() );
   QTest::qWait(1000);
 
-  QCOMPARE( cmspy.count(), 1 );
-  arg = cmspy.takeFirst();
+  QCOMPARE( cmodspy.count(), 1 );
+  arg = cmodspy.takeFirst();
   col = arg.at(0).value<Collection>();
   QCOMPARE( col, monitorCol );
   if ( fetchCol )
     QCOMPARE( col.name(), QString("changed name") );
 
-  QVERIFY( caspy.isEmpty() );
-  QVERIFY( crspy.isEmpty() );
-  QVERIFY( csspy.isEmpty() );
-  QVERIFY( iaspy.isEmpty() );
-  QVERIFY( imspy.isEmpty() );
-  QVERIFY( irspy.isEmpty() );
+  QVERIFY( caddspy.isEmpty() );
+  QVERIFY( crmspy.isEmpty() );
+  QVERIFY( cstatspy.isEmpty() );
+  QVERIFY( iaddspy.isEmpty() );
+  QVERIFY( imodspy.isEmpty() );
+  QVERIFY( imvspy.isEmpty() );
+  QVERIFY( irmspy.isEmpty() );
 
   // delete a collection
   CollectionDeleteJob *cdel = new CollectionDeleteJob( monitorCol, this );
   QVERIFY( cdel->exec() );
   QTest::qWait(1000);
 
-  QCOMPARE( crspy.count(), 1 );
-  arg = crspy.takeFirst();
+  QCOMPARE( crmspy.count(), 1 );
+  arg = crmspy.takeFirst();
   QCOMPARE( arg.at(0).value<Collection>().id(), monitorCol.id() );
 
-  QVERIFY( caspy.isEmpty() );
-  QVERIFY( cmspy.isEmpty() );
-  QVERIFY( csspy.isEmpty() );
-  QVERIFY( iaspy.isEmpty() );
-  QVERIFY( imspy.isEmpty() );
-  QVERIFY( irspy.isEmpty() );
+  QVERIFY( caddspy.isEmpty() );
+  QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( cstatspy.isEmpty() );
+  QVERIFY( iaddspy.isEmpty() );
+  QVERIFY( imodspy.isEmpty() );
+  QVERIFY( imvspy.isEmpty() );
+  QVERIFY( irmspy.isEmpty() );
 }
 
 void MonitorTest::testVirtualCollectionsMonitoring()
@@ -239,13 +304,13 @@ void MonitorTest::testVirtualCollectionsMonitoring()
   Monitor *monitor = new Monitor( this );
   monitor->setCollectionMonitored( Collection( 1 ) );   // top-level 'Search' collection
 
-  QSignalSpy caspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  QVERIFY( caspy.isValid() );
+  QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+  QVERIFY( caddspy.isValid() );
 
   SearchCreateJob *job = new SearchCreateJob( "Test search collection", "test-search-query" );
   QVERIFY( job->exec() );
   QTest::qWait( 1000 );
-  QCOMPARE( caspy.count(), 1 );
+  QCOMPARE( caddspy.count(), 1 );
 }
 
 #include "monitortest.moc"
