@@ -190,7 +190,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
           if ( !value.isEmpty() )
             rid = QString::fromUtf8( value );
           else
-            rid = QString();
+            rid.clear();
         } else if ( key == "COLLECTIONID" ) {
           cid = value.toInt();
         } else if ( key == "MIMETYPE" )
