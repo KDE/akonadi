@@ -133,7 +133,8 @@ static void loadPlugins() {
   const QStringList types = pl->types();
   kDebug( 5250 ) << "ItemSerializerPluginLoader: "
                  << "found" << types.size() << "plugins." << endl;
-  all->insert( QLatin1String( "application/octet-stream" ), PluginEntry( s_defaultItemSerializerPlugin ) );
+// FIXME: when adding this it might be found before more specific plugins if there is no exact match
+//  all->insert( QLatin1String( "application/octet-stream" ), PluginEntry( s_defaultItemSerializerPlugin ) );
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
     all->insert( *it, PluginEntry( *it ) );
   }
