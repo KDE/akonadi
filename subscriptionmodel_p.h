@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SUBSCRIPTIONMODEL_H
-#define AKONADI_SUBSCRIPTIONMODEL_H
+#ifndef AKONADI_SUBSCRIPTIONMODEL_P_H
+#define AKONADI_SUBSCRIPTIONMODEL_P_H
 
 #include <akonadi/collection.h>
 #include <akonadi/collectionmodel.h>

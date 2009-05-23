@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_PASTEHELPER_H
-#define AKONADI_PASTEHELPER_H
+#ifndef AKONADI_PASTEHELPER_P_H
+#define AKONADI_PASTEHELPER_P_H
 
 #include <akonadi/collection.h>
 

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONSELECTJOB_H
-#define AKONADI_COLLECTIONSELECTJOB_H
+#ifndef AKONADI_COLLECTIONSELECTJOB_P_H
+#define AKONADI_COLLECTIONSELECTJOB_P_H
 
 #include <akonadi/collection.h>
 #include <akonadi/job.h>

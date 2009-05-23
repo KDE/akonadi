@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_RESOURCESCHEDULER_H
-#define AKONADI_RESOURCESCHEDULER_H
+#ifndef AKONADI_RESOURCESCHEDULER_P_H
+#define AKONADI_RESOURCESCHEDULER_P_H
 
 #include <akonadi/agentbase.h>
 #include <akonadi/collection.h>

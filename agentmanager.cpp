@@ -84,7 +84,7 @@ void AgentManagerPrivate::agentInstanceAdded( const QString &identifier )
   if ( instance.isValid() ) {
 
     // It is possible that this function is called when the instance is already
-    // in our list we filled initally in the constructor.
+    // in our list we filled initially in the constructor.
     // This happens when the constructor is called during Akonadi startup, when
     // the agent processes are not fully loaded and have no D-Bus interface yet.
     // The server-side agent manager then emits the instance added signal when

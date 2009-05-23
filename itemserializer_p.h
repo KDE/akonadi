@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ITEM_SERIALIZER_H
-#define AKONADI_ITEM_SERIALIZER_H
+#ifndef AKONADI_ITEM_SERIALIZER_P_H
+#define AKONADI_ITEM_SERIALIZER_P_H
 
 #include <QtCore/QByteArray>
 #include <QtCore/QSet>

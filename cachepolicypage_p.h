@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_CACHEPOLICYPAGE_H
-#define AKONADI_CACHEPOLICYPAGE_H
+#ifndef AKONADI_CACHEPOLICYPAGE_P_H
+#define AKONADI_CACHEPOLICYPAGE_P_H
 
 #include <akonadi/collectionpropertiespage.h>
 

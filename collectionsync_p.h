@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONSYNC_H
-#define AKONADI_COLLECTIONSYNC_H
+#ifndef AKONADI_COLLECTIONSYNC_P_H
+#define AKONADI_COLLECTIONSYNC_P_H
 
 #include <akonadi/collection.h>
 #include <akonadi/transactionsequence.h>

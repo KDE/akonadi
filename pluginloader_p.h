@@ -17,8 +17,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef AKONADI_PLUGINLOADER_H
-#define AKONADI_PLUGINLOADER_H
+#ifndef AKONADI_PLUGINLOADER_P_H
+#define AKONADI_PLUGINLOADER_P_H
 
 #include "akonadiprivate_export.h"
 

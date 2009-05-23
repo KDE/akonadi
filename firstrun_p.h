@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_FIRSTRUN_H
-#define AKONADI_FIRSTRUN_H
+#ifndef AKONADI_FIRSTRUN_P_H
+#define AKONADI_FIRSTRUN_P_H
 
 #include <QObject>
 #include <QStringList>

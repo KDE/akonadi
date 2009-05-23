@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SUBSCRIPTIONJOB_H
-#define AKONADI_SUBSCRIPTIONJOB_H
+#ifndef AKONADI_SUBSCRIPTIONJOB_P_H
+#define AKONADI_SUBSCRIPTIONJOB_P_H
 
 #include <akonadi/collection.h>
 #include <akonadi/job.h>

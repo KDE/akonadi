@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_PROTOCOLHELPER_H
-#define AKONADI_PROTOCOLHELPER_H
+#ifndef AKONADI_PROTOCOLHELPER_P_H
+#define AKONADI_PROTOCOLHELPER_P_H
 
 #include <akonadi/cachepolicy.h>
 #include <akonadi/collection.h>

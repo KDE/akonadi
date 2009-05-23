@@ -139,7 +139,7 @@ class AKONADI_EXPORT CollectionPropertiesPage : public QWidget
     /**
      * Sets the page title.
      *
-     * @param title Translated, preferrably short tab title.
+     * @param title Translated, preferbly short tab title.
      */
     void setPageTitle( const QString &title );
 
