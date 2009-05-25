@@ -157,7 +157,7 @@ macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
    if (IS_ABSOLUTE "${in}")
       set(${out} "${in}")
    else (IS_ABSOLUTE "${in}")
-      set(${out} "\${KDEPIMLIBS_INSTALL_DIR}/${in}")
+      set(${out} "\${AKONADI_INSTALL_DIR}/${in}")
    endif (IS_ABSOLUTE "${in}")
 endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 
