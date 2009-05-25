@@ -21,7 +21,7 @@
 #include "itemcreatejob.h"
 
 #include "collection.h"
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "item.h"
 #include "itemserializer_p.h"
 #include "job_p.h"

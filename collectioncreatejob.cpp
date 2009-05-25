@@ -18,7 +18,7 @@
 */
 
 #include "collectioncreatejob.h"
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "protocolhelper_p.h"
 
 #include "job_p.h"

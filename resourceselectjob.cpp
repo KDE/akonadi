@@ -19,9 +19,9 @@
 
 #include "resourceselectjob_p.h"
 
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "job_p.h"
-#include "protocol_p.h"
+#include <akonadi/private/protocol_p.h>
 
 #include <KDebug>
 

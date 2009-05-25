@@ -26,7 +26,7 @@
 #include "controladaptor.h"
 #include "statusadaptor.h"
 #include "monitor_p.h"
-#include "xdgbasedirs_p.h"
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include "session.h"
 #include "session_p.h"

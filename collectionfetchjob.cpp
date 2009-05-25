@@ -19,9 +19,9 @@
 
 #include "collectionfetchjob.h"
 
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "job_p.h"
-#include "protocol_p.h"
+#include <akonadi/private/protocol_p.h>
 #include "protocolhelper_p.h"
 #include "entity_p.h"
 

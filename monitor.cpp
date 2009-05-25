@@ -21,7 +21,7 @@
 #include "monitor_p.h"
 
 #include "itemfetchjob.h"
-#include "notificationmessage_p.h"
+#include <akonadi/private/notificationmessage_p.h>
 #include "session.h"
 
 #include <kdebug.h>

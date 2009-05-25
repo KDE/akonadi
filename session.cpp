@@ -20,11 +20,11 @@
 #include "session.h"
 #include "session_p.h"
 
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 #include "job.h"
 #include "job_p.h"
 #include "servermanager_p.h"
-#include "xdgbasedirs_p.h"
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include <kdebug.h>
 #include <klocale.h>

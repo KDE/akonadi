@@ -27,7 +27,7 @@
 #include "itemsync.h"
 #include "resourcescheduler_p.h"
 #include "tracerinterface.h"
-#include "xdgbasedirs_p.h"
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include "changerecorder.h"
 #include "collectionfetchjob.h"

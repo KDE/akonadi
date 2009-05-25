@@ -21,7 +21,7 @@
 #define AKONADI_SESSION_P_H
 
 #include "session.h"
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 
 #include <QtNetwork/QLocalSocket>
 

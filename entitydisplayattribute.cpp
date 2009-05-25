@@ -19,7 +19,7 @@
 
 #include "entitydisplayattribute.h"
 
-#include "imapparser_p.h"
+#include <akonadi/private/imapparser_p.h>
 
 #include <KIcon>
 
