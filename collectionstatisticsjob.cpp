@@ -21,7 +21,7 @@
 
 #include "collection.h"
 #include "collectionstatistics.h"
-#include <akonadi/private/imapparser_p.h>
+#include "imapparser_p.h"
 #include "job_p.h"
 
 #include <kdebug.h>

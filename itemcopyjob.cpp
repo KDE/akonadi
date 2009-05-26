@@ -20,7 +20,7 @@
 #include "itemcopyjob.h"
 
 #include "collection.h"
-#include <akonadi/private/imapset_p.h>
+#include "imapset_p.h"
 #include "job_p.h"
 
 using namespace Akonadi;

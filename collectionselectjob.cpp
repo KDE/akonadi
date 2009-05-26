@@ -20,7 +20,7 @@
 #include "collectionselectjob_p.h"
 
 #include "job_p.h"
-#include <akonadi/private/protocol_p.h>
+#include "protocol_p.h"
 
 #include <QtCore/QDebug>
 
