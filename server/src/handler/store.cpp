@@ -313,7 +313,7 @@ bool Store::parseStream()
           if ( !PartHelper::update( &part, value, value.size() ) )
             return failureResponse( "Unable to update item part" );
         } else {
-          qDebug() << "insert from Store::handleLine: " << value;
+          qDebug() << "insert from Store::handleLine: " << value.left(100);
           part.setData( value );
           part.setDatasize( value.size() );
           if ( !PartHelper::insert( &part ) )
