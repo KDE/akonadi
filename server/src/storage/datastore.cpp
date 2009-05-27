@@ -458,30 +458,6 @@ bool Akonadi::DataStore::updatePimItem(PimItem & pimItem)
   return true;
 }
 
-bool Akonadi::DataStore::updatePimItem(PimItem & pimItem, const Collection & destination)
-{
-  if ( !pimItem.isValid() || !destination.isValid() )
-    return false;
-  if ( pimItem.collectionId() == destination.id() )
-    return true;
-
-  Collection source = pimItem.collection();
-  if ( !source.isValid() )
-    return false;
-  mNotificationCollector->collectionChanged( source );
-
-  pimItem.setCollectionId( destination.id() );
-  pimItem.setAtime( QDateTime::currentDateTime() );
-  if ( mSessionId != pimItem.collection().resource().name().toLatin1() )
-    pimItem.setDirty( true );
-  if ( !pimItem.update() )
-    return false;
-
-  mNotificationCollector->collectionChanged( destination );
-  mNotificationCollector->itemMoved( pimItem, source, destination );
-  return true;
-}
-
 bool DataStore::updatePimItem(PimItem & pimItem, const QString & remoteId)
 {
   if ( !pimItem.isValid() )

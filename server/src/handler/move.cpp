@@ -41,6 +41,9 @@ bool Move::parseStream()
 {
   mScope.parseScope( m_streamParser );
   const Collection destination = HandlerHelper::collectionFromIdOrName( m_streamParser->readString() );
+  if ( !destination.isValid() )
+    throw HandlerException( "Unknown destination collection" );
+  const Resource destResource = destination.resource();
 
   // make sure all the items we want to move are in the cache
   ItemRetriever retriever( connection() );
@@ -53,15 +56,37 @@ bool Move::parseStream()
 
   SelectQueryBuilder<PimItem> qb;
   ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
+  qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::NotEquals, destination.id() );
+
+  const QDateTime mtime = QDateTime::currentDateTime();
 
   if ( qb.exec() ) {
     const QList<PimItem> items = qb.result();
     if ( items.isEmpty() )
       throw HandlerException( "No items found" );
     foreach ( PimItem item, items ) {
-      if ( !store->updatePimItem( item, destination ) ) // TODO inline this method here once it's no longer used in store.cpp
-        throw HandlerException( "Unable to move item" );
+      if ( !item.isValid() )
+        throw HandlerException( "Invalid item in result set!?" );
+      Q_ASSERT( item.collectionId() != destination.id() );
+      const Collection source = item.collection();
+      if ( !source.isValid() )
+        throw HandlerException( "Item without collection found!?" );
+
+      store->notificationCollector()->collectionChanged( source ); // ### why?
+
+      item.setCollectionId( destination.id() );
+      item.setAtime( mtime );
+      item.setDatetime( mtime );
+      // if the resource moved itself, we assume it did so because the change happend in the backend
+      if ( connection()->resourceContext().id() != destResource.id() )
+        item.setDirty( true );
+
+      if ( !item.update() )
+        throw HandlerException( "Unable to update item" );
+
+      store->notificationCollector()->itemMoved( item, source, destination );
     }
+    store->notificationCollector()->collectionChanged( destination, destResource.name().toUtf8() ); // ### why?
   } else {
     throw HandlerException( "Unable to execute query" );
   }
