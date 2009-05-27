@@ -96,6 +96,13 @@ if(NOT XSLTPROC_EXECUTABLE)
 endif(NOT XSLTPROC_EXECUTABLE)
 
 #### Boost ####
+if(MSVC)
+  # otherwise we get an undefined reference to
+  # boost::program_options::options_description::m_default_line_length
+  set(Boost_USE_STATIC_LIBS ON)
+  set (_ENABLE_EXCEPTIONS -EHsc)
+endif(MSVC)
+
 find_package(Boost COMPONENTS program_options)
 macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Akonadi requires the Boost C++ libraries.")
 
@@ -104,15 +111,7 @@ if(NOT Boost_USE_STATIC_LIBS)
   add_definitions(-DBOOST_DYN_LINK)
 endif(NOT Boost_USE_STATIC_LIBS)
 
-
 ############### Compilers flags ###############
-
-if(MSVC)
-  # otherwise we get an undefined reference to
-  # boost::program_options::options_description::m_default_line_length
-  set(Boost_USE_STATIC_LIBS ON)
-  set (_ENABLE_EXCEPTIONS -EHsc)
-endif(MSVC)
 
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
   set (_ENABLE_EXCEPTIONS -fexceptions)
