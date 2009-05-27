@@ -377,6 +377,15 @@ void SetupTest::shutdown()
       // safety timeout
       QTimer::singleShot( 30 * 1000, this, SLOT( shutdownHarder() ) );
     }
+
+    // in case we indirectly started KDE processes, stop those before we kill their D-Bus
+    if ( mInternalBus->interface()->isServiceRegistered( "org.kde.klauncher" ) ) {
+      QDBusInterface klauncherIface( QLatin1String( "org.kde.klauncher" ), QLatin1String( "/" ),
+                                   QLatin1String( "org.kde.KLauncher" ), *mInternalBus );
+      QDBusReply<void> reply = klauncherIface.call( "terminate_kdeinit" );
+      if ( !reply.isValid() )
+        kDebug() << reply.error();
+    }
   } else {
     shutdownHarder();
   }
