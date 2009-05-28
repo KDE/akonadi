@@ -86,7 +86,6 @@ add_akonadi_test(itemhydratest.cpp)
 add_akonadi_test(itemtest.cpp)
 add_akonadi_test(itemserializertest.cpp)
 add_akonadi_test(mimetypecheckertest.cpp)
-add_akonadi_test(notificationmessagetest.cpp)
 add_akonadi_test(protocolhelpertest.cpp)
 
 # testrunner tests
