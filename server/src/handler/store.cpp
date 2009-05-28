@@ -210,14 +210,15 @@ bool Store::parseStream()
     if ( pimItems.size() > 1 )
       throw HandlerException( "This Modification can only be applied to a single item" );
     PimItem &item = pimItems.first();
+    if ( !item.isValid() )
+      throw HandlerException( "Invalid item in query result!?" );
 
     if ( command == AKONADI_PARAM_REMOTEID ) {
       const QString rid = m_streamParser->readUtf8String();
       if ( item.remoteId() != rid ) {
         if ( !connection()->isOwnerResource( item ) )
           throw HandlerException( "Only resources can modify remote identifiers" );
-        if ( !store->updatePimItem( item, rid ) )
-          return failureResponse( "Unable to change remote id for item." );
+        item.setRemoteId( rid );
       }
     }
 

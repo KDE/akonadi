@@ -458,23 +458,6 @@ bool Akonadi::DataStore::updatePimItem(PimItem & pimItem)
   return true;
 }
 
-bool DataStore::updatePimItem(PimItem & pimItem, const QString & remoteId)
-{
-  if ( !pimItem.isValid() )
-    return false;
-  if ( pimItem.remoteId() == remoteId )
-    return true;
-
-  pimItem.setRemoteId( remoteId );
-  pimItem.setAtime( QDateTime::currentDateTime() );
-  if ( !pimItem.update() )
-    return false;
-  mNotificationCollector->itemChanged( pimItem );
-  return true;
-}
-
-
-
 bool DataStore::cleanupPimItem( const PimItem &item )
 {
   if ( !item.isValid() )
