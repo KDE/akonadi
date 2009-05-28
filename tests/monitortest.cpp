@@ -49,6 +49,7 @@ QTEST_AKONADIMAIN( MonitorTest, NoGUI )
 static Collection res3;
 
 Q_DECLARE_METATYPE(Akonadi::Collection::Id)
+Q_DECLARE_METATYPE(QSet<QByteArray>)
 
 void MonitorTest::initTestCase()
 {
@@ -82,6 +83,7 @@ void MonitorTest::testMonitor()
   qRegisterMetaType<Akonadi::Collection::Id>();
   qRegisterMetaType<Akonadi::Item>();
   qRegisterMetaType<Akonadi::CollectionStatistics>();
+  qRegisterMetaType<QSet<QByteArray> >();
   QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
   QSignalSpy crmspy( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)) );
@@ -194,6 +196,8 @@ void MonitorTest::testMonitor()
   item = arg.at( 0 ).value<Item>();
   QCOMPARE( monitorRef, item );
   QCOMPARE( item.payload<QByteArray>(), QByteArray( "some new content" ) );
+  QSet<QByteArray> parts = arg.at( 1 ).value<QSet<QByteArray> >();
+  QCOMPARE( parts, QSet<QByteArray>() << "PLD:RFC822" );
 
   QVERIFY( caddspy.isEmpty() );
   QVERIFY( cmodspy.isEmpty() );
