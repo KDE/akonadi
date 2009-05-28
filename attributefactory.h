@@ -53,7 +53,8 @@ class AKONADI_EXPORT AttributeFactory
     //@endcond
 
     /**
-     * Register a custom attribute of type T.
+     * Registers a custom attribute of type T.
+     * The same attribute cannot be registered more than once.
      */
     template <typename T> inline static void registerAttribute()
     {
@@ -62,6 +63,7 @@ class AKONADI_EXPORT AttributeFactory
 
     /**
      * Creates an entity attribute object of the given type.
+     * If the type has not been registered, creates a DefaultAttribute.
      *
      * @param type The attribute type.
      */

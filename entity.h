@@ -30,6 +30,8 @@ AKONADI_EXPORT uint qHash( const Akonadi::Entity& );
 
 #include <akonadi/attribute.h>
 
+#include <KDebug>
+
 #include <QtCore/QHash>
 #include <QtCore/QSharedDataPointer>
 
@@ -165,8 +167,13 @@ class AKONADI_EXPORT Entity
       Q_UNUSED( option );
 
       const T dummy;
-      if ( hasAttribute( dummy.type() ) )
-        return static_cast<T*>( attribute( dummy.type() ) );
+      if ( hasAttribute( dummy.type() ) ) {
+        T* attr = dynamic_cast<T*>( attribute( dummy.type() ) );
+        if ( attr )
+          return attr;
+        kWarning( 5250 ) << "Found attribute of unknown type" << dummy.type()
+          << ". Did you forget to call AttributeFactory::registerAttribute()?";
+      }
 
       T* attr = new T();
       addAttribute( attr );
@@ -179,8 +186,14 @@ class AKONADI_EXPORT Entity
     template <typename T> inline T* attribute() const
     {
       const T dummy;
-      if ( hasAttribute( dummy.type() ) )
-        return static_cast<T*>( attribute( dummy.type() ) );
+      if ( hasAttribute( dummy.type() ) ) {
+        T* attr = dynamic_cast<T*>( attribute( dummy.type() ) );
+        if ( attr )
+          return attr;
+        kWarning( 5250 ) << "Found attribute of unknown type" << dummy.type()
+          << ". Did you forget to call AttributeFactory::registerAttribute()?";
+      }
+
       return 0;
     }
 

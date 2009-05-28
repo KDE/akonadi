@@ -91,6 +91,7 @@ add_akonadi_test(protocolhelpertest.cpp)
 # testrunner tests
 add_akonadi_isolated_test(testenvironmenttest.cpp)
 add_akonadi_isolated_test(autoincrementtest.cpp)
+add_akonadi_isolated_test(attributefactorytest.cpp)
 add_akonadi_isolated_test(collectionjobtest.cpp)
 add_akonadi_isolated_test(collectionpathresolvertest.cpp)
 add_akonadi_isolated_test(collectionattributetest.cpp)
