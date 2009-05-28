@@ -30,7 +30,7 @@ AKONADI_EXPORT uint qHash( const Akonadi::Entity& );
 
 #include <akonadi/attribute.h>
 
-#include <KDebug>
+#include <KDE/KDebug>
 
 #include <QtCore/QHash>
 #include <QtCore/QSharedDataPointer>
