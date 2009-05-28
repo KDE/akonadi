@@ -22,6 +22,7 @@
 #include <QDBusMetaType>
 #include <QDebug>
 #include <QHash>
+#include "imapparser_p.h"
 
 using namespace Akonadi;
 
@@ -242,7 +243,9 @@ QString NotificationMessage::toString() const
       rv += QLatin1String( "added" );
       break;
     case Modify:
-      rv += QLatin1String( "modified" );
+      rv += QLatin1String( "modified parts (" );
+      rv += QString::fromLatin1( ImapParser::join( itemParts().toList(), ", " ) );
+      rv += QLatin1String( ")" );
       break;
     case Move:
       rv += QLatin1String( "moved" );
