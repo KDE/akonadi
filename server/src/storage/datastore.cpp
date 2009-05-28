@@ -168,7 +168,7 @@ bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
       return false;
   }
 
-  mNotificationCollector->itemChanged( item );
+  mNotificationCollector->itemChanged( item, QSet<QByteArray>() << "FLAGS" );
   return true;
 }
 
@@ -187,7 +187,7 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags,
     }
   }
 
-  mNotificationCollector->itemChanged( item, col );
+  mNotificationCollector->itemChanged( item, QSet<QByteArray>() << "FLAGS", col );
   return true;
 }
 
@@ -214,7 +214,7 @@ bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
       return false;
   }
 
-  mNotificationCollector->itemChanged( item );
+  mNotificationCollector->itemChanged( item, QSet<QByteArray>() << "FLAGS" );
   return true;
 }
 
@@ -230,7 +230,7 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
     }
   }
 
-  mNotificationCollector->itemChanged( item );
+  mNotificationCollector->itemChanged( item, parts.toSet() );
   return true;
 }
 
@@ -443,18 +443,6 @@ bool DataStore::appendPimItem( QList<Part> & parts,
   }
 
   mNotificationCollector->itemAdded( pimItem, collection, mimetype.name() );
-  return true;
-}
-
-bool Akonadi::DataStore::updatePimItem(PimItem & pimItem)
-{
-  pimItem.setAtime( QDateTime::currentDateTime() );
-  if ( mSessionId != pimItem.collection().resource().name().toLatin1() )
-    pimItem.setDirty( true );
-  if ( !pimItem.update() )
-    return false;
-
-  mNotificationCollector->itemChanged( pimItem );
   return true;
 }
 

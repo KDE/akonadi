@@ -156,7 +156,10 @@ bool Store::parseStream()
       throw HandlerException( "Item was modified elsewhere, aborting STORE." );
     pimItems[ i ].setRev( pimItems[ i ].rev() + 1 );
     pimItems[ i ].setDatetime( modificationtime );
+    pimItems[ i ].setAtime( modificationtime );
   }
+
+  QSet<QByteArray> changes;
 
   // apply modifications
   m_streamParser->beginList();
@@ -202,6 +205,7 @@ bool Store::parseStream()
         }
       }
 
+      changes << AKONADI_PARAM_FLAGS;
       continue;
     }
 
@@ -219,6 +223,7 @@ bool Store::parseStream()
         if ( !connection()->isOwnerResource( item ) )
           throw HandlerException( "Only resources can modify remote identifiers" );
         item.setRemoteId( rid );
+        changes << AKONADI_PARAM_REMOTEID;
       }
     }
 
@@ -229,6 +234,7 @@ bool Store::parseStream()
 
     else if ( command == AKONADI_PARAM_SIZE ) {
       mSize = m_streamParser->readNumber();
+      changes << AKONADI_PARAM_SIZE;
     }
 
     else if ( command == "PARTS" ) {
@@ -236,6 +242,7 @@ bool Store::parseStream()
       if ( op == Delete ) {
         if ( !store->removeItemParts( item, parts ) )
           return failureResponse( "Unable to remove item parts." );
+        changes += QSet<QByteArray>::fromList( parts );
       }
     }
 
@@ -297,6 +304,7 @@ bool Store::parseStream()
             return failureResponse( "Unable to update item part" );
           }
 
+          changes << partName;
           continue;
         } else { // not store in file
           //don't write in streaming way as the data goes to the database
@@ -320,14 +328,21 @@ bool Store::parseStream()
           if ( !PartHelper::insert( &part ) )
             return failureResponse( "Unable to add item part" );
         }
+        changes << partName;
       }
 
     } // parts/attribute modification
   }
 
   // run update query and prepare change notifications
-  for ( int i = 0; i < pimItems.count(); ++i )
-    store->updatePimItem( pimItems[ i ] );
+  for ( int i = 0; i < pimItems.count(); ++i ) {
+    PimItem item = pimItems[ i ];
+    if ( !connection()->isOwnerResource( item ) )
+      item.setDirty( true );
+    if ( !item.update() )
+      throw HandlerException( "Unable to write item changes into the database" );
+    store->notificationCollector()->itemChanged( item, changes );
+  }
 
   if ( !transaction.commit() )
     return failureResponse( "Cannot commit transaction." );

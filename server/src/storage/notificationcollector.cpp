@@ -47,11 +47,12 @@ void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
 }
 
 void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
+                                                  const QSet<QByteArray> &changedParts,
                                                   const Collection &collection,
                                                   const QString & mimeType,
                                                   const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Modify, item, collection, Collection(), mimeType, resource );
+  itemNotification( NotificationMessage::Modify, item, collection, Collection(), mimeType, resource, changedParts );
 }
 
 void Akonadi::NotificationCollector::itemMoved( const PimItem &item,
@@ -126,7 +127,8 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
                                               const Collection & collection,
                                               const Collection & collectionDest,
                                               const QString & mimeType,
-                                              const QByteArray & resource)
+                                              const QByteArray & resource,
+                                              const QSet<QByteArray> &parts )
 {
   NotificationMessage msg;
   msg.setSessionId( mSessionId );
@@ -134,6 +136,7 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
   msg.setOperation( op );
   msg.setUid( item.id() );
   msg.setRemoteId( item.remoteId() );
+  msg.setItemParts( parts );
 
   Collection col = collection;
   if ( !col.isValid() )

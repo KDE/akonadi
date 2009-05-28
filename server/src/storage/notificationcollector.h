@@ -73,7 +73,9 @@ class NotificationCollector : public QObject
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemChanged( const PimItem &item, const Collection &collection = Collection(),
+    void itemChanged( const PimItem &item,
+                      const QSet<QByteArray> &changedParts,
+                      const Collection &collection = Collection(),
                       const QString &mimeType = QString(),
                       const QByteArray &resource = QByteArray() );
 
@@ -138,7 +140,8 @@ class NotificationCollector : public QObject
                            const Collection &collection,
                            const Collection &collectionDest,
                            const QString &mimeType,
-                           const QByteArray &resource );
+                           const QByteArray &resource,
+                           const QSet<QByteArray> &parts = QSet<QByteArray>() );
     void collectionNotification( NotificationMessage::Operation op,
                                  const Collection &collection,
                                  const QByteArray &resource );
