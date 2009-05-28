@@ -50,7 +50,7 @@ class NotificationMessage::Private : public QSharedData
       parts = other.parts;
     }
 
-    bool compareWithoutOp( const Private &other ) const
+    bool compareWithoutOpAndParts( const Private &other ) const
     {
       return sessionId == other.sessionId
           && type == other.type
@@ -59,7 +59,12 @@ class NotificationMessage::Private : public QSharedData
           && resource == other.resource
           && parentCollection == other.parentCollection
           && parentDestCollection == other.parentDestCollection
-          && mimeType == other.mimeType
+          && mimeType == other.mimeType;
+    }
+
+    bool compareWithoutOp( const Private &other ) const
+    {
+      return compareWithoutOpAndParts( other )
           && parts == other.parts;
     }
 
@@ -268,6 +273,12 @@ void NotificationMessage::appendAndCompress(NotificationMessage::List & list, co
       }
       if ( msg.operation() == Remove && (*it).operation() == Modify ) {
         it = list.erase( it );
+      } else
+        ++it;
+    } else if ( msg.d->compareWithoutOpAndParts( *((*it).d) ) ) {
+      if ( msg.operation() == Modify && (*it).operation() == Modify && msg.type() == Item ) {
+        (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
+        return;
       } else
         ++it;
     } else

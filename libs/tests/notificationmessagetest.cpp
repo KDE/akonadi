@@ -92,3 +92,20 @@ void NotificationMessageTest::testNoCompress()
   NotificationMessage::appendAndCompress( list, msg );
   QCOMPARE( list.count(), 2 );
 }
+
+void NotificationMessageTest::testPartModificationMerge()
+{
+  NotificationMessage::List list;
+  NotificationMessage msg;
+  msg.setType( NotificationMessage::Item );
+  msg.setOperation( NotificationMessage::Modify );
+  msg.setItemParts( QSet<QByteArray>() << "PART1" );
+
+  NotificationMessage::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 1 );
+
+  msg.setItemParts( QSet<QByteArray>() << "PART2" );
+  NotificationMessage::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 1 );
+  QCOMPARE( list.first().itemParts(), (QSet<QByteArray>() << "PART1" << "PART2") );
+}
