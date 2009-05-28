@@ -29,4 +29,5 @@ install( FILES
   DESTINATION ${CMAKE_INSTALL_PREFIX}/include/akonadi/private
 )
 
+add_subdirectory( tests )
 

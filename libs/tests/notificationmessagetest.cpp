@@ -20,11 +20,11 @@
 #include "notificationmessagetest.h"
 #include "notificationmessagetest.moc"
 
-#include <akonadi/private/notificationmessage_p.h>
+#include <notificationmessage_p.h>
 
-#include <qtest_kde.h>
+#include <QtTest>
 
-QTEST_KDEMAIN( NotificationMessageTest, NoGUI )
+QTEST_APPLESS_MAIN( NotificationMessageTest )
 
 using namespace Akonadi;
 
