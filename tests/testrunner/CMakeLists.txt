@@ -17,13 +17,6 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(akonaditest_SRCS
   main.cpp
-  akonaditesting.cpp
-  dao.cpp
-  item.cpp
-  itemfactory.cpp
-  calitem.cpp
-  vcarditem.cpp
-  feeditem.cpp
   setup.cpp
   configreader.cpp
   config.cpp

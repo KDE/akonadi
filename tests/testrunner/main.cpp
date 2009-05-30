@@ -16,7 +16,6 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "akonaditesting.h"
 #include "config.h"
 #include "setup.h"
 #include "shellscript.h"
@@ -85,11 +84,7 @@ int main( int argc, char **argv )
       delete setup;
       return 1;
   }
-
-  AkonadiTesting *testing = new AkonadiTesting();
-
-  testing->insertItemFromList();
-
+  
   ShellScript *sh = new ShellScript();
 
   if( args->isSet("testenv"))
@@ -113,7 +108,6 @@ int main( int argc, char **argv )
   }
 
   Config::destroyInstance();
-  delete testing;
   delete setup;
   setup = 0;
   delete sh;
