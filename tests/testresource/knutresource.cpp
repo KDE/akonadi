@@ -21,8 +21,8 @@
 #include "knutresource.h"
 #include "settings.h"
 #include "settingsadaptor.h"
-#include "akonadi/xml/xmlwriter.h"
-#include "akonadi/xml/xmlreader.h"
+#include "xml/xmlwriter.h"
+#include "xml/xmlreader.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>

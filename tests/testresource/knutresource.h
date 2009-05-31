@@ -27,7 +27,7 @@
 
 #include <QDomDocument>
 
-#include <akonadi/xml/xmldocument.h>
+#include <xml/xmldocument.h>
 
 class QFileSystemWatcher;
 
