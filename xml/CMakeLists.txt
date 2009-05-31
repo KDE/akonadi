@@ -1,8 +1,5 @@
 project (akonadixml)
 
-macro_optional_find_package(LibXml2)
-macro_log_feature(LIBXML2_FOUND "LibXML2" "Libraries used to develop XML applications" "http://xmlsoft.org" FALSE "" "Needed for building the knut Akonadi resource.")
-
 if ( LIBXML2_FOUND )
   add_definitions( -DHAVE_LIBXML2 )
 endif ( LIBXML2_FOUND )
@@ -18,7 +15,6 @@ include_directories(
     ${KDEPIMLIBS_INCLUDE_DIR}
     ${LIBXML2_INCLUDE_DIR}
 )
-
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 

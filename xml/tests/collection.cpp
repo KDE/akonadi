@@ -18,8 +18,8 @@
 */
 
 #include "collection.h"
-#include <akonadi/xml/xmlreader.h>
-#include <akonadi/xml/xmlwriter.h>
+#include <xml/xmlreader.h>
+#include <xml/xmlwriter.h>
 
 #include <akonadi/entitydisplayattribute.h>
 

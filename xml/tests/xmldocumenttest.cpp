@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <akonadi/xml/xmldocument.h>
+#include <xml/xmldocument.h>
 
 #include <QtCore/QObject>
 

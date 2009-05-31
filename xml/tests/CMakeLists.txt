@@ -1,7 +1,7 @@
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/xml
-    ${CMAKE_SOURCE_DIR}
+    ${kdepim-runtime_SOURCE_DIR}
+    ${kdepim-runtime_SOURCE_DIR}/xml
     ${AKONADI_INCLUDE_DIR}
     ${KDE4_INCLUDES}
     ${KDEPIMLIBS_INCLUDE_DIR}
