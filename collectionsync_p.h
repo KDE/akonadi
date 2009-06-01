@@ -29,6 +29,9 @@ namespace Akonadi {
   @internal
 
   Syncs remote and local collections.
+
+  @todo Optimize the streaming case, so far only the interface supports streaming,
+  not the actual sync algorithm.
 */
 class CollectionSync : public TransactionSequence
 {
@@ -62,6 +65,19 @@ class CollectionSync : public TransactionSequence
     */
     void setRemoteCollections( const Collection::List &changedCollections,
                                const Collection::List &removedCollections );
+
+    /**
+      Enables streaming, that is not all collections are delivered at once.
+      Use setRemoteCollections() multiple times when streaming is enabled and call
+      retrievalDone() when all collections have been retrieved.
+      Must be called before the first call to setRemoteCollections().
+    */
+    void setStreamingEnabled( bool streaming );
+
+    /**
+      Indicate that all collections have been retrieved in streaming mode.
+    */
+    void retrievalDone();
 
   protected:
     void doStart();

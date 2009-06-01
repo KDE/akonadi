@@ -38,7 +38,8 @@ class CollectionSync::Private
   public:
     Private() :
       pendingJobs( 0 ),
-      incremental( false )
+      incremental( false ),
+      streaming( false )
     {
     }
 
@@ -61,6 +62,7 @@ class CollectionSync::Private
     int pendingJobs;
 
     bool incremental;
+    bool streaming;
 };
 
 CollectionSync::CollectionSync( const QString &resourceId, QObject *parent ) :
@@ -80,6 +82,8 @@ void CollectionSync::setRemoteCollections(const Collection::List & remoteCollect
   foreach ( const Collection &c, remoteCollections ) {
     d->remoteCollections.insert( c.id(), c );
   }
+  if ( !d->streaming )
+    retrievalDone();
 }
 
 void CollectionSync::setRemoteCollections(const Collection::List & changedCollections, const Collection::List & removedCollections)
@@ -88,14 +92,13 @@ void CollectionSync::setRemoteCollections(const Collection::List & changedCollec
   foreach ( const Collection &c, changedCollections ) {
     d->remoteCollections.insert( c.id(), c );
   }
-  d->removedRemoteCollections = removedCollections;
+  d->removedRemoteCollections += removedCollections;
+  if ( !d->streaming )
+    retrievalDone();
 }
 
 void CollectionSync::doStart()
 {
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
-  job->setResource( d->resourceId );
-  connect( job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)) );
 }
 
 void CollectionSync::slotLocalListDone(KJob * job)
@@ -216,6 +219,18 @@ void CollectionSync::slotLocalChangeDone(KJob * job)
     return;
   d->pendingJobs--;
   checkDone();
+}
+
+void CollectionSync::setStreamingEnabled( bool streaming )
+{
+  d->streaming = streaming;
+}
+
+void CollectionSync::retrievalDone()
+{
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
+  job->setResource( d->resourceId );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)) );
 }
 
 #include "collectionsync_p.moc"

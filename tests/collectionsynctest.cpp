@@ -82,25 +82,25 @@ class CollectionSyncTest : public QObject
       syncer->setAutoDelete( false );
       QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
       QVERIFY( spy.isValid() );
-      // ### streaming not implemented yet
-//       syncer->setTotalItems( origCols.count() );
+      syncer->setStreamingEnabled( true );
       QTest::qWait( 10 );
       QCOMPARE( spy.count(), 0 );
-// 
+
       for ( int i = 0; i < origCols.count(); ++i ) {
-//         Item::List l;
-//         l << origCols[i];
-//         syncer->setFullSyncItems( l );
-//         if ( i < origCols.count() - 1 )
-//           QTest::qWait( 10 ); // enter the event loop so itemsync actually can do something
-//         QCOMPARE( spy.count(), 0 );
+        Collection::List l;
+        l << origCols[i];
+        syncer->setRemoteCollections( l );
+        if ( i < origCols.count() - 1 )
+          QTest::qWait( 10 ); // enter the event loop so itemsync actually can do something
+        QCOMPARE( spy.count(), 0 );
       }
-//       QTest::qWait( 1000 ); // let it finish its job
-//       QCOMPARE( spy.count(), 1 );
-//       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
-//       QCOMPARE( job, syncer );
-//       QCOMPARE( job->error(), 0 );
-// 
+      syncer->retrievalDone();
+      QTest::qWait( 1000 ); // let it finish its job
+      QCOMPARE( spy.count(), 1 );
+      KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
+      QCOMPARE( job, syncer );
+      QCOMPARE( job->error(), 0 );
+
       Collection::List resultCols = fetchCollections( "akonadi_knut_resource_0" );
       QCOMPARE( resultCols.count(), origCols.count() );
 
@@ -153,25 +153,24 @@ class CollectionSyncTest : public QObject
       syncer->setAutoDelete( false );
       QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
       QVERIFY( spy.isValid() );
-      // ### not implemented yet
-//       syncer->setStreamingEnabled( true );
+      syncer->setStreamingEnabled( true );
       QTest::qWait( 10 );
       QCOMPARE( spy.count(), 0 );
 
       for ( int i = 0; i < origCols.count(); ++i ) {
-/*        Item::List l;
+        Collection::List l;
         l << origCols[i];
-        syncer->setIncrementalSyncItems( l, Item::List() );
+        syncer->setRemoteCollections( l, Collection::List() );
         if ( i < origCols.count() - 1 )
           QTest::qWait( 10 ); // enter the event loop so itemsync actually can do something
-        QCOMPARE( spy.count(), 0 );*/
+        QCOMPARE( spy.count(), 0 );
       }
-//       syncer->deliveryDone();
-//       QTest::qWait( 1000 ); // let it finish its job
-//       QCOMPARE( spy.count(), 1 );
-//       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
-//       QCOMPARE( job, syncer );
-//       QCOMPARE( job->error(), 0 );
+      syncer->retrievalDone();
+      QTest::qWait( 1000 ); // let it finish its job
+      QCOMPARE( spy.count(), 1 );
+      KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
+      QCOMPARE( job, syncer );
+      QCOMPARE( job->error(), 0 );
 
       Collection::List resultCols = fetchCollections( "akonadi_knut_resource_0" );
       QCOMPARE( resultCols.count(), origCols.count() );
