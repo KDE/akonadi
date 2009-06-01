@@ -302,6 +302,25 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
                                           const Collection::List &removedCollections );
 
     /**
+     * Enable collection streaming, that is collections don't have to be delivered at once
+     * as result of a retrieveCollections() call but can be delivered by multiple calls
+     * to collectionsRetrieved() or collectionsRetrievedIncremental(). When all collections
+     * have been retrieved, call collectionsRetrievalDone().
+     * @param enable @c true if collection streaming should be enabled, @c false by default
+     */
+    void setCollectionStreamingEnabled( bool enable );
+
+    /**
+     * Call this method to indicate you finished synchronizing the collection tree.
+     *
+     * This is not needed if you use the built in syncing without collection streaming
+     * and call collectionsRetrieved() or collectionRetrievedIncremental() instead.
+     * If collection streaming is enabled, call this method once all collections have been delivered
+     * using collectionsRetrieved() or collectionsRetrievedIncremental().
+     */
+    void collectionsRetrievalDone();
+
+    /**
      * Call this method to supply the full collection listing from the remote server.
      *
      * If the remote server supports incremental listing, it's strongly

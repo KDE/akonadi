@@ -60,7 +60,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     ResourceBasePrivate( ResourceBase *parent )
       : AgentBasePrivate( parent ),
         scheduler( 0 ),
-        mItemSyncer( 0 )
+        mItemSyncer( 0 ),
+        mCollectionSyncer( 0 )
     {
       mStatusMessage = defaultReadyMessage();
     }
@@ -102,6 +103,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     ResourceScheduler *scheduler;
     ItemSync *mItemSyncer;
+    CollectionSync *mCollectionSyncer;
 };
 
 ResourceBase::ResourceBase( const QString & id )
@@ -351,22 +353,69 @@ bool ResourceBase::requestItemDelivery( qint64 uid, const QString & remoteId,
 void ResourceBase::collectionsRetrieved(const Collection::List & collections)
 {
   Q_D( ResourceBase );
-  CollectionSync *syncer = new CollectionSync( d->mId );
-  syncer->setRemoteCollections( collections );
-  connect( syncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)) );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree ||
+              d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
+              "ResourceBase::collectionsRetrieved()",
+              "Calling collectionsRetrieved() although no collection retrieval is in progress" );
+  if ( !d->mCollectionSyncer ) {
+    d->mCollectionSyncer = new CollectionSync( identifier() );
+    connect( d->mCollectionSyncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
+    connect( d->mCollectionSyncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)) );
+  }
+  d->mCollectionSyncer->setRemoteCollections( collections );
 }
 
 void ResourceBase::collectionsRetrievedIncremental(const Collection::List & changedCollections, const Collection::List & removedCollections)
 {
   Q_D( ResourceBase );
-  CollectionSync *syncer = new CollectionSync( d->mId );
-  syncer->setRemoteCollections( changedCollections, removedCollections );
-  connect( syncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)) );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree ||
+              d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
+              "ResourceBase::collectionsRetrievedIncremental()",
+              "Calling collectionsRetrievedIncremental() although no collection retrieval is in progress" );
+  if ( !d->mCollectionSyncer ) {
+    d->mCollectionSyncer = new CollectionSync( identifier() );
+    connect( d->mCollectionSyncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
+    connect( d->mCollectionSyncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)) );
+  }
+  d->mCollectionSyncer->setRemoteCollections( changedCollections, removedCollections );
+}
+
+void ResourceBase::setCollectionStreamingEnabled(bool enable)
+{
+  Q_D( ResourceBase );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree ||
+              d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
+              "ResourceBase::setCollectionStreamingEnabled()",
+              "Calling setCollectionStreamingEnabled() although no collection retrieval is in progress" );
+  if ( !d->mCollectionSyncer ) {
+    d->mCollectionSyncer = new CollectionSync( identifier() );
+    connect( d->mCollectionSyncer, SIGNAL(percent(KJob*,unsigned long)), SLOT(slotPercent(KJob*,unsigned long)) );
+    connect( d->mCollectionSyncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)) );
+  }
+  d->mCollectionSyncer->setStreamingEnabled( enable );
+}
+
+void ResourceBase::collectionsRetrievalDone()
+{
+  Q_D( ResourceBase );
+  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree ||
+              d->scheduler->currentTask().type == ResourceScheduler::SyncAll,
+              "ResourceBase::collectionsRetrievalDone()",
+              "Calling collectionsRetrievalDone() although no collection retrieval is in progress" );
+  // streaming enabled, so finalize the sync
+  if ( d->mCollectionSyncer ) {
+    d->mCollectionSyncer->retrievalDone();
+  }
+  // user did the sync himself, we are done now
+  else {
+    d->scheduler->taskDone();
+  }
 }
 
 void ResourceBasePrivate::slotCollectionSyncDone(KJob * job)
 {
   Q_Q( ResourceBase );
+  mCollectionSyncer = 0;
   if ( job->error() ) {
     emit q->error( job->errorString() );
   } else {
