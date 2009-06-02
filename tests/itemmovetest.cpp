@@ -47,9 +47,9 @@ class ItemMoveTest: public QObject
       QTest::addColumn<Item::List>( "items" );
 
       QTest::newRow( "single uid" ) << (Item::List() << Item( 1 ));
-//       QTest::newRow( "two uid" ) << (Item::List() << Item( 2 ) << Item( 3 ));
-//       Item r1; r1.setRemoteId( "D" );
-//       QTest::newRow( "single rid" ) << (Item::List() << r1);
+      QTest::newRow( "two uid" ) << (Item::List() << Item( 2 ) << Item( 3 ));
+      Item r1; r1.setRemoteId( "D" );
+      QTest::newRow( "single rid" ) << (Item::List() << r1);
     }
 
     void testMove()

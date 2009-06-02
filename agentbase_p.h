@@ -91,17 +91,14 @@ class AgentBasePrivate : public QObject
     AgentBase::Observer *mObserver;
 
   protected Q_SLOTS:
-    virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
+    void itemMoved( const Akonadi::Item &, const Akonadi::Collection &source, const Akonadi::Collection &destination );
+    void itemRemoved( const Akonadi::Item &item );
 
-    virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
-
-    virtual void itemRemoved( const Akonadi::Item &item );
-
-    virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
-
-    virtual void collectionChanged( const Akonadi::Collection &collection );
-
-    virtual void collectionRemoved( const Akonadi::Collection &collection );
+    void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
+    void collectionChanged( const Akonadi::Collection &collection );
+    void collectionRemoved( const Akonadi::Collection &collection );
 };
 
 }
