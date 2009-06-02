@@ -18,7 +18,6 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 set(akonaditest_SRCS
   main.cpp
   setup.cpp
-  configreader.cpp
   config.cpp
   shellscript.cpp
   symbols.cpp
