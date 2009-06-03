@@ -1,3 +1,14 @@
+1.1.90                           03-June-2009
+---------------------------------------------
+- Return the storage location for items in FETCH responses
+- Fix remode identifier encoding problems
+- Fix infinite loop when parsing RID lists
+- Fix parsing errors on stray newlines
+- Support RID-based operations for STORE and MOVE
+- Fix race on resource creation
+- Provide modified item parts in change notifications
+- Build system fixes
+
 1.1.85                            05-May-2009
 ---------------------------------------------
 - Improved CMake scripts so it is possible to detect
