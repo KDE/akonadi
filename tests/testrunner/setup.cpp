@@ -33,6 +33,7 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
+#include <QHash>
 
 #include <signal.h>
 #include <unistd.h>
@@ -181,15 +182,16 @@ void SetupTest::setupAgents()
   QDBusInterface agentDBus( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/AgentManager" ),
                             QLatin1String( "org.freedesktop.Akonadi.AgentManager" ), *mInternalBus );
 
-  const QList<QPair<QString,bool> > agents = config->agents();
-  typedef QPair<QString,bool> StringBoolPair;
-  foreach ( const StringBoolPair &agent, agents ) {
-    kDebug() << "Creating agent" << agent.first << "...";
-    QDBusReply<QString> reply = agentDBus.call( QLatin1String( "createAgentInstance" ), agent.first );
+  const QHash<QString,bool> agents = config->agents();
+  QHashIterator<QString, bool> i(agents);
+  while( i.hasNext() ) {
+    i.next();
+    kDebug() << "Creating agent" << i.key() << "...";
+    QDBusReply<QString> reply = agentDBus.call( QLatin1String( "createAgentInstance" ), i.key() );
     if ( reply.isValid() && !reply.value().isEmpty() ) {
       mPendingAgents << reply.value();
       mPendingResources << reply.value();
-      if ( agent.second ) {
+      if ( i.value() ) {
         mPendingSyncs << reply.value();
       }
     } else {

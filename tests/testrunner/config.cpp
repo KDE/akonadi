@@ -116,22 +116,12 @@ void Config::setXdgConfigHome( const QString &configHome )
   mXdgConfigHome = configHomeDir.absolutePath();
 }
 
-void Config::insertItemConfig( const QString &itemName, const QString &collectionName )
-{
-  mItemConfig.append( qMakePair( itemName, collectionName ) );
-}
-
-QList< QPair<QString, QString> > Config::itemConfig() const
-{
-  return mItemConfig;
-}
-
 void Config::insertAgent( const QString &agent, bool sync )
 {
-  mAgents.append( qMakePair( agent, sync ) );
+  mAgents[agent] = sync;
 }
 
-QList<QPair<QString, bool> > Config::agents() const
+QHash<QString, bool> Config::agents() const
 {
   return mAgents;
 }
