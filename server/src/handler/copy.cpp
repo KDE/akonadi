@@ -41,8 +41,8 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   PimItem newItem = item;
   newItem.setId( -1 );
   newItem.setRev( 0 );
-  newItem.setSize( 0 );
   newItem.setDatetime( QDateTime::currentDateTime() );
+  newItem.setAtime( QDateTime::currentDateTime() );
   newItem.setRemoteId( QString() );
   newItem.setCollectionId( target.id() );
   Part::List parts;

@@ -335,10 +335,11 @@ bool Store::parseStream()
       }
 
     } // parts/attribute modification
-
-    if ( mSize > 0 || partSizes > 0 )
-      item.setSize( qMax( mSize, partSizes ) );
   }
+
+  // update item size
+  if ( pimItems.size() == 1 && (mSize > 0 || partSizes > 0) )
+    pimItems.first().setSize( qMax( mSize, partSizes ) );
 
   // run update query and prepare change notifications
   for ( int i = 0; i < pimItems.count(); ++i ) {
