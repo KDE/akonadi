@@ -118,10 +118,10 @@ void Config::setXdgConfigHome( const QString &configHome )
 
 void Config::insertAgent( const QString &agent, bool sync )
 {
-  mAgents[agent] = sync;
+  mAgents.append( qMakePair( agent, sync ) );
 }
 
-QHash<QString, bool> Config::agents() const
+QList<QPair<QString, bool> > Config::agents() const
 {
   return mAgents;
 }

@@ -32,13 +32,12 @@ class Config
     QString kdeHome() const;
     QString xdgDataHome() const;
     QString xdgConfigHome() const;
-    QHash<QString, bool> agents() const;
+    QList<QPair<QString, bool> > agents() const;
 
   protected:
     void setKdeHome( const QString &home );
     void setXdgDataHome( const QString &dataHome );
     void setXdgConfigHome( const QString &configHome );
-    void insertItemConfig( const QString &itemName, const QString &collectionName );
     void insertAgent( const QString &agent, bool sync );
 
   private:
@@ -48,7 +47,7 @@ class Config
     QString mKdeHome;
     QString mXdgDataHome;
     QString mXdgConfigHome;
-    QHash<QString, bool> mAgents;
+    QList<QPair<QString, bool> > mAgents;
 };
 
 #endif
