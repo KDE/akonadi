@@ -33,13 +33,35 @@ namespace Akonadi {
 
 /**
  * @internal
+ *
+ * @short A dialog that checks the current status of the Akonadi system.
+ *
+ * This dialog checks the current status of the Akonadi system and
+ * displays a summary of the checks.
+ *
+ * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
 {
   Q_OBJECT
   public:
+    /**
+     * Creates a new self test dialog.
+     *
+     * @param parent The parent widget.
+     */
     SelfTestDialog( QWidget *parent = 0 );
+
+    /**
+     * Hides the label with the introduction message.
+     */
     void hideIntroduction();
+
+  private slots:
+    void selectionChanged( const QModelIndex &index );
+    void saveReport();
+    void copyReport();
+    void linkActivated( const QString &link );
 
   private:
     enum ResultType {
@@ -67,13 +89,6 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
 
     QString createReport();
 
-  private slots:
-    void selectionChanged( const QModelIndex &index );
-    void saveReport();
-    void copyReport();
-    void linkActivated( const QString &link );
-
-  private:
     Ui::SelfTestDialog ui;
     QStandardItemModel* mTestModel;
 };
