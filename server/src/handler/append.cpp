@@ -59,6 +59,7 @@ bool Append::commit()
     //and more data is read into the stream and that causes the problems.
     if ( m_streamParser->hasLiteral() ) {
       dataSize = m_streamParser->remainingLiteralSize();
+      m_size = qMax( m_size, dataSize );
       storeInFile = DbConfig::useExternalPayloadFile() && dataSize > DbConfig::sizeThreshold();
       if ( storeInFile ) {
         if ( !tmpFile.open() ) {
@@ -197,8 +198,7 @@ bool Append::parseStream()
 
   m_mailbox = m_streamParser->readString();
 
-  bool ok = false;
-  m_size = m_streamParser->readNumber( &ok );
+  m_size = m_streamParser->readNumber();
 
     // parse optional flag parenthesized list
     // Syntax:

@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include "../../libs/imapparser_p.h"
+#include "libs/imapparser_p.h"
 #include "imapstreamparser.h"
 
 #include "append.h"
@@ -123,11 +123,10 @@ bool AkAppend::parseStream()
     //
     // Syntax:
     // x-akappend = "X-AKAPPEND" SP mailbox SP size [SP flag-list] [SP date-time] SP (partname SP literal)+
-  
+
   m_mailbox = m_streamParser->readString();
 
-  bool ok = false;
-  m_size = m_streamParser->readNumber(&ok);
+  m_size = m_streamParser->readNumber();
 
   // parse optional flag parenthesized list
   // Syntax:
@@ -153,10 +152,11 @@ bool AkAppend::parseStream()
   QList<QPair<QByteArray, QPair<qint64, int> > > partSpecs;
   QByteArray partName = "";
   qint64 partSize = -1;
-  ok = false;
+  qint64 partSizes = 0;
+  bool ok = false;
 
   QList<QByteArray> list = m_streamParser->readParenthesizedList();
-  Q_FOREACH(QByteArray item, list)
+  Q_FOREACH( const QByteArray &item, list )
   {
     if (partName.isEmpty() && partSize == -1)
     {
@@ -176,10 +176,14 @@ bool AkAppend::parseStream()
 
       partSpecs.append( qMakePair( plainPartName, qMakePair( partSize, version ) ) );
       partName = "";
+      partSizes += partSize;
       partSize = -1;
     }
   }
 
+  m_size = qMax( partSizes, m_size );
+
+  // TODO streaming support!
   QByteArray allParts = m_streamParser->readString();
 
   // chop up literal data in parts

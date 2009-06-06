@@ -160,6 +160,7 @@ bool Store::parseStream()
   }
 
   QSet<QByteArray> changes;
+  qint64 partSizes = 0;
 
   // apply modifications
   m_streamParser->beginList();
@@ -273,6 +274,7 @@ bool Store::parseStream()
       QByteArray value;
       if ( m_streamParser->hasLiteral() ) {
         const qint64 dataSize = m_streamParser->remainingLiteralSize();
+        partSizes += dataSize;
         const bool storeInFile = ( DbConfig::useExternalPayloadFile() && dataSize > DbConfig::sizeThreshold() );
         //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
         if ( storeInFile ) {
@@ -314,6 +316,7 @@ bool Store::parseStream()
         }
       } else { //not a literal
         value = m_streamParser->readString();
+        partSizes += value.size();
       }
 
       const QByteArray origData = PartHelper::translateData( part );
@@ -332,6 +335,9 @@ bool Store::parseStream()
       }
 
     } // parts/attribute modification
+
+    if ( mSize > 0 || partSizes > 0 )
+      item.setSize( qMax( mSize, partSizes ) );
   }
 
   // run update query and prepare change notifications
