@@ -52,26 +52,23 @@ class ItemCopyTest : public QObject
       QVERIFY( target.isValid() );
 
       ItemCopyJob *copy = new ItemCopyJob( Item( 1 ), target );
-      QVERIFY( copy->exec() );
+      AKVERIFYEXEC( copy );
 
       Item source( 1 );
       ItemFetchJob *sourceFetch = new ItemFetchJob( source );
-      QVERIFY( sourceFetch->exec() );
+      AKVERIFYEXEC( sourceFetch );
+      source = sourceFetch->items().first();
 
       ItemFetchJob *fetch = new ItemFetchJob( target );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().fetchAllAttributes();
       fetch->fetchScope().setCacheOnly( true );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QCOMPARE( fetch->items().count(), 1 );
 
       Item item = fetch->items().first();
       QVERIFY( item.hasPayload() );
-      QEXPECT_FAIL( "", "For some reason the size is not set correctly after "
-                        "the fetch", Continue);
       QVERIFY( source.size() > 0 );
-      QEXPECT_FAIL( "", "For some reason the size is not set correctly after "
-                        "the fetch", Continue);
       QVERIFY( item.size() > 0 );
       QCOMPARE( item.size(), source.size() );
       QCOMPARE( item.attributes().count(), 1 );

@@ -64,11 +64,11 @@ void ItemAppendTest::testItemAppend()
   item.setFlag( "TestFlag" );
   item.setSize( 3456 );
   ItemCreateJob *job = new ItemCreateJob( item, Collection( testFolder1 ), this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   QCOMPARE( fjob->items()[0], ref );
   QCOMPARE( fjob->items()[0].remoteId(), remoteId );
@@ -78,10 +78,10 @@ void ItemAppendTest::testItemAppend()
   QCOMPARE( fjob->items()[0].size(), size );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-  QVERIFY( djob->exec() );
+  AKVERIFYEXEC( djob );
 
   fjob = new ItemFetchJob( testFolder1, this );
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QVERIFY( fjob->items().isEmpty() );
 }
 
@@ -115,12 +115,12 @@ void ItemAppendTest::testContent()
   item.setPayload( data );
 
   ItemCreateJob* job = new ItemCreateJob( item, testFolder1, this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Item ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
   fjob->fetchScope().fetchFullPayload();
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();
   QCOMPARE( item2.payload<QByteArray>(), data );
@@ -128,7 +128,7 @@ void ItemAppendTest::testContent()
   QCOMPARE( item2.payload<QByteArray>().isNull(), data.isNull() );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-  QVERIFY( djob->exec() );
+  AKVERIFYEXEC( djob );
 }
 
 void ItemAppendTest::testNewMimetype()
@@ -139,13 +139,13 @@ void ItemAppendTest::testNewMimetype()
   Item item;
   item.setMimeType( "application/new-type" );
   ItemCreateJob *job = new ItemCreateJob( item, col, this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   item = job->item();
   QVERIFY( item.isValid() );
 
   ItemFetchJob *fetch = new ItemFetchJob( item, this );
-  QVERIFY( fetch->exec() );
+  AKVERIFYEXEC( fetch );
   QCOMPARE( fetch->items().count(), 1 );
   QCOMPARE( fetch->items().first().mimeType(), item.mimeType() );
 }
@@ -183,13 +183,13 @@ void ItemAppendTest::testMultipartAppend()
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
   item.setFlag( "TestFlag" );
   ItemCreateJob *job = new ItemCreateJob( item, testFolder1, this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Item ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( ref, this );
   fjob->fetchScope().fetchFullPayload();
   fjob->fetchScope().fetchAttribute<TestAttribute>();
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();
   QCOMPARE( item.payload<QByteArray>(), QByteArray( "body data" ) );
@@ -198,7 +198,41 @@ void ItemAppendTest::testMultipartAppend()
   QVERIFY( item.flags().contains( "TestFlag" ) );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-  QVERIFY( djob->exec() );
+  AKVERIFYEXEC( djob );
+}
+
+void ItemAppendTest::testItemSize_data()
+{
+  QTest::addColumn<Akonadi::Item>( "item" );
+  QTest::addColumn<qint64>( "size" );
+
+  Item i( "application/octet-stream" );
+  i.setPayload( QByteArray( "ABCD" ) );
+
+  QTest::newRow( "auto size" ) << i << 4ll;
+  i.setSize( 3 );
+  QTest::newRow( "too small" ) << i << 4ll;
+  i.setSize( 10 );
+  QTest::newRow( "too large" ) << i << 10ll;
+}
+
+void ItemAppendTest::testItemSize()
+{
+  QFETCH( Akonadi::Item, item );
+  QFETCH( qint64, size );
+
+  const Collection col( collectionIdFromPath( "res2/space folder" ) );
+  QVERIFY( col.isValid() );
+
+  ItemCreateJob *create = new ItemCreateJob( item, col, this );
+  AKVERIFYEXEC( create );
+  Item newItem = create->item();
+
+  ItemFetchJob *fetch = new ItemFetchJob( newItem, this );
+  AKVERIFYEXEC( fetch );
+  QCOMPARE( fetch->items().count(), 1 );
+
+  QCOMPARE( fetch->items().first().size(), size );
 }
 
 #include "itemappendtest.moc"

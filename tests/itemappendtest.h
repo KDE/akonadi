@@ -34,6 +34,8 @@ class ItemAppendTest : public QObject
     void testNewMimetype();
     void testIllegalAppend();
     void testMultipartAppend();
+    void testItemSize_data();
+    void testItemSize();
 };
 
 

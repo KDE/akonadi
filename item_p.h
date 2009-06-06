@@ -41,7 +41,8 @@ class ItemPrivate : public EntityPrivate
         mCollectionId( -1 ),
         mSize( 0 ),
         mModificationTime(),
-        mFlagsOverwritten( false )
+        mFlagsOverwritten( false ),
+        mSizeChanged( false )
     {
     }
 
@@ -60,6 +61,7 @@ class ItemPrivate : public EntityPrivate
       mAddedFlags = other.mAddedFlags;
       mDeletedFlags = other.mDeletedFlags;
       mFlagsOverwritten = other.mFlagsOverwritten;
+      mSizeChanged = other.mSizeChanged;
     }
 
     ~ItemPrivate()
@@ -72,6 +74,7 @@ class ItemPrivate : public EntityPrivate
       mFlagsOverwritten = false;
       mAddedFlags.clear();
       mDeletedFlags.clear();
+      mSizeChanged = false;
     }
 
     EntityPrivate *clone() const
@@ -89,6 +92,7 @@ class ItemPrivate : public EntityPrivate
     Item::Flags mAddedFlags;
     Item::Flags mDeletedFlags;
     bool mFlagsOverwritten;
+    bool mSizeChanged;
 };
 
 }
