@@ -25,7 +25,7 @@ set(AKONADI_XDG_MIME_INSTALL_DIR "@AKONADI_XDG_MIME_DIR@")
 # Compatibility
 if(WIN32)
 if(MINGW)
-  set(AKONADI_COMMON_LIBRARIES     "@AKONADI_LIB_DIR@/libakonadiprotocolinternals.dll")
+  set(AKONADI_COMMON_LIBRARIES     "@AKONADI_LIB_DIR@/libakonadiprotocolinternals.dll.a")
 else(MINGW)
   set(AKONADI_COMMON_LIBRARIES     "@AKONADI_LIB_DIR@/akonadiprotocolinternals.lib")
 endif(MINGW)
