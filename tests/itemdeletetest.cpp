@@ -106,6 +106,30 @@ class ItemDeleteTest : public QObject
       QCOMPARE( fjob->items().count(), 0 );
     }
 
+    void testCollectionDelete()
+    {
+      const Collection col( collectionIdFromPath( "res1/foo" ) );
+      ItemFetchJob *fjob = new ItemFetchJob( col, this );
+      AKVERIFYEXEC( fjob );
+      QVERIFY( fjob->items().count() > 0 );
+
+      // delete from non-empty collection
+      ItemDeleteJob *djob = new ItemDeleteJob( col, this );
+      AKVERIFYEXEC( djob );
+
+      fjob = new ItemFetchJob( col, this );
+      AKVERIFYEXEC( fjob );
+      QCOMPARE( fjob->items().count(), 0 );
+
+      // delete from empty collection
+      djob = new ItemDeleteJob( col, this );
+      QVERIFY( !djob->exec() ); // error: no items found
+
+      fjob = new ItemFetchJob( col, this );
+      AKVERIFYEXEC( fjob );
+      QCOMPARE( fjob->items().count(), 0 );
+    }
+
 };
 
 QTEST_AKONADIMAIN( ItemDeleteTest, NoGUI )
