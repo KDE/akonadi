@@ -269,6 +269,9 @@ AgentManager::AgentManager()
                                                      QLatin1String( "/AgentManager" ),
                                                      QDBusConnection::sessionBus(), this );
 
+  Q_ASSERT_X(d->mManager->isValid(), "Akonadi::AgentManager::AgentManager()",
+             "Failed to register dbus-interface org.freedesktop.Akonadi.Control/AgentManager");
+
   connect( d->mManager, SIGNAL( agentTypeAdded( const QString& ) ),
            this, SLOT( agentTypeAdded( const QString& ) ) );
   connect( d->mManager, SIGNAL( agentTypeRemoved( const QString& ) ),
