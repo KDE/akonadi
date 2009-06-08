@@ -39,10 +39,17 @@ using namespace Akonadi;
 class CollectionRoot : public Collection
 {
   public:
-    CollectionRoot() : Collection( 0 ) {
+    CollectionRoot()
+      : Collection( 0 )
+    {
       QStringList types;
       types << Collection::mimeType();
       setContentMimeTypes( types );
+
+      // The root collection is read-only for the users
+      Collection::Rights rights;
+      rights |= Collection::ReadOnly;
+      setRights( rights );
     }
 };
 
