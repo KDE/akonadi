@@ -87,6 +87,14 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
      */
     void changesAdded();
 
+    /**
+     * @internal
+     * Emitted when replayNext() was called, but there was no valid change to replay.
+     * This is used internally to prevent stuck notifications. You shouldn't need to
+     * connect to this signal.
+     */
+    void nothingToReplay();
+
   private:
     Q_DECLARE_PRIVATE( ChangeRecorder )
 };

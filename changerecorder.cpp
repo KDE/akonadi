@@ -150,12 +150,21 @@ void ChangeRecorder::setConfig(QSettings * settings)
 
 void ChangeRecorder::replayNext()
 {
+  bool nothing = true;
   Q_D( ChangeRecorder );
   while( !d->pendingNotifications.isEmpty() ) {
     const NotificationMessage msg = d->pendingNotifications.first();
-    if ( d->processNotification( msg ) )
+    if ( d->processNotification( msg ) ) {
+      nothing = false;
       break;
+    }
     d->pendingNotifications.takeFirst();
+  }
+  if( nothing ) {
+    // This is necessary when none of the notifications were accepted / processed
+    // above, and so there is no one to call changeProcessed() and the ChangeReplay task
+    // will be stuck forever in the ResourceScheduler.
+    emit nothingToReplay();
   }
   d->saveNotifications();
 }
