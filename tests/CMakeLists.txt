@@ -87,7 +87,11 @@ add_akonadi_test(itemtest.cpp)
 add_akonadi_test(itemserializertest.cpp)
 add_akonadi_test(mimetypecheckertest.cpp)
 add_akonadi_test(protocolhelpertest.cpp)
-add_akonadi_test(resourceschedulertest.cpp)
+
+# qtestlib tests that need non-exported stuff from akonadi-kde
+kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)
+target_link_libraries(resourceschedulertest akonadi-kde ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
+
 
 # testrunner tests
 add_akonadi_isolated_test(testenvironmenttest.cpp)

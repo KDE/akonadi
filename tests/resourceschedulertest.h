@@ -27,6 +27,7 @@ class ResourceSchedulerTest : public QObject
   private Q_SLOTS:
 
     void testTaskComparision();
+    void testChangeReplaySchedule();
 };
 
 #endif
