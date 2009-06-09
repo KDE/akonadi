@@ -135,13 +135,6 @@ class ChangeRecorderTest : public QObject
       QCOMPARE( nothingSpy.count(), 1 );
       QCOMPARE( changedSpy.count(), 1 );
 
-      // Second item changed signal, from triggerChange()
-      /*recorder.changeProcessed();
-      recorder.replayNext();
-      QTest::qWait( 1000 );
-      QCOMPARE( nothingSpy.count(), 1 );
-      QCOMPARE( changedSpy.count(), 2 );*/
-
       // Nothing else to replay now
       recorder.changeProcessed();
       recorder.replayNext();
