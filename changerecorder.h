@@ -87,6 +87,14 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
      */
     void changesAdded();
 
+    /**
+     * Emitted when replayNext() was called, but there was no valid change to replay.
+     * This can happen when all pending changes have been filtered out for example.
+     * You only need to connect to this signal if you rely on one signal being emitted
+     * as a result of calling replayNext().
+     */
+    void nothingToReplay();
+
   private:
     Q_DECLARE_PRIVATE( ChangeRecorder )
 };

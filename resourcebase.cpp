@@ -140,6 +140,7 @@ ResourceBase::ResourceBase( const QString & id )
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
            d->mMonitor, SLOT(replayNext()) );
   connect( d->scheduler, SIGNAL(fullSyncComplete()), SIGNAL(synchronized()) );
+  connect( d->mMonitor, SIGNAL(nothingToReplay()), d->scheduler, SLOT(taskDone()) );
   connect( this, SIGNAL(synchronized()), d->scheduler, SLOT(taskDone()) );
 
   d->scheduler->setOnline( d->mOnline );
