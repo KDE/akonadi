@@ -51,6 +51,9 @@ void ResourceSchedulerTest::testChangeReplaySchedule()
   QSignalSpy changeReplaySpy( &scheduler, SIGNAL( executeChangeReplay() ) );
   QSignalSpy collectionTreeSyncSpy( &scheduler, SIGNAL( executeCollectionTreeSync() ) );
   QSignalSpy syncSpy( &scheduler, SIGNAL( executeCollectionSync( const Akonadi::Collection & ) ) );
+  QVERIFY( changeReplaySpy.isValid() );
+  QVERIFY( collectionTreeSyncSpy.isValid() );
+  QVERIFY( syncSpy.isValid() );
 
   // Schedule a change replay, it should be executed first thing when we enter the
   // event loop, but not before
