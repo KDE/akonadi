@@ -16,36 +16,71 @@
  */
 
 #include "config.h"
-#include "configreader.h"
 
 #include <kstandarddirs.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QPair>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
+#include <QtXml/QDomNode>
 
-Config* Config::mInstance = 0;
+
+Q_GLOBAL_STATIC(Config, globalConfig)
 
 Config::Config()
 {
 }
 
-Config *Config::instance( const QString& pathToConfig )
+Config::~Config()
 {
-  if ( mInstance == 0 ) {
-    QString cfgFile = pathToConfig;
-    if ( cfgFile.isEmpty() )
-       cfgFile = KStandardDirs::locate( "config", "akonaditest.xml" );
-
-     mInstance = new ConfigReader( cfgFile );
-  }
-
-  return mInstance;
 }
 
-
-void Config::destroyInstance()
+Config *Config::instance(const QString &pathToConfig)
 {
-  delete mInstance;
+  if ( !pathToConfig.isEmpty() ) 
+    globalConfig()->readConfiguration(pathToConfig);
+
+  return globalConfig();
+}
+
+void Config::readConfiguration(const QString &configfile)
+{
+  QDomDocument doc;
+  QFile file( configfile );
+
+  if ( !file.open( QIODevice::ReadOnly ) )
+    qFatal( "error reading file: %s", qPrintable( configfile ) );
+
+  QString errorMsg;
+  if ( !doc.setContent( &file, &errorMsg ) )
+    qFatal( "unable to parse config file: %s", qPrintable( errorMsg ) );
+
+  const QDomElement root = doc.documentElement();
+  if ( root.tagName() != "config" )
+    qFatal( "could not file root tag" );
+
+  const QString basePath = QFileInfo( configfile ).absolutePath() + "/";
+
+  QDomNode node = root.firstChild();
+  while ( !node.isNull() ) {
+    const QDomElement element = node.toElement();
+    if ( !element.isNull() ) {
+      if ( element.tagName() == "kdehome" ) {
+        setKdeHome( basePath + element.text() );
+      } else if ( element.tagName() == "confighome" ) {
+        setXdgConfigHome( basePath + element.text() );
+      } else if ( element.tagName() == "datahome" ) {
+        setXdgDataHome( basePath + element.text() );
+      } else if ( element.tagName() == "agent" ) {
+        insertAgent( element.text(), element.attribute( "synchronize", "false" ) == QLatin1String("true") );
+      }
+    }
+
+    node = node.nextSibling();
+  }
 }
 
 QString Config::kdeHome() const
@@ -79,16 +114,6 @@ void Config::setXdgConfigHome( const QString &configHome )
 {
   const QDir configHomeDir( configHome );
   mXdgConfigHome = configHomeDir.absolutePath();
-}
-
-void Config::insertItemConfig( const QString &itemName, const QString &collectionName )
-{
-  mItemConfig.append( qMakePair( itemName, collectionName ) );
-}
-
-QList< QPair<QString, QString> > Config::itemConfig() const
-{
-  return mItemConfig;
 }
 
 void Config::insertAgent( const QString &agent, bool sync )

@@ -151,7 +151,9 @@ QString Item::mimeType() const
 
 void Item::setSize( qint64 size )
 {
-  d_func()->mSize = size;
+  Q_D( Item );
+  d->mSize = size;
+  d->mSizeChanged = true;
 }
 
 qint64 Item::size() const

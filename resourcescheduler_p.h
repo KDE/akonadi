@@ -70,8 +70,8 @@ class ResourceScheduler : public QObject
         bool operator==( const Task &other ) const
         {
           return type == other.type
-              && collection == other.collection
-              && item == other.item
+              && (collection == other.collection || (!collection.isValid() && !other.collection.isValid()))
+              && (item == other.item || (!item.isValid() && !other.item.isValid()))
               && itemParts == other.itemParts;
         }
     };

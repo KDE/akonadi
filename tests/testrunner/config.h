@@ -25,29 +25,29 @@
 class Config
 {
   public:
+    Config();
+    ~Config();
     static Config *instance( const QString &pathToConfig = QString() );
     static void destroyInstance();
     QString kdeHome() const;
     QString xdgDataHome() const;
     QString xdgConfigHome() const;
-    QList<QPair<QString, QString> > itemConfig() const;
     QList<QPair<QString, bool> > agents() const;
 
   protected:
-    Config();
     void setKdeHome( const QString &home );
     void setXdgDataHome( const QString &dataHome );
     void setXdgConfigHome( const QString &configHome );
-    void insertItemConfig( const QString &itemName, const QString &collectionName );
     void insertAgent( const QString &agent, bool sync );
+
+  private:
+    void readConfiguration(const QString &configFile);
 
   private:
     QString mKdeHome;
     QString mXdgDataHome;
     QString mXdgConfigHome;
-    QList<QPair<QString, QString> >  mItemConfig;
     QList<QPair<QString, bool> > mAgents;
-    static Config *mInstance;
 };
 
 #endif

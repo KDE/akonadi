@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Thomas McGuire <mcguire@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -16,27 +16,18 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-
-#ifndef ITEMAPPENDTEST_H
-#define ITEMAPPENDTEST_H
+#ifndef RESOURCESCHEDULERTEST_H
+#define RESOURCESCHEDULERTEST_H
 
 #include <QtCore/QObject>
 
-class ItemAppendTest : public QObject
+class ResourceSchedulerTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
-    void initTestCase();
-    void testItemAppend_data();
-    void testItemAppend();
-    void testContent_data();
-    void testContent();
-    void testNewMimetype();
-    void testIllegalAppend();
-    void testMultipartAppend();
-    void testItemSize_data();
-    void testItemSize();
-};
 
+    void testTaskComparision();
+    void testChangeReplaySchedule();
+};
 
 #endif

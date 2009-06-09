@@ -414,6 +414,7 @@ void StandardActionManager::setActionText(Type type, const KLocalizedString & te
 {
   Q_ASSERT( type >= 0 && type < LastType );
   d->pluralLabels.insert( type, text );
+  d->updateActions();
 }
 
 #include "standardactionmanager.moc"

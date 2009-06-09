@@ -290,19 +290,21 @@ AgentManager::AgentManager()
   connect( d->mManager, SIGNAL(agentInstanceOnlineChanged(QString,bool)),
            SLOT(agentInstanceOnlineChanged(QString,bool)) );
 
-  QDBusReply<QStringList> result = d->mManager->agentTypes();
-  if ( result.isValid() ) {
-    foreach( const QString &type, result.value() ) {
-      const AgentType agentType = d->fillAgentType( type );
-      d->mTypes.insert( type, agentType );
+  if ( d->mManager->isValid() ) {
+    QDBusReply<QStringList> result = d->mManager->agentTypes();
+    if ( result.isValid() ) {
+      foreach( const QString &type, result.value() ) {
+        const AgentType agentType = d->fillAgentType( type );
+        d->mTypes.insert( type, agentType );
+      }
     }
-  }
 
-  result = d->mManager->agentInstances();
-  if ( result.isValid() ) {
-    foreach( const QString &instance, result.value() ) {
-      const AgentInstance agentInstance = d->fillAgentInstance( instance );
-      d->mInstances.insert( instance, agentInstance );
+    result = d->mManager->agentInstances();
+    if ( result.isValid() ) {
+      foreach( const QString &instance, result.value() ) {
+        const AgentInstance agentInstance = d->fillAgentInstance( instance );
+        d->mInstances.insert( instance, agentInstance );
+      }
     }
   }
 }

@@ -107,7 +107,6 @@ int main( int argc, char **argv )
     delete runner;
   }
 
-  Config::destroyInstance();
   delete setup;
   setup = 0;
   delete sh;

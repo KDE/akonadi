@@ -160,6 +160,8 @@ void AgentBasePrivate::init()
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
            SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+  connect( mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+           SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
   connect( mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
            SLOT( itemRemoved( const Akonadi::Item& ) ) );
   connect( mMonitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
@@ -202,6 +204,31 @@ void AgentBasePrivate::itemChanged( const Akonadi::Item &item, const QSet<QByteA
   kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   if ( mObserver != 0 )
     mObserver->itemChanged( item, partIdentifiers );
+}
+
+void AgentBasePrivate::itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &dest )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  if ( mObserver ) {
+    // inter-resource moves, requires we know which resources the source and destination are in though
+    if ( !source.resource().isEmpty() && !dest.resource().isEmpty() ) {
+      if ( source.resource() != dest.resource() ) {
+        if ( source.resource() == q_ptr->identifier() ) // moved away from us
+          mObserver->itemRemoved( item );
+        else if ( dest.resource() == q_ptr->identifier() ) // moved to us
+          mObserver->itemAdded( item, dest );
+        else // not for us, not sure if we should get here at all
+          changeProcessed();
+        return;
+      }
+    }
+    // either incomplete information or intra-resource move
+    // ### we cannot just call itemRemoved here as this will already trigger changeProcessed()
+    // so, just itemAdded() is good enough as no resource can have implemented intra-resource moves anyway
+    // without using Observer2
+    mObserver->itemAdded( item, dest );
+    // mObserver->itemRemoved( item );
+  }
 }
 
 void AgentBasePrivate::itemRemoved( const Akonadi::Item &item )

@@ -110,6 +110,38 @@ class ChangeRecorderTest : public QObject
       QCOMPARE( spy2.count(), 2 );
       delete rec;
     }
+
+    void testEmptyChangeReplay()
+    {
+      ChangeRecorder recorder;
+      recorder.setAllMonitored();
+      recorder.itemFetchScope().fetchFullPayload();
+      recorder.itemFetchScope().fetchAllAttributes();
+      QSignalSpy nothingSpy( &recorder, SIGNAL(nothingToReplay()) );
+      QSignalSpy changedSpy( &recorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+      QVERIFY( nothingSpy.isValid() );
+      QVERIFY( changedSpy.isValid() );
+
+      // Nothing to replay, should emit that signal then.
+      recorder.replayNext();
+      QCOMPARE( nothingSpy.count(), 1 );
+      QCOMPARE( changedSpy.count(), 0 );
+
+      // Give it something to replay
+      triggerChange( 1 );
+      QTest::qWait( 1000 ); // enter event loop and wait for change notifications from the server
+      recorder.replayNext();
+      QTest::qWait( 1000 );
+      QCOMPARE( nothingSpy.count(), 1 );
+      QCOMPARE( changedSpy.count(), 1 );
+
+      // Nothing else to replay now
+      recorder.changeProcessed();
+      recorder.replayNext();
+      QTest::qWait( 1000 );
+      QCOMPARE( nothingSpy.count(), 2 );
+      QCOMPARE( changedSpy.count(), 1 );
+    };
 };
 
 QTEST_AKONADIMAIN( ChangeRecorderTest, NoGUI )

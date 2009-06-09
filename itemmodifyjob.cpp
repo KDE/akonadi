@@ -144,7 +144,8 @@ void ItemModifyJob::doStart()
     command += "REV " + QByteArray::number( d->mItem.revision() ) + ' ';
   }
 
-  command += "SIZE " + QByteArray::number( d->mItem.size() );
+  if ( d->mItem.d_func()->mSizeChanged )
+    command += "SIZE " + QByteArray::number( d->mItem.size() );
 
   command += " (" + ImapParser::join( changes, " " );
   const QByteArray attrs = ProtocolHelper::attributesToByteArray( d->mItem, true );
