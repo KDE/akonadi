@@ -36,6 +36,9 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/topological_sort.hpp>
+
 // temporary
 #include "pluginloader_p.h"
 
@@ -71,7 +74,6 @@ K_GLOBAL_STATIC( DefaultItemSerializerPlugin, s_defaultItemSerializerPlugin )
 
 }
 
-
 using namespace Akonadi;
 
 class PluginEntry
@@ -82,12 +84,10 @@ class PluginEntry
     {
     }
 
-    PluginEntry( const QString &identifier )
-      : mIdentifier( identifier ), mPlugin( 0 )
+    explicit PluginEntry( const QString &identifier, ItemSerializerPlugin *plugin = 0 )
+      : mIdentifier( identifier ), mPlugin( plugin )
     {
     }
-
-    PluginEntry( ItemSerializerPlugin* plugin ) : mPlugin( plugin ) {}
 
     inline ItemSerializerPlugin* plugin() const
     {
@@ -117,36 +117,115 @@ class PluginEntry
       return mPlugin;
     }
 
+    QString type() const { return mIdentifier; }
+
+    bool operator<( const PluginEntry &other ) const
+    {
+      return mIdentifier < other.mIdentifier;
+    }
+    bool operator<( const QString &type ) const
+    {
+      return mIdentifier < type;
+    }
+
   private:
     QString mIdentifier;
     mutable ItemSerializerPlugin *mPlugin;
 };
 
-static QHash<QString, PluginEntry> * all = 0;
-
-static void loadPlugins() {
-  const PluginLoader* pl = PluginLoader::self();
-  if ( !pl ) {
-    kWarning( 5250 ) << "Cannot instantiate plugin loader!" << endl;
-    return;
-  }
-  const QStringList types = pl->types();
-  kDebug( 5250 ) << "ItemSerializerPluginLoader: "
-                 << "found" << types.size() << "plugins." << endl;
-// FIXME: when adding this it might be found before more specific plugins if there is no exact match
-//  all->insert( QLatin1String( "application/octet-stream" ), PluginEntry( s_defaultItemSerializerPlugin ) );
-  for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
-    all->insert( *it, PluginEntry( *it ) );
-  }
-}
-
-static void setup()
+static bool operator<( const QString &type, const PluginEntry &entry )
 {
-    if (!all) {
-        all = new QHash<QString, PluginEntry>();
-        loadPlugins();
-    }
+  return type < entry.type();
 }
+
+static QDebug& operator<<( QDebug& d, const PluginEntry& entry )
+{
+  d << entry.type();
+  return d;
+}
+
+
+class PluginRegistry
+{
+  public:
+    PluginRegistry() :
+      mDefaultPlugin( PluginEntry( QLatin1String("application/octet-stream"), s_defaultItemSerializerPlugin ) )
+    {
+      const PluginLoader* pl = PluginLoader::self();
+      if ( !pl ) {
+        kWarning( 5250 ) << "Cannot instantiate plugin loader!" << endl;
+        return;
+      }
+      const QStringList types = pl->types();
+      kDebug( 5250 ) << "ItemSerializerPluginLoader: "
+                     << "found" << types.size() << "plugins." << endl;
+      allPlugins.reserve( types.size() + 1 );
+      foreach ( const QString &type, types )
+        allPlugins.append( PluginEntry( type ) );
+      allPlugins.append( mDefaultPlugin );
+      std::sort( allPlugins.begin(), allPlugins.end() );
+    }
+
+    const PluginEntry& findBestMatch( const QString &type )
+    {
+      KMimeType::Ptr mimeType = KMimeType::mimeType( type, KMimeType::ResolveAliases );
+      if ( mimeType.isNull() )
+        return mDefaultPlugin;
+
+      // step 1: find all plugins that match at all
+      QVector<int> matchingIndexes;
+      for ( int i = 0, end = allPlugins.size(); i < end; ++i ) {
+        if ( mimeType->is( allPlugins[i].type() ) )
+          matchingIndexes.append( i );
+      }
+
+      // 0 matches: no luck (shouldn't happend though, as application/octet-stream matches everything)
+      if ( matchingIndexes.isEmpty() )
+        return mDefaultPlugin;
+      // 1 match: we are done
+      if ( matchingIndexes.size() == 1 )
+        return allPlugins[matchingIndexes.first()];
+
+      // step 2: if we have more than one match, find the most specific one using topological sort
+      boost::adjacency_list<> graph( allPlugins.size() );
+      for ( int i = 0, end = matchingIndexes.size() ; i != end ; ++i ) {
+        KMimeType::Ptr mimeType = KMimeType::mimeType( allPlugins[matchingIndexes[i]].type(), KMimeType::ResolveAliases );
+        if ( mimeType.isNull() )
+          continue;
+        for ( int j = 0; j != end; ++j ) {
+          if ( i == j )
+            continue;
+          if ( mimeType->is( allPlugins[matchingIndexes[j]].type() ) )
+            boost::add_edge( matchingIndexes[j], matchingIndexes[i], graph );
+        }
+      }
+
+      QVector<int> order;
+      order.reserve( allPlugins.size() );
+      try {
+        boost::topological_sort( graph, std::back_inserter( order ) );
+      } catch ( boost::not_a_dag &e ) {
+        kWarning() << "Mimetype tree is not a DAG!";
+        return mDefaultPlugin;
+      }
+
+      foreach( int i, order ) {
+        if ( matchingIndexes.contains( i ) )
+          return allPlugins[i];
+      }
+
+      return mDefaultPlugin; // should not happen
+    }
+
+    QVector<PluginEntry> allPlugins;
+    QHash<QString, ItemSerializerPlugin*> cachedPlugins;
+
+  private:
+    PluginEntry mDefaultPlugin;
+};
+
+K_GLOBAL_STATIC( PluginRegistry, s_pluginRegistry )
+
 
 /*static*/
 void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version, bool external )
@@ -171,7 +250,6 @@ void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QBy
 /*static*/
 void ItemSerializer::deserialize( Item& item, const QByteArray& label, QIODevice& data, int version )
 {
-  setup();
   if ( !ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data, version ) )
     kWarning() << "Unable to deserialize payload part:" << label;
 }
@@ -192,7 +270,6 @@ void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODe
 {
   if ( !item.hasPayload() )
     return;
-  setup();
   ItemSerializerPlugin& plugin = pluginForMimeType( item.mimeType() );
   plugin.serialize( item, label, data, version );
 }
@@ -201,29 +278,39 @@ QSet<QByteArray> ItemSerializer::parts(const Item & item)
 {
   if ( !item.hasPayload() )
     return QSet<QByteArray>();
-  setup();
   return pluginForMimeType( item.mimeType() ).parts( item );
 }
 
 /*static*/
 ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetype )
 {
-    if ( all->contains( mimetype ) )
-        return *(all->value( mimetype ).plugin());
+  // plugin cached, so let's take that one
+  if ( s_pluginRegistry->cachedPlugins.contains( mimetype ) )
+    return *(s_pluginRegistry->cachedPlugins.value( mimetype ));
 
-    KMimeType::Ptr mimeType = KMimeType::mimeType( mimetype, KMimeType::ResolveAliases );
-    if ( !mimeType.isNull() ) {
-      foreach ( const QString &type, all->keys() ) {
-        if ( mimeType->is( type ) ) {
-          return *(all->value( type ).plugin() );
-        }
-      }
-    }
+  ItemSerializerPlugin *plugin = 0;
 
+  // check if we have one that matches exactly
+  const QVector<PluginEntry>::const_iterator it
+    = qBinaryFind( s_pluginRegistry->allPlugins.begin(), s_pluginRegistry->allPlugins.end(), mimetype );
+  if ( it != s_pluginRegistry->allPlugins.end() ) {
+    plugin = (*it).plugin();
+  } else {
+    // check if we have a more generic plugin
+    const PluginEntry &entry = s_pluginRegistry->findBestMatch( mimetype );
+    kDebug() << "Did not find exactly matching serializer plugin for type" << mimetype
+             << ", taking" << entry.type() << "as the closest match";
+    plugin = entry.plugin();
+  }
+
+  if ( !plugin ) {
     kDebug( 5250 ) << "No plugin for mimetype " << mimetype << " found!";
-    kDebug( 5250 ) << "Available plugins are: " << all->keys();
+    kDebug( 5250 ) << "Available plugins are: " << s_pluginRegistry->allPlugins;
 
-    ItemSerializerPlugin *plugin = s_defaultItemSerializerPlugin;
-    Q_ASSERT(plugin);
-    return *plugin;
+    plugin = s_defaultItemSerializerPlugin;
+  }
+
+  Q_ASSERT(plugin);
+  s_pluginRegistry->cachedPlugins.insert( mimetype, plugin );
+  return *plugin;
 }
