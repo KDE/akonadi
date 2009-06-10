@@ -38,7 +38,8 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
   public:
     CollectionFetchJobPrivate( CollectionFetchJob *parent )
       : JobPrivate( parent ),
-        mUnsubscribed( false )
+        mUnsubscribed( false ),
+        mStatistics( false )
     {
     }
 
@@ -52,6 +53,7 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
     Collection::List mPendingCollections;
     QTimer *mEmitTimer;
     bool mUnsubscribed;
+    bool mStatistics;
 
     void timeout()
     {
@@ -161,6 +163,10 @@ void CollectionFetchJob::doStart()
     command += '"';
   }
 
+  if ( d->mStatistics ) {
+    command += ") (STATISTICS true";
+  }
+
   command += ")\n";
   d->writeData( command );
 }
@@ -209,6 +215,13 @@ void CollectionFetchJob::includeUnsubscribed(bool include)
   Q_D( CollectionFetchJob );
 
   d->mUnsubscribed = include;
+}
+
+void CollectionFetchJob::includeStatistics(bool include)
+{
+  Q_D( CollectionFetchJob );
+
+  d->mStatistics = include;
 }
 
 #include "collectionfetchjob.moc"

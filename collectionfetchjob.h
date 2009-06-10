@@ -111,6 +111,13 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      */
     void includeUnsubscribed( bool include = true );
 
+    /**
+     * Include also statistics about the collections.
+     *
+     * @since 4.3
+     */
+    void includeStatistics( bool include = true );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the job has received collections.

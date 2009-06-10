@@ -20,6 +20,7 @@
 #include "protocolhelper_p.h"
 
 #include "attributefactory.h"
+#include "collectionstatistics.h"
 #include "exception.h"
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>
@@ -122,6 +123,14 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       for ( int j = 0; j < ct.size(); j++ )
         ct2 << QString::fromLatin1( ct[j] );
       collection.setContentMimeTypes( ct2 );
+    } else if ( key == "MESSAGES" ) {
+      CollectionStatistics s = collection.statistics();
+      s.setCount( value.toLongLong() );
+      collection.setStatistics( s );
+    } else if ( key == "UNSEEN" ) {
+      CollectionStatistics s = collection.statistics();
+      s.setUnreadCount( value.toLongLong() );
+      collection.setStatistics( s );
     } else if ( key == "CACHEPOLICY" ) {
       CachePolicy policy;
       ProtocolHelper::parseCachePolicy( value, policy );
