@@ -71,6 +71,7 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
       newParent = collections.value( newParentId );
     CollectionFetchJob *job = new CollectionFetchJob( newParent, CollectionFetchJob::Recursive, session );
     job->includeUnsubscribed( unsubscribed );
+    job->includeStatistics( fetchStatistics );
     q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                 q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
     q->connect( job, SIGNAL( result( KJob* ) ),
@@ -80,6 +81,7 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
   else { // It's a simple change
     CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::Base, session );
     job->includeUnsubscribed( unsubscribed );
+    job->includeStatistics( fetchStatistics );
     q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                 q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
     q->connect( job, SIGNAL( result( KJob* ) ),
@@ -322,6 +324,7 @@ void CollectionModelPrivate::startFirstListJob()
   // start a list job
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, session );
   job->includeUnsubscribed( unsubscribed );
+  job->includeStatistics( fetchStatistics );
   q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
               q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
   q->connect( job, SIGNAL(result(KJob*)), q, SLOT(listDone(KJob*)) );
