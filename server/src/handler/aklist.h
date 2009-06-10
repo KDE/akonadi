@@ -39,11 +39,13 @@ namespace Akonadi {
 
   Request:
   @verbatim
-  request = tag " " command " " collection-id " " depth " (" filter-list ")"
+  request = tag " " command " " collection-id " " depth " (" filter-list ")" " (" option-list ")"
   command = "X-AKLIST" | "X-AKLSUB" | "RID X-AKLIST" | "RID X-AKLSUB"
   depth = number | "INF"
   filter-list = *(filter-key " " filter-value)
   filter-key = "RESOURCE"
+  option-list = *(option-key " " option-value)
+  option-key = "STATISTICS"
   @endverbatim
 
   @c X-AKLIST will include all known collections, @c X-AKLSUB only those that are
@@ -62,7 +64,7 @@ namespace Akonadi {
   @verbatim
   response = "*" collection-id " " parent-id " ("attribute-list")"
   attribute-list = *(attribute-identifier " " attribute-value)
-  attribute-identifier = "NAME" | "MIMETYPE" | "REMOTEID" | "RESOURCE" | custom-attr-identifier
+  attribute-identifier = "NAME" | "MIMETYPE" | "REMOTEID" | "RESOURCE" | "MESSAGES" | "UNSEEN" | "custom-attr-identifier
   @endverbatim
 
   The name is encoded as an quoted UTF-8 string. There is no order defined for the
@@ -85,6 +87,7 @@ class AKONADIPRIVATE_EXPORT AkList : public Handler
     Resource mResource;
     Scope::SelectionScope mScope;
     bool mOnlySubscribed;
+    bool mIncludeStatistics;
 
 };
 

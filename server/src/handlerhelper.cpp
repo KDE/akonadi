@@ -151,7 +151,7 @@ QByteArray HandlerHelper::cachePolicyToByteArray(const Collection & col)
   return rv;
 }
 
-QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hidden )
+QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hidden, bool includeStatistics )
 {
   QByteArray b = QByteArray::number( col.id() ) + ' '
                + QByteArray::number( col.parentId() ) + " (";
@@ -164,6 +164,11 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
     b += "MIMETYPE (" + MimeType::joinByName( col.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
   b += "REMOTEID \"" + col.remoteId().toUtf8() + "\" ";
   b += "RESOURCE \"" + col.resource().name().toUtf8() + "\" ";
+
+  if ( includeStatistics ) {
+      b += "MESSAGES " + QByteArray::number( HandlerHelper::itemCount( col ) ) + ' ';
+      b += "UNSEEN " + QByteArray::number( HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) ) ) + ' ';
+  }
 
   b += HandlerHelper::cachePolicyToByteArray( col ) + ' ';
 

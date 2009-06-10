@@ -86,7 +86,7 @@ class HandlerHelper
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static QByteArray collectionToByteArray( const Collection &col, bool hidden = false );
+    static QByteArray collectionToByteArray( const Collection &col, bool hidden = false, bool includeStatistics = false );
 };
 
 }

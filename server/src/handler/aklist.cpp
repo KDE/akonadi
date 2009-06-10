@@ -35,7 +35,8 @@ using namespace Akonadi;
 AkList::AkList( Scope::SelectionScope scope, bool onlySubscribed ):
     Handler(),
     mScope( scope ),
-    mOnlySubscribed( onlySubscribed )
+    mOnlySubscribed( onlySubscribed ),
+    mIncludeStatistics( false )
 {}
 
 AkList::~AkList() {}
@@ -61,7 +62,7 @@ bool AkList::listCollection(const Collection & root, int depth )
   Collection dummy = root;
   DataStore *db = connection()->storageBackend();
   db->activeCachePolicy( dummy );
-  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden );
+  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden, mIncludeStatistics );
 
   Response response;
   response.setUntagged();
@@ -105,6 +106,19 @@ bool AkList::parseStream()
         return failureResponse( "Unknown resource" );
     } else
       return failureResponse( "Invalid filter parameter" );
+  }
+
+  if ( m_streamParser->hasList() ) { // We got extra options
+    QList<QByteArray> options = m_streamParser->readParenthesizedList();
+    for ( int i = 0; i < options.count() - 1; i += 2 ) {
+      if ( options.at( i ) == "STATISTICS" ) {
+        if ( QString::fromLatin1( options.at( i + 1 ) ).compare( QLatin1String( "true" ), Qt::CaseInsensitive ) == 0 ) {
+          mIncludeStatistics = true;
+        }
+      } else {
+        return failureResponse( "Invalid option parameter" );
+      }
+    }
   }
 
   Collection::List collections;
