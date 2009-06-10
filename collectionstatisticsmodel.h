@@ -32,7 +32,8 @@ class CollectionStatisticsModelPrivate;
  *
  * This model extends the CollectionModel by providing additional
  * information about the collections, e.g. the number of items
- * in a collection or the number of read/unread items.
+ * in a collection, the number of read/unread items, or the total size
+ * of the collection.
  *
  * Example:
  *
@@ -63,6 +64,8 @@ class AKONADI_EXPORT CollectionStatisticsModel : public CollectionModel
       RecursiveUnreadRole,                        ///< The number of unread items in this collection and its children.
       RecursiveTotalRole,                         ///< The number of items in this collection and its children.
       RecursiveStatisticsRole,                    ///< A statistics object of this collection and its children.
+      SizeRole,                                  ///< The total size of the items in this collection.
+      RecursiveSizeRole,                         ///< The total size of the items in this collection and its children.
       UserRole = CollectionModel::UserRole + 42   ///< Role for user extensions.
     };
 

@@ -35,7 +35,7 @@ namespace Akonadi {
 class CollectionStatisticsModelPrivate : public CollectionModelPrivate
 {
   public:
-    enum CountType { Total, Unread };
+    enum CountType { Total, Unread, Size };
     Q_DECLARE_PUBLIC( CollectionStatisticsModel )
     CollectionStatisticsModelPrivate( CollectionStatisticsModel *parent )
         : CollectionModelPrivate( parent )
@@ -54,6 +54,8 @@ qint64 CollectionStatisticsModelPrivate::countRecursive( Collection::Id collecti
     case Unread: result = collections.value( collection ).statistics().unreadCount();
                  break;
     case Total: result = collections.value( collection ).statistics().count();
+                break;
+    case Size: result = collections.value( collection ).statistics().size();
                 break;
     default: Q_ASSERT( false );
              break;
@@ -76,7 +78,7 @@ int CollectionStatisticsModel::columnCount( const QModelIndex & parent ) const
 {
   if ( parent.isValid() && parent.column() != 0 )
     return 0;
-  return 3;
+  return 4;
 }
 
 QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) const
@@ -92,19 +94,26 @@ QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) 
 
   qint64 total = statistics.count();
   qint64 unread = statistics.unreadCount();
+  qint64 size = statistics.size();
   qint64 totalRecursive = d->countRecursive( col.id(),
                                              CollectionStatisticsModelPrivate::Total );
   qint64 unreadRecursive = d->countRecursive( col.id(),
                                               CollectionStatisticsModelPrivate::Unread );
+  qint64 sizeRecursive = d->countRecursive( col.id(),
+                                            CollectionStatisticsModelPrivate::Size );
 
   if ( role == TotalRole )
     return total;
   else if ( role == UnreadRole )
     return unread;
+  else if ( role == SizeRole )
+    return size;
   else if ( role == RecursiveUnreadRole )
     return unreadRecursive;
   else if ( role == RecursiveTotalRole )
     return totalRecursive;
+  else if ( role == RecursiveSizeRole )
+    return sizeRecursive;
   else if ( role == StatisticsRole ) {
     QVariant var;
     var.setValue( statistics );
@@ -116,12 +125,13 @@ QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) 
   }
 
   if ( role == Qt::DisplayRole &&
-       ( index.column() == 1 || index.column() == 2 ) ) {
+       ( index.column() == 1 || index.column() == 2 || index.column() == 3 ) ) {
 
     qint64 value = -1;
     switch ( index.column() ) {
       case 1 : value = unread; break;
       case 2 : value = total; break;
+      case 3 : value = size; break;
     }
     if ( value < 0 )
       return QString();
@@ -131,7 +141,7 @@ QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) 
       return QString::number( value );
   }
 
-  if ( role == Qt::TextAlignmentRole && ( index.column() == 1 || index.column() == 2 ) )
+  if ( role == Qt::TextAlignmentRole && ( index.column() == 1 || index.column() == 2 || index.column() == 3 ) )
     return Qt::AlignRight;
 
   return CollectionModel::data( index, role );
@@ -143,6 +153,7 @@ QVariant CollectionStatisticsModel::headerData( int section, Qt::Orientation ori
     switch ( section ) {
       case 1: return i18nc( "@title:column, number of unread messages", "Unread" );
       case 2: return i18nc( "@title:column, total number of messages", "Total" );
+      case 3: return i18nc( "@title:column, total size (in bytes) of the collection", "Size" );
     }
 
   return CollectionModel::headerData( section, orientation, role );
