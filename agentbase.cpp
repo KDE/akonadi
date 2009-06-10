@@ -340,8 +340,6 @@ AgentBase::~AgentBase()
   delete d_ptr;
 }
 
-static char* sAgentAppName = 0;
-
 QString AgentBase::parseArguments( int argc, char **argv )
 {
   QString identifier;
@@ -360,8 +358,14 @@ QString AgentBase::parseArguments( int argc, char **argv )
     exit( 1 );
   }
 
-  sAgentAppName = qstrdup( identifier.toLatin1().constData() );
-  KCmdLineArgs::init( argc, argv, sAgentAppName, 0, ki18n("Akonadi Agent"),"0.1" ,
+  QByteArray catalog;
+  char *p = strrchr( argv[0], '/' );
+  if ( p )
+    catalog = QByteArray( p + 1 );
+  else
+    catalog = QByteArray( argv[0] );
+
+  KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog, ki18n("Akonadi Agent"),"0.1" ,
                       ki18n("Akonadi Agent") );
 
   KCmdLineOptions options;
@@ -379,7 +383,6 @@ int AgentBase::init( AgentBase *r )
   KGlobal::locale()->insertCatalog( QLatin1String("libakonadi") );
   int rv = kapp->exec();
   delete r;
-  delete[] sAgentAppName;
   return rv;
 }
 

@@ -187,8 +187,6 @@ QString ResourceBase::name() const
     return d->mName;
 }
 
-static char* sAppName = 0;
-
 QString ResourceBase::parseArguments( int argc, char **argv )
 {
   QString identifier;
@@ -207,8 +205,14 @@ QString ResourceBase::parseArguments( int argc, char **argv )
     exit( 1 );
   }
 
-  sAppName = qstrdup( identifier.toLatin1().constData() );
-  KCmdLineArgs::init( argc, argv, sAppName, QByteArray( argv[ 0 ] ),
+  QByteArray catalog;
+  char *p = strrchr( argv[0], '/' );
+  if ( p )
+    catalog = QByteArray( p + 1 );
+  else
+    catalog = QByteArray( argv[0] );
+
+  KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog,
                       ki18nc("@title, application name", "Akonadi Resource"), "0.1",
                       ki18nc("@title, application description", "Akonadi Resource") );
 
@@ -225,7 +229,6 @@ int ResourceBase::init( ResourceBase *r )
   QApplication::setQuitOnLastWindowClosed( false );
   int rv = kapp->exec();
   delete r;
-  delete[] sAppName;
   return rv;
 }
 
