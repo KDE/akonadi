@@ -56,7 +56,7 @@ void CollectionStatisticsJob::doStart( )
 {
   Q_D( CollectionStatisticsJob );
 
-  d->writeData( d->newTag() + " STATUS " + QByteArray::number( d->mCollection.id() ) + " (MESSAGES UNSEEN)\n" );
+  d->writeData( d->newTag() + " STATUS " + QByteArray::number( d->mCollection.id() ) + " (MESSAGES UNSEEN SIZE)\n" );
 }
 
 void CollectionStatisticsJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
@@ -77,6 +77,8 @@ void CollectionStatisticsJob::doHandleResponse( const QByteArray & tag, const QB
           d->mStatistics.setCount( list[i+1].toLongLong() );
         } else if ( list[i] == "UNSEEN" ) {
           d->mStatistics.setUnreadCount( list[i+1].toLongLong() );
+        } else if ( list[i] == "SIZE" ) {
+          d->mStatistics.setSize( list[i+1].toLongLong() );
         } else {
           kDebug( 5250 ) << "Unknown STATUS response: " << list[i];
         }

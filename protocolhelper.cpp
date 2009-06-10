@@ -131,6 +131,10 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       CollectionStatistics s = collection.statistics();
       s.setUnreadCount( value.toLongLong() );
       collection.setStatistics( s );
+    } else if ( key == "SIZE" ) {
+      CollectionStatistics s = collection.statistics();
+      s.setSize( value.toLongLong() );
+      collection.setStatistics( s );
     } else if ( key == "CACHEPOLICY" ) {
       CachePolicy policy;
       ProtocolHelper::parseCachePolicy( value, policy );
