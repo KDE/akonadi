@@ -107,6 +107,24 @@ class AKONADI_EXPORT CollectionStatistics
     void setUnreadCount( qint64 count );
 
     /**
+     * Returns the total size of the items in this collection or @c -1 if
+     * this information is not available.
+     *
+     * @see setSize()
+     * @since 4.3
+     */
+    qint64 size() const;
+
+    /**
+     * Sets the total size of the items in this collection.
+     *
+     * @param size The total size of the items
+     * @see size()
+     * @since 4.3
+     */
+    void setSize( qint64 size );
+
+    /**
      * Assigns @p other to this statistics object and returns a reference to this one.
      */
     CollectionStatistics& operator=( const CollectionStatistics &other );

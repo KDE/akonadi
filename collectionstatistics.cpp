@@ -32,7 +32,8 @@ class CollectionStatistics::Private : public QSharedData
     Private() :
       QSharedData(),
       count( -1 ),
-      unreadCount( -1 )
+      unreadCount( -1 ),
+      size( -1 )
     {}
 
     Private( const Private &other ) :
@@ -40,10 +41,12 @@ class CollectionStatistics::Private : public QSharedData
     {
       count = other.count;
       unreadCount = other.count;
+      size = other.size;
     }
 
     qint64 count;
     qint64 unreadCount;
+    qint64 size;
 };
 
 
@@ -79,6 +82,16 @@ qint64 CollectionStatistics::unreadCount( ) const
 void CollectionStatistics::setUnreadCount( qint64 count )
 {
   d->unreadCount = count;
+}
+
+qint64 CollectionStatistics::size( ) const
+{
+  return d->size;
+}
+
+void CollectionStatistics::setSize( qint64 size )
+{
+  d->size = size;
 }
 
 CollectionStatistics& CollectionStatistics::operator =(const CollectionStatistics & other)
