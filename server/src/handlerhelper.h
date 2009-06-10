@@ -70,6 +70,12 @@ class HandlerHelper
     static int itemWithoutFlagCount( const Collection &col, const QString &flag );
 
     /**
+      Returns the total size of all the items in the given collection.
+      @return -1 on error
+     */
+    static qint64 itemsTotalSize( const Collection &col );
+
+    /**
       Parse cache policy and update the given Collection object accoordingly.
       @todo Error handling.
     */

@@ -111,6 +111,22 @@ int HandlerHelper::itemWithoutFlagCount(const Collection & col, const QString & 
   return totalCount - flagCount;
 }
 
+qint64 HandlerHelper::itemsTotalSize(const Collection & col)
+{
+  QueryBuilder qb;
+  qb.addTable( PimItem::tableName() );
+  qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
+  qb.addColumn( QLatin1String("sum(size)") );
+
+  if ( !qb.exec() )
+    return -1;
+  if ( !qb.query().next() ) {
+      qDebug() << "Error during retrieving result of query:" << qb.query().lastError().text();
+      return -1;
+  }
+  return qb.query().value( 0 ).toLongLong();
+}
+
 int HandlerHelper::parseCachePolicy(const QByteArray & data, Collection & col, int start)
 {
   QList<QByteArray> params;
@@ -168,6 +184,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
   if ( includeStatistics ) {
       b += "MESSAGES " + QByteArray::number( HandlerHelper::itemCount( col ) ) + ' ';
       b += "UNSEEN " + QByteArray::number( HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) ) ) + ' ';
+      b += "SIZE " + QByteArray::number( HandlerHelper::itemsTotalSize( col ) ) + ' ';
   }
 
   b += HandlerHelper::cachePolicyToByteArray( col ) + ' ';

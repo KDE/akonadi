@@ -48,8 +48,8 @@ bool Status::parseStream()
 
     // Syntax:
     // status     = "STATUS" SP mailbox SP "(" status-att *(SP status-att) ")"
-    // status-att = "MESSAGES" / "RECENT" / "UIDNEXT" / "UIDVALIDITY" / "UNSEEN"
-  
+    // status-att = "MESSAGES" / "RECENT" / "UIDNEXT" / "UIDVALIDITY" / "UNSEEN" / "SIZE"
+
   QByteArray mailbox = m_streamParser->readString();
   QList<QByteArray> attributeList = m_streamParser->readParenthesizedList();
 
@@ -110,6 +110,17 @@ bool Status::parseStream()
     if ( count < 0 )
       return failureResponse( "Unable to retrieve unread count" );
     statusResponse += QByteArray::number( count );
+  }
+  if ( attributeList.contains( "SIZE" ) ) {
+    if ( !statusResponse.isEmpty() )
+      statusResponse += " SIZE ";
+    else
+      statusResponse += "SIZE ";
+
+    const qint64 size = HandlerHelper::itemsTotalSize( col );
+    if ( size < 0 )
+      return failureResponse( "Unable to retrieve collection total size" );
+    statusResponse += QByteArray::number( size );
   }
 
   response.setUntagged();
