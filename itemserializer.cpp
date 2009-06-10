@@ -292,7 +292,7 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
 
   // check if we have one that matches exactly
   const QVector<PluginEntry>::const_iterator it
-    = qBinaryFind( s_pluginRegistry->allPlugins.begin(), s_pluginRegistry->allPlugins.end(), mimetype );
+    = qBinaryFind( s_pluginRegistry->allPlugins.constBegin(), s_pluginRegistry->allPlugins.constEnd(), mimetype );
   if ( it != s_pluginRegistry->allPlugins.end() ) {
     plugin = (*it).plugin();
   } else {
