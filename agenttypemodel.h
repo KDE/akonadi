@@ -80,6 +80,7 @@ class AKONADI_EXPORT AgentTypeModel : public QAbstractItemModel
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
     virtual QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;
     virtual QModelIndex parent( const QModelIndex &index ) const;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
 
   private:
     //@cond PRIVATE

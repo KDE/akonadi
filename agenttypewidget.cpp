@@ -19,6 +19,8 @@
 
 #include "agenttypewidget.h"
 
+#include <KDebug>
+
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QListView>
@@ -58,6 +60,12 @@ class AgentTypeWidget::Private
     }
 
     void currentAgentTypeChanged( const QModelIndex&, const QModelIndex& );
+
+    void typeActivated( const QModelIndex &index )
+    {
+      if ( index.flags() & (Qt::ItemIsSelectable | Qt::ItemIsEnabled) )
+        emit mParent->activated();
+    }
 
     AgentTypeWidget *mParent;
     QListView *mView;
@@ -101,7 +109,7 @@ AgentTypeWidget::AgentTypeWidget( QWidget *parent )
   connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) ) );
   connect( d->mView, SIGNAL( activated( const QModelIndex& ) ),
-           SIGNAL( activated() ) );
+           SLOT( typeActivated(QModelIndex) ) );
 }
 
 AgentTypeWidget::~AgentTypeWidget()

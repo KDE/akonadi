@@ -141,4 +141,18 @@ QModelIndex AgentTypeModel::parent( const QModelIndex& ) const
   return QModelIndex();
 }
 
+Qt::ItemFlags AgentTypeModel::flags(const QModelIndex& index) const
+{
+  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mTypes.count() )
+    return QAbstractItemModel::flags( index );
+
+  const AgentType &type = d->mTypes[ index.row() ];
+  if ( type.capabilities().contains( QLatin1String( "Unique" ) ) &&
+       AgentManager::self()->instance( type.identifier() ).isValid() )
+  {
+    return QAbstractItemModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+  }
+  return QAbstractItemModel::flags(index);
+}
+
 #include "agenttypemodel.moc"
