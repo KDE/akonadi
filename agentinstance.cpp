@@ -128,15 +128,34 @@ bool AgentInstance::operator==( const AgentInstance &other ) const
   return (d->mIdentifier == other.d->mIdentifier);
 }
 
+void AgentInstance::abort() const
+{
+  QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( identifier() ),
+                        QString::fromLatin1("/"),
+                        QString::fromLatin1("org.freedesktop.Akonadi.Agent.Control") );
+  if ( iface.isValid() ) {
+    QDBusReply<void> reply = iface.call( QString::fromLatin1("abort") );
+    if( !reply.isValid() ) {
+      kWarning() << "Failed to place D-Bus call.";
+    }
+  } else {
+    kWarning() << "Unable to obtain agent interface";
+  }
+}
+
 void AgentInstance::reconfigure() const
 {
   QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( identifier() ),
                         QString::fromLatin1("/"),
                         QString::fromLatin1("org.freedesktop.Akonadi.Agent.Control") );
-  if ( iface.isValid() )
-    iface.call( QString::fromLatin1("reconfigure") );
-  else
+  if ( iface.isValid() ) {
+    QDBusReply<void> reply = iface.call( QString::fromLatin1("reconfigure") );
+    if( !reply.isValid() ) {
+      kWarning() << "Failed to place D-Bus call.";
+    }
+  } else {
     kWarning() << "Unable to obtain agent interface";
+  }
 }
 
 void Akonadi::AgentInstance::restart() const
@@ -144,8 +163,12 @@ void Akonadi::AgentInstance::restart() const
   QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Control"),
                         QString::fromLatin1("/AgentManager"),
                         QString::fromLatin1("org.freedesktop.Akonadi.AgentManager") );
-  if ( iface.isValid() )
-    iface.call( QString::fromLatin1("restartAgentInstance"), identifier() );
-  else
+  if ( iface.isValid() ) {
+    QDBusReply<void> reply = iface.call( QString::fromLatin1("restartAgentInstance"), identifier() );
+    if( !reply.isValid() ) {
+      kWarning() << "Failed to place D-Bus call.";
+    }
+  } else {
     kWarning() << "Unable to obtain control interface" << iface.lastError().message();
+  }
 }

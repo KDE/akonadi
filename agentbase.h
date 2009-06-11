@@ -352,7 +352,17 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     void error( const QString& message );
 
     /**
-     * Emitted if another application has changed the agents configuration remotely
+     * Emitted when another application has remotely asked the agent to abort
+     * its current operation.
+     * Connect to this signal if your agent supports abortion. After aborting
+     * and cleaning up, agents should return to Idle status.
+     *
+     * @since 4.4
+     */
+    void abortRequested();
+
+    /**
+     * Emitted if another application has changed the agent's configuration remotely
      * and called AgentInstance::reconfigure().
      *
      * @since 4.2
@@ -440,6 +450,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     static int init( AgentBase *r );
 
     // D-Bus interface stuff
+    void abort();
     void reconfigure();
     void quit();
 
