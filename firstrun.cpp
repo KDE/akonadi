@@ -164,9 +164,17 @@ void Firstrun::setupNext()
     const QString kresCfgFile = KStandardDirs::locateLocal( "config", QString::fromLatin1( "kresources/%1/stdrc" ).arg( kresType ) );
     KConfig resCfg( kresCfgFile );
     const KConfigGroup resGroup( &resCfg, "General" );
-    if ( !resGroup.readEntry( "ResourceKeys", QStringList() ).isEmpty()
-      || !resGroup.readEntry( "PassiveResourceKeys", QStringList() ).isEmpty() )
-    {
+    bool legacyResourceFound = false;
+    const QStringList kresResources = resGroup.readEntry( "ResourceKeys", QStringList() )
+      + resGroup.readEntry( "PassiveResourceKeys", QStringList() );
+    foreach ( const QString &kresResource, kresResources ) {
+      const KConfigGroup cfg( &resCfg, QString::fromLatin1("Resource_%1").arg( kresResource ) );
+      if ( cfg.readEntry( "ResourceType", QString() ) != QLatin1String( "akonadi" ) ) { // not a bridge
+        legacyResourceFound = true;
+        break;
+      }
+    }
+    if ( legacyResourceFound ) {
       kDebug() << "ignoring " << mCurrentDefault->name() << " as there is a KResource setup for its type already.";
       KConfigGroup cfg( mConfig, "ProcessedDefaults" );
       cfg.writeEntry( agentCfg.readEntry( "Id", QString() ), QString::fromLatin1( "kres" ) );
