@@ -138,12 +138,6 @@ static bool operator<( const QString &type, const PluginEntry &entry )
   return type < entry.type();
 }
 
-static QDebug& operator<<( QDebug& d, const PluginEntry& entry )
-{
-  d << entry.type();
-  return d;
-}
-
 
 class PluginRegistry
 {
@@ -187,16 +181,14 @@ class PluginRegistry
         return allPlugins[matchingIndexes.first()];
 
       // step 2: if we have more than one match, find the most specific one using topological sort
-      boost::adjacency_list<> graph( allPlugins.size() );
+      boost::adjacency_list<> graph( matchingIndexes.size() );
       for ( int i = 0, end = matchingIndexes.size() ; i != end ; ++i ) {
         KMimeType::Ptr mimeType = KMimeType::mimeType( allPlugins[matchingIndexes[i]].type(), KMimeType::ResolveAliases );
         if ( mimeType.isNull() )
           continue;
         for ( int j = 0; j != end; ++j ) {
-          if ( i == j )
-            continue;
-          if ( mimeType->is( allPlugins[matchingIndexes[j]].type() ) )
-            boost::add_edge( matchingIndexes[j], matchingIndexes[i], graph );
+          if ( i != j && mimeType->is( allPlugins[matchingIndexes[j]].type() ) )
+            boost::add_edge( j, i, graph );
         }
       }
 
@@ -209,12 +201,7 @@ class PluginRegistry
         return mDefaultPlugin;
       }
 
-      foreach( int i, order ) {
-        if ( matchingIndexes.contains( i ) )
-          return allPlugins[i];
-      }
-
-      return mDefaultPlugin; // should not happen
+      return allPlugins[matchingIndexes[order.first()]];
     }
 
     QVector<PluginEntry> allPlugins;
@@ -298,16 +285,9 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
   } else {
     // check if we have a more generic plugin
     const PluginEntry &entry = s_pluginRegistry->findBestMatch( mimetype );
-    kDebug() << "Did not find exactly matching serializer plugin for type" << mimetype
-             << ", taking" << entry.type() << "as the closest match";
+    kDebug( 5250 ) << "Did not find exactly matching serializer plugin for type" << mimetype
+                   << ", taking" << entry.type() << "as the closest match";
     plugin = entry.plugin();
-  }
-
-  if ( !plugin ) {
-    kDebug( 5250 ) << "No plugin for mimetype " << mimetype << " found!";
-    kDebug( 5250 ) << "Available plugins are: " << s_pluginRegistry->allPlugins;
-
-    plugin = s_defaultItemSerializerPlugin;
   }
 
   Q_ASSERT(plugin);
