@@ -119,7 +119,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
     if ( command == "APPEND" )
         return new Append();
     if ( command == "CREATE" )
-        return new Create();
+        return new Create( scope );
     if ( command == "LIST" )
         return new List();
     if ( command == "SELECT" )

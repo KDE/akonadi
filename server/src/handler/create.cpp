@@ -27,6 +27,7 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 #include "handlerhelper.h"
+#include "storage/selectquerybuilder.h"
 
 #include "response.h"
 #include "libs/imapparser_p.h"
@@ -34,42 +35,57 @@
 
 using namespace Akonadi;
 
-Create::Create(): Handler()
+Create::Create( Scope::SelectionScope scope ) :
+  Handler(),
+  m_scope( scope )
 {
 }
-
-
-Create::~Create()
-{
-}
-
 
 bool Create::parseStream()
 {
   QString name = m_streamParser->readUtf8String();
+  if ( name.isEmpty() )
+    return failureResponse( "Invalid collection name" );
 
   bool ok = false;
   Collection parent;
-  qint64 parentId = m_streamParser->readNumber( &ok );
-  if ( !ok ) { // RFC 3501 compat
-    QString parentPath;
-    int index = name.lastIndexOf( QLatin1Char('/') );
-    if ( index > 0 ) {
-      parentPath = name.left( index );
-      name = name.mid( index + 1 );
-      parent = HandlerHelper::collectionFromIdOrName( parentPath.toUtf8() );
-    } else
-      parentId = 0;
-  } else {
-    if ( parentId > 0 )
-      parent = Collection::retrieveById( parentId );
+
+  if ( m_scope == Scope::Uid || m_scope == Scope::None ) {
+    qint64 parentId = m_streamParser->readNumber( &ok );
+    if ( !ok ) { // RFC 3501 compat
+      QString parentPath;
+      int index = name.lastIndexOf( QLatin1Char('/') );
+      if ( index > 0 ) {
+        parentPath = name.left( index );
+        name = name.mid( index + 1 );
+        parent = HandlerHelper::collectionFromIdOrName( parentPath.toUtf8() );
+      } else
+        parentId = 0;
+    } else {
+      if ( parentId > 0 )
+        parent = Collection::retrieveById( parentId );
+    }
+
+    if ( parentId != 0 && !parent.isValid() )
+      return failureResponse( "Parent collection not found" );
+  } else if ( m_scope == Scope::Rid ) {
+    const QString rid = m_streamParser->readUtf8String();
+    if ( rid.isEmpty() )
+      throw HandlerException( "Empty parent remote identifier" );
+    if ( !connection()->resourceContext().isValid() )
+      throw HandlerException( "Invalid resource context" );
+    SelectQueryBuilder<Collection> qb;
+    qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, rid );
+    qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->resourceContext().id() );
+    if ( !qb.exec() )
+      throw HandlerException( "Unable to execute collection query" );
+    const Collection::List cols = qb.result();
+    if ( cols.size() == 0 )
+      throw HandlerException( "Parent collection not found" );
+    else if ( cols.size() > 1 )
+      throw HandlerException( "Parent collection is not unique" );
+    parent = cols.first();
   }
-
-  if ( parentId != 0 && !parent.isValid() )
-    return failureResponse( "Parent collection not found" );
-
-  if ( name.isEmpty() )
-    return failureResponse( "Invalid collection name" );
 
   qint64 resourceId = 0;
   MimeType::List parentContentTypes;
@@ -98,7 +114,7 @@ bool Create::parseStream()
   }
 
   Collection collection;
-  collection.setParentId( parentId );
+  collection.setParentId( parent.isValid() ? parent.id() : 0 );
   collection.setName( name.toUtf8() );
   collection.setResourceId( resourceId );
 

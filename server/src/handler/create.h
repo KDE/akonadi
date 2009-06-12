@@ -20,6 +20,7 @@
 #define AKONADICREATE_H
 
 #include <handler.h>
+#include "scope.h"
 
 namespace Akonadi {
 
@@ -33,10 +34,11 @@ namespace Akonadi {
 
   Request:
   @verbatim
-  tag " CREATE " collection-name " " parent-collection " (" attribute-list ")"
+  tag [" RID"] " CREATE " collection-name " " parent-collection " (" attribute-list ")"
   @endverbatim
 
   @c attribute-list is the same as defined in AkList.
+  @c parent-collection is either a collection UID or a collection RID, depending on the command prefix
 
   Response:
   A untagged response identical to AkList is sent for every created collection.
@@ -45,12 +47,12 @@ class Create : public Handler
 {
   Q_OBJECT
 public:
-    Create();
-
-    ~Create();
+    Create( Scope::SelectionScope scope );
 
     bool parseStream();
 
+  private:
+    Scope::SelectionScope m_scope;
 };
 
 }
