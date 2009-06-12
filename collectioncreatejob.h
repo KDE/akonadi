@@ -43,10 +43,7 @@ class CollectionCreateJobPrivate;
  * collection.setContentMimeTypes( QStringList( "text/calendar" ) );
  *
  * Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( collection );
- * if ( job->exec() )
- *   qDebug() << "Created successfully";
- * else
- *   qDebug() << "Error occurred";
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(createResult(KJob*)) );
  *
  * @endcode
  *
@@ -59,7 +56,10 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     /**
      * Creates a new collection create job.
      *
-     * @param collection The new collection.
+     * @param collection The new collection. @p collection must have a parent collection
+     * set with a unique identifier. If a resource context is specified in the current session
+     * (that is you are using it within Akonadi::ResourceBase), the parent collection can be
+     * identified by its remote identifier as well.
      * @param parent The parent object.
      */
     explicit CollectionCreateJob( const Collection &collection, QObject *parent = 0 );

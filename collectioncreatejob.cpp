@@ -53,9 +53,21 @@ CollectionCreateJob::~CollectionCreateJob( )
 void CollectionCreateJob::doStart( )
 {
   Q_D( CollectionCreateJob );
+  if ( d->mCollection.parent() < 0 && d->mCollection.parentRemoteId().isEmpty() ) {
+    setError( Unknown );
+    setErrorText( QLatin1String("Invalid parent") );
+    emitResult();
+    return;
+  }
 
-  QByteArray command = d->newTag() + " CREATE \"" + d->mCollection.name().toUtf8() + "\" ";
-  command += QByteArray::number( d->mCollection.parent() );
+  QByteArray command = d->newTag();
+  if ( d->mCollection.parent() < 0 )
+    command += " RID";
+  command += " CREATE \"" + d->mCollection.name().toUtf8() + "\" ";
+  if ( d->mCollection.parent() >= 0 )
+    command += QByteArray::number( d->mCollection.parent() );
+  else
+    command += ImapParser::quote( d->mCollection.parentRemoteId().toUtf8() );
   command += " (";
   if ( !d->mCollection.contentMimeTypes().isEmpty() )
   {

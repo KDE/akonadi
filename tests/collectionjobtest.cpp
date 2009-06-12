@@ -38,6 +38,7 @@
 #include "control.h"
 #include "item.h"
 #include "kmime/messageparts.h"
+#include "resourceselectjob_p.h"
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -269,6 +270,11 @@ void CollectionJobTest::testCreateDeleteFolder_data()
 
   col.setParent( INT_MAX );
   QTest::newRow( "missing parent" ) << col << false;
+
+  col = Collection();
+  col.setName( "rid parent" );
+  col.setParentRemoteId( "8" );
+  QTest::newRow( "rid parent" ) << col << false; // missing resource context
 }
 
 void CollectionJobTest::testCreateDeleteFolder()
@@ -289,7 +295,7 @@ void CollectionJobTest::testCreateDeleteFolder()
   QCOMPARE( createdCol.cachePolicy(), collection.cachePolicy() );
 
   CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::FirstLevel, this );
-  QVERIFY( listJob->exec() );
+  AKVERIFYEXEC( listJob );
   Collection listedCol = findCol( listJob->collections(), collection.name() );
   QCOMPARE( listedCol, createdCol );
   QCOMPARE( listedCol.remoteId(), collection.remoteId() );
@@ -299,7 +305,7 @@ void CollectionJobTest::testCreateDeleteFolder()
   Collection parentCol = Collection::root();
   if ( collection.parent() > 0 ) {
     CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Base, this );
-    QVERIFY( listJob->exec() );
+    AKVERIFYEXEC( listJob );
     QCOMPARE( listJob->collections().count(), 1 );
     parentCol = listJob->collections().first();
   }
@@ -315,10 +321,10 @@ void CollectionJobTest::testCreateDeleteFolder()
     QCOMPARE( listedCol.resource(), collection.resource() );
 
   CollectionDeleteJob *delJob = new CollectionDeleteJob( createdCol, this );
-  QVERIFY( delJob->exec() );
+  AKVERIFYEXEC( delJob );
 
   listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::FirstLevel, this );
-  QVERIFY( listJob->exec() );
+  AKVERIFYEXEC( listJob );
   QVERIFY( !findCol( listJob->collections(), collection.name() ).isValid() );
 }
 
@@ -512,6 +518,36 @@ void CollectionJobTest::testRidFetch()
   col = job->collections().first();
   QVERIFY( col.isValid() );
   QCOMPARE( col.remoteId(), QString::fromLatin1( "10" ) );
+}
+
+void CollectionJobTest::testRidCreate()
+{
+  Collection collection;
+  collection.setName( "rid create" );
+  collection.setParentRemoteId( "8" );
+
+  ResourceSelectJob *resSel = new ResourceSelectJob( "akonadi_knut_resource_2" );
+  AKVERIFYEXEC( resSel );
+
+  CollectionCreateJob *createJob = new CollectionCreateJob( collection, this );
+  AKVERIFYEXEC( createJob );
+
+  Collection createdCol = createJob->collection();
+  QVERIFY( createdCol.isValid() );
+  QCOMPARE( createdCol.name(), collection.name() );
+
+  CollectionFetchJob *listJob = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::FirstLevel, this );
+  AKVERIFYEXEC( listJob );
+  Collection listedCol = findCol( listJob->collections(), collection.name() );
+  QCOMPARE( listedCol, createdCol );
+  QCOMPARE( listedCol.name(), collection.name() );
+
+  CollectionDeleteJob *delJob = new CollectionDeleteJob( createdCol, this );
+  AKVERIFYEXEC( delJob );
+
+  listJob = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::FirstLevel, this );
+  AKVERIFYEXEC( listJob );
+  QVERIFY( !findCol( listJob->collections(), collection.name() ).isValid() );
 }
 
 #include "collectionjobtest.moc"
