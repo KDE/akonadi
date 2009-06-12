@@ -40,7 +40,7 @@ class XmlWriteJobPrivate {
     XmlWriteJobPrivate( XmlWriteJob* parent ) : q( parent ) {}
 
     XmlWriteJob* const q;
-    Collection root;
+    Collection::List roots;
     QStack<Collection::List> pendingSiblings;
     QStack<QDomElement> elementStack;
     QString fileName;
@@ -117,9 +117,19 @@ XmlWriteJob::XmlWriteJob(const Collection& root, const QString& fileName, QObjec
   Job( parent ),
   d( new XmlWriteJobPrivate( this ) )
 {
-  d->root = root;
+  d->roots.append( root );
   d->fileName = fileName;
 }
+
+
+XmlWriteJob::XmlWriteJob(const Collection::List& roots, const QString& fileName, QObject* parent) :
+  Job( parent ),
+  d( new XmlWriteJobPrivate( this ) )
+{
+  d->roots = roots;
+  d->fileName = fileName;
+}
+
 
 XmlWriteJob::~XmlWriteJob()
 {
@@ -129,7 +139,7 @@ XmlWriteJob::~XmlWriteJob()
 void XmlWriteJob::doStart()
 {
   d->elementStack.push( d->document.document().documentElement() );
-  CollectionFetchJob *job = new CollectionFetchJob( d->root, CollectionFetchJob::Base, this );
+  CollectionFetchJob *job = new CollectionFetchJob( d->roots, this );
   connect( job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)) );
 }
 
