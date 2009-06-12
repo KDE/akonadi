@@ -216,14 +216,12 @@ QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem
      "<tr>"
      "<td rowspan=\"2\"><img src=\"agent_icon\">&nbsp;&nbsp;</td>"
      "<td><b>%2</b></td>"
-     "</tr>" ).arg(textColor.name().toUpper()).arg( name );
-  if ( capabilities.contains( QLatin1String( "Resource" ) ) ) {
-     content += QString::fromLatin1(
+     "</tr>" ).arg(textColor.name().toUpper()).arg( name )
+     + QString::fromLatin1(
      "<tr>"
      "<td><img src=\"status_icon\"/> %1 %2</td>"
-     "</tr>" ).arg( statusMessage ).arg( status == 1 ? QString( QLatin1String( "(%1%)" ) ).arg( progress ) : QLatin1String( "" ) );
-  }
-  content += QLatin1String( "</table></body></html>" );
+     "</tr>" ).arg( statusMessage ).arg( status == 1 ? QString( QLatin1String( "(%1%)" ) ).arg( progress ) : QLatin1String( "" ) )
+     + QLatin1String( "</table></body></html>" );
 
   document->setHtml( content );
 
