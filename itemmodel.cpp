@@ -20,6 +20,7 @@
 #include "itemmodel.h"
 
 #include "itemfetchjob.h"
+#include "collectionfetchjob.h"
 #include "itemfetchscope.h"
 #include "monitor.h"
 #include "pastehelper_p.h"
@@ -90,6 +91,7 @@ class ItemModel::Private
     }
 
     void listingDone( KJob* );
+    void collectionFetchResult( KJob* );
     void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& );
     void itemsAdded( const Akonadi::Item::List &list );
     void itemAdded( const Akonadi::Item &item );
@@ -114,6 +116,20 @@ void ItemModel::Private::listingDone( KJob * job )
   if ( job->error() ) {
     // TODO
     kWarning( 5250 ) << "Item query failed:" << job->errorString();
+  }
+}
+
+void ItemModel::Private::collectionFetchResult( KJob * job )
+{
+  CollectionFetchJob *fetch = static_cast<CollectionFetchJob*>( job );
+  Q_ASSERT( fetch->collections().count() == 1 ); // we only listed base
+  Collection c = fetch->collections().first();
+   // avoid recursion, if this fails for some reason
+  if ( !c.contentMimeTypes().isEmpty() ) {
+    mParent->setCollection(c);
+  } else {
+    kWarning( 5250 ) << "Failed to retrieve the contents mime type of the collection: " << c;
+    mParent->setCollection(Collection());
   }
 }
 
@@ -296,6 +312,14 @@ void ItemModel::setCollection( const Collection &collection )
   kDebug( 5250 );
   if ( d->collection == collection )
     return;
+
+  // if we don't know anything about this collection yet, fetch it
+  if ( collection.isValid() && collection.contentMimeTypes().isEmpty() )
+  {
+    CollectionFetchJob* job = new CollectionFetchJob( collection, CollectionFetchJob::Base, this );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)) );
+    return;
+  }
 
   d->monitor->setCollectionMonitored( d->collection, false );
 
