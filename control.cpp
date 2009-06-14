@@ -75,6 +75,11 @@ class Control::Private
         mFirstRunner = new Firstrun( mParent );
     }
 
+    ~Private()
+    {
+      delete mProgressIndicator;
+    }
+
     void setupProgressIndicator( const QString &msg, QWidget *parent = 0 )
     {
       if ( mProgressIndicator )
@@ -94,9 +99,9 @@ class Control::Private
     void serverStarted();
     void serverStopped();
 
-    Control *mParent;
+    QPointer<Control> mParent;
     QEventLoop *mEventLoop;
-    ControlProgressIndicator *mProgressIndicator;
+    QPointer<ControlProgressIndicator> mProgressIndicator;
     QList<QWidget*> mPendingOverlays;
     Firstrun *mFirstRunner;
     bool mSuccess;
@@ -132,6 +137,8 @@ bool Control::Private::exec()
     if ( mProgressIndicator && mStarting ) {
       SelfTestDialog dlg( mProgressIndicator->parentWidget() );
       dlg.exec();
+      if ( !mParent ) 
+        return false;
     }
   }
 
