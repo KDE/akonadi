@@ -135,8 +135,9 @@ bool Control::Private::exec()
   if ( !mSuccess ) {
     kWarning( 5250 ) << "Could not start/stop Akonadi!";
     if ( mProgressIndicator && mStarting ) {
-      SelfTestDialog dlg( mProgressIndicator->parentWidget() );
-      dlg.exec();
+      QPointer<SelfTestDialog> dlg = new SelfTestDialog( mProgressIndicator->parentWidget() );
+      dlg->exec();
+      delete dlg;
       if ( !mParent ) 
         return false;
     }
