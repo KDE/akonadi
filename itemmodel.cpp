@@ -98,6 +98,7 @@ class ItemModel::Private
     void itemMoved( const Akonadi::Item&, const Akonadi::Collection& src, const Akonadi::Collection& dst );
     void itemRemoved( const Akonadi::Item& );
     int rowForItem( const Akonadi::Item& );
+    bool collectionIsCompatible() const;
 
     ItemModel *mParent;
 
@@ -108,6 +109,16 @@ class ItemModel::Private
     Monitor *monitor;
     Session *session;
 };
+
+bool ItemModel::Private::collectionIsCompatible() const
+{
+    Q_FOREACH( QString type, mParent->mimeTypes() ) {
+      if ( collection.contentMimeTypes().contains( type ) ) {
+        return true;
+      }
+    }
+    return false;
+}
 
 void ItemModel::Private::listingDone( KJob * job )
 {
@@ -336,10 +347,12 @@ void ItemModel::setCollection( const Collection &collection )
   d->session->clear();
 
   // start listing job
-  ItemFetchJob* job = new ItemFetchJob( collection, session() );
-  job->setFetchScope( d->monitor->itemFetchScope() );
-  connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsAdded(Akonadi::Item::List)) );
-  connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
+  if ( d->collectionIsCompatible() ) {
+    ItemFetchJob* job = new ItemFetchJob( collection, session() );
+    job->setFetchScope( d->monitor->itemFetchScope() );
+    connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsAdded(Akonadi::Item::List)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
+  }
 
   emit collectionChanged( collection );
 }
