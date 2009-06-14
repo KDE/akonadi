@@ -112,12 +112,17 @@ class ItemModel::Private
 
 bool ItemModel::Private::collectionIsCompatible() const
 {
-    Q_FOREACH( QString type, mParent->mimeTypes() ) {
-      if ( collection.contentMimeTypes().contains( type ) ) {
-        return true;
-      }
+  // in the generic case, we show any collection
+  if ( mParent->mimeTypes() == QStringList( QLatin1String("text/uri-list") ) )
+    return true;
+  // if the model's mime types are more specific, limit to those
+  // collections that have matching types
+  Q_FOREACH( QString type, mParent->mimeTypes() ) {
+    if ( collection.contentMimeTypes().contains( type ) ) {
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 void ItemModel::Private::listingDone( KJob * job )
@@ -393,7 +398,7 @@ Qt::ItemFlags ItemModel::flags( const QModelIndex &index ) const
 
 QStringList ItemModel::mimeTypes() const
 {
-  return QStringList();
+  return QStringList() << QLatin1String("text/uri-list");
 }
 
 Session * ItemModel::session() const
