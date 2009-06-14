@@ -60,6 +60,11 @@ class AKONADI_KMIME_EXPORT MessageModel : public Akonadi::ItemModel
     /**
       Reimplemented from QAbstractItemModel.
      */
+    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+
+    /**
+      Reimplemented from QAbstractItemModel.
+     */
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
 
     /**
@@ -72,6 +77,10 @@ class AKONADI_KMIME_EXPORT MessageModel : public Akonadi::ItemModel
      */
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
+    /**
+      Reimplemented from QAbstractItemModel.
+     */
+    virtual QStringList mimeTypes() const;
   private:
     class Private;
     Private* const d;

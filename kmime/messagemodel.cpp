@@ -54,8 +54,26 @@ MessageModel::~MessageModel( )
   delete d;
 }
 
+QStringList MessageModel::mimeTypes() const
+{
+  return QStringList()
+      << QLatin1String("text/uri-list")
+      << QLatin1String("message/rfc822");
+}
+
+int MessageModel::rowCount( const QModelIndex & parent ) const
+{
+  if ( !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") ) )
+    return 1;
+
+  return ItemModel::rowCount();
+}
+
 int MessageModel::columnCount( const QModelIndex & parent ) const
 {
+  if ( !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") ) )
+    return 1;
+
   if ( !parent.isValid() )
     return 5; // keep in sync with the column type enum
 
@@ -68,6 +86,16 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
     return QVariant();
   if ( index.row() >= rowCount() )
     return QVariant();
+
+  if ( !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") ) ) {
+     if ( role == Qt::DisplayRole )
+       // FIXME i18n when we unfreeze for 4.4
+       return QString::fromLatin1( "This model can only handle email folders. The current collection holds mimetypes: %1").arg(
+                       collection().contentMimeTypes().join( QLatin1String(",") ) );
+     else
+       return QVariant();
+  }
+
   Item item = itemForIndex( index );
   if ( !item.hasPayload<MessagePtr>() )
     return QVariant();
@@ -111,6 +139,10 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
 
 QVariant MessageModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
+  if ( !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") ) ) {
+    return QVariant();
+  }
+
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
       case Subject:
