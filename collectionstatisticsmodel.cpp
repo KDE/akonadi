@@ -24,6 +24,7 @@
 #include "collectionstatistics.h"
 
 #include <kdebug.h>
+#include <KGlobal>
 #include <klocale.h>
 
 #include <QtGui/QFont>
@@ -137,6 +138,8 @@ QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) 
       return QString();
     else if ( value == 0 )
       return QLatin1String( "-" );
+    else if ( index.column() == 3 )
+      return KGlobal::locale()->formatByteSize( value );
     else
       return QString::number( value );
   }
