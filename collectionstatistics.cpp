@@ -20,6 +20,7 @@
 #include "collectionstatistics.h"
 
 #include <QtCore/QSharedData>
+#include <QtCore/QDebug>
 
 using namespace Akonadi;
 
@@ -98,4 +99,12 @@ CollectionStatistics& CollectionStatistics::operator =(const CollectionStatistic
 {
   d = other.d;
   return *this;
+}
+
+QDebug operator<<( QDebug d, const CollectionStatistics& s )
+{
+    return d << "CollectionStatistics:" << endl
+            << "   count:" << s.count() << endl
+            << "   unread count:" << s.unreadCount() << endl
+            << "   size:" << s.size();
 }

@@ -138,6 +138,11 @@ class AKONADI_EXPORT CollectionStatistics
 
 }
 
+/**
+ * Allows to output the collection statistics for debugging purposes.
+ */
+AKONADI_EXPORT QDebug operator<<( QDebug d, const Akonadi::CollectionStatistics& );
+
 Q_DECLARE_METATYPE( Akonadi::CollectionStatistics )
 
 #endif

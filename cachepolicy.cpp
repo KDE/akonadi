@@ -134,3 +134,13 @@ void CachePolicy::setSyncOnDemand(bool enable)
 {
   d->syncOnDemand = enable;
 }
+
+QDebug operator<<( QDebug d, const CachePolicy& c )
+{
+    return d << "CachePolicy: " << endl
+            << "   inherit:" << c.inheritFromParent() << endl
+            << "   interval:" << c.intervalCheckTime() << endl
+            << "   timeout:" << c.cacheTimeout() << endl
+            << "   sync on demand:" << c.syncOnDemand() << endl
+            << "   local parts:" << c.localParts();
+}

@@ -150,4 +150,9 @@ class AKONADI_EXPORT CachePolicy
 
 }
 
+/**
+ * Allows to output a cache policy for debugging purposes.
+ */
+AKONADI_EXPORT QDebug operator<<( QDebug, const Akonadi::CachePolicy& );
+
 #endif

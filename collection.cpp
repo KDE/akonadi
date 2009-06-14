@@ -195,6 +195,22 @@ uint qHash( const Akonadi::Collection &collection )
   return qHash( collection.id() );
 }
 
+QDebug operator <<( QDebug d, const Akonadi::Collection &collection )
+{
+    return d << "Collection ID:" << collection.id()
+             << "   remote ID:" << collection.remoteId() << endl
+             << "   name:" << collection.name() << endl
+             << "   url:" << collection.url() << endl
+             << "   parent ID:" << collection.parent()
+             << "   parent remote ID: " << collection.parentRemoteId() << endl
+             << "   resource:" << collection.resource() << endl
+             << "   mime type:" << collection.mimeType() << endl
+             << "   rights:" << collection.rights() << endl
+             << "   contents mime type:" << collection.contentMimeTypes() << endl
+             << "   " << collection.cachePolicy() << endl
+             << "   " << collection.statistics();
+}
+
 CollectionStatistics Collection::statistics() const
 {
   return d_func()->statistics;
