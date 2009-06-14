@@ -145,8 +145,7 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
 {
   Q_Q( CollectionModel );
 
-  foreach ( Collection col, cols )
-  {
+  foreach ( Collection col, cols ) { //krazy:exclude=foreach non-const is needed here
     if ( collections.contains( col.id() ) ) {
       // If the collection is already known to the model, we simply update it...
       col.setStatistics( collections.value( col.id() ).statistics() );

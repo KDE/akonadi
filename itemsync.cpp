@@ -296,7 +296,7 @@ void ItemSync::Private::execute()
 void ItemSync::Private::processItems()
 {
   // added / updated
-  foreach ( Item remoteItem, mRemoteItems ) {
+  foreach ( Item remoteItem, mRemoteItems ) { //krazy:exclude=foreach non-const is needed here
 #ifndef NDEBUG
     if ( remoteItem.remoteId().isEmpty() ) {
       kWarning( 5250 ) << "Item " << remoteItem.id() << " does not have a remote identifier";
