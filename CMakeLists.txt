@@ -75,7 +75,7 @@ if (NOT Soprano_FOUND)
   if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
     message(STATUS "Soprano is needed to build Akonadi but is not installed yet. Let's use the source and build dirs instead.")
     set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano)
-    set (SOPRANO_LIBRARIES ${KDESupport_BINARY_DIR}/soprano/soprano/libsoprano.so) # Doesn't exist yet.
+    set (SOPRANO_LIBRARIES soprano) # Doesn't exist yet.
     set (Soprano_FOUND TRUE)
   endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 endif (NOT Soprano_FOUND)
