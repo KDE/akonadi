@@ -282,28 +282,33 @@ void ItemStoreTest::testRevisionCheck()
   // fetch same item twice
   Item ref( 2 );
   ItemFetchJob *prefetchjob = new ItemFetchJob( ref );
-  QVERIFY( prefetchjob->exec() );
+  AKVERIFYEXEC( prefetchjob );
   QCOMPARE( prefetchjob->items().count(), 1 );
   Item item1 = prefetchjob->items()[0];
   Item item2 = prefetchjob->items()[0];
 
   // store first item unmodified
   ItemModifyJob *sjob = new ItemModifyJob( item1 );
-  QVERIFY( sjob->exec() );
+  AKVERIFYEXEC( sjob );
 
-  // try to store second item
+  // store the first item with modifications (should work)
+  item1.attribute<TestAttribute>( Item::AddIfMissing )->data = "random stuff 1";
+  sjob = new ItemModifyJob( item1, this );
+  AKVERIFYEXEC( sjob );
+
+  // try to store second item with modifications (should be detected as a conflict)
+  item2.attribute<TestAttribute>( Item::AddIfMissing )->data = "random stuff 2";
   ItemModifyJob *sjob2 = new ItemModifyJob( item2 );
-  item2.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
   QVERIFY( !sjob2->exec() );
 
   // fetch same again
   prefetchjob = new ItemFetchJob( ref );
-  prefetchjob->exec();
+  AKVERIFYEXEC( prefetchjob );
   item1 = prefetchjob->items()[0];
 
   // delete item
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-  djob->exec();
+  AKVERIFYEXEC( djob );
 
   // try to store it
   sjob = new ItemModifyJob( item1 );
