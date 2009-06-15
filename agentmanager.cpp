@@ -126,12 +126,15 @@ void AgentManagerPrivate::agentInstanceStatusChanged( const QString &identifier,
 
 void AgentManagerPrivate::agentInstanceProgressChanged( const QString &identifier, uint progress, const QString &msg )
 {
+  Q_UNUSED( msg );
+  // msg is the (unimplemented) progress message, not the status message.
+
   if ( !mInstances.contains( identifier ) )
     return;
 
   AgentInstance &instance = mInstances[ identifier ];
   instance.d->mProgress = progress;
-  instance.d->mStatusMessage = msg;
+  // instance.d->mStatusMessage = msg;
 
   emit mParent->instanceProgressChanged( instance );
 }
