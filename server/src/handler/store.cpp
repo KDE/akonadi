@@ -155,8 +155,6 @@ bool Store::parseStream()
     if ( mPreviousRevision >= 0 && pimItems.at( i ).rev() != (int)mPreviousRevision )
       throw HandlerException( "Item was modified elsewhere, aborting STORE." );
     pimItems[ i ].setRev( pimItems[ i ].rev() + 1 );
-    pimItems[ i ].setDatetime( modificationtime );
-    pimItems[ i ].setAtime( modificationtime );
   }
 
   QSet<QByteArray> changes;
@@ -337,24 +335,31 @@ bool Store::parseStream()
     } // parts/attribute modification
   }
 
-  // update item size
-  if ( pimItems.size() == 1 && (mSize > 0 || partSizes > 0) )
-    pimItems.first().setSize( qMax( mSize, partSizes ) );
+  QString datetime;
+  if ( !changes.isEmpty() ) {
+    // update item size
+    if ( pimItems.size() == 1 && (mSize > 0 || partSizes > 0) )
+      pimItems.first().setSize( qMax( mSize, partSizes ) );
 
-  // run update query and prepare change notifications
-  for ( int i = 0; i < pimItems.count(); ++i ) {
-    PimItem item = pimItems[ i ];
-    if ( !connection()->isOwnerResource( item ) )
-      item.setDirty( true );
-    if ( !item.update() )
-      throw HandlerException( "Unable to write item changes into the database" );
-    store->notificationCollector()->itemChanged( item, changes );
+    // run update query and prepare change notifications
+    for ( int i = 0; i < pimItems.count(); ++i ) {
+      PimItem &item = pimItems[ i ];
+      item.setDatetime( modificationtime );
+      item.setAtime( modificationtime );
+      if ( !connection()->isOwnerResource( item ) )
+        item.setDirty( true );
+      if ( !item.update() )
+        throw HandlerException( "Unable to write item changes into the database" );
+      store->notificationCollector()->itemChanged( item, changes );
+    }
+
+    if ( !transaction.commit() )
+      return failureResponse( "Cannot commit transaction." );
+
+    datetime = QLocale::c().toString( modificationtime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
+  } else {
+    datetime = QLocale::c().toString( pimItems.first().datetime(), QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
   }
-
-  if ( !transaction.commit() )
-    return failureResponse( "Cannot commit transaction." );
-
-  const QString datetime = QLocale::c().toString( modificationtime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
 
   Response response;
   response.setTag( tag() );
