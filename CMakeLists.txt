@@ -94,6 +94,7 @@ set( akonadikde_LIB_SRC
   itemview.cpp
   job.cpp
   linkjob.cpp
+  filteractionjob.cpp
   mimetypechecker.cpp
   monitor.cpp
   monitor_p.cpp
@@ -215,6 +216,7 @@ install( FILES
   itemview.h
   job.h
   linkjob.h
+  filteractionjob.h
   mimetypechecker.h
   monitor.h
   qtest_akonadi.h
