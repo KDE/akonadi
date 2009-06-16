@@ -80,7 +80,7 @@ if (NOT Soprano_FOUND)
   endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 endif (NOT Soprano_FOUND)
 
-macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "" TRUE "" "Soprano is required to build Akonadi")
+macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "" "Soprano is required to build Akonadi")
 
 #### Automoc ####
 find_package(Automoc4 REQUIRED)
