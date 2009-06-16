@@ -222,11 +222,14 @@ class AKONADI_EXPORT Item : public Entity
     int revision() const;
 
     /**
-     * Get the main collection ID of the item. Calling this method makes sense only after running an ItemFetchJob on the item.
-     * Returns the collection ID if it is know, -1 otherwise. 
+     * Returns the unique identifier of the collection this item is stored in. There is only
+     * a single such collection, although the item can be linked into arbitrary many
+     * virtual collections.
+     * Calling this method makes sense only after running an ItemFetchJob on the item.
+     * @returns the collection ID if it is know, -1 otherwise.
      * @since 4.3
      */
-    Entity::Id collectionId() const;
+    Entity::Id storageCollectionId() const;
 
     /**
      * Set the size of the item in bytes.
@@ -321,12 +324,12 @@ class AKONADI_EXPORT Item : public Entity
     PayloadBase* payloadBase() const;
     void setPayloadBase( PayloadBase* );
     /**
-     * Set the collection ID to where the item belongs to. Should be set only by the ItemFetchJob.
-     * @param collectionId the main collection ID
+     * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
+     * @param collectionId the unique identifier of the the collection where this item is stored in.
      * @since 4.3
      */
-    void setCollectionId( Entity::Id collectionId);
-    
+    void setStorageCollectionId( Entity::Id collectionId);
+
     //@endcond
 
     AKONADI_DECLARE_PRIVATE( Item )

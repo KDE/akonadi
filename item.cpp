@@ -134,12 +134,12 @@ void Item::setRevision( int rev )
   d_func()->mRevision = rev;
 }
 
-Entity::Id Item::collectionId() const
+Entity::Id Item::storageCollectionId() const
 {
   return d_func()->mCollectionId;
 }
 
-void Item::setCollectionId( Entity::Id collectionId )
+void Item::setStorageCollectionId( Entity::Id collectionId )
 {
   d_func()->mCollectionId = collectionId;
 }
