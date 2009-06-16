@@ -34,6 +34,7 @@
 #include "handler/capability.h"
 #include "handler/copy.h"
 #include "handler/colcopy.h"
+#include "handler/colmove.h"
 #include "handler/create.h"
 #include "handler/delete.h"
 #include "handler/expunge.h"
@@ -118,7 +119,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
     // allowed commands are listed below ;-).
     if ( command == "APPEND" )
         return new Append();
-    if ( command == "CREATE" )
+    if ( command == AKONADI_CMD_COLLECTIONCREATE )
         return new Create( scope );
     if ( command == "LIST" )
         return new List();
@@ -136,9 +137,9 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
         return new Store( scope );
     if ( command == "STATUS" )
         return new Status();
-    if ( command == "DELETE" )
+    if ( command == AKONADI_CMD_COLLECTIONDELETE )
       return new Delete();
-    if ( command == "MODIFY" )
+    if ( command == AKONADI_CMD_COLLECTIONMODIFY )
       return new Modify();
     if ( command == "RENAME" )
       return new Rename();
@@ -160,7 +161,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
       return new Subscribe( false );
     if ( command == AKONADI_CMD_ITEMCOPY )
       return new Copy();
-    if ( command == "COLCOPY" )
+    if ( command == AKONADI_CMD_COLLECTIONCOPY )
       return new ColCopy();
     if ( command == "LINK" )
       return new Link( true );
@@ -172,6 +173,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
       return new Remove( scope );
     if ( command == AKONADI_CMD_ITEMMOVE )
       return new Move( scope );
+    if ( command == AKONADI_CMD_COLLECTIONMOVE )
+      return new ColMove( scope );
 
     return 0;
 }

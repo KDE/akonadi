@@ -68,6 +68,7 @@ set(libakonadiprivate_SRCS
   src/handler/append.cpp
   src/handler/copy.cpp
   src/handler/colcopy.cpp
+  src/handler/colmove.cpp
   src/handler/create.cpp
   src/handler/capability.cpp
   src/handler/delete.cpp
