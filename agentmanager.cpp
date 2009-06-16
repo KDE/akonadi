@@ -131,7 +131,8 @@ void AgentManagerPrivate::agentInstanceProgressChanged( const QString &identifie
 
   AgentInstance &instance = mInstances[ identifier ];
   instance.d->mProgress = progress;
-  instance.d->mStatusMessage = msg;
+  if ( !msg.isEmpty() )
+    instance.d->mStatusMessage = msg;
 
   emit mParent->instanceProgressChanged( instance );
 }
