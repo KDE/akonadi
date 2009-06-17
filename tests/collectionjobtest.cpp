@@ -21,6 +21,7 @@
 
 #include "collectionjobtest.h"
 #include <qtest_akonadi.h>
+#include "test_utils.h"
 
 #include "agentmanager.h"
 #include "agentinstance.h"
@@ -361,64 +362,88 @@ void CollectionJobTest::testStatistics()
   QCOMPARE( s.unreadCount(), 14ll );
 }
 
+void CollectionJobTest::testModify_data()
+{
+  QTest::addColumn<qint64>( "uid" );
+  QTest::addColumn<QString>( "rid" );
+
+  QTest::newRow( "uid" ) << collectionIdFromPath( "res1/foo" ) << QString();
+  QTest::newRow( "rid" ) << -1ll << QString( "10" );
+}
+
+#define RESET_COLLECTION_ID \
+  col.setId( uid ); \
+  if ( !rid.isEmpty() ) col.setRemoteId( rid )
+
 void CollectionJobTest::testModify()
 {
+  QFETCH( qint64, uid );
+  QFETCH( QString, rid );
+
+  if ( !rid.isEmpty() ) {
+    ResourceSelectJob *rjob = new ResourceSelectJob( "akonadi_knut_resource_0" );
+    AKVERIFYEXEC( rjob );
+  }
+
   QStringList reference;
   reference << "text/calendar" << "text/directory" << "message/rfc822" << "application/octet-stream" << "inode/directory";
 
   Collection col;
-  CollectionFetchJob *ljob = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::FirstLevel );
-  QVERIFY( ljob->exec() );
-  col = findCol( ljob->collections(), "foo" );
-  QVERIFY( col.isValid() );
+  RESET_COLLECTION_ID;
 
   // test noop modify
   CollectionModifyJob *mod = new CollectionModifyJob( col, this );
-  QVERIFY( mod->exec() );
+  AKVERIFYEXEC( mod );
 
-  ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
-  QVERIFY( ljob->exec() );
+  CollectionFetchJob* ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
+  AKVERIFYEXEC( ljob );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
   compareLists( col.contentMimeTypes(), reference );
 
   // test clearing content types
+  RESET_COLLECTION_ID;
   col.setContentMimeTypes( QStringList() );
   mod = new CollectionModifyJob( col, this );
-  QVERIFY( mod->exec() );
+  AKVERIFYEXEC( mod );
 
   ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
-  QVERIFY( ljob->exec() );
+  AKVERIFYEXEC( ljob );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
   QVERIFY( col.contentMimeTypes().isEmpty() );
 
   // test setting contnet types
+  RESET_COLLECTION_ID;
   col.setContentMimeTypes( reference );
   mod = new CollectionModifyJob( col, this );
-  QVERIFY( mod->exec() );
+  AKVERIFYEXEC( mod );
 
   ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
-  QVERIFY( ljob->exec() );
+  AKVERIFYEXEC( ljob );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
   compareLists( col.contentMimeTypes(), reference );
 
   // renaming
+  RESET_COLLECTION_ID;
   col.setName( "foo (renamed)" );
   mod = new CollectionModifyJob( col, this );
-  QVERIFY( mod->exec() );
+  AKVERIFYEXEC( mod );
 
   ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
-  QVERIFY( ljob->exec() );
+  AKVERIFYEXEC( ljob );
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
   QCOMPARE( col.name(), QString( "foo (renamed)" ) );
 
+  RESET_COLLECTION_ID;
   col.setName( "foo" );
   mod = new CollectionModifyJob( col, this );
-  QVERIFY( mod->exec() );
+  AKVERIFYEXEC( mod );
 }
+
+#undef RESET_COLLECTION_ID
 
 void CollectionJobTest::testIllegalModify()
 {

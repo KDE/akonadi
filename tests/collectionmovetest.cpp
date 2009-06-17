@@ -21,7 +21,7 @@
 
 #include "collection.h"
 #include "collectionfetchjob.h"
-#include "collectionmodifyjob.h"
+#include "collectionmovejob.h"
 #include "item.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
@@ -57,8 +57,7 @@ class CollectionMoveTest : public QObject
       QVERIFY( source.isValid() );
       QVERIFY( destination.isValid() );
 
-      source.setParent( destination );
-      CollectionModifyJob* mod = new CollectionModifyJob( source, this );
+      CollectionMoveJob* mod = new CollectionMoveJob( source, destination, this );
       QVERIFY( !mod->exec() );
     }
 
@@ -86,39 +85,37 @@ class CollectionMoveTest : public QObject
       QVERIFY( destination.isValid() );
 
       CollectionFetchJob *fetch = new CollectionFetchJob( source, CollectionFetchJob::Base, this );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QCOMPARE( fetch->collections().count(), 1 );
       source = fetch->collections().first();
 
       // obtain reference listing
       fetch = new CollectionFetchJob( source, CollectionFetchJob::Recursive );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QHash<Collection, Item::List> referenceData;
       foreach ( const Collection c, fetch->collections() ) {
         ItemFetchJob *job = new ItemFetchJob( c, this );
-        QVERIFY( job->exec() );
+        AKVERIFYEXEC( job );
         referenceData.insert( c, job->items() );
       }
 
       // move collection
-      Collection col( source );
-      col.setParent( destination );
-      CollectionModifyJob *mod = new CollectionModifyJob( col, this );
-      QVERIFY( mod->exec() );
+      CollectionMoveJob *mod = new CollectionMoveJob( source, destination, this );
+      AKVERIFYEXEC( mod );
 
       // check if source was modified correctly
       CollectionFetchJob *ljob = new CollectionFetchJob( source, CollectionFetchJob::Base );
-      QVERIFY( ljob->exec() );
+      AKVERIFYEXEC( ljob );
       Collection::List list = ljob->collections();
 
       QCOMPARE( list.count(), 1 );
-      col = list.first();
+      Collection col = list.first();
       QCOMPARE( col.name(), source.name() );
       QCOMPARE( col.parent(), destination.id() );
 
       // list destination and check if everything is still there
       ljob = new CollectionFetchJob( destination, CollectionFetchJob::Recursive );
-      QVERIFY( ljob->exec() );
+      AKVERIFYEXEC( ljob );
       list = ljob->collections();
 
       QVERIFY( list.count() >= referenceData.count() );
@@ -131,7 +128,7 @@ class CollectionMoveTest : public QObject
         }
         ItemFetchJob *job = new ItemFetchJob( it.key(), this );
         job->fetchScope().fetchFullPayload();
-        QVERIFY( job->exec() );
+        AKVERIFYEXEC( job );
         QCOMPARE( job->items().count(), it.value().count() );
         foreach ( const Item item, job->items() ) {
           QVERIFY( it.value().contains( item ) );
@@ -140,9 +137,8 @@ class CollectionMoveTest : public QObject
       }
 
       // cleanup
-      col.setParent( source.parent() );
-      mod = new CollectionModifyJob( col, this );
-      QVERIFY( mod->exec() );
+      mod = new CollectionMoveJob( col, Collection( source.parent() ), this );
+      AKVERIFYEXEC( mod );
     }
 };
 

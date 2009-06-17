@@ -40,11 +40,7 @@ class CollectionModifyJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection );
- *
- * if ( job->exec() )
- *   qDebug() << "Modified successfully";
- * else
- *   qDebug() << "Error occurred";
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(modifyResult(KJob*)) );
  *
  * @endcode
  *
@@ -56,7 +52,11 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
 
   public:
     /**
-     * Creates a new collection modify job for the given collection.
+     * Creates a new collection modify job for the given collection. The collection can be
+     * identified either by its unique identifier or its remote identifier. Since the remote
+     * identifier is not necessarily globally unique, identification by remote identifier only
+     * works inside a resource context (that is from within ResourceBase) and is therefore
+     * limited to one resource.
      *
      * @param collection The collection to modify.
      * @param parent The parent object.

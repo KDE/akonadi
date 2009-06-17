@@ -37,6 +37,7 @@ class CollectionJobTest : public QObject
     void testCreateDeleteFolder();
     void testIllegalDeleteFolder();
     void testStatistics();
+    void testModify_data();
     void testModify();
     void testIllegalModify();
     void testUtf8CollectionName();

@@ -20,7 +20,7 @@
 #include "pastehelper_p.h"
 
 #include "collectioncopyjob.h"
-#include "collectionmodifyjob.h"
+#include "collectionmovejob.h"
 #include "item.h"
 #include "itemcreatejob.h"
 #include "itemcopyjob.h"
@@ -90,8 +90,7 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
     if ( Collection::fromUrl( url ).isValid() ) {
       Collection col = Collection::fromUrl( url );
       if ( !copy ) {
-        col.setParent( collection );
-        CollectionModifyJob *job = new CollectionModifyJob( col, transaction );
+        new CollectionMoveJob( col, collection, transaction );
       } else {
         new CollectionCopyJob( col, collection, transaction );
       }

@@ -41,8 +41,6 @@ CollectionModifyJob::CollectionModifyJob( const Collection &collection, QObject 
   : Job( new CollectionModifyJobPrivate( this ), parent )
 {
   Q_D( CollectionModifyJob );
-
-  Q_ASSERT( collection.isValid() );
   d->mCollection = collection;
 }
 
@@ -53,8 +51,18 @@ CollectionModifyJob::~CollectionModifyJob()
 void CollectionModifyJob::doStart()
 {
   Q_D( CollectionModifyJob );
+  if ( !d->mCollection.isValid() && d->mCollection.remoteId().isEmpty() ) {
+    setError( Unknown );
+    setErrorText( QLatin1String( "Invalid collection" ) );
+    emitResult();
+    return;
+  }
 
-  QByteArray command = d->newTag() + " MODIFY " + QByteArray::number( d->mCollection.id() );
+  QByteArray command = d->newTag();
+  if ( d->mCollection.isValid() )
+    command += " MODIFY " + QByteArray::number( d->mCollection.id() );
+  else
+    command += " RID MODIFY " + ImapParser::quote( d->mCollection.remoteId().toUtf8() );
   QByteArray changes;
   if ( d->mCollection.d_func()->contentTypesChanged ) {
     QList<QByteArray> bList;
