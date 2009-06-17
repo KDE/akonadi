@@ -63,7 +63,7 @@ QStringList MessageModel::mimeTypes() const
 
 int MessageModel::rowCount( const QModelIndex & parent ) const
 {
-  if ( !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") ) )
+  if ( collection().isValid() && !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") ) )
     return 1;
 
   return ItemModel::rowCount();
