@@ -99,6 +99,7 @@ set(libakonadiprivate_SRCS
   src/search/result.cpp
   src/search/term.cpp
 
+  src/storage/collectionqueryhelper.cpp
   src/storage/entity.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   src/storage/datastore.cpp
@@ -112,6 +113,7 @@ set(libakonadiprivate_SRCS
   src/storage/notificationcollector.cpp
   src/storage/query.cpp
   src/storage/querybuilder.cpp
+  src/storage/queryhelper.cpp
   src/storage/transaction.cpp
   src/storage/parthelper.cpp
   src/tracer.cpp

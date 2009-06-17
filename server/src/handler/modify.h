@@ -21,6 +21,7 @@
 #define AKONADI_MODIFY_H
 
 #include <handler.h>
+#include <handler/scope.h>
 
 namespace Akonadi {
 
@@ -36,10 +37,12 @@ namespace Akonadi {
 
   Request:
   @verbatim
-  request = tag " MODIFY " collection-id " " attribute-list
+  request = tag " [ "RID " ] MODIFY " collection-ids " " attribute-list
   attribute-list = *([-]attribute-name [" " attribute-value])
   attribute-name = "NAME" | "MIMETYPE" | "REMOTEID" | "CACHEPOLICY" | "PARENT" | [-]custom-attr-name
   @endverbatim
+
+  @c collection-ids is either a UID set or a RID list, depending on the command prefix.
 
   Attributes marked with a leading '-' will be deleted, they don't have any attribute value.
 */
@@ -47,10 +50,11 @@ class Modify : public Handler
 {
   Q_OBJECT
   public:
-    Modify();
-    ~Modify();
-
+    Modify( Scope::SelectionScope scope );
     bool parseStream();
+
+  private:
+    Scope m_scope;
 };
 
 }

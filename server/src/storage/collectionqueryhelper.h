@@ -17,48 +17,36 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SCOPE_H
-#define AKONADI_SCOPE_H
+#ifndef AKONADI_COLLECTIONQUERYHELPER_H
+#define AKONADI_COLLECTIONQUERYHELPER_H
 
-#include "libs/imapset_p.h"
-#include <QStringList>
+#include "entities.h"
+#include "handler/scope.h"
 
 namespace Akonadi {
 
-class ImapStreamParser;
+class AkonadiConnection;
+class ImapSet;
+class QueryBuilder;
+class Scope;
 
 /**
-  Represents a set of Akonadi objects (eg. items or collections) selected for an operations.
+  Helper methods to generate WHERE clauses for collection queries based on a Scope object.
 */
-class Scope
+namespace CollectionQueryHelper
 {
-  public:
-    enum SelectionScope
-    {
-      Invalid,
-      None,
-      Uid,
-      Rid
-    };
+  /**
+    Add conditions to @p qb for the given remote identifier @p rid.
+    The rid context is taken from @p connection.
+  */
+  void remoteIdToQuery( const QStringList &rids, AkonadiConnection* connection, QueryBuilder &qb );
 
-    Scope( SelectionScope scope );
-    /**
-      Parse the object set dependent on the set selection scope.
-      The set has to be non-empty. If not a HandlerException is thrown.
-    */
-    void parseScope( ImapStreamParser *parser );
-
-    SelectionScope scope() const;
-    void setScope( SelectionScope scope );
-    ImapSet uidSet() const;
-    void setUidSet( const ImapSet &set );
-    QStringList ridSet() const;
-
-  private:
-    SelectionScope mScope;
-    ImapSet mUidSet;
-    QStringList mRidSet;
-};
+  /**
+    Add conditions to @p qb for the given collection operation scope @p scope.
+    The rid context is taken from @p connection, if none is specified an exception is thrown.
+  */
+  void scopeToQuery( const Scope &scope, AkonadiConnection* connection, QueryBuilder &qb );
+}
 
 }
 

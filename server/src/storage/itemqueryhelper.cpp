@@ -25,31 +25,13 @@
 #include "libs/imapset_p.h"
 #include "handler/scope.h"
 #include "handler.h"
+#include "storage/queryhelper.h"
 
 using namespace Akonadi;
 
 void ItemQueryHelper::itemSetToQuery(const ImapSet& set, QueryBuilder& qb, const Collection& collection )
 {
-  Query::Condition cond( Query::Or );
-  foreach ( const ImapInterval i, set.intervals() ) {
-    if ( i.hasDefinedBegin() && i.hasDefinedEnd() ) {
-      if ( i.size() == 1 ) {
-        cond.addValueCondition( PimItem::idFullColumnName(), Query::Equals, i.begin() );
-      } else {
-        Query::Condition subCond( Query::And );
-        subCond.addValueCondition( PimItem::idFullColumnName(), Query::GreaterOrEqual, i.begin() );
-        subCond.addValueCondition( PimItem::idFullColumnName(), Query::LessOrEqual, i.end() );
-        cond.addCondition( subCond );
-      }
-    } else if ( i.hasDefinedBegin() ) {
-      cond.addValueCondition( PimItem::idFullColumnName(), Query::GreaterOrEqual, i.begin() );
-    } else if ( i.hasDefinedEnd() ) {
-      cond.addValueCondition( PimItem::idFullColumnName(), Query::LessOrEqual, i.end() );
-    }
-  }
-  if ( !cond.isEmpty() )
-    qb.addCondition( cond );
-
+  QueryHelper::setToQuery( set, PimItem::idFullColumnName(), qb );
   if ( collection.isValid() ) {
     // FIXME: we probably want to do both paths here in all cases, but that is apparently
     // non-trivial with SQL
@@ -76,7 +58,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet& set, bool isUid, AkonadiConn
 
 void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection* connection, QueryBuilder& qb)
 {
-  if ( rids.size() == 1 ) 
+  if ( rids.size() == 1 )
     qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::Equals, rids.first() );
   else
     qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::In, rids );

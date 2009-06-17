@@ -28,25 +28,28 @@
 #include <handlerhelper.h>
 #include <response.h>
 #include <storage/itemretriever.h>
+#include <storage/selectquerybuilder.h>
+#include <storage/collectionqueryhelper.h>
 
 using namespace Akonadi;
 
-Akonadi::Modify::Modify()
-{
-}
-
-Akonadi::Modify::~ Modify()
+Modify::Modify( Scope::SelectionScope scope ) : m_scope( scope )
 {
 }
 
 bool Modify::parseStream()
 {
-  QByteArray collectionByteArray = m_streamParser->readString();
-  Collection collection = HandlerHelper::collectionFromIdOrName( collectionByteArray );
-  if ( !collection.isValid() )
-    return failureResponse( "No such collection" );
-  if ( collection.id() == 0 )
-    return failureResponse( "Cannot modify root collection" );
+  m_scope.parseScope( m_streamParser );
+  SelectQueryBuilder<Collection> qb;
+  CollectionQueryHelper::scopeToQuery( m_scope, connection(), qb );
+  if ( !qb.exec() )
+    throw HandlerException( "Unable to execute collection query" );
+  const Collection::List collections = qb.result();
+  if ( collections.isEmpty() )
+    throw HandlerException( "No such collection" );
+  if ( collections.size() > 1 ) // TODO
+    throw HandlerException( "Mass-modifying collections is not yet implemented" );
+  Collection collection = collections.first();
 
 
   //TODO: do it cleanly with the streaming parser, which doesn't have look-ahead at this moment
@@ -55,8 +58,9 @@ bool Modify::parseStream()
 
   int p = 0;
   if ( (p = line.indexOf( "PARENT ")) > 0 ) {
-    ImapParser::parseString( line, collectionByteArray, p + 6 );
-    const Collection newParent = HandlerHelper::collectionFromIdOrName( collectionByteArray );
+    QByteArray tmp;
+    ImapParser::parseString( line, tmp, p + 6 );
+    const Collection newParent = HandlerHelper::collectionFromIdOrName( tmp );
     if ( newParent.isValid() && collection.parentId() != newParent.id()
          && collection.resourceId() != newParent.resourceId() )
     {

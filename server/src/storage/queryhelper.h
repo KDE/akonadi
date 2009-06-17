@@ -17,48 +17,26 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SCOPE_H
-#define AKONADI_SCOPE_H
+#ifndef AKONADI_QUERYHELPER_H
+#define AKONADI_QUERYHELPER_H
 
-#include "libs/imapset_p.h"
-#include <QStringList>
+#include "handler/scope.h"
 
 namespace Akonadi {
 
-class ImapStreamParser;
+class QueryBuilder;
+class Scope;
 
 /**
-  Represents a set of Akonadi objects (eg. items or collections) selected for an operations.
+  Helper methods for common query tasks.
 */
-class Scope
+namespace QueryHelper
 {
-  public:
-    enum SelectionScope
-    {
-      Invalid,
-      None,
-      Uid,
-      Rid
-    };
-
-    Scope( SelectionScope scope );
-    /**
-      Parse the object set dependent on the set selection scope.
-      The set has to be non-empty. If not a HandlerException is thrown.
-    */
-    void parseScope( ImapStreamParser *parser );
-
-    SelectionScope scope() const;
-    void setScope( SelectionScope scope );
-    ImapSet uidSet() const;
-    void setUidSet( const ImapSet &set );
-    QStringList ridSet() const;
-
-  private:
-    SelectionScope mScope;
-    ImapSet mUidSet;
-    QStringList mRidSet;
-};
+  /**
+    Add conditions to @p qb for the given uid set @p set applied to @p column.
+  */
+  void setToQuery( const ImapSet &set, const QString &column, QueryBuilder &qb );
+}
 
 }
 
