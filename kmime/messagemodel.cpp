@@ -63,7 +63,9 @@ QStringList MessageModel::mimeTypes() const
 
 int MessageModel::rowCount( const QModelIndex & parent ) const
 {
-  if ( collection().isValid() && !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") ) )
+  if ( collection().isValid()
+          && !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") )
+          && collection().contentMimeTypes() != QStringList( QLatin1String("inode/directory") ) )
     return 1;
 
   return ItemModel::rowCount();
