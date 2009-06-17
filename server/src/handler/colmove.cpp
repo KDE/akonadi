@@ -40,11 +40,11 @@ bool ColMove::parseStream()
   if ( !source.isValid() )
     return failureResponse( "No valid source specified" );
 
-  const Collection target = HandlerHelper::collectionFromIdOrName( m_streamParser->readString() );
-  if ( !target.isValid() )
+  qint64 target = m_streamParser->readNumber();
+  if ( target < 0 )
     return failureResponse( "No valid destination specified" );
 
-  if ( source.parentId() == target.id() )
+  if ( source.parentId() == target )
     return successResponse( "COLMOVE complete - nothing to do" );
 
   // retrieve all not yet cached items of the source
@@ -56,7 +56,7 @@ bool ColMove::parseStream()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  if ( !store->renameCollection( source, target.id(), source.name() ) )
+  if ( !store->renameCollection( source, target, source.name() ) )
     return failureResponse( "Unable to reparent collection" );
 
   if ( !transaction.commit() )
