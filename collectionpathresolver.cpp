@@ -40,6 +40,29 @@ class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 
     void jobResult( KJob* );
 
+    QStringList splitPath( const QString &path )
+    {
+      if ( path.isEmpty() ) // path is normalized, so non-empty means at least one hit
+        return QStringList();
+
+      QStringList rv;
+      int begin = 0;
+      for ( int i = 0; i < path.size(); ++i ) {
+        if ( path[i] == QLatin1Char('/') ) {
+          QString pathElement = path.mid( begin, i - begin );
+          pathElement = pathElement.replace( QLatin1String( "\\/" ), QLatin1String( "/" ) );
+          rv.append( pathElement );
+          begin = i + 1;
+        }
+        if ( i < path.size() - 2 && path[i] == QLatin1Char('\\') && path[i + 1] == QLatin1Char('/') )
+          ++i;
+      }
+      QString pathElement = path.mid( begin );
+      pathElement = pathElement.replace( QLatin1String( "\\/" ), QLatin1String( "/" ) );
+      rv.append( pathElement );
+      return rv;
+    }
+
     Q_DECLARE_PUBLIC( CollectionPathResolver )
 
     Collection::Id mColId;
@@ -113,7 +136,7 @@ CollectionPathResolver::CollectionPathResolver(const QString & path, QObject * p
   if ( d->mPath.endsWith( pathDelimiter() )  )
     d->mPath = d->mPath.left( d->mPath.length() - pathDelimiter().length() );
 
-  d->mPathParts = d->mPath.split( pathDelimiter() );
+  d->mPathParts = d->splitPath( d->mPath );
   d->mCurrentNode = Collection::root();
 }
 
