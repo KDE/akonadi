@@ -63,22 +63,24 @@ endif(NOT QT_QTSQL_FOUND)
 include(${QT_USE_FILE})
 
 #### Soprano ####
-find_package(Soprano)
 
 # There are different cases :
-# 1/ Soprano is already installed on the system, we use it
-# 2/ Soprano is not installed but we're actually building kdesupport
-# 3/ Soprano wasn't found and we're not building kdesupport.
-# Only the 3rd case should display an error.
+# 1/ We're running CMake in kdesupport. The Soprano dir exists and its compilation is enabled.
+# 2/ We're running CMake in kdesupport but Soprano won't be built. we look for installed headers.
+# 3/ We're just building akonadi. We look for the Soprano headers.
 
-if (NOT Soprano_FOUND)
-  if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-    message(STATUS "Soprano is needed to build Akonadi but is not installed yet. Let's use the source and build dirs instead.")
+if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}") # We ran CMake in kdesupport
+  if(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano) # and we plan to build Soprano
+    message(STATUS "Soprano is needed to build Akonadi. We will use Soprano from kdesupport.")
     set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano)
-    set (SOPRANO_LIBRARIES soprano) # Doesn't exist yet.
+    set (SOPRANO_LIBRARIES soprano)
     set (Soprano_FOUND TRUE)
-  endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-endif (NOT Soprano_FOUND)
+  endif(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano)
+endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+
+if(NOT Soprano_FOUND)
+  find_package(Soprano)
+endif(NOT Soprano_FOUND)
 
 macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "" "Soprano is required to build Akonadi")
 
