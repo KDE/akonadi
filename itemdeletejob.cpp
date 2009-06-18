@@ -70,6 +70,7 @@ ItemDeleteJob::ItemDeleteJob(const Item::List& items, QObject* parent)
   : Job( new ItemDeleteJobPrivate( this ), parent )
 {
   Q_D( ItemDeleteJob );
+
   d->mItems = items;
 }
 
@@ -77,11 +78,26 @@ ItemDeleteJob::ItemDeleteJob(const Collection& collection, QObject* parent)
   : Job( new ItemDeleteJobPrivate( this ), parent )
 {
   Q_D( ItemDeleteJob );
+
   d->mCollection = collection;
 }
 
 ItemDeleteJob::~ItemDeleteJob()
 {
+}
+
+Item::List ItemDeleteJob::items() const
+{
+  Q_D( const ItemDeleteJob );
+
+  return d->mItems;
+}
+
+Collection ItemDeleteJob::collection() const
+{
+  Q_D( const ItemDeleteJob );
+
+  return d->mCollection;
 }
 
 void ItemDeleteJob::doStart()

@@ -79,6 +79,11 @@ class AKONADI_EXPORT ItemCopyJob : public Job
      */
     ~ItemCopyJob();
 
+    /**
+     * Returns the items passed on in the constructor.
+     */
+     Item::List items() const;
+
   protected:
     void doStart();
 
