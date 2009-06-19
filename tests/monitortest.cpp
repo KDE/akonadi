@@ -146,7 +146,7 @@ void MonitorTest::testMonitor()
   /*
      qRegisterMetaType<Akonadi::Collection::Id>() registers the type with a
      name of "qlonglong".  Doing
-     qRegisterMetaType<Akonadi::Collection::Id>( "Akonadi::Collection::Id" ) 
+     qRegisterMetaType<Akonadi::Collection::Id>( "Akonadi::Collection::Id" )
      doesn't help.
 
      The problem here is that Akonadi::Collection::Id is a typedef to qlonglong,
@@ -267,7 +267,7 @@ void MonitorTest::testMonitor()
   // modify a collection
   monitorCol.setName( "changed name" );
   CollectionModifyJob *mod = new CollectionModifyJob( monitorCol, this );
-  QVERIFY( mod->exec() );
+  AKVERIFYEXEC( mod );
   QTest::qWait(1000);
 
   QCOMPARE( cmodspy.count(), 1 );
@@ -312,7 +312,7 @@ void MonitorTest::testVirtualCollectionsMonitoring()
   QVERIFY( caddspy.isValid() );
 
   SearchCreateJob *job = new SearchCreateJob( "Test search collection", "test-search-query" );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   QTest::qWait( 1000 );
   QCOMPARE( caddspy.count(), 1 );
 }
