@@ -145,6 +145,8 @@ bool Modify::parseStream()
           attr.setCollectionId( collection.id() );
           attr.setType( type );
           attr.setValue( value );
+          if ( !attr.insert() )
+            throw HandlerException( "Unable to add collection attribute" );
           changes.append( type );
         } else if ( attrs.size() == 1 ) {
           CollectionAttribute attr = attrs.first();
