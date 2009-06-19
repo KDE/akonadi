@@ -26,6 +26,7 @@
 
 #include "agentmanager.h"
 #include "agentinstance.h"
+#include "attributefactory.h"
 #include "cachepolicy.h"
 #include "collection.h"
 #include "collectioncreatejob.h"
@@ -46,7 +47,6 @@
 #include <QDBusConnectionInterface>
 
 
-
 using namespace Akonadi;
 
 QTEST_AKONADIMAIN( CollectionJobTest, NoGUI )
@@ -54,6 +54,7 @@ QTEST_AKONADIMAIN( CollectionJobTest, NoGUI )
 void CollectionJobTest::initTestCase()
 {
   qRegisterMetaType<Akonadi::Collection::List>();
+  AttributeFactory::registerAttribute<TestAttribute>();
   Control::start();
 
   // switch all resources offline to reduce interference from them
