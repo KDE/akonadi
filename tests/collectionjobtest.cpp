@@ -435,18 +435,18 @@ void CollectionJobTest::testModify()
   ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   AKVERIFYEXEC( ljob );
   QVERIFY( ljob->collections().first().hasAttribute<TestAttribute>() );
-  QCOMPARE( ljob->collection().first().attribute<TestAttribute>()->data, QByteArray( "new" ) );
+  QCOMPARE( ljob->collections().first().attribute<TestAttribute>()->data, QByteArray( "new" ) );
 
   // modify existing attribute
   RESET_COLLECTION_ID;
-  col.attribute<TestAttribute()->data = "modified";
+  col.attribute<TestAttribute>()->data = "modified";
   mod = new CollectionModifyJob( col, this );
   AKVERIFYEXEC( mod );
 
   ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   AKVERIFYEXEC( ljob );
   QVERIFY( ljob->collections().first().hasAttribute<TestAttribute>() );
-  QCOMPARE( ljob->collection().first().attribute<TestAttribute>()->data, QByteArray( "modified" ) );
+  QCOMPARE( ljob->collections().first().attribute<TestAttribute>()->data, QByteArray( "modified" ) );
 
   // renaming
   RESET_COLLECTION_ID;
