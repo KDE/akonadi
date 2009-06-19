@@ -42,6 +42,8 @@ void ResourceScheduler::scheduleFullSync()
 {
   Task t;
   t.type = SyncAll;
+  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+    return;
   mTaskList << t;
   signalTaskToTracker( t, "SyncAll" );
   scheduleNext();
@@ -51,6 +53,8 @@ void ResourceScheduler::scheduleCollectionTreeSync()
 {
   Task t;
   t.type = SyncCollectionTree;
+  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+    return;
   mTaskList << t;
   signalTaskToTracker( t, "SyncCollectionTree" );
   scheduleNext();
@@ -61,6 +65,8 @@ void ResourceScheduler::scheduleSync(const Collection & col)
   Task t;
   t.type = SyncCollection;
   t.collection = col;
+  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+    return;
   mTaskList << t;
   signalTaskToTracker( t, "SyncCollection" );
   scheduleNext();
@@ -73,6 +79,8 @@ void ResourceScheduler::scheduleItemFetch(const Item & item, const QSet<QByteArr
   t.item = item;
   t.itemParts = parts;
   t.dbusMsg = msg;
+  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+    return;
   mTaskList << t;
   signalTaskToTracker( t, "FetchItem" );
   scheduleNext();
@@ -82,6 +90,8 @@ void ResourceScheduler::scheduleResourceCollectionDeletion()
 {
   Task t;
   t.type = DeleteResourceCollection;
+  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+    return;
   mTaskList << t;
   signalTaskToTracker( t, "DeleteResourceCollection" );
   scheduleNext();
