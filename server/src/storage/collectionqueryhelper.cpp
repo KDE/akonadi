@@ -36,9 +36,7 @@ void CollectionQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConn
   else
     qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::In, rids );
 
-  if ( connection->selectedCollectionId() > 0 ) {
-    qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Equals, connection->selectedCollectionId() );
-  } else if ( connection->resourceContext().isValid() ) {
+  if ( connection->resourceContext().isValid() ) {
     qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->resourceContext().id() );
   }
 }
