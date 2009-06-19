@@ -32,6 +32,7 @@
 #include "xdgbasedirs_p.h"
 #include "akdebug.h"
 #include "parthelper.h"
+#include "libs/protocol_p.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -323,7 +324,8 @@ bool Akonadi::DataStore::renameCollection( Collection & collection, qint64 newPa
   if ( !collection.update() )
     return false;
 
-  mNotificationCollector->collectionChanged( collection );
+  QList<QByteArray> changes = QList<QByteArray>() << "PARENT" << AKONADI_PARAM_NAME;
+  mNotificationCollector->collectionChanged( collection, changes );
   return true;
 }
 
@@ -542,7 +544,7 @@ bool DataStore::addCollectionAttribute(const Collection & col, const QByteArray 
   if ( !attr.insert() )
     return false;
 
-  mNotificationCollector->collectionChanged( col );
+  mNotificationCollector->collectionChanged( col, QList<QByteArray>() << key );
   return true;
 }
 
@@ -559,7 +561,7 @@ bool Akonadi::DataStore::removeCollectionAttribute(const Collection & col, const
       return false;
   }
 
-  mNotificationCollector->collectionChanged( col );
+  mNotificationCollector->collectionChanged( col, QList<QByteArray>() << key );
   return true;
 }
 

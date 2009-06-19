@@ -28,6 +28,8 @@ QTEST_APPLESS_MAIN( NotificationMessageTest )
 
 using namespace Akonadi;
 
+Q_DECLARE_METATYPE( NotificationMessage::Type )
+
 void NotificationMessageTest::testCompress()
 {
   NotificationMessage::List list;
@@ -93,11 +95,20 @@ void NotificationMessageTest::testNoCompress()
   QCOMPARE( list.count(), 2 );
 }
 
+void NotificationMessageTest::testPartModificationMerge_data()
+{
+  QTest::addColumn<NotificationMessage::Type>( "type" );
+  QTest::newRow( "item" ) << NotificationMessage::Item;
+  QTest::newRow( "collection" ) << NotificationMessage::Collection;
+}
+
 void NotificationMessageTest::testPartModificationMerge()
 {
+  QFETCH( NotificationMessage::Type, type );
+
   NotificationMessage::List list;
   NotificationMessage msg;
-  msg.setType( NotificationMessage::Item );
+  msg.setType( type );
   msg.setOperation( NotificationMessage::Modify );
   msg.setItemParts( QSet<QByteArray>() << "PART1" );
 

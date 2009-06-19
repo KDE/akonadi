@@ -453,6 +453,14 @@ bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
   return true;
 }
 
+bool <xsl:value-of select="$className"/>::hasPendingChanges() const
+{
+  return false
+  <xsl:for-each select="column[@name != 'id']">
+    || d-&gt;<xsl:value-of select="@name"/>_changed
+  </xsl:for-each>;
+}
+
 // update existing data
 bool <xsl:value-of select="$className"/>::update()
 {

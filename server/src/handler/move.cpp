@@ -72,7 +72,7 @@ bool Move::parseStream()
       if ( !source.isValid() )
         throw HandlerException( "Item without collection found!?" );
 
-      store->notificationCollector()->collectionChanged( source ); // ### why?
+      store->notificationCollector()->collectionChanged( source, QList<QByteArray>() ); // ### why?
 
       item.setCollectionId( destination.id() );
       item.setAtime( mtime );
@@ -86,7 +86,7 @@ bool Move::parseStream()
 
       store->notificationCollector()->itemMoved( item, source, destination );
     }
-    store->notificationCollector()->collectionChanged( destination, destResource.name().toUtf8() ); // ### why?
+    store->notificationCollector()->collectionChanged( destination, QList<QByteArray>(), destResource.name().toUtf8() ); // ### why?
   } else {
     throw HandlerException( "Unable to execute query" );
   }

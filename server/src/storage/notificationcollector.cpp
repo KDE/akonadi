@@ -90,9 +90,10 @@ void Akonadi::NotificationCollector::collectionAdded( const Collection &collecti
 }
 
 void Akonadi::NotificationCollector::collectionChanged( const Collection &collection,
+                                                        const QList<QByteArray> &changes,
                                                         const QByteArray &resource )
 {
-  collectionNotification( NotificationMessage::Modify, collection, resource );
+  collectionNotification( NotificationMessage::Modify, collection, resource, changes.toSet() );
 }
 
 void Akonadi::NotificationCollector::collectionRemoved( const Collection &collection,
@@ -157,7 +158,8 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
 
 void NotificationCollector::collectionNotification( NotificationMessage::Operation op,
                                                     const Collection & collection,
-                                                    const QByteArray & resource)
+                                                    const QByteArray & resource,
+                                                    const QSet<QByteArray> &changes )
 {
   NotificationMessage msg;
   msg.setType( NotificationMessage::Collection );
@@ -166,6 +168,7 @@ void NotificationCollector::collectionNotification( NotificationMessage::Operati
   msg.setUid( collection.id() );
   msg.setRemoteId( collection.remoteId() );
   msg.setParentCollection( collection.parentId() );
+  msg.setItemParts( changes );
 
   QByteArray res = resource;
   if ( res.isEmpty() )

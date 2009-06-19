@@ -30,6 +30,7 @@
 #include <storage/itemretriever.h>
 #include <storage/selectquerybuilder.h>
 #include <storage/collectionqueryhelper.h>
+#include <libs/protocol_p.h>
 
 using namespace Akonadi;
 
@@ -73,11 +74,13 @@ bool Modify::parseStream()
 
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
+  QList<QByteArray> changes;
+
   int pos = 0;
   while ( pos < line.length() ) {
     QByteArray type;
     pos = ImapParser::parseString( line, type, pos );
-    if ( type == "MIMETYPE" ) {
+    if ( type == AKONADI_PARAM_MIMETYPE ) {
       QList<QByteArray> mimeTypes;
       pos = ImapParser::parseParenthesizedList( line, mimeTypes, pos );
       if ( !db->removeMimeTypesForCollection( collection.id() ) )
@@ -87,55 +90,84 @@ bool Modify::parseStream()
         mts << QString::fromLatin1(ba);
       if ( !db->appendMimeTypeForCollection( collection.id(), mts ) )
         return failureResponse( "Unable to modify collection mimetypes." );
-    } else if ( type == "CACHEPOLICY" ) {
+      changes.append( AKONADI_PARAM_MIMETYPE );
+    } else if ( type == AKONADI_PARAM_CACHEPOLICY ) {
       pos = HandlerHelper::parseCachePolicy( line, collection, pos );
-      db->notificationCollector()->collectionChanged( collection );
-      if ( !collection.update() )
-        return failureResponse( "Unable to change cache policy" );
-    } else if ( type == "NAME" ) {
+      changes.append( AKONADI_PARAM_CACHEPOLICY );
+    } else if ( type == AKONADI_PARAM_NAME ) {
       QByteArray newName;
       pos = ImapParser::parseString( line, newName, pos );
+      if ( collection.name() == newName )
+        continue;
       if ( !db->renameCollection( collection, collection.parentId(), newName ) )
         return failureResponse( "Unable to rename collection" );
+      changes.append( AKONADI_PARAM_NAME );
     } else if ( type == "PARENT" ) {
       qint64 newParent;
       bool ok = false;
       pos = ImapParser::parseNumber( line, newParent, &ok, pos );
       if ( !ok )
         return failureResponse( "Invalid syntax" );
+      if ( collection.parentId() == newParent )
+        continue;
       if ( !db->renameCollection( collection, newParent, collection.name() ) )
         return failureResponse( "Unable to reparent collection" );
-    } else if ( type == "REMOTEID" ) {
-      // FIXME: missing change notification
+      changes.append( "PARENT" );
+    } else if ( type == AKONADI_PARAM_REMOTEID ) {
       QString rid;
       pos = ImapParser::parseString( line, rid, pos );
       if ( rid == collection.remoteId() )
         continue;
       collection.setRemoteId( rid );
-      if ( !collection.update() )
-        return failureResponse( "Unable to change remote identifier" );
+      changes.append( AKONADI_PARAM_REMOTEID );
     } else if ( type.isEmpty() ) {
       break; // input end
     } else {
       // custom attribute
-      bool removeOnly = false;
       if ( type.startsWith( '-' ) ) {
         type = type.mid( 1 );
-        removeOnly = true;
-      }
-      if ( !db->removeCollectionAttribute( collection, type ) )
-        return failureResponse( "Unable to remove custom collection attribute" );
-      if ( ! removeOnly ) {
+        if ( !db->removeCollectionAttribute( collection, type ) )
+          return failureResponse( "Unable to remove custom collection attribute" );
+        changes.append( type );
+      } else {
         QByteArray value;
         pos = ImapParser::parseString( line, value, pos );
-        if ( !db->addCollectionAttribute( collection, type, value ) )
-          return failureResponse( "Unable to add custom collection attribute" );
+
+        SelectQueryBuilder<CollectionAttribute> qb;
+        qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, collection.id() );
+        qb.addValueCondition( CollectionAttribute::typeColumn(), Query::Equals, type );
+        if ( !qb.exec() )
+          throw HandlerException( "Unable to retrieve collection attribute" );
+
+        const CollectionAttribute::List attrs = qb.result();
+        if ( attrs.isEmpty() ) {
+          CollectionAttribute attr;
+          attr.setCollectionId( collection.id() );
+          attr.setType( type );
+          attr.setValue( value );
+          changes.append( type );
+        } else if ( attrs.size() == 1 ) {
+          CollectionAttribute attr = attrs.first();
+          if ( attr.value() == value )
+            continue;
+          attr.setValue( value );
+          if ( !attr.update() )
+            throw HandlerException( "Unable to update collection attribute" );
+          changes.append( type );
+        } else {
+          throw HandlerException( "WTF: more than one attribute with the same name" );
+        }
       }
     }
   }
 
-  if ( !transaction.commit() )
-    return failureResponse( "Unable to commit transaction." );
+  if ( !changes.isEmpty() ) {
+    if ( collection.hasPendingChanges() && !collection.update() )
+      return failureResponse( "Unable to update collection" );
+    db->notificationCollector()->collectionChanged( collection, changes );
+    if ( !transaction.commit() )
+      return failureResponse( "Unable to commit transaction" );
+  }
 
   Response response;
   response.setTag( tag() );

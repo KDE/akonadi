@@ -161,6 +161,11 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
     bool insert( qint64* insertId = 0 );
 
     /**
+      Returns @c true if this record has any pending changes.
+    */
+    bool hasPendingChanges() const;
+
+    /**
       Stores all changes made to this record into the database.
       Note that this method assumes the existence of an 'id' column to identify
       the record to update. If that column does not exist, all records will be

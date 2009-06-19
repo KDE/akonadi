@@ -279,7 +279,7 @@ void NotificationMessage::appendAndCompress(NotificationMessage::List & list, co
       } else
         ++it;
     } else if ( msg.d->compareWithoutOpAndParts( *((*it).d) ) ) {
-      if ( msg.operation() == Modify && (*it).operation() == Modify && msg.type() == Item ) {
+      if ( msg.operation() == Modify && (*it).operation() == Modify ) {
         (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
         return;
       } else

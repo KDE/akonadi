@@ -122,6 +122,7 @@ class NotificationCollector : public QObject
       that is missing will be looked up in the database later.
     */
     void collectionChanged( const Collection &collection,
+                            const QList<QByteArray> &changes,
                             const QByteArray &resource = QByteArray() );
 
     /**
@@ -144,7 +145,8 @@ class NotificationCollector : public QObject
                            const QSet<QByteArray> &parts = QSet<QByteArray>() );
     void collectionNotification( NotificationMessage::Operation op,
                                  const Collection &collection,
-                                 const QByteArray &resource );
+                                 const QByteArray &resource,
+                                 const QSet<QByteArray> &changes = QSet<QByteArray>() );
     void dispatchNotification( const NotificationMessage &msg );
     void clear();
 
