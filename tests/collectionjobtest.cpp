@@ -22,6 +22,7 @@
 #include "collectionjobtest.h"
 #include <qtest_akonadi.h>
 #include "test_utils.h"
+#include "testattribute.h"
 
 #include "agentmanager.h"
 #include "agentinstance.h"
@@ -424,6 +425,28 @@ void CollectionJobTest::testModify()
   QCOMPARE( ljob->collections().count(), 1 );
   col = ljob->collections().first();
   compareLists( col.contentMimeTypes(), reference );
+
+  // add attribute
+  RESET_COLLECTION_ID;
+  col.attribute<TestAttribute>( Collection::AddIfMissing )->data = "new";
+  mod = new CollectionModifyJob( col, this );
+  AKVERIFYEXEC( mod );
+
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
+  AKVERIFYEXEC( ljob );
+  QVERIFY( ljob->collections().first().hasAttribute<TestAttribute>() );
+  QCOMPARE( ljob->collection().first().attribute<TestAttribute>()->data, QByteArray( "new" ) );
+
+  // modify existing attribute
+  RESET_COLLECTION_ID;
+  col.attribute<TestAttribute()->data = "modified";
+  mod = new CollectionModifyJob( col, this );
+  AKVERIFYEXEC( mod );
+
+  ljob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
+  AKVERIFYEXEC( ljob );
+  QVERIFY( ljob->collections().first().hasAttribute<TestAttribute>() );
+  QCOMPARE( ljob->collection().first().attribute<TestAttribute>()->data, QByteArray( "modified" ) );
 
   // renaming
   RESET_COLLECTION_ID;
