@@ -68,9 +68,12 @@ void CollectionAttributeTest::testAttributes_data()
   QTest::addColumn<QByteArray>("attr2");
 
   QTest::newRow("basic") << QByteArray("foo") << QByteArray("bar");
-  QTest::newRow("emtpy1") << QByteArray("") << QByteArray("non-empty");
+  QTest::newRow("empty1") << QByteArray("") << QByteArray("non-empty");
   QTest::newRow("empty2") << QByteArray("non-empty") << QByteArray("");
   QTest::newRow("space") << QByteArray("foo bar") << QByteArray("bar foo");
+  QTest::newRow("newline") << QByteArray("\n") << QByteArray("no newline");
+  QTest::newRow("newline2") << QByteArray(" \\\n\\\nnn") << QByteArray("no newline");
+  QTest::newRow("cr") << QByteArray("\r") << QByteArray("\\\r\n");
   QTest::newRow("quotes") << QByteArray("\"quoted \\ test\"") << QByteArray("single \" quote \\");
   QTest::newRow("parenthesis") << QByteArray(")") << QByteArray("(");
   QTest::newRow("binary") << QByteArray("\000") << QByteArray("\001");
