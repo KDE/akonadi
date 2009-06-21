@@ -22,25 +22,41 @@
 
 #include <handler.h>
 #include <entities.h>
+#include <scope.h>
 
 namespace Akonadi {
 
 /**
   @ingroup akonadi_server_handler
 
-  Handler for collection deletion commands. It's basically RFC 3051 compatible,
-  but also works with still existing sub-collections and content.
+  Handler for the collection deletion command.
+
+  This commands deletes the selected collections including all their content
+  and that of any child collection.
+
+  <h4>Syntax</h4>
+
+  Request:
+  @verbatim
+  request = tag [" RID"] " DELETE " collection-ids
+  @endverbatim
+
+  @c collection-ids is the set of collections that should be deleted, either as UID-set
+  or as a list of RIDs (in case the @c RID prefix is given).
+
+  There is only the usual status response indicating success or failure of the
+  DELETE command
 */
 class Delete : public Handler
 {
   Q_OBJECT
   public:
-    Delete();
-    ~Delete();
+    Delete( Scope scope );
     bool parseStream();
 
   private:
     bool deleteRecursive( Collection &col );
+    Scope m_scope;
 
 };
 

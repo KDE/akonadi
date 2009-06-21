@@ -27,14 +27,14 @@
 #include <storage/transaction.h>
 #include "abstractsearchmanager.h"
 #include "imapstreamparser.h"
+#include <storage/selectquerybuilder.h>
+#include <storage/collectionqueryhelper.h>
 
 using namespace Akonadi;
 
-Delete::Delete() : Handler()
-{
-}
-
-Delete::~Delete()
+Delete::Delete( Scope scope ) :
+  Handler(),
+  m_scope( scope )
 {
 }
 
@@ -51,17 +51,23 @@ bool Delete::deleteRecursive(Collection & col)
 
 bool Delete::parseStream()
 {
-  QByteArray collectionByteArray = m_streamParser->readString();
+  m_scope.parseScope( m_streamParser );
+  SelectQueryBuilder<Collection> qb;
+  CollectionQueryHelper::scopeToQuery( m_scope, connection(), qb );
+  if ( !qb.exec() )
+    throw HandlerException( "Unable to execute collection query" );
+  const Collection::List collections = qb.result();
+  if ( collections.isEmpty() )
+    throw HandlerException( "No collection selected" );
+  else if ( collections.size() > 1 )
+    throw HandlerException( "Deleting multiple collections is not yet implemented" );
 
-  // prevent deletion of the root node
-  if ( collectionByteArray.isEmpty() )
-    return failureResponse( "Deleting everything is not allowed." );
 
   // check if collection exists
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  Collection collection = HandlerHelper::collectionFromIdOrName( collectionByteArray );
+  Collection collection = collections.first();
   if ( !collection.isValid() )
     return failureResponse( "No such collection." );
 

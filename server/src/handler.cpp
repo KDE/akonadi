@@ -138,7 +138,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
     if ( command == "STATUS" )
         return new Status();
     if ( command == AKONADI_CMD_COLLECTIONDELETE )
-      return new Delete();
+      return new Delete( scope );
     if ( command == AKONADI_CMD_COLLECTIONMODIFY )
       return new Modify( scope );
     if ( command == "RENAME" )
