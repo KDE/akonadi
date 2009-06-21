@@ -72,6 +72,7 @@ class AgentBasePrivate : public QObject
     Q_DECLARE_PUBLIC( AgentBase )
 
     QString mId;
+    QString mName;
 
     int mStatusCode;
     QString mStatusMessage;
