@@ -180,16 +180,32 @@ int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, 
   if ( data[begin] == '"' ) {
     ++begin;
     for ( int i = begin; i < data.length(); ++i ) {
-      if ( data[i] == '\\' ) {
-        ++i;
+      const char ch = data.at( i );
+      if ( foundSlash ) {
+        foundSlash = false;
+        if ( ch == 'r' )
+          result += '\r';
+        else if ( ch == 'n' )
+          result += '\n';
+        else if ( ch == '\\' )
+          result += '\\';
+        else if ( ch == '\"' )
+          result += '\"';
+        else {
+          //TODO: this is actually an error
+          result += ch;
+        }
+        continue;
+      }
+      if ( ch == '\\' ) {
         foundSlash = true;
         continue;
       }
-      if ( data[i] == '"' ) {
-        result = data.mid( begin, i - begin );
+      if ( ch == '"' ) {
         end = i + 1; // skip the '"'
         break;
       }
+      result += ch;
     }
   }
 
@@ -212,15 +228,16 @@ int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, 
     // transform unquoted NIL
     if ( result == "NIL" )
       result.clear();
+
+    // strip quotes
+    if ( foundSlash ) {
+      while ( result.contains( "\\\"" ) )
+        result.replace( "\\\"", "\"" );
+      while ( result.contains( "\\\\" ) )
+        result.replace( "\\\\", "\\" );
+    }
   }
 
-  // strip quotes
-  if ( foundSlash ) {
-    while ( result.contains( "\\\"" ) )
-      result.replace( "\\\"", "\"" );
-    while ( result.contains( "\\\\" ) )
-      result.replace( "\\\\", "\\" );
-  }
   return end;
 }
 
@@ -309,9 +326,20 @@ QByteArray ImapParser::quote(const QByteArray & data)
   QByteArray result( "\"" );
   result.reserve( data.length() + 2 );
   for ( int i = 0; i < data.length(); ++i ) {
-    if ( data.at( i ) == '"' || data.at( i ) == '\\' )
+    const char ch = data.at( i );
+    if ( ch == '\n' ) {
+      result += "\\n";
+      continue;
+    }
+
+    if ( ch == '\r' ) {
+      result += "\\r";
+      continue;
+    }
+ 
+    if ( ch == '"' || ch == '\\' )
       result += '\\';
-    result += data.at( i );
+    result += ch;
   }
   result += '"';
   return result;

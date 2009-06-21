@@ -512,16 +512,37 @@ QByteArray ImapStreamParser::parseQuotedString()
         m_position = i;
         throw ImapParserException("Unable to read more data");
       }
-      if ( m_data[i] == '\\' ) {
-        i += 2;
-        foundSlash = true;
+
+      if ( foundSlash ) {
+        foundSlash = false;
+        if ( m_data[i] == 'r' )
+          result += '\r';
+        else if ( m_data[i] == 'n' )
+          result += '\n';
+        else if ( m_data[i] == '\\' )
+          result += '\\';
+        else if ( m_data[i] == '\"' )
+          result += '\"';
+        else {
+          throw ImapParserException("Unexpected '\\' in quoted string");
+        }
+        ++i;
         continue;
       }
+
+      if ( m_data[i] == '\\' ) {
+        foundSlash = true;
+        ++i;
+        continue;
+      }
+
       if ( m_data[i] == '"' ) {
-        result = m_data.mid( m_position, i - m_position );
         end = i + 1; // skip the '"'
         break;
       }
+
+      result += m_data[i];
+
       ++i;
     }
   }
@@ -553,15 +574,16 @@ QByteArray ImapStreamParser::parseQuotedString()
     // transform unquoted NIL
     if ( result == "NIL" )
       result.clear();
+
+    // strip quotes
+    if ( foundSlash ) {
+      while ( result.contains( "\\\"" ) )
+        result.replace( "\\\"", "\"" );
+      while ( result.contains( "\\\\" ) )
+        result.replace( "\\\\", "\\" );
+    }
   }
 
-  // strip quotes
-  if ( foundSlash ) {
-    while ( result.contains( "\\\"" ) )
-      result.replace( "\\\"", "\"" );
-    while ( result.contains( "\\\\" ) )
-      result.replace( "\\\\", "\\" );
-  }
   m_position = end;
   return result;
 }
