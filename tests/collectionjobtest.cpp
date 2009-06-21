@@ -569,11 +569,12 @@ void CollectionJobTest::testRidFetch()
   QCOMPARE( col.remoteId(), QString::fromLatin1( "10" ) );
 }
 
-void CollectionJobTest::testRidCreate()
+void CollectionJobTest::testRidCreateDelete()
 {
   Collection collection;
   collection.setName( "rid create" );
   collection.setParentRemoteId( "8" );
+  collection.setRemoteId( "MY REMOTE ID" );
 
   ResourceSelectJob *resSel = new ResourceSelectJob( "akonadi_knut_resource_2" );
   AKVERIFYEXEC( resSel );
@@ -591,7 +592,8 @@ void CollectionJobTest::testRidCreate()
   QCOMPARE( listedCol, createdCol );
   QCOMPARE( listedCol.name(), collection.name() );
 
-  CollectionDeleteJob *delJob = new CollectionDeleteJob( createdCol, this );
+  QVERIFY( !collection.isValid() );
+  CollectionDeleteJob *delJob = new CollectionDeleteJob( collection, this );
   AKVERIFYEXEC( delJob );
 
   listJob = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::FirstLevel, this );

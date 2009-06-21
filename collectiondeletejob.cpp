@@ -22,6 +22,8 @@
 #include "collection.h"
 #include "job_p.h"
 
+#include <akonadi/private/imapparser_p.h>
+
 using namespace Akonadi;
 
 class Akonadi::CollectionDeleteJobPrivate : public JobPrivate
@@ -51,7 +53,17 @@ void CollectionDeleteJob::doStart()
 {
   Q_D( CollectionDeleteJob );
 
-  d->writeData( d->newTag() + " DELETE " + QByteArray::number( d->mCollection.id() ) + '\n' );
+  if ( !d->mCollection.isValid() && d->mCollection.remoteId().isEmpty() ) {
+    setError( Unknown );
+    setErrorText( QLatin1String("Invalid collection") );
+    emitResult();
+    return;
+  }
+
+  if ( d->mCollection.isValid() )
+    d->writeData( d->newTag() + " DELETE " + QByteArray::number( d->mCollection.id() ) + '\n' );
+  else
+    d->writeData( d->newTag() + " RID DELETE " + ImapParser::quote( d->mCollection.remoteId().toUtf8() ) + '\n' );
 }
 
 #include "collectiondeletejob.moc"

@@ -37,11 +37,7 @@ class CollectionDeleteJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( collection );
- *
- * if ( job->exec() )
- *   qDebug() << "Deleted successfully";
- * else
- *   qDebug() << "Error occurred";
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
  *
  * @endcode
  *
@@ -53,7 +49,10 @@ class AKONADI_EXPORT CollectionDeleteJob : public Job
 
   public:
     /**
-     * Creates a new collection delete job.
+     * Creates a new collection delete job. The collection needs to either have a unique
+     * identifier or a remote identifier set. Note that using a remote identifier only works
+     * in a resource context (that is from within ResourceBase), as remote identifiers
+     * are not guaranteed to be globally unique.
      *
      * @param collection The collection to delete.
      * @param parent The parent object.
