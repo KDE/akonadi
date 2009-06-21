@@ -41,7 +41,7 @@ class CollectionStatistics::Private : public QSharedData
       QSharedData( other )
     {
       count = other.count;
-      unreadCount = other.count;
+      unreadCount = other.unreadCount;
       size = other.size;
     }
 
