@@ -1,0 +1,5 @@
+<config>
+  <kdehome>kdehome</kdehome>
+  <confighome>xdgconfig</confighome>
+  <datahome>xdglocal</datahome>
+</config>

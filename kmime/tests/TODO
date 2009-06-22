@@ -1,0 +1,6 @@
+LocalFolders:
+* LocalFolders should be able to recover from any of the following situations:
+- maildir resource and collection were removed
+- maildir resource was removed, but collections are still there
+- one or both collections have been removed
+

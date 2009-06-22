@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="localfoldersrc"/>
+  <group name="LocalFolders">
+    <entry name="ResourceId" type="String">
+      <label>Id of the resource containing the collections.</label>
+      <whatsthis>Id of the maildir resource containing the outbox and sent-mail collections.</whatsthis>
+      <default>""</default>
+    </entry>
+    <entry name="OutboxId" type="LongLong">
+      <label>Id of the outbox collection.</label>
+      <default>-1</default>
+    </entry>
+    <entry name="SentMailId" type="LongLong">
+      <label>Id of the sent-mail collection.</label>
+      <default>-1</default>
+    </entry>
+  </group>
+</kcfg>

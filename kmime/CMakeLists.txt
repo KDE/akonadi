@@ -4,16 +4,23 @@ include_directories(
         ${Boost_INCLUDE_DIR}
 )
 
+add_subdirectory( tests )
+
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}" )
 
 ########### next target ###############
 
 set( kmimeakonadi_LIB_SRC
+  localfolders.cpp
   messagemodel.cpp
   messageparts.cpp
   messagethreadingattribute.cpp
   messagethreaderproxymodel.cpp
+  resourcesynchronizationjob.cpp # copied from playground/pim/akonaditest/resourcetester
 )
+
+kde4_add_kcfg_files( kmimeakonadi_LIB_SRC localfolderssettings.kcfgc )
+install( FILES localfolders.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 
 kde4_add_library( akonadi-kmime SHARED ${kmimeakonadi_LIB_SRC} )
 
@@ -24,6 +31,7 @@ install(TARGETS akonadi-kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_
 ########### install files ###############
 
 install( FILES
+  localfolders.h
   akonadi-kmime_export.h
   messagemodel.h
   messageparts.h
