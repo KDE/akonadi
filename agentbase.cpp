@@ -509,6 +509,10 @@ void AgentBase::aboutToQuit()
 void AgentBase::cleanup()
 {
   Q_D( AgentBase );
+  // prevent the monitor from picking up deletion signals for our own data if we are a resource
+  // and thus avoid that we kill our own data as last act before our own death
+  d->mMonitor->blockSignals( true );
+
   aboutToQuit();
 
   const QString fileName = d->mSettings->fileName();
