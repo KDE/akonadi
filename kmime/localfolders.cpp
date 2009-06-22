@@ -37,7 +37,6 @@
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/agentmanager.h>
-#include <akonadi/collection.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/monitor.h>
@@ -67,11 +66,9 @@ class Akonadi::LocalFoldersPrivate
     bool preparing;
     bool scheduled;
     bool isMainInstance;
-    Collection outbox;
-    Collection sentMail;
     Collection rootMaildir;
-    KJob *outboxJob;
-    KJob *sentMailJob;
+    QMultiHash<int, Collection> folders;
+    QSet<KJob*> pendingJobs;
     Monitor *monitor;
 
     /**
@@ -119,6 +116,15 @@ class Akonadi::LocalFoldersPrivate
     void collectionCreateResult( KJob *job );
     void collectionFetchResult( KJob *job );
 
+    /**
+      Returns the English name for a default (i.e. non-custom) folder type.
+    */
+    static QString nameForType( int type );
+
+    /**
+      Returns the Type for an English name for a folder type.
+    */
+    static LocalFolders::Type typeForName( const QString &name );
 };
 
 
@@ -146,16 +152,69 @@ bool LocalFolders::isReady() const
   return d->ready;
 }
 
+Collection LocalFolders::inbox() const
+{
+  return folder( Inbox );
+}
+
 Collection LocalFolders::outbox() const
 {
-  Q_ASSERT( d->ready );
-  return d->outbox;
+  return folder( Outbox );
 }
 
 Collection LocalFolders::sentMail() const
 {
+  return folder( SentMail );
+}
+
+Collection LocalFolders::trash() const
+{
+  return folder( Trash );
+}
+
+Collection LocalFolders::drafts() const
+{
+  return folder( Drafts );
+}
+
+Collection LocalFolders::templates() const
+{
+  return folder( Templates );
+}
+
+#if 0
+Collection LocalFolders::folder( const QString &name ) const
+{
   Q_ASSERT( d->ready );
-  return d->sentMail;
+  Q_FOREACH( const Collection &col, d->folders.values() ) {
+    if( col.name() == name ) {
+      return col;
+    }
+  }
+}
+#endif
+
+Collection LocalFolders::folder( Type type ) const
+{
+  Q_ASSERT( type < Custom );
+  Q_ASSERT( d->ready );
+  if( d->folders.contains( type ) ) {
+    return d->folders.value( type );
+  } else {
+    kWarning() << "Non-existent folder of type" << type;
+    return Collection();
+  }
+}
+
+Collection::List LocalFolders::folders( Type type ) const
+{
+  Q_ASSERT( d->ready );
+  if( d->folders.contains( type ) ) {
+    return d->folders.values( type );
+  } else {
+    kWarning() << "No folders of type" << type;
+    return Collection::List();
+  }
 }
 
 
@@ -168,8 +227,6 @@ LocalFoldersPrivate::LocalFoldersPrivate()
   ready = false;
   // prepare() expects these
   preparing = false;
-  outboxJob = 0;
-  sentMailJob = 0;
   monitor = 0;
   prepare();
 }
@@ -194,14 +251,7 @@ void LocalFoldersPrivate::prepare()
   preparing = true;
   scheduled = false;
 
-  Q_ASSERT( outboxJob == 0 );
-  Q_ASSERT( sentMailJob == 0 );
-  Q_ASSERT( monitor == 0);
-
   rootMaildir = Collection( -1 );
-  outbox = Collection( -1 );
-  sentMail = Collection( -1 );
-
   createResourceIfNeeded();
 }
 
@@ -268,34 +318,26 @@ void LocalFoldersPrivate::createCollectionsIfNeeded()
   Q_ASSERT( preparing ); // but I may not be the main instance
   Q_ASSERT( rootMaildir.isValid() );
 
-  if( !outbox.isValid() ) {
-    kDebug() << "Creating outbox collection.";
-    Collection col;
-    col.setParent( rootMaildir );
-    col.setName( QLatin1String( "outbox" ) );
-    col.setContentMimeTypes( QStringList( QLatin1String( "message/rfc822" ) ) );
-    Q_ASSERT( outboxJob == 0 );
-    outboxJob = new CollectionCreateJob( col );
-    QObject::connect( outboxJob, SIGNAL( result( KJob * ) ),
-      instance, SLOT( collectionCreateResult( KJob * ) ) );
+  for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
+    if( !folders.contains( type ) ) {
+      kDebug() << "Creating" << nameForType( type ) << "collection.";
+      Collection col;
+      col.setParent( rootMaildir );
+      col.setName( nameForType( type ) );
+      col.setContentMimeTypes( QStringList( QLatin1String( "message/rfc822" ) ) );
+      CollectionCreateJob *cjob = new CollectionCreateJob( col );
+      QObject::connect( cjob, SIGNAL(result(KJob*)),
+        instance, SLOT(collectionCreateResult(KJob*)) );
+      pendingJobs.insert( cjob );
+    }
   }
 
-  if( !sentMail.isValid() ) {
-    kDebug() << "Creating sent-mail collection.";
-    Collection col;
-    col.setParent( rootMaildir );
-    col.setName( QLatin1String( "sent-mail" ) );
-    col.setContentMimeTypes( QStringList( QLatin1String( "message/rfc822" ) ) );
-    Q_ASSERT( sentMailJob == 0 );
-    sentMailJob = new CollectionCreateJob( col );
-    QObject::connect( sentMailJob, SIGNAL( result( KJob * ) ),
-      instance, SLOT( collectionCreateResult( KJob * ) ) );
-  }
-
-  if( outboxJob == 0 && sentMailJob == 0 ) {
+  if( pendingJobs.isEmpty() ) {
     // Everything is ready (created and fetched).
-    kDebug() << "Local folders ready. resourceId" << Settings::resourceId()
-             << "outbox id" << outbox.id() << "sentMail id" << sentMail.id();
+    kDebug() << "Local folders ready. resourceId" << Settings::resourceId();
+    for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
+      kDebug() << nameForType( type ) << "collection has id" << folders.value(type).id();
+    }
 
     Q_ASSERT( !ready );
     ready = true;
@@ -378,20 +420,9 @@ void LocalFoldersPrivate::collectionCreateResult( KJob *job )
     kFatal() << "CollectionCreateJob failed to make a collection for us.";
   }
 
-  CollectionCreateJob *createJob = static_cast<CollectionCreateJob *>( job );
-  if( job == outboxJob ) {
-    outboxJob = 0;
-    outbox = createJob->collection();
-    kDebug() << "Created outbox collection with id" << outbox.id();
-  } else if( job == sentMailJob ) {
-    sentMailJob = 0;
-    sentMail = createJob->collection();
-    kDebug() << "Created sent-mail collection with id" << sentMail.id();
-  } else {
-    kFatal() << "Got a result for a job I don't know about.";
-  }
-
-  if( outboxJob == 0 && sentMailJob == 0 ) {
+  Q_ASSERT( pendingJobs.contains( job ) );
+  pendingJobs.remove( job );
+  if( pendingJobs.isEmpty() ) {
     // Done creating.  Refetch everything.
     fetchCollections();
   }
@@ -405,23 +436,20 @@ void LocalFoldersPrivate::collectionFetchResult( KJob *job )
 
   kDebug() << "CollectionFetchJob fetched" << cols.count() << "collections.";
 
-  outbox = Collection( -1 );
-  sentMail = Collection( -1 );
+  folders.clear();
   Q_FOREACH( const Collection &col, cols ) {
     if( col.parent() == Collection::root().id() ) {
       rootMaildir = col;
       kDebug() << "Fetched root maildir collection.";
-    } else if( col.name() == QLatin1String( "outbox" ) ) {
-      Q_ASSERT( outbox.id() == -1 );
-      outbox = col;
-      kDebug() << "Fetched outbox collection.";
-    } else if( col.name() == QLatin1String( "sent-mail" ) ) {
-      Q_ASSERT( sentMail.id() == -1 );
-      sentMail = col;
-      kDebug() << "Fetched sent-mail collection.";
     } else {
-      kWarning() << "Extraneous collection" << col.name() << "with id"
-        << col.id() << "found.";
+      // Try to guess folder type.
+      LocalFolders::Type type = typeForName( col.name() );
+      kDebug() << "Fetched" << nameForType( type ) << "collection.";
+      if( type != LocalFolders::Custom && folders.contains( type ) ) {
+        kDebug() << "But I have this type already, so making it Custom.";
+        type = LocalFolders::Custom;
+      }
+      folders.insert( type, col );
     }
   }
 
@@ -430,6 +458,42 @@ void LocalFoldersPrivate::collectionFetchResult( KJob *job )
   }
 
   createCollectionsIfNeeded();
+}
+
+
+// static
+QString LocalFoldersPrivate::nameForType( int type )
+{
+  Q_ASSERT( type >= 0 && type < LocalFolders::LastDefaultType );
+  switch( type ) {
+    case LocalFolders::Inbox: return QLatin1String( "inbox" );
+    case LocalFolders::Outbox: return QLatin1String( "outbox" );
+    case LocalFolders::SentMail: return QLatin1String( "sent-mail" );
+    case LocalFolders::Trash: return QLatin1String( "trash" );
+    case LocalFolders::Drafts: return QLatin1String( "drafts" );
+    case LocalFolders::Templates: return QLatin1String( "templates" );
+    default: Q_ASSERT( false ); return QString();
+  }
+}
+
+//static
+LocalFolders::Type LocalFoldersPrivate::typeForName( const QString &name )
+{
+  if( name == QLatin1String( "inbox" ) ) {
+    return LocalFolders::Inbox;
+  } else if( name == QLatin1String( "outbox" ) ) {
+    return LocalFolders::Outbox;
+  } else if( name == QLatin1String( "sent-mail" ) ) {
+    return LocalFolders::SentMail;
+  } else if( name == QLatin1String( "trash" ) ) {
+    return LocalFolders::Trash;
+  } else if( name == QLatin1String( "drafts" ) ) {
+    return LocalFolders::Drafts;
+  } else if( name == QLatin1String( "templates" ) ) {
+    return LocalFolders::Templates;
+  } else {
+    return LocalFolders::Custom;
+  }
 }
 
 

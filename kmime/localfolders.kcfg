@@ -7,16 +7,8 @@
   <group name="LocalFolders">
     <entry name="ResourceId" type="String">
       <label>Id of the resource containing the collections.</label>
-      <whatsthis>Id of the maildir resource containing the outbox and sent-mail collections.</whatsthis>
+      <whatsthis>Id of the maildir resource containing the local folder collections.</whatsthis>
       <default>""</default>
-    </entry>
-    <entry name="OutboxId" type="LongLong">
-      <label>Id of the outbox collection.</label>
-      <default>-1</default>
-    </entry>
-    <entry name="SentMailId" type="LongLong">
-      <label>Id of the sent-mail collection.</label>
-      <default>-1</default>
     </entry>
   </group>
 </kcfg>
