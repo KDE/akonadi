@@ -1,3 +1,17 @@
+1.1.95                           23-June-2009
+---------------------------------------------
+- Fix item size handling.
+- Add support for retrieving collection statistics as part
+  of the AKLIST/AKLSUB commands.
+- Add support for collection size statistics.
+- Build fixes for Windows.
+- Support RID-based operations for CREATE, MODIFY and DELETE.
+- Avoid emitting unecessary change notifications when
+  modifying items or collections.
+- Add COLMOVE command.
+- Reduce number of database writes when modifying a collection.
+- Fix parsing of attributes containing CR or LF characters.
+
 1.1.90                           03-June-2009
 ---------------------------------------------
 - Return the storage location for items in FETCH responses

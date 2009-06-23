@@ -1,3 +1,198 @@
+2009-06-23 16:03 +0000 [r985873]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.h,
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp: Correctly
+	  check if the new cache policy really differs from the old one,
+	  and only then send a change notification.
+
+2009-06-23 09:29 +0000 [r985611]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp: Less
+	  brutal way to update collection content types. Avoids a whole lot
+	  of unecessary database writes and thus change notifications.
+
+2009-06-21 19:06 +0000 [r984939]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/delete.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/delete.h,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp: Also
+	  allow to delete collections based on their remote identifier.
+
+2009-06-21 01:44 +0000 [r984547]  Frank Osterfeld frank.osterfeld@kdemail.net
+
+	* trunk/kdesupport/akonadi/libs/imapparser.cpp,
+	  trunk/kdesupport/akonadi/server/src/imapstreamparser.cpp: When
+	  creating a collection with CR and/or LF in attribute values, the
+	  CollectionCreateJob gets stuck forever. That's because ImapParser
+	  doesn't quote CR and LF at all when creating the quoted string
+	  for the attribute value. According to [1], CR and LF are not
+	  allowed inside a quoted string. This patch fixes this by escaping
+	  LF as "\n" and CR as "\r" in ImapParser::quote() and resolving
+	  them again in ImapParser::parseQuotedString and
+	  ImapStreamParser;:parseQuotedString(). Approved by Volker.
+
+2009-06-19 17:57 +0000 [r984003]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/collectionqueryhelper.cpp:
+	  Selection context is only relevant for items, so ignore it here.
+
+2009-06-19 17:45 +0000 [r984000]  Frank Osterfeld frank.osterfeld@kdemail.net
+
+	* trunk/kdesupport/akonadi/libs/tests/CMakeLists.txt: find the
+	  .moc, add binary dir to include path
+
+2009-06-19 16:39 +0000 [r983981]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/modify.cpp: oops, fix
+	  creation of new collection attributes
+
+2009-06-19 15:35 +0000 [r983965]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/libs/tests/notificationmessagetest.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/entities-source.xsl,
+	  trunk/kdesupport/akonadi/libs/tests/notificationmessagetest.h,
+	  trunk/kdesupport/akonadi/libs/protocol_p.h,
+	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/entities-header.xsl,
+	  trunk/kdesupport/akonadi/server/src/handler/move.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.h,
+	  trunk/kdesupport/akonadi/libs/notificationmessage.cpp: Improve
+	  the MODIFY command handler to trigger less database writes and
+	  thus change notifications, about 30% less during a normal IMAP
+	  sync.
+
+2009-06-19 15:14 +0000 [r983962]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/libs/tests/CMakeLists.txt (added): add
+	  missing file
+
+2009-06-18 23:23 +0000 [r983741]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Change the logic when
+	  we're running CMake in kdesupport: * We will use Soprano from
+	  kdesupport even if some headers are installed * We will look for
+	  installed headers if we're not running CMake in kdesupport _OR_
+	  if BUILD_Soprano is false (ie: it is explicitely disabled or was
+	  excluded from the svn checkout) This should cover all the
+	  possible cases.
+
+2009-06-17 13:54 +0000 [r983001]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/modify.h,
+	  trunk/kdesupport/akonadi/server/src/storage/queryhelper.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/storage/collectionqueryhelper.h
+	  (added), trunk/kdesupport/akonadi/server/src/handler/scope.h,
+	  trunk/kdesupport/akonadi/server/src/handler.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/queryhelper.h
+	  (added), trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/storage/collectionqueryhelper.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/storage/itemqueryhelper.cpp:
+	  Extract stuff from the item query helper code that is also useful
+	  for collection queries and use that to support RID-based
+	  collection modification.
+
+2009-06-17 12:16 +0000 [r982972]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/colmove.cpp: Fix
+	  moving into the root collection.
+
+2009-06-16 20:23 +0000 [r982804]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Display the Soprano URL
+	  if it can't be found
+
+2009-06-16 14:14 +0000 [r982648]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler.cpp,
+	  trunk/kdesupport/akonadi/libs/protocol_p.h,
+	  trunk/kdesupport/akonadi/server/src/handler/colmove.cpp (added),
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/colmove.h (added):
+	  Factor out collection moving from the collection modification
+	  command, like we did for the corresponding item commands already,
+	  to get rid of the look-ahead hack in its parsing code.
+
+2009-06-15 20:13 +0000 [r982416]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Don't hardcode
+	  SOPRANO_LIBRARIES
+
+2009-06-15 11:31 +0000 [r982248]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp: Only send
+	  change notifications if something did actually change.
+
+2009-06-12 18:00 +0000 [r980962]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Bump version to 1.1.91
+
+2009-06-12 15:28 +0000 [r980832]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/create.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/create.h,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp: When
+	  creating a collection, allow to identify the parent collection by
+	  its remote identifier as well.
+
+2009-06-10 14:23 +0000 [r979786]  Kevin Ottens ervin@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/aklist.h,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/status.cpp,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.h: Add support
+	  for SIZE in the STATUS and X-AKLIST commands. So now for
+	  statistics we can get the total size of a collection.
+
+2009-06-10 09:27 +0000 [r979596]  Kevin Ottens ervin@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/aklist.h,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.h,
+	  trunk/kdesupport/akonadi/server/src/handler/aklist.cpp: Extend
+	  the server protocol so that X-AKLIST and X-AKLSUB can return the
+	  collection statistics along with the collections (avoid issuing a
+	  first listing and then a storm of STATUS request when you need
+	  the statistics). This protocol modification is an extension and
+	  is backward compatible.
+
+2009-06-07 10:36 +0000 [r978475]  Carlo Segato brandon.ml@gmail.com
+
+	* trunk/kdesupport/akonadi/AkonadiConfig.cmake.in: use .dll.a for
+	  mingw
+
+2009-06-06 09:28 +0000 [r978167]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp: More fixes
+	  for the item size handling.
+
+2009-06-06 08:18 +0000 [r978140]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp: Fix
+	  updating of items sizes.
+
+2009-06-03 17:33 +0000 [r977248]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/makechangelog: Prepare for the 1.1.90
+	  release. Also change makechangelog to use anonsvn instead of a
+	  hard-coded svn account.
+
 2009-05-28 17:58 +0000 [r974197]  Volker Krause vkrause@kde.org
 
 	* trunk/kdesupport/akonadi/libs/notificationmessage.cpp: Show the
