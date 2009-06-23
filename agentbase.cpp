@@ -157,34 +157,33 @@ void AgentBasePrivate::init()
   mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
 
   mName = mSettings->value( QLatin1String( "Agent/Name" ) ).toString();
-  if (mName.isEmpty()) {
+  if ( mName.isEmpty() ) {
     mName = mSettings->value( QLatin1String( "Resource/Name" ) ).toString();
-    if (!mName.isEmpty()) {
+    if ( !mName.isEmpty() ) {
       mSettings->remove( QLatin1String( "Resource/Name" ) );
       mSettings->setValue( QLatin1String( "Agent/Name" ), mName );
     }
   }
-  
 
   connect( mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
            SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
-  connect( mMonitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-           SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+  connect( mMonitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+           SLOT( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
            SLOT( itemRemoved( const Akonadi::Item& ) ) );
-  connect( mMonitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-           SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+  connect( mMonitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
+           SLOT( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
            SLOT( collectionChanged( const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
            SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
 
-  connect( q, SIGNAL( status( int, QString ) ), q, SLOT( slotStatus( int, QString ) ) );
+  connect( q, SIGNAL( status( int, const QString& ) ), q, SLOT( slotStatus( int, const QString& ) ) );
   connect( q, SIGNAL( percent( int ) ), q, SLOT( slotPercent( int ) ) );
-  connect( q, SIGNAL( warning( QString ) ), q, SLOT( slotWarning( QString ) ) );
-  connect( q, SIGNAL( error( QString ) ), q, SLOT( slotError( QString ) ) );
+  connect( q, SIGNAL( warning( const QString& ) ), q, SLOT( slotWarning( const QString& ) ) );
+  connect( q, SIGNAL( error( const QString& ) ), q, SLOT( slotError( const QString& ) ) );
 
   // Use reference counting to allow agents to finish internal jobs when the
   // agent is stopped.

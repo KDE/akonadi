@@ -40,7 +40,7 @@ class CollectionModifyJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(modifyResult(KJob*)) );
+ * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( modifyResult( KJob* ) ) );
  *
  * @endcode
  *

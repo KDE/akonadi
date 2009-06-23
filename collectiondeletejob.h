@@ -37,7 +37,7 @@ class CollectionDeleteJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionDeleteJob *job = new Akonadi::CollectionDeleteJob( collection );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(deletionResult(KJob*)) );
+ * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( deletionResult( KJob* ) ) );
  *
  * @endcode
  *
