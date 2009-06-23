@@ -102,8 +102,10 @@ bool Modify::parseStream()
       if ( !equal || !mts.isEmpty() )
         changes.append( AKONADI_PARAM_MIMETYPE );
     } else if ( type == AKONADI_PARAM_CACHEPOLICY ) {
-      pos = HandlerHelper::parseCachePolicy( line, collection, pos );
-      changes.append( AKONADI_PARAM_CACHEPOLICY );
+      bool changed = false;
+      pos = HandlerHelper::parseCachePolicy( line, collection, pos, &changed );
+      if ( changed )
+        changes.append( AKONADI_PARAM_CACHEPOLICY );
     } else if ( type == AKONADI_PARAM_NAME ) {
       QByteArray newName;
       pos = ImapParser::parseString( line, newName, pos );

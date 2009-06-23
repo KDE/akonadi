@@ -127,31 +127,48 @@ qint64 HandlerHelper::itemsTotalSize(const Collection & col)
   return qb.query().value( 0 ).toLongLong();
 }
 
-int HandlerHelper::parseCachePolicy(const QByteArray & data, Collection & col, int start)
+int HandlerHelper::parseCachePolicy(const QByteArray & data, Collection & col, int start, bool *changed )
 {
+  bool inheritChanged = false;
+  bool somethingElseChanged = false;
+
   QList<QByteArray> params;
   int end = Akonadi::ImapParser::parseParenthesizedList( data, params, start );
   for ( int i = 0; i < params.count() - 1; i += 2 ) {
     const QByteArray key = params[i];
     const QByteArray value = params[i + 1];
 
-    if ( key == "INHERIT" )
-      col.setCachePolicyInherit( value == "true" );
-    else if ( key == "INTERVAL" )
-      col.setCachePolicyCheckInterval( value.toInt() );
-    else if ( key == "CACHETIMEOUT" )
-      col.setCachePolicyCacheTimeout( value.toInt() );
-    else if ( key == "SYNCONDEMAND" )
-      col.setCachePolicySyncOnDemand( value == "true" );
-    else if ( key == "LOCALPARTS" ) {
+    if ( key == "INHERIT" ) {
+      const bool inherit = value == "true";
+      inheritChanged = col.cachePolicyInherit() != inherit;
+      col.setCachePolicyInherit( inherit );
+    } else if ( key == "INTERVAL" ) {
+      const int interval = value.toInt();
+      somethingElseChanged = somethingElseChanged || interval != col.cachePolicyCheckInterval();
+      col.setCachePolicyCheckInterval( interval );
+    } else if ( key == "CACHETIMEOUT" ) {
+      const int timeout = value.toInt();
+      somethingElseChanged = somethingElseChanged || timeout != col.cachePolicyCacheTimeout();
+      col.setCachePolicyCacheTimeout( timeout );
+    } else if ( key == "SYNCONDEMAND" ) {
+      const bool syncOnDemand = value == "true";
+      somethingElseChanged = somethingElseChanged || syncOnDemand != col.cachePolicySyncOnDemand();
+      col.setCachePolicySyncOnDemand( syncOnDemand );
+    } else if ( key == "LOCALPARTS" ) {
       QList<QByteArray> tmp;
-      QStringList parts;
+      QStringList partsList;
       Akonadi::ImapParser::parseParenthesizedList( value, tmp );
       foreach ( const QByteArray &ba, tmp )
-        parts << QString::fromLatin1( ba );
-      col.setCachePolicyLocalParts( parts.join( QLatin1String(" ") ) );
+        partsList << QString::fromLatin1( ba );
+      const QString parts = partsList.join( QLatin1String( " " ) );
+      somethingElseChanged = somethingElseChanged || col.cachePolicyLocalParts() != parts;
+      col.setCachePolicyLocalParts( parts );
     }
   }
+
+  if ( changed && (inheritChanged || (!col.cachePolicyInherit() && somethingElseChanged)) )
+    *changed = true;
+
   return end;
 }
 

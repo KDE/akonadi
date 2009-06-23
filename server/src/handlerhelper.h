@@ -77,9 +77,11 @@ class HandlerHelper
 
     /**
       Parse cache policy and update the given Collection object accoordingly.
+      @param changed Indicates wether or not the cache policy already available in @p col
+      has actually changed
       @todo Error handling.
     */
-    static int parseCachePolicy( const QByteArray &data, Collection &col, int start = 0 );
+    static int parseCachePolicy( const QByteArray& data, Akonadi::Collection& col, int start = 0, bool* changed = 0 );
 
     /**
       Returns the protocol representation of the cache policy of the given
