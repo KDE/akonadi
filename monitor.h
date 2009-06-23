@@ -325,6 +325,7 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_DECLARE_PRIVATE( Monitor )
 
     //@cond PRIVATE
+    Q_PRIVATE_SLOT( d_ptr, void slotSessionDestroyed( QObject* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotStatisticsChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
     Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessage::List& ) )

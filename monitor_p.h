@@ -86,7 +86,7 @@ class MonitorPrivate
     bool processNotification( const NotificationMessage &msg );
 
     // private slots
-    void sessionDestroyed( QObject* );
+    void slotSessionDestroyed( QObject* );
     void slotStatisticsChangedFinished( KJob* );
     void slotFlushRecentlyChangedCollections();
 

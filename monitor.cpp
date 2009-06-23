@@ -106,6 +106,7 @@ void Akonadi::Monitor::setAllMonitored( bool monitored )
 void Monitor::ignoreSession(Session * session)
 {
   d->sessions << session->sessionId();
+  connect( session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)) );
 }
 
 void Monitor::fetchCollection(bool enable)
