@@ -255,7 +255,7 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
     cleanupPimItem( item );
 
   // delete collection mimetypes
-  removeMimeTypesForCollection( collection.id() );
+  collection.clearMimeTypes();
   Collection::clearPimItems( collection.id() );
 
   // delete attributes
@@ -358,11 +358,6 @@ bool DataStore::appendMimeTypeForCollection( qint64 collectionId, const QStringL
   }
 
   return true;
-}
-
-bool Akonadi::DataStore::removeMimeTypesForCollection(qint64 collectionId)
-{
-  return Collection::clearMimeTypes( collectionId );
 }
 
 

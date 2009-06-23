@@ -83,14 +83,24 @@ bool Modify::parseStream()
     if ( type == AKONADI_PARAM_MIMETYPE ) {
       QList<QByteArray> mimeTypes;
       pos = ImapParser::parseParenthesizedList( line, mimeTypes, pos );
-      if ( !db->removeMimeTypesForCollection( collection.id() ) )
-        return failureResponse( "Unable to modify collection mimetypes." );
       QStringList mts;
       foreach ( const QByteArray &ba, mimeTypes )
         mts << QString::fromLatin1(ba);
+      MimeType::List currentMts = collection.mimeTypes();
+      bool equal = true;
+      foreach ( const MimeType &currentMt, currentMts ) {
+        if ( mts.contains( currentMt.name() ) ) {
+          mts.removeAll( currentMt.name() );
+          continue;
+        }
+        equal = false;
+        if ( !collection.removeMimeType( currentMt ) )
+          throw HandlerException( "Unable to remove collection mimetype" );
+      }
       if ( !db->appendMimeTypeForCollection( collection.id(), mts ) )
-        return failureResponse( "Unable to modify collection mimetypes." );
-      changes.append( AKONADI_PARAM_MIMETYPE );
+        return failureResponse( "Unable to add collection mimetypes" );
+      if ( !equal || !mts.isEmpty() )
+        changes.append( AKONADI_PARAM_MIMETYPE );
     } else if ( type == AKONADI_PARAM_CACHEPOLICY ) {
       pos = HandlerHelper::parseCachePolicy( line, collection, pos );
       changes.append( AKONADI_PARAM_CACHEPOLICY );

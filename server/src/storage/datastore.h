@@ -137,7 +137,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool renameCollection( Collection &collection, qint64 newParent, const QByteArray &newName );
 
     bool appendMimeTypeForCollection( qint64 collectionId, const QStringList & mimeTypes );
-    bool removeMimeTypesForCollection( qint64 collectionId );
 
     static QString collectionDelimiter() { return QLatin1String("/"); }
 
