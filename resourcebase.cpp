@@ -96,8 +96,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     void slotDeleteResourceCollectionDone( KJob *job );
     void slotCollectionDeletionDone( KJob *job );
 
-    QString mName;
-
     // synchronize states
     Collection currentCollection;
 
@@ -112,10 +110,6 @@ ResourceBase::ResourceBase( const QString & id )
   Q_D( ResourceBase );
 
   new ResourceAdaptor( this );
-
-  const QString name = d->mSettings->value( QLatin1String( "Resource/Name" ) ).toString();
-  if ( !name.isEmpty() )
-    d->mName = name;
 
   d->scheduler = new ResourceScheduler( this );
 
@@ -142,6 +136,7 @@ ResourceBase::ResourceBase( const QString & id )
   connect( d->scheduler, SIGNAL(fullSyncComplete()), SIGNAL(synchronized()) );
   connect( d->mMonitor, SIGNAL(nothingToReplay()), d->scheduler, SLOT(taskDone()) );
   connect( this, SIGNAL(synchronized()), d->scheduler, SLOT(taskDone()) );
+  connect( this, SIGNAL(agentNameChanged(QString)), this, SIGNAL(nameChanged(QString)));
 
   d->scheduler->setOnline( d->mOnline );
   if ( !d->mMonitor->isEmpty() )
@@ -161,30 +156,12 @@ void ResourceBase::synchronize()
 
 void ResourceBase::setName( const QString &name )
 {
-  Q_D( ResourceBase );
-  if ( name == d->mName )
-    return;
-
-  // TODO: rename collection
-  d->mName = name;
-
-  if ( d->mName.isEmpty() || d->mName == d->mId )
-    d->mSettings->remove( QLatin1String( "Resource/Name" ) );
-  else
-    d->mSettings->setValue( QLatin1String( "Resource/Name" ), d->mName );
-
-  d->mSettings->sync();
-
-  emit nameChanged( d->mName );
+    AgentBase::setAgentName(name);
 }
 
 QString ResourceBase::name() const
 {
-  Q_D( const ResourceBase );
-  if ( d->mName.isEmpty() )
-    return d->mId;
-  else
-    return d->mName;
+    return AgentBase::agentName();
 }
 
 QString ResourceBase::parseArguments( int argc, char **argv )

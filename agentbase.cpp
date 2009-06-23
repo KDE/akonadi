@@ -156,6 +156,16 @@ void AgentBasePrivate::init()
 
   mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
 
+  mName = mSettings->value( QLatin1String( "Agent/Name" ) ).toString();
+  if (mName.isEmpty()) {
+    mName = mSettings->value( QLatin1String( "Resource/Name" ) ).toString();
+    if (!mName.isEmpty()) {
+      mSettings->remove( QLatin1String( "Resource/Name" ) );
+      mSettings->setValue( QLatin1String( "Agent/Name" ), mName );
+    }
+  }
+  
+
   connect( mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
@@ -499,6 +509,10 @@ void AgentBase::aboutToQuit()
 void AgentBase::cleanup()
 {
   Q_D( AgentBase );
+  // prevent the monitor from picking up deletion signals for our own data if we are a resource
+  // and thus avoid that we kill our own data as last act before our own death
+  d->mMonitor->blockSignals( true );
+
   aboutToQuit();
 
   const QString fileName = d->mSettings->fileName();
@@ -533,6 +547,35 @@ void AgentBase::registerObserver( Observer *observer )
 QString AgentBase::identifier() const
 {
   return d_ptr->mId;
+}
+
+void AgentBase::setAgentName( const QString &name )
+{
+  Q_D( AgentBase );
+  if ( name == d->mName )
+    return;
+
+  // TODO: rename collection
+  d->mName = name;
+
+  if ( d->mName.isEmpty() || d->mName == d->mId ) {
+    d->mSettings->remove( QLatin1String( "Resource/Name" ) );
+    d->mSettings->remove( QLatin1String( "Agent/Name" ) );
+  } else
+    d->mSettings->setValue( QLatin1String( "Agent/Name" ), d->mName );
+
+  d->mSettings->sync();
+
+  emit agentNameChanged( d->mName );
+}
+
+QString AgentBase::agentName() const
+{
+  Q_D( const AgentBase );
+  if ( d->mName.isEmpty() )
+    return d->mId;
+  else
+    return d->mName;
 }
 
 void AgentBase::changeProcessed()
