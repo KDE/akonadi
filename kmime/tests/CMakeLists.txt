@@ -50,5 +50,6 @@ endmacro(add_akonadi_isolated_test)
 
 
 
+add_akonadi_isolated_test( customfoldertest.cpp )
 add_akonadi_isolated_test( racetest.cpp )
 

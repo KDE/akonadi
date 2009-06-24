@@ -1,6 +1,4 @@
 LocalFolders:
-* LocalFolders should be able to recover from any of the following situations:
-- maildir resource and collection were removed
-- maildir resource was removed, but collections are still there
-- one or both collections have been removed
+* test for deletion of actual dir from local file system
+* test for user creating a custom folder with a default folder name (such as 'inbox')
 
