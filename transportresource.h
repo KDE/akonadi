@@ -34,85 +34,87 @@ namespace Akonadi {
 /**
   * @short Resource implementing mail transport capability.
   *
-  * TODO docu
+  * If your resource supports sending email, inherit from this class instead
+  * of ResourceBase.  Then implement the virtual method send().
+  *
+  * For an example of a transport-enabled resource, see
+  * kdepim/akonadi/resources/mailtransport_dummy.
  */
-// TODO name: TransportResourceBase?
+
+/*
+   DESIGN NOTES:
+
+   There seem to be three ways to implement transport-enabled resources:
+   1) new class TransportResource (this):
+      Pros:
+      + Straight-forward API, no need to connect to weird signals, just
+        reimplement a virtual method.
+      + The TransportAdaptor is taken care of here, and resources need not
+        worry about it.
+      Cons:
+      - If there will ever be SomeOtherNiftyFeatureResource derived from
+        ResourceBase, then it will be hard to combine the Transport ability
+        (this class) with SomeOtherNiftyFeature.
+    2) add the stuff to ResourceBase:
+      Pros:
+      + No additional class, so further extensions seem possible.
+      Cons:
+      - The TransportAdaptor either has to be merged with ResourceAdaptor;
+        added in ResourceBase; or compiled from xml and added by each
+        transport-enabled resource.  This means either useless weight to all
+        resources, or added complexity and dependencies for transport-enabled
+        resources.
+      - Weird API.  Transport-enabled resources will need to connect to a
+        transportItem() signal, and there is no guarantee that this is done
+        properly (unlike a virtual function).
+    3) do it with ObserverV2:
+       How?
+*/
+
 class AKONADI_EXPORT TransportResource : public ResourceBase
 {
   Q_OBJECT
 
-  public:
-#if 0
-    /**
-     * Use this method in the main function of your resource
-     * application to initialize your resource subclass.
-     * This method also takes care of creating a KApplication
-     * object and parsing command line arguments.
-     *
-     * @note In case the given class is also derived from AgentBase::Observer
-     *       it gets registered as its own observer (see AgentBase::Observer), e.g.
-     *       <tt>resourceInstance->registerObserver( resourceInstance );</tt>
-     *
-     * @code
-     *
-     *   class MyResource : public ResourceBase
-     *   {
-     *     ...
-     *   };
-     *
-     *   int main( int argc, char **argv )
-     *   {
-     *     return ResourceBase::init<MyResource>( argc, argv );
-     *   }
-     *
-     * @endcode
-     */
-    template <typename T>
-    static int init( int argc, char **argv )
-    {
-      const QString id = parseArguments( argc, argv );
-      KApplication app;
-      T* r = new T( id );
-
-      // check if T also inherits AgentBase::Observer and
-      // if it does, automatically register it on itself
-      Observer *observer = dynamic_cast<Observer*>( r );
-      if ( observer != 0 )
-        r->registerObserver( observer );
-      return init( r );
-    }
-#endif
-
   Q_SIGNALS:
+    /**
+      Emitted when the resource has finished sending the message.
+      @param result The success of the operation.
+      @param message An optional textual explanation of the result.
+    */
     void transportResult( bool result, const QString &message );
 
   public Q_SLOTS:
+    /**
+      Reimplement in your resource, to begin the actual sending operation.
+      Connect the transport job's result() signal to emitResult(), or emit
+      transportResult() manually when you are done.
+      @param message The ID of the message to be sent.
+      @see emitResult.
+      @see transportResult.
+    */
     virtual void send( Akonadi::Item::Id message ) = 0;
 
   protected:
+    /**
+      Constructs a new TransportResource.
+      @param id The instance id of the resource.
+    */
     TransportResource( const QString &id );
 
   protected Q_SLOTS:
-    void emitResult( KJob* );
+    /**
+      Utility function to emit transportResult.  If your sending operation is
+      a KJob, you can connect its result() signal to this slot, and it will
+      emit transportResult with the proper parameters.
+      @param job The transport job.
+    */
+    void emitResult( KJob *job );
 
   private:
     // TODO probably need a private class.
 
 };
 
-}
+} // namespace Akonadi
 
-#if 0
-#ifndef AKONADI_RESOURCE_MAIN
-/**
- * Convenience Macro for the most common main() function for Akonadi resources.
- */
-#define AKONADI_RESOURCE_MAIN( resourceClass )                       \
-  int main( int argc, char **argv )                            \
-  {                                                            \
-    return Akonadi::ResourceBase::init<resourceClass>( argc, argv ); \
-  }
-#endif
-#endif
-
-#endif
+#endif // AKONADI_TRANSPORTRESOURCE_H

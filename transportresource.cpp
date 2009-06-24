@@ -39,8 +39,6 @@ void TransportResource::emitResult( KJob *job )
   } else {
     emit transportResult( true, i18n( "Sending succeeded." ) );
   }
-
-  // TODO unsure if I need something like QDBusMessage reply = ... here
 }
 
 #include "transportresource.moc"
