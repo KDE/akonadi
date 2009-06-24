@@ -1,0 +1,7 @@
+File=localfolders.kcfg
+ClassName=LocalFoldersSettings
+NameSpace=Akonadi
+Singleton=true
+ItemAccessors=true
+Mutators=true
+SetUserTextx=true
