@@ -12,6 +12,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO
 
 set( kmimeakonadi_LIB_SRC
   localfolders.cpp
+  localfoldersbuildjob.cpp
   messagemodel.cpp
   messageparts.cpp
   messagethreadingattribute.cpp

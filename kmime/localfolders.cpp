@@ -19,44 +19,30 @@
 
 #include "localfolders.h"
 
+#include "localfoldersbuildjob_p.h"
 #include "localfolderssettings.h"
 
-#include <QApplication>
 #include <QDBusConnection>
-#include <QDBusConnectionInterface>
-#include <QDBusInterface>
 #include <QObject>
+#include <QSet>
 #include <QTimer>
-#include <QVariant>
 
 #include <KDebug>
 #include <KGlobal>
 #include <KLocalizedString>
 #include <KStandardDirs>
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionmodifyjob.h>
-#include <akonadi/entitydisplayattribute.h>
 #include <akonadi/monitor.h>
 
-#include <resourcesynchronizationjob.h> // copied from playground/pim/akonaditest
-
 #define DBUS_SERVICE_NAME QLatin1String( "org.kde.pim.LocalFolders" )
-
 
 using namespace Akonadi;
 
 typedef LocalFoldersSettings Settings;
 
-
 /**
- * Private class that helps to provide binary compatibility between releases.
- * @internal
- */
+  @internal
+*/
 class Akonadi::LocalFoldersPrivate
 {
   public:
@@ -69,75 +55,30 @@ class Akonadi::LocalFoldersPrivate
     bool scheduled;
     bool isMainInstance;
     Collection rootMaildir;
-    QMultiHash<int, Collection> folders;
+    Collection::List defaultFolders;
     QSet<KJob*> pendingJobs;
     Monitor *monitor;
 
     /**
-      If this is the main instance, attempts to create the resource and collections
-      if necessary, then fetches them.
-      If this is not the main instance, waits for them to be created by the main
-      instance, and then fetches them.
+      If this is the main instance, attempts to build and fetch the local
+      folder structure.  Otherwise, it waits for the structure to be created
+      by the main instance, and then just fetches it.
 
-      Will emit foldersReady() when done
+      Will emit foldersReady() when the folders are ready.
     */
-    void prepare();
+    void prepare(); // slot
+
+    // slots:
+    void buildResult( KJob *job );
+    void collectionRemoved( const Collection &col );
 
     /**
       Schedules a prepare() in 1 second.
       Called when this is not the main instance and we need to wait, or when
       something disappeared and needs to be recreated.
     */
-    void schedulePrepare(); // slot
+    void schedulePrepare();
 
-    /**
-      Emits foldersReady().
-    */
-    void emitReady();
-
-    /**
-      Creates the maildir resource, if it is not found.
-    */
-    void createResourceIfNeeded();
-
-    /**
-      Creates the outbox and sent-mail collections, if they are not present.
-    */
-    void createCollectionsIfNeeded();
-
-    /**
-      Creates a Monitor to watch the resource and connects to its signals.
-      This is used to watch for evil users deleting the resource / outbox / etc.
-    */
-    void connectMonitor();
-
-    /**
-      Fetches the collections of the maildir resource.
-      There is one root collection, which contains the outbox and sent-mail
-      collections.
-     */
-    void fetchCollections();
-
-    void resourceCreateResult( KJob *job );
-    void resourceSyncResult( KJob *job );
-    void collectionCreateResult( KJob *job );
-    void collectionFetchResult( KJob *job );
-    void collectionModifyResult( KJob *job );
-
-    /**
-      Returns the English name for a default (i.e. non-custom) folder type.
-    */
-    static QString nameForType( int type );
-
-    /**
-      Returns the standard icon name for a default (non-custom) folder type.
-    */
-    static QString iconNameForType( int type );
-
-    /**
-      Returns the Type for an English name for a folder type.
-    */
-    static LocalFolders::Type typeForName( const QString &name );
 };
 
 
@@ -163,6 +104,11 @@ void LocalFolders::fetch()
 bool LocalFolders::isReady() const
 {
   return d->ready;
+}
+
+Collection LocalFolders::root() const
+{
+  return folder( Root );
 }
 
 Collection LocalFolders::inbox() const
@@ -195,39 +141,11 @@ Collection LocalFolders::templates() const
   return folder( Templates );
 }
 
-#if 0
-Collection LocalFolders::folder( const QString &name ) const
+Collection LocalFolders::folder( int type ) const
 {
   Q_ASSERT( d->ready );
-  Q_FOREACH( const Collection &col, d->folders.values() ) {
-    if( col.name() == name ) {
-      return col;
-    }
-  }
-}
-#endif
-
-Collection LocalFolders::folder( Type type ) const
-{
-  Q_ASSERT( type < Custom );
-  Q_ASSERT( d->ready );
-  if( d->folders.contains( type ) ) {
-    return d->folders.value( type );
-  } else {
-    kWarning() << "Non-existent folder of type" << type;
-    return Collection();
-  }
-}
-
-Collection::List LocalFolders::folders( Type type ) const
-{
-  Q_ASSERT( d->ready );
-  if( d->folders.contains( type ) ) {
-    return d->folders.values( type );
-  } else {
-    kWarning() << "No folders of type" << type;
-    return Collection::List();
-  }
+  Q_ASSERT( type >= 0 && type < LastDefaultType );
+  return d->defaultFolders[ type ];
 }
 
 
@@ -235,10 +153,8 @@ Collection::List LocalFolders::folders( Type type ) const
 LocalFoldersPrivate::LocalFoldersPrivate()
   : instance( new LocalFolders(this) )
 {
-  isMainInstance = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
-
+  isMainInstance = false;
   ready = false;
-  // prepare() expects these
   preparing = false;
   monitor = 0;
   prepare();
@@ -252,7 +168,7 @@ LocalFoldersPrivate::~LocalFoldersPrivate()
 void LocalFoldersPrivate::prepare()
 {
   if( ready ) {
-    //kDebug() << "Already ready.  Emitting foldersReady().";
+    kDebug() << "Already ready.  Emitting foldersReady().";
     emit instance->foldersReady();
     return;
   }
@@ -260,12 +176,77 @@ void LocalFoldersPrivate::prepare()
     kDebug() << "Already preparing.";
     return;
   }
-  kDebug() << "Preparing. isMainInstance" << isMainInstance;
-  preparing = true;
-  scheduled = false;
 
-  rootMaildir = Collection( -1 );
-  createResourceIfNeeded();
+  // Try to grab main instance status (if previous main instance quit).
+  if( !isMainInstance ) {
+    isMainInstance = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
+  }
+
+  // Fetch / build the folder structure.
+  {
+    kDebug() << "Preparing. isMainInstance" << isMainInstance;
+    preparing = true;
+    scheduled = false;
+    LocalFoldersBuildJob *bjob = new LocalFoldersBuildJob( isMainInstance, instance );
+    QObject::connect( bjob, SIGNAL(result(KJob*)), instance, SLOT(buildResult(KJob*)) );
+    // auto-starts
+  }
+}
+
+void LocalFoldersPrivate::buildResult( KJob *job )
+{
+  if( job->error() ) {
+    kDebug() << "BuildJob failed with error" << job->errorString();
+    schedulePrepare();
+    return;
+  }
+
+  // Get the folders from the job.
+  {
+    Q_ASSERT( dynamic_cast<LocalFoldersBuildJob*>( job ) );
+    LocalFoldersBuildJob *bjob = static_cast<LocalFoldersBuildJob*>( job );
+    Q_ASSERT( defaultFolders.isEmpty() );
+    defaultFolders = bjob->defaultFolders();
+  }
+
+  // Verify everything.
+  {
+    Q_ASSERT( defaultFolders.count() == LocalFolders::LastDefaultType );
+    Collection::Id rootId = defaultFolders[ LocalFolders::Root ].id();
+    Q_ASSERT( rootId >= 0 );
+    for( int type = 1; type < LocalFolders::LastDefaultType; type++ ) {
+      Q_ASSERT( defaultFolders[ type ].isValid() );
+      Q_ASSERT( defaultFolders[ type ].parent() == rootId );
+    }
+  }
+
+  // Connect monitor.
+  {
+    Q_ASSERT( monitor == 0 );
+    monitor = new Monitor( instance );
+    monitor->setResourceMonitored( Settings::resourceId().toAscii() );
+    QObject::connect( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+        instance, SLOT(collectionRemoved(Akonadi::Collection)) );
+  }
+
+  // Emit ready.
+  {
+    kDebug() << "Local folders ready.";
+    Q_ASSERT( !ready );
+    ready = true;
+    preparing = false;
+    emit instance->foldersReady();
+  }
+}
+
+void LocalFoldersPrivate::collectionRemoved( const Akonadi::Collection &col )
+{
+  kDebug() << "id" << col.id();
+  if( defaultFolders.contains( col ) ) {
+    // These are undeletable folders.  If one of them got removed, it means
+    // the entire resource has been removed.
+    schedulePrepare();
+  }
 }
 
 void LocalFoldersPrivate::schedulePrepare()
@@ -275,299 +256,24 @@ void LocalFoldersPrivate::schedulePrepare()
     return;
   }
 
-  kDebug() << "Scheduling prepare.";
-
-  if( monitor ) {
-    monitor->disconnect( instance );
-    monitor->deleteLater();
-    monitor = 0;
-  }
-
-  ready = false;
-  preparing = false;
-  scheduled = true;
-  QTimer::singleShot( 1000, instance, SLOT( prepare() ) );
-}
-
-void LocalFoldersPrivate::emitReady()
-{
-  kDebug() << "Local folders ready. resourceId" << Settings::resourceId();
-  for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
-    kDebug() << nameForType( type ) << "collection has id" << folders.value(type).id();
-  }
-
-  Q_ASSERT( !ready );
-  ready = true;
-  preparing = false;
-  Settings::self()->writeConfig();
-  emit instance->foldersReady();
-}
-
-void LocalFoldersPrivate::createResourceIfNeeded()
-{
-  Q_ASSERT( preparing );
-
-  // Another instance might have created the resource and updated the config.
-  Settings::self()->readConfig();
-  kDebug() << "Resource from config:" << Settings::resourceId();
-
-  // check that the maildir resource exists
-  AgentInstance resource = AgentManager::self()->instance( Settings::resourceId() );
-  if( !resource.isValid() ) {
-    // Try to grab main instance status (if previous main instance quit).
-    if( !isMainInstance ) {
-      isMainInstance = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
-      if( isMainInstance ) {
-        kDebug() << "I have become the main instance.";
-      }
+  // Clean up.
+  {
+    if( monitor ) {
+      monitor->disconnect( instance );
+      monitor->deleteLater();
+      monitor = 0;
     }
+    defaultFolders.clear();
+  }
 
-    // Create resource if main instance.
-    if( !isMainInstance ) {
-      kDebug() << "Waiting for the main instance to create the resource.";
-      schedulePrepare();
-    } else {
-      kDebug() << "Creating maildir resource.";
-      AgentType type = AgentManager::self()->type( QString::fromLatin1( "akonadi_maildir_resource" ) );
-      AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
-      QObject::connect( job, SIGNAL( result( KJob * ) ),
-        instance, SLOT( resourceCreateResult( KJob * ) ) );
-      // this is not an Akonadi::Job, so we must start it ourselves
-      job->start();
-    }
-  } else {
-    connectMonitor();
+  // Schedule prepare in 1s.
+  {
+    kDebug() << "Scheduling prepare.";
+    ready = false;
+    preparing = false;
+    scheduled = true;
+    QTimer::singleShot( 1000, instance, SLOT( prepare() ) );
   }
 }
-
-void LocalFoldersPrivate::createCollectionsIfNeeded()
-{
-  Q_ASSERT( preparing ); // but I may not be the main instance
-  Q_ASSERT( rootMaildir.isValid() );
-
-  for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
-    if( !folders.contains( type ) ) {
-      kDebug() << "Creating" << nameForType( type ) << "collection.";
-      Collection col;
-      col.setParent( rootMaildir );
-      col.setName( nameForType( type ) );
-      col.setContentMimeTypes( QStringList( QLatin1String( "message/rfc822" ) ) );
-      EntityDisplayAttribute *attr = new EntityDisplayAttribute;
-      attr->setIconName( iconNameForType( type ) );
-      attr->setDisplayName( i18nc( "local mail folder", nameForType( type ).toLatin1() ) );
-      col.addAttribute( attr );
-      CollectionCreateJob *cjob = new CollectionCreateJob( col );
-      QObject::connect( cjob, SIGNAL(result(KJob*)),
-        instance, SLOT(collectionCreateResult(KJob*)) );
-      pendingJobs.insert( cjob );
-    }
-  }
-
-  if( pendingJobs.isEmpty() ) {
-    // Everything is ready (created and fetched).
-    emitReady();
-  }
-}
-
-void LocalFoldersPrivate::connectMonitor()
-{
-  Q_ASSERT( preparing ); // but I may not be the main instance
-  Q_ASSERT( monitor == 0 );
-  monitor = new Monitor( instance );
-  monitor->setResourceMonitored( Settings::resourceId().toAscii() );
-  QObject::connect( monitor, SIGNAL( collectionRemoved( Akonadi::Collection ) ),
-      instance, SLOT( schedulePrepare() ) );
-  kDebug() << "Connected monitor.";
-  fetchCollections();
-}
-
-void LocalFoldersPrivate::fetchCollections()
-{
-  Q_ASSERT( preparing ); // but I may not be the main instance
-  kDebug() << "Fetching collections in maildir resource.";
-
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  job->setResource( Settings::resourceId() ); // limit search
-  QObject::connect( job, SIGNAL( result( KJob * ) ),
-      instance, SLOT( collectionFetchResult( KJob * ) ) );
-}
-
-void LocalFoldersPrivate::resourceCreateResult( KJob *job )
-{
-  Q_ASSERT( isMainInstance );
-  Q_ASSERT( preparing );
-  if( job->error() ) {
-    kFatal() << "AgentInstanceCreateJob failed to make a maildir resource for us.";
-  }
-
-  AgentInstanceCreateJob *createJob = static_cast<AgentInstanceCreateJob *>( job );
-  AgentInstance agent = createJob->instance();
-  Settings::setResourceId( agent.identifier() );
-  kDebug() << "Created maildir resource with id" << Settings::resourceId();
-
-  // configure the resource
-  agent.setName( i18n( "Local Mail Folders" ) );
-  QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + Settings::resourceId(),
-                       QString::fromLatin1( "/Settings" ),
-                       QString::fromLatin1( "org.kde.Akonadi.Maildir.Settings" ) );
-  QDBusReply<void> reply = conf.call( QString::fromLatin1( "setPath" ),
-                                      KGlobal::dirs()->localxdgdatadir() + QString::fromLatin1( "mail" ) );
-  if( !reply.isValid() ) {
-    kFatal() << "Failed to set the root maildir.";
-  }
-  agent.reconfigure();
-
-  // sync the resource
-  ResourceSynchronizationJob *sjob = new ResourceSynchronizationJob( agent );
-  QObject::connect( sjob, SIGNAL( result( KJob* ) ),
-      instance, SLOT( resourceSyncResult( KJob* ) ) );
-  sjob->start(); // non-Akonadi
-}
-
-void LocalFoldersPrivate::resourceSyncResult( KJob *job )
-{
-  Q_ASSERT( isMainInstance );
-  Q_ASSERT( preparing );
-  if( job->error() ) {
-    kFatal() << "ResourceSynchronizationJob failed.";
-  }
-
-  connectMonitor();
-}
-
-void LocalFoldersPrivate::collectionCreateResult( KJob *job )
-{
-  Q_ASSERT( isMainInstance );
-  if( job->error() ) {
-    kFatal() << "CollectionCreateJob failed to make a collection for us.";
-  }
-
-  Q_ASSERT( pendingJobs.contains( job ) );
-  pendingJobs.remove( job );
-  if( pendingJobs.isEmpty() ) {
-    // Done creating.  Refetch everything.
-    fetchCollections();
-  }
-}
-
-void LocalFoldersPrivate::collectionFetchResult( KJob *job )
-{
-  Q_ASSERT( preparing ); // but I may not be the main instance
-  CollectionFetchJob *fetchJob = static_cast<CollectionFetchJob *>( job );
-  Collection::List cols = fetchJob->collections();
-
-  kDebug() << "CollectionFetchJob fetched" << cols.count() << "collections.";
-
-  folders.clear();
-  Q_FOREACH( Collection col, cols ) { // TODO krazy: we want a copy here
-    if( col.parent() == Collection::root().id() ) {
-      rootMaildir = col;
-      kDebug() << "Fetched root maildir collection.";
-    } else {
-      // Try to guess folder type.
-      LocalFolders::Type type = typeForName( col.name() );
-      kDebug() << "Fetched" << nameForType( type ) << "collection.";
-      if( type != LocalFolders::Custom && folders.contains( type ) ) {
-        kDebug() << "But I have this type already, so making it Custom.";
-        type = LocalFolders::Custom;
-      }
-
-      // Create EntityDisplayAttribute if needed and not present.
-      if( type != LocalFolders::Custom && !col.hasAttribute<EntityDisplayAttribute>() ) {
-        if( !isMainInstance ) {
-          kWarning() << "Main instance forgot to set EntityDisplayAttribute.";
-        } else {
-          kDebug() << "Does not have EntityDisplayAttribute; creating.";
-          EntityDisplayAttribute *attr = new EntityDisplayAttribute;
-          attr->setIconName( iconNameForType( type ) );
-          attr->setDisplayName( i18nc( "local mail folder", nameForType( type ).toLatin1() ) );
-          col.addAttribute( attr );
-          CollectionModifyJob *mjob = new CollectionModifyJob( col );
-          QObject::connect( mjob, SIGNAL(result(KJob*)),
-              instance, SLOT(collectionModifyResult(KJob*)) );
-          pendingJobs << mjob;
-        }
-      }
-
-      folders.insert( type, col );
-    }
-  }
-
-  if( !rootMaildir.isValid() ) {
-    kFatal() << "Failed to fetch root maildir collection.";
-  }
-
-  createCollectionsIfNeeded();
-}
-
-void LocalFoldersPrivate::collectionModifyResult( KJob *job )
-{
-  kDebug() << "CollectionModifyJob to set EntityDisplayAttribute done.";
-
-  Q_ASSERT( isMainInstance );
-  if( job->error() ) {
-    kWarning() << "CollectionModifyJob failed to set an EntityDisplayAttribute.";
-  }
-
-  Q_ASSERT( pendingJobs.contains( job ) );
-  pendingJobs.remove( job );
-  if( pendingJobs.isEmpty() ) {
-    // Done creating / modifying.
-    emitReady();
-  }
-}
-
-
-// static
-QString LocalFoldersPrivate::nameForType( int type )
-{
-  Q_ASSERT( type >= 0 && type < LocalFolders::LastDefaultType );
-  switch( type ) {
-    case LocalFolders::Inbox: return QLatin1String( "inbox" );
-    case LocalFolders::Outbox: return QLatin1String( "outbox" );
-    case LocalFolders::SentMail: return QLatin1String( "sent-mail" );
-    case LocalFolders::Trash: return QLatin1String( "trash" );
-    case LocalFolders::Drafts: return QLatin1String( "drafts" );
-    case LocalFolders::Templates: return QLatin1String( "templates" );
-    default: Q_ASSERT( false ); return QString();
-  }
-}
-
-//static
-QString LocalFoldersPrivate::iconNameForType( int type )
-{
-  // Icons imitating KMail.
-  Q_ASSERT( type >= 0 && type < LocalFolders::LastDefaultType );
-  switch( type ) {
-    case LocalFolders::Inbox: return QLatin1String( "mail-folder-inbox" );
-    case LocalFolders::Outbox: return QLatin1String( "mail-folder-outbox" );
-    case LocalFolders::SentMail: return QLatin1String( "mail-folder-sent" );
-    case LocalFolders::Trash: return QLatin1String( "user-trash" );
-    case LocalFolders::Drafts: return QLatin1String( "document-properties" );
-    case LocalFolders::Templates: return QLatin1String( "document-new" );
-    default: Q_ASSERT( false ); return QString();
-  }
-}
-
-//static
-LocalFolders::Type LocalFoldersPrivate::typeForName( const QString &name )
-{
-  if( name == QLatin1String( "inbox" ) ) {
-    return LocalFolders::Inbox;
-  } else if( name == QLatin1String( "outbox" ) ) {
-    return LocalFolders::Outbox;
-  } else if( name == QLatin1String( "sent-mail" ) ) {
-    return LocalFolders::SentMail;
-  } else if( name == QLatin1String( "trash" ) ) {
-    return LocalFolders::Trash;
-  } else if( name == QLatin1String( "drafts" ) ) {
-    return LocalFolders::Drafts;
-  } else if( name == QLatin1String( "templates" ) ) {
-    return LocalFolders::Templates;
-  } else {
-    return LocalFolders::Custom;
-  }
-}
-
 
 #include "localfolders.moc"

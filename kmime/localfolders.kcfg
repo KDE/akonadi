@@ -8,7 +8,7 @@
     <entry name="ResourceId" type="String">
       <label>Id of the resource containing the collections.</label>
       <whatsthis>Id of the maildir resource containing the local folder collections.</whatsthis>
-      <default>""</default>
+      <default></default>
     </entry>
   </group>
 </kcfg>

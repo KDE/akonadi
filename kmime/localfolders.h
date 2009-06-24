@@ -23,38 +23,42 @@
 #include "akonadi-kmime_export.h"
 
 #include <QtCore/QObject>
-#include <QtCore/QString>
 
 #include <akonadi/collection.h>
 
 class KJob;
 
 namespace Akonadi {
-  class Collection;
-}
-
-
-namespace Akonadi {
-
 
 class LocalFoldersPrivate;
 
-
 /**
-  Creates and monitors the Outbox and Sent-Mail collections for the mail
-  dispatcher agent.
+  @short Interface to local folders such as inbox, outbox etc.
 
-  The first time it is used, or when you call fetch(), this class checks for
-  the following:
-  * a maildir resource with name 'Local Mail Folders'
-  * 'outbox' and 'sent-mail' collections under that resource
-  If they do not exist, this class creates them, and then emits foldersReady().
+  This class provides access to the following default (and undeletable) local
+  folders: inbox, outbox, sent-mail, trash, drafts, and templates; as well as
+  the root local folder containing them.  The user may create custom
+  subfolders in the root local folder, or in any of the default local folders.
 
-  Do not store the collections returned by outbox() and sentMail().  They can
-  become invalid if e.g. the user deletes them and LocalFolders creates them
-  again, so you should always use LocalFolders::outbox() instead of storing
-  its return value.
+  By default, these folders are stored in a maildir in
+  $HOME/.local/share/mail.
 
+  This class also monitors the local folders and the maildir resource hosting
+  them, and re-creates them when necessary (for example, if the user
+  accidentally removed the maildir resource).  For this reason, you must make
+  sure the local folders are ready before calling any of the accessor
+  functions.  It is also recommended that you always use this class to access
+  the local folders, instead of, for example, storing the result of
+  LocalFolders::self()->outbox() locally.
+
+  @code
+  connect( LocalFolders::self(), SIGNAL(foldersReady()),
+      this, SLOT(riseAndShine()) );
+  LocalFolders::self()->fetch();
+  @endcode
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
 */
 class AKONADI_KMIME_EXPORT LocalFolders : public QObject
 {
@@ -62,33 +66,43 @@ class AKONADI_KMIME_EXPORT LocalFolders : public QObject
 
   public:
     /**
-      Each folder has one of the types below.  There is only one folder of
-      each type, except for Custom, which multiple folders can use.
+      Each local folder has one of the types below.  There cannot be more
+      than one folder of each type, except for Custom.
     */
     enum Type
     {
-      Inbox,
-      Outbox,
-      SentMail,
-      Trash,
-      Drafts,
-      Templates,
-      LastDefaultType, //< internal
-      Custom = 31 //< for custom folders created by the user
-      //,User = 32 //< for user-defined types
+      Root,            ///< the root folder containing the local folders
+      Inbox,           ///< inbox
+      Outbox,          ///< outbox
+      SentMail,        ///< sent-mail
+      Trash,           ///< trash
+      Drafts,          ///< drafts
+      Templates,       ///< templates
+      LastDefaultType, ///< @internal marker
+      Custom = 15      ///< for custom folders created by the user
     };
 
     /**
       Returns the LocalFolders instance.
       Does a fetch() when first called.
+
+      @see fetch
     */
     static LocalFolders *self();
 
     /**
-      Returns whether the outbox and sent-mail collections have been
-      fetched and are ready to be used via outbox() and sentMail().
+      Returns whether the local folder collections have been fetched and are
+      ready to be accessed.
+
+      @see fetch
+      @see foldersReady
     */
     bool isReady() const;
+
+    /**
+      Returns the root collection containing all local folders.
+    */
+    Akonadi::Collection root() const;
 
     /**
       Returns the inbox collection.
@@ -120,39 +134,34 @@ class AKONADI_KMIME_EXPORT LocalFolders : public QObject
     */
     Akonadi::Collection templates() const;
 
-#if 0
-    /**
-      Get a folder by its name.
-      Returns an invalid collection if no such folder exists.
-    */
-    Akonadi::Collection folder( const QString &name ) const;
-#endif
-
     /**
       Get a folder by its type.
       Returns an invalid collection if no such folder exists.
-      For Custom folders, call folders() instead.
-    */
-    Akonadi::Collection folder( Type type ) const;
+      This function only works for default (non-Custom) folder types.
 
-    /**
-      Returns all folders of type @p type.
-      If this is a default type (such as inbox, outbox etc.), then there is
-      at most one folder of that type, so you may call folder() instead.
+      @see Type
     */
-    Akonadi::Collection::List folders( Type type ) const;
+    Akonadi::Collection folder( int type ) const;
 
   public Q_SLOTS:
     /**
-      Begins creating / fetching the resource and collections.
-      Emits foldersReady() when done.
+      Begins fetching the resource and collections, or creating them if
+      necessary.  Emits foldersReady() when done.
+
+      @code
+      connect( LocalFolders::self(), SIGNAL(foldersReady()),
+          this, SLOT(riseAndShine()) );
+      LocalFolders::self()->fetch();
+      @endcode
     */
     void fetch();
 
   Q_SIGNALS:
     /**
-      Emitted when the outbox and sent-mail collections have been fetched and
-      are ready to be used via outbox() and sentMail().
+      Emitted when the local folder collections have been fetched and
+      are ready to be accessed.
+
+      @see isReady
     */
     void foldersReady();
 
@@ -165,17 +174,11 @@ class AKONADI_KMIME_EXPORT LocalFolders : public QObject
     LocalFoldersPrivate *const d;
 
     Q_PRIVATE_SLOT( d, void prepare() )
-    Q_PRIVATE_SLOT( d, void schedulePrepare() )
-    Q_PRIVATE_SLOT( d, void resourceCreateResult( KJob * ) )
-    Q_PRIVATE_SLOT( d, void resourceSyncResult( KJob * ) )
-    Q_PRIVATE_SLOT( d, void collectionCreateResult( KJob * ) )
-    Q_PRIVATE_SLOT( d, void collectionFetchResult( KJob * ) )
-    Q_PRIVATE_SLOT( d, void collectionModifyResult( KJob * ) )
+    Q_PRIVATE_SLOT( d, void buildResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void collectionRemoved( Akonadi::Collection ) )
 
 };
 
+} // namespace Akonadi
 
-}
-
-
-#endif
+#endif // AKONADI_LOCALFOLDERS_H
