@@ -39,6 +39,8 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionmodifyjob.h>
+#include <akonadi/entitydisplayattribute.h>
 #include <akonadi/monitor.h>
 
 #include <resourcesynchronizationjob.h> // copied from playground/pim/akonaditest
@@ -89,6 +91,11 @@ class Akonadi::LocalFoldersPrivate
     void schedulePrepare(); // slot
 
     /**
+      Emits foldersReady().
+    */
+    void emitReady();
+
+    /**
       Creates the maildir resource, if it is not found.
     */
     void createResourceIfNeeded();
@@ -115,11 +122,17 @@ class Akonadi::LocalFoldersPrivate
     void resourceSyncResult( KJob *job );
     void collectionCreateResult( KJob *job );
     void collectionFetchResult( KJob *job );
+    void collectionModifyResult( KJob *job );
 
     /**
       Returns the English name for a default (i.e. non-custom) folder type.
     */
     static QString nameForType( int type );
+
+    /**
+      Returns the standard icon name for a default (non-custom) folder type.
+    */
+    static QString iconNameForType( int type );
 
     /**
       Returns the Type for an English name for a folder type.
@@ -276,6 +289,20 @@ void LocalFoldersPrivate::schedulePrepare()
   QTimer::singleShot( 1000, instance, SLOT( prepare() ) );
 }
 
+void LocalFoldersPrivate::emitReady()
+{
+  kDebug() << "Local folders ready. resourceId" << Settings::resourceId();
+  for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
+    kDebug() << nameForType( type ) << "collection has id" << folders.value(type).id();
+  }
+
+  Q_ASSERT( !ready );
+  ready = true;
+  preparing = false;
+  Settings::self()->writeConfig();
+  emit instance->foldersReady();
+}
+
 void LocalFoldersPrivate::createResourceIfNeeded()
 {
   Q_ASSERT( preparing );
@@ -325,6 +352,10 @@ void LocalFoldersPrivate::createCollectionsIfNeeded()
       col.setParent( rootMaildir );
       col.setName( nameForType( type ) );
       col.setContentMimeTypes( QStringList( QLatin1String( "message/rfc822" ) ) );
+      EntityDisplayAttribute *attr = new EntityDisplayAttribute;
+      attr->setIconName( iconNameForType( type ) );
+      attr->setDisplayName( i18nc( "local mail folder", nameForType( type ).toLatin1() ) );
+      col.addAttribute( attr );
       CollectionCreateJob *cjob = new CollectionCreateJob( col );
       QObject::connect( cjob, SIGNAL(result(KJob*)),
         instance, SLOT(collectionCreateResult(KJob*)) );
@@ -334,16 +365,7 @@ void LocalFoldersPrivate::createCollectionsIfNeeded()
 
   if( pendingJobs.isEmpty() ) {
     // Everything is ready (created and fetched).
-    kDebug() << "Local folders ready. resourceId" << Settings::resourceId();
-    for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
-      kDebug() << nameForType( type ) << "collection has id" << folders.value(type).id();
-    }
-
-    Q_ASSERT( !ready );
-    ready = true;
-    preparing = false;
-    Settings::self()->writeConfig();
-    emit instance->foldersReady();
+    emitReady();
   }
 }
 
@@ -437,7 +459,7 @@ void LocalFoldersPrivate::collectionFetchResult( KJob *job )
   kDebug() << "CollectionFetchJob fetched" << cols.count() << "collections.";
 
   folders.clear();
-  Q_FOREACH( const Collection &col, cols ) {
+  Q_FOREACH( Collection col, cols ) { // TODO krazy: we want a copy here
     if( col.parent() == Collection::root().id() ) {
       rootMaildir = col;
       kDebug() << "Fetched root maildir collection.";
@@ -449,6 +471,24 @@ void LocalFoldersPrivate::collectionFetchResult( KJob *job )
         kDebug() << "But I have this type already, so making it Custom.";
         type = LocalFolders::Custom;
       }
+
+      // Create EntityDisplayAttribute if needed and not present.
+      if( type != LocalFolders::Custom && !col.hasAttribute<EntityDisplayAttribute>() ) {
+        if( !isMainInstance ) {
+          kWarning() << "Main instance forgot to set EntityDisplayAttribute.";
+        } else {
+          kDebug() << "Does not have EntityDisplayAttribute; creating.";
+          EntityDisplayAttribute *attr = new EntityDisplayAttribute;
+          attr->setIconName( iconNameForType( type ) );
+          attr->setDisplayName( i18nc( "local mail folder", nameForType( type ).toLatin1() ) );
+          col.addAttribute( attr );
+          CollectionModifyJob *mjob = new CollectionModifyJob( col );
+          QObject::connect( mjob, SIGNAL(result(KJob*)),
+              instance, SLOT(collectionModifyResult(KJob*)) );
+          pendingJobs << mjob;
+        }
+      }
+
       folders.insert( type, col );
     }
   }
@@ -458,6 +498,23 @@ void LocalFoldersPrivate::collectionFetchResult( KJob *job )
   }
 
   createCollectionsIfNeeded();
+}
+
+void LocalFoldersPrivate::collectionModifyResult( KJob *job )
+{
+  kDebug() << "CollectionModifyJob to set EntityDisplayAttribute done.";
+
+  Q_ASSERT( isMainInstance );
+  if( job->error() ) {
+    kWarning() << "CollectionModifyJob failed to set an EntityDisplayAttribute.";
+  }
+
+  Q_ASSERT( pendingJobs.contains( job ) );
+  pendingJobs.remove( job );
+  if( pendingJobs.isEmpty() ) {
+    // Done creating / modifying.
+    emitReady();
+  }
 }
 
 
@@ -472,6 +529,22 @@ QString LocalFoldersPrivate::nameForType( int type )
     case LocalFolders::Trash: return QLatin1String( "trash" );
     case LocalFolders::Drafts: return QLatin1String( "drafts" );
     case LocalFolders::Templates: return QLatin1String( "templates" );
+    default: Q_ASSERT( false ); return QString();
+  }
+}
+
+//static
+QString LocalFoldersPrivate::iconNameForType( int type )
+{
+  // Icons imitating KMail.
+  Q_ASSERT( type >= 0 && type < LocalFolders::LastDefaultType );
+  switch( type ) {
+    case LocalFolders::Inbox: return QLatin1String( "mail-folder-inbox" );
+    case LocalFolders::Outbox: return QLatin1String( "mail-folder-outbox" );
+    case LocalFolders::SentMail: return QLatin1String( "mail-folder-sent" );
+    case LocalFolders::Trash: return QLatin1String( "user-trash" );
+    case LocalFolders::Drafts: return QLatin1String( "document-properties" );
+    case LocalFolders::Templates: return QLatin1String( "document-new" );
     default: Q_ASSERT( false ); return QString();
   }
 }

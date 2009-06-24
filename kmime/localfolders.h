@@ -170,6 +170,7 @@ class AKONADI_KMIME_EXPORT LocalFolders : public QObject
     Q_PRIVATE_SLOT( d, void resourceSyncResult( KJob * ) )
     Q_PRIVATE_SLOT( d, void collectionCreateResult( KJob * ) )
     Q_PRIVATE_SLOT( d, void collectionFetchResult( KJob * ) )
+    Q_PRIVATE_SLOT( d, void collectionModifyResult( KJob * ) )
 
 };
 
