@@ -114,6 +114,7 @@ set( akonadikde_LIB_SRC
   subscriptionmodel.cpp
   transactionjobs.cpp
   transactionsequence.cpp
+  transportresource.cpp
   unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
@@ -128,6 +129,9 @@ qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.f
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Status.xml agentbase.h Akonadi::AgentBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase )
+# TODO move this to kdesupport/akonadi/interfaces
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Resource.Transport.xml transportresource.h Akonadi::TransportResource )
+#qt4_add_dbus_interface( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Resource.Transport.xml resourcetransportinterface )
 
 kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
@@ -221,6 +225,7 @@ install( FILES
   standardactionmanager.h
   transactionjobs.h
   transactionsequence.h
+  transportresource.h
   unlinkjob.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel
 )

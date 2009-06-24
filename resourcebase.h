@@ -224,19 +224,19 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * If incremental retrieval is not possible, provide the full listing by calling
      * itemsRetrieved( const Item::List& ).
      * In any case, ensure that all items have a correctly set remote identifier
-     * to allow synchronizing with already locally existing items.
-     * In case you don't want to use the built-in item syncing code, store the retrived
+     * to allow synchronizing with items already existing locally.
+     * In case you don't want to use the built-in item syncing code, store the retrieved
      * items manually and call itemsRetrieved() once you are done.
-     * @param collection The collection to sync.
-     * @see itemsRetrieved( const Item::List &), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
+     * @param collection The collection whose items to retrieve.
+     * @see itemsRetrieved( const Item::List& ), itemsRetrievedIncremental(), itemsRetrieved(), currentCollection()
      */
     virtual void retrieveItems( const Akonadi::Collection &collection ) = 0;
 
     /**
      * Retrieve a single item from the backend. The item to retrieve is provided as @p item.
      * Add the requested payload parts and call itemRetrieved() when done.
-     * @param item The empty item which payload should be retrieved. Use this object when delivering
-     * the result instead of creating a new item to ensure conflict detection to work.
+     * @param item The empty item whose payload should be retrieved. Use this object when delivering
+     * the result instead of creating a new item to ensure conflict detection will work.
      * @param parts The item parts that should be retrieved.
      * @return false if there is an immediate error when retrieving the item.
      * @see itemRetrieved()
