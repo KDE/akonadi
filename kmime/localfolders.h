@@ -20,9 +20,12 @@
 #ifndef AKONADI_LOCALFOLDERS_H
 #define AKONADI_LOCALFOLDERS_H
 
-#include <QtCore/QObject>
-
 #include "akonadi-kmime_export.h"
+
+#include <QtCore/QObject>
+#include <QtCore/QString>
+
+#include <akonadi/collection.h>
 
 class KJob;
 
@@ -59,16 +62,27 @@ class AKONADI_KMIME_EXPORT LocalFolders : public QObject
 
   public:
     /**
+      Each folder has one of the types below.  There is only one folder of
+      each type, except for Custom, which multiple folders can use.
+    */
+    enum Type
+    {
+      Inbox,
+      Outbox,
+      SentMail,
+      Trash,
+      Drafts,
+      Templates,
+      LastDefaultType, //< internal
+      Custom = 31 //< for custom folders created by the user
+      //,User = 32 //< for user-defined types
+    };
+
+    /**
       Returns the LocalFolders instance.
       Does a fetch() when first called.
     */
     static LocalFolders *self();
-
-    /**
-      Begins creating / fetching the resource and collections.
-      Emits foldersReady() when done.
-    */
-    void fetch();
 
     /**
       Returns whether the outbox and sent-mail collections have been
@@ -76,7 +90,11 @@ class AKONADI_KMIME_EXPORT LocalFolders : public QObject
     */
     bool isReady() const;
 
-  public Q_SLOTS:
+    /**
+      Returns the inbox collection.
+    */
+    Akonadi::Collection inbox() const;
+
     /**
       Returns the outbox collection.
     */
@@ -86,6 +104,50 @@ class AKONADI_KMIME_EXPORT LocalFolders : public QObject
       Returns the sent-mail collection.
     */
     Akonadi::Collection sentMail() const;
+
+    /**
+      Returns the trash collection.
+    */
+    Akonadi::Collection trash() const;
+
+    /**
+      Returns the drafts collection.
+    */
+    Akonadi::Collection drafts() const;
+
+    /**
+      Returns the templates collection.
+    */
+    Akonadi::Collection templates() const;
+
+#if 0
+    /**
+      Get a folder by its name.
+      Returns an invalid collection if no such folder exists.
+    */
+    Akonadi::Collection folder( const QString &name ) const;
+#endif
+
+    /**
+      Get a folder by its type.
+      Returns an invalid collection if no such folder exists.
+      For Custom folders, call folders() instead.
+    */
+    Akonadi::Collection folder( Type type ) const;
+
+    /**
+      Returns all folders of type @p type.
+      If this is a default type (such as inbox, outbox etc.), then there is
+      at most one folder of that type, so you may call folder() instead.
+    */
+    Akonadi::Collection::List folders( Type type ) const;
+
+  public Q_SLOTS:
+    /**
+      Begins creating / fetching the resource and collections.
+      Emits foldersReady() when done.
+    */
+    void fetch();
 
   Q_SIGNALS:
     /**
