@@ -30,54 +30,133 @@ class ItemFetchScope;
 class Job;
 
 /**
-  Abstract functor for a FilterActionJob.  Subclass it and implement the virtual
-  methods.
+  @short Base class for a filter/action for FilterActionJob.
 
-  // TODO docu
+  Abstract class defining an interface for a filter and an action for
+  FilterActionJob.  The virtual methods must be implemented in subclasses.
 
-  // TODO example
+  @code
+  class ClearErrorAction : public Akonadi::FilterAction
+  {
+    public:
+      // reimpl
+      virtual Akonadi::ItemFetchScope fetchScope() const
+      {
+        ItemFetchScope scope;
+        scope.fetchFullPayload( false );
+        scope.fetchAttribute<ErrorAttribute>();
+        return scope;
+      }
+
+      virtual bool itemAccepted( const Akonadi::Item &item ) const
+      {
+        return item.hasAttribute<ErrorAttribute>();
+      }
+
+      virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const
+      {
+        Item cp = item;
+        cp.removeAttribute<ErrorAttribute>();
+        return new ItemModifyJob( cp );
+      }
+  };
+  @endcode
+
+  @see FilterActionJob
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
 */
 class AKONADI_EXPORT FilterAction
 {
   public:
-    /// only used if FilterActionJob created with collection constructor
-    virtual Akonadi::ItemFetchScope fetchScope() const = 0;
-    virtual bool itemAccepted( const Akonadi::Item &item ) const = 0;
-    virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const = 0;
+    /**
+      Destroys this FilterAction.
+      A FilterActionJob will delete its FilterAction automatically.
+    */
     virtual ~FilterAction();
+
+    /**
+      Returns an ItemFetchScope to use if the FilterActionJob needs to fetch
+      the items from a collection.
+      Note that the items are not fetched unless FilterActionJob is
+      constructed with a Collection parameter.
+    */
+    virtual Akonadi::ItemFetchScope fetchScope() const = 0;
+
+    /**
+      Returns true if the @p item is accepted by the filter and should be
+      acted upon by the FilterActionJob.
+    */
+    virtual bool itemAccepted( const Akonadi::Item &item ) const = 0;
+
+    /**
+      Returns a job to act on the @p item.
+      The FilterActionJob will finish when all such jobs are finished.
+    */
+    virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const = 0;
 };
 
 
+
 /**
-  A job to filter and apply an action on a set of items.  The filter and action
-  are provided by a functor derived from FilterAction.
+  @short Job to filter and apply an action on a set of items.
+ 
+  This jobs filters through a set of items, and applies an action to the
+  items which are accepted by the filter.  The filter and action
+  are provided by a functor class derived from FilterAction.
 
-  // TODO docu
+  For example, a MarkAsRead action/filter may be used to mark all messages
+  in a folder as read.
 
-  // TODO example
+  @code
+  FilterActionJob *mjob = new FilterActionJob( LocalFolders::self()->outbox(),
+                                               new ClearErrorAction, this );
+  connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
+  @endcode
+
+  @see FilterAction
+
+  @author Constantin Berzan <exit3219@gmail.com>
+  @since 4.4
 */
 class AKONADI_EXPORT FilterActionJob : public TransactionSequence
 {
   Q_OBJECT
 
   public:
+    /**
+      Creates a FilterActionJob to act on a single item.
+
+      @param item The item to act on.  The item is not re-fetched.
+      @param functor The FilterAction to use.
+    */
     FilterActionJob( const Item &item, FilterAction *functor, QObject *parent = 0 );
+
+    /**
+      Creates a FilterActionJob to act on a set of items.
+
+      @param items The items to act on.  The items are not re-fetched.
+      @param functor The FilterAction to use.
+    */
     FilterActionJob( const Item::List &items, FilterAction *functor, QObject *parent = 0 );
+
+    /**
+      Creates a FilterActionJob to act on items in a collection.
+
+      @param items The items to act on.  The items are fetched using functor->fetchScope().
+      @param functor The FilterAction to use.
+    */
     FilterActionJob( const Collection &collection, FilterAction *functor, QObject *parent = 0 );
+
+    /**
+      Destroys this FilterActionJob.
+      This job autodeletes itself.
+    */
     ~FilterActionJob();
 
-    // TODO I would like to provide a list of modified items, but there is no
-    // easy way to get those, because FilterAction::itemAction() can return any
-    // kind of Job, not only an ItemModifyJob.
-    // Restrict it to modify jobs only?
-    // Re-fetch the accepted items after all jobs are done?
-    //Item::List items() const;
-
-    // TODO provide setFunctor?
-
-    // TODO provide forceFetch for the Item and Item::List constructors?
-
   protected:
+    /* reimpl */
     virtual void doStart();
 
   private:
@@ -89,8 +168,6 @@ class AKONADI_EXPORT FilterActionJob : public TransactionSequence
     //@endcond
 };
 
-}
+} // namespace Akonadi
 
-
-#endif
-
+#endif // AKONADI_FILTERACTIONJOB_H

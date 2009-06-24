@@ -125,13 +125,6 @@ FilterActionJob::~FilterActionJob()
   delete d;
 }
 
-#if 0
-Item::List FilterActionJob::items()
-{
-  return d->items;
-}
-#endif
-
 void FilterActionJob::doStart()
 {
   if( d->collection.isValid() ) {
