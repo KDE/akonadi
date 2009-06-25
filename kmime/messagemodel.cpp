@@ -93,8 +93,7 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
 
   if ( !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") ) ) {
      if ( role == Qt::DisplayRole )
-       // FIXME i18n when we unfreeze for 4.4
-       return QString::fromLatin1( "This model can only handle email folders. The current collection holds mimetypes: %1").arg(
+       return i18n( "This model can only handle email folders. The current collection holds mimetypes: %1",
                        collection().contentMimeTypes().join( QLatin1String(",") ) );
      else
        return QVariant();
