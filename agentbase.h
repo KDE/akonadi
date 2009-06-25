@@ -323,12 +323,16 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
     /**
      * This method is used to set the name of the agent.
+     *
+     * @since 4.3
      */
     //FIXME_API: make sure location is renamed to this by agentbase
     void setAgentName( const QString &name );
 
     /**
      * Returns the name of the agent.
+     *
+     * @since 4.3
      */
     QString agentName() const;
 
@@ -337,6 +341,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * This signal is emitted whenever the name of the agent has changed.
      *
      * @param name The new name of the agent.
+     *
+     * @since 4.3
      */
     void agentNameChanged( const QString &name );
 

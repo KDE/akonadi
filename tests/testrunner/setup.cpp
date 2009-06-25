@@ -22,6 +22,7 @@
 #include <kapplication.h>
 #include <kdebug.h>
 #include <KProcess>
+#include <KStandardDirs>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -33,6 +34,7 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
+#include <QtNetwork/QHostInfo>
 
 #include <signal.h>
 #include <unistd.h>
@@ -294,6 +296,12 @@ void SetupTest::createTempEnvironment()
   copyDirectory( config->kdeHome(), basePath() + testRunnerKdeHomeDir );
   copyDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir  );
   copyDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
+
+  // copy syscoca file from the host to increase startup speed
+  const QString sycoca = KStandardDirs::locateLocal( "cache", "ksycoca4" );
+  const QString cacheDir = basePath() + testRunnerKdeHomeDir + QDir::separator() + "cache-" + QHostInfo::localHostName() + QDir::separator();
+  QFile::copy( sycoca, cacheDir + "ksycoca4" );
+  QFile::copy( sycoca + "stamp", cacheDir + "ksycoca4stamp" );
 }
 
 void SetupTest::deleteDirectory( const QString &dirName )
