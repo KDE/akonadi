@@ -137,7 +137,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
   return false;
 }
 
-void MonitorPrivate::sessionDestroyed( QObject * object )
+void MonitorPrivate::slotSessionDestroyed( QObject * object )
 {
   Session* session = qobject_cast<Session*>( object );
   if ( session )
