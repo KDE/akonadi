@@ -309,9 +309,24 @@ ItemFetchScope &ItemFetchJob::fetchScope()
   return d->mFetchScope;
 }
 
+Item ItemFetchJob::item() const
+{
+  Q_D( const ItemFetchJob );
+
+  return d->mItem;
+}
+
+Collection ItemFetchJob::collection() const
+{
+  Q_D( const ItemFetchJob );
+
+  return d->mCollection;
+}
+
 void ItemFetchJob::setCollection(const Akonadi::Collection& collection)
 {
   Q_D( ItemFetchJob );
+
   d->mCollection = collection;
 }
 

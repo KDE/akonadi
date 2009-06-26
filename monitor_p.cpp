@@ -206,6 +206,7 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
       break;
     case NotificationMessage::Remove:
       emit q_ptr->itemRemoved( it );
+      emit q_ptr->itemRemoved( it, col );
       break;
     case NotificationMessage::Link:
       emit q_ptr->itemLinked( it, col );
