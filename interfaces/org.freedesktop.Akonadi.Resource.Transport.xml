@@ -6,6 +6,7 @@
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <signal name="transportResult">
+      <arg name="itemId" type="x" direction="out"/>
       <arg name="result" type="b" direction="out"/>
       <arg name="message" type="s" direction="out"/>
     </signal>

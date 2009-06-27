@@ -31,6 +31,7 @@
 
 class KJob;
 class ResourceAdaptor;
+class TransportAdaptor;
 
 namespace Akonadi {
 
@@ -147,6 +148,34 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
   public:
     /**
+     * @short Interface for resources supporting sending messages.
+     *
+     * A Transport object attached to a resource tells MailTransport that
+     * the resource supports sending messages.  The resource must also have
+     * the "MailTransport" capability flag.
+     *
+     * To implement a transport-enabled resource, inherit from both
+     * ResourceBase and ResourceBase::Transport, implement the virtual method
+     * sendItem(), and call emitTransportResult() when finished sending.
+     *
+     * @todo add code example
+     *
+     * TODO figure out what to do about data, from, to, cc, bcc from
+     * TransportManager::TransportJob.  See comments in MT/AkonadiJob.
+     *
+     * @author Constantin Berzan <exit3219@gmail.com>
+     * @since 4.4
+     */
+    class AKONADI_EXPORT Transport
+    {
+      public:
+        Transport();
+        virtual ~Transport();
+
+        virtual void sendItem( Akonadi::Item::Id message ) = 0;
+    };
+
+    /**
      * Use this method in the main function of your resource
      * application to initialize your resource subclass.
      * This method also takes care of creating a KApplication
@@ -182,8 +211,20 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       Observer *observer = dynamic_cast<Observer*>( r );
       if ( observer != 0 )
         r->registerObserver( observer );
+
+      // Check if T also inherits ResourceBase::Transport and
+      // if it does, automatically register it on itself.
+      Transport *transport = dynamic_cast<Transport*>( r );
+      if ( transport != 0 )
+        r->registerTransport( r );
+
       return init( r );
     }
+
+    /**
+     * Registers the given transport object for sending messages.
+     */
+    void registerTransport( Transport *transport );
 
     /**
      * This method is used to set the name of the resource.
@@ -208,6 +249,16 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * Emitted when a full synchronization has been completed.
      */
     void synchronized();
+
+    /**
+     * Emitted when an item has been sent.
+     * @param item The id of the item that was sent.
+     * @param success The success of the sending operation.
+     * @param message An optional textual explanation of the result.
+     * @see Transport.
+     * @since 4.4
+     */
+    void transportResult( qlonglong item, bool success, const QString &message );
 
   protected Q_SLOTS:
     /**
@@ -427,12 +478,28 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void doSetOnline( bool online );
 
+    /**
+     * Emits the transportResult() signal.
+     * Call this if you resource inherits from ResourceBase::Transport.
+     * @param item The id of the item that was sent.
+     * @param success True if the sending operation succeeded.
+     * @param message An optional textual explanation of the result.
+     * @see Transport.
+     * @since 4.4
+     */
+    void emitTransportResult( Akonadi::Item::Id &item, bool success,
+                              const QString &message = QString() );
+
   private:
     static QString parseArguments( int, char** );
     static int init( ResourceBase *r );
 
     // dbus resource interface
     friend class ::ResourceAdaptor;
+    friend class ::TransportAdaptor;
+
+    // D-Bus calls:
+    void send( Akonadi::Item::Id message );
 
     bool requestItemDelivery( qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &parts );
 
