@@ -215,7 +215,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
       // if it does, automatically register it on itself.
       Transport *transport = dynamic_cast<Transport*>( r );
       if ( transport != 0 )
-        r->registerTransport( r );
+        r->registerTransport( transport );
 
       return init( r );
     }
