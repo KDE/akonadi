@@ -160,8 +160,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *
      * @todo add code example
      *
-     * TODO figure out what to do about data, from, to, cc, bcc from
-     * TransportManager::TransportJob.  See comments in MT/AkonadiJob.
+     * @see TransportManager::AkonadiJob
      *
      * @author Constantin Berzan <exit3219@gmail.com>
      * @since 4.4

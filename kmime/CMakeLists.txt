@@ -11,6 +11,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO
 ########### next target ###############
 
 set( kmimeakonadi_LIB_SRC
+  addressattribute.cpp
   localfolders.cpp
   localfoldersbuildjob.cpp
   messagemodel.cpp
@@ -32,6 +33,7 @@ install(TARGETS akonadi-kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_
 ########### install files ###############
 
 install( FILES
+  addressattribute.h
   localfolders.h
   akonadi-kmime_export.h
   messagemodel.h

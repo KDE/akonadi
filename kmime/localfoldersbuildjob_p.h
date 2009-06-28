@@ -55,7 +55,7 @@ class LocalFoldersBuildJob : public TransactionSequence
       @param canBuild Whether this job is allowed to build the folder
                       structure (as opposed to only fetching it).
     */
-    LocalFoldersBuildJob( bool canBuild, QObject *parent = 0 );
+    explicit LocalFoldersBuildJob( bool canBuild, QObject *parent = 0 );
     ~LocalFoldersBuildJob();
 
     const Collection::List &defaultFolders() const;
