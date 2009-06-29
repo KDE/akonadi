@@ -6,7 +6,7 @@ remove_definitions( -DQT_NO_CAST_TO_ASCII )
 
 set( requester_srcs foldersrequester.cpp )
 kde4_add_executable( requester TEST ${requester_srcs} )
-target_link_libraries( requester akonadi-kmime )
+target_link_librarieS( requester akonadi-kmime ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 # for racetest
 set( requester_exe "QLatin1String( \"${CMAKE_CURRENT_BINARY_DIR}/requester\" )" )
 add_definitions( -DREQUESTER_EXE='${requester_exe}' )
