@@ -68,7 +68,7 @@ QImage ImageLoader::loadImage( const KUrl &url, bool *ok )
   (*ok) = false;
 
   if ( url.isLocalFile() ) {
-    if ( image.load( url.path() ) ) {
+    if ( image.load( url.toLocalFile() ) ) {
       (*ok) = true;
     }
   } else if ( KIO::NetAccess::download( url, tempFile, mParent ) ) {

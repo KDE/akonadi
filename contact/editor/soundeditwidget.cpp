@@ -64,7 +64,7 @@ QByteArray SoundLoader::loadSound( const KUrl &url, bool *ok )
   (*ok) = false;
 
   if ( url.isLocalFile() ) {
-    QFile file( url.path() );
+    QFile file( url.toLocalFile() );
     if ( file.open( QIODevice::ReadOnly ) ) {
       sound = file.readAll();
       file.close();
