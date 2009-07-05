@@ -1,6 +1,6 @@
 <config>
   <kdehome>kdehome</kdehome>
-  <confighome>xdgconfig.fs</confighome>
+  <confighome>xdgconfig-postgresql.db</confighome>
   <datahome>xdglocal</datahome>
   <agent synchronize="true">akonadi_knut_resource</agent>
   <agent synchronize="true">akonadi_knut_resource</agent>
