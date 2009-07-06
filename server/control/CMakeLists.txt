@@ -34,7 +34,7 @@ qt4_add_dbus_interfaces( control_SRCS
 )
 qt4_add_dbus_interface( control_SRCS ${Akonadi_SOURCE_DIR}/server/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resource_manager)
 
-automoc4_add_executable(akonadi_control WIN32 ${control_SRCS})
+automoc4_add_executable(akonadi_control ${control_SRCS})
 set_target_properties(akonadi_control PROPERTIES OUTPUT_NAME akonadi_control)
 if (WIN32)
   set_target_properties(akonadi_control PROPERTIES WIN32_EXECUTABLE TRUE)
