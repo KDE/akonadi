@@ -29,6 +29,7 @@
 #include <klocale.h>
 
 #include <QtCore/QEventLoop>
+#include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 #include <QtGui/QFrame>
 
@@ -118,6 +119,10 @@ class StaticControl : public Control
 
 K_GLOBAL_STATIC( StaticControl, s_instance )
 
+void Control::cleanup()
+{
+  s_instance.destroy();
+}
 
 bool Control::Private::exec()
 {
@@ -177,6 +182,10 @@ Control::Control()
 {
   connect( ServerManager::self(), SIGNAL(started()), SLOT(serverStarted()) );
   connect( ServerManager::self(), SIGNAL(stopped()), SLOT(serverStopped()) );
+  // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
+  // Otherwise we get a crash in QCursor code with Qt-4.5
+  if ( QCoreApplication::instance() )
+    connect( QCoreApplication::instance(), SIGNAL(aboutToQuit()), this, SLOT(cleanup()) );
 }
 
 Control::~Control()

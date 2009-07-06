@@ -126,6 +126,9 @@ class AKONADI_EXPORT Control : public QObject
      */
     Control();
 
+  private Q_SLOTS:
+    void cleanup();
+
   private:
     //@cond PRIVATE
     class Private;
