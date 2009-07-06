@@ -30,24 +30,31 @@ using namespace Akonadi;
 class CollectionDialog::Private
 {
   public:
-    Private();
-
+    CollectionDialog *q;
     CollectionModel *collectionModel;
     CollectionFilterProxyModel *filterModel;
     CollectionView *collectionView;
+
+    explicit Private(CollectionDialog *q);
+    void slotSelectionChanged();
 };
 
-CollectionDialog::Private::Private()
-  : collectionModel( 0 ),
+CollectionDialog::Private::Private(CollectionDialog *q)
+  : q(q),
+    collectionModel( 0 ),
     filterModel( 0 ),
     collectionView( 0 )
 {
 }
 
+void CollectionDialog::Private::slotSelectionChanged()
+{
+  q->enableButton(KDialog::Ok, collectionView->selectionModel()->selectedIndexes().count() > 0);
+}
 
 CollectionDialog::CollectionDialog( QWidget *parent )
   : KDialog( parent ),
-    d( new Private )
+    d( new Private(this) )
 {
   QWidget *widget = mainWidget();
   QVBoxLayout *layout = new QVBoxLayout( widget );
@@ -62,6 +69,9 @@ CollectionDialog::CollectionDialog( QWidget *parent )
   d->collectionView = new CollectionView( widget );
   d->collectionView->setModel( d->filterModel );
   layout->addWidget( d->collectionView );
+
+  connect(d->collectionView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(slotSelectionChanged()));
+  enableButton(KDialog::Ok, false);
 }
 
 CollectionDialog::~CollectionDialog()
