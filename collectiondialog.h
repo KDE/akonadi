@@ -33,8 +33,9 @@ namespace Akonadi {
 /**
  * @short A collection selection dialog.
  *
- * Provides a dialog that lists all collections that are available
- * on the Akonadi storage.
+ * Provides a dialog that lists collections that are available
+ * on the Akonadi storage and allows to select one or multiple
+ * collections.
  * The list of shown collections can be filtered by mime type.
  *
  * Example:
@@ -75,7 +76,10 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     ~CollectionDialog();
 
     /**
-     * Returns the selected collection.
+     * Returns the selected collection if the selection mode is
+     * QAbstractItemView::SingleSelection what is the default. If
+     * another selection mode was set then an invalid collection
+     * is returned.
      */
     Akonadi::Collection selectedCollection() const;
 
@@ -86,13 +90,11 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
 
     /**
      * Sets the mime types any of which the selected collection(s) shall support.
-     * @see Akonadi::CollectionDialog::setMimeTypeFilter()
      */
     void setMimeTypeFilter( const QStringList &mimeTypes );
 
     /**
      * Returns the mime types any of which the selected collection(s) shall support.
-     * @see Akonadi::CollectionDialog::mimeTypeFilter()
      */
     QStringList mimeTypeFilter() const;
 
@@ -111,6 +113,8 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
   private:
     class Private;
     Private * const d;
+
+    Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
 };
 
 } // namespace Akonadi

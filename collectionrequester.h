@@ -89,13 +89,11 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
 
     /**
      * Sets the mime types any of which the selected collection shall support.
-     * @see Akonadi::CollectionDialog::setMimeTypeFilter()
      */
     void setMimeTypeFilter( const QStringList &mimeTypes );
 
     /**
     * Returns the mime types any of which the selected collection shall support.
-    * @see Akonadi::CollectionDialog::mimeTypeFilter()
     */
     QStringList mimeTypeFilter() const;
 
