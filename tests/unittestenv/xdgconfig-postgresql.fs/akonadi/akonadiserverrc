@@ -1,0 +1,17 @@
+[%General]
+Driver=QPSQL
+SizeThreshold=0
+ExternalPayload=true
+
+[Search]
+Manager=Dummy
+
+[QPSQL]
+Name=post_table
+User=user
+Password=pass
+Options=
+StartServer=false
+Host=
+Port=5432
+

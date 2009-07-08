@@ -117,7 +117,7 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
         if ( item.size() == 0 )
           return i18nc( "No size available", "-" );
         else
-          return KIO::convertSize( KIO::filesize_t( item.size() ) );
+          return KGlobal::locale()->formatByteSize( item.size() );
       default:
         return QVariant();
     }
