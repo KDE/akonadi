@@ -53,6 +53,8 @@ set(QT_MIN_VERSION 4.5.0)
 find_package(Qt4 REQUIRED)
 
 # We need QtDBus and QtSql
+set(QT_USE_QTDBUS TRUE)
+set(QT_USE_QTSQL TRUE)
 if (NOT QT_QTDBUS_FOUND)
    message(FATAL_ERROR  "Akonadi requires Qt4 with QtDBus module in order to built.")
 endif(NOT QT_QTDBUS_FOUND)
