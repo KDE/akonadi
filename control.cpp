@@ -58,6 +58,14 @@ class ControlProgressIndicator : public QFrame
     Ui::ControlProgressIndicator ui;
 };
 
+class StaticControl : public Control
+{
+  public:
+    StaticControl() : Control() {}
+};
+
+K_GLOBAL_STATIC( StaticControl, s_instance )
+
 /**
  * @internal
  */
@@ -96,6 +104,11 @@ class Control::Private
       mPendingOverlays.clear();
     }
 
+    void cleanup()
+    {
+      s_instance.destroy();
+    }
+
     bool exec();
     void serverStarted();
     void serverStopped();
@@ -110,19 +123,6 @@ class Control::Private
     bool mStarting;
     bool mStopping;
 };
-
-class StaticControl : public Control
-{
-  public:
-    StaticControl() : Control() {}
-};
-
-K_GLOBAL_STATIC( StaticControl, s_instance )
-
-void Control::cleanup()
-{
-  s_instance.destroy();
-}
 
 bool Control::Private::exec()
 {
@@ -143,7 +143,7 @@ bool Control::Private::exec()
       QPointer<SelfTestDialog> dlg = new SelfTestDialog( mProgressIndicator->parentWidget() );
       dlg->exec();
       delete dlg;
-      if ( !mParent ) 
+      if ( !mParent )
         return false;
     }
   }
@@ -180,12 +180,12 @@ void Control::Private::serverStopped()
 Control::Control()
   : d( new Private( this ) )
 {
-  connect( ServerManager::self(), SIGNAL(started()), SLOT(serverStarted()) );
-  connect( ServerManager::self(), SIGNAL(stopped()), SLOT(serverStopped()) );
+  connect( ServerManager::self(), SIGNAL( started() ), SLOT( serverStarted() ) );
+  connect( ServerManager::self(), SIGNAL( stopped() ), SLOT( serverStopped() ) );
   // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
   // Otherwise we get a crash in QCursor code with Qt-4.5
   if ( QCoreApplication::instance() )
-    connect( QCoreApplication::instance(), SIGNAL(aboutToQuit()), this, SLOT(cleanup()) );
+    connect( QCoreApplication::instance(), SIGNAL( aboutToQuit() ), this, SLOT( cleanup() ) );
 }
 
 Control::~Control()
