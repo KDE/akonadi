@@ -110,6 +110,8 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * Sets a content mimetype filter, that is include only collections in the result
      * that match the given filter.
      * @param contentMimeTypes A list of content mimetypes.
+     *
+     * @since 4.4
      */
     void setContentMimeTypes( const QStringList &contentMimeTypes );
 
