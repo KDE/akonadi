@@ -50,6 +50,7 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
     Collection::List mBaseList;
     Collection::List mCollections;
     QString mResource;
+    QList<QByteArray> mMimeTypes;
     Collection::List mPendingCollections;
     QTimer *mEmitTimer;
     bool mUnsubscribed;
@@ -163,6 +164,12 @@ void CollectionFetchJob::doStart()
     command += '"';
   }
 
+  if ( !d->mMimeTypes.isEmpty() ) {
+    command += " MIMETYPE (";
+    command += ImapParser::join( d->mMimeTypes, " " );
+    command += ')';
+  }
+
   if ( d->mStatistics ) {
     command += ") (STATISTICS true";
   }
@@ -196,6 +203,13 @@ void CollectionFetchJob::setResource(const QString & resource)
   Q_D( CollectionFetchJob );
 
   d->mResource = resource;
+}
+
+void CollectionFetchJob::setContentMimeTypes( const QStringList &contentMimeTypes )
+{
+  Q_D( CollectionFetchJob );
+  foreach ( const QString &mt, contentMimeTypes )
+    d->mMimeTypes.append( mt.toUtf8() );
 }
 
 void CollectionFetchJob::slotResult(KJob * job)
