@@ -33,6 +33,7 @@ class CollectionJobTest : public QObject
     void testEmptyFolderList();
     void testSearchFolderList();
     void testResourceFolderList();
+    void testMimeTypeFilter();
     void testCreateDeleteFolder_data();
     void testCreateDeleteFolder();
     void testIllegalDeleteFolder();

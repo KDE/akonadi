@@ -223,6 +223,27 @@ void CollectionJobTest::testResourceFolderList()
   QVERIFY( findCol( list, "bla" ).isValid() );
 }
 
+void CollectionJobTest::testMimeTypeFilter()
+{
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
+  job->setContentMimeTypes( QStringList() << "message/rfc822" );
+  AKVERIFYEXEC( job );
+
+  Collection::List list = job->collections();
+  QCOMPARE( list.count(), 2 );
+  QVERIFY( findCol( list, "res1" ).isValid() );
+  QVERIFY( findCol( list, "foo" ).isValid() );
+  int fooId = findCol( list, "foo" ).id();
+
+  // limited listing of a resource
+  job = new CollectionFetchJob( Collection( fooId ), CollectionFetchJob::Recursive );
+  job->setContentMimeTypes( QStringList() << "message/rfc822" );
+  AKVERIFYEXEC( job );
+
+  list = job->collections();
+  QCOMPARE( list.count(), 0 );
+}
+
 void CollectionJobTest::testCreateDeleteFolder_data()
 {
   QTest::addColumn<Collection>("collection");
