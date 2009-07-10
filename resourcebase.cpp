@@ -22,7 +22,6 @@
 #include "agentbase_p.h"
 
 #include "resourceadaptor.h"
-#include "transportadaptor.h"
 #include "collectiondeletejob.h"
 #include "collectionsync_p.h"
 #include "itemsync.h"
@@ -60,7 +59,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
   public:
     ResourceBasePrivate( ResourceBase *parent )
       : AgentBasePrivate( parent ),
-        mTransport( 0 ),
         scheduler( 0 ),
         mItemSyncer( 0 ),
         mCollectionSyncer( 0 )
@@ -101,19 +99,10 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     // synchronize states
     Collection currentCollection;
 
-    ResourceBase::Transport *mTransport;
     ResourceScheduler *scheduler;
     ItemSync *mItemSyncer;
     CollectionSync *mCollectionSyncer;
 };
-
-ResourceBase::Transport::Transport()
-{
-}
-
-ResourceBase::Transport::~Transport()
-{
-}
 
 ResourceBase::ResourceBase( const QString & id )
   : AgentBase( new ResourceBasePrivate( this ), id )
@@ -164,17 +153,6 @@ ResourceBase::~ResourceBase()
 void ResourceBase::synchronize()
 {
   d_func()->scheduler->scheduleFullSync();
-}
-
-void ResourceBase::registerTransport( Transport *transport )
-{
-  static bool adaptorCreated = false;
-  if( !adaptorCreated ) {
-    new TransportAdaptor( this );
-    adaptorCreated = true;
-  }
-  kDebug() << "transport=" << (void*) transport << "this=" << (void*) this;
-  d_func()->mTransport = transport;
 }
 
 void ResourceBase::setName( const QString &name )
@@ -539,11 +517,6 @@ void ResourceBase::doSetOnline( bool state )
   d_func()->scheduler->setOnline( state );
 }
 
-void ResourceBase::emitTransportResult( Akonadi::Item::Id &item, bool success, const QString &message )
-{
-  emit transportResult( item, success, message );
-}
-
 void ResourceBase::synchronizeCollection( qint64 collectionId )
 {
   CollectionFetchJob* job = new CollectionFetchJob( Collection( collectionId ), CollectionFetchJob::Base );
@@ -597,14 +570,6 @@ void ResourceBase::itemsRetrieved( const Item::List &items )
     connect( d->mItemSyncer, SIGNAL( result( KJob* ) ), SLOT( slotItemSyncDone( KJob* ) ) );
   }
   d->mItemSyncer->setFullSyncItems( items );
-}
-
-void ResourceBase::send( Item::Id message )
-{
-  kDebug() << "id" << message;
-  Q_D( ResourceBase );
-  Q_ASSERT( d->mTransport );
-  d->mTransport->sendItem( message );
 }
 
 void ResourceBase::itemsRetrievedIncremental( const Item::List &changedItems, const Item::List &removedItems )
