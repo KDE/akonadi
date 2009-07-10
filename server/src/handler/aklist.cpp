@@ -30,7 +30,19 @@
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
 
+#include <libs/protocol_p.h>
+
 using namespace Akonadi;
+
+template <typename T>
+static bool intersect( const QList<typename T::Id> &l1, const QList<T> &l2 )
+{
+  foreach ( const T& e2, l2 ) {
+    if ( l1.contains( e2.id() ) )
+      return true;
+  }
+  return false;
+}
 
 AkList::AkList( Scope::SelectionScope scope, bool onlySubscribed ):
     Handler(),
@@ -54,7 +66,10 @@ bool AkList::listCollection(const Collection & root, int depth )
   }
 
   // filter if this node isn't needed by it's children
-  bool hidden = (mResource.isValid() && root.resourceId() != mResource.id()) || (mOnlySubscribed && !root.subscribed());
+  bool hidden = (mResource.isValid() && root.resourceId() != mResource.id())
+      || (mOnlySubscribed && !root.subscribed())
+      || (!mMimeTypes.isEmpty() && !intersect( mMimeTypes, root.mimeTypes()) );
+
   if ( !childrenFound && hidden )
     return false;
 
@@ -97,15 +112,22 @@ bool AkList::parseStream()
   else
     depth = tmp.toInt();
 
-  QList<QByteArray> filter = m_streamParser->readParenthesizedList();
-
-  for ( int i = 0; i < filter.count() - 1; i += 2 ) {
-    if ( filter.at( i ) == "RESOURCE" ) {
-      mResource = Resource::retrieveByName( QString::fromLatin1( filter.at(i + 1) ) );
+  m_streamParser->beginList();
+  while ( !m_streamParser->atListEnd() ) {
+    const QByteArray filter = m_streamParser->readString();
+    if ( filter == AKONADI_PARAM_RESOURCE ) {
+      mResource = Resource::retrieveByName( m_streamParser->readUtf8String() );
       if ( !mResource.isValid() )
         return failureResponse( "Unknown resource" );
-    } else
-      return failureResponse( "Invalid filter parameter" );
+    } else if ( filter == AKONADI_PARAM_MIMETYPE ) {
+      m_streamParser->beginList();
+      while ( !m_streamParser->atListEnd() ) {
+        const MimeType mt = MimeType::retrieveByName( m_streamParser->readUtf8String() );
+        if ( !mt.isValid() )
+          throw HandlerException( "Invalid mimetype filter" );
+        mMimeTypes.append( mt.id() );
+      }
+    }
   }
 
   if ( m_streamParser->hasList() ) { // We got extra options

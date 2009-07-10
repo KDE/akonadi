@@ -43,7 +43,7 @@ namespace Akonadi {
   command = "X-AKLIST" | "X-AKLSUB" | "RID X-AKLIST" | "RID X-AKLSUB"
   depth = number | "INF"
   filter-list = *(filter-key " " filter-value)
-  filter-key = "RESOURCE"
+  filter-key = "RESOURCE" | "MIMETYPE"
   option-list = *(option-key " " option-value)
   option-key = "STATISTICS"
   @endverbatim
@@ -85,6 +85,7 @@ class AKONADIPRIVATE_EXPORT AkList : public Handler
 
   private:
     Resource mResource;
+    QList<MimeType::Id> mMimeTypes;
     Scope::SelectionScope mScope;
     bool mOnlySubscribed;
     bool mIncludeStatistics;
