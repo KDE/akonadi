@@ -199,8 +199,10 @@ void SessionPrivate::jobDestroyed(QObject * job)
   queue.removeAll( static_cast<Akonadi::Job*>( job ) );
   // ### likely not enough to really cancel already running jobs
   pipeline.removeAll( static_cast<Akonadi::Job*>( job ) );
-  if ( currentJob == job )
+  if ( currentJob == job ) {
     currentJob = 0;
+    jobRunning = false;
+  }
 }
 
 void SessionPrivate::addJob(Job * job)
