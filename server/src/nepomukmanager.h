@@ -48,6 +48,7 @@ class NepomukManager : public QObject, public AbstractSearchManager
   private Q_SLOTS:
     void hitsAdded( const QList<Nepomuk::Search::Result>& entries );
     void hitsRemoved( const QList<QUrl> &entries );
+    void addSearchInternal( qint64 id, const QString &searchStatement );
 
   private:
     bool mValid;

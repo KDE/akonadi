@@ -19,6 +19,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QUrl>
+#include <QMetaObject>
 
 #include "nepomukmanager.h"
 
@@ -67,13 +68,18 @@ bool NepomukManager::addSearch( const Collection &collection )
   if ( !mValid )
     return false;
 
-  QMutexLocker lock( &mMutex );
   if ( collection.remoteId().isEmpty() )
     return false;
 
   // TODO: search statement is stored in remoteId currently, port to attributes!
-  const QString searchStatement = collection.remoteId();
+  QMetaObject::invokeMethod( const_cast<NepomukManager*>( this ), "addSearchInternal", Qt::QueuedConnection,
+                             Q_ARG(qint64, collection.id()), Q_ARG(QString, collection.remoteId()) );
 
+  return true;
+}
+
+void NepomukManager::addSearchInternal( qint64 id, const QString &searchStatement )
+{
   Nepomuk::Search::QueryServiceClient *query = new Nepomuk::Search::QueryServiceClient( this );
 
   connect( query, SIGNAL( newEntries( const QList<Nepomuk::Search::Result>& ) ),
@@ -81,13 +87,13 @@ bool NepomukManager::addSearch( const Collection &collection )
   connect( query, SIGNAL( entriesRemoved( const QList<QUrl>& ) ),
            this, SLOT( hitsRemoved( const QList<QUrl>& ) ) );
 
-  mQueryMap.insert( query, collection.id() );
-  mQueryInvMap.insert( collection.id(), query ); // needed for fast lookup in removeSearch()
+  mMutex.lock();
+  mQueryMap.insert( query, id );
+  mQueryInvMap.insert( id, query ); // needed for fast lookup in removeSearch()
+  mMutex.unlock();
 
   // query with SPARQL statement
   query->query( Nepomuk::Search::Query( searchStatement ) );
-
-  return true;
 }
 
 bool NepomukManager::removeSearch( qint64 collectionId )
@@ -101,8 +107,10 @@ bool NepomukManager::removeSearch( qint64 collectionId )
   }
 
   // cleanup mappings
+  mMutex.lock();
   mQueryInvMap.remove( collectionId );
   mQueryMap.remove( query );
+  mMutex.unlock();
 
   query->deleteLater();
 
