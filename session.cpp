@@ -113,7 +113,7 @@ void SessionPrivate::dataReceived()
         }
         kDebug( 5250 ) << "Server protocol version is:" << protocolVersion;
 
-        writeData( "0 LOGIN " + sessionId + '\n' );
+        writeData( "0 LOGIN " + ImapParser::quote( sessionId ) + '\n' );
 
       // work for the current job
       } else {
