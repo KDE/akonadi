@@ -64,6 +64,14 @@ bool SearchPersistent::parseStream()
   if ( !db->appendCollection( col ) )
     return failureResponse( "Unable to create persistent search" );
 
+  // work around the fact that we have no clue what might be in there
+  MimeType::List mts = MimeType::retrieveAll();
+  foreach ( const MimeType &mt, mts ) {
+    if ( mt.name() == QLatin1String( "inode/directory" ) )
+      continue;
+    col.addMimeType( mt );
+  }
+
   if ( !AbstractSearchManager::instance()->addSearch( col ) )
     return failureResponse( "Unable to add search to search manager" );
 
