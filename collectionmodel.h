@@ -105,6 +105,9 @@ class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
     virtual QStringList mimeTypes() const;
 
+  Q_SIGNALS:
+    void listDone();
+
   protected:
     /**
      * Returns the collection for a given collection @p id.

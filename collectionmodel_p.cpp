@@ -121,9 +121,11 @@ void CollectionModelPrivate::collectionStatisticsChanged( Collection::Id collect
 
 void CollectionModelPrivate::listDone( KJob *job )
 {
+  Q_Q( CollectionModel );
   if ( job->error() ) {
     kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
   }
+  emit q->listDone();
 }
 
 void CollectionModelPrivate::editDone( KJob * job )
