@@ -75,6 +75,9 @@ class ResourceTest : public QObject
       QVERIFY( !job->exec() );
 
       // unique agent
+      // According to vkrause the mailthreader agent is no longer started by
+      // default so this won't work.
+      /*
       const AgentType type = AgentManager::self()->type( "akonadi_mailthreader_agent" );
       QVERIFY( type.isValid() );
       job = new AgentInstanceCreateJob( type );
@@ -82,6 +85,7 @@ class ResourceTest : public QObject
 
       job = new AgentInstanceCreateJob( type );
       QVERIFY( !job->exec() );
+      */
     }
 };
 

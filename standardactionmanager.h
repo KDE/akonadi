@@ -32,6 +32,8 @@ class QWidget;
 
 namespace Akonadi {
 
+class FavoriteCollectionsModel;
+
 /**
  * @short Manages generic actions for collection and item views.
  *
@@ -103,6 +105,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       Paste,                     ///< Paste collections or items
       DeleteItems,               ///< Deletes items
       ManageLocalSubscriptions,  ///< Manages local subscriptions
+      AddToFavoriteCollections,  ///< Add the collection to the favorite collections model
       LastType                   ///< Marks last action
     };
 
@@ -131,6 +134,13 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * should operate. If none is set, all item actions will be disabled.
      */
     void setItemSelectionModel( QItemSelectionModel* selectionModel );
+
+    /**
+     * Sets the favorite collections model based on which the collection
+     * relatedactions should operate. If none is set, the "Add to Favorite Folders" action
+     * will be disabled.
+     */
+    void setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel );
 
     /**
      * Creates the action of the given type and adds it to the action collection
@@ -189,6 +199,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotPaste() )
     Q_PRIVATE_SLOT( d, void slotDeleteItems() )
     Q_PRIVATE_SLOT( d, void slotLocalSubscription() )
+    Q_PRIVATE_SLOT( d, void slotAddToFavorites() )
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void collectionDeletionResult(KJob*) )
