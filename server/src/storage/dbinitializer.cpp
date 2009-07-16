@@ -265,26 +265,35 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
 bool DbInitializer::checkRelation(const QDomElement & element)
 {
-  QString table1 = element.attribute(QLatin1String("table1"));
-  QString table2 = element.attribute(QLatin1String("table2"));
-  QString col1 = element.attribute(QLatin1String("column1"));
-  QString col2 = element.attribute(QLatin1String("column2"));
+  const QString table1 = element.attribute(QLatin1String("table1"));
+  const QString table1Name = table1 + QLatin1String( "Table" );
+  const QString table2 = element.attribute(QLatin1String("table2"));
+  const QString table2Name = table2 + QLatin1String ( "Table" );
+  const QString col1 = element.attribute(QLatin1String("column1"));
+  const QString col2 = element.attribute(QLatin1String("column2"));
 
   QString tableName = table1 + table2 + QLatin1String("Relation");
   qDebug() << "checking relation " << tableName;
 
+  QString columnOptions;
+  // ### for MySQL as well?
+  if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) )
+    columnOptions = QLatin1String( " ON DELETE CASCADE ON UPDATE CASCADE " );
+
   if ( !hasTable( tableName ) ) {
     QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
-    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4), " )
-        .arg( table1 )
+    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4) %5, " )
+        .arg( table1  )
         .arg( col1 )
-        .arg( table1 )
-        .arg( col1 );
-    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4), " )
+        .arg( table1Name )
+        .arg( col1 )
+        .arg( columnOptions );
+    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4) %5, " )
         .arg( table2 )
         .arg( col2 )
-        .arg( table2 )
-        .arg( col2 );
+        .arg( table2Name )
+        .arg( col2 )
+        .arg( columnOptions ),
     statement += QString::fromLatin1("PRIMARY KEY (%1_%2, %3_%4));" ).arg( table1 ).arg( col1 ).arg( table2 ).arg( col2 );
     qDebug() << statement;
 
@@ -307,8 +316,11 @@ QString DbInitializer::sqlType(const QString & type)
 {
   if ( type == QLatin1String("int") )
     return QLatin1String("INTEGER");
-  if ( type == QLatin1String("qint64") )
-    return QLatin1String("BIGINT");
+  if ( type == QLatin1String("qint64") ) {
+    return ( mDatabase.driverName() == QLatin1String( "QPSQL" ) )
+            ? QLatin1String( "int8" )
+            : QLatin1String( "BIGINT" );
+  }
   if ( type == QLatin1String("QString") )
     return QLatin1String("TEXT");
   if (type == QLatin1String("QByteArray") )
@@ -335,10 +347,10 @@ bool DbInitializer::hasIndex(const QString & tableName, const QString & indexNam
   if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
     statement  = QString::fromLatin1( "SHOW INDEXES FROM %1" ).arg( tableName );
     statement += QString::fromLatin1( " WHERE `Key_name` = '%1'" ).arg( indexName );
-  } else if( mDatabase.driverName() == QLatin1String("PSQL") ) {
-    statement  = QLatin1String( "SELECT indexname FROM pq_indexes" );
-    statement += QString::fromLatin1( " WHERE tablename = '%1'" ).arg( tableName );
-    statement += QString::fromLatin1( " AND  indexname = '%1';" ).arg( indexName );
+  } else if( mDatabase.driverName() == QLatin1String("QPSQL") ) {
+    statement  = QLatin1String( "SELECT indexname FROM pg_catalog.pg_indexes" );
+    statement += QString::fromLatin1( " WHERE tablename ilike '%1'" ).arg( tableName );
+    statement += QString::fromLatin1( " AND  indexname ilike '%1';" ).arg( indexName );
   } else if ( mDatabase.driverName() == QLatin1String("QSQLITE") ) {
     statement  = QString::fromLatin1( "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';" ).arg( tableName ).arg( indexName );
   } else {
