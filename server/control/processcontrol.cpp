@@ -138,6 +138,7 @@ void ProcessControl::start()
   if ( !agentValgrind.isEmpty() && mApplication.contains( agentValgrind ) ) {
 
     mArguments.prepend( mApplication );
+    const QString originalArguments = mArguments.join( QString::fromLocal8Bit( " " ) );
     mApplication = QString::fromLocal8Bit( "valgrind" );
 
     const QString valgrindSkin = getEnv( "AKONADI_VALGRIND_SKIN", QString::fromLocal8Bit( "memcheck" ) );
@@ -149,7 +150,7 @@ void ProcessControl::start()
 
     qDebug();
     qDebug() << "============================================================";
-    qDebug() << "ProcessControl: Valgrinding process" << mApplication;
+    qDebug() << "ProcessControl: Valgrinding process" << originalArguments;
     if ( !valgrindSkin.isEmpty() )
       qDebug() << "ProcessControl: Valgrind skin:" << valgrindSkin;
     if ( !valgrindOptions.isEmpty() )
