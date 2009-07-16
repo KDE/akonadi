@@ -63,7 +63,8 @@ static const struct {
   { "akonadi_item_copy", 0, "edit-copy", 0, SLOT(slotCopyItems()) },
   { "akonadi_paste", I18N_NOOP("&Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()) },
   { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT(slotDeleteItems()) },
-  { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()) }
+  { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()) },
+  { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), "bookmark-new", 0, SLOT(slotAddToFavorites()) }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -89,7 +90,8 @@ class StandardActionManager::Private
     Private( StandardActionManager *parent ) :
       q( parent ),
       collectionSelectionModel( 0 ),
-      itemSelectionModel( 0 )
+      itemSelectionModel( 0 ),
+      favoritesModel( 0 )
     {
       actions.fill( 0, StandardActionManager::LastType );
 
@@ -148,11 +150,15 @@ class StandardActionManager::Private
         enableAction( CollectionProperties, singleColSelected && (col != Collection::root()) );
         enableAction( SynchronizeCollections, CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col ) );
         enableAction( Paste, PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
+        //FIXME: remove the reinterpret_cast once FavoriteCollectionsModel is in kdepimlibs/akonadi
+        enableAction( AddToFavoriteCollections, (favoritesModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
+                                             && singleColSelected && (col != Collection::root()) );
       } else {
         enableAction( CreateCollection, false );
         enableAction( DeleteCollections, false );
         enableAction( SynchronizeCollections, false );
         enableAction( Paste, false );
+        enableAction( AddToFavoriteCollections, false );
       }
 
       bool multiItemSelected = false;
@@ -313,6 +319,23 @@ class StandardActionManager::Private
       dlg->show();
     }
 
+    void slotAddToFavorites()
+    {
+      Q_ASSERT( collectionSelectionModel );
+      Q_ASSERT( favoritesModel );
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      //FIXME: remove the reinterpret_cast and invokeMethod once FavoriteCollectionsModel is in kdepimlibs/akonadi
+      QAbstractItemModel *model = reinterpret_cast<QAbstractItemModel*>( favoritesModel );
+      QMetaObject::invokeMethod( model, "addCollection", Q_ARG(Collection, collection) );
+    }
+
     void collectionCreationResult( KJob *job )
     {
       if ( job->error() ) {
@@ -342,6 +365,7 @@ class StandardActionManager::Private
     QWidget *parentWidget;
     QItemSelectionModel *collectionSelectionModel;
     QItemSelectionModel *itemSelectionModel;
+    FavoriteCollectionsModel *favoritesModel;
     QVector<KAction*> actions;
     AgentManager *agentManager;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
@@ -376,6 +400,11 @@ void StandardActionManager::setItemSelectionModel(QItemSelectionModel * selectio
   d->itemSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
            SLOT(updateActions()) );
+}
+
+void Akonadi::StandardActionManager::setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel )
+{
+  d->favoritesModel = favoritesModel;
 }
 
 KAction* StandardActionManager::createAction( Type type )
