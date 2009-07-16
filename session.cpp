@@ -113,7 +113,7 @@ void SessionPrivate::dataReceived()
         }
         kDebug( 5250 ) << "Server protocol version is:" << protocolVersion;
 
-        writeData( "0 LOGIN " + sessionId + '\n' );
+        writeData( "0 LOGIN " + ImapParser::quote( sessionId ) + '\n' );
 
       // work for the current job
       } else {
@@ -199,8 +199,10 @@ void SessionPrivate::jobDestroyed(QObject * job)
   queue.removeAll( static_cast<Akonadi::Job*>( job ) );
   // ### likely not enough to really cancel already running jobs
   pipeline.removeAll( static_cast<Akonadi::Job*>( job ) );
-  if ( currentJob == job )
+  if ( currentJob == job ) {
     currentJob = 0;
+    jobRunning = false;
+  }
 }
 
 void SessionPrivate::addJob(Job * job)
