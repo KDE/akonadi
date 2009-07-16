@@ -32,9 +32,11 @@
 
 #include <KAction>
 #include <KActionCollection>
+#include <KActionMenu>
 #include <KDebug>
 #include <KInputDialog>
 #include <KLocale>
+#include <KMenu>
 #include <KMessageBox>
 
 #include <QtCore/QMimeData>
@@ -43,6 +45,8 @@
 #include <QtGui/QItemSelectionModel>
 
 #include <boost/static_assert.hpp>
+
+Q_DECLARE_METATYPE(QModelIndex)
 
 using namespace Akonadi;
 
@@ -54,17 +58,20 @@ static const struct {
   const char *icon;
   int shortcut;
   const char* slot;
+  bool isActionMenu;
 } actionData[] = {
-  { "akonadi_collection_create", I18N_NOOP("&New Folder..."), "folder-new", 0, SLOT(slotCreateCollection()) },
-  { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT(slotCopyCollections()) },
-  { "akonadi_collection_delete", I18N_NOOP("&Delete Folder"), "edit-delete", 0, SLOT(slotDeleteCollection()) },
-  { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()) },
-  { "akonadi_collection_properties", I18N_NOOP("Folder &Properties"), "configure", 0, SLOT(slotCollectionProperties()) },
-  { "akonadi_item_copy", 0, "edit-copy", 0, SLOT(slotCopyItems()) },
-  { "akonadi_paste", I18N_NOOP("&Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()) },
-  { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT(slotDeleteItems()) },
-  { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()) },
-  { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), "bookmark-new", 0, SLOT(slotAddToFavorites()) }
+  { "akonadi_collection_create", I18N_NOOP("&New Folder..."), "folder-new", 0, SLOT(slotCreateCollection()), false },
+  { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT(slotCopyCollections()), false },
+  { "akonadi_collection_delete", I18N_NOOP("&Delete Folder"), "edit-delete", 0, SLOT(slotDeleteCollection()), false },
+  { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()), false },
+  { "akonadi_collection_properties", I18N_NOOP("Folder &Properties"), "configure", 0, SLOT(slotCollectionProperties()), false },
+  { "akonadi_item_copy", 0, "edit-copy", 0, SLOT(slotCopyItems()), false },
+  { "akonadi_paste", I18N_NOOP("&Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()), false },
+  { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT(slotDeleteItems()), false },
+  { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()), false },
+  { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), "bookmark-new", 0, SLOT(slotAddToFavorites()), false },
+  { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
+  { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -105,6 +112,17 @@ class StandardActionManager::Private
       Q_ASSERT( type >= 0 && type < StandardActionManager::LastType );
       if ( actions[type] )
         actions[type]->setEnabled( enable );
+
+      // Update the action menu
+      KActionMenu *actionMenu = qobject_cast<KActionMenu*>( actions[type] );
+      if ( actionMenu ) {
+        actionMenu->menu()->clear();
+        if ( enable ) {
+          fillFoldersMenu( actionMenu->menu(),
+                           collectionSelectionModel->model(),
+                           QModelIndex() );
+        }
+      }
     }
 
     void updatePluralLabel( StandardActionManager::Type type, int count )
@@ -153,6 +171,7 @@ class StandardActionManager::Private
         //FIXME: remove the reinterpret_cast once FavoriteCollectionsModel is in kdepimlibs/akonadi
         enableAction( AddToFavoriteCollections, (favoritesModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
                                              && singleColSelected && (col != Collection::root()) );
+        enableAction( CopyCollectionToMenu, multiColSelected && (col != Collection::root()) );
       } else {
         enableAction( CreateCollection, false );
         enableAction( DeleteCollections, false );
@@ -171,6 +190,8 @@ class StandardActionManager::Private
       enableAction( CopyItems, multiItemSelected );
       const bool canDeleteItem = !col.isValid() || (col.rights() & Collection::CanDeleteItem);
       enableAction( DeleteItems, multiItemSelected && canDeleteItem );
+
+      enableAction( CopyItemToMenu, multiItemSelected );
 
       updatePluralLabel( CopyCollections, colCount );
       updatePluralLabel( CopyItems, itemCount );
@@ -336,6 +357,37 @@ class StandardActionManager::Private
       QMetaObject::invokeMethod( model, "addCollection", Q_ARG(Collection, collection) );
     }
 
+    void slotCopyCollectionTo( QAction *action )
+    {
+      copyTo( collectionSelectionModel, action );
+    }
+
+    void slotCopyItemTo( QAction *action )
+    {
+      copyTo( itemSelectionModel, action );
+    }
+
+    void copyTo( QItemSelectionModel *selectionModel, QAction *action )
+    {
+      Q_ASSERT( selectionModel );
+      if ( selectionModel->selectedRows().count() <= 0 )
+        return;
+
+      QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
+
+      Q_ASSERT( collectionSelectionModel );
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( col.isValid() );
+
+      KJob *job = PasteHelper::paste( mimeData, col );
+      q->connect( job, SIGNAL(result(KJob*)), q, SLOT(copyToResult(KJob*)) );
+    }
+
     void collectionCreationResult( KJob *job )
     {
       if ( job->error() ) {
@@ -357,6 +409,59 @@ class StandardActionManager::Private
       if ( job->error() ) {
         KMessageBox::error( parentWidget, i18n("Could not paste data: %1", job->errorString()),
                             i18n("Paste failed") );
+      }
+    }
+
+    void copyToResult( KJob *job )
+    {
+      if ( job->error() ) {
+        KMessageBox::error( parentWidget, i18n("Could not copy data: %1", job->errorString()),
+                            i18n("Copy failed") );
+      }
+    }
+
+    void fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model, QModelIndex parentIndex )
+    {
+      int rowCount = model->rowCount( parentIndex );
+
+      for ( int row = 0; row < rowCount; row++ ) {
+        QModelIndex index = model->index( row, 0, parentIndex );
+
+        // FIXME: Need a way to skip the search folder
+
+        QString label = model->data( index ).toString();
+        label.replace( QString::fromUtf8( "&" ), QString::fromUtf8( "&&" ) );
+        QIcon icon = model->data( index, Qt::DecorationRole ).value<QIcon>();
+
+        if ( model->rowCount( index ) > 0 ) {
+          // new level
+          QMenu* popup = new QMenu( menu );
+
+          popup->setObjectName( QString::fromUtf8( "subMenu" ) );
+          popup->setTitle( label );
+          popup->setIcon( icon );
+
+          fillFoldersMenu( popup, model, index );
+
+          bool readOnly = false;
+          //FIXME: If collection is readonly turn this flag to true
+
+          if ( !readOnly ) {
+            popup->addSeparator();
+
+            QAction *act = popup->addAction( i18n("Copy to This Folder") );
+            act->setData( QVariant::fromValue<QModelIndex>( index ) );
+          }
+
+          menu->addMenu( popup );
+
+        } else {
+
+          // insert an item
+          QAction* act = menu->addAction( icon, label );
+          act->setData( QVariant::fromValue<QModelIndex>( index ) );
+          //FIXME: If collection is readonly disable this action
+        }
       }
     }
 
@@ -413,16 +518,30 @@ KAction* StandardActionManager::createAction( Type type )
   Q_ASSERT( actionData[type].name );
   if ( d->actions[type] )
     return d->actions[type];
-  KAction *action = new KAction( d->parentWidget );
+  KAction *action;
+  if ( !actionData[type].isActionMenu ) {
+    action = new KAction( d->parentWidget );
+  } else {
+    action = new KActionMenu( d->parentWidget );
+  }
+
   if ( d->pluralLabels.contains( type ) && !d->pluralLabels.value( type ).isEmpty() )
     action->setText( d->pluralLabels.value( type ).subs( 1 ).toString() );
   else if ( actionData[type].label )
     action->setText( i18n( actionData[type].label ) );
+
   if ( actionData[type].icon )
     action->setIcon( KIcon( QString::fromLatin1( actionData[type].icon ) ) );
+
   action->setShortcut( actionData[type].shortcut );
-  if ( actionData[type].slot )
+
+  if ( actionData[type].slot && !actionData[type].isActionMenu ) {
     connect( action, SIGNAL(triggered()), actionData[type].slot );
+  } else if ( actionData[type].slot ) {
+    KActionMenu *actionMenu = qobject_cast<KActionMenu*>( action );
+    connect( actionMenu->menu(), SIGNAL(triggered(QAction*)), actionData[type].slot );
+  }
+
   d->actionCollection->addAction( QString::fromLatin1(actionData[type].name), action );
   d->actions[type] = action;
   d->updateActions();
