@@ -62,6 +62,7 @@ class ItemPrivate : public EntityPrivate
       mDeletedFlags = other.mDeletedFlags;
       mFlagsOverwritten = other.mFlagsOverwritten;
       mSizeChanged = other.mSizeChanged;
+      mCollectionId = other.mCollectionId;
     }
 
     ~ItemPrivate()

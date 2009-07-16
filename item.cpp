@@ -50,7 +50,6 @@ Item::Item( const QString & mimeType )
 Item::Item( const Item &other )
   : Entity( other )
 {
-  setStorageCollectionId( other.storageCollectionId() );
 }
 
 Item::~Item()
