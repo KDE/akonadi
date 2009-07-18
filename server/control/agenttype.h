@@ -22,6 +22,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QHash>
 
 namespace Akonadi {
   class ProcessControl;
@@ -38,8 +39,8 @@ class AgentType
     void save( QSettings *config ) const;
 
     QString identifier;
-    QString name;
-    QString comment;
+    QHash<QString, QString> name;
+    QHash<QString, QString> comment;
     QString icon;
     QStringList mimeTypes;
     QStringList capabilities;

@@ -40,8 +40,19 @@ bool AgentType::load(const QString & fileName, AgentManager * manager)
   QSettings file( fileName, QSettings::IniFormat );
   file.beginGroup( "Desktop Entry" );
 
-  name = file.value( "Name" ).toString();
-  comment = file.value( "Comment" ).toString();
+  foreach(const QString& key, file.allKeys() ) {
+    if ( key.startsWith( "Name[" ) ) {
+      QString lang = key.mid( 5, key.length()-6);
+      name.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() ) );
+    } else if ( key == "Name" ) {
+      name.insert( "en_US", QString::fromUtf8( file.value( "Name" ).toByteArray() ) );
+    } else if ( key.startsWith( "Comment[" ) ) {
+      QString lang = key.mid( 8, key.length()-9);
+      comment.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() )  );
+    } else if ( key == "Comment" ) {
+      comment.insert( "en_US", QString::fromUtf8( file.value( "Comment" ).toByteArray() ) );
+    }
+  }
   icon = file.value( "Icon" ).toString();
   mimeTypes = file.value( "X-Akonadi-MimeTypes" ).toStringList();
   capabilities = file.value( "X-Akonadi-Capabilities" ).toStringList();

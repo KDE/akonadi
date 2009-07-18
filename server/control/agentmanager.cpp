@@ -114,18 +114,20 @@ QStringList AgentManager::agentTypes() const
   return mAgents.keys();
 }
 
-QString AgentManager::agentName( const QString &identifier ) const
+QString AgentManager::agentName(  const QString &identifier, const QString& lang ) const
 {
   if ( !checkAgentExists( identifier ) )
     return QString();
-  return mAgents.value( identifier ).name;
+  const QString name = mAgents.value( identifier ).name.value( lang );
+  return name.isEmpty() ? mAgents.value( identifier ).name.value( "en_US" ) : name;
 }
 
-QString AgentManager::agentComment( const QString &identifier ) const
+QString AgentManager::agentComment( const QString &identifier, const QString& lang ) const
 {
   if ( !checkAgentExists( identifier ) )
     return QString();
-  return mAgents.value( identifier ).comment;
+  const QString comment = mAgents.value( identifier ).comment.value( lang );
+  return comment.isEmpty() ? mAgents.value( identifier ).comment.value( "en_US" ) : comment;
 }
 
 QString AgentManager::agentIcon( const QString &identifier ) const
@@ -282,7 +284,7 @@ void AgentManager::setAgentInstanceName( const QString &identifier, const QStrin
   mAgentInstances.value( identifier )->resourceInterface()->setName( name );
 }
 
-QString AgentManager::agentInstanceName( const QString &identifier ) const
+QString AgentManager::agentInstanceName( const QString &identifier, const QString &lang ) const
 {
   if ( !checkInstance( identifier ) )
     return QString();
@@ -291,7 +293,8 @@ QString AgentManager::agentInstanceName( const QString &identifier ) const
     return inst->resourceName();
   if ( !checkAgentExists( inst->agentType() ) )
     return QString();
-  return mAgents.value( inst->agentType() ).name;
+  const QString name = mAgents.value( inst->agentType() ).name.value( lang );
+  return name.isEmpty() ? mAgents.value( inst->agentType() ).name.value("en_US") : name;
 }
 
 void AgentManager::agentInstanceSynchronize( const QString &identifier )
