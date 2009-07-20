@@ -41,6 +41,7 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QStandardItemModel>
 #include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlError>
 
 // @cond PRIVATE
 
@@ -131,10 +132,16 @@ void SelfTestDialog::selectionChanged(const QModelIndex &index )
 
 void SelfTestDialog::runTests()
 {
+  const QString driver = serverSetting( QLatin1String("General"), "Driver", QLatin1String("QMYSQL") ).toString();
   testSQLDriver();
-  testMySQLServer();
-  testMySQLServerLog();
-  testMySQLServerConfig();
+  if (driver == QLatin1String( "QPSQL" )) {
+    testPSQLServer();
+  }
+  else {
+    testMySQLServer();
+    testMySQLServerLog();
+    testMySQLServerConfig();
+  }
   testAkonadiCtl();
   testServerStatus();
   testProtocolVersion();
@@ -327,6 +334,32 @@ void SelfTestDialog::testMySQLServerConfig()
                    ki18n( "The MySQL server configuration was found at %1 and is readable.").subs( makeLink( actualConfig ) ) );
     item->setData( actualConfig, FileIncludeRole );
   }
+}
+
+void SelfTestDialog::testPSQLServer()
+{
+  const QString dbname = serverSetting( QLatin1String( "QPSQL" ), "Name", QLatin1String( "akonadi" )).toString();
+  const QString hostname = serverSetting( QLatin1String( "QPSQL" ), "Host", QLatin1String( "localhost" )).toString();
+  const QString username = serverSetting( QLatin1String( "QPSQL" ), "User", QLatin1String( "akonadi" )).toString();
+  const QString password = serverSetting( QLatin1String( "QPSQL" ), "Password", QLatin1String( "akonadi" )).toString();
+  const int port = serverSetting( QLatin1String( "QPSQL" ), "Port", 5432).toInt();
+
+  QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QPSQL" ) );
+  db.setHostName( hostname );
+  db.setDatabaseName( dbname );
+  db.setUserName( username );
+  db.setPassword( password );
+  db.setPort( port );
+
+  if ( !db.open() ) {
+    const KLocalizedString details = ki18n( db.lastError().text().toLatin1() );
+    report( Error, ki18n( "Cannot connect to PostgreSQL server." ),  details);
+  }
+  else {
+    report( Success, ki18n( "PostgreSQL server found." ),
+                   ki18n( "The PostgreSQL server was found and connection is working."));
+  }
+  db.close();
 }
 
 void SelfTestDialog::testAkonadiCtl()
