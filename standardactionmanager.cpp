@@ -118,7 +118,8 @@ class StandardActionManager::Private
       if ( actionMenu ) {
         actionMenu->menu()->clear();
         if ( enable ) {
-          fillFoldersMenu( actionMenu->menu(),
+          fillFoldersMenu( type,
+                           actionMenu->menu(),
                            collectionSelectionModel->model(),
                            QModelIndex() );
         }
@@ -420,7 +421,8 @@ class StandardActionManager::Private
       }
     }
 
-    void fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model, QModelIndex parentIndex )
+    void fillFoldersMenu( StandardActionManager::Type type, QMenu *menu,
+                          const QAbstractItemModel *model, QModelIndex parentIndex )
     {
       int rowCount = model->rowCount( parentIndex );
 
@@ -436,6 +438,10 @@ class StandardActionManager::Private
         label.replace( QString::fromUtf8( "&" ), QString::fromUtf8( "&&" ) );
         QIcon icon = model->data( index, Qt::DecorationRole ).value<QIcon>();
 
+        bool readOnly = CollectionUtils::isStructural( collection )
+                     || ( type == CopyItemToMenu && !( collection.rights() & Collection::CanCreateItem ) )
+                     || ( type == CopyCollectionToMenu && !( collection.rights() & Collection::CanCreateCollection ) );
+
         if ( model->rowCount( index ) > 0 ) {
           // new level
           QMenu* popup = new QMenu( menu );
@@ -444,10 +450,7 @@ class StandardActionManager::Private
           popup->setTitle( label );
           popup->setIcon( icon );
 
-          fillFoldersMenu( popup, model, index );
-
-          bool readOnly = false;
-          //FIXME: If collection is readonly turn this flag to true
+          fillFoldersMenu( type, popup, model, index );
 
           if ( !readOnly ) {
             popup->addSeparator();
@@ -463,7 +466,7 @@ class StandardActionManager::Private
           // insert an item
           QAction* act = menu->addAction( icon, label );
           act->setData( QVariant::fromValue<QModelIndex>( index ) );
-          //FIXME: If collection is readonly disable this action
+          act->setEnabled( !readOnly );
         }
       }
     }
