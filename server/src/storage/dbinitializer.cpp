@@ -108,17 +108,19 @@ bool DbInitializer::checkTable( const QDomElement &element )
       else
         entry.second = columnElement.attribute( QLatin1String("sqltype") ); 
       QString props = columnElement.attribute(QLatin1String("properties"));
+
+      // TODO: we need a nicer way for this...
+      // special cases for sqlite
       if ( mDatabase.driverName().startsWith( QLatin1String("QSQLITE") ) ) {
-        if ( props.contains(QLatin1String("PRIMARY KEY")) )
-          if ( entry.second == QLatin1String("BIGINT") )
+        if ( props.contains(QLatin1String("PRIMARY KEY")) && entry.second == QLatin1String("BIGINT") )
             entry.second = QLatin1String("INTEGER");
-      if ( props.contains(QLatin1String("BINARY")) )
-        if ( !(props.contains(QLatin1String("COLLATE BINARY"))) )
+        if ( props.contains(QLatin1String("BINARY")) && !props.contains(QLatin1String("COLLATE BINARY")) )
           props.replace(QLatin1String("BINARY"), QLatin1String("COLLATE BINARY"));
-      if ( props.contains(QLatin1String("character set utf8 collate utf8_bin")) )
-        props.remove(QLatin1String("character set utf8 collate utf8_bin"));
+        if ( props.contains(QLatin1String("character set utf8 collate utf8_bin")) )
+          props.remove(QLatin1String("character set utf8 collate utf8_bin"));
       }
-      entry.second += QLatin1String(" ")+props;
+      entry.second += QLatin1String(" ") + props;
+      // special cases for PostgreSQL
       if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) ) {
         if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
           entry.second = QLatin1String("SERIAL PRIMARY KEY NOT NULL");
@@ -126,7 +128,13 @@ bool DbInitializer::checkTable( const QDomElement &element )
           entry.second = QLatin1String("BYTEA");
         if ( entry.second.startsWith( QLatin1String("CHAR") ) )
           entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
-      } else if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
+        if ( entry.second.contains( QLatin1String( "BINARY" ) ) )
+          entry.second.remove( QLatin1String( "BINARY" ) );
+        if ( entry.second.contains(QLatin1String("character set utf8 collate utf8_bin")) )
+          entry.second.remove(QLatin1String("character set utf8 collate utf8_bin"));
+      }
+      // special cases for MySQL
+      else if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
         if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
           entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("AUTO_INCREMENT"));
         if ( entry.second.startsWith( QLatin1String("CHAR") ) )
