@@ -106,7 +106,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
       if ( columnElement.attribute( QLatin1String("sqltype") ).isEmpty() )
         entry.second = sqlType( columnElement.attribute( QLatin1String("type") ) );
       else
-        entry.second = columnElement.attribute( QLatin1String("sqltype") );
+        entry.second = columnElement.attribute( QLatin1String("sqltype") ); 
       QString props = columnElement.attribute(QLatin1String("properties"));
       if ( mDatabase.driverName().startsWith( QLatin1String("QSQLITE") ) ) {
         if ( props.contains(QLatin1String("PRIMARY KEY")) )
@@ -132,6 +132,17 @@ bool DbInitializer::checkTable( const QDomElement &element )
         if ( entry.second.startsWith( QLatin1String("CHAR") ) )
           entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
       }
+
+      if ( !columnElement.attribute( QLatin1String( "refTable" ) ).isEmpty()
+        && !columnElement.attribute( QLatin1String( "refColumn" ) ).isEmpty() )
+      {
+        const QString refStmt = QString::fromLatin1( " REFERENCES %1Table(%2)" )
+          .arg( columnElement.attribute( QLatin1String( "refTable" ) ) )
+          .arg( columnElement.attribute( QLatin1String( "refColumn" ) ) );
+        if ( !mDatabase.driverName().startsWith( QLatin1String("QSQLITE") ) )
+          entry.second += refStmt;
+      }
+
       columnsList.append( entry );
     } else if ( columnElement.tagName() == QLatin1String( "data" ) ) {
       QString values = columnElement.attribute( QLatin1String("values") );

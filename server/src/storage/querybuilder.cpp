@@ -328,11 +328,11 @@ qint64 QueryBuilder::insertId()
 
 QueryBuilder::DatabaseType QueryBuilder::qsqlDriverNameToDatabaseType (const QString & driverName)
 {
-  if ( driverName == QLatin1String( "QMYSQL" ) )
+  if ( driverName.startsWith( QLatin1String( "QMYSQL" ) ) )
     return MySQL;
   if ( driverName == QLatin1String( "QPSQL" ) )
     return PostgreSQL;
-  if ( driverName == QLatin1String( "SQLITE" ) )
+  if ( driverName.startsWith( QLatin1String( "SQLITE" ) ) )
     return Sqlite;
   return Unknown;
 }
