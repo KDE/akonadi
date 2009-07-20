@@ -193,8 +193,8 @@ AgentType AgentManagerPrivate::fillAgentType( const QString &identifier ) const
 {
   AgentType type;
   type.d->mIdentifier = identifier;
-  type.d->mName = mManager->agentName( identifier, KGlobal::locale()->language() );
-  type.d->mDescription = mManager->agentComment( identifier, KGlobal::locale()->language() );
+  type.d->mName = mManager->agentName( identifier );
+  type.d->mDescription = mManager->agentComment( identifier );
   type.d->mIconName = mManager->agentIcon( identifier );
   type.d->mMimeTypes = mManager->agentMimeTypes( identifier );
   type.d->mCapabilities = mManager->agentCapabilities( identifier );
