@@ -78,6 +78,7 @@ class <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation;
 <xsl:if test="$code='source'">
 #include &lt;entities.h&gt;
 #include &lt;storage/datastore.h&gt;
+#include &lt;storage/selectquerybuilder.h&gt;
 
 #include &lt;qsqldatabase.h&gt;
 #include &lt;QLatin1String&gt;

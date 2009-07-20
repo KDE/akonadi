@@ -292,24 +292,19 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
   if ( !db.isOpen() )
     return QList&lt;<xsl:value-of select="$className"/>&gt;();
 
-  QSqlQuery query( db );
-  QString statement = QLatin1String( "SELECT <xsl:call-template name="column-list"/> FROM " );
-  statement.append( tableName() );
-  statement.append( QLatin1String(" WHERE ") );
-  statement.append( key );
+  SelectQueryBuilder&lt;<xsl:value-of select="$className"/>&gt; qb;
+  qb.addTable( tableName() );
   if ( value.isNull() )
-    statement.append( QLatin1String(" is null") );
+    qb.addValueCondition( key, Query::Is, QVariant() );
   else
-    statement.append( QLatin1String(" = :key") );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":key"), value );
-  if ( !query.exec() ) {
+    qb.addValueCondition( key, Query::Equals, value );
+  if ( !qb.exec() ) {
     qDebug() &lt;&lt; "Error during selection of records from table" &lt;&lt; tableName()
       &lt;&lt; "filtered by" &lt;&lt; key &lt;&lt; "=" &lt;&lt; value
-      &lt;&lt; query.lastError().text();
+      &lt;&lt; qb.query().lastError().text();
     return QList&lt;<xsl:value-of select="$className"/>&gt;();
   }
-  return extractResult( query );
+  return qb.result();
 }
 
 // data retrieval for referenced tables
