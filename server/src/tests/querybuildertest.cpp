@@ -85,7 +85,7 @@ void QueryBuilderTest::testQueryBuilder_data()
 
   qb = QueryBuilder( QueryBuilder::Update );
   qb.addTable( "table" );
-  qb.updateColumnValue( "col1", QString( "bla" ) );
+  qb.setColumnValue( "col1", QString( "bla" ) );
   bindVals.clear();
   bindVals << QString( "bla" );
   QTest::newRow( "update" ) << qb << QString( "UPDATE table SET col1 = :0" ) << bindVals;
@@ -93,12 +93,31 @@ void QueryBuilderTest::testQueryBuilder_data()
   qb = QueryBuilder( QueryBuilder::Update );
   qb.addTable( "table" );
   qb.addTable( "table2" );
-  qb.updateColumnValue( "col1", QString( "bla" ) );
+  qb.setColumnValue( "col1", QString( "bla" ) );
   qb.addColumnCondition( "table1.id", Query::Equals, "table2.id" );
   bindVals.clear();
   bindVals << QString( "bla" );
-  QTest::newRow( "update" ) << qb << QString( "UPDATE table, table2 SET col1 = :0 WHERE ( table1.id = table2.id )" )
+  QTest::newRow( "update multi table" ) << qb << QString( "UPDATE table, table2 SET col1 = :0 WHERE ( table1.id = table2.id )" )
       << bindVals;
+
+  qb = QueryBuilder( QueryBuilder::Insert );
+  qb.addTable( "table" );
+  qb.setColumnValue( "col1", QString( "bla" ) );
+  QTest::newRow( "insert single column" ) << qb << QString( "INSERT INTO table (col1) VALUES (:0)" ) << bindVals;
+
+  qb = QueryBuilder( QueryBuilder::Insert );
+  qb.addTable( "table" );
+  qb.setColumnValue( "col1", QString( "bla" ) );
+  qb.setColumnValue( "col2", 5 );
+  bindVals << 5;
+  QTest::newRow( "insert multi column" ) << qb << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1)" ) << bindVals;
+
+  qb = QueryBuilder( QueryBuilder::Insert );
+  qb.setDatabaseType( QueryBuilder::PostgreSQL );
+  qb.addTable( "table" );
+  qb.setColumnValue( "col1", QString( "bla" ) );
+  qb.setColumnValue( "col2", 5 );
+  QTest::newRow( "insert multi column" ) << qb << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1) RETURNING id" ) << bindVals;
 }
 
 void QueryBuilderTest::testQueryBuilder()

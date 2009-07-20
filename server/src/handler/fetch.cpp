@@ -74,7 +74,7 @@ void Fetch::updateItemAccessTime()
 {
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
-  qb.updateColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
+  qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
   ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";

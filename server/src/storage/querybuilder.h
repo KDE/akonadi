@@ -42,14 +42,28 @@ class QueryBuilder
   public:
     enum QueryType {
       Select,
+      Insert,
       Update,
       Delete
+    };
+
+    enum DatabaseType {
+      Unknown,
+      Sqlite,
+      MySQL,
+      PostgreSQL
     };
 
     /**
       Creates a new query builder.
     */
     explicit QueryBuilder( QueryType type = Select );
+
+    /**
+      Sets the database which should execute the query. Unfortunately the SQL "standard"
+      is not interpreted in the same way everywhere...
+    */
+    void setDatabaseType( DatabaseType type );
 
     /**
       Add a table to the FROM part of the query.
@@ -104,11 +118,11 @@ class QueryBuilder
     void addSortColumn( const QString &column, Query::SortOrder order = Query::Ascending );
 
     /**
-      Adds a column to update (only valid for UPDATE queries).
+      Sets a column to the given value (only valid for INSERT and UPDATE queries).
       @param column Column to change.
       @param value The value @p column should be set to.
     */
-    void updateColumnValue( const QString &column, const QVariant &value );
+    void setColumnValue( const QString &column, const QVariant &value );
 
     /**
      * Specify whether duplicates should be included in the result.
@@ -126,11 +140,23 @@ class QueryBuilder
     */
     bool exec();
 
+    /**
+      Returns the ID of the newly created record (only valid for INSERT queries)
+      @returns -1 if invalid
+    */
+    qint64 insertId();
+
+    /**
+      Converts Qt database driver names into database types.
+    */
+    static DatabaseType qsqlDriverNameToDatabaseType( const QString &driverName );
+
   private:
     QString bindValue( const QVariant &value );
     QString buildWhereCondition( const Query::Condition &cond );
 
   private:
+    DatabaseType mDatabaseType;
     Query::Condition mRootCondition;
     QStringList mTables;
     QSqlQuery mQuery;
@@ -138,7 +164,7 @@ class QueryBuilder
     QStringList mColumns;
     QList<QVariant> mBindValues;
     QList<QPair<QString, Query::SortOrder> > mSortColumns;
-    QList<QPair<QString, QVariant> > mUpdateColumns;
+    QList<QPair<QString, QVariant> > mColumnValues;
     bool mDistinct;
 #ifdef QUERYBUILDER_UNITTEST
     QString mStatement;

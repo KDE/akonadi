@@ -273,7 +273,7 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( Collection::tableName() );
   qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, collection.id() );
-  qb.updateColumnValue( Collection::resourceIdColumn(), resourceId );
+  qb.setColumnValue( Collection::resourceIdColumn(), resourceId );
   if ( !qb.exec() )
     return false;
   foreach ( const Collection &col, collection.children() ) {
@@ -586,18 +586,6 @@ qint64 DataStore::uidNext() const
     //       entry with the highest id is deleted. Instead we should probably
     //       keep record of the largest id that any PimItem ever had.
     return highestPimItemId() + 1;
-}
-
-
-//static
-qint64 DataStore::lastInsertId( const QSqlQuery & query )
-{
-    QVariant v = query.lastInsertId();
-    if ( !v.isValid() ) return -1;
-    bool ok;
-    qint64 insertId = v.toLongLong( &ok );
-    if ( !ok ) return -1;
-    return insertId;
 }
 
 

@@ -23,6 +23,8 @@
 #include "storage/datastore.h"
 #endif
 
+#include <QSqlRecord>
+
 using namespace Akonadi;
 
 static QString compareOperatorToString( Query::CompareOperator op )
@@ -79,11 +81,19 @@ static QString sortOrderToString( Query::SortOrder order )
 
 QueryBuilder::QueryBuilder( QueryType type ) :
 #ifndef QUERYBUILDER_UNITTEST
+    mDatabaseType( qsqlDriverNameToDatabaseType( DataStore::self()->database().driverName() ) ),
     mQuery( DataStore::self()->database() ),
+#else
+    mDatabaseType( Unknown ),
 #endif
     mType( type ),
     mDistinct( false )
 {
+}
+
+void QueryBuilder::setDatabaseType( DatabaseType type )
+{
+  mDatabaseType = type;
 }
 
 void QueryBuilder::addTable(const QString & table)
@@ -122,16 +132,36 @@ bool QueryBuilder::exec()
       Q_ASSERT_X( mTables.count() > 0, "QueryBuilder::exec()", "No tables specified" );
       statement += mTables.join( QLatin1String( ", " ) );
      break;
+    case Insert:
+    {
+      statement += QLatin1String( "INSERT INTO " );
+      Q_ASSERT_X( mTables.count() == 1, "QueryBuilder::exec()", "Specify exactly one table" );
+      statement += mTables.first();
+      statement += QLatin1String(" (");
+      typedef QPair<QString,QVariant> StringVariantPair;
+      QStringList cols, vals;
+      foreach ( const StringVariantPair &p, mColumnValues ) {
+        cols.append( p.first );
+        vals.append( bindValue( p.second ) );
+      }
+      statement += cols.join( QLatin1String( ", " ) );
+      statement += QLatin1String(") VALUES (");
+      statement += vals.join( QLatin1String( ", " ) );
+      statement += QLatin1Char(')');
+      if ( mDatabaseType == PostgreSQL )
+        statement += QLatin1String( " RETURNING id" );
+      break;
+    }
     case Update:
     {
       statement += QLatin1String( "UPDATE " );
       Q_ASSERT_X( mTables.count() > 0, "QueryBuilder::exec()", "No tables specified" );
       statement += mTables.join( QLatin1String( ", " ) );
       statement += QLatin1String( " SET " );
-      Q_ASSERT_X( mUpdateColumns.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed" );
+      Q_ASSERT_X( mColumnValues.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed" );
       typedef QPair<QString,QVariant> StringVariantPair;
       QStringList updStmts;
-      foreach ( const StringVariantPair &p, mUpdateColumns ) {
+      foreach ( const StringVariantPair &p, mColumnValues ) {
         QString updStmt = p.first;
         updStmt += QLatin1String( " = " );
         updStmt += bindValue( p.second );
@@ -254,12 +284,39 @@ void QueryBuilder::addSortColumn(const QString & column, Query::SortOrder order 
   mSortColumns << qMakePair( column, order );
 }
 
-void QueryBuilder::updateColumnValue(const QString & column, const QVariant & value)
+void QueryBuilder::setColumnValue(const QString & column, const QVariant & value)
 {
-  mUpdateColumns << qMakePair( column, value );
+  mColumnValues << qMakePair( column, value );
 }
 
 void QueryBuilder::setDistinct(bool distinct)
 {
   mDistinct = distinct;
+}
+
+qint64 QueryBuilder::insertId()
+{
+  if ( mDatabaseType == PostgreSQL ) {
+    query().next();
+    return query().record().value( QLatin1String("id") ).toLongLong();
+  } else {
+    const QVariant v = query().lastInsertId();
+    if ( !v.isValid() ) return -1;
+    bool ok;
+    const qint64 insertId = v.toLongLong( &ok );
+    if ( !ok ) return -1;
+    return insertId;
+  }
+  return -1;
+}
+
+QueryBuilder::DatabaseType QueryBuilder::qsqlDriverNameToDatabaseType (const QString & driverName)
+{
+  if ( driverName == QLatin1String( "QMYSQL" ) )
+    return MySQL;
+  if ( driverName == QLatin1String( "QPSQL" ) )
+    return PostgreSQL;
+  if ( driverName == QLatin1String( "SQLITE" ) )
+    return Sqlite;
+  return Unknown;
 }

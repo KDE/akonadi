@@ -237,13 +237,6 @@ protected:
 
     void debugLastDbError( const char* actionDescription ) const;
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
-  public:
-    /** Returns the id of the most recent inserted row, or -1 if there's no such
-        id.
-        @param query the query we want to get the last insert id for
-        @return id of the most recent inserted row, or -1
-     */
-    static qint64 lastInsertId( const QSqlQuery & query );
 
   private:
     /** Converts the given date/time to the database format, i.e.

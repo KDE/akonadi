@@ -423,31 +423,21 @@ bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
   if ( !db.isOpen() )
     return false;
 
-  QStringList cols, vals;
+  QueryBuilder qb( QueryBuilder::Insert );
+  qb.addTable( tableName() );
   <xsl:for-each select="column[@name != 'id']">
   if ( d-&gt;<xsl:value-of select="@name"/>_changed ) {
-    cols.append( <xsl:value-of select="@name"/>Column() );
-    vals.append( QLatin1String( ":<xsl:value-of select="@name"/>" ) );
-  }
-  </xsl:for-each>
-  QString statement = QString::fromLatin1("INSERT INTO <xsl:value-of select="$tableName"/> (%1) VALUES (%2)")
-    .arg( cols.join( QLatin1String(",") ), vals.join( QLatin1String(",") ) );
-
-  QSqlQuery query( db );
-  query.prepare( statement );
-  <xsl:for-each select="column[@name != 'id']">
-  if ( d-&gt;<xsl:value-of select="@name"/>_changed ) {
-    query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), this-&gt;<xsl:value-of select="@name"/>() );
+    qb.setColumnValue( <xsl:value-of select="@name"/>Column(), this-&gt;<xsl:value-of select="@name"/>() );
   }
   </xsl:for-each>
 
-  if ( !query.exec() ) {
+  if ( !qb.exec() ) {
     qDebug() &lt;&lt; "Error during insertion into table" &lt;&lt; tableName()
-      &lt;&lt; query.lastError().text();
+      &lt;&lt; qb.query().lastError().text();
     return false;
   }
 
-  setId( DataStore::self()->lastInsertId( query ) );
+  setId( qb.insertId() );
   if ( insertId )
     *insertId = id();
   return true;
