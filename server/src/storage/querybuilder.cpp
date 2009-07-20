@@ -156,7 +156,13 @@ bool QueryBuilder::exec()
     {
       statement += QLatin1String( "UPDATE " );
       Q_ASSERT_X( mTables.count() > 0, "QueryBuilder::exec()", "No tables specified" );
-      statement += mTables.join( QLatin1String( ", " ) );
+
+      if ( mDatabaseType == MySQL ) {
+        statement += mTables.join( QLatin1String( ", " ) );
+      } else {
+         statement += mTables.at( 0 );
+      }
+
       statement += QLatin1String( " SET " );
       Q_ASSERT_X( mColumnValues.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed" );
       typedef QPair<QString,QVariant> StringVariantPair;
@@ -168,6 +174,16 @@ bool QueryBuilder::exec()
         updStmts << updStmt;
       }
       statement += updStmts.join( QLatin1String( ", " ) );
+
+      if ( mDatabaseType != MySQL ) {
+        // FROM TABLES
+        QString part = QLatin1String( " FROM" );
+        for ( int i = 1; i <  mTables.size(); i++ ) {
+          statement += part + QLatin1String( " " ) + mTables.at( i );
+          part = QLatin1String( " JOIN " );
+        }
+      }
+
       break;
     }
     case Delete:

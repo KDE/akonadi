@@ -91,13 +91,23 @@ void QueryBuilderTest::testQueryBuilder_data()
   QTest::newRow( "update" ) << qb << QString( "UPDATE table SET col1 = :0" ) << bindVals;
 
   qb = QueryBuilder( QueryBuilder::Update );
-  qb.addTable( "table" );
+  qb.setDatabaseType( QueryBuilder::MySQL );
+  qb.addTable( "table1" );
   qb.addTable( "table2" );
   qb.setColumnValue( "col1", QString( "bla" ) );
   qb.addColumnCondition( "table1.id", Query::Equals, "table2.id" );
   bindVals.clear();
   bindVals << QString( "bla" );
-  QTest::newRow( "update multi table" ) << qb << QString( "UPDATE table, table2 SET col1 = :0 WHERE ( table1.id = table2.id )" )
+  QTest::newRow( "update multi table MYSQL" ) << qb << QString( "UPDATE table1, table2 SET col1 = :0 WHERE ( table1.id = table2.id )" )
+      << bindVals;
+
+  qb = QueryBuilder( QueryBuilder::Update );
+  qb.setDatabaseType( QueryBuilder::PostgreSQL );
+  qb.addTable( "table1" );
+  qb.addTable( "table2" );
+  qb.setColumnValue( "col1", QString( "bla" ) );
+  qb.addColumnCondition( "table1.id", Query::Equals, "table2.id" );
+  QTest::newRow( "update multi table PSQL" ) << qb << QString( "UPDATE table1 SET col1 = :0 FROM table2 WHERE ( table1.id = table2.id )" )
       << bindVals;
 
   qb = QueryBuilder( QueryBuilder::Insert );
@@ -117,7 +127,7 @@ void QueryBuilderTest::testQueryBuilder_data()
   qb.addTable( "table" );
   qb.setColumnValue( "col1", QString( "bla" ) );
   qb.setColumnValue( "col2", 5 );
-  QTest::newRow( "insert multi column" ) << qb << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1) RETURNING id" ) << bindVals;
+  QTest::newRow( "insert multi column PSQL" ) << qb << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1) RETURNING id" ) << bindVals;
 }
 
 void QueryBuilderTest::testQueryBuilder()
