@@ -71,6 +71,7 @@ static const struct {
   { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()), false },
   { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), "bookmark-new", 0, SLOT(slotAddToFavorites()), false },
   { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), false },
+  { "akonadi_collection_rename_favorite", I18N_NOOP("Rename Favorite..."), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
   { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
   { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true }
 };
@@ -176,6 +177,8 @@ class StandardActionManager::Private
         //FIXME: better check if the collection is in the model, todo once FavoriteCollectionsModel is in kdepimlibs/akonadi
         enableAction( RemoveFromFavoriteCollections, (favoritesModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
                                                   && singleColSelected && (col != Collection::root()) );
+        enableAction( RenameFavoriteCollection, (favoritesModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
+                                             && singleColSelected && (col != Collection::root()) );
         enableAction( CopyCollectionToMenu, multiColSelected && (col != Collection::root()) );
       } else {
         enableAction( CreateCollection, false );
@@ -378,6 +381,30 @@ class StandardActionManager::Private
       //FIXME: remove the reinterpret_cast and invokeMethod once FavoriteCollectionsModel is in kdepimlibs/akonadi
       QAbstractItemModel *model = reinterpret_cast<QAbstractItemModel*>( favoritesModel );
       QMetaObject::invokeMethod( model, "removeCollection", Q_ARG(Collection, collection) );
+    }
+
+    void slotRenameFavorite()
+    {
+      Q_ASSERT( collectionSelectionModel );
+      Q_ASSERT( favoritesModel );
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      bool ok;
+      QString label = KInputDialog::getText( i18n( "Rename Favorite" ),
+                                             i18nc( "@label:textbox New name of the folder.", "Name:" ),
+                                             index.data().toString(), &ok, parentWidget );
+      if ( !ok )
+        return;
+
+      //FIXME: remove the reinterpret_cast and invokeMethod once FavoriteCollectionsModel is in kdepimlibs/akonadi
+      QAbstractItemModel *model = reinterpret_cast<QAbstractItemModel*>( favoritesModel );
+      QMetaObject::invokeMethod( model, "setFavoriteLabel", Q_ARG(Collection, collection), Q_ARG(QString, label) );
     }
 
     void slotCopyCollectionTo( QAction *action )
