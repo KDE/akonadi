@@ -54,7 +54,7 @@ Collection HandlerHelper::collectionFromIdOrName(const QByteArray & id)
     if ( col.isValid() )
       qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, col.id() );
     else
-      qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, 0 );
+      qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
     if ( !qb.exec() )
       return Collection();
     Collection::List list = qb.result();

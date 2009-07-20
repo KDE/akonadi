@@ -75,6 +75,10 @@
 
   <update version="12" abortOnFailure="false">
     ALTER TABLE PartTable CHANGE datasize datasize BIGINT;
- </update>
+  </update>
+
+  <update version="13" abortOnFailure="true">
+    UPDATE collectiontable SET parentId = NULL WHERE parentId = 0;
+  </update>
 
 </updates>

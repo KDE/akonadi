@@ -177,7 +177,7 @@ bool AkList::parseStream()
     }
   } else {
     if ( depth != 0 ) {
-      Collection::List list = Collection::retrieveFiltered( Collection::parentIdColumn(), 0 );
+      Collection::List list = Collection::retrieveFiltered( Collection::parentIdColumn(), QVariant() );
       collections << list;
     }
     --depth;

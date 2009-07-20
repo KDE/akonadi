@@ -308,7 +308,10 @@ bool Akonadi::DataStore::renameCollection( Collection & collection, qint64 newPa
   }
 
   SelectQueryBuilder<Collection> qb;
-  qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, newParent );
+  if ( newParent > 0 )
+    qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, newParent );
+  else
+    qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
   qb.addValueCondition( Collection::nameColumn(), Query::Equals, newName );
   if ( !qb.exec() || qb.result().count() > 0 )
     return false;

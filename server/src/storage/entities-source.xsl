@@ -237,7 +237,9 @@ QList&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$classN
   while ( query.next() ) {
     rv.append( <xsl:value-of select="$className"/>(
       <xsl:for-each select="column">
-        query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
+        (query.isNull(<xsl:value-of select="position() - 1"/>)) ?
+          <xsl:value-of select="@type"/>() :
+          query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
         <xsl:if test="position() != last()">,</xsl:if>
       </xsl:for-each>
     ) );
@@ -295,7 +297,10 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
   statement.append( tableName() );
   statement.append( QLatin1String(" WHERE ") );
   statement.append( key );
-  statement.append( QLatin1String(" = :key") );
+  if ( value.isNull() )
+    statement.append( QLatin1String(" is null") );
+  else
+    statement.append( QLatin1String(" = :key") );
   query.prepare( statement );
   query.bindValue( QLatin1String(":key"), value );
   if ( !query.exec() ) {
@@ -426,9 +431,15 @@ bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
   QueryBuilder qb( QueryBuilder::Insert );
   qb.addTable( tableName() );
   <xsl:for-each select="column[@name != 'id']">
-  if ( d-&gt;<xsl:value-of select="@name"/>_changed ) {
-    qb.setColumnValue( <xsl:value-of select="@name"/>Column(), this-&gt;<xsl:value-of select="@name"/>() );
-  }
+    <xsl:variable name="refColumn"><xsl:value-of select="@refColumn"/></xsl:variable>
+    <xsl:if test="$refColumn = 'id'">
+    if ( d-&gt;<xsl:value-of select="@name"/>_changed  &amp;&amp; d-&gt;<xsl:value-of select="@name"/> &gt; 0 )
+      qb.setColumnValue( <xsl:value-of select="@name"/>Column(), this-&gt;<xsl:value-of select="@name"/>() );
+    </xsl:if>
+    <xsl:if test="$refColumn != 'id'">
+    if ( d-&gt;<xsl:value-of select="@name"/>_changed )
+      qb.setColumnValue( <xsl:value-of select="@name"/>Column(), this-&gt;<xsl:value-of select="@name"/>() );
+    </xsl:if>
   </xsl:for-each>
 
   if ( !qb.exec() ) {

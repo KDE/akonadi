@@ -144,7 +144,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
       if ( !columnElement.attribute( QLatin1String( "refTable" ) ).isEmpty()
         && !columnElement.attribute( QLatin1String( "refColumn" ) ).isEmpty() )
       {
-        const QString refStmt = QString::fromLatin1( " REFERENCES %1Table(%2)" )
+        const QString refStmt = QString::fromLatin1( " REFERENCES %1Table(%2) ON DELETE CASCADE ON UPDATE CASCADE" )
           .arg( columnElement.attribute( QLatin1String( "refTable" ) ) )
           .arg( columnElement.attribute( QLatin1String( "refColumn" ) ) );
         if ( !mDatabase.driverName().startsWith( QLatin1String("QSQLITE") ) )

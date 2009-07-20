@@ -163,7 +163,9 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
 
   <xsl:value-of select="$className"/> rv(
   <xsl:for-each select="column">
-    query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
+    (query.isNull(<xsl:value-of select="position() - 1"/>)) ?
+      <xsl:value-of select="@type"/>() :
+      query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
     <xsl:if test="position() != last()">,</xsl:if>
   </xsl:for-each>
   );

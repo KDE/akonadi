@@ -67,7 +67,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="12"/>
+    <data columns="version" values="13"/>
   </table>
 
   <table name="Resource">
@@ -81,7 +81,7 @@
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="remoteId" type="QString"/>
     <column name="name" type="QByteArray" sqltype="VARCHAR(255)" properties="BINARY character set utf8 collate utf8_bin NOT NULL"/>
-    <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent" properties="DEFAULT 0"/>
+    <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent" properties="DEFAULT NULL"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" properties="NOT NULL"/>
     <column name="subscribed" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
     <column name="cachePolicyInherit" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
@@ -93,7 +93,7 @@
     <reference name="children" table="Collection" key="parentId"/>
     <reference name="items" table="PimItem" key="collectionId"/>
     <reference name="attributes" table="CollectionAttribute" key="collectionId"/>
-    <data columns="parentId,name,resourceId" values="0,'Search',1"/>
+    <data columns="parentId,name,resourceId" values="NULL,'Search',1"/>
   </table>
 
   <table name="MimeType">
@@ -154,7 +154,7 @@
 
   <table name="CollectionAttribute">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="collectionId" type="qint64" refTable="Collection" refColumn="id"/>
+    <column name="collectionId" type="qint64" refTable="Collection" refColumn="id" properties="NOT NULL"/>
     <column name="type" type="QByteArray" properties="NOT NULL"/>
     <column name="value" type="QByteArray"/>
     <index name="collectionIndex" columns="collectionId" unique="false"/>
