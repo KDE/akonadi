@@ -147,6 +147,13 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     void setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel );
 
     /**
+     * Sets the favorite collection selection model based on which the favorite
+     * collection related actions should operate. If none is set, all favorite modifications
+     * actions will be disabled.
+     */
+    void setFavoriteSelectionModel( QItemSelectionModel *selectionModel );
+
+    /**
      * Creates the action of the given type and adds it to the action collection
      * specified in the constructor if it does not exist yet. The action is
      * connected to its default implementation provided by this class.

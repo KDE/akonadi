@@ -100,7 +100,8 @@ class StandardActionManager::Private
       q( parent ),
       collectionSelectionModel( 0 ),
       itemSelectionModel( 0 ),
-      favoritesModel( 0 )
+      favoritesModel( 0 ),
+      favoriteSelectionModel( 0 )
     {
       actions.fill( 0, StandardActionManager::LastType );
 
@@ -175,9 +176,9 @@ class StandardActionManager::Private
         enableAction( AddToFavoriteCollections, (favoritesModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
                                              && singleColSelected && (col != Collection::root()) );
         //FIXME: better check if the collection is in the model, todo once FavoriteCollectionsModel is in kdepimlibs/akonadi
-        enableAction( RemoveFromFavoriteCollections, (favoritesModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
+        enableAction( RemoveFromFavoriteCollections, (favoriteSelectionModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
                                                   && singleColSelected && (col != Collection::root()) );
-        enableAction( RenameFavoriteCollection, (favoritesModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
+        enableAction( RenameFavoriteCollection, (favoriteSelectionModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
                                              && singleColSelected && (col != Collection::root()) );
         enableAction( CopyCollectionToMenu, multiColSelected && (col != Collection::root()) );
       } else {
@@ -525,6 +526,7 @@ class StandardActionManager::Private
     QWidget *parentWidget;
     QItemSelectionModel *collectionSelectionModel;
     QItemSelectionModel *itemSelectionModel;
+    QItemSelectionModel *favoriteSelectionModel;
     FavoriteCollectionsModel *favoritesModel;
     QVector<KAction*> actions;
     AgentManager *agentManager;
@@ -562,9 +564,16 @@ void StandardActionManager::setItemSelectionModel(QItemSelectionModel * selectio
            SLOT(updateActions()) );
 }
 
-void Akonadi::StandardActionManager::setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel )
+void StandardActionManager::setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel )
 {
   d->favoritesModel = favoritesModel;
+}
+
+void StandardActionManager::setFavoriteSelectionModel( QItemSelectionModel *selectionModel )
+{
+  d->favoriteSelectionModel = selectionModel;
+  connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
+           SLOT(updateActions()) );
 }
 
 KAction* StandardActionManager::createAction( Type type )
