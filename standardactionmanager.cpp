@@ -426,8 +426,11 @@ class StandardActionManager::Private
 
       for ( int row = 0; row < rowCount; row++ ) {
         QModelIndex index = model->index( row, 0, parentIndex );
+        Collection collection = model->data( index, CollectionModel::CollectionRole ).value<Collection>();
 
-        // FIXME: Need a way to skip the search folder
+        if ( CollectionUtils::isVirtual( collection ) ) {
+          continue;
+        }
 
         QString label = model->data( index ).toString();
         label.replace( QString::fromUtf8( "&" ), QString::fromUtf8( "&&" ) );
