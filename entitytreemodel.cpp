@@ -409,7 +409,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
     if ( destCollection == Collection::root() )
       return false;
 
-    if ( data->hasFormat( "text/uri-list" ) ) {
+    if ( data->hasFormat( QLatin1String( "text/uri-list" ) ) ) {
 
       MimeTypeChecker mimeChecker;
       mimeChecker.setWantedMimeTypes( destCollection.contentMimeTypes() );
