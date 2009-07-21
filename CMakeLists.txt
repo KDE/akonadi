@@ -77,6 +77,7 @@ set( akonadikde_LIB_SRC
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entityfilterproxymodel.cpp
+  entitytreeviewstatesaver.cpp
   erroroverlay.cpp
   exception.cpp
   expungejob.cpp
@@ -203,6 +204,7 @@ install( FILES
   entitydisplayattribute.h
   entitytreemodel.h
   entityfilterproxymodel.h
+  entitytreeviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
   item.h
