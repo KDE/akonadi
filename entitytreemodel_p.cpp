@@ -125,8 +125,8 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     // the key is the parent of new collections.
     const Collection::Id parentId = it.key();
 
-    const QList<Collection::Id> newChildCollections = it.value();
-    const int newChildCount = newChildCollections.size();
+    const QList<Collection::Id> newChildCollectionList = it.value();
+    const int newChildCount = newChildCollectionList.size();
 
     if ( m_collections.contains( parentId ) ) {
       int startRow = 0; // Prepend collections.
@@ -135,7 +135,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       const QModelIndex parentIndex = q->indexForCollection( m_collections.value( parentId ) );
 
       q->beginInsertRows( parentIndex, startRow, startRow + newChildCount - 1 );
-      foreach ( const Collection::Id id, newChildCollections ) {
+      foreach ( const Collection::Id id, newChildCollectionList ) {
         const Collection collection = newCollections.value( id );
         m_collections.insert( id, collection );
 
@@ -147,7 +147,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       }
       q->endInsertRows();
 
-      foreach ( const Collection::Id id, newChildCollections ) {
+      foreach ( const Collection::Id id, newChildCollectionList ) {
         const Collection collection = newCollections.value( id );
 
         // Fetch the next level of collections if necessary.
