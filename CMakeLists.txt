@@ -76,10 +76,11 @@ set( akonadikde_LIB_SRC
   entitydisplayattribute.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
-  #entitysortfilterproxymodel.cpp
+  entityfilterproxymodel.cpp
   erroroverlay.cpp
   exception.cpp
   expungejob.cpp
+  favoritecollectionsmodel.cpp
   firstrun.cpp
   flatcollectionproxymodel.cpp
   item.cpp
@@ -112,6 +113,8 @@ set( akonadikde_LIB_SRC
   session.cpp
   servermanager.cpp
   standardactionmanager.cpp
+  statisticsproxymodel.cpp
+  statisticstooltipproxymodel.cpp
   subscriptionjob.cpp
   subscriptionchangeproxymodel.cpp
   subscriptiondialog.cpp
@@ -199,8 +202,9 @@ install( FILES
   entity.h
   entitydisplayattribute.h
   entitytreemodel.h
-  #  entitysortfilterproxymodel.h
+  entityfilterproxymodel.h
   exception.h
+  favoritescollectionmodel.h
   item.h
   itemcreatejob.h
   itemcopyjob.h
@@ -226,6 +230,8 @@ install( FILES
   session.h
   servermanager.h
   standardactionmanager.h
+  statisticsproxymodel.h
+  statisticstooltipsproxymodel.h
   transactionjobs.h
   transactionsequence.h
   unlinkjob.h
