@@ -72,6 +72,7 @@ set( akonadikde_LIB_SRC
   collectionsync.cpp
   collectionview.cpp
   control.cpp
+  descendantsproxymodel.cpp
   entitydisplayattribute.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
@@ -193,6 +194,7 @@ install( FILES
   collectionstatisticsjob.h
   collectionview.h
   control.h
+  descendantsproxymodel.h
   entity.h
   entitydisplayattribute.h
   entitytreemodel.h
