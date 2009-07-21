@@ -204,7 +204,7 @@ install( FILES
   entitytreemodel.h
   entityfilterproxymodel.h
   exception.h
-  favoritescollectionmodel.h
+  favoritecollectionsmodel.h
   item.h
   itemcreatejob.h
   itemcopyjob.h
@@ -231,7 +231,7 @@ install( FILES
   servermanager.h
   standardactionmanager.h
   statisticsproxymodel.h
-  statisticstooltipsproxymodel.h
+  statisticstooltipproxymodel.h
   transactionjobs.h
   transactionsequence.h
   unlinkjob.h

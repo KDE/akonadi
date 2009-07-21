@@ -21,7 +21,7 @@
 #define AKONADI_STATISTICSTOOLTIPPROXYMODEL_H
 
 #include <QtGui/QSortFilterProxyModel>
-#include "akonadi_next_export.h"
+#include "akonadi_export.h"
 namespace Akonadi {
 
 /**
@@ -44,7 +44,7 @@ namespace Akonadi {
  *
  * @author Kevin Ottens <ervin@kde.org>
  */
-class AKONADI_NEXT_EXPORT StatisticsToolTipProxyModel : public QSortFilterProxyModel
+class AKONADI_EXPORT StatisticsToolTipProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 

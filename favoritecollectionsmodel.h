@@ -22,7 +22,7 @@
 
 #include "selectionproxymodel.h"
 
-#include "akonadi_next_export.h"
+#include "akonadi_export.h"
 
 #include <akonadi/collection.h>
 
@@ -30,7 +30,7 @@ namespace Akonadi {
 
 class EntityTreeModel;
 
-class AKONADI_NEXT_EXPORT FavoriteCollectionsModel : public SelectionProxyModel
+class AKONADI_EXPORT FavoriteCollectionsModel : public SelectionProxyModel
 {
   Q_OBJECT
 
@@ -61,10 +61,6 @@ class AKONADI_NEXT_EXPORT FavoriteCollectionsModel : public SelectionProxyModel
 
   private:
     using SelectionProxyModel::setSourceModel;
-    using SelectionProxyModel::setOmitChildren;
-    using SelectionProxyModel::setOmitDescendants;
-    using SelectionProxyModel::setStartWithChildTrees;
-    using SelectionProxyModel::setIncludeAllSelected;
 
     Q_PRIVATE_SLOT( d, void clearAndUpdateSelection() )
     Q_PRIVATE_SLOT( d, void updateSelection() )

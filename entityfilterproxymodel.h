@@ -22,7 +22,7 @@
 #define AKONADI_ENTITYFILTERPROXYMODEL_H
 
 #include <QtGui/QSortFilterProxyModel>
-#include "akonadi_next_export.h"
+#include "akonadi_export.h"
 namespace Akonadi {
 
 class EntityFilterProxyModelPrivate;
@@ -53,7 +53,7 @@ class EntityFilterProxyModelPrivate;
  * @author Bruno Virlet <bruno.virlet@gmail.com>
  * @author Stephen Kelly <steveire@gmail.com>
  */
-class AKONADI_NEXT_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
+class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 

@@ -116,8 +116,7 @@ FavoriteCollectionsModel::FavoriteCollectionsModel( EntityTreeModel *source, QOb
     d( new Private( this ) )
 {
   setSourceModel( source );
-  setOmitChildren( true );
-  setIncludeAllSelected( true );
+  setFilterBehavior(OnlySelected);
 
   connect( source, SIGNAL( modelReset() ), this, SLOT( clearAndUpdateSelection() ) );
   connect( source, SIGNAL( layoutChanged() ), this, SLOT( clearAndUpdateSelection() ) );
@@ -199,7 +198,7 @@ QVariant FavoriteCollectionsModel::headerData( int section, Qt::Orientation orie
   if ( section == 0
     && orientation == Qt::Horizontal
     && role == Qt::DisplayRole ) {
-    return "Favorite Folders";
+    return QLatin1String("Favorite Folders");
   } else {
     return SelectionProxyModel::headerData( section, orientation, role );
   }

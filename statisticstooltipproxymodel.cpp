@@ -124,7 +124,7 @@ QVariant StatisticsToolTipProxyModel::data( const QModelIndex & index, int role)
       }
 
       if ( iconPath.isEmpty() ) {
-        iconPath = KIconLoader::global()->iconPath( "folder", -32, false );
+        iconPath = KIconLoader::global()->iconPath( QLatin1String("folder"), -32, false );
       }
 
       tip += QString::fromLatin1(
