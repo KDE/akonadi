@@ -519,8 +519,8 @@ class StandardActionManager::Private
     QWidget *parentWidget;
     QItemSelectionModel *collectionSelectionModel;
     QItemSelectionModel *itemSelectionModel;
-    QItemSelectionModel *favoriteSelectionModel;
     FavoriteCollectionsModel *favoritesModel;
+    QItemSelectionModel *favoriteSelectionModel;
     QVector<KAction*> actions;
     AgentManager *agentManager;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
@@ -543,14 +543,14 @@ StandardActionManager::~ StandardActionManager()
   delete d;
 }
 
-void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel * selectionModel)
+void StandardActionManager::setCollectionSelectionModel( QItemSelectionModel * selectionModel )
 {
   d->collectionSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
            SLOT(updateActions()) );
 }
 
-void StandardActionManager::setItemSelectionModel(QItemSelectionModel * selectionModel)
+void StandardActionManager::setItemSelectionModel( QItemSelectionModel * selectionModel )
 {
   d->itemSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
@@ -617,7 +617,7 @@ KAction * StandardActionManager::action( Type type ) const
   return d->actions[type];
 }
 
-void StandardActionManager::setActionText(Type type, const KLocalizedString & text)
+void StandardActionManager::setActionText( Type type, const KLocalizedString & text )
 {
   Q_ASSERT( type >= 0 && type < LastType );
   d->pluralLabels.insert( type, text );
