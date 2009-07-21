@@ -77,3 +77,25 @@ void DescendantsProxyModel::setHeaderSet(int set)
   Q_D(DescendantsProxyModel);
   d->m_headerSet = set;
 }
+
+bool DescendantsProxyModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
+{
+  Q_ASSERT(sourceModel());
+  const QModelIndex sourceParent = mapToSource(parent);
+  return sourceModel()->dropMimeData(data, action, row, column, sourceParent);
+}
+
+QMimeData* DescendantsProxyModel::mimeData( const QModelIndexList & indexes ) const
+{
+  Q_ASSERT(sourceModel());
+  QModelIndexList sourceIndexes;
+  foreach(const QModelIndex& index, indexes)
+    sourceIndexes << mapToSource(index);
+  return sourceModel()->mimeData(sourceIndexes);
+}
+
+QStringList DescendantsProxyModel::mimeTypes() const
+{
+  Q_ASSERT(sourceModel());
+  return sourceModel()->mimeTypes();
+}

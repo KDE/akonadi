@@ -77,3 +77,26 @@ void SelectionProxyModel::setHeaderSet(int set)
   Q_D(SelectionProxyModel);
   d->m_headerSet = set;
 }
+
+bool SelectionProxyModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
+{
+  Q_ASSERT(sourceModel());
+  const QModelIndex sourceParent = mapToSource(parent);
+  return sourceModel()->dropMimeData(data, action, row, column, sourceParent);
+}
+
+QMimeData* SelectionProxyModel::mimeData( const QModelIndexList & indexes ) const
+{
+  Q_ASSERT(sourceModel());
+  QModelIndexList sourceIndexes;
+  foreach(const QModelIndex& index, indexes)
+    sourceIndexes << mapToSource(index);
+  return sourceModel()->mimeData(sourceIndexes);
+}
+
+QStringList SelectionProxyModel::mimeTypes() const
+{
+  Q_ASSERT(sourceModel());
+  return sourceModel()->mimeTypes();
+}
+
