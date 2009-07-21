@@ -20,43 +20,60 @@
 #ifndef AKONADI_SELECTIONPROXYMODEL_H
 #define AKONADI_SELECTIONPROXYMODEL_H
 
-#include <QItemSelectionModel>
-
 #include "akonadi_export.h"
+
 #include <kselectionproxymodel.h>
+
+#include <QtGui/QItemSelectionModel>
 
 namespace Akonadi
 {
 
 class SelectionProxyModelPrivate;
 
+/**
+ * @short A proxy model that provides data depending on the selection of a view.
+ *
+ * @author Stephen Kelly <steveire@gmail.com>
+ * @since 4.4
+ */
 class AKONADI_EXPORT SelectionProxyModel : public KSelectionProxyModel
 {
   Q_OBJECT
-public:
-  explicit SelectionProxyModel(QItemSelectionModel *selectionModel, QObject *parent = 0 );
 
-  virtual ~SelectionProxyModel();
-  /**
-   * Sets the header @p set that shall be used by the proxy.
-   *
-   * \s EntityTreeModel::HeaderGroup
-   */
-  void setHeaderSet( int set );
+  public:
+    /**
+     * Creates a new selection proxy model.
+     *
+     * @param selectionModel The selection model to work on.
+     * @param parent The parent object.
+     */
+    explicit SelectionProxyModel( QItemSelectionModel *selectionModel, QObject *parent = 0 );
 
-  /**
-   * Returns the header set used by the proxy.
-   */
-  int headerSet() const;
+    /**
+     * Destroys the selection proxy model.
+     */
+    virtual ~SelectionProxyModel();
 
-  virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    /**
+     * Sets the header @p set that shall be used by the proxy model.
+     *
+     * \s EntityTreeModel::HeaderGroup
+     */
+    void setHeaderSet( int set );
 
-private:
-  Q_DECLARE_PRIVATE(SelectionProxyModel)
-  //@cond PRIVATE
-  SelectionProxyModelPrivate *d_ptr;
-  //@endcond
+    /**
+     * Returns the header set used by the proxy model.
+     */
+    int headerSet() const;
 
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+
+  private:
+    //@cond PRIVATE
+    Q_DECLARE_PRIVATE( SelectionProxyModel )
+    SelectionProxyModelPrivate *d_ptr;
+    //@endcond
 };
 
 }

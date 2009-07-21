@@ -17,44 +17,59 @@
     02110-1301, USA.
 */
 
-#ifndef DESCENDANTSPROXYMODEL_H
-#define DESCENDANTSPROXYMODEL_H
-
-#include <kdescendantsproxymodel.h>
+#ifndef AKONADI_DESCENDANTSPROXYMODEL_H
+#define AKONADI_DESCENDANTSPROXYMODEL_H
 
 #include "akonadi_export.h"
 
+#include <kdescendantsproxymodel.h>
+
 namespace Akonadi
 {
-  
 class DescendantsProxyModelPrivate;
 
+/**
+ * @short A proxy model that flattens a tree-based model to a list model.
+ *
+ * @author Stephen Kelly <steveire@gmail.com>
+ * @since 4.4
+ */
 class AKONADI_EXPORT DescendantsProxyModel : public KDescendantsProxyModel
 {
   Q_OBJECT
-public:  
-  DescendantsProxyModel(QObject *parent = 0);
 
-  virtual ~DescendantsProxyModel();
+  public:
+    /**
+     * Creates a new descendants proxy model.
+     *
+     * @param parent The parent object.
+     */
+    DescendantsProxyModel( QObject *parent = 0 );
 
-  /**
-   * Sets the header @p set that shall be used by the proxy.
-   *
-   * \s EntityTreeModel::HeaderGroup
-   */
-  void setHeaderSet( int set );
+    /**
+     * Destroys the descendants proxy model.
+     */
+    virtual ~DescendantsProxyModel();
 
-  /**
-   * Returns the header set used by the proxy.
-   */
-  int headerSet() const;
+    /**
+     * Sets the header @p set that shall be used by the proxy model.
+     *
+     * \s EntityTreeModel::HeaderGroup
+     */
+    void setHeaderSet( int set );
 
-  virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    /**
+     * Returns the header set used by the proxy model.
+     */
+    int headerSet() const;
 
-private:
-  Q_DECLARE_PRIVATE(DescendantsProxyModel)
-  DescendantsProxyModelPrivate *d_ptr;
-      
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+
+  private:
+    //@cond PRIVATE
+    Q_DECLARE_PRIVATE(DescendantsProxyModel)
+    DescendantsProxyModelPrivate *d_ptr;
+    //@endcond
 };
 
 }

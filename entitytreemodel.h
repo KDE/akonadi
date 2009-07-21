@@ -20,13 +20,13 @@
 #ifndef AKONADI_ENTITYTREEMODEL_H
 #define AKONADI_ENTITYTREEMODEL_H
 
-
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QStringList>
+#include "akonadi_export.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
-#include "akonadi_export.h"
+
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QStringList>
 
 // TODO (Applies to all these 'new' models, not just EntityTreeModel):
 // * Figure out how LazyPopulation and signals from monitor containing items should
@@ -47,11 +47,11 @@
 
 namespace Akonadi
 {
-class Item;
 class CollectionStatistics;
+class Item;
+class ItemFetchScope;
 class Monitor;
 class Session;
-class ItemFetchScope;
 
 class EntityTreeModelPrivate;
 
@@ -253,21 +253,20 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     virtual bool hasChildren( const QModelIndex &parent = QModelIndex() ) const;
 
     /**
-    Reimplemented to handle the AmazingCompletionRole.
-    */
-    virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+     * Reimplemented to handle the AmazingCompletionRole.
+     */
+    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
     /**
-      Reimplement this in a subclass to return true if @p item matches @p value with @p flags in the AmazingCompletionRole.
-    */
-    virtual bool match(const Item &item, const QVariant &value, Qt::MatchFlags flags) const;
+     * Reimplement this in a subclass to return true if @p item matches @p value with @p flags in the AmazingCompletionRole.
+     */
+    virtual bool match( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const;
 
     /**
-      Reimplement this in a subclass to return true if @p collection matches @p value with @p flags in the AmazingCompletionRole.
-    */
-    virtual bool match(const Collection &collection, const QVariant &value, Qt::MatchFlags flags) const;
+     * Reimplement this in a subclass to return true if @p collection matches @p value with @p flags in the AmazingCompletionRole.
+     */
+    virtual bool match( const Collection &collection, const QVariant &value, Qt::MatchFlags flags ) const;
 
-    
   protected:
     /**
      * Clears and resets the model. Always call this instead of the reset method in the superclass.
