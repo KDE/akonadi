@@ -26,7 +26,7 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
-#include "akonadi_next_export.h"
+#include "akonadi_export.h"
 
 // TODO (Applies to all these 'new' models, not just EntityTreeModel):
 // * Figure out how LazyPopulation and signals from monitor containing items should
@@ -77,7 +77,7 @@ class EntityTreeModelPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_NEXT_EXPORT EntityTreeModel : public QAbstractItemModel
+class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
 {
   Q_OBJECT
 
