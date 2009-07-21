@@ -107,6 +107,7 @@ set( akonadikde_LIB_SRC
   resourcescheduler.cpp
   resourceselectjob.cpp
   searchcreatejob.cpp
+  selectionproxymodel.cpp
   selftestdialog.cpp
   session.cpp
   servermanager.cpp
@@ -221,6 +222,7 @@ install( FILES
   qtest_akonadi.h
   resourcebase.h
   searchcreatejob.h
+  selectionproxymodel.h
   session.h
   servermanager.h
   standardactionmanager.h
