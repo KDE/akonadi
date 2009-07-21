@@ -20,8 +20,10 @@
 #ifndef AKONADI_STATISTICSPROXYMODEL_H
 #define AKONADI_STATISTICSPROXYMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
 #include "akonadi_export.h"
+
+#include <QtGui/QSortFilterProxyModel>
+
 namespace Akonadi {
 
 /**
@@ -43,6 +45,7 @@ namespace Akonadi {
  * @endcode
  *
  * @author Kevin Ottens <ervin@kde.org>
+ * @since 4.4
  */
 class AKONADI_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
 {

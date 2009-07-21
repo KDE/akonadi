@@ -123,12 +123,12 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     ItemFetchScope &fetchScope();
 
     /**
-      Specifies the collection the item is in.
-      This is only required when retrieving an item based on its remote id which might not be
-      unique globally.
-
-      @see Akonadi::ResourceSelectJob
-    */
+     * Specifies the collection the item is in.
+     * This is only required when retrieving an item based on its remote id which might not be
+     * unique globally.
+     *
+     * @see Akonadi::ResourceSelectJob
+     */
     void setCollection( const Collection &collection );
 
   Q_SIGNALS:

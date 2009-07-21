@@ -21,11 +21,14 @@
 #ifndef AKONADI_ENTITYFILTERPROXYMODEL_H
 #define AKONADI_ENTITYFILTERPROXYMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
 #include "akonadi_export.h"
+
+#include <QtGui/QSortFilterProxyModel>
+
 namespace Akonadi {
 
 class EntityFilterProxyModelPrivate;
+
 /**
  * @short A proxy model that filters entities by mime type.
  *
@@ -52,6 +55,7 @@ class EntityFilterProxyModelPrivate;
  *
  * @author Bruno Virlet <bruno.virlet@gmail.com>
  * @author Stephen Kelly <steveire@gmail.com>
+ * @since 4.4
  */
 class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
 {
@@ -135,7 +139,7 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
     /**
       Reimplemented to handle the AmazingCompletionRole.
     */
-    virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
 
   protected:
@@ -143,7 +147,7 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
 
   private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE(EntityFilterProxyModel)
+    Q_DECLARE_PRIVATE( EntityFilterProxyModel )
     EntityFilterProxyModelPrivate *d_ptr;
     //@endcond
 };

@@ -20,9 +20,9 @@
 #ifndef AKONADI_FAVORITECOLLECTIONSMODEL_H
 #define AKONADI_FAVORITECOLLECTIONSMODEL_H
 
-#include "selectionproxymodel.h"
-
 #include "akonadi_export.h"
+
+#include "selectionproxymodel.h"
 
 #include <akonadi/collection.h>
 
@@ -30,6 +30,12 @@ namespace Akonadi {
 
 class EntityTreeModel;
 
+/**
+ * @short A model that lists a set of favorite collections.
+ *
+ * @author Kevin Ottens <ervin@kde.org>
+ * @since 4.4
+ */
 class AKONADI_EXPORT FavoriteCollectionsModel : public SelectionProxyModel
 {
   Q_OBJECT
@@ -47,17 +53,19 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public SelectionProxyModel
      */
     virtual ~FavoriteCollectionsModel();
 
+    /**
+     * Returns the list of favorite collections.
+     */
+    Collection::List collections() const;
+
+    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+
   public Q_SLOTS:
     void setCollections( const Collection::List &collections );
     void addCollection( const Collection &collection );
     void removeCollection( const Collection &collection );
     void setFavoriteLabel( const Collection &collection, const QString &label );
-
-  public:
-    Collection::List collections() const;
-
-    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
   private:
     using SelectionProxyModel::setSourceModel;
