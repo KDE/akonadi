@@ -106,6 +106,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       DeleteItems,               ///< Deletes items
       ManageLocalSubscriptions,  ///< Manages local subscriptions
       AddToFavoriteCollections,  ///< Add the collection to the favorite collections model
+      RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model
+      RenameFavoriteCollection,  ///< Rename the collection of the favorite collections model
       CopyCollectionToMenu,      ///< Menu allowing to quickly copy a collection into another collection
       CopyItemToMenu,            ///< Menu allowing to quickly copy an item into a collection
       LastType                   ///< Marks last action
@@ -143,6 +145,13 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * will be disabled.
      */
     void setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel );
+
+    /**
+     * Sets the favorite collection selection model based on which the favorite
+     * collection related actions should operate. If none is set, all favorite modifications
+     * actions will be disabled.
+     */
+    void setFavoriteSelectionModel( QItemSelectionModel *selectionModel );
 
     /**
      * Creates the action of the given type and adds it to the action collection
@@ -202,6 +211,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotDeleteItems() )
     Q_PRIVATE_SLOT( d, void slotLocalSubscription() )
     Q_PRIVATE_SLOT( d, void slotAddToFavorites() )
+    Q_PRIVATE_SLOT( d, void slotRemoveFromFavorites() )
+    Q_PRIVATE_SLOT( d, void slotRenameFavorite() )
     Q_PRIVATE_SLOT( d, void slotCopyCollectionTo(QAction*) )
     Q_PRIVATE_SLOT( d, void slotCopyItemTo(QAction*) )
 

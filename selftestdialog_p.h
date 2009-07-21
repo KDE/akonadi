@@ -80,6 +80,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
     void testMySQLServer();
     void testMySQLServerLog();
     void testMySQLServerConfig();
+    void testPSQLServer();
     void testAkonadiCtl();
     void testServerStatus();
     void testProtocolVersion();

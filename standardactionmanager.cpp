@@ -70,6 +70,8 @@ static const struct {
   { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT(slotDeleteItems()), false },
   { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()), false },
   { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), "bookmark-new", 0, SLOT(slotAddToFavorites()), false },
+  { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), false },
+  { "akonadi_collection_rename_favorite", I18N_NOOP("Rename Favorite..."), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
   { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
   { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true }
 };
@@ -98,7 +100,8 @@ class StandardActionManager::Private
       q( parent ),
       collectionSelectionModel( 0 ),
       itemSelectionModel( 0 ),
-      favoritesModel( 0 )
+      favoritesModel( 0 ),
+      favoriteSelectionModel( 0 )
     {
       actions.fill( 0, StandardActionManager::LastType );
 
@@ -118,7 +121,8 @@ class StandardActionManager::Private
       if ( actionMenu ) {
         actionMenu->menu()->clear();
         if ( enable ) {
-          fillFoldersMenu( actionMenu->menu(),
+          fillFoldersMenu( type,
+                           actionMenu->menu(),
                            collectionSelectionModel->model(),
                            QModelIndex() );
         }
@@ -171,6 +175,11 @@ class StandardActionManager::Private
         //FIXME: remove the reinterpret_cast once FavoriteCollectionsModel is in kdepimlibs/akonadi
         enableAction( AddToFavoriteCollections, (favoritesModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
                                              && singleColSelected && (col != Collection::root()) );
+        //FIXME: better check if the collection is in the model, todo once FavoriteCollectionsModel is in kdepimlibs/akonadi
+        enableAction( RemoveFromFavoriteCollections, (favoriteSelectionModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
+                                                  && singleColSelected && (col != Collection::root()) );
+        enableAction( RenameFavoriteCollection, (favoriteSelectionModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
+                                             && singleColSelected && (col != Collection::root()) );
         enableAction( CopyCollectionToMenu, multiColSelected && (col != Collection::root()) );
       } else {
         enableAction( CreateCollection, false );
@@ -178,6 +187,7 @@ class StandardActionManager::Private
         enableAction( SynchronizeCollections, false );
         enableAction( Paste, false );
         enableAction( AddToFavoriteCollections, false );
+        enableAction( RemoveFromFavoriteCollections, false );
       }
 
       bool multiItemSelected = false;
@@ -357,6 +367,47 @@ class StandardActionManager::Private
       QMetaObject::invokeMethod( model, "addCollection", Q_ARG(Collection, collection) );
     }
 
+    void slotRemoveFromFavorites()
+    {
+      Q_ASSERT( collectionSelectionModel );
+      Q_ASSERT( favoritesModel );
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      //FIXME: remove the reinterpret_cast and invokeMethod once FavoriteCollectionsModel is in kdepimlibs/akonadi
+      QAbstractItemModel *model = reinterpret_cast<QAbstractItemModel*>( favoritesModel );
+      QMetaObject::invokeMethod( model, "removeCollection", Q_ARG(Collection, collection) );
+    }
+
+    void slotRenameFavorite()
+    {
+      Q_ASSERT( collectionSelectionModel );
+      Q_ASSERT( favoritesModel );
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      bool ok;
+      QString label = KInputDialog::getText( i18n( "Rename Favorite" ),
+                                             i18nc( "@label:textbox New name of the folder.", "Name:" ),
+                                             index.data().toString(), &ok, parentWidget );
+      if ( !ok )
+        return;
+
+      //FIXME: remove the reinterpret_cast and invokeMethod once FavoriteCollectionsModel is in kdepimlibs/akonadi
+      QAbstractItemModel *model = reinterpret_cast<QAbstractItemModel*>( favoritesModel );
+      QMetaObject::invokeMethod( model, "setFavoriteLabel", Q_ARG(Collection, collection), Q_ARG(QString, label) );
+    }
+
     void slotCopyCollectionTo( QAction *action )
     {
       copyTo( collectionSelectionModel, action );
@@ -420,18 +471,26 @@ class StandardActionManager::Private
       }
     }
 
-    void fillFoldersMenu( QMenu *menu, const QAbstractItemModel *model, QModelIndex parentIndex )
+    void fillFoldersMenu( StandardActionManager::Type type, QMenu *menu,
+                          const QAbstractItemModel *model, QModelIndex parentIndex )
     {
       int rowCount = model->rowCount( parentIndex );
 
       for ( int row = 0; row < rowCount; row++ ) {
         QModelIndex index = model->index( row, 0, parentIndex );
+        Collection collection = model->data( index, CollectionModel::CollectionRole ).value<Collection>();
 
-        // FIXME: Need a way to skip the search folder
+        if ( CollectionUtils::isVirtual( collection ) ) {
+          continue;
+        }
 
         QString label = model->data( index ).toString();
         label.replace( QString::fromUtf8( "&" ), QString::fromUtf8( "&&" ) );
         QIcon icon = model->data( index, Qt::DecorationRole ).value<QIcon>();
+
+        bool readOnly = CollectionUtils::isStructural( collection )
+                     || ( type == CopyItemToMenu && !( collection.rights() & Collection::CanCreateItem ) )
+                     || ( type == CopyCollectionToMenu && !( collection.rights() & Collection::CanCreateCollection ) );
 
         if ( model->rowCount( index ) > 0 ) {
           // new level
@@ -441,10 +500,7 @@ class StandardActionManager::Private
           popup->setTitle( label );
           popup->setIcon( icon );
 
-          fillFoldersMenu( popup, model, index );
-
-          bool readOnly = false;
-          //FIXME: If collection is readonly turn this flag to true
+          fillFoldersMenu( type, popup, model, index );
 
           if ( !readOnly ) {
             popup->addSeparator();
@@ -460,7 +516,7 @@ class StandardActionManager::Private
           // insert an item
           QAction* act = menu->addAction( icon, label );
           act->setData( QVariant::fromValue<QModelIndex>( index ) );
-          //FIXME: If collection is readonly disable this action
+          act->setEnabled( !readOnly );
         }
       }
     }
@@ -470,6 +526,7 @@ class StandardActionManager::Private
     QWidget *parentWidget;
     QItemSelectionModel *collectionSelectionModel;
     QItemSelectionModel *itemSelectionModel;
+    QItemSelectionModel *favoriteSelectionModel;
     FavoriteCollectionsModel *favoritesModel;
     QVector<KAction*> actions;
     AgentManager *agentManager;
@@ -507,9 +564,16 @@ void StandardActionManager::setItemSelectionModel(QItemSelectionModel * selectio
            SLOT(updateActions()) );
 }
 
-void Akonadi::StandardActionManager::setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel )
+void StandardActionManager::setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel )
 {
   d->favoritesModel = favoritesModel;
+}
+
+void StandardActionManager::setFavoriteSelectionModel( QItemSelectionModel *selectionModel )
+{
+  d->favoriteSelectionModel = selectionModel;
+  connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
+           SLOT(updateActions()) );
 }
 
 KAction* StandardActionManager::createAction( Type type )
