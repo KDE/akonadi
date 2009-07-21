@@ -80,7 +80,7 @@ class AKONADI_EXPORT AgentManager : public QObject
      * Returns the agent type with the given @p identifier or
      * an invalid agent type if the identifier does not exist.
      */
-    AgentType type( const QString &identififer ) const;
+    AgentType type( const QString &identifier ) const;
 
     /**
      * Returns the list of all available agent instances.
