@@ -73,6 +73,8 @@ set( akonadikde_LIB_SRC
   collectionview.cpp
   control.cpp
   entitydisplayattribute.cpp
+  entitytreemodel.cpp
+  entitytreemodel_p.cpp
   #entitysortfilterproxymodel.cpp
   erroroverlay.cpp
   exception.cpp
@@ -193,6 +195,7 @@ install( FILES
   control.h
   entity.h
   entitydisplayattribute.h
+  entitytreemodel.h
   #  entitysortfilterproxymodel.h
   exception.h
   item.h
