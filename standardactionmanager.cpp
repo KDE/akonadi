@@ -256,6 +256,7 @@ class StandardActionManager::Private
       q->blockSignals(true);
 
       QItemSelection selection = favoriteSelectionModel->selection();
+      if ( selection.indexes().isEmpty() ) return;
       selection = mapToEntityTreeModel( favoritesModel, selection );
       selection = mapFromEntityTreeModel( collectionSelectionModel->model(), selection );
       collectionSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
