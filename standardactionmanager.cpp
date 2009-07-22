@@ -215,6 +215,55 @@ class StandardActionManager::Private
         updateActions();
     }
 
+    QItemSelection mapToEntityTreeModel( const QAbstractItemModel *model, const QItemSelection &selection )
+    {
+      const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model );
+      if ( proxy ) {
+        return mapToEntityTreeModel( proxy->sourceModel(), proxy->mapSelectionToSource( selection ) );
+      } else {
+        return selection;
+      }
+    }
+
+    QItemSelection mapFromEntityTreeModel( const QAbstractItemModel *model, const QItemSelection &selection )
+    {
+      const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model );
+      if ( proxy ) {
+        QItemSelection select = mapFromEntityTreeModel( proxy->sourceModel(), selection );
+        return proxy->mapSelectionFromSource( select );
+      } else {
+        return selection;
+      }
+    }
+
+    void collectionSelectionChanged()
+    {
+      q->blockSignals(true);
+
+      QItemSelection selection = collectionSelectionModel->selection();
+      selection = mapToEntityTreeModel( collectionSelectionModel->model(), selection );
+      selection = mapFromEntityTreeModel( favoritesModel, selection );
+      favoriteSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect );
+
+      q->blockSignals(false);
+
+      updateActions();
+    }
+
+    void favoriteSelectionChanged()
+    {
+      q->blockSignals(true);
+
+      QItemSelection selection = favoriteSelectionModel->selection();
+      selection = mapToEntityTreeModel( favoritesModel, selection );
+      selection = mapFromEntityTreeModel( collectionSelectionModel->model(), selection );
+      collectionSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
+
+      q->blockSignals(false);
+
+      updateActions();
+    }
+
     void slotCreateCollection()
     {
       Q_ASSERT( collectionSelectionModel );
@@ -514,6 +563,31 @@ class StandardActionManager::Private
       }
     }
 
+    void checkModelsConsistency()
+    {
+      if ( favoritesModel==0 || favoriteSelectionModel==0 ) {
+        // No need to check when the favorite collections feature is not used
+        return;
+      }
+
+      // Check that the collection selection model maps to the same
+      // EntityTreeModel than favoritesModel
+      if ( collectionSelectionModel!=0 ) {
+        const QAbstractItemModel *model = collectionSelectionModel->model();
+        while ( const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model ) ) {
+          model = proxy->sourceModel();
+        }
+        Q_ASSERT( model == favoritesModel->sourceModel() );
+      }
+
+      // Check that the favorite selection model maps to favoritesModel
+      const QAbstractItemModel *model = favoriteSelectionModel->model();
+      while ( const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model ) ) {
+        model = proxy->sourceModel();
+      }
+      Q_ASSERT( model == favoritesModel->sourceModel() );
+    }
+
     StandardActionManager *q;
     KActionCollection *actionCollection;
     QWidget *parentWidget;
@@ -547,7 +621,9 @@ void StandardActionManager::setCollectionSelectionModel( QItemSelectionModel * s
 {
   d->collectionSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
-           SLOT(updateActions()) );
+           SLOT(collectionSelectionChanged()) );
+
+  d->checkModelsConsistency();
 }
 
 void StandardActionManager::setItemSelectionModel( QItemSelectionModel * selectionModel )
@@ -560,13 +636,15 @@ void StandardActionManager::setItemSelectionModel( QItemSelectionModel * selecti
 void StandardActionManager::setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel )
 {
   d->favoritesModel = favoritesModel;
+  d->checkModelsConsistency();
 }
 
 void StandardActionManager::setFavoriteSelectionModel( QItemSelectionModel *selectionModel )
 {
   d->favoriteSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
-           SLOT(updateActions()) );
+           SLOT(favoriteSelectionChanged()) );
+  d->checkModelsConsistency();
 }
 
 KAction* StandardActionManager::createAction( Type type )
