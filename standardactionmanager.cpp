@@ -173,11 +173,11 @@ class StandardActionManager::Private
         enableAction( CollectionProperties, singleColSelected && (col != Collection::root()) );
         enableAction( SynchronizeCollections, CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col ) );
         enableAction( Paste, PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
-        enableAction( AddToFavoriteCollections, (favoritesModel!=0) && (selectedIndex.model()!=favoritesModel)
+        enableAction( AddToFavoriteCollections, (favoritesModel!=0) && (!favoritesModel->collections().contains(col))
                                              && singleColSelected && (col != Collection::root()) );
-        enableAction( RemoveFromFavoriteCollections, (favoriteSelectionModel!=0) && (selectedIndex.model()!=favoritesModel)
+        enableAction( RemoveFromFavoriteCollections, (favoritesModel!=0) && (favoritesModel->collections().contains(col))
                                                   && singleColSelected && (col != Collection::root()) );
-        enableAction( RenameFavoriteCollection, (favoriteSelectionModel!=0) && (selectedIndex.model()!=favoritesModel)
+        enableAction( RenameFavoriteCollection, (favoritesModel!=0) && (favoritesModel->collections().contains(col))
                                              && singleColSelected && (col != Collection::root()) );
         enableAction( CopyCollectionToMenu, multiColSelected && (col != Collection::root()) );
       } else {
@@ -187,6 +187,7 @@ class StandardActionManager::Private
         enableAction( Paste, false );
         enableAction( AddToFavoriteCollections, false );
         enableAction( RemoveFromFavoriteCollections, false );
+        enableAction( RenameFavoriteCollection, false );
       }
 
       bool multiItemSelected = false;
