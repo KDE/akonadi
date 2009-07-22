@@ -244,7 +244,9 @@ class StandardActionManager::Private
       QItemSelection selection = collectionSelectionModel->selection();
       selection = mapToEntityTreeModel( collectionSelectionModel->model(), selection );
       selection = mapFromEntityTreeModel( favoritesModel, selection );
-      favoriteSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect );
+
+      if ( favoriteSelectionModel )
+        favoriteSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect );
 
       q->blockSignals(false);
 
