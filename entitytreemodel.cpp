@@ -261,11 +261,11 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   {
     if (ColumnCountRole != role)
       return QVariant();
-    return getNumColumns(headerSet);   
+    return getColumnCount(headerSet);
   }
 
   if (ColumnCountRole == role)
-    return getNumColumns(headerSet);
+    return getColumnCount(headerSet);
   
   Q_D( const EntityTreeModel );
 
@@ -568,7 +568,7 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
   return 0;
 }
 
-int EntityTreeModel::getNumColumns(int headerSet) const
+int EntityTreeModel::getColumnCount(int headerSet) const
 {
   // Not needed in this model.
   Q_UNUSED(headerSet);
