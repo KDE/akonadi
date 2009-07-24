@@ -22,13 +22,13 @@ endif ( SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES )
 
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
-if( NOT WIN32 )
-  find_package(PkgConfig)
-
-  pkg_check_modules(PC_SQLITE QUIET sqlite3)
-
-  set(SQLITE_DEFINITIONS ${PC_SQLITE_CFLAGS_OTHER})
-endif( NOT WIN32 )
+#if( NOT WIN32 )
+#  find_package(PkgConfig)
+#
+#  pkg_check_modules(PC_SQLITE QUIET sqlite3)
+#
+#  set(SQLITE_DEFINITIONS ${PC_SQLITE_CFLAGS_OTHER})
+#endif( NOT WIN32 )
 
 FIND_PATH(SQLITE_INCLUDE_DIR NAMES sqlite3.h
   PATHS

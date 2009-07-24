@@ -1,11 +1,3 @@
-project(QSqlite)
-
-cmake_minimum_required(VERSION 2.6)
-
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
-
-find_package(Sqlite REQUIRED)
-
 set(QSqlite_SRCS
   src/qsql_sqlite.cpp
   src/smain.cpp
@@ -15,6 +7,9 @@ set(QSqlite_SRCS
 SET(QSqlite_MOC_HDRS
   src/qsql_sqlite.h
 )
+
+message(STATUS "Building QSQLITE3 driver")
+message(STATUS "Make sure that you add " ${CMAKE_INSTALL_PREFIX}/lib/kde4/plugins/sqldrivers " to QT_PLUGIN_PATH")
 
 add_definitions(-Wall)
 add_definitions(${QT_DEFINITIONS})
