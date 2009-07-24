@@ -370,7 +370,7 @@ bool DbInitializer::hasIndex(const QString & tableName, const QString & indexNam
     statement  = QLatin1String( "SELECT indexname FROM pg_catalog.pg_indexes" );
     statement += QString::fromLatin1( " WHERE tablename ilike '%1'" ).arg( tableName );
     statement += QString::fromLatin1( " AND  indexname ilike '%1';" ).arg( indexName );
-  } else if ( mDatabase.driverName() == QLatin1String("QSQLITE") ) {
+  } else if ( mDatabase.driverName() == QLatin1String("QSQLITE") || mDatabase.driverName() == QLatin1String("QSQLITE3") ) {
     statement  = QString::fromLatin1( "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';" ).arg( tableName ).arg( indexName );
   } else {
     qFatal( "Implement index support for your database!" );

@@ -98,7 +98,7 @@ class DbConfigStatic
       } else if ( mDriverName == QLatin1String("QMYSQL_EMBEDDED") ) {
         defaultDbName = QLatin1String( "akonadi" );
         defaultOptions = QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( mysqlEmbeddedDataDir() );
-      } else if ( mDriverName == QLatin1String( "QSQLITE" ) ) {
+      } else if ( mDriverName == QLatin1String( "QSQLITE" ) || mDriverName == QLatin1String( "QSQLITE3" ) ) {
         defaultDbName = sqliteDataFile();
       }
 
@@ -168,7 +168,7 @@ class DbConfigStatic
 
     QString sqliteDataFile() const
     {
-      Q_ASSERT( mDriverName == QLatin1String( "QSQLITE" ) );
+      Q_ASSERT( mDriverName == QLatin1String( "QSQLITE" ) || mDriverName == QLatin1String( "QSQLITE3" ) );
       const QString akonadiPath = dataDir() + QLatin1String("akonadi.db");
       if ( !QFile::exists( akonadiPath ) ) {
         QFile file( akonadiPath );

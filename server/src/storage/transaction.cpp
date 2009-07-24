@@ -20,26 +20,36 @@
 #include "transaction.h"
 #include "storage/datastore.h"
 
+#include <QtCore/QDebug>
+
 Akonadi::Transaction::Transaction(DataStore * db, bool beginTransaction ) :
     mDb( db ), mCommitted( false )
 {
-  if ( beginTransaction )
-    mDb->beginTransaction();
+  if ( beginTransaction ) {
+    //mDb->beginTransaction();
+    begin();
+  }
 }
 
 Akonadi::Transaction::~Transaction()
 {
-  if ( !mCommitted )
+  if ( !mCommitted ) {
+    qDebug() << "ROLLING BACK TRANSACTION";
     mDb->rollbackTransaction();
+  } else {
+    qDebug() << "TRANSACTION SUCCESSFUL COMITTED";
+  }
 }
 
 bool Akonadi::Transaction::commit()
 {
+  qDebug() << "COMMITTING TRANSACTION";
   mCommitted = true;
   return mDb->commitTransaction();
 }
 
 void Akonadi::Transaction::begin()
 {
+  qDebug() << "BEGINNING TRANSACTION";
   mDb->beginTransaction();
 }
