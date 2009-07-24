@@ -104,6 +104,7 @@ set( akonadikde_LIB_SRC
   monitor.cpp
   monitor_p.cpp
   pastehelper.cpp
+  preprocessorbase.cpp
   protocolhelper.cpp
   resourcebase.cpp
   resourcescheduler.cpp
@@ -134,6 +135,7 @@ qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationmanagerint
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Tracer.xml )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Preprocessor.xml preprocessorbase.h Akonadi::PreprocessorBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Status.xml agentbase.h Akonadi::AgentBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase )
 
@@ -226,6 +228,7 @@ install( FILES
   mimetypechecker.h
   monitor.h
   qtest_akonadi.h
+  preprocessorbase.h
   resourcebase.h
   searchcreatejob.h
   selectionproxymodel.h
