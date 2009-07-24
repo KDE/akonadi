@@ -25,40 +25,39 @@
 #include "preprocessorbase.h"
 
 #include "agentbase_p.h"
-
 #include "preprocessoradaptor.h"
 
-#include <QDebug>
+#include <kdebug.h>
 
 namespace Akonadi
 {
 
-
 class PreprocessorBasePrivate : public AgentBasePrivate
 {
-public:
-  bool mInDelayedProcessing;
-  qlonglong mDelayedProcessingItemId;
+  public:
+    PreprocessorBasePrivate( PreprocessorBase *parent )
+      : AgentBasePrivate( parent ),
+        mInDelayedProcessing( false ),
+        mDelayedProcessingItemId( 0 )
+    {
+    }
 
-public:
-  PreprocessorBasePrivate( PreprocessorBase *parent )
-    : AgentBasePrivate( parent ),
-      mInDelayedProcessing( false ),
-      mDelayedProcessingItemId( 0 )
-  {
-  }
+    Q_DECLARE_PUBLIC( PreprocessorBase )
 
-  Q_DECLARE_PUBLIC( PreprocessorBase )
+    void delayedInit()
+    {
+      if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Preprocessor." ) + mId ) )
+        kFatal() << "Unable to register service at D-Bus: " << QDBusConnection::sessionBus().lastError().message();
+      AgentBasePrivate::delayedInit();
+    }
 
-  void delayedInit()
-  {
-    if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Preprocessor." ) + mId ) )
-      kFatal() << "Unable to register service at D-Bus: " << QDBusConnection::sessionBus().lastError().message();
-    AgentBasePrivate::delayedInit();
-  }
+    bool mInDelayedProcessing;
+    qlonglong mDelayedProcessingItemId;
+};
 
-}; // class PreprocessorBasePrivate
+}
 
+using namespace Akonadi;
 
 PreprocessorBase::PreprocessorBase( const QString &id )
   : AgentBase( new PreprocessorBasePrivate( this ), id )
@@ -68,7 +67,6 @@ PreprocessorBase::PreprocessorBase( const QString &id )
 
 PreprocessorBase::~PreprocessorBase()
 {
-
 }
 
 void PreprocessorBase::processingTerminated( ProcessingResult result )
@@ -86,21 +84,21 @@ void PreprocessorBase::beginProcessItem( qlonglong id )
 {
   Q_D( PreprocessorBase );
 
-  qDebug() << "PreprocessorBase: about to process item " << id;
+  kDebug() << "PreprocessorBase: about to process item " << id;
 
   switch( processItem( Item( id ) ) )
   {
     case ProcessingFailed:
     case ProcessingRefused:
     case ProcessingCompleted:
-      qDebug() << "PreprocessorBase: item processed, emitting signal (" << id << ")";
+      kDebug() << "PreprocessorBase: item processed, emitting signal (" << id << ")";
 
       emit itemProcessed( id );
 
-      qDebug() << "PreprocessorBase: item processed, signal emitted (" << id << ")";
+      kDebug() << "PreprocessorBase: item processed, signal emitted (" << id << ")";
     break;
     case ProcessingDelayed:
-      qDebug() << "PreprocessorBase: item processing delayed (" << id << ")";
+      kDebug() << "PreprocessorBase: item processing delayed (" << id << ")";
 
       d->mInDelayedProcessing = true;
       d->mDelayedProcessingItemId = id;
@@ -108,4 +106,4 @@ void PreprocessorBase::beginProcessItem( qlonglong id )
   }
 }
 
-} // namespace Akonadi
+#include "preprocessorbase.moc"

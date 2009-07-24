@@ -39,13 +39,21 @@ namespace Akonadi
 class PreprocessorBasePrivate;
 
 /**
- * @short The base class for all Akonadi preprocessors.
+ * @short The base class for all Akonadi preprocessors agents.
  *
  * This class should be used as a base class by all preprocessor agents
  * since it encapsulates large parts of the protocol between
  * preprocessor agent, agent manager and the Akonadi storage.
  *
+ * Preprocessor agents are special agents that are informed about newly
+ * added items before any other agents. This allows them to do filtering
+ * on the items or any other task that shall be done before the new item
+ * is visible in the Akonadi storage system.
+ *
  * The method all the preprocessors must implement is processItem().
+ *
+ * @author Szymon Stefanek <s.stefanek@gmail.com>
+ * @since 4.4
  */
 class AKONADI_EXPORT PreprocessorBase : public AgentBase
 {
@@ -53,110 +61,99 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
 
   Q_OBJECT
 
-public:
-
-  /**
-   * Creates an instance of a PreprocessorBase.
-   * You don't need to call this explicitly if you
-   * use the AKONADI_PREPROCESSOR_MAIN macro below.
-   */
-  PreprocessorBase( const QString &id );
-
-  /**
-   * Destroys the PreprocessorBase instance.
-   */
-  virtual ~PreprocessorBase();
-
-public:
-
-  /**
-   * The possible results of your processItem() function.
-   */
-  enum ProcessingResult
-  {
+  public:
     /**
-     * Processing completed succesfully for this item.
-     * The Akonadi server will push in a new item when it's available.
+     * Describes the possible return values of the processItem() method.
      */
-    ProcessingCompleted,
+    enum ProcessingResult
+    {
+      /**
+       * Processing completed succesfully for this item.
+       * The Akonadi server will push in a new item when it's available.
+       */
+      ProcessingCompleted,
+
+      /**
+       * Processing was delayed to a later stage.
+       * This must be returned when implementing asynchronous preprocessing.
+       *
+       * If this value is returned, processingTerminated() has to be called
+       * when processing is done.
+       */
+      ProcessingDelayed,
+
+      /**
+       * Processing for this item failed (and the failure is unrecoverable).
+       * The Akonadi server will push in a new item when it's available,
+       * after possibly logging the failure.
+       */
+      ProcessingFailed,
+
+      /**
+       * Processing for this item was refused. This is very
+       * similar to ProcessingFailed above but additionally remarks
+       * that the item that the Akonadi server pushed in wasn't
+       * meant for this Preprocessor.
+       * The Akonadi server will push in a new item when it's available,
+       * after possibly logging the failure and maybe taking some additional action.
+       */
+      ProcessingRefused
+    };
 
     /**
-     * Processing was delayed to a later stage.
-     * This is what you want to return when implementing
-     * asynchronous preprocessing.
+     * This method has to be implement by every preprocessor subclass.
      *
-     * If you return this value then you're responsible of calling
-     * processingTerminated() when you're done.
+     * Returns ProcessingCompleted on success, ProcessingDelayed
+     * if processing is implemented asynchronously and
+     * ProcessingRefused or ProcessingFailed if the processing
+     * didn't complete.
      */
-    ProcessingDelayed,
+    virtual ProcessingResult processItem( const Item &item ) = 0;
 
     /**
-     * Processing for this item failed (and the failure is unrecoverable).
-     * The Akonadi server will push in a new item when it's available,
-     * after possibly logging the failure.
+     * This method must be called if processing is implemented asynchronously.
+     *
+     * Valid values for @p result are ProcessingCompleted,
+     * PocessingRefused and ProcessingFailed. Passing any
+     * other value will lead to a runtime assertion.
      */
-    ProcessingFailed,
+    void processingTerminated( ProcessingResult result );
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted to report item processing termination
+     * to the Akonadi server.
+     *
+     * @note This signal is only for internal use.
+     */
+    void itemProcessed( qlonglong id );
+
+  protected:
+    /**
+     * Creates a new preprocessor base agent.
+     *
+     * @param id The instance id of the preprocessor base agent.
+     */
+    PreprocessorBase( const QString &id );
 
     /**
-     * Processing for this item was refused. This is very
-     * similar to ProcessingFailed above but additionally remarks
-     * that the item that the Akonadi server pushed in wasn't
-     * meant for this Preprocessor.
-     * The Akonadi server will push in a new item when it's available,
-     * after possibly logging the failure and maybe taking some additional action.
+     * Destroys the preprocessor base agent.
      */
-    ProcessingRefused
+    virtual ~PreprocessorBase();
 
-  };
+    /**
+     * This dbus method is called by the Akonadi server
+     * in order to trigger the processing of an item.
+     *
+     * @note Do not call it manually!
+     */
+    void beginProcessItem( qlonglong itemId );
 
-  /**
-   * This is the pure virtual you need to implement
-   * in your preprocessor.
-   *
-   * Return ProcessingCompleted on success, ProcessingDelayed
-   * if you're implementing asynchronous preprocessing and
-   * ProcessingRefused or ProcessingFailed if the processing
-   * didn't complete.
-   *
-   * If you return ProcessingDelayed then you also MUST
-   * call processingTerminated() when you're asynchronous
-   * elaboration completes.
-   */
-  virtual ProcessingResult processItem( const Item &item ) = 0;
+  private:
+    // dbus Preprocessor interface
+    friend class ::PreprocessorAdaptor;
 
-  /**
-   * You need to call this function if you are implementing an asynchronous
-   * preprocessor. In processItem() you trigger your async work
-   * and return ProcessingDelayed. The framework will then assume
-   * that you're busy until you call this function.
-   *
-   * Possible values for result are ProcessingCompleted,
-   * PocessingRefused and ProcessingFailed. Passing ProcessingDelayed
-   * is a programming error and will be punished by a Q_ASSERT().
-   */
-  void processingTerminated( ProcessingResult result );
-
-private:
-
-  // dbus Preprocessor interface: don't look :)
-  friend class ::PreprocessorAdaptor;
-
-  /**
-   * Internal D-Bus handler. Called by the Akonadi server
-   * in order to trigger the processing of an item. Don't touch :)
-   */
-  void beginProcessItem( qlonglong id );
-
-Q_SIGNALS:
-  /**
-   * Internal D-Bus signal. Used to report item processing termination
-   * to the Akonadi server. Don't touch :)
-   */
-  void itemProcessed( qlonglong id );
-  
-private:
-
-  Q_DECLARE_PRIVATE( PreprocessorBase )
+    Q_DECLARE_PRIVATE( PreprocessorBase )
 
 }; // class PreprocessorBase
 
@@ -172,6 +169,5 @@ private:
     return Akonadi::PreprocessorBase::init<preProcessorClass>( argc, argv ); \
   }
 #endif //!AKONADI_RESOURCE_MAIN
-
 
 #endif //!_PREPROCESSORBASE_H_
