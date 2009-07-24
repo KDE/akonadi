@@ -16,15 +16,10 @@ add_definitions(${QT_DEFINITIONS})
 add_definitions(-DQT_PLUGIN)
 add_definitions(-DQT_SHARED)
 
-set(QT_USE_QTSQL TRUE)
-
-find_package(Qt4 REQUIRED)
-include(${QT_USE_FILE})
-
 qt4_wrap_cpp(QSqlite_MOC_SRCS ${QSqlite_MOC_HDRS})
 
 include_directories(${CMAKE_BINARY_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
 
