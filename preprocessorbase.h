@@ -1,8 +1,5 @@
 /******************************************************************************
  *
- *  File : preprocessorbase.h
- *  Creation date : Sun 19 Jul 2009 22:39:13
- *
  *  Copyright (c) 2009 Szymon Stefanek <s.stefanek at gmail dot com>
  *
  *  This library is free software; you can redistribute it and/or modify it
@@ -22,24 +19,23 @@
  *
  *****************************************************************************/
 
-#ifndef _PREPROCESSORBASE_H_
-#define _PREPROCESSORBASE_H_
+#ifndef AKONADI_PREPROCESSORBASE_H
+#define AKONADI_PREPROCESSORBASE_H
 
 #include "akonadi_export.h"
 
 #include <akonadi/agentbase.h>
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
 
 class PreprocessorAdaptor;
 
 namespace Akonadi
 {
 
+class Item;
 class PreprocessorBasePrivate;
 
 /**
- * @short The base class for all Akonadi preprocessors agents.
+ * @short The base class for all Akonadi preprocessor agents.
  *
  * This class should be used as a base class by all preprocessor agents
  * since it encapsulates large parts of the protocol between
@@ -77,7 +73,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
        * Processing was delayed to a later stage.
        * This must be returned when implementing asynchronous preprocessing.
        *
-       * If this value is returned, processingTerminated() has to be called
+       * If this value is returned, terminateProcessing() has to be called
        * when processing is done.
        */
       ProcessingDelayed,
@@ -117,7 +113,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      * PocessingRefused and ProcessingFailed. Passing any
      * other value will lead to a runtime assertion.
      */
-    void processingTerminated( ProcessingResult result );
+    void terminateProcessing( ProcessingResult result );
 
   Q_SIGNALS:
     /**

@@ -1,8 +1,5 @@
 /******************************************************************************
  *
- *  File : preprocessorbase.cpp
- *  Creation date : Sun 19 Jul 2009 22:39:13
- *
  *  Copyright (c) 2009 Szymon Stefanek <s.stefanek at gmail dot com>
  *
  *  This library is free software; you can redistribute it and/or modify it
@@ -25,6 +22,7 @@
 #include "preprocessorbase.h"
 
 #include "agentbase_p.h"
+#include "item.h"
 #include "preprocessoradaptor.h"
 
 #include <kdebug.h>
@@ -69,12 +67,12 @@ PreprocessorBase::~PreprocessorBase()
 {
 }
 
-void PreprocessorBase::processingTerminated( ProcessingResult result )
+void PreprocessorBase::terminateProcessing( ProcessingResult result )
 {
   Q_D( PreprocessorBase );
 
-  Q_ASSERT_X( result != ProcessingDelayed, "PreprocessorBase::processingTerminated", "You should never pass ProcessingDelayed to this function" );
-  Q_ASSERT_X( d->mInDelayedProcessing, "PreprocessorBase::processingTerminated", "processingTerminated() called while not in delayed processing mode" );
+  Q_ASSERT_X( result != ProcessingDelayed, "PreprocessorBase::terminateProcessing", "You should never pass ProcessingDelayed to this function" );
+  Q_ASSERT_X( d->mInDelayedProcessing, "PreprocessorBase::terminateProcessing", "terminateProcessing() called while not in delayed processing mode" );
 
   d->mInDelayedProcessing = false;
   emit itemProcessed( d->mDelayedProcessingItemId );
