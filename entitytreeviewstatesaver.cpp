@@ -63,16 +63,16 @@ class EntityTreeViewStateSaverPrivate
       return QString::fromLatin1( "i%1" ).arg( index.data( EntityTreeModel::ItemIdRole ).value<Entity::Id>() );
     }
 
-    void saveState( const QModelIndex &index, KConfigGroup &selectionGroup, KConfigGroup &expansionGroup )
+    void saveState( const QModelIndex &index, QStringList &selection, QStringList &expansion )
     {
       const QString cfgKey = key( index );
       if ( view->selectionModel()->isSelected( index ) )
-        selectionGroup.writeEntry( cfgKey, true );
+        selection.append( cfgKey );
       if ( view->isExpanded( index ) )
-        expansionGroup.writeEntry( cfgKey, true );
+        expansion.append( cfgKey );
       for ( int i = 0; i < view->model()->rowCount( index ); ++i ) {
         const QModelIndex child = view->model()->index( i, 0, index );
-        saveState( child, selectionGroup, expansionGroup );
+        saveState( child, selection, expansion );
       }
     }
 
@@ -152,21 +152,21 @@ EntityTreeViewStateSaver::~EntityTreeViewStateSaver()
 void EntityTreeViewStateSaver::saveState( KConfigGroup &configGroup ) const
 {
   configGroup.deleteGroup();
-  KConfigGroup selectionGroup( &configGroup, "Selection" );
-  KConfigGroup expansionGroup( &configGroup, "Expansion" );
+  QStringList selection, expansion;
   for ( int i = 0; i < d->view->model()->rowCount(); ++i ) {
     const QModelIndex index = d->view->model()->index( i, 0 );
-    d->saveState( index, selectionGroup, expansionGroup );
+    d->saveState( index, selection, expansion );
   }
-  KConfigGroup scrollBarGroup( &configGroup, "ScrollBar" );
-  scrollBarGroup.writeEntry( "Horizontal", d->view->horizontalScrollBar()->value() );
-  scrollBarGroup.writeEntry( "Vertical", d->view->verticalScrollBar()->value() );
+  configGroup.writeEntry( "Selection", selection );
+  configGroup.writeEntry( "Expansion", expansion );
+  configGroup.writeEntry( "ScrollBarHorizontal", d->view->horizontalScrollBar()->value() );
+  configGroup.writeEntry( "ScrollBarVertical", d->view->verticalScrollBar()->value() );
 }
 
 void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) const
 {
-  const KConfigGroup selectionGroup( &configGroup, "Selection" );
-  foreach( const QString &key, selectionGroup.keyList() ) {
+  const QStringList selection = configGroup.readEntry( "Selection", QStringList() );
+  foreach( const QString &key, selection ) {
     Entity::Id id = key.mid( 1 ).toLongLong();
     if ( id < 0 )
       continue;
@@ -176,8 +176,8 @@ void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) c
       d->pendingItemChanges[id].selected = true;
   }
 
-  const KConfigGroup expansionGroup( &configGroup, "Expansion" );
-  foreach( const QString &key, expansionGroup.keyList() ) {
+  const QStringList expansion = configGroup.readEntry( "Expansion", QStringList() );
+  foreach( const QString &key, expansion ) {
     Entity::Id id = key.mid( 1 ).toLongLong();
     if ( id < 0 )
       continue;
@@ -187,9 +187,8 @@ void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) c
       d->pendingItemChanges[id].expanded = true;
   }
 
-  const KConfigGroup scrollBarGroup( &configGroup, "ScrollBar" );
-  d->horizontalScrollBarValue = scrollBarGroup.readEntry( "Horizontal", -1 );
-  d->verticalScrollBarValue = scrollBarGroup.readEntry( "Vertical", -1 );
+  d->horizontalScrollBarValue = configGroup.readEntry( "ScrollBarHorizontal", -1 );
+  d->verticalScrollBarValue = configGroup.readEntry( "ScrollBarVertical", -1 );
 
   // initial restore run, for everything already loaded
   for ( int i = 0; i < d->view->model()->rowCount() && d->hasChanges(); ++i ) {
