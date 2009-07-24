@@ -96,8 +96,8 @@ class PluginEntry
 
       QObject *object = PluginLoader::self()->createForName( mIdentifier );
       if ( !object ) {
-        kWarning( 5250 ) << "ItemSerializerPluginLoader: "
-                         << "plugin" << mIdentifier << "is not valid!" << endl;
+        kWarning() << "ItemSerializerPluginLoader: "
+                   << "plugin" << mIdentifier << "is not valid!" << endl;
 
         // we try to use the default in that case
         mPlugin = s_defaultItemSerializerPlugin;
@@ -105,8 +105,8 @@ class PluginEntry
 
       mPlugin = qobject_cast<ItemSerializerPlugin*>( object );
       if ( !mPlugin ) {
-        kWarning( 5250 ) << "ItemSerializerPluginLoader: "
-                         << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
+        kWarning() << "ItemSerializerPluginLoader: "
+                   << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
 
         // we try to use the default in that case
         mPlugin = s_defaultItemSerializerPlugin;
@@ -147,12 +147,12 @@ class PluginRegistry
     {
       const PluginLoader* pl = PluginLoader::self();
       if ( !pl ) {
-        kWarning( 5250 ) << "Cannot instantiate plugin loader!" << endl;
+        kWarning() << "Cannot instantiate plugin loader!" << endl;
         return;
       }
       const QStringList types = pl->types();
-      kDebug( 5250 ) << "ItemSerializerPluginLoader: "
-                     << "found" << types.size() << "plugins." << endl;
+      kDebug() << "ItemSerializerPluginLoader: "
+               << "found" << types.size() << "plugins." << endl;
       allPlugins.reserve( types.size() + 1 );
       foreach ( const QString &type, types )
         allPlugins.append( PluginEntry( type ) );
@@ -285,8 +285,8 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
   } else {
     // check if we have a more generic plugin
     const PluginEntry &entry = s_pluginRegistry->findBestMatch( mimetype );
-    kDebug( 5250 ) << "Did not find exactly matching serializer plugin for type" << mimetype
-                   << ", taking" << entry.type() << "as the closest match";
+    kDebug() << "Did not find exactly matching serializer plugin for type" << mimetype
+             << ", taking" << entry.type() << "as the closest match";
     plugin = entry.plugin();
   }
 

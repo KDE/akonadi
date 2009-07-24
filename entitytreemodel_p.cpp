@@ -408,7 +408,7 @@ void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Coll
   Q_Q( EntityTreeModel );
 
   if ( !m_collections.contains( id ) ) {
-    kWarning( 5250 ) << "Got statistics response for non-existing collection:" << id;
+    kWarning() << "Got statistics response for non-existing collection:" << id;
   } else {
     m_collections[ id ].setStatistics( statistics );
 
@@ -530,21 +530,21 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
   Q_ASSERT(m_pendingChildCollections.isEmpty());
   
   if ( job->error() ) {
-    kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
+    kWarning() << "Job error: " << job->errorString() << endl;
   }
 }
 
 void EntityTreeModelPrivate::copyJobDone( KJob *job )
 {
   if ( job->error() ) {
-    kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
+    kWarning() << "Job error: " << job->errorString() << endl;
   }
 }
 
 void EntityTreeModelPrivate::moveJobDone( KJob *job )
 {
   if ( job->error() ) {
-    kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
+    kWarning() << "Job error: " << job->errorString() << endl;
   }
 }
 
@@ -552,7 +552,7 @@ void EntityTreeModelPrivate::updateJobDone( KJob *job )
 {
   if ( job->error() ) {
     // TODO: handle job errors
-    kWarning( 5250 ) << "Job error:" << job->errorString();
+    kWarning() << "Job error:" << job->errorString();
   } else {
     // TODO: Is this trying to do the job of collectionstatisticschanged?
 //     CollectionStatisticsJob *csjob = static_cast<CollectionStatisticsJob*>( job );

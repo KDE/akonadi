@@ -88,14 +88,14 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
   bool ok = false;
   pos = ImapParser::parseNumber( data, colId, &ok, pos );
   if ( !ok || colId <= 0 ) {
-    kDebug( 5250 ) << "Could not parse collection id from response:" << data;
+    kDebug() << "Could not parse collection id from response:" << data;
     return start;
   }
 
   Collection::Id parentId = -1;
   pos = ImapParser::parseNumber( data, parentId, &ok, pos );
   if ( !ok || parentId < 0 ) {
-    kDebug( 5250 ) << "Could not parse parent id from response:" << data;
+    kDebug() << "Could not parse parent id from response:" << data;
     return start;
   }
 

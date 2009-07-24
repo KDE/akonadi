@@ -80,7 +80,7 @@ void CollectionStatisticsJob::doHandleResponse( const QByteArray & tag, const QB
         } else if ( list[i] == "SIZE" ) {
           d->mStatistics.setSize( list[i+1].toLongLong() );
         } else {
-          kDebug( 5250 ) << "Unknown STATUS response: " << list[i];
+          kDebug() << "Unknown STATUS response: " << list[i];
         }
       }
 
@@ -88,7 +88,7 @@ void CollectionStatisticsJob::doHandleResponse( const QByteArray & tag, const QB
       return;
     }
   }
-  kDebug( 5250 ) << "Unhandled response: " << tag << data;
+  kDebug() << "Unhandled response: " << tag << data;
 }
 
 Collection CollectionStatisticsJob::collection() const

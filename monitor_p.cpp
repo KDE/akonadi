@@ -52,7 +52,7 @@ bool MonitorPrivate::connectToNotificationManager()
     return true;
 
   if ( !nm ) {
-    kWarning( 5250 ) << "Unable to connect to notification manager";
+    kWarning() << "Unable to connect to notification manager";
   } else {
     QObject::connect( nm, SIGNAL(notify(Akonadi::NotificationMessage::List)),
              q_ptr, SLOT(slotNotify(Akonadi::NotificationMessage::List)) );
@@ -67,7 +67,7 @@ bool MonitorPrivate::acceptNotification(const NotificationMessage & msg)
     return false;
   switch ( msg.type() ) {
     case NotificationMessage::InvalidType:
-      kWarning( 5250 ) << "Received invalid change notification!";
+      kWarning() << "Received invalid change notification!";
       return false;
     case NotificationMessage::Item:
       return isItemMonitored( msg.uid(), msg.parentCollection(), msg.parentDestCollection(), msg.mimeType(), msg.resource() )
@@ -132,7 +132,7 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
     return true;
 
   } else {
-    kWarning( 5250 ) << "Received unknown change notification!";
+    kWarning() << "Received unknown change notification!";
   }
   return false;
 }
@@ -147,7 +147,7 @@ void MonitorPrivate::slotSessionDestroyed( QObject * object )
 void MonitorPrivate::slotStatisticsChangedFinished( KJob* job )
 {
   if ( job->error() ) {
-    kWarning( 5250 ) << "Error on fetching collection statistics: " << job->errorText();
+    kWarning() << "Error on fetching collection statistics: " << job->errorText();
   } else {
     CollectionStatisticsJob *statisticsJob = static_cast<CollectionStatisticsJob*>( job );
     emit q_ptr->collectionStatisticsChanged( statisticsJob->collection().id(),
@@ -251,7 +251,7 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
 void MonitorPrivate::slotItemJobFinished( KJob* job )
 {
   if ( !pendingJobs.contains( job ) ) {
-    kWarning( 5250 ) << "Unknown job - wtf is going on here?";
+    kWarning() << "Unknown job - wtf is going on here?";
     return;
   }
   NotificationMessage msg = pendingJobs.take( job );
@@ -259,7 +259,7 @@ void MonitorPrivate::slotItemJobFinished( KJob* job )
   Collection col;
   Collection destCol;
   if ( job->error() ) {
-    kWarning( 5250 ) << "Error on fetching item:" << job->errorText();
+    kWarning() << "Error on fetching item:" << job->errorText();
   } else {
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
     if ( fetchJob && fetchJob->items().count() > 0 )
@@ -277,12 +277,12 @@ void MonitorPrivate::slotItemJobFinished( KJob* job )
 void MonitorPrivate::slotCollectionJobFinished( KJob* job )
 {
   if ( !pendingJobs.contains( job ) ) {
-    kWarning( 5250 ) << "Unknown job - wtf is going on here?";
+    kWarning() << "Unknown job - wtf is going on here?";
     return;
   }
   NotificationMessage msg = pendingJobs.take( job );
   if ( job->error() ) {
-    kWarning( 5250 ) << "Error on fetching collection:" << job->errorText();
+    kWarning() << "Error on fetching collection:" << job->errorText();
   } else {
     Collection col, parent;
     CollectionFetchJob *listJob = qobject_cast<CollectionFetchJob*>( job );

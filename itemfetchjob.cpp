@@ -198,7 +198,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       }
 
       if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
-        kWarning( 5250 ) << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
+        kWarning() << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
         return;
       }
 
@@ -246,7 +246,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
               if (fileKey == "[FILE]") {
                 isExternal = true;
                 i++;
-                kDebug( 5250 ) << "Payload is external: " << isExternal << " filename: " << fetchResponse.value( i + 1 );
+                kDebug() << "Payload is external: " << isExternal << " filename: " << fetchResponse.value( i + 1 );
               }
               ItemSerializer::deserialize( item, plainKey, fetchResponse.value( i + 1 ), version, isExternal );
               break;
@@ -285,7 +285,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       return;
     }
   }
-  kDebug( 5250 ) << "Unhandled response: " << tag << data;
+  kDebug() << "Unhandled response: " << tag << data;
 }
 
 Item::List ItemFetchJob::items() const

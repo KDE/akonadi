@@ -1,5 +1,7 @@
 project(akonadi-kde)
 
+add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5250 )
+
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 if(CMAKE_COMPILE_GCOV)
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")

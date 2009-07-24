@@ -269,7 +269,7 @@ bool Job::removeSubjob(KJob * job)
 
 void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
 {
-  kDebug( 5250 ) << "Unhandled response: " << tag << data;
+  kDebug() << "Unhandled response: " << tag << data;
 }
 
 void Job::slotResult(KJob * job)

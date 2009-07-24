@@ -68,7 +68,7 @@ void SessionPrivate::reconnect()
 void SessionPrivate::socketError( QLocalSocket::LocalSocketError error )
 {
   Q_ASSERT( mParent->sender() == socket );
-  kWarning( 5250 ) << "Socket error occurred:" << socket->errorString();
+  kWarning() << "Socket error occurred:" << socket->errorString();
   socketDisconnected();
 }
 
@@ -96,7 +96,7 @@ void SessionPrivate::dataReceived()
           connected = true;
           startNext();
         } else {
-          kWarning( 5250 ) << "Unable to login to Akonadi server:" << parser->data();
+          kWarning() << "Unable to login to Akonadi server:" << parser->data();
           socket->close();
           QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
         }
@@ -111,7 +111,7 @@ void SessionPrivate::dataReceived()
           protocolVersion = tmp;
           Internal::setServerProtocolVersion( tmp );
         }
-        kDebug( 5250 ) << "Server protocol version is:" << protocolVersion;
+        kDebug() << "Server protocol version is:" << protocolVersion;
 
         writeData( "0 LOGIN " + ImapParser::quote( sessionId ) + '\n' );
 
@@ -184,7 +184,7 @@ void SessionPrivate::jobDone(KJob * job)
   }
   // ### better handle the other cases too, user might have canceled jobs
   else {
-    kDebug( 5250 ) << job << "Non-current job finished.";
+    kDebug() << job << "Non-current job finished.";
   }
 }
 
@@ -247,10 +247,10 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
 
   QFileInfo fileInfo( connectionConfigFile );
   if ( !fileInfo.exists() ) {
-    kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
-                     << "akonadi/akonadiconnectionrc can not be found in '"
-                     << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
-                     << XdgBaseDirs::systemPathList( "config" );
+    kWarning() << "Akonadi Client Session: connection config file '"
+               << "akonadi/akonadiconnectionrc can not be found in '"
+               << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
+               << XdgBaseDirs::systemPathList( "config" );
   }
 
   d->mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );
