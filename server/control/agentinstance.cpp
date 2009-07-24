@@ -31,6 +31,7 @@ AgentInstance::AgentInstance(AgentManager * manager) :
     mAgentControlInterface( 0 ),
     mAgentStatusInterface( 0 ),
     mResourceInterface( 0 ),
+    mPreprocessorInterface( 0 ),
     mStatus( 0 ),
     mPercent( 0 ),
     mOnline( false )
@@ -129,6 +130,40 @@ bool AgentInstance::obtainResourceInterface()
   mResourceInterface = resInterface;
 
   refreshResourceStatus();
+  return true;
+}
+
+bool AgentInstance::obtainPreprocessorInterface()
+{
+  // Cleanup if it was already present
+  if( mPreprocessorInterface )
+  {
+    delete mPreprocessorInterface;
+    mPreprocessorInterface = 0;
+  }
+
+  org::freedesktop::Akonadi::Preprocessor * preProcessorInterface =
+    new org::freedesktop::Akonadi::Preprocessor(
+        "org.freedesktop.Akonadi.Preprocessor." + mIdentifier,
+        "/",
+        QDBusConnection::sessionBus(),
+        this
+      );
+
+  if ( !preProcessorInterface || !preProcessorInterface->isValid() )
+  {
+    // The agent likely doesn't export the preprocessor interface
+    // or there is some D-Bus quirk that prevents us from accessing it.
+    mManager->tracer()->error(
+        QLatin1String( "AgentInstance::obtainPreprocessorInterface" ),
+        QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+          .arg( mIdentifier, preProcessorInterface ? preProcessorInterface->lastError().message() : "" )
+      );
+    return false;
+  }
+
+  mPreprocessorInterface = preProcessorInterface;
+
   return true;
 }
 

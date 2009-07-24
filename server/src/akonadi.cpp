@@ -33,6 +33,7 @@
 #include "nepomukmanager.h"
 #include "debuginterface.h"
 #include "storage/itemretrievalthread.h"
+#include "preprocessormanager.h"
 
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
@@ -107,6 +108,10 @@ AkonadiServer::AkonadiServer( QObject* parent )
     Tracer::self();
     new DebugInterface( this );
     ResourceManager::self();
+
+    // Initialize the preprocessor manager
+    PreprocessorManager::init();
+
     if ( settings.value( QLatin1String( "Cache/EnableCleaner" ), true ).toBool() ) {
       mCacheCleaner = new CacheCleaner( this );
       mCacheCleaner->start( QThread::IdlePriority );
@@ -168,6 +173,9 @@ void AkonadiServer::quit()
     for ( int i = 0; i < mConnections.count(); ++i )
       quitThread( mConnections[ i ] );
     mConnections.clear();
+
+    // Terminate the preprocessor manager before the database but after all connections are gone
+    PreprocessorManager::done();
 
     DataStore::self()->close();
     Q_ASSERT( QSqlDatabase::connectionNames().isEmpty() );

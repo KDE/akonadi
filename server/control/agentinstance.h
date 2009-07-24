@@ -24,6 +24,7 @@
 #include "statusinterface.h"
 #include "resourceinterface.h"
 #include "tracerinterface.h"
+#include "preprocessorinterface.h"
 
 #include <QDBusError>
 #include <QString>
@@ -40,6 +41,11 @@ class AgentType;
 
 /**
  * Represents one agent instance and takes care of communication with it.
+ *
+ * The agent exposes multiple D-Bus interfaces. The Control and the Status
+ * interfaces are implemented by all the agents. The Resource and Preprocessor
+ * interfaces are obviously implemented only by the agents impersonating resources or
+ * preprocessors.
  */
 class AgentInstance : public QObject
 {
@@ -66,13 +72,16 @@ class AgentInstance : public QObject
 
     bool hasResourceInterface() const { return mResourceInterface; }
     bool hasAgentInterface() const { return mAgentControlInterface && mAgentStatusInterface; }
+    bool hasPreprocessorInterface() const { return mPreprocessorInterface; }
 
     org::freedesktop::Akonadi::Agent::Control* controlInterface() const { return mAgentControlInterface; }
     org::freedesktop::Akonadi::Agent::Status* statusInterface() const { return mAgentStatusInterface; }
     org::freedesktop::Akonadi::Resource* resourceInterface() const { return mResourceInterface; }
+    org::freedesktop::Akonadi::Preprocessor * preProcessorInterface() const { return mPreprocessorInterface; }
 
     bool obtainAgentInterface();
     bool obtainResourceInterface();
+    bool obtainPreprocessorInterface();
 
   private slots:
     void statusChanged( int status, const QString &statusMsg );
@@ -97,6 +106,7 @@ class AgentInstance : public QObject
     org::freedesktop::Akonadi::Agent::Control *mAgentControlInterface;
     org::freedesktop::Akonadi::Agent::Status *mAgentStatusInterface;
     org::freedesktop::Akonadi::Resource *mResourceInterface;
+    org::freedesktop::Akonadi::Preprocessor * mPreprocessorInterface;
 
     int mStatus;
     QString mStatusMessage;

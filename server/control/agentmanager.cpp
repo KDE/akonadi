@@ -26,6 +26,7 @@
 #include "../../libs/xdgbasedirs_p.h"
 #include "akdebug.h"
 #include "resource_manager.h"
+#include "preprocessor_manager.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -207,6 +208,16 @@ void AgentManager::removeAgentInstance( const QString &identifier )
   
   org::freedesktop::Akonadi::ResourceManager * resmanager = new org::freedesktop::Akonadi::ResourceManager( QLatin1String("org.freedesktop.Akonadi"), QLatin1String("/ResourceManager"), QDBusConnection::sessionBus(), this );
   resmanager->removeResourceInstance(instance->identifier());
+
+  // Kill the preprocessor instance, if any.
+  org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
+      QLatin1String( "org.freedesktop.Akonadi" ),
+      QLatin1String( "/PreprocessorManager" ),
+      QDBusConnection::sessionBus(),
+      this
+    );
+
+  preProcessorManager.unregisterInstance( instance->identifier() );
 
   emit agentInstanceRemoved( identifier );
 }
@@ -453,16 +464,24 @@ void AgentManager::save()
   file.sync();
 }
 
-void AgentManager::serviceOwnerChanged( const QString &name, const QString&, const QString &newOwner )
+void AgentManager::serviceOwnerChanged( const QString &name, const QString &, const QString &newOwner )
 {
+  // This is called by the D-Bus server when a service comes up, goes down or changes ownership for some reason
+  // and this is where we "hook up" our different Agent interfaces.
+
+  //qDebug() << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
+
   if ( name == "org.freedesktop.Akonadi" && !newOwner.isEmpty() ) {
     // server is operational, start agents
     continueStartup();
   }
 
   if ( name.startsWith( "org.freedesktop.Akonadi.Agent." ) ) {
+
+    // An agent service went up or down
+
     if ( newOwner.isEmpty() )
-      return;
+      return; // It went down: we don't care here.
 
     const QString identifier = name.mid( 30 );
     if ( !mAgentInstances.contains( identifier ) )
@@ -478,14 +497,86 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
   }
 
   else if ( name.startsWith( "org.freedesktop.Akonadi.Resource." ) ) {
+
+    // A resource service went up or down
+
     if ( newOwner.isEmpty() )
-      return;
+      return; // It went down: we don't care here.
 
     const QString identifier = name.mid( 33 );
     if ( !mAgentInstances.contains( identifier ) )
       return;
 
     mAgentInstances.value( identifier )->obtainResourceInterface();
+  }
+
+  else if ( name.startsWith( "org.freedesktop.Akonadi.Preprocessor." ) ) {
+
+    // A preprocessor service went up or down
+
+    // If the preprocessor is going up then the org.freedesktop.Akonadi.Agent.* interface
+    // should be already up (as it's registered before the preprocessor one).
+    // So if we don't know about the preprocessor as agent instance
+    // then it's not our preprocessor.
+
+    // If the preprocessor is going down then either the agent interface already
+    // went down (and it has been already unregistered on the manager side)
+    // or it's still registered as agent and WE have to unregister it.
+    // The order of interface deletions depends on Qt but we handle both cases.
+
+    // Check if we "know" about it.
+
+    const QString identifier = name.mid( 37 );
+
+    qDebug() << "Preprocessor " << identifier << " is going up or down...";
+
+    if ( !mAgentInstances.contains( identifier ) )
+    {
+      qDebug() << "But it isn't registered as agent... not mine (anymore?)";
+      return; // not our agent (?)
+    }
+
+    org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
+        QLatin1String( "org.freedesktop.Akonadi" ),
+        QLatin1String( "/PreprocessorManager" ),
+        QDBusConnection::sessionBus(),
+        this
+      );
+
+    if( !preProcessorManager.isValid() )
+    {
+      mTracer->warning(
+          QLatin1String( "AgentManager::serviceOwnerChanged" ),
+          QString( "Could not connect to PreprocessorManager via D-Bus: %1" )
+            .arg( preProcessorManager.lastError().message() )
+        );
+    } else {
+      if ( newOwner.isEmpty() )
+      {
+        // The preprocessor went down. Unregister it on server side.
+
+        preProcessorManager.unregisterInstance( identifier );
+
+      } else {
+
+        // The preprocessor went up. Register it on server side.
+
+        if ( !mAgentInstances.value( identifier )->obtainPreprocessorInterface() )
+        {
+          // Hm.. couldn't hook up its preprocessor interface..
+          // Make sure we don't have it in the preprocessor chain
+          qWarning() << "Couldn't obtain preprocessor interface for instance " << identifier;
+ 
+          preProcessorManager.unregisterInstance( identifier );
+          return;
+        }
+
+        qDebug() << "Registering preprocessor instance " << identifier;
+
+        // Add to the preprocessor chain
+        preProcessorManager.registerInstance( identifier );
+      }
+    }
   }
 }
 

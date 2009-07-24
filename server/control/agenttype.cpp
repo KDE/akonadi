@@ -29,6 +29,7 @@ using namespace Akonadi;
 QLatin1String AgentType::CapabilityUnique = QLatin1String( "Unique" );
 QLatin1String AgentType::CapabilityResource = QLatin1String( "Resource" );
 QLatin1String AgentType::CapabilityAutostart = QLatin1String( "Autostart" );
+QLatin1String AgentType::CapabilityPreprocessor = QLatin1String( "Preprocessor" );
 
 AgentType::AgentType() :
     instanceCounter( 0 )
