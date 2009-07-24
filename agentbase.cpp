@@ -588,6 +588,11 @@ ChangeRecorder * AgentBase::changeRecorder() const
   return d_ptr->mMonitor;
 }
 
+void AgentBase::abort()
+{
+  emit abortRequested();
+}
+
 void AgentBase::reconfigure()
 {
   emit reloadConfiguration();
