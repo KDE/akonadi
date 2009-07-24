@@ -141,6 +141,7 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
     */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
+    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
   protected:
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;

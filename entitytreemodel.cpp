@@ -254,9 +254,19 @@ QVariant EntityTreeModel::getData( const Collection &collection, int column, int
 
 QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 {
-  if ( !index.isValid() )
-    return QVariant();
+  const int headerSet = (role / TerminalUserRole);
 
+  role %= TerminalUserRole;
+  if ( !index.isValid() )
+  {
+    if (ColumnCountRole != role)
+      return QVariant();
+    return getNumColumns(headerSet);   
+  }
+
+  if (ColumnCountRole == role)
+    return getNumColumns(headerSet);
+  
   Q_D( const EntityTreeModel );
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
@@ -556,6 +566,14 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
     return d->m_childEntities.value( id ).size();
 
   return 0;
+}
+
+int EntityTreeModel::getNumColumns(int headerSet) const
+{
+  // Not needed in this model.
+  Q_UNUSED(headerSet);
+
+  return columnCount();
 }
 
 QVariant EntityTreeModel::getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet) const
