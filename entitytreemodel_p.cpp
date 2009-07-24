@@ -94,76 +94,60 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
 {
   // TODO: refactor this stuff into separate methods for listing resources in Collection::root, and listing collections within resources.
   Q_Q( EntityTreeModel );
-  QHash<Collection::Id, Collection> newCollections;
-  QHash<Collection::Id, QList<Collection::Id> > newChildCollections;
 
   Akonadi::AgentManager *agentManager = Akonadi::AgentManager::self();
 
-  foreach ( const Collection &collection, collections ) {
-    if ( m_collections.contains( collection.id() ) ) {
-      // If we already know about the collection, there is nothing left to do
-      continue;
-    }
-    // ... otherwise we add it to the set of collections we need to handle.
-    if ( collection.parent() == Collection::root().id() ) {
+  Collection::List _collections = collections;
 
-      if ( !m_monitor->resourcesMonitored().isEmpty() &&
-           !m_monitor->resourcesMonitored().contains( collection.resource().toUtf8() ) &&
-           !m_monitor->isAllMonitored() )
-        continue;
-    }
+  forever
+  {
+    int collectionsSize = _collections.size();
 
-    newChildCollections[ collection.parent() ].append( collection.id() );
-    newCollections.insert( collection.id(), collection );
-  }
+    QMutableListIterator<Akonadi::Collection> it(_collections);
+    while (it.hasNext())
+    {
+      const Collection col = it.next();
+      const Collection::Id parentId = col.parent();
+      const Collection::Id colId = col.id();
 
-  // Insert new child collections into model.
-  QHashIterator<Collection::Id, QList<Collection::Id> > it( newChildCollections );
-  while ( it.hasNext() ) {
-    it.next();
+      if ( m_collections.contains( parentId ) ) {
+        insertCollection( col, m_collections.value( parentId ) );
 
-    // the key is the parent of new collections.
-    const Collection::Id parentId = it.key();
+        if ( m_pendingChildCollections.contains( colId ) )
+        {
+          QList<Collection::Id> pendingParentIds = m_pendingChildCollections.value( colId );
 
-    const QList<Collection::Id> newChildCollectionList = it.value();
-    const int newChildCount = newChildCollectionList.size();
-
-    if ( m_collections.contains( parentId ) ) {
-      int startRow = 0; // Prepend collections.
-
-      // TODO: account for ordering.
-      const QModelIndex parentIndex = q->indexForCollection( m_collections.value( parentId ) );
-
-      q->beginInsertRows( parentIndex, startRow, startRow + newChildCount - 1 );
-      foreach ( const Collection::Id id, newChildCollectionList ) {
-        const Collection collection = newCollections.value( id );
-        m_collections.insert( id, collection );
-
-        Node *node = new Node;
-        node->id = id;
-        node->parent = parentId;
-        node->type = Node::Collection;
-        m_childEntities[ parentId ].prepend( node );
-      }
-      q->endInsertRows();
-
-      foreach ( const Collection::Id id, newChildCollectionList ) {
-        const Collection collection = newCollections.value( id );
-
-        // Fetch the next level of collections if necessary.
-        if ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )
-          fetchCollections( collection, CollectionFetchJob::FirstLevel );
-
-        // Fetch items if necessary. If we don't fetch them now, we'll wait for an application
-        // to request them through EntityTreeModel::fetchMore
-        if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
-          fetchItems( collection );
+          foreach(const Collection::Id &id, pendingParentIds)
+          {
+            Collection pendingCollection = m_pendingCollections.value(id);
+            Q_ASSERT( pendingCollection.isValid() );
+            insertPendingCollection( pendingCollection, col, it );
+            m_pendingCollections.remove(id);
+          }
+          if ( !it.findNext(col) && it.findPrevious(col))
+          {
+            Q_ASSERT("Something went very wrong" == "false");
+          }
+          m_pendingChildCollections.remove( colId );          
+        }
+        
+        it.remove();
+      } else {
+        m_pendingCollections.insert( colId, col );
+        m_pendingChildCollections[ parentId ].append( colId );
       }
     }
-    // TODO: Fetch parent again so that its entities get ordered properly. Or start a modify job?
-    // Should I do this for all other cases as well instead of using transactions?
-    // Could be a way around the fact that monitor could notify me of things out of order. a parent could
-    // be 'changed' for its entities to be reordered before one of its entities is in the model yet.
+    
+    if ( _collections.isEmpty() )
+      break; // forever
+
+    if( _collections.size() == collectionsSize )
+    {
+      // Didn't process any collections this iteration.
+      // Persist them until the next time collectionsFetched recieves collections.
+      kWarning() << "Some collections could not be inserted into the model yet.";
+      break; // forever
+    }
   }
 }
 
@@ -267,7 +251,9 @@ void EntityTreeModelPrivate::insertAncestors(const Akonadi::Collection::List& co
 
 void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
 {
-
+  Q_ASSERT(collection.isValid());
+  Q_ASSERT(parent.isValid());
+  
   Q_Q( EntityTreeModel );
   // TODO: Use order attribute of parent if available
   // Otherwise prepend collections and append items. Currently this prepends all collections.
@@ -279,7 +265,6 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
 //   int numChildCols = childCollections.value(parent.id()).size();
 
   const int row = 0;
-
   const QModelIndex parentIndex = q->indexForCollection( parent );
   q->beginInsertRows( parentIndex, row, row );
   m_collections.insert( collection.id(), collection );
@@ -290,6 +275,35 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
   node->type = Node::Collection;
   m_childEntities[ parent.id() ].prepend( node );
   q->endInsertRows();
+
+  if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
+    fetchItems( collection );
+}
+
+void EntityTreeModelPrivate::insertPendingCollection( const Akonadi::Collection& collection, const Akonadi::Collection& parent, QMutableListIterator<Collection> &colIt )
+{
+  insertCollection(collection, parent);
+  m_pendingCollections.remove( collection.id() );
+
+  if (colIt.findPrevious(collection) || colIt.findNext(collection))
+  {    
+    colIt.remove();
+  }
+
+  Q_ASSERT(m_collections.contains(parent.id()));
+  
+  QList<Collection::Id> pendingChildCollectionsToInsert = m_pendingChildCollections.value(collection.id());
+
+  QList<Collection::Id>::const_iterator it;
+  const QList<Collection::Id>::const_iterator begin = pendingChildCollectionsToInsert.constBegin();
+  const QList<Collection::Id>::const_iterator end = pendingChildCollectionsToInsert.constEnd();
+  
+  for ( it = begin; it != end; ++it )
+  {
+    insertPendingCollection(m_pendingCollections.value( *it ), collection, colIt);
+  }
+  
+  m_pendingChildCollections.remove( parent.id() );
 }
 
 void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
@@ -512,6 +526,9 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
 
 void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 {
+  Q_ASSERT(m_pendingCollections.isEmpty());
+  Q_ASSERT(m_pendingChildCollections.isEmpty());
+  
   if ( job->error() ) {
     kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
   }
@@ -547,8 +564,6 @@ void EntityTreeModelPrivate::updateJobDone( KJob *job )
 void EntityTreeModelPrivate::startFirstListJob()
 {
   Q_Q(EntityTreeModel);
-
-  kDebug() << m_collections.size();
 
   if (m_collections.size() > 0)
     return;
