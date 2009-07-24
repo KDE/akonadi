@@ -11,5 +11,7 @@
     </method>
     <method name="reconfigure">
     </method>
+    <method name="abort">
+    </method>
   </interface>
 </node>
