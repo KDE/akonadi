@@ -64,6 +64,10 @@ StatisticsProxyModel::~StatisticsProxyModel()
 
 QModelIndex Akonadi::StatisticsProxyModel::index( int row, int column, const QModelIndex & parent ) const
 {
+    if (!hasIndex(row, column, parent))
+      return QModelIndex();
+
+    
     int sourceColumn = column;
 
     if ( column>=columnCount( parent)-3 ) {
