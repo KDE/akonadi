@@ -85,6 +85,10 @@ bool AgentInstance::obtainAgentInterface()
     mManager->tracer()->error( QLatin1String( "AgentInstance::obtainAgentInterface" ),
       QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
           .arg( mIdentifier, agentControlIface ? agentControlIface->lastError().message() : "" ) );
+
+    if ( agentControlIface )
+      delete agentControlIface;
+
     return false;
   }
   mAgentControlInterface = agentControlIface;
@@ -96,6 +100,10 @@ bool AgentInstance::obtainAgentInterface()
     mManager->tracer()->error( QLatin1String( "AgentInstance::obtainAgentInterface" ),
       QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
           .arg( mIdentifier, agentStatusIface ? agentStatusIface->lastError().message() : "" ) );
+
+    if ( agentStatusIface )
+      delete agentStatusIface;
+
     return false;
   }
   mAgentStatusInterface = agentStatusIface;
@@ -123,6 +131,10 @@ bool AgentInstance::obtainResourceInterface()
     mManager->tracer()->error( QLatin1String( "AgentInstance::obtainResourceInterface" ),
       QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
           .arg( mIdentifier, resInterface ? resInterface->lastError().message() : "" ) );
+
+    if ( resInterface )
+      delete resInterface;
+
     return false;
   }
 
@@ -159,6 +171,10 @@ bool AgentInstance::obtainPreprocessorInterface()
         QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
           .arg( mIdentifier, preProcessorInterface ? preProcessorInterface->lastError().message() : "" )
       );
+
+    if ( preProcessorInterface )
+      delete preProcessorInterface;
+
     return false;
   }
 
