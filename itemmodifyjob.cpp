@@ -172,8 +172,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
       if ( dateTimePos != -1 ) {
         int resultPos = ImapParser::parseDateTime( data, modificationDateTime, dateTimePos + 8 );
         if ( resultPos == (dateTimePos + 8) ) {
-          kDebug( 5250 ) << "Invalid DATETIME response to STORE command: "
-              << _tag << data;
+          kDebug() << "Invalid DATETIME response to STORE command: " << _tag << data;
         }
       }
 
@@ -188,7 +187,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
     emitResult();
     return;
   }
-  kDebug( 5250 ) << "Unhandled response: " << _tag << data;
+  kDebug() << "Unhandled response: " << _tag << data;
 }
 
 void ItemModifyJob::setIgnorePayload( bool ignore )

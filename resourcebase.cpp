@@ -169,7 +169,7 @@ QString ResourceBase::parseArguments( int argc, char **argv )
 {
   QString identifier;
   if ( argc < 3 ) {
-    kDebug( 5250 ) << "Not enough arguments passed...";
+    kDebug() << "Not enough arguments passed...";
     exit( 1 );
   }
 
@@ -179,7 +179,7 @@ QString ResourceBase::parseArguments( int argc, char **argv )
   }
 
   if ( identifier.isEmpty() ) {
-    kDebug( 5250 ) << "Identifier argument missing";
+    kDebug() << "Identifier argument missing";
     exit( 1 );
   }
 
@@ -226,7 +226,7 @@ void ResourceBase::itemRetrieved( const Item &item )
   QSet<QByteArray> requestedParts = d->scheduler->currentTask().itemParts;
   foreach ( const QByteArray &part, requestedParts ) {
     if ( !item.loadedPayloadParts().contains( part ) ) {
-      kWarning( 5250 ) << "Item does not provide part" << part;
+      kWarning() << "Item does not provide part" << part;
     }
   }
 

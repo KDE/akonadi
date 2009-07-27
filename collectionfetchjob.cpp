@@ -195,7 +195,7 @@ void CollectionFetchJob::doHandleResponse( const QByteArray & tag, const QByteAr
       d->mEmitTimer->start();
     return;
   }
-  kDebug( 5250 ) << "Unhandled server response" << tag << data;
+  kDebug() << "Unhandled server response" << tag << data;
 }
 
 void CollectionFetchJob::setResource(const QString & resource)

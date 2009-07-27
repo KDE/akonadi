@@ -105,11 +105,11 @@ bool ServerManager::start()
 {
   const bool ok = QProcess::startDetached( QLatin1String("akonadi_control") );
   if ( !ok ) {
-    kWarning( 5250 ) << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
+    kWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
     QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
     if ( !reply.isValid() ) {
-      kDebug( 5250 ) << "Akonadi server could not be started via D-Bus either: "
-                     << reply.error().message();
+      kDebug() << "Akonadi server could not be started via D-Bus either: "
+               << reply.error().message();
       return false;
     }
   }

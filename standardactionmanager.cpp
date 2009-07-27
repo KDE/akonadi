@@ -25,6 +25,7 @@
 #include "collectionmodel.h"
 #include "collectionutils_p.h"
 #include "collectionpropertiesdialog.h"
+#include "favoritecollectionsmodel.h"
 #include "itemdeletejob.h"
 #include "itemmodel.h"
 #include "pastehelper_p.h"
@@ -172,13 +173,11 @@ class StandardActionManager::Private
         enableAction( CollectionProperties, singleColSelected && (col != Collection::root()) );
         enableAction( SynchronizeCollections, CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col ) );
         enableAction( Paste, PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
-        //FIXME: remove the reinterpret_cast once FavoriteCollectionsModel is in kdepimlibs/akonadi
-        enableAction( AddToFavoriteCollections, (favoritesModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
+        enableAction( AddToFavoriteCollections, (favoritesModel!=0) && (!favoritesModel->collections().contains(col))
                                              && singleColSelected && (col != Collection::root()) );
-        //FIXME: better check if the collection is in the model, todo once FavoriteCollectionsModel is in kdepimlibs/akonadi
-        enableAction( RemoveFromFavoriteCollections, (favoriteSelectionModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
+        enableAction( RemoveFromFavoriteCollections, (favoritesModel!=0) && (favoritesModel->collections().contains(col))
                                                   && singleColSelected && (col != Collection::root()) );
-        enableAction( RenameFavoriteCollection, (favoriteSelectionModel!=0) && (selectedIndex.model()!=reinterpret_cast<QAbstractItemModel*>(favoritesModel))
+        enableAction( RenameFavoriteCollection, (favoritesModel!=0) && (favoritesModel->collections().contains(col))
                                              && singleColSelected && (col != Collection::root()) );
         enableAction( CopyCollectionToMenu, multiColSelected && (col != Collection::root()) );
       } else {
@@ -188,6 +187,7 @@ class StandardActionManager::Private
         enableAction( Paste, false );
         enableAction( AddToFavoriteCollections, false );
         enableAction( RemoveFromFavoriteCollections, false );
+        enableAction( RenameFavoriteCollection, false );
       }
 
       bool multiItemSelected = false;
@@ -214,6 +214,58 @@ class StandardActionManager::Private
     {
       if ( mode == QClipboard::Clipboard )
         updateActions();
+    }
+
+    QItemSelection mapToEntityTreeModel( const QAbstractItemModel *model, const QItemSelection &selection )
+    {
+      const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model );
+      if ( proxy ) {
+        return mapToEntityTreeModel( proxy->sourceModel(), proxy->mapSelectionToSource( selection ) );
+      } else {
+        return selection;
+      }
+    }
+
+    QItemSelection mapFromEntityTreeModel( const QAbstractItemModel *model, const QItemSelection &selection )
+    {
+      const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model );
+      if ( proxy ) {
+        QItemSelection select = mapFromEntityTreeModel( proxy->sourceModel(), selection );
+        return proxy->mapSelectionFromSource( select );
+      } else {
+        return selection;
+      }
+    }
+
+    void collectionSelectionChanged()
+    {
+      q->blockSignals(true);
+
+      QItemSelection selection = collectionSelectionModel->selection();
+      selection = mapToEntityTreeModel( collectionSelectionModel->model(), selection );
+      selection = mapFromEntityTreeModel( favoritesModel, selection );
+
+      if ( favoriteSelectionModel )
+        favoriteSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect );
+
+      q->blockSignals(false);
+
+      updateActions();
+    }
+
+    void favoriteSelectionChanged()
+    {
+      q->blockSignals(true);
+
+      QItemSelection selection = favoriteSelectionModel->selection();
+      if ( selection.indexes().isEmpty() ) return;
+      selection = mapToEntityTreeModel( favoritesModel, selection );
+      selection = mapFromEntityTreeModel( collectionSelectionModel->model(), selection );
+      collectionSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
+
+      q->blockSignals(false);
+
+      updateActions();
     }
 
     void slotCreateCollection()
@@ -362,9 +414,7 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      //FIXME: remove the reinterpret_cast and invokeMethod once FavoriteCollectionsModel is in kdepimlibs/akonadi
-      QAbstractItemModel *model = reinterpret_cast<QAbstractItemModel*>( favoritesModel );
-      QMetaObject::invokeMethod( model, "addCollection", Q_ARG(Collection, collection) );
+      favoritesModel->addCollection( collection );
     }
 
     void slotRemoveFromFavorites()
@@ -379,9 +429,7 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      //FIXME: remove the reinterpret_cast and invokeMethod once FavoriteCollectionsModel is in kdepimlibs/akonadi
-      QAbstractItemModel *model = reinterpret_cast<QAbstractItemModel*>( favoritesModel );
-      QMetaObject::invokeMethod( model, "removeCollection", Q_ARG(Collection, collection) );
+      favoritesModel->removeCollection( collection );
     }
 
     void slotRenameFavorite()
@@ -403,9 +451,7 @@ class StandardActionManager::Private
       if ( !ok )
         return;
 
-      //FIXME: remove the reinterpret_cast and invokeMethod once FavoriteCollectionsModel is in kdepimlibs/akonadi
-      QAbstractItemModel *model = reinterpret_cast<QAbstractItemModel*>( favoritesModel );
-      QMetaObject::invokeMethod( model, "setFavoriteLabel", Q_ARG(Collection, collection), Q_ARG(QString, label) );
+      favoritesModel->setFavoriteLabel( collection, label );
     }
 
     void slotCopyCollectionTo( QAction *action )
@@ -521,13 +567,38 @@ class StandardActionManager::Private
       }
     }
 
+    void checkModelsConsistency()
+    {
+      if ( favoritesModel==0 || favoriteSelectionModel==0 ) {
+        // No need to check when the favorite collections feature is not used
+        return;
+      }
+
+      // Check that the collection selection model maps to the same
+      // EntityTreeModel than favoritesModel
+      if ( collectionSelectionModel!=0 ) {
+        const QAbstractItemModel *model = collectionSelectionModel->model();
+        while ( const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model ) ) {
+          model = proxy->sourceModel();
+        }
+        Q_ASSERT( model == favoritesModel->sourceModel() );
+      }
+
+      // Check that the favorite selection model maps to favoritesModel
+      const QAbstractItemModel *model = favoriteSelectionModel->model();
+      while ( const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model ) ) {
+        model = proxy->sourceModel();
+      }
+      Q_ASSERT( model == favoritesModel->sourceModel() );
+    }
+
     StandardActionManager *q;
     KActionCollection *actionCollection;
     QWidget *parentWidget;
     QItemSelectionModel *collectionSelectionModel;
     QItemSelectionModel *itemSelectionModel;
-    QItemSelectionModel *favoriteSelectionModel;
     FavoriteCollectionsModel *favoritesModel;
+    QItemSelectionModel *favoriteSelectionModel;
     QVector<KAction*> actions;
     AgentManager *agentManager;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
@@ -550,14 +621,16 @@ StandardActionManager::~ StandardActionManager()
   delete d;
 }
 
-void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel * selectionModel)
+void StandardActionManager::setCollectionSelectionModel( QItemSelectionModel * selectionModel )
 {
   d->collectionSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
-           SLOT(updateActions()) );
+           SLOT(collectionSelectionChanged()) );
+
+  d->checkModelsConsistency();
 }
 
-void StandardActionManager::setItemSelectionModel(QItemSelectionModel * selectionModel)
+void StandardActionManager::setItemSelectionModel( QItemSelectionModel * selectionModel )
 {
   d->itemSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
@@ -567,13 +640,15 @@ void StandardActionManager::setItemSelectionModel(QItemSelectionModel * selectio
 void StandardActionManager::setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel )
 {
   d->favoritesModel = favoritesModel;
+  d->checkModelsConsistency();
 }
 
 void StandardActionManager::setFavoriteSelectionModel( QItemSelectionModel *selectionModel )
 {
   d->favoriteSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
-           SLOT(updateActions()) );
+           SLOT(favoriteSelectionChanged()) );
+  d->checkModelsConsistency();
 }
 
 KAction* StandardActionManager::createAction( Type type )
@@ -624,7 +699,7 @@ KAction * StandardActionManager::action( Type type ) const
   return d->actions[type];
 }
 
-void StandardActionManager::setActionText(Type type, const KLocalizedString & text)
+void StandardActionManager::setActionText( Type type, const KLocalizedString & text )
 {
   Q_ASSERT( type >= 0 && type < LastType );
   d->pluralLabels.insert( type, text );

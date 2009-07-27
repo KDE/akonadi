@@ -1,5 +1,7 @@
 project(akonadi-kde)
 
+add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5250 )
+
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 if(CMAKE_COMPILE_GCOV)
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
@@ -72,11 +74,16 @@ set( akonadikde_LIB_SRC
   collectionsync.cpp
   collectionview.cpp
   control.cpp
+  descendantsproxymodel.cpp
   entitydisplayattribute.cpp
-  #entitysortfilterproxymodel.cpp
+  entitytreemodel.cpp
+  entitytreemodel_p.cpp
+  entityfilterproxymodel.cpp
+  entitytreeviewstatesaver.cpp
   erroroverlay.cpp
   exception.cpp
   expungejob.cpp
+  favoritecollectionsmodel.cpp
   firstrun.cpp
   flatcollectionproxymodel.cpp
   item.cpp
@@ -100,15 +107,19 @@ set( akonadikde_LIB_SRC
   monitor.cpp
   monitor_p.cpp
   pastehelper.cpp
+  preprocessorbase.cpp
   protocolhelper.cpp
   resourcebase.cpp
   resourcescheduler.cpp
   resourceselectjob.cpp
   searchcreatejob.cpp
+  selectionproxymodel.cpp
   selftestdialog.cpp
   session.cpp
   servermanager.cpp
   standardactionmanager.cpp
+  statisticsproxymodel.cpp
+  statisticstooltipproxymodel.cpp
   subscriptionjob.cpp
   subscriptionchangeproxymodel.cpp
   subscriptiondialog.cpp
@@ -128,6 +139,7 @@ qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationmanagerint
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Tracer.xml )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Resource.xml resourcebase.h Akonadi::ResourceBase )
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Preprocessor.xml preprocessorbase.h Akonadi::PreprocessorBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Status.xml agentbase.h Akonadi::AgentBase )
 # TODO move this to kdesupport/akonadi/interfaces
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Resource.Transport.xml transportresourcebase_p.h Akonadi::TransportResourceBasePrivate )
@@ -197,10 +209,14 @@ install( FILES
   collectionstatisticsjob.h
   collectionview.h
   control.h
+  descendantsproxymodel.h
   entity.h
   entitydisplayattribute.h
-  #  entitysortfilterproxymodel.h
+  entitytreemodel.h
+  entityfilterproxymodel.h
+  entitytreeviewstatesaver.h
   exception.h
+  favoritecollectionsmodel.h
   item.h
   itemcreatejob.h
   itemcopyjob.h
@@ -221,11 +237,15 @@ install( FILES
   mimetypechecker.h
   monitor.h
   qtest_akonadi.h
+  preprocessorbase.h
   resourcebase.h
   searchcreatejob.h
+  selectionproxymodel.h
   session.h
   servermanager.h
   standardactionmanager.h
+  statisticsproxymodel.h
+  statisticstooltipproxymodel.h
   transactionjobs.h
   transactionsequence.h
   transportresourcebase.h

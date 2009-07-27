@@ -94,7 +94,7 @@ void CollectionModelPrivate::updateDone( KJob *job )
 {
   if ( job->error() ) {
     // TODO: handle job errors
-    kWarning( 5250 ) << "Job error:" << job->errorString();
+    kWarning() << "Job error:" << job->errorString();
   } else {
     CollectionStatisticsJob *csjob = static_cast<CollectionStatisticsJob*>( job );
     Collection result = csjob->collection();
@@ -108,7 +108,7 @@ void CollectionModelPrivate::collectionStatisticsChanged( Collection::Id collect
   Q_Q( CollectionModel );
 
   if ( !collections.contains( collection ) )
-    kWarning( 5250 ) << "Got statistics response for non-existing collection:" << collection;
+    kWarning() << "Got statistics response for non-existing collection:" << collection;
   else {
     collections[ collection ].setStatistics( statistics );
 
@@ -123,7 +123,7 @@ void CollectionModelPrivate::listDone( KJob *job )
 {
   Q_Q( CollectionModel );
   if ( job->error() ) {
-    kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
+    kWarning() << "Job error: " << job->errorString() << endl;
   }
   emit q->listDone();
 }
@@ -131,14 +131,14 @@ void CollectionModelPrivate::listDone( KJob *job )
 void CollectionModelPrivate::editDone( KJob * job )
 {
   if ( job->error() ) {
-    kWarning( 5250 ) << "Edit failed: " << job->errorString();
+    kWarning() << "Edit failed: " << job->errorString();
   }
 }
 
 void CollectionModelPrivate::dropResult(KJob * job)
 {
   if ( job->error() ) {
-    kWarning( 5250 ) << "Paste failed:" << job->errorString();
+    kWarning() << "Paste failed:" << job->errorString();
     // TODO: error handling
   }
 }
@@ -260,7 +260,7 @@ bool CollectionModelPrivate::removeRowFromModel( int row, const QModelIndex & pa
     list = childCollections.value( Collection::root().id() );
   }
   if ( row < 0 || row  >= list.size() ) {
-    kWarning( 5250 ) << "Index out of bounds:" << row <<" parent:" << parentCol.id();
+    kWarning() << "Index out of bounds:" << row <<" parent:" << parentCol.id();
     return false;
   }
 

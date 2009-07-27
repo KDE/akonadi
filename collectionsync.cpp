@@ -116,7 +116,7 @@ void CollectionSync::slotLocalListDone(KJob * job)
   // added / updated
   foreach ( const Collection &c, d->remoteCollections ) {
     if ( c.remoteId().isEmpty() ) {
-      kWarning( 5250 ) << "Collection '" << c.name() <<"' does not have a remote identifier - skipping";
+      kWarning() << "Collection '" << c.name() <<"' does not have a remote identifier - skipping";
       continue;
     }
 

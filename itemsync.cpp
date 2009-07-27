@@ -210,8 +210,8 @@ bool ItemSync::updateItem( const Item &storedItem, Item &newItem )
 
   // Check whether the flags differ
   if ( storedItem.flags() != newItem.flags() ) {
-    kDebug( 5250 ) << "Stored flags "  << storedItem.flags()
-                    << "new flags " << newItem.flags();
+    kDebug() << "Stored flags "  << storedItem.flags()
+             << "new flags " << newItem.flags();
     return true;
   }
 
@@ -299,7 +299,7 @@ void ItemSync::Private::processItems()
   foreach ( Item remoteItem, mRemoteItems ) { //krazy:exclude=foreach non-const is needed here
 #ifndef NDEBUG
     if ( remoteItem.remoteId().isEmpty() ) {
-      kWarning( 5250 ) << "Item " << remoteItem.id() << " does not have a remote identifier";
+      kWarning() << "Item " << remoteItem.id() << " does not have a remote identifier";
     }
 #endif
 
@@ -339,9 +339,9 @@ void ItemSync::Private::deleteItems( const Item::List &items )
 
     if ( !delItem.isValid() ) {
 #ifndef NDEBUG
-      kWarning( 5250 ) << "Delete item (remoteeId=" << delItem.remoteId()
-                       << "mimeType=" << delItem.mimeType()
-                       << ") does not have a valid UID and no item with that remote ID exists either";
+      kWarning() << "Delete item (remoteeId=" << delItem.remoteId()
+                 << "mimeType=" << delItem.mimeType()
+                 << ") does not have a valid UID and no item with that remote ID exists either";
 #endif
       continue;
     }

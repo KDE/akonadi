@@ -129,7 +129,7 @@ bool Control::Private::exec()
   if ( mProgressIndicator )
     mProgressIndicator->show();
 
-  kDebug( 5250 ) << "Starting Akonadi (using an event loop).";
+  kDebug() << "Starting Akonadi (using an event loop).";
   mEventLoop = new QEventLoop( mParent );
   // safety timeout
   QTimer::singleShot( 10000, mEventLoop, SLOT(quit()) );
@@ -138,7 +138,7 @@ bool Control::Private::exec()
   mEventLoop = 0;
 
   if ( !mSuccess ) {
-    kWarning( 5250 ) << "Could not start/stop Akonadi!";
+    kWarning() << "Could not start/stop Akonadi!";
     if ( mProgressIndicator && mStarting ) {
       QPointer<SelfTestDialog> dlg = new SelfTestDialog( mProgressIndicator->parentWidget() );
       dlg->exec();

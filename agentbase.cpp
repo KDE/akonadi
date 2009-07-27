@@ -353,7 +353,7 @@ QString AgentBase::parseArguments( int argc, char **argv )
 {
   QString identifier;
   if ( argc < 3 ) {
-    kDebug( 5250 ) << "Not enough arguments passed...";
+    kDebug() << "Not enough arguments passed...";
     exit( 1 );
   }
 
@@ -363,7 +363,7 @@ QString AgentBase::parseArguments( int argc, char **argv )
   }
 
   if ( identifier.isEmpty() ) {
-    kDebug( 5250 ) << "Identifier argument missing";
+    kDebug() << "Identifier argument missing";
     exit( 1 );
   }
 
