@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef COLLECTIONFETCHSCOPE_H
-#define COLLECTIONFETCHSCOPE_H
+#ifndef AKONADI_COLLECTIONFETCHSCOPE_H
+#define AKONADI_COLLECTIONFETCHSCOPE_H
 
 #include "akonadi_export.h"
 
@@ -59,13 +59,16 @@ class CollectionFetchScopePrivate;
  * @endcode
  *
  * This class is implicitly shared.
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ * @since 4.4
  */
 class AKONADI_EXPORT CollectionFetchScope
 {
   public:
     /**
-      Ancestor retrieval depth.
-    */
+     * Describes the ancestor retrieval depth.
+     */
     enum AncestorRetrieval {
       None, ///< No ancestor retrieval at all (the default)
       Parent, ///< Only retrieve the immediate parent collection
@@ -81,12 +84,12 @@ class AKONADI_EXPORT CollectionFetchScope
     CollectionFetchScope();
 
     /**
-     * Creates a new item fetch scope from an @p other.
+     * Creates a new collection fetch scope from an @p other.
      */
     CollectionFetchScope( const CollectionFetchScope &other );
 
     /**
-     * Destroys the item fetch scope.
+     * Destroys the collection fetch scope.
      */
     ~CollectionFetchScope();
 
@@ -124,48 +127,48 @@ class AKONADI_EXPORT CollectionFetchScope
     void setIncludeStatistics( bool include );
 
     /**
-      Returns the resource filter.
-
-      @see setResource()
-    */
+     * Returns the resource identifier that is used as filter.
+     *
+     * @see setResource()
+     */
     QString resource() const;
 
     /**
-      Sets a resource filter, that is only collections owned by the specified resource are
-      retrieved.
-
-      @param resource The resource identifier.
-    */
+     * Sets a resource filter, that is only collections owned by the specified resource are
+     * retrieved.
+     *
+     * @param resource The resource identifier.
+     */
     void setResource( const QString &resource );
 
     /**
-      Returns the content mimetypes filter.
-
-      @see setContentMimeTypes()
-    */
-    QStringList contentMimeTypes() const;
-
-    /**
-      Sets a content mimetypes filter, that is only collections that contain at least one of the
-      given mimetypes (or their parents) are retrieved.
-
-      @param mimeTypes A list of mime types
-    */
+     * Sets a content mimetypes filter, that is only collections that contain at least one of the
+     * given mimetypes (or their parents) are retrieved.
+     *
+     * @param mimeTypes A list of mime types
+     */
     void setContentMimeTypes( const QStringList &mimeTypes );
 
     /**
-      Returns the ancestor retrieval depth.
-
-      @see setAncestorRetrieval()
-    */
-    AncestorRetrieval ancestorRetrieval() const;
+     * Returns the content mimetypes filter.
+     *
+     * @see setContentMimeTypes()
+     */
+    QStringList contentMimeTypes() const;
 
     /**
-      Sets how many levels of ancestor collections should be included in the retrieval.
-
-      @param ancestorDepth The desired ancestor retrieval depth.
-    */
+     * Sets how many levels of ancestor collections should be included in the retrieval.
+     *
+     * @param ancestorDepth The desired ancestor retrieval depth.
+     */
     void setAncestorRetrieval( AncestorRetrieval ancestorDepth );
+
+    /**
+     * Returns the ancestor retrieval depth.
+     *
+     * @see setAncestorRetrieval()
+     */
+    AncestorRetrieval ancestorRetrieval() const;
 
     /**
      * Returns @c true if there is nothing to fetch.
