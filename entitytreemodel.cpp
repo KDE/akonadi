@@ -749,10 +749,14 @@ bool EntityTreeModel::match(const Collection &collection, const QVariant &value,
 QModelIndexList EntityTreeModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags ) const
 {  
   if (role != AmazingCompletionRole)
-    return Akonadi::EntityTreeModel::match(start, role, value, hits, flags);
+    return QAbstractItemModel::match(start, role, value, hits, flags);
 
   // Try to match names, and email addresses.
   QModelIndexList list;
+
+  if (role < 0 || !start.isValid() || !value.isValid())
+    return list;
+  
   const int column = 0;
   int row = start.row();
   QModelIndex parentIdx = start.parent();
