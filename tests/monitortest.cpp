@@ -27,6 +27,7 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
+#include <akonadi/collectionmovejob.h>
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/control.h>
 #include <akonadi/itemcreatejob.h>
@@ -86,6 +87,7 @@ void MonitorTest::testMonitor()
   qRegisterMetaType<QSet<QByteArray> >();
   QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
+  QSignalSpy cmvspy( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
   QSignalSpy crmspy( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)) );
   QSignalSpy cstatspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
   QSignalSpy iaddspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
@@ -95,6 +97,7 @@ void MonitorTest::testMonitor()
 
   QVERIFY( caddspy.isValid() );
   QVERIFY( cmodspy.isValid() );
+  QVERIFY( cmvspy.isValid() );
   QVERIFY( crmspy.isValid() );
   QVERIFY( cstatspy.isValid() );
   QVERIFY( iaddspy.isValid() );
@@ -122,6 +125,7 @@ void MonitorTest::testMonitor()
   QCOMPARE( parent, res3 );
 
   QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( cstatspy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
@@ -175,6 +179,7 @@ void MonitorTest::testMonitor()
 
   QVERIFY( caddspy.isEmpty() );
   QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
@@ -201,6 +206,7 @@ void MonitorTest::testMonitor()
 
   QVERIFY( caddspy.isEmpty() );
   QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
@@ -235,6 +241,7 @@ void MonitorTest::testMonitor()
            ( col2.id() == monitorCol.id() && col1.id() == res3.id() ) );
 
   QVERIFY( caddspy.isEmpty() );
+  QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
@@ -258,6 +265,7 @@ void MonitorTest::testMonitor()
 
   QVERIFY( caddspy.isEmpty() );
   QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
@@ -278,12 +286,41 @@ void MonitorTest::testMonitor()
     QCOMPARE( col.name(), QString("changed name") );
 
   QVERIFY( caddspy.isEmpty() );
+  QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( cstatspy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
   QVERIFY( irmspy.isEmpty() );
+
+
+  // move a collection
+  Collection dest = Collection( collectionIdFromPath( "res1/foo" ) );
+  CollectionMoveJob *cmove = new CollectionMoveJob( monitorCol, dest, this );
+  AKVERIFYEXEC( cmove );
+  QTest::qWait( 1000 );
+
+  QCOMPARE( cmvspy.count(), 1 );
+  arg = cmvspy.takeFirst();
+  col = arg.at( 0 ).value<Collection>();
+  QCOMPARE( col, monitorCol );
+  if ( fetchCol )
+    QCOMPARE( col.name(), monitorCol.name() );
+  col = arg.at( 1 ).value<Collection>();
+  QCOMPARE( col, res3 );
+  col = arg.at( 2 ).value<Collection>();
+  QCOMPARE( col, dest );
+
+  QVERIFY( caddspy.isEmpty() );
+  QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( crmspy.isEmpty() );
+  QVERIFY( cstatspy.isEmpty() );
+  QVERIFY( iaddspy.isEmpty() );
+  QVERIFY( imodspy.isEmpty() );
+  QVERIFY( imvspy.isEmpty() );
+  QVERIFY( irmspy.isEmpty() );
+
 
   // delete a collection
   CollectionDeleteJob *cdel = new CollectionDeleteJob( monitorCol, this );
@@ -296,6 +333,7 @@ void MonitorTest::testMonitor()
 
   QVERIFY( caddspy.isEmpty() );
   QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( cmvspy.isEmpty() );
   QVERIFY( cstatspy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );

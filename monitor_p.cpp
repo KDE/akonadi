@@ -117,8 +117,10 @@ bool MonitorPrivate::processNotification(const NotificationMessage & msg)
     if ( msg.operation() != NotificationMessage::Remove && fetchCollection ) {
       Collection::List list;
       list << Collection( msg.uid() );
-      if ( msg.operation() == NotificationMessage::Add )
+      if ( msg.operation() == NotificationMessage::Add || msg.operation() == NotificationMessage::Move )
         list << Collection( msg.parentCollection() );
+      if ( msg.operation() == NotificationMessage::Move )
+        list << Collection( msg.parentDestCollection() );
       CollectionFetchJob *job = new CollectionFetchJob( list, q_ptr );
       pendingJobs.insert( job, msg );
       QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotCollectionJobFinished(KJob*)) );
@@ -220,7 +222,7 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
 }
 
 void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg, const Collection &col,
-                                                   const Collection &par )
+                                                   const Collection &par, const Collection &dest )
 {
   Q_ASSERT( msg.type() == NotificationMessage::Collection );
   Collection collection = col;
@@ -233,6 +235,9 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
   Collection parent = par;
   if ( !parent.isValid() )
     parent = Collection( msg.parentCollection() );
+  Collection destination = dest;
+  if ( !destination.isValid() )
+    destination = Collection( msg.parentDestCollection() );
   switch ( msg.operation() ) {
     case NotificationMessage::Add:
       emit q_ptr->collectionAdded( collection, parent );
@@ -240,11 +245,14 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
     case NotificationMessage::Modify:
       emit q_ptr->collectionChanged( collection );
       break;
+    case NotificationMessage::Move:
+      emit q_ptr->collectionMoved( collection, parent, destination );
+      break;
     case NotificationMessage::Remove:
       emit q_ptr->collectionRemoved( collection );
       break;
     default:
-      Q_ASSERT_X( false, "MonitorPrivate::emitCollectionNotification", "Invalid enum value" );
+      kDebug() << "Unknown operation type" << msg.operation() << "in collection change notification";
   }
 }
 
@@ -284,16 +292,11 @@ void MonitorPrivate::slotCollectionJobFinished( KJob* job )
   if ( job->error() ) {
     kWarning() << "Error on fetching collection:" << job->errorText();
   } else {
-    Collection col, parent;
     CollectionFetchJob *listJob = qobject_cast<CollectionFetchJob*>( job );
-    if ( listJob && listJob->collections().count() > 0 )
-      col = listJob->collections().first();
-    if ( listJob && listJob->collections().count() > 1 && msg.operation() == NotificationMessage::Add ) {
-      parent = listJob->collections().at( 1 );
-      if ( col.id() != msg.uid() )
-        qSwap( col, parent );
-    }
-    emitCollectionNotification( msg, col, parent );
+    QHash<Collection::Id, Collection> cols;
+    foreach ( const Collection &c, listJob->collections() )
+      cols.insert( c.id(), c );
+    emitCollectionNotification( msg, cols.value( msg.uid() ),  cols.value( msg.parentCollection() ), cols.value( msg.parentDestCollection() ) );
   }
 }
 

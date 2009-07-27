@@ -246,12 +246,20 @@ class AKONADI_EXPORT Monitor : public QObject
     void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
 
     /**
-     * This signal is emitted if a monitored collection has been changed (properties or content)
-     * or has been reparented.
+     * This signal is emitted if a monitored collection has been changed (properties or content).
      *
      * @param collection The changed collection.
      */
     void collectionChanged( const Akonadi::Collection &collection );
+
+    /**
+     * This signals is emitted if a monitored collection has been moved.
+     *
+     * @param collection The moved collection.
+     * @param source The previous parent collection.
+     * @param distination The new parent collection.
+     */
+    void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
 
     /**
      * This signal is emitted if a monitored collection has been removed from the Akonadi storage.
