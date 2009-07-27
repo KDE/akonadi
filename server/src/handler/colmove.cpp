@@ -56,7 +56,7 @@ bool ColMove::parseStream()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  if ( !store->renameCollection( source, target, source.name() ) )
+  if ( !store->moveCollection( source, target ) )
     return failureResponse( "Unable to reparent collection" );
 
   if ( !transaction.commit() )

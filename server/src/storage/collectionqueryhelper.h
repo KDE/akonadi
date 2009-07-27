@@ -46,6 +46,16 @@ namespace CollectionQueryHelper
     The rid context is taken from @p connection, if none is specified an exception is thrown.
   */
   void scopeToQuery( const Scope &scope, AkonadiConnection* connection, QueryBuilder &qb );
+
+  /**
+    Checks if a collection could exist in the given parent folder with the given name.
+  */
+  bool hasAllowedName( const Collection &collection, const QByteArray &name, Collection::Id parent );
+
+  /**
+    Checks if a collection could be moved from its current parent into the given one.
+  */
+  bool canBeMovedTo ( const Collection &collection, const Collection &parent );
 }
 
 }

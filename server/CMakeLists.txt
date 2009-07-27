@@ -82,7 +82,6 @@ set(libakonadiprivate_SRCS
   src/handler/move.cpp
   src/handler/noop.cpp
   src/handler/remove.cpp
-  src/handler/rename.cpp
   src/handler/resourceselect.cpp
   src/handler/scope.cpp
   src/handler/searchhelper.cpp

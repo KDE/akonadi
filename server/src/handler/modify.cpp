@@ -111,8 +111,9 @@ bool Modify::parseStream()
       pos = ImapParser::parseString( line, newName, pos );
       if ( collection.name() == newName )
         continue;
-      if ( !db->renameCollection( collection, collection.parentId(), newName ) )
-        return failureResponse( "Unable to rename collection" );
+      if ( !CollectionQueryHelper::hasAllowedName( collection, newName, collection.parentId() ) )
+        throw HandlerException( "Collection with the same name exists already" );
+      collection.setName( newName );
       changes.append( AKONADI_PARAM_NAME );
     } else if ( type == "PARENT" ) {
       qint64 newParent;
@@ -122,7 +123,7 @@ bool Modify::parseStream()
         return failureResponse( "Invalid syntax" );
       if ( collection.parentId() == newParent )
         continue;
-      if ( !db->renameCollection( collection, newParent, collection.name() ) )
+      if ( !db->moveCollection( collection, newParent ) )
         return failureResponse( "Unable to reparent collection" );
       changes.append( "PARENT" );
     } else if ( type == AKONADI_PARAM_REMOTEID ) {

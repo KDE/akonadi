@@ -49,6 +49,7 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlField>
 #include <QtSql/QSqlQuery>
+#include "collectionqueryhelper.h"
 
 using namespace Akonadi;
 
@@ -283,40 +284,21 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   return true;
 }
 
-bool Akonadi::DataStore::renameCollection( Collection & collection, qint64 newParent, const QByteArray & newName)
+bool Akonadi::DataStore::moveCollection( Collection & collection, qint64 newParent )
 {
-  if ( collection.name() == newName && collection.parentId() == newParent )
+  if ( collection.parentId() == newParent )
     return true;
 
-  if ( !m_dbOpened )
+  if ( !m_dbOpened || newParent < 0 )
     return false;
 
   int resourceId = collection.resourceId();
-  if ( newParent > 0 && collection.parentId() != newParent ) {
-    Collection parent = Collection::retrieveById( newParent );
-    resourceId = parent.resourceId();
-    if ( !parent.isValid() )
-      return false;
-
-    forever {
-      if ( parent.id() == collection.id() )
-        return false; // target is child of source
-      if ( parent.parentId() == 0 )
-        break;
-      parent = parent.parent();
-    }
-  }
-
-  SelectQueryBuilder<Collection> qb;
-  if ( newParent > 0 )
-    qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, newParent );
-  else
-    qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
-  qb.addValueCondition( Collection::nameColumn(), Query::Equals, newName );
-  if ( !qb.exec() || qb.result().count() > 0 )
+  const Collection source = collection.parent();
+  Collection parent = Collection::retrieveById( newParent );
+  resourceId = parent.resourceId();
+  if ( !CollectionQueryHelper::canBeMovedTo ( collection, parent ) )
     return false;
 
-  collection.setName( newName );
   collection.setParentId( newParent );
   if ( collection.resourceId() != resourceId ) {
     collection.setResourceId( resourceId );
@@ -327,8 +309,7 @@ bool Akonadi::DataStore::renameCollection( Collection & collection, qint64 newPa
   if ( !collection.update() )
     return false;
 
-  QList<QByteArray> changes = QList<QByteArray>() << "PARENT" << AKONADI_PARAM_NAME;
-  mNotificationCollector->collectionChanged( collection, changes );
+  mNotificationCollector->collectionMoved( collection, source );
   return true;
 }
 

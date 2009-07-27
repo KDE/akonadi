@@ -133,8 +133,8 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool appendCollection( Collection &collection );
     /// removes the given collection and all its content
     bool cleanupCollection( Collection &collection );
-    /// rename the collection @p collection to @p newName.
-    bool renameCollection( Collection &collection, qint64 newParent, const QByteArray &newName );
+    /// moves the collection @p collection to @p newParent.
+    bool moveCollection( Collection &collection, qint64 newParent );
 
     bool appendMimeTypeForCollection( qint64 collectionId, const QStringList & mimeTypes );
 

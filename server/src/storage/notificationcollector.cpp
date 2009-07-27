@@ -86,20 +86,27 @@ void NotificationCollector::itemUnlinked(const PimItem & item, const Collection 
 void Akonadi::NotificationCollector::collectionAdded( const Collection &collection,
                                                       const QByteArray &resource )
 {
-  collectionNotification( NotificationMessage::Add, collection, resource );
+  collectionNotification( NotificationMessage::Add, collection, collection.parentId(), -1, resource );
 }
 
 void Akonadi::NotificationCollector::collectionChanged( const Collection &collection,
                                                         const QList<QByteArray> &changes,
                                                         const QByteArray &resource )
 {
-  collectionNotification( NotificationMessage::Modify, collection, resource, changes.toSet() );
+  collectionNotification( NotificationMessage::Modify, collection, collection.parentId(), -1, resource, changes.toSet() );
+}
+
+void NotificationCollector::collectionMoved( const Collection &collection,
+                                             const Collection &source,
+                                             const QByteArray &resource )
+{
+  collectionNotification( NotificationMessage::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>() << "PARENT" );
 }
 
 void Akonadi::NotificationCollector::collectionRemoved( const Collection &collection,
                                                         const QByteArray &resource )
 {
-  collectionNotification( NotificationMessage::Remove, collection, resource );
+  collectionNotification( NotificationMessage::Remove, collection, collection.parentId(), -1, resource );
 }
 
 void Akonadi::NotificationCollector::transactionCommitted()
@@ -158,6 +165,8 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
 
 void NotificationCollector::collectionNotification( NotificationMessage::Operation op,
                                                     const Collection & collection,
+                                                    Collection::Id source,
+                                                    Collection::Id destination,
                                                     const QByteArray & resource,
                                                     const QSet<QByteArray> &changes )
 {
@@ -167,7 +176,8 @@ void NotificationCollector::collectionNotification( NotificationMessage::Operati
   msg.setSessionId( mSessionId );
   msg.setUid( collection.id() );
   msg.setRemoteId( collection.remoteId() );
-  msg.setParentCollection( collection.parentId() );
+  msg.setParentCollection( source );
+  msg.setParentDestCollection( destination );
   msg.setItemParts( changes );
 
   QByteArray res = resource;

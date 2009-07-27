@@ -47,7 +47,6 @@
 #include "handler/move.h"
 #include "handler/noop.h"
 #include "handler/remove.h"
-#include "handler/rename.h"
 #include "handler/resourceselect.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
@@ -141,8 +140,6 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
       return new Delete( scope );
     if ( command == AKONADI_CMD_COLLECTIONMODIFY )
       return new Modify( scope );
-    if ( command == "RENAME" )
-      return new Rename();
     if ( command == "BEGIN" )
       return new TransactionHandler( TransactionHandler::Begin );
     if ( command == "ROLLBACK" )

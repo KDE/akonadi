@@ -126,6 +126,15 @@ class NotificationCollector : public QObject
                             const QByteArray &resource = QByteArray() );
 
     /**
+      Notify about a moved collection.
+      Provide as many parameters as you have at hand currently, everything
+      missing will be lookeded up on demand in the database later.
+    */
+    void collectionMoved( const Collection &collection,
+                          const Collection &source,
+                          const QByteArray &resource = QByteArray() );
+
+    /**
       Notify about a removed collection.
       Make sure you either provide all parameters or call this function before
       actually removing the item from database.
@@ -145,6 +154,7 @@ class NotificationCollector : public QObject
                            const QSet<QByteArray> &parts = QSet<QByteArray>() );
     void collectionNotification( NotificationMessage::Operation op,
                                  const Collection &collection,
+                                 Collection::Id source, Collection::Id destination,
                                  const QByteArray &resource,
                                  const QSet<QByteArray> &changes = QSet<QByteArray>() );
     void dispatchNotification( const NotificationMessage &msg );

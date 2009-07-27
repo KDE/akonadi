@@ -22,6 +22,7 @@
 #include "akonadiconnection.h"
 #include "entities.h"
 #include "storage/querybuilder.h"
+#include "storage/selectquerybuilder.h"
 #include "libs/imapset_p.h"
 #include "handler/scope.h"
 #include "handler.h"
@@ -51,4 +52,32 @@ void CollectionQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* 
     CollectionQueryHelper::remoteIdToQuery( scope.ridSet(), connection, qb );
   } else
     throw HandlerException( "WTF?" );
+}
+
+bool CollectionQueryHelper::hasAllowedName(const Collection & collection, const QByteArray & name, Collection::Id parent)
+{
+  SelectQueryBuilder<Collection> qb;
+  if ( parent > 0 )
+    qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, parent );
+  else
+    qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
+  qb.addValueCondition( Collection::nameColumn(), Query::Equals, name );
+  if ( !qb.exec() || qb.result().count() > 0 )
+    return false;
+  return true;
+}
+
+bool CollectionQueryHelper::canBeMovedTo ( const Collection &collection, const Collection &_parent )
+{
+  if ( _parent.isValid() ) {
+    Collection parent = _parent;
+    forever {
+      if ( parent.id() == collection.id() )
+        return false; // target is child of source
+      if ( parent.parentId() == 0 )
+        break;
+      parent = parent.parent();
+    }
+  }
+  return hasAllowedName( collection, collection.name(), _parent.id() );
 }
