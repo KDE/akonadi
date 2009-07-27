@@ -177,6 +177,8 @@ void AgentBasePrivate::init()
            SLOT( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
            SLOT( collectionChanged( const Akonadi::Collection& ) ) );
+  connect( mMonitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
+           SLOT(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
   connect( mMonitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
            SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
 
@@ -259,6 +261,30 @@ void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection 
   kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   if ( mObserver != 0 )
     mObserver->collectionChanged( collection );
+}
+
+void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  if ( mObserver ) {
+    // inter-resource moves, requires we know which resources the source and destination are in though
+    if ( !source.resource().isEmpty() && !dest.resource().isEmpty() ) {
+      if ( source.resource() != dest.resource() ) {
+        if ( source.resource() == q_ptr->identifier() ) // moved away from us
+          mObserver->collectionRemoved( collection );
+        else if ( dest.resource() == q_ptr->identifier() ) // moved to us
+          mObserver->collectionAdded( collection, dest );
+        else // not for us, not sure if we should get here at all
+          changeProcessed();
+        return;
+      }
+    }
+    // either incomplete information or intra-resource move
+    // ### we cannot just call collectionRemoved here as this will already trigger changeProcessed()
+    // so, just collectionAdded() is good enough as no resource can have implemented intra-resource moves anyway
+    // without using Observer2
+    mObserver->collectionAdded( collection, dest );
+  }
 }
 
 void AgentBasePrivate::collectionRemoved( const Akonadi::Collection &collection )
