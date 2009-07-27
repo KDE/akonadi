@@ -53,8 +53,6 @@ class PreprocessorBasePrivate;
  */
 class AKONADI_EXPORT PreprocessorBase : public AgentBase
 {
-  friend class PreprocessorAdaptor;
-
   Q_OBJECT
 
   public:
