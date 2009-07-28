@@ -309,6 +309,18 @@ void EntityTreeModelPrivate::insertPendingCollection( const Akonadi::Collection&
 
 void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
 {
+  // If the resource is removed while populating the model with it, we might still
+  // get some monitor signals. These stale/out-of-order signals can't be completely eliminated
+  // in the akonadi server due to implementation details, so we also handle such signals in the model silently
+  // in all the monior slots.
+  // Stephen Kelly, 28, July 2009
+
+  // This is currently temporarily blocked by a uninitialized value bug in the server.
+//   if ( !m_collections.contains( parent.id() ) )
+//   {
+//     kWarning() << "Got a stale notification for a collection whose parent was already removed." << collection.id() << collection.remoteId();
+//     return;
+//   }
 
   // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
   // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
@@ -330,12 +342,17 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
 
 void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collection& collection )
 {
+  if ( !m_collections.contains( collection.parent() ) )
+    return;
+  
   Q_Q( EntityTreeModel );
 
-
   // This may be a signal for a collection we've already removed by removing its ancestor.
-  if (!m_collections.contains(collection.id()))
+  if ( !m_collections.contains( collection.id() ) )
+  {
+    kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
     return;
+  }
 
   const int row = indexOf( m_childEntities.value( collection.parentCollection().id() ), collection.id() );
     
@@ -376,6 +393,12 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
                                                        const Akonadi::Collection& sourceCollection,
                                                        const Akonadi::Collection& destCollection )
 {
+  if ( !m_collections.contains( collection.id() ) )
+  {
+    kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
+    return;
+  }
+  
   Q_Q( EntityTreeModel );
 
   const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), collection.id() );
@@ -396,10 +419,16 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 {
   Q_Q( EntityTreeModel );
 
-  if ( m_collections.contains( collection.id() ) )
-    m_collections[ collection.id() ] = collection;
+  if ( !m_collections.contains( collection.id() ) )
+  {
+    kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
+    return;
+  }
+  
+  m_collections[ collection.id() ] = collection;
 
   const QModelIndex index = q->indexForCollection( collection );
+  Q_ASSERT( index.isValid() );
   q->dataChanged( index, index );
 }
 
@@ -422,9 +451,17 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
 {
   Q_Q( EntityTreeModel );
 
+  if ( !m_collections.contains( collection.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
+    return;
+  }
+  
+  Q_ASSERT( m_collections.contains( collection.id() ) );
+
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
-
+  
   const int row = m_childEntities.value( collection.id() ).size();
 
   const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.id() ) );
@@ -446,7 +483,17 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
   const Collection::List parents = getParentCollections( item );
   if ( parents.isEmpty() )
     return;
+
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+
+  // TODO: Iterate over all (virtual) collections.
   const Collection collection = parents.first();
+
+  Q_ASSERT( m_collections.contains( collection.id() ) );
 
   const int row = indexOf( m_childEntities.value( collection.id() ), item.id() );
 
@@ -461,11 +508,26 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
 void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
 {
   Q_Q( EntityTreeModel );
+  
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+
   m_items[ item.id() ] = item;
 
   const QModelIndexList indexes = q->indexesForItem( item );
   foreach ( const QModelIndex &index, indexes )
-    q->dataChanged( index, index );
+  {
+    
+    if( !index.isValid() )
+    {
+      kWarning() << "item has invalid index:" << item.id() << item.remoteId();
+    } else {
+      q->dataChanged( index, index );
+    }
+  }
 }
 
 void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
@@ -473,6 +535,15 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
                                                  const Akonadi::Collection& destCollection )
 {
   Q_Q( EntityTreeModel );
+
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+
+  Q_ASSERT( m_collections.contains( sourceCollection.id() ) );
+  Q_ASSERT( m_collections.contains( destCollection.id() ) );
 
   const Item::Id itemId = item.id();
 
@@ -496,6 +567,13 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
 {
   Q_Q( EntityTreeModel );
 
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+  Q_ASSERT( m_collections.contains( collection.id() ) );
+
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
 
@@ -515,6 +593,13 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
 void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, const Akonadi::Collection& collection )
 {
   Q_Q( EntityTreeModel );
+
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+  Q_ASSERT( m_collections.contains( collection.id() ) );
 
   const int row = indexOf( m_childEntities.value( collection.id() ), item.id() );
 
