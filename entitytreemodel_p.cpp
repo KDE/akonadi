@@ -469,17 +469,17 @@ void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, co
 }
 
 void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
-                                                 const Akonadi::Collection& sourceItem,
-                                                 const Akonadi::Collection& destItem )
+                                                 const Akonadi::Collection& sourceCollection,
+                                                 const Akonadi::Collection& destCollection )
 {
   Q_Q( EntityTreeModel );
 
   const Item::Id itemId = item.id();
 
-  const int srcRow = indexOf( m_childEntities.value( sourceItem.id() ), itemId );
+  const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), itemId );
 
-  const QModelIndex srcIndex = q->indexForCollection( sourceItem );
-  const QModelIndex destIndex = q->indexForCollection( destItem );
+  const QModelIndex srcIndex = q->indexForCollection( sourceCollection );
+  const QModelIndex destIndex = q->indexForCollection( destCollection );
 
   // Where should it go? Always append items and prepend collections and reorganize them with separate reactions to Attributes?
 
