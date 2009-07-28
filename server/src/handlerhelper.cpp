@@ -206,9 +206,13 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
 
   b += HandlerHelper::cachePolicyToByteArray( col ) + ' ';
 
-  CollectionAttribute::List attrs = col.attributes();
-  foreach ( const CollectionAttribute &attr, attrs )
+  const CollectionAttribute::List attrs = col.attributes();
+  for ( int i = 0; i < attrs.size(); ++i ) {
+    const CollectionAttribute &attr = attrs[i];
     b += attr.type() + ' ' + ImapParser::quote( attr.value() );
+    if ( i != attrs.size() - 1 )
+      b += ' ';
+  }
   b+= ')';
 
   return b;
