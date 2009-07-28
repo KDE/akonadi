@@ -31,6 +31,7 @@
 
 #include "changerecorder.h"
 #include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
 #include "collectionmodifyjob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
@@ -256,7 +257,7 @@ void ResourceBasePrivate::slotDeleteResourceCollection()
   Q_Q( ResourceBase );
 
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
-  job->setResource( q->identifier() );
+  job->fetchScope().setResource( q->identifier() );
   connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotDeleteResourceCollectionDone( KJob* ) ) );
 }
 
@@ -404,7 +405,7 @@ void ResourceBasePrivate::slotCollectionSyncDone( KJob * job )
   } else {
     if ( scheduler->currentTask().type == ResourceScheduler::SyncAll ) {
       CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-      list->setResource( mId );
+      list->fetchScope().setResource( mId );
       q->connect( list, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalListDone( KJob* ) ) );
       return;
     }
@@ -520,7 +521,7 @@ void ResourceBase::doSetOnline( bool state )
 void ResourceBase::synchronizeCollection( qint64 collectionId )
 {
   CollectionFetchJob* job = new CollectionFetchJob( Collection( collectionId ), CollectionFetchJob::Base );
-  job->setResource( identifier() );
+  job->fetchScope().setResource( identifier() );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( slotCollectionListDone( KJob* ) ) );
 }
 
