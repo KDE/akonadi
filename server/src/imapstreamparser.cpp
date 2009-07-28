@@ -58,7 +58,7 @@ QByteArray ImapStreamParser::readString()
     throw ImapParserException("Unable to read more data");
   stripLeadingSpaces();
   if ( !waitForMoreData( m_position >= m_data.length() ) )
-    throw ImapParserException("Unable to read more data");;
+    throw ImapParserException("Unable to read more data");
 
   // literal string
   // TODO: error handling
@@ -229,6 +229,8 @@ bool ImapStreamParser::hasList()
     throw ImapParserException("Unable to read more data");
   int savedPos = m_position;
   stripLeadingSpaces();
+  if ( !waitForMoreData( m_position >= m_data.length() ) )
+    throw ImapParserException("Unable to read more data");
   int pos = m_position;
   m_position = savedPos;
   if ( m_data[pos] == '(' )
