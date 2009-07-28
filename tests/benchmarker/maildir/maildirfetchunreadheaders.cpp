@@ -26,6 +26,7 @@
 #include <QTest>
 
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 
@@ -44,7 +45,7 @@ void MailDirFetchUnreadHeaders::runTest() {
   timer.start();
   qDebug() << "  Listing headers of unread messages of every folder.";
   CollectionFetchJob *clj3 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj3->setResource( currentInstance.identifier() );
+  clj3->fetchScope().setResource( currentInstance.identifier() );
   clj3->exec();
   Collection::List list3 = clj3->collections();
   foreach ( const Collection &collection, list3 ) {

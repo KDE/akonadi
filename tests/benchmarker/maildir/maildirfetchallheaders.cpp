@@ -26,6 +26,7 @@
 #include <QTest>
 
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 
@@ -44,7 +45,7 @@ void MailDirFetchAllHeaders::runTest() {
   timer.start();
   qDebug() << "  Listing all headers of every folder.";
   CollectionFetchJob *clj = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj->setResource( currentInstance.identifier() );
+  clj->fetchScope().setResource( currentInstance.identifier() );
   clj->exec();
   Collection::List list = clj->collections();
   foreach ( const Collection &collection, list ) {

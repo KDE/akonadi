@@ -26,6 +26,7 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/agenttype.h>
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/collectionstatisticsjob.h>
 #include <akonadi/entitydisplayattribute.h>
@@ -81,9 +82,9 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
 {
   Q_Q( EntityTreeModel );
   CollectionFetchJob *job = new CollectionFetchJob( collection, type, m_session );
-  job->includeUnsubscribed( m_includeUnsubscribed );
-  job->includeStatistics( m_includeStatistics );
-  job->setContentMimeTypes( m_monitor->mimeTypesMonitored() );
+  job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
+  job->fetchScope().setIncludeStatistics( m_includeStatistics );
+  job->fetchScope().setContentMimeTypes( m_monitor->mimeTypesMonitored() );
   q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
               q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
   q->connect( job, SIGNAL( result( KJob* ) ),
@@ -206,8 +207,8 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection& collec
   Q_Q( EntityTreeModel );
   // Unlike fetchCollections, this method fetches collections by traversing up, not down.
   CollectionFetchJob *job = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Base, m_session );
-  job->includeUnsubscribed( m_includeUnsubscribed );
-  job->includeStatistics( m_includeStatistics );
+  job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
+  job->fetchScope().setIncludeStatistics( m_includeStatistics );
   q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
               q, SLOT( ancestorsFetched( const Akonadi::Collection::List& ) ) );
   q->connect( job, SIGNAL( result( KJob* ) ),

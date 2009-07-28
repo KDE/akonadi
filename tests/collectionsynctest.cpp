@@ -24,6 +24,7 @@
 #include <akonadi/control.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 
 #include "../akonadi/collectionsync.cpp"
 
@@ -45,7 +46,7 @@ class CollectionSyncTest : public QObject
     Collection::List fetchCollections( const QString &res )
     {
       CollectionFetchJob *fetch = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
-      fetch->setResource( res );
+      fetch->fetchScope().setResource( res );
       Q_ASSERT( fetch->exec() );
       Q_ASSERT( !fetch->collections().isEmpty() );
       return fetch->collections();

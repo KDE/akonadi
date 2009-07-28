@@ -42,6 +42,7 @@
 #include "item.h"
 #include "kmime/messageparts.h"
 #include "resourceselectjob_p.h"
+#include "collectionfetchscope.h"
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -196,12 +197,12 @@ void CollectionJobTest::testResourceFolderList()
 {
   // non-existing resource
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
-  job->setResource( "i_dont_exist" );
+  job->fetchScope().setResource( "i_dont_exist" );
   QVERIFY( !job->exec() );
 
   // recursive listing of all collections of an existing resource
   job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  job->setResource( "akonadi_knut_resource_0" );
+  job->fetchScope().setResource( "akonadi_knut_resource_0" );
   QVERIFY( job->exec() );
 
   Collection::List list = job->collections();
@@ -214,7 +215,7 @@ void CollectionJobTest::testResourceFolderList()
 
   // limited listing of a resource
   job = new CollectionFetchJob( Collection( fooId ), CollectionFetchJob::Recursive );
-  job->setResource( "akonadi_knut_resource_0" );
+  job->fetchScope().setResource( "akonadi_knut_resource_0" );
   QVERIFY( job->exec() );
 
   list = job->collections();
@@ -226,7 +227,7 @@ void CollectionJobTest::testResourceFolderList()
 void CollectionJobTest::testMimeTypeFilter()
 {
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  job->setContentMimeTypes( QStringList() << "message/rfc822" );
+  job->fetchScope().setContentMimeTypes( QStringList() << "message/rfc822" );
   AKVERIFYEXEC( job );
 
   Collection::List list = job->collections();
@@ -237,7 +238,7 @@ void CollectionJobTest::testMimeTypeFilter()
 
   // limited listing of a resource
   job = new CollectionFetchJob( Collection( fooId ), CollectionFetchJob::Recursive );
-  job->setContentMimeTypes( QStringList() << "message/rfc822" );
+  job->fetchScope().setContentMimeTypes( QStringList() << "message/rfc822" );
   AKVERIFYEXEC( job );
 
   list = job->collections();
@@ -582,7 +583,7 @@ void CollectionJobTest::testRidFetch()
   col.setRemoteId( "10" );
 
   CollectionFetchJob *job = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
-  job->setResource( "akonadi_knut_resource_0" );
+  job->fetchScope().setResource( "akonadi_knut_resource_0" );
   QVERIFY( job->exec() );
   QCOMPARE( job->collections().count(), 1 );
   col = job->collections().first();

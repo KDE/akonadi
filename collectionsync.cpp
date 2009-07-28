@@ -24,7 +24,7 @@
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
-
+#include "collectionfetchscope.h"
 
 #include <kdebug.h>
 
@@ -229,7 +229,7 @@ void CollectionSync::setStreamingEnabled( bool streaming )
 void CollectionSync::retrievalDone()
 {
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
-  job->setResource( d->resourceId );
+  job->fetchScope().setResource( d->resourceId );
   connect( job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)) );
 }
 

@@ -24,6 +24,7 @@
 #include "protocol_p.h"
 #include "protocolhelper_p.h"
 #include "entity_p.h"
+#include "collectionfetchscope.h"
 
 #include <kdebug.h>
 
@@ -37,9 +38,7 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
 {
   public:
     CollectionFetchJobPrivate( CollectionFetchJob *parent )
-      : JobPrivate( parent ),
-        mUnsubscribed( false ),
-        mStatistics( false )
+      : JobPrivate( parent )
     {
     }
 
@@ -49,12 +48,9 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
     Collection mBase;
     Collection::List mBaseList;
     Collection::List mCollections;
-    QString mResource;
-    QList<QByteArray> mMimeTypes;
+    CollectionFetchScope mScope;
     Collection::List mPendingCollections;
     QTimer *mEmitTimer;
-    bool mUnsubscribed;
-    bool mStatistics;
 
     void timeout()
     {
@@ -135,7 +131,7 @@ void CollectionFetchJob::doStart()
   QByteArray command = d->newTag();
   if ( !d->mBase.isValid() )
     command += " " AKONADI_CMD_RID;
-  if ( d->mUnsubscribed )
+  if ( d->mScope.includeUnubscribed() )
     command += " X-AKLIST ";
   else
     command += " X-AKLSUB ";
@@ -158,19 +154,22 @@ void CollectionFetchJob::doStart()
       Q_ASSERT( false );
   }
 
-  if ( !d->mResource.isEmpty() ) {
+  if ( !d->mScope.resource().isEmpty() ) {
     command += "RESOURCE \"";
-    command += d->mResource.toUtf8();
+    command += d->mScope.resource().toUtf8();
     command += '"';
   }
 
-  if ( !d->mMimeTypes.isEmpty() ) {
+  if ( !d->mScope.contentMimeTypes().isEmpty() ) {
     command += " MIMETYPE (";
-    command += ImapParser::join( d->mMimeTypes, " " );
+    QList<QByteArray> mts;
+    foreach ( const QString &mt, d->mScope.contentMimeTypes() )
+      mts.append( mt.toUtf8() );
+    command += ImapParser::join( mts, " " );
     command += ')';
   }
 
-  if ( d->mStatistics ) {
+  if ( d->mScope.includeStatistics() ) {
     command += ") (STATISTICS true";
   }
 
@@ -202,14 +201,7 @@ void CollectionFetchJob::setResource(const QString & resource)
 {
   Q_D( CollectionFetchJob );
 
-  d->mResource = resource;
-}
-
-void CollectionFetchJob::setContentMimeTypes( const QStringList &contentMimeTypes )
-{
-  Q_D( CollectionFetchJob );
-  foreach ( const QString &mt, contentMimeTypes )
-    d->mMimeTypes.append( mt.toUtf8() );
+  d->mScope.setResource( resource );
 }
 
 void CollectionFetchJob::slotResult(KJob * job)
@@ -228,14 +220,26 @@ void CollectionFetchJob::includeUnsubscribed(bool include)
 {
   Q_D( CollectionFetchJob );
 
-  d->mUnsubscribed = include;
+  d->mScope.setIncludeUnsubscribed( include );
 }
 
 void CollectionFetchJob::includeStatistics(bool include)
 {
   Q_D( CollectionFetchJob );
 
-  d->mStatistics = include;
+  d->mScope.setIncludeStatistics( include );
+}
+
+void CollectionFetchJob::setFetchScope( const CollectionFetchScope &scope )
+{
+  Q_D( CollectionFetchJob );
+  d->mScope = scope;
+}
+
+CollectionFetchScope& CollectionFetchJob::fetchScope()
+{
+  Q_D( CollectionFetchJob );
+  return d->mScope;
 }
 
 #include "collectionfetchjob.moc"

@@ -23,6 +23,7 @@
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 
 #include <QDebug>
 #include <QTest>
@@ -104,7 +105,7 @@ void MakeTest::removeCollections()
   timer.restart();
   qDebug() << "  Removing every folder sequentially.";
   CollectionFetchJob *clj5 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj5->setResource( currentInstance.identifier() );
+  clj5->fetchScope().setResource( currentInstance.identifier() );
   clj5->exec();
   Collection::List list5 = clj5->collections();
   foreach ( const Collection &collection, list5 ) {

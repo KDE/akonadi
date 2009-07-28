@@ -26,6 +26,7 @@
 
 namespace Akonadi {
 
+class CollectionFetchScope;
 class CollectionFetchJobPrivate;
 
 /**
@@ -103,29 +104,51 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * Sets a resource identifier to limit collection listing to one resource.
      *
      * @param resource The resource identifier.
+     * @deprecated Use CollectionFetchScope instead.
      */
-    void setResource( const QString &resource );
-
-    /**
-     * Sets a content mimetype filter, that is include only collections in the result
-     * that match the given filter.
-     * @param contentMimeTypes A list of content mimetypes.
-     *
-     * @since 4.4
-     */
-    void setContentMimeTypes( const QStringList &contentMimeTypes );
+    KDE_DEPRECATED void setResource( const QString &resource );
 
     /**
      * Include also unsubscribed collections.
+     * @deprecated Use CollectionFetchScope instead.
      */
-    void includeUnsubscribed( bool include = true );
+    KDE_DEPRECATED void includeUnsubscribed( bool include = true );
 
     /**
      * Include also statistics about the collections.
      *
      * @since 4.3
+     * @deprecated Use CollectionFetchScope instead.
      */
-    void includeStatistics( bool include = true );
+    KDE_DEPRECATED void includeStatistics( bool include = true );
+
+    /**
+     * Sets the collection fetch scope.
+     *
+     * The CollectionFetchScope controls how much of a collection's data is fetched
+     * from the server as well as filter to select which collections to fetch.
+     *
+     * @param fetchScope The new scope for collection fetch operations.
+     *
+     * @see fetchScope()
+     * @since 4.4
+     */
+    void setFetchScope( const CollectionFetchScope &fetchScope );
+
+    /**
+     * Returns the collection fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the CollectionFetchScope documentation
+     * for an example.
+     *
+     * @return a reference to the current collection fetch scope
+     *
+     * @see setFetchScope() for replacing the current collection fetch scope
+     * @since 4.4
+     */
+    CollectionFetchScope &fetchScope();
 
   Q_SIGNALS:
     /**
