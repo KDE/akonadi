@@ -156,42 +156,46 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 {
   Q_Q( EntityTreeModel );
   QObject *job = q->sender();
-  if ( job ) {
-    const Collection::Id collectionId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
-    Item::List itemsToInsert;
-    Item::List itemsToUpdate;
 
-    const Collection collection = m_collections.value( collectionId );
+  Q_ASSERT( job );
 
-    const QList<Node*> collectionEntities = m_childEntities.value( collectionId );
-    foreach ( const Item &item, items ) {
-      if ( indexOf( collectionEntities, item.id() ) != -1 ) {
-        itemsToUpdate << item;
-      } else {
-        if ( m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedItem( item ) ) {
-          itemsToInsert << item;
-        }
+  const Collection::Id collectionId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
+  Item::List itemsToInsert;
+  Item::List itemsToUpdate;
+
+  const Collection collection = m_collections.value( collectionId );
+
+  Q_ASSERT( collection.isValid() );
+
+  const QList<Node*> collectionEntities = m_childEntities.value( collectionId );
+  foreach ( const Item &item, items ) {
+    if ( indexOf( collectionEntities, item.id() ) != -1 ) {
+      itemsToUpdate << item;
+    } else {
+      if ( m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedItem( item ) ) {
+        itemsToInsert << item;
       }
-    }
-    if ( itemsToInsert.size() > 0 ) {
-      const int startRow = m_childEntities.value( collectionId ).size();
-
-      const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collectionId ) );
-      q->beginInsertRows( parentIndex, startRow, startRow + items.size() - 1 );
-      foreach ( const Item &item, items ) {
-        Item::Id itemId = item.id();
-        m_items.insert( itemId, item );
-
-        Node *node = new Node;
-        node->id = itemId;
-        node->parent = collectionId;
-        node->type = Node::Item;
-
-        m_childEntities[ collectionId ].append( node );
-      }
-      q->endInsertRows();
     }
   }
+  if ( itemsToInsert.size() > 0 ) {
+    const int startRow = m_childEntities.value( collectionId ).size();
+
+    const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collectionId ) );
+    q->beginInsertRows( parentIndex, startRow, startRow + items.size() - 1 );
+    foreach ( const Item &item, items ) {
+      Item::Id itemId = item.id();
+      m_items.insert( itemId, item );
+
+      Node *node = new Node;
+      node->id = itemId;
+      node->parent = collectionId;
+      node->type = Node::Item;
+
+      m_childEntities[ collectionId ].append( node );
+    }
+    q->endInsertRows();
+  }
+
 }
 
 void EntityTreeModelPrivate::monitoredMimeTypeChanged( const QString & mimeType, bool monitored )
