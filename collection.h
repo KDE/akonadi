@@ -149,29 +149,34 @@ class AKONADI_EXPORT Collection : public Entity
 
     /**
      * Returns the identifier of the parent collection.
+     * @deprecated Use parentCollection()
      */
-    Id parent() const;
+    KDE_DEPRECATED Id parent() const;
 
     /**
      * Sets the identifier of the @p parent collection.
+     * @deprecated Use setParentCollection()
      */
-    void setParent( Id parent );
+    KDE_DEPRECATED void setParent( Id parent );
 
     /**
      * Sets the parent @p collection.
+     * @deprecated Use setParentCollection()
      */
-    void setParent( const Collection &collection );
+    KDE_DEPRECATED void setParent( const Collection &collection );
 
     /**
      * Returns the parent remote identifier.
      * @note This usually returns nothing for collections retrieved from the backend.
+     * @deprecated Use parentCollection()
      */
-    QString parentRemoteId() const;
+    KDE_DEPRECATED QString parentRemoteId() const;
 
     /**
      * Sets the parent's remote @p identifier.
+     * @deprecated Use setParentCollection()
      */
-    void setParentRemoteId( const QString &identifier );
+    KDE_DEPRECATED void setParentRemoteId( const QString &identifier );
 
     /**
      * Returns the root collection.

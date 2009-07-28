@@ -126,12 +126,12 @@ void CollectionSync::slotLocalListDone(KJob * job)
     if ( !local.isValid() ) {
       // determine local parent
       Collection localParent;
-      if ( c.parent() >= 0 )
-        localParent = Collection( c.parent() );
-      if ( c.parentRemoteId().isEmpty() )
+      if ( c.parentCollection().id() >= 0 )
+        localParent = c.parentCollection();
+      if ( c.parentCollection().remoteId().isEmpty() )
         localParent = Collection::root();
       else
-        localParent = d->localCollections.value( c.parentRemoteId() );
+        localParent = d->localCollections.value( c.parentCollection().remoteId() );
 
       // no local parent found, create later
       if ( !localParent.isValid() ) {
@@ -176,7 +176,7 @@ void CollectionSync::slotLocalCreateDone(KJob * job)
   // search for children we can create now
   Collection::List stillOrphans;
   foreach ( const Collection &orphan, d->orphanRemoteCollections ) {
-    if ( orphan.parentRemoteId() == newLocal.remoteId() ) {
+    if ( orphan.parentCollection().remoteId() == newLocal.remoteId() ) {
       createLocalCollection( orphan, newLocal );
     } else {
       stillOrphans << orphan;
@@ -191,7 +191,7 @@ void CollectionSync::createLocalCollection(const Collection & c, const Collectio
 {
   d->pendingJobs++;
   Collection col( c );
-  col.setParent( parent );
+  col.setParentCollection( parent );
   CollectionCreateJob *create = new CollectionCreateJob( col, this );
   connect( create, SIGNAL(result(KJob*)), SLOT(slotLocalCreateDone(KJob*)) );
 }
@@ -207,7 +207,7 @@ void CollectionSync::checkDone()
     setError( Unknown );
     setErrorText( QLatin1String( "Found unresolved orphan collections" ) );
     foreach ( const Collection &col, d->orphanRemoteCollections )
-      kDebug() << "found orphan collection:" << col.remoteId() << "parent:" << col.parentRemoteId();
+      kDebug() << "found orphan collection:" << col.remoteId() << "parent:" << col.parentCollection().remoteId();
   }
 
   commit();

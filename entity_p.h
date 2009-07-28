@@ -21,6 +21,7 @@
 #define ENTITY_P_H
 
 #include "entity.h"
+#include "collection.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QSharedData>
@@ -39,23 +40,28 @@ class EntityPrivate : public QSharedData
 {
   public:
     EntityPrivate( Entity::Id id = -1 )
-      : mId( id )
+      : mId( id ),
+      mParent( 0 )
     {
     }
 
     virtual ~EntityPrivate()
     {
       qDeleteAll( mAttributes );
+      delete mParent;
     }
 
     EntityPrivate( const EntityPrivate &other )
-      : QSharedData( other )
+      : QSharedData( other ),
+      mParent( 0 )
     {
       mId = other.mId;
       mRemoteId = other.mRemoteId;
       foreach ( Attribute* attr, other.mAttributes )
         mAttributes.insert( attr->type(), attr->clone() );
       mDeletedAttributes = other.mDeletedAttributes;
+      if ( other.mParent )
+        mParent = new Collection( *(other.mParent) );
     }
 
     virtual void resetChangeLog()
@@ -69,6 +75,7 @@ class EntityPrivate : public QSharedData
     QString mRemoteId;
     QHash<QByteArray, Attribute*> mAttributes;
     QSet<QByteArray> mDeletedAttributes;
+    mutable Collection* mParent;
 };
 
 }

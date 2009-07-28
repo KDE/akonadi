@@ -54,7 +54,7 @@ void TransactionTest::testTransaction()
       basisCollection = col;
 
   Collection testCollection;
-  testCollection.setParent( basisCollection );
+  testCollection.setParentCollection( basisCollection );
   testCollection.setName( "transactionTest" );
   testCollection.setRemoteId( "transactionTestRemoteId" );
   CollectionCreateJob *job = new CollectionCreateJob( testCollection, Session::defaultSession() );

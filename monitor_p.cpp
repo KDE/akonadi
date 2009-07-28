@@ -228,7 +228,7 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
   Collection collection = col;
   if ( !collection.isValid() ) {
     collection = Collection( msg.uid() );
-    collection.setParent( msg.parentCollection() );
+    collection.setParentCollection( Collection( msg.parentCollection() ) );
     collection.setResource( QString::fromUtf8( msg.resource() ) );
     collection.setRemoteId( msg.remoteId() );
   }

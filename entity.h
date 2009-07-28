@@ -42,6 +42,7 @@ AKONADI_EXPORT uint qHash( const Akonadi::Entity& );
 
 namespace Akonadi {
 
+class Collection;
 class EntityPrivate;
 
 /**
@@ -108,6 +109,33 @@ class AKONADI_EXPORT Entity
      * Assigns the @p other to this entity and returns a reference to this entity.
      */
     Entity& operator=( const Entity &other );
+
+    /**
+     * Returns the parent collection of this object.
+     * @note This will of course only return a useful value if it was explictly retrieved
+     *       from the Akonadi server.
+     * @since 4.4
+     */
+    Collection parentCollection() const;
+
+    /**
+     * Returns a reference to the parent collection of this object.
+     * @note This will of course only return a useful value if it was explictly retrieved
+     *       from the Akonadi server.
+     * @since 4.4
+     */
+    Collection& parentCollection();
+
+    /**
+     * Set the parent collection of this object.
+     * @note Calling this method has no immediate effect for the object itself,
+     *       such as being moved to another collection.
+     *       It is mainly relevant to provide a context for RID-based operations
+     *       inside resources.
+     * @param parent The parent collection.
+     * @since 4.4
+     */
+    void setParentCollection( const Collection &parent );
 
     /**
      * Adds an attribute to the entity.

@@ -293,7 +293,7 @@ class StandardActionManager::Private
 
       Collection col;
       col.setName( name );
-      col.setParent( parentId );
+      col.parentCollection().setId( parentId );
       CollectionCreateJob *job = new CollectionCreateJob( col );
       q->connect( job, SIGNAL(result(KJob*)), q, SLOT(collectionCreationResult(KJob*)) );
     }

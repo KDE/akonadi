@@ -31,7 +31,7 @@ namespace CollectionUtils
 {
   inline bool isVirtualParent( const Collection &collection )
   {
-    return (collection.parent() == Collection::root().id() &&
+    return (collection.parentCollection() == Collection::root() &&
             collection.resource() == QLatin1String( "akonadi_search_resource" ));
   }
 
@@ -42,7 +42,7 @@ namespace CollectionUtils
 
   inline bool isResource( const Collection &collection )
   {
-    return (collection.parent() == Collection::root().id());
+    return (collection.parentCollection() == Collection::root());
   }
 
   inline bool isStructural( const Collection &collection )
@@ -52,7 +52,7 @@ namespace CollectionUtils
 
   inline bool isFolder( const Collection &collection )
   {
-    return (collection.parent() != Collection::root().id() &&
+    return (collection.parentCollection() != Collection::root() &&
             collection.resource() != QLatin1String( "akonadi_search_resource" ) &&
             !collection.contentMimeTypes().isEmpty());
   }

@@ -69,8 +69,8 @@ void CollectionModifyJob::doStart()
     foreach( const QString &s, d->mCollection.contentMimeTypes() ) bList << s.toLatin1();
     changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
   }
-  if ( d->mCollection.parent() >= 0 )
-    changes += " PARENT " + QByteArray::number( d->mCollection.parent() );
+  if ( d->mCollection.parentCollection().id() >= 0 )
+    changes += " PARENT " + QByteArray::number( d->mCollection.parentCollection().id() );
   if ( !d->mCollection.name().isEmpty() )
     changes += " NAME " + ImapParser::quote( d->mCollection.name().toUtf8() );
   if ( !d->mCollection.remoteId().isNull() )

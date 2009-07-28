@@ -531,9 +531,9 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
       return createIndex( 0, 0, reinterpret_cast<void *>( d->m_rootNode ) );
   }
 
-  const int row = d->indexOf( d->m_childEntities.value( collection.parent()), collection.id() );
+  const int row = d->indexOf( d->m_childEntities.value( collection.parentCollection().id()), collection.id() );
 
-  Node *parentNode = d->m_childEntities.value( collection.parent() ).at( row );
+  Node *parentNode = d->m_childEntities.value( collection.parentCollection().id() ).at( row );
 
   return createIndex( row, 0, reinterpret_cast<void*>( parentNode ) );
 }
@@ -833,12 +833,12 @@ QModelIndex EntityTreeModel::indexForCollection( const Collection &collection ) 
 
   // TODO: will this work for collection::root while showing it?
 
-  const int row = d->indexOf( d->m_childEntities.value( collection.parent() ), collection.id() );
+  const int row = d->indexOf( d->m_childEntities.value( collection.parentCollection().id() ), collection.id() );
 
   if ( row < 0 )
     return QModelIndex();
 
-  Node *node = d->m_childEntities.value( collection.parent() ).at( row );
+  Node *node = d->m_childEntities.value( collection.parentCollection().id() ).at( row );
 
   return createIndex( row, 0, reinterpret_cast<void*>( node ) );
 }

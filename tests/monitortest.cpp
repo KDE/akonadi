@@ -107,7 +107,7 @@ void MonitorTest::testMonitor()
 
   // create a collection
   Collection monitorCol;
-  monitorCol.setParent( res3 );
+  monitorCol.setParentCollection( res3 );
   monitorCol.setName( "monitor" );
   CollectionCreateJob *create = new CollectionCreateJob( monitorCol, this );
   QVERIFY( create->exec() );

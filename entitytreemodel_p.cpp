@@ -108,7 +108,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     while (it.hasNext())
     {
       const Collection col = it.next();
-      const Collection::Id parentId = col.parent();
+      const Collection::Id parentId = col.parentCollection().id();
       const Collection::Id colId = col.id();
 
       if ( m_collections.contains( parentId ) ) {
@@ -206,7 +206,7 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection& collec
 {
   Q_Q( EntityTreeModel );
   // Unlike fetchCollections, this method fetches collections by traversing up, not down.
-  CollectionFetchJob *job = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Base, m_session );
+  CollectionFetchJob *job = new CollectionFetchJob( collection.parentCollection(), CollectionFetchJob::Base, m_session );
   job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
   job->fetchScope().setIncludeStatistics( m_includeStatistics );
   q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
@@ -228,9 +228,9 @@ void EntityTreeModelPrivate::ancestorsFetched(const Akonadi::Collection::List& c
     Q_ASSERT(!m_collections.contains(collection.id()));
 
     m_ancestors.prepend(collection);
-    if (m_collections.contains(collection.parent()))
+    if (m_collections.contains(collection.parentCollection().id()))
     {
-      m_ancestors.prepend( m_collections.value(collection.parent()) );
+      m_ancestors.prepend( m_collections.value(collection.parentCollection().id()) );
       insertAncestors(m_ancestors);
     } else {
       retrieveAncestors(collection);
@@ -337,9 +337,9 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   if (!m_collections.contains(collection.id()))
     return;
 
-  const int row = indexOf( m_childEntities.value( collection.parent() ), collection.id() );
+  const int row = indexOf( m_childEntities.value( collection.parentCollection().id() ), collection.id() );
     
-  const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.parent() ) );
+  const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.parentCollection().id() ) );
 
   q->beginRemoveRows( parentIndex, row, row );
 
@@ -347,7 +347,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   removeChildEntities(collection.id());
 
   // Remove deleted collection from its parent.
-  m_childEntities[ collection.parent() ].removeAt( row );
+  m_childEntities[ collection.parentCollection().id() ].removeAt( row );
 
   q->endRemoveRows();
 }
@@ -646,7 +646,7 @@ Collection::List EntityTreeModelPrivate::getParentCollections( const Item &item 
 
 Collection EntityTreeModelPrivate::getParentCollection( const Collection &collection ) const
 {
-  return m_collections.value( collection.parent() );
+  return m_collections.value( collection.parentCollection().id() );
 }
 
 Entity::Id EntityTreeModelPrivate::childAt( Collection::Id id, int position, bool *ok ) const
