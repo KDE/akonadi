@@ -480,6 +480,11 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
 
   Q_D( const EntityTreeModel );
 
+  if ( parent.column() > 0 )
+  {
+    return QModelIndex();    
+  }
+  
   //TODO: don't use column count here? Use some d-> func.
   if ( column >= columnCount() || column < 0 )
     return QModelIndex();
