@@ -244,6 +244,8 @@ void ImapStreamParser::beginList()
   if ( !waitForMoreData( m_position >= m_data.length() ) )
     throw ImapParserException("Unable to read more data");
   stripLeadingSpaces();
+  if ( !waitForMoreData( m_position >= m_data.length() ) )
+    throw ImapParserException("Unable to read more data");
   if ( m_data[m_position] != '(' )
     throw ImapParserException( "Stream not at a beginning of a list" );
   ++m_position;
