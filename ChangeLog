@@ -1,3 +1,43 @@
+2009-07-28 16:34 +0000 [r1003699]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.2/CMakeLists.txt,
+	  branches/akonadi/1.2/cmake/modules/FindQt4.cmake: Backport SVN
+	  commit 993358 by mikearthur from trunk: Add QT_USE_* options to
+	  fix building on OSX with Qt SDK. Backport SVN commit 993403 by
+	  mikearthur from trunk: Add missing QtDBus Framework include for
+	  Qt SDK compilation on OSX. Backported from CMake 2.6.4.
+
+2009-07-28 16:31 +0000 [r1003694]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.2/server/control/CMakeLists.txt: Backport SVN
+	  commit 992351 by pokrzywka from trunk: run akonadi_control
+	  silently on windows (no console popup) Backport SVN commit 992355
+	  by pokrzywka: one WIN32 flag is enough
+
+2009-07-28 16:27 +0000 [r1003692]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.2/server/src/handlerhelper.cpp: Backport SVN
+	  commit 986123 by vkrause from trunk: Join collection attributes
+	  correctly. Not that it makes any difference for the parser, but
+	  it's much less confusing to read for humans in the akonadiconsole
+	  debugger.
+
+2009-07-28 16:24 +0000 [r1003689]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.2/makechangelog: Create changelog for the
+	  correct branch.
+
+2009-06-23 19:13 +0000 [r985928]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.2 (added): Create Akonadi 1.2 branch.
+
+2009-06-23 18:27 +0000 [r985910]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: Prepare for the 1.1.95
+	  release.
+
 2009-06-23 16:03 +0000 [r985873]  Volker Krause vkrause@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
@@ -403,8 +443,8 @@
 	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
 	  trunk/kdesupport/akonadi/server/tests/unittest/handlertest.h,
 	  trunk/kdesupport/akonadi/server/src/handler.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/uid.cpp (removed),
 	  trunk/kdesupport/akonadi/server/src/handler/store.h,
+	  trunk/kdesupport/akonadi/server/src/handler/uid.cpp (removed),
 	  trunk/kdesupport/akonadi/server/src/handler.h,
 	  trunk/kdesupport/akonadi/server/src/handler/uid.h (removed),
 	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
@@ -617,8 +657,8 @@
 	  trunk/kdesupport/akonadi/libs/protocol_p.h,
 	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
 	  trunk/kdesupport/akonadi/server/src/storage/itemqueryhelper.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/scope.h (added),
 	  trunk/kdesupport/akonadi/server/src/akonadiconnection.h,
+	  trunk/kdesupport/akonadi/server/src/handler/scope.h (added),
 	  trunk/kdesupport/akonadi/server/src/handler/select.cpp,
 	  trunk/kdesupport/akonadi/server/src/storage/itemqueryhelper.h,
 	  trunk/kdesupport/akonadi/server/src/handler/uid.cpp,
@@ -632,8 +672,8 @@
 
 2009-04-06 13:13 +0000 [r950045]  Volker Krause vkrause@kde.org
 
-	* trunk/kdesupport/akonadi/server/src/handler/aklist.h,
-	  trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/aklist.h,
 	  trunk/kdesupport/akonadi/server/src/handler/link.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/fetch.h,
 	  trunk/kdesupport/akonadi/server/src/handler.cpp,
@@ -648,15 +688,15 @@
 	  trunk/kdesupport/akonadi/server/src/handler/expunge.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/list.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/select.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/uid.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/subscribe.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/status.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/uid.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/status.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/transaction.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/subscribe.h,
 	  trunk/kdesupport/akonadi/server/src/handler/searchpersistent.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/aklist.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/subscribe.h,
 	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/aklist.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/transaction.h: Avoid
 	  the re-insertion of command names in the input stream. Also, get
@@ -723,8 +763,8 @@
 	  (added), trunk/kdesupport/akonadi/server/src/search/result.cpp
 	  (added), trunk/kdesupport/akonadi/server/queryserver (removed),
 	  trunk/kdesupport/akonadi/server/src/search (added),
+	  trunk/kdesupport/akonadi/server/src/search/result.h (added),
 	  trunk/kdesupport/akonadi/server/src/search/querymetatype.h
-	  (added), trunk/kdesupport/akonadi/server/src/search/result.h
 	  (added),
 	  trunk/kdesupport/akonadi/server/src/search/queryserviceclient.cpp
 	  (added),
@@ -860,21 +900,21 @@
 	  trunk/kdesupport/akonadi/server/src/handler/logout.cpp,
 	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/list.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/noop.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/list.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/colcopy.h,
 	  trunk/kdesupport/akonadi/server/src/handler/expunge.h,
 	  trunk/kdesupport/akonadi/server/src/handler/uid.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/select.h,
 	  trunk/kdesupport/akonadi/server/src/handler/transaction.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/capability.h,
 	  trunk/kdesupport/akonadi/server/src/handler/subscribe.h,
+	  trunk/kdesupport/akonadi/server/src/handler/capability.h,
 	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/akappend.h,
 	  trunk/kdesupport/akonadi/server/src/handler/status.h,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.h,
 	  trunk/kdesupport/akonadi/server/src/handler/searchpersistent.h,
-	  trunk/kdesupport/akonadi/server/src/handler/aklist.h,
 	  trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/aklist.h,
 	  trunk/kdesupport/akonadi/server/src/handler/link.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/fetch.h,
 	  trunk/kdesupport/akonadi/server/src/handler.cpp,
@@ -1097,7 +1137,7 @@
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt: support gcov compiling
 
-2009-03-03 11:34 +0000 [r934526]  Dario Freddi drf54321@gmail.com
+2009-03-03 11:34 +0000 [r934526]  Dario Freddi drf@kde.org
 
 	* trunk/kdesupport/akonadi/README: Fix typo
 
@@ -1245,18 +1285,18 @@
 	  trunk/kdesupport/akonadi/server/src/handler/link.h,
 	  trunk/kdesupport/akonadi/server/src/handler/delete.h,
 	  trunk/kdesupport/akonadi/server/src/handler/create.h,
-	  trunk/kdesupport/akonadi/server/src/handler/rename.h,
 	  trunk/kdesupport/akonadi/server/src/handler/append.h,
-	  trunk/kdesupport/akonadi/server/src/handler/login.h,
+	  trunk/kdesupport/akonadi/server/src/handler/rename.h,
 	  trunk/kdesupport/akonadi/server/src/handler/colcopy.h,
+	  trunk/kdesupport/akonadi/server/src/handler/login.h,
 	  trunk/kdesupport/akonadi/server/src/handler/logout.h,
 	  trunk/kdesupport/akonadi/server/src/handler/copy.h,
-	  trunk/kdesupport/akonadi/server/src/handler/noop.h,
-	  trunk/kdesupport/akonadi/server/src/handler/list.h,
 	  trunk/kdesupport/akonadi/server/src/handler/expunge.h,
+	  trunk/kdesupport/akonadi/server/src/handler/list.h,
+	  trunk/kdesupport/akonadi/server/src/handler/noop.h,
 	  trunk/kdesupport/akonadi/server/src/handler/select.h,
-	  trunk/kdesupport/akonadi/server/src/handler/subscribe.h,
 	  trunk/kdesupport/akonadi/server/src/handler/capability.h,
+	  trunk/kdesupport/akonadi/server/src/handler/subscribe.h,
 	  trunk/kdesupport/akonadi/server/src/handler/akappend.h,
 	  trunk/kdesupport/akonadi/server/src/handler/status.h,
 	  trunk/kdesupport/akonadi/server/src/handler/transaction.h,
@@ -1557,17 +1597,17 @@
 	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
 	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
 	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.h,
-	  trunk/kdesupport/akonadi/server/src/nepomukmanager.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/aklist.h,
-	  trunk/kdesupport/akonadi/server/src/handler/link.cpp,
+	  trunk/kdesupport/akonadi/server/src/nepomukmanager.cpp,
 	  trunk/kdesupport/akonadi/server/src/storage/dbupdate.xml,
+	  trunk/kdesupport/akonadi/server/src/handler/link.cpp,
 	  trunk/kdesupport/akonadi/server/tests/unittest/teststoragebackend.h,
-	  trunk/kdesupport/akonadi/server/src/handler.cpp,
 	  trunk/kdesupport/akonadi/server/src/xesammanager.h,
+	  trunk/kdesupport/akonadi/server/src/handler.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/delete.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/create.cpp,
-	  trunk/kdesupport/akonadi/server/src/intervalcheck.cpp,
 	  trunk/kdesupport/akonadi/server/src/handlerhelper.h,
+	  trunk/kdesupport/akonadi/server/src/intervalcheck.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/colcopy.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/expunge.cpp,
 	  trunk/kdesupport/akonadi/server/src/abstractsearchmanager.h,
@@ -1784,8 +1824,8 @@
 
 2008-12-02 10:14 +0000 [r891498]  Alexander Neundorf neundorf@kde.org
 
-	* trunk/kdesupport/akonadi/cmake/CMakeLists.txt (removed),
-	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	* trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/cmake/CMakeLists.txt (removed),
 	  trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake,
 	  trunk/kdesupport/akonadi/server/CMakeLists.txt: -proper RPATH
 	  handling (see comments in CMakeLists.txt) -remove LIB_DESTINATION
@@ -2163,8 +2203,8 @@
 	  trunk/KDE/kdepimlibs/akonadi/agentinstance.h,
 	  trunk/KDE/kdepimlibs/akonadi/agentbase.cpp,
 	  trunk/KDE/kdepim/akonadi/migration/kres/kresmigrator.cpp (added),
-	  trunk/KDE/kdepim/akonadi/migration/kres/kabcmigrator.h (added),
 	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Agent.Control.xml,
+	  trunk/KDE/kdepim/akonadi/migration/kres/kabcmigrator.h (added),
 	  trunk/KDE/kdepim/akonadi/migration (added),
 	  trunk/KDE/kdepimlibs/akonadi/agentbase.h,
 	  trunk/KDE/kdepim/akonadi/migration/kres/kresmigrator.h (added),
@@ -2403,9 +2443,9 @@
 
 	* trunk/kdesupport/akonadi/server/control/org.freedesktop.Akonadi.Control.service.cmake
 	  (added),
-	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.SearchQueryIterator.xml
-	  (removed),
 	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.Search.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.SearchQueryIterator.xml
 	  (removed),
 	  trunk/kdesupport/akonadi/server/interfaces/org.kde.Akonadi.Server.xml
 	  (removed),
@@ -2413,10 +2453,10 @@
 	  (removed), trunk/kdesupport/akonadi/server/src/nepomukmanager.h,
 	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Tracer.xml
 	  (removed), trunk/kdesupport/akonadi/libs/protocol_p.h,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
 	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.NotificationManager.xml
 	  (removed),
 	  trunk/kdesupport/akonadi/server/src/resourcemanager.cpp,
-	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
 	  trunk/kdesupport/akonadi/server/src/main.cpp,
 	  trunk/kdesupport/akonadi/server/src/notificationmanager.h,
 	  trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Resource.xml
@@ -2558,8 +2598,9 @@
 	  (removed),
 	  trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/server/src/tests/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/cmake/modules/kde4automoc.files.in
-	  (removed), trunk/kdesupport/akonadi/CMakeLists.txt,
+	  (removed),
 	  trunk/kdesupport/akonadi/cmake/modules/KDE4Macros.cmake
 	  (removed), trunk/kdesupport/akonadi/server/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
@@ -2589,8 +2630,8 @@
 	* trunk/kdesupport/akonadi/server/src/nepomukmanager.cpp,
 	  trunk/kdesupport/akonadi/server/queryserver/query.cpp,
 	  trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/create.cpp,
 	  trunk/kdesupport/akonadi/server/src/storage/querybuilder.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/create.cpp,
 	  trunk/kdesupport/akonadi/server/src/notificationmanager.cpp,
 	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
@@ -2784,8 +2825,8 @@
 2008-04-23 19:23 +0000 [r800264]  Will Stephenson wstephenson@kde.org
 
 	* trunk/kdesupport/akonadi/libs/akonadiprotocolinternals_export.h,
-	  trunk/kdesupport/akonadi/kdemacros.h.cmake (removed),
 	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/kdemacros.h.cmake (removed),
 	  trunk/kdesupport/akonadi/server/src/akonadiprivate_export.h: Last
 	  few kdemacros.h dependencies; thanks Allen
 
@@ -2868,8 +2909,8 @@
 
 2008-04-23 17:25 +0000 [r800213]  Will Stephenson wstephenson@kde.org
 
-	* trunk/kdesupport/akonadi/libs/notificationmessage_p.h (added),
-	  trunk/kdesupport/akonadi/server/interfaces (added),
+	* trunk/kdesupport/akonadi/server/interfaces (added),
+	  trunk/kdesupport/akonadi/libs/notificationmessage_p.h (added),
 	  trunk/KDE/kdepim/akonadi/config-akonadi.h.cmake (removed),
 	  trunk/KDE/kdepim/akonadi/server/akonadictl (removed),
 	  trunk/KDE/kdepim/akonadi/server/Mainpage.dox (removed),
@@ -2891,8 +2932,8 @@
 	  trunk/KDE/kdepim/akonadi/server/queryserver (removed),
 	  trunk/kdesupport/akonadi/server/akonadictl (added),
 	  trunk/kdesupport/akonadi/server/Mainpage.dox (added),
-	  trunk/KDE/kdepim/akonadi/server/templates (removed),
 	  trunk/kdesupport/akonadi/cmake (added),
+	  trunk/KDE/kdepim/akonadi/server/templates (removed),
 	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
 	  trunk/kdesupport/akonadi/interfaces (added),
 	  trunk/kdesupport/akonadi/server/akonadictl/main.cpp,
@@ -2903,10 +2944,10 @@
 	  (removed),
 	  trunk/kdesupport/akonadi/server/src/handler/delete.cpp,
 	  trunk/KDE/kdepimlibs/akonadi/imapset_p.h (removed),
-	  trunk/KDE/kdepim/akonadi/server/control (removed),
 	  trunk/kdesupport/akonadi/server/queryserver (added),
-	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/KDE/kdepim/akonadi/server/control (removed),
 	  trunk/kdesupport/akonadi/server/src/handler/colcopy.cpp,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/server/templates (added),
 	  trunk/kdesupport/akonadi/libs/notificationmessage.cpp (added),
 	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
@@ -2933,8 +2974,8 @@
 	  (added), trunk/kdesupport/akonadi (added),
 	  trunk/kdesupport/akonadi/server/src/handler/rename.cpp,
 	  trunk/KDE/kdepimlibs/akonadi/notificationmessage.cpp (removed),
-	  trunk/KDE/kdepimlibs/akonadi/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/server/src/handler/login.cpp,
+	  trunk/KDE/kdepimlibs/akonadi/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
 	  trunk/KDE/kdepim/akonadi/akonadi-mime.xml (removed),
 	  trunk/kdesupport/akonadi/server/src/handler/list.cpp,
@@ -2948,10 +2989,10 @@
 	  (removed),
 	  trunk/KDE/kdepimlibs/akonadi/interfaces/org.kde.Akonadi.NotificationManager.xml
 	  (removed), trunk/kdesupport/akonadi/server/src/handler/store.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/fetch.h,
 	  trunk/KDE/kdepim/akonadi/CMakeLists.txt,
-	  trunk/KDE/kdepimlibs/akonadi/xdgbasedirs_p.h (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.h,
 	  trunk/kdesupport/akonadi/akonadi-mime.xml (added),
+	  trunk/KDE/kdepimlibs/akonadi/xdgbasedirs_p.h (removed),
 	  trunk/kdesupport/akonadi/server/src/handler.cpp,
 	  trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/server/src/handler/create.cpp,
@@ -2965,10 +3006,10 @@
 	  trunk/KDE/kdepim/akonadi/server/src (removed),
 	  trunk/kdesupport/akonadi/server/src/handler/select.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/subscribe.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/status.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/searchpersistent.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/status.cpp,
 	  trunk/kdesupport/akonadi/server/control/agentinfo.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/searchpersistent.cpp,
 	  trunk/KDE/kdepim/akonadi/server/tests (removed),
 	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp,
 	  trunk/KDE/kdepimlibs/akonadi/interfaces/org.kde.Akonadi.Agent.Status.xml
