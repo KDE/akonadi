@@ -2,5 +2,5 @@ rm -f /tmp/svn2log.py /tmp/accounts
 svn cat svn://anonsvn.kde.org/home/kde/branches/KDE/3.5/kde-common/release/svn2log.py > /tmp/svn2log.py
 svn cat svn://anonsvn.kde.org/home/kde/trunk/kde-common/accounts > /tmp/accounts
 svn log -v --xml \
-    svn://anonsvn.kde.org/home/kde/trunk/kdesupport/akonadi \
+    svn://anonsvn.kde.org/home/kde/branches/akonadi/1.2 \
  | python /tmp/svn2log.py --users=/tmp/accounts --users-charset=UTF8
