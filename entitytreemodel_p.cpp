@@ -312,7 +312,7 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
 
   // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
   // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
-  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() || !m_mimeChecker.isWantedCollection( collection ) )
+  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedCollection( collection ) )
     return;
 
   if (!m_collections.contains(parent.id()))
@@ -422,7 +422,7 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
 {
   Q_Q( EntityTreeModel );
 
-  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() || !m_mimeChecker.isWantedItem( item ) )
+  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
 
   const int row = m_childEntities.value( collection.id() ).size();
@@ -496,7 +496,7 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
 {
   Q_Q( EntityTreeModel );
 
-  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() || !m_mimeChecker.isWantedItem( item ) )
+  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
 
   const int row = m_childEntities.value( collection.id() ).size();
