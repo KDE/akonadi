@@ -692,6 +692,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
 bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
 {
+  Q_D(const EntityTreeModel);
   const Item item = parent.data( ItemRole ).value<Item>();
 
   if ( item.isValid() ) {
@@ -700,6 +701,25 @@ bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
     return false;
   } else {
     // but collections can...
+    const Collection::Id colId = parent.data( CollectionIdRole ).toULongLong();
+
+    // But the root collection can't...
+    if ( Collection::root().id() == colId )
+    {
+      return false;
+    }
+    
+    foreach (Node *node, d->m_childEntities.value( colId ) )
+    {
+      if ( Node::Item == node->type )
+      {
+        // Only try to fetch more from a collection if we don't already have items in it.
+        // Otherwise we'd spend all the time listing items in collections.
+        // This means that collections which don't contain items get a lot of item fetch jobs started on them.
+        // Will fix that later.
+        return false;
+      }
+    }
     return true;
   }
 
