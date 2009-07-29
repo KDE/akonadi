@@ -197,9 +197,8 @@ QDebug operator <<( QDebug d, const Akonadi::Collection &collection )
              << "   remote ID:" << collection.remoteId() << endl
              << "   name:" << collection.name() << endl
              << "   url:" << collection.url() << endl
-             << "   parent:" << collection.parentCollection() << endl
+             << "   parent:" << collection.parentCollection().id() << collection.parentCollection().remoteId() << endl
              << "   resource:" << collection.resource() << endl
-             << "   mime type:" << collection.mimeType() << endl
              << "   rights:" << collection.rights() << endl
              << "   contents mime type:" << collection.contentMimeTypes() << endl
              << "   " << collection.cachePolicy() << endl
