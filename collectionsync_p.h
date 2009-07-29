@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007, 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -30,8 +30,25 @@ namespace Akonadi {
 
   Syncs remote and local collections.
 
-  @todo Optimize the streaming case, so far only the interface supports streaming,
-  not the actual sync algorithm.
+  Basic terminology:
+  - "local": The current state in the Akonadi server
+  - "remote": The state in the backend, which is also the state the Akonadi
+              server is supposed to have afterwards.
+
+  There are three options to influence the way syncing is done:
+  - Streaming vs. complete delivery: If streaming is enabled remote collections
+    do not need to be delivered in a single batch but can be delivered in multiple
+    chunks. This improves performance but requires an explicit notification
+    when delivery has been completed.
+  - Incremental vs. non-incremental: In the incremental case only remote changes
+    since the last sync have to be delivered, in the non-incremental mode the full
+    remote state has to be provided. The first is obviously the preferred way,
+    but requires support by the backend.
+  - Hierarchical vs. global RIDs: The first requires RIDs to be unique per parent
+    collection, the second one requires globally unique RIDs (per resource). Those
+    have different advantages and disadvantages, esp. regarding moving. Which one
+    to chose mostly depends on what the backend provides in this regard.
+
 */
 class CollectionSync : public TransactionSequence
 {
@@ -79,21 +96,25 @@ class CollectionSync : public TransactionSequence
     */
     void retrievalDone();
 
+    /**
+      Indicate whether the resource supplies collections with hierachical or global
+      remote identifiers. @c false by default.
+    */
+    void setHierarchicalRemoteIds( bool hierarchical );
+
   protected:
     void doStart();
 
-  private:
-    void createLocalCollection( const Collection &c, const Collection &parent );
-    void checkDone();
-
   private Q_SLOTS:
     void slotLocalListDone( KJob *job );
-    void slotLocalCreateDone( KJob *job );
-    void slotLocalChangeDone( KJob *job );
 
   private:
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void updateLocalCollectionResult(KJob* job) )
+    Q_PRIVATE_SLOT( d, void createLocalCollectionResult(KJob* job) )
+    Q_PRIVATE_SLOT( d, void deleteLocalCollectionsResult(KJob* job) )
 };
 
 }
