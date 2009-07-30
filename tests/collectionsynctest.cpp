@@ -52,6 +52,20 @@ class CollectionSyncTest : public QObject
       return fetch->collections();
     }
 
+    void makeTestData()
+    {
+      QTest::addColumn<bool>( "hierarchicalRIDs" );
+      QTest::addColumn<QString>( "resource" );
+
+      QTest::newRow( "akonadi_knut_resource_0 global RID" ) << false << "akonadi_knut_resource_0";
+      QTest::newRow( "akonadi_knut_resource_1 global RID" ) << false << "akonadi_knut_resource_1";
+      QTest::newRow( "akonadi_knut_resource_2 global RID" ) << false << "akonadi_knut_resource_2";
+
+/*      QTest::newRow( "akonadi_knut_resource_0 hierarchical RID" ) << true << "akonadi_knut_resource_0";
+      QTest::newRow( "akonadi_knut_resource_1 hierarchical RID" ) << true << "akonadi_knut_resource_1";
+      QTest::newRow( "akonadi_knut_resource_2 hierarchical RID" ) << true << "akonadi_knut_resource_2";*/
+    }
+
   private slots:
     void initTestCase()
     {
@@ -63,23 +77,41 @@ class CollectionSyncTest : public QObject
         agent.setIsOnline( false );
     }
 
+    void testFullSync_data()
+    {
+      makeTestData();
+    }
+
     void testFullSync()
     {
-      Collection::List origCols = fetchCollections( "akonadi_knut_resource_0" );
+      QFETCH( bool, hierarchicalRIDs );
+      QFETCH( QString, resource );
 
-      CollectionSync* syncer = new CollectionSync( "akonadi_knut_resource_0" );
+      Collection::List origCols = fetchCollections( resource );
+
+      CollectionSync* syncer = new CollectionSync( resource, this );
+      syncer->setHierarchicalRemoteIds( hierarchicalRIDs );
       syncer->setRemoteCollections( origCols );
       AKVERIFYEXEC( syncer );
 
-      Collection::List resultCols = fetchCollections( "akonadi_knut_resource_0" );
+      Collection::List resultCols = fetchCollections( resource );
       QCOMPARE( resultCols.count(), origCols.count() );
+    }
+
+    void testFullStreamingSync_data()
+    {
+      makeTestData();
     }
 
     void testFullStreamingSync()
     {
-      Collection::List origCols = fetchCollections( "akonadi_knut_resource_0" );
+      QFETCH( bool, hierarchicalRIDs );
+      QFETCH( QString, resource );
 
-      CollectionSync* syncer = new CollectionSync( "akonadi_knut_resource_0" );
+      Collection::List origCols = fetchCollections( resource );
+
+      CollectionSync* syncer = new CollectionSync( resource, this );
+      syncer->setHierarchicalRemoteIds( hierarchicalRIDs );
       syncer->setAutoDelete( false );
       QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
       QVERIFY( spy.isValid() );
@@ -100,23 +132,35 @@ class CollectionSyncTest : public QObject
       QCOMPARE( spy.count(), 1 );
       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
       QCOMPARE( job, syncer );
+      QCOMPARE( job->errorText(), QString() );
       QCOMPARE( job->error(), 0 );
 
-      Collection::List resultCols = fetchCollections( "akonadi_knut_resource_0" );
+      Collection::List resultCols = fetchCollections( resource );
       QCOMPARE( resultCols.count(), origCols.count() );
 
       delete syncer;
     }
 
+    void testIncrementalSync_data()
+    {
+      makeTestData();
+    }
+
     void testIncrementalSync()
     {
-      Collection::List origCols = fetchCollections( "akonadi_knut_resource_0" );
+      QFETCH( bool, hierarchicalRIDs );
+      QFETCH( QString, resource );
+      if ( resource == QLatin1String( "akonadi_knut_resource_2" ) )
+        QSKIP( "test requires more than one collection", SkipSingle );
 
-      CollectionSync* syncer = new CollectionSync( "akonadi_knut_resource_0" );
+      Collection::List origCols = fetchCollections( resource );
+
+      CollectionSync* syncer = new CollectionSync( resource, this );
+      syncer->setHierarchicalRemoteIds( hierarchicalRIDs );
       syncer->setRemoteCollections( origCols, Collection::List() );
       AKVERIFYEXEC( syncer );
 
-      Collection::List resultCols = fetchCollections( "akonadi_knut_resource_0" );
+      Collection::List resultCols = fetchCollections( resource );
       QCOMPARE( resultCols.count(), origCols.count() );
 
       Collection::List delCols;
@@ -138,19 +182,28 @@ class CollectionSyncTest : public QObject
       delCols << colWithRandomRemoteId;
 #endif
 
-      syncer = new CollectionSync( "akonadi_knut_resource_0" );
+      syncer = new CollectionSync( resource, this );
       syncer->setRemoteCollections( resultCols, delCols );
       AKVERIFYEXEC( syncer );
 
-      Collection::List resultCols2 = fetchCollections( "akonadi_knut_resource_0" );
+      Collection::List resultCols2 = fetchCollections( resource );
       QCOMPARE( resultCols2.count(), resultCols.count() );
+    }
+
+    void testIncrementalStreamingSync_data()
+    {
+      makeTestData();
     }
 
     void testIncrementalStreamingSync()
     {
-      Collection::List origCols = fetchCollections( "akonadi_knut_resource_0" );
+      QFETCH( bool, hierarchicalRIDs );
+      QFETCH( QString, resource );
 
-      CollectionSync* syncer = new CollectionSync( "akonadi_knut_resource_0" );
+      Collection::List origCols = fetchCollections( resource );
+
+      CollectionSync* syncer = new CollectionSync( resource, this );
+      syncer->setHierarchicalRemoteIds( hierarchicalRIDs );
       syncer->setAutoDelete( false );
       QSignalSpy spy( syncer, SIGNAL(result(KJob*)) );
       QVERIFY( spy.isValid() );
@@ -171,23 +224,33 @@ class CollectionSyncTest : public QObject
       QCOMPARE( spy.count(), 1 );
       KJob *job = spy.at( 0 ).at( 0 ).value<KJob*>();
       QCOMPARE( job, syncer );
+      QCOMPARE( job->errorText(), QString() );
       QCOMPARE( job->error(), 0 );
 
-      Collection::List resultCols = fetchCollections( "akonadi_knut_resource_0" );
+      Collection::List resultCols = fetchCollections( resource );
       QCOMPARE( resultCols.count(), origCols.count() );
 
       delete syncer;
     }
 
+    void testEmptyIncrementalSync_data()
+    {
+      makeTestData();
+    }
+
     void testEmptyIncrementalSync()
     {
-      Collection::List origCols = fetchCollections( "akonadi_knut_resource_0" );
+      QFETCH( bool, hierarchicalRIDs );
+      QFETCH( QString, resource );
 
-      CollectionSync* syncer = new CollectionSync( "akonadi_knut_resource_0" );
+      Collection::List origCols = fetchCollections( resource );
+
+      CollectionSync* syncer = new CollectionSync( resource, this );
+      syncer->setHierarchicalRemoteIds( hierarchicalRIDs );
       syncer->setRemoteCollections( Collection::List(), Collection::List() );
       AKVERIFYEXEC( syncer );
 
-      Collection::List resultCols = fetchCollections( "akonadi_knut_resource_0" );
+      Collection::List resultCols = fetchCollections( resource );
       QCOMPARE( resultCols.count(), origCols.count() );
     }
 };

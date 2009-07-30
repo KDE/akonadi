@@ -148,6 +148,31 @@ class CollectionSync::Private
       localRoot->pendingRemoteNodes.append( node );
     }
 
+    /** Create local nodes as we receive the local listing from the Akonadi server. */
+    void localCollectionsReceived( const Akonadi::Collection::List &localCols )
+    {
+      foreach ( const Collection &c, localCols )
+        createLocalNode( c );
+    }
+
+    /** Once the local collection listing finished we can continue with the interesting stuff. */
+    void localCollectionFetchResult( KJob *job )
+    {
+      if ( job->error() )
+        return; // handled by the base class
+
+      // safety check: the local tree has to be connected
+      if ( !localPendingCollections.isEmpty() ) {
+        q->setError( Unknown );
+        q->setErrorText( QLatin1String( "Inconsistent local collection tree detected! OMG, what have you done to my database?!?!" ) );
+        q->emitResult();
+        return;
+      }
+
+      localListDone = true;
+      execute();
+    }
+
     /**
       Find the local node that matches the given remote collection, returns 0
       if that doesn't exist (yet).
@@ -160,12 +185,16 @@ class CollectionSync::Private
         return 0;
       } else {
         LocalNode *localParent = 0;
+        if ( collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty() ) {
+          kWarning() << "Remote collection without valid parent found: " << collection;
+          return 0;
+        }
         if ( collection.parentCollection() == Collection::root() )
           localParent = localRoot;
         else
           localParent = findMatchingLocalNode( collection.parentCollection() );
  
-        if ( localParent->childRidMap.contains( collection.remoteId() ) )
+        if ( localParent && localParent->childRidMap.contains( collection.remoteId() ) )
           return localParent->childRidMap.value( collection.remoteId() );
         return 0;
       }
@@ -180,6 +209,10 @@ class CollectionSync::Private
     {
       if ( !hierarchicalRIDs )
         return localRoot;
+      if ( collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty() ) {
+        kWarning() << "Remote collection without valid parent found: " << collection;
+        return 0;
+      }
       if ( collection.parentCollection() == Collection::root() ) {
         if ( exactMatch ) *exactMatch = true;
         return localRoot;
@@ -225,7 +258,12 @@ class CollectionSync::Private
         }
         // step 3: find the best matching ancestor and enqueue it for later processing
         localNode = findBestLocalAncestor( remoteNode->collection );
-        Q_ASSERT( localNode );
+        if ( !localNode ) {
+          q->setError( Unknown );
+          q->setErrorText( QLatin1String( "Remote collection without root-terminated ancestor chain provided, fix your resource dude!" ) );
+          q->emitResult();
+          return;
+        }
         localNode->pendingRemoteNodes.append( remoteNode );
       }
 
@@ -471,23 +509,8 @@ void CollectionSync::doStart()
 {
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
   job->fetchScope().setResource( d->resourceId );
-  connect( job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)) );
-}
-
-// TODO make private, create local nodes when retrieving the streaming signal instead
-void CollectionSync::slotLocalListDone(KJob * job)
-{
-  if ( job->error() )
-    return;
-
-  Collection::List list = static_cast<CollectionFetchJob*>( job )->collections();
-  foreach ( const Collection &c, list )
-    d->createLocalNode( c );
-
-  Q_ASSERT( d->localPendingCollections.isEmpty() );
-  d->localListDone = true;
-
-  d->execute();
+  connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(localCollectionsReceived(Akonadi::Collection::List)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(localCollectionFetchResult(KJob*)) );
 }
 
 void CollectionSync::setStreamingEnabled( bool streaming )

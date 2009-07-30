@@ -99,19 +99,19 @@ class CollectionSync : public TransactionSequence
     /**
       Indicate whether the resource supplies collections with hierachical or global
       remote identifiers. @c false by default.
+      Must be called before the first call to setRemoteCollections().
     */
     void setHierarchicalRemoteIds( bool hierarchical );
 
   protected:
     void doStart();
 
-  private Q_SLOTS:
-    void slotLocalListDone( KJob *job );
-
   private:
     class Private;
     Private* const d;
 
+    Q_PRIVATE_SLOT( d, void localCollectionsReceived( const Akonadi::Collection::List &localCols ) )
+    Q_PRIVATE_SLOT( d, void localCollectionFetchResult( KJob* job ) )
     Q_PRIVATE_SLOT( d, void updateLocalCollectionResult(KJob* job) )
     Q_PRIVATE_SLOT( d, void createLocalCollectionResult(KJob* job) )
     Q_PRIVATE_SLOT( d, void deleteLocalCollectionsResult(KJob* job) )
