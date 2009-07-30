@@ -38,12 +38,36 @@ class Collection;
 class ItemRetrievalManager : public QObject
 {
   Q_OBJECT
+
+  public:
+    class Request
+    {
+      public:
+        Request();
+        qint64 id;
+        QByteArray remoteId;
+        QByteArray mimeType;
+        QString resourceId;
+        QStringList parts;
+        QString errorMsg;
+        bool processed;
+      private:
+        Q_DISABLE_COPY( Request )
+    };
+
   public:
     ItemRetrievalManager( QObject *parent = 0 );
     ~ItemRetrievalManager();
 
     void requestItemDelivery( qint64 uid, const QByteArray& remoteId, const QByteArray& mimeType,
                               const QString &resource, const QStringList &parts );
+
+    /**
+     * Added for convenience. ItemRetrievalManager takes ownership over the
+     * pointer and deletes it when the request is processed.
+     */
+    void requestItemDelivery( Request *request );
+
     void requestCollectionSync( const Collection &collection );
 
     static ItemRetrievalManager* instance();
@@ -61,21 +85,6 @@ class ItemRetrievalManager : public QObject
     void triggerCollectionSync( const QString &resource, qint64 colId );
 
   private:
-    class Request
-    {
-      public:
-        Request();
-        qint64 id;
-        QByteArray remoteId;
-        QByteArray mimeType;
-        QString resourceId;
-        QStringList parts;
-        QString errorMsg;
-        bool processed;
-      private:
-        Q_DISABLE_COPY( Request )
-    };
-
     static ItemRetrievalManager *sInstance;
     /// Protects mPendingRequests and every Request object posted to it
     QReadWriteLock *mLock;

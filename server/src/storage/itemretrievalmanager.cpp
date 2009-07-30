@@ -109,8 +109,6 @@ OrgFreedesktopAkonadiResourceInterface* ItemRetrievalManager::resourceInterface(
 void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& remoteId, const QByteArray& mimeType,
                                                const QString& resource, const QStringList& parts )
 {
-  qDebug() << "requestItemDelivery() - current thread:" << QThread::currentThread() << " retrieval thread:" << thread();
-
   Request *req = new Request();
   req->id = uid;
   req->remoteId = remoteId;
@@ -118,8 +116,16 @@ void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& re
   req->resourceId = resource;
   req->parts = parts;
 
+  requestItemDelivery( req );
+}
+
+void ItemRetrievalManager::requestItemDelivery( Request *req )
+{
+  qDebug() << "requestItemDelivery() - current thread:" << QThread::currentThread()
+           << " retrieval thread:" << thread();
+  
   mLock->lockForWrite();
-  qDebug() << "posting retrieval request for item" << uid ;
+  qDebug() << "posting retrieval request for item" << req->id;
   mPendingRequests.append( req );
   mLock->unlock();
 
@@ -127,19 +133,19 @@ void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& re
 
   mLock->lockForRead();
   forever {
-    qDebug() << "checking if request for item" << uid << "has been processed...";
+    qDebug() << "checking if request for item" << req->id << "has been processed...";
     if ( req->processed ) {
       Q_ASSERT( !mPendingRequests.contains( req ) );
       const QString errorMsg = req->errorMsg;
       mLock->unlock();
-      qDebug() << "request for item" << uid << "processed, error:" << errorMsg;
+      qDebug() << "request for item" << req->id << "processed, error:" << errorMsg;
       delete req;
       if ( errorMsg.isEmpty() )
         return;
       else
         throw ItemRetrieverException( errorMsg );
     } else {
-      qDebug() << "request for item" << uid << "still pending - waiting";
+      qDebug() << "request for item" << req->id << "still pending - waiting";
       mWaitCondition->wait( mLock );
       qDebug() << "continuing";
     }
