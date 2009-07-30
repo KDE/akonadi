@@ -47,20 +47,36 @@ static bool intersect( const QList<typename T::Id> &l1, const QList<T> &l2 )
 AkList::AkList( Scope::SelectionScope scope, bool onlySubscribed ):
     Handler(),
     mScope( scope ),
+    mAncestorDepth( 0 ),
     mOnlySubscribed( onlySubscribed ),
     mIncludeStatistics( false )
 {}
 
-AkList::~AkList() {}
+QStack<Collection> AkList::ancestorsForCollection( const Collection &col )
+{
+  if ( mAncestorDepth <= 0 )
+    return QStack<Collection>();
+  QStack<Collection> ancestors;
+  Collection parent = col.parent();
+  for ( int i = 0; i < mAncestorDepth; ++i ) {
+    if ( !parent.isValid() )
+      break;
+    ancestors.prepend( parent );
+    parent = parent.parent();
+  }
+  return ancestors;
+}
 
-bool AkList::listCollection(const Collection & root, int depth )
+bool AkList::listCollection(const Collection & root, int depth, const QStack<Collection> &ancestors )
 {
   // recursive listing of child collections
   bool childrenFound = false;
   if ( depth > 0 ) {
     Collection::List children = root.children();
+    QStack<Collection> ancestorsAndMe( ancestors );
+    ancestorsAndMe.push( root );
     foreach ( const Collection &col, children ) {
-      if ( listCollection( col, depth - 1 ) )
+      if ( listCollection( col, depth - 1, ancestorsAndMe ) )
         childrenFound = true;
     }
   }
@@ -77,7 +93,7 @@ bool AkList::listCollection(const Collection & root, int depth )
   Collection dummy = root;
   DataStore *db = connection()->storageBackend();
   db->activeCachePolicy( dummy );
-  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden, mIncludeStatistics );
+  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden, mIncludeStatistics, mAncestorDepth, ancestors );
 
   Response response;
   response.setUntagged();
@@ -131,19 +147,26 @@ bool AkList::parseStream()
   }
 
   if ( m_streamParser->hasList() ) { // We got extra options
-    QList<QByteArray> options = m_streamParser->readParenthesizedList();
-    for ( int i = 0; i < options.count() - 1; i += 2 ) {
-      if ( options.at( i ) == "STATISTICS" ) {
-        if ( QString::fromLatin1( options.at( i + 1 ) ).compare( QLatin1String( "true" ), Qt::CaseInsensitive ) == 0 ) {
+    m_streamParser->beginList();
+    while ( !m_streamParser->atListEnd() ) {
+      const QByteArray option = m_streamParser->readString();
+      if ( option == "STATISTICS" ) {
+        if ( m_streamParser->readString() == "true" )
           mIncludeStatistics = true;
-        }
-      } else {
-        return failureResponse( "Invalid option parameter" );
+      }
+      if ( option == "ANCESTORS" ) {
+        const QByteArray argument = m_streamParser->readString();
+        if ( argument == "INF" )
+          mAncestorDepth = INT_MAX;
+        else
+          mAncestorDepth = argument.toInt();
       }
     }
   }
 
   Collection::List collections;
+  QStack<Collection> ancestors;
+
   if ( baseCollection != 0 ) { // not root
     Collection col;
     if ( mScope == Scope::None || mScope == Scope::Uid ) {
@@ -165,15 +188,21 @@ bool AkList::parseStream()
       if ( results.count() != 1 )
         throw HandlerException( QByteArray::number( results.count() ) + " collections found" );
       col = results.first();
-    } else
+    } else {
       throw HandlerException( "WTF" );
+    }
+
     if ( !col.isValid() )
       return failureResponse( "Collection " + QByteArray::number( baseCollection ) + " does not exist" );
-    if ( depth == 0 )
+
+    if ( depth == 0 ) {
       collections << col;
-    else {
+      ancestors = ancestorsForCollection( col );
+    } else {
       collections << col.children();
       --depth;
+      if ( !collections.isEmpty() )
+        ancestors = ancestorsForCollection( collections.first() );
     }
   } else {
     if ( depth != 0 ) {
@@ -184,7 +213,7 @@ bool AkList::parseStream()
   }
 
   foreach ( const Collection &col, collections )
-    listCollection( col, depth );
+    listCollection( col, depth, ancestors );
 
   Response response;
   response.setSuccess();

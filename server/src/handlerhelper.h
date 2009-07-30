@@ -20,11 +20,12 @@
 #ifndef AKONADIHANDLERHELPER_H
 #define AKONADIHANDLERHELPER_H
 
+#include <entities.h>
+
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 #include <QtCore/QString>
-
-#include <entities.h>
+#include <QtCore/QStack>
 
 namespace Akonadi {
 
@@ -94,7 +95,8 @@ class HandlerHelper
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static QByteArray collectionToByteArray( const Collection &col, bool hidden = false, bool includeStatistics = false );
+    static QByteArray collectionToByteArray( const Collection &col, bool hidden = false, bool includeStatistics = false,
+                                             int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>() );
 };
 
 }

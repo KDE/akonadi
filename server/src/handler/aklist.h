@@ -25,6 +25,8 @@
 #include <scope.h>
 #include "akonadiprivate_export.h"
 
+template <typename T> class QStack;
+
 namespace Akonadi {
 
 /**
@@ -57,36 +59,47 @@ namespace Akonadi {
 
   @c depths chooses between recursive (@c INF), flat (1) and local (0, ie. just the
   base collection) listing, 0 indicates the root collection.
+
   The @c filter-list is used to restrict the listing to collection of a specific
-  resource.
+  resource or content type.
+
+  The @c option-list allows to specifiy the response content to some extend:
+  - @c STATISTICS (boolean) allows to include the collection statistics (see Status)
+  - @c ANCESTORDEPTH (numeric) allows you to specifiy the number of ancestor nodes that
+    should be included additionally to the @c parent-id included anyway.
+    Possible values are @c 0 (the default), @c 1 for the direct parent node and @c INF for all,
+    terminating with the root collection.
 
   Response:
   @verbatim
   response = "*" collection-id " " parent-id " ("attribute-list")"
   attribute-list = *(attribute-identifier " " attribute-value)
-  attribute-identifier = "NAME" | "MIMETYPE" | "REMOTEID" | "RESOURCE" | "MESSAGES" | "UNSEEN" | "SIZE" | "custom-attr-identifier
+  attribute-identifier = "NAME" | "MIMETYPE" | "REMOTEID" | "RESOURCE" | "MESSAGES" | "UNSEEN" | "SIZE" | "ANCESTORS" | "custom-attr-identifier
   @endverbatim
 
   The name is encoded as an quoted UTF-8 string. There is no order defined for the
   single responses.
- */
+
+  The ancestors property is encoded as a list of UID/RID pairs.
+*/
 class AKONADIPRIVATE_EXPORT AkList : public Handler
 {
   Q_OBJECT
 
   public:
     AkList( Scope::SelectionScope scope, bool onlySubscribed );
-    ~AkList();
 
     bool parseStream();
 
   private:
-    bool listCollection( const Collection &root, int depth );
+    bool listCollection( const Collection &root, int depth, const QStack<Collection> &ancestors );
+    QStack<Collection> ancestorsForCollection( const Collection &col );
 
   private:
     Resource mResource;
     QList<MimeType::Id> mMimeTypes;
     Scope::SelectionScope mScope;
+    int mAncestorDepth;
     bool mOnlySubscribed;
     bool mIncludeStatistics;
 
