@@ -59,6 +59,8 @@
 
 #include <sqlite3.h>
 
+#include "sqlite_blocking.h"
+
 Q_DECLARE_METATYPE(sqlite3*)
 Q_DECLARE_METATYPE(sqlite3_stmt*)
 
@@ -191,7 +193,7 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
         q->setAt(QSql::AfterLastRow);
         return false;
     }
-    res = sqlite3_step(stmt);
+    res = sqlite3_blocking_step(stmt);
 
     switch(res) {
     case SQLITE_ROW:
@@ -315,8 +317,10 @@ bool QSQLiteResult::prepare(const QString &query)
     setSelect(false);
 
 #if (SQLITE_VERSION_NUMBER >= 3003011)
-    int res = sqlite3_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
-                                   &d->stmt, 0);
+    int res = sqlite3_blocking_prepare16_v2(d->access,
+                                            query.constData(),
+                                            (query.size() + 1) * sizeof(QChar),
+                                            &d->stmt, 0);
 #else
     int res = sqlite3_prepare16(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
                                 &d->stmt, 0);
@@ -469,7 +473,8 @@ QSQLiteDriver::QSQLiteDriver(sqlite3 *connection, QObject *parent)
 
 QSQLiteDriver::~QSQLiteDriver()
 {
-    delete d;
+  qDebug() << "CUSTOM SQLITE3 DRIVER DTOR";
+  delete d;
 }
 
 bool QSQLiteDriver::hasFeature(DriverFeature f) const

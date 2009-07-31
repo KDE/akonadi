@@ -1,4 +1,5 @@
 set(QSqlite_SRCS
+  src/sqlite_blocking.cpp
   src/qsql_sqlite.cpp
   src/smain.cpp
 )

@@ -28,8 +28,8 @@ include(MacroWriteBasicCMakeVersionFile)
 ############### The Akonadi version (used in AkonadiConfig.cmake) ###############
 
 set(AKONADI_VERSION_MAJOR "1")
-set(AKONADI_VERSION_MINOR "2")
-set(AKONADI_VERSION_PATCH "60")
+set(AKONADI_VERSION_MINOR "1")
+set(AKONADI_VERSION_PATCH "95")
 set(AKONADI_VERSION "${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
 
 # If Subversion is installed, and a '.svn' directory is found,
@@ -114,6 +114,11 @@ macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.or
 if(NOT Boost_USE_STATIC_LIBS)
   add_definitions(-DBOOST_DYN_LINK)
 endif(NOT Boost_USE_STATIC_LIBS)
+
+#### Sqlite ####
+set(SQLITE_MIN_VERSION 3.6.16)
+find_package(Sqlite)
+macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" TRUE "" "")
 
 ############### Compilers flags ###############
 
@@ -205,6 +210,10 @@ add_subdirectory(libs)
 if (XSLTPROC_EXECUTABLE)
    add_subdirectory(server)
 endif (XSLTPROC_EXECUTABLE)
+
+if (SQLITE_FOUND)
+   add_subdirectory(qsqlite)
+endif (SQLITE_FOUND)
 
 
 ############### install stuff ###############
