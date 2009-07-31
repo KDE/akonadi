@@ -309,6 +309,7 @@ bool QSQLiteResult::reset(const QString &query)
 
 bool QSQLiteResult::prepare(const QString &query)
 {
+  qDebug() << "[QSQLITE3] Preparing:" << query;
     if (!driver() || !driver()->isOpen() || driver()->isOpenError())
         return false;
 
@@ -456,14 +457,14 @@ QVariant QSQLiteResult::handle() const
 QSQLiteDriver::QSQLiteDriver(QObject * parent)
     : QSqlDriver(parent)
 {
-    qDebug() << "CUSTOM SQLITE3 DRIVER CTOR 1";
+    qDebug() << "[QSQLITE3] CUSTOM SQLITE3 DRIVER CTOR 1";
     d = new QSQLiteDriverPrivate();
 }
 
 QSQLiteDriver::QSQLiteDriver(sqlite3 *connection, QObject *parent)
     : QSqlDriver(parent)
 {
-    qDebug() << "CUSTOM SQLITE3 DRIVER CTOR 2";
+    qDebug() << "[QSQLITE3] CUSTOM SQLITE3 DRIVER CTOR 2";
     d = new QSQLiteDriverPrivate();
     d->access = connection;
     setOpen(true);
@@ -473,7 +474,7 @@ QSQLiteDriver::QSQLiteDriver(sqlite3 *connection, QObject *parent)
 
 QSQLiteDriver::~QSQLiteDriver()
 {
-  qDebug() << "CUSTOM SQLITE3 DRIVER DTOR";
+  qDebug() << "[QSQLITE3] CUSTOM SQLITE3 DRIVER DTOR";
   delete d;
 }
 
