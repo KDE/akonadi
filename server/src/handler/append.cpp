@@ -26,6 +26,7 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
+#include "preprocessormanager.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
@@ -135,6 +136,24 @@ bool Append::commit()
     QList<Part> parts;
     parts.append( part );
 
+    // If we have active preprocessors then we also set the hidden attribute
+    // for the UI and we enqueue the item for preprocessing.
+    bool doPreprocessing = PreprocessorManager::instance()->isActive();
+    qDebug() << "Append handler: doPreprocessing is" << doPreprocessing;
+    if ( doPreprocessing )
+    {
+      Part hiddenAttribute;
+      hiddenAttribute.setName( QLatin1String( "ATR:HIDDEN" ) );
+      hiddenAttribute.setData( QByteArray() );
+      hiddenAttribute.setPimItemId( item.id() );
+      if ( storeInFile )
+      {
+        hiddenAttribute.setDatasize( 0 );
+        hiddenAttribute.setExternal( true ); // the hidden attribute shouldn't be external
+      }
+      parts.append( hiddenAttribute );
+    }
+
     bool ok = db->appendPimItem( parts, mimeType, col, m_dateTime, remote_id, item );
     response.setTag( tag() );
     if ( !ok ) {
@@ -165,6 +184,12 @@ bool Append::commit()
 
     if ( !transaction.commit() )
         return failureResponse( "Unable to commit transaction." );
+
+    if ( doPreprocessing )
+    {
+      // enqueue the item for preprocessing
+      PreprocessorManager::instance()->beginHandleItem( item, db );
+    }
 
     // Date time is always stored in UTC time zone by the server.
     QString datetime = QLocale::c().toString( item.datetime(), QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );

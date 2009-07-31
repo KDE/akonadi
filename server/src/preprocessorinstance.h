@@ -25,13 +25,11 @@
 #ifndef _PREPROCESSORINSTANCE_H_
 #define _PREPROCESSORINSTANCE_H_
 
-#include "entities.h"
-
-#include <QObject>
+#include <QtCore/QObject>
+#include <QtCore/QList>
+#include <QtCore/QDateTime>
 
 class OrgFreedesktopAkonadiPreprocessorInterface;
-
-class QTimer;
 
 namespace Akonadi
 {
@@ -43,32 +41,39 @@ class AgentInstance;
  *
  * Most of the interface of this class is protected and is exposed only
  * to PreprocessorManager (singleton).
+ *
+ * This class is NOT thread safe. The caller is responsable of protecting
+ * agains concurrent access.
  */
 class PreprocessorInstance : public QObject
 {
   friend class PreprocessorManager;
 
   Q_OBJECT
-public:
+
+protected:
 
   /**
    * Create an instance of a PreprocessorInstance descriptor.
    */
   PreprocessorInstance( const QString &id );
 
+public: // This is public only for qDeleteAll() called from PreprocessorManager
+        // ...for some reason couldn't convince gcc to have it as friend...
+
   /**
    * Destroy this instance of the PreprocessorInstance descriptor.
    */
   ~PreprocessorInstance();
 
-protected:
+private:
 
   /**
-   * The internal item queue.
+   * The internal queue if item identifiers.
    * The head item in the queue is the one currently being processed.
    * The other ones are waiting.
    */
-  PimItem::List mItemQueue;
+  QList< qint64 > mItemQueue;
 
   /**
    * Is this processor busy ?
@@ -76,6 +81,14 @@ protected:
    * as the head item in the queue is the one being processed now.
    */
   bool mBusy;
+
+  /**
+   * The date-time at that we have started processing the current
+   * item in the queue. This is used to compute the processing time
+   * and eventually spot a "dead" preprocessor (which takes longer
+   * than N minutes to process an item).
+   */
+  QDateTime mItemProcessingStartDateTime;
 
   /**
    * The id of this preprocessor instance. This is actually
@@ -88,13 +101,7 @@ protected:
    */
   OrgFreedesktopAkonadiPreprocessorInterface * mInterface;
 
-  /**
-   * This is used to timeout a processing on the agent side
-   * which takes *really* too long.
-   */
-  QTimer * mProcessingDeadlineTimer;
-
-public:
+protected:
 
   /**
    * This is called by PreprocessorManager just after the construction
@@ -115,6 +122,13 @@ public:
   }
 
   /**
+   * Returns the time in seconds elapsed since the current item was submitted
+   * to the slave preprocessor instance. If no item is currently being
+   * processed then this function returns -1;
+   */
+  int currentProcessingTime();
+
+  /**
    * Returns the id of this preprocessor. This is actually
    * the AgentInstance identifier but it's not a requirement.
    */
@@ -123,30 +137,58 @@ public:
     return mId;
   }
 
-protected:
+  /**
+   * Returns a pointer to the internal preprocessor instance
+   * item queue. Don't mess with it unless you *really* know
+   * what you're doing. Use enqueueItem() to add an item
+   * to the queue. This method is provided to the PreprocessorManager
+   * to take over the item queue of a dying preprocessor.
+   *
+   * The returned pointer is granted to be non null.
+   */
+  QList< qint64 > * itemQueue()
+  {
+    return &mItemQueue;
+  }
 
   /**
    * This is called by PreprocessorManager to enqueue a PimItem
    * for processing by this preprocessor instance.
    */
-  void enqueueItem( const PimItem &item );
+  void enqueueItem( qint64 itemId );
+
+  /**
+   * Attempts to abort the processing of the current item.
+   * May be called only if isBusy() returns true and an assertion
+   * will remind you of that.
+   * Returns true if the abort request was succesfully sent
+   * (but not necessarily handled by the slave) and false
+   * if the request couldn't be sent for some reason.
+   */
+  bool abortProcessing();
+
+  /**
+   * Attempts to invoke the preprocessor slave restart via
+   * AgentManager. This is the "last resort" action before
+   * starting to ignore the preprocessor (after it misbehaved).
+   */
+  bool invokeRestart();
+
+private:
 
   /**
    * This function starts processing of the first item in mItemQueue.
+   * It's only used internally.
    */
   void processHeadItem();
 
 private Q_SLOTS:
+
   /**
    * This is invoked to signal that the processing of the current (head)
    * item has terminated and the next item should be processed.
    */
   void itemProcessed( qlonglong id );
-
-  /**
-   * Triggered when the processing operation took *really* too much time.
-   */
-  void processingTimedOut();
 
 }; // class PreprocessorInstance
 

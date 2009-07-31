@@ -28,6 +28,9 @@
     text: SQL statement to execute for update
     version attribute: the new schmema version
     abortOnFailure attribute: if true, the update must succeed, otherwise failures are ignored
+
+  Please note: if you're adding a column to the db then you DON'T need to add an update
+  statement here. Add your column to akonadidb.xml instead: it will be added to the db automagically.
 -->
 <updates>
 

@@ -112,6 +112,10 @@ AkonadiServer::AkonadiServer( QObject* parent )
     // Initialize the preprocessor manager
     PreprocessorManager::init();
 
+    // Forcibly disable it if configuration says so
+    if ( settings.value( QLatin1String( "General/DisablePreprocessing" ), false ).toBool() )
+      PreprocessorManager::instance()->setEnabled( false );
+
     if ( settings.value( QLatin1String( "Cache/EnableCleaner" ), true ).toBool() ) {
       mCacheCleaner = new CacheCleaner( this );
       mCacheCleaner->start( QThread::IdlePriority );
@@ -139,6 +143,13 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
              SLOT(serviceOwnerChanged(QString,QString,QString)) );
+
+    // Unhide all the items that are actually hidden.
+    // The hidden flag was probably left out after an (abrupt)
+    // server quit. We don't attempt to resume preprocessing
+    // for the items as we don't actually know at which stage the
+    // operation was interrupted...
+    db->unhideAllPimItems();
 }
 
 AkonadiServer::~AkonadiServer()

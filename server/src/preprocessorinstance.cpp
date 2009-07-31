@@ -26,11 +26,14 @@
 #include "preprocessorinterface.h"
 #include "preprocessormanager.h"
 
+#include "entities.h"
+
+#include "agentcontrolinterface.h"
+#include "agentmanagerinterface.h"
+
 #include "tracer.h"
 
 #include <QtCore/QTimer>
-
-const int gProcessingTimeoutInSecs = 300; // 5 minutes
 
 namespace Akonadi
 {
@@ -40,21 +43,11 @@ PreprocessorInstance::PreprocessorInstance( const QString &id )
 {
   Q_ASSERT( !id.isEmpty() );
 
-  mProcessingDeadlineTimer = new QTimer( this );
-  mProcessingDeadlineTimer->setSingleShot( true );
-  QObject::connect(
-      mProcessingDeadlineTimer,
-      SIGNAL( timeout() ),
-      this,
-      SLOT( processingTimedOut() )
-    );
   mBusy = false;
 }
 
 PreprocessorInstance::~PreprocessorInstance()
 {
-  if( mProcessingDeadlineTimer->isActive() )
-    mProcessingDeadlineTimer->stop();
 }
 
 bool PreprocessorInstance::init()
@@ -92,11 +85,11 @@ bool PreprocessorInstance::init()
   return true;
 }
 
-void PreprocessorInstance::enqueueItem( const PimItem &item )
+void PreprocessorInstance::enqueueItem( qint64 itemId )
 {
-  qDebug() << "PreprocessorInstance::enqueueItem(" << item.id() << ")";
+  qDebug() << "PreprocessorInstance::enqueueItem(" << itemId << ")";
 
-  mItemQueue.append( item );
+  mItemQueue.append( itemId );
 
   // If the preprocessor is already busy processing another item then do nothing.
   if ( mBusy )
@@ -105,9 +98,6 @@ void PreprocessorInstance::enqueueItem( const PimItem &item )
     Q_ASSERT( mItemQueue.count() > 1 );
     return;
   }
-
-  // should have no deadline now
-  Q_ASSERT( !mProcessingDeadlineTimer->isActive() );
 
   // Not busy: handle the item.
   processHeadItem();
@@ -120,31 +110,112 @@ void PreprocessorInstance::processHeadItem()
   // We shouldn't be here with no interface
   Q_ASSERT( mInterface );
 
+  qint64 itemId = mItemQueue.first();
+
+  // Fetch the actual item data (as it may have changed since it was enqueued)
+  // The fetch will hit the cache if the item wasn't changed.
+
+  PimItem actualItem = PimItem::retrieveById( itemId );
+
+  while ( !actualItem.isValid() )
+  {
+    // hum... item is gone ?
+    // FIXME: Signal to the manager that the item is no longer valid!
+    PreprocessorManager::instance()->preProcessorFinishedHandlingItem( this, itemId );
+
+    mItemQueue.removeFirst();
+    if( mItemQueue.count() == 0 )
+    {
+      // nothing more to process for this instance: jump out
+      mBusy = false;
+      return;
+    }
+
+    // try the next one in the queue
+    itemId = mItemQueue.first();
+    actualItem = PimItem::retrieveById( itemId );
+  }
+
+  // Ok.. got a valid item to process: collection and mimetype is known.
+
+  qDebug() << "PreprocessorInstance::processHeadItem(): about to begin processing item " << itemId;
+
   mBusy = true;
 
-  PimItem item = mItemQueue.first();
-
-  qDebug() << "PreprocessorInstance::processHeadItem(): about to begin processing item " << item.id();
-
-  mProcessingDeadlineTimer->start( gProcessingTimeoutInSecs * 1000 );
+  mItemProcessingStartDateTime = QDateTime::currentDateTime();
 
   // The beginProcessItem() D-Bus call is asynchronous (marked with NoReply attribute)
-  mInterface->beginProcessItem( item.id() );
+  mInterface->beginProcessItem( itemId, actualItem.collectionId(), actualItem.mimeType().name() );
 
-  qDebug() << "PreprocessorInstance::processHeadItem(): processing started for item " << item.id();
+  qDebug() << "PreprocessorInstance::processHeadItem(): processing started for item " << itemId;
 
 }
 
-void PreprocessorInstance::processingTimedOut()
+int PreprocessorInstance::currentProcessingTime()
 {
-  qDebug() << "PreprocessorInstance::processingTimedOut!";
+  if( !mBusy )
+    return -1; // nothing being processed
 
-  Q_ASSERT( mProcessingDeadlineTimer->isActive() ); // we should be called from the QTimer here
-
-  mProcessingDeadlineTimer->stop();
-
-  // FIXME: And what now ? Try a ping() on the interface and if it fails then kill the preprocessor ?  
+  return mItemProcessingStartDateTime.secsTo( QDateTime::currentDateTime() );
 }
+
+bool PreprocessorInstance::abortProcessing()
+{
+  Q_ASSERT_X( mBusy, "PreprocessorInstance::abortProcessing()", "You shouldn't call this method when isBusy() returns false" );
+
+  OrgFreedesktopAkonadiAgentControlInterface iface(
+      QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId,
+      QLatin1String( "/" ),
+      QDBusConnection::sessionBus(),
+      this
+    );
+
+  if( !iface.isValid() )
+  {
+    Tracer::self()->warning(
+        QLatin1String( "PreprocessorInstance" ),
+        QString::fromLatin1( "Could not connect to pre-processor instance '%1': %2" )
+          .arg( mId )
+          .arg( iface.lastError().message() )
+      );
+    return false;
+  }
+
+  // We don't check the return value.. as this is a "warning"
+  // The preprocessor manager will check again in a while and eventually
+  // terminate the agent at all...
+  iface.abort();
+
+  return true;
+}
+
+bool PreprocessorInstance::invokeRestart()
+{
+  Q_ASSERT_X( mBusy, "PreprocessorInstance::invokeRestart()", "You shouldn't call this method when isBusy() returns false" );
+
+  OrgFreedesktopAkonadiAgentManagerInterface iface(
+      QLatin1String( "org.freedesktop.Akonadi" ),
+      QLatin1String( "/AgentManager" ),
+      QDBusConnection::sessionBus(),
+      this
+    );
+
+  if( !iface.isValid() )
+  {
+    Tracer::self()->warning(
+        QLatin1String( "PreprocessorInstance" ),
+        QString::fromLatin1( "Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2" )
+          .arg( mId )
+          .arg( iface.lastError().message() )
+      );
+    return false;
+  }
+
+  iface.restartAgentInstance( mId );
+
+  return true;
+}
+
 
 void PreprocessorInstance::itemProcessed( qlonglong id )
 {
@@ -159,32 +230,31 @@ void PreprocessorInstance::itemProcessed( qlonglong id )
           .arg( mId )
           .arg( id )
       );
+    mBusy = false;
     return; // preprocessor is buggy (FIXME: What now ?)
   }
 
   // We should be busy now: this is more likely our fault, not the preprocessor's one.
   Q_ASSERT( mBusy );
 
-  PimItem item = mItemQueue.first();
+  qlonglong itemId = mItemQueue.first();
 
-  if( item.id() != id )
+  if( itemId != id )
   {
     Tracer::self()->warning(
         QLatin1String( "PreprocessorInstance" ),
         QString::fromLatin1( "Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3" )
           .arg( mId )
           .arg( id )
-          .arg( item.id() )
+          .arg( itemId )
       );
 
     // FIXME: And what now ?
   }
 
-  mProcessingDeadlineTimer->stop();
-
   mItemQueue.removeFirst();
 
-  PreprocessorManager::instance()->preProcessorFinishedHandlingItem( this, item );
+  PreprocessorManager::instance()->preProcessorFinishedHandlingItem( this, itemId );
 
   if( mItemQueue.count() < 1 )
   {

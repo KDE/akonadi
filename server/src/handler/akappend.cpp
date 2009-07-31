@@ -27,6 +27,7 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
+#include "preprocessormanager.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
 #include "storage/transaction.h"
@@ -84,6 +85,21 @@ bool Akonadi::AkAppend::commit()
     item.setRev( 0 );
     item.setSize( m_size );
 
+
+    // If we have active preprocessors then we also set the hidden attribute
+    // for the UI and we enqueue the item for preprocessing.
+    bool doPreprocessing = PreprocessorManager::instance()->isActive();
+
+    if ( doPreprocessing )
+    {
+      Part hiddenAttribute;
+      hiddenAttribute.setName( QLatin1String( "ATR:HIDDEN" ) );
+      hiddenAttribute.setData( QByteArray() );
+      hiddenAttribute.setPimItemId( item.id() );
+
+      m_parts.append( hiddenAttribute );
+    }
+
     bool ok = db->appendPimItem( m_parts, mimeType, col, m_dateTime, remote_id, item );
 
     response.setTag( tag() );
@@ -101,6 +117,12 @@ bool Akonadi::AkAppend::commit()
 
     if ( !transaction.commit() )
         return failureResponse( "Unable to commit transaction." );
+
+    if ( doPreprocessing )
+    {
+      // enqueue the item for preprocessing
+      PreprocessorManager::instance()->beginHandleItem( item, db );
+    }
 
     response.setTag( tag() );
     response.setUserDefined();
