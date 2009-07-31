@@ -25,13 +25,14 @@
 #include "akonadi_export.h"
 
 #include <akonadi/agentbase.h>
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 class PreprocessorAdaptor;
 
 namespace Akonadi
 {
 
-class Item;
 class PreprocessorBasePrivate;
 
 /**
@@ -97,17 +98,32 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
     };
 
     /**
-     * This method has to be implement by every preprocessor subclass.
+     * This method must be implemented by every preprocessor subclass.
      *
-     * Returns ProcessingCompleted on success, ProcessingDelayed
+     * It must realize the preprocessing of the item with the specified itemId,
+     * which is actually in the collection with collectionId and has the specified mimetype.
+     *
+     * The Akonadi server will push in for preprocessing any newly created item:
+     * it's your responsability to decide if you want to process the item or not.
+     *
+     * The method should return ProcessingCompleted on success, ProcessingDelayed
      * if processing is implemented asynchronously and
      * ProcessingRefused or ProcessingFailed if the processing
      * didn't complete.
+     *
+     * If your operation is asynchronous then you should also
+     * connect to the abortRequested() signal and handle it
+     * appropriately (as the server MAY abort your async job
+     * if it decides that it's taking too long).
      */
-    virtual ProcessingResult processItem( const Item &item ) = 0;
+    virtual ProcessingResult processItem( Item::Id itemId, Collection::Id collectionId, const QString &mimeType ) = 0;
 
     /**
      * This method must be called if processing is implemented asynchronously.
+     *
+     * You should call it when you have completed the processing
+     * or if an abortRequest() signal arrives (and in this case you
+     * will probably use ProcessingFailed as result).
      *
      * Valid values for @p result are ProcessingCompleted,
      * PocessingRefused and ProcessingFailed. Passing any
@@ -143,7 +159,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      *
      * @note Do not call it manually!
      */
-    void beginProcessItem( qlonglong itemId );
+    void beginProcessItem( qlonglong itemId, qlonglong collectionId, const QString &mimeType );
 
   private:
     // dbus Preprocessor interface
