@@ -22,6 +22,7 @@
 #include <akonadi/control.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/subscriptionjob_p.h>
 
 #include <QtCore/QObject>
@@ -55,7 +56,7 @@ class SubscriptionTest : public QObject
       QCOMPARE( ljob->collections().count(), 1 );
 
       ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
-      ljob->includeUnsubscribed();
+      ljob->fetchScope().setIncludeUnsubscribed( true );
       QVERIFY( ljob->exec() );
       QCOMPARE( ljob->collections().count(), 2 );
 

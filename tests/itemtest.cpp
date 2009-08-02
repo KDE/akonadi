@@ -24,6 +24,7 @@
 #include <akonadi/item.h>
 
 #include <qtest_kde.h>
+#include <collection.h>
 
 QTEST_KDEMAIN( ItemTest, NoGUI )
 
@@ -60,4 +61,33 @@ void ItemTest::testInheritance()
 
   Item b( a );
   b.setFlag( "\\send" );
+}
+
+void ItemTest::testParentCollection ()
+{
+  Item a;
+  QVERIFY( !a.parentCollection().isValid() );
+
+  a.setParentCollection( Collection::root() );
+  QCOMPARE( a.parentCollection(), Collection::root() );
+  Item b = a;
+  QCOMPARE( b.parentCollection(), Collection::root() );
+
+  Item c;
+  c.parentCollection().setRemoteId( "foo" );
+  QCOMPARE( c.parentCollection().remoteId(), QString( "foo" ) );
+  const Item d = c;
+  QCOMPARE( d.parentCollection().remoteId(), QString( "foo" ) );
+
+  const Item e;
+  QVERIFY( !e.parentCollection().isValid() );
+
+  Collection col( 5 );
+  Item f;
+  f.setParentCollection( col );
+  QCOMPARE( f.parentCollection(), col );
+  Item g = f;
+  QCOMPARE( g.parentCollection(), col );
+  b = g;
+  QCOMPARE( b.parentCollection(), col );
 }

@@ -72,7 +72,7 @@ class CollectionCreator : public QObject
           lastJob = new TransactionBeginJob( this );
         for ( int i = 0; i < count; ++i ) {
           Collection col;
-          col.setParent( parent );
+          col.setParentCollection( parent );
           col.setName( QLatin1String("col") + QString::number( ++index ) );
           lastJob = new CollectionCreateJob( col, this );
         }

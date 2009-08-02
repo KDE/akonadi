@@ -19,6 +19,7 @@
 
 #include "entity.h"
 #include "entity_p.h"
+#include "collection.h"
 
 using namespace Akonadi;
 
@@ -124,6 +125,26 @@ Attribute * Entity::attribute(const QByteArray & type) const
 uint qHash( const Akonadi::Entity &entity )
 {
   return qHash( entity.id() );
+}
+
+Collection& Entity::parentCollection()
+{
+  if ( !d_ptr->mParent )
+    d_ptr->mParent = new Collection();
+  return *(d_ptr->mParent);
+}
+
+Collection Entity::parentCollection() const
+{
+  if ( !d_ptr->mParent )
+    d_ptr->mParent = new Collection();
+  return *(d_ptr->mParent);
+}
+
+void Entity::setParentCollection( const Collection &parent )
+{
+  delete d_ptr->mParent;
+  d_ptr->mParent = new Collection( parent );
 }
 
 AKONADI_DEFINE_PRIVATE( Entity )

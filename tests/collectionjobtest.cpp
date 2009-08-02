@@ -42,6 +42,7 @@
 #include "item.h"
 #include "kmime/messageparts.h"
 #include "resourceselectjob_p.h"
+#include "collectionfetchscope.h"
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -109,7 +110,7 @@ void CollectionJobTest::testTopLevelList( )
   res1ColId = col.id(); // for the next test
   QVERIFY( res1ColId > 0 );
   QVERIFY( CollectionUtils::isResource( col ) );
-  QCOMPARE( col.parent(), Collection::root().id() );
+  QCOMPARE( col.parentCollection(), Collection::root() );
   QCOMPARE( col.resource(), QLatin1String("akonadi_knut_resource_0") );
 
   QVERIFY( findCol( list, "res2" ).isValid() );
@@ -153,14 +154,14 @@ void CollectionJobTest::testFolderList( )
 
   col = findCol( list, "foo" );
   QVERIFY( col.isValid() );
-  QCOMPARE( col.parent(), res1ColId );
+  QCOMPARE( col.parentCollection().id(), res1ColId );
   QVERIFY( CollectionUtils::isFolder( col ) );
   contentTypes << "message/rfc822" << "text/calendar" << "text/directory"
                << "application/octet-stream" << "inode/directory";
   compareLists( col.contentMimeTypes(), contentTypes );
 
   QVERIFY( findCol( list, "bar" ).isValid() );
-  QCOMPARE( findCol( list, "bar" ).parent(), col.id() );
+  QCOMPARE( findCol( list, "bar" ).parentCollection(), col );
   QVERIFY( findCol( list, "bla" ).isValid() );
 }
 
@@ -196,12 +197,12 @@ void CollectionJobTest::testResourceFolderList()
 {
   // non-existing resource
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
-  job->setResource( "i_dont_exist" );
+  job->fetchScope().setResource( "i_dont_exist" );
   QVERIFY( !job->exec() );
 
   // recursive listing of all collections of an existing resource
   job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  job->setResource( "akonadi_knut_resource_0" );
+  job->fetchScope().setResource( "akonadi_knut_resource_0" );
   QVERIFY( job->exec() );
 
   Collection::List list = job->collections();
@@ -214,7 +215,7 @@ void CollectionJobTest::testResourceFolderList()
 
   // limited listing of a resource
   job = new CollectionFetchJob( Collection( fooId ), CollectionFetchJob::Recursive );
-  job->setResource( "akonadi_knut_resource_0" );
+  job->fetchScope().setResource( "akonadi_knut_resource_0" );
   QVERIFY( job->exec() );
 
   list = job->collections();
@@ -226,7 +227,7 @@ void CollectionJobTest::testResourceFolderList()
 void CollectionJobTest::testMimeTypeFilter()
 {
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  job->setContentMimeTypes( QStringList() << "message/rfc822" );
+  job->fetchScope().setContentMimeTypes( QStringList() << "message/rfc822" );
   AKVERIFYEXEC( job );
 
   Collection::List list = job->collections();
@@ -237,7 +238,7 @@ void CollectionJobTest::testMimeTypeFilter()
 
   // limited listing of a resource
   job = new CollectionFetchJob( Collection( fooId ), CollectionFetchJob::Recursive );
-  job->setContentMimeTypes( QStringList() << "message/rfc822" );
+  job->fetchScope().setContentMimeTypes( QStringList() << "message/rfc822" );
   AKVERIFYEXEC( job );
 
   list = job->collections();
@@ -252,10 +253,10 @@ void CollectionJobTest::testCreateDeleteFolder_data()
   Collection col;
   QTest::newRow("empty") << col << false;
   col.setName( "new folder" );
-  col.setParent( res3ColId );
+  col.parentCollection().setId( res3ColId );
   QTest::newRow("simple") << col << true;
 
-  col.setParent( res3ColId );
+  col.parentCollection().setId( res3ColId );
   col.setName( "foo" );
   QTest::newRow( "existing in different resource" ) << col << true;
 
@@ -275,29 +276,29 @@ void CollectionJobTest::testCreateDeleteFolder_data()
 
   col = Collection();
   col.setName( "New Folder" );
-  col.setParent( searchColId );
+  col.parentCollection().setId( searchColId );
   QTest::newRow( "search folder" ) << col << false;
 
-  col.setParent( res2ColId );
+  col.parentCollection().setId( res2ColId );
   col.setName( "foo2" );
   QTest::newRow( "already existing" ) << col << false;
 
   col.setName( "Bla" );
-  col.setParent( 2 );
+  col.parentCollection().setId( 2 );
   QTest::newRow( "already existing with different case" ) << col << true;
 
   CollectionPathResolver *resolver = new CollectionPathResolver( "res2/foo2", this );
   QVERIFY( resolver->exec() );
-  col.setParent( resolver->collection() );
+  col.parentCollection().setId( resolver->collection() );
   col.setName( "new folder" );
   QTest::newRow( "parent noinferior" ) << col << false;
 
-  col.setParent( INT_MAX );
+  col.parentCollection().setId( INT_MAX );
   QTest::newRow( "missing parent" ) << col << false;
 
   col = Collection();
   col.setName( "rid parent" );
-  col.setParentRemoteId( "8" );
+  col.parentCollection().setRemoteId( "8" );
   QTest::newRow( "rid parent" ) << col << false; // missing resource context
 }
 
@@ -314,11 +315,11 @@ void CollectionJobTest::testCreateDeleteFolder()
   Collection createdCol = createJob->collection();
   QVERIFY( createdCol.isValid() );
   QCOMPARE( createdCol.name(), collection.name() );
-  QCOMPARE( createdCol.parent(), collection.parent() );
+  QCOMPARE( createdCol.parentCollection(), collection.parentCollection() );
   QCOMPARE( createdCol.remoteId(), collection.remoteId() );
   QCOMPARE( createdCol.cachePolicy(), collection.cachePolicy() );
 
-  CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::FirstLevel, this );
+  CollectionFetchJob *listJob = new CollectionFetchJob( collection.parentCollection(), CollectionFetchJob::FirstLevel, this );
   AKVERIFYEXEC( listJob );
   Collection listedCol = findCol( listJob->collections(), collection.name() );
   QCOMPARE( listedCol, createdCol );
@@ -327,8 +328,8 @@ void CollectionJobTest::testCreateDeleteFolder()
 
   // fetch parent to compare inherited collection properties
   Collection parentCol = Collection::root();
-  if ( collection.parent() > 0 ) {
-    CollectionFetchJob *listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Base, this );
+  if ( collection.parentCollection().isValid() ) {
+    CollectionFetchJob *listJob = new CollectionFetchJob( collection.parentCollection(), CollectionFetchJob::Base, this );
     AKVERIFYEXEC( listJob );
     QCOMPARE( listJob->collections().count(), 1 );
     parentCol = listJob->collections().first();
@@ -347,7 +348,7 @@ void CollectionJobTest::testCreateDeleteFolder()
   CollectionDeleteJob *delJob = new CollectionDeleteJob( createdCol, this );
   AKVERIFYEXEC( delJob );
 
-  listJob = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::FirstLevel, this );
+  listJob = new CollectionFetchJob( collection.parentCollection(), CollectionFetchJob::FirstLevel, this );
   AKVERIFYEXEC( listJob );
   QVERIFY( !findCol( listJob->collections(), collection.name() ).isValid() );
 }
@@ -494,7 +495,7 @@ void CollectionJobTest::testIllegalModify()
 {
   // non-existing collection
   Collection col( INT_MAX );
-  col.setParent( res1ColId );
+  col.parentCollection().setId( res1ColId );
   CollectionModifyJob *mod = new CollectionModifyJob( col, this );
   QVERIFY( !mod->exec() );
 
@@ -511,7 +512,7 @@ void CollectionJobTest::testUtf8CollectionName()
 
   // create collection
   Collection col;
-  col.setParent( res3ColId );
+  col.parentCollection().setId( res3ColId );
   col.setName( folderName );
   CollectionCreateJob *create = new CollectionCreateJob( col, this );
   QVERIFY( create->exec() );
@@ -582,7 +583,7 @@ void CollectionJobTest::testRidFetch()
   col.setRemoteId( "10" );
 
   CollectionFetchJob *job = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
-  job->setResource( "akonadi_knut_resource_0" );
+  job->fetchScope().setResource( "akonadi_knut_resource_0" );
   QVERIFY( job->exec() );
   QCOMPARE( job->collections().count(), 1 );
   col = job->collections().first();
@@ -594,7 +595,7 @@ void CollectionJobTest::testRidCreateDelete()
 {
   Collection collection;
   collection.setName( "rid create" );
-  collection.setParentRemoteId( "8" );
+  collection.parentCollection().setRemoteId( "8" );
   collection.setRemoteId( "MY REMOTE ID" );
 
   ResourceSelectJob *resSel = new ResourceSelectJob( "akonadi_knut_resource_2" );

@@ -89,7 +89,7 @@ void CollectionAttributeTest::testAttributes()
   attr->deserialize( attr1 );
   Collection col;
   col.setName( "attribute test" );
-  col.setParent( parentColId );
+  col.setParentCollection( Collection( parentColId ) );
   col.addAttribute( attr );
   CollectionCreateJob *create = new CollectionCreateJob( col, this );
   QVERIFY( create->exec() );

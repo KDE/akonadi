@@ -35,6 +35,7 @@
 
 #include <QCoreApplication>
 #include <QtCore/QTimer>
+#include "collectionfetchscope.h"
 
 using namespace Akonadi;
 
@@ -60,8 +61,8 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
 {
   Q_Q( CollectionModel );
   // What kind of change is it ?
-  Collection::Id oldParentId = collections.value( collection.id() ).parent();
-  Collection::Id newParentId = collection.parent();
+  Collection::Id oldParentId = collections.value( collection.id() ).parentCollection().id();
+  Collection::Id newParentId = collection.parentCollection().id();
   if ( newParentId !=  oldParentId && oldParentId >= 0 ) { // It's a move
     removeRowFromModel( indexForId( collections[ collection.id() ].id() ).row(), indexForId( oldParentId ) );
     Collection newParent;
@@ -70,8 +71,8 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
     else
       newParent = collections.value( newParentId );
     CollectionFetchJob *job = new CollectionFetchJob( newParent, CollectionFetchJob::Recursive, session );
-    job->includeUnsubscribed( unsubscribed );
-    job->includeStatistics( fetchStatistics );
+    job->fetchScope().setIncludeUnsubscribed( unsubscribed );
+    job->fetchScope().setIncludeStatistics( fetchStatistics );
     q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                 q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
     q->connect( job, SIGNAL( result( KJob* ) ),
@@ -80,8 +81,8 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
   }
   else { // It's a simple change
     CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::Base, session );
-    job->includeUnsubscribed( unsubscribed );
-    job->includeStatistics( fetchStatistics );
+    job->fetchScope().setIncludeUnsubscribed( unsubscribed );
+    job->fetchScope().setIncludeStatistics( fetchStatistics );
     q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                 q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
     q->connect( job, SIGNAL( result( KJob* ) ),
@@ -158,7 +159,7 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
       continue;
     }
     // ... otherwise we add it to the set of collections we need to handle.
-    m_newChildCollections[ col.parent() ].append( col.id() );
+    m_newChildCollections[ col.parentCollection().id() ].append( col.id() );
     m_newCollections.insert( col.id(), col );
   }
 
@@ -233,7 +234,7 @@ QModelIndex CollectionModelPrivate::indexForId( Collection::Id id, int column ) 
   if ( !collections.contains( id ) )
     return QModelIndex();
 
-  Collection::Id parentId = collections.value( id ).parent();
+  Collection::Id parentId = collections.value( id ).parentCollection().id();
   // check if parent still exist or if this is an orphan collection
   if ( parentId != Collection::root().id() && !collections.contains( parentId ) )
     return QModelIndex();
@@ -324,8 +325,8 @@ void CollectionModelPrivate::startFirstListJob()
 
   // start a list job
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, session );
-  job->includeUnsubscribed( unsubscribed );
-  job->includeStatistics( fetchStatistics );
+  job->fetchScope().setIncludeUnsubscribed( unsubscribed );
+  job->fetchScope().setIncludeStatistics( fetchStatistics );
   q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
               q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
   q->connect( job, SIGNAL(result(KJob*)), q, SLOT(listDone(KJob*)) );

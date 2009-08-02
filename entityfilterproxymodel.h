@@ -136,6 +136,8 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
     virtual QMimeData* mimeData( const QModelIndexList & indexes ) const;
     virtual QStringList mimeTypes() const;
 
+    virtual bool hasChildren(const QModelIndex& parent = QModelIndex()) const;
+
     /**
       Reimplemented to handle the AmazingCompletionRole.
     */

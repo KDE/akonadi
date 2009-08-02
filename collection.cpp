@@ -117,31 +117,27 @@ void Collection::setContentMimeTypes( const QStringList & types )
 
 Collection::Id Collection::parent() const
 {
-  return d_func()->parentId;
+  return parentCollection().id();
 }
 
 void Collection::setParent( Id parent )
 {
-  Q_D( Collection );
-  d->parentId = parent;
+  parentCollection().setId( parent );
 }
 
 void Collection::setParent(const Collection & collection)
 {
-  Q_D( Collection );
-  d->parentId = collection.id();
-  d->parentRemoteId = collection.remoteId();
+  setParentCollection( collection );
 }
 
 QString Collection::parentRemoteId() const
 {
-  return d_func()->parentRemoteId;
+  return parentCollection().remoteId();
 }
 
 void Collection::setParentRemoteId(const QString & remoteParent)
 {
-  Q_D( Collection );
-  d->parentRemoteId = remoteParent;
+  parentCollection().setRemoteId( remoteParent );
 }
 
 KUrl Collection::url() const
@@ -201,10 +197,8 @@ QDebug operator <<( QDebug d, const Akonadi::Collection &collection )
              << "   remote ID:" << collection.remoteId() << endl
              << "   name:" << collection.name() << endl
              << "   url:" << collection.url() << endl
-             << "   parent ID:" << collection.parent()
-             << "   parent remote ID: " << collection.parentRemoteId() << endl
+             << "   parent:" << collection.parentCollection().id() << collection.parentCollection().remoteId() << endl
              << "   resource:" << collection.resource() << endl
-             << "   mime type:" << collection.mimeType() << endl
              << "   rights:" << collection.rights() << endl
              << "   contents mime type:" << collection.contentMimeTypes() << endl
              << "   " << collection.cachePolicy() << endl

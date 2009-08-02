@@ -113,7 +113,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job )
     nextJob = new CollectionFetchJob( mCurrentNode, CollectionFetchJob::FirstLevel, q );
   } else {
     Collection col = list->collections().first();
-    mCurrentNode = Collection( col.parent() );
+    mCurrentNode = col.parentCollection();
     mPathParts.prepend( col.name() );
     if ( mCurrentNode == Collection::root() ) {
       q->emitResult();

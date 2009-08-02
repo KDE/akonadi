@@ -480,6 +480,11 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
 
   Q_D( const EntityTreeModel );
 
+  if ( parent.column() > 0 )
+  {
+    return QModelIndex();    
+  }
+  
   //TODO: don't use column count here? Use some d-> func.
   if ( column >= columnCount() || column < 0 )
     return QModelIndex();
@@ -531,9 +536,9 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
       return createIndex( 0, 0, reinterpret_cast<void *>( d->m_rootNode ) );
   }
 
-  const int row = d->indexOf( d->m_childEntities.value( collection.parent()), collection.id() );
+  const int row = d->indexOf( d->m_childEntities.value( collection.parentCollection().id()), collection.id() );
 
-  Node *parentNode = d->m_childEntities.value( collection.parent() ).at( row );
+  Node *parentNode = d->m_childEntities.value( collection.parentCollection().id() ).at( row );
 
   return createIndex( row, 0, reinterpret_cast<void*>( parentNode ) );
 }
@@ -687,6 +692,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
 bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
 {
+  Q_D(const EntityTreeModel);
   const Item item = parent.data( ItemRole ).value<Item>();
 
   if ( item.isValid() ) {
@@ -695,6 +701,25 @@ bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
     return false;
   } else {
     // but collections can...
+    const Collection::Id colId = parent.data( CollectionIdRole ).toULongLong();
+
+    // But the root collection can't...
+    if ( Collection::root().id() == colId )
+    {
+      return false;
+    }
+    
+    foreach (Node *node, d->m_childEntities.value( colId ) )
+    {
+      if ( Node::Item == node->type )
+      {
+        // Only try to fetch more from a collection if we don't already have items in it.
+        // Otherwise we'd spend all the time listing items in collections.
+        // This means that collections which don't contain items get a lot of item fetch jobs started on them.
+        // Will fix that later.
+        return false;
+      }
+    }
     return true;
   }
 
@@ -749,10 +774,14 @@ bool EntityTreeModel::match(const Collection &collection, const QVariant &value,
 QModelIndexList EntityTreeModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags ) const
 {  
   if (role != AmazingCompletionRole)
-    return Akonadi::EntityTreeModel::match(start, role, value, hits, flags);
+    return QAbstractItemModel::match(start, role, value, hits, flags);
 
   // Try to match names, and email addresses.
   QModelIndexList list;
+
+  if (role < 0 || !start.isValid() || !value.isValid())
+    return list;
+  
   const int column = 0;
   int row = start.row();
   QModelIndex parentIdx = start.parent();
@@ -829,12 +858,12 @@ QModelIndex EntityTreeModel::indexForCollection( const Collection &collection ) 
 
   // TODO: will this work for collection::root while showing it?
 
-  const int row = d->indexOf( d->m_childEntities.value( collection.parent() ), collection.id() );
+  const int row = d->indexOf( d->m_childEntities.value( collection.parentCollection().id() ), collection.id() );
 
   if ( row < 0 )
     return QModelIndex();
 
-  Node *node = d->m_childEntities.value( collection.parent() ).at( row );
+  Node *node = d->m_childEntities.value( collection.parentCollection().id() ).at( row );
 
   return createIndex( row, 0, reinterpret_cast<void*>( node ) );
 }

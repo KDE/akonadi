@@ -23,6 +23,7 @@
 
 #include "agentbase_p.h"
 #include "item.h"
+#include "collection.h"
 #include "preprocessoradaptor.h"
 
 #include <kdebug.h>
@@ -53,7 +54,7 @@ class PreprocessorBasePrivate : public AgentBasePrivate
     qlonglong mDelayedProcessingItemId;
 };
 
-}
+} // namespace Akonadi
 
 using namespace Akonadi;
 
@@ -78,28 +79,30 @@ void PreprocessorBase::terminateProcessing( ProcessingResult result )
   emit itemProcessed( d->mDelayedProcessingItemId );
 }
 
-void PreprocessorBase::beginProcessItem( qlonglong id )
+void PreprocessorBase::beginProcessItem( qlonglong itemId, qlonglong collectionId, const QString &mimeType )
 {
   Q_D( PreprocessorBase );
 
-  kDebug() << "PreprocessorBase: about to process item " << id;
+  kDebug() << "PreprocessorBase: about to process item " << itemId << " in collection " << collectionId << " and mimetype " << mimeType;
 
-  switch( processItem( Item( id ) ) )
+  switch( processItem( static_cast< Item::Id >( itemId ), static_cast< Collection::Id >( collectionId ), mimeType ) )
   {
     case ProcessingFailed:
     case ProcessingRefused:
     case ProcessingCompleted:
-      kDebug() << "PreprocessorBase: item processed, emitting signal (" << id << ")";
+      kDebug() << "PreprocessorBase: item processed, emitting signal (" << itemId << ")";
 
-      emit itemProcessed( id );
+      // TODO: Handle the different status codes appropriately
 
-      kDebug() << "PreprocessorBase: item processed, signal emitted (" << id << ")";
+      emit itemProcessed( itemId );
+
+      kDebug() << "PreprocessorBase: item processed, signal emitted (" << itemId << ")";
     break;
     case ProcessingDelayed:
-      kDebug() << "PreprocessorBase: item processing delayed (" << id << ")";
+      kDebug() << "PreprocessorBase: item processing delayed (" << itemId << ")";
 
       d->mInDelayedProcessing = true;
-      d->mDelayedProcessingItemId = id;
+      d->mDelayedProcessingItemId = itemId;
     break;
   }
 }

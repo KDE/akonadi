@@ -111,7 +111,7 @@ class CollectionMoveTest : public QObject
       QCOMPARE( list.count(), 1 );
       Collection col = list.first();
       QCOMPARE( col.name(), source.name() );
-      QCOMPARE( col.parent(), destination.id() );
+      QCOMPARE( col.parentCollection(), destination );
 
       // list destination and check if everything is still there
       ljob = new CollectionFetchJob( destination, CollectionFetchJob::Recursive );
@@ -137,7 +137,7 @@ class CollectionMoveTest : public QObject
       }
 
       // cleanup
-      mod = new CollectionMoveJob( col, Collection( source.parent() ), this );
+      mod = new CollectionMoveJob( col, source.parentCollection(), this );
       AKVERIFYEXEC( mod );
     }
 };

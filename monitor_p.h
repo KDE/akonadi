@@ -97,7 +97,7 @@ class MonitorPrivate
     void emitItemNotification( const NotificationMessage &msg, const Item &item = Item(),
                                const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
     void emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
-                                     const Collection &par = Collection() );
+                                     const Collection &par = Collection(), const Collection &dest = Collection() );
 
     bool fetchCollection;
     bool fetchCollectionStatistics;

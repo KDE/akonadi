@@ -26,6 +26,7 @@
 #include <QTest>
 
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
 
@@ -37,7 +38,7 @@ void MailDir20PercentAsRead::runTest() {
   timer.start();
   qDebug() << "  Marking 20% of messages as read.";
   CollectionFetchJob *clj2 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj2->setResource( currentInstance.identifier() );
+  clj2->fetchScope().setResource( currentInstance.identifier() );
   clj2->exec();
   Collection::List list2 = clj2->collections();
   foreach ( const Collection &collection, list2 ) {

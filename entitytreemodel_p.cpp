@@ -26,6 +26,7 @@
 #include <akonadi/agentmanager.h>
 #include <akonadi/agenttype.h>
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/collectionstatisticsjob.h>
 #include <akonadi/entitydisplayattribute.h>
@@ -81,9 +82,9 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
 {
   Q_Q( EntityTreeModel );
   CollectionFetchJob *job = new CollectionFetchJob( collection, type, m_session );
-  job->includeUnsubscribed( m_includeUnsubscribed );
-  job->includeStatistics( m_includeStatistics );
-  job->setContentMimeTypes( m_monitor->mimeTypesMonitored() );
+  job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
+  job->fetchScope().setIncludeStatistics( m_includeStatistics );
+  job->fetchScope().setContentMimeTypes( m_monitor->mimeTypesMonitored() );
   q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
               q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
   q->connect( job, SIGNAL( result( KJob* ) ),
@@ -107,7 +108,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     while (it.hasNext())
     {
       const Collection col = it.next();
-      const Collection::Id parentId = col.parent();
+      const Collection::Id parentId = col.parentCollection().id();
       const Collection::Id colId = col.id();
 
       if ( m_collections.contains( parentId ) ) {
@@ -128,23 +129,23 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
           {
             Q_ASSERT("Something went very wrong" == "false");
           }
-          m_pendingChildCollections.remove( colId );          
+          m_pendingChildCollections.remove( colId );
         }
-        
+
         it.remove();
       } else {
         m_pendingCollections.insert( colId, col );
         m_pendingChildCollections[ parentId ].append( colId );
       }
     }
-    
+
     if ( _collections.isEmpty() )
       break; // forever
 
     if( _collections.size() == collectionsSize )
     {
       // Didn't process any collections this iteration.
-      // Persist them until the next time collectionsFetched recieves collections.
+      // Persist them until the next time collectionsFetched receives collections.
       kWarning() << "Some collections could not be inserted into the model yet.";
       break; // forever
     }
@@ -155,42 +156,46 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 {
   Q_Q( EntityTreeModel );
   QObject *job = q->sender();
-  if ( job ) {
-    const Collection::Id collectionId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
-    Item::List itemsToInsert;
-    Item::List itemsToUpdate;
 
-    const Collection collection = m_collections.value( collectionId );
+  Q_ASSERT( job );
 
-    const QList<Node*> collectionEntities = m_childEntities.value( collectionId );
-    foreach ( const Item &item, items ) {
-      if ( indexOf( collectionEntities, item.id() ) != -1 ) {
-        itemsToUpdate << item;
-      } else {
-        if ( m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedItem( item ) ) {
-          itemsToInsert << item;
-        }
+  const Collection::Id collectionId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
+  Item::List itemsToInsert;
+  Item::List itemsToUpdate;
+
+  const Collection collection = m_collections.value( collectionId );
+
+  Q_ASSERT( collection.isValid() );
+
+  const QList<Node*> collectionEntities = m_childEntities.value( collectionId );
+  foreach ( const Item &item, items ) {
+    if ( indexOf( collectionEntities, item.id() ) != -1 ) {
+      itemsToUpdate << item;
+    } else {
+      if ( m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedItem( item ) ) {
+        itemsToInsert << item;
       }
-    }
-    if ( itemsToInsert.size() > 0 ) {
-      const int startRow = m_childEntities.value( collectionId ).size();
-
-      const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collectionId ) );
-      q->beginInsertRows( parentIndex, startRow, startRow + items.size() - 1 );
-      foreach ( const Item &item, items ) {
-        Item::Id itemId = item.id();
-        m_items.insert( itemId, item );
-
-        Node *node = new Node;
-        node->id = itemId;
-        node->parent = collectionId;
-        node->type = Node::Item;
-
-        m_childEntities[ collectionId ].append( node );
-      }
-      q->endInsertRows();
     }
   }
+  if ( itemsToInsert.size() > 0 ) {
+    const int startRow = m_childEntities.value( collectionId ).size();
+
+    const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collectionId ) );
+    q->beginInsertRows( parentIndex, startRow, startRow + items.size() - 1 );
+    foreach ( const Item &item, items ) {
+      Item::Id itemId = item.id();
+      m_items.insert( itemId, item );
+
+      Node *node = new Node;
+      node->id = itemId;
+      node->parent = collectionId;
+      node->type = Node::Item;
+
+      m_childEntities[ collectionId ].append( node );
+    }
+    q->endInsertRows();
+  }
+
 }
 
 void EntityTreeModelPrivate::monitoredMimeTypeChanged( const QString & mimeType, bool monitored )
@@ -205,9 +210,9 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection& collec
 {
   Q_Q( EntityTreeModel );
   // Unlike fetchCollections, this method fetches collections by traversing up, not down.
-  CollectionFetchJob *job = new CollectionFetchJob( Collection( collection.parent() ), CollectionFetchJob::Base, m_session );
-  job->includeUnsubscribed( m_includeUnsubscribed );
-  job->includeStatistics( m_includeStatistics );
+  CollectionFetchJob *job = new CollectionFetchJob( collection.parentCollection(), CollectionFetchJob::Base, m_session );
+  job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
+  job->fetchScope().setIncludeStatistics( m_includeStatistics );
   q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
               q, SLOT( ancestorsFetched( const Akonadi::Collection::List& ) ) );
   q->connect( job, SIGNAL( result( KJob* ) ),
@@ -227,9 +232,9 @@ void EntityTreeModelPrivate::ancestorsFetched(const Akonadi::Collection::List& c
     Q_ASSERT(!m_collections.contains(collection.id()));
 
     m_ancestors.prepend(collection);
-    if (m_collections.contains(collection.parent()))
+    if (m_collections.contains(collection.parentCollection().id()))
     {
-      m_ancestors.prepend( m_collections.value(collection.parent()) );
+      m_ancestors.prepend( m_collections.value(collection.parentCollection().id()) );
       insertAncestors(m_ancestors);
     } else {
       retrieveAncestors(collection);
@@ -253,7 +258,7 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
 {
   Q_ASSERT(collection.isValid());
   Q_ASSERT(parent.isValid());
-  
+
   Q_Q( EntityTreeModel );
   // TODO: Use order attribute of parent if available
   // Otherwise prepend collections and append items. Currently this prepends all collections.
@@ -286,32 +291,44 @@ void EntityTreeModelPrivate::insertPendingCollection( const Akonadi::Collection&
   m_pendingCollections.remove( collection.id() );
 
   if (colIt.findPrevious(collection) || colIt.findNext(collection))
-  {    
+  {
     colIt.remove();
   }
 
   Q_ASSERT(m_collections.contains(parent.id()));
-  
+
   QList<Collection::Id> pendingChildCollectionsToInsert = m_pendingChildCollections.value(collection.id());
 
   QList<Collection::Id>::const_iterator it;
   const QList<Collection::Id>::const_iterator begin = pendingChildCollectionsToInsert.constBegin();
   const QList<Collection::Id>::const_iterator end = pendingChildCollectionsToInsert.constEnd();
-  
+
   for ( it = begin; it != end; ++it )
   {
     insertPendingCollection(m_pendingCollections.value( *it ), collection, colIt);
   }
-  
+
   m_pendingChildCollections.remove( parent.id() );
 }
 
 void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
 {
+  // If the resource is removed while populating the model with it, we might still
+  // get some monitor signals. These stale/out-of-order signals can't be completely eliminated
+  // in the akonadi server due to implementation details, so we also handle such signals in the model silently
+  // in all the monior slots.
+  // Stephen Kelly, 28, July 2009
+
+  // This is currently temporarily blocked by a uninitialized value bug in the server.
+//   if ( !m_collections.contains( parent.id() ) )
+//   {
+//     kWarning() << "Got a stale notification for a collection whose parent was already removed." << collection.id() << collection.remoteId();
+//     return;
+//   }
 
   // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
   // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
-  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() || !m_mimeChecker.isWantedCollection( collection ) )
+  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedCollection( collection ) )
     return;
 
   if (!m_collections.contains(parent.id()))
@@ -324,21 +341,26 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
   }
 
   insertCollection(collection, parent);
-  
+
 }
 
 void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collection& collection )
 {
-  Q_Q( EntityTreeModel );
-
-
-  // This may be a signal for a collection we've already removed by removing its ancestor.
-  if (!m_collections.contains(collection.id()))
+  if ( !m_collections.contains( collection.parent() ) )
     return;
 
-  const int row = indexOf( m_childEntities.value( collection.parent() ), collection.id() );
-    
-  const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.parent() ) );
+  Q_Q( EntityTreeModel );
+
+  // This may be a signal for a collection we've already removed by removing its ancestor.
+  if ( !m_collections.contains( collection.id() ) )
+  {
+    kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
+    return;
+  }
+
+  const int row = indexOf( m_childEntities.value( collection.parentCollection().id() ), collection.id() );
+
+  const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.parentCollection().id() ) );
 
   q->beginRemoveRows( parentIndex, row, row );
 
@@ -346,14 +368,14 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   removeChildEntities(collection.id());
 
   // Remove deleted collection from its parent.
-  m_childEntities[ collection.parent() ].removeAt( row );
+  m_childEntities[ collection.parentCollection().id() ].removeAt( row );
 
   q->endRemoveRows();
 }
 
 void EntityTreeModelPrivate::removeChildEntities(Collection::Id colId)
 {
-  
+
   QList<Node*>::const_iterator it;
   QList<Node*> childList = m_childEntities.value(colId);
   const QList<Node*>::const_iterator begin = childList.constBegin();
@@ -375,6 +397,12 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
                                                        const Akonadi::Collection& sourceCollection,
                                                        const Akonadi::Collection& destCollection )
 {
+  if ( !m_collections.contains( collection.id() ) )
+  {
+    kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
+    return;
+  }
+
   Q_Q( EntityTreeModel );
 
   const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), collection.id() );
@@ -395,10 +423,16 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 {
   Q_Q( EntityTreeModel );
 
-  if ( m_collections.contains( collection.id() ) )
-    m_collections[ collection.id() ] = collection;
+  if ( !m_collections.contains( collection.id() ) )
+  {
+    kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
+    return;
+  }
+
+  m_collections[ collection.id() ] = collection;
 
   const QModelIndex index = q->indexForCollection( collection );
+  Q_ASSERT( index.isValid() );
   q->dataChanged( index, index );
 }
 
@@ -421,7 +455,15 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
 {
   Q_Q( EntityTreeModel );
 
-  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() || !m_mimeChecker.isWantedItem( item ) )
+  if ( !m_collections.contains( collection.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
+    return;
+  }
+
+  Q_ASSERT( m_collections.contains( collection.id() ) );
+
+  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
 
   const int row = m_childEntities.value( collection.id() ).size();
@@ -445,7 +487,17 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
   const Collection::List parents = getParentCollections( item );
   if ( parents.isEmpty() )
     return;
+
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+
+  // TODO: Iterate over all (virtual) collections.
   const Collection collection = parents.first();
+
+  Q_ASSERT( m_collections.contains( collection.id() ) );
 
   const int row = indexOf( m_childEntities.value( collection.id() ), item.id() );
 
@@ -460,25 +512,49 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
 void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
 {
   Q_Q( EntityTreeModel );
+
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+
   m_items[ item.id() ] = item;
 
   const QModelIndexList indexes = q->indexesForItem( item );
   foreach ( const QModelIndex &index, indexes )
-    q->dataChanged( index, index );
+  {
+
+    if( !index.isValid() )
+    {
+      kWarning() << "item has invalid index:" << item.id() << item.remoteId();
+    } else {
+      q->dataChanged( index, index );
+    }
+  }
 }
 
 void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
-                                                 const Akonadi::Collection& sourceItem,
-                                                 const Akonadi::Collection& destItem )
+                                                 const Akonadi::Collection& sourceCollection,
+                                                 const Akonadi::Collection& destCollection )
 {
   Q_Q( EntityTreeModel );
 
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+
+  Q_ASSERT( m_collections.contains( sourceCollection.id() ) );
+  Q_ASSERT( m_collections.contains( destCollection.id() ) );
+
   const Item::Id itemId = item.id();
 
-  const int srcRow = indexOf( m_childEntities.value( sourceItem.id() ), itemId );
+  const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), itemId );
 
-  const QModelIndex srcIndex = q->indexForCollection( sourceItem );
-  const QModelIndex destIndex = q->indexForCollection( destItem );
+  const QModelIndex srcIndex = q->indexForCollection( sourceCollection );
+  const QModelIndex destIndex = q->indexForCollection( destCollection );
 
   // Where should it go? Always append items and prepend collections and reorganize them with separate reactions to Attributes?
 
@@ -495,7 +571,14 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
 {
   Q_Q( EntityTreeModel );
 
-  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() || !m_mimeChecker.isWantedItem( item ) )
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+  Q_ASSERT( m_collections.contains( collection.id() ) );
+
+  if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
 
   const int row = m_childEntities.value( collection.id() ).size();
@@ -515,6 +598,13 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
 {
   Q_Q( EntityTreeModel );
 
+  if ( !m_items.contains( item.id() ) )
+  {
+    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+    return;
+  }
+  Q_ASSERT( m_collections.contains( collection.id() ) );
+
   const int row = indexOf( m_childEntities.value( collection.id() ), item.id() );
 
   const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.id() ) );
@@ -528,7 +618,7 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 {
   Q_ASSERT(m_pendingCollections.isEmpty());
   Q_ASSERT(m_pendingChildCollections.isEmpty());
-  
+
   if ( job->error() ) {
     kWarning() << "Job error: " << job->errorString() << endl;
   }
@@ -645,7 +735,7 @@ Collection::List EntityTreeModelPrivate::getParentCollections( const Item &item 
 
 Collection EntityTreeModelPrivate::getParentCollection( const Collection &collection ) const
 {
-  return m_collections.value( collection.parent() );
+  return m_collections.value( collection.parentCollection().id() );
 }
 
 Entity::Id EntityTreeModelPrivate::childAt( Collection::Id id, int position, bool *ok ) const

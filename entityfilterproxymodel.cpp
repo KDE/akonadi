@@ -237,11 +237,34 @@ QModelIndexList EntityFilterProxyModel::match(const QModelIndex& start, int role
 int EntityFilterProxyModel::columnCount(const QModelIndex &parent) const
 {
   Q_D(const EntityFilterProxyModel);
-//   return QSortFilterProxyModel::columnCount(parent);
+  
   QVariant var = sourceModel()->data(parent, EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerSet));
   if( !var.isValid() )
     return 0;
   return var.toInt();
+}
+
+bool EntityFilterProxyModel::hasChildren(const QModelIndex &parent) const
+{
+  if ( !parent.isValid() )
+    return sourceModel()->hasChildren(parent);
+  
+  Q_D(const EntityFilterProxyModel);
+  if ( EntityTreeModel::ItemListHeaders == d->m_headerSet)
+    return false;
+
+  if ( EntityTreeModel::CollectionTreeHeaders == d->m_headerSet )
+  {
+    QModelIndex childIndex = parent.child( 0, 0 );
+    while ( childIndex.isValid() )
+    {
+      Collection col = childIndex.data( EntityTreeModel::CollectionRole ).value<Collection>();
+      if (col.isValid())
+        return true;
+      childIndex = childIndex.sibling( childIndex.row() + 1, childIndex.column() );
+    }
+  }
+  return false;
 }
 
 #include "entityfilterproxymodel.moc"

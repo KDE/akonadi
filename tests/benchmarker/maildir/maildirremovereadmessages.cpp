@@ -25,6 +25,7 @@
 #include <QTest>
 
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 
@@ -36,7 +37,7 @@ void MailDirRemoveReadMessages::runTest() {
   timer.start();
   qDebug() << "  Removing read messages from every folder.";
   CollectionFetchJob *clj4 = new CollectionFetchJob( Collection::root() , CollectionFetchJob::Recursive );
-  clj4->setResource( currentInstance.identifier() );
+  clj4->fetchScope().setResource( currentInstance.identifier() );
   clj4->exec();
   Collection::List list4 = clj4->collections();
   foreach ( const Collection &collection, list4 ) {

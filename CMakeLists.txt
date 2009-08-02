@@ -57,6 +57,7 @@ set( akonadikde_LIB_SRC
   collectionfilterproxymodel.cpp
   collectiongeneralpropertiespage.cpp
   collectionfetchjob.cpp
+  collectionfetchscope.cpp
   collectionmodel.cpp
   collectionmodel_p.cpp
   collectionmodifyjob.cpp
@@ -198,6 +199,7 @@ install( FILES
   collectiondialog.h
   collectionfilterproxymodel.h
   collectionfetchjob.h
+  collectionfetchscope.h
   collectionmodel.h
   collectionmodifyjob.h
   collectionpropertiesdialog.h

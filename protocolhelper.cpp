@@ -100,7 +100,7 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
   }
 
   collection = Collection( colId );
-  collection.setParent( parentId );
+  collection.setParentCollection( Collection( parentId ) );
 
   // attributes
   QVarLengthArray<QByteArray,16> attributes;
