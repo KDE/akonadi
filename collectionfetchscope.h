@@ -106,7 +106,7 @@ class AKONADI_EXPORT CollectionFetchScope
     bool includeUnubscribed() const;
 
     /**
-     * Sets wether unsubscribed collections should be included in the collection listing.
+     * Sets whether unsubscribed collections should be included in the collection listing.
      *
      * @param include @c true to include unsubscribed collections, @c false otherwise (the default).
      */

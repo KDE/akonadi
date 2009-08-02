@@ -97,8 +97,8 @@ class CollectionSync : public TransactionSequence
     void retrievalDone();
 
     /**
-      Indicate whether the resource supplies collections with hierachical or global
-      remote identifiers. @c false by default.
+      Indicate whether the resource supplies collections with hierarchical or
+      global remote identifiers. @c false by default.
       Must be called before the first call to setRemoteCollections().
     */
     void setHierarchicalRemoteIds( bool hierarchical );

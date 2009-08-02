@@ -65,7 +65,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
     enum ProcessingResult
     {
       /**
-       * Processing completed succesfully for this item.
+       * Processing completed successfully for this item.
        * The Akonadi server will push in a new item when it's available.
        */
       ProcessingCompleted,
@@ -104,7 +104,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      * which is actually in the collection with collectionId and has the specified mimetype.
      *
      * The Akonadi server will push in for preprocessing any newly created item:
-     * it's your responsability to decide if you want to process the item or not.
+     * it's your responsibility to decide if you want to process the item or not.
      *
      * The method should return ProcessingCompleted on success, ProcessingDelayed
      * if processing is implemented asynchronously and
