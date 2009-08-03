@@ -148,7 +148,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
             insertPendingCollection( pendingCollection, col, it );
             m_pendingCollections.remove(id);
           }
-          if ( !it.findNext(col) && it.findPrevious(col))
+          if ( !it.findNext(col) && !it.findPrevious(col) )
           {
             Q_ASSERT("Something went very wrong" == "false");
           }
@@ -158,7 +158,8 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
         it.remove();
       } else {
         m_pendingCollections.insert( colId, col );
-        m_pendingChildCollections[ parentId ].append( colId );
+        if ( !m_pendingChildCollections.value( parentId ).contains( colId ) )
+          m_pendingChildCollections[ parentId ].append( colId );
       }
     }
 
