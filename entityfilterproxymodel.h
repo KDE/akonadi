@@ -153,7 +153,7 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
   private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( EntityFilterProxyModel )
-    EntityFilterProxyModelPrivate *d_ptr;
+    EntityFilterProxyModelPrivate * const d_ptr;
     //@endcond
 };
 

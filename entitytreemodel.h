@@ -301,7 +301,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
   private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( EntityTreeModel )
-    EntityTreeModelPrivate *d_ptr;
+    EntityTreeModelPrivate * const d_ptr;
 
     // Make these private, they shouldn't be called by applications
     virtual bool insertRows( int , int, const QModelIndex& = QModelIndex() );

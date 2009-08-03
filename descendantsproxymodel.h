@@ -73,7 +73,7 @@ class AKONADI_EXPORT DescendantsProxyModel : public KDescendantsProxyModel
   private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(DescendantsProxyModel)
-    DescendantsProxyModelPrivate *d_ptr;
+    DescendantsProxyModelPrivate * const d_ptr;
     //@endcond
 };
 
