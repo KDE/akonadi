@@ -77,6 +77,7 @@ set( akonadikde_LIB_SRC
   control.cpp
   descendantsproxymodel.cpp
   entitydisplayattribute.cpp
+  entityhiddenattribute.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entityfilterproxymodel.cpp
@@ -208,6 +209,7 @@ install( FILES
   descendantsproxymodel.h
   entity.h
   entitydisplayattribute.h
+  entityhiddenattribute.h
   entitytreemodel.h
   entityfilterproxymodel.h
   entitytreeviewstatesaver.h
