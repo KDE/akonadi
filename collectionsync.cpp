@@ -96,6 +96,7 @@ class CollectionSync::Private
       deliveryDone( false )
     {
       localRoot = new LocalNode( Collection::root() );
+      localRoot->processed = true; // never try to delete that one
       localUidMap.insert( localRoot->collection.id(), localRoot );
       if ( !hierarchicalRIDs )
         localRidMap.insert( QString(), localRoot );
