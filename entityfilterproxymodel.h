@@ -138,6 +138,8 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
 
     virtual bool hasChildren(const QModelIndex& parent = QModelIndex()) const;
 
+    virtual bool canFetchMore(const QModelIndex &parent) const;
+
     /**
       Reimplemented to handle the AmazingCompletionRole.
     */

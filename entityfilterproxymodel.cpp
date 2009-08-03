@@ -267,5 +267,13 @@ bool EntityFilterProxyModel::hasChildren(const QModelIndex &parent) const
   return false;
 }
 
+bool EntityFilterProxyModel::canFetchMore( const QModelIndex &parent ) const
+{
+  Q_D(const EntityFilterProxyModel);
+  if ( EntityTreeModel::CollectionTreeHeaders == d->m_headerSet )
+    return false;
+  return QSortFilterProxyModel::canFetchMore(parent);
+}
+
 #include "entityfilterproxymodel.moc"
 
