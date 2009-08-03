@@ -70,17 +70,24 @@ class ProtocolHelperTest : public QObject
       QTest::addColumn<QByteArray>( "input" );
       QTest::addColumn<Collection>( "collection" );
 
-      QByteArray b = "3 2 (REMOTEID \"r3\" ANCESTORS ((2 \"r2\") (1 \"r1\") (0 \"\")))";
-      Collection c;
-      c.setId( 3 );
-      c.setRemoteId( "r3" );
-      c.parentCollection().setId( 2 );
-      c.parentCollection().setRemoteId( "r2" );
-      c.parentCollection().parentCollection().setId( 1 );
-      c.parentCollection().parentCollection().setRemoteId( "r1" );
-      c.parentCollection().parentCollection().setParentCollection( Collection::root() );
+      const QByteArray b1 = "2 1 (REMOTEID \"r2\" NAME \"n2\")";
+      Collection c1;
+      c1.setId( 2 );
+      c1.setRemoteId( "r2" );
+      c1.parentCollection().setId( 1 );
+      c1.setName( "n2" );
+      QTest::newRow( "no ancestors" ) << b1 << c1;
 
-      QTest::newRow( "ancestors" ) << b << c;
+      const QByteArray b2 = "3 2 (REMOTEID \"r3\" ANCESTORS ((2 \"r2\") (1 \"r1\") (0 \"\")))";
+      Collection c2;
+      c2.setId( 3 );
+      c2.setRemoteId( "r3" );
+      c2.parentCollection().setId( 2 );
+      c2.parentCollection().setRemoteId( "r2" );
+      c2.parentCollection().parentCollection().setId( 1 );
+      c2.parentCollection().parentCollection().setRemoteId( "r1" );
+      c2.parentCollection().parentCollection().setParentCollection( Collection::root() );
+      QTest::newRow( "ancestors" ) << b2 << c2;
     }
 
     void testCollectionParsing()
@@ -90,6 +97,8 @@ class ProtocolHelperTest : public QObject
 
       Collection parsedCollection;
       ProtocolHelper::parseCollection( input, parsedCollection );
+
+      QCOMPARE( parsedCollection.name(), collection.name() );
 
       while ( collection.isValid() || parsedCollection.isValid() ) {
         QCOMPARE( parsedCollection.id(), collection.id() );
