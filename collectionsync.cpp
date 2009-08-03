@@ -40,7 +40,6 @@ struct LocalNode
 {
   LocalNode( const Collection &col ) :
     collection( col ),
-    parentNode( 0 ),
     processed( false )
   {}
 
@@ -51,7 +50,6 @@ struct LocalNode
   }
 
   Collection collection;
-  LocalNode *parentNode; // ### really needed?
   QList<LocalNode*> childNodes;
   QHash<QString, LocalNode*> childRidMap;
   /** When using hierarchical RIDs we attach a list of not yet processable remote nodes to
@@ -129,9 +127,9 @@ class CollectionSync::Private
 
       // set our parent and add ourselves as child
       if ( localUidMap.contains( col.parentCollection().id() ) ) {
-        node->parentNode = localUidMap.value( col.parentCollection().id() );
-        node->parentNode->childNodes.append( node );
-        node->parentNode->childRidMap.insert( node->collection.remoteId(), node );
+        LocalNode* parentNode = localUidMap.value( col.parentCollection().id() );
+        parentNode->childNodes.append( node );
+        parentNode->childRidMap.insert( node->collection.remoteId(), node );
       } else {
         localPendingCollections[ col.parentCollection().id() ].append( col.id() );
       }
