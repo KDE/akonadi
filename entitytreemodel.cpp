@@ -271,7 +271,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
-  if (ParentCollection == role)
+  if (ParentCollectionRole == role)
   {
     const Collection parentCollection = d->m_collections.value( node->parent );
     Q_ASSERT(parentCollection.isValid());

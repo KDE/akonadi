@@ -100,7 +100,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       RemoteIdRole,                           ///< The remoteId of the entity
       CollectionChildOrderRole,               ///< Ordered list of child items if available
       AmazingCompletionRole,                  ///< Role used to implement amazing completion
-      ParentCollection,                       ///< The parent collection of the entity
+      ParentCollectionRole,                   ///< The parent collection of the entity
       ColumnCountRole,                        ///< @internal Used by proxies to determine the number of columns for a header group.
       UserRole = Qt::UserRole + 1000,         ///< Role for user extensions.
       TerminalUserRole = 10000                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
