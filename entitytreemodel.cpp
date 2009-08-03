@@ -266,12 +266,12 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 
   if (ColumnCountRole == role)
     return getColumnCount(headerSet);
-  
+
   Q_D( const EntityTreeModel );
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
-  if (ParentCollection == role)
+  if (ParentCollectionRole == role)
   {
     const Collection parentCollection = d->m_collections.value( node->parent );
     Q_ASSERT(parentCollection.isValid());
@@ -482,9 +482,9 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
 
   if ( parent.column() > 0 )
   {
-    return QModelIndex();    
+    return QModelIndex();
   }
-  
+
   //TODO: don't use column count here? Use some d-> func.
   if ( column >= columnCount() || column < 0 )
     return QModelIndex();
@@ -708,7 +708,7 @@ bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
     {
       return false;
     }
-    
+
     foreach (Node *node, d->m_childEntities.value( colId ) )
     {
       if ( Node::Item == node->type )
@@ -731,6 +731,9 @@ bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
 void EntityTreeModel::fetchMore( const QModelIndex & parent )
 {
   Q_D( EntityTreeModel );
+
+  if (!canFetchMore(parent))
+    return;
 
   if ( d->m_itemPopulation == ImmediatePopulation )
     // Nothing to do. The items are already in the model.
@@ -772,7 +775,7 @@ bool EntityTreeModel::match(const Collection &collection, const QVariant &value,
 }
 
 QModelIndexList EntityTreeModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags ) const
-{  
+{
   if (role != AmazingCompletionRole)
     return QAbstractItemModel::match(start, role, value, hits, flags);
 
@@ -781,7 +784,7 @@ QModelIndexList EntityTreeModel::match(const QModelIndex& start, int role, const
 
   if (role < 0 || !start.isValid() || !value.isValid())
     return list;
-  
+
   const int column = 0;
   int row = start.row();
   QModelIndex parentIdx = start.parent();

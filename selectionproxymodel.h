@@ -77,7 +77,7 @@ class AKONADI_EXPORT SelectionProxyModel : public KSelectionProxyModel
   private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( SelectionProxyModel )
-    SelectionProxyModelPrivate *d_ptr;
+    SelectionProxyModelPrivate * const d_ptr;
     //@endcond
 };
 

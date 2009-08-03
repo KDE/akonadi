@@ -154,26 +154,43 @@ void CollectionFetchJob::doStart()
       Q_ASSERT( false );
   }
 
+  QList<QByteArray> filter;
   if ( !d->mScope.resource().isEmpty() ) {
-    command += "RESOURCE \"";
-    command += d->mScope.resource().toUtf8();
-    command += '"';
+    filter.append( "RESOURCE" );
+    filter.append( d->mScope.resource().toUtf8() );
   }
 
   if ( !d->mScope.contentMimeTypes().isEmpty() ) {
-    command += " MIMETYPE (";
+    filter.append( "MIMETYPE" );
     QList<QByteArray> mts;
     foreach ( const QString &mt, d->mScope.contentMimeTypes() )
       mts.append( mt.toUtf8() );
-    command += ImapParser::join( mts, " " );
-    command += ')';
+    filter.append( "(" + ImapParser::join( mts, " " ) + ")" );
   }
 
+  QList<QByteArray> options;
   if ( d->mScope.includeStatistics() ) {
-    command += ") (STATISTICS true";
+    options.append( "STATISTICS" );
+    options.append( "true" );
+  }
+  if ( d->mScope.ancestorRetrieval() != CollectionFetchScope::None ) {
+    options.append( "ANCESTORS" );
+    switch ( d->mScope.ancestorRetrieval() ) {
+      case CollectionFetchScope::None:
+        options.append( "0" );
+        break;
+      case CollectionFetchScope::Parent:
+        options.append( "1" );
+        break;
+      case CollectionFetchScope::All:
+        options.append( "INF" );
+        break;
+      default:
+        Q_ASSERT( false );
+    }
   }
 
-  command += ")\n";
+  command += ImapParser::join( filter, " " ) + ") (" + ImapParser::join( options, " " ) + ")\n";
   d->writeData( command );
 }
 

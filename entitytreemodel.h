@@ -100,7 +100,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       RemoteIdRole,                           ///< The remoteId of the entity
       CollectionChildOrderRole,               ///< Ordered list of child items if available
       AmazingCompletionRole,                  ///< Role used to implement amazing completion
-      ParentCollection,                       ///< The parent collection of the entity
+      ParentCollectionRole,                   ///< The parent collection of the entity
       ColumnCountRole,                        ///< @internal Used by proxies to determine the number of columns for a header group.
       UserRole = Qt::UserRole + 1000,         ///< Role for user extensions.
       TerminalUserRole = 10000                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
@@ -292,7 +292,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     virtual QVariant getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
 
     virtual int getColumnCount(int headerSet) const;
-    
+
     /**
      * Removes the rows from @p start to @p end from @parent
      */
@@ -301,7 +301,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
   private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( EntityTreeModel )
-    EntityTreeModelPrivate *d_ptr;
+    EntityTreeModelPrivate * const d_ptr;
 
     // Make these private, they shouldn't be called by applications
     virtual bool insertRows( int , int, const QModelIndex& = QModelIndex() );

@@ -139,6 +139,25 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       CachePolicy policy;
       ProtocolHelper::parseCachePolicy( value, policy );
       collection.setCachePolicy( policy );
+    } else if ( key == "ANCESTORS" ) {
+      QList<QByteArray> ancestors;
+      ImapParser::parseParenthesizedList( value, ancestors );
+      Collection* currentCol = &collection;
+      foreach ( const QByteArray uidRidPair, ancestors ) {
+        QList<QByteArray> parentIds;
+        ImapParser::parseParenthesizedList( uidRidPair, parentIds );
+        if ( parentIds.size() != 2 )
+          break;
+        const Collection::Id uid = parentIds.at( 0 ).toLongLong();
+        const QString rid = QString::fromUtf8( parentIds.at( 1 ) );
+        if ( uid == Collection::root().id() ) {
+          currentCol->setParentCollection( Collection::root() );
+          break;
+        }
+        currentCol->parentCollection().setId( uid );
+        currentCol->parentCollection().setRemoteId( rid );
+        currentCol = &currentCol->parentCollection();
+      }
     } else {
       Attribute* attr = AttributeFactory::createAttribute( key );
       Q_ASSERT( attr );

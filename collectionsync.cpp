@@ -40,7 +40,6 @@ struct LocalNode
 {
   LocalNode( const Collection &col ) :
     collection( col ),
-    parentNode( 0 ),
     processed( false )
   {}
 
@@ -51,7 +50,6 @@ struct LocalNode
   }
 
   Collection collection;
-  LocalNode *parentNode; // ### really needed?
   QList<LocalNode*> childNodes;
   QHash<QString, LocalNode*> childRidMap;
   /** When using hierarchical RIDs we attach a list of not yet processable remote nodes to
@@ -96,6 +94,7 @@ class CollectionSync::Private
       deliveryDone( false )
     {
       localRoot = new LocalNode( Collection::root() );
+      localRoot->processed = true; // never try to delete that one
       localUidMap.insert( localRoot->collection.id(), localRoot );
       if ( !hierarchicalRIDs )
         localRidMap.insert( QString(), localRoot );
@@ -128,8 +127,9 @@ class CollectionSync::Private
 
       // set our parent and add ourselves as child
       if ( localUidMap.contains( col.parentCollection().id() ) ) {
-        node->parentNode = localUidMap.value( col.parentCollection().id() );
-        node->parentNode->childNodes.append( node );
+        LocalNode* parentNode = localUidMap.value( col.parentCollection().id() );
+        parentNode->childNodes.append( node );
+        parentNode->childRidMap.insert( node->collection.remoteId(), node );
       } else {
         localPendingCollections[ col.parentCollection().id() ].append( col.id() );
       }
@@ -184,12 +184,14 @@ class CollectionSync::Private
           return localRidMap.value( collection.remoteId() );
         return 0;
       } else {
+        if ( collection.id() == Collection::root().id() || collection.remoteId() == Collection::root().remoteId() )
+          return localRoot;
         LocalNode *localParent = 0;
         if ( collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty() ) {
           kWarning() << "Remote collection without valid parent found: " << collection;
           return 0;
         }
-        if ( collection.parentCollection() == Collection::root() )
+        if ( collection.parentCollection().id() == Collection::root().id() || collection.parentCollection().remoteId() == Collection::root().remoteId() )
           localParent = localRoot;
         else
           localParent = findMatchingLocalNode( collection.parentCollection() );
@@ -361,6 +363,7 @@ class CollectionSync::Private
       if ( incremental )
         return;
       Collection::List cols = findUnprocessedLocalCollections( localRoot );
+      deleteLocalCollections( cols );
     }
 
     /**
