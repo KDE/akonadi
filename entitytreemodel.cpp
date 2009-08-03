@@ -732,6 +732,9 @@ void EntityTreeModel::fetchMore( const QModelIndex & parent )
 {
   Q_D( EntityTreeModel );
 
+  if (!canFetchMore(parent))
+    return;
+
   if ( d->m_itemPopulation == ImmediatePopulation )
     // Nothing to do. The items are already in the model.
     return;
