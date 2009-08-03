@@ -29,6 +29,11 @@
 
 #include "entitytreemodel.h"
 
+namespace Akonadi
+{
+class ItemFetchJob;
+}
+
 struct Node
 {
   Akonadi::Entity::Id id;
@@ -95,7 +100,10 @@ public:
   void insertCollection(const Akonadi::Collection &collection, const Akonadi::Collection& parent );
   void insertPendingCollection(const Akonadi::Collection &collection, const Akonadi::Collection& parent, QMutableListIterator<Collection> &it );
   void insertAncestors(const Akonadi::Collection::List &collectionList );
-  
+
+  ItemFetchJob* getItemFetchJob(const Collection &parent, ItemFetchScope scope) const;
+  ItemFetchJob* getItemFetchJob(const Item &item, ItemFetchScope scope) const;
+  void runItemFetchJob(ItemFetchJob* itemFetchJob, const Collection &parent) const;
 
   QHash<Collection::Id, Collection> m_collections;
   QHash<Entity::Id, Item> m_items;

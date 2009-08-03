@@ -61,21 +61,44 @@ int EntityTreeModelPrivate::indexOf( const QList<Node*> &nodes, Entity::Id id ) 
   return -1;
 }
 
+ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Collection &parent, ItemFetchScope scope ) const
+{
+  ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( parent, m_session );
+  itemJob->setFetchScope( scope );
+  return itemJob;
+}
+
+ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Item &item, ItemFetchScope scope ) const
+{
+  ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( item, m_session );
+  itemJob->setFetchScope( scope );
+  return itemJob;
+}
+
+void EntityTreeModelPrivate::runItemFetchJob(ItemFetchJob *itemFetchJob, const Collection &parent) const
+{
+  Q_Q( const EntityTreeModel );
+
+  // TODO: This hack is probably not needed anymore. Remove it.
+  // ### HACK: itemsReceivedFromJob needs to know which collection items were added to.
+  // That is not provided by akonadi, so we attach it in a property.
+  itemFetchJob->setProperty( ItemFetchCollectionId(), QVariant( parent.id() ) );
+
+  q->connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
+              q, SLOT( itemsFetched( const Akonadi::Item::List& ) ) );
+  q->connect( itemFetchJob, SIGNAL( result( KJob* ) ),
+              q, SLOT( fetchJobDone( KJob* ) ) );
+
+}
+
 void EntityTreeModelPrivate::fetchItems( const Collection &parent )
 {
   Q_Q( EntityTreeModel );
-//   kDebug() << parent.remoteId();
-  Akonadi::ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( parent, m_session );
-  itemJob->setFetchScope( m_monitor->itemFetchScope() );
 
-  // ### HACK: itemsReceivedFromJob needs to know which collection items were added to.
-  // That is not provided by akonadi, so we attach it in a property.
-  itemJob->setProperty( ItemFetchCollectionId(), QVariant( parent.id() ) );
+  // TODO: Use a more specific fetch scope to get only the envelope for mails etc.
+  ItemFetchJob *itemJob = getItemFetchJob(parent, m_monitor->itemFetchScope() );
 
-  q->connect( itemJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
-              q, SLOT( itemsFetched( const Akonadi::Item::List& ) ) );
-  q->connect( itemJob, SIGNAL( result( KJob* ) ),
-              q, SLOT( fetchJobDone( KJob* ) ) );
+  runItemFetchJob(itemJob, parent);
 }
 
 void EntityTreeModelPrivate::fetchCollections( const Collection &collection, CollectionFetchJob::Type type )
