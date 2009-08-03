@@ -130,6 +130,7 @@ class CollectionSync::Private
       if ( localUidMap.contains( col.parentCollection().id() ) ) {
         node->parentNode = localUidMap.value( col.parentCollection().id() );
         node->parentNode->childNodes.append( node );
+        node->parentNode->childRidMap.insert( node->collection.remoteId(), node );
       } else {
         localPendingCollections[ col.parentCollection().id() ].append( col.id() );
       }
@@ -184,12 +185,14 @@ class CollectionSync::Private
           return localRidMap.value( collection.remoteId() );
         return 0;
       } else {
+        if ( collection.id() == Collection::root().id() || collection.remoteId() == Collection::root().remoteId() )
+          return localRoot;
         LocalNode *localParent = 0;
         if ( collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty() ) {
           kWarning() << "Remote collection without valid parent found: " << collection;
           return 0;
         }
-        if ( collection.parentCollection() == Collection::root() )
+        if ( collection.parentCollection().id() == Collection::root().id() || collection.parentCollection().remoteId() == Collection::root().remoteId() )
           localParent = localRoot;
         else
           localParent = findMatchingLocalNode( collection.parentCollection() );
@@ -361,6 +364,7 @@ class CollectionSync::Private
       if ( incremental )
         return;
       Collection::List cols = findUnprocessedLocalCollections( localRoot );
+      deleteLocalCollections( cols );
     }
 
     /**

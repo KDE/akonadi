@@ -47,6 +47,7 @@ class CollectionSyncTest : public QObject
     {
       CollectionFetchJob *fetch = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
       fetch->fetchScope().setResource( res );
+      fetch->fetchScope().setAncestorRetrieval( CollectionFetchScope::All );
       Q_ASSERT( fetch->exec() );
       Q_ASSERT( !fetch->collections().isEmpty() );
       return fetch->collections();
@@ -61,9 +62,9 @@ class CollectionSyncTest : public QObject
       QTest::newRow( "akonadi_knut_resource_1 global RID" ) << false << "akonadi_knut_resource_1";
       QTest::newRow( "akonadi_knut_resource_2 global RID" ) << false << "akonadi_knut_resource_2";
 
-/*      QTest::newRow( "akonadi_knut_resource_0 hierarchical RID" ) << true << "akonadi_knut_resource_0";
+      QTest::newRow( "akonadi_knut_resource_0 hierarchical RID" ) << true << "akonadi_knut_resource_0";
       QTest::newRow( "akonadi_knut_resource_1 hierarchical RID" ) << true << "akonadi_knut_resource_1";
-      QTest::newRow( "akonadi_knut_resource_2 hierarchical RID" ) << true << "akonadi_knut_resource_2";*/
+      QTest::newRow( "akonadi_knut_resource_2 hierarchical RID" ) << true << "akonadi_knut_resource_2";
     }
 
   private slots:

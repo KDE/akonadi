@@ -64,6 +64,42 @@ class ProtocolHelperTest : public QObject
       }
       QCOMPARE( didThrow, shouldThrow );
     }
+
+    void testCollectionParsing_data()
+    {
+      QTest::addColumn<QByteArray>( "input" );
+      QTest::addColumn<Collection>( "collection" );
+
+      QByteArray b = "3 2 (REMOTEID \"r3\" ANCESTORS ((2 \"r2\") (1 \"r1\") (0 \"\")))";
+      Collection c;
+      c.setId( 3 );
+      c.setRemoteId( "r3" );
+      c.parentCollection().setId( 2 );
+      c.parentCollection().setRemoteId( "r2" );
+      c.parentCollection().parentCollection().setId( 1 );
+      c.parentCollection().parentCollection().setRemoteId( "r1" );
+      c.parentCollection().parentCollection().setParentCollection( Collection::root() );
+
+      QTest::newRow( "ancestors" ) << b << c;
+    }
+
+    void testCollectionParsing()
+    {
+      QFETCH( QByteArray, input );
+      QFETCH( Collection, collection );
+
+      Collection parsedCollection;
+      ProtocolHelper::parseCollection( input, parsedCollection );
+
+      while ( collection.isValid() || parsedCollection.isValid() ) {
+        QCOMPARE( parsedCollection.id(), collection.id() );
+        QCOMPARE( parsedCollection.remoteId(), collection.remoteId() );
+        const Collection p1( parsedCollection.parentCollection() );
+        const Collection p2( collection.parentCollection() );
+        parsedCollection = p1;
+        collection = p2;
+      }
+    }
 };
 
 QTEST_KDEMAIN( ProtocolHelperTest, NoGUI )
