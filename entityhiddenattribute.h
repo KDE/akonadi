@@ -1,8 +1,5 @@
 /******************************************************************************
  *
- *  File : entityhiddenattribute.h
- *  Creation date : Sat 1 Aug 2009 02:07:50
- *
  *  Copyright (c) 2009 Szymon Stefanek <s.stefanek at gmail dot com>
  *
  *  This library is free software; you can redistribute it and/or modify it
@@ -22,18 +19,17 @@
  *
  *****************************************************************************/
 
-#ifndef _ENTITYHIDDENATTRIBUTE_H_
-#define _ENTITYHIDDENATTRIBUTE_H_
+#ifndef AKONADI_ENTITYHIDDENATTRIBUTE_H
+#define AKONADI_ENTITYHIDDENATTRIBUTE_H
 
 #include <akonadi/attribute.h>
-
 
 namespace Akonadi {
 
 /**
- * @short Attribute signaling that an entity should be hidden in the UI
+ * @short Attribute signalling that an entity should be hidden in the UI
  *
- * This class rappresents the attribute of all hidden items. The hidden
+ * This class represents the attribute of all hidden items. The hidden
  * items shouldn't be displayed in UI applications (unless in some kind
  * of "debug" mode).
  *
@@ -45,7 +41,6 @@ namespace Akonadi {
 class AKONADI_EXPORT EntityHiddenAttribute : public Attribute
 {
   public:
-
     /**
      * Creates a new entity hidden attribute.
      */
@@ -56,8 +51,6 @@ class AKONADI_EXPORT EntityHiddenAttribute : public Attribute
      */
     ~EntityHiddenAttribute();
 
-  public:
-
     /**
      * Reimplemented from Attribute
      */
@@ -66,7 +59,7 @@ class AKONADI_EXPORT EntityHiddenAttribute : public Attribute
     /**
      * Reimplemented from Attribute
      */
-    EntityHiddenAttribute * clone() const;
+    EntityHiddenAttribute* clone() const;
 
     /**
      * Reimplemented from Attribute
@@ -78,8 +71,13 @@ class AKONADI_EXPORT EntityHiddenAttribute : public Attribute
      */
     void deserialize( const QByteArray &data );
 
-}; // EntityHiddenAttribute
+  private:
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+    //@endcond
+};
 
-} // namespace Akonadi
+}
 
-#endif //!_ENTITYHIDDENATTRIBUTE_H_
+#endif
