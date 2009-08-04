@@ -30,7 +30,12 @@
 class <xsl:value-of select="$className"/>::Private : public QSharedData
 {
   public:
-    Private() : QSharedData() {}
+    Private() : QSharedData()
+    <xsl:for-each select="column[@name != 'id']">
+      , <xsl:value-of select="@name"/>( <xsl:value-of select="@type"/>() )
+      , <xsl:value-of select="@name"/>_changed( false )
+    </xsl:for-each>
+    {}
     Private( const Private &amp; other ) : QSharedData( other )
     {
       <xsl:for-each select="column[@name != 'id']">
@@ -88,9 +93,6 @@ void <xsl:value-of select="$className"/>::Private::addToCache( const <xsl:value-
 <xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>() : Entity(),
   d( new Private )
 {
-<xsl:for-each select="column[@name != 'id']">
-  d-&gt;<xsl:value-of select="@name"/>_changed = false;
-</xsl:for-each>
 }
 
 <xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>(
