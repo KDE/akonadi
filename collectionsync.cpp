@@ -25,6 +25,7 @@
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
 #include "collectionfetchscope.h"
+#include "collectionmovejob.h"
 
 #include <kdebug.h>
 #include <QtCore/QVariant>
@@ -248,7 +249,6 @@ class CollectionSync::Private
         LocalNode *localNode = findMatchingLocalNode( remoteNode->collection );
         if ( localNode ) {
           Q_ASSERT( !localNode->processed );
-          // TODO: moving when using global RIDs
           updateLocalCollection( localNode, remoteNode );
           continue;
         }
@@ -286,9 +286,20 @@ class CollectionSync::Private
       Collection upd( remoteNode->collection );
       upd.setId( localNode->collection.id() );
       CollectionModifyJob *mod = new CollectionModifyJob( upd, q );
-      mod->setProperty( REMOTE_NODE, QVariant::fromValue( remoteNode ) );
       connect( mod, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)) );
+
+      // detecting moves is only possible with global RIDs
+      if ( !hierarchicalRIDs ) {
+        LocalNode *newParent = findMatchingLocalNode( remoteNode->collection.parentCollection() );
+        if ( localNode != newParent ) {
+          ++pendingJobs;
+          CollectionMoveJob *move = new CollectionMoveJob( upd, newParent->collection, q );
+          connect( move, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)) );
+        }
+      }
+
       localNode->processed = true;
+      delete remoteNode;
     }
 
     void updateLocalCollectionResult( KJob* job )
@@ -296,8 +307,6 @@ class CollectionSync::Private
       --pendingJobs;
       if ( job->error() )
         return; // handled by the base class
-      RemoteNode* remoteNode = job->property( REMOTE_NODE ).value<RemoteNode*>();
-      delete remoteNode;
       checkDone();
     }
 
