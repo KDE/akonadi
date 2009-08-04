@@ -76,6 +76,7 @@ set( akonadikde_LIB_SRC
   collectionview.cpp
   control.cpp
   descendantsproxymodel.cpp
+  entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
   entitytreemodel.cpp

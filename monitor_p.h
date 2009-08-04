@@ -23,6 +23,7 @@
 #include "monitor.h"
 #include "collection.h"
 #include "collectionstatisticsjob.h"
+#include "collectionfetchscope.h"
 #include "item.h"
 #include "itemfetchscope.h"
 #include "job.h"
@@ -57,6 +58,7 @@ class MonitorPrivate
     bool monitorAll;
     QList<QByteArray> sessions;
     ItemFetchScope mItemFetchScope;
+    CollectionFetchScope mCollectionFetchScope;
     QHash<KJob*,NotificationMessage> pendingJobs;
 
     bool isCollectionMonitored( Collection::Id collection, const QByteArray &resource ) const

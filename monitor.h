@@ -27,6 +27,7 @@
 
 namespace Akonadi {
 
+class CollectionFetchScope;
 class CollectionStatistics;
 class Item;
 class ItemFetchScope;
@@ -40,7 +41,7 @@ class Session;
  * removed or new ones are added to the Akonadi storage.
  *
  * Optionally, the changed objects can be fetched automatically from the server.
- * To enable this, see fetchCollection(), fetchItemMetaData(), fetchItemData().
+ * To enable this, see itemFetchScope() and collectionFetchScope().
  *
  * @todo: distinguish between monitoring collection properties and collection content.
  * @todo: special case for collection content counts changed
@@ -146,6 +147,35 @@ class AKONADI_EXPORT Monitor : public QObject
      * @see setItemFetchScope() for replacing the current item fetch scope
      */
     ItemFetchScope &itemFetchScope();
+
+    /**
+     * Sets the collection fetch scope.
+     *
+     * Controls which collections are monitored and how much of a collection's data
+     * is fetched from the server.
+     *
+     * @param fetchScope The new scope for collection fetch operations.
+     *
+     * @see collectionFetchScope()
+     * @since 4.4
+     */
+    void setCollectionFetchScope( const CollectionFetchScope &fetchScope );
+
+    /**
+     * Returns the collection fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the CollectionFetchScope documentation
+     * for an example.
+     *
+     * @return a reference to the current collection fetch scope
+     *
+     * @see setCollectionFetchScope() for replacing the current collection fetch scope
+     * @since 4.4
+     */
+    CollectionFetchScope &collectionFetchScope();
+
 
     /**
      * Returns the list of collections being monitored.
