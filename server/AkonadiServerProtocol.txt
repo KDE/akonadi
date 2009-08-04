@@ -2,7 +2,7 @@ The Akonadi Server Protocol
 ============================
 
 This document is the official specification of the Akonadi server protocol
-in version 1.X
+in version 17.
 
 Table of Contents
 -------------------
@@ -16,7 +16,7 @@ Table of Contents
 1) General Information
 =======================
 The protocol used for the communication between the applications and the Akonadi server
-has its roots in the IMAP protocol [RFC 1730], therefor the overall command structure is
+has its roots in the IMAP protocol [RFC 3501], therefor the overall command structure is
 quite similar and existing IMAP libraries can be abused by extending them with the additional,
 Akonadi specific commands. However in some parts, the IMAP standard has been extended or
 changed to better match the requirements of Akonadi's data transport mechanisms.
@@ -28,13 +28,13 @@ by sending the greeting message
   * OK Akonadi Almost IMAP Server [PROTOCOL 17]
 
 that includes the number of the protocol version, which is 17 in this example.
-Clients should always check that version number and avoid communication if they
-do not support it. In the next step the client can start with sending commands
+Clients should always check that version number and avoid communication if their
+minimum requirement is not met. In the next step the client can start with sending commands
 to the server to continue communication.
 
 2) Commands
 ============
-The basic commands of IMAP has been reused, sometimes with slightly different semantics.
+The basic commands of IMAP have been reused, sometimes with slightly different semantics.
 For example the LOGIN command does not take user credentials as arguments, as every user
 runs its own Akonadi server and an authentication is pointless in this case. Instead a
 session identifier is passed, that allowas easy management of parallel communication.
@@ -171,7 +171,7 @@ DESCRIPTION:
 
   RESPONSES:
 
-    DETAILS:
+    DETAILS: deprecated, use X-AKAPPEND
 
 
 2.3.X) The LIST command
@@ -190,7 +190,7 @@ DESCRIPTION:
 
   RESPONSES:
 
-    DETAILS:
+    DETAILS: deprecated, use X-AKLIST
 
 
 2.3.X) The SELECT command
@@ -247,7 +247,7 @@ DESCRIPTION:
 
   RESPONSES:
 
-    DETAILS:
+    DETAILS: deprecated, use REMOVE
 
 
 2.3.X) The STATUS command
