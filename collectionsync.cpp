@@ -88,6 +88,7 @@ class CollectionSync::Private
     Private( CollectionSync *parent ) :
       q( parent ),
       pendingJobs( 0 ),
+      progress( 0 ),
       incremental( false ),
       streaming( false ),
       hierarchicalRIDs( false ),
@@ -290,8 +291,9 @@ class CollectionSync::Private
 
       // detecting moves is only possible with global RIDs
       if ( !hierarchicalRIDs ) {
+        LocalNode *oldParent = localUidMap.value( localNode->collection.parentCollection().id() );
         LocalNode *newParent = findMatchingLocalNode( remoteNode->collection.parentCollection() );
-        if ( localNode != newParent ) {
+        if ( oldParent != newParent ) {
           ++pendingJobs;
           CollectionMoveJob *move = new CollectionMoveJob( upd, newParent->collection, q );
           connect( move, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)) );
@@ -307,6 +309,8 @@ class CollectionSync::Private
       --pendingJobs;
       if ( job->error() )
         return; // handled by the base class
+      if ( qobject_cast<CollectionModifyJob*>( job ) )
+        ++progress;
       checkDone();
     }
 
@@ -341,6 +345,7 @@ class CollectionSync::Private
       Q_ASSERT( localParent->childNodes.contains( localNode ) );
       RemoteNode* remoteNode = job->property( REMOTE_NODE ).value<RemoteNode*>();
       delete remoteNode;
+      ++progress;
 
       processPendingRemoteNodes( localParent );
       if ( !hierarchicalRIDs )
@@ -381,6 +386,7 @@ class CollectionSync::Private
     */
     void deleteLocalCollections( const Collection::List &cols )
     {
+      q->setTotalAmount( KJob::Bytes, q->totalAmount( KJob::Bytes ) + cols.size() );
       foreach ( const Collection &col, cols ) {
         ++pendingJobs;
         CollectionDeleteJob *job = new CollectionDeleteJob( col, q );
@@ -390,9 +396,10 @@ class CollectionSync::Private
 
     void deleteLocalCollectionsResult( KJob *job )
     {
-     if ( job->error() )
-        return; // handled by the base class
       --pendingJobs;
+      if ( job->error() )
+        return; // handled by the base class
+      ++progress;
       checkDone();
     }
 
@@ -443,6 +450,8 @@ class CollectionSync::Private
     */
     void checkDone()
     {
+      q->setProcessedAmount( KJob::Bytes, progress );
+
       // still running jobs or not fully delivered local/remote state
       if ( !deliveryDone || pendingJobs > 0 || !localListDone )
         return;
@@ -454,6 +463,8 @@ class CollectionSync::Private
         q->setErrorText( QLatin1String( "Found unresolved orphan collections" ) );
         foreach ( RemoteNode* orphan, orphans )
           kDebug() << "found orphan collection:" << orphan->collection;
+        q->emitResult();
+        return;
       }
 
       q->commit();
@@ -464,6 +475,7 @@ class CollectionSync::Private
     QString resourceId;
 
     int pendingJobs;
+    int progress;
 
     LocalNode* localRoot;
     QHash<Collection::Id, LocalNode*> localUidMap;
@@ -488,6 +500,7 @@ CollectionSync::CollectionSync( const QString &resourceId, QObject *parent ) :
     d( new Private( this ) )
 {
   d->resourceId = resourceId;
+  setTotalAmount( KJob::Bytes, 0 );
 }
 
 CollectionSync::~CollectionSync()
@@ -497,6 +510,7 @@ CollectionSync::~CollectionSync()
 
 void CollectionSync::setRemoteCollections(const Collection::List & remoteCollections)
 {
+  setTotalAmount( KJob::Bytes, totalAmount( KJob::Bytes ) + remoteCollections.count() );
   foreach ( const Collection &c, remoteCollections )
     d->createRemoteNode( c );
 
@@ -507,6 +521,7 @@ void CollectionSync::setRemoteCollections(const Collection::List & remoteCollect
 
 void CollectionSync::setRemoteCollections(const Collection::List & changedCollections, const Collection::List & removedCollections)
 {
+  setTotalAmount( KJob::Bytes, totalAmount( KJob::Bytes ) + changedCollections.count() );
   d->incremental = true;
   foreach ( const Collection &c, changedCollections )
     d->createRemoteNode( c );
