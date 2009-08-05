@@ -132,9 +132,9 @@ void CollectionFetchJob::doStart()
   if ( !d->mBase.isValid() )
     command += " " AKONADI_CMD_RID;
   if ( d->mScope.includeUnubscribed() )
-    command += " X-AKLIST ";
+    command += " LIST ";
   else
-    command += " X-AKLSUB ";
+    command += " LSUB ";
   if ( d->mBase.isValid() )
     command += QByteArray::number( d->mBase.id() );
   else
