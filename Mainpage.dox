@@ -77,7 +77,6 @@ The following classes are provided to manipulate PIM items:
 - Akonadi::ItemCopyJob
 - Akonadi::ItemModifyJob
 - Akonadi::ItemDeleteJob
-- Akonadi::ExpungeJob
 
 Akonadi::ItemModel provides a self-updating model class which can be used to display the content
 of a collection. Akonadi::ItemView is the base-class for a corresponding view. Often needed KAction

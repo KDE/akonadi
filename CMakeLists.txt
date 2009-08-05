@@ -85,7 +85,6 @@ set( akonadikde_LIB_SRC
   entitytreeviewstatesaver.cpp
   erroroverlay.cpp
   exception.cpp
-  expungejob.cpp
   favoritecollectionsmodel.cpp
   firstrun.cpp
   flatcollectionproxymodel.cpp
