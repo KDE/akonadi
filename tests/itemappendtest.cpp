@@ -22,6 +22,8 @@
 #include "testattribute.h"
 #include "test_utils.h"
 
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
 #include <akonadi/attributefactory.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
@@ -38,6 +40,10 @@ QTEST_AKONADIMAIN( ItemAppendTest, NoGUI )
 void ItemAppendTest::initTestCase()
 {
   Control::start();
+
+  // switch all resources offline to reduce interference from them
+  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+    agent.setIsOnline( false );
 }
 
 void ItemAppendTest::testItemAppend_data()
@@ -48,6 +54,7 @@ void ItemAppendTest::testItemAppend_data()
   QTest::newRow( "non empty" ) << QString( "remote-id" );
   QTest::newRow( "whitespace" ) << QString( "remote id" );
   QTest::newRow( "quotes" ) << QString ( "\"remote\" id" );
+  QTest::newRow( "brackets" ) << QString( "[remote id]" );
 }
 
 void ItemAppendTest::testItemAppend()
