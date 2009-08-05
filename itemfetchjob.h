@@ -106,7 +106,20 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      *
      * @see fetchScope()
      */
-    void setFetchScope( ItemFetchScope &fetchScope );
+    void setFetchScope( ItemFetchScope &fetchScope ); // KDE5: remove
+
+    /**
+     * Sets the item fetch scope.
+     *
+     * The ItemFetchScope controls how much of an item's data is fetched
+     * from the server, e.g. whether to fetch the full item payload or
+     * only meta data.
+     *
+     * @param fetchScope The new scope for item fetch operations.
+     *
+     * @see fetchScope()
+     */
+    void setFetchScope( const ItemFetchScope &fetchScope );
 
     /**
      * Returns the item fetch scope.
