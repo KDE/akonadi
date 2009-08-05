@@ -165,7 +165,7 @@ void CollectionFetchJob::doStart()
     QList<QByteArray> mts;
     foreach ( const QString &mt, d->mScope.contentMimeTypes() )
       mts.append( mt.toUtf8() );
-    filter.append( "(" + ImapParser::join( mts, " " ) + ")" );
+    filter.append( "(" + ImapParser::join( mts, " " ) + ')' );
   }
 
   QList<QByteArray> options;
