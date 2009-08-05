@@ -1,196 +1,227 @@
-/***************************************************************************
- *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Library General Public License as       *
- *   published by the Free Software Foundation; either version 2 of the    *
- *   License, or (at your option) any later version.                       *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU Library General Public     *
- *   License along with this program; if not, write to the                 *
- *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
- ***************************************************************************/
+/*
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
 #include "list.h"
 
 #include <QtCore/QDebug>
 
-#include "akonadi.h"
-#include "akonadiconnection.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
-#include "../../libs/imapparser_p.h"
-#include "handlerhelper.h"
+#include "storage/selectquerybuilder.h"
 
+#include "akonadiconnection.h"
 #include "response.h"
+#include "handlerhelper.h"
+#include "imapstreamparser.h"
+
+#include <libs/protocol_p.h>
 
 using namespace Akonadi;
 
-List::List(): Handler()
+template <typename T>
+static bool intersect( const QList<typename T::Id> &l1, const QList<T> &l2 )
 {
+  foreach ( const T& e2, l2 ) {
+    if ( l1.contains( e2.id() ) )
+      return true;
+  }
+  return false;
 }
 
+List::List( Scope::SelectionScope scope, bool onlySubscribed ):
+    Handler(),
+    mScope( scope ),
+    mAncestorDepth( 0 ),
+    mOnlySubscribed( onlySubscribed ),
+    mIncludeStatistics( false )
+{}
 
-List::~List()
+QStack<Collection> List::ancestorsForCollection( const Collection &col )
 {
+  if ( mAncestorDepth <= 0 )
+    return QStack<Collection>();
+  QStack<Collection> ancestors;
+  Collection parent = col.parent();
+  for ( int i = 0; i < mAncestorDepth; ++i ) {
+    if ( !parent.isValid() )
+      break;
+    ancestors.prepend( parent );
+    parent = parent.parent();
+  }
+  return ancestors;
 }
 
-
-bool List::handleLine(const QByteArray& line )
+bool List::listCollection(const Collection & root, int depth, const QStack<Collection> &ancestors )
 {
-    // parse out the reference name and mailbox name
-    int pos = line.indexOf( ' ' ) + 1; // skip tag
-    pos = line.indexOf( ' ', pos ) + 1; // skip command
-    QString reference;
-    pos = ImapParser::parseString( line, reference, pos );
-    QString mailbox;
-    ImapParser::parseString( line, mailbox, pos );
-
-//     qDebug() << "reference:" << reference << "mailbox:" << mailbox << "::" << endl;
-
-    Response response;
-    response.setUntagged();
-
-    if ( mailbox.isEmpty() ) { // special case of asking for the delimiter
-        response.setString( "LIST (\\Noselect) \"/\" \"\"" );
-        emit responseAvailable( response );
-    } else {
-        QList<Location> collections;
-        if ( !listCollections( reference, mailbox, collections ) ) {
-          return failureResponse( "Unable to find collection" );
-        }
-
-        foreach ( Location loc, collections ) {
-            QByteArray list( "LIST ");
-            list += '(';
-            bool first = true;
-            QList<MimeType> supportedMimeTypes = loc.mimeTypes();
-            if ( supportedMimeTypes.isEmpty() ) {
-                list += "\\Noinferiors";
-                first = false;
-            }
-            bool canContainFolders = false;
-            foreach ( MimeType mt, supportedMimeTypes ) {
-              if ( mt.name() == QLatin1String("inode/directory") ) {
-                canContainFolders = true;
-                break;
-              }
-            }
-            if ( canContainFolders ) {
-                if ( !first ) list += ' ';
-                list += "\\Noselect";
-                first = false;
-            }
-            if ( !supportedMimeTypes.isEmpty() ) {
-                if ( !first ) list += ' ';
-                list += "\\MimeTypes[" + MimeType::joinByName( supportedMimeTypes, QLatin1String(",") ).toLatin1() + ']';
-            }
-            list += ") ";
-            list += "\"/\" \""; // FIXME delimiter
-            if ( loc.isValid() )
-              list += HandlerHelper::pathForCollection( loc ).toUtf8();
-            else
-              list += loc.name(); // search folder
-            list += "\"";
-            response.setString( list );
-            emit responseAvailable( response );
-        }
+  // recursive listing of child collections
+  bool childrenFound = false;
+  if ( depth > 0 ) {
+    Collection::List children = root.children();
+    QStack<Collection> ancestorsAndMe( ancestors );
+    ancestorsAndMe.push( root );
+    foreach ( const Collection &col, children ) {
+      if ( listCollection( col, depth - 1, ancestorsAndMe ) )
+        childrenFound = true;
     }
+  }
 
-    response.setSuccess();
-    response.setTag( tag() );
-    response.setString( "List completed" );
-    emit responseAvailable( response );
-    deleteLater();
-    return true;
-}
+  // filter if this node isn't needed by it's children
+  bool hidden = (mResource.isValid() && root.resourceId() != mResource.id())
+      || (mOnlySubscribed && !root.subscribed())
+      || (!mMimeTypes.isEmpty() && !intersect( mMimeTypes, root.mimeTypes()) );
 
-bool List::listCollections( const QString & prefix,
-                                      const QString & mailboxPattern,
-                                      QList<Location> &result )
-{
-  bool rv = true;
-  result.clear();
+  if ( !childrenFound && hidden )
+    return false;
 
-  if ( mailboxPattern.isEmpty() )
-    return true;
-
+  // write out collection details
+  Collection dummy = root;
   DataStore *db = connection()->storageBackend();
-  const QString locationDelimiter = db->locationDelimiter();
+  db->activeCachePolicy( dummy );
+  const QByteArray b = HandlerHelper::collectionToByteArray( dummy, hidden, mIncludeStatistics, mAncestorDepth, ancestors );
 
-  // normalize path and pattern
-  QString sanitizedPattern( mailboxPattern );
-  QString fullPrefix( prefix );
-  const bool hasPercent = mailboxPattern.contains( QLatin1Char('%') );
-  const bool hasStar = mailboxPattern.contains( QLatin1Char('*') );
-  const int endOfPath = mailboxPattern.lastIndexOf( locationDelimiter ) + 1;
+  Response response;
+  response.setUntagged();
+  response.setString( b );
+  emit responseAvailable( response );
 
-  Resource resource;
-  if ( fullPrefix.startsWith( QLatin1Char('#') ) ) {
-    int endOfRes = fullPrefix.indexOf( locationDelimiter );
-    QString resourceName;
-    if ( endOfRes < 0 ) {
-      resourceName = fullPrefix.mid( 1 );
-      fullPrefix = QString();
-    } else {
-      resourceName = fullPrefix.mid( 1, endOfRes - 1 );
-      fullPrefix = fullPrefix.right( fullPrefix.length() - endOfRes );
-    }
+  return true;
+}
 
-    qDebug() << "listCollections()" << resourceName;
-    resource = Resource::retrieveByName( resourceName );
-    qDebug() << "resource.isValid()" << resource.isValid();
-    if ( !resource.isValid() ) {
-      return false;
-    }
-  }
+bool List::parseStream()
+{
+  qint64 baseCollection = -1;
+  QString rid;
+  if ( mScope == Scope::None || mScope == Scope::Uid ) {
+    bool ok = false;
+    baseCollection = m_streamParser->readNumber( &ok );
+    if ( !ok )
+      return failureResponse( "Invalid base collection" );
+  } else if ( mScope == Scope::Rid ) {
+    rid = m_streamParser->readUtf8String();
+    if ( rid.isEmpty() )
+      throw HandlerException( "No remote identifier specified" );
+  } else
+    throw HandlerException( "WTF" );
 
-  if ( !mailboxPattern.startsWith( locationDelimiter ) && fullPrefix != locationDelimiter )
-    fullPrefix += locationDelimiter;
-  fullPrefix += mailboxPattern.left( endOfPath );
-
-  if ( hasPercent )
-    sanitizedPattern = QLatin1String("%");
-  else if ( hasStar )
-    sanitizedPattern = QLatin1String("*");
+  int depth;
+  const QByteArray tmp = m_streamParser->readString();
+  if ( tmp.isEmpty() )
+    return failureResponse( "Specify listing depth" );
+  if ( tmp == "INF" )
+    depth = INT_MAX;
   else
-    sanitizedPattern = mailboxPattern.mid( endOfPath );
+    depth = tmp.toInt();
 
-  qDebug() << "Resource: " << resource.name() << " fullPrefix: " << fullPrefix << " pattern: " << sanitizedPattern;
-
-  if ( !fullPrefix.isEmpty() ) {
-    rv = false;
-  }
-
-  QList<Location> locations;
-  if ( resource.isValid() )
-    locations = Location::retrieveFiltered( Location::resourceIdColumn(), resource.id() );
-  else
-    locations = Location::retrieveAll();
-
-  foreach( Location l, locations ) {
-    const QString location = locationDelimiter + HandlerHelper::pathForCollection( l );
-#if 0
-    qDebug() << "Location: " << location << " l: " << l << " prefix: " << fullPrefix;
-#endif
-    const bool atFirstLevel =
-      location.lastIndexOf( locationDelimiter ) == fullPrefix.lastIndexOf( locationDelimiter );
-    if ( location.startsWith( fullPrefix ) ) {
-      if ( hasStar || ( hasPercent && atFirstLevel ) ||
-           location == fullPrefix + sanitizedPattern ) {
-        result.append( l );
+  m_streamParser->beginList();
+  while ( !m_streamParser->atListEnd() ) {
+    const QByteArray filter = m_streamParser->readString();
+    if ( filter == AKONADI_PARAM_RESOURCE ) {
+      mResource = Resource::retrieveByName( m_streamParser->readUtf8String() );
+      if ( !mResource.isValid() )
+        return failureResponse( "Unknown resource" );
+    } else if ( filter == AKONADI_PARAM_MIMETYPE ) {
+      m_streamParser->beginList();
+      while ( !m_streamParser->atListEnd() ) {
+        const MimeType mt = MimeType::retrieveByName( m_streamParser->readUtf8String() );
+        if ( !mt.isValid() )
+          throw HandlerException( "Invalid mimetype filter" );
+        mMimeTypes.append( mt.id() );
       }
     }
-    // Check, if requested folder has been found to distinguish between
-    // non-existant folder and empty folder.
-    if ( location + locationDelimiter == fullPrefix || fullPrefix == locationDelimiter )
-      rv = true;
   }
 
-  return rv;
+  if ( m_streamParser->hasList() ) { // We got extra options
+    m_streamParser->beginList();
+    while ( !m_streamParser->atListEnd() ) {
+      const QByteArray option = m_streamParser->readString();
+      if ( option == "STATISTICS" ) {
+        if ( m_streamParser->readString() == "true" )
+          mIncludeStatistics = true;
+      }
+      if ( option == "ANCESTORS" ) {
+        const QByteArray argument = m_streamParser->readString();
+        if ( argument == "INF" )
+          mAncestorDepth = INT_MAX;
+        else
+          mAncestorDepth = argument.toInt();
+      }
+    }
+  }
+
+  Collection::List collections;
+  QStack<Collection> ancestors;
+
+  if ( baseCollection != 0 ) { // not root
+    Collection col;
+    if ( mScope == Scope::None || mScope == Scope::Uid ) {
+       col = Collection::retrieveById( baseCollection );
+    } else if ( mScope == Scope::Rid ) {
+      SelectQueryBuilder<Collection> qb;
+      qb.addTable( Resource::tableName() );
+      qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::Equals, rid );
+      qb.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
+      if ( mResource.isValid() )
+        qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, mResource.id() );
+      else if ( connection()->resourceContext().isValid() )
+        qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, connection()->resourceContext().id() );
+      else
+        throw HandlerException( "Cannot retrieve collection based on remote identifier without a resource context" );
+      if ( !qb.exec() )
+        throw HandlerException( "Unable to retrieve collection for listing" );
+      Collection::List results = qb.result();
+      if ( results.count() != 1 )
+        throw HandlerException( QByteArray::number( results.count() ) + " collections found" );
+      col = results.first();
+    } else {
+      throw HandlerException( "WTF" );
+    }
+
+    if ( !col.isValid() )
+      return failureResponse( "Collection " + QByteArray::number( baseCollection ) + " does not exist" );
+
+    if ( depth == 0 ) {
+      collections << col;
+      ancestors = ancestorsForCollection( col );
+    } else {
+      collections << col.children();
+      --depth;
+      if ( !collections.isEmpty() )
+        ancestors = ancestorsForCollection( collections.first() );
+    }
+  } else {
+    if ( depth != 0 ) {
+      Collection::List list = Collection::retrieveFiltered( Collection::parentIdColumn(), QVariant() );
+      collections << list;
+    }
+    --depth;
+  }
+
+  foreach ( const Collection &col, collections )
+    listCollection( col, depth, ancestors );
+
+  Response response;
+  response.setSuccess();
+  response.setTag( tag() );
+  response.setString( "List completed" );
+  emit responseAvailable( response );
+  deleteLater();
+  return true;
 }
+
+#include "list.moc"

@@ -29,7 +29,6 @@
 #include "response.h"
 #include "scope.h"
 #include "handler/akappend.h"
-#include "handler/aklist.h"
 #include "handler/append.h"
 #include "handler/capability.h"
 #include "handler/copy.h"
@@ -119,15 +118,17 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
         return new Append();
     if ( command == AKONADI_CMD_COLLECTIONCREATE )
         return new Create( scope );
-    if ( command == "LIST" )
-        return new List();
+    if ( command == "LIST" || command == "X-AKLIST" ) //TODO: remove X-AKLIST support in Akonadi 2.0
+        return new List( scope, false );
+    if ( command == "LSUB" || command == "X-AKLSUB" ) //TODO: remove X-AKLSUB support in Akonadi 2.0
+        return new List( scope, true );
     if ( command == "SELECT" )
         return new Select( scope );
     if ( command == "SEARCH_STORE" )
         return new SearchPersistent();
     if ( command == AKONADI_CMD_ITEMFETCH )
         return new Fetch( scope );
-    if ( command == "EXPUNGE" )
+    if ( command == "EXPUNGE" ) //TODO: remove EXPUNGE support in Akonadi 2.0
         return new Expunge();
     if ( command == AKONADI_CMD_ITEMMODIFY )
         return new Store( scope );
@@ -145,10 +146,6 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
       return new TransactionHandler( TransactionHandler::Commit );
     if ( command == AKONADI_CMD_ITEMCREATE )
       return new AkAppend();
-    if ( command == "X-AKLIST" )
-      return new AkList( scope, false );
-    if ( command == "X-AKLSUB" )
-      return new AkList( scope, true );
     if ( command == "SUBSCRIBE" )
       return new Subscribe( true );
     if ( command == "UNSUBSCRIBE" )

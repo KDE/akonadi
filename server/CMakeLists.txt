@@ -63,7 +63,6 @@ set(libakonadiprivate_SRCS
   src/handlerhelper.cpp
   src/intervalcheck.cpp
   src/response.cpp
-  src/handler/aklist.cpp
   src/handler/akappend.cpp
   src/handler/append.cpp
   src/handler/copy.cpp

@@ -157,6 +157,43 @@ DESCRIPTION:
 
     DETAILS:
 
+2.3.X) The LIST command
+----------------------------
+DESCRIPTION:
+
+    COMMAND: LIST
+
+     STATES: Authenticated
+
+     SCOPES:
+
+  ARGUMENTS:
+
+   EXAMPLES:
+
+  RESPONSES:
+
+    DETAILS:
+
+
+2.3.X) The LSUB command
+----------------------------
+DESCRIPTION:
+
+    COMMAND: LSUB
+
+     STATES: Authenticated
+
+     SCOPES:
+
+  ARGUMENTS:
+
+   EXAMPLES:
+
+  RESPONSES:
+
+    DETAILS:
+
 
 2.3.X) The SEARCH_STORE command
 --------------------------------
@@ -239,44 +276,6 @@ DESCRIPTION:
 DESCRIPTION:
 
     COMMAND: COMMIT
-
-     STATES: Authenticated
-
-     SCOPES:
-
-  ARGUMENTS:
-
-   EXAMPLES:
-
-  RESPONSES:
-
-    DETAILS:
-
-
-2.3.X) The X-AKLIST command
-----------------------------
-DESCRIPTION:
-
-    COMMAND: X_AKLIST
-
-     STATES: Authenticated
-
-     SCOPES:
-
-  ARGUMENTS:
-
-   EXAMPLES:
-
-  RESPONSES:
-
-    DETAILS:
-
-
-2.3.X) The X-AKLSUB command
-----------------------------
-DESCRIPTION:
-
-    COMMAND: X-AKLSUB
 
      STATES: Authenticated
 
