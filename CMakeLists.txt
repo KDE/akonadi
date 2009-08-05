@@ -119,6 +119,7 @@ endif(NOT Boost_USE_STATIC_LIBS)
 
 ############### Compilers flags ###############
 
+option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
   set (_ENABLE_EXCEPTIONS -fexceptions)
   set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
