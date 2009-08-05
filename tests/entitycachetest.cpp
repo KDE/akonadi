@@ -57,6 +57,22 @@ class EntityCacheTest : public QObject
       QVERIFY( !cache.isRequested( 1 ) );
       QVERIFY( cache.isRequested( 2 ) );
       QVERIFY( cache.isRequested( 3 ) );
+
+      cache.invalidate( 2 );
+
+      QTest::qWait( 1000 );
+      QCOMPARE( spy.count(), 2 );
+      QVERIFY( cache.isCached( 2 ) );
+      QVERIFY( cache.isCached( 3 ) );
+
+      const T e2 = cache.retrieve( 2 );
+      const T e3a = cache.retrieve( 3 );
+      QCOMPARE( e3a.id(), 3ll );
+      QVERIFY( !e2.isValid() );
+
+      cache.invalidate( 3 );
+      const T e3b = cache.retrieve( 3 );
+      QVERIFY( !e3b.isValid() );
     }
 
   private slots:

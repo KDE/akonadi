@@ -44,7 +44,7 @@ class EntityCacheBase : public QObject
 {
   Q_OBJECT
   public:
-    EntityCacheBase (QObject * parent = 0);
+    explicit EntityCacheBase (QObject * parent = 0);
 
   signals:
     void dataAvailable();
@@ -78,7 +78,7 @@ template<typename T, typename FetchJob, typename FetchScope>
 class EntityCache : public EntityCacheBase
 {
   public:
-    EntityCache( int maxCapacity, QObject *parent = 0 ) :
+    explicit EntityCache( int maxCapacity, QObject *parent = 0 ) :
       EntityCacheBase( parent ),
       mCapacity( maxCapacity )
     {}
@@ -104,8 +104,10 @@ class EntityCache : public EntityCacheBase
     T retrieve( typename T::Id id ) const
     {
       Q_ASSERT( isCached( id ) );
-      // TODO: return T() for invalid entries
-      return cacheNodeForId( id )->entity;
+      EntityCacheNode<T>* node = cacheNodeForId( id );
+      if ( !node->invalid )
+        return node->entity;
+      return T();
     }
 
     void invalidate( typename T::Id id )
@@ -125,8 +127,8 @@ class EntityCache : public EntityCacheBase
       Q_ASSERT( !isRequested( id ) );
       shrinkCache();
       EntityCacheNode<T> *node = new EntityCacheNode<T>( id );
-      FetchJob* job = new FetchJob( T( id ), this );
-//       job->setFetchScope( scope ); // FIXME: ItemFetchJob is broken here!
+      FetchJob* job = createFetchJob( id );
+      job->setFetchScope( scope );
       job->setProperty( "EntityCacheNode", QVariant::fromValue<EntityCacheNode<T>*>( node ) );
       connect( job, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
       mCache.enqueue( node );
@@ -159,13 +161,18 @@ class EntityCache : public EntityCacheBase
       emit dataAvailable();
     }
 
-    void extractResult( EntityCacheNode<T>* node, KJob* job );
+    void extractResult( EntityCacheNode<T>* node, KJob* job ) const;
+
+    inline FetchJob* createFetchJob( typename T::Id id )
+    {
+      return new FetchJob( T( id ), this );
+    }
 
     /** Tries to reduce the cache size until at least one more object fits in. */
     void shrinkCache()
     {
       while ( mCache.size() >= mCapacity && !mCache.first()->pending )
-        mCache.dequeue();
+        delete mCache.dequeue();
     }
 
   private:
@@ -173,20 +180,7 @@ class EntityCache : public EntityCacheBase
     int mCapacity;
 };
 
-// FIXME fix CollectionFetchJob instead!
-template<> void EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::request( Collection::Id id, const CollectionFetchScope &scope )
-{
-  Q_ASSERT( !isRequested( id ) );
-  shrinkCache();
-  EntityCacheNode<Collection> *node = new EntityCacheNode<Collection>( id );
-  CollectionFetchJob* job = new CollectionFetchJob( Collection( id ), CollectionFetchJob::Base, this );
-  job->setFetchScope( scope );
-  job->setProperty( "EntityCacheNode", QVariant::fromValue<EntityCacheNode<Collection>*>( node ) );
-  connect( job, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
-  mCache.enqueue( node );
-}
-
-template<> void EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResult( EntityCacheNode<Collection>* node, KJob *job )
+template<> inline void EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResult( EntityCacheNode<Collection>* node, KJob *job ) const
 {
   CollectionFetchJob* fetch = qobject_cast<CollectionFetchJob*>( job );
   Q_ASSERT( fetch );
@@ -196,7 +190,7 @@ template<> void EntityCache<Collection, CollectionFetchJob, CollectionFetchScope
     node->entity = fetch->collections().first();
 }
 
-template<> void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractResult( EntityCacheNode<Item>* node, KJob *job )
+template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractResult( EntityCacheNode<Item>* node, KJob *job ) const
 {
   ItemFetchJob* fetch = qobject_cast<ItemFetchJob*>( job );
   Q_ASSERT( fetch );
@@ -204,6 +198,11 @@ template<> void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractResult( 
     node->entity = Item();
   else
     node->entity = fetch->items().first();
+}
+
+template<> inline CollectionFetchJob* EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob( Collection::Id id )
+{
+  return new CollectionFetchJob( Collection( id ), CollectionFetchJob::Base, this );
 }
 
 typedef EntityCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionCache;
