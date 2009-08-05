@@ -45,7 +45,6 @@
 #include "handler/logout.h"
 #include "handler/modify.h"
 #include "handler/move.h"
-#include "handler/noop.h"
 #include "handler/remove.h"
 #include "handler/resourceselect.h"
 #include "handler/searchpersistent.h"
@@ -74,7 +73,7 @@ Handler::~Handler()
 
 Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & command )
 {
-    // allowed are LOGIN and AUTHENTICATE
+    // allowed are LOGIN
     if ( command == "LOGIN" )
         return new Login();
 
@@ -83,7 +82,7 @@ Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & com
 
 Handler * Handler::findHandlerForCommandAlwaysAllowed( const QByteArray & command )
 {
-    // allowed commands CAPABILITY, NOOP, and LOGOUT
+    // allowed commands CAPABILITY and LOGOUT
     if ( command == "LOGOUT" )
         return new Logout();
     if ( command == "CAPABILITY" )
@@ -126,8 +125,6 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
         return new Select( scope );
     if ( command == "SEARCH_STORE" )
         return new SearchPersistent();
-    if ( command == "NOOP" )
-        return new Noop();
     if ( command == AKONADI_CMD_ITEMFETCH )
         return new Fetch( scope );
     if ( command == "EXPUNGE" )

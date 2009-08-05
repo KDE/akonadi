@@ -82,60 +82,6 @@ DESCRIPTION: A short textual description of what the commands is supposed to do
   RESPONSES: Possible responses of the example calls
     DETAILS: Further descriptions of the command
 
-2.3.X) The NOOP command
-------------------------
-DESCRIPTION:
-
-    COMMAND: NOOP
-
-     STATES: Authenticated
-
-     SCOPES: No scopes
-
-  ARGUMENTS: No arguments
-
-   EXAMPLES: * NOOP
-
-  RESPONSES: * NOOP completed
-
-    DETAILS:
-
-2.3.X) The LOGOUT command
-------------------------
-DESCRIPTION:
-
-    COMMAND: LOGOUT
-
-     STATES: Always
-
-     SCOPES:
-
-  ARGUMENTS:
-
-   EXAMPLES:
-
-  RESPONSES:
-
-    DETAILS:
-
-2.3.X) The CAPABILITY command
-------------------------
-DESCRIPTION:
-
-    COMMAND: CAPABILITY
-
-     STATES: Always
-
-     SCOPES:
-
-  ARGUMENTS:
-
-   EXAMPLES:
-
-  RESPONSES:
-
-    DETAILS:
-
 2.3.X) The LOGIN command
 ------------------------
 DESCRIPTION:
@@ -155,32 +101,13 @@ DESCRIPTION:
     DETAILS:
 
 
-2.3.X) The APPEND command
---------------------------
-DESCRIPTION:
-
-    COMMAND: APPEND
-
-     STATES: Authenticated
-
-     SCOPES:
-
-  ARGUMENTS:
-
-   EXAMPLES:
-
-  RESPONSES:
-
-    DETAILS: deprecated, use X-AKAPPEND
-
-
-2.3.X) The LIST command
+2.3.X) The LOGOUT command
 ------------------------
 DESCRIPTION:
 
-    COMMAND: LIST
+    COMMAND: LOGOUT
 
-     STATES: Authenticated
+     STATES: Always
 
      SCOPES:
 
@@ -190,7 +117,26 @@ DESCRIPTION:
 
   RESPONSES:
 
-    DETAILS: deprecated, use X-AKLIST
+    DETAILS:
+
+
+2.3.X) The CAPABILITY command
+------------------------
+DESCRIPTION:
+
+    COMMAND: CAPABILITY
+
+     STATES: Always
+
+     SCOPES:
+
+  ARGUMENTS:
+
+   EXAMPLES:
+
+  RESPONSES:
+
+    DETAILS:
 
 
 2.3.X) The SELECT command
@@ -229,25 +175,6 @@ DESCRIPTION:
   RESPONSES:
 
     DETAILS:
-
-
-2.3.X) The EXPUNGE command
----------------------------
-DESCRIPTION:
-
-    COMMAND: EXPUNGE
-
-     STATES: Authenticated
-
-     SCOPES:
-
-  ARGUMENTS:
-
-   EXAMPLES:
-
-  RESPONSES:
-
-    DETAILS: deprecated, use REMOVE
 
 
 2.3.X) The STATUS command
