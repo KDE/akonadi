@@ -76,6 +76,7 @@ set( akonadikde_LIB_SRC
   collectionview.cpp
   control.cpp
   descendantsproxymodel.cpp
+  entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
   entitytreemodel.cpp
@@ -84,7 +85,6 @@ set( akonadikde_LIB_SRC
   entitytreeviewstatesaver.cpp
   erroroverlay.cpp
   exception.cpp
-  expungejob.cpp
   favoritecollectionsmodel.cpp
   firstrun.cpp
   flatcollectionproxymodel.cpp

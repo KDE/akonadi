@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,43 +17,12 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_EXPUNGEJOB_P_H
-#define AKONADI_EXPUNGEJOB_P_H
+#include "entitycache_p.h"
 
-#include "job.h"
+using namespace Akonadi;
 
-namespace Akonadi {
-
-class ExpungeJobPrivate;
-
-/**
- * @internal
- *
- * Permanently removes all items marked for deletion.
- */
-class ExpungeJob : public Job
+EntityCacheBase::EntityCacheBase( QObject *parent ) : QObject( parent )
 {
-  Q_OBJECT
-
-  public:
-    /**
-      Creates a new ExpungeJob.
-      @param parent The parent object.
-    */
-    explicit ExpungeJob( QObject *parent = 0 );
-
-    /**
-      Destroys this job.
-    */
-    virtual ~ExpungeJob();
-
-  protected:
-    virtual void doStart();
-
-  private:
-    Q_DECLARE_PRIVATE( ExpungeJob )
-};
-
 }
 
-#endif
+#include "entitycache_p.moc"

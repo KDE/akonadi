@@ -31,6 +31,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
+#include "collectionfetchscope.h"
 
 using namespace Akonadi;
 
@@ -127,6 +128,16 @@ void Monitor::setItemFetchScope( const ItemFetchScope &fetchScope )
 ItemFetchScope &Monitor::itemFetchScope()
 {
   return d->mItemFetchScope;
+}
+
+void Monitor::setCollectionFetchScope( const CollectionFetchScope &fetchScope )
+{
+  d->mCollectionFetchScope = fetchScope;
+}
+
+CollectionFetchScope& Monitor::collectionFetchScope()
+{
+  return d->mCollectionFetchScope;
 }
 
 Collection::List Monitor::collectionsMonitored() const

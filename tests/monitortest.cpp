@@ -349,7 +349,7 @@ void MonitorTest::testVirtualCollectionsMonitoring()
   QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
   QVERIFY( caddspy.isValid() );
 
-  SearchCreateJob *job = new SearchCreateJob( "Test search collection", "test-search-query" );
+  SearchCreateJob *job = new SearchCreateJob( "Test search collection", "test-search-query", this );
   AKVERIFYEXEC( job );
   QTest::qWait( 1000 );
   QCOMPARE( caddspy.count(), 1 );

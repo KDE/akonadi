@@ -132,9 +132,9 @@ void CollectionFetchJob::doStart()
   if ( !d->mBase.isValid() )
     command += " " AKONADI_CMD_RID;
   if ( d->mScope.includeUnubscribed() )
-    command += " X-AKLIST ";
+    command += " LIST ";
   else
-    command += " X-AKLSUB ";
+    command += " LSUB ";
   if ( d->mBase.isValid() )
     command += QByteArray::number( d->mBase.id() );
   else
@@ -165,7 +165,7 @@ void CollectionFetchJob::doStart()
     QList<QByteArray> mts;
     foreach ( const QString &mt, d->mScope.contentMimeTypes() )
       mts.append( mt.toUtf8() );
-    filter.append( "(" + ImapParser::join( mts, " " ) + ")" );
+    filter.append( '(' + ImapParser::join( mts, " " ) + ')' );
   }
 
   QList<QByteArray> options;

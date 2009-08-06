@@ -143,7 +143,7 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       QList<QByteArray> ancestors;
       ImapParser::parseParenthesizedList( value, ancestors );
       Collection* currentCol = &collection;
-      foreach ( const QByteArray uidRidPair, ancestors ) {
+      foreach ( const QByteArray &uidRidPair, ancestors ) {
         QList<QByteArray> parentIds;
         ImapParser::parseParenthesizedList( uidRidPair, parentIds );
         if ( parentIds.size() != 2 )

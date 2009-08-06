@@ -1,8 +1,5 @@
 /******************************************************************************
  *
- *  File : entityhiddenattribute.cpp
- *  Creation date : Sat 1 Aug 2009 02:07:50
- *
  *  Copyright (c) 2009 Szymon Stefanek <s.stefanek at gmail dot com>
  *
  *  This library is free software; you can redistribute it and/or modify it
@@ -26,10 +23,10 @@
 
 #include <QtCore/QByteArray>
 
-namespace Akonadi
-{
+using namespace Akonadi;
 
 EntityHiddenAttribute::EntityHiddenAttribute()
+  : d( 0 )
 {
 }
 
@@ -56,6 +53,3 @@ void EntityHiddenAttribute::deserialize( const QByteArray &data )
 {
   Q_ASSERT( data.isEmpty() );
 }
-
-} // namespace Akonadi
-

@@ -302,6 +302,13 @@ void ItemFetchJob::setFetchScope( ItemFetchScope &fetchScope )
   d->mFetchScope = fetchScope;
 }
 
+void ItemFetchJob::setFetchScope( const ItemFetchScope &fetchScope )
+{
+  Q_D( ItemFetchJob );
+
+  d->mFetchScope = fetchScope;
+}
+
 ItemFetchScope &ItemFetchJob::fetchScope()
 {
   Q_D( ItemFetchJob );
