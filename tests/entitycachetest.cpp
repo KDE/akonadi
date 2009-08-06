@@ -37,10 +37,12 @@ class EntityCacheTest : public QObject
 
       QVERIFY( !cache.isCached( 1 ) );
       QVERIFY( !cache.isRequested( 1 ) );
+      QVERIFY( !cache.retrieve( 1 ).isValid() );
 
       cache.request( 1, FetchScope() );
       QVERIFY( !cache.isCached( 1 ) );
       QVERIFY( cache.isRequested( 1 ) );
+      QVERIFY( !cache.retrieve( 1 ).isValid() );
 
       QTest::qWait( 1000 );
       QCOMPARE( spy.count(), 1 );

@@ -101,11 +101,11 @@ class EntityCache : public EntityCacheBase
       return cacheNodeForId( id );
     }
 
+    /** Returns the cached object if available, an empty instance otherwise. */
     T retrieve( typename T::Id id ) const
     {
-      Q_ASSERT( isCached( id ) );
       EntityCacheNode<T>* node = cacheNodeForId( id );
-      if ( !node->invalid )
+      if ( node && !node->pending && !node->invalid )
         return node->entity;
       return T();
     }
@@ -115,6 +115,17 @@ class EntityCache : public EntityCacheBase
       EntityCacheNode<T>* node = cacheNodeForId( id );
       if ( node )
         node->invalid = true;
+    }
+
+    /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */
+    bool ensureCached( typename T::Id id, const FetchScope &scope )
+    {
+      EntityCacheNode<T>* node = cacheNodeForId( id );
+      if ( !node ) {
+        request( id, scope );
+        return false;
+      }
+      return !node->pending;
     }
 
     /**
