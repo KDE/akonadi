@@ -63,13 +63,6 @@ struct EntityCacheNode
   bool invalid;
 };
 
-}
-
-Q_DECLARE_METATYPE( Akonadi::EntityCacheNode<Akonadi::Collection>* )
-Q_DECLARE_METATYPE( Akonadi::EntityCacheNode<Akonadi::Item>* )
-
-namespace Akonadi {
-
 /**
  * @internal
  * A in-memory FIFO cache for a small amount of Entity objects.
@@ -110,11 +103,23 @@ class EntityCache : public EntityCacheBase
       return T();
     }
 
+    /** Marks the cache entry as invalid, use in case the object has been deleted on the server. */
     void invalidate( typename T::Id id )
     {
       EntityCacheNode<T>* node = cacheNodeForId( id );
       if ( node )
         node->invalid = true;
+    }
+
+    /** Triggers a re-fetching of a cache entry, use if it has changed on the server. */
+    void update( typename T::Id id, const FetchScope &scope )
+    {
+      EntityCacheNode<T>* node = cacheNodeForId( id );
+      if ( node )
+        mCache.removeAll( node );
+      if ( !node || node->pending )
+        request( id, scope );
+      delete node;
     }
 
     /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */
@@ -140,7 +145,7 @@ class EntityCache : public EntityCacheBase
       EntityCacheNode<T> *node = new EntityCacheNode<T>( id );
       FetchJob* job = createFetchJob( id );
       job->setFetchScope( scope );
-      job->setProperty( "EntityCacheNode", QVariant::fromValue<EntityCacheNode<T>*>( node ) );
+      job->setProperty( "EntityCacheNode", QVariant::fromValue<typename T::Id>( id ) );
       connect( job, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
       mCache.enqueue( node );
     }
@@ -159,9 +164,11 @@ class EntityCache : public EntityCacheBase
 
     void fetchResult( KJob* job )
     {
-      EntityCacheNode<T> *node = job->property( "EntityCacheNode" ).template value<EntityCacheNode<T>*>();
-      Q_ASSERT( node );
-      typename T::Id id = node->entity.id();
+      typename T::Id id = job->property( "EntityCacheNode" ).template value<typename T::Id>();
+      EntityCacheNode<T> *node = cacheNodeForId( id );
+      if ( !node )
+        return; // got replaced in the meantime
+
       node->pending = false;
       extractResult( node, job );
       if ( node->entity.id() != id ) { // make sure we find this node again if something went wrong here...
