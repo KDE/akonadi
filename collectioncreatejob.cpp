@@ -53,7 +53,7 @@ CollectionCreateJob::~CollectionCreateJob( )
 void CollectionCreateJob::doStart( )
 {
   Q_D( CollectionCreateJob );
-  if ( d->mCollection.parent() < 0 && d->mCollection.parentRemoteId().isEmpty() ) {
+  if ( d->mCollection.parentCollection().id() < 0 && d->mCollection.parentCollection().remoteId().isEmpty() ) {
     setError( Unknown );
     setErrorText( QLatin1String("Invalid parent") );
     emitResult();
@@ -61,13 +61,13 @@ void CollectionCreateJob::doStart( )
   }
 
   QByteArray command = d->newTag();
-  if ( d->mCollection.parent() < 0 )
+  if ( d->mCollection.parentCollection().id() < 0 )
     command += " RID";
   command += " CREATE \"" + d->mCollection.name().toUtf8() + "\" ";
-  if ( d->mCollection.parent() >= 0 )
-    command += QByteArray::number( d->mCollection.parent() );
+  if ( d->mCollection.parentCollection().id() >= 0 )
+    command += QByteArray::number( d->mCollection.parentCollection().id() );
   else
-    command += ImapParser::quote( d->mCollection.parentRemoteId().toUtf8() );
+    command += ImapParser::quote( d->mCollection.parentCollection().remoteId().toUtf8() );
   command += " (";
   if ( !d->mCollection.contentMimeTypes().isEmpty() )
   {
@@ -101,7 +101,7 @@ void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteAr
     if ( !col.isValid() )
       return;
 
-    col.setParent( d->mCollection.parent() );
+    col.setParentCollection( d->mCollection.parentCollection() );
     col.setName( d->mCollection.name() );
     col.setRemoteId( d->mCollection.remoteId() );
     d->mCollection = col;
