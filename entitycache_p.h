@@ -159,7 +159,7 @@ class EntityCache : public EntityCacheBase
 
     void fetchResult( KJob* job )
     {
-      EntityCacheNode<T> *node = job->property( "EntityCacheNode" ).value<EntityCacheNode<T>*>();
+      EntityCacheNode<T> *node = job->property( "EntityCacheNode" ).template value<EntityCacheNode<T>*>();
       Q_ASSERT( node );
       typename T::Id id = node->entity.id();
       node->pending = false;
