@@ -11,7 +11,6 @@ macro(add_server_test _source)
   target_link_libraries(${_name} akonadiprivate ${QT_QTTEST_LIBRARY})
 endmacro(add_server_test)
 
-add_server_test(handlertest.cpp)
 if(NOT WIN32)
   add_server_test(imapstreamparsertest.cpp)
 endif(NOT WIN32)
