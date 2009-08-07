@@ -36,25 +36,22 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
     }
 
     Q_DECLARE_PUBLIC( ChangeRecorder )
-    NotificationMessage::List pendingNotifications;
     QSettings *settings;
     bool enableChangeRecording;
 
+    virtual int pipelineSize() const
+    {
+      if ( enableChangeRecording )
+        return 0; // we fill the pipeline ourselves when using change recording
+      return MonitorPrivate::pipelineSize();
+    }
+
     virtual void slotNotify( const NotificationMessage::List &msgs )
     {
-      if ( !enableChangeRecording ) {
-        foreach( const NotificationMessage &msg, msgs )
-          processNotification( msg );
-        return;
-      }
-
       Q_Q( ChangeRecorder );
-      int oldChanges = pendingNotifications.count();
-      foreach ( const NotificationMessage &msg, msgs ) {
-        if ( acceptNotification( msg ) )
-          NotificationMessage::appendAndCompress( pendingNotifications, msg );
-      }
-      if ( pendingNotifications.count() != oldChanges ) {
+      const int oldChanges = pendingNotifications.size();
+      MonitorPrivate::slotNotify( msgs ); // with change recording disabled this will automatically take care of dispatching notification messages
+      if ( enableChangeRecording && pendingNotifications.size() != oldChanges ) {
         saveNotifications();
         emit q->changesAdded();
       }
@@ -151,17 +148,14 @@ void ChangeRecorder::setConfig(QSettings * settings)
 
 void ChangeRecorder::replayNext()
 {
-  bool nothing = true;
   Q_D( ChangeRecorder );
-  while( !d->pendingNotifications.isEmpty() ) {
+  if ( !d->pendingNotifications.isEmpty() ) {
     const NotificationMessage msg = d->pendingNotifications.first();
-    if ( d->processNotification( msg ) ) {
-      nothing = false;
-      break;
-    }
-    d->pendingNotifications.takeFirst();
-  }
-  if( nothing ) {
+    if ( d->ensureDataAvailable( msg ) )
+      d->emitNotification( msg );
+    else
+      d->pipeline.enqueue( msg );
+  } else {
     // This is necessary when none of the notifications were accepted / processed
     // above, and so there is no one to call changeProcessed() and the ChangeReplay task
     // will be stuck forever in the ResourceScheduler.

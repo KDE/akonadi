@@ -61,7 +61,6 @@ class MonitorPrivate
     QList<QByteArray> sessions;
     ItemFetchScope mItemFetchScope;
     CollectionFetchScope mCollectionFetchScope;
-    QHash<KJob*,NotificationMessage> pendingJobs;
     CollectionCache collectionCache;
     ItemCache itemCache;
     QQueue<NotificationMessage> pendingNotifications;
@@ -97,9 +96,9 @@ class MonitorPrivate
     bool ensureDataAvailable( const NotificationMessage &msg );
     void emitNotification( const NotificationMessage &msg );
     void updatePendingStatistics( const NotificationMessage &msg );
-    bool processNotification( const NotificationMessage &msg );
-
     void invalidateCaches( const NotificationMessage &msg );
+
+    virtual int pipelineSize() const;
 
     // private slots
     void dataAvailable();
@@ -108,8 +107,6 @@ class MonitorPrivate
     void slotFlushRecentlyChangedCollections();
 
     virtual void slotNotify( const NotificationMessage::List &msgs );
-    void slotItemJobFinished( KJob* job );
-    void slotCollectionJobFinished( KJob *job );
 
     void emitItemNotification( const NotificationMessage &msg, const Item &item = Item(),
                                const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
@@ -160,45 +157,6 @@ class MonitorPrivate
         recentlyChangedCollections.insert( collection );
       }
     }
-};
-
-
-/**
- * @internal
- *
- * A job which fetches an item and a collection.
- */
-class AKONADI_EXPORT ItemCollectionFetchJob : public Job
-{
-  Q_OBJECT
-
-  public:
-    explicit ItemCollectionFetchJob( const Item &item, Collection::Id collectionId, Collection::Id destCollectionId, QObject *parent = 0 );
-    ~ItemCollectionFetchJob();
-
-    Item item() const;
-    Collection collection() const;
-    Collection destCollection() const;
-
-    void setFetchScope( const ItemFetchScope &fetchScope );
-
-  protected:
-    virtual void doStart();
-
-  private Q_SLOTS:
-    void collectionJobDone( KJob* job );
-    void destCollectionJobDone( KJob* job );
-    void itemJobDone( KJob* job );
-
-  private:
-    Item mReferenceItem;
-    Collection::Id mCollectionId;
-    Collection::Id mDestCollectionId;
-
-    Item mItem;
-    Collection mCollection;
-    Collection mDestCollection;
-    ItemFetchScope mFetchScope;
 };
 
 }
