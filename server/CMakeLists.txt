@@ -82,6 +82,7 @@ set(libakonadiprivate_SRCS
   src/handler/remove.cpp
   src/handler/resourceselect.cpp
   src/handler/scope.cpp
+  src/handler/search.cpp
   src/handler/searchhelper.cpp
   src/handler/searchpersistent.cpp
   src/handler/select.cpp
@@ -122,6 +123,7 @@ set(libakonadiprivate_SRCS
   src/abstractsearchmanager.cpp
   src/xesammanager.cpp
   src/nepomukmanager.cpp
+  src/nepomuksearch.cpp
   src/debuginterface.cpp
   src/imapstreamparser.cpp
   src/preprocessorinstance.cpp
