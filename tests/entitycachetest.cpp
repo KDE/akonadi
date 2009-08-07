@@ -37,10 +37,12 @@ class EntityCacheTest : public QObject
 
       QVERIFY( !cache.isCached( 1 ) );
       QVERIFY( !cache.isRequested( 1 ) );
+      QVERIFY( !cache.retrieve( 1 ).isValid() );
 
       cache.request( 1, FetchScope() );
       QVERIFY( !cache.isCached( 1 ) );
       QVERIFY( cache.isRequested( 1 ) );
+      QVERIFY( !cache.retrieve( 1 ).isValid() );
 
       QTest::qWait( 1000 );
       QCOMPARE( spy.count(), 1 );
@@ -73,6 +75,18 @@ class EntityCacheTest : public QObject
       cache.invalidate( 3 );
       const T e3b = cache.retrieve( 3 );
       QVERIFY( !e3b.isValid() );
+
+      spy.clear();
+      cache.update( 3, FetchScope() );
+      cache.update( 3, FetchScope() );
+      QVERIFY( !cache.isCached( 3 ) );
+      QVERIFY( cache.isRequested( 3 ) );
+      QVERIFY( !cache.retrieve( 3 ).isValid() );
+
+      QTest::qWait( 1000 );
+      QCOMPARE( spy.count(), 1 );
+      QVERIFY( cache.isCached( 3 ) );
+      QVERIFY( cache.retrieve( 3 ).isValid() );
     }
 
   private slots:
@@ -90,6 +104,25 @@ class EntityCacheTest : public QObject
         testCache<Collection, CollectionFetchJob, CollectionFetchScope>();
       else
         testCache<Item, ItemFetchJob, ItemFetchScope>();
+    }
+
+    void testItemCache()
+    {
+      ItemCache cache( 1 );
+      QSignalSpy spy( &cache, SIGNAL(dataAvailable()) );
+      QVERIFY( spy.isValid() );
+
+      ItemFetchScope scope;
+      scope.fetchFullPayload( true );
+      cache.request( 1, scope );
+
+      QTest::qWait( 1000 );
+      QCOMPARE( spy.count(), 1 );
+      QVERIFY( cache.isCached( 1 ) );
+      QVERIFY( cache.isRequested( 1 ) );
+      const Item item = cache.retrieve( 1 );
+      QCOMPARE( item.id(), 1ll );
+      QVERIFY( item.hasPayload<QByteArray>() );
     }
 };
 

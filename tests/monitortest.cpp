@@ -200,6 +200,7 @@ void MonitorTest::testMonitor()
   arg = imodspy.takeFirst();
   item = arg.at( 0 ).value<Item>();
   QCOMPARE( monitorRef, item );
+  QVERIFY( item.hasPayload<QByteArray>() );
   QCOMPARE( item.payload<QByteArray>(), QByteArray( "some new content" ) );
   QSet<QByteArray> parts = arg.at( 1 ).value<QSet<QByteArray> >();
   QCOMPARE( parts, QSet<QByteArray>() << "PLD:RFC822" );

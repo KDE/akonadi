@@ -370,6 +370,7 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessage::List& ) )
     Q_PRIVATE_SLOT( d_ptr, void slotItemJobFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotCollectionJobFinished( KJob* ) )
+    Q_PRIVATE_SLOT( d_ptr, void dataAvailable() )
     //@endcond
 };
 

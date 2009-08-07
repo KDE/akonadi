@@ -31,13 +31,23 @@
 
 using namespace Akonadi;
 
+static const int PipelineSize = 5;
+
 MonitorPrivate::MonitorPrivate(Monitor * parent) :
   q_ptr( parent ),
   nm( 0 ),
   monitorAll( false ),
+  collectionCache( 3*PipelineSize ), // needs to be at least 3x pipeline size for the collection move case
+  itemCache( PipelineSize ), // needs to be at least 1x pipeline size
   fetchCollection( false ),
   fetchCollectionStatistics( false )
 {
+}
+
+void MonitorPrivate::init()
+{
+  QObject::connect( &collectionCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
+  QObject::connect( &itemCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
 }
 
 bool MonitorPrivate::connectToNotificationManager()
@@ -80,6 +90,79 @@ bool MonitorPrivate::acceptNotification(const NotificationMessage & msg)
   }
   Q_ASSERT( false );
   return false;
+}
+
+void MonitorPrivate::dispatchNotifications()
+{
+  while ( pipeline.size() < PipelineSize && !pendingNotifications.isEmpty() ) {
+    const NotificationMessage msg = pendingNotifications.dequeue();
+    if ( ensureDataAvailable( msg ) && pipeline.isEmpty() )
+      emitNotification( msg );
+    else
+      pipeline.enqueue( msg );
+  }
+}
+
+bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
+{
+  bool allCached = true;
+  if ( fetchCollection ) {
+    if ( !collectionCache.ensureCached( msg.parentCollection(), mCollectionFetchScope ) )
+      allCached = false;
+    if ( msg.operation() == NotificationMessage::Move && !collectionCache.ensureCached( msg.parentDestCollection(), mCollectionFetchScope ) )
+      allCached = false;
+  }
+  if ( msg.operation() == NotificationMessage::Remove )
+    return allCached; // the actual object is gone already, nothing to fetch there
+
+  if ( msg.type() == NotificationMessage::Item && !mItemFetchScope.isEmpty() ) {
+    if ( !itemCache.ensureCached( msg.uid(), mItemFetchScope ) )
+      allCached = false;
+  } else if ( msg.type() == NotificationMessage::Collection && fetchCollection ) {
+    if ( !collectionCache.ensureCached( msg.uid(), mCollectionFetchScope ) )
+      allCached = false;
+  }
+  return allCached;
+}
+
+void MonitorPrivate::emitNotification( const NotificationMessage &msg )
+{
+  const Collection parent = collectionCache.retrieve( msg.parentCollection() );
+  Collection destParent;
+  if ( msg.operation() == NotificationMessage::Move )
+    destParent = collectionCache.retrieve( msg.parentDestCollection() );
+
+  if ( msg.type() == NotificationMessage::Collection ) {
+    const Collection col = collectionCache.retrieve( msg.uid() );
+    emitCollectionNotification( msg, col, parent, destParent );
+  } else if ( msg.type() == NotificationMessage::Item ) {
+    const Item item = itemCache.retrieve( msg.uid() );
+    emitItemNotification( msg, item, parent, destParent );
+  }
+}
+
+void MonitorPrivate::dataAvailable()
+{
+  while ( !pipeline.isEmpty() ) {
+    const NotificationMessage msg = pipeline.head();
+    if ( ensureDataAvailable( msg ) ) {
+      emitNotification( msg );
+      pipeline.dequeue();
+    } else {
+      break;
+    }
+  }
+  dispatchNotifications();
+}
+
+void MonitorPrivate::updatePendingStatistics( const NotificationMessage &msg )
+{
+  if ( msg.type() == NotificationMessage::Item ) {
+    notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
+  } else if ( msg.type() == NotificationMessage::Collection && msg.operation() == NotificationMessage::Remove ) {
+    // no need for statistics updates anymore
+    recentlyChangedCollections.remove( msg.uid() );
+  }
 }
 
 bool MonitorPrivate::processNotification(const NotificationMessage & msg)
@@ -172,8 +255,15 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
 
 void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
 {
-  foreach ( const NotificationMessage &msg, msgs )
-    processNotification( msg );
+  foreach ( const NotificationMessage &msg, msgs ) {
+    invalidateCaches( msg );
+    if ( acceptNotification( msg ) ) {
+      updatePendingStatistics( msg );
+      NotificationMessage::appendAndCompress( pendingNotifications, msg );
+    }
+  }
+
+  dispatchNotifications();
 }
 
 void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const Item &item,
@@ -298,6 +388,27 @@ void MonitorPrivate::slotCollectionJobFinished( KJob* job )
     foreach ( const Collection &c, listJob->collections() )
       cols.insert( c.id(), c );
     emitCollectionNotification( msg, cols.value( msg.uid() ),  cols.value( msg.parentCollection() ), cols.value( msg.parentDestCollection() ) );
+  }
+}
+
+void MonitorPrivate::invalidateCaches( const NotificationMessage &msg )
+{
+  // remove invalidates
+  if ( msg.operation() == NotificationMessage::Remove ) {
+    if ( msg.type() == NotificationMessage::Collection ) {
+      collectionCache.invalidate( msg.uid() );
+    } else if ( msg.type() == NotificationMessage::Item ) {
+      itemCache.invalidate( msg.uid() );
+    }
+  }
+
+  // modify removes the cache entry, as we need to re-fetch
+  if ( msg.operation() == NotificationMessage::Modify ) {
+    if ( msg.type() == NotificationMessage::Collection ) {
+      collectionCache.update( msg.uid(), mCollectionFetchScope );
+    } else if ( msg.type() == NotificationMessage::Item ) {
+      itemCache.update( msg.uid(), mItemFetchScope );
+    }
   }
 }
 

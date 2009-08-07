@@ -29,6 +29,7 @@
 #include "job.h"
 #include <akonadi/private/notificationmessage_p.h>
 #include "notificationmanagerinterface.h"
+#include "entitycache_p.h"
 
 #include <kmimetype.h>
 
@@ -47,6 +48,7 @@ class MonitorPrivate
   public:
     MonitorPrivate( Monitor *parent );
     virtual ~MonitorPrivate() {}
+    void init();
 
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
@@ -60,6 +62,12 @@ class MonitorPrivate
     ItemFetchScope mItemFetchScope;
     CollectionFetchScope mCollectionFetchScope;
     QHash<KJob*,NotificationMessage> pendingJobs;
+    CollectionCache collectionCache;
+    ItemCache itemCache;
+    QQueue<NotificationMessage> pendingNotifications;
+    QQueue<NotificationMessage> pipeline;
+    bool fetchCollection;
+    bool fetchCollectionStatistics;
 
     bool isCollectionMonitored( Collection::Id collection, const QByteArray &resource ) const
     {
@@ -85,9 +93,16 @@ class MonitorPrivate
 
     bool connectToNotificationManager();
     bool acceptNotification( const NotificationMessage &msg );
+    void dispatchNotifications();
+    bool ensureDataAvailable( const NotificationMessage &msg );
+    void emitNotification( const NotificationMessage &msg );
+    void updatePendingStatistics( const NotificationMessage &msg );
     bool processNotification( const NotificationMessage &msg );
 
+    void invalidateCaches( const NotificationMessage &msg );
+
     // private slots
+    void dataAvailable();
     void slotSessionDestroyed( QObject* );
     void slotStatisticsChangedFinished( KJob* );
     void slotFlushRecentlyChangedCollections();
@@ -100,9 +115,6 @@ class MonitorPrivate
                                const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
     void emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
                                      const Collection &par = Collection(), const Collection &dest = Collection() );
-
-    bool fetchCollection;
-    bool fetchCollectionStatistics;
 
   private:
     // collections that need a statistics update

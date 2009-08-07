@@ -126,6 +126,7 @@ ChangeRecorder::ChangeRecorder(QObject * parent) :
     Monitor( new ChangeRecorderPrivate( this ), parent )
 {
   Q_D( ChangeRecorder );
+  d->init();
   d->connectToNotificationManager();
 }
 
