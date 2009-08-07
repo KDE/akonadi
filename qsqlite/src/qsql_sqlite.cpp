@@ -49,7 +49,9 @@
 #include <qsqlquery.h>
 #include <qstringlist.h>
 #include <qvector.h>
+
 #include <qdebug.h>
+#include <qthread.h>
 
 #if defined Q_OS_WIN
 # include <qt_windows.h>
@@ -288,6 +290,7 @@ void QSQLiteResult::virtual_hook(int id, void *data)
 {
     switch (id) {
     case QSqlResult::DetachFromResultSet:
+        qDebug() << debugString() + "Detaching" << (d->stmt != 0);
         if (d->stmt)
             sqlite3_reset(d->stmt);
         break;
@@ -309,7 +312,7 @@ bool QSQLiteResult::reset(const QString &query)
 
 bool QSQLiteResult::prepare(const QString &query)
 {
-  qDebug() << "[QSQLITE3] Preparing:" << query;
+  qDebug() << debugString() + "Preparing:" << query;
     if (!driver() || !driver()->isOpen() || driver()->isOpenError())
         return false;
 
@@ -457,14 +460,14 @@ QVariant QSQLiteResult::handle() const
 QSQLiteDriver::QSQLiteDriver(QObject * parent)
     : QSqlDriver(parent)
 {
-    qDebug() << "[QSQLITE3] CUSTOM SQLITE3 DRIVER CTOR 1";
+    qDebug() << debugString() + "CUSTOM SQLITE3 DRIVER CTOR 1";
     d = new QSQLiteDriverPrivate();
 }
 
 QSQLiteDriver::QSQLiteDriver(sqlite3 *connection, QObject *parent)
     : QSqlDriver(parent)
 {
-    qDebug() << "[QSQLITE3] CUSTOM SQLITE3 DRIVER CTOR 2";
+    qDebug() << debugString() + "CUSTOM SQLITE3 DRIVER CTOR 2";
     d = new QSQLiteDriverPrivate();
     d->access = connection;
     setOpen(true);
@@ -474,7 +477,7 @@ QSQLiteDriver::QSQLiteDriver(sqlite3 *connection, QObject *parent)
 
 QSQLiteDriver::~QSQLiteDriver()
 {
-  qDebug() << "[QSQLITE3] CUSTOM SQLITE3 DRIVER DTOR";
+  qDebug() << debugString() + "CUSTOM SQLITE3 DRIVER DTOR";
   delete d;
 }
 

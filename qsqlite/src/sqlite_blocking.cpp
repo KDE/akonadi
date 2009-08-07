@@ -4,6 +4,12 @@
 #include <unistd.h>
 
 #include "qdebug.h"
+#include "qthread.h"
+
+QString debugString()
+{
+  return QString("[QSQLITE3: " + QString::number(QThread::currentThreadId()) + "] ");
+}
 
 int sqlite3_blocking_step( sqlite3_stmt *pStmt )
 {
@@ -12,16 +18,21 @@ int sqlite3_blocking_step( sqlite3_stmt *pStmt )
   //       SQLITE_BUSY.
   int rc = sqlite3_step( pStmt );
 
+  QThread::currentThreadId();
   if ( rc == SQLITE_BUSY )
-    qDebug() << "[QSQLITE3] STEP: Entering while loop";
+    qDebug() << debugString() + "sqlite3_blocking_step: Entering while loop";
 
   while( rc == SQLITE_BUSY ) {
-    usleep(500000);
+    usleep(5000);
     sqlite3_reset( pStmt );
     rc = sqlite3_step( pStmt );
+
+    if ( rc != SQLITE_BUSY ) {
+      qDebug() << debugString() + "sqlite3_blocking_step: Leaving while loop";
+    }
   }
 
-  qDebug() << "[QSQLITE3] BLOCKIN_STEP Returning" << rc;
+  qDebug() << debugString() + "sqlite3_blocking_step Returning" << rc;
   return rc;
 }
 
@@ -34,13 +45,17 @@ int sqlite3_blocking_prepare16_v2( sqlite3 *db,           /* Database handle. */
   int rc = sqlite3_prepare16_v2( db, zSql, nSql, ppStmt, pzTail );
 
   if ( rc == SQLITE_BUSY )
-    qDebug() << "[QSQLITE3] PREPARE: Entering while loop";
+    qDebug() << debugString() + "sqlite3_blocking_prepare16_v2: Entering while loop";
 
   while( rc == SQLITE_BUSY ) {
     usleep(500000);
     rc = sqlite3_prepare16_v2( db, zSql, nSql, ppStmt, pzTail );
+
+    if ( rc != SQLITE_BUSY ) {
+      qDebug() << debugString() + "sqlite3_prepare16_v2: Leaving while loop";
+    }
   }
 
-  qDebug() << "[QSQLITE3] BLOCKIN_PREPARE Returning" << rc;
+  qDebug() << debugString() + "sqlite3_blocking_prepare16_v2 Returning" << rc;
   return rc;
 }

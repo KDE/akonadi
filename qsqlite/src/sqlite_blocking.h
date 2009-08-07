@@ -1,6 +1,11 @@
 #ifndef SQLITE_BLOCKING_H
 #define SQLITE_BLOCKING_H
 
+#include <QtCore/QString>
+#include <QtCore/QThread>
+
+QString debugString();
+
 struct sqlite3;
 struct sqlite3_stmt;
 
