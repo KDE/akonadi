@@ -247,53 +247,48 @@ void ImapStreamParserTest::testParseParenthesizedList( )
 
 }
 
+void ImapStreamParserTest::testParseNumber_data()
+{
+  QTest::addColumn<QByteArray>( "input" );
+  QTest::addColumn<int>( "startIndex" );
+  QTest::addColumn<qint64>( "result" );
+  QTest::addColumn<bool>( "success" );
+
+  QTest::newRow( "empty" ) << QByteArray( " " ) << 0 << 0ll << false;
+  QTest::newRow( "start" ) << QByteArray( "1 23 4\n" ) << 0 << 1ll << true;
+  QTest::newRow( "middle" ) << QByteArray( "1 23 4\n" ) << 1 << 23ll << true;
+  QTest::newRow( "middle2" ) << QByteArray( "1 23 4\n" ) << 2 << 23ll << true;
+  QTest::newRow( "middle3" ) << QByteArray( "1 23 4\n" ) << 3 << 3ll << true;
+  QTest::newRow( "end" ) << QByteArray( "1 23 4\n" ) << 4 << 4ll << true;
+  QTest::newRow( "after end" ) << QByteArray( "1 23 4\n" ) << 6 << 0ll << false;
+  QTest::newRow( "incomplete" ) << QByteArray( "1" ) << 0 << 0ll << false;
+  QTest::newRow( "nan" ) << QByteArray( "foo" ) << 0 << 0ll << false;
+}
 
 void ImapStreamParserTest::testParseNumber()
 {
+  QFETCH( QByteArray, input );
+  QFETCH( int, startIndex );
+  QFETCH( qint64, result );
+  QFETCH( bool, success );
+
   QBuffer buffer;
   buffer.open( QBuffer::ReadWrite | QIODevice::Truncate );
   ImapStreamParser parser(&buffer);
 
-  buffer.write( QByteArray( " " ) );
-  buffer.seek(0);
+  buffer.write( input );
+  buffer.seek( startIndex );
 
-  qint64 result;
-  bool ok;
-
+  bool failed = false;
   try {
-  // empty string
-  result = parser.readNumber( &ok );
-  QCOMPARE( ok, false );
-
-  buffer.close();
-  buffer.open( QBuffer::ReadWrite | QIODevice::Truncate );
-  buffer.write( QByteArray( " 1 23 4" ) );
-  buffer.seek(0);
-  // leading spaces at the beginning
-  result = parser.readNumber( &ok );
-  QCOMPARE( ok, true );
-  QCOMPARE( result, 1ll );
-
-  // multiple digits
-  result = parser.readNumber(  &ok );
-  QCOMPARE( ok, true );
-  QCOMPARE( result, 23ll );
-
-  // number at input end
-  result = parser.readNumber(&ok );
-  QCOMPARE( ok, true );
-  QCOMPARE( result, 4ll );
-
-  // out of bounds access - throws an exception
-  result = parser.readNumber(  &ok );
-  QCOMPARE( ok, false );
-} catch ( const Akonadi::Exception &e ) {
-  qDebug() << "Caught exception: " << e.type() << " : " <<
-      e.what();
-} catch (...)
-{
-  qDebug() << "Unknown exception caught: " << akBacktrace();
-}
+    qint64 number = parser.readNumber();
+    QCOMPARE( number, result );
+  } catch ( const ImapParserException &e ) {
+    if ( success )
+      qDebug() << "Caught unexpected parser exception: " << " : " << e.what();
+    failed = true;
+  }
+  QCOMPARE( failed, !success );
 }
 
 
