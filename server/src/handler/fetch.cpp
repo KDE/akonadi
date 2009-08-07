@@ -197,7 +197,6 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
       req->parts = missingPayloadIds;
 
       if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-        akDebug() << "TEST!!!!!!!!!";
         requests.append(req);
       } else {
         // TODO: how should we handle retrieval errors here? so far they have been ignored,
@@ -213,7 +212,6 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
   }
 
   if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    akDebug() << "Closing queries and sending out requests.";
     // Close the queries so we can start writing without endig up in a lock.
     partQuery.query().finish();
     mItemQuery.query().finish();
@@ -240,7 +238,42 @@ bool Fetch::parseStream()
 
   triggerOnDemandFetch();
 
+  // retrieve missing parts
+  QStringList partList, payloadList;
+  foreach( const QByteArray &b, mRequestedParts ) {
+    // filter out non-part attributes
+    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
+      continue;
+    if ( b == "SIZE" ) {
+      mSizeRequested = true;
+      continue;
+    }
+    if ( b == "DATETIME" ) {
+      mMTimeRequested = true;
+      continue;
+    }
+    partList << QString::fromLatin1( b );
+    if ( b.startsWith( "PLD:" ) )
+      payloadList << QString::fromLatin1( b );
+  }
+
   buildItemQuery();
+  retrieveMissingPayloads( payloadList );
+
+  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+    if ( !mItemQuery.exec() )
+      throw HandlerException("Unable to list items");
+    mItemQuery.query().next();
+  }
+
+  // build part query if needed
+  QueryBuilder partQuery;
+  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
+    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
+    if ( !partQuery.exec() )
+      return failureResponse( "Unable to retrieve item parts" );
+    partQuery.query().next();
+  }
 
   // build flag query if needed
   QueryBuilder flagQuery;
@@ -261,41 +294,6 @@ bool Fetch::parseStream()
   }
   const int flagQueryIdColumn = 0;
   const int flagQueryNameColumn = 1;
-
-  // retrieve missing parts
-  QStringList partList, payloadList;
-  foreach( const QByteArray &b, mRequestedParts ) {
-    // filter out non-part attributes
-    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
-      continue;
-    if ( b == "SIZE" ) {
-      mSizeRequested = true;
-      continue;
-    }
-    if ( b == "DATETIME" ) {
-      mMTimeRequested = true;
-      continue;
-    }
-    partList << QString::fromLatin1( b );
-    if ( b.startsWith( "PLD:" ) )
-      payloadList << QString::fromLatin1( b );
-  }
-  retrieveMissingPayloads( payloadList );
-
-  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    if ( !mItemQuery.exec() )
-      throw HandlerException("Unable to list items");
-    mItemQuery.query().next();
-  }
-
-  // build part query if needed
-  QueryBuilder partQuery;
-  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
-    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
-    if ( !partQuery.exec() )
-      return failureResponse( "Unable to retrieve item parts" );
-    partQuery.query().next();
-  }
 
   // build responses
   Response response;
