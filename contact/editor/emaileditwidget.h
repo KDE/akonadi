@@ -66,7 +66,7 @@ class EmailEditDialog : public KDialog
   Q_OBJECT
 
   public:
-    EmailEditDialog( const QStringList &list, QWidget *parent = 0 );
+    explicit EmailEditDialog( const QStringList &list, QWidget *parent = 0 );
     ~EmailEditDialog();
 
     QStringList emails() const;

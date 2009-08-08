@@ -41,7 +41,7 @@ class ImageWidget : public QPushButton
       Logo
     };
 
-    ImageWidget( Type type, QWidget *parent = 0 );
+    explicit ImageWidget( Type type, QWidget *parent = 0 );
     ~ImageWidget();
 
     void loadContact( const KABC::Addressee &contact );

@@ -248,7 +248,7 @@ class PhoneTypeDialog : public KDialog
      * @param type The initial type of the phone number.
      * @param parent The parent widget.
      */
-    PhoneTypeDialog( KABC::PhoneNumber::Type type, QWidget *parent = 0 );
+    explicit PhoneTypeDialog( KABC::PhoneNumber::Type type, QWidget *parent = 0 );
 
     /**
      * Returns the selected type.
