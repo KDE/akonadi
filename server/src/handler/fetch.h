@@ -35,6 +35,21 @@ class QueryBuilder;
   @ingroup akonadi_server_handler
 
   Handler for the fetch command.
+
+  Request syntax:
+  @verbatim
+  fetch-request = tag " " [scope-selector " "] "FETCH " scope " " fetch-parameters " " part-list
+  scope-selector = [ "UID" / "RID" ]
+  fetch-parameters = [ "FULLPAYLOAD" / "CACHEONLY" / "CACHEONLY" / "EXTERNALPAYLOAD" / "ANCESTORS " depth ]
+  part-list = "(" *(part-id) ")"
+  depth = "0" / "1" / "INF"
+  @endverbatim
+
+  Semantics:
+  - @c FULLPAYLOAD: Retrieve the full payload
+  - @c CACHEONLY: Restrict retrieval to parts already in the cache, even if more parts have been requested.
+  - @c EXTERNALPAYLOAD: Indicate the capability to retrieve parts via the filesystem instead over the socket
+  - @c ANCESTORS: Indicate the desired ancestor collection depth (0 is the default) 
  */
 class Fetch : public Handler
 {
@@ -52,12 +67,12 @@ class Fetch : public Handler
     QueryBuilder buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
     void retrieveMissingPayloads( const QStringList &payloadList );
     void parseCommandStream();
-    QString driverName();
 
   private:
     QueryBuilder mItemQuery;
     QList<QByteArray> mRequestedParts;
     Scope mScope;
+    int mAncestorDepth;
     bool mCacheOnly;
     bool mFullPayload;
     bool mAllAttrs;

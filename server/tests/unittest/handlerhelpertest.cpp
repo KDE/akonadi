@@ -1,0 +1,102 @@
+/*
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+#include <QObject>
+#include <QtTest>
+
+#include "handlerhelper.cpp"
+
+using namespace Akonadi;
+
+Q_DECLARE_METATYPE( Akonadi::Collection )
+Q_DECLARE_METATYPE( QStack<Akonadi::Collection> )
+
+class HandlerHelperTest : public QObject
+{
+  Q_OBJECT
+  private slots:
+    void testCachePolicyToByteArray_data()
+    {
+      QTest::addColumn<Collection>( "collection" );
+      QTest::addColumn<QByteArray>( "result" );
+
+      Collection c;
+      c.setCachePolicyInherit( true );
+      QTest::newRow( "inherit" ) << c << QByteArray( "CACHEPOLICY (INHERIT true INTERVAL 0 CACHETIMEOUT 0 SYNCONDEMAND false LOCALPARTS ())" );
+
+      c.setCachePolicyInherit( false );
+      c.setCachePolicyCheckInterval( 1 );
+      c.setCachePolicyCacheTimeout( 2 );
+      c.setCachePolicyLocalParts( "PART1 PART2" );
+      c.setCachePolicySyncOnDemand( true );
+      QTest::newRow( "non-inherit" ) << c << QByteArray( "CACHEPOLICY (INHERIT false INTERVAL 1 CACHETIMEOUT 2 SYNCONDEMAND true LOCALPARTS (PART1 PART2))" );
+    }
+
+    void testCachePolicyToByteArray()
+    {
+      QFETCH( Collection, collection );
+      QFETCH( QByteArray, result );
+
+      const QByteArray realResult = HandlerHelper::cachePolicyToByteArray( collection );
+      QCOMPARE( realResult, result );
+    }
+
+    void testAncestorsToByteArray_data()
+    {
+      QTest::addColumn<int>( "depth" );
+      QTest::addColumn<QStack<Collection> >( "ancestors" );
+      QTest::addColumn<QByteArray>( "result" );
+
+      QTest::newRow( "empty0" ) << 0 << QStack<Collection>() << QByteArray();
+      QTest::newRow( "empty1" ) << 1 << QStack<Collection>() << QByteArray( "ANCESTORS ((0 \"\"))" );
+      QTest::newRow( "empty2" ) << 2 << QStack<Collection>() << QByteArray( "ANCESTORS ((0 \"\"))" );
+
+      QStack<Collection> ancestors;
+      Collection c;
+      c.setId( 1 );
+      c.setRemoteId( "r1" );
+      ancestors.push( c );
+      QTest::newRow( "one1" ) << 1 << ancestors << QByteArray( "ANCESTORS ((1 \"r1\"))" );
+      QTest::newRow( "one2" ) << 2 << ancestors << QByteArray( "ANCESTORS ((1 \"r1\") (0 \"\"))" );
+      QTest::newRow( "one3" ) << 3 << ancestors << QByteArray( "ANCESTORS ((1 \"r1\") (0 \"\"))" );
+
+      c.setId( 2 );
+      c.setRemoteId( "r2" );
+      ancestors.push( c );
+      QTest::newRow( "two1" ) << 1 << ancestors << QByteArray( "ANCESTORS ((2 \"r2\"))" );
+      QTest::newRow( "two2" ) << 2 << ancestors << QByteArray( "ANCESTORS ((2 \"r2\") (1 \"r1\"))" );
+      QTest::newRow( "two3" ) << 3 << ancestors << QByteArray( "ANCESTORS ((2 \"r2\") (1 \"r1\") (0 \"\"))" );
+      QTest::newRow( "two4" ) << 4 << ancestors << QByteArray( "ANCESTORS ((2 \"r2\") (1 \"r1\") (0 \"\"))" );
+    }
+
+    void testAncestorsToByteArray()
+    {
+      QFETCH( int, depth );
+      QFETCH( QStack<Collection>, ancestors );
+      QFETCH( QByteArray, result );
+
+      const QByteArray realResult = HandlerHelper::ancestorsToByteArray( depth, ancestors );
+      qDebug() << realResult;
+      QCOMPARE( realResult, result );
+    }
+};
+
+QTEST_MAIN( HandlerHelperTest )
+
+#include "handlerhelpertest.moc"

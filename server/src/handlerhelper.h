@@ -97,6 +97,11 @@ class HandlerHelper
     */
     static QByteArray collectionToByteArray( const Collection &col, bool hidden = false, bool includeStatistics = false,
                                              int ancestorDepth = 0, const QStack<Collection> &ancestors = QStack<Collection>() );
+
+    /**
+      Returns the protocol representation of a collection ancestor chain.
+    */
+    static QByteArray ancestorsToByteArray( int ancestorDepth, const QStack<Collection> &ancestors );
 };
 
 }
