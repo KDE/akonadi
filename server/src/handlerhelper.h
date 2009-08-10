@@ -29,6 +29,8 @@
 
 namespace Akonadi {
 
+class ImapStreamParser;
+
 /**
   Helper functions for command handlers.
 */
@@ -102,6 +104,11 @@ class HandlerHelper
       Returns the protocol representation of a collection ancestor chain.
     */
     static QByteArray ancestorsToByteArray( int ancestorDepth, const QStack<Collection> &ancestors );
+
+    /**
+      Parses the listing/ancestor depth parameter.
+    */
+    static int parseDepth( const QByteArray &depth );
 };
 
 }

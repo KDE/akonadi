@@ -119,14 +119,7 @@ bool List::parseStream()
   } else
     throw HandlerException( "WTF" );
 
-  int depth;
-  const QByteArray tmp = m_streamParser->readString();
-  if ( tmp.isEmpty() )
-    return failureResponse( "Specify listing depth" );
-  if ( tmp == "INF" )
-    depth = INT_MAX;
-  else
-    depth = tmp.toInt();
+  int depth = HandlerHelper::parseDepth( m_streamParser->readString() );
 
   m_streamParser->beginList();
   while ( !m_streamParser->atListEnd() ) {
@@ -154,12 +147,9 @@ bool List::parseStream()
         if ( m_streamParser->readString() == "true" )
           mIncludeStatistics = true;
       }
-      if ( option == "ANCESTORS" ) {
+      if ( option == AKONADI_PARAM_ANCESTORS ) {
         const QByteArray argument = m_streamParser->readString();
-        if ( argument == "INF" )
-          mAncestorDepth = INT_MAX;
-        else
-          mAncestorDepth = argument.toInt();
+        mAncestorDepth = HandlerHelper::parseDepth( argument );
       }
     }
   }

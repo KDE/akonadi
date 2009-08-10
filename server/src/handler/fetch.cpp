@@ -31,7 +31,7 @@
 #include "storage/parthelper.h"
 #include "akdebug.h"
 #include "imapstreamparser.h"
-
+#include "handlerhelper.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QUuid>
@@ -158,7 +158,6 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
     throw HandlerException( "Unable to retrieve item parts" );
   partQuery.query().next();
 
-  QList<ItemRetrievalManager::Request*> requests;
   while ( mItemQuery.query().isValid() ) {
     const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
     QStringList missingParts = payloadList;
@@ -188,48 +187,22 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
       QStringList missingPayloadIds;
       foreach ( const QString &s, missingParts )
         missingPayloadIds << s.mid( 4 );
-
-      ItemRetrievalManager::Request *req = new ItemRetrievalManager::Request();
-      req->id = pimItemId;
-      req->remoteId = mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8();
-      req->mimeType = mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8();
-      req->resourceId = mItemQuery.query().value( itemQueryResouceColumn ).toString();
-      req->parts = missingPayloadIds;
-
-      if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-        requests.append(req);
-      } else {
-        // TODO: how should we handle retrieval errors here? so far they have been ignored,
-        // which makes sense in some cases, do we need a command parameter for this?
-        try {
-          ItemRetrievalManager::instance()->requestItemDelivery( req );
-        } catch ( const ItemRetrieverException &e ) {
-          akError() << e.type() << ": " << e.what();
-        }
+      // TODO: how should we handle retrieval errors here? so far they have been ignored,
+      // which makes sense in some cases, do we need a command parameter for this?
+      try {
+        ItemRetrievalManager::instance()->requestItemDelivery( pimItemId,
+          mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
+          mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8(),
+          mItemQuery.query().value( itemQueryResouceColumn ).toString(), missingPayloadIds );
+      } catch ( const ItemRetrieverException &e ) {
+        akError() << e.type() << ": " << e.what();
       }
     }
     mItemQuery.query().next();
   }
 
-  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    // Close the queries so we can start writing without endig up in a lock.
-    partQuery.query().finish();
-    mItemQuery.query().finish();
-
-    // Now both reading queries are closed, start sending out the
-    foreach ( ItemRetrievalManager::Request *req, requests ) {
-      // TODO: how should we handle retrieval errors here? so far they have been ignored,
-      // which makes sense in some cases, do we need a command parameter for this?
-      try {
-        ItemRetrievalManager::instance()->requestItemDelivery( req );
-      } catch ( const ItemRetrieverException &e ) {
-        akError() << e.type() << ": " << e.what();
-      }
-    }
-  } else {
-    // rewind item query
-    mItemQuery.query().first();
-  }
+  // rewind item query
+  mItemQuery.query().first();
 }
 
 bool Fetch::parseStream()
@@ -238,42 +211,7 @@ bool Fetch::parseStream()
 
   triggerOnDemandFetch();
 
-  // retrieve missing parts
-  QStringList partList, payloadList;
-  foreach( const QByteArray &b, mRequestedParts ) {
-    // filter out non-part attributes
-    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
-      continue;
-    if ( b == "SIZE" ) {
-      mSizeRequested = true;
-      continue;
-    }
-    if ( b == "DATETIME" ) {
-      mMTimeRequested = true;
-      continue;
-    }
-    partList << QString::fromLatin1( b );
-    if ( b.startsWith( "PLD:" ) )
-      payloadList << QString::fromLatin1( b );
-  }
-
   buildItemQuery();
-  retrieveMissingPayloads( payloadList );
-
-  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    if ( !mItemQuery.exec() )
-      throw HandlerException("Unable to list items");
-    mItemQuery.query().next();
-  }
-
-  // build part query if needed
-  QueryBuilder partQuery;
-  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
-    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
-    if ( !partQuery.exec() )
-      return failureResponse( "Unable to retrieve item parts" );
-    partQuery.query().next();
-  }
 
   // build flag query if needed
   QueryBuilder flagQuery;
@@ -294,6 +232,35 @@ bool Fetch::parseStream()
   }
   const int flagQueryIdColumn = 0;
   const int flagQueryNameColumn = 1;
+
+  // retrieve missing parts
+  QStringList partList, payloadList;
+  foreach( const QByteArray &b, mRequestedParts ) {
+    // filter out non-part attributes
+    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
+      continue;
+    if ( b == "SIZE" ) {
+      mSizeRequested = true;
+      continue;
+    }
+    if ( b == "DATETIME" ) {
+      mMTimeRequested = true;
+      continue;
+    }
+    partList << QString::fromLatin1( b );
+    if ( b.startsWith( "PLD:" ) )
+      payloadList << QString::fromLatin1( b );
+  }
+  retrieveMissingPayloads( payloadList );
+
+  // build part query if needed
+  QueryBuilder partQuery;
+  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
+    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
+    if ( !partQuery.exec() )
+      return failureResponse( "Unable to retrieve item parts" );
+    partQuery.query().next();
+  }
 
   // build responses
   Response response;
@@ -405,7 +372,7 @@ void Fetch::parseCommandStream()
     if ( m_streamParser->atCommandEnd() )
       break;
     if ( m_streamParser->hasList() ) {
-      QList<QByteArray> tmp =m_streamParser->readParenthesizedList();
+      QList<QByteArray> tmp = m_streamParser->readParenthesizedList();
       mRequestedParts += tmp;
       break;
     } else {
@@ -416,29 +383,15 @@ void Fetch::parseCommandStream()
         mAllAttrs = true;
       } else if ( buffer == AKONADI_PARAM_EXTERNALPAYLOAD ) {
         mExternalPayloadSupported = true;
-      }else if ( buffer == AKONADI_PARAM_FULLPAYLOAD ) {
+      } else if ( buffer == AKONADI_PARAM_FULLPAYLOAD ) {
         mRequestedParts << "PLD:RFC822"; // HACK: temporary workaround until we have support for detecting the availability of the full payload in the server
         mFullPayload = true;
-      }
-#if 0
-      // IMAP compat stuff
-      else if ( buffer == "ALL" ) {
-                              mRequestedParts << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE";
-    } else if ( buffer == "FULL" ) {
-                              mRequestedParts << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE";
-    } else if ( buffer == "FAST" ) {
-                              mRequestedParts << "FLAGS" << "INTERNALDATE" << "RFC822.SIZE" << "ENVELOPE" << "BODY";
-    }
-#endif
-      else {
+      } else if ( buffer == AKONADI_PARAM_ANCESTORS ) {
+        mAncestorDepth = HandlerHelper::parseDepth( m_streamParser->readString() );
+      } else {
         throw HandlerException( "Invalid command argument" );
       }
     }
   }
-}
-
-QString Fetch::driverName()
-{
-  return connection()->storageBackend()->database().driverName();
 }
 

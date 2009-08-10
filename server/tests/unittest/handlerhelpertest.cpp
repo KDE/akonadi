@@ -92,8 +92,39 @@ class HandlerHelperTest : public QObject
       QFETCH( QByteArray, result );
 
       const QByteArray realResult = HandlerHelper::ancestorsToByteArray( depth, ancestors );
-      qDebug() << realResult;
       QCOMPARE( realResult, result );
+    }
+
+    void testParseDepth_data()
+    {
+      QTest::addColumn<QByteArray>( "input" );
+      QTest::addColumn<int>( "output" );
+      QTest::addColumn<bool>( "success" );
+
+      QTest::newRow( "0" ) << QByteArray( "0" ) << 0 << true;
+      QTest::newRow( "1" ) << QByteArray( "1" ) << 1 << true;
+      QTest::newRow( "INF" ) << QByteArray( "INF" ) << INT_MAX << true;
+
+      QTest::newRow( "empty" ) << QByteArray() << 0 << false;
+      QTest::newRow( "invalid" ) << QByteArray( "foo" ) << 0 << false;
+    }
+
+    void testParseDepth()
+    {
+      QFETCH( QByteArray, input );
+      QFETCH( int, output );
+      QFETCH( bool, success );
+
+      bool didThrow = false;
+      try {
+        const int result = HandlerHelper::parseDepth( input );
+        QCOMPARE( result, output );
+      } catch ( const ImapParserException &e ) {
+        if ( success )
+          qDebug() << e.what();
+        didThrow = true;
+      }
+      QCOMPARE( didThrow, !success );
     }
 };
 

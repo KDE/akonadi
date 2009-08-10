@@ -25,6 +25,7 @@
 #include "scope.h"
 #include "libs/imapset_p.h"
 #include "storage/datastore.h"
+#include <QStack>
 
 namespace Akonadi {
 
@@ -71,6 +72,7 @@ class Fetch : public Handler
   private:
     QueryBuilder mItemQuery;
     QList<QByteArray> mRequestedParts;
+    QHash<Collection::Id, QStack<Collection> > mAncestorCache;
     Scope mScope;
     int mAncestorDepth;
     bool mCacheOnly;
