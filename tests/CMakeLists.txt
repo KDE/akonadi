@@ -14,6 +14,7 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/../
     ${Boost_INCLUDE_DIR}
     ${AKONADI_INCLUDE_DIR}
+    ${AKONADI_INCLUDE_DIR}/akonadi/private
 )
 
 # add testrunner (application for managing a self-contained test
@@ -36,8 +37,8 @@ endmacro(add_akonadi_demo)
 macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test})
-  target_link_libraries(${_name} akonadi-kde akonadi-kmime ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
+  kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test} fakesession.cpp fakemonitor.cpp fakeserver.cpp)
+  target_link_libraries(${_name} akonadi-kde akonadi-kmime ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
 endmacro(add_akonadi_test)
 
 # convenience macro to add akonadi testrunner unit-tests
@@ -89,6 +90,7 @@ add_akonadi_test(itemtest.cpp)
 add_akonadi_test(itemserializertest.cpp)
 add_akonadi_test(mimetypecheckertest.cpp)
 add_akonadi_test(protocolhelpertest.cpp)
+add_akonadi_test(entitytreemodeltest.cpp)
 
 # qtestlib tests that need non-exported stuff from akonadi-kde
 kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)

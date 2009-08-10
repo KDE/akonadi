@@ -73,7 +73,7 @@ void CollectionRequester::Private::init()
   button->setFixedSize( buttonSize, buttonSize );
   button->setToolTip( i18n( "Open collection dialog" ) );
 
-  q->setSpacing( KDialog::spacingHint() );
+  q->setSpacing( -1 );
 
   edit->installEventFilter( q );
   q->setFocusProxy( edit );

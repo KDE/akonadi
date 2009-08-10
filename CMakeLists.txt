@@ -97,6 +97,7 @@ set( akonadikde_LIB_SRC
   itemmodel.cpp
   itemmonitor.cpp
   itemmovejob.cpp
+  itemsearchjob.cpp
   itemserializer.cpp
   itemserializerplugin.cpp
   itemmodifyjob.cpp
@@ -232,6 +233,7 @@ install( FILES
   itemmonitor.h
   itemmovejob.h
   itempayloadinternals_p.h
+  itemsearchjob.h
   itemserializerplugin.h
   itemsync.h
   itemview.h
