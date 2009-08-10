@@ -66,7 +66,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * @param query The search query in SPARQL format.
      * @param parent The parent object.
      */
-    ItemSearchJob( const QString &query, QObject *parent = 0 );
+    explicit ItemSearchJob( const QString &query, QObject *parent = 0 );
 
     /**
      * Destroys the item search job.
