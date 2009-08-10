@@ -61,6 +61,7 @@ static const int partQueryExternalColumn = 4;
 Fetch::Fetch( Scope::SelectionScope scope )
   : Handler(),
     mScope( scope ),
+    mAncestorDepth( 0 ),
     mCacheOnly( false ),
     mFullPayload( false ),
     mAllAttrs( false ),
@@ -274,7 +275,8 @@ bool Fetch::parseStream()
     attributes.append( "REV " + QByteArray::number( pimItemRev ) );
     attributes.append( "REMOTEID " + ImapParser::quote( mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8() ) );
     attributes.append( "MIMETYPE " + ImapParser::quote( mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8() ) );
-    attributes.append( "COLLECTIONID " + ImapParser::quote( mItemQuery.query().value( itemQueryCollectionIdColumn ).toString().toUtf8() ) );
+    Collection::Id parentCollectionId = mItemQuery.query().value( itemQueryCollectionIdColumn ).toLongLong();
+    attributes.append( "COLLECTIONID " + QByteArray::number( parentCollectionId ) );
 
     if ( mSizeRequested ) {
       const qint64 pimItemSize = mItemQuery.query().value( itemQuerySizeColumn ).toLongLong();
@@ -302,6 +304,9 @@ bool Fetch::parseStream()
       }
       attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
     }
+
+    if ( mAncestorDepth > 0 )
+      attributes.append( HandlerHelper::ancestorsToByteArray( mAncestorDepth, ancestorsForItem( parentCollectionId ) ) );
 
     while ( partQuery.query().isValid() ) {
       const qint64 id = partQuery.query().value( partQueryIdColumn ).toLongLong();
@@ -395,3 +400,21 @@ void Fetch::parseCommandStream()
   }
 }
 
+QStack<Collection> Fetch::ancestorsForItem( Collection::Id parentColId )
+{
+  if ( mAncestorDepth <= 0 )
+    return QStack<Collection>();
+  if ( mAncestorCache.contains( parentColId ) )
+    return mAncestorCache.value( parentColId );
+
+  QStack<Collection> ancestors;
+  Collection col = Collection::retrieveById( parentColId );
+  for ( int i = 0; i < mAncestorDepth; ++i ) {
+    if ( !col.isValid() )
+      break;
+    ancestors.prepend( col );
+    col = col.parent();
+  }
+  mAncestorCache.insert( parentColId, ancestors );
+  return ancestors;
+}
