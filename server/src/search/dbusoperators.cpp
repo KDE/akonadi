@@ -18,6 +18,8 @@
 
 #include "dbusoperators.h"
 
+#include <soprano/version.h>
+
 #include <QtDBus/QDBusMetaType>
 
 
@@ -329,7 +331,14 @@ const QDBusArgument& operator>>( const QDBusArgument& arg, Soprano::Node& node )
     QString value, language, dataTypeUri;
     arg >> type >> value >> language >> dataTypeUri;
     if ( type == Soprano::Node::LiteralNode ) {
+#if SOPRANO_IS_VERSION( 2, 3, 0 )
+        if ( dataTypeUri.isEmpty() )
+            node = Soprano::Node( Soprano::LiteralValue::createPlainLiteral( value, language ) );
+        else
+            node = Soprano::Node( Soprano::LiteralValue::fromString( value, QUrl::fromEncoded( dataTypeUri.toAscii() ) ) );
+#else
         node = Soprano::Node( Soprano::LiteralValue::fromString( value, dataTypeUri ), language );
+#endif
     }
     else if ( type == Soprano::Node::ResourceNode ) {
         node = Soprano::Node( QUrl::fromEncoded( value.toAscii() ) );
