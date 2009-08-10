@@ -22,6 +22,7 @@
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
+#include "itemfetchscope.h"
 
 namespace Akonadi {
 
@@ -31,8 +32,9 @@ namespace Akonadi {
 class ItemFetchScopePrivate : public QSharedData
 {
   public:
-    ItemFetchScopePrivate()
-      : mFullPayload( false ),
+    ItemFetchScopePrivate() :
+        mAncestorDepth( ItemFetchScope::None ),
+        mFullPayload( false ),
         mAllAttributes( false ),
         mCacheOnly( false )
     {
@@ -43,6 +45,7 @@ class ItemFetchScopePrivate : public QSharedData
     {
       mPayloadParts = other.mPayloadParts;
       mAttributes = other.mAttributes;
+      mAncestorDepth = other.mAncestorDepth;
       mFullPayload = other.mFullPayload;
       mAllAttributes = other.mAllAttributes;
       mCacheOnly = other.mCacheOnly;
@@ -51,6 +54,7 @@ class ItemFetchScopePrivate : public QSharedData
   public:
     QSet<QByteArray> mPayloadParts;
     QSet<QByteArray> mAttributes;
+    ItemFetchScope::AncestorRetrieval mAncestorDepth;
     bool mFullPayload;
     bool mAllAttributes;
     bool mCacheOnly;

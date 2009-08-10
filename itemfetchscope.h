@@ -68,6 +68,16 @@ class AKONADI_EXPORT ItemFetchScope
 {
   public:
     /**
+     * Describes the ancestor retrieval depth.
+     * @since 4.4
+     */
+    enum AncestorRetrieval {
+      None, ///< No ancestor retrieval at all (the default)
+      Parent, ///< Only retrieve the immediate parent collection
+      All ///< Retrieve all ancestors, up to Collection::root()
+    };
+
+    /**
      * Creates an empty item fetch scope.
      *
      * Using an empty scope will only fetch the very basic meta data of items,
@@ -178,6 +188,22 @@ class AKONADI_EXPORT ItemFetchScope
      * @c false otherwise (the default).
      */
     void setCacheOnly( bool cacheOnly );
+
+    /**
+     * Sets how many levels of ancestor collections should be included in the retrieval.
+     *
+     * @param ancestorDepth The desired ancestor retrieval depth.
+     * @since 4.4
+     */
+    void setAncestorRetrieval( AncestorRetrieval ancestorDepth );
+
+    /**
+     * Returns the ancestor retrieval depth.
+     *
+     * @see setAncestorRetrieval()
+     * @since 4.4
+     */
+    AncestorRetrieval ancestorRetrieval() const;
 
     /**
      * Returns @c true if there is nothing to fetch.

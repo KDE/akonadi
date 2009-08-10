@@ -88,6 +88,18 @@ void ItemFetchJobPrivate::startFetchJob()
     command += " " AKONADI_PARAM_ALLATTRIBUTES;
   if ( mFetchScope.cacheOnly() )
     command += " " AKONADI_PARAM_CACHEONLY;
+  if ( mFetchScope.ancestorRetrieval() != ItemFetchScope::None ) {
+    switch ( mFetchScope.ancestorRetrieval() ) {
+      case ItemFetchScope::Parent:
+        command += " ANCESTORS 1";
+        break;
+      case ItemFetchScope::All:
+        command += " ANCESTORS INF";
+        break;
+      default:
+        Q_ASSERT( false );
+    }
+  }
 
   //TODO: detect somehow if server supports external payload attribute
   command += " " AKONADI_PARAM_EXTERNALPAYLOAD;
@@ -230,6 +242,8 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
           QDateTime datetime;
           ImapParser::parseDateTime( fetchResponse[i + 1], datetime );
           item.setModificationTime( datetime );
+        } else if ( key == "ANCESTORS" ) {
+          ProtocolHelper::parseAncestors( fetchResponse[i + 1], &item );
         } else {
           int version = 0;
           QByteArray plainKey( key );
