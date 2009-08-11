@@ -107,3 +107,13 @@ void ItemFetchScope::setCacheOnly(bool cacheOnly)
 {
   d->mCacheOnly = cacheOnly;
 }
+
+ItemFetchScope::AncestorRetrieval ItemFetchScope::ancestorRetrieval() const
+{
+  return d->mAncestorDepth;
+}
+
+void ItemFetchScope::setAncestorRetrieval( AncestorRetrieval depth )
+{
+  d->mAncestorDepth = depth;
+}

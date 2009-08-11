@@ -59,6 +59,11 @@ class ProtocolHelper
     static QByteArray cachePolicyToByteArray( const CachePolicy &policy );
 
     /**
+      Convert a ancestor chain from its protocol representation into an Entity object.
+    */
+    static void parseAncestors( const QByteArray &data, Entity *entity, int start = 0 );
+
+    /**
       Parse a collection description.
       @param data The input data.
       @param collection The parsed collection.

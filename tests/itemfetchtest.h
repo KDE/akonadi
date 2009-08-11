@@ -33,6 +33,7 @@ class ItemFetchTest : public QObject
     void testMultipartFetch_data();
     void testMultipartFetch();
     void testRidFetch();
+    void testAncestorRetrieval();
 };
 
 

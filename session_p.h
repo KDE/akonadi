@@ -90,7 +90,7 @@ class SessionPrivate
     */
     void writeData( const QByteArray &data );
 
-    static int minimumProtocolVersion() { return 18; }
+    static int minimumProtocolVersion() { return 19; }
 
     Session *mParent;
     QByteArray sessionId;

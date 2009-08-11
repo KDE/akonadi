@@ -79,6 +79,28 @@ QByteArray ProtocolHelper::cachePolicyToByteArray(const CachePolicy & policy)
   return rv;
 }
 
+void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int start )
+{
+  QList<QByteArray> ancestors;
+  ImapParser::parseParenthesizedList( data, ancestors );
+  Entity* current = entity;
+  foreach ( const QByteArray &uidRidPair, ancestors ) {
+    QList<QByteArray> parentIds;
+    ImapParser::parseParenthesizedList( uidRidPair, parentIds );
+    if ( parentIds.size() != 2 )
+      break;
+    const Collection::Id uid = parentIds.at( 0 ).toLongLong();
+    const QString rid = QString::fromUtf8( parentIds.at( 1 ) );
+    if ( uid == Collection::root().id() ) {
+      current->setParentCollection( Collection::root() );
+      break;
+    }
+    current->parentCollection().setId( uid );
+    current->parentCollection().setRemoteId( rid );
+    current = &current->parentCollection();
+  }
+}
+
 int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collection, int start)
 {
   int pos = start;
@@ -140,24 +162,7 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       ProtocolHelper::parseCachePolicy( value, policy );
       collection.setCachePolicy( policy );
     } else if ( key == "ANCESTORS" ) {
-      QList<QByteArray> ancestors;
-      ImapParser::parseParenthesizedList( value, ancestors );
-      Collection* currentCol = &collection;
-      foreach ( const QByteArray &uidRidPair, ancestors ) {
-        QList<QByteArray> parentIds;
-        ImapParser::parseParenthesizedList( uidRidPair, parentIds );
-        if ( parentIds.size() != 2 )
-          break;
-        const Collection::Id uid = parentIds.at( 0 ).toLongLong();
-        const QString rid = QString::fromUtf8( parentIds.at( 1 ) );
-        if ( uid == Collection::root().id() ) {
-          currentCol->setParentCollection( Collection::root() );
-          break;
-        }
-        currentCol->parentCollection().setId( uid );
-        currentCol->parentCollection().setRemoteId( rid );
-        currentCol = &currentCol->parentCollection();
-      }
+      parseAncestors( value, &collection );
     } else {
       Attribute* attr = AttributeFactory::createAttribute( key );
       Q_ASSERT( attr );

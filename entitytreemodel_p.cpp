@@ -688,7 +688,6 @@ void EntityTreeModelPrivate::startFirstListJob()
   if ( m_showRootCollection ) {
     rootCollection = Collection::root();
     // Notify the outside that we're putting collection::root into the model.
-//     kDebug() << "begin";
     q->beginInsertRows( QModelIndex(), 0, 0 );
     m_collections.insert( rootCollection.id(), rootCollection );
     m_rootNode = new Node;
@@ -696,7 +695,6 @@ void EntityTreeModelPrivate::startFirstListJob()
     m_rootNode->parent = -1;
     m_rootNode->type = Node::Collection;
     m_childEntities[ -1 ].append( m_rootNode );
-//     kDebug() << "why";
     q->endInsertRows();
   } else {
     // Otherwise store it silently because it's not part of the usable model.
@@ -707,8 +705,6 @@ void EntityTreeModelPrivate::startFirstListJob()
     m_rootNode->type = Node::Collection;
     m_collections.insert( rootCollection.id(), rootCollection );
   }
-
-//   kDebug() << "inserting" << rootCollection.id();
 
   // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
   // necessary.
@@ -724,7 +720,6 @@ void EntityTreeModelPrivate::startFirstListJob()
   // retrieved now.
 
   if ( m_itemPopulation != EntityTreeModel::NoItemPopulation ) {
-//     kDebug() << (rootCollection == Collection::root());
     if (rootCollection != Collection::root())
       fetchItems( rootCollection );
   }

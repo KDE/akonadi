@@ -859,14 +859,15 @@ QModelIndex EntityTreeModel::indexForCollection( const Collection &collection ) 
 {
   Q_D(const EntityTreeModel);
 
-  // TODO: will this work for collection::root while showing it?
+  // The id of the parent of Collection::root is not guaranteed to be -1 as assumed by startFirstListJob,
+  // we ensure that we use -1 for the invalid Collection.
+  const Collection::Id parentId = collection.parentCollection().isValid() ? collection.parentCollection().id() : -1;
 
-  const int row = d->indexOf( d->m_childEntities.value( collection.parentCollection().id() ), collection.id() );
-
+  const int row = d->indexOf( d->m_childEntities.value( parentId ), collection.id() );
   if ( row < 0 )
     return QModelIndex();
 
-  Node *node = d->m_childEntities.value( collection.parentCollection().id() ).at( row );
+  Node *node = d->m_childEntities.value( parentId ).at( row );
 
   return createIndex( row, 0, reinterpret_cast<void*>( node ) );
 }

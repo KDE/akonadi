@@ -236,3 +236,22 @@ void ItemFetchTest::testRidFetch()
   QCOMPARE( item.remoteId(), QString::fromLatin1( "A" ) );
   QCOMPARE( item.mimeType(), QString::fromLatin1( "application/octet-stream" ) );
 }
+
+void ItemFetchTest::testAncestorRetrieval()
+{
+  ItemFetchJob *job = new ItemFetchJob( Item( 1 ), this );
+  job->fetchScope().setAncestorRetrieval( ItemFetchScope::All );
+  AKVERIFYEXEC( job );
+  QCOMPARE( job->items().count(), 1 );
+  const Item item = job->items().first();
+  QVERIFY( item.isValid() );
+  QCOMPARE( item.remoteId(), QString::fromLatin1( "A" ) );
+  QCOMPARE( item.mimeType(), QString::fromLatin1( "application/octet-stream" ) );
+  const Collection c = item.parentCollection();
+  QCOMPARE( c.remoteId(), QString( "10" ) );
+  const Collection c2 = c.parentCollection();
+  QCOMPARE( c2.remoteId(), QString( "6" ) );
+  const Collection c3 = c2.parentCollection();
+  QCOMPARE( c3, Collection::root() );
+
+}
