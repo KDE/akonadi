@@ -137,6 +137,9 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       if ( m_collections.contains( parentId ) ) {
         insertCollection( col, m_collections.value( parentId ) );
 
+        if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
+          fetchItems( col );
+
         if ( m_pendingChildCollections.contains( colId ) )
         {
           QList<Collection::Id> pendingParentIds = m_pendingChildCollections.value( colId );
@@ -304,15 +307,16 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
   node->type = Node::Collection;
   m_childEntities[ parent.id() ].prepend( node );
   q->endInsertRows();
-
-  if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
-    fetchItems( collection );
 }
 
 void EntityTreeModelPrivate::insertPendingCollection( const Akonadi::Collection& collection, const Akonadi::Collection& parent, QMutableListIterator<Collection> &colIt )
 {
   insertCollection(collection, parent);
+
   m_pendingCollections.remove( collection.id() );
+
+  if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
+    fetchItems( collection );
 
   if (colIt.findPrevious(collection) || colIt.findNext(collection))
   {
@@ -340,7 +344,7 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
   // If the resource is removed while populating the model with it, we might still
   // get some monitor signals. These stale/out-of-order signals can't be completely eliminated
   // in the akonadi server due to implementation details, so we also handle such signals in the model silently
-  // in all the monior slots.
+  // in all the monitored slots.
   // Stephen Kelly, 28, July 2009
 
   // This is currently temporarily blocked by a uninitialized value bug in the server.
