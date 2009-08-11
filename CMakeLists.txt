@@ -115,6 +115,7 @@ set( akonadikde_LIB_SRC
   resourcebase.cpp
   resourcescheduler.cpp
   resourceselectjob.cpp
+  resourcesynchronizationjob.cpp
   searchcreatejob.cpp
   selectionproxymodel.cpp
   selftestdialog.cpp
@@ -244,6 +245,7 @@ install( FILES
   qtest_akonadi.h
   preprocessorbase.h
   resourcebase.h
+  resourcesynchronizationjob.h
   searchcreatejob.h
   selectionproxymodel.h
   session.h

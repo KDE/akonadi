@@ -18,6 +18,7 @@
 #ifndef AKONADI_RESOURCESYNCJOB_H
 #define AKONADI_RESOURCESYNCJOB_H
 
+#include "akonadi_export.h"
 #include <kjob.h>
 
 namespace Akonadi {
@@ -26,14 +27,22 @@ class AgentInstance;
 class ResourceSynchronizationJobPrivate;
 
 /**
-  Synchronizes a given resource.
+  Synchronizes a given resource. If you only want to trigger a
+  resource synchronization without being interested in the result,
+  using Akonadi::AgentInstance::synchronize() is enough. If you want
+  to wait until it's finished, this job is for you.
+
+  @note This is a KJob not an Akonadi::Job, so it wont auto-start!
+
+  @since 4.4
 */
-class ResourceSynchronizationJob : public KJob
+class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
 {
   Q_OBJECT
   public:
     /**
       Create a new synchronization job for the given agent.
+      @param instance The resource instance to synchronize.
     */
     ResourceSynchronizationJob( const AgentInstance &instance, QObject *parent = 0 );
 
@@ -45,12 +54,12 @@ class ResourceSynchronizationJob : public KJob
     /* reimpl */
     void start();
 
-  private slots:
-    void slotSynchronized();
-    void slotTimeout();
-
   private:
     ResourceSynchronizationJobPrivate* const d;
+    friend class ResourceSynchronizationJobPrivate;
+
+    Q_PRIVATE_SLOT( d, void slotSynchronized() )
+    Q_PRIVATE_SLOT( d, void slotTimeout() )
 };
 
 }
