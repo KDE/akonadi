@@ -15,10 +15,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef AKONADI_RESOURCESYNCJOB_H
-#define AKONADI_RESOURCESYNCJOB_H
+#ifndef AKONADI_RESOURCESYNCHRONIZATIONJOB_H
+#define AKONADI_RESOURCESYNCHRONIZATIONJOB_H
 
 #include "akonadi_export.h"
+
 #include <kjob.h>
 
 namespace Akonadi {
@@ -27,39 +28,61 @@ class AgentInstance;
 class ResourceSynchronizationJobPrivate;
 
 /**
-  Synchronizes a given resource. If you only want to trigger a
-  resource synchronization without being interested in the result,
-  using Akonadi::AgentInstance::synchronize() is enough. If you want
-  to wait until it's finished, this job is for you.
-
-  @note This is a KJob not an Akonadi::Job, so it wont auto-start!
-
-  @since 4.4
-*/
+ * @short Job that synchronizes a resource.
+ *
+ * This job will trigger a resource to synchronize the backend it is
+ * responsible for (e.g. a local file or a groupware server) with the
+ * Akonadi storage.
+ *
+ * If you only want to trigger the synchronization without being
+ * interested in the result, using Akonadi::AgentInstance::synchronize() is enough.
+ * If you want to wait until it's finished, use this class.
+ *
+ * Example:
+ *
+ * @code
+ * using namespace Akonadi;
+ *
+ * const AgentInstance resource = AgentManager::self()->instance( "myresourceidentifier" );
+ *
+ * ResourceSynchronizationJob *job = new ResourceSynchronizationJob( resource );
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( synchronizationFinished( KJob* ) ) );
+ *
+ * @endcode
+ *
+ * @note This is a KJob not an Akonadi::Job, so it wont auto-start!
+ *
+ * @author Volker Krause <vkrause@kde.org>
+ * @since 4.4
+ */
 class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
 {
   Q_OBJECT
+
   public:
     /**
-      Create a new synchronization job for the given agent.
-      @param instance The resource instance to synchronize.
-    */
+     * Creates a new synchronization job for the given resource.
+     *
+     * @param instance The resource instance to synchronize.
+     */
     ResourceSynchronizationJob( const AgentInstance &instance, QObject *parent = 0 );
 
     /**
-      Destructor.
-    */
+     * Destroys the synchronization job.
+     */
     ~ResourceSynchronizationJob();
 
     /* reimpl */
     void start();
 
   private:
+    //@cond PRIVATE
     ResourceSynchronizationJobPrivate* const d;
     friend class ResourceSynchronizationJobPrivate;
 
     Q_PRIVATE_SLOT( d, void slotSynchronized() )
     Q_PRIVATE_SLOT( d, void slotTimeout() )
+    //@endcond
 };
 
 }
