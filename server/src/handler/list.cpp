@@ -132,9 +132,8 @@ bool List::parseStream()
       m_streamParser->beginList();
       while ( !m_streamParser->atListEnd() ) {
         const MimeType mt = MimeType::retrieveByName( m_streamParser->readUtf8String() );
-        if ( !mt.isValid() )
-          throw HandlerException( "Invalid mimetype filter" );
-        mMimeTypes.append( mt.id() );
+        if ( mt.isValid() )
+          mMimeTypes.append( mt.id() );
       }
     }
   }
