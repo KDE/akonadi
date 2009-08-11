@@ -1,0 +1,4 @@
+LocalFolders:
+* test for deletion of actual dir from local file system
+* test for user creating a custom folder with a default folder name (such as 'inbox')
+

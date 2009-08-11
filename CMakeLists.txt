@@ -105,6 +105,7 @@ set( akonadikde_LIB_SRC
   itemview.cpp
   job.cpp
   linkjob.cpp
+  filteractionjob.cpp
   mimetypechecker.cpp
   monitor.cpp
   monitor_p.cpp
@@ -128,6 +129,7 @@ set( akonadikde_LIB_SRC
   subscriptionmodel.cpp
   transactionjobs.cpp
   transactionsequence.cpp
+  transportresourcebase.cpp
   unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
@@ -143,6 +145,9 @@ qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.free
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Preprocessor.xml preprocessorbase.h Akonadi::PreprocessorBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Status.xml agentbase.h Akonadi::AgentBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase )
+# TODO move this to kdesupport/akonadi/interfaces
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Resource.Transport.xml transportresourcebase_p.h Akonadi::TransportResourceBasePrivate )
+#qt4_add_dbus_interface( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Resource.Transport.xml resourcetransportinterface )
 
 kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
@@ -233,6 +238,7 @@ install( FILES
   itemview.h
   job.h
   linkjob.h
+  filteractionjob.h
   mimetypechecker.h
   monitor.h
   qtest_akonadi.h
@@ -247,6 +253,7 @@ install( FILES
   statisticstooltipproxymodel.h
   transactionjobs.h
   transactionsequence.h
+  transportresourcebase.h
   unlinkjob.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel
 )
