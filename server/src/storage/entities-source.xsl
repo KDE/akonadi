@@ -78,6 +78,7 @@ QHash&lt;<xsl:value-of select="column[@name = 'name']/@type"/>, <xsl:value-of se
 void <xsl:value-of select="$className"/>::Private::addToCache( const <xsl:value-of select="$className"/> &amp; entry )
 {
   Q_ASSERT( cacheEnabled );
+  Q_UNUSED( entry ); <!-- in case the table has neither an id nor name column -->
   cacheMutex.lock();
   <xsl:if test="column[@name = 'id']">
   idCache.insert( entry.id(), entry );
