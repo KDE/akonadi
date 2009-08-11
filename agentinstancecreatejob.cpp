@@ -28,6 +28,11 @@
 
 #include <QtCore/QTimer>
 
+#ifdef Q_OS_UNIX
+#include <sys/types.h>
+#include <signal.h>
+#endif
+
 using namespace Akonadi;
 
 static const int safetyTimeout = 10000; // ms
@@ -127,7 +132,14 @@ void AgentInstanceCreateJob::start()
     setErrorText( i18n("Unable to create agent instance." ) );
     QTimer::singleShot( 0, this , SLOT(emitResult()) );
   } else {
-    d->safetyTimer->start( safetyTimeout );
+    int timeout = safetyTimeout;
+#ifdef Q_OS_UNIX
+    // Increate the timeout when valgrinding the agent, because that slows down things a log.
+    QString agentValgrind = QString::fromLocal8Bit( qgetenv( "AKONADI_VALGRIND" ) );
+    if ( !agentValgrind.isEmpty() && d->agentType.identifier().contains( agentValgrind ) )
+      timeout *= 15;
+#endif
+    d->safetyTimer->start( timeout );
   }
 }
 
