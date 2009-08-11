@@ -38,7 +38,7 @@
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/entitydisplayattribute.h>
 
-#include <resourcesynchronizationjob.h> // copied from playground/pim/akonaditest
+#include <akonadi/resourcesynchronizationjob.h> // copied from playground/pim/akonaditest
 
 using namespace Akonadi;
 
@@ -145,7 +145,7 @@ void LocalFoldersBuildJob::Private::resourceCreateResult( KJob *job )
     q->emitResult();
   } else {
     AgentInstance agent;
-    
+
     // Get the resource instance, and save its ID to config.
     {
       Q_ASSERT( dynamic_cast<AgentInstanceCreateJob*>( job ) );
