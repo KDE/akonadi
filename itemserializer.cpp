@@ -72,10 +72,6 @@ public:
 
 K_GLOBAL_STATIC( DefaultItemSerializerPlugin, s_defaultItemSerializerPlugin )
 
-}
-
-using namespace Akonadi;
-
 class PluginEntry
 {
   public:
@@ -293,4 +289,6 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
   Q_ASSERT(plugin);
   s_pluginRegistry->cachedPlugins.insert( mimetype, plugin );
   return *plugin;
+}
+
 }
