@@ -6,7 +6,7 @@ remove_definitions( -DQT_NO_CAST_TO_ASCII )
 
 set( requester_srcs foldersrequester.cpp )
 kde4_add_executable( requester TEST ${requester_srcs} )
-target_link_librarieS( requester akonadi-kmime ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+target_link_libraries( requester akonadi-kmime akonadi-kde ${KDE4_KDEUI_LIBS})
 # for racetest
 set( requester_exe "QLatin1String( \"${CMAKE_CURRENT_BINARY_DIR}/requester\" )" )
 add_definitions( -DREQUESTER_EXE='${requester_exe}' )
@@ -22,12 +22,12 @@ macro(add_akonadi_isolated_test _source)
   target_link_libraries(${_targetName}
     ${QT_QTTEST_LIBRARY}
     ${QT_QTGUI_LIBRARY}
+    ${QT_QTDBUS_LIBRARY}
     ${KDE4_AKONADI_LIBS}
     ${KDE4_KDECORE_LIBS}
     ${KDE4_MAILTRANSPORT_LIBS}
     ${KDE4_KMIME_LIBS}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTDBUS_LIBRARY}
+    akonadi-kde
     akonadi-kmime
   )
 
