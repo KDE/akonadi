@@ -30,6 +30,7 @@ set(akonadicontact_LIB_SRC
   contactgroupeditor.cpp
   contactgroupeditordialog.cpp
   contactgrouplineedit.cpp
+  contactmetadataattribute.cpp
   waitingoverlay.cpp
   ${akonadicontact_editor_SRCS}
 )
