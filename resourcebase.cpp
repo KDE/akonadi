@@ -97,6 +97,9 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     void slotDeleteResourceCollectionDone( KJob *job );
     void slotCollectionDeletionDone( KJob *job );
 
+    void slotPrepareItemRetrieval( const Akonadi::Item &item );
+    void slotPrepareItemRetrievalResult( KJob* job );
+
     // synchronize states
     Collection currentCollection;
 
@@ -127,7 +130,7 @@ ResourceBase::ResourceBase( const QString & id )
   connect( d->scheduler, SIGNAL( executeCollectionSync( const Akonadi::Collection& ) ),
            SLOT( slotSynchronizeCollection( const Akonadi::Collection& ) ) );
   connect( d->scheduler, SIGNAL( executeItemFetch( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-           SLOT( retrieveItem( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+           SLOT( slotPrepareItemRetrieval(Akonadi::Item)) );
   connect( d->scheduler, SIGNAL( executeResourceCollectionDeletion() ),
            SLOT( slotDeleteResourceCollection() ) );
   connect( d->scheduler, SIGNAL( status( int, const QString& ) ),
@@ -443,6 +446,35 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
   scheduler->taskDone();
 }
 
+void ResourceBasePrivate::slotPrepareItemRetrieval( const Akonadi::Item &item )
+{
+  Q_Q( ResourceBase );
+  ItemFetchJob *fetch = new ItemFetchJob( item, this );
+  fetch->fetchScope().setAncestorRetrieval( q->changeRecorder()->itemFetchScope().ancestorRetrieval() );
+  q->connect( fetch, SIGNAL(result(KJob*)), SLOT(slotPrepareItemRetrievalResult(KJob*)) );
+}
+
+void ResourceBasePrivate::slotPrepareItemRetrievalResult( KJob* job )
+{
+  Q_Q( ResourceBase );
+  Q_ASSERT_X( scheduler->currentTask().type == ResourceScheduler::FetchItem,
+            "ResourceBasePrivate::slotPrepareItemRetrievalResult()",
+            "Preparing item retrieval although no item retrieval is in progress" );
+  if ( job->error() ) {
+    q->cancelTask( job->errorText() );
+    return;
+  }
+  ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
+  if ( fetch->items().count() != 1 ) {
+    q->cancelTask( QLatin1String("The requested item does no longer exist") );
+    return;
+  }
+  const Item item = fetch->items().first();
+  const QSet<QByteArray> parts = scheduler->currentTask().itemParts;
+  if ( !q->retrieveItem( item, parts ) )
+    q->cancelTask();
+}
+
 void ResourceBase::itemsRetrievalDone()
 {
   Q_D( ResourceBase );
@@ -522,6 +554,7 @@ void ResourceBase::synchronizeCollection( qint64 collectionId )
 {
   CollectionFetchJob* job = new CollectionFetchJob( Collection( collectionId ), CollectionFetchJob::Base );
   job->fetchScope().setResource( identifier() );
+  job->fetchScope().setAncestorRetrieval( changeRecorder()->collectionFetchScope().ancestorRetrieval() );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( slotCollectionListDone( KJob* ) ) );
 }
 

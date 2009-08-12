@@ -234,6 +234,12 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
     it.setRemoteId( msg.remoteId() );
     it.setMimeType( msg.mimeType() );
   }
+  if ( !it.parentCollection().isValid() ) {
+    if ( msg.operation() == NotificationMessage::Move )
+      it.setParentCollection( colDest );
+    else
+      it.setParentCollection( col );
+  }
   switch ( msg.operation() ) {
     case NotificationMessage::Add:
       emit q_ptr->itemAdded( it, col );
@@ -267,16 +273,24 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
   Collection collection = col;
   if ( !collection.isValid() ) {
     collection = Collection( msg.uid() );
-    collection.setParentCollection( Collection( msg.parentCollection() ) );
     collection.setResource( QString::fromUtf8( msg.resource() ) );
     collection.setRemoteId( msg.remoteId() );
   }
+
   Collection parent = par;
   if ( !parent.isValid() )
     parent = Collection( msg.parentCollection() );
   Collection destination = dest;
   if ( !destination.isValid() )
     destination = Collection( msg.parentDestCollection() );
+
+  if ( !collection.parentCollection().isValid() ) {
+    if ( msg.operation() == NotificationMessage::Move )
+      collection.setParentCollection( destination );
+    else
+      collection.setParentCollection( parent );
+  }
+
   switch ( msg.operation() ) {
     case NotificationMessage::Add:
       emit q_ptr->collectionAdded( collection, parent );

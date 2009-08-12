@@ -110,7 +110,7 @@ void MonitorTest::testMonitor()
   monitorCol.setParentCollection( res3 );
   monitorCol.setName( "monitor" );
   CollectionCreateJob *create = new CollectionCreateJob( monitorCol, this );
-  QVERIFY( create->exec() );
+  AKVERIFYEXEC( create );
   monitorCol = create->collection();
   QVERIFY( monitorCol.isValid() );
   QTest::qWait(1000); // make sure the DBus signal has been processed
@@ -263,6 +263,7 @@ void MonitorTest::testMonitor()
   arg = irmspy.takeFirst();
   Item ref = qvariant_cast<Item>( arg.at(0) );
   QCOMPARE( monitorRef, ref );
+  QCOMPARE( ref.parentCollection(), res3 );
 
   QVERIFY( caddspy.isEmpty() );
   QVERIFY( cmodspy.isEmpty() );
@@ -330,7 +331,9 @@ void MonitorTest::testMonitor()
 
   QCOMPARE( crmspy.count(), 1 );
   arg = crmspy.takeFirst();
-  QCOMPARE( arg.at(0).value<Collection>().id(), monitorCol.id() );
+  col = arg.at(0).value<Collection>();
+  QCOMPARE( col.id(), monitorCol.id() );
+  QCOMPARE( col.parentCollection(), dest );
 
   QVERIFY( caddspy.isEmpty() );
   QVERIFY( cmodspy.isEmpty() );

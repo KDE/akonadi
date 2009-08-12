@@ -30,129 +30,132 @@ class ItemFetchScope;
 class Job;
 
 /**
-  @short Base class for a filter/action for FilterActionJob.
-
-  Abstract class defining an interface for a filter and an action for
-  FilterActionJob.  The virtual methods must be implemented in subclasses.
-
-  @code
-  class ClearErrorAction : public Akonadi::FilterAction
-  {
-    public:
-      // reimpl
-      virtual Akonadi::ItemFetchScope fetchScope() const
-      {
-        ItemFetchScope scope;
-        scope.fetchFullPayload( false );
-        scope.fetchAttribute<ErrorAttribute>();
-        return scope;
-      }
-
-      virtual bool itemAccepted( const Akonadi::Item &item ) const
-      {
-        return item.hasAttribute<ErrorAttribute>();
-      }
-
-      virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const
-      {
-        Item cp = item;
-        cp.removeAttribute<ErrorAttribute>();
-        return new ItemModifyJob( cp );
-      }
-  };
-  @endcode
-
-  @see FilterActionJob
-
-  @author Constantin Berzan <exit3219@gmail.com>
-  @since 4.4
-*/
+ * @short Base class for a filter/action for FilterActionJob.
+ *
+ * Abstract class defining an interface for a filter and an action for
+ * FilterActionJob.  The virtual methods must be implemented in subclasses.
+ *
+ * @code
+ * class ClearErrorAction : public Akonadi::FilterAction
+ * {
+ *   public:
+ *     // reimpl
+ *     virtual Akonadi::ItemFetchScope fetchScope() const
+ *     {
+ *       ItemFetchScope scope;
+ *       scope.fetchFullPayload( false );
+ *       scope.fetchAttribute<ErrorAttribute>();
+ *       return scope;
+ *     }
+ *
+ *     virtual bool itemAccepted( const Akonadi::Item &item ) const
+ *     {
+ *       return item.hasAttribute<ErrorAttribute>();
+ *     }
+ *
+ *     virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const
+ *     {
+ *       Item cp = item;
+ *       cp.removeAttribute<ErrorAttribute>();
+ *       return new ItemModifyJob( cp );
+ *     }
+ * };
+ * @endcode
+ *
+ * @see FilterActionJob
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ * @since 4.4
+ */
 class AKONADI_EXPORT FilterAction
 {
   public:
     /**
-      Destroys this FilterAction.
-      A FilterActionJob will delete its FilterAction automatically.
-    */
+     * Destroys this filter action.
+     *
+     * A FilterActionJob will delete its FilterAction automatically.
+     */
     virtual ~FilterAction();
 
     /**
-      Returns an ItemFetchScope to use if the FilterActionJob needs to fetch
-      the items from a collection.
-      Note that the items are not fetched unless FilterActionJob is
-      constructed with a Collection parameter.
-    */
+     * Returns an ItemFetchScope to use if the FilterActionJob needs
+     * to fetch the items from a collection.
+     *
+     * @note The items are not fetched unless FilterActionJob is
+     *       constructed with a Collection parameter.
+     */
     virtual Akonadi::ItemFetchScope fetchScope() const = 0;
 
     /**
-      Returns true if the @p item is accepted by the filter and should be
-      acted upon by the FilterActionJob.
-    */
+     * Returns @c true if the @p item is accepted by the filter and should be
+     * acted upon by the FilterActionJob.
+     */
     virtual bool itemAccepted( const Akonadi::Item &item ) const = 0;
 
     /**
-      Returns a job to act on the @p item.
-      The FilterActionJob will finish when all such jobs are finished.
-    */
+     * Returns a job to act on the @p item.
+     * The FilterActionJob will finish when all such jobs are finished.
+     */
     virtual Akonadi::Job *itemAction( const Akonadi::Item &item ) const = 0;
 };
 
-
-
 /**
-  @short Job to filter and apply an action on a set of items.
- 
-  This jobs filters through a set of items, and applies an action to the
-  items which are accepted by the filter.  The filter and action
-  are provided by a functor class derived from FilterAction.
-
-  For example, a MarkAsRead action/filter may be used to mark all messages
-  in a folder as read.
-
-  @code
-  FilterActionJob *mjob = new FilterActionJob( LocalFolders::self()->outbox(),
-                                               new ClearErrorAction, this );
-  connect( mjob, SIGNAL(result(KJob*)), this, SLOT(massModifyResult(KJob*)) );
-  @endcode
-
-  @see FilterAction
-
-  @author Constantin Berzan <exit3219@gmail.com>
-  @since 4.4
-*/
+ * @short Job to filter and apply an action on a set of items.
+ *
+ * This jobs filters through a set of items, and applies an action to the
+ * items which are accepted by the filter.  The filter and action
+ * are provided by a functor class derived from FilterAction.
+ *
+ * For example, a MarkAsRead action/filter may be used to mark all messages
+ * in a folder as read.
+ *
+ * @code
+ * FilterActionJob *mjob = new FilterActionJob( LocalFolders::self()->outbox(),
+ *                                              new ClearErrorAction, this );
+ * connect( mjob, SIGNAL( result( KJob* ) ), this, SLOT( massModifyResult( KJob* ) ) );
+ * @endcode
+ *
+ * @see FilterAction
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ * @since 4.4
+ */
 class AKONADI_EXPORT FilterActionJob : public TransactionSequence
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a FilterActionJob to act on a single item.
-
-      @param item The item to act on.  The item is not re-fetched.
-      @param functor The FilterAction to use.
-    */
+     * Creates a filter action job to act on a single item.
+     *
+     * @param item The item to act on. The item is not re-fetched.
+     * @param functor The FilterAction to use.
+     * @param parent The parent object.
+     */
     FilterActionJob( const Item &item, FilterAction *functor, QObject *parent = 0 );
 
     /**
-      Creates a FilterActionJob to act on a set of items.
-
-      @param items The items to act on.  The items are not re-fetched.
-      @param functor The FilterAction to use.
-    */
+     * Creates a filter action job to act on a set of items.
+     *
+     * @param items The items to act on. The items are not re-fetched.
+     * @param functor The FilterAction to use.
+     * @param parent The parent object.
+     */
     FilterActionJob( const Item::List &items, FilterAction *functor, QObject *parent = 0 );
 
     /**
-      Creates a FilterActionJob to act on items in a collection.
-
-      @param items The items to act on.  The items are fetched using functor->fetchScope().
-      @param functor The FilterAction to use.
-    */
+     * Creates a filter action job to act on items in a collection.
+     *
+     * @param collection The collection to act on.
+     *                   The items of the collection are fetched using functor->fetchScope().
+     * @param functor The FilterAction to use.
+     * @param parent The parent object.
+     */
     FilterActionJob( const Collection &collection, FilterAction *functor, QObject *parent = 0 );
 
     /**
-      Destroys this FilterActionJob.
-      This job autodeletes itself.
-    */
+     * Destroys the filter action job.
+     */
     ~FilterActionJob();
 
   protected:

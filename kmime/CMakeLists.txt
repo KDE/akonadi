@@ -19,7 +19,6 @@ set( kmimeakonadi_LIB_SRC
   messageparts.cpp
   messagethreadingattribute.cpp
   messagethreaderproxymodel.cpp
-  resourcesynchronizationjob.cpp # copied from playground/pim/akonaditest/resourcetester
 )
 
 kde4_add_kcfg_files( kmimeakonadi_LIB_SRC localfolderssettings.kcfgc )

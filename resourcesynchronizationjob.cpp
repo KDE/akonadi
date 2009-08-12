@@ -33,24 +33,29 @@ namespace Akonadi
 class ResourceSynchronizationJobPrivate
 {
   public:
-    ResourceSynchronizationJobPrivate() :
+    ResourceSynchronizationJobPrivate( ResourceSynchronizationJob* parent ) :
+      q( parent ),
       interface( 0 ),
       safetyTimer( 0 ),
       timeoutCount( 0 )
     {}
 
+    ResourceSynchronizationJob *q;
     AgentInstance instance;
     QDBusInterface* interface;
     QTimer* safetyTimer;
     int timeoutCount;
     static int timeoutCountLimit;
+
+    void slotSynchronized();
+    void slotTimeout();
 };
 
 int ResourceSynchronizationJobPrivate::timeoutCountLimit = 60;
 
 ResourceSynchronizationJob::ResourceSynchronizationJob(const AgentInstance& instance, QObject* parent) :
   KJob( parent ),
-  d( new ResourceSynchronizationJobPrivate )
+  d( new ResourceSynchronizationJobPrivate( this ) )
 {
   d->instance = instance;
   d->safetyTimer = new QTimer( this );
@@ -89,30 +94,30 @@ void ResourceSynchronizationJob::start()
   }
 }
 
-void ResourceSynchronizationJob::slotSynchronized()
+void ResourceSynchronizationJobPrivate::slotSynchronized()
 {
-  disconnect( d->interface, SIGNAL(synchronized()), this, SLOT(slotSynchronized()) );
-  d->safetyTimer->stop();
-  emitResult();
+  q->disconnect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
+  safetyTimer->stop();
+  q->emitResult();
 }
 
-void ResourceSynchronizationJob::slotTimeout()
+void ResourceSynchronizationJobPrivate::slotTimeout()
 {
-  d->instance = AgentManager::self()->instance( d->instance.identifier() );
-  d->timeoutCount++;
+  instance = AgentManager::self()->instance( instance.identifier() );
+  timeoutCount++;
 
-  if ( d->timeoutCount > d->timeoutCountLimit ) {
-    d->safetyTimer->stop();
-    setError( UserDefinedError );
-    setErrorText( i18n( "Resource synchronization timed out." ) );
-    emitResult();
+  if ( timeoutCount > timeoutCountLimit ) {
+    safetyTimer->stop();
+    q->setError( KJob::UserDefinedError );
+    q->setErrorText( i18n( "Resource synchronization timed out." ) );
+    q->emitResult();
     return;
   }
 
-  if ( d->instance.status() == AgentInstance::Idle ) {
+  if ( instance.status() == AgentInstance::Idle ) {
     // try again, we might have lost the synchronized() signal
-    kDebug() << "trying again to sync resource" << d->instance.identifier();
-    d->instance.synchronize();
+    kDebug() << "trying again to sync resource" << instance.identifier();
+    instance.synchronize();
   }
 }
 
