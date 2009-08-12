@@ -37,8 +37,7 @@
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/entitydisplayattribute.h>
-
-#include <akonadi/resourcesynchronizationjob.h> // copied from playground/pim/akonaditest
+#include <akonadi/resourcesynchronizationjob.h>
 
 using namespace Akonadi;
 
