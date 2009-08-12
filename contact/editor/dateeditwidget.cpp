@@ -25,7 +25,7 @@
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <libkdepim/kdatepickerpopup.h>
+#include <libkdepim-copy/kdatepickerpopup.h>
 
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QHBoxLayout>
