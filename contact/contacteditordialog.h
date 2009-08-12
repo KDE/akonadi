@@ -32,6 +32,46 @@ namespace Akonadi {
 class AbstractContactEditorWidget;
 class Item;
 
+/**
+ * @short A dialog for creating or editing a contact in Akonadi.
+ *
+ * This dialog provides a way to create a new contact or edit
+ * an existing contact in Akonadi.
+ *
+ * Example for creating a new contact:
+ *
+ * @code
+ *
+ * Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode,
+ *                                   collectionModel, this );
+ *
+ * if ( dlg.exec() ) {
+ *   qDebug() << "New contact has been added to the address book";
+ * } else {
+ *   qDebug() << "User has canceled operation";
+ * }
+ *
+ * @endcode
+ *
+ * Example for editing an existing contact:
+ *
+ * @code
+ *
+ * const Akonadi::Item contact = ...;
+ *
+ * Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, 0, this );
+ * dlg.setContact( contact );
+ *
+ * if ( dlg.exec() ) {
+ *   qDebug() << "Contact has been edited";
+ * } else {
+ *   qDebug() << "User has canceled operation";
+ * }
+ *
+ * @endcode
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ */
 class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
 {
   Q_OBJECT
@@ -50,7 +90,8 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      * Creates a new contact editor dialog with the standard editor widget.
      *
      * @param mode The mode of the dialog.
-     * @param collectionModel The collection model.
+     * @param collectionModel The collection model that is used to allow the user
+     *                        to select a target collection for new contacts.
      * @param parent The parent widget of the dialog.
      */
     ContactEditorDialog( Mode mode, QAbstractItemModel *collectionModel, QWidget *parent = 0 );
@@ -59,7 +100,8 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      * Creates a new contact editor dialog with a custom editor widget.
      *
      * @param mode The mode of the dialog.
-     * @param collectionModel The collection model.
+     * @param collectionModel The collection model that is used to allow the user
+     *                        to select a target collection for new contacts.
      * @param editorWidget The contact editor widget that shall be used for editing.
      * @param parent The parent widget of the dialog.
      */
@@ -73,6 +115,9 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
 
     /**
      * Sets the @p contact to edit when in EditMode.
+     *
+     * @note The contact item just must have a uid set, all
+     *       other data are fetched by the dialog automatically.
      */
     void setContact( const Akonadi::Item &contact );
 

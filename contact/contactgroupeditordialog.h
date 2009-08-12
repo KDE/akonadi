@@ -32,11 +32,19 @@ namespace Akonadi {
 class Item;
 class ContactGroupEditor;
 
+/**
+ * @short A dialog for editing a contact group.
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ */
 class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
 {
   Q_OBJECT
 
   public:
+    /**
+     * Describes the mode of the contact group editor.
+     */
     enum Mode
     {
       CreateMode, ///< Creates a new contact group
@@ -79,7 +87,10 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
     virtual void slotButtonClicked( int button );
 
   private:
-    Akonadi::ContactGroupEditor *mEditor;
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+    //@endcond
 };
 
 }

@@ -20,13 +20,12 @@
 
 #include "contactgroupeditordialog.h"
 
-#include "contactgroupeditor.h"
-
 #include "collectioncombobox.h"
 #include "collectionfiltermodel_p.h"
+#include "contactgroupeditor.h"
+
 #include <akonadi/descendantsproxymodel.h>
 #include <akonadi/item.h>
-
 #include <kabc/contactgroup.h>
 #include <klocale.h>
 
@@ -35,8 +34,14 @@
 
 using namespace Akonadi;
 
+class ContactGroupEditorDialog::Private
+{
+  public:
+    ContactGroupEditor *mEditor;
+};
+
 ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemModel *collectionModel, QWidget *parent )
-  : KDialog( parent )
+  : KDialog( parent ), d( new Private )
 {
   setCaption( mode == CreateMode ? i18n( "New Contact Group" ) : i18n( "Edit Contact Group" ) );
   setButtons( Ok | Cancel );
@@ -46,8 +51,9 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemMode
 
   QGridLayout *layout = new QGridLayout( mainWidget );
 
-  mEditor = new Akonadi::ContactGroupEditor( mode == CreateMode ?
-                                             Akonadi::ContactGroupEditor::CreateMode : Akonadi::ContactGroupEditor::EditMode, this );
+  d->mEditor = new Akonadi::ContactGroupEditor( mode == CreateMode ?
+                                                Akonadi::ContactGroupEditor::CreateMode : Akonadi::ContactGroupEditor::EditMode,
+                                                this );
 
   if ( mode == CreateMode ) {
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
@@ -69,15 +75,15 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemMode
     layout->addWidget( box, 0, 1 );
 
     connect( box, SIGNAL( selectionChanged( const Akonadi::Collection& ) ),
-             mEditor, SLOT( setDefaultCollection( const Akonadi::Collection& ) ) );
+             d->mEditor, SLOT( setDefaultCollection( const Akonadi::Collection& ) ) );
 
-    mEditor->setDefaultCollection( box->selectedCollection() );
+    d->mEditor->setDefaultCollection( box->selectedCollection() );
   }
 
-  layout->addWidget( mEditor, 1, 0, 1, 2 );
+  layout->addWidget( d->mEditor, 1, 0, 1, 2 );
   layout->setColumnStretch( 1, 1 );
 
-  connect( mEditor, SIGNAL( contactGroupStored( const Akonadi::Item& ) ),
+  connect( d->mEditor, SIGNAL( contactGroupStored( const Akonadi::Item& ) ),
            this, SIGNAL( contactGroupStored( const Akonadi::Item& ) ) );
 
   setInitialSize( QSize( 420, 120 ) );
@@ -85,22 +91,23 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemMode
 
 ContactGroupEditorDialog::~ContactGroupEditorDialog()
 {
+  delete d;
 }
 
 void ContactGroupEditorDialog::setCompletionModel( QAbstractItemModel *model )
 {
-  mEditor->setCompletionModel( model );
+  d->mEditor->setCompletionModel( model );
 }
 
 void ContactGroupEditorDialog::setContactGroup( const Akonadi::Item &group )
 {
-  mEditor->loadContactGroup( group );
+  d->mEditor->loadContactGroup( group );
 }
 
 void ContactGroupEditorDialog::slotButtonClicked( int button )
 {
   if ( button == KDialog::Ok ) {
-    if ( mEditor->saveContactGroup() )
+    if ( d->mEditor->saveContactGroup() )
       accept();
   } else if ( button == KDialog::Cancel ) {
     reject();

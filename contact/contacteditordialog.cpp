@@ -121,6 +121,7 @@ ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collect
 
 ContactEditorDialog::~ContactEditorDialog()
 {
+  delete d;
 }
 
 void ContactEditorDialog::setContact( const Akonadi::Item &contact )

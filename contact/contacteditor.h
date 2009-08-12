@@ -32,6 +32,11 @@ class AbstractContactEditorWidget;
 class Collection;
 class Item;
 
+/**
+ * @short An widget to edit contacts in Akonadi.
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ */
 class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
 {
   Q_OBJECT
