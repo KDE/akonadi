@@ -158,7 +158,7 @@ void ImageWidget::updateView()
   if ( mHasImage ) {
     setIcon( QPixmap::fromImage( mImage ) );
   } else {
-    setIcon( KIcon( "user-identity" ) );
+    setIcon( KIcon( QLatin1String( "user-identity" ) ) );
   }
 }
 

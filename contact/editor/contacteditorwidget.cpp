@@ -18,10 +18,10 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "contacteditor.h"
+#include "contacteditorwidget.h"
 
 #include "addresseditwidget.h"
-#include "contactmetadata.h"
+//#include "contactmetadata.h"
 #include "dateeditwidget.h"
 #include "displaynameeditwidget.h"
 #include "emaileditwidget.h"
@@ -44,10 +44,10 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 
-class ContactEditor::Private
+class ContactEditorWidget::Private
 {
   public:
-    Private( ContactEditor *parent )
+    Private( ContactEditorWidget *parent )
       : mParent( parent )
     {
     }
@@ -61,7 +61,7 @@ class ContactEditor::Private
     QString loadCustom( const KABC::Addressee &contact, const QString &key ) const;
     void storeCustom( KABC::Addressee &contact, const QString &key, const QString &value ) const;
 
-    ContactEditor *mParent;
+    ContactEditorWidget *mParent;
     KTabWidget *mTabWidget;
 
     // widgets from name group
@@ -110,7 +110,7 @@ class ContactEditor::Private
     KLineEdit *mPartnerWidget;
 };
 
-void ContactEditor::Private::initGui()
+void ContactEditorWidget::Private::initGui()
 {
   QVBoxLayout *layout = new QVBoxLayout( mParent );
   layout->setMargin( 0 );
@@ -124,7 +124,7 @@ void ContactEditor::Private::initGui()
   initGuiPersonalTab();
 }
 
-void ContactEditor::Private::initGuiContactTab()
+void ContactEditorWidget::Private::initGuiContactTab()
 {
   QWidget *widget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( widget );
@@ -226,7 +226,7 @@ void ContactEditor::Private::initGuiContactTab()
   phonesLayout->setRowStretch( 1, 1 );
 }
 
-void ContactEditor::Private::initGuiLocationTab()
+void ContactEditorWidget::Private::initGuiLocationTab()
 {
   QWidget *widget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( widget );
@@ -254,7 +254,7 @@ void ContactEditor::Private::initGuiLocationTab()
   coordinatesLayout->setRowStretch( 1, 1 );
 }
 
-void ContactEditor::Private::initGuiBusinessTab()
+void ContactEditorWidget::Private::initGuiBusinessTab()
 {
   QWidget *widget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( widget );
@@ -353,7 +353,7 @@ void ContactEditor::Private::initGuiBusinessTab()
   notesLayout->addWidget( mNotesWidget, 0, 0 );
 }
 
-void ContactEditor::Private::initGuiPersonalTab()
+void ContactEditorWidget::Private::initGuiPersonalTab()
 {
   QWidget *widget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( widget );
@@ -403,20 +403,20 @@ void ContactEditor::Private::initGuiPersonalTab()
   familyLayout->setRowStretch( 1, 1 );
 }
 
-QString ContactEditor::Private::loadCustom( const KABC::Addressee &contact, const QString &key ) const
+QString ContactEditorWidget::Private::loadCustom( const KABC::Addressee &contact, const QString &key ) const
 {
-  return contact.custom( "KADDRESSBOOK", key );
+  return contact.custom( QLatin1String( "KADDRESSBOOK" ), key );
 }
 
-void ContactEditor::Private::storeCustom( KABC::Addressee &contact, const QString &key, const QString &value ) const
+void ContactEditorWidget::Private::storeCustom( KABC::Addressee &contact, const QString &key, const QString &value ) const
 {
   if ( value.isEmpty() )
-    contact.removeCustom( "KADDRESSBOOK", key );
+    contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), key );
   else
-    contact.insertCustom( "KADDRESSBOOK", key, value );
+    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), key, value );
 }
 
-ContactEditor::ContactEditor( QWidget* )
+ContactEditorWidget::ContactEditorWidget( QWidget* )
   : d( new Private( this ) )
 {
   d->initGui();
@@ -427,12 +427,12 @@ ContactEditor::ContactEditor( QWidget* )
            d->mDisplayNameWidget, SLOT( changeOrganization( const QString& ) ) );
 }
 
-ContactEditor::~ContactEditor()
+ContactEditorWidget::~ContactEditorWidget()
 {
   delete d;
 }
 
-void ContactEditor::loadContact( const KABC::Addressee &contact )
+void ContactEditorWidget::loadContact( const KABC::Addressee &contact )
 {
   // name group
   d->mPhotoWidget->loadContact( contact );
@@ -444,7 +444,7 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
   // internet group
   d->mEmailWidget->loadContact( contact );
   d->mHomepageWidget->setUrl( contact.url() );
-  d->mBlogWidget->setText( d->loadCustom( contact, "BlogFeed" ) );
+  d->mBlogWidget->setText( d->loadCustom( contact, QLatin1String( "BlogFeed" ) ) );
   d->mIMWidget->loadContact( contact );
 
   // phones group
@@ -458,12 +458,12 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
   // general group
   d->mLogoWidget->loadContact( contact );
   d->mOrganizationWidget->setText( contact.organization() );
-  d->mProfessionWidget->setText( d->loadCustom( contact, "X-Profession" ) );
+  d->mProfessionWidget->setText( d->loadCustom( contact, QLatin1String( "X-Profession" ) ) );
   d->mTitleWidget->setText( contact.title() );
   d->mDepartmentWidget->setText( contact.department() );
-  d->mOfficeWidget->setText( d->loadCustom( contact, "X-Office" ) );
-  d->mManagerWidget->setText( d->loadCustom( contact, "X-ManagersName" ) );
-  d->mAssistantWidget->setText( d->loadCustom( contact, "X-AssistantsName" ) );
+  d->mOfficeWidget->setText( d->loadCustom( contact, QLatin1String( "X-Office" ) ) );
+  d->mManagerWidget->setText( d->loadCustom( contact, QLatin1String( "X-ManagersName" ) ) );
+  d->mAssistantWidget->setText( d->loadCustom( contact, QLatin1String( "X-AssistantsName" ) ) );
 
   // groupware group
   d->mFreeBusyWidget->loadContact( contact );
@@ -473,16 +473,20 @@ void ContactEditor::loadContact( const KABC::Addressee &contact )
 
   // dates group
   d->mBirthdateWidget->setDate( contact.birthday().date() );
-  d->mAnniversaryWidget->setDate( QDate::fromString( d->loadCustom( contact, "X-Anniversary" ), Qt::ISODate ) );
+  d->mAnniversaryWidget->setDate( QDate::fromString( d->loadCustom( contact, QLatin1String( "X-Anniversary" ) ),
+                                                     Qt::ISODate ) );
 
   // family group
-  d->mPartnerWidget->setText( d->loadCustom( contact, "X-SpousesName" ) );
+  d->mPartnerWidget->setText( d->loadCustom( contact, QLatin1String( "X-SpousesName" ) ) );
 
+#warning FIXME
+/*
   const ContactMetaData metaData( contact );
   d->mDisplayNameWidget->setDisplayType( (DisplayNameEditWidget::DisplayType)metaData.displayNameMode() );
+*/
 }
 
-void ContactEditor::storeContact( KABC::Addressee &contact ) const
+void ContactEditorWidget::storeContact( KABC::Addressee &contact ) const
 {
   // name group
   d->mPhotoWidget->storeContact( contact );
@@ -494,7 +498,7 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
   // internet group
   d->mEmailWidget->storeContact( contact );
   contact.setUrl( KUrl( d->mHomepageWidget->text().trimmed() ) );
-  d->storeCustom( contact, "BlogFeed", d->mBlogWidget->text().trimmed() );
+  d->storeCustom( contact, QLatin1String( "BlogFeed" ), d->mBlogWidget->text().trimmed() );
   d->mIMWidget->storeContact( contact );
 
   // phones group
@@ -508,12 +512,12 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
   // general group
   d->mLogoWidget->storeContact( contact );
   contact.setOrganization( d->mOrganizationWidget->text() );
-  d->storeCustom( contact, "X-Profession", d->mProfessionWidget->text().trimmed() );
+  d->storeCustom( contact, QLatin1String( "X-Profession" ), d->mProfessionWidget->text().trimmed() );
   contact.setTitle( d->mTitleWidget->text().trimmed() );
   contact.setDepartment( d->mDepartmentWidget->text().trimmed() );
-  d->storeCustom( contact, "X-Office", d->mOfficeWidget->text().trimmed() );
-  d->storeCustom( contact, "X-ManagersName", d->mManagerWidget->text().trimmed() );
-  d->storeCustom( contact, "X-AssistantsName", d->mAssistantWidget->text().trimmed() );
+  d->storeCustom( contact, QLatin1String( "X-Office" ), d->mOfficeWidget->text().trimmed() );
+  d->storeCustom( contact, QLatin1String( "X-ManagersName" ), d->mManagerWidget->text().trimmed() );
+  d->storeCustom( contact, QLatin1String( "X-AssistantsName" ), d->mAssistantWidget->text().trimmed() );
 
   // groupware group
   d->mFreeBusyWidget->storeContact( contact );
@@ -523,11 +527,14 @@ void ContactEditor::storeContact( KABC::Addressee &contact ) const
 
   // dates group
   contact.setBirthday( QDateTime( d->mBirthdateWidget->date(), QTime() ) );
-  d->storeCustom( contact, "X-Anniversary", d->mAnniversaryWidget->date().toString( Qt::ISODate ) );
+  d->storeCustom( contact, QLatin1String( "X-Anniversary" ), d->mAnniversaryWidget->date().toString( Qt::ISODate ) );
 
   // family group
-  d->storeCustom( contact, "X-SpousesName", d->mPartnerWidget->text().trimmed() );
+  d->storeCustom( contact, QLatin1String( "X-SpousesName" ), d->mPartnerWidget->text().trimmed() );
 
+#warning FIXME
+/*
   ContactMetaData metaData( contact );
   metaData.setDisplayNameMode( d->mDisplayNameWidget->displayType() );
+*/
 }

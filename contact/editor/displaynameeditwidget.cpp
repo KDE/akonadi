@@ -173,16 +173,16 @@ void DisplayNameEditWidget::updateView()
 
   switch ( mDisplayType ) {
     case SimpleName:
-      text = mContact.givenName() + ' ' + mContact.familyName();
+      text = mContact.givenName() + QLatin1Char( ' ' ) + mContact.familyName();
       break;
     case FullName:
       text = mContact.assembledName();
       break;
     case ReverseNameWithComma:
-      text = mContact.familyName() + ", " + mContact.givenName();
+      text = mContact.familyName() + QLatin1String( ", " ) + mContact.givenName();
       break;
     case ReverseName:
-      text = mContact.familyName() + ' ' + mContact.givenName();
+      text = mContact.familyName() + QLatin1Char( ' ' ) + mContact.givenName();
       break;
     case Organization:
       text = mContact.organization();

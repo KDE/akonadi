@@ -40,8 +40,8 @@ class EmailValidator : public QRegExpValidator
   public:
     EmailValidator() : QRegExpValidator( 0 )
     {
-      setObjectName( "EmailValidator" );
-      QRegExp rx( ".*@.*\\.[A-Za-z]+" );
+      setObjectName( QLatin1String( "EmailValidator" ) );
+      QRegExp rx( QLatin1String( ".*@.*\\.[A-Za-z]+" ) );
       setRegExp( rx );
     }
 };
@@ -84,7 +84,7 @@ EmailEditWidget::EmailEditWidget( QWidget *parent )
   layout->addWidget( mEmailEdit );
 
   mEditButton = new QToolButton;
-  mEditButton->setText( "..." );
+  mEditButton->setText( QLatin1String( "..." ) );
   connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
   layout->addWidget( mEditButton );
 }
@@ -195,7 +195,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
   topLayout->setRowStretch( 4, 1 );
 
   QStringList items = list;
-  if ( items.removeAll( "" ) > 0 )
+  if ( items.removeAll( QLatin1String( "" ) ) > 0 )
     mChanged = true;
   else
     mChanged = false;
@@ -283,15 +283,15 @@ void EmailEditDialog::edit()
 
 void EmailEditDialog::remove()
 {
-  QString address = mEmailListBox->currentItem()->text();
+  const QString address = mEmailListBox->currentItem()->text();
 
-  QString text = i18n( "<qt>Are you sure that you want to remove the email address <b>%1</b>?</qt>", address );
-  QString caption = i18n( "Confirm Remove" );
+  const QString text = i18n( "<qt>Are you sure that you want to remove the email address <b>%1</b>?</qt>", address );
+  const QString caption = i18n( "Confirm Remove" );
 
-  if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), "edit-delete" ) ) == KMessageBox::Continue ) {
+  if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), QLatin1String( "edit-delete" ) ) ) == KMessageBox::Continue ) {
     EmailItem *item = static_cast<EmailItem*>( mEmailListBox->currentItem() );
 
-    bool preferred = item->preferred();
+    const bool preferred = item->preferred();
     mEmailListBox->takeItem( mEmailListBox->currentRow() );
     if ( preferred ) {
       item = dynamic_cast<EmailItem*>( mEmailListBox->item( 0 ) );

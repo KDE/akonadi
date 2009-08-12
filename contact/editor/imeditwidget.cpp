@@ -41,15 +41,15 @@ IMEditWidget::~IMEditWidget()
 
 void IMEditWidget::loadContact( const KABC::Addressee &contact )
 {
-  mIMEdit->setText( contact.custom( "KADDRESSBOOK", "X-IMAddress" ) );
+  mIMEdit->setText( contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ) ) );
 }
 
 void IMEditWidget::storeContact( KABC::Addressee &contact ) const
 {
   if ( !mIMEdit->text().isEmpty() )
-    contact.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMEdit->text() );
+    contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ), mIMEdit->text() );
   else
-    contact.removeCustom( "KADDRESSBOOK", "X-IMAddress" );
+    contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ) );
 }
 
 void IMEditWidget::setReadOnly( bool readOnly )

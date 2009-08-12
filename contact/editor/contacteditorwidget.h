@@ -33,20 +33,20 @@ class Addressee;
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class ContactEditor : public AbstractContactEditorWidget
+class ContactEditorWidget : public Akonadi::AbstractContactEditorWidget
 {
   public:
     /**
-     * Creates a new contact editor.
+     * Creates a new contact editor widget.
      *
      * @param parent The parent widget.
      */
-    ContactEditor( QWidget *parent = 0 );
+    ContactEditorWidget( QWidget *parent = 0 );
 
     /**
-     * Destroys the contact editor.
+     * Destroys the contact editor widget.
      */
-    ~ContactEditor();
+    ~ContactEditorWidget();
 
     /**
      * Initializes the fields of the contact editor
