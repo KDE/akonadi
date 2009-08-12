@@ -21,7 +21,7 @@
 #include "contacteditorwidget.h"
 
 #include "addresseditwidget.h"
-//#include "contactmetadata.h"
+#include "contactmetadata_p.h"
 #include "dateeditwidget.h"
 #include "displaynameeditwidget.h"
 #include "emaileditwidget.h"
@@ -432,7 +432,7 @@ ContactEditorWidget::~ContactEditorWidget()
   delete d;
 }
 
-void ContactEditorWidget::loadContact( const KABC::Addressee &contact )
+void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData &metaData )
 {
   // name group
   d->mPhotoWidget->loadContact( contact );
@@ -479,14 +479,10 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact )
   // family group
   d->mPartnerWidget->setText( d->loadCustom( contact, QLatin1String( "X-SpousesName" ) ) );
 
-#warning FIXME
-/*
-  const ContactMetaData metaData( contact );
   d->mDisplayNameWidget->setDisplayType( (DisplayNameEditWidget::DisplayType)metaData.displayNameMode() );
-*/
 }
 
-void ContactEditorWidget::storeContact( KABC::Addressee &contact ) const
+void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const
 {
   // name group
   d->mPhotoWidget->storeContact( contact );
@@ -532,9 +528,5 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact ) const
   // family group
   d->storeCustom( contact, QLatin1String( "X-SpousesName" ), d->mPartnerWidget->text().trimmed() );
 
-#warning FIXME
-/*
-  ContactMetaData metaData( contact );
   metaData.setDisplayNameMode( d->mDisplayNameWidget->displayType() );
-*/
 }

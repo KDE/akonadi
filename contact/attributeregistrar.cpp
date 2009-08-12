@@ -1,7 +1,5 @@
 /*
-    This file is part of Akonadi Contact.
-
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,28 +17,21 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ABSTRACTCONTACTEDITORWIDGET_H
-#define AKONADI_ABSTRACTCONTACTEDITORWIDGET_H
+#include "contactmetadataattribute_p.h"
 
-#include <QtGui/QWidget>
+#include <akonadi/attributefactory.h>
 
-namespace KABC
+namespace {
+
+// Anonymous namespace; function is invisible outside this file.
+bool dummy()
 {
-class Addressee;
+  using namespace Akonadi;
+  AttributeFactory::registerAttribute<ContactMetaDataAttribute>();
+  return true;
 }
 
-namespace Akonadi
-{
+// Called when this library is loaded.
+const bool registered = dummy();
 
-class ContactMetaData;
-
-class AbstractContactEditorWidget : public QWidget
-{
-  public:
-    virtual void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& ) = 0;
-    virtual void storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const = 0;
-};
-
-}
-
-#endif
+} // namespace

@@ -41,8 +41,8 @@ class ContactEditorDialog::Private
 {
   public:
     Private( ContactEditorDialog::Mode mode, QAbstractItemModel *collectionModel,
-             AbstractContactEditorWidget *editorWidget, QWidget *parent, ContactEditorDialog *_q )
-      : q( _q )
+             AbstractContactEditorWidget *editorWidget, ContactEditorDialog *parent )
+      : q( parent )
     {
       q->setCaption( mode == ContactEditorDialog::CreateMode ? i18n( "New Contact" ) : i18n( "Edit Contact" ) );
       q->setButtons( ContactEditorDialog::Ok | ContactEditorDialog::Cancel );
@@ -109,13 +109,13 @@ class ContactEditorDialog::Private
 };
 
 ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collectionModel, QWidget *parent )
-  : KDialog( parent ), d( new Private( mode, collectionModel, 0, parent, this ) )
+  : KDialog( parent ), d( new Private( mode, collectionModel, 0, this ) )
 {
 }
 
 ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collectionModel,
                                           AbstractContactEditorWidget *editorWidget, QWidget *parent )
-  : KDialog( parent ), d( new Private( mode, collectionModel, editorWidget, parent, this ) )
+  : KDialog( parent ), d( new Private( mode, collectionModel, editorWidget, this ) )
 {
 }
 

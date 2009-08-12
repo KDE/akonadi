@@ -38,10 +38,8 @@ class ContactMetaDataAttribute : public Akonadi::Attribute
   public:
     /**
      * Creates a new contact meta data attribute.
-     *
-     * @param data The meta data.
      */
-    ContactMetaDataAttribute( const QVariantMap &data );
+    ContactMetaDataAttribute();
 
     /**
      * Destroys the contact meta data attribute.

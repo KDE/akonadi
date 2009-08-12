@@ -22,6 +22,8 @@
 #include "contacteditor.h"
 
 #include "abstractcontacteditorwidget.h"
+#include "contactmetadata_p.h"
+#include "contactmetadataattribute_p.h"
 
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -54,13 +56,14 @@ class ContactEditor::Private
     void storeDone( KJob* );
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& );
 
-    void loadContact( const KABC::Addressee &addr );
-    void storeContact( KABC::Addressee &addr );
+    void loadContact( const KABC::Addressee &addr, const ContactMetaData &metaData );
+    void storeContact( KABC::Addressee &addr, ContactMetaData &metaData );
     void setupMonitor();
 
     ContactEditor *mParent;
     ContactEditor::Mode mMode;
     Akonadi::Item mItem;
+    Akonadi::ContactMetaData mContactMetaData;
     Akonadi::Monitor *mMonitor;
     Akonadi::Collection mDefaultCollection;
     AbstractContactEditorWidget *mEditorWidget;
@@ -81,7 +84,8 @@ void ContactEditor::Private::fetchDone( KJob *job )
   mItem = fetchJob->items().first();
 
   const KABC::Addressee addr = mItem.payload<KABC::Addressee>();
-  loadContact( addr );
+  mContactMetaData.load( mItem );
+  loadContact( addr, mContactMetaData );
 }
 
 void ContactEditor::Private::storeDone( KJob *job )
@@ -108,19 +112,20 @@ void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByte
   if ( dlg.exec() == QMessageBox::AcceptRole ) {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
     job->fetchScope().fetchFullPayload();
+    job->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
 
     mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( fetchDone( KJob* ) ) );
   }
 }
 
-void ContactEditor::Private::loadContact( const KABC::Addressee &addr )
+void ContactEditor::Private::loadContact( const KABC::Addressee &addr, const ContactMetaData &metaData )
 {
-  mEditorWidget->loadContact( addr );
+  mEditorWidget->loadContact( addr, metaData );
 }
 
-void ContactEditor::Private::storeContact( KABC::Addressee &addr )
+void ContactEditor::Private::storeContact( KABC::Addressee &addr, ContactMetaData &metaData )
 {
-  mEditorWidget->storeContact( addr );
+  mEditorWidget->storeContact( addr, metaData );
 }
 
 void ContactEditor::Private::setupMonitor()
@@ -158,6 +163,7 @@ void ContactEditor::loadContact( const Akonadi::Item &item )
 
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
   job->fetchScope().fetchFullPayload();
+  job->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
 
   connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchDone( KJob* ) ) );
 
@@ -173,7 +179,9 @@ void ContactEditor::saveContact()
 
     KABC::Addressee addr = d->mItem.payload<KABC::Addressee>();
 
-    d->storeContact( addr );
+    d->storeContact( addr, d->mContactMetaData );
+
+    d->mContactMetaData.store( d->mItem );
 
     d->mItem.setPayload<KABC::Addressee>( addr );
 
@@ -183,11 +191,13 @@ void ContactEditor::saveContact()
     Q_ASSERT_X( d->mDefaultCollection.isValid(), "ContactEditor::saveContact", "Using invalid default collection for saving!" );
 
     KABC::Addressee addr;
-    d->storeContact( addr );
+    d->storeContact( addr, d->mContactMetaData );
 
     Akonadi::Item item;
     item.setPayload<KABC::Addressee>( addr );
     item.setMimeType( KABC::Addressee::mimeType() );
+
+    d->mContactMetaData.store( item );
 
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, d->mDefaultCollection );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );

@@ -28,16 +28,11 @@ using namespace Akonadi;
 class ContactMetaDataAttribute::Private
 {
   public:
-    Private( const QVariantMap &data )
-      : mData( data )
-    {
-    }
-
     QVariantMap mData;
 };
 
-ContactMetaDataAttribute::ContactMetaDataAttribute( const QVariantMap &data )
-  : d( new Private( data ) )
+ContactMetaDataAttribute::ContactMetaDataAttribute()
+  : d( new Private )
 {
 }
 
@@ -63,7 +58,10 @@ QByteArray ContactMetaDataAttribute::type() const
 
 Attribute* ContactMetaDataAttribute::clone() const
 {
-  return new ContactMetaDataAttribute( d->mData );
+  ContactMetaDataAttribute *copy = new ContactMetaDataAttribute;
+  copy->setMetaData( d->mData );
+
+  return copy;
 }
 
 QByteArray ContactMetaDataAttribute::serialized() const

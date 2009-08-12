@@ -23,6 +23,7 @@ set(akonadicontact_editor_SRCS
 )
 
 set(akonadicontact_LIB_SRC
+  attributeregistrar.cpp
   collectioncombobox.cpp
   collectionfiltermodel.cpp
   contacteditor.cpp
@@ -30,6 +31,7 @@ set(akonadicontact_LIB_SRC
   contactgroupeditor.cpp
   contactgroupeditordialog.cpp
   contactgrouplineedit.cpp
+  contactmetadata.cpp
   contactmetadataattribute.cpp
   waitingoverlay.cpp
   ${akonadicontact_editor_SRCS}

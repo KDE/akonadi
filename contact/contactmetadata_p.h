@@ -18,51 +18,63 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef CONTACTEDITOR_H
-#define CONTACTEDITOR_H
+#ifndef AKONADI_CONTACTMETADATA_H
+#define AKONADI_CONTACTMETADATA_H
 
-#include "abstractcontacteditorwidget.h"
+#include <QtCore/QStringList>
 
-namespace KABC
+namespace Akonadi
 {
-class Addressee;
-}
+
+class Item;
 
 /**
- * @short A widget for editing a contact.
- *
- * @author Tobias Koenig <tokoe@kde.org>
+ * @short A helper class for storing contact specific settings.
  */
-class ContactEditorWidget : public Akonadi::AbstractContactEditorWidget
+class ContactMetaData
 {
   public:
     /**
-     * Creates a new contact editor widget.
-     *
-     * @param parent The parent widget.
+     * Creates a contact meta data object.
      */
-    ContactEditorWidget( QWidget *parent = 0 );
+    ContactMetaData();
 
     /**
-     * Destroys the contact editor widget.
+     * Destroys the contact meta data object.
      */
-    ~ContactEditorWidget();
+    ~ContactMetaData();
 
     /**
-     * Initializes the fields of the contact editor
-     * with the values from a @p contact.
+     * Loads the meta data for the given @p contact.
      */
-    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& );
+    void load( const Akonadi::Item &contact );
 
     /**
-     * Stores back the fields of the contact editor
-     * into the given @p contact.
+     * Stores the meta data to the given @p contact.
      */
-    void storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const;
+    void store( Akonadi::Item &contact );
+
+    /**
+     * Sets the mode that is used for the display
+     * name of that contact.
+     */
+    void setDisplayNameMode( int mode );
+
+    /**
+     * Returns the mode that is used for the display
+     * name of that contact.
+     */
+    int displayNameMode() const;
 
   private:
+    //@cond PRIVATE
+    Q_DISABLE_COPY( ContactMetaData )
+
     class Private;
     Private* const d;
+    //@endcond
 };
+
+}
 
 #endif
