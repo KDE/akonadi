@@ -80,9 +80,15 @@ void ContactGroupViewer::setContactGroup( const Akonadi::Item &group )
 
 void ContactGroupViewer::itemChanged( const Item &item )
 {
+  static QPixmap defaultPixmap = KIcon( QLatin1String( "x-mail-distribution-list" ) ).pixmap( QSize( 100, 140 ) );
+
   const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
 
   setWindowTitle( i18n( "Contact Group %1", group.name() ) );
+
+  d->mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                        QUrl( QLatin1String( "group_photo" ) ),
+                                        defaultPixmap );
 
   d->mBrowser->setHtml( contactGroupAsHtml( group ) );
 }
