@@ -34,6 +34,7 @@ set(akonadicontact_LIB_SRC
   contactmetadata.cpp
   contactmetadataattribute.cpp
   contactviewer.cpp
+  contactviewerdialog.cpp
   waitingoverlay.cpp
   ${akonadicontact_editor_SRCS}
 )
