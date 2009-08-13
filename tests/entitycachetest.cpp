@@ -54,7 +54,7 @@ class EntityCacheTest : public QObject
       const T e1 = cache.retrieve( 1 );
       QCOMPARE( e1.id(), 1ll );
       QVERIFY( e1.parentCollection().isValid() );
-      QVERIFY( !e1.parentCollection().remoteId().isEmpty() );
+      QVERIFY( !e1.parentCollection().remoteId().isEmpty() || e1.parentCollection() == Collection::root() );
 
       spy.clear();
       cache.request( 2, FetchScope() );
