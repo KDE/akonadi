@@ -36,6 +36,7 @@ set(akonadicontact_LIB_SRC
   contactgroupviewerdialog.cpp
   contactmetadata.cpp
   contactmetadataattribute.cpp
+  contactsearchjob.cpp
   contactviewer.cpp
   contactviewerdialog.cpp
   waitingoverlay.cpp
