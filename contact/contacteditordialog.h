@@ -42,8 +42,7 @@ class Item;
  *
  * @code
  *
- * Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode,
- *                                   collectionModel, this );
+ * Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
  *
  * if ( dlg.exec() ) {
  *   qDebug() << "New contact has been added to the address book";
@@ -59,7 +58,7 @@ class Item;
  *
  * const Akonadi::Item contact = ...;
  *
- * Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, 0, this );
+ * Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, this );
  * dlg.setContact( contact );
  *
  * if ( dlg.exec() ) {
@@ -90,11 +89,9 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      * Creates a new contact editor dialog with the standard editor widget.
      *
      * @param mode The mode of the dialog.
-     * @param collectionModel The collection model that is used to allow the user
-     *                        to select a target collection for new contacts.
      * @param parent The parent widget of the dialog.
      */
-    ContactEditorDialog( Mode mode, QAbstractItemModel *collectionModel, QWidget *parent = 0 );
+    ContactEditorDialog( Mode mode, QWidget *parent = 0 );
 
     /**
      * Creates a new contact editor dialog with a custom editor widget.
@@ -105,8 +102,7 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      * @param editorWidget The contact editor widget that shall be used for editing.
      * @param parent The parent widget of the dialog.
      */
-    ContactEditorDialog( Mode mode, QAbstractItemModel *collectionModel,
-                         AbstractContactEditorWidget *editorWidget, QWidget *parent = 0 );
+    ContactEditorDialog( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent = 0 );
 
     /**
      * Destroys the contact editor dialog.

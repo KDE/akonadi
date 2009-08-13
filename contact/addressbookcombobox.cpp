@@ -68,6 +68,17 @@ class AddressBookComboBox::Private
       DescendantsProxyModel *descProxy = new DescendantsProxyModel( parent );
       descProxy->setSourceModel( filter );
 
+/*
+        // flatten the collection tree structure to a collection list
+        Akonadi::DescendantsProxyModel *descendantModel = new Akonadi::DescendantsProxyModel( q );
+        descendantModel->setSourceModel( collectionModel );
+
+        // filter for collections that support contacts
+        CollectionFilterModel *filterModel = new CollectionFilterModel( q );
+        filterModel->addContentMimeTypeFilter( KABC::Addressee::mimeType() );
+        filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
+        filterModel->setSourceModel( descendantModel );
+*/
       mComboBox->setModel( descProxy );
     }
 

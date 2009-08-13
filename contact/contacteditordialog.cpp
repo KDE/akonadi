@@ -21,11 +21,9 @@
 #include "contacteditordialog.h"
 
 #include "addressbookcombobox.h"
-#include "collectionfiltermodel_p.h"
 #include "contacteditor.h"
 #include "editor/contacteditorwidget.h"
 
-#include <akonadi/descendantsproxymodel.h>
 #include <akonadi/item.h>
 
 #include <kabc/addressee.h>
@@ -40,8 +38,8 @@ using namespace Akonadi;
 class ContactEditorDialog::Private
 {
   public:
-    Private( ContactEditorDialog::Mode mode, QAbstractItemModel *collectionModel,
-             AbstractContactEditorWidget *editorWidget, ContactEditorDialog *parent )
+    Private( ContactEditorDialog::Mode mode, AbstractContactEditorWidget *editorWidget,
+             ContactEditorDialog *parent )
       : q( parent )
     {
       q->setCaption( mode == ContactEditorDialog::CreateMode ? i18n( "New Contact" ) : i18n( "Edit Contact" ) );
@@ -58,19 +56,7 @@ class ContactEditorDialog::Private
       if ( mode == ContactEditorDialog::CreateMode ) {
         QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-/*
-        // flatten the collection tree structure to a collection list
-        Akonadi::DescendantsProxyModel *descendantModel = new Akonadi::DescendantsProxyModel( q );
-        descendantModel->setSourceModel( collectionModel );
-
-        // filter for collections that support contacts
-        CollectionFilterModel *filterModel = new CollectionFilterModel( q );
-        filterModel->addContentMimeTypeFilter( KABC::Addressee::mimeType() );
-        filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
-        filterModel->setSourceModel( descendantModel );
-*/
         AddressBookComboBox *box = new AddressBookComboBox( AddressBookComboBox::ContactsOnly, mainWidget );
-//        box->setModel( filterModel );
 
         layout->addWidget( label, 0, 0 );
         layout->addWidget( box, 0, 1 );
@@ -109,14 +95,13 @@ class ContactEditorDialog::Private
     ContactEditor *mEditor;
 };
 
-ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collectionModel, QWidget *parent )
-  : KDialog( parent ), d( new Private( mode, collectionModel, 0, this ) )
+ContactEditorDialog::ContactEditorDialog( Mode mode, QWidget *parent )
+  : KDialog( parent ), d( new Private( mode, 0, this ) )
 {
 }
 
-ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collectionModel,
-                                          AbstractContactEditorWidget *editorWidget, QWidget *parent )
-  : KDialog( parent ), d( new Private( mode, collectionModel, editorWidget, this ) )
+ContactEditorDialog::ContactEditorDialog( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent )
+  : KDialog( parent ), d( new Private( mode, editorWidget, this ) )
 {
 }
 

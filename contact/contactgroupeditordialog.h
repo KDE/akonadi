@@ -55,10 +55,9 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
      * Creates a new contact group editor dialog.
      *
      * @param mode The mode of the dialog.
-     * @param collectionModel The collection model.
      * @param parent The parent widget of the dialog.
      */
-    ContactGroupEditorDialog( Mode mode, QAbstractItemModel *collectionModel, QWidget *parent = 0 );
+    ContactGroupEditorDialog( Mode mode, QWidget *parent = 0 );
 
     /**
      * Destroys the contact group editor dialog.
