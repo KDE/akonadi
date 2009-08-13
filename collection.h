@@ -239,5 +239,6 @@ AKONADI_EXPORT QDebug operator<<( QDebug d, const Akonadi::Collection &collectio
 
 Q_DECLARE_METATYPE(Akonadi::Collection)
 Q_DECLARE_METATYPE(Akonadi::Collection::List)
+Q_DECLARE_OPERATORS_FOR_FLAGS( Akonadi::Collection::Rights )
 
 #endif
