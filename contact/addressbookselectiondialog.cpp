@@ -36,7 +36,7 @@ class AddressBookSelectionDialog::Private
     AddressBookComboBox *mCollectionCombo;
 };
 
-AddressBookSelectionDialog::AddressBookSelectionDialog( QWidget *parent )
+AddressBookSelectionDialog::AddressBookSelectionDialog( Type type, QWidget *parent )
   : KDialog( parent ), d( new Private )
 {
   setCaption( i18n( "Select Address Book" ) );
@@ -47,7 +47,7 @@ AddressBookSelectionDialog::AddressBookSelectionDialog( QWidget *parent )
 
   QVBoxLayout *layout = new QVBoxLayout( mainWidget );
 
-  d->mCollectionCombo = new Akonadi::AddressBookComboBox;
+  d->mCollectionCombo = new Akonadi::AddressBookComboBox( (AddressBookComboBox::Type)type );
 
   layout->addWidget( new QLabel( i18n( "Select the address book" ) ) );
   layout->addWidget( d->mCollectionCombo );

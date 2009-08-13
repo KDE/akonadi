@@ -26,6 +26,7 @@
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QComboBox>
@@ -36,16 +37,26 @@ using namespace Akonadi;
 class AddressBookComboBox::Private
 {
   public:
-    Private( AddressBookComboBox *parent )
+    Private( AddressBookComboBox::Type type, AddressBookComboBox *parent )
       : mParent( parent )
     {
       mComboBox = new QComboBox;
 
+      QStringList contentTypes;
+      switch ( type ) {
+        case AddressBookComboBox::ContactsOnly: contentTypes << KABC::Addressee::mimeType(); break;
+        case AddressBookComboBox::ContactGroupsOnly: contentTypes << KABC::ContactGroup::mimeType(); break;
+        case AddressBookComboBox::All: contentTypes << KABC::Addressee::mimeType()
+                                                    << KABC::ContactGroup::mimeType(); break;
+      }
+
       mMonitor = new Akonadi::Monitor;
       mMonitor->fetchCollection( true );
-      mMonitor->collectionFetchScope().setContentMimeTypes( QStringList() << KABC::Addressee::mimeType() );
       mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
-      mMonitor->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
+
+      mMonitor->collectionFetchScope().setContentMimeTypes( contentTypes );
+      foreach ( const QString &mimeType, contentTypes )
+        mMonitor->setMimeTypeMonitored( mimeType, true );
 
       mModel = new EntityTreeModel( Session::defaultSession(), mMonitor );
 
@@ -82,8 +93,8 @@ void AddressBookComboBox::Private::activated( int index )
     emit mParent->selectionChanged( modelIndex.data( EntityTreeModel::CollectionRole).value<Collection>() );
 }
 
-AddressBookComboBox::AddressBookComboBox( QWidget *parent )
-  : QWidget( parent ), d( new Private( this ) )
+AddressBookComboBox::AddressBookComboBox( Type type, QWidget *parent )
+  : QWidget( parent ), d( new Private( type, this ) )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );

@@ -39,11 +39,22 @@ class AKONADI_CONTACT_EXPORT AddressBookSelectionDialog : public KDialog
 {
   public:
     /**
+     * Describes what type of address books shall be listed for
+     * selection.
+     */
+    enum Type
+    {
+      ContactsOnly,      ///< Only address books that can store contacts.
+      ContactGroupsOnly, ///< Only address books that can store contact groups.
+      All                ///< All address books.
+    };
+
+    /**
      * Creates a new address bool selection dialog.
      *
      * @param parent The parent widget.
      */
-    explicit AddressBookSelectionDialog( QWidget *parent = 0 );
+    explicit AddressBookSelectionDialog( Type type, QWidget *parent = 0 );
 
     /**
      * Destroys the address book selection dialog.

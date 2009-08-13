@@ -41,21 +41,28 @@ class AKONADI_CONTACT_EXPORT AddressBookComboBox : public QWidget
 
   public:
     /**
+     * Describes what type of address books shall be listed for
+     * selection.
+     */
+    enum Type
+    {
+      ContactsOnly,      ///< Only address books that can store contacts.
+      ContactGroupsOnly, ///< Only address books that can store contact groups.
+      All                ///< All address books.
+    };
+
+    /**
      * Creates a new address book combobox.
      *
+     * @param type The type of address books that shall be listed.
      * @param parent The parent widget.
      */
-    AddressBookComboBox( QWidget *parent = 0 );
+    AddressBookComboBox( Type type, QWidget *parent = 0 );
 
     /**
      * Destroys the collection combobox.
      */
     ~AddressBookComboBox();
-
-    /**
-     * Sets the collection model.
-     */
-    void setModel( QAbstractItemModel *model );
 
     /**
      * Returns the selected address book.

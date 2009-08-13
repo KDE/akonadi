@@ -69,7 +69,7 @@ class ContactEditorDialog::Private
         filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
         filterModel->setSourceModel( descendantModel );
 */
-        AddressBookComboBox *box = new AddressBookComboBox( mainWidget );
+        AddressBookComboBox *box = new AddressBookComboBox( AddressBookComboBox::ContactsOnly, mainWidget );
 //        box->setModel( filterModel );
 
         layout->addWidget( label, 0, 0 );
