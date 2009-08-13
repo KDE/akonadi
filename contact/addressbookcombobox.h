@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_COLLECTIONCOMBOBOX_H
-#define AKONADI_COLLECTIONCOMBOBOX_H
+#ifndef AKONADI_ADDRESSBOOKCOMBOBOX_H
+#define AKONADI_ADDRESSBOOKCOMBOBOX_H
 
 #include "akonadi-contact_export.h"
 
@@ -31,26 +31,26 @@ class QAbstractItemModel;
 namespace Akonadi {
 
 /**
- * @short A combobox for selecting an Akonadi collection.
+ * @short A combobox for selecting an Akonadi address book.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_CONTACT_EXPORT CollectionComboBox : public QWidget
+class AKONADI_CONTACT_EXPORT AddressBookComboBox : public QWidget
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new collection combobox.
+     * Creates a new address book combobox.
      *
      * @param parent The parent widget.
      */
-    CollectionComboBox( QWidget *parent = 0 );
+    AddressBookComboBox( QWidget *parent = 0 );
 
     /**
      * Destroys the collection combobox.
      */
-    ~CollectionComboBox();
+    ~AddressBookComboBox();
 
     /**
      * Sets the collection model.
@@ -58,17 +58,17 @@ class AKONADI_CONTACT_EXPORT CollectionComboBox : public QWidget
     void setModel( QAbstractItemModel *model );
 
     /**
-     * Returns the identifier of the selected collection
+     * Returns the selected address book.
      */
-    Akonadi::Collection selectedCollection() const;
+    Akonadi::Collection selectedAddressBook() const;
 
   Q_SIGNALS:
     /**
-     * This signal is emitted whenever the selected collection changed.
+     * This signal is emitted whenever the selected address book changed.
      *
-     * @param identifier The identifier of the selected collection.
+     * @param addressBook The selected address book.
      */
-    void selectionChanged( const Akonadi::Collection &identifier );
+    void selectionChanged( const Akonadi::Collection &addressBook );
 
   private:
     //@cond PRIVATE

@@ -17,67 +17,91 @@
     02110-1301, USA.
 */
 
-#include "collectioncombobox.h"
+#include "addressbookcombobox.h"
+
+#include <akonadi/collectionfetchscope.h>
+#include <akonadi/descendantsproxymodel.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/monitor.h>
+#include <akonadi/session.h>
+#include <kabc/addressee.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QComboBox>
 #include <QtGui/QVBoxLayout>
 
-#include <akonadi/entitytreemodel.h>
-
 using namespace Akonadi;
 
-class CollectionComboBox::Private
+class AddressBookComboBox::Private
 {
   public:
-    Private( CollectionComboBox *parent )
+    Private( AddressBookComboBox *parent )
       : mParent( parent )
     {
+      mComboBox = new QComboBox;
+
+      mMonitor = new Akonadi::Monitor;
+      mMonitor->fetchCollection( true );
+      mMonitor->collectionFetchScope().setContentMimeTypes( QStringList() << KABC::Addressee::mimeType() );
+      mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
+      mMonitor->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
+
+      mModel = new EntityTreeModel( Session::defaultSession(), mMonitor );
+
+      EntityFilterProxyModel *filter = new EntityFilterProxyModel( parent );
+      filter->setSourceModel( mModel );
+      filter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+      filter->setHeaderSet( EntityTreeModel::CollectionTreeHeaders );
+
+      DescendantsProxyModel *descProxy = new DescendantsProxyModel( parent );
+      descProxy->setSourceModel( filter );
+
+      mComboBox->setModel( descProxy );
+    }
+
+    ~Private()
+    {
+      delete mModel;
+      delete mMonitor;
     }
 
     void activated( int index );
 
-    CollectionComboBox *mParent;
+    AddressBookComboBox *mParent;
 
     QComboBox *mComboBox;
+    Monitor *mMonitor;
+    EntityTreeModel *mModel;
 };
 
-void CollectionComboBox::Private::activated( int index )
+void AddressBookComboBox::Private::activated( int index )
 {
-  if ( !mComboBox->model() )
-    return;
-
   const QModelIndex modelIndex = mComboBox->model()->index( index, 0 );
   if ( modelIndex.isValid() )
     emit mParent->selectionChanged( modelIndex.data( EntityTreeModel::CollectionRole).value<Collection>() );
 }
 
-CollectionComboBox::CollectionComboBox( QWidget *parent )
+AddressBookComboBox::AddressBookComboBox( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
   layout->setSpacing( 0 );
 
-  d->mComboBox = new QComboBox( this );
   layout->addWidget( d->mComboBox );
 
   connect( d->mComboBox, SIGNAL( activated( int ) ), SLOT( activated( int ) ) );
 }
 
-CollectionComboBox::~CollectionComboBox()
+AddressBookComboBox::~AddressBookComboBox()
 {
   delete d;
 }
 
-void CollectionComboBox::setModel( QAbstractItemModel *model )
+Akonadi::Collection AddressBookComboBox::selectedAddressBook() const
 {
-  d->mComboBox->setModel( model );
-}
-
-Akonadi::Collection CollectionComboBox::selectedCollection() const
-{
-  Q_ASSERT_X( d->mComboBox->model() != 0, "CollectionComboBox::selectionChanged", "No model set!" );
+  Q_ASSERT_X( d->mComboBox->model() != 0, "AddressBookComboBox::selectedAddressBook", "No model set!" );
 
   int index = d->mComboBox->currentIndex();
 
@@ -88,4 +112,4 @@ Akonadi::Collection CollectionComboBox::selectedCollection() const
     return Akonadi::Collection();
 }
 
-#include "collectioncombobox.moc"
+#include "addressbookcombobox.moc"

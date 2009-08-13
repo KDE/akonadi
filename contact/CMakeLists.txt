@@ -23,8 +23,9 @@ set(akonadicontact_editor_SRCS
 )
 
 set(akonadicontact_LIB_SRC
+  addressbookcombobox.cpp
+  addressbookselectiondialog.cpp
   attributeregistrar.cpp
-  collectioncombobox.cpp
   collectionfiltermodel.cpp
   contacteditor.cpp
   contacteditordialog.cpp

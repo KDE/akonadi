@@ -20,7 +20,7 @@
 
 #include "contacteditordialog.h"
 
-#include "collectioncombobox.h"
+#include "addressbookcombobox.h"
 #include "collectionfiltermodel_p.h"
 #include "contacteditor.h"
 #include "editor/contacteditorwidget.h"
@@ -58,6 +58,7 @@ class ContactEditorDialog::Private
       if ( mode == ContactEditorDialog::CreateMode ) {
         QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
+/*
         // flatten the collection tree structure to a collection list
         Akonadi::DescendantsProxyModel *descendantModel = new Akonadi::DescendantsProxyModel( q );
         descendantModel->setSourceModel( collectionModel );
@@ -67,9 +68,9 @@ class ContactEditorDialog::Private
         filterModel->addContentMimeTypeFilter( KABC::Addressee::mimeType() );
         filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
         filterModel->setSourceModel( descendantModel );
-
-        CollectionComboBox *box = new CollectionComboBox( mainWidget );
-        box->setModel( filterModel );
+*/
+        AddressBookComboBox *box = new AddressBookComboBox( mainWidget );
+//        box->setModel( filterModel );
 
         layout->addWidget( label, 0, 0 );
         layout->addWidget( box, 0, 1 );
@@ -77,7 +78,7 @@ class ContactEditorDialog::Private
         connect( box, SIGNAL( selectionChanged( const Akonadi::Collection& ) ),
                  mEditor, SLOT( setDefaultCollection( const Akonadi::Collection& ) ) );
 
-        mEditor->setDefaultCollection( box->selectedCollection() );
+        mEditor->setDefaultCollection( box->selectedAddressBook() );
       }
 
       layout->addWidget( mEditor, 1, 0, 1, 2 );
