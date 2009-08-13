@@ -36,15 +36,15 @@ class ContactSearchJob::Private
     void searchResult( KJob *job )
     {
       ItemSearchJob *searchJob = qobject_cast<ItemSearchJob*>( job );
-      const Item::List items = searchJob->items();
-      mSearchResults = items.count();
+      mItems = searchJob->items();
+      mSearchResults = mItems.count();
 
       if ( mSearchResults == 0 ) {
-        mParent->slotResult( mParent );
+        mParent->emitResult();
         return;
       }
 
-      foreach ( const Item &item, items ) {
+      foreach ( const Item &item, mItems ) {
         ItemFetchJob *job = new ItemFetchJob( item );
         job->fetchScope().fetchFullPayload();
 
@@ -64,18 +64,19 @@ class ContactSearchJob::Private
       mSearchResults--;
 
       if ( mSearchResults == 0 )
-        mParent->slotResult( mParent );
+        mParent->emitResult();
     }
 
     ContactSearchJob *mParent;
     ContactSearchJob::Criterion mCriterion;
     QString mValue;
     KABC::Addressee::List mContacts;
+    Item::List mItems;
     int mSearchResults;
 };
 
 ContactSearchJob::ContactSearchJob( QObject * parent )
-  : Job( parent ), d( new Private( this ) )
+  : KJob( parent ), d( new Private( this ) )
 {
 }
 
@@ -89,7 +90,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
   d->mValue = value;
 }
 
-void ContactSearchJob::doStart()
+void ContactSearchJob::start()
 {
   QString query;
 
@@ -101,7 +102,7 @@ void ContactSearchJob::doStart()
                                  "}" );
   } else if ( d->mCriterion == Email ) {
     query = QString::fromLatin1( ""
-                                 "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco>"
+                                 "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
                                  "SELECT ?person WHERE {"
                                  "  ?person nco:hasEmailAddress ?email ."
                                  "  ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
@@ -118,6 +119,11 @@ void ContactSearchJob::doStart()
 KABC::Addressee::List ContactSearchJob::contacts() const
 {
   return d->mContacts;
+}
+
+Item::List ContactSearchJob::items() const
+{
+  return d->mItems;
 }
 
 #include "contactsearchjob.moc"

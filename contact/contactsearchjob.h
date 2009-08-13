@@ -22,8 +22,9 @@
 
 #include "akonadi-contact_export.h"
 
-#include <akonadi/job.h>
+#include <akonadi/item.h>
 #include <kabc/addressee.h>
+#include <kjob.h>
 
 namespace Akonadi {
 
@@ -52,7 +53,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_CONTACT_EXPORT ContactSearchJob : public Job
+class AKONADI_CONTACT_EXPORT ContactSearchJob : public KJob
 {
   Q_OBJECT
 
@@ -85,13 +86,20 @@ class AKONADI_CONTACT_EXPORT ContactSearchJob : public Job
 
     /**
      * Returns the contacts that matched the search criteria.
-     *
-     * @note The items only contain the uid but no payload.
      */
     KABC::Addressee::List contacts() const;
 
-  protected:
-    void doStart();
+    /**
+     * Returns the items that matched the search criteria.
+     *
+     * @note The items only contain the uid but no payload.
+     */
+    Item::List items() const;
+
+    /**
+     * Starts the search job.
+     */
+    virtual void start();
 
   private:
     //@cond PRIVATE
