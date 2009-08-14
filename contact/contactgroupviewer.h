@@ -79,6 +79,8 @@ class AKONADI_CONTACT_EXPORT ContactGroupViewer : public QWidget, public Akonadi
     //@cond PRIVATE
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void _k_expandResult( KJob* ) )
     //@endcond
 };
 

@@ -21,7 +21,10 @@
 
 #include "contactgroupviewer.h"
 
+#include "contactgroupexpandjob.h"
+
 #include <akonadi/item.h>
+#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
@@ -36,7 +39,7 @@
 
 using namespace Akonadi;
 
-static QString contactGroupAsHtml( const KABC::ContactGroup &group );
+static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::List &contacts );
 
 class ContactGroupViewer::Private
 {
@@ -46,8 +49,18 @@ class ContactGroupViewer::Private
     {
     }
 
+    void _k_expandResult( KJob *job )
+    {
+      ContactGroupExpandJob *expandJob = qobject_cast<ContactGroupExpandJob*>( job );
+
+      const KABC::Addressee::List contacts = expandJob->contacts();
+
+      mBrowser->setHtml( contactsAsHtml( mGroupName, contacts ) );
+    }
+
     ContactGroupViewer *mParent;
     KTextBrowser *mBrowser;
+    QString mGroupName;
 };
 
 ContactGroupViewer::ContactGroupViewer( QWidget *parent )
@@ -83,6 +96,7 @@ void ContactGroupViewer::itemChanged( const Item &item )
   static QPixmap defaultPixmap = KIcon( QLatin1String( "x-mail-distribution-list" ) ).pixmap( QSize( 100, 140 ) );
 
   const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
+  d->mGroupName = group.name();
 
   setWindowTitle( i18n( "Contact Group %1", group.name() ) );
 
@@ -90,7 +104,9 @@ void ContactGroupViewer::itemChanged( const Item &item )
                                         QUrl( QLatin1String( "group_photo" ) ),
                                         defaultPixmap );
 
-  d->mBrowser->setHtml( contactGroupAsHtml( group ) );
+  ContactGroupExpandJob *job = new ContactGroupExpandJob( group );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( _k_expandResult( KJob* ) ) );
+  job->start();
 }
 
 void ContactGroupViewer::itemRemoved()
@@ -98,7 +114,7 @@ void ContactGroupViewer::itemRemoved()
   d->mBrowser->clear();
 }
 
-static QString contactGroupAsHtml( const KABC::ContactGroup &group )
+static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::List &contacts )
 {
   // Assemble all parts
   QString strGroup = QString::fromLatin1(
@@ -111,21 +127,14 @@ static QString contactGroupAsHtml( const KABC::ContactGroup &group )
     "<td align=\"left\" width=\"70%\"><font size=\"+2\"><b>%2</b></font></td>" // name
     "</tr>" )
       .arg( QLatin1String( "group_photo" ) )
-      .arg( group.name() );
+      .arg( groupName );
 
-  for ( unsigned int i = 0; i < group.dataCount(); ++i ) {
-    const KABC::ContactGroup::Data data = group.data( i );
-    QString name = data.name();
-    name.replace( QLatin1Char( ' ' ), QLatin1String( "&nbsp;" ) );
-    const QString entry = QString::fromLatin1( "&nbsp;&nbsp;&nbsp;&bull;&nbsp;%1&nbsp;&lt;%2&gt;" )
-                                              .arg( name )
-                                              .arg( data.email() );
+  foreach ( const KABC::Addressee &contact, contacts ) {
+    const QString entry = QString::fromLatin1( "&bull;%1 &lt;%2&gt;" )
+                                              .arg( contact.formattedName() )
+                                              .arg( contact.preferredEmail() );
 
     strGroup.append( QString::fromLatin1( "<tr><td align=\"left\" colspan=\"2\">%1</td></tr>" ).arg( entry ) );
-  }
-  for ( unsigned int i = 0; i < group.contactReferenceCount(); ++i ) {
-    const KABC::ContactGroup::ContactReference reference = group.contactReference( i );
-    strGroup.append( QString::fromLatin1( "<tr><td align=\"left\" colspan=\"2\">%1</td></tr>" ).arg( reference.uid() ) );
   }
 
   strGroup.append( QString::fromLatin1( "</table></div>\n" ) );
