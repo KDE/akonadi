@@ -31,6 +31,7 @@ set(akonadicontact_LIB_SRC
   contacteditordialog.cpp
   contactgroupeditor.cpp
   contactgroupeditordialog.cpp
+  contactgroupexpandjob.cpp
   contactgrouplineedit.cpp
   contactgroupviewer.cpp
   contactgroupviewerdialog.cpp
