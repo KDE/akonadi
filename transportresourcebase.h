@@ -22,7 +22,7 @@
 
 #include "akonadi_export.h"
 
-#include <QString>
+#include <QtCore/QString>
 
 #include <akonadi/item.h>
 
