@@ -76,7 +76,7 @@ class AKONADI_CONTACT_EXPORT ContactGroupSearchJob : public KJob
      */
     enum Criterion
     {
-      Name, ///< The name of the contact group.
+      Name ///< The name of the contact group.
     };
 
     /**
