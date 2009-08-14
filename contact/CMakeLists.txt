@@ -33,6 +33,7 @@ set(akonadicontact_LIB_SRC
   contactgroupeditordialog.cpp
   contactgroupexpandjob.cpp
   contactgrouplineedit.cpp
+  contactgroupsearchjob.cpp
   contactgroupviewer.cpp
   contactgroupviewerdialog.cpp
   contactmetadata.cpp
