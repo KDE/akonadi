@@ -37,7 +37,8 @@ namespace Akonadi {
  * @code
  *
  * Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
- * job->
+ * job->setQuery( Akonadi::ContactSearchJob::Email, "tokoe@kde.org" );
+ * job->start();
  * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
  *
  * ...
