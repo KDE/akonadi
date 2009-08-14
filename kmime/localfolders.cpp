@@ -197,7 +197,11 @@ void LocalFoldersPrivate::buildResult( KJob *job )
 {
   if( job->error() ) {
     kDebug() << "BuildJob failed with error" << job->errorString();
+#if 0
+    // FIXME Temporary workaround for the duplicate-entry problem causing lots
+    //       of maildir instances to be created.
     schedulePrepare();
+#endif
     return;
   }
 
