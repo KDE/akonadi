@@ -82,6 +82,7 @@ ContactSearchJob::ContactSearchJob( QObject * parent )
 
 ContactSearchJob::~ContactSearchJob()
 {
+  delete d;
 }
 
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value )

@@ -46,7 +46,7 @@ namespace Akonadi {
  * MyClass::searchResult( KJob *job )
  * {
  *   Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
- *   const KABC::Addressee::List contacts = searchJob->contact();
+ *   const KABC::Addressee::List contacts = searchJob->contacts();
  *   // do something with the contacts
  * }
  *
