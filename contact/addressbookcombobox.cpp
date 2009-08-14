@@ -112,6 +112,7 @@ AddressBookComboBox::AddressBookComboBox( Type type, QWidget *parent )
   layout->setSpacing( 0 );
 
   layout->addWidget( d->mComboBox );
+  d->mComboBox->setCurrentIndex( 0 );
 
   connect( d->mComboBox, SIGNAL( activated( int ) ), SLOT( activated( int ) ) );
 }
@@ -125,7 +126,7 @@ Akonadi::Collection AddressBookComboBox::selectedAddressBook() const
 {
   Q_ASSERT_X( d->mComboBox->model() != 0, "AddressBookComboBox::selectedAddressBook", "No model set!" );
 
-  int index = d->mComboBox->currentIndex();
+  const int index = d->mComboBox->currentIndex();
 
   const QModelIndex modelIndex = d->mComboBox->model()->index( index, 0 );
   if ( modelIndex.isValid() )

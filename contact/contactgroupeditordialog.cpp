@@ -35,6 +35,12 @@ using namespace Akonadi;
 class ContactGroupEditorDialog::Private
 {
   public:
+    Private()
+      : mAddressBookBox( 0 )
+    {
+    }
+
+    AddressBookComboBox *mAddressBookBox;
     ContactGroupEditor *mEditor;
 };
 
@@ -56,15 +62,10 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
   if ( mode == CreateMode ) {
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-    AddressBookComboBox *box = new AddressBookComboBox( AddressBookComboBox::ContactGroupsOnly, mainWidget );
+    d->mAddressBookBox = new AddressBookComboBox( AddressBookComboBox::ContactGroupsOnly, mainWidget );
 
     layout->addWidget( label, 0, 0 );
-    layout->addWidget( box, 0, 1 );
-
-    connect( box, SIGNAL( selectionChanged( const Akonadi::Collection& ) ),
-             d->mEditor, SLOT( setDefaultCollection( const Akonadi::Collection& ) ) );
-
-    d->mEditor->setDefaultCollection( box->selectedAddressBook() );
+    layout->addWidget( d->mAddressBookBox, 0, 1 );
   }
 
   layout->addWidget( d->mEditor, 1, 0, 1, 2 );
@@ -94,6 +95,9 @@ void ContactGroupEditorDialog::setContactGroup( const Akonadi::Item &group )
 void ContactGroupEditorDialog::slotButtonClicked( int button )
 {
   if ( button == KDialog::Ok ) {
+    if ( d->mAddressBookBox )
+      d->mEditor->setDefaultCollection( d->mAddressBookBox->selectedAddressBook() );
+
     if ( d->mEditor->saveContactGroup() )
       accept();
   } else if ( button == KDialog::Cancel ) {

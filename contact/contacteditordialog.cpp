@@ -40,7 +40,7 @@ class ContactEditorDialog::Private
   public:
     Private( ContactEditorDialog::Mode mode, AbstractContactEditorWidget *editorWidget,
              ContactEditorDialog *parent )
-      : q( parent )
+      : q( parent ), mAddressBookBox( 0 )
     {
       q->setCaption( mode == ContactEditorDialog::CreateMode ? i18n( "New Contact" ) : i18n( "Edit Contact" ) );
       q->setButtons( ContactEditorDialog::Ok | ContactEditorDialog::Cancel );
@@ -56,15 +56,10 @@ class ContactEditorDialog::Private
       if ( mode == ContactEditorDialog::CreateMode ) {
         QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-        AddressBookComboBox *box = new AddressBookComboBox( AddressBookComboBox::ContactsOnly, mainWidget );
+        mAddressBookBox = new AddressBookComboBox( AddressBookComboBox::ContactsOnly, mainWidget );
 
         layout->addWidget( label, 0, 0 );
-        layout->addWidget( box, 0, 1 );
-
-        connect( box, SIGNAL( selectionChanged( const Akonadi::Collection& ) ),
-                 mEditor, SLOT( setDefaultCollection( const Akonadi::Collection& ) ) );
-
-        mEditor->setDefaultCollection( box->selectedAddressBook() );
+        layout->addWidget( mAddressBookBox, 0, 1 );
       }
 
       layout->addWidget( mEditor, 1, 0, 1, 2 );
@@ -81,6 +76,9 @@ class ContactEditorDialog::Private
 
     void slotOkClicked()
     {
+      if ( mAddressBookBox )
+        mEditor->setDefaultCollection( mAddressBookBox->selectedAddressBook() );
+
       mEditor->saveContact();
 
       q->accept();
@@ -92,6 +90,7 @@ class ContactEditorDialog::Private
     }
 
     ContactEditorDialog *q;
+    AddressBookComboBox *mAddressBookBox;
     ContactEditor *mEditor;
 };
 
