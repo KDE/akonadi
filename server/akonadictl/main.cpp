@@ -19,6 +19,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtDBus/QDBusConnection>
@@ -65,6 +66,23 @@ static bool statusServer()
 
   registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_SERVER_SERVICE );
   qDebug( "Akonadi Server: %s", registered ? "running" : "stopped" );
+
+  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.nepomuk.services.nepomukqueryservice" );
+  if ( registered ) {
+    QString backend = QLatin1String( "Unknown" );
+
+    QDir redlandDir = QDir::home();
+    if ( redlandDir.cd( ".kde/share/apps/nepomuk/repository/main/data/redland/" ) )
+      backend = QLatin1String( "Redland" );
+
+    QDir sesame2Dir = QDir::home();
+    if ( sesame2Dir.cd( ".kde/share/apps/nepomuk/repository/main/data/sesame2/" ) )
+      backend = QLatin1String( "Sesame2" );
+
+    qDebug( "Akonadi Server Search Support: available (backend: %s)", qPrintable( backend ) );
+  } else {
+    qDebug( "Akonadi Server Search Support: not available" );
+  }
 
   return true;
 }
