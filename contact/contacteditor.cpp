@@ -43,7 +43,7 @@ class ContactEditor::Private
 {
   public:
     Private( ContactEditor *parent )
-      : mParent( parent ), mMonitor( 0 )
+      : mParent( parent ), mMonitor( 0 ), mReadOnly( false )
     {
     }
 
@@ -67,6 +67,7 @@ class ContactEditor::Private
     Akonadi::Monitor *mMonitor;
     Akonadi::Collection mDefaultCollection;
     AbstractContactEditorWidget *mEditorWidget;
+    bool mReadOnly;
 };
 
 void ContactEditor::Private::fetchDone( KJob *job )
@@ -82,6 +83,16 @@ void ContactEditor::Private::fetchDone( KJob *job )
     return;
 
   mItem = fetchJob->items().first();
+
+  if ( mMode == ContactEditor::EditMode ) {
+    mReadOnly = false;
+
+    const Akonadi::Collection parentCollection = mItem.parentCollection();
+    if ( parentCollection.isValid() )
+      mReadOnly = (parentCollection.rights() & Collection::CanChangeItem);
+
+      mEditorWidget->setReadOnly( mReadOnly );
+  }
 
   const KABC::Addressee addr = mItem.payload<KABC::Addressee>();
   mContactMetaData.load( mItem );
@@ -113,6 +124,7 @@ void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByte
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
     job->fetchScope().fetchFullPayload();
     job->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
     mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( fetchDone( KJob* ) ) );
   }
@@ -164,6 +176,7 @@ void ContactEditor::loadContact( const Akonadi::Item &item )
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
   job->fetchScope().fetchFullPayload();
   job->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
+  job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
   connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchDone( KJob* ) ) );
 
@@ -175,6 +188,9 @@ void ContactEditor::saveContact()
 {
   if ( d->mMode == EditMode ) {
     if ( !d->mItem.isValid() )
+      return;
+
+    if ( d->mReadOnly )
       return;
 
     KABC::Addressee addr = d->mItem.payload<KABC::Addressee>();

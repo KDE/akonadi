@@ -60,6 +60,12 @@ class ContactEditorWidget : public Akonadi::AbstractContactEditorWidget
      */
     void storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const;
 
+    /**
+     * Sets whether the contact in the editor allows
+     * the user to edit the contact or not.
+     */
+    void setReadOnly( bool readOnly );
+
   private:
     class Private;
     Private* const d;

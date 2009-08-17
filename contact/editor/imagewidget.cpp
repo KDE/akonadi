@@ -245,6 +245,9 @@ void ImageWidget::contextMenuEvent( QContextMenuEvent *event )
 
 void ImageWidget::changeImage()
 {
+  if ( mReadOnly )
+    return;
+
   const KUrl url = KFileDialog::getOpenUrl( QString(), KImageIO::pattern(), this );
   if ( url.isValid() ) {
     bool ok = false;

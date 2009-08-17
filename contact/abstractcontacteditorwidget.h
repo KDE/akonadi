@@ -39,6 +39,7 @@ class AbstractContactEditorWidget : public QWidget
   public:
     virtual void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& ) = 0;
     virtual void storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const = 0;
+    virtual void setReadOnly( bool readOnly ) = 0;
 };
 
 }

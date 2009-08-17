@@ -530,3 +530,51 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
 
   metaData.setDisplayNameMode( d->mDisplayNameWidget->displayType() );
 }
+
+void ContactEditorWidget::setReadOnly( bool readOnly )
+{
+  // widgets from name group
+  d->mNameWidget->setReadOnly( readOnly );
+  d->mPhotoWidget->setReadOnly( readOnly );
+  d->mDisplayNameWidget->setReadOnly( readOnly );
+  d->mNickNameWidget->setReadOnly( readOnly );
+  d->mPronunciationWidget->setReadOnly( readOnly );
+
+  // widgets from internet group
+  d->mEmailWidget->setReadOnly( readOnly );
+  d->mHomepageWidget->setReadOnly( readOnly );
+  d->mBlogWidget->setReadOnly( readOnly );
+  d->mIMWidget->setReadOnly( readOnly );
+
+  // widgets from phones group
+  d->mPhonesWidget->setReadOnly( readOnly );
+
+  // widgets from addresses group
+  d->mAddressesWidget->setReadOnly( readOnly );
+
+  // widgets from coordinates group
+  d->mCoordinatesWidget->setEnabled( false );
+
+  // widgets from general group
+  d->mLogoWidget->setReadOnly( readOnly );
+  d->mOrganizationWidget->setReadOnly( readOnly );
+  d->mProfessionWidget->setReadOnly( readOnly );
+  d->mTitleWidget->setReadOnly( readOnly );
+  d->mDepartmentWidget->setReadOnly( readOnly );
+  d->mOfficeWidget->setReadOnly( readOnly );
+  d->mManagerWidget->setReadOnly( readOnly );
+  d->mAssistantWidget->setReadOnly( readOnly );
+
+  // widgets from groupware group
+  d->mFreeBusyWidget->setReadOnly( readOnly );
+
+  // widgets from notes group
+  d->mNotesWidget->setReadOnly( readOnly );
+
+  // widgets from dates group
+  d->mBirthdateWidget->setReadOnly( readOnly );
+  d->mAnniversaryWidget->setReadOnly( readOnly );
+
+  // widgets from family group
+  d->mPartnerWidget->setReadOnly( readOnly );
+}
