@@ -149,7 +149,8 @@ int EntityTreeModel::columnCount( const QModelIndex & parent ) const
 // TODO: Statistics?
   if ( parent.isValid() && parent.column() != 0 )
     return 0;
-  return 1;
+
+  return qMax( getColumnCount( CollectionTreeHeaders ), getColumnCount( ItemListHeaders ) );
 }
 
 
