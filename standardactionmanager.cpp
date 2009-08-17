@@ -25,6 +25,7 @@
 #include "collectionmodel.h"
 #include "collectionutils_p.h"
 #include "collectionpropertiesdialog.h"
+#include "entitytreemodel.h"
 #include "favoritecollectionsmodel.h"
 #include "itemdeletejob.h"
 #include "itemmodel.h"
@@ -191,14 +192,24 @@ class StandardActionManager::Private
       }
 
       bool multiItemSelected = false;
+      bool canDeleteItem = true;
       int itemCount = 0;
       if ( itemSelectionModel ) {
-        itemCount = itemSelectionModel->selectedRows().count();
+        const QModelIndexList rows = itemSelectionModel->selectedRows();
+
+        itemCount = rows.count();
         multiItemSelected = itemCount > 0;
+
+        foreach ( const QModelIndex &itemIndex, rows ) {
+          const Collection parentCollection = itemIndex.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+          if ( !parentCollection.isValid() )
+            continue;
+
+          canDeleteItem = canDeleteItem && (parentCollection.rights() & Collection::CanDeleteItem);
+        }
       }
 
       enableAction( CopyItems, multiItemSelected );
-      const bool canDeleteItem = !col.isValid() || (col.rights() & Collection::CanDeleteItem);
       enableAction( DeleteItems, multiItemSelected && canDeleteItem );
 
       enableAction( CopyItemToMenu, multiItemSelected );
