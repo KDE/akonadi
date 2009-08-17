@@ -23,7 +23,6 @@
 #include <kdatepicker.h>
 #include <kglobal.h>
 #include <kicon.h>
-#include <klineedit.h>
 #include <klocale.h>
 #include <libkdepim-copy/kdatepickerpopup.h>
 
@@ -32,13 +31,15 @@
 #include <QtGui/QLabel>
 #include <QtGui/QToolButton>
 
-DateLineEdit::DateLineEdit( QWidget *parent )
-  : KLineEdit( parent )
+DateView::DateView( QWidget *parent )
+  : QLabel( parent )
 {
-  setReadOnly( true );
+  setTextInteractionFlags( Qt::TextSelectableByMouse );
+  setFrameShape( QFrame::Panel );
+  setFrameShadow( QFrame::Sunken );
 }
 
-void DateLineEdit::contextMenuEvent( QContextMenuEvent *event )
+void DateView::contextMenuEvent( QContextMenuEvent *event )
 {
   QMenu menu;
   menu.addAction( i18n( "Remove" ), this, SLOT( emitSignal() ) );
@@ -46,7 +47,7 @@ void DateLineEdit::contextMenuEvent( QContextMenuEvent *event )
   menu.exec( event->globalPos() );
 }
 
-void DateLineEdit::emitSignal()
+void DateView::emitSignal()
 {
   emit resetDate();
 }
@@ -57,7 +58,7 @@ DateEditWidget::DateEditWidget( QWidget *parent )
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setMargin( 0 );
 
-  mView = new DateLineEdit;
+  mView = new DateView;
   layout->addWidget( mView );
 
   mButton = new QToolButton;

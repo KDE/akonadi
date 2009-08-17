@@ -22,9 +22,8 @@
 #define DATEEDITWIDGET_H
 
 #include <QtCore/QDate>
+#include <QtGui/QLabel>
 #include <QtGui/QWidget>
-
-#include <klineedit.h>
 
 namespace KPIM
 {
@@ -34,12 +33,12 @@ class KDatePickerPopup;
 class QContextMenuEvent;
 class QToolButton;
 
-class DateLineEdit : public KLineEdit
+class DateView : public QLabel
 {
   Q_OBJECT
 
   public:
-    DateLineEdit( QWidget *parent = 0 );
+    DateView( QWidget *parent = 0 );
 
   Q_SIGNALS:
     void resetDate();
@@ -71,7 +70,7 @@ class DateEditWidget : public QWidget
 
   private:
     QDate mDate;
-    DateLineEdit *mView;
+    DateView *mView;
     QToolButton *mButton;
     KPIM::KDatePickerPopup *mMenu;
 };
