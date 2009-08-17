@@ -116,7 +116,8 @@ void CollectionFetchJob::doStart()
 
   if ( !d->mBaseList.isEmpty() ) {
     foreach ( const Collection &col, d->mBaseList ) {
-      new CollectionFetchJob( col, CollectionFetchJob::Base, this );
+      CollectionFetchJob *subJob = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
+      subJob->setFetchScope( fetchScope() );
     }
     return;
   }

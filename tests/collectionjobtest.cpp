@@ -623,4 +623,21 @@ void CollectionJobTest::testRidCreateDelete()
   QVERIFY( !findCol( listJob->collections(), collection.name() ).isValid() );
 }
 
+void CollectionJobTest::testAncestorRetrieval()
+{
+  Collection col;
+  col.setRemoteId( "10" );
+
+  CollectionFetchJob *job = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
+  job->fetchScope().setResource( "akonadi_knut_resource_0" );
+  job->fetchScope().setAncestorRetrieval( CollectionFetchScope::All );
+  AKVERIFYEXEC( job );
+  QCOMPARE( job->collections().count(), 1 );
+  col = job->collections().first();
+  QVERIFY( col.isValid() );
+  QVERIFY( col.parentCollection().isValid() );
+  QCOMPARE( col.parentCollection().remoteId(), QString( "6" ) );
+  QCOMPARE( col.parentCollection().parentCollection(), Collection::root() );
+}
+
 #include "collectionjobtest.moc"

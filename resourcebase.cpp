@@ -395,6 +395,7 @@ void ResourceBase::collectionsRetrievalDone()
   }
   // user did the sync himself, we are done now
   else {
+    // FIXME: we need the same special case for SyncAll as in slotCollectionSyncDone here!
     d->scheduler->taskDone();
   }
 }
@@ -409,6 +410,7 @@ void ResourceBasePrivate::slotCollectionSyncDone( KJob * job )
     if ( scheduler->currentTask().type == ResourceScheduler::SyncAll ) {
       CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
       list->fetchScope().setResource( mId );
+      list->fetchScope().setAncestorRetrieval( q->changeRecorder()->collectionFetchScope().ancestorRetrieval() );
       q->connect( list, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalListDone( KJob* ) ) );
       return;
     }

@@ -65,7 +65,7 @@ class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
      *
      * @param instance The resource instance to synchronize.
      */
-    ResourceSynchronizationJob( const AgentInstance &instance, QObject *parent = 0 );
+    explicit ResourceSynchronizationJob( const AgentInstance &instance, QObject *parent = 0 );
 
     /**
      * Destroys the synchronization job.

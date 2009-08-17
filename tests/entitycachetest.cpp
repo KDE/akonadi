@@ -39,7 +39,10 @@ class EntityCacheTest : public QObject
       QVERIFY( !cache.isRequested( 1 ) );
       QVERIFY( !cache.retrieve( 1 ).isValid() );
 
-      cache.request( 1, FetchScope() );
+      FetchScope scope;
+      scope.setAncestorRetrieval( FetchScope::All );
+
+      cache.request( 1, scope );
       QVERIFY( !cache.isCached( 1 ) );
       QVERIFY( cache.isRequested( 1 ) );
       QVERIFY( !cache.retrieve( 1 ).isValid() );
@@ -50,6 +53,8 @@ class EntityCacheTest : public QObject
       QVERIFY( cache.isRequested( 1 ) );
       const T e1 = cache.retrieve( 1 );
       QCOMPARE( e1.id(), 1ll );
+      QVERIFY( e1.parentCollection().isValid() );
+      QVERIFY( !e1.parentCollection().remoteId().isEmpty() || e1.parentCollection() == Collection::root() );
 
       spy.clear();
       cache.request( 2, FetchScope() );

@@ -27,7 +27,7 @@
 class KConfig;
 class KJob;
 class KProcess;
-class QMetaObject;
+struct QMetaObject;
 
 namespace Akonadi {
 

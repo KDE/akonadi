@@ -40,6 +40,7 @@ class CollectionFetchScopePrivate : public QSharedData
     {
       resource = other.resource;
       contentMimeTypes = other.contentMimeTypes;
+      ancestorDepth = other.ancestorDepth;
       unsubscribed = other.unsubscribed;
       statistics = other.statistics;
     }
