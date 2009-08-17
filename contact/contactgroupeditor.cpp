@@ -191,6 +191,9 @@ bool ContactGroupEditor::Private::storeContactGroup( KABC::ContactGroup &group )
       if ( data == KABC::ContactGroup::Data() ) {
         const QString text = mMembers.at( i )->text();
 
+        if ( text.simplified().isEmpty() ) // we handle empty members as 'to be removed'
+          continue;
+
         QString fullName, email;
         KABC::Addressee::parseEmailAddress( text, fullName, email );
 
