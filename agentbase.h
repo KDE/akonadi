@@ -153,6 +153,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * @endcode
      *
      * @author Kevin Krammer <kevin.krammer@gmx.at>
+     *
+     * @deprecated Use Observer2 instead
      */
     class AKONADI_EXPORT Observer  // krazy:exclude=dpointer
     {
@@ -205,6 +207,42 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param collection The deleted collection.
          */
         virtual void collectionRemoved( const Akonadi::Collection &collection );
+    };
+
+    /**
+     * BC extension of Observer with support for monitoring item and collection moves.
+     * Use this one instead of Observer.
+     *
+     * @since 4.4
+     */
+    class AKONADI_EXPORT Observer2 : public Observer  // krazy:exclude=dpointer
+    {
+      public:
+        /**
+         * Reimplement to handle item moves.
+         * When using this class in combination with Akonadi::ResourceBase, inter-resource
+         * moves are handled internally already and the corresponding  add or delete method
+         * is called instead.
+         *
+         * @param item The moved item.
+         * @param collectionSource The collection the item has been moved from.
+         * @param collectionDestination The collection the item has been moved to.
+         */
+        virtual void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource,
+                                const Akonadi::Collection &collectionDestination );
+
+        /**
+         * Reimplement to handle collection moves.
+         * When using this class in combination with Akonadi::ResourceBase, inter-resource
+         * moves are handled internally already and the corresponding  add or delete method
+         * is called instead.
+         *
+         * @param collection The moved collection.
+         * @param source The previous parent collection.
+         * @param distination The new parent collection.
+         */
+        virtual void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source,
+                                      const Akonadi::Collection &destination );
     };
 
     /**
