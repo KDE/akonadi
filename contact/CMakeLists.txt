@@ -27,6 +27,7 @@ set(akonadicontact_LIB_SRC
   addressbookselectiondialog.cpp
   attributeregistrar.cpp
   collectionfiltermodel.cpp
+  contactcompletionmodel.cpp
   contacteditor.cpp
   contacteditordialog.cpp
   contactgroupeditor.cpp

@@ -34,6 +34,7 @@
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 
+#include "contactcompletionmodel_p.h"
 #include "contactgrouplineedit_p.h"
 #include "ui_contactgroupeditor.h"
 #include "waitingoverlay_p.h"
@@ -45,8 +46,9 @@ class ContactGroupEditor::Private
 {
   public:
     Private( ContactGroupEditor *parent )
-      : mParent( parent ), mMonitor( 0 ), mCompletionModel( 0 )
+      : mParent( parent ), mMonitor( 0 ), mCompletionModel( 0 ), mReadOnly( false )
     {
+      mCompletionModel = ContactCompletionModel::self();
     }
 
     ~Private()
@@ -100,7 +102,7 @@ void ContactGroupEditor::Private::fetchDone( KJob *job )
 
     const Akonadi::Collection parentCollection = mItem.parentCollection();
     if ( parentCollection.isValid() )
-      mReadOnly = (parentCollection.rights() & Collection::CanChangeItem);
+      mReadOnly = !(parentCollection.rights() & Collection::CanChangeItem);
   }
 
   const KABC::ContactGroup group = mItem.payload<KABC::ContactGroup>();
@@ -272,21 +274,15 @@ ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
   d->mMembersLayout = new QVBoxLayout();
   layout->addLayout( d->mMembersLayout );
   layout->addStretch();
+
+  if ( d->mMode == CreateMode )
+    d->addMemberEdit();
 }
 
 
 ContactGroupEditor::~ContactGroupEditor()
 {
    delete d;
-}
-
-void ContactGroupEditor::setCompletionModel( QAbstractItemModel *model )
-{
-  d->mCompletionModel = model;
-
-  // We have to add the initial member edit here as it depends on the completion model
-  if ( d->mMode == CreateMode )
-    d->addMemberEdit();
 }
 
 void ContactGroupEditor::loadContactGroup( const Akonadi::Item &item )

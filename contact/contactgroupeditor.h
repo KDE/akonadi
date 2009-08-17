@@ -26,8 +26,6 @@
 
 #include <QtGui/QWidget>
 
-class QAbstractItemModel;
-
 namespace Akonadi {
 
 class Collection;
@@ -65,13 +63,6 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
      * Destroys the contact group editor.
      */
     virtual ~ContactGroupEditor();
-
-    /**
-     * Sets the contact completion @p model.
-     *
-     * @note Must be called before the first loadContactGroup() call.
-     */
-    void setCompletionModel( QAbstractItemModel *model );
 
   public Q_SLOTS:
     /**

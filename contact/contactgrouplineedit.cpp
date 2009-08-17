@@ -19,6 +19,8 @@
 
 #include "contactgrouplineedit_p.h"
 
+#include "contactcompletionmodel_p.h"
+
 #include <akonadi/entitytreemodel.h>
 #include <klocale.h>
 
@@ -39,8 +41,7 @@ void ContactGroupLineEdit::setCompletionModel( QAbstractItemModel *model )
   mModel = model;
 
   mCompleter = new QCompleter( mModel, this );
-  mCompleter->setCompletionColumn( 0 );
-  mCompleter->setCompletionRole( Qt::DisplayRole );
+  mCompleter->setCompletionColumn( Akonadi::ContactCompletionModel::NameAndEmailColumn );
   connect( mCompleter, SIGNAL( activated( const QModelIndex& ) ),
            this, SLOT( autoCompleted( const QModelIndex& ) ) );
 

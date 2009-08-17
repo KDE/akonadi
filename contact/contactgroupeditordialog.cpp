@@ -82,11 +82,6 @@ ContactGroupEditorDialog::~ContactGroupEditorDialog()
   delete d;
 }
 
-void ContactGroupEditorDialog::setCompletionModel( QAbstractItemModel *model )
-{
-  d->mEditor->setCompletionModel( model );
-}
-
 void ContactGroupEditorDialog::setContactGroup( const Akonadi::Item &group )
 {
   d->mEditor->loadContactGroup( group );
