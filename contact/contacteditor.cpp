@@ -89,7 +89,7 @@ void ContactEditor::Private::fetchDone( KJob *job )
 
     const Akonadi::Collection parentCollection = mItem.parentCollection();
     if ( parentCollection.isValid() )
-      mReadOnly = (parentCollection.rights() & Collection::CanChangeItem);
+      mReadOnly = !(parentCollection.rights() & Collection::CanChangeItem);
 
       mEditorWidget->setReadOnly( mReadOnly );
   }
