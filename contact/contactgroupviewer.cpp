@@ -45,7 +45,7 @@ class ContactGroupViewer::Private
 {
   public:
     Private( ContactGroupViewer *parent )
-      : mParent( parent )
+      : mParent( parent ), mExpandJob( 0 )
     {
     }
 
@@ -56,11 +56,14 @@ class ContactGroupViewer::Private
       const KABC::Addressee::List contacts = expandJob->contacts();
 
       mBrowser->setHtml( contactsAsHtml( mGroupName, contacts ) );
+
+      mExpandJob = 0;
     }
 
     ContactGroupViewer *mParent;
     KTextBrowser *mBrowser;
     QString mGroupName;
+    ContactGroupExpandJob *mExpandJob;
 };
 
 ContactGroupViewer::ContactGroupViewer( QWidget *parent )
@@ -104,9 +107,14 @@ void ContactGroupViewer::itemChanged( const Item &item )
                                         QUrl( QLatin1String( "group_photo" ) ),
                                         defaultPixmap );
 
-  ContactGroupExpandJob *job = new ContactGroupExpandJob( group );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( _k_expandResult( KJob* ) ) );
-  job->start();
+  if ( d->mExpandJob ) {
+    disconnect( d->mExpandJob, SIGNAL( result( KJob* ) ), this, SLOT( _k_expandResult( KJob* ) ) );
+    d->mExpandJob->kill();
+  }
+
+  d->mExpandJob = new ContactGroupExpandJob( group );
+  connect( d->mExpandJob, SIGNAL( result( KJob* ) ), SLOT( _k_expandResult( KJob* ) ) );
+  d->mExpandJob->start();
 }
 
 void ContactGroupViewer::itemRemoved()
