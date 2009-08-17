@@ -184,16 +184,18 @@ void SelfTestDialog::testSQLDriver()
 {
   const QString driver = serverSetting( QLatin1String("General"), "Driver", QLatin1String("QMYSQL") ).toString();
   const QStringList availableDrivers = QSqlDatabase::drivers();
-  const KLocalizedString details = ki18n( "The QtSQL driver '%1' is required by your current Akonadi server configuration.\n"
+  const KLocalizedString detailsOk = ki18n( "The QtSQL driver '%1' is required by your current Akonadi server configuration and was found on your system." )
+      .subs( driver );
+  const KLocalizedString detailsFail = ki18n( "The QtSQL driver '%1' is required by your current Akonadi server configuration.\n"
       "The following drivers are installed: %2.\n"
       "Make sure the required driver is installed." )
       .subs( driver )
       .subs( availableDrivers.join( QLatin1String(", ") ) );
   QStandardItem *item = 0;
   if ( availableDrivers.contains( driver ) )
-    item = report( Success, ki18n( "Database driver found." ), details );
+    item = report( Success, ki18n( "Database driver found." ), detailsOk );
   else
-    item = report( Error, ki18n( "Database driver not found." ), details );
+    item = report( Error, ki18n( "Database driver not found." ), detailsFail );
   item->setData( XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite ), FileIncludeRole );
 }
 
