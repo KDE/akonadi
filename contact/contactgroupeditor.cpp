@@ -58,6 +58,7 @@ class ContactGroupEditor::Private
     void storeDone( KJob* );
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& );
     void memberChanged();
+    void setReadOnly( bool );
 
     void loadContactGroup( const KABC::ContactGroup &group );
     bool storeContactGroup( KABC::ContactGroup &group );
@@ -69,10 +70,11 @@ class ContactGroupEditor::Private
     Item mItem;
     Monitor *mMonitor;
     Collection mDefaultCollection;
-    Ui::ContactGroupEditor gui;
-    QVBoxLayout *membersLayout;
-    QList<ContactGroupLineEdit*> members;
+    Ui::ContactGroupEditor mGui;
+    QVBoxLayout *mMembersLayout;
+    QList<ContactGroupLineEdit*> mMembers;
     QAbstractItemModel *mCompletionModel;
+    bool mReadOnly;
 };
 
 }
@@ -93,8 +95,18 @@ void ContactGroupEditor::Private::fetchDone( KJob *job )
 
   mItem = fetchJob->items().first();
 
+  if ( mMode == ContactGroupEditor::EditMode ) {
+    mReadOnly = false;
+
+    const Akonadi::Collection parentCollection = mItem.parentCollection();
+    if ( parentCollection.isValid() )
+      mReadOnly = (parentCollection.rights() & Collection::CanChangeItem);
+  }
+
   const KABC::ContactGroup group = mItem.payload<KABC::ContactGroup>();
   loadContactGroup( group );
+
+  setReadOnly( mReadOnly );
 }
 
 void ContactGroupEditor::Private::storeDone( KJob *job )
@@ -121,6 +133,7 @@ void ContactGroupEditor::Private::itemChanged( const Item&, const QSet<QByteArra
   if ( dlg.exec() == QMessageBox::AcceptRole ) {
     ItemFetchJob *job = new ItemFetchJob( mItem );
     job->fetchScope().fetchFullPayload();
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
     mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( fetchDone( KJob* ) ) );
     new WaitingOverlay( job, mParent );
@@ -129,9 +142,9 @@ void ContactGroupEditor::Private::itemChanged( const Item&, const QSet<QByteArra
 
 void ContactGroupEditor::Private::loadContactGroup( const KABC::ContactGroup &group )
 {
-  gui.groupName->setText( group.name() );
+  mGui.groupName->setText( group.name() );
 
-  qDeleteAll( members );
+  qDeleteAll( mMembers );
   for ( unsigned int i = 0; i < group.dataCount(); ++i ) {
     const KABC::ContactGroup::Data data = group.data( i );
     ContactGroupLineEdit *lineEdit = addMemberEdit();
@@ -155,26 +168,26 @@ void ContactGroupEditor::Private::loadContactGroup( const KABC::ContactGroup &gr
 
 bool ContactGroupEditor::Private::storeContactGroup( KABC::ContactGroup &group )
 {
-  if ( gui.groupName->text().isEmpty() ) {
+  if ( mGui.groupName->text().isEmpty() ) {
     KMessageBox::error( mParent, i18n( "The name of the contact group must not be empty." ) );
     return false;
   }
 
-  group.setName( gui.groupName->text() );
+  group.setName( mGui.groupName->text() );
 
   group.removeAllContactData();
   group.removeAllContactReferences();
 
   // Iterate over all members except the last one, as this is always empty anyway
-  for ( int i = 0; i < (members.count() - 1); ++i ) {
-    if ( members.at( i )->containsReference() ) {
-      const KABC::ContactGroup::ContactReference reference = members.at( i )->contactReference();
+  for ( int i = 0; i < (mMembers.count() - 1); ++i ) {
+    if ( mMembers.at( i )->containsReference() ) {
+      const KABC::ContactGroup::ContactReference reference = mMembers.at( i )->contactReference();
       if ( !(reference == KABC::ContactGroup::ContactReference()) )
         group.append( reference );
     } else {
-      const KABC::ContactGroup::Data data = members.at( i )->contactData();
+      const KABC::ContactGroup::Data data = mMembers.at( i )->contactData();
       if ( data == KABC::ContactGroup::Data() ) {
-        const QString text = members.at( i )->text();
+        const QString text = mMembers.at( i )->text();
 
         QString fullName, email;
         KABC::Addressee::parseEmailAddress( text, fullName, email );
@@ -212,8 +225,8 @@ ContactGroupLineEdit* ContactGroupEditor::Private::addMemberEdit()
   ContactGroupLineEdit *lineEdit = new ContactGroupLineEdit( mParent );
   lineEdit->setCompletionModel( mCompletionModel );
   lineEdit->setToolTip( i18n( "Enter member in format: name <email>" ) );
-  members.append( lineEdit );
-  membersLayout->addWidget( lineEdit );
+  mMembers.append( lineEdit );
+  mMembersLayout->addWidget( lineEdit );
   mParent->connect( lineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( memberChanged() ) );
 
   return lineEdit;
@@ -222,22 +235,30 @@ ContactGroupLineEdit* ContactGroupEditor::Private::addMemberEdit()
 void ContactGroupEditor::Private::memberChanged()
 {
   // remove last line edit iff last and second last line edits are both empty
-  if ( members.count() >= 2 ) { // only if more than 1 line edit available
-    if ( members.at( members.count() - 1 )->text().isEmpty() &&
-         members.at( members.count() - 2 )->text().isEmpty() ) {
+  if ( mMembers.count() >= 2 ) { // only if more than 1 line edit available
+    if ( mMembers.at( mMembers.count() - 1 )->text().isEmpty() &&
+         mMembers.at( mMembers.count() - 2 )->text().isEmpty() ) {
 
       // delete line edit with deleteLater as this slot might be called by
       // that line edit
-      members.at( members.count() - 1 )->deleteLater();
+      mMembers.at( mMembers.count() - 1 )->deleteLater();
 
       // remove line edit from list of known line edits
-      members.removeAt( members.count() - 1 );
+      mMembers.removeAt( mMembers.count() - 1 );
     }
   }
 
   // add new line edit if the last one contains text
-  if ( !members.last()->text().isEmpty() )
+  if ( !mMembers.last()->text().isEmpty() )
     addMemberEdit();
+}
+
+void ContactGroupEditor::Private::setReadOnly( bool readOnly )
+{
+  mGui.groupName->setReadOnly( readOnly );
+
+  for ( int i = 0; i < mMembers.count(); ++i )
+    mMembers.at( i )->setReadOnly( readOnly );
 }
 
 
@@ -245,11 +266,11 @@ ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
   d->mMode = mode;
-  d->gui.setupUi( this );
-  d->gui.gridLayout->setRowStretch( 2, 1 );
-  QVBoxLayout *layout = new QVBoxLayout( d->gui.memberWidget );
-  d->membersLayout = new QVBoxLayout();
-  layout->addLayout( d->membersLayout );
+  d->mGui.setupUi( this );
+  d->mGui.gridLayout->setRowStretch( 2, 1 );
+  QVBoxLayout *layout = new QVBoxLayout( d->mGui.memberWidget );
+  d->mMembersLayout = new QVBoxLayout();
+  layout->addLayout( d->mMembersLayout );
   layout->addStretch();
 }
 
@@ -278,6 +299,7 @@ void ContactGroupEditor::loadContactGroup( const Akonadi::Item &item )
 
   ItemFetchJob *job = new ItemFetchJob( item );
   job->fetchScope().fetchFullPayload();
+  job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
   connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchDone( KJob* ) ) );
 
@@ -292,6 +314,9 @@ bool ContactGroupEditor::saveContactGroup()
   if ( d->mMode == EditMode ) {
     if ( !d->mItem.isValid() )
       return false;
+
+    if ( d->mReadOnly )
+      return true;
 
     KABC::ContactGroup group = d->mItem.payload<KABC::ContactGroup>();
 
