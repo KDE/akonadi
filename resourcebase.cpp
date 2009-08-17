@@ -62,7 +62,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       : AgentBasePrivate( parent ),
         scheduler( 0 ),
         mItemSyncer( 0 ),
-        mCollectionSyncer( 0 )
+        mCollectionSyncer( 0 ),
+        mHierarchicalRid( false )
     {
       mStatusMessage = defaultReadyMessage();
     }
@@ -106,6 +107,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     ResourceScheduler *scheduler;
     ItemSync *mItemSyncer;
     CollectionSync *mCollectionSyncer;
+    bool mHierarchicalRid;
 };
 
 ResourceBase::ResourceBase( const QString & id )
@@ -345,6 +347,7 @@ void ResourceBase::collectionsRetrieved( const Collection::List & collections )
               "Calling collectionsRetrieved() although no collection retrieval is in progress" );
   if ( !d->mCollectionSyncer ) {
     d->mCollectionSyncer = new CollectionSync( identifier() );
+    d->mCollectionSyncer->setHierarchicalRemoteIds( d->mHierarchicalRid );
     connect( d->mCollectionSyncer, SIGNAL( percent( KJob*, unsigned long ) ), SLOT( slotPercent( KJob*, unsigned long ) ) );
     connect( d->mCollectionSyncer, SIGNAL( result( KJob* ) ), SLOT( slotCollectionSyncDone( KJob* ) ) );
   }
@@ -361,6 +364,7 @@ void ResourceBase::collectionsRetrievedIncremental( const Collection::List & cha
               "Calling collectionsRetrievedIncremental() although no collection retrieval is in progress" );
   if ( !d->mCollectionSyncer ) {
     d->mCollectionSyncer = new CollectionSync( identifier() );
+    d->mCollectionSyncer->setHierarchicalRemoteIds( d->mHierarchicalRid );
     connect( d->mCollectionSyncer, SIGNAL( percent( KJob*, unsigned long ) ), SLOT( slotPercent( KJob*, unsigned long ) ) );
     connect( d->mCollectionSyncer, SIGNAL( result( KJob* ) ), SLOT( slotCollectionSyncDone( KJob* ) ) );
   }
@@ -376,6 +380,7 @@ void ResourceBase::setCollectionStreamingEnabled( bool enable )
               "Calling setCollectionStreamingEnabled() although no collection retrieval is in progress" );
   if ( !d->mCollectionSyncer ) {
     d->mCollectionSyncer = new CollectionSync( identifier() );
+    d->mCollectionSyncer->setHierarchicalRemoteIds( d->mHierarchicalRid );
     connect( d->mCollectionSyncer, SIGNAL( percent( KJob*, unsigned long ) ), SLOT( slotPercent( KJob*, unsigned long ) ) );
     connect( d->mCollectionSyncer, SIGNAL( result( KJob* ) ), SLOT( slotCollectionSyncDone( KJob* ) ) );
   }
@@ -637,6 +642,12 @@ void ResourceBasePrivate::slotPercent( KJob *job, unsigned long percent )
   Q_Q( ResourceBase );
   Q_UNUSED( job );
   emit q->percent( percent );
+}
+
+void ResourceBase::enableHierarchicalRemoteIdentifiers( bool enable )
+{
+  Q_D( ResourceBase );
+  d->mHierarchicalRid = enable;
 }
 
 #include "resourcebase.moc"
