@@ -39,6 +39,7 @@
 #include "itemmodifyjob_p.h"
 #include "session.h"
 #include "resourceselectjob_p.h"
+#include "monitor_p.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -318,6 +319,7 @@ void ResourceBasePrivate::changeCommittedResult( KJob *job )
   Q_Q( ResourceBase );
   if ( job->error() )
     emit q->error( i18n( "Updating local collection failed: %1.", job->errorText() ) );
+  mMonitor->d_ptr->invalidateCache( static_cast<CollectionModifyJob*>( job )->collection() );
   changeProcessed();
 }
 

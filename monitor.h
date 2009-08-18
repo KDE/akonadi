@@ -368,6 +368,8 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
     Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessage::List& ) )
     Q_PRIVATE_SLOT( d_ptr, void dataAvailable() )
+
+    friend class ResourceBasePrivate;
     //@endcond
 };
 

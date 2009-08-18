@@ -329,4 +329,9 @@ void MonitorPrivate::invalidateCaches( const NotificationMessage &msg )
   }
 }
 
+void MonitorPrivate::invalidateCache( const Collection &col )
+{
+  collectionCache.update( col.id(), mCollectionFetchScope );
+}
+
 // @endcond
