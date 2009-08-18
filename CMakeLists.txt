@@ -8,8 +8,6 @@ set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 
 ############### Build Options ###############
 
-include(CTest)
-include(CTestConfig.cmake)
 option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 if (AKONADI_BUILD_TESTS)
   enable_testing()
@@ -76,7 +74,7 @@ include(${QT_USE_FILE})
 if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}") # We ran CMake in kdesupport
   if(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano) # and we plan to build Soprano
     message(STATUS "Soprano is needed to build Akonadi. We will use Soprano from kdesupport.")
-    set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano ${KDESupport_SOURCE_DIR}/soprano/soprano ${KDESupport_BINARY_DIR}/soprano)
+    set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano)
     set (SOPRANO_LIBRARIES soprano)
     set (Soprano_FOUND TRUE)
   endif(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano)
@@ -117,9 +115,13 @@ if(NOT Boost_USE_STATIC_LIBS)
   add_definitions(-DBOOST_DYN_LINK)
 endif(NOT Boost_USE_STATIC_LIBS)
 
+#### Sqlite ####
+set(SQLITE_MIN_VERSION 3.6.16)
+find_package(Sqlite)
+macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" TRUE "" "")
+
 ############### Compilers flags ###############
 
-option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
   set (_ENABLE_EXCEPTIONS -fexceptions)
   set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
@@ -208,6 +210,10 @@ add_subdirectory(libs)
 if (XSLTPROC_EXECUTABLE)
    add_subdirectory(server)
 endif (XSLTPROC_EXECUTABLE)
+
+if (SQLITE_FOUND)
+   add_subdirectory(qsqlite)
+endif (SQLITE_FOUND)
 
 
 ############### install stuff ###############
