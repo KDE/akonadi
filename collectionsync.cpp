@@ -213,13 +213,13 @@ class CollectionSync::Private
     {
       if ( !hierarchicalRIDs )
         return localRoot;
+      if ( collection == Collection::root() ) {
+        if ( exactMatch ) *exactMatch = true;
+        return localRoot;
+      }
       if ( collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty() ) {
         kWarning() << "Remote collection without valid parent found: " << collection;
         return 0;
-      }
-      if ( collection.parentCollection() == Collection::root() ) {
-        if ( exactMatch ) *exactMatch = true;
-        return localRoot;
       }
       bool parentIsExact = false;
       LocalNode *localParent = findBestLocalAncestor( collection.parentCollection(), &parentIsExact );
