@@ -423,8 +423,34 @@ bool DataStore::appendPimItem( QList<Part> & parts,
     }
   }
 
+  qDebug() << "appendPimItem: " << pimItem;
+
   mNotificationCollector->itemAdded( pimItem, collection, mimetype.name() );
   return true;
+}
+
+bool DataStore::unhidePimItem( PimItem &pimItem )
+{
+  if ( !m_dbOpened )
+    return false;
+
+  qDebug() << "DataStore::unhidePimItem(" << pimItem << ")";
+
+  // FIXME: This is inefficient. Using a bit on the PimItemTable record would probably be some orders of magnitude faster...
+  QList< QByteArray > parts;
+  parts << "ATR:HIDDEN";
+
+  return removeItemParts( pimItem, parts );
+}
+
+bool DataStore::unhideAllPimItems()
+{
+  if ( !m_dbOpened )
+    return false;
+
+  qDebug() << "DataStore::unhideAllPimItems()";
+
+  return PartHelper::remove( Part::nameFullColumnName(), QLatin1String( "ATR:HIDDEN" ) );
 }
 
 bool DataStore::cleanupPimItem( const PimItem &item )

@@ -143,6 +143,7 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/server/interf
 
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManager.xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml )
 qt4_add_dbus_interface( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Preprocessor.xml preprocessorinterface )
+qt4_add_dbus_interface( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml agentcontrolinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.Search.xml searchinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.SearchQuery.xml searchqueryinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface )

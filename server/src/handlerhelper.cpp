@@ -18,11 +18,10 @@
  ***************************************************************************/
 
 #include "handlerhelper.h"
-#include "imapstreamparser.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
-#include "libs/imapparser_p.h"
-#include "libs/protocol_p.h"
+
+#include "../libs/imapparser_p.h"
 
 using namespace Akonadi;
 
@@ -186,7 +185,7 @@ QByteArray HandlerHelper::cachePolicyToByteArray(const Collection & col)
 }
 
 QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hidden, bool includeStatistics,
-                                                 int ancestorDepth, const QStack<Collection> &ancestors )
+                                                 int ancestorDepth, const QStack<Collection> &_ancestors )
 {
   QByteArray b = QByteArray::number( col.id() ) + ' '
                + QByteArray::number( col.parentId() ) + " (";
@@ -207,8 +206,23 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
   }
 
   b += HandlerHelper::cachePolicyToByteArray( col ) + ' ';
-  if ( ancestorDepth > 0 )
-    b += HandlerHelper::ancestorsToByteArray( ancestorDepth, ancestors ) + ' ';
+
+  if ( ancestorDepth > 0 ) {
+    b += "ANCESTORS (";
+    QStack<Collection> ancestors( _ancestors );
+    for ( int i = 0; i < ancestorDepth; ++i ) {
+      if ( ancestors.isEmpty() ) {
+        b += "(0 \"\")";
+        break;
+      }
+      b += '(';
+      const Collection c = ancestors.pop();
+      b += QByteArray::number( c.id() ) + " \"";
+      b += c.remoteId().toUtf8();
+      b += "\") ";
+    }
+    b += ") ";
+  }
 
   const CollectionAttribute::List attrs = col.attributes();
   for ( int i = 0; i < attrs.size(); ++i ) {
@@ -220,41 +234,4 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
   b+= ')';
 
   return b;
-}
-
-QByteArray HandlerHelper::ancestorsToByteArray( int ancestorDepth, const QStack<Collection> &_ancestors )
-{
-  QByteArray b;
-  if ( ancestorDepth > 0 ) {
-    b += AKONADI_PARAM_ANCESTORS " (";
-    QStack<Collection> ancestors( _ancestors );
-    for ( int i = 0; i < ancestorDepth; ++i ) {
-      if ( ancestors.isEmpty() ) {
-        b += "(0 \"\")";
-        break;
-      }
-      b += '(';
-      const Collection c = ancestors.pop();
-      b += QByteArray::number( c.id() ) + " \"";
-      b += c.remoteId().toUtf8();
-      b += "\")";
-      if ( i != ancestorDepth - 1 )
-        b += ' ';
-    }
-    b += ')';
-  }
-  return b;
-}
-
-int HandlerHelper::parseDepth( const QByteArray &depth )
-{
-  if ( depth.isEmpty() )
-    throw ImapParserException( "No depth specified" );
-  if ( depth == "INF" )
-    return INT_MAX;
-  bool ok = false;
-  int result = depth.toInt( &ok );
-  if ( !ok )
-    throw ImapParserException( "Invalid depth argument" );
-  return result;
 }
