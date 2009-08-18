@@ -78,7 +78,6 @@ QHash&lt;<xsl:value-of select="column[@name = 'name']/@type"/>, <xsl:value-of se
 void <xsl:value-of select="$className"/>::Private::addToCache( const <xsl:value-of select="$className"/> &amp; entry )
 {
   Q_ASSERT( cacheEnabled );
-  Q_UNUSED( entry ); <!-- in case the table has neither an id nor name column -->
   cacheMutex.lock();
   <xsl:if test="column[@name = 'id']">
   idCache.insert( entry.id(), entry );
@@ -474,15 +473,8 @@ bool <xsl:value-of select="$className"/>::update()
 
   QStringList cols;
   <xsl:for-each select="column[@name != 'id']">
-    <xsl:variable name="refColumn"><xsl:value-of select="@refColumn"/></xsl:variable>
-    <xsl:if test="$refColumn = 'id'">
-    if ( d-&gt;<xsl:value-of select="@name"/>_changed  &amp;&amp; d-&gt;<xsl:value-of select="@name"/> &gt; 0 )
-      cols.append( <xsl:value-of select="@name"/>Column() + QLatin1String( " = :<xsl:value-of select="@name"/>" ) );;
-    </xsl:if>
-    <xsl:if test="$refColumn != 'id'">
-    if ( d-&gt;<xsl:value-of select="@name"/>_changed )
-      cols.append( <xsl:value-of select="@name"/>Column() + QLatin1String( " = :<xsl:value-of select="@name"/>" ) );;
-    </xsl:if>
+  if ( d-&gt;<xsl:value-of select="@name"/>_changed )
+    cols.append( <xsl:value-of select="@name"/>Column() + QLatin1String( " = :<xsl:value-of select="@name"/>" ) );;
   </xsl:for-each>
   statement += cols.join( QLatin1String( ", " ) );
   <xsl:if test="column[@name = 'id']">

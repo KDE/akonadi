@@ -119,7 +119,14 @@ bool List::parseStream()
   } else
     throw HandlerException( "WTF" );
 
-  int depth = HandlerHelper::parseDepth( m_streamParser->readString() );
+  int depth;
+  const QByteArray tmp = m_streamParser->readString();
+  if ( tmp.isEmpty() )
+    return failureResponse( "Specify listing depth" );
+  if ( tmp == "INF" )
+    depth = INT_MAX;
+  else
+    depth = tmp.toInt();
 
   m_streamParser->beginList();
   while ( !m_streamParser->atListEnd() ) {
@@ -132,8 +139,9 @@ bool List::parseStream()
       m_streamParser->beginList();
       while ( !m_streamParser->atListEnd() ) {
         const MimeType mt = MimeType::retrieveByName( m_streamParser->readUtf8String() );
-        if ( mt.isValid() )
-          mMimeTypes.append( mt.id() );
+        if ( !mt.isValid() )
+          throw HandlerException( "Invalid mimetype filter" );
+        mMimeTypes.append( mt.id() );
       }
     }
   }
@@ -146,9 +154,12 @@ bool List::parseStream()
         if ( m_streamParser->readString() == "true" )
           mIncludeStatistics = true;
       }
-      if ( option == AKONADI_PARAM_ANCESTORS ) {
+      if ( option == "ANCESTORS" ) {
         const QByteArray argument = m_streamParser->readString();
-        mAncestorDepth = HandlerHelper::parseDepth( argument );
+        if ( argument == "INF" )
+          mAncestorDepth = INT_MAX;
+        else
+          mAncestorDepth = argument.toInt();
       }
     }
   }

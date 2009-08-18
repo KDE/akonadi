@@ -63,7 +63,6 @@ set(libakonadiprivate_SRCS
   src/handlerhelper.cpp
   src/intervalcheck.cpp
   src/response.cpp
-  src/handler/aklist.cpp
   src/handler/akappend.cpp
   src/handler/append.cpp
   src/handler/copy.cpp
@@ -80,7 +79,6 @@ set(libakonadiprivate_SRCS
   src/handler/logout.cpp
   src/handler/modify.cpp
   src/handler/move.cpp
-  src/handler/noop.cpp
   src/handler/remove.cpp
   src/handler/resourceselect.cpp
   src/handler/scope.cpp
@@ -190,7 +188,7 @@ set( akonadiserver_bin_SRCS src/main.cpp
 
 add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
 set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
-target_link_libraries( akonadiserver_bin akonadiprivate )
+target_link_libraries( akonadiserver_bin akonadiprivate ${QT_QTCORE_LIBRARY} )
 
 install( TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
 install( FILES src/storage/mysql-global.conf DESTINATION ${CONFIG_INSTALL_DIR}/akonadi/ )

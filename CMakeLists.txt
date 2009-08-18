@@ -8,6 +8,8 @@ set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 
 ############### Build Options ###############
 
+include(CTest)
+include(CTestConfig.cmake)
 option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 if (AKONADI_BUILD_TESTS)
   enable_testing()
@@ -122,6 +124,7 @@ macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sq
 
 ############### Compilers flags ###############
 
+option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
   set (_ENABLE_EXCEPTIONS -fexceptions)
   set (CMAKE_C_FLAGS     "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
