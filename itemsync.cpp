@@ -245,6 +245,8 @@ void ItemSync::Private::slotLocalListDone( KJob * job )
 
   const Item::List list = static_cast<ItemFetchJob*>( job )->items();
   foreach ( const Item &item, list ) {
+    if ( item.remoteId().isEmpty() )
+      continue;
     mLocalItemsById.insert( item.id(), item );
     mLocalItemsByRemoteId.insert( item.remoteId(), item );
     mUnprocessedLocalItems.insert( item );
