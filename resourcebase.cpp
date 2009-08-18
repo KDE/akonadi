@@ -101,6 +101,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     void slotPrepareItemRetrieval( const Akonadi::Item &item );
     void slotPrepareItemRetrievalResult( KJob* job );
 
+    void changeCommittedResult( KJob* job );
+
     // synchronize states
     Collection currentCollection;
 
@@ -307,11 +309,16 @@ void ResourceBase::changeCommitted( const Item& item )
 
 void ResourceBase::changeCommitted( const Collection &collection )
 {
-  Q_D( ResourceBase );
   CollectionModifyJob *job = new CollectionModifyJob( collection );
-  Q_UNUSED( job );
-  //TODO: error checking
-  d->changeProcessed();
+  connect( job, SIGNAL(result(KJob*)), SLOT(changeCommittedResult(KJob*)) );
+}
+
+void ResourceBasePrivate::changeCommittedResult( KJob *job )
+{
+  Q_Q( ResourceBase );
+  if ( job->error() )
+    emit q->error( i18n( "Updating local collection failed: %1.", job->errorText() ) );
+  changeProcessed();
 }
 
 bool ResourceBase::requestItemDelivery( qint64 uid, const QString & remoteId,
