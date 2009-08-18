@@ -56,7 +56,6 @@ void CollectionQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* 
 
 bool CollectionQueryHelper::hasAllowedName(const Collection & collection, const QByteArray & name, Collection::Id parent)
 {
-  Q_UNUSED( collection );
   SelectQueryBuilder<Collection> qb;
   if ( parent > 0 )
     qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, parent );

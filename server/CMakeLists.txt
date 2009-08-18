@@ -63,6 +63,7 @@ set(libakonadiprivate_SRCS
   src/handlerhelper.cpp
   src/intervalcheck.cpp
   src/response.cpp
+  src/handler/aklist.cpp
   src/handler/akappend.cpp
   src/handler/append.cpp
   src/handler/copy.cpp
@@ -79,10 +80,10 @@ set(libakonadiprivate_SRCS
   src/handler/logout.cpp
   src/handler/modify.cpp
   src/handler/move.cpp
+  src/handler/noop.cpp
   src/handler/remove.cpp
   src/handler/resourceselect.cpp
   src/handler/scope.cpp
-  src/handler/search.cpp
   src/handler/searchhelper.cpp
   src/handler/searchpersistent.cpp
   src/handler/select.cpp
@@ -123,7 +124,6 @@ set(libakonadiprivate_SRCS
   src/abstractsearchmanager.cpp
   src/xesammanager.cpp
   src/nepomukmanager.cpp
-  src/nepomuksearch.cpp
   src/debuginterface.cpp
   src/imapstreamparser.cpp
   src/preprocessorinstance.cpp
@@ -143,7 +143,6 @@ qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/server/interf
 
 qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManager.xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml )
 qt4_add_dbus_interface( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Preprocessor.xml preprocessorinterface )
-qt4_add_dbus_interface( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml agentcontrolinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.Search.xml searchinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.SearchQuery.xml searchqueryinterface )
 qt4_add_dbus_interface( libakonadiprivate_SRCS interfaces/org.freedesktop.Akonadi.SearchQueryIterator.xml searchqueryiteratorinterface )
@@ -190,7 +189,7 @@ set( akonadiserver_bin_SRCS src/main.cpp
 
 add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
 set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
-target_link_libraries( akonadiserver_bin akonadiprivate ${QT_QTCORE_LIBRARY} )
+target_link_libraries( akonadiserver_bin akonadiprivate )
 
 install( TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
 install( FILES src/storage/mysql-global.conf DESTINATION ${CONFIG_INSTALL_DIR}/akonadi/ )

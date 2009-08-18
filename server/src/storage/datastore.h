@@ -167,27 +167,6 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
      */
     bool cleanupPimItems( const Collection &collection );
 
-    /**
-     * Unhides the specified PimItem. Emits the itemAdded() notification as 
-     * the hidden flag is assumed to have been set by appendPimItem() before
-     * pushing the item to the preprocessor chain. The hidden item had his
-     * notifications disabled until now (so for the clients the "unhide" operation
-     * is actually a new item arrival).
-     *
-     * This function does NOT verify if the item was *really* hidden: this is
-     * responsability of the caller.
-     */
-    bool unhidePimItem( PimItem &pimItem );
-
-    /**
-     * Unhides all the items which have the "hidden" flag set.
-     * This function doesn't emit any notification about the items
-     * being unhidden so it's meant to be called only in rare circumstances.
-     * The most notable call to this function is at server startup
-     * when we attempt to restore a clean state of the database.
-     */
-    bool unhideAllPimItems();
-
     qint64 highestPimItemId() const;
 
     /* --- Collection attributes ------------------------------------------ */

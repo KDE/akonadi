@@ -29,6 +29,7 @@
 #include "response.h"
 #include "scope.h"
 #include "handler/akappend.h"
+#include "handler/aklist.h"
 #include "handler/append.h"
 #include "handler/capability.h"
 #include "handler/copy.h"
@@ -44,9 +45,9 @@
 #include "handler/logout.h"
 #include "handler/modify.h"
 #include "handler/move.h"
+#include "handler/noop.h"
 #include "handler/remove.h"
 #include "handler/resourceselect.h"
-#include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
 #include "handler/subscribe.h"
@@ -73,7 +74,7 @@ Handler::~Handler()
 
 Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & command )
 {
-    // allowed are LOGIN
+    // allowed are LOGIN and AUTHENTICATE
     if ( command == "LOGIN" )
         return new Login();
 
@@ -82,7 +83,7 @@ Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & com
 
 Handler * Handler::findHandlerForCommandAlwaysAllowed( const QByteArray & command )
 {
-    // allowed commands CAPABILITY and LOGOUT
+    // allowed commands CAPABILITY, NOOP, and LOGOUT
     if ( command == "LOGOUT" )
         return new Logout();
     if ( command == "CAPABILITY" )
@@ -119,19 +120,17 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
         return new Append();
     if ( command == AKONADI_CMD_COLLECTIONCREATE )
         return new Create( scope );
-    if ( command == "LIST" || command == "X-AKLIST" ) //TODO: remove X-AKLIST support in Akonadi 2.0
-        return new List( scope, false );
-    if ( command == "LSUB" || command == "X-AKLSUB" ) //TODO: remove X-AKLSUB support in Akonadi 2.0
-        return new List( scope, true );
+    if ( command == "LIST" )
+        return new List();
     if ( command == "SELECT" )
         return new Select( scope );
     if ( command == "SEARCH_STORE" )
         return new SearchPersistent();
-    if ( command == "SEARCH" )
-        return new Search();
+    if ( command == "NOOP" )
+        return new Noop();
     if ( command == AKONADI_CMD_ITEMFETCH )
         return new Fetch( scope );
-    if ( command == "EXPUNGE" ) //TODO: remove EXPUNGE support in Akonadi 2.0
+    if ( command == "EXPUNGE" )
         return new Expunge();
     if ( command == AKONADI_CMD_ITEMMODIFY )
         return new Store( scope );
@@ -149,6 +148,10 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
       return new TransactionHandler( TransactionHandler::Commit );
     if ( command == AKONADI_CMD_ITEMCREATE )
       return new AkAppend();
+    if ( command == "X-AKLIST" )
+      return new AkList( scope, false );
+    if ( command == "X-AKLSUB" )
+      return new AkList( scope, true );
     if ( command == "SUBSCRIBE" )
       return new Subscribe( true );
     if ( command == "UNSUBSCRIBE" )
