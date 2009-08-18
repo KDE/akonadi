@@ -110,6 +110,8 @@ class CollectionSync::Private
     /** Create a local node from the given local collection and integrate it into the local tree structure. */
     LocalNode* createLocalNode( const Collection &col )
     {
+      if ( col.remoteId().isEmpty() ) // no remote id here means it hasn't been added to the resource yet, so we exclude it from the sync
+        return 0;
       LocalNode *node = new LocalNode( col );
       Q_ASSERT( !localUidMap.contains( col.id() ) );
       localUidMap.insert( node->collection.id(), node );
