@@ -229,7 +229,7 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
     // FIXME setResource here required ?
   }
   Item it = item;
-  if ( !it.isValid() ) {
+  if ( !it.isValid() || msg.operation() == NotificationMessage::Remove ) {
     it = Item( msg.uid() );
     it.setRemoteId( msg.remoteId() );
     it.setMimeType( msg.mimeType() );
@@ -271,7 +271,7 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
 {
   Q_ASSERT( msg.type() == NotificationMessage::Collection );
   Collection collection = col;
-  if ( !collection.isValid() ) {
+  if ( !collection.isValid() || msg.operation() == NotificationMessage::Remove ) {
     collection = Collection( msg.uid() );
     collection.setResource( QString::fromUtf8( msg.resource() ) );
     collection.setRemoteId( msg.remoteId() );

@@ -428,6 +428,11 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void doSetOnline( bool online );
 
+    /**
+     * Indicate the use of hierarchical remote identifiers.
+     */
+    void enableHierarchicalRemoteIdentifiers( bool enable );
+
   private:
     static QString parseArguments( int, char** );
     static int init( ResourceBase *r );

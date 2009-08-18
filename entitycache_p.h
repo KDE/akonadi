@@ -115,11 +115,12 @@ class EntityCache : public EntityCacheBase
     void update( typename T::Id id, const FetchScope &scope )
     {
       EntityCacheNode<T>* node = cacheNodeForId( id );
-      if ( node )
+      if ( node ) {
         mCache.removeAll( node );
-      if ( !node || node->pending )
-        request( id, scope );
-      delete node;
+        if ( node->pending )
+          request( id, scope );
+        delete node;
+      }
     }
 
     /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */

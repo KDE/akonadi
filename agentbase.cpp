@@ -111,6 +111,26 @@ void AgentBase::Observer::collectionRemoved( const Collection &collection )
     sAgentBase->d_ptr->changeProcessed();
 }
 
+void AgentBase::Observer2::itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &dest )
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( item );
+  Q_UNUSED( source );
+  Q_UNUSED( dest );
+  if ( sAgentBase != 0 )
+    sAgentBase->d_ptr->changeProcessed();
+}
+
+void AgentBase::Observer2::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( collection );
+  Q_UNUSED( source );
+  Q_UNUSED( dest );
+  if ( sAgentBase != 0 )
+    sAgentBase->d_ptr->changeProcessed();
+}
+
 //@cond PRIVATE
 
 AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
@@ -220,6 +240,7 @@ void AgentBasePrivate::itemChanged( const Akonadi::Item &item, const QSet<QByteA
 void AgentBasePrivate::itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &dest )
 {
   kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  AgentBase::Observer2 *observer2 = dynamic_cast<AgentBase::Observer2*>( mObserver );
   if ( mObserver ) {
     // inter-resource moves, requires we know which resources the source and destination are in though
     if ( !source.resource().isEmpty() && !dest.resource().isEmpty() ) {
@@ -228,17 +249,24 @@ void AgentBasePrivate::itemMoved( const Akonadi::Item &item, const Akonadi::Coll
           mObserver->itemRemoved( item );
         else if ( dest.resource() == q_ptr->identifier() ) // moved to us
           mObserver->itemAdded( item, dest );
-        else // not for us, not sure if we should get here at all
+        else if ( observer2 )
+          observer2->itemMoved( item, source, dest );
+        else
+          // not for us, not sure if we should get here at all
           changeProcessed();
         return;
       }
     }
-    // either incomplete information or intra-resource move
-    // ### we cannot just call itemRemoved here as this will already trigger changeProcessed()
-    // so, just itemAdded() is good enough as no resource can have implemented intra-resource moves anyway
-    // without using Observer2
-    mObserver->itemAdded( item, dest );
-    // mObserver->itemRemoved( item );
+    // intra-resource move
+    if ( observer2 ) {
+      observer2->itemMoved( item, source, dest );
+    } else {
+      // ### we cannot just call itemRemoved here as this will already trigger changeProcessed()
+      // so, just itemAdded() is good enough as no resource can have implemented intra-resource moves anyway
+      // without using Observer2
+      mObserver->itemAdded( item, dest );
+      // mObserver->itemRemoved( item );
+    }
   }
 }
 
@@ -266,6 +294,7 @@ void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection 
 void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
 {
   kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  AgentBase::Observer2 *observer2 = dynamic_cast<AgentBase::Observer2*>( mObserver );
   if ( mObserver ) {
     // inter-resource moves, requires we know which resources the source and destination are in though
     if ( !source.resource().isEmpty() && !dest.resource().isEmpty() ) {
@@ -274,16 +303,22 @@ void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, c
           mObserver->collectionRemoved( collection );
         else if ( dest.resource() == q_ptr->identifier() ) // moved to us
           mObserver->collectionAdded( collection, dest );
+        else if ( observer2 )
+          observer2->collectionMoved( collection, source, dest );
         else // not for us, not sure if we should get here at all
           changeProcessed();
         return;
       }
     }
-    // either incomplete information or intra-resource move
-    // ### we cannot just call collectionRemoved here as this will already trigger changeProcessed()
-    // so, just collectionAdded() is good enough as no resource can have implemented intra-resource moves anyway
-    // without using Observer2
-    mObserver->collectionAdded( collection, dest );
+    // intra-resource move
+    if ( observer2 ) {
+      observer2->collectionMoved( collection, source, dest );
+    } else {
+      // ### we cannot just call collectionRemoved here as this will already trigger changeProcessed()
+      // so, just collectionAdded() is good enough as no resource can have implemented intra-resource moves anyway
+      // without using Observer2
+      mObserver->collectionAdded( collection, dest );
+    }
   }
 }
 
