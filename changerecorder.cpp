@@ -22,6 +22,7 @@
 
 #include <kdebug.h>
 #include <QtCore/QSettings>
+#include <QtCore/QTime>
 
 using namespace Akonadi;
 
@@ -31,13 +32,17 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
     ChangeRecorderPrivate( ChangeRecorder* parent ) :
       MonitorPrivate( parent ),
       settings( 0 ),
-      enableChangeRecording( true )
+      enableChangeRecording( true ),
+      safetyTimer( 0 )
     {
     }
 
     Q_DECLARE_PUBLIC( ChangeRecorder )
     QSettings *settings;
     bool enableChangeRecording;
+    QTimer *safetyTimer;
+    QTime safetyTimeElapsed;
+    QString safetyTimerMessage;
 
     virtual int pipelineSize() const
     {
@@ -117,6 +122,28 @@ class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
       settings->endGroup();
     }
 
+    void startSafetyTimer( const QString &message )
+    {
+      if( safetyTimer ) {
+        safetyTimer->start();
+        safetyTimeElapsed.restart();
+        safetyTimerMessage = message;
+      }
+    }
+
+    void stopSafetyTimer()
+    {
+      if( safetyTimer ) {
+        safetyTimer->stop();
+        safetyTimerMessage.clear();
+      }
+    }
+
+    void safetyTimeout() // slot
+    {
+      kWarning() << "Change notification taking" << ( safetyTimeElapsed.elapsed() / 1000 )
+        << "seconds:" << safetyTimerMessage;
+    }
 };
 
 ChangeRecorder::ChangeRecorder(QObject * parent) :
@@ -125,6 +152,11 @@ ChangeRecorder::ChangeRecorder(QObject * parent) :
   Q_D( ChangeRecorder );
   d->init();
   d->connectToNotificationManager();
+
+  // Warn the developer if a change notification takes more than 5 seconds to process.
+  d->safetyTimer = new QTimer( this );
+  d->safetyTimer->setInterval( 5000 );
+  connect( d->safetyTimer, SIGNAL(timeout()), this, SLOT(safetyTimeout()) );
 }
 
 ChangeRecorder::~ ChangeRecorder()
@@ -151,14 +183,17 @@ void ChangeRecorder::replayNext()
   Q_D( ChangeRecorder );
   if ( !d->pendingNotifications.isEmpty() ) {
     const NotificationMessage msg = d->pendingNotifications.first();
-    if ( d->ensureDataAvailable( msg ) )
+    if ( d->ensureDataAvailable( msg ) ) {
+      d->startSafetyTimer( msg.toString() );
       d->emitNotification( msg );
-    else
+    } else {
       d->pipeline.enqueue( msg );
+    }
   } else {
     // This is necessary when none of the notifications were accepted / processed
     // above, and so there is no one to call changeProcessed() and the ChangeReplay task
     // will be stuck forever in the ResourceScheduler.
+    d->startSafetyTimer( QLatin1String( "nothingToReplay" ) );
     emit nothingToReplay();
   }
   d->saveNotifications();
@@ -173,6 +208,7 @@ bool ChangeRecorder::isEmpty() const
 void ChangeRecorder::changeProcessed()
 {
   Q_D( ChangeRecorder );
+  d->stopSafetyTimer();
   if ( !d->pendingNotifications.isEmpty() )
     d->pendingNotifications.removeFirst();
   d->saveNotifications();

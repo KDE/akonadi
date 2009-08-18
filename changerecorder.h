@@ -97,6 +97,8 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
 
   private:
     Q_DECLARE_PRIVATE( ChangeRecorder )
+
+    Q_PRIVATE_SLOT( d_func(), void safetyTimeout() )
 };
 
 }
