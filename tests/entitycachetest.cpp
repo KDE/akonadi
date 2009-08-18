@@ -82,14 +82,24 @@ class EntityCacheTest : public QObject
       QVERIFY( !e3b.isValid() );
 
       spy.clear();
+      // updating a cached entry removes it
       cache.update( 3, FetchScope() );
       cache.update( 3, FetchScope() );
       QVERIFY( !cache.isCached( 3 ) );
-      QVERIFY( cache.isRequested( 3 ) );
+      QVERIFY( !cache.isRequested( 3 ) );
       QVERIFY( !cache.retrieve( 3 ).isValid() );
 
+      // updating a pending entry re-fetches
+      cache.request( 3, FetchScope() );
+      cache.update( 3, FetchScope() );
+      QVERIFY( !cache.isCached( 3 ) );
+      QVERIFY( cache.isRequested( 3 ) );
+      cache.update( 3, FetchScope() );
+      QVERIFY( !cache.isCached( 3 ) );
+      QVERIFY( cache.isRequested( 3 ) );
+
       QTest::qWait( 1000 );
-      QCOMPARE( spy.count(), 1 );
+      QCOMPARE( spy.count(), 3 );
       QVERIFY( cache.isCached( 3 ) );
       QVERIFY( cache.retrieve( 3 ).isValid() );
     }
