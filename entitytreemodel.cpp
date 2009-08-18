@@ -579,7 +579,7 @@ int EntityTreeModel::getColumnCount(int headerSet) const
   // Not needed in this model.
   Q_UNUSED(headerSet);
 
-  return columnCount();
+  return 1;
 }
 
 QVariant EntityTreeModel::getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet) const
