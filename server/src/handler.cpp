@@ -46,6 +46,7 @@
 #include "handler/move.h"
 #include "handler/remove.h"
 #include "handler/resourceselect.h"
+#include "handler/search.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
 #include "handler/subscribe.h"
@@ -126,6 +127,8 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
         return new Select( scope );
     if ( command == "SEARCH_STORE" )
         return new SearchPersistent();
+    if ( command == "SEARCH" )
+        return new Search();
     if ( command == AKONADI_CMD_ITEMFETCH )
         return new Fetch( scope );
     if ( command == "EXPUNGE" ) //TODO: remove EXPUNGE support in Akonadi 2.0

@@ -103,7 +103,7 @@ bool Append::commit()
         mt = flag.mid( pos1 + 1, pos2 - pos1 - 1 );
       } else if ( flag.startsWith( "\\RemoteId" ) ) {
         int pos1 = flag.indexOf( '[' );
-        int pos2 = flag.indexOf( ']', pos1 );
+        int pos2 = flag.lastIndexOf( ']' );
         remote_id = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
       } else
         flags << flag;

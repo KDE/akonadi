@@ -159,6 +159,7 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
     throw HandlerException( "Unable to retrieve item parts" );
   partQuery.query().next();
 
+  QList<ItemRetrievalManager::Request*> requests;
   while ( mItemQuery.query().isValid() ) {
     const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
     QStringList missingParts = payloadList;
@@ -188,22 +189,48 @@ void Fetch::retrieveMissingPayloads(const QStringList & payloadList)
       QStringList missingPayloadIds;
       foreach ( const QString &s, missingParts )
         missingPayloadIds << s.mid( 4 );
-      // TODO: how should we handle retrieval errors here? so far they have been ignored,
-      // which makes sense in some cases, do we need a command parameter for this?
-      try {
-        ItemRetrievalManager::instance()->requestItemDelivery( pimItemId,
-          mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
-          mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8(),
-          mItemQuery.query().value( itemQueryResouceColumn ).toString(), missingPayloadIds );
-      } catch ( const ItemRetrieverException &e ) {
-        akError() << e.type() << ": " << e.what();
+
+      ItemRetrievalManager::Request *req = new ItemRetrievalManager::Request();
+      req->id = pimItemId;
+      req->remoteId = mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8();
+      req->mimeType = mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8();
+      req->resourceId = mItemQuery.query().value( itemQueryResouceColumn ).toString();
+      req->parts = missingPayloadIds;
+
+      if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+        requests.append(req);
+      } else {
+        // TODO: how should we handle retrieval errors here? so far they have been ignored,
+        // which makes sense in some cases, do we need a command parameter for this?
+        try {
+          ItemRetrievalManager::instance()->requestItemDelivery( req );
+        } catch ( const ItemRetrieverException &e ) {
+          akError() << e.type() << ": " << e.what();
+        }
       }
     }
     mItemQuery.query().next();
   }
 
-  // rewind item query
-  mItemQuery.query().first();
+  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+    // Close the queries so we can start writing without endig up in a lock.
+    partQuery.query().finish();
+    mItemQuery.query().finish();
+
+    // Now both reading queries are closed, start sending out the
+    foreach ( ItemRetrievalManager::Request *req, requests ) {
+      // TODO: how should we handle retrieval errors here? so far they have been ignored,
+      // which makes sense in some cases, do we need a command parameter for this?
+      try {
+        ItemRetrievalManager::instance()->requestItemDelivery( req );
+      } catch ( const ItemRetrieverException &e ) {
+        akError() << e.type() << ": " << e.what();
+      }
+    }
+  } else {
+    // rewind item query
+    mItemQuery.query().first();
+  }
 }
 
 bool Fetch::parseStream()
@@ -212,7 +239,42 @@ bool Fetch::parseStream()
 
   triggerOnDemandFetch();
 
+  // retrieve missing parts
+  QStringList partList, payloadList;
+  foreach( const QByteArray &b, mRequestedParts ) {
+    // filter out non-part attributes
+    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
+      continue;
+    if ( b == "SIZE" ) {
+      mSizeRequested = true;
+      continue;
+    }
+    if ( b == "DATETIME" ) {
+      mMTimeRequested = true;
+      continue;
+    }
+    partList << QString::fromLatin1( b );
+    if ( b.startsWith( "PLD:" ) )
+      payloadList << QString::fromLatin1( b );
+  }
+
   buildItemQuery();
+  retrieveMissingPayloads( payloadList );
+
+  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+    if ( !mItemQuery.exec() )
+      throw HandlerException("Unable to list items");
+    mItemQuery.query().next();
+  }
+
+  // build part query if needed
+  QueryBuilder partQuery;
+  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
+    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
+    if ( !partQuery.exec() )
+      return failureResponse( "Unable to retrieve item parts" );
+    partQuery.query().next();
+  }
 
   // build flag query if needed
   QueryBuilder flagQuery;
@@ -233,35 +295,6 @@ bool Fetch::parseStream()
   }
   const int flagQueryIdColumn = 0;
   const int flagQueryNameColumn = 1;
-
-  // retrieve missing parts
-  QStringList partList, payloadList;
-  foreach( const QByteArray &b, mRequestedParts ) {
-    // filter out non-part attributes
-    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
-      continue;
-    if ( b == "SIZE" ) {
-      mSizeRequested = true;
-      continue;
-    }
-    if ( b == "DATETIME" ) {
-      mMTimeRequested = true;
-      continue;
-    }
-    partList << QString::fromLatin1( b );
-    if ( b.startsWith( "PLD:" ) )
-      payloadList << QString::fromLatin1( b );
-  }
-  retrieveMissingPayloads( payloadList );
-
-  // build part query if needed
-  QueryBuilder partQuery;
-  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
-    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
-    if ( !partQuery.exec() )
-      return failureResponse( "Unable to retrieve item parts" );
-    partQuery.query().next();
-  }
 
   // build responses
   Response response;
@@ -400,6 +433,11 @@ void Fetch::parseCommandStream()
   }
 }
 
+QString Fetch::driverName()
+{
+  return connection()->storageBackend()->database().driverName();
+}
+
 QStack<Collection> Fetch::ancestorsForItem( Collection::Id parentColId )
 {
   if ( mAncestorDepth <= 0 )
@@ -418,3 +456,4 @@ QStack<Collection> Fetch::ancestorsForItem( Collection::Id parentColId )
   mAncestorCache.insert( parentColId, ancestors );
   return ancestors;
 }
+

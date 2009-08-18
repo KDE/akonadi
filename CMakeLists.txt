@@ -76,7 +76,7 @@ include(${QT_USE_FILE})
 if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}") # We ran CMake in kdesupport
   if(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano) # and we plan to build Soprano
     message(STATUS "Soprano is needed to build Akonadi. We will use Soprano from kdesupport.")
-    set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano)
+    set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano ${KDESupport_SOURCE_DIR}/soprano/soprano ${KDESupport_BINARY_DIR}/soprano)
     set (SOPRANO_LIBRARIES soprano)
     set (Soprano_FOUND TRUE)
   endif(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano)
