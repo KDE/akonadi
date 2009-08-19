@@ -145,6 +145,7 @@ void QSQLiteResultPrivate::finalize()
     if (!stmt)
         return;
 
+    qDebug() << debugString() + "finalize" << stmt;
     sqlite3_finalize(stmt);
     stmt = 0;
 }
@@ -312,7 +313,6 @@ bool QSQLiteResult::reset(const QString &query)
 
 bool QSQLiteResult::prepare(const QString &query)
 {
-  qDebug() << debugString() + "Preparing:" << query;
     if (!driver() || !driver()->isOpen() || driver()->isOpenError())
         return false;
 
@@ -329,6 +329,7 @@ bool QSQLiteResult::prepare(const QString &query)
     int res = sqlite3_prepare16(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
                                 &d->stmt, 0);
 #endif
+    qDebug() << debugString() + "Prepared:" << query << d->stmt;
 
     if (res != SQLITE_OK) {
         setLastError(qMakeError(d->access, QCoreApplication::translate("QSQLiteResult",
