@@ -144,6 +144,8 @@ ResourceBase::ResourceBase( const QString & id )
            d->mMonitor, SLOT( replayNext() ) );
   connect( d->scheduler, SIGNAL( fullSyncComplete() ), SIGNAL( synchronized() ) );
   connect( d->mMonitor, SIGNAL( nothingToReplay() ), d->scheduler, SLOT( taskDone() ) );
+  connect( d->mMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+           d->scheduler, SLOT(collectionRemoved(Akonadi::Collection)) );
   connect( this, SIGNAL( synchronized() ), d->scheduler, SLOT( taskDone() ) );
   connect( this, SIGNAL( agentNameChanged( const QString& ) ),
            this, SIGNAL( nameChanged( const QString& ) ) );

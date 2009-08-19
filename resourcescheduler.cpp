@@ -241,6 +241,19 @@ void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray 
   }
 }
 
+void ResourceScheduler::collectionRemoved( const Akonadi::Collection &collection )
+{
+  if ( !collection.isValid() ) // should not happen, but you never know...
+    return;
+  for ( QList<Task>::iterator it = mTaskList.begin(); it != mTaskList.end(); ) {
+    if ( (*it).type == SyncCollection && (*it).collection == collection ) {
+      it = mTaskList.erase( it );
+      kDebug() << " erasing";
+    } else
+      ++it;
+  }
+}
+
 //@endcond
 
 #include "resourcescheduler_p.moc"
