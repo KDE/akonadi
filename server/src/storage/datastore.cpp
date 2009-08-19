@@ -27,6 +27,7 @@
 #include "notificationmanager.h"
 #include "tracer.h"
 #include "selectquerybuilder.h"
+#include "transaction.h"
 #include "handlerhelper.h"
 #include "countquerybuilder.h"
 #include "xdgbasedirs_p.h"
@@ -275,8 +276,12 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   qb.addTable( Collection::tableName() );
   qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, collection.id() );
   qb.setColumnValue( Collection::resourceIdColumn(), resourceId );
+  Transaction transaction( DataStore::self() );
   if ( !qb.exec() )
     return false;
+
+  transaction.commit();
+
   foreach ( const Collection &col, collection.children() ) {
     if ( !recursiveSetResourceId( col, resourceId ) )
       return false;

@@ -29,6 +29,7 @@
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
 #include "storage/parthelper.h"
+#include "storage/transaction.h"
 #include "akdebug.h"
 #include "imapstreamparser.h"
 #include "handlerhelper.h"
@@ -73,12 +74,16 @@ Fetch::Fetch( Scope::SelectionScope scope )
 
 void Fetch::updateItemAccessTime()
 {
+  Transaction transaction( connection()->storageBackend() );
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
   ItemQueryHelper::scopeToQuery( mScope, connection(), qb );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     qWarning() << "Unable to update item access time";
+  } else {
+    transaction.commit();
+  }
 }
 
 void Fetch::triggerOnDemandFetch()
