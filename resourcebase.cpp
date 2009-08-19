@@ -653,7 +653,7 @@ void ResourceBasePrivate::slotPercent( KJob *job, unsigned long percent )
   emit q->percent( percent );
 }
 
-void ResourceBase::enableHierarchicalRemoteIdentifiers( bool enable )
+void ResourceBase::setHierarchicalRemoteIdentifiersEnabled( bool enable )
 {
   Q_D( ResourceBase );
   d->mHierarchicalRid = enable;
