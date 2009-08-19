@@ -309,7 +309,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * have been retrieved, call collectionsRetrievalDone().
      * @param enable @c true if collection streaming should be enabled, @c false by default
      */
-    void setCollectionStreamingEnabled( bool enable );
+    void setCollectionStreamingEnabled( bool enable = true );
 
     /**
      * Call this method to indicate you finished synchronizing the collection tree.
@@ -345,7 +345,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * Item streaming is disabled by default.
      * @param enable @c true if items are delivered in chunks rather in one big block.
      */
-    void setItemStreamingEnabled( bool enable );
+    void setItemStreamingEnabled( bool enable = true );
 
     /**
      * Call this method to supply incrementally retrieved items from the remote server.
@@ -426,12 +426,12 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
      * Inherited from AgentBase.
      */
-    void doSetOnline( bool online );
+    void doSetOnline( bool online = true );
 
     /**
      * Indicate the use of hierarchical remote identifiers.
      */
-    void enableHierarchicalRemoteIdentifiers( bool enable );
+    void enableHierarchicalRemoteIdentifiers( bool enable = true );
 
   private:
     static QString parseArguments( int, char** );
