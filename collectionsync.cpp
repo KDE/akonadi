@@ -110,6 +110,8 @@ class CollectionSync::Private
     /** Create a local node from the given local collection and integrate it into the local tree structure. */
     LocalNode* createLocalNode( const Collection &col )
     {
+      if ( col.remoteId().isEmpty() ) // no remote id here means it hasn't been added to the resource yet, so we exclude it from the sync
+        return 0;
       LocalNode *node = new LocalNode( col );
       Q_ASSERT( !localUidMap.contains( col.id() ) );
       localUidMap.insert( node->collection.id(), node );
@@ -213,13 +215,13 @@ class CollectionSync::Private
     {
       if ( !hierarchicalRIDs )
         return localRoot;
+      if ( collection == Collection::root() ) {
+        if ( exactMatch ) *exactMatch = true;
+        return localRoot;
+      }
       if ( collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty() ) {
         kWarning() << "Remote collection without valid parent found: " << collection;
         return 0;
-      }
-      if ( collection.parentCollection() == Collection::root() ) {
-        if ( exactMatch ) *exactMatch = true;
-        return localRoot;
       }
       bool parentIsExact = false;
       LocalNode *localParent = findBestLocalAncestor( collection.parentCollection(), &parentIsExact );

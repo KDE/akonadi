@@ -172,8 +172,9 @@ class EntityCache : public EntityCacheBase
 
       node->pending = false;
       extractResult( node, job );
-      if ( node->entity.id() != id ) { // make sure we find this node again if something went wrong here...
-        kWarning() << "Something went very wrong...";
+      // make sure we find this node again if something went wrong here,
+      // most likely the object got deleted from the server in the meantime
+      if ( node->entity.id() != id ) {
         node->entity.setId( id );
         node->invalid = true;
       }

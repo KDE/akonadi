@@ -68,6 +68,12 @@ class AKONADI_EXPORT CollectionModifyJob : public Job
      */
     ~CollectionModifyJob();
 
+    /**
+      Returns the modified collection.
+      @since 4.4
+     */
+    Collection collection() const;
+
   protected:
     virtual void doStart();
 

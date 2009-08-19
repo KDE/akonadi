@@ -89,4 +89,10 @@ void CollectionModifyJob::doStart()
   d->writeData( command );
 }
 
+Collection CollectionModifyJob::collection() const
+{
+  const Q_D( CollectionModifyJob );
+  return d->mCollection;
+}
+
 #include "collectionmodifyjob.moc"

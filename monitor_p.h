@@ -98,6 +98,11 @@ class MonitorPrivate
     void updatePendingStatistics( const NotificationMessage &msg );
     void invalidateCaches( const NotificationMessage &msg );
 
+    /** Used by ResourceBase to inform us about collection changes before the notifications are emitted,
+        needed to avoid the missing RID race on change replay.
+    */
+    void invalidateCache( const Collection &col );
+
     virtual int pipelineSize() const;
 
     // private slots
