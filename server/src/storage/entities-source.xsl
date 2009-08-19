@@ -26,8 +26,6 @@
 <xsl:variable name="tableName"><xsl:value-of select="@name"/>Table</xsl:variable>
 <xsl:variable name="entityName"><xsl:value-of select="@name"/></xsl:variable>
 
-#include "storage/transaction.h"
-
 // private class
 class <xsl:value-of select="$className"/>::Private : public QSharedData
 {
@@ -442,14 +440,11 @@ bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
     </xsl:if>
   </xsl:for-each>
 
-  Transaction transaction( DataStore::self() );
   if ( !qb.exec() ) {
     qDebug() &lt;&lt; "Error during insertion into table" &lt;&lt; tableName()
       &lt;&lt; qb.query().lastError().text();
     return false;
   }
-
-  transaction.commit();
 
   setId( qb.insertId() );
   if ( insertId )
