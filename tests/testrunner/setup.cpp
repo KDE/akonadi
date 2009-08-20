@@ -308,7 +308,7 @@ void SetupTest::deleteDirectory( const QString &dirName )
 {
   Q_ASSERT( dirName.startsWith( QDir::tempPath() ) ); // just to be sure we don't run amok anywhere
   QDir dir( dirName );
-  dir.setFilter( QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot );
+  dir.setFilter( QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden );
 
   const QFileInfoList list = dir.entryInfoList();
   for ( int i = 0; i < list.size(); ++i ) {
