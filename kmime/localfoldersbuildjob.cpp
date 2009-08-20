@@ -67,6 +67,9 @@ class Akonadi::LocalFoldersBuildJob::Private
 
     // May be called for any default type, including Root.
     static QString nameForType( int type );
+    
+    // May be called for any default type, including Root.
+    static QString displayNameForType( int type );
 
     // May be called for any default type, including Root.
     static QString iconNameForType( int type );
@@ -156,12 +159,12 @@ void LocalFoldersBuildJob::Private::resourceCreateResult( KJob *job )
 
     // Configure the resource.
     {
-      agent.setName( i18n( "Local Mail Folders" ) );
+      agent.setName( nameForType( LocalFolders::Root ) );
       QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + Settings::resourceId(),
                            QString::fromLatin1( "/Settings" ),
                            QString::fromLatin1( "org.kde.Akonadi.Maildir.Settings" ) );
       QDBusReply<void> reply = conf.call( QString::fromLatin1( "setPath" ),
-                                          KGlobal::dirs()->localxdgdatadir() + QString::fromLatin1( "mail" ) );
+                                          KGlobal::dirs()->localxdgdatadir() + nameForType( LocalFolders::Root ) );
       if( !reply.isValid() ) {
         q->setError( UserDefinedError );
         q->setErrorText( QLatin1String( "Failed to set the root maildir via D-Bus." ) );
@@ -210,6 +213,7 @@ void LocalFoldersBuildJob::Private::collectionFetchResult( KJob *job )
   {
     Q_ASSERT( dynamic_cast<CollectionFetchJob*>( job ) );
     CollectionFetchJob *fjob = static_cast<CollectionFetchJob *>( job );
+    kDebug() << "Fetched" << fjob->collections().count() << "collections.";
     Q_FOREACH( const Collection &col, fjob->collections() ) {
       if( col.parent() == Collection::root().id() ) {
         // This is the root maildir collection.
@@ -224,7 +228,7 @@ void LocalFoldersBuildJob::Private::collectionFetchResult( KJob *job )
 
   // Go no further if the root maildir was not found.
   if( !defaultFolders[ LocalFolders::Root ].isValid() ) {
-    q->setError( UserDefinedError );
+    q->setError( Job::UserError );
     q->setErrorText( QLatin1String( "Failed to fetch root maildir collection." ) );
     q->emitResult();
     return;
@@ -292,13 +296,13 @@ void LocalFoldersBuildJob::Private::createAndConfigureCollections()
       col.setRights( Collection::Rights( Collection::AllRights ^ Collection::CanDeleteCollection ) );
       CollectionCreateJob *cjob = new CollectionCreateJob( col, q );
       QObject::connect( cjob, SIGNAL(result(KJob*)), q, SLOT(collectionCreateResult(KJob*)) );
-    } else if( defaultFolders[ type ].rights() & Collection::CanDeleteCollection ) {
+    } else if( !defaultFolders[ type ].hasAttribute<EntityDisplayAttribute>() ) {
       // This default folder needs to be modified.
       kDebug() << "Modifying default folder" << nameForType( type );
       Collection &col = defaultFolders[ type ];
       EntityDisplayAttribute *attr = new EntityDisplayAttribute;
       attr->setIconName( iconNameForType( type ) );
-      attr->setDisplayName( i18nc( "local mail folder", nameForType( type ).toLatin1() ) );
+      attr->setDisplayName( displayNameForType( type ) );
       col.addAttribute( attr );
       col.setRights( Collection::Rights( Collection::AllRights ^ Collection::CanDeleteCollection ) );
       CollectionModifyJob *mjob = new CollectionModifyJob( col, q );
@@ -350,7 +354,7 @@ void LocalFoldersBuildJob::Private::collectionModifyResult( KJob *job )
 QString LocalFoldersBuildJob::Private::nameForType( int type )
 {
   switch( type ) {
-    case LocalFolders::Root: return QLatin1String( "Local Folders" );
+    case LocalFolders::Root: return QLatin1String( "local-mail" );
     case LocalFolders::Inbox: return QLatin1String( "inbox" );
     case LocalFolders::Outbox: return QLatin1String( "outbox" );
     case LocalFolders::SentMail: return QLatin1String( "sent-mail" );
@@ -361,12 +365,27 @@ QString LocalFoldersBuildJob::Private::nameForType( int type )
   }
 }
 
+// static
+QString LocalFoldersBuildJob::Private::displayNameForType( int type )
+{
+  switch( type ) {
+    case LocalFolders::Root: return i18nc( "local mail folder", "Local Folders" );
+    case LocalFolders::Inbox: return i18nc( "local mail folder", "inbox" );
+    case LocalFolders::Outbox: return i18nc( "local mail folder", "outbox" );
+    case LocalFolders::SentMail: return i18nc( "local mail folder", "sent-mail" );
+    case LocalFolders::Trash: return i18nc( "local mail folder", "trash" );
+    case LocalFolders::Drafts: return i18nc( "local mail folder", "drafts" );
+    case LocalFolders::Templates: return i18nc( "local mail folder", "templates" );
+    default: Q_ASSERT( false ); return QString();
+  }
+}
+
 //static
 QString LocalFoldersBuildJob::Private::iconNameForType( int type )
 {
   // Icons imitating KMail.
   switch( type ) {
-    case LocalFolders::Root: return QString();
+    case LocalFolders::Root: return QLatin1String( "folder" );
     case LocalFolders::Inbox: return QLatin1String( "mail-folder-inbox" );
     case LocalFolders::Outbox: return QLatin1String( "mail-folder-outbox" );
     case LocalFolders::SentMail: return QLatin1String( "mail-folder-sent" );
