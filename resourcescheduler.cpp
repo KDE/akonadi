@@ -103,7 +103,10 @@ void ResourceScheduler::scheduleChangeReplay()
   t.type = ChangeReplay;
   if ( mTaskList.contains( t ) )
     return;
-  mTaskList << t;
+  // change replays have to happen before we pull changes from the backend, otherwise
+  // we will overwrite our still unsaved local changes if the backend can't do
+  // incremental retrieval
+  mTaskList.prepend( t );
   signalTaskToTracker( t, "ChangeReplay" );
   scheduleNext();
 }
@@ -238,6 +241,19 @@ void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray 
                  << QString()
                  << QString::fromLatin1( taskType );
     s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobCreated"), argumentList);
+  }
+}
+
+void ResourceScheduler::collectionRemoved( const Akonadi::Collection &collection )
+{
+  if ( !collection.isValid() ) // should not happen, but you never know...
+    return;
+  for ( QList<Task>::iterator it = mTaskList.begin(); it != mTaskList.end(); ) {
+    if ( (*it).type == SyncCollection && (*it).collection == collection ) {
+      it = mTaskList.erase( it );
+      kDebug() << " erasing";
+    } else
+      ++it;
   }
 }
 

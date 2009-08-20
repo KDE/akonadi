@@ -89,8 +89,8 @@ void ResourceSchedulerTest::testChangeReplaySchedule()
   scheduler.scheduleChangeReplay();
 
   QTest::qWait( 100 );
-  QCOMPARE( collectionTreeSyncSpy.count(), 1 );
-  QCOMPARE( changeReplaySpy.count(), 0 );
+  QCOMPARE( collectionTreeSyncSpy.count(), 0 );
+  QCOMPARE( changeReplaySpy.count(), 1 );
   QCOMPARE( syncSpy.count(), 0 );
 
   scheduler.taskDone();

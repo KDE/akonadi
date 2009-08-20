@@ -430,8 +430,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     /**
      * Indicate the use of hierarchical remote identifiers.
+     * @since 4.4
      */
-    void enableHierarchicalRemoteIdentifiers( bool enable );
+    void setHierarchicalRemoteIdentifiersEnabled( bool enable );
 
   private:
     static QString parseArguments( int, char** );

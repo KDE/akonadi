@@ -144,6 +144,11 @@ class ResourceScheduler : public QObject
     */
     void deferTask();
 
+    /**
+      Remove tasks that affect @p collection.
+    */
+    void collectionRemoved( const Akonadi::Collection &collection );
+
   Q_SIGNALS:
     void executeFullSync();
     void executeCollectionSync( const Akonadi::Collection &col );
