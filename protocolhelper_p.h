@@ -92,6 +92,12 @@ class ProtocolHelper
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
     static QByteArray itemSetToByteArray( const Item::List &items, const QByteArray &command );
+
+    /**
+      Converts the given collection's hierarchical RID into a protocol representation.
+      Assumes @p col has a valid hierarchical RID, so check that before!
+    */
+    static QByteArray hierarchicalRidToByteArray( const Collection &col );
 };
 
 }
