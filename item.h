@@ -337,7 +337,7 @@ class AKONADI_EXPORT Item : public Entity
      *
      * @since 4.4
      */
-    void merge(const Item &other);
+    void merge( const Item &other );
 
   private:
     //@cond PRIVATE

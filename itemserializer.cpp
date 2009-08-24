@@ -261,11 +261,11 @@ void ItemSerializer::merge( Item &item, const Item &other )
 {
   if ( !other.hasPayload() )
     return;
+
   ItemSerializerPlugin *plugin = pluginForMimeType( item.mimeType() );
 
-  ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2*>(plugin);
-  if ( pluginV2 )
-  {
+  ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2*>( plugin );
+  if ( pluginV2 ) {
     pluginV2->merge( item, other );
     return;
   }
@@ -275,13 +275,12 @@ void ItemSerializer::merge( Item &item, const Item &other )
   buffer.setBuffer( &other.payloadData() );
   buffer.open( QIODevice::ReadOnly );
 
-  foreach( const QByteArray &part, other.loadedPayloadParts() )
-  {
+  foreach ( const QByteArray &part, other.loadedPayloadParts() ) {
     buffer.seek( 0 );
     deserialize( item, part, buffer, 0 );
   }
-  buffer.close();
 
+  buffer.close();
 }
 
 QSet<QByteArray> ItemSerializer::parts( const Item & item )
@@ -299,14 +298,12 @@ QSet<QByteArray> ItemSerializer::availableParts( const Item & item )
   ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2*>( plugin );
 
   if ( pluginV2 )
-  {
     return pluginV2->availableParts( item );
-  }
 
   if (item.hasPayload())
     return QSet<QByteArray>();
-  return QSet<QByteArray>() << Item::FullPayload;
 
+  return QSet<QByteArray>() << Item::FullPayload;
 }
 
 /*static*/

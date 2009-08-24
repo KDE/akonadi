@@ -119,7 +119,7 @@ namespace Akonadi {
  */
 class AKONADI_EXPORT ItemSerializerPlugin
 {
-public:
+  public:
     /**
      * Destroys the item serializer plugin.
      */
@@ -177,34 +177,33 @@ public:
 
 class AKONADI_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
 {
-public:
-  /**
-  * Destroys the item serializer plugin.
-  */
-  virtual ~ItemSerializerPluginV2();
+  public:
+    /**
+     * Destroys the item serializer plugin.
+     */
+    virtual ~ItemSerializerPluginV2();
 
-  /**
-  * Merges the payload parts in @p other into @p item.
-  *
-  * The default implementation is slow as it requires serializing @p other, and deserializing @p item multiple times.
-  * Reimplementing this is recommended if your type uses payload parts.
-  *
-  * @since 4.4
-  */
-  virtual void merge( Item &item, const Item &other );
+    /**
+     * Merges the payload parts in @p other into @p item.
+     *
+     * The default implementation is slow as it requires serializing @p other, and deserializing @p item multiple times.
+     * Reimplementing this is recommended if your type uses payload parts.
+     *
+     * @since 4.4
+     */
+    virtual void merge( Item &item, const Item &other );
 
-
-  /**
-  * Returns the parts available in the item @p item.
-  *
-  * This should be reimplemented to return available parts.
-  *
-  * The default implementation returns an empty set if the item has a payload,
-  * and a set containing Item::FullPayload if the item has no payload.
-  *
-  * @since 4.4
-  */
-  virtual QSet<QByteArray> availableParts( const Item &item ) const;
+    /**
+     * Returns the parts available in the item @p item.
+     *
+     * This should be reimplemented to return available parts.
+     *
+     * The default implementation returns an empty set if the item has a payload,
+     * and a set containing Item::FullPayload if the item has no payload.
+     *
+     * @since 4.4
+     */
+    virtual QSet<QByteArray> availableParts( const Item &item ) const;
 };
 
 }

@@ -49,16 +49,20 @@ class AKONADI_TESTS_EXPORT ItemSerializer
       /** throws ItemSerializerException on failure */
       static void serialize( const Item& item, const QByteArray& label, QIODevice& data, int &version );
 
-      /** throws ItemSerializerException on failure
+      /**
+       * Throws ItemSerializerException on failure.
        *
        * @since 4.4
        */
       static void merge( Item& item, const Item &other );
 
-      /** Returns a list of parts available in the item payload. */
+      /**
+       * Returns a list of parts available in the item payload.
+       */
       static QSet<QByteArray> parts( const Item &item );
 
-      /** Returns a list of parts available remotely in the item payload.
+      /**
+       * Returns a list of parts available remotely in the item payload.
        *
        * @since 4.4
        */
