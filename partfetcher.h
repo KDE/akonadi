@@ -20,7 +20,7 @@
 #ifndef AKONADI_PART_FETCHER_H
 #define AKONADI_PART_FETCHER_H
 
-#include <QtCore/QObject>
+#include <kjob.h>
 
 #include "akonadi_export.h"
 
@@ -36,14 +36,41 @@ class PartFetcherPrivate;
  * @short Convenience class for getting payload parts from an Akonadi Model.
  *
  * This class can be used to retrieve individual payload parts from an EntityTreeModel,
- * and fetch them asyncronously from the Akonadi storage if necessary.
+ * and fetch them asynchronously from the Akonadi storage if necessary.
  *
  * The requested part is emitted though the partFetched signal.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * const QModelIndex index = view->selectionModel()->currentIndex();
+ *
+ * PartFetcher *fetcher = new PartFetcher( index, Akonadi::MessagePart::Envelope );
+ * connect( fetcher, SIGNAL( result( KJob* ) ), SLOT( fetchResult( KJob* ) ) );
+ * fetcher->start();
+ *
+ * ...
+ *
+ * MyClass::fetchResult( KJob *job )
+ * {
+ *   if ( job->error() ) {
+ *     qDebug() << job->errorText();
+ *     return;
+ *   }
+ *
+ *   PartFetcher *fetcher = qobject_cast<PartFetcher>( job );
+ *
+ *   const Item item = fetcher->item();
+ *   // do something with the item
+ * }
+ *
+ * @endcode
  *
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT PartFetcher : public QObject
+class AKONADI_EXPORT PartFetcher : public KJob
 {
   Q_OBJECT
 
@@ -51,39 +78,39 @@ class AKONADI_EXPORT PartFetcher : public QObject
     /**
      * Creates a new part fetcher.
      *
+     * @param index The index of the item to fetch the part from.
+     * @param partName The name of the payload part to fetch.
      * @param parent The parent object.
      */
-    explicit PartFetcher( QObject *parent = 0 );
+    explicit PartFetcher( const QModelIndex &index, const QByteArray &partName, QObject *parent = 0 );
 
     /**
-     * Fetches the part called @p partName from the item at @p index
+     * Starts the fetch operation.
      */
-    bool fetchPart( const QModelIndex &index, const QByteArray &partName );
+    virtual void start();
 
     /**
-     * @internal
-     *
-     * TODO: move to private class.
+     * Returns the index of the item the part was fetched from.
      */
-    void reset();
+    QModelIndex index() const;
 
-  Q_SIGNALS:
     /**
-     * This signal is emitted whenever the requested part has been fetched successfully.
-     *
-     * @param index The index of the item the part was fetched from.
-     * @param item The item the part was fetched from.
-     * @param partName The name of the part that has been fetched.
+     * Returns the name of the part that has been fetched.
      */
-    void partFetched( const QModelIndex &index, const Item &item, const QByteArray &partName );
-    void invalidated();
+    QByteArray partName() const;
+
+    /**
+     * Returns the item that contains the fetched payload part.
+     */
+    Item item() const;
 
   private:
+    //@cond PRIVATE
     Q_DECLARE_PRIVATE( Akonadi::PartFetcher )
     PartFetcherPrivate *d_ptr;
 
-    Q_PRIVATE_SLOT( d_func(), void itemsFetched( const Akonadi::Item::List & ) )
     Q_PRIVATE_SLOT( d_func(), void fetchJobDone( KJob *job ) )
+    //@endcond
 };
 
 }
