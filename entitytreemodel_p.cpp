@@ -31,6 +31,7 @@
 #include <akonadi/collectionstatisticsjob.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemmodifyjob.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 
@@ -221,6 +222,18 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
       m_childEntities[ collectionId ].append( node );
     }
     q->endInsertRows();
+  }
+
+  if ( itemsToUpdate.size() > 0 )
+  {
+    foreach (const Item &item, itemsToUpdate)
+    {
+      m_items[ item.id() ].merge( item );
+      foreach ( const QModelIndex &idx, q->indexesForItem( item ) )
+      {
+        q->dataChanged( idx, idx );
+      }
+    }
   }
 
 }
@@ -546,8 +559,7 @@ void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, co
     kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
     return;
   }
-
-  m_items[ item.id() ] = item;
+  m_items[ item.id() ].merge(item);
 
   const QModelIndexList indexes = q->indexesForItem( item );
   foreach ( const QModelIndex &index, indexes )
@@ -668,10 +680,29 @@ void EntityTreeModelPrivate::moveJobDone( KJob *job )
 
 void EntityTreeModelPrivate::updateJobDone( KJob *job )
 {
+  Q_Q(EntityTreeModel);
+
   if ( job->error() ) {
     // TODO: handle job errors
     kWarning() << "Job error:" << job->errorString();
   } else {
+
+    ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob *>(job);
+    if (!modifyJob)
+      return;
+
+    Item item = modifyJob->item();
+
+    Q_ASSERT( item.isValid() );
+
+    m_items[ item.id() ].merge( item );
+    QModelIndexList list = q->indexesForItem( item );
+
+    foreach (const QModelIndex &idx, list)
+    {
+      q->dataChanged( idx, idx );
+    }
+
     // TODO: Is this trying to do the job of collectionstatisticschanged?
 //     CollectionStatisticsJob *csjob = static_cast<CollectionStatisticsJob*>( job );
 //     Collection result = csjob->collection();

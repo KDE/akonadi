@@ -109,6 +109,7 @@ set( akonadikde_LIB_SRC
   mimetypechecker.cpp
   monitor.cpp
   monitor_p.cpp
+  partfetcher.cpp
   pastehelper.cpp
   preprocessorbase.cpp
   protocolhelper.cpp
@@ -240,8 +241,9 @@ install( FILES
   filteractionjob.h
   mimetypechecker.h
   monitor.h
-  qtest_akonadi.h
+  partfetcher.h
   preprocessorbase.h
+  qtest_akonadi.h
   resourcebase.h
   resourcesynchronizationjob.h
   searchcreatejob.h
