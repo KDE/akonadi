@@ -99,7 +99,6 @@ public:
   void ancestorsFetched(const Akonadi::Collection::List& collectionList);
   void insertCollection(const Akonadi::Collection &collection, const Akonadi::Collection& parent );
   void insertPendingCollection(const Akonadi::Collection &collection, const Akonadi::Collection& parent, QMutableListIterator<Collection> &it );
-  void insertAncestors(const Akonadi::Collection::List &collectionList );
 
   ItemFetchJob* getItemFetchJob(const Collection &parent, ItemFetchScope scope) const;
   ItemFetchJob* getItemFetchJob(const Item &item, ItemFetchScope scope) const;
@@ -109,7 +108,6 @@ public:
   QHash<Entity::Id, Item> m_items;
   QHash<Collection::Id, QList<Node*> > m_childEntities;
   QSet<Collection::Id> m_populatedCols;
-  Collection::List m_ancestors;
 
   QHash<Collection::Id, Collection> m_pendingCollections;
   QHash<Collection::Id, QList<Collection::Id> > m_pendingChildCollections;

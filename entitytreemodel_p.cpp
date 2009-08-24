@@ -246,58 +246,82 @@ void EntityTreeModelPrivate::monitoredMimeTypeChanged( const QString & mimeType,
     m_mimeChecker.removeWantedMimeType( mimeType );
 }
 
-void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection& collection)
+void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& collection )
 {
   Q_Q( EntityTreeModel );
-  // Unlike fetchCollections, this method fetches collections by traversing up, not down.
-  CollectionFetchJob *job = new CollectionFetchJob( collection.parentCollection(), CollectionFetchJob::Base, m_session );
-  job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
-  job->fetchScope().setIncludeStatistics( m_includeStatistics );
-  q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-              q, SLOT( ancestorsFetched( const Akonadi::Collection::List& ) ) );
-  q->connect( job, SIGNAL( result( KJob* ) ),
-              q, SLOT( fetchJobDone( KJob* ) ) );
-}
 
-void EntityTreeModelPrivate::ancestorsFetched(const Akonadi::Collection::List& collectionList)
-{
-  // List is a size of one.
-  foreach(const Collection &collection, collectionList)
+  Collection parentCollection = collection.parentCollection();
+
+  Q_ASSERT( parentCollection != Collection::root() );
+
+  Collection temp;
+
+  Collection::List ancestors;
+
+  while ( !m_collections.contains( parentCollection.id() ) )
   {
-    // We should find a collection already in the tree before we reach the collection root.
-    // We're looking to bridge a gap here.
-    Q_ASSERT(collection != Collection::root());
+    // Put a temporary node in the tree later.
+    ancestors.prepend( parentCollection );
 
-    // We already checked this either on the previous recursion or in monitoredCollectionAdded.
-    Q_ASSERT(!m_collections.contains(collection.id()));
+    // Fetch the real ancestor
+    CollectionFetchJob *job = new CollectionFetchJob( parentCollection, CollectionFetchJob::Base, m_session );
+    job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
+    job->fetchScope().setIncludeStatistics( m_includeStatistics );
+    q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+                q, SLOT( ancestorsFetched( const Akonadi::Collection::List& ) ) );
+    q->connect( job, SIGNAL( result( KJob* ) ),
+                q, SLOT( fetchJobDone( KJob* ) ) );
 
-    m_ancestors.prepend(collection);
-    if (m_collections.contains(collection.parentCollection().id()))
-    {
-      m_ancestors.prepend( m_collections.value(collection.parentCollection().id()) );
-      insertAncestors(m_ancestors);
-    } else {
-      retrieveAncestors(collection);
-    }
+    temp = parentCollection.parentCollection();
+    parentCollection = temp;
   }
-}
 
-void EntityTreeModelPrivate::insertAncestors(const Akonadi::Collection::List& collectionList)
-{
+  QModelIndex parent = q->indexForCollection( parentCollection );
+
+  // Still prepending all collections for now.
+  int row = 0;
+
+  // Although we insert several Collections here, we only need to notify though the model
+  // about the top-level one. The rest will be found auotmatically by the view.
+  q->beginInsertRows(parent, row, row);
+
   Collection::List::const_iterator it;
-  const Collection::List::const_iterator begin = collectionList.constBegin() + 1;
-  const Collection::List::const_iterator end = collectionList.constEnd();
-  for (it = begin; it != end; ++it)
+  const Collection::List::const_iterator begin = ancestors.constBegin();
+  const Collection::List::const_iterator end = ancestors.constEnd();
+
+  for ( it = begin; it != end; ++it )
   {
-    insertCollection(*it, *(it-1));
+    Collection col = *it;
+    m_collections.insert( col.id(), col );
+
+    Node *node = new Node;
+    node->id = col.id();
+    node->parent = col.parentCollection().id();
+    node->type = Node::Collection;
+    m_childEntities[ node->parent ].prepend( node );
   }
-  m_ancestors.clear();
+
+  q->endInsertRows();
+}
+
+void EntityTreeModelPrivate::ancestorsFetched( const Akonadi::Collection::List& collectionList )
+{
+  Q_Q( EntityTreeModel );
+  Q_ASSERT( collectionList.size() == 1 );
+
+  const Collection collection = collectionList.at( 0 );
+
+  m_collections[ collection.id() ] = collection;
+
+  const QModelIndex index = q->indexForCollection( collection );
+  Q_ASSERT( index.isValid() );
+  q->dataChanged( index, index );
 }
 
 void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
 {
-  Q_ASSERT(collection.isValid());
-  Q_ASSERT(parent.isValid());
+  Q_ASSERT( collection.isValid() );
+  Q_ASSERT( parent.isValid() );
 
   Q_Q( EntityTreeModel );
   // TODO: Use order attribute of parent if available
@@ -331,14 +355,14 @@ void EntityTreeModelPrivate::insertPendingCollection( const Akonadi::Collection&
   if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
     fetchItems( collection );
 
-  if (colIt.findPrevious(collection) || colIt.findNext(collection))
+  if ( colIt.findPrevious( collection ) || colIt.findNext( collection ) )
   {
     colIt.remove();
   }
 
-  Q_ASSERT(m_collections.contains(parent.id()));
+  Q_ASSERT( m_collections.contains( parent.id() ) );
 
-  QList<Collection::Id> pendingChildCollectionsToInsert = m_pendingChildCollections.value(collection.id());
+  QList<Collection::Id> pendingChildCollectionsToInsert = m_pendingChildCollections.value( collection.id() );
 
   QList<Collection::Id>::const_iterator it;
   const QList<Collection::Id>::const_iterator begin = pendingChildCollectionsToInsert.constBegin();
@@ -346,7 +370,7 @@ void EntityTreeModelPrivate::insertPendingCollection( const Akonadi::Collection&
 
   for ( it = begin; it != end; ++it )
   {
-    insertPendingCollection(m_pendingCollections.value( *it ), collection, colIt);
+    insertPendingCollection( m_pendingCollections.value( *it ), collection, colIt );
   }
 
   m_pendingChildCollections.remove( parent.id() );
@@ -372,16 +396,15 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedCollection( collection ) )
     return;
 
-  if (!m_collections.contains(parent.id()))
+  if ( !m_collections.contains(parent.id() ) )
   {
     // The collection we're interested in is contained in a collection we're not interested in.
     // We download the ancestors of the collection we're interested in to complete the tree.
-    m_ancestors.prepend(collection);
-    retrieveAncestors(collection);
+    retrieveAncestors( collection );
     return;
   }
 
-  insertCollection(collection, parent);
+  insertCollection( collection, parent );
 
 }
 

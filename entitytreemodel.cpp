@@ -38,6 +38,7 @@
 #include <akonadi/itemmovejob.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
+#include "collectionfetchscope.h"
 
 #include "collectionutils_p.h"
 
@@ -59,6 +60,7 @@ EntityTreeModel::EntityTreeModel( Session *session,
 
   d->m_includeStatistics = true;
   d->m_monitor->fetchCollectionStatistics( true );
+  d->m_monitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
 
   d->m_mimeChecker.setWantedMimeTypes( d->m_monitor->mimeTypesMonitored() );
 
