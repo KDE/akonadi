@@ -50,6 +50,11 @@ void CollectionQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* 
     if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() )
       throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
     CollectionQueryHelper::remoteIdToQuery( scope.ridSet(), connection, qb );
+  } else if ( scope.scope() == Scope::HierarchicalRid ) {
+    if ( !connection->resourceContext().isValid() )
+      throw HandlerException( "Operations based on hierarchical remote identifiers require a resource or collection context" );
+    const Collection c = CollectionQueryHelper::resolveHierarchicalRID( scope.ridChain(), connection->resourceContext().id() );
+    qb.addValueCondition( Collection::idFullColumnName(), Query::Equals, c.id() );
   } else
     throw HandlerException( "WTF?" );
 }
@@ -81,4 +86,31 @@ bool CollectionQueryHelper::canBeMovedTo ( const Collection &collection, const C
     }
   }
   return hasAllowedName( collection, collection.name(), _parent.id() );
+}
+
+Collection CollectionQueryHelper::resolveHierarchicalRID( const QStringList &ridChain, Resource::Id resId )
+{
+  if ( ridChain.size() < 2 )
+    throw HandlerException( "Empty or incomplete hierarchical RID chain" );
+  if ( !ridChain.last().isEmpty() )
+    throw HandlerException( "Hierarchical RID chain is not root-terminated" );
+  Collection::Id parentId = 0;
+  Collection result;
+  for ( int i = ridChain.size() - 2; i >= 0; --i ) {
+    SelectQueryBuilder<Collection> qb;
+    if ( parentId > 0 )
+      qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, parentId );
+    else
+      qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
+    qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, ridChain.at( i ) );
+    qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, resId );
+    if ( !qb.exec() )
+      throw HandlerException( "Unable to execute query" );
+    Collection::List results = qb.result();
+    if ( results.size() != 1 )
+      throw HandlerException( "Hierarchical RID does not specify a unique collection" );
+    result = results.first();
+    parentId = result.id();
+  }
+  return result;
 }

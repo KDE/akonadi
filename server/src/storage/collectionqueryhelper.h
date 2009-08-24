@@ -56,6 +56,11 @@ namespace CollectionQueryHelper
     Checks if a collection could be moved from its current parent into the given one.
   */
   bool canBeMovedTo ( const Collection &collection, const Collection &parent );
+
+  /**
+    Retrieve the collection referred to by the given hierarchical RID chain.
+  */
+  Collection resolveHierarchicalRID( const QStringList &ridChain, Resource::Id resId );
 }
 
 }

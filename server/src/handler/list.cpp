@@ -31,6 +31,7 @@
 #include "imapstreamparser.h"
 
 #include <libs/protocol_p.h>
+#include <storage/collectionqueryhelper.h>
 
 using namespace Akonadi;
 
@@ -107,15 +108,17 @@ bool List::parseStream()
 {
   qint64 baseCollection = -1;
   QString rid;
-  if ( mScope == Scope::None || mScope == Scope::Uid ) {
+  if ( mScope.scope() == Scope::None || mScope.scope() == Scope::Uid ) {
     bool ok = false;
     baseCollection = m_streamParser->readNumber( &ok );
     if ( !ok )
       return failureResponse( "Invalid base collection" );
-  } else if ( mScope == Scope::Rid ) {
+  } else if ( mScope.scope() == Scope::Rid ) {
     rid = m_streamParser->readUtf8String();
     if ( rid.isEmpty() )
       throw HandlerException( "No remote identifier specified" );
+  } else if ( mScope.scope() == Scope::HierarchicalRid ) {
+    mScope.parseScope( m_streamParser );
   } else
     throw HandlerException( "WTF" );
 
@@ -158,9 +161,9 @@ bool List::parseStream()
 
   if ( baseCollection != 0 ) { // not root
     Collection col;
-    if ( mScope == Scope::None || mScope == Scope::Uid ) {
+    if ( mScope.scope() == Scope::None || mScope.scope() == Scope::Uid ) {
        col = Collection::retrieveById( baseCollection );
-    } else if ( mScope == Scope::Rid ) {
+    } else if ( mScope.scope() == Scope::Rid ) {
       SelectQueryBuilder<Collection> qb;
       qb.addTable( Resource::tableName() );
       qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::Equals, rid );
@@ -177,6 +180,10 @@ bool List::parseStream()
       if ( results.count() != 1 )
         throw HandlerException( QByteArray::number( results.count() ) + " collections found" );
       col = results.first();
+    } else if ( mScope.scope() == Scope::HierarchicalRid ) {
+      if ( !connection()->resourceContext().isValid() )
+        throw HandlerException( "Cannot retrieve collection based on hierarchical remote identifier without a resource context" );
+      col = CollectionQueryHelper::resolveHierarchicalRID( mScope.ridChain(), connection()->resourceContext().id() );
     } else {
       throw HandlerException( "WTF" );
     }

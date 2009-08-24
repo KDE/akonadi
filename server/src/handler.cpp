@@ -112,6 +112,9 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
   } else if ( command == AKONADI_CMD_RID ) {
     scope = Scope::Rid;
     command = streamParser->readString();
+  } else if ( command == AKONADI_CMD_HRID ) {
+    scope = Scope::HierarchicalRid;
+    command = streamParser->readString();
   }
 
     // allowed commands are listed below ;-).

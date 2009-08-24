@@ -46,6 +46,15 @@ void Scope::parseScope( ImapStreamParser* parser )
     }
     if ( mRidSet.isEmpty() )
       throw HandlerException( "Empty remote identifier set specified" );
+  } else if ( mScope == HierarchicalRid ) {
+    parser->beginList();
+    while ( !parser->atListEnd() ) {
+      parser->beginList();
+      parser->readString(); // uid, invalid here
+      mRidChain.append( parser->readUtf8String() );
+      if ( !parser->atListEnd() )
+        throw HandlerException( "Invalid hierarchical RID chain format" );
+    }
   } else {
     throw HandlerException( "WTF?!?" );
   }
@@ -66,12 +75,12 @@ ImapSet Scope::uidSet() const
   return mUidSet;
 }
 
-void Scope::setUidSet(const ImapSet& set)
-{
-  mUidSet = set;
-}
-
 QStringList Scope::ridSet() const
 {
   return mRidSet;
+}
+
+QStringList Scope::ridChain() const
+{
+  return mRidChain;
 }

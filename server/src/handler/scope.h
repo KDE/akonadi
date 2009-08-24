@@ -38,7 +38,8 @@ class Scope
       Invalid,
       None,
       Uid,
-      Rid
+      Rid,
+      HierarchicalRid
     };
 
     Scope( SelectionScope scope );
@@ -51,13 +52,14 @@ class Scope
     SelectionScope scope() const;
     void setScope( SelectionScope scope );
     ImapSet uidSet() const;
-    void setUidSet( const ImapSet &set );
     QStringList ridSet() const;
+    QStringList ridChain() const;
 
   private:
     SelectionScope mScope;
     ImapSet mUidSet;
     QStringList mRidSet;
+    QStringList mRidChain;
 };
 
 }

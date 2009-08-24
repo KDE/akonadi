@@ -100,6 +100,46 @@ class ScopeTest : public QObject
       QCOMPARE( scope.ridSet().first(), QLatin1String( "my first remote id" ) );
       QCOMPARE( scope.ridSet().last(), QLatin1String( "my second remote id" ) );
     }
+
+    void testHRID_data()
+    {
+      QTest::addColumn<QByteArray>( "input" );
+      QTest::addColumn<QStringList>( "result" );
+      QTest::addColumn<bool>( "success" );
+
+      QTest::newRow( "null" ) << QByteArray() << QStringList() << false;
+      QTest::newRow( "empty" ) << QByteArray( "()" ) << QStringList() << true;
+      QTest::newRow( "root" ) << QByteArray( "((0 \"\"))" ) << (QStringList() << "") << true;
+      QTest::newRow( "chain") << QByteArray( "((1 \"r1\") (2 \"r2\"))" ) << (QStringList() << "r1" << "r2") << true;
+      QTest::newRow( "invalid 1" ) << QByteArray( "(foo)" ) << QStringList() << false;
+      QTest::newRow( "invalid 2" ) << QByteArray( "foo" ) << QStringList() << false;
+      QTest::newRow( "invalid 3" ) << QByteArray( "((foo)" ) << QStringList() << false;
+      QTest::newRow( "invalid 4" ) << QByteArray( "(()foo)" ) << QStringList() << false;
+    }
+
+    void testHRID()
+    {
+      QFETCH( QByteArray, input );
+      QFETCH( QStringList, result );
+      QFETCH( bool, success );
+
+      QBuffer buffer( &input, this );
+      buffer.open( QIODevice::ReadOnly );
+      ImapStreamParser parser( &buffer );
+
+      Scope scope( Scope::HierarchicalRid );
+      bool didThrow = false;
+      try {
+        scope.parseScope( &parser );
+      } catch ( const Akonadi::Exception &e ) {
+        didThrow = true;
+        if ( success )
+          qDebug() << e.type() << e.what();
+      }
+      QCOMPARE( didThrow, !success );
+      if ( success )
+        QCOMPARE( scope.ridChain(), result );
+    }
 };
 
 QTEST_MAIN( ScopeTest )
