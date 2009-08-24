@@ -25,6 +25,7 @@
 #include "protocolhelper_p.h"
 #include "entity_p.h"
 #include "collectionfetchscope.h"
+#include "collectionutils_p.h"
 
 #include <kdebug.h>
 
@@ -130,16 +131,24 @@ void CollectionFetchJob::doStart()
   }
 
   QByteArray command = d->newTag();
-  if ( !d->mBase.isValid() )
-    command += " " AKONADI_CMD_RID;
+  if ( !d->mBase.isValid() ) {
+    if ( CollectionUtils::hasValidHierarchicalRID( d->mBase ) )
+      command += " HRID";
+    else
+      command += " " AKONADI_CMD_RID;
+  }
   if ( d->mScope.includeUnubscribed() )
     command += " LIST ";
   else
     command += " LSUB ";
+
   if ( d->mBase.isValid() )
     command += QByteArray::number( d->mBase.id() );
+  else if ( CollectionUtils::hasValidHierarchicalRID( d->mBase ) )
+    command += '(' + ProtocolHelper::hierarchicalRidToByteArray( d->mBase ) + ')';
   else
     command += ImapParser::quote( d->mBase.remoteId().toUtf8() );
+
   command += ' ';
   switch ( d->mType ) {
     case Base:
