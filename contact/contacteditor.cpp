@@ -24,6 +24,8 @@
 #include "abstractcontacteditorwidget.h"
 #include "contactmetadata_p.h"
 #include "contactmetadataattribute_p.h"
+#include "addressbookselectiondialog.h"
+#include "autoqpointer.h"
 
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -204,7 +206,13 @@ void ContactEditor::saveContact()
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( d->mItem );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
   } else if ( d->mMode == CreateMode ) {
-    Q_ASSERT_X( d->mDefaultCollection.isValid(), "ContactEditor::saveContact", "Using invalid default collection for saving!" );
+    if ( !d->mDefaultCollection.isValid() ) {
+      AutoQPointer<AddressBookSelectionDialog> dlg = new AddressBookSelectionDialog( AddressBookSelectionDialog::ContactsOnly, this );
+      if ( dlg->exec() == KDialog::Accepted )
+        setDefaultCollection( dlg->selectedAddressBook() );
+      else
+        return; // FIXME: should go back to the editor instead of aborting
+    }
 
     KABC::Addressee addr;
     d->storeContact( addr, d->mContactMetaData );
