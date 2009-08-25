@@ -226,6 +226,28 @@ QDomElement XmlDocument::collectionElementByRemoteId(const QString& rid) const
   return d->findElementByRid( rid, Format::Tag::collection() );
 }
 
+QDomElement XmlDocument::collectionElement( const Collection &collection ) const
+{
+  if ( collection == Collection::root() )
+    return d->document.documentElement();
+  if ( collection.remoteId().isEmpty() )
+    return QDomElement();
+  if ( collection.parentCollection().remoteId().isEmpty() && collection.parentCollection() != Collection::root() )
+    return d->findElementByRid( collection.remoteId(), Format::Tag::collection() );
+  QDomElement parent = collectionElement( collection.parentCollection() );
+  if ( parent.isNull() )
+    return QDomElement();
+  const QDomNodeList children = parent.childNodes();
+  for ( int i = 0; i < children.count(); ++i ) {
+    const QDomElement child = children.at( i ).toElement();
+    if ( child.isNull() )
+      continue;
+   if ( child.tagName() == Format::Tag::collection() && child.attribute( Format::Attr::remoteId() ) == collection.remoteId() )
+    return child;
+  }
+  return QDomElement();
+}
+
 QDomElement XmlDocument::itemElementByRemoteId(const QString& rid) const
 {
   return d->findElementByRid( rid, Format::Tag::item() );
@@ -249,11 +271,14 @@ Collection::List XmlDocument::collections() const
 
 Collection::List XmlDocument::childCollections(const QString& parentCollectionRid) const
 {
-  QDomElement parentElem;
-  if ( parentCollectionRid.isEmpty() )
-    parentElem = d->document.documentElement();
-  else
-    parentElem = collectionElementByRemoteId( parentCollectionRid );
+  Collection c;
+  c.setRemoteId( parentCollectionRid );
+  return childCollections( c );
+}
+
+Collection::List XmlDocument::childCollections( const Collection &parentCollection ) const
+{
+  QDomElement parentElem = collectionElement( parentCollection );
 
   if ( parentElem.isNull() ) {
     d->lastError = QLatin1String( "Parent node not found." );
@@ -266,7 +291,9 @@ Collection::List XmlDocument::childCollections(const QString& parentCollectionRi
     const QDomElement childElem = children.at( i ).toElement();
     if ( childElem.isNull() || childElem.tagName() != Format::Tag::collection() )
       continue;
-    rv += XmlReader::elementToCollection( childElem );
+    Collection c = XmlReader::elementToCollection( childElem );
+    c.setParentCollection( parentCollection );
+    rv.append( c );
   }
 
   return rv;
@@ -275,7 +302,7 @@ Collection::List XmlDocument::childCollections(const QString& parentCollectionRi
 
 Item::List XmlDocument::items(const Akonadi::Collection& collection, bool includePayload) const
 {
-  const QDomElement colElem = collectionElementByRemoteId( collection.remoteId() );
+  const QDomElement colElem = collectionElement( collection );
   if ( colElem.isNull() ) {
     d->lastError = i18n( "Unable to find collection %1", collection.name() );
     return Item::List();
