@@ -272,7 +272,8 @@ void ItemSerializer::merge( Item &item, const Item &other )
 
   // Old-school merge:
   QBuffer buffer;
-  buffer.setBuffer( &other.payloadData() );
+  QByteArray payloadData = other.payloadData();
+  buffer.setBuffer( &payloadData );
   buffer.open( QIODevice::ReadOnly );
 
   foreach ( const QByteArray &part, other.loadedPayloadParts() ) {
