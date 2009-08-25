@@ -317,6 +317,28 @@ class AKONADI_EXPORT Item : public Entity
      */
     KUrl url( UrlType type = UrlShort ) const;
 
+    /**
+     * Returns the parts available for this item.
+     *
+     * @since 4.4
+     */
+    QSet<QByteArray> availablePayloadParts() const;
+
+    /**
+     * Merges the Item @p other into this item.
+     * Any parts or attributes available in other, will be merged into this item,
+     * and the payload parts of other will be inserted into this item, overwriting
+     * any existing parts with the same part name.
+     *
+     * If there is an ItemSerialzerPluginV2 for the type, the merge method in that plugin is
+     * used to perform the merge. If only an ItemSerialzerPlugin class is found, or the merge
+     * method of the -V2 plugin is not implemented, the merge is performed with multiple deserializations
+     * of the payload.
+     *
+     * @since 4.4
+     */
+    void merge( const Item &other );
+
   private:
     //@cond PRIVATE
     friend class ItemModifyJob;

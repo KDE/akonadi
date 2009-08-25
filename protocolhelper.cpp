@@ -251,3 +251,13 @@ QByteArray ProtocolHelper::itemSetToByteArray( const Item::List &_items, const Q
   }
   return rv;
 }
+
+QByteArray ProtocolHelper::hierarchicalRidToByteArray( const Collection &col )
+{
+  if ( col == Collection::root() )
+    return QByteArray("(0 \"\")");
+  if ( col.remoteId().isEmpty() )
+    return QByteArray();
+  const QByteArray parentHrid = hierarchicalRidToByteArray( col.parentCollection() );
+  return '(' + QByteArray::number( col.id() ) + ' ' + ImapParser::quote( col.remoteId().toUtf8() ) + ") " + parentHrid;
+}

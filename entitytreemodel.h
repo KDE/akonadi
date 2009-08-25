@@ -28,6 +28,8 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStringList>
 
+Q_DECLARE_METATYPE( QSet<QByteArray> )
+
 // TODO (Applies to all these 'new' models, not just EntityTreeModel):
 // * Figure out how LazyPopulation and signals from monitor containing items should
 //     fit together. Possibly store a list of collections whose items have already
@@ -102,6 +104,9 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       AmazingCompletionRole,                  ///< Role used to implement amazing completion
       ParentCollectionRole,                   ///< The parent collection of the entity
       ColumnCountRole,                        ///< @internal Used by proxies to determine the number of columns for a header group.
+      LoadedPartsRole,                        ///< Parts available in the model for the item
+      AvailablePartsRole,                     ///< Parts available in the Akonadi server for the item
+      SessionRole,                            ///< The Session used by this model. @internal.
       UserRole = Qt::UserRole + 1000,         ///< Role for user extensions.
       TerminalUserRole = 10000                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
     };

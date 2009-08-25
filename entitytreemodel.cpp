@@ -38,6 +38,7 @@
 #include <akonadi/itemmovejob.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
+#include "collectionfetchscope.h"
 
 #include "collectionutils_p.h"
 
@@ -59,6 +60,7 @@ EntityTreeModel::EntityTreeModel( Session *session,
 
   d->m_includeStatistics = true;
   d->m_monitor->fetchCollectionStatistics( true );
+  d->m_monitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
 
   d->m_mimeChecker.setWantedMimeTypes( d->m_monitor->mimeTypesMonitored() );
 
@@ -172,18 +174,6 @@ QVariant EntityTreeModel::getData( const Item &item, int column, int role ) cons
              !item.attribute<EntityDisplayAttribute>()->iconName().isEmpty() )
           return item.attribute<EntityDisplayAttribute>()->icon();
         break;
-      case MimeTypeRole:
-        return item.mimeType();
-        break;
-      case RemoteIdRole:
-        return item.remoteId();
-        break;
-      case ItemRole:
-        return QVariant::fromValue( item );
-        break;
-      case ItemIdRole:
-        return item.id();
-        break;
       default:
         break;
     }
@@ -232,20 +222,6 @@ QVariant EntityTreeModel::getData( const Collection &collection, int column, int
         return collection.attribute<EntityDisplayAttribute>()->icon();
       }
       return KIcon( CollectionUtils::defaultIconName( collection ) );
-      break;
-    case MimeTypeRole:
-      return collection.mimeType();
-      break;
-    case RemoteIdRole:
-      return collection.remoteId();
-      break;
-    case CollectionIdRole:
-      return collection.id();
-      break;
-    case CollectionRole: {
-      return QVariant::fromValue( collection );
-      break;
-    }
     default:
       break;
   }
@@ -255,6 +231,10 @@ QVariant EntityTreeModel::getData( const Collection &collection, int column, int
 
 QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 {
+  Q_D( const EntityTreeModel );
+  if ( role == SessionRole )
+    return QVariant::fromValue( qobject_cast<QObject *>( d->m_session ) );
+
   const int headerSet = (role / TerminalUserRole);
 
   role %= TerminalUserRole;
@@ -268,7 +248,6 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   if (ColumnCountRole == role)
     return getColumnCount(headerSet);
 
-  Q_D( const EntityTreeModel );
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
@@ -286,13 +265,46 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     if ( !collection.isValid() )
       return QVariant();
 
-    return getData( collection, index.column(), role );
+    switch ( role )
+    {
+    case MimeTypeRole:
+      return collection.mimeType();
+    case RemoteIdRole:
+      return collection.remoteId();
+    case CollectionIdRole:
+      return collection.id();
+    case CollectionRole:
+      return QVariant::fromValue( collection );
+    default:
+      return getData( collection, index.column(), role );
+    }
+
   } else if ( Node::Item == node->type ) {
     const Item item = d->m_items.value( node->id );
     if ( !item.isValid() )
       return QVariant();
 
-    return getData( item, index.column(), role );
+    switch ( role )
+    {
+    case MimeTypeRole:
+      return item.mimeType();
+      break;
+    case RemoteIdRole:
+      return item.remoteId();
+      break;
+    case ItemRole:
+      return QVariant::fromValue( item );
+      break;
+    case ItemIdRole:
+      return item.id();
+      break;
+    case LoadedPartsRole:
+      return QVariant::fromValue( item.loadedPayloadParts() );
+    case AvailablePartsRole:
+      return QVariant::fromValue( item.availablePayloadParts() );
+    default:
+      return getData( item, index.column(), role );
+    }
   }
 
   return QVariant();
@@ -636,7 +648,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
   const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
 
-  if ( index.column() == 0 && (role & (Qt::EditRole | ItemRole | CollectionRole)) ) {
+  if ( index.column() == 0 && (role & ( Qt::EditRole | ItemRole | CollectionRole ) ) ) {
     if ( Node::Collection == node->type ) {
 
       Collection collection = d->m_collections.value( node->id );

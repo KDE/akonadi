@@ -83,6 +83,15 @@ namespace CollectionUtils
     }
     return QLatin1String( "folder" );
   }
+
+  inline bool hasValidHierarchicalRID( const Collection &col )
+  {
+    if ( col == Collection::root() )
+      return true;
+    if ( col.remoteId().isEmpty() )
+      return false;
+    return hasValidHierarchicalRID( col.parentCollection() );
+  }
 }
 
 }

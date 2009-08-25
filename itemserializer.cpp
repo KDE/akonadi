@@ -233,7 +233,7 @@ void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QBy
 /*static*/
 void ItemSerializer::deserialize( Item& item, const QByteArray& label, QIODevice& data, int version )
 {
-  if ( !ItemSerializer::pluginForMimeType( item.mimeType() ).deserialize( item, label, data, version ) )
+  if ( !ItemSerializer::pluginForMimeType( item.mimeType() )->deserialize( item, label, data, version ) )
     kWarning() << "Unable to deserialize payload part:" << label;
 }
 
@@ -253,23 +253,65 @@ void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODe
 {
   if ( !item.hasPayload() )
     return;
-  ItemSerializerPlugin& plugin = pluginForMimeType( item.mimeType() );
-  plugin.serialize( item, label, data, version );
+  ItemSerializerPlugin *plugin = pluginForMimeType( item.mimeType() );
+  plugin->serialize( item, label, data, version );
 }
 
-QSet<QByteArray> ItemSerializer::parts(const Item & item)
+void ItemSerializer::merge( Item &item, const Item &other )
+{
+  if ( !other.hasPayload() )
+    return;
+
+  ItemSerializerPlugin *plugin = pluginForMimeType( item.mimeType() );
+
+  ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2*>( plugin );
+  if ( pluginV2 ) {
+    pluginV2->merge( item, other );
+    return;
+  }
+
+  // Old-school merge:
+  QBuffer buffer;
+  buffer.setBuffer( &other.payloadData() );
+  buffer.open( QIODevice::ReadOnly );
+
+  foreach ( const QByteArray &part, other.loadedPayloadParts() ) {
+    buffer.seek( 0 );
+    deserialize( item, part, buffer, 0 );
+  }
+
+  buffer.close();
+}
+
+QSet<QByteArray> ItemSerializer::parts( const Item & item )
 {
   if ( !item.hasPayload() )
     return QSet<QByteArray>();
-  return pluginForMimeType( item.mimeType() ).parts( item );
+  return pluginForMimeType( item.mimeType() )->parts( item );
+}
+
+QSet<QByteArray> ItemSerializer::availableParts( const Item & item )
+{
+  if ( !item.hasPayload() )
+    return QSet<QByteArray>();
+  ItemSerializerPlugin *plugin = pluginForMimeType( item.mimeType() );
+  ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2*>( plugin );
+
+  if ( pluginV2 )
+    return pluginV2->availableParts( item );
+
+  if (item.hasPayload())
+    return QSet<QByteArray>();
+
+  return QSet<QByteArray>() << Item::FullPayload;
 }
 
 /*static*/
-ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetype )
+ItemSerializerPlugin* ItemSerializer::pluginForMimeType( const QString & mimetype )
 {
   // plugin cached, so let's take that one
   if ( s_pluginRegistry->cachedPlugins.contains( mimetype ) )
-    return *(s_pluginRegistry->cachedPlugins.value( mimetype ));
+    return s_pluginRegistry->cachedPlugins.value( mimetype );
 
   ItemSerializerPlugin *plugin = 0;
 
@@ -277,7 +319,7 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
   const QVector<PluginEntry>::const_iterator it
     = qBinaryFind( s_pluginRegistry->allPlugins.constBegin(), s_pluginRegistry->allPlugins.constEnd(), mimetype );
   if ( it != s_pluginRegistry->allPlugins.constEnd() ) {
-    plugin = (*it).plugin();
+    plugin = ( *it ).plugin();
   } else {
     // check if we have a more generic plugin
     const PluginEntry &entry = s_pluginRegistry->findBestMatch( mimetype );
@@ -288,7 +330,7 @@ ItemSerializerPlugin& ItemSerializer::pluginForMimeType( const QString & mimetyp
 
   Q_ASSERT(plugin);
   s_pluginRegistry->cachedPlugins.insert( mimetype, plugin );
-  return *plugin;
+  return plugin;
 }
 
 }

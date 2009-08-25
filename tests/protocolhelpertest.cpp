@@ -109,6 +109,31 @@ class ProtocolHelperTest : public QObject
         collection = p2;
       }
     }
+
+    void testHRidToByteArray_data()
+    {
+      QTest::addColumn<Collection>( "collection" );
+      QTest::addColumn<QByteArray>( "result" );
+
+      QTest::newRow( "empty" ) << Collection() << QByteArray();
+      QTest::newRow( "root" ) << Collection::root() << QByteArray( "(0 \"\")" );
+      Collection c;
+      c.setParentCollection( Collection::root() );
+      c.setRemoteId( "r1" );
+      QTest::newRow( "one level" ) << c << QByteArray( "(-14 \"r1\") (0 \"\")" );
+      Collection c2;
+      c2.setParentCollection( c );
+      c2.setRemoteId( "r2" );
+      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-15 \"r2\") (-14 \"r1\") (0 \"\")" );
+    }
+
+    void testHRidToByteArray()
+    {
+      QFETCH( Collection, collection );
+      QFETCH( QByteArray, result );
+      qDebug() << ProtocolHelper::hierarchicalRidToByteArray( collection ) << result;
+      QCOMPARE( ProtocolHelper::hierarchicalRidToByteArray( collection ), result );
+    }
 };
 
 QTEST_KDEMAIN( ProtocolHelperTest, NoGUI )

@@ -638,6 +638,17 @@ void CollectionJobTest::testAncestorRetrieval()
   QVERIFY( col.parentCollection().isValid() );
   QCOMPARE( col.parentCollection().remoteId(), QString( "6" ) );
   QCOMPARE( col.parentCollection().parentCollection(), Collection::root() );
+
+  ResourceSelectJob* select = new ResourceSelectJob( "akonadi_knut_resource_0", this );
+  AKVERIFYEXEC( select );
+  Collection col2( col );
+  col2.setId( -1 ); // make it invalid but keep the ancestor chain
+  job = new CollectionFetchJob( col2, CollectionFetchJob::Base, this );
+  AKVERIFYEXEC( job );
+  QCOMPARE( job->collections().count(), 1 );
+  col2 = job->collections().first();
+  QVERIFY( col2.isValid() );
+  QCOMPARE( col, col2 );
 }
 
 #include "collectionjobtest.moc"
