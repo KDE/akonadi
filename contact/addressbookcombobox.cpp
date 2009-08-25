@@ -119,6 +119,7 @@ AddressBookComboBox::AddressBookComboBox( Type type, QWidget *parent )
 
 AddressBookComboBox::~AddressBookComboBox()
 {
+  delete d->mComboBox; // delete as long as the model still exists, crashs otherwise
   delete d;
 }
 
