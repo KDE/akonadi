@@ -47,6 +47,7 @@
 
 #define AKONADI_CONTROL_SERVICE QLatin1String("org.freedesktop.Akonadi.Control")
 #define AKONADI_SERVER_SERVICE QLatin1String("org.freedesktop.Akonadi")
+#define AKONADI_SEARCH_SERVICE QLatin1String("org.kde.nepomuk.services.nepomukqueryservice")
 
 using namespace Akonadi;
 
@@ -144,6 +145,7 @@ void SelfTestDialog::runTests()
   }
   testAkonadiCtl();
   testServerStatus();
+  testSearchStatus();
   testProtocolVersion();
   testResources();
   testServerLog();
@@ -404,6 +406,38 @@ void SelfTestDialog::testServerStatus()
     report( Error, ki18n( "Akonadi server process not registered at D-Bus." ),
                  ki18n( "The Akonadi server process is not registered at D-Bus which typically means it was not started "
                        "or encountered a fatal error during startup."  ) );
+  }
+}
+
+void SelfTestDialog::testSearchStatus()
+{
+  bool searchAvailable = false;
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SEARCH_SERVICE ) ) {
+    searchAvailable = true;
+    report( Success, ki18n( "Nepomuk search service registered at D-Bus." ),
+                   ki18n( "The Nepomuk search service is registered at D-Bus which typically indicates it is operational." ) );
+  } else {
+    report( Error, ki18n( "Nepomuk search service not registered at D-Bus." ),
+                   ki18n( "The Nepomuk search service is not registered at D-Bus which typically means it was not started "
+                          "or encountered a fatal error during startup."  ) );
+  }
+
+  if ( searchAvailable ) {
+    // check which backend is used
+    QDBusInterface interface( QLatin1String( "org.kde.NepomukStorage" ), QLatin1String( "/nepomukstorage" ) );
+    const QDBusReply<QString> reply = interface.call( QLatin1String( "usedSopranoBackend" ) );
+    if ( reply.isValid() ) {
+      const QString name = reply.value();
+
+      if ( name == QLatin1String( "sesame2" ) ) {
+        report( Success, ki18n( "Nepomuk search service uses Sesame2 backend. " ),
+                         ki18n( "The Nepomuk search service uses the recommended Sesame2 backend." ) );
+      } else {
+        report( Error, ki18n( "Nepomuk search service uses insufficient backend." ),
+                       ki18n( "The Nepomuk search service uses the '%1' backend that is not "
+                              "recommended to use with Akonadi." ).subs( name ) );
+      }
+    }
   }
 }
 
