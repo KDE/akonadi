@@ -29,25 +29,44 @@
 #include <QLocalServer>
 #include <QLocalSocket>
 
+#include "collection.h"
+
+
+class EventQueue;
+class SessionEvent;
+class FakeSession;
+
 class FakeAkonadiServer : public QThread
 {
     Q_OBJECT
 
 public:
-    FakeAkonadiServer( QObject* parent = 0 );
+    FakeAkonadiServer( EventQueue *eventQueue, FakeSession *fakeSession, QObject* parent = 0 );
     ~FakeAkonadiServer();
     virtual void run();
-    void setResponse( const QStringList& data );
+
+    void setCollectionStore( Akonadi::Collection::List list );
+
+    Akonadi::Collection getCollection( Akonadi::Entity::Id );
+
+protected:
+  QByteArray getResponse( SessionEvent *sessionEvent );
 
 private Q_SLOTS:
     void newConnection();
     void dataAvailable();
+    void followUp();
+    void responseProcessed();
 
 private:
     QStringList m_data;
+    EventQueue *m_eventQueue;
+    FakeSession *m_fakeSession;
+    QByteArray m_lastRecievedMessage;
     QLocalServer *m_localServer;
     QMutex m_mutex;
     QLocalSocket* m_localSocket;
+    QHash<Akonadi::Entity::Id, Akonadi::Collection> m_collections;
 };
 
 #endif

@@ -34,6 +34,9 @@ public:
 
   void firstListJobResult(QList<Collection::List> collectionChunks);
 
+signals:
+  void bytesRead(int numBytes);
+
 };
 
 #endif
