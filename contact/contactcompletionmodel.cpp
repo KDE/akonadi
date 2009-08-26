@@ -20,7 +20,8 @@
 
 #include "contactcompletionmodel_p.h"
 
-#include <akonadi/descendantsproxymodel.h>
+#include <kdescendantsproxymodel.h>
+
 #include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/monitor.h>
@@ -45,7 +46,7 @@ QAbstractItemModel* ContactCompletionModel::self()
 
   ContactCompletionModel *model = new ContactCompletionModel( Session::defaultSession(), monitor );
 
-  Akonadi::DescendantsProxyModel *descModel = new DescendantsProxyModel( model );
+  KDescendantsProxyModel *descModel = new KDescendantsProxyModel( model );
   descModel->setSourceModel( model );
 
   EntityFilterProxyModel *filter = new Akonadi::EntityFilterProxyModel( model );

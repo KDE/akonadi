@@ -22,13 +22,14 @@
 #include "collectionfiltermodel_p.h"
 
 #include <akonadi/collectionfetchscope.h>
-#include <akonadi/descendantsproxymodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
+
+#include <kdescendantsproxymodel.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QComboBox>
@@ -67,7 +68,7 @@ class AddressBookComboBox::Private
       filter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
       filter->setHeaderSet( EntityTreeModel::CollectionTreeHeaders );
 
-      DescendantsProxyModel *descProxy = new DescendantsProxyModel( parent );
+      KDescendantsProxyModel *descProxy = new KDescendantsProxyModel( parent );
       descProxy->setSourceModel( filter );
 
       // filter for collections that support saving of contacts / contact groups
