@@ -181,8 +181,11 @@ void ChangeRecorder::changeProcessed()
 void ChangeRecorder::setChangeRecordingEnabled( bool enable )
 {
   Q_D( ChangeRecorder );
+  if ( d->enableChangeRecording == enable )
+    return;
   d->enableChangeRecording = enable;
-  Q_ASSERT( enable || d->pendingNotifications.isEmpty() );
+  if ( !enable )
+    d->dispatchNotifications();
 }
 
 #include "changerecorder.moc"
