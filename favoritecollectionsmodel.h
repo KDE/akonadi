@@ -22,7 +22,7 @@
 
 #include "akonadi_export.h"
 
-#include "selectionproxymodel.h"
+#include <kselectionproxymodel.h>
 
 #include <akonadi/collection.h>
 
@@ -36,7 +36,7 @@ class EntityTreeModel;
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
-class AKONADI_EXPORT FavoriteCollectionsModel : public SelectionProxyModel
+class AKONADI_EXPORT FavoriteCollectionsModel : public KSelectionProxyModel
 {
   Q_OBJECT
 
@@ -68,7 +68,7 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public SelectionProxyModel
     void setFavoriteLabel( const Collection &collection, const QString &label );
 
   private:
-    using SelectionProxyModel::setSourceModel;
+    using KSelectionProxyModel::setSourceModel;
 
     Q_PRIVATE_SLOT( d, void clearAndUpdateSelection() )
     Q_PRIVATE_SLOT( d, void updateSelection() )

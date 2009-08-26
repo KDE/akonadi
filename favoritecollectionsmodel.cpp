@@ -112,7 +112,7 @@ class FavoriteCollectionsModel::Private
 };
 
 FavoriteCollectionsModel::FavoriteCollectionsModel( EntityTreeModel *source, QObject *parent )
-  : SelectionProxyModel( new QItemSelectionModel( source, parent ), parent ),
+  : KSelectionProxyModel( new QItemSelectionModel( source, parent ), parent ),
     d( new Private( this ) )
 {
   setSourceModel( source );
@@ -189,7 +189,7 @@ QVariant Akonadi::FavoriteCollectionsModel::data( const QModelIndex &index, int 
 
     return d->labelForCollection( c );
   } else {
-    return SelectionProxyModel::data( index, role );
+    return KSelectionProxyModel::data( index, role );
   }
 }
 
@@ -200,7 +200,7 @@ QVariant FavoriteCollectionsModel::headerData( int section, Qt::Orientation orie
     && role == Qt::DisplayRole ) {
     return QLatin1String("Favorite Folders");
   } else {
-    return SelectionProxyModel::headerData( section, orientation, role );
+    return KSelectionProxyModel::headerData( section, orientation, role );
   }
 }
 
