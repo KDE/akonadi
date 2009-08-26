@@ -19,6 +19,8 @@
 
 #include "addressbookcombobox.h"
 
+#include "collectionfiltermodel_p.h"
+
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/descendantsproxymodel.h>
 #include <akonadi/entitytreemodel.h>
@@ -68,18 +70,14 @@ class AddressBookComboBox::Private
       DescendantsProxyModel *descProxy = new DescendantsProxyModel( parent );
       descProxy->setSourceModel( filter );
 
-/*
-        // flatten the collection tree structure to a collection list
-        Akonadi::DescendantsProxyModel *descendantModel = new Akonadi::DescendantsProxyModel( q );
-        descendantModel->setSourceModel( collectionModel );
+      // filter for collections that support saving of contacts / contact groups
+      CollectionFilterModel *filterModel = new CollectionFilterModel( mParent );
+      foreach ( const QString &contentMimeType, contentTypes )
+        filterModel->addContentMimeTypeFilter( contentMimeType );
+      filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
+      filterModel->setSourceModel( descProxy );
 
-        // filter for collections that support contacts
-        CollectionFilterModel *filterModel = new CollectionFilterModel( q );
-        filterModel->addContentMimeTypeFilter( KABC::Addressee::mimeType() );
-        filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
-        filterModel->setSourceModel( descendantModel );
-*/
-      mComboBox->setModel( descProxy );
+      mComboBox->setModel( filterModel );
     }
 
     ~Private()
