@@ -79,9 +79,8 @@ class ContactEditorDialog::Private
       if ( mAddressBookBox )
         mEditor->setDefaultCollection( mAddressBookBox->selectedAddressBook() );
 
-      mEditor->saveContact();
-
-      q->accept();
+      if ( mEditor->saveContact() )
+        q->accept();
     }
 
     void slotCancelClicked()

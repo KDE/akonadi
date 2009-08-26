@@ -22,10 +22,10 @@
 #include "contacteditor.h"
 
 #include "abstractcontacteditorwidget.h"
-#include "contactmetadata_p.h"
-#include "contactmetadataattribute_p.h"
 #include "addressbookselectiondialog.h"
 #include "autoqpointer.h"
+#include "contactmetadata_p.h"
+#include "contactmetadataattribute_p.h"
 
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -186,14 +186,14 @@ void ContactEditor::loadContact( const Akonadi::Item &item )
   d->mMonitor->setItemMonitored( item );
 }
 
-void ContactEditor::saveContact()
+bool ContactEditor::saveContact()
 {
   if ( d->mMode == EditMode ) {
     if ( !d->mItem.isValid() )
-      return;
+      return true;
 
     if ( d->mReadOnly )
-      return;
+      return true;
 
     KABC::Addressee addr = d->mItem.payload<KABC::Addressee>();
 
@@ -211,7 +211,7 @@ void ContactEditor::saveContact()
       if ( dlg->exec() == KDialog::Accepted )
         setDefaultCollection( dlg->selectedAddressBook() );
       else
-        return; // FIXME: should go back to the editor instead of aborting
+        return false;
     }
 
     KABC::Addressee addr;
@@ -226,6 +226,8 @@ void ContactEditor::saveContact()
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, d->mDefaultCollection );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
   }
+
+  return true;
 }
 
 void ContactEditor::setDefaultCollection( const Akonadi::Collection &collection )

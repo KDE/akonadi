@@ -19,25 +19,27 @@
 
 #include "contactgroupeditor.h"
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QMessageBox>
+#include "addressbookselectiondialog.h"
+#include "autoqpointer.h"
+#include "contactcompletionmodel_p.h"
+#include "contactgrouplineedit_p.h"
+#include "ui_contactgroupeditor.h"
+#include "waitingoverlay_p.h"
 
-#include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
-#include <klocale.h>
-#include <klineedit.h>
-#include <kmessagebox.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
+#include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
+#include <klocale.h>
+#include <klineedit.h>
+#include <kmessagebox.h>
 
-#include "contactcompletionmodel_p.h"
-#include "contactgrouplineedit_p.h"
-#include "ui_contactgroupeditor.h"
-#include "waitingoverlay_p.h"
+#include <QtGui/QGridLayout>
+#include <QtGui/QMessageBox>
 
 namespace Akonadi
 {
@@ -327,7 +329,13 @@ bool ContactGroupEditor::saveContactGroup()
     ItemModifyJob *job = new ItemModifyJob( d->mItem );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
   } else if ( d->mMode == CreateMode ) {
-    Q_ASSERT_X( d->mDefaultCollection.isValid(), "ContactGroupEditor::saveContactGroup", "Using invalid default collection for saving!" );
+    if ( !d->mDefaultCollection.isValid() ) {
+      AutoQPointer<AddressBookSelectionDialog> dlg = new AddressBookSelectionDialog( AddressBookSelectionDialog::ContactsOnly, this );
+      if ( dlg->exec() == KDialog::Accepted )
+        setDefaultCollection( dlg->selectedAddressBook() );
+      else
+        return false;
+    }
 
     KABC::ContactGroup group;
     if ( !d->storeContactGroup( group ) )
