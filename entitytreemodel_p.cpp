@@ -120,8 +120,6 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
   // TODO: refactor this stuff into separate methods for listing resources in Collection::root, and listing collections within resources.
   Q_Q( EntityTreeModel );
 
-  Akonadi::AgentManager *agentManager = Akonadi::AgentManager::self();
-
   Collection::List _collections = collections;
 
   forever
