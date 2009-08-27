@@ -96,6 +96,9 @@ void ContactGroupViewer::setContactGroup( const Akonadi::Item &group )
 
 void ContactGroupViewer::itemChanged( const Item &item )
 {
+  if ( !item.hasPayload<KABC::ContactGroup>() )
+    return;
+
   static QPixmap defaultPixmap = KIcon( QLatin1String( "x-mail-distribution-list" ) ).pixmap( QSize( 100, 140 ) );
 
   const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
