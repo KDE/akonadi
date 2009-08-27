@@ -22,6 +22,8 @@
 #include "contactcompletionmodel_p.h"
 
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 #include <klocale.h>
 
 #include <QtCore/QAbstractItemModel>
@@ -31,16 +33,14 @@
 
 ContactGroupLineEdit::ContactGroupLineEdit( QWidget *parent )
   : QLineEdit( parent ),
-    mCompleter( 0 ), mModel( 0 ),
+    mCompleter( 0 ),
     mContainsReference( false )
 {
 }
 
 void ContactGroupLineEdit::setCompletionModel( QAbstractItemModel *model )
 {
-  mModel = model;
-
-  mCompleter = new QCompleter( mModel, this );
+  mCompleter = new QCompleter( model, this );
   mCompleter->setCompletionColumn( Akonadi::ContactCompletionModel::NameAndEmailColumn );
   connect( mCompleter, SIGNAL( activated( const QModelIndex& ) ),
            this, SLOT( autoCompleted( const QModelIndex& ) ) );
@@ -105,26 +105,19 @@ void ContactGroupLineEdit::autoCompleted( const QModelIndex &index )
 
 void ContactGroupLineEdit::updateView( const QString &uid, const QString &preferredEmail )
 {
-  if ( !mModel ) {
-    qDebug( "ContactGroupLineEdit::updateView(): Warning!!! no model set" );
-    return;
-  }
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item( uid.toLongLong() ) );
+  job->fetchScope().fetchFullPayload();
+  job->setProperty( "preferredEmail", preferredEmail );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchDone( KJob* ) ) );
+}
 
-  const Akonadi::Item::Id updateId = uid.toLongLong();
+void ContactGroupLineEdit::fetchDone( KJob *job )
+{
+  Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
 
-  for ( int i = 0; i < mModel->rowCount(); ++i ) {
-    const QModelIndex index = mModel->index( i, 0 );
-    if ( !index.isValid() )
-      continue;
-
-    const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-    if ( !item.isValid() )
-      continue;
-
-    if ( item.id() == updateId ) {
-      updateView( item, preferredEmail );
-      break;
-    }
+  if ( !fetchJob->items().isEmpty() ) {
+    const Akonadi::Item item = fetchJob->items().first();
+    updateView( item, fetchJob->property( "preferredEmail" ).toString() );
   }
 }
 

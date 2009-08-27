@@ -30,6 +30,8 @@ class QAbstractItemModel;
 class QCompleter;
 class QModelIndex;
 
+class KJob;
+
 class ContactGroupLineEdit : public QLineEdit
 {
   Q_OBJECT
@@ -51,6 +53,7 @@ class ContactGroupLineEdit : public QLineEdit
 
   private Q_SLOTS:
     void autoCompleted( const QModelIndex& );
+    void fetchDone( KJob* );
 
   private:
     void updateView( const QString &uid, const QString &preferredEmail = QString() );
@@ -58,7 +61,6 @@ class ContactGroupLineEdit : public QLineEdit
     QString requestPreferredEmail( const KABC::Addressee &contact ) const;
 
     QCompleter *mCompleter;
-    QAbstractItemModel *mModel;
     bool mContainsReference;
     KABC::ContactGroup::Data mContactData;
     KABC::ContactGroup::ContactReference mContactReference;
