@@ -26,6 +26,7 @@
 #include "ui_contactgroupeditor.h"
 #include "waitingoverlay_p.h"
 
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
@@ -58,7 +59,8 @@ class ContactGroupEditor::Private
       delete mMonitor;
     }
 
-    void fetchDone( KJob* );
+    void itemFetchDone( KJob* );
+    void parentCollectionFetchDone( KJob* );
     void storeDone( KJob* );
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& );
     void memberChanged();
@@ -85,7 +87,7 @@ class ContactGroupEditor::Private
 
 using namespace Akonadi;
 
-void ContactGroupEditor::Private::fetchDone( KJob *job )
+void ContactGroupEditor::Private::itemFetchDone( KJob *job )
 {
   if ( job->error() )
     return;
@@ -99,13 +101,35 @@ void ContactGroupEditor::Private::fetchDone( KJob *job )
 
   mItem = fetchJob->items().first();
 
+  mReadOnly = false;
   if ( mMode == ContactGroupEditor::EditMode ) {
-    mReadOnly = false;
+    // if in edit mode we have to fetch the parent collection to find out
+    // about the modify rights of the item
 
-    const Akonadi::Collection parentCollection = mItem.parentCollection();
-    if ( parentCollection.isValid() )
-      mReadOnly = !(parentCollection.rights() & Collection::CanChangeItem);
+    Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( mItem.parentCollection(),
+                                                                                       Akonadi::CollectionFetchJob::Base );
+    mParent->connect( collectionFetchJob, SIGNAL( result( KJob* ) ),
+                      SLOT( parentCollectionFetchDone( KJob* ) ) );
+  } else {
+    const KABC::ContactGroup group = mItem.payload<KABC::ContactGroup>();
+    loadContactGroup( group );
+
+    setReadOnly( mReadOnly );
   }
+}
+
+void ContactGroupEditor::Private::parentCollectionFetchDone( KJob *job )
+{
+  if ( job->error() )
+    return;
+
+  Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
+  if ( !fetchJob )
+    return;
+
+  const Akonadi::Collection parentCollection = fetchJob->collections().first();
+  if ( parentCollection.isValid() )
+    mReadOnly = !(parentCollection.rights() & Collection::CanChangeItem);
 
   const KABC::ContactGroup group = mItem.payload<KABC::ContactGroup>();
   loadContactGroup( group );
@@ -139,7 +163,7 @@ void ContactGroupEditor::Private::itemChanged( const Item&, const QSet<QByteArra
     job->fetchScope().fetchFullPayload();
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-    mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( fetchDone( KJob* ) ) );
+    mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( itemFetchDone( KJob* ) ) );
     new WaitingOverlay( job, mParent );
   }
 }
@@ -302,7 +326,7 @@ void ContactGroupEditor::loadContactGroup( const Akonadi::Item &item )
   job->fetchScope().fetchFullPayload();
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchDone( KJob* ) ) );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetchDone( KJob* ) ) );
 
   d->setupMonitor();
   d->mMonitor->setItemMonitored( item );

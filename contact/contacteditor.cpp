@@ -27,6 +27,7 @@
 #include "contactmetadata_p.h"
 #include "contactmetadataattribute_p.h"
 
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
@@ -54,7 +55,8 @@ class ContactEditor::Private
       delete mMonitor;
     }
 
-    void fetchDone( KJob* );
+    void itemFetchDone( KJob* );
+    void parentCollectionFetchDone( KJob* );
     void storeDone( KJob* );
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& );
 
@@ -72,7 +74,7 @@ class ContactEditor::Private
     bool mReadOnly;
 };
 
-void ContactEditor::Private::fetchDone( KJob *job )
+void ContactEditor::Private::itemFetchDone( KJob *job )
 {
   if ( job->error() != KJob::NoError )
     return;
@@ -86,15 +88,37 @@ void ContactEditor::Private::fetchDone( KJob *job )
 
   mItem = fetchJob->items().first();
 
+  mReadOnly = false;
   if ( mMode == ContactEditor::EditMode ) {
-    mReadOnly = false;
+    // if in edit mode we have to fetch the parent collection to find out
+    // about the modify rights of the item
 
-    const Akonadi::Collection parentCollection = mItem.parentCollection();
-    if ( parentCollection.isValid() )
-      mReadOnly = !(parentCollection.rights() & Collection::CanChangeItem);
-
-      mEditorWidget->setReadOnly( mReadOnly );
+    Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( mItem.parentCollection(),
+                                                                                       Akonadi::CollectionFetchJob::Base );
+    mParent->connect( collectionFetchJob, SIGNAL( result( KJob* ) ),
+                      SLOT( parentCollectionFetchDone( KJob* ) ) );
+  } else {
+    const KABC::Addressee addr = mItem.payload<KABC::Addressee>();
+    mContactMetaData.load( mItem );
+    loadContact( addr, mContactMetaData );
+    mEditorWidget->setReadOnly( mReadOnly );
   }
+}
+
+void ContactEditor::Private::parentCollectionFetchDone( KJob *job )
+{
+  if ( job->error() )
+    return;
+
+  Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
+  if ( !fetchJob )
+    return;
+
+  const Akonadi::Collection parentCollection = fetchJob->collections().first();
+  if ( parentCollection.isValid() )
+    mReadOnly = !(parentCollection.rights() & Collection::CanChangeItem);
+
+  mEditorWidget->setReadOnly( mReadOnly );
 
   const KABC::Addressee addr = mItem.payload<KABC::Addressee>();
   mContactMetaData.load( mItem );
@@ -128,7 +152,7 @@ void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByte
     job->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-    mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( fetchDone( KJob* ) ) );
+    mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( itemFetchDone( KJob* ) ) );
   }
 }
 
@@ -180,7 +204,7 @@ void ContactEditor::loadContact( const Akonadi::Item &item )
   job->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchDone( KJob* ) ) );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetchDone( KJob* ) ) );
 
   d->setupMonitor();
   d->mMonitor->setItemMonitored( item );
