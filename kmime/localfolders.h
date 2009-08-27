@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-#include <akonadi/collection.h>
+#include <Akonadi/Collection>
 
 class KJob;
 
@@ -34,6 +34,8 @@ class LocalFoldersPrivate;
 
 /**
   @short Interface to local folders such as inbox, outbox etc.
+
+  TODO: update this and method API docs...
 
   This class provides access to the following default (and undeletable) local
   folders: inbox, outbox, sent-mail, trash, drafts, and templates; as well as
@@ -67,116 +69,64 @@ class AKONADI_KMIME_EXPORT LocalFolders : public QObject
   public:
     /**
       Each local folder has one of the types below.  There cannot be more
-      than one folder of each type, except for Custom.
+      than one folder of each type.
     */
     enum Type
     {
       Root,            ///< the root folder containing the local folders
+                       // TODO ^ do we even need this?
       Inbox,           ///< inbox
       Outbox,          ///< outbox
       SentMail,        ///< sent-mail
       Trash,           ///< trash
       Drafts,          ///< drafts
       Templates,       ///< templates
-      LastDefaultType, ///< @internal marker
-      Custom = 15      ///< for custom folders created by the user
+      LastDefaultType  ///< @internal marker
     };
 
     /**
       Returns the LocalFolders instance.
-      Does a fetch() when first called.
-
-      @see fetch
     */
     static LocalFolders *self();
 
-    /**
-      Returns whether the local folder collections have been fetched and are
-      ready to be accessed.
+    bool hasFolder( int type, const QString &resourceId ) const;
 
-      @see fetch
-      @see foldersReady
-    */
-    bool isReady() const;
+    Akonadi::Collection folder( int type, const QString &resourceId ) const;
 
-    /**
-      Returns the root collection containing all local folders.
-    */
-    Akonadi::Collection root() const;
+    /// needs attribute and resource
+    bool registerFolder( const Akonadi::Collection &collection );
 
-    /**
-      Returns the inbox collection.
-    */
-    Akonadi::Collection inbox() const;
+    QString defaultResourceId() const;
 
-    /**
-      Returns the outbox collection.
-    */
-    Akonadi::Collection outbox() const;
+    bool hasDefaultFolder( int type ) const;
 
-    /**
-      Returns the sent-mail collection.
-    */
-    Akonadi::Collection sentMail() const;
-
-    /**
-      Returns the trash collection.
-    */
-    Akonadi::Collection trash() const;
-
-    /**
-      Returns the drafts collection.
-    */
-    Akonadi::Collection drafts() const;
-
-    /**
-      Returns the templates collection.
-    */
-    Akonadi::Collection templates() const;
-
-    /**
-      Get a folder by its type.
-      Returns an invalid collection if no such folder exists.
-      This function only works for default (non-Custom) folder types.
-
-      @see Type
-    */
-    Akonadi::Collection folder( int type ) const;
-
-  public Q_SLOTS:
-    /**
-      Begins fetching the resource and collections, or creating them if
-      necessary.  Emits foldersReady() when done.
-
-      @code
-      connect( LocalFolders::self(), SIGNAL(foldersReady()),
-          this, SLOT(riseAndShine()) );
-      LocalFolders::self()->fetch();
-      @endcode
-    */
-    void fetch();
+    Akonadi::Collection defaultFolder( int type ) const;
 
   Q_SIGNALS:
-    /**
-      Emitted when the local folder collections have been fetched and
-      are ready to be accessed.
+    void foldersChanged( const QString &resourceId );
 
-      @see isReady
+    /**
     */
-    void foldersReady();
+    void defaultFoldersChanged();
 
   private:
+    friend class LocalFoldersRequestJob;
     friend class LocalFoldersPrivate;
+
+#if 1 // TODO do this only if building tests:
+    friend class LocalFoldersTesting;
+#endif
 
     // singleton class; the only instance resides in sInstance->instance
     LocalFolders( LocalFoldersPrivate *dd );
 
+    void forgetFoldersForResource( const QString &resourceId );
+    void beginBatchRegister();
+    void endBatchRegister();
+
     LocalFoldersPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void prepare() )
-    Q_PRIVATE_SLOT( d, void buildResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void collectionRemoved( Akonadi::Collection ) )
-
 };
 
 } // namespace Akonadi

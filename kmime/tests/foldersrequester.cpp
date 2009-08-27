@@ -26,6 +26,7 @@
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
 #include <akonadi/kmime/localfolders.h>
+#include <akonadi/kmime/localfoldersrequestjob.h>
 
 using namespace Akonadi;
 
@@ -34,21 +35,19 @@ Requester::Requester()
 {
   Control::start();
 
-  connect( LocalFolders::self(), SIGNAL( foldersReady() ),
-      this, SLOT( checkFolders() ) );
-  LocalFolders::self()->fetch();
+  LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
+  rjob->requestDefaultFolder( LocalFolders::Outbox );
+  connect( rjob, SIGNAL(result(KJob*)), this, SLOT(requestResult(KJob*)) );
+  rjob->start();
 }
 
-void Requester::checkFolders()
+void Requester::requestResult( KJob *job )
 {
-  Collection outbox = LocalFolders::self()->outbox();
-  Collection sentMail = LocalFolders::self()->sentMail();
-
-  kDebug() << "Got outbox" << outbox.id() << "sent-mail" << sentMail.id();
-
-  if( !outbox.isValid() || !sentMail.isValid() ) {
+  if( job->error() ) {
+    kError() << "LocalFoldersRequestJob failed:" << job->errorString();
     KApplication::exit( 1 );
   } else {
+    // Success.
     KApplication::exit( 2 );
   }
 }

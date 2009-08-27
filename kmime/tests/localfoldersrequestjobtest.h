@@ -17,30 +17,22 @@
     02110-1301, USA.
 */
 
-#ifndef CUSTOMFOLDERTEST_H
-#define CUSTOMFOLDERTEST_H
+#ifndef LOCALFOLDERSTESTREQUESTJOB_H
+#define LOCALFOLDERSTESTREQUESTJOB_H
 
 #include <QtCore/QObject>
 
-#include <akonadi/collection.h>
-
 /**
-  Tests the correct handling of custom (i.e. user-created, non-default) folders
-  in LocalFolders.
  */
-class CustomFolderTest : public QObject
+class LocalFoldersRequestJobTest : public QObject
 {
   Q_OBJECT
 
   private Q_SLOTS:
     void initTestCase();
-    void testDefaultFolders();
-    void testCustomFoldersDontRebuild();
-#if 0
-    void testCustomFoldersInRoot();
-    void testCustomFoldersInDefaultFolders();
-#endif
-
+    void testRequestWithNoDefaultResourceExisting();
+    void testRequestWithDefaultResourceAlreadyExisting();
+    void testMixedRequest();
 };
 
 #endif

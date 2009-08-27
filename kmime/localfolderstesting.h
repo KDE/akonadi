@@ -17,31 +17,31 @@
     02110-1301, USA.
 */
 
-#ifndef FOLDERSREQUESTER_H
-#define FOLDERSREQUESTER_H
+#ifndef AKONADI_LOCALFOLDERSTESTING_H
+#define AKONADI_LOCALFOLDERSTESTING_H
 
-#include <QObject>
+#include "akonadi-kmime_export.h"
+#include "localfolders.h"
 
-class KJob;
+namespace Akonadi {
 
 /**
-  This class requests some LocalFolders, then exits the app with a status of 2
-  if they were delivered OK, or 1 if they were not.
-
-  NOTE: The non-standard exit status 2 in case of success is to make feel more
-  comfortable than checking for zero (I actually had a bug causing it to always
-  return zero).
+  @internal
+  Class that exposes LocalFolders' private methods for use in unit tests.
+  HACK Is there a better way to do this?
 */
-class Requester : public QObject
+class AKONADI_KMIME_TEST_EXPORT LocalFoldersTesting
 {
-  Q_OBJECT
-
   public:
-    Requester();
-
-  private slots:
-    void requestResult( KJob *job );
+    static LocalFoldersTesting *_t_self();
+    void _t_setDefaultResourceId( const QString &resourceId );
+    void _t_forgetFoldersForResource( const QString &resourceId );
+    void _t_beginBatchRegister();
+    void _t_endBatchRegister();
+    int _t_knownResourceCount() const;
+    int _t_knownFolderCount() const;
 };
 
+} // namespace Akonadi
 
-#endif
+#endif // AKONADI_LOCALFOLDERSTESTING_H

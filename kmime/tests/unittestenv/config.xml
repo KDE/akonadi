@@ -2,4 +2,5 @@
   <kdehome>kdehome</kdehome>
   <confighome>xdgconfig</confighome>
   <datahome>xdglocal</datahome>
+  <agent synchronize="true">akonadi_knut_resource</agent>
 </config>
