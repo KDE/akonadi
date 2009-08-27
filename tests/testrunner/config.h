@@ -33,6 +33,7 @@ class Config
     QString xdgDataHome() const;
     QString xdgConfigHome() const;
     QList<QPair<QString, bool> > agents() const;
+    QHash<QString, QString> envVars() const;
 
   protected:
     void setKdeHome( const QString &home );
@@ -48,6 +49,7 @@ class Config
     QString mXdgDataHome;
     QString mXdgConfigHome;
     QList<QPair<QString, bool> > mAgents;
+    QHash<QString, QString> mEnvVars;
 };
 
 #endif

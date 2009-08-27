@@ -17,6 +17,7 @@
 
 #include "config.h"
 
+#include <KDE/KDebug>
 #include <kstandarddirs.h>
 
 #include <QtCore/QDir>
@@ -76,6 +77,13 @@ void Config::readConfiguration(const QString &configfile)
         setXdgDataHome( basePath + element.text() );
       } else if ( element.tagName() == "agent" ) {
         insertAgent( element.text(), element.attribute( "synchronize", "false" ) == QLatin1String("true") );
+      } else if ( element.tagName() == "envvar" ) {
+        const QString name = element.attribute( "name" );
+        if( name.isEmpty() ) {
+          kWarning() << "Given envvar with no name.";
+        } else {
+          mEnvVars[ name ] = element.text();
+        }
       }
     }
 
@@ -124,4 +132,9 @@ void Config::insertAgent( const QString &agent, bool sync )
 QList<QPair<QString, bool> > Config::agents() const
 {
   return mAgents;
+}
+
+QHash<QString, QString> Config::envVars() const
+{
+  return mEnvVars;
 }

@@ -342,6 +342,12 @@ SetupTest::SetupTest() :
   setenv( "KDEHOME", qPrintable( basePath() + "kdehome" ), 1 );
   setenv( "XDG_DATA_HOME", qPrintable( basePath() + "data" ), 1 );
   setenv( "XDG_CONFIG_HOME", qPrintable( basePath() + "config" ), 1 );
+  QHashIterator<QString, QString> iter( Config::instance()->envVars() );
+  while( iter.hasNext() ) {
+    iter.next();
+    kDebug() << "Setting environment variable" << iter.key() << "=" << iter.value();
+    setenv( qPrintable( iter.key() ), qPrintable( iter.value() ), 1 );
+  }
 
   Symbols *symbol = Symbols::instance();
   symbol->insertSymbol( "KDEHOME", basePath() + QLatin1String( "kdehome" ) );
