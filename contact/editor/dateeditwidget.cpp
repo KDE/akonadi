@@ -53,7 +53,7 @@ void DateView::emitSignal()
 }
 
 DateEditWidget::DateEditWidget( QWidget *parent )
-  : QWidget( parent )
+  : QWidget( parent ), mReadOnly( false )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setMargin( 0 );
@@ -61,14 +61,22 @@ DateEditWidget::DateEditWidget( QWidget *parent )
   mView = new DateView;
   layout->addWidget( mView );
 
-  mButton = new QToolButton;
-  mButton->setPopupMode(QToolButton::InstantPopup);
-  mButton->setIcon( KIcon( QLatin1String( "view-calendar-day" ) ) );
-  layout->addWidget( mButton );
+  mClearButton = new QToolButton;
+  if ( layoutDirection() == Qt::LeftToRight )
+    mClearButton->setIcon( KIcon( QLatin1String( "edit-clear-locationbar-rtl" ) ) );
+  else
+    mClearButton->setIcon( KIcon( QLatin1String( "edit-clear-locationbar-ltr" ) ) );
+  layout->addWidget( mClearButton );
+
+  mSelectButton = new QToolButton;
+  mSelectButton->setPopupMode( QToolButton::InstantPopup );
+  mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-day" ) ) );
+  layout->addWidget( mSelectButton );
 
   mMenu = new KPIM::KDatePickerPopup( KPIM::KDatePickerPopup::DatePicker, QDate(), this );
-  mButton->setMenu( mMenu );
+  mSelectButton->setMenu( mMenu );
 
+  connect( mClearButton, SIGNAL( clicked() ), SLOT( resetDate() ) );
   connect( mMenu, SIGNAL( dateChanged( const QDate& ) ), SLOT( dateSelected( const QDate& ) ) );
   connect( mView, SIGNAL( resetDate() ), SLOT( resetDate() ) );
 
@@ -93,7 +101,10 @@ QDate DateEditWidget::date() const
 
 void DateEditWidget::setReadOnly( bool readOnly )
 {
-  mButton->setEnabled( !readOnly );
+  mReadOnly = readOnly;
+
+  mSelectButton->setEnabled( !readOnly );
+  mClearButton->setEnabled( !readOnly );
 }
 
 void DateEditWidget::dateSelected(const QDate &date)
@@ -110,10 +121,13 @@ void DateEditWidget::resetDate()
 
 void DateEditWidget::updateView()
 {
-  if ( mDate.isValid() )
+  if ( mDate.isValid() ) {
     mView->setText( KGlobal::locale()->formatDate( mDate ) );
-  else
+    mClearButton->show();
+  } else {
     mView->setText( QString() );
+    mClearButton->hide();
+  }
 }
 
 #include "dateeditwidget.moc"

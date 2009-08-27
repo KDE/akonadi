@@ -71,8 +71,10 @@ class DateEditWidget : public QWidget
   private:
     QDate mDate;
     DateView *mView;
-    QToolButton *mButton;
+    QToolButton *mSelectButton;
+    QToolButton *mClearButton;
     KPIM::KDatePickerPopup *mMenu;
+    bool mReadOnly;
 };
 
 #endif
