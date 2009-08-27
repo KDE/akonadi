@@ -43,4 +43,10 @@ QDebug akDebug();
  */
 void akInit( const QString &baseName );
 
+/**
+ * Returns the contents of @p name environment variable if it is defined,
+ * or @p defaultValue otherwise.
+ */
+QString getEnv( const char *name, const QString &defaultValue = QString() );
+
 #endif

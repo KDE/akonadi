@@ -153,3 +153,10 @@ void akInit( const QString &baseName )
       qFatal( "Cannot rename log file - running on a readonly filesystem maybe?" );
   }
 }
+
+QString getEnv( const char *name, const QString &defaultValue )
+{
+  const QString v = QString::fromLocal8Bit( qgetenv( name ) );
+  return !v.isEmpty() ? v : defaultValue;
+}
+

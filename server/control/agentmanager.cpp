@@ -384,6 +384,13 @@ void AgentManager::readPluginInfos( const QDir& directory )
                             .arg( fileName, agentInfo.identifier ) );
         continue;
       }
+
+      const QString disableAutostart = getEnv( "AKONADI_DISABLE_AGENT_AUTOSTART" );
+      if( !disableAutostart.isEmpty() ) {
+        qDebug() << "Autostarting of agents is disabled.";
+        agentInfo.capabilities.removeOne( AgentType::CapabilityAutostart );
+      }
+
       qDebug() << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
       mAgents.insert( agentInfo.identifier, agentInfo );
       mAgentWatcher->addPath( Akonadi::XdgBaseDirs::findExecutableFile( agentInfo.exec ) );
