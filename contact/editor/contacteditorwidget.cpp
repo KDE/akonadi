@@ -26,6 +26,7 @@
 #include "displaynameeditwidget.h"
 #include "emaileditwidget.h"
 #include "freebusyeditwidget.h"
+#include "geoeditwidget.h"
 #include "imagewidget.h"
 #include "imeditwidget.h"
 #include "nameeditwidget.h"
@@ -84,7 +85,7 @@ class ContactEditorWidget::Private
     AddressEditWidget *mAddressesWidget;
 
     // widgets from coordinates group
-    QWidget *mCoordinatesWidget;
+    GeoEditWidget *mCoordinatesWidget;
 
     // widgets from general group
     ImageWidget *mLogoWidget;
@@ -249,7 +250,7 @@ void ContactEditorWidget::Private::initGuiLocationTab()
   addressesLayout->setRowStretch( 1, 1 );
 
   // setup coordinates group box
-  mCoordinatesWidget = new QWidget;
+  mCoordinatesWidget = new GeoEditWidget;
   coordinatesLayout->addWidget( mCoordinatesWidget, 0, 0 );
   coordinatesLayout->setRowStretch( 1, 1 );
 }
@@ -454,6 +455,7 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
   d->mAddressesWidget->loadContact( contact );
 
   // coordinates group
+  d->mCoordinatesWidget->loadContact( contact );
 
   // general group
   d->mLogoWidget->loadContact( contact );
@@ -504,6 +506,7 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   d->mAddressesWidget->storeContact( contact );
 
   // coordinates group
+  d->mCoordinatesWidget->storeContact( contact );
 
   // general group
   d->mLogoWidget->storeContact( contact );
@@ -553,7 +556,7 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
   d->mAddressesWidget->setReadOnly( readOnly );
 
   // widgets from coordinates group
-  d->mCoordinatesWidget->setEnabled( false );
+  d->mCoordinatesWidget->setReadOnly( readOnly );
 
   // widgets from general group
   d->mLogoWidget->setReadOnly( readOnly );
