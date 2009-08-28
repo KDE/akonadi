@@ -29,7 +29,7 @@ include(MacroWriteBasicCMakeVersionFile)
 
 set(AKONADI_VERSION_MAJOR "1")
 set(AKONADI_VERSION_MINOR "2")
-set(AKONADI_VERSION_PATCH "0")
+set(AKONADI_VERSION_PATCH "1")
 set(AKONADI_VERSION "${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
 
 # If Subversion is installed, and a '.svn' directory is found,

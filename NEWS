@@ -1,3 +1,8 @@
+1.2.1                          28-August-2009
+---------------------------------------------
+- Fix item creation with RID's containing a ']'.
+- Fix ASAP parser not reading the entire command.
+
 1.2.0                            28-June-2009
 ---------------------------------------------
 - Fix attribute joining in collection list results.
