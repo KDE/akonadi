@@ -62,14 +62,10 @@ class AddressBookComboBox::Private
         mMonitor->setMimeTypeMonitored( mimeType, true );
 
       mModel = new EntityTreeModel( Session::defaultSession(), mMonitor );
-
-      EntityFilterProxyModel *filter = new EntityFilterProxyModel( parent );
-      filter->setSourceModel( mModel );
-      filter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-      filter->setHeaderSet( EntityTreeModel::CollectionTreeHeaders );
+      mModel->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
 
       KDescendantsProxyModel *descProxy = new KDescendantsProxyModel( parent );
-      descProxy->setSourceModel( filter );
+      descProxy->setSourceModel( mModel );
 
       // filter for collections that support saving of contacts / contact groups
       CollectionFilterModel *filterModel = new CollectionFilterModel( mParent );
