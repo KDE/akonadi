@@ -111,6 +111,7 @@ class AKONADI_KMIME_EXPORT LocalFolders : public QObject
 
   private:
     friend class LocalFoldersRequestJob;
+    friend class LocalFoldersRequestJobPrivate;
     friend class LocalFoldersPrivate;
 
 #if 1 // TODO do this only if building tests:

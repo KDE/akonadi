@@ -27,6 +27,8 @@
 
 namespace Akonadi {
 
+class LocalFoldersRequestJobPrivate;
+
 /**
   TODO
 
@@ -36,6 +38,8 @@ namespace Akonadi {
 class AKONADI_KMIME_EXPORT LocalFoldersRequestJob : public TransactionSequence
 {
   Q_OBJECT
+
+  friend class LocalFoldersRequestJobPrivate;
 
   public:
     explicit LocalFoldersRequestJob( QObject *parent = 0 );
@@ -51,9 +55,7 @@ class AKONADI_KMIME_EXPORT LocalFoldersRequestJob : public TransactionSequence
     virtual void slotResult( KJob *job );
 
   private:
-    class Private;
-    friend class Private;
-    Private *const d;
+    LocalFoldersRequestJobPrivate *const d;
 
     Q_PRIVATE_SLOT( d, void lockResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void releaseLock() )

@@ -36,10 +36,10 @@ typedef LocalFoldersSettings Settings;
 /**
   @internal
 */
-class Akonadi::LocalFoldersRequestJob::Private
+class Akonadi::LocalFoldersRequestJobPrivate
 {
   public:
-    Private( LocalFoldersRequestJob *qq );
+    LocalFoldersRequestJobPrivate( LocalFoldersRequestJob *qq );
 
     bool isEverythingReady();
     void lockResult( KJob *job ); // slot
@@ -65,7 +65,7 @@ class Akonadi::LocalFoldersRequestJob::Private
 
 
 
-LocalFoldersRequestJob::Private::Private( LocalFoldersRequestJob *qq )
+LocalFoldersRequestJobPrivate::LocalFoldersRequestJobPrivate( LocalFoldersRequestJob *qq )
   : q( qq )
   , pendingCreateJobs( 0 )
   , requestingDefaultFolders( false )
@@ -77,7 +77,7 @@ LocalFoldersRequestJob::Private::Private( LocalFoldersRequestJob *qq )
   defaultFolders = falseBoolList;
 }
 
-bool LocalFoldersRequestJob::Private::isEverythingReady()
+bool LocalFoldersRequestJobPrivate::isEverythingReady()
 {
   LocalFolders *lf = LocalFolders::self();
 
@@ -102,7 +102,7 @@ bool LocalFoldersRequestJob::Private::isEverythingReady()
   return true;
 }
 
-void LocalFoldersRequestJob::Private::lockResult( KJob *job )
+void LocalFoldersRequestJobPrivate::lockResult( KJob *job )
 {
   if( job->error() ) {
     kWarning() << "Failed to get lock:" << job->errorString();
@@ -112,14 +112,14 @@ void LocalFoldersRequestJob::Private::lockResult( KJob *job )
   if( requestingDefaultFolders ) {
     // If default folders are requested, deal with that first.
     DefaultResourceJob *resjob = new DefaultResourceJob( q );
-    connect( resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)) );
+    QObject::connect( resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)) );
   } else {
     // If no default folders are requested, go straight to the next step.
     nextResource();
   }
 }
 
-void LocalFoldersRequestJob::Private::releaseLock()
+void LocalFoldersRequestJobPrivate::releaseLock()
 {
   const bool ok = Akonadi::releaseLock();
   if( !ok ) {
@@ -127,7 +127,7 @@ void LocalFoldersRequestJob::Private::releaseLock()
   }
 }
 
-void LocalFoldersRequestJob::Private::nextResource()
+void LocalFoldersRequestJobPrivate::nextResource()
 {
   if( foldersForResource.isEmpty() ) {
     kDebug() << "All done! Comitting.";
@@ -151,17 +151,17 @@ void LocalFoldersRequestJob::Private::nextResource()
     q->commit();
 
     // Release the lock once the transaction has been committed.
-    connect( q, SIGNAL(result(KJob*)), q, SLOT(releaseLock()) );
+    QObject::connect( q, SIGNAL(result(KJob*)), q, SLOT(releaseLock()) );
   } else {
     const QString resourceId = foldersForResource.keys().first();
     kDebug() << "A resource is done," << foldersForResource.count()
              << "more to do. Now doing resource" << resourceId;
     ResourceScanJob *resjob = new ResourceScanJob( resourceId, q );
-    connect( resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)) );
+    QObject::connect( resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)) );
   }
 }
 
-void LocalFoldersRequestJob::Private::resourceScanResult( KJob *job )
+void LocalFoldersRequestJobPrivate::resourceScanResult( KJob *job )
 {
   Q_ASSERT( dynamic_cast<ResourceScanJob*>( job ) );
   ResourceScanJob *resjob = static_cast<ResourceScanJob*>( job );
@@ -186,7 +186,7 @@ void LocalFoldersRequestJob::Private::resourceScanResult( KJob *job )
   }
 }
 
-void LocalFoldersRequestJob::Private::createRequestedFolders( ResourceScanJob *resjob,
+void LocalFoldersRequestJobPrivate::createRequestedFolders( ResourceScanJob *resjob,
                                           QList<bool> &requestedFolders )
 {
   Q_ASSERT( requestedFolders.count() == LocalFolders::LastDefaultType );
@@ -221,7 +221,7 @@ void LocalFoldersRequestJob::Private::createRequestedFolders( ResourceScanJob *r
   }
 }
 
-void LocalFoldersRequestJob::Private::collectionCreateResult( KJob *job )
+void LocalFoldersRequestJobPrivate::collectionCreateResult( KJob *job )
 {
   if( job->error() ) {
     kWarning() << "Failed CollectionCreateJob." << job->errorString();
@@ -245,7 +245,7 @@ void LocalFoldersRequestJob::Private::collectionCreateResult( KJob *job )
 
 LocalFoldersRequestJob::LocalFoldersRequestJob( QObject *parent )
   : TransactionSequence( parent )
-  , d( new Private( this ) )
+  , d( new LocalFoldersRequestJobPrivate( this ) )
 {
 }
 
