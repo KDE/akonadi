@@ -220,18 +220,9 @@ bool ContactGroupEditor::Private::storeContactGroup( KABC::ContactGroup &group )
         if ( text.simplified().isEmpty() ) // we handle empty members as 'to be removed'
           continue;
 
-        QString fullName, email;
-        KABC::Addressee::parseEmailAddress( text, fullName, email );
-
-        if ( fullName.isEmpty() ) {
-          KMessageBox::error( mParent, i18n( "The contact '%1' is missing a name.", text ) );
-          return false;
-        }
-        if ( email.isEmpty() ) {
-          KMessageBox::error( mParent, i18n( "The contact '%1' is missing an email address.", text ) );
-          return false;
-        }
-
+        KMessageBox::error( mParent, i18n( "<qt>The contact '%1' has not the correct format.<br/>"
+                                           "Use <b>Name &lt;email@address&gt;</b></qt>", text ) );
+        return false;
       } else {
         group.append( data );
       }
