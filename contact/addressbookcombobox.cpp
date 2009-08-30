@@ -62,17 +62,17 @@ class AddressBookComboBox::Private
         mMonitor->setMimeTypeMonitored( mimeType, true );
 
       mModel = new EntityTreeModel( Session::defaultSession(), mMonitor );
-      mModel->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
+      mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
-      KDescendantsProxyModel *descProxy = new KDescendantsProxyModel( parent );
-      descProxy->setSourceModel( mModel );
+      KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
+      proxyModel->setSourceModel( mModel );
 
       // filter for collections that support saving of contacts / contact groups
       CollectionFilterModel *filterModel = new CollectionFilterModel( mParent );
       foreach ( const QString &contentMimeType, contentTypes )
         filterModel->addContentMimeTypeFilter( contentMimeType );
       filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
-      filterModel->setSourceModel( descProxy );
+      filterModel->setSourceModel( proxyModel );
 
       mComboBox->setModel( filterModel );
     }
