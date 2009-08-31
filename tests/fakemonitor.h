@@ -22,11 +22,21 @@
 
 #include "monitor.h"
 
+class EventQueue;
+class FakeAkonadiServer;
+
 class FakeMonitor : public Akonadi::Monitor
 {
   Q_OBJECT
 public:
-  FakeMonitor(QObject* parent = 0);
+  FakeMonitor(EventQueue *eventQueue, FakeAkonadiServer *fakeServer, QObject* parent = 0);
+
+public slots:
+  void processNextEvent();
+
+private:
+  EventQueue *m_eventQueue;
+  FakeAkonadiServer *m_fakeServer;
 
 };
 

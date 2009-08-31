@@ -75,7 +75,6 @@ set( akonadikde_LIB_SRC
   collectionsync.cpp
   collectionview.cpp
   control.cpp
-  descendantsproxymodel.cpp
   entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
@@ -118,7 +117,6 @@ set( akonadikde_LIB_SRC
   resourceselectjob.cpp
   resourcesynchronizationjob.cpp
   searchcreatejob.cpp
-  selectionproxymodel.cpp
   selftestdialog.cpp
   session.cpp
   servermanager.cpp
@@ -212,7 +210,6 @@ install( FILES
   collectionstatisticsjob.h
   collectionview.h
   control.h
-  descendantsproxymodel.h
   entity.h
   entitydisplayattribute.h
   entityhiddenattribute.h
@@ -247,7 +244,6 @@ install( FILES
   resourcebase.h
   resourcesynchronizationjob.h
   searchcreatejob.h
-  selectionproxymodel.h
   session.h
   servermanager.h
   standardactionmanager.h

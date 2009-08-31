@@ -37,7 +37,7 @@ endmacro(add_akonadi_demo)
 macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test} fakesession.cpp fakemonitor.cpp fakeserver.cpp)
+  kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test} fakesession.cpp fakemonitor.cpp fakeserver.cpp akonadieventqueue.cpp modelspy.cpp)
   target_link_libraries(${_name} akonadi-kde akonadi-kmime ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
 endmacro(add_akonadi_test)
 
