@@ -1,6 +1,7 @@
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/kabc
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
@@ -52,14 +53,16 @@ qt4_wrap_ui(akonadicontact_LIB_SRC contactgroupeditor.ui)
 
 kde4_add_library(akonadi-contact SHARED ${akonadicontact_LIB_SRC})
 
-target_link_libraries(akonadi-contact ${KDEPIMLIBS_AKONADI_LIBS}
-                                      ${KDEPIMLIBS_KABC_LIBS}
+target_link_libraries(akonadi-contact akonadi-kde
+                                      kabc
+                                      kcal
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
                                       ${KDE4_PHONON_LIBS})
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
-                                      ${KDEPIMLIBS_AKONADI_LIBS}
-                                      ${KDEPIMLIBS_KABC_LIBS}
+                                      akonadi-kde
+                                      kabc
+                                      kcal
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
                                       ${KDE4_PHONON_LIBS})
