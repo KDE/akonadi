@@ -23,7 +23,7 @@
 #include <QHash>
 #include <QString>
 
-#include <Akonadi/Collection>
+#include "akonadi/collection.h"
 
 class KJob;
 

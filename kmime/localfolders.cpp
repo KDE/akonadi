@@ -30,7 +30,7 @@
 #include <KDebug>
 #include <KGlobal>
 
-#include <Akonadi/Monitor>
+#include "akonadi/monitor.h"
 
 using namespace Akonadi;
 
