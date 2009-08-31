@@ -28,7 +28,7 @@
 #include <akonadi/agenttype.h>
 #include <akonadi/agentmanager.h>
 #include <akonadi/qtest_akonadi.h>
-#include <akonadi/kmime/localfolders.h>
+//#include <akonadi/kmime/localfolders.h>
 
 #define TIMEOUT_SECONDS 20
 #define MAXCOUNT 10
@@ -135,6 +135,10 @@ void RaceTest::testMultipleProcesses()
     kDebug() << "Checking exit status of process" << i + 1 << "of" << count;
     QCOMPARE( finishedSpy[i]->count(), 1 );
     QList<QVariant> args = finishedSpy[i]->takeFirst();
+    if( args[0].toInt() != 2 ) {
+      kDebug() << "Exit status" << args[0].toInt() << ", expected 2. Timeout, gdb master!";
+      QTest::qWait( 1000*1000 );
+    }
     QCOMPARE( args[0].toInt(), 2 );
   }
 

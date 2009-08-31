@@ -1,5 +1,8 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
+# We need localfolderssettings.h which is a generated header.
+# include_directories( ${CMAKE_CURRENT_BINARY_DIR}/.. )
+
 # TODO apparently QTEST_AKONADIMAIN doesn't like NO_CASTs...
 remove_definitions( -DQT_NO_CAST_FROM_ASCII )
 remove_definitions( -DQT_NO_CAST_TO_ASCII )
@@ -50,6 +53,7 @@ endmacro(add_akonadi_isolated_test)
 
 
 
-add_akonadi_isolated_test( customfoldertest.cpp )
+add_akonadi_isolated_test( localfolderstest.cpp )
+add_akonadi_isolated_test( localfoldersrequestjobtest.cpp )
 add_akonadi_isolated_test( racetest.cpp )
 

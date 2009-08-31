@@ -33,4 +33,20 @@
 # endif
 #endif
 
+#ifdef COMPILING_TESTS
+# ifndef AKONADI_KMIME_TEST_EXPORT
+#  if defined(MAKE_AKONADI_KMIME_LIB)
+    /* We are building this library */
+#   define AKONADI_KMIME_TEST_EXPORT KDE_EXPORT
+#  else
+    /* We are using this library */
+#   define AKONADI_KMIME_TEST_EXPORT KDE_IMPORT
+#  endif
+# endif
+#else
+# ifndef AKONADI_KMIME_TEST_EXPORT
+#  define AKONADI_KMIME_TEST_EXPORT
+# endif
+#endif
+
 #endif

@@ -19,70 +19,78 @@
 
 #include "localfolders.h"
 
-#include "localfoldersbuildjob_p.h"
+#include "localfolders_p.h"
+#include "localfolderattribute.h"
 #include "localfolderssettings.h"
 
-#include <QDBusConnection>
+#include <QHash>
 #include <QObject>
 #include <QSet>
-#include <QTimer>
 
 #include <KDebug>
 #include <KGlobal>
-#include <KLocalizedString>
-#include <KStandardDirs>
 
-#include <akonadi/monitor.h>
-
-#define DBUS_SERVICE_NAME QLatin1String( "org.kde.pim.LocalFolders" )
+#include <Akonadi/Monitor>
 
 using namespace Akonadi;
 
 typedef LocalFoldersSettings Settings;
 
-/**
-  @internal
-*/
-class Akonadi::LocalFoldersPrivate
-{
-  public:
-    LocalFoldersPrivate();
-    ~LocalFoldersPrivate();
-
-    LocalFolders *instance;
-    bool ready;
-    bool preparing;
-    bool scheduled;
-    bool isMainInstance;
-    Collection rootMaildir;
-    Collection::List defaultFolders;
-    QSet<KJob*> pendingJobs;
-    Monitor *monitor;
-
-    /**
-      If this is the main instance, attempts to build and fetch the local
-      folder structure.  Otherwise, it waits for the structure to be created
-      by the main instance, and then just fetches it.
-
-      Will emit foldersReady() when the folders are ready.
-    */
-    void prepare(); // slot
-
-    // slots:
-    void buildResult( KJob *job );
-    void collectionRemoved( const Collection &col );
-
-    /**
-      Schedules a prepare() in 1 second.
-      Called when this is not the main instance and we need to wait, or when
-      something disappeared and needs to be recreated.
-    */
-    void schedulePrepare();
-
-};
-
-
 K_GLOBAL_STATIC( LocalFoldersPrivate, sInstance )
+
+LocalFoldersPrivate::LocalFoldersPrivate()
+  : instance( new LocalFolders( this ) )
+  , batchMode( false )
+{
+  for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
+    emptyFolderList.append( Collection( -1 ) );
+  }
+
+  monitor = new Monitor( instance );
+  QObject::connect( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+      instance, SLOT(collectionRemoved(Akonadi::Collection)) );
+}
+
+LocalFoldersPrivate::~LocalFoldersPrivate()
+{
+  delete instance;
+}
+
+void LocalFoldersPrivate::emitChanged( const QString &resourceId )
+{
+  if( batchMode ) {
+    toEmitChangedFor.insert( resourceId );
+  } else {
+    kDebug() << "Emitting changed for" << resourceId;
+    emit instance->foldersChanged( resourceId );
+    if( resourceId == Settings::defaultResourceId() ) {
+      kDebug() << "Emitting defaultFoldersChanged.";
+      emit instance->defaultFoldersChanged();
+    }
+  }
+}
+
+void LocalFoldersPrivate::collectionRemoved( const Collection &col )
+{
+  kDebug() << "Collection" << col.id() << "resource" << col.resource();
+  if( foldersForResource.contains( col.resource() ) ) {
+    Collection::List &list = foldersForResource[ col.resource() ];
+    int others = 0;
+    for( int i = 0; i < LocalFolders::LastDefaultType; i++ ) {
+      if( list[i] == col ) {
+        list[i] = Collection( -1 );
+        emitChanged( col.resource() );
+      } else if( list[i].isValid() ) {
+        others++;
+      }
+    }
+    if( others == 0 ) {
+      // This resource has no more folders, so remove it completely.
+      foldersForResource.remove( col.resource() );
+    }
+  }
+}
+
 
 
 LocalFolders::LocalFolders( LocalFoldersPrivate *dd )
@@ -96,188 +104,108 @@ LocalFolders *LocalFolders::self()
   return sInstance->instance;
 }
 
-void LocalFolders::fetch()
+bool LocalFolders::hasFolder( int type, const QString &resourceId ) const
 {
-  d->prepare();
-}
+  kDebug() << "Type" << type << "resourceId" << resourceId;
 
-bool LocalFolders::isReady() const
-{
-  return d->ready;
-}
-
-Collection LocalFolders::root() const
-{
-  return folder( Root );
-}
-
-Collection LocalFolders::inbox() const
-{
-  return folder( Inbox );
-}
-
-Collection LocalFolders::outbox() const
-{
-  return folder( Outbox );
-}
-
-Collection LocalFolders::sentMail() const
-{
-  return folder( SentMail );
-}
-
-Collection LocalFolders::trash() const
-{
-  return folder( Trash );
-}
-
-Collection LocalFolders::drafts() const
-{
-  return folder( Drafts );
-}
-
-Collection LocalFolders::templates() const
-{
-  return folder( Templates );
-}
-
-Collection LocalFolders::folder( int type ) const
-{
-  Q_ASSERT( d->ready );
   Q_ASSERT( type >= 0 && type < LastDefaultType );
-  return d->defaultFolders[ type ];
+  if( !d->foldersForResource.contains( resourceId ) ) {
+    // We do not know any folders in this resource.
+    return false;
+  }
+  return d->foldersForResource[ resourceId ][ type ].isValid();
 }
 
-
-
-LocalFoldersPrivate::LocalFoldersPrivate()
-  : instance( new LocalFolders(this) )
+Collection LocalFolders::folder( int type, const QString &resourceId ) const
 {
-  isMainInstance = false;
-  ready = false;
-  preparing = false;
-  monitor = 0;
-  prepare();
+  Q_ASSERT( type >= 0 && type < LastDefaultType );
+  if( !d->foldersForResource.contains( resourceId ) ) {
+    // We do not know any folders in this resource.
+    return Collection( -1 );
+  }
+  return d->foldersForResource[ resourceId ][ type ];
 }
 
-LocalFoldersPrivate::~LocalFoldersPrivate()
+bool LocalFolders::registerFolder( const Collection &collection )
 {
-  delete instance;
+  if( !collection.isValid() ) {
+    kWarning() << "Invalid collection.";
+    return false;
+  }
+
+  const QString &resourceId = collection.resource();
+  if( resourceId.isEmpty() ) {
+    kWarning() << "Collection has empty resourceId.";
+    return false;
+  }
+
+  if( !collection.hasAttribute<LocalFolderAttribute>() ) {
+    kWarning() << "Collection has no LocalFolderAttribute.";
+    return false;
+  }
+  const LocalFolderAttribute *attr = collection.attribute<LocalFolderAttribute>();
+  const int type = attr->folderType();
+  Q_ASSERT( type >= 0 && type < LastDefaultType );
+
+  if( !d->foldersForResource.contains( resourceId ) ) {
+    // We do not know any folders in this resource yet.
+    Q_ASSERT( d->emptyFolderList.count() == LastDefaultType );
+    d->foldersForResource[ resourceId ] = d->emptyFolderList;
+  }
+
+  if( d->foldersForResource[ resourceId ][ type ] != collection ) {
+    d->monitor->setCollectionMonitored( d->foldersForResource[ resourceId ][ type ], false );
+    d->monitor->setCollectionMonitored( collection, true );
+    d->foldersForResource[ resourceId ][ type ] = collection;
+    d->emitChanged( resourceId );
+  }
+  kDebug() << "Registered collection" << collection.id() << "as folder of type" << type
+    << "in resource" << resourceId;
+  return true;
 }
 
-void LocalFoldersPrivate::prepare()
+QString LocalFolders::defaultResourceId() const
 {
-  if( ready ) {
-    kDebug() << "Already ready.  Emitting foldersReady().";
-    emit instance->foldersReady();
-    return;
-  }
-  if( preparing ) {
-    kDebug() << "Already preparing.";
-    return;
-  }
-
-  // Try to grab main instance status (if previous main instance quit).
-  if( !isMainInstance ) {
-    isMainInstance = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
-  }
-
-  // Fetch / build the folder structure.
-  {
-    kDebug() << "Preparing. isMainInstance" << isMainInstance;
-    preparing = true;
-    scheduled = false;
-    LocalFoldersBuildJob *bjob = new LocalFoldersBuildJob( isMainInstance, instance );
-    QObject::connect( bjob, SIGNAL(result(KJob*)), instance, SLOT(buildResult(KJob*)) );
-    // auto-starts
-  }
+  return Settings::defaultResourceId();
 }
 
-void LocalFoldersPrivate::buildResult( KJob *job )
+bool LocalFolders::hasDefaultFolder( int type ) const
 {
-  if( job->error() ) {
-    kDebug() << "BuildJob failed with error" << job->errorString();
-#if 0
-    // FIXME Temporary workaround for the duplicate-entry problem causing lots
-    //       of maildir instances to be created.
-    schedulePrepare();
-#endif
-    return;
-  }
+  return hasFolder( type, defaultResourceId() );
+}
 
-  // Get the folders from the job.
-  {
-    Q_ASSERT( dynamic_cast<LocalFoldersBuildJob*>( job ) );
-    LocalFoldersBuildJob *bjob = static_cast<LocalFoldersBuildJob*>( job );
-    Q_ASSERT( defaultFolders.isEmpty() );
-    defaultFolders = bjob->defaultFolders();
-  }
+Collection LocalFolders::defaultFolder( int type ) const
+{
+  return folder( type, defaultResourceId() );
+}
 
-  // Verify everything.
-  {
-    Q_ASSERT( defaultFolders.count() == LocalFolders::LastDefaultType );
-    Collection::Id rootId = defaultFolders[ LocalFolders::Root ].id();
-    Q_ASSERT( rootId >= 0 );
-    for( int type = 1; type < LocalFolders::LastDefaultType; type++ ) {
-      Q_ASSERT( defaultFolders[ type ].isValid() );
-      Q_ASSERT( defaultFolders[ type ].parent() == rootId );
+void LocalFolders::forgetFoldersForResource( const QString &resourceId )
+{
+  if( d->foldersForResource.contains( resourceId ) ) {
+    foreach( const Collection &col, d->foldersForResource[ resourceId ] ) {
+      d->monitor->setCollectionMonitored( col, false );
     }
-  }
-
-  // Connect monitor.
-  {
-    Q_ASSERT( monitor == 0 );
-    monitor = new Monitor( instance );
-    monitor->setResourceMonitored( Settings::resourceId().toAscii() );
-    QObject::connect( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
-        instance, SLOT(collectionRemoved(Akonadi::Collection)) );
-  }
-
-  // Emit ready.
-  {
-    kDebug() << "Local folders ready.";
-    Q_ASSERT( !ready );
-    ready = true;
-    preparing = false;
-    emit instance->foldersReady();
+    d->foldersForResource.remove( resourceId );
+    d->emitChanged( resourceId );
   }
 }
 
-void LocalFoldersPrivate::collectionRemoved( const Akonadi::Collection &col )
+void LocalFolders::beginBatchRegister()
 {
-  kDebug() << "id" << col.id();
-  if( defaultFolders.contains( col ) ) {
-    // These are undeletable folders.  If one of them got removed, it means
-    // the entire resource has been removed.
-    schedulePrepare();
-  }
+  Q_ASSERT( !d->batchMode );
+  d->batchMode = true;
+  Q_ASSERT( d->toEmitChangedFor.isEmpty() );
 }
 
-void LocalFoldersPrivate::schedulePrepare()
+void LocalFolders::endBatchRegister()
 {
-  if( scheduled ) {
-    kDebug() << "Prepare already scheduled.";
-    return;
+  Q_ASSERT( d->batchMode );
+  d->batchMode = false;
+  
+  foreach( const QString &resourceId, d->toEmitChangedFor ) {
+    d->emitChanged( resourceId );
   }
-
-  // Clean up.
-  {
-    if( monitor ) {
-      monitor->disconnect( instance );
-      monitor->deleteLater();
-      monitor = 0;
-    }
-    defaultFolders.clear();
-  }
-
-  // Schedule prepare in 1s.
-  {
-    kDebug() << "Scheduling prepare.";
-    ready = false;
-    preparing = false;
-    scheduled = true;
-    QTimer::singleShot( 1000, instance, SLOT( prepare() ) );
-  }
+  d->toEmitChangedFor.clear();
 }
 
 #include "localfolders.moc"

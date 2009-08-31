@@ -12,13 +12,21 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO
 
 set( kmimeakonadi_LIB_SRC
   addressattribute.cpp
+  localfolderattribute.cpp
   localfolders.cpp
-  localfoldersbuildjob.cpp
+  localfoldershelperjobs.cpp
+  localfoldersrequestjob.cpp
   messagefolderattribute.cpp
   messagemodel.cpp
   messageparts.cpp
   messagethreadingattribute.cpp
   messagethreaderproxymodel.cpp
+)
+
+# TODO figure out how to only add this if we're building unit tests.
+set( kmimeakonadi_LIB_SRC
+  ${kmimeakonadi_LIB_SRC}
+  localfolderstesting.cpp
 )
 
 kde4_add_kcfg_files( kmimeakonadi_LIB_SRC localfolderssettings.kcfgc )
@@ -34,7 +42,9 @@ install(TARGETS akonadi-kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_
 
 install( FILES
   addressattribute.h
+  localfolderattribute.h
   localfolders.h
+  localfoldersrequestjob.h
   akonadi-kmime_export.h
   messagefolderattribute.h
   messagemodel.h

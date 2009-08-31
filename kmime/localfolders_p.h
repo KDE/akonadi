@@ -17,31 +17,41 @@
     02110-1301, USA.
 */
 
-#ifndef FOLDERSREQUESTER_H
-#define FOLDERSREQUESTER_H
+#ifndef AKONADI_LOCALFOLDERS_P_H
+#define AKONADI_LOCALFOLDERS_P_H
 
-#include <QObject>
+#include <QHash>
+#include <QString>
+
+#include <Akonadi/Collection>
 
 class KJob;
 
+namespace Akonadi {
+
+class LocalFolders;
+class Monitor;
+
 /**
-  This class requests some LocalFolders, then exits the app with a status of 2
-  if they were delivered OK, or 1 if they were not.
-
-  NOTE: The non-standard exit status 2 in case of success is to make feel more
-  comfortable than checking for zero (I actually had a bug causing it to always
-  return zero).
+  @internal
 */
-class Requester : public QObject
+class LocalFoldersPrivate
 {
-  Q_OBJECT
-
   public:
-    Requester();
+    LocalFoldersPrivate();
+    ~LocalFoldersPrivate();
 
-  private slots:
-    void requestResult( KJob *job );
+    void emitChanged( const QString &resourceId );
+    void collectionRemoved( const Collection &col ); // slot
+
+    LocalFolders *instance;
+    Collection::List emptyFolderList;
+    QHash<QString,Collection::List> foldersForResource;
+    bool batchMode;
+    QSet<QString> toEmitChangedFor;
+    Monitor *monitor;
 };
 
+} // namespace Akonadi
 
-#endif
+#endif // AKONADI_LOCALFOLDERS_P_H

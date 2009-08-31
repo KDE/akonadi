@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+    Copyright 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,31 +17,38 @@
     02110-1301, USA.
 */
 
-#ifndef FOLDERSREQUESTER_H
-#define FOLDERSREQUESTER_H
+#ifndef LOCALFOLDERSTEST_H
+#define LOCALFOLDERSTEST_H
 
-#include <QObject>
-
-class KJob;
+#include <QtCore/QObject>
 
 /**
-  This class requests some LocalFolders, then exits the app with a status of 2
-  if they were delivered OK, or 1 if they were not.
-
-  NOTE: The non-standard exit status 2 in case of success is to make feel more
-  comfortable than checking for zero (I actually had a bug causing it to always
-  return zero).
-*/
-class Requester : public QObject
+ */
+class LocalFoldersTest : public QObject
 {
   Q_OBJECT
 
-  public:
-    Requester();
+  private Q_SLOTS:
+    void initTestCase();
 
-  private slots:
-    void requestResult( KJob *job );
+    // Tests for GetLockJob:
+    void testLock();
+
+    // Tests for LocalFolders:
+    void testInitialState();
+    void testRegistrationErrors();
+    void testDefaultFolderRegistration();
+    void testCustomFolderRegistration();
+    void testCollectionDelete();
+    void testBatchRegister();
+
+    // Tests for ResourceScanJob:
+    void testResourceScanErrors();
+    void testResourceScan();
+
+    // Tests for DefaultResourceJob:
+    void testDefaultResourceJob();
+    void testRecoverDefaultResource();
 };
-
 
 #endif
