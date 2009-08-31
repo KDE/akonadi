@@ -21,7 +21,7 @@
 #ifndef CONTACTEDITOR_H
 #define CONTACTEDITOR_H
 
-#include "abstractcontacteditorwidget.h"
+#include "abstractcontacteditorwidget_p.h"
 
 namespace KABC
 {

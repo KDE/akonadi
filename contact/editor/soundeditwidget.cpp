@@ -217,3 +217,5 @@ SoundLoader* SoundEditWidget::soundLoader()
 
   return mSoundLoader;
 }
+
+#include "soundeditwidget.moc"

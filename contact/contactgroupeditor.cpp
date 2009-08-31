@@ -20,7 +20,7 @@
 #include "contactgroupeditor.h"
 
 #include "addressbookselectiondialog.h"
-#include "autoqpointer.h"
+#include "autoqpointer_p.h"
 #include "contactcompletionmodel_p.h"
 #include "contactgrouplineedit_p.h"
 #include "ui_contactgroupeditor.h"

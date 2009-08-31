@@ -20,7 +20,7 @@
 
 #include "addressbookselectiondialog.h"
 
-#include "addressbookcombobox.h"
+#include "addressbookcombobox_p.h"
 
 #include <akonadi/item.h>
 #include <klocale.h>

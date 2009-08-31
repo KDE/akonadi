@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "addressbookcombobox.h"
+#include "addressbookcombobox_p.h"
 
 #include "collectionfiltermodel_p.h"
 
@@ -131,4 +131,4 @@ Akonadi::Collection AddressBookComboBox::selectedAddressBook() const
     return Akonadi::Collection();
 }
 
-#include "addressbookcombobox.moc"
+#include "addressbookcombobox_p.moc"

@@ -20,7 +20,7 @@
 
 #include "contacteditordialog.h"
 
-#include "addressbookcombobox.h"
+#include "addressbookcombobox_p.h"
 #include "contacteditor.h"
 #include "editor/contacteditorwidget.h"
 

@@ -20,7 +20,7 @@
 
 #include "contactgroupeditordialog.h"
 
-#include "addressbookcombobox.h"
+#include "addressbookcombobox_p.h"
 #include "contactgroupeditor.h"
 
 #include <akonadi/item.h>

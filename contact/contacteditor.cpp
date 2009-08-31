@@ -21,9 +21,9 @@
 
 #include "contacteditor.h"
 
-#include "abstractcontacteditorwidget.h"
+#include "abstractcontacteditorwidget_p.h"
 #include "addressbookselectiondialog.h"
-#include "autoqpointer.h"
+#include "autoqpointer_p.h"
 #include "contactmetadata_p.h"
 #include "contactmetadataattribute_p.h"
 
