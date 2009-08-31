@@ -14,6 +14,7 @@ set( kmimeakonadi_LIB_SRC
   addressattribute.cpp
   localfolders.cpp
   localfoldersbuildjob.cpp
+  messagefolderattribute.cpp
   messagemodel.cpp
   messageparts.cpp
   messagethreadingattribute.cpp
@@ -35,6 +36,7 @@ install( FILES
   addressattribute.h
   localfolders.h
   akonadi-kmime_export.h
+  messagefolderattribute.h
   messagemodel.h
   messageparts.h
   messagethreadingattribute.h
