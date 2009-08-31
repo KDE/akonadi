@@ -30,7 +30,34 @@ namespace Akonadi {
 class LocalFoldersRequestJobPrivate;
 
 /**
-  TODO
+  @short A job to request LocalFolders.
+
+  Use this job to request the LocalFolders you need. You can request both
+  default LocalFolders and LocalFolders in a given resource. The default
+  LocalFolders resource is created when the first default LocalFolder is
+  requested, but if a LocalFolder in a custom resource is requested, this
+  job expects that resource to exist already.
+
+  If the folders you requested already exist, this job simply succeeds.
+  Otherwise, it creates the required collections and registers them with
+  LocalFolders.
+
+  Example of usage:
+
+  In your class constructor:
+  @code
+  LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
+  rjob->requestDefaultFolder( LocalFolders::Outbox );
+  connect( rjob, SIGNAL(result(KJob*)), this, SLOT(localFoldersRequestResult(KJob*)) );
+  rjob->start();
+  @endcode
+
+  And in your localFoldersRequestResult( KJob *job ) slot:
+  @code
+  if( job->error() ) { ... }
+  Collection col = LocalFolders::self()->defaultFolder( LocalFolders::Outbox );
+  Q_ASSERT( col.isValid() );
+  @endcode
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
@@ -42,10 +69,27 @@ class AKONADI_KMIME_EXPORT LocalFoldersRequestJob : public TransactionSequence
   friend class LocalFoldersRequestJobPrivate;
 
   public:
+    /**
+      Creates a new LocalFoldersRequestJob.
+    */
     explicit LocalFoldersRequestJob( QObject *parent = 0 );
+
+    /**
+      Destroys this LocalFoldersRequestJob.
+    */
     ~LocalFoldersRequestJob();
 
+    /**
+      Requests a LocalFolder of type @p type in the default resource.
+      @param type The type of LocalFolder requested.
+    */
     void requestDefaultFolder( int type );
+
+    /**
+      Requests a LocalFolder of type @p type in the given resource.
+      @param type The type of LocalFolder requested.
+      @param resourceId The resource ID of the LocalFolder requested.
+    */
     void requestFolder( int type, const QString &resourceId );
 
   protected:
