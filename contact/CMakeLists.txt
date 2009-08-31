@@ -17,6 +17,7 @@ set(akonadicontact_editor_SRCS
   editor/geoeditwidget.cpp
   editor/imagewidget.cpp
   editor/imeditwidget.cpp
+  editor/kdatepickerpopup.cpp
   editor/nameeditwidget.cpp
   editor/phoneeditwidget.cpp
   editor/secrecyeditwidget.cpp
@@ -53,15 +54,35 @@ kde4_add_library(akonadi-contact SHARED ${akonadicontact_LIB_SRC})
 
 target_link_libraries(akonadi-contact ${KDEPIMLIBS_AKONADI_LIBS}
                                       ${KDEPIMLIBS_KABC_LIBS}
-                                      ${KDEPIMLIBS_KCAL_LIBS}
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
-                                      ${KDE4_PHONON_LIBS}
-                                      kdepim-copy)
-target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDE4_KDEUI_LIBS})
+                                      ${KDE4_PHONON_LIBS})
+target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
+                                      ${KDEPIMLIBS_AKONADI_LIBS}
+                                      ${KDEPIMLIBS_KABC_LIBS}
+                                      ${KDE4_KDEUI_LIBS}
+                                      ${KDE4_KIO_LIBS}
+                                      ${KDE4_PHONON_LIBS})
 
 set_target_properties(akonadi-contact PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
 install(TARGETS akonadi-contact ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES editor/pics/world.jpg DESTINATION ${DATA_INSTALL_DIR}/akonadi/contact/pics)
 install(FILES editor/data/zone.tab DESTINATION ${DATA_INSTALL_DIR}/akonadi/contact/data)
+
+install( FILES
+  akonadi-contact_export.h
+  addressbookselectiondialog.h
+  contacteditor.h
+  contacteditordialog.h
+  contactgroupeditor.h
+  contactgroupeditordialog.h
+  contactgroupexpandjob.h
+  contactgroupsearchjob.h
+  contactgroupviewer.h
+  contactgroupviewerdialog.h
+  contactsearchjob.h
+  contactviewer.h
+  contactviewerdialog.h
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/contact COMPONENT Devel
+)

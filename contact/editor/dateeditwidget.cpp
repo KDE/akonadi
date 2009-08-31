@@ -20,11 +20,12 @@
 
 #include "dateeditwidget.h"
 
+#include "kdatepickerpopup_p.h"
+
 #include <kdatepicker.h>
 #include <kglobal.h>
 #include <kicon.h>
 #include <klocale.h>
-#include <libkdepim-copy/kdatepickerpopup.h>
 
 #include <QtGui/QContextMenuEvent>
 #include <QtGui/QHBoxLayout>
