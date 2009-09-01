@@ -26,6 +26,7 @@
 #include "autoqpointer_p.h"
 #include "contactmetadata_p.h"
 #include "contactmetadataattribute_p.h"
+#include "editor/contacteditorwidget.h"
 
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
@@ -45,9 +46,18 @@ using namespace Akonadi;
 class ContactEditor::Private
 {
   public:
-    Private( ContactEditor *parent )
-      : mParent( parent ), mMonitor( 0 ), mReadOnly( false )
+    Private( ContactEditor::Mode mode, AbstractContactEditorWidget *editorWidget, ContactEditor *parent )
+      : mParent( parent ), mMode( mode ), mMonitor( 0 ), mReadOnly( false )
     {
+      if ( editorWidget )
+        mEditorWidget = editorWidget;
+      else
+        mEditorWidget = new ContactEditorWidget();
+
+      QVBoxLayout *layout = new QVBoxLayout( mParent );
+      layout->setMargin( 0 );
+      layout->setSpacing( 0 );
+      layout->addWidget( mEditorWidget );
     }
 
     ~Private()
@@ -177,16 +187,14 @@ void ContactEditor::Private::setupMonitor()
 }
 
 
-ContactEditor::ContactEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent )
-  : QWidget( parent ), d( new Private( this ) )
+ContactEditor::ContactEditor( Mode mode, QWidget *parent )
+  : QWidget( parent ), d( new Private( mode, 0, this ) )
 {
-  d->mMode = mode;
-  d->mEditorWidget = editorWidget;
+}
 
-  QVBoxLayout *layout = new QVBoxLayout( this );
-  layout->setMargin( 0 );
-  layout->setSpacing( 0 );
-  layout->addWidget( d->mEditorWidget );
+ContactEditor::ContactEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent )
+  : QWidget( parent ), d( new Private( mode, editorWidget, this ) )
+{
 }
 
 ContactEditor::~ContactEditor()
