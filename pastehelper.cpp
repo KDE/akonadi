@@ -42,16 +42,38 @@ bool PasteHelper::canPaste(const QMimeData * mimeData, const Collection & collec
   if ( !mimeData || !collection.isValid() )
     return false;
 
-  // TODO check acls depending on mimetype
-  if ( (collection.rights() & (Collection::CanCreateItem | Collection::CanCreateCollection) ) == 0 )
-    return false;
+  // check that the target collection has the rights to
+  // create the pasted items resp. collections
+  Collection::Rights neededRights = Collection::ReadOnly;
+  if ( KUrl::List::canDecode( mimeData ) ) {
+    const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
+    foreach ( const KUrl &url, urls ) {
+      if ( url.hasQueryItem( QLatin1String( "item" ) ) ) {
+        neededRights |= Collection::CanCreateItem;
+      } else if ( url.hasQueryItem( QLatin1String( "collection" ) ) ) {
+        neededRights |= Collection::CanCreateCollection;
+      }
+    }
 
-  if ( KUrl::List::canDecode( mimeData ) )
+    if ( (collection.rights() & neededRights) == 0 )
+      return false;
+
+    // check that the target collection supports the mime types of the
+    // items/collections that shall be pasted
+    bool supportsMimeTypes = true;
+    foreach ( const KUrl &url, urls ) {
+      const QString mimeType = url.queryItemValue( QLatin1String( "type" ) );
+      if ( !collection.contentMimeTypes().contains( mimeType ) ) {
+        supportsMimeTypes = false;
+        break;
+      }
+    }
+
+    if ( !supportsMimeTypes )
+      return false;
+
     return true;
-
-  foreach ( const QString &format, mimeData->formats() )
-    if ( collection.contentMimeTypes().contains( format ) )
-      return true;
+  }
 
   return false;
 }
