@@ -1,5 +1,7 @@
 /*
-    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+    This file is part of Akonadi Contact.
+
+    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,41 +19,29 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_LOCALFOLDERS_P_H
-#define AKONADI_LOCALFOLDERS_P_H
+#ifndef AKONADI_ABSTRACTCONTACTEDITORWIDGET_H
+#define AKONADI_ABSTRACTCONTACTEDITORWIDGET_H
 
-#include <QHash>
-#include <QString>
+#include <QtGui/QWidget>
 
-#include "akonadi/collection.h"
+namespace KABC
+{
+class Addressee;
+}
 
-class KJob;
+namespace Akonadi
+{
 
-namespace Akonadi {
+class ContactMetaData;
 
-class LocalFolders;
-class Monitor;
-
-/**
-  @internal
-*/
-class LocalFoldersPrivate
+class AbstractContactEditorWidget : public QWidget
 {
   public:
-    LocalFoldersPrivate();
-    ~LocalFoldersPrivate();
-
-    void emitChanged( const QString &resourceId );
-    void collectionRemoved( const Collection &col ); // slot
-
-    LocalFolders *instance;
-    Collection::List emptyFolderList;
-    QHash<QString,Collection::List> foldersForResource;
-    bool batchMode;
-    QSet<QString> toEmitChangedFor;
-    Monitor *monitor;
+    virtual void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& ) = 0;
+    virtual void storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const = 0;
+    virtual void setReadOnly( bool readOnly ) = 0;
 };
 
-} // namespace Akonadi
+}
 
-#endif // AKONADI_LOCALFOLDERS_P_H
+#endif

@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-#include <Akonadi/Collection>
+#include "akonadi/collection.h"
 
 class KJob;
 

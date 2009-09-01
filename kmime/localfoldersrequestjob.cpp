@@ -26,8 +26,8 @@
 
 #include <KDebug>
 
-#include <Akonadi/CollectionCreateJob>
-#include <Akonadi/EntityDisplayAttribute>
+#include "akonadi/collectioncreatejob.h"
+#include "akonadi/entitydisplayattribute.h"
 
 using namespace Akonadi;
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,41 +17,41 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_LOCALFOLDERS_P_H
-#define AKONADI_LOCALFOLDERS_P_H
+#ifndef WAITINGOVERLAY_H
+#define WAITINGOVERLAY_H
 
-#include <QHash>
-#include <QString>
+#include <QtCore/QPointer>
+#include <QtGui/QWidget>
 
-#include "akonadi/collection.h"
-
+class QLabel;
+class QProgressBar;
 class KJob;
 
-namespace Akonadi {
-
-class LocalFolders;
-class Monitor;
-
 /**
-  @internal
-*/
-class LocalFoldersPrivate
+ * @internal
+ * Overlay widget to block widgets while a job is running.
+ */
+class WaitingOverlay : public QWidget
 {
   public:
-    LocalFoldersPrivate();
-    ~LocalFoldersPrivate();
+    /**
+     * Create an overlay widget on @p baseWidget for @p job.
+     * @p baseWidget must not be null.
+     * @p parent must not be equal to @p baseWidget
+     */
+    explicit WaitingOverlay( KJob *job, QWidget *baseWidget, QWidget *parent = 0 );
+    ~WaitingOverlay();
 
-    void emitChanged( const QString &resourceId );
-    void collectionRemoved( const Collection &col ); // slot
+  protected:
+    bool eventFilter( QObject *object, QEvent *event );
 
-    LocalFolders *instance;
-    Collection::List emptyFolderList;
-    QHash<QString,Collection::List> foldersForResource;
-    bool batchMode;
-    QSet<QString> toEmitChangedFor;
-    Monitor *monitor;
+  private:
+    void reposition();
+
+  private:
+    QPointer<QWidget> mBaseWidget;
+    QLabel *mDescription;
+    bool mPreviousState;
 };
 
-} // namespace Akonadi
-
-#endif // AKONADI_LOCALFOLDERS_P_H
+#endif

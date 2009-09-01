@@ -18,6 +18,7 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 
 add_subdirectory( kabc )
 add_subdirectory( kmime )
+add_subdirectory( contact )
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}

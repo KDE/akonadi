@@ -17,41 +17,21 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_LOCALFOLDERS_P_H
-#define AKONADI_LOCALFOLDERS_P_H
+#include "contactmetadataattribute_p.h"
 
-#include <QHash>
-#include <QString>
+#include <akonadi/attributefactory.h>
 
-#include "akonadi/collection.h"
+namespace {
 
-class KJob;
-
-namespace Akonadi {
-
-class LocalFolders;
-class Monitor;
-
-/**
-  @internal
-*/
-class LocalFoldersPrivate
+// Anonymous namespace; function is invisible outside this file.
+bool dummy()
 {
-  public:
-    LocalFoldersPrivate();
-    ~LocalFoldersPrivate();
+  using namespace Akonadi;
+  AttributeFactory::registerAttribute<ContactMetaDataAttribute>();
+  return true;
+}
 
-    void emitChanged( const QString &resourceId );
-    void collectionRemoved( const Collection &col ); // slot
+// Called when this library is loaded.
+const bool registered = dummy();
 
-    LocalFolders *instance;
-    Collection::List emptyFolderList;
-    QHash<QString,Collection::List> foldersForResource;
-    bool batchMode;
-    QSet<QString> toEmitChangedFor;
-    Monitor *monitor;
-};
-
-} // namespace Akonadi
-
-#endif // AKONADI_LOCALFOLDERS_P_H
+} // namespace
