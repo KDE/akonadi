@@ -101,7 +101,8 @@ void DisplayNameEditWidget::changeName( const KABC::Addressee &contact )
   const QString organization = mContact.organization();
   mContact = contact;
   mContact.setOrganization( organization );
-  mContact.setFormattedName( mView->text() );
+  if ( mDisplayType == CustomName )
+    mContact.setFormattedName( mView->text() );
 
   updateView();
 }
