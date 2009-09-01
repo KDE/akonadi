@@ -220,7 +220,7 @@ bool ContactGroupEditor::Private::storeContactGroup( KABC::ContactGroup &group )
         if ( text.simplified().isEmpty() ) // we handle empty members as 'to be removed'
           continue;
 
-        KMessageBox::error( mParent, i18n( "<qt>The contact '%1' has not the correct format.<br/>"
+        KMessageBox::error( mParent, i18n( "<qt>The contact '%1' does not have the correct format.<br/>"
                                            "Use <b>Name &lt;email@address&gt;</b></qt>", text ) );
         return false;
       } else {
