@@ -41,6 +41,7 @@ class ContactCompletionModel : public EntityTreeModel
     virtual ~ContactCompletionModel();
 
     virtual QVariant getData( const Item &item, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant getData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
     virtual int columnCount( const QModelIndex &parent ) const;
     virtual int getColumnCount( int ) const;
 
