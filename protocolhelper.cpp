@@ -21,10 +21,15 @@
 
 #include "attributefactory.h"
 #include "collectionstatistics.h"
+#include "entity_p.h"
 #include "exception.h"
+#include "itemserializer_p.h"
+#include "itemserializerplugin.h"
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>
 
+#include <QtCore/QDateTime>
+#include <QtCore/QFile>
 #include <QtCore/QVarLengthArray>
 
 #include <kdebug.h>
@@ -260,4 +265,153 @@ QByteArray ProtocolHelper::hierarchicalRidToByteArray( const Collection &col )
     return QByteArray();
   const QByteArray parentHrid = hierarchicalRidToByteArray( col.parentCollection() );
   return '(' + QByteArray::number( col.id() ) + ' ' + ImapParser::quote( col.remoteId().toUtf8() ) + ") " + parentHrid;
+}
+
+QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetchScope )
+{
+  QByteArray command;
+
+  if ( fetchScope.fullPayload() )
+    command += " " AKONADI_PARAM_FULLPAYLOAD;
+  if ( fetchScope.allAttributes() )
+    command += " " AKONADI_PARAM_ALLATTRIBUTES;
+  if ( fetchScope.cacheOnly() )
+    command += " " AKONADI_PARAM_CACHEONLY;
+  if ( fetchScope.ancestorRetrieval() != ItemFetchScope::None ) {
+    switch ( fetchScope.ancestorRetrieval() ) {
+      case ItemFetchScope::Parent:
+        command += " ANCESTORS 1";
+        break;
+      case ItemFetchScope::All:
+        command += " ANCESTORS INF";
+        break;
+      default:
+        Q_ASSERT( false );
+    }
+  }
+
+  //TODO: detect somehow if server supports external payload attribute
+  command += " " AKONADI_PARAM_EXTERNALPAYLOAD;
+
+  command += " (UID REMOTEID COLLECTIONID FLAGS SIZE DATETIME";
+  foreach ( const QByteArray &part, fetchScope.payloadParts() )
+    command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, part );
+  foreach ( const QByteArray &part, fetchScope.attributes() )
+    command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartAttribute, part );
+  command += ")\n";
+
+  return command;
+}
+
+void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, Item &item )
+{
+  // create a new item object
+  Item::Id uid = -1;
+  int rev = -1;
+  QString rid;
+  QString mimeType;
+  Entity::Id cid = -1;
+
+  for ( int i = 0; i < lineTokens.count() - 1; i += 2 ) {
+    const QByteArray key = lineTokens.value( i );
+    const QByteArray value = lineTokens.value( i + 1 );
+
+    if ( key == "UID" )
+      uid = value.toLongLong();
+    else if ( key == "REV" )
+      rev = value.toInt();
+    else if ( key == "REMOTEID" ) {
+      if ( !value.isEmpty() )
+        rid = QString::fromUtf8( value );
+      else
+        rid.clear();
+    } else if ( key == "COLLECTIONID" ) {
+      cid = value.toInt();
+    } else if ( key == "MIMETYPE" )
+      mimeType = QString::fromLatin1( value );
+  }
+
+  if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
+    kWarning() << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
+    return;
+  }
+
+  item = Item( uid );
+  item.setRemoteId( rid );
+  item.setRevision( rev );
+  item.setMimeType( mimeType );
+  item.setStorageCollectionId( cid );
+  if ( !item.isValid() )
+    return;
+
+  // parse fetch response fields
+  for ( int i = 0; i < lineTokens.count() - 1; i += 2 ) {
+    const QByteArray key = lineTokens.value( i );
+    // skip stuff we dealt with already
+    if ( key == "UID" || key == "REV" || key == "REMOTEID" || key == "MIMETYPE"  || key == "COLLECTIONID")
+      continue;
+    // flags
+    if ( key == "FLAGS" ) {
+      QList<QByteArray> flags;
+      ImapParser::parseParenthesizedList( lineTokens[i + 1], flags );
+      foreach ( const QByteArray &flag, flags ) {
+        item.setFlag( flag );
+      }
+    } else if ( key == "SIZE" ) {
+      const quint64 size = lineTokens[i + 1].toLongLong();
+      item.setSize( size );
+    } else if ( key == "DATETIME" ) {
+      QDateTime datetime;
+      ImapParser::parseDateTime( lineTokens[i + 1], datetime );
+      item.setModificationTime( datetime );
+    } else if ( key == "ANCESTORS" ) {
+      ProtocolHelper::parseAncestors( lineTokens[i + 1], &item );
+    } else {
+      int version = 0;
+      QByteArray plainKey( key );
+      ProtocolHelper::PartNamespace ns;
+
+      ImapParser::splitVersionedKey( key, plainKey, version );
+      plainKey = ProtocolHelper::decodePartIdentifier( plainKey, ns );
+
+      switch ( ns ) {
+        case ProtocolHelper::PartPayload:
+        {
+          bool isExternal = false;
+          const QByteArray fileKey = lineTokens.value( i + 1 );
+          if ( fileKey == "[FILE]" ) {
+            isExternal = true;
+            i++;
+            kDebug() << "Payload is external: " << isExternal << " filename: " << lineTokens.value( i + 1 );
+          }
+          ItemSerializer::deserialize( item, plainKey, lineTokens.value( i + 1 ), version, isExternal );
+          break;
+        }
+        case ProtocolHelper::PartAttribute:
+        {
+          Attribute* attr = AttributeFactory::createAttribute( plainKey );
+          Q_ASSERT( attr );
+          if ( lineTokens.value( i + 1 ) == "[FILE]" ) {
+            ++i;
+            QFile file( QString::fromUtf8( lineTokens.value( i + 1 ) ) );
+            if ( file.open( QFile::ReadOnly ) )
+              attr->deserialize( file.readAll() );
+            else {
+              kWarning() << "Failed to open attribute file: " << lineTokens.value( i + 1 );
+              delete attr;
+            }
+          } else {
+            attr->deserialize( lineTokens.value( i + 1 ) );
+          }
+          item.addAttribute( attr );
+          break;
+        }
+        case ProtocolHelper::PartGlobal:
+        default:
+          kWarning() << "Unknown item part type:" << key;
+      }
+    }
+  }
+
+  item.d_ptr->resetChangeLog();
 }

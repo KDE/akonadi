@@ -342,7 +342,7 @@ class AKONADI_EXPORT Item : public Entity
   private:
     //@cond PRIVATE
     friend class ItemModifyJob;
-    friend class ItemFetchJob;
+    friend class ProtocolHelper;
     PayloadBase* payloadBase() const;
     void setPayloadBase( PayloadBase* );
     /**
