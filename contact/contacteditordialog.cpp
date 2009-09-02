@@ -22,7 +22,6 @@
 
 #include "addressbookcombobox_p.h"
 #include "contacteditor.h"
-#include "editor/contacteditorwidget.h"
 
 #include <akonadi/item.h>
 
@@ -50,8 +49,10 @@ class ContactEditorDialog::Private
 
       QGridLayout *layout = new QGridLayout( mainWidget );
 
-      mEditor = new ContactEditor( mode == ContactEditorDialog::CreateMode ? ContactEditor::CreateMode : ContactEditor::EditMode,
-                                   editorWidget ? editorWidget : new ContactEditorWidget(), q );
+      if ( editorWidget )
+        mEditor = new ContactEditor( mode == ContactEditorDialog::CreateMode ? ContactEditor::CreateMode : ContactEditor::EditMode, editorWidget, q );
+      else
+        mEditor = new ContactEditor( mode == ContactEditorDialog::CreateMode ? ContactEditor::CreateMode : ContactEditor::EditMode, q );
 
       if ( mode == ContactEditorDialog::CreateMode ) {
         QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );

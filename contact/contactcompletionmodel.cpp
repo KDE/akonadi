@@ -113,6 +113,11 @@ QVariant ContactCompletionModel::getData( const Item &item, int column, int role
   return EntityTreeModel::getData( item, column, role );
 }
 
+QVariant ContactCompletionModel::getData( const Collection &collection, int column, int role ) const
+{
+  return EntityTreeModel::getData( collection, column, role );
+}
+
 int ContactCompletionModel::columnCount( const QModelIndex &parent ) const
 {
   if ( !parent.isValid() )

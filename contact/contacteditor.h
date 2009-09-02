@@ -67,7 +67,7 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
      * @param editorWidget The contact editor widget that shall be used for editing.
      * @param parent The parent widget of the editor.
      */
-    explicit ContactEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent = 0 );
+    ContactEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent = 0 );
 
     /**
      * Destroys the contact editor.
