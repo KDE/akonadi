@@ -21,10 +21,11 @@
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
-#include "response.h"
+#include "fetchhelper.h"
 #include "handlerhelper.h"
-#include "nepomuksearch.h"
 #include "imapstreamparser.h"
+#include "nepomuksearch.h"
+#include "response.h"
 
 #include <QtCore/QStringList>
 
@@ -46,26 +47,38 @@ bool Search::parseStream()
     return failureResponse( "No query specified" );
 
   NepomukSearch *service = new NepomukSearch;
-
   const QStringList uids = service->search( QString::fromUtf8( queryString ) );
-
   delete service;
 
-  foreach ( const QString &uid, uids ) {
-    Response response;
-    response.setUntagged();
-    response.setString( QString::fromLatin1( "SEARCH (UID %1)" ).arg( uid ) );
-    emit responseAvailable( response );
-  }
+  // create imap query
+  ImapSet itemSet;
 
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( "SEARCH completed" );
-  emit responseAvailable( response );
+  QList<ImapSet::Id> imapIds;
+  foreach ( const QString &uid, uids )
+    imapIds.append( uid.toULongLong() );
+
+  itemSet.add( imapIds );
+
+  FetchHelper fetchHelper( itemSet );
+  fetchHelper.setConnection( connection() );
+  fetchHelper.setStreamParser( m_streamParser );
+  connect( &fetchHelper, SIGNAL( responseAvailable( const Response& ) ),
+           this, SIGNAL( responseAvailable( const Response& ) ) );
+  connect( &fetchHelper, SIGNAL( failureResponse( const QString& ) ),
+           this, SLOT( slotFailureResponse( const QString& ) ) );
+
+  if ( !fetchHelper.parseStream( "SEARCH" ) )
+    return false;
+
+  successResponse( "SEARCH completed" );
 
   deleteLater();
   return true;
+}
+
+void Search::slotFailureResponse( const QString &msg )
+{
+  failureResponse( msg );
 }
 
 #include "search.moc"

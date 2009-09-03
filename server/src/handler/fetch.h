@@ -23,14 +23,8 @@
 #include <handler.h>
 
 #include "scope.h"
-#include "libs/imapset_p.h"
-#include "storage/datastore.h"
-#include <QStack>
 
 namespace Akonadi {
-
-class ImapSet;
-class QueryBuilder;
 
 /**
   @ingroup akonadi_server_handler
@@ -60,29 +54,11 @@ class Fetch : public Handler
 
     bool parseStream();
 
-  private:
-    void parseCommand( const QByteArray &line );
-    void updateItemAccessTime();
-    void triggerOnDemandFetch();
-    void buildItemQuery();
-    QueryBuilder buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
-    void retrieveMissingPayloads( const QStringList &payloadList );
-    void parseCommandStream();
-    QString driverName();
-    QStack<Collection> ancestorsForItem( Collection::Id parentColId );
+  private Q_SLOTS:
+    void slotFailureResponse( const QString& );
 
   private:
-    QueryBuilder mItemQuery;
-    QList<QByteArray> mRequestedParts;
-    QHash<Collection::Id, QStack<Collection> > mAncestorCache;
     Scope mScope;
-    int mAncestorDepth;
-    bool mCacheOnly;
-    bool mFullPayload;
-    bool mAllAttrs;
-    bool mSizeRequested;
-    bool mMTimeRequested;
-    bool mExternalPayloadSupported;
 };
 
 }
