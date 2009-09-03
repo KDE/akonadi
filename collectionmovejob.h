@@ -44,6 +44,7 @@ class CollectionMoveJobPrivate;
  *
  * @endcode
  *
+ * @since 4.4
  * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT CollectionMoveJob : public Job
