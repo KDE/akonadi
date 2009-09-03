@@ -1,5 +1,5 @@
 /*
-  This file is part of libkdepim.
+    This file is part of Akonadi Contact.
 
   Copyright (c) 2004 Bram Schoenmakers <bramschoenmakers@kde.nl>
 

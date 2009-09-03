@@ -159,7 +159,11 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 
   Q_SIGNALS:
     /**
-     * This signal is emitted when the items are fetched completely.
+     * This signal is emitted whenever new items have been fetched completely.
+     *
+     * @note This is an optimization, instead of waiting for the end of the job
+     *       and calling items(), you can connect to this signal and get the items
+     *       incrementally.
      *
      * @param items The fetched items.
      */

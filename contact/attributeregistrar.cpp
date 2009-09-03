@@ -1,4 +1,6 @@
 /*
+    This file is part of Akonadi Contact.
+
     Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it

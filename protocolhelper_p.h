@@ -23,6 +23,7 @@
 #include <akonadi/cachepolicy.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
+#include <akonadi/itemfetchscope.h>
 
 namespace Akonadi {
 
@@ -98,6 +99,16 @@ class ProtocolHelper
       Assumes @p col has a valid hierarchical RID, so check that before!
     */
     static QByteArray hierarchicalRidToByteArray( const Collection &col );
+
+    /**
+      Converts a given ItemFetchScope object into a protocol representation.
+    */
+    static QByteArray itemFetchScopeToByteArray( const ItemFetchScope &fetchScope );
+
+    /**
+      Parses a single line from an item fetch job result into an Item object.
+     */
+    static void parseItemFetchResult( const QList<QByteArray> &lineTokens, Item &item );
 };
 
 }
