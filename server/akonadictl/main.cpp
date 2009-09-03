@@ -24,6 +24,8 @@
 #include <QtCore/QStringList>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
 
 #include <config-akonadi.h>
 
@@ -71,13 +73,17 @@ static bool statusServer()
   if ( registered ) {
     QString backend = QLatin1String( "Unknown" );
 
-    QDir redlandDir = QDir::home();
-    if ( redlandDir.cd( ".kde/share/apps/nepomuk/repository/main/data/redland/" ) )
-      backend = QLatin1String( "Redland" );
+    // check which backend is used
+    QDBusInterface interface( "org.kde.NepomukStorage", "/nepomukstorage" );
+    const QDBusReply<QString> reply = interface.call( "usedSopranoBackend" );
+    if ( reply.isValid() ) {
+      const QString name = reply.value();
 
-    QDir sesame2Dir = QDir::home();
-    if ( sesame2Dir.cd( ".kde/share/apps/nepomuk/repository/main/data/sesame2/" ) )
-      backend = QLatin1String( "Sesame2" );
+      if ( name == QLatin1String( "redland" ) )
+        backend = QLatin1String( "Redland" );
+      else if ( name == QLatin1String( "sesame2" ) )
+        backend = QLatin1String( "Sesame2" );
+    }
 
     qDebug( "Akonadi Server Search Support: available (backend: %s)", qPrintable( backend ) );
   } else {
