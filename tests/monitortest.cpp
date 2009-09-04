@@ -218,7 +218,7 @@ void MonitorTest::testMonitor()
   QVERIFY( move->exec() );
   QTest::qWait( 1000 );
 
-  QCOMPARE( cstatspy.count(), 1 );
+  QCOMPARE( cstatspy.count(), 1 );  //### shouldn't that be one for source and one for destination??
   arg = cstatspy.takeFirst();
   QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
   QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
@@ -232,16 +232,8 @@ void MonitorTest::testMonitor()
   col = arg.at( 2 ).value<Collection>(); // the destination collection
   QCOMPARE( col.id(), res3.id() );
 
-  QCOMPARE( cmodspy.count(), 2 );
-  arg = cmodspy.takeFirst();
-  Collection col1 = arg.at( 0 ).value<Collection>();
-  arg = cmodspy.takeFirst();
-  Collection col2 = arg.at( 0 ).value<Collection>();
-  // source and dest collections, in any order
-  QVERIFY( ( col1.id() == monitorCol.id() && col2.id() == res3.id() ) ||
-           ( col2.id() == monitorCol.id() && col1.id() == res3.id() ) );
-
   QVERIFY( caddspy.isEmpty() );
+  QVERIFY( cmodspy.isEmpty() );
   QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
