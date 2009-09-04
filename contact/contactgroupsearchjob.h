@@ -93,8 +93,6 @@ class AKONADI_CONTACT_EXPORT ContactGroupSearchJob : public KJob
 
     /**
      * Returns the items that matched the search criteria.
-     *
-     * @note The items only contain the uid but no payload.
      */
     Item::List items() const;
 
@@ -109,7 +107,6 @@ class AKONADI_CONTACT_EXPORT ContactGroupSearchJob : public KJob
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void searchResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
     //@endcond
 };
 

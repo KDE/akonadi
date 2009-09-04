@@ -25,19 +25,21 @@
 
 namespace Akonadi {
 
+class ItemFetchScope;
 class ItemSearchJobPrivate;
 
 /**
  * @short Job that searches for items in the Akonadi storage.
  *
  * This job searches for items that match a given search query and returns
- * the list of item ids.
+ * the list of matching item.
  *
  * @code
  *
  * const QString query = "..."; // some sparql query
  *
  * Akonadi::ItemSearchJob *job = new Akonadi::ItemSearchJob( query );
+ * job->fetchScope().fetchFullPayload();
  * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
  *
  * ...
@@ -47,7 +49,7 @@ class ItemSearchJobPrivate;
  *   Akonadi::ItemSearchJob *searchJob = qobject_cast<Akonadi::ItemSearchJob*>( job );
  *   const Akonadi::Item::List items = searchJob->items();
  *   foreach ( const Akonadi::Item &item, items ) {
- *     // fetch the full payload of 'item'
+ *     // extract the payload and do further stuff
  *   }
  * }
  *
@@ -74,18 +76,59 @@ class AKONADI_EXPORT ItemSearchJob : public Job
     ~ItemSearchJob();
 
     /**
-     * Returns the items that matched the search query.
+     * Sets the item fetch scope.
      *
-     * @note The items only contain the uid but no payload.
+     * The ItemFetchScope controls how much of an matching item's data is fetched
+     * from the server, e.g. whether to fetch the full item payload or
+     * only meta data.
+     *
+     * @param fetchScope The new scope for item fetch operations.
+     *
+     * @see fetchScope()
+     */
+    void setFetchScope( const ItemFetchScope &fetchScope );
+
+    /**
+     * Returns the item fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the ItemFetchScope documentation
+     * for an example.
+     *
+     * @return a reference to the current item fetch scope
+     *
+     * @see setFetchScope() for replacing the current item fetch scope
+     */
+    ItemFetchScope &fetchScope();
+
+    /**
+     * Returns the items that matched the search query.
      */
     Item::List items() const;
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever new matching items have been fetched completely.
+     *
+     * @note This is an optimization, instead of waiting for the end of the job
+     *       and calling items(), you can connect to this signal and get the items
+     *       incrementally.
+     *
+     * @param items The matching items.
+     */
+    void itemsReceived( const Akonadi::Item::List &items );
 
   protected:
     void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
+    //@cond PRIVATE
     Q_DECLARE_PRIVATE( ItemSearchJob )
+
+    Q_PRIVATE_SLOT( d_func(), void timeout() )
+    //@endcond
 };
 
 }

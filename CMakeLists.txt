@@ -202,6 +202,7 @@ install( FILES
   collectionfetchscope.h
   collectionmodel.h
   collectionmodifyjob.h
+  collectionmovejob.h
   collectionpropertiesdialog.h
   collectionpropertiespage.h
   collectionrequester.h

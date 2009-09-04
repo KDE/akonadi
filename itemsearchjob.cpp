@@ -20,7 +20,11 @@
 #include "itemsearchjob.h"
 
 #include "imapparser_p.h"
+#include "itemfetchscope.h"
 #include "job_p.h"
+#include "protocolhelper_p.h"
+
+#include <QtCore/QTimer>
 
 using namespace Akonadi;
 
@@ -32,17 +36,54 @@ class Akonadi::ItemSearchJobPrivate : public JobPrivate
     {
     }
 
+    void timeout()
+    {
+      Q_Q( Akonadi::ItemSearchJob );
+
+      mEmitTimer->stop(); // in case we are called by result()
+      if ( !mPendingItems.isEmpty() ) {
+        emit q->itemsReceived( mPendingItems );
+        mPendingItems.clear();
+      }
+    }
+
+    Q_DECLARE_PUBLIC( ItemSearchJob )
+
     QString mQuery;
     Item::List mItems;
+    ItemFetchScope mFetchScope;
+    Item::List mPendingItems; // items pending for emitting itemsReceived()
+    QTimer* mEmitTimer;
 };
 
 ItemSearchJob::ItemSearchJob( const QString & query, QObject * parent )
   : Job( new ItemSearchJobPrivate( this, query ), parent )
 {
+  Q_D( ItemSearchJob );
+
+  d->mEmitTimer = new QTimer( this );
+  d->mEmitTimer->setSingleShot( true );
+  d->mEmitTimer->setInterval( 100 );
+  connect( d->mEmitTimer, SIGNAL( timeout() ), this, SLOT( timeout() ) );
+  connect( this, SIGNAL( result( KJob* ) ), this, SLOT( timeout() ) );
 }
 
 ItemSearchJob::~ItemSearchJob()
 {
+}
+
+void ItemSearchJob::setFetchScope( const ItemFetchScope &fetchScope )
+{
+  Q_D( ItemSearchJob );
+
+  d->mFetchScope = fetchScope;
+}
+
+ItemFetchScope &ItemSearchJob::fetchScope()
+{
+  Q_D( ItemSearchJob );
+
+  return d->mFetchScope;
 }
 
 void ItemSearchJob::doStart()
@@ -51,6 +92,7 @@ void ItemSearchJob::doStart()
 
   QByteArray command = d->newTag() + " SEARCH ";
   command += ImapParser::quote( d->mQuery.toUtf8() );
+  command += ' ' + ProtocolHelper::itemFetchScopeToByteArray( d->mFetchScope );
   command += '\n';
   d->writeData( command );
 }
@@ -63,34 +105,23 @@ void ItemSearchJob::doHandleResponse( const QByteArray & tag, const QByteArray &
     int begin = data.indexOf( "SEARCH" );
     if ( begin >= 0 ) {
 
-      // split search response into key/value pairs
-      QList<QByteArray> searchResponse;
-      ImapParser::parseParenthesizedList( data, searchResponse, begin + 7 );
+      // split fetch response into key/value pairs
+      QList<QByteArray> fetchResponse;
+      ImapParser::parseParenthesizedList( data, fetchResponse, begin + 7 );
 
-      // create a new item object
-      Item::Id uid = -1;
-
-      for ( int i = 0; i < searchResponse.count() - 1; i += 2 ) {
-        const QByteArray key = searchResponse.value( i );
-        const QByteArray value = searchResponse.value( i + 1 );
-
-        if ( key == "UID" )
-          uid = value.toLongLong();
-      }
-
-      if ( uid < 0 ) {
-        kWarning() << "Broken search response: UID missing!";
-        return;
-      }
-
-      Item item( uid );
+      Item item;
+      ProtocolHelper::parseItemFetchResult( fetchResponse, item );
       if ( !item.isValid() )
         return;
 
       d->mItems.append( item );
+      d->mPendingItems.append( item );
+      if ( !d->mEmitTimer->isActive() )
+        d->mEmitTimer->start();
       return;
     }
   }
+  kDebug() << "Unhandled response: " << tag << data;
 }
 
 Item::List ItemSearchJob::items() const

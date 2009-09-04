@@ -21,7 +21,6 @@
 
 #include "contactsearchjob.h"
 
-#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemsearchjob.h>
 
@@ -39,34 +38,13 @@ class ContactSearchJob::Private
     {
       ItemSearchJob *searchJob = qobject_cast<ItemSearchJob*>( job );
       mItems = searchJob->items();
-      mSearchResults = mItems.count();
-
-      if ( mSearchResults == 0 ) {
-        mParent->emitResult();
-        return;
-      }
 
       foreach ( const Item &item, mItems ) {
-        ItemFetchJob *job = new ItemFetchJob( item );
-        job->fetchScope().fetchFullPayload();
-
-        mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( fetchResult( KJob* ) ) );
-      }
-    }
-
-    void fetchResult( KJob *job )
-    {
-      ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-
-      const Item::List items = fetchJob->items();
-      if ( items.count() == 1 ) {
-        mContacts.append( items.first().payload<KABC::Addressee>() );
+        if ( item.hasPayload<KABC::Addressee>() )
+          mContacts.append( item.payload<KABC::Addressee>() );
       }
 
-      mSearchResults--;
-
-      if ( mSearchResults == 0 )
-        mParent->emitResult();
+      mParent->emitResult();
     }
 
     ContactSearchJob *mParent;
@@ -74,7 +52,6 @@ class ContactSearchJob::Private
     QString mValue;
     KABC::Addressee::List mContacts;
     Item::List mItems;
-    int mSearchResults;
 };
 
 ContactSearchJob::ContactSearchJob( QObject * parent )
@@ -115,6 +92,7 @@ void ContactSearchJob::start()
   query = query.arg( d->mValue );
 
   ItemSearchJob *job = new ItemSearchJob( query, this );
+  job->fetchScope().fetchFullPayload();
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
   job->start();
 }
