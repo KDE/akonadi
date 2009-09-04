@@ -40,7 +40,7 @@ class ContactEditorDialog::Private
   public:
     Private( ContactEditorDialog::Mode mode, AbstractContactEditorWidget *editorWidget,
              ContactEditorDialog *parent )
-      : q( parent ), mAddressBookBox( 0 )
+      : q( parent ), mAddressBookBox( 0 ), mMode( mode )
     {
       q->setCaption( mode == ContactEditorDialog::CreateMode ? i18n( "New Contact" ) : i18n( "Edit Contact" ) );
       q->setButtons( ContactEditorDialog::Ok | ContactEditorDialog::Cancel );
@@ -92,6 +92,7 @@ class ContactEditorDialog::Private
 
     ContactEditorDialog *q;
     AddressBookComboBox *mAddressBookBox;
+    ContactEditorDialog::Mode mMode;
     ContactEditor *mEditor;
 };
 
@@ -113,6 +114,14 @@ ContactEditorDialog::~ContactEditorDialog()
 void ContactEditorDialog::setContact( const Akonadi::Item &contact )
 {
   d->mEditor->loadContact( contact );
+}
+
+void ContactEditorDialog::setDefaultAddressBook( const Akonadi::Collection &addressbook )
+{
+  if ( d->mMode == EditMode )
+    return;
+
+  d->mAddressBookBox->setDefaultAddressBook( addressbook );
 }
 
 #include "contacteditordialog.moc"

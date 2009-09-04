@@ -21,6 +21,7 @@
 
 #include "addressbookcombobox_p.h"
 
+#include "asyncselectionhandler_p.h"
 #include "collectionfiltermodel_p.h"
 
 #include <akonadi/collectionfetchscope.h>
@@ -77,6 +78,10 @@ class AddressBookComboBox::Private
       filterModel->setSourceModel( proxyModel );
 
       mComboBox->setModel( filterModel );
+
+      mSelectionHandler = new AsyncSelectionHandler( filterModel, mParent );
+      mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
+                        mParent, SLOT( activated( const QModelIndex& ) ) );
     }
 
     ~Private()
@@ -86,12 +91,14 @@ class AddressBookComboBox::Private
     }
 
     void activated( int index );
+    void activated( const QModelIndex& index );
 
     AddressBookComboBox *mParent;
 
     QComboBox *mComboBox;
     Monitor *mMonitor;
     EntityTreeModel *mModel;
+    AsyncSelectionHandler *mSelectionHandler;
 };
 
 void AddressBookComboBox::Private::activated( int index )
@@ -99,6 +106,11 @@ void AddressBookComboBox::Private::activated( int index )
   const QModelIndex modelIndex = mComboBox->model()->index( index, 0 );
   if ( modelIndex.isValid() )
     emit mParent->selectionChanged( modelIndex.data( EntityTreeModel::CollectionRole).value<Collection>() );
+}
+
+void AddressBookComboBox::Private::activated( const QModelIndex &index )
+{
+  mComboBox->setCurrentIndex( index.row() );
 }
 
 AddressBookComboBox::AddressBookComboBox( Type type, QWidget *parent )
@@ -118,6 +130,11 @@ AddressBookComboBox::~AddressBookComboBox()
 {
   delete d->mComboBox; // delete as long as the model still exists, crashs otherwise
   delete d;
+}
+
+void AddressBookComboBox::setDefaultAddressBook( const Collection &addressbook )
+{
+  d->mSelectionHandler->waitForCollection( addressbook );
 }
 
 Akonadi::Collection AddressBookComboBox::selectedAddressBook() const

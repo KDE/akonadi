@@ -67,6 +67,11 @@ class AKONADI_CONTACT_EXPORT AddressBookComboBox : public QWidget
     ~AddressBookComboBox();
 
     /**
+     * Sets the @p addressbook that shall be selected as default.
+     */
+    void setDefaultAddressBook( const Collection &addressbook );
+
+    /**
      * Returns the selected address book.
      */
     Akonadi::Collection selectedAddressBook() const;
@@ -85,6 +90,7 @@ class AKONADI_CONTACT_EXPORT AddressBookComboBox : public QWidget
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void activated( int ) )
+    Q_PRIVATE_SLOT( d, void activated( const QModelIndex& ) )
     //@endcond
 };
 

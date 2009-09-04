@@ -31,6 +31,7 @@ class QAbstractItemModel;
 namespace Akonadi {
 
 class AbstractContactEditorWidget;
+class Collection;
 class Item;
 
 /**
@@ -117,6 +118,11 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      *       other data are fetched by the dialog automatically.
      */
     void setContact( const Akonadi::Item &contact );
+
+    /**
+     * Sets the @p addressbook that shall be selected as default in create mode.
+     */
+    void setDefaultAddressBook( const Akonadi::Collection &addressbook );
 
   Q_SIGNALS:
     /**
