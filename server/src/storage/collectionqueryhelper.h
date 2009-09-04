@@ -61,6 +61,12 @@ namespace CollectionQueryHelper
     Retrieve the collection referred to by the given hierarchical RID chain.
   */
   Collection resolveHierarchicalRID( const QStringList &ridChain, Resource::Id resId );
+
+  /**
+    Returns an existing collection specified by the given scope. If that does not
+    specify exactly one valid collection, an exception is thrwon.
+  */
+  Collection singleCollectionFromScope( const Scope &scope, AkonadiConnection *connection );
 }
 
 }

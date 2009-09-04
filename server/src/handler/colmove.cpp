@@ -24,6 +24,8 @@
 #include <storage/itemretriever.h>
 #include <imapstreamparser.h>
 #include <storage/transaction.h>
+#include <storage/collectionqueryhelper.h>
+#include <storage/selectquerybuilder.h>
 
 namespace Akonadi {
 
@@ -35,16 +37,24 @@ ColMove::ColMove(Scope::SelectionScope scope) :
 
 bool ColMove::parseStream()
 {
-  // TODO: use m_scope here to support collection sets and RID based operations
-  Collection source = HandlerHelper::collectionFromIdOrName( m_streamParser->readString() );
-  if ( !source.isValid() )
-    return failureResponse( "No valid source specified" );
+  m_scope.parseScope( m_streamParser );
+  SelectQueryBuilder<Collection> qb;
+  CollectionQueryHelper::scopeToQuery( m_scope, connection(), qb );
+  if ( !qb.exec() )
+    throw HandlerException( "Unable to execute collection query" );
+  const Collection::List sources = qb.result();
+  if ( sources.isEmpty() )
+    throw HandlerException( "No source collection specified" );
+  else if ( sources.size() > 1 ) // TODO
+    throw HandlerException( "Moving multiple collections is not yet implemented" );
+  Collection source = sources.first();
 
-  qint64 target = m_streamParser->readNumber();
-  if ( target < 0 )
-    return failureResponse( "No valid destination specified" );
+  Scope destScope( m_scope.scope() );
+  destScope.parseScope( m_streamParser );
+  qDebug() << destScope.uidSet().toImapSequenceSet();
+  const Collection target = CollectionQueryHelper::singleCollectionFromScope( destScope, connection() );
 
-  if ( source.parentId() == target )
+  if ( source.parentId() == target.id() )
     return successResponse( "COLMOVE complete - nothing to do" );
 
   // retrieve all not yet cached items of the source

@@ -27,7 +27,6 @@
 #include "notificationmanager.h"
 #include "tracer.h"
 #include "selectquerybuilder.h"
-#include "transaction.h"
 #include "handlerhelper.h"
 #include "countquerybuilder.h"
 #include "xdgbasedirs_p.h"
@@ -53,8 +52,6 @@
 #include "collectionqueryhelper.h"
 
 using namespace Akonadi;
-
-static QMutex sTransactionMutex;
 
 /***************************************************************************
  *   DataStore                                                           *
@@ -278,12 +275,8 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   qb.addTable( Collection::tableName() );
   qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, collection.id() );
   qb.setColumnValue( Collection::resourceIdColumn(), resourceId );
-  Transaction transaction( DataStore::self() );
   if ( !qb.exec() )
     return false;
-
-  transaction.commit();
-
   foreach ( const Collection &col, collection.children() ) {
     if ( !recursiveSetResourceId( col, resourceId ) )
       return false;
@@ -291,22 +284,22 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   return true;
 }
 
-bool Akonadi::DataStore::moveCollection( Collection & collection, qint64 newParent )
+bool Akonadi::DataStore::moveCollection( Collection & collection, const Collection &newParent )
 {
-  if ( collection.parentId() == newParent )
+  if ( collection.parentId() == newParent.id() )
     return true;
 
-  if ( !m_dbOpened || newParent < 0 )
+  if ( !m_dbOpened || !newParent.isValid() )
     return false;
 
   int resourceId = collection.resourceId();
   const Collection source = collection.parent();
-  Collection parent = Collection::retrieveById( newParent );
-  resourceId = parent.resourceId();
-  if ( !CollectionQueryHelper::canBeMovedTo ( collection, parent ) )
+  if ( newParent.id() > 0 ) // not root
+    resourceId = newParent.resourceId();
+  if ( !CollectionQueryHelper::canBeMovedTo ( collection, newParent ) )
     return false;
 
-  collection.setParentId( newParent );
+  collection.setParentId( newParent.id() );
   if ( collection.resourceId() != resourceId ) {
     collection.setResourceId( resourceId );
     if ( !recursiveSetResourceId( collection, resourceId ) )
@@ -629,10 +622,8 @@ bool Akonadi::DataStore::beginTransaction()
 
   if ( m_transactionLevel == 0 ) {
     QSqlDriver *driver = m_database.driver();
-    sTransactionMutex.lock();
     if ( !driver->beginTransaction() ) {
       debugLastDbError( "DataStore::beginTransaction" );
-      sTransactionMutex.unlock();
       return false;
     }
   }
@@ -658,11 +649,9 @@ bool Akonadi::DataStore::rollbackTransaction()
     QSqlDriver *driver = m_database.driver();
     emit transactionRolledBack();
     if ( !driver->rollbackTransaction() ) {
-      sTransactionMutex.unlock();
       debugLastDbError( "DataStore::rollbackTransaction" );
       return false;
     }
-    sTransactionMutex.unlock();
   }
 
   return true;
@@ -685,7 +674,6 @@ bool Akonadi::DataStore::commitTransaction()
       rollbackTransaction();
       return false;
     } else {
-      sTransactionMutex.unlock();
       emit transactionCommitted();
     }
   }

@@ -114,3 +114,27 @@ Collection CollectionQueryHelper::resolveHierarchicalRID( const QStringList &rid
   }
   return result;
 }
+
+Collection Akonadi::CollectionQueryHelper::singleCollectionFromScope(const Akonadi::Scope& scope, AkonadiConnection* connection)
+{
+  // root
+  if ( (scope.scope() == Scope::Uid || scope.scope() == Scope::None) && scope.uidSet().intervals().count() == 1 ) {
+    const ImapInterval i = scope.uidSet().intervals().first();
+    if ( !i.size() ) { // ### why do we need this hack for 0, shouldn't that be size() == 1?
+      Collection root;
+      root.setId( 0 );
+      return root;
+    }
+  }
+  SelectQueryBuilder<Collection> qb;
+  scopeToQuery( scope, connection, qb );
+  if ( !qb.exec() )
+    throw HandlerException( "Unable to execute query" );
+  const Collection::List cols = qb.result();
+  if ( cols.isEmpty() )
+    throw HandlerException( "No collection found" );
+  if ( cols.size() > 1 )
+    throw HandlerException( "Collection cannot be uniquely identified" );
+  return cols.first();
+}
+

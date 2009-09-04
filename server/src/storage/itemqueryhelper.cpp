@@ -63,13 +63,13 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection
   else
     qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::In, rids );
 
-  if ( connection->selectedCollectionId() > 0 ) {
-    qb.addTable( Collection::tableName() );
-    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, connection->selectedCollectionId() );
-  } else if ( connection->resourceContext().isValid() ) {
+  if ( connection->resourceContext().isValid() ) {
     qb.addTable( Collection::tableName() );
     qb.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
     qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->resourceContext().id() );
+  } else if ( connection->selectedCollectionId() > 0 ) {
+    qb.addTable( Collection::tableName() );
+    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, connection->selectedCollectionId() );
   }
 }
 

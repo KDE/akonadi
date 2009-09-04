@@ -28,7 +28,7 @@
 #include <storage/itemqueryhelper.h>
 #include <storage/selectquerybuilder.h>
 #include <storage/transaction.h>
-#include <libs/imapset_p.h>
+#include <storage/collectionqueryhelper.h>
 
 namespace Akonadi {
 
@@ -40,9 +40,10 @@ Move::Move( Scope::SelectionScope scope ) :
 bool Move::parseStream()
 {
   mScope.parseScope( m_streamParser );
-  const Collection destination = HandlerHelper::collectionFromIdOrName( m_streamParser->readString() );
-  if ( !destination.isValid() )
-    throw HandlerException( "Unknown destination collection" );
+
+  Scope destScope( mScope.scope() );
+  destScope.parseScope( m_streamParser );
+  const Collection destination = CollectionQueryHelper::singleCollectionFromScope( destScope, connection() );
   const Resource destResource = destination.resource();
 
   // make sure all the items we want to move are in the cache
@@ -72,8 +73,6 @@ bool Move::parseStream()
       if ( !source.isValid() )
         throw HandlerException( "Item without collection found!?" );
 
-      store->notificationCollector()->collectionChanged( source, QList<QByteArray>() ); // ### why?
-
       item.setCollectionId( destination.id() );
       item.setAtime( mtime );
       item.setDatetime( mtime );
@@ -86,7 +85,6 @@ bool Move::parseStream()
 
       store->notificationCollector()->itemMoved( item, source, destination );
     }
-    store->notificationCollector()->collectionChanged( destination, QList<QByteArray>(), destResource.name().toUtf8() ); // ### why?
   } else {
     throw HandlerException( "Unable to execute query" );
   }

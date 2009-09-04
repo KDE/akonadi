@@ -134,7 +134,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /// removes the given collection and all its content
     bool cleanupCollection( Collection &collection );
     /// moves the collection @p collection to @p newParent.
-    bool moveCollection( Collection &collection, qint64 newParent );
+    bool moveCollection( Akonadi::Collection& collection, const Akonadi::Collection& newParent );
 
     bool appendMimeTypeForCollection( qint64 collectionId, const QStringList & mimeTypes );
 

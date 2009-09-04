@@ -123,7 +123,7 @@ bool Modify::parseStream()
         return failureResponse( "Invalid syntax" );
       if ( collection.parentId() == newParent )
         continue;
-      if ( !db->moveCollection( collection, newParent ) )
+      if ( !db->moveCollection( collection, Collection::retrieveById( newParent ) ) )
         return failureResponse( "Unable to reparent collection" );
       changes.append( "PARENT" );
     } else if ( type == AKONADI_PARAM_REMOTEID ) {
