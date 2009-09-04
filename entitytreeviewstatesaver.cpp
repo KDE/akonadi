@@ -126,7 +126,7 @@ class EntityTreeViewStateSaverPrivate
       }
 
       for ( int i = start; i <= end && hasChanges(); ++i ) {
-        const QModelIndex child = index.child( i, 0 );
+        const QModelIndex child = view->model()->index( i, 0, index);;
         restoreState( child );
       }
     }
