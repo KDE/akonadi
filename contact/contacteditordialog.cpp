@@ -21,7 +21,7 @@
 
 #include "contacteditordialog.h"
 
-#include "addressbookcombobox_p.h"
+#include "addressbookcombobox.h"
 #include "contacteditor.h"
 
 #include <akonadi/item.h>
@@ -58,7 +58,8 @@ class ContactEditorDialog::Private
       if ( mode == ContactEditorDialog::CreateMode ) {
         QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-        mAddressBookBox = new AddressBookComboBox( AddressBookComboBox::ContactsOnly, mainWidget );
+        mAddressBookBox = new AddressBookComboBox( AddressBookComboBox::ContactsOnly,
+                                                   AddressBookComboBox::Writable, mainWidget );
 
         layout->addWidget( label, 0, 0 );
         layout->addWidget( mAddressBookBox, 0, 1 );

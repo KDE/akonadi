@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-#include "addressbookcombobox_p.h"
+#include "addressbookcombobox.h"
 
 #include "asyncselectionhandler_p.h"
 #include "collectionfiltermodel_p.h"
@@ -43,7 +43,7 @@ using namespace Akonadi;
 class AddressBookComboBox::Private
 {
   public:
-    Private( AddressBookComboBox::Type type, AddressBookComboBox *parent )
+    Private( AddressBookComboBox::Type type, AddressBookComboBox::Rights rights, AddressBookComboBox *parent )
       : mParent( parent )
     {
       mComboBox = new QComboBox;
@@ -74,7 +74,10 @@ class AddressBookComboBox::Private
       CollectionFilterModel *filterModel = new CollectionFilterModel( mParent );
       foreach ( const QString &contentMimeType, contentTypes )
         filterModel->addContentMimeTypeFilter( contentMimeType );
-      filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
+
+      if ( rights == AddressBookComboBox::Writable )
+        filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
+
       filterModel->setSourceModel( proxyModel );
 
       mComboBox->setModel( filterModel );
@@ -113,8 +116,8 @@ void AddressBookComboBox::Private::activated( const QModelIndex &index )
   mComboBox->setCurrentIndex( index.row() );
 }
 
-AddressBookComboBox::AddressBookComboBox( Type type, QWidget *parent )
-  : QWidget( parent ), d( new Private( type, this ) )
+AddressBookComboBox::AddressBookComboBox( Type type, Rights rights, QWidget *parent )
+  : QWidget( parent ), d( new Private( type, rights, this ) )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
@@ -150,4 +153,4 @@ Akonadi::Collection AddressBookComboBox::selectedAddressBook() const
     return Akonadi::Collection();
 }
 
-#include "addressbookcombobox_p.moc"
+#include "addressbookcombobox.moc"

@@ -21,7 +21,7 @@
 
 #include "addressbookselectiondialog.h"
 
-#include "addressbookcombobox_p.h"
+#include "addressbookcombobox.h"
 
 #include <akonadi/item.h>
 #include <klocale.h>
@@ -48,7 +48,7 @@ AddressBookSelectionDialog::AddressBookSelectionDialog( Type type, QWidget *pare
 
   QVBoxLayout *layout = new QVBoxLayout( mainWidget );
 
-  d->mCollectionCombo = new Akonadi::AddressBookComboBox( (AddressBookComboBox::Type)type );
+  d->mCollectionCombo = new Akonadi::AddressBookComboBox( (AddressBookComboBox::Type)type, AddressBookComboBox::Writable );
 
   layout->addWidget( new QLabel( i18n( "Select the address book" ) ) );
   layout->addWidget( d->mCollectionCombo );
