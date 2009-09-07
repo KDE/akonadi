@@ -91,7 +91,7 @@ void ItemDeleteJob::doStart()
   if ( !d->mItems.isEmpty() ) {
     QByteArray command = d->newTag();
     try {
-      command += ProtocolHelper::itemSetToByteArray( d->mItems, AKONADI_CMD_ITEMDELETE );
+      command += ProtocolHelper::entitySetToByteArray( d->mItems, AKONADI_CMD_ITEMDELETE );
     } catch ( const std::exception &e ) {
       setError( Unknown );
       setErrorText( QString::fromUtf8( e.what() ) );

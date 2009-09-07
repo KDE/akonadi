@@ -77,7 +77,7 @@ void ItemMoveJob::doStart()
 
   QByteArray command = d->newTag();
   try {
-    command += ProtocolHelper::itemSetToByteArray( d->mItems, "MOVE" );
+    command += ProtocolHelper::entitySetToByteArray( d->mItems, "MOVE" );
   } catch ( const std::exception &e ) {
     setError( Unknown );
     setErrorText( QString::fromUtf8( e.what() ) );
