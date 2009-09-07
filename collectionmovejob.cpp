@@ -20,44 +20,29 @@
 #include "collectionmovejob.h"
 #include "collection.h"
 #include "job_p.h"
+#include "movejobimpl_p.h"
 
 using namespace Akonadi;
 
-class Akonadi::CollectionMoveJobPrivate : public JobPrivate
+class Akonadi::CollectionMoveJobPrivate : public MoveJobImpl<Collection, CollectionMoveJob>
 {
   public:
-    CollectionMoveJobPrivate( CollectionMoveJob *parent )
-      : JobPrivate( parent )
-    {
-    }
-
-    Collection collection;
-    Collection destination;
+    CollectionMoveJobPrivate( CollectionMoveJob *parent ) : MoveJobImpl<Collection, CollectionMoveJob>( parent ) {}
+    Q_DECLARE_PUBLIC( CollectionMoveJob )
 };
 
 CollectionMoveJob::CollectionMoveJob( const Collection &collection, const Collection &destination, QObject * parent )
   : Job( new CollectionMoveJobPrivate( this ), parent )
 {
   Q_D( CollectionMoveJob );
-
-  Q_ASSERT( collection.isValid() );
-  d->collection = collection;
   d->destination = destination;
+  d->objectsToMove.append( collection );
 }
 
 void CollectionMoveJob::doStart()
 {
   Q_D( CollectionMoveJob );
-  if ( !d->collection.isValid() || !d->destination.isValid() ) {
-    setError( Unknown );
-    setErrorText( QLatin1String("Invalid collection specified") );
-    emitResult();
-    return;
-  }
-
-  const QByteArray command = d->newTag() + " COLMOVE " + QByteArray::number( d->collection.id() )
-    + ' ' + QByteArray::number( d->destination.id() ) + '\n';
-  d->writeData( command );
+  d->sendCommand( "COLMOVE" );
 }
 
 #include "collectionmovejob.moc"

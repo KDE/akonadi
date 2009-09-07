@@ -66,6 +66,7 @@ class AKONADI_EXPORT CollectionMoveJob : public Job
 
   private:
     Q_DECLARE_PRIVATE( CollectionMoveJob )
+    template <typename T, typename MoveJob> friend class MoveJobImpl;
 };
 
 }
