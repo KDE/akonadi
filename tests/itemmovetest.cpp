@@ -29,6 +29,7 @@
 #include <QtCore/QObject>
 
 #include <qtest_akonadi.h>
+#include <resourceselectjob_p.h>
 
 using namespace Akonadi;
 
@@ -45,28 +46,34 @@ class ItemMoveTest: public QObject
     void testMove_data()
     {
       QTest::addColumn<Item::List>( "items" );
+      QTest::addColumn<Collection>( "destination" );
 
-      QTest::newRow( "single uid" ) << (Item::List() << Item( 1 ));
-      QTest::newRow( "two uid" ) << (Item::List() << Item( 2 ) << Item( 3 ));
+      const Collection destination( collectionIdFromPath( "res3" ) );
+      QVERIFY( destination.isValid() );
+
+      QTest::newRow( "single uid" ) << (Item::List() << Item( 1 )) << destination;
+      QTest::newRow( "two uid" ) << (Item::List() << Item( 2 ) << Item( 3 )) << destination;
       Item r1; r1.setRemoteId( "D" );
-      QTest::newRow( "single rid" ) << (Item::List() << r1);
+      Collection ridDest;
+      ridDest.setRemoteId( "3" );
+      QTest::newRow( "single rid" ) << (Item::List() << r1) << ridDest;
     }
 
     void testMove()
     {
       QFETCH( Item::List, items );
+      QFETCH( Collection, destination );
 
-      Collection destination( collectionIdFromPath( "res3" ) );
-      QVERIFY( destination.isValid() );
       Collection source( collectionIdFromPath( "res1/foo" ) );
       QVERIFY( source.isValid() );
+
+      ResourceSelectJob *select = new ResourceSelectJob( "akonadi_knut_resource_0" );
+      AKVERIFYEXEC( select ); // for rid based moves
 
       ItemFetchJob *prefetchjob = new ItemFetchJob( destination, this );
       AKVERIFYEXEC( prefetchjob );
       int baseline = prefetchjob->items().size();
 
-      CollectionSelectJob *select = new CollectionSelectJob( source );
-      AKVERIFYEXEC( select ); // for rid based moves
       ItemMoveJob *move = new ItemMoveJob( items, destination, this );
       AKVERIFYEXEC( move );
 

@@ -23,6 +23,7 @@
 #include "item.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
+#include <akonadi/private/imapparser_p.h>
 
 using namespace Akonadi;
 
@@ -61,6 +62,19 @@ ItemMoveJob::~ ItemMoveJob()
 void ItemMoveJob::doStart()
 {
   Q_D( ItemMoveJob );
+  if ( d->mItems.isEmpty() ) {
+    setError( Unknown );
+    setErrorText( QLatin1String( "No items specified for moving" ) );
+    emitResult();
+    return;
+  }
+  if ( !d->mTarget.isValid() && d->mTarget.remoteId().isEmpty() ) {
+    setError( Unknown );
+    setErrorText( QLatin1String( "No valid destination specifieed" ) );
+    emitResult();
+    return;
+  }
+
   QByteArray command = d->newTag();
   try {
     command += ProtocolHelper::itemSetToByteArray( d->mItems, "MOVE" );
@@ -71,7 +85,10 @@ void ItemMoveJob::doStart()
     return;
   }
   command += ' ';
-  command += QByteArray::number( d->mTarget.id() );
+  if ( d->mItems.first().isValid() ) // with all the checks done before this indicates now whether this is a UID or RID based operation
+    command += QByteArray::number( d->mTarget.id() );
+  else
+    command += ImapParser::quote( d->mTarget.remoteId().toUtf8() );
   command += '\n';
   d->writeData( command );
 }

@@ -21,7 +21,7 @@
 
 #include "contactgroupeditordialog.h"
 
-#include "addressbookcombobox_p.h"
+#include "addressbookcombobox.h"
 #include "contactgroupeditor.h"
 
 #include <akonadi/item.h>
@@ -63,7 +63,8 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
   if ( mode == CreateMode ) {
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-    d->mAddressBookBox = new AddressBookComboBox( AddressBookComboBox::ContactGroupsOnly, mainWidget );
+    d->mAddressBookBox = new AddressBookComboBox( AddressBookComboBox::ContactGroupsOnly,
+                                                  AddressBookComboBox::Writable, mainWidget );
 
     layout->addWidget( label, 0, 0 );
     layout->addWidget( d->mAddressBookBox, 0, 1 );

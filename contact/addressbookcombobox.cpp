@@ -19,8 +19,9 @@
     02110-1301, USA.
 */
 
-#include "addressbookcombobox_p.h"
+#include "addressbookcombobox.h"
 
+#include "asyncselectionhandler_p.h"
 #include "collectionfiltermodel_p.h"
 
 #include <akonadi/collectionfetchscope.h>
@@ -42,7 +43,7 @@ using namespace Akonadi;
 class AddressBookComboBox::Private
 {
   public:
-    Private( AddressBookComboBox::Type type, AddressBookComboBox *parent )
+    Private( AddressBookComboBox::Type type, AddressBookComboBox::Rights rights, AddressBookComboBox *parent )
       : mParent( parent )
     {
       mComboBox = new QComboBox;
@@ -73,10 +74,17 @@ class AddressBookComboBox::Private
       CollectionFilterModel *filterModel = new CollectionFilterModel( mParent );
       foreach ( const QString &contentMimeType, contentTypes )
         filterModel->addContentMimeTypeFilter( contentMimeType );
-      filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
+
+      if ( rights == AddressBookComboBox::Writable )
+        filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
+
       filterModel->setSourceModel( proxyModel );
 
       mComboBox->setModel( filterModel );
+
+      mSelectionHandler = new AsyncSelectionHandler( filterModel, mParent );
+      mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
+                        mParent, SLOT( activated( const QModelIndex& ) ) );
     }
 
     ~Private()
@@ -86,12 +94,14 @@ class AddressBookComboBox::Private
     }
 
     void activated( int index );
+    void activated( const QModelIndex& index );
 
     AddressBookComboBox *mParent;
 
     QComboBox *mComboBox;
     Monitor *mMonitor;
     EntityTreeModel *mModel;
+    AsyncSelectionHandler *mSelectionHandler;
 };
 
 void AddressBookComboBox::Private::activated( int index )
@@ -101,8 +111,13 @@ void AddressBookComboBox::Private::activated( int index )
     emit mParent->selectionChanged( modelIndex.data( EntityTreeModel::CollectionRole).value<Collection>() );
 }
 
-AddressBookComboBox::AddressBookComboBox( Type type, QWidget *parent )
-  : QWidget( parent ), d( new Private( type, this ) )
+void AddressBookComboBox::Private::activated( const QModelIndex &index )
+{
+  mComboBox->setCurrentIndex( index.row() );
+}
+
+AddressBookComboBox::AddressBookComboBox( Type type, Rights rights, QWidget *parent )
+  : QWidget( parent ), d( new Private( type, rights, this ) )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
@@ -120,6 +135,11 @@ AddressBookComboBox::~AddressBookComboBox()
   delete d;
 }
 
+void AddressBookComboBox::setDefaultAddressBook( const Collection &addressbook )
+{
+  d->mSelectionHandler->waitForCollection( addressbook );
+}
+
 Akonadi::Collection AddressBookComboBox::selectedAddressBook() const
 {
   Q_ASSERT_X( d->mComboBox->model() != 0, "AddressBookComboBox::selectedAddressBook", "No model set!" );
@@ -133,4 +153,4 @@ Akonadi::Collection AddressBookComboBox::selectedAddressBook() const
     return Akonadi::Collection();
 }
 
-#include "addressbookcombobox_p.moc"
+#include "addressbookcombobox.moc"

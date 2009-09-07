@@ -54,7 +54,8 @@ bool CollectionFilterModel::filterAcceptsRow( int row, const QModelIndex &parent
     accepted = accepted && !(contentMimeTypes.intersect( mContentMimeTypes ).isEmpty());
   }
 
-  accepted = accepted && (collection.rights() & mRights);
+  if ( mRights != Akonadi::Collection::ReadOnly )
+    accepted = accepted && (collection.rights() & mRights);
 
   return accepted;
 }

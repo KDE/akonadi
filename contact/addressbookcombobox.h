@@ -54,17 +54,33 @@ class AKONADI_CONTACT_EXPORT AddressBookComboBox : public QWidget
     };
 
     /**
+     * Describes what rights the address books must have that shall
+     * be listed for selection.
+     */
+    enum Rights
+    {
+      Readable,  ///< Address books that can be read from.
+      Writable   ///< Address books that can be written to.
+    };
+
+    /**
      * Creates a new address book combobox.
      *
      * @param type The type of address books that shall be listed.
+     * @param rights The rights of the address books that shall be listed.
      * @param parent The parent widget.
      */
-    AddressBookComboBox( Type type, QWidget *parent = 0 );
+    AddressBookComboBox( Type type, Rights rights, QWidget *parent = 0 );
 
     /**
      * Destroys the collection combobox.
      */
     ~AddressBookComboBox();
+
+    /**
+     * Sets the @p addressbook that shall be selected as default.
+     */
+    void setDefaultAddressBook( const Collection &addressbook );
 
     /**
      * Returns the selected address book.
@@ -85,6 +101,7 @@ class AKONADI_CONTACT_EXPORT AddressBookComboBox : public QWidget
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void activated( int ) )
+    Q_PRIVATE_SLOT( d, void activated( const QModelIndex& ) )
     //@endcond
 };
 
