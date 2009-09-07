@@ -161,6 +161,7 @@ Item ItemCreateJob::item() const
   item.setId( d->mUid );
   item.setRevision( 0 );
   item.setModificationTime( d->mDatetime );
+  item.setParentCollection( d->mCollection );
 
   return item;
 }
