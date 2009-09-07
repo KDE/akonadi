@@ -86,18 +86,11 @@ ItemDeleteJob::~ItemDeleteJob()
 {
 }
 
-Item::List ItemDeleteJob::items() const
+Item::List ItemDeleteJob::deletedItems() const
 {
   Q_D( const ItemDeleteJob );
 
   return d->mItems;
-}
-
-Collection ItemDeleteJob::collection() const
-{
-  Q_D( const ItemDeleteJob );
-
-  return d->mCollection;
 }
 
 void ItemDeleteJob::doStart()

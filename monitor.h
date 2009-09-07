@@ -247,8 +247,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @param item The removed item.
      */
-    void itemRemoved( const Akonadi::Item &item ); //TODO remove if we are sure nobody uses it any longer
-    void itemRemoved( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    void itemRemoved( const Akonadi::Item &item );
 
     /**
      * This signal is emitted if a reference to an item is added to a virtual collection.

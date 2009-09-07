@@ -59,13 +59,6 @@ ItemCopyJob::~ItemCopyJob()
 {
 }
 
-Item::List ItemCopyJob::items() const
-{
-  Q_D( const ItemCopyJob );
-
-  return d->mItems;
-}
-
 void ItemCopyJob::doStart()
 {
   Q_D( ItemCopyJob );
