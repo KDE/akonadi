@@ -136,13 +136,6 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     ItemFetchScope &fetchScope();
 
     /**
-     * Returns the item passed in on in the constructor or an invalid
-     * item if another constructor, e.g. those with the collection,
-     * was called.
-     */
-    Item item() const;
-
-    /**
      * Returns the collection passed in on in the constructor or set with the
      * setCollection method.
      */

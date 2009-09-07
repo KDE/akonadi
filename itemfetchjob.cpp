@@ -194,13 +194,6 @@ ItemFetchScope &ItemFetchJob::fetchScope()
   return d->mFetchScope;
 }
 
-Item ItemFetchJob::item() const
-{
-  Q_D( const ItemFetchJob );
-
-  return d->mItem;
-}
-
 Collection ItemFetchJob::collection() const
 {
   Q_D( const ItemFetchJob );
