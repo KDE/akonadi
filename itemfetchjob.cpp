@@ -194,13 +194,6 @@ ItemFetchScope &ItemFetchJob::fetchScope()
   return d->mFetchScope;
 }
 
-Collection ItemFetchJob::collection() const
-{
-  Q_D( const ItemFetchJob );
-
-  return d->mCollection;
-}
-
 void ItemFetchJob::setCollection(const Akonadi::Collection& collection)
 {
   Q_D( ItemFetchJob );

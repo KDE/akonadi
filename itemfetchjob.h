@@ -136,12 +136,6 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     ItemFetchScope &fetchScope();
 
     /**
-     * Returns the collection passed in on in the constructor or set with the
-     * setCollection method.
-     */
-    Collection collection() const;
-
-    /**
      * Specifies the collection the item is in.
      * This is only required when retrieving an item based on its remote id which might not be
      * unique globally.
