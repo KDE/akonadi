@@ -324,7 +324,7 @@ void DefaultResourceJob::Private::collectionFetchResult( KJob *job )
   // These collections have been created by the maildir resource, when it
   // found the folders on disk. So give them the necessary attributes now.
   Q_ASSERT( pendingModifyJobs == 0 );
-  foreach( Collection col, toRecover ) {          // TODO tell krazy we want a copy
+  foreach( Collection col, toRecover ) {          // krazy:exclude=foreach
     if( typeForName.contains( col.name() ) ) {
       kDebug() << "Recovering collection" << col.name();
       setCollectionAttributes( col, typeForName[ col.name() ] );
