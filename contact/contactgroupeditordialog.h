@@ -58,7 +58,7 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
      * @param mode The mode of the dialog.
      * @param parent The parent widget of the dialog.
      */
-    ContactGroupEditorDialog( Mode mode, QWidget *parent = 0 );
+    explicit ContactGroupEditorDialog( Mode mode, QWidget *parent = 0 );
 
     /**
      * Destroys the contact group editor dialog.

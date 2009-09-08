@@ -93,7 +93,7 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      * @param mode The mode of the dialog.
      * @param parent The parent widget of the dialog.
      */
-    ContactEditorDialog( Mode mode, QWidget *parent = 0 );
+    explicit ContactEditorDialog( Mode mode, QWidget *parent = 0 );
 
     /**
      * Creates a new contact editor dialog with a custom editor widget.
