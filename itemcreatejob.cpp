@@ -162,6 +162,7 @@ Item ItemCreateJob::item() const
   item.setRevision( 0 );
   item.setModificationTime( d->mDatetime );
   item.setParentCollection( d->mCollection );
+  item.setStorageCollectionId( d->mCollection.id() );
 
   return item;
 }

@@ -197,6 +197,7 @@ ItemFetchScope &ItemFetchJob::fetchScope()
 void ItemFetchJob::setCollection(const Akonadi::Collection& collection)
 {
   Q_D( ItemFetchJob );
+
   d->mCollection = collection;
 }
 

@@ -105,6 +105,12 @@ class AKONADI_EXPORT ItemDeleteJob : public Job
      */
     ~ItemDeleteJob();
 
+    /**
+     * Returns the items passed on in the constructor.
+     * @since 4.4
+     */
+     Item::List deletedItems() const;
+
   protected:
     virtual void doStart();
 
