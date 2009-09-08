@@ -166,11 +166,4 @@ Item ItemCreateJob::item() const
   return item;
 }
 
-Collection ItemCreateJob::collection() const
-{
-  Q_D( const ItemCreateJob );
-
-  return d->mCollection;
-}
-
 #include "itemcreatejob.moc"

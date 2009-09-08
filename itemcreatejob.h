@@ -85,12 +85,6 @@ class AKONADI_EXPORT ItemCreateJob : public Job
      */
     Item item() const;
 
-    /**
-     * Returns the collection the created item is child of. This is the same collection
-     * passed in on in the constructor.
-     */
-    Collection collection() const;
-
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
