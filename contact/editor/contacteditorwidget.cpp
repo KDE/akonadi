@@ -73,7 +73,7 @@ class ContactEditorWidget::Private
     KLineEdit *mNickNameWidget;
     SoundEditWidget *mPronunciationWidget;
 
-    // widgets from internet group
+    // widgets from Internet group
     EmailEditWidget *mEmailWidget;
     KLineEdit *mHomepageWidget;
     KLineEdit *mBlogWidget;
@@ -186,7 +186,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
 
   nameLayout->setRowStretch( 4, 1 );
 
-  // setup internet group box
+  // setup Internet group box
   label = new QLabel( i18n( "Email:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   internetLayout->addWidget( label, 0, 0 );
@@ -443,7 +443,7 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
   d->mNickNameWidget->setText( contact.nickName() );
   d->mPronunciationWidget->loadContact( contact );
 
-  // internet group
+  // Internet group
   d->mEmailWidget->loadContact( contact );
   d->mHomepageWidget->setUrl( contact.url() );
   d->mBlogWidget->setText( d->loadCustom( contact, QLatin1String( "BlogFeed" ) ) );
@@ -494,7 +494,7 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   contact.setNickName( d->mNickNameWidget->text().trimmed() );
   d->mPronunciationWidget->storeContact( contact );
 
-  // internet group
+  // Internet group
   d->mEmailWidget->storeContact( contact );
   contact.setUrl( KUrl( d->mHomepageWidget->text().trimmed() ) );
   d->storeCustom( contact, QLatin1String( "BlogFeed" ), d->mBlogWidget->text().trimmed() );
@@ -544,7 +544,7 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
   d->mNickNameWidget->setReadOnly( readOnly );
   d->mPronunciationWidget->setReadOnly( readOnly );
 
-  // widgets from internet group
+  // widgets from Internet group
   d->mEmailWidget->setReadOnly( readOnly );
   d->mHomepageWidget->setReadOnly( readOnly );
   d->mBlogWidget->setReadOnly( readOnly );
