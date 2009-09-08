@@ -24,35 +24,31 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include <akonadi/private/imapparser_p.h>
+#include "movejobimpl_p.h"
 
 using namespace Akonadi;
 
-class Akonadi::ItemMoveJobPrivate: public JobPrivate
+class Akonadi::ItemMoveJobPrivate: public MoveJobImpl<Item, ItemMoveJob>
 {
   public:
-    ItemMoveJobPrivate( ItemMoveJob *parent )
-      : JobPrivate( parent )
-    {
-    }
-
-    Collection mTarget;
-    Item::List mItems;
+    ItemMoveJobPrivate( ItemMoveJob *parent ) : MoveJobImpl<Item, ItemMoveJob>( parent ) {}
+    Q_DECLARE_PUBLIC( ItemMoveJob )
 };
 
 ItemMoveJob::ItemMoveJob(const Item & item, const Collection & target, QObject * parent) :
     Job( new ItemMoveJobPrivate( this ), parent )
 {
   Q_D( ItemMoveJob );
-  d->mTarget = target;
-  d->mItems << item;
+  d->destination = target;
+  d->objectsToMove.append( item );
 }
 
 ItemMoveJob::ItemMoveJob( const Item::List& items, const Collection& target, QObject* parent) :
   Job( new ItemMoveJobPrivate( this ), parent )
 {
   Q_D( ItemMoveJob );
-  d->mTarget = target;
-  d->mItems = items;
+  d->destination = target;
+  d->objectsToMove = items;
 }
 
 ItemMoveJob::~ ItemMoveJob()
@@ -62,35 +58,7 @@ ItemMoveJob::~ ItemMoveJob()
 void ItemMoveJob::doStart()
 {
   Q_D( ItemMoveJob );
-  if ( d->mItems.isEmpty() ) {
-    setError( Unknown );
-    setErrorText( QLatin1String( "No items specified for moving" ) );
-    emitResult();
-    return;
-  }
-  if ( !d->mTarget.isValid() && d->mTarget.remoteId().isEmpty() ) {
-    setError( Unknown );
-    setErrorText( QLatin1String( "No valid destination specifieed" ) );
-    emitResult();
-    return;
-  }
-
-  QByteArray command = d->newTag();
-  try {
-    command += ProtocolHelper::itemSetToByteArray( d->mItems, "MOVE" );
-  } catch ( const std::exception &e ) {
-    setError( Unknown );
-    setErrorText( QString::fromUtf8( e.what() ) );
-    emitResult();
-    return;
-  }
-  command += ' ';
-  if ( d->mItems.first().isValid() ) // with all the checks done before this indicates now whether this is a UID or RID based operation
-    command += QByteArray::number( d->mTarget.id() );
-  else
-    command += ImapParser::quote( d->mTarget.remoteId().toUtf8() );
-  command += '\n';
-  d->writeData( command );
+  d->sendCommand( "MOVE" );
 }
 
 #include "itemmovejob.moc"

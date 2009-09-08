@@ -70,16 +70,19 @@ void ItemAppendTest::testItemAppend()
   item.setMimeType( "application/octet-stream" );
   item.setFlag( "TestFlag" );
   item.setSize( 3456 );
-  ItemCreateJob *job = new ItemCreateJob( item, Collection( testFolder1 ), this );
+  ItemCreateJob *job = new ItemCreateJob( item, testFolder1, this );
   AKVERIFYEXEC( job );
   ref = job->item();
+  QCOMPARE( ref.parentCollection(), testFolder1 );
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
+  fjob->fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
   AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   QCOMPARE( fjob->items()[0], ref );
   QCOMPARE( fjob->items()[0].remoteId(), remoteId );
   QVERIFY( fjob->items()[0].flags().contains( "TestFlag" ) );
+  QCOMPARE( fjob->items()[0].parentCollection(), ref.parentCollection() );
 
   qint64 size = 3456;
   QCOMPARE( fjob->items()[0].size(), size );

@@ -25,6 +25,12 @@
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 
+#include <akonadi/private/imapparser_p.h>
+#include <akonadi/private/protocol_p.h>
+
+#include <boost/bind.hpp>
+#include <algorithm>
+
 namespace Akonadi {
 
 /**
@@ -92,7 +98,44 @@ class ProtocolHelper
       Converts the given set of items into a protocol representation.
       @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
     */
-    static QByteArray itemSetToByteArray( const Item::List &items, const QByteArray &command );
+    template <typename T>
+    static QByteArray entitySetToByteArray( const QList<T> &_objects, const QByteArray &command )
+    {
+      if ( _objects.isEmpty() )
+        throw Exception( "No objects specified" );
+
+      typename T::List objects( _objects );
+
+      QByteArray rv;
+      std::sort( objects.begin(), objects.end(), boost::bind( &T::id, _1 ) < boost::bind( &T::id, _2 ) );
+      if ( objects.first().isValid() ) {
+        // all items have a uid set
+        rv += " " AKONADI_CMD_UID " ";
+        rv += command;
+        rv += ' ';
+        QList<typename T::Id>  uids;
+        foreach ( const T &object, objects )
+          uids << object.id();
+        ImapSet set;
+        set.add( uids );
+        rv += set.toImapSequenceSet();
+      } else {
+        // check if all items have a remote id
+        QList<QByteArray> rids;
+        foreach ( const T &object, objects ) {
+          if ( object.remoteId().isEmpty() )
+            throw Exception( "No remote identifier specified" );
+          rids << ImapParser::quote( object.remoteId().toUtf8() );
+        }
+
+        rv += " " AKONADI_CMD_RID " ";
+        rv += command;
+        rv += " (";
+        rv += ImapParser::join( rids, " " );
+        rv += ')';
+      }
+      return rv;
+    }
 
     /**
       Converts the given collection's hierarchical RID into a protocol representation.

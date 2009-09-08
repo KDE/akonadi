@@ -56,7 +56,7 @@ class ProtocolHelperTest : public QObject
 
       bool didThrow = false;
       try {
-        const QByteArray r = ProtocolHelper::itemSetToByteArray( items, "CMD" );
+        const QByteArray r = ProtocolHelper::entitySetToByteArray( items, "CMD" );
         QCOMPARE( r, result );
       } catch ( const std::exception &e ) {
         qDebug() << e.what();
