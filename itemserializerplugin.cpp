@@ -56,7 +56,7 @@ void ItemSerializerPluginV2::merge( Item &item, const Item &other )
   buffer.setBuffer( &other.payloadData() );
   buffer.open( QIODevice::ReadOnly );
 
-  foreach ( const QByteArray part, other.loadedPayloadParts() ) {
+  foreach ( const QByteArray &part, other.loadedPayloadParts() ) {
     buffer.seek( 0 );
     deserialize( item, part, buffer, 0 );
   }
