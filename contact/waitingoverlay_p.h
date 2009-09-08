@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef WAITINGOVERLAY_H
-#define WAITINGOVERLAY_H
+#ifndef AKONADI_WAITINGOVERLAY_P_H
+#define AKONADI_WAITINGOVERLAY_P_H
 
 #include <QtCore/QPointer>
 #include <QtGui/QWidget>
