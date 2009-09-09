@@ -175,6 +175,11 @@ class AKONADI_EXPORT ItemSerializerPlugin
 
 };
 
+/**
+ * @short The extended base class for item type serializer plugins.
+ *
+ * @since 4.4
+ */
 class AKONADI_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
 {
   public:

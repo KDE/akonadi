@@ -34,6 +34,7 @@ class Item;
  * @short A dialog for displaying a contact group in Akonadi.
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactGroupViewerDialog : public KDialog
 {

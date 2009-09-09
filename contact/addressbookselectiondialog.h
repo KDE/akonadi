@@ -35,6 +35,7 @@ class Collection;
  * @short A dialog to select an address book in Akonadi.
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT AddressBookSelectionDialog : public KDialog
 {

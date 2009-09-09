@@ -36,6 +36,7 @@ class Item;
  * @short An widget to edit contacts in Akonadi.
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
 {

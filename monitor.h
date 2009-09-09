@@ -288,6 +288,8 @@ class AKONADI_EXPORT Monitor : public QObject
      * @param collection The moved collection.
      * @param source The previous parent collection.
      * @param distination The new parent collection.
+     *
+     * @since 4.4
      */
     void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
 

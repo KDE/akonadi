@@ -118,6 +118,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      * @param fetchScope The new scope for item fetch operations.
      *
      * @see fetchScope()
+     * @since 4.4
      */
     void setFetchScope( const ItemFetchScope &fetchScope );
 

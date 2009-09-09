@@ -34,6 +34,7 @@ namespace Akonadi {
  * @short A viewer component for contact groups in Akonadi.
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactGroupViewer : public QWidget, public Akonadi::ItemMonitor
 {

@@ -37,6 +37,7 @@ class ContactGroupEditor;
  * @short A dialog for editing a contact group.
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
 {

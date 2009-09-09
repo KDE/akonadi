@@ -35,7 +35,7 @@ class Item;
  * @short An editor for contact groups.
  *
  * @author Tobias Koenig <tokoe@kde.org>
- * @since 4.3
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
 {

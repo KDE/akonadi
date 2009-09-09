@@ -143,6 +143,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * Sets the favorite collections model based on which the collection
      * relatedactions should operate. If none is set, the "Add to Favorite Folders" action
      * will be disabled.
+     *
+     * @since 4.4
      */
     void setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel );
 
@@ -150,6 +152,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * Sets the favorite collection selection model based on which the favorite
      * collection related actions should operate. If none is set, all favorite modifications
      * actions will be disabled.
+     *
+     * @since 4.4
      */
     void setFavoriteSelectionModel( QItemSelectionModel *selectionModel );
 

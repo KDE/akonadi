@@ -36,6 +36,7 @@ namespace Akonadi {
  * @short A combobox for selecting an Akonadi address book.
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT AddressBookComboBox : public QWidget
 {
