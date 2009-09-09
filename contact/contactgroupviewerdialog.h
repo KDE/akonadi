@@ -33,6 +33,21 @@ class Item;
 /**
  * @short A dialog for displaying a contact group in Akonadi.
  *
+ * This dialog provides a way to show a contact group from the
+ * Akonadi storage.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * const Akonadi::Item group = ...
+ *
+ * Akonadi::ContactGroupViewerDialog dlg( this );
+ * dlg.setContactGroup( group );
+ * dlg.exec();
+ *
+ * @endcode
+ *
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */

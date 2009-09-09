@@ -34,7 +34,41 @@ class Item;
 class ContactGroupEditor;
 
 /**
- * @short A dialog for editing a contact group.
+ * @short A dialog for creating or editing a contact group in Akonadi.
+ *
+ * This dialog provides a way to create a new contact group or edit
+ * an existing contact group in Akonadi.
+ *
+ * Example for creating a new contact group:
+ *
+ * @code
+ *
+ * Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, this );
+ *
+ * if ( dlg.exec() ) {
+ *   qDebug() << "New contact group has been added to the address book";
+ * } else {
+ *   qDebug() << "User has canceled operation";
+ * }
+ *
+ * @endcode
+ *
+ * Example for editing an existing contact group:
+ *
+ * @code
+ *
+ * const Akonadi::Item contactGroup = ...;
+ *
+ * Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, this );
+ * dlg.setContactGroup( contactGroup );
+ *
+ * if ( dlg.exec() ) {
+ *   qDebug() << "Contact group has been edited";
+ * } else {
+ *   qDebug() << "User has canceled operation";
+ * }
+ *
+ * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
