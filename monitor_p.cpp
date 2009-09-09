@@ -296,6 +296,7 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
       break;
     case NotificationMessage::Modify:
       emit q_ptr->collectionChanged( collection );
+      emit q_ptr->collectionChanged( collection, msg.itemParts() );
       break;
     case NotificationMessage::Move:
       emit q_ptr->collectionMoved( collection, parent, destination );

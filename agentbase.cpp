@@ -131,6 +131,12 @@ void AgentBase::Observer2::collectionMoved( const Akonadi::Collection &collectio
     sAgentBase->d_ptr->changeProcessed();
 }
 
+void AgentBase::Observer2::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers )
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Observer::collectionChanged( collection );
+}
+
 //@cond PRIVATE
 
 AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
@@ -197,6 +203,8 @@ void AgentBasePrivate::init()
            SLOT( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
            SLOT( collectionChanged( const Akonadi::Collection& ) ) );
+  connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ),
+           SLOT( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ) );
   connect( mMonitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
            SLOT(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
   connect( mMonitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
@@ -287,8 +295,17 @@ void AgentBasePrivate::collectionAdded( const Akonadi::Collection &collection, c
 void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection )
 {
   kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
-  if ( mObserver != 0 )
+  AgentBase::Observer2 *observer2 = dynamic_cast<AgentBase::Observer2*>( mObserver );
+  if ( mObserver != 0 && observer2 == 0 ) // For Observer2 we use the variant with the part identifiers
     mObserver->collectionChanged( collection );
+}
+
+void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  AgentBase::Observer2 *observer2 = dynamic_cast<AgentBase::Observer2*>( mObserver );
+  if ( observer2 != 0 )
+    observer2->collectionChanged( collection, partIdentifiers );
 }
 
 void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
