@@ -31,6 +31,7 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/collectioncopyjob.h>
 #include <akonadi/collectionmodifyjob.h>
+#include <akonadi/collectionmovejob.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/transactionsequence.h>
 #include <akonadi/itemcopyjob.h>
@@ -449,7 +450,9 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
             return false;
 
           if ( Qt::MoveAction == action ) {
-    //         new CollectionMoveJob(col, destCol, transaction);
+            CollectionMoveJob *collectionMoveJob = new CollectionMoveJob( collection, destCollection, transaction );
+            connect( collectionMoveJob, SIGNAL( result ( KJob* ) ),
+                     SLOT(  moveJobDone(  KJob* ) ) );
           } else if ( Qt::CopyAction == action ) {
             CollectionCopyJob *collectionCopyJob = new CollectionCopyJob( collection, destCollection, transaction );
             connect( collectionCopyJob, SIGNAL( result( KJob* ) ),
