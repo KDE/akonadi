@@ -287,6 +287,8 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @param collection The changed collection.
      * @param partIdentifiers The identifiers of the collection parts that has been changed.
+     *
+     * @since 4.4
      */
     void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers );
 
