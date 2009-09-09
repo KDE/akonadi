@@ -134,7 +134,8 @@ void AgentBase::Observer2::collectionMoved( const Akonadi::Collection &collectio
 void AgentBase::Observer2::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers )
 {
   kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
-  Observer::collectionChanged( collection );
+  Q_UNUSED( partIdentifiers );
+  collectionChanged( collection );
 }
 
 //@cond PRIVATE
