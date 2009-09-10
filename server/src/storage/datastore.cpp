@@ -20,7 +20,6 @@
 
 #include "datastore.h"
 
-#include "agentmanagerinterface.h"
 #include "dbconfig.h"
 #include "dbinitializer.h"
 #include "dbupdater.h"

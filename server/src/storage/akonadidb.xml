@@ -75,7 +75,7 @@
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY NOT NULL UNIQUE"/>
     <column name="isVirtual" type="bool" properties="DEFAULT false"/>
     <reference name="collections" table="Collection" key="resourceId"/>
-    <data columns="name" values="'akonadi_search_resource'"/>
+    <data columns="name,isVirtual" values="'akonadi_search_resource',true"/>
   </table>
 
   <table name="Collection">
