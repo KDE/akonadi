@@ -3,11 +3,10 @@
   <interface name="org.freedesktop.Akonadi.ResourceManager">
     <method name="addResourceInstance">
       <arg name="identifier" type="s" direction="in"/>
-      <arg type="b" direction="out"/> 
+      <arg name="capabilities" type="as" direction="in"/>
     </method>
     <method name="removeResourceInstance">
       <arg name="identifier" type="s" direction="in"/>
-      <arg type="b" direction="out"/>
     </method>
   </interface>
 </node>

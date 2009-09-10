@@ -23,7 +23,7 @@
 #include "agentmanageradaptor.h"
 #include "processcontrol.h"
 #include "serverinterface.h"
-#include "../../libs/xdgbasedirs_p.h"
+#include "libs/xdgbasedirs_p.h"
 #include "akdebug.h"
 #include "resource_manager.h"
 #include "preprocessor_manager.h"
@@ -180,7 +180,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   mAgentInstances.insert( instance->identifier(), instance );
 
   org::freedesktop::Akonadi::ResourceManager * resmanager = new org::freedesktop::Akonadi::ResourceManager( QLatin1String("org.freedesktop.Akonadi"), QLatin1String("/ResourceManager"), QDBusConnection::sessionBus(), this );
-  resmanager->addResourceInstance(instance->identifier());
+  resmanager->addResourceInstance( instance->identifier(), agentInfo.capabilities );
 
   save();
   return instance->identifier();

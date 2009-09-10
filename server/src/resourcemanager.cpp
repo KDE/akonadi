@@ -21,6 +21,7 @@
 #include "tracer.h"
 #include "storage/datastore.h"
 #include "resourcemanageradaptor.h"
+#include "libs/capabilities_p.h"
 
 #include <QtDBus/QDBusConnection>
 
@@ -35,26 +36,22 @@ Akonadi::ResourceManager::ResourceManager(QObject * parent) :
   QDBusConnection::sessionBus().registerObject( QLatin1String("/ResourceManager"), this );
 }
 
-bool Akonadi::ResourceManager::addResourceInstance(const QString & name)
+void Akonadi::ResourceManager::addResourceInstance(const QString & name, const QStringList &capabilities)
 {
-  DataStore *db = DataStore::self();
-
   Resource resource = Resource::retrieveByName( name );
-  if ( resource.isValid() )
-    return false; // resource already exists
+  if ( resource.isValid() ) {
+    Tracer::self()->error( "ResourceManager", QString::fromLatin1("Resource '%1' already exists.").arg(name) );
+    return; // resource already exists
+  }
 
   // create the resource
   resource.setName( name );
-  if ( !resource.insert() ) {
+  resource.setIsVirtual( capabilities.contains( QLatin1String( AKONADI_AGENT_CAPABILITY_VIRTUAL ) ) );
+  if ( !resource.insert() )
     Tracer::self()->error( "ResourceManager", QString::fromLatin1("Could not create resource '%1'.").arg(name) );
-    delete db;
-    return false;
-  }
-  resource = Resource::retrieveByName( name );
-  return true;
 }
 
-bool Akonadi::ResourceManager::removeResourceInstance(const QString & name)
+void Akonadi::ResourceManager::removeResourceInstance(const QString & name)
 {
   DataStore *db = DataStore::self();
 
@@ -68,7 +65,6 @@ bool Akonadi::ResourceManager::removeResourceInstance(const QString & name)
     // remove resource
     resource.remove();
   }
-  return true;
 }
 
 ResourceManager * Akonadi::ResourceManager::self()

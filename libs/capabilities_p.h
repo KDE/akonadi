@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,38 +17,20 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_RESOURCEMANAGER_H
-#define AKONADI_RESOURCEMANAGER_H
-
-#include <QtCore/QObject>
-
-#include "agentmanagerinterface.h"
-
-namespace Akonadi {
+#ifndef AKONADI_CAPABILITIES_P_H
+#define AKONADI_CAPABILITIES_P_H
 
 /**
-  Listens to agent instance added/removed signals and creates/removes
-  the corresponding data in the database.
+  @file capabilites_p.h Shared constants for agent capabilities.
+
+  @todo Fill this file with the missing capabilites.
 */
-class ResourceManager : public QObject
-{
-  Q_OBJECT
 
-  public:
-    static ResourceManager *self();
-
-  private:
-    ResourceManager( QObject *parent = 0 );
-
-  public Q_SLOTS:
-    void addResourceInstance( const QString &name, const QStringList &capabilites );
-    void removeResourceInstance( const QString &name );
-
-  private:
-    static ResourceManager* mSelf;
-    org::freedesktop::Akonadi::AgentManager *mManager;
-};
-
-}
+#define AKONADI_AGENT_CAPABILITY_AUTOSTART "Autostart"
+#define AKONADI_AGENT_CAPABILITY_NOCONFIG "NoConfig"
+#define AKONADI_AGENT_CAPABILITY_PREPROCESSOR "Preprocessor"
+#define AKONADI_AGENT_CAPABILITY_RESOURCE "Resource"
+#define AKONADI_AGENT_CAPABILITY_UNIQUE "Unique"
+#define AKONADI_AGENT_CAPABILITY_VIRTUAL "Virtual"
 
 #endif

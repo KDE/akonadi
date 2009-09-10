@@ -85,4 +85,9 @@
     ALTER TABLE CollectionTable CHANGE parentId parentId BIGINT DEFAULT NULL;
   </update>
 
+  <update version="14" abortOnFailure="false">
+    UPDATE resourcetable SET isVirtual = true WHERE name = 'akonadi_nepomuktag_resource';
+    UPDATE resourcetable SET isVirtual = true WHERE name = 'akonadi_search_resource';
+  </update>
+
 </updates>

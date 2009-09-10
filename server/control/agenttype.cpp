@@ -20,16 +20,17 @@
 #include "agenttype.h"
 #include "agentmanager.h"
 #include "tracerinterface.h"
-#include "../../libs/xdgbasedirs_p.h"
+#include "libs/xdgbasedirs_p.h"
+#include "libs/capabilities_p.h"
 
 #include <QSettings>
 
 using namespace Akonadi;
 
-QLatin1String AgentType::CapabilityUnique = QLatin1String( "Unique" );
-QLatin1String AgentType::CapabilityResource = QLatin1String( "Resource" );
-QLatin1String AgentType::CapabilityAutostart = QLatin1String( "Autostart" );
-QLatin1String AgentType::CapabilityPreprocessor = QLatin1String( "Preprocessor" );
+QLatin1String AgentType::CapabilityUnique = QLatin1String( AKONADI_AGENT_CAPABILITY_UNIQUE );
+QLatin1String AgentType::CapabilityResource = QLatin1String( AKONADI_AGENT_CAPABILITY_RESOURCE );
+QLatin1String AgentType::CapabilityAutostart = QLatin1String( AKONADI_AGENT_CAPABILITY_AUTOSTART );
+QLatin1String AgentType::CapabilityPreprocessor = QLatin1String( AKONADI_AGENT_CAPABILITY_PREPROCESSOR );
 
 AgentType::AgentType() :
     instanceCounter( 0 )

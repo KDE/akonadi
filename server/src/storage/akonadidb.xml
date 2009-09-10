@@ -67,12 +67,13 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="13"/>
+    <data columns="version" values="14"/>
   </table>
 
   <table name="Resource">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY NOT NULL UNIQUE"/>
+    <column name="isVirtual" type="bool" properties="DEFAULT false"/>
     <reference name="collections" table="Collection" key="resourceId"/>
     <data columns="name" values="'akonadi_search_resource'"/>
   </table>

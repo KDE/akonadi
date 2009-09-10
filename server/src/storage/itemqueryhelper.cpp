@@ -33,11 +33,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet& set, QueryBuilder& qb, const
 {
   QueryHelper::setToQuery( set, PimItem::idFullColumnName(), qb );
   if ( collection.isValid() ) {
-    // FIXME: we probably want to do both paths here in all cases, but that is apparently
-    // non-trivial with SQL
-    if ( collection.resource().name() == QLatin1String("akonadi_search_resource") ||
-      collection.resource().name().contains( QLatin1String("nepomuk") ) )
-    {
+    if ( collection.resource().isVirtual() ) {
       qb.addTable( CollectionPimItemRelation::tableName() );
       qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, collection.id() );
       qb.addColumnCondition( CollectionPimItemRelation::rightFullColumnName(), Query::Equals,
