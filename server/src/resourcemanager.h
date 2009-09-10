@@ -22,8 +22,6 @@
 
 #include <QtCore/QObject>
 
-#include "agentmanagerinterface.h"
-
 namespace Akonadi {
 
 /**
@@ -46,7 +44,6 @@ class ResourceManager : public QObject
 
   private:
     static ResourceManager* mSelf;
-    org::freedesktop::Akonadi::AgentManager *mManager;
 };
 
 }
