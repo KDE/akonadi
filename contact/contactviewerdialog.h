@@ -33,7 +33,23 @@ class Item;
 /**
  * @short A dialog for displaying a contact in Akonadi.
  *
+ * This dialog provides a way to show a contact from the
+ * Akonadi storage.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * const Akonadi::Item contact = ...
+ *
+ * Akonadi::ContactViewerDialog dlg( this );
+ * dlg.setContact( contact );
+ * dlg.exec();
+ *
+ * @endcode
+ *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactViewerDialog : public KDialog
 {

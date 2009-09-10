@@ -72,6 +72,7 @@ class Item;
  * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
 {

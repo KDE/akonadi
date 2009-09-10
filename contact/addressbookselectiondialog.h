@@ -34,7 +34,27 @@ class Collection;
 /**
  * @short A dialog to select an address book in Akonadi.
  *
+ * This dialog provides a combobox to select an address book
+ * collection from the Akonadi storage.
+ * The available address books can be filtered to show only
+ * address books that can contain contacts, contact groups or both.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * AddressBookSelectionDialog dlg( AddressBookSelectionDialog::All, this );
+ * if ( dlg.exec() ) {
+ *   const Collection addressBook = dlg.selectedAddressBook();
+ *   ...
+ * }
+ *
+ * @endcode
+ *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT AddressBookSelectionDialog : public KDialog
 {

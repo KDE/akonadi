@@ -59,6 +59,7 @@ namespace Akonadi {
  * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactGroupExpandJob : public KJob
 {

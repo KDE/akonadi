@@ -33,7 +33,24 @@ namespace Akonadi {
 /**
  * @short A viewer component for contacts in Akonadi.
  *
+ * This widgets provides a way to show a contact from the
+ * Akonadi storage.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * const Item contact = ...
+ *
+ * ContactViewer *viewer = new ContactViewer( this );
+ * viewer->setContact( contact );
+ *
+ * @endcode
+ *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::ItemMonitor
 {

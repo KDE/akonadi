@@ -35,7 +35,28 @@ namespace Akonadi {
 /**
  * @short A combobox for selecting an Akonadi address book.
  *
+ * This widget provides a combobox to select an address book
+ * collection from the Akonadi storage.
+ * The available address books can be filtered to show only
+ * address books that can contain contacts, contact groups or both.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * AddressBookComboBox *box = new AddressBookComboBox( AddressBookComboBox::All,
+ *                                                     AddressBookComboBox::Readable, this );
+ *
+ * ...
+ *
+ * const Collection addressBook = box->selectedAddressBook();
+ *
+ * @endcode
+ *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT AddressBookComboBox : public QWidget
 {

@@ -43,6 +43,7 @@ namespace Akonadi {
  * @endcode
  *
  * @author Kevin Ottens <ervin@kde.org>
+ * @since 4.4
  */
 class AKONADI_EXPORT StatisticsToolTipProxyModel : public QSortFilterProxyModel
 {

@@ -35,7 +35,46 @@ class Item;
 /**
  * @short An widget to edit contacts in Akonadi.
  *
+ * This widget provides a way to create a new contact or edit
+ * an existing contact in Akonadi.
+ *
+ * Example for creating a new contact:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * ContactEditor *editor = new ContactEditor( Akonadi::ContactEditor::CreateMode, this );
+ *
+ * ...
+ *
+ * if ( !editor->saveContact() ) {
+ *   qDebug() << "Unable to save new contact to storage";
+ *   return;
+ * }
+ *
+ * @endcode
+ *
+ * Example for editing an existing contact:
+ *
+ * @code
+ *
+ * const Akonadi::Item contact = ...;
+ *
+ * ContactEditor *editor = new ContactEditor( Akonadi::ContactEditor::EditMode, this );
+ * editor->loadContact( contact );
+ *
+ * ...
+ *
+ * if ( !editor->saveContact() ) {
+ *   qDebug() << "Unable to save changed contact to storage";
+ *   return;
+ * }
+ *
+ * @endcode
+ *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
 {

@@ -217,6 +217,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     class AKONADI_EXPORT Observer2 : public Observer  // krazy:exclude=dpointer
     {
+        using Observer::collectionChanged;
+
       public:
         /**
          * Reimplement to handle item moves.
@@ -243,6 +245,13 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          */
         virtual void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source,
                                       const Akonadi::Collection &destination );
+
+        /**
+         * Reimplement to handle changes to existing collections.
+         * @param collection The changed collection.
+         * @param partIdentifiers The identifiers of the collection parts that has been changed.
+         */
+        virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers );
     };
 
     /**

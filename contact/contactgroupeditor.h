@@ -32,10 +32,48 @@ class Collection;
 class Item;
 
 /**
- * @short An editor for contact groups.
+ * @short An widget to edit contact groups in Akonadi.
+ *
+ * This widget provides a way to create a new contact group or edit
+ * an existing contact group in Akonadi.
+ *
+ * Example for creating a new contact group:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * ContactGroupEditor *editor = new ContactGroupEditor( Akonadi::ContactGroupEditor::CreateMode, this );
+ *
+ * ...
+ *
+ * if ( !editor->saveContactGroup() ) {
+ *   qDebug() << "Unable to save new contact group to storage";
+ *   return;
+ * }
+ *
+ * @endcode
+ *
+ * Example for editing an existing contact group:
+ *
+ * @code
+ *
+ * const Akonadi::Item contactGroup = ...;
+ *
+ * ContactGroupEditor *editor = new ContactGroupEditor( Akonadi::ContactGroupEditor::EditMode, this );
+ * editor->loadContactGroup( contactGroup );
+ *
+ * ...
+ *
+ * if ( !editor->saveContactGroup() ) {
+ *   qDebug() << "Unable to save changed contact group to storage";
+ *   return;
+ * }
+ *
+ * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
- * @since 4.3
+ * @since 4.4
  */
 class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
 {
