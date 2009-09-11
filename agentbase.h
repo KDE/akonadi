@@ -234,6 +234,22 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
                                 const Akonadi::Collection &collectionDestination );
 
         /**
+         * Reimplement to handle item linking.
+         * This is only relevant for virtual resources.
+         * @param item The linked item.
+         * @param collection The collection the item is linked to.
+         */
+        virtual void itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+
+        /**
+         * Reimplement to handle item unlinking.
+         * This is only relevant for virtual resources.
+         * @param item The unlinked item.
+         * @param collection The collection the item is unlinked to.
+         */
+        virtual void itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+
+        /**
          * Reimplement to handle collection moves.
          * When using this class in combination with Akonadi::ResourceBase, inter-resource
          * moves are handled internally already and the corresponding  add or delete method

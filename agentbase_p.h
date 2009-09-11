@@ -96,6 +96,8 @@ class AgentBasePrivate : public QObject
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
     void itemMoved( const Akonadi::Item &, const Akonadi::Collection &source, const Akonadi::Collection &destination );
     void itemRemoved( const Akonadi::Item &item );
+    void itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    void itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
     void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
     void collectionChanged( const Akonadi::Collection &collection );

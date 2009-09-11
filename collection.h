@@ -81,8 +81,10 @@ class AKONADI_EXPORT Collection : public Entity
       CanChangeCollection = 0x8,        ///< Can change subcollections in this collection
       CanCreateCollection = 0x10,       ///< Can create new subcollections in this collection
       CanDeleteCollection = 0x20,       ///< Can delete subcollections in this collection
+      CanLinkItem = 0x40,               ///< Can create links to existing items in this virtual collection
+      CanUnlinkItem = 0x80,             ///< Can remove links to items in this virtual collection
       AllRights = (CanChangeItem | CanCreateItem | CanDeleteItem |
-                   CanChangeCollection | CanCreateCollection | CanDeleteCollection) ///< Has all rights on this collection
+                   CanChangeCollection | CanCreateCollection | CanDeleteCollection) ///< Has all rights on this storage collection
     };
     Q_DECLARE_FLAGS(Rights, Right)
 

@@ -121,6 +121,24 @@ void AgentBase::Observer2::itemMoved( const Akonadi::Item &item, const Akonadi::
     sAgentBase->d_ptr->changeProcessed();
 }
 
+void AgentBase::Observer2::itemLinked(const Akonadi::Item& item, const Akonadi::Collection& collection)
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( item );
+  Q_UNUSED( collection );
+  if ( sAgentBase != 0 )
+    sAgentBase->d_ptr->changeProcessed();
+}
+
+void AgentBase::Observer2::itemUnlinked(const Akonadi::Item& item, const Akonadi::Collection& collection)
+{
+  kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
+  Q_UNUSED( item );
+  Q_UNUSED( collection );
+  if ( sAgentBase != 0 )
+    sAgentBase->d_ptr->changeProcessed();
+}
+
 void AgentBase::Observer2::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
 {
   kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
@@ -202,6 +220,10 @@ void AgentBasePrivate::init()
            SLOT( itemRemoved( const Akonadi::Item& ) ) );
   connect( mMonitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+  connect( mMonitor, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
+           SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
+  connect( mMonitor, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
+           SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
   connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
            SLOT( collectionChanged( const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ),
@@ -284,6 +306,26 @@ void AgentBasePrivate::itemRemoved( const Akonadi::Item &item )
   kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
   if ( mObserver != 0 )
     mObserver->itemRemoved( item );
+}
+
+void AgentBasePrivate::itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  AgentBase::Observer2 *observer2 = dynamic_cast<AgentBase::Observer2*>( mObserver );
+  if ( observer2 )
+    observer2->itemLinked( item, collection );
+  else
+    changeProcessed();
+}
+
+void AgentBasePrivate::itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection )
+{
+  kDebug() << "mObserver=" << (void*) mObserver << "this=" << (void*) this;
+  AgentBase::Observer2 *observer2 = dynamic_cast<AgentBase::Observer2*>( mObserver );
+  if ( observer2 )
+    observer2->itemUnlinked( item, collection );
+  else
+    changeProcessed();
 }
 
 void AgentBasePrivate::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )

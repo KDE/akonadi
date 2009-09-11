@@ -38,6 +38,8 @@ static Collection::Rights dataToRights( const QByteArray &data )
       case 'w': rights |= Collection::CanChangeItem; break;
       case 'c': rights |= Collection::CanCreateItem; break;
       case 'd': rights |= Collection::CanDeleteItem; break;
+      case 'l': rights |= Collection::CanLinkItem; break;
+      case 'u': rights |= Collection::CanUnlinkItem; break;
       case 'W': rights |= Collection::CanChangeCollection; break;
       case 'C': rights |= Collection::CanCreateCollection; break;
       case 'D': rights |= Collection::CanDeleteCollection; break;
@@ -65,6 +67,10 @@ static QByteArray rightsToData( Collection::Rights &rights )
     data.append( 'C' );
   if ( rights & Collection::CanDeleteCollection )
     data.append( 'D' );
+  if ( rights & Collection::CanLinkItem )
+    data.append( 'l' );
+  if ( rights & Collection::CanUnlinkItem )
+    data.append( 'u' );
 
   return data;
 }
