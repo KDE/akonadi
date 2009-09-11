@@ -31,6 +31,7 @@ class QAbstractItemModel;
 namespace Akonadi {
 
 class Item;
+class Collection;
 class ContactGroupEditor;
 
 /**
@@ -104,6 +105,11 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
      * Sets the contact @p group to edit when in EditMode.
      */
     void setContactGroup( const Akonadi::Item &group );
+
+    /**
+     * Sets the @p addressbook that shall be selected as default in create mode.
+     */
+    void setDefaultAddressBook( const Akonadi::Collection &addressbook );
 
   Q_SIGNALS:
     /**

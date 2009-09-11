@@ -36,17 +36,18 @@ using namespace Akonadi;
 class ContactGroupEditorDialog::Private
 {
   public:
-    Private()
-      : mAddressBookBox( 0 )
+    Private( ContactGroupEditorDialog::Mode mode )
+      : mAddressBookBox( 0 ), mMode( mode )
     {
     }
 
     AddressBookComboBox *mAddressBookBox;
     ContactGroupEditor *mEditor;
+    ContactGroupEditorDialog::Mode mMode;
 };
 
 ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
-  : KDialog( parent ), d( new Private )
+  : KDialog( parent ), d( new Private( mode ) )
 {
   setCaption( mode == CreateMode ? i18n( "New Contact Group" ) : i18n( "Edit Contact Group" ) );
   setButtons( Ok | Cancel );
@@ -87,6 +88,14 @@ ContactGroupEditorDialog::~ContactGroupEditorDialog()
 void ContactGroupEditorDialog::setContactGroup( const Akonadi::Item &group )
 {
   d->mEditor->loadContactGroup( group );
+}
+
+void ContactGroupEditorDialog::setDefaultAddressBook( const Akonadi::Collection &addressbook )
+{
+  if ( d->mMode == EditMode )
+    return;
+
+  d->mAddressBookBox->setDefaultAddressBook( addressbook );
 }
 
 void ContactGroupEditorDialog::slotButtonClicked( int button )
