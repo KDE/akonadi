@@ -37,6 +37,7 @@
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemmovejob.h>
+#include <akonadi/linkjob.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include "collectionfetchscope.h"
@@ -342,7 +343,7 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
         // Need to allow this by drag and drop.
         flags |= Qt::ItemIsDropEnabled;
       }
-      if ( rights & ( Collection::CanCreateCollection | Collection::CanCreateItem ) ) {
+      if ( rights & ( Collection::CanCreateCollection | Collection::CanCreateItem | Collection::CanLinkItem ) ) {
         // Can we drop new collections and items into this collection?
         flags |= Qt::ItemIsDropEnabled;
       }
@@ -377,7 +378,7 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 
 Qt::DropActions EntityTreeModel::supportedDropActions() const
 {
-  return Qt::CopyAction | Qt::MoveAction;
+  return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
 }
 
 QStringList EntityTreeModel::mimeTypes() const
@@ -455,9 +456,12 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
               connect( itemMoveJob, SIGNAL( result( KJob* ) ),
                        SLOT( moveJobDone( KJob* ) ) );
             } else if ( Qt::CopyAction == action ) {
-              ItemCopyJob *itemCopyJob = new ItemCopyJob( item, destCollection, transaction);
+              ItemCopyJob *itemCopyJob = new ItemCopyJob( item, destCollection, transaction );
               connect( itemCopyJob, SIGNAL( result( KJob* ) ),
                        SLOT( copyJobDone( KJob* ) ) );
+            } else if ( Qt::LinkAction == action ) {
+              LinkJob *itemLinkJob = new LinkJob( destCollection,  Item::List() << item, transaction );
+              connect( itemLinkJob, SIGNAL(result(KJob*)), SLOT(linkJobDone(KJob*)) );
             }
           } else {
             // A uri, but not an akonadi url. What to do?

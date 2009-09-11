@@ -130,6 +130,7 @@ public:
   void copyJobDone( KJob *job );
   void moveJobDone( KJob *job );
   void updateJobDone( KJob *job );
+  void linkJobDone( KJob *job );
 
   /**
    * Returns the index of the node in @p list with the id @p id. Returns -1 if not found.
