@@ -322,10 +322,6 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
-  // Only show and enable items in columns other than 0.
-  if ( index.column() != 0 )
-    return flags;
-
   const Node *node = reinterpret_cast<Node *>(index.internalPointer());
 
   if ( Node::Collection == node->type ) {
@@ -340,21 +336,20 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
       const int rights = collection.rights();
 
       if ( rights & Collection::CanChangeCollection ) {
-        flags |= Qt::ItemIsEditable;
+        if ( index.column() == 0 )
+          flags |= Qt::ItemIsEditable;
         // Changing the collection includes changing the metadata (child entityordering).
         // Need to allow this by drag and drop.
         flags |= Qt::ItemIsDropEnabled;
       }
-
-      if ( rights & Collection::CanDeleteCollection ) {
-        // If this collection is moved, it will need to be deleted
-        flags |= Qt::ItemIsDragEnabled;
-      }
-
       if ( rights & ( Collection::CanCreateCollection | Collection::CanCreateItem ) ) {
         // Can we drop new collections and items into this collection?
         flags |= Qt::ItemIsDropEnabled;
       }
+
+      // dragging is always possible, even for read-only objects, but they can only be copied, not moved.
+      flags |= Qt::ItemIsDragEnabled;
+
     }
   } else if ( Node::Item == node->type ) {
 
@@ -369,13 +364,11 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
       const int rights = parentCollection.rights();
 
       // Can't drop onto items.
-      if ( rights & Collection::CanChangeItem ) {
+      if ( rights & Collection::CanChangeItem && index.column() == 0 ) {
         flags = flags | Qt::ItemIsEditable;
       }
-      if ( rights & Collection::CanDeleteItem ) {
-        // If this item is moved, it will need to be deleted from its parent.
-        flags = flags | Qt::ItemIsDragEnabled;
-      }
+      // dragging is always possible, even for read-only objects, but they can only be copied, not moved.
+      flags |= Qt::ItemIsDragEnabled;
     }
   }
 
@@ -412,10 +405,6 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 // Shouldn't do this. Need to be able to drop vcards for example.
 //   if (!data->hasFormat("text/uri-list"))
 //       return false;
-
-// TODO This is probably wrong and unnecessary.
-  if ( column > 0 )
-    return false;
 
   const Node *node = reinterpret_cast<Node *>( parent.internalId() );
 
