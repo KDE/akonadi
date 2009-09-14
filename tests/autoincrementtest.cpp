@@ -61,7 +61,7 @@ Akonadi::ItemCreateJob* AutoIncrementTest::createItemCreateJob()
 Akonadi::CollectionCreateJob* AutoIncrementTest::createCollectionCreateJob( int number )
 {
   Collection collection;
-  collection.setParent( collectionTargetCollection );
+  collection.setParentCollection( collectionTargetCollection );
   collection.setName( "testCollection" + QString::number( number) );
   return new CollectionCreateJob( collection );
 }
