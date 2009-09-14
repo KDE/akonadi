@@ -26,6 +26,7 @@
 #include "itemcopyjob.h"
 #include "itemmodifyjob.h"
 #include "itemmovejob.h"
+#include "linkjob.h"
 #include "transactionsequence.h"
 
 #include <KDebug>
@@ -106,30 +107,47 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
     return 0;
 
   // data contains an url list
-  TransactionSequence *transaction = new TransactionSequence();
-  KUrl::List urls = KUrl::List::fromMimeData( mimeData );
+  return pasteUriList( mimeData, collection, copy ? Qt::CopyAction : Qt::MoveAction );
+}
+
+KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &destination, Qt::DropAction action )
+{
+  if ( !KUrl::List::canDecode( mimeData ) )
+    return 0;
+
+  const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
+  Collection::List collections;
+  Item::List items;
   foreach ( const KUrl &url, urls ) {
-    if ( Collection::fromUrl( url ).isValid() ) {
-      Collection col = Collection::fromUrl( url );
-      if ( !copy ) {
-        new CollectionMoveJob( col, collection, transaction );
-      } else {
-        new CollectionCopyJob( col, collection, transaction );
-      }
-    } else if ( Item::fromUrl( url ).isValid() ) {
-      // TODO Extract mimetype from url and check if collection accepts it
-      const Item item = Item::fromUrl( url );
-      if ( !copy ) {
-        new ItemMoveJob( item, collection, transaction );
-      } else  {
-        new ItemCopyJob( item, collection, transaction );
-      }
-    } else {
-      // non-akonadi URL
-      // TODO
-      kDebug() << "Implement me!";
-    }
+    const Collection collection = Collection::fromUrl( url );
+    if ( collection.isValid() )
+      collections.append( collection );
+    const Item item = Item::fromUrl( url );
+    if ( item.isValid() )
+      items.append( item );
+    // TODO: handle non Akonadi URLs?
+  }
+
+  TransactionSequence *transaction = new TransactionSequence();
+  switch ( action ) {
+    case Qt::CopyAction:
+      if ( !items.isEmpty() )
+        new ItemCopyJob( items, destination, transaction );
+      foreach ( const Collection &col, collections ) // FIXME: remove once we have a batch job for collections as well
+        new CollectionCopyJob( col, destination, transaction );
+      break;
+    case Qt::MoveAction:
+      if ( !items.isEmpty() )
+        new ItemMoveJob( items, destination, transaction );
+      foreach ( const Collection &col, collections ) // FIXME: remove once we have a batch job for collections as well
+        new CollectionMoveJob( col, destination, transaction );
+      break;
+    case Qt::LinkAction:
+      new LinkJob( destination, items, transaction );
+      break;
+    default:
+      Q_ASSERT( "WTF?!" == false );
+      return 0;
   }
   return transaction;
 }
-

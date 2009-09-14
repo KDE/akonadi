@@ -53,6 +53,15 @@ namespace PasteHelper
     @returns The job performing the paste, 0 if there is nothing to paste.
   */
   KJob* paste( const QMimeData* mimeData, const Collection &collection, bool copy = true );
+
+  /**
+    URI list paste/drop.
+    @param mimeData The pasted/dropped data.
+    @param collection The target collection.
+    @param action The drop action (copy/move/link).
+    @returns The job performing the paste, 0 if there is nothing to paste.
+  */
+  KJob* pasteUriList( const QMimeData* mimeData, const Collection &collection, Qt::DropAction action );
 }
 
 

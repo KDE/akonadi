@@ -29,15 +29,10 @@
 #include <KDE/KUrl>
 
 #include <akonadi/attributefactory.h>
-#include <akonadi/collectioncopyjob.h>
 #include <akonadi/collectionmodifyjob.h>
-#include <akonadi/collectionmovejob.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/transactionsequence.h>
-#include <akonadi/itemcopyjob.h>
 #include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemmovejob.h>
-#include <akonadi/linkjob.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include "collectionfetchscope.h"
@@ -45,6 +40,7 @@
 #include "collectionutils_p.h"
 
 #include "kdebug.h"
+#include "pastehelper_p.h"
 
 using namespace Akonadi;
 
@@ -428,48 +424,8 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
       MimeTypeChecker mimeChecker;
       mimeChecker.setWantedMimeTypes( destCollection.contentMimeTypes() );
 
-      TransactionSequence *transaction = new TransactionSequence( d->m_session );
-
-      const KUrl::List urls = KUrl::List::fromMimeData( data );
-
-      foreach ( const KUrl &url, urls ) {
-        const Collection collection = d->m_collections.value( Collection::fromUrl( url ).id() );
-        if ( collection.isValid() ) {
-
-          if ( !mimeChecker.isWantedCollection( collection ) )
-            return false;
-
-          if ( Qt::MoveAction == action ) {
-            CollectionMoveJob *collectionMoveJob = new CollectionMoveJob( collection, destCollection, transaction );
-            connect( collectionMoveJob, SIGNAL( result ( KJob* ) ),
-                     SLOT(  moveJobDone(  KJob* ) ) );
-          } else if ( Qt::CopyAction == action ) {
-            CollectionCopyJob *collectionCopyJob = new CollectionCopyJob( collection, destCollection, transaction );
-            connect( collectionCopyJob, SIGNAL( result( KJob* ) ),
-                     SLOT( copyJobDone( KJob* ) ) );
-          }
-        } else {
-          const Item item = d->m_items.value( Item::fromUrl( url ).id() );
-          if ( item.isValid() ) {
-            if ( Qt::MoveAction == action ) {
-              ItemMoveJob *itemMoveJob = new ItemMoveJob( item, destCollection, transaction );
-              connect( itemMoveJob, SIGNAL( result( KJob* ) ),
-                       SLOT( moveJobDone( KJob* ) ) );
-            } else if ( Qt::CopyAction == action ) {
-              ItemCopyJob *itemCopyJob = new ItemCopyJob( item, destCollection, transaction );
-              connect( itemCopyJob, SIGNAL( result( KJob* ) ),
-                       SLOT( copyJobDone( KJob* ) ) );
-            } else if ( Qt::LinkAction == action ) {
-              LinkJob *itemLinkJob = new LinkJob( destCollection,  Item::List() << item, transaction );
-              connect( itemLinkJob, SIGNAL(result(KJob*)), SLOT(linkJobDone(KJob*)) );
-            }
-          } else {
-            // A uri, but not an akonadi url. What to do?
-            // Should handle known mimetypes like vcards first.
-            // That should make any remaining uris meaningless at this point.
-          }
-        }
-      }
+      KJob *job = PasteHelper::pasteUriList( data, destCollection, action );
+      connect( job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)) );
 
       return false; // ### Return false so that the view does not update with the dropped
       // in place where they were dropped. That will be done when the monitor notifies the model
