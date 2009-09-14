@@ -22,6 +22,8 @@
 #ifndef AKONADI_CONTACTMETADATAATTRIBUTE_P_H
 #define AKONADI_CONTACTMETADATAATTRIBUTE_P_H
 
+#include "akonadi-contactprivate_export.h"
+
 #include <akonadi/attribute.h>
 
 #include <QtCore/QVariant>
@@ -33,7 +35,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class ContactMetaDataAttribute : public Akonadi::Attribute
+class AKONADI_CONTACT_TESTS_EXPORT ContactMetaDataAttribute : public Akonadi::Attribute
 {
   public:
     /**

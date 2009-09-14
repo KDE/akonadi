@@ -699,6 +699,12 @@ void EntityTreeModelPrivate::moveJobDone( KJob *job )
   }
 }
 
+void EntityTreeModelPrivate::linkJobDone( KJob *job )
+{
+  if ( job->error() )
+    kWarning() << "Job error: " << job->errorString() << endl;
+}
+
 void EntityTreeModelPrivate::updateJobDone( KJob *job )
 {
   Q_Q(EntityTreeModel);
