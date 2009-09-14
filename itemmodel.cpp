@@ -246,7 +246,6 @@ ItemModel::ItemModel( QObject *parent ) :
     QAbstractTableModel( parent ),
     d( new Private( this ) )
 {
-  setSupportedDragActions( Qt::MoveAction | Qt::CopyAction );
 }
 
 ItemModel::~ItemModel()

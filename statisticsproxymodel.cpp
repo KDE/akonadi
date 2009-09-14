@@ -54,7 +54,6 @@ StatisticsProxyModel::StatisticsProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
     d( new Private( this ) )
 {
-  setSupportedDragActions( Qt::CopyAction | Qt::MoveAction );
 }
 
 StatisticsProxyModel::~StatisticsProxyModel()

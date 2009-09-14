@@ -276,7 +276,6 @@ MessageThreaderProxyModel::MessageThreaderProxyModel( QObject *parent )
     d( new Private( this ) )
 {
   AttributeFactory::registerAttribute<MessageThreadingAttribute>();
-  setSupportedDragActions( Qt::MoveAction | Qt::CopyAction );
 }
 
 MessageThreaderProxyModel::~MessageThreaderProxyModel()

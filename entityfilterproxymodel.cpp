@@ -61,8 +61,6 @@ EntityFilterProxyModel::EntityFilterProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
     d_ptr( new EntityFilterProxyModelPrivate( this ) )
 {
-  // TODO: Override setSourceModel and do this there?
-  setSupportedDragActions( Qt::CopyAction | Qt::MoveAction );
 }
 
 EntityFilterProxyModel::~EntityFilterProxyModel()
