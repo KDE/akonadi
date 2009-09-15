@@ -36,14 +36,7 @@ target_link_libraries(akonadi-xml
 
 set_target_properties(akonadi-xml PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install (TARGETS akonadi-xml ${INSTALL_TARGETS_DEFAULT_ARGS})
-install( FILES
-   akonadi-xml_export.h
-   xmldocument.h
-   xmlreader.h
-   xmlwriter.h
-   xmlwritejob.h
-   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/xml/ COMPONENT Devel
-)
+
 install( FILES akonadi-xml.xsd DESTINATION ${DATA_INSTALL_DIR}/akonadi/ )
 
 kde4_add_executable(akonadi2xml akonadi2xml.cpp)
