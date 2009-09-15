@@ -54,7 +54,7 @@ void DateView::emitSignal()
   emit resetDate();
 }
 
-DateEditWidget::DateEditWidget( QWidget *parent )
+DateEditWidget::DateEditWidget( Type type, QWidget *parent )
   : QWidget( parent ), mReadOnly( false )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
@@ -72,7 +72,12 @@ DateEditWidget::DateEditWidget( QWidget *parent )
 
   mSelectButton = new QToolButton;
   mSelectButton->setPopupMode( QToolButton::InstantPopup );
-  mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-day" ) ) );
+  switch ( type ) {
+    case General: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-day" ) ) ); break;
+    case Birthday: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-birthday" ) ) ); break;
+    case Anniversary: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-anniversary" ) ) ); break;
+  }
+
   layout->addWidget( mSelectButton );
 
   mMenu = new KPIM::KDatePickerPopup( KPIM::KDatePickerPopup::DatePicker, QDate(), this );

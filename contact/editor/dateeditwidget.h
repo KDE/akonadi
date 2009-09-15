@@ -56,7 +56,13 @@ class DateEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    DateEditWidget( QWidget *parent = 0 );
+    enum Type {
+      General,
+      Birthday,
+      Anniversary
+    };
+
+    DateEditWidget( Type type = General, QWidget *parent = 0 );
     ~DateEditWidget();
 
     void setDate( const QDate &date );
