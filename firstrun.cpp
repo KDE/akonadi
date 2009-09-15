@@ -225,13 +225,22 @@ void Firstrun::instanceCreated( KJob *job )
       kError() << "Setting " << setting << " not found in agent configuration interface of " << instance.identifier();
       continue;
     }
-    const QVariant arg = settings.readEntry( setting, QVariant( argType ) );
+
+    QVariant arg;
+    if ( argType == QVariant::String ) {
+      // Since a string could be a path we always use readPathEntry here,
+      // that shouldn't harm any normal string settings
+      arg = settings.readPathEntry( setting, QString() );
+    } else
+      arg = settings.readEntry( setting, QVariant( argType ) );
+
     const QDBusReply<void> reply = iface->call( methodName, arg );
     if ( !reply.isValid() )
       kError() << "Setting " << setting << " failed for agent " << instance.identifier();
   }
 
   instance.reconfigure();
+  instance.synchronize();
   delete iface;
 
   // remember we set this one up already
