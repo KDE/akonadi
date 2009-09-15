@@ -59,6 +59,11 @@ AddressBookSelectionDialog::~AddressBookSelectionDialog()
   delete d;
 }
 
+void AddressBookSelectionDialog::setDefaultAddressBook( const Collection &addressbook )
+{
+  d->mCollectionCombo->setDefaultAddressBook( addressbook );
+}
+
 Akonadi::Collection AddressBookSelectionDialog::selectedAddressBook() const
 {
   return d->mCollectionCombo->selectedAddressBook();
