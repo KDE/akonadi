@@ -378,7 +378,7 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   datesLayout->addWidget( label, 0, 0 );
 
-  mBirthdateWidget = new DateEditWidget;
+  mBirthdateWidget = new DateEditWidget( DateEditWidget::Birthday );
   label->setBuddy( mBirthdateWidget );
   datesLayout->addWidget( mBirthdateWidget, 0, 1 );
 
@@ -386,7 +386,7 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   datesLayout->addWidget( label, 1, 0 );
 
-  mAnniversaryWidget = new DateEditWidget;
+  mAnniversaryWidget = new DateEditWidget( DateEditWidget::Anniversary );
   label->setBuddy( mAnniversaryWidget );
   datesLayout->addWidget( mAnniversaryWidget, 1, 1 );
 

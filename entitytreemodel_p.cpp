@@ -685,21 +685,7 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
   }
 }
 
-void EntityTreeModelPrivate::copyJobDone( KJob *job )
-{
-  if ( job->error() ) {
-    kWarning() << "Job error: " << job->errorString() << endl;
-  }
-}
-
-void EntityTreeModelPrivate::moveJobDone( KJob *job )
-{
-  if ( job->error() ) {
-    kWarning() << "Job error: " << job->errorString() << endl;
-  }
-}
-
-void EntityTreeModelPrivate::linkJobDone( KJob *job )
+void EntityTreeModelPrivate::pasteJobDone( KJob *job )
 {
   if ( job->error() )
     kWarning() << "Job error: " << job->errorString() << endl;
