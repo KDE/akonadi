@@ -92,6 +92,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
      *
      * @param items The items to fetch.
      * @param parent The parent object.
+     * @since 4.4
      */
     explicit ItemFetchJob( const Item::List &items, QObject *parent = 0 );
 
