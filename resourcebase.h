@@ -452,6 +452,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * Indicate that the current task is finished. Use this method from the slot called via scheduleCustomTaks().
      * As with all the other callbacks, make sure to either call taskDone() or cancelTask()/deferTask() on all
      * exit paths, otherwise the resource will hang.
+     * @since 4.4
      */
     void taskDone();
 
