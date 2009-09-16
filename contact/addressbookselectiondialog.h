@@ -83,6 +83,11 @@ class AKONADI_CONTACT_EXPORT AddressBookSelectionDialog : public KDialog
     ~AddressBookSelectionDialog();
 
     /**
+     * Sets the @p addressbook that shall be selected as default.
+     */
+    void setDefaultAddressBook( const Akonadi::Collection &addressbook );
+
+    /**
      * Returns the selected collection or an invalid collection
      * if none is selected.
      */
