@@ -75,7 +75,7 @@ DateEditWidget::DateEditWidget( Type type, QWidget *parent )
   switch ( type ) {
     case General: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-day" ) ) ); break;
     case Birthday: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-birthday" ) ) ); break;
-    case Anniversary: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-anniversary" ) ) ); break;
+    case Anniversary: mSelectButton->setIcon( KIcon( QLatin1String( "view-calendar-wedding-anniversary" ) ) ); break;
   }
 
   layout->addWidget( mSelectButton );
