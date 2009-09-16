@@ -20,14 +20,23 @@
 #define RESOURCESCHEDULERTEST_H
 
 #include <QtCore/QObject>
+#include <QtCore/QVariant>
 
 class ResourceSchedulerTest : public QObject
 {
   Q_OBJECT
+  public Q_SLOTS:
+    void customTask( const QVariant &argument );
+
   private Q_SLOTS:
 
     void testTaskComparision();
     void testChangeReplaySchedule();
+    void testCustomTask();
+
+  private:
+    int mCustomCallCount;
+    QVariant mLastArgument;
 };
 
 #endif

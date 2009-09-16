@@ -41,6 +41,18 @@ void ResourceSchedulerTest::testTaskComparision()
   t3.type = ResourceScheduler::DeleteResourceCollection;
   QVERIFY( !( t2 == t3 ) );
   QVERIFY( !taskList.contains( t3 ) );
+
+  ResourceScheduler::Task t4;
+  t4.type = ResourceScheduler::Custom;
+  t4.receiver = this;
+  t4.methodName = "customTask";
+  t4.argument = QString( "call1" );
+
+  ResourceScheduler::Task t5( t4 );
+  QVERIFY( t4 == t5 );
+
+  t5.argument = QString( "call2" );
+  QVERIFY( !( t4 == t5 ) );
 }
 
 void ResourceSchedulerTest::testChangeReplaySchedule()
@@ -119,3 +131,39 @@ void ResourceSchedulerTest::testChangeReplaySchedule()
   QCOMPARE( changeReplaySpy.count(), 1 );
   QCOMPARE( syncSpy.count(), 1 );
 }
+
+
+void ResourceSchedulerTest::customTask(const QVariant& argument)
+{
+  ++mCustomCallCount;
+  mLastArgument = argument;
+}
+
+
+void ResourceSchedulerTest::testCustomTask()
+{
+  ResourceScheduler scheduler;
+  scheduler.setOnline( true );
+  mCustomCallCount = 0;
+
+  scheduler.scheduleCustomTask( this, "customTask", QString( "call1" ) );
+  scheduler.scheduleCustomTask( this, "customTask", QString( "call1" ) );
+  scheduler.scheduleCustomTask( this, "customTask", QString( "call2" ) );
+
+  QCOMPARE( mCustomCallCount, 0 );
+
+  QTest::qWait( 1 );
+  QCOMPARE( mCustomCallCount, 1 );
+  QCOMPARE( mLastArgument.toString(), QString( "call1" ) );
+
+  scheduler.taskDone();
+  QVERIFY( !scheduler.isEmpty() );
+  QTest::qWait( 1 );
+  QCOMPARE( mCustomCallCount, 2 );
+  QCOMPARE( mLastArgument.toString(), QString( "call2" ) );
+
+  scheduler.taskDone();
+  QVERIFY( scheduler.isEmpty() );
+}
+
+#include "resourceschedulertest.moc"
