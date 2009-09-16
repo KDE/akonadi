@@ -83,6 +83,19 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     explicit ItemFetchJob( const Item &item, QObject *parent = 0 );
 
     /**
+     * Creates a new item fetch job that retrieves the specified items.
+     * If the items have an uid set, this is used to identify the item on the Akonadi
+     * server. If only a remote identifier is available, that one is used.
+     * However, as remote identifier are not necessarily globally unique, you
+     * need to specify the resource and/or collection to search in in that case,
+     * using setCollection() or Akonadi::ResourceSelectJob.
+     *
+     * @param items The items to fetch.
+     * @param parent The parent object.
+     */
+    explicit ItemFetchJob( const Item::List &items, QObject *parent = 0 );
+
+    /**
      * Destroys the item fetch job.
      */
     virtual ~ItemFetchJob();
