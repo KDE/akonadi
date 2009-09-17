@@ -81,6 +81,7 @@ class AKONADI_EXPORT UnlinkJob : public Job
 
   private:
     Q_DECLARE_PRIVATE( UnlinkJob )
+    template <typename T> friend class LinkJobImpl;
 };
 
 }

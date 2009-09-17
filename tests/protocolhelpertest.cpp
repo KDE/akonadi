@@ -29,6 +29,7 @@ class ProtocolHelperTest : public QObject
     void testItemSetToByteArray_data()
     {
       QTest::addColumn<Item::List>( "items" );
+      QTest::addColumn<QByteArray>( "command" );
       QTest::addColumn<QByteArray>( "result" );
       QTest::addColumn<bool>( "shouldThrow" );
 
@@ -38,25 +39,28 @@ class ProtocolHelperTest : public QObject
       Item r1; r1.setRemoteId( "A" );
       Item r2; r2.setRemoteId( "B" );
 
-      QTest::newRow( "empty" ) << Item::List() << QByteArray() << true;
-      QTest::newRow( "single uid" ) << (Item::List() << u1) << QByteArray( " UID CMD 1" ) << false;
-      QTest::newRow( "multi uid" ) << (Item::List() << u1 << u3) << QByteArray( " UID CMD 1,3" ) << false;
-      QTest::newRow( "block uid" ) << (Item::List() << u1 << u2 << u3) << QByteArray( " UID CMD 1:3" ) << false;
-      QTest::newRow( "single rid" ) << (Item::List() << r1) << QByteArray( " RID CMD (\"A\")" ) << false;
-      QTest::newRow( "multi rid" ) << (Item::List() << r1 << r2) << QByteArray( " RID CMD (\"A\" \"B\")" ) << false;
-      QTest::newRow( "invalid" ) << (Item::List() << Item()) << QByteArray() << true;
-      QTest::newRow( "mixed" ) << (Item::List() << u1 << r1) << QByteArray() << true;
+      QTest::newRow( "empty" ) << Item::List() << QByteArray( "CMD" ) << QByteArray() << true;
+      QTest::newRow( "single uid" ) << (Item::List() << u1) << QByteArray( "CMD" ) << QByteArray( " UID CMD 1" ) << false;
+      QTest::newRow( "multi uid" ) << (Item::List() << u1 << u3) << QByteArray( "CMD" ) << QByteArray( " UID CMD 1,3" ) << false;
+      QTest::newRow( "block uid" ) << (Item::List() << u1 << u2 << u3) << QByteArray( "CMD" ) << QByteArray( " UID CMD 1:3" ) << false;
+      QTest::newRow( "single rid" ) << (Item::List() << r1) << QByteArray( "CMD" ) << QByteArray( " RID CMD (\"A\")" ) << false;
+      QTest::newRow( "multi rid" ) << (Item::List() << r1 << r2) << QByteArray( "CMD" ) << QByteArray( " RID CMD (\"A\" \"B\")" ) << false;
+      QTest::newRow( "invalid" ) << (Item::List() << Item()) << QByteArray( "CMD" ) << QByteArray() << true;
+      QTest::newRow( "mixed" ) << (Item::List() << u1 << r1) << QByteArray( "CMD" ) << QByteArray() << true;
+      QTest::newRow( "empty command, uid" ) << (Item::List() << u1) << QByteArray() << QByteArray( " UID 1" ) << false;
+      QTest::newRow( "empty command, single rid" ) << (Item::List() << r1) << QByteArray() << QByteArray( " RID (\"A\")" ) << false;
     }
 
     void testItemSetToByteArray()
     {
       QFETCH( Item::List, items );
+      QFETCH( QByteArray, command );
       QFETCH( QByteArray, result );
       QFETCH( bool, shouldThrow );
 
       bool didThrow = false;
       try {
-        const QByteArray r = ProtocolHelper::entitySetToByteArray( items, "CMD" );
+        const QByteArray r = ProtocolHelper::entitySetToByteArray( items, command );
         QCOMPARE( r, result );
       } catch ( const std::exception &e ) {
         qDebug() << e.what();
