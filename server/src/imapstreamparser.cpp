@@ -30,7 +30,8 @@
 
 using namespace Akonadi;
 
-ImapStreamParser::ImapStreamParser( QIODevice *socket )
+ImapStreamParser::ImapStreamParser( QIODevice *socket ) :
+  m_peeking( false )
 {
   m_socket = socket;
   m_position = 0;
@@ -71,6 +72,16 @@ QByteArray ImapStreamParser::readString()
 
   // quoted string
   return parseQuotedString();
+}
+
+QByteArray ImapStreamParser::peekString()
+{
+  m_peeking = true;
+  int pos = m_position;
+  const QByteArray string = readString();
+  m_position = pos;
+  m_peeking = false;
+  return string;
 }
 
 bool ImapStreamParser::hasString()
@@ -159,8 +170,10 @@ QByteArray ImapStreamParser::readLiteralPart()
   m_position += size;
   m_literalSize -= size;
   Q_ASSERT(m_literalSize >= 0);
-  m_data = m_data.right( m_data.size() - m_position );
-  m_position = 0;
+  if ( !m_peeking ) {
+    m_data = m_data.right( m_data.size() - m_position );
+    m_position = 0;
+  }
   return result;
 }
 
@@ -674,8 +687,10 @@ bool ImapStreamParser::atCommandEnd()
     if ( m_position < m_data.length() && m_data[m_position] == '\n' )
       ++m_position;
     // We'd better empty m_data from time to time before it grows out of control
-    m_data = m_data.right(m_data.size()-m_position);
-    m_position = 0;
+    if ( !m_peeking ) {
+      m_data = m_data.right(m_data.size()-m_position);
+      m_position = 0;
+    }
     return true; //command end
   }
   m_position = savedPos;
@@ -722,9 +737,11 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
     ++i;
   }
   m_position = i + 1;
-    // We'd better empty m_data from time to time before it grows out of control
-  m_data = m_data.right(m_data.size()-m_position);
-  m_position = 0;
+  // We'd better empty m_data from time to time before it grows out of control
+  if ( !m_peeking ) {
+    m_data = m_data.right(m_data.size()-m_position);
+    m_position = 0;
+  }
   return result;
 }
 

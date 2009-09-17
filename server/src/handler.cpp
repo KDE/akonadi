@@ -103,19 +103,10 @@ QByteArray Handler::tag( ) const
 Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_command, ImapStreamParser *streamParser )
 {
   QByteArray command( _command );
-  Scope::SelectionScope scope = Scope::None;
-
   // deal with command prefixes
-  if ( command == AKONADI_CMD_UID ) {
-    scope = Scope::Uid;
+  Scope::SelectionScope scope = Scope::selectionScopeFromByteArray( command );
+  if ( scope != Scope::None )
     command = streamParser->readString();
-  } else if ( command == AKONADI_CMD_RID ) {
-    scope = Scope::Rid;
-    command = streamParser->readString();
-  } else if ( command == AKONADI_CMD_HRID ) {
-    scope = Scope::HierarchicalRid;
-    command = streamParser->readString();
-  }
 
     // allowed commands are listed below ;-).
     if ( command == "APPEND" )

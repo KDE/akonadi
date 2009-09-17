@@ -131,11 +131,7 @@ void ImapStreamParserTest::testParseQuotedString( )
   result = parser.parseQuotedString();
   QCOMPARE( result, QByteArray("LOGOUT") );
   } catch ( const Akonadi::Exception &e ) {
-    qDebug() << "Caught exception: " << e.type() << " : " <<
-        e.what();
-  } catch (...)
-  {
-    qDebug() << "Unknown exception caught: " << akBacktrace();
+    qDebug() << "Caught exception: " << e.type() << " : " << e.what();
   }
 }
 
@@ -151,35 +147,42 @@ void ImapStreamParserTest::testParseString( )
   buffer.seek(0);
 
   QByteArray result;
+  bool exceptionExpected = false;
 
   try {
   // quoted strings
+  result = parser.peekString();
+  QCOMPARE( result, QByteArray( "quoted" ) );
   result = parser.readString();
   QCOMPARE( result, QByteArray( "quoted" ) );
 
   // unquoted string
+  result = parser.peekString( );
+  QCOMPARE( result, QByteArray( "unquoted" ) );
   result = parser.readString( );
   QCOMPARE( result, QByteArray( "unquoted" ) );
 
   // literal string
+  result = parser.peekString( );
+  QCOMPARE( result, QByteArray( "literal" ) );
   result = parser.readString( );
   QCOMPARE( result, QByteArray( "literal" ) );
 
   // empty literal string
+  result = parser.peekString();
+  QCOMPARE( result, QByteArray( "" ) );
   result = parser.readString();
   QCOMPARE( result, QByteArray( "" ) );
 
   // out of bounds access
 
   //this results in an ImapStreamParser exception
+  exceptionExpected = true;
   result = parser.readString();
   QCOMPARE( result, QByteArray() );
   } catch ( const Akonadi::Exception &e ) {
-    qDebug() << "Caught exception: " << e.type() << " : " <<
-        e.what();
-  } catch (...)
-  {
-    qDebug() << "Unknown exception caught: " << akBacktrace();
+    qDebug() << "Caught exception: " << e.type() << " : " << e.what();
+    QVERIFY( exceptionExpected );
   }
 }
 
@@ -240,11 +243,8 @@ void ImapStreamParserTest::testParseParenthesizedList( )
   } catch ( const Akonadi::Exception &e ) {
     qDebug() << "Caught exception: " << e.type() << " : " <<
         e.what();
-  } catch (...)
-  {
-    qDebug() << "Unknown exception caught: " << akBacktrace();
+    QVERIFY( false );
   }
-
 }
 
 void ImapStreamParserTest::testParseNumber_data()
@@ -296,36 +296,38 @@ void ImapStreamParserTest::testParseSequenceSet_data()
 {
   QTest::addColumn<QByteArray>( "data" );
   QTest::addColumn<ImapInterval::List>( "result" );
+  QTest::addColumn<bool>( "exceptionExpected" );
 
   QByteArray data( " 1 0:* 3:4,8:* *:5,1" );
 
-  QTest::newRow( "empty" ) << QByteArray() << ImapInterval::List() ;
+  QTest::newRow( "empty" ) << QByteArray() << ImapInterval::List() << true;
 
   ImapInterval::List result;
   result << ImapInterval( 1, 1 );
   data = " 1 ";
-  QTest::newRow( "single value" ) << data  << result;
+  QTest::newRow( "single value" ) << data  << result << false;
 
   result.clear();
   result << ImapInterval();
   data = "  0:* ";
-  QTest::newRow( "full interval" ) << data << result;
+  QTest::newRow( "full interval" ) << data << result << false;
 
   data = " 3:4,8:*";
   result.clear();
   result << ImapInterval( 3, 4 ) << ImapInterval( 8 );
-  QTest::newRow( "complex 1" ) << data << result ;
+  QTest::newRow( "complex 1" ) << data << result << false;
 
-  data = " *:5,1";
+  data = " 1,5:*";
   result.clear();
-  result << ImapInterval( 0, 5 ) << ImapInterval( 1, 1 );
-  QTest::newRow( "complex 2" ) << data  << result ;
+  result << ImapInterval( 1, 1 ) << ImapInterval( 5, 0 );
+  QTest::newRow( "complex 2" ) << data  << result << false;
 }
 
 void ImapStreamParserTest::testParseSequenceSet()
 {
   QFETCH( QByteArray, data );
   QFETCH( ImapInterval::List, result );
+  QFETCH( bool, exceptionExpected );
 
   QBuffer buffer;
   buffer.open( QBuffer::ReadWrite);
@@ -334,16 +336,15 @@ void ImapStreamParserTest::testParseSequenceSet()
   buffer.seek(0);
 
   ImapSet res;
+  bool exceptionCaught = false;
   try {
     res = parser.readSequenceSet();
     QCOMPARE( res.intervals(), result );
-} catch ( const Akonadi::Exception &e ) {
-  qDebug() << "Caught exception: " << e.type() << " : " <<
-      e.what();
-} catch (...)
-{
-  qDebug() << "Unknown exception caught: " << akBacktrace();
-}
+  } catch ( const Akonadi::Exception &e ) {
+    qDebug() << "Caught exception: " << e.type() << " : " << e.what();
+    exceptionCaught = true;
+  }
+  QCOMPARE( exceptionCaught, exceptionExpected );
 }
 
 
@@ -351,8 +352,9 @@ void ImapStreamParserTest::testParseDateTime_data()
 {
   QTest::addColumn<QByteArray>( "data" );
   QTest::addColumn<QDateTime>( "result" );
+  QTest::addColumn<bool>( "exceptionExpected" );
 
-  QTest::newRow( "empty" ) << QByteArray() <<  QDateTime() ;
+  QTest::newRow( "empty" ) << QByteArray() <<  QDateTime() << true;
 
   QByteArray data( " \"28-May-2006 01:03:35 +0200\"" );
   QByteArray data2( "22-Jul-2008 16:31:48 +0000" );
@@ -361,15 +363,16 @@ void ImapStreamParserTest::testParseDateTime_data()
   QDateTime dt( QDate( 2006, 5, 27 ), QTime( 23, 3, 35 ), Qt::UTC );
   QDateTime dt2( QDate( 2008, 7, 22 ), QTime( 16, 31, 48 ), Qt::UTC );
 
-  QTest::newRow( "quoted" ) << data  << dt ;
-  QTest::newRow( "unquoted" ) << data2 <<  dt2 ;
-  QTest::newRow( "invalid" ) << data3 << QDateTime();
+  QTest::newRow( "quoted" ) << data  << dt << false;
+  QTest::newRow( "unquoted" ) << data2 <<  dt2 << false;
+  QTest::newRow( "invalid" ) << data3 << QDateTime() << false;
 }
 
 void ImapStreamParserTest::testParseDateTime()
 {
   QFETCH( QByteArray, data );
   QFETCH( QDateTime, result );
+  QFETCH( bool, exceptionExpected );
 
   QBuffer buffer;
   buffer.open( QBuffer::ReadWrite);
@@ -378,16 +381,15 @@ void ImapStreamParserTest::testParseDateTime()
   buffer.seek(0);
 
   QDateTime actualResult;
+  bool exceptionCaught = false;
   try {
     actualResult = parser.readDateTime();
     QCOMPARE( actualResult, result );
   } catch ( const Akonadi::Exception &e ) {
-    qDebug() << "Caught exception: " << e.type() << " : " <<
-        e.what();
-  } catch (...)
-  {
-    qDebug() << "Unknown exception caught: " << akBacktrace();
+    qDebug() << "Caught exception: " << e.type() << " : " << e.what();
+    exceptionCaught = true;
   }
+  QCOMPARE( exceptionCaught, exceptionExpected );
 }
 
 void ImapStreamParserTest::testReadUntilCommandEnd()

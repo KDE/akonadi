@@ -70,6 +70,12 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
     QByteArray readString();
 
     /**
+     * Same as above, but without actually moving the stream position forward.
+     * @return the next string from the stream, without modifying the stream.
+     */
+    QByteArray peekString();
+
+    /**
      * Get he next IMAP sequence set. If the upcoming data is not an IMAP sequence set,
      * the behavior is undefined. Use @ref hasSequenceSet to be sure a sequence set comes. This call might block.
      * @return the next IMAP sequence set.
@@ -244,6 +250,7 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
     int m_position;
     qint64 m_literalSize;
     qint64 m_continuationSize;
+    bool m_peeking;
 };
 
 }

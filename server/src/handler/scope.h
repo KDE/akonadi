@@ -49,6 +49,12 @@ class Scope
     */
     void parseScope( ImapStreamParser *parser );
 
+    /**
+      Parse the selection scope identifier (UID, RID, HRID, etc.).
+      Returns None if @p input is not a selection scope.
+    */
+    static SelectionScope selectionScopeFromByteArray( const QByteArray &input );
+
     SelectionScope scope() const;
     void setScope( SelectionScope scope );
     ImapSet uidSet() const;

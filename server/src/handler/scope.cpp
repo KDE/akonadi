@@ -20,6 +20,7 @@
 #include "scope.h"
 #include "imapstreamparser.h"
 #include "handler.h"
+#include "libs/protocol_p.h"
 
 #include <cassert>
 
@@ -58,6 +59,18 @@ void Scope::parseScope( ImapStreamParser* parser )
   } else {
     throw HandlerException( "WTF?!?" );
   }
+}
+
+Scope::SelectionScope Scope::selectionScopeFromByteArray(const QByteArray& input)
+{
+  if ( input == AKONADI_CMD_UID ) {
+    return Scope::Uid;
+  } else if ( input == AKONADI_CMD_RID ) {
+    return Scope::Rid;
+  } else if ( input == AKONADI_CMD_HRID ) {
+    return Scope::HierarchicalRid;
+  }
+  return Scope::None;
 }
 
 Scope::SelectionScope Scope::scope() const

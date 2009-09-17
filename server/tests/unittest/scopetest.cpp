@@ -25,6 +25,8 @@
 
 using namespace Akonadi;
 
+Q_DECLARE_METATYPE( Scope::SelectionScope )
+
 class ScopeTest : public QObject
 {
   Q_OBJECT
@@ -139,6 +141,26 @@ class ScopeTest : public QObject
       QCOMPARE( didThrow, !success );
       if ( success )
         QCOMPARE( scope.ridChain(), result );
+    }
+
+    void testSelectionScopeParsing_data()
+    {
+      QTest::addColumn<QByteArray>( "input" );
+      QTest::addColumn<Scope::SelectionScope>( "scope" );
+
+      QTest::newRow( "empty" ) << QByteArray() << Scope::None;
+      QTest::newRow( "UID" ) << QByteArray( "UID" ) << Scope::Uid;
+      QTest::newRow( "RID" ) << QByteArray( "RID" ) << Scope::Rid;
+      QTest::newRow( "HRID" ) << QByteArray( "HRID" ) << Scope::HierarchicalRid;
+      QTest::newRow( "none" ) << QByteArray( "1:*" ) << Scope::None;
+    }
+
+    void testSelectionScopeParsing()
+    {
+      QFETCH( QByteArray, input );
+      QFETCH( Scope::SelectionScope, scope );
+
+      QCOMPARE( Scope::selectionScopeFromByteArray( input ), scope );
     }
 };
 
