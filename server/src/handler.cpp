@@ -151,10 +151,10 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
       return new Copy();
     if ( command == AKONADI_CMD_COLLECTIONCOPY )
       return new ColCopy();
-    if ( command == "LINK" )
-      return new Link( true );
-    if ( command == "UNLINK" )
-      return new Link( false );
+    if ( command == AKONADI_CMD_ITEMLINK )
+      return new Link( scope, true );
+    if ( command == AKONADI_CMD_ITEMUNLINK )
+      return new Link( scope, false );
     if ( command == AKONADI_CMD_RESOURCESELECT )
       return new ResourceSelect();
     if ( command == AKONADI_CMD_ITEMDELETE )

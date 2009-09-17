@@ -28,30 +28,32 @@
 #include "entities.h"
 
 #include "imapstreamparser.h"
+#include <storage/collectionqueryhelper.h>
 
 using namespace Akonadi;
 
-Link::Link(bool create) : Handler(), mCreateLinks( create )
+Link::Link( Scope::SelectionScope scope, bool create) : Handler(),
+  mDestinationScope( scope ), mCreateLinks( create )
 {
 }
 
 bool Link::parseStream()
 {
-  QByteArray tmp = m_streamParser->readString();
-  const Collection collection = HandlerHelper::collectionFromIdOrName( tmp );
-  if ( !collection.isValid() )
-    return failureResponse( "No valid collection specified" );
+  mDestinationScope.parseScope( m_streamParser );
+  const Collection collection = CollectionQueryHelper::singleCollectionFromScope( mDestinationScope, connection() );
 
-  ImapSet set = m_streamParser->readSequenceSet();
-  if ( set.isEmpty() )
-    return failureResponse( "No valid sequence set specified" );
+  Scope::SelectionScope itemSelectionScope = Scope::selectionScopeFromByteArray( m_streamParser->peekString() );
+  if ( itemSelectionScope != Scope::None )
+    m_streamParser->readString();
+  Scope itemScope( itemSelectionScope );
+  itemScope.parseScope( m_streamParser );
 
   SelectQueryBuilder<PimItem> qb;
-  ItemQueryHelper::itemSetToQuery( set, qb );
+  ItemQueryHelper::scopeToQuery( itemScope, connection(), qb );
   if ( !qb.exec() )
     return failureResponse( "Unable to execute item query" );
 
-  PimItem::List items = qb.result();
+  const PimItem::List items = qb.result();
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );

@@ -95,7 +95,7 @@ void AkonadiConnection::run()
     connect( m_socket, SIGNAL( disconnected() ),
              this, SLOT( slotDisconnected() ), Qt::DirectConnection );
 
-    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 22]");
+    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 23]");
 
     m_streamParser = new ImapStreamParser( m_socket );
     exec();

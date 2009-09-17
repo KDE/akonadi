@@ -21,6 +21,7 @@
 #define AKONADI_LINK_H
 
 #include "handler.h"
+#include "scope.h"
 
 namespace Akonadi {
 
@@ -36,8 +37,7 @@ namespace Akonadi {
  *
  * Request:
  * @verbatim
- * link-request = tag " LINK " collection-id " " item-set
- * unlink-request = tag " UNLINK " collection-id " " item-set
+ * request = tag [" " selection-scope] " " [" LINK "|" UNLINK "] collection-id " " [selection-scope " "] item-set
  * @endverbatim
  *
  * There is only the usual status response indicating success or failure of the
@@ -50,10 +50,11 @@ class Link : public Handler
     /**
      * @param create @c true adds references, @c false removes them
      */
-    Link( bool create );
+    Link( Scope::SelectionScope scope, bool create );
     bool parseStream();
 
   private:
+    Scope mDestinationScope;
     bool mCreateLinks;
 };
 
