@@ -24,6 +24,7 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnectionInterface>
+#include <boost/graph/graph_concepts.hpp>
 
 using namespace Akonadi;
 
@@ -120,6 +121,20 @@ void Akonadi::ResourceScheduler::scheduleFullSyncCompletion()
   scheduleNext();
 }
 
+void Akonadi::ResourceScheduler::scheduleCustomTask( QObject *receiver, const char* methodName, const QVariant &argument )
+{
+  Task t;
+  t.type = Custom;
+  t.receiver = receiver;
+  t.methodName = methodName;
+  t.argument = argument;
+  if ( mTaskList.contains( t ) )
+    return;
+  mTaskList.append( t );
+  signalTaskToTracker( t, "Custom-" + t.methodName );
+  scheduleNext();
+}
+
 void ResourceScheduler::taskDone()
 {
   if ( isEmpty() )
@@ -200,6 +215,13 @@ void ResourceScheduler::executeNext()
     case SyncAllDone:
       emit fullSyncComplete();
       break;
+    case Custom:
+    {
+      const bool success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName, Q_ARG(QVariant, mCurrentTask.argument) );
+      if ( !success )
+        kError() << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
+      break;
+    }
     default:
       Q_ASSERT( false );
   }

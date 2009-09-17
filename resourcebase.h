@@ -434,6 +434,28 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void setHierarchicalRemoteIdentifiersEnabled( bool enable );
 
+    /**
+     * Schedules a custom task in the internal scheduler. It will be queued with
+     * all other tasks such as change replays and retrieval requests and eventually
+     * executed by calling the specified method.
+     * @param receiver The object the slot should be called on.
+     * @param methodName The name of the method (and only the name, not signature, not SLOT(...) macro),
+     * that should be called to execute this task. The method has to be a slot and take a QVariant as
+     * argument.
+     * @param argument A QVariant argument passed to the method specified above. Use this to pass task
+     * parameters.
+     * @since 4.4
+     */
+    void scheduleCustomTask( QObject* receiver, const char* method, const QVariant &argument );
+
+    /**
+     * Indicate that the current task is finished. Use this method from the slot called via scheduleCustomTaks().
+     * As with all the other callbacks, make sure to either call taskDone() or cancelTask()/deferTask() on all
+     * exit paths, otherwise the resource will hang.
+     * @since 4.4
+     */
+    void taskDone();
+
   private:
     static QString parseArguments( int, char** );
     static int init( ResourceBase *r );

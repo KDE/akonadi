@@ -52,27 +52,34 @@ class ResourceScheduler : public QObject
       FetchItem,
       ChangeReplay,
       DeleteResourceCollection,
-      SyncAllDone
+      SyncAllDone,
+      Custom
     };
 
     class Task {
       static qint64 latestSerial;
 
       public:
-        Task() : serial( ++latestSerial ), type( Invalid ) {}
+        Task() : serial( ++latestSerial ), type( Invalid ), receiver( 0 ) {}
         qint64 serial;
         TaskType type;
         Collection collection;
         Item item;
         QSet<QByteArray> itemParts;
         QDBusMessage dbusMsg;
+        QObject *receiver;
+        QByteArray methodName;
+        QVariant argument;
 
         bool operator==( const Task &other ) const
         {
           return type == other.type
               && (collection == other.collection || (!collection.isValid() && !other.collection.isValid()))
               && (item == other.item || (!item.isValid() && !other.item.isValid()))
-              && itemParts == other.itemParts;
+              && itemParts == other.itemParts
+              && receiver == other.receiver
+              && methodName == other.methodName
+              && argument == other.argument;
         }
     };
 
@@ -112,6 +119,12 @@ class ResourceScheduler : public QObject
       Insert synchronization completetion marker into the task queue.
     */
     void scheduleFullSyncCompletion();
+
+    /**
+      Insert a custom taks.
+      @param methodName The method name, without signature, do not use the SLOT() macro
+    */
+    void scheduleCustomTask( QObject *receiver, const char *methodName, const QVariant &argument );
 
     /**
       Returns true if no tasks are running or in the queue.

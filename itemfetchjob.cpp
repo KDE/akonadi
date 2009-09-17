@@ -41,6 +41,17 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
     ItemFetchJobPrivate( ItemFetchJob *parent )
       : JobPrivate( parent )
     {
+      mCollection = Collection::root();
+    }
+
+    void init()
+    {
+      Q_Q( ItemFetchJob );
+      mEmitTimer = new QTimer( q );
+      mEmitTimer->setSingleShot( true );
+      mEmitTimer->setInterval( 100 );
+      q->connect( mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()) );
+      q->connect( q, SIGNAL(result(KJob*)), q, SLOT(timeout()) );
     }
 
     void timeout()
@@ -60,8 +71,8 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
     Q_DECLARE_PUBLIC( ItemFetchJob )
 
     Collection mCollection;
-    Item mItem;
-    Item::List mItems;
+    Item::List mRequestedItems;
+    Item::List mResultItems;
     ItemFetchScope mFetchScope;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
     QTimer* mEmitTimer;
@@ -69,13 +80,20 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
 
 void ItemFetchJobPrivate::startFetchJob()
 {
+  Q_Q( ItemFetchJob );
   QByteArray command = newTag();
-  if ( mItem.isValid() )
-    command += " " AKONADI_CMD_UID " " AKONADI_CMD_ITEMFETCH " " + QByteArray::number( mItem.id() );
-  else if ( !mItem.remoteId().isEmpty() )
-    command += " " AKONADI_CMD_RID " " AKONADI_CMD_ITEMFETCH " " + mItem.remoteId().toUtf8();
-  else
+  if ( mRequestedItems.isEmpty() ) {
     command += " " AKONADI_CMD_ITEMFETCH " 1:*";
+  } else {
+    try {
+      command += ProtocolHelper::entitySetToByteArray( mRequestedItems, AKONADI_CMD_ITEMFETCH );
+    } catch ( const Exception &e ) {
+      q->setError( Job::Unknown );
+      q->setErrorText( QString::fromUtf8( e.what() ) );
+      q->emitResult();
+      return;
+    }
+  }
 
   command += ProtocolHelper::itemFetchScopeToByteArray( mFetchScope );
 
@@ -94,12 +112,7 @@ ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent )
 {
   Q_D( ItemFetchJob );
 
-  d->mEmitTimer = new QTimer( this );
-  d->mEmitTimer->setSingleShot( true );
-  d->mEmitTimer->setInterval( 100 );
-  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
-  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
-
+  d->init();
   d->mCollection = collection;
 }
 
@@ -108,15 +121,19 @@ ItemFetchJob::ItemFetchJob( const Item & item, QObject * parent)
 {
   Q_D( ItemFetchJob );
 
-  d->mEmitTimer = new QTimer( this );
-  d->mEmitTimer->setSingleShot( true );
-  d->mEmitTimer->setInterval( 100 );
-  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
-  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
-
-  d->mCollection = Collection::root();
-  d->mItem = item;
+  d->init();
+  d->mRequestedItems.append( item );
 }
+
+ItemFetchJob::ItemFetchJob(const Akonadi::Item::List& items, QObject* parent)
+  : Job( new ItemFetchJobPrivate( this ), parent )
+{
+  Q_D( ItemFetchJob );
+
+  d->init();
+  d->mRequestedItems = items;
+}
+
 
 ItemFetchJob::~ItemFetchJob()
 {
@@ -126,7 +143,7 @@ void ItemFetchJob::doStart()
 {
   Q_D( ItemFetchJob );
 
-  if ( !d->mItem.isValid() ) { // collection content listing
+  if ( d->mRequestedItems.isEmpty() ) { // collection content listing
     if ( d->mCollection == Collection::root() ) {
       setErrorText( QLatin1String("Cannot list root collection.") );
       setError( Unknown );
@@ -156,7 +173,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       if ( !item.isValid() )
         return;
 
-      d->mItems.append( item );
+      d->mResultItems.append( item );
       d->mPendingItems.append( item );
       if ( !d->mEmitTimer->isActive() )
         d->mEmitTimer->start();
@@ -170,7 +187,7 @@ Item::List ItemFetchJob::items() const
 {
   Q_D( const ItemFetchJob );
 
-  return d->mItems;
+  return d->mResultItems;
 }
 
 void ItemFetchJob::setFetchScope( ItemFetchScope &fetchScope )
