@@ -271,7 +271,7 @@ void FetchHelper::updateItemAccessTime()
 
 void FetchHelper::triggerOnDemandFetch()
 {
-  if ( mScope.scope() != Scope::None || mConnection->selectedCollectionId() <= 0 )
+  if ( mScope.scope() != Scope::None || mConnection->selectedCollectionId() <= 0 || mCacheOnly )
     return;
 
   Collection collection = mConnection->selectedCollection();
