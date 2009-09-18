@@ -21,31 +21,22 @@
 
 #include "collection.h"
 #include "job_p.h"
-#include <imapset_p.h>
+#include "linkjobimpl_p.h"
 
 using namespace Akonadi;
 
-class Akonadi::LinkJobPrivate : public JobPrivate
+class Akonadi::LinkJobPrivate : public LinkJobImpl<LinkJob>
 {
   public:
-    LinkJobPrivate( LinkJob *parent )
-      : JobPrivate( parent )
-    {
-    }
-
-    Collection collection;
-    ImapSet set;
+    LinkJobPrivate( LinkJob *parent ) : LinkJobImpl<LinkJob>( parent ) {}
 };
 
 LinkJob::LinkJob( const Collection &collection, const Item::List &items, QObject *parent ) :
     Job( new LinkJobPrivate( this ), parent )
 {
   Q_D( LinkJob );
-  d->collection = collection;
-  QList<Item::Id> ids;
-  foreach ( const Item &item, items )
-    ids << item.id();
-  d->set.add( ids );
+  d->destination = collection;
+  d->objectsToLink = items;
 }
 
 LinkJob::~LinkJob()
@@ -55,14 +46,7 @@ LinkJob::~LinkJob()
 void LinkJob::doStart()
 {
   Q_D( LinkJob );
-
-  QByteArray command = d->newTag();
-  command += " LINK ";
-  command += QByteArray::number( d->collection.id() );
-  command += ' ';
-  command += d->set.toImapSequenceSet();
-  command += '\n';
-  d->writeData( command );
+  d->sendCommand( "LINK" );
 }
 
 #include "linkjob.moc"

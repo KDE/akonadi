@@ -21,31 +21,22 @@
 
 #include "collection.h"
 #include "job_p.h"
-#include <imapset_p.h>
+#include "linkjobimpl_p.h"
 
 using namespace Akonadi;
 
-class Akonadi::UnlinkJobPrivate : public JobPrivate
+class Akonadi::UnlinkJobPrivate : public LinkJobImpl<UnlinkJob>
 {
   public:
-    UnlinkJobPrivate( UnlinkJob *parent )
-      : JobPrivate( parent )
-    {
-    }
-
-    Collection collection;
-    ImapSet set;
+    UnlinkJobPrivate( UnlinkJob *parent ) : LinkJobImpl<UnlinkJob>( parent ) {}
 };
 
 UnlinkJob::UnlinkJob( const Collection &collection, const Item::List &items, QObject *parent ) :
     Job( new UnlinkJobPrivate( this ), parent )
 {
   Q_D( UnlinkJob );
-  d->collection = collection;
-  QList<Item::Id> ids;
-  foreach ( const Item &item, items )
-    ids << item.id();
-  d->set.add( ids );
+  d->destination = collection;
+  d->objectsToLink = items;
 }
 
 UnlinkJob::~UnlinkJob()
@@ -55,14 +46,7 @@ UnlinkJob::~UnlinkJob()
 void UnlinkJob::doStart()
 {
   Q_D( UnlinkJob );
-
-  QByteArray command = d->newTag();
-  command += " UNLINK ";
-  command += QByteArray::number( d->collection.id() );
-  command += ' ';
-  command += d->set.toImapSequenceSet();
-  command += '\n';
-  d->writeData( command );
+  d->sendCommand( "UNLINK" );
 }
 
 #include "unlinkjob.moc"

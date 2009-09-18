@@ -111,8 +111,10 @@ class ProtocolHelper
       if ( objects.first().isValid() ) {
         // all items have a uid set
         rv += " " AKONADI_CMD_UID " ";
-        rv += command;
-        rv += ' ';
+        if ( !command.isEmpty() ) {
+          rv += command;
+          rv += ' ';
+        }
         QList<typename T::Id>  uids;
         foreach ( const T &object, objects )
           uids << object.id();
@@ -129,8 +131,11 @@ class ProtocolHelper
         }
 
         rv += " " AKONADI_CMD_RID " ";
-        rv += command;
-        rv += " (";
+        if ( !command.isEmpty() ) {
+          rv += command;
+          rv += ' ';
+        }
+        rv += '(';
         rv += ImapParser::join( rids, " " );
         rv += ')';
       }

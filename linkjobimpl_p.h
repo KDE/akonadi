@@ -17,28 +17,29 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_MOVEJOBIMPL_P_H
-#define AKONADI_MOVEJOBIMPL_P_H
+#ifndef AKONADI_LINKJOBIMPL_P_H
+#define AKONADI_LINKJOBIMPL_P_H
 
 #include "collection.h"
+#include "item.h"
 #include "job.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
 
+#include <kdebug.h>
+
 namespace Akonadi {
 
 /** Shared implementation details between item and collection move jobs. */
-template <typename T, typename MoveJob> class MoveJobImpl : public JobPrivate
+template <typename LinkJob> class LinkJobImpl : public JobPrivate
 {
   public:
-    MoveJobImpl( Job *parent ) : JobPrivate( parent ) {}
+    LinkJobImpl( Job *parent ) : JobPrivate( parent ) {}
 
     inline void sendCommand( const char* asapCommand )
     {
-      MoveJob *q = static_cast<MoveJob*>( q_func() ); // Job would be enough already, but then we don't have access to the non-public stuff...
-      if ( objectsToMove.isEmpty() ) {
-        q->setError( Job::Unknown );
-        q->setErrorText( QLatin1String( "No objects specified for moving" ) );
+      LinkJob *q = static_cast<LinkJob*>( q_func() ); // Job would be enough already, but then we don't have access to the non-public stuff...
+      if ( objectsToLink.isEmpty() ) {
         q->emitResult();
         return;
       }
@@ -51,23 +52,21 @@ template <typename T, typename MoveJob> class MoveJobImpl : public JobPrivate
 
       QByteArray command = newTag();
       try {
-        command += ProtocolHelper::entitySetToByteArray( objectsToMove, asapCommand );
+        command += ProtocolHelper::entitySetToByteArray( Collection::List() << destination, asapCommand );
       } catch ( const std::exception &e ) {
         q->setError( Job::Unknown );
         q->setErrorText( QString::fromUtf8( e.what() ) );
         q->emitResult();
         return;
       }
-      command += ' ';
-      if ( objectsToMove.first().isValid() ) // with all the checks done before this indicates now whether this is a UID or RID based operation
-        command += QByteArray::number( destination.id() );
-      else
-        command += ImapParser::quote( destination.remoteId().toUtf8() );
+
+      command += ProtocolHelper::entitySetToByteArray( objectsToLink, QByteArray() );
       command += '\n';
+
       writeData( command );
     }
 
-    typename T::List objectsToMove;
+    Item::List objectsToLink;
     Collection destination;
 };
 
