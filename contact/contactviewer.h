@@ -28,6 +28,13 @@
 
 #include <QtGui/QWidget>
 
+class QUrl;
+
+namespace KABC {
+class Address;
+class PhoneNumber;
+}
+
 namespace Akonadi {
 
 /**
@@ -80,6 +87,40 @@ class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::Ite
      */
     void setContact( const Akonadi::Item &contact );
 
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the user has clicked on
+     * a url (e.g. homepage or blog url) in the viewer.
+     *
+     * @param url The url that has been clicked.
+     */
+    void urlClicked( const QUrl &url );
+
+    /**
+     * This signal is emitted whenever the user has clicked on
+     * an email address in the viewer.
+     *
+     * @param name The name of the contact.
+     * @param email The plain email address of the contact.
+     */
+    void emailClicked( const QString &name, const QString &email );
+
+    /**
+     * This signal is emitted whenever the user has clicked on a
+     * phone number (that includes fax numbers as well) in the viewer.
+     *
+     * @param number The corresponding phone number.
+     */
+    void phoneNumberClicked( const KABC::PhoneNumber &number );
+
+    /**
+     * This signal is emitted whenever the user has clicked on an
+     * address in the viewer.
+     *
+     * @param address The corresponding address.
+     */
+    void addressClicked( const KABC::Address &address );
+
   private:
     /**
      * This method is called whenever the displayed contact has been changed.
@@ -96,6 +137,9 @@ class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::Ite
     //@cond PRIVATE
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void slotMailClicked( const QString&, const QString& ) )
+    Q_PRIVATE_SLOT( d, void slotUrlClicked( const QString& ) )
     //@endcond
 };
 

@@ -26,6 +26,13 @@
 
 #include <kdialog.h>
 
+class QUrl;
+
+namespace KABC {
+class Address;
+class PhoneNumber;
+}
+
 namespace Akonadi {
 
 class Item;
@@ -78,6 +85,40 @@ class AKONADI_CONTACT_EXPORT ContactViewerDialog : public KDialog
      * Sets the @p contact that shall be displayed in the dialog.
      */
     void setContact( const Akonadi::Item &contact );
+
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the user has clicked on
+     * a url (e.g. homepage or blog url) in the viewer dialog.
+     *
+     * @param url The url that has been clicked.
+     */
+    void urlClicked( const QUrl &url );
+
+    /**
+     * This signal is emitted whenever the user has clicked on
+     * an email address in the viewer dialog.
+     *
+     * @param name The name of the contact.
+     * @param email The plain email address of the contact.
+     */
+    void emailClicked( const QString &name, const QString &email );
+
+    /**
+     * This signal is emitted whenever the user has clicked on a
+     * phone number (that includes fax numbers as well) in the viewer dialog.
+     *
+     * @param number The corresponding phone number.
+     */
+    void phoneNumberClicked( const KABC::PhoneNumber &number );
+
+    /**
+     * This signal is emitted whenever the user has clicked on an
+     * address in the viewer dialog.
+     *
+     * @param address The corresponding address.
+     */
+    void addressClicked( const KABC::Address &address );
 
   private:
     //@cond PRIVATE
