@@ -63,6 +63,10 @@ bool PasteHelper::canPaste(const QMimeData * mimeData, const Collection & collec
     // items/collections that shall be pasted
     bool supportsMimeTypes = true;
     foreach ( const KUrl &url, urls ) {
+      // collections do not provide mimetype information, so ignore this check
+      if ( url.hasQueryItem( QLatin1String( "collection" ) ) )
+        continue;
+
       const QString mimeType = url.queryItemValue( QLatin1String( "type" ) );
       if ( !collection.contentMimeTypes().contains( mimeType ) ) {
         supportsMimeTypes = false;
