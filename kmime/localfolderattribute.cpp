@@ -81,13 +81,13 @@ void LocalFolderAttribute::setFolderType( int type )
 // Register the attribute when the library is loaded.
 namespace {
 
-bool dummy()
+bool dummyLocalFolderAttribute()
 {
   using namespace Akonadi;
   AttributeFactory::registerAttribute<LocalFolderAttribute>();
   return true;
 }
 
-const bool registered = dummy();
+const bool registeredLocalFolderAttribute = dummyLocalFolderAttribute();
 
 }
