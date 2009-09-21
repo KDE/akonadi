@@ -22,6 +22,7 @@
 #include "agentmanager_p.h"
 
 #include "agentinstance.h"
+#include "controlinterface.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -70,7 +71,41 @@ class AgentInstanceCreateJob::Private
 
     void doConfigure()
     {
+      org::freedesktop::Akonadi::Agent::Control *agentControlIface =
+        new org::freedesktop::Akonadi::Agent::Control( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + agentInstance.identifier(),
+                                                       QLatin1String( "/" ), QDBusConnection::sessionBus(), q );
+      if ( !agentControlIface || !agentControlIface->isValid() ) {
+        if ( agentControlIface )
+          delete agentControlIface;
+
+        q->setError( KJob::UserDefinedError );
+        q->setErrorText( i18n( "Unable to access dbus interface of created agent." ) );
+        q->emitResult();
+        return;
+      }
+
+      q->connect( agentControlIface, SIGNAL( configurationDialogAccepted() ),
+                  q, SLOT( configurationDialogAccepted() ) );
+      q->connect( agentControlIface, SIGNAL( configurationDialogRejected() ),
+                  q, SLOT( configurationDialogRejected() ) );
+
       agentInstance.configure( parentWidget );
+    }
+
+    void configurationDialogAccepted()
+    {
+      // The user clicked 'Ok' in the initial configuration dialog, so we assume
+      // he wants to keep the resource and the job is done.
+      q->emitResult();
+    }
+
+    void configurationDialogRejected()
+    {
+      // The user clicked 'Cancel' in the initial configuration dialog, so we assume
+      // he wants to abort the 'create new resource' job and the new resource will be
+      // removed again.
+      AgentManager::self()->removeInstance( agentInstance );
+
       q->emitResult();
     }
 
@@ -96,16 +131,16 @@ class AgentInstanceCreateJob::Private
     bool tooLate;
 };
 
-AgentInstanceCreateJob::AgentInstanceCreateJob(const AgentType & agentType, QObject * parent) :
-    KJob( parent ),
+AgentInstanceCreateJob::AgentInstanceCreateJob( const AgentType & agentType, QObject * parent )
+  : KJob( parent ),
     d( new Private( this ) )
 {
   d->agentType = agentType;
-  connect( AgentManager::self(), SIGNAL(instanceAdded(const Akonadi::AgentInstance&)),
-           this, SLOT(agentInstanceAdded(const Akonadi::AgentInstance&)) );
+  connect( AgentManager::self(), SIGNAL( instanceAdded( const Akonadi::AgentInstance& ) ),
+           this, SLOT( agentInstanceAdded( const Akonadi::AgentInstance& ) ) );
 
   d->safetyTimer = new QTimer( this );
-  connect( d->safetyTimer, SIGNAL(timeout()), SLOT(timeout()) );
+  connect( d->safetyTimer, SIGNAL( timeout() ), SLOT( timeout() ) );
 }
 
 AgentInstanceCreateJob::~ AgentInstanceCreateJob()
@@ -130,7 +165,7 @@ void AgentInstanceCreateJob::start()
   if ( !d->agentInstance.isValid() ) {
     setError( KJob::UserDefinedError );
     setErrorText( i18n("Unable to create agent instance." ) );
-    QTimer::singleShot( 0, this , SLOT(emitResult()) );
+    QTimer::singleShot( 0, this , SLOT( emitResult() ) );
   } else {
     int timeout = safetyTimeout;
 #ifdef Q_OS_UNIX

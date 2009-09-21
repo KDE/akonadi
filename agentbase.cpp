@@ -583,6 +583,7 @@ void AgentBase::doSetOnline( bool online )
 void AgentBase::configure( WId windowId )
 {
   Q_UNUSED( windowId );
+  emit configurationDialogAccepted();
 }
 
 #ifdef Q_OS_WIN //krazy:exclude=cpp
