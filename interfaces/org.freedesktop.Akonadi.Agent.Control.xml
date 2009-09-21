@@ -9,6 +9,8 @@
       <arg name="windowId" type="x" direction="in"/>
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
+    <signal name="configurationDialogAccepted"/>
+    <signal name="configurationDialogRejected"/>
     <method name="reconfigure">
     </method>
     <method name="abort">
