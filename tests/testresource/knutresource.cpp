@@ -117,6 +117,8 @@ void KnutResource::configure( WId windowId )
   Settings::self()->setDataFile( newFile );
   Settings::self()->writeConfig();
   load();
+
+  emit configurationDialogAccepted();
 }
 
 void KnutResource::retrieveCollections()
