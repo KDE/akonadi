@@ -243,6 +243,12 @@ void CollectionJobTest::testMimeTypeFilter()
 
   list = job->collections();
   QCOMPARE( list.count(), 0 );
+
+  // non-existing mimetype
+  job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
+  job->fetchScope().setContentMimeTypes( QStringList() << "something/non-existing" );
+  AKVERIFYEXEC( job );
+  QCOMPARE( job->collections().size(), 0 );
 }
 
 void CollectionJobTest::testCreateDeleteFolder_data()
@@ -649,14 +655,6 @@ void CollectionJobTest::testAncestorRetrieval()
   col2 = job->collections().first();
   QVERIFY( col2.isValid() );
   QCOMPARE( col, col2 );
-}
-
-void CollectionJobTest::testMimeTypeFilter()
-{
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
-  job->fetchScope().setContentMimeTypes( QStringList() << "something/non-existing" );
-  AKVERIFYEXEC( job );
-  QCOMPARE( job->collections().size(), 0 );
 }
 
 #include "collectionjobtest.moc"
