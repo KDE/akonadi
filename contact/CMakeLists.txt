@@ -11,6 +11,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_
 
 ########### next target ###############
 
+set(akonadicontact_actions_SRCS
+  actions/dialphonenumberaction.cpp
+  actions/showaddressaction.cpp
+  actions/qskypedialer.cpp
+)
+
 set(akonadicontact_editor_SRCS
   editor/addresseditwidget.cpp
   editor/contacteditorwidget.cpp
@@ -35,6 +41,7 @@ set(akonadicontact_LIB_SRC
   attributeregistrar.cpp
   collectionfiltermodel.cpp
   contactcompletionmodel.cpp
+  contactdefaultactions.cpp
   contacteditor.cpp
   contacteditordialog.cpp
   contactgroupeditor.cpp
@@ -50,6 +57,7 @@ set(akonadicontact_LIB_SRC
   contactviewer.cpp
   contactviewerdialog.cpp
   waitingoverlay.cpp
+  ${akonadicontact_actions_SRCS}
   ${akonadicontact_editor_SRCS}
 )
 
@@ -81,6 +89,7 @@ install( FILES
   akonadi-contact_export.h
   addressbookcombobox.h
   addressbookselectiondialog.h
+  contactdefaultactions.h
   contacteditor.h
   contacteditordialog.h
   contactgroupeditor.h
