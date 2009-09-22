@@ -134,9 +134,16 @@ bool List::parseStream()
     } else if ( filter == AKONADI_PARAM_MIMETYPE ) {
       m_streamParser->beginList();
       while ( !m_streamParser->atListEnd() ) {
-        const MimeType mt = MimeType::retrieveByName( m_streamParser->readUtf8String() );
-        if ( mt.isValid() )
+        const QString mtName = m_streamParser->readUtf8String();
+        const MimeType mt = MimeType::retrieveByName( mtName );
+        if ( mt.isValid() ) {
           mMimeTypes.append( mt.id() );
+        } else {
+          MimeType mt ( mtName );
+          if ( !mt.insert() )
+            throw HandlerException( "Failed to create mimetype record" );
+          mMimeTypes.append( mt.id() );
+        }
       }
     }
   }
