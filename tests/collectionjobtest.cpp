@@ -651,4 +651,12 @@ void CollectionJobTest::testAncestorRetrieval()
   QCOMPARE( col, col2 );
 }
 
+void CollectionJobTest::testMimeTypeFilter()
+{
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
+  job->fetchScope().setContentMimeTypes( QStringList() << "something/non-existing" );
+  AKVERIFYEXEC( job );
+  QCOMPARE( job->collections().size(), 0 );
+}
+
 #include "collectionjobtest.moc"
