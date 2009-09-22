@@ -45,8 +45,43 @@ class ContactViewer::Private
     {
     }
 
+    void slotMailClicked( const QString&, const QString &email )
+    {
+      QString name, address;
+
+      // remove the 'mailto:' and split into name and email address
+      KABC::Addressee::parseEmailAddress( email.mid( 7 ), name, address );
+
+      emit mParent->emailClicked( name, address );
+    }
+
+    void slotUrlClicked( const QString &urlString )
+    {
+      QUrl url( urlString );
+
+      if ( url.scheme() == QLatin1String( "http" ) ||
+           url.scheme() == QLatin1String( "https" ) ) {
+        emit mParent->urlClicked( urlString );
+      } else if ( url.scheme() == QLatin1String( "phone" ) ) {
+        const int pos = url.queryItemValue( QLatin1String( "index" ) ).toInt();
+
+        const KABC::PhoneNumber::List numbers = mCurrentContact.phoneNumbers();
+        if ( pos < numbers.count() ) {
+          emit mParent->phoneNumberClicked( numbers.at( pos ) );
+        }
+      } else if ( url.scheme() == QLatin1String( "address" ) ) {
+        const int pos = url.queryItemValue( QLatin1String( "index" ) ).toInt();
+
+        const KABC::Address::List addresses = mCurrentContact.addresses();
+        if ( pos < addresses.count() ) {
+          emit mParent->addressClicked( addresses.at( pos ) );
+        }
+      }
+    }
+
     ContactViewer *mParent;
     KTextBrowser *mBrowser;
+    KABC::Addressee mCurrentContact;
 };
 
 ContactViewer::ContactViewer( QWidget *parent )
@@ -55,6 +90,12 @@ ContactViewer::ContactViewer( QWidget *parent )
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   d->mBrowser = new KTextBrowser;
+  d->mBrowser->setNotifyClick( true );
+
+  connect( d->mBrowser, SIGNAL( mailClick( const QString&, const QString& ) ),
+           this, SLOT( slotMailClicked( const QString&, const QString& ) ) );
+  connect( d->mBrowser, SIGNAL( urlClick( const QString& ) ),
+           this, SLOT( slotUrlClicked( const QString& ) ) );
 
   layout->addWidget( d->mBrowser );
 
@@ -84,21 +125,21 @@ void ContactViewer::itemChanged( const Item &contactItem )
 
   static QPixmap defaultPixmap = KIcon( QLatin1String( "x-office-contact" ) ).pixmap( QSize( 100, 140 ) );
 
-  const KABC::Addressee contact = contactItem.payload<KABC::Addressee>();
+  d->mCurrentContact = contactItem.payload<KABC::Addressee>();
 
-  setWindowTitle( i18n( "Contact %1", contact.assembledName() ) );
+  setWindowTitle( i18n( "Contact %1", d->mCurrentContact.assembledName() ) );
 
-  if ( contact.photo().isIntern() ) {
+  if ( d->mCurrentContact.photo().isIntern() ) {
     d->mBrowser->document()->addResource( QTextDocument::ImageResource,
                                           QUrl( QLatin1String( "contact_photo" ) ),
-                                          contact.photo().data() );
+                                          d->mCurrentContact.photo().data() );
   } else {
     d->mBrowser->document()->addResource( QTextDocument::ImageResource,
                                           QUrl( QLatin1String( "contact_photo" ) ),
                                           defaultPixmap );
   }
 
-  d->mBrowser->setHtml( contactAsHtml( contact ) );
+  d->mBrowser->setHtml( contactAsHtml( d->mCurrentContact ) );
 }
 
 void ContactViewer::itemRemoved()
@@ -130,16 +171,14 @@ static QString contactAsHtml( const KABC::Addressee &contact )
       .arg( KGlobal::locale()->formatDate( date, KLocale::ShortDate ) );
 
   // Phone Numbers
-  foreach( const KABC::PhoneNumber &number, contact.phoneNumbers() ) {
-      QString url;
-      if ( number.type() & KABC::PhoneNumber::Fax )
-        url = QString::fromLatin1( "fax:" ) + number.number();
-      else
-        url = QString::fromLatin1( "phone:" ) + number.number();
+  int counter = 0;
+  foreach ( const KABC::PhoneNumber &number, contact.phoneNumbers() ) {
+      const QString url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( number.number() );
+      counter++;
 
       dynamicPart += rowFmtStr
         .arg( KABC::PhoneNumber::typeLabel( number.type() ).replace( QLatin1String( " " ), QLatin1String( "&nbsp;" ) ) )
-        .arg( number.number() );
+        .arg( url );
   }
 
   // EMails
@@ -169,21 +208,24 @@ static QString contactAsHtml( const KABC::Addressee &contact )
     dynamicPart += rowFmtStr.arg( i18n( "Blog Feed" ) ).arg( KStringHandler::tagUrls( blog ) );
 
   // Addresses
+  counter = 0;
   foreach ( const KABC::Address &address, contact.addresses() ) {
+    QString formattedAddress;
+
     if ( address.label().isEmpty() ) {
-      QString formattedAddress;
-
       formattedAddress = address.formattedAddress().trimmed();
-      formattedAddress = formattedAddress.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) );
-
-      dynamicPart += rowFmtStr
-        .arg( KABC::Address::typeLabel( address.type() ) )
-        .arg( formattedAddress );
     } else {
-      dynamicPart += rowFmtStr
-        .arg( KABC::Address::typeLabel( address.type() ) )
-        .arg( address.label().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) );
+      formattedAddress = address.label();
     }
+
+    formattedAddress = formattedAddress.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) );
+
+    const QString url = QString::fromLatin1( "<a href=\"address:?index=%1\">%2</a>" ).arg( counter).arg( formattedAddress );
+    counter++;
+
+    dynamicPart += rowFmtStr
+      .arg( KABC::Address::typeLabel( address.type() ) )
+      .arg( url );
   }
 
   // Note
@@ -258,6 +300,11 @@ static QString contactAsHtml( const KABC::Addressee &contact )
 
   const QString document = QString::fromLatin1(
     "<html>"
+    "<head>"
+    " <style type=\"text/css\">"
+    "  a {text-decoration:none}"
+    " </style>"
+    "</head>"
     "<body text=\"%1\" bgcolor=\"%2\">" // text and background color
     "%3" // contact part
     "</body>"

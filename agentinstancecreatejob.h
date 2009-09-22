@@ -109,6 +109,8 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     Q_PRIVATE_SLOT( d, void doConfigure() )
     Q_PRIVATE_SLOT( d, void timeout() )
     Q_PRIVATE_SLOT( d, void emitResult() )
+    Q_PRIVATE_SLOT( d, void configurationDialogAccepted() )
+    Q_PRIVATE_SLOT( d, void configurationDialogRejected() )
     //@endcond
 };
 

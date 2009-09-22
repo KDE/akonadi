@@ -347,7 +347,11 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * This method is called whenever the agent shall show its configuration dialog
      * to the user. It will be automatically called when the agent is started for
      * the first time.
+     *
      * @param windowId The parent window id.
+     *
+     * @note If the method is reimplemented it has to emit the configurationDialogAccepted()
+     *       or configurationDialogRejected() signals depending on the users choice.
      */
     virtual void configure( WId windowId );
 
@@ -462,6 +466,26 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * @since 4.2
      */
     void onlineChanged( bool b );
+
+    /**
+     * This signal is emitted whenever the user has accepted the configuration dialog.
+     *
+     * @note Implementors of agents/resources are responsible to emit this signal if
+     *       the agent/resource reimplements configure().
+     *
+     * @since 4.4
+     */
+    void configurationDialogAccepted();
+
+    /**
+     * This signal is emitted whenever the user has rejected the configuration dialog.
+     *
+     * @note Implementors of agents/resources are responsible to emit this signal if
+     *       the agent/resource reimplements configure().
+     *
+     * @since 4.4
+     */
+    void configurationDialogRejected();
 
   protected:
     /**

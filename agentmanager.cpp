@@ -290,8 +290,8 @@ AgentManager::AgentManager()
            this, SLOT( agentInstanceWarning( const QString&, const QString& ) ) );
   connect( d->mManager, SIGNAL( agentInstanceError( const QString&, const QString& ) ),
            this, SLOT( agentInstanceError( const QString&, const QString& ) ) );
-  connect( d->mManager, SIGNAL(agentInstanceOnlineChanged(QString,bool)),
-           SLOT(agentInstanceOnlineChanged(QString,bool)) );
+  connect( d->mManager, SIGNAL( agentInstanceOnlineChanged( const QString&, bool ) ),
+           this, SLOT( agentInstanceOnlineChanged( const QString&, bool ) ) );
 
   if ( d->mManager->isValid() ) {
     QDBusReply<QStringList> result = d->mManager->agentTypes();
