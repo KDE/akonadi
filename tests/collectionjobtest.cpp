@@ -243,6 +243,12 @@ void CollectionJobTest::testMimeTypeFilter()
 
   list = job->collections();
   QCOMPARE( list.count(), 0 );
+
+  // non-existing mimetype
+  job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
+  job->fetchScope().setContentMimeTypes( QStringList() << "something/non-existing" );
+  AKVERIFYEXEC( job );
+  QCOMPARE( job->collections().size(), 0 );
 }
 
 void CollectionJobTest::testCreateDeleteFolder_data()
