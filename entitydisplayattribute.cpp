@@ -28,8 +28,10 @@ using namespace Akonadi;
 class EntityDisplayAttribute::Private
 {
   public:
+    Private() : hidden( false ) {}
     QString name;
     QString icon;
+    bool hidden;
 };
 
 EntityDisplayAttribute::EntityDisplayAttribute() :
@@ -67,6 +69,16 @@ void EntityDisplayAttribute::setIconName(const QString & icon)
   d->icon = icon;
 }
 
+bool EntityDisplayAttribute::isHidden() const
+{
+  return d->hidden;
+}
+
+void EntityDisplayAttribute::setHidden(bool hide)
+{
+  d->hidden = hide;
+}
+
 QByteArray Akonadi::EntityDisplayAttribute::type() const
 {
   return "ENTITYDISPLAY";
@@ -85,6 +97,7 @@ QByteArray EntityDisplayAttribute::serialized() const
   QList<QByteArray> l;
   l << ImapParser::quote( d->name.toUtf8() );
   l << ImapParser::quote( d->icon.toUtf8() );
+  l << (d->hidden ? "true" : "false");
   return '(' + ImapParser::join( l, " " ) + ')';
 }
 
@@ -95,4 +108,6 @@ void EntityDisplayAttribute::deserialize(const QByteArray &data)
   Q_ASSERT( l.count() >= 2 );
   d->name = QString::fromUtf8( l[0] );
   d->icon = QString::fromUtf8( l[1] );
+  if ( l.size() >= 3 )
+    d->hidden = (l[2] == "true");
 }
