@@ -6,7 +6,7 @@ X-KDE-ServiceTypes=KCModule
 X-KDE-Library=kcm_akonadicontact_actions
 X-KDE-ParentApp=kaddressbook
 X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
-X-KDE-CfgDlgHierarchy=KAB
+X-KDE-CfgDlgHierarchy=KAddressBook
 X-KDE-Weight=200
 
 Name=Contact Actions
