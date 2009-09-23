@@ -292,8 +292,7 @@ static QString contactAsHtml( const KABC::Addressee &contact )
     "</tr>"
     "<tr>"
     "<td align=\"left\" width=\"70%\">%4</td>"  // organization
-    "</tr>"
-    "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>")
+    "</tr>")
       .arg( QLatin1String( "contact_photo" ) )
       .arg( contact.realName() )
       .arg( role )
