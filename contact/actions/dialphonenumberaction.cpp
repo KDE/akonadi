@@ -21,6 +21,7 @@
 
 #include "dialphonenumberaction.h"
 
+#include "contactactionssettings.h"
 #include "qskypedialer.h"
 
 #include <kabc/phonenumber.h>
@@ -47,15 +48,10 @@ static QString strippedNumber( const QString &number )
 
 void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
 {
-  KConfig config( QLatin1String( "akonadi_contactrc" ) );
-  KConfigGroup group( &config, "Phone Dial Settings" );
+  // synchronize
+  ContactActionsSettings::self()->readConfig();
 
-  QString command;
-
-  if ( number.type() & KABC::PhoneNumber::Fax )
-    command = group.readEntry( "FaxCommandPattern", QString() );
-  else
-    command = group.readEntry( "PhoneCommandPattern", QString() );
+  QString command = ContactActionsSettings::self()->phoneCommand();
 
   if ( command.isEmpty() ) {
     KMessageBox::sorry( 0, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
@@ -63,7 +59,7 @@ void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
   }
 
   // we handle skype separated
-  if ( command == QLatin1String( "skype" ) ) {
+  if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSkype ) {
     QSkypeDialer dialer( QLatin1String( "AkonadiContacts" ) );
     if ( !dialer.dialNumber( strippedNumber( number.number().trimmed() ) ) ) {
       KMessageBox::sorry( 0, dialer.errorMessage() );
