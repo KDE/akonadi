@@ -102,6 +102,8 @@ class AKONADI_EXPORT ItemModel : public QAbstractTableModel
 
     virtual QStringList mimeTypes() const;
 
+    virtual Qt::DropActions supportedDropActions() const;
+
     /**
      * Sets the item fetch scope.
      *

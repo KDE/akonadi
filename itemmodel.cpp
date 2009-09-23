@@ -441,4 +441,10 @@ Collection ItemModel::collection() const
   return d->collection;
 }
 
+Qt::DropActions ItemModel::supportedDropActions() const
+{
+  return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
+}
+
+
 #include "itemmodel.moc"
