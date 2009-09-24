@@ -1,0 +1,16 @@
+[Desktop Entry]
+Icon=configure
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kcm_akonadicontact_actions
+X-KDE-ParentApp=kaddressbook
+X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
+X-KDE-CfgDlgHierarchy=KAddressBook
+X-KDE-Weight=200
+
+Name=Contact Actions
+Name[x-test]=xxContact Actionsxx
+Comment=Configure the Contact Actions
+Comment[x-test]=xxConfigure the Contact Actionsxx
+X-KDE-Keywords=kaddressbook, configure, settings, contact, actions

@@ -37,6 +37,7 @@ struct State
   State() : selected( false ), expanded( false ) {}
   bool selected;
   bool expanded;
+  bool currentIndex;
 };
 
 class EntityTreeViewStateSaverPrivate
@@ -82,6 +83,8 @@ class EntityTreeViewStateSaverPrivate
         view->selectionModel()->select( index, QItemSelectionModel::Select | QItemSelectionModel::Rows );
       if ( state.expanded )
         view->setExpanded( index, true );
+      if ( state.currentIndex )
+        view->setCurrentIndex( index );
       QTimer::singleShot( 0, q, SLOT(restoreScrollBarState()) );
     }
 
@@ -157,8 +160,12 @@ void EntityTreeViewStateSaver::saveState( KConfigGroup &configGroup ) const
     const QModelIndex index = d->view->model()->index( i, 0 );
     d->saveState( index, selection, expansion );
   }
+
+  const QString currentIndex = d->key( d->view->selectionModel()->currentIndex() );
+
   configGroup.writeEntry( "Selection", selection );
   configGroup.writeEntry( "Expansion", expansion );
+  configGroup.writeEntry( "CurrentIndex", currentIndex );
   configGroup.writeEntry( "ScrollBarHorizontal", d->view->horizontalScrollBar()->value() );
   configGroup.writeEntry( "ScrollBarVertical", d->view->verticalScrollBar()->value() );
 }
@@ -185,6 +192,15 @@ void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) c
       d->pendingCollectionChanges[id].expanded = true;
     else if ( key.startsWith( QLatin1Char( 'i' ) ) )
       d->pendingItemChanges[id].expanded = true;
+  }
+
+  const QString key = configGroup.readEntry( "CurrentIndex", QString() );
+  const Entity::Id id = key.mid( 1 ).toLongLong();
+  if ( id >= 0 ) {
+    if ( key.startsWith( QLatin1Char( 'c' ) ) )
+      d->pendingCollectionChanges[id].currentIndex = true;
+    else if ( key.startsWith( QLatin1Char( 'i' ) ) )
+      d->pendingItemChanges[id].currentIndex = true;
   }
 
   d->horizontalScrollBarValue = configGroup.readEntry( "ScrollBarHorizontal", -1 );

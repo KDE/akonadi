@@ -43,8 +43,8 @@ class Session;
  * Optionally, the changed objects can be fetched automatically from the server.
  * To enable this, see itemFetchScope() and collectionFetchScope().
  *
- * @todo: distinguish between monitoring collection properties and collection content.
- * @todo: special case for collection content counts changed
+ * @todo Distinguish between monitoring collection properties and collection content.
+ * @todo Special case for collection content counts changed
  *
  * @author Volker Krause <vkrause@kde.org>
  */
@@ -66,42 +66,72 @@ class AKONADI_EXPORT Monitor : public QObject
     virtual ~Monitor();
 
     /**
-     * Sets whether the specified collection shall be monitored for changes.
+     * Sets whether the specified collection shall be monitored for changes. If
+     * monitoring is turned on for the collection, all notifications for items
+     * in that collection will be emitted, and its child collections will also
+     * be monitored. Note that move notifications will be emitted if either one
+     * of the collections involved is being monitored.
+     *
+     * Note that if a session is being ignored, this takes precedence over
+     * setCollectionMonitored() on that session.
      *
      * @param collection The collection to monitor.
      *                   If this collection is Collection::root(), all collections
      *                   in the Akonadi storage will be monitored.
+     * @param monitored Whether to monitor the collection.
      */
     void setCollectionMonitored( const Collection &collection, bool monitored = true );
 
     /**
      * Sets whether the specified item shall be monitored for changes.
      *
+     * Note that if a session is being ignored, this takes precedence over
+     * setItemMonitored() on that session.
+     *
      * @param item The item to monitor.
+     * @param monitored Whether to monitor the item.
      */
     void setItemMonitored( const Item &item, bool monitored = true );
 
     /**
-     * Sets whether the specified resource shall be monitored for changes.
+     * Sets whether the specified resource shall be monitored for changes. If
+     * monitoring is turned on for the resource, all notifications for
+     * collections and items in that resource will be emitted.
+     *
+     * Note that if a session is being ignored, this takes precedence over
+     * setResourceMonitored() on that session.
      *
      * @param resource The resource identifier.
+     * @param monitored Whether to monitor the resource.
      */
     void setResourceMonitored( const QByteArray &resource, bool monitored = true );
 
     /**
-     * Sets whether objects of the specified mime type shall be monitored for changes.
+     * Sets whether items of the specified mime type shall be monitored for changes.
+     * If monitoring is turned on for the mime type, all notifications for items
+     * matching that mime type will be emitted, but notifications for collections
+     * matching that mime type will only be emitted if this is otherwise specified,
+     * for example by setCollectionMonitored().
+     *
+     * Note that if a session is being ignored, this takes precedence over
+     * setMimeTypeMonitored() on that session.
      *
      * @param mimetype The mime type to monitor.
+     * @param monitored Whether to monitor the mime type.
      */
     void setMimeTypeMonitored( const QString &mimetype, bool monitored = true );
 
     /**
      * Sets whether all items shall be monitored.
+     *
+     * Note that if a session is being ignored, this takes precedence over
+     * setAllMonitored() on that session.
      */
     void setAllMonitored( bool monitored = true );
 
     /**
-     * Ignores all change notifications caused by the given session.
+     * Ignores all change notifications caused by the given session. This
+     * overrides all other settings on this session.
      *
      * @param session The session you want to ignore.
      */

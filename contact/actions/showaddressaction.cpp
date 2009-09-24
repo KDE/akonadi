@@ -21,21 +21,40 @@
 
 #include "showaddressaction.h"
 
+#include "contactactionssettings.h"
+
 #include <kabc/address.h>
+#include <krun.h>
 #include <ktoolinvocation.h>
 
 using namespace Akonadi;
 
 void ShowAddressAction::showAddress( const KABC::Address &address )
 {
-  QString urlTemplate = QLatin1String( "http://maps.google.com/maps?f=q&hl=%1&q=%n,%l,%s" );
+  // synchronize
+  ContactActionsSettings::self()->readConfig();
 
-  urlTemplate.replace( QLatin1String( "%s" ), address.street() ).
-              replace( QLatin1String( "%r" ), address.region() ).
-              replace( QLatin1String( "%l" ), address.locality() ).
-              replace( QLatin1String( "%z" ), address.postalCode() ).
-              replace( QLatin1String( "%n" ), address.country() ).
-              replace( QLatin1String( "%c" ), address.countryToISO( address.country() ) );
+  if ( ContactActionsSettings::self()->showAddressAction() == ContactActionsSettings::UseBrowser ) {
+    QString urlTemplate = ContactActionsSettings::self()->addressUrl();
 
-  KToolInvocation::invokeBrowser( urlTemplate );
+    urlTemplate.replace( QLatin1String( "%s" ), address.street() ).
+                replace( QLatin1String( "%r" ), address.region() ).
+                replace( QLatin1String( "%l" ), address.locality() ).
+                replace( QLatin1String( "%z" ), address.postalCode() ).
+                replace( QLatin1String( "%n" ), address.country() ).
+                replace( QLatin1String( "%c" ), address.countryToISO( address.country() ) );
+
+    KToolInvocation::invokeBrowser( urlTemplate );
+  } else {
+    QString commandTemplate = ContactActionsSettings::self()->addressCommand();
+
+    commandTemplate.replace( QLatin1String( "%s" ), address.street() ).
+                    replace( QLatin1String( "%r" ), address.region() ).
+                    replace( QLatin1String( "%l" ), address.locality() ).
+                    replace( QLatin1String( "%z" ), address.postalCode() ).
+                    replace( QLatin1String( "%n" ), address.country() ).
+                    replace( QLatin1String( "%c" ), address.countryToISO( address.country() ) );
+
+    KRun::runCommand( commandTemplate, 0 );
+  }
 }

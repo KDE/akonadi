@@ -154,7 +154,7 @@ static QString contactAsHtml( const KABC::Addressee &contact )
 
   QString rowFmtStr = QString::fromLatin1(
         "<tr>"
-        "<td align=\"right\" valign=\"top\" width=\"30%\"><b>%1</b></td>\n"
+        "<td align=\"right\" valign=\"top\" width=\"30%\"><b><font color=\"grey\">%1</font></b></td>\n"
         "<td align=\"left\" valign=\"top\" width=\"70%\">%2</td>\n"
         "</tr>\n"
         );
@@ -272,9 +272,15 @@ static QString contactAsHtml( const KABC::Addressee &contact )
   }
 
   // Assemble all parts
+  QString role = contact.title();
+  if ( role.isEmpty() )
+    role = contact.role();
+  if ( role.isEmpty() )
+    role = contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) );
+
   QString strAddr = QString::fromLatin1(
     "<div align=\"center\">"
-    "<table cellpadding=\"1\" cellspacing=\"0\">"
+    "<table cellpadding=\"3\" cellspacing=\"0\">"
     "<tr>"
     "<td align=\"right\" valign=\"top\" width=\"30%\" rowspan=\"3\">"
     "<img src=\"%1\" width=\"75\" height=\"105\" vspace=\"1\">" // image
@@ -286,11 +292,10 @@ static QString contactAsHtml( const KABC::Addressee &contact )
     "</tr>"
     "<tr>"
     "<td align=\"left\" width=\"70%\">%4</td>"  // organization
-    "</tr>"
-    "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>")
+    "</tr>")
       .arg( QLatin1String( "contact_photo" ) )
       .arg( contact.realName() )
-      .arg( contact.role() )
+      .arg( role )
       .arg( contact.organization() );
 
   strAddr.append( dynamicPart );
@@ -302,7 +307,7 @@ static QString contactAsHtml( const KABC::Addressee &contact )
     "<html>"
     "<head>"
     " <style type=\"text/css\">"
-    "  a {text-decoration:none}"
+    "  a {text-decoration:none; color:%1}"
     " </style>"
     "</head>"
     "<body text=\"%1\" bgcolor=\"%2\">" // text and background color

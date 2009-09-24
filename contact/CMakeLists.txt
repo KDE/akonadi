@@ -6,6 +6,7 @@ include_directories(
 )
 
 add_subdirectory(tests)
+add_subdirectory(kcm)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
 
@@ -16,6 +17,7 @@ set(akonadicontact_actions_SRCS
   actions/showaddressaction.cpp
   actions/qskypedialer.cpp
 )
+kde4_add_kcfg_files(akonadicontact_actions_SRCS actions/contactactionssettings.kcfgc)
 
 set(akonadicontact_editor_SRCS
   editor/addresseditwidget.cpp
