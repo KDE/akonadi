@@ -10,7 +10,5 @@ X-KDE-CfgDlgHierarchy=KAddressBook
 X-KDE-Weight=200
 
 Name=Contact Actions
-Name[x-test]=xxContact Actionsxx
 Comment=Configure the Contact Actions
-Comment[x-test]=xxConfigure the Contact Actionsxx
 X-KDE-Keywords=kaddressbook, configure, settings, contact, actions
