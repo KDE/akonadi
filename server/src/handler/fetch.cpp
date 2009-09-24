@@ -54,7 +54,6 @@ bool Fetch::parseStream()
   else
     successResponse( "FETCH completed" );
 
-  deleteLater();
   return true;
 }
 

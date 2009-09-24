@@ -206,8 +206,6 @@ bool Append::commit()
     response.setSuccess();
     response.setString( "Append completed" );
     emit responseAvailable( response );
-    deleteLater();
-
     return true;
 }
 

@@ -131,10 +131,7 @@ bool Status::parseStream()
   response.setTag( tag() );
   response.setString( "STATUS completed" );
   emit responseAvailable( response );
-
-  deleteLater();
   return true;
-
 }
 
 #include "status.moc"

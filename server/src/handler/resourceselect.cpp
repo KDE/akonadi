@@ -35,7 +35,6 @@ bool ResourceSelect::parseStream()
   const QString resourceName = m_streamParser->readUtf8String();
   if ( resourceName.isEmpty() ) {
     connection()->setResourceContext( Resource() );
-    deleteLater();
     return successResponse( "Resource deselected" );
   }
 
@@ -45,7 +44,6 @@ bool ResourceSelect::parseStream()
 
   connection()->setResourceContext( res );
 
-  deleteLater();
   return successResponse( resourceName.toUtf8() + " selected" );
 }
 

@@ -51,8 +51,6 @@ bool Expunge::parseStream()
     response.setString( "\\Deleted flag unknown" );
 
     emit responseAvailable( response );
-    deleteLater();
-
     return true;
   }
 
@@ -76,7 +74,6 @@ bool Expunge::parseStream()
         response.setString( "internal error" );
 
         emit responseAvailable( response );
-        deleteLater();
         return true;
       }
     }
@@ -92,8 +89,6 @@ bool Expunge::parseStream()
   response.setString( "EXPUNGE completed" );
 
   emit responseAvailable( response );
-  deleteLater();
-
   return true;
 }
 

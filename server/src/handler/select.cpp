@@ -123,7 +123,6 @@ bool Select::parseStream()
   emit responseAvailable( response );
 
   connection()->setSelectedCollection( col.id() );
-  deleteLater();
   return true;
 }
 

@@ -50,7 +50,6 @@ bool Login::parseStream()
 
   emit responseAvailable( response );
   emit connectionStateChange( Authenticated );
-  deleteLater();
   return true;
 }
 

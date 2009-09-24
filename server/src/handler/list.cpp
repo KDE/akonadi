@@ -223,7 +223,6 @@ bool List::parseStream()
   response.setTag( tag() );
   response.setString( "List completed" );
   emit responseAvailable( response );
-  deleteLater();
   return true;
 }
 

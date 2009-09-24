@@ -74,8 +74,6 @@ bool Search::parseStream()
     return false;
 
   successResponse( "SEARCH completed" );
-
-  deleteLater();
   return true;
 }
 

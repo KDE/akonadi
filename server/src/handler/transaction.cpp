@@ -53,7 +53,6 @@ bool Akonadi::TransactionHandler::parseStream()
       return failureResponse( "Unable to commit transaction." );
   }
 
-  deleteLater();
   const QMetaEnum me = metaObject()->enumerator( metaObject()->indexOfEnumerator( "Mode" ) );
   return successResponse( me.valueToKey( mMode ) + QByteArray( " completed" ) );
 }

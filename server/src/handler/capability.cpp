@@ -44,7 +44,6 @@ bool Capability::parseStream()
   response.setTag( tag() );
   response.setString( "CAPABILITY completed" );
   emit responseAvailable( response );
-  deleteLater();
   return true;
 }
 

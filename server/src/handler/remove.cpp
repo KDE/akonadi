@@ -59,7 +59,6 @@ bool Remove::parseStream()
   if ( !transaction.commit() )
     return failureResponse( "Unable to commit transaction." );
 
-  deleteLater();
   return successResponse( "REMOVE complete" );
 }
 

@@ -46,7 +46,6 @@ bool Logout::parseStream()
   response.setString( "Logout completed" );
   emit responseAvailable( response );
   emit connectionStateChange( LoggingOut );
-  deleteLater();
   return true;
 }
 

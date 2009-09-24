@@ -90,7 +90,6 @@ bool Delete::parseStream()
   response.setTag( tag() );
   response.setString( "DELETE completed" );
   emit responseAvailable( response );
-  deleteLater();
   return true;
 }
 

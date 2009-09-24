@@ -132,7 +132,6 @@ bool Akonadi::AkAppend::commit()
     response.setSuccess();
     response.setString( "Append completed" );
     emit responseAvailable( response );
-    deleteLater();
     return true;
 }
 

@@ -83,8 +83,6 @@ bool SearchPersistent::parseStream()
   response.setSuccess();
   response.setString( "SEARCH_STORE completed" );
   emit responseAvailable( response );
-
-  deleteLater();
   return true;
 }
 
