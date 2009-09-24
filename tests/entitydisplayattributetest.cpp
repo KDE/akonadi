@@ -58,7 +58,12 @@ class EntityDisplayAttributeTest : public QObject
       QCOMPARE( attr->isHidden(), hide );
 
       QCOMPARE( attr->serialized(), output );
+
+      EntityDisplayAttribute *copy = attr->clone();
+      QCOMPARE( copy->serialized(), output );
+
       delete attr;
+      delete copy;
     }
 };
 
