@@ -50,6 +50,9 @@ bool Search::parseStream()
   const QStringList uids = service->search( QString::fromUtf8( queryString ) );
   delete service;
 
+  if ( uids.isEmpty() )
+    return successResponse( "SEARCH completed" );
+
   // create imap query
   ImapSet itemSet;
 
