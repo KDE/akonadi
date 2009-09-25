@@ -299,6 +299,7 @@ void MonitorTest::testMonitor()
   arg = cmvspy.takeFirst();
   col = arg.at( 0 ).value<Collection>();
   QCOMPARE( col, monitorCol );
+  QCOMPARE( col.parentCollection(), dest );
   if ( fetchCol )
     QCOMPARE( col.name(), monitorCol.name() );
   col = arg.at( 1 ).value<Collection>();
