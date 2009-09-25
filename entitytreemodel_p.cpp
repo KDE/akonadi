@@ -422,6 +422,8 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
   const int row = indexOf( m_childEntities.value( collection.parentCollection().id() ), collection.id() );
 
+  Q_ASSERT(row >= 0);
+
   const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.parentCollection().id() ) );
 
   q->beginRemoveRows( parentIndex, row, row );
@@ -474,6 +476,8 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
   const int destRow = 0; // Prepend collections
 
+  Q_ASSERT( collection.parentCollection() == destCollection );
+
 #if QT_VERSION >= 0x040600
   if (!q->beginMoveRows( srcParentIndex, srcRow, srcRow, destParentIndex, destRow ))
   {
@@ -481,6 +485,10 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
     return;
   }
   Node *node = m_childEntities[ sourceCollection.id() ].takeAt( srcRow );
+  // collection has the correct parentCollection etc. We need to set it on the
+  // internal data structure to not corrupt things.
+  m_collections.insert( collection.id(), collection );
+  node->parent = destCollection.id();
   m_childEntities[ destCollection.id() ].prepend( node );
   q->endMoveRows();
 #endif
