@@ -72,9 +72,9 @@ EntityTreeModel::EntityTreeModel( Session *session,
            SLOT( monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
            SLOT( monitoredCollectionRemoved( const Akonadi::Collection&) ) );
-//   connect( monitor,
-//             SIGNAL( collectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ),
-//            SLOT( monitoredCollectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ) );
+  connect( monitor,
+           SIGNAL( collectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ),
+           SLOT( monitoredCollectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ) );
 
   //TODO: Figure out if the monitor emits these signals even without an item fetch scope.
   // Wrap them in an if() if so.
@@ -90,8 +90,8 @@ EntityTreeModel::EntityTreeModel( Session *session,
            SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
   connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
            SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
-  //connect( monitor, SIGNAL( itemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ),
-  //         SLOT( monitoredItemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ) );
+  connect( monitor, SIGNAL( itemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ),
+           SLOT( monitoredItemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ) );
 
   connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
            SLOT(monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
