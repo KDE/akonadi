@@ -31,14 +31,14 @@ QTEST_KDEMAIN(CollectionTest, NoGUI)
 QByteArray collection1(
 "<test>\n"
 " <collection content=\"inode/directory,message/rfc822\" rid=\"c11\" name=\"Inbox\" >\n"
-"  <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\")</attribute>\n"
+"  <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\" false)</attribute>\n"
 " </collection>\n"
 "</test>\n");
 
 QByteArray collection2(
 "<test> \
   <collection rid=\"c11\" name=\"Inbox\" content=\"inode/directory,message/rfc822\">           \
-      <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\")</attribute>  \
+      <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\" false)</attribute>  \
       <collection rid=\"c111\" name=\"KDE PIM\" content=\"inode/directory,message/rfc822\">   \
       </collection>            								      \
       <collection rid=\"c112\" name=\"Akonadi\" content=\"inode/directory,message/rfc822\">   \
