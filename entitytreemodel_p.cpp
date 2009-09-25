@@ -474,11 +474,16 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
   const int destRow = 0; // Prepend collections
 
-// TODO: Uncomment for Qt4.6
-//   q->beginMoveRows( srcParentIndex, srcRow, srcRow, destParentIndex, destRow );
-//   Node *node = m_childEntities[ sourceCollection.id() ].takeAt( srcRow );
-//   m_childEntities[ destCollection.id() ].prepend( node );
-//   q->endMoveRows();
+#if QT_VERSION >= 0x040600
+  if (!q->beginMoveRows( srcParentIndex, srcRow, srcRow, destParentIndex, destRow ))
+  {
+    kWarning() << "Invalid move";
+    return;
+  }
+  Node *node = m_childEntities[ sourceCollection.id() ].takeAt( srcRow );
+  m_childEntities[ destCollection.id() ].prepend( node );
+  q->endMoveRows();
+#endif
 }
 
 void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collection &collection )
@@ -621,11 +626,16 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
 
   const int destRow = q->rowCount( destIndex );
 
-// TODO: Uncomment for Qt4.6
-//   q->beginMoveRows( srcIndex, srcRow, srcRow, destIndex, destRow );
-//   Node *node = m_childEntities[ sourceItem.id() ].takeAt( srcRow );
-//   m_childEntities[ destItem.id() ].append( node );
-//   q->endMoveRows();
+#if QT_VERSION >= 0x040600
+  if (!q->beginMoveRows( srcIndex, srcRow, srcRow, destIndex, destRow ))
+  {
+    kWarning() << "Invalid move";
+    return;
+  }
+  Node *node = m_childEntities[ sourceCollection.id() ].takeAt( srcRow );
+  m_childEntities[ destCollection.id() ].append( node );
+  q->endMoveRows();
+#endif
 }
 
 void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, const Akonadi::Collection& collection )

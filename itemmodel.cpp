@@ -49,9 +49,8 @@ using namespace Akonadi;
 struct ItemContainer
 {
   ItemContainer( const Item& i, int r )
+    : item( i ), row( r )
   {
-    item = i;
-    row = r;
   }
   Item item;
   int row;

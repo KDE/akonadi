@@ -175,7 +175,7 @@ void FakeAkonadiServer::newConnection()
     QMutexLocker locker(&m_mutex);
 
     m_localSocket = m_localServer->nextPendingConnection();
-    m_localSocket->write( QByteArray( "* OK Akonadi Fake Server [PROTOCOL 20]\r\n" ) );
+    m_localSocket->write( QByteArray( "* OK Akonadi Fake Server [PROTOCOL 23]\r\n" ) );
     connect(m_localSocket, SIGNAL(readyRead()), this, SLOT(dataAvailable()));
 }
 

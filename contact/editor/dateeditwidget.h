@@ -62,7 +62,7 @@ class DateEditWidget : public QWidget
       Anniversary
     };
 
-    DateEditWidget( Type type = General, QWidget *parent = 0 );
+    explicit DateEditWidget( Type type = General, QWidget *parent = 0 );
     ~DateEditWidget();
 
     void setDate( const QDate &date );
