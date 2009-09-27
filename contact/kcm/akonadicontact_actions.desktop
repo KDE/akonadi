@@ -10,6 +10,7 @@ X-KDE-CfgDlgHierarchy=KAddressBook
 X-KDE-Weight=200
 
 Name=Contact Actions
+Name[nds]=Kontakt-Akschonen
 Name[pt]=Acções do Contacto
 Name[pt_BR]=Ações do contatos
 Name[sv]=Kontaktåtgärder
@@ -17,6 +18,7 @@ Name[tr]=Kişi Eylemleri
 Name[uk]=Дії контакту
 Name[x-test]=xxContact Actionsxx
 Comment=Configure the Contact Actions
+Comment[nds]=Kontakt-Akschonen instellen
 Comment[pt]=Configurar as Acções do Contacto
 Comment[pt_BR]=Configura as ações do contato
 Comment[sv]=Anpassa kontaktåtgärder
