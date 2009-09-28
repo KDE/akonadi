@@ -109,6 +109,7 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
   job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
   job->fetchScope().setIncludeStatistics( m_includeStatistics );
   job->fetchScope().setContentMimeTypes( m_monitor->mimeTypesMonitored() );
+  job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
   q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
               q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
   q->connect( job, SIGNAL( result( KJob* ) ),
@@ -117,64 +118,52 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
 
 void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List& collections )
 {
-  // TODO: refactor this stuff into separate methods for listing resources in Collection::root, and listing collections within resources.
   Q_Q( EntityTreeModel );
 
-  Collection::List _collections = collections;
+  QListIterator<Akonadi::Collection> it(collections);
 
-  forever
+  QHash<Collection::Id, Collection::List> collectionsToInsert;
+  QHash<Collection::Id, Collection> parents;
+
+  while (it.hasNext())
   {
-    int collectionsSize = _collections.size();
+    const Collection col = it.next();
 
-    QMutableListIterator<Akonadi::Collection> it(_collections);
-    while (it.hasNext())
+    Collection parent = col;
+    Collection tmp;
+
+    while ( !m_collections.contains( parent.parentCollection().isValid() ? parent.parentCollection().id() : 0 ) )
     {
-      const Collection col = it.next();
-      const Collection::Id parentId = col.parentCollection().id();
-      const Collection::Id colId = col.id();
-
-      if ( m_collections.contains( parentId ) ) {
-        insertCollection( col, m_collections.value( parentId ) );
-
-        if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
-          fetchItems( col );
-
-        if ( m_pendingChildCollections.contains( colId ) )
-        {
-          QList<Collection::Id> pendingParentIds = m_pendingChildCollections.value( colId );
-
-          foreach(const Collection::Id &id, pendingParentIds)
-          {
-            Collection pendingCollection = m_pendingCollections.value(id);
-            Q_ASSERT( pendingCollection.isValid() );
-            insertPendingCollection( pendingCollection, col, it );
-            m_pendingCollections.remove(id);
-          }
-          if ( !it.findNext(col) && !it.findPrevious(col) )
-          {
-            Q_ASSERT("Something went very wrong" == "false");
-          }
-          m_pendingChildCollections.remove( colId );
-        }
-
-        it.remove();
-      } else {
-        m_pendingCollections.insert( colId, col );
-        if ( !m_pendingChildCollections.value( parentId ).contains( colId ) )
-          m_pendingChildCollections[ parentId ].append( colId );
-      }
+      tmp = parent.parentCollection();
+      parent = tmp;
     }
+    collectionsToInsert[ parent.id() ].append( col );
+    if ( !parents.contains( parent.id() ) )
+      parents.insert( parent.id(), parent.parentCollection() );
+  }
 
-    if ( _collections.isEmpty() )
-      break; // forever
+  const int row = 0;
 
-    if( _collections.size() == collectionsSize )
+  QHashIterator<Collection::Id, Collection::List> colIt( collectionsToInsert );
+  while ( colIt.hasNext() )
+  {
+    colIt.next();
+    const Collection::Id topCollectionId = colIt.key();
+
+    Q_ASSERT( !m_collections.contains( topCollectionId ) );
+
+    const QModelIndex parentIndex = q->indexForCollection( parents.value( topCollectionId ) );
+    q->beginInsertRows( parentIndex, row, row );
+    foreach( const Collection &col, colIt.value() )
     {
-      // Didn't process any collections this iteration.
-      // Persist them until the next time collectionsFetched receives collections.
-      kWarning() << "Some collections could not be inserted into the model yet.";
-      break; // forever
+      m_collections.insert( col.id(), col );
+      Node *node = new Node;
+      node->id = col.id();
+      node->parent = col.parentCollection().id();
+      node->type = Node::Collection;
+      m_childEntities[ col.parentCollection().id() ].prepend( node );
     }
+    q->endInsertRows();
   }
 }
 
@@ -342,36 +331,6 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
   node->type = Node::Collection;
   m_childEntities[ parent.id() ].prepend( node );
   q->endInsertRows();
-}
-
-void EntityTreeModelPrivate::insertPendingCollection( const Akonadi::Collection& collection, const Akonadi::Collection& parent, QMutableListIterator<Collection> &colIt )
-{
-  insertCollection(collection, parent);
-
-  m_pendingCollections.remove( collection.id() );
-
-  if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
-    fetchItems( collection );
-
-  if ( colIt.findPrevious( collection ) || colIt.findNext( collection ) )
-  {
-    colIt.remove();
-  }
-
-  Q_ASSERT( m_collections.contains( parent.id() ) );
-
-  QList<Collection::Id> pendingChildCollectionsToInsert = m_pendingChildCollections.value( collection.id() );
-
-  QList<Collection::Id>::const_iterator it;
-  const QList<Collection::Id>::const_iterator begin = pendingChildCollectionsToInsert.constBegin();
-  const QList<Collection::Id>::const_iterator end = pendingChildCollectionsToInsert.constEnd();
-
-  for ( it = begin; it != end; ++it )
-  {
-    insertPendingCollection( m_pendingCollections.value( *it ), collection, colIt );
-  }
-
-  m_pendingChildCollections.remove( parent.id() );
 }
 
 void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
@@ -695,9 +654,6 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
 
 void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 {
-  Q_ASSERT(m_pendingCollections.isEmpty());
-  Q_ASSERT(m_pendingChildCollections.isEmpty());
-
   if ( job->error() ) {
     kWarning() << "Job error: " << job->errorString() << endl;
   }
