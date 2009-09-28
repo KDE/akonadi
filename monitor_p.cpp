@@ -321,7 +321,7 @@ void MonitorPrivate::invalidateCaches( const NotificationMessage &msg )
   }
 
   // modify removes the cache entry, as we need to re-fetch
-  if ( msg.operation() == NotificationMessage::Modify ) {
+  if ( msg.operation() == NotificationMessage::Modify || msg.operation() == NotificationMessage::Move ) {
     if ( msg.type() == NotificationMessage::Collection ) {
       collectionCache.update( msg.uid(), mCollectionFetchScope );
     } else if ( msg.type() == NotificationMessage::Item ) {

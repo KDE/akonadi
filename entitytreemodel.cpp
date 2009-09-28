@@ -389,13 +389,18 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 
   // TODO Use action and collection rights and return false if necessary
 
-// if row and column are -1, then the drop was on parent directly.
-// data should then be appended on the end of the items of the collections as appropriate.
-// That will mean begin insert rows etc.
-// Otherwise it was a sibling of the row^th item of parent.
-// That will need to be handled by a proxy model. This one can't handle ordering.
-// if parent is invalid the drop occurred somewhere on the view that is no model, and corresponds to the root.
-  kDebug() << "ismove" << ( action == Qt::MoveAction );
+  // if row and column are -1, then the drop was on parent directly.
+  // data should then be appended on the end of the items of the collections as appropriate.
+  // That will mean begin insert rows etc.
+  // Otherwise it was a sibling of the row^th item of parent.
+  // Needs to be handled when ordering is accounted for.
+
+  // Handle dropping between items as well as on items.
+//   if (row != -1 && column != -1)
+//   {
+//   }
+
+
   if ( action == Qt::IgnoreAction )
     return true;
 
@@ -403,13 +408,21 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 //   if (!data->hasFormat("text/uri-list"))
 //       return false;
 
-  const Node *node = reinterpret_cast<Node *>( parent.internalId() );
+  Node *node = reinterpret_cast<Node *>( parent.internalId() );
+
+  Q_ASSERT( node );
 
   if ( Node::Item == node->type ) {
-    // Can't drop data onto an item, although we can drop data between items.
-    return false;
-    // TODO: Maybe if it's a drop on an item I should drop below the item instead?
-    // Find out what others do.
+    if ( !parent.parent().isValid() )
+    {
+      // The drop is somehow on an item with no parent (shouldn't happen)
+      // The drop should be considered handled anyway.
+      kWarning() << "Dropped onto item with no parent collection";
+      return true;
+    }
+
+    // A drop onto an item should be considered as a drop onto its parent collection
+    node = reinterpret_cast<Node *>( parent.parent().internalId() );
   }
 
   if ( Node::Collection == node->type ) {
@@ -417,19 +430,45 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 
     // Applications can't create new collections in root. Only resources can.
     if ( destCollection == Collection::root() )
-      return false;
+      // Accept the event so that it doesn't propagate.
+      return true;
 
     if ( data->hasFormat( QLatin1String( "text/uri-list" ) ) ) {
 
       MimeTypeChecker mimeChecker;
       mimeChecker.setWantedMimeTypes( destCollection.contentMimeTypes() );
 
+      const KUrl::List urls = KUrl::List::fromMimeData( data );
+      foreach ( const KUrl &url, urls ) {
+        const Collection collection = d->m_collections.value( Collection::fromUrl( url ).id() );
+        if ( collection.isValid() )
+        {
+          if ( !mimeChecker.isWantedCollection( collection ) )
+          {
+            kDebug() << "unwanted collection" << mimeChecker.wantedMimeTypes() << collection.contentMimeTypes();
+            return false;
+          }
+        } else {
+          const Item item = d->m_items.value( Item::fromUrl( url ).id() );
+          if ( item.isValid() )
+          {
+            if ( !mimeChecker.isWantedItem( item ) )
+            {
+              kDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
+              return false;
+            }
+          }
+        }
+      }
+
       KJob *job = PasteHelper::pasteUriList( data, destCollection, action );
+      if (!job)
+        return false;
+
       connect( job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)) );
 
-      return false; // ### Return false so that the view does not update with the dropped
-      // in place where they were dropped. That will be done when the monitor notifies the model
-      // through collectionsReceived that the move was successful.
+      // Accpet the event so that it doesn't propagate.
+      return true;
     } else {
 //       not a set of uris. Maybe vcards etc. Check if the parent supports them, and maybe do
       // fromMimeData for them. Hmm, put it in the same transaction with the above?
@@ -501,8 +540,9 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
       return createIndex( 0, 0, reinterpret_cast<void *>( d->m_rootNode ) );
   }
 
-  const int row = d->indexOf( d->m_childEntities.value( collection.parentCollection().id()), collection.id() );
+  const int row = d->indexOf( d->m_childEntities.value( collection.parentCollection().id() ), collection.id() );
 
+  Q_ASSERT( row >= 0 );
   Node *parentNode = d->m_childEntities.value( collection.parentCollection().id() ).at( row );
 
   return createIndex( row, 0, reinterpret_cast<void*>( parentNode ) );
@@ -829,6 +869,7 @@ QModelIndex EntityTreeModel::indexForCollection( const Collection &collection ) 
   const Collection::Id parentId = collection.parentCollection().isValid() ? collection.parentCollection().id() : -1;
 
   const int row = d->indexOf( d->m_childEntities.value( parentId ), collection.id() );
+
   if ( row < 0 )
     return QModelIndex();
 
