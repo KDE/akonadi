@@ -164,6 +164,10 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       m_childEntities[ col.parentCollection().id() ].prepend( node );
     }
     q->endInsertRows();
+
+    if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
+      foreach( const Collection &col, colIt.value() )
+        fetchItems( col );
   }
 }
 
