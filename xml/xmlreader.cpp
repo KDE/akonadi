@@ -63,7 +63,7 @@ Collection XmlReader::elementToCollection(const QDomElement& elem)
 
   const QDomElement parentElem = elem.parentNode().toElement();
   if ( !parentElem.isNull() && parentElem.tagName() == Format::Tag::collection() )
-    c.setParentRemoteId( parentElem.attribute( Format::Attr::remoteId() ) );
+    c.parentCollection().setRemoteId( parentElem.attribute( Format::Attr::remoteId() ) );
 
   return c;
 }
