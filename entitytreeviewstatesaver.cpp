@@ -34,7 +34,7 @@ namespace Akonadi {
 
 struct State
 {
-  State() : selected( false ), expanded( false ) {}
+  State() : selected( false ), expanded( false ), currentIndex( false ) {}
   bool selected;
   bool expanded;
   bool currentIndex;
@@ -58,6 +58,8 @@ class EntityTreeViewStateSaverPrivate
 
     static inline QString key( const QModelIndex &index )
     {
+      if ( !index.isValid() )
+        return QLatin1String( "x-1" );
       const Collection c = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
       if ( c.isValid() )
         return QString::fromLatin1( "c%1" ).arg( c.id() );
