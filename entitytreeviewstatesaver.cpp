@@ -215,7 +215,7 @@ void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) c
 
   // watch the model for stuff coming in delayed
   if ( d->hasChanges() )
-    connect( d->view->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(rowsInserted(QModelIndex,int,int)) );
+    connect( d->view->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(rowsInserted(QModelIndex,int,int)), Qt::QueuedConnection );
 }
 
 } // namespace Akonadi
