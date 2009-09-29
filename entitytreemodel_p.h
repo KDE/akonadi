@@ -143,6 +143,10 @@ public:
   Session *m_session;
 
   Q_DECLARE_PUBLIC( EntityTreeModel )
+
+  void fetchTopLevelCollections() const;
+  void topLevelCollectionsFetched(const Akonadi::Collection::List& collectionList);
+
 };
 
 }
