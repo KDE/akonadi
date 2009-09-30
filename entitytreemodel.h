@@ -144,6 +144,9 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       LazyPopulation       ///< Fetch items only when requested (using canFetchMore/fetchMore)
     };
 
+    void setShowHiddenEntities( bool hidden );
+    bool showHiddenEntities() const;
+
     /**
      * Sets the item population @p strategy of the model.
      */

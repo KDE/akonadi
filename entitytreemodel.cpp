@@ -122,6 +122,18 @@ EntityTreeModel::~EntityTreeModel()
   delete d_ptr;
 }
 
+bool EntityTreeModel::showHiddenEntities() const
+{
+  Q_D( const EntityTreeModel );
+  return d->m_showHiddenEntities;
+}
+
+void EntityTreeModel::setShowHiddenEntities( bool hidden )
+{
+  Q_D( EntityTreeModel );
+  d->m_showHiddenEntities = hidden;
+}
+
 void EntityTreeModel::clearAndReset()
 {
   Q_D( EntityTreeModel );

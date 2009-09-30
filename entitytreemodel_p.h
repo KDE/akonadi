@@ -152,6 +152,8 @@ public:
   */
   bool isHidden(const Entity &entity) const;
 
+  bool m_showHiddenEntities;
+
 };
 
 }

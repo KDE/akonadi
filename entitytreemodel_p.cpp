@@ -45,7 +45,8 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
       m_itemPopulation( EntityTreeModel::ImmediatePopulation ),
       m_includeUnsubscribed( true ),
       m_includeStatistics( false ),
-      m_showRootCollection( false )
+      m_showRootCollection( false ),
+      m_showHiddenEntities( false )
 {
 }
 
@@ -118,6 +119,9 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
 
 bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
 {
+  if ( m_showHiddenEntities )
+    return false;
+
   if (entity.id() == Collection::root().id())
     return false;
 
