@@ -95,8 +95,6 @@ void EntityTreeModelPrivate::runItemFetchJob(ItemFetchJob *itemFetchJob, const C
 
 void EntityTreeModelPrivate::fetchItems( const Collection &parent )
 {
-  Q_Q( EntityTreeModel );
-
   // TODO: Use a more specific fetch scope to get only the envelope for mails etc.
   ItemFetchJob *itemJob = getItemFetchJob(parent, m_monitor->itemFetchScope() );
 
@@ -127,11 +125,11 @@ bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
 
   if ( entity.hasAttribute<EntityDisplayAttribute>() )
   {
-    EntityDisplayAttribute *eda = entity.attribute<EntityDisplayAttribute>();
+    const EntityDisplayAttribute *eda = entity.attribute<EntityDisplayAttribute>();
     if ( eda->isHidden() )
       return true;
 
-    Collection parent = entity.parentCollection();
+    const Collection parent = entity.parentCollection();
     if ( parent.isValid() )
       return isHidden( parent );
   }
@@ -411,7 +409,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   if ( isHidden( collection ) )
     return;
 
-  if ( !m_collections.contains( collection.parent() ) )
+  if ( !m_collections.contains( collection.parentCollection().id() ) )
     return;
 
   Q_Q( EntityTreeModel );
@@ -487,16 +485,15 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
   Q_Q( EntityTreeModel );
 
-  const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), collection.id() );
-
   const QModelIndex srcParentIndex = q->indexForCollection( sourceCollection );
   const QModelIndex destParentIndex = q->indexForCollection( destCollection );
-
-  const int destRow = 0; // Prepend collections
 
   Q_ASSERT( collection.parentCollection() == destCollection );
 
 #if QT_VERSION >= 0x040600
+  const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), collection.id() );
+  const int destRow = 0; // Prepend collections
+
   if (!q->beginMoveRows( srcParentIndex, srcRow, srcRow, destParentIndex, destRow ))
   {
     kWarning() << "Invalid move";
@@ -669,18 +666,17 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
   Q_ASSERT( m_collections.contains( sourceCollection.id() ) );
   Q_ASSERT( m_collections.contains( destCollection.id() ) );
 
-  const Item::Id itemId = item.id();
-
-  const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), itemId );
-
   const QModelIndex srcIndex = q->indexForCollection( sourceCollection );
   const QModelIndex destIndex = q->indexForCollection( destCollection );
 
   // Where should it go? Always append items and prepend collections and reorganize them with separate reactions to Attributes?
 
+#if QT_VERSION >= 0x040600
+  const Item::Id itemId = item.id();
+
+  const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), itemId );
   const int destRow = q->rowCount( destIndex );
 
-#if QT_VERSION >= 0x040600
   if (!q->beginMoveRows( srcIndex, srcRow, srcRow, destIndex, destRow ))
   {
     kWarning() << "Invalid move";

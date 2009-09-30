@@ -478,6 +478,8 @@ class StandardActionManager::Private
     void copyTo( QItemSelectionModel *selectionModel, QAction *action )
     {
       Q_ASSERT( selectionModel );
+      Q_UNUSED( action );
+
       if ( selectionModel->selectedRows().count() <= 0 )
         return;
 

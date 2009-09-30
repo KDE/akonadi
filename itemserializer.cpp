@@ -61,7 +61,7 @@ public:
         return true;
     }
 
-    void serialize( const Item& item, const QByteArray& label, QIODevice& data, int& )
+    void serialize( const Item& item, const QByteArray&, QIODevice& data, int& )
     {
         Q_ASSERT( label == Item::FullPayload );
         if ( item.hasPayload<QByteArray>() )

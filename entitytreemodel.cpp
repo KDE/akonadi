@@ -397,6 +397,8 @@ QStringList EntityTreeModel::mimeTypes() const
 
 bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
 {
+  Q_UNUSED( row );
+  Q_UNUSED( column );
   Q_D( EntityTreeModel );
 
   // TODO Use action and collection rights and return false if necessary
@@ -842,7 +844,7 @@ bool EntityTreeModel::insertColumns( int, int, const QModelIndex& )
   return false;
 }
 
-bool EntityTreeModel::removeRows( int start, int end, const QModelIndex &parent )
+bool EntityTreeModel::removeRows( int, int, const QModelIndex& )
 {
   /*
   beginRemoveRows(start, end, parent);

@@ -81,6 +81,8 @@ QByteArray ProtocolHelper::cachePolicyToByteArray(const CachePolicy & policy)
 
 void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int start )
 {
+  Q_UNUSED( start );
+
   QList<QByteArray> ancestors;
   ImapParser::parseParenthesizedList( data, ancestors );
   Entity* current = entity;

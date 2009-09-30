@@ -68,7 +68,7 @@ PreprocessorBase::~PreprocessorBase()
 {
 }
 
-void PreprocessorBase::terminateProcessing( ProcessingResult result )
+void PreprocessorBase::terminateProcessing( ProcessingResult )
 {
   Q_D( PreprocessorBase );
 
