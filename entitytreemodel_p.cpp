@@ -129,6 +129,9 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
   {
     const Collection col = it.next();
 
+    if ( m_collections.contains( col.id() ) )
+      continue;
+
     Collection parent = col;
     Collection tmp;
 
@@ -154,6 +157,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
 
     const QModelIndex parentIndex = q->indexForCollection( parents.value( topCollectionId ) );
     q->beginInsertRows( parentIndex, row, row );
+    Q_ASSERT( !colIt.value().isEmpty() );
     foreach( const Collection &col, colIt.value() )
     {
       m_collections.insert( col.id(), col );
@@ -198,6 +202,8 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
   }
   if ( itemsToInsert.size() > 0 ) {
     const int startRow = m_childEntities.value( collectionId ).size();
+
+    Q_ASSERT( m_collections.contains( collectionId ) );
 
     const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collectionId ) );
     q->beginInsertRows( parentIndex, startRow, startRow + items.size() - 1 );
@@ -746,8 +752,57 @@ void EntityTreeModelPrivate::startFirstListJob()
   // retrieved now.
 
   if ( m_itemPopulation != EntityTreeModel::NoItemPopulation ) {
-    if (rootCollection != Collection::root())
+    if ( rootCollection != Collection::root() )
       fetchItems( rootCollection );
+  }
+
+  // Resources which are explicitly monitored won't have appeared yet if their mimetype didn't match.
+  // We fetch the top level collections and examine them for whether to add them.
+  // This fetches virtual collections into the tree.
+  if ( !m_monitor->resourcesMonitored().isEmpty() )
+    fetchTopLevelCollections();
+}
+
+void EntityTreeModelPrivate::fetchTopLevelCollections() const
+{
+  Q_Q( const EntityTreeModel );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel, m_session );
+  q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+              q, SLOT( topLevelCollectionsFetched( const Akonadi::Collection::List& ) ) );
+  q->connect( job, SIGNAL( result( KJob* ) ),
+              q, SLOT( fetchJobDone( KJob* ) ) );
+}
+
+void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collection::List& list )
+{
+  Q_Q( EntityTreeModel );
+  foreach( const Collection &collection, list )
+  {
+    if ( m_monitor->resourcesMonitored().contains( collection.resource().toUtf8() ) && !m_collections.contains( collection.id() ) )
+    {
+      const QModelIndex parentIndex = q->indexForCollection( collection.parentCollection() );
+      // Prepending new collections.
+      const int row  = 0;
+      q->beginInsertRows( parentIndex, row, row );
+
+      m_collections.insert( collection.id(), collection );
+      Node *node = new Node;
+      node->id = collection.id();
+      node->parent = collection.parentCollection().id();
+      node->type = Node::Collection;
+      m_childEntities[ collection.parentCollection().id() ].prepend( node );
+
+      q->endInsertRows();
+
+      CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::FirstLevel, m_session );
+      job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
+      job->fetchScope().setIncludeStatistics( m_includeStatistics );
+      job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+      q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+                  q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
+      q->connect( job, SIGNAL( result( KJob* ) ),
+                  q, SLOT( fetchJobDone( KJob* ) ) );
+    }
   }
 }
 
