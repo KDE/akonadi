@@ -116,6 +116,20 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
               q, SLOT( fetchJobDone( KJob* ) ) );
 }
 
+bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
+{
+  if (entity.id() == Collection::root().id())
+    return false;
+
+  if (!entity.hasAttribute<EntityDisplayAttribute>())
+    return isHidden(entity.parentCollection());
+
+  EntityDisplayAttribute *eda = entity.attribute<EntityDisplayAttribute>();
+
+  if (eda->isHidden())
+    return true;
+}
+
 void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List& collections )
 {
   Q_Q( EntityTreeModel );
@@ -128,6 +142,9 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
   while (it.hasNext())
   {
     const Collection col = it.next();
+
+    if ( isHidden( col ) )
+      continue;
 
     if ( m_collections.contains( col.id() ) )
       continue;
@@ -192,6 +209,10 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 
   const QList<Node*> collectionEntities = m_childEntities.value( collectionId );
   foreach ( const Item &item, items ) {
+
+    if (isHidden(item))
+      continue;
+
     if ( indexOf( collectionEntities, item.id() ) != -1 ) {
       itemsToUpdate << item;
     } else {
@@ -232,7 +253,6 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
       }
     }
   }
-
 }
 
 void EntityTreeModelPrivate::monitoredMimeTypeChanged( const QString & mimeType, bool monitored )
@@ -345,6 +365,9 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
 
 void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
 {
+  if ( isHidden( collection ) )
+    return;
+
   // If the resource is removed while populating the model with it, we might still
   // get some monitor signals. These stale/out-of-order signals can't be completely eliminated
   // in the akonadi server due to implementation details, so we also handle such signals in the model silently
@@ -377,6 +400,9 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
 
 void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collection& collection )
 {
+  if ( isHidden( collection ) )
+    return;
+
   if ( !m_collections.contains( collection.parent() ) )
     return;
 
@@ -408,7 +434,6 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
 void EntityTreeModelPrivate::removeChildEntities(Collection::Id colId)
 {
-
   QList<Node*>::const_iterator it;
   QList<Node*> childList = m_childEntities.value(colId);
   const QList<Node*>::const_iterator begin = childList.constBegin();
@@ -430,6 +455,22 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
                                                        const Akonadi::Collection& sourceCollection,
                                                        const Akonadi::Collection& destCollection )
 {
+  if ( isHidden( collection ) )
+    return;
+
+  if ( isHidden( sourceCollection ) )
+  {
+    if ( isHidden( destCollection ) )
+      return;
+
+    monitoredCollectionAdded( collection, destCollection );
+    return;
+  } else if ( isHidden( destCollection ) )
+  {
+    monitoredCollectionRemoved( collection );
+    return;
+  }
+
   if ( !m_collections.contains( collection.id() ) )
   {
     kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
@@ -467,6 +508,9 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 {
   Q_Q( EntityTreeModel );
 
+  if ( isHidden( collection ) )
+    return;
+
   if ( !m_collections.contains( collection.id() ) )
   {
     kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
@@ -499,6 +543,9 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
 {
   Q_Q( EntityTreeModel );
 
+  if ( isHidden( item ) )
+    return;
+
   if ( !m_collections.contains( collection.id() ) )
   {
     kWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
@@ -527,6 +574,9 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
 void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
 {
   Q_Q( EntityTreeModel );
+
+  if ( isHidden( item ) )
+    return;
 
   const Collection::List parents = getParentCollections( item );
   if ( parents.isEmpty() )
@@ -557,6 +607,9 @@ void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, co
 {
   Q_Q( EntityTreeModel );
 
+  if ( isHidden( item ) )
+    return;
+
   if ( !m_items.contains( item.id() ) )
   {
     kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
@@ -582,6 +635,22 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
                                                  const Akonadi::Collection& destCollection )
 {
   Q_Q( EntityTreeModel );
+
+  if ( isHidden( item ) )
+    return;
+
+  if ( isHidden( sourceCollection ) )
+  {
+    if ( isHidden( destCollection ) )
+      return;
+
+    monitoredItemAdded( item, destCollection );
+    return;
+  } else if ( isHidden( destCollection ) )
+  {
+    monitoredItemRemoved( item );
+    return;
+  }
 
   if ( !m_items.contains( item.id() ) )
   {
@@ -619,6 +688,9 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
 {
   Q_Q( EntityTreeModel );
 
+  if ( isHidden( item ) )
+    return;
+
   if ( !m_items.contains( item.id() ) )
   {
     kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
@@ -645,6 +717,9 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
 void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, const Akonadi::Collection& collection )
 {
   Q_Q( EntityTreeModel );
+
+  if ( isHidden( item ) )
+    return;
 
   if ( !m_items.contains( item.id() ) )
   {
@@ -778,6 +853,11 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collecti
   Q_Q( EntityTreeModel );
   foreach( const Collection &collection, list )
   {
+    // These collections have been explicitly shown in the Monitor,
+    // but hidden trumps that for now. This may change in the future if we figure out a use for it.
+    if ( isHidden( collection ) )
+      continue;
+
     if ( m_monitor->resourcesMonitored().contains( collection.resource().toUtf8() ) && !m_collections.contains( collection.id() ) )
     {
       const QModelIndex parentIndex = q->indexForCollection( collection.parentCollection() );

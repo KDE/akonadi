@@ -147,6 +147,11 @@ public:
   void fetchTopLevelCollections() const;
   void topLevelCollectionsFetched(const Akonadi::Collection::List& collectionList);
 
+  /**
+    @returns True if @p entity or one of its descemdants is hidden.
+  */
+  bool isHidden(const Entity &entity) const;
+
 };
 
 }
