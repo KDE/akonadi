@@ -26,7 +26,7 @@
 using namespace Akonadi;
 
 FakeMonitor::FakeMonitor(EventQueue *eventQueue, FakeAkonadiServer *fakeServer, QObject* parent)
-  : Monitor(parent), m_eventQueue(eventQueue), m_fakeServer(fakeServer)
+  : ChangeRecorder(parent), m_eventQueue(eventQueue), m_fakeServer(fakeServer)
 {
   connect(eventQueue, SIGNAL(dequeued()), SLOT(processNextEvent()));
 }

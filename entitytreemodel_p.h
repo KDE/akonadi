@@ -32,6 +32,7 @@
 namespace Akonadi
 {
 class ItemFetchJob;
+class ChangeRecorder;
 }
 
 struct Node
@@ -109,7 +110,7 @@ public:
   QHash<Collection::Id, QList<Node*> > m_childEntities;
   QSet<Collection::Id> m_populatedCols;
 
-  Monitor *m_monitor;
+  ChangeRecorder *m_monitor;
   Collection m_rootCollection;
   Node *m_rootNode;
   QString m_rootCollectionDisplayName;

@@ -25,6 +25,7 @@
 
 #include <akonadi/agentmanager.h>
 #include <akonadi/agenttype.h>
+#include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/collectionstatistics.h>
@@ -32,7 +33,6 @@
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
-#include <akonadi/monitor.h>
 #include <akonadi/session.h>
 
 #include <kdebug.h>

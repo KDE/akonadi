@@ -29,11 +29,11 @@
 #include <KDE/KUrl>
 
 #include <akonadi/attributefactory.h>
+#include <akonadi/changerecorder.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/transactionsequence.h>
 #include <akonadi/itemmodifyjob.h>
-#include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include "collectionfetchscope.h"
 
@@ -45,7 +45,7 @@
 using namespace Akonadi;
 
 EntityTreeModel::EntityTreeModel( Session *session,
-                                  Monitor *monitor,
+                                  ChangeRecorder *monitor,
                                   QObject *parent
                                 )
     : QAbstractItemModel( parent ),
