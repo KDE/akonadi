@@ -125,13 +125,17 @@ bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
   if (entity.id() == Collection::root().id())
     return false;
 
-  if (!entity.hasAttribute<EntityDisplayAttribute>())
-    return isHidden(entity.parentCollection());
+  if ( entity.hasAttribute<EntityDisplayAttribute>() )
+  {
+    EntityDisplayAttribute *eda = entity.attribute<EntityDisplayAttribute>();
+    if ( eda->isHidden() )
+      return true;
 
-  EntityDisplayAttribute *eda = entity.attribute<EntityDisplayAttribute>();
-
-  if (eda->isHidden())
-    return true;
+    Collection parent = entity.parentCollection();
+    if ( parent.isValid() )
+      return isHidden( parent );
+  }
+  return false;
 }
 
 void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List& collections )
