@@ -56,6 +56,8 @@ EntityTreeModel::EntityTreeModel( Session *session,
   d->m_monitor = monitor;
   d->m_session = session;
 
+  d->m_monitor->setChangeRecordingEnabled(false);
+
   d->m_includeStatistics = true;
   d->m_monitor->fetchCollectionStatistics( true );
   d->m_monitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
