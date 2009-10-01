@@ -1,2 +1,4 @@
 #! /bin/sh
-$XGETTEXT *.cpp editor/*.cpp -o $podir/akonadicontact.pot
+$EXTRACTRC actions/*.kcfg >> rc.cpp || exit 11
+$XGETTEXT *.cpp actions/*.cpp editor/*.cpp -o $podir/akonadicontact.pot
+rm -f rc.cpp
