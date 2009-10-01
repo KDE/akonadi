@@ -44,15 +44,15 @@ class EntityFilterProxyModelPrivate
     {
     }
 
+    Q_DECLARE_PUBLIC(EntityFilterProxyModel)
+    EntityFilterProxyModel *q_ptr;
+
     QStringList includedMimeTypes;
     QStringList excludedMimeTypes;
 
     QPersistentModelIndex m_rootIndex;
 
     int m_headerSet;
-
-    Q_DECLARE_PUBLIC(EntityFilterProxyModel)
-    EntityFilterProxyModel *q_ptr;
 };
 
 }

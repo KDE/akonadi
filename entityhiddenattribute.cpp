@@ -52,4 +52,5 @@ QByteArray EntityHiddenAttribute::serialized() const
 void EntityHiddenAttribute::deserialize( const QByteArray &data )
 {
   Q_ASSERT( data.isEmpty() );
+  Q_UNUSED( data );
 }

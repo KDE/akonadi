@@ -356,7 +356,7 @@ bool MessageThreaderProxyModel::hasChildren( const QModelIndex& index ) const
   return rowCount( index ) > 0;
 }
 
-int MessageThreaderProxyModel::columnCount( const QModelIndex& index ) const
+int MessageThreaderProxyModel::columnCount( const QModelIndex& ) const
 {
   // We assume that the source model has the same number of columns for each rows
   return sourceModel()->columnCount( QModelIndex() );

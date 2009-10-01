@@ -143,6 +143,7 @@ void LocalFoldersRequestJobPrivate::nextResource()
     foreach( const Collection &col, toRegister ) {
       const bool ok = LocalFolders::self()->registerFolder( col );
       Q_ASSERT( ok );
+      Q_UNUSED( ok );
     }
 
     LocalFolders::self()->endBatchRegister();

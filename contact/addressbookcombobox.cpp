@@ -24,10 +24,10 @@
 #include "asyncselectionhandler_p.h"
 #include "collectionfiltermodel_p.h"
 
+#include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entityfilterproxymodel.h>
-#include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
@@ -56,7 +56,7 @@ class AddressBookComboBox::Private
                                                     << KABC::ContactGroup::mimeType(); break;
       }
 
-      mMonitor = new Akonadi::Monitor;
+      mMonitor = new Akonadi::ChangeRecorder;
       mMonitor->fetchCollection( true );
       mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
 
@@ -99,7 +99,7 @@ class AddressBookComboBox::Private
     AddressBookComboBox *mParent;
 
     QComboBox *mComboBox;
-    Monitor *mMonitor;
+    ChangeRecorder *mMonitor;
     EntityTreeModel *mModel;
     AsyncSelectionHandler *mSelectionHandler;
 };

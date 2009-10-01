@@ -49,6 +49,8 @@ Q_DECLARE_METATYPE( QSet<QByteArray> )
 
 namespace Akonadi
 {
+
+class ChangeRecorder;
 class CollectionStatistics;
 class Item;
 class ItemFetchScope;
@@ -65,7 +67,7 @@ class EntityTreeModelPrivate;
  *
  * @code
  *
- *   Monitor *monitor = new Monitor(this);
+ *   ChangeRecorder *monitor = new ChangeRecorder(this);
  *   monitor->setCollectionMonitored(Collection::root());
  *   monitor->setMimeTypeMonitored(KABC::addresseeMimeType());
  *
@@ -125,10 +127,10 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * Creates a new entity tree model.
      *
      * @param session The Session to use to communicate with Akonadi.
-     * @param monitor The Monitor whose entities should be represented in the model.
+     * @param monitor The ChangeRecorder whose entities should be represented in the model.
      * @param parent The parent object.
      */
-    EntityTreeModel( Session *session, Monitor *monitor, QObject *parent = 0 );
+    EntityTreeModel( Session *session, ChangeRecorder *monitor, QObject *parent = 0 );
 
     /**
      * Destroys the entity tree model.
@@ -143,6 +145,9 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       ImmediatePopulation, ///< Retrieve items immediately when their parent is in the model. This is the default.
       LazyPopulation       ///< Fetch items only when requested (using canFetchMore/fetchMore)
     };
+
+    void setShowHiddenEntities( bool hidden );
+    bool showHiddenEntities() const;
 
     /**
      * Sets the item population @p strategy of the model.

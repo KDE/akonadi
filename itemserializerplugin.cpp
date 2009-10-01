@@ -53,7 +53,8 @@ QSet<QByteArray> ItemSerializerPluginV2::availableParts( const Item & item ) con
 void ItemSerializerPluginV2::merge( Item &item, const Item &other )
 {
   QBuffer buffer;
-  buffer.setBuffer( &other.payloadData() );
+  QByteArray data( other.payloadData() );
+  buffer.setBuffer( &data );
   buffer.open( QIODevice::ReadOnly );
 
   foreach ( const QByteArray &part, other.loadedPayloadParts() ) {

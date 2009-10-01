@@ -65,7 +65,7 @@ void SessionPrivate::reconnect()
   }
 }
 
-void SessionPrivate::socketError( QLocalSocket::LocalSocketError error )
+void SessionPrivate::socketError( QLocalSocket::LocalSocketError )
 {
   Q_ASSERT( mParent->sender() == socket );
   kWarning() << "Socket error occurred:" << socket->errorString();
@@ -191,6 +191,8 @@ void SessionPrivate::jobDone(KJob * job)
 void SessionPrivate::jobWriteFinished( Akonadi::Job* job )
 {
   Q_ASSERT( (job == currentJob && pipeline.isEmpty()) || (job = pipeline.last()) );
+  Q_UNUSED( job );
+
   startNext();
 }
 

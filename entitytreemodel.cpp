@@ -29,11 +29,11 @@
 #include <KDE/KUrl>
 
 #include <akonadi/attributefactory.h>
+#include <akonadi/changerecorder.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/transactionsequence.h>
 #include <akonadi/itemmodifyjob.h>
-#include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include "collectionfetchscope.h"
 
@@ -45,7 +45,7 @@
 using namespace Akonadi;
 
 EntityTreeModel::EntityTreeModel( Session *session,
-                                  Monitor *monitor,
+                                  ChangeRecorder *monitor,
                                   QObject *parent
                                 )
     : QAbstractItemModel( parent ),
@@ -120,6 +120,18 @@ EntityTreeModel::~EntityTreeModel()
   }
 
   delete d_ptr;
+}
+
+bool EntityTreeModel::showHiddenEntities() const
+{
+  Q_D( const EntityTreeModel );
+  return d->m_showHiddenEntities;
+}
+
+void EntityTreeModel::setShowHiddenEntities( bool hidden )
+{
+  Q_D( EntityTreeModel );
+  d->m_showHiddenEntities = hidden;
 }
 
 void EntityTreeModel::clearAndReset()
@@ -385,6 +397,8 @@ QStringList EntityTreeModel::mimeTypes() const
 
 bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
 {
+  Q_UNUSED( row );
+  Q_UNUSED( column );
   Q_D( EntityTreeModel );
 
   // TODO Use action and collection rights and return false if necessary
@@ -830,7 +844,7 @@ bool EntityTreeModel::insertColumns( int, int, const QModelIndex& )
   return false;
 }
 
-bool EntityTreeModel::removeRows( int start, int end, const QModelIndex &parent )
+bool EntityTreeModel::removeRows( int, int, const QModelIndex& )
 {
   /*
   beginRemoveRows(start, end, parent);

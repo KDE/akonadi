@@ -32,6 +32,7 @@
 namespace Akonadi
 {
 class ItemFetchJob;
+class ChangeRecorder;
 }
 
 struct Node
@@ -109,7 +110,7 @@ public:
   QHash<Collection::Id, QList<Node*> > m_childEntities;
   QSet<Collection::Id> m_populatedCols;
 
-  Monitor *m_monitor;
+  ChangeRecorder *m_monitor;
   Collection m_rootCollection;
   Node *m_rootNode;
   QString m_rootCollectionDisplayName;
@@ -146,6 +147,13 @@ public:
 
   void fetchTopLevelCollections() const;
   void topLevelCollectionsFetched(const Akonadi::Collection::List& collectionList);
+
+  /**
+    @returns True if @p entity or one of its descemdants is hidden.
+  */
+  bool isHidden(const Entity &entity) const;
+
+  bool m_showHiddenEntities;
 
 };
 

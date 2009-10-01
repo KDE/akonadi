@@ -20,12 +20,12 @@
 #ifndef FAKEMONITOR_H
 #define FAKEMONITOR_H
 
-#include "monitor.h"
+#include "changerecorder.h"
 
 class EventQueue;
 class FakeAkonadiServer;
 
-class FakeMonitor : public Akonadi::Monitor
+class FakeMonitor : public Akonadi::ChangeRecorder
 {
   Q_OBJECT
 public:

@@ -24,8 +24,8 @@
 #include <kdescendantsproxymodel.h>
 
 #include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/monitor.h>
 #include <akonadi/session.h>
 
 #include <kabc/addressee.h>
@@ -39,7 +39,7 @@ QAbstractItemModel* ContactCompletionModel::self()
   if ( mSelf )
     return mSelf;
 
-  Monitor *monitor = new Monitor;
+  ChangeRecorder *monitor = new ChangeRecorder;
   monitor->fetchCollection( true );
   monitor->itemFetchScope().fetchFullPayload();
   monitor->setCollectionMonitored( Akonadi::Collection::root() );
@@ -60,7 +60,7 @@ QAbstractItemModel* ContactCompletionModel::self()
   return mSelf;
 }
 
-ContactCompletionModel::ContactCompletionModel( Session *session, Monitor *monitor, QObject *parent )
+ContactCompletionModel::ContactCompletionModel( Session *session, ChangeRecorder *monitor, QObject *parent )
   : EntityTreeModel( session, monitor, parent )
 {
 }
