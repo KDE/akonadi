@@ -13,7 +13,7 @@ qt4_add_dbus_adaptor(knutresource_SRCS
   ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Knut.Settings.xml settings.h Settings
 )
 
-kde4_add_executable(akonadi_knut_resource RUN_UNINSTALLED ${knutresource_SRCS})
+kde4_add_executable(akonadi_knut_resource ${knutresource_SRCS})
 
 target_link_libraries(akonadi_knut_resource
   akonadi-xml
