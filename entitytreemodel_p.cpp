@@ -682,7 +682,10 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
     kWarning() << "Invalid move";
     return;
   }
+
   Node *node = m_childEntities[ sourceCollection.id() ].takeAt( srcRow );
+  m_items.insert( item.id(), item );
+  node->parent = destCollection.id();
   m_childEntities[ destCollection.id() ].append( node );
   q->endMoveRows();
 #endif
