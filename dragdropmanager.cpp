@@ -22,9 +22,9 @@
 #include <QtGui/QDropEvent>
 #include <QtGui/QMenu>
 
-#include <KDE/KUrl>
 #include <KDE/KIcon>
 #include <KDE/KLocale>
+#include <KDE/KUrl>
 
 #include "akonadi/collection.h"
 #include "akonadi/entitytreemodel.h"
@@ -34,31 +34,32 @@ using namespace Akonadi;
 DragDropManager::DragDropManager( QAbstractItemView *view )
     : m_view( view )
 {
-
 }
 
-Collection DragDropManager::currentDropTarget(QDropEvent* event) const
+Collection DragDropManager::currentDropTarget( QDropEvent *event ) const
 {
   const QModelIndex index = m_view->indexAt( event->pos() );
-  Collection col = m_view->model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
-  if ( !col.isValid() ) {
+
+  Collection collection = m_view->model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
+  if ( !collection.isValid() ) {
     const Item item = m_view->model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
     if ( item.isValid() )
-      col = m_view->model()->data( index.parent(), EntityTreeModel::CollectionRole ).value<Collection>();
+      collection = m_view->model()->data( index.parent(), EntityTreeModel::CollectionRole ).value<Collection>();
   }
-  return col;
+
+  return collection;
 }
 
-bool DragDropManager::dropAllowed( QDragMoveEvent * event )
+bool DragDropManager::dropAllowed( QDragMoveEvent *event ) const
 {
   // Check if the collection under the cursor accepts this data type
-  const Collection col = currentDropTarget( event );
-  if ( col.isValid() )
-  {
-    QStringList supportedContentTypes = col.contentMimeTypes();
+  const Collection targetCollection = currentDropTarget( event );
+  if ( targetCollection.isValid() ) {
+    const QStringList supportedContentTypes = targetCollection.contentMimeTypes();
+
     const QMimeData *data = event->mimeData();
-    KUrl::List urls = KUrl::List::fromMimeData( data );
-    foreach( const KUrl &url, urls ) {
+    const KUrl::List urls = KUrl::List::fromMimeData( data );
+    foreach ( const KUrl &url, urls ) {
       const Collection collection = Collection::fromUrl( url );
       if ( collection.isValid() ) {
         if ( !supportedContentTypes.contains( Collection::mimeType() ) )
@@ -68,32 +69,35 @@ bool DragDropManager::dropAllowed( QDragMoveEvent * event )
         if ( hasAncestor( m_view->indexAt( event->pos() ), collection.id() ) )
           break;
       } else { // This is an item.
-        QString type = url.queryItems()[ QString::fromLatin1( "type" )];
+        const QString type = url.queryItems()[ QString::fromLatin1( "type" ) ];
         if ( !supportedContentTypes.contains( type ) )
           break;
       }
+
       return true;
     }
   }
+
   return false;
 }
 
-bool DragDropManager::hasAncestor( const QModelIndex& idx, Collection::Id parentId )
+bool DragDropManager::hasAncestor( const QModelIndex &_index, Collection::Id parentId ) const
 {
-  QModelIndex idx2 = idx;
-  while ( idx2.isValid() ) {
-    if ( m_view->model()->data( idx2, EntityTreeModel::CollectionIdRole ).toLongLong() == parentId )
+  QModelIndex index( _index );
+  while ( index.isValid() ) {
+    if ( m_view->model()->data( index, EntityTreeModel::CollectionIdRole ).toLongLong() == parentId )
       return true;
 
-    idx2 = idx2.parent();
+    index = index.parent();
   }
+
   return false;
 }
 
 bool DragDropManager::processDropEvent( QDropEvent *event )
 {
-  const Collection target = currentDropTarget( event );
-  if ( !target.isValid() )
+  const Collection targetCollection = currentDropTarget( event );
+  if ( !targetCollection.isValid() )
     return false;
 
   QMenu popup( m_view );
@@ -102,21 +106,21 @@ bool DragDropManager::processDropEvent( QDropEvent *event )
   QAction* moveDropAction = 0;
   // TODO check if the source supports moving
 
-  if ( (target.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
+  if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
         && (event->possibleActions() & Qt::MoveAction) ) {
     moveDropAction = popup.addAction( KIcon( QString::fromLatin1( "edit-rename" ) ), i18n( "&Move here" ) );
     ++actionCount;
     defaultAction = Qt::MoveAction;
   }
   QAction* copyDropAction = 0;
-  if ( (target.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
+  if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
         && (event->possibleActions() & Qt::CopyAction) ) {
     copyDropAction = popup.addAction( KIcon( QString::fromLatin1( "edit-copy" ) ), i18n( "&Copy here" ) );
     ++actionCount;
     defaultAction = Qt::CopyAction;
   }
   QAction* linkAction = 0;
-  if ( (target.rights() & Collection::CanLinkItem) && (event->possibleActions() & Qt::LinkAction) ) {
+  if ( (targetCollection.rights() & Collection::CanLinkItem) && (event->possibleActions() & Qt::LinkAction) ) {
     linkAction = popup.addAction( KIcon( QLatin1String( "edit-link" ) ), i18n( "&Link here" ) );
     ++actionCount;
     defaultAction = Qt::LinkAction;
@@ -152,7 +156,7 @@ bool DragDropManager::processDropEvent( QDropEvent *event )
   return true;
 }
 
-void DragDropManager::startDrag( Qt::DropActions _supportedActions )
+void DragDropManager::startDrag( Qt::DropActions supportedActions )
 {
   QModelIndexList indexes;
   bool sourceDeletable = true;
@@ -193,12 +197,8 @@ void DragDropManager::startDrag( Qt::DropActions _supportedActions )
     drag->setPixmap( pixmap );
   }
 
-  Qt::DropActions supportedActions( _supportedActions );
   if ( !sourceDeletable )
     supportedActions &= ~Qt::MoveAction;
+
   drag->exec( supportedActions, Qt::CopyAction );
 }
-
-
-
-

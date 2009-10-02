@@ -63,114 +63,116 @@ class Item;
  *
  * @author Volker Krause <vkrause@kde.org>
  * @author Stephen Kelly <steveire@gmail.com>
+ * @since 4.4
  */
 class AKONADI_EXPORT EntityTreeView : public QTreeView
 {
   Q_OBJECT
 
-public:
-  /**
-   * Creates a new entity tree view.
-   *
-   * @param parent The parent widget.
-   */
-  explicit EntityTreeView( QWidget *parent = 0 );
+  public:
+    /**
+     * Creates a new entity tree view.
+     *
+     * @param parent The parent widget.
+     */
+    explicit EntityTreeView( QWidget *parent = 0 );
 
-  /**
-   * Creates a new entity tree view.
-   *
-   * @param xmlGuiClient The KXMLGUIClient the view is used in.
-   *                     This is needed for the XMLGUI based context menu.
-   *                     Passing 0 is ok and will disable the builtin context menu.
-   * @param parent The parent widget.
-   */
-  explicit EntityTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+    /**
+     * Creates a new entity tree view.
+     *
+     * @param xmlGuiClient The KXMLGUIClient the view is used in.
+     *                     This is needed for the XMLGUI based context menu.
+     *                     Passing 0 is ok and will disable the builtin context menu.
+     * @param parent The parent widget.
+     */
+    explicit EntityTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
 
-  /**
-   * Destroys the entity tree view.
-   */
-  virtual ~EntityTreeView();
+    /**
+     * Destroys the entity tree view.
+     */
+    virtual ~EntityTreeView();
 
-  /**
-   * Sets the XML GUI client which the view is used in.
-   *
-   * This is needed if you want to use the built-in context menu.
-   *
-   * @param xmlGuiClient The KXMLGUIClient the view is used in.
-   */
-  void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
+    /**
+     * Sets the XML GUI client which the view is used in.
+     *
+     * This is needed if you want to use the built-in context menu.
+     *
+     * @param xmlGuiClient The KXMLGUIClient the view is used in.
+     */
+    void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
 
-  virtual void setModel( QAbstractItemModel * model );
+    /**
+     * @reimplemented
+     */
+    virtual void setModel( QAbstractItemModel * model );
 
-Q_SIGNALS:
-  /**
-   * This signal is emitted whenever the user has clicked
-   * a collection in the view.
-   *
-   * @param collection The clicked collection.
-   */
-  void clicked( const Akonadi::Collection &collection );
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the user has clicked
+     * a collection in the view.
+     *
+     * @param collection The clicked collection.
+     */
+    void clicked( const Akonadi::Collection &collection );
 
-  /**
-   * This signal is emitted whenever the user has clicked
-   * an item in the view.
-   *
-   * @param item The clicked item.
-   */
-  void clicked( const Akonadi::Item &item );
+    /**
+     * This signal is emitted whenever the user has clicked
+     * an item in the view.
+     *
+     * @param item The clicked item.
+     */
+    void clicked( const Akonadi::Item &item );
 
-  /**
-   * This signal is emitted whenever the user has double clicked
-   * a collection in the view.
-   *
-   * @param collection The double clicked collection.
-   */
-  void doubleClicked( const Akonadi::Collection &collection );
+    /**
+     * This signal is emitted whenever the user has double clicked
+     * a collection in the view.
+     *
+     * @param collection The double clicked collection.
+     */
+    void doubleClicked( const Akonadi::Collection &collection );
 
-  /**
-   * This signal is emitted whenever the user has double clicked
-   * an item in the view.
-   *
-   * @param item The double clicked item.
-   */
-  void doubleClicked( const Akonadi::Item &item );
+    /**
+     * This signal is emitted whenever the user has double clicked
+     * an item in the view.
+     *
+     * @param item The double clicked item.
+     */
+    void doubleClicked( const Akonadi::Item &item );
 
-  /**
-   * This signal is emitted whenever the current collection
-   * in the view has changed.
-   *
-   * @param collection The new current collection.
-   */
-  void currentChanged( const Akonadi::Collection &collection );
+    /**
+     * This signal is emitted whenever the current collection
+     * in the view has changed.
+     *
+     * @param collection The new current collection.
+     */
+    void currentChanged( const Akonadi::Collection &collection );
 
-  /**
-   * This signal is emitted whenever the current item
-   * in the view has changed.
-   *
-   * @param item The new current item.
-   */
-  void currentChanged( const Akonadi::Item &item );
+    /**
+     * This signal is emitted whenever the current item
+     * in the view has changed.
+     *
+     * @param item The new current item.
+     */
+    void currentChanged( const Akonadi::Item &item );
 
-protected:
-  using QTreeView::currentChanged;
-  virtual void dragMoveEvent( QDragMoveEvent *event );
+  protected:
+    using QTreeView::currentChanged;
+    virtual void dragMoveEvent( QDragMoveEvent *event );
+    virtual void timerEvent( QTimerEvent *event );
+    virtual void dropEvent( QDropEvent *event );
+    virtual void contextMenuEvent( QContextMenuEvent *event );
+    virtual void startDrag( Qt::DropActions supportedActions );
 
-  virtual void timerEvent(QTimerEvent *event);
+  private:
+    //@cond PRIVATE
+    class Private;
+    Private * const d;
 
-  virtual void dropEvent( QDropEvent *event );
-  virtual void contextMenuEvent( QContextMenuEvent *event );
-  virtual void startDrag( Qt::DropActions supportedActions );
-
-private:
-  //@cond PRIVATE
-  class Private;
-  Private * const d;
-
-  Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
-  Q_PRIVATE_SLOT( d, void itemDoubleClicked( const QModelIndex& ) )
-  Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
-  Q_PRIVATE_SLOT( d, void slotSelectionChanged( const QItemSelection &, const QItemSelection & ) )
-  //@endcond
+    Q_PRIVATE_SLOT( d, void itemClicked( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void itemDoubleClicked( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void itemCurrentChanged( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void slotSelectionChanged( const QItemSelection &, const QItemSelection & ) )
+    //@endcond
 };
 
 }

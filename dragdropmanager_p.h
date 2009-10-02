@@ -29,37 +29,37 @@ namespace Akonadi
 
 class DragDropManager
 {
-public:
-  DragDropManager( QAbstractItemView *view );
+  public:
+    DragDropManager( QAbstractItemView *view );
 
-  /**
-    @returns True if the drop described in @p event is allowed.
-  */
-  bool dropAllowed( QDragMoveEvent * event );
+    /**
+     * @returns True if the drop described in @p event is allowed.
+     */
+    bool dropAllowed( QDragMoveEvent *event ) const;
 
-  /**
-    Process an attempted drop event.
+    /**
+     * Process an attempted drop event.
+     *
+     * Attempts to show a popup menu with possible actions for @p event.
+     *
+     * @returns True if the event should be further processed, and false otherwise.
+     */
+    bool processDropEvent( QDropEvent *event );
 
-    Attempts to show a popup menu with possible actions for @p event.
+    /**
+     * Starts a drag if possible and sets the appropriate supported actions to allow moves.
+     *
+     * Also sets the pixmap for hte drag to something appropriately small, overriding the Qt
+     * behaviour of creating a painting of all selected rows when dragging.
+     */
+    void startDrag( Qt::DropActions supportedActions );
 
-    @returns True if the event should be further processed, and false otherwise.
-  */
-  bool processDropEvent( QDropEvent *event );
+  private:
+    Collection currentDropTarget( QDropEvent* event ) const;
 
-  /**
-    Starts a drag if possible and sets the appropriate supported actions to allow moves.
+    bool hasAncestor( const QModelIndex& index, Collection::Id parentId ) const;
 
-    Also sets the pixmap for hte drag to something appropriately small, overriding the Qt
-    behaviour of creating a painting of all selected rows when dragging.
-  */
-  void startDrag( Qt::DropActions _supportedActions );
-
-private:
-  Collection currentDropTarget(QDropEvent* event) const;
-
-  bool hasAncestor( const QModelIndex& idx, Collection::Id parentId );
-
-  QAbstractItemView *m_view;
+    QAbstractItemView *m_view;
 };
 
 }

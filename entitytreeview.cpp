@@ -20,6 +20,8 @@
 
 #include "entitytreeview.h"
 
+#include "dragdropmanager_p.h"
+
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
@@ -33,15 +35,13 @@
 #include <KUrl>
 #include <KXMLGUIFactory>
 
-#include <kxmlguiclient.h>
-
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
 #include <akonadi/item.h>
 #include <akonadi/entitytreemodel.h>
 
 #include <kdebug.h>
-#include "dragdropmanager_p.h"
+#include <kxmlguiclient.h>
 
 using namespace Akonadi;
 
@@ -52,10 +52,8 @@ class EntityTreeView::Private
 {
 public:
   Private( EntityTreeView *parent )
-      : mParent( parent ),
-      xmlGuiClient( 0 )
+      : mParent( parent ), mDragDropManager( new DragDropManager( mParent ) ), mXmlGuiClient( 0 )
   {
-    m_dragDropManager = new DragDropManager(mParent);
   }
 
   void init();
@@ -66,9 +64,9 @@ public:
   void slotSelectionChanged( const QItemSelection & selected, const QItemSelection & deselected );
 
   EntityTreeView *mParent;
-  QBasicTimer dragExpandTimer;
-  DragDropManager *m_dragDropManager;
-  KXMLGUIClient *xmlGuiClient;
+  QBasicTimer mDragExpandTimer;
+  DragDropManager *mDragDropManager;
+  KXMLGUIClient *mXmlGuiClient;
 };
 
 void EntityTreeView::Private::init()
@@ -80,7 +78,7 @@ void EntityTreeView::Private::init()
   // QTreeView::autoExpandDelay has very strange behaviour. It toggles the collapse/expand state
   // of the item the cursor is currently over when a timer event fires.
   // The behaviour we want is to expand a collapsed row on drag-over, but not collapse it.
-  // dragExpandTimer is used to achieve this.
+  // mDragExpandTimer is used to achieve this.
 //   mParent->setAutoExpandDelay ( QApplication::startDragTime() );
 
   mParent->setSortingEnabled( true );
@@ -99,19 +97,19 @@ void EntityTreeView::Private::init()
   Control::widgetNeedsAkonadi( mParent );
 }
 
-void EntityTreeView::Private::slotSelectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
+void EntityTreeView::Private::slotSelectionChanged( const QItemSelection & selected, const QItemSelection& )
 {
   const int column = 0;
-  foreach (const QItemSelectionRange &range, selected)
-  {
-    QModelIndex idx = range.topLeft();
-    if (idx.column() > 0)
+  foreach ( const QItemSelectionRange &range, selected ) {
+    const QModelIndex index = range.topLeft();
+
+    if ( index.column() > 0 )
       continue;
-    for (int row = idx.row(); row <= range.bottomRight().row(); ++row)
-    {
+
+    for ( int row = index.row(); row <= range.bottomRight().row(); ++row ) {
       // Don't use canFetchMore here. We need to bypass the check in
       // the EntityFilterModel when it shows only collections.
-      mParent->model()->fetchMore(idx.sibling(row, column));
+      mParent->model()->fetchMore( index.sibling( row, column ) );
     }
   }
 }
@@ -161,38 +159,36 @@ void EntityTreeView::Private::itemCurrentChanged( const QModelIndex &index )
   }
 }
 
-EntityTreeView::EntityTreeView( QWidget * parent ) :
-    QTreeView( parent ),
+EntityTreeView::EntityTreeView( QWidget * parent )
+  : QTreeView( parent ),
     d( new Private( this ) )
 {
-
   setSelectionMode( QAbstractItemView::SingleSelection );
   d->init();
 }
 
-EntityTreeView::EntityTreeView( KXMLGUIClient *xmlGuiClient, QWidget * parent ) :
-    QTreeView( parent ),
+EntityTreeView::EntityTreeView( KXMLGUIClient *xmlGuiClient, QWidget * parent )
+  : QTreeView( parent ),
     d( new Private( this ) )
 {
-  d->xmlGuiClient = xmlGuiClient;
+  d->mXmlGuiClient = xmlGuiClient;
   d->init();
 }
 
 EntityTreeView::~EntityTreeView()
 {
-  delete d->m_dragDropManager;
+  delete d->mDragDropManager;
   delete d;
 }
 
 void EntityTreeView::setModel( QAbstractItemModel * model )
 {
-  if ( selectionModel() )
-  {
+  if ( selectionModel() ) {
     disconnect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
 
-    disconnect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-           this, SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ) );
+    disconnect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+           this, SLOT( slotSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
   }
 
   QTreeView::setModel( model );
@@ -201,46 +197,45 @@ void EntityTreeView::setModel( QAbstractItemModel * model )
   connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            SLOT( itemCurrentChanged( const QModelIndex& ) ) );
 
-  connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
-           SLOT( slotSelectionChanged( const QItemSelection &, const QItemSelection & ) ) );
+  connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+           SLOT( slotSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
 }
 
 
-void EntityTreeView::timerEvent(QTimerEvent* event)
+void EntityTreeView::timerEvent( QTimerEvent *event )
 {
-  if ( event->timerId() == d->dragExpandTimer.timerId() ) {
-    QPoint pos = viewport()->mapFromGlobal( QCursor::pos() );
-    if ( state() == QAbstractItemView::DraggingState
-          && viewport()->rect().contains( pos ) ) {
+  if ( event->timerId() == d->mDragExpandTimer.timerId() ) {
+    const QPoint pos = viewport()->mapFromGlobal( QCursor::pos() );
+    if ( state() == QAbstractItemView::DraggingState && viewport()->rect().contains( pos ) )
       setExpanded( indexAt( pos ), true );
-    }
   }
+
   QTreeView::timerEvent( event );
 }
 
 void EntityTreeView::dragMoveEvent( QDragMoveEvent * event )
 {
-  d->dragExpandTimer.start( QApplication::startDragTime() , this );
+  d->mDragExpandTimer.start( QApplication::startDragTime() , this );
 
-  if ( d->m_dragDropManager->dropAllowed( event ) )
-  {
+  if ( d->mDragDropManager->dropAllowed( event ) ) {
     // All urls are supported. process the event.
     QTreeView::dragMoveEvent( event );
     return;
   }
+
   event->setDropAction( Qt::IgnoreAction );
   return;
 }
 
 void EntityTreeView::dropEvent( QDropEvent * event )
 {
-  if ( d->m_dragDropManager->processDropEvent( event ) )
+  if ( d->mDragDropManager->processDropEvent( event ) )
     QTreeView::dropEvent( event );
 }
 
 void EntityTreeView::contextMenuEvent( QContextMenuEvent * event )
 {
-  if ( !d->xmlGuiClient )
+  if ( !d->mXmlGuiClient )
     return;
 
   const QModelIndex index = indexAt( event->pos() );
@@ -250,23 +245,23 @@ void EntityTreeView::contextMenuEvent( QContextMenuEvent * event )
   // check if the index under the cursor is a collection or item
   const Item item = model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
   if ( item.isValid() )
-    popup = static_cast<QMenu*>( d->xmlGuiClient->factory()->container(
-                                 QLatin1String( "akonadi_itemview_contextmenu" ), d->xmlGuiClient ) );
+    popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
+                                 QLatin1String( "akonadi_itemview_contextmenu" ), d->mXmlGuiClient ) );
   else
-    popup = static_cast<QMenu*>( d->xmlGuiClient->factory()->container(
-                                 QLatin1String( "akonadi_collectionview_contextmenu" ), d->xmlGuiClient ) );
+    popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
+                                 QLatin1String( "akonadi_collectionview_contextmenu" ), d->mXmlGuiClient ) );
   if ( popup )
     popup->exec( event->globalPos() );
 }
 
 void EntityTreeView::setXmlGuiClient( KXMLGUIClient * xmlGuiClient )
 {
-  d->xmlGuiClient = xmlGuiClient;
+  d->mXmlGuiClient = xmlGuiClient;
 }
 
-void EntityTreeView::startDrag( Qt::DropActions _supportedActions )
+void EntityTreeView::startDrag( Qt::DropActions supportedActions )
 {
-  d->m_dragDropManager->startDrag( _supportedActions );
+  d->mDragDropManager->startDrag( supportedActions );
 }
 
 #include "entitytreeview.moc"

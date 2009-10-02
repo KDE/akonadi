@@ -21,6 +21,8 @@
 
 #include "favoritecollectionsview.h"
 
+#include "dragdropmanager_p.h"
+
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
@@ -34,15 +36,13 @@
 #include <KUrl>
 #include <KXMLGUIFactory>
 
+#include <kdebug.h>
 #include <kxmlguiclient.h>
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
 #include <akonadi/item.h>
 #include <akonadi/entitytreemodel.h>
-
-#include <kdebug.h>
-#include "dragdropmanager_p.h"
 
 using namespace Akonadi;
 
@@ -53,10 +53,8 @@ class FavoriteCollectionsView::Private
 {
 public:
   Private( FavoriteCollectionsView *parent )
-      : mParent( parent ),
-      xmlGuiClient( 0 )
+      : mParent( parent ), mDragDropManager( new DragDropManager( mParent ) ), mXmlGuiClient( 0 )
   {
-    m_dragDropManager = new DragDropManager( mParent );
   }
 
   void init();
@@ -65,9 +63,8 @@ public:
   void itemCurrentChanged( const QModelIndex& );
 
   FavoriteCollectionsView *mParent;
-  DragDropManager *m_dragDropManager;
-
-  KXMLGUIClient *xmlGuiClient;
+  DragDropManager *mDragDropManager;
+  KXMLGUIClient *mXmlGuiClient;
 };
 
 void FavoriteCollectionsView::Private::init()
@@ -119,33 +116,31 @@ void FavoriteCollectionsView::Private::itemCurrentChanged( const QModelIndex &in
   }
 }
 
-FavoriteCollectionsView::FavoriteCollectionsView( QWidget * parent ) :
-    QListView( parent ),
+FavoriteCollectionsView::FavoriteCollectionsView( QWidget * parent )
+  : QListView( parent ),
     d( new Private( this ) )
 {
-
   setSelectionMode( QAbstractItemView::SingleSelection );
   d->init();
 }
 
-FavoriteCollectionsView::FavoriteCollectionsView( KXMLGUIClient *xmlGuiClient, QWidget * parent ) :
-    QListView( parent ),
+FavoriteCollectionsView::FavoriteCollectionsView( KXMLGUIClient *xmlGuiClient, QWidget * parent )
+  : QListView( parent ),
     d( new Private( this ) )
 {
-  d->xmlGuiClient = xmlGuiClient;
+  d->mXmlGuiClient = xmlGuiClient;
   d->init();
 }
 
 FavoriteCollectionsView::~FavoriteCollectionsView()
 {
-  delete d->m_dragDropManager;
+  delete d->mDragDropManager;
   delete d;
 }
 
 void FavoriteCollectionsView::setModel( QAbstractItemModel * model )
 {
-  if ( selectionModel() )
-  {
+  if ( selectionModel() ) {
     disconnect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
   }
@@ -158,27 +153,26 @@ void FavoriteCollectionsView::setModel( QAbstractItemModel * model )
 
 void FavoriteCollectionsView::dragMoveEvent( QDragMoveEvent * event )
 {
-  if ( d->m_dragDropManager->dropAllowed( event ) )
-  {
+  if ( d->mDragDropManager->dropAllowed( event ) ) {
     // All urls are supported. process the event.
     QListView::dragMoveEvent( event );
     return;
   }
+
   event->setDropAction( Qt::IgnoreAction );
   return;
 }
 
 void FavoriteCollectionsView::dropEvent( QDropEvent * event )
 {
-  if ( d->m_dragDropManager->processDropEvent( event ) )
-  {
+  if ( d->mDragDropManager->processDropEvent( event ) ) {
     QListView::dropEvent( event );
   }
 }
 
 void FavoriteCollectionsView::contextMenuEvent( QContextMenuEvent * event )
 {
-  if ( !d->xmlGuiClient )
+  if ( !d->mXmlGuiClient )
     return;
 
   const QModelIndex index = indexAt( event->pos() );
@@ -188,20 +182,20 @@ void FavoriteCollectionsView::contextMenuEvent( QContextMenuEvent * event )
   // check if the index under the cursor is a collection or item
   const Collection collection = model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
   if ( collection.isValid() )
-    popup = static_cast<QMenu*>( d->xmlGuiClient->factory()->container(
-                                 QLatin1String( "akonadi_favoriteview_contextmenu" ), d->xmlGuiClient ) );
+    popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
+                                 QLatin1String( "akonadi_favoriteview_contextmenu" ), d->mXmlGuiClient ) );
   if ( popup )
     popup->exec( event->globalPos() );
 }
 
-void FavoriteCollectionsView::setXmlGuiClient( KXMLGUIClient * xmlGuiClient )
+void FavoriteCollectionsView::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 {
-  d->xmlGuiClient = xmlGuiClient;
+  d->mXmlGuiClient = xmlGuiClient;
 }
 
-void FavoriteCollectionsView::startDrag( Qt::DropActions _supportedActions )
+void FavoriteCollectionsView::startDrag( Qt::DropActions supportedActions )
 {
-  d->m_dragDropManager->startDrag( _supportedActions );
+  d->mDragDropManager->startDrag( supportedActions );
 }
 
 #include "favoritecollectionsview.moc"
