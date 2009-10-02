@@ -22,6 +22,7 @@
 #include "contacteditorwidget.h"
 
 #include "addresseditwidget.h"
+#include "contacteditorpageplugin.h"
 #include "contactmetadata_p.h"
 #include "dateeditwidget.h"
 #include "displaynameeditwidget.h"
@@ -38,10 +39,13 @@
 #include <kconfiggroup.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <kstandarddirs.h>
 #include <ktabwidget.h>
-#include <kurlrequester.h>
 #include <ktextedit.h>
+#include <kurlrequester.h>
 
+#include <QtCore/QDirIterator>
+#include <QtCore/QPluginLoader>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
@@ -59,6 +63,8 @@ class ContactEditorWidget::Private
     void initGuiLocationTab();
     void initGuiBusinessTab();
     void initGuiPersonalTab();
+
+    void loadCustomPages();
 
     QString loadCustom( const KABC::Addressee &contact, const QString &key ) const;
     void storeCustom( KABC::Addressee &contact, const QString &key, const QString &value ) const;
@@ -110,6 +116,9 @@ class ContactEditorWidget::Private
 
     // widgets from family group
     KLineEdit *mPartnerWidget;
+
+    // custom editor pages
+    QList<Akonadi::ContactEditorPagePlugin*> mCustomPages;
 };
 
 void ContactEditorWidget::Private::initGui()
@@ -124,6 +133,8 @@ void ContactEditorWidget::Private::initGui()
   initGuiLocationTab();
   initGuiBusinessTab();
   initGuiPersonalTab();
+
+  loadCustomPages();
 }
 
 void ContactEditorWidget::Private::initGuiContactTab()
@@ -405,6 +416,29 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   familyLayout->setRowStretch( 1, 1 );
 }
 
+void ContactEditorWidget::Private::loadCustomPages()
+{
+  qDeleteAll( mCustomPages );
+  mCustomPages.clear();
+
+  const QString pluginDirectory = KStandardDirs::locate( "data", QLatin1String( "akonadi/contact/editorpageplugins/" ) );
+  QDirIterator it( pluginDirectory, QDir::Files );
+  while ( it.hasNext() ) {
+    QPluginLoader loader( it.next() );
+    if ( !loader.load() )
+      continue;
+
+    Akonadi::ContactEditorPagePlugin *plugin = qobject_cast<Akonadi::ContactEditorPagePlugin*>( loader.instance() );
+    if ( !plugin )
+      continue;
+
+    mCustomPages.append( plugin );
+  }
+
+  foreach ( Akonadi::ContactEditorPagePlugin *plugin, mCustomPages )
+    mTabWidget->addTab( plugin, plugin->title() );
+}
+
 QString ContactEditorWidget::Private::loadCustom( const KABC::Addressee &contact, const QString &key ) const
 {
   return contact.custom( QLatin1String( "KADDRESSBOOK" ), key );
@@ -483,6 +517,10 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
   d->mPartnerWidget->setText( d->loadCustom( contact, QLatin1String( "X-SpousesName" ) ) );
 
   d->mDisplayNameWidget->setDisplayType( (DisplayNameEditWidget::DisplayType)metaData.displayNameMode() );
+
+  // custom pages
+  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages )
+    plugin->loadContact( contact );
 }
 
 void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const
@@ -533,6 +571,10 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   d->storeCustom( contact, QLatin1String( "X-SpousesName" ), d->mPartnerWidget->text().trimmed() );
 
   metaData.setDisplayNameMode( d->mDisplayNameWidget->displayType() );
+
+  // custom pages
+  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages )
+    plugin->storeContact( contact );
 }
 
 void ContactEditorWidget::setReadOnly( bool readOnly )
@@ -581,4 +623,8 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
 
   // widgets from family group
   d->mPartnerWidget->setReadOnly( readOnly );
+
+  // custom pages
+  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages )
+    plugin->setReadOnly( readOnly );
 }
