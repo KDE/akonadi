@@ -242,7 +242,7 @@ void DefaultResourceJob::Private::resourceCreateResult( KJob *job )
 
   // Configure the resource.
   {
-    agent.setName( nameForType( LocalFolders::Root ) );
+    agent.setName( displayNameForType( LocalFolders::Root ) );
     QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + Settings::defaultResourceId(),
                          QString::fromLatin1( "/Settings" ),
                          QString::fromLatin1( "org.kde.Akonadi.Maildir.Settings" ) );
