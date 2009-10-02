@@ -247,6 +247,15 @@ static QString contactAsHtml( const KABC::Addressee &contact )
     titleMap.insert( QLatin1String( "Anniversary" ), i18n( "Anniversary" ) );
   }
 
+  static QSet<QString> blacklistedKeys;
+  if ( blacklistedKeys.isEmpty() ) {
+    blacklistedKeys.insert( QLatin1String( "CRYPTOPROTOPREF" ) );
+    blacklistedKeys.insert( QLatin1String( "OPENPGPFP" ) );
+    blacklistedKeys.insert( QLatin1String( "SMIMEFP" ) );
+    blacklistedKeys.insert( QLatin1String( "CRYPTOSIGNPREF" ) );
+    blacklistedKeys.insert( QLatin1String( "CRYPTOENCRYPTPREF" ) );
+  }
+
   if ( !contact.customs().empty() ) {
     const QStringList customs = contact.customs();
     foreach ( QString custom, customs ) { //krazy:exclude=foreach
@@ -260,6 +269,9 @@ static QString contactAsHtml( const KABC::Addressee &contact )
 
         // blog is handled separated
         if ( key == QLatin1String( "BlogFeed" ) )
+          continue;
+
+        if ( blacklistedKeys.contains( key ) )
           continue;
 
         const QMap<QString, QString>::ConstIterator keyIt = titleMap.constFind( key );
