@@ -21,7 +21,7 @@
 #ifndef AKONADI_ENTITY_TREE_VIEW
 #define AKONADI_ENTITY_TREE_VIEW
 
-#include "akonadi_next_export.h"
+#include "akonadi_export.h"
 
 #include <QtGui/QTreeView>
 
@@ -64,7 +64,7 @@ class Item;
  * @author Volker Krause <vkrause@kde.org>
  * @author Stephen Kelly <steveire@gmail.com>
  */
-class AKONADI_NEXT_EXPORT EntityTreeView : public QTreeView
+class AKONADI_EXPORT EntityTreeView : public QTreeView
 {
   Q_OBJECT
 

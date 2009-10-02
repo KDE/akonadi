@@ -22,7 +22,7 @@
 #ifndef AKONADI_FAVORITE_COLLECTIONS_VIEW
 #define AKONADI_FAVORITE_COLLECTIONS_VIEW
 
-#include "akonadi_next_export.h"
+#include "akonadi_export.h"
 
 #include <QtGui/QListView>
 
@@ -65,7 +65,7 @@ class Item;
  * @author Volker Krause <vkrause@kde.org>
  * @author Stephen Kelly <steveire@gmail.com>
  */
-class AKONADI_NEXT_EXPORT FavoriteCollectionsView : public QListView
+class AKONADI_EXPORT FavoriteCollectionsView : public QListView
 {
   Q_OBJECT
 

@@ -185,11 +185,11 @@ void DragDropManager::startDrag( Qt::DropActions _supportedActions )
   QDrag *drag = new QDrag( m_view );
   drag->setMimeData( mimeData );
   if ( indexes.size() > 1 ) {
-    drag->setPixmap( KIcon( "document-multiple" ).pixmap( QSize( 22, 22 ) ) );
+    drag->setPixmap( KIcon( QLatin1String( "document-multiple" ) ).pixmap( QSize( 22, 22 ) ) );
   } else {
     QPixmap pixmap = indexes.first().data( Qt::DecorationRole ).value<QIcon>().pixmap( QSize( 22, 22 ) );
     if ( pixmap.isNull() )
-      pixmap = KIcon( "text-plain" ).pixmap( QSize( 22, 22 ) );
+      pixmap = KIcon( QLatin1String( "text-plain" ) ).pixmap( QSize( 22, 22 ) );
     drag->setPixmap( pixmap );
   }
 
