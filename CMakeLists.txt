@@ -75,17 +75,20 @@ set( akonadikde_LIB_SRC
   collectionstatisticsmodel.cpp
   collectionsync.cpp
   collectionview.cpp
+  dragdropmanager.cpp
   control.cpp
   entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
+  entitytreeview.cpp
   entityfilterproxymodel.cpp
   entitytreeviewstatesaver.cpp
   erroroverlay.cpp
   exception.cpp
   favoritecollectionsmodel.cpp
+  favoritecollectionsview.cpp
   firstrun.cpp
   flatcollectionproxymodel.cpp
   item.cpp
@@ -217,10 +220,12 @@ install( FILES
   entitydisplayattribute.h
   entityhiddenattribute.h
   entitytreemodel.h
+  entitytreeview.h
   entityfilterproxymodel.h
   entitytreeviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
+  favoritecollectionsview.h
   item.h
   itemcreatejob.h
   itemcopyjob.h
