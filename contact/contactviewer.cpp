@@ -265,7 +265,13 @@ static QString contactAsHtml( const KABC::Addressee &contact )
 
         int pos = custom.indexOf( QLatin1Char( ':' ) );
         QString key = custom.left( pos );
-        const QString value = custom.mid( pos + 1 );
+        QString value = custom.mid( pos + 1 );
+
+        // convert anniversary correctly
+        if ( key == QLatin1String( "Anniversary" ) ) {
+          const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
+          value = KGlobal::locale()->formatDate( dateTime.date(), KLocale::ShortDate );
+        }
 
         // blog is handled separated
         if ( key == QLatin1String( "BlogFeed" ) )
