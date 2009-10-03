@@ -34,10 +34,11 @@
 #include <QtGui/QMenu>
 
 ContactGroupLineEdit::ContactGroupLineEdit( QWidget *parent )
-  : QLineEdit( parent ),
+  : KLineEdit( parent ),
     mCompleter( 0 ),
     mContainsReference( false )
 {
+  setClearButtonShown( true );
 }
 
 void ContactGroupLineEdit::setCompletionModel( QAbstractItemModel *model )
@@ -83,6 +84,8 @@ void ContactGroupLineEdit::setContactReference( const KABC::ContactGroup::Contac
   mContactReference = reference;
   mContainsReference = true;
 
+  disconnect( this, SIGNAL( textChanged( const QString& ) ), this, SLOT( invalidateReference() ) );
+
   updateView( reference.uid(), reference.preferredEmail() );
 }
 
@@ -100,9 +103,18 @@ void ContactGroupLineEdit::autoCompleted( const QModelIndex &index )
   if ( !item.isValid() )
     return;
 
+  disconnect( this, SIGNAL( textChanged( const QString& ) ), this, SLOT( invalidateReference() ) );
   mContainsReference = true;
 
   updateView( item );
+
+  connect( this, SIGNAL( textChanged( const QString& ) ), SLOT( invalidateReference() ) );
+}
+
+void ContactGroupLineEdit::invalidateReference()
+{
+  disconnect( this, SIGNAL( textChanged( const QString& ) ), this, SLOT( invalidateReference() ) );
+  mContainsReference = false;
 }
 
 void ContactGroupLineEdit::updateView( const QString &uid, const QString &preferredEmail )
@@ -121,6 +133,8 @@ void ContactGroupLineEdit::fetchDone( KJob *job )
     const Akonadi::Item item = fetchJob->items().first();
     updateView( item, fetchJob->property( "preferredEmail" ).toString() );
   }
+
+  connect( this, SIGNAL( textChanged( const QString& ) ), SLOT( invalidateReference() ) );
 }
 
 void ContactGroupLineEdit::updateView( const Akonadi::Item &item, const QString &preferredEmail )

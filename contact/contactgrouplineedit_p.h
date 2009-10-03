@@ -22,11 +22,10 @@
 #ifndef AKONADI_CONTACTGROUPLINEEDIT_P_H
 #define AKONADI_CONTACTGROUPLINEEDIT_P_H
 
-#include <QtGui/QLineEdit>
-
 #include <akonadi/item.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
+#include <klineedit.h>
 
 class QAbstractItemModel;
 class QCompleter;
@@ -34,7 +33,7 @@ class QModelIndex;
 
 class KJob;
 
-class ContactGroupLineEdit : public QLineEdit
+class ContactGroupLineEdit : public KLineEdit
 {
   Q_OBJECT
 
@@ -56,6 +55,7 @@ class ContactGroupLineEdit : public QLineEdit
   private Q_SLOTS:
     void autoCompleted( const QModelIndex& );
     void fetchDone( KJob* );
+    void invalidateReference();
 
   private:
     void updateView( const QString &uid, const QString &preferredEmail = QString() );
