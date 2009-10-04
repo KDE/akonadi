@@ -198,7 +198,7 @@ QVariant FavoriteCollectionsModel::headerData( int section, Qt::Orientation orie
   if ( section == 0
     && orientation == Qt::Horizontal
     && role == Qt::DisplayRole ) {
-    return QLatin1String("Favorite Folders");
+    return QLatin1String("Favorite Folders"); //i18n ???
   } else {
     return KSelectionProxyModel::headerData( section, orientation, role );
   }
