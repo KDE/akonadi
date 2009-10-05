@@ -247,6 +247,15 @@ static QString contactAsHtml( const KABC::Addressee &contact )
     titleMap.insert( QLatin1String( "Anniversary" ), i18n( "Anniversary" ) );
   }
 
+  static QSet<QString> blacklistedKeys;
+  if ( blacklistedKeys.isEmpty() ) {
+    blacklistedKeys.insert( QLatin1String( "CRYPTOPROTOPREF" ) );
+    blacklistedKeys.insert( QLatin1String( "OPENPGPFP" ) );
+    blacklistedKeys.insert( QLatin1String( "SMIMEFP" ) );
+    blacklistedKeys.insert( QLatin1String( "CRYPTOSIGNPREF" ) );
+    blacklistedKeys.insert( QLatin1String( "CRYPTOENCRYPTPREF" ) );
+  }
+
   if ( !contact.customs().empty() ) {
     const QStringList customs = contact.customs();
     foreach ( QString custom, customs ) { //krazy:exclude=foreach
@@ -256,10 +265,19 @@ static QString contactAsHtml( const KABC::Addressee &contact )
 
         int pos = custom.indexOf( QLatin1Char( ':' ) );
         QString key = custom.left( pos );
-        const QString value = custom.mid( pos + 1 );
+        QString value = custom.mid( pos + 1 );
+
+        // convert anniversary correctly
+        if ( key == QLatin1String( "Anniversary" ) ) {
+          const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
+          value = KGlobal::locale()->formatDate( dateTime.date(), KLocale::ShortDate );
+        }
 
         // blog is handled separated
         if ( key == QLatin1String( "BlogFeed" ) )
+          continue;
+
+        if ( blacklistedKeys.contains( key ) )
           continue;
 
         const QMap<QString, QString>::ConstIterator keyIt = titleMap.constFind( key );

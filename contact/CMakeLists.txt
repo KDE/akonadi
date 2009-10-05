@@ -94,6 +94,7 @@ install( FILES
   contactdefaultactions.h
   contacteditor.h
   contacteditordialog.h
+  contacteditorpageplugin.h
   contactgroupeditor.h
   contactgroupeditordialog.h
   contactgroupexpandjob.h

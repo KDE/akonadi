@@ -78,30 +78,25 @@ EntityTreeModel::EntityTreeModel( Session *session,
            SIGNAL( collectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ),
            SLOT( monitoredCollectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ) );
 
-  //TODO: Figure out if the monitor emits these signals even without an item fetch scope.
-  // Wrap them in an if() if so.
-  // Don't want to be adding items to a model if NoItemPopulation is set.
-  // If LazyPopulation is set, then we'll have to add items to collections which
-  // have already been lazily populated.
+  if ( !monitor->itemFetchScope().isEmpty() )
+  {
+    // Monitor item changes.
+    connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+            SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+    connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+            SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+    connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+            SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
+    connect( monitor, SIGNAL( itemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ),
+            SLOT( monitoredItemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ) );
 
-
-  // Monitor item changes.
-  connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-           SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-           SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
-  connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
-           SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
-  connect( monitor, SIGNAL( itemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ),
-           SLOT( monitoredItemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ) );
-
+    connect( monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& )),
+            SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& )));
+    connect( monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )),
+            SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )));
+  }
   connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
            SLOT(monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
-
-  connect( monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& )),
-           SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& )));
-  connect( monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )),
-           SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )));
 
 //   connect( q, SIGNAL( modelReset() ), q, SLOT( slotModelReset() ) );
 
@@ -957,6 +952,24 @@ void EntityTreeModel::setCollectionFetchStrategy( CollectionFetchStrategy strate
 {
   Q_D( EntityTreeModel);
   d->m_collectionFetchStrategy = strategy;
+
+  if ( strategy == NoItemPopulation )
+  {
+    disconnect( d->m_monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+            this, SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+    disconnect( d->m_monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+            this, SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+    disconnect( d->m_monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+            this, SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
+    disconnect( d->m_monitor, SIGNAL( itemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ),
+            this, SLOT( monitoredItemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ) );
+
+    disconnect( d->m_monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& )),
+            this, SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& )));
+    disconnect( d->m_monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )),
+            this, SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )));
+  }
+
   clearAndReset();
 }
 
