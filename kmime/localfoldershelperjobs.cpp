@@ -242,7 +242,7 @@ void DefaultResourceJob::Private::resourceCreateResult( KJob *job )
 
   // Configure the resource.
   {
-    agent.setName( nameForType( LocalFolders::Root ) );
+    agent.setName( displayNameForType( LocalFolders::Root ) );
     QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + Settings::defaultResourceId(),
                          QString::fromLatin1( "/Settings" ),
                          QString::fromLatin1( "org.kde.Akonadi.Maildir.Settings" ) );
@@ -325,9 +325,18 @@ void DefaultResourceJob::Private::collectionFetchResult( KJob *job )
   // found the folders on disk. So give them the necessary attributes now.
   Q_ASSERT( pendingModifyJobs == 0 );
   foreach( Collection col, toRecover ) {          // krazy:exclude=foreach
-    if( typeForName.contains( col.name() ) ) {
+
+    // Find the type for the collection. For the root collection, we can't use typeForName(), as
+    // the root collection name is i18n'ed, as it comes from the resource name
+    int type = -1;
+    if ( typeForName.contains( col.name() ) )
+      type = typeForName[ col.name() ];
+    else if ( col == maildirRoot )
+      type = LocalFolders::Root;
+
+    if( type != -1 ) {
       kDebug() << "Recovering collection" << col.name();
-      setCollectionAttributes( col, typeForName[ col.name() ] );
+      setCollectionAttributes( col, type );
       CollectionModifyJob *mjob = new CollectionModifyJob( col, q );
       QObject::connect( mjob, SIGNAL(result(KJob*)), q, SLOT(collectionModifyResult(KJob*)) );
       pendingModifyJobs++;

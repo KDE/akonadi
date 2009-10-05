@@ -539,7 +539,7 @@ void LocalFoldersTest::testRecoverDefaultResource()
     // The first folder should be the Root.
     {
       Collection col = folders[0];
-      QCOMPARE( col.name(), nameForType( LocalFolders::Root ) );
+      QCOMPARE( col.name(), displayNameForType( LocalFolders::Root ) );
       QVERIFY( col.hasAttribute<LocalFolderAttribute>() );
       QCOMPARE( col.attribute<LocalFolderAttribute>()->folderType(), int( LocalFolders::Root ) );
     }

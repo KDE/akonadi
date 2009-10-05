@@ -203,7 +203,7 @@ QString AKONADI_KMIME_TEST_EXPORT nameForType( int type );
   Returns the pretty i18n'ed name of a LocalFolder type. These names are used
   in the EntityDisplayAttribute of LocalFolders collections.
 */
-QString displayNameForType( int type );
+QString AKONADI_KMIME_TEST_EXPORT displayNameForType( int type );
 
 /**
   Returns the icon name for a given LocalFolder type.
