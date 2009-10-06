@@ -112,7 +112,7 @@ class FavoriteCollectionsModel::Private
 };
 
 FavoriteCollectionsModel::FavoriteCollectionsModel( EntityTreeModel *source, QObject *parent )
-  : KSelectionProxyModel( new QItemSelectionModel( source, parent ), parent ),
+  : Akonadi::SelectionProxyModel( new QItemSelectionModel( source, parent ), parent ),
     d( new Private( this ) )
 {
   setSourceModel( source );

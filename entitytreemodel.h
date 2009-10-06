@@ -108,7 +108,9 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       ColumnCountRole,                        ///< @internal Used by proxies to determine the number of columns for a header group.
       LoadedPartsRole,                        ///< Parts available in the model for the item
       AvailablePartsRole,                     ///< Parts available in the Akonadi server for the item
-      SessionRole,                            ///< The Session used by this model. @internal.
+      SessionRole,                            ///< @internal The Session used by this model
+      CollectionRefRole,                      ///< @internal Used to increase the reference count on a Collection
+      CollectionDerefRole,                    ///< @internal Used to decrease the reference count on a Collection
       UserRole = Qt::UserRole + 1000,         ///< Role for user extensions.
       TerminalUserRole = 10000                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
     };

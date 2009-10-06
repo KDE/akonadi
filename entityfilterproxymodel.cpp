@@ -235,7 +235,7 @@ QModelIndexList EntityFilterProxyModel::match(const QModelIndex& start, int role
 int EntityFilterProxyModel::columnCount(const QModelIndex &parent) const
 {
   Q_D(const EntityFilterProxyModel);
-  
+
   QVariant var = sourceModel()->data(parent, EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerSet));
   if( !var.isValid() )
     return 0;
