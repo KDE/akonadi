@@ -56,7 +56,7 @@ private:
   Q_PRIVATE_SLOT( d_func(), void rootIndexAdded( const QModelIndex & ) )
   Q_PRIVATE_SLOT( d_func(), void rootIndexAboutToBeRemoved( const QModelIndex & ) )
 
-  Q_DECLARE_PRIVATE( SelectionProxyModel );
+  Q_DECLARE_PRIVATE( SelectionProxyModel )
   SelectionProxyModelPrivate *d_ptr;
 };
 
