@@ -148,8 +148,20 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       LazyPopulation       ///< Fetch items only when requested (using canFetchMore/fetchMore)
     };
 
-    void setShowHiddenEntities( bool hidden );
-    bool showHiddenEntities() const;
+    /**
+      Some Entities are hidden in the model, but exist for internal purposes, for example, custom object
+      directories in groupware resources.
+
+      They are hidden by default, but can be shown by setting @p show to true.
+
+      Most applications will not need to use this feature.
+    */
+    void setShowSystemEntities( bool show );
+
+    /**
+      @returns True if internal system entities are shown, and false otherwise.
+    */
+    bool systemEntitiesShown() const;
 
     /**
      * Sets the item population @p strategy of the model.

@@ -153,7 +153,7 @@ public:
   */
   bool isHidden(const Entity &entity) const;
 
-  bool m_showHiddenEntities;
+  bool m_showSystemEntities;
 
   void ref( Collection::Id id );
   void deref( Collection::Id id );

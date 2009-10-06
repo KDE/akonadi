@@ -121,16 +121,16 @@ EntityTreeModel::~EntityTreeModel()
   delete d_ptr;
 }
 
-bool EntityTreeModel::showHiddenEntities() const
+bool EntityTreeModel::systemEntitiesShown() const
 {
   Q_D( const EntityTreeModel );
-  return d->m_showHiddenEntities;
+  return d->m_showSystemEntities;
 }
 
-void EntityTreeModel::setShowHiddenEntities( bool hidden )
+void EntityTreeModel::setShowSystemEntities( bool show )
 {
   Q_D( EntityTreeModel );
-  d->m_showHiddenEntities = hidden;
+  d->m_showSystemEntities = show;
 }
 
 void EntityTreeModel::clearAndReset()

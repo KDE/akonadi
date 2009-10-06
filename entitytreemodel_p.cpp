@@ -49,7 +49,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
       m_includeUnsubscribed( true ),
       m_includeStatistics( false ),
       m_showRootCollection( false ),
-      m_showHiddenEntities( false ),
+      m_showSystemEntities( false ),
       m_buffer( PurgeBuffer( this ) )
 {
 }
@@ -121,7 +121,7 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
 
 bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
 {
-  if ( m_showHiddenEntities )
+  if ( m_showSystemEntities )
     return false;
 
   if (entity.id() == Collection::root().id())
