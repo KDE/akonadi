@@ -29,6 +29,7 @@ class NotificationMessageTest : public QObject
     void testCompress();
     void testCompress2();
     void testCompress3();
+    void testCompressWithItemParts();
     void testNoCompress();
     void testPartModificationMerge_data();
     void testPartModificationMerge();

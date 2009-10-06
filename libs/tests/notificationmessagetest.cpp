@@ -80,6 +80,40 @@ void NotificationMessageTest::testCompress3()
   QCOMPARE( list.count(), 1 );
 }
 
+void NotificationMessageTest::testCompressWithItemParts()
+{
+  NotificationMessage::List list;
+  NotificationMessage msg;
+  msg.setType( NotificationMessage::Item );
+  msg.setOperation( NotificationMessage::Add );
+
+  NotificationMessage::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 1 );
+
+  msg.setOperation( NotificationMessage::Modify );
+  QSet<QByteArray> changes;
+  changes.insert( "FLAGS" );
+  msg.setItemParts( changes );
+  NotificationMessage::appendAndCompress( list, msg );
+  NotificationMessage::appendAndCompress( list, msg );
+
+  QCOMPARE( list.count(), 1 );
+  QCOMPARE( list.first().operation(), NotificationMessage::Add );
+  QCOMPARE( list.first().itemParts(), QSet<QByteArray>() );
+
+  list.clear();
+  NotificationMessage::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 1 );
+
+  msg.setOperation( NotificationMessage::Remove );
+  msg.setItemParts( QSet<QByteArray>() );
+  NotificationMessage::appendAndCompress( list, msg );
+
+  QCOMPARE( list.count(), 1 );
+  QCOMPARE( list.first().operation(), NotificationMessage::Remove );
+  QCOMPARE( list.first().itemParts(), QSet<QByteArray>() );
+}
+
 void NotificationMessageTest::testNoCompress()
 {
   NotificationMessage::List list;

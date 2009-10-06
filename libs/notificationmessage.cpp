@@ -63,15 +63,9 @@ class NotificationMessage::Private : public QSharedData
           && mimeType == other.mimeType;
     }
 
-    bool compareWithoutOp( const Private &other ) const
-    {
-      return compareWithoutOpAndParts( other )
-          && parts == other.parts;
-    }
-
     bool operator==(const Private &other ) const
     {
-      return operation == other.operation && compareWithoutOp( other );
+      return operation == other.operation &&  parts == other.parts && compareWithoutOpAndParts( other );
     }
 
     QByteArray sessionId;
@@ -270,22 +264,27 @@ QString NotificationMessage::toString() const
 void NotificationMessage::appendAndCompress(NotificationMessage::List & list, const NotificationMessage & msg)
 {
   for ( NotificationMessage::List::Iterator it = list.begin(); it != list.end(); ) {
-    if ( msg.d->compareWithoutOp( *((*it).d) ) ) {
-      if ( msg.operation() == (*it).operation() || msg.operation() == Modify ) {
-        return;
-      }
-      if ( msg.operation() == Remove && (*it).operation() == Modify ) {
-        it = list.erase( it );
-      } else
-        ++it;
-    } else if ( msg.d->compareWithoutOpAndParts( *((*it).d) ) ) {
-      if ( msg.operation() == Modify && (*it).operation() == Modify ) {
+    if ( msg.d->compareWithoutOpAndParts( *((*it).d) ) ) {
+      // same operation: merge changed parts and drop the new one
+      if ( msg.operation() == (*it).operation() ) {
         (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
         return;
-      } else
+      }
+      // new one is a modification, the existing one not, so drop the new one
+      else if ( msg.operation() == Modify ) {
+        return;
+      }
+      // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
+      else if ( msg.operation() == Remove && (*it).operation() == Modify ) {
+        it = list.erase( it );
+      }
+      // keep looking
+      else {
         ++it;
-    } else
+      }
+    } else {
       ++it;
+    }
   }
   list << msg;
 }
