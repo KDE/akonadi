@@ -29,6 +29,8 @@ class QMimeData;
 
 namespace Akonadi {
 
+class Session;
+
 /**
   @internal
 
@@ -52,7 +54,7 @@ namespace PasteHelper
     @param copy Indicate whether this is a copy or a move.
     @returns The job performing the paste, 0 if there is nothing to paste.
   */
-  KJob* paste( const QMimeData* mimeData, const Collection &collection, bool copy = true );
+  KJob* paste( const QMimeData* mimeData, const Collection &collection, bool copy = true, Session *session = 0 );
 
   /**
     URI list paste/drop.
@@ -61,7 +63,7 @@ namespace PasteHelper
     @param action The drop action (copy/move/link).
     @returns The job performing the paste, 0 if there is nothing to paste.
   */
-  KJob* pasteUriList( const QMimeData* mimeData, const Collection &collection, Qt::DropAction action );
+  KJob* pasteUriList( const QMimeData* mimeData, const Collection &collection, Qt::DropAction action, Session *session );
 }
 
 

@@ -474,7 +474,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
         }
       }
 
-      KJob *job = PasteHelper::pasteUriList( data, destCollection, action );
+      KJob *job = PasteHelper::pasteUriList( data, destCollection, action, d->m_session );
       if (!job)
         return false;
 
