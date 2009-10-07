@@ -253,7 +253,7 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
 
 void MonitorPrivate::appendAndCompress( const NotificationMessage &msg  )
 {
-  if ( msg.operation() != NotificationMessage::Move || msg.type() != NotificationMessage::Item )
+  if ( !useRefCounting || msg.operation() != NotificationMessage::Move || msg.type() != NotificationMessage::Item )
     return NotificationMessage::appendAndCompress( pendingNotifications, msg );
 
   bool sourceWatched = refCountMap.contains( msg.parentCollection() );
