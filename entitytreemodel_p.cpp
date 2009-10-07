@@ -20,6 +20,8 @@
 #include "entitytreemodel_p.h"
 #include "entitytreemodel.h"
 
+#include "monitor_p.h" // For friend ref/deref
+
 #include <KDE/KIconLoader>
 #include <KDE/KUrl>
 
@@ -36,6 +38,7 @@
 #include <akonadi/session.h>
 
 #include <kdebug.h>
+#include "monitor_p.h"
 
 using namespace Akonadi;
 
@@ -46,7 +49,8 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
       m_includeUnsubscribed( true ),
       m_includeStatistics( false ),
       m_showRootCollection( false ),
-      m_showHiddenEntities( false )
+      m_showSystemEntities( false ),
+      m_buffer( PurgeBuffer( this ) )
 {
 }
 
@@ -117,7 +121,7 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
 
 bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
 {
-  if ( m_showHiddenEntities )
+  if ( m_showSystemEntities )
     return false;
 
   if (entity.id() == Collection::root().id())
@@ -950,3 +954,130 @@ Item EntityTreeModelPrivate::getItem( Item::Id id) const
 
   return m_items.value( id );
 }
+
+void EntityTreeModelPrivate::ref( Collection::Id id )
+{
+  m_monitor->d_ptr->ref( id );
+  if ( m_buffer.isBuffered( id ) )
+    m_buffer.purge( id );
+}
+
+void EntityTreeModelPrivate::PurgeBuffer::purge( Collection::Id id )
+{
+  int idx = m_buffer.indexOf( id, 0 );
+  while ( idx <= m_index )
+  {
+    if ( idx < 0 )
+      break;
+    m_buffer.removeAt( idx );
+    if ( m_index > 0 )
+      --m_index;
+    idx = m_buffer.indexOf( id, idx );
+  }
+  while ( int idx = m_buffer.indexOf( id, m_index ) > -1 )
+  {
+    m_buffer.removeAt( idx );
+  }
+}
+
+void EntityTreeModelPrivate::PurgeBuffer::buffer( Collection::Id id )
+{
+  if ( m_index == MAXBUFFERSIZE )
+  {
+    m_index = 0;
+  }
+
+  if ( m_buffer.size() == MAXBUFFERSIZE )
+  {
+    Collection::Id bumpedId = m_buffer.takeAt( m_index );
+    if ( m_model->shouldPurge( bumpedId ) )
+    {
+      m_model->purgeItems( bumpedId );
+    }
+  }
+
+  // Ensure that we don't put a duplicate @p id into the buffer.
+  purge( id );
+
+  m_buffer.insert( m_index, id );
+  ++m_index;
+}
+
+bool EntityTreeModelPrivate::shouldPurge( Collection::Id id )
+{
+  if( m_monitor->d_ptr->refCountMap.contains( id ) )
+    return false;
+
+  if ( m_buffer.isBuffered( id ) )
+    return false;
+
+  static const int MAXITEMS = 10000;
+
+  if ( m_items.size() < MAXITEMS )
+    return false;
+
+  return true;
+}
+
+void EntityTreeModelPrivate::deref( Collection::Id id )
+{
+  m_monitor->d_ptr->deref( id );
+  m_buffer.buffer( id );
+}
+
+QList<Node*>::iterator EntityTreeModelPrivate::skipCollections( QList<Node*>::iterator it, QList<Node*>::iterator end, int * pos )
+{
+  for( ; it != end; ++it )
+  {
+    if ( ( *it )->type == Node::Item )
+    {
+      break;
+    }
+    ++( *pos );
+  }
+  return it;
+}
+
+QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterator it, QList<Node*>::iterator end, int *pos, const Collection &col )
+{
+  Q_Q( EntityTreeModel );
+
+  QList<Node *>::iterator startIt = it;
+
+  int start = *pos;
+  for( ; it != end; ++it )
+  {
+    if ( ( *it )->type != Node::Item)
+    {
+      break;
+    }
+    ++(*pos);
+  }
+
+  QModelIndex parentIndex = q->indexForCollection( col );
+
+  q->beginRemoveRows( parentIndex, start, (*pos) - 1 );
+  m_childEntities[ col.id() ].erase( startIt, it );
+  q->endRemoveRows();
+
+  return it;
+}
+
+void EntityTreeModelPrivate::purgeItems( Collection::Id id )
+{
+  QList<Node*> &childEntities = m_childEntities[ id ];
+
+  const Collection col = m_collections.value( id );
+  Q_ASSERT( col.isValid() );
+
+  QList<Node*>::iterator begin = childEntities.begin();
+  const QList<Node*>::iterator end = childEntities.end();
+
+  int pos = 0;
+  while ( ( begin = skipCollections( begin, end, &pos ) ) != end )
+  {
+    begin = removeItems( begin, end, &pos, col );
+  }
+}
+
+

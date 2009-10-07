@@ -397,6 +397,8 @@ class AKONADI_EXPORT Monitor : public QObject
 
   protected:
     //@cond PRIVATE
+    friend class EntityTreeModel;
+    friend class EntityTreeModelPrivate;
     MonitorPrivate *d_ptr;
     explicit Monitor( MonitorPrivate *d, QObject *parent = 0 );
     //@endcond

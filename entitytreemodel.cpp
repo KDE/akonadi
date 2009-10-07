@@ -20,6 +20,8 @@
 #include "entitytreemodel.h"
 #include "entitytreemodel_p.h"
 
+#include "monitor_p.h"
+
 #include <QtCore/QHash>
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
@@ -119,16 +121,16 @@ EntityTreeModel::~EntityTreeModel()
   delete d_ptr;
 }
 
-bool EntityTreeModel::showHiddenEntities() const
+bool EntityTreeModel::systemEntitiesShown() const
 {
   Q_D( const EntityTreeModel );
-  return d->m_showHiddenEntities;
+  return d->m_showSystemEntities;
 }
 
-void EntityTreeModel::setShowHiddenEntities( bool hidden )
+void EntityTreeModel::setShowSystemEntities( bool show )
 {
   Q_D( EntityTreeModel );
-  d->m_showHiddenEntities = hidden;
+  d->m_showSystemEntities = show;
 }
 
 void EntityTreeModel::clearAndReset()
@@ -651,6 +653,17 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
   const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
 
+  if ( index.isValid() && node->type == Node::Collection && ( role == CollectionRefRole || role == CollectionDerefRole ) )
+  {
+    Collection col = index.data( CollectionRole ).value<Collection>();
+    Q_ASSERT( col.isValid() );
+
+    if ( role == CollectionDerefRole )
+      d->deref( col.id() );
+    else if ( role == CollectionRefRole )
+      d->ref( col.id() );
+  }
+
   if ( index.column() == 0 && (role & ( Qt::EditRole | ItemRole | CollectionRole ) ) ) {
     if ( Node::Collection == node->type ) {
 
@@ -929,6 +942,8 @@ void EntityTreeModel::setItemPopulationStrategy( ItemPopulationStrategy strategy
     disconnect( d->m_monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )),
             this, SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )));
   }
+
+  d->m_monitor->d_ptr->useRefCounting = ( strategy == LazyPopulation );
 
   clearAndReset();
 }

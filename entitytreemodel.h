@@ -108,7 +108,9 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       ColumnCountRole,                        ///< @internal Used by proxies to determine the number of columns for a header group.
       LoadedPartsRole,                        ///< Parts available in the model for the item
       AvailablePartsRole,                     ///< Parts available in the Akonadi server for the item
-      SessionRole,                            ///< The Session used by this model. @internal.
+      SessionRole,                            ///< @internal The Session used by this model
+      CollectionRefRole,                      ///< @internal Used to increase the reference count on a Collection
+      CollectionDerefRole,                    ///< @internal Used to decrease the reference count on a Collection
       UserRole = Qt::UserRole + 1000,         ///< Role for user extensions.
       TerminalUserRole = 10000                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
     };
@@ -146,8 +148,20 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       LazyPopulation       ///< Fetch items only when requested (using canFetchMore/fetchMore)
     };
 
-    void setShowHiddenEntities( bool hidden );
-    bool showHiddenEntities() const;
+    /**
+      Some Entities are hidden in the model, but exist for internal purposes, for example, custom object
+      directories in groupware resources.
+
+      They are hidden by default, but can be shown by setting @p show to true.
+
+      Most applications will not need to use this feature.
+    */
+    void setShowSystemEntities( bool show );
+
+    /**
+      @returns True if internal system entities are shown, and false otherwise.
+    */
+    bool systemEntitiesShown() const;
 
     /**
      * Sets the item population @p strategy of the model.

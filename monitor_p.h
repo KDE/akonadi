@@ -111,6 +111,8 @@ class MonitorPrivate
     void slotStatisticsChangedFinished( KJob* );
     void slotFlushRecentlyChangedCollections();
 
+    void appendAndCompress( const NotificationMessage &msg  );
+
     virtual void slotNotify( const NotificationMessage::List &msgs );
 
     void emitItemNotification( const NotificationMessage &msg, const Item &item = Item(),
@@ -118,9 +120,19 @@ class MonitorPrivate
     void emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
                                      const Collection &par = Collection(), const Collection &dest = Collection() );
 
+    QHash<Collection::Id, int> refCountMap;
+    bool useRefCounting;
+    void ref( Collection::Id id );
+    void deref( Collection::Id id );
+
   private:
     // collections that need a statistics update
     QSet<Collection::Id> recentlyChangedCollections;
+
+    /**
+      @returns True if @p msg should be ignored. Otherwise appropriate signals are emitted for it.
+    */
+    bool isLazilyIgnored( const NotificationMessage & msg ) const;
 
     bool isCollectionMonitored( Collection::Id collection ) const
     {

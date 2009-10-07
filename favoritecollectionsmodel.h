@@ -22,7 +22,7 @@
 
 #include "akonadi_export.h"
 
-#include <kselectionproxymodel.h>
+#include <akonadi/selectionproxymodel.h>
 
 #include <akonadi/collection.h>
 
@@ -36,7 +36,7 @@ class EntityTreeModel;
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
-class AKONADI_EXPORT FavoriteCollectionsModel : public KSelectionProxyModel
+class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyModel
 {
   Q_OBJECT
 

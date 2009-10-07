@@ -40,7 +40,8 @@ MonitorPrivate::MonitorPrivate(Monitor * parent) :
   collectionCache( 3*PipelineSize ), // needs to be at least 3x pipeline size for the collection move case
   itemCache( PipelineSize ), // needs to be at least 1x pipeline size
   fetchCollection( false ),
-  fetchCollectionStatistics( false )
+  fetchCollectionStatistics( false ),
+  useRefCounting( false )
 {
 }
 
@@ -76,10 +77,47 @@ int MonitorPrivate::pipelineSize() const
   return PipelineSize;
 }
 
-bool MonitorPrivate::acceptNotification(const NotificationMessage & msg)
+bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
+{
+  if ( !useRefCounting )
+    return false;
+
+  if ( msg.type() == NotificationMessage::Collection )
+    // Lazy fetching can only affects items.
+    return false;
+
+  Collection::Id parentCollectionId = msg.parentCollection();
+
+  NotificationMessage::Operation op = msg.operation();
+  if ( ( op == NotificationMessage::Add )
+    || ( op == NotificationMessage::Remove )
+    || ( op == NotificationMessage::Modify )
+    || ( op == NotificationMessage::Link )
+    || ( op == NotificationMessage::Unlink ) )
+  {
+    if ( refCountMap.contains( parentCollectionId ) )
+      return false;
+  }
+
+  if ( op == NotificationMessage::Move )
+  {
+    if ( refCountMap.contains( parentCollectionId ) )
+      if ( refCountMap.contains( msg.parentDestCollection() ) )
+        return true;
+    // We can't ignore the move. It must be transformed later into a removal or insertion.
+    return false;
+  }
+  return true;
+}
+
+bool MonitorPrivate::acceptNotification( const NotificationMessage & msg )
 {
   if ( isSessionIgnored( msg.sessionId() ) )
     return false;
+
+  if ( isLazilyIgnored( msg ) )
+    return false;
+
   switch ( msg.type() ) {
     case NotificationMessage::InvalidType:
       kWarning() << "Received invalid change notification!";
@@ -201,13 +239,41 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
   recentlyChangedCollections.clear();
 }
 
+void MonitorPrivate::appendAndCompress( const NotificationMessage &msg  )
+{
+  if ( msg.operation() != NotificationMessage::Move || msg.type() != NotificationMessage::Item )
+    return NotificationMessage::appendAndCompress( pendingNotifications, msg );
+
+  bool sourceWatched = refCountMap.contains( msg.parentCollection() );
+  bool destWatched = refCountMap.contains( msg.parentDestCollection() );
+
+  if ( sourceWatched && destWatched )
+    return NotificationMessage::appendAndCompress( pendingNotifications, msg );
+
+  if ( sourceWatched )
+  {
+    // Transform into a removal
+    NotificationMessage removalMessage = msg;
+    removalMessage.setOperation( NotificationMessage::Remove );
+    removalMessage.setParentDestCollection( -1 );
+    return NotificationMessage::appendAndCompress( pendingNotifications, removalMessage );
+  }
+
+  // Transform into an insertion
+  NotificationMessage insertionMessage = msg;
+  insertionMessage.setOperation( NotificationMessage::Add );
+  insertionMessage.setParentCollection( msg.parentDestCollection() );
+  insertionMessage.setParentDestCollection( -1 );
+  NotificationMessage::appendAndCompress( pendingNotifications, insertionMessage );
+}
+
 void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
 {
   foreach ( const NotificationMessage &msg, msgs ) {
     invalidateCaches( msg );
     if ( acceptNotification( msg ) ) {
       updatePendingStatistics( msg );
-      NotificationMessage::appendAndCompress( pendingNotifications, msg );
+      appendAndCompress( msg );
     }
   }
 
@@ -334,5 +400,24 @@ void MonitorPrivate::invalidateCache( const Collection &col )
 {
   collectionCache.update( col.id(), mCollectionFetchScope );
 }
+
+void MonitorPrivate::ref( Collection::Id id )
+{
+  if ( !refCountMap.contains( id ) )
+  {
+    refCountMap.insert( id, 0 );
+  }
+  ++refCountMap[ id ];
+}
+
+void MonitorPrivate::deref( Collection::Id id )
+{
+  Q_ASSERT( refCountMap.contains( id ) );
+  if ( --refCountMap[ id ] == 0 )
+  {
+    refCountMap.remove( id );
+  }
+}
+
 
 // @endcond
