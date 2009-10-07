@@ -79,6 +79,17 @@ int MonitorPrivate::pipelineSize() const
 
 bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
 {
+  NotificationMessage::Operation op = msg.operation();
+
+  if ( ( msg.type() == NotificationMessage::Item ) && ( ( op == NotificationMessage::Add && q_ptr->receivers( SIGNAL(itemAdded(const Akonadi::Item &,const Akonadi::Collection &)) ) == 0 )
+    || ( op == NotificationMessage::Remove && q_ptr->receivers( SIGNAL(itemRemoved(const Akonadi::Item &)) ) == 0 )
+    || ( op == NotificationMessage::Modify && q_ptr->receivers( SIGNAL(itemChanged(const Akonadi::Item &,const QSet<QByteArray> &)) ) == 0 )
+    || ( op == NotificationMessage::Link && q_ptr->receivers( SIGNAL(itemLinked(const Akonadi::Item &,const Akonadi::Collection &)) ) == 0 )
+    || ( op == NotificationMessage::Unlink && q_ptr->receivers( SIGNAL(itemUnlinked(const Akonadi::Item &,const Akonadi::Collection &)) ) == 0 ) ) )
+  {
+    return true;
+  }
+
   if ( !useRefCounting )
     return false;
 
@@ -88,7 +99,6 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
 
   Collection::Id parentCollectionId = msg.parentCollection();
 
-  NotificationMessage::Operation op = msg.operation();
   if ( ( op == NotificationMessage::Add )
     || ( op == NotificationMessage::Remove )
     || ( op == NotificationMessage::Modify )
@@ -98,6 +108,7 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
     if ( refCountMap.contains( parentCollectionId ) )
       return false;
   }
+
 
   if ( op == NotificationMessage::Move )
   {
