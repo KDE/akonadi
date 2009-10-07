@@ -416,13 +416,13 @@ bool DataStore::appendPimItem( QList<Part> & parts,
       (*it).setPimItemId( pimItem.id() );
       (*it).setDatasize( (*it).data().size() );
 
-      qDebug() << "Insert from DataStore::appendPimItem";
+//       qDebug() << "Insert from DataStore::appendPimItem";
       if( !PartHelper::insert(&(*it)) )
         return false;
     }
   }
 
-  qDebug() << "appendPimItem: " << pimItem;
+//   qDebug() << "appendPimItem: " << pimItem;
 
   mNotificationCollector->itemAdded( pimItem, collection, mimetype.name() );
   return true;

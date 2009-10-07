@@ -18,6 +18,8 @@
 */
 
 #include "itemretrievalmanager.h"
+#include "itemretrievalrequest.h"
+#include "itemretrievaljob.h"
 
 #include "resourceinterface.h"
 #include "akdebug.h"
@@ -29,12 +31,6 @@
 #include <QDBusConnectionInterface>
 
 using namespace Akonadi;
-
-ItemRetrievalManager::Request::Request() :
-  processed( false )
-{
-}
-
 
 ItemRetrievalManager* ItemRetrievalManager::sInstance = 0;
 
@@ -109,43 +105,35 @@ OrgFreedesktopAkonadiResourceInterface* ItemRetrievalManager::resourceInterface(
 void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& remoteId, const QByteArray& mimeType,
                                                const QString& resource, const QStringList& parts )
 {
-  Request *req = new Request();
+  ItemRetrievalRequest *req = new ItemRetrievalRequest();
   req->id = uid;
   req->remoteId = remoteId;
   req->mimeType = mimeType;
   req->resourceId = resource;
   req->parts = parts;
 
-  requestItemDelivery( req );
-}
-
-void ItemRetrievalManager::requestItemDelivery( Request *req )
-{
-  qDebug() << "requestItemDelivery() - current thread:" << QThread::currentThread()
-           << " retrieval thread:" << thread();
-  
   mLock->lockForWrite();
-  qDebug() << "posting retrieval request for item" << req->id;
-  mPendingRequests.append( req );
+  qDebug() << "posting retrieval request for item" << uid << " there are " << mPendingRequests.size() << " queues and " << mPendingRequests[ resource ].size() << " items in mine";
+  mPendingRequests[ resource ].append( req );
   mLock->unlock();
 
   emit requestAdded();
 
   mLock->lockForRead();
   forever {
-    qDebug() << "checking if request for item" << req->id << "has been processed...";
+    qDebug() << "checking if request for item" << uid << "has been processed...";
     if ( req->processed ) {
-      Q_ASSERT( !mPendingRequests.contains( req ) );
+      Q_ASSERT( !mPendingRequests[ req->resourceId ].contains( req ) );
       const QString errorMsg = req->errorMsg;
       mLock->unlock();
-      qDebug() << "request for item" << req->id << "processed, error:" << errorMsg;
+      qDebug() << "request for item" << uid << "processed, error:" << errorMsg;
       delete req;
       if ( errorMsg.isEmpty() )
         return;
       else
         throw ItemRetrieverException( errorMsg );
     } else {
-      qDebug() << "request for item" << req->id << "still pending - waiting";
+      qDebug() << "request for item" << uid << "still pending - waiting";
       mWaitCondition->wait( mLock );
       qDebug() << "continuing";
     }
@@ -157,54 +145,55 @@ void ItemRetrievalManager::requestItemDelivery( Request *req )
 // called within the retrieval thread
 void ItemRetrievalManager::processRequest()
 {
-  qDebug() << "processRequest() - current thread:" << QThread::currentThread() << " retrieval thread:" << thread();
-  mLock->lockForRead();
-  // TODO: check if there is another one for the same uid with more parts requested
-  Request *currentRequest = 0;
-  if ( !mPendingRequests.isEmpty() )
-    currentRequest = mPendingRequests.first();
+  mLock->lockForWrite();
+  // look for idle resources
+  for ( QHash< QString, QList< ItemRetrievalRequest* > >::iterator it = mPendingRequests.begin(); it != mPendingRequests.end(); ) {
+    if ( it.value().isEmpty() ) {
+      it = mPendingRequests.erase( it );
+      continue;
+    }
+    if ( !mCurrentJobs.contains( it.key() ) || mCurrentJobs.value( it.key() ) == 0 ) {
+      // TODO: check if there is another one for the same uid with more parts requested
+      ItemRetrievalRequest* req = it.value().takeFirst();
+      Q_ASSERT( req->resourceId == it.key() );
+      ItemRetrievalJob *job = new ItemRetrievalJob( req, this );
+      connect( job, SIGNAL(requestCompleted(ItemRetrievalRequest*,QString)), SLOT(retrievalJobFinished(ItemRetrievalRequest*,QString)) );
+      mCurrentJobs.insert( req->resourceId, job );
+      job->start( resourceInterface( req->resourceId ) );
+    }
+    ++it;
+  }
+
+  bool nothingGoingOn = mPendingRequests.isEmpty() || mCurrentJobs.isEmpty();
   mLock->unlock();
 
-  if ( !currentRequest ) {
-    akError() << "WTF: processRequest() called but no request queued!?";
+  if ( !nothingGoingOn ) { // someone asked as to process requests although everything is done already, he might still be waiting
     mWaitCondition->wakeAll();
     return;
   }
+}
 
-  qDebug() << "processing retrieval request for item" << currentRequest->id << " parts:" << currentRequest->parts;
-  // call the resource
-  QString errorMsg;
-  OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface( currentRequest->resourceId );
-  if ( interface ) {
-    QDBusReply<bool> reply = interface->requestItemDelivery( currentRequest->id,
-                                                             QString::fromUtf8( currentRequest->remoteId ),
-                                                             QString::fromUtf8( currentRequest->mimeType ),
-                                                             currentRequest->parts );
-    if ( !reply.isValid() )
-      errorMsg = QString::fromLatin1( "Unable to retrieve item from resource: %1" ).arg( reply.error().message() );
-    else if ( reply.value() == false )
-      errorMsg = QString::fromLatin1( "Resource was unable to deliver item" );
-  } else {
-    errorMsg = QString::fromLatin1( "Unable to contact resource" );
-  }
-
+void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest* request, const QString& errorMsg)
+{
   mLock->lockForWrite();
-  currentRequest->errorMsg = errorMsg;
-  currentRequest->processed = true;
-  mPendingRequests.removeAll( currentRequest );
+  request->errorMsg = errorMsg;
+  request->processed = true;
+  Q_ASSERT( mCurrentJobs.contains( request->resourceId ) );
+  mCurrentJobs.remove( request->resourceId );
   // TODO check if (*it)->parts is a subset of currentRequest->parts
-  for ( QList<Request*>::Iterator it = mPendingRequests.begin(); it != mPendingRequests.end(); ) {
-    if ( (*it)->id == currentRequest->id ) {
-      qDebug() << "someone else requested item" << currentRequest->id << "as well, marking as processed";
+  for ( QList<ItemRetrievalRequest*>::Iterator it = mPendingRequests[ request->resourceId ].begin(); it != mPendingRequests[ request->resourceId ].end(); ) {
+    if ( (*it)->id == request->id ) {
+      qDebug() << "someone else requested item" << request->id << "as well, marking as processed";
       (*it)->errorMsg = errorMsg;
       (*it)->processed = true;
-      it = mPendingRequests.erase( it );
+      it = mPendingRequests[ request->resourceId ].erase( it );
     } else {
       ++it;
     }
   }
   mWaitCondition->wakeAll();
   mLock->unlock();
+  emit requestAdded(); // trigger processRequest() again, in case there is more in the queues
 }
 
 void ItemRetrievalManager::requestCollectionSync(const Collection& collection)
@@ -218,5 +207,6 @@ void ItemRetrievalManager::triggerCollectionSync(const QString& resource, qint64
   if ( interface )
     interface->synchronizeCollection( colId );
 }
+
 
 #include "itemretrievalmanager.moc"

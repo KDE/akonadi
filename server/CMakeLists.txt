@@ -109,6 +109,7 @@ set(libakonadiprivate_SRCS
   src/storage/itemretriever.cpp
   src/storage/itemretrievalmanager.cpp
   src/storage/itemretrievalthread.cpp
+  src/storage/itemretrievaljob.cpp
   src/storage/notificationcollector.cpp
   src/storage/query.cpp
   src/storage/querybuilder.cpp

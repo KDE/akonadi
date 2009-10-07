@@ -180,7 +180,7 @@ bool Store::parseStream()
       command.chop( 7 );
       silent = true;
     }
-    qDebug() << "STORE: handling command: " << command;
+//     qDebug() << "STORE: handling command: " << command;
 
 
     // handle commands that can be applied to more than one item
@@ -283,7 +283,7 @@ bool Store::parseStream()
             if ( !PartHelper::update( &part, value, dataSize ) )
               return failureResponse( "Unable to update item part" );
           } else {
-            qDebug() << "insert from Store::handleLine";
+//             qDebug() << "insert from Store::handleLine";
             part.setData( value );
             part.setDatasize( value.size() ); // ### why not datasize?
             if ( !PartHelper::insert( &part ) )
@@ -323,7 +323,7 @@ bool Store::parseStream()
           if ( !PartHelper::update( &part, value, value.size() ) )
             return failureResponse( "Unable to update item part" );
         } else {
-          qDebug() << "insert from Store::handleLine: " << value.left(100);
+//           qDebug() << "insert from Store::handleLine: " << value.left(100);
           part.setData( value );
           part.setDatasize( value.size() );
           if ( !PartHelper::insert( &part ) )
