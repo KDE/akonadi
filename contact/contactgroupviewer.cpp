@@ -99,7 +99,7 @@ void ContactGroupViewer::itemChanged( const Item &item )
   if ( !item.hasPayload<KABC::ContactGroup>() )
     return;
 
-  static QPixmap defaultPixmap = KIcon( QLatin1String( "x-mail-distribution-list" ) ).pixmap( QSize( 100, 140 ) );
+  static QPixmap groupPixmap = KIcon( QLatin1String( "x-mail-distribution-list" ) ).pixmap( QSize( 100, 140 ) );
 
   const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
   d->mGroupName = group.name();
@@ -108,7 +108,7 @@ void ContactGroupViewer::itemChanged( const Item &item )
 
   d->mBrowser->document()->addResource( QTextDocument::ImageResource,
                                         QUrl( QLatin1String( "group_photo" ) ),
-                                        defaultPixmap );
+                                        groupPixmap );
 
   if ( d->mExpandJob ) {
     disconnect( d->mExpandJob, SIGNAL( result( KJob* ) ), this, SLOT( _k_expandResult( KJob* ) ) );
@@ -129,26 +129,28 @@ static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::
 {
   // Assemble all parts
   QString strGroup = QString::fromLatin1(
-    "<div align=\"center\">"
-    "<table cellpadding=\"1\" cellspacing=\"0\">"
+    "<table cellpadding=\"1\" cellspacing=\"0\" width=\"100%\">"
     "<tr>"
     "<td align=\"right\" valign=\"top\" width=\"30%\">"
     "<img src=\"%1\" width=\"75\" height=\"105\" vspace=\"1\">" // image
     "</td>"
     "<td align=\"left\" width=\"70%\"><font size=\"+2\"><b>%2</b></font></td>" // name
-    "</tr>" )
+    "</tr>"
+    "</table>" )
       .arg( QLatin1String( "group_photo" ) )
       .arg( groupName );
 
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    const QString entry = QString::fromLatin1( "&bull;%1 &lt;%2&gt;" )
-                                              .arg( contact.formattedName() )
-                                              .arg( contact.preferredEmail() );
+  strGroup += QLatin1String( "<table width=\"100%\">" );
 
-    strGroup.append( QString::fromLatin1( "<tr><td align=\"left\" colspan=\"2\">%1</td></tr>" ).arg( entry ) );
+
+  foreach ( const KABC::Addressee &contact, contacts ) {
+    strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
+                                          "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font size=\"-1\">&lt;%2&gt;</font></td></td></tr>" )
+                   .arg( contact.realName() )
+                   .arg( contact.preferredEmail() ) );
   }
 
-  strGroup.append( QString::fromLatin1( "</table></div>\n" ) );
+  strGroup.append( QString::fromLatin1( "</table>\n" ) );
 
   const QString document = QString::fromLatin1(
     "<html>"
