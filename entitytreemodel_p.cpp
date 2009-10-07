@@ -157,16 +157,26 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       continue;
 
     if ( m_collections.contains( col.id() ) )
+    {
+      // This is probably the result of a parent of a previous collection already being in the model.
+      // Replace the dummy collection with the real one and move on.
+      m_collections[ col.id() ] = col;
+      QModelIndex colIndex = q->indexForCollection( col );
+      emit q->dataChanged(colIndex, colIndex);
       continue;
-
+    }
     Collection parent = col;
     Collection tmp;
 
-    while ( !m_collections.contains( parent.parentCollection().isValid() ? parent.parentCollection().id() : 0 ) )
+    while ( !m_collections.contains( parent.parentCollection().id() ) )
     {
+      collectionsToInsert[ parent.parentCollection().id() ].append( parent.parentCollection() );
+      collectionsToInsert[ parent.parentCollection().id() ].append( collectionsToInsert.take( parent.id() ) );
+
       tmp = parent.parentCollection();
       parent = tmp;
     }
+
     collectionsToInsert[ parent.id() ].append( col );
     if ( !parents.contains( parent.id() ) )
       parents.insert( parent.id(), parent.parentCollection() );
@@ -182,9 +192,13 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
 
     Q_ASSERT( !m_collections.contains( topCollectionId ) );
 
+    Q_ASSERT( parents.contains( topCollectionId ) );
     const QModelIndex parentIndex = q->indexForCollection( parents.value( topCollectionId ) );
+
     q->beginInsertRows( parentIndex, row, row );
     Q_ASSERT( !colIt.value().isEmpty() );
+    Q_ASSERT( m_collections.contains( parents.value( topCollectionId ).id() ) );
+
     foreach( const Collection &col, colIt.value() )
     {
       m_collections.insert( col.id(), col );
