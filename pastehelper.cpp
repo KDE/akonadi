@@ -28,6 +28,7 @@
 #include "itemmovejob.h"
 #include "linkjob.h"
 #include "transactionsequence.h"
+#include "session.h"
 
 #include <KDebug>
 #include <KUrl>
@@ -83,7 +84,7 @@ bool PasteHelper::canPaste(const QMimeData * mimeData, const Collection & collec
   return false;
 }
 
-KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collection, bool copy)
+KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collection, bool copy, Session *session )
 {
   if ( !canPaste( mimeData, collection ) )
     return 0;
@@ -111,10 +112,10 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
     return 0;
 
   // data contains an url list
-  return pasteUriList( mimeData, collection, copy ? Qt::CopyAction : Qt::MoveAction );
+  return pasteUriList( mimeData, collection, copy ? Qt::CopyAction : Qt::MoveAction, session );
 }
 
-KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &destination, Qt::DropAction action )
+KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &destination, Qt::DropAction action, Session *session )
 {
   if ( !KUrl::List::canDecode( mimeData ) )
     return 0;
@@ -132,7 +133,7 @@ KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &de
     // TODO: handle non Akonadi URLs?
   }
 
-  TransactionSequence *transaction = new TransactionSequence();
+  TransactionSequence *transaction = new TransactionSequence( session );
   switch ( action ) {
     case Qt::CopyAction:
       if ( !items.isEmpty() )

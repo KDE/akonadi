@@ -146,7 +146,8 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
 
   QListIterator<Akonadi::Collection> it(collections);
 
-  QHash<Collection::Id, Collection::List> collectionsToInsert;
+  QHash<Collection::Id, Collection> collectionsToInsert;
+  QHash<Collection::Id, QList<Collection::Id> > subTreesToInsert;
   QHash<Collection::Id, Collection> parents;
 
   while (it.hasNext())
@@ -157,24 +158,46 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       continue;
 
     if ( m_collections.contains( col.id() ) )
+    {
+      // This is probably the result of a parent of a previous collection already being in the model.
+      // Replace the dummy collection with the real one and move on.
+      m_collections[ col.id() ] = col;
+      QModelIndex colIndex = q->indexForCollection( col );
+      emit q->dataChanged(colIndex, colIndex);
       continue;
-
+    }
     Collection parent = col;
     Collection tmp;
 
-    while ( !m_collections.contains( parent.parentCollection().isValid() ? parent.parentCollection().id() : 0 ) )
+    while ( !m_collections.contains( parent.parentCollection().id() ) )
     {
+      if ( !subTreesToInsert[ parent.parentCollection().id() ].contains( parent.parentCollection().id() ) )
+      {
+        subTreesToInsert[ parent.parentCollection().id() ].append( parent.parentCollection().id() );
+        collectionsToInsert.insert( parent.parentCollection().id(), parent.parentCollection() );
+      }
+
+      foreach( Collection::Id colId, subTreesToInsert.take( parent.id() ) )
+      {
+        if ( !subTreesToInsert[ parent.parentCollection().id() ].contains( colId ) )
+          subTreesToInsert[ parent.parentCollection().id() ].append( colId );
+      }
+
       tmp = parent.parentCollection();
       parent = tmp;
     }
-    collectionsToInsert[ parent.id() ].append( col );
+
+    if ( !subTreesToInsert[ parent.id() ].contains( col.id() ) )
+      subTreesToInsert[ parent.id() ].append( col.id() );
+
+    collectionsToInsert.insert( col.id(), col );
     if ( !parents.contains( parent.id() ) )
       parents.insert( parent.id(), parent.parentCollection() );
   }
 
   const int row = 0;
 
-  QHashIterator<Collection::Id, Collection::List> colIt( collectionsToInsert );
+  QHashIterator<Collection::Id, QList<Collection::Id> > colIt( subTreesToInsert );
   while ( colIt.hasNext() )
   {
     colIt.next();
@@ -182,14 +205,20 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
 
     Q_ASSERT( !m_collections.contains( topCollectionId ) );
 
+    Q_ASSERT( parents.contains( topCollectionId ) );
     const QModelIndex parentIndex = q->indexForCollection( parents.value( topCollectionId ) );
+
     q->beginInsertRows( parentIndex, row, row );
     Q_ASSERT( !colIt.value().isEmpty() );
-    foreach( const Collection &col, colIt.value() )
+    Q_ASSERT( m_collections.contains( parents.value( topCollectionId ).id() ) );
+
+    foreach( Collection::Id colId, colIt.value() )
     {
-      m_collections.insert( col.id(), col );
+      Collection col = collectionsToInsert.take( colId );
+      Q_ASSERT( col.isValid() );
+      m_collections.insert( colId, col );
       Node *node = new Node;
-      node->id = col.id();
+      node->id = colId;
       node->parent = col.parentCollection().id();
       node->type = Node::Collection;
       m_childEntities[ col.parentCollection().id() ].prepend( node );
@@ -197,8 +226,8 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     q->endInsertRows();
 
     if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
-      foreach( const Collection &col, colIt.value() )
-        fetchItems( col );
+      foreach( const Collection::Id &colId, colIt.value() )
+        fetchItems( m_collections.value( colId ) );
   }
 }
 
