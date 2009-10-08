@@ -329,7 +329,7 @@ bool Fetch::parseStream()
       } else if ( data.isEmpty() ) {
         part += " \"\"";
       } else {
-        part += " {" + QByteArray::number( data.length() ) + "}\n";
+        part += " {" + QByteArray::number( data.length() ) + "}\r\n";
         part += data;
       }
 
