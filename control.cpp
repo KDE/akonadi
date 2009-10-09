@@ -91,9 +91,9 @@ class Control::Private
 
     void setupProgressIndicator( const QString &msg, QWidget *parent = 0 )
     {
-      if ( mProgressIndicator )
-        return;
-      mProgressIndicator = new ControlProgressIndicator( parent );
+      if ( !mProgressIndicator )
+        mProgressIndicator = new ControlProgressIndicator( parent );
+
       mProgressIndicator->setMessage( msg );
     }
 
