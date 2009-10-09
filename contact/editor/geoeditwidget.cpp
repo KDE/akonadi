@@ -204,7 +204,7 @@ GeoDialog::GeoDialog( const KABC::Geo &coordinates, QWidget *parent )
   : KDialog( parent ),
     mCoordinates( coordinates )
 {
-  setCaption( i18nc( "@title:window", "Coordinates Selection" ) );
+  setCaption( i18nc( "@title:window", "Coordinate Selection" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
   showButtonSeparator( true );
