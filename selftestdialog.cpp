@@ -430,10 +430,10 @@ void SelfTestDialog::testSearchStatus()
       const QString name = reply.value();
 
       if ( name == QLatin1String( "sesame2" ) ) {
-        report( Success, ki18n( "Nepomuk search service uses the Sesame2 backend. " ),
+        report( Success, ki18n( "Nepomuk search service uses Sesame2 backend. " ),
                          ki18n( "The Nepomuk search service uses the recommended Sesame2 backend." ) );
       } else {
-        report( Error, ki18n( "Nepomuk search service uses an inappropriate backend." ),
+        report( Error, ki18n( "Nepomuk search service uses inappropriate backend." ),
                        ki18n( "The Nepomuk search service uses the '%1' backend, which is not "
                               "recommended for use with Akonadi." ).subs( name ) );
       }
