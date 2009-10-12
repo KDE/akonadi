@@ -75,9 +75,9 @@ static const struct {
   { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), false },
   { "akonadi_collection_rename_favorite", I18N_NOOP("Rename Favorite..."), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
   { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
-  { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "edit-move", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
+  { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
   { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true },
-  { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), "edit-move", 0, SLOT(slotMoveItemTo(QAction*)), true }
+  { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), true }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -537,7 +537,11 @@ class StandardActionManager::Private
 
       QModelIndexList list;
       QSet<QString> mimetypes;
-      if (type == CopyItemToMenu)
+
+      const bool itemAction = ( type == CopyItemToMenu || type == MoveItemToMenu );
+      const bool collectionAction = ( type == CopyCollectionToMenu || type == MoveCollectionToMenu );
+
+      if ( itemAction )
       {
         list = itemSelectionModel->selectedRows();
         foreach(const QModelIndex idx, list)
@@ -546,7 +550,7 @@ class StandardActionManager::Private
         }
       }
 
-      if (type == CopyCollectionToMenu)
+      if ( collectionAction )
       {
         list = collectionSelectionModel->selectedRows();
         foreach(const QModelIndex idx, list)
@@ -570,12 +574,13 @@ class StandardActionManager::Private
         label.replace( QString::fromUtf8( "&" ), QString::fromUtf8( "&&" ) );
         QIcon icon = model->data( index, Qt::DecorationRole ).value<QIcon>();
 
+
         bool readOnly = CollectionUtils::isStructural( collection )
-                     || ( type == CopyItemToMenu && !( collection.rights() & Collection::CanCreateItem ) )
-                     || ( type == CopyCollectionToMenu && !( collection.rights() & Collection::CanCreateCollection ) )
-                     || ( type == CopyItemToMenu && collection.contentMimeTypes().toSet().intersect( mimetypes ).isEmpty() )
-                     || ( type == CopyCollectionToMenu && QSet<QString>( mimetypes ).subtract( AgentManager::self()->type( collection.resource() ).mimeTypes().toSet() ).isEmpty() )
-                     || ( type == CopyCollectionToMenu && !collection.contentMimeTypes().contains( Collection::mimeType() ) );
+              || ( itemAction && ( !( collection.rights() & Collection::CanCreateItem )
+                    || collection.contentMimeTypes().toSet().intersect( mimetypes ).isEmpty() ) )
+              || ( collectionAction && ( !( collection.rights() & Collection::CanCreateCollection )
+                    || QSet<QString>( mimetypes ).subtract( AgentManager::self()->type( collection.resource() ).mimeTypes().toSet() ).isEmpty()
+                    || !collection.contentMimeTypes().contains( Collection::mimeType() ) ) );
 
         if ( model->rowCount( index ) > 0 ) {
           // new level
