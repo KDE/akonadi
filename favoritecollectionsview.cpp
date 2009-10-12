@@ -74,6 +74,7 @@ void FavoriteCollectionsView::Private::init()
   mParent->setDropIndicatorShown( true );
   mParent->setDragDropMode( DragDrop );
   mParent->setDragEnabled( true );
+  mParent->setRootIsDecorated(false);
 
   mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
                     mParent, SLOT( itemClicked( const QModelIndex& ) ) );
@@ -117,7 +118,7 @@ void FavoriteCollectionsView::Private::itemCurrentChanged( const QModelIndex &in
 }
 
 FavoriteCollectionsView::FavoriteCollectionsView( QWidget * parent )
-  : QListView( parent ),
+  : QTreeView( parent ),
     d( new Private( this ) )
 {
   setSelectionMode( QAbstractItemView::SingleSelection );
@@ -125,7 +126,7 @@ FavoriteCollectionsView::FavoriteCollectionsView( QWidget * parent )
 }
 
 FavoriteCollectionsView::FavoriteCollectionsView( KXMLGUIClient *xmlGuiClient, QWidget * parent )
-  : QListView( parent ),
+  : QTreeView( parent ),
     d( new Private( this ) )
 {
   d->mXmlGuiClient = xmlGuiClient;
@@ -145,7 +146,7 @@ void FavoriteCollectionsView::setModel( QAbstractItemModel * model )
            this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
   }
 
-  QListView::setModel( model );
+  QTreeView::setModel( model );
 
   connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
            SLOT( itemCurrentChanged( const QModelIndex& ) ) );
@@ -155,7 +156,7 @@ void FavoriteCollectionsView::dragMoveEvent( QDragMoveEvent * event )
 {
   if ( d->mDragDropManager->dropAllowed( event ) ) {
     // All urls are supported. process the event.
-    QListView::dragMoveEvent( event );
+    QTreeView::dragMoveEvent( event );
     return;
   }
 
@@ -165,7 +166,7 @@ void FavoriteCollectionsView::dragMoveEvent( QDragMoveEvent * event )
 void FavoriteCollectionsView::dropEvent( QDropEvent * event )
 {
   if ( d->mDragDropManager->processDropEvent( event ) ) {
-    QListView::dropEvent( event );
+    QTreeView::dropEvent( event );
   }
 }
 

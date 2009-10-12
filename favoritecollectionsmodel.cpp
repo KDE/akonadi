@@ -25,7 +25,7 @@
 #include <kconfiggroup.h>
 #include <kglobal.h>
 #include <ksharedconfig.h>
-
+#include <KLocale>
 #include "entitytreemodel.h"
 
 using namespace Akonadi;
@@ -198,7 +198,7 @@ QVariant FavoriteCollectionsModel::headerData( int section, Qt::Orientation orie
   if ( section == 0
     && orientation == Qt::Horizontal
     && role == Qt::DisplayRole ) {
-    return QLatin1String("Favorite Folders"); //i18n ???
+    return i18n("Favorite Folders"); 
   } else {
     return KSelectionProxyModel::headerData( section, orientation, role );
   }

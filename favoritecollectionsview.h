@@ -24,7 +24,7 @@
 
 #include "akonadi_export.h"
 
-#include <QtGui/QListView>
+#include <QtGui/QTreeView>
 
 class KXMLGUIClient;
 class QDragMoveEvent;
@@ -66,7 +66,7 @@ class Item;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT FavoriteCollectionsView : public QListView
+class AKONADI_EXPORT FavoriteCollectionsView : public QTreeView
 {
   Q_OBJECT
 
@@ -141,7 +141,7 @@ class AKONADI_EXPORT FavoriteCollectionsView : public QListView
     void currentChanged( const Akonadi::Item &item );
 
   protected:
-    using QListView::currentChanged;
+    using QTreeView::currentChanged;
     virtual void dragMoveEvent( QDragMoveEvent *event );
     virtual void dropEvent( QDropEvent *event );
     virtual void contextMenuEvent( QContextMenuEvent *event );
