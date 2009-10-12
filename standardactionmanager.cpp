@@ -381,11 +381,10 @@ class StandardActionManager::Private
 
       const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
       Q_ASSERT( index.isValid() );
-      const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( col.isValid() );
 
-      KJob *job = PasteHelper::paste( QApplication::clipboard()->mimeData(), col );
-      q->connect( job, SIGNAL(result(KJob*)), q, SLOT(pasteResult(KJob*)) );
+      // TODO: Copy or move? We can't seem to cut yet
+      QAbstractItemModel *model = const_cast<QAbstractItemModel *>( collectionSelectionModel->model() );
+      model->dropMimeData( QApplication::clipboard()->mimeData(), Qt::CopyAction, -1, -1, index );
     }
 
     void slotDeleteItems()
@@ -478,24 +477,19 @@ class StandardActionManager::Private
     void copyTo( QItemSelectionModel *selectionModel, QAction *action )
     {
       Q_ASSERT( selectionModel );
-      Q_UNUSED( action );
+      Q_ASSERT( action );
 
       if ( selectionModel->selectedRows().count() <= 0 )
         return;
 
       QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
 
-      Q_ASSERT( collectionSelectionModel );
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
-        return;
+      QModelIndex index = action->data().value<QModelIndex>();
 
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
       Q_ASSERT( index.isValid() );
-      const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( col.isValid() );
 
-      KJob *job = PasteHelper::paste( mimeData, col );
-      q->connect( job, SIGNAL(result(KJob*)), q, SLOT(copyToResult(KJob*)) );
+      QAbstractItemModel *model = const_cast<QAbstractItemModel *>( index->model() );
+      model->dropMimeData( mimeData, Qt::CopyAction, -1, -1, index );
     }
 
     void collectionCreationResult( KJob *job )
@@ -522,18 +516,33 @@ class StandardActionManager::Private
       }
     }
 
-    void copyToResult( KJob *job )
-    {
-      if ( job->error() ) {
-        KMessageBox::error( parentWidget, i18n("Could not copy data: %1", job->errorString()),
-                            i18n("Copy failed") );
-      }
-    }
-
     void fillFoldersMenu( StandardActionManager::Type type, QMenu *menu,
                           const QAbstractItemModel *model, QModelIndex parentIndex )
     {
       int rowCount = model->rowCount( parentIndex );
+
+      QModelIndexList list;
+      QSet<QString> mimetypes;
+      if (type == CopyItemToMenu)
+      {
+        list = itemSelectionModel->selectedRows();
+        foreach(const QModelIndex idx, list)
+        {
+          mimetypes << idx.data( EntityTreeModel::MimeTypeRole ).toString();
+        }
+      }
+
+      if (type == CopyCollectionToMenu)
+      {
+        list = collectionSelectionModel->selectedRows();
+        foreach(const QModelIndex idx, list)
+        {
+          Collection collection = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+
+          // The mimetypes that the selected collection can possibly contain
+          mimetypes = AgentManager::self()->type( collection.resource() ).mimeTypes().toSet();
+        }
+      }
 
       for ( int row = 0; row < rowCount; row++ ) {
         QModelIndex index = model->index( row, 0, parentIndex );
@@ -549,7 +558,10 @@ class StandardActionManager::Private
 
         bool readOnly = CollectionUtils::isStructural( collection )
                      || ( type == CopyItemToMenu && !( collection.rights() & Collection::CanCreateItem ) )
-                     || ( type == CopyCollectionToMenu && !( collection.rights() & Collection::CanCreateCollection ) );
+                     || ( type == CopyCollectionToMenu && !( collection.rights() & Collection::CanCreateCollection ) )
+                     || ( type == CopyItemToMenu && collection.contentMimeTypes().toSet().intersect( mimetypes ).isEmpty() )
+                     || ( type == CopyCollectionToMenu && QSet<QString>( mimetypes ).subtract( AgentManager::self()->type( collection.resource() ).mimeTypes().toSet() ).isEmpty() )
+                     || ( type == CopyCollectionToMenu && !collection.contentMimeTypes().contains( Collection::mimeType() ) );
 
         if ( model->rowCount( index ) > 0 ) {
           // new level
@@ -571,7 +583,6 @@ class StandardActionManager::Private
           menu->addMenu( popup );
 
         } else {
-
           // insert an item
           QAction* act = menu->addAction( icon, label );
           act->setData( QVariant::fromValue<QModelIndex>( index ) );
@@ -613,7 +624,6 @@ class StandardActionManager::Private
     FavoriteCollectionsModel *favoritesModel;
     QItemSelectionModel *favoriteSelectionModel;
     QVector<KAction*> actions;
-    AgentManager *agentManager;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
 };
 
