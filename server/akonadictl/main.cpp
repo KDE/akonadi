@@ -83,6 +83,8 @@ static bool statusServer()
         backend = QLatin1String( "Redland" );
       else if ( name == QLatin1String( "sesame2" ) )
         backend = QLatin1String( "Sesame2" );
+      else if ( name == QLatin1String( "virtuosobackend" ) )
+        backend = QLatin1String( "Virtuoso" );
     }
 
     qDebug( "Akonadi Server Search Support: available (backend: %s)", qPrintable( backend ) );
