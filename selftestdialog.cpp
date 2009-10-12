@@ -433,9 +433,9 @@ void SelfTestDialog::testSearchStatus()
         report( Success, ki18n( "Nepomuk search service uses Sesame2 backend. " ),
                          ki18n( "The Nepomuk search service uses the recommended Sesame2 backend." ) );
       } else {
-        report( Error, ki18n( "Nepomuk search service uses insufficient backend." ),
-                       ki18n( "The Nepomuk search service uses the '%1' backend that is not "
-                              "recommended to use with Akonadi." ).subs( name ) );
+        report( Error, ki18n( "Nepomuk search service uses inappropriate backend." ),
+                       ki18n( "The Nepomuk search service uses the '%1' backend, which is not "
+                              "recommended for use with Akonadi." ).subs( name ) );
       }
     }
   }
