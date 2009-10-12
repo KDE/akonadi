@@ -75,7 +75,9 @@ static const struct {
   { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), false },
   { "akonadi_collection_rename_favorite", I18N_NOOP("Rename Favorite..."), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
   { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
-  { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true }
+  { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "edit-move", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
+  { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true },
+  { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), "edit-move", 0, SLOT(slotMoveItemTo(QAction*)), true }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -181,9 +183,11 @@ class StandardActionManager::Private
         enableAction( RenameFavoriteCollection, (favoritesModel!=0) && (favoritesModel->collections().contains(col))
                                              && singleColSelected && (col != Collection::root()) );
         enableAction( CopyCollectionToMenu, multiColSelected && (col != Collection::root()) );
+        enableAction( MoveCollectionToMenu, multiColSelected && (col != Collection::root()) && col.rights() & Collection::CanDeleteCollection );
       } else {
         enableAction( CreateCollection, false );
         enableAction( DeleteCollections, false );
+
         enableAction( SynchronizeCollections, false );
         enableAction( Paste, false );
         enableAction( AddToFavoriteCollections, false );
@@ -213,7 +217,7 @@ class StandardActionManager::Private
       enableAction( DeleteItems, multiItemSelected && canDeleteItem );
 
       enableAction( CopyItemToMenu, multiItemSelected );
-
+      enableAction( MoveItemToMenu, multiItemSelected && canDeleteItem );
       updatePluralLabel( CopyCollections, colCount );
       updatePluralLabel( CopyItems, itemCount );
       updatePluralLabel( DeleteItems, itemCount );
@@ -466,15 +470,25 @@ class StandardActionManager::Private
 
     void slotCopyCollectionTo( QAction *action )
     {
-      copyTo( collectionSelectionModel, action );
+      pasteTo( collectionSelectionModel, action, Qt::CopyAction );
     }
 
     void slotCopyItemTo( QAction *action )
     {
-      copyTo( itemSelectionModel, action );
+      pasteTo( itemSelectionModel, action, Qt::CopyAction );
     }
 
-    void copyTo( QItemSelectionModel *selectionModel, QAction *action )
+    void slotMoveCollectionTo( QAction *action )
+    {
+      pasteTo( collectionSelectionModel, action, Qt::MoveAction );
+    }
+
+    void slotMoveItemTo( QAction *action )
+    {
+      pasteTo( itemSelectionModel, action, Qt::MoveAction );
+    }
+
+    void pasteTo( QItemSelectionModel *selectionModel, QAction *action, Qt::DropAction dropAction )
     {
       Q_ASSERT( selectionModel );
       Q_ASSERT( action );
@@ -488,8 +502,8 @@ class StandardActionManager::Private
 
       Q_ASSERT( index.isValid() );
 
-      QAbstractItemModel *model = const_cast<QAbstractItemModel *>( index->model() );
-      model->dropMimeData( mimeData, Qt::CopyAction, -1, -1, index );
+      QAbstractItemModel *model = const_cast<QAbstractItemModel *>( index.model() );
+      model->dropMimeData( mimeData, dropAction, -1, -1, index );
     }
 
     void collectionCreationResult( KJob *job )

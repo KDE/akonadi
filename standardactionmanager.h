@@ -109,7 +109,9 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model
       RenameFavoriteCollection,  ///< Rename the collection of the favorite collections model
       CopyCollectionToMenu,      ///< Menu allowing to quickly copy a collection into another collection
+      MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection
       CopyItemToMenu,            ///< Menu allowing to quickly copy an item into a collection
+      MoveItemToMenu,            ///< Menu allowing to move item into a collection
       LastType                   ///< Marks last action
     };
 
@@ -220,7 +222,9 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotRemoveFromFavorites() )
     Q_PRIVATE_SLOT( d, void slotRenameFavorite() )
     Q_PRIVATE_SLOT( d, void slotCopyCollectionTo(QAction*) )
+    Q_PRIVATE_SLOT( d, void slotMoveCollectionTo(QAction*) )
     Q_PRIVATE_SLOT( d, void slotCopyItemTo(QAction*) )
+    Q_PRIVATE_SLOT( d, void slotMoveItemTo(QAction*) )
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void collectionDeletionResult(KJob*) )
