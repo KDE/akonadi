@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) \
   KDEMainFlags mainFlags = flags;                         \
   KComponentData cData(&aboutData); \
   QApplication app( argc, argv, (mainFlags & GUI) != 0 ); \
-  app.setApplicationName( "qttest" ); \
+  app.setApplicationName( QLatin1String("qttest") ); \
   qRegisterMetaType<KUrl>(); /*as done by kapplication*/ \
   qRegisterMetaType<KUrl::List>(); \
   TestObject tc; \
