@@ -171,6 +171,7 @@ class AKONADI_EXPORT AgentInstance
 
     /**
      * Tell the agent to abort its current operation.
+     * @since 4.4
      */
     void abort() const;
 
