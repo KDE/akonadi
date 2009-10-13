@@ -369,6 +369,7 @@ class StandardActionManager::Private
       Q_ASSERT( col.isValid() );
 
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( col, parentWidget );
+      dlg->setCaption(i18n("Properties of Folder %1",col.name()));
       dlg->show();
     }
 
