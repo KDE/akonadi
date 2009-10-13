@@ -63,7 +63,7 @@ namespace PasteHelper
     @param action The drop action (copy/move/link).
     @returns The job performing the paste, 0 if there is nothing to paste.
   */
-  KJob* pasteUriList( const QMimeData* mimeData, const Collection &collection, Qt::DropAction action, Session *session );
+  KJob* pasteUriList( const QMimeData* mimeData, const Collection &collection, Qt::DropAction action, Session *session = 0 );
 }
 
 

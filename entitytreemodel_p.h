@@ -235,6 +235,11 @@ public:
   */
   QList<Node*>::iterator skipCollections( QList<Node*>::iterator it, QList<Node*>::iterator end, int *pos );
 
+  /**
+    Emits the data changed signal for the entire row as in the subclass, instead of just for the first column.
+  */
+  void dataChanged( const QModelIndex &top, const QModelIndex &bottom );
+
 };
 
 }

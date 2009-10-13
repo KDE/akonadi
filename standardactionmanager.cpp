@@ -75,7 +75,9 @@ static const struct {
   { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), false },
   { "akonadi_collection_rename_favorite", I18N_NOOP("Rename Favorite..."), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
   { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
-  { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true }
+  { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
+  { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true },
+  { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), true }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -181,9 +183,11 @@ class StandardActionManager::Private
         enableAction( RenameFavoriteCollection, (favoritesModel!=0) && (favoritesModel->collections().contains(col))
                                              && singleColSelected && (col != Collection::root()) );
         enableAction( CopyCollectionToMenu, multiColSelected && (col != Collection::root()) );
+        enableAction( MoveCollectionToMenu, multiColSelected && (col != Collection::root()) && col.rights() & Collection::CanDeleteCollection );
       } else {
         enableAction( CreateCollection, false );
         enableAction( DeleteCollections, false );
+
         enableAction( SynchronizeCollections, false );
         enableAction( Paste, false );
         enableAction( AddToFavoriteCollections, false );
@@ -213,7 +217,7 @@ class StandardActionManager::Private
       enableAction( DeleteItems, multiItemSelected && canDeleteItem );
 
       enableAction( CopyItemToMenu, multiItemSelected );
-
+      enableAction( MoveItemToMenu, multiItemSelected && canDeleteItem );
       updatePluralLabel( CopyCollections, colCount );
       updatePluralLabel( CopyItems, itemCount );
       updatePluralLabel( DeleteItems, itemCount );
@@ -365,6 +369,7 @@ class StandardActionManager::Private
       Q_ASSERT( col.isValid() );
 
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( col, parentWidget );
+      dlg->setCaption(i18n("Properties of Folder %1",col.name()));
       dlg->show();
     }
 
@@ -381,11 +386,10 @@ class StandardActionManager::Private
 
       const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
       Q_ASSERT( index.isValid() );
-      const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( col.isValid() );
 
-      KJob *job = PasteHelper::paste( QApplication::clipboard()->mimeData(), col );
-      q->connect( job, SIGNAL(result(KJob*)), q, SLOT(pasteResult(KJob*)) );
+      // TODO: Copy or move? We can't seem to cut yet
+      QAbstractItemModel *model = const_cast<QAbstractItemModel *>( collectionSelectionModel->model() );
+      model->dropMimeData( QApplication::clipboard()->mimeData(), Qt::CopyAction, -1, -1, index );
     }
 
     void slotDeleteItems()
@@ -468,35 +472,40 @@ class StandardActionManager::Private
 
     void slotCopyCollectionTo( QAction *action )
     {
-      copyTo( collectionSelectionModel, action );
+      pasteTo( collectionSelectionModel, action, Qt::CopyAction );
     }
 
     void slotCopyItemTo( QAction *action )
     {
-      copyTo( itemSelectionModel, action );
+      pasteTo( itemSelectionModel, action, Qt::CopyAction );
     }
 
-    void copyTo( QItemSelectionModel *selectionModel, QAction *action )
+    void slotMoveCollectionTo( QAction *action )
+    {
+      pasteTo( collectionSelectionModel, action, Qt::MoveAction );
+    }
+
+    void slotMoveItemTo( QAction *action )
+    {
+      pasteTo( itemSelectionModel, action, Qt::MoveAction );
+    }
+
+    void pasteTo( QItemSelectionModel *selectionModel, QAction *action, Qt::DropAction dropAction )
     {
       Q_ASSERT( selectionModel );
-      Q_UNUSED( action );
+      Q_ASSERT( action );
 
       if ( selectionModel->selectedRows().count() <= 0 )
         return;
 
       QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
 
-      Q_ASSERT( collectionSelectionModel );
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
-        return;
+      QModelIndex index = action->data().value<QModelIndex>();
 
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
       Q_ASSERT( index.isValid() );
-      const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( col.isValid() );
 
-      KJob *job = PasteHelper::paste( mimeData, col );
-      q->connect( job, SIGNAL(result(KJob*)), q, SLOT(copyToResult(KJob*)) );
+      QAbstractItemModel *model = const_cast<QAbstractItemModel *>( index.model() );
+      model->dropMimeData( mimeData, dropAction, -1, -1, index );
     }
 
     void collectionCreationResult( KJob *job )
@@ -523,18 +532,37 @@ class StandardActionManager::Private
       }
     }
 
-    void copyToResult( KJob *job )
-    {
-      if ( job->error() ) {
-        KMessageBox::error( parentWidget, i18n("Could not copy data: %1", job->errorString()),
-                            i18n("Copy failed") );
-      }
-    }
-
     void fillFoldersMenu( StandardActionManager::Type type, QMenu *menu,
                           const QAbstractItemModel *model, QModelIndex parentIndex )
     {
       int rowCount = model->rowCount( parentIndex );
+
+      QModelIndexList list;
+      QSet<QString> mimetypes;
+
+      const bool itemAction = ( type == CopyItemToMenu || type == MoveItemToMenu );
+      const bool collectionAction = ( type == CopyCollectionToMenu || type == MoveCollectionToMenu );
+
+      if ( itemAction )
+      {
+        list = itemSelectionModel->selectedRows();
+        foreach(const QModelIndex idx, list)
+        {
+          mimetypes << idx.data( EntityTreeModel::MimeTypeRole ).toString();
+        }
+      }
+
+      if ( collectionAction )
+      {
+        list = collectionSelectionModel->selectedRows();
+        foreach(const QModelIndex idx, list)
+        {
+          Collection collection = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+
+          // The mimetypes that the selected collection can possibly contain
+          mimetypes = AgentManager::self()->type( collection.resource() ).mimeTypes().toSet();
+        }
+      }
 
       for ( int row = 0; row < rowCount; row++ ) {
         QModelIndex index = model->index( row, 0, parentIndex );
@@ -548,9 +576,13 @@ class StandardActionManager::Private
         label.replace( QString::fromUtf8( "&" ), QString::fromUtf8( "&&" ) );
         QIcon icon = model->data( index, Qt::DecorationRole ).value<QIcon>();
 
+
         bool readOnly = CollectionUtils::isStructural( collection )
-                     || ( type == CopyItemToMenu && !( collection.rights() & Collection::CanCreateItem ) )
-                     || ( type == CopyCollectionToMenu && !( collection.rights() & Collection::CanCreateCollection ) );
+              || ( itemAction && ( !( collection.rights() & Collection::CanCreateItem )
+                    || collection.contentMimeTypes().toSet().intersect( mimetypes ).isEmpty() ) )
+              || ( collectionAction && ( !( collection.rights() & Collection::CanCreateCollection )
+                    || QSet<QString>( mimetypes ).subtract( AgentManager::self()->type( collection.resource() ).mimeTypes().toSet() ).isEmpty()
+                    || !collection.contentMimeTypes().contains( Collection::mimeType() ) ) );
 
         if ( model->rowCount( index ) > 0 ) {
           // new level
@@ -572,7 +604,6 @@ class StandardActionManager::Private
           menu->addMenu( popup );
 
         } else {
-
           // insert an item
           QAction* act = menu->addAction( icon, label );
           act->setData( QVariant::fromValue<QModelIndex>( index ) );
@@ -614,7 +645,6 @@ class StandardActionManager::Private
     FavoriteCollectionsModel *favoritesModel;
     QItemSelectionModel *favoriteSelectionModel;
     QVector<KAction*> actions;
-    AgentManager *agentManager;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
 };
 

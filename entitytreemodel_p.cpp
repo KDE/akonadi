@@ -163,7 +163,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       // Replace the dummy collection with the real one and move on.
       m_collections[ col.id() ] = col;
       QModelIndex colIndex = q->indexForCollection( col );
-      emit q->dataChanged(colIndex, colIndex);
+      dataChanged(colIndex, colIndex);
       continue;
     }
     Collection parent = col;
@@ -288,7 +288,7 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
       m_items[ item.id() ].merge( item );
       foreach ( const QModelIndex &idx, q->indexesForItem( item ) )
       {
-        q->dataChanged( idx, idx );
+        dataChanged( idx, idx );
       }
     }
   }
@@ -371,7 +371,7 @@ void EntityTreeModelPrivate::ancestorsFetched( const Akonadi::Collection::List& 
 
   const QModelIndex index = q->indexForCollection( collection );
   Q_ASSERT( index.isValid() );
-  q->dataChanged( index, index );
+  dataChanged( index, index );
 }
 
 void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
@@ -559,7 +559,7 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 
   const QModelIndex index = q->indexForCollection( collection );
   Q_ASSERT( index.isValid() );
-  q->dataChanged( index, index );
+  dataChanged( index, index );
 }
 
 void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Collection::Id id,
@@ -573,7 +573,7 @@ void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Coll
     m_collections[ id ].setStatistics( statistics );
 
     const QModelIndex index = q->indexForCollection( m_collections[ id ] );
-    q->dataChanged( index, index );
+    dataChanged( index, index );
   }
 }
 
@@ -663,7 +663,7 @@ void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, co
     {
       kWarning() << "item has invalid index:" << item.id() << item.remoteId();
     } else {
-      q->dataChanged( index, index );
+     dataChanged( index, index );
     }
   }
 }
@@ -812,7 +812,7 @@ void EntityTreeModelPrivate::updateJobDone( KJob *job )
 
     foreach (const QModelIndex &idx, list)
     {
-      q->dataChanged( idx, idx );
+      dataChanged( idx, idx );
     }
 
     // TODO: Is this trying to do the job of collectionstatisticschanged?
@@ -1109,4 +1109,9 @@ void EntityTreeModelPrivate::purgeItems( Collection::Id id )
   }
 }
 
+void EntityTreeModelPrivate::dataChanged( const QModelIndex &top, const QModelIndex &bottom )
+{
+  Q_Q( EntityTreeModel );
+  emit q->dataChanged( top, bottom.sibling( bottom.row(), q->columnCount() ) );
+}
 

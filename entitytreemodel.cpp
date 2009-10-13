@@ -400,6 +400,10 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
   Q_UNUSED( column );
   Q_D( EntityTreeModel );
 
+  // Can't drop onto Collection::root.
+  if ( !parent.isValid() )
+    return false;
+
   // TODO Use action and collection rights and return false if necessary
 
   // if row and column are -1, then the drop was on parent directly.

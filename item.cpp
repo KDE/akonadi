@@ -216,6 +216,7 @@ QSet<QByteArray> Item::availablePayloadParts() const
 
 void Item::merge( const Item &other )
 {
+  setRemoteId( other.remoteId() );
   foreach( Attribute *attribute, other.attributes() )
     addAttribute( attribute->clone() );
 

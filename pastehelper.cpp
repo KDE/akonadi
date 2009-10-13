@@ -39,7 +39,7 @@
 
 using namespace Akonadi;
 
-bool PasteHelper::canPaste(const QMimeData * mimeData, const Collection & collection)
+bool PasteHelper::canPaste( const QMimeData * mimeData, const Collection & collection )
 {
   if ( !mimeData || !collection.isValid() )
     return false;
@@ -118,6 +118,9 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
 KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &destination, Qt::DropAction action, Session *session )
 {
   if ( !KUrl::List::canDecode( mimeData ) )
+    return 0;
+
+  if ( !canPaste( mimeData, destination ) )
     return 0;
 
   const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
