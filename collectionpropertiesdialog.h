@@ -80,6 +80,14 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      */
     static void registerPage( CollectionPropertiesPageFactory *factory );
 
+    /**
+     * Define if we want to use default page.
+     *
+     * @param defaultPage Use or not default page.
+     *
+     * @since 4.4
+     */
+    static void useDefaultPage ( bool defaultPage );
   private:
     //@cond PRIVATE
     class Private;
