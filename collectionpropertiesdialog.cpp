@@ -32,8 +32,6 @@
 
 using namespace Akonadi;
 
-AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPropertiesPageFactory, CollectionGeneralPropertiesPage)
-
 /**
  * @internal
  */
