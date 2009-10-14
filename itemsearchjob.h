@@ -56,6 +56,7 @@ class ItemSearchJobPrivate;
  * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class AKONADI_EXPORT ItemSearchJob : public Job
 {
