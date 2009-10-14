@@ -23,6 +23,7 @@
 #include "entitytreemodel.h"
 #include "collectionutils_p.h"
 
+#include <akonadi/collectionquotaattribute.h>
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/entitydisplayattribute.h>
 
@@ -97,10 +98,19 @@ QVariant StatisticsToolTipProxyModel::data( const QModelIndex & index, int role)
         ).arg( i18n("Total Messages") ).arg( collection.statistics().count() )
          .arg( i18n("Unread Messages") ).arg( collection.statistics().unreadCount() );
 
-      //TODO: Quota missing
-      //tip += QString::fromLatin1(
-      //  "      <strong>%1</strong>: %2<br>\n"
-      //  ).arg( i18n( "Quota" ) ).arg( "0" );
+      if ( collection.hasAttribute<CollectionQuotaAttribute>() ) {
+        CollectionQuotaAttribute *quota = collection.attribute<CollectionQuotaAttribute>();
+        if ( quota->currentValue() > -1 && quota->maxValue() > 0 ) {
+          qreal percentage = ( 100.0 * quota->currentValue() ) / quota->maxValue();
+
+          if ( qAbs( percentage ) >= 0.01 ) {
+            QString percentStr = QString::number( percentage, 'f', 2 );
+            tip += QString::fromLatin1(
+              "      <strong>%1</strong>: %2%<br>\n"
+              ).arg( i18n( "Quota" ) ).arg( percentStr );
+          }
+        }
+      }
 
       tip += QString::fromLatin1(
         "      <strong>%1</strong>: %2<br>\n"

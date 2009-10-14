@@ -19,6 +19,7 @@
 
 #include "attributefactory.h"
 
+#include "collectionquotaattribute.h"
 #include "collectionrightsattribute_p.h"
 #include "entitydisplayattribute.h"
 #include "entityhiddenattribute.h"
@@ -75,6 +76,7 @@ class StaticAttributeFactory : public AttributeFactory
       initialized = true;
 
       // Register built-in attributes
+      AttributeFactory::registerAttribute<CollectionQuotaAttribute>();
       AttributeFactory::registerAttribute<CollectionRightsAttribute>();
       AttributeFactory::registerAttribute<EntityDisplayAttribute>();
       AttributeFactory::registerAttribute<EntityHiddenAttribute>();

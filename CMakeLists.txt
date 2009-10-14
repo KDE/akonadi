@@ -66,6 +66,7 @@ set( akonadikde_LIB_SRC
   collectionpathresolver.cpp
   collectionpropertiesdialog.cpp
   collectionpropertiespage.cpp
+  collectionquotaattribute.cpp
   collectionrequester.cpp
   collectionrightsattribute.cpp
   collectionselectjob.cpp
@@ -210,6 +211,7 @@ install( FILES
   collectionmovejob.h
   collectionpropertiesdialog.h
   collectionpropertiespage.h
+  collectionquotaattribute.h
   collectionrequester.h
   collectionstatisticsdelegate.h
   collectionstatisticsmodel.h
