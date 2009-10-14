@@ -23,30 +23,51 @@
 
 using namespace Akonadi;
 
+class CollectionQuotaAttribute::Private
+{
+  public:
+    Private( qint64 currentValue, qint64 maxValue )
+      : mCurrentValue( currentValue ), mMaximumValue( maxValue )
+    {
+    }
+
+    qint64 mCurrentValue;
+    qint64 mMaximumValue;
+};
+
 CollectionQuotaAttribute::CollectionQuotaAttribute()
-  : mCurrent( -1 ), mMax( -1 )
+  : d( new Private( -1, -1 ) )
 {
 }
 
 CollectionQuotaAttribute::CollectionQuotaAttribute( qint64 currentValue, qint64 maxValue )
-  : mCurrent( currentValue ), mMax( maxValue )
+  : d( new Private( currentValue, maxValue ) )
 {
 }
 
-void CollectionQuotaAttribute::setValues( qint64 currentValue, qint64 maxValue )
+CollectionQuotaAttribute::~CollectionQuotaAttribute()
 {
-  mCurrent = currentValue;
-  mMax = maxValue;
+  delete d;
+}
+
+void CollectionQuotaAttribute::setCurrentValue( qint64 value )
+{
+  d->mCurrentValue = value;
+}
+
+void CollectionQuotaAttribute::setMaximumValue( qint64 value )
+{
+  d->mMaximumValue = value;
 }
 
 qint64 CollectionQuotaAttribute::currentValue() const
 {
-  return mCurrent;
+  return d->mCurrentValue;
 }
 
-qint64 CollectionQuotaAttribute::maxValue() const
+qint64 CollectionQuotaAttribute::maximumValue() const
 {
-  return mMax;
+  return d->mMaximumValue;
 }
 
 QByteArray CollectionQuotaAttribute::type() const
@@ -56,32 +77,30 @@ QByteArray CollectionQuotaAttribute::type() const
 
 Akonadi::Attribute* CollectionQuotaAttribute::clone() const
 {
-  return new CollectionQuotaAttribute( mCurrent, mMax );
+  return new CollectionQuotaAttribute( d->mCurrentValue, d->mMaximumValue );
 }
 
 QByteArray CollectionQuotaAttribute::serialized() const
 {
-  return QByteArray::number( mCurrent )
+  return QByteArray::number( d->mCurrentValue )
        + ' '
-       + QByteArray::number( mMax );
+       + QByteArray::number( d->mMaximumValue );
 }
 
 void CollectionQuotaAttribute::deserialize( const QByteArray &data )
 {
-  mCurrent = -1;
-  mMax = -1;
+  d->mCurrentValue = -1;
+  d->mMaximumValue = -1;
 
-  QList<QByteArray> items = data.simplified().split( ' ' );
+  const QList<QByteArray> items = data.simplified().split( ' ' );
 
-  if ( items.isEmpty() ) {
+  if ( items.isEmpty() )
     return;
-  }
 
-  mCurrent = items[0].toLongLong();
+  d->mCurrentValue = items[0].toLongLong();
 
-  if ( items.size() < 2 ) {
+  if ( items.size() < 2 )
     return;
-  }
 
-  mMax = items[1].toLongLong();
+  d->mMaximumValue = items[1].toLongLong();
 }

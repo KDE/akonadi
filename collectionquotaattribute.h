@@ -24,16 +24,73 @@
 
 namespace Akonadi {
 
+/**
+ * @short Attribute that provides quota information for a collection.
+ *
+ * This attribute class provides quota information (e.g. current fill value
+ * and maximum fill value) for an Akonadi collection.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * const Collection collection = collectionFetchJob->collections().first();
+ * if ( collection.hasAttribute<CollectionQuotaAttribute>() ) {
+ *   const CollectionQuotaAttribute *attribute = collection.attribute<CollectionQuotaAttribute>();
+ *   qDebug() << "current value" << attribute->currentValue();
+ * }
+ *
+ * @endcode
+ *
+ * @author Kevin Ottens <ervin@kde.org>
+ * @since 4.4
+ */
 class AKONADI_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute
 {
   public:
+    /**
+     * Creates a new collection quota attribute.
+     */
     CollectionQuotaAttribute();
+
+    /**
+     * Creates a new collection quota attribute with initial values.
+     *
+     * @param currentValue The current quota value in bytes.
+     * @param maxValue The maximum quota value in bytes.
+     */
     CollectionQuotaAttribute( qint64 currentValue, qint64 maxValue );
 
-    void setValues( qint64 currentValue, qint64 maxValue );
+    /**
+     * Destroys the collection quota attribute.
+     */
+    ~CollectionQuotaAttribute();
 
+    /**
+     * Sets the current quota @p value for the collection.
+     *
+     * @param value The current quota value in bytes.
+     */ 
+    void setCurrentValue( qint64 value );
+
+    /**
+     * Sets the maximum quota @p value for the collection.
+     *
+     * @param value The maximum quota value in bytes.
+     */ 
+    void setMaximumValue( qint64 value );
+
+    /**
+     * Returns the current quota value in bytes.
+     */
     qint64 currentValue() const;
-    qint64 maxValue() const;
+
+    /**
+     * Returns the maximum quota value in bytes.
+     */
+    qint64 maximumValue() const;
 
     virtual QByteArray type() const;
     virtual Attribute *clone() const;
@@ -41,8 +98,10 @@ class AKONADI_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute
     virtual void deserialize( const QByteArray &data );
 
   private:
-    qint64 mCurrent;
-    qint64 mMax;
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+    //@endcond
 };
 
 }
