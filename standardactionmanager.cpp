@@ -430,6 +430,7 @@ class StandardActionManager::Private
       Q_ASSERT( collection.isValid() );
 
       favoritesModel->addCollection( collection );
+      enableAction( AddToFavoriteCollections, false );
     }
 
     void slotRemoveFromFavorites()
