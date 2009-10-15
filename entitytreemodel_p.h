@@ -162,54 +162,6 @@ public:
   void deref( Collection::Id id );
 
   /**
-    @brief Class used to determine when to purge items in a Collection
-
-    The buffer method can be used to buffer a Collection. This may cause another Collection
-    to be purged if it is removed from the buffer.
-
-    The purge method is used to purge a Collection from the buffer, but not the model.
-    This is used for example, to not buffer Collections anymore if they get referenced,
-    and to ensure that one Collection does not appear twice in the buffer.
-
-    Check whether a Collection is buffered using the isBuffered method.
-  */
-  class PurgeBuffer
-  {
-    // Buffer the most recent 10 unreferenced Collections
-    static const int MAXBUFFERSIZE = 10;
-  public:
-    explicit PurgeBuffer( EntityTreeModelPrivate *model )
-      : m_index( 0 ),
-        m_bufferSize( MAXBUFFERSIZE ),
-        m_model( model )
-    {
-    }
-
-    /**
-      Adds @p id to the Collections to be buffered
-    */
-    void buffer( Collection::Id id );
-
-    /**
-    Removes @p id from the Collections being buffered
-    */
-    void purge( Collection::Id id );
-
-    bool isBuffered( Collection::Id id )
-    {
-      return m_buffer.contains( id );
-    }
-
-  private:
-    QList<Collection::Id> m_buffer;
-    int m_index;
-    int m_bufferSize;
-    EntityTreeModelPrivate *m_model;
-
-  };
-  PurgeBuffer m_buffer;
-
-  /**
     @returns true if the Collection with the id of @p id should be purged.
   */
   bool shouldPurge( Collection::Id id );
