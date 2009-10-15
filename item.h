@@ -226,7 +226,7 @@ class AKONADI_EXPORT Item : public Entity
      * a single such collection, although the item can be linked into arbitrary many
      * virtual collections.
      * Calling this method makes sense only after running an ItemFetchJob on the item.
-     * @returns the collection ID if it is know, -1 otherwise.
+     * @returns the collection ID if it is known, -1 otherwise.
      * @since 4.3
      */
     Entity::Id storageCollectionId() const;
