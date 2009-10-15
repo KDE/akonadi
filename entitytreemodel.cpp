@@ -273,9 +273,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 
     if ( role == Qt::ForegroundRole && d->m_pendingCutCollections.contains( node->id ) )
     {
-      return Qt::gray;
-      // The commented line does not work, which means this is probably broken on non-default palettes.
-//       return QApplication::palette().color( QPalette::Inactive, QPalette::WindowText);
+       return QApplication::palette().color( QPalette::Disabled, QPalette::Text);
     }
 
     const Collection collection = d->m_collections.value( node->id );
@@ -304,8 +302,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   } else if ( Node::Item == node->type ) {
     if ( role == Qt::ForegroundRole && d->m_pendingCutItems.contains( node->id ) )
     {
-      return Qt::gray;
-//       return QApplication::palette().color( QPalette::Inactive, QPalette::WindowText );
+       return QApplication::palette().color( QPalette::Disabled, QPalette::Text );
     }
 
     const Item item = d->m_items.value( node->id );
