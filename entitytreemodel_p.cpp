@@ -49,8 +49,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
       m_includeUnsubscribed( true ),
       m_includeStatistics( false ),
       m_showRootCollection( false ),
-      m_showSystemEntities( false ),
-      m_buffer( PurgeBuffer( this ) )
+      m_showSystemEntities( false )
 {
 }
 
@@ -987,49 +986,6 @@ Item EntityTreeModelPrivate::getItem( Item::Id id) const
 void EntityTreeModelPrivate::ref( Collection::Id id )
 {
   m_monitor->d_ptr->ref( id );
-  if ( m_buffer.isBuffered( id ) )
-    m_buffer.purge( id );
-}
-
-void EntityTreeModelPrivate::PurgeBuffer::purge( Collection::Id id )
-{
-  int idx = m_buffer.indexOf( id, 0 );
-  while ( idx <= m_index )
-  {
-    if ( idx < 0 )
-      break;
-    m_buffer.removeAt( idx );
-    if ( m_index > 0 )
-      --m_index;
-    idx = m_buffer.indexOf( id, idx );
-  }
-  while ( int idx = m_buffer.indexOf( id, m_index ) > -1 )
-  {
-    m_buffer.removeAt( idx );
-  }
-}
-
-void EntityTreeModelPrivate::PurgeBuffer::buffer( Collection::Id id )
-{
-  if ( m_index == MAXBUFFERSIZE )
-  {
-    m_index = 0;
-  }
-
-  if ( m_buffer.size() == MAXBUFFERSIZE )
-  {
-    Collection::Id bumpedId = m_buffer.takeAt( m_index );
-    if ( m_model->shouldPurge( bumpedId ) )
-    {
-      m_model->purgeItems( bumpedId );
-    }
-  }
-
-  // Ensure that we don't put a duplicate @p id into the buffer.
-  purge( id );
-
-  m_buffer.insert( m_index, id );
-  ++m_index;
 }
 
 bool EntityTreeModelPrivate::shouldPurge( Collection::Id id )
@@ -1037,7 +993,7 @@ bool EntityTreeModelPrivate::shouldPurge( Collection::Id id )
   if( m_monitor->d_ptr->refCountMap.contains( id ) )
     return false;
 
-  if ( m_buffer.isBuffered( id ) )
+  if ( m_monitor->d_ptr->m_buffer.isBuffered( id ) )
     return false;
 
   static const int MAXITEMS = 10000;
@@ -1050,8 +1006,15 @@ bool EntityTreeModelPrivate::shouldPurge( Collection::Id id )
 
 void EntityTreeModelPrivate::deref( Collection::Id id )
 {
-  m_monitor->d_ptr->deref( id );
-  m_buffer.buffer( id );
+  Collection::Id bumpedId = m_monitor->d_ptr->deref( id );
+
+  if( bumpedId < 0 )
+    return;
+
+  if ( shouldPurge( bumpedId ) )
+  {
+    purgeItems( bumpedId );
+  }
 }
 
 QList<Node*>::iterator EntityTreeModelPrivate::skipCollections( QList<Node*>::iterator it, QList<Node*>::iterator end, int * pos )

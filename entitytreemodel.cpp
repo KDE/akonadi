@@ -25,6 +25,8 @@
 #include <QtCore/QHash>
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
+#include <QtGui/QApplication>
+#include <QtGui/QPalette>
 
 #include <KDE/KIcon>
 #include <KDE/KLocale>
@@ -237,23 +239,22 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   if ( role == SessionRole )
     return QVariant::fromValue( qobject_cast<QObject *>( d->m_session ) );
 
-  const int headerSet = (role / TerminalUserRole);
+  const int headerSet = ( role / TerminalUserRole );
 
   role %= TerminalUserRole;
   if ( !index.isValid() )
   {
-    if (ColumnCountRole != role)
+    if ( ColumnCountRole != role )
       return QVariant();
-    return getColumnCount(headerSet);
+    return getColumnCount( headerSet );
   }
 
-  if (ColumnCountRole == role)
-    return getColumnCount(headerSet);
-
+  if ( ColumnCountRole == role )
+    return getColumnCount( headerSet );
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
-  if (ParentCollectionRole == role)
+  if ( ParentCollectionRole == role )
   {
     const Collection parentCollection = d->m_collections.value( node->parent );
     Q_ASSERT(parentCollection.isValid());
@@ -262,6 +263,12 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   }
 
   if ( Node::Collection == node->type ) {
+
+    if ( role == Qt::ForegroundRole && d->m_pendingCutCollections.contains( node->id ) )
+    {
+      return QApplication::palette().color( QPalette::Inactive, QPalette::WindowText);
+    }
+
     const Collection collection = d->m_collections.value( node->id );
 
     if ( !collection.isValid() )
@@ -275,6 +282,10 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       return collection.remoteId();
     case CollectionIdRole:
       return collection.id();
+    case ItemIdRole:
+      // QVariant().toInt() is 0, not -1, so we have to handle the ItemIdRole
+      // and CollectionIdRole (below) specially
+      return -1;
     case CollectionRole:
       return QVariant::fromValue( collection );
     default:
@@ -282,6 +293,11 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     }
 
   } else if ( Node::Item == node->type ) {
+    if ( role == Qt::ForegroundRole && d->m_pendingCutItems.contains( node->id ) )
+    {
+      return QApplication::palette().color( QPalette::Inactive, QPalette::WindowText );
+    }
+
     const Item item = d->m_items.value( node->id );
     if ( !item.isValid() )
       return QVariant();
@@ -290,16 +306,14 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     {
     case MimeTypeRole:
       return item.mimeType();
-      break;
     case RemoteIdRole:
       return item.remoteId();
-      break;
     case ItemRole:
       return QVariant::fromValue( item );
-      break;
     case ItemIdRole:
       return item.id();
-      break;
+    case CollectionIdRole:
+      return -1;
     case LoadedPartsRole:
       return QVariant::fromValue( item.loadedPayloadParts() );
     case AvailablePartsRole:
@@ -308,7 +322,6 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       return getData( item, index.column(), role );
     }
   }
-
   return QVariant();
 }
 
@@ -453,6 +466,12 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
         const Collection collection = d->m_collections.value( Collection::fromUrl( url ).id() );
         if ( collection.isValid() )
         {
+          if ( collection.parentCollection().id() == destCollection.id() )
+          {
+            kDebug() << "Error: source and destination of move are the same.";
+            return false;
+          }
+
           if ( !mimeChecker.isWantedCollection( collection ) )
           {
             kDebug() << "unwanted collection" << mimeChecker.wantedMimeTypes() << collection.contentMimeTypes();
@@ -462,6 +481,12 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
           const Item item = d->m_items.value( Item::fromUrl( url ).id() );
           if ( item.isValid() )
           {
+            if ( item.parentCollection().id() == destCollection.id() )
+            {
+              kDebug() << "Error: source and destination of move are the same.";
+              return false;
+            }
+
             if ( !mimeChecker.isWantedItem( item ) )
             {
               kDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
@@ -649,6 +674,24 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
   Q_D( EntityTreeModel );
 
   const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
+
+  if ( role == PendingCutRole )
+  {
+    if ( index.isValid() && value.toBool() )
+    {
+      if ( Node::Collection == node->type )
+        d->m_pendingCutCollections.append( node->id );
+
+      if ( Node::Item == node->type )
+        d->m_pendingCutItems.append( node->id );
+    }
+    else
+    {
+      d->m_pendingCutCollections.clear();
+      d->m_pendingCutItems.clear();
+    }
+    return true;
+  }
 
   if ( index.isValid() && node->type == Node::Collection && ( role == CollectionRefRole || role == CollectionDerefRole ) )
   {
