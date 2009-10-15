@@ -21,7 +21,8 @@
 #define AKONADI_COLLECTIONUTILS_P_H
 
 #include <QtCore/QStringList>
-
+#include <akonadi/entitydisplayattribute.h>
+#include <akonadi/collectionstatistics.h>
 namespace Akonadi {
 
 /**
@@ -56,7 +57,6 @@ namespace CollectionUtils
             collection.resource() != QLatin1String( "akonadi_search_resource" ) &&
             !collection.contentMimeTypes().isEmpty());
   }
-
   inline QString defaultIconName( const Collection &col )
   {
     if ( CollectionUtils::isVirtualParent( col ) )
@@ -83,7 +83,20 @@ namespace CollectionUtils
     }
     return QLatin1String( "folder" );
   }
+  inline QString displayIconName( const Collection &col )
+  {
+    QString iconName = defaultIconName( col );
+    if ( col.hasAttribute<EntityDisplayAttribute>() &&
+         !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
+      if ( !col.attribute<EntityDisplayAttribute>()->activeIconName().isEmpty() && col.statistics().unreadCount()> 0) {
+        iconName = col.attribute<EntityDisplayAttribute>()->activeIconName();
+      }
+      else
+        iconName = col.attribute<EntityDisplayAttribute>()->iconName();
+      }
+    return iconName;
 
+  }
   inline bool hasValidHierarchicalRID( const Collection &col )
   {
     if ( col == Collection::root() )

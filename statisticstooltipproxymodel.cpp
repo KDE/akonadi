@@ -117,11 +117,7 @@ QVariant StatisticsToolTipProxyModel::data( const QModelIndex & index, int role)
         ).arg( i18n("Storage Size") ).arg( KIO::convertSize( (KIO::filesize_t)( collection.statistics().size() ) ) );
 
 
-      QString iconName = CollectionUtils::defaultIconName( collection );
-      if ( collection.hasAttribute<EntityDisplayAttribute>() &&
-           !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
-        iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
-      }
+      QString iconName = CollectionUtils::displayIconName( collection );
 
       int iconSizes[] = { 32, 22 };
       QString iconPath;

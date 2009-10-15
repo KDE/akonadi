@@ -33,7 +33,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QPalette>
-
+#include <KIcon>
 using namespace Akonadi;
 
 /**
@@ -66,7 +66,7 @@ QModelIndex Akonadi::StatisticsProxyModel::index( int row, int column, const QMo
     if (!hasIndex(row, column, parent))
       return QModelIndex();
 
-    
+
     int sourceColumn = column;
 
     if ( column>=columnCount( parent)-3 ) {
@@ -99,8 +99,17 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
         return QVariant();
       }
     }
+
   } else if ( role == Qt::TextAlignmentRole && index.column()>=columnCount( index.parent() )-3 ) {
     return Qt::AlignRight;
+  } else if ( role == Qt::DecorationRole && index.column() == 0 ) {
+    const QModelIndex sourceIndex = mapToSource( index.sibling( index.row(), 0 ) );
+    Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
+
+    if ( collection.isValid() )
+      return KIcon(  CollectionUtils::displayIconName( collection ) );
+    else
+      return QVariant();
   }
 
   return QAbstractProxyModel::data( index, role );
