@@ -75,9 +75,11 @@ static const struct {
   { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), false },
   { "akonadi_collection_rename_favorite", I18N_NOOP("Rename Favorite..."), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
   { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
-  { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
   { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true },
-  { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), true }
+  { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
+  { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), true },
+  { "akonadi_item_cut", I18N_NOOP("&Cut Item"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutItems()), false },
+  { "akonadi_collection_cut", I18N_NOOP("&Cut Collection"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutCollections()), false }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -111,6 +113,8 @@ class StandardActionManager::Private
 
       pluralLabels.insert( StandardActionManager::CopyCollections, ki18np( "&Copy Folder", "&Copy %1 Folders" ) );
       pluralLabels.insert( StandardActionManager::CopyItems, ki18np( "&Copy Item", "&Copy %1 Items" ) );
+      pluralLabels.insert( StandardActionManager::CutItems, ki18np( "&Cut Item", "&Cut %1 Items" ) );
+      pluralLabels.insert( StandardActionManager::CutCollections, ki18np( "&Cut Collection", "&Cut %1 Collections" ) );
       pluralLabels.insert( StandardActionManager::DeleteItems, ki18np( "&Delete Item", "&Delete %1 Items" ) );
     }
 
@@ -141,83 +145,103 @@ class StandardActionManager::Private
       }
     }
 
-    void copy( QItemSelectionModel* selModel )
+    void encodeToClipboard( QItemSelectionModel* selModel, bool cut = false )
     {
       Q_ASSERT( selModel );
       if ( selModel->selectedRows().count() <= 0 )
         return;
       QMimeData *mimeData = selModel->model()->mimeData( selModel->selectedRows() );
+      markCutAction( mimeData, cut );
       QApplication::clipboard()->setMimeData( mimeData );
+
+      QAbstractItemModel *model = const_cast<QAbstractItemModel *>( selModel->model() );
+
+      foreach( const QModelIndex &index, selModel->selectedRows() )
+      {
+        model->setData( index, true, EntityTreeModel::PendingCutRole );
+      }
     }
 
     void updateActions()
     {
       bool singleColSelected = false;
       bool multiColSelected = false;
+      bool canDeleteCollections = true;
       int colCount = 0;
+
       QModelIndex selectedIndex;
-      if ( collectionSelectionModel ) {
+      if ( !collectionSelectionModel ) {
+        canDeleteCollections = false;
+      } else {
         colCount = collectionSelectionModel->selectedRows().count();
         singleColSelected = colCount == 1;
-        multiColSelected = colCount > 0;
+        multiColSelected = colCount > 1;
+        canDeleteCollections = colCount > 0;
+
         if ( singleColSelected )
           selectedIndex = collectionSelectionModel->selectedRows().first();
+
+        const QModelIndexList rows = itemSelectionModel->selectedRows();
+        foreach ( const QModelIndex &itemIndex, rows ) {
+          const Collection collection = itemIndex.data( EntityTreeModel::CollectionRole ).value<Collection>();
+          if ( !collection.isValid() )
+            continue;
+
+          if ( collection == collection.root() )
+            // The root collection is selected. There are no valid actions to enable.
+            return;
+
+          canDeleteCollections = canDeleteCollections && ( collection.rights() & Collection::CanDeleteCollection );
+        }
+
       }
 
-      enableAction( CopyCollections, multiColSelected );
+      enableAction( CopyCollections, singleColSelected || multiColSelected );
       enableAction( CollectionProperties, singleColSelected );
 
-      Collection col;
-      if ( singleColSelected && selectedIndex.isValid() ) {
-        col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
-        enableAction( CreateCollection, canCreateCollection( col ) );
-        enableAction( DeleteCollections, col.rights() & Collection::CanDeleteCollection );
-        enableAction( CopyCollections, multiColSelected && (col != Collection::root()) );
-        enableAction( CollectionProperties, singleColSelected && (col != Collection::root()) );
-        enableAction( SynchronizeCollections, (CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col )) && col != Collection::root() );
-        enableAction( Paste, PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
-        enableAction( AddToFavoriteCollections, (favoritesModel!=0) && (!favoritesModel->collections().contains(col))
-                                             && singleColSelected && (col != Collection::root()) );
-        enableAction( RemoveFromFavoriteCollections, (favoritesModel!=0) && (favoritesModel->collections().contains(col))
-                                                  && singleColSelected && (col != Collection::root()) );
-        enableAction( RenameFavoriteCollection, (favoritesModel!=0) && (favoritesModel->collections().contains(col))
-                                             && singleColSelected && (col != Collection::root()) );
-        enableAction( CopyCollectionToMenu, multiColSelected && (col != Collection::root()) );
-        enableAction( MoveCollectionToMenu, multiColSelected && (col != Collection::root()) && col.rights() & Collection::CanDeleteCollection );
-      } else {
-        enableAction( CreateCollection, false );
-        enableAction( DeleteCollections, false );
-
-        enableAction( SynchronizeCollections, false );
-        enableAction( Paste, false );
-        enableAction( AddToFavoriteCollections, false );
-        enableAction( RemoveFromFavoriteCollections, false );
-        enableAction( RenameFavoriteCollection, false );
-      }
+      Collection col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
+      enableAction( CreateCollection, singleColSelected && canCreateCollection( col ) );
+      enableAction( DeleteCollections, singleColSelected && col.rights() & Collection::CanDeleteCollection );
+      enableAction( CopyCollections, singleColSelected || multiColSelected );
+      enableAction( CutCollections, canDeleteCollections );
+      enableAction( CollectionProperties, singleColSelected );
+      enableAction( SynchronizeCollections, singleColSelected && (CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col ) ) );
+      enableAction( Paste, singleColSelected && PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
+      enableAction( AddToFavoriteCollections, singleColSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( col ) ) );
+      enableAction( RemoveFromFavoriteCollections, singleColSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( col ) ) );
+      enableAction( RenameFavoriteCollection, singleColSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( col ) ) );
+      enableAction( CopyCollectionToMenu, singleColSelected || multiColSelected );
+      enableAction( MoveCollectionToMenu, canDeleteCollections );
 
       bool multiItemSelected = false;
-      bool canDeleteItem = true;
+      bool canDeleteItems = true;
       int itemCount = 0;
-      if ( itemSelectionModel ) {
+      if ( !itemSelectionModel ) {
+        canDeleteItems = false;
+      } else {
         const QModelIndexList rows = itemSelectionModel->selectedRows();
 
         itemCount = rows.count();
         multiItemSelected = itemCount > 0;
+        canDeleteItems = itemCount > 0;
 
         foreach ( const QModelIndex &itemIndex, rows ) {
           const Collection parentCollection = itemIndex.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
           if ( !parentCollection.isValid() )
             continue;
 
-          canDeleteItem = canDeleteItem && (parentCollection.rights() & Collection::CanDeleteItem);
+          canDeleteItems = canDeleteItems && (parentCollection.rights() & Collection::CanDeleteItem);
         }
       }
 
       enableAction( CopyItems, multiItemSelected );
-      enableAction( DeleteItems, multiItemSelected && canDeleteItem );
+      enableAction( CutItems, canDeleteItems );
+
+      enableAction( DeleteItems, multiItemSelected && canDeleteItems );
 
       enableAction( CopyItemToMenu, multiItemSelected );
-      enableAction( MoveItemToMenu, multiItemSelected && canDeleteItem );
+      enableAction( MoveItemToMenu, multiItemSelected && canDeleteItems );
+
       updatePluralLabel( CopyCollections, colCount );
       updatePluralLabel( CopyItems, itemCount );
       updatePluralLabel( DeleteItems, itemCount );
@@ -315,7 +339,12 @@ class StandardActionManager::Private
 
     void slotCopyCollections()
     {
-      copy( collectionSelectionModel );
+      encodeToClipboard( collectionSelectionModel );
+    }
+
+    void slotCutCollections()
+    {
+      encodeToClipboard( collectionSelectionModel, true );
     }
 
     void slotDeleteCollection()
@@ -375,7 +404,12 @@ class StandardActionManager::Private
 
     void slotCopyItems()
     {
-      copy( itemSelectionModel );
+      encodeToClipboard( itemSelectionModel );
+    }
+
+    void slotCutItems()
+    {
+      encodeToClipboard( itemSelectionModel, true );
     }
 
     void slotPaste()
@@ -389,7 +423,10 @@ class StandardActionManager::Private
 
       // TODO: Copy or move? We can't seem to cut yet
       QAbstractItemModel *model = const_cast<QAbstractItemModel *>( collectionSelectionModel->model() );
-      model->dropMimeData( QApplication::clipboard()->mimeData(), Qt::CopyAction, -1, -1, index );
+      const QMimeData *mimeData = QApplication::clipboard()->mimeData();
+      model->dropMimeData( mimeData, isCutAction( mimeData ) ? Qt::MoveAction : Qt::CopyAction, -1, -1, index );
+      model->setData( QModelIndex(), false, EntityTreeModel::PendingCutRole );
+      QApplication::clipboard()->clear();
     }
 
     void slotDeleteItems()
@@ -635,6 +672,24 @@ class StandardActionManager::Private
         model = proxy->sourceModel();
       }
       Q_ASSERT( model == favoritesModel->sourceModel() );
+    }
+
+    void markCutAction( QMimeData *mimeData, bool cut ) const
+    {
+      if ( !cut )
+        return;
+
+      const QByteArray cutSelectionData = "1";
+      mimeData->setData( QLatin1String( "application/x-kde.akonadi-cutselection" ), cutSelectionData);
+    }
+
+    bool isCutAction( const QMimeData *mimeData ) const
+    {
+      QByteArray a = mimeData->data( QLatin1String( "application/x-kde.akonadi-cutselection" ) );
+      if ( a.isEmpty() )
+        return false;
+      else
+        return (a.at(0) == '1'); // true if 1
     }
 
     StandardActionManager *q;

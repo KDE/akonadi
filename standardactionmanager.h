@@ -109,9 +109,11 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model
       RenameFavoriteCollection,  ///< Rename the collection of the favorite collections model
       CopyCollectionToMenu,      ///< Menu allowing to quickly copy a collection into another collection
-      MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection
       CopyItemToMenu,            ///< Menu allowing to quickly copy an item into a collection
       MoveItemToMenu,            ///< Menu allowing to move item into a collection
+      MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection
+      CutItems,                  ///< Cuts items
+      CutCollections,            ///< Cuts items
       LastType                   ///< Marks last action
     };
 
@@ -211,10 +213,12 @@ class AKONADI_EXPORT StandardActionManager : public QObject
 
     Q_PRIVATE_SLOT( d, void slotCreateCollection() )
     Q_PRIVATE_SLOT( d, void slotCopyCollections() )
+    Q_PRIVATE_SLOT( d, void slotCutCollections() )
     Q_PRIVATE_SLOT( d, void slotDeleteCollection() )
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollection() )
     Q_PRIVATE_SLOT( d, void slotCollectionProperties() )
     Q_PRIVATE_SLOT( d, void slotCopyItems() )
+    Q_PRIVATE_SLOT( d, void slotCutItems() )
     Q_PRIVATE_SLOT( d, void slotPaste() )
     Q_PRIVATE_SLOT( d, void slotDeleteItems() )
     Q_PRIVATE_SLOT( d, void slotLocalSubscription() )

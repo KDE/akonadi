@@ -25,6 +25,8 @@
 #include <QtCore/QHash>
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
+#include <QtGui/QApplication>
+#include <QtGui/QPalette>
 
 #include <KDE/KIcon>
 #include <KDE/KLocale>
@@ -244,23 +246,22 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   if ( role == SessionRole )
     return QVariant::fromValue( qobject_cast<QObject *>( d->m_session ) );
 
-  const int headerSet = (role / TerminalUserRole);
+  const int headerSet = ( role / TerminalUserRole );
 
   role %= TerminalUserRole;
   if ( !index.isValid() )
   {
-    if (ColumnCountRole != role)
+    if ( ColumnCountRole != role )
       return QVariant();
-    return getColumnCount(headerSet);
+    return getColumnCount( headerSet );
   }
 
-  if (ColumnCountRole == role)
-    return getColumnCount(headerSet);
-
+  if ( ColumnCountRole == role )
+    return getColumnCount( headerSet );
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
-  if (ParentCollectionRole == role)
+  if ( ParentCollectionRole == role )
   {
     const Collection parentCollection = d->m_collections.value( node->parent );
     Q_ASSERT(parentCollection.isValid());
@@ -269,6 +270,12 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   }
 
   if ( Node::Collection == node->type ) {
+
+    if ( role == Qt::ForegroundRole && d->m_pendingCutCollections.contains( node->id ) )
+    {
+      return QApplication::palette().color( QPalette::Inactive, QPalette::WindowText);
+    }
+
     const Collection collection = d->m_collections.value( node->id );
 
     if ( !collection.isValid() )
@@ -293,6 +300,11 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     }
 
   } else if ( Node::Item == node->type ) {
+    if ( role == Qt::ForegroundRole && d->m_pendingCutItems.contains( node->id ) )
+    {
+      return QApplication::palette().color( QPalette::Inactive, QPalette::WindowText );
+    }
+
     const Item item = d->m_items.value( node->id );
     if ( !item.isValid() )
       return QVariant();
@@ -669,6 +681,24 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
   Q_D( EntityTreeModel );
 
   const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
+
+  if ( role == PendingCutRole )
+  {
+    if ( index.isValid() && value.toBool() )
+    {
+      if ( Node::Collection == node->type )
+        d->m_pendingCutCollections.append( node->id );
+
+      if ( Node::Item == node->type )
+        d->m_pendingCutItems.append( node->id );
+    }
+    else
+    {
+      d->m_pendingCutCollections.clear();
+      d->m_pendingCutItems.clear();
+    }
+    return true;
+  }
 
   if ( index.isValid() && node->type == Node::Collection && ( role == CollectionRefRole || role == CollectionDerefRole ) )
   {
