@@ -282,6 +282,10 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       return collection.remoteId();
     case CollectionIdRole:
       return collection.id();
+    case ItemIdRole:
+      // QVariant().toInt() is 0, not -1, so we have to handle the ItemIdRole
+      // and CollectionIdRole (below) specially
+      return -1;
     case CollectionRole:
       return QVariant::fromValue( collection );
     default:
@@ -297,16 +301,14 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     {
     case MimeTypeRole:
       return item.mimeType();
-      break;
     case RemoteIdRole:
       return item.remoteId();
-      break;
     case ItemRole:
       return QVariant::fromValue( item );
-      break;
     case ItemIdRole:
       return item.id();
-      break;
+    case CollectionIdRole:
+      return -1;
     case LoadedPartsRole:
       return QVariant::fromValue( item.loadedPayloadParts() );
     case AvailablePartsRole:
@@ -315,7 +317,6 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       return getData( item, index.column(), role );
     }
   }
-
   return QVariant();
 }
 
