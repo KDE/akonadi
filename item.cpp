@@ -65,16 +65,24 @@ void Item::setFlag( const QByteArray & name )
 {
   Q_D( Item );
   d->mFlags.insert( name );
-  if ( !d->mFlagsOverwritten )
-    d->mAddedFlags.insert( name );
+  if ( !d->mFlagsOverwritten ) {
+    if ( d->mDeletedFlags.contains( name ) )
+      d->mDeletedFlags.remove( name );
+    else
+      d->mAddedFlags.insert( name );
+  }
 }
 
 void Item::clearFlag( const QByteArray & name )
 {
   Q_D( Item );
   d->mFlags.remove( name );
-  if ( !d->mFlagsOverwritten )
-    d->mDeletedFlags.insert( name );
+  if ( !d->mFlagsOverwritten ) {
+    if ( d->mAddedFlags.contains( name ) )
+      d->mAddedFlags.remove( name );
+    else
+      d->mDeletedFlags.insert( name );
+  }
 }
 
 void Item::setFlags( const Flags &flags )
