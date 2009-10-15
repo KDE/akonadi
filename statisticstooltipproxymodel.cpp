@@ -100,8 +100,8 @@ QVariant StatisticsToolTipProxyModel::data( const QModelIndex & index, int role)
 
       if ( collection.hasAttribute<CollectionQuotaAttribute>() ) {
         CollectionQuotaAttribute *quota = collection.attribute<CollectionQuotaAttribute>();
-        if ( quota->currentValue() > -1 && quota->maxValue() > 0 ) {
-          qreal percentage = ( 100.0 * quota->currentValue() ) / quota->maxValue();
+        if ( quota->currentValue() > -1 && quota->maximumValue() > 0 ) {
+          qreal percentage = ( 100.0 * quota->currentValue() ) / quota->maximumValue();
 
           if ( qAbs( percentage ) >= 0.01 ) {
             QString percentStr = QString::number( percentage, 'f', 2 );
