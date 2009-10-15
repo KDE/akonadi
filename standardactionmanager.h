@@ -97,13 +97,13 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      */
     enum Type {
       CreateCollection,          ///< Creates an collection
-      CopyCollections,           ///< Copies collections
-      DeleteCollections,         ///< Deletes collections
+      CopyCollections,           ///< Copies the selected collections
+      DeleteCollections,         ///< Deletes the selected collections
       SynchronizeCollections,    ///< Synchronizes collections
       CollectionProperties,      ///< Provides collection properties
-      CopyItems,                 ///< Copies items
+      CopyItems,                 ///< Copies the selected items
       Paste,                     ///< Paste collections or items
-      DeleteItems,               ///< Deletes items
+      DeleteItems,               ///< Deletes the selected items
       ManageLocalSubscriptions,  ///< Manages local subscriptions
       AddToFavoriteCollections,  ///< Add the collection to the favorite collections model
       RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model
@@ -112,8 +112,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       CopyItemToMenu,            ///< Menu allowing to quickly copy an item into a collection
       MoveItemToMenu,            ///< Menu allowing to move item into a collection
       MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection
-      CutItems,                  ///< Cuts items
-      CutCollections,            ///< Cuts items
+      CutItems,                  ///< Cuts the selected items
+      CutCollections,            ///< Cuts the selected collections
       LastType                   ///< Marks last action
     };
 
