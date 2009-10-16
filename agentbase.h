@@ -245,7 +245,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * Reimplement to handle item unlinking.
          * This is only relevant for virtual resources.
          * @param item The unlinked item.
-         * @param collection The collection the item is unlinked to.
+         * @param collection The collection the item is unlinked from.
          */
         virtual void itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
@@ -257,17 +257,17 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          *
          * @param collection The moved collection.
          * @param source The previous parent collection.
-         * @param distination The new parent collection.
+         * @param destination The new parent collection.
          */
-        virtual void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source,
-                                      const Akonadi::Collection &destination );
+        virtual void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &collectionSource,
+                                      const Akonadi::Collection &collectionDestination );
 
         /**
          * Reimplement to handle changes to existing collections.
          * @param collection The changed collection.
          * @param partIdentifiers The identifiers of the collection parts that has been changed.
          */
-        virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers );
+        virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes );
     };
 
     /**
