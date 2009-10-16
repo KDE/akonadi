@@ -69,6 +69,16 @@ class AKONADI_EXPORT StatisticsToolTipProxyModel : public QSortFilterProxyModel
     virtual QMimeData* mimeData( const QModelIndexList & indexes ) const;
     virtual QStringList mimeTypes() const;
 
+    /**
+     * @param enable Display tooltips
+     */
+    void setToolTipEnabled( bool enable);
+
+    /**
+     * Return true if we display tooltips, otherwise false
+     */
+    bool isToolTipEnabled() const;
+
   private:
     //@cond PRIVATE
     class Private;
