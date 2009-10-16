@@ -30,8 +30,8 @@ QTEST_KDEMAIN(CollectionTest, NoGUI)
 
 QByteArray collection1(
 "<test>\n"
-" <collection content=\"inode/directory,message/rfc822\" rid=\"c11\" name=\"Inbox\" >\n"
-"  <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\" false)</attribute>\n"
+" <collection content=\"inode/directory,message/rfc822\" rid=\"c11\" name=\"Inbox\">\n"
+"  <attribute type=\"ENTITYDISPLAY\">(\"Posteingang\" \"mail-folder-inbox\" false \"\")</attribute>\n"
 " </collection>\n"
 "</test>\n");
 
