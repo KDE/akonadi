@@ -75,15 +75,15 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
     QString iconName() const;
 
     /**
-     * Returns whether this object should be hidden. This is for purely view-based hiding,
-     * comparable to hidden files, the object will always be visible from the API POV.
+     * Returns whether this entity should be hidden. This is for purely view-based hiding,
+     * comparable to hidden files, the entity will always be visible from the API POV.
      * @since 4.4
      */
     bool isHidden() const;
 
     /**
-     * Sets whether this object should be hidden.
-     * @param hide @c true to hide the object, @c false to show it
+     * Sets whether this entity should be hidden.
+     * @param hide @c true to hide the entity, @c false to show it
      * @see isHidden
      * @since 4.4
      */
