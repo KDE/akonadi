@@ -128,7 +128,7 @@ bool AgentInstance::operator==( const AgentInstance &other ) const
   return (d->mIdentifier == other.d->mIdentifier);
 }
 
-void AgentInstance::abort() const
+void AgentInstance::abortCurrentTask() const
 {
   QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( identifier() ),
                         QString::fromLatin1("/"),

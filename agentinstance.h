@@ -173,7 +173,7 @@ class AKONADI_EXPORT AgentInstance
      * Tell the agent to abort its current operation.
      * @since 4.4
      */
-    void abort() const;
+    void abortCurrentTask() const;
 
     /**
      * Tell the agent that its configuration has been changed remotely via D-Bus
