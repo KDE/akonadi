@@ -146,7 +146,6 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
     Q_PRIVATE_SLOT( d, void parentCollectionFetchDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void storeDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
-    Q_PRIVATE_SLOT( d, void memberChanged() )
     //@endcond
 };
 

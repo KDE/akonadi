@@ -77,7 +77,7 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
   connect( d->mEditor, SIGNAL( contactGroupStored( const Akonadi::Item& ) ),
            this, SIGNAL( contactGroupStored( const Akonadi::Item& ) ) );
 
-  setInitialSize( QSize( 420, 120 ) );
+  setInitialSize( QSize( 470, 400 ) );
 }
 
 ContactGroupEditorDialog::~ContactGroupEditorDialog()

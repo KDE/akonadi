@@ -23,8 +23,8 @@
 
 #include "addressbookselectiondialog.h"
 #include "autoqpointer_p.h"
-#include "contactcompletionmodel_p.h"
-#include "contactgrouplineedit_p.h"
+#include "contactgroupmodel_p.h"
+#include "contactgroupeditordelegate_p.h"
 #include "ui_contactgroupeditor.h"
 #include "waitingoverlay_p.h"
 
@@ -35,7 +35,6 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
-#include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <klocale.h>
 #include <klineedit.h>
@@ -43,6 +42,7 @@
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QMessageBox>
+#include <QtGui/QTableView>
 
 namespace Akonadi
 {
@@ -51,9 +51,8 @@ class ContactGroupEditor::Private
 {
   public:
     Private( ContactGroupEditor *parent )
-      : mParent( parent ), mMonitor( 0 ), mCompletionModel( 0 ), mReadOnly( false )
+      : mParent( parent ), mMonitor( 0 ), mReadOnly( false )
     {
-      mCompletionModel = ContactCompletionModel::self();
     }
 
     ~Private()
@@ -71,7 +70,6 @@ class ContactGroupEditor::Private
     void loadContactGroup( const KABC::ContactGroup &group );
     bool storeContactGroup( KABC::ContactGroup &group );
     void setupMonitor();
-    ContactGroupLineEdit* addMemberEdit();
 
     ContactGroupEditor *mParent;
     ContactGroupEditor::Mode mMode;
@@ -79,10 +77,8 @@ class ContactGroupEditor::Private
     Monitor *mMonitor;
     Collection mDefaultCollection;
     Ui::ContactGroupEditor mGui;
-    QVBoxLayout *mMembersLayout;
-    QList<ContactGroupLineEdit*> mMembers;
-    QAbstractItemModel *mCompletionModel;
     bool mReadOnly;
+    ContactGroupModel *mGroupModel;
 };
 
 }
@@ -174,26 +170,15 @@ void ContactGroupEditor::Private::loadContactGroup( const KABC::ContactGroup &gr
 {
   mGui.groupName->setText( group.name() );
 
-  qDeleteAll( mMembers );
-  for ( unsigned int i = 0; i < group.dataCount(); ++i ) {
-    const KABC::ContactGroup::Data data = group.data( i );
-    ContactGroupLineEdit *lineEdit = addMemberEdit();
+  mGroupModel->loadContactGroup( group );
 
-    mParent->disconnect( lineEdit, SIGNAL( textChanged( const QString& ) ), mParent, SLOT( memberChanged() ) );
-    lineEdit->setContactData( data );
-    mParent->connect( lineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( memberChanged() ) );
-  }
+  const QAbstractItemModel *model = mGui.membersView->model();
+  mGui.membersView->setCurrentIndex( model->index( model->rowCount() - 1, 0 ) );
 
-  for ( unsigned int i = 0; i < group.contactReferenceCount(); ++i ) {
-    const KABC::ContactGroup::ContactReference reference = group.contactReference( i );
-    ContactGroupLineEdit *lineEdit = addMemberEdit();
+  if ( mMode == EditMode )
+    mGui.membersView->setFocus();
 
-    mParent->disconnect( lineEdit, SIGNAL( textChanged( const QString& ) ), mParent, SLOT( memberChanged() ) );
-    lineEdit->setContactReference( reference );
-    mParent->connect( lineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( memberChanged() ) );
-  }
-
-  addMemberEdit();
+  mGui.membersView->header()->resizeSections( QHeaderView::Stretch );
 }
 
 bool ContactGroupEditor::Private::storeContactGroup( KABC::ContactGroup &group )
@@ -205,30 +190,9 @@ bool ContactGroupEditor::Private::storeContactGroup( KABC::ContactGroup &group )
 
   group.setName( mGui.groupName->text() );
 
-  group.removeAllContactData();
-  group.removeAllContactReferences();
-
-  // Iterate over all members except the last one, as this is always empty anyway
-  for ( int i = 0; i < (mMembers.count() - 1); ++i ) {
-    if ( mMembers.at( i )->containsReference() ) {
-      const KABC::ContactGroup::ContactReference reference = mMembers.at( i )->contactReference();
-      if ( !(reference == KABC::ContactGroup::ContactReference()) )
-        group.append( reference );
-    } else {
-      const KABC::ContactGroup::Data data = mMembers.at( i )->contactData();
-      if ( data == KABC::ContactGroup::Data() ) {
-        const QString text = mMembers.at( i )->text();
-
-        if ( text.simplified().isEmpty() ) // we handle empty members as 'to be removed'
-          continue;
-
-        KMessageBox::error( mParent, i18n( "<qt>The contact '%1' does not have the correct format.<br/>"
-                                           "Use <b>Name &lt;email@address&gt;</b></qt>", text ) );
-        return false;
-      } else {
-        group.append( data );
-      }
-    }
+  if ( !mGroupModel->storeContactGroup( group ) ) {
+    KMessageBox::error( mParent, mGroupModel->lastErrorMessage() );
+    return false;
   }
 
   return true;
@@ -244,45 +208,10 @@ void ContactGroupEditor::Private::setupMonitor()
            mParent, SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
 }
 
-ContactGroupLineEdit* ContactGroupEditor::Private::addMemberEdit()
-{
-  ContactGroupLineEdit *lineEdit = new ContactGroupLineEdit( mParent );
-  lineEdit->setCompletionModel( mCompletionModel );
-  lineEdit->setToolTip( i18n( "Enter member in format: name <email>" ) );
-  mMembers.append( lineEdit );
-  mMembersLayout->addWidget( lineEdit );
-  mParent->connect( lineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( memberChanged() ) );
-
-  return lineEdit;
-}
-
-void ContactGroupEditor::Private::memberChanged()
-{
-  // remove last line edit iff last and second last line edits are both empty
-  if ( mMembers.count() >= 2 ) { // only if more than 1 line edit available
-    if ( mMembers.at( mMembers.count() - 1 )->text().isEmpty() &&
-         mMembers.at( mMembers.count() - 2 )->text().isEmpty() ) {
-
-      // delete line edit with deleteLater as this slot might be called by
-      // that line edit
-      mMembers.at( mMembers.count() - 1 )->deleteLater();
-
-      // remove line edit from list of known line edits
-      mMembers.removeAt( mMembers.count() - 1 );
-    }
-  }
-
-  // add new line edit if the last one contains text
-  if ( !mMembers.last()->text().isEmpty() )
-    addMemberEdit();
-}
-
 void ContactGroupEditor::Private::setReadOnly( bool readOnly )
 {
   mGui.groupName->setReadOnly( readOnly );
-
-  for ( int i = 0; i < mMembers.count(); ++i )
-    mMembers.at( i )->setReadOnly( readOnly );
+  mGui.membersView->setEnabled( !readOnly );
 }
 
 
@@ -291,16 +220,22 @@ ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
 {
   d->mMode = mode;
   d->mGui.setupUi( this );
-  d->mGui.gridLayout->setRowStretch( 2, 1 );
-  QVBoxLayout *layout = new QVBoxLayout( d->mGui.memberWidget );
-  d->mMembersLayout = new QVBoxLayout();
-  layout->addLayout( d->mMembersLayout );
-  layout->addStretch();
 
-  if ( d->mMode == CreateMode )
-    d->addMemberEdit();
+  d->mGui.membersView->setEditTriggers( QAbstractItemView::CurrentChanged );
+
+  d->mGroupModel = new ContactGroupModel( this );
+  d->mGui.membersView->setModel( d->mGroupModel );
+  d->mGui.membersView->setItemDelegate( new ContactGroupEditorDelegate( d->mGui.membersView, this ) );
+
+  if ( mode == CreateMode ) {
+    KABC::ContactGroup dummyGroup;
+    d->mGroupModel->loadContactGroup( dummyGroup );
+    d->mGui.membersView->header()->setDefaultSectionSize( d->mGui.membersView->header()->width() / 2 );
+    d->mGui.membersView->header()->resizeSections( QHeaderView::Interactive );
+  }
+
+  d->mGui.membersView->header()->setStretchLastSection( true );
 }
-
 
 ContactGroupEditor::~ContactGroupEditor()
 {
@@ -311,9 +246,6 @@ void ContactGroupEditor::loadContactGroup( const Akonadi::Item &item )
 {
   if ( d->mMode == CreateMode )
     Q_ASSERT_X( false, "ContactGroupEditor::loadContactGroup", "You are calling loadContactGroup in CreateMode!" );
-
-  if ( !d->mCompletionModel )
-    Q_ASSERT_X( false, "ContactGroupEditor::loadContactGroup", "You have no completion model set yet!" );
 
   ItemFetchJob *job = new ItemFetchJob( item );
   job->fetchScope().fetchFullPayload();
