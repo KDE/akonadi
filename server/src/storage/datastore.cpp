@@ -142,19 +142,6 @@ DataStore * Akonadi::DataStore::self()
 }
 
 
-/* --- Flag ---------------------------------------------------------- */
-bool DataStore::appendFlag( const QString & name )
-{
-  if ( Flag::exists( name ) ) {
-    qDebug() << "Cannot insert flag " << name
-             << " because it already exists.";
-    return false;
-  }
-
-  Flag flag( name );
-  return flag.insert();
-}
-
 /* --- ItemFlags ----------------------------------------------------- */
 
 bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
@@ -190,22 +177,6 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags,
 
   mNotificationCollector->itemChanged( item, QSet<QByteArray>() << "FLAGS", col );
   return true;
-}
-
-bool DataStore::appendItemFlags( const PimItem &item, const QList<QByteArray> &flags,
-                                 bool checkIfExists, const Collection &col )
-{
-  Flag::List list;
-  foreach ( const QByteArray &f, flags ) {
-    Flag flag = Flag::retrieveByName( QString::fromUtf8( f ) );
-    if ( !flag.isValid() ) {
-      flag = Flag( QString::fromUtf8( f ) );
-      if ( !flag.insert() )
-        return false;
-    }
-    list << flag;
-  }
-  return appendItemFlags( item, list, checkIfExists, col );
 }
 
 bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )

@@ -144,6 +144,12 @@ void <xsl:value-of select="$className"/>::Private::addToCache( const <xsl:value-
   return *this;
 }
 
+// comparisson operator
+bool <xsl:value-of select="$className"/>::operator==( const <xsl:value-of select="$className"/> &amp; other )
+{
+  return id() == other.id();
+}
+
 // accessor methods
 <xsl:for-each select="column[@name != 'id']">
 <xsl:value-of select="@type"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>() const

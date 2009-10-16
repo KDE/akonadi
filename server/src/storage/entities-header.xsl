@@ -61,6 +61,9 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
     /// assignment operator
     <xsl:value-of select="$className"/>&amp; operator=( const <xsl:value-of select="$className"/> &amp; other );
 
+    /// comparisson operator, compares ids, not content
+    bool operator==( const <xsl:value-of select="$className"/> &amp; other );
+
     // accessor methods
     <xsl:for-each select="column[@name != 'id']">
     /**

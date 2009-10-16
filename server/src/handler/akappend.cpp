@@ -108,7 +108,8 @@ bool Akonadi::AkAppend::commit()
     }
 
     // set message flags
-    if ( !db->appendItemFlags( item, flags, false, col ) )
+    const Flag::List flagList = HandlerHelper::resolveFlags( flags );
+    if ( !db->appendItemFlags( item, flagList, false, col ) )
       return failureResponse( "Unable to append item flags." );
 
     // TODO if the mailbox is currently selected, the normal new message

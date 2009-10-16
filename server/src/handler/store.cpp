@@ -40,6 +40,9 @@
 #include <QDebug>
 #include <QFile>
 
+#include <boost/bind.hpp>
+#include <algorithm>
+
 using namespace Akonadi;
 
 Store::Store( Scope::SelectionScope scope )
@@ -53,58 +56,25 @@ Store::Store( Scope::SelectionScope scope )
 
 bool Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
+  Flag::List flagList = HandlerHelper::resolveFlags( flags );
   DataStore *store = connection()->storageBackend();
 
-  QList<Flag> flagList;
-  for ( int i = 0; i < flags.count(); ++i ) {
-    Flag flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
-    if ( !flag.isValid() ) {
-       // If the flag does not exist we'll create it now.
-      if ( !store->appendFlag( QString::fromUtf8( flags[ i ] ) ) ) {
-        qDebug( "Store::replaceFlags: Unable to add new flag '%s'", flags[ i ].data() );
-        return false;
-      } else {
-        flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
-        if ( !flag.isValid() )
-          return false;
-        else
-          flagList.append( flag );
-      }
-    } else {
-      flagList.append( flag );
-    }
-  }
-
-  if ( !store->setItemFlags( item, flagList ) ) {
-    qDebug( "Store::replaceFlags: Unable to set new item flags" );
+  Flag::List currentFlags = item.flags();
+  std::sort( flagList.begin(), flagList.end(), boost::bind( &Flag::id, _1 ) < boost::bind( &Flag::id, _2 ) );
+  std::sort( currentFlags.begin(), currentFlags.end(), boost::bind( &Flag::id, _1 ) < boost::bind( &Flag::id, _2 ) );
+  if ( flagList == currentFlags )
     return false;
-  }
+
+  if ( !store->setItemFlags( item, flagList ) )
+    throw HandlerException( "Store::replaceFlags: Unable to set new item flags" );
+
   return true;
 }
 
 bool Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
+  const Flag::List flagList = HandlerHelper::resolveFlags( flags );
   DataStore *store = connection()->storageBackend();
-
-  QList<Flag> flagList;
-  for ( int i = 0; i < flags.count(); ++i ) {
-    Flag flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
-    if ( !flag.isValid() ) {
-       // If the flag does not exist we'll create it now.
-      if ( !store->appendFlag( QString::fromUtf8( flags[ i ]  ) ) ) {
-        qDebug( "Store::addFlags: Unable to add new flag '%s'", flags[ i ].data() );
-        return false;
-      } else {
-        flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
-        if ( !flag.isValid() )
-          return false;
-        else
-          flagList.append( flag );
-      }
-    } else {
-      flagList.append( flag );
-    }
-  }
 
   if ( !store->appendItemFlags( item, flagList ) ) {
     qDebug( "Store::addFlags: Unable to add new item flags" );
@@ -185,12 +155,12 @@ bool Store::parseStream()
 
     // handle commands that can be applied to more than one item
     if ( command == AKONADI_PARAM_FLAGS ) {
+      bool flagsChanged = true;
       const QList<QByteArray> flags = m_streamParser->readParenthesizedList();
       // TODO move this iteration to an SQL query.
       for ( int i = 0; i < pimItems.count(); ++i ) {
         if ( op == Replace ) {
-          if ( !replaceFlags( pimItems[ i ], flags ) )
-            return failureResponse( "Unable to replace item flags." );
+          flagsChanged = replaceFlags( pimItems[ i ], flags );
         } else if ( op == Add ) {
           if ( !addFlags( pimItems[ i ], flags ) )
             return failureResponse( "Unable to add item flags." );
@@ -204,7 +174,8 @@ bool Store::parseStream()
         }
       }
 
-      changes << AKONADI_PARAM_FLAGS;
+      if ( flagsChanged )
+        changes << AKONADI_PARAM_FLAGS;
       continue;
     }
 

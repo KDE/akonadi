@@ -115,14 +115,9 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     */
     static DataStore* self();
 
-    /* --- Flag ---------------------------------------------------------- */
-    bool appendFlag( const QString & name );
-
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
     bool appendItemFlags( const PimItem &item, const QList<Flag> &flags,
-                          bool checkIfExists = true, const Collection &col = Collection() );
-    bool appendItemFlags( const PimItem &item, const QList<QByteArray> &flags,
                           bool checkIfExists = true, const Collection &col = Collection() );
     bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
 

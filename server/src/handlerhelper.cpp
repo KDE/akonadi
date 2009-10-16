@@ -23,6 +23,7 @@
 #include "storage/selectquerybuilder.h"
 #include "libs/imapparser_p.h"
 #include "libs/protocol_p.h"
+#include "handler.h"
 
 using namespace Akonadi;
 
@@ -257,4 +258,19 @@ int HandlerHelper::parseDepth( const QByteArray &depth )
   if ( !ok )
     throw ImapParserException( "Invalid depth argument" );
   return result;
+}
+
+Akonadi::Flag::List Akonadi::HandlerHelper::resolveFlags(const QList< QByteArray >& flagNames)
+{
+  Flag::List flagList;
+  foreach ( const QByteArray &flagName, flagNames ) {
+    Flag flag = Flag::retrieveByName( QString::fromUtf8( flagName ) );
+    if ( !flag.isValid() ) {
+      flag = Flag( QString::fromUtf8( flagName ) );
+      if ( !flag.insert() )
+        throw HandlerException( "Unable to create flag" );
+    }
+    flagList.append( flag );
+  }
+  return flagList;
 }

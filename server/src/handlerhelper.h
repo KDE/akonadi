@@ -109,6 +109,12 @@ class HandlerHelper
       Parses the listing/ancestor depth parameter.
     */
     static int parseDepth( const QByteArray &depth );
+
+    /**
+      Converts a bytearray list of flag names into flag records.
+      @throws HandlerException on errors during datbase operations
+    */
+    static Akonadi::Flag::List resolveFlags( const QList<QByteArray> &flagNames );
 };
 
 }

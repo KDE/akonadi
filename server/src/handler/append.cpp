@@ -161,7 +161,8 @@ bool Append::commit()
     }
 
     // set message flags
-    if ( !db->appendItemFlags( item, flags, false, col ) )
+    const Flag::List flagList = HandlerHelper::resolveFlags( flags );
+    if ( !db->appendItemFlags( item, flagList, false, col ) )
       return failureResponse( "Unable to append item flags." );
 
     if (storeInFile) {
