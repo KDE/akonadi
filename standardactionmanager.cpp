@@ -181,19 +181,20 @@ class StandardActionManager::Private
         if ( singleColSelected )
           selectedIndex = collectionSelectionModel->selectedRows().first();
 
-        const QModelIndexList rows = itemSelectionModel->selectedRows();
-        foreach ( const QModelIndex &itemIndex, rows ) {
-          const Collection collection = itemIndex.data( EntityTreeModel::CollectionRole ).value<Collection>();
-          if ( !collection.isValid() )
-            continue;
+        if ( itemSelectionModel ) {
+          const QModelIndexList rows = itemSelectionModel->selectedRows();
+          foreach ( const QModelIndex &itemIndex, rows ) {
+            const Collection collection = itemIndex.data( EntityTreeModel::CollectionRole ).value<Collection>();
+            if ( !collection.isValid() )
+              continue;
 
-          if ( collection == collection.root() )
-            // The root collection is selected. There are no valid actions to enable.
-            return;
+            if ( collection == collection.root() )
+              // The root collection is selected. There are no valid actions to enable.
+              return;
 
-          canDeleteCollections = canDeleteCollections && ( collection.rights() & Collection::CanDeleteCollection );
+            canDeleteCollections = canDeleteCollections && ( collection.rights() & Collection::CanDeleteCollection );
+          }
         }
-
       }
 
       enableAction( CopyCollections, singleColSelected || multiColSelected );
