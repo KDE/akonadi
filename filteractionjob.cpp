@@ -22,7 +22,6 @@
 #include "collection.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "job_p.h"
 
 #include <KDebug>
 
