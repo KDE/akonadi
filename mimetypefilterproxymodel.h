@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ENTITYFILTERPROXYMODEL_H
-#define AKONADI_ENTITYFILTERPROXYMODEL_H
+#ifndef AKONADI_MIMETYPEFILTERPROXYMODEL_H
+#define AKONADI_MIMETYPEFILTERPROXYMODEL_H
 
 #include "akonadi_export.h"
 
@@ -27,7 +27,7 @@
 
 namespace Akonadi {
 
-class EntityFilterProxyModelPrivate;
+class MimeTypeFilterProxyModelPrivate;
 
 /**
  * @short A proxy model that filters entities by mime type.
@@ -39,7 +39,7 @@ class EntityFilterProxyModelPrivate;
  *
  *   Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel( this );
  *
- *   Akonadi::EntityFilterProxyModel *proxy = new Akonadi::EntityFilterProxyModel();
+ *   Akonadi::MimeTypeFilterProxyModel *proxy = new Akonadi::MimeTypeFilterProxyModel();
  *   proxy->addMimeTypeInclusionFilter( "message/rfc822" );
  *   proxy->setSourceModel( model );
  *
@@ -57,22 +57,22 @@ class EntityFilterProxyModelPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
+class AKONADI_EXPORT MimeTypeFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new proxy filter model.
+     * Creates a new mime type proxy filter model.
      *
      * @param parent The parent object.
      */
-    explicit EntityFilterProxyModel( QObject *parent = 0 );
+    explicit MimeTypeFilterProxyModel( QObject *parent = 0 );
 
     /**
-     * Destroys the proxy filter model.
+     * Destroys the mime type proxy filter model.
      */
-    virtual ~EntityFilterProxyModel();
+    virtual ~MimeTypeFilterProxyModel();
 
     /**
      * Add mime types to be shown by the filter.
@@ -152,8 +152,8 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
 
   private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( EntityFilterProxyModel )
-    EntityFilterProxyModelPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE( MimeTypeFilterProxyModel )
+    MimeTypeFilterProxyModelPrivate * const d_ptr;
     //@endcond
 };
 

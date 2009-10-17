@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-#include "entityfilterproxymodel.h"
+#include "mimetypefilterproxymodel.h"
 
 #include "entitytreemodel.h"
 
@@ -35,17 +35,17 @@ namespace Akonadi {
 /**
  * @internal
  */
-class EntityFilterProxyModelPrivate
+class MimeTypeFilterProxyModelPrivate
 {
   public:
-    EntityFilterProxyModelPrivate( EntityFilterProxyModel *parent )
+    MimeTypeFilterProxyModelPrivate( MimeTypeFilterProxyModel *parent )
       : q_ptr( parent ),
         m_headerSet(0)
     {
     }
 
-    Q_DECLARE_PUBLIC(EntityFilterProxyModel)
-    EntityFilterProxyModel *q_ptr;
+    Q_DECLARE_PUBLIC(MimeTypeFilterProxyModel)
+    MimeTypeFilterProxyModel *q_ptr;
 
     QStringList includedMimeTypes;
     QStringList excludedMimeTypes;
@@ -57,48 +57,48 @@ class EntityFilterProxyModelPrivate
 
 }
 
-EntityFilterProxyModel::EntityFilterProxyModel( QObject *parent )
+MimeTypeFilterProxyModel::MimeTypeFilterProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
-    d_ptr( new EntityFilterProxyModelPrivate( this ) )
+    d_ptr( new MimeTypeFilterProxyModelPrivate( this ) )
 {
 }
 
-EntityFilterProxyModel::~EntityFilterProxyModel()
+MimeTypeFilterProxyModel::~MimeTypeFilterProxyModel()
 {
   delete d_ptr;
 }
 
-void EntityFilterProxyModel::addMimeTypeInclusionFilters(const QStringList &typeList)
+void MimeTypeFilterProxyModel::addMimeTypeInclusionFilters(const QStringList &typeList)
 {
-  Q_D(EntityFilterProxyModel);
+  Q_D(MimeTypeFilterProxyModel);
   d->includedMimeTypes << typeList;
   invalidateFilter();
 }
 
-void EntityFilterProxyModel::addMimeTypeExclusionFilters(const QStringList &typeList)
+void MimeTypeFilterProxyModel::addMimeTypeExclusionFilters(const QStringList &typeList)
 {
-  Q_D(EntityFilterProxyModel);
+  Q_D(MimeTypeFilterProxyModel);
   d->excludedMimeTypes << typeList;
   invalidateFilter();
 }
 
-void EntityFilterProxyModel::addMimeTypeInclusionFilter(const QString &type)
+void MimeTypeFilterProxyModel::addMimeTypeInclusionFilter(const QString &type)
 {
-  Q_D(EntityFilterProxyModel);
+  Q_D(MimeTypeFilterProxyModel);
   d->includedMimeTypes << type;
   invalidateFilter();
 }
 
-void EntityFilterProxyModel::addMimeTypeExclusionFilter(const QString &type)
+void MimeTypeFilterProxyModel::addMimeTypeExclusionFilter(const QString &type)
 {
-  Q_D(EntityFilterProxyModel);
+  Q_D(MimeTypeFilterProxyModel);
   d->excludedMimeTypes << type;
   invalidateFilter();
 }
 
-bool EntityFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
+bool MimeTypeFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
 {
-  Q_D(const EntityFilterProxyModel);
+  Q_D(const MimeTypeFilterProxyModel);
   // All rows that are not below m_rootIndex are unfiltered.
 
   bool found = false;
@@ -136,55 +136,55 @@ bool EntityFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex 
   return false;
 }
 
-QStringList EntityFilterProxyModel::mimeTypeInclusionFilters() const
+QStringList MimeTypeFilterProxyModel::mimeTypeInclusionFilters() const
 {
-  Q_D(const EntityFilterProxyModel);
+  Q_D(const MimeTypeFilterProxyModel);
   return d->includedMimeTypes;
 }
 
-QStringList EntityFilterProxyModel::mimeTypeExclusionFilters() const
+QStringList MimeTypeFilterProxyModel::mimeTypeExclusionFilters() const
 {
-  Q_D(const EntityFilterProxyModel);
+  Q_D(const MimeTypeFilterProxyModel);
   return d->excludedMimeTypes;
 }
 
-void EntityFilterProxyModel::clearFilters()
+void MimeTypeFilterProxyModel::clearFilters()
 {
-  Q_D(EntityFilterProxyModel);
+  Q_D(MimeTypeFilterProxyModel);
   d->includedMimeTypes.clear();
   d->excludedMimeTypes.clear();
   invalidateFilter();
 }
 
-void EntityFilterProxyModel::setRootIndex(const QModelIndex &srcIndex)
+void MimeTypeFilterProxyModel::setRootIndex(const QModelIndex &srcIndex)
 {
-  Q_D(EntityFilterProxyModel);
+  Q_D(MimeTypeFilterProxyModel);
   d->m_rootIndex = srcIndex;
   reset();
 }
 
-void EntityFilterProxyModel::setHeaderSet(int set)
+void MimeTypeFilterProxyModel::setHeaderSet(int set)
 {
-  Q_D(EntityFilterProxyModel);
+  Q_D(MimeTypeFilterProxyModel);
   d->m_headerSet = set;
 }
 
 
-QVariant EntityFilterProxyModel::headerData(int section, Qt::Orientation orientation, int role ) const
+QVariant MimeTypeFilterProxyModel::headerData(int section, Qt::Orientation orientation, int role ) const
 {
-  Q_D(const EntityFilterProxyModel);
+  Q_D(const MimeTypeFilterProxyModel);
   role += (EntityTreeModel::TerminalUserRole * d->m_headerSet);
   return sourceModel()->headerData(section, orientation, role);
 }
 
-bool EntityFilterProxyModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
+bool MimeTypeFilterProxyModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
 {
   Q_ASSERT(sourceModel());
   const QModelIndex sourceParent = mapToSource(parent);
   return sourceModel()->dropMimeData(data, action, row, column, sourceParent);
 }
 
-QMimeData* EntityFilterProxyModel::mimeData( const QModelIndexList & indexes ) const
+QMimeData* MimeTypeFilterProxyModel::mimeData( const QModelIndexList & indexes ) const
 {
   Q_ASSERT(sourceModel());
   QModelIndexList sourceIndexes;
@@ -193,13 +193,13 @@ QMimeData* EntityFilterProxyModel::mimeData( const QModelIndexList & indexes ) c
   return sourceModel()->mimeData(sourceIndexes);
 }
 
-QStringList EntityFilterProxyModel::mimeTypes() const
+QStringList MimeTypeFilterProxyModel::mimeTypes() const
 {
   Q_ASSERT(sourceModel());
   return sourceModel()->mimeTypes();
 }
 
-QModelIndexList EntityFilterProxyModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags) const
+QModelIndexList MimeTypeFilterProxyModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags) const
 {
   if (EntityTreeModel::AmazingCompletionRole != role)
     return QSortFilterProxyModel::match(start, role, value, hits, flags);
@@ -232,9 +232,9 @@ QModelIndexList EntityFilterProxyModel::match(const QModelIndex& start, int role
   return proxyMap.values().mid(0, hits);
 }
 
-int EntityFilterProxyModel::columnCount(const QModelIndex &parent) const
+int MimeTypeFilterProxyModel::columnCount(const QModelIndex &parent) const
 {
-  Q_D(const EntityFilterProxyModel);
+  Q_D(const MimeTypeFilterProxyModel);
 
   QVariant var = sourceModel()->data(parent, EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerSet));
   if( !var.isValid() )
@@ -242,12 +242,12 @@ int EntityFilterProxyModel::columnCount(const QModelIndex &parent) const
   return var.toInt();
 }
 
-bool EntityFilterProxyModel::hasChildren(const QModelIndex &parent) const
+bool MimeTypeFilterProxyModel::hasChildren(const QModelIndex &parent) const
 {
   if ( !parent.isValid() )
     return sourceModel()->hasChildren(parent);
   
-  Q_D(const EntityFilterProxyModel);
+  Q_D(const MimeTypeFilterProxyModel);
   if ( EntityTreeModel::ItemListHeaders == d->m_headerSet)
     return false;
 
@@ -265,13 +265,13 @@ bool EntityFilterProxyModel::hasChildren(const QModelIndex &parent) const
   return false;
 }
 
-bool EntityFilterProxyModel::canFetchMore( const QModelIndex &parent ) const
+bool MimeTypeFilterProxyModel::canFetchMore( const QModelIndex &parent ) const
 {
-  Q_D(const EntityFilterProxyModel);
+  Q_D(const MimeTypeFilterProxyModel);
   if ( EntityTreeModel::CollectionTreeHeaders == d->m_headerSet )
     return false;
   return QSortFilterProxyModel::canFetchMore(parent);
 }
 
-#include "entityfilterproxymodel.moc"
+#include "mimetypefilterproxymodel.moc"
 

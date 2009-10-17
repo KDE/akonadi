@@ -27,7 +27,7 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/entitytreemodel.h>
-#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/mimetypefilterproxymodel.h>
 #include <akonadi/session.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>

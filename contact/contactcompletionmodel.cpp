@@ -23,9 +23,9 @@
 
 #include <kdescendantsproxymodel.h>
 
-#include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/mimetypefilterproxymodel.h>
 #include <akonadi/session.h>
 
 #include <kabc/addressee.h>
@@ -50,7 +50,7 @@ QAbstractItemModel* ContactCompletionModel::self()
   KDescendantsProxyModel *descModel = new KDescendantsProxyModel( model );
   descModel->setSourceModel( model );
 
-  EntityFilterProxyModel *filter = new Akonadi::EntityFilterProxyModel( model );
+  MimeTypeFilterProxyModel *filter = new Akonadi::MimeTypeFilterProxyModel( model );
   filter->setSourceModel( descModel );
   filter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   filter->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );

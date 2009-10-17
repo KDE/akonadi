@@ -84,7 +84,6 @@ set( akonadikde_LIB_SRC
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entitytreeview.cpp
-  entityfilterproxymodel.cpp
   entitytreeviewstatesaver.cpp
   erroroverlay.cpp
   exception.cpp
@@ -111,6 +110,7 @@ set( akonadikde_LIB_SRC
   linkjob.cpp
   filteractionjob.cpp
   mimetypechecker.cpp
+  mimetypefilterproxymodel.cpp
   monitor.cpp
   monitor_p.cpp
   partfetcher.cpp
@@ -224,7 +224,6 @@ install( FILES
   entityhiddenattribute.h
   entitytreemodel.h
   entitytreeview.h
-  entityfilterproxymodel.h
   entitytreeviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
@@ -248,6 +247,7 @@ install( FILES
   linkjob.h
   filteractionjob.h
   mimetypechecker.h
+  mimetypefilterproxymodel.h
   monitor.h
   partfetcher.h
   preprocessorbase.h
