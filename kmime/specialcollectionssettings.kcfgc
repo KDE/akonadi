@@ -1,5 +1,5 @@
-File=localfolders.kcfg
-ClassName=LocalFoldersSettings
+File=specialcollections.kcfg
+ClassName=SpecialCollectionsSettings
 NameSpace=Akonadi
 Singleton=true
 ItemAccessors=true

@@ -17,58 +17,60 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_LOCALFOLDERATTRIBUTE_H
-#define AKONADI_LOCALFOLDERATTRIBUTE_H
+#ifndef AKONADI_SPECIALCOLLECTIONATTRIBUTE_H
+#define AKONADI_SPECIALCOLLECTIONATTRIBUTE_H
 
 #include "akonadi-kmime_export.h"
 
 #include <akonadi/attribute.h>
+#include <akonadi/kmime/specialcollections.h>
 
 namespace Akonadi {
 
 /**
-  Attribute storing the LocalFolder type of a collection (e.g. Outbox,
-  Drafts, SentMail).  All collections registered with LocalFolders must
-  have this attribute.
-
-  @author Constantin Berzan <exit3219@gmail.com>
-  @since 4.4
-*/
-class AKONADI_KMIME_EXPORT LocalFolderAttribute : public Akonadi::Attribute
+ * @short An Attribute that stores the special collection type of a collection.
+ *
+ * All collections registered with SpecialCollections must have this attribute set.
+ *
+ * @author Constantin Berzan <exit3219@gmail.com>
+ * @since 4.4
+ */
+class AKONADI_KMIME_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute
 {
   public:
     /**
-      Creates a new LocalFolderAttribute.
-    */
-    explicit LocalFolderAttribute( int type = -1 );
+     * Creates a new special collection attribute.
+     */
+    explicit SpecialCollectionAttribute( SpecialCollections::Type type = SpecialCollections::Invalid );
 
     /**
-      Destroys the LocalFolderAttribute.
-    */
-    virtual ~LocalFolderAttribute();
+     * Destroys the special collection attribute.
+     */
+    virtual ~SpecialCollectionAttribute();
+
+    /**
+     * Sets the special collections @p type of the collection.
+     */
+    void setCollectionType( SpecialCollections::Type type );
+
+    /**
+     * Returns the special collections type of the collection.
+     */
+    SpecialCollections::Type collectionType() const;
 
     /* reimpl */
-    virtual LocalFolderAttribute* clone() const;
+    virtual SpecialCollectionAttribute* clone() const;
     virtual QByteArray type() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
 
-    /**
-      Returns the LocalFolder type of the collection.
-    */
-    int folderType() const;
-
-    /**
-      Sets the LocalFolder type of the collection.
-    */
-    void setFolderType( int type );
-
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
-
+    //@endcond
 };
 
 } // namespace Akonadi
 
-#endif // AKONADI_LOCALFOLDERATTRIBUTE_H
+#endif // AKONADI_SPECIALCOLLECTIONATTRIBUTE_H

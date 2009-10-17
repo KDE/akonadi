@@ -17,23 +17,23 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_LOCALFOLDERSTESTING_H
-#define AKONADI_LOCALFOLDERSTESTING_H
+#ifndef AKONADI_SPECIALCOLLECTIONSTESTING_H
+#define AKONADI_SPECIALCOLLECTIONSTESTING_H
 
 #include "akonadi-kmime_export.h"
-#include "localfolders.h"
+#include "specialcollections.h"
 
 namespace Akonadi {
 
 /**
   @internal
-  Class that exposes LocalFolders' private methods for use in unit tests.
+  Class that exposes SpecialCollections' private methods for use in unit tests.
   HACK Is there a better way to do this?
 */
-class AKONADI_KMIME_TEST_EXPORT LocalFoldersTesting
+class AKONADI_KMIME_TEST_EXPORT SpecialCollectionsTesting
 {
   public:
-    static LocalFoldersTesting *_t_self();
+    static SpecialCollectionsTesting *_t_self();
     void _t_setDefaultResourceId( const QString &resourceId );
     void _t_forgetFoldersForResource( const QString &resourceId );
     void _t_beginBatchRegister();
@@ -44,4 +44,4 @@ class AKONADI_KMIME_TEST_EXPORT LocalFoldersTesting
 
 } // namespace Akonadi
 
-#endif // AKONADI_LOCALFOLDERSTESTING_H
+#endif // AKONADI_SPECIALCOLLECTIONSTESTING_H

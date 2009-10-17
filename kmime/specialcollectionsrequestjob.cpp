@@ -17,29 +17,31 @@
     02110-1301, USA.
 */
 
-#include "localfoldersrequestjob.h"
+#include "specialcollectionsrequestjob.h"
 
-#include "localfolderattribute.h"
-#include "localfolders.h"
-#include "localfoldershelperjobs_p.h"
-#include "localfolderssettings.h"
+#include "specialcollectionattribute_p.h"
+#include "specialcollections.h"
+#include "specialcollections_p.h"
+#include "specialcollectionshelperjobs_p.h"
+#include "specialcollectionssettings.h"
 
 #include <KDebug>
 
+#include "akonadi/agentmanager.h"
 #include "akonadi/collectioncreatejob.h"
 #include "akonadi/entitydisplayattribute.h"
 
 using namespace Akonadi;
 
-typedef LocalFoldersSettings Settings;
+typedef SpecialCollectionsSettings Settings;
 
 /**
   @internal
 */
-class Akonadi::LocalFoldersRequestJobPrivate
+class Akonadi::SpecialCollectionsRequestJobPrivate
 {
   public:
-    LocalFoldersRequestJobPrivate( LocalFoldersRequestJob *qq );
+    SpecialCollectionsRequestJobPrivate( SpecialCollectionsRequestJob *qq );
 
     bool isEverythingReady();
     void lockResult( KJob *job ); // slot
@@ -49,9 +51,12 @@ class Akonadi::LocalFoldersRequestJobPrivate
     void createRequestedFolders( ResourceScanJob *resjob, QList<bool> &requestedFolders );
     void collectionCreateResult( KJob *job ); // slot
 
-    LocalFoldersRequestJob *q;
+    SpecialCollectionsRequestJob *q;
     QList<bool> falseBoolList;
     int pendingCreateJobs;
+
+    SpecialCollections::Type mRequestedType;
+    AgentInstance mRequestedResource;
 
     // Input:
     QList<bool> defaultFolders;
@@ -60,30 +65,30 @@ class Akonadi::LocalFoldersRequestJobPrivate
 
     // Output:
     QStringList toForget;
-    QList<Collection> toRegister;
+    QList< QPair<Collection, SpecialCollections::Type> > toRegister;
 };
 
 
 
-LocalFoldersRequestJobPrivate::LocalFoldersRequestJobPrivate( LocalFoldersRequestJob *qq )
+SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate( SpecialCollectionsRequestJob *qq )
   : q( qq )
   , pendingCreateJobs( 0 )
   , requestingDefaultFolders( false )
 {
-  for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
+  for( int type = SpecialCollections::Root; type < SpecialCollections::LastType; type++ ) {
     falseBoolList.append( false );
   }
 
   defaultFolders = falseBoolList;
 }
 
-bool LocalFoldersRequestJobPrivate::isEverythingReady()
+bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
 {
-  LocalFolders *lf = LocalFolders::self();
+  SpecialCollections *lf = SpecialCollections::self();
 
   if( requestingDefaultFolders ) {
-    for( int i = 0; i < LocalFolders::LastDefaultType; i++ ) {
-      if( defaultFolders[i] && !lf->hasDefaultFolder( i ) ) {
+    for( int i = SpecialCollections::Root; i < SpecialCollections::LastType; i++ ) {
+      if( defaultFolders[i] && !lf->hasDefaultCollection( (SpecialCollections::Type)i ) ) {
         return false;
       }
     }
@@ -91,8 +96,9 @@ bool LocalFoldersRequestJobPrivate::isEverythingReady()
 
   foreach( const QString &resourceId, foldersForResource.keys() ) {
     const QList<bool> &requested = foldersForResource[ resourceId ];
-    for( int i = 0; i < LocalFolders::LastDefaultType; i++ ) {
-      if( requested[i] && !lf->hasFolder( i, resourceId ) ) {
+    for( int i = SpecialCollections::Root; i < SpecialCollections::LastType; i++ ) {
+      if ( requested[i] && !lf->hasCollection( (SpecialCollections::Type)i,
+                                                AgentManager::self()->instance( resourceId ) ) ) {
         return false;
       }
     }
@@ -102,7 +108,7 @@ bool LocalFoldersRequestJobPrivate::isEverythingReady()
   return true;
 }
 
-void LocalFoldersRequestJobPrivate::lockResult( KJob *job )
+void SpecialCollectionsRequestJobPrivate::lockResult( KJob *job )
 {
   if( job->error() ) {
     kWarning() << "Failed to get lock:" << job->errorString();
@@ -119,7 +125,7 @@ void LocalFoldersRequestJobPrivate::lockResult( KJob *job )
   }
 }
 
-void LocalFoldersRequestJobPrivate::releaseLock()
+void SpecialCollectionsRequestJobPrivate::releaseLock()
 {
   const bool ok = Akonadi::releaseLock();
   if( !ok ) {
@@ -127,26 +133,27 @@ void LocalFoldersRequestJobPrivate::releaseLock()
   }
 }
 
-void LocalFoldersRequestJobPrivate::nextResource()
+void SpecialCollectionsRequestJobPrivate::nextResource()
 {
   if( foldersForResource.isEmpty() ) {
     kDebug() << "All done! Comitting.";
 
-    LocalFolders::self()->beginBatchRegister();
+    SpecialCollections::self()->d->beginBatchRegister();
 
     // Forget everything we knew before about these resources.
     foreach( const QString &resourceId, toForget ) {
-      LocalFolders::self()->forgetFoldersForResource( resourceId );
+      SpecialCollections::self()->d->forgetFoldersForResource( resourceId );
     }
 
     // Register all the collections that we fetched / created.
-    foreach( const Collection &col, toRegister ) {
-      const bool ok = LocalFolders::self()->registerFolder( col );
+    typedef QPair<Collection, SpecialCollections::Type> RegisterPair;
+    foreach( const RegisterPair &pair, toRegister ) {
+      const bool ok = SpecialCollections::self()->registerCollection( pair.second, pair.first );
       Q_ASSERT( ok );
       Q_UNUSED( ok );
     }
 
-    LocalFolders::self()->endBatchRegister();
+    SpecialCollections::self()->d->endBatchRegister();
 
     // We are done!
     q->commit();
@@ -162,7 +169,7 @@ void LocalFoldersRequestJobPrivate::nextResource()
   }
 }
 
-void LocalFoldersRequestJobPrivate::resourceScanResult( KJob *job )
+void SpecialCollectionsRequestJobPrivate::resourceScanResult( KJob *job )
 {
   Q_ASSERT( dynamic_cast<ResourceScanJob*>( job ) );
   ResourceScanJob *resjob = static_cast<ResourceScanJob*>( job );
@@ -177,7 +184,7 @@ void LocalFoldersRequestJobPrivate::resourceScanResult( KJob *job )
   if( dynamic_cast<DefaultResourceJob*>( job ) ) {
     // This is the default resource.
     Q_ASSERT( resourceId == Settings::defaultResourceId() );
-    //toForget.append( LocalFolders::self()->defaultResourceId() );
+    //toForget.append( SpecialCollections::self()->defaultResourceId() );
     createRequestedFolders( resjob, defaultFolders );
   } else {
     // This is not the default resource.
@@ -187,17 +194,17 @@ void LocalFoldersRequestJobPrivate::resourceScanResult( KJob *job )
   }
 }
 
-void LocalFoldersRequestJobPrivate::createRequestedFolders( ResourceScanJob *resjob,
+void SpecialCollectionsRequestJobPrivate::createRequestedFolders( ResourceScanJob *resjob,
                                           QList<bool> &requestedFolders )
 {
-  Q_ASSERT( requestedFolders.count() == LocalFolders::LastDefaultType );
+  Q_ASSERT( requestedFolders.count() == SpecialCollections::LastType );
 
   // Remove from the request list the folders which already exist.
   foreach( const Collection &col, resjob->localFolders() ) {
-    toRegister.append( col );
-    Q_ASSERT( col.hasAttribute<LocalFolderAttribute>() );
-    const LocalFolderAttribute *attr = col.attribute<LocalFolderAttribute>();
-    const int type = attr->folderType();
+    Q_ASSERT( col.hasAttribute<SpecialCollectionAttribute>() );
+    const SpecialCollectionAttribute *attr = col.attribute<SpecialCollectionAttribute>();
+    const int type = (int)attr->collectionType();
+    toRegister.append( qMakePair( col, (SpecialCollections::Type)type ) );
     requestedFolders[ type ] = false;
   }
   toForget.append( resjob->resourceId() );
@@ -205,13 +212,14 @@ void LocalFoldersRequestJobPrivate::createRequestedFolders( ResourceScanJob *res
   // Folders left in the request list must be created.
   Q_ASSERT( pendingCreateJobs == 0 );
   Q_ASSERT( resjob->rootResourceCollection().isValid() );
-  for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
+  for( int type = SpecialCollections::Root; type < SpecialCollections::LastType; type++ ) {
     if( requestedFolders[ type ] ) {
       Collection col;
       col.setParentCollection( resjob->rootResourceCollection() );
-      col.setName( nameForType( type ) );
-      setCollectionAttributes( col, type );
+      col.setName( nameForType( (SpecialCollections::Type)type ) );
+      setCollectionAttributes( col, (SpecialCollections::Type)type );
       CollectionCreateJob *cjob = new CollectionCreateJob( col, q );
+      cjob->setProperty( "type", type );
       QObject::connect( cjob, SIGNAL(result(KJob*)), q, SLOT(collectionCreateResult(KJob*)) );
       pendingCreateJobs++;
     }
@@ -222,7 +230,7 @@ void LocalFoldersRequestJobPrivate::createRequestedFolders( ResourceScanJob *res
   }
 }
 
-void LocalFoldersRequestJobPrivate::collectionCreateResult( KJob *job )
+void SpecialCollectionsRequestJobPrivate::collectionCreateResult( KJob *job )
 {
   if( job->error() ) {
     kWarning() << "Failed CollectionCreateJob." << job->errorString();
@@ -232,7 +240,7 @@ void LocalFoldersRequestJobPrivate::collectionCreateResult( KJob *job )
   Q_ASSERT( dynamic_cast<CollectionCreateJob*>( job ) );
   CollectionCreateJob *cjob = static_cast<CollectionCreateJob*>( job );
   const Collection col = cjob->collection();
-  toRegister.append( col );
+  toRegister.append( qMakePair( col, (SpecialCollections::Type)cjob->property( "id" ).toInt() ) );
 
   Q_ASSERT( pendingCreateJobs > 0 );
   pendingCreateJobs--;
@@ -244,35 +252,47 @@ void LocalFoldersRequestJobPrivate::collectionCreateResult( KJob *job )
 
 
 
-LocalFoldersRequestJob::LocalFoldersRequestJob( QObject *parent )
+SpecialCollectionsRequestJob::SpecialCollectionsRequestJob( QObject *parent )
   : TransactionSequence( parent )
-  , d( new LocalFoldersRequestJobPrivate( this ) )
+  , d( new SpecialCollectionsRequestJobPrivate( this ) )
 {
 }
 
-LocalFoldersRequestJob::~LocalFoldersRequestJob()
+SpecialCollectionsRequestJob::~SpecialCollectionsRequestJob()
 {
   delete d;
 }
 
-void LocalFoldersRequestJob::requestDefaultFolder( int type )
+void SpecialCollectionsRequestJob::requestDefaultCollection( SpecialCollections::Type type )
 {
-  Q_ASSERT( type >= 0 && type < LocalFolders::LastDefaultType );
+  Q_ASSERT( type > SpecialCollections::Invalid && type < SpecialCollections::LastType );
   d->defaultFolders[ type ] = true;
   d->requestingDefaultFolders = true;
+  d->mRequestedType = type;
 }
 
-void LocalFoldersRequestJob::requestFolder( int type, const QString &resourceId )
+void SpecialCollectionsRequestJob::requestCollection( SpecialCollections::Type type, const AgentInstance &instance )
 {
-  Q_ASSERT( type >= 0 && type < LocalFolders::LastDefaultType );
-  if( !d->foldersForResource.contains( resourceId ) ) {
+  Q_ASSERT( type > SpecialCollections::Invalid && type < SpecialCollections::LastType );
+  if( !d->foldersForResource.contains( instance.identifier() ) ) {
     // This resource was previously unknown.
-    d->foldersForResource[ resourceId ] = d->falseBoolList;
+    d->foldersForResource[ instance.identifier() ] = d->falseBoolList;
   }
-  d->foldersForResource[ resourceId ][ type ] = true;
+  d->foldersForResource[ instance.identifier() ][ type ] = true;
+
+  d->mRequestedType = type;
+  d->mRequestedResource = instance;
 }
 
-void LocalFoldersRequestJob::doStart()
+Collection SpecialCollectionsRequestJob::collection() const
+{
+  if ( d->mRequestedResource.isValid() )
+    return SpecialCollections::self()->collection( d->mRequestedType, d->mRequestedResource );
+  else
+    return SpecialCollections::self()->defaultCollection( d->mRequestedType );
+}
+
+void SpecialCollectionsRequestJob::doStart()
 {
   if( d->isEverythingReady() ) {
     emitResult();
@@ -283,7 +303,7 @@ void LocalFoldersRequestJob::doStart()
   }
 }
 
-void LocalFoldersRequestJob::slotResult( KJob *job )
+void SpecialCollectionsRequestJob::slotResult( KJob *job )
 {
   if( job->error() ) {
     // If we failed, let others try.
@@ -293,4 +313,4 @@ void LocalFoldersRequestJob::slotResult( KJob *job )
   TransactionSequence::slotResult( job );
 }
 
-#include "localfoldersrequestjob.moc"
+#include "specialcollectionsrequestjob.moc"
