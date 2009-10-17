@@ -44,8 +44,8 @@ namespace Akonadi {
  * const KABC::ContactGroup group = ...;
  *
  * Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( group );
- * job->start();
  * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
+ * job->start();
  *
  * ...
  *
