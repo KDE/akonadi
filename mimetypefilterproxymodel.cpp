@@ -40,7 +40,7 @@ class MimeTypeFilterProxyModelPrivate
   public:
     MimeTypeFilterProxyModelPrivate( MimeTypeFilterProxyModel *parent )
       : q_ptr( parent ),
-        m_headerGroup(0)
+        m_headerGroup(EntityTreeModel::EntityTreeHeaders)
     {
     }
 
