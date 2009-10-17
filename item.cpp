@@ -222,13 +222,13 @@ QSet<QByteArray> Item::availablePayloadParts() const
   return ItemSerializer::availableParts( *this );
 }
 
-void Item::merge( const Item &other )
+void Item::apply( const Item &other )
 {
   setRemoteId( other.remoteId() );
   foreach( Attribute *attribute, other.attributes() )
     addAttribute( attribute->clone() );
 
-  ItemSerializer::merge( *this, other );
+  ItemSerializer::apply( *this, other );
 }
 
 AKONADI_DEFINE_PRIVATE( Item )

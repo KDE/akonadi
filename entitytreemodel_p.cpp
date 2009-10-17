@@ -284,7 +284,7 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
   {
     foreach (const Item &item, itemsToUpdate)
     {
-      m_items[ item.id() ].merge( item );
+      m_items[ item.id() ].apply( item );
       foreach ( const QModelIndex &idx, q->indexesForItem( item ) )
       {
         dataChanged( idx, idx );
@@ -652,7 +652,7 @@ void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, co
     kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
     return;
   }
-  m_items[ item.id() ].merge(item);
+  m_items[ item.id() ].apply(item);
 
   const QModelIndexList indexes = q->indexesForItem( item );
   foreach ( const QModelIndex &index, indexes )
@@ -806,7 +806,7 @@ void EntityTreeModelPrivate::updateJobDone( KJob *job )
 
     Q_ASSERT( item.isValid() );
 
-    m_items[ item.id() ].merge( item );
+    m_items[ item.id() ].apply( item );
     QModelIndexList list = q->indexesForItem( item );
 
     foreach (const QModelIndex &idx, list)
