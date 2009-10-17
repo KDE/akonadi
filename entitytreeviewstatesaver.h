@@ -94,7 +94,7 @@ class AKONADI_EXPORT EntityTreeViewStateSaver : public QObject
      *
      * @param view The QTreeView which state should be saved/restored.
      */
-    EntityTreeViewStateSaver( QTreeView* view );
+    explicit EntityTreeViewStateSaver( QTreeView* view );
 
     /**
      * Destroys this state saver.
