@@ -57,11 +57,11 @@ class ContactViewer::Private
 
     void slotUrlClicked( const QString &urlString )
     {
-      QUrl url( urlString );
+      KUrl url( urlString );
 
       if ( url.scheme() == QLatin1String( "http" ) ||
            url.scheme() == QLatin1String( "https" ) ) {
-        emit mParent->urlClicked( urlString );
+        emit mParent->urlClicked( url );
       } else if ( url.scheme() == QLatin1String( "phone" ) ) {
         const int pos = url.queryItemValue( QLatin1String( "index" ) ).toInt();
 

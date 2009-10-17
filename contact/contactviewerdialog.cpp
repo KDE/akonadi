@@ -50,16 +50,6 @@ ContactViewerDialog::ContactViewerDialog( QWidget *parent )
   d->mViewer = new ContactViewer;
   layout->addWidget( d->mViewer );
 
-  // forward the signals from ContactViewer
-  connect( d->mViewer, SIGNAL( urlClicked( const QUrl& ) ),
-           this, SIGNAL( urlClicked( const QUrl& ) ) );
-  connect( d->mViewer, SIGNAL( emailClicked( const QString&, const QString& ) ),
-           this, SIGNAL( emailClicked( const QString&, const QString& ) ) );
-  connect( d->mViewer, SIGNAL( phoneNumberClicked( const KABC::PhoneNumber& ) ),
-           this, SIGNAL( phoneNumberClicked( const KABC::PhoneNumber& ) ) );
-  connect( d->mViewer, SIGNAL( addressClicked( const KABC::Address& ) ),
-           this, SIGNAL( addressClicked( const KABC::Address& ) ) );
-
   setInitialSize( QSize( 500, 600 ) );
 }
 
@@ -71,6 +61,11 @@ ContactViewerDialog::~ContactViewerDialog()
 Akonadi::Item ContactViewerDialog::contact() const
 {
   return d->mViewer->contact();
+}
+
+ContactViewer* ContactViewerDialog::viewer() const
+{
+  return d->mViewer;
 }
 
 void ContactViewerDialog::setContact( const Akonadi::Item &contact )

@@ -28,7 +28,7 @@
 
 #include <QtGui/QWidget>
 
-class QUrl;
+class KUrl;
 
 namespace KABC {
 class Address;
@@ -94,7 +94,7 @@ class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::Ite
      *
      * @param url The url that has been clicked.
      */
-    void urlClicked( const QUrl &url );
+    void urlClicked( const KUrl &url );
 
     /**
      * This signal is emitted whenever the user has clicked on

@@ -30,6 +30,7 @@
 
 namespace Akonadi {
 
+//TODO_AKONADI_REVIEW: add support for clicking on email address
 /**
  * @short A viewer component for contact groups in Akonadi.
  *
