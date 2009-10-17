@@ -119,11 +119,6 @@ class AKONADI_EXPORT MimeTypeFilterProxyModel : public QSortFilterProxyModel
     void clearFilters();
 
     /**
-     * Sets the @p index that shall be used as the root for this model.
-     */
-    void setRootIndex( const QModelIndex &index );
-
-    /**
      * Sets the header @p set of the filter model.
      *
      * \sa EntityTreeModel::HeaderGroup

@@ -156,13 +156,6 @@ void MimeTypeFilterProxyModel::clearFilters()
   invalidateFilter();
 }
 
-void MimeTypeFilterProxyModel::setRootIndex(const QModelIndex &srcIndex)
-{
-  Q_D(MimeTypeFilterProxyModel);
-  d->m_rootIndex = srcIndex;
-  reset();
-}
-
 void MimeTypeFilterProxyModel::setHeaderGroup(EntityTreeModel::HeaderGroup headerGroup)
 {
   Q_D(MimeTypeFilterProxyModel);
