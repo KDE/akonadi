@@ -72,7 +72,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
        * Processing was delayed to a later stage.
        * This must be returned when implementing asynchronous preprocessing.
        *
-       * If this value is returned, terminateProcessing() has to be called
+       * If this value is returned, finishProcessing() has to be called
        * when processing is done.
        */
       ProcessingDelayed,
@@ -127,7 +127,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      * PocessingRefused and ProcessingFailed. Passing any
      * other value will lead to a runtime assertion.
      */
-    void terminateProcessing( ProcessingResult result );
+    void finishProcessing( ProcessingResult result );
 
   Q_SIGNALS:
     /**
