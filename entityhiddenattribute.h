@@ -33,7 +33,7 @@ namespace Akonadi {
  * items shouldn't be displayed in UI applications (unless in some kind
  * of "debug" mode).
  *
- * @seealso Attribute
+ * @see Akonadi::Attribute
  *
  * @author Szymon Stefanek <s.stefanek@gmail.com>
  * @since 4.4

@@ -59,7 +59,7 @@ class PartFetcherPrivate;
  *     return;
  *   }
  *
- *   PartFetcher *fetcher = qobject_cast<PartFetcher>( job );
+ *   PartFetcher *fetcher = qobject_cast<PartFetcher*>( job );
  *
  *   const Item item = fetcher->item();
  *   // do something with the item
