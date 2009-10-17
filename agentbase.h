@@ -154,7 +154,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *
      * @author Kevin Krammer <kevin.krammer@gmx.at>
      *
-     * @deprecated Use Observer2 instead
+     * @deprecated Use ObserverV2 instead
      */
     class AKONADI_EXPORT Observer  // krazy:exclude=dpointer
     {
@@ -215,7 +215,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *
      * @since 4.4
      */
-    class AKONADI_EXPORT Observer2 : public Observer  // krazy:exclude=dpointer
+    class AKONADI_EXPORT ObserverV2 : public Observer  // krazy:exclude=dpointer
     {
         using Observer::collectionChanged;
 
