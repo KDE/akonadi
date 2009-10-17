@@ -136,9 +136,6 @@ class AKONADI_EXPORT MimeTypeFilterProxyModel : public QSortFilterProxyModel
 
     virtual bool canFetchMore(const QModelIndex &parent) const;
 
-    /**
-      Reimplemented to handle the AmazingCompletionRole.
-    */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
     virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
