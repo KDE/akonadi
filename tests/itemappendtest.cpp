@@ -211,6 +211,27 @@ void ItemAppendTest::testMultipartAppend()
   AKVERIFYEXEC( djob );
 }
 
+void ItemAppendTest::testInvalidMultipartAppend()
+{
+  AttributeFactory::registerAttribute<TestAttribute>();
+
+  Item item;
+  item.setMimeType( "application/octet-stream" );
+  item.setPayload<QByteArray>( "body data" );
+  item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
+  item.setFlag( "TestFlag" );
+  ItemCreateJob *job = new ItemCreateJob( item, Collection( -1 ), this );
+  QVERIFY( !job->exec() );
+
+  Item item2;
+  item2.setMimeType( "application/octet-stream" );
+  item2.setPayload<QByteArray>( "more body data" );
+  item2.attribute<TestAttribute>( Item::AddIfMissing )->data = "even more extra data";
+  item2.setFlag( "TestFlag" );
+  ItemCreateJob *job2 = new ItemCreateJob( item2, Collection( -1 ), this );
+  QVERIFY( !job2->exec() );
+}
+
 void ItemAppendTest::testItemSize_data()
 {
   QTest::addColumn<Akonadi::Item>( "item" );
