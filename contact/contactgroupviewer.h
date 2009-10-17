@@ -30,7 +30,6 @@
 
 namespace Akonadi {
 
-//TODO_AKONADI_REVIEW: add support for clicking on email address
 /**
  * @short A viewer component for contact groups in Akonadi.
  *
@@ -81,6 +80,16 @@ class AKONADI_CONTACT_EXPORT ContactGroupViewer : public QWidget, public Akonadi
      */
     void setContactGroup( const Akonadi::Item &group );
 
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the user has clicked on
+     * an email address in the viewer.
+     *
+     * @param name The name of the contact.
+     * @param email The plain email address of the contact.
+     */
+    void emailClicked( const QString &name, const QString &email );
+
   private:
     /**
      * This method is called whenever the displayed contact @p group has been changed.
@@ -98,6 +107,7 @@ class AKONADI_CONTACT_EXPORT ContactGroupViewer : public QWidget, public Akonadi
     class Private;
     Private* const d;
 
+    Q_PRIVATE_SLOT( d, void slotMailClicked( const QString&, const QString& ) )
     Q_PRIVATE_SLOT( d, void _k_expandResult( KJob* ) )
     //@endcond
 };

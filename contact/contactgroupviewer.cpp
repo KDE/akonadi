@@ -49,6 +49,16 @@ class ContactGroupViewer::Private
     {
     }
 
+    void slotMailClicked( const QString&, const QString &email )
+    {
+      QString name, address;
+
+      // remove the 'mailto:' and split into name and email address
+      KABC::Addressee::parseEmailAddress( email.mid( 7 ), name, address );
+
+      emit mParent->emailClicked( name, address );
+    }
+
     void _k_expandResult( KJob *job )
     {
       ContactGroupExpandJob *expandJob = qobject_cast<ContactGroupExpandJob*>( job );
@@ -72,6 +82,10 @@ ContactGroupViewer::ContactGroupViewer( QWidget *parent )
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   d->mBrowser = new KTextBrowser;
+  d->mBrowser->setNotifyClick( true );
+
+  connect( d->mBrowser, SIGNAL( mailClick( const QString&, const QString& ) ),
+           this, SLOT( slotMailClicked( const QString&, const QString& ) ) );
 
   layout->addWidget( d->mBrowser );
 
@@ -144,16 +158,23 @@ static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::
 
 
   foreach ( const KABC::Addressee &contact, contacts ) {
+    const QString fullEmail = QLatin1String( "<a href=\"mailto:" ) + QString::fromLatin1( KUrl::toPercentEncoding( contact.fullEmail() ) ) + QString::fromLatin1( "\">%1</a>" ).arg( contact.preferredEmail() );
+
     strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
                                           "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font size=\"-1\">&lt;%2&gt;</font></td></td></tr>" )
                    .arg( contact.realName() )
-                   .arg( contact.preferredEmail() ) );
+                   .arg( fullEmail ) );
   }
 
   strGroup.append( QString::fromLatin1( "</table>\n" ) );
 
   const QString document = QString::fromLatin1(
     "<html>"
+    "<head>"
+    " <style type=\"text/css\">"
+    "  a {text-decoration:none; color:%1}"
+    " </style>"
+    "</head>"
     "<body text=\"%1\" bgcolor=\"%2\">" // text and background color
     "%3" // contact part
     "</body>"
