@@ -66,7 +66,7 @@ class Item;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT FavoriteCollectionsView : public QListView
+class AKONADI_EXPORT EntityListView : public QListView
 {
   Q_OBJECT
 
@@ -76,7 +76,7 @@ class AKONADI_EXPORT FavoriteCollectionsView : public QListView
      *
      * @param parent The parent widget.
      */
-    explicit FavoriteCollectionsView( QWidget *parent = 0 );
+    explicit EntityListView( QWidget *parent = 0 );
 
     /**
      * Creates a new favorite collections view.
@@ -86,12 +86,12 @@ class AKONADI_EXPORT FavoriteCollectionsView : public QListView
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit FavoriteCollectionsView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+    explicit EntityListView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
 
     /**
      * Destroys the favorite collections view.
      */
-    virtual ~FavoriteCollectionsView();
+    virtual ~EntityListView();
 
     /**
      * Sets the XML GUI client which the view is used in.

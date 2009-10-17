@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-#include "favoritecollectionsview.h"
+#include "entitylistview.h"
 
 #include "dragdropmanager_p.h"
 
@@ -49,10 +49,10 @@ using namespace Akonadi;
 /**
  * @internal
  */
-class FavoriteCollectionsView::Private
+class EntityListView::Private
 {
 public:
-  Private( FavoriteCollectionsView *parent )
+  Private( EntityListView *parent )
       : mParent( parent ), mDragDropManager( new DragDropManager( mParent ) ), mXmlGuiClient( 0 )
   {
   }
@@ -62,12 +62,12 @@ public:
   void itemDoubleClicked( const QModelIndex& );
   void itemCurrentChanged( const QModelIndex& );
 
-  FavoriteCollectionsView *mParent;
+  EntityListView *mParent;
   DragDropManager *mDragDropManager;
   KXMLGUIClient *mXmlGuiClient;
 };
 
-void FavoriteCollectionsView::Private::init()
+void EntityListView::Private::init()
 {
   mParent->setEditTriggers( QAbstractItemView::EditKeyPressed );
   mParent->setAcceptDrops( true );
@@ -83,7 +83,7 @@ void FavoriteCollectionsView::Private::init()
   Control::widgetNeedsAkonadi( mParent );
 }
 
-void FavoriteCollectionsView::Private::itemClicked( const QModelIndex &index )
+void EntityListView::Private::itemClicked( const QModelIndex &index )
 {
   if ( !index.isValid() )
     return;
@@ -94,7 +94,7 @@ void FavoriteCollectionsView::Private::itemClicked( const QModelIndex &index )
   }
 }
 
-void FavoriteCollectionsView::Private::itemDoubleClicked( const QModelIndex &index )
+void EntityListView::Private::itemDoubleClicked( const QModelIndex &index )
 {
   if ( !index.isValid() )
     return;
@@ -105,7 +105,7 @@ void FavoriteCollectionsView::Private::itemDoubleClicked( const QModelIndex &ind
   }
 }
 
-void FavoriteCollectionsView::Private::itemCurrentChanged( const QModelIndex &index )
+void EntityListView::Private::itemCurrentChanged( const QModelIndex &index )
 {
   if ( !index.isValid() )
     return;
@@ -116,7 +116,7 @@ void FavoriteCollectionsView::Private::itemCurrentChanged( const QModelIndex &in
   }
 }
 
-FavoriteCollectionsView::FavoriteCollectionsView( QWidget * parent )
+EntityListView::EntityListView( QWidget * parent )
   : QListView( parent ),
     d( new Private( this ) )
 {
@@ -124,7 +124,7 @@ FavoriteCollectionsView::FavoriteCollectionsView( QWidget * parent )
   d->init();
 }
 
-FavoriteCollectionsView::FavoriteCollectionsView( KXMLGUIClient *xmlGuiClient, QWidget * parent )
+EntityListView::EntityListView( KXMLGUIClient *xmlGuiClient, QWidget * parent )
   : QListView( parent ),
     d( new Private( this ) )
 {
@@ -132,13 +132,13 @@ FavoriteCollectionsView::FavoriteCollectionsView( KXMLGUIClient *xmlGuiClient, Q
   d->init();
 }
 
-FavoriteCollectionsView::~FavoriteCollectionsView()
+EntityListView::~EntityListView()
 {
   delete d->mDragDropManager;
   delete d;
 }
 
-void FavoriteCollectionsView::setModel( QAbstractItemModel * model )
+void EntityListView::setModel( QAbstractItemModel * model )
 {
   if ( selectionModel() ) {
     disconnect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
@@ -151,7 +151,7 @@ void FavoriteCollectionsView::setModel( QAbstractItemModel * model )
            SLOT( itemCurrentChanged( const QModelIndex& ) ) );
 }
 
-void FavoriteCollectionsView::dragMoveEvent( QDragMoveEvent * event )
+void EntityListView::dragMoveEvent( QDragMoveEvent * event )
 {
   if ( d->mDragDropManager->dropAllowed( event ) ) {
     // All urls are supported. process the event.
@@ -162,14 +162,14 @@ void FavoriteCollectionsView::dragMoveEvent( QDragMoveEvent * event )
   event->setDropAction( Qt::IgnoreAction );
 }
 
-void FavoriteCollectionsView::dropEvent( QDropEvent * event )
+void EntityListView::dropEvent( QDropEvent * event )
 {
   if ( d->mDragDropManager->processDropEvent( event ) ) {
     QListView::dropEvent( event );
   }
 }
 
-void FavoriteCollectionsView::contextMenuEvent( QContextMenuEvent * event )
+void EntityListView::contextMenuEvent( QContextMenuEvent * event )
 {
   if ( !d->mXmlGuiClient )
     return;
@@ -187,14 +187,14 @@ void FavoriteCollectionsView::contextMenuEvent( QContextMenuEvent * event )
     popup->exec( event->globalPos() );
 }
 
-void FavoriteCollectionsView::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
+void EntityListView::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 {
   d->mXmlGuiClient = xmlGuiClient;
 }
 
-void FavoriteCollectionsView::startDrag( Qt::DropActions supportedActions )
+void EntityListView::startDrag( Qt::DropActions supportedActions )
 {
   d->mDragDropManager->startDrag( supportedActions );
 }
 
-#include "favoritecollectionsview.moc"
+#include "entitylistview.moc"

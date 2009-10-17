@@ -81,6 +81,7 @@ set( akonadikde_LIB_SRC
   entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
+  entitylistview.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entitytreeview.cpp
@@ -88,7 +89,6 @@ set( akonadikde_LIB_SRC
   erroroverlay.cpp
   exception.cpp
   favoritecollectionsmodel.cpp
-  favoritecollectionsview.cpp
   firstrun.cpp
   flatcollectionproxymodel.cpp
   item.cpp
@@ -222,12 +222,12 @@ install( FILES
   entity.h
   entitydisplayattribute.h
   entityhiddenattribute.h
+  entitylistview.h
   entitytreemodel.h
   entitytreeview.h
   entitytreeviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
-  favoritecollectionsview.h
   item.h
   itemcreatejob.h
   itemcopyjob.h
