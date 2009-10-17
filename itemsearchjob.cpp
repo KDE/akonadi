@@ -72,6 +72,13 @@ ItemSearchJob::~ItemSearchJob()
 {
 }
 
+void ItemSearchJob::setQuery( const QString &query )
+{
+  Q_D( ItemSearchJob );
+
+  d->mQuery = query;
+}
+
 void ItemSearchJob::setFetchScope( const ItemFetchScope &fetchScope )
 {
   Q_D( ItemSearchJob );
