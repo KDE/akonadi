@@ -21,9 +21,9 @@
 
 #include "contacteditordialog.h"
 
-#include "addressbookcombobox.h"
 #include "contacteditor.h"
 
+#include <akonadi/collectioncombobox.h>
 #include <akonadi/item.h>
 
 #include <kabc/addressee.h>
@@ -58,8 +58,9 @@ class ContactEditorDialog::Private
       if ( mode == ContactEditorDialog::CreateMode ) {
         QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-        mAddressBookBox = new AddressBookComboBox( AddressBookComboBox::ContactsOnly,
-                                                   AddressBookComboBox::Writable, mainWidget );
+        mAddressBookBox = new CollectionComboBox( mainWidget );
+        mAddressBookBox->setContentMimeTypesFilter( QStringList() << KABC::Addressee::mimeType() );
+        mAddressBookBox->setAccessRightsFilter( CollectionComboBox::Writable );
 
         layout->addWidget( label, 0, 0 );
         layout->addWidget( mAddressBookBox, 0, 1 );
@@ -80,7 +81,7 @@ class ContactEditorDialog::Private
     void slotOkClicked()
     {
       if ( mAddressBookBox )
-        mEditor->setDefaultAddressBook( mAddressBookBox->selectedAddressBook() );
+        mEditor->setDefaultAddressBook( mAddressBookBox->currentCollection() );
 
       if ( mEditor->saveContact() )
         q->accept();
@@ -92,7 +93,7 @@ class ContactEditorDialog::Private
     }
 
     ContactEditorDialog *q;
-    AddressBookComboBox *mAddressBookBox;
+    CollectionComboBox *mAddressBookBox;
     ContactEditorDialog::Mode mMode;
     ContactEditor *mEditor;
 };
@@ -122,7 +123,7 @@ void ContactEditorDialog::setDefaultAddressBook( const Akonadi::Collection &addr
   if ( d->mMode == EditMode )
     return;
 
-  d->mAddressBookBox->setDefaultAddressBook( addressbook );
+  d->mAddressBookBox->setDefaultCollection( addressbook );
 }
 
 ContactEditor* ContactEditorDialog::editor() const

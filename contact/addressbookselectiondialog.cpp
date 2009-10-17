@@ -21,9 +21,10 @@
 
 #include "addressbookselectiondialog.h"
 
-#include "addressbookcombobox.h"
-
+#include <akonadi/collectioncombobox.h>
 #include <akonadi/item.h>
+#include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
 #include <klocale.h>
 
 #include <QtGui/QLabel>
@@ -34,7 +35,7 @@ using namespace Akonadi;
 class AddressBookSelectionDialog::Private
 {
   public:
-    AddressBookComboBox *mCollectionCombo;
+    CollectionComboBox *mCollectionCombo;
 };
 
 AddressBookSelectionDialog::AddressBookSelectionDialog( Type type, QWidget *parent )
@@ -48,7 +49,14 @@ AddressBookSelectionDialog::AddressBookSelectionDialog( Type type, QWidget *pare
 
   QVBoxLayout *layout = new QVBoxLayout( mainWidget );
 
-  d->mCollectionCombo = new Akonadi::AddressBookComboBox( (AddressBookComboBox::Type)type, AddressBookComboBox::Writable );
+  d->mCollectionCombo = new CollectionComboBox();
+  if ( type == ContactsOnly )
+    d->mCollectionCombo->setContentMimeTypesFilter( QStringList() << KABC::Addressee::mimeType() );
+  else if ( type == ContactGroupsOnly )
+    d->mCollectionCombo->setContentMimeTypesFilter( QStringList() << KABC::ContactGroup::mimeType() );
+  else
+    d->mCollectionCombo->setContentMimeTypesFilter( QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType() );
+  d->mCollectionCombo->setAccessRightsFilter( CollectionComboBox::Writable );
 
   layout->addWidget( new QLabel( i18n( "Select the address book" ) ) );
   layout->addWidget( d->mCollectionCombo );
@@ -61,10 +69,10 @@ AddressBookSelectionDialog::~AddressBookSelectionDialog()
 
 void AddressBookSelectionDialog::setDefaultAddressBook( const Collection &addressbook )
 {
-  d->mCollectionCombo->setDefaultAddressBook( addressbook );
+  d->mCollectionCombo->setDefaultCollection( addressbook );
 }
 
 Akonadi::Collection AddressBookSelectionDialog::selectedAddressBook() const
 {
-  return d->mCollectionCombo->selectedAddressBook();
+  return d->mCollectionCombo->currentCollection();
 }

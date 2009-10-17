@@ -21,9 +21,9 @@
 
 #include "contactgroupeditordialog.h"
 
-#include "addressbookcombobox.h"
 #include "contactgroupeditor.h"
 
+#include <akonadi/collectioncombobox.h>
 #include <akonadi/item.h>
 #include <kabc/contactgroup.h>
 #include <klocale.h>
@@ -41,7 +41,7 @@ class ContactGroupEditorDialog::Private
     {
     }
 
-    AddressBookComboBox *mAddressBookBox;
+    CollectionComboBox *mAddressBookBox;
     ContactGroupEditor *mEditor;
     ContactGroupEditorDialog::Mode mMode;
 };
@@ -64,8 +64,9 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
   if ( mode == CreateMode ) {
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-    d->mAddressBookBox = new AddressBookComboBox( AddressBookComboBox::ContactGroupsOnly,
-                                                  AddressBookComboBox::Writable, mainWidget );
+    d->mAddressBookBox = new CollectionComboBox( mainWidget );
+    d->mAddressBookBox->setContentMimeTypesFilter( QStringList() << KABC::ContactGroup::mimeType() );
+    d->mAddressBookBox->setAccessRightsFilter( CollectionComboBox::Writable );
 
     layout->addWidget( label, 0, 0 );
     layout->addWidget( d->mAddressBookBox, 0, 1 );
@@ -95,7 +96,7 @@ void ContactGroupEditorDialog::setDefaultAddressBook( const Akonadi::Collection 
   if ( d->mMode == EditMode )
     return;
 
-  d->mAddressBookBox->setDefaultAddressBook( addressbook );
+  d->mAddressBookBox->setDefaultCollection( addressbook );
 }
 
 ContactGroupEditor* ContactGroupEditorDialog::editor() const
@@ -107,7 +108,7 @@ void ContactGroupEditorDialog::slotButtonClicked( int button )
 {
   if ( button == KDialog::Ok ) {
     if ( d->mAddressBookBox )
-      d->mEditor->setDefaultAddressBook( d->mAddressBookBox->selectedAddressBook() );
+      d->mEditor->setDefaultAddressBook( d->mAddressBookBox->currentCollection() );
 
     if ( d->mEditor->saveContactGroup() )
       accept();

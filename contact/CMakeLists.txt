@@ -37,9 +37,7 @@ set(akonadicontact_editor_SRCS
 )
 
 set(akonadicontact_LIB_SRC
-  addressbookcombobox.cpp
   addressbookselectiondialog.cpp
-  asyncselectionhandler.cpp
   attributeregistrar.cpp
   collectionfiltermodel.cpp
   contactcompletionmodel.cpp
@@ -91,7 +89,6 @@ install(FILES editor/data/zone.tab DESTINATION ${DATA_INSTALL_DIR}/akonadi/conta
 
 install( FILES
   akonadi-contact_export.h
-  addressbookcombobox.h
   addressbookselectiondialog.h
   contactdefaultactions.h
   contacteditor.h

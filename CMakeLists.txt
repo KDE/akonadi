@@ -45,12 +45,14 @@ set( akonadikde_LIB_SRC
   agenttypemodel.cpp
   agenttypewidget.cpp
   agenttypedialog.cpp
+  asyncselectionhandler.cpp
   attribute.cpp
   attributefactory.cpp
   cachepolicy.cpp
   cachepolicypage.cpp
   changerecorder.cpp
   collection.cpp
+  collectioncombobox.cpp
   collectioncopyjob.cpp
   collectioncreatejob.cpp
   collectiondeletejob.cpp
@@ -199,6 +201,7 @@ install( FILES
   cachepolicy.h
   changerecorder.h
   collection.h
+  collectioncombobox.h
   collectioncopyjob.h
   collectioncreatejob.h
   collectiondeletejob.h
