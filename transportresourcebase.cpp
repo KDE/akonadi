@@ -22,7 +22,10 @@
 
 #include "transportadaptor.h"
 
-#include <QDBusConnection>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+
+#include <QtDBus/QDBusConnection>
 
 using namespace Akonadi;
 
@@ -34,9 +37,27 @@ TransportResourceBasePrivate::TransportResourceBasePrivate( TransportResourceBas
                                                 this, QDBusConnection::ExportAdaptors );
 }
 
-void TransportResourceBasePrivate::send( Item::Id message )
+void TransportResourceBasePrivate::send( Item::Id id )
 {
-  q->sendItem( message );
+  ItemFetchJob *job = new ItemFetchJob( Item( id ) );
+  job->fetchScope().fetchFullPayload();
+  job->setProperty( "id", QVariant( id ) );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchResult( KJob* ) ) );
+}
+
+void TransportResourceBasePrivate::fetchResult( KJob *job )
+{
+  if ( job->error() ) {
+    const Item::Id id = job->property( "id" ).toLongLong();
+    emit transportResult( id, (int)TransportResourceBase::TransportFailed, job->errorText() );
+    return;
+  }
+
+  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  Q_ASSERT( fetchJob );
+
+  const Item item = fetchJob->items().first();
+  q->sendItem( item );
 }
 
 TransportResourceBase::TransportResourceBase()
@@ -49,10 +70,11 @@ TransportResourceBase::~TransportResourceBase()
   delete d;
 }
 
-void TransportResourceBase::emitTransportResult( Item::Id &item, bool success,
-                                                 const QString &message )
+void TransportResourceBase::itemSent( const Item &item,
+                                      TransportResult result,
+                                      const QString &message )
 {
-  emit d->transportResult( item, success, message );
+  emit d->transportResult( item.id(), (int)result, message );
 }
 
 #include "transportresourcebase_p.moc"
