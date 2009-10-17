@@ -217,9 +217,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     class AKONADI_EXPORT ObserverV2 : public Observer  // krazy:exclude=dpointer
     {
+      public:
         using Observer::collectionChanged;
 
-      public:
         /**
          * Reimplement to handle item moves.
          * When using this class in combination with Akonadi::ResourceBase, inter-resource
