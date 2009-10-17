@@ -117,12 +117,28 @@ class AKONADI_EXPORT EntityListView : public QListView
     void clicked( const Akonadi::Collection &collection );
 
     /**
+     * This signal is emitted whenever the user has clicked
+     * an item in the view.
+     *
+     * @param item The clicked item.
+     */
+    void clicked( const Akonadi::Item &item );
+
+    /**
      * This signal is emitted whenever the user has double clicked
      * a collection in the view.
      *
      * @param collection The double clicked collection.
      */
     void doubleClicked( const Akonadi::Collection &collection );
+
+    /**
+     * This signal is emitted whenever the user has double clicked
+     * an item in the view.
+     *
+     * @param item The double clicked item.
+     */
+    void doubleClicked( const Akonadi::Item &item );
 
     /**
      * This signal is emitted whenever the current collection
