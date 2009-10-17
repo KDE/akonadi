@@ -113,7 +113,7 @@ class AKONADI_EXPORT EntityTreeViewStateSaver : public QObject
      * become available in the model (the model is populated asynchronously, which is the
      * main reason why you want to use this class).
      *
-     * @param configGroup Config file group containing a previously stored ETM state.
+     * @param configGroup Config file group containing a previously stored EntityTreeView state.
      */
     void restoreState( const KConfigGroup &configGroup ) const;
 
@@ -122,7 +122,7 @@ class AKONADI_EXPORT EntityTreeViewStateSaver : public QObject
     EntityTreeViewStateSaverPrivate* const d;
     Q_PRIVATE_SLOT( d, void rowsInserted( const QModelIndex&, int, int ) )
     Q_PRIVATE_SLOT( d, void restoreScrollBarState() )
-    //@endcond PRIVATE
+    //@endcond
 };
 
 }
