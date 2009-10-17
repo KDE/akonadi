@@ -120,6 +120,8 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      */
     void setContact( const Akonadi::Item &contact );
 
+    //TODO_AKONADI_REVIEW: add setContactTemplate( const KABC::Addressee& ) in EditMore
+
     /**
      * Sets the @p addressbook that shall be selected as default in create mode.
      */

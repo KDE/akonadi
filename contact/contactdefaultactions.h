@@ -54,7 +54,7 @@ namespace Akonadi {
  *
  * ContactDefaultActions *actions = new ContactDefaultActions( this );
  * actions->connectToView( viewer );
- *
+ * //TODO_AKONADI_REVIEW: add example for custom actions
  * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
@@ -88,6 +88,7 @@ class AKONADI_CONTACT_EXPORT ContactDefaultActions : public QObject
      * Shows the given @p url in the users preferred webbrowser.
      */
     void showUrl( const QUrl &url );
+    //TODO_AKONADI_REVIEW: QUrl->KUrl
 
     /**
      * Opens the users preferred mail composer and does the setup

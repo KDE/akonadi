@@ -57,6 +57,7 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */
+ //TODO_AKONADI_REVIEW: inherit from ItemSearchJob
 class AKONADI_CONTACT_EXPORT ContactSearchJob : public KJob
 {
   Q_OBJECT

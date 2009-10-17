@@ -106,6 +106,8 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
      */
     void setContactGroup( const Akonadi::Item &group );
 
+    //TODO_AKONADI_REVIEW: add setContactGroupTemplate()
+
     /**
      * Sets the @p addressbook that shall be selected as default in create mode.
      */

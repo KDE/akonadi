@@ -31,6 +31,7 @@ namespace Akonadi
 
 class Collection;
 
+//TODO_AKONADI_REVIEW: drop this class and extend collectiondialog
 /**
  * @short A dialog to select an address book in Akonadi.
  *

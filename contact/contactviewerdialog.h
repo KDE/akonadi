@@ -68,7 +68,7 @@ class AKONADI_CONTACT_EXPORT ContactViewerDialog : public KDialog
      *
      * @param parent The parent widget of the dialog.
      */
-    ContactViewerDialog( QWidget *parent = 0 );
+    explicit ContactViewerDialog( QWidget *parent = 0 );
 
     /**
      * Destroys the contact viewer dialog.

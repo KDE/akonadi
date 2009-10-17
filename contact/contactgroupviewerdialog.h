@@ -30,6 +30,8 @@ namespace Akonadi {
 
 class Item;
 
+    //TODO_AKONADI_REVIEW: add support for clicking on email address
+    //TODO_AKONADI_REVIEW: provide access to widgets (for all dialogs)
 /**
  * @short A dialog for displaying a contact group in Akonadi.
  *
