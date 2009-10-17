@@ -453,7 +453,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * argument.
      * @param argument A QVariant argument passed to the method specified above. Use this to pass task
      * parameters.
-     * @param priority Priority if the task. Use this to influence the position in
+     * @param priority Priority of the task. Use this to influence the position in
      * the execution queue.
      * @since 4.4
      */
