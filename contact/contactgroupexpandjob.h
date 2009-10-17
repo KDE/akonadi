@@ -85,14 +85,6 @@ class AKONADI_CONTACT_EXPORT ContactGroupExpandJob : public KJob
     KABC::Addressee::List contacts() const;
 
     /**
-     * Returns the list of email addresses of the contacts.
-     *
-     * Each entry of the list is in the form: FullName <email@address>
-     */
-    QStringList emailAddresses() const;
-    //TODO_AKONADI_REVIEW: remove this method
-
-    /**
      * Starts the expand job.
      */
     virtual void start();
