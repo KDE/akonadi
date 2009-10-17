@@ -121,7 +121,7 @@ void Akonadi::ResourceScheduler::scheduleFullSyncCompletion()
   scheduleNext();
 }
 
-void Akonadi::ResourceScheduler::scheduleCustomTask( QObject *receiver, const char* methodName, const QVariant &argument )
+void Akonadi::ResourceScheduler::scheduleCustomTask( QObject *receiver, const char* methodName, const QVariant &argument, ResourceBase::SchedulePriority priority )
 {
   Task t;
   t.type = Custom;
@@ -130,7 +130,30 @@ void Akonadi::ResourceScheduler::scheduleCustomTask( QObject *receiver, const ch
   t.argument = argument;
   if ( mTaskList.contains( t ) )
     return;
-  mTaskList.append( t );
+
+  switch (priority) {
+  case ResourceBase::Prepend:
+    mTaskList.prepend(t);
+    break;
+  case ResourceBase::AfterChangeReplay:
+    {
+      QMutableListIterator<Task> it(mTaskList);
+      bool inserted = false;
+      while (it.hasNext() && !inserted) {
+        if (it.next().type != ChangeReplay) {
+          it.previous(); // next returns the item *and* advances the iterator.
+          it.insert(t);
+          inserted = true;
+        }
+      }
+      if (!inserted)
+        mTaskList.append(t);
+    }
+    break;
+  default:
+    mTaskList.append(t);
+  }
+
   signalTaskToTracker( t, "Custom-" + t.methodName );
   scheduleNext();
 }
