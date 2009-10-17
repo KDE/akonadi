@@ -44,13 +44,12 @@ class ContactGroupEditor;
  *
  * @code
  *
- * Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, this );
+ * using namespace Akonadi;
  *
- * if ( dlg.exec() ) {
- *   qDebug() << "New contact group has been added to the address book";
- * } else {
- *   qDebug() << "User has canceled operation";
- * }
+ * ContactGroupEditorDialog *dlg = new ContactGroupEditorDialog( ContactGroupEditorDialog::CreateMode, this );
+ * connect( dlg, SIGNAL( contactGroupStored( const Akonadi::Item& ) ),
+ *          this, SLOT( contactGroupStored( const Akonadi::Item& ) ) );
+ * dlg->show();
  *
  * @endcode
  *
@@ -58,16 +57,15 @@ class ContactGroupEditor;
  *
  * @code
  *
- * const Akonadi::Item contactGroup = ...;
+ * using namespace Akonadi;
  *
- * Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, this );
- * dlg.setContactGroup( contactGroup );
+ * const Item contactGroup = ...;
  *
- * if ( dlg.exec() ) {
- *   qDebug() << "Contact group has been edited";
- * } else {
- *   qDebug() << "User has canceled operation";
- * }
+ * ContactGroupEditorDialog *dlg = new ContactGroupEditorDialog( ContactGroupEditorDialog::EditMode, this );
+ * connect( dlg, SIGNAL( contactGroupStored( const Akonadi::Item& ) ),
+ *          this, SLOT( contactGroupStored( const Akonadi::Item& ) ) );
+ * dlg->setContactGroup( contactGroup );
+ * dlg->show();
  *
  * @endcode
  *
@@ -106,12 +104,16 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
      */
     void setContactGroup( const Akonadi::Item &group );
 
-    //TODO_AKONADI_REVIEW: add setContactGroupTemplate()
-
     /**
-     * Sets the @p addressbook that shall be selected as default in create mode.
+     * Sets the @p addressbook that shall be selected as default
+     * for storage in create mode.
      */
     void setDefaultAddressBook( const Akonadi::Collection &addressbook );
+
+    /**
+     * Returns the ContactGroupEditor that is used by the dialog.
+     */
+    ContactGroupEditor* editor() const;
 
   Q_SIGNALS:
     /**

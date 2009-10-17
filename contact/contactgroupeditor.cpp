@@ -281,7 +281,7 @@ bool ContactGroupEditor::saveContactGroup()
     if ( !d->mDefaultCollection.isValid() ) {
       AutoQPointer<AddressBookSelectionDialog> dlg = new AddressBookSelectionDialog( AddressBookSelectionDialog::ContactsOnly, this );
       if ( dlg->exec() == KDialog::Accepted )
-        setDefaultCollection( dlg->selectedAddressBook() );
+        setDefaultAddressBook( dlg->selectedAddressBook() );
       else
         return false;
     }
@@ -301,7 +301,14 @@ bool ContactGroupEditor::saveContactGroup()
   return true;
 }
 
-void ContactGroupEditor::setDefaultCollection( const Akonadi::Collection &collection )
+void ContactGroupEditor::setContactGroupTemplate( const KABC::ContactGroup &group )
+{
+  d->mGroupModel->loadContactGroup( group );
+  d->mGui.membersView->header()->setDefaultSectionSize( d->mGui.membersView->header()->width() / 2 );
+  d->mGui.membersView->header()->resizeSections( QHeaderView::Interactive );
+}
+
+void ContactGroupEditor::setDefaultAddressBook( const Akonadi::Collection &collection )
 {
   d->mDefaultCollection = collection;
 }

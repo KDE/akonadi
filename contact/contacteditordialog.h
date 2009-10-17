@@ -31,6 +31,7 @@ class QAbstractItemModel;
 namespace Akonadi {
 
 class AbstractContactEditorWidget;
+class ContactEditor;
 class Collection;
 class Item;
 
@@ -44,13 +45,13 @@ class Item;
  *
  * @code
  *
- * Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
+ * using namespace Akonadi;
  *
- * if ( dlg.exec() ) {
- *   qDebug() << "New contact has been added to the address book";
- * } else {
- *   qDebug() << "User has canceled operation";
- * }
+ * ContactEditorDialog *dlg = new ContactEditorDialog( ContactEditorDialog::CreateMode, this );
+ * connect( dlg, SIGNAL( contactStored( const Akonadi::Item& ) ),
+ *          this, SLOT( contactStored( const Akonadi::Item& ) ) );
+ * dlg->show();
+ *
  *
  * @endcode
  *
@@ -58,16 +59,15 @@ class Item;
  *
  * @code
  *
- * const Akonadi::Item contact = ...;
+ * using namespace Akonadi;
  *
- * Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, this );
- * dlg.setContact( contact );
+ * const Item contact = ...;
  *
- * if ( dlg.exec() ) {
- *   qDebug() << "Contact has been edited";
- * } else {
- *   qDebug() << "User has canceled operation";
- * }
+ * ContactEditorDialog *dlg = new ContactEditorDialog( ContactEditorDialog::EditMode, this );
+ * connect( dlg, SIGNAL( contactStored( const Akonadi::Item& ) ),
+ *          this, SLOT( contactStored( const Akonadi::Item& ) ) );
+ * dlg->setContact( contact );
+ * dlg->show();
  *
  * @endcode
  *
@@ -127,6 +127,11 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      */
     void setDefaultAddressBook( const Akonadi::Collection &addressbook );
 
+    /**
+     * Returns the ContactEditor that is used by this dialog.
+     */
+    ContactEditor* editor() const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever a contact was updated or stored.
@@ -142,7 +147,7 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
 
     Q_PRIVATE_SLOT( d, void slotOkClicked() )
     Q_PRIVATE_SLOT( d, void slotCancelClicked() )
-    //@endcond PRIVATE
+    //@endcond
 };
 
 }

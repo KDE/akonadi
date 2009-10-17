@@ -98,11 +98,16 @@ void ContactGroupEditorDialog::setDefaultAddressBook( const Akonadi::Collection 
   d->mAddressBookBox->setDefaultAddressBook( addressbook );
 }
 
+ContactGroupEditor* ContactGroupEditorDialog::editor() const
+{
+  return d->mEditor;
+}
+
 void ContactGroupEditorDialog::slotButtonClicked( int button )
 {
   if ( button == KDialog::Ok ) {
     if ( d->mAddressBookBox )
-      d->mEditor->setDefaultCollection( d->mAddressBookBox->selectedAddressBook() );
+      d->mEditor->setDefaultAddressBook( d->mAddressBookBox->selectedAddressBook() );
 
     if ( d->mEditor->saveContactGroup() )
       accept();

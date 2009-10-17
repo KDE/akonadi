@@ -26,6 +26,10 @@
 
 #include <QtGui/QWidget>
 
+namespace KABC {
+class Addressee;
+}
+
 namespace Akonadi {
 
 class AbstractContactEditorWidget;
@@ -113,6 +117,20 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
      */
     virtual ~ContactEditor();
 
+    /**
+     * Sets a @p contact that is used as template in create mode.
+     *
+     * The fields of the editor will be prefilled with the content
+     * of the contact.
+     */
+    void setContactTemplate( const KABC::Addressee &contact );
+
+    /**
+     * Sets the @p addressbook which shall be used to store new
+     * contacts.
+     */
+    void setDefaultAddressBook( const Akonadi::Collection &addressbook );
+
   public Q_SLOTS:
     /**
      * Loads the @p contact into the editor.
@@ -123,12 +141,6 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
      * Saves the contact from the editor back to the storage.
      */
     bool saveContact();
-
-    /**
-     * Sets the @p collection which shall be used to store new
-     * contacts.
-     */
-    void setDefaultCollection( const Akonadi::Collection &collection );
 
   Q_SIGNALS:
     /**
@@ -153,7 +165,7 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
     Q_PRIVATE_SLOT( d, void parentCollectionFetchDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void storeDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
-    //@endcond PRIVATE
+    //@endcond
 };
 
 }

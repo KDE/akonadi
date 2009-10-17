@@ -80,7 +80,7 @@ class ContactEditorDialog::Private
     void slotOkClicked()
     {
       if ( mAddressBookBox )
-        mEditor->setDefaultCollection( mAddressBookBox->selectedAddressBook() );
+        mEditor->setDefaultAddressBook( mAddressBookBox->selectedAddressBook() );
 
       if ( mEditor->saveContact() )
         q->accept();
@@ -123,6 +123,11 @@ void ContactEditorDialog::setDefaultAddressBook( const Akonadi::Collection &addr
     return;
 
   d->mAddressBookBox->setDefaultAddressBook( addressbook );
+}
+
+ContactEditor* ContactEditorDialog::editor() const
+{
+  return d->mEditor;
 }
 
 #include "contacteditordialog.moc"

@@ -241,7 +241,7 @@ bool ContactEditor::saveContact()
     if ( !d->mDefaultCollection.isValid() ) {
       AutoQPointer<AddressBookSelectionDialog> dlg = new AddressBookSelectionDialog( AddressBookSelectionDialog::ContactsOnly, this );
       if ( dlg->exec() == KDialog::Accepted )
-        setDefaultCollection( dlg->selectedAddressBook() );
+        setDefaultAddressBook( dlg->selectedAddressBook() );
       else
         return false;
     }
@@ -262,7 +262,12 @@ bool ContactEditor::saveContact()
   return true;
 }
 
-void ContactEditor::setDefaultCollection( const Akonadi::Collection &collection )
+void ContactEditor::setContactTemplate( const KABC::Addressee &contact )
+{
+  d->loadContact( contact, d->mContactMetaData );
+}
+
+void ContactEditor::setDefaultAddressBook( const Akonadi::Collection &collection )
 {
   d->mDefaultCollection = collection;
 }
