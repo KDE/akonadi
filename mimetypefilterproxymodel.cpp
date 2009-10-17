@@ -40,7 +40,7 @@ class MimeTypeFilterProxyModelPrivate
   public:
     MimeTypeFilterProxyModelPrivate( MimeTypeFilterProxyModel *parent )
       : q_ptr( parent ),
-        m_headerSet(0)
+        m_headerGroup(0)
     {
     }
 
@@ -52,7 +52,7 @@ class MimeTypeFilterProxyModelPrivate
 
     QPersistentModelIndex m_rootIndex;
 
-    int m_headerSet;
+    int m_headerGroup;
 };
 
 }
@@ -163,17 +163,17 @@ void MimeTypeFilterProxyModel::setRootIndex(const QModelIndex &srcIndex)
   reset();
 }
 
-void MimeTypeFilterProxyModel::setHeaderSet(int set)
+void MimeTypeFilterProxyModel::setHeaderGroup(EntityTreeModel::HeaderGroup headerGroup)
 {
   Q_D(MimeTypeFilterProxyModel);
-  d->m_headerSet = set;
+  d->m_headerGroup = headerGroup;
 }
 
 
 QVariant MimeTypeFilterProxyModel::headerData(int section, Qt::Orientation orientation, int role ) const
 {
   Q_D(const MimeTypeFilterProxyModel);
-  role += (EntityTreeModel::TerminalUserRole * d->m_headerSet);
+  role += (EntityTreeModel::TerminalUserRole * d->m_headerGroup);
   return sourceModel()->headerData(section, orientation, role);
 }
 
@@ -236,7 +236,7 @@ int MimeTypeFilterProxyModel::columnCount(const QModelIndex &parent) const
 {
   Q_D(const MimeTypeFilterProxyModel);
 
-  QVariant var = sourceModel()->data(parent, EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerSet));
+  QVariant var = sourceModel()->data(parent, EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerGroup));
   if( !var.isValid() )
     return 0;
   return var.toInt();
@@ -246,12 +246,12 @@ bool MimeTypeFilterProxyModel::hasChildren(const QModelIndex &parent) const
 {
   if ( !parent.isValid() )
     return sourceModel()->hasChildren(parent);
-  
+
   Q_D(const MimeTypeFilterProxyModel);
-  if ( EntityTreeModel::ItemListHeaders == d->m_headerSet)
+  if ( EntityTreeModel::ItemListHeaders == d->m_headerGroup)
     return false;
 
-  if ( EntityTreeModel::CollectionTreeHeaders == d->m_headerSet )
+  if ( EntityTreeModel::CollectionTreeHeaders == d->m_headerGroup )
   {
     QModelIndex childIndex = parent.child( 0, 0 );
     while ( childIndex.isValid() )
@@ -268,7 +268,7 @@ bool MimeTypeFilterProxyModel::hasChildren(const QModelIndex &parent) const
 bool MimeTypeFilterProxyModel::canFetchMore( const QModelIndex &parent ) const
 {
   Q_D(const MimeTypeFilterProxyModel);
-  if ( EntityTreeModel::CollectionTreeHeaders == d->m_headerSet )
+  if ( EntityTreeModel::CollectionTreeHeaders == d->m_headerGroup )
     return false;
   return QSortFilterProxyModel::canFetchMore(parent);
 }

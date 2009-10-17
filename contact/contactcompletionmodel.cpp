@@ -53,7 +53,7 @@ QAbstractItemModel* ContactCompletionModel::self()
   MimeTypeFilterProxyModel *filter = new Akonadi::MimeTypeFilterProxyModel( model );
   filter->setSourceModel( descModel );
   filter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-  filter->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
+  filter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
   mSelf = filter;
 

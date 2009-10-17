@@ -22,6 +22,7 @@
 #define AKONADI_MIMETYPEFILTERPROXYMODEL_H
 
 #include "akonadi_export.h"
+#include "entitytreemodel.h"
 
 #include <QtGui/QSortFilterProxyModel>
 
@@ -127,7 +128,7 @@ class AKONADI_EXPORT MimeTypeFilterProxyModel : public QSortFilterProxyModel
      *
      * \sa EntityTreeModel::HeaderGroup
      */
-    void setHeaderSet( int set );
+    void setHeaderGroup( EntityTreeModel::HeaderGroup headerGroup );
 
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
