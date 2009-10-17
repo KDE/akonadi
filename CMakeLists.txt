@@ -130,7 +130,6 @@ set( akonadikde_LIB_SRC
   servermanager.cpp
   standardactionmanager.cpp
   statisticsproxymodel.cpp
-  statisticstooltipproxymodel.cpp
   subscriptionjob.cpp
   subscriptionchangeproxymodel.cpp
   subscriptiondialog.cpp
@@ -263,7 +262,6 @@ install( FILES
   servermanager.h
   standardactionmanager.h
   statisticsproxymodel.h
-  statisticstooltipproxymodel.h
   transactionjobs.h
   transactionsequence.h
   transportresourcebase.h
