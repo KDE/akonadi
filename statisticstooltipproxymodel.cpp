@@ -43,11 +43,11 @@ class StatisticsToolTipProxyModel::Private
 {
   public:
     Private( StatisticsToolTipProxyModel *parent )
-      : mParent( parent )
+      : mParent( parent ), toolTipEnabled( true )
     {
     }
-
     StatisticsToolTipProxyModel *mParent;
+    bool toolTipEnabled;
 };
 
 StatisticsToolTipProxyModel::StatisticsToolTipProxyModel( QObject *parent )
@@ -63,7 +63,7 @@ StatisticsToolTipProxyModel::~StatisticsToolTipProxyModel()
 
 QVariant StatisticsToolTipProxyModel::data( const QModelIndex & index, int role) const
 {
-  if ( role == Qt::ToolTipRole ) {
+  if ( role == Qt::ToolTipRole && d->toolTipEnabled ) {
     const QModelIndex sourceIndex = mapToSource( index );
     Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
 
@@ -178,6 +178,18 @@ QStringList StatisticsToolTipProxyModel::mimeTypes() const
   Q_ASSERT(sourceModel());
   return sourceModel()->mimeTypes();
 }
+
+void StatisticsToolTipProxyModel::setToolTipEnabled( bool enable )
+{
+  d->toolTipEnabled = enable;
+}
+
+bool StatisticsToolTipProxyModel::isToolTipEnabled() const
+{
+  return d->toolTipEnabled;
+}
+
+
 
 #include "statisticstooltipproxymodel.moc"
 
