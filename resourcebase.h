@@ -430,6 +430,12 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     /**
      * Indicate the use of hierarchical remote identifiers.
+     *
+     * This means that it is possible to have two different items with the same
+     * remoteId in different Collections.
+     *
+     * This should be called in the resource constructor as needed.
+     *
      * @since 4.4
      */
     void setHierarchicalRemoteIdentifiersEnabled( bool enable );
