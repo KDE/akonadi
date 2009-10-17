@@ -84,6 +84,7 @@ set( akonadikde_LIB_SRC
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
   entitylistview.cpp
+  entitymimetypefiltermodel.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entitytreeview.cpp
@@ -112,7 +113,6 @@ set( akonadikde_LIB_SRC
   linkjob.cpp
   filteractionjob.cpp
   mimetypechecker.cpp
-  mimetypefilterproxymodel.cpp
   monitor.cpp
   monitor_p.cpp
   partfetcher.cpp
@@ -225,6 +225,7 @@ install( FILES
   entitydisplayattribute.h
   entityhiddenattribute.h
   entitylistview.h
+  entitymimetypefiltermodel.h
   entitytreemodel.h
   entitytreeview.h
   entitytreeviewstatesaver.h
@@ -249,7 +250,6 @@ install( FILES
   linkjob.h
   filteractionjob.h
   mimetypechecker.h
-  mimetypefilterproxymodel.h
   monitor.h
   partfetcher.h
   preprocessorbase.h

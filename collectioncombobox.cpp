@@ -26,8 +26,8 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/collectionfilterproxymodel.h>
+#include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreemodel.h>
-#include <akonadi/mimetypefilterproxymodel.h>
 #include <akonadi/session.h>
 
 #include <kdescendantsproxymodel.h>
@@ -60,8 +60,8 @@ class CollectionComboBox::Private
         baseModel = proxyModel;
       }
 
-      mMimeTypeFilterProxyModel = new CollectionFilterProxyModel( parent );
-      mMimeTypeFilterProxyModel->setSourceModel( baseModel );
+      mEntityMimeTypeFilterModel = new EntityMimeTypeFilterModel( parent );
+      mEntityMimeTypeFilterModel->setSourceModel( baseModel );
 
 /*
       QStringList contentTypes;
@@ -82,9 +82,9 @@ class CollectionComboBox::Private
       filterModel->setSourceModel( proxyModel );
 */
 
-      mParent->setModel( mMimeTypeFilterProxyModel );
+      mParent->setModel( mEntityMimeTypeFilterModel );
 
-      mSelectionHandler = new AsyncSelectionHandler( mMimeTypeFilterProxyModel, mParent );
+      mSelectionHandler = new AsyncSelectionHandler( mEntityMimeTypeFilterModel, mParent );
       mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
                         mParent, SLOT( activated( const QModelIndex& ) ) );
 
@@ -106,7 +106,7 @@ class CollectionComboBox::Private
 
     ChangeRecorder *mMonitor;
     EntityTreeModel *mModel;
-    CollectionFilterProxyModel *mMimeTypeFilterProxyModel;
+    EntityMimeTypeFilterModel *mEntityMimeTypeFilterModel;
     AsyncSelectionHandler *mSelectionHandler;
 
     QStringList mMimeTypesFilter;
@@ -143,8 +143,8 @@ CollectionComboBox::~CollectionComboBox()
 
 void CollectionComboBox::setContentMimeTypesFilter( const QStringList &contentMimeTypes )
 {
-  d->mMimeTypeFilterProxyModel->clearFilters();
-  d->mMimeTypeFilterProxyModel->addMimeTypeFilters( contentMimeTypes );
+  d->mEntityMimeTypeFilterModel->clearFilters();
+  d->mEntityMimeTypeFilterModel->addContentMimeTypeInclusionFilters( contentMimeTypes );
   d->mMimeTypesFilter = contentMimeTypes;
 
   if ( d->mMonitor ) {

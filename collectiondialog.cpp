@@ -19,9 +19,9 @@
 
 #include "collectiondialog.h"
 
-#include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectionview.h>
+#include <akonadi/entitymimetypefiltermodel.h>
 
 #include <QtGui/QVBoxLayout>
 
@@ -32,7 +32,7 @@ class CollectionDialog::Private
   public:
     CollectionDialog *q;
     CollectionModel *collectionModel;
-    CollectionFilterProxyModel *filterModel;
+    EntityMimeTypeFilterModel *filterModel;
     CollectionView *collectionView;
 
     explicit Private(CollectionDialog *q);
@@ -61,7 +61,7 @@ CollectionDialog::CollectionDialog( QWidget *parent )
 
   d->collectionModel = new CollectionModel( this );
 
-  d->filterModel = new CollectionFilterProxyModel( this );
+  d->filterModel = new EntityMimeTypeFilterModel( this );
   d->filterModel->setDynamicSortFilter( true );
   d->filterModel->setSortCaseSensitivity( Qt::CaseInsensitive );
   d->filterModel->setSourceModel( d->collectionModel );
@@ -109,12 +109,12 @@ Akonadi::Collection::List CollectionDialog::selectedCollections() const
 void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )
 {
   d->filterModel->clearFilters();
-  d->filterModel->addMimeTypeFilters( mimeTypes );
+  d->filterModel->addContentMimeTypeInclusionFilters( mimeTypes );
 }
 
 QStringList CollectionDialog::mimeTypeFilter() const
 {
-  return d->filterModel->mimeTypeFilters();
+  return d->filterModel->contentMimeTypeInclusionFilters();
 }
 
 void CollectionDialog::setSelectionMode( QAbstractItemView::SelectionMode mode )

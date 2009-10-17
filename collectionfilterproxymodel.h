@@ -50,8 +50,10 @@ class CollectionModel;
  * @endcode
  *
  * @author Bruno Virlet <bruno.virlet@gmail.com>
+ *
+ * @deprecated Use EntityMimeTypeFilterModel instead.
  */
-class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
+class AKONADI_EXPORT_DEPRECATED CollectionFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 

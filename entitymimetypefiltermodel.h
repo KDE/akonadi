@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_MIMETYPEFILTERPROXYMODEL_H
-#define AKONADI_MIMETYPEFILTERPROXYMODEL_H
+#ifndef AKONADI_ENTITYMIMETYPEFILTERMODEL_H
+#define AKONADI_ENTITYMIMETYPEFILTERMODEL_H
 
 #include "akonadi_export.h"
 #include "entitytreemodel.h"
@@ -28,7 +28,7 @@
 
 namespace Akonadi {
 
-class MimeTypeFilterProxyModelPrivate;
+class EntityMimeTypeFilterModelPrivate;
 
 /**
  * @short A proxy model that filters entities by mime type.
@@ -40,7 +40,7 @@ class MimeTypeFilterProxyModelPrivate;
  *
  *   Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel( this );
  *
- *   Akonadi::MimeTypeFilterProxyModel *proxy = new Akonadi::MimeTypeFilterProxyModel();
+ *   Akonadi::EntityMimeTypeFilterModel *proxy = new Akonadi::EntityMimeTypeFilterModel();
  *   proxy->addMimeTypeInclusionFilter( "message/rfc822" );
  *   proxy->setSourceModel( model );
  *
@@ -58,7 +58,7 @@ class MimeTypeFilterProxyModelPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT MimeTypeFilterProxyModel : public QSortFilterProxyModel
+class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
@@ -68,12 +68,12 @@ class AKONADI_EXPORT MimeTypeFilterProxyModel : public QSortFilterProxyModel
      *
      * @param parent The parent object.
      */
-    explicit MimeTypeFilterProxyModel( QObject *parent = 0 );
+    explicit EntityMimeTypeFilterModel( QObject *parent = 0 );
 
     /**
      * Destroys the mime type proxy filter model.
      */
-    virtual ~MimeTypeFilterProxyModel();
+    virtual ~EntityMimeTypeFilterModel();
 
     /**
      * Add mime types to be shown by the filter.
@@ -104,6 +104,20 @@ class AKONADI_EXPORT MimeTypeFilterProxyModel : public QSortFilterProxyModel
     void addMimeTypeExclusionFilter( const QString &mimeType );
 
     /**
+     * Add content mime type to be shown by the filter.
+     *
+     * @param mimeType A mime type to be shown.
+     */
+    void addContentMimeTypeInclusionFilter( const QString &mimeType );
+
+    /**
+     * Add content mime types to be shown by the filter.
+     *
+     * @param mimeTypes A list of content mime types to be included.
+     */
+    void addContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
+
+    /**
      * Returns the list of mime type inclusion filters.
      */
     QStringList mimeTypeInclusionFilters() const;
@@ -112,6 +126,11 @@ class AKONADI_EXPORT MimeTypeFilterProxyModel : public QSortFilterProxyModel
      * Returns the list of mime type exclusion filters.
      */
     QStringList mimeTypeExclusionFilters() const;
+
+    /**
+     * Returns the list of content mime type inclusion filters.
+     */
+    QStringList contentMimeTypeInclusionFilters() const;
 
     /**
      * Clear all mime type filters.
@@ -145,8 +164,10 @@ class AKONADI_EXPORT MimeTypeFilterProxyModel : public QSortFilterProxyModel
 
   private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( MimeTypeFilterProxyModel )
-    MimeTypeFilterProxyModelPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE( EntityMimeTypeFilterModel )
+    EntityMimeTypeFilterModelPrivate * const d_ptr;
+
+    Q_PRIVATE_SLOT( d_ptr, void slotReset() )
     //@endcond
 };
 
