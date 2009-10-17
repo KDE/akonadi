@@ -29,7 +29,6 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QTimer>
 
 using namespace Akonadi;
 
@@ -46,13 +45,6 @@ class EntityMimeTypeFilterModelPrivate
     {
     }
 
-    bool collectionAccepted( const QModelIndex &index, bool checkResourceVisibility = true ) const;
-
-    void slotReset()
-    {
-      q_ptr->reset();
-    }
-
     Q_DECLARE_PUBLIC(EntityMimeTypeFilterModel)
     EntityMimeTypeFilterModel *q_ptr;
 
@@ -63,61 +55,8 @@ class EntityMimeTypeFilterModelPrivate
     QPersistentModelIndex m_rootIndex;
 
     EntityTreeModel::HeaderGroup m_headerGroup;
-    MimeTypeChecker m_contentMimeChecker;
-    mutable QList<QModelIndex> m_acceptedResources;
 };
 
-}
-
-bool EntityMimeTypeFilterModelPrivate::collectionAccepted( const QModelIndex &index, bool checkResourceVisibility ) const
-{
-  // Retrieve supported mimetypes
-  const Collection collection = q_ptr->sourceModel()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
-
-  // If this collection directly contains one valid mimetype, it is accepted
-  if ( m_contentMimeChecker.isWantedCollection( collection ) ) {
-    // The folder will be accepted, but we need to make sure the resource is visible too.
-    if ( checkResourceVisibility ) {
-
-      // find the resource
-      QModelIndex resource = index;
-      while ( resource.parent().isValid() )
-        resource = resource.parent();
-
-      // See if that resource is visible, if not, reset the model.
-      if ( resource != index && !m_acceptedResources.contains( resource ) ) {
-        kDebug() << "We got a new collection:" << q_ptr->sourceModel()->data( index ).toString()
-                 << "but the resource is not visible:" << q_ptr->sourceModel()->data( resource ).toString();
-        m_acceptedResources.clear();
-        // defer reset, the model might still be supplying new items at this point which crashs
-        QTimer::singleShot( 0, q_ptr, SLOT( slotReset() ) );
-        return true;
-      }
-    }
-
-    // Keep track of all the resources that are visible.
-    if ( !index.parent().isValid() )
-      m_acceptedResources.append( index );
-
-    return true;
-  }
-
-  // If this collection has a child which contains valid mimetypes, it is accepted
-  QModelIndex childIndex = index.child( 0, 0 );
-  while ( childIndex.isValid() ) {
-    if ( collectionAccepted( childIndex, false /* don't check visibility of the parent, as we are checking the child now */ ) ) {
-
-      // Keep track of all the resources that are visible.
-      if ( !index.parent().isValid())
-        m_acceptedResources.append( index );
-
-      return true;
-    }
-    childIndex = childIndex.sibling( childIndex.row() + 1, 0 );
-  }
-
-  // Or else, no reason to keep this collection.
-  return false;
 }
 
 EntityMimeTypeFilterModel::EntityMimeTypeFilterModel( QObject *parent )
@@ -163,7 +102,6 @@ void EntityMimeTypeFilterModel::addContentMimeTypeInclusionFilter( const QString
 {
   Q_D(EntityMimeTypeFilterModel);
   d->includedContentMimeTypes << type;
-  d->m_contentMimeChecker.addWantedMimeType( type );
   invalidateFilter();
 }
 
@@ -171,9 +109,6 @@ void EntityMimeTypeFilterModel::addContentMimeTypeInclusionFilters( const QStrin
 {
   Q_D(EntityMimeTypeFilterModel);
   d->includedContentMimeTypes << typeList;
-  foreach ( const QString &type, typeList )
-    d->m_contentMimeChecker.addWantedMimeType( type );
-
   invalidateFilter();
 }
 
@@ -211,10 +146,25 @@ bool EntityMimeTypeFilterModel::filterAcceptsRow( int sourceRow, const QModelInd
 
   if ( d->excludedMimeTypes.contains( rowMimetype ) )
     return false;
-  if ( d->includedMimeTypes.isEmpty() || d->includedMimeTypes.contains( rowMimetype ) )
-    return true;
 
-  return d->collectionAccepted( sourceModel()->index( sourceRow, 0, sourceParent ) );
+  if ( !d->includedMimeTypes.isEmpty() ) {
+    if ( d->includedMimeTypes.contains( rowMimetype ) )
+      return true;
+  }
+
+  if ( !d->includedContentMimeTypes.isEmpty() ) {
+    const Collection collection = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+    if ( collection.isValid() ) {
+      const QStringList contentMimeTypes = collection.contentMimeTypes();
+      if ( !contentMimeTypes.toSet().intersect( d->includedContentMimeTypes.toSet() ).isEmpty() )
+        return true;
+      else
+        return false;
+    } else
+      return false;
+  }
+
+  return true;
 }
 
 QStringList EntityMimeTypeFilterModel::mimeTypeInclusionFilters() const
@@ -241,7 +191,6 @@ void EntityMimeTypeFilterModel::clearFilters()
   d->includedMimeTypes.clear();
   d->excludedMimeTypes.clear();
   d->includedContentMimeTypes.clear();
-  d->m_contentMimeChecker = MimeTypeChecker();
   invalidateFilter();
 }
 

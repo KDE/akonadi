@@ -166,8 +166,6 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( EntityMimeTypeFilterModel )
     EntityMimeTypeFilterModelPrivate * const d_ptr;
-
-    Q_PRIVATE_SLOT( d_ptr, void slotReset() )
     //@endcond
 };
 
