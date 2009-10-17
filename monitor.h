@@ -313,14 +313,14 @@ class AKONADI_EXPORT Monitor : public QObject
     void collectionChanged( const Akonadi::Collection &collection );
 
     /**
-     * This signal is emitted if a monitored collection has been changed (properties or content).
+     * This signal is emitted if a monitored collection has been changed (properties or attributes).
      *
      * @param collection The changed collection.
-     * @param partIdentifiers The identifiers of the collection parts that has been changed.
+     * @param attributeNames The names of the collection attributes that have been changed.
      *
      * @since 4.4
      */
-    void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers );
+    void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &attributeNames );
 
     /**
      * This signals is emitted if a monitored collection has been moved.
