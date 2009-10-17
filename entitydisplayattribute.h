@@ -100,8 +100,8 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
     bool isHidden() const;
 
     /**
-     * Sets whether this object should be hidden.
-     * @param hide @c true to hide the object, @c false to show it
+     * Sets whether this entity should be hidden.
+     * @param hide @c true to hide the entity, @c false to show it
      * @see isHidden
      * @since 4.4
      */

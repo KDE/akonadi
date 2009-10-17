@@ -266,7 +266,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 
     if ( role == Qt::ForegroundRole && d->m_pendingCutCollections.contains( node->id ) )
     {
-      return QApplication::palette().color( QPalette::Inactive, QPalette::WindowText);
+       return QApplication::palette().color( QPalette::Disabled, QPalette::Text);
     }
 
     const Collection collection = d->m_collections.value( node->id );
@@ -295,7 +295,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   } else if ( Node::Item == node->type ) {
     if ( role == Qt::ForegroundRole && d->m_pendingCutItems.contains( node->id ) )
     {
-      return QApplication::palette().color( QPalette::Inactive, QPalette::WindowText );
+       return QApplication::palette().color( QPalette::Disabled, QPalette::Text );
     }
 
     const Item item = d->m_items.value( node->id );
