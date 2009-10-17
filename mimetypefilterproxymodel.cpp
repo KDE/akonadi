@@ -52,7 +52,7 @@ class MimeTypeFilterProxyModelPrivate
 
     QPersistentModelIndex m_rootIndex;
 
-    int m_headerGroup;
+    EntityTreeModel::HeaderGroup m_headerGroup;
 };
 
 }
