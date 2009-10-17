@@ -21,66 +21,28 @@
 
 #include "contactsearchjob.h"
 
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemsearchjob.h>
-
 using namespace Akonadi;
 
-class ContactSearchJob::Private
-{
-  public:
-    Private( ContactSearchJob *parent )
-      : mParent( parent ), mCriterion( ContactSearchJob::Name )
-    {
-    }
-
-    void searchResult( KJob *job )
-    {
-      ItemSearchJob *searchJob = qobject_cast<ItemSearchJob*>( job );
-      mItems = searchJob->items();
-
-      foreach ( const Item &item, mItems ) {
-        if ( item.hasPayload<KABC::Addressee>() )
-          mContacts.append( item.payload<KABC::Addressee>() );
-      }
-
-      mParent->emitResult();
-    }
-
-    ContactSearchJob *mParent;
-    ContactSearchJob::Criterion mCriterion;
-    QString mValue;
-    KABC::Addressee::List mContacts;
-    Item::List mItems;
-};
-
 ContactSearchJob::ContactSearchJob( QObject * parent )
-  : KJob( parent ), d( new Private( this ) )
+  : ItemSearchJob( QString(), parent ), d( 0 )
 {
 }
 
 ContactSearchJob::~ContactSearchJob()
 {
-  delete d;
 }
 
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
 {
-  d->mCriterion = criterion;
-  d->mValue = value;
-}
-
-void ContactSearchJob::start()
-{
   QString query;
 
-  if ( d->mCriterion == Name ) {
+  if ( criterion == Name ) {
     query = QString::fromLatin1( ""
                                  "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
                                  "SELECT ?r WHERE {"
                                  "  ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
                                  "}" );
-  } else if ( d->mCriterion == Email ) {
+  } else if ( criterion == Email ) {
     query = QString::fromLatin1( ""
                                  "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
                                  "SELECT ?person WHERE {"
@@ -89,22 +51,21 @@ void ContactSearchJob::start()
                                  " }" );
   }
 
-  query = query.arg( d->mValue );
+  query = query.arg( value );
 
-  ItemSearchJob *job = new ItemSearchJob( query, this );
-  job->fetchScope().fetchFullPayload();
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
-  job->start();
+  ItemSearchJob::setQuery( query );
 }
 
 KABC::Addressee::List ContactSearchJob::contacts() const
 {
-  return d->mContacts;
-}
+  KABC::Addressee::List contacts;
 
-Item::List ContactSearchJob::items() const
-{
-  return d->mItems;
+  foreach ( const Item &item, items() ) {
+    if ( item.hasPayload<KABC::Addressee>() )
+      contacts.append( item.payload<KABC::Addressee>() );
+  }
+
+  return contacts;
 }
 
 #include "contactsearchjob.moc"

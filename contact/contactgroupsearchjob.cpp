@@ -21,60 +21,22 @@
 
 #include "contactgroupsearchjob.h"
 
-#include <akonadi/itemfetchscope.h>
-#include <akonadi/itemsearchjob.h>
-
 using namespace Akonadi;
 
-class ContactGroupSearchJob::Private
-{
-  public:
-    Private( ContactGroupSearchJob *parent )
-      : mParent( parent ), mCriterion( ContactGroupSearchJob::Name )
-    {
-    }
-
-    void searchResult( KJob *job )
-    {
-      ItemSearchJob *searchJob = qobject_cast<ItemSearchJob*>( job );
-      mItems = searchJob->items();
-
-      foreach ( const Item &item, mItems ) {
-        if ( item.hasPayload<KABC::ContactGroup>() )
-          mContactGroups.append( item.payload<KABC::ContactGroup>() );
-      }
-
-      mParent->emitResult();
-    }
-
-    ContactGroupSearchJob *mParent;
-    ContactGroupSearchJob::Criterion mCriterion;
-    QString mValue;
-    KABC::ContactGroup::List mContactGroups;
-    Item::List mItems;
-};
-
 ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
-  : KJob( parent ), d( new Private( this ) )
+  : ItemSearchJob( QString(), parent ), d( 0 )
 {
 }
 
 ContactGroupSearchJob::~ContactGroupSearchJob()
 {
-  delete d;
 }
 
 void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value )
 {
-  d->mCriterion = criterion;
-  d->mValue = value;
-}
-
-void ContactGroupSearchJob::start()
-{
   QString query;
 
-  if ( d->mCriterion == Name ) {
+  if ( criterion == Name ) {
     query = QString::fromLatin1( ""
                                  "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
                                  "SELECT ?group WHERE {"
@@ -82,22 +44,21 @@ void ContactGroupSearchJob::start()
                                  "}" );
   }
 
-  query = query.arg( d->mValue );
+  query = query.arg( value );
 
-  ItemSearchJob *job = new ItemSearchJob( query, this );
-  job->fetchScope().fetchFullPayload();
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
-  job->start();
+  ItemSearchJob::setQuery( query );
 }
 
 KABC::ContactGroup::List ContactGroupSearchJob::contactGroups() const
 {
-  return d->mContactGroups;
-}
+  KABC::ContactGroup::List contactGroups;
 
-Item::List ContactGroupSearchJob::items() const
-{
-  return d->mItems;
+  foreach ( const Item &item, items() ) {
+    if ( item.hasPayload<KABC::ContactGroup>() )
+      contactGroups.append( item.payload<KABC::ContactGroup>() );
+  }
+
+  return contactGroups;
 }
 
 #include "contactgroupsearchjob.moc"

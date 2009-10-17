@@ -25,8 +25,8 @@
 #include "akonadi-contact_export.h"
 
 #include <akonadi/item.h>
+#include <akonadi/itemsearchjob.h>
 #include <kabc/addressee.h>
-#include <kjob.h>
 
 namespace Akonadi {
 
@@ -40,7 +40,6 @@ namespace Akonadi {
  *
  * Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
  * job->setQuery( Akonadi::ContactSearchJob::Email, "tokoe@kde.org" );
- * job->start();
  * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
  *
  * ...
@@ -57,8 +56,7 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */
- //TODO_AKONADI_REVIEW: inherit from ItemSearchJob
-class AKONADI_CONTACT_EXPORT ContactSearchJob : public KJob
+class AKONADI_CONTACT_EXPORT ContactSearchJob : public ItemSearchJob
 {
   Q_OBJECT
 
@@ -94,22 +92,10 @@ class AKONADI_CONTACT_EXPORT ContactSearchJob : public KJob
      */
     KABC::Addressee::List contacts() const;
 
-    /**
-     * Returns the items that matched the search criteria.
-     */
-    Item::List items() const;
-
-    /**
-     * Starts the search job.
-     */
-    virtual void start();
-
   private:
     //@cond PRIVATE
     class Private;
     Private* const d;
-
-    Q_PRIVATE_SLOT( d, void searchResult( KJob* ) )
     //@endcond
 };
 
