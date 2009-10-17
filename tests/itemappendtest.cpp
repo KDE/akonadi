@@ -44,6 +44,8 @@ void ItemAppendTest::initTestCase()
   // switch all resources offline to reduce interference from them
   foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
     agent.setIsOnline( false );
+
+  AttributeFactory::registerAttribute<TestAttribute>();
 }
 
 void ItemAppendTest::testItemAppend_data()
@@ -182,8 +184,6 @@ void ItemAppendTest::testIllegalAppend()
 
 void ItemAppendTest::testMultipartAppend()
 {
-  AttributeFactory::registerAttribute<TestAttribute>();
-
   const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
   QVERIFY( testFolder1.isValid() );
 
@@ -213,8 +213,6 @@ void ItemAppendTest::testMultipartAppend()
 
 void ItemAppendTest::testInvalidMultipartAppend()
 {
-  AttributeFactory::registerAttribute<TestAttribute>();
-
   Item item;
   item.setMimeType( "application/octet-stream" );
   item.setPayload<QByteArray>( "body data" );
