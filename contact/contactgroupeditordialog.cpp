@@ -27,6 +27,7 @@
 #include <akonadi/item.h>
 #include <kabc/contactgroup.h>
 #include <klocale.h>
+#include <kpushbutton.h>
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
@@ -51,6 +52,11 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
 {
   setCaption( mode == CreateMode ? i18n( "New Contact Group" ) : i18n( "Edit Contact Group" ) );
   setButtons( Ok | Cancel );
+
+  // Disable default button, so that finish editing of
+  // a member with the Enter key does not close the dialog
+  button( Ok )->setAutoDefault( false );
+  button( Cancel )->setAutoDefault( false );
 
   QWidget *mainWidget = new QWidget( this );
   setMainWidget( mainWidget );

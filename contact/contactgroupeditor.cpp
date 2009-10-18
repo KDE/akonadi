@@ -40,6 +40,7 @@
 #include <klineedit.h>
 #include <kmessagebox.h>
 
+#include <QtCore/QTimer>
 #include <QtGui/QGridLayout>
 #include <QtGui/QMessageBox>
 #include <QtGui/QTableView>
@@ -66,6 +67,12 @@ class ContactGroupEditor::Private
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& );
     void memberChanged();
     void setReadOnly( bool );
+
+    void adaptHeaderSizes()
+    {
+      mGui.membersView->header()->setDefaultSectionSize( mGui.membersView->header()->width() / 2 );
+      mGui.membersView->header()->resizeSections( QHeaderView::Interactive );
+    }
 
     void loadContactGroup( const KABC::ContactGroup &group );
     bool storeContactGroup( KABC::ContactGroup &group );
@@ -113,6 +120,8 @@ void ContactGroupEditor::Private::itemFetchDone( KJob *job )
     loadContactGroup( group );
 
     setReadOnly( mReadOnly );
+
+    QTimer::singleShot( 0, mParent, SLOT( adaptHeaderSizes() ) );
   }
 }
 
@@ -133,6 +142,8 @@ void ContactGroupEditor::Private::parentCollectionFetchDone( KJob *job )
   loadContactGroup( group );
 
   setReadOnly( mReadOnly );
+
+  QTimer::singleShot( 0, mParent, SLOT( adaptHeaderSizes() ) );
 }
 
 void ContactGroupEditor::Private::storeDone( KJob *job )
@@ -230,8 +241,9 @@ ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
   if ( mode == CreateMode ) {
     KABC::ContactGroup dummyGroup;
     d->mGroupModel->loadContactGroup( dummyGroup );
-    d->mGui.membersView->header()->setDefaultSectionSize( d->mGui.membersView->header()->width() / 2 );
-    d->mGui.membersView->header()->resizeSections( QHeaderView::Interactive );
+    d->mGui.groupName->setFocus();
+
+    QTimer::singleShot( 0, this, SLOT( adaptHeaderSizes() ) );
   }
 
   d->mGui.membersView->header()->setStretchLastSection( true );

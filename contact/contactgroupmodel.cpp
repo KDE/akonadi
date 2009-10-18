@@ -371,6 +371,9 @@ Qt::ItemFlags ContactGroupModel::flags( const QModelIndex &index ) const
   if ( !index.isValid() || index.row() < 0 || index.row() >= d->mMembers.count() )
     return Qt::ItemIsEnabled;
 
+  if ( d->mMembers[ index.row() ].loadingError )
+    return Qt::ItemFlags( Qt::ItemIsEnabled );
+
   return Qt::ItemFlags( Qt::ItemIsEnabled | Qt::ItemIsEditable );
 }
 
