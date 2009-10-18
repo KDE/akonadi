@@ -156,6 +156,7 @@ class AKONADI_KMIME_EXPORT SpecialCollections : public QObject
 
 #if 1 // TODO do this only if building tests:
     friend class SpecialCollectionsTesting;
+    friend class LocalFoldersTest;
 #endif
 
     // singleton class; the only instance resides in sInstance->instance

@@ -124,6 +124,12 @@ void SpecialCollectionsPrivate::forgetFoldersForResource( const QString &resourc
   }
 }
 
+AgentInstance SpecialCollectionsPrivate::defaultResource() const
+{
+  const QString identifier = Settings::defaultResourceId();
+  return AgentManager::self()->instance( identifier );
+}
+
 
 SpecialCollections::SpecialCollections( SpecialCollectionsPrivate *dd )
   : QObject()
@@ -199,20 +205,14 @@ bool SpecialCollections::registerCollection( Type type, const Collection &collec
   return true;
 }
 
-static AgentInstance defaultResource()
-{
-  const QString identifier = Settings::defaultResourceId();
-  return AgentManager::self()->instance( identifier );
-}
-
 bool SpecialCollections::hasDefaultCollection( Type type ) const
 {
-  return hasCollection( type, defaultResource() );
+  return hasCollection( type, d->defaultResource() );
 }
 
 Collection SpecialCollections::defaultCollection( Type type ) const
 {
-  return collection( type, defaultResource() );
+  return collection( type, d->defaultResource() );
 }
 
 #include "specialcollections.moc"

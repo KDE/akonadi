@@ -23,19 +23,22 @@
 #include <QHash>
 #include <QString>
 
+#include "akonadi-kmime_export.h"
+
 #include "akonadi/collection.h"
 
 class KJob;
 
 namespace Akonadi {
 
+class AgentInstance;
 class SpecialCollections;
 class Monitor;
 
 /**
   @internal
 */
-class SpecialCollectionsPrivate
+class AKONADI_KMIME_TEST_EXPORT SpecialCollectionsPrivate
 {
   public:
     SpecialCollectionsPrivate();
@@ -63,6 +66,8 @@ class SpecialCollectionsPrivate
       This method is used by SpecialCollectionsRequestJob.
     */
     void endBatchRegister();
+
+    AgentInstance defaultResource() const;
 
     SpecialCollections *instance;
     Collection::List emptyFolderList;

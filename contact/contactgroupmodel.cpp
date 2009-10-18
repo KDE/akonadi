@@ -32,10 +32,16 @@ using namespace Akonadi;
 
 struct GroupMember
 {
+  GroupMember()
+    : loadingError( false )
+  {
+  }
+
   bool isReference;
   KABC::ContactGroup::ContactReference reference;
   KABC::ContactGroup::Data data;
   KABC::Addressee referencedContact;
+  bool loadingError;
 };
 
 class ContactGroupModel::Private
@@ -46,11 +52,12 @@ class ContactGroupModel::Private
     {
     }
 
-    void resolveContactReference( const KABC::ContactGroup::ContactReference &reference )
+    void resolveContactReference( const KABC::ContactGroup::ContactReference &reference, int row )
     {
       const Item item( reference.uid().toLongLong() );
 
       ItemFetchJob *job = new ItemFetchJob( item, mParent );
+      job->setProperty( "row", row );
       job->fetchScope().fetchFullPayload();
 
       mParent->connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetched( KJob* ) ) );
@@ -58,22 +65,28 @@ class ContactGroupModel::Private
 
     void itemFetched( KJob *job )
     {
-      if ( job->error() )
-        return; //TODO: show error in view
+      const int row = job->property( "row" ).toInt();
+
+      if ( job->error() ) {
+        mMembers[ row ].loadingError = true;
+        emit mParent->dataChanged( mParent->index( row, 0, QModelIndex() ), mParent->index( row, 1, QModelIndex() ) );
+        return;
+      }
 
       ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+
+      if ( fetchJob->items().count() != 1 ) {
+        mMembers[ row ].loadingError = true;
+        emit mParent->dataChanged( mParent->index( row, 0, QModelIndex() ), mParent->index( row, 1, QModelIndex() ) );
+        return;
+      }
 
       const Item item = fetchJob->items().first();
       const KABC::Addressee contact = item.payload<KABC::Addressee>();
 
-      for ( int i = 0; i < mMembers.count(); ++i ) {
-        GroupMember &member = mMembers[ i ];
-        if ( member.isReference && member.reference.uid().toLongLong() == item.id() ) {
-          member.referencedContact = contact;
-          emit mParent->dataChanged( mParent->index( i, 0, QModelIndex() ), mParent->index( i, 1, QModelIndex() ) );
-          break;
-        }
-      }
+      GroupMember &member = mMembers[ row ];
+      member.referencedContact = contact;
+      emit mParent->dataChanged( mParent->index( row, 0, QModelIndex() ), mParent->index( row, 1, QModelIndex() ) );
     }
 
     void normalizeMemberList()
@@ -145,7 +158,7 @@ void ContactGroupModel::loadContactGroup( const KABC::ContactGroup &contactGroup
 
     d->mMembers.append( member );
 
-    d->resolveContactReference( reference );
+    d->resolveContactReference( reference, d->mMembers.count() - 1 );
   }
 
   d->normalizeMemberList();
@@ -208,6 +221,13 @@ QVariant ContactGroupModel::data( const QModelIndex &index, int role ) const
   const GroupMember &member = d->mMembers[ index.row() ];
 
   if ( role == Qt::DisplayRole ) {
+    if ( member.loadingError ) {
+      if ( index.column() == 0 )
+        return i18n( "Contact does not exists anymore" );
+      else
+        return QString();
+    }
+
     if ( member.isReference ) {
       if ( index.column() == 0 )
         return member.referencedContact.realName();
@@ -228,6 +248,9 @@ QVariant ContactGroupModel::data( const QModelIndex &index, int role ) const
   if ( role == Qt::DecorationRole ) {
     if ( index.column() == 1 )
       return QVariant();
+
+    if ( member.loadingError )
+      return KIcon( QLatin1String( "emblem-important" ) );
 
     if ( index.row() == (d->mMembers.count() - 1) )
       return KIcon( QLatin1String( "contact-new" ) );
@@ -288,7 +311,7 @@ bool ContactGroupModel::setData( const QModelIndex &index, const QVariant &value
     if ( member.isReference ) {
       if ( index.column() == 0 ) {
         member.reference.setUid( QString::number( value.toLongLong() ) );
-        d->resolveContactReference( member.reference );
+        d->resolveContactReference( member.reference, index.row() );
       }
       if ( index.column() == 1 ) {
         const QString email = value.toString();

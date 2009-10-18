@@ -24,6 +24,9 @@
 
 /**
  */
+namespace Akonadi
+{
+
 class LocalFoldersTest : public QObject
 {
   Q_OBJECT
@@ -50,5 +53,7 @@ class LocalFoldersTest : public QObject
     void testDefaultResourceJob();
     void testRecoverDefaultResource();
 };
+
+}
 
 #endif
