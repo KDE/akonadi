@@ -25,8 +25,8 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
-#include <akonadi/kmime/localfolders.h>
-#include <akonadi/kmime/localfoldersrequestjob.h>
+#include <akonadi/kmime/specialcollections.h>
+#include <akonadi/kmime/specialcollectionsrequestjob.h>
 
 using namespace Akonadi;
 
@@ -35,8 +35,8 @@ Requester::Requester()
 {
   Control::start();
 
-  LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
-  rjob->requestDefaultFolder( LocalFolders::Outbox );
+  SpecialCollectionsRequestJob *rjob = new SpecialCollectionsRequestJob( this );
+  rjob->requestDefaultCollection( SpecialCollections::Outbox );
   connect( rjob, SIGNAL(result(KJob*)), this, SLOT(requestResult(KJob*)) );
   rjob->start();
 }
