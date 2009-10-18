@@ -61,6 +61,8 @@ class AsyncSelectionHandler : public QObject
     void rowsInserted( const QModelIndex&, int, int );
 
   private:
+    bool scanSubTree( const QModelIndex &index, bool searchForItem );
+
     QAbstractItemModel *mModel;
     Collection mCollection;
     Item mItem;

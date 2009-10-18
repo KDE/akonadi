@@ -19,9 +19,15 @@
 
 #include "collectiondialog.h"
 
-#include <akonadi/collectionmodel.h>
-#include <akonadi/collectionview.h>
+#include "asyncselectionhandler_p.h"
+
+#include <akonadi/changerecorder.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/entityrightsfiltermodel.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/entitytreeview.h>
+#include <akonadi/session.h>
 
 #include <QtGui/QVBoxLayout>
 
@@ -30,48 +36,91 @@ using namespace Akonadi;
 class CollectionDialog::Private
 {
   public:
-    CollectionDialog *q;
-    CollectionModel *collectionModel;
-    EntityMimeTypeFilterModel *filterModel;
-    CollectionView *collectionView;
+    Private( QAbstractItemModel *customModel, CollectionDialog *parent )
+      : mParent( parent )
+    {
+      // setup GUI
+      QWidget *widget = mParent->mainWidget();
+      QVBoxLayout *layout = new QVBoxLayout( widget );
 
-    explicit Private(CollectionDialog *q);
+      mView = new EntityTreeView;
+      layout->addWidget( mView );
+
+
+      mParent->enableButton( KDialog::Ok, false );
+
+      // setup models
+      QAbstractItemModel *baseModel;
+
+      if ( customModel ) {
+        baseModel = customModel;
+      } else {
+        mMonitor = new Akonadi::ChangeRecorder;
+        mMonitor->fetchCollection( true );
+        mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
+
+        mModel = new EntityTreeModel( Session::defaultSession(), mMonitor );
+        mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
+        baseModel = mModel;
+      }
+
+      mMimeTypeFilterModel = new EntityMimeTypeFilterModel( parent );
+      mMimeTypeFilterModel->setSourceModel( baseModel );
+      mMimeTypeFilterModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+      mMimeTypeFilterModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+
+      mRightsFilterModel = new EntityRightsFilterModel( parent );
+      mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
+
+      mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
+      mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
+                        mParent, SLOT( slotCollectionAvailable( const QModelIndex& ) ) );
+      mView->setModel( mRightsFilterModel );
+
+      mParent->connect( mView->selectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
+                        mParent, SLOT( slotSelectionChanged() ) );
+    }
+
+    ~Private()
+    {
+      mView->setModel( 0 );
+      delete mModel;
+      delete mMonitor;
+    }
+
+    void slotCollectionAvailable( const QModelIndex &index )
+    {
+      mView->expandAll();
+      mView->setCurrentIndex( index );
+    }
+
+    CollectionDialog *mParent;
+
+    ChangeRecorder *mMonitor;
+    EntityTreeModel *mModel;
+    EntityMimeTypeFilterModel *mMimeTypeFilterModel;
+    EntityRightsFilterModel *mRightsFilterModel;
+    EntityTreeView *mView;
+    AsyncSelectionHandler *mSelectionHandler;
+
     void slotSelectionChanged();
 };
 
-CollectionDialog::Private::Private(CollectionDialog *q)
-  : q(q),
-    collectionModel( 0 ),
-    filterModel( 0 ),
-    collectionView( 0 )
-{
-}
-
 void CollectionDialog::Private::slotSelectionChanged()
 {
-  q->enableButton(KDialog::Ok, collectionView->selectionModel()->selectedIndexes().count() > 0);
+  mParent->enableButton( KDialog::Ok, mView->selectionModel()->selectedIndexes().count() > 0 );
 }
 
 CollectionDialog::CollectionDialog( QWidget *parent )
   : KDialog( parent ),
-    d( new Private(this) )
+    d( new Private( 0, this ) )
 {
-  QWidget *widget = mainWidget();
-  QVBoxLayout *layout = new QVBoxLayout( widget );
+}
 
-  d->collectionModel = new CollectionModel( this );
-
-  d->filterModel = new EntityMimeTypeFilterModel( this );
-  d->filterModel->setDynamicSortFilter( true );
-  d->filterModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-  d->filterModel->setSourceModel( d->collectionModel );
-
-  d->collectionView = new CollectionView( widget );
-  d->collectionView->setModel( d->filterModel );
-  layout->addWidget( d->collectionView );
-
-  connect(d->collectionView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(slotSelectionChanged()));
-  enableButton(KDialog::Ok, false);
+CollectionDialog::CollectionDialog( QAbstractItemModel *model, QWidget *parent )
+  : KDialog( parent ),
+    d( new Private( model, this ) )
+{
 }
 
 CollectionDialog::~CollectionDialog()
@@ -82,9 +131,9 @@ CollectionDialog::~CollectionDialog()
 Akonadi::Collection CollectionDialog::selectedCollection() const
 {
   if ( selectionMode() == QAbstractItemView::SingleSelection ) {
-    const QModelIndex index = d->collectionView->currentIndex();
+    const QModelIndex index = d->mView->currentIndex();
     if ( index.isValid() )
-      return index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
+      return index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
   }
 
   return Collection();
@@ -93,11 +142,11 @@ Akonadi::Collection CollectionDialog::selectedCollection() const
 Akonadi::Collection::List CollectionDialog::selectedCollections() const
 {
   Collection::List collections;
-  const QItemSelectionModel *selectionModel = d->collectionView->selectionModel();
+  const QItemSelectionModel *selectionModel = d->mView->selectionModel();
   const QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
   foreach ( const QModelIndex &index, selectedIndexes ) {
     if ( index.isValid() ) {
-      const Collection collection = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
+      const Collection collection = index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
       if ( collection.isValid() )
         collections.append( collection );
     }
@@ -108,23 +157,38 @@ Akonadi::Collection::List CollectionDialog::selectedCollections() const
 
 void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )
 {
-  d->filterModel->clearFilters();
-  d->filterModel->addContentMimeTypeInclusionFilters( mimeTypes );
+  d->mMimeTypeFilterModel->clearFilters();
+  d->mMimeTypeFilterModel->addContentMimeTypeInclusionFilters( mimeTypes );
 }
 
 QStringList CollectionDialog::mimeTypeFilter() const
 {
-  return d->filterModel->contentMimeTypeInclusionFilters();
+  return d->mMimeTypeFilterModel->contentMimeTypeInclusionFilters();
+}
+
+void CollectionDialog::setAccessRightsFilter( Collection::Rights rights )
+{
+  d->mRightsFilterModel->setAccessRights( rights );
+}
+
+Collection::Rights CollectionDialog::accessRightsFilter() const
+{
+  return d->mRightsFilterModel->accessRights();
+}
+
+void CollectionDialog::setDefaultCollection( const Collection &collection )
+{
+  d->mSelectionHandler->waitForCollection( collection );
 }
 
 void CollectionDialog::setSelectionMode( QAbstractItemView::SelectionMode mode )
 {
-  d->collectionView->setSelectionMode( mode );
+  d->mView->setSelectionMode( mode );
 }
 
 QAbstractItemView::SelectionMode CollectionDialog::selectionMode() const
 {
-  return d->collectionView->selectionMode();
+  return d->mView->selectionMode();
 }
 
 #include "collectiondialog.moc"

@@ -64,14 +64,14 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 
   public:
     /**
-     * Creates a new mime type proxy filter model.
+     * Creates a new entity mime type filter model.
      *
      * @param parent The parent object.
      */
     explicit EntityMimeTypeFilterModel( QObject *parent = 0 );
 
     /**
-     * Destroys the mime type proxy filter model.
+     * Destroys the entity mime type filter model.
      */
     virtual ~EntityMimeTypeFilterModel();
 
@@ -158,6 +158,8 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
     virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+
+    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
   protected:
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;

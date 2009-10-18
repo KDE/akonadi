@@ -85,6 +85,7 @@ set( akonadikde_LIB_SRC
   entityhiddenattribute.cpp
   entitylistview.cpp
   entitymimetypefiltermodel.cpp
+  entityrightsfiltermodel.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entitytreeview.cpp
@@ -226,6 +227,7 @@ install( FILES
   entityhiddenattribute.h
   entitylistview.h
   entitymimetypefiltermodel.h
+  entityrightsfiltermodel.h
   entitytreemodel.h
   entitytreeview.h
   entitytreeviewstatesaver.h

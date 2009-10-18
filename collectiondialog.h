@@ -64,11 +64,22 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
   public:
 
     /**
-     * Creates a collection dialog.
+     * Creates a new collection dialog.
      *
      * @param parent The parent widget.
      */
     explicit CollectionDialog( QWidget *parent = 0 );
+
+    /**
+     * Creates a new collection dialog with a custom @p model.
+     *
+     * The filtering by content mime type and access rights is done
+     * on top of the custom model.
+     *
+     * @param model The custom model to use.
+     * @param parent The parent widget.
+     */
+    explicit CollectionDialog( QAbstractItemModel *model, QWidget *parent = 0 );
 
     /**
      * Destroys the collection dialog.
@@ -99,6 +110,21 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     QStringList mimeTypeFilter() const;
 
     /**
+     * Sets the access @p rights that the listed collections shall match with.
+     */
+    void setAccessRightsFilter( Collection::Rights rights );
+
+    /**
+     * Sets the access @p rights that the listed collections shall match with.
+     */
+    Collection::Rights accessRightsFilter() const;
+
+    /**
+     * Sets the @p collection that shall be selected by default.
+     */
+    void setDefaultCollection( const Collection &collection );
+
+    /**
      * Sets the selection mode.
      * @see QAbstractItemView::setSelectionMode()
      */
@@ -111,10 +137,13 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     QAbstractItemView::SelectionMode selectionMode() const;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private * const d;
 
+    Q_PRIVATE_SLOT( d, void slotCollectionAvailable( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
+    //@endcond
 };
 
 } // namespace Akonadi

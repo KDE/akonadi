@@ -25,7 +25,6 @@
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchscope.h>
-#include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/session.h>

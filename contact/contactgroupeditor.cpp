@@ -21,13 +21,13 @@
 
 #include "contactgroupeditor.h"
 
-#include "addressbookselectiondialog.h"
 #include "autoqpointer_p.h"
 #include "contactgroupmodel_p.h"
 #include "contactgroupeditordelegate_p.h"
 #include "ui_contactgroupeditor.h"
 #include "waitingoverlay_p.h"
 
+#include <akonadi/collectiondialog.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -291,9 +291,14 @@ bool ContactGroupEditor::saveContactGroup()
     connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
   } else if ( d->mMode == CreateMode ) {
     if ( !d->mDefaultCollection.isValid() ) {
-      AutoQPointer<AddressBookSelectionDialog> dlg = new AddressBookSelectionDialog( AddressBookSelectionDialog::ContactsOnly, this );
+      const QStringList mimeTypeFilter( KABC::ContactGroup::mimeType() );
+
+      AutoQPointer<CollectionDialog> dlg = new CollectionDialog( this );
+      dlg->setMimeTypeFilter( mimeTypeFilter );
+      dlg->setAccessRightsFilter( Collection::CanCreateItem );
+
       if ( dlg->exec() == KDialog::Accepted )
-        setDefaultAddressBook( dlg->selectedAddressBook() );
+        setDefaultAddressBook( dlg->selectedCollection() );
       else
         return false;
     }
