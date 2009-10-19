@@ -116,7 +116,7 @@ FavoriteCollectionsModel::FavoriteCollectionsModel( EntityTreeModel *source, QOb
     d( new Private( this ) )
 {
   setSourceModel( source );
-  setFilterBehavior(OnlySelected);
+  setFilterBehavior(ExactSelection);
 
   connect( source, SIGNAL( modelReset() ), this, SLOT( clearAndUpdateSelection() ) );
   connect( source, SIGNAL( layoutChanged() ), this, SLOT( clearAndUpdateSelection() ) );
