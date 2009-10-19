@@ -30,23 +30,6 @@
 
 Q_DECLARE_METATYPE( QSet<QByteArray> )
 
-// TODO (Applies to all these 'new' models, not just EntityTreeModel):
-// * Figure out how LazyPopulation and signals from monitor containing items should
-//     fit together. Possibly store a list of collections whose items have already
-//     been lazily fetched.
-// * Fgure out whether DescendantEntitiesProxyModel needs to use fetchMore.
-// * Profile this and DescendantEntitiesProxyModel. Make sure it's faster than
-//     FlatCollectionProxyModel. See if the cache in that class can be cleared less often.
-// * Unit tests. Much of the stuff here is not covered by modeltest, and some of
-//     it is akonadi specific, such as setting root collection etc.
-// * Implement support for includeUnsubscribed.
-// * Use CollectionStatistics for item count stuff. Find out if I can get stats by mimetype.
-// * Make sure there are applications using it before committing to it until KDE5.
-//     Some API/ virtual methods might need to be added when real applications are made.
-// * Implement ordering support.
-// * Implement some proxy models for time-table like uses, eg KOrganizer events.
-// * Apidox++
-
 namespace Akonadi
 {
 

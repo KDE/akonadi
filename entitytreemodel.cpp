@@ -46,6 +46,9 @@
 #include "kdebug.h"
 #include "pastehelper_p.h"
 
+// TODO:
+// * Implement ordering support.
+
 using namespace Akonadi;
 
 EntityTreeModel::EntityTreeModel( Session *session,
