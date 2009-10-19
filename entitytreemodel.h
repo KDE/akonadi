@@ -252,10 +252,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     Item itemForId( Item::Id id ) const;
 
-    // TODO: Remove these and use the Monitor instead. Need to add api to Monitor for this.
-    void setIncludeUnsubscribed( bool include );
-    bool includeUnsubscribed() const;
-
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
     virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
 
