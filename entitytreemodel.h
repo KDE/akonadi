@@ -299,7 +299,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     virtual QVariant getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
 
-    virtual int getColumnCount(int headerSet) const;
+    virtual int getColumnCount( HeaderGroup headerGroup ) const;
 
     /**
      * Removes the rows from @p start to @p end from @parent
