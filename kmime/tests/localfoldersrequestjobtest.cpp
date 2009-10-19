@@ -65,6 +65,8 @@ void LocalFoldersRequestJobTest::testRequestWithNoDefaultResourceExisting()
   Q_ASSERT( lft );
   QSignalSpy spy( lf, SIGNAL(collectionsChanged(const Akonadi::AgentInstance&)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Initially the defaut maildir does not exist.
   QVERIFY( !QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
@@ -96,6 +98,8 @@ void LocalFoldersRequestJobTest::testRequestWithDefaultResourceAlreadyExisting()
   Q_ASSERT( lft );
   QSignalSpy spy( lf, SIGNAL(collectionsChanged(const Akonadi::AgentInstance&)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Prerequisites (from testRequestWithNoDefaultResourceExisting()).
   QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
@@ -131,6 +135,8 @@ void LocalFoldersRequestJobTest::testMixedRequest()
   Q_ASSERT( lft );
   QSignalSpy spy( lf, SIGNAL(collectionsChanged(const Akonadi::AgentInstance&)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Get our knut collection.
   Collection res1;

@@ -140,7 +140,7 @@ class AKONADI_KMIME_EXPORT SpecialCollections : public QObject
      *
      * @param instance The instance of the resource the collection belongs to.
      */
-    void collectionsChanged( const AgentInstance &instance );
+    void collectionsChanged( const Akonadi::AgentInstance &instance );
 
     /**
      * Emitted when the special collections for the default resource have

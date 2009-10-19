@@ -148,8 +148,10 @@ void LocalFoldersTest::testDefaultFolderRegistration()
   SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
-  QSignalSpy defSpy( lf, SIGNAL(defaultCollectionChanged()) );
+  QSignalSpy spy( lf, SIGNAL(collectionssChanged(Akonadi::AgentInstance)) );
+  QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // No one has created the default resource.
   QVERIFY( lf->d->defaultResource().identifier().isEmpty() );
@@ -204,8 +206,10 @@ void LocalFoldersTest::testCustomFolderRegistration()
   SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
+  QSignalSpy spy( lf, SIGNAL(collectionChanged(Akonadi::AgentInstance)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Set a fake default resource, so that res1.resource() isn't seen as the default one.
   // LF should have no folders.
@@ -259,8 +263,10 @@ void LocalFoldersTest::testCollectionDelete()
   SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
+  QSignalSpy spy( lf, SIGNAL(collectionChanged(Akonadi::AgentInstance)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Set the default resource. LF should have no folders.
   lft->_t_setDefaultResourceId( res1.resource() );
@@ -312,6 +318,8 @@ void LocalFoldersTest::testBatchRegister()
   Q_ASSERT( lft );
   QSignalSpy spy( lf, SIGNAL(connectionsChanged(const Akonadi::AgentInstance&)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Set the default resource. LF should have no folders.
   lft->_t_setDefaultResourceId( res1.resource() );
