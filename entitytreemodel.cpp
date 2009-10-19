@@ -163,11 +163,11 @@ int EntityTreeModel::columnCount( const QModelIndex & parent ) const
   if ( parent.isValid() && parent.column() != 0 )
     return 0;
 
-  return qMax( getColumnCount( CollectionTreeHeaders ), getColumnCount( ItemListHeaders ) );
+  return qMax( entityColumnCount( CollectionTreeHeaders ), entityColumnCount( ItemListHeaders ) );
 }
 
 
-QVariant EntityTreeModel::getData( const Item &item, int column, int role ) const
+QVariant EntityTreeModel::entityData( const Item &item, int column, int role ) const
 {
   if ( column == 0 ) {
     switch ( role ) {
@@ -193,7 +193,7 @@ QVariant EntityTreeModel::getData( const Item &item, int column, int role ) cons
   return QVariant();
 }
 
-QVariant EntityTreeModel::getData( const Collection &collection, int column, int role ) const
+QVariant EntityTreeModel::entityData( const Collection &collection, int column, int role ) const
 {
   Q_D(const EntityTreeModel);
 
@@ -254,11 +254,11 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   {
     if ( ColumnCountRole != role )
       return QVariant();
-    return getColumnCount( headerGroup );
+    return entityColumnCount( headerGroup );
   }
 
   if ( ColumnCountRole == role )
-    return getColumnCount( headerGroup );
+    return entityColumnCount( headerGroup );
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
@@ -297,7 +297,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     case CollectionRole:
       return QVariant::fromValue( collection );
     default:
-      return getData( collection, index.column(), role );
+      return entityData( collection, index.column(), role );
     }
 
   } else if ( Node::Item == node->type ) {
@@ -327,7 +327,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     case AvailablePartsRole:
       return QVariant::fromValue( item.availablePayloadParts() );
     default:
-      return getData( item, index.column(), role );
+      return entityData( item, index.column(), role );
     }
   }
   return QVariant();
@@ -621,7 +621,7 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
   return 0;
 }
 
-int EntityTreeModel::getColumnCount( HeaderGroup headerGroup ) const
+int EntityTreeModel::entityColumnCount( HeaderGroup headerGroup ) const
 {
   // Not needed in this model.
   Q_UNUSED(headerGroup);
@@ -629,7 +629,7 @@ int EntityTreeModel::getColumnCount( HeaderGroup headerGroup ) const
   return 1;
 }
 
-QVariant EntityTreeModel::getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet) const
+QVariant EntityTreeModel::entityHeaderData( int section, Qt::Orientation orientation, int role, int headerSet) const
 {
   // Not needed in this model.
   Q_UNUSED(headerSet);
@@ -645,7 +645,7 @@ QVariant EntityTreeModel::headerData( int section, Qt::Orientation orientation, 
   const int headerSet = (role / TerminalUserRole);
 
   role %= TerminalUserRole;
-  return getHeaderData( section, orientation, role, headerSet );
+  return entityHeaderData( section, orientation, role, headerSet );
 }
 
 QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const

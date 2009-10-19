@@ -41,10 +41,10 @@ class ContactCompletionModel : public EntityTreeModel
     ContactCompletionModel( Session *session, ChangeRecorder *monitor, QObject *parent = 0 );
     virtual ~ContactCompletionModel();
 
-    virtual QVariant getData( const Item &item, int column, int role = Qt::DisplayRole ) const;
-    virtual QVariant getData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
     virtual int columnCount( const QModelIndex &parent ) const;
-    virtual int getColumnCount( int ) const;
+    virtual int entityColumnCount( HeaderGroup ) const;
 
     static QAbstractItemModel* self();
 

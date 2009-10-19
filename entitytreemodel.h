@@ -286,20 +286,20 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     /**
      * Provided for convenience of subclasses.
      */
-    virtual QVariant getData( const Item &item, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
 
     /**
      * Provided for convenience of subclasses.
      */
-    virtual QVariant getData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
 
     /**
      * Reimplement this to provide different header data. This is needed when using one model
      * with multiple proxies and views, and each should show different header data.
      */
-    virtual QVariant getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
+    virtual QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
 
-    virtual int getColumnCount( HeaderGroup headerGroup ) const;
+    virtual int entityColumnCount( HeaderGroup headerGroup ) const;
 
   private:
     //@cond PRIVATE
