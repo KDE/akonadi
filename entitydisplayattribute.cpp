@@ -31,6 +31,7 @@ class EntityDisplayAttribute::Private
     Private() : hidden( false ) {}
     QString name;
     QString icon;
+    QString activeIcon;
     bool hidden;
 };
 
@@ -90,6 +91,7 @@ EntityDisplayAttribute * EntityDisplayAttribute::clone() const
   attr->d->name = d->name;
   attr->d->icon = d->icon;
   attr->d->hidden = d->hidden;
+  attr->d->activeIcon = d->activeIcon;
   return attr;
 }
 
@@ -99,6 +101,7 @@ QByteArray EntityDisplayAttribute::serialized() const
   l << ImapParser::quote( d->name.toUtf8() );
   l << ImapParser::quote( d->icon.toUtf8() );
   l << (d->hidden ? "true" : "false");
+  l << ImapParser::quote( d->activeIcon.toUtf8() );
   return '(' + ImapParser::join( l, " " ) + ')';
 }
 
@@ -110,5 +113,22 @@ void EntityDisplayAttribute::deserialize(const QByteArray &data)
   d->name = QString::fromUtf8( l[0] );
   d->icon = QString::fromUtf8( l[1] );
   if ( l.size() >= 3 )
-    d->hidden = (l[2] == "true");
+     d->hidden = (l[2] == "true");
+  if ( l.size() >= 4 )
+     d->activeIcon = QString::fromUtf8( l[3] );
+}
+
+void EntityDisplayAttribute::setActiveIconName( const QString &name )
+{
+  d->activeIcon = name;
+}
+
+KIcon EntityDisplayAttribute::activeIcon() const
+{
+  return KIcon( d->activeIcon );
+}
+
+QString EntityDisplayAttribute::activeIconName() const
+{
+  return d->activeIcon;
 }

@@ -34,7 +34,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QPalette>
-
+#include <KIcon>
 using namespace Akonadi;
 
 /**
@@ -214,6 +214,7 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
         return QVariant();
       }
     }
+
   } else if ( role == Qt::TextAlignmentRole && index.column()>=d->sourceColumnCount( index.parent() ) ) {
     return Qt::AlignRight;
 
@@ -226,6 +227,15 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
     if ( collection.isValid() && collection.statistics().count()>0 ) {
       return d->toolTipForCollection( index, collection );
     }
+  
+  } else if ( role == Qt::DecorationRole && index.column() == 0 ) {
+    const QModelIndex sourceIndex = mapToSource( index.sibling( index.row(), 0 ) );
+    Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
+
+    if ( collection.isValid() )
+      return KIcon(  CollectionUtils::displayIconName( collection ) );
+    else
+      return QVariant();
   }
 
   return QAbstractProxyModel::data( index, role );

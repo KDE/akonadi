@@ -30,7 +30,6 @@ namespace Akonadi {
  * @short Attribute that stores the properties that are used to display an entity.
  *
  * Display properties of a collection or item, such as translated names and icons.
- * @todo add active icon, eg. when folder contains unread mail, or a mail is unread
  *
  * @author Volker Krause <vkrause@kde.org>
  * @since 4.2
@@ -73,6 +72,25 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
      * Returns the icon name of the icon returned by icon().
      */
     QString iconName() const;
+
+    /**
+     * Sets the icon @p name for the active icon.
+     * @since 4.4
+     */
+    void setActiveIconName( const QString &name );
+
+    /**
+     * Returns the icon that should be used for this collection or item when active.
+     * @since 4.4
+     */
+    KIcon activeIcon() const;
+
+    /**
+     * Returns the icon name of an active item.
+     * @since 4.4
+     */
+    QString activeIconName() const;
+
 
     /**
      * Returns whether this entity should be hidden. This is for purely view-based hiding,

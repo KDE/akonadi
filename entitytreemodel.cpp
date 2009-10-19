@@ -214,13 +214,6 @@ QVariant EntityTreeModel::entityData( const Collection &collection, int column, 
       return QVariant();
   }
 
-  if ( column == 0 && (role == Qt::DisplayRole || role == Qt::EditRole) ) {
-    if ( collection.hasAttribute<EntityDisplayAttribute>() &&
-          !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
-      return collection.attribute<EntityDisplayAttribute>()->displayName();
-    return collection.name();
-  }
-
   switch ( role ) {
     case Qt::DisplayRole:
     case Qt::EditRole:
