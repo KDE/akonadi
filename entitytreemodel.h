@@ -62,20 +62,210 @@ class EntityTreeModelPrivate;
 /**
  * @short A model for collections and items together.
  *
- * This class is a wrapper around a Akonadi::Monitor object. The model represents a
- * part of the collection and item tree configured in the Monitor.
+ * Akonadi models and views provide a high level way to interact with the akonadi server.
+ * Most applications will use these classes.
+ *
+ * Models provide an interface for viewing, deleting and moving Items and Collections.
+ * Additionally, the models are updated automatically if another application changes the
+ * data or inserts of deletes items etc.
+ *
+ * @note The EntityTreeModel should be used with the EntityTreeView or the EntityListView class
+ * either directly or indirectly via proxy models.
+ *
+ * The responsibilities which fall to the application developer are
+ * - Configuring the ChangeRecorder and EntityTreeModel
+ * - Making use of this class via proxy models
+ * - Subclassing for type specific display information
+ *
+ * <h3>Creating and configuring the EntityTreeModel</h3>
+ *
+ * This class is a wrapper around a Akonadi::ChangeRecorder object. The model represents a
+ * part of the collection and item tree configured in the ChangeRecorder.
+ *
+ * The following code creates a model which fetches items and collections relevant to
+ * addressees (contacts), and automatically manages keeping the items up to date.
  *
  * @code
  *
- *   ChangeRecorder *monitor = new ChangeRecorder(this);
- *   monitor->setCollectionMonitored(Collection::root());
- *   monitor->setMimeTypeMonitored(KABC::addresseeMimeType());
+ *   ChangeRecorder *changeRecorder = new ChangeRecorder( this );
+ *   changeRecorder->setCollectionMonitored( Collection::root() );
+ *   changeRecorder->setMimeTypeMonitored( KABC::addresseeMimeType() );
  *
- *   EntityTreeModel *model = new EntityTreeModel( session, monitor, this );
+ *   EntityTreeModel *model = new EntityTreeModel( session, changeRecorder, this );
  *
  *   EntityTreeView *view = new EntityTreeView( this );
  *   view->setModel( model );
  *
+ * @endcode
+ *
+ * The EntityTreeModel will show items of a different type by changing the line
+ *
+ * @code
+ * changeRecorder->setMimeTypeMonitored( KABC::addresseeMimeType() );
+ * @endcode
+ *
+ * to a different mimetype. KABC::addresseeMimeType() is an alias for "text/directory". If changed to KMime::Message::mimeType()
+ * (an alias for "message/rfc822") the model would instead contain emails. The model can be configured to contain items of any mimetype
+ * known to %Akonadi.
+ *
+ * @see akonadi-mimetypes.
+ *
+ * The EntityTreeModel can be further configured for certain behaviours such as fetching of collections and items.
+ *
+ * The model can be configured to not fetch items into the model (ie, fetch collections only) by setting
+ *
+ * @code
+ * entityTreeModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
+ * @endcode
+ *
+ * The items may be fetched lazily, i.e. not inserted into the model until request by the user for performance reasons.
+ *
+ * The Collection tree is always built immediately.
+ *
+ * @code
+ * entityTreeModel->setItemPopulationStrategy( EntityTreeModel::LazyPopulation );
+ * @endcode
+ *
+ * This will typically be used with a MimeTypeFilterProxyModel in a configuration such as KMail4.5 or AkonadiConsole.
+ *
+ * @see lazy-model-population
+ *
+ * It is also possible to show the root Collection as part of the selectable model:
+ *
+ * @code
+ * entityTree->setIncludeRootCollection(true);
+ * @endcode
+ *
+ *
+ * By default the displayed name of the root collection is '[*]', because it doesn't require i18n, and is generic. It can be changed too.
+ *
+ * @code
+ * entityTree->setIncludeRootCollection(true);
+ * entityTree->setRootCollectionDisplayName(i18nc("Name of top level for all addressbooks in the application", "[All AddressBooks]"))
+ * @endcode
+ *
+ * This feature is used in KAddressBook.
+ *
+ * <h2>Using EntityTreeModel with Proxy models</h2>
+ *
+ * An Akonadi::SelectionProxyModel can be used to simplify managing selection in one view through multiple proxy models to a representation in another view.
+ * The selectionModel of the initial view is used to create a proxied model which filters out anything not related to the current selection.
+ *
+ * @code
+ * // ... create an EntityTreeModel
+ *
+ * collectionTree = new MimeTypeFilterProxyModel(this);
+ * collectionTree->setSourceModel(entityTreeModel);
+ *
+ * // Include only collections in this proxy model.
+ * collectionTree->addMimeTypeInclusionFilter( Collection::mimeType() );
+ * collectionTree->setHeaderGroup( EntityTreeModel::CollectionTreeHeaders );
+ *
+ * treeview->setModel(collectionTree);
+ *
+ * // SelectionProxyModel can handle complex selections:
+ * treeview->setSelectionMode( QAbstractItemView::ExtendedSelection );
+ *
+ * SelectionProxyModel *selProxy = new SelectionProxyModel( treeview->selectionModel(), this );
+ * selProxy->setSourceModel( entityTreeModel );
+ *
+ * itemList = new MimeTypeFilterProxyModel( this );
+ * itemList->setSourceModel( selProxy );
+ *
+ * // Filter out collections. Show only items.
+ * itemList->addMimeTypeExclusionFilter( Collection::mimeType() );
+ * itemList->setHeaderGroup( EntityTreeModel::ItemListHeaders );
+ *
+ * EntityTreeView *itemView = new EntityTreeView( splitter );
+ * itemView->setModel( itemList );
+ * @endcode
+ *
+ * The SelectionProxyModel can handle complex selections.
+ *
+ * See the KSelectionProxyModel documentation for the valid configurations of a Akonadi::SelectionProxyModel.
+ *
+ * Obviously, the SelectionProxyModel may be used in a view, or further processed with other proxy models. Typically, the result
+ * from this model will be further filtered to remove collections from the item list as in the above example.
+ *
+ * There are several advantages of using EntityTreeModel with the SelectionProxyModel, namely the items can be fetched and cached
+ * instead of being fetched many times, and the chain of proxies from the core model to the view is automatically handled. There is
+ * no need to manage all the mapToSource and mapFromSource calls manually.
+ *
+ * A KDescendantsProxyModel can be used to represent all descendants of a model as a flat list.
+ * For example, to show all descendant items in a selected Collection in a list:
+ * @code
+ * collectionTree = new MimeTypeFilterProxyModel( this );
+ * collectionTree->setSourceModel( entityTreeModel );
+ *
+ * // Include only collections in this proxy model.
+ * collectionTree->addMimeTypeInclusionFilter( Collection::mimeType() );
+ * collectionTree->setHeaderGroup( EntityTreeModel::CollectionTreeHeaders );
+ *
+ * treeview->setModel( collectionTree );
+ *
+ * SelectionProxyModel *selProxy = new SelectionProxyModel( treeview->selectionModel(), this );
+ * selProxy->setSourceModel( entityTreeModel );
+ *
+ * descendedList = new DescendantEntitiesProxyModel( this );
+ * descendedList->setSourceModel( selProxy );
+ *
+ * itemList = new MimeTypeFilterProxyModel( this );
+ * itemList->setSourceModel( descendedList );
+ *
+ * // Exclude collections from the list view.
+ * itemList->addMimeTypeExclusionFilter( Collection::mimeType() );
+ * itemList->setHeaderGroup( EntityTreeModel::ItemListHeaders );
+ *
+ * listView = new EntityTreeView( this );
+ * listView->setModel( itemList );
+ * @endcode
+ *
+ *
+ * Note that it is important in this case to use the DescendantEntitesProxyModel before the MimeTypeFilterProxyModel.
+ * Otherwise, by filtering out the collections first, you would also be filtering out their child items.
+ *
+ * This pattern is used in KAddressBook.
+ *
+ * It would not make sense to use a KDescendantsProxyModel with LazyPopulation.
+ *
+ * <h3>Subclassing EntityTreeModel</h3>
+ *
+ * Usually an application will create a subclass of an EntityTreeModel and use that in several views via proxy models.
+ *
+ * The subclassing is necessary in order for the data in the model to have type-specific representation in applications
+ *
+ * For example, the headerData for an EntityTreeModel will be different depending on whether it is in a view showing only Collections
+ * in which case the header data should be "AddressBooks" for example, or only Items, in which case the headerData would be
+ * for example "Family Name", "Given Name" and "Email addres" for contacts or "Subject", "Sender", "Date" in the case of emails.
+ *
+ * Additionally, the actual data shown in the rows of the model should be type specific.
+ *
+ * In summary, it must be possible to have different numbers of columns, different data in hte rows of those columns, and different
+ * titles for each column depending on the contents of the view.
+ *
+ * The way this is accomplished is by using the MimeTypeFilterProxyModel for splitting the model into a "CollectionTree" and an "Item List"
+ * as in the above example, and using a type-specifc EntityTreeModel subclass to return the type-specific data, typically for only one type (for example, contacts or emails).
+ *
+ * The following protected virtual methods should be implemented in the subclass:
+ * - int entityColumnCount( HeaderGroup headerGroup ) const;
+ * -- Implement to return the number of columns for a HeaderGroup. If the HeaderGroup is CollectionTreeHeaders, return the number of columns to display for the
+ *    Collection tree, and if it is ItemListHeaders, return the number of colums to display for the item. In the case of addressee, this could be for example,
+ *    two (for given name and family name) or for emails it could be three (for subject, sender, date). This is a decision of the subclass implementor.
+ * - QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;
+ * -- Implement to return the data for each section for a HeaderGroup. For example, if the header group is CollectionTreeHeaders in a contacts model,
+ *    the string "Address books" might be returned for column 0, whereas if the headerGroup is ItemListHeaders, the strings "Given Name", "Family Name",
+ *    "Email Address" might be returned for the columns 0, 1, and 2.
+ * - QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
+ * -- Implement to return data for a particular Collection. Typically this will be the name of the collection or the EntityDisplayAttribute
+ * - QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
+ * -- Implement to return the data for a particular item and column. In the case of email for example, this would be the actual subject, sender and date of the email.
+ *
+ * The application writer must then properly configure proxy models for the views, so that the correct data is shown in the correct view.
+ * That is the purpose of these lines in the above example
+ *
+ * @code
+ * collectionTree->setHeaderGroup( EntityTreeModel::CollectionTreeHeaders );
+ * itemList->setHeaderGroup( EntityTreeModel::ItemListHeaders );
  * @endcode
  *
  * @author Stephen Kelly <steveire@gmail.com>
