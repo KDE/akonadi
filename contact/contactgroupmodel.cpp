@@ -223,7 +223,7 @@ QVariant ContactGroupModel::data( const QModelIndex &index, int role ) const
   if ( role == Qt::DisplayRole ) {
     if ( member.loadingError ) {
       if ( index.column() == 0 )
-        return i18n( "Contact does not exists anymore" );
+        return i18n( "Contact does not exist anymore" );
       else
         return QString();
     }
