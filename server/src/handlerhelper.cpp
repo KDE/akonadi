@@ -198,8 +198,8 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
     b+= "MIMETYPE () ";
   else
     b += "MIMETYPE (" + MimeType::joinByName( col.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
-  b += "REMOTEID \"" + col.remoteId().toUtf8() + "\" ";
-  b += "RESOURCE \"" + col.resource().name().toUtf8() + "\" ";
+  b += "REMOTEID " + ImapParser::quote( col.remoteId().toUtf8() );
+  b += " RESOURCE " + ImapParser::quote( col.resource().name().toUtf8() ) + ' ';
 
   if ( includeStatistics ) {
       b += "MESSAGES " + QByteArray::number( HandlerHelper::itemCount( col ) ) + ' ';
