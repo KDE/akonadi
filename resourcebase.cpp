@@ -661,10 +661,10 @@ void ResourceBase::setHierarchicalRemoteIdentifiersEnabled( bool enable )
   d->mHierarchicalRid = enable;
 }
 
-void ResourceBase::scheduleCustomTask( QObject *receiver, const char *method, const QVariant &argument )
+void ResourceBase::scheduleCustomTask( QObject *receiver, const char *method, const QVariant &argument, SchedulePriority priority )
 {
   Q_D( ResourceBase );
-  d->scheduler->scheduleCustomTask( receiver, method, argument );
+  d->scheduler->scheduleCustomTask( receiver, method, argument, priority );
 }
 
 void ResourceBase::taskDone()

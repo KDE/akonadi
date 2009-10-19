@@ -23,6 +23,7 @@
 #include <akonadi/agentbase.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
+#include <akonadi/resourcebase.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
@@ -124,7 +125,7 @@ class ResourceScheduler : public QObject
       Insert a custom taks.
       @param methodName The method name, without signature, do not use the SLOT() macro
     */
-    void scheduleCustomTask( QObject *receiver, const char *methodName, const QVariant &argument );
+    void scheduleCustomTask( QObject *receiver, const char *methodName, const QVariant &argument, ResourceBase::SchedulePriority priority = ResourceBase::Append );
 
     /**
       Returns true if no tasks are running or in the queue.

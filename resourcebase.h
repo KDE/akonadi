@@ -440,19 +440,30 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void setHierarchicalRemoteIdentifiersEnabled( bool enable );
 
+    friend class ResourceScheduler;
+
+    enum SchedulePriority {
+      Prepend,            ///> The task will be executed as soon as the current task has finished.
+      AfterChangeReplay,  ///> The task is scheduled after the last ChangeReplay task in the queue
+      Append              ///> The task will be executed after all tasks currently in the queue are finished
+    };
+
     /**
      * Schedules a custom task in the internal scheduler. It will be queued with
      * all other tasks such as change replays and retrieval requests and eventually
-     * executed by calling the specified method.
+     * executed by calling the specified method. With the priority parameter the
+     * time of execution of the Task can be influenced. @see SchedulePriority
      * @param receiver The object the slot should be called on.
      * @param methodName The name of the method (and only the name, not signature, not SLOT(...) macro),
      * that should be called to execute this task. The method has to be a slot and take a QVariant as
      * argument.
      * @param argument A QVariant argument passed to the method specified above. Use this to pass task
      * parameters.
+     * @param priority Priority of the task. Use this to influence the position in
+     * the execution queue.
      * @since 4.4
      */
-    void scheduleCustomTask( QObject* receiver, const char* method, const QVariant &argument );
+    void scheduleCustomTask( QObject* receiver, const char* method, const QVariant &argument, SchedulePriority priority = Append );
 
     /**
      * Indicate that the current task is finished. Use this method from the slot called via scheduleCustomTaks().
