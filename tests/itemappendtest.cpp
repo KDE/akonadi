@@ -44,6 +44,8 @@ void ItemAppendTest::initTestCase()
   // switch all resources offline to reduce interference from them
   foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
     agent.setIsOnline( false );
+
+  AttributeFactory::registerAttribute<TestAttribute>();
 }
 
 void ItemAppendTest::testItemAppend_data()
@@ -182,8 +184,6 @@ void ItemAppendTest::testIllegalAppend()
 
 void ItemAppendTest::testMultipartAppend()
 {
-  AttributeFactory::registerAttribute<TestAttribute>();
-
   const Collection testFolder1( collectionIdFromPath( "res2/space folder" ) );
   QVERIFY( testFolder1.isValid() );
 
@@ -209,6 +209,25 @@ void ItemAppendTest::testMultipartAppend()
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   AKVERIFYEXEC( djob );
+}
+
+void ItemAppendTest::testInvalidMultipartAppend()
+{
+  Item item;
+  item.setMimeType( "application/octet-stream" );
+  item.setPayload<QByteArray>( "body data" );
+  item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
+  item.setFlag( "TestFlag" );
+  ItemCreateJob *job = new ItemCreateJob( item, Collection( -1 ), this );
+  QVERIFY( !job->exec() );
+
+  Item item2;
+  item2.setMimeType( "application/octet-stream" );
+  item2.setPayload<QByteArray>( "more body data" );
+  item2.attribute<TestAttribute>( Item::AddIfMissing )->data = "even more extra data";
+  item2.setFlag( "TestFlag" );
+  ItemCreateJob *job2 = new ItemCreateJob( item2, Collection( -1 ), this );
+  QVERIFY( !job2->exec() );
 }
 
 void ItemAppendTest::testItemSize_data()
