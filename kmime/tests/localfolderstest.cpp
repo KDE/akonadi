@@ -148,7 +148,7 @@ void LocalFoldersTest::testDefaultFolderRegistration()
   SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(collectionssChanged(Akonadi::AgentInstance)) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(Akonadi::AgentInstance)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
   QVERIFY( spy.isValid() );
   QVERIFY( defSpy.isValid() );
@@ -206,7 +206,7 @@ void LocalFoldersTest::testCustomFolderRegistration()
   SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(collectionChanged(Akonadi::AgentInstance)) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(Akonadi::AgentInstance)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
   QVERIFY( spy.isValid() );
   QVERIFY( defSpy.isValid() );
@@ -263,7 +263,7 @@ void LocalFoldersTest::testCollectionDelete()
   SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(collectionChanged(Akonadi::AgentInstance)) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(Akonadi::AgentInstance)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
   QVERIFY( spy.isValid() );
   QVERIFY( defSpy.isValid() );
@@ -316,7 +316,7 @@ void LocalFoldersTest::testBatchRegister()
   SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(connectionsChanged(const Akonadi::AgentInstance&)) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(const Akonadi::AgentInstance&)) );
   QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
   QVERIFY( spy.isValid() );
   QVERIFY( defSpy.isValid() );
