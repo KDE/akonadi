@@ -82,15 +82,14 @@ class AKONADI_KMIME_EXPORT SpecialCollections : public QObject
      */
     enum Type
     {
-      Invalid,         ///< An invalid special collection.
-      Root,            ///< The root collection containing the local folders.
+      Invalid = -1,    ///< An invalid special collection.
+      Root = 0,        ///< The root collection containing the local folders.
       Inbox,           ///< The inbox collection.
       Outbox,          ///< The outbox collection.
       SentMail,        ///< The sent-mail collection.
       Trash,           ///< The trash collection.
       Drafts,          ///< The drafts collection.
       Templates,       ///< The templates collection.
-      Spam,            ///< The spam collection.
       LastType         ///< @internal marker
     };
 
