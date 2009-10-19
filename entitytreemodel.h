@@ -175,19 +175,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     ItemPopulationStrategy itemPopulationStrategy() const;
 
     /**
-     * Sets the root collection to create an entity tree for.
-     * The @p collection must be a valid Collection object.
-     *
-     * By default the Collection::root() is used.
-     */
-    void setRootCollection( const Collection &collection );
-
-    /**
-     * Returns the root collection of the entity tree.
-     */
-    Collection rootCollection() const;
-
-    /**
      * Sets whether the root collection shall be provided by the model.
      *
      * @see setRootCollectionDisplayName()

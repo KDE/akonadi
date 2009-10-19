@@ -916,21 +916,6 @@ bool EntityTreeModel::removeColumns( int, int, const QModelIndex& )
   return false;
 }
 
-void EntityTreeModel::setRootCollection( const Collection &collection )
-{
-  Q_D(EntityTreeModel);
-
-  Q_ASSERT( collection.isValid() );
-  d->m_rootCollection = collection;
-  clearAndReset();
-}
-
-Collection EntityTreeModel::rootCollection() const
-{
-  Q_D(const EntityTreeModel);
-  return d->m_rootCollection;
-}
-
 QModelIndex EntityTreeModel::indexForCollection( const Collection &collection ) const
 {
   Q_D(const EntityTreeModel);
