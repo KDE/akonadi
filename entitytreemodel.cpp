@@ -904,11 +904,6 @@ bool EntityTreeModel::insertColumns( int, int, const QModelIndex& )
 
 bool EntityTreeModel::removeRows( int, int, const QModelIndex& )
 {
-  /*
-  beginRemoveRows(start, end, parent);
-  // TODO: Implement me.
-  endRemoveRows(start, end, parent);
-  */
   return false;
 }
 

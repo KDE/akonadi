@@ -301,11 +301,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
 
     virtual int getColumnCount( HeaderGroup headerGroup ) const;
 
-    /**
-     * Removes the rows from @p start to @p end from @parent
-     */
-    virtual bool removeRows( int start, int end, const QModelIndex &parent = QModelIndex() );
-
   private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( EntityTreeModel )
@@ -315,6 +310,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     virtual bool insertRows( int , int, const QModelIndex& = QModelIndex() );
     virtual bool insertColumns( int, int, const QModelIndex& = QModelIndex() );
     virtual bool removeColumns( int, int, const QModelIndex& = QModelIndex() );
+    virtual bool removeRows( int, int, const QModelIndex & = QModelIndex() );
 
     Q_PRIVATE_SLOT( d_func(), void monitoredCollectionStatisticsChanged( Akonadi::Collection::Id,
                                                                          const Akonadi::CollectionStatistics& ) )
