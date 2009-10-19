@@ -629,10 +629,10 @@ int EntityTreeModel::entityColumnCount( HeaderGroup headerGroup ) const
   return 1;
 }
 
-QVariant EntityTreeModel::entityHeaderData( int section, Qt::Orientation orientation, int role, int headerSet) const
+QVariant EntityTreeModel::entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const
 {
   // Not needed in this model.
-  Q_UNUSED(headerSet);
+  Q_UNUSED( headerGroup );
 
   if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole )
     return i18nc( "@title:column, name of a thing", "Name" );
@@ -642,10 +642,10 @@ QVariant EntityTreeModel::entityHeaderData( int section, Qt::Orientation orienta
 
 QVariant EntityTreeModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  const int headerSet = (role / TerminalUserRole);
+  const HeaderGroup headerGroup = static_cast<HeaderGroup>( (role / static_cast<int>( TerminalUserRole ) ) );
 
   role %= TerminalUserRole;
-  return entityHeaderData( section, orientation, role, headerSet );
+  return entityHeaderData( section, orientation, role, headerGroup );
 }
 
 QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
