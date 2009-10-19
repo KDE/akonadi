@@ -49,6 +49,8 @@
 // TODO:
 // * Implement ordering support.
 
+Q_DECLARE_METATYPE( QSet<QByteArray> )
+
 using namespace Akonadi;
 
 EntityTreeModel::EntityTreeModel( Session *session,

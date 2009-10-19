@@ -28,8 +28,6 @@
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStringList>
 
-Q_DECLARE_METATYPE( QSet<QByteArray> )
-
 namespace Akonadi
 {
 

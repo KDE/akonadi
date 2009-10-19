@@ -24,6 +24,8 @@
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 
+Q_DECLARE_METATYPE( QSet<QByteArray> )
+
 using namespace Akonadi;
 
 namespace Akonadi
