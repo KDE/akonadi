@@ -111,7 +111,7 @@ void FakeAkonadiServer::responseProcessed()
 
   SessionEvent *sessionEvent = qobject_cast<SessionEvent *>( event );
   Q_ASSERT( sessionEvent );
-
+  Q_UNUSED( sessionEvent );
 }
 
 void FakeAkonadiServer::followUp()
