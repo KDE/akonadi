@@ -159,8 +159,6 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 
     virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
-    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
-
   protected:
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
 
