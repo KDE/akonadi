@@ -47,7 +47,7 @@ void ContactDefaultActions::connectToView( QObject *view )
   const QMetaObject *metaObject = view->metaObject();
 
   if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "urlClicked( const QUrl& )" ) ) != -1 )
-    connect( view, SIGNAL( urlClicked( const QUrl& ) ), SLOT( showUrl( const QUrl& ) ) );
+    connect( view, SIGNAL( urlClicked( const KUrl& ) ), SLOT( showUrl( const KUrl& ) ) );
 
   if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "emailClicked( const QString&, const QString& )" ) ) != -1 )
     connect( view, SIGNAL( emailClicked( const QString&, const QString& ) ),
@@ -62,9 +62,9 @@ void ContactDefaultActions::connectToView( QObject *view )
              this, SLOT( showAddress( const KABC::Address& ) ) );
 }
 
-void ContactDefaultActions::showUrl( const QUrl &url )
+void ContactDefaultActions::showUrl( const KUrl &url )
 {
-  KToolInvocation::invokeBrowser( url.toString() );
+  KToolInvocation::invokeBrowser( url.url() );
 }
 
 void ContactDefaultActions::sendEmail( const QString &name, const QString &address )

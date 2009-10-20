@@ -21,13 +21,13 @@
 
 #include "contactgroupeditor.h"
 
-#include "addressbookselectiondialog.h"
 #include "autoqpointer_p.h"
 #include "contactgroupmodel_p.h"
 #include "contactgroupeditordelegate_p.h"
 #include "ui_contactgroupeditor.h"
 #include "waitingoverlay_p.h"
 
+#include <akonadi/collectiondialog.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -40,6 +40,7 @@
 #include <klineedit.h>
 #include <kmessagebox.h>
 
+#include <QtCore/QTimer>
 #include <QtGui/QGridLayout>
 #include <QtGui/QMessageBox>
 #include <QtGui/QTableView>
@@ -66,6 +67,12 @@ class ContactGroupEditor::Private
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& );
     void memberChanged();
     void setReadOnly( bool );
+
+    void adaptHeaderSizes()
+    {
+      mGui.membersView->header()->setDefaultSectionSize( mGui.membersView->header()->width() / 2 );
+      mGui.membersView->header()->resizeSections( QHeaderView::Interactive );
+    }
 
     void loadContactGroup( const KABC::ContactGroup &group );
     bool storeContactGroup( KABC::ContactGroup &group );
@@ -113,6 +120,8 @@ void ContactGroupEditor::Private::itemFetchDone( KJob *job )
     loadContactGroup( group );
 
     setReadOnly( mReadOnly );
+
+    QTimer::singleShot( 0, mParent, SLOT( adaptHeaderSizes() ) );
   }
 }
 
@@ -133,6 +142,8 @@ void ContactGroupEditor::Private::parentCollectionFetchDone( KJob *job )
   loadContactGroup( group );
 
   setReadOnly( mReadOnly );
+
+  QTimer::singleShot( 0, mParent, SLOT( adaptHeaderSizes() ) );
 }
 
 void ContactGroupEditor::Private::storeDone( KJob *job )
@@ -230,8 +241,9 @@ ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
   if ( mode == CreateMode ) {
     KABC::ContactGroup dummyGroup;
     d->mGroupModel->loadContactGroup( dummyGroup );
-    d->mGui.membersView->header()->setDefaultSectionSize( d->mGui.membersView->header()->width() / 2 );
-    d->mGui.membersView->header()->resizeSections( QHeaderView::Interactive );
+    d->mGui.groupName->setFocus();
+
+    QTimer::singleShot( 0, this, SLOT( adaptHeaderSizes() ) );
   }
 
   d->mGui.membersView->header()->setStretchLastSection( true );
@@ -279,9 +291,16 @@ bool ContactGroupEditor::saveContactGroup()
     connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
   } else if ( d->mMode == CreateMode ) {
     if ( !d->mDefaultCollection.isValid() ) {
-      AutoQPointer<AddressBookSelectionDialog> dlg = new AddressBookSelectionDialog( AddressBookSelectionDialog::ContactsOnly, this );
+      const QStringList mimeTypeFilter( KABC::ContactGroup::mimeType() );
+
+      AutoQPointer<CollectionDialog> dlg = new CollectionDialog( this );
+      dlg->setMimeTypeFilter( mimeTypeFilter );
+      dlg->setAccessRightsFilter( Collection::CanCreateItem );
+      dlg->setCaption( i18n( "Select Address Book" ) );
+      dlg->setDescription( i18n( "Select the address book the new contact group shall be saved in:" ) );
+
       if ( dlg->exec() == KDialog::Accepted )
-        setDefaultCollection( dlg->selectedAddressBook() );
+        setDefaultAddressBook( dlg->selectedCollection() );
       else
         return false;
     }
@@ -301,7 +320,14 @@ bool ContactGroupEditor::saveContactGroup()
   return true;
 }
 
-void ContactGroupEditor::setDefaultCollection( const Akonadi::Collection &collection )
+void ContactGroupEditor::setContactGroupTemplate( const KABC::ContactGroup &group )
+{
+  d->mGroupModel->loadContactGroup( group );
+  d->mGui.membersView->header()->setDefaultSectionSize( d->mGui.membersView->header()->width() / 2 );
+  d->mGui.membersView->header()->resizeSections( QHeaderView::Interactive );
+}
+
+void ContactGroupEditor::setDefaultAddressBook( const Akonadi::Collection &collection )
 {
   d->mDefaultCollection = collection;
 }

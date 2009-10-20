@@ -24,6 +24,8 @@
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 
+Q_DECLARE_METATYPE( QSet<QByteArray> )
+
 using namespace Akonadi;
 
 namespace Akonadi
@@ -81,7 +83,7 @@ void PartFetcherPrivate::fetchJobDone( KJob *job )
 
   Item item = m_persistentIndex.data( EntityTreeModel::ItemRole ).value<Item>();
 
-  item.merge( list.at( 0 ) );
+  item.apply( list.at( 0 ) );
 
   QAbstractItemModel *model = const_cast<QAbstractItemModel *>( m_persistentIndex.model() );
 

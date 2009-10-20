@@ -25,8 +25,8 @@
 #include "akonadi-contact_export.h"
 
 #include <akonadi/item.h>
+#include <akonadi/itemsearchjob.h>
 #include <kabc/contactgroup.h>
-#include <kjob.h>
 
 namespace Akonadi {
 
@@ -40,7 +40,6 @@ namespace Akonadi {
  *
  * Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob();
  * job->setQuery( Akonadi::ContactGroupSearchJob::Name, "Family Members" );
- * job->start();
  * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
  *
  * ...
@@ -57,7 +56,7 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */
-class AKONADI_CONTACT_EXPORT ContactGroupSearchJob : public KJob
+class AKONADI_CONTACT_EXPORT ContactGroupSearchJob : public ItemSearchJob
 {
   Q_OBJECT
 
@@ -92,22 +91,10 @@ class AKONADI_CONTACT_EXPORT ContactGroupSearchJob : public KJob
      */
     KABC::ContactGroup::List contactGroups() const;
 
-    /**
-     * Returns the items that matched the search criteria.
-     */
-    Item::List items() const;
-
-    /**
-     * Starts the search job.
-     */
-    virtual void start();
-
   private:
     //@cond PRIVATE
     class Private;
     Private* const d;
-
-    Q_PRIVATE_SLOT( d, void searchResult( KJob* ) )
     //@endcond
 };
 

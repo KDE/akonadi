@@ -46,6 +46,11 @@
 #include "kdebug.h"
 #include "pastehelper_p.h"
 
+// TODO:
+// * Implement ordering support.
+
+Q_DECLARE_METATYPE( QSet<QByteArray> )
+
 using namespace Akonadi;
 
 EntityTreeModel::EntityTreeModel( Session *session,
@@ -163,11 +168,11 @@ int EntityTreeModel::columnCount( const QModelIndex & parent ) const
   if ( parent.isValid() && parent.column() != 0 )
     return 0;
 
-  return qMax( getColumnCount( CollectionTreeHeaders ), getColumnCount( ItemListHeaders ) );
+  return qMax( entityColumnCount( CollectionTreeHeaders ), entityColumnCount( ItemListHeaders ) );
 }
 
 
-QVariant EntityTreeModel::getData( const Item &item, int column, int role ) const
+QVariant EntityTreeModel::entityData( const Item &item, int column, int role ) const
 {
   if ( column == 0 ) {
     switch ( role ) {
@@ -193,7 +198,7 @@ QVariant EntityTreeModel::getData( const Item &item, int column, int role ) cons
   return QVariant();
 }
 
-QVariant EntityTreeModel::getData( const Collection &collection, int column, int role ) const
+QVariant EntityTreeModel::entityData( const Collection &collection, int column, int role ) const
 {
   Q_D(const EntityTreeModel);
 
@@ -239,18 +244,19 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   if ( role == SessionRole )
     return QVariant::fromValue( qobject_cast<QObject *>( d->m_session ) );
 
-  const int headerSet = ( role / TerminalUserRole );
+  // Ugly, but at least the API is clean.
+  const HeaderGroup headerGroup = static_cast<HeaderGroup>( ( role / static_cast<int>( TerminalUserRole ) ) );
 
   role %= TerminalUserRole;
   if ( !index.isValid() )
   {
     if ( ColumnCountRole != role )
       return QVariant();
-    return getColumnCount( headerSet );
+    return entityColumnCount( headerGroup );
   }
 
   if ( ColumnCountRole == role )
-    return getColumnCount( headerSet );
+    return entityColumnCount( headerGroup );
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
@@ -289,7 +295,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     case CollectionRole:
       return QVariant::fromValue( collection );
     default:
-      return getData( collection, index.column(), role );
+      return entityData( collection, index.column(), role );
     }
 
   } else if ( Node::Item == node->type ) {
@@ -319,7 +325,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     case AvailablePartsRole:
       return QVariant::fromValue( item.availablePayloadParts() );
     default:
-      return getData( item, index.column(), role );
+      return entityData( item, index.column(), role );
     }
   }
   return QVariant();
@@ -613,18 +619,18 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
   return 0;
 }
 
-int EntityTreeModel::getColumnCount(int headerSet) const
+int EntityTreeModel::entityColumnCount( HeaderGroup headerGroup ) const
 {
   // Not needed in this model.
-  Q_UNUSED(headerSet);
+  Q_UNUSED(headerGroup);
 
   return 1;
 }
 
-QVariant EntityTreeModel::getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet) const
+QVariant EntityTreeModel::entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const
 {
   // Not needed in this model.
-  Q_UNUSED(headerSet);
+  Q_UNUSED( headerGroup );
 
   if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole )
     return i18nc( "@title:column, name of a thing", "Name" );
@@ -634,10 +640,10 @@ QVariant EntityTreeModel::getHeaderData( int section, Qt::Orientation orientatio
 
 QVariant EntityTreeModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  const int headerSet = (role / TerminalUserRole);
+  const HeaderGroup headerGroup = static_cast<HeaderGroup>( (role / static_cast<int>( TerminalUserRole ) ) );
 
   role %= TerminalUserRole;
-  return getHeaderData( section, orientation, role, headerSet );
+  return entityHeaderData( section, orientation, role, headerGroup );
 }
 
 QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
@@ -896,32 +902,12 @@ bool EntityTreeModel::insertColumns( int, int, const QModelIndex& )
 
 bool EntityTreeModel::removeRows( int, int, const QModelIndex& )
 {
-  /*
-  beginRemoveRows(start, end, parent);
-  // TODO: Implement me.
-  endRemoveRows(start, end, parent);
-  */
   return false;
 }
 
 bool EntityTreeModel::removeColumns( int, int, const QModelIndex& )
 {
   return false;
-}
-
-void EntityTreeModel::setRootCollection( const Collection &collection )
-{
-  Q_D(EntityTreeModel);
-
-  Q_ASSERT( collection.isValid() );
-  d->m_rootCollection = collection;
-  clearAndReset();
-}
-
-Collection EntityTreeModel::rootCollection() const
-{
-  Q_D(const EntityTreeModel);
-  return d->m_rootCollection;
 }
 
 QModelIndex EntityTreeModel::indexForCollection( const Collection &collection ) const

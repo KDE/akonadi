@@ -63,6 +63,11 @@ Akonadi::Item ContactGroupViewerDialog::contactGroup() const
   return d->mViewer->contactGroup();
 }
 
+ContactGroupViewer* ContactGroupViewerDialog::viewer() const
+{
+  return d->mViewer;
+}
+
 void ContactGroupViewerDialog::setContactGroup( const Akonadi::Item &group )
 {
   d->mViewer->setContactGroup( group );

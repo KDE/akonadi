@@ -325,8 +325,8 @@ class AKONADI_EXPORT Item : public Entity
     QSet<QByteArray> availablePayloadParts() const;
 
     /**
-     * Merges the Item @p other into this item.
-     * Any parts or attributes available in other, will be merged into this item,
+     * Applies the parts of Item @p other to this item.
+     * Any parts or attributes available in other, will be applied to this item,
      * and the payload parts of other will be inserted into this item, overwriting
      * any existing parts with the same part name.
      *
@@ -337,7 +337,7 @@ class AKONADI_EXPORT Item : public Entity
      *
      * @since 4.4
      */
-    void merge( const Item &other );
+    void apply( const Item &other );
 
   private:
     //@cond PRIVATE

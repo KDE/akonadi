@@ -17,12 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_LOCALFOLDERSHELPERJOBS_P_H
-#define AKONADI_LOCALFOLDERSHELPERJOBS_P_H
+#ifndef AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H
+#define AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H
 
 #include "akonadi-kmime_export.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/kmime/specialcollections.h>
 #include <akonadi/transactionsequence.h>
 
 namespace Akonadi {
@@ -31,10 +32,10 @@ namespace Akonadi {
 
 /**
   @internal
-  Helper job for LocalFoldersRequestJob.
+  Helper job for SpecialCollectionsRequestJob.
 
   A Job that fetches all the collections of a resource, and returns only
-  those that have a LocalFolderAttribute.
+  those that have a SpecialCollectionAttribute.
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
@@ -73,7 +74,7 @@ class AKONADI_KMIME_TEST_EXPORT ResourceScanJob : public TransactionSequence
 
     /**
       Returns all the collections of this resource which have a
-      LocalFolderAttribute. These might include the root resource collection.
+      SpecialCollectionAttribute. These might include the root resource collection.
     */
     Akonadi::Collection::List localFolders() const;
 
@@ -94,17 +95,17 @@ class AKONADI_KMIME_TEST_EXPORT ResourceScanJob : public TransactionSequence
 
 /**
   @internal
-  Helper job for LocalFoldersRequestJob.
+  Helper job for SpecialCollectionsRequestJob.
 
   A custom ResourceScanJob for the default local folders resource. This is a
   maildir resource stored in ~/.local/share/local-mail.
 
   This job does two things that a regular ResourceScanJob does not do:
   1) It creates and syncs the resource if it is missing. The resource ID is
-     stored in a config file named localfoldersrc.
+     stored in a config file named specialcollectionsrc.
   2) If the resource had to be recreated, but the folders existed on disk
      before that, it recovers the folders based on name. For instance, it will
-     give a folder named outbox a LocalFolderAttribute of type Outbox.
+     give a folder named outbox a SpecialCollectionAttribute of type Outbox.
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
@@ -146,16 +147,16 @@ class AKONADI_KMIME_TEST_EXPORT DefaultResourceJob : public ResourceScanJob
 
 /**
   @internal
-  Helper job for LocalFoldersRequestJob.
+  Helper job for SpecialCollectionsRequestJob.
 
-  If LocalFoldersRequestJob needs to create a collection, it sets a lock so
+  If SpecialCollectionsRequestJob needs to create a collection, it sets a lock so
   that other instances do not interfere. This lock is an
-  org.kde.pim.LocalFolders name registered on D-Bus. This job is used to get
+  org.kde.pim.SpecialCollections name registered on D-Bus. This job is used to get
   that lock.
   This job will give the lock immediately if possible, or wait up to three
   seconds for the lock to be released.  If the lock is not released during
   that time, this job fails. (This is based on the assumption that
-  LocalFoldersRequestJob operations should not take long.)
+  SpecialCollectionsRequestJob operations should not take long.)
 
   Use the releaseLock() function to release the lock.
 
@@ -194,30 +195,30 @@ class AKONADI_KMIME_TEST_EXPORT GetLockJob : public KJob
 // ===================== helper functions ============================
 
 /**
-  Returns the short English name associated with a LocalFolder type (for
+  Returns the short English name associated with a SpecialCollection type (for
   instance 'outbox' for Outbox). These names are used as collection names.
 */
-QString AKONADI_KMIME_TEST_EXPORT nameForType( int type );
+QString AKONADI_KMIME_TEST_EXPORT nameForType( SpecialCollections::Type type );
 
 /**
-  Returns the pretty i18n'ed name of a LocalFolder type. These names are used
-  in the EntityDisplayAttribute of LocalFolders collections.
+  Returns the pretty i18n'ed name of a SpecialCollection type. These names are used
+  in the EntityDisplayAttribute of SpecialCollections collections.
 */
-QString AKONADI_KMIME_TEST_EXPORT displayNameForType( int type );
+QString AKONADI_KMIME_TEST_EXPORT displayNameForType( SpecialCollections::Type type );
 
 /**
-  Returns the icon name for a given LocalFolder type.
+  Returns the icon name for a given SpecialCollection type.
 */
-QString iconNameForType( int type );
+QString iconNameForType( SpecialCollections::Type type );
 
 /**
-  Sets on @p col the required attributes of LocalFolder type @p type.
-  These are a LocalFolderAttribute and an EntityDisplayAttribute.
+  Sets on @p col the required attributes of SpecialCollection type @p type.
+  These are a SpecialCollectionAttribute and an EntityDisplayAttribute.
 */
-void setCollectionAttributes( Akonadi::Collection &col, int type );
+void setCollectionAttributes( Akonadi::Collection &col, SpecialCollections::Type type );
 
 /**
-  Releases the LocalFoldersRequestJob lock that was obtained through
+  Releases the SpecialCollectionsRequestJob lock that was obtained through
   GetLockJob.
   @return Whether the lock was released successfully.
 */
@@ -225,4 +226,4 @@ bool AKONADI_KMIME_TEST_EXPORT releaseLock();
 
 } // namespace Akonadi
 
-#endif // AKONADI_LOCALFOLDERSHELPERJOBS_P_H
+#endif // AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H

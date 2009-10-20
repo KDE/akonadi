@@ -26,7 +26,7 @@
 
 #include <QtCore/QObject>
 
-class QUrl;
+class KUrl;
 
 namespace KABC {
 class Address;
@@ -54,6 +54,29 @@ namespace Akonadi {
  *
  * ContactDefaultActions *actions = new ContactDefaultActions( this );
  * actions->connectToView( viewer );
+ * @endcode
+ *
+ * If you want to use the full functionality of ContactDefaultActions
+ * but customize a single action (e.g. handling sending mail differently)
+ * the following can be done:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * ContactViewer *viewer = new ContactViewer( this );
+ * ContactDefaultActions *actions = new ContactDefaultActions( this );
+ *
+ * // first connect all actions
+ * actions->connectToView( viewer );
+ *
+ * // then remove the signle/slot connection you want to overwrite
+ * disconnect( viewer, SIGNAL( emailClicked( const QString&, const QString& ) ),
+ *             actions, SLOT( sendEmail( const QString&, const QString& ) ) );
+ *
+ * // connect to your custom implementation
+ * connect( viewer, SIGNAL( emailClicked( const QString&, const QString& ) ),
+ *          this, SLOT( handleSpecial( const QString&, const QString& ) ) );
  *
  * @endcode
  *
@@ -87,7 +110,7 @@ class AKONADI_CONTACT_EXPORT ContactDefaultActions : public QObject
     /**
      * Shows the given @p url in the users preferred webbrowser.
      */
-    void showUrl( const QUrl &url );
+    void showUrl( const KUrl &url );
 
     /**
      * Opens the users preferred mail composer and does the setup

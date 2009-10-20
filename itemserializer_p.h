@@ -54,7 +54,7 @@ class AKONADI_TESTS_EXPORT ItemSerializer
        *
        * @since 4.4
        */
-      static void merge( Item& item, const Item &other );
+      static void apply( Item& item, const Item &other );
 
       /**
        * Returns a list of parts available in the item payload.

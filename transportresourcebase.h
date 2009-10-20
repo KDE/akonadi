@@ -49,33 +49,54 @@ class TransportResourceBasePrivate;
 class AKONADI_EXPORT TransportResourceBase
 {
   public:
+    /**
+     * Creates a new transport resource base.
+     */
     TransportResourceBase();
+
+    /**
+     * Destroys the transport resource base.
+     */
     virtual ~TransportResourceBase();
 
     /**
-      Reimplement in your resource, to begin the actual sending operation.
-      Call emitTransportResult() when finished.
-      @param message The ID of the message to be sent.
-      @see emitTransportResult.
-    */
-    virtual void sendItem( Akonadi::Item::Id message ) = 0;
-
-    // TODO add void emitSendProgress( int percent );
+     * Describes the result of the transport process.
+     */
+    enum TransportResult
+    {
+      TransportSucceeded, ///< The transport process succeeded.
+      TransportFailed     ///< The transport process failed.
+    };
 
     /**
-     * Emits the transportResult() DBus signal with the given arguments.
-     * @param item The id of the item that was sent.
-     * @param success True if the sending operation succeeded.
+     * This method is called when the given @p item shall be send.
+     * When the sending is done or an error occured during
+     * sending, call itemSent() with the according result flag.
+     *
+     * @param item The message item to be send.
+     * @see itemSent().
+     */
+    virtual void sendItem( const Akonadi::Item &item ) = 0;
+
+    /**
+     * This method marks the sending of the passed @p item
+     * as finished.
+     *
+     * @param item The item that was sent.
+     * @param result The result that indicates whether the sending
+     *               was successfully or not.
      * @param message An optional textual explanation of the result.
      * @see Transport.
      */
-    void emitTransportResult( Akonadi::Item::Id &item, bool success,
-                              const QString &message = QString() );
+    void itemSent( const Akonadi::Item &item, TransportResult result,
+                   const QString &message = QString() );
 
   private:
+    //@cond PRIVATE
     TransportResourceBasePrivate *const d;
+    //@endcond
 };
 
-} // namespace Akonadi
+}
 
-#endif // AKONADI_TRANSPORTRESOURCEBASE_H
+#endif

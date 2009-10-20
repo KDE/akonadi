@@ -430,12 +430,24 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     /**
      * Indicate the use of hierarchical remote identifiers.
+     *
+     * This means that it is possible to have two different items with the same
+     * remoteId in different Collections.
+     *
+     * This should be called in the resource constructor as needed.
+     *
      * @since 4.4
      */
     void setHierarchicalRemoteIdentifiersEnabled( bool enable );
 
     friend class ResourceScheduler;
 
+    /**
+     * Describes the scheduling priority of a task that has been queued
+     * for execution.
+     *
+     * @see scheduleCustomTask
+     */
     enum SchedulePriority {
       Prepend,            ///> The task will be executed as soon as the current task has finished.
       AfterChangeReplay,  ///> The task is scheduled after the last ChangeReplay task in the queue

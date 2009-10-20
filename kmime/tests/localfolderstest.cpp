@@ -37,10 +37,11 @@
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/control.h>
 #include <akonadi/qtest_akonadi.h>
-#include <akonadi/kmime/localfolderattribute.h>
-#include <akonadi/kmime/localfolders.h>
-#include "../localfolderstesting.h"
-#include "../localfoldershelperjobs_p.h"
+#include "../specialcollectionattribute_p.h"
+#include "../specialcollections_p.h"
+#include <akonadi/kmime/specialcollections.h>
+#include "../specialcollectionstesting.h"
+#include "../specialcollectionshelperjobs_p.h"
 
 using namespace Akonadi;
 
@@ -90,72 +91,74 @@ void LocalFoldersTest::testLock()
 
 void LocalFoldersTest::testInitialState()
 {
-  LocalFolders *lf = LocalFolders::self();
-  LocalFoldersTesting *lft = LocalFoldersTesting::_t_self();
+  SpecialCollections *lf = SpecialCollections::self();
+  SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
 
   // No one has created the default resource.
-  QVERIFY( lf->defaultResourceId().isEmpty() );
+  QVERIFY( lf->d->defaultResource().identifier().isEmpty() );
 
   // LF does not have a default Outbox folder (or any other).
-  QCOMPARE( lf->hasDefaultFolder( LocalFolders::Outbox ), false );
-  QVERIFY( !lf->defaultFolder( LocalFolders::Outbox ).isValid() );
+  QCOMPARE( lf->hasDefaultCollection( SpecialCollections::Outbox ), false );
+  QVERIFY( !lf->defaultCollection( SpecialCollections::Outbox ).isValid() );
 
   // LF treats unknown resources correctly.
   const QString resourceId = QString::fromLatin1( "this_resource_does_not_exist" );
-  QCOMPARE( lf->hasFolder( LocalFolders::Outbox, resourceId ), false );
-  QVERIFY( !lf->folder( LocalFolders::Outbox, resourceId ).isValid() );
+  QCOMPARE( lf->hasCollection( SpecialCollections::Outbox, AgentManager::self()->instance( resourceId ) ), false );
+  QVERIFY( !lf->collection( SpecialCollections::Outbox, AgentManager::self()->instance( resourceId ) ).isValid() );
 }
 
 void LocalFoldersTest::testRegistrationErrors()
 {
-  LocalFolders *lf = LocalFolders::self();
+  SpecialCollections *lf = SpecialCollections::self();
 
   // A valid collection that can be registered.
   Collection outbox;
   outbox.setName( QLatin1String( "my_outbox" ) );
   outbox.setParentCollection( res1 );
-  outbox.addAttribute( new LocalFolderAttribute( LocalFolders::Outbox ) );
+  outbox.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Outbox ) );
   outbox.setResource( res1.resource() );
 
   // Needs to be valid.
   {
     Collection col( outbox );
     col.setId( -1 );
-    QVERIFY( !lf->registerFolder( col ) );
+    QVERIFY( !lf->registerCollection( SpecialCollections::Outbox, col ) );
   }
 
   // Needs to have a resourceId.
   {
     Collection col( outbox );
     col.setResource( QString() );
-    QVERIFY( !lf->registerFolder( col ) );
+    QVERIFY( !lf->registerCollection( SpecialCollections::Outbox, col ) );
   }
 
   // Needs to have a LocalFolderAttribute.
   {
     Collection col( outbox );
-    col.removeAttribute<LocalFolderAttribute>();
-    QVERIFY( !lf->registerFolder( col ) );
+    col.removeAttribute<SpecialCollectionAttribute>();
+    QVERIFY( !lf->registerCollection( SpecialCollections::Outbox, col ) );
   }
 }
 
 void LocalFoldersTest::testDefaultFolderRegistration()
 {
-  LocalFolders *lf = LocalFolders::self();
-  LocalFoldersTesting *lft = LocalFoldersTesting::_t_self();
+  SpecialCollections *lf = SpecialCollections::self();
+  SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
-  QSignalSpy defSpy( lf, SIGNAL(defaultFoldersChanged()) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(Akonadi::AgentInstance)) );
+  QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // No one has created the default resource.
-  QVERIFY( lf->defaultResourceId().isEmpty() );
+  QVERIFY( lf->d->defaultResource().identifier().isEmpty() );
 
   // Set the default resource. LF should still have no folders.
   lft->_t_setDefaultResourceId( res1.resource() );
-  QCOMPARE( lf->defaultResourceId(), res1.resource() );
+  QCOMPARE( lf->d->defaultResource().identifier(), res1.resource() );
   QCOMPARE( lft->_t_knownResourceCount(), 0 );
   QCOMPARE( lft->_t_knownFolderCount(), 0 );
 
@@ -163,7 +166,7 @@ void LocalFoldersTest::testDefaultFolderRegistration()
   Collection outbox;
   outbox.setName( QLatin1String( "my_outbox" ) );
   outbox.setParentCollection( res1 );
-  outbox.addAttribute( new LocalFolderAttribute( LocalFolders::Outbox ) );
+  outbox.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Outbox ) );
   CollectionCreateJob *cjob = new CollectionCreateJob( outbox, this );
   AKVERIFYEXEC( cjob );
   outbox = cjob->collection();
@@ -175,18 +178,18 @@ void LocalFoldersTest::testDefaultFolderRegistration()
   QCOMPARE( defSpy.count(), 0 );
 
   // Register the collection. LF should now know it.
-  bool ok = lf->registerFolder( outbox );
+  bool ok = lf->registerCollection( SpecialCollections::Outbox, outbox );
   QVERIFY( ok );
-  QVERIFY( lf->hasDefaultFolder( LocalFolders::Outbox ) );
-  QCOMPARE( lf->defaultFolder( LocalFolders::Outbox ), outbox );
+  QVERIFY( lf->hasDefaultCollection( SpecialCollections::Outbox ) );
+  QCOMPARE( lf->defaultCollection( SpecialCollections::Outbox ), outbox );
   QCOMPARE( lft->_t_knownResourceCount(), 1 );
   QCOMPARE( lft->_t_knownFolderCount(), 1 );
   QCOMPARE( spy.count(), 1 );
   QCOMPARE( defSpy.count(), 1 );
 
   // Forget all folders in the default resource.
-  lft->_t_forgetFoldersForResource( lf->defaultResourceId() );
-  QCOMPARE( lf->hasDefaultFolder( LocalFolders::Outbox ), false );
+  lft->_t_forgetFoldersForResource( lf->d->defaultResource().identifier() );
+  QCOMPARE( lf->hasDefaultCollection( SpecialCollections::Outbox ), false );
   QCOMPARE( lft->_t_knownResourceCount(), 0 );
   QCOMPARE( lft->_t_knownFolderCount(), 0 );
   QCOMPARE( spy.count(), 2 );
@@ -199,12 +202,14 @@ void LocalFoldersTest::testDefaultFolderRegistration()
 
 void LocalFoldersTest::testCustomFolderRegistration()
 {
-  LocalFolders *lf = LocalFolders::self();
-  LocalFoldersTesting *lft = LocalFoldersTesting::_t_self();
+  SpecialCollections *lf = SpecialCollections::self();
+  SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
-  QSignalSpy defSpy( lf, SIGNAL(defaultFoldersChanged()) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(Akonadi::AgentInstance)) );
+  QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Set a fake default resource, so that res1.resource() isn't seen as the default one.
   // LF should have no folders.
@@ -216,7 +221,7 @@ void LocalFoldersTest::testCustomFolderRegistration()
   Collection outbox;
   outbox.setName( QLatin1String( "my_outbox" ) );
   outbox.setParentCollection( res1 );
-  outbox.addAttribute( new LocalFolderAttribute( LocalFolders::Outbox ) );
+  outbox.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Outbox ) );
   CollectionCreateJob *cjob = new CollectionCreateJob( outbox, this );
   AKVERIFYEXEC( cjob );
   outbox = cjob->collection();
@@ -228,11 +233,11 @@ void LocalFoldersTest::testCustomFolderRegistration()
   QCOMPARE( defSpy.count(), 0 );
 
   // Register the collection. LF should now know it.
-  bool ok = lf->registerFolder( outbox );
+  bool ok = lf->registerCollection( SpecialCollections::Outbox, outbox );
   QVERIFY( ok );
-  QVERIFY( !lf->hasDefaultFolder( LocalFolders::Outbox ) );
-  QVERIFY( lf->hasFolder( LocalFolders::Outbox, outbox.resource() ) );
-  QCOMPARE( lf->folder( LocalFolders::Outbox, outbox.resource() ), outbox );
+  QVERIFY( !lf->hasDefaultCollection( SpecialCollections::Outbox ) );
+  QVERIFY( lf->hasCollection( SpecialCollections::Outbox, AgentManager::self()->instance( outbox.resource() ) ) );
+  QCOMPARE( lf->collection( SpecialCollections::Outbox, AgentManager::self()->instance( outbox.resource() ) ), outbox );
   QCOMPARE( lft->_t_knownResourceCount(), 1 );
   QCOMPARE( lft->_t_knownFolderCount(), 1 );
   QCOMPARE( spy.count(), 1 );
@@ -240,8 +245,8 @@ void LocalFoldersTest::testCustomFolderRegistration()
 
   // Forget all folders in this resource.
   lft->_t_forgetFoldersForResource( outbox.resource() );
-  QCOMPARE( lf->hasDefaultFolder( LocalFolders::Outbox ), false );
-  QCOMPARE( lf->hasFolder( LocalFolders::Outbox, outbox.resource() ), false );
+  QCOMPARE( lf->hasDefaultCollection( SpecialCollections::Outbox ), false );
+  QCOMPARE( lf->hasCollection( SpecialCollections::Outbox, AgentManager::self()->instance( outbox.resource() ) ), false );
   QCOMPARE( lft->_t_knownResourceCount(), 0 );
   QCOMPARE( lft->_t_knownFolderCount(), 0 );
   QCOMPARE( spy.count(), 2 );
@@ -254,16 +259,18 @@ void LocalFoldersTest::testCustomFolderRegistration()
 
 void LocalFoldersTest::testCollectionDelete()
 {
-  LocalFolders *lf = LocalFolders::self();
-  LocalFoldersTesting *lft = LocalFoldersTesting::_t_self();
+  SpecialCollections *lf = SpecialCollections::self();
+  SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
-  QSignalSpy defSpy( lf, SIGNAL(defaultFoldersChanged()) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(Akonadi::AgentInstance)) );
+  QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Set the default resource. LF should have no folders.
   lft->_t_setDefaultResourceId( res1.resource() );
-  QCOMPARE( lf->defaultResourceId(), res1.resource() );
+  QCOMPARE( lf->d->defaultResource().identifier(), res1.resource() );
   QCOMPARE( lft->_t_knownResourceCount(), 0 );
   QCOMPARE( lft->_t_knownFolderCount(), 0 );
 
@@ -271,7 +278,7 @@ void LocalFoldersTest::testCollectionDelete()
   Collection outbox;
   outbox.setName( QLatin1String( "my_outbox" ) );
   outbox.setParentCollection( res1 );
-  outbox.addAttribute( new LocalFolderAttribute( LocalFolders::Outbox ) );
+  outbox.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Outbox ) );
   CollectionCreateJob *cjob = new CollectionCreateJob( outbox, this );
   AKVERIFYEXEC( cjob );
   outbox = cjob->collection();
@@ -283,10 +290,10 @@ void LocalFoldersTest::testCollectionDelete()
   QCOMPARE( defSpy.count(), 0 );
 
   // Register the collection. LF should now know it.
-  bool ok = lf->registerFolder( outbox );
+  bool ok = lf->registerCollection( SpecialCollections::Outbox, outbox );
   QVERIFY( ok );
-  QVERIFY( lf->hasDefaultFolder( LocalFolders::Outbox ) );
-  QCOMPARE( lf->defaultFolder( LocalFolders::Outbox ), outbox );
+  QVERIFY( lf->hasDefaultCollection( SpecialCollections::Outbox ) );
+  QCOMPARE( lf->defaultCollection( SpecialCollections::Outbox ), outbox );
   QCOMPARE( lft->_t_knownResourceCount(), 1 );
   QCOMPARE( lft->_t_knownFolderCount(), 1 );
   QCOMPARE( spy.count(), 1 );
@@ -296,7 +303,7 @@ void LocalFoldersTest::testCollectionDelete()
   CollectionDeleteJob *djob = new CollectionDeleteJob( outbox, this );
   AKVERIFYEXEC( djob );
   QTest::qWait( 100 );
-  QVERIFY( !lf->hasDefaultFolder( LocalFolders::Outbox ) );
+  QVERIFY( !lf->hasDefaultCollection( SpecialCollections::Outbox ) );
   QCOMPARE( lft->_t_knownResourceCount(), 0 );
   QCOMPARE( lft->_t_knownFolderCount(), 0 );
   QCOMPARE( spy.count(), 2 );
@@ -305,16 +312,18 @@ void LocalFoldersTest::testCollectionDelete()
 
 void LocalFoldersTest::testBatchRegister()
 {
-  LocalFolders *lf = LocalFolders::self();
-  LocalFoldersTesting *lft = LocalFoldersTesting::_t_self();
+  SpecialCollections *lf = SpecialCollections::self();
+  SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
-  QSignalSpy defSpy( lf, SIGNAL(defaultFoldersChanged()) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(const Akonadi::AgentInstance&)) );
+  QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Set the default resource. LF should have no folders.
   lft->_t_setDefaultResourceId( res1.resource() );
-  QCOMPARE( lf->defaultResourceId(), res1.resource() );
+  QCOMPARE( lf->d->defaultResource().identifier(), res1.resource() );
   QCOMPARE( lft->_t_knownResourceCount(), 0 );
   QCOMPARE( lft->_t_knownFolderCount(), 0 );
 
@@ -322,7 +331,7 @@ void LocalFoldersTest::testBatchRegister()
   Collection outbox;
   outbox.setName( QLatin1String( "my_outbox" ) );
   outbox.setParentCollection( res1 );
-  outbox.addAttribute( new LocalFolderAttribute( LocalFolders::Outbox ) );
+  outbox.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Outbox ) );
   CollectionCreateJob *cjob = new CollectionCreateJob( outbox, this );
   AKVERIFYEXEC( cjob );
   outbox = cjob->collection();
@@ -331,7 +340,7 @@ void LocalFoldersTest::testBatchRegister()
   Collection drafts;
   drafts.setName( QLatin1String( "my_drafts" ) );
   drafts.setParentCollection( res1 );
-  drafts.addAttribute( new LocalFolderAttribute( LocalFolders::Drafts ) );
+  drafts.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Drafts ) );
   cjob = new CollectionCreateJob( drafts, this );
   AKVERIFYEXEC( cjob );
   drafts = cjob->collection();
@@ -344,18 +353,18 @@ void LocalFoldersTest::testBatchRegister()
 
   // Register the folders in batch mode.
   lft->_t_beginBatchRegister();
-  bool ok = lf->registerFolder( outbox );
+  bool ok = lf->registerCollection( SpecialCollections::Outbox, outbox );
   QVERIFY( ok );
-  QVERIFY( lf->hasDefaultFolder( LocalFolders::Outbox ) );
-  QCOMPARE( lf->defaultFolder( LocalFolders::Outbox ), outbox );
+  QVERIFY( lf->hasDefaultCollection( SpecialCollections::Outbox ) );
+  QCOMPARE( lf->defaultCollection( SpecialCollections::Outbox ), outbox );
   QCOMPARE( lft->_t_knownResourceCount(), 1 );
   QCOMPARE( lft->_t_knownFolderCount(), 1 );
   QCOMPARE( spy.count(), 0 );
   QCOMPARE( defSpy.count(), 0 );
-  ok = lf->registerFolder( drafts );
+  ok = lf->registerCollection( SpecialCollections::Drafts, drafts );
   QVERIFY( ok );
-  QVERIFY( lf->hasDefaultFolder( LocalFolders::Drafts ) );
-  QCOMPARE( lf->defaultFolder( LocalFolders::Drafts ), drafts );
+  QVERIFY( lf->hasDefaultCollection( SpecialCollections::Drafts ) );
+  QCOMPARE( lf->defaultCollection( SpecialCollections::Drafts ), drafts );
   QCOMPARE( lft->_t_knownResourceCount(), 1 );
   QCOMPARE( lft->_t_knownFolderCount(), 2 );
   QCOMPARE( spy.count(), 0 );
@@ -367,9 +376,9 @@ void LocalFoldersTest::testBatchRegister()
   QCOMPARE( defSpy.count(), 1 );
 
   // Forget all folders in the default resource.
-  lft->_t_forgetFoldersForResource( lf->defaultResourceId() );
-  QCOMPARE( lf->hasDefaultFolder( LocalFolders::Outbox ), false );
-  QCOMPARE( lf->hasDefaultFolder( LocalFolders::Drafts ), false );
+  lft->_t_forgetFoldersForResource( lf->d->defaultResource().identifier() );
+  QCOMPARE( lf->hasDefaultCollection( SpecialCollections::Outbox ), false );
+  QCOMPARE( lf->hasDefaultCollection( SpecialCollections::Drafts ), false );
   QCOMPARE( lft->_t_knownResourceCount(), 0 );
   QCOMPARE( lft->_t_knownFolderCount(), 0 );
   QCOMPARE( spy.count(), 2 );
@@ -403,7 +412,7 @@ void LocalFoldersTest::testResourceScan()
   {
     outbox.setName( QLatin1String( "my_outbox" ) );
     outbox.setParentCollection( res1 );
-    outbox.addAttribute( new LocalFolderAttribute( LocalFolders::Outbox ) );
+    outbox.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Outbox ) );
     CollectionCreateJob *cjob = new CollectionCreateJob( outbox, this );
     AKVERIFYEXEC( cjob );
     outbox = cjob->collection();
@@ -414,7 +423,7 @@ void LocalFoldersTest::testResourceScan()
   {
     drafts.setName( QLatin1String( "my_drafts" ) );
     drafts.setParentCollection( res1 );
-    drafts.addAttribute( new LocalFolderAttribute( LocalFolders::Drafts ) );
+    drafts.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Drafts ) );
     CollectionCreateJob *cjob = new CollectionCreateJob( drafts, this );
     AKVERIFYEXEC( cjob );
     drafts = cjob->collection();
@@ -458,7 +467,7 @@ void LocalFoldersTest::testResourceScan()
 void LocalFoldersTest::testDefaultResourceJob()
 {
   // Initially the defaut maildir does not exist.
-  QVERIFY( !QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( LocalFolders::Root ) ) );
+  QVERIFY( !QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
 
   // Run the job.
   Collection maildirRoot;
@@ -470,19 +479,19 @@ void LocalFoldersTest::testDefaultResourceJob()
     const Collection::List folders = resjob->localFolders();
     QCOMPARE( folders.count(), 1 );
     maildirRoot = folders.first();
-    QVERIFY( maildirRoot.hasAttribute<LocalFolderAttribute>() );
-    QCOMPARE( maildirRoot.attribute<LocalFolderAttribute>()->folderType(), int( LocalFolders::Root ) );
+    QVERIFY( maildirRoot.hasAttribute<SpecialCollectionAttribute>() );
+    QCOMPARE( maildirRoot.attribute<SpecialCollectionAttribute>()->collectionType(), SpecialCollections::Root );
   }
 
   // The maildir should exist now.
-  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( LocalFolders::Root ) ) );
+  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
 
   // Create a LocalFolder in the default resource.
   Collection outbox;
   {
     outbox.setName( QLatin1String( "outbox" ) );
     outbox.setParentCollection( maildirRoot );
-    outbox.addAttribute( new LocalFolderAttribute( LocalFolders::Outbox ) );
+    outbox.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Outbox ) );
     CollectionCreateJob *cjob = new CollectionCreateJob( outbox, this );
     AKVERIFYEXEC( cjob );
     outbox = cjob->collection();
@@ -508,15 +517,15 @@ void LocalFoldersTest::testRecoverDefaultResource()
 {
   // The maildirs should exist (created in testDefaultResourceJob).
   const QString xdgPath = KGlobal::dirs()->localxdgdatadir();
-  const QString rootPath = xdgPath + nameForType( LocalFolders::Root );
+  const QString rootPath = xdgPath + nameForType( SpecialCollections::Root );
   const QString outboxPath = xdgPath + QString::fromLatin1( ".%1.directory/%2" ) \
-                                       .arg( nameForType( LocalFolders::Root ) )
-                                       .arg( nameForType( LocalFolders::Outbox ) );
+                                       .arg( nameForType( SpecialCollections::Root ) )
+                                       .arg( nameForType( SpecialCollections::Outbox ) );
   QVERIFY( QFile::exists( rootPath ) );
   QVERIFY( QFile::exists( outboxPath ) );
 
   // Kill the default resource.
-  const QString oldResourceId = LocalFolders::self()->defaultResourceId();
+  const QString oldResourceId = SpecialCollections::self()->d->defaultResource().identifier();
   const AgentInstance resource = AgentManager::self()->instance( oldResourceId );
   QVERIFY( resource.isValid() );
   AgentManager::self()->removeInstance( resource );
@@ -539,17 +548,17 @@ void LocalFoldersTest::testRecoverDefaultResource()
     // The first folder should be the Root.
     {
       Collection col = folders[0];
-      QCOMPARE( col.name(), displayNameForType( LocalFolders::Root ) );
-      QVERIFY( col.hasAttribute<LocalFolderAttribute>() );
-      QCOMPARE( col.attribute<LocalFolderAttribute>()->folderType(), int( LocalFolders::Root ) );
+      QCOMPARE( col.name(), displayNameForType( SpecialCollections::Root ) );
+      QVERIFY( col.hasAttribute<SpecialCollectionAttribute>() );
+      QCOMPARE( col.attribute<SpecialCollectionAttribute>()->collectionType(), SpecialCollections::Root );
     }
 
     // The second folder should be the Outbox.
     {
       Collection col = folders[1];
-      QCOMPARE( col.name(), nameForType( LocalFolders::Outbox ) );
-      QVERIFY( col.hasAttribute<LocalFolderAttribute>() );
-      QCOMPARE( col.attribute<LocalFolderAttribute>()->folderType(), int( LocalFolders::Outbox ) );
+      QCOMPARE( col.name(), nameForType( SpecialCollections::Outbox ) );
+      QVERIFY( col.hasAttribute<SpecialCollectionAttribute>() );
+      QCOMPARE( col.attribute<SpecialCollectionAttribute>()->collectionType(), SpecialCollections::Outbox );
     }
   }
 }

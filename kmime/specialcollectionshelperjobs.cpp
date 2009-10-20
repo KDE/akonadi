@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
-#include "localfoldershelperjobs_p.h"
+#include "specialcollectionshelperjobs_p.h"
 
-#include "localfolderattribute.h"
-#include "localfolders.h"
-#include "localfolderssettings.h"
+#include "specialcollectionattribute_p.h"
+#include "specialcollections.h"
+#include "specialcollectionssettings.h"
 
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
@@ -42,12 +42,12 @@
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/resourcesynchronizationjob.h>
 
-#define DBUS_SERVICE_NAME QLatin1String( "org.kde.pim.LocalFolders" )
+#define DBUS_SERVICE_NAME QLatin1String( "org.kde.pim.SpecialCollections" )
 #define LOCK_WAIT_TIMEOUT_SECONDS 3
 
 using namespace Akonadi;
 
-typedef LocalFoldersSettings Settings;
+typedef SpecialCollectionsSettings Settings;
 
 
 // ===================== ResourceScanJob ============================
@@ -97,7 +97,7 @@ void ResourceScanJob::Private::fetchResult( KJob *job )
       }
     }
 
-    if( col.hasAttribute<LocalFolderAttribute>() ) {
+    if( col.hasAttribute<SpecialCollectionAttribute>() ) {
       localFolders.append( col );
     }
   }
@@ -242,12 +242,12 @@ void DefaultResourceJob::Private::resourceCreateResult( KJob *job )
 
   // Configure the resource.
   {
-    agent.setName( displayNameForType( LocalFolders::Root ) );
+    agent.setName( displayNameForType( SpecialCollections::Root ) );
     QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + Settings::defaultResourceId(),
                          QString::fromLatin1( "/Settings" ),
                          QString::fromLatin1( "org.kde.Akonadi.Maildir.Settings" ) );
     QDBusReply<void> reply = conf.call( QString::fromLatin1( "setPath" ),
-                                        KGlobal::dirs()->localxdgdatadir() + nameForType( LocalFolders::Root ) );
+                                        KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) );
     if( !reply.isValid() ) {
       q->setError( Job::Unknown );
       q->setErrorText( i18n( "Failed to set the root maildir via D-Bus." ) );
@@ -316,9 +316,10 @@ void DefaultResourceJob::Private::collectionFetchResult( KJob *job )
     }
   }
 
-  QHash<QString, int> typeForName;
-  for( int type = 0; type < LocalFolders::LastDefaultType; type++ ) {
-    typeForName[ nameForType( type ) ] = type;
+  QHash<QString, SpecialCollections::Type> typeForName;
+  for( int type = SpecialCollections::Root;
+       type < SpecialCollections::LastType; type++ ) {
+    typeForName[ nameForType( (SpecialCollections::Type)type ) ] = (SpecialCollections::Type)type;
   }
 
   // These collections have been created by the maildir resource, when it
@@ -328,13 +329,13 @@ void DefaultResourceJob::Private::collectionFetchResult( KJob *job )
 
     // Find the type for the collection. For the root collection, we can't use typeForName(), as
     // the root collection name is i18n'ed, as it comes from the resource name
-    int type = -1;
+    SpecialCollections::Type type = SpecialCollections::Invalid;
     if ( typeForName.contains( col.name() ) )
       type = typeForName[ col.name() ];
     else if ( col == maildirRoot )
-      type = LocalFolders::Root;
+      type = SpecialCollections::Root;
 
-    if( type != -1 ) {
+    if( type != SpecialCollections::Invalid ) {
       kDebug() << "Recovering collection" << col.name();
       setCollectionAttributes( col, type );
       CollectionModifyJob *mjob = new CollectionModifyJob( col, q );
@@ -497,52 +498,52 @@ void GetLockJob::start()
 
 // ===================== helper functions ============================
 
-QString Akonadi::nameForType( int type )
+QString Akonadi::nameForType( SpecialCollections::Type type )
 {
   switch( type ) {
-    case LocalFolders::Root: return QLatin1String( "local-mail" );
-    case LocalFolders::Inbox: return QLatin1String( "inbox" );
-    case LocalFolders::Outbox: return QLatin1String( "outbox" );
-    case LocalFolders::SentMail: return QLatin1String( "sent-mail" );
-    case LocalFolders::Trash: return QLatin1String( "trash" );
-    case LocalFolders::Drafts: return QLatin1String( "drafts" );
-    case LocalFolders::Templates: return QLatin1String( "templates" );
+    case SpecialCollections::Root: return QLatin1String( "local-mail" );
+    case SpecialCollections::Inbox: return QLatin1String( "inbox" );
+    case SpecialCollections::Outbox: return QLatin1String( "outbox" );
+    case SpecialCollections::SentMail: return QLatin1String( "sent-mail" );
+    case SpecialCollections::Trash: return QLatin1String( "trash" );
+    case SpecialCollections::Drafts: return QLatin1String( "drafts" );
+    case SpecialCollections::Templates: return QLatin1String( "templates" );
     default: Q_ASSERT( false ); return QString();
   }
 }
 
-QString Akonadi::displayNameForType( int type )
+QString Akonadi::displayNameForType( SpecialCollections::Type type )
 {
   switch( type ) {
-    case LocalFolders::Root: return i18nc( "local mail folder", "Local Folders" );
-    case LocalFolders::Inbox: return i18nc( "local mail folder", "inbox" );
-    case LocalFolders::Outbox: return i18nc( "local mail folder", "outbox" );
-    case LocalFolders::SentMail: return i18nc( "local mail folder", "sent-mail" );
-    case LocalFolders::Trash: return i18nc( "local mail folder", "trash" );
-    case LocalFolders::Drafts: return i18nc( "local mail folder", "drafts" );
-    case LocalFolders::Templates: return i18nc( "local mail folder", "templates" );
+    case SpecialCollections::Root: return i18nc( "local mail folder", "Local Folders" );
+    case SpecialCollections::Inbox: return i18nc( "local mail folder", "inbox" );
+    case SpecialCollections::Outbox: return i18nc( "local mail folder", "outbox" );
+    case SpecialCollections::SentMail: return i18nc( "local mail folder", "sent-mail" );
+    case SpecialCollections::Trash: return i18nc( "local mail folder", "trash" );
+    case SpecialCollections::Drafts: return i18nc( "local mail folder", "drafts" );
+    case SpecialCollections::Templates: return i18nc( "local mail folder", "templates" );
     default: Q_ASSERT( false ); return QString();
   }
 }
 
-QString Akonadi::iconNameForType( int type )
+QString Akonadi::iconNameForType( SpecialCollections::Type type )
 {
   // Icons imitating KMail.
   switch( type ) {
-    case LocalFolders::Root: return QLatin1String( "folder" );
-    case LocalFolders::Inbox: return QLatin1String( "mail-folder-inbox" );
-    case LocalFolders::Outbox: return QLatin1String( "mail-folder-outbox" );
-    case LocalFolders::SentMail: return QLatin1String( "mail-folder-sent" );
-    case LocalFolders::Trash: return QLatin1String( "user-trash" );
-    case LocalFolders::Drafts: return QLatin1String( "document-properties" );
-    case LocalFolders::Templates: return QLatin1String( "document-new" );
+    case SpecialCollections::Root: return QLatin1String( "folder" );
+    case SpecialCollections::Inbox: return QLatin1String( "mail-folder-inbox" );
+    case SpecialCollections::Outbox: return QLatin1String( "mail-folder-outbox" );
+    case SpecialCollections::SentMail: return QLatin1String( "mail-folder-sent" );
+    case SpecialCollections::Trash: return QLatin1String( "user-trash" );
+    case SpecialCollections::Drafts: return QLatin1String( "document-properties" );
+    case SpecialCollections::Templates: return QLatin1String( "document-new" );
     default: Q_ASSERT( false ); return QString();
   }
 }
 
-void Akonadi::setCollectionAttributes( Collection &col, int type )
+void Akonadi::setCollectionAttributes( Collection &col, SpecialCollections::Type type )
 {
-  Q_ASSERT( type >= 0 && type < LocalFolders::LastDefaultType );
+  Q_ASSERT( type > SpecialCollections::Invalid  && type < SpecialCollections::LastType );
 
   {
     EntityDisplayAttribute *attr = new EntityDisplayAttribute;
@@ -552,8 +553,8 @@ void Akonadi::setCollectionAttributes( Collection &col, int type )
   }
 
   {
-    LocalFolderAttribute *attr = new LocalFolderAttribute;
-    attr->setFolderType( type );
+    SpecialCollectionAttribute *attr = new SpecialCollectionAttribute;
+    attr->setCollectionType( type );
     col.addAttribute( attr );
   }
 }
@@ -563,4 +564,4 @@ bool Akonadi::releaseLock()
   return QDBusConnection::sessionBus().unregisterService( DBUS_SERVICE_NAME );
 }
 
-#include "localfoldershelperjobs_p.moc"
+#include "specialcollectionshelperjobs_p.moc"

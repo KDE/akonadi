@@ -30,6 +30,8 @@ namespace Akonadi {
 
 class Item;
 
+class ContactGroupViewer;
+
 /**
  * @short A dialog for displaying a contact group in Akonadi.
  *
@@ -40,11 +42,13 @@ class Item;
  *
  * @code
  *
- * const Akonadi::Item group = ...
+ * using namespace Akonadi;
  *
- * Akonadi::ContactGroupViewerDialog dlg( this );
- * dlg.setContactGroup( group );
- * dlg.exec();
+ * const Item group = ...
+ *
+ * ContactGroupViewerDialog *dlg = new ContactGroupViewerDialog( this );
+ * dlg->setContactGroup( group );
+ * dlg->show();
  *
  * @endcode
  *
@@ -72,6 +76,11 @@ class AKONADI_CONTACT_EXPORT ContactGroupViewerDialog : public KDialog
      * Returns the contact group that is currently displayed.
      */
     Akonadi::Item contactGroup() const;
+
+    /**
+     * Returns the ContactGroupViewer that is used by this dialog.
+     */
+    ContactGroupViewer *viewer() const;
 
   public Q_SLOTS:
     /**

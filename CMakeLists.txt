@@ -45,12 +45,14 @@ set( akonadikde_LIB_SRC
   agenttypemodel.cpp
   agenttypewidget.cpp
   agenttypedialog.cpp
+  asyncselectionhandler.cpp
   attribute.cpp
   attributefactory.cpp
   cachepolicy.cpp
   cachepolicypage.cpp
   changerecorder.cpp
   collection.cpp
+  collectioncombobox.cpp
   collectioncopyjob.cpp
   collectioncreatejob.cpp
   collectiondeletejob.cpp
@@ -81,10 +83,12 @@ set( akonadikde_LIB_SRC
   entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
+  entitylistview.cpp
+  entitymimetypefiltermodel.cpp
+  entityrightsfiltermodel.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entitytreeview.cpp
-  entityfilterproxymodel.cpp
   entitytreeviewstatesaver.cpp
   erroroverlay.cpp
   exception.cpp
@@ -128,7 +132,6 @@ set( akonadikde_LIB_SRC
   servermanager.cpp
   standardactionmanager.cpp
   statisticsproxymodel.cpp
-  statisticstooltipproxymodel.cpp
   subscriptionjob.cpp
   subscriptionchangeproxymodel.cpp
   subscriptiondialog.cpp
@@ -199,6 +202,7 @@ install( FILES
   cachepolicy.h
   changerecorder.h
   collection.h
+  collectioncombobox.h
   collectioncopyjob.h
   collectioncreatejob.h
   collectiondeletejob.h
@@ -222,9 +226,11 @@ install( FILES
   entity.h
   entitydisplayattribute.h
   entityhiddenattribute.h
+  entitylistview.h
+  entitymimetypefiltermodel.h
+  entityrightsfiltermodel.h
   entitytreemodel.h
   entitytreeview.h
-  entityfilterproxymodel.h
   entitytreeviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
@@ -260,7 +266,6 @@ install( FILES
   servermanager.h
   standardactionmanager.h
   statisticsproxymodel.h
-  statisticstooltipproxymodel.h
   transactionjobs.h
   transactionsequence.h
   transportresourcebase.h

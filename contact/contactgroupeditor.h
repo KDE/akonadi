@@ -26,6 +26,10 @@
 
 #include <QtGui/QWidget>
 
+namespace KABC {
+class ContactGroup;
+}
+
 namespace Akonadi {
 
 class Collection;
@@ -102,6 +106,20 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
      */
     virtual ~ContactGroupEditor();
 
+    /**
+     * Sets a contact @p group that is used as template in create mode.
+     *
+     * The fields of the editor will be prefilled with the content
+     * of the group.
+     */
+    void setContactGroupTemplate( const KABC::ContactGroup &group );
+
+    /**
+     * Sets the @p addressbook which shall be used to store new
+     * contact groups.
+     */
+    void setDefaultAddressBook( const Akonadi::Collection &addressbook );
+
   public Q_SLOTS:
     /**
      * Loads the contact @p group into the editor.
@@ -114,12 +132,6 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
      * @returns @c true if the contact group has been saved successfully, false otherwise.
      */
     bool saveContactGroup();
-
-    /**
-     * Sets the @p collection which shall be used to store new
-     * contact groups.
-     */
-    void setDefaultCollection( const Akonadi::Collection &collection );
 
   Q_SIGNALS:
     /**
@@ -146,6 +158,7 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
     Q_PRIVATE_SLOT( d, void parentCollectionFetchDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void storeDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
+    Q_PRIVATE_SLOT( d, void adaptHeaderSizes() )
     //@endcond
 };
 

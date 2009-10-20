@@ -77,6 +77,11 @@ class AKONADI_EXPORT ItemSearchJob : public Job
     ~ItemSearchJob();
 
     /**
+     * Sets the search @p query in SPARQL format.
+     */
+    void setQuery( const QString &query );
+
+    /**
      * Sets the item fetch scope.
      *
      * The ItemFetchScope controls how much of an matching item's data is fetched

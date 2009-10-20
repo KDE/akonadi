@@ -44,8 +44,8 @@ namespace Akonadi {
  * const KABC::ContactGroup group = ...;
  *
  * Akonadi::ContactGroupExpandJob *job = new Akonadi::ContactGroupExpandJob( group );
- * job->start();
  * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( expandResult( KJob* ) ) );
+ * job->start();
  *
  * ...
  *
@@ -83,13 +83,6 @@ class AKONADI_CONTACT_EXPORT ContactGroupExpandJob : public KJob
      * Returns the list of contacts.
      */
     KABC::Addressee::List contacts() const;
-
-    /**
-     * Returns the list of email addresses of the contacts.
-     *
-     * Each entry of the list is in the form: FullName <email@address>
-     */
-    QStringList emailAddresses() const;
 
     /**
      * Starts the expand job.

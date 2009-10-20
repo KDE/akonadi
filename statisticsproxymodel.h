@@ -64,6 +64,27 @@ class AKONADI_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
      */
     virtual ~StatisticsProxyModel();
 
+    /**
+     * @param enable Display tooltips
+     */
+    void setToolTipEnabled( bool enable);
+
+    /**
+     * Return true if we display tooltips, otherwise false
+     */
+    bool isToolTipEnabled() const;
+
+    /**
+     * @param enable Display extra statistics columns
+     */
+    void setExtraColumnsEnabled( bool enable);
+
+    /**
+     * Return true if we display extra statistics columns, otherwise false
+     */
+    bool isExtraColumnsEnabled() const;
+
+
     virtual QModelIndex index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;

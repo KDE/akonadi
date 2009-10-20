@@ -106,14 +106,4 @@ KABC::Addressee::List ContactGroupExpandJob::contacts() const
   return d->mContacts;
 }
 
-QStringList ContactGroupExpandJob::emailAddresses() const
-{
-  QStringList emails;
-
-  foreach ( const KABC::Addressee &contact, d->mContacts )
-    emails.append( contact.fullEmail() );
-
-  return emails;
-}
-
 #include "contactgroupexpandjob.moc"

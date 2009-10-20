@@ -17,53 +17,53 @@
     02110-1301, USA.
 */
 
-#include "localfolderstesting.h"
+#include "specialcollectionstesting.h"
 
-#include "localfolders_p.h"
-#include "localfolderssettings.h"
+#include "specialcollections_p.h"
+#include "specialcollectionssettings.h"
 
 using namespace Akonadi;
 
-typedef LocalFoldersSettings Settings;
+typedef SpecialCollectionsSettings Settings;
 
-LocalFoldersTesting *LocalFoldersTesting::_t_self()
+SpecialCollectionsTesting *SpecialCollectionsTesting::_t_self()
 {
-  static LocalFoldersTesting *instance = 0;
+  static SpecialCollectionsTesting *instance = 0;
   if( !instance ) {
-    instance = new LocalFoldersTesting;
+    instance = new SpecialCollectionsTesting;
   }
   return instance;
 }
 
-void LocalFoldersTesting::_t_setDefaultResourceId( const QString &resourceId )
+void SpecialCollectionsTesting::_t_setDefaultResourceId( const QString &resourceId )
 {
   Settings::setDefaultResourceId( resourceId );
 }
 
-void LocalFoldersTesting::_t_forgetFoldersForResource( const QString &resourceId )
+void SpecialCollectionsTesting::_t_forgetFoldersForResource( const QString &resourceId )
 {
-  LocalFolders::self()->forgetFoldersForResource( resourceId );
+  SpecialCollections::self()->d->forgetFoldersForResource( resourceId );
 }
 
-void LocalFoldersTesting::_t_beginBatchRegister()
+void SpecialCollectionsTesting::_t_beginBatchRegister()
 {
-  LocalFolders::self()->beginBatchRegister();
+  SpecialCollections::self()->d->beginBatchRegister();
 }
 
-void LocalFoldersTesting::_t_endBatchRegister()
+void SpecialCollectionsTesting::_t_endBatchRegister()
 {
-  LocalFolders::self()->endBatchRegister();
+  SpecialCollections::self()->d->endBatchRegister();
 }
 
-int LocalFoldersTesting::_t_knownResourceCount() const
+int SpecialCollectionsTesting::_t_knownResourceCount() const
 {
-  const LocalFoldersPrivate *d = LocalFolders::self()->d;
+  const SpecialCollectionsPrivate *d = SpecialCollections::self()->d;
   return d->foldersForResource.count();
 }
 
-int LocalFoldersTesting::_t_knownFolderCount() const
+int SpecialCollectionsTesting::_t_knownFolderCount() const
 {
-  const LocalFoldersPrivate *d = LocalFolders::self()->d;
+  const SpecialCollectionsPrivate *d = SpecialCollections::self()->d;
   int ret = 0;
   foreach( const Collection::List &list, d->foldersForResource ) {
     foreach( const Collection &col, list ) {

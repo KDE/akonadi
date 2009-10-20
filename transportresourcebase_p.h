@@ -40,15 +40,18 @@ class TransportResourceBasePrivate : public QObject
   public:
     TransportResourceBasePrivate( TransportResourceBase *qq );
 
-  signals:
+  Q_SIGNALS:
     /**
      * Emitted when an item has been sent.
      * @param item The id of the item that was sent.
-     * @param success The success of the sending operation.
+     * @param result The result of the sending operation.
      * @param message An optional textual explanation of the result.
      * @since 4.4
      */
-    void transportResult( qlonglong item, bool success, const QString &message ); // D-Bus signal
+    void transportResult( qlonglong item, int result, const QString &message ); // D-Bus signal
+
+  private Q_SLOTS:
+    void fetchResult( KJob* );
 
   private:
     friend class TransportResourceBase;

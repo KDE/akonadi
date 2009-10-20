@@ -196,7 +196,7 @@ class AKONADI_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
      *
      * @since 4.4
      */
-    virtual void merge( Item &item, const Item &other );
+    virtual void apply( Item &item, const Item &other );
 
     /**
      * Returns the parts available in the item @p item.

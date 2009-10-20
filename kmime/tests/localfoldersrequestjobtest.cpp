@@ -26,17 +26,20 @@
 #include <KDebug>
 #include <KStandardDirs>
 
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/control.h>
 #include <akonadi/qtest_akonadi.h>
-#include <akonadi/kmime/localfolderattribute.h>
-#include <akonadi/kmime/localfolders.h>
-#include <akonadi/kmime/localfoldersrequestjob.h>
-#include "../localfolderstesting.h"
-#include "../localfoldershelperjobs_p.h"
+#include "../specialcollectionattribute_p.h"
+#include "../specialcollections_p.h"
+#include <akonadi/kmime/specialcollections.h>
+#include <akonadi/kmime/specialcollectionsrequestjob.h>
+#include "../specialcollectionstesting.h"
+#include "../specialcollectionshelperjobs_p.h"
 
 using namespace Akonadi;
 
@@ -45,91 +48,96 @@ void LocalFoldersRequestJobTest::initTestCase()
   QVERIFY( Control::start() );
   QTest::qWait( 1000 );
 
-  LocalFolders *lf = LocalFolders::self();
-  LocalFoldersTesting *lft = LocalFoldersTesting::_t_self();
+  SpecialCollections *lf = SpecialCollections::self();
+  SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
 
   // No one has created the default resource.  LF has no folders.
-  QVERIFY( lf->defaultResourceId().isEmpty() );
   QCOMPARE( lft->_t_knownResourceCount(), 0 );
   QCOMPARE( lft->_t_knownFolderCount(), 0 );
 }
 
 void LocalFoldersRequestJobTest::testRequestWithNoDefaultResourceExisting()
 {
-  LocalFolders *lf = LocalFolders::self();
-  LocalFoldersTesting *lft = LocalFoldersTesting::_t_self();
+  SpecialCollections *lf = SpecialCollections::self();
+  SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
-  QSignalSpy defSpy( lf, SIGNAL(defaultFoldersChanged()) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(const Akonadi::AgentInstance&)) );
+  QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Initially the defaut maildir does not exist.
-  QVERIFY( !QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( LocalFolders::Root ) ) );
+  QVERIFY( !QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
 
   // Request some default folders.
   {
-    LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
-    rjob->requestDefaultFolder( LocalFolders::Outbox );
-    rjob->requestDefaultFolder( LocalFolders::Drafts );
+    SpecialCollectionsRequestJob *rjob = new SpecialCollectionsRequestJob( this );
+    rjob->requestDefaultCollection( SpecialCollections::Outbox );
+    rjob->requestDefaultCollection( SpecialCollections::Drafts );
     AKVERIFYEXEC( rjob );
     QCOMPARE( spy.count(), 1 );
     QCOMPARE( defSpy.count(), 1 );
     QCOMPARE( lft->_t_knownResourceCount(), 1 );
     QCOMPARE( lft->_t_knownFolderCount(), 3 ); // Outbox, Drafts, and Root.
-    QVERIFY( lf->hasDefaultFolder( LocalFolders::Outbox ) );
-    QVERIFY( lf->hasDefaultFolder( LocalFolders::Drafts ) );
-    QVERIFY( lf->hasDefaultFolder( LocalFolders::Root ) );
+    QVERIFY( lf->hasDefaultCollection( SpecialCollections::Outbox ) );
+    QVERIFY( lf->hasDefaultCollection( SpecialCollections::Drafts ) );
+    QVERIFY( lf->hasDefaultCollection( SpecialCollections::Root ) );
   }
 
   // The maildir should exist now.
-  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( LocalFolders::Root ) ) );
+  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
 }
 
 void LocalFoldersRequestJobTest::testRequestWithDefaultResourceAlreadyExisting()
 {
-  LocalFolders *lf = LocalFolders::self();
-  LocalFoldersTesting *lft = LocalFoldersTesting::_t_self();
+  SpecialCollections *lf = SpecialCollections::self();
+  SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
-  QSignalSpy defSpy( lf, SIGNAL(defaultFoldersChanged()) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(const Akonadi::AgentInstance&)) );
+  QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Prerequisites (from testRequestWithNoDefaultResourceExisting()).
-  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( LocalFolders::Root ) ) );
-  QVERIFY( !lf->hasDefaultFolder( LocalFolders::Inbox ) );
-  QVERIFY( lf->hasDefaultFolder( LocalFolders::Outbox ) );
-  const Collection oldOutbox = lf->defaultFolder( LocalFolders::Outbox );
+  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
+  QVERIFY( !lf->hasDefaultCollection( SpecialCollections::Inbox ) );
+  QVERIFY( lf->hasDefaultCollection( SpecialCollections::Outbox ) );
+  const Collection oldOutbox = lf->defaultCollection( SpecialCollections::Outbox );
 
   // Request some default folders.
   {
-    LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
-    rjob->requestDefaultFolder( LocalFolders::Outbox ); // Exists previously.
-    rjob->requestDefaultFolder( LocalFolders::Inbox ); // Must be created.
+    SpecialCollectionsRequestJob *rjob = new SpecialCollectionsRequestJob( this );
+    rjob->requestDefaultCollection( SpecialCollections::Outbox ); // Exists previously.
+    rjob->requestDefaultCollection( SpecialCollections::Inbox ); // Must be created.
     AKVERIFYEXEC( rjob );
     QCOMPARE( spy.count(), 1 );
     QCOMPARE( defSpy.count(), 1 );
     QCOMPARE( lft->_t_knownResourceCount(), 1 );
     QCOMPARE( lft->_t_knownFolderCount(), 4 ); // Inbox, Outbox, Drafts, and Root.
-    QVERIFY( lf->hasDefaultFolder( LocalFolders::Inbox ) );
-    QVERIFY( lf->hasDefaultFolder( LocalFolders::Outbox ) );
-    QVERIFY( lf->hasDefaultFolder( LocalFolders::Drafts ) );
-    QVERIFY( lf->hasDefaultFolder( LocalFolders::Root ) );
+    QVERIFY( lf->hasDefaultCollection( SpecialCollections::Inbox ) );
+    QVERIFY( lf->hasDefaultCollection( SpecialCollections::Outbox ) );
+    QVERIFY( lf->hasDefaultCollection( SpecialCollections::Drafts ) );
+    QVERIFY( lf->hasDefaultCollection( SpecialCollections::Root ) );
   }
 
   // This should be untouched.
-  QCOMPARE( lf->defaultFolder( LocalFolders::Outbox ), oldOutbox );
+  QCOMPARE( lf->defaultCollection( SpecialCollections::Outbox ), oldOutbox );
 }
 
 void LocalFoldersRequestJobTest::testMixedRequest()
 {
-  LocalFolders *lf = LocalFolders::self();
-  LocalFoldersTesting *lft = LocalFoldersTesting::_t_self();
+  SpecialCollections *lf = SpecialCollections::self();
+  SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
-  QSignalSpy spy( lf, SIGNAL(foldersChanged(QString)) );
-  QSignalSpy defSpy( lf, SIGNAL(defaultFoldersChanged()) );
+  QSignalSpy spy( lf, SIGNAL(collectionsChanged(const Akonadi::AgentInstance&)) );
+  QSignalSpy defSpy( lf, SIGNAL(defaultCollectionsChanged()) );
+  QVERIFY( spy.isValid() );
+  QVERIFY( defSpy.isValid() );
 
   // Get our knut collection.
   Collection res1;
@@ -151,38 +159,38 @@ void LocalFoldersRequestJobTest::testMixedRequest()
     knutOutbox.setName( QLatin1String( "my_outbox" ) );
     knutOutbox.setParentCollection( res1 );
     kDebug() << res1;
-    knutOutbox.addAttribute( new LocalFolderAttribute( LocalFolders::Outbox ) );
+    knutOutbox.addAttribute( new SpecialCollectionAttribute( SpecialCollections::Outbox ) );
     CollectionCreateJob *cjob = new CollectionCreateJob( knutOutbox, this );
     AKVERIFYEXEC( cjob );
     knutOutbox = cjob->collection();
   }
 
   // Prerequisites (from the above two functions).
-  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( LocalFolders::Root ) ) );
-  QVERIFY( !lf->hasDefaultFolder( LocalFolders::SentMail ) );
-  QVERIFY( lf->hasDefaultFolder( LocalFolders::Outbox ) );
-  const Collection oldOutbox = lf->defaultFolder( LocalFolders::Outbox );
+  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
+  QVERIFY( !lf->hasDefaultCollection( SpecialCollections::SentMail ) );
+  QVERIFY( lf->hasDefaultCollection( SpecialCollections::Outbox ) );
+  const Collection oldOutbox = lf->defaultCollection( SpecialCollections::Outbox );
 
   // Request some folders, both in our default resource and in the knut resource.
   {
-    LocalFoldersRequestJob *rjob = new LocalFoldersRequestJob( this );
-    rjob->requestDefaultFolder( LocalFolders::Outbox ); // Exists previously.
-    rjob->requestDefaultFolder( LocalFolders::SentMail ); // Must be created.
-    rjob->requestFolder( LocalFolders::Outbox, res1.resource() ); // Exists previously, but unregistered with LF.
-    rjob->requestFolder( LocalFolders::SentMail, res1.resource() ); // Must be created.
+    SpecialCollectionsRequestJob *rjob = new SpecialCollectionsRequestJob( this );
+    rjob->requestDefaultCollection( SpecialCollections::Outbox ); // Exists previously.
+    rjob->requestDefaultCollection( SpecialCollections::SentMail ); // Must be created.
+    rjob->requestCollection( SpecialCollections::Outbox, AgentManager::self()->instance( res1.resource() ) ); // Exists previously, but unregistered with LF.
+    rjob->requestCollection( SpecialCollections::SentMail, AgentManager::self()->instance( res1.resource() ) ); // Must be created.
     AKVERIFYEXEC( rjob );
     QCOMPARE( spy.count(), 2 ); // Default resource and knut resource.
     QCOMPARE( defSpy.count(), 1 );
     QCOMPARE( lft->_t_knownResourceCount(), 2 );
-    QVERIFY( lf->hasDefaultFolder( LocalFolders::Outbox ) );
-    QVERIFY( lf->hasDefaultFolder( LocalFolders::SentMail ) );
-    QVERIFY( lf->hasFolder( LocalFolders::Outbox, res1.resource() ) );
-    QVERIFY( lf->hasFolder( LocalFolders::SentMail, res1.resource() ) );
+    QVERIFY( lf->hasDefaultCollection( SpecialCollections::Outbox ) );
+    QVERIFY( lf->hasDefaultCollection( SpecialCollections::SentMail ) );
+    QVERIFY( lf->hasCollection( SpecialCollections::Outbox, AgentManager::self()->instance( res1.resource() ) ) );
+    QVERIFY( lf->hasCollection( SpecialCollections::SentMail, AgentManager::self()->instance( res1.resource() ) ) );
   }
 
   // These should be untouched.
-  QCOMPARE( lf->defaultFolder( LocalFolders::Outbox ), oldOutbox );
-  QCOMPARE( lf->folder( LocalFolders::Outbox, res1.resource() ), knutOutbox );
+  QCOMPARE( lf->defaultCollection( SpecialCollections::Outbox ), oldOutbox );
+  QCOMPARE( lf->collection( SpecialCollections::Outbox, AgentManager::self()->instance( res1.resource() ) ), knutOutbox );
 }
 
 QTEST_AKONADIMAIN( LocalFoldersRequestJobTest, NoGUI )

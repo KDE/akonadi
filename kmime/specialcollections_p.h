@@ -17,11 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_LOCALFOLDERS_P_H
-#define AKONADI_LOCALFOLDERS_P_H
+#ifndef AKONADI_SPECIALCOLLECTIONS_P_H
+#define AKONADI_SPECIALCOLLECTIONS_P_H
 
 #include <QHash>
 #include <QString>
+
+#include "akonadi-kmime_export.h"
 
 #include "akonadi/collection.h"
 
@@ -29,22 +31,45 @@ class KJob;
 
 namespace Akonadi {
 
-class LocalFolders;
+class AgentInstance;
+class SpecialCollections;
 class Monitor;
 
 /**
   @internal
 */
-class LocalFoldersPrivate
+class AKONADI_KMIME_TEST_EXPORT SpecialCollectionsPrivate
 {
   public:
-    LocalFoldersPrivate();
-    ~LocalFoldersPrivate();
+    SpecialCollectionsPrivate();
+    ~SpecialCollectionsPrivate();
 
     void emitChanged( const QString &resourceId );
     void collectionRemoved( const Collection &col ); // slot
 
-    LocalFolders *instance;
+    /**
+      Forgets all folders owned by the given resource.
+      This method is used by SpecialCollectionsRequestJob.
+    */
+    void forgetFoldersForResource( const QString &resourceId );
+
+    /**
+      Avoids emitting the foldersChanged() signal until endBatchRegister()
+      is called. This is used to avoid emitting repeated signals when multiple
+      folders are registered in a row.
+      This method is used by SpecialCollectionsRequestJob.
+    */
+    void beginBatchRegister();
+
+    /**
+      @see beginBatchRegister()
+      This method is used by SpecialCollectionsRequestJob.
+    */
+    void endBatchRegister();
+
+    AgentInstance defaultResource() const;
+
+    SpecialCollections *instance;
     Collection::List emptyFolderList;
     QHash<QString,Collection::List> foldersForResource;
     bool batchMode;
@@ -54,4 +79,4 @@ class LocalFoldersPrivate
 
 } // namespace Akonadi
 
-#endif // AKONADI_LOCALFOLDERS_P_H
+#endif // AKONADI_SPECIALCOLLECTIONS_P_H

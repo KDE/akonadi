@@ -50,7 +50,7 @@ QSet<QByteArray> ItemSerializerPluginV2::availableParts( const Item & item ) con
   return QSet<QByteArray>() << Item::FullPayload;
 }
 
-void ItemSerializerPluginV2::merge( Item &item, const Item &other )
+void ItemSerializerPluginV2::apply( Item &item, const Item &other )
 {
   QBuffer buffer;
   QByteArray data( other.payloadData() );

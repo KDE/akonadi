@@ -31,6 +31,11 @@
    /* We are using this library */
 #  define AKONADI_EXPORT KDE_IMPORT
 # endif
+
+# ifndef AKONADI_EXPORT_DEPRECATED
+#  define AKONADI_EXPORT_DEPRECATED KDE_DEPRECATED AKONADI_EXPORT
+# endif
+
 #endif
 
 #endif

@@ -59,7 +59,7 @@ class PartFetcherPrivate;
  *     return;
  *   }
  *
- *   PartFetcher *fetcher = qobject_cast<PartFetcher>( job );
+ *   PartFetcher *fetcher = qobject_cast<PartFetcher*>( job );
  *
  *   const Item item = fetcher->item();
  *   // do something with the item
@@ -82,7 +82,7 @@ class AKONADI_EXPORT PartFetcher : public KJob
      * @param partName The name of the payload part to fetch.
      * @param parent The parent object.
      */
-    explicit PartFetcher( const QModelIndex &index, const QByteArray &partName, QObject *parent = 0 );
+    PartFetcher( const QModelIndex &index, const QByteArray &partName, QObject *parent = 0 );
 
     /**
      * Starts the fetch operation.

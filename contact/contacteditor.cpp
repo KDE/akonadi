@@ -22,12 +22,12 @@
 #include "contacteditor.h"
 
 #include "abstractcontacteditorwidget_p.h"
-#include "addressbookselectiondialog.h"
 #include "autoqpointer_p.h"
 #include "contactmetadata_p.h"
 #include "contactmetadataattribute_p.h"
 #include "editor/contacteditorwidget.h"
 
+#include <akonadi/collectiondialog.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
@@ -239,9 +239,15 @@ bool ContactEditor::saveContact()
     connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
   } else if ( d->mMode == CreateMode ) {
     if ( !d->mDefaultCollection.isValid() ) {
-      AutoQPointer<AddressBookSelectionDialog> dlg = new AddressBookSelectionDialog( AddressBookSelectionDialog::ContactsOnly, this );
+      const QStringList mimeTypeFilter( KABC::Addressee::mimeType() );
+
+      AutoQPointer<CollectionDialog> dlg = new CollectionDialog( this );
+      dlg->setMimeTypeFilter( mimeTypeFilter );
+      dlg->setAccessRightsFilter( Collection::CanCreateItem );
+      dlg->setCaption( i18n( "Select Address Book" ) );
+      dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
       if ( dlg->exec() == KDialog::Accepted )
-        setDefaultCollection( dlg->selectedAddressBook() );
+        setDefaultAddressBook( dlg->selectedCollection() );
       else
         return false;
     }
@@ -262,7 +268,12 @@ bool ContactEditor::saveContact()
   return true;
 }
 
-void ContactEditor::setDefaultCollection( const Akonadi::Collection &collection )
+void ContactEditor::setContactTemplate( const KABC::Addressee &contact )
+{
+  d->loadContact( contact, d->mContactMetaData );
+}
+
+void ContactEditor::setDefaultAddressBook( const Akonadi::Collection &collection )
 {
   d->mDefaultCollection = collection;
 }

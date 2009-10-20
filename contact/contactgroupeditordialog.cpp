@@ -21,12 +21,13 @@
 
 #include "contactgroupeditordialog.h"
 
-#include "addressbookcombobox.h"
 #include "contactgroupeditor.h"
 
+#include <akonadi/collectioncombobox.h>
 #include <akonadi/item.h>
 #include <kabc/contactgroup.h>
 #include <klocale.h>
+#include <kpushbutton.h>
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
@@ -41,7 +42,7 @@ class ContactGroupEditorDialog::Private
     {
     }
 
-    AddressBookComboBox *mAddressBookBox;
+    CollectionComboBox *mAddressBookBox;
     ContactGroupEditor *mEditor;
     ContactGroupEditorDialog::Mode mMode;
 };
@@ -51,6 +52,11 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
 {
   setCaption( mode == CreateMode ? i18n( "New Contact Group" ) : i18n( "Edit Contact Group" ) );
   setButtons( Ok | Cancel );
+
+  // Disable default button, so that finish editing of
+  // a member with the Enter key does not close the dialog
+  button( Ok )->setAutoDefault( false );
+  button( Cancel )->setAutoDefault( false );
 
   QWidget *mainWidget = new QWidget( this );
   setMainWidget( mainWidget );
@@ -64,8 +70,9 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
   if ( mode == CreateMode ) {
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-    d->mAddressBookBox = new AddressBookComboBox( AddressBookComboBox::ContactGroupsOnly,
-                                                  AddressBookComboBox::Writable, mainWidget );
+    d->mAddressBookBox = new CollectionComboBox( mainWidget );
+    d->mAddressBookBox->setMimeTypeFilter( QStringList() << KABC::ContactGroup::mimeType() );
+    d->mAddressBookBox->setAccessRightsFilter( Collection::CanCreateItem );
 
     layout->addWidget( label, 0, 0 );
     layout->addWidget( d->mAddressBookBox, 0, 1 );
@@ -95,14 +102,19 @@ void ContactGroupEditorDialog::setDefaultAddressBook( const Akonadi::Collection 
   if ( d->mMode == EditMode )
     return;
 
-  d->mAddressBookBox->setDefaultAddressBook( addressbook );
+  d->mAddressBookBox->setDefaultCollection( addressbook );
+}
+
+ContactGroupEditor* ContactGroupEditorDialog::editor() const
+{
+  return d->mEditor;
 }
 
 void ContactGroupEditorDialog::slotButtonClicked( int button )
 {
   if ( button == KDialog::Ok ) {
     if ( d->mAddressBookBox )
-      d->mEditor->setDefaultCollection( d->mAddressBookBox->selectedAddressBook() );
+      d->mEditor->setDefaultAddressBook( d->mAddressBookBox->currentCollection() );
 
     if ( d->mEditor->saveContactGroup() )
       accept();

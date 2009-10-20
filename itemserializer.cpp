@@ -258,7 +258,7 @@ void ItemSerializer::serialize( const Item& item, const QByteArray& label, QIODe
   plugin->serialize( item, label, data, version );
 }
 
-void ItemSerializer::merge( Item &item, const Item &other )
+void ItemSerializer::apply( Item &item, const Item &other )
 {
   if ( !other.hasPayload() )
     return;
@@ -267,7 +267,7 @@ void ItemSerializer::merge( Item &item, const Item &other )
 
   ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2*>( plugin );
   if ( pluginV2 ) {
-    pluginV2->merge( item, other );
+    pluginV2->apply( item, other );
     return;
   }
 

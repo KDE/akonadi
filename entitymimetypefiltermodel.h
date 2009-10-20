@@ -18,16 +18,17 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ENTITYFILTERPROXYMODEL_H
-#define AKONADI_ENTITYFILTERPROXYMODEL_H
+#ifndef AKONADI_ENTITYMIMETYPEFILTERMODEL_H
+#define AKONADI_ENTITYMIMETYPEFILTERMODEL_H
 
 #include "akonadi_export.h"
+#include "entitytreemodel.h"
 
 #include <QtGui/QSortFilterProxyModel>
 
 namespace Akonadi {
 
-class EntityFilterProxyModelPrivate;
+class EntityMimeTypeFilterModelPrivate;
 
 /**
  * @short A proxy model that filters entities by mime type.
@@ -39,7 +40,7 @@ class EntityFilterProxyModelPrivate;
  *
  *   Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel( this );
  *
- *   Akonadi::EntityFilterProxyModel *proxy = new Akonadi::EntityFilterProxyModel();
+ *   Akonadi::EntityMimeTypeFilterModel *proxy = new Akonadi::EntityMimeTypeFilterModel();
  *   proxy->addMimeTypeInclusionFilter( "message/rfc822" );
  *   proxy->setSourceModel( model );
  *
@@ -57,22 +58,22 @@ class EntityFilterProxyModelPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
-class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
+class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new proxy filter model.
+     * Creates a new entity mime type filter model.
      *
      * @param parent The parent object.
      */
-    explicit EntityFilterProxyModel( QObject *parent = 0 );
+    explicit EntityMimeTypeFilterModel( QObject *parent = 0 );
 
     /**
-     * Destroys the proxy filter model.
+     * Destroys the entity mime type filter model.
      */
-    virtual ~EntityFilterProxyModel();
+    virtual ~EntityMimeTypeFilterModel();
 
     /**
      * Add mime types to be shown by the filter.
@@ -103,6 +104,20 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
     void addMimeTypeExclusionFilter( const QString &mimeType );
 
     /**
+     * Add content mime type to be shown by the filter.
+     *
+     * @param mimeType A mime type to be shown.
+     */
+    void addContentMimeTypeInclusionFilter( const QString &mimeType );
+
+    /**
+     * Add content mime types to be shown by the filter.
+     *
+     * @param mimeTypes A list of content mime types to be included.
+     */
+    void addContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
+
+    /**
      * Returns the list of mime type inclusion filters.
      */
     QStringList mimeTypeInclusionFilters() const;
@@ -113,21 +128,21 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
     QStringList mimeTypeExclusionFilters() const;
 
     /**
+     * Returns the list of content mime type inclusion filters.
+     */
+    QStringList contentMimeTypeInclusionFilters() const;
+
+    /**
      * Clear all mime type filters.
      */
     void clearFilters();
-
-    /**
-     * Sets the @p index that shall be used as the root for this model.
-     */
-    void setRootIndex( const QModelIndex &index );
 
     /**
      * Sets the header @p set of the filter model.
      *
      * \sa EntityTreeModel::HeaderGroup
      */
-    void setHeaderSet( int set );
+    void setHeaderGroup( EntityTreeModel::HeaderGroup headerGroup );
 
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
@@ -140,20 +155,19 @@ class AKONADI_EXPORT EntityFilterProxyModel : public QSortFilterProxyModel
 
     virtual bool canFetchMore(const QModelIndex &parent) const;
 
-    /**
-      Reimplemented to handle the AmazingCompletionRole.
-    */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
     virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
+
+    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
   protected:
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
 
   private:
     //@cond PRIVATE
-    Q_DECLARE_PRIVATE( EntityFilterProxyModel )
-    EntityFilterProxyModelPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE( EntityMimeTypeFilterModel )
+    EntityMimeTypeFilterModelPrivate * const d_ptr;
     //@endcond
 };
 

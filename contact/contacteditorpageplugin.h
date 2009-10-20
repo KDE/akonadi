@@ -35,6 +35,7 @@ namespace Akonadi
  * @short The base class for custom ContactEditor page plugins.
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class ContactEditorPagePlugin : public QWidget
 {

@@ -1,6 +1,4 @@
 /*
-    This file is part of Akonadi Contact.
-
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -38,51 +36,52 @@ AsyncSelectionHandler::~AsyncSelectionHandler()
 {
 }
 
+bool AsyncSelectionHandler::scanSubTree( const QModelIndex &index, bool searchForItem )
+{
+  if ( searchForItem ) {
+    const Item::Id id = index.data( EntityTreeModel::ItemIdRole ).toLongLong();
+
+    if ( mItem.id() == id ) {
+      emit itemAvailable( index );
+      return true;
+    }
+  } else {
+    const Collection::Id id = index.data( EntityTreeModel::CollectionIdRole ).toLongLong();
+
+    if ( mCollection.id() == id ) {
+      emit collectionAvailable( index );
+      return true;
+    }
+  }
+
+  for ( int row = 0; row < mModel->rowCount( index ); ++row ) {
+    const QModelIndex childIndex = mModel->index( row, 0, index );
+    if ( scanSubTree( childIndex, searchForItem ) )
+      return true;
+  }
+
+  return false;
+}
+
 void AsyncSelectionHandler::waitForCollection( const Collection &collection )
 {
   mCollection = collection;
 
-  for ( int i = 0; i < mModel->rowCount(); ++i ) {
-    const QModelIndex index = mModel->index( i, 0 );
-    const Collection::Id id = index.data( EntityTreeModel::CollectionIdRole ).toLongLong();
-    if ( collection.id() == id ) {
-      emit collectionAvailable( index );
-      break;
-    }
-  }
+  scanSubTree( mModel->index( 0, 0 ), false );
 }
 
 void AsyncSelectionHandler::waitForItem( const Item &item )
 {
   mItem = item;
 
-  for ( int i = 0; i < mModel->rowCount(); ++i ) {
-    const QModelIndex index = mModel->index( i, 0 );
-    const Item::Id id = index.data( EntityTreeModel::ItemIdRole ).toLongLong();
-    if ( item.id() == id ) {
-      emit itemAvailable( index );
-      break;
-    }
-  }
+  scanSubTree( mModel->index( 0, 0 ), true );
 }
 
 void AsyncSelectionHandler::rowsInserted( const QModelIndex &parent, int start, int end )
 {
   for ( int i = start; i <= end; ++i ) {
-    const QModelIndex index = mModel->index( i, 0, parent );
-
-    if ( mCollection.isValid() ) {
-      const Collection::Id id = index.data( EntityTreeModel::CollectionIdRole ).toLongLong();
-      if ( mCollection.id() == id ) {
-        emit collectionAvailable( index );
-      }
-    }
-
-    if ( mItem.isValid() ) {
-      const Item::Id id = index.data( EntityTreeModel::CollectionIdRole ).toLongLong();
-      if ( mItem.id() == id )
-        emit itemAvailable( index );
-    }
+    scanSubTree( mModel->index( i, 0, parent ), false );
+    scanSubTree( mModel->index( i, 0, parent ), true );
   }
 }
 

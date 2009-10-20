@@ -23,8 +23,8 @@
 
 #include <kdescendantsproxymodel.h>
 
-#include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/changerecorder.h>
+#include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>
 
@@ -50,10 +50,10 @@ QAbstractItemModel* ContactCompletionModel::self()
   KDescendantsProxyModel *descModel = new KDescendantsProxyModel( model );
   descModel->setSourceModel( model );
 
-  EntityFilterProxyModel *filter = new Akonadi::EntityFilterProxyModel( model );
+  EntityMimeTypeFilterModel *filter = new Akonadi::EntityMimeTypeFilterModel( model );
   filter->setSourceModel( descModel );
   filter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-  filter->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
+  filter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
   mSelf = filter;
 
@@ -69,7 +69,7 @@ ContactCompletionModel::~ContactCompletionModel()
 {
 }
 
-QVariant ContactCompletionModel::getData( const Item &item, int column, int role ) const
+QVariant ContactCompletionModel::entityData( const Item &item, int column, int role ) const
 {
   if ( !item.hasPayload<KABC::Addressee>() ) {
     // Pass modeltest
@@ -111,12 +111,12 @@ QVariant ContactCompletionModel::getData( const Item &item, int column, int role
     }
   }
 
-  return EntityTreeModel::getData( item, column, role );
+  return EntityTreeModel::entityData( item, column, role );
 }
 
-QVariant ContactCompletionModel::getData( const Collection &collection, int column, int role ) const
+QVariant ContactCompletionModel::entityData( const Collection &collection, int column, int role ) const
 {
-  return EntityTreeModel::getData( collection, column, role );
+  return EntityTreeModel::entityData( collection, column, role );
 }
 
 int ContactCompletionModel::columnCount( const QModelIndex &parent ) const
@@ -127,7 +127,7 @@ int ContactCompletionModel::columnCount( const QModelIndex &parent ) const
     return 0;
 }
 
-int ContactCompletionModel::getColumnCount( int ) const
+int ContactCompletionModel::entityColumnCount( HeaderGroup ) const
 {
   return 3;
 }
