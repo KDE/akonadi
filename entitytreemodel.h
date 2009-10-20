@@ -53,6 +53,35 @@ class EntityTreeModelPrivate;
  * @note The EntityTreeModel should be used with the EntityTreeView or the EntityListView class
  * either directly or indirectly via proxy models.
  *
+ * <h3>Retrieving Collections and Items from the model</h3>
+ *
+ * If you want to retrieve and Item or Collection from the model, and already have a valid
+ * QModelIndex for the correct row, the Collection can be retrieved like this:
+ *
+ * @code
+ * Collection col = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+ * @endcode
+ *
+ * And similarly for Items. This works even if there is a proxy model between the calling code
+ * and the EntityTreeModel.
+ *
+ * If you want to retrieve a Collection for a particular Collection::Id  and you do not yet
+ * have a valid QModelIndex, use match:
+ *
+ * @code
+ * QModelIndexList list = model->match(QModelIndex(), CollectionIdRole, id);
+ * if (list.isEmpty())
+ *   return; // A Collection with that Id is not in the model.
+ * Q_ASSERT( list.size() == 1 ); // Otherwise there must be only one instance of it.
+ * Collection col = list.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+ * @endcode
+ *
+ * Not that a single Item may appear multiple times in a model, so the list size may not be 1
+ * if it is not empty in that case, so the Q_ASSERT should not be used.
+ * @see virtual-collections
+ *
+ * <h3>Using EntityTreeModel in your application</h3>
+ *
  * The responsibilities which fall to the application developer are
  * - Configuring the ChangeRecorder and EntityTreeModel
  * - Making use of this class via proxy models
