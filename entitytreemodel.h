@@ -390,26 +390,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     CollectionFetchStrategy collectionFetchStrategy() const;
 
-    /**
-     * Returns the model index for the given @p collection.
-     */
-    QModelIndex indexForCollection( const Collection &collection ) const;
-
-    /**
-     * Returns the model indexes for the given @p item.
-     */
-    QModelIndexList indexesForItem( const Item &item ) const;
-
-    /**
-     * Returns the collection for the given collection @p id.
-     */
-    Collection collectionForId( Collection::Id id ) const;
-
-    /**
-     * Returns the item for the given item @p id.
-     */
-    Item itemForId( Item::Id id ) const;
-
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
     virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
 

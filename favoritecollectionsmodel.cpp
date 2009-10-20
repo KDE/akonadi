@@ -47,11 +47,9 @@ class FavoriteCollectionsModel::Private
         return labelMap[c.id()];
       }
 
-      EntityTreeModel *model = qobject_cast<EntityTreeModel*>( q->sourceModel() );
-      Q_ASSERT( model!=0 );
-
-      QModelIndex index = model->indexForCollection( model->collectionForId( c.id() ) );
-      return model->data(index).toString();
+      QModelIndexList indexList = q->sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, c.id() );
+      Q_ASSERT( indexList.size() == 1 );
+      return indexList.at( 0 ).data().toString();
     }
 
     void clearAndUpdateSelection()
@@ -62,12 +60,12 @@ class FavoriteCollectionsModel::Private
 
     void updateSelection()
     {
-      EntityTreeModel *model = qobject_cast<EntityTreeModel*>( q->sourceModel() );
-      Q_ASSERT( model!=0 );
-
       foreach (const Collection &c, collections) {
-        QModelIndex index = model->indexForCollection( model->collectionForId( c.id() ) );
-        q->selectionModel()->select( index,
+        QModelIndexList indexList = q->sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, c.id() );
+        if ( indexList.isEmpty() )
+          continue;
+        Q_ASSERT( indexList.size() == 1 );
+        q->selectionModel()->select( indexList.at( 0 ),
                                      QItemSelectionModel::Select );
       }
     }
@@ -111,7 +109,7 @@ class FavoriteCollectionsModel::Private
     QHash<qint64, QString> labelMap;
 };
 
-FavoriteCollectionsModel::FavoriteCollectionsModel( EntityTreeModel *source, QObject *parent )
+FavoriteCollectionsModel::FavoriteCollectionsModel( QAbstractItemModel *source, QObject *parent )
   : Akonadi::SelectionProxyModel( new QItemSelectionModel( source, parent ), parent ),
     d( new Private( this ) )
 {
@@ -151,11 +149,11 @@ void FavoriteCollectionsModel::removeCollection( const Collection &collection )
   d->collections.removeAll( collection );
   d->labelMap.remove( collection.id() );
 
-  EntityTreeModel *model = qobject_cast<EntityTreeModel*>( sourceModel() );
-  Q_ASSERT( model!=0 );
-
-  QModelIndex index = model->indexForCollection( model->collectionForId( collection.id() ) );
-  selectionModel()->select( index,
+  QModelIndexList indexList = sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collection.id() );
+  if ( indexList.isEmpty() )
+    return;
+  Q_ASSERT( indexList.size() == 1 );
+  selectionModel()->select( indexList.at( 0 ),
                             QItemSelectionModel::Deselect );
 
   d->updateSelection();
@@ -173,11 +171,12 @@ void Akonadi::FavoriteCollectionsModel::setFavoriteLabel( const Collection &coll
   d->labelMap[ collection.id() ] = label;
   d->saveConfig();
 
-  EntityTreeModel *model = qobject_cast<EntityTreeModel*>( sourceModel() );
-  Q_ASSERT( model!=0 );
+  QModelIndexList indexList = sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collection.id() );
+  if ( indexList.isEmpty() )
+    return;
+  Q_ASSERT( indexList.size() == 1 );
 
-  QModelIndex sourceIndex = model->indexForCollection( model->collectionForId( collection.id() ) );
-  QModelIndex index = mapFromSource( sourceIndex );
+  QModelIndex index = mapFromSource( indexList.at( 0 ) );
   emit dataChanged( index, index );
 }
 

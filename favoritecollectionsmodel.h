@@ -46,7 +46,7 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyMo
      *
      * @param parent The parent object.
      */
-    explicit FavoriteCollectionsModel( EntityTreeModel *source, QObject *parent = 0 );
+    explicit FavoriteCollectionsModel( QAbstractItemModel *source, QObject *parent = 0 );
 
     /**
      * Destroys the favorite collections model.

@@ -150,18 +150,6 @@ void EntityTreeModel::clearAndReset()
   QTimer::singleShot( 0, this, SLOT( startFirstListJob() ) );
 }
 
-Collection EntityTreeModel::collectionForId( Collection::Id id ) const
-{
-  Q_D( const EntityTreeModel );
-  return d->m_collections.value( id );
-}
-
-Item EntityTreeModel::itemForId( Item::Id id ) const
-{
-  Q_D( const EntityTreeModel );
-  return d->m_items.value( id );
-}
-
 int EntityTreeModel::columnCount( const QModelIndex & parent ) const
 {
 // TODO: Statistics?
@@ -851,6 +839,47 @@ bool EntityTreeModel::match(const Collection &collection, const QVariant &value,
 
 QModelIndexList EntityTreeModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags ) const
 {
+  Q_D( const EntityTreeModel );
+
+  if ( role == CollectionIdRole || role == CollectionRole )
+  {
+    Collection::Id id;
+    if ( role == CollectionRole )
+    {
+      Collection col = value.value<Collection>();
+      id = col.id();
+    }
+    id = value.toLongLong();
+    QModelIndexList list;
+
+    Collection col = d->m_collections.value( id );
+
+    if ( !col.isValid() )
+      return list;
+
+    QModelIndex collectionIndex = d->indexForCollection(col);
+    Q_ASSERT( collectionIndex.isValid() );
+    list << collectionIndex;
+    return list;
+  }
+
+  if ( role == ItemIdRole)
+  {
+    Item::Id id;
+    if ( role == CollectionRole )
+    {
+      Item item = value.value<Item>();
+      id = item.id();
+    }
+    id = value.toLongLong();
+    QModelIndexList list;
+
+    Item item = d->m_items.value( id );
+    if ( !item.isValid() )
+      return list;
+    return d->indexesForItem( item );
+  }
+
   if (role != AmazingCompletionRole)
     return QAbstractItemModel::match(start, role, value, hits, flags);
 
@@ -908,43 +937,6 @@ bool EntityTreeModel::removeRows( int, int, const QModelIndex& )
 bool EntityTreeModel::removeColumns( int, int, const QModelIndex& )
 {
   return false;
-}
-
-QModelIndex EntityTreeModel::indexForCollection( const Collection &collection ) const
-{
-  Q_D(const EntityTreeModel);
-
-  // The id of the parent of Collection::root is not guaranteed to be -1 as assumed by startFirstListJob,
-  // we ensure that we use -1 for the invalid Collection.
-  const Collection::Id parentId = collection.parentCollection().isValid() ? collection.parentCollection().id() : -1;
-
-  const int row = d->indexOf( d->m_childEntities.value( parentId ), collection.id() );
-
-  if ( row < 0 )
-    return QModelIndex();
-
-  Node *node = d->m_childEntities.value( parentId ).at( row );
-
-  return createIndex( row, 0, reinterpret_cast<void*>( node ) );
-}
-
-QModelIndexList EntityTreeModel::indexesForItem( const Item &item ) const
-{
-  Q_D(const EntityTreeModel);
-  QModelIndexList indexes;
-
-  const Collection::List collections = d->getParentCollections( item );
-  const qint64 id = item.id();
-
-  foreach ( const Collection &collection, collections ) {
-    const int row = d->indexOf( d->m_childEntities.value( collection.id() ), id );
-
-    Node *node = d->m_childEntities.value( collection.id() ).at( row );
-
-    indexes << createIndex( row, 0, reinterpret_cast<void*>( node ) );
-  }
-
-  return indexes;
 }
 
 void EntityTreeModel::setItemPopulationStrategy( ItemPopulationStrategy strategy )
