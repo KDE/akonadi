@@ -39,7 +39,9 @@ class CollectionDialog::Private
 {
   public:
     Private( QAbstractItemModel *customModel, CollectionDialog *parent )
-      : mParent( parent )
+      : mParent( parent ),
+        mMonitor( 0 ),
+        mModel( 0 )
     {
       // setup GUI
       QWidget *widget = mParent->mainWidget();
@@ -62,11 +64,11 @@ class CollectionDialog::Private
       if ( customModel ) {
         baseModel = customModel;
       } else {
-        mMonitor = new Akonadi::ChangeRecorder;
+        mMonitor = new Akonadi::ChangeRecorder( mParent );
         mMonitor->fetchCollection( true );
         mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
 
-        mModel = new EntityTreeModel( Session::defaultSession(), mMonitor );
+        mModel = new EntityTreeModel( Session::defaultSession(), mMonitor, mParent );
         mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
         baseModel = mModel;
       }
@@ -91,8 +93,6 @@ class CollectionDialog::Private
     ~Private()
     {
       mView->setModel( 0 );
-      delete mModel;
-      delete mMonitor;
     }
 
     void slotCollectionAvailable( const QModelIndex &index )
@@ -105,7 +105,7 @@ class CollectionDialog::Private
 
     ChangeRecorder *mMonitor;
     EntityTreeModel *mModel;
-    EntityMimeTypeFilterModel *mMimeTypeFilterModel;
+    CollectionFilterProxyModel *mMimeTypeFilterModel;
     EntityRightsFilterModel *mRightsFilterModel;
     EntityTreeView *mView;
     AsyncSelectionHandler *mSelectionHandler;

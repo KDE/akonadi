@@ -47,11 +47,11 @@ class CollectionComboBox::Private
       if ( customModel ) {
         baseModel = customModel;
       } else {
-        mMonitor = new Akonadi::ChangeRecorder;
+        mMonitor = new Akonadi::ChangeRecorder( mParent );
         mMonitor->fetchCollection( true );
         mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
 
-        mModel = new EntityTreeModel( Session::defaultSession(), mMonitor );
+        mModel = new EntityTreeModel( Session::defaultSession(), mMonitor, mParent );
         mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
         KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
@@ -79,8 +79,6 @@ class CollectionComboBox::Private
     ~Private()
     {
       mParent->setModel( 0 );
-      delete mModel;
-      delete mMonitor;
     }
 
     void activated( int index );
