@@ -70,16 +70,6 @@ void EntityDisplayAttribute::setIconName(const QString & icon)
   d->icon = icon;
 }
 
-bool EntityDisplayAttribute::isHidden() const
-{
-  return d->hidden;
-}
-
-void EntityDisplayAttribute::setHidden(bool hide)
-{
-  d->hidden = hide;
-}
-
 QByteArray Akonadi::EntityDisplayAttribute::type() const
 {
   return "ENTITYDISPLAY";
@@ -90,7 +80,6 @@ EntityDisplayAttribute * EntityDisplayAttribute::clone() const
   EntityDisplayAttribute *attr = new EntityDisplayAttribute();
   attr->d->name = d->name;
   attr->d->icon = d->icon;
-  attr->d->hidden = d->hidden;
   attr->d->activeIcon = d->activeIcon;
   return attr;
 }
@@ -100,7 +89,6 @@ QByteArray EntityDisplayAttribute::serialized() const
   QList<QByteArray> l;
   l << ImapParser::quote( d->name.toUtf8() );
   l << ImapParser::quote( d->icon.toUtf8() );
-  l << (d->hidden ? "true" : "false");
   l << ImapParser::quote( d->activeIcon.toUtf8() );
   return '(' + ImapParser::join( l, " " ) + ')';
 }
@@ -113,9 +101,7 @@ void EntityDisplayAttribute::deserialize(const QByteArray &data)
   d->name = QString::fromUtf8( l[0] );
   d->icon = QString::fromUtf8( l[1] );
   if ( l.size() >= 3 )
-     d->hidden = (l[2] == "true");
-  if ( l.size() >= 4 )
-     d->activeIcon = QString::fromUtf8( l[3] );
+     d->activeIcon = QString::fromUtf8( l[2] );
 }
 
 void EntityDisplayAttribute::setActiveIconName( const QString &name )

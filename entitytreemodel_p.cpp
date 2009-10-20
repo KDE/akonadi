@@ -32,7 +32,7 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/collectionstatisticsjob.h>
-#include <akonadi/entitydisplayattribute.h>
+#include <akonadi/entityhiddenattribute.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/session.h>
@@ -126,16 +126,13 @@ bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
   if (entity.id() == Collection::root().id())
     return false;
 
-  if ( entity.hasAttribute<EntityDisplayAttribute>() )
-  {
-    const EntityDisplayAttribute *eda = entity.attribute<EntityDisplayAttribute>();
-    if ( eda->isHidden() )
-      return true;
+  if ( entity.hasAttribute<EntityHiddenAttribute>() )
+    return true;
 
-    const Collection parent = entity.parentCollection();
-    if ( parent.isValid() )
-      return isHidden( parent );
-  }
+  const Collection parent = entity.parentCollection();
+  if ( parent.isValid() )
+    return isHidden( parent );
+ 
   return false;
 }
 
@@ -361,7 +358,6 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
 
 void EntityTreeModelPrivate::ancestorsFetched( const Akonadi::Collection::List& collectionList )
 {
-  Q_Q( EntityTreeModel );
   Q_ASSERT( collectionList.size() == 1 );
 
   const Collection collection = collectionList.at( 0 );
@@ -543,8 +539,6 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
 void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collection &collection )
 {
-  Q_Q( EntityTreeModel );
-
   if ( isHidden( collection ) )
     return;
 
@@ -564,8 +558,6 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Collection::Id id,
                                                                    const Akonadi::CollectionStatistics &statistics )
 {
-  Q_Q( EntityTreeModel );
-
   if ( !m_collections.contains( id ) ) {
     kWarning() << "Got statistics response for non-existing collection:" << id;
   } else {
@@ -642,8 +634,6 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
 
 void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
 {
-  Q_Q( EntityTreeModel );
-
   if ( isHidden( item ) )
     return;
 
@@ -791,8 +781,6 @@ void EntityTreeModelPrivate::pasteJobDone( KJob *job )
 
 void EntityTreeModelPrivate::updateJobDone( KJob *job )
 {
-  Q_Q(EntityTreeModel);
-
   if ( job->error() ) {
     // TODO: handle job errors
     kWarning() << "Job error:" << job->errorString();
