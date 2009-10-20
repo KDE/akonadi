@@ -821,7 +821,7 @@ bool EntityTreeModel::hasChildren( const QModelIndex &parent ) const
   return ((rowCount(parent) > 0) || (canFetchMore( parent ) && d->m_itemPopulation == LazyPopulation));
 }
 
-bool EntityTreeModel::match(const Item &item, const QVariant &value, Qt::MatchFlags flags) const
+bool EntityTreeModel::entityMatch(const Item &item, const QVariant &value, Qt::MatchFlags flags) const
 {
   Q_UNUSED(item);
   Q_UNUSED(value);
@@ -829,7 +829,7 @@ bool EntityTreeModel::match(const Item &item, const QVariant &value, Qt::MatchFl
   return false;
 }
 
-bool EntityTreeModel::match(const Collection &collection, const QVariant &value, Qt::MatchFlags flags) const
+bool EntityTreeModel::entityMatch(const Collection &collection, const QVariant &value, Qt::MatchFlags flags) const
 {
   Q_UNUSED(collection);
   Q_UNUSED(value);
@@ -905,10 +905,10 @@ QModelIndexList EntityTreeModel::match(const QModelIndex& start, int role, const
       {
         continue;
       }
-      if (match(col, value, flags))
+      if (entityMatch(col, value, flags))
         list << idx;
     } else {
-      if (match(item, value, flags))
+      if (entityMatch(item, value, flags))
       {
         list << idx;
       }

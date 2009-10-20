@@ -446,16 +446,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
-    /**
-     * Reimplement this in a subclass to return true if @p item matches @p value with @p flags in the AmazingCompletionRole.
-     */
-    virtual bool match( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const;
-
-    /**
-     * Reimplement this in a subclass to return true if @p collection matches @p value with @p flags in the AmazingCompletionRole.
-     */
-    virtual bool match( const Collection &collection, const QVariant &value, Qt::MatchFlags flags ) const;
-
   protected:
     /**
      * Clears and resets the model. Always call this instead of the reset method in the superclass.
@@ -480,6 +470,17 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     virtual QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;
 
     virtual int entityColumnCount( HeaderGroup headerGroup ) const;
+
+    /**
+     * Reimplement this in a subclass to return true if @p item matches @p value with @p flags in the AmazingCompletionRole.
+     */
+    virtual bool entityMatch( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const;
+
+    /**
+     * Reimplement this in a subclass to return true if @p collection matches @p value with @p flags in the AmazingCompletionRole.
+     */
+    virtual bool entityMatch( const Collection &collection, const QVariant &value, Qt::MatchFlags flags ) const;
+
 
   private:
     //@cond PRIVATE
