@@ -26,6 +26,7 @@
 #include <KDebug>
 #include <KStandardDirs>
 
+#include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectiondeletejob.h>
