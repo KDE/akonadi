@@ -146,4 +146,15 @@ void CollectionFilterProxyModel::clearFilters()
   invalidateFilter();
 }
 
+Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) const
+{
+  const Collection collection = sourceModel()->data( mapToSource( index ), CollectionModel::CollectionRole ).value<Collection>();
+
+  // If this collection directly contains one valid mimetype, it is accepted
+  if ( d->mimeChecker.isWantedCollection( collection ) )
+    return QSortFilterProxyModel::flags( index );
+  else
+    return QSortFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+}
+
 #include "collectionfilterproxymodel.moc"

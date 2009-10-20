@@ -92,6 +92,8 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      */
     void clearFilters();
 
+    virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
+
   protected:
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const;
 
