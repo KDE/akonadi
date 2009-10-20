@@ -71,8 +71,8 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
     d->mAddressBookBox = new CollectionComboBox( mainWidget );
-    d->mAddressBookBox->setContentMimeTypesFilter( QStringList() << KABC::ContactGroup::mimeType() );
-    d->mAddressBookBox->setAccessRightsFilter( CollectionComboBox::Writable );
+    d->mAddressBookBox->setMimeTypeFilter( QStringList() << KABC::ContactGroup::mimeType() );
+    d->mAddressBookBox->setAccessRightsFilter( Collection::CanCreateItem );
 
     layout->addWidget( label, 0, 0 );
     layout->addWidget( d->mAddressBookBox, 0, 1 );

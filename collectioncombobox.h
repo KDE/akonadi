@@ -49,8 +49,8 @@ namespace Akonadi {
  * contentMimeTypes << KABC::ContactGroup::mimeType();
  *
  * CollectionComboBox *box = new CollectionComboBox( this );
- * box->setContentMimeTypes( contentMimeTypes );
- * box->setAccessRights( CollectionComboBox::Writable );
+ * box->setMimeTypeFilter( contentMimeTypes );
+ * box->setAccessRightsFilter( Collection::CanCreateItem );
  * ...
  *
  * const Collection collection = box->currentCollection();
@@ -65,15 +65,6 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
   Q_OBJECT
 
   public:
-    /**
-     * Describes what rights the collections must have to be listed.
-     */
-    enum AccessRights
-    {
-      Readable,  ///< All collections that can be read from.
-      Writable   ///< All collections that can be written to.
-    };
-
     /**
      * Creates a new collection combobox.
      *
@@ -100,22 +91,22 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
     /**
      * Sets the content @p mimetypes the collections shall be filtered by.
      */
-    void setContentMimeTypesFilter( const QStringList &mimetypes );
+    void setMimeTypeFilter( const QStringList &mimetypes );
 
     /**
      * Returns the content mimetype the collections are filtered by.
      */
-    QStringList contentMimeTypesFilter() const;
+    QStringList mimeTypeFilter() const;
 
     /**
      * Sets the access @p rights the collections shall be filtered by.
      */
-    void setAccessRightsFilter( AccessRights rights );
+    void setAccessRightsFilter( Collection::Rights rights );
 
     /**
      * Returns the access rights the collections are filtered by.
      */
-    AccessRights accessRightsFilter() const;
+    Collection::Rights accessRightsFilter() const;
 
     /**
      * Sets the @p collection that shall be selected by default.

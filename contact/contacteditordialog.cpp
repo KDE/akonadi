@@ -59,8 +59,8 @@ class ContactEditorDialog::Private
         QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
         mAddressBookBox = new CollectionComboBox( mainWidget );
-        mAddressBookBox->setContentMimeTypesFilter( QStringList() << KABC::Addressee::mimeType() );
-        mAddressBookBox->setAccessRightsFilter( CollectionComboBox::Writable );
+        mAddressBookBox->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+        mAddressBookBox->setAccessRightsFilter( Collection::CanCreateItem );
 
         layout->addWidget( label, 0, 0 );
         layout->addWidget( mAddressBookBox, 0, 1 );

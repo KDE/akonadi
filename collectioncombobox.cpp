@@ -26,6 +26,7 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/entityrightsfiltermodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/session.h>
 
@@ -59,31 +60,15 @@ class CollectionComboBox::Private
         baseModel = proxyModel;
       }
 
-      mEntityMimeTypeFilterModel = new EntityMimeTypeFilterModel( parent );
-      mEntityMimeTypeFilterModel->setSourceModel( baseModel );
+      mMimeTypeFilterModel = new EntityMimeTypeFilterModel( parent );
+      mMimeTypeFilterModel->setSourceModel( baseModel );
 
-/*
-      QStringList contentTypes;
-      switch ( type ) {
-        case CollectionComboBox::ContactsOnly: contentTypes << KABC::Addressee::mimeType(); break;
-        case CollectionComboBox::ContactGroupsOnly: contentTypes << KABC::ContactGroup::mimeType(); break;
-        case CollectionComboBox::All: contentTypes << KABC::Addressee::mimeType()
-                                                    << KABC::ContactGroup::mimeType(); break;
-      }
-      // filter for collections that support saving of contacts / contact groups
-      CollectionFilterModel *filterModel = new CollectionFilterModel( mParent );
-      foreach ( const QString &contentMimeType, contentTypes )
-        filterModel->addContentMimeTypeFilter( contentMimeType );
+      mRightsFilterModel = new EntityRightsFilterModel( parent );
+      mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
 
-      if ( rights == CollectionComboBox::Writable )
-        filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
+      mParent->setModel( mRightsFilterModel );
 
-      filterModel->setSourceModel( proxyModel );
-*/
-
-      mParent->setModel( mEntityMimeTypeFilterModel );
-
-      mSelectionHandler = new AsyncSelectionHandler( mEntityMimeTypeFilterModel, mParent );
+      mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
       mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
                         mParent, SLOT( activated( const QModelIndex& ) ) );
 
@@ -105,11 +90,9 @@ class CollectionComboBox::Private
 
     ChangeRecorder *mMonitor;
     EntityTreeModel *mModel;
-    EntityMimeTypeFilterModel *mEntityMimeTypeFilterModel;
+    EntityMimeTypeFilterModel *mMimeTypeFilterModel;
+    EntityRightsFilterModel *mRightsFilterModel;
     AsyncSelectionHandler *mSelectionHandler;
-
-    QStringList mMimeTypesFilter;
-    CollectionComboBox::AccessRights mAccessRightsFilter; 
 };
 
 void CollectionComboBox::Private::activated( int index )
@@ -140,11 +123,10 @@ CollectionComboBox::~CollectionComboBox()
   delete d;
 }
 
-void CollectionComboBox::setContentMimeTypesFilter( const QStringList &contentMimeTypes )
+void CollectionComboBox::setMimeTypeFilter( const QStringList &contentMimeTypes )
 {
-  d->mEntityMimeTypeFilterModel->clearFilters();
-  d->mEntityMimeTypeFilterModel->addContentMimeTypeInclusionFilters( contentMimeTypes );
-  d->mMimeTypesFilter = contentMimeTypes;
+  d->mMimeTypeFilterModel->clearFilters();
+  d->mMimeTypeFilterModel->addContentMimeTypeInclusionFilters( contentMimeTypes );
 
   if ( d->mMonitor ) {
     d->mMonitor->collectionFetchScope().setContentMimeTypes( contentMimeTypes );
@@ -153,19 +135,19 @@ void CollectionComboBox::setContentMimeTypesFilter( const QStringList &contentMi
   }
 }
 
-QStringList CollectionComboBox::contentMimeTypesFilter() const
+QStringList CollectionComboBox::mimeTypeFilter() const
 {
-  return d->mMimeTypesFilter;
+  return d->mMimeTypeFilterModel->contentMimeTypeInclusionFilters();
 }
 
-void CollectionComboBox::setAccessRightsFilter( AccessRights rights )
+void CollectionComboBox::setAccessRightsFilter( Collection::Rights rights )
 {
-  d->mAccessRightsFilter = rights;
+  d->mRightsFilterModel->setAccessRights( rights );
 }
 
-CollectionComboBox::AccessRights CollectionComboBox::accessRightsFilter() const
+Collection::Rights CollectionComboBox::accessRightsFilter() const
 {
-  return d->mAccessRightsFilter;
+  return d->mRightsFilterModel->accessRights();
 }
 
 void CollectionComboBox::setDefaultCollection( const Collection &collection )
