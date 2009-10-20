@@ -23,7 +23,7 @@
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchscope.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/entityrightsfiltermodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitytreeview.h>
@@ -73,12 +73,10 @@ class CollectionDialog::Private
         baseModel = mModel;
       }
 
-      mMimeTypeFilterModel = new EntityMimeTypeFilterModel( parent );
+      mMimeTypeFilterModel = new CollectionFilterProxyModel( mParent );
       mMimeTypeFilterModel->setSourceModel( baseModel );
-      mMimeTypeFilterModel->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-      mMimeTypeFilterModel->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
-      mRightsFilterModel = new EntityRightsFilterModel( parent );
+      mRightsFilterModel = new EntityRightsFilterModel( mParent );
       mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
 
       mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
@@ -166,12 +164,16 @@ Akonadi::Collection::List CollectionDialog::selectedCollections() const
 void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )
 {
   d->mMimeTypeFilterModel->clearFilters();
-  d->mMimeTypeFilterModel->addContentMimeTypeInclusionFilters( mimeTypes );
+  d->mMimeTypeFilterModel->addMimeTypeFilters( mimeTypes );
+
+  if ( d->mMonitor )
+    foreach( const QString &mimetype, mimeTypes )
+      d->mMonitor->setMimeTypeMonitored( mimetype );
 }
 
 QStringList CollectionDialog::mimeTypeFilter() const
 {
-  return d->mMimeTypeFilterModel->contentMimeTypeInclusionFilters();
+  return d->mMimeTypeFilterModel->mimeTypeFilters();
 }
 
 void CollectionDialog::setAccessRightsFilter( Collection::Rights rights )
