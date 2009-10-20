@@ -244,6 +244,8 @@ bool ContactEditor::saveContact()
       AutoQPointer<CollectionDialog> dlg = new CollectionDialog( this );
       dlg->setMimeTypeFilter( mimeTypeFilter );
       dlg->setAccessRightsFilter( Collection::CanCreateItem );
+      dlg->setCaption( i18n( "Select Address Book" ) );
+      dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
       if ( dlg->exec() == KDialog::Accepted )
         setDefaultAddressBook( dlg->selectedCollection() );
       else

@@ -36,18 +36,23 @@ namespace Akonadi {
  * Provides a dialog that lists collections that are available
  * on the Akonadi storage and allows to select one or multiple
  * collections.
- * The list of shown collections can be filtered by mime type.
+ * The list of shown collections can be filtered by mime type
+ * and access rights.
  *
  * Example:
  *
  * @code
  *
- * // show the user a dialog to select a collection of contacts
- * Akonadi::CollectionDialog dlg( this );
- * dlg.setMimeTypeFilter( QStringList() << QString( "text/directory" ) );
+ * using namespace Akonadi;
+ *
+ * // Show the user a dialog to select a writable collection of contacts
+ * CollectionDialog dlg( this );
+ * dlg.setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+ * dlg.setAccessRightsFilter( Collection::CanCreateItem );
+ * dlg.setDescription( i18n( "Select an address book for saving:" ) );
  *
  * if ( dlg.exec() ) {
- *   const Akonadi::Collection collection = dlg.selectedCollection();
+ *   const Collection collection = dlg.selectedCollection();
  *   ...
  * }
  *
@@ -62,7 +67,6 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     Q_DISABLE_COPY( CollectionDialog )
 
   public:
-
     /**
      * Creates a new collection dialog.
      *
@@ -87,19 +91,6 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     ~CollectionDialog();
 
     /**
-     * Returns the selected collection if the selection mode is
-     * QAbstractItemView::SingleSelection what is the default. If
-     * another selection mode was set then an invalid collection
-     * is returned.
-     */
-    Akonadi::Collection selectedCollection() const;
-
-    /**
-     * Returns the list of selected collections.
-     */
-    Akonadi::Collection::List selectedCollections() const;
-
-    /**
      * Sets the mime types any of which the selected collection(s) shall support.
      */
     void setMimeTypeFilter( const QStringList &mimeTypes );
@@ -120,6 +111,11 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     Collection::Rights accessRightsFilter() const;
 
     /**
+     * Sets the @p text that will be shown in the dialog.
+     */
+    void setDescription( const QString &text );
+
+    /**
      * Sets the @p collection that shall be selected by default.
      */
     void setDefaultCollection( const Collection &collection );
@@ -135,6 +131,19 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      * @see QAbstractItemView::selectionMode()
      */
     QAbstractItemView::SelectionMode selectionMode() const;
+
+    /**
+     * Returns the selected collection if the selection mode is
+     * QAbstractItemView::SingleSelection what is the default. If
+     * another selection mode was set then an invalid collection
+     * is returned.
+     */
+    Akonadi::Collection selectedCollection() const;
+
+    /**
+     * Returns the list of selected collections.
+     */
+    Akonadi::Collection::List selectedCollections() const;
 
   private:
     //@cond PRIVATE

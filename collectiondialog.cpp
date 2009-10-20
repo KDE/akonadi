@@ -29,6 +29,8 @@
 #include <akonadi/entitytreeview.h>
 #include <akonadi/session.h>
 
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
 
 using namespace Akonadi;
@@ -43,7 +45,12 @@ class CollectionDialog::Private
       QWidget *widget = mParent->mainWidget();
       QVBoxLayout *layout = new QVBoxLayout( widget );
 
+      mTextLabel = new QLabel;
+      layout->addWidget( mTextLabel );
+      mTextLabel->hide();
+
       mView = new EntityTreeView;
+      mView->header()->hide();
       layout->addWidget( mView );
 
 
@@ -102,6 +109,7 @@ class CollectionDialog::Private
     EntityRightsFilterModel *mRightsFilterModel;
     EntityTreeView *mView;
     AsyncSelectionHandler *mSelectionHandler;
+    QLabel *mTextLabel;
 
     void slotSelectionChanged();
 };
@@ -174,6 +182,12 @@ void CollectionDialog::setAccessRightsFilter( Collection::Rights rights )
 Collection::Rights CollectionDialog::accessRightsFilter() const
 {
   return d->mRightsFilterModel->accessRights();
+}
+
+void CollectionDialog::setDescription( const QString &text )
+{
+  d->mTextLabel->setText( text );
+  d->mTextLabel->show();
 }
 
 void CollectionDialog::setDefaultCollection( const Collection &collection )
