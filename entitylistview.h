@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_FAVORITE_COLLECTIONS_VIEW
-#define AKONADI_FAVORITE_COLLECTIONS_VIEW
+#ifndef AKONADI_ENTITYLISTVIEW_H
+#define AKONADI_ENTITYLISTVIEW_H
 
 #include "akonadi_export.h"
 
@@ -36,15 +36,17 @@ class Collection;
 class Item;
 
 /**
- * @short A view to show a list of collections provided by a FavoriteCollectionsModel.
+ * @short A view to show an item/collection list provided by an EntityTreeModel.
  *
  * When a KXmlGuiWindow is passed to the constructor, the XMLGUI
- * defined context menu @c akonadi_collectionview_contextmenu is
- * used if available.
+ * defined context menu @c akonadi_collectionview_contextmenu or
+ * @c akonadi_itemview_contextmenu is used if available.
  *
  * Example:
  *
  * @code
+ *
+ * using namespace Akonadi;
  *
  * class MyWindow : public KXmlGuiWindow
  * {
@@ -52,11 +54,15 @@ class Item;
  *    MyWindow()
  *      : KXmlGuiWindow()
  *    {
- *      Akonadi::FavoriteCollectionsView *view = new Akonadi::FavoriteCollectionsView( this, this );
+ *      EntityListView *view = new EntityListView( this, this );
  *      setCentralWidget( view );
  *
- *      Akonadi::FavoriteCollectionsModel *model = new Akonadi::FavoriteCollectionsModel( ... );
- *      view->setModel( model );
+ *      EntityTreeModel *model = new EntityTreeModel( ... );
+ *
+ *      KDescendantsProxyModel *flatModel = new KDescendantsProxyModel( this );
+ *      flatModel->setSourceModel( model );
+ *
+ *      view->setModel( flatModel );
  *    }
  * }
  *

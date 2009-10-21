@@ -75,7 +75,7 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyMo
      *              selection of favorite collections.
      * @param parent The parent object.
      */
-    explicit FavoriteCollectionsModel( QAbstractItemModel *model, const KConfigGroup &group, QObject *parent = 0 );
+    FavoriteCollectionsModel( QAbstractItemModel *model, const KConfigGroup &group, QObject *parent = 0 );
 
     /**
      * Destroys the favorite collections model.

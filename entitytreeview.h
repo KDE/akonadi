@@ -35,7 +35,7 @@ class Collection;
 class Item;
 
 /**
- * @short A view to show an item/collection tree provided by a EntityTreeModel.
+ * @short A view to show an item/collection tree provided by an EntityTreeModel.
  *
  * When a KXmlGuiWindow is passed to the constructor, the XMLGUI
  * defined context menu @c akonadi_collectionview_contextmenu or

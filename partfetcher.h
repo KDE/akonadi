@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_PART_FETCHER_H
-#define AKONADI_PART_FETCHER_H
+#ifndef AKONADI_PARTFETCHER_H
+#define AKONADI_PARTFETCHER_H
 
 #include <kjob.h>
 
