@@ -21,8 +21,6 @@
 
 #include "preprocessorbase.h"
 
-#include "item.h"
-#include "collection.h"
 #include "preprocessorbase_p.h"
 
 #include <kdebug.h>
@@ -50,4 +48,17 @@ void PreprocessorBase::finishProcessing( ProcessingResult result )
   emit d->itemProcessed( d->mDelayedProcessingItemId );
 }
 
+void PreprocessorBase::setFetchScope( const ItemFetchScope &fetchScope )
+{
+  Q_D( PreprocessorBase );
+
+  d->mFetchScope = fetchScope;
+}
+
+ItemFetchScope &PreprocessorBase::fetchScope()
+{
+  Q_D( PreprocessorBase );
+
+  return d->mFetchScope;
+}
 #include "preprocessorbase.moc"

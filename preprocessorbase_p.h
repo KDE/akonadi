@@ -24,6 +24,8 @@
 
 #include "preprocessorbase.h"
 
+#include <akonadi/itemfetchscope.h>
+
 class KJob;
 
 namespace Akonadi {
@@ -43,11 +45,12 @@ class PreprocessorBasePrivate : public AgentBasePrivate
     void itemProcessed( qlonglong id );
 
   private Q_SLOTS:
-    void compoundFetched( KJob *job );
+    void itemFetched( KJob *job );
 
   public:
     bool mInDelayedProcessing;
     qlonglong mDelayedProcessingItemId;
+    ItemFetchScope mFetchScope;
 
     Q_DECLARE_PUBLIC( PreprocessorBase )
 };
