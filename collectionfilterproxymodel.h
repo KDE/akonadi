@@ -50,10 +50,8 @@ class CollectionModel;
  * @endcode
  *
  * @author Bruno Virlet <bruno.virlet@gmail.com>
- *
- * @deprecated Use EntityMimeTypeFilterModel instead.
  */
-class AKONADI_EXPORT_DEPRECATED CollectionFilterProxyModel : public QSortFilterProxyModel
+class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
@@ -93,6 +91,8 @@ class AKONADI_EXPORT_DEPRECATED CollectionFilterProxyModel : public QSortFilterP
      * Clear all mime type filters.
      */
     void clearFilters();
+
+    virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
 
   protected:
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const;

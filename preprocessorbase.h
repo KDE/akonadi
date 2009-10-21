@@ -28,8 +28,6 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
-class PreprocessorAdaptor;
-
 namespace Akonadi
 {
 
@@ -98,8 +96,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
     /**
      * This method must be implemented by every preprocessor subclass.
      *
-     * It must realize the preprocessing of the item with the specified itemId,
-     * which is actually in the collection with collectionId and has the specified mimetype.
+     * It must realize the preprocessing of the @p item, which is actually in @p collection.
      *
      * The Akonadi server will push in for preprocessing any newly created item:
      * it's your responsibility to decide if you want to process the item or not.
@@ -114,7 +111,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      * appropriately (as the server MAY abort your async job
      * if it decides that it's taking too long).
      */
-    virtual ProcessingResult processItem( Item::Id itemId, Collection::Id collectionId, const QString &mimeType ) = 0;
+    virtual ProcessingResult processItem( const Item &item, const Collection &collection ) = 0;
 
     /**
      * This method must be called if processing is implemented asynchronously.
@@ -129,15 +126,6 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      */
     void finishProcessing( ProcessingResult result );
 
-  Q_SIGNALS:
-    /**
-     * This signal is emitted to report item processing termination
-     * to the Akonadi server.
-     *
-     * @note This signal is only for internal use.
-     */
-    void itemProcessed( qlonglong id );
-
   protected:
     /**
      * Creates a new preprocessor base agent.
@@ -151,19 +139,10 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      */
     virtual ~PreprocessorBase();
 
-    /**
-     * This dbus method is called by the Akonadi server
-     * in order to trigger the processing of an item.
-     *
-     * @note Do not call it manually!
-     */
-    void beginProcessItem( qlonglong itemId, qlonglong collectionId, const QString &mimeType );
-
   private:
-    // dbus Preprocessor interface
-    friend class ::PreprocessorAdaptor;
-
+    //@cond PRIVATE
     Q_DECLARE_PRIVATE( PreprocessorBase )
+    //@endcond
 
 }; // class PreprocessorBase
 

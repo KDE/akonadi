@@ -27,15 +27,34 @@
 namespace Akonadi {
 
 /**
- * @short Attribute signalling that an entity should be hidden in the UI
+ * @short An Attribute that marks that an entity should be hidden in the UI.
  *
  * This class represents the attribute of all hidden items. The hidden
  * items shouldn't be displayed in UI applications (unless in some kind
  * of "debug" mode).
  *
- * @see Akonadi::Attribute
+ * Example:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * ...
+ * // hide a collection by setting the hidden attribute
+ * Collection collection = collectionFetchJob->collections().first();
+ * collection.attribute<EntityHiddenAttribute>( Entity::AddIfMissing );
+ * new CollectionModifyJob( collection, this ); // save back to storage
+ *
+ * // check if the collection is hidden
+ * if ( collection.hasAttribute<EntityHiddenAttribute>() )
+ *   qDebug() << "collection is hidden";
+ * else
+ *   qDebug() << "collection is visible";
+ *
+ * @endcode
  *
  * @author Szymon Stefanek <s.stefanek@gmail.com>
+ * @see Akonadi::Attribute
  * @since 4.4
  */
 class AKONADI_EXPORT EntityHiddenAttribute : public Attribute

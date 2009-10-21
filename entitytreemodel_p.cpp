@@ -32,7 +32,7 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/collectionstatisticsjob.h>
-#include <akonadi/entitydisplayattribute.h>
+#include <akonadi/entityhiddenattribute.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/session.h>
@@ -126,16 +126,13 @@ bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
   if (entity.id() == Collection::root().id())
     return false;
 
-  if ( entity.hasAttribute<EntityDisplayAttribute>() )
-  {
-    const EntityDisplayAttribute *eda = entity.attribute<EntityDisplayAttribute>();
-    if ( eda->isHidden() )
-      return true;
+  if ( entity.hasAttribute<EntityHiddenAttribute>() )
+    return true;
 
-    const Collection parent = entity.parentCollection();
-    if ( parent.isValid() )
-      return isHidden( parent );
-  }
+  const Collection parent = entity.parentCollection();
+  if ( parent.isValid() )
+    return isHidden( parent );
+ 
   return false;
 }
 
@@ -161,7 +158,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       // This is probably the result of a parent of a previous collection already being in the model.
       // Replace the dummy collection with the real one and move on.
       m_collections[ col.id() ] = col;
-      QModelIndex colIndex = q->indexForCollection( col );
+      QModelIndex colIndex = indexForCollection( col );
       dataChanged(colIndex, colIndex);
       continue;
     }
@@ -205,7 +202,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     Q_ASSERT( !m_collections.contains( topCollectionId ) );
 
     Q_ASSERT( parents.contains( topCollectionId ) );
-    const QModelIndex parentIndex = q->indexForCollection( parents.value( topCollectionId ) );
+    const QModelIndex parentIndex = indexForCollection( parents.value( topCollectionId ) );
 
     q->beginInsertRows( parentIndex, row, row );
     Q_ASSERT( !colIt.value().isEmpty() );
@@ -264,7 +261,7 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 
     Q_ASSERT( m_collections.contains( collectionId ) );
 
-    const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collectionId ) );
+    const QModelIndex parentIndex = indexForCollection( m_collections.value( collectionId ) );
     q->beginInsertRows( parentIndex, startRow, startRow + items.size() - 1 );
     foreach ( const Item &item, items ) {
       Item::Id itemId = item.id();
@@ -285,7 +282,7 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
     foreach (const Item &item, itemsToUpdate)
     {
       m_items[ item.id() ].apply( item );
-      foreach ( const QModelIndex &idx, q->indexesForItem( item ) )
+      foreach ( const QModelIndex &idx, indexesForItem( item ) )
       {
         dataChanged( idx, idx );
       }
@@ -331,7 +328,7 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
     parentCollection = temp;
   }
 
-  QModelIndex parent = q->indexForCollection( parentCollection );
+  QModelIndex parent = indexForCollection( parentCollection );
 
   // Still prepending all collections for now.
   int row = 0;
@@ -361,14 +358,13 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
 
 void EntityTreeModelPrivate::ancestorsFetched( const Akonadi::Collection::List& collectionList )
 {
-  Q_Q( EntityTreeModel );
   Q_ASSERT( collectionList.size() == 1 );
 
   const Collection collection = collectionList.at( 0 );
 
   m_collections[ collection.id() ] = collection;
 
-  const QModelIndex index = q->indexForCollection( collection );
+  const QModelIndex index = indexForCollection( collection );
   Q_ASSERT( index.isValid() );
   dataChanged( index, index );
 }
@@ -389,7 +385,7 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
 //   int numChildCols = childCollections.value(parent.id()).size();
 
   const int row = 0;
-  const QModelIndex parentIndex = q->indexForCollection( parent );
+  const QModelIndex parentIndex = indexForCollection( parent );
   q->beginInsertRows( parentIndex, row, row );
   m_collections.insert( collection.id(), collection );
 
@@ -457,7 +453,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
   Q_ASSERT(row >= 0);
 
-  const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.parentCollection().id() ) );
+  const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.parentCollection().id() ) );
 
   q->beginRemoveRows( parentIndex, row, row );
 
@@ -517,8 +513,8 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
   Q_Q( EntityTreeModel );
 
-  const QModelIndex srcParentIndex = q->indexForCollection( sourceCollection );
-  const QModelIndex destParentIndex = q->indexForCollection( destCollection );
+  const QModelIndex srcParentIndex = indexForCollection( sourceCollection );
+  const QModelIndex destParentIndex = indexForCollection( destCollection );
 
   Q_ASSERT( collection.parentCollection() == destCollection );
 
@@ -543,8 +539,6 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
 void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collection &collection )
 {
-  Q_Q( EntityTreeModel );
-
   if ( isHidden( collection ) )
     return;
 
@@ -556,7 +550,7 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 
   m_collections[ collection.id() ] = collection;
 
-  const QModelIndex index = q->indexForCollection( collection );
+  const QModelIndex index = indexForCollection( collection );
   Q_ASSERT( index.isValid() );
   dataChanged( index, index );
 }
@@ -564,14 +558,12 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Collection::Id id,
                                                                    const Akonadi::CollectionStatistics &statistics )
 {
-  Q_Q( EntityTreeModel );
-
   if ( !m_collections.contains( id ) ) {
     kWarning() << "Got statistics response for non-existing collection:" << id;
   } else {
     m_collections[ id ].setStatistics( statistics );
 
-    const QModelIndex index = q->indexForCollection( m_collections[ id ] );
+    const QModelIndex index = indexForCollection( m_collections[ id ] );
     dataChanged( index, index );
   }
 }
@@ -596,7 +588,7 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
 
   const int row = m_childEntities.value( collection.id() ).size();
 
-  const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.id() ) );
+  const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
   q->beginInsertRows( parentIndex, row, row );
   m_items.insert( item.id(), item );
@@ -632,7 +624,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
 
   const int row = indexOf( m_childEntities.value( collection.id() ), item.id() );
 
-  const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.id() ) );
+  const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
   q->beginRemoveRows( parentIndex, row, row );
   m_items.remove( item.id() );
@@ -642,8 +634,6 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
 
 void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
 {
-  Q_Q( EntityTreeModel );
-
   if ( isHidden( item ) )
     return;
 
@@ -654,7 +644,7 @@ void EntityTreeModelPrivate::monitoredItemChanged( const Akonadi::Item &item, co
   }
   m_items[ item.id() ].apply(item);
 
-  const QModelIndexList indexes = q->indexesForItem( item );
+  const QModelIndexList indexes = indexesForItem( item );
   foreach ( const QModelIndex &index, indexes )
   {
 
@@ -698,8 +688,8 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
   Q_ASSERT( m_collections.contains( sourceCollection.id() ) );
   Q_ASSERT( m_collections.contains( destCollection.id() ) );
 
-  const QModelIndex srcIndex = q->indexForCollection( sourceCollection );
-  const QModelIndex destIndex = q->indexForCollection( destCollection );
+  const QModelIndex srcIndex = indexForCollection( sourceCollection );
+  const QModelIndex destIndex = indexForCollection( destCollection );
 
   // Where should it go? Always append items and prepend collections and reorganize them with separate reactions to Attributes?
 
@@ -742,7 +732,7 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
 
   const int row = m_childEntities.value( collection.id() ).size();
 
-  const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.id() ) );
+  const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
   q->beginInsertRows( parentIndex, row, row );
   Node *node = new Node;
@@ -769,7 +759,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
 
   const int row = indexOf( m_childEntities.value( collection.id() ), item.id() );
 
-  const QModelIndex parentIndex = q->indexForCollection( m_collections.value( collection.id() ) );
+  const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
   q->beginInsertRows( parentIndex, row, row );
   m_childEntities[ collection.id() ].removeAt( row );
@@ -791,8 +781,6 @@ void EntityTreeModelPrivate::pasteJobDone( KJob *job )
 
 void EntityTreeModelPrivate::updateJobDone( KJob *job )
 {
-  Q_Q(EntityTreeModel);
-
   if ( job->error() ) {
     // TODO: handle job errors
     kWarning() << "Job error:" << job->errorString();
@@ -807,7 +795,7 @@ void EntityTreeModelPrivate::updateJobDone( KJob *job )
     Q_ASSERT( item.isValid() );
 
     m_items[ item.id() ].apply( item );
-    QModelIndexList list = q->indexesForItem( item );
+    QModelIndexList list = indexesForItem( item );
 
     foreach (const QModelIndex &idx, list)
     {
@@ -899,7 +887,7 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collecti
 
     if ( m_monitor->resourcesMonitored().contains( collection.resource().toUtf8() ) && !m_collections.contains( collection.id() ) )
     {
-      const QModelIndex parentIndex = q->indexForCollection( collection.parentCollection() );
+      const QModelIndex parentIndex = indexForCollection( collection.parentCollection() );
       // Prepending new collections.
       const int row  = 0;
       q->beginInsertRows( parentIndex, row, row );
@@ -1046,7 +1034,7 @@ QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterat
     ++(*pos);
   }
 
-  QModelIndex parentIndex = q->indexForCollection( col );
+  QModelIndex parentIndex = indexForCollection( col );
 
   q->beginRemoveRows( parentIndex, start, (*pos) - 1 );
   m_childEntities[ col.id() ].erase( startIt, it );
@@ -1077,4 +1065,42 @@ void EntityTreeModelPrivate::dataChanged( const QModelIndex &top, const QModelIn
   Q_Q( EntityTreeModel );
   emit q->dataChanged( top, bottom.sibling( bottom.row(), q->columnCount() ) );
 }
+
+QModelIndex EntityTreeModelPrivate::indexForCollection( const Collection &collection ) const
+{
+  Q_Q( const EntityTreeModel );
+
+  // The id of the parent of Collection::root is not guaranteed to be -1 as assumed by startFirstListJob,
+  // we ensure that we use -1 for the invalid Collection.
+  const Collection::Id parentId = collection.parentCollection().isValid() ? collection.parentCollection().id() : -1;
+
+  const int row = indexOf( m_childEntities.value( parentId ), collection.id() );
+
+  if ( row < 0 )
+    return QModelIndex();
+
+  Node *node = m_childEntities.value( parentId ).at( row );
+
+  return q->createIndex( row, 0, reinterpret_cast<void*>( node ) );
+}
+
+QModelIndexList EntityTreeModelPrivate::indexesForItem( const Item &item ) const
+{
+  Q_Q( const EntityTreeModel );
+  QModelIndexList indexes;
+
+  const Collection::List collections = getParentCollections( item );
+  const qint64 id = item.id();
+
+  foreach ( const Collection &collection, collections ) {
+    const int row = indexOf( m_childEntities.value( collection.id() ), id );
+
+    Node *node = m_childEntities.value( collection.id() ).at( row );
+
+    indexes << q->createIndex( row, 0, reinterpret_cast<void*>( node ) );
+  }
+
+  return indexes;
+}
+
 

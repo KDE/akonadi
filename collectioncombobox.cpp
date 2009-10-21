@@ -25,7 +25,7 @@
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchscope.h>
-#include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/entityrightsfiltermodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/session.h>
@@ -47,11 +47,11 @@ class CollectionComboBox::Private
       if ( customModel ) {
         baseModel = customModel;
       } else {
-        mMonitor = new Akonadi::ChangeRecorder;
+        mMonitor = new Akonadi::ChangeRecorder( mParent );
         mMonitor->fetchCollection( true );
         mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
 
-        mModel = new EntityTreeModel( Session::defaultSession(), mMonitor );
+        mModel = new EntityTreeModel( Session::defaultSession(), mMonitor, mParent );
         mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
         KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
@@ -60,7 +60,7 @@ class CollectionComboBox::Private
         baseModel = proxyModel;
       }
 
-      mMimeTypeFilterModel = new EntityMimeTypeFilterModel( parent );
+      mMimeTypeFilterModel = new CollectionFilterProxyModel( parent );
       mMimeTypeFilterModel->setSourceModel( baseModel );
 
       mRightsFilterModel = new EntityRightsFilterModel( parent );
@@ -79,8 +79,6 @@ class CollectionComboBox::Private
     ~Private()
     {
       mParent->setModel( 0 );
-      delete mModel;
-      delete mMonitor;
     }
 
     void activated( int index );
@@ -90,7 +88,7 @@ class CollectionComboBox::Private
 
     ChangeRecorder *mMonitor;
     EntityTreeModel *mModel;
-    EntityMimeTypeFilterModel *mMimeTypeFilterModel;
+    CollectionFilterProxyModel *mMimeTypeFilterModel;
     EntityRightsFilterModel *mRightsFilterModel;
     AsyncSelectionHandler *mSelectionHandler;
 };
@@ -126,18 +124,16 @@ CollectionComboBox::~CollectionComboBox()
 void CollectionComboBox::setMimeTypeFilter( const QStringList &contentMimeTypes )
 {
   d->mMimeTypeFilterModel->clearFilters();
-  d->mMimeTypeFilterModel->addContentMimeTypeInclusionFilters( contentMimeTypes );
+  d->mMimeTypeFilterModel->addMimeTypeFilters( contentMimeTypes );
 
-  if ( d->mMonitor ) {
-    d->mMonitor->collectionFetchScope().setContentMimeTypes( contentMimeTypes );
+  if ( d->mMonitor )
     foreach ( const QString &mimeType, contentMimeTypes )
       d->mMonitor->setMimeTypeMonitored( mimeType, true );
-  }
 }
 
 QStringList CollectionComboBox::mimeTypeFilter() const
 {
-  return d->mMimeTypeFilterModel->contentMimeTypeInclusionFilters();
+  return d->mMimeTypeFilterModel->mimeTypeFilters();
 }
 
 void CollectionComboBox::setAccessRightsFilter( Collection::Rights rights )

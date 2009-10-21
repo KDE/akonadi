@@ -53,6 +53,35 @@ class EntityTreeModelPrivate;
  * @note The EntityTreeModel should be used with the EntityTreeView or the EntityListView class
  * either directly or indirectly via proxy models.
  *
+ * <h3>Retrieving Collections and Items from the model</h3>
+ *
+ * If you want to retrieve and Item or Collection from the model, and already have a valid
+ * QModelIndex for the correct row, the Collection can be retrieved like this:
+ *
+ * @code
+ * Collection col = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+ * @endcode
+ *
+ * And similarly for Items. This works even if there is a proxy model between the calling code
+ * and the EntityTreeModel.
+ *
+ * If you want to retrieve a Collection for a particular Collection::Id  and you do not yet
+ * have a valid QModelIndex, use match:
+ *
+ * @code
+ * QModelIndexList list = model->match(QModelIndex(), CollectionIdRole, id);
+ * if (list.isEmpty())
+ *   return; // A Collection with that Id is not in the model.
+ * Q_ASSERT( list.size() == 1 ); // Otherwise there must be only one instance of it.
+ * Collection col = list.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+ * @endcode
+ *
+ * Not that a single Item may appear multiple times in a model, so the list size may not be 1
+ * if it is not empty in that case, so the Q_ASSERT should not be used.
+ * @see virtual-collections
+ *
+ * <h3>Using EntityTreeModel in your application</h3>
+ *
  * The responsibilities which fall to the application developer are
  * - Configuring the ChangeRecorder and EntityTreeModel
  * - Making use of this class via proxy models
@@ -390,26 +419,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     CollectionFetchStrategy collectionFetchStrategy() const;
 
-    /**
-     * Returns the model index for the given @p collection.
-     */
-    QModelIndex indexForCollection( const Collection &collection ) const;
-
-    /**
-     * Returns the model indexes for the given @p item.
-     */
-    QModelIndexList indexesForItem( const Item &item ) const;
-
-    /**
-     * Returns the collection for the given collection @p id.
-     */
-    Collection collectionForId( Collection::Id id ) const;
-
-    /**
-     * Returns the item for the given item @p id.
-     */
-    Item itemForId( Item::Id id ) const;
-
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
     virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
 
@@ -437,16 +446,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
-    /**
-     * Reimplement this in a subclass to return true if @p item matches @p value with @p flags in the AmazingCompletionRole.
-     */
-    virtual bool match( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const;
-
-    /**
-     * Reimplement this in a subclass to return true if @p collection matches @p value with @p flags in the AmazingCompletionRole.
-     */
-    virtual bool match( const Collection &collection, const QVariant &value, Qt::MatchFlags flags ) const;
-
   protected:
     /**
      * Clears and resets the model. Always call this instead of the reset method in the superclass.
@@ -471,6 +470,17 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     virtual QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;
 
     virtual int entityColumnCount( HeaderGroup headerGroup ) const;
+
+    /**
+     * Reimplement this in a subclass to return true if @p item matches @p value with @p flags in the AmazingCompletionRole.
+     */
+    virtual bool entityMatch( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const;
+
+    /**
+     * Reimplement this in a subclass to return true if @p collection matches @p value with @p flags in the AmazingCompletionRole.
+     */
+    virtual bool entityMatch( const Collection &collection, const QVariant &value, Qt::MatchFlags flags ) const;
+
 
   private:
     //@cond PRIVATE

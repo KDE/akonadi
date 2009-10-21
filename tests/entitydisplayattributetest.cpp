@@ -34,15 +34,12 @@ class EntityDisplayAttributeTest : public QObject
       QTest::addColumn<QByteArray>( "input" );
       QTest::addColumn<QString>( "name" );
       QTest::addColumn<QString>( "icon" );
-      QTest::addColumn<bool>( "hide" );
       QTest::addColumn<QString>( "activeIcon");
       QTest::addColumn<QByteArray>( "output" );
 
-      QTest::newRow( "empty" ) << QByteArray("(\"\" \"\")") << QString() << QString() << false <<QString()<< QByteArray("(\"\" \"\" false \"\")");
-      QTest::newRow( "name+icon" ) << QByteArray( "(\"name\" \"icon\")") << QString( "name" ) << QString( "icon" ) << false << QString()<<QByteArray( "(\"name\" \"icon\" false \"\")" );
-      QTest::newRow( "name+icon+visible" ) << QByteArray( "(\"name\" \"icon\" false)") << QString( "name" ) << QString( "icon" ) << false << QString() <<QByteArray( "(\"name\" \"icon\" false \"\")" );
-      QTest::newRow( "name+icon+hidden" ) << QByteArray( "(\"name\" \"icon\" true)") << QString( "name" ) << QString( "icon" ) << true << QString() <<QByteArray( "(\"name\" \"icon\" true \"\")" );
-      QTest::newRow("name+icon+hidden+activeIcon") << QByteArray( "(\"name\" \"icon\" true \"activeIcon\")") << QString( "name" ) << QString( "icon" ) << true << QString("activeIcon") << QByteArray( "(\"name\" \"icon\" true \"activeIcon\")" );
+      QTest::newRow( "empty" ) << QByteArray("(\"\" \"\")") << QString() << QString() << QString() << QByteArray("(\"\" \"\" \"\")");
+      QTest::newRow( "name+icon" ) << QByteArray( "(\"name\" \"icon\")") << QString( "name" ) << QString( "icon" ) << QString()<<QByteArray( "(\"name\" \"icon\" \"\")" );
+      QTest::newRow("name+icon+activeIcon") << QByteArray( "(\"name\" \"icon\" \"activeIcon\")") << QString( "name" ) << QString( "icon" ) << QString("activeIcon") << QByteArray( "(\"name\" \"icon\" \"activeIcon\")" );
     }
 
     void testDeserialize()
@@ -50,7 +47,6 @@ class EntityDisplayAttributeTest : public QObject
       QFETCH( QByteArray, input );
       QFETCH( QString, name );
       QFETCH( QString, icon );
-      QFETCH( bool, hide );
       QFETCH( QString, activeIcon);
       QFETCH( QByteArray, output );
 
@@ -58,7 +54,6 @@ class EntityDisplayAttributeTest : public QObject
       attr->deserialize( input );
       QCOMPARE( attr->displayName(), name );
       QCOMPARE( attr->iconName(), icon );
-      QCOMPARE( attr->isHidden(), hide );
       QCOMPARE( attr->activeIconName(), activeIcon );
 
       QCOMPARE( attr->serialized(), output );

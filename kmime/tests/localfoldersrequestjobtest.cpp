@@ -45,6 +45,8 @@ using namespace Akonadi;
 
 void LocalFoldersRequestJobTest::initTestCase()
 {
+  qRegisterMetaType<Akonadi::AgentInstance>();
+
   QVERIFY( Control::start() );
   QTest::qWait( 1000 );
 
@@ -52,6 +54,7 @@ void LocalFoldersRequestJobTest::initTestCase()
   SpecialCollectionsTesting *lft = SpecialCollectionsTesting::_t_self();
   Q_ASSERT( lf );
   Q_ASSERT( lft );
+  Q_UNUSED( lf );
 
   // No one has created the default resource.  LF has no folders.
   QCOMPARE( lft->_t_knownResourceCount(), 0 );

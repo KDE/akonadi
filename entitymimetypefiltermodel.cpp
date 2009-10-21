@@ -41,35 +41,8 @@ class EntityMimeTypeFilterModelPrivate
   public:
     EntityMimeTypeFilterModelPrivate( EntityMimeTypeFilterModel *parent )
       : q_ptr( parent ),
-        m_headerGroup(EntityTreeModel::EntityTreeHeaders)
+        m_headerGroup( EntityTreeModel::EntityTreeHeaders )
     {
-    }
-
-    bool mimeTypeMatches( const QModelIndex &index ) const
-    {
-      const QString rowMimetype = index.data( EntityTreeModel::MimeTypeRole ).toString();
-
-      if ( excludedMimeTypes.contains( rowMimetype ) )
-        return false;
-
-      if ( !includedMimeTypes.isEmpty() ) {
-        if ( includedMimeTypes.contains( rowMimetype ) )
-          return true;
-      }
-
-      if ( !includedContentMimeTypes.isEmpty() ) {
-        const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
-        if ( collection.isValid() ) {
-          const QStringList contentMimeTypes = collection.contentMimeTypes();
-          if ( !contentMimeTypes.toSet().intersect( includedContentMimeTypes.toSet() ).isEmpty() )
-            return true;
-          else
-            return false;
-        } else
-          return false;
-      }
-
-      return true;
     }
 
     Q_DECLARE_PUBLIC(EntityMimeTypeFilterModel)
@@ -77,7 +50,6 @@ class EntityMimeTypeFilterModelPrivate
 
     QStringList includedMimeTypes;
     QStringList excludedMimeTypes;
-    QStringList includedContentMimeTypes;
 
     QPersistentModelIndex m_rootIndex;
 
@@ -125,33 +97,20 @@ void EntityMimeTypeFilterModel::addMimeTypeExclusionFilter(const QString &type)
   invalidateFilter();
 }
 
-void EntityMimeTypeFilterModel::addContentMimeTypeInclusionFilter( const QString &type )
-{
-  Q_D(EntityMimeTypeFilterModel);
-  d->includedContentMimeTypes << type;
-  invalidateFilter();
-}
-
-void EntityMimeTypeFilterModel::addContentMimeTypeInclusionFilters( const QStringList &typeList )
-{
-  Q_D(EntityMimeTypeFilterModel);
-  d->includedContentMimeTypes << typeList;
-  invalidateFilter();
-}
-
 bool EntityMimeTypeFilterModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
 {
   Q_D(const EntityMimeTypeFilterModel);
 
-  const QModelIndex sourceIndex = sourceModel()->index( sourceRow, 0, sourceParent );
+  const QModelIndex idx = sourceModel()->index(sourceRow, 0, sourceParent);
 
-  // one of our children might be accepted, so accept this row if one of our children are accepted.
-  for ( int row = 0 ; row < sourceModel()->rowCount( sourceIndex ); row++ ) {
-    if ( filterAcceptsRow( row, sourceIndex ) )
-      return true;
-  }
+  const QString rowMimetype = idx.data( EntityTreeModel::MimeTypeRole ).toString();
 
-  return d->mimeTypeMatches( sourceIndex );
+  if ( d->excludedMimeTypes.contains( rowMimetype ) )
+    return false;
+  if ( d->includedMimeTypes.isEmpty() || d->includedMimeTypes.contains( rowMimetype ) )
+    return true;
+
+  return false;
 }
 
 QStringList EntityMimeTypeFilterModel::mimeTypeInclusionFilters() const
@@ -166,18 +125,11 @@ QStringList EntityMimeTypeFilterModel::mimeTypeExclusionFilters() const
   return d->excludedMimeTypes;
 }
 
-QStringList EntityMimeTypeFilterModel::contentMimeTypeInclusionFilters() const
-{
-  Q_D(const EntityMimeTypeFilterModel);
-  return d->includedContentMimeTypes;
-}
-
 void EntityMimeTypeFilterModel::clearFilters()
 {
   Q_D(EntityMimeTypeFilterModel);
   d->includedMimeTypes.clear();
   d->excludedMimeTypes.clear();
-  d->includedContentMimeTypes.clear();
   invalidateFilter();
 }
 
@@ -186,7 +138,6 @@ void EntityMimeTypeFilterModel::setHeaderGroup(EntityTreeModel::HeaderGroup head
   Q_D(EntityMimeTypeFilterModel);
   d->m_headerGroup = headerGroup;
 }
-
 
 QVariant EntityMimeTypeFilterModel::headerData(int section, Qt::Orientation orientation, int role ) const
 {
@@ -289,16 +240,6 @@ bool EntityMimeTypeFilterModel::canFetchMore( const QModelIndex &parent ) const
   if ( EntityTreeModel::CollectionTreeHeaders == d->m_headerGroup )
     return false;
   return QSortFilterProxyModel::canFetchMore(parent);
-}
-
-Qt::ItemFlags EntityMimeTypeFilterModel::flags( const QModelIndex &index ) const
-{
-  Q_D(const EntityMimeTypeFilterModel);
-
-  if ( d->mimeTypeMatches( index ) )
-    return QSortFilterProxyModel::flags( index );
-  else
-    return QSortFilterProxyModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 #include "entitymimetypefiltermodel.moc"

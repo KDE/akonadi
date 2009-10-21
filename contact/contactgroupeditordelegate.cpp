@@ -86,7 +86,7 @@ ContactGroupEditorDelegate::~ContactGroupEditorDelegate()
   delete d;
 }
 
-QWidget* ContactGroupEditorDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &option,
+QWidget* ContactGroupEditorDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem&,
                                                    const QModelIndex &index ) const
 {
   if ( index.column() == 0 ) {

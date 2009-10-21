@@ -202,7 +202,7 @@ QModelIndex ContactGroupModel::index( int row, int col, const QModelIndex& ) con
   return createIndex( row, col, 0 );
 }
 
-QModelIndex ContactGroupModel::parent( const QModelIndex &child ) const
+QModelIndex ContactGroupModel::parent( const QModelIndex& ) const
 {
   return QModelIndex();
 }
@@ -395,6 +395,9 @@ int ContactGroupModel::rowCount( const QModelIndex &parent ) const
 
 bool ContactGroupModel::removeRows( int row, int count, const QModelIndex &parent )
 {
+  if ( parent.isValid() )
+    return false;
+
   beginRemoveRows( QModelIndex(), row, row + count - 1 );
   for ( int i = 0; i < count; ++i )
     d->mMembers.removeAt( row );

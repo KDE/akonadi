@@ -195,6 +195,26 @@ public:
   */
   void dataChanged( const QModelIndex &top, const QModelIndex &bottom );
 
+  /**
+  * Returns the model index for the given @p collection.
+  */
+  QModelIndex indexForCollection( const Collection &collection ) const;
+
+  /**
+  * Returns the model indexes for the given @p item.
+  */
+  QModelIndexList indexesForItem( const Item &item ) const;
+
+  /**
+  * Returns the collection for the given collection @p id.
+  */
+  Collection collectionForId( Collection::Id id ) const;
+
+  /**
+  * Returns the item for the given item @p id.
+  */
+  Item itemForId( Item::Id id ) const;
+
 };
 
 }
