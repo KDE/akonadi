@@ -53,7 +53,7 @@ void IntervalCheck::doIntervalCheck()
     DataStore::self()->activeCachePolicy( collection );
 
     // check if there is something to expire at all
-    if ( collection.cachePolicyCheckInterval() < 0 || !collection.subscribed() )
+    if ( collection.cachePolicyCheckInterval() <= 0 || !collection.subscribed() )
       continue;
 
     QDateTime lastExpectedCheck = QDateTime::currentDateTime().addSecs( collection.cachePolicyCheckInterval() * -60 );
