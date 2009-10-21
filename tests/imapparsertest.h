@@ -29,6 +29,7 @@ class ImapParserTest : public QObject
     void testStripLeadingSpaces();
     void testParseQuotedString();
     void testParseString();
+    void testParseParenthesizedList_data();
     void testParseParenthesizedList();
     void testParseNumber();
     void testQuote_data();
