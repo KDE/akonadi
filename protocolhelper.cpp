@@ -306,6 +306,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   // parse fetch response fields
   for ( int i = 0; i < lineTokens.count() - 1; i += 2 ) {
     const QByteArray key = lineTokens.value( i );
+    kDebug() << "reading fetch response:" << key;
     // skip stuff we dealt with already
     if ( key == "UID" || key == "REV" || key == "REMOTEID" || key == "MIMETYPE"  || key == "COLLECTIONID")
       continue;
