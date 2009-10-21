@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ENTITY_TREE_VIEW
-#define AKONADI_ENTITY_TREE_VIEW
+#ifndef AKONADI_ENTITYTREEVIEW_H
+#define AKONADI_ENTITYTREEVIEW_H
 
 #include "akonadi_export.h"
 
@@ -35,15 +35,17 @@ class Collection;
 class Item;
 
 /**
- * @short A view to show a collection tree provided by a CollectionModel.
+ * @short A view to show an item/collection tree provided by a EntityTreeModel.
  *
  * When a KXmlGuiWindow is passed to the constructor, the XMLGUI
- * defined context menu @c akonadi_collectionview_contextmenu is
- * used if available.
+ * defined context menu @c akonadi_collectionview_contextmenu or
+ * @c akonadi_itemview_contextmenu is used if available.
  *
  * Example:
  *
  * @code
+ *
+ * using namespace Akonadi;
  *
  * class MyWindow : public KXmlGuiWindow
  * {
@@ -51,10 +53,10 @@ class Item;
  *    MyWindow()
  *      : KXmlGuiWindow()
  *    {
- *      Akonadi::CollectionView *view = new Akonadi::CollectionView( this, this );
+ *      EntityTreeView *view = new EntityTreeView( this, this );
  *      setCentralWidget( view );
  *
- *      Akonadi::CollectionModel *model = new Akonadi::CollectionModel( this );
+ *      EntityTreeModel *model = new EntityTreeModel( ... );
  *      view->setModel( model );
  *    }
  * }
