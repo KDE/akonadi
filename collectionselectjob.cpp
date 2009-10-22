@@ -23,7 +23,7 @@
 #include "protocol_p.h"
 
 #include <QtCore/QDebug>
-
+#include <KLocale>
 using namespace Akonadi;
 
 class Akonadi::CollectionSelectJobPrivate : public JobPrivate
@@ -69,7 +69,7 @@ void CollectionSelectJob::doStart( )
     d->writeData( command + d->mCollection.remoteId().toUtf8() + '\n' );
   } else {
     setError( Unknown );
-    setErrorText( QLatin1String("Invalid collection specified") );
+    setErrorText( i18n("Invalid collection specified") );
     emitResult();
   }
 }

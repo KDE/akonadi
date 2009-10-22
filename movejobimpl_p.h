@@ -25,6 +25,8 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 
+#include <KLocale>
+
 namespace Akonadi {
 
 /** Shared implementation details between item and collection move jobs. */
@@ -38,13 +40,13 @@ template <typename T, typename MoveJob> class MoveJobImpl : public JobPrivate
       MoveJob *q = static_cast<MoveJob*>( q_func() ); // Job would be enough already, but then we don't have access to the non-public stuff...
       if ( objectsToMove.isEmpty() ) {
         q->setError( Job::Unknown );
-        q->setErrorText( QLatin1String( "No objects specified for moving" ) );
+        q->setErrorText( i18n( "No objects specified for moving" ) );
         q->emitResult();
         return;
       }
       if ( !destination.isValid() && destination.remoteId().isEmpty() ) {
         q->setError( Job::Unknown );
-        q->setErrorText( QLatin1String( "No valid destination specified" ) );
+        q->setErrorText( i18n( "No valid destination specified" ) );
         q->emitResult();
         return;
       }

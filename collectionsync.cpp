@@ -28,6 +28,7 @@
 #include "collectionmovejob.h"
 
 #include <kdebug.h>
+#include <KLocale>
 #include <QtCore/QVariant>
 
 using namespace Akonadi;
@@ -168,7 +169,7 @@ class CollectionSync::Private
       // safety check: the local tree has to be connected
       if ( !localPendingCollections.isEmpty() ) {
         q->setError( Unknown );
-        q->setErrorText( QLatin1String( "Inconsistent local collection tree detected! OMG, what have you done to my database?!?!" ) );
+        q->setErrorText( i18n( "Inconsistent local collection tree detected! OMG, what have you done to my database?!?!" ) );
         q->emitResult();
         return;
       }
@@ -199,7 +200,7 @@ class CollectionSync::Private
           localParent = localRoot;
         else
           localParent = findMatchingLocalNode( collection.parentCollection() );
- 
+
         if ( localParent && localParent->childRidMap.contains( collection.remoteId() ) )
           return localParent->childRidMap.value( collection.remoteId() );
         return 0;
@@ -265,7 +266,7 @@ class CollectionSync::Private
         localNode = findBestLocalAncestor( remoteNode->collection );
         if ( !localNode ) {
           q->setError( Unknown );
-          q->setErrorText( QLatin1String( "Remote collection without root-terminated ancestor chain provided, fix your resource dude!" ) );
+          q->setErrorText( i18n( "Remote collection without root-terminated ancestor chain provided, fix your resource dude!" ) );
           q->emitResult();
           return;
         }
@@ -462,7 +463,7 @@ class CollectionSync::Private
       QList<RemoteNode*> orphans = findPendingRemoteNodes( localRoot );
       if ( !orphans.isEmpty() ) {
         q->setError( Unknown );
-        q->setErrorText( QLatin1String( "Found unresolved orphan collections" ) );
+        q->setErrorText( i18n( "Found unresolved orphan collections" ) );
         foreach ( RemoteNode* orphan, orphans )
           kDebug() << "found orphan collection:" << orphan->collection;
         q->emitResult();

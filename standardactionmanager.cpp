@@ -79,7 +79,7 @@ static const struct {
   { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
   { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), true },
   { "akonadi_item_cut", I18N_NOOP("&Cut Item"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutItems()), false },
-  { "akonadi_collection_cut", I18N_NOOP("&Cut Collection"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutCollections()), false }
+  { "akonadi_collection_cut", I18N_NOOP("&Cut Folder"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutCollections()), false }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -114,7 +114,7 @@ class StandardActionManager::Private
       pluralLabels.insert( StandardActionManager::CopyCollections, ki18np( "&Copy Folder", "&Copy %1 Folders" ) );
       pluralLabels.insert( StandardActionManager::CopyItems, ki18np( "&Copy Item", "&Copy %1 Items" ) );
       pluralLabels.insert( StandardActionManager::CutItems, ki18np( "&Cut Item", "&Cut %1 Items" ) );
-      pluralLabels.insert( StandardActionManager::CutCollections, ki18np( "&Cut Collection", "&Cut %1 Collections" ) );
+      pluralLabels.insert( StandardActionManager::CutCollections, ki18np( "&Cut Folder", "&Cut %1 Folders" ) );
       pluralLabels.insert( StandardActionManager::DeleteItems, ki18np( "&Delete Item", "&Delete %1 Items" ) );
     }
 
