@@ -41,6 +41,11 @@ namespace CollectionUtils
     return (collection.resource() == QLatin1String( "akonadi_search_resource" ));
   }
 
+  inline bool isReadOnly( const Collection &collection )
+  {
+    return !(collection.rights() & Collection::CanCreateItem);
+  }
+
   inline bool isResource( const Collection &collection )
   {
     return (collection.parentCollection() == Collection::root());
@@ -66,6 +71,8 @@ namespace CollectionUtils
     if ( CollectionUtils::isResource( col ) )
       return QLatin1String( "network-server" );
     if ( CollectionUtils::isStructural( col ) )
+      return QLatin1String( "folder-grey" );
+    if ( col.rights() & Collection::CanCreateItem )
       return QLatin1String( "folder-grey" );
 
     const QStringList content = col.contentMimeTypes();
