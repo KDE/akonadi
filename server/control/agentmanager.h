@@ -331,6 +331,7 @@ class AgentManager : public QObject
     bool checkAgentExists( const QString &identifier ) const;
     void ensureAutoStart( const AgentType &info );
     void continueStartup();
+    void registerAgentAtServer( const AgentInstance::Ptr& instance, const AgentType& type );
 
   private:
     /**

@@ -36,6 +36,8 @@
 #include <QtDBus/QDBusError>
 #include <QtCore/QDebug>
 
+#include <boost/scoped_ptr.hpp>
+
 using Akonadi::ProcessControl;
 
 AgentManager::AgentManager( QObject *parent )
@@ -178,10 +180,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   if ( !instance->start( agentInfo ) )
     return QString();
   mAgentInstances.insert( instance->identifier(), instance );
-
-  org::freedesktop::Akonadi::ResourceManager * resmanager = new org::freedesktop::Akonadi::ResourceManager( QLatin1String("org.freedesktop.Akonadi"), QLatin1String("/ResourceManager"), QDBusConnection::sessionBus(), this );
-  resmanager->addResourceInstance( instance->identifier(), agentInfo.capabilities );
-
+  registerAgentAtServer( instance, agentInfo );
   save();
   return instance->identifier();
 }
@@ -644,6 +643,7 @@ void AgentManager::ensureAutoStart(const AgentType & info)
   instance->setIdentifier( info.identifier );
   if ( instance->start( info ) ) {
     mAgentInstances.insert( instance->identifier(), instance );
+    registerAgentAtServer( instance, info );
     save();
   }
 }
@@ -662,5 +662,15 @@ void AgentManager::agentExeChanged(const QString & fileName)
   }
 }
 
+void AgentManager::registerAgentAtServer( const AgentInstance::Ptr &instance, const AgentType &type )
+{
+  if ( type.capabilities.contains( AgentType::CapabilityResource ) ) {
+    boost::scoped_ptr<org::freedesktop::Akonadi::ResourceManager> resmanager(
+      new org::freedesktop::Akonadi::ResourceManager( QLatin1String("org.freedesktop.Akonadi"),
+                                                      QLatin1String("/ResourceManager"),
+                                                      QDBusConnection::sessionBus(), this ) );
+    resmanager->addResourceInstance( instance->identifier(), type.capabilities );
+  }
+}
 
 #include "agentmanager.moc"
