@@ -29,7 +29,6 @@ class QAbstractItemModel;
 
 namespace Akonadi {
 
-//TODO_AKONADI_REVIEW: rename class to CollectionComboBox, Type->QStringList, allow to set custom model, move ctor arguments to setter/getter, inherit from KComboBox, rename selectedCollection to currentCollection, selectionChanged -> currentChanged
 /**
  * @short A combobox for selecting an Akonadi collection.
  *

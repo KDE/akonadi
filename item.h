@@ -320,6 +320,9 @@ class AKONADI_EXPORT Item : public Entity
     /**
      * Returns the parts available for this item.
      *
+     * The returned set refers to parts available on the akonadi server or remotely,
+     * but does not include the loadedPayloadParts() of this item.
+     *
      * @since 4.4
      */
     QSet<QByteArray> availablePayloadParts() const;

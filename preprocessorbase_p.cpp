@@ -21,8 +21,9 @@
 
 #include "preprocessorbase.h"
 
-#include "compoundfetchjob_p.h"
 #include "preprocessoradaptor.h"
+
+#include <akonadi/itemfetchjob.h>
 
 using namespace Akonadi;
 
@@ -45,12 +46,12 @@ void PreprocessorBasePrivate::beginProcessItem( qlonglong itemId, qlonglong coll
 {
   kDebug() << "PreprocessorBase: about to process item " << itemId << " in collection " << collectionId << " with mimeType " << mimeType;
 
-  CompoundFetchJob *fetchJob = new CompoundFetchJob( Item( static_cast<Item::Id>( itemId ) ), Collection( static_cast<Collection::Id>( collectionId ) ), this );
-  connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( compoundFetched( KJob* ) ) );
-  fetchJob->start();
+  ItemFetchJob *fetchJob = new ItemFetchJob( Item( itemId ), this );
+  fetchJob->setFetchScope( mFetchScope );
+  connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( itemFetched( KJob* ) ) );
 }
 
-void PreprocessorBasePrivate::compoundFetched( KJob *job )
+void PreprocessorBasePrivate::itemFetched( KJob *job )
 {
   Q_Q( PreprocessorBase );
 
@@ -59,12 +60,16 @@ void PreprocessorBasePrivate::compoundFetched( KJob *job )
     return;
   }
 
-  CompoundFetchJob *fetchJob = qobject_cast<CompoundFetchJob*>( job );
+  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
 
-  const Item item = fetchJob->item();
-  const Collection collection = fetchJob->collection();
+  if ( fetchJob->items().isEmpty() ) {
+    emit itemProcessed( PreprocessorBase::ProcessingFailed );
+    return;
+  }
 
-  switch ( q->processItem( item, collection ) ) {
+  const Item item = fetchJob->items().first();
+
+  switch ( q->processItem( item ) ) {
     case PreprocessorBase::ProcessingFailed:
     case PreprocessorBase::ProcessingRefused:
     case PreprocessorBase::ProcessingCompleted:
@@ -86,4 +91,3 @@ void PreprocessorBasePrivate::compoundFetched( KJob *job )
 }
 
 #include "preprocessorbase_p.moc"
-#include "compoundfetchjob_p.moc"

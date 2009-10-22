@@ -158,54 +158,57 @@ void ImapParserTest::testParseString( )
   QCOMPARE( consumed, input.length() );
 }
 
-void ImapParserTest::testParseParenthesizedList( )
+void ImapParserTest::testParseParenthesizedList_data()
 {
-  QByteArray input;
-  QList<QByteArray> result;
-  int consumed;
+  QTest::addColumn<QByteArray>( "input" );
+  QTest::addColumn<QList<QByteArray> >( "result" );
+  QTest::addColumn<int>( "consumed" );
 
-  // empty lists
-  input = "() ( )";
-  consumed = ImapParser::parseParenthesizedList( input, result, 0 );
-  QVERIFY( result.isEmpty() );
-  QCOMPARE( consumed, 2 );
-
-  consumed = ImapParser::parseParenthesizedList( input, result, 2 );
-  QVERIFY( result.isEmpty() );
-  QCOMPARE( consumed, 6 );
-
-  // complex list with all kind of entries
-  input = "(entry1 \"entry2()\" (sub list) \")))\" {6}\nentry3) end";
-  consumed = ImapParser::parseParenthesizedList( input, result, 0 );
   QList<QByteArray> reference;
+
+  QTest::newRow( "null" ) << QByteArray() << reference << 0;
+  QTest::newRow( "empty" ) << QByteArray( "()" ) << reference << 2;
+  QTest::newRow( "empty with space" ) << QByteArray( " ( )" ) << reference<< 4;
+  QTest::newRow( "no list" ) << QByteArray( "some list-less text" ) << reference << 0;
+
   reference << "entry1";
   reference << "entry2()";
   reference << "(sub list)";
   reference << ")))";
   reference << "entry3";
-  QCOMPARE( result, reference );
-  QCOMPARE( consumed, 47 );
+  QTest::newRow( "complex" ) << QByteArray( "(entry1 \"entry2()\" (sub list) \")))\" {6}\nentry3) end" ) << reference << 47;
 
-  // no list at all
-  input = "some list-less text";
-  consumed = ImapParser::parseParenthesizedList( input, result, 0 );
-  QVERIFY( result.isEmpty() );
-  QCOMPARE( consumed, 0 );
-
-  // out of bounds access
-  consumed = ImapParser::parseParenthesizedList( input, result, input.length() );
-  QVERIFY( result.isEmpty() );
-  QCOMPARE( consumed, input.length() );
-
-  // newline literal (based on itemappendtest bug)
-  input = "(foo {6}\n\n\nbar\n bla)";
-  consumed = ImapParser::parseParenthesizedList( input, result );
   reference.clear();
   reference << "foo";
   reference << "\n\nbar\n";
   reference << "bla";
-  QCOMPARE( result, reference );
-  QCOMPARE( consumed, input.length() );
+  QTest::newRow( "newline literal" ) << QByteArray("(foo {6}\n\n\nbar\n bla)") << reference << 20;
+
+  reference.clear();
+  reference << "partid";
+  reference << "body";
+  QTest::newRow( "CRLF literal separator" ) << QByteArray( "(partid {4}\r\nbody)") << reference << 18;
+
+  reference.clear();
+  reference << "partid";
+  reference << "\n\rbody\n\r";
+  QTest::newRow( "CRLF literal separator 2" ) << QByteArray( "(partid {8}\r\n\n\rbody\n\r)") << reference << 22;
+}
+
+void ImapParserTest::testParseParenthesizedList( )
+{
+  QFETCH( QByteArray, input );
+  QFETCH( QList<QByteArray>, result );
+  QFETCH( int, consumed );
+
+  QList<QByteArray> realResult;
+  int reallyConsumed = ImapParser::parseParenthesizedList( input, realResult, 0 );
+  QCOMPARE( realResult, result );
+  QCOMPARE( reallyConsumed, consumed );
+
+  // newline literal (based on itemappendtest bug)
+  input = "(foo {6}\n\n\nbar\n bla)";
+  consumed = ImapParser::parseParenthesizedList( input, result );
 }
 
 void ImapParserTest::testParseNumber()

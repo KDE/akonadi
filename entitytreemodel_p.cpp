@@ -1063,7 +1063,7 @@ void EntityTreeModelPrivate::purgeItems( Collection::Id id )
 void EntityTreeModelPrivate::dataChanged( const QModelIndex &top, const QModelIndex &bottom )
 {
   Q_Q( EntityTreeModel );
-  emit q->dataChanged( top, bottom.sibling( bottom.row(), q->columnCount()-1 ) );
+  emit q->dataChanged( top, bottom.sibling( bottom.row(), q->columnCount() - 1 ) );
 }
 
 QModelIndex EntityTreeModelPrivate::indexForCollection( const Collection &collection ) const

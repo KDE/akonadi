@@ -31,6 +31,8 @@
 namespace Akonadi
 {
 
+class ItemFetchScope;
+
 class PreprocessorBasePrivate;
 
 /**
@@ -96,7 +98,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
     /**
      * This method must be implemented by every preprocessor subclass.
      *
-     * It must realize the preprocessing of the @p item, which is actually in @p collection.
+     * It must realize the preprocessing of the given @p item.
      *
      * The Akonadi server will push in for preprocessing any newly created item:
      * it's your responsibility to decide if you want to process the item or not.
@@ -111,7 +113,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      * appropriately (as the server MAY abort your async job
      * if it decides that it's taking too long).
      */
-    virtual ProcessingResult processItem( const Item &item, const Collection &collection ) = 0;
+    virtual ProcessingResult processItem( const Item &item ) = 0;
 
     /**
      * This method must be called if processing is implemented asynchronously.
@@ -125,6 +127,33 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
      * other value will lead to a runtime assertion.
      */
     void finishProcessing( ProcessingResult result );
+
+    /**
+     * Sets the item fetch scope.
+     *
+     * The ItemFetchScope controls how much of an item's data is fetched
+     * from the server, e.g. whether to fetch the full item payload or
+     * only meta data.
+     *
+     * @param fetchScope The new scope for item fetch operations.
+     *
+     * @see fetchScope()
+     */
+    void setFetchScope( const ItemFetchScope &fetchScope );
+
+    /**
+     * Returns the item fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify the
+     * current scope in-place, i.e. by calling a method on the returned reference
+     * without storing it in a local variable. See the ItemFetchScope documentation
+     * for an example.
+     *
+     * @return a reference to the current item fetch scope
+     *
+     * @see setFetchScope() for replacing the current item fetch scope
+     */
+    ItemFetchScope &fetchScope();
 
   protected:
     /**
